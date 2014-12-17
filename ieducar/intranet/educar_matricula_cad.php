@@ -34,6 +34,7 @@ require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'lib/Portabilis/Date/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
+require_once 'lib/Portabilis/Utils/Database.php';
 
 /**
  * clsIndexBase class.
@@ -168,8 +169,7 @@ class indice extends clsCadastro
 
     $anoLetivoHelperOptions = array('situacoes' => array('em_andamento', 'nao_iniciado'));
 
-    $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'curso', 'serie'));
-    $this->inputsHelper()->dynamic('turma', array('required' => false, 'option value' => 'Selecione uma turma'));
+    $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'curso', 'serie', 'turma'));
     $this->inputsHelper()->dynamic('anoLetivo', array('label' => 'Ano destino'), $anoLetivoHelperOptions);
     $this->inputsHelper()->date('data_matricula', array('label' => Portabilis_String_Utils::toLatin1('Data da matrícula'), 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y') ));
     $this->inputsHelper()->hidden('ano_em_andamento', array('value' => '1'));
@@ -221,6 +221,9 @@ class indice extends clsCadastro
                                                                      null,
                                                                      1
                                                                      );
+
+    if(! $this->existeVagasDisponíveis())
+      return false;    
 
     if(is_array($anoLetivoEmAndamentoEscola)) {
       require_once 'include/pmieducar/clsPmieducarSerie.inc.php';
@@ -776,6 +779,88 @@ function enturmacaoMatricula($matriculaId, $turmaDestinoId) {
     }
     return false;
   }
+
+  function existeVagasDisponíveis(){
+  
+    // Caso quantidade de matrículas naquela turma seja maior ou igual que a capacidade da turma deve bloquear
+    if($this->_getQtdMatriculaTurma() >= $this->_getMaxAlunoTurma()){
+      $this->mensagem .= Portabilis_String_Utils::toLatin1("Não existem vagas disponíveis para essa turma!") . '<br/>';
+      return false;
+    }
+
+    // Caso a capacidade de alunos naquele turno seja menor ou igual ao ao número de alunos matrículados + alunos na reserva de vaga externa deve bloquear
+    if ($this->_getMaxAlunoTurno() <= ($this->_getQtdAlunosFila() + $this->_getQtdMatriculaTurno() )){
+      $this->mensagem .= Portabilis_String_Utils::toLatin1("Não existem vagas disponíveis para essa série/turno!") . '<br/>';
+      return false;
+    }
+
+    return true;
+  }
+
+  function _getQtdMatriculaTurma(){
+    $obj_mt = new clsPmieducarMatriculaTurma();
+    return count($obj_mt->lista(NULL, $this->ref_cod_turma));
+  }
+
+  function _getMaxAlunoTurma(){
+    $obj_t = new clsPmieducarTurma($this->ref_cod_turma);
+    $det_t = $obj_t->detalhe();
+    return $det_t['max_aluno'];
+  }
+
+  function _getMaxAlunoTurno(){
+    $obj_t = new clsPmieducarTurma($this->ref_cod_turma);
+    $det_t = $obj_t->detalhe();
+
+    $lista_t = $obj_t->lista($int_cod_turma = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, 
+    $int_ref_ref_cod_serie = $this->ref_cod_serie, $int_ref_ref_cod_escola = $this->ref_cod_escola, $int_ref_cod_infra_predio_comodo = null, 
+    $str_nm_turma = null, $str_sgl_turma = null, $int_max_aluno = null, $int_multiseriada = null, $date_data_cadastro_ini = null, 
+    $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_turma_tipo = null, 
+    $time_hora_inicial_ini = null, $time_hora_inicial_fim = null, $time_hora_final_ini = null, $time_hora_final_fim = null, $time_hora_inicio_intervalo_ini = null, 
+    $time_hora_inicio_intervalo_fim = null, $time_hora_fim_intervalo_ini = null, $time_hora_fim_intervalo_fim = null, $int_ref_cod_curso = null, $int_ref_cod_instituicao = null, 
+    $int_ref_cod_regente = null, $int_ref_cod_instituicao_regente = null, $int_ref_ref_cod_escola_mult = null, $int_ref_ref_cod_serie_mult = null, $int_qtd_min_alunos_matriculados = null, 
+    $bool_verifica_serie_multiseriada = false, $bool_tem_alunos_aguardando_nota = null, $visivel = null, $turma_turno_id = $det_t['turma_turno_id'], $tipo_boletim = null, $ano = $this->ano, $somenteAnoLetivoEmAndamento = FALSE);
+    
+    $max_aluno_turmas = 0;
+
+    foreach ($lista_t as $reg) {
+      $max_aluno_turmas += $reg['max_aluno'];
+    }
+
+    return $max_aluno_turmas;
+  }
+
+  function _getQtdAlunosFila(){
+    $obj_t = new clsPmieducarTurma($this->ref_cod_turma);
+    $det_t = $obj_t->detalhe();
+
+    $sql = 'SELECT qtd_alunos FROM pmieducar.quantidade_reserva_externa WHERE ref_cod_instituicao = $1 AND ref_cod_escola = $2 AND ref_cod_curso = $3 AND ref_cod_serie = $4 AND ref_turma_turno_id = $5 ';
+
+    return (int) Portabilis_Utils_Database::selectField($sql, array($this->ref_cod_instituicao, $this->ref_cod_escola, $this->ref_cod_curso, $this->ref_cod_serie, $det_t['turma_turno_id']));
+  }
+
+  function _getQtdMatriculaTurno(){
+    $obj_t = new clsPmieducarTurma($this->ref_cod_turma);
+    $det_t = $obj_t->detalhe();
+
+    $obj_mt = new clsPmieducarMatriculaTurma();
+
+    return (int) count($obj_mt->lista($int_ref_cod_matricula = NULL, $int_ref_cod_turma = NULL,
+              $int_ref_usuario_exc = NULL, $int_ref_usuario_cad = NULL,
+              $date_data_cadastro_ini = NULL, $date_data_cadastro_fim = NULL,
+              $date_data_exclusao_ini = NULL, $date_data_exclusao_fim = NULL, $int_ativo = NULL,
+              $int_ref_cod_serie = $this->ref_cod_serie, $int_ref_cod_curso = $this->ref_cod_curso, $int_ref_cod_escola = $this->ref_cod_escola,
+              $int_ref_cod_instituicao = NULL, $int_ref_cod_aluno = NULL, $mes = NULL,
+              $aprovado = NULL, $mes_menor_que = NULL, $int_sequencial = NULL,
+              $int_ano_matricula = NULL, $tem_avaliacao = NULL, $bool_get_nome_aluno = FALSE,
+              $bool_aprovados_reprovados = NULL, $int_ultima_matricula = NULL,
+              $bool_matricula_ativo = NULL, $bool_escola_andamento = FALSE,
+              $mes_matricula_inicial = FALSE, $get_serie_mult = FALSE,
+              $int_ref_cod_serie_mult = NULL, $int_semestre = NULL,
+              $pegar_ano_em_andamento = FALSE, $parar=NULL, $diario = FALSE, 
+              $int_turma_turno_id = $det_t['turma_turno_id'], $int_ano_turma = $det_t['ano']));
+  }
+
 
 }
 

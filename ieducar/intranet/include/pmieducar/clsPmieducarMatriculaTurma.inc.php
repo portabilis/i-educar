@@ -391,7 +391,8 @@ class clsPmieducarMatriculaTurma
     $bool_matricula_ativo = NULL, $bool_escola_andamento = FALSE,
     $mes_matricula_inicial = FALSE, $get_serie_mult = FALSE,
     $int_ref_cod_serie_mult = NULL, $int_semestre = NULL,
-    $pegar_ano_em_andamento = FALSE, $parar=NULL, $diario = FALSE)
+    $pegar_ano_em_andamento = FALSE, $parar=NULL, $diario = FALSE, 
+    $int_turma_turno_id = FALSE, $int_ano_turma = FALSE)
   {
     if ($bool_get_nome_aluno === true) {
       $nome = " ,(SELECT (nome)
@@ -592,6 +593,16 @@ class clsPmieducarMatriculaTurma
 
     if (is_numeric($int_sequencial)) {
       $filtros .= "{$whereAnd} mt.sequencial = '{$int_sequencial}'";
+      $whereAnd = " AND ";
+    }
+
+    if (is_numeric($int_turma_turno_id)) {
+      $filtros .= "{$whereAnd} t.turma_turno_id = '{$int_turma_turno_id}'";
+      $whereAnd = " AND ";
+    }
+
+    if (is_numeric($int_ano_turma)) {
+      $filtros .= "{$whereAnd} t.ano = '{$int_ano_turma}'";
       $whereAnd = " AND ";
     }
 

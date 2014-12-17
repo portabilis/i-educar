@@ -233,6 +233,47 @@ class MatriculaController extends ApiCoreController
     return array('aluno_id' => $alunoId);
   }
 
+  protected function canPostReservaExterna(){
+    return $this->validatesPresenceOf('instituicao_id') && $this->validatesPresenceOf('ano')
+             && $this->validatesPresenceOf('curso_id')  && $this->validatesPresenceOf('serie_id') 
+             && $this->validatesPresenceOf('turma_turno_id') && $this->validatesPresenceOf('qtd_alunos')
+             && $this->validatesPresenceOf('escola_id');
+  }
+
+  protected function postReservaExterna(){
+    if($this->canPostReservaExterna()){
+
+      $instituicaoId = $this->getRequest()->instituicao_id;
+      $escolaId = $this->getRequest()->escola_id;
+      $cursoId = $this->getRequest()->curso_id;
+      $serieId = $this->getRequest()->serie_id;
+      $turmaTurnoId = $this->getRequest()->turma_turno_id;
+      $ano = $this->getRequest()->ano;
+      $qtd_alunos = $this->getRequest()->qtd_alunos;
+  
+      $params = array($instituicaoId, $escolaId, $cursoId, $serieId, $turmaTurnoId, $ano);
+
+      $sql = 'DELETE
+                FROM pmieducar.quantidade_reserva_externa 
+                WHERE ref_cod_instituicao = $1
+                AND ref_cod_escola = $2
+                AND ref_cod_curso = $3
+                AND ref_cod_serie = $4
+                AND ref_turma_turno_id = $5 
+                AND ano = $6';
+  
+      $this->fetchPreparedQuery($sql, $params);
+  
+      $params[] = $qtd_alunos;
+  
+      $sql = ' INSERT INTO pmieducar.quantidade_reserva_externa VALUES ($1,$2,$3,$4,$5,$6,$7)';
+  
+      $this->fetchPreparedQuery($sql, $params);
+      
+      $this->messenger->append('Quantidade de alunos atualizada com sucesso!.', 'success');
+    }
+  }
+
   public function Gerar() {
     if ($this->isRequestFor('get', 'matricula'))
       $this->appendResponse($this->get());
@@ -251,6 +292,9 @@ class MatriculaController extends ApiCoreController
 
     elseif ($this->isRequestFor('delete', 'reclassificacao'))
       $this->appendResponse($this->deleteReclassificacao());
+
+    elseif ($this->isRequestFor('post', 'reserva-externa'))
+      $this->appendResponse($this->postReservaExterna());
 
     else
       $this->notImplementedOperationError();
