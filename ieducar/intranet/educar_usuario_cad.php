@@ -106,7 +106,7 @@ class indice extends clsCadastro
 			{
 				$this->super = true;
 			}
-
+			$this->status = $this->ativo;
 			$obj = new clsPmieducarUsuario( $this->ref_pessoa);
 			$registro  = $obj->detalhe();
 			if( $registro )
@@ -291,7 +291,10 @@ class indice extends clsCadastro
 		$this->campoLista("setor_4", "Subsetor 4", $opcoes, $this->setor_4, "oproDocumentoNextLvl(this.value, '5')", false, "", "", $this->setor_3 == "" ? true : false, false);
 
 		$opcoes = array(0 => "Inativo", 1 => "Ativo");
-		$this->campoLista("ativo", "Status", $opcoes, $this->ativo);
+		if (!$this->ref_cod_pessoa_fj == '')
+			$this->campoLista("ativo", "Status", $opcoes, $this->status);
+		else
+			$this->campoLista("ativo", "Status", $opcoes, 1);
 
 		$opcoes = array("" => "Selecione", 5 => "Comissionado", 4 => "Contratado", 3 => "Efetivo", 6 => "Estagi&aacute;rio");
 		$this->campoLista("ref_cod_funcionario_vinculo", "V&iacute;nculo", $opcoes, $this->ref_cod_funcionario_vinculo);
