@@ -84,7 +84,7 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
 
       $this->beforeValidation();
       $this->report->addArg('SUBREPORT_DIR', ($GLOBALS['coreExt']['Config']->app->database->dbname=="test" || $GLOBALS['coreExt']['Config']->app->database->dbname=="desenvolvimento" ? "/sites_media_root/services-test/reports/jasper/" : "/sites_media_root/services/reports/jasper/" ));
-      $this->report->addArg('database', ($GLOBALS['coreExt']['Config']->app->database->dbname ));
+      $this->report->addArg('database', ($GLOBALS['coreExt']['Config']->app->database->dbname == 'test' ? $GLOBALS['coreExt']['Config']->app->report->database_teste : $GLOBALS['coreExt']['Config']->app->database->dbname ));
       $this->report->addArg('data_emissao', (int) $GLOBALS['coreExt']['Config']->report->header->show_data_emissao);
       $this->validatesPresenseOfRequiredArgsInReport();
       $this->aftervalidation();
