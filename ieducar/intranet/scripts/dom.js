@@ -27,7 +27,7 @@ function ajax( funcaoRetorno )
 					if ( xml.status == 200 ) { 
 						xml.personalCallback( xml.responseXML, xml.args ) 
 					} else if (xml.status == 500){
-						alert('Nenhuma discplina vinculada com essa Escola/S\u00e9rie!');
+						alert('N\u00e3o existem Componentes curriculares vinculados para a S\u00e9rie/Ano desta escola. Verifique em Cadastros > S\u00e9rie > Escola-s\u00e9rie se os Componentes curriculares foram selecionados/marcados para esta S\u00e9rie/Ano.');
 					}else { 
 						alert('Erro: '+xml.status); 
 					} 
