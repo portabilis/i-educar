@@ -1571,7 +1571,7 @@ function atualizaTurmaCad_TipoTurma(xml)
   else {
     campoTipoTurma.length     = 1;
     campoTipoTurma.options[0] = new Option(
-      'A instituicao n\u00e3o possui nenhum tipo de turma', '', false, false
+      'A institui\u00e7\u00e3o n\u00e3o possui nenhum tipo de turma', '', false, false
     );
   }
 }
@@ -1609,7 +1609,7 @@ function getModulo_xml(xml)
 
   if (campoModulo.length == 1 && campoInstituicao != '') {
     campoModulo.options[0] = new Option(
-      'A Instituicao n\u00e3o possui nenhum modulo', '', false, false
+      'A institui\u00e7\u00e3o n\u00e3o possui nenhum modulo', '', false, false
     );
   }
 }
@@ -1797,7 +1797,7 @@ function atualizaMultiSerie(xml)
   }
 
   if (campoSerieMult.length == 1 && campoCurso != '') {
-    campoSerieMult.options[0] = new Option('O curso n\u00e3o possui nenhuma serie', '', false, false);
+    campoSerieMult.options[0] = new Option('O curso n\u00e3o possui nenhuma s\u00e9rie', '', false, false);
   }
 
   document.getElementById('ref_ref_cod_serie_mult').value = document.getElementById('ref_ref_cod_serie_mult_').value;
@@ -1865,7 +1865,7 @@ function parseComponentesCurriculares(xml_disciplina)
     }
   }
   else {
-    campoDisciplinas.innerHTML = 'A serie/ano escolar n\u00e3o possui componentes '
+    campoDisciplinas.innerHTML = 'A s\u00e9rie/ano escolar n\u00e3o possui componentes '
                                + 'curriculares cadastrados.';
   }
 
@@ -2254,7 +2254,7 @@ function atualizaLstEscolaCursoSerie(xml)
     }
   }
   else {
-    campoSerie.options[0].text = 'A escola/curso n\u00e3o possui nenhuma serie';
+    campoSerie.options[0].text = 'A escola/curso n\u00e3o possui nenhuma s\u00e9rie';
   }
 }
 
