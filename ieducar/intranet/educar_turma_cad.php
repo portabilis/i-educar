@@ -1609,7 +1609,7 @@ function getModulo_xml(xml)
 
   if (campoModulo.length == 1 && campoInstituicao != '') {
     campoModulo.options[0] = new Option(
-      'A institui\u00e7\u00e3o n\u00e3o possui nenhum modulo', '', false, false
+      'A institui\u00e7\u00e3o n\u00e3o possui nenhum m\u00f3dulo', '', false, false
     );
   }
 }
