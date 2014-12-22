@@ -22,7 +22,16 @@ function ajax( funcaoRetorno )
 			xml = new XMLHttpRequest();
 			xml.args = args;
 			xml.personalCallback = funcaoRetorno;
-			xml.onreadystatechange = function(){ if( xml.readyState > 3 ) { if ( xml.status == 200 ) { xml.personalCallback( xml.responseXML, xml.args ) } else { alert('Erro: '+xml.status); } } };
+			xml.onreadystatechange = function(){ 
+				if( xml.readyState > 3 ) { 
+					if ( xml.status == 200 ) { 
+						xml.personalCallback( xml.responseXML, xml.args ) 
+					} else if (xml.status == 500){
+						alert('Nenhuma discplina vinculada com essa Escola/S\u00e9rie!');
+					}else { 
+						alert('Erro: '+xml.status); 
+					} 
+				} };
 			xml.envia = function(){xml.open("GET",addRandToURL(arguments[0]),true);xml.send(null)};
 			return xml;
 		} catch(e)
