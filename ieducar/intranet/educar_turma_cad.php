@@ -155,7 +155,7 @@ class indice extends clsCadastro
     4  => 'Quarta',
     5  => 'Quinta',
     6  => 'Sexta',
-    7  => 'Sábado'
+    7  => 'S&aacute;bado'
   );
 
   function Inicializar()
@@ -1537,7 +1537,7 @@ function atualizaTurmaCad_TipoComodo(xml)
   }
   else {
     campoComodo.length = 1;
-    campoComodo.options[0] = new Option('A escola nao possui nenhuma Sala', '', false, false);
+    campoComodo.options[0] = new Option('A escola n\u00e3o possui nenhuma sala', '', false, false);
   }
 }
 
@@ -1571,7 +1571,7 @@ function atualizaTurmaCad_TipoTurma(xml)
   else {
     campoTipoTurma.length     = 1;
     campoTipoTurma.options[0] = new Option(
-      'A instituicao nao possui nenhum Tipo de Turma', '', false, false
+      'A instituicao n\u00e3o possui nenhum tipo de turma', '', false, false
     );
   }
 }
@@ -1609,7 +1609,7 @@ function getModulo_xml(xml)
 
   if (campoModulo.length == 1 && campoInstituicao != '') {
     campoModulo.options[0] = new Option(
-      'A Instituicao nao possui nenhum modulo', '', false, false
+      'A Instituicao n\u00e3o possui nenhum modulo', '', false, false
     );
   }
 }
@@ -1784,7 +1784,7 @@ function atualizaMultiSerie(xml)
   var campoSerie      = document.getElementById('ref_ref_cod_serie');
 
   campoSerieMult.length = 1;
-  campoSerieMult.options[0] = new Option('Selecione uma serie', '', false, false);
+  campoSerieMult.options[0] = new Option('Selecione uma s\u00e9rie', '', false, false);
 
   var multi_serie = xml.getElementsByTagName('serie');
 
@@ -1797,7 +1797,7 @@ function atualizaMultiSerie(xml)
   }
 
   if (campoSerieMult.length == 1 && campoCurso != '') {
-    campoSerieMult.options[0] = new Option('O curso nao possui nenhuma serie', '', false, false);
+    campoSerieMult.options[0] = new Option('O curso n\u00e3o possui nenhuma serie', '', false, false);
   }
 
   document.getElementById('ref_ref_cod_serie_mult').value = document.getElementById('ref_ref_cod_serie_mult_').value;
@@ -1865,7 +1865,7 @@ function parseComponentesCurriculares(xml_disciplina)
     }
   }
   else {
-    campoDisciplinas.innerHTML = 'A serie/ano escolar nao possui componentes '
+    campoDisciplinas.innerHTML = 'A serie/ano escolar n\u00e3o possui componentes '
                                + 'curriculares cadastrados.';
   }
 
@@ -2241,7 +2241,7 @@ function atualizaLstEscolaCursoSerie(xml)
 {
   var campoSerie             = document.getElementById('ref_ref_cod_serie');
   campoSerie.length          = 1;
-  campoSerie.options[0].text = 'Selecione uma serie';
+  campoSerie.options[0].text = 'Selecione uma s\u00e9rie';
   campoSerie.disabled        = false;
 
   series = xml.getElementsByTagName('serie');
@@ -2254,7 +2254,7 @@ function atualizaLstEscolaCursoSerie(xml)
     }
   }
   else {
-    campoSerie.options[0].text = 'A escola/curso nao possui nenhuma serie';
+    campoSerie.options[0].text = 'A escola/curso n\u00e3o possui nenhuma serie';
   }
 }
 
