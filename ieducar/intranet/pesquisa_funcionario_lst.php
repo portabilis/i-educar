@@ -71,10 +71,10 @@ class indice extends clsListagem
 		@session_write_close();
 		$submit = false;
 
-		$this->addCabecalhos( array( "Matr&iacute;cula", "Funcion&aacute;rio" ) );
+		$this->addCabecalhos( array( "Matr&iacute;cula", "CPF", "Funcion&aacute;rio" ) );
 
 		// Filtros de Busca
-		$this->campoTexto( "campo_busca", "Funcionário", "", 50, 255, false, false, false, "Matrícula/Nome do Funcionário" );
+		$this->campoTexto( "campo_busca", "Funcionário", "", 50, 255, false, false, false, "Matrícula/CPF/Nome do Funcionário" );
 		$this->campoOculto("com_matricula",$_GET['com_matricula']);
 
 		if ( $_GET['campo_busca'] )

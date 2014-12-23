@@ -100,6 +100,7 @@ class indice extends clsListagem
     $this->addCabecalhos( array(
       'Nome do Servidor',
       'Matrícula',
+      'CPF',
       'Instituição'
     ));
 
@@ -191,6 +192,7 @@ class indice extends clsListagem
           $registro['matricula'] = $det_cod_servidor['matricula'];
           $det_cod_servidor      = $det_cod_servidor['idpes']->detalhe();
           $registro['nome']      = $det_cod_servidor['nome'];
+          $registro['cpf']      = $det_cod_servidor['cpf'];
         }
         else {
           $registro['cod_servidor'] = 'Erro na geracao';
@@ -206,6 +208,7 @@ class indice extends clsListagem
         $this->addLinhas(array(
           $url->l($registro['nome'], $path, $options),
           $url->l($registro['matricula'], $path, $options),
+          $url->l($registro['cpf'], $path, $options),
           $url->l($registro['ref_cod_instituicao'], $path, $options),
         ));
       }
