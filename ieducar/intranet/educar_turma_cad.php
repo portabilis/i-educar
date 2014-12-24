@@ -1596,7 +1596,7 @@ function getModulo_xml(xml)
   var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
 
   campoModulo.length     = 1;
-  campoModulo.options[0] = new Option('Selecione um modulo', '', false, false);
+  campoModulo.options[0] = new Option('Selecione um m\u00f3dulo', '', false, false);
 
   var DOM_modulos = xml.getElementsByTagName('item');
 
@@ -1848,7 +1848,7 @@ function parseComponentesCurriculares(xml_disciplina)
     conteudo += '  <span style="display: block; float: left; width: 250px;">Nome</span>';
     conteudo += '  <label> <span style="display: block; float: left; width: 100px">Carga hor&aacute;ria </span></label>';
     conteudo += '  <label> <span style="display: block; float: left; width: 200px">Usar padr&atilde;o do componente?</span></label>';
-    conteudo += '  <label> <span style="display: block; float: left">Possui docente v&iacute;nculado?</span></label>';
+    conteudo += '  <label> <span style="display: block; float: left">Possui docente vinculado?</span></label>';
     conteudo += '</div>';
     conteudo += '<br style="clear: left" />';
 
