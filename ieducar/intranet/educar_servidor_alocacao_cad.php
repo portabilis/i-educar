@@ -254,28 +254,40 @@ class indice extends clsCadastro
       $obj_tmp->excluiAlocacoesServidor($this->ref_cod_servidor);
 
       foreach ($this->ref_cod_escola as $key => $value) {
-        $cargaHoraria = explode(':', $this->carga_horaria_alocada[$key]);
+        if (stripos($periodos_em_uso, $this->periodo[$key])){
+          $this->mensagem = 'Período de locação já em uso.<br />';
+          $this->alocacao_array = null;
+          foreach ($this->ref_cod_escola as $key => $value) {
+            $this->alocacao_array[$key][] = $value;
+            $this->alocacao_array[$key][] = $this->periodo[$key];
+            $this->alocacao_array[$key][] = $this->carga_horaria_alocada[$key];
+            $this->alocacao_array[$key][] = $this->cod_servidor_funcao[$key];  
+          }
+          return false;
+        }else{
+          $cargaHoraria = explode(':', $this->carga_horaria_alocada[$key]);
 
-        $hora    = isset($cargaHoraria[0]) ? $cargaHoraria[0] : 0;
-        $minuto  = isset($cargaHoraria[1]) ? $cargaHoraria[1] : 0;
-        $segundo = isset($cargaHoraria[2]) ? $cargaHoraria[2] : 0;
+          $hora    = isset($cargaHoraria[0]) ? $cargaHoraria[0] : 0;
+          $minuto  = isset($cargaHoraria[1]) ? $cargaHoraria[1] : 0;
+          $segundo = isset($cargaHoraria[2]) ? $cargaHoraria[2] : 0;
 
-        $cargaHoraria = sprintf("%'02d:%'02d:%'02d", $hora, $minuto, $segundo);
+          $cargaHoraria = sprintf("%'02d:%'02d:%'02d", $hora, $minuto, $segundo);
 
-        $obj = new clsPmieducarServidorAlocacao(NULL, $this->ref_ref_cod_instituicao,
-          NULL, $this->pessoa_logada, $value,
-          $this->ref_cod_servidor, NULL, NULL, $this->ativo,
-          $cargaHoraria, $this->periodo[$key], $this->cod_servidor_funcao[$key]);
+          $obj = new clsPmieducarServidorAlocacao(NULL, $this->ref_ref_cod_instituicao,
+            NULL, $this->pessoa_logada, $value,
+            $this->ref_cod_servidor, NULL, NULL, $this->ativo,
+            $cargaHoraria, $this->periodo[$key], $this->cod_servidor_funcao[$key]);        
+          $cadastrou = FALSE;
 
-        $cadastrou = FALSE;
-
-        $cadastrou = $obj->cadastra();
-
-        if (!$cadastrou) {
-          $this->mensagem = 'Cadastro não realizado.<br />';
-          echo "<!--\nErro ao cadastrar clsPmieducarServidorAlocacao\nvalores obrigatorios\nis_numeric($this->ref_ref_cod_instituicao) && is_numeric($this->ref_usuario_cad) && is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_servidor) && is_numeric($this->periodo) && ($this->carga_horaria_alocada)\n-->";
-          return FALSE;
-        }      
+          $cadastrou = $obj->cadastra();
+        
+          $periodos_em_uso = $periodos_em_uso.'-'.$this->periodo[$key];
+          if (!$cadastrou) {
+            $this->mensagem = 'Cadastro não realizado.<br />';
+            echo "<!--\nErro ao cadastrar clsPmieducarServidorAlocacao\nvalores obrigatorios\nis_numeric($this->ref_ref_cod_instituicao) && is_numeric($this->ref_usuario_cad) && is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_servidor) && is_numeric($this->periodo) && ($this->carga_horaria_alocada)\n-->";
+            return FALSE;
+          }
+        }    
       }
     }else{
       $this->mensagem = 'Não é possível alocar quantidade superior de horas do que o disponível.<br />';
