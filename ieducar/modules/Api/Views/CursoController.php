@@ -48,6 +48,8 @@ class CursoController extends ApiCoreController
       $instituicaoId = $this->getRequest()->instituicao_id;
       $escolaId = $this->getRequest()->escola_id;
       $getSeries = (bool)$this->getRequest()->get_series;
+      $getTurmas = (bool)$this->getRequest()->get_turmas;
+      $ano = $this->getRequest()->ano;
 
       if($escolaId){
         if(is_array($escolaId))
@@ -80,14 +82,30 @@ class CursoController extends ApiCoreController
       if($escolaId)
         $sqlSerie .= " AND es.ref_cod_escola IN ({$escolaId}) ";
 
+      $sqlTurma = "SELECT DISTINCT t.cod_turma, t.nm_turma                  
+                    FROM pmieducar.turma t
+                    WHERE t.ativo = 1 
+                    AND t.ref_ref_cod_escola IN ({$escolaId}) ";
+
       foreach ($cursos as &$curso) {
         $curso['nm_curso'] = Portabilis_String_Utils::toUtf8($curso['nm_curso']);
         if($getSeries){
           $series = $this->fetchPreparedQuery($sqlSerie . " AND s.ref_cod_curso = {$curso['cod_curso']} ORDER BY s.nm_serie ASC");
+
+          $attrs = array('cod_serie' => 'id', 'nm_serie' => 'nome');
           foreach ($series as &$serie) {
             $serie['nm_serie'] = Portabilis_String_Utils::toUtf8($serie['nm_serie']);
+
+            if($getTurmas && is_numeric($ano) && !empty($escolaId)){
+              $turmas = $this->fetchPreparedQuery($sqlTurma . " AND t.ref_cod_curso = {$curso['cod_curso']} AND t.ref_ref_cod_serie = {$serie['cod_serie']} ORDER BY t.nm_turma ASC");
+              foreach ($turmas as &$turma) {
+                $turma['nm_turma'] = Portabilis_String_Utils::toUtf8($turma['nm_turma']);
+              }
+              $attrs['turmas'] = 'turmas';
+              $serie['turmas'] = Portabilis_Array_Utils::filterSet($turmas, array('cod_turma', 'nm_turma'));
+            }
           }
-          $curso['series'] = Portabilis_Array_Utils::filterSet($series, array('cod_serie' => 'id', 'nm_serie' => 'nome'));
+          $curso['series'] = Portabilis_Array_Utils::filterSet($series, $attrs);
         }
       }
 
