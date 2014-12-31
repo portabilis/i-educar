@@ -984,11 +984,13 @@ if(!$this->isEnderecoExterno){
 					}
 
 					$this->campoNumero( "p_ddd_telefone_1", "DDD Telefone 1",  $this->p_ddd_telefone_1, 2, 2, false );
-					$this->campoNumero( "p_telefone_1", "Telefone 1",  $this->p_telefone_1, 10, 15, false );
+					$this->campoNumero( "p_telefone_1", "Telefone 1",  $this->p_telefone_1, 11, 11, false );
 					$this->campoNumero( "p_ddd_telefone_2", "DDD Telefone 2",  $this->p_ddd_telefone_2, 2, 2, false );
-					$this->campoNumero( "p_telefone_2", "Telefone",  $this->p_telefone_2, 10, 15, false );
+					$this->campoNumero( "p_telefone_2", "Telefone 2",  $this->p_telefone_2, 11, 11, false );
+					$this->campoNumero( "p_ddd_telefone_mov", "DDD Celular",  $this->p_ddd_telefone_mov, 2, 2, false );
+					$this->campoNumero( "p_telefone_mov", "Celular",  $this->p_telefone_mov, 11, 11, false );
 					$this->campoNumero( "p_ddd_telefone_fax", "DDD Fax",  $this->p_ddd_telefone_fax, 2, 2, false );
-					$this->campoNumero( "p_telefone_fax", "Fax",  $this->p_telefone_fax, 10, 15, false );
+					$this->campoNumero( "p_telefone_fax", "Fax",  $this->p_telefone_fax, 11, 11, false );
 					$this->campoTexto( "p_http", "Site",  $this->p_http, "50", "255", false );
 					$this->campoTexto( "p_email", "E-mail",  $this->p_email, "50", "255", false );
 
