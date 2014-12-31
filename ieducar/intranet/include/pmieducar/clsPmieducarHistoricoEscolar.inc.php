@@ -457,7 +457,7 @@ class clsPmieducarHistoricoEscolar
 			if( is_string( $this->observacao ) )
 			{
 				$campos .= "{$gruda}observacao";
-				$valores .= "{$gruda}'{$this->observacao}'";
+				$valores .= "{$gruda}$$'{$this->observacao}'$$";
 				$gruda = ", ";
 			}
 			if( is_numeric( $this->aprovado ) )
@@ -487,28 +487,28 @@ class clsPmieducarHistoricoEscolar
 			if( is_string( $this->registro ))
 			{
 				$campos .= "{$gruda}registro";
-				$valores .= "{$gruda}'{$this->registro}'";
+				$valores .= "{$gruda}$$'{$this->registro}'$$";
 				$gruda = ", ";
 			}
 
 			if( is_string( $this->livro ))
 			{
 				$campos .= "{$gruda}livro";
-				$valores .= "{$gruda}'{$this->livro}'";
+				$valores .= "{$gruda}$$'{$this->livro}'$$";
 				$gruda = ", ";
 			}
 
 			if( is_string( $this->folha ))
 			{
 				$campos .= "{$gruda}folha";
-				$valores .= "{$gruda}'{$this->folha}'";
+				$valores .= "{$gruda}$$'{$this->folha}'$$";
 				$gruda = ", ";
 			}
 
 			if( is_string( $this->nm_curso ))
 			{
 				$campos .= "{$gruda}nm_curso";
-				$valores .= "{$gruda}'{$this->nm_curso}'";
+				$valores .= "{$gruda}$$'{$this->nm_curso}'$$";
 				$gruda = ", ";
 			}
 
@@ -630,7 +630,7 @@ class clsPmieducarHistoricoEscolar
 			}
 			if( is_string( $this->observacao ) )
 			{
-				$set .= "{$gruda}observacao = '{$this->observacao}'";
+				$set .= "{$gruda}observacao = $$'{$this->observacao}'$$";
 				$gruda = ", ";
 			}
 			if( is_numeric( $this->aprovado ) )
@@ -673,25 +673,25 @@ class clsPmieducarHistoricoEscolar
 
 			if( is_string( $this->registro))
 			{
-				$set .= "{$gruda}registro = '{$this->registro}'";
+				$set .= "{$gruda}registro = $$'{$this->registro}'$$";
 				$gruda = ", ";
 			}
 
 			if( is_string( $this->livro))
 			{
-				$set .= "{$gruda}livro = '{$this->livro}'";
+				$set .= "{$gruda}livro = $$'{$this->livro}'$$";
 				$gruda = ", ";
 			}
 
 			if( is_string( $this->folha))
 			{
-				$set .= "{$gruda}folha = '{$this->folha}'";
+				$set .= "{$gruda}folha = $$'{$this->folha}'$$";
 				$gruda = ", ";
 			}
 
 			if( is_string( $this->nm_curso))
 			{
-				$set .= "{$gruda}nm_curso = '{$this->nm_curso}'";
+				$set .= "{$gruda}nm_curso = $$'{$this->nm_curso}'$$";
 				$gruda = ", ";
 			}
 
