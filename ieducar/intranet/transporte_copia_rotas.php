@@ -75,7 +75,7 @@ class indice extends clsCadastro {
 			null,
 			$this->nome_destino,
 			$this->ano,
-			$this->ref_cod_empresa_transporte_escolar
+			null
 		);
 		if ( is_array( $lista ) && count( $lista ) ){
 			foreach ( $lista as $registro ){
@@ -168,7 +168,7 @@ class indice extends clsCadastro {
       		echo"<script LANGUAGE=\"JavaScript\">alert(\"C\u00f3pia efetuada com sucesso.\");</script>";
       		return true;
 		}else{
-			$this->mensagem = "N&atilde;o existe rotas anteriores para essa empresa.<br>";
+			$this->mensagem = "N&atilde;o existe rotas em $this->ano_orig para essa empresa.<br>";
 			return false;
 		}
 	}
