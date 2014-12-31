@@ -29,15 +29,7 @@ class indice extends clsCadastro {
 	 */
 	var $pessoa_logada;
 
-	var $ano_orig;
-	var $ano_dest;
-	var $ref_idpes_destino;
-	var $descricao;
-	var $tipo_rota;
-	var $km_pav;
-	var $km_npav;
-	var $tercerizado;
-	var $ref_cod_empresa_transporte_escolar;
+ 	var $nome_url_sucesso = "Efetuar c&oacute;pia";
 
 	function Inicializar(){
 
