@@ -255,7 +255,7 @@ class indice extends clsCadastro
 
       foreach ($this->ref_cod_escola as $key => $value) {
         if (stripos($periodos_em_uso, $this->periodo[$key])){
-          $this->mensagem = 'Período de locação já em uso.<br />';
+          $this->mensagem = 'Período informado já foi alocado para outra escola. Por favor, selecione outro.<br />';
           $this->alocacao_array = null;
           foreach ($this->ref_cod_escola as $key => $value) {
             $this->alocacao_array[$key][] = $value;
