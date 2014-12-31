@@ -50,6 +50,7 @@ class CursoController extends ApiCoreController
       $getSeries = (bool)$this->getRequest()->get_series;
       $getTurmas = (bool)$this->getRequest()->get_turmas;
       $ano = $this->getRequest()->ano;
+      $turnoId = $this->getRequest()->turno_id;
 
       if($escolaId){
         if(is_array($escolaId))
@@ -97,7 +98,9 @@ class CursoController extends ApiCoreController
             $serie['nm_serie'] = Portabilis_String_Utils::toUtf8($serie['nm_serie']);
 
             if($getTurmas && is_numeric($ano) && !empty($escolaId)){
-              $turmas = $this->fetchPreparedQuery($sqlTurma . " AND t.ref_cod_curso = {$curso['cod_curso']} AND t.ref_ref_cod_serie = {$serie['cod_serie']} ORDER BY t.nm_turma ASC");
+              $turmas = $this->fetchPreparedQuery($sqlTurma . " AND t.ref_cod_curso = {$curso['cod_curso']} AND t.ref_ref_cod_serie = {$serie['cod_serie']}
+                  ".(is_numeric($turnoId) ? " AND t.turma_turno_id = {$turnoId} " : "") ."
+               ORDER BY t.nm_turma ASC");
               foreach ($turmas as &$turma) {
                 $turma['nm_turma'] = Portabilis_String_Utils::toUtf8($turma['nm_turma']);
               }
