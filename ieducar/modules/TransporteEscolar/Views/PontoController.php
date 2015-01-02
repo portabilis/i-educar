@@ -216,9 +216,9 @@ class PontoController extends Portabilis_Controller_Page_EditController
 
     $this->inputsHelper()->text('complemento', $options);
 
-    $this->inputsHelper()->text('latitude');
+    $this->inputsHelper()->text('latitude', array('required' => false));
 
-    $this->inputsHelper()->text('longitude');
+    $this->inputsHelper()->text('longitude', array('required' => false));
 
     $script = array('/modules/Cadastro/Assets/Javascripts/Endereco.js',
                     '/lib/Utils/gmaps.js',
