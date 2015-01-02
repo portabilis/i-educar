@@ -159,18 +159,19 @@ class indice extends clsDetalhe
 					{
 						if ($telefone["tipo"] == 1 )
 						{
-							$ddd_telefone_1 = $telefone["ddd"];
-							$telefone_1 = $telefone["fone"];
+							$telefone_1 = "(".$telefone["ddd"].") ".$telefone["fone"];
 						}
 						else if ($telefone["tipo"] == 2 )
 						{
-							$ddd_telefone_2 = $telefone["ddd"];
-							$telefone_2 = $telefone["fone"];
+							$telefone_2 = "(".$telefone["ddd"].") ".$telefone["fone"];
+						}
+						else if ($telefone["tipo"] == 3 )
+						{
+							$telefone_mov = "(".$telefone["ddd"].") ".$telefone["fone"];
 						}
 						else if ($telefone["tipo"] == 4 )
 						{
-							$ddd_telefone_fax = $telefone["ddd"];
-							$telefone_fax = $telefone["fone"];
+							$telefone_fax = "(".$telefone["ddd"].") ".$telefone["fone"];
 						}
 					}
 				}
@@ -297,25 +298,17 @@ class indice extends clsDetalhe
 			{
 				$this->addDetalhe( array( "E-mail", "{$email}") );
 			}
-			if( $ddd_telefone_1 )
-			{
-				$this->addDetalhe( array( "DDD Telefone 1", "{$ddd_telefone_1}") );
-			}
 			if( $telefone_1 )
 			{
 				$this->addDetalhe( array( "Telefone 1", "{$telefone_1}") );
-			}
-			if( $ddd_telefone_2 )
-			{
-				$this->addDetalhe( array( "DDD Telefone 2", "{$ddd_telefone_2}") );
 			}
 			if( $telefone_2 )
 			{
 				$this->addDetalhe( array( "Telefone 2", "{$telefone_2}") );
 			}
-			if( $ddd_telefone_fax )
+			if( $telefone_mov )
 			{
-				$this->addDetalhe( array( "DDD Fax", "{$ddd_telefone_fax}") );
+				$this->addDetalhe( array( "Celular", "{$telefone_mov}") );
 			}
 			if( $telefone_fax )
 			{
@@ -369,25 +362,17 @@ class indice extends clsDetalhe
 			{
 				$this->addDetalhe( array( "E-mail", "{$email}") );
 			}
-			if( $ddd_telefone_1 )
-			{
-				$this->addDetalhe( array( "DDD Telefone 1", "{$ddd_telefone_1}") );
-			}
 			if( $telefone_1 )
 			{
 				$this->addDetalhe( array( "Telefone 1", "{$telefone_1}") );
-			}
-			if( $ddd_telefone_2 )
-			{
-				$this->addDetalhe( array( "DDD Telefone 2", "{$ddd_telefone_2}") );
 			}
 			if( $telefone_2 )
 			{
 				$this->addDetalhe( array( "Telefone 2", "{$telefone_2}") );
 			}
-			if( $ddd_telefone_fax )
+			if( $telefone_mov )
 			{
-				$this->addDetalhe( array( "DDD Fax", "{$ddd_telefone_fax}") );
+				$this->addDetalhe( array( "Celular", "{$telefone_mov}") );
 			}
 			if( $telefone_fax )
 			{
@@ -426,17 +411,9 @@ class indice extends clsDetalhe
 			{
 				$this->addDetalhe( array( "E-mail", "{$email}") );
 			}
-			if( $ddd_telefone )
-			{
-				$this->addDetalhe( array( "DDD Telefone", "{$ddd_telefone}") );
-			}
 			if( $telefone )
 			{
 				$this->addDetalhe( array( "Telefone", "{$telefone}") );
-			}
-			if( $ddd_telefone_fax )
-			{
-				$this->addDetalhe( array( "DDD Fax", "{$ddd_telefone_fax}") );
 			}
 			if( $telefone_fax )
 			{
