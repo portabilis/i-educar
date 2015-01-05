@@ -355,11 +355,6 @@ class clsPmieducarHistoricoEscolar
 	 */
 	function cadastra()
 	{
-		function carac_especial($string_campo){
-			$procurar_por = array("'", "#");
-			$string_campo = str_replace ($procurar_por , "\'" , $string_campo );
-			return $string_campo;
-		}
 		if( is_numeric( $this->ref_cod_aluno ) && is_numeric( $this->ref_usuario_cad ) && is_string( $this->nm_serie ) && is_numeric( $this->ano  )&& is_string( $this->escola ) && is_string( $this->escola_cidade ) && is_numeric( $this->aprovado ) && is_numeric( $this->ref_cod_instituicao ))
 		{
 			$db = new clsBanco();
@@ -441,12 +436,14 @@ class clsPmieducarHistoricoEscolar
 				$valores .= "{$gruda}NULL";
 				$gruda = ", ";
 			}
+			$this->escola = addslashes($this->escola);
 			if( is_string( $this->escola ) )
 			{
 				$campos .= "{$gruda}escola";
 				$valores .= "{$gruda}'{$this->escola}'";
 				$gruda = ", ";
 			}
+			$this->escola_cidade = addslashes($this->escola_cidade);
 			if( is_string( $this->escola_cidade ) )
 			{
 				$campos .= "{$gruda}escola_cidade";
@@ -459,7 +456,7 @@ class clsPmieducarHistoricoEscolar
 				$valores .= "{$gruda}'{$this->escola_uf}'";
 				$gruda = ", ";
 			}
-			$this->observacao = carac_especial($this->observacao);
+			$this->observacao = addslashes($this->observacao);
 			if( is_string( $this->observacao ) )
 			{
 				$campos .= "{$gruda}observacao";
@@ -490,28 +487,28 @@ class clsPmieducarHistoricoEscolar
 				$valores .= "{$gruda}NULL";
 				$gruda = ", ";
 			}
-			$this->registro = carac_especial($this->registro);
+			$this->registro = addslashes($this->registro);
 			if( is_string( $this->registro ))
 			{
 				$campos .= "{$gruda}registro";
 				$valores .= "{$gruda}'{$this->registro}'";
 				$gruda = ", ";
 			}
-			$this->livro = carac_especial($this->livro);
+			$this->livro = addslashes($this->livro);
 			if( is_string( $this->livro ))
 			{
 				$campos .= "{$gruda}livro";
 				$valores .= "{$gruda}'{$this->livro}'";
 				$gruda = ", ";
 			}
-			$this->folha = carac_especial($this->folha);
+			$this->folha = addslashes($this->folha);
 			if( is_string( $this->folha ))
 			{
 				$campos .= "{$gruda}folha";
 				$valores .= "{$gruda}'{$this->folha}'";
 				$gruda = ", ";
 			}
-			$this->nm_curso = carac_especial($this->nm_curso);
+			$this->nm_curso = addslashes($this->nm_curso);
 			if( is_string( $this->nm_curso ))
 			{
 				$campos .= "{$gruda}nm_curso";
@@ -554,11 +551,6 @@ class clsPmieducarHistoricoEscolar
 	 */
 	function edita()
 	{
-		function carac_especial($string_campo){
-			$procurar_por = array("'", "#");
-			$string_campo = str_replace ($procurar_por , "\'" , $string_campo );
-			return $string_campo;
-		}
 		if( is_numeric( $this->ref_cod_aluno ) && is_numeric( $this->sequencial ) && is_numeric( $this->ref_usuario_exc ) )
 		{
 
@@ -625,11 +617,13 @@ class clsPmieducarHistoricoEscolar
 				$set .= "{$gruda}dias_letivos = NULL";
 				$gruda = ", ";
 			}
+			$this->escola = addslashes ($this->escola);
 			if( is_string( $this->escola ) )
 			{
 				$set .= "{$gruda}escola = '{$this->escola}'";
 				$gruda = ", ";
 			}
+			$this->escola_cidade = addslashes($this->escola_cidade);
 			if( is_string( $this->escola_cidade ) )
 			{
 				$set .= "{$gruda}escola_cidade = '{$this->escola_cidade}'";
@@ -640,7 +634,7 @@ class clsPmieducarHistoricoEscolar
 				$set .= "{$gruda}escola_uf = '{$this->escola_uf}'";
 				$gruda = ", ";
 			}
-			$this->observacao = carac_especial($this->observacao);
+			$this->observacao = addslashes($this->observacao);
 			if( is_string( $this->observacao ) )
 			{
 				$set .= "{$gruda}observacao = '{$this->observacao}'";
@@ -683,25 +677,25 @@ class clsPmieducarHistoricoEscolar
 				$set .= "{$gruda}faltas_globalizadas = NULL";
 				$gruda = ", ";
 			}
-			$this->registro = carac_especial($this->registro);
+			$this->registro = addslashes($this->registro);
 			if( is_string( $this->registro))
 			{
 				$set .= "{$gruda}registro = '{$this->registro}'";
 				$gruda = ", ";
 			}
-			$this->livro = carac_especial($this->livro);
+			$this->livro = addslashes($this->livro);
 			if( is_string( $this->livro))
 			{
 				$set .= "{$gruda}livro = '{$this->livro}'";
 				$gruda = ", ";
 			}
-			$this->folha = carac_especial($this->folha);
+			$this->folha = addslashes($this->folha);
 			if( is_string( $this->folha))
 			{
 				$set .= "{$gruda}folha = '{$this->folha}'";
 				$gruda = ", ";
 			}
-			$this->nm_curso = carac_especial($this->nm_curso);
+			$this->nm_curso = addslashes($this->nm_curso);
 			if( is_string( $this->nm_curso))
 			{
 				$set .= "{$gruda}nm_curso = '{$this->nm_curso}'";
