@@ -790,7 +790,7 @@ function enturmacaoMatricula($matriculaId, $turmaDestinoId) {
 
     // Caso a capacidade de alunos naquele turno seja menor ou igual ao ao número de alunos matrículados + alunos na reserva de vaga externa deve bloquear
     if ($this->_getMaxAlunoTurno() <= ($this->_getQtdAlunosFila() + $this->_getQtdMatriculaTurno() )){
-      $this->mensagem .= Portabilis_String_Utils::toLatin1("max turno = {$this->_getMaxAlunoTurno()}, na fila = {$this->_getQtdAlunosFila()}, gtd matricula = {$this->_getQtdMatriculaTurno()}  Não existem vagas disponíveis para essa série/turno!") . '<br/>';
+      $this->mensagem .= Portabilis_String_Utils::toLatin1("Não existem vagas disponíveis para essa série/turno!") . '<br/>';
       return false;
     }
 
