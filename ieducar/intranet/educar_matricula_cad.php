@@ -790,7 +790,7 @@ function enturmacaoMatricula($matriculaId, $turmaDestinoId) {
 
     // Caso a capacidade de alunos naquele turno seja menor ou igual ao ao número de alunos matrículados + alunos na reserva de vaga externa deve bloquear
     if ($this->_getMaxAlunoTurno() <= ($this->_getQtdAlunosFila() + $this->_getQtdMatriculaTurno() )){
-      $this->mensagem .= Portabilis_String_Utils::toLatin1("Não existem vagas disponíveis para essa série/turno!") . '<br/>';
+      $this->mensagem .= Portabilis_String_Utils::toLatin1("max turno = {$this->_getMaxAlunoTurno()}, na fila = {$this->_getQtdAlunosFila()}, gtd matricula = {$this->_getQtdMatriculaTurno()}  Não existem vagas disponíveis para essa série/turno!") . '<br/>';
       return false;
     }
 
@@ -799,7 +799,8 @@ function enturmacaoMatricula($matriculaId, $turmaDestinoId) {
 
   function _getQtdMatriculaTurma(){
     $obj_mt = new clsPmieducarMatriculaTurma();
-    return count($obj_mt->lista(NULL, $this->ref_cod_turma));
+    $ativo = 1;
+    return count($obj_mt->lista(NULL, $this->ref_cod_turma, NULL, NULL, NULL, NULL, NULL, NULL, $ativo));
   }
 
   function _getMaxAlunoTurma(){
@@ -848,7 +849,7 @@ function enturmacaoMatricula($matriculaId, $turmaDestinoId) {
     return (int) count($obj_mt->lista($int_ref_cod_matricula = NULL, $int_ref_cod_turma = NULL,
               $int_ref_usuario_exc = NULL, $int_ref_usuario_cad = NULL,
               $date_data_cadastro_ini = NULL, $date_data_cadastro_fim = NULL,
-              $date_data_exclusao_ini = NULL, $date_data_exclusao_fim = NULL, $int_ativo = NULL,
+              $date_data_exclusao_ini = NULL, $date_data_exclusao_fim = NULL, $int_ativo = 1,
               $int_ref_cod_serie = $this->ref_cod_serie, $int_ref_cod_curso = $this->ref_cod_curso, $int_ref_cod_escola = $this->ref_cod_escola,
               $int_ref_cod_instituicao = NULL, $int_ref_cod_aluno = NULL, $mes = NULL,
               $aprovado = NULL, $mes_menor_que = NULL, $int_sequencial = NULL,
