@@ -171,6 +171,7 @@ class PreMatriculaController extends ApiCoreController
     $fisica                       = new clsFisica();
     $fisica->idpes                = $pessoaId;
     $fisica->data_nasc            = $dataNascimento;
+    $fisica->idpes_cad            = 1;
 
     $sql = "select 1 from cadastro.fisica WHERE idpes = $1 limit 1";
 
@@ -184,10 +185,10 @@ class PreMatriculaController extends ApiCoreController
     if(is_numeric($pessoaResponsavelId) && is_numeric($pessoaMaeId))
       $fisica->idpes_mae = $pessoaMaeId;
 
-    // if (Portabilis_Utils_Database::selectField($sql, $pessoaId) != 1)
+    if (Portabilis_Utils_Database::selectField($sql, $pessoaId) != 1)
       $fisica->cadastra();
-    // else
-      // $fisica->edita();
+    else
+      $fisica->edita();
   }
 
   protected function createOrUpdatePessoaFisicaResponsavel($pessoaId, $cpf) {
