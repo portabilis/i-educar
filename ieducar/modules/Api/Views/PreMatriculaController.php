@@ -174,14 +174,14 @@ class PreMatriculaController extends ApiCoreController
 
     $sql = "select 1 from cadastro.fisica WHERE idpes = $1 limit 1";
 
-    if(is_numeric($pessoaResponsavelId))
+    if(isset($pessoaResponsavelId))
       $fisica->idpes_responsavel = $pessoaResponsavelId;
-    elseif(is_numeric($pessoaMaeId)){
+    elseif(isset($pessoaMaeId)){
       $fisica->idpes_mae = $pessoaMaeId;
       $fisica->idpes_responsavel = $pessoaMaeId;
     }
 
-    if(is_numeric($pessoaResponsavelId) && is_numeric($pessoaMaeId))
+    if(isset($pessoaResponsavelId) && isset($pessoaMaeId))
       $fisica->idpes_mae = $pessoaMaeId;
 
     if (Portabilis_Utils_Database::selectField($sql, $pessoaId) != 1)
