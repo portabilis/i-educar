@@ -101,7 +101,7 @@ class PreMatriculaController extends ApiCoreController
       if(is_array($deficiencias))
         $this->updateDeficiencias($pessoaAlunoId, $deficiencias);
 
-      $this->cadastraMatricula($escolaId, $serieId, $anoLetivo, $cursoId, $alunoId, $turmaId);
+      return $this->cadastraMatricula($escolaId, $serieId, $anoLetivo, $cursoId, $alunoId, $turmaId);
 
       // @TODO CRIAR/GRAVAR ENDEREÇO
     }
