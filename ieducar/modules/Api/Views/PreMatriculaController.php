@@ -174,20 +174,20 @@ class PreMatriculaController extends ApiCoreController
 
     $sql = "select 1 from cadastro.fisica WHERE idpes = $1 limit 1";
 
-    // if(is_numeric($pessoaResponsavelId))
-    //   $fisica->idpes_responsavel = $pessoaResponsavelId;
-    // elseif(is_numeric($pessoaMaeId)){
-    //   $fisica->idpes_mae = $pessoaMaeId;
-    //   $fisica->idpes_responsavel = $pessoaMaeId;
-    // }
+    if(is_numeric($pessoaResponsavelId))
+      $fisica->idpes_responsavel = $pessoaResponsavelId;
+    elseif(is_numeric($pessoaMaeId)){
+      $fisica->idpes_mae = $pessoaMaeId;
+      $fisica->idpes_responsavel = $pessoaMaeId;
+    }
 
-    // if(is_numeric($pessoaResponsavelId) && is_numeric($pessoaMaeId))
-    //   $fisica->idpes_mae = $pessoaMaeId;
+    if(is_numeric($pessoaResponsavelId) && is_numeric($pessoaMaeId))
+      $fisica->idpes_mae = $pessoaMaeId;
 
-    if (Portabilis_Utils_Database::selectField($sql, $pessoaId) != 1)
+    // if (Portabilis_Utils_Database::selectField($sql, $pessoaId) != 1)
       $fisica->cadastra();
-    else
-      $fisica->edita();
+    // else
+      // $fisica->edita();
   }
 
   protected function createOrUpdatePessoaFisicaResponsavel($pessoaId, $cpf) {
