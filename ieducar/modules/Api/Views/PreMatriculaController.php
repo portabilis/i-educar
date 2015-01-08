@@ -124,7 +124,7 @@ class PreMatriculaController extends ApiCoreController
                                                  1);
     $enturmacao->data_enturmacao = date('Y-m-d');
     $enturmacao->cadastra();
-    return $enturmacao->cod_matricula;
+    return $matriculaId;
   }
 
   protected function updateDeficiencias($pessoaId, $deficiencias) {
