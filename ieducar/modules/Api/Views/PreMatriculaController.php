@@ -123,7 +123,7 @@ class PreMatriculaController extends ApiCoreController
                                                  NULL,
                                                  1);
     $enturmacao->data_enturmacao = date('Y-m-d');
-    $enturmacao->cadastra();
+    return $enturmacao->cadastra();
   }
 
   protected function updateDeficiencias($pessoaId, $deficiencias) {
