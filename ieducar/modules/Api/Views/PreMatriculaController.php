@@ -221,6 +221,7 @@ class PreMatriculaController extends ApiCoreController
     return $max_aluno_turmas;
   }
 
+<<<<<<< HEAD
   function _getQtdAlunosFila($ano, $escolaId, $cursoId, $serieId, $turnoId){
 
     $sql = 'SELECT count(1) as qtd
@@ -259,6 +260,13 @@ class PreMatriculaController extends ApiCoreController
         && $this->validatesPresenceOf('serie_id') && $this->validatesPresenceOf('escola_id')
         && $this->validatesPresenceOf('turma_id') && $this->validatesPresenceOf('nome_aluno')
         && $this->validatesPresenceOf('data_nasc_aluno') && $this->validatesPresenceOf('sexo_aluno')
+=======
+  protected function canMatricularCandidato(){
+    return $this->validatesPresenceOf('ano_letivo') && $this->validatesPresenceOf('curso_id')
+        && $this->validatesPresenceOf('serie_id') && $this->validatesPresenceOf('escola_id')
+        && $this->validatesPresenceOf('turma_id') && $this->validatesPresenceOf('nome_aluno')
+        && $this->validatesPresenceOf('data_nasc_aluno')
+>>>>>>> 2028e76... Alterado API de matricula externa:
         && $this->validatesPresenceOf('cep') && $this->validatesPresenceOf('rua')
         && $this->validatesPresenceOf('numero') && $this->validatesPresenceOf('bairro')
         && $this->validatesPresenceOf('cidade') && $this->validatesPresenceOf('estado') && $this->validatesPresenceOf('pais');
@@ -287,6 +295,7 @@ class PreMatriculaController extends ApiCoreController
 
       // Dados do endereço
       $cep = $this->getRequest()->cep;
+<<<<<<< HEAD
       $rua = Portabilis_String_utils::toLatin1($this->getRequest()->rua);
       $numero = $this->getRequest()->numero;
       $complemento = Portabilis_String_utils::toLatin1($this->getRequest()->complemento);
@@ -294,6 +303,15 @@ class PreMatriculaController extends ApiCoreController
       $cidade = Portabilis_String_utils::toLatin1($this->getRequest()->cidade);
       $estado = Portabilis_String_utils::toLatin1($this->getRequest()->estado);
       $pais = Portabilis_String_utils::toLatin1($this->getRequest()->pais);
+=======
+      $rua = $this->getRequest()->rua;
+      $numero = $this->getRequest()->numero;
+      $complemento = $this->getRequest()->complemento;
+      $bairro = $this->getRequest()->bairro;
+      $cidade = $this->getRequest()->cidade;
+      $estado = $this->getRequest()->estado;
+      $pais = $this->getRequest()->pais;
+>>>>>>> 2028e76... Alterado API de matricula externa:
 
       $pessoaAlunoId = $this->createPessoa($nomeAluno);
       $pessoaMaeId = null;
