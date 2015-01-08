@@ -41,14 +41,13 @@ class PreMatriculaController extends ApiCoreController
 {
 
   protected function canMatricularCandidato(){
-    return $this->validatesPresenceOf('ano_letivo') && $this->validatesPresenceOf('curso_id') 
+    return $this->validatesPresenceOf('ano_letivo') && $this->validatesPresenceOf('curso_id')
         && $this->validatesPresenceOf('serie_id') && $this->validatesPresenceOf('escola_id')
         && $this->validatesPresenceOf('turma_id') && $this->validatesPresenceOf('nome_aluno')
-        && $this->validatesPresenceOf('data_nasc_aluno')        
+        && $this->validatesPresenceOf('data_nasc_aluno')
         && $this->validatesPresenceOf('cep') && $this->validatesPresenceOf('rua')
-        && $this->validatesPresenceOf('numero') && $this->validatesPresenceOf('complemento')
-        && $this->validatesPresenceOf('bairro') && $this->validatesPresenceOf('cidade')
-        && $this->validatesPresenceOf('estado') && $this->validatesPresenceOf('pais');
+        && $this->validatesPresenceOf('numero') && $this->validatesPresenceOf('bairro')
+        && $this->validatesPresenceOf('cidade') && $this->validatesPresenceOf('estado') && $this->validatesPresenceOf('pais');
   }
 
   protected function matricularCandidato(){
@@ -72,15 +71,15 @@ class PreMatriculaController extends ApiCoreController
       $cpfResponsavel = $this->getRequest()->cpf_responsavel;
 
       // Dados do endereço
-      $cep = $this->getRequest()->cep;      
-      $rua = $this->getRequest()->rua;      
+      $cep = $this->getRequest()->cep;
+      $rua = $this->getRequest()->rua;
       $numero = $this->getRequest()->numero;
       $complemento = $this->getRequest()->complemento;
       $bairro = $this->getRequest()->bairro;
       $cidade = $this->getRequest()->cidade;
       $estado = $this->getRequest()->estado;
       $pais = $this->getRequest()->pais;
-      
+
       $pessoaAlunoId = $this->createPessoa($nomeAluno);
       $pessoaMaeId = null;
       $pessoaResponsavelId = null;
@@ -92,7 +91,7 @@ class PreMatriculaController extends ApiCoreController
 
       if(is_numeric($cpfResponsavel)){
         $pessoaResponsavelId = $this->createOrUpdatePessoaResponsavel($cpfResponsavel, $nomeResponsavel);
-        $this->createOrUpdatePessoaFisicaResponsavel($pessoaResponsavelId, $cpfResponsavel);  
+        $this->createOrUpdatePessoaFisicaResponsavel($pessoaResponsavelId, $cpfResponsavel);
       }
 
       $this->createOrUpdatePessoaFisica($pessoaAlunoId, $pessoaResponsavelId, $pessoaMaeId, $dataNascimento);
@@ -104,7 +103,7 @@ class PreMatriculaController extends ApiCoreController
 
       $this->cadastraMatricula($escolaId, $serieId, $anoLetivo, $cursoId, $alunoId, $turmaId);
 
-      // @TODO CRIAR/GRAVAR ENDEREÇO      
+      // @TODO CRIAR/GRAVAR ENDEREÇO
     }
   }
 
@@ -121,7 +120,7 @@ class PreMatriculaController extends ApiCoreController
                                                 1,
                                                  1,
                                                  NULL,
-                                                 NULL, 
+                                                 NULL,
                                                  1);
     $enturmacao->data_enturmacao = date('Y-m-d');
     $enturmacao->cadastra();
@@ -176,7 +175,7 @@ class PreMatriculaController extends ApiCoreController
     $sql = "select 1 from cadastro.fisica WHERE idpes = $1 limit 1";
 
     if(is_numeric($pessoaResponsavelId))
-      $fisica->idpes_responsavel = $pessoaResponsavelId;    
+      $fisica->idpes_responsavel = $pessoaResponsavelId;
     elseif(is_numeric($pessoaMaeId)){
       $fisica->idpes_mae = $pessoaMaeId;
       $fisica->idpes_responsavel = $pessoaMaeId;
