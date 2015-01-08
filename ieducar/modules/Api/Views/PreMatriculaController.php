@@ -101,7 +101,7 @@ class PreMatriculaController extends ApiCoreController
       if(is_array($deficiencias))
         $this->updateDeficiencias($pessoaAlunoId, $deficiencias);
 
-      return $this->cadastraMatricula($escolaId, $serieId, $anoLetivo, $cursoId, $alunoId, $turmaId);
+      return array("cod_matricula" => $this->cadastraMatricula($escolaId, $serieId, $anoLetivo, $cursoId, $alunoId, $turmaId));
 
       // @TODO CRIAR/GRAVAR ENDEREÇO
     }
@@ -123,7 +123,8 @@ class PreMatriculaController extends ApiCoreController
                                                  NULL,
                                                  1);
     $enturmacao->data_enturmacao = date('Y-m-d');
-    return $enturmacao->cadastra();
+    $enturmacao->cadastra();
+    return $enturmacao->cod_matricula;
   }
 
   protected function updateDeficiencias($pessoaId, $deficiencias) {
