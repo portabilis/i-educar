@@ -126,7 +126,7 @@ class EscolaController extends ApiCoreController
                 INNER JOIN pmieducar.escola_serie es ON (es.ref_cod_escola = e.cod_escola)
                 INNER JOIN pmieducar.serie s ON (s.cod_serie = es.ref_cod_serie)
                 INNER JOIN pmieducar.turma t ON (s.cod_serie = t.ref_ref_cod_serie AND t.ref_ref_cod_escola = e.cod_escola )
-
+                INNER JOIN pmieducar.escola_ano_letivo eal ON(e.cod_escola = eal.ref_cod_escola)
                 WHERE t.ano = $1
                 AND t.turma_turno_id = $2
                 AND c.cod_curso = $3
@@ -137,7 +137,10 @@ class EscolaController extends ApiCoreController
                 AND e.ativo = 1
                 AND es.ativo = 1
                 AND s.ativo = 1
-                AND t.ativo = 1 ";
+                AND t.ativo = 1
+                AND eal.ativo = 1
+                AND eal.andamento = 1
+				AND eal.ano = $1";
       $escolaIds = $this->fetchPreparedQuery($sql, array($ano, $turmaTurnoId, $cursoId, $instituicaoId, $serieId));
 
       $attrs = array('cod_escola');
