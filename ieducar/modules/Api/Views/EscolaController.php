@@ -197,7 +197,7 @@ class EscolaController extends ApiCoreController
               $int_ref_usuario_exc = NULL, $int_ref_usuario_cad = NULL,
               $date_data_cadastro_ini = NULL, $date_data_cadastro_fim = NULL,
               $date_data_exclusao_ini = NULL, $date_data_exclusao_fim = NULL, $int_ativo = 1,
-              $int_ref_cod_serie = $this->ref_cod_serie, $int_ref_cod_curso = $this->getRequest()->curso_id,
+              $int_ref_cod_serie = $this->getRequest()->serie_id, $int_ref_cod_curso = $this->getRequest()->curso_id,
               $int_ref_cod_escola = $escolaId,
               $int_ref_cod_instituicao = $this->getRequest()->instituicao_id, $int_ref_cod_aluno = NULL, $mes = NULL,
               $aprovado = NULL, $mes_menor_que = NULL, $int_sequencial = NULL,

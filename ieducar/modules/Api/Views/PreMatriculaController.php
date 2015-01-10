@@ -237,17 +237,21 @@ class PreMatriculaController extends ApiCoreController
   protected function _alunosMatriculadosTurma($turmaId){
   	$obj_mt = new clsPmieducarMatriculaTurma($turmaId);
 
-    return count(array_filter(($obj_mt->lista($int_ref_cod_matricula = NULL, $int_ref_cod_turma = $turmaId,
+    return count(array_filter(($obj_mt->lista($int_ref_cod_matricula = NULL, $int_ref_cod_turma = NULL,
                                               $int_ref_usuario_exc = NULL, $int_ref_usuario_cad = NULL,
                                               $date_data_cadastro_ini = NULL, $date_data_cadastro_fim = NULL,
                                               $date_data_exclusao_ini = NULL, $date_data_exclusao_fim = NULL, $int_ativo = 1,
-                                              $int_ref_cod_serie = $this->ref_cod_serie, $int_ref_cod_curso = $this->getRequest()->curso_id,
+                                              $int_ref_cod_serie = $this->getRequest()->serie_id, $int_ref_cod_curso = $this->getRequest()->curso_id,
                                               $int_ref_cod_escola = $this->getRequest()->escola_id,
                                               $int_ref_cod_instituicao = $this->getRequest()->instituicao_id, $int_ref_cod_aluno = NULL, $mes = NULL,
                                               $aprovado = NULL, $mes_menor_que = NULL, $int_sequencial = NULL,
                                               $int_ano_matricula = $this->getRequest()->ano, $tem_avaliacao = NULL, $bool_get_nome_aluno = FALSE,
                                               $bool_aprovados_reprovados = NULL, $int_ultima_matricula = NULL,
-                                              $bool_matricula_ativo = true))));
+                                              $bool_matricula_ativo = true, $bool_escola_andamento = true,
+                                              $mes_matricula_inicial = FALSE, $get_serie_mult = FALSE,
+                                              $int_ref_cod_serie_mult = NULL, $int_semestre = NULL,
+                                              $pegar_ano_em_andamento = FALSE, $parar=NULL, $diario = FALSE, 
+                                              $int_turma_turno_id = NULL, $int_ano_turma = $this->getRequest()->ano))));
   }
 
   public function Gerar() {
