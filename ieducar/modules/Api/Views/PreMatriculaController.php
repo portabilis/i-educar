@@ -44,7 +44,7 @@ class PreMatriculaController extends ApiCoreController
     return $this->validatesPresenceOf('ano_letivo') && $this->validatesPresenceOf('curso_id')
         && $this->validatesPresenceOf('serie_id') && $this->validatesPresenceOf('escola_id')
         && $this->validatesPresenceOf('turma_id') && $this->validatesPresenceOf('nome_aluno')
-        && $this->validatesPresenceOf('data_nasc_aluno')
+        && $this->validatesPresenceOf('data_nasc_aluno') && $this->validatesPresenceOf('sexo_aluno')
         && $this->validatesPresenceOf('cep') && $this->validatesPresenceOf('rua')
         && $this->validatesPresenceOf('numero') && $this->validatesPresenceOf('bairro')
         && $this->validatesPresenceOf('cidade') && $this->validatesPresenceOf('estado') && $this->validatesPresenceOf('pais');
@@ -63,6 +63,7 @@ class PreMatriculaController extends ApiCoreController
       $nomeAluno = $this->getRequest()->nome_aluno;
       $dataNascAluno = $this->getRequest()->data_nasc_aluno;
       $deficiencias = $this->getRequest()->deficiencias;
+      $sexoAluno = $this->getRequest()->sexo_aluno;
 
       // Dados responsaveis
       $nomeMae = $this->getRequest()->nome_mae;
@@ -94,7 +95,7 @@ class PreMatriculaController extends ApiCoreController
         $this->createOrUpdatePessoaFisicaResponsavel($pessoaResponsavelId, $cpfResponsavel);
       }
 
-      $this->createOrUpdatePessoaFisica($pessoaAlunoId, $pessoaResponsavelId, $pessoaMaeId, $dataNascimento);
+      $this->createOrUpdatePessoaFisica($pessoaAlunoId, $pessoaResponsavelId, $pessoaMaeId, $dataNascimento, $sexoAluno);
 
       $alunoId = $this->createOrUpdateAluno($pessoaAlunoId);
 
@@ -168,11 +169,12 @@ class PreMatriculaController extends ApiCoreController
     return $pessoaId;
   }
 
-  protected function createOrUpdatePessoaFisica($pessoaId, $pessoaResponsavelId, $pessoaMaeId, $dataNascimento) {
+  protected function createOrUpdatePessoaFisica($pessoaId, $pessoaResponsavelId, $pessoaMaeId, $dataNascimento, $sexo) {
     $fisica                       = new clsFisica();
     $fisica->idpes                = $pessoaId;
     $fisica->data_nasc            = $dataNascimento;
     $fisica->idpes_cad            = 1;
+    $fisica->sexo                 = strtoupper($sexo);
 
     $sql = "select 1 from cadastro.fisica WHERE idpes = $1 limit 1";
 
