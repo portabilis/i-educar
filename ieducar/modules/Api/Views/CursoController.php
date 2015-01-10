@@ -85,7 +85,8 @@ class CursoController extends ApiCoreController
 
       $sqlTurma = "SELECT DISTINCT t.cod_turma, t.nm_turma                  
                     FROM pmieducar.turma t
-                    WHERE t.ativo = 1 
+                    WHERE t.ativo = 1
+                    AND t.ano = {$ano}
                     AND t.ref_ref_cod_escola IN ({$escolaId}) ";
 
       foreach ($cursos as &$curso) {
