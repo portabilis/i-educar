@@ -237,6 +237,10 @@ class PreMatriculaController extends ApiCoreController
   protected function _alunosMatriculadosTurma($turmaId){
   	$obj_mt = new clsPmieducarMatriculaTurma($turmaId);
 
+  	$obj_m = new clsPmieducarTurma($turmaId);
+  	$det_m = $obj_m->detalhe();
+  	$turno_id = $det_m['turma_turno_id'];
+
     return count(array_filter(($obj_mt->lista($int_ref_cod_matricula = NULL, $int_ref_cod_turma = NULL,
                                               $int_ref_usuario_exc = NULL, $int_ref_usuario_cad = NULL,
                                               $date_data_cadastro_ini = NULL, $date_data_cadastro_fim = NULL,
@@ -251,7 +255,7 @@ class PreMatriculaController extends ApiCoreController
                                               $mes_matricula_inicial = FALSE, $get_serie_mult = FALSE,
                                               $int_ref_cod_serie_mult = NULL, $int_semestre = NULL,
                                               $pegar_ano_em_andamento = FALSE, $parar=NULL, $diario = FALSE, 
-                                              $int_turma_turno_id = NULL, $int_ano_turma = $this->getRequest()->ano))));
+                                              $int_turma_turno_id = $turno_id, $int_ano_turma = $this->getRequest()->ano))));
   }
 
   public function Gerar() {
