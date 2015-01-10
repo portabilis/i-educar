@@ -103,7 +103,7 @@ class PreMatriculaController extends ApiCoreController
         $this->updateDeficiencias($pessoaAlunoId, $deficiencias);
 
       if($this->_maxAlunosTurma($turmaId) <= $this->_alunosMatriculadosTurma($turmaId)){
-      	$this->messenger->append("max alunos turma: " . $this->_maxAlunosTurma($turmaId) . "alunos matriculados na turma: " . $this->_alunosMatriculadosTurma($turmaId));
+      	// $this->messenger->append("max alunos turma: " . $this->_maxAlunosTurma($turmaId) . "alunos matriculados na turma: " . $this->_alunosMatriculadosTurma($turmaId));
       	$this->messenger->append("Aparentemente não existem vagas disponíveis para a seleção informada. Altere a seleção e tente novamente.");
       	return array("cod_matricula" => 0);
   	  }
@@ -241,11 +241,11 @@ class PreMatriculaController extends ApiCoreController
                                               $int_ref_usuario_exc = NULL, $int_ref_usuario_cad = NULL,
                                               $date_data_cadastro_ini = NULL, $date_data_cadastro_fim = NULL,
                                               $date_data_exclusao_ini = NULL, $date_data_exclusao_fim = NULL, $int_ativo = 1,
-                                              $int_ref_cod_serie = $this->ref_cod_serie, $int_ref_cod_curso = NULL,
-                                              $int_ref_cod_escola = NULL,
+                                              $int_ref_cod_serie = $this->ref_cod_serie, $int_ref_cod_curso = $this->getRequest()->curso_id,
+                                              $int_ref_cod_escola = $this->getRequest()->escola_id,
                                               $int_ref_cod_instituicao = $this->getRequest()->instituicao_id, $int_ref_cod_aluno = NULL, $mes = NULL,
                                               $aprovado = NULL, $mes_menor_que = NULL, $int_sequencial = NULL,
-                                              $int_ano_matricula = NULL, $tem_avaliacao = NULL, $bool_get_nome_aluno = FALSE,
+                                              $int_ano_matricula = $this->getRequest()->ano, $tem_avaliacao = NULL, $bool_get_nome_aluno = FALSE,
                                               $bool_aprovados_reprovados = NULL, $int_ultima_matricula = NULL,
                                               $bool_matricula_ativo = true))));
   }
