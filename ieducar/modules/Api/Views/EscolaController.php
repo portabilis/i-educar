@@ -203,7 +203,7 @@ class EscolaController extends ApiCoreController
               $aprovado = NULL, $mes_menor_que = NULL, $int_sequencial = NULL,
               $int_ano_matricula = $this->getRequest()->ano, $tem_avaliacao = NULL, $bool_get_nome_aluno = FALSE,
               $bool_aprovados_reprovados = NULL, $int_ultima_matricula = NULL,
-              $bool_matricula_ativo = 1, $bool_escola_andamento = true,
+              $bool_matricula_ativo = true, $bool_escola_andamento = true,
               $mes_matricula_inicial = FALSE, $get_serie_mult = FALSE,
               $int_ref_cod_serie_mult = NULL, $int_semestre = NULL,
               $pegar_ano_em_andamento = FALSE, $parar=NULL, $diario = FALSE, 
