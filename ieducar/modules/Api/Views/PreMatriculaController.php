@@ -241,7 +241,7 @@ class PreMatriculaController extends ApiCoreController
   	$det_m = $obj_m->detalhe();
   	$turno_id = $det_m['turma_turno_id'];
 
-    return count(array_filter(($obj_mt->lista($int_ref_cod_matricula = NULL, $int_ref_cod_turma = NULL,
+    return count(array_filter(($obj_mt->lista($int_ref_cod_matricula = NULL, $int_ref_cod_turma = $turmaId,
                                               $int_ref_usuario_exc = NULL, $int_ref_usuario_cad = NULL,
                                               $date_data_cadastro_ini = NULL, $date_data_cadastro_fim = NULL,
                                               $date_data_exclusao_ini = NULL, $date_data_exclusao_fim = NULL, $int_ativo = 1,
