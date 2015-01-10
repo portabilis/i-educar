@@ -152,6 +152,7 @@ class EscolaController extends ApiCoreController
       $escolaIds = $this->fetchPreparedQuery($sql, array($ano, $turmaTurnoId, $cursoId, $instituicaoId, $serieId));
 
       foreach($escolaIds as $escolaId){
+      	$this->messenger->append("Escola: " . $escolaId[0] . " Maximo de alunos no turno: " . $this->_getMaxAlunoTurno($escolaId[0]) . " Quantidade alunos fila: " . $this->_getQtdAlunosFila($escolaId[0]) . " Quantidade matriculas turno: " . $this->_getQtdMatriculaTurno($escolaId[0]));
       	if(!$this->existeVagasDisponiveis($escolaId[0])){
       		if (($key = array_search($escolaId, $escolaIds)) !== false) {
     			unset($escolaIds[$key]);
