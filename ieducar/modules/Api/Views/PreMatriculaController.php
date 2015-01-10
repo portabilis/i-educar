@@ -102,6 +102,12 @@ class PreMatriculaController extends ApiCoreController
       if(is_array($deficiencias))
         $this->updateDeficiencias($pessoaAlunoId, $deficiencias);
 
+      if($this->_maxAlunosTurma($turmaId) <= $this->_alunosMatriculadosTurma($turmaId)){
+      	// $this->messenger->append("max alunos turma: " . $this->_maxAlunosTurma($turmaId) . "alunos matriculados na turma: " . $this->_alunosMatriculadosTurma($turmaId));
+      	$this->messenger->append("Aparentemente não existem vagas disponíveis para a seleção informada. Altere a seleção e tente novamente.");
+      	return array("cod_matricula" => 0);
+  	  }
+
       return array("cod_matricula" => $this->cadastraMatricula($escolaId, $serieId, $anoLetivo, $cursoId, $alunoId, $turmaId));
 
       // @TODO CRIAR/GRAVAR ENDEREÇO
@@ -219,6 +225,25 @@ class PreMatriculaController extends ApiCoreController
       $retorno = $detalhe['cod_aluno'];
 
     return $retorno;
+  }
+
+  protected function _maxAlunosTurma($turmaId){
+  	$obj_t = new clsPmieducarTurma($turmaId);
+    $det_t = $obj_t->detalhe();
+    $maxAlunosTurma = $det_t['max_aluno'];
+    return $maxAlunosTurma;
+  }
+
+  protected function _alunosMatriculadosTurma($turmaId){
+  	$obj_mt = new clsPmieducarMatriculaTurma($turmaId);
+
+    return count(array_filter(($obj_mt->lista($int_ref_cod_matricula = NULL, $int_ref_cod_turma = $turmaId,
+              								  $int_ref_usuario_exc = NULL, $int_ref_usuario_cad = NULL,
+              								  $date_data_cadastro_ini = NULL, $date_data_cadastro_fim = NULL,
+              								  $date_data_exclusao_ini = NULL, $date_data_exclusao_fim = NULL, $int_ativo = 1,
+              								  $int_ref_cod_serie = $this->ref_cod_serie, $int_ref_cod_curso = NULL,
+              								  $int_ref_cod_escola = NULL,
+              								  $int_ref_cod_instituicao = $this->getRequest()->instituicao_id))));
   }
 
   public function Gerar() {
