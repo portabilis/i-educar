@@ -64,6 +64,7 @@ class clsPmieducarMatricula
   var $semestre;
   var $data_matricula;
   var $data_cancel;
+  var $turno_pre_matricula;
 
   /**
    * caso seja a primeira matricula do aluno
@@ -141,7 +142,7 @@ class clsPmieducarMatricula
     $this->_schema = 'pmieducar.';
     $this->_tabela = $this->_schema . 'matricula';
 
-    $this->_campos_lista = $this->_todos_campos = "m.cod_matricula, m.ref_cod_reserva_vaga, m.ref_ref_cod_escola, m.ref_ref_cod_serie, m.ref_usuario_exc, m.ref_usuario_cad, m.ref_cod_aluno, m.aprovado, m.data_cadastro, m.data_exclusao, m.ativo, m.ano, m.ultima_matricula, m.modulo,formando,descricao_reclassificacao,matricula_reclassificacao, m.ref_cod_curso,m.matricula_transferencia,m.semestre, m.data_matricula, m.data_cancel, m.ref_cod_abandono_tipo";
+    $this->_campos_lista = $this->_todos_campos = "m.cod_matricula, m.ref_cod_reserva_vaga, m.ref_ref_cod_escola, m.ref_ref_cod_serie, m.ref_usuario_exc, m.ref_usuario_cad, m.ref_cod_aluno, m.aprovado, m.data_cadastro, m.data_exclusao, m.ativo, m.ano, m.ultima_matricula, m.modulo,formando,descricao_reclassificacao,matricula_reclassificacao, m.ref_cod_curso,m.matricula_transferencia,m.semestre, m.data_matricula, m.data_cancel, m.ref_cod_abandono_tipo, m.turno_pre_matricula ";
 
     if (is_numeric($ref_usuario_exc)) {
       if (class_exists("clsPmieducarUsuario")) {
@@ -447,7 +448,13 @@ class clsPmieducarMatricula
         $campos .= "{$gruda}data_cancel";
         $valores .= "{$gruda}'{$this->data_cancel}'";
         $gruda = ", ";
-      }        
+      }
+
+      if (is_numeric($this->turno_pre_matricula)) {
+        $campos .= "{$gruda}turno_pre_matricula";
+        $valores .= "{$gruda}'{$this->turno_pre_matricula}'";
+        $gruda = ", ";
+      }
 
       $db->Consulta("INSERT INTO {$this->_tabela} ($campos) VALUES ($valores)");
       return $db->InsertId("{$this->_tabela}_cod_matricula_seq");
@@ -574,6 +581,11 @@ class clsPmieducarMatricula
 
       if (is_string($this->data_cancel)) {
         $set .= "{$gruda}data_cancel = '{$this->data_cancel}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->turno_pre_matricula)) {
+        $set .= "{$gruda}turno_pre_matricula = '{$this->turno_pre_matricula}'";
         $gruda = ", ";
       }
 
