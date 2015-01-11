@@ -60,26 +60,26 @@ class PreMatriculaController extends ApiCoreController
       $turmaId = $this->getRequest()->turma_id;
 
       // Dados do aluno
-      $nomeAluno = $this->getRequest()->nome_aluno;
+      $nomeAluno = Portabilis_String_utils::toLatin1($this->getRequest()->nome_aluno);
       $dataNascAluno = $this->getRequest()->data_nasc_aluno;
       $deficiencias = $this->getRequest()->deficiencias;
       $sexoAluno = $this->getRequest()->sexo_aluno;
 
       // Dados responsaveis
-      $nomeMae = $this->getRequest()->nome_mae;
+      $nomeMae = Portabilis_String_utils::toLatin1($this->getRequest()->nome_mae);
       $cpfMae = $this->getRequest()->cpf_mae;
-      $nomeResponsavel = $this->getRequest()->nome_responsavel;
+      $nomeResponsavel = Portabilis_String_utils::toLatin1($this->getRequest()->nome_responsavel);
       $cpfResponsavel = $this->getRequest()->cpf_responsavel;
 
       // Dados do endereço
       $cep = $this->getRequest()->cep;
-      $rua = $this->getRequest()->rua;
+      $rua = Portabilis_String_utils::toLatin1($this->getRequest()->rua);
       $numero = $this->getRequest()->numero;
-      $complemento = $this->getRequest()->complemento;
-      $bairro = $this->getRequest()->bairro;
-      $cidade = $this->getRequest()->cidade;
-      $estado = $this->getRequest()->estado;
-      $pais = $this->getRequest()->pais;
+      $complemento = Portabilis_String_utils::toLatin1($this->getRequest()->complemento);
+      $bairro = Portabilis_String_utils::toLatin1($this->getRequest()->bairro);
+      $cidade = Portabilis_String_utils::toLatin1($this->getRequest()->cidade);
+      $estado = Portabilis_String_utils::toLatin1($this->getRequest()->estado);
+      $pais = Portabilis_String_utils::toLatin1($this->getRequest()->pais);
 
       $pessoaAlunoId = $this->createPessoa($nomeAluno);
       $pessoaMaeId = null;
