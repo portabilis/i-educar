@@ -40,6 +40,121 @@ require_once 'include/pmieducar/geral.inc.php';
 class PreMatriculaController extends ApiCoreController
 {
 
+  protected function canRegistrarPreMatricula(){
+    return $this->validatesPresenceOf('ano_letivo') && $this->validatesPresenceOf('curso_id')
+        && $this->validatesPresenceOf('serie_id') && $this->validatesPresenceOf('escola_id')
+        && $this->validatesPresenceOf('turno_id') && $this->validatesPresenceOf('nome_aluno')
+        && $this->validatesPresenceOf('data_nasc_aluno') && $this->validatesPresenceOf('sexo_aluno');
+  }
+
+  protected function registrarPreMatricula(){
+    if ($this->canRegistrarPreMatricula()){
+      // Dados da matrícula
+      $anoLetivo = $this->getRequest()->ano_letivo;
+      $cursoId = $this->getRequest()->curso_id;
+      $serieId = $this->getRequest()->serie_id;
+      $escolaId = $this->getRequest()->escola_id;
+      $turnoId = $this->getRequest()->turno_id;
+
+      // Dados do aluno
+      $nomeAluno = Portabilis_String_utils::toLatin1($this->getRequest()->nome_aluno);
+      $dataNascAluno = $this->getRequest()->data_nasc_aluno;
+      $deficiencias = $this->getRequest()->deficiencias;
+      $sexoAluno = $this->getRequest()->sexo_aluno;
+
+      // Dados responsaveis
+      $nomeMae = Portabilis_String_utils::toLatin1($this->getRequest()->nome_mae);
+      $cpfMae = $this->getRequest()->cpf_mae;
+      $nomeResponsavel = Portabilis_String_utils::toLatin1($this->getRequest()->nome_responsavel);
+      $cpfResponsavel = $this->getRequest()->cpf_responsavel;
+
+      $pessoaAlunoId = $this->createPessoa($nomeAluno);
+      $pessoaMaeId = null;
+      $pessoaResponsavelId = null;
+
+      if(is_numeric($cpfMae)){
+        $pessoaMaeId = $this->createOrUpdatePessoaResponsavel($cpfMae, $nomeMae);
+        $this->createOrUpdatePessoaFisicaResponsavel($pessoaMaeId, $cpfMae);
+      }
+
+      if(is_numeric($cpfResponsavel)){
+        $pessoaResponsavelId = $this->createOrUpdatePessoaResponsavel($cpfResponsavel, $nomeResponsavel);
+        $this->createOrUpdatePessoaFisicaResponsavel($pessoaResponsavelId, $cpfResponsavel);
+      }
+
+      $this->createOrUpdatePessoaFisica($pessoaAlunoId, $pessoaResponsavelId, $pessoaMaeId, $dataNascimento, $sexoAluno);
+
+      $alunoId = $this->createOrUpdateAluno($pessoaAlunoId);
+
+      if(is_array($deficiencias))
+        $this->updateDeficiencias($pessoaAlunoId, $deficiencias);
+
+      $qtdFila = $this->_getQtdAlunosFila($anoLetivo, $escolaId, $cursoId, $serieId, $turnoId);
+      $maxAlunoTurno = $this->_getMaxAlunoTurno($ano, $escolaId, $serieId, $turnoId);
+      $qtdMatriculaTurno = $this->_getQtdMatriculaTurno($ano, $escolaId, $cursoId, $serieId, $turnoId);
+      
+      if($maxAlunoTurno <= $qtdFila + $qtdMatriculaTurno){
+        $this->messenger->append("Aparentemente não existem vagas disponíveis para a seleção informada. Altere a seleção e tente novamente.");
+        return array("cod_matricula" => 0);
+      }
+
+      return array("cod_matricula" => $this->cadastraPreMatricula($escolaId, $serieId, $anoLetivo, $cursoId, $alunoId, $turnoId));
+    }
+  }
+
+  function _getMaxAlunoTurno($ano, $escolaId, $serieId, $turnoId){
+    $obj_t = new clsPmieducarTurma();
+
+    $lista_t = $obj_t->lista($int_cod_turma = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, 
+    $int_ref_ref_cod_serie = $serieId, $int_ref_ref_cod_escola = $escolaId, $int_ref_cod_infra_predio_comodo = null, 
+    $str_nm_turma = null, $str_sgl_turma = null, $int_max_aluno = null, $int_multiseriada = null, $date_data_cadastro_ini = null, 
+    $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_turma_tipo = null, 
+    $time_hora_inicial_ini = null, $time_hora_inicial_fim = null, $time_hora_final_ini = null, $time_hora_final_fim = null, $time_hora_inicio_intervalo_ini = null, 
+    $time_hora_inicio_intervalo_fim = null, $time_hora_fim_intervalo_ini = null, $time_hora_fim_intervalo_fim = null, $int_ref_cod_curso = null, $int_ref_cod_instituicao = null, 
+    $int_ref_cod_regente = null, $int_ref_cod_instituicao_regente = null, $int_ref_ref_cod_escola_mult = null, $int_ref_ref_cod_serie_mult = null, $int_qtd_min_alunos_matriculados = null, 
+    $bool_verifica_serie_multiseriada = false, $bool_tem_alunos_aguardando_nota = null, $visivel = null, $turma_turno_id = $turnoId, $tipo_boletim = null, $ano = $ano, $somenteAnoLetivoEmAndamento = FALSE);
+    
+    $max_aluno_turmas = 0;
+
+    foreach ($lista_t as $reg) {
+      $max_aluno_turmas += $reg['max_aluno'];
+    }
+
+    return $max_aluno_turmas;
+  }
+
+  function _getQtdAlunosFila($ano, $escolaId, $cursoId, $serieId, $turnoId){
+
+    $sql = 'SELECT count(1) as qtd
+              FROM pmieducar.matricula 
+              WHERE ano = $1 
+              AND ref_ref_cod_escola = $2 
+              AND ref_cod_curso = $3 
+              AND ref_ref_cod_serie = $4 
+              AND turno_pre_matricula = $5 ';
+
+    return (int) Portabilis_Utils_Database::selectField($sql, array($ano, $escolaId, $cursoId, $serieId, $turnoId));
+  }
+
+  function _getQtdMatriculaTurno($ano, $escolaId, $cursoId, $serieId, $turnoId){
+    $obj_mt = new clsPmieducarMatriculaTurma();
+
+    return (int) count($obj_mt->lista($int_ref_cod_matricula = NULL, $int_ref_cod_turma = NULL,
+              $int_ref_usuario_exc = NULL, $int_ref_usuario_cad = NULL,
+              $date_data_cadastro_ini = NULL, $date_data_cadastro_fim = NULL,
+              $date_data_exclusao_ini = NULL, $date_data_exclusao_fim = NULL, $int_ativo = 1,
+              $int_ref_cod_serie = $serieId, $int_ref_cod_curso = $cursoId, $int_ref_cod_escola = $escolaId,
+              $int_ref_cod_instituicao = NULL, $int_ref_cod_aluno = NULL, $mes = NULL,
+              $aprovado = NULL, $mes_menor_que = NULL, $int_sequencial = NULL,
+              $int_ano_matricula = NULL, $tem_avaliacao = NULL, $bool_get_nome_aluno = FALSE,
+              $bool_aprovados_reprovados = NULL, $int_ultima_matricula = NULL,
+              $bool_matricula_ativo = NULL, $bool_escola_andamento = FALSE,
+              $mes_matricula_inicial = FALSE, $get_serie_mult = FALSE,
+              $int_ref_cod_serie_mult = NULL, $int_semestre = NULL,
+              $pegar_ano_em_andamento = FALSE, $parar=NULL, $diario = FALSE, 
+              $int_turma_turno_id = $turnoId, $int_ano_turma = $ano));
+  }
+
   protected function canMatricularCandidato(){
     return $this->validatesPresenceOf('ano_letivo') && $this->validatesPresenceOf('curso_id')
         && $this->validatesPresenceOf('serie_id') && $this->validatesPresenceOf('escola_id')
@@ -112,6 +227,19 @@ class PreMatriculaController extends ApiCoreController
 
       // @TODO CRIAR/GRAVAR ENDEREÇO
     }
+  }
+
+  protected function cadastraPreMatricula($escolaId, $serieId, $anoLetivo, $cursoId, $alunoId, $turnoId){
+    $obj = new clsPmieducarMatricula(NULL, NULL,
+        $escolaId, $serieId, NULL,
+        1, $alunoId, 11, NULL, NULL, 1, $anoLetivo,
+        1, NULL, NULL, NULL, NULL, $cursoId,
+        NULL, NULL, date('Y-m-d'));
+    $obj->turno_pre_matricula = $turnoId;
+
+    $matriculaId = $obj->cadastra();
+
+    return $matriculaId;
   }
 
   protected function cadastraMatricula($escolaId, $serieId, $anoLetivo, $cursoId, $alunoId, $turmaId){
@@ -249,6 +377,9 @@ class PreMatriculaController extends ApiCoreController
   public function Gerar() {
     if ($this->isRequestFor('post', 'matricular-candidato'))
       $this->appendResponse($this->matricularCandidato());
+    elseif ($this->isRequestFor('post', 'registrar-pre-matricula')) {
+      $this->appendResponse($this->registrarPreMatricula());
+    }
     else
       $this->notImplementedOperationError();
   }
