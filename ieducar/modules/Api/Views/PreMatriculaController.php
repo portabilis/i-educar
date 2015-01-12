@@ -65,6 +65,7 @@ class PreMatriculaController extends ApiCoreController
       $dataNascAluno = $this->getRequest()->data_nasc_aluno;
       $deficiencias = $this->getRequest()->deficiencias;
       $sexoAluno = $this->getRequest()->sexo_aluno;
+      $alunoIdParametro = $this->getRequest()->aluno_id;
 
       // Dados responsaveis
       $nomeMae = Portabilis_String_utils::toLatin1($this->getRequest()->nome_mae);
@@ -85,16 +86,40 @@ class PreMatriculaController extends ApiCoreController
       $matriculaId = $this->getRequest()->matricula_id;
 
       $obj_m = new clsPmieducarMatricula($matriculaId);
-
       $det_m = $obj_m->detalhe();
+      $alunoIdMatricula = $det_m['ref_cod_aluno'];
 
       if($det_m['aprovado'] != 11){
       	$this->messenger->append("Matrícula já homologada.");
-      	return false;
+      	return array("cod_matricula" => 0);
       }
 
-      $alunoId = $det_m['ref_cod_aluno'];
-      $obj_a = new clsPmieducarAluno($alunoId);
+	  // $this->messenger->append("max alunos turma: " . $this->_maxAlunosTurma($turmaId) . "alunos matriculados na turma: " . $this->_alunosMatriculadosTurma($turmaId));
+      if($this->_maxAlunosTurma($turmaId) <= $this->_alunosMatriculadosTurma($turmaId)){
+	    $this->messenger->append("Aparentemente não existem vagas disponíveis para a seleção informada. Altere a seleção e tente novamente.");
+	    return array("cod_matricula" => 0);
+	   }
+
+	   if($this->getRequest->aluno_id){
+	   	 $obj_a = new clsPmieducarAluno($alunoIdParametro);
+	   	 if($obj_a->detalhe()){
+	   	 	$this->messenger->append("teste");
+
+	     	$obj_m = new clsPmieducarMatricula($matriculaId);
+	  		$obj_m->ref_cod_aluno = $alunoIdParametro;
+	  		$obj_m->edita();
+
+	  		// $obj_a = new clsPmieducarAluno($alunoIdParametro);
+	  		$obj_a->ativo = 1;
+	  		$obj_a->edita();
+
+	  		$this->excluirInformacoesAluno($alunoIdMatricula);
+
+	  		return array("cod_matricula" => $this->enturmaPreMatricula($escolaId, $serieId, $anoLetivo, $cursoId, $alunoIdParametro, $turmaId, $matriculaId));
+	 	}
+	   }
+
+      $obj_a = new clsPmieducarAluno($alunoIdMatricula);
       $det_a = $obj_a->detalhe();
       $pessoaAlunoId = $det_a['ref_idpes'];
 
@@ -120,20 +145,15 @@ class PreMatriculaController extends ApiCoreController
 
       $alunoId = $this->createOrUpdateAluno($pessoaAlunoId, 1);
 
-      if(is_array($deficiencias))
-        $this->updateDeficiencias($pessoaAlunoId, $deficiencias);
-
-      // $this->messenger->append("max alunos turma: " . $this->_maxAlunosTurma($turmaId) . "alunos matriculados na turma: " . $this->_alunosMatriculadosTurma($turmaId));
-      if($this->_maxAlunosTurma($turmaId) <= $this->_alunosMatriculadosTurma($turmaId)){
-
-      	$this->messenger->append("Aparentemente não existem vagas disponíveis para a seleção informada. Altere a seleção e tente novamente.");
-      	return array("cod_matricula" => 0);
-  	  }
-  	  // $this->messenger->append("escola:" . $escolaId . " serie:" . $serieId . " anoletivo:" . $anoLetivo .
-  	  		                    // " curso: " . $cursoId . " aluno:" . $alunoId . " turma: " . $turmaId . "matricula: " . $matriculaId);
-      return array("cod_matricula" => $this->enturmaPreMatricula($escolaId, $serieId, $anoLetivo, $cursoId, $alunoId, $turmaId, $matriculaId));
+      $this->updateDeficiencias($pessoaAlunoId, $deficiencias);
 
       // @TODO CRIAR/GRAVAR ENDEREÇO
+	  // $this->gravarEnderecoAluno($pessoaAlunoId, $cep, $rua, $numero, $complemento, $bairro, $cidade, $estado, $pais);
+
+  	  // $this->messenger->append("escola:" . $escolaId . " serie:" . $serieId . " anoletivo:" . $anoLetivo .
+  	  		                    // " curso: " . $cursoId . " aluno:" . $alunoId . " turma: " . $turmaId . "matricula: " . $matriculaId);
+
+      return array("cod_matricula" => $this->enturmaPreMatricula($escolaId, $serieId, $anoLetivo, $cursoId, $alunoIdMatricula, $turmaId, $matriculaId));
 
 	}
 }
@@ -343,6 +363,11 @@ class PreMatriculaController extends ApiCoreController
 
   protected function enturmaPreMatricula($escolaId, $serieId, $anoLetivo, $cursoId, $alunoId, $turmaId, $matriculaId){
   	// $this->messenger->append($escolaId, $serieId, $anoLetivo, $cursoId, $alunoId, $turmaId, $matriculaId);
+
+  	$obj_a = new clsPmieducarAluno($alunoId);
+	$obj_a->ativo = 1;
+	$obj_a->edita();
+
     $obj_m = new clsPmieducarMatricula($matriculaId);
     $obj_m->aprovado = 3;
     $obj_m->edita();
@@ -515,6 +540,97 @@ class PreMatriculaController extends ApiCoreController
     }
   }
 
+  // protected function createOrUpdateEndereco($pessoaAlunoId, $cep, $rua, $numero, $complemento, $bairro, $cidade, $estado, $pais) {
+
+  // 	$bairro = strtoupper($bairro);
+  // 	$rua = strtoupper($rua);
+  // 	$cidade = strtoupper($cidade);
+  // 	$bairroId = Portabilis_Utils_Database::selectField('SELECT idbai FROM public.bairro WHERE nome = $1 limit 1', array($bairro));
+  // 	$logradouroId = Portabilis_Utils_Database::selectField('SELECT idmun FROM public.bairro WHERE nome = $1 limit 1', array($rua));
+
+  //   if ($cep && is_numeric($bairroId) && is_numeric($logradouroId))
+  //     $this->_createOrUpdatePessoaEndereco($pessoaAlunoId);
+  //   else if($this->getRequest()->cep && is_numeric($this->getRequest()->municipio_id) && is_numeric($this->getRequest()->distrito_id)){
+
+  //     if (!is_numeric($bairroId)){
+  //       if ($this->canCreateBairro())
+  //         $bairroId = $this->createBairro();
+  //       else
+  //         return;
+  //     }
+
+  //     if (!is_numeric($this->getRequest()->logradouro_id)){
+  //       if($this->canCreateLogradouro())
+  //         $this->getRequest()->logradouro_id = $this->createLogradouro();
+  //       else
+  //         return;
+  //     }
+
+  //     $this->_createOrUpdatePessoaEndereco($pessoaAlunoId);
+
+  //   }else{
+  //     $endereco = new clsPessoaEndereco($pessoaAlunoId);
+  //     $endereco->exclui();
+  //   }
+
+  // protected function _createOrUpdatePessoaEndereco($pessoaId) {
+
+  //   $cep = idFederal2Int($this->getRequest()->cep);
+
+  //   $objCepLogradouro = new ClsCepLogradouro($cep, $this->getRequest()->logradouro_id);
+
+  //   if (! $objCepLogradouro->existe())
+  //     $objCepLogradouro->cadastra();
+
+  //   $objCepLogradouroBairro = new ClsCepLogradouroBairro();
+  //   $objCepLogradouroBairro->cep = $cep;
+  //   $objCepLogradouroBairro->idbai = $bairroId;
+  //   $objCepLogradouroBairro->idlog = $this->getRequest()->logradouro_id;
+
+  //   if (! $objCepLogradouroBairro->existe())
+  //     $objCepLogradouroBairro->cadastra();
+
+  //   $endereco = new clsPessoaEndereco(
+  //     $pessoaId,
+  //     $cep,
+  //     $this->getRequest()->logradouro_id,
+  //     $bairroId,
+  //     $this->getRequest()->numero,
+  //     Portabilis_String_Utils::toLatin1($this->getRequest()->complemento),
+  //     FALSE
+  //   );
+
+  //   // forçado exclusão, assim ao cadastrar endereco_pessoa novamente,
+  //   // será excluido endereco_externo (por meio da trigger fcn_aft_ins_endereco_pessoa).
+  //   $endereco->exclui();
+  //   $endereco->cadastra();
+  // }
+// }
+  protected function excluirInformacoesAluno($alunoId){
+
+      $pessoaId = Portabilis_Utils_Database::selectField('SELECT ref_idpes FROM pmieducar.aluno WHERE cod_aluno = $1', array($alunoId));
+      if(is_numeric($pessoaId)){
+      	$pessoaMaeId = Portabilis_Utils_Database::selectField('SELECT idpes_mae FROM cadastro.fisica WHERE idpes = $1', array($pessoaId));
+      	$pessoaRespId = Portabilis_Utils_Database::selectField('SELECT idpes_responsavel FROM cadastro.fisica WHERE idpes = $1', array($pessoaId));
+  	  }
+      if(is_numeric($alunoId))
+        $this->fetchPreparedQuery('DELETE FROM pmieducar.aluno WHERE cod_aluno = $1', $alunoId);
+
+      if(is_numeric($pessoaId)){
+        $this->fetchPreparedQuery('DELETE FROM cadastro.fisica WHERE idpes = $1', $pessoaId);
+        $this->fetchPreparedQuery('DELETE FROM cadastro.pessoa WHERE idpes = $1', $pessoaId);
+      }
+      if(is_numeric($pessoaMaeId)){
+        $this->fetchPreparedQuery('DELETE FROM cadastro.fisica WHERE idpes = $1', $pessoaMaeId);
+        $this->fetchPreparedQuery('DELETE FROM cadastro.pessoa WHERE idpes = $1', $pessoaMaeId);
+      }
+
+      if(is_numeric($pessoaRespId)){
+        $this->fetchPreparedQuery('DELETE FROM cadastro.fisica WHERE idpes = $1', $pessoaRespId);
+        $this->fetchPreparedQuery('DELETE FROM cadastro.pessoa WHERE idpes = $1', $pessoaRespId);
+      }
+
+  }
   public function Gerar() {
     // if ($this->isRequestFor('post', 'matricular-candidato'))
       // $this->appendResponse($this->matricularCandidato());
