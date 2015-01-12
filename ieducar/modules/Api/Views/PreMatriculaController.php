@@ -94,6 +94,7 @@ class PreMatriculaController extends ApiCoreController
       $qtdMatriculaTurno = $this->_getQtdMatriculaTurno($anoLetivo, $escolaId, $cursoId, $serieId, $turnoId);
       
       if($maxAlunoTurno <= $qtdFila + $qtdMatriculaTurno){
+        $this->messenger->append("Quantidade de reservas: ".$qtdFila.". Máximo de alunos permitido no turno: ".$maxAlunoTurno.". Quantidade de alunos matriculados no turno: ".$qtdMatriculaTurno);
         $this->messenger->append("Aparentemente não existem vagas disponíveis para a seleção informada. Altere a seleção e tente novamente.");
         return array("cod_matricula" => 0);
       }
