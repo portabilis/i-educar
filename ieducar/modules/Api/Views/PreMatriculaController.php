@@ -132,7 +132,8 @@ class PreMatriculaController extends ApiCoreController
               AND ref_ref_cod_escola = $2 
               AND ref_cod_curso = $3 
               AND ref_ref_cod_serie = $4 
-              AND turno_pre_matricula = $5 ';
+              AND turno_pre_matricula = $5
+              AND aprovado = 11 ';
 
     return (int) Portabilis_Utils_Database::selectField($sql, array($ano, $escolaId, $cursoId, $serieId, $turnoId));
   }
