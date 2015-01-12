@@ -93,7 +93,13 @@ class PreMatriculaController extends ApiCoreController
       	return false;
       }
 
-      $pessoaAlunoId = $this->createPessoa($nomeAluno);
+      $pessoaAlunoId = $det_m['ref_cod_aluno'];
+
+      $pessoa        = new clsPessoa_($pessoaAlunoId);
+      $pessoa->nome  = addslashes($nomeAluno);
+      $pessoa->tipo  = 'F';
+      $pessoa->edita();
+
       $pessoaMaeId = null;
       $pessoaResponsavelId = null;
 
@@ -115,7 +121,7 @@ class PreMatriculaController extends ApiCoreController
         $this->updateDeficiencias($pessoaAlunoId, $deficiencias);
 
       if($this->_maxAlunosTurma($turmaId) <= $this->_alunosMatriculadosTurma($turmaId)){
-      	// $this->messenger->append("max alunos turma: " . $this->_maxAlunosTurma($turmaId) . "alunos matriculados na turma: " . $this->_alunosMatriculadosTurma($turmaId));
+      	$this->messenger->append("max alunos turma: " . $this->_maxAlunosTurma($turmaId) . "alunos matriculados na turma: " . $this->_alunosMatriculadosTurma($turmaId));
       	$this->messenger->append("Aparentemente não existem vagas disponíveis para a seleção informada. Altere a seleção e tente novamente.");
       	return array("cod_matricula" => 0);
   	  }
