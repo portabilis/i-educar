@@ -182,9 +182,16 @@ class EscolaController extends ApiCoreController
 
   function _getQtdAlunosFila($escolaId){
 
-    $sql = 'SELECT qtd_alunos FROM pmieducar.quantidade_reserva_externa WHERE ref_cod_instituicao = $1 AND ref_cod_escola = $2 AND ref_cod_curso = $3 AND ref_cod_serie = $4 AND ref_turma_turno_id = $5 ';
+    $sql = 'SELECT count(1) as qtd
+              FROM pmieducar.matricula 
+              WHERE ano = $1 
+              AND ref_ref_cod_escola = $2 
+              AND ref_cod_curso = $3 
+              AND ref_ref_cod_serie = $4 
+              AND turno_pre_matricula = $5
+              AND aprovado = 11 ';
 
-    return (int) Portabilis_Utils_Database::selectField($sql, array($this->getRequest()->instituicao_id, $escolaId,
+    return (int) Portabilis_Utils_Database::selectField($sql, array($this->getRequest()->ano, $escolaId,
     									                            $this->getRequest()->curso_id, $this->getRequest()->serie_id,
     									                            $this->getRequest()->turma_turno_id));
   }
