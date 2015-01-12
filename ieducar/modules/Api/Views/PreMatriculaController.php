@@ -491,8 +491,10 @@ class PreMatriculaController extends ApiCoreController
       $pessoaMaeId = Portabilis_Utils_Database::selectField('SELECT idpes_mae FROM cadastro.fisica WHERE idpes = $1', array($pessoaId));
       $pessoaRespId = Portabilis_Utils_Database::selectField('SELECT idpes_responsavel FROM cadastro.fisica WHERE idpes = $1', array($pessoaId));
 
-      if(is_numeric($matriculaId))
+      if(is_numeric($matriculaId)){
+        $this->fetchPreparedQuery('DELETE FROM pmieducar.matricula_turma WHERE ref_cod_matricula = $1', array($matriculaId));
         $this->fetchPreparedQuery('DELETE FROM pmieducar.matricula WHERE cod_matricula = $1', array($matriculaId));
+      }
 
       if(is_numeric($alunoId))
         $this->fetchPreparedQuery('DELETE FROM pmieducar.aluno WHERE cod_aluno = $1', $alunoId);
