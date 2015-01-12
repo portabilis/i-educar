@@ -832,7 +832,9 @@ function enturmacaoMatricula($matriculaId, $turmaDestinoId) {
   }
 
   function _getQtdAlunosFila(){
-
+    $obj_t = new clsPmieducarTurma($this->ref_cod_turma);
+    $det_t = $obj_t->detalhe();
+    
     $sql = 'SELECT count(1) as qtd
               FROM pmieducar.matricula 
               WHERE ano = $1 
