@@ -388,7 +388,13 @@ class PreMatriculaController extends ApiCoreController
       $alunoId = Portabilis_Utils_Database::selectField('SELECT ref_cod_aluno FROM pmieducar.matricula WHERE cod_matricula = $1', array($matriculaId));
       $pessoaId = Portabilis_Utils_Database::selectField('SELECT ref_idpes FROM pmieducar.aluno WHERE cod_aluno = $1', array($alunoId));
       $pessoaMaeId = Portabilis_Utils_Database::selectField('SELECT idpes_mae FROM cadastro.fisica WHERE idpes = $1', array($pessoaId));
-      $pessoaRespId = Portabilis_Utils_Database::selectField('SELECT idpes_responsavel FROM cadastro.fisica WHERE idpes = $1', array($pessoaId));      
+      $pessoaRespId = Portabilis_Utils_Database::selectField('SELECT idpes_responsavel FROM cadastro.fisica WHERE idpes = $1', array($pessoaId));
+
+      if(is_numeric($matriculaId))
+        $this->fetchPreparedQuery('DELETE FROM pmieducar.matricula WHERE cod_matricula = $1', array($matriculaId));
+
+      if(is_numeric($alunoId))
+        $this->fetchPreparedQuery('DELETE FROM pmieducar.aluno WHERE cod_aluno = $1', $alunoId);
 
       if(is_numeric($pessoaId)){
         $this->fetchPreparedQuery('DELETE FROM cadastro.fisica WHERE idpes = $1', $pessoaId);
@@ -402,13 +408,7 @@ class PreMatriculaController extends ApiCoreController
       if(is_numeric($pessoaRespId)){
         $this->fetchPreparedQuery('DELETE FROM cadastro.fisica WHERE idpes = $1', $pessoaRespId);
         $this->fetchPreparedQuery('DELETE FROM cadastro.pessoa WHERE idpes = $1', $pessoaRespId);
-      }
-
-      if(is_numeric($matriculaId))
-        $this->fetchPreparedQuery('UPDATE pmieducar.matricula SET ativo = 0 WHERE cod_matricula = $1', array($matriculaId));
-
-      if(is_numeric($alunoId))
-        $this->fetchPreparedQuery('DELETE FROM pmieducar.aluno WHERE cod_aluno = $1', $alunoId);
+      }            
     }
   }
 
