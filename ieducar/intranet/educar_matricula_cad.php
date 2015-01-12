@@ -832,12 +832,17 @@ function enturmacaoMatricula($matriculaId, $turmaDestinoId) {
   }
 
   function _getQtdAlunosFila(){
-    $obj_t = new clsPmieducarTurma($this->ref_cod_turma);
-    $det_t = $obj_t->detalhe();
 
-    $sql = 'SELECT qtd_alunos FROM pmieducar.quantidade_reserva_externa WHERE ref_cod_instituicao = $1 AND ref_cod_escola = $2 AND ref_cod_curso = $3 AND ref_cod_serie = $4 AND ref_turma_turno_id = $5 ';
+    $sql = 'SELECT count(1) as qtd
+              FROM pmieducar.matricula 
+              WHERE ano = $1 
+              AND ref_ref_cod_escola = $2 
+              AND ref_cod_curso = $3 
+              AND ref_ref_cod_serie = $4 
+              AND turno_pre_matricula = $5
+              AND aprovado = 11 ';
 
-    return (int) Portabilis_Utils_Database::selectField($sql, array($this->ref_cod_instituicao, $this->ref_cod_escola, $this->ref_cod_curso, $this->ref_cod_serie, $det_t['turma_turno_id']));
+    return (int) Portabilis_Utils_Database::selectField($sql, array($this->ano, $this->ref_cod_escola, $this->ref_cod_curso, $this->ref_cod_serie, $det_t['turma_turno_id']));
   }
 
   function _getQtdMatriculaTurno(){
