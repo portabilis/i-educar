@@ -1,4 +1,7 @@
 <?php
+//error_reporting(E_ERROR);
+//ini_set("display_errors", 1);
+
 
 /**
  * i-Educar - Sistema de gestão escolar
@@ -480,7 +483,7 @@ class clsPmieducarMatricula
    */
   function edita()
   {
-    if (is_numeric($this->cod_matricula) && is_numeric($this->ref_usuario_exc))
+    if (is_numeric($this->cod_matricula))
     {
 
       $db = new clsBanco();
