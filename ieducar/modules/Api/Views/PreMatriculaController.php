@@ -93,7 +93,10 @@ class PreMatriculaController extends ApiCoreController
       	return false;
       }
 
-      $pessoaAlunoId = $det_m['ref_cod_aluno'];
+      $alunoId = $det_m['ref_cod_aluno'];
+      $obj_a = new clsPmieducarAluno($alunoId);
+      $det_a = $obj_a->detalhe();
+      $pessoaAlunoId = $det_a['ref_idpes'];
 
       $pessoa        = new clsPessoa_($pessoaAlunoId);
       $pessoa->nome  = addslashes($nomeAluno);
