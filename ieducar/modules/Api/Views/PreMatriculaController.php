@@ -90,8 +90,8 @@ class PreMatriculaController extends ApiCoreController
         $this->updateDeficiencias($pessoaAlunoId, $deficiencias);
 
       $qtdFila = $this->_getQtdAlunosFila($anoLetivo, $escolaId, $cursoId, $serieId, $turnoId);
-      $maxAlunoTurno = $this->_getMaxAlunoTurno($ano, $escolaId, $serieId, $turnoId);
-      $qtdMatriculaTurno = $this->_getQtdMatriculaTurno($ano, $escolaId, $cursoId, $serieId, $turnoId);
+      $maxAlunoTurno = $this->_getMaxAlunoTurno($anoLetivo, $escolaId, $serieId, $turnoId);
+      $qtdMatriculaTurno = $this->_getQtdMatriculaTurno($anoLetivo, $escolaId, $cursoId, $serieId, $turnoId);
       
       if($maxAlunoTurno <= $qtdFila + $qtdMatriculaTurno){
         $this->messenger->append("Aparentemente não existem vagas disponíveis para a seleção informada. Altere a seleção e tente novamente.");
