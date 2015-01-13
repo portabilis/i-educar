@@ -100,10 +100,9 @@ class PreMatriculaController extends ApiCoreController
 	    return array("cod_matricula" => 0);
 	   }
 
-	   if($this->getRequest->aluno_id){
+	   if($this->getRequest()->aluno_id){
 	   	 $obj_a = new clsPmieducarAluno($alunoIdParametro);
 	   	 if($obj_a->detalhe()){
-	   	 	$this->messenger->append("teste");
 
 	     	$obj_m = new clsPmieducarMatricula($matriculaId);
 	  		$obj_m->ref_cod_aluno = $alunoIdParametro;
