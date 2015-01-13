@@ -1,7 +1,7 @@
 <?php
 
-error_reporting(E_ERROR);
-ini_set("display_errors", 1);
+// error_reporting(E_ERROR);
+// ini_set("display_errors", 1);
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -152,6 +152,7 @@ class EscolaController extends ApiCoreController
       $escolaIds = $this->fetchPreparedQuery($sql, array($ano, $turmaTurnoId, $cursoId, $instituicaoId, $serieId));
 
       foreach($escolaIds as $escolaId){
+      	// $this->messenger->append("Escola: " . $escolaId[0] . " Maximo de alunos no turno: " . $this->_getMaxAlunoTurno($escolaId[0]) . " Quantidade alunos fila: " . $this->_getQtdAlunosFila($escolaId[0]) . " Quantidade matriculas turno: " . $this->_getQtdMatriculaTurno($escolaId[0]));
       	if(!$this->existeVagasDisponiveis($escolaId[0])){
       		if (($key = array_search($escolaId, $escolaIds)) !== false) {
     			unset($escolaIds[$key]);
@@ -203,13 +204,13 @@ class EscolaController extends ApiCoreController
               $int_ref_usuario_exc = NULL, $int_ref_usuario_cad = NULL,
               $date_data_cadastro_ini = NULL, $date_data_cadastro_fim = NULL,
               $date_data_exclusao_ini = NULL, $date_data_exclusao_fim = NULL, $int_ativo = 1,
-              $int_ref_cod_serie = $this->ref_cod_serie, $int_ref_cod_curso = $this->getRequest()->curso_id,
+              $int_ref_cod_serie = $this->getRequest()->serie_id, $int_ref_cod_curso = $this->getRequest()->curso_id,
               $int_ref_cod_escola = $escolaId,
               $int_ref_cod_instituicao = $this->getRequest()->instituicao_id, $int_ref_cod_aluno = NULL, $mes = NULL,
               $aprovado = NULL, $mes_menor_que = NULL, $int_sequencial = NULL,
-              $int_ano_matricula = NULL, $tem_avaliacao = NULL, $bool_get_nome_aluno = FALSE,
+              $int_ano_matricula = $this->getRequest()->ano, $tem_avaliacao = NULL, $bool_get_nome_aluno = FALSE,
               $bool_aprovados_reprovados = NULL, $int_ultima_matricula = NULL,
-              $bool_matricula_ativo = NULL, $bool_escola_andamento = FALSE,
+              $bool_matricula_ativo = true, $bool_escola_andamento = true,
               $mes_matricula_inicial = FALSE, $get_serie_mult = FALSE,
               $int_ref_cod_serie_mult = NULL, $int_semestre = NULL,
               $pegar_ano_em_andamento = FALSE, $parar=NULL, $diario = FALSE, 
