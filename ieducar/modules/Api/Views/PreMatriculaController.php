@@ -1,6 +1,6 @@
 <?php
-//error_reporting(E_ERROR);
-//ini_set("display_errors", 1);
+// error_reporting(E_ERROR);
+// ini_set("display_errors", 1);
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -147,7 +147,7 @@ class PreMatriculaController extends ApiCoreController
       $this->updateDeficiencias($pessoaAlunoId, $deficiencias);
 
       // @TODO CRIAR/GRAVAR ENDEREÇO
-	  // $this->gravarEnderecoAluno($pessoaAlunoId, $cep, $rua, $numero, $complemento, $bairro, $cidade, $estado, $pais);
+	  $this->createOrUpdateEndereco($pessoaAlunoId, $cep, $rua, $numero, $complemento, $bairro, $cidade, $estado, $pais);
 
   	  // $this->messenger->append("escola:" . $escolaId . " serie:" . $serieId . " anoletivo:" . $anoLetivo .
   	  		                    // " curso: " . $cursoId . " aluno:" . $alunoId . " turma: " . $turmaId . "matricula: " . $matriculaId);
@@ -539,72 +539,77 @@ class PreMatriculaController extends ApiCoreController
     }
   }
 
-  // protected function createOrUpdateEndereco($pessoaAlunoId, $cep, $rua, $numero, $complemento, $bairro, $cidade, $estado, $pais) {
+  protected function createOrUpdateEndereco($pessoaAlunoId, $cep, $rua, $numero, $complemento, $bairro, $cidade, $estado, $pais) {
 
-  // 	$bairro = strtoupper($bairro);
-  // 	$rua = strtoupper($rua);
-  // 	$cidade = strtoupper($cidade);
-  // 	$bairroId = Portabilis_Utils_Database::selectField('SELECT idbai FROM public.bairro WHERE nome = $1 limit 1', array($bairro));
-  // 	$logradouroId = Portabilis_Utils_Database::selectField('SELECT idmun FROM public.bairro WHERE nome = $1 limit 1', array($rua));
+  	$bairroId     = Portabilis_Utils_Database::selectField('SELECT idbai FROM public.bairro WHERE upper(nome) = upper($1) limit 1', $bairro);
+  	$logradouroId = Portabilis_Utils_Database::selectField('SELECT idlog FROM public.logradouro WHERE upper(nome) = upper($1) limit 1', $rua);
+  	$municipioId  = Portabilis_Utils_Database::selectField('SELECT idmun FROM public.municipio WHERE upper(nome) = upper($1) limit 1', $cidade);
+  	$distritoId   = Portabilis_Utils_Database::selectField('SELECT iddis FROM public.distrito WHERE upper(nome) = upper($1) limit 1', $cidade);
 
-  //   if ($cep && is_numeric($bairroId) && is_numeric($logradouroId))
-  //     $this->_createOrUpdatePessoaEndereco($pessoaAlunoId);
-  //   else if($this->getRequest()->cep && is_numeric($this->getRequest()->municipio_id) && is_numeric($this->getRequest()->distrito_id)){
+  	// $this->messenger->append("Bairro: " . $bairroId . "Logradouro: " . $logradouroId . "Municipio: " . $municipioId . "Distrito: " . $distritoId . "cep: " . $cep);
+  	// $this->messenger->append(" parametros: " . $pessoaAlunoId." ". $cep." ". $rua." ". $numero." ". $complemento." ". $bairro." ". $cidade." ". $estado." ". $pais);
+    if ($cep && is_numeric($bairroId) && is_numeric($logradouroId)){
+      $this->_createOrUpdatePessoaEndereco($pessoaAlunoId, $cep, $logradouroId, $numero, $complemento, $bairroId);
+    } else if($cep && is_numeric($municipioId) && is_numeric($distritoId)){
 
-  //     if (!is_numeric($bairroId)){
-  //       if ($this->canCreateBairro())
-  //         $bairroId = $this->createBairro();
-  //       else
-  //         return;
-  //     }
+      if (!is_numeric($bairroId)){
+          $bairroId = $this->createBairro($bairro, $municipioId, $distritoId);
+      }
+      if (!is_numeric($logradouroId)){
+          $logradouroId = $this->createLogradouro($rua, $municipioId);
+      }
 
-  //     if (!is_numeric($this->getRequest()->logradouro_id)){
-  //       if($this->canCreateLogradouro())
-  //         $this->getRequest()->logradouro_id = $this->createLogradouro();
-  //       else
-  //         return;
-  //     }
+      $this->_createOrUpdatePessoaEndereco($pessoaAlunoId, $cep, $logradouroId, $numero, $complemento, $bairroId);
 
-  //     $this->_createOrUpdatePessoaEndereco($pessoaAlunoId);
+    }else{
+      $endereco = new clsPessoaEndereco($pessoaAlunoId);
+      $endereco->exclui();
+    }
+  }
 
-  //   }else{
-  //     $endereco = new clsPessoaEndereco($pessoaAlunoId);
-  //     $endereco->exclui();
-  //   }
+  protected function _createOrUpdatePessoaEndereco($pessoaId, $cep, $logradouroId, $numero, $complemento, $bairroId) {
 
-  // protected function _createOrUpdatePessoaEndereco($pessoaId) {
+    $objCepLogradouro = new ClsCepLogradouro($cep, $logradouroId);
 
-  //   $cep = idFederal2Int($this->getRequest()->cep);
+    if (! $objCepLogradouro->existe())
+      $objCepLogradouro->cadastra();
 
-  //   $objCepLogradouro = new ClsCepLogradouro($cep, $this->getRequest()->logradouro_id);
+    $objCepLogradouroBairro = new ClsCepLogradouroBairro();
+    $objCepLogradouroBairro->cep = $cep;
+    $objCepLogradouroBairro->idbai = $bairroId;
+    $objCepLogradouroBairro->idlog = $logradouroId;
 
-  //   if (! $objCepLogradouro->existe())
-  //     $objCepLogradouro->cadastra();
+    if (! $objCepLogradouroBairro->existe())
+      $objCepLogradouroBairro->cadastra();
 
-  //   $objCepLogradouroBairro = new ClsCepLogradouroBairro();
-  //   $objCepLogradouroBairro->cep = $cep;
-  //   $objCepLogradouroBairro->idbai = $bairroId;
-  //   $objCepLogradouroBairro->idlog = $this->getRequest()->logradouro_id;
+    $endereco = new clsPessoaEndereco(
+      $pessoaId,
+      $cep,
+      $logradouroId,
+      $bairroId,
+      $numero,
+      $complemento,
+      FALSE
+    );
+    // $this->messenger->append(" pessoaid: " . $pessoaId . "CEP: " . $cep . "Logradouro: " . $logradouroId . "Bairro: " . $bairroId . "Número: " . $numero . "COmplemento:  " . $complemento);
+    // forçado exclusão, assim ao cadastrar endereco_pessoa novamente,
+    // será excluido endereco_externo (por meio da trigger fcn_aft_ins_endereco_pessoa).
+    $endereco->exclui();
+    $endereco->cadastra();
+  }
 
-  //   if (! $objCepLogradouroBairro->existe())
-  //     $objCepLogradouroBairro->cadastra();
+  protected function createBairro($bairro, $municipioId, $distritoId){
+    $objBairro = new clsBairro(null,$municipioId,null,addslashes($bairro), 1);
+    $objBairro->iddis = $distritoId;
+    return $objBairro->cadastra();
+  }
 
-  //   $endereco = new clsPessoaEndereco(
-  //     $pessoaId,
-  //     $cep,
-  //     $this->getRequest()->logradouro_id,
-  //     $bairroId,
-  //     $this->getRequest()->numero,
-  //     Portabilis_String_Utils::toLatin1($this->getRequest()->complemento),
-  //     FALSE
-  //   );
+  protected function createLogradouro($logradouro, $municipioId){
+    $objLogradouro = new clsLogradouro(null,'RUA', $logradouro, $municipioId,
+                                           null, 'S', 1);
+    return $objLogradouro->cadastra();
+  }
 
-  //   // forçado exclusão, assim ao cadastrar endereco_pessoa novamente,
-  //   // será excluido endereco_externo (por meio da trigger fcn_aft_ins_endereco_pessoa).
-  //   $endereco->exclui();
-  //   $endereco->cadastra();
-  // }
-// }
   protected function excluirInformacoesAluno($alunoId){
 
       $pessoaId = Portabilis_Utils_Database::selectField('SELECT ref_idpes FROM pmieducar.aluno WHERE cod_aluno = $1', array($alunoId));
