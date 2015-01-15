@@ -589,7 +589,13 @@ class PreMatriculaController extends ApiCoreController
       $bairroId,
       $numero,
       $complemento,
-      FALSE
+      FALSE,
+      FALSE,
+      FALSE,
+      FALSE,
+      FALSE,
+      1,
+      1
     );
 
     // $this->messenger->append(" pessoaid: " . $pessoaId . "CEP: " . $cep . "Logradouro: " . $logradouroId . "Bairro: " . $bairroId . "Número: " . $numero . "COmplemento:  " . $complemento);
