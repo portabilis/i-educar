@@ -573,7 +573,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                                 );
 
           $historicoEscolar->edita();
-          $this->recreateHistoricoDisciplinas($dadosHistoricoEscolar['sequencial'], $alunoId, $dadosMatricula['turma_id']);
+          $this->recreateHistoricoDisciplinas($sequencial, $alunoId, $dadosMatricula['turma_id']);
           $this->appendMsg('Histórico reprocessado com sucesso', 'success');
         }
 
