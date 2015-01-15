@@ -155,48 +155,6 @@ class PreMatriculaController extends ApiCoreController
 
       return array("cod_matricula" => $this->enturmaPreMatricula($escolaId, $serieId, $anoLetivo, $cursoId, $alunoIdMatricula, $turmaId, $matriculaId));
 
-      $alunoId = $det_m['ref_cod_aluno'];
-      $obj_a = new clsPmieducarAluno($alunoId);
-      $det_a = $obj_a->detalhe();
-      $pessoaAlunoId = $det_a['ref_idpes'];
-
-      $pessoa        = new clsPessoa_($pessoaAlunoId);
-      $pessoa->nome  = addslashes($nomeAluno);
-      $pessoa->tipo  = 'F';
-      $pessoa->edita();
-
-      $pessoaMaeId = null;
-      $pessoaResponsavelId = null;
-
-      if(is_numeric($cpfMae)){
-        $pessoaMaeId = $this->createOrUpdatePessoaResponsavel($cpfMae, $nomeMae);
-        $this->createOrUpdatePessoaFisicaResponsavel($pessoaMaeId, $cpfMae);
-      }
-
-      if(is_numeric($cpfResponsavel)){
-        $pessoaResponsavelId = $this->createOrUpdatePessoaResponsavel($cpfResponsavel, $nomeResponsavel);
-        $this->createOrUpdatePessoaFisicaResponsavel($pessoaResponsavelId, $cpfResponsavel);
-      }
-
-      $this->createOrUpdatePessoaFisica($pessoaAlunoId, $pessoaResponsavelId, $pessoaMaeId, $dataNascimento, $sexoAluno);
-
-      $alunoId = $this->createOrUpdateAluno($pessoaAlunoId);
-
-      if(is_array($deficiencias))
-        $this->updateDeficiencias($pessoaAlunoId, $deficiencias);
-
-      // $this->messenger->append("max alunos turma: " . $this->_maxAlunosTurma($turmaId) . "alunos matriculados na turma: " . $this->_alunosMatriculadosTurma($turmaId));
-      if($this->_maxAlunosTurma($turmaId) <= $this->_alunosMatriculadosTurma($turmaId)){
-
-      	$this->messenger->append("Aparentemente não existem vagas disponíveis para a seleção informada. Altere a seleção e tente novamente.");
-      	return array("cod_matricula" => 0);
-  	  }
-  	  // $this->messenger->append("escola:" . $escolaId . " serie:" . $serieId . " anoletivo:" . $anoLetivo .
-  	  		                    // " curso: " . $cursoId . " aluno:" . $alunoId . " turma: " . $turmaId . "matricula: " . $matriculaId);
-      return array("cod_matricula" => $this->enturmaPreMatricula($escolaId, $serieId, $anoLetivo, $cursoId, $alunoId, $turmaId, $matriculaId));
-
-      // @TODO CRIAR/GRAVAR ENDEREÇO
-
 	}
 }
   protected function canRegistrarPreMatricula(){
@@ -251,7 +209,7 @@ class PreMatriculaController extends ApiCoreController
       $qtdFila = $this->_getQtdAlunosFila($anoLetivo, $escolaId, $cursoId, $serieId, $turnoId);
       $maxAlunoTurno = $this->_getMaxAlunoTurno($anoLetivo, $escolaId, $serieId, $turnoId);
       $qtdMatriculaTurno = $this->_getQtdMatriculaTurno($anoLetivo, $escolaId, $cursoId, $serieId, $turnoId);
-      
+
       if($maxAlunoTurno <= $qtdFila + $qtdMatriculaTurno){
         // $this->messenger->append("Quantidade de reservas: ".$qtdFila.". Máximo de alunos permitido no turno: ".$maxAlunoTurno.". Quantidade de alunos matriculados no turno: ".$qtdMatriculaTurno);
         $this->messenger->append("Aparentemente não existem vagas disponíveis para a seleção informada. Altere a seleção e tente novamente.");
@@ -265,13 +223,13 @@ class PreMatriculaController extends ApiCoreController
   function _getMaxAlunoTurno($ano, $escolaId, $serieId, $turnoId){
     $obj_t = new clsPmieducarTurma();
 
-    $lista_t = $obj_t->lista($int_cod_turma = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, 
-    $int_ref_ref_cod_serie = $serieId, $int_ref_ref_cod_escola = $escolaId, $int_ref_cod_infra_predio_comodo = null, 
-    $str_nm_turma = null, $str_sgl_turma = null, $int_max_aluno = null, $int_multiseriada = null, $date_data_cadastro_ini = null, 
-    $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_turma_tipo = null, 
-    $time_hora_inicial_ini = null, $time_hora_inicial_fim = null, $time_hora_final_ini = null, $time_hora_final_fim = null, $time_hora_inicio_intervalo_ini = null, 
-    $time_hora_inicio_intervalo_fim = null, $time_hora_fim_intervalo_ini = null, $time_hora_fim_intervalo_fim = null, $int_ref_cod_curso = null, $int_ref_cod_instituicao = null, 
-    $int_ref_cod_regente = null, $int_ref_cod_instituicao_regente = null, $int_ref_ref_cod_escola_mult = null, $int_ref_ref_cod_serie_mult = null, $int_qtd_min_alunos_matriculados = null, 
+    $lista_t = $obj_t->lista($int_cod_turma = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null,
+    $int_ref_ref_cod_serie = $serieId, $int_ref_ref_cod_escola = $escolaId, $int_ref_cod_infra_predio_comodo = null,
+    $str_nm_turma = null, $str_sgl_turma = null, $int_max_aluno = null, $int_multiseriada = null, $date_data_cadastro_ini = null,
+    $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_turma_tipo = null,
+    $time_hora_inicial_ini = null, $time_hora_inicial_fim = null, $time_hora_final_ini = null, $time_hora_final_fim = null, $time_hora_inicio_intervalo_ini = null,
+    $time_hora_inicio_intervalo_fim = null, $time_hora_fim_intervalo_ini = null, $time_hora_fim_intervalo_fim = null, $int_ref_cod_curso = null, $int_ref_cod_instituicao = null,
+    $int_ref_cod_regente = null, $int_ref_cod_instituicao_regente = null, $int_ref_ref_cod_escola_mult = null, $int_ref_ref_cod_serie_mult = null, $int_qtd_min_alunos_matriculados = null,
     $bool_verifica_serie_multiseriada = false, $bool_tem_alunos_aguardando_nota = null, $visivel = null, $turma_turno_id = $turnoId, $tipo_boletim = null, $ano = $ano, $somenteAnoLetivoEmAndamento = FALSE);
 
     $max_aluno_turmas = 0;
@@ -312,7 +270,7 @@ class PreMatriculaController extends ApiCoreController
               $bool_matricula_ativo = NULL, $bool_escola_andamento = FALSE,
               $mes_matricula_inicial = FALSE, $get_serie_mult = FALSE,
               $int_ref_cod_serie_mult = NULL, $int_semestre = NULL,
-              $pegar_ano_em_andamento = FALSE, $parar=NULL, $diario = FALSE, 
+              $pegar_ano_em_andamento = FALSE, $parar=NULL, $diario = FALSE,
               $int_turma_turno_id = $turnoId, $int_ano_turma = $ano));
   }
 
@@ -550,7 +508,6 @@ class PreMatriculaController extends ApiCoreController
 
   protected function cancelarPreMatricula(){
     if ($this->canCancelarPreMatricula()){
-
       $matriculaId = $this->getRequest()->matricula_id;
 
       $alunoId = Portabilis_Utils_Database::selectField('SELECT ref_cod_aluno FROM pmieducar.matricula WHERE cod_matricula = $1', array($matriculaId));
@@ -655,7 +612,7 @@ class PreMatriculaController extends ApiCoreController
   }
 
   protected function createLogradouro($logradouro, $municipioId){
-    $objLogradouro = new clsLogradouro(null,'RUA', $logradouro, $municipioId,
+    $objLogradouro = new clsLogradouro(null,'', $logradouro, $municipioId,
                                            null, 'S', 1);
     return $objLogradouro->cadastra();
   }
