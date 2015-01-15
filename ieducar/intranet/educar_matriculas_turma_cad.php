@@ -96,6 +96,7 @@ class indice extends clsCadastro
     @session_write_close();
 
     $this->ref_cod_turma = $_GET['ref_cod_turma'];
+    $this->ano = $_GET['ano'];
 
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(659, $this->pessoa_logada, 7,
@@ -204,6 +205,9 @@ class indice extends clsCadastro
       $det_turma = $obj_turma->detalhe();
       $nm_turma = $det_turma['nm_turma'];
       $this->campoRotulo('nm_turma', 'Turma', $nm_turma);
+    }
+    if ($this->ano) {
+      $this->campoRotulo('ano', 'Ano', $this->ano);
     }
 
     // Inlui o aluno

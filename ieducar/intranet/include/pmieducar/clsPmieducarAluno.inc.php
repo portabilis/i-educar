@@ -395,7 +395,7 @@ class clsPmieducarAluno
    */
   function edita()
   {
-    if (is_numeric($this->cod_aluno) && is_numeric($this->ref_usuario_exc)) {
+    if (is_numeric($this->cod_aluno)) {
       $db  = new clsBanco();
       $set = '';
 
