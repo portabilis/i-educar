@@ -1,12 +1,6 @@
 <?php
-
-<<<<<<< HEAD
-error_reporting(E_ERROR);
-ini_set("display_errors", 1);
-=======
 // error_reporting(E_ERROR);
 // ini_set("display_errors", 1);
->>>>>>> master
 /**
  * i-Educar - Sistema de gestão escolar
  *
