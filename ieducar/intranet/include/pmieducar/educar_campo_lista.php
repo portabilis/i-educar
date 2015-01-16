@@ -385,11 +385,9 @@
 		$this->campoLista( "ref_cod_turma", "Turma", $opcoes_turma, $this->ref_cod_turma, null, null, null, null, $turma_desabilitado, $turma_obrigatorio );
 	}
 	if ($get_ano){
-		$obj_turma = new clsPmieducarTurma();
-		$obj_turma->setOrderby("ano DESC");
-		$lst_turma = $obj_turma->lista( null, null, null, null, null, null, null, null, null, null, null, null, null, null, 1);
-		if ( is_array( $lst_turma ) && count( $lst_turma ) ){
-			foreach ($lst_turma as $ano){
+		$lst_anos = Portabilis_Utils_Database::fetchPreparedQuery('SELECT distinct ano from pmieducar.turma where ativo = 1 order by ano desc');
+		if ( is_array( $lst_anos ) && count( $lst_anos ) ){
+			foreach ($lst_anos as $ano){
 				if ($ano['ano'])
 				$opcoes_ano["{$ano['ano']}"] = "{$ano['ano']}";
 			}
