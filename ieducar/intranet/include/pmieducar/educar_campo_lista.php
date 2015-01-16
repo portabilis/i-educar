@@ -393,10 +393,8 @@
 			}
 		}else
 			$opcoes_ano = array( "" => "Indisponível" );
-		$this->campoLista( "ano", "Ano", $opcoes_ano, $this->ano, null, null, null, null, false, false);
-
-			
-	// }
+		$this->campoLista( "ano", "Ano", $opcoes_ano, $this->ano, null, null, null, null, false, false);		
+	}
 	if (isset($get_cabecalho))
 	{
 		if ( $qtd_bibliotecas > 1 && ($nivel_usuario == 4 || $nivel_usuario == 8) )
