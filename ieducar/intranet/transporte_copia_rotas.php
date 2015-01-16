@@ -5,12 +5,16 @@
 -- @license  @@license@@
 -- @version  $Id$
 */
+
+error_reporting(E_ERROR);
+ini_set("display_errors", 1);
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once( "include/pmieducar/geral.inc.php" );
 
-
+require_once 'include/modules/clsModulesItinerarioTransporteEscolar.inc.php';
 require_once("include/modules/clsModulesRotaTransporteEscolar.inc.php");
 require_once("include/modules/clsModulesEmpresaTransporteEscolar.inc.php");
 class clsIndexBase extends clsBase{
@@ -163,14 +167,62 @@ class indice extends clsCadastro {
 	      			$gruda = ", ";
 	    		}
       			$db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
-      			//return $db->InsertId("{$this->_tabela}_seq");
+      			// return $db->InsertId("{$this->_tabela}_seq");
       		}
-      		echo"<script LANGUAGE=\"JavaScript\">alert(\"C\u00f3pia efetuada com sucesso.\");</script>";
+      	}
+
+      			$obj_rota = new clsModulesRotaTransporteEscolar();
+				$obj_rota->setOrderby( " descricao ASC" );
+				$obj_rota->setLimite( $this->limite, $this->offset );
+
+				$lista_new_rota = $obj_rota->lista(
+					null,
+					null,
+					null,
+					null,
+					$this->ano_dest,
+					$this->ref_cod_empresa_transporte_escolar
+				);//pega as rotas novas.
+				
+
+				$num = 0;
+				foreach ($lista as $registro) {
+					$cod_rota_nova = $lista_new_rota[$num]['cod_rota_transporte_escolar'];
+
+					//echo $cod_rota_nova; die;
+					$obj = new clsModulesItinerarioTransporteEscolar();
+		        	//$obj->setOrderby('seq ASC');
+		        	
+		     		$intinerario_old = $obj->lista(NULL, $registro['cod_rota_transporte_escolar']);  //pega os intinerários antigos
+		     		//print_r ($intinerario_old);die;
+		     		$num2 = 0;
+		     		foreach($intinerario_old as $intinerario){
+		     			$intinerario_old[$num2]['ref_cod_rota_transporte_escolar'] = $cod_rota_nova;
+		     			$num2++;
+		     		}
+		     		//print_r ($intinerario_old);die;
+					foreach ( $intinerario_old as $registro ){
+
+							///echo"<pre>";var_dump($lista_new_rota[$chave]['cod_rota_transporte_escolar']);
+			     		//if 	($registro){
+			     			$obj = new clsModulesItinerarioTransporteEscolar(null, 
+				     				$registro['ref_cod_rota_transporte_escolar'], 
+				     				$registro['seq'], 
+				     				$registro['ref_cod_ponto_transporte_escolar'], 
+				     				$registro['ref_cod_veiculo'], 
+				     				$registro['hora'],
+				     				$registro['tipo']);
+			     			$obj->cadastra();
+			     		//}
+		     		}
+		     		$num++;
+				}
+       		//echo"<script LANGUAGE=\"JavaScript\">alert(\"C\u00f3pia efetuada com sucesso.\");</script>";
       		return true;
-		}else{
-			$this->mensagem = "N&atilde;o existe rotas em $this->ano_orig para essa empresa.<br>";
-			return false;
-		}
+		// }else{
+		// 	$this->mensagem = "N&atilde;o existe rotas em $this->ano_orig para essa empresa.<br>";
+		// 	return false;
+		// }
 	}
 }
 
