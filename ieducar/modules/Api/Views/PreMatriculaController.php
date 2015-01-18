@@ -430,6 +430,7 @@ class PreMatriculaController extends ApiCoreController
     $fisica->idpes                = $pessoaId;
     $fisica->data_nasc            = $dataNascimento;
     $fisica->idpes_cad            = 1;
+    $fisica->idpes_rev            = 1;
     $fisica->sexo                 = strtoupper($sexo);
 
     $sql = "select 1 from cadastro.fisica WHERE idpes = $1 limit 1";
