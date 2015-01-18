@@ -136,6 +136,7 @@ class PreMatriculaController extends ApiCoreController
 
       $pessoaMaeId = $pessoaFisicaAluno_det['idpes_mae'];
       $pessoaResponsavelId = $pessoaFisicaAluno_det['idpes_responsavel'];
+      $maeIsResponsavel = ($pessoaMaeId == $pessoaResponsavelId);
 
       if(is_numeric($pessoaMaeId)){
       	$pessoaMaeAluno = new clsPessoa_($pessoaMaeId);
@@ -151,19 +152,21 @@ class PreMatriculaController extends ApiCoreController
         $pessoaMaeId = $this->createOrUpdatePessoaResponsavel($cpfMae, $nomeMae);
         $this->createOrUpdatePessoaFisicaResponsavel($pessoaMaeId, $cpfMae);
       }
-      if(is_numeric($pessoaResponsavelId)){
-      	$pessoaResponsavelAluno = new clsPessoa_($pessoaResponsavelId);
-      	$pessoaResponsavelAluno->nome = $nomeResponsavel;
-      	$pessoaResponsavelAluno->edita();
+      if(!$maeIsResponsavel){
+      	if(is_numeric($pessoaResponsavelId)){
+      		$pessoaResponsavelAluno = new clsPessoa_($pessoaResponsavelId);
+      		$pessoaResponsavelAluno->nome = $nomeResponsavel;
+      		$pessoaResponsavelAluno->edita();
 
-      	$pessoaFisicaResponsavelAluno = new clsFisica($pessoaResponsavelId);
-      	$pessoaFisicaResponsavelAluno->cpf = $cpfResponsavel;
-      	$pessoaFisicaResponsavelAluno->idpes_rev = 1;
-      	$pessoaFisicaResponsavelAluno->edita();
-      }
-      elseif(is_numeric($cpfResponsavel)){
-        $pessoaResponsavelId = $this->createOrUpdatePessoaResponsavel($cpfResponsavel, $nomeResponsavel);
-        $this->createOrUpdatePessoaFisicaResponsavel($pessoaResponsavelId, $cpfResponsavel);
+	      	$pessoaFisicaResponsavelAluno = new clsFisica($pessoaResponsavelId);
+	      	$pessoaFisicaResponsavelAluno->cpf = $cpfResponsavel;
+	      	$pessoaFisicaResponsavelAluno->idpes_rev = 1;
+      		$pessoaFisicaResponsavelAluno->edita();
+      	}
+      	elseif(is_numeric($cpfResponsavel)){
+        	$pessoaResponsavelId = $this->createOrUpdatePessoaResponsavel($cpfResponsavel, $nomeResponsavel);
+        	$this->createOrUpdatePessoaFisicaResponsavel($pessoaResponsavelId, $cpfResponsavel);
+      	}
       }
 
       $this->createOrUpdatePessoaFisica($pessoaAlunoId, $pessoaResponsavelId, $pessoaMaeId, $dataNascAluno, $sexoAluno);
