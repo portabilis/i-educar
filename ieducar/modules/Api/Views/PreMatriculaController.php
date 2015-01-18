@@ -131,12 +131,37 @@ class PreMatriculaController extends ApiCoreController
       $pessoaMaeId = null;
       $pessoaResponsavelId = null;
 
-      if(is_numeric($cpfMae)){
+      $pessoaFisicaAluno = new clsFisica($pessoaAlunoId);
+      $pessoaFisicaAluno_det = $pessoaFisicaAluno->detalhe();
+
+      $pessoaMaeAlunoId = $pessoaFisicaAluno_det['idpes_mae'];
+      $pessoaResponsavelAlunoId = $pessoaFisicaAluno_det['idpes_responsavel'];
+
+      if(is_numeric($pessoaMaeAlunoId)){
+      	$pessoaMaeAluno = new clsPessoa_($pessoaMaeAlunoId);
+      	$pessoaMaeAluno->nome = $nomeMae;
+      	$pessoaMaeAluno->edita();
+
+      	$pessoaFisicaMaeAluno = new clsFisica($pessoaMaeAlunoId);
+      	$pessoaFisicaMaeAluno->cpf = $cpfMae;
+      	$pessoaFisicaMaeAluno->idpes_rev = 1;
+      	$pessoaFisicaMaeAluno->edita();
+      }
+      elseif(is_numeric($cpfMae)){
         $pessoaMaeId = $this->createOrUpdatePessoaResponsavel($cpfMae, $nomeMae);
         $this->createOrUpdatePessoaFisicaResponsavel($pessoaMaeId, $cpfMae);
       }
+      if(is_numeric($pessoaResponsavelAlunoId)){
+      	$pessoaResponsavelAluno = new clsPessoa_($pessoaResponsavelAlunoId);
+      	$pessoaResponsavelAluno->nome = $nomeResponsavel;
+      	$pessoaResponsavelAluno->edita();
 
-      if(is_numeric($cpfResponsavel)){
+      	$pessoaFisicaResponsavelAluno = new clsFisica($pessoaResponsavelAlunoId);
+      	$pessoaFisicaResponsavelAluno->cpf = $cpfResponsavel;
+      	$pessoaFisicaResponsavelAluno->idpes_rev = 1;
+      	$pessoaFisicaResponsavelAluno->edita();
+      }
+      elseif(is_numeric($cpfResponsavel)){
         $pessoaResponsavelId = $this->createOrUpdatePessoaResponsavel($cpfResponsavel, $nomeResponsavel);
         $this->createOrUpdatePessoaFisicaResponsavel($pessoaResponsavelId, $cpfResponsavel);
       }
