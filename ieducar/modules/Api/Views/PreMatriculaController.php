@@ -433,6 +433,8 @@ class PreMatriculaController extends ApiCoreController
   protected function createOrUpdatePessoaResponsavel($cpf, $nome) {
     $pessoa        = new clsPessoa_();
     $pessoa->nome  = addslashes($nome);
+    $pessoa->idpes_cad = 1;
+    $pessoa->idpes_rev = 1;
 
     $sql = "select idpes from cadastro.fisica WHERE cpf = $1 limit 1";
     $pessoaId = Portabilis_Utils_Database::selectField($sql, $cpf);
@@ -480,6 +482,8 @@ class PreMatriculaController extends ApiCoreController
     $fisica                       = new clsFisica();
     $fisica->idpes                = $pessoaId;
     $fisica->cpf                  = $cpf;
+    $fisica->idpes_cad            = 1;
+    $fisica->idpes_rev            = 1;
 
     $sql = "select 1 from cadastro.fisica WHERE idpes = $1 limit 1";
 
