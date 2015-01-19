@@ -175,7 +175,6 @@ class PreMatriculaController extends ApiCoreController
 
       $this->updateDeficiencias($pessoaAlunoId, $deficiencias);
 
-      // @TODO CRIAR/GRAVAR ENDEREÇO
 	  $this->createOrUpdateEndereco($pessoaAlunoId, $cep, $rua, $numero, $complemento, $bairro, $cidade, $estado, $pais);
 
   	  // $this->messenger->append("escola:" . $escolaId . " serie:" . $serieId . " anoletivo:" . $anoLetivo .
@@ -645,7 +644,7 @@ class PreMatriculaController extends ApiCoreController
   }
 
   protected function createLogradouro($logradouro, $municipioId){
-    $objLogradouro = new clsLogradouro(null,'', $logradouro, $municipioId,
+    $objLogradouro = new clsLogradouro(null,'RUA', $logradouro, $municipioId,
                                            null, 'S', 1);
     return $objLogradouro->cadastra();
   }
