@@ -98,7 +98,7 @@ class indice extends clsCadastro {
 		@session_start();
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
-
+		
 		if (!$this->ano_orig or !$this->ref_cod_empresa_transporte_escolar or !$this->ano_dest){
 			$this->mensagem = "Preencha os dados corretamente.<br>";
 			return false;
@@ -117,64 +117,73 @@ class indice extends clsCadastro {
 			$this->ref_cod_empresa_transporte_escolar
 		);
 		if ( is_array( $lista ) && count( $lista ) ){
-			foreach ( $lista as $registro ){
-				$db = new clsBanco();
-				$this->_schema = "modules.";
-    			$this->_tabela = "{$this->_schema}rota_transporte_escolar";
+			$obj_rota = new clsModulesRotaTransporteEscolar();
+				$obj_rota->setOrderby( " descricao ASC" );
+				$obj_rota->setLimite( $this->limite, $this->offset );
+				$lista_new_rota = $obj_rota->lista(
+					null,
+					null,
+					null,
+					null,
+					$this->ano_dest,
+					$this->ref_cod_empresa_transporte_escolar
+				);//verificar se a ampresa ja tem rotas no ano destino.
+			if (!$lista_new_rota){
+				foreach ( $lista as $registro ){
+					$db = new clsBanco();
+					$this->_schema = "modules.";
+	    			$this->_tabela = "{$this->_schema}rota_transporte_escolar";
 
-     			$campos  = '';
-      			$valores = '';
-      			$gruda   = '';
+	     			$campos  = '';
+	      			$valores = '';
+	      			$gruda   = '';
 
-	    		if (is_numeric($registro['ref_idpes_destino'])) {
-	      			$campos .= "{$gruda}ref_idpes_destino";
-	      			$valores .= "{$gruda}'{$registro['ref_idpes_destino']}'";
-	      			$gruda = ", ";
-	      		}    
-	    		if (is_string($registro['descricao'])) {
-	      			$campos .= "{$gruda}descricao";
-	      			$valores .= "{$gruda}'{$registro['descricao']}'";
-	      			$gruda = ", ";
-	    		}
-	    		if (is_numeric($this->ano_dest)) {
-	      			$campos .= "{$gruda}ano";
-	      			$valores .= "{$gruda}'{$this->ano_dest}'";
-	      			$gruda = ", ";
-	    		}
-	    		if (is_string($registro['tipo_rota'])) {
-	      			$campos .= "{$gruda}tipo_rota";
-	      			$valores .= "{$gruda}'{$registro['tipo_rota']}'";
-	      			$gruda = ", ";
-	    		}    
-	    		if (is_numeric($registro['km_pav'])) {
-	      			$campos .= "{$gruda}km_pav";
-	      			$valores .= "{$gruda}'{$registro['km_pav']}'";
-	      			$gruda = ", ";
-	    		}
-	    		if (is_numeric($registro['km_npav'])) {
-	      			$campos .= "{$gruda}km_npav";
-	      			$valores .= "{$gruda}'{$registro['km_npav']}'";
-	      			$gruda = ", ";
-	    		}    
-	    		if (is_numeric($this->ref_cod_empresa_transporte_escolar)) {
-	      			$campos .= "{$gruda}ref_cod_empresa_transporte_escolar";
-	      			$valores .= "{$gruda}'{$this->ref_cod_empresa_transporte_escolar}'";
-	      			$gruda = ", ";
-	    		}    
-	    		if (is_string($registro['tercerizado'])) {
-	      			$campos .= "{$gruda}tercerizado";
-	      			$valores .= "{$gruda}'{$registro['tercerizado']}'";
-	      			$gruda = ", ";
-	    		}
-      			$db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
-      			// return $db->InsertId("{$this->_tabela}_seq");
-      		}
-      	}
-
+		    		if (is_numeric($registro['ref_idpes_destino'])) {
+		      			$campos .= "{$gruda}ref_idpes_destino";
+		      			$valores .= "{$gruda}'{$registro['ref_idpes_destino']}'";
+		      			$gruda = ", ";
+		      		}    
+		    		if (is_string($registro['descricao'])) {
+		      			$campos .= "{$gruda}descricao";
+		      			$valores .= "{$gruda}'{$registro['descricao']}'";
+		      			$gruda = ", ";
+		    		}
+		    		if (is_numeric($this->ano_dest)) {
+		      			$campos .= "{$gruda}ano";
+		      			$valores .= "{$gruda}'{$this->ano_dest}'";
+		      			$gruda = ", ";
+		    		}
+		    		if (is_string($registro['tipo_rota'])) {
+		      			$campos .= "{$gruda}tipo_rota";
+		      			$valores .= "{$gruda}'{$registro['tipo_rota']}'";
+		      			$gruda = ", ";
+		    		}    
+		    		if (is_numeric($registro['km_pav'])) {
+		      			$campos .= "{$gruda}km_pav";
+		      			$valores .= "{$gruda}'{$registro['km_pav']}'";
+		      			$gruda = ", ";
+		    		}
+		    		if (is_numeric($registro['km_npav'])) {
+		      			$campos .= "{$gruda}km_npav";
+		      			$valores .= "{$gruda}'{$registro['km_npav']}'";
+		      			$gruda = ", ";
+		    		}    
+		    		if (is_numeric($this->ref_cod_empresa_transporte_escolar)) {
+		      			$campos .= "{$gruda}ref_cod_empresa_transporte_escolar";
+		      			$valores .= "{$gruda}'{$this->ref_cod_empresa_transporte_escolar}'";
+		      			$gruda = ", ";
+		    		}    
+		    		if (is_string($registro['tercerizado'])) {
+		      			$campos .= "{$gruda}tercerizado";
+		      			$valores .= "{$gruda}'{$registro['tercerizado']}'";
+		      			$gruda = ", ";
+		    		}
+	      			$db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
+	      			// return $db->InsertId("{$this->_tabela}_seq");
+	      		}
       			$obj_rota = new clsModulesRotaTransporteEscolar();
 				$obj_rota->setOrderby( " descricao ASC" );
 				$obj_rota->setLimite( $this->limite, $this->offset );
-
 				$lista_new_rota = $obj_rota->lista(
 					null,
 					null,
@@ -188,23 +197,14 @@ class indice extends clsCadastro {
 				$num = 0;
 				foreach ($lista as $registro) {
 					$cod_rota_nova = $lista_new_rota[$num]['cod_rota_transporte_escolar'];
-
-					//echo $cod_rota_nova; die;
-					$obj = new clsModulesItinerarioTransporteEscolar();
-		        	//$obj->setOrderby('seq ASC');
-		        	
+					$obj = new clsModulesItinerarioTransporteEscolar();		        	
 		     		$intinerario_old = $obj->lista(NULL, $registro['cod_rota_transporte_escolar']);  //pega os intinerários antigos
-		     		//print_r ($intinerario_old);die;
 		     		$num2 = 0;
 		     		foreach($intinerario_old as $intinerario){
-		     			$intinerario_old[$num2]['ref_cod_rota_transporte_escolar'] = $cod_rota_nova;
+		     			$intinerario_old[$num2]['ref_cod_rota_transporte_escolar'] = $cod_rota_nova; //substitui o cod das rotas antigas pelos novos
 		     			$num2++;
 		     		}
-		     		//print_r ($intinerario_old);die;
 					foreach ( $intinerario_old as $registro ){
-
-							///echo"<pre>";var_dump($lista_new_rota[$chave]['cod_rota_transporte_escolar']);
-			     		//if 	($registro){
 			     			$obj = new clsModulesItinerarioTransporteEscolar(null, 
 				     				$registro['ref_cod_rota_transporte_escolar'], 
 				     				$registro['seq'], 
@@ -212,17 +212,28 @@ class indice extends clsCadastro {
 				     				$registro['ref_cod_veiculo'], 
 				     				$registro['hora'],
 				     				$registro['tipo']);
-			     			$obj->cadastra();
-			     		//}
+			     			$obj->cadastra(); //grava os nóvos intinerários no banco
 		     		}
 		     		$num++;
 				}
-       		//echo"<script LANGUAGE=\"JavaScript\">alert(\"C\u00f3pia efetuada com sucesso.\");</script>";
-      		return true;
-		// }else{
-		// 	$this->mensagem = "N&atilde;o existe rotas em $this->ano_orig para essa empresa.<br>";
-		// 	return false;
-		// }
+			$this->mensagem = Portabilis_String_Utils::toLatin1("Cópia efetuada com sucesso");
+			return true;
+
+      		}else{
+      			$this->mensagem = Portabilis_String_Utils::toLatin1("A empresa já possuí rotas em {$this->ano_dest}");
+		 		return false;
+      		}
+      	}else{
+		 	$this->mensagem = Portabilis_String_Utils::toLatin1("Não existe rotas em $this->ano_orig para essa empresa");
+		 	return false;
+		}
+	}
+	protected function flashMessage() {
+
+		if (strpos($this->mensagem, 'sucesso'))
+	 		return empty($this->mensagem) ? "" : "<p class='form_erro success'>$this->mensagem</p>";
+	 	else
+	 		return empty($this->mensagem) ? "" : "<p class='form_erro error'>$this->mensagem</p>";
 	}
 }
 
