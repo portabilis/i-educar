@@ -132,7 +132,8 @@ class indice extends clsListagem
 		$obj_turma = new clsPmieducarTurma();
 		$obj_turma->setOrderby( "nm_turma ASC" );
 		$obj_turma->setLimite( $this->limite, $this->offset );
-
+		if (!$this->ano)
+			$this->ano = date (Y);
 		$lista = $obj_turma->lista3(
 			$this->ref_cod_turma,
 			null,
@@ -159,7 +160,16 @@ class indice extends clsListagem
 			null,
 			null,
 			$this->ref_cod_curso,
-			$this->ref_cod_instituicao
+			$this->ref_cod_instituicao,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null,
+			$this->ano
 		);
 
 		$total = $obj_turma->_total;
