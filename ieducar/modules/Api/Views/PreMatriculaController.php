@@ -576,10 +576,10 @@ class PreMatriculaController extends ApiCoreController
 
   protected function createOrUpdateEndereco($pessoaAlunoId, $cep, $rua, $numero, $complemento, $bairro, $cidade, $estado, $pais) {
 
-  	$logradouroId = Portabilis_Utils_Database::selectField('SELECT idlog FROM public.logradouro WHERE upper(nome) = upper($1) limit 1', $rua);
   	$municipioId  = Portabilis_Utils_Database::selectField('SELECT idmun FROM public.municipio WHERE upper(nome) = upper($1) limit 1', $cidade);
   	$distritoId   = Portabilis_Utils_Database::selectField('SELECT iddis FROM public.distrito WHERE upper(nome) = upper($1) limit 1', $cidade);
   	$bairroId     = Portabilis_Utils_Database::selectField('SELECT idbai FROM public.bairro WHERE upper(nome) = upper($1) and idmun = $2 limit 1', array($bairro, $municipioId));
+  	$logradouroId = Portabilis_Utils_Database::selectField('SELECT idlog FROM public.logradouro WHERE upper(nome) = upper($1) and idmun = $2 limit 1', array($rua, $municipioId));
 
   	// $this->messenger->append("Bairro: " . $bairroId . "Logradouro: " . $logradouroId . "Municipio: " . $municipioId . "Distrito: " . $distritoId . "cep: " . $cep);
   	// $this->messenger->append(" parametros: " . $pessoaAlunoId." ". $cep." ". $rua." ". $numero." ". $complemento." ". $bairro." ". $cidade." ". $estado." ". $pais);
