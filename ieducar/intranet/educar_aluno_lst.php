@@ -117,7 +117,8 @@ class indice extends clsListagem
 		if(!$GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu'){
 			$this->campoNumero("cod_inep","C&oacute;digo INEP",$this->cod_inep,20,255,false);
 		}
-		$this->campoNumero("aluno_estado_id",($GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu' ? "C&oacute;digo estadual do aluno(R.A.)" : "C&oacute;digo estadual do aluno" ), $this->aluno_estado_id,20,255,false);
+		//$this->campoNumero("aluno_estado_id",($GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu' ? "C&oacute;digo estadual do aluno(R.A.)" : "C&oacute;digo estadual do aluno" ), $this->aluno_estado_id,20,255,false);
+		$this->campoRA('aluno_estado_id', Portabilis_String_Utils::toLatin1("Código rede estadual do aluno(RA)"), $this->aluno_estado_id, FALSE);
 		$this->campoTexto("nome_aluno","Nome do aluno", $this->nome_aluno,50,255,false);
 		$this->campoData("data_nascimento", "Data de Nascimento", $this->data_nascimento);
 		$this->campoTexto("nome_pai", "Nome do Pai", $this->nome_pai, 50, 255);
