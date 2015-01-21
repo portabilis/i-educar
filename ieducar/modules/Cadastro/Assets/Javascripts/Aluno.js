@@ -1239,6 +1239,11 @@ function canShowParentsFields(){
         }
 
         $j('#cep_').val(person_details.cep);
+        person_details.fone_fixo = ((person_details.fone_fixo != 0) ? person_details.fone_fixo : null);
+        $j('#telefone_fixo').val(person_details.fone_fixo);
+        person_details.fone_mov = ((person_details.fone_mov != 0) ? person_details.fone_mov : null);
+        $j('#telefone_cel').val(person_details.fone_mov);
+        $j('#distrito_id').val(person_details.iddis);
 
         if ($j('#cep_').val()){
 
@@ -1259,12 +1264,6 @@ function canShowParentsFields(){
           $j('#andar').val(person_details.andar);
 
           $j('#municipio_id').val(person_details.idmun);
-
-          person_details.fone_fixo = ((person_details.fone_fixo != 0) ? person_details.fone_fixo : null);
-          $j('#telefone_fixo').val(person_details.fone_fixo);
-          person_details.fone_mov = ((person_details.fone_mov != 0) ? person_details.fone_mov : null);
-          $j('#telefone_cel').val(person_details.fone_mov);
-          $j('#distrito_id').val(person_details.iddis);
 
           $j('#municipio_municipio').val(person_details.idmun+' - '+person_details.municipio+' ('+person_details.sigla_uf+')');
           $j('#distrito_distrito').val(person_details.iddis+' - '+person_details.distrito);
