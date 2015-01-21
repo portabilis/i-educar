@@ -1037,7 +1037,7 @@ function canShowParentsFields(){
     $j('#municipio_pessoa-aluno').closest('tr').hide();
 
 
-    $j('body').append('<div id="dialog-form-pessoa-aluno" ><form><p></p><table><tr><td valign="top"><fieldset><legend>Dados b&aacute;sicos</legend><label for="nome-pessoa-aluno">Nome</label>    <input type="text " name="nome-pessoa-aluno" id="nome-pessoa-aluno" size="58" maxlength="255" class="text">    <label for="sexo-pessoa-aluno">Sexo</label>  <select class="select ui-widget-content ui-corner-all" name="sexo-pessoa-aluno" id="sexo-pessoa-aluno" ><option value="" selected>Sexo</option><option value="M">Masculino</option><option value="F">Feminino</option></select>    <label for="estado-civil-pessoa-aluno">Estado civil</label>   <select class="select ui-widget-content ui-corner-all" name="estado-civil-pessoa-aluno" id="estado-civil-pessoa-aluno"  ><option id="estado-civil-pessoa-aluno_" value="" selected>Estado civil</option><option id="estado-civil-pessoa-aluno_2" value="2">Casado(a)</option><option id="estado-civil-pessoa-aluno_6" value="6">Companheiro(a)</option><option id="estado-civil-pessoa-aluno_3" value="3">Divorciado(a)</option><option id="estado-civil-pessoa-aluno_4" value="4">Separado(a)</option><option id="estado-civil-pessoa-aluno_1" value="1">Solteiro(a)</option><option id="estado-civil-pessoa-aluno_5" value="5">Vi&uacute;vo(a)</option></select> <label for="data-nasc-pessoa-aluno"> Data de nascimento </label> <input onKeyPress="formataData(this, event);" class="" placeholder="dd/mm/yyyy" type="text" name="data-nasc-pessoa-aluno" id="data-nasc-pessoa-aluno" value="" size="11" maxlength="10" > <label for="naturalidade_pessoa-aluno"> Naturalidade </label>  </fieldset> </td><td><fieldset valign="top"> <legend>Dados do endere&ccedil;o</legend> <table></table></fieldset></td><td><fieldset ><table></table></fieldset></td></tr></table><p><a id="link_cadastro_detalhado" target="_blank">Cadastro detalhado</a></p></form></div>');
+    $j('body').append('<div id="dialog-form-pessoa-aluno" ><form><p></p><table><tr><td valign="top"><fieldset><legend>Dados b&aacute;sicos</legend><label for="nome-pessoa-aluno">Nome</label>    <input type="text " name="nome-pessoa-aluno" id="nome-pessoa-aluno" size="58" maxlength="255" class="text">    <label for="sexo-pessoa-aluno">Sexo</label>  <select class="select ui-widget-content ui-corner-all" name="sexo-pessoa-aluno" id="sexo-pessoa-aluno" ><option value="" selected>Sexo</option><option value="M">Masculino</option><option value="F">Feminino</option></select>    <label for="estado-civil-pessoa-aluno">Estado civil</label>   <select class="select ui-widget-content ui-corner-all" name="estado-civil-pessoa-aluno" id="estado-civil-pessoa-aluno"  ><option id="estado-civil-pessoa-aluno_" value="" selected>Estado civil</option><option id="estado-civil-pessoa-aluno_2" value="2">Casado(a)</option><option id="estado-civil-pessoa-aluno_6" value="6">Companheiro(a)</option><option id="estado-civil-pessoa-aluno_3" value="3">Divorciado(a)</option><option id="estado-civil-pessoa-aluno_4" value="4">Separado(a)</option><option id="estado-civil-pessoa-aluno_1" value="1">Solteiro(a)</option><option id="estado-civil-pessoa-aluno_5" value="5">Vi&uacute;vo(a)</option></select> <label for="data-nasc-pessoa-aluno"> Data de nascimento </label> <input onKeyPress="formataData(this, event);" class="" placeholder="dd/mm/yyyy" type="text" name="data-nasc-pessoa-aluno" id="data-nasc-pessoa-aluno" value="" size="11" maxlength="10" > <label for="telefone_fixo">Telefone</label> <input onKeyPress="formataFoneNew(this, event);" placeholder="(ddd)+n\u00famero" type="text" name="telefone_fixo" id="telefone_fixo" size="14" maxlength="13" class="text" /><label for="telefone_cel">Celular</label> <input onKeyPress="formataFoneNew(this, event);" type="text " name="telefone_cel" id="telefone_cel" placeholder="(ddd)+n\u00famero" size="14" maxlength="13" class="text"> <label for="naturalidade_pessoa-aluno"> Naturalidade </label>  </fieldset> </td><td><fieldset valign="top"> <legend>Dados do endere&ccedil;o</legend> <table></table></fieldset></td><td><fieldset ><table></table></fieldset></td></tr></table><p><a id="link_cadastro_detalhado" target="_blank">Cadastro detalhado</a></p></form></div>');
 
     var name = $j("#nome-pessoa-aluno"),
       sexo = $j( "#sexo-pessoa-aluno" ),
@@ -1045,13 +1045,15 @@ function canShowParentsFields(){
       datanasc     = $j( "#data-nasc-pessoa-aluno" ),
       municipio    = $j( "#naturalidade_aluno_pessoa-aluno" ),
       municipio_id = $j( "#naturalidade_aluno_id" ),
+      telefone_1   = $j( "#telefone_fixo" ),
+      telefone_mov = $j( "#telefone_cel" ),
       complemento  = $j( "#complemento" ),
       numero       = $j( "#numero" ),
       letra        = $j( "#letra" ),
       apartamento  = $j( "#apartamento" ),
       bloco        = $j( "#bloco" ),
       andar        = $j( "#andar" ),
-      allFields = $j( [] ).add( name ).add( sexo ).add( estadocivil ).add(datanasc).add(municipio).add(municipio_id)
+      allFields = $j( [] ).add( name ).add( sexo ).add( estadocivil ).add(datanasc).add(municipio).add(telefone_1).add(telefone_mov).add(municipio_id)
       .add(complemento).add(numero).add(letra).add(apartamento).add(bloco).add(andar);
 
     municipio.show().toggleClass('geral text').attr('display', 'block').appendTo('#dialog-form-pessoa-aluno tr td:first-child fieldset');
@@ -1112,7 +1114,7 @@ function canShowParentsFields(){
           bValid = bValid && ($j('#cep_').val() == '' ? true : validateEndereco());
 
           if ( bValid ) {
-            postPessoa($j('#pessoa_nome'), name.val(), sexo.val(), estadocivil.val(), datanasc.val(), municipio_id.val(), (editar_pessoa ? $j('#pessoa_id').val() : null), null);
+            postPessoa($j('#pessoa_nome'), name.val(), sexo.val(), estadocivil.val(), datanasc.val(), municipio_id.val(), (editar_pessoa ? $j('#pessoa_id').val() : null), null, telefone_1.val(), telefone_mov.val());
             $j( this ).dialog( "close" );
           }
         },
@@ -1257,6 +1259,11 @@ function canShowParentsFields(){
           $j('#andar').val(person_details.andar);
 
           $j('#municipio_id').val(person_details.idmun);
+
+          person_details.fone_fixo = ((person_details.fone_fixo != 0) ? person_details.fone_fixo : null);
+          $j('#telefone_fixo').val(person_details.fone_fixo);
+          person_details.fone_mov = ((person_details.fone_mov != 0) ? person_details.fone_mov : null);
+          $j('#telefone_cel').val(person_details.fone_mov);
           $j('#distrito_id').val(person_details.iddis);
 
           $j('#municipio_municipio').val(person_details.idmun+' - '+person_details.municipio+' ('+person_details.sigla_uf+')');
@@ -1443,13 +1450,15 @@ function canShowParentsFields(){
   }); // ready
 
 
-  function postPessoa($pessoaField, nome, sexo, estadocivil, datanasc, naturalidade, pessoa_id, parentType) {
+  function postPessoa($pessoaField, nome, sexo, estadocivil, datanasc, naturalidade, pessoa_id, parentType, telefone_1, telefone_mov) {
 
       var data = {
         nome             : nome,
         sexo             : sexo,
         estadocivil      : estadocivil,
         datanasc         : datanasc,
+        telefone_1       : telefone_1,
+        telefone_mov     : telefone_mov,
         naturalidade     : naturalidade,
         pessoa_id        : pessoa_id
       };
@@ -1494,6 +1503,8 @@ function canShowParentsFields(){
         letra              : $j('#letra').val(),
         bloco              : $j('#bloco').val(),
         andar              : $j('#andar').val()
+       // telefone_1         : $j('#telefone_1').val()
+       // telefone_mov       : $j('#telefone_mov').val()
       };
 
       var options = {
