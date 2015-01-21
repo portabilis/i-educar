@@ -557,10 +557,10 @@ function formataCNPJ(campo, e)
  function formataFoneNew(campo, e)
 {   
     // console.log(e.keyCode);
-    if (e.keyCode != 40 && (campo.value.length == 0)) {
+    if (window.event.keyCode != 40 && (campo.value.length == 0)) {
       campo.value += '(';
     }
-    if (e.keyCode != 41 && (campo.value.length == 3)) {
+    if (window.event.keyCode != 41 && (campo.value.length == 3)) {
       campo.value += ')';
     }
     // Allow: backspace, delete, tab, escape, enter and .
