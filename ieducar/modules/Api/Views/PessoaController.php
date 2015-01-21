@@ -171,7 +171,10 @@ class PessoaController extends ApiCoreController
                 INNER JOIN public.bairro ON (endereco_pessoa.idbai = bairro.idbai)
                 INNER JOIN public.distrito ON (bairro.iddis = distrito.iddis)
                          WHERE idpes = $2) as distrito,
-
+              (SELECT fone_pessoa.fone FROM cadastro.fone_pessoa WHERE fone_pessoa.idpes = $2 AND fone_pessoa.tipo = 1) as fone_fixo,
+              (SELECT fone_pessoa.fone FROM cadastro.fone_pessoa WHERE fone_pessoa.idpes = $2 AND fone_pessoa.tipo = 2) as fone_mov,
+              (SELECT fone_pessoa.ddd FROM cadastro.fone_pessoa WHERE fone_pessoa.idpes = $2 AND fone_pessoa.tipo = 1) as ddd_fone_fixo,
+              (SELECT fone_pessoa.ddd FROM cadastro.fone_pessoa WHERE fone_pessoa.idpes = $2 AND fone_pessoa.tipo = 2) as ddd_fone_mov,
 
              (SELECT idlog FROM cadastro.endereco_pessoa WHERE idpes = $2) as idlog
             from cadastro.fisica where idpes = $2";
@@ -185,7 +188,7 @@ class PessoaController extends ApiCoreController
     $attrs   = array('cpf', 'rg', 'data_nascimento', 'pai_id', 'mae_id', 'responsavel_id', 'nome_pai', 'nome_mae',
                        'nome_responsavel','sexo','estadocivil', 'cep', 'logradouro', 'idtlog', 'bairro',
                        'zona_localizacao', 'idbai', 'idlog', 'idmun', 'idmun_nascimento', 'complemento',
-                       'apartamento', 'andar', 'bloco', 'numero' , 'letra', 'possui_documento', 'iddis', 'distrito');
+                       'apartamento', 'andar', 'bloco', 'numero' , 'letra', 'possui_documento', 'iddis', 'distrito', 'fone_fixo', 'fone_mov', 'ddd_fone_fixo', 'ddd_fone_mov');
     $details = Portabilis_Array_Utils::filter($details, $attrs);
 
     $details['aluno_id']         = $alunoId;
@@ -200,6 +203,8 @@ class PessoaController extends ApiCoreController
     $detaihandleGetPersonls['complemento']      = $this->toUtf8($details['complemento']);
     $details['letra']            = $this->toUtf8($details['letra']);
     $details['bloco']            = $this->toUtf8($details['bloco']);
+    $details['fone_fixo']            = $this->toUtf8("({$details['ddd_fone_fixo']}){$details['fone_fixo']}");
+    $details['fone_mov']            = $this->toUtf8("({$details['ddd_fone_mov']}){$details['fone_mov']}");
 
     if($details['idmun']){
 
@@ -424,6 +429,8 @@ class PessoaController extends ApiCoreController
     //$fisica->idpes_pai          = "NULL";
     //$fisica->idpes_mae          = "NULL";
     $fisica->idmun_nascimento   = $this->getRequest()->naturalidade;
+    $fone_fixo                  = $this->getRequest()->telefone_1;
+    $fone_mov                   = $this->getRequest()->telefone_mov;
 
     $sql = "select 1 from cadastro.fisica WHERE idpes = $1 limit 1";
 
@@ -431,6 +438,27 @@ class PessoaController extends ApiCoreController
       $fisica->cadastra();
     else
       $fisica->edita();
+    if ($fone_fixo){
+      //$rest = substr("abcdef", -3, 1); // retorna "d"
+      $ddd_fixo = substr($fone_fixo, 1,2);
+      $fone_fixo = substr($fone_fixo, 4);
+      if (is_numeric($fone_fixo) and is_numeric($ddd_fixo)){
+        $db = new clsBanco();
+        $sql = "update fone_pessoa set fone = $fone_fixo, ddd = $ddd_fixo where fone_pessoa.idpes = $fisica->idpes AND fone_pessoa.tipo = 1";
+        $db->Consulta($sql);
+      }else
+        echo "No campo telefone use apenas números.";
+    }
+    if ($fone_mov){
+      $ddd_mov = substr($fone_mov, 1,2);
+      $fone_mov = substr($fone_mov, 4);
+      if (is_numeric($fone_mov) and is_numeric($ddd_mov)){
+        $db = new clsBanco();
+        $sql = "update fone_pessoa set fone = $fone_mov, ddd = $ddd_mov where fone_pessoa.idpes = $fisica->idpes AND fone_pessoa.tipo = 2";
+        $db->Consulta($sql);
+      }else
+        echo "No campo celular use apenas números.";
+    }
 
   }
 
