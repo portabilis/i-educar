@@ -32,6 +32,7 @@ require_once 'CoreExt/Validate/Choice.php';
 require_once 'CoreExt/Validate/ChoiceMultiple.php';
 require_once 'CoreExt/Validate/String.php';
 require_once 'CoreExt/Validate/Numeric.php';
+require_once 'CoreExt/Validate/Date.php';
 
 /**
  * CoreExt_Validatable interface.
