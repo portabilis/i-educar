@@ -50,14 +50,21 @@ class indice extends clsCadastro
 	var $cod_distribuicao_uniforme;
 	var $ref_cod_aluno;
 	var $ano;
-  var $agasalho_qtd;
-  var $camiseta_curta_qtd;
-  var $camiseta_longa_qtd;
-  var $meias_qtd;
-  var $bermudas_tectels_qtd;
-  var $bermudas_coton_qtd;
-  var $tenis_qtd;
-  var $data;
+	var $agasalho_qtd;
+	var $camiseta_curta_qtd;
+	var $camiseta_longa_qtd;
+	var $meias_qtd;
+	var $bermudas_tectels_qtd;
+	var $bermudas_coton_qtd;
+	var $tenis_qtd;
+	var $data;
+	var $agasalho_tm;
+	var $camiseta_curta_tm;
+	var $camiseta_longa_tm;
+	var $meias_tm;
+	var $bermudas_tectels_tm;
+	var $bermudas_coton_tm;
+	var $tenis_tm;
 
 	function Inicializar()
 	{
@@ -120,13 +127,41 @@ class indice extends clsCadastro
 		$this->campoNumero( "ano", "Ano", $this->ano, 4, 4, true );
 		$this->inputsHelper()->date('data', array( 'label' => "Data da distribuição", 'value' => $this->data, 'placeholder' => ''));		
 		$this->inputsHelper()->checkbox('kit_completo', array( 'label' => "Kit completo", 'value' => $this->kit_completo));		
-		$this->campoNumero( "agasalho_qtd", "Quantidade de agasalhos (jaqueta e calça)", $this->agasalho_qtd, 2, 2, false );
-		$this->campoNumero( "camiseta_curta_qtd", "Quantidade de camisetas (manga curta)", $this->camiseta_curta_qtd, 2, 2, false);
-		$this->campoNumero( "camiseta_longa_qtd", "Quantidade de camisetas (manga longa)", $this->camiseta_longa_qtd, 2, 2, false);
-		$this->campoNumero( "meias_qtd", "Quantidade de meias", $this->meias_qtd, 2, 2, false);
-		$this->campoNumero( "bermudas_tectels_qtd", "Bermudas tectels (masculino)", $this->bermudas_tectels_qtd, 2, 2, false);
-		$this->campoNumero( "bermudas_coton_qtd", "Bermudas coton (feminino)", $this->bermudas_coton_qtd, 2, 2, false);
-		$this->campoNumero( "tenis_qtd", "Tênis", $this->tenis_qtd, 2, 2, false);
+		// $this->campoNumero( "agasalho_qtd", "Quantidade de agasalhos (jaqueta e calça)", $this->agasalho_qtd, 2, 2, false );
+		$options = array('required' => false, 'label' => 'Quantidade de agasalhos (jaqueta e calça)', 'value' => $this->agasalho_qtd, 'max_length' => 2, 'size' => 2, 'inline'	=> true);
+	    $this->inputsHelper()->integer('agasalho_qtd', $options);
+		$options = array('required' => false, 'label' => ' Tamanho', 'value' => $this->agasalho_tm, 'max_length'  => 10, 'size' => 10);
+	    $this->inputsHelper()->text('agasalho_tm', $options);
+		// $this->campoNumero( "camiseta_curta_qtd", "Quantidade de camisetas (manga curta)", $this->camiseta_curta_qtd, 2, 2, false);
+		$options = array('required' => false, 'label' => 'Quantidade de camisetas (manga curta)', 'value' => $this->camiseta_curta_qtd, 'max_length' => 2, 'size' => 2, 'inline'	=> true);
+	    $this->inputsHelper()->integer('camiseta_curta_qtd', $options);
+		$options = array('required' => false, 'label' => ' Tamanho', 'value' => $this->camiseta_curta_tm, 'max_length'  => 10, 'size' => 10);
+	    $this->inputsHelper()->text('camiseta_curta_tm', $options);
+		// $this->campoNumero( "camiseta_longa_qtd", "Quantidade de camisetas (manga longa)", $this->camiseta_longa_qtd, 2, 2, false);
+		$options = array('required' => false, 'label' => 'Quantidade de camisetas (manga longa)', 'value' => $this->camiseta_longa_qtd, 'max_length' => 2, 'size' => 2, 'inline'	=> true);
+	    $this->inputsHelper()->integer('camiseta_longa_qtd', $options);
+		$options = array('required' => false, 'label' => ' Tamanho', 'value' => $this->camiseta_longa_tm, 'max_length'  => 10, 'size' => 10);
+	    $this->inputsHelper()->text('camiseta_longa_tm', $options);
+		// $this->campoNumero( "meias_qtd", "Quantidade de meias", $this->meias_qtd, 2, 2, false);
+		$options = array('required' => false, 'label' => 'Quantidade de meias', 'value' => $this->meias_qtd, 'max_length' => 2, 'size' => 2, 'inline'	=> true);
+	    $this->inputsHelper()->integer('meias_qtd', $options);
+		$options = array('required' => false, 'label' => ' Tamanho', 'value' => $this->meias_tm, 'max_length'  => 10, 'size' => 10);
+	    $this->inputsHelper()->text('meias_tm', $options);
+		// $this->campoNumero( "bermudas_tectels_qtd", "Bermudas tectels (masculino)", $this->bermudas_tectels_qtd, 2, 2, false);
+		$options = array('required' => false, 'label' => 'Bermudas tectels (masculino)', 'value' => $this->bermudas_tectels_qtd, 'max_length' => 2, 'size' => 2, 'inline'	=> true);
+	    $this->inputsHelper()->integer('bermudas_tectels_qtd', $options);
+		$options = array('required' => false, 'label' => ' Tamanho', 'value' => $this->bermudas_tectels_tm, 'max_length'  => 10, 'size' => 10);
+	    $this->inputsHelper()->text('bermudas_tectels_tm', $options);
+		// $this->campoNumero( "bermudas_coton_qtd", "Bermudas coton (feminino)", $this->bermudas_coton_qtd, 2, 2, false);
+		$options = array('required' => false, 'label' => 'Bermudas coton (feminino)', 'value' => $this->bermudas_coton_qtd, 'max_length' => 2, 'size' => 2, 'inline' => true);
+	    $this->inputsHelper()->integer('bermudas_coton_qtd', $options);
+		$options = array('required' => false, 'label' => ' Tamanho', 'value' => $this->bermudas_coton_tm, 'max_length' => 10, 'size' => 10);
+	    $this->inputsHelper()->text('bermudas_coton_tm', $options);
+	    // $this->campoNumero( "tamanho", "Tênis", $this->tenis_qtd, 2, 2, false);
+		$options = array('required' => false, 'label' => 'Tênis', 'value' => $this->tenis_qtd, 'max_length' => 2, 'size' => 2, 'inline'	=> true);
+	    $this->inputsHelper()->integer('tenis_qtd', $options);
+		$options = array('required' => false, 'label' => ' Tamanho', 'value' => $this->tenis_tm, 'max_length'  => 10, 'size' => 10);
+	    $this->inputsHelper()->text('tenis_tm', $options);
 
 	}
 
@@ -151,7 +186,9 @@ class indice extends clsCadastro
 
 		$obj = new clsPmieducarDistribuicaoUniforme( null, $this->ref_cod_aluno, $this->ano, !is_null($this->kit_completo), $this->agasalho_qtd, 
 																								$this->camiseta_curta_qtd, $this->camiseta_longa_qtd, $this->meias_qtd, $this->bermudas_tectels_qtd, 
-																								$this->bermudas_coton_qtd, $this->tenis_qtd, $this->data);
+																								$this->bermudas_coton_qtd, $this->tenis_qtd, $this->data,
+																								$this->agasalho_tm, $this->camiseta_curta_tm, $this->camiseta_longa_tm, $this->meias_tm, 
+																								$this->bermudas_tectels_tm, $this->bermudas_coton_tm, $this->tenis_tm);
 		$cadastrou = $obj->cadastra();
 		if( $cadastrou )
 		{
@@ -191,7 +228,9 @@ class indice extends clsCadastro
 
 		$obj = new clsPmieducarDistribuicaoUniforme( $this->cod_distribuicao_uniforme, $this->ref_cod_aluno, $this->ano, !is_null($this->kit_completo), 
 																									$this->agasalho_qtd, $this->camiseta_curta_qtd, $this->camiseta_longa_qtd, $this->meias_qtd, 
-																									$this->bermudas_tectels_qtd, $this->bermudas_coton_qtd, $this->tenis_qtd, $this->data);
+																									$this->bermudas_tectels_qtd, $this->bermudas_coton_qtd, $this->tenis_qtd, $this->data,
+																									$this->agasalho_tm, $this->camiseta_curta_tm, $this->camiseta_longa_tm, $this->meias_tm, 
+																									$this->bermudas_tectels_tm, $this->bermudas_coton_tm, $this->tenis_tm);
 		$editou = $obj->edita();
 		if( $editou )
 		{
