@@ -1239,9 +1239,7 @@ function canShowParentsFields(){
         }
 
         $j('#cep_').val(person_details.cep);
-        person_details.fone_fixo = ((person_details.fone_fixo != 0) ? person_details.fone_fixo : null);
         $j('#telefone_fixo').val(person_details.fone_fixo);
-        person_details.fone_mov = ((person_details.fone_mov != 0) ? person_details.fone_mov : null);
         $j('#telefone_cel').val(person_details.fone_mov);
         $j('#distrito_id').val(person_details.iddis);
 

@@ -203,8 +203,10 @@ class PessoaController extends ApiCoreController
     $detaihandleGetPersonls['complemento']      = $this->toUtf8($details['complemento']);
     $details['letra']            = $this->toUtf8($details['letra']);
     $details['bloco']            = $this->toUtf8($details['bloco']);
-    $details['fone_fixo']            = $this->toUtf8("({$details['ddd_fone_fixo']}){$details['fone_fixo']}");
-    $details['fone_mov']            = $this->toUtf8("({$details['ddd_fone_mov']}){$details['fone_mov']}");
+    if ($details['fone_fixo'])
+      $details['fone_fixo']            = $this->toUtf8("({$details['ddd_fone_fixo']}){$details['fone_fixo']}");
+    if ($details['fone_mov'])
+      $details['fone_mov']            = $this->toUtf8("({$details['ddd_fone_mov']}){$details['fone_mov']}");
 
     if($details['idmun']){
 
@@ -438,30 +440,23 @@ class PessoaController extends ApiCoreController
       $fisica->cadastra();
     else
       $fisica->edita();
+    
+
     if ($fone_fixo){
-      //$rest = substr("abcdef", -3, 1); // retorna "d"
       $ddd_fixo = substr($fone_fixo, 1,2);
       $fone_fixo = substr($fone_fixo, 4);
-      if (is_numeric($fone_fixo) and is_numeric($ddd_fixo)){
-        $db = new clsBanco();
-        $sql = "update fone_pessoa set fone = $fone_fixo, ddd = $ddd_fixo where fone_pessoa.idpes = $fisica->idpes AND fone_pessoa.tipo = 1";
-        $db->Consulta($sql);
-      }else
-        echo "No campo telefone use apenas números.";
+      $telefone = new clsPessoaTelefone($fisica->idpes, 1, $fone_fixo, $ddd_fixo);
+      $telefone->cadastra();
     }
     if ($fone_mov){
       $ddd_mov = substr($fone_mov, 1,2);
       $fone_mov = substr($fone_mov, 4);
-      if (is_numeric($fone_mov) and is_numeric($ddd_mov)){
-        $db = new clsBanco();
-        $sql = "update fone_pessoa set fone = $fone_mov, ddd = $ddd_mov where fone_pessoa.idpes = $fisica->idpes AND fone_pessoa.tipo = 2";
-        $db->Consulta($sql);
-      }else
-        echo "No campo celular use apenas números.";
+      $telefone = new clsPessoaTelefone($fisica->idpes, 2, $fone_mov, $ddd_mov);
+      $telefone->cadastra();
     }
 
   }
-
+//select fone from fone_pessoa where fone_pessoa.idpes = 18664 AND fone_pessoa.tipo = 1
   protected function _createOrUpdatePessoaEndereco($pessoaId) {
 
     $cep = idFederal2Int($this->getRequest()->cep);
