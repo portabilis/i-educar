@@ -1057,6 +1057,10 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
       case 'string':
         $return = (string)$cmpVal;
         break;
+
+      case 'date':
+        $return = $this->getDatabaseDate($cmpVal);
+        break;
     }
     return $return;
   }
@@ -1080,6 +1084,24 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
     }
 
     return floatval($value);
+  }
+
+  /**
+   * Retorna uma data formatada para ser usada no banco de dados.
+   *
+   * @param numeric $value
+   * @return float
+   */
+  public function getDatabaseDate($value)
+  {
+    $hasSlash = strpos($value, '/') !== FALSE;
+
+    if ($hasSlash) {
+      list($day, $month, $year) = explode('/', $value);
+      $value = $year . '-' . $month . '-' . $day;
+    }
+
+    return $value;
   }
 
   /**
