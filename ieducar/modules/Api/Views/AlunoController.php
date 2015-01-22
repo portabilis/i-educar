@@ -174,11 +174,17 @@ class AlunoController extends ApiCoreController
         $sql     .= " and cod_aluno != $2";
         $params[] = $this->getRequest()->id;
       }
+      $count = strlen($this->getRequest()->aluno_estado_id);
+      if ($count < 13) {
+        $this->messenger->append("Código rede estadual inválido ".
+                                 "{$this->getRequest()->aluno_estado_id}.");
 
+        return false;
+      }
       $alunoId = $this->fetchPreparedQuery($sql, $params, true, 'first-field');
 
       if ($alunoId) {
-        $this->messenger->append("Já existe o aluno $alunoId cadastrado com código estado ".
+        $this->messenger->append("Já existe o aluno $alunoId cadastrado com código estadual (RA) ".
                                  "{$this->getRequest()->aluno_estado_id}.");
 
         return false;
@@ -471,7 +477,7 @@ class AlunoController extends ApiCoreController
 
     $aluno                          = new clsPmieducarAluno();
     $aluno->cod_aluno               = $id;
-    $aluno->aluno_estado_id         = Portabilis_String_Utils::toLatin1($this->getRequest()->aluno_estado_id);
+    $aluno->aluno_estado_id         = strtoupper(Portabilis_String_Utils::toLatin1($this->getRequest()->aluno_estado_id));
     $aluno->codigo_sistema          = Portabilis_String_Utils::toLatin1($this->getRequest()->codigo_sistema);
 
     // após cadastro não muda mais id pessoa

@@ -554,6 +554,30 @@ function formataCNPJ(campo, e)
  *   clsCampos.inc.php. Não existem chamadas para campoFone().
  *   Ver: $ egrep -rn 'formataFone[ ]{0,3}\(' intranet/
  */
+ function formataFoneNew(campo, e)
+{   
+    // console.log(e.keyCode);
+    if (window.event.keyCode != 40 && (campo.value.length == 0)) {
+      campo.value += '(';
+    }
+    if (window.event.keyCode != 41 && (campo.value.length == 3)) {
+      campo.value += ')';
+    }
+    // Allow: backspace, delete, tab, escape, enter and .
+    if ($j.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
+         // Allow: Ctrl+A
+        (e.keyCode == 65 && e.ctrlKey === true) || 
+         // Allow: home, end, left, right
+        (e.keyCode >= 35 && e.keyCode <= 39)) {
+             // let it happen, don't do anything
+             return;
+    }
+    // Ensure that it is a number and stop the keypress
+    if ((e.keyCode < 48 || e.keyCode > 57) && (e.keyCode != 40 && e.keyCode != 41) ) {
+        e.preventDefault();
+    }
+}
+
 function formataFone(campo, e)
 {
   if (typeof window.event != 'undefined') {
