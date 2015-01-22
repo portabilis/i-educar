@@ -240,32 +240,33 @@ class EscolaController extends ApiCoreController
 protected function getInformacaoEscolas(){
 
   $sql = " SELECT escola.cod_escola as cod_escola,
-                  juridica.fantasia as nome,
-                  endereco_pessoa.cep as cep,
-                  endereco_pessoa.numero as numero,
-                  endereco_pessoa.complemento as complemento,
-                  logradouro.nome as logradouro,
-                  bairro.nome as bairro,
-                  municipio.nome as municipio,
-                  uf.sigla_uf as uf,
-                  pais.nome as pais,
-                  pessoa.email as email,
-                  fone_pessoa.ddd as ddd,
-                  fone_pessoa.fone as fone,
-                  pessoa_responsavel.nome as nome_responsavel
-             from pmieducar.escola
-            inner join cadastro.juridica on(escola.ref_idpes = juridica.idpes)
-             left join cadastro.pessoa on(juridica.idpes = pessoa.idpes)
-             left join cadastro.pessoa pessoa_responsavel on(escola.ref_idpes_gestor = pessoa_responsavel.idpes)
-             left join cadastro.fone_pessoa on(fone_pessoa.idpes = pessoa.idpes)
-             left join cadastro.endereco_pessoa on(escola.ref_idpes = endereco_pessoa.idpes)
-             left join public.logradouro on(endereco_pessoa.idlog = logradouro.idlog)
-             left join public.municipio on(logradouro.idmun = municipio.idmun)
-             left join public.uf on(municipio.sigla_uf = uf.sigla_uf)
-             left join public.bairro on(endereco_pessoa.idbai = bairro.idbai and municipio.idmun = bairro.idmun)
-             left join public.pais on(uf.idpais = pais.idpais)
-            where escola.ativo = 1
-              and fone_pessoa.tipo = 1";
+				  juridica.fantasia as nome,
+				  coalesce(endereco_pessoa.cep, endereco_externo.cep) as cep,
+				  coalesce(endereco_pessoa.numero, endereco_externo.numero) as numero,
+				  coalesce(endereco_pessoa.complemento, endereco_externo.complemento) as complemento,
+				  coalesce(logradouro.nome,endereco_externo.logradouro) as logradouro,
+				  coalesce(bairro.nome, endereco_externo.bairro) as bairro,
+				  coalesce(municipio.nome, endereco_externo.cidade) as municipio,
+				  coalesce(uf.sigla_uf, endereco_externo.sigla_uf) as uf,
+				  pais.nome as pais,
+				  pessoa.email as email,
+				  fone_pessoa.ddd as ddd,
+				  fone_pessoa.fone as fone,
+				  pessoa_responsavel.nome as nome_responsavel
+		     from pmieducar.escola
+		    inner join cadastro.juridica on(escola.ref_idpes = juridica.idpes)
+		     left join cadastro.pessoa on(juridica.idpes = pessoa.idpes)
+		     left join cadastro.pessoa pessoa_responsavel on(escola.ref_idpes_gestor = pessoa_responsavel.idpes)
+		     left join cadastro.fone_pessoa on(fone_pessoa.idpes = pessoa.idpes)
+		     left join cadastro.endereco_pessoa on(escola.ref_idpes = endereco_pessoa.idpes)
+		     left join cadastro.endereco_externo on(escola.ref_idpes = endereco_externo.idpes)
+		     left join public.logradouro on(endereco_pessoa.idlog = logradouro.idlog)
+		     left join public.municipio on(logradouro.idmun = municipio.idmun)
+		     left join public.uf on(municipio.sigla_uf = uf.sigla_uf)
+		     left join public.bairro on(endereco_pessoa.idbai = bairro.idbai and municipio.idmun = bairro.idmun)
+		     left join public.pais on(uf.idpais = pais.idpais)
+		    where escola.ativo = 1
+		      and fone_pessoa.tipo = 1";
 
   $escolas = $this->fetchPreparedQuery($sql);
 
