@@ -53,6 +53,13 @@ class clsPmieducarDistribuicaoUniforme
   var $bermudas_coton_qtd;
   var $tenis_qtd;
   var $data;
+  var $agasalho_tm;
+  var $camiseta_curta_tm;
+  var $camiseta_longa_tm;
+  var $meias_tm;
+  var $bermudas_tectels_tm;
+  var $bermudas_coton_tm;
+  var $tenis_tm;
 
   /**
    * @var int
@@ -110,14 +117,17 @@ class clsPmieducarDistribuicaoUniforme
   function __construct( $cod_distribuicao_uniforme = NULL, $ref_cod_aluno = NULL, $ano = NULL,
         $kit_completo = NULL, $agasalho_qtd = NULL, $camiseta_curta_qtd = NULL,
         $camiseta_longa_qtd = NULL, $meias_qtd = NULL, $bermudas_tectels_qtd = NULL,
-        $bermudas_coton_qtd = NULL, $tenis_qtd = NULL, $data = NULL)
+        $bermudas_coton_qtd = NULL, $tenis_qtd = NULL, $data = NULL, $agasalho_tm = NULL, $camiseta_curta_tm = NULL,
+        $camiseta_longa_tm = NULL, $meias_tm = NULL, $bermudas_tectels_tm = NULL,
+        $bermudas_coton_tm = NULL, $tenis_tm = NULL)
   {
     $db = new clsBanco();
     $this->_schema = "pmieducar.";
     $this->_tabela = "{$this->_schema}distribuicao_uniforme";
 
     $this->_campos_lista = $this->_todos_campos = " cod_distribuicao_uniforme, ref_cod_aluno, ano, kit_completo, agasalho_qtd, camiseta_curta_qtd,
-        camiseta_longa_qtd, meias_qtd, bermudas_tectels_qtd, bermudas_coton_qtd, tenis_qtd, data "; 
+        camiseta_longa_qtd, meias_qtd, bermudas_tectels_qtd, bermudas_coton_qtd, tenis_qtd, data,
+        agasalho_tm, camiseta_curta_tm, camiseta_longa_tm, meias_tm, bermudas_tectels_tm, bermudas_coton_tm"; 
 
     if (is_numeric($cod_distribuicao_uniforme)) {
       $this->cod_distribuicao_uniforme = $cod_distribuicao_uniforme;
@@ -164,7 +174,13 @@ class clsPmieducarDistribuicaoUniforme
     if (is_string($data)) {
       $this->data = $data;
     }
-
+    $this->agasalho_tm = $agasalho_tm;
+    $this->camiseta_curta_tm = $camiseta_curta_tm;
+    $this->camiseta_longa_tm = $camiseta_longa_tm;
+    $this->meias_tm = $meias_tm;
+    $this->bermudas_tectels_tm = $bermudas_tectels_tm;
+    $this->bermudas_coton_tm = $bermudas_coton_tm;
+    $this->tenis_tm = $tenis_tm;
   }
 
   /**
@@ -245,6 +261,47 @@ class clsPmieducarDistribuicaoUniforme
         $campos .= "{$gruda}data";
         $valores .= "{$gruda}'{$this->data}'";
         $gruda = ", ";
+      }
+      if(is_numeric($this->agasalho_tm)){
+        $campos .= "{$gruda}agasalho_tm";
+        $valores .= "{$gruda}{$this->agasalho_tm}";
+        $gruda = ", ";
+      }
+
+      if(is_numeric($this->camiseta_curta_tm)){
+        $campos .= "{$gruda}camiseta_curta_tm";
+        $valores .= "{$gruda}{$this->camiseta_curta_tm}";
+        $gruda = ", ";
+      }
+
+      if(is_numeric($this->camiseta_longa_tm)){
+        $campos .= "{$gruda}camiseta_longa_tm";
+        $valores .= "{$gruda}{$this->camiseta_longa_tm}";
+        $gruda = ", ";
+      }
+
+      if(is_numeric($this->meias_tm)){
+        $campos .= "{$gruda}meias_tm";
+        $valores .= "{$gruda}{$this->meias_tm}";
+        $gruda = ", ";
+      }
+
+      if(is_numeric($this->bermudas_tectels_tm)){
+        $campos .= "{$gruda}bermudas_tectels_tm";
+        $valores .= "{$gruda}{$this->bermudas_tectels_tm}";
+        $gruda = ", ";
+      }
+
+      if(is_numeric($this->bermudas_coton_tm)){
+        $campos .= "{$gruda}bermudas_coton_tm";
+        $valores .= "{$gruda}{$this->bermudas_coton_tm}";
+        $gruda = ", ";
+      }
+
+      if(is_numeric($this->tenis_tm)){
+        $campos .= "{$gruda}tenis_tm";
+        $valores .= "{$gruda}{$this->tenis_tm}";
+        $gruda = ", ";
       }      
 
       $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
@@ -319,6 +376,48 @@ class clsPmieducarDistribuicaoUniforme
 
       if(is_string($this->data))
         $set .= ",data = '{$this->data}'";
+
+      if ($this->agasalho_tm)
+        $set .= ",agasalho_tm = '{$this->agasalho_tm}'";
+      else{
+        $set .= ",agasalho_tm = NULL";
+      }
+   
+      if ($this->camiseta_curta_tm)
+        $set .= ",camiseta_curta_tm = '{$this->camiseta_curta_tm}'";
+      else{
+        $set .= ",camiseta_curta_tm = NULL";
+      }
+  
+      if ($this->camiseta_longa_tm)
+        $set .= ",camiseta_longa_tm = '{$this->camiseta_longa_tm}'";
+      else{
+        $set .= ",camiseta_longa_tm = NULL";
+      }
+  
+      if ($this->meias_tm)
+        $set .= ",meias_tm = '{$this->meias_tm}'";
+      else{
+        $set .= ",meias_tm = NULL";
+      }
+  
+      if ($this->bermudas_tectels_tm)
+        $set .= ",bermudas_tectels_tm = '{$this->bermudas_tectels_tm}'";
+      else{
+        $set .= ",bermudas_tectels_tm = NULL";
+      }
+
+      if ($this->bermudas_coton_tm)
+        $set .= ",bermudas_coton_tm = '{$this->bermudas_coton_tm}'";
+      else{
+        $set .= ",bermudas_coton_tm = NULL";
+      }
+
+      if ($this->tenis_tm)
+        $set .= ",tenis_tm = '{$this->tenis_tm}'";
+      else{
+        $set .= ",tenis_tm = NULL";
+      } 
 
       if ($set) {
         $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_distribuicao_uniforme = '{$this->cod_distribuicao_uniforme}'");

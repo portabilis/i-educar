@@ -176,7 +176,7 @@ class AlunoController extends ApiCoreController
       }
       $count = strlen($this->getRequest()->aluno_estado_id);
       if ($count < 13) {
-        $this->messenger->append("Código rede estadual inválido ".
+        $this->messenger->append("O Código rede estadual informado é inválido. ".
                                  "{$this->getRequest()->aluno_estado_id}.");
 
         return false;
