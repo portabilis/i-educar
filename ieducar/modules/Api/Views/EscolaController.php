@@ -280,6 +280,7 @@ protected function getInformacaoEscolas(){
   		$escola['complemento'] = Portabilis_String_Utils::toUtf8($escola['complemento']);
   		$escola['logradouro'] = Portabilis_String_Utils::toUtf8($escola['logradouro']);
   		$escola['bairro'] = Portabilis_String_Utils::toUtf8($escola['bairro']);
+  		$escola['municipio'] = Portabilis_String_Utils::toUtf8($escola['municipio']);
   		$escola['nome_responsavel'] = Portabilis_String_Utils::toUtf8($escola['nome_responsavel']);
   	}
   	$attrs = array('cod_escola', 'nome', 'cep', 'numero', 'complemento', 'logradouro', 'bairro', 'municipio', 'uf', 'pais', 'email', 'ddd', 'fone', 'nome_responsavel');
