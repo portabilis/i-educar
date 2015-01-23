@@ -576,6 +576,9 @@ function handleSearch($resultTable, dataResponse) {
 
     if (! componenteCurricularSelected && value.componentes_curriculares)
       updateComponenteCurriculares($resultTable, value.matricula_id, value.componentes_curriculares);
+
+    if (!componenteCurricularSelected)
+      criaBotaoReplicarNotasPorArea(value.componentes_curriculares);
     
   });
 
@@ -608,16 +611,18 @@ function handleSearch($resultTable, dataResponse) {
     $j('#form_resultado select').removeAttr('disabled');
     $j('#form_resultado textarea').removeAttr('disabled');
   }
+  if (componenteCurricularSelected)
+    criaBotaoReplicarNotas();
 
-  criaBotaoReplicarNotas();
 }
 
-function _notaField(matriculaId, componenteCurricularId, klass, id, value) {
+function _notaField(matriculaId, componenteCurricularId, klass, id, value, areaConhecimentoId) {
   if($tableSearchDetails.data('details').tipo_nota == 'conceitual') {
     var opcoesNotas = $tableSearchDetails.data('details').opcoes_notas;
 
     var $notaField = $j('<select />')
                      .addClass(klass)
+                     .addClass(areaConhecimentoId)
                      .attr('id', id)
                      .data('matricula_id', matriculaId)
                      .data('componente_curricular_id', componenteCurricularId);
@@ -650,12 +655,13 @@ function _notaField(matriculaId, componenteCurricularId, klass, id, value) {
 }
 
 
-function notaField(matriculaId, componenteCurricularId, value) {
+function notaField(matriculaId, componenteCurricularId, value, areaConhecimentoId) {
   return _notaField(matriculaId,
                     componenteCurricularId,
                     'nota-matricula-cc',
                     'nota-matricula-' + matriculaId + '-cc-' + componenteCurricularId,
-                    value);
+                    value,
+                    'area-id-' + areaConhecimentoId);
 }
 
 
@@ -724,7 +730,7 @@ function updateComponenteCurricular($targetElement, matriculaId, cc) {
   colorizeSituacaoTd($situacaoTd, cc.situacao);
 
   if(useNota) {
-    notaField(matriculaId, cc.id, cc.nota_atual).appendTo($targetElement);
+    notaField(matriculaId, cc.id, cc.nota_atual, cc.area_id).appendTo($targetElement);
 
     // mostra nota exame caso estiver selecionado a ultima etapa
     if ($tableSearchDetails.data('details').quantidade_etapas == $j('#etapa').val()) {
@@ -950,6 +956,29 @@ function navegacaoTab(sentido){
     }
 }
 
+function criaBotaoReplicarNotasPorArea(componentesCurriculares){
+  
+  var uniqueAreaConhecimento = [];
+
+  $j.each(componentesCurriculares, function(index, element){
+    if ($j.inArray(element.area_id, uniqueAreaConhecimento) == -1) uniqueAreaConhecimento.push(element.area_id);
+  });
+  
+  $j.each(uniqueAreaConhecimento, function(index, value) {
+
+    $j('<button/>').html('Replicar a todos')
+                   .attr('type','button')
+                   .attr('id','replicar-todas-notas-' + value)
+                   .addClass('submit')
+                   .appendTo($j('<p/>').insertAfter($j('.area-id-' + value)
+                                       .first()))
+                   .unbind();
+    $j('#replicar-todas-notas-' + value).on('click', function(){
+      $j('.area-id-' + value).val($j('.area-id-' + value).first().val())
+                                   .trigger('change');
+    });
+  });
+}
 function criaBotaoReplicarNotas(){
   if($j('.nota-matricula-cc').length > 1){
     $j('<button/>').html('Replicar a todos')
@@ -965,6 +994,7 @@ function criaBotaoReplicarNotas(){
     });
   }
 }
+
 
 (function($) {
   var sR = {
