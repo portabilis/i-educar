@@ -1050,8 +1050,8 @@ class clsCampos extends Core_Controller_Page_Abstract
         This.id--;
       }
 
-      if (This.id == 0)
-        This.addRow();
+      // if (This.id == 0)
+      //   This.addRow();   // Foi comentado para permitir excluir todas as alocações do servidor publico.
 
       this.afterRemoveRow();
     }
