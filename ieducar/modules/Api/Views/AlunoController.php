@@ -646,7 +646,8 @@ class AlunoController extends ApiCoreController
       if (is_array($ocorrenciasMatricula)) {
         $attrsFilter                   = array('ref_cod_tipo_ocorrencia_disciplinar' => 'tipo',
                                                'data_cadastro'                       => 'data_hora',
-                                               'observacao'                          => 'descricao');
+                                               'observacao'                          => 'descricao',
+                                               'cod_ocorrencia_disciplinar' 	     => 'ocorrencia_disciplinar_id');
 
         $ocorrenciasMatricula = Portabilis_Array_Utils::filterSet($ocorrenciasMatricula, $attrsFilter);
 
