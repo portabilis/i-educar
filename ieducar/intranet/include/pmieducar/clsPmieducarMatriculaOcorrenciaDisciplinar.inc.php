@@ -247,9 +247,6 @@ class clsPmieducarMatriculaOcorrenciaDisciplinar
 		{
 			$this->ativo = $ativo;
 		}
-		if(is_numeric($ref_cod_matricula) && is_numeric($ref_cod_tipo_ocorrencia_disciplinar) && is_numeric($sequencial)){
-			$this->cod_ocorrencia_disciplinar = $cod_ocorrencia_disciplinar;
-		}
 
 		$this->visivel_pais = $visivel_pais;
 	}
@@ -325,11 +322,6 @@ class clsPmieducarMatriculaOcorrenciaDisciplinar
 			$valores .= "{$gruda}'1'";
 			$gruda = ", ";
 
-			$campos .= "{$gruda}cod_ocorrencia_disciplinar";
-			$valores.= "{$gruda}'{$this->getSequencialOcorrenciaDisciplinar($this->ref_cod_matricula, $this->ref_cod_tipo_ocorrencia_disciplinar, $sequencial)}'";
-			$gruda = ", ";
-
-
 			$db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
 			return true;
 		}
@@ -384,12 +376,6 @@ class clsPmieducarMatriculaOcorrenciaDisciplinar
 
 		    if(is_numeric($this->ref_cod_tipo_ocorrencia_disciplinar)){
 		    	$set .= "{$gruda}ref_cod_tipo_ocorrencia_disciplinar = '{$this->ref_cod_tipo_ocorrencia_disciplinar}'";
-		        $gruda = ", ";
-		    }
-
-		    if(is_numeric($this->ref_cod_matricula) || is_numeric($this->ref_cod_tipo_ocorrencia_disciplinar) || is_numeric($this->sequencial)){
-		    	$ocorrencia_disciplinar_id = $this->getSequencialOcorrenciaDisciplinar($this->ref_cod_matricula, $this->ref_cod_tipo_ocorrencia_disciplinar, $this->sequencial);
-		    	$set .= "{$gruda}cod_ocorrencia_disciplinar = '{$ocorrencia_disciplinar_id}'";
 		        $gruda = ", ";
 		    }
 
@@ -669,10 +655,6 @@ class clsPmieducarMatriculaOcorrenciaDisciplinar
 		}
 		return false;
 
-	}
-
-	function getSequencialOcorrenciaDisciplinar($ref_cod_matricula, $ref_cod_tipo_ocorrencia_disciplinar, $sequencial){
-		return $ref_cod_matricula . $ref_cod_tipo_ocorrencia_disciplinar . $sequencial;
 	}
 
 }
