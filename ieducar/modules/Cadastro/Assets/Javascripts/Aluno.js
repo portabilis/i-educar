@@ -633,6 +633,26 @@ var handleGetPersonDetails = function(dataResponse) {
   //$j('#aluno_foto').val(dataResponse.url_foto);
   canShowParentsFields();
 }
+// hide or show *certidao* fields, by #tipo_certidao_civil
+  var checkTipoCertidaoCivil = function() {
+  var $certidaoCivilFields     = $j('#termo_certidao_civil, #livro_certidao_civil, #folha_certidao_civil');
+  var $certidaoNascimentoField = $j('#certidao_nascimento');
+  var tipoCertidaoCivil        = $j('#tipo_certidao_civil').val();
+
+  $certidaoCivilFields.hide();
+  $certidaoNascimentoField.hide();
+
+  if ($j.inArray(tipoCertidaoCivil, ['91', '92']) > -1) {
+    $certidaoCivilFields.show();
+    $j('#tr_tipo_certidao_civil td:first span').html(stringUtils.toUtf8('Tipo certidão civil / Termo / Livro / Folha'));
+  }
+
+  else if (tipoCertidaoCivil == 'certidao_nascimento_novo_formato') {
+    $certidaoNascimentoField.show();
+    $j('#tr_tipo_certidao_civil td:first span').html(stringUtils.toUtf8('Tipo certidão civil / Certidão nascimento'));
+  }
+
+}
 
 function disableJustificativaFields(){
   $jField = $j('#justificativa_falta_documentacao');
@@ -668,7 +688,8 @@ var handleGetPersonParentDetails = function(dataResponse, parentType) {
       }
     }
 }
-
+checkTipoCertidaoCivil();
+$j('#tipo_certidao_civil').change(checkTipoCertidaoCivil);
 var getPersonDetails = function(personId) {
   var additionalVars = {
     id : personId,
