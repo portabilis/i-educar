@@ -580,4 +580,21 @@ class PessoaController extends ApiCoreController
     else
       $this->notImplementedOperationError();
   }
+
+  protected function sqlsForStringSearch() {
+    $searchOptions = $this->mergeOptions($this->searchOptions(), $this->defaultSearchOptions());
+
+    // $namespace     = $searchOptions['namespace'];
+    // $table         = $searchOptions['table'];
+    // $idAttr        = $searchOptions['idAttr'];
+    // $labelAttr     = $searchOptions['labelAttr'];
+
+    // $searchOptions['selectFields'][] = "$idAttr as id, $labelAttr as name";
+    // $selectFields                    = join(', ', $searchOptions['selectFields']);
+
+     return "select distinct pessoa.idpes as id, pessoa.nome as name from cadastro.pessoa inner join cadastro.fisica ON (fisica.idpes = pessoa.idpes)
+            where lower(to_ascii(pessoa.nome)) like '%'||lower(to_ascii($1))||'%' order by id, name limit 15";
+    // return "select distinct $selectFields from $namespace.$table
+    //         where lower(to_ascii($labelAttr)) like '%'||lower(to_ascii($1))||'%' order by $labelAttr limit 15";
+  }
 }
