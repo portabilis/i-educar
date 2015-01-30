@@ -1143,6 +1143,7 @@ class AlunoController extends ApiCoreController
         $this->createOrUpdateMoradia($id);
         $this->saveProjetos($id);
         $this->createOrUpdatePessoaTransporte($pessoaId);
+        $this->createOrUpdateDocumentos($pessoaId);
 
         $this->messenger->append('Cadastrado realizado com sucesso', 'success', false, 'error');
       }
@@ -1170,6 +1171,7 @@ class AlunoController extends ApiCoreController
       $this->createOrUpdateMoradia($id);
       $this->saveProjetos($id);
       $this->createOrUpdatePessoaTransporte($pessoaId);
+      $this->createOrUpdateDocumentos($pessoaId);
 
       $this->messenger->append('Cadastro alterado com sucesso', 'success', false, 'error');
     }
@@ -1251,6 +1253,51 @@ class AlunoController extends ApiCoreController
              order by ano desc
              limit 1";
     return (Portabilis_Utils_Database::selectField($sql, $alunoId));
+  }
+
+  protected function createOrUpdateDocumentos($pessoaId) {
+    $documentos                             = new clsDocumento();
+    $documentos->idpes                      = $pessoaId;
+
+
+    // o tipo certidão novo padrão é apenas para exibição ao usuário,
+    // não precisa ser gravado no banco
+    //
+    // quando selecionado um tipo diferente do novo formato,
+    // é removido o valor de certidao_nascimento.
+    //
+    if ($this->getRequest()->tipo_certidao_civil == 'certidao_nascimento_novo_formato') {
+      $documentos->tipo_cert_civil     = null;
+      $documentos->certidao_nascimento = $this->getRequest()->certidao_nascimento;
+    }
+    else {
+      $documentos->tipo_cert_civil     = $this->getRequest()->tipo_certidao_civil;
+      $documentos->certidao_nascimento = '';
+    }
+
+    $documentos->num_termo                  = $this->getRequest()->termo_certidao_civil;
+    $documentos->num_livro                  = $this->getRequest()->livro_certidao_civil;
+    $documentos->num_folha                  = $this->getRequest()->folha_certidao_civil;
+
+    $documentos->data_emissao_cert_civil    = Portabilis_Date_Utils::brToPgSQL(
+      $this->getRequest()->data_emissao_certidao_civil
+    );
+
+    $documentos->sigla_uf_cert_civil        = $this->getRequest()->uf_emissao_certidao_civil;
+    $documentos->cartorio_cert_civil        = addslashes($this->getRequest()->cartorio_emissao_certidao_civil);
+    $documentos->cartorio_cert_civil_inep   = $this->getRequest()->cartorio_cert_civil_inep;
+
+    // Alteração de documentos compativel com a versão anterior do cadastro,
+    // onde era possivel criar uma pessoa, não informando os documentos,
+    // o que não criaria o registro do documento, sendo assim, ao editar uma pessoa,
+    // o registro do documento será criado, caso não exista.
+
+    $sql = "select 1 from cadastro.documento WHERE idpes = $1 limit 1";
+
+    if (Portabilis_Utils_Database::selectField($sql, $pessoaId) != 1)
+      $documentos->cadastra();
+    else
+      $documentos->edita();
   }
 
   public function Gerar() {

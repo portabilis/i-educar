@@ -397,12 +397,14 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     $this->inputsHelper()->select('justificativa_falta_documentacao', $options);
 
     $cod_aluno = $_GET['id'];
-    $db = new clsBanco();
-    $cod_pessoa_fj = $db->CampoUnico("select ref_idpes from pmieducar.aluno where cod_aluno = '$cod_aluno'");
+    if ($cod_aluno){
+      $db = new clsBanco();
+      $cod_pessoa_fj = $db->CampoUnico("select ref_idpes from pmieducar.aluno where cod_aluno = '$cod_aluno'");
 
-    $documentos        = new clsDocumento();
-    $documentos->idpes = $cod_pessoa_fj;
-    $documentos        = $documentos->detalhe();
+      $documentos        = new clsDocumento();
+      $documentos->idpes = $cod_pessoa_fj;
+      $documentos        = $documentos->detalhe();
+    }
     // tipo de certidao civil
     $escolha_certidao = Portabilis_String_Utils::toLatin1('Tipo certidão civil');
     $selectOptions = array(
@@ -554,25 +556,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     // mãe
     $options = array('label' => $this->_getLabel('mae'), 'disabled' => true, 'required' => false, 'size' => 68);
     $this->inputsHelper()->text('mae', $options);*/
-
-
-    // certidão civil
-
-
-    // o tipo certidão novo padrão é apenas para exibição ao usuário,
-    // não precisa ser gravado no banco
-    //
-    // quando selecionado um tipo diferente do novo formato,
-    // é removido o valor de certidao_nascimento.
-    //
-    if ($_REQUEST['tipo_certidao_civil'] == 'certidao_nascimento_novo_formato') {
-      $documentos->tipo_cert_civil     = null;
-      $documentos->certidao_nascimento = $_REQUEST['certidao_nascimento'];
-    }
-    else {
-      $documentos->tipo_cert_civil     = $_REQUEST['tipo_certidao_civil'];
-      $documentos->certidao_nascimento = '';
-    }
 
     // responsável
 
