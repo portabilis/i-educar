@@ -616,7 +616,8 @@ class AlunoController extends ApiCoreController
       $params     = array($this->getRequest()->escola_id);
     }else{
       $sql = "SELECT cod_matricula as matricula_id, 
-              ref_cod_aluno as aluno_id
+              ref_cod_aluno as aluno_id,
+              ref_ref_cod_escola as escola_id
               FROM pmieducar.matricula 
               WHERE ref_cod_aluno IN ({$alunoId})
               AND matricula.ativo = 1 
@@ -656,6 +657,7 @@ class AlunoController extends ApiCoreController
           $ocorrenciaMatricula['data_hora'] = Portabilis_Date_Utils::pgSQLToBr($ocorrenciaMatricula['data_hora']);
           $ocorrenciaMatricula['descricao'] = $this->toUtf8($ocorrenciaMatricula['descricao']);
           $ocorrenciaMatricula['aluno_id']  = $matricula['aluno_id'];
+          $ocorrenciaMatricula['escola_id']  = $matricula['escola_id'];
           $ocorrenciasAluno[]               = $ocorrenciaMatricula;
         }
       }
