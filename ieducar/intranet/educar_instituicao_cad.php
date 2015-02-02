@@ -77,6 +77,7 @@ class indice extends clsCadastro
 	var $percentagem_maxima_ocupacao_salas;
 	var $quantidade_alunos_metro_quadrado;
 	var $gerar_historico_transferencia;
+	var $matricula_apenas_bairro_escola;
 
 	function Inicializar()
 	{
@@ -120,6 +121,7 @@ class indice extends clsCadastro
         $this->enviaLocalizacao($localizacao->montar());
 
         $this->gerar_historico_transferencia = dbBool($this->gerar_historico_transferencia);
+        $this->matricula_apenas_bairro_escola = dbBool($this->matricula_apenas_bairro_escola);
 
 		return $retorno;
 	}
@@ -195,6 +197,8 @@ class indice extends clsCadastro
 
     $this->campoCheck("gerar_historico_transferencia", "Gerar histórico de transferência ao transferir matrícula?", $this->gerar_historico_transferencia);
 
+    $this->campoCheck("matricula_apenas_bairro_escola", "Permitir matrícula de alunos apenas do bairro da escola?", $this->matricula_apenas_bairro_escola);
+
   	$this->campoCheck("controlar_espaco_utilizacao_aluno", "Controlar espaço utilizado pelo aluno?", $this->controlar_espaco_utilizacao_aluno );
 		$this->campoMonetario( "percentagem_maxima_ocupacao_salas", "Percentagem máxima de ocupação da sala",
 															  Portabilis_Currency_Utils::moedaUsToBr($this->percentagem_maxima_ocupacao_salas),
@@ -214,6 +218,7 @@ class indice extends clsCadastro
 		$obj->data_base_transferencia = Portabilis_Date_Utils::brToPgSQL($this->data_base_transferencia);
 		$obj->exigir_vinculo_turma_professor = is_null($this->exigir_vinculo_turma_professor) ? 0 : 1;
 		$obj->gerar_historico_transferencia = !is_null($this->gerar_historico_transferencia);
+		$obj->matricula_apenas_bairro_escola = !is_null($this->matricula_apenas_bairro_escola);
 		$obj->controlar_espaco_utilizacao_aluno = is_null($this->controlar_espaco_utilizacao_aluno) ? 0 : 1;
 		$obj->percentagem_maxima_ocupacao_salas = Portabilis_Currency_Utils::moedaBrToUs($this->percentagem_maxima_ocupacao_salas);
 		$cadastrou = $obj->cadastra();
@@ -241,6 +246,7 @@ class indice extends clsCadastro
 		$obj->data_base_transferencia = Portabilis_Date_Utils::brToPgSQL($this->data_base_transferencia);
 		$obj->exigir_vinculo_turma_professor = is_null($this->exigir_vinculo_turma_professor) ? 0 : 1;
 		$obj->gerar_historico_transferencia = !is_null($this->gerar_historico_transferencia);
+		$obj->matricula_apenas_bairro_escola = !is_null($this->matricula_apenas_bairro_escola);
 		$obj->controlar_espaco_utilizacao_aluno = is_null($this->controlar_espaco_utilizacao_aluno) ? 0 : 1;
 		$obj->percentagem_maxima_ocupacao_salas = Portabilis_Currency_Utils::moedaBrToUs($this->percentagem_maxima_ocupacao_salas);
 		$editou = $obj->edita();
