@@ -273,6 +273,38 @@ class MatriculaController extends ApiCoreController
       $this->messenger->append('Quantidade de alunos atualizada com sucesso!.', 'success');
     }
   }
+  // WIP #1016
+  // protected function canPostDataEntrada(){
+  // 	return $this->validatesPresenceOf('matricula_id') && $this->validatesPresenceOf('data_entrada');
+  // }
+
+  // protected function canPostDataSaida(){
+  // 	return $this->validatesPresenceOf('matricula_id') && $this->validatesPresenceOf('data_saida');
+  // }
+
+  // protected function postDataEntrada(){
+  // 	if($this->canPostDataEntrada()){
+  // 		$matricula_id = $this->getRequest()->matricula_id;
+  // 		$data_entrada = $this->getRequest()->data_entrada;
+  // 		$matricula = new clsPmieducarMatricula($matricula_id);
+  // 		$matricula->data_matricula = $data_entrada;
+  // 		if($matricula->edita()){
+  // 			return $this->messenger->append('Data de entrada atualizada com sucesso.', 'success')
+  // 		}
+  // 	}
+  // }
+
+  // protected function postDataSaida(){
+  // 	if($this->canPostDataSaida()){
+  // 		$matricula_id = $this->getRequest()->matricula_id;
+  // 		$data_saida = $this->getRequest()->data_saida;
+  // 		$matricula = new clsPmieducarMatricula($matricula_id);
+  // 		$matricula->data_cancel = $data_saida;
+  // 		if($matricula->edita()){
+  // 			return $this->messenger->append('Data de saida atualizada com sucesso.', 'success')
+  // 		}
+  // 	}
+  // }
 
   public function Gerar() {
     if ($this->isRequestFor('get', 'matricula'))
@@ -295,6 +327,10 @@ class MatriculaController extends ApiCoreController
 
     elseif ($this->isRequestFor('post', 'reserva-externa'))
       $this->appendResponse($this->postReservaExterna());
+  	// elseif ($this->isRequestFor('post', 'data-entrada'))
+  	//   $this->appendResponse($this->postDataEntrada());
+  	// elseif ($this->isRequestFor('post', 'data-saida'))
+  	//   $this->appendResponse($this->postDataSaida());
 
     else
       $this->notImplementedOperationError();
