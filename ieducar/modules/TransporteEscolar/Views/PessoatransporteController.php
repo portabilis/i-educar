@@ -118,7 +118,7 @@ class PessoatransporteController extends Portabilis_Controller_Page_EditControll
     $lista_rota = $obj_rota->lista();
     $rota_resources = array("" => "Selecione uma rota" );
     foreach ($lista_rota as $reg) {
-      $rota_resources["{$reg['cod_rota_transporte_escolar']}"] = "{$reg['descricao']}";
+      $rota_resources["{$reg['cod_rota_transporte_escolar']}"] = "{$reg['descricao']} - {$reg['ano']}";
     }
     
     // Rota
