@@ -360,8 +360,11 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     $this->inputsHelper()->integer('aluno_estado_id', $options);
 
     // código aluno sistema
-    $options = array('label' => Portabilis_String_Utils::toLatin1($GLOBALS['coreExt']['Config']->app->alunos->codigo_sistema), 'required' => false, 'size' => 25, 'max_length' => 30);
-    $this->inputsHelper()->text('codigo_sistema', $options);
+    if($GLOBALS['coreExt']['Config']->app->alunos->mostrar_codigo_sistema){
+    	$options = array('label' => Portabilis_String_Utils::toLatin1($GLOBALS['coreExt']['Config']->app->alunos->codigo_sistema), 'required' => false, 'size' => 25, 'max_length' => 30);
+    	$this->inputsHelper()->text('codigo_sistema', $options);
+    }
+    
 
     // nome
     $options = array('label' => $this->_getLabel('pessoa'), 'size' => 68);
