@@ -39,6 +39,7 @@ class clsPmieducarMatriculaOcorrenciaDisciplinar
 	var $data_cadastro;
 	var $data_exclusao;
 	var $ativo;
+	var $cod_ocorrencia_disciplinar;
 
 	// propriedades padrao
 
@@ -104,13 +105,13 @@ class clsPmieducarMatriculaOcorrenciaDisciplinar
 	 *
 	 * @return object
 	 */
-	function clsPmieducarMatriculaOcorrenciaDisciplinar( $ref_cod_matricula = null, $ref_cod_tipo_ocorrencia_disciplinar = null, $sequencial = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $observacao = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $visivel_pais = null )
+	function clsPmieducarMatriculaOcorrenciaDisciplinar( $ref_cod_matricula = null, $ref_cod_tipo_ocorrencia_disciplinar = null, $sequencial = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $observacao = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $visivel_pais = null, $cod_ocorrencia_disciplinar = null )
 	{
 		$db = new clsBanco();
 		$this->_schema = "pmieducar.";
 		$this->_tabela = "{$this->_schema}matricula_ocorrencia_disciplinar";
 
-		$this->_campos_lista = $this->_todos_campos = "ref_cod_matricula, ref_cod_tipo_ocorrencia_disciplinar, sequencial, ref_usuario_exc, ref_usuario_cad, observacao, data_cadastro, data_exclusao, ativo, visivel_pais";
+		$this->_campos_lista = $this->_todos_campos = "ref_cod_matricula, ref_cod_tipo_ocorrencia_disciplinar, sequencial, ref_usuario_exc, ref_usuario_cad, observacao, data_cadastro, data_exclusao, ativo, visivel_pais, cod_ocorrencia_disciplinar";
 
 		if( is_numeric( $ref_usuario_exc ) )
 		{
@@ -321,7 +322,6 @@ class clsPmieducarMatriculaOcorrenciaDisciplinar
 			$valores .= "{$gruda}'1'";
 			$gruda = ", ";
 
-
 			$db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
 			return true;
 		}
@@ -374,6 +374,11 @@ class clsPmieducarMatriculaOcorrenciaDisciplinar
 		        $gruda = ", ";
 		    }
 
+		    if(is_numeric($this->ref_cod_tipo_ocorrencia_disciplinar)){
+		    	$set .= "{$gruda}ref_cod_tipo_ocorrencia_disciplinar = '{$this->ref_cod_tipo_ocorrencia_disciplinar}'";
+		        $gruda = ", ";
+		    }
+
 			if( $set )
 			{
 				$db->Consulta( "UPDATE {$this->_tabela} SET $set WHERE ref_cod_matricula = '{$this->ref_cod_matricula}' AND ref_cod_tipo_ocorrencia_disciplinar = '{$this->ref_cod_tipo_ocorrencia_disciplinar}' AND sequencial = '{$this->sequencial}'" );
@@ -388,8 +393,7 @@ class clsPmieducarMatriculaOcorrenciaDisciplinar
 	 *
 	 * @return array
 	 */
-	function lista( $int_ref_cod_matricula = null, $int_ref_cod_tipo_ocorrencia_disciplinar = null, $int_sequencial = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_observacao = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $visivel_pais = null )
-	{
+	function lista( $int_ref_cod_matricula = null, $int_ref_cod_tipo_ocorrencia_disciplinar = null, $int_sequencial = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_observacao = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $visivel_pais = null, $cod_ocorrencia_disciplinar = null )	{
 		$sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
 		$filtros = "";
 
@@ -461,6 +465,10 @@ class clsPmieducarMatriculaOcorrenciaDisciplinar
 			$whereAnd = " AND ";
 		}
 
+		if(is_numeric($cod_ocorrencia_disciplinar)) {
+			$filtros .= "{$whereAnd} cod_ocorrencia_disciplinar = '{$cod_ocorrencia_disciplinar}'";
+			$whereAnd = " AND ";
+		}
 
 		$db = new clsBanco();
 		$countCampos = count( explode( ",", $this->_campos_lista ) );

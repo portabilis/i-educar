@@ -30,6 +30,8 @@
  * @since     Arquivo disponível desde a versão ?
  * @version   $Id$
  */
+ require_once 'include/clsCadastro.inc.php';
+ require_once ("include/clsBanco.inc.php");
 
 require_once 'App/Model/ZonaLocalizacao.php';
 require_once 'lib/Portabilis/Controller/Page/EditController.php';
@@ -45,6 +47,8 @@ class AlunoController extends Portabilis_Controller_Page_EditController
   protected $_processoAp        = 578;
   protected $_deleteOption      = true;
 
+  protected $cod_aluno;
+
   protected $_formMap    = array(
     'pessoa' => array(
       'label'  => 'Pessoa',
@@ -58,6 +62,11 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
     'justificativa_falta_documentacao' => array(
       'label'  => 'Justificativa para a falta de documentação',
+      'help'   => '',
+    ),
+
+    'certidao_nascimento' => array(
+      'label'  => 'Certidão de Nascimento',
       'help'   => '',
     ),
 
@@ -356,9 +365,9 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     }
 
     // código aluno rede estadual
-    $options = array('label' => $labels_botucatu ? Portabilis_String_Utils::toLatin1("Código rede estadual (RA)") : $this->_getLabel('aluno_estado_id'), 'required' => $labels_botucatu, 'size' => 25, 'max_length' => 25);
-    $this->inputsHelper()->integer('aluno_estado_id', $options);
-
+   // $options = array('label' => $labels_botucatu ? Portabilis_String_Utils::toLatin1("Código rede estadual (RA)") : $this->_getLabel('aluno_estado_id'), 'required' => $labels_botucatu, 'size' => 25, 'max_length' => 25);
+   // $this->inputsHelper()->text('aluno_estado_id', $options);
+    $this->campoRA('aluno_estado_id', Portabilis_String_Utils::toLatin1("Código rede estadual (RA)"), $this->aluno_estado_id, FALSE);
     // código aluno sistema
     if($GLOBALS['coreExt']['Config']->app->alunos->mostrar_codigo_sistema){
     	$options = array('label' => Portabilis_String_Utils::toLatin1($GLOBALS['coreExt']['Config']->app->alunos->codigo_sistema), 'required' => false, 'size' => 25, 'max_length' => 30);
@@ -390,9 +399,156 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
     $this->inputsHelper()->select('justificativa_falta_documentacao', $options);
 
+    $cod_aluno = $_GET['id'];
+    if ($cod_aluno){
+      $db = new clsBanco();
+      $cod_pessoa_fj = $db->CampoUnico("select ref_idpes from pmieducar.aluno where cod_aluno = '$cod_aluno'");
+
+      $documentos        = new clsDocumento();
+      $documentos->idpes = $cod_pessoa_fj;
+      $documentos        = $documentos->detalhe();
+    }
+    // tipo de certidao civil
+    $escolha_certidao = Portabilis_String_Utils::toLatin1('Tipo certidão civil');
+    $selectOptions = array(
+      null                               => $escolha_certidao,
+      'certidao_nascimento_novo_formato' => 'Nascimento (novo formato)',
+      91                                 => 'Nascimento (antigo formato)',
+      92                                 => 'Casamento'
+    );
 
 
+    // caso certidao nascimento novo formato tenha sido informado,
+    // considera este o tipo da certidão
+    if (! empty($documentos['certidao_nascimento']))
+      $tipoCertidaoCivil = 'certidao_nascimento_novo_formato';
+    else
+      $tipoCertidaoCivil = $documentos['tipo_cert_civil'];
+
+    $options = array(
+      'required'  => false,
+      'label'     => 'Tipo certidão civil',
+      'value'     => $tipoCertidaoCivil,
+      'resources' => $selectOptions,
+      'inline'    => true
+    );
+
+    $this->inputsHelper()->select('tipo_certidao_civil', $options);
+
+    // termo certidao civil
+
+    $options = array(
+      'required'    => false,
+      'label'       => '',
+      'placeholder' => 'Termo',
+      'value'       => $documentos['num_termo'],
+      'max_length'  => 8,
+      'inline'      => true
+    );
+
+    $this->inputsHelper()->integer('termo_certidao_civil', $options);
+
+
+    // livro certidao civil
+
+    $options = array(
+      'required'    => false,
+      'label'       => '',
+      'placeholder' => 'Livro',
+      'value'       => $documentos['num_livro'],
+      'max_length'  => 8,
+      'size'        => 15,
+      'inline'      => true
+    );
+
+    $this->inputsHelper()->text('livro_certidao_civil', $options);
+
+
+    // folha certidao civil
+
+    $options = array(
+      'required'    => false,
+      'label'       => '',
+      'placeholder' => 'Folha',
+      'value'       => $documentos['num_folha'],
+      'max_length'  => 4,
+      'inline'      => true
+    );
+
+    $this->inputsHelper()->integer('folha_certidao_civil', $options);
+
+
+    // certidao nascimento (novo padrão)
+    $placeholderCertidao = Portabilis_String_Utils::toLatin1('Certidão nascimento');
+    $options = array(
+      'required'    => false,
+      'label'       => '',
+      'placeholder' => $placeholderCertidao,
+      'value'       => $documentos['certidao_nascimento'],
+      'max_length'  => 50,
+      'size'        => 50
+    );
+
+    $this->inputsHelper()->text('certidao_nascimento', $options);
+
+
+    // uf emissão certidão civil
+
+    $options = array(
+      'required' => false,
+      'label'    => 'Estado emissão / Data emissão',
+      'value'    => $documentos['sigla_uf_cert_civil'],
+      'inline'   => true
+    );
+
+    $helperOptions = array(
+      'attrName' => 'uf_emissao_certidao_civil'
+    );
+
+    $this->inputsHelper()->uf($options, $helperOptions);
+
+
+    // data emissão certidão civil
+    $placeholderEmissao = Portabilis_String_Utils::toLatin1('Data emissão');
+    $options = array(
+      'required'    => false,
+      'label'       => '',
+      'placeholder' => $placeholderEmissao,
+      'value'       => $documentos['data_emissao_cert_civil'],
+      'inline'   => true
+    );
+
+    $this->inputsHelper()->date('data_emissao_certidao_civil', $options);
+
+    $placeholderInep = Portabilis_String_Utils::toLatin1('Código cartório INEP');
+    $options = array(
+      'required'    => false,
+      'label'       => '',
+      'size'        => '18',
+      'max_length'  => '7',
+      'placeholder' => $placeholderInep,
+      'value'       => $documentos['cartorio_cert_civil_inep']
+    );
+
+    $this->inputsHelper()->integer('cartorio_cert_civil_inep', $options);
+
+
+    // cartório emissão certidão civil
+    $labelCartorio = Portabilis_String_Utils::toLatin1('Cartório emissão');
+    $options = array(
+      'required'    => false,
+      'label'       => $labelCartorio,
+      'value'       => $documentos['cartorio_cert_civil'],
+      'cols'        => 45,
+      'max_length'  => 150
+    );
+
+    $this->inputsHelper()->textArea('cartorio_emissao_certidao_civil', $options);
+
+    // pai
     $this->inputPai();
+    
+    // mãe
     $this->inputMae();
 
 /*    // pai
@@ -403,7 +559,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     // mãe
     $options = array('label' => $this->_getLabel('mae'), 'disabled' => true, 'required' => false, 'size' => 68);
     $this->inputsHelper()->text('mae', $options);*/
-
 
     // responsável
 

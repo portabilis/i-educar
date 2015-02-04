@@ -171,7 +171,10 @@ class PessoaController extends ApiCoreController
                 INNER JOIN public.bairro ON (endereco_pessoa.idbai = bairro.idbai)
                 INNER JOIN public.distrito ON (bairro.iddis = distrito.iddis)
                          WHERE idpes = $2) as distrito,
-
+              (SELECT fone_pessoa.fone FROM cadastro.fone_pessoa WHERE fone_pessoa.idpes = $2 AND fone_pessoa.tipo = 1) as fone_fixo,
+              (SELECT fone_pessoa.fone FROM cadastro.fone_pessoa WHERE fone_pessoa.idpes = $2 AND fone_pessoa.tipo = 2) as fone_mov,
+              (SELECT fone_pessoa.ddd FROM cadastro.fone_pessoa WHERE fone_pessoa.idpes = $2 AND fone_pessoa.tipo = 1) as ddd_fone_fixo,
+              (SELECT fone_pessoa.ddd FROM cadastro.fone_pessoa WHERE fone_pessoa.idpes = $2 AND fone_pessoa.tipo = 2) as ddd_fone_mov,
 
              (SELECT idlog FROM cadastro.endereco_pessoa WHERE idpes = $2) as idlog
             from cadastro.fisica where idpes = $2";
@@ -185,7 +188,7 @@ class PessoaController extends ApiCoreController
     $attrs   = array('cpf', 'rg', 'data_nascimento', 'pai_id', 'mae_id', 'responsavel_id', 'nome_pai', 'nome_mae',
                        'nome_responsavel','sexo','estadocivil', 'cep', 'logradouro', 'idtlog', 'bairro',
                        'zona_localizacao', 'idbai', 'idlog', 'idmun', 'idmun_nascimento', 'complemento',
-                       'apartamento', 'andar', 'bloco', 'numero' , 'letra', 'possui_documento', 'iddis', 'distrito');
+                       'apartamento', 'andar', 'bloco', 'numero' , 'letra', 'possui_documento', 'iddis', 'distrito', 'fone_fixo', 'fone_mov', 'ddd_fone_fixo', 'ddd_fone_mov');
     $details = Portabilis_Array_Utils::filter($details, $attrs);
 
     $details['aluno_id']         = $alunoId;
@@ -200,6 +203,10 @@ class PessoaController extends ApiCoreController
     $detaihandleGetPersonls['complemento']      = $this->toUtf8($details['complemento']);
     $details['letra']            = $this->toUtf8($details['letra']);
     $details['bloco']            = $this->toUtf8($details['bloco']);
+    if ($details['fone_fixo'])
+      $details['fone_fixo']            = $this->toUtf8("({$details['ddd_fone_fixo']}){$details['fone_fixo']}");
+    if ($details['fone_mov'])
+      $details['fone_mov']            = $this->toUtf8("({$details['ddd_fone_mov']}){$details['fone_mov']}");
 
     if($details['idmun']){
 
@@ -424,6 +431,8 @@ class PessoaController extends ApiCoreController
     //$fisica->idpes_pai          = "NULL";
     //$fisica->idpes_mae          = "NULL";
     $fisica->idmun_nascimento   = $this->getRequest()->naturalidade;
+    $fone_fixo                  = $this->getRequest()->telefone_1;
+    $fone_mov                   = $this->getRequest()->telefone_mov;
 
     $sql = "select 1 from cadastro.fisica WHERE idpes = $1 limit 1";
 
@@ -431,9 +440,23 @@ class PessoaController extends ApiCoreController
       $fisica->cadastra();
     else
       $fisica->edita();
+    
+
+    if ($fone_fixo){
+      $ddd_fixo = substr($fone_fixo, 1,2);
+      $fone_fixo = substr($fone_fixo, 4);
+      $telefone = new clsPessoaTelefone($fisica->idpes, 1, $fone_fixo, $ddd_fixo);
+      $telefone->cadastra();
+    }
+    if ($fone_mov){
+      $ddd_mov = substr($fone_mov, 1,2);
+      $fone_mov = substr($fone_mov, 4);
+      $telefone = new clsPessoaTelefone($fisica->idpes, 2, $fone_mov, $ddd_mov);
+      $telefone->cadastra();
+    }
 
   }
-
+//select fone from fone_pessoa where fone_pessoa.idpes = 18664 AND fone_pessoa.tipo = 1
   protected function _createOrUpdatePessoaEndereco($pessoaId) {
 
     $cep = idFederal2Int($this->getRequest()->cep);
@@ -556,5 +579,22 @@ class PessoaController extends ApiCoreController
       $this->appendResponse($this->loadPessoaParent());
     else
       $this->notImplementedOperationError();
+  }
+
+  protected function sqlsForStringSearch() {
+    $searchOptions = $this->mergeOptions($this->searchOptions(), $this->defaultSearchOptions());
+
+    // $namespace     = $searchOptions['namespace'];
+    // $table         = $searchOptions['table'];
+    // $idAttr        = $searchOptions['idAttr'];
+    // $labelAttr     = $searchOptions['labelAttr'];
+
+    // $searchOptions['selectFields'][] = "$idAttr as id, $labelAttr as name";
+    // $selectFields                    = join(', ', $searchOptions['selectFields']);
+
+     return "select distinct pessoa.idpes as id, pessoa.nome as name from cadastro.pessoa inner join cadastro.fisica ON (fisica.idpes = pessoa.idpes)
+            where lower(to_ascii(pessoa.nome)) like '%'||lower(to_ascii($1))||'%' order by id, name limit 15";
+    // return "select distinct $selectFields from $namespace.$table
+    //         where lower(to_ascii($labelAttr)) like '%'||lower(to_ascii($1))||'%' order by $labelAttr limit 15";
   }
 }

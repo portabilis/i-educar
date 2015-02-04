@@ -174,11 +174,17 @@ class AlunoController extends ApiCoreController
         $sql     .= " and cod_aluno != $2";
         $params[] = $this->getRequest()->id;
       }
+      $count = strlen($this->getRequest()->aluno_estado_id);
+      if ($count < 13) {
+        $this->messenger->append("O Código rede estadual informado é inválido. ".
+                                 "{$this->getRequest()->aluno_estado_id}.");
 
+        return false;
+      }
       $alunoId = $this->fetchPreparedQuery($sql, $params, true, 'first-field');
 
       if ($alunoId) {
-        $this->messenger->append("Já existe o aluno $alunoId cadastrado com código estado ".
+        $this->messenger->append("Já existe o aluno $alunoId cadastrado com código estadual (RA) ".
                                  "{$this->getRequest()->aluno_estado_id}.");
 
         return false;
@@ -471,7 +477,7 @@ class AlunoController extends ApiCoreController
 
     $aluno                          = new clsPmieducarAluno();
     $aluno->cod_aluno               = $id;
-    $aluno->aluno_estado_id         = Portabilis_String_Utils::toLatin1($this->getRequest()->aluno_estado_id);
+    $aluno->aluno_estado_id         = strtoupper(Portabilis_String_Utils::toLatin1($this->getRequest()->aluno_estado_id));
     $aluno->codigo_sistema          = Portabilis_String_Utils::toLatin1($this->getRequest()->codigo_sistema);
 
     // após cadastro não muda mais id pessoa
@@ -610,7 +616,8 @@ class AlunoController extends ApiCoreController
       $params     = array($this->getRequest()->escola_id);
     }else{
       $sql = "SELECT cod_matricula as matricula_id, 
-              ref_cod_aluno as aluno_id
+              ref_cod_aluno as aluno_id,
+              ref_ref_cod_escola as escola_id
               FROM pmieducar.matricula 
               WHERE ref_cod_aluno IN ({$alunoId})
               AND matricula.ativo = 1 
@@ -640,7 +647,8 @@ class AlunoController extends ApiCoreController
       if (is_array($ocorrenciasMatricula)) {
         $attrsFilter                   = array('ref_cod_tipo_ocorrencia_disciplinar' => 'tipo',
                                                'data_cadastro'                       => 'data_hora',
-                                               'observacao'                          => 'descricao');
+                                               'observacao'                          => 'descricao',
+                                               'cod_ocorrencia_disciplinar' 	     => 'ocorrencia_disciplinar_id');
 
         $ocorrenciasMatricula = Portabilis_Array_Utils::filterSet($ocorrenciasMatricula, $attrsFilter);
 
@@ -649,6 +657,7 @@ class AlunoController extends ApiCoreController
           $ocorrenciaMatricula['data_hora'] = Portabilis_Date_Utils::pgSQLToBr($ocorrenciaMatricula['data_hora']);
           $ocorrenciaMatricula['descricao'] = $this->toUtf8($ocorrenciaMatricula['descricao']);
           $ocorrenciaMatricula['aluno_id']  = $matricula['aluno_id'];
+          $ocorrenciaMatricula['escola_id']  = $matricula['escola_id'];
           $ocorrenciasAluno[]               = $ocorrenciaMatricula;
         }
       }
@@ -1134,6 +1143,7 @@ class AlunoController extends ApiCoreController
         $this->createOrUpdateMoradia($id);
         $this->saveProjetos($id);
         $this->createOrUpdatePessoaTransporte($pessoaId);
+        $this->createOrUpdateDocumentos($pessoaId);
 
         $this->messenger->append('Cadastrado realizado com sucesso', 'success', false, 'error');
       }
@@ -1161,6 +1171,7 @@ class AlunoController extends ApiCoreController
       $this->createOrUpdateMoradia($id);
       $this->saveProjetos($id);
       $this->createOrUpdatePessoaTransporte($pessoaId);
+      $this->createOrUpdateDocumentos($pessoaId);
 
       $this->messenger->append('Cadastro alterado com sucesso', 'success', false, 'error');
     }
@@ -1242,6 +1253,51 @@ class AlunoController extends ApiCoreController
              order by ano desc
              limit 1";
     return (Portabilis_Utils_Database::selectField($sql, $alunoId));
+  }
+
+  protected function createOrUpdateDocumentos($pessoaId) {
+    $documentos                             = new clsDocumento();
+    $documentos->idpes                      = $pessoaId;
+
+
+    // o tipo certidão novo padrão é apenas para exibição ao usuário,
+    // não precisa ser gravado no banco
+    //
+    // quando selecionado um tipo diferente do novo formato,
+    // é removido o valor de certidao_nascimento.
+    //
+    if ($this->getRequest()->tipo_certidao_civil == 'certidao_nascimento_novo_formato') {
+      $documentos->tipo_cert_civil     = null;
+      $documentos->certidao_nascimento = $this->getRequest()->certidao_nascimento;
+    }
+    else {
+      $documentos->tipo_cert_civil     = $this->getRequest()->tipo_certidao_civil;
+      $documentos->certidao_nascimento = '';
+    }
+
+    $documentos->num_termo                  = $this->getRequest()->termo_certidao_civil;
+    $documentos->num_livro                  = $this->getRequest()->livro_certidao_civil;
+    $documentos->num_folha                  = $this->getRequest()->folha_certidao_civil;
+
+    $documentos->data_emissao_cert_civil    = Portabilis_Date_Utils::brToPgSQL(
+      $this->getRequest()->data_emissao_certidao_civil
+    );
+
+    $documentos->sigla_uf_cert_civil        = $this->getRequest()->uf_emissao_certidao_civil;
+    $documentos->cartorio_cert_civil        = addslashes($this->getRequest()->cartorio_emissao_certidao_civil);
+    $documentos->cartorio_cert_civil_inep   = $this->getRequest()->cartorio_cert_civil_inep;
+
+    // Alteração de documentos compativel com a versão anterior do cadastro,
+    // onde era possivel criar uma pessoa, não informando os documentos,
+    // o que não criaria o registro do documento, sendo assim, ao editar uma pessoa,
+    // o registro do documento será criado, caso não exista.
+
+    $sql = "select 1 from cadastro.documento WHERE idpes = $1 limit 1";
+
+    if (Portabilis_Utils_Database::selectField($sql, $pessoaId) != 1)
+      $documentos->cadastra();
+    else
+      $documentos->edita();
   }
 
   public function Gerar() {

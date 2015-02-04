@@ -60,9 +60,20 @@ var handleGetMatriculas = function(dataResponse) {
       $j('<td>').html(matricula.serie_nome).appendTo($tr);
       $j('<td>').html(matricula.curso_nome).appendTo($tr);
       $j('<td>').html(matricula.escola_nome).appendTo($tr);
+      // WIP #1016
+      // if matricula.user_can_change_data_entrada_saida{
+        // console.log('a');
+      // }
+      // $inputDataEntrada = $j('<input>').val(matricula.data_entrada).css('width', '70px');
+      // $inputDataEntrada.bind('keyup', function(key){
+      //   console.log(key);
+      // });
+
+      // $inputDataEntrada.appendTo($j('<td>').appendTo($tr));
+
+      // $j('<input>').val(matricula.data_saida).css('width', '70px').appendTo($j('<td>').appendTo($tr));
       $j('<td>').html(matricula.data_entrada).appendTo($tr);
       $j('<td>').html(matricula.data_saida).appendTo($tr);
-
       if (matricula.transferencia_em_aberto) {
         transferenciaEmAberto = true;
         $tr.addClass('notice');
@@ -111,6 +122,10 @@ var handleGetMatriculas = function(dataResponse) {
     throw error;
   }
 }
+// WIP #1016
+// function onDataEntradaKeyup(matricula_id){
+//   console.log(key, matricula_id);
+// }
 
 var getMatriculas = function() {
   var data = {

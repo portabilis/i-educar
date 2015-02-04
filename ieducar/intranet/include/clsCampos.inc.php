@@ -336,6 +336,27 @@ class clsCampos extends Core_Controller_Page_Abstract
       $this->__campos_tabela[] = $arr_componente;
     }
   }
+  function campoRA($nome, $campo, $valor, $obrigatorio = FALSE, $descricao = FALSE, $disabled = FALSE)// RA = Registro do Aluno, aluno_estado_id
+  {
+    $arr_componente = array(
+      'cpf',
+      $this->__adicionando_tabela ? $nome : $campo,
+      $obrigatorio ? "/[0-9]{3}\.[0-9]{3}\.[0-9]{3}-[0-9]{1}/" : '',
+      $valor,
+      14,
+      13,
+      'nnn.nnn.nnn-n',
+      $descricao,
+      $disabled
+    );
+
+    if (! $this->__adicionando_tabela) {
+      $this->campos[$nome] = $arr_componente;
+    }
+    else {
+      $this->__campos_tabela[] = $arr_componente;
+    }
+  }
 
   function campoIdFederal($nome, $campo, $valor, $obrigatorio = FALSE,
     $invisivel = FALSE, $descricao = FALSE)

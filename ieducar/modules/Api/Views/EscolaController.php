@@ -237,6 +237,56 @@ class EscolaController extends ApiCoreController
     return $max_aluno_turmas;
   }
 
+protected function getInformacaoEscolas(){
+
+  $sql = " SELECT escola.cod_escola as cod_escola,
+				  juridica.fantasia as nome,
+				  coalesce(endereco_pessoa.cep, endereco_externo.cep) as cep,
+				  coalesce(endereco_pessoa.numero, endereco_externo.numero) as numero,
+				  coalesce(endereco_pessoa.complemento, endereco_externo.complemento) as complemento,
+				  coalesce(logradouro.nome,endereco_externo.logradouro) as logradouro,
+				  coalesce(bairro.nome, endereco_externo.bairro) as bairro,
+				  coalesce(municipio.nome, endereco_externo.cidade) as municipio,
+				  coalesce(uf.sigla_uf, endereco_externo.sigla_uf) as uf,
+				  pais.nome as pais,
+				  pessoa.email as email,
+				  fone_pessoa.ddd as ddd,
+				  fone_pessoa.fone as fone,
+				  pessoa_responsavel.nome as nome_responsavel
+		     from pmieducar.escola
+		    inner join cadastro.juridica on(escola.ref_idpes = juridica.idpes)
+		     left join cadastro.pessoa on(juridica.idpes = pessoa.idpes)
+		     left join cadastro.pessoa pessoa_responsavel on(escola.ref_idpes_gestor = pessoa_responsavel.idpes)
+		     left join cadastro.fone_pessoa on(fone_pessoa.idpes = pessoa.idpes)
+		     left join cadastro.endereco_pessoa on(escola.ref_idpes = endereco_pessoa.idpes)
+		     left join cadastro.endereco_externo on(escola.ref_idpes = endereco_externo.idpes)
+		     left join public.logradouro on(endereco_pessoa.idlog = logradouro.idlog)
+		     left join public.municipio on(logradouro.idmun = municipio.idmun)
+		     left join public.uf on(municipio.sigla_uf = uf.sigla_uf)
+		     left join public.bairro on(endereco_pessoa.idbai = bairro.idbai and municipio.idmun = bairro.idmun)
+		     left join public.pais on(uf.idpais = pais.idpais)
+		    where escola.ativo = 1
+		      and fone_pessoa.tipo = 1";
+
+  $escolas = $this->fetchPreparedQuery($sql);
+
+  if(empty($escolas)){
+  	$this->messenger->append("Desculpe, mas não existem escolas cadastradas");
+  	return array( 'escolas' => 0);
+  }
+  else{
+  	foreach($escolas as &$escola){
+  		$escola['nome'] = Portabilis_String_Utils::toUtf8($escola['nome']);
+  		$escola['complemento'] = Portabilis_String_Utils::toUtf8($escola['complemento']);
+  		$escola['logradouro'] = Portabilis_String_Utils::toUtf8($escola['logradouro']);
+  		$escola['bairro'] = Portabilis_String_Utils::toUtf8($escola['bairro']);
+  		$escola['municipio'] = Portabilis_String_Utils::toUtf8($escola['municipio']);
+  		$escola['nome_responsavel'] = Portabilis_String_Utils::toUtf8($escola['nome_responsavel']);
+  	}
+  	$attrs = array('cod_escola', 'nome', 'cep', 'numero', 'complemento', 'logradouro', 'bairro', 'municipio', 'uf', 'pais', 'email', 'ddd', 'fone', 'nome_responsavel');
+  	return array( 'escolas' => Portabilis_Array_Utils::filterSet($escolas, $attrs));
+	}
+}
 
   public function Gerar() {
     if ($this->isRequestFor('get', 'escola'))
@@ -247,6 +297,9 @@ class EscolaController extends ApiCoreController
 
     elseif ($this->isRequestFor('get', 'escolas'))
       $this->appendResponse($this->getEscolas());
+
+  	elseif ($this->isRequestFor('get', 'info-escolas'))
+  		$this->appendResponse($this->getInformacaoEscolas());
 
     else
       $this->notImplementedOperationError();
