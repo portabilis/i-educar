@@ -305,7 +305,13 @@ class indice extends clsDetalhe
 		$this->addBotao('Copiar Histórico',"educar_historico_escolar_cad.php?ref_cod_aluno={$registro["ref_cod_aluno"]}&sequencial={$registro["sequencial"]}&copia=true");
 
 		$obj_permissoes = new clsPermissoes();
-		if( $obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7 ) )
+		$this->obj_permissao = new clsPermissoes();
+    	$this->nivel_usuario = $this->obj_permissao->nivel_acesso($this->pessoa_logada);
+    	//$year = date('Y');
+    	$db = new clsBanco();	
+		$school_user = $db->CampoUnico("select ref_cod_escola from pmieducar.usuario where cod_usuario =  $this->pessoa_logada");
+		$school_student = $db->CampoUnico("select ref_ref_cod_escola, ano from matricula where ref_cod_aluno = {$this->ref_cod_aluno} and ativo = 1 order by data_cadastro desc limit 1");
+		if( $obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7 ) and ($this->nivel_usuario == 1 or $school_user == $school_student or !$school_student))
 		{
 			$this->url_novo = "educar_historico_escolar_cad.php?ref_cod_aluno={$registro["ref_cod_aluno"]}";
 			if ($registro['origem'])
