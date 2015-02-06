@@ -35,6 +35,7 @@ require_once 'lib/Portabilis/String/Utils.php';
 require_once 'App/Model/MatriculaSituacao.php';
 require_once 'intranet/include/clsBanco.inc.php';
 require_once 'include/pmieducar/clsPmieducarMatricula.inc.php';
+require_once 'Portabilis/Date/Utils.php';
 
 class MatriculaController extends ApiCoreController
 {
@@ -67,7 +68,7 @@ class MatriculaController extends ApiCoreController
             max(matricula.cod_matricula) as id, pessoa.nome as name from pmieducar.matricula,
             pmieducar.aluno, cadastro.pessoa where aluno.cod_aluno = matricula.ref_cod_aluno and
             pessoa.idpes = aluno.ref_idpes and aluno.ativo = matricula.ativo and
-            matricula.ativo = 1 and 
+            matricula.ativo = 1 and
             case when $4 = 1 then matricula.aprovado = 3 else matricula.aprovado in (1, 2, 3, 4, 6, 7, 8, 9) end and
             (matricula.cod_matricula like $1||'%' or matricula.ref_cod_aluno like $1||'%') and
             (select case when $2 != 0 then matricula.ref_ref_cod_escola = $2 else 1=1 end) and
@@ -81,7 +82,7 @@ class MatriculaController extends ApiCoreController
             max(matricula.cod_matricula) as id, pessoa.nome as name from pmieducar.matricula,
             pmieducar.aluno, cadastro.pessoa where aluno.cod_aluno = matricula.ref_cod_aluno and
             pessoa.idpes = aluno.ref_idpes and aluno.ativo = matricula.ativo and
-            matricula.ativo = 1 and 
+            matricula.ativo = 1 and
             case when $4 = 1 then matricula.aprovado = 3 else matricula.aprovado in (1, 2, 3, 4, 6, 7, 8, 9) end and
             lower(to_ascii(pessoa.nome)) like lower(to_ascii($1))||'%' and
             (select case when $2 != 0 then matricula.ref_ref_cod_escola = $2 else 1=1 end) and
@@ -235,7 +236,7 @@ class MatriculaController extends ApiCoreController
 
   protected function canPostReservaExterna(){
     return $this->validatesPresenceOf('instituicao_id') && $this->validatesPresenceOf('ano')
-             && $this->validatesPresenceOf('curso_id')  && $this->validatesPresenceOf('serie_id') 
+             && $this->validatesPresenceOf('curso_id')  && $this->validatesPresenceOf('serie_id')
              && $this->validatesPresenceOf('turma_turno_id') && $this->validatesPresenceOf('qtd_alunos')
              && $this->validatesPresenceOf('escola_id');
   }
@@ -250,61 +251,71 @@ class MatriculaController extends ApiCoreController
       $turmaTurnoId = $this->getRequest()->turma_turno_id;
       $ano = $this->getRequest()->ano;
       $qtd_alunos = $this->getRequest()->qtd_alunos;
-  
+
       $params = array($instituicaoId, $escolaId, $cursoId, $serieId, $turmaTurnoId, $ano);
 
       $sql = 'DELETE
-                FROM pmieducar.quantidade_reserva_externa 
+                FROM pmieducar.quantidade_reserva_externa
                 WHERE ref_cod_instituicao = $1
                 AND ref_cod_escola = $2
                 AND ref_cod_curso = $3
                 AND ref_cod_serie = $4
-                AND ref_turma_turno_id = $5 
+                AND ref_turma_turno_id = $5
                 AND ano = $6';
-  
+
       $this->fetchPreparedQuery($sql, $params);
-  
+
       $params[] = $qtd_alunos;
-  
+
       $sql = ' INSERT INTO pmieducar.quantidade_reserva_externa VALUES ($1,$2,$3,$4,$5,$6,$7)';
-  
+
       $this->fetchPreparedQuery($sql, $params);
-      
+
       $this->messenger->append('Quantidade de alunos atualizada com sucesso!.', 'success');
     }
   }
-  // WIP #1016
-  // protected function canPostDataEntrada(){
-  // 	return $this->validatesPresenceOf('matricula_id') && $this->validatesPresenceOf('data_entrada');
-  // }
 
-  // protected function canPostDataSaida(){
-  // 	return $this->validatesPresenceOf('matricula_id') && $this->validatesPresenceOf('data_saida');
-  // }
+  protected function validaDataEntrada(){
+  	if(!Portabilis_Date_Utils::validaData($this->getRequest()->data_entrada)){
+  		$this->messenger->append('Valor inválido para data de entrada', 'error');
+  		return false;
+  	}else{
+  		return true;
+  	}
+  }
 
-  // protected function postDataEntrada(){
-  // 	if($this->canPostDataEntrada()){
-  // 		$matricula_id = $this->getRequest()->matricula_id;
-  // 		$data_entrada = $this->getRequest()->data_entrada;
-  // 		$matricula = new clsPmieducarMatricula($matricula_id);
-  // 		$matricula->data_matricula = $data_entrada;
-  // 		if($matricula->edita()){
-  // 			return $this->messenger->append('Data de entrada atualizada com sucesso.', 'success')
-  // 		}
-  // 	}
-  // }
+  protected function validaDataSaida(){
+  	if(!Portabilis_Date_Utils::validaData($this->getRequest()->data_saida)){
+  		$this->messenger->append('Valor inválido para data de saída', 'error');
+  		return false;
+  	}else{
+  		return true;
+  	}
+  }
 
-  // protected function postDataSaida(){
-  // 	if($this->canPostDataSaida()){
-  // 		$matricula_id = $this->getRequest()->matricula_id;
-  // 		$data_saida = $this->getRequest()->data_saida;
-  // 		$matricula = new clsPmieducarMatricula($matricula_id);
-  // 		$matricula->data_cancel = $data_saida;
-  // 		if($matricula->edita()){
-  // 			return $this->messenger->append('Data de saida atualizada com sucesso.', 'success')
-  // 		}
-  // 	}
-  // }
+  protected function postDataEntrada(){
+  	if($this->validaDataEntrada()){
+  		$matricula_id = $this->getRequest()->matricula_id;
+  		$data_entrada = Portabilis_Date_Utils::brToPgSQL($this->getRequest()->data_entrada);
+  		$matricula = new clsPmieducarMatricula($matricula_id);
+  		$matricula->data_matricula = $data_entrada;
+  		if($matricula->edita()){
+  			$this->messenger->append('Data de entrada atualizada com sucesso.', 'success');
+  		}
+  	}
+  }
+
+  protected function postDataSaida(){
+  	if($this->validaDataSaida()){
+  		$matricula_id = $this->getRequest()->matricula_id;
+  		$data_saida = Portabilis_Date_Utils::brToPgSQL($this->getRequest()->data_saida);
+  		$matricula = new clsPmieducarMatricula($matricula_id);
+  		$matricula->data_cancel = $data_saida;
+  		if($matricula->edita()){
+  			return $this->messenger->append('Data de saida atualizada com sucesso.', 'success');
+  		}
+  	}
+  }
 
   public function Gerar() {
     if ($this->isRequestFor('get', 'matricula'))
@@ -327,10 +338,12 @@ class MatriculaController extends ApiCoreController
 
     elseif ($this->isRequestFor('post', 'reserva-externa'))
       $this->appendResponse($this->postReservaExterna());
-  	// elseif ($this->isRequestFor('post', 'data-entrada'))
-  	//   $this->appendResponse($this->postDataEntrada());
-  	// elseif ($this->isRequestFor('post', 'data-saida'))
-  	//   $this->appendResponse($this->postDataSaida());
+
+  	elseif ($this->isRequestFor('post', 'data-entrada'))
+  	  $this->appendResponse($this->postDataEntrada());
+
+  	elseif ($this->isRequestFor('post', 'data-saida'))
+  	  $this->appendResponse($this->postDataSaida());
 
     else
       $this->notImplementedOperationError();
