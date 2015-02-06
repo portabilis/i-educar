@@ -223,3 +223,6 @@ div p a{;
 .select { 
   border: 1px solid #ffffff; background: #ffffff; color: #000000;
 }
+input{
+  font-size: 11px;
+}
