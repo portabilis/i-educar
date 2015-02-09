@@ -505,11 +505,6 @@ class indice extends clsCadastro
               );
 
               $det_matricula = $obj_matricula->detalhe();
-
-              // Se a matrícula anterior estava em andamento, copia as notas/faltas/pareceres
-              if ($det_matricula['aprovado']=3){
-                $db->Consulta(" SELECT modules.copia_notas_transf({$det_matricula['cod_matricula']},{$cod_matricula})");
-              }
               
               // Criar histórico de transferencia
               clsPmieducarHistoricoEscolar::gerarHistoricoTransferencia($det_matricula['cod_matricula'], $this->pessoa_logada);
@@ -582,6 +577,11 @@ class indice extends clsCadastro
                 return FALSE;
               }
             }
+            $this->enturmacaoMatricula($cod_matricula, $this->ref_cod_turma);
+            // Se a matrícula anterior estava em andamento, copia as notas/faltas/pareceres
+            if ($det_matricula['aprovado']==3){
+              $db->Consulta(" SELECT modules.copia_notas_transf({$det_matricula['cod_matricula']},{$cod_matricula})");
+            }
           }else{
             $objMatriculasTrasnferidas = new clsPmieducarMatricula();
             $matriculasTransferidas = $objMatriculasTrasnferidas->lista($int_cod_matricula = NULL, $int_ref_cod_reserva_vaga = NULL,
@@ -599,13 +599,14 @@ class indice extends clsCadastro
                                                 $arr_int_cod_matricula = NULL, $int_mes_defasado = NULL, $boo_data_nasc = NULL,
                                                 $boo_matricula_transferencia = NULL, $int_semestre = NULL, $int_ref_cod_turma = NULL,
                                                 $int_ref_cod_abandono = NULL, $matriculas_turmas_transferidas_abandono = FALSE);
+            $this->enturmacaoMatricula($cod_matricula, $this->ref_cod_turma);
             foreach ($matriculasTransferidas as $matriculaTransferida) {
               $db = new clsBanco();
               $db->consulta("SELECT modules.copia_notas_transf({$matriculaTransferida['cod_matricula']},{$cod_matricula})");
             }
           }
         //}
-        $this->enturmacaoMatricula($cod_matricula, $this->ref_cod_turma);
+
         #TODO set in $_SESSION['flash'] 'Aluno matriculado com sucesso'
         $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
         header('Location: educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno);
