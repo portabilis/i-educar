@@ -4,7 +4,7 @@
   -- @license  @@license@@
   -- @version  $Id$
 
-DROP FUNCTION modules.copia_notas_transf(old_matricula_id integer, new_matricula_id integer);
+--DROP FUNCTION modules.copia_notas_transf(old_matricula_id integer, new_matricula_id integer);
 
 CREATE OR REPLACE FUNCTION modules.copia_notas_transf(old_matricula_id integer, new_matricula_id integer)
   RETURNS VARCHAR AS
@@ -12,7 +12,7 @@ $BODY$
   DECLARE
   cur_comp RECORD;
   cur_comp_media RECORD;
-  cur_falta_geral RECORD;3
+  cur_falta_geral RECORD;
   cur_falta_comp RECORD;
   cur_parecer_geral RECORD;
   cur_parecer_comp RECORD;
