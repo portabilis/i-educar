@@ -120,9 +120,9 @@ class indice
           });
          </script>';
 
-     // if($GLOBALS['coreExt']['Config']->app->database->dbname == 'rionegrinho'){
-     // 	echo $this->mostraModalPesquisa("Rio Negrinho", "https://docs.google.com/a/portabilis.com.br/forms/d/14AdnuR-iCdsuPQJEUDvEtFc9rrrkuFPmtZg99jJLUVE/viewform");
-     // }
+     /*if($GLOBALS['coreExt']['Config']->app->database->dbname == 'rionegrinho'){
+     	echo $this->mostraModalPesquisa("Rio Negrinho", "https://docs.google.com/a/portabilis.com.br/forms/d/14AdnuR-iCdsuPQJEUDvEtFc9rrrkuFPmtZg99jJLUVE/viewform");
+     }
      if($GLOBALS['coreExt']['Config']->app->database->dbname == 'cocaldosul'){
      	echo $this->mostraModalPesquisa("Cocal do Sul", "https://docs.google.com/a/portabilis.com.br/forms/d/1b2Ir3cbreeOhcY7fwIc4RV4gdLKtRTVPXYMAxVX_7sA/viewform");
      }
@@ -146,7 +146,7 @@ class indice
      }
      if($GLOBALS['coreExt']['Config']->app->database->dbname == 'sombrio'){
      	echo $this->mostraModalPesquisa("Sombrio", "https://docs.google.com/a/portabilis.com.br/forms/d/1lhPjDbmsddCGoN5I469gyEKwubdqc3kdErhmyyBm7sQ/viewform");
-     }
+     }*/
 
       $temp .= '<table width="100%" height="400" align="center" border="0" cellspacing="4" cellpadding="0">';
       $temp .= '
