@@ -96,24 +96,30 @@ class indice extends clsCadastro
 
   function Inicializar()
   {
-    $retorno = 'Novo';
+    //$retorno = 'Novo';
 
     @session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     @session_write_close();
 
+    $this->ref_cod_turma_copiar_enturmacoes = $_GET['ref_cod_turma_copiar_enturmacoes'];
     $this->cod_matricula = $_GET['cod_matricula'];
     $this->ref_cod_aluno = $_GET['ref_cod_aluno'];
     $this->ref_cod_candidato_reserva_vaga = $_GET['ref_cod_candidato_reserva_vaga'];
 
+    $retorno = ($this->ref_cod_turma_copiar_enturmacoes ? 'CopiaEnturmacoes' : 'Novo');
+
     $obj_aluno = new clsPmieducarAluno($this->ref_cod_aluno);
 
-    if (! $obj_aluno->existe()) {
+    if (! $obj_aluno->existe() and !$this->ref_cod_turma_copiar_enturmacoes) {
       header('Location: educar_aluno_lst.php');
       die;
     }
-
-    $url = 'educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno;
+    if ($this->ref_cod_turma_copiar_enturmacoes){
+      $this->nome_url_sucesso = Portabilis_String_Utils::toLatin1('Gravar enturmações');
+      $url = 'educar_matriculas_turma_cad.php?ref_cod_turma=' . $this->ref_cod_turma_copiar_enturmacoes;
+    }else
+      $url = 'educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno;
 
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7, $url);
@@ -143,28 +149,32 @@ class indice extends clsCadastro
   function Gerar()
   {
     // primary keys
+    $this->campoOculto("ref_cod_turma_copiar_enturmacoes", $this->ref_cod_turma_copiar_enturmacoes);
     $this->campoOculto("cod_matricula", $this->cod_matricula);
     $this->campoOculto("ref_cod_aluno", $this->ref_cod_aluno);
     $this->campoOculto("ref_cod_candidato_reserva_vaga", $this->ref_cod_candidato_reserva_vaga);
 
-    $obj_aluno = new clsPmieducarAluno();
-    $lst_aluno = $obj_aluno->lista($this->ref_cod_aluno, NULL, NULL, NULL, NULL,
-      NULL, NULL, NULL, NULL, NULL, 1);
+    if ($this->ref_cod_aluno){
+      $obj_aluno = new clsPmieducarAluno();
+      $lst_aluno = $obj_aluno->lista($this->ref_cod_aluno, NULL, NULL, NULL, NULL,
+        NULL, NULL, NULL, NULL, NULL, 1);
 
-    if (is_array($lst_aluno)) {
-      $det_aluno      = array_shift($lst_aluno);
-      $this->nm_aluno = $det_aluno['nome_aluno'];
-      $this->campoRotulo('nm_aluno', 'Aluno', $this->nm_aluno);
+      if (is_array($lst_aluno)) {
+        $det_aluno      = array_shift($lst_aluno);
+        $this->nm_aluno = $det_aluno['nome_aluno'];
+        $this->campoRotulo('nm_aluno', 'Aluno', $this->nm_aluno);
+      }
+
+      /*
+       * Verifica se existem matrículas para o aluno para apresentar o campo
+       * transferência, necessário para o relatório de movimentação mensal.
+       */
+      $obj_matricula = new clsPmieducarMatricula();
+      $lst_matricula = $obj_matricula->lista(NULL, NULL, NULL, NULL, NULL, NULL,
+        $this->ref_cod_aluno);
     }
-
-    /*
-     * Verifica se existem matrículas para o aluno para apresentar o campo
-     * transferência, necessário para o relatório de movimentação mensal.
-     */
-    $obj_matricula = new clsPmieducarMatricula();
-    $lst_matricula = $obj_matricula->lista(NULL, NULL, NULL, NULL, NULL, NULL,
-      $this->ref_cod_aluno);
-
+    if ($this->ref_cod_turma_copiar_enturmacoes)
+      $this->nome_url_sucesso = Portabilis_String_Utils::toLatin1('Gravar enturmações');
     // inputs
 
     $anoLetivoHelperOptions = array('situacoes' => array('em_andamento', 'nao_iniciado'));
@@ -191,7 +201,54 @@ class indice extends clsCadastro
     $curso = new clsPmieducarCurso($id);
     return $curso->detalhe();
   }
-
+  function CopiaEnturmacoes(){
+    $enturmacoes_turma_dest = Portabilis_Utils_Database::fetchPreparedQuery("
+                                                                  select * from pmieducar.matricula_turma 
+                                                                  where ref_cod_turma = {$this->ref_cod_turma} and ativo = 1");
+    $qtq_alunos = count($enturmacoes_turma_dest);
+    $db = new clsBanco();
+    $max_aluno = $db->CampoUnico("select max_aluno from pmieducar.turma where cod_turma = $this->ref_cod_turma");
+    $saldo_turma = $max_aluno - $qtq_alunos;
+//echo $this->ref_cod_turma;die;
+    $enturmacoes = Portabilis_Utils_Database::fetchPreparedQuery("
+                                                                  select * from pmieducar.matricula_turma 
+                                                                  where ref_cod_turma = {$this->ref_cod_turma_copiar_enturmacoes} and ativo = 1");
+    $qtd_alunos_new = count($enturmacoes);
+    if ($qtd_alunos_new < $saldo_turma){
+      foreach ($enturmacoes as $enturmar) {
+         //echo $enturmar['ref_cod_matricula']."fd".$this->ref_cod_turma;die;
+        $db = new clsBanco();
+        $existe = $db->CampoUnico("select ref_cod_turma from pmieducar.matricula_turma 
+                                    where ref_cod_matricula = {$enturmar['ref_cod_matricula']} 
+                                    and ref_cod_turma = {$this->ref_cod_turma}");
+        if (!$existe){
+          // $obj_matricula_turma = new clsPmieducarMatriculaTurma($enturmar['ref_cod_matricula'],
+          // $this->ref_cod_turma, $enturmar['ref_usuario_exc'], $enturmar['ref_usuario_cad'], 
+          // NULL, NULL, 1, NULL, NULL, $this->data_matricula);
+          // $lst_matricula_turma = $obj_matricula_turma->cadastra();
+          $db = new clsBanco();
+          $db->CampoUnico("insert into pmieducar.matricula_turma
+                           (ref_cod_matricula,
+                            ref_cod_turma,
+                            sequencial,
+                            ref_usuario_exc, 
+                            ref_usuario_cad,
+                            data_cadastro,
+                            ativo,
+                            data_enturmacao)
+                           values
+                           ({$enturmar['ref_cod_matricula']}, {$this->ref_cod_turma}, {$enturmar['sequencial']}, NULL, 
+                            {$enturmar['ref_usuario_cad']}, '{$this->data_matricula}', {$enturmar['ativo']}, '{$this->data_matricula}')");
+        }
+      }
+      header("Location: educar_matriculas_turma_cad.php?ref_cod_turma= {$this->ref_cod_turma}");
+        die;
+    }else{
+      $this->mensagem = Portabilis_String_Utils::toLatin1("A turma não tem saldo de vagas suficiente.");
+      //header("Location: educar_matricula_cad.php?ref_cod_turma_copiar_enturmacoes= {$this->ref_cod_turma_copiar_enturmacoes}");
+      return FALSE;
+    }
+  }
   function Novo()
   {
 
@@ -453,42 +510,6 @@ class indice extends clsCadastro
 
         $obj_transferencia = new clsPmieducarTransferenciaSolicitacao();
 
-
-        #Se encontrar solicitações de transferencia externa (com data de transferencia sem codigo de matricula de entrada), inativa estas
-        /*$lst_transferencia = $obj_transferencia->lista(NULL, NULL, NULL, NULL,
-          NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL,
-          $this->ref_cod_aluno, FALSE, NULL, NULL, NULL, TRUE, FALSE);
-
-        if (is_array($lst_transferencia)) {
-          echo 'Encontrou solicitações de transferencia externa (saida) com data de transferencia';
-          $det_transferencia = array_shift($lst_transferencia);
-
-          $obj_transferencia = new clsPmieducarTransferenciaSolicitacao(
-            $det_transferencia['cod_transferencia_solicitacao'], NULL,
-            $this->pessoa_logada, NULL, NULL, NULL, NULL, NULL, NULL, 0);
-
-          $editou2 = $obj_transferencia->edita();
-
-          if ($editou2) {
-            $obj = new clsPmieducarMatricula($det_transferencia['ref_cod_matricula_saida'],
-              NULL, NULL, NULL, $this->pessoa_logada, NULL, NULL, 4, NULL, NULL, 1, NULL, 0);
-
-            $editou3 = $obj->edita();
-
-            if (! $editou3) {
-              $this->mensagem = 'Edição não realizada.<br />';
-              return FALSE;
-            }
-          }
-          else {
-            $this->mensagem = 'Edição não realizada.<br />';
-            return FALSE;
-          }
-        }
-        #senão pega as solicitacoes de transferencia internas (sem data de transferencia e sem codigo de matricula de entrada) e
-        #seta a data de transferencia e codigo de matricula de entrada, atualiza a situacao da matricula para transferido e inativa a matricula turma
-        else {
-        */
           $obj_transferencia = new clsPmieducarTransferenciaSolicitacao();
           $lst_transferencia = $obj_transferencia->lista(NULL, NULL, NULL, NULL,
             NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL,

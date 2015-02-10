@@ -125,6 +125,11 @@ class indice extends clsCadastro
 
       $this->nome_url_cancelar = 'Cancelar';
 
+      if ($retorno == 'Editar'){
+        $this->url_copiar_enturmacoes = sprintf('educar_matricula_cad.php?ref_cod_turma_copiar_enturmacoes=%d', $this->ref_cod_turma);
+        $this->nome_url_copiar_enturmacoes = Portabilis_String_Utils::toLatin1('Copiar enturmações');
+      }
+
       $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
       $localizacao = new LocalizacaoSistema();
       $localizacao->entradaCaminhos( array(
