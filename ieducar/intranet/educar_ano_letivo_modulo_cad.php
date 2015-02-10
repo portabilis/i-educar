@@ -214,17 +214,19 @@ class indice extends clsCadastro
           $this->ano_letivo_modulo[$qtd_registros][] = $campo["ref_cod_modulo"];
           $this->ano_letivo_modulo[$qtd_registros][] = dataFromPgToBr($campo['data_inicio']);
           $this->ano_letivo_modulo[$qtd_registros][] = dataFromPgToBr($campo['data_fim']);
+          $this->ano_letivo_modulo[$qtd_registros][] = $campo["dias_letivos"];
           $qtd_registros++;
         }
       }
 
-      $this->campoTabelaInicio("modulos_ano_letivo","M&oacute;dulos do ano letivo",array("M&oacute;dulo","Data inicial","Data final"),$this->ano_letivo_modulo);
+      $this->campoTabelaInicio("modulos_ano_letivo","M&oacute;dulos do ano letivo",array("M&oacute;dulo","Data inicial","Data final", "Dias Letivos"),$this->ano_letivo_modulo);
 
       $this->campoLista('ref_cod_modulo', 'Módulo', $opcoesCampoModulo,
       $this->ref_cod_modulo, NULL, NULL, NULL, NULL, NULL, TRUE);
 
       $this->campoData( "data_inicio", "Hora", $this->data_inicio,true);
       $this->campoData( "data_fim", "Hora", $this->data_fim, true);
+      $this->campoNumero( "dias_letivos", "Dias Letivos", $this->dias_letivos, 6, 3, false);
       $this->campoTabelaFim();
     }
 
@@ -253,13 +255,14 @@ class indice extends clsCadastro
       if ($cadastrou) {
 
         foreach ($this->ref_cod_modulo as $key => $campo) {
-          $this->data_inicio[$key] = dataToBanco($this->data_inicio[$key]);
-          $this->data_fim[$key]    = dataToBanco($this->data_fim[$key]);
+          $this->data_inicio[$key]  = dataToBanco($this->data_inicio[$key]);
+          $this->data_fim[$key]     = dataToBanco($this->data_fim[$key]);
+          $this->dias_letivos[$key] = dataToBanco($this->dias_letivos[$key]);
 
           $obj = new clsPmieducarAnoLetivoModulo($this->ref_ano,
             $this->ref_ref_cod_escola, $key+1,
             $this->ref_cod_modulo[$key], $this->data_inicio[$key],
-            $this->data_fim[$key]
+            $this->data_fim[$key], $this->dias_letivos[$key]
           );
 
           $cadastrou1 = $obj->cadastra();
@@ -308,7 +311,7 @@ class indice extends clsCadastro
           $obj = new clsPmieducarAnoLetivoModulo($this->ref_ano,
             $this->ref_ref_cod_escola, $key+1,
             $this->ref_cod_modulo[$key], $this->data_inicio[$key],
-            $this->data_fim[$key]
+            $this->data_fim[$key], $this->dias_letivos[$key]
           );
 
           $cadastrou1 = $obj->cadastra();

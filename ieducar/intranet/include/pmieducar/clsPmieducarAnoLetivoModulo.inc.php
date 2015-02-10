@@ -40,7 +40,7 @@ class clsPmieducarAnoLetivoModulo
 	var $ref_cod_modulo;
 	var $data_inicio;
 	var $data_fim;
-
+	var $dias_letivos;
 	// propriedades padrao
 
 	/**
@@ -105,13 +105,13 @@ class clsPmieducarAnoLetivoModulo
 	 *
 	 * @return object
 	 */
-	function clsPmieducarAnoLetivoModulo( $ref_ano = null, $ref_ref_cod_escola = null, $sequencial = null, $ref_cod_modulo = null, $data_inicio = null, $data_fim = null )
+	function clsPmieducarAnoLetivoModulo( $ref_ano = null, $ref_ref_cod_escola = null, $sequencial = null, $ref_cod_modulo = null, $data_inicio = null, $data_fim = null, $dias_letivos = null )
 	{
 		$db = new clsBanco();
 		$this->_schema = "pmieducar.";
 		$this->_tabela = "{$this->_schema}ano_letivo_modulo";
 
-		$this->_campos_lista = $this->_todos_campos = "ref_ano, ref_ref_cod_escola, sequencial, ref_cod_modulo, data_inicio, data_fim";
+		$this->_campos_lista = $this->_todos_campos = "ref_ano, ref_ref_cod_escola, sequencial, ref_cod_modulo, data_inicio, data_fim, dias_letivos";
 
 		if( is_numeric( $ref_cod_modulo ) )
 		{
@@ -186,6 +186,10 @@ class clsPmieducarAnoLetivoModulo
 		{
 			$this->data_fim = $data_fim;
 		}
+		if( is_numeric( $dias_letivos ) )
+		{
+			$this->dias_letivos = $dias_letivos;
+		}
 
 	}
 
@@ -196,7 +200,7 @@ class clsPmieducarAnoLetivoModulo
 	 */
 	function cadastra()
 	{
-		if( is_numeric( $this->ref_ano ) && is_numeric( $this->ref_ref_cod_escola ) && is_numeric( $this->sequencial ) && is_numeric( $this->ref_cod_modulo ) && is_string( $this->data_inicio ) && is_string( $this->data_fim ) )
+		if( is_numeric( $this->ref_ano ) && is_numeric( $this->ref_ref_cod_escola ) && is_numeric( $this->sequencial ) && is_numeric( $this->ref_cod_modulo ) && is_string( $this->data_inicio ) && is_string( $this->data_fim) && is_numeric($this->dias_letivos) )
 		{
 			$db = new clsBanco();
 
@@ -240,7 +244,13 @@ class clsPmieducarAnoLetivoModulo
 				$valores .= "{$gruda}'{$this->data_fim}'";
 				$gruda = ", ";
 			}
-
+			if( is_numeric( $this->dias_letivos ) )
+			{
+				$campos .= "{$gruda}dias_letivos";
+				$valores .= "{$gruda}'{$this->dias_letivos}'";
+				$gruda = ", ";
+			}
+			
       // ativa escolaAnoLetivo se estiver desativado
       // (quando o escolaAnoLetivo é 'excluido' o registro não é removido)
       $escolaAnoLetivo = new clsPmieducarEscolaAnoLetivo($this->ref_ref_cod_escola, 
@@ -285,7 +295,11 @@ class clsPmieducarAnoLetivoModulo
 				$set .= "{$gruda}data_fim = '{$this->data_fim}'";
 				$gruda = ", ";
 			}
-
+			if( is_numeric( $this->dias_letivos ) )
+			{
+				$set .= "{$gruda}dias_letivos = '{$this->dias_letivos}'";
+				$gruda = ", ";
+			}
 
 			if( $set )
 			{
