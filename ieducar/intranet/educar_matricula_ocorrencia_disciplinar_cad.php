@@ -49,6 +49,7 @@ class indice extends clsCadastro
 	 */
 	var $pessoa_logada;
 
+	var $cod_ocorrencia_disciplinar;
 	var $ref_cod_matricula;
 	var $ref_cod_tipo_ocorrencia_disciplinar;
 	var $sequencial;
@@ -127,13 +128,13 @@ class indice extends clsCadastro
 
 		if (is_numeric($this->ref_cod_matricula))
 			$this->url_cancelar = ($retorno == "Editar") ? "educar_matricula_ocorrencia_disciplinar_det.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_tipo_ocorrencia_disciplinar={$registro["ref_cod_tipo_ocorrencia_disciplinar"]}&sequencial={$registro["sequencial"]}" : "educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$this->ref_cod_matricula}";
-		
+
 		$nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
         $localizacao = new LocalizacaoSistema();
         $localizacao->entradaCaminhos( array(
              $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
              "educar_index.php"                  => "i-Educar - Escola",
-             ""        => "{$nomeMenu} ocorr&ecirc;ncia disciplinar para matr&iacute;cula"             
+             ""        => "{$nomeMenu} ocorr&ecirc;ncia disciplinar para matr&iacute;cula"
         ));
         $this->enviaLocalizacao($localizacao->montar());
 
@@ -157,7 +158,7 @@ class indice extends clsCadastro
 			$obj_aluno = new clsPmieducarAluno();
 			$det_aluno = array_shift($det_aluno = $obj_aluno->lista($detalhe_aluno['ref_cod_aluno'],null,null,null,null,null,null,null,null,null,1));
 
-			$this->campoRotulo("nm_pessoa","Nome do Aluno",$det_aluno['nome_aluno']);				
+			$this->campoRotulo("nm_pessoa","Nome do Aluno",$det_aluno['nome_aluno']);
 		}else{
 			$this->inputsHelper()->dynamic(array('ano', 'instituicao', 'escola'));
 			$this->inputsHelper()->simpleSearchMatricula();
@@ -168,6 +169,7 @@ class indice extends clsCadastro
 		$this->campoOculto( "ref_cod_matricula", $this->ref_cod_matricula );
 		$this->campoOculto( "ref_cod_tipo_ocorrencia_disciplinar", $this->ref_cod_tipo_ocorrencia_disciplinar );
 		$this->campoOculto( "sequencial", $this->sequencial );
+		$this->campoOculto( "cod_ocorrencia_disciplinar", $this->cod_ocorrencia_disciplinar);
 
 		$this->campoData("data_cadastro","Data Atual",$this->data_cadastro,true);
 		$this->campoHora("hora_cadastro","Horas",$this->hora_cadastro,true);
@@ -224,12 +226,12 @@ class indice extends clsCadastro
 		// text
 		$this->campoMemo( "observacao", "Observac&atilde;o", $this->observacao, 60, 10, true );
 
-		$this->campoCheck("visivel_pais", 
-						  "Visível aos pais",
+		$this->campoCheck("visivel_pais",
+						  Portabilis_String_Utils::toLatin1("Visível aos pais"),
 						  $this->visivel_pais,
-						  "Marque este campo, caso deseje que os pais do aluno possam visualizar tal ocorrência disciplinar.");
+						  Portabilis_String_Utils::toLatin1("Marque este campo, caso deseje que os pais do aluno possam visualizar tal ocorrência disciplinar."));
 
-		// data
+		Portabilis_View_Helper_Application::loadJavascript($this, '/modules/Cadastro/Assets/Javascripts/OcorrenciaDisciplinar.js');
 
 	}
 
