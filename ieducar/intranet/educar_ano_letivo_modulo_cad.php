@@ -257,7 +257,6 @@ class indice extends clsCadastro
         foreach ($this->ref_cod_modulo as $key => $campo) {
           $this->data_inicio[$key]  = dataToBanco($this->data_inicio[$key]);
           $this->data_fim[$key]     = dataToBanco($this->data_fim[$key]);
-          $this->dias_letivos[$key] = dataToBanco($this->dias_letivos[$key]);
 
           $obj = new clsPmieducarAnoLetivoModulo($this->ref_ano,
             $this->ref_ref_cod_escola, $key+1,
