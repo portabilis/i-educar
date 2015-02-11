@@ -257,7 +257,8 @@ class indice extends clsCadastro
         foreach ($this->ref_cod_modulo as $key => $campo) {
           $this->data_inicio[$key]  = dataToBanco($this->data_inicio[$key]);
           $this->data_fim[$key]     = dataToBanco($this->data_fim[$key]);
-
+          if ($this->dias_letivos[$key] == '')
+            $this->dias_letivos[$key] = '0';
           $obj = new clsPmieducarAnoLetivoModulo($this->ref_ano,
             $this->ref_ref_cod_escola, $key+1,
             $this->ref_cod_modulo[$key], $this->data_inicio[$key],
@@ -306,7 +307,8 @@ class indice extends clsCadastro
         foreach ($this->ref_cod_modulo as $key => $campo) {
           $this->data_inicio[$key] = dataToBanco($this->data_inicio[$key]);
           $this->data_fim[$key]    = dataToBanco($this->data_fim[$key]);
-
+          if ($this->dias_letivos[$key] == '')
+            $this->dias_letivos[$key] = '0';
           $obj = new clsPmieducarAnoLetivoModulo($this->ref_ano,
             $this->ref_ref_cod_escola, $key+1,
             $this->ref_cod_modulo[$key], $this->data_inicio[$key],
