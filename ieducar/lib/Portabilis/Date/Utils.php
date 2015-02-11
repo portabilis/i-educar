@@ -83,7 +83,7 @@ class Portabilis_Date_Utils
   public static function validaData($date){
   	$date_arr = explode('/', $date);
   	if(count($date_arr) == 3){
-  		if(checkdate($date_arr[0], $date_arr[1], $date_arr[2])){
+  		if(checkdate($date_arr[1], $date_arr[0], $date_arr[2])){
   			return true;
   		}else{
   			return false;
