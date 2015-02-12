@@ -32,7 +32,7 @@
  */
  require_once 'include/clsCadastro.inc.php';
  require_once ("include/clsBanco.inc.php");
-
+require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
 require_once 'App/Model/ZonaLocalizacao.php';
 require_once 'lib/Portabilis/Controller/Page/EditController.php';
 require_once 'Usuario/Model/FuncionarioDataMapper.php';
@@ -48,6 +48,14 @@ class AlunoController extends Portabilis_Controller_Page_EditController
   protected $_deleteOption      = true;
 
   protected $cod_aluno;
+
+  // Variáveis para controle da foto
+  var $objPhoto;
+  var $arquivoFoto;
+  var $file_delete;
+
+  var $caminho_det;
+  var $caminho_lst;
 
   protected $_formMap    = array(
     'pessoa' => array(
@@ -349,6 +357,32 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
     if($labels_botucatu)
       $this->inputsHelper()->hidden('labels_botucatu');
+    $cod_aluno = $_GET['id'];
+    if ($cod_aluno){
+      $db = new clsBanco();
+      $cod_pessoa_fj = $db->CampoUnico("select ref_idpes from pmieducar.aluno where cod_aluno = '$cod_aluno'");
+
+      $documentos        = new clsDocumento();
+      $documentos->idpes = $cod_pessoa_fj;
+      $documentos        = $documentos->detalhe();
+    }
+
+$foto = false;
+    if (is_numeric($cod_pessoa_fj)){
+        $objFoto = new ClsCadastroFisicaFoto($cod_pessoa_fj);
+        $detalheFoto = $objFoto->detalhe();
+        if(count($detalheFoto))
+          $foto = $detalheFoto['caminho'];
+    } else
+      $foto=false;
+
+    if ($foto){
+      $this->campoRotulo('fotoAtual_','Foto atual','<img height="117" src="'.$foto.'"/>');
+      $this->inputsHelper()->checkbox('file_delete', array('label' => 'Excluir a foto'));
+      $this->campoArquivo('file','Trocar foto',$this->arquivoFoto,40,'<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho máximo: 150KB</span>');
+    }else
+      $this->campoArquivo('file','Foto',$this->arquivoFoto,40,'<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho máximo: 150KB</span>');
+
 
     // código aluno
     $options = array('label'    => $labels_botucatu ? Portabilis_String_Utils::toLatin1("Código aluno (i-Educar)") : $this->_getLabel('id'), 'disabled' => true,
@@ -399,15 +433,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
     $this->inputsHelper()->select('justificativa_falta_documentacao', $options);
 
-    $cod_aluno = $_GET['id'];
-    if ($cod_aluno){
-      $db = new clsBanco();
-      $cod_pessoa_fj = $db->CampoUnico("select ref_idpes from pmieducar.aluno where cod_aluno = '$cod_aluno'");
-
-      $documentos        = new clsDocumento();
-      $documentos->idpes = $cod_pessoa_fj;
-      $documentos        = $documentos->detalhe();
-    }
     // tipo de certidao civil
     $escolha_certidao = Portabilis_String_Utils::toLatin1('Tipo certidão civil');
     $selectOptions = array(
@@ -1198,7 +1223,52 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     $this->loadResourceAssets($this->getDispatcher());
 
   }
+    //envia foto e salva caminha no banco
+  protected function savePhoto($id){
 
+    if ($this->objPhoto!=null){
+
+      $caminhoFoto = $this->objPhoto->sendPicture($id);
+      if ($caminhoFoto!=''){
+        //new clsCadastroFisicaFoto($id)->exclui();
+        $obj = new clsCadastroFisicaFoto($id,$caminhoFoto);
+        $detalheFoto = $obj->detalhe();
+        if (is_array($detalheFoto) && count($detalheFoto)>0)
+         $obj->edita();
+        else
+         $obj->cadastra();
+
+        return true;
+      } else{
+        echo '<script>alert(\'Foto não salva.\')</script>';
+        return false;
+      }
+    }elseif($this->file_delete == 'on'){
+      $obj = new clsCadastroFisicaFoto($id);
+      $obj->excluir();
+    }
+  }
+
+  // Retorna true caso a foto seja válida
+  protected function validatePhoto(){
+
+    $this->arquivoFoto = $_FILES["file"];
+    if (!empty($this->arquivoFoto["name"])){
+      $this->arquivoFoto["name"] = mb_strtolower($this->arquivoFoto["name"], 'UTF-8');
+      $this->objPhoto = new PictureController($this->arquivoFoto);
+      if ($this->objPhoto->validatePicture()){
+        return TRUE;
+      } else {
+        $this->mensagem = $this->objPhoto->getErrorMessage();
+        return false;
+      }
+      return false;
+    }else{
+      $this->objPhoto = null;
+      return true;
+    }
+
+  }
 
   protected function inputPai() {
     $this->addParentsInput('pai');
