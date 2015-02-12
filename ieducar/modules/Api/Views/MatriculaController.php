@@ -277,7 +277,7 @@ class MatriculaController extends ApiCoreController
 
   protected function validaDataEntrada(){
   	if(!Portabilis_Date_Utils::validaData($this->getRequest()->data_entrada)){
-  		$this->messenger->append('Valor inválido para data de entrada', 'error');
+  		$this->messenger->append('Valor inválido para data de entrada ' . $this->getRequest()->data_entrada, 'error');
   		return false;
   	}else{
   		return true;

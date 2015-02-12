@@ -64,25 +64,29 @@ var handleGetMatriculas = function(dataResponse) {
       if(matricula.data_entrada != ""){
         if(matricula.user_can_access){
           $inputDataEntrada = $j('<input>').val(matricula.data_entrada).css('width', '70px');
-          $inputDataEntrada.bind('keydown blur', function(key){
-            onDataEntradaKeyup(matricula.id, key, $j(this));
+          $inputDataEntrada.bind('change', function(key){
+            onDataEntradaChange(matricula.id, key, $j(this));
           });
           $inputDataEntrada.appendTo($j('<td>').appendTo($tr));
         }else{
           $j('<td>').html(matricula.data_entrada).appendTo($tr);
         }
+      }else{
+        $j('<td>').html('').appendTo($tr);
       }
 
       if(matricula.data_saida != ""){
         if(matricula.user_can_access){
           $inputDataSaida = $j('<input>').val(matricula.data_saida).css('width', '70px');
-          $inputDataSaida.bind('keydown blur', function(key){
-            onDataSaidaKeyUp(matricula.id, key, $j(this));
+          $inputDataSaida.bind('change', function(key){
+            onDataSaidaKeyChange(matricula.id, key, $j(this));
           });
           $inputDataSaida.appendTo($j('<td>').appendTo($tr));
           }else{
             $j('<td>').html(matricula.data_entrada).appendTo($tr);
           }
+      }else{
+        $j('<td>').html('').appendTo($tr);
       }
 
       if (matricula.transferencia_em_aberto) {
@@ -134,7 +138,7 @@ var handleGetMatriculas = function(dataResponse) {
   }
 }
 
-function onDataEntradaKeyup(matricula_id, key, campo){
+function onDataEntradaChange(matricula_id, key, campo){
   if(key.keyCode == 13 || key.keyCode == 9 || (typeof key.keyCode == "undefined")){
     var data = {
       matricula_id : matricula_id,
@@ -156,7 +160,7 @@ var handlePostDataEntrada = function(dataresponse){
   handleMessages(dataresponse.msgs);
 }
 
-function onDataSaidaKeyUp(matricula_id, key, campo){
+function onDataSaidaChange(matricula_id, key, campo){
 
   if(key.keyCode == 13 || key.keyCode == 9 || (typeof key.keyCode == "undefined")){
     var data = {
