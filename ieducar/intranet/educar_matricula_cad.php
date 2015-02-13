@@ -226,6 +226,8 @@ class indice extends clsCadastro
           // $this->ref_cod_turma, $enturmar['ref_usuario_exc'], $enturmar['ref_usuario_cad'], 
           // NULL, NULL, 1, NULL, NULL, $this->data_matricula);
           // $lst_matricula_turma = $obj_matricula_turma->cadastra();
+          $data = date( "Y-m-d");
+          $datah = date( "Y-m-d H:i:s");
           $db = new clsBanco();
           $db->CampoUnico("insert into pmieducar.matricula_turma
                            (ref_cod_matricula,
@@ -238,7 +240,7 @@ class indice extends clsCadastro
                             data_enturmacao)
                            values
                            ({$enturmar['ref_cod_matricula']}, {$this->ref_cod_turma}, {$enturmar['sequencial']}, NULL, 
-                            {$enturmar['ref_usuario_cad']}, '{$this->data_matricula} 00:00:00', {$enturmar['ativo']}, '{$this->data_matricula}')");
+                            {$enturmar['ref_usuario_cad']}, '{$datah}', {$enturmar['ativo']}, '{$data}')");
         }
       }
       header("Location: educar_matriculas_turma_cad.php?ref_cod_turma= {$this->ref_cod_turma}");
