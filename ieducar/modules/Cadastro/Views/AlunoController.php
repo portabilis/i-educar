@@ -33,6 +33,7 @@
  require_once 'include/clsCadastro.inc.php';
  require_once ("include/clsBanco.inc.php");
 require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
+require_once 'image_check.php';
 require_once 'App/Model/ZonaLocalizacao.php';
 require_once 'lib/Portabilis/Controller/Page/EditController.php';
 require_once 'Usuario/Model/FuncionarioDataMapper.php';
@@ -379,9 +380,9 @@ $foto = false;
     if ($foto){
       $this->campoRotulo('fotoAtual_','Foto atual','<img height="117" src="'.$foto.'"/>');
       $this->inputsHelper()->checkbox('file_delete', array('label' => 'Excluir a foto'));
-      $this->campoArquivo('file','Trocar foto',$this->arquivoFoto,40,'<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho máximo: 150KB</span>');
+      $this->campoArquivo('file','Trocar foto',$this->arquivoFoto,40,'<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho m&aacute;ximo: 150KB</span>');
     }else
-      $this->campoArquivo('file','Foto',$this->arquivoFoto,40,'<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho máximo: 150KB</span>');
+      $this->campoArquivo('file','Foto',$this->arquivoFoto,40,'<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho m&aacute;ximo: 150KB</span>');
 
 
     // código aluno
@@ -1221,52 +1222,6 @@ $foto = false;
     Portabilis_View_Helper_Application::loadJavascript($this, $script);
 
     $this->loadResourceAssets($this->getDispatcher());
-
-  }
-    //envia foto e salva caminha no banco
-  protected function savePhoto($id){
-
-    if ($this->objPhoto!=null){
-
-      $caminhoFoto = $this->objPhoto->sendPicture($id);
-      if ($caminhoFoto!=''){
-        //new clsCadastroFisicaFoto($id)->exclui();
-        $obj = new clsCadastroFisicaFoto($id,$caminhoFoto);
-        $detalheFoto = $obj->detalhe();
-        if (is_array($detalheFoto) && count($detalheFoto)>0)
-         $obj->edita();
-        else
-         $obj->cadastra();
-
-        return true;
-      } else{
-        echo '<script>alert(\'Foto não salva.\')</script>';
-        return false;
-      }
-    }elseif($this->file_delete == 'on'){
-      $obj = new clsCadastroFisicaFoto($id);
-      $obj->excluir();
-    }
-  }
-
-  // Retorna true caso a foto seja válida
-  protected function validatePhoto(){
-
-    $this->arquivoFoto = $_FILES["file"];
-    if (!empty($this->arquivoFoto["name"])){
-      $this->arquivoFoto["name"] = mb_strtolower($this->arquivoFoto["name"], 'UTF-8');
-      $this->objPhoto = new PictureController($this->arquivoFoto);
-      if ($this->objPhoto->validatePicture()){
-        return TRUE;
-      } else {
-        $this->mensagem = $this->objPhoto->getErrorMessage();
-        return false;
-      }
-      return false;
-    }else{
-      $this->objPhoto = null;
-      return true;
-    }
 
   }
 
