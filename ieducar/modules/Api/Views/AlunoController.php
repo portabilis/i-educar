@@ -37,6 +37,7 @@ require_once 'include/pmieducar/clsPmieducarAluno.inc.php';
 require_once 'include/pmieducar/clsPmieducarProjeto.inc.php';
 require_once 'include/modules/clsModulesFichaMedicaAluno.inc.php';
 require_once 'include/modules/clsModulesMoradiaAluno.inc.php';
+require_once 'include/pmieducar/clsPermissoes.inc.php';
 
 require_once 'App/Model/MatriculaSituacao.php';
 
@@ -1052,13 +1053,15 @@ class AlunoController extends ApiCoreController
         );
 
         $matriculas[$index]['user_can_access']         = Portabilis_Utils_User::canAccessEscola($matricula['escola_id']);
+        $matriculas[$index]['user_can_change_date']    = $this->loadAcessoDataEntradaSaida();
         $matriculas[$index]['transferencia_em_aberto'] = $this->possuiTransferenciaEmAberto($matricula['id']);
       }
-      
-      $attrs = array('id', 'instituicao_id', 'escola_id', 'curso_id', 'serie_id', 'aluno_id', 'aluno_nome', 'situacao', 'ano', 'turma_id', 
-          'turma_nome', 'escola_nome', 'escola_nome', 'curso_nome', 'serie_nome', 'ultima_enturmacao', 'data_entrada', 'data_entrada', 'data_saida', 'user_can_access', 'transferencia_em_aberto');
 
-      $matriculas = Portabilis_Array_Utils::filterSet($matriculas, $attrs);      
+      $attrs = array('id', 'instituicao_id', 'escola_id', 'curso_id', 'serie_id', 'aluno_id', 'aluno_nome', 'situacao', 'ano', 'turma_id',
+          'turma_nome', 'escola_nome', 'escola_nome', 'curso_nome', 'serie_nome', 'ultima_enturmacao', 'data_entrada', 'data_entrada', 'data_saida', 'user_can_access', 'user_can_change_date',
+          'transferencia_em_aberto');
+
+      $matriculas = Portabilis_Array_Utils::filterSet($matriculas, $attrs);
 
       return array('matriculas' => $matriculas);
     }
@@ -1354,6 +1357,13 @@ class AlunoController extends ApiCoreController
       $documentos->cadastra();
     else
       $documentos->edita();
+  }
+  protected function loadAcessoDataEntradaSaida(){
+  	@session_start();
+    $this->pessoa_logada = $_SESSION['id_pessoa'];
+  	$acesso = new clsPermissoes();
+  	session_write_close();
+  	return $acesso->permissao_cadastra(626, $this->pessoa_logada, 7, null, true);
   }
 
   public function Gerar() {

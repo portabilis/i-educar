@@ -62,8 +62,8 @@ var handleGetMatriculas = function(dataResponse) {
       $j('<td>').html(matricula.escola_nome).appendTo($tr);
 
       if(matricula.data_entrada != ""){
-        if(matricula.user_can_access){
-          $inputDataEntrada = $j('<input>').val(matricula.data_entrada).css('width', '70px');
+        if(matricula.user_can_access && matricula.user_can_change_date){
+          $inputDataEntrada = $j('<input>').val(matricula.data_entrada).css('width', '58px').mask("99/99/9999", {placeholder: "__/__/____"});
           $inputDataEntrada.bind('change', function(key){
             onDataEntradaChange(matricula.id, key, $j(this));
           });
@@ -76,8 +76,8 @@ var handleGetMatriculas = function(dataResponse) {
       }
 
       if(matricula.data_saida != ""){
-        if(matricula.user_can_access){
-          $inputDataSaida = $j('<input>').val(matricula.data_saida).css('width', '70px');
+        if(matricula.user_can_access && matricula.user_can_change_date){
+          $inputDataSaida = $j('<input>').val(matricula.data_saida).css('width', '58px').mask("99/99/9999", {placeholder: "__/__/____"});
           $inputDataSaida.bind('change', function(key){
             onDataSaidaKeyChange(matricula.id, key, $j(this));
           });
