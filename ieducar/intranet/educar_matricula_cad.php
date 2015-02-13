@@ -238,7 +238,7 @@ class indice extends clsCadastro
                             data_enturmacao)
                            values
                            ({$enturmar['ref_cod_matricula']}, {$this->ref_cod_turma}, {$enturmar['sequencial']}, NULL, 
-                            {$enturmar['ref_usuario_cad']}, '{$this->data_matricula}', {$enturmar['ativo']}, '{$this->data_matricula}')");
+                            {$enturmar['ref_usuario_cad']}, '{$this->data_matricula} 00:00:00', {$enturmar['ativo']}, '{$this->data_matricula}')");
         }
       }
       header("Location: educar_matriculas_turma_cad.php?ref_cod_turma= {$this->ref_cod_turma}");
