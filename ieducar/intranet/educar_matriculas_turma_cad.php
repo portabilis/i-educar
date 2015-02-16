@@ -125,7 +125,10 @@ class indice extends clsCadastro
 
       $this->nome_url_cancelar = 'Cancelar';
 
-      if ($retorno == 'Editar'){
+      $db = new clsBanco();
+      $existe_entrumacao = $db->CampoUnico("select * from matricula_turma where ref_cod_turma = $this->ref_cod_turma");
+
+      if ($retorno == 'Editar' and $existe_entrumacao){
         $this->url_copiar_enturmacoes = sprintf('educar_matricula_cad.php?ref_cod_turma_copiar_enturmacoes=%d', $this->ref_cod_turma);
         $this->nome_url_copiar_enturmacoes = Portabilis_String_Utils::toLatin1('Copiar enturmações');
       }
