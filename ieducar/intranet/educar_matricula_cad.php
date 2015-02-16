@@ -217,6 +217,19 @@ class indice extends clsCadastro
     if ($qtd_alunos_new < $saldo_turma){
       foreach ($enturmacoes as $enturmar) {
          //echo $enturmar['ref_cod_matricula']."fd".$this->ref_cod_turma;die;
+        $dado_matricula_old = Portabilis_Utils_Database::fetchPreparedQuery("
+                                                                  select * from pmieducar.matricula where cod_matricula = {$enturmar['ref_cod_matricula']} limit 1");
+        $data = date( "Y-m-d");
+        $datah = date( "Y-m-d H:i:s");
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        //print_r($dado_matricula_old[0]['ref_ref_cod_escola']);die;
+        $this->data_matricula = Portabilis_Date_Utils::brToPgSQL($this->data_matricula);
+        $obj = new clsPmieducarMatricula(NULL, NULL,
+          $dado_matricula_old[0]['ref_ref_cod_escola'], $dado_matricula_old[0]['ref_ref_cod_serie'], NULL,
+          $this->pessoa_logada, $dado_matricula_old[0]['ref_cod_aluno'], 3, NULL, NULL, 1, $dado_matricula_old[0]['ano'],
+          1, NULL, NULL, NULL, NULL, $dado_matricula_old[0]['ref_cod_curso'],
+          NULL, 1, $datah);
+        $matricula_new = $obj->cadastra();
         $db = new clsBanco();
         $existe = $db->CampoUnico("select ref_cod_turma from pmieducar.matricula_turma 
                                     where ref_cod_matricula = {$enturmar['ref_cod_matricula']} 
@@ -226,8 +239,6 @@ class indice extends clsCadastro
           // $this->ref_cod_turma, $enturmar['ref_usuario_exc'], $enturmar['ref_usuario_cad'], 
           // NULL, NULL, 1, NULL, NULL, $this->data_matricula);
           // $lst_matricula_turma = $obj_matricula_turma->cadastra();
-          $data = date( "Y-m-d");
-          $datah = date( "Y-m-d H:i:s");
           $db = new clsBanco();
           $db->CampoUnico("insert into pmieducar.matricula_turma
                            (ref_cod_matricula,
@@ -239,7 +250,7 @@ class indice extends clsCadastro
                             ativo,
                             data_enturmacao)
                            values
-                           ({$enturmar['ref_cod_matricula']}, {$this->ref_cod_turma}, {$enturmar['sequencial']}, NULL, 
+                           ({$matricula_new}, {$this->ref_cod_turma}, {$enturmar['sequencial']}, NULL, 
                             {$enturmar['ref_usuario_cad']}, '{$datah}', {$enturmar['ativo']}, '{$data}')");
         }
       }

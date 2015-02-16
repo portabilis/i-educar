@@ -188,8 +188,8 @@ class clsCadastro extends clsCampos
           $this->mensagem = "N&atilde;o foi poss&iacute;vel excluir a informa&ccedil;&atilde;o. [CAD04]";
         }
       }
-      elseif ($this->tipoacao == 'CopiaEnturmacoes') {
-        $sucesso = $this->CopiaEnturmacoes();
+      elseif ($this->tipoacao == 'Enturmar') {
+        $sucesso = $this->Enturmar();
         if (!$sucesso && empty( $this->erros ) && empty( $this->mensagem )) {
           $this->mensagem = "N&atilde;o foi poss&iacute;vel copiar as entruma&ccedil;&otilde;es. [CAD05]";
         }
