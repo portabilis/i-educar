@@ -107,7 +107,7 @@ class indice extends clsCadastro
     $this->ref_cod_aluno = $_GET['ref_cod_aluno'];
     $this->ref_cod_candidato_reserva_vaga = $_GET['ref_cod_candidato_reserva_vaga'];
 
-    $retorno = ($this->ref_cod_turma_copiar_enturmacoes ? 'CopiaEnturmacoes' : 'Novo');
+    $retorno = ($this->ref_cod_turma_copiar_enturmacoes ? 'Enturmar' : 'Novo');
 
     $obj_aluno = new clsPmieducarAluno($this->ref_cod_aluno);
 
@@ -201,7 +201,7 @@ class indice extends clsCadastro
     $curso = new clsPmieducarCurso($id);
     return $curso->detalhe();
   }
-  function CopiaEnturmacoes(){
+  function Enturmar(){
     $enturmacoes_turma_dest = Portabilis_Utils_Database::fetchPreparedQuery("
                                                                   select * from pmieducar.matricula_turma 
                                                                   where ref_cod_turma = {$this->ref_cod_turma} and ativo = 1");
