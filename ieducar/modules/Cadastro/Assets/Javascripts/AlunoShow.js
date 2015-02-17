@@ -60,20 +60,35 @@ var handleGetMatriculas = function(dataResponse) {
       $j('<td>').html(matricula.serie_nome).appendTo($tr);
       $j('<td>').html(matricula.curso_nome).appendTo($tr);
       $j('<td>').html(matricula.escola_nome).appendTo($tr);
-      // WIP #1016
-      // if matricula.user_can_change_data_entrada_saida{
-        // console.log('a');
-      // }
-      // $inputDataEntrada = $j('<input>').val(matricula.data_entrada).css('width', '70px');
-      // $inputDataEntrada.bind('keyup', function(key){
-      //   console.log(key);
-      // });
 
-      // $inputDataEntrada.appendTo($j('<td>').appendTo($tr));
+      if(matricula.data_entrada != ""){
+        if(matricula.user_can_access && matricula.user_can_change_date){
+          $inputDataEntrada = $j('<input>').val(matricula.data_entrada).css('width', '58px').mask("99/99/9999", {placeholder: "__/__/____"});
+          $inputDataEntrada.bind('change', function(key){
+            onDataEntradaChange(matricula.id, key, $j(this));
+          });
+          $inputDataEntrada.appendTo($j('<td>').appendTo($tr));
+        }else{
+          $j('<td>').html(matricula.data_entrada).appendTo($tr);
+        }
+      }else{
+        $j('<td>').html('').appendTo($tr);
+      }
 
-      // $j('<input>').val(matricula.data_saida).css('width', '70px').appendTo($j('<td>').appendTo($tr));
-      $j('<td>').html(matricula.data_entrada).appendTo($tr);
-      $j('<td>').html(matricula.data_saida).appendTo($tr);
+      if(matricula.data_saida != ""){
+        if(matricula.user_can_access && matricula.user_can_change_date){
+          $inputDataSaida = $j('<input>').val(matricula.data_saida).css('width', '58px').mask("99/99/9999", {placeholder: "__/__/____"});
+          $inputDataSaida.bind('change', function(key){
+            onDataSaidaKeyChange(matricula.id, key, $j(this));
+          });
+          $inputDataSaida.appendTo($j('<td>').appendTo($tr));
+          }else{
+            $j('<td>').html(matricula.data_entrada).appendTo($tr);
+          }
+      }else{
+        $j('<td>').html('').appendTo($tr);
+      }
+
       if (matricula.transferencia_em_aberto) {
         transferenciaEmAberto = true;
         $tr.addClass('notice');
@@ -122,10 +137,51 @@ var handleGetMatriculas = function(dataResponse) {
     throw error;
   }
 }
-// WIP #1016
-// function onDataEntradaKeyup(matricula_id){
-//   console.log(key, matricula_id);
-// }
+
+function onDataEntradaChange(matricula_id, key, campo){
+  if(key.keyCode == 13 || key.keyCode == 9 || (typeof key.keyCode == "undefined")){
+    var data = {
+      matricula_id : matricula_id,
+      data_entrada : campo.val()
+    };
+
+    var options = {
+      url      : postResourceUrlBuilder.buildUrl('/module/Api/matricula', 'data-entrada'),
+      dataType : 'json',
+      data     : data,
+      success  : handlePostDataEntrada
+    };
+    postResource(options);
+  }
+
+}
+
+var handlePostDataEntrada = function(dataresponse){
+  handleMessages(dataresponse.msgs);
+}
+
+function onDataSaidaChange(matricula_id, key, campo){
+
+  if(key.keyCode == 13 || key.keyCode == 9 || (typeof key.keyCode == "undefined")){
+    var data = {
+      matricula_id : matricula_id,
+      data_saida : campo.val()
+    };
+
+    var options = {
+      url      : postResourceUrlBuilder.buildUrl('/module/Api/matricula', 'data-saida'),
+      dataType : 'json',
+      data     : data,
+      success  : handlePostDataSaida
+    };
+    postResource(options);
+  }
+
+}
+
+var handlePostDataSaida = function(dataresponse){
+  handleMessages(dataresponse.msgs);
+}
 
 var getMatriculas = function() {
   var data = {

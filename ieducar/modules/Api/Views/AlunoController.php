@@ -31,11 +31,13 @@
  * @since   Arquivo disponível desde a versão ?
  * @version   $Id$
  */
-
+require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
+require_once 'image_check.php';
 require_once 'include/pmieducar/clsPmieducarAluno.inc.php';
 require_once 'include/pmieducar/clsPmieducarProjeto.inc.php';
 require_once 'include/modules/clsModulesFichaMedicaAluno.inc.php';
 require_once 'include/modules/clsModulesMoradiaAluno.inc.php';
+require_once 'include/pmieducar/clsPermissoes.inc.php';
 
 require_once 'App/Model/MatriculaSituacao.php';
 
@@ -501,9 +503,17 @@ class AlunoController extends ApiCoreController
     $aluno->recurso_prova_inep_prova_braille         = $this->getRequest()->recurso_prova_inep_prova_braille == 'on' ? 1 : 0;
     $aluno->justificativa_falta_documentacao         = $this->getRequest()->justificativa_falta_documentacao;
 
+    $this->file_foto = $_FILES["file"];
+    $this->del_foto = $_POST["file_delete"];
+    if (!$this->validatePhoto()){
+      $this->mensagem = "Foto inválida";
+      return false;
+    }
+    $pessoaId = $this->getRequest()->pessoa_id;
+    $this->savePhoto($pessoaId );
+
     //laudo medico
     $aluno->url_laudo_medico         = Portabilis_String_Utils::toLatin1($this->getRequest()->url_laudo_medico);
-
     return (is_null($id) ? $aluno->cadastra() : $aluno->edita());
   }
 
@@ -842,7 +852,8 @@ class AlunoController extends ApiCoreController
         'recurso_prova_inep_prova_braille',
         'justificativa_falta_documentacao',
         'url_laudo_medico',
-        'codigo_sistema'
+        'codigo_sistema',
+        'url_foto_aluno'
       );
 
       $aluno = Portabilis_Array_Utils::filter($aluno, $attrs);
@@ -1042,13 +1053,15 @@ class AlunoController extends ApiCoreController
         );
 
         $matriculas[$index]['user_can_access']         = Portabilis_Utils_User::canAccessEscola($matricula['escola_id']);
+        $matriculas[$index]['user_can_change_date']    = $this->loadAcessoDataEntradaSaida();
         $matriculas[$index]['transferencia_em_aberto'] = $this->possuiTransferenciaEmAberto($matricula['id']);
       }
-      
-      $attrs = array('id', 'instituicao_id', 'escola_id', 'curso_id', 'serie_id', 'aluno_id', 'aluno_nome', 'situacao', 'ano', 'turma_id', 
-          'turma_nome', 'escola_nome', 'escola_nome', 'curso_nome', 'serie_nome', 'ultima_enturmacao', 'data_entrada', 'data_entrada', 'data_saida', 'user_can_access', 'transferencia_em_aberto');
 
-      $matriculas = Portabilis_Array_Utils::filterSet($matriculas, $attrs);      
+      $attrs = array('id', 'instituicao_id', 'escola_id', 'curso_id', 'serie_id', 'aluno_id', 'aluno_nome', 'situacao', 'ano', 'turma_id',
+          'turma_nome', 'escola_nome', 'escola_nome', 'curso_nome', 'serie_nome', 'ultima_enturmacao', 'data_entrada', 'data_entrada', 'data_saida', 'user_can_access', 'user_can_change_date',
+          'transferencia_em_aberto');
+
+      $matriculas = Portabilis_Array_Utils::filterSet($matriculas, $attrs);
 
       return array('matriculas' => $matriculas);
     }
@@ -1255,6 +1268,52 @@ class AlunoController extends ApiCoreController
     return (Portabilis_Utils_Database::selectField($sql, $alunoId));
   }
 
+  //envia foto e salva caminha no banco
+  protected function savePhoto($id){
+    if ($this->objPhoto!=null){
+
+      $caminhoFoto = $this->objPhoto->sendPicture($id);
+      if ($caminhoFoto!=''){
+        //new clsCadastroFisicaFoto($id)->exclui();
+        $obj = new clsCadastroFisicaFoto($id,$caminhoFoto);
+        $detalheFoto = $obj->detalhe();
+        if (is_array($detalheFoto) && count($detalheFoto)>0)
+         $obj->edita();
+        else
+         $obj->cadastra();
+
+        return true;
+      } else{
+        echo '<script>alert(\'Foto não salva.\')</script>';
+        return false;
+      }
+    }elseif($this->del_foto == 'on'){
+      $obj = new clsCadastroFisicaFoto($id);
+      $obj->excluir();
+    }
+  }
+
+  // Retorna true caso a foto seja válida
+  protected function validatePhoto(){
+
+    $this->arquivoFoto = $this->file_foto;
+    if (!empty($this->arquivoFoto["name"])){
+      $this->arquivoFoto["name"] = mb_strtolower($this->arquivoFoto["name"], 'UTF-8');
+      $this->objPhoto = new PictureController($this->arquivoFoto);
+      if ($this->objPhoto->validatePicture()){
+        return TRUE;
+      } else {
+        $this->mensagem = $this->objPhoto->getErrorMessage();
+        return false;
+      }
+      return false;
+    }else{
+      $this->objPhoto = null;
+      return true;
+    }
+
+  }
+
   protected function createOrUpdateDocumentos($pessoaId) {
     $documentos                             = new clsDocumento();
     $documentos->idpes                      = $pessoaId;
@@ -1298,6 +1357,13 @@ class AlunoController extends ApiCoreController
       $documentos->cadastra();
     else
       $documentos->edita();
+  }
+  protected function loadAcessoDataEntradaSaida(){
+  	@session_start();
+    $this->pessoa_logada = $_SESSION['id_pessoa'];
+  	$acesso = new clsPermissoes();
+  	session_write_close();
+  	return $acesso->permissao_cadastra(626, $this->pessoa_logada, 7, null, true);
   }
 
   public function Gerar() {

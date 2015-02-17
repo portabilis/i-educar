@@ -322,6 +322,7 @@ class clsPmieducarMatriculaOcorrenciaDisciplinar
 			$valores .= "{$gruda}'1'";
 			$gruda = ", ";
 
+			$this->cod_ocorrencia_disciplinar = $db->CampoUnico("SELECT nextval('ocorrencia_disciplinar_seq')");
 			$db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
 			return true;
 		}

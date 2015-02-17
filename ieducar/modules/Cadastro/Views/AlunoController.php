@@ -32,7 +32,8 @@
  */
  require_once 'include/clsCadastro.inc.php';
  require_once ("include/clsBanco.inc.php");
-
+require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
+require_once 'image_check.php';
 require_once 'App/Model/ZonaLocalizacao.php';
 require_once 'lib/Portabilis/Controller/Page/EditController.php';
 require_once 'Usuario/Model/FuncionarioDataMapper.php';
@@ -48,6 +49,14 @@ class AlunoController extends Portabilis_Controller_Page_EditController
   protected $_deleteOption      = true;
 
   protected $cod_aluno;
+
+  // Variáveis para controle da foto
+  var $objPhoto;
+  var $arquivoFoto;
+  var $file_delete;
+
+  var $caminho_det;
+  var $caminho_lst;
 
   protected $_formMap    = array(
     'pessoa' => array(
@@ -349,6 +358,32 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
     if($labels_botucatu)
       $this->inputsHelper()->hidden('labels_botucatu');
+    $cod_aluno = $_GET['id'];
+    if ($cod_aluno){
+      $db = new clsBanco();
+      $cod_pessoa_fj = $db->CampoUnico("select ref_idpes from pmieducar.aluno where cod_aluno = '$cod_aluno'");
+
+      $documentos        = new clsDocumento();
+      $documentos->idpes = $cod_pessoa_fj;
+      $documentos        = $documentos->detalhe();
+    }
+
+$foto = false;
+    if (is_numeric($cod_pessoa_fj)){
+        $objFoto = new ClsCadastroFisicaFoto($cod_pessoa_fj);
+        $detalheFoto = $objFoto->detalhe();
+        if(count($detalheFoto))
+          $foto = $detalheFoto['caminho'];
+    } else
+      $foto=false;
+
+    if ($foto){
+      $this->campoRotulo('fotoAtual_','Foto atual','<img height="117" src="'.$foto.'"/>');
+      $this->inputsHelper()->checkbox('file_delete', array('label' => 'Excluir a foto'));
+      $this->campoArquivo('file','Trocar foto',$this->arquivoFoto,40,'<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho m&aacute;ximo: 150KB</span>');
+    }else
+      $this->campoArquivo('file','Foto',$this->arquivoFoto,40,'<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho m&aacute;ximo: 150KB</span>');
+
 
     // código aluno
     $options = array('label'    => $labels_botucatu ? Portabilis_String_Utils::toLatin1("Código aluno (i-Educar)") : $this->_getLabel('id'), 'disabled' => true,
@@ -399,15 +434,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
     $this->inputsHelper()->select('justificativa_falta_documentacao', $options);
 
-    $cod_aluno = $_GET['id'];
-    if ($cod_aluno){
-      $db = new clsBanco();
-      $cod_pessoa_fj = $db->CampoUnico("select ref_idpes from pmieducar.aluno where cod_aluno = '$cod_aluno'");
-
-      $documentos        = new clsDocumento();
-      $documentos->idpes = $cod_pessoa_fj;
-      $documentos        = $documentos->detalhe();
-    }
     // tipo de certidao civil
     $escolha_certidao = Portabilis_String_Utils::toLatin1('Tipo certidão civil');
     $selectOptions = array(
@@ -1198,7 +1224,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     $this->loadResourceAssets($this->getDispatcher());
 
   }
-
 
   protected function inputPai() {
     $this->addParentsInput('pai');

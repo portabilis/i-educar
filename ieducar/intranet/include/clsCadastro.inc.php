@@ -188,6 +188,12 @@ class clsCadastro extends clsCampos
           $this->mensagem = "N&atilde;o foi poss&iacute;vel excluir a informa&ccedil;&atilde;o. [CAD04]";
         }
       }
+      elseif ($this->tipoacao == 'Enturmar') {
+        $sucesso = $this->Enturmar();
+        if (!$sucesso && empty( $this->erros ) && empty( $this->mensagem )) {
+          $this->mensagem = "N&atilde;o foi poss&iacute;vel copiar as entruma&ccedil;&otilde;es. [CAD05]";
+        }
+      }
       if (empty($script) && $sucesso && !empty($this->url_sucesso)) {
         redirecionar( $this->url_sucesso );
       }
@@ -645,6 +651,9 @@ class clsCadastro extends clsCampos
     }
     if ($this->url_cancelar || $this->script_cancelar) {
       $retorno .=  "&nbsp;<input type='button' class='botaolistagem' onclick='javascript: $this->script_cancelar go( \"$this->url_cancelar\" );' value=' $this->nome_url_cancelar '>&nbsp;";
+    }
+    if ($this->url_copiar_enturmacoes) {
+      $retorno .=  "&nbsp;<input type='button' class='botaolistagem' onclick='javascript: go( \"$this->url_copiar_enturmacoes\" );' value=' $this->nome_url_copiar_enturmacoes '>&nbsp;";
     }
 
     if ($this->array_botao_url) {
