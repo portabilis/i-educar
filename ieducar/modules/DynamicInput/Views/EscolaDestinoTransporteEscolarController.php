@@ -17,12 +17,13 @@ class EscolaDestinoTransporteEscolarController extends ApiCoreController{
 
   protected function getEscolaDestinoTransporteEscolar() {
 
-     $sql    = 'SELECT idpes AS id,
- 				       nome AS nome
- 				  FROM cadastro.pessoa
- 				 WHERE idpes IN(SELECT ref_idpes_destino
- 				                  FROM modules.rota_transporte_escolar)
- 				 ORDER BY to_ascii(lower(nome)) ASC';
+     $sql    = 'SELECT idpes AS id, 
+                       nome AS nome
+ 				          FROM cadastro.pessoa
+ 				          WHERE idpes IN
+                    (SELECT ref_idpes_destino
+ 				               FROM modules.rota_transporte_escolar)
+ 				          ORDER BY to_ascii(lower(nome)) ASC';
 
 
 
@@ -30,7 +31,7 @@ class EscolaDestinoTransporteEscolarController extends ApiCoreController{
     $options = array();
 
     foreach ($escolasDestinoTransporte as $escolaDestinoTransporte){
-      $options['__' . $escolaDestinoTransporte['id']] = $this->toUtf8($escolaDestinoTransporte['nome']);
+      $options['__' . $escolaDestinoTransporte['id']] = $escolaDestinoTransporte['id'].' - '.$this->toUtf8($escolaDestinoTransporte['nome']);
     }
 
     return array('options' => $options);
