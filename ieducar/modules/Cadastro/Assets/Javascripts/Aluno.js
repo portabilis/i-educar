@@ -750,38 +750,43 @@ var simpleSearchPessoaOptions = {
 // children callbacks
 
 function afterChangePessoa(targetWindow, parentType, parentId, parentName) {
-  if (targetWindow != null)
+
+  if (targetWindow != null){
     targetWindow.close();
-
-  var $tempIdField;
-  var $tempNomeField;
-
-  if(parentType){
-    $tempIdField   = $j(buildId(parentType + '_id'));
-    $tempNomeField = $j(buildId(parentType + '_nome'));
+    window.location.reload();// Colocado atualizar a página toda devido a quantidade de campos da cad pessoa que já existem em cad aluno.
   }else{
-    $tempIdField = $j('pessoa_id');
-    $tempNomeField = $nomeField;
-  }
+    var $tempIdField;
+    var $tempNomeField;
 
-  // timeout para usuario perceber mudança
-  window.setTimeout(function() {
-    messageUtils.success('Pessoa alterada com sucesso', $tempNomeField);
-
-    $tempIdField.val(parentId);
-    if(!parentType){
-      getPersonDetails(parentId);
+    if(parentType){
+      $tempIdField   = $j(buildId(parentType + '_id'));
+      $tempNomeField = $j(buildId(parentType + '_nome'));
     }else{
-      $tempNomeField.val(parentId + ' - ' +parentName);
+      $tempIdField = $j('pessoa_id');
+      $tempNomeField = $nomeField;
     }
 
+    // timeout para usuario perceber mudança
+    window.setTimeout(function() {
+      messageUtils.success('Pessoa alterada com sucesso', $tempNomeField);
+      
+      $tempIdField.val(parentId);
+      if(!parentType){
+        getPersonDetails(parentId);
+      }else{
+        $tempNomeField.val(parentId + ' - ' +parentName);
+      }
 
-    if ($tempNomeField.is(':active'))
-      $tempNomeField.focus();
 
-    changeVisibilityOfLinksToPessoaParent(parentType);
+      if ($tempNomeField.is(':active'))
+        $tempNomeField.focus();
 
-  }, 500);
+      changeVisibilityOfLinksToPessoaParent(parentType);
+
+    }, 500);
+  }
+
+ 
 }
 
 function afterChangePessoaParent(pessoaId, parentType) {
