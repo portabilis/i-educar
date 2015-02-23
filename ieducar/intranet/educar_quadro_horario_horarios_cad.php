@@ -246,7 +246,7 @@ class indice extends clsCadastro
       $opcoes_disc = array('NULL' => 'A série dessa escola não possui componentes cadastrados');
     }
     else {
-        $opcoes_disc['todas_disciplinas'] = 'TODAS AS DISCIPLINAS';
+        $opcoes_disc['todas_disciplinas'] = 'Todas as disciplinas';
       foreach ($componentesTurma as $componente) {
         $opcoes_disc[$componente->id] = $componente;
       }

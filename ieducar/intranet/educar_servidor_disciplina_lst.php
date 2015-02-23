@@ -184,7 +184,7 @@ class indice extends clsCadastro
         $componentes = $componenteAnoDataMapper->findComponentePorCurso($curso);
 
         $opcoes_disc = array();
-          $opcoes_disc['todas_disciplinas']  = 'TODAS AS DISCIPLINAS';
+          $opcoes_disc['todas_disciplinas']  = 'Todas as disciplinas';
         foreach ($componentes as $componente) {
           $opcoes_disc[$componente->id]  = $componente->nome;
         }
@@ -299,7 +299,7 @@ $pagina->MakeAll();
 
     if (disciplinas.length) {
       campoDisciplina.options[campoDisciplina.options.length] =
-          new Option('TODAS AS DISCIPLINAS', 'todas_disciplinas', false, false);
+          new Option('Todas as disciplinas', 'todas_disciplinas', false, false);
       for (var i = 0; i < disciplinas.length; i++) {
         campoDisciplina.options[campoDisciplina.options.length] =
           new Option(disciplinas[i].firstChild.data, disciplinas[i].getAttribute('cod_disciplina'), false, false);
