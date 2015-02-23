@@ -1165,14 +1165,15 @@ function canShowParentsFields(){
       }
     });
 
-    $j('body').append('<div id="dialog-form-pessoa-parent"><form><p></p><table><tr><td valign="top"><fieldset><label for="nome-pessoa-parent">Nome</label>    <input type="text " name="nome-pessoa-parent" id="nome-pessoa-parent" size="58" maxlength="255" class="text">    <label for="sexo-pessoa-parent">Sexo</label>  <select class="select ui-widget-content ui-corner-all" name="sexo-pessoa-parent" id="sexo-pessoa-parent" ><option value="" selected>Sexo</option><option value="M">Masculino</option><option value="F">Feminino</option></select>    <label for="estado-civil-pessoa-parent">Estado civil</label>   <select class="select ui-widget-content ui-corner-all" name="estado-civil-pessoa-parent" id="estado-civil-pessoa-parent"  ><option id="estado-civil-pessoa-parent_" value="" selected>Estado civil</option><option id="estado-civil-pessoa-parent_2" value="2">Casado(a)</option><option id="estado-civil-pessoa-parent_6" value="6">Companheiro(a)</option><option id="estado-civil-pessoa-parent_3" value="3">Divorciado(a)</option><option id="estado-civil-pessoa-parent_4" value="4">Separado(a)</option><option id="estado-civil-pessoa-parent_1" value="1">Solteiro(a)</option><option id="estado-civil-pessoa-parent_5" value="5">Vi&uacute;vo(a)</option></select></fieldset><p><a id="link_cadastro_detalhado_parent" target="_blank">Cadastro detalhado</a></p></form></div>');
+    $j('body').append('<div id="dialog-form-pessoa-parent"><form><p></p><table><tr><td valign="top"><fieldset><label for="nome-pessoa-parent">Nome</label>    <input type="text " name="nome-pessoa-parent" id="nome-pessoa-parent" size="58" maxlength="255" class="text">    <label for="sexo-pessoa-parent">Sexo</label>  <select class="select ui-widget-content ui-corner-all" name="sexo-pessoa-parent" id="sexo-pessoa-parent" ><option value="" selected>Sexo</option><option value="M">Masculino</option><option value="F">Feminino</option></select>    <label for="estado-civil-pessoa-parent">Estado civil</label>   <select class="select ui-widget-content ui-corner-all" name="estado-civil-pessoa-parent" id="estado-civil-pessoa-parent"  ><option id="estado-civil-pessoa-parent_" value="" selected>Estado civil</option><option id="estado-civil-pessoa-parent_2" value="2">Casado(a)</option><option id="estado-civil-pessoa-parent_6" value="6">Companheiro(a)</option><option id="estado-civil-pessoa-parent_3" value="3">Divorciado(a)</option><option id="estado-civil-pessoa-parent_4" value="4">Separado(a)</option><option id="estado-civil-pessoa-parent_1" value="1">Solteiro(a)</option><option id="estado-civil-pessoa-parent_5" value="5">Vi&uacute;vo(a)</option></select><label for="data-nasc-pessoa-parent"> Data de nascimento </label> <input onKeyPress="formataData(this, event);" class="" placeholder="dd/mm/yyyy" type="text" name="data-nasc-pessoa-parent" id="data-nasc-pessoa-parent" value="" size="11" maxlength="10" ></fieldset><p><a id="link_cadastro_detalhado_parent" target="_blank">Cadastro detalhado</a></p></form></div>');
 
     $j('#dialog-form-pessoa-parent').find(':input').css('display', 'block');
 
     var nameParent = $j("#nome-pessoa-parent"),
       sexoParent = $j( "#sexo-pessoa-parent" ),
       estadocivilParent  = $j( "#estado-civil-pessoa-parent" ),
-      allFields = $j( [] ).add( nameParent ).add( sexoParent ).add( estadocivilParent );
+      datanascParent     = $j( "#data-nasc-pessoa-parent" ),
+      allFields = $j( [] ).add( nameParent ).add( sexoParent ).add( estadocivilParent ).add( datanascParent );
 
     $j( "#dialog-form-pessoa-parent" ).dialog({
       autoOpen: false,
@@ -1190,9 +1191,11 @@ function canShowParentsFields(){
           bValid = bValid && checkLength( nameParent, "nome", 3, 255 );
           bValid = bValid && checkSelect( sexoParent, "sexo");
           bValid = bValid && checkSelect( estadocivilParent, "estado civil");
+          bValid = bValid && checkRegexp( datanascParent, /(^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$)/i, "O campo data de nascimento deve ser preenchido no formato dd/mm/yyyy." );
+          
 
           if ( bValid ) {
-            postPessoa(nameParent, nameParent.val(), sexoParent.val(), estadocivilParent.val(), null, null, (editar_pessoa ? $j('#'+pessoaPaiOuMae+'_id').val() : null), pessoaPaiOuMae);
+            postPessoa(nameParent, nameParent.val(), sexoParent.val(), estadocivilParent.val(), datanascParent.val(), null, (editar_pessoa ? $j('#'+pessoaPaiOuMae+'_id').val() : null), pessoaPaiOuMae);
             $j( this ).dialog( "close" );
           }
         },
@@ -1414,6 +1417,7 @@ function canShowParentsFields(){
       nameParent.val(window[parentType+'_details'].nome);
       estadocivilParent.val(window[parentType+'_details'].estadocivil);
       sexoParent.val(window[parentType+'_details'].sexo);
+      datanascParent.val(window[parentType+'_details'].data_nascimento);
 
       $j('#dialog-form-pessoa-parent form p:first-child').html('Editar pessoa '+(parentType == 'mae' ? 'm&atilde;e' : parentType)).css('margin-left', '0.75em');
 
