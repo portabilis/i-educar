@@ -1286,7 +1286,7 @@ class clsPmieducarServidor
       }
       else {
         $servidorDisciplinas = sprintf(
-          'AND sd.ref_cod_disciplina = %d AND sd.ref_cod_curso = %d',
+          'AND (sd.ref_cod_disciplina = %d or todas_disciplinas = %d) AND sd.ref_cod_curso = %d',
           $int_ref_cod_disciplina, $int_ref_cod_curso);
       }
 
