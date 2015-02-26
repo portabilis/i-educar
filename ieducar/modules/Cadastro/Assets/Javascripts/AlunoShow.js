@@ -79,11 +79,11 @@ var handleGetMatriculas = function(dataResponse) {
         if(matricula.user_can_access && matricula.user_can_change_date){
           $inputDataSaida = $j('<input>').val(matricula.data_saida).css('width', '58px').mask("99/99/9999", {placeholder: "__/__/____"});
           $inputDataSaida.bind('change', function(key){
-            onDataSaidaKeyChange(matricula.id, key, $j(this));
+            onDataSaidaChange(matricula.id, key, $j(this));
           });
           $inputDataSaida.appendTo($j('<td>').appendTo($tr));
           }else{
-            $j('<td>').html(matricula.data_entrada).appendTo($tr);
+            $j('<td>').html(matricula.data_saida).appendTo($tr);
           }
       }else{
         $j('<td>').html('').appendTo($tr);
