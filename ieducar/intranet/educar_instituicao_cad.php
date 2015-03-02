@@ -78,6 +78,7 @@ class indice extends clsCadastro
 	var $quantidade_alunos_metro_quadrado;
 	var $gerar_historico_transferencia;
 	var $matricula_apenas_bairro_escola;
+	var $restringir_historico_escolar;
 
 	function Inicializar()
 	{
@@ -120,8 +121,9 @@ class indice extends clsCadastro
         ));
         $this->enviaLocalizacao($localizacao->montar());
 
-        $this->gerar_historico_transferencia = dbBool($this->gerar_historico_transferencia);
-        $this->matricula_apenas_bairro_escola = dbBool($this->matricula_apenas_bairro_escola);
+        $this->gerar_historico_transferencia 	= dbBool($this->gerar_historico_transferencia);
+        $this->matricula_apenas_bairro_escola 	= dbBool($this->matricula_apenas_bairro_escola);
+        $this->restringir_historico_escolar   	= dbBool($this->restringir_historico_escolar);
 
 		return $retorno;
 	}
@@ -199,6 +201,8 @@ class indice extends clsCadastro
 
     $this->campoCheck("matricula_apenas_bairro_escola", "Permitir matrícula de alunos apenas do bairro da escola?", $this->matricula_apenas_bairro_escola);
 
+	$this->campoCheck("restringir_historico_escolar", "Restringir modificações de históricos escolares?", $this->restringir_historico_escolar, NULL, false, false, false, 'Com esta opção selecionada, somente será possível cadastrar/editar históricos escolares de alunos que pertençam a mesma escola do funcionário.' );
+
   	$this->campoCheck("controlar_espaco_utilizacao_aluno", "Controlar espaço utilizado pelo aluno?", $this->controlar_espaco_utilizacao_aluno );
 		$this->campoMonetario( "percentagem_maxima_ocupacao_salas", "Percentagem máxima de ocupação da sala",
 															  Portabilis_Currency_Utils::moedaUsToBr($this->percentagem_maxima_ocupacao_salas),
@@ -214,11 +218,12 @@ class indice extends clsCadastro
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
 		$obj = new clsPmieducarInstituicao( null, $this->ref_usuario_exc, $this->pessoa_logada, $this->ref_idtlog, $this->ref_sigla_uf, str_replace( "-", "", $this->cep ), $this->cidade, $this->bairro, $this->logradouro, $this->numero, $this->complemento, $this->nm_responsavel, $this->ddd_telefone, $this->telefone, $this->data_cadastro, $this->data_exclusao, 1, $this->nm_instituicao, null, null, $this->quantidade_alunos_metro_quadrado);
-		$obj->data_base_remanejamento = Portabilis_Date_Utils::brToPgSQL($this->data_base_remanejamento);
-		$obj->data_base_transferencia = Portabilis_Date_Utils::brToPgSQL($this->data_base_transferencia);
-		$obj->exigir_vinculo_turma_professor = is_null($this->exigir_vinculo_turma_professor) ? 0 : 1;
-		$obj->gerar_historico_transferencia = !is_null($this->gerar_historico_transferencia);
-		$obj->matricula_apenas_bairro_escola = !is_null($this->matricula_apenas_bairro_escola);
+		$obj->data_base_remanejamento 			= Portabilis_Date_Utils::brToPgSQL($this->data_base_remanejamento);
+		$obj->data_base_transferencia 			= Portabilis_Date_Utils::brToPgSQL($this->data_base_transferencia);
+		$obj->exigir_vinculo_turma_professor	= is_null($this->exigir_vinculo_turma_professor) ? 0 : 1;
+		$obj->gerar_historico_transferencia 	= !is_null($this->gerar_historico_transferencia);
+		$obj->matricula_apenas_bairro_escola 	= !is_null($this->matricula_apenas_bairro_escola);
+		$obj->restringir_historico_escolar 		= !is_null($this->restringir_historico_escolar);
 		$obj->controlar_espaco_utilizacao_aluno = is_null($this->controlar_espaco_utilizacao_aluno) ? 0 : 1;
 		$obj->percentagem_maxima_ocupacao_salas = Portabilis_Currency_Utils::moedaBrToUs($this->percentagem_maxima_ocupacao_salas);
 		$cadastrou = $obj->cadastra();
@@ -242,11 +247,12 @@ class indice extends clsCadastro
 		@session_write_close();
 
 		$obj = new clsPmieducarInstituicao( $this->cod_instituicao, $this->ref_usuario_exc, $this->pessoa_logada, $this->ref_idtlog, $this->ref_sigla_uf, str_replace( "-", "", $this->cep ), $this->cidade, $this->bairro, $this->logradouro, $this->numero, $this->complemento, $this->nm_responsavel, $this->ddd_telefone, $this->telefone, $this->data_cadastro, $this->data_exclusao, 1, $this->nm_instituicao, null, null, $this->quantidade_alunos_metro_quadrado);
-		$obj->data_base_remanejamento = Portabilis_Date_Utils::brToPgSQL($this->data_base_remanejamento);
-		$obj->data_base_transferencia = Portabilis_Date_Utils::brToPgSQL($this->data_base_transferencia);
-		$obj->exigir_vinculo_turma_professor = is_null($this->exigir_vinculo_turma_professor) ? 0 : 1;
-		$obj->gerar_historico_transferencia = !is_null($this->gerar_historico_transferencia);
-		$obj->matricula_apenas_bairro_escola = !is_null($this->matricula_apenas_bairro_escola);
+		$obj->data_base_remanejamento 			= Portabilis_Date_Utils::brToPgSQL($this->data_base_remanejamento);
+		$obj->data_base_transferencia 			= Portabilis_Date_Utils::brToPgSQL($this->data_base_transferencia);
+		$obj->exigir_vinculo_turma_professor 	= is_null($this->exigir_vinculo_turma_professor) ? 0 : 1;
+		$obj->gerar_historico_transferencia 	= !is_null($this->gerar_historico_transferencia);
+		$obj->matricula_apenas_bairro_escola 	= !is_null($this->matricula_apenas_bairro_escola);
+		$obj->restringir_historico_escolar 		= !is_null($this->restringir_historico_escolar);
 		$obj->controlar_espaco_utilizacao_aluno = is_null($this->controlar_espaco_utilizacao_aluno) ? 0 : 1;
 		$obj->percentagem_maxima_ocupacao_salas = Portabilis_Currency_Utils::moedaBrToUs($this->percentagem_maxima_ocupacao_salas);
 		$editou = $obj->edita();
