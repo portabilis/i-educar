@@ -229,7 +229,9 @@ class indice extends clsListagem
     	$db = new clsBanco();	
 		$school_user = $db->CampoUnico("select ref_cod_escola from pmieducar.usuario where cod_usuario =  $this->pessoa_logada");
 		$school_student = $db->CampoUnico("select ref_ref_cod_escola, ano from matricula where ref_cod_aluno = {$this->ref_cod_aluno} and ativo = 1 order by data_cadastro desc limit 1");
-		if( $obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7 ) and ($this->nivel_usuario == 1 or $this->nivel_usuario == 2 or $school_user == $school_student or !$school_student))
+		$db = new clsBanco();
+    		$historico_restringido = $db->CampoUnico("SELECT restringir_historico_escolar FROM pmieducar.instituicao where cod_instituicao = {$this->ref_cod_instituicao}");
+		if( $obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7 ) and ($historico_restringido == 'f' or $this->nivel_usuario == 1 or $this->nivel_usuario == 2 or $school_user == $school_student or !$school_student))
 		{
 			$this->acao = "go(\"educar_historico_escolar_cad.php?ref_cod_aluno={$this->ref_cod_aluno}\")";
 			$this->nome_acao = "Novo";
