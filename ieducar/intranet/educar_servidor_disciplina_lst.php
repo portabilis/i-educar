@@ -184,6 +184,7 @@ class indice extends clsCadastro
         $componentes = $componenteAnoDataMapper->findComponentePorCurso($curso);
 
         $opcoes_disc = array();
+          $opcoes_disc['todas_disciplinas']  = 'Todas as disciplinas';
         foreach ($componentes as $componente) {
           $opcoes_disc[$componente->id]  = $componente->nome;
         }
@@ -215,10 +216,22 @@ class indice extends clsCadastro
 
     if ($this->ref_cod_curso) {
       for ($i = 0, $loop = count($this->ref_cod_curso); $i < $loop; $i++) {
-        $curso = $this->ref_cod_curso[$i];
-        $curso_servidor[$curso] = $curso;
-        $disciplina = $this->ref_cod_disciplina[$i];
-        $cursos_disciplina[$curso][$disciplina] = $disciplina;
+        if ($this->ref_cod_disciplina[$i] == 'todas_disciplinas'){
+          $componenteAnoDataMapper = new ComponenteCurricular_Model_AnoEscolarDataMapper();
+          $componentes = $componenteAnoDataMapper->findComponentePorCurso($this->ref_cod_curso[$i]);
+          
+          foreach ($componentes as $componente) {
+            $curso = $this->ref_cod_curso[$i];
+            $curso_servidor[$curso] = $curso;
+            $disciplina = $componente->id;
+            $cursos_disciplina[$curso][$disciplina] = $disciplina;
+          }
+        }else{
+          $curso = $this->ref_cod_curso[$i];
+          $curso_servidor[$curso] = $curso;
+          $disciplina = $this->ref_cod_disciplina[$i];
+          $cursos_disciplina[$curso][$disciplina] = $disciplina;
+        }
       }
     }
 
@@ -285,6 +298,8 @@ $pagina->MakeAll();
     var disciplinas = xml.getElementsByTagName('disciplina');
 
     if (disciplinas.length) {
+      campoDisciplina.options[campoDisciplina.options.length] =
+          new Option('Todas as disciplinas', 'todas_disciplinas', false, false);
       for (var i = 0; i < disciplinas.length; i++) {
         campoDisciplina.options[campoDisciplina.options.length] =
           new Option(disciplinas[i].firstChild.data, disciplinas[i].getAttribute('cod_disciplina'), false, false);

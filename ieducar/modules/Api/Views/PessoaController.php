@@ -269,9 +269,11 @@ class PessoaController extends ApiCoreController
 
   protected function loadPessoaParent(){
 
-      $_sql = " SELECT (select nome from cadastro.pessoa where pessoa.idpes = fisica.idpes) as nome ,ideciv as estadocivil, sexo FROM cadastro.fisica WHERE idpes = $1; ";
+      $_sql = " SELECT (select nome from cadastro.pessoa where pessoa.idpes = fisica.idpes) as nome ,ideciv as estadocivil, data_nasc, sexo FROM cadastro.fisica WHERE idpes = $1; ";
 
       $details = $this->fetchPreparedQuery($_sql, $this->getRequest()->id, false, 'first-row');
+
+      $details['data_nascimento'] = Portabilis_Date_Utils::pgSQLToBr($details['data_nasc']);
 
       $details['nome'] = Portabilis_String_Utils::toUtf8($details['nome']);
 
