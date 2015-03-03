@@ -231,9 +231,10 @@ class indice extends clsCadastro
           NULL, 1, $datah);
         $matricula_new = $obj->cadastra();
         $db = new clsBanco();
-        $existe = $db->CampoUnico("select ref_cod_turma from pmieducar.matricula_turma 
-                                    where ref_cod_matricula = {$enturmar['ref_cod_matricula']} 
-                                    and ref_cod_turma = {$this->ref_cod_turma}");
+        $existe = $db->CampoUnico("select 1 from pmieducar.matricula_turma, pmieducar.matricula 
+                                      where ref_cod_matricula = cod_matricula 
+                                      and ref_cod_turma = {$this->ref_cod_turma} 
+                                      and ref_cod_aluno = {$dado_matricula_old[0]['ref_cod_aluno']}");
         if (!$existe){
           // $obj_matricula_turma = new clsPmieducarMatriculaTurma($enturmar['ref_cod_matricula'],
           // $this->ref_cod_turma, $enturmar['ref_usuario_exc'], $enturmar['ref_usuario_cad'], 
