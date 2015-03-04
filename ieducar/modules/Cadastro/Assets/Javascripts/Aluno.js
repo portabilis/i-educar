@@ -751,10 +751,8 @@ var simpleSearchPessoaOptions = {
 
 function afterChangePessoa(targetWindow, parentType, parentId, parentName) {
 
-  if (targetWindow != null){
-    targetWindow.close();
-    window.location.reload();// Colocado atualizar a página toda devido a quantidade de campos da cad pessoa que já existem em cad aluno.
-  }else{
+    if (targetWindow != null)
+      targetWindow.close();
     var $tempIdField;
     var $tempNomeField;
 
@@ -784,7 +782,6 @@ function afterChangePessoa(targetWindow, parentType, parentId, parentName) {
       changeVisibilityOfLinksToPessoaParent(parentType);
 
     }, 500);
-  }
 
  
 }
