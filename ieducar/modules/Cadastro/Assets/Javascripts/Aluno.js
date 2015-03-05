@@ -778,7 +778,7 @@ function afterChangePessoa(targetWindow, parentType, parentId, parentName) {
       $tempNomeField = $nomeField;
     }
     //timeout para usuario perceber mudança
-    if (targetWindow == null){
+    if (targetWindow == null || parentType != null){
       window.setTimeout(function() {
         messageUtils.success('Pessoa alterada com sucesso', $tempNomeField);
         
