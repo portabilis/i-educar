@@ -359,18 +359,22 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     if($labels_botucatu)
       $this->inputsHelper()->hidden('labels_botucatu');
     $cod_aluno = $_GET['id'];
-    if ($cod_aluno){
-      $db = new clsBanco();
-      $cod_pessoa_fj = $db->CampoUnico("select ref_idpes from pmieducar.aluno where cod_aluno = '$cod_aluno'");
-
+    if ($cod_aluno or $_GET['person']){
+      if ($_GET['person']){
+        $this->cod_pessoa_fj = $_GET['person'];
+        $this->inputsHelper()->hidden('person', array('value' => $this->cod_pessoa_fj));
+      }
+      else{
+        $db = new clsBanco();
+        $this->cod_pessoa_fj = $db->CampoUnico("select ref_idpes from pmieducar.aluno where cod_aluno = '$cod_aluno'");
+      }
       $documentos        = new clsDocumento();
-      $documentos->idpes = $cod_pessoa_fj;
+      $documentos->idpes = $this->cod_pessoa_fj;
       $documentos        = $documentos->detalhe();
     }
-
-$foto = false;
-    if (is_numeric($cod_pessoa_fj)){
-        $objFoto = new ClsCadastroFisicaFoto($cod_pessoa_fj);
+    $foto = false;
+    if (is_numeric($this->cod_pessoa_fj)){
+        $objFoto = new ClsCadastroFisicaFoto($this->cod_pessoa_fj);
         $detalheFoto = $objFoto->detalhe();
         if(count($detalheFoto))
           $foto = $detalheFoto['caminho'];

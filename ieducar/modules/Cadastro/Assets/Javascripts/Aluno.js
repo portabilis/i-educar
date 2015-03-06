@@ -733,6 +733,8 @@ var updatePersonDetails = function() {
     clearPersonDetails();
 }
 
+if ($j('#person').val() && !$j('#pessoa_nome').val() && !$j('#pessoa_id').val())
+  getPersonDetails($j('#person').val());
 var clearPersonDetails = function() {
   $j('#pessoa_id').val('');
   $j('#pai').val('');
@@ -749,12 +751,22 @@ var simpleSearchPessoaOptions = {
 
 // children callbacks
 
+function pegaDominio() {
+      var url = location.href; //pega endereço que esta no navegador
+      url = url.split("/"); //quebra o endereço de acordo com a / (barra)
+      return (url[2]); // retorna a parte www.endereco.com.br
+  }
+
 function afterChangePessoa(targetWindow, parentType, parentId, parentName) {
 
-  if (targetWindow != null){
-    targetWindow.close();
-    window.location.reload();// Colocado atualizar a página toda devido a quantidade de campos da cad pessoa que já existem em cad aluno.
-  }else{
+    if (targetWindow != null){
+      targetWindow.close();
+      if (parentType == null){
+        dominio = pegaDominio();
+        url = $j('#id').val() ? 'http://'+dominio+'/module/Cadastro/aluno?id='+$j('#id').val() : 'http://'+dominio+'/module/Cadastro/aluno?person='+parentId;
+        setTimeout("document.location = url",5);
+      }
+    }
     var $tempIdField;
     var $tempNomeField;
 
@@ -765,28 +777,24 @@ function afterChangePessoa(targetWindow, parentType, parentId, parentName) {
       $tempIdField = $j('pessoa_id');
       $tempNomeField = $nomeField;
     }
+    //timeout para usuario perceber mudança
+    if (targetWindow == null || parentType != null){
+      window.setTimeout(function() {
+        messageUtils.success('Pessoa alterada com sucesso', $tempNomeField);
+        
+        $tempIdField.val(parentId);
+        if(!parentType){
+          getPersonDetails(parentId);
+        }else{
+          $tempNomeField.val(parentId + ' - ' +parentName);
+        }
+        if ($tempNomeField.is(':active'))
+          $tempNomeField.focus();
 
-    // timeout para usuario perceber mudança
-    window.setTimeout(function() {
-      messageUtils.success('Pessoa alterada com sucesso', $tempNomeField);
-      
-      $tempIdField.val(parentId);
-      if(!parentType){
-        getPersonDetails(parentId);
-      }else{
-        $tempNomeField.val(parentId + ' - ' +parentName);
-      }
+        changeVisibilityOfLinksToPessoaParent(parentType);
 
-
-      if ($tempNomeField.is(':active'))
-        $tempNomeField.focus();
-
-      changeVisibilityOfLinksToPessoaParent(parentType);
-
-    }, 500);
-  }
-
- 
+      }, 500);
+    }
 }
 
 function afterChangePessoaParent(pessoaId, parentType) {
