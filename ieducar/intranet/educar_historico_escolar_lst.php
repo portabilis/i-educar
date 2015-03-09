@@ -232,7 +232,7 @@ class indice extends clsListagem
 		$db = new clsBanco();
 		$school_student = $school_student ? $school_student : 0;
     	$historico_restringido = $db->CampoUnico("SELECT restringir_historico_escolar FROM pmieducar.instituicao where cod_instituicao = (select ref_cod_instituicao from pmieducar.escola where cod_escola = $school_student)");
-		if( $obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7 ) and ($historico_restringido == 'f' or $this->nivel_usuario == 1 or $this->nivel_usuario == 2 or $school_user == $school_student or !$school_student))
+		if( $obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7 ) and ($historico_restringido != 't' or $this->nivel_usuario == 1 or $this->nivel_usuario == 2 or $school_user == $school_student or !$school_student))
 		{
 			$this->acao = "go(\"educar_historico_escolar_cad.php?ref_cod_aluno={$this->ref_cod_aluno}\")";
 			$this->nome_acao = "Novo";
