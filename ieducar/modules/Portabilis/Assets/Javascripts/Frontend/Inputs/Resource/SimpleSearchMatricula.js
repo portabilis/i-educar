@@ -21,10 +21,10 @@ var simpleSearchMatriculaOptions = {
       return false;
     }
 
-    if (! $j('#ref_cod_escola').val()) {
-      alert('Selecione uma escola.');
-      return false;
-    }
+    //if (! $j('#ref_cod_escola').val()) {
+     // alert('Selecione uma escola.');
+    //  return false;
+   // }
     
     return true;
  }
