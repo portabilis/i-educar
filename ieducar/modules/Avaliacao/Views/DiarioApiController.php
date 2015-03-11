@@ -62,8 +62,9 @@ class DiarioApiController extends ApiCoreController
   // post nota validations
 
   protected function validatesValueOfAttValueIsInOpcoesNotas() {
-    $expectedValues = array_keys($this->getOpcoesNotas());
-    return $this->validator->validatesValueInSetOf($this->getRequest()->att_value, $expectedValues, 'att_value');
+    //$expectedValues = array_keys($this->getOpcoesNotas());
+    //return $this->validator->validatesValueInSetOf($this->getRequest()->att_value, $expectedValues, 'att_value');
+    return true;
   }
 
 

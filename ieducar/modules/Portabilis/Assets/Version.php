@@ -4,7 +4,7 @@
    usado pelo metodos loadJavascript e loadStylesheet do helper Portabilis_View_Helper_Application */
 
 class Portabilis_Assets_Version {
-  const VERSION = '2';
+  const VERSION = '3';
 }
 
 ?>

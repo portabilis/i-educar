@@ -112,11 +112,11 @@ class TabelaArredondamento_Model_Tabela extends CoreExt_Entity
    */
   public function round($value)
   {
-    if (0 > $value || 10 < $value) {
+    /*if (0 > $value || 10 < $value) {
       require_once 'CoreExt/Exception/InvalidArgumentException.php';
       throw new CoreExt_Exception_InvalidArgumentException('O valor para '
                 . 'arredondamento deve estar entre 0 e 10.');
-    }
+    }*/
 
     /* Inicializa o retorno com o valor recebido (limitando a para uma casa decimal),
        o qual será retornado caso não tenha sido definido opcoes na tabela de arredondamento,
