@@ -429,6 +429,21 @@ class clsPmieducarTransferenciaSolicitacao
 		return false;
 	}
 
+ 	/**
+ 	*
+ 	* Apaga os registros de uma matricula em uma escola que foi a aceitação da transferencia 
+ 	*
+ 	* @return boolean
+ 	*/
+ 	function desativaEntradaTransferencia(){
+ 		if (is_numeric($this->cod_transferencia_solicitacao)){
+ 			$db = new clsBanco();
+ 			$db->Consulta( "UPDATE {$this->_tabela} SET ref_cod_matricula_entrada = NULL, data_transferencia = NULL,ref_usuario_exc = NULL, data_exclusao = NULL WHERE cod_transferencia_solicitacao = '{$this->cod_transferencia_solicitacao}'" );
+ 			return true;
+ 		}
+ 		return false;
+ 	}	
+
 	/**
 	 * Retorna uma lista filtrados de acordo com os parametros
 	 *

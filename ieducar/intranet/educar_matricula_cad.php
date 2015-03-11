@@ -595,6 +595,24 @@ class indice extends clsCadastro
       NULL, $ref_cod_serie, NULL, NULL, NULL, NULL, NULL, NULL, 1
     );
 
+    // Coloca as matrículas anteriores em andamento
+    $obj_transferencia_antiga  = new clsPmieducarTransferenciaSolicitacao();
+    $lista_transferencia = $obj_transferencia_antiga->lista(null,null,null,null,null,$this->cod_matricula);
+    if (is_array($lista_transferencia))){
+      foreach ($lista_transferencia as $transf) {
+ 
+        $obj_mat = new clsPmieducarMatricula($transf['ref_cod_matricula_saida']);
+        $obj_mat = $obj_mat->detalhe();
+          if ($obj_mat['aprovado']==4){
+            $obj_mat = new clsPmieducarMatricula($transf['ref_cod_matricula_saida'],null,null
+                         ,null,$this->pessoa_logada,null,null,3);
+           $obj_mat->edita();
+           $obj_transf  = new clsPmieducarTransferenciaSolicitacao($transf['cod_transferencia_solicitacao']);
+           $obj_transf->desativaEntradaTransferencia();
+         }
+      }
+    }    
+
     // Verifica se a série da matrícula cancelada é sequência de alguma outra série
     if (is_array($lst_sequencia)) {
       $det_sequencia    = array_shift($lst_sequencia);
