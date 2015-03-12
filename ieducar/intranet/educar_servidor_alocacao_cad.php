@@ -254,7 +254,7 @@ class indice extends clsCadastro
       $obj_tmp->excluiAlocacoesServidor($this->ref_cod_servidor);
 
       foreach ($this->ref_cod_escola as $key => $value) {
-        if (stripos($periodos_em_uso, $this->periodo[$key])){
+        if (stripos($periodos_em_uso, ($this->periodo[$key] . $value))){
           $this->mensagem = 'Período informado já foi alocado. Por favor, selecione outro.<br />';
           $this->alocacao_array = null;
           foreach ($this->ref_cod_escola as $key => $value) {
@@ -281,7 +281,7 @@ class indice extends clsCadastro
 
           $cadastrou = $obj->cadastra();
         
-          $periodos_em_uso = $periodos_em_uso.'-'.$this->periodo[$key];
+          $periodos_em_uso = $periodos_em_uso.'-'.$this->periodo[$key] . $value;
           if (!$cadastrou) {
             $this->mensagem = 'Cadastro não realizado.<br />';
             echo "<!--\nErro ao cadastrar clsPmieducarServidorAlocacao\nvalores obrigatorios\nis_numeric($this->ref_ref_cod_instituicao) && is_numeric($this->ref_usuario_cad) && is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_servidor) && is_numeric($this->periodo) && ($this->carga_horaria_alocada)\n-->";
@@ -318,10 +318,8 @@ class indice extends clsCadastro
   }
 
   function hhmmToMinutes($hhmm){
-    if(strlen($hhmm) == 5)
-      return ((int)substr($hhmm, 0, 2)) + ((int) substr($hhmm, 3, 2)) * 60;
-    else
-      return 0;
+  	list($hora, $minuto) = split(':', $hhmm);
+  	return (((int)$hora * 60) + $minuto);
   }
 
   function arrayHhmmToMinutes($array){
