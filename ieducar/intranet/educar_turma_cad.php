@@ -573,7 +573,18 @@ class indice extends clsCadastro
       $this->turma_modulo = unserialize(urldecode($_POST['turma_modulo']));
     }
 
-    $qtd_modulo = count($this->turma_modulo) == 0 ? 1 : (count($this->turma_modulo) + 1);
+    if ($_POST){
+      $qtd_modulo = count($this->turma_modulo) == 0 ? 1 : (count($this->turma_modulo) + 1);
+      echo "
+        <script type=\"text/javascript\">
+          window.setTimeout(function() { 
+            document.getElementById(\"event_incluir_modulo\").focus();
+          }, 500);
+        </script>
+      ";
+    }
+    else
+      $qtd_modulo = 0;
 
     if (is_numeric($this->cod_turma) && !$_POST) {
       $obj = new clsPmieducarTurmaModulo();
