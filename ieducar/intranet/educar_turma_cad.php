@@ -578,7 +578,7 @@ class indice extends clsCadastro
       echo "
         <script type=\"text/javascript\">
           window.setTimeout(function() { 
-            document.getElementById(\"event_incluir_modulo\").focus();
+            document.getElementById(\"event_incluir_dia_semana\").focus();
           }, 500);
         </script>
       ";
@@ -590,7 +590,7 @@ class indice extends clsCadastro
       $obj = new clsPmieducarTurmaModulo();
       $registros = $obj->lista($this->cod_turma);
 
-      if ($registros) {
+      if ($registros and !$this->padrao_ano_escolar) {
         foreach ($registros as $campo) {
           $this->turma_modulo[$campo[$qtd_modulo]]['sequencial_']     = $campo['sequencial'];
           $this->turma_modulo[$campo[$qtd_modulo]]['ref_cod_modulo_'] = $campo['ref_cod_modulo'];
