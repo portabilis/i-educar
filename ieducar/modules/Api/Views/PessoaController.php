@@ -268,7 +268,7 @@ class PessoaController extends ApiCoreController
   }
 
   protected function loadPessoaParent(){
-
+    if ($this->getRequest()->id){
       $_sql = " SELECT (select nome from cadastro.pessoa where pessoa.idpes = fisica.idpes) as nome ,ideciv as estadocivil, data_nasc, sexo FROM cadastro.fisica WHERE idpes = $1; ";
 
       $details = $this->fetchPreparedQuery($_sql, $this->getRequest()->id, false, 'first-row');
@@ -279,7 +279,9 @@ class PessoaController extends ApiCoreController
 
       $details['id'] = $this->getRequest()->id;
 
-      return $details;;
+      return $details;
+    }else
+      return '';
   }
 
   protected function loadDeficiencias($pessoaId) {

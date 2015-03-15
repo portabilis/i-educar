@@ -573,13 +573,24 @@ class indice extends clsCadastro
       $this->turma_modulo = unserialize(urldecode($_POST['turma_modulo']));
     }
 
-    $qtd_modulo = count($this->turma_modulo) == 0 ? 1 : (count($this->turma_modulo) + 1);
+    if ($_POST){
+      $qtd_modulo = count($this->turma_modulo) == 0 ? 1 : (count($this->turma_modulo) + 1);
+      echo "
+        <script type=\"text/javascript\">
+          window.setTimeout(function() { 
+            document.getElementById(\"event_incluir_dia_semana\").focus();
+          }, 500);
+        </script>
+      ";
+    }
+    else
+      $qtd_modulo = 0;
 
     if (is_numeric($this->cod_turma) && !$_POST) {
       $obj = new clsPmieducarTurmaModulo();
       $registros = $obj->lista($this->cod_turma);
 
-      if ($registros) {
+      if ($registros and !$this->padrao_ano_escolar) {
         foreach ($registros as $campo) {
           $this->turma_modulo[$campo[$qtd_modulo]]['sequencial_']     = $campo['sequencial'];
           $this->turma_modulo[$campo[$qtd_modulo]]['ref_cod_modulo_'] = $campo['ref_cod_modulo'];
