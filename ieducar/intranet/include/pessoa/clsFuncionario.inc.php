@@ -368,7 +368,7 @@ class clsFuncionario extends clsPessoaFisica
 				$idpesOk = true;
 			}
 		}
-		else if($this->cpf)
+		else if(is_numeric($this->cpf))
 		{
 			$db = new clsBanco();
 			$db->Consulta("SELECT idpes FROM {$this->schema_cadastro}.fisica WHERE cpf = '{$this->cpf}'");
