@@ -219,6 +219,7 @@ class indice extends clsCadastro
          //echo $enturmar['ref_cod_matricula']."fd".$this->ref_cod_turma;die;
         $dado_matricula_old = Portabilis_Utils_Database::fetchPreparedQuery("
                                                                   select * from pmieducar.matricula where cod_matricula = {$enturmar['ref_cod_matricula']} limit 1");
+        if (!$existe){
         $data = date( "Y-m-d");
         $datah = date( "Y-m-d H:i:s");
         $this->pessoa_logada = $_SESSION['id_pessoa'];
@@ -235,11 +236,6 @@ class indice extends clsCadastro
                                       where ref_cod_matricula = cod_matricula 
                                       and ref_cod_turma = {$this->ref_cod_turma} 
                                       and ref_cod_aluno = {$dado_matricula_old[0]['ref_cod_aluno']}");
-        if (!$existe){
-          // $obj_matricula_turma = new clsPmieducarMatriculaTurma($enturmar['ref_cod_matricula'],
-          // $this->ref_cod_turma, $enturmar['ref_usuario_exc'], $enturmar['ref_usuario_cad'], 
-          // NULL, NULL, 1, NULL, NULL, $this->data_matricula);
-          // $lst_matricula_turma = $obj_matricula_turma->cadastra();
           $db = new clsBanco();
           $db->CampoUnico("insert into pmieducar.matricula_turma
                            (ref_cod_matricula,
