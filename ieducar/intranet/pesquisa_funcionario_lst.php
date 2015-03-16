@@ -110,12 +110,12 @@ class indice extends clsListagem
 			{
 				$lst_funcionario = $obj_funcionario->lista( $chave_busca, false, false, false, false, false, false, $iniciolimit, $limite, false, $com_matricula );
 			}
-			if ( !$lst_funcionario )
-			{
-				$obj_funcionario      = new clsFuncionario(null, null, $chave_busca);
-          		$det_funcionario      = $obj_funcionario->detalhe();
-				$lst_funcionario = $obj_funcionario->lista( $det_funcionario['matricula'], false, false, false, false, false, false, $iniciolimit, $limite, false, $com_matricula );
-			}
+			// if ( !$lst_funcionario )
+			// {
+			// 	$obj_funcionario      = new clsFuncionario(null, null, $chave_busca);
+   //        		$det_funcionario      = $obj_funcionario->detalhe();
+			// 	$lst_funcionario = $obj_funcionario->lista( $det_funcionario['matricula'], false, false, false, false, false, false, $iniciolimit, $limite, false, $com_matricula );
+			// }
 		}
 		else {
 			$obj_funcionario = new clsFuncionario();

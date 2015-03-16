@@ -354,12 +354,9 @@ class clsFuncionario extends clsPessoaFisica
 	function detalhe()
 	{
 		$idpesOk = false;
-		if( is_numeric($this->idpes) )
-		{
+		if( is_numeric($this->idpes) ){
 			$idpesOk = true;
-		}
-		else if($this->matricula)
-		{
+		}else if($this->matricula){
 			$db = new clsBanco();
 			$db->Consulta("SELECT ref_cod_pessoa_fj FROM funcionario WHERE matricula = '{$this->matricula}'");
 			if( $db->ProximoRegistro() )
@@ -367,9 +364,7 @@ class clsFuncionario extends clsPessoaFisica
 				list( $this->idpes ) = $db->Tupla();
 				$idpesOk = true;
 			}
-		}
-		else if(is_numeric($this->cpf))
-		{
+		}else if(is_numeric($this->cpf)){
 			$db = new clsBanco();
 			$db->Consulta("SELECT idpes FROM {$this->schema_cadastro}.fisica WHERE cpf = '{$this->cpf}'");
 			if( $db->ProximoRegistro() )
@@ -378,10 +373,7 @@ class clsFuncionario extends clsPessoaFisica
 				$idpesOk = true;
 			}
 		}
-
-		if( $idpesOk  )
-		{
-
+		if( $idpesOk  ){
 			$tupla = parent::detalhe();
 			$db = new clsBanco();
 			$db->Consulta("SELECT ref_cod_pessoa_fj, matricula, matricula_interna, senha, ativo, ref_sec, ramal, sequencial, opcao_menu, ref_cod_setor, ref_cod_funcionario_vinculo, tempo_expira_senha, tempo_expira_conta, data_troca_senha, data_reativa_conta, ref_ref_cod_pessoa_fj, proibido, ref_cod_setor_new, matricula_permanente, email FROM funcionario WHERE ref_cod_pessoa_fj = '{$this->idpes}'");
