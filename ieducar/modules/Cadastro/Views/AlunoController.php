@@ -427,16 +427,29 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     // $this->inputsHelper()->integer('rg', $options);
 
     $options = array(
-      'required'    => false,
-      'label'       => 'Documento de identidade (RG)',
+      'required'    => $required,
+      'label'       => 'RG / Data emissão',
+      'placeholder' => 'Documento identidade',
       'value'       => $documentos['rg'],
-      //'disabled'    => true,
       'max_length'  => 25,
-      'size'        => 25
+      'size'        => 27,
+      'inline'      => true
     );
 
     $this->inputsHelper()->text('rg', $options);
 
+
+    // data emissão rg
+
+    $options = array(
+      'required'    => false,
+      'label'       => '',
+      'placeholder' => 'Data emiss\u00e3o',
+      'value'       => $documentos['data_exp_rg'],
+      'size'        => 19
+    );
+
+    $this->inputsHelper()->date('data_emissao_rg', $options);
 
     // justificativa_falta_documentacao
     $resources = array(null          => 'Selecione',

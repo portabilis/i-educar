@@ -474,7 +474,134 @@ class clsDocumento
 		}
 		return false;
 	}
+	function edita_aluno()
+	{
+		$set = "";
+		$gruda = "SET ";
+		//die($this->rg."<-");
+		if( is_string( $this->rg ) and (!empty($this->rg)))
+		{	//die("aki");
+			$set = "SET rg = '{$this->rg}'";
+			$gruda = ", ";
+		}else
+		{
+			$set .= $gruda."rg = NULL";
+			$gruda = ", ";
+		}
 
+		if( is_string( $this->data_exp_rg ) and (!empty($this->data_exp_rg)))
+		{
+			$set .= $gruda."data_exp_rg = '{$this->data_exp_rg}'";
+			$gruda = ", ";
+		}
+		else
+		{
+			$set .= $gruda."data_exp_rg = NULL";
+			$gruda = ", ";
+		}
+
+		if( is_string( $this->tipo_cert_civil ) and (!empty($this->tipo_cert_civil)))
+		{
+			$set .= $gruda."tipo_cert_civil = '{$this->tipo_cert_civil}'";
+			$gruda = ", ";
+		}
+		else
+		{
+			$set .= $gruda."tipo_cert_civil = NULL";
+			$gruda = ", ";
+		}
+
+		if( is_numeric( $this->num_termo ) and (!empty($this->num_termo))) 
+		{
+			$set .= $gruda."num_termo = '{$this->num_termo}'";
+			$gruda = ", ";
+		}
+	    else
+    	{
+      		$set .= $gruda."num_termo = NULL";
+      		$gruda = ", ";
+    	} 		
+
+		if( is_string( $this->num_livro ) and (!empty($this->num_livro)))
+		{
+			$set .= $gruda."num_livro = '{$this->num_livro}'";
+			$gruda = ", ";
+		}
+		else
+		{
+			$set .= $gruda."num_livro = NULL";
+			$gruda = ", ";
+		}
+
+		if( is_numeric( $this->num_folha ) and (!empty($this->num_folha))) 
+		{
+			$set .= $gruda."num_folha = '{$this->num_folha}'";
+			$gruda = ", ";
+		}
+	    else
+	    {
+		    $set .= $gruda."num_folha = NULL";
+		    $gruda = ", ";
+	    } 		
+
+		if( is_numeric( $this->cartorio_cert_civil_inep ) and (!empty($this->cartorio_cert_civil_inep))) 
+		{
+			$set .= $gruda."cartorio_cert_civil_inep = '{$this->cartorio_cert_civil_inep}'";
+			$gruda = ", ";
+		}
+	    else
+	    {
+		    $set .= $gruda."cartorio_cert_civil_inep = NULL";
+		    $gruda = ", ";
+	    } 		
+
+		if( is_string( $this->data_emissao_cert_civil ) and (!empty($this->data_emissao_cert_civil)))
+		{
+			$set .= $gruda."data_emissao_cert_civil = '{$this->data_emissao_cert_civil}'";
+			$gruda = ", ";
+		}
+		else
+		{
+			$set .= $gruda."data_emissao_cert_civil = NULL";
+			$gruda = ", ";
+		}
+
+		if( is_string( $this->sigla_uf_cert_civil ) and (!empty($this->sigla_uf_cert_civil)))
+		{
+			$set .= $gruda."sigla_uf_cert_civil = '{$this->sigla_uf_cert_civil}'";
+			$gruda = ", ";
+		}
+		else
+		{
+			$set .= $gruda."sigla_uf_cert_civil = NULL";
+			$gruda = ", ";
+		}
+
+		if( is_string( $this->cartorio_cert_civil ) and (!empty($this->cartorio_cert_civil)))
+		{
+			$set .= $gruda."cartorio_cert_civil = '{$this->cartorio_cert_civil}'";
+			$gruda = ", ";
+		}
+		else
+		{
+			$set .= $gruda."cartorio_cert_civil = NULL";
+			$gruda = ", ";
+		}
+
+		if( ! is_null( $this->certidao_nascimento ))
+		{
+			$set .= $gruda."certidao_nascimento = '{$this->certidao_nascimento}'";
+			$gruda = ", ";
+		}
+
+		if($set)
+		{
+			$db = new clsBanco();
+			$db->Consulta( "UPDATE {$this->schema}.{$this->tabela} $set WHERE idpes = '$this->idpes'" );
+			return true;
+		}
+		return false;
+	}
 	/**
 	 * Remove o registro atual
 	 *
