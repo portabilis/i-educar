@@ -1339,6 +1339,7 @@ class AlunoController extends ApiCoreController
     $documentos->num_folha                  = $this->getRequest()->folha_certidao_civil;
 
     $documentos->rg                         = $this->getRequest()->rg;
+    $documentos->data_exp_rg                = $this->getRequest()->data_emissao_rg;
 
     $documentos->data_emissao_cert_civil    = Portabilis_Date_Utils::brToPgSQL(
       $this->getRequest()->data_emissao_certidao_civil
@@ -1358,7 +1359,7 @@ class AlunoController extends ApiCoreController
     if (Portabilis_Utils_Database::selectField($sql, $pessoaId) != 1)
       $documentos->cadastra();
     else
-      $documentos->edita();
+      $documentos->edita_aluno();
   }
   protected function loadAcessoDataEntradaSaida(){
   	@session_start();
