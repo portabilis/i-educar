@@ -215,27 +215,30 @@ class miolo1 extends clsListagem
     $this->addPaginador2('educar_pesquisa_cep_log_bairro.php', $total, $_GET,
       $this->nome, $limite);
 
-    if ($_GET['param']) {
-      $this->rodape = '
-        <table border="0" cellspacing="0" cellpadding="0" width="100%" align="center">
-          <tr width="100%">
-            <td>
-              <div align="center">[ <a href="javascript:void(0);" onclick="liberaCamposOuvidoria()">Cadastrar Novo Endereço</a> ]</div>
-            </td>
-          </tr>
-        </table>';
-    }
-    else {
-      $this->rodape = sprintf('
-        <table border="0" cellspacing="0" cellpadding="0" width="100%%" align="center">
-          <tr width="100%%">
-            <td>
-              <div align="center">[ <a href="javascript:void(0);" onclick="%s">Cadastrar Novo Endereço</a> ]</div>
-            </td>
-          </tr>
-        </table>',
-        $this->funcao_js
-      );
+    if(!((bool)$coreExt['Config']->app->obriga_endereco_normalizado_pf)){
+
+      if ($_GET['param']) {
+        $this->rodape = '
+          <table border="0" cellspacing="0" cellpadding="0" width="100%" align="center">
+            <tr width="100%">
+              <td>
+                <div align="center">[ <a href="javascript:void(0);" onclick="liberaCamposOuvidoria()">Cadastrar Novo Endereço</a> ]</div>
+              </td>
+            </tr>
+          </table>';
+      }
+      else {
+        $this->rodape = sprintf('
+          <table border="0" cellspacing="0" cellpadding="0" width="100%%" align="center">
+            <tr width="100%%">
+              <td>
+                <div align="center">[ <a href="javascript:void(0);" onclick="%s">Cadastrar Novo Endereço</a> ]</div>
+              </td>
+            </tr>
+          </table>',
+          $this->funcao_js
+        );
+      }
     }
 
     @session_write_close();
