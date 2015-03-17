@@ -64,10 +64,10 @@ class AlunoController extends Portabilis_Controller_Page_EditController
       'help'   => '',
     ),
 
-    'rg' => array(
-      'label'  => 'Documento de identidade (RG)',
-      'help'   => '',
-    ),
+    // 'rg' => array(
+    //   'label'  => 'Documento de identidade (RG)',
+    //   'help'   => '',
+    // ),
 
     'justificativa_falta_documentacao' => array(
       'label'  => 'Justificativa para a falta de documentação',
@@ -423,8 +423,20 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     $this->inputsHelper()->date('data_nascimento', $options);
 
     // rg
-    $options = array('label' => $this->_getLabel('rg'), 'disabled' => true, 'required' => false, 'size' => 25);
-    $this->inputsHelper()->integer('rg', $options);
+    // $options = array('label' => $this->_getLabel('rg'), 'disabled' => true, 'required' => false, 'size' => 25);
+    // $this->inputsHelper()->integer('rg', $options);
+
+    $options = array(
+      'required'    => false,
+      'label'       => 'Documento de identidade (RG)',
+      'value'       => $documentos['rg'],
+      //'disabled'    => true,
+      'max_length'  => 25,
+      'size'        => 25
+    );
+
+    $this->inputsHelper()->text('rg', $options);
+
 
     // justificativa_falta_documentacao
     $resources = array(null          => 'Selecione',
