@@ -58,6 +58,10 @@ class CoreExt_Validate_Date extends CoreExt_Validate_Abstract
   */
   protected function _validate($value)
   {
+    if (! $this->getOption('required') && (is_null($value) || $value === '')) {
+      return true;
+    }
+
     $hasSlash = strpos($value, '/') !== false;
 
     if ($hasSlash) {
