@@ -377,6 +377,7 @@ function selAction(menu_pai, tipo, acao)
     for (var ct = 0; ct < element.length; ct++) {
       if(element[ct].getAttribute('type') == 'checkbox') {
         element[ct].checked = state;
+        element[ct].value = ( state ? 'on' : '');
       }
     }
 
@@ -384,7 +385,7 @@ function selAction(menu_pai, tipo, acao)
   }
 
   for (var ct=0; ct < menu[menu_pai].length; ct++){
-    document.getElementsByName('permissoes[' + menu[menu_pai][ct]  + '][' + tipo + ']')[0].checked = state;
+    document.getElementsByName('permissoes[' + menu[menu_pai][ct]  + '][' + tipo + ']')[0].value = ( state ? 'on' : '');
   }
 }
 </script>
