@@ -233,10 +233,10 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
       // anteriores, lançando um Exceção. Como CoreExt_Enum não contém um
       // estado (o valor corrente, por ser um Enum!), aceitamos apenas
       // instâncias de CoreExt_Entity como parâmetro
-      elseif (!($val instanceof CoreExt_Entity)) {
+      elseif (!($val instanceof CoreExt_Entity) && ! is_null($val)) {
         require_once 'CoreExt/Exception/InvalidArgumentException.php';
         throw new CoreExt_Exception_InvalidArgumentException('O argumento passado para o atributo "' . $key
-                  . '" é inválido. Apenas os tipos "int" e "CoreExt_Entity" são suportados.');
+                  . '" é inválido. Apenas os tipos "int", "null" e "CoreExt_Entity" são suportados.');
       }
     }
 
