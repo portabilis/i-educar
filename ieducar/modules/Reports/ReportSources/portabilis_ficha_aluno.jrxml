@@ -230,7 +230,9 @@
                pmieducar.escola
          where escola.ref_idpes = ps.idpes AND
                ps.idpes = juridica .idpes AND
-	       escola.cod_escola = $P{escola}),(SELECT nm_escola FROM pmieducar.escola_complemento where ref_cod_escola = $P{escola}))) AS nm_escola
+	       escola.cod_escola = $P{escola}),(SELECT nm_escola FROM pmieducar.escola_complemento where ref_cod_escola = $P{escola}))) AS nm_escola,
+
+(SELECT caminho FROM cadastro.fisica_foto WHERE idpes = aluno.ref_idpes) AS foto
 
   FROM pmieducar.instituicao,
        pmieducar.aluno,
@@ -313,6 +315,7 @@
 	<field name="sigla_uf_responsavel" class="java.lang.String"/>
 	<field name="bairro_responsavel" class="java.lang.String"/>
 	<field name="nm_escola" class="java.lang.String"/>
+	<field name="foto" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -692,17 +695,25 @@
 				<text><![CDATA[PAÍS DE ORIGEM:]]></text>
 			</staticText>
 			<rectangle>
-				<reportElement uuid="cf30196d-7da5-4de3-a72c-47d98d7b73d3" x="471" y="6" width="72" height="90"/>
+				<reportElement uuid="cf30196d-7da5-4de3-a72c-47d98d7b73d3" x="471" y="6" width="68" height="90">
+					<printWhenExpression><![CDATA[$F{foto} == null]]></printWhenExpression>
+				</reportElement>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</rectangle>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement uuid="3a409d0f-1fbc-460e-9a20-b99f8b06a595" x="471" y="6" width="68" height="90"/>
+				<imageExpression><![CDATA[$F{foto}]]></imageExpression>
+			</image>
 			<staticText>
-				<reportElement uuid="c2713064-d203-4433-b086-70d4dcb2557e" x="483" y="42" width="44" height="12"/>
-				<textElement textAlignment="Center">
+				<reportElement uuid="c2713064-d203-4433-b086-70d4dcb2557e" x="471" y="6" width="68" height="90">
+					<printWhenExpression><![CDATA[$F{foto} == null]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
-				<text><![CDATA[FOTO 3X4]]></text>
+				<text><![CDATA[Foto 3x4]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
 				<reportElement uuid="9e7414a4-ac32-4387-86c9-ff256081e3a5" x="46" y="25" width="251" height="12"/>
