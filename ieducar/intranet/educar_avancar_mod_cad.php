@@ -35,6 +35,7 @@ require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
+require_once 'lib/Portabilis/Date/Utils.php';
 
 class clsIndexBase extends clsBase
 {
@@ -48,6 +49,7 @@ class clsIndexBase extends clsBase
 class indice extends clsCadastro
 {
   var $pessoa_logada;
+  var $data_matricula;
 
   function Inicializar()
   {
@@ -66,6 +68,7 @@ class indice extends clsCadastro
 
     $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'curso', 'serie', 'turma'));
     $this->inputsHelper()->dynamic('anoLetivo', array('label' => 'Ano destino'), $anoLetivoHelperOptions);
+    $this->inputsHelper()->date('data_matricula', array('label' => 'Data da matrícula', 'placeholder' => 'dd/mm/yyyy'));
   }
 
   /**
@@ -79,6 +82,8 @@ class indice extends clsCadastro
 
     $this->db  = new clsBanco();
     $this->db2 = new clsBanco();
+
+    $this->data_matricula = Portabilis_Date_Utils::brToPgSQL($this->data_matricula);
 
     $result = $this->rematricularALunos($this->ref_cod_escola, $this->ref_cod_curso,
                                         $this->ref_cod_serie, $this->ref_cod_turma, $_POST['ano']);
@@ -175,7 +180,7 @@ class indice extends clsCadastro
     try {
       $this->db2->Consulta(sprintf("INSERT INTO pmieducar.matricula
         (ref_ref_cod_escola, ref_ref_cod_serie, ref_usuario_cad, ref_cod_aluno, aprovado, data_cadastro, ano, ref_cod_curso, ultima_matricula) VALUES ('%d', '%d', '%d', '%d', '3', 'NOW()', '%d', '%d', '1')",
-      $escolaId, $serieId, $this->pessoa_logada, $alunoId, $ano, $cursoId));
+      $escolaId, $serieId, $this->pessoa_logada, $alunoId, $ano, $cursoId, $this->data_matricula));
     }
     catch (Exception $e) {
       $this->mensagem = "Erro durante matrícula do aluno: $alunoId";

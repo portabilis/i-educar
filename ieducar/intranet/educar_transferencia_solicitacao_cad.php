@@ -28,6 +28,7 @@ require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once( "include/pmieducar/geral.inc.php" );
+require_once 'lib/Portabilis/Date/Utils.php';
 
 class clsIndexBase extends clsBase
 {
@@ -156,7 +157,7 @@ class indice extends clsCadastro
 			$opcoes = array( "" => "Erro na geracao" );
 		}
 		$this->campoLista( "ref_cod_transferencia_tipo", "Transfer&ecirc;ncia Motivo", $opcoes, $this->ref_cod_transferencia_tipo );
-
+		$this->inputsHelper()->date('data_cancel', array('label' => 'Data da transferência', 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y')));
 		// text
 		$this->campoMemo( "observacao", "Observa&ccedil;&atilde;o", $this->observacao, 60, 5, false );
 	}
@@ -179,6 +180,28 @@ class indice extends clsCadastro
 
   
     // escola externa
+		$this->data_cancel = Portabilis_Date_Utils::brToPgSQL($this->data_cancel);
+		$obj = new clsPmieducarMatricula( $this->ref_cod_matricula, null,null,null,$this->pessoa_logada);
+		$det_matricula = $obj->detalhe();
+
+		if(is_null($det_matricula['data_matricula'])){
+
+			if(substr($det_matricula['data_cadastro'], 0, 10) > $this->data_cancel){
+
+				$this->mensagem = "Data de abandono não pode ser inferior a data da matrícula.<br>";
+				return false;	
+				die();							
+			} 
+		}else{
+			if(substr($det_matricula['data_matricula'], 0, 10) > $this->data_cancel){
+				$this->mensagem = "Data de abandono não pode ser inferior a data da matrícula.<br>";
+				return false;
+				die();
+			}
+		}		
+		$editou = $obj->edita();
+
+		$obj->data_cancel = $this->data_cancel;    
 		if ($this->transferencia_tipo == 2)
 		{
 			$this->data_transferencia = date("Y-m-d");
@@ -222,6 +245,11 @@ class indice extends clsCadastro
 		$cadastrou = $obj->cadastra();
 		if( $cadastrou )
 		{
+			
+			$obj = new clsPmieducarMatricula( $this->ref_cod_matricula, null,null,null,$this->pessoa_logada);
+			$det_matricula = $obj->detalhe();
+			$obj->data_cancel = $this->data_cancel;
+			$obj->edita();			
 			$this->mensagem .= "Cadastro efetuado com sucesso.<br>";
 			header( "Location: educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}" );
 			die();

@@ -32,6 +32,7 @@ require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
+require_once 'lib/Portabilis/Date/Utils.php';
 
 /**
  * clsIndexBase class.
@@ -78,6 +79,7 @@ class indice extends clsCadastro
   var $data_exclusao;
   var $ativo;
   var $ano;
+  var $data_matricula;
 
   var $ref_cod_instituicao;
   var $ref_cod_curso;
@@ -161,6 +163,7 @@ class indice extends clsCadastro
     $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'curso', 'serie'));
     $this->inputsHelper()->dynamic('turma', array('required' => false, 'option value' => 'Selecione uma turma'));
     $this->inputsHelper()->dynamic('anoLetivo', array('label' => 'Ano destino'), $anoLetivoHelperOptions);
+    $this->inputsHelper()->date('data_matricula', array('label' => 'Data da matrícula', 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y') ));
     
 
     if (is_numeric($this->ref_cod_curso)) {
@@ -387,12 +390,14 @@ class indice extends clsCadastro
       if (! $this->removerFlagUltimaMatricula($this->ref_cod_aluno)) {
         return false;
       }
+
+      $this->data_matricula = Portabilis_Date_Utils::brToPgSQL($this->data_matricula);
       
       $obj = new clsPmieducarMatricula(NULL, $this->ref_cod_reserva_vaga,
         $this->ref_cod_escola, $this->ref_cod_serie, NULL,
         $this->pessoa_logada, $this->ref_cod_aluno, 3, NULL, NULL, 1, $this->ano,
         1, NULL, NULL, NULL, NULL, $this->ref_cod_curso,
-        $this->matricula_transferencia, $this->semestre);
+        $this->matricula_transferencia, $this->semestre, $this->data_matricula);
 
       $cadastrou = $obj->cadastra();
       

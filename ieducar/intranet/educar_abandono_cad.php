@@ -37,6 +37,7 @@ require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once( "include/pmieducar/geral.inc.php" );
+require_once 'lib/Portabilis/Date/Utils.php';
 
 class clsIndexBase extends clsBase
 {
@@ -111,6 +112,8 @@ class indice extends clsCadastro
 			$this->campoTexto( "nm_aluno", "Aluno", $this->nm_aluno, 30, 255, true,false,false,"","","","",true );
 		}
 
+		$this->inputsHelper()->date('data_cancel', array('label' => 'Data do abandono', 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y')));
+		
 		// text
 		$this->campoMemo( "observacao", "Observa&ccedil;&atilde;o", $this->observacao, 60, 5, false );
 	}
@@ -125,8 +128,23 @@ class indice extends clsCadastro
 		$obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7,  "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}" );
 
 		$obj_matricula = new clsPmieducarMatricula( $this->ref_cod_matricula,null,null,null,$this->pessoa_logada,null,null,6 );
+		$obj_matricula->data_cancel = Portabilis_Date_Utils::brToPgSQL($this->data_cancel);
 
 		$det_matricula = $obj_matricula->detalhe();
+
+		if(is_null($det_matricula['data_matricula'])){
+
+			if(substr($det_matricula['data_cadastro'], 0, 10) > $obj_matricula->data_cancel){
+
+				$this->mensagem = "Data de abandono não pode ser inferior a data da matrícula.<br>";
+				return false;								
+			} 
+		}else{
+			if(substr($det_matricula['data_matricula'], 0, 10) > $obj_matricula->data_cancel){
+				$this->mensagem = "Data de abandono não pode ser inferior a data da matrícula.<br>";
+				return false;
+			}
+		}		
 
 		if($obj_matricula->edita())
 		{
