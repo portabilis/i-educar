@@ -320,7 +320,7 @@ class indice extends clsCadastro
     }
 
     $this->campoHora('carga_horaria', 'Carga Horária', $hora_formatada, TRUE,
-      'Número de horas deve ser maior que horas alocadas');
+      'Número de horas deve ser maior que horas alocadas','',FALSE);
 
     // Dados do docente no Inep/Educacenso.
     if ($this->docente) {
