@@ -229,7 +229,7 @@ class EmprestimoApiController extends ApiCoreController
                                    null,
                                    null,
                                    null,
-                                   $exemplar['cod_exemplar'],
+                                   $exemplar['id'],
                                    1,
                                    $this->getRequest()->biblioteca_id,
                                    $this->getRequest()->instituicao_id,
@@ -364,7 +364,46 @@ class EmprestimoApiController extends ApiCoreController
     if (is_null($exemplar))
       $exemplar = $this->loadExemplar();
 
+    if ($exemplar['situacao']['flag'] == 'reservado')
+      $exemplar['situacao']['flag'] = $this->validateReservaOfExemplar($exemplar);    
+
     return $exemplar['situacao'];
+  }
+
+  // Verifica se há reservas para o exemplar
+  // Efetua retirada da reserva caso seja para o cliente em questão
+  protected function validateReservaOfExemplar($exemplar = null){
+    if (is_null($exemplar))
+      $exemplar = $this->loadExemplar();
+
+    $reservas = $this->loadReservasForExemplar($exemplar);
+    $cont = 0;
+    $clientePossuiReserva = false;
+    $codReserva = 0;
+    if (is_array($reservas) && count($reservas)){
+      foreach ($reservas as $registro) {
+        $cont;
+        if ($registro['cliente_id'] == $this->getRequest()->cliente_id){
+          $clientePossuiReserva = true;
+          $codReserva = $registro['id'];
+          break;
+        }
+      }
+    }
+    if ($clientePossuiReserva){
+      if ($cont==1){
+        $reservas = new clsPmieducarReservas($codReserva);
+        $reservas->data_retirada = date('Y-m-d H:i:s');
+        $reservas->edita();
+      }else{ 
+
+        $this->messenger->append("Outros clientes já haviam reservado o exemplar anteriormente.".$cont, 'success');
+      }
+    }else if($cont>0){
+      $this->messenger->append("Outros clientes já haviam reservado o exemplar.", 'success');
+    }
+    
+    return 'disponivel';
   }
 
 

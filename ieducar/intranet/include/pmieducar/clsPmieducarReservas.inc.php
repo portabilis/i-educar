@@ -390,7 +390,7 @@ class clsPmieducarReservas
 	 *
 	 * @return array
 	 */
-	function lista( $int_cod_reserva = null, $int_ref_usuario_libera = null, $int_ref_usuario_cad = null, $int_ref_cod_cliente = null, $date_data_reserva_ini = null, $date_data_reserva_fim = null, $date_data_prevista_disponivel_ini = null, $date_data_prevista_disponivel_fim = null, $date_data_retirada_ini = null, $date_data_retirada_fim = null, $int_ref_cod_exemplar = null, $int_ativo = null, $int_ref_cod_biblioteca = null, $int_ref_cod_instituicao = null, $int_ref_cod_escola = null, $data_retirada_null = false )
+	function lista( $int_cod_reserva = null, $int_ref_usuario_libera = null, $int_ref_usuario_cad = null, $int_ref_cod_cliente = null, $date_data_reserva_ini = null, $date_data_reserva_fim = null, $date_data_prevista_disponivel_ini = null, $date_data_prevista_disponivel_fim = null, $date_data_retirada_ini = null, $date_data_retirada_fim = null, $int_ref_cod_exemplar = null, $int_ativo = null, $int_ref_cod_biblioteca = null, $int_ref_cod_instituicao = null, $int_ref_cod_escola = null, $data_retirada_null = null )
 	{
 		$sql = "SELECT {$this->_campos_lista}, a.ref_cod_biblioteca, b.ref_cod_instituicao, b.ref_cod_escola FROM {$this->_tabela} r, {$this->_schema}exemplar e, {$this->_schema}acervo a, {$this->_schema}biblioteca b";
 
@@ -478,11 +478,16 @@ class clsPmieducarReservas
 			$whereAnd = " AND ";
 		}
 
-		if($data_retirada_null)
-		{
-			$filtros .= "{$whereAnd} r.data_retirada is null";
-			$whereAnd = " AND ";
-		}
+		if(!is_null($data_retirada_null)){
+			if($data_retirada_null)
+			{
+				$filtros .= "{$whereAnd} r.data_retirada is null";
+				$whereAnd = " AND ";
+			}else{
+				$filtros .= "{$whereAnd} r.data_retirada is not null";
+				$whereAnd = " AND ";
+			}
+ 		}
 
 		$db = new clsBanco();
 		$countCampos = count( explode( ",", $this->_campos_lista ) );
