@@ -1055,7 +1055,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
         break;
 
       case 'string':
-        $return = (string)$cmpVal;
+        $return = (string)$val;
         break;
     }
     return $return;
