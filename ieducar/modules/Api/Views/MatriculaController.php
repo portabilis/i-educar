@@ -33,6 +33,7 @@ require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
 require_once 'App/Model/MatriculaSituacao.php';
+require_once 'intranet/include/clsBanco.inc.php';
 
 class MatriculaController extends ApiCoreController
 {
@@ -192,6 +193,13 @@ class MatriculaController extends ApiCoreController
     }
   }
 
+  protected function getFrequencia() {
+    $cod_matricula = $this->getRequest()->id;
+    $objBanco = new clsBanco();
+    $frequencia = $objBanco->unicoCampo(" SELECT modules.frequencia_da_matricula({$cod_matricula}); ");
+    return array('frequencia' => $frequencia);
+  }   
+
   protected function deleteAbandono() {
     if ($this->canDeleteAbandono()) {
       $matriculaId       = $this->getRequest()->id;
@@ -213,6 +221,9 @@ class MatriculaController extends ApiCoreController
 
     elseif ($this->isRequestFor('get', 'matricula-search'))
       $this->appendResponse($this->search());
+
+    elseif ($this->isRequestFor('get', 'frequencia'))
+      $this->appendResponse($this->getFrequencia());
 
     elseif ($this->isRequestFor('delete', 'abandono'))
       $this->appendResponse($this->deleteAbandono());
