@@ -536,7 +536,7 @@ class DiarioApiController extends ApiCoreController
 
     if ($this->canGetMatriculas()) {
       $alunos = new clsPmieducarMatriculaTurma();
-      $alunos->setOrderby("translate(pessoa.nome,'".Portabilis_String_Utils::toLatin1(åáàãâäéèêëíìîïóòõôöúùüûçÿýñÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ)."', '".Portabilis_String_Utils::toLatin1(aaaaaaeeeeiiiiooooouuuucyynAAAAAAEEEEIIIIOOOOOUUUUCYN)."')");
+      $alunos->setOrderby("sequencial_fechamento , translate(pessoa.nome,'".Portabilis_String_Utils::toLatin1(åáàãâäéèêëíìîïóòõôöúùüûçÿýñÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ)."', '".Portabilis_String_Utils::toLatin1(aaaaaaeeeeiiiiooooouuuucyynAAAAAAEEEEIIIIOOOOOUUUUCYN)."')");
 
       $alunos = $alunos->lista(
         $this->getRequest()->matricula_id,

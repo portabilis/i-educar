@@ -599,7 +599,7 @@ class clsPmieducarMatricula
                     ) as data_nasc";
     }
 
-    $sql = "SELECT {$this->_campos_lista}, c.ref_cod_instituicao, p.nome, a.cod_aluno, a.ref_idpes, c.cod_curso, m.observacao FROM {$this->_tabela} m, {$this->_schema}curso c, {$this->_schema}aluno a, cadastro.pessoa p ";
+    $sql = "SELECT {$this->_campos_lista}, c.ref_cod_instituicao, p.nome, a.cod_aluno, a.ref_idpes, c.cod_curso, m.observacao, (SELECT sequencial_fechamento FROM pmieducar.matricula_turma WHERE ref_cod_matricula = cod_matricula AND ativo = 1 LIMIT 1) as sequencial_fechamento FROM {$this->_tabela} m, {$this->_schema}curso c, {$this->_schema}aluno a, cadastro.pessoa p ";
 
     $whereAnd = " AND ";
     $filtros = " WHERE m.ref_cod_aluno = a.cod_aluno AND a.ativo = 1 AND m.ref_cod_curso = c.cod_curso AND p.idpes = a.ref_idpes ";
