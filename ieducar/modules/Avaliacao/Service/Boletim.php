@@ -2269,6 +2269,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    */
   public function preverNotaRecuperacao($id)
   {
+    /*
     if (is_null($this->getRegra()->formulaRecuperacao) || !isset($this->_notasComponentes[$id])) {
       return NULL;
     }
@@ -2293,7 +2294,36 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       $data['formulaValues']['E' . $nota->etapa] = $nota->nota;
     }
 
-    return $this->getRegra()->tabelaArredondamento->predictValue($formula, $data);
+    return $this->getRegra()->tabelaArredondamento->predictValue($formula, $data); */
+
+    if (is_null($this->getRegra()->formulaRecuperacao) || !isset($this->_notasComponentes[$id])) {
+      return NULL;
+    }
+
+    $notas      = $this->_notasComponentes[$id];
+
+    unset($notas[$this->getOption('etapas')]);
+
+    $somaEtapas = array_sum(CoreExt_Entity::entityFilterAttr($notas, 'etapa', 'nota'));
+
+    $formula    = $this->getRegra()->formulaRecuperacao;
+
+    $data = array(
+        'Se' => $somaEtapas,
+        'Et' => $this->getOption('etapas'),
+        'Rc' => NULL );
+
+    foreach ($notas as $nota) {
+      $data['E' . $nota->etapa] = $nota->nota;
+    }
+
+    for($i = 0.1 ; $i<=10; $i+=0.1){
+      $data['Rc']=$i;
+      if ($this->getRegra()->formulaRecuperacao->execFormulaMedia($data) >= $this->getRegra()->mediaRecuperacao)
+        return $i;
+    }
+
+    return null;
   }
 
   /**
