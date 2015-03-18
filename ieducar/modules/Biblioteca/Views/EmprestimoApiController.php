@@ -444,15 +444,18 @@ class EmprestimoApiController extends ApiCoreController
         $reservas = new clsPmieducarReservas($codReserva);
         $reservas->data_retirada = date('Y-m-d H:i:s');
         $reservas->edita();
+        $return = 'disponivel';
       }else{ 
 
         $this->messenger->append("Outros clientes já haviam reservado o exemplar anteriormente.".$cont, 'success');
+        $return = 'reservado';
       }
     }else if($cont>0){
       $this->messenger->append("Outros clientes já haviam reservado o exemplar.", 'success');
+      $return = 'reservado';
     }
     
-    return 'disponivel';
+    return $return;
   }
 
 
