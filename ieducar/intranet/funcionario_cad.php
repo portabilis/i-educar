@@ -304,9 +304,15 @@ class indice extends clsCadastro
 		}
 
 		$this->campoTexto("ramal", "Ramal", $this->ramal, 11, 30);
-		$this->campoCheck("super", "Super usu&aacute;rio", $this->super);
-		$this->campoCheck("proibido", "Banido", $this->proibido);
-		$this->campoCheck("matricula_permanente", "Matr&iacute;cula permanente", $this->matricula_permanente);
+
+		$opcoes = array(null => "Não", 'S' => "Sim");
+		$this->campoLista("super", "Super usu&aacute;rio", $opcoes, $this->super, '',false,'','',false,false);
+
+		$opcoes = array(null => "Não", 1 => "Sim");
+		$this->campoLista("proibido", "Banido", $opcoes, $this->proibido, '',false,'','',false,false);
+
+		$opcoes = array(null => "Não", 1 => "Sim");
+		$this->campoLista("matricula_permanente", "Matr&iacute;cula permanente", $opcoes, $this->matricula_permanente, '',false,'','',false,false);				
 
 		//-----------------------------------------------------------------------------------------------
 
