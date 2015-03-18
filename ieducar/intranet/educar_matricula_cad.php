@@ -608,7 +608,7 @@ class indice extends clsCadastro
     // Coloca as matrículas anteriores em andamento
     $obj_transferencia_antiga  = new clsPmieducarTransferenciaSolicitacao();
     $lista_transferencia = $obj_transferencia_antiga->lista(null,null,null,null,null,$this->cod_matricula);
-    if (is_array($lista_transferencia))){
+    if (is_array($lista_transferencia)){
       foreach ($lista_transferencia as $transf) {
  
         $obj_mat = new clsPmieducarMatricula($transf['ref_cod_matricula_saida']);
@@ -710,6 +710,7 @@ class indice extends clsCadastro
                                                    NULL,
                                                    NULL, 
                                                    1);
+      $enturmacao->data_enturmacao = $this->data_matricula;
       return $enturmacao->cadastra();
     }
     return false;

@@ -78,6 +78,7 @@ class indice extends clsDetalhe
   var $ref_cod_escola;
   var $ref_cod_turma_origem;
   var $ref_cod_curso;
+  var $data_enturmacao;
 
   var $sequencial;
 
@@ -239,6 +240,9 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('<b>Enturmação</b>', $selectEnturmacoes));
     }
 
+    if(!$this->possuiEnturmacaoTurmaDestino)
+      $this->addDetalhe(array('Data da enturmação', '<input onkeypress="formataData(this,event);" value="'.date('d/m/Y').'" class="geral" type="text" name="data_enturmacao" id="data_enturmacao" size="9" maxlength="10"/>'));    
+
     $this->addDetalhe(array(
       '-',
       sprintf('
@@ -248,6 +252,7 @@ class indice extends clsDetalhe
           <input type="hidden" name="ref_cod_escola" value="">
           <input type="hidden" name="ref_cod_turma_origem" value="%d">
           <input type="hidden" name="ref_cod_turma_destino" value="">
+          <input type="hidden" name="data_enturmacao" value="">
           <input type="hidden" name="sequencial" value="%d">
         </form>
       ', $this->ref_cod_turma_origem, $this->sequencial)
@@ -289,6 +294,7 @@ class indice extends clsDetalhe
 
           document.formcadastro.ref_cod_matricula.value = ref_cod_matricula;
           document.formcadastro.ref_cod_turma_destino.value = ref_cod_turma_destino;
+          document.formcadastro.data_enturmacao.value = document.getElementById("data_enturmacao").value;
           document.formcadastro.submit();
         }
 

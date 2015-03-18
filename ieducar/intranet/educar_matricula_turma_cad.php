@@ -33,6 +33,7 @@ require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'include/pmieducar/clsPmieducarMatricula.inc.php';
+require_once 'lib/Portabilis/Date/Utils.php';
 
 /**
  * clsIndexBase class.
@@ -78,6 +79,7 @@ class indice extends clsCadastro
   var $ref_cod_turma_origem;
   var $ref_cod_turma_destino;
   var $ref_cod_curso;
+  var $data_enturmacao;
 
   var $sequencial;
 
@@ -96,6 +98,8 @@ class indice extends clsCadastro
     foreach ($_POST as $key =>$value) {
       $this->$key = $value;
     }
+
+    $this->data_enturmacao = Portabilis_Date_Utils::brToPgSQL($this->data_enturmacao);
 
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7, 'educar_matricula_lst.php');
@@ -144,6 +148,7 @@ class indice extends clsCadastro
                                                    NULL,
                                                    NULL, 
                                                    1);
+      $enturmacao->data_enturmacao = $this->data_enturmacao;
       return $enturmacao->cadastra();
     }
     return false;
