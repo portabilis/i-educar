@@ -149,11 +149,6 @@ class indice extends clsCadastro
 		$this->campoCheck( "requisita_senha", "Requisita Senha", $this->requisita_senha );
 		$this->campoNumero( "dias_espera", "Dias Espera", $this->dias_espera, 2, 2, true );
 
-		if ($this->tombo_automatico)
-			$this->campoBoolLista("tombo_automatico", "Biblioteca possui tombo automático", $this->tombo_automatico);
-		else
-			$this->campoBoolLista("tombo_automatico", "Biblioteca possui tombo automático", "t");
-
 	//-----------------------INCLUI DIA SEMANA------------------------//
 		$this->campoQuebra();
 

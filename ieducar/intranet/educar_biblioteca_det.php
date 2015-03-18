@@ -128,10 +128,6 @@ class indice extends clsDetalhe
 		{
 			$this->addDetalhe( array( "Biblioteca", "{$registro["nm_biblioteca"]}") );
 		}
-		if ($registro["tombo_automatico"])
-		{
-			$this->addDetalhe(array("Tombo Automático", dbBool($registro["tombo_automatico"]) ? "Sim" : "Não"));
-		}
 		$obj = new clsPmieducarBibliotecaUsuario();
 		$lst = $obj->lista( $this->cod_biblioteca );
 		if ($lst)
