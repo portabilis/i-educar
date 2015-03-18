@@ -583,7 +583,8 @@ abstract class CoreExt_DataMapper
   {
     $this->_getDbAdapter()->Consulta($this->_getFindStatment($pkey));
     if (FALSE === $this->_getDbAdapter()->ProximoRegistro()) {
-      throw new Exception('Nenhum registro encontrado com a(s) chaves(s) informada(s).');
+      $table = $this->_tableSchema . '.' . $this->_tableName;
+      throw new Exception("Nenhum registro encontrado na tabela '$table' com a(s) chaves(s) informada(s): '$pkey'.");
     }
     return $this->_createEntityObject($this->_getDbAdapter()->Tupla());
   }
