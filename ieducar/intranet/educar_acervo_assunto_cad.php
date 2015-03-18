@@ -55,7 +55,6 @@ class indice extends clsCadastro
 	var $data_cadastro;
 	var $data_exclusao;
 	var $ativo;
-	var $ref_cod_biblioteca;
 
 	function Inicializar()
 	{
@@ -98,8 +97,6 @@ class indice extends clsCadastro
 		// primary keys
 		$this->campoOculto( "cod_acervo_assunto", $this->cod_acervo_assunto );
 
-    //foreign keys
-    $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'biblioteca'));
 
 		// text
 		$this->campoTexto( "nm_assunto", "Assunto", $this->nm_assunto, 30, 255, true );
@@ -116,7 +113,7 @@ class indice extends clsCadastro
 		$obj_permissoes->permissao_cadastra( 592, $this->pessoa_logada, 11,  "educar_acervo_assunto_lst.php" );
 
 
-		$obj = new clsPmieducarAcervoAssunto( null, null, $this->pessoa_logada, $this->nm_assunto, $this->descricao, null, null, 1, $this->ref_cod_biblioteca );
+		$obj = new clsPmieducarAcervoAssunto( null, null, $this->pessoa_logada, $this->nm_assunto, $this->descricao, null, null, 1);
 		$cadastrou = $obj->cadastra();
 		if( $cadastrou )
 		{
@@ -141,7 +138,7 @@ class indice extends clsCadastro
 		$obj_permissoes->permissao_cadastra( 592, $this->pessoa_logada, 11,  "educar_acervo_assunto_lst.php" );
 
 
-		$obj = new clsPmieducarAcervoAssunto($this->cod_acervo_assunto, $this->pessoa_logada, null, $this->nm_assunto, $this->descricao, null, null, 1, $this->ref_cod_biblioteca);
+		$obj = new clsPmieducarAcervoAssunto($this->cod_acervo_assunto, $this->pessoa_logada, null, $this->nm_assunto, $this->descricao, null, null, 1);
 		$editou = $obj->edita();
 		if( $editou )
 		{

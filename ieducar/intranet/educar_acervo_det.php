@@ -316,6 +316,16 @@ class indice extends clsDetalhe
 			$this->addDetalhe( array( "ISBN", "{$registro["isbn"]}") );
 		}
 
+		$obj = new clsPmieducarAcervoAssunto();
+		$obj = $obj->listaAssuntosPorObra($this->cod_acervo);
+		if (count($obj)){
+			foreach ($obj as $reg) {
+				$assuntos.= '<span style="background-color: #A1B3BD; padding: 2px;"><b>'.$reg['nome'].'</b></span>&nbsp; ';
+			}
+			if(!empty($assuntos))
+				$this->addDetalhe( array( "Assuntos", "{$assuntos}") );
+		}		
+
 		$obj_permissoes = new clsPermissoes();
 		if( $obj_permissoes->permissao_cadastra( 598, $this->pessoa_logada, 11 ) )
 		{

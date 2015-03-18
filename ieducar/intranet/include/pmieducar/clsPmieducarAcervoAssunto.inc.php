@@ -212,7 +212,7 @@ class clsPmieducarAcervoAssunto
 	 */
 	function cadastra()
 	{
-		if( is_numeric( $this->ref_usuario_cad ) && is_string( $this->nm_assunto ) && is_numeric($this->ref_cod_biblioteca) )
+		if( is_numeric( $this->ref_usuario_cad ) && is_string( $this->nm_assunto ) )
 		{
 			$db = new clsBanco();
 			
@@ -451,6 +451,51 @@ class clsPmieducarAcervoAssunto
 		}
 		return false;
 	}
+
+
+	/**
+	 * Deleta todos assuntos de uma determinada obra.
+	 *
+	 * @return boolean
+	 */
+	function deletaAssuntosDaObra($acervoId){
+		$db = new clsBanco();
+		$db->Consulta( "DELETE FROM pmieducar.acervo_acervo_assunto WHERE ref_cod_acervo = {$acervoId}" );
+		return true;
+	}
+
+	/**
+	 * Cadastra um determinado assunto para uma determinada obra.
+	 *
+	 * @return boolean
+	 */
+	function cadastraAssuntoParaObra($acervoId, $assuntoId){
+		$db = new clsBanco();
+		$db->Consulta( "INSERT INTO pmieducar.acervo_acervo_assunto (ref_cod_acervo, ref_cod_acervo_assunto) VALUES ({$acervoId},{$assuntoId})" );
+		return true;
+	}	
+
+	/**
+	 * Cadastra um determinado assunto para uma determinada obra.
+	 *
+	 * @return array
+	 */
+	function listaAssuntosPorObra($acervoId){
+		$db = new clsBanco();
+		$db->Consulta( "SELECT aas.*, (SELECT nm_assunto FROM pmieducar.acervo_assunto WHERE cod_acervo_assunto = aas.ref_cod_acervo_assunto) as nome FROM pmieducar.acervo_acervo_assunto aas WHERE ref_cod_acervo = {$acervoId} " );
+		
+		while ( $db->ProximoRegistro() ) 
+		{
+			$resultado[] = $db->Tupla();
+		}		
+
+		if( count( $resultado ) )
+		{
+			return $resultado;
+		}
+
+		return false;
+	}	
 	
 	/**
 	 * Retorna um array com os dados de um registro

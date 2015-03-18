@@ -38,11 +38,13 @@ var multipleSearch = {
     $input.attr('multiple', '');
     $input.attr('data-placeholder', options.get('placeholder'));
 
+    var objectName = options.get('objectName');
+
     // jquery scope
     $input.chosen(options.get('chosenOptions'), multipleSearch.handleSearch);
 
     // fixup to API receive all ids
-    $j("#deficiencias").attr('name', $j("#deficiencias").attr('name') + '[]');
+    $j("#"+objectName).attr('name', $j("#"+objectName).attr('name') + '[]');
   }
 };
 

@@ -898,6 +898,12 @@ class clsPmieducarAcervo
 			$whereAnd = " AND ";
 		}
 
+		if( is_numeric( $this->ref_cod_acervo_assunto ) )
+		{		
+			$filtros .= "{$whereAnd} (SELECT 1 FROM pmieducar.acervo_acervo_assunto WHERE ref_cod_acervo = cod_acervo AND ref_cod_acervo_assunto = {$this->ref_cod_acervo_assunto} ) IS NOT NULL";
+			$whereAnd = " AND ";
+		}			
+
 		if(is_string($str_titulo))
 		{
 			$filtros .= "{$whereAnd} titulo LIKE '%{$str_titulo}%'";

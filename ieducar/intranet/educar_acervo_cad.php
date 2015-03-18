@@ -388,6 +388,11 @@ class indice extends clsCadastro
 		$this->campoTexto( "titulo", "T&iacute;tulo", $this->titulo, 40, 255, true );
 		$this->campoTexto( "sub_titulo", "Subt&iacute;tulo", $this->sub_titulo, 40, 255, false );
 		$this->campoTexto( "estante", "Estante", $this->estante, 20, 15, false );
+ 		$helperOptions = array('objectName' => 'assuntos');
+  	$options       = array('label' => 'Assuntos', 'size' => 50, 'required' => false,
+                           'options' => array('value' => null));
+
+ 		$this->inputsHelper()->multipleSearchAssuntos('', $options, $helperOptions);		
 		$this->campoTexto( "cdd", "CDD", $this->cdd, 20, 15, false );
 		$this->campoTexto( "cdu", "CDU", $this->cdu, 20, 15, false );
 		$this->campoTexto( "cutter", "Cutter", $this->cutter, 20, 15, false );
@@ -413,6 +418,7 @@ class indice extends clsCadastro
 			$cadastrou = $obj->cadastra();
 			if( $cadastrou )
 			{
+				$this->gravaAssuntos($cadastrou);
 			//-----------------------CADASTRA AUTOR------------------------//
 				foreach ( $this->acervo_autor AS $autor )
 				{
@@ -459,6 +465,8 @@ class indice extends clsCadastro
 			$editou = $obj->edita();
 			if( $editou )
 			{
+
+			$this->gravaAssuntos($this->cod_acervo);
 			//-----------------------EDITA AUTOR------------------------//
 
 				$obj  = new clsPmieducarAcervoAcervoAutor( null, $this->cod_acervo );
@@ -519,6 +527,17 @@ class indice extends clsCadastro
 		echo "<!--\nErro ao excluir clsPmieducarAcervo\nvalores obrigatorios\nif( is_numeric( $this->cod_acervo ) && is_numeric( $this->pessoa_logada ) )\n-->";
 		return false;
 	}
+
+	function gravaAssuntos($cod_acervo){
+		$objAssunto = new clsPmieducarAcervoAssunto();
+		$objAssunto->deletaAssuntosDaObra($cod_acervo);
+		foreach ($this->getRequest()->assuntos as $assuntoId) {
+			if (! empty($assuntoId)) {
+				$objAssunto = new clsPmieducarAcervoAssunto();
+				$objAssunto->cadastraAssuntoParaObra($cod_acervo, $assuntoId);
+			}
+		}
+	}	
 }
 
 // cria uma extensao da classe base
@@ -741,5 +760,51 @@ function fixupPrincipalCheckboxes() {
 }
 
 fixupPrincipalCheckboxes();
+function fixupAssuntosSize(){
+
+	$j('#assuntos_chzn ul').css('width', '307px');	
+	
+}
+
+fixupAssuntosSize();
+
+  $assuntos = $j('#assuntos');
+
+  $assuntos.trigger('liszt:updated');
+  var testezin;
+
+var handleGetAssuntos = function(dataResponse) {
+  testezin = dataResponse['assuntos'];
+  
+  $j.each(dataResponse['assuntos'], function(id, value) {
+  	
+    $assuntos.children("[value=" + value + "]").attr('selected', '');
+  });
+
+  $assuntos.trigger('liszt:updated');
+}
+
+var getAssuntos = function() {
+	    
+  var $cod_acervo = $j('#cod_acervo').val();
+  
+  if ($j('#cod_acervo').val()!='') {    
+
+    var additionalVars = {
+      id : $j('#cod_acervo').val(),
+    };
+
+    var options = {
+      url      : getResourceUrlBuilder.buildUrl('/module/Api/assunto', 'assunto', additionalVars),
+      dataType : 'json',
+      data     : {},
+      success  : handleGetAssuntos,
+    };
+
+    getResource(options);
+  }
+}
+
+getAssuntos();
 
 </script>
