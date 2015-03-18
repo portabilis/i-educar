@@ -232,7 +232,7 @@ class indice extends clsCadastro
 
       $this->ativo = 1;
 
-      $sql = "SELECT COUNT(0) FROM pmieducar.cliente_tipo_cliente WHERE ref_cod_cliente_tipo = {$this->cod_cliente}
+      $sql = "SELECT COUNT(0) FROM pmieducar.cliente_tipo_cliente WHERE ref_cod_cliente = {$this->cod_cliente}
         AND ref_cod_biblioteca = {$this->ref_cod_biblioteca} AND ativo = 1";
 
       $db = new clsBanco();
@@ -254,7 +254,6 @@ class indice extends clsCadastro
 				}
       }
 			else {
-        $this->Editar();
         $this->mensagem = "O cliente já está cadastrado!<br>";
       }
     }
