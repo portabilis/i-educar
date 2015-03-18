@@ -51,6 +51,7 @@ class clsPmieducarMatriculaTurma
   var $ativo;
   var $ref_cod_turma_transf;
   var $sequencial;
+  var $sequencial_fechamento;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -294,6 +295,14 @@ class clsPmieducarMatriculaTurma
         $campos .= "{$gruda}data_enturmacao";
         $valores .= "{$gruda}'{$this->data_enturmacao}'";
         $gruda = ", ";
+      }
+
+      $this->sequencial_fechamento = $this->getSequencialFechamento($this->ref_cod_matricula, $this->ref_cod_turma, $this->data_enturmacao);
+
+      if(is_numeric($this->sequencial_fechamento)){
+        $campos .= "{$gruda}sequencial_fechamento";
+        $valores .= "{$gruda}'{$this->sequencial_fechamento}'";
+        $gruda = ", ";        
       }      
 
       $db->Consulta("INSERT INTO {$this->_tabela} ($campos) VALUES ($valores)");
@@ -1269,4 +1278,15 @@ class clsPmieducarMatriculaTurma
 
     return FALSE;
   }
+  function getSequencialFechamento($matriculaId, $turmaId, $dataEnturmacao){
+    $db = new clsBanco();
+    $possui_fechamento = $db->CampoUnico("SELECT data_fechamento FROM pmieducar.turma WHERE cod_turma = {$turmaId}");
+    if (is_string($possui_fechamento)){
+      if (strtotime($possui_fechamento) < strtotime($dataEnturmacao))
+        return $db->CampoUnico("SELECT MAX(sequencial_fechamento)+1 FROM {$this->_tabela} where ref_cod_turma = {$turmaId}");
+      else
+        return 0;
+    }else
+      return 0;
+  }  
 }

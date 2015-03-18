@@ -33,6 +33,7 @@ require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'Portabilis/String/Utils.php';
+require_once 'lib/Portabilis/Date/Utils.php';
 
 /**
  * clsIndexBase class.
@@ -85,6 +86,7 @@ class indice extends clsCadastro
   var $hora_final;
   var $hora_inicio_intervalo;
   var $hora_fim_intervalo;
+  var $data_fechamento;
 
   var $ref_cod_instituicao;
   var $ref_cod_curso;
@@ -318,6 +320,8 @@ class indice extends clsCadastro
     $this->campoTexto('sgl_turma', 'Sigla', $this->sgl_turma, 15, 15, FALSE);
 
     $this->campoNumero('max_aluno', 'Máximo de Alunos', $this->max_aluno, 3, 3, TRUE);
+
+    $this->inputsHelper()->date('data_fechamento', array('required' => false,'label' => 'Data de fechamento' ,'value' => Portabilis_Date_Utils::pgSQLToBr($this->data_fechamento)));
 
     $ativo = isset($this->cod_turma) ? dbBool($this->visivel) : true;
     $this->campoCheck('visivel', 'Ativo', $ativo);
@@ -672,6 +676,8 @@ class indice extends clsCadastro
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     @session_write_close();
 
+    $this->data_fechamento = Portabilis_Date_Utils::brToPgSQL($this->data_fechamento);
+
     if(! $this->canCreateTurma($this->ref_cod_escola, $this->ref_ref_cod_serie, $this->turma_turno_id))
       return false;
 
@@ -705,7 +711,7 @@ class indice extends clsCadastro
           $this->hora_inicio_intervalo, $this->hora_fim_intervalo, $this->ref_cod_regente,
           $this->ref_cod_instituicao_regente, $this->ref_cod_instituicao,
           $this->ref_cod_curso, $this->ref_ref_cod_serie_mult, $this->ref_cod_escola,
-          $this->visivel, $this->turma_turno_id, $this->tipo_boletim, $this->ano);
+          $this->visivel, $this->turma_turno_id, $this->tipo_boletim, $this->ano, $this->data_fechamento);
 
         $cadastrou = $obj->cadastra();
 
@@ -772,7 +778,7 @@ class indice extends clsCadastro
         $this->ref_cod_regente, $this->ref_cod_instituicao_regente,
         $this->ref_cod_instituicao, $this->ref_cod_curso,
         $this->ref_ref_cod_serie_mult, $this->ref_cod_escola, $this->visivel,
-        $this->turma_turno_id, $this->tipo_boletim, $this->ano);
+        $this->turma_turno_id, $this->tipo_boletim, $this->ano, $this->data_fechamento);
 
       $cadastrou = $obj->cadastra();
 
@@ -800,6 +806,8 @@ class indice extends clsCadastro
     @session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     @session_write_close();
+
+    $this->data_fechamento = Portabilis_Date_Utils::brToPgSQL($this->data_fechamento);
 
     if(is_numeric($this->ano_hidden))
       $this->ano = $this->ano_hidden;
@@ -837,7 +845,7 @@ class indice extends clsCadastro
           $this->visivel,
           $this->turma_turno_id,
           $this->tipo_boletim,
-          $this->ano);
+          $this->ano, $this->data_fechamento);
 
         $editou = $obj->edita();
 
@@ -908,7 +916,7 @@ class indice extends clsCadastro
         $this->hora_inicio_intervalo, $this->hora_fim_intervalo, $this->ref_cod_regente,
         $this->ref_cod_instituicao_regente, $this->ref_cod_instituicao,
         $this->ref_cod_curso, $this->ref_ref_cod_serie_mult, $this->ref_cod_escola,
-        $this->visivel, $this->turma_turno_id, $this->tipo_boletim, $this->ano);
+        $this->visivel, $this->turma_turno_id, $this->tipo_boletim, $this->ano, $this->data_fechamento);
 
       $editou = $obj->edita();
     }
