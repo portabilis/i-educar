@@ -81,6 +81,9 @@ class indice extends clsCadastro
 				foreach( $registro AS $campo => $val )	// passa todos os valores obtidos no registro para atributos do objeto
 					$this->$campo = $val;
 
+			$this->nm_autor = stripslashes($this->nm_autor);
+			$this->nm_autor = htmlspecialchars($this->nm_autor);
+
 			$obj_permissoes = new clsPermissoes();
 			if( $obj_permissoes->permissao_excluir( 594, $this->pessoa_logada, 11 ) )
 			{
@@ -137,6 +140,8 @@ class indice extends clsCadastro
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
 
+		$this->nm_autor = addslashes($this->nm_autor);
+
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra( 594, $this->pessoa_logada, 11,  "educar_acervo_autor_lst.php" );
 
@@ -161,6 +166,8 @@ class indice extends clsCadastro
 		@session_start();
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
+
+		$this->nm_autor = addslashes($this->nm_autor);
 
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra( 594, $this->pessoa_logada, 11,  "educar_acervo_autor_lst.php" );
