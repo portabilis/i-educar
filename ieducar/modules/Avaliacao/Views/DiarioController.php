@@ -51,7 +51,7 @@ require_once 'Portabilis/Business/Professor.php';
 class DiarioController extends Portabilis_Controller_Page_ListController
 {
   protected $_titulo     = 'Lan&ccedil;amento por turma';
-  protected $_processoAp = 644;
+  protected $_processoAp = 642;
 
   public function Gerar() {
     $this->inputsHelper()->input('ano');
