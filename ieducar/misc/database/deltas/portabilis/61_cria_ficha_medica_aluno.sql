@@ -55,7 +55,7 @@
   responsavel_parentesco_telefone character varying(20),
   responsavel_parentesco_celular character varying(20),
   observacao character varying(255),
-  CONSTRAINT ficha_medica_cod_aluno_pkey PRIMARY KEY (ref_cod_aluno)
+  CONSTRAINT ficha_medica_cod_aluno_pkey PRIMARY KEY (ref_cod_aluno),
   CONSTRAINT ficha_medica_aluno_fkey FOREIGN KEY (ref_cod_aluno)
   REFERENCES pmieducar.aluno(cod_aluno) MATCH SIMPLE
   ON UPDATE RESTRICT ON DELETE RESTRICT
