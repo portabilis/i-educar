@@ -88,13 +88,13 @@ class clsEnderecoExterno
       $this->idtlog = $idtlog;
     }
 
-    $this->logradouro  = $logradouro;
+    $this->logradouro  = pg_escape_string($logradouro);
     $this->numero      = $numero;
     $this->letra       = $letra;
-    $this->complemento = $complemento;
-    $this->bairro      = $bairro;
+    $this->complemento = pg_escape_string($complemento);
+    $this->bairro      = pg_escape_string($bairro);
     $this->cep         = $cep;
-    $this->cidade      = $cidade;
+    $this->cidade      = pg_escape_string($cidade);
 
     $objSiglaUf = new clsUf($sigla_uf);
     if ($objPessoa->detalhe()) {
