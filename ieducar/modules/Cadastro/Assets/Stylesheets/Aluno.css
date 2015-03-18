@@ -16,3 +16,150 @@
 #deficiencias_chzn ul {
   width: 307px;
 }
+
+.pessoa-links {
+  display: block;
+  padding: 5px;
+  margin: 2px;
+}
+
+.pessoa-links a {
+  /*
+    obs: no firefox, ao mostrar o elemento (.show, jquery), é setado display como block,
+         para reparar isto, após chamar .show(), chamar .css('display', 'inline');
+  */
+
+  margin-right: 5px;
+}
+
+#deficiencias_chzn ul {
+  width: 307px;
+}
+
+#tabControl ul{
+  display: inline;
+  list-style-type: none;
+}
+
+#tabControl ul li{
+  padding-left: 2px;
+  float: left;
+
+}
+
+.alunoTab{
+  border: 1px solid rgb(73, 92, 103);
+  border-bottom-color: #FFF;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+  -moz-border-radius-topleft: 5px;
+  -moz-border-radius-topright: 5px;
+  -moz-border-radius-bottomleft: 0px;
+  -moz-border-radius-bottomright: 0px;
+  -webkit-border-top-left-radius: 5px;
+  -webkit-border-top-right-radius: 5px;
+  -webkit-border-bottom-left-radius: 0px;
+  -webkit-border-bottom-right-radius: 0px;
+  position:relative;
+  top: 2px;
+  width: 100px;
+  height: 25px;
+  background-color: white;
+  text-align: center;
+  cursor: pointer;
+}
+
+.alunoTab2{
+  border: 1px solid rgb(73, 92, 103);
+  border-bottom-color: #FFF;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+  -moz-border-radius-topleft: 5px;
+  -moz-border-radius-topright: 5px;
+  -moz-border-radius-bottomleft: 0px;
+  -moz-border-radius-bottomright: 0px;
+  -webkit-border-top-left-radius: 5px;
+  -webkit-border-top-right-radius: 5px;
+  -webkit-border-bottom-left-radius: 0px;
+  -webkit-border-bottom-right-radius: 0px;
+  position:relative;
+  top: 2px;
+  width: 100px;
+  height: 25px;
+  background-color: #e4e9ed;
+  text-align: center;
+  cursor: pointer;
+}
+
+.alunoTab-active{
+  border: 1px solid rgb(73, 92, 103);
+  border-bottom: 0px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+  -moz-border-radius-topleft: 5px;
+  -moz-border-radius-topright: 5px;
+  -moz-border-radius-bottomleft: 0px;
+  -moz-border-radius-bottomright: 0px;
+  -webkit-border-top-left-radius: 5px;
+  -webkit-border-top-right-radius: 5px;
+  -webkit-border-bottom-left-radius: 0px;
+  -webkit-border-bottom-right-radius: 0px;
+  position:relative;
+  top: 3px;
+  width: 100px;
+  height: 25px;
+  background-color: #e4e9ed;
+  text-align: center;
+  font-weight: bold;  
+}
+
+.alunoTab-active2{
+  border: 1px solid rgb(73, 92, 103);
+  border-bottom: 0px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+  -moz-border-radius-topleft: 5px;
+  -moz-border-radius-topright: 5px;
+  -moz-border-radius-bottomleft: 0px;
+  -moz-border-radius-bottomright: 0px;
+  -webkit-border-top-left-radius: 5px;
+  -webkit-border-top-right-radius: 5px;
+  -webkit-border-bottom-left-radius: 0px;
+  -webkit-border-bottom-right-radius: 0px;
+  position:relative;
+  top: 3px;
+  width: 100px;
+  height: 25px;
+  background-color: white;
+  text-align: center;
+  font-weight: bold;  
+}
+
+.tabText{
+  position: relative;
+  top: 6px;  
+}
+
+#tr_tit_dados_hospital, #tr_tit_dados_responsavel{
+  font-weight: bold;
+  font-size: 12px;
+}
+
+#tit_dados_hospital, #tit_dados_responsavel, #tr_label_calca, 
+#tr_label_calcado, #tr_label_saia, #tr_label_camiseta, 
+#tr_label_meia, #tr_label_bermuda, #tr_label_blusa_jaqueta{
+  font-weight: bold;
+  font-size: 10px;
+}
+.tit_uniforme{
+  font-weight: bold;
+  font-size: 10px;
+}
