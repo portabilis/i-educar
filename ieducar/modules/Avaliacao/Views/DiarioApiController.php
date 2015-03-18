@@ -1009,6 +1009,8 @@ class DiarioApiController extends ApiCoreController
       $itensRegra['quantidade_etapas'] = $this->serviceBoletim()->getOption('etapas');
     }
 
+    $itensRegra['nomenclatura_exame'] = ($GLOBALS['coreExt']['Config']->app->diario->nomenclatura_exame == 0 ? 'exame' : 'conselho');
+
     return $itensRegra;
   }
 

@@ -12,6 +12,8 @@ var DELETE_LABEL = '';
 
 var SEARCH_ORIENTATION = '';
 
+var nomenclatura_exame = '';
+
 // funcoes usados pelo modulo Frontend/Process.js
 var onClickSelectAllEvent = false;
 var onClickActionEvent    = false;
@@ -501,6 +503,8 @@ function setTableSearchDetails($tableSearchDetails, dataDetails) {
   $linha.appendTo($tableSearchDetails);
   $tableSearchDetails.show();
 
+  nomenclatura_exame = dataDetails.nomenclatura_exame;
+
   //dataDetails.opcoes_notas = safeSortArray(dataDetails.opcoes_notas);
   $tableSearchDetails.data('details', dataDetails);
 }
@@ -716,8 +720,8 @@ function updateComponenteCurricularHeaders($targetElement, $tagElement) {
     $tagElement.clone().addClass('center').html('Nota').appendTo($targetElement);
 
     if ($tableSearchDetails.data('details').quantidade_etapas == $j('#etapa').val()){
-      $tagElement.clone().addClass('center').html('Nota exame').appendTo($targetElement);
-      $tagElement.clone().addClass('center').html(safeUtf8Decode('Nota necessária no exame')).appendTo($targetElement);
+      $tagElement.clone().addClass('center').html('Nota '+nomenclatura_exame).appendTo($targetElement);
+      $tagElement.clone().addClass('center').html(safeUtf8Decode('Nota necessária no '+nomenclatura_exame)).appendTo($targetElement);
     }
   }
 
