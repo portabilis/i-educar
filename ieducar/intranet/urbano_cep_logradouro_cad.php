@@ -525,4 +525,8 @@ function getBairro_(xml_bairro, DOM_array) {
     }
   }
 }
+
+$j(document).ready( function(){
+  $j('#tab_cep').find('img[alt="excluir"]').hide();
+});
 </script>
