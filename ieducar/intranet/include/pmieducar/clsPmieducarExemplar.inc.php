@@ -333,6 +333,9 @@ class clsPmieducarExemplar
 	 */
 	function cadastra()
 	{
+		if(!is_numeric( $this->preco ))
+			$this->preco = 0.00;		
+		
 		if( is_numeric( $this->ref_cod_fonte ) && is_numeric( $this->ref_cod_acervo ) && is_numeric( $this->ref_cod_situacao ) && is_numeric( $this->ref_usuario_cad ) && is_numeric( $this->permite_emprestimo ) && is_numeric( $this->preco ) )
 		{
 			$db = new clsBanco();
