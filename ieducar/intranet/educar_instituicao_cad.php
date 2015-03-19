@@ -195,6 +195,15 @@ class indice extends clsCadastro
   		$this->campoData('data_base_remanejamento', 'Data máxima para troca de sala', Portabilis_Date_Utils::pgSQLToBr($this->data_base_remanejamento), null, null, false);
   	}
 
+	///$hiddenInputOptions = array('options' => array('value' => $this->coordenador_transporte));
+	//$helperOptions      = array('objectName' => 'gestor', 'hiddenInputOptions' => $hiddenInputOptions);
+  	$options            = array('label'      => 'Coordenador(a) de transporte',
+	                                'size'       => 50,
+	                                'value'		 => $this->coordenador_transporte,
+	                                'required'   => false);
+
+	$this->inputsHelper()->simpleSearchPessoa('coordenador_transporte', $options, $helperOptions);
+
     $this->campoCheck("exigir_vinculo_turma_professor", "Exigir vínculo com turma para lançamento de notas do professor?", $this->exigir_vinculo_turma_professor );
 
     $this->campoCheck("gerar_historico_transferencia", "Gerar histórico de transferência ao transferir matrícula?", $this->gerar_historico_transferencia);
@@ -224,6 +233,7 @@ class indice extends clsCadastro
 		$obj->gerar_historico_transferencia 	= !is_null($this->gerar_historico_transferencia);
 		$obj->matricula_apenas_bairro_escola 	= !is_null($this->matricula_apenas_bairro_escola);
 		$obj->restringir_historico_escolar 		= !is_null($this->restringir_historico_escolar);
+		$obj->coordenador_transporte 			= $this->pessoa_coordenador_transporte;
 		$obj->controlar_espaco_utilizacao_aluno = is_null($this->controlar_espaco_utilizacao_aluno) ? 0 : 1;
 		$obj->percentagem_maxima_ocupacao_salas = Portabilis_Currency_Utils::moedaBrToUs($this->percentagem_maxima_ocupacao_salas);
 		$cadastrou = $obj->cadastra();
@@ -253,6 +263,7 @@ class indice extends clsCadastro
 		$obj->gerar_historico_transferencia 	= !is_null($this->gerar_historico_transferencia);
 		$obj->matricula_apenas_bairro_escola 	= !is_null($this->matricula_apenas_bairro_escola);
 		$obj->restringir_historico_escolar 		= !is_null($this->restringir_historico_escolar);
+		$obj->coordenador_transporte 			= $this->pessoa_coordenador_transporte;
 		$obj->controlar_espaco_utilizacao_aluno = is_null($this->controlar_espaco_utilizacao_aluno) ? 0 : 1;
 		$obj->percentagem_maxima_ocupacao_salas = Portabilis_Currency_Utils::moedaBrToUs($this->percentagem_maxima_ocupacao_salas);
 		$editou = $obj->edita();

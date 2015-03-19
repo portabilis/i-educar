@@ -133,7 +133,7 @@ class clsPmieducarInstituicao
     $this->_schema = "pmieducar.";
     $this->_tabela = "{$this->_schema}instituicao";
 
-    $this->_campos_lista = $this->_todos_campos = "cod_instituicao, ref_usuario_exc, ref_usuario_cad, ref_idtlog, ref_sigla_uf, cep, cidade, bairro, logradouro, numero, complemento, nm_responsavel, ddd_telefone, telefone, data_cadastro, data_exclusao, ativo, nm_instituicao, data_base_transferencia, data_base_remanejamento, controlar_espaco_utilizacao_aluno, percentagem_maxima_ocupacao_salas, quantidade_alunos_metro_quadrado, exigir_vinculo_turma_professor, gerar_historico_transferencia, matricula_apenas_bairro_escola, restringir_historico_escolar ";
+    $this->_campos_lista = $this->_todos_campos = "cod_instituicao, ref_usuario_exc, ref_usuario_cad, ref_idtlog, ref_sigla_uf, cep, cidade, bairro, logradouro, numero, complemento, nm_responsavel, ddd_telefone, telefone, data_cadastro, data_exclusao, ativo, nm_instituicao, data_base_transferencia, data_base_remanejamento, controlar_espaco_utilizacao_aluno, percentagem_maxima_ocupacao_salas, quantidade_alunos_metro_quadrado, exigir_vinculo_turma_professor, gerar_historico_transferencia, matricula_apenas_bairro_escola, restringir_historico_escolar, coordenador_transporte";
 
     if (is_numeric($ref_usuario_cad)) {
       if (class_exists('clsPmieducarUsuario')) {
@@ -446,6 +446,15 @@ class clsPmieducarInstituicao
         $gruda = ", ";
       }
 
+      if (strripos($this->coordenador_transporte, '-') and strripos($this->coordenador_transporte, '('))
+        $this->coordenador_transporte = $this->parte_string($this->coordenador_transporte, '-', '(');
+          
+      if (is_string($this->coordenador_transporte)) {
+        $campos .= "{$gruda}coordenador_transporte";
+        $valores .= "{$gruda}'{$this->coordenador_transporte}'";
+        $gruda = ", ";
+      }
+
       $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
       return $db->InsertId("{$this->_tabela}_cod_instituicao_seq");
     }
@@ -595,6 +604,13 @@ class clsPmieducarInstituicao
         $set .= "{$gruda}restringir_historico_escolar = false ";
         $gruda = ", ";
       }
+      if (strripos($this->coordenador_transporte, '-') and strripos($this->coordenador_transporte, '('))
+        $this->coordenador_transporte = $this->parte_string($this->coordenador_transporte, '-', '(');
+
+      if (is_string($this->coordenador_transporte)) {
+        $set .= "{$gruda}coordenador_transporte = '{$this->coordenador_transporte}'";
+        $gruda = ", ";
+      }
 
       if (is_numeric($this->percentagem_maxima_ocupacao_salas) AND !empty($this->percentagem_maxima_ocupacao_salas)) {
         $set .= "{$gruda}percentagem_maxima_ocupacao_salas = '{$this->percentagem_maxima_ocupacao_salas}'";
@@ -620,7 +636,16 @@ class clsPmieducarInstituicao
 
     return FALSE;
   }
-
+  function parte_string($string, $ponto_inicio, $ponto_final){
+    $num = 1;
+    if ($string and $ponto_inicio)
+      $registro = explode($ponto_inicio, $string);
+    if ($ponto_final){
+      $num = 0;
+      $registro = explode($ponto_final, $registro[1]);
+    }
+    return $registro[$num];
+  }
   /**
    * Retorna uma lista de registros filtrados de acordo com os parâmetros.
    * @return array
