@@ -1919,12 +1919,8 @@ and  e.cod_escola = t.ref_ref_cod_escola
 			$whereAnd = " AND ";
 		}
 
-		$filtros .= "{$whereAnd} (ano = (SELECT max(ano)
-					  FROM pmieducar.escola_ano_letivo mat	        
-					  WHERE ativo = 1 and mat.andamento = 1) or ((t.ano is null) AND (select 1 from pmieducar.matricula_turma 
-					  where ativo = 1 and date_part('year',data_cadastro) = (SELECT max(ano)
-					  FROM pmieducar.escola_ano_letivo
-					  WHERE ativo = 1 and andamento = 1) and t.cod_turma = ref_cod_turma limit 1) is not null))";
+		// Retirar OR quando todas turmas tiverem a coluna ANO definido.
+		$filtros .= "{$whereAnd} t.ano = ( SELECT ano FROM pmieducar.escola_ano_letivo enl WHERE enl.ref_cod_escola = t.ref_ref_cod_escola AND andamento = 1)";
 
 		$db = new clsBanco();
 		$countCampos = count( explode( ",", $this->_campos_lista ) );

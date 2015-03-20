@@ -89,6 +89,7 @@ class indice extends clsListagem
 		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" );
 
 		$lista_busca = array(
+			"Ano",
 			"Turma",
 			"S&eacute;rie",
 			"Curso"
@@ -221,6 +222,7 @@ class indice extends clsListagem
 				}
 
 				$lista_busca = array(
+					"<a href=\"educar_matriculas_turma_cad.php?ref_cod_turma={$registro["cod_turma"]}\">{$registro["ano"]}</a>",
 					"<a href=\"educar_matriculas_turma_cad.php?ref_cod_turma={$registro["cod_turma"]}\">{$registro["nm_turma"]}</a>"
 				);
 
