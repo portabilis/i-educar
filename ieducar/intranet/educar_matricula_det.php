@@ -32,10 +32,10 @@ require_once 'include/clsBase.inc.php';
 require_once 'include/clsDetalhe.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
+require_once 'include/pmieducar/clsPermissoes.inc.php';
 
 require_once 'App/Model/MatriculaSituacao.php';
 require_once 'Portabilis/View/Helper/Application.php';
-
 /**
  * clsIndexBase class.
  *
@@ -55,6 +55,8 @@ class clsIndexBase extends clsBase
     $this->addEstilo("localizacaoSistema");
   }
 }
+
+
 
 /**
  * indice class.
@@ -271,8 +273,13 @@ class indice extends clsDetalhe
       if ($registro['aprovado'] == 3 &&
          (!is_array($lst_transferencia) && !isset($data_transferencia))
       ) {
-        $this->array_botao[]            = 'Cancelar Matrícula';
-        $this->array_botao_url_script[] = "if(confirm(\"Deseja realmente cancelar esta matrícula?\"))go(\"educar_matricula_cad.php?cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\")";
+
+        // Verificar se tem permissao para executar cancelamento de matricula
+        if($this->permissao_cancelar()){
+
+          $this->array_botao[]            = 'Cancelar Matrícula';
+          $this->array_botao_url_script[] = "if(confirm(\"Deseja realmente cancelar esta matrícula?\"))go(\"educar_matricula_cad.php?cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\")";
+        }
 
         $this->array_botao[]            = 'Ocorrências Disciplinares';
         $this->array_botao_url_script[] = "go(\"educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$registro['cod_matricula']}\")";
@@ -361,6 +368,26 @@ class indice extends clsDetalhe
     );
 
     Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
+  }
+
+  // Verificar se pode cancelar matricula
+  function permissao_cancelar(){
+    @session_start();
+
+    $this->pessoa_logada = $_SESSION['id_pessoa'];
+    $acesso = new clsPermissoes();
+
+    session_write_close();
+
+    /**
+     * @param Processo
+     * @param Usuário logado
+     * @param Nível de acesso
+     * @param Redirecionar página
+     * @param Super Usuário
+     * @param Verifica usuário biblioteca
+     */
+    return $acesso->permissao_excluir(627, $this->pessoa_logada, 7, null, true);
   }
 
   function canCancelTransferenciaExterna($matriculaId, $alunoId) {
