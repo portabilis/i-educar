@@ -330,8 +330,11 @@ class indice extends clsCadastro {
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
-    $this->data_retorno = dataFromBrToPg($this->data_retorno);
-    $this->data_saida = dataFromBrToPg($this->data_saida);
+    $this->data_retorno = dataToBanco($this->data_retorno);
+    $this->data_saida = dataToBanco($this->data_saida);
+
+
+    // echo"<pre>";var_dump($this->data_retorno);die;
 
     $this->ref_cod_servidor = isset($_POST['ref_cod_servidor']) ?
       $_POST['ref_cod_servidor'] : NULL;
@@ -433,7 +436,7 @@ class indice extends clsCadastro {
 
     $obj = new clsPmieducarServidorAfastamento($this->ref_cod_servidor,
       $this->sequencial, $this->ref_cod_motivo_afastamento, $this->pessoa_logada,
-      NULL, NULL, NULL, $this->data_retorno, unserialize($this->data_saida), 0,
+      NULL, NULL, NULL, dataToBanco($this->data_retorno), unserialize($this->data_saida), 0,
       $this->ref_cod_instituicao);
 
     $editou = $obj->edita();
