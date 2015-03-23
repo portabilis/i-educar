@@ -330,8 +330,8 @@ class indice extends clsCadastro {
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
-    $this->data_retorno = dataToBanco($this->data_retorno);
-    $this->data_saida = dataToBanco($this->data_saida);
+    $this->data_retorno = dataFromBrToPg($this->data_retorno);
+    $this->data_saida = dataFromBrToPg($this->data_saida);
 
     $this->ref_cod_servidor = isset($_POST['ref_cod_servidor']) ?
       $_POST['ref_cod_servidor'] : NULL;
