@@ -54,7 +54,33 @@ var handleGetMatriculas = function(dataResponse) {
 
       $j('<td>').html(linkToMatricula).appendTo($tr).addClass('center');
       $j('<td>').html(matricula.ano).appendTo($tr);
-      $j('<td>').html(matricula.situacao).appendTo($tr);
+
+      if(matricula.user_can_change_situacao){
+        var situacoes = [
+              {val: 1, text: 'Aprovado'},
+              {val: 2, text: 'Retido'},
+              {val: 3, text: 'Em andamento'},
+              {val: 4, text: 'Transferido'},
+              {val: 6, text: 'Abandono'}
+        ];
+
+        var sel = $j('<select>')
+        $j(situacoes).each(function() {
+          sel.append($j("<option>").attr('value',this.val).text(this.text));
+        });
+        console.log(matricula.codigo_situacao);
+        // sel.each(function(){this.selected = matricula.codigo_situacao});
+        sel.val(matricula.codigo_situacao);
+        sel.bind('change', function(){
+          onSituacaoChange(matricula.id, $j(this).val());
+        });
+        sel.appendTo($tr);
+
+      }else{
+        $j('<td>').html(matricula.situacao).appendTo($tr);
+      }
+      
+
       $j('<td>').html(matricula.turma_nome).appendTo($tr);
       $j('<td>').html(matricula.ultima_enturmacao).appendTo($tr);
       $j('<td>').html(matricula.serie_nome).appendTo($tr);
@@ -136,6 +162,25 @@ var handleGetMatriculas = function(dataResponse) {
 
     throw error;
   }
+}
+
+function onSituacaoChange(matricula_id, novaSituacao){
+  var data = {
+    matricula_id  : matricula_id,
+    nova_situacao : novaSituacao
+  };
+
+  var options = {
+      url      : postResourceUrlBuilder.buildUrl('/module/Api/matricula', 'situacao'),
+      dataType : 'json',
+      data     : data,
+      success  : handlePostSituacao
+  };
+  postResource(options);
+}
+
+var handlePostSituacao = function(dataresponse){
+  handleMessages(dataresponse.msgs);
 }
 
 function onDataEntradaChange(matricula_id, key, campo){

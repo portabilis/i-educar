@@ -1052,14 +1052,16 @@ class AlunoController extends ApiCoreController
           $matricula['situacao']
         );
 
-        $matriculas[$index]['user_can_access']         = Portabilis_Utils_User::canAccessEscola($matricula['escola_id']);
-        $matriculas[$index]['user_can_change_date']    = $this->loadAcessoDataEntradaSaida();
-        $matriculas[$index]['transferencia_em_aberto'] = $this->possuiTransferenciaEmAberto($matricula['id']);
+        $matriculas[$index]['codigo_situacao']          = $matricula['situacao'];
+        $matriculas[$index]['user_can_access']          = Portabilis_Utils_User::canAccessEscola($matricula['escola_id']);
+        $matriculas[$index]['user_can_change_date']     = $this->loadAcessoDataEntradaSaida();
+        $matriculas[$index]['user_can_change_situacao'] = $this->isUsuarioAdmin();
+        $matriculas[$index]['transferencia_em_aberto']  = $this->possuiTransferenciaEmAberto($matricula['id']);
       }
 
       $attrs = array('id', 'instituicao_id', 'escola_id', 'curso_id', 'serie_id', 'aluno_id', 'aluno_nome', 'situacao', 'ano', 'turma_id',
           'turma_nome', 'escola_nome', 'escola_nome', 'curso_nome', 'serie_nome', 'ultima_enturmacao', 'data_entrada', 'data_entrada', 'data_saida', 'user_can_access', 'user_can_change_date',
-          'transferencia_em_aberto');
+          'codigo_situacao', 'user_can_change_situacao','transferencia_em_aberto');
 
       $matriculas = Portabilis_Array_Utils::filterSet($matriculas, $attrs);
 
@@ -1369,6 +1371,14 @@ class AlunoController extends ApiCoreController
   	$acesso = new clsPermissoes();
   	session_write_close();
   	return $acesso->permissao_cadastra(626, $this->pessoa_logada, 7, null, true);
+  }
+  protected function isUsuarioAdmin(){
+    @session_start();
+    $this->pessoa_logada = $_SESSION['id_pessoa'];
+    $isAdmin = ($this->pessoa_logada == 1);
+    session_write_close();
+    return $isAdmin;
+    
   }
 
   public function Gerar() {
