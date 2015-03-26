@@ -34,7 +34,7 @@ require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
 require_once 'App/Model/MatriculaSituacao.php';
 require_once 'intranet/include/clsBanco.inc.php';
-require_once 'include/pmieducar/clsPmieducarMatricula.inc.php';
+require_once 'include/pmieducar/geral.inc.php';
 require_once 'Portabilis/Date/Utils.php';
 
 class MatriculaController extends ApiCoreController
@@ -316,6 +316,50 @@ class MatriculaController extends ApiCoreController
   		}
   	}
   }
+  protected function postSituacao(){
+    if($this->validatesPresenceOf('matricula_id') && $this->validatesPresenceOf('nova_situacao')){
+      $matriculaId = $this->getRequest()->matricula_id;
+      $matricula = new clsPmieducarMatricula($matriculaId);
+
+      $situacaoAntiga = $matricula->aprovado;
+      $situacaoNova   = $this->getRequest()->nova_situacao;
+
+      
+      if($situacaoNova == App_Model_MatriculaSituacao::TRANSFERIDO || $situacaoNova == App_Model_MatriculaSituacao::ABANDONO){
+        $enturmacoes = new clsPmieducarMatriculaTurma();
+        $enturmacoes = $enturmacoes->lista($matriculaId, null, null, null, null, null, null, null, 1 );
+
+        if($enturmacoes){
+
+          foreach ($enturmacoes as $enturmacao) {
+            $enturmacao = new clsPmieducarMatriculaTurma( $matriculaId, $enturmacao['ref_cod_turma'], 1, null, null, date("Y-m-d H:i:s"), 0, null, $enturmacao['sequencial']);
+            if(!$enturmacao->edita()){
+              return false;
+            }else{
+              $enturmacao->marcaAlunoTransferido();
+            }
+          }
+        }
+      }elseif($situacaoNova == App_Model_MatriculaSituacao::APROVADO || $situacaoNova == App_Model_MatriculaSituacao::EM_ANDAMENTO || $situacaoNova == App_Model_MatriculaSituacao::REPROVADO){
+        
+        $params = array($matriculaId, 0);
+        $sql = 'SELECT max(sequencial) as codigo FROM pmieducar.matricula_turma where ref_cod_matricula = $1 and ativo = $2';
+        $sequencial = $this->fetchPreparedQuery($sql, $params, false, 'first-field');
+
+        $sql = 'UPDATE pmieducar.matricula_turma set ativo = 1 where sequencial = $1 and ref_cod_matricula = $2';
+
+
+        $params = array($sequencial, $matriculaId);
+        $this->fetchPreparedQuery($sql, $params);
+
+      }
+
+      $matricula->aprovado = $this->getRequest()->nova_situacao;
+      if($matricula->edita()){
+        return $this->messenger->append('Situação da matrícula alterada com sucesso.', 'success');
+      }
+    }  
+  }
 
   public function Gerar() {
     if ($this->isRequestFor('get', 'matricula'))
@@ -344,6 +388,9 @@ class MatriculaController extends ApiCoreController
 
   	elseif ($this->isRequestFor('post', 'data-saida'))
   	  $this->appendResponse($this->postDataSaida());
+
+    elseif ($this->isRequestFor('post', 'situacao'))
+      $this->appendResponse($this->postSituacao());
 
     else
       $this->notImplementedOperationError();
