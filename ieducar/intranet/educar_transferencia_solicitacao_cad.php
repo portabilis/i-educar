@@ -61,11 +61,12 @@ class indice extends clsCadastro
 	var $ativo;
 	var $data_transferencia;
 	var $data_cancel;
-
 	var $ref_cod_matricula;
 	var $transferencia_tipo;
 	var $ref_cod_aluno;
 	var $nm_aluno;
+	var $escola_destino_externa;
+	var $ref_cod_escola_destino;
 
 	function Inicializar()
 	{
@@ -104,7 +105,7 @@ class indice extends clsCadastro
              ""        => "{$nomeMenu} transfer&ecirc;ncia de matr&iacute;cula"
         ));
         $this->enviaLocalizacao($localizacao->montar());
-
+        Portabilis_View_Helper_Application::loadJavascript($this, array('/modules/Cadastro/Assets/Javascripts/TransferenciaSolicitacao.js'));
 		$this->nome_url_cancelar = "Cancelar";
 		return $retorno;
 	}
@@ -148,6 +149,18 @@ class indice extends clsCadastro
 
 		$opcoes = array( 1 => "Escola do Sistema",2 => "Escola Externa" );
 		$this->campoRadio( "transferencia_tipo", "Transfer&ecirc;ncia Tipo", $opcoes, $this->transferencia_tipo );
+
+		$opcoes = array("" => "Selecione");
+		$objTemp = new clsPmieducarEscola();
+
+		$lista = $objTemp->lista(null, null, null, $det_matricula['ref_cod_instituicao']);
+
+		foreach ($lista as $escola){
+			$opcoes["{$escola['cod_escola']}"] = "{$escola['nome']}";
+		}
+
+		$this->campoLista("ref_cod_escola_destino", "Escola", $opcoes, null, '', false, 'Destino do aluno', '', false, false);
+		$this->campoTexto('escola_destino_externa', "Escola ", "", 30, 255, false, false, false, 'Destino do aluno');
 
 		// foreign keys
 		$opcoes = array( "" => "Selecione" );
@@ -259,7 +272,7 @@ class indice extends clsCadastro
 			clsPmieducarHistoricoEscolar::gerarHistoricoTransferencia($this->ref_cod_matricula, $this->pessoa_logada);
 		}
 
-		$obj = new clsPmieducarTransferenciaSolicitacao( null, $this->ref_cod_transferencia_tipo, null, $this->pessoa_logada, null, $this->ref_cod_matricula, $this->observacao, null, null, $this->ativo, $this->data_transferencia );
+		$obj = new clsPmieducarTransferenciaSolicitacao( null, $this->ref_cod_transferencia_tipo, null, $this->pessoa_logada, null, $this->ref_cod_matricula, $this->observacao, null, null, $this->ativo, $this->data_transferencia, $this->escola_destino_externa, $this->ref_cod_escola_destino);
 		$cadastrou = $obj->cadastra();
 		if( $cadastrou )
 		{
