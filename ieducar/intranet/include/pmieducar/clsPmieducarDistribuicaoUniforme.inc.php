@@ -31,7 +31,7 @@ require_once 'include/pmieducar/geral.inc.php';
 
 /**
  * clsPmieducarDistribuicaoUniforme class.
- * 
+ *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
  * @category  i-Educar
  * @license   @@license@@
@@ -60,6 +60,7 @@ class clsPmieducarDistribuicaoUniforme
   var $bermudas_tectels_tm;
   var $bermudas_coton_tm;
   var $tenis_tm;
+  var $ref_cod_escola;
 
   /**
    * @var int
@@ -119,7 +120,7 @@ class clsPmieducarDistribuicaoUniforme
         $camiseta_longa_qtd = NULL, $meias_qtd = NULL, $bermudas_tectels_qtd = NULL,
         $bermudas_coton_qtd = NULL, $tenis_qtd = NULL, $data = NULL, $agasalho_tm = NULL, $camiseta_curta_tm = NULL,
         $camiseta_longa_tm = NULL, $meias_tm = NULL, $bermudas_tectels_tm = NULL,
-        $bermudas_coton_tm = NULL, $tenis_tm = NULL)
+        $bermudas_coton_tm = NULL, $tenis_tm = NULL, $ref_cod_escola = NULL)
   {
     $db = new clsBanco();
     $this->_schema = "pmieducar.";
@@ -127,7 +128,7 @@ class clsPmieducarDistribuicaoUniforme
 
     $this->_campos_lista = $this->_todos_campos = " cod_distribuicao_uniforme, ref_cod_aluno, ano, kit_completo, agasalho_qtd, camiseta_curta_qtd,
         camiseta_longa_qtd, meias_qtd, bermudas_tectels_qtd, bermudas_coton_qtd, tenis_qtd, data,
-        agasalho_tm, camiseta_curta_tm, camiseta_longa_tm, meias_tm, bermudas_tectels_tm, bermudas_coton_tm"; 
+        agasalho_tm, camiseta_curta_tm, camiseta_longa_tm, meias_tm, bermudas_tectels_tm, bermudas_coton_tm, ref_cod_escola";
 
     if (is_numeric($cod_distribuicao_uniforme)) {
       $this->cod_distribuicao_uniforme = $cod_distribuicao_uniforme;
@@ -135,38 +136,38 @@ class clsPmieducarDistribuicaoUniforme
 
     if (is_numeric($ref_cod_aluno)) {
       $this->ref_cod_aluno = $ref_cod_aluno;
-    } 
+    }
 
     if (is_numeric($ano)) {
       $this->ano = $ano;
-    }     
+    }
 
     $this->kit_completo = $kit_completo;
-    
+
     if (is_numeric($agasalho_qtd)) {
       $this->agasalho_qtd = $agasalho_qtd;
-    }    
-   
+    }
+
     if (is_numeric($camiseta_curta_qtd)) {
       $this->camiseta_curta_qtd = $camiseta_curta_qtd;
     }
-    
+
     if (is_numeric($camiseta_longa_qtd)) {
       $this->camiseta_longa_qtd = $camiseta_longa_qtd;
-    }    
-   
+    }
+
     if (is_numeric($meias_qtd)) {
       $this->meias_qtd = $meias_qtd;
     }
-    
+
     if (is_numeric($bermudas_tectels_qtd)) {
       $this->bermudas_tectels_qtd = $bermudas_tectels_qtd;
-    }    
-   
+    }
+
     if (is_numeric($bermudas_coton_qtd)) {
       $this->bermudas_coton_qtd = $bermudas_coton_qtd;
     }
-    
+
     if (is_numeric($tenis_qtd)) {
       $this->tenis_qtd = $tenis_qtd;
     }
@@ -181,6 +182,8 @@ class clsPmieducarDistribuicaoUniforme
     $this->bermudas_tectels_tm = $bermudas_tectels_tm;
     $this->bermudas_coton_tm = $bermudas_coton_tm;
     $this->tenis_tm = $tenis_tm;
+    $this->ref_cod_escola = $ref_cod_escola;
+
   }
 
   /**
@@ -195,7 +198,7 @@ class clsPmieducarDistribuicaoUniforme
 
       $campos  = '';
       $valores = '';
-      $gruda   = '';    
+      $gruda   = '';
 
       $campos .= "{$gruda}ref_cod_aluno";
       $valores .= "{$gruda}{$this->ref_cod_aluno}";
@@ -302,7 +305,13 @@ class clsPmieducarDistribuicaoUniforme
         $campos .= "{$gruda}tenis_tm";
         $valores .= "{$gruda}{$this->tenis_tm}";
         $gruda = ", ";
-      }      
+      }
+
+      if($this->ref_cod_escola){
+        $campos .= "{$gruda}ref_cod_escola";
+        $valores .= "{$gruda}{$this->ref_cod_escola}";
+        $gruda = ", ";
+      }
 
       $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
       return TRUE;
@@ -320,42 +329,42 @@ class clsPmieducarDistribuicaoUniforme
     if (is_numeric($this->cod_distribuicao_uniforme)) {
       $db  = new clsBanco();
       $set = '';
- 
+
       if (is_numeric($this->ano))
         $set .= " ano = '{$this->ano}' ";
       else
         return false;
-  
+
       if (dbBool($this->kit_completo))
         $set .= ",kit_completo = TRUE ";
       else{
         $set .= ",kit_completo = FALSE";
       }
-  
+
       if (is_numeric($this->agasalho_qtd))
         $set .= ",agasalho_qtd = '{$this->agasalho_qtd}'";
       else{
         $set .= ",agasalho_qtd = NULL";
       }
-   
+
       if (is_numeric($this->camiseta_curta_qtd))
         $set .= ",camiseta_curta_qtd = '{$this->camiseta_curta_qtd}'";
       else{
         $set .= ",camiseta_curta_qtd = NULL";
       }
-  
+
       if (is_numeric($this->camiseta_longa_qtd))
         $set .= ",camiseta_longa_qtd = '{$this->camiseta_longa_qtd}'";
       else{
         $set .= ",camiseta_longa_qtd = NULL";
       }
-  
+
       if (is_numeric($this->meias_qtd))
         $set .= ",meias_qtd = '{$this->meias_qtd}'";
       else{
         $set .= ",meias_qtd = NULL";
       }
-  
+
       if (is_numeric($this->bermudas_tectels_qtd))
         $set .= ",bermudas_tectels_qtd = '{$this->bermudas_tectels_qtd}'";
       else{
@@ -372,7 +381,7 @@ class clsPmieducarDistribuicaoUniforme
         $set .= ",tenis_qtd = '{$this->tenis_qtd}'";
       else{
         $set .= ",tenis_qtd = NULL";
-      }    
+      }
 
       if(is_string($this->data))
         $set .= ",data = '{$this->data}'";
@@ -382,25 +391,25 @@ class clsPmieducarDistribuicaoUniforme
       else{
         $set .= ",agasalho_tm = NULL";
       }
-   
+
       if ($this->camiseta_curta_tm)
         $set .= ",camiseta_curta_tm = '{$this->camiseta_curta_tm}'";
       else{
         $set .= ",camiseta_curta_tm = NULL";
       }
-  
+
       if ($this->camiseta_longa_tm)
         $set .= ",camiseta_longa_tm = '{$this->camiseta_longa_tm}'";
       else{
         $set .= ",camiseta_longa_tm = NULL";
       }
-  
+
       if ($this->meias_tm)
         $set .= ",meias_tm = '{$this->meias_tm}'";
       else{
         $set .= ",meias_tm = NULL";
       }
-  
+
       if ($this->bermudas_tectels_tm)
         $set .= ",bermudas_tectels_tm = '{$this->bermudas_tectels_tm}'";
       else{
@@ -417,7 +426,12 @@ class clsPmieducarDistribuicaoUniforme
         $set .= ",tenis_tm = '{$this->tenis_tm}'";
       else{
         $set .= ",tenis_tm = NULL";
-      } 
+      }
+      if ($this->ref_cod_escola)
+        $set .= ",ref_cod_escola = '{$this->ref_cod_escola}'";
+      else{
+        $set .= ",ref_cod_escola = NULL";
+      }
 
       if ($set) {
         $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_distribuicao_uniforme = '{$this->cod_distribuicao_uniforme}'");
