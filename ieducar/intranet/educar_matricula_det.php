@@ -218,6 +218,27 @@ class indice extends clsDetalhe
 
       $this->addDetalhe(array('Situação', $aprovado));
     }
+
+    if($registro[aprovado] == 4){
+      $obj_transferencia = new clsPmieducarTransferenciaSolicitacao();
+
+      $lst_transferencia = $obj_transferencia->lista(NULL, NULL, NULL, NULL,
+        NULL, $registro['cod_matricula'], NULL, NULL, NULL, NULL, NULL, 1,
+        NULL, NULL, $registro['ref_cod_aluno'], FALSE);
+
+      if (is_array($lst_transferencia)) {
+        $det_transferencia = array_shift($lst_transferencia);
+      }
+      // echo "<pre>"; var_dump($det_transferencia["ref_cod_escola_destino"]); die;
+      if(!is_null($det_transferencia["ref_cod_escola_destino"])) {
+        $tmp_obj = new clsPmieducarEscola($det_transferencia["ref_cod_escola_destino"]);
+        $tmp_det = $tmp_obj->detalhe();
+        $this->addDetalhe(array("Escola destino", $tmp_det["nome"]));
+      }else{
+        $this->addDetalhe(array("Escola destino", $det_transferencia["escola_destino_externa"]));
+      }
+    }
+
     if ($campoObs){
 
       $tipoAbandono = new clsPmieducarAbandonoTipo($registro['ref_cod_abandono_tipo']);
