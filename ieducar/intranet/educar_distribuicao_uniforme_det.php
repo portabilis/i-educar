@@ -92,7 +92,18 @@ class indice extends clsDetalhe
 		if( $registro["data"] )
 		{
 			$this->addDetalhe( array( Portabilis_String_Utils::toLatin1("Data da distribuição"), Portabilis_Date_Utils::pgSQLToBr($registro["data"]) ) );
-		} 
+		}
+
+		if ( $registro["ref_cod_escola"]){
+			$obj_escola = new clsPmieducarEscola();
+			$lst_escola = $obj_escola->lista($registro["ref_cod_escola"]);
+			if ( is_array($lst_escola) ){
+				$det_escola = array_shift($lst_escola);
+				$nm_escola = $det_escola["nome"];
+				$this->addDetalhe(array("Escola fornecedora: ", Portabilis_String_Utils::toLatin1($nm_escola)));
+			}
+
+		}
 
 		if( dbBool($registro["kit_completo"]) )
 			$this->addDetalhe( array( "Recebeu kit completo", "Sim") );
