@@ -100,7 +100,7 @@ class indice extends clsDetalhe
 			if ( is_array($lst_escola) ){
 				$det_escola = array_shift($lst_escola);
 				$nm_escola = $det_escola["nome"];
-				$this->addDetalhe(array("Escola fornecedora: ", Portabilis_String_Utils::toLatin1($nm_escola)));
+				$this->addDetalhe(array("Escola fornecedora", Portabilis_String_Utils::toLatin1($nm_escola)));
 			}
 
 		}

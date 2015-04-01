@@ -128,7 +128,7 @@ class clsPmieducarDistribuicaoUniforme
 
     $this->_campos_lista = $this->_todos_campos = " cod_distribuicao_uniforme, ref_cod_aluno, ano, kit_completo, agasalho_qtd, camiseta_curta_qtd,
         camiseta_longa_qtd, meias_qtd, bermudas_tectels_qtd, bermudas_coton_qtd, tenis_qtd, data,
-        agasalho_tm, camiseta_curta_tm, camiseta_longa_tm, meias_tm, bermudas_tectels_tm, bermudas_coton_tm, ref_cod_escola";
+        agasalho_tm, camiseta_curta_tm, camiseta_longa_tm, meias_tm, bermudas_tectels_tm, bermudas_coton_tm, tenis_tm, ref_cod_escola";
 
     if (is_numeric($cod_distribuicao_uniforme)) {
       $this->cod_distribuicao_uniforme = $cod_distribuicao_uniforme;
