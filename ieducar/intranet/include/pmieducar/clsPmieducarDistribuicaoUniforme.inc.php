@@ -267,43 +267,43 @@ class clsPmieducarDistribuicaoUniforme
       }
       if(is_string($this->agasalho_tm)){
         $campos .= "{$gruda}agasalho_tm";
-        $valores .= "{$gruda}{$this->agasalho_tm}";
+        $valores .= "{$gruda}'{$this->agasalho_tm}'";
         $gruda = ", ";
       }
 
       if(is_string($this->camiseta_curta_tm)){
         $campos .= "{$gruda}camiseta_curta_tm";
-        $valores .= "{$gruda}{$this->camiseta_curta_tm}";
+        $valores .= "{$gruda}'{$this->camiseta_curta_tm}'";
         $gruda = ", ";
       }
 
       if(is_string($this->camiseta_longa_tm)){
         $campos .= "{$gruda}camiseta_longa_tm";
-        $valores .= "{$gruda}{$this->camiseta_longa_tm}";
+        $valores .= "{$gruda}'{$this->camiseta_longa_tm}'";
         $gruda = ", ";
       }
 
       if(is_string($this->meias_tm)){
         $campos .= "{$gruda}meias_tm";
-        $valores .= "{$gruda}{$this->meias_tm}";
+        $valores .= "{$gruda}'{$this->meias_tm}'";
         $gruda = ", ";
       }
 
       if(is_string($this->bermudas_tectels_tm)){
         $campos .= "{$gruda}bermudas_tectels_tm";
-        $valores .= "{$gruda}{$this->bermudas_tectels_tm}";
+        $valores .= "{$gruda}'{$this->bermudas_tectels_tm}'";
         $gruda = ", ";
       }
 
       if(is_string($this->bermudas_coton_tm)){
         $campos .= "{$gruda}bermudas_coton_tm";
-        $valores .= "{$gruda}{$this->bermudas_coton_tm}";
+        $valores .= "{$gruda}'{$this->bermudas_coton_tm}'";
         $gruda = ", ";
       }
 
       if(is_string($this->tenis_tm)){
         $campos .= "{$gruda}tenis_tm";
-        $valores .= "{$gruda}{$this->tenis_tm}";
+        $valores .= "{$gruda}'{$this->tenis_tm}'";
         $gruda = ", ";
       }
 
