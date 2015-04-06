@@ -65,6 +65,7 @@ class indice extends clsCadastro
 	var $bermudas_tectels_tm;
 	var $bermudas_coton_tm;
 	var $tenis_tm;
+	var $ref_cod_escola;
 
 	function Inicializar()
 	{
@@ -125,7 +126,18 @@ class indice extends clsCadastro
 		$this->campoOculto( "cod_distribuicao_uniforme", $this->cod_distribuicao_uniforme );
 
 		$this->campoNumero( "ano", "Ano", $this->ano, 4, 4, true );
-		$this->inputsHelper()->date('data', array( 'label' => "Data da distribuição", 'value' => $this->data, 'placeholder' => ''));		
+		$this->inputsHelper()->date('data', array( 'label' => "Data da distribuição", 'value' => $this->data, 'placeholder' => ''));
+
+		$opcoes = array("" => "Selecione");
+		$objTemp = new clsPmieducarEscola();
+
+		$lista = $objTemp->lista(null, null, null, $det_matricula['ref_cod_instituicao']);
+
+		foreach ($lista as $escola){
+			$opcoes["{$escola['cod_escola']}"] = "{$escola['nome']}";
+		}
+		$this->campoLista("ref_cod_escola", "Escola", $opcoes, $this->ref_cod_escola, '', false, '(Responsável pela distribuição do uniforme)', '', false, true);
+
 		$this->inputsHelper()->checkbox('kit_completo', array( 'label' => "Kit completo", 'value' => $this->kit_completo));		
 		// $this->campoNumero( "agasalho_qtd", "Quantidade de agasalhos (jaqueta e calça)", $this->agasalho_qtd, 2, 2, false );
 		$options = array('required' => false, 'label' => 'Quantidade de agasalhos (jaqueta e calça)', 'value' => $this->agasalho_qtd, 'max_length' => 2, 'size' => 2, 'inline'	=> true);
@@ -188,7 +200,7 @@ class indice extends clsCadastro
 																								$this->camiseta_curta_qtd, $this->camiseta_longa_qtd, $this->meias_qtd, $this->bermudas_tectels_qtd, 
 																								$this->bermudas_coton_qtd, $this->tenis_qtd, $this->data,
 																								$this->agasalho_tm, $this->camiseta_curta_tm, $this->camiseta_longa_tm, $this->meias_tm, 
-																								$this->bermudas_tectels_tm, $this->bermudas_coton_tm, $this->tenis_tm);
+																								$this->bermudas_tectels_tm, $this->bermudas_coton_tm, $this->tenis_tm, $this->ref_cod_escola);
 		$cadastrou = $obj->cadastra();
 		if( $cadastrou )
 		{
@@ -230,7 +242,7 @@ class indice extends clsCadastro
 																									$this->agasalho_qtd, $this->camiseta_curta_qtd, $this->camiseta_longa_qtd, $this->meias_qtd, 
 																									$this->bermudas_tectels_qtd, $this->bermudas_coton_qtd, $this->tenis_qtd, $this->data,
 																									$this->agasalho_tm, $this->camiseta_curta_tm, $this->camiseta_longa_tm, $this->meias_tm, 
-																									$this->bermudas_tectels_tm, $this->bermudas_coton_tm, $this->tenis_tm);
+																									$this->bermudas_tectels_tm, $this->bermudas_coton_tm, $this->tenis_tm, $this->ref_cod_escola);
 		$editou = $obj->edita();
 		if( $editou )
 		{
@@ -306,8 +318,6 @@ $pagina->MakeAll();
 	$j(document).ready(function(){
 		if($j('#kit_completo').is(':checked'))
 			bloqueiaCamposQuantidade();
-
-		console.log('vsf');
 
 		$j('#kit_completo').on('change', function(){
 			if($j('#kit_completo').is(':checked'))

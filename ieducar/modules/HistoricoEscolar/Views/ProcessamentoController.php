@@ -203,11 +203,17 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
       </tr>
 
       <tr>
-        <td><label for='media-area-conhecimento'>Fechar m&eacute;dia por &aacute;rea de conhecimento</label></td>
+				<td>
+					<label for='media-area-conhecimento'>Fechar m&eacute;dia por &aacute;rea de conhecimento</label><br>
+					<sub style='vertical-align:top;'>".Portabilis_String_Utils::toLatin1("Caso esse campo seja selecionado, será gerado o histórico das áreas de conhecimento e não dos componentes curriculares")."</sub>
+				</td>
         <td colspan='2'><input type='checkbox' id='media-area-conhecimento' name='media-area-conhecimento'></input></td>
       </tr>
 
     </table>";
+
+
+		
 
 
     $this->appendOutput($resourceOptionsTable);
