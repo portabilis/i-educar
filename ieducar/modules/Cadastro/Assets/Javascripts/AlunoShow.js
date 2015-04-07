@@ -61,6 +61,7 @@ var handleGetMatriculas = function(dataResponse) {
               {val: 2, text: 'Retido'},
               {val: 3, text: 'Em andamento'},
               {val: 4, text: 'Transferido'},
+              {val: 5, text: 'Reclassificado'},
               {val: 6, text: 'Abandono'}
         ];
 
@@ -68,8 +69,7 @@ var handleGetMatriculas = function(dataResponse) {
         $j(situacoes).each(function() {
           sel.append($j("<option>").attr('value',this.val).text(this.text));
         });
-        console.log(matricula.codigo_situacao);
-        // sel.each(function(){this.selected = matricula.codigo_situacao});
+
         sel.val(matricula.codigo_situacao);
         sel.bind('change', function(){
           onSituacaoChange(matricula.id, $j(this).val());
