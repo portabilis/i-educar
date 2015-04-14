@@ -61,21 +61,50 @@ class ComponenteCurricularController extends ApiCoreController
     $sql = 'SELECT componente_curricular_id FROM modules.professor_turma_disciplina WHERE professor_turma_id = $1';
 
     $array = array();
-    
+
     $resources = Portabilis_Utils_Database::fetchPreparedQuery($sql, array( 'params' => array($this->getRequest()->id) ));
 
     foreach ($resources as $reg) {
       $array[] = $reg['componente_curricular_id'];
-    }    
-    
-    return array('componentecurricular' => $array);    
+    }
+
+    return array('componentecurricular' => $array);
+  }
+
+  function canGetComponentesCurriculares(){
+    return  $this->validatesPresenceOf('instituicao_id');
+  }
+
+  function getComponentesCurriculares(){
+    if($this->canGetComponentesCurriculares()){
+
+      $instituicaoId = $this->getRequest()->instituicao_id;
+
+      $sql = 'SELECT id, nome
+                FROM modules.componente_curricular
+                WHERE instituicao_id = $1
+                ORDER BY nome ';
+
+      $disciplinas = $this->fetchPreparedQuery($sql, array($instituicaoId));
+
+      $attrs = array('id', 'nome');
+      $disciplinas = Portabilis_Array_Utils::filterSet($disciplinas, $attrs);
+
+      foreach ($disciplinas as &$disciplina) {
+        $disciplina['nome'] = Portabilis_String_Utils::toUtf8($disciplina['nome']);
+      }
+
+      return array('disciplinas' => $disciplinas);
+    }
   }
 
   public function Gerar() {
     if ($this->isRequestFor('get', 'componente_curricular-search'))
       $this->appendResponse($this->search());
     elseif ($this->isRequestFor('get', 'componentecurricular-search'))
-      $this->appendResponse($this->getComponentesCurricularesSearch());    
+      $this->appendResponse($this->getComponentesCurricularesSearch());
+    elseif ($this->isRequestFor('get', 'componentes-curriculares'))
+      $this->appendResponse($this->getComponentesCurriculares());
     else
       $this->notImplementedOperationError();
   }
