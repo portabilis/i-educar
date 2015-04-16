@@ -47,6 +47,11 @@ class TurmaController extends ApiCoreController
             $this->validatesExistenceOf('turma', $this->getRequest()->id);
   }
 
+  protected function canGetTurmasPorEscola() {
+    return  $this->validatesPresenceOf('ano') &&
+            $this->validatesPresenceOf('instituicao_id');
+  }
+
   // validations
 
   protected function canGet() {
@@ -97,11 +102,39 @@ class TurmaController extends ApiCoreController
     return array('tipo-boletim' => $tipos[$tipo]);
   }
 
+  protected function getTurmasPorEscola(){
+    if($this->canGetTurmasPorEscola()){
+
+      $ano = $this->getRequest()->ano;
+      $instituicaoId = $this->getRequest()->instituicao_id;
+
+
+      $sql = 'SELECT cod_turma as id, nm_turma as nome, ref_ref_cod_escola as escola_id
+                FROM pmieducar.turma
+                WHERE ref_cod_instituicao = $1
+                AND ano = $2
+                ORDER BY ref_ref_cod_escola, nm_turma';
+
+      $turmas = $this->fetchPreparedQuery($sql, array($instituicaoId, $ano));
+
+      $attrs = array('id', 'nome', 'escola_id');
+      $turmas = Portabilis_Array_Utils::filterSet($turmas, $attrs);
+
+      foreach ($turmas as &$turma) {
+        $turma['nome'] = Portabilis_String_Utils::toUtf8($turma['nome']);
+      }
+
+      return array('turmas' => $turmas);
+    }
+  }
+
   public function Gerar() {
     if ($this->isRequestFor('get', 'tipo-boletim'))
       $this->appendResponse($this->getTipoBoletim());
     else if($this->isRequestFor('get', 'ordena-turma-alfabetica'))
       $this->appendResponse($this->ordenaTurmaAlfabetica());
+    else if($this->isRequestFor('get', 'turmas-por-escola'))
+      $this->appendResponse($this->getTurmasPorEscola());
     else
       $this->notImplementedOperationError();
   }
