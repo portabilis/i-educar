@@ -2,7 +2,7 @@
   
   --
   -- Cria menu para o relatório Ficha Individual-PA para Educação Infantil
-  -- @author   Gabriel Matos de Souza <ricardo@portabilis.com.br>
+  -- @author   Gabriel Matos de Souza <gabriel@portabilis.com.br>
   -- @license  @@license@@
   -- @version  $Id$  
   
