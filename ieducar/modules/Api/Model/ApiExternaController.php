@@ -45,9 +45,10 @@ class ApiExternaController{
 	}
 
 	public function executaRequisicao(){
-		$options = array( CURLOPT_URL  		 => $this->getUrl(),
-						  CURLOPT_POST 		 => ($this->tipoRequisicao == self::REQUISICAO_POST),
-						  CURLOPT_POSTFIELDS => $this->params);
+		$options = array( CURLOPT_URL  		 	 => $this->getUrl(),
+						  CURLOPT_POST 		 	 => ($this->tipoRequisicao == self::REQUISICAO_POST),
+						  CURLOPT_POSTFIELDS 	 => $this->params,
+						  CURLOPT_RETURNTRANSFER => true);
 		curl_setopt_array($this->curl, $options);
 
 		return curl_exec($this->curl);

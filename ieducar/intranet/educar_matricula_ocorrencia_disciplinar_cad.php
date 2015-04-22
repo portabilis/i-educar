@@ -254,11 +254,11 @@ class indice extends clsCadastro
 		if( $cod_ocorrencia_disciplinar )
 		{
 			if($this->visivel_pais){
-				$resposta = $this->enviaOcorrenciaNovoEducacao($cod_ocorrencia_disciplinar);
-				if(is_array($resposta['errors'])){
-					foreach($resposta['errors'] as $erro){
-						$this->mensagem .= $erro;
-					}
+				$resposta = json_decode($this->enviaOcorrenciaNovoEducacao($cod_ocorrencia_disciplinar));
+
+				if(is_array($resposta->errors)){
+					echo Portabilis_String_Utils::toLatin1("Erro ao enviar ocorrencia disciplinar ao sistema externo: " . $resposta->errors[0]);
+					die;
 				}
 
 			}
