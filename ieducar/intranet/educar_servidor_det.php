@@ -146,7 +146,7 @@ class indice extends clsDetalhe
       NULL,
       NULL,
       NULL,
-      $this->cod_servidor
+      $this->cod_servidor,
       NULL,
       NULL,
       NULL,
