@@ -59,6 +59,11 @@ class TurmaController extends ApiCoreController
            $this->validatesTurmaId();
   }
 
+  protected function canGetAlunosMatriculadosTurma(){
+    return  $this->validatesPresenceOf('instituicao_id') &&
+            $this->validatesPresenceOf('turma_id');
+  }
+
   // api
 
   protected function ordenaTurmaAlfabetica(){
@@ -130,6 +135,52 @@ class TurmaController extends ApiCoreController
     }
   }
 
+  protected function getAlunosMatriculadosTurma(){
+    if($this->canGetAlunosMatriculadosTurma()){
+      $instituicaoId = $this->getRequest()->instituicao_id;
+      $turmaId       = $this->getRequest()->turma_id;
+      $disciplinaId  = $this->getRequest()->disciplina_id;
+
+      $sql = 'SELECT a.cod_aluno as id
+              FROM pmieducar.matricula_turma mt
+              INNER JOIN pmieducar.matricula m ON mt.ref_cod_matricula = m.cod_matricula
+              INNER JOIN pmieducar.aluno a ON a.cod_aluno = m.ref_cod_aluno
+              INNER JOIN pmieducar.turma t ON t.cod_turma = mt.ref_cod_turma
+              INNER JOIN cadastro.pessoa p ON p.idpes = a.ref_idpes
+
+              WHERE mt.ativo = 1
+              AND m.ativo = 1
+              AND a.ativo = 1
+              AND t.ativo = 1
+              AND t.ref_cod_instituicao = $1
+              AND t.cod_turma  = $2  ';
+
+      $params = array($instituicaoId, $turmaId);
+
+
+      if(is_numeric($disciplinaId)){
+        $params[] = $disciplinaId;
+        $sql .= 'AND  (
+                    SELECT 1 FROM pmieducar.dispensa_disciplina dd
+                    WHERE dd.ativo = 1
+                    AND dd.ref_cod_matricula = m.cod_matricula
+                    AND dd.ref_cod_disciplina = $3
+                    LIMIT 1
+                  ) IS NULL
+        ';
+      }
+
+      $sql .= " ORDER BY sequencial_fechamento, translate(upper(p.nome),'áéíóúýàèìòùãõâêîôûäëïöüÿçÁÉÍÓÚÝÀÈÌÒÙÃÕÂÊÎÔÛÄËÏÖÜÇ','AEIOUYAEIOUAOAEIOUAEIOUYCAEIOUYAEIOUAOAEIOUAEIOUC')";
+
+      $alunos = $this->fetchPreparedQuery($sql, $params);
+
+      $attrs = array('id');
+      $alunos = Portabilis_Array_Utils::filterSet($alunos, $attrs);
+
+      return array('alunos' => $alunos);
+    }
+  }
+
   public function Gerar() {
     if ($this->isRequestFor('get', 'tipo-boletim'))
       $this->appendResponse($this->getTipoBoletim());
@@ -137,6 +188,8 @@ class TurmaController extends ApiCoreController
       $this->appendResponse($this->ordenaTurmaAlfabetica());
     else if($this->isRequestFor('get', 'turmas-por-escola'))
       $this->appendResponse($this->getTurmasPorEscola());
+    else if($this->isRequestFor('get', 'alunos-matriculados-turma'))
+      $this->appendResponse($this->getAlunosMatriculadosTurma());
     else
       $this->notImplementedOperationError();
   }
