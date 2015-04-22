@@ -1,5 +1,6 @@
 <?php
-
+// error_reporting(E_ALL);
+// ini_set("display_errors", 1);
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -72,17 +73,16 @@ class indice extends clsDetalhe
   /**
    * Atributos de dados
    */
-  var
-    $cod_servidor        = NULL,
-    $ref_idesco          = NULL,
-    $ref_cod_funcao      = NULL,
-    $carga_horaria       = NULL,
-    $data_cadastro       = NULL,
-    $data_exclusao       = NULL,
-    $ativo               = NULL,
-    $ref_cod_instituicao = NULL,
-    $alocacao_array      = array(),
-    $is_professor = FALSE;
+  var $cod_servidor = null;
+  var $ref_idesco = null;
+  var $ref_cod_funcao = null;
+  var $carga_horaria = null;
+  var $data_cadastro = null;
+  var $data_exclusao = null;
+  var $ativo = null;
+  var $ref_cod_instituicao = null;
+  var $alocacao_array = array();
+  var $is_professor = FALSE;
 
   /**
    * Implementação do método Gerar()
@@ -94,19 +94,18 @@ class indice extends clsDetalhe
     session_write_close();
 
     $this->titulo = 'Servidor - Detalhe';
-    $this->addBanner('imagens/nvp_top_intranet.jpg', 'imagens/nvp_vert_intranet.jpg',
-      'Intranet');
+    $this->addBanner('imagens/nvp_top_intranet.jpg', 'imagens/nvp_vert_intranet.jpg', 'Intranet');
 
     $this->cod_servidor        = $_GET['cod_servidor'];
     $this->ref_cod_instituicao = $_GET['ref_cod_instituicao'];
 
-    $tmp_obj = new clsPmieducarServidor($this->cod_servidor, NULL, NULL, NULL,
-      NULL, NULL, NULL, $this->ref_cod_instituicao);
+    $tmp_obj = new clsPmieducarServidor($this->cod_servidor, NULL, NULL, NULL, NULL, NULL, NULL, $this->ref_cod_instituicao);
 
     $registro = $tmp_obj->detalhe();
 
     if (!$registro) {
       header('Location: educar_servidor_lst.php');
+
       die();
     }  
 
@@ -116,8 +115,7 @@ class indice extends clsDetalhe
     $registro['ref_idesco'] = $det_ref_idesco['descricao'];
 
     // Função
-    $obj_ref_cod_funcao = new clsPmieducarFuncao($registro['ref_cod_funcao'],
-        NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, $this->ref_cod_instituicao);
+    $obj_ref_cod_funcao = new clsPmieducarFuncao($registro['ref_cod_funcao'], NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, $this->ref_cod_instituicao);
     $det_ref_cod_funcao = $obj_ref_cod_funcao->detalhe();
     $registro['ref_cod_funcao'] = $det_ref_cod_funcao['nm_funcao'];
 
@@ -126,7 +124,12 @@ class indice extends clsDetalhe
     $det_cod_servidor = $obj_cod_servidor->detalhe();
 
     $registro['matricula'] = $det_cod_servidor['matricula'];
-    $det_cod_servidor = $det_cod_servidor['idpes']->detalhe();
+    
+    /**
+     * TODO: Verificar utilização do método detalhes
+     * Iago Effting
+     */
+    // $det_cod_servidor = $det_cod_servidor['idpes']->detalhe(); // verificar
     $registro['nome'] = $det_cod_servidor['nome'];
 
     // Instituição
@@ -137,8 +140,24 @@ class indice extends clsDetalhe
     // Alocação do servidor
     $obj = new clsPmieducarServidorAlocacao();
     $obj->setOrderby('periodo, carga_horaria');
-    $lista = $obj->lista(NULL, $this->ref_cod_instituicao, NULL, NULL, NULL,
-      $this->cod_servidor, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
+    $lista = $obj->lista(
+      NULL,
+      $this->ref_cod_instituicao,
+      NULL,
+      NULL,
+      NULL,
+      $this->cod_servidor
+      NULL,
+      NULL,
+      NULL,
+      NULL,
+      NULL,
+      NULL,
+      NULL,
+      NULL,
+      NULL,
+      1
+    );
 
     if ($lista) {
       // Passa todos os valores do registro para atributos do objeto
@@ -187,7 +206,12 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('Função', $registro['ref_cod_funcao']));
     }
 
-    $this->addDetalhe(array('Multi-seriado', dbBool($registro['multi_seriado']) ? 'Sim' : 'Não'));
+    $this->addDetalhe(
+      array(
+        'Multi-seriado', 
+        dbBool($registro['multi_seriado']) ? 'Sim' : 'Não'
+      )
+    );
 
     $obj_funcao = new clsPmieducarServidorFuncao();
     $lst_funcao = $obj_funcao->lista($this->ref_cod_instituicao, $this->cod_servidor);
@@ -207,8 +231,7 @@ class indice extends clsDetalhe
       $tab_disc = NULL;
 
       $obj_disciplina_servidor = new clsPmieducarServidorDisciplina();
-      $lst_disciplina_servidor = $obj_disciplina_servidor->lista(NULL,
-        $this->ref_cod_instituicao, $this->cod_servidor);
+      $lst_disciplina_servidor = $obj_disciplina_servidor->lista(null, $this->ref_cod_instituicao, $this->cod_servidor);
 
       if ($lst_disciplina_servidor) {
         $tab_disc .= "<table cellspacing='0' cellpadding='0' width='200' border='0' style='border:1px dotted #000000'>";
@@ -235,8 +258,7 @@ class indice extends clsDetalhe
       }
 
       $obj_servidor_curso = new clsPmieducarServidorCursoMinistra();
-      $lst_servidor_curso = $obj_servidor_curso->lista(NULL,
-        $this->ref_cod_instituicao, $this->cod_servidor);
+      $lst_servidor_curso = $obj_servidor_curso->lista(null, $this->ref_cod_instituicao, $this->cod_servidor);
 
       if ($lst_servidor_curso) {
         $tab_curso .= "<table cellspacing='0' cellpadding='0' width='200' border='0' style='border:1px dotted #000000'>";
@@ -263,7 +285,6 @@ class indice extends clsDetalhe
       }
 
       foreach ($lst_funcao as $funcao) {
-
         $obj_funcao = new clsPmieducarFuncao($funcao['ref_cod_funcao']);
         $det_funcao = $obj_funcao->detalhe();
 
@@ -278,7 +299,6 @@ class indice extends clsDetalhe
       }
 
       if ($tab_curso) {
-
         $tabela .= "
           <tr class='$class' align='center'>
             <td style='padding:5px'>$tab_curso</td>
@@ -286,7 +306,6 @@ class indice extends clsDetalhe
       }
 
       if ($tab_disc) {
-
         $tabela .= "
           <tr class='$class' align='center'>
             <td style='padding:5px'>$tab_disc</td>
@@ -294,8 +313,7 @@ class indice extends clsDetalhe
       }
 
       $tabela .= "</table>";
-      $this->addDetalhe(array('Função',
-        "<a href='javascript:trocaDisplay(\"det_f\");' >Mostrar detalhe</a><div id='det_f' name='det_f' style='display:none;'>".$tabela."</div>"));
+      $this->addDetalhe(array('Função', "<a href='javascript:trocaDisplay(\"det_f\");' >Mostrar detalhe</a><div id='det_f' name='det_f' style='display:none;'>".$tabela."</div>"));
     }
 
     $tabela = NULL;
@@ -319,7 +337,8 @@ class indice extends clsDetalhe
       4  => 'Quarta',
       5  => 'Quinta',
       6  => 'Sexta',
-      7  => 'Sábado');
+      7  => 'Sábado'
+    );
 
     if ($this->alocacao_array) {
       $tabela .= "
@@ -335,12 +354,15 @@ class indice extends clsDetalhe
         switch ($alocacao['periodo']) {
           case 1:
             $nm_periodo = "Matutino";
+
             break;
           case 2:
             $nm_periodo = "Vespertino";
+
             break;
           case 3:
             $nm_periodo = "Noturno";
+
             break;
         }
 
@@ -361,8 +383,7 @@ class indice extends clsDetalhe
     }
 
     // Horários do professor
-    $horarios = $tmp_obj->getHorariosServidor($registro['cod_servidor'],
-      $this->ref_cod_instituicao);
+    $horarios = $tmp_obj->getHorariosServidor($registro['cod_servidor'], $this->ref_cod_instituicao);
 
     if ($horarios) {
       $tabela = "
@@ -412,11 +433,11 @@ class indice extends clsDetalhe
     if ($docente) {
       $docenteMapper = new Educacenso_Model_DocenteDataMapper();
 
-      $docenteInep = NULL;
+      $docenteInep = null;
       try {
         $docenteInep = $docenteMapper->find(array('docente' => $registro['cod_servidor']));
-      }
-      catch (Exception $e) {
+      } catch (Exception $e) {
+
       }
 
       if (isset($docenteInep)) {
@@ -429,11 +450,10 @@ class indice extends clsDetalhe
     }
 
     $obj_permissoes = new clsPermissoes();
-
     if ($obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7)) {
+
       $this->url_novo   = 'educar_servidor_cad.php';
       $this->url_editar = "educar_servidor_cad.php?cod_servidor={$registro["cod_servidor"]}&ref_cod_instituicao={$this->ref_cod_instituicao}";
-
 
       $get_padrao ="ref_cod_servidor={$registro["cod_servidor"]}&ref_cod_instituicao={$this->ref_cod_instituicao}";
 
@@ -465,9 +485,24 @@ class indice extends clsDetalhe
       $this->array_botao_url_script[] = "popless();";
 
       $obj_servidor_alocacao = new clsPmieducarServidorAlocacao();
-      $lista_alocacao = $obj_servidor_alocacao->lista(NULL,
-        $this->ref_cod_instituicao, NULL, NULL, NULL, $this->cod_servidor, NULL,
-        NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
+      $lista_alocacao = $obj_servidor_alocacao->lista(
+        NULL,
+        $this->ref_cod_instituicao,
+        NULL,
+        NULL,
+        NULL,
+        $this->cod_servidor,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        1
+      );
 
       if ($lista) {
         $this->array_botao[] = 'Substituir Horário Servidor';
@@ -480,8 +515,7 @@ class indice extends clsDetalhe
       if (is_numeric($afastamento) && $afastamento == 0) {
         $this->array_botao[] = 'Afastar Servidor';
         $this->array_botao_url_script[] = "go(\"educar_servidor_afastamento_cad.php?{$get_padrao}\");";
-      }
-      elseif (is_numeric($afastamento)) {
+      } elseif (is_numeric($afastamento)) {
         $this->array_botao[] = 'Retornar Servidor';
         $this->array_botao_url_script[] = "go(\"educar_servidor_afastamento_cad.php?{$get_padrao}&sequencial={$afastamento}\");";
       }
@@ -496,11 +530,12 @@ class indice extends clsDetalhe
     $this->largura = '100%';
 
     $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
+    $localizacao->entradaCaminhos(array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
-         ""                                  => "Detalhe do servidor"
+         "educar_index.php" => "i-Educar - Escola",
+         "" => "Detalhe do servidor"
     ));
+
     $this->enviaLocalizacao($localizacao->montar());    
   }
 }
