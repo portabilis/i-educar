@@ -143,14 +143,14 @@ class indice extends clsCadastro
 			$detPessoa = $objPessoa->detalhe();
 			$nome = $detPessoa['nome'];
 			
-			$this->campoTextoInv( "id_moderador_$id", "Super Usuário(s)", $nome,  "30", "30", true,false,false, "","<a href='#' onclick=\"javascript:excluirSumit({$moderador},'id_moderador_deletar') \">Clique aqui para Excluir</a>");
+			$this->campoTextoInv("id_moderador_$id", "Super Usuário(s)", $nome,  "30", "30", true,false,false, "","<a href='#' onclick=\"javascript:excluirSumit({$moderador},'id_moderador_deletar') \">Clique aqui para Excluir</a>");
 		}
 
 		//$this->campoProcurarAdicionar("id_moderador", "Incluir Super Usuário", "", 10, 5, "openurl('pesquisa_funcionario_otopic.php?campo=id_moderador')", "Procurar","insereSubmit()","");
 		$parametros = new clsParametrosPesquisas();
 		$parametros->setSubmit( 1 );
 		$parametros->adicionaCampoSelect( "id_moderador", "ref_cod_pessoa_fj", "nome" );
-		$this->campoListaPesq( "id_moderador", "Incluir Super Usuário", array( "Para procurar, clique na lupa ao lado" ), "", "pesquisa_funcionario_lst.php", "", false, "", "", null, null, "", false, $parametros->serializaCampos() );
+		$this->campoListaPesq("id_moderador","Incluir Super Usuário",array("Para procurar, clique na lupa ao lado"), "", "pesquisa_funcionario_lst.php", "", false, "", "", null, null, "", false, $parametros->serializaCampos() );
 		//$this->campoLista( "id_moderador", "Incluir Super Usuário", array("Para procurar, clique na lupa ao lado"), "", "", false, "", "<img id='lupa' src=\"imagens/lupa.png\" border=\"0\" onclick=\"showExpansivel( 500,500, '<iframe name=\'miolo\' id=\'miolo\' frameborder=\'0\' height=\'100%\' width=\'500\' marginheight=\'0\' marginwidth=\'0\' src=\'pesquisa_funcionario_lst.php?campos=$serializedcampos\'></iframe>' );\">", false, true );
 		
 		$this->url_cancelar = "otopic_su_lst.php";
@@ -167,12 +167,13 @@ class indice extends clsCadastro
 		if(!empty($this->todos_moderadores))
 		{
 			$db = new clsBanco();
-		   	$db->Consulta("DELETE FROM pmiotopic.funcionario_su");			
+      $db->Consulta("DELETE FROM pmiotopic.funcionario_su");	
 			foreach ($this->todos_moderadores AS $id=>$moderador)
 		    {
-				$db->Consulta("INSERT  INTO pmiotopic.funcionario_su (ref_ref_cod_pessoa_fj) VALUES ($moderador)");
+          $db->Consulta("INSERT  INTO pmiotopic.funcionario_su (ref_ref_cod_pessoa_fj) VALUES ($moderador)");
 		    }
 		}
+
 		header("Location: otopic_su_lst.php");
 		return false;		
 		
@@ -186,7 +187,7 @@ class indice extends clsCadastro
 	function Excluir()
 	{
 		$db = new clsBanco();
-		$db->Consulta("DELETE FROM pmiotopic.funcionario_su");			
+		$db->Consulta("DELETE FROM pmiotopic.funcionario_su");	
 		header("Location: otopic_su_lst.php");
 	}
 }

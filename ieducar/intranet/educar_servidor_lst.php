@@ -1,5 +1,6 @@
 <?php
-
+//error_reporting(E_ALL);
+//ini_set("display_errors", 1);
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -94,9 +95,7 @@ class indice extends clsListagem
     foreach ($_GET AS $var => $val) {
       $this->$var = ($val === '') ? NULL : $val;
     }
-
     
-
     $this->addCabecalhos( array(
       'Nome do Servidor',
       'Matrícula',
@@ -173,6 +172,7 @@ class indice extends clsListagem
     $url = CoreExt_View_Helper_UrlHelper::getInstance();
 
     // Monta a lista
+    // echo "<pre>";var_dump($lista);die;
     if (is_array($lista) && count($lista)) {
       foreach ($lista as $registro) {
         // Pega detalhes de foreign_keys
@@ -190,11 +190,11 @@ class indice extends clsListagem
           $obj_cod_servidor      = new clsFuncionario($registro['cod_servidor']);
           $det_cod_servidor      = $obj_cod_servidor->detalhe();
           $registro['matricula'] = $det_cod_servidor['matricula'];
-          $det_cod_servidor      = $det_cod_servidor['idpes']->detalhe();
-          $registro['nome']      = $det_cod_servidor['nome'];
+          //$det_cod_servidor      = $det_cod_servidor['idpes']->detalhe();
+          $det_cod_servidor      = $det_cod_servidor;
+         // $registro['nome']      = $det_cod_servidor['nome'];
           $registro['cpf']      = $det_cod_servidor['cpf'];
-        }
-        else {
+        } else {
           $registro['cod_servidor'] = 'Erro na geracao';
         }
 
