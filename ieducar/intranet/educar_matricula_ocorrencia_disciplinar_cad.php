@@ -255,8 +255,10 @@ class indice extends clsCadastro
 		{
 			if($this->visivel_pais){
 				$resposta = $this->enviaOcorrenciaNovoEducacao($cod_ocorrencia_disciplinar);
-				if(is_string($resposta['errors'])){
-					$this->mensagem = $resposta['errors'];
+				if(is_array($resposta['errors'])){
+					foreach($resposta['errors'] as $erro){
+						$this->mensagem .= $erro;
+					}
 				}
 
 			}
