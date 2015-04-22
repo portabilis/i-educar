@@ -365,7 +365,6 @@ class indice extends clsCadastro
   												   'params'			=> $params));
 
   	
-  	 echo"<pre>";var_dump($requisicao);die;
 	return $requisicao->executaRequisicao();
   }
 
