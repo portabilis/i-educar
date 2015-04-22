@@ -254,7 +254,11 @@ class indice extends clsCadastro
 		if( $cod_ocorrencia_disciplinar )
 		{
 			if($this->visivel_pais){
-				$this->enviaOcorrenciaNovoEducacao($cod_ocorrencia_disciplinar);
+				$resposta = $this->enviaOcorrenciaNovoEducacao($cod_ocorrencia_disciplinar);
+				if(is_string($resposta['errors'])){
+					$this->mensagem = $resposta['errors'];
+				}
+
 			}
 			$this->mensagem .= "Cadastro efetuado com sucesso.<br>";
 			if ($voltaListagem)
