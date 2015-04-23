@@ -1324,8 +1324,8 @@ class clsPmieducarServidor
         WHERE qhh.ref_servidor = s.cod_servidor
         AND qhh.ref_cod_instituicao_servidor = s.ref_cod_instituicao
         AND qhh.dia_semana = '{$array_horario[0]}'
-        AND qhh.hora_inicial > '{$array_horario[1]}'
-        AND qhh.hora_final < '{$array_horario[2]}'
+        AND (('{$array_horario[1]}' > qhh.hora_inicial AND '{$array_horario[1]}' < qhh.hora_final)
+              OR ('{$array_horario[2]}' > qhh.hora_inicial AND '{$array_horario[2]}' < qhh.hora_final))
         AND qhh.ativo = '1' ";
 
       if (is_string($lst_matriculas)) {
