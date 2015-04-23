@@ -236,7 +236,7 @@ class clsParametrosPesquisas
 	 * @param string $campo_indice
 	 * @param string $campo_valor
 	 */
-	function adicionaCampoSelect($campo_nome, $campo_indice, $campo_valor) {
+	function  adicionaCampoSelect( $campo_nome, $campo_indice, $campo_valor ) {
 		$this->campo_nome[]   = $campo_nome;
 		$this->campo_tipo[]   = "select";
 		$this->campo_indice[] = $campo_indice;

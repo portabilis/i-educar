@@ -101,7 +101,7 @@ class clsFuncionario extends clsPessoaFisica
 	 */
 	var $_campo_order_by;
 
-	function clsFuncionario($int_idpes = false, $str_matricula = false, $int_cpf = false, $int_ref_cod_setor = false, $str_senha = false, $data_troca_senha = false, $tempo_expira_senha = false, $data_reativa_conta = false, $tempo_expira_conta = false, $ref_cod_funcionario_vinculo = false, $ramal = false, $matricula_permanente = false, $banido = false, $email = null)
+	function  clsFuncionario($int_idpes = false, $str_matricula = false, $int_cpf = false, $int_ref_cod_setor = false, $str_senha = false, $data_troca_senha = false, $tempo_expira_senha = false, $data_reativa_conta = false, $tempo_expira_conta = false, $ref_cod_funcionario_vinculo = false, $ramal = false, $matricula_permanente = false, $banido = false, $email = null)
 	{
 		$this->idpes = $int_idpes;
 		$this->matricula = $str_matricula;
@@ -160,23 +160,8 @@ class clsFuncionario extends clsPessoaFisica
 		}
 	}
 
-  function lista(
-    $str_matricula = false,
-    $str_nome = false,
-    $int_ativo = false,
-    $int_secretaria = false,
-    $int_departamento = false,
-    $int_setor = false,
-    $int_vinculo = false,
-    $int_inicio_limit = false,
-    $int_qtd_registros = false,
-    $str_ramal = false,
-    $matricula_is_not_null = false,
-    $int_idpes = false,
-    $email = null,
-    $matricula_interna = NULL)
+	function lista($str_matricula=false, $str_nome=false, $int_ativo=false, $int_secretaria=false, $int_departamento=false, $int_setor=false, $int_vinculo=false, $int_inicio_limit=false, $int_qtd_registros=false, $str_ramal = false, $matricula_is_not_null = false, $int_idpes = false, $email = null, $matricula_interna = NULL )
 	{
-    // Recuperar lista
 		$sql = " SELECT {$this->_campos_lista} FROM {$this->schema_portal}.v_funcionario f";
 		$filtros = "";
 		$filtro_pessoa = false;
@@ -184,99 +169,102 @@ class clsFuncionario extends clsPessoaFisica
 
 		$whereAnd = " WHERE ";
 
-		if (is_string($str_matricula) && $str_matricula != '') {
+		if( is_string( $str_matricula ) && $str_matricula != '')
+		{
 			$filtros .= "{$whereAnd} to_ascii(f.matricula) LIKE to_ascii('%{$str_matricula}%')";
 			$whereAnd = " AND ";
 		}
-
-		if(is_string($matricula_interna) && $matricula_interna != '')	{
+		if( is_string( $matricula_interna ) && $matricula_interna != '')
+		{
 			$filtros .= "{$whereAnd} to_ascii(f.matricula_interna) LIKE to_ascii('%{$matricula_interna}%')";
 			$whereAnd = " AND ";
-		}	
-    
-		if (is_string($str_nome)) {
+		}		
+		if( is_string( $str_nome ) )
+		{
 			$filtros .= "{$whereAnd} to_ascii(f.nome) LIKE  to_ascii('%{$str_nome}%%')";
 			$whereAnd = " AND ";
 			$filtro_pessoa =true;
 		}
-
-		if (is_numeric($int_ativo)) {
+		if( is_numeric( $int_ativo ) )
+		{
 			$filtros .= "{$whereAnd} f.ativo = '{$int_ativo}'";
 			$whereAnd = " AND ";
 		}
-
-		if (is_numeric($int_vinculo)) {
+		if( is_numeric( $int_vinculo ) )
+		{
 			$filtros .= "{$whereAnd} f.ref_cod_funcionario_vinculo = '{$int_vinculo}'";
 			$whereAnd = " AND ";
 		}
-
-		if (is_string($str_ramal)) {
+		if( is_string( $str_ramal ) )
+		{
 			$filtros .= "{$whereAnd} f.str_ramal ILIKE '%{$str_ramal}%'f";
 			$whereAnd = " AND ";
 		}
-
-		if ($matricula_is_not_null) {
+		if($matricula_is_not_null)
+		{
 			$filtros .= "{$whereAnd} f.matricula  IS NOT NULL";
 			$whereAnd = " AND ";
 		}
-
-		if (is_numeric($int_idpes)) {
+		if(is_numeric($int_idpes))
+		{
 			$filtros .= "{$whereAnd} f.ref_cod_pessoa_fj = '{$int_idpes}'";
 			$whereAnd = " AND ";
 			$filtro_pessoa =true;
 		}
 
-		if (is_string($str_email)) {
+		if(is_string($str_email))
+		{
 			$filtros .= "{$whereAnd} f.email ILIKE '%{$str_email}%'f";
 			$whereAnd = " AND ";
 		}
 
 		$limite = "";
-		if($int_inicio_limit !== false  && $int_qtd_registros !== false) {
+		if($int_inicio_limit !== false  && $int_qtd_registros !== false)
+		{
 			$limite = "LIMIT $int_qtd_registros OFFSET $int_inicio_limit ";
 		}
-
 		$db = new clsBanco();
 		$countCampos = count( explode( ",", $this->_campos_lista ) );
 		$resultado = array();
 
-		if($int_inicio_limit !== false  && $int_qtd_registros !== false) {
+		if($int_inicio_limit !== false  && $int_qtd_registros !== false)
+		{
 			$sql .= "{$filtros}"." ORDER BY to_ascii(f.nome) ASC ".$limite;
-		} else {
+		}
+		else
+		{
 			$sql .= "{$filtros}".$this->getOrderby().$this->getLimite();
 		}
 
 		$this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->schema_portal}.v_funcionario f {$filtros}" );
+		
+		$db->Consulta( $sql );
 
-		$db->Consulta($sql);
-
-		if($countCampos > 1) {
-			while ($db->ProximoRegistro()) {
+		if( $countCampos > 1 )
+		{
+			while ( $db->ProximoRegistro() )
+			{
 				$tupla = $db->Tupla();
 
 				$tupla["_total"] = $this->_total;
 				$resultado[] = $tupla;
 			}
-		} else {
+		}
+		else
+		{
 			while ( $db->ProximoRegistro() )
 			{
 				$resultado = $db->Tupla();//$tupla;
 			}
 		}
-
-		if (count($resultado))
+		if( count( $resultado ) )
+		{
 			return $resultado;
+		}
 		return false;
 	}
 
-  function listaFuncionarioUsuario(
-    $str_matricula = false,
-    $str_nome = false,
-    $matricula_interna = NULL,
-    $int_ref_cod_escola = null,
-    $int_ref_cod_instituicao = null,
-    $int_ref_cod_tipo_usuario = null,
-    $int_nivel = null)
+	function listaFuncionarioUsuario($str_matricula=false, $str_nome=false, $matricula_interna = NULL, $int_ref_cod_escola = null, $int_ref_cod_instituicao = null, $int_ref_cod_tipo_usuario = null, $int_nivel = null )
 	{
 		$sql = " SELECT f.ref_cod_pessoa_fj, f.nome, f.matricula, f.matricula_interna, f.ativo, tu.nm_tipo, tu.nivel
 							FROM {$this->schema_portal}.v_funcionario f 
@@ -285,40 +273,43 @@ class clsFuncionario extends clsPessoaFisica
 		$filtros = "";
 		$filtro_pessoa = false;
 
+
 		$whereAnd = " WHERE u.ativo = 1 AND ";
 
-		if (is_string($str_matricula) && $str_matricula != '') {
+		if( is_string( $str_matricula ) && $str_matricula != '')
+		{
 			$filtros .= "{$whereAnd} to_ascii(f.matricula) LIKE to_ascii('%{$str_matricula}%')";
 			$whereAnd = " AND ";
 		}
-
-		if (is_string($matricula_interna) && $matricula_interna != '') {
+		if( is_string( $matricula_interna ) && $matricula_interna != '')
+		{
 			$filtros .= "{$whereAnd} to_ascii(f.matricula_interna) LIKE to_ascii('%{$matricula_interna}%')";
 			$whereAnd = " AND ";
-    }
-
-		if (is_string($str_nome)) {
+		}		
+		if( is_string( $str_nome ) )
+		{
 			$filtros .= "{$whereAnd} to_ascii(f.nome) LIKE  to_ascii('%{$str_nome}%%')";
 			$whereAnd = " AND ";
 			$filtro_pessoa =true;
 		}
 
-		if (is_numeric($int_ref_cod_escola)) {
+		if( is_numeric( $int_ref_cod_escola ) )
+		{
 			$filtros .= "{$whereAnd} u.ref_cod_escola = '{$int_ref_cod_escola}'";
 			$whereAnd = " AND ";
-    }
-
-		if (is_numeric($int_ref_cod_instituicao)) {
+		}
+		if( is_numeric( $int_ref_cod_instituicao ) )
+		{
 			$filtros .= "{$whereAnd} u.ref_cod_instituicao = '{$int_ref_cod_instituicao}'";
 			$whereAnd = " AND ";
-    }
-
-		if (is_numeric($int_ref_cod_tipo_usuario)) {
+		}
+		if( is_numeric( $int_ref_cod_tipo_usuario ) )
+		{
 			$filtros .= "{$whereAnd} u.ref_cod_tipo_usuario = '{$int_ref_cod_tipo_usuario}'";
 			$whereAnd = " AND ";
-    }
-
-		if (is_numeric($int_nivel)) {
+		}
+		if( is_numeric($int_nivel))
+		{
 			$filtros .= "{$whereAnd} tu.nivel = '$int_nivel'";
 			$whereAnd = " AND ";
 		}
@@ -393,11 +384,9 @@ class clsFuncionario extends clsPessoaFisica
 
 				$tupla["idpes"] = new clsPessoaFisica( $tupla["ref_cod_pessoa_fj"] );
 				$tupla[] = $tupla["idpes"];
-
 				return $tupla;
 			}
 		}
-
 		return false;
 	}
 
@@ -418,7 +407,6 @@ class clsFuncionario extends clsPessoaFisica
 		{
 			return $resultado;
 		}
-
 		return false;
 	}
 
@@ -436,7 +424,9 @@ class clsFuncionario extends clsPessoaFisica
 
 		}
 		if(count($resultado) > 0)
+		{
 			return $resultado;
+		}
 		return false;
 	}
 
@@ -454,7 +444,9 @@ class clsFuncionario extends clsPessoaFisica
 
 		}
 		if(count($resultado) > 0)
+		{
 			return $resultado;
+		}
 		return false;
 	}
 
