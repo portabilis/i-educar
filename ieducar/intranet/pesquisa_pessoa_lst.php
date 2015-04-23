@@ -50,97 +50,106 @@ class clsIndex extends clsBase
 
 class indice extends clsListagem
 {
-  var $cpf;
-  var $cnpj;
-  var $matricula;
-  var $campo_busca;
-  var $chave_campo;
+	var $cpf;
+	var $cnpj;
+	var $matricula;
+	var $campo_busca;
+	var $chave_campo;
 
-  function Gerar()
-  {
-    @session_start();
-    $id_pessoa  = $_SESSION['id_pessoa'];
-    $this->nome = "form1";
+	function Gerar()
+	{
+		@session_start();
+		$id_pessoa  = $_SESSION['id_pessoa'];
+		$this->nome = "form1";
 
-    $show = $_REQUEST['show'];
-    $this->campoOculto("show",$show);
+		$show = $_REQUEST['show'];
+		$this->campoOculto("show",$show);
+		
+		
+		if( $show == "todos" ) 
+		{
+			$show = false;
+		}
+		else 
+		{
+			$show = 1;
+		}
+		
+		$this->chave_campo = $_GET['chave_campo'];
+		if ( $_GET["campos"] )
+		{
+			$parametros 		= new clsParametrosPesquisas();
+			$parametros->deserializaCampos( $_GET["campos"] );
+			$_SESSION['campos'] = $parametros->geraArrayComAtributos();
+			unset( $_GET["campos"] );
+		}
+		else
+		{
+			$parametros = new clsParametrosPesquisas();
+			$parametros->preencheAtributosComArray( $_SESSION['campos'] );
+		}
 
-    if ($show == "todos") {
-      $show = false;
-    } else {
-      $show = 1;
-    }
+		@session_write_close();
+		$submit = false;
 
-    $this->chave_campo = $_GET['chave_campo'];
+		foreach ($_GET AS $key => $value)
+		{
+			$this->$key = $value;
+		}
 
-    if ($_GET["campos"]) {
-      $parametros 		= new clsParametrosPesquisas();
-      $parametros->deserializaCampos( $_GET["campos"] );
-      $_SESSION['campos'] = $parametros->geraArrayComAtributos();
-      unset( $_GET["campos"] );
-    } else {
-      $parametros = new clsParametrosPesquisas();
-      $parametros->preencheAtributosComArray( $_SESSION['campos'] );
-    }
+		if ( $parametros->getPessoa() == 'F' )
+		{
 
-    @session_write_close();
-    $submit = false;
+			$this->addCabecalhos( array( "CPF", "Nome" ) );
 
-    foreach ($_GET as $key => $value) {
-      $this->$key = $value;
-    }
+			// Filtros de Busca
+			$this->campoTexto( "campo_busca", "Pessoa", $this->campo_busca, 50, 255, false, false, false, "Código/Nome" );
+			$this->campoCpf( "cpf", "CPF", ($this->cpf)?int2CPF(idFederal2int($this->cpf)):"" );
 
-    if ($parametros->getPessoa() == 'F' || 1==1) {
-      $this->addCabecalhos(array("CPF", "Nome"));
+			$chave_busca = @$_GET['campo_busca'];
+			$cpf		 = @$_GET['cpf'];
+			$busca       = @$_GET['busca'];
 
-      // Filtros de Busca
-      $this->campoTexto( "campo_busca", "Pessoa", $this->campo_busca, 50, 255, false, false, false, "Código/Nome" );
-      $this->campoCpf( "cpf", "CPF", ($this->cpf)?int2CPF(idFederal2int($this->cpf)):"" );
+			// Paginador
+			$limite      = 10;
+			$iniciolimit = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"] * $limite - $limite: 0;
 
-      $chave_busca = @$_GET['campo_busca'];
-      $cpf = @$_GET['cpf'];
-      $busca = @$_GET['busca'];
+			if(is_numeric($this->chave_campo))
+				$chave = "[$this->chave_campo]";
+			else
+				$chave = "";
 
-      // Paginador
-      $limite      = 10;
-      $iniciolimit = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"] * $limite - $limite: 0;
-
-      if(is_numeric($this->chave_campo))
-        $chave = "[$this->chave_campo]";
-      else
-        $chave = "";
-
-      if ($busca == 'S') {
-        if ($parametros->getPessoaNovo() == 'S') {
-          if ($parametros->getPessoaTela() == "window") {
-						$this->acao = "set_campo_pesquisa(\"".$parametros->getPessoaCampo()."\", \"0\", \"submit\")";
-            $this->nome_acao = "Novo";
-          } elseif ($parametros->getPessoaTela() == "frame") {
-            $this->acao = "go( \"pesquisa_pessoa_cad.php?pessoa=F&cod=0&ref_cod_sistema=".$parametros->getCodSistema()."&pessoa_cpf=".$parametros->getPessoaCPF()."\" )";
-            $this->nome_acao = "Novo";
-          }
-        }
-
-        if (is_numeric($chave_busca)) {
-          $obj_pessoa = new clsPessoaFisica();
-          $lst_pessoa = $obj_pessoa->lista( null, ( ( $cpf ) ? idFederal2int( $cpf ) : null ), $iniciolimit, $limite, false, $parametros->getCodSistema(), $chave_busca );
-        } else {
-          $obj_pessoa = new clsPessoaFisica();
-          $lst_pessoa = $obj_pessoa->lista( $chave_busca, ( ( $cpf ) ? idFederal2int( $cpf ) : null ), $iniciolimit, $limite, false, $parametros->getCodSistema() );
-        }
-      } else {
+			if ( $busca == 'S' ) {
+				if ( $parametros->getPessoaNovo() == 'S' ) {
+					if ( $parametros->getPessoaTela() == "window" ) {
+						$this->acao 	 = "set_campo_pesquisa( \"".$parametros->getPessoaCampo()."\", \"0\", \"submit\" )";
+						$this->nome_acao = "Novo";
+					}
+					elseif ( $parametros->getPessoaTela() == "frame" ) {
+						$this->acao 	 = "go( \"pesquisa_pessoa_cad.php?pessoa=F&cod=0&ref_cod_sistema=".$parametros->getCodSistema()."&pessoa_cpf=".$parametros->getPessoaCPF()."\" )";
+						$this->nome_acao = "Novo";
+					}
+				}
+				if ( is_numeric( $chave_busca ) ) {
+					$obj_pessoa = new clsPessoaFisica();
+					$lst_pessoa = $obj_pessoa->lista( null, ( ( $cpf ) ? idFederal2int( $cpf ) : null ), $iniciolimit, $limite, false, $parametros->getCodSistema(), $chave_busca );
+				}
+				else {
+					$obj_pessoa = new clsPessoaFisica();
+					$lst_pessoa = $obj_pessoa->lista( $chave_busca, ( ( $cpf ) ? idFederal2int( $cpf ) : null ), $iniciolimit, $limite, false, $parametros->getCodSistema() );
+				}
+			}
+			else {
 				$obj_pessoa = new clsPessoaFisica();
 				$lst_pessoa = $obj_pessoa->lista( null, null, $iniciolimit, $limite, false, $parametros->getCodSistema() );
-      }
-
-			if ($lst_pessoa) {
-        foreach ($lst_pessoa as $pessoa) {
-          $funcao = " set_campo_pesquisa(";
-          $virgula = "";
-          $cont = 0;
-          $pessoa["cpf"] = ( is_numeric( $pessoa["cpf"] ) ) ? int2CPF( $pessoa["cpf"] ) : null;
-
-					foreach ($parametros->getCampoNome() as $campo) {
+			}
+			if ( $lst_pessoa ) {
+				foreach ( $lst_pessoa as $pessoa ) {
+					$funcao 	   = " set_campo_pesquisa(";
+					$virgula 	   = "";
+					$cont    	   = 0;
+					$pessoa["cpf"] = ( is_numeric( $pessoa["cpf"] ) ) ? int2CPF( $pessoa["cpf"] ) : null;
+					foreach ( $parametros->getCampoNome() as $campo ) {
 						if ( $parametros->getCampoTipo( $cont ) == "text" ) {
 							$funcao .= "{$virgula} '{$campo}{$chave}', '{$pessoa[$parametros->getCampoValor( $cont )]}'";
 							$virgula = ",";
@@ -472,3 +481,6 @@ $miolo = new indice();
 $pagina->addForm( $miolo );
 $pagina->MakeAll();
 ?>
+<script type="text/javascript"/">
+
+</script>
