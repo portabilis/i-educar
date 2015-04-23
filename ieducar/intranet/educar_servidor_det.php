@@ -77,7 +77,7 @@ class indice extends clsDetalhe
     $ref_idesco          = NULL,
     $ref_cod_funcao      = NULL,
     $carga_horaria       = NULL,
-    $data_cadastro       = NULL,D
+    $data_cadastro       = NULL,
     $data_exclusao       = NULL,
     $ativo               = NULL,
     $ref_cod_instituicao = NULL,
