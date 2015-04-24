@@ -1,5 +1,4 @@
 <?php
-
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -89,8 +88,7 @@ class clsCampos extends Core_Controller_Page_Abstract
     }
 
     $this->campos['tabbed_add_' . $this->__id_tabbed] = $this->__id_tabbed;
-  }
-
+  } 
   function campoTabFim()
   {
     $this->campos['fim_tab']          = 1;
@@ -565,8 +563,7 @@ class clsCampos extends Core_Controller_Page_Abstract
     );
   }
 
-  function campoListaAtivarPesoSelect($nome, $campo, $valor, $default = '0',
-    $ativado = FALSE, $valor2)
+  function campoListaAtivarPesoSelect($nome, $campo, $valor, $default = '0', $ativado = FALSE, $valor2)
   {
     $this->campos[$nome] = array(
       'listaativarpesoselect',
@@ -579,14 +576,45 @@ class clsCampos extends Core_Controller_Page_Abstract
     );
   }
 
-  function campoListaPesq($nome, $campo, $valor, $default, $caminho = '', $acao = '',
-    $duplo = FALSE, $descricao = '', $descricao2 = '', $flag = NULL, $pag_cadastro = NULL,
-    $disabled = '', $div = FALSE, $serializedcampos = FALSE, $obrigatorio = FALSE)
+  /**
+   * Configurar campo do tipo ListaPesquisa
+   *
+   * @param $options array
+   */
+  public function setOptionsListaPesquisa($nome, array $options)
+  {
+    $this->campos[$nome] = array('listapesquisa');
+
+    foreach ($options as $key =>  $option)
+      $this->campos[$nome][] = $option;
+  }
+
+  /**
+   * [Obsoleta] Ver função setOptionsListaPesquisa
+   *
+   * TODO: converter todos que utilizam essa fução para a
+   * função setOptionsListaPesquisa
+   */
+  function campoListaPesq(
+    $nome,
+    $campo,
+    $valor,
+    $default,
+    $caminho = '',
+    $acao = '',
+    $duplo = false,
+    $descricao = '',
+    $descricao2 = '',
+    $flag = NULL,
+    $pag_cadastro = NULL,
+    $disabled = '',
+    $div = false,
+    $serializedcampos = false,
+    $obrigatorio = false)
   {
     $this->campos[$nome] = array(
       'listapesquisa',
       $campo,
-      $obrigatorio ? "/[^ ]/": '',
       $valor,
       $default,
       $acao,
@@ -639,10 +667,9 @@ class clsCampos extends Core_Controller_Page_Abstract
       $disabled
     );
 
-    if (! $this->__adicionando_tabela) {
+    if (!$this->__adicionando_tabela) {
       $this->campos[$nome] = $arr_componente;
-    }
-    else {
+    } else {
       $this->__campos_tabela[] = $arr_componente;
     }
   }

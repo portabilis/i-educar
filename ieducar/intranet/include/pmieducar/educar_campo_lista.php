@@ -24,38 +24,31 @@
 *	02111-1307, USA.													 *
 *																		 *
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-?>
-<?	$pessoa_logada = $_SESSION['id_pessoa'];
+$pessoa_logada = $_SESSION['id_pessoa'];
 
 	if(!isset($exibe_campo_lista_curso_escola))
 	{
 		$exibe_campo_lista_curso_escola = true;
 	}
 
-	if ($obrigatorio)
-	{
+	if ($obrigatorio) {
 		$instituicao_obrigatorio = $escola_obrigatorio = $curso_obrigatorio = $escola_curso_obrigatorio = $escola_curso_serie_obrigatorio = $serie_obrigatorio = $biblioteca_obrigatorio = $cliente_tipo_obrigatorio = $funcao_obrigatorio = $turma_obrigatorio = true;
-	}
-	else
-	{
-		$instituicao_obrigatorio = 			isset($instituicao_obrigatorio) 		? $instituicao_obrigatorio 			: false;
-		$escola_obrigatorio = 				isset($escola_obrigatorio) 				? $escola_obrigatorio 				: false;
-		$curso_obrigatorio = 				isset($curso_obrigatorio) 				? $curso_obrigatorio 				: false;
-		$escola_curso_obrigatorio = 		isset($escola_curso_obrigatorio) 		? $escola_curso_obrigatorio 		: false;
-		$escola_curso_serie_obrigatorio = 	isset($escola_curso_serie_obrigatorio) 	? $escola_curso_serie_obrigatorio 	: false;
-		$serie_obrigatorio = 				isset($serie_obrigatorio) 				? $serie_obrigatorio 				: false;
-		$biblioteca_obrigatorio = 			isset($biblioteca_obrigatorio) 			? $biblioteca_obrigatorio 			: false;
-		$cliente_tipo_obrigatorio = 		isset( $cliente_tipo_obrigatorio ) 		? $cliente_tipo_obrigatorio 		: false;
-		$funcao_obrigatorio = 				isset( $funcao_obrigatorio ) 			? $funcao_obrigatorio 				: false;
-		$turma_obrigatorio = 				isset( $turma_obrigatorio ) 			? $turma_obrigatorio 				: false;
+	} else {
+		$instituicao_obrigatorio        = isset($instituicao_obrigatorio)? $instituicao_obrigatorio : false;
+		$escola_obrigatorio             = isset($escola_obrigatorio)? $escola_obrigatorio : false;
+		$curso_obrigatorio              = isset($curso_obrigatorio)? $curso_obrigatorio : false;
+		$escola_curso_obrigatorio       = isset($escola_curso_obrigatorio)? $escola_curso_obrigatorio : false;
+		$escola_curso_serie_obrigatorio = isset($escola_curso_serie_obrigatorio)? $escola_curso_serie_obrigatorio : false;
+		$serie_obrigatorio              = isset($serie_obrigatorio)? $serie_obrigatorio : false;
+		$biblioteca_obrigatorio         = isset($biblioteca_obrigatorio)? $biblioteca_obrigatorio : false;
+		$cliente_tipo_obrigatorio       = isset($cliente_tipo_obrigatorio)? $cliente_tipo_obrigatorio : false;
+		$funcao_obrigatorio             = isset($funcao_obrigatorio)? $funcao_obrigatorio : false;
+		$turma_obrigatorio              = isset($turma_obrigatorio)? $turma_obrigatorio : false;
 	}
 
-	if ($desabilitado)
-	{
+	if ($desabilitado) {
 		$instituicao_desabilitado = $escola_desabilitado = $curso_desabilitado = $escola_curso_desabilitado = $escola_curso_serie_desabilitado = $serie_desabilitado = $biblioteca_desabilitado = $cliente_tipo_desabilitado = $turma_desabilitado = true;
-	}
-	else
-	{
+	} else {
 		$instituicao_desabilitado = 		isset($instituicao_desabilitado) 		? $instituicao_desabilitado 		: false;
 		$escola_desabilitado = 				isset($escola_desabilitado) 			? $escola_desabilitado 				: false;
 		$curso_desabilitado = 				isset($curso_desabilitado) 				? $curso_desabilitado 				: false;
@@ -90,38 +83,25 @@
 		if ($get_escola && $get_biblioteca)
 		{
 			$this->campoLista( "ref_cod_instituicao", "Institui&ccedil;&atilde;o", $opcoes, $this->ref_cod_instituicao,"getDuploEscolaBiblioteca();",null,null,null,$instituicao_desabilitado,$instituicao_obrigatorio);
-		}
-		else if ($get_escola && $get_curso && $get_matricula)
-		{
+		} else if ($get_escola && $get_curso && $get_matricula) {
 			$this->campoLista( "ref_cod_instituicao", "Institui&ccedil;&atilde;o", $opcoes, $this->ref_cod_instituicao, "getMatricula();", null, null, null, $instituicao_desabilitado, $instituicao_obrigatorio );
-		}
-		else if ($get_escola && $get_curso )
-		{
+		} else if ($get_escola && $get_curso ) {
 			$this->campoLista( "ref_cod_instituicao", "Institui&ccedil;&atilde;o", $opcoes, $this->ref_cod_instituicao, "getDuploEscolaCurso();", null, null, null, $instituicao_desabilitado, $instituicao_obrigatorio );
-		}
-		else if ($get_escola)
-		{
+		} else if ($get_escola) {
 			$this->campoLista( "ref_cod_instituicao", "Institui&ccedil;&atilde;o", $opcoes, $this->ref_cod_instituicao,"getEscola();",null,null,null,$instituicao_desabilitado,$instituicao_obrigatorio);
-		}
-		else if ($get_curso)
-		{
+		} else if ($get_curso) {
 			$this->campoLista( "ref_cod_instituicao", "Institui&ccedil;&atilde;o", $opcoes, $this->ref_cod_instituicao,"getCurso();",null,null,null,$instituicao_desabilitado,$instituicao_obrigatorio);
-		}
-		else if ($get_biblioteca)
-		{
+		} else if ($get_biblioteca) {
 			$this->campoLista( "ref_cod_instituicao", "Institui&ccedil;&atilde;o", $opcoes, $this->ref_cod_instituicao,"getBiblioteca(1);",null,null,null,$instituicao_desabilitado,$instituicao_obrigatorio);
-		}
-		else if ( $get_cliente_tipo )
-		{
+		} else if ( $get_cliente_tipo ) {
 			$this->campoLista( "ref_cod_cliente_tipo", "Tipo de Cliente", $opcoes, $this->ref_cod_cliente_tipo, "getCliente();", null, null, null, $cliente_tipo_desabilitado, $cliente_tipo_obrigatorio );
-		}
-		else
-		{
+		} else {
 			$this->campoLista( "ref_cod_instituicao", "Institui&ccedil;&atilde;o", $opcoes, $this->ref_cod_instituicao,"",null,null,null,$instituicao_desabilitado,$instituicao_obrigatorio);
 		}
 	}
+  
 	//se nao eh administrador
-	elseif ( $nivel_usuario != 1 )
+	elseif ($nivel_usuario != 1)
 	{
 	 	$obj_usuario = new clsPmieducarUsuario($pessoa_logada);
 		$det_usuario = $obj_usuario->detalhe();
@@ -141,11 +121,9 @@
 				$nm_escola = $det_escola['nome'];
 				$this->campoRotulo( "nm_escola","Escola", $nm_escola );
 			}
-			if ( $get_biblioteca )
-			{
+			if ( $get_biblioteca ) {
 				$obj_per = new clsPermissoes();
 				$ref_cod_biblioteca_ = $obj_per->getBiblioteca( $pessoa_logada );
-
 			}
 		}
 	}
