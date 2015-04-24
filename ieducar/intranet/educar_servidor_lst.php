@@ -1,6 +1,6 @@
 <?php
-//error_reporting(E_ALL);
-//ini_set("display_errors", 1);
+// error_reporting(E_ALL);
+// ini_set("display_errors", 1);
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -103,9 +103,9 @@ class indice extends clsListagem
       'Instituição'
     ));
 
-    $get_escola      = TRUE;
-    $obrigatorio     = TRUE;
-    $exibe_nm_escola = TRUE;
+    $get_escola      = true;
+    $obrigatorio     = true;
+    $exibe_nm_escola = true;
 
     include 'include/pmieducar/educar_campo_lista.php';
 
@@ -114,18 +114,54 @@ class indice extends clsListagem
     if ($this->cod_servidor) {
       $objTemp = new clsFuncionario($this->cod_servidor);
       $detalhe = $objTemp->detalhe();
-      $detalhe = $detalhe['idpes']->detalhe();
+      // $detalhe = $detalhe['idpes']->detalhe();
 
       $opcoes[$detalhe['idpes']] = $detalhe['nome'];
     }
 
     $parametros = new clsParametrosPesquisas();
     $parametros->setSubmit(0);
-    $parametros->adicionaCampoSelect( 'cod_servidor', 'ref_cod_pessoa_fj', 'nome');
+    $parametros->adicionaCampoSelect( 'cod_servidor', 'idpes', 'nome');
 
-    $this->campoListaPesq('cod_servidor', 'Servidor', $opcoes, $this->cod_servidor,
-      'pesquisa_funcionario_lst.php', '', FALSE, '', '', NULL, NULL, '', FALSE,
-      $parametros->serializaCampos() . '&com_matricula=false', TRUE);
+
+    // Configurações do campo de pesquisa
+    $dados = array(
+      'nome' => 'Pessoa',
+      'campo' => '', // Como acao
+      'valor' => array(null => 'Para procurar, clique na lupa ao lado.'),
+      'default' => null,
+      'acao' => "",
+      'descricao' => "",
+      'caminho' => 'pesquisa_pessoa_lst.php',
+      'descricao2' => "",
+      'flag' => null,
+      'pag_cadastro' => null,
+      'disabled' => "",
+      'div' => false,
+      'serializedcampos' => $parametros->serializaCampos() . '&com_matricula=false',
+      'duplo' => false,
+      'obrigatorio' => true
+    ); 
+    $this->setOptionsListaPesquisa("cod_servidor", $dados);
+
+    //
+    // $this->campoListaPesq(
+    //   'cod_servidor', 
+    //   'Servidor', 
+    //   $opcoes, 
+    //   $this->cod_servidor, 
+    //   'pesquisa_funcionario_lst.php', 
+    //   '', 
+    //   false, 
+    //   '', 
+    //   '', 
+    //   null, 
+    //   null, 
+    //   '', 
+    //   false,
+    //   $parametros->serializaCampos() . '&com_matricula=false', 
+    //   true
+    // );
 
     // Paginador
     $this->limite = 20;

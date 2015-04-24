@@ -142,7 +142,26 @@ class indice extends clsCadastro
       $parametros->setPessoaNovo('S');
       $parametros->setPessoaTela('frame');
 
-      $this->campoListaPesq('ref_idpes', 'Cliente', $opcoes, $this->ref_idpes, 'pesquisa_pessoa_lst.php', '', FALSE, '', '', NULL, NULL, '', FALSE, $parametros->serializaCampos());
+      // $this->campoListaPesq('ref_idpes', 'Cliente', $opcoes, $this->ref_idpes, 'pesquisa_pessoa_lst.php', '', FALSE, '', '', NULL, NULL, '', FALSE, $parametros->serializaCampos());
+      $dados = array(
+        'nome' => 'Cliente',
+        'campo' => '',
+        'valor' => array(null => 'Para procurar, clique na lupa ao lado.'),
+        'default' => null,
+        'acao' => "",
+        'descricao' => "",
+        'caminho' => 'pesquisa_pessoa_lst.php',
+        'descricao2' => "",
+        'flag' => null,
+        'pag_cadastro' => null,
+        'disabled' => "",
+        'div' => false,
+        'serializedcampos' => $parametros->serializaCampos(),
+        'duplo' => false,
+        'obrigatorio' => true
+      );
+      $this->setOptionsListaPesquisa("ref_idpes", $dados);
+
 		}
     else {
       $this->campoOculto('ref_idpes', $this->ref_idpes);

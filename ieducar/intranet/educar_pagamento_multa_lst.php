@@ -120,7 +120,25 @@ class indice extends clsListagem
 		$parametros->setPessoaCPF( 'N' );
 		$parametros->setCodSistema( 1 );
 
-		$this->campoListaPesq( "ref_idpes", "Cliente", array( '' => "Selecione" ), $this->ref_idpes, "pesquisa_pessoa_lst.php", "", false, "", "", null, null, "", false, $parametros->serializaCampos() );
+    $dados = array(
+      'nome' => 'Cliente',
+      'campo' => '', // Como acao
+      'valor' => array(null => 'Para procurar, clique na lupa ao lado.'),
+      'default' => null,
+      'acao' => "",
+      'descricao' => "",
+      'caminho' => 'pesquisa_pessoa_lst.php',
+      'descricao2' => "",
+      'flag' => null,
+      'pag_cadastro' => null,
+      'disabled' => "",
+      'div' => false,
+      'serializedcampos' => $parametros->serializaCampos(),
+      'duplo' => false,
+      'obrigatorio' => true
+    ); 
+    $this->setOptionsListaPesquisa("ref_idpes", $dados);
+		// $this->campoListaPesq( "ref_idpes", "Cliente", array( '' => "Selecione" ), $this->ref_idpes, "pesquisa_pessoa_lst.php", "", false, "", "", null, null, "", false, $parametros->serializaCampos() );
 
 		// Paginador
 		$this->limite = 20;
