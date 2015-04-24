@@ -149,9 +149,15 @@ class clsPmieducarServidor
    * Construtor.
    */
   function clsPmieducarServidor(
-    $cod_servidor = NULL, $ref_cod_deficiencia = NULL, $ref_idesco = NULL,
-    $carga_horaria = NULL, $data_cadastro = NULL, $data_exclusao = NULL,
-    $ativo = NULL, $ref_cod_instituicao = NULL, $ref_cod_subnivel = NULL)
+    $cod_servidor = NULL,
+    $ref_cod_deficiencia = NULL,
+    $ref_idesco = NULL,
+    $carga_horaria = NULL,
+    $data_cadastro = NULL,
+    $data_exclusao = NULL,
+    $ativo = NULL,
+    $ref_cod_instituicao = NULL,
+    $ref_cod_subnivel = NULL)
   {
     $db = new clsBanco();
     $this->_schema = 'pmieducar.';
@@ -194,6 +200,9 @@ class clsPmieducarServidor
       }
     }
 
+    /**
+     * Filtrar cod_servidor
+     */
     if (is_numeric($cod_servidor)) {
       if (class_exists('clsFuncionario')) {
         $tmp_obj = new clsFuncionario( $cod_servidor);
@@ -203,9 +212,9 @@ class clsPmieducarServidor
           }
         }
         elseif (method_exists( $tmp_obj, 'detalhe')) {
-          if ($tmp_obj->detalhe()) {
+          // if ($tmp_obj->detalhe()) {
             $this->cod_servidor = $cod_servidor;
-          }
+          // }
         }
       }
       elseif ($db->CampoUnico("SELECT 1 FROM funcionario WHERE ref_cod_pessoa_fj = '{$cod_servidor}'")) {
@@ -571,12 +580,12 @@ class clsPmieducarServidor
         $valores .= "{$gruda} FALSE ";
         $gruda = ", ";
       }
-
       $db->Consulta("INSERT INTO {$this->_tabela} ($campos) VALUES ($valores)");
+
       return $this->cod_servidor;
     }
 
-    return FALSE;
+    return false;
   }
 
   /**
@@ -1378,10 +1387,11 @@ class clsPmieducarServidor
       $db = new clsBanco();
       $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE cod_servidor = '{$this->cod_servidor}' AND ref_cod_instituicao = '{$this->ref_cod_instituicao}'");
       $db->ProximoRegistro();
+
       return $db->Tupla();
     }
 
-    return FALSE;
+    return false;
   }
 
   /**

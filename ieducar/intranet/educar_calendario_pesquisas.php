@@ -14,9 +14,8 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
   $retorno .= '<form action="" method="post" id="formcadastro" name="formcadastro">';
 
   if ($obrigatorio) {
-    $instituicao_obrigatorio = $escola_obrigatorio = TRUE;
-  }
-  else {
+    $instituicao_obrigatorio = $escola_obrigatorio = true;
+  } else {
     $instituicao_obrigatorio = isset($instituicao_obrigatorio) ?
       $instituicao_obrigatorio : $obrigatorio;
 
@@ -25,16 +24,14 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
   }
 
   if ($desabilitado) {
-    $instituicao_desabilitado = $escola_desabilitado = TRUE;
-  }
-  else {
+    $instituicao_desabilitado = $escola_desabilitado = true;
+  } else {
     $instituicao_desabilitado = isset($instituicao_desabilitado) ?
       $instituicao_desabilitado : $desabilitado;
 
     $escola_desabilitado = isset($escola_desabilitado) ?
       $escola_desabilitado : $desabilitado;
-  }
-
+  } 
   $obj_permissoes = new clsPermissoes();
   $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
@@ -54,8 +51,7 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
           $opcoes[$registro['cod_instituicao']] = $registro['nm_instituicao'];
         }
       }
-    }
-    else {
+    } else {
       $opcoes = array('' => 'Erro na geração');
     }
 
@@ -100,8 +96,7 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
         $this->ref_cod_instituicao
       );
     }
-  }
-  elseif ($nivel_usuario != 1) {
+  } elseif ($nivel_usuario != 1) {
     $obj_usuario = new clsPmieducarUsuario($this->pessoa_logada);
     $det_usuario = $obj_usuario->detalhe();
     $this->ref_cod_instituicao = $det_usuario['ref_cod_instituicao'];
@@ -134,8 +129,7 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
         }
 
         echo sprintf('<script>%s</script>', $todas_escolas);
-      }
-      else {
+      } else {
         $opcoes_escola = array('' => 'Erro na geração');
       }
 
@@ -151,8 +145,7 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
               $opcoes_escola[$registro['cod_escola']] = $registro['nome'];
             }
           }
-        }
-        else {
+        } else {
           $opcoes_escola = array('' => 'Erro na geração');
         }
       }
@@ -197,9 +190,11 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
     if ($nivel_usuario == 1 || $nivel_usuario == 2) {
       ${$get_cabecalho}[] = 'Escola';
     }
+
     if ($nivel_usuario == 1) {
       ${$get_cabecalho}[] = 'Instituição';
     }
+
   }
 
   $validacao = '';
@@ -214,8 +209,7 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
         alert("Por favor, selecione uma escola");
         return false;
       } ';
-  }
-  elseif ($nivel_usuario == 2) {
+  } elseif ($nivel_usuario == 2) {
     $validacao = '
       if (!document.getElementById("ref_cod_escola").value){
         alert("Por favor, selecione uma escola");
