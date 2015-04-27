@@ -275,28 +275,9 @@ class indice extends clsCadastro
     $this->campoHora('hora_inicial', 'Hora Inicial', $this->hora_inicial, FALSE);
     $this->campoHora('hora_final', 'Hora Final', $this->hora_final, FALSE);
 
-    $dados = array(
-      'nome' => 'Servidor',
-      'campo' => '',
-      'valor' => array(null => 'Para procurar, clique na lupa ao lado.'),
-      'default' => null,
-      'acao' => "",
-      'descricao' => "",
-      'caminho' => 'pesquisa_pessoa_lst.php',
-      'descricao2' => "",
-      'flag' => null,
-      'pag_cadastro' => null,
-      'disabled' => "",
-      'div' => false,
-      'serializedcampos' => $parametros->serializaCampos(),
-      'duplo' => false,
-      'obrigatorio' => true
-    );
-    $this->setOptionsListaPesquisa("ref_cod_servidor", $dados);
-
-    // $this->campoListaPesq('ref_cod_servidor', 'Servidor',
-    //   array('' => 'Selecione um servidor'), $this->ref_cod_servidor, '', '',
-    //   FALSE, '', '', NULL, NULL, '', TRUE, FALSE, FALSE);
+    $this->campoListaPesq('ref_cod_servidor', 'Servidor',
+    array('' => 'Selecione um servidor'), $this->ref_cod_servidor, '', '',
+    FALSE, '', '', NULL, NULL, '', TRUE, FALSE, FALSE);
 
     $this->campoRotulo(
       'bt_incluir_horario', 'Hor&aacute;rio',
