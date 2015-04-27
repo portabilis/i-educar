@@ -615,6 +615,7 @@ class clsCampos extends Core_Controller_Page_Abstract
     $this->campos[$nome] = array(
       'listapesquisa',
       $campo,
+      $obrigatorio ? "/[^ ]/": '',
       $valor,
       $default,
       $acao,
