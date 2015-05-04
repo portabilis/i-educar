@@ -1,6 +1,6 @@
 <?php
-//error_reporting(E_ALL);
-//ini_set("display_errors", 1);
+error_reporting(E_ERROR);
+ini_set("display_errors", 1);
 
 /**
  * i-Educar - Sistema de gestão escolar
@@ -168,7 +168,7 @@ class indice extends clsCadastro
     if ($this->ref_cod_servidor) {
       $objTemp = new clsFuncionario($this->ref_cod_servidor);
       $detalhe = $objTemp->detalhe();
-      $detalhe = $detalhe['idpes']->detalhe();
+      //$detalhe = $detalhe['idpes']->detalhe();
       $nm_servidor = $detalhe['nome'];
     }
 
