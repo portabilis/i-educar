@@ -34,6 +34,7 @@ require_once 'RegraAvaliacao/Model/Nota/TipoValor.php';
 require_once 'RegraAvaliacao/Model/TipoProgressao.php';
 require_once 'RegraAvaliacao/Model/TipoParecerDescritivo.php';
 require_once 'RegraAvaliacao/Model/TipoPresenca.php';
+require_once 'RegraAvaliacao/Model/TipoRecuperacaoParalela.php';
 
 /**
  * RegraAvaliacao_Model_Regra class.
@@ -49,24 +50,28 @@ require_once 'RegraAvaliacao/Model/TipoPresenca.php';
 class RegraAvaliacao_Model_Regra extends CoreExt_Entity
 {
   protected $_data = array(
-    'instituicao'          => NULL,
-    'nome'                 => NULL,
-    'tipoNota'             => NULL,
-    'tipoProgressao'       => NULL,
-    'tabelaArredondamento' => NULL,
-    'media'                => NULL,
-    'formulaMedia'         => NULL,
-    'formulaRecuperacao'   => NULL,
-    'porcentagemPresenca'  => NULL,
-    'parecerDescritivo'    => NULL,
-    'tipoPresenca'         => NULL,
-    'mediaRecuperacao'     => NULL
+    'instituicao'              => NULL,
+    'nome'                     => NULL,
+    'tipoNota'                 => NULL,
+    'tipoProgressao'           => NULL,
+    'tabelaArredondamento'     => NULL,
+    'media'                    => NULL,
+    'formulaMedia'             => NULL,
+    'formulaRecuperacao'       => NULL,
+    'porcentagemPresenca'      => NULL,
+    'parecerDescritivo'        => NULL,
+    'tipoPresenca'             => NULL,
+    'mediaRecuperacao'         => NULL,
+    'tipoRecuperacaoParalela'  => NULL,
+    'mediaRecuperacaoParalela' => NULL
   );
 
   protected $_dataTypes = array(
     'media' => 'numeric',
     'porcentagemPresenca' => 'numeric',
-    'mediaRecuperacao' => 'numeric'
+    'mediaRecuperacao' => 'numeric',
+    'tipoRecuperacaoParalela' => 'numeric',
+    'mediaRecuperacaoParalela' => 'numeric'
   );
 
   protected $_references = array(
@@ -108,6 +113,12 @@ class RegraAvaliacao_Model_Regra extends CoreExt_Entity
       'class' => 'FormulaMedia_Model_FormulaDataMapper',
       'file'  => 'FormulaMedia/Model/FormulaDataMapper.php',
       'null'  => TRUE
+    ),
+    'tipoRecuperacaoParalela' => array(
+      'value' => 0,
+      'class' => 'RegraAvaliacao_Model_TipoRecuperacaoParalela',
+      'file'  => 'RegraAvaliacao/Model/TipoRecuperacaoParalela.php',
+      'null'  => TRUE
     )
   );
 
@@ -129,10 +140,11 @@ class RegraAvaliacao_Model_Regra extends CoreExt_Entity
   public function getDefaultValidatorCollection()
   {
     // Enums
-    $tipoNotaValor         = RegraAvaliacao_Model_Nota_TipoValor::getInstance();
-    $tipoProgressao        = RegraAvaliacao_Model_TipoProgressao::getInstance();
-    $tipoParecerDescritivo = RegraAvaliacao_Model_TipoParecerDescritivo::getInstance();
-    $tipoPresenca          = RegraAvaliacao_Model_TipoPresenca::getInstance();
+    $tipoNotaValor           = RegraAvaliacao_Model_Nota_TipoValor::getInstance();
+    $tipoProgressao          = RegraAvaliacao_Model_TipoProgressao::getInstance();
+    $tipoParecerDescritivo   = RegraAvaliacao_Model_TipoParecerDescritivo::getInstance();
+    $tipoPresenca            = RegraAvaliacao_Model_TipoPresenca::getInstance();
+    $tipoRecuperacaoParalela = RegraAvaliacao_Model_TipoRecuperacaoParalela::getInstance();
 
     // ids de fórmulas de média
     $formulaMedia = $this->getDataMapper()->findFormulaMediaFinal();
@@ -211,7 +223,13 @@ class RegraAvaliacao_Model_Regra extends CoreExt_Entity
         array('required' => $isMediaRequired, 'min' => 1, 'max' => 14),
         array('required' => $isMediaRequired, 'min' => 0, 'max' => 14)
       ),
-    );
+      'tipoRecuperacaoParalela' => new CoreExt_Validate_Choice(array(
+        'choices' => $tipoRecuperacaoParalela->getKeys()
+      )),
+      'mediaRecuperacaoParalela' => new CoreExt_Validate_String(array(
+        'min' => 1, 'max' => 5
+      ))
+      );
   }
 
   /**

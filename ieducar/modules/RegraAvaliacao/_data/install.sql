@@ -40,18 +40,20 @@ CREATE TABLE "modules"."formula_media"  (
   PRIMARY KEY("id","instituicao_id")
 );
 CREATE TABLE "modules"."regra_avaliacao"  ( 
-  "id"                        serial NOT NULL,
-  "instituicao_id"            int NOT NULL,
-  "formula_media_id"          int NOT NULL,
-  "formula_recuperacao_id"    int NULL DEFAULT 0,
-  "tabela_arredondamento_id"  int NULL,
-  "nome"                      varchar(50) NOT NULL,
-  "tipo_nota"                 smallint NOT NULL,
-  "tipo_progressao"           smallint NOT NULL,
-  "media"                     decimal(5,3) NULL DEFAULT 00.000,
-  "porcentagem_presenca"      decimal(6,3) NULL DEFAULT 00.000,
-  "parecer_descritivo"        smallint NULL DEFAULT 0,
-  "tipo_presenca"             smallint NOT NULL,
+  "id"                         serial NOT NULL,
+  "instituicao_id"             int NOT NULL,
+  "formula_media_id"           int NOT NULL,
+  "formula_recuperacao_id"     int NULL DEFAULT 0,
+  "tabela_arredondamento_id"   int NULL,
+  "nome"                       varchar(50) NOT NULL,
+  "tipo_nota"                  smallint NOT NULL,
+  "tipo_progressao"            smallint NOT NULL,
+  "media"                      decimal(5,3) NULL DEFAULT 00.000,
+  "porcentagem_presenca"       decimal(6,3) NULL DEFAULT 00.000,
+  "parecer_descritivo"         smallint NULL DEFAULT 0,
+  "tipo_presenca"              smallint NOT NULL,
+  "tipo_recuperacao_paralela"  smallint DEFAULT 0,
+  "media_recuperacao_paralela" smallint,
   PRIMARY KEY("id","instituicao_id")
 );
 CREATE TABLE "modules"."tabela_arredondamento"  ( 
