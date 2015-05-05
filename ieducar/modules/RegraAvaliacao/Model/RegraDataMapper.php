@@ -51,16 +51,18 @@ class RegraAvaliacao_Model_RegraDataMapper extends CoreExt_DataMapper
   protected $_tableSchema = 'modules';
 
   protected $_attributeMap = array(
-    'instituicao'          => 'instituicao_id',
-    'tipoNota'             => 'tipo_nota',
-    'tipoProgressao'       => 'tipo_progressao',
-    'tabelaArredondamento' => 'tabela_arredondamento_id',
-    'formulaMedia'         => 'formula_media_id',
-    'formulaRecuperacao'   => 'formula_recuperacao_id',
-    'porcentagemPresenca'  => 'porcentagem_presenca',
-    'parecerDescritivo'    => 'parecer_descritivo',
-    'tipoPresenca'         => 'tipo_presenca',
-    'mediaRecuperacao'     => 'media_recuperacao',
+    'instituicao'              => 'instituicao_id',
+    'tipoNota'                 => 'tipo_nota',
+    'tipoProgressao'           => 'tipo_progressao',
+    'tabelaArredondamento'     => 'tabela_arredondamento_id',
+    'formulaMedia'             => 'formula_media_id',
+    'formulaRecuperacao'       => 'formula_recuperacao_id',
+    'porcentagemPresenca'      => 'porcentagem_presenca',
+    'parecerDescritivo'        => 'parecer_descritivo',
+    'tipoPresenca'             => 'tipo_presenca',
+    'mediaRecuperacao'         => 'media_recuperacao',
+    'tipoRecuperacaoParalela'  => 'tipo_recuperacao_paralela',
+    'mediaRecuperacaoParalela' => 'media_recuperacao_paralela'
   );
 
   /**
