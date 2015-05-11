@@ -1,5 +1,4 @@
 <?php
-
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -108,6 +107,14 @@ class EditController extends Core_Controller_Page_EditController
     'tipoPresenca' => array(
       'label'  => 'Apuração de presença',
       'help'   => ''
+    ),
+    'tipoRecuperacaoParalela' => array(
+      'label'   => 'Permitir recuperação paralela',
+      'help'    => ''
+    ),
+    'mediaRecuperacaoParalela' => array(
+      'label'   => 'Média da recuperação paralela',
+      'help'    => ''
     )
   );
 
@@ -295,5 +302,16 @@ var tabela_arredondamento = new function() {
     $this->campoRadio('tipoPresenca', $this->_getLabel('tipoPresenca'),
       $tipoPresenca->getEnums(), $this->getEntity()->get('tipoPresenca'), '',
       $this->_getHelp('tipoPresenca'));
+    
+    $tipoRecuperacaoParalela = RegraAvaliacao_Model_TipoRecuperacaoParalela::getInstance();
+    // echo"<pre>";var_dump($tipoRecuperacaoParalela);die;
+    $this->campoLista('tipoRecuperacaoParalela', $this->_getLabel('tipoRecuperacaoParalela'),
+      $tipoRecuperacaoParalela->getEnums(), $this->getEntity()->get('tipoRecuperacaoParalela'), '', FALSE,
+      $this->_getHelp('tipoRecuperacaoParalela'), '', FALSE, FALSE);
+
+
+    $this->campoTexto('mediaRecuperacaoParalela', $this->_getLabel('mediaRecuperacaoParalela'), 
+                       $this->getEntity()->mediaRecuperacaoParalela, 5, 50, FALSE, FALSE, 
+                       FALSE, $this->_getHelp('mediaRecuperacaoParalela'));
   }
 }
