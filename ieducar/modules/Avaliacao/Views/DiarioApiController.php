@@ -414,7 +414,8 @@ class DiarioApiController extends ApiCoreController
       $nota = new Avaliacao_Model_NotaComponente(array(
                   'componenteCurricular' => $this->getRequest()->componente_curricular_id,
                   'nota'                 => urldecode($this->getRequest()->att_value),
-                  'etapa'                => $this->getRequest()->etapa));
+                  'etapa'                => $this->getRequest()->etapa,
+                  'notaOriginal'         => urldecode($this->getRequest()->nota_original)));
 
       $this->serviceBoletim()->addNota($nota);
       $this->trySaveServiceBoletim();
@@ -425,6 +426,37 @@ class DiarioApiController extends ApiCoreController
     $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
     $this->appendResponse('situacao',     $this->getSituacaoMatricula());
     $this->appendResponse('nota_necessaria_exame', $notaNecessariaExame = $this->getNotaNecessariaExame($this->getRequest()->componente_curricular_id));
+
+    if (!empty($notaNecessariaExame) && $this->getSituacaoMatricula()=='Em Exame')
+      $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $notaNecessariaExame);
+    else
+      $this->deleteNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id);
+  }
+
+  protected function postNotaRecuperacaoParalela() {
+    if ($this->canPostNota()) {
+      $notaOriginal = $this->getNotaOriginal();
+      $notaRecuperacaoParalela = urldecode($this->getRequest()->att_value);
+
+      $notaNova = (($notaRecuperacaoParalela > $notaOriginal) ? $notaRecuperacaoParalela : $notaOriginal);
+
+      $nota = new Avaliacao_Model_NotaComponente(array(
+                  'componenteCurricular'    => $this->getRequest()->componente_curricular_id,
+                  'etapa'                   => $this->getRequest()->etapa,
+                  'nota'                    => $notaNova,
+                  'notaRecuperacaoParalela' => urldecode($this->getRequest()->att_value),
+                  'notaOriginal'            => $notaOriginal));
+
+      $this->serviceBoletim()->addNota($nota);
+      $this->trySaveServiceBoletim();
+      $this->messenger->append('Nota de recuperação da matrícula '. $this->getRequest()->matricula_id .' alterada com sucesso.', 'success');
+    }
+
+    $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
+    $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
+    $this->appendResponse('situacao',     $this->getSituacaoMatricula());
+    $this->appendResponse('nota_necessaria_exame', $notaNecessariaExame = $this->getNotaNecessariaExame($this->getRequest()->componente_curricular_id));
+    $this->appendResponse('nota_nova', ($notaNova > $notaOriginal ? $notaNova : null));
 
     if (!empty($notaNecessariaExame) && $this->getSituacaoMatricula()=='Em Exame')
       $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $notaNecessariaExame);
@@ -496,9 +528,29 @@ class DiarioApiController extends ApiCoreController
 
     $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
     $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
-    $this->appendResponse('situacao',     $this->getSituacaoMatricula());
+    $this->appendResponse('situacao',     $this->getSituacaoMatricula());    
   }
 
+  protected function deleteNotaRecuperacaoParalela(){
+    if($this->canDeleteNota()){
+      $notaOriginal = $this->getNotaOriginal();
+      $notaAtual = $this->getNotaAtual();
+       $nota = new Avaliacao_Model_NotaComponente(array(
+                  'componenteCurricular'    => $this->getRequest()->componente_curricular_id,
+                  'etapa'                   => $this->getRequest()->etapa,
+                  'nota'                    => $notaOriginal,
+                  'notaOriginal'            => $notaOriginal));
+
+      $this->serviceBoletim()->addNota($nota);
+      $this->trySaveServiceBoletim();
+      $this->messenger->append('Nota de recuperação da matrícula '. $this->getRequest()->matricula_id .' excluída com sucesso.', 'success');
+
+      $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
+      $this->appendResponse('matricula_id',  $this->getRequest()->matricula_id);
+      $this->appendResponse('situacao',      $this->getSituacaoMatricula());
+      $this->appendResponse('nota_original', $notaOriginal); 
+    }
+  }
 
   protected function deleteFalta() {
     $canDelete = $this->canDeleteFalta();
@@ -796,15 +848,17 @@ class DiarioApiController extends ApiCoreController
       if (clsPmieducarTurma::verificaDisciplinaDispensada($turmaId, $componenteId))
         continue;
 
-      $componente['id']                    = $componenteId;
-      $componente['nome']                  = $this->safeString(mb_strtoupper($_componente->get('nome'), 'iso-8859-1'), false);
-      $componente['nota_atual']            = $this->getNotaAtual($etapa = null, $componente['id']);
-      $componente['nota_exame']            = $this->getNotaExame($componente['id']);
-      $componente['falta_atual']           = $this->getFaltaAtual($etapa = null, $componente['id']);
-      $componente['parecer_atual']         = $this->getParecerAtual($componente['id']);
-      $componente['situacao']              = $this->getSituacaoMatricula($componente['id']);
-      $componente['nota_necessaria_exame'] = ($componente['situacao'] == 'Em Exame' ? $this->getNotaNecessariaExame($componente['id']) : null );
-      $componente['ordenamento']           = $_componente->get('ordenamento');
+      $componente['id']                        = $componenteId;
+      $componente['nome']                      = $this->safeString(mb_strtoupper($_componente->get('nome'), 'iso-8859-1'), false);
+      $componente['nota_atual']                = $this->getNotaAtual($etapa = null, $componente['id']);
+      $componente['nota_exame']                = $this->getNotaExame($componente['id']);
+      $componente['falta_atual']               = $this->getFaltaAtual($etapa = null, $componente['id']);
+      $componente['parecer_atual']             = $this->getParecerAtual($componente['id']);
+      $componente['situacao']                  = $this->getSituacaoMatricula($componente['id']);
+      $componente['nota_necessaria_exame']     = ($componente['situacao'] == 'Em Exame' ? $this->getNotaNecessariaExame($componente['id']) : null );
+      $componente['ordenamento']               = $_componente->get('ordenamento');
+      $componente['nota_recuperacao_paralela'] = $this->getNotaRecuperacaoParalelaAtual($etapa, $componente['id']);
+      $componente['nota_original']             = $this->getNotaOriginal($etapa, $componente['id']);
 
       if (!empty($componente['nota_necessaria_exame']))
         $this->createOrUpdateNotaExame($matriculaId, $componente['id'], $componente['nota_necessaria_exame']);
@@ -899,6 +953,41 @@ class DiarioApiController extends ApiCoreController
     return str_replace(',', '.', $nota);
   }
 
+  protected function getNotaRecuperacaoParalelaAtual($etapa = null, $componenteCurricularId = null) {
+    // defaults
+    if (is_null($componenteCurricularId))
+      $componenteCurricularId = $this->getRequest()->componente_curricular_id;
+
+    if (is_null($etapa))
+      $etapa = $this->getRequest()->etapa;
+
+    // validacao
+    if (! is_numeric($componenteCurricularId)) {
+      throw new Exception('Não foi possivel obter a nota de recuperação paralela atual, pois não foi recebido o id do componente curricular.');
+    }
+
+    $nota = urldecode($this->serviceBoletim()->getNotaComponente($componenteCurricularId, $etapa)->notaRecuperacaoParalela);
+    $nota = str_replace(',', '.', $nota);
+    return $nota;
+  }
+
+  protected function getNotaOriginal($etapa = null, $componenteCurricularId = null) {
+    // defaults
+    if (is_null($componenteCurricularId))
+      $componenteCurricularId = $this->getRequest()->componente_curricular_id;
+
+    if (is_null($etapa))
+      $etapa = $this->getRequest()->etapa;
+
+    // validacao
+    if (! is_numeric($componenteCurricularId)) {
+      throw new Exception('Não foi possivel obter a nota original, pois não foi recebido o id do componente curricular.');
+    }
+
+    $nota = urldecode($this->serviceBoletim()->getNotaComponente($componenteCurricularId, $etapa)->notaOriginal);
+    $nota = str_replace(',', '.', $nota);
+    return $nota;
+  }
 
   protected function getNotaExame($componenteCurricularId = null) {
     // somente recupera nota de exame se estiver buscando as matriculas da ultima etapa
@@ -1089,6 +1178,16 @@ class DiarioApiController extends ApiCoreController
 
     $itensRegra['nomenclatura_exame'] = ($GLOBALS['coreExt']['Config']->app->diario->nomenclatura_exame == 0 ? 'exame' : 'conselho');
 
+    //tipo de recuperação paralela
+    $tipoRecuperacaoParalela = $regra->get('tipoRecuperacaoParalela');
+
+    if($tipoRecuperacaoParalela == RegraAvaliacao_Model_TipoRecuperacaoParalela::NAO_USAR){
+      $itensRegra['tipo_recuperacao_paralela'] = 'nao_utiliza';
+    }elseif($tipoRecuperacaoParalela == RegraAvaliacao_Model_TipoRecuperacaoParalela::USAR_POR_ETAPA){
+      $itensRegra['tipo_recuperacao_paralela'] = 'por_etapa';
+      $itensRegra['media_recuperacao_paralela'] = $this->serviceBoletim()->getRegra()->get('mediaRecuperacaoParalela');
+    }
+
     return $itensRegra;
   }
 
@@ -1110,6 +1209,9 @@ class DiarioApiController extends ApiCoreController
     elseif ($this->isRequestFor('post', 'nota') || $this->isRequestFor('post', 'nota_exame'))
       $this->postNota();
 
+    elseif ($this->isRequestFor('post', 'nota_recuperacao_paralela'))
+      $this->postNotaRecuperacaoParalela();
+
     elseif ($this->isRequestFor('post', 'falta'))
       $this->postFalta();
 
@@ -1118,6 +1220,9 @@ class DiarioApiController extends ApiCoreController
 
     elseif ($this->isRequestFor('delete', 'nota') || $this->isRequestFor('delete', 'nota_exame'))
         $this->deleteNota();
+    
+    elseif ($this->isRequestFor('delete', 'nota_recuperacao_paralela'))
+            $this->deleteNotaRecuperacaoParalela();
 
     elseif ($this->isRequestFor('delete', 'falta'))
         $this->deleteFalta();

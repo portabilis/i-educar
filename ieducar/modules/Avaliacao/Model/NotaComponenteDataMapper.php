@@ -50,8 +50,10 @@ class Avaliacao_Model_NotaComponenteDataMapper extends CoreExt_DataMapper
   protected $_tableSchema = 'modules';
 
   protected $_attributeMap = array(
-    'notaAluno'            => 'nota_aluno_id',
-    'componenteCurricular' => 'componente_curricular_id',
-    'notaArredondada'      => 'nota_arredondada'
+    'notaAluno'               => 'nota_aluno_id',
+    'componenteCurricular'    => 'componente_curricular_id',
+    'notaArredondada'         => 'nota_arredondada',
+    'notaRecuperacaoParalela'	=> 'nota_recuperacao',
+    'notaOriginal'		        => 'nota_original'
   );
 }

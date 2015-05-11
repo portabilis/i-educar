@@ -46,10 +46,12 @@ require_once 'Avaliacao/Model/Etapa.php';
 class Avaliacao_Model_NotaComponente extends Avaliacao_Model_Etapa
 {
   protected $_data = array(
-    'notaAluno'            => NULL,
-    'componenteCurricular' => NULL,
-    'nota'                 => NULL,
-    'notaArredondada'      => NULL,
+    'notaAluno'               => NULL,
+    'componenteCurricular'    => NULL,
+    'nota'                    => NULL,
+    'notaArredondada'         => NULL,
+    'notaRecuperacaoParalela' => NULL,
+    'notaOriginal'            => NULL
   );
 
   protected $_dataTypes = array(
@@ -79,7 +81,7 @@ class Avaliacao_Model_NotaComponente extends Avaliacao_Model_Etapa
 
     return array(
       'nota' => new CoreExt_Validate_Numeric(array('min' => 0, 'max' => 10)),
-      'notaArredondada' => new CoreExt_Validate_String(array('max' => 5)),
+      'notaArredondada'  => new CoreExt_Validate_String(array('max' => 5))
     );
   }
 }

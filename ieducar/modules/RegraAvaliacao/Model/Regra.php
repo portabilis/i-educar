@@ -227,7 +227,7 @@ class RegraAvaliacao_Model_Regra extends CoreExt_Entity
         'choices' => $tipoRecuperacaoParalela->getKeys()
       )),
       'mediaRecuperacaoParalela' => new CoreExt_Validate_String(array(
-        'min' => 1, 'max' => 5
+        'min' => 1, 'max' => 10
       ))
       );
   }
