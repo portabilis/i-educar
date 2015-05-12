@@ -1,4 +1,6 @@
 <?php
+error_reporting(E_ERROR);
+ini_set("display_errors", 1);
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
 	*	@author Prefeitura Municipal de Itajaí								 *
@@ -131,110 +133,26 @@ class indice extends clsCadastro
 			$this->campoRotulo( "nm_aluno", "Aluno", $this->nm_aluno);
 		}
 
-
-		$array_inicio_sequencias = clsPmieducarMatricula::getInicioSequencia();
-
-		$db = new clsBanco();
-
-
 		$cursos = array();
-		$sql_curso_aluno = "SELECT ref_cod_curso FROM pmieducar.serie WHERE cod_serie = {$this->ref_ref_cod_serie}";
-		$this->ref_cod_curso = $db->CampoUnico($sql_curso_aluno);
 
-		foreach ($array_inicio_sequencias as $serie_inicio)
-		{
-			$serie_inicio = $serie_inicio[0];
+		$escolaAluno = $this->ref_ref_cod_escola;
 
-			$seq_ini = $serie_inicio;
-			$seq_correta = false;
-			do
-			{
-				$sql = "SELECT o.ref_serie_origem
-				               ,s.nm_serie
-						       ,o.ref_serie_destino
-						       ,s.ref_cod_curso as ref_cod_curso_origem
-						       ,sd.ref_cod_curso as ref_cod_curso_destino
-						  FROM pmieducar.sequencia_serie o
-						       ,pmieducar.serie s
-						       ,pmieducar.serie sd
-						 WHERE s.cod_serie = o.ref_serie_origem
-						   AND s.cod_serie = $seq_ini
-				           AND sd.cod_serie = o.ref_serie_destino
-				           AND o.ativo = 1
-						";
-//						   AND s.ref_cod_curso = $curso
-				$db->Consulta($sql);
-				$db->ProximoRegistro();
-				$tupla = $db->Tupla();
-				$serie_origem = $tupla['ref_serie_origem'];
-				//$nm_serie_origem = $tupla['nm_serie'];
-				$curso_origem = $tupla['ref_cod_curso_origem'];
-				$curso_destino = $tupla['ref_cod_curso_destino'];
-				$seq_ini = $serie_destino = $tupla['ref_serie_destino'];
+		$objEscolaCurso = new clsPmieducarEscolaCurso();
 
-				$obj_curso = new clsPmieducarCurso($curso_origem);
-				$det_curso = $obj_curso->detalhe();
-				$cursos[$curso_origem] = $det_curso['nm_curso'];
+		$listaEscolaCurso = $objEscolaCurso->lista($escolaAluno);
 
-				$obj_curso = new clsPmieducarCurso($curso_destino);
-				$det_curso = $obj_curso->detalhe();
-				$cursos[$curso_destino] = $det_curso['nm_curso'];
-
-				if($this->ref_ref_cod_serie == $serie_origem)
-					$seq_correta = true;
-
-				//echo "serie: $serie_origem curso_origem: $curso_origem curso_destino: $curso_destino <br/>";
-
-
-				//$todas_sequencias .= "sequencia_serie[sequencia_serie.length] = new Array({$curso_origem},$serie_origem,'$nm_serie_origem');\n";
-
-				$sql = "SELECT 1
-						  FROM pmieducar.sequencia_serie s
-						 WHERE s.ref_serie_origem = $seq_ini
-					    ";
-				$true = $db->CampoUnico($sql);
-
-			}while($true);
-
-			$obj_serie = new clsPmieducarSerie($serie_destino);
-			$det_serie = $obj_serie->detalhe();
-
-			//$todas_sequencias .= "sequencia_serie[sequencia_serie.length] = new Array({$curso_destino},$serie_destino,'{$det_serie['nm_serie']}');\n";
-
-			if($this->ref_ref_cod_serie == $serie_destino)
-				$seq_correta = true;
-
-			if($seq_correta == false)
-			{
-				///$todas_sequencias = "var sequencia_serie = new Array();\n";
-				$cursos = array('' => 'Não existem cursos/séries para reclassificação');
-			}else
-			{
-				break;
-			}
-		}
-
-
+		 if($listaEscolaCurso){
+		 	foreach($listaEscolaCurso as $escolaCurso){
+		 		$objCurso = new clsPmieducarCurso($escolaCurso["ref_cod_curso"]);
+		 		$detCurso = $objCurso->detalhe();
+		 		$nomeCurso = $detCurso["nm_curso"];
+		 		$cursos[$escolaCurso["ref_cod_curso"]] = $nomeCurso;
+		 	}
+		 }
 
 		$this->campoOculto("serie_matricula",$this->ref_ref_cod_serie);
-
-		//echo "<script>\n{$todas_sequencias}var serie_matricula = {$this->ref_ref_cod_serie};\n</script>";
-
-
-		// foreign keys
-		//$obrigatorio = true;
-		//$get_escola = false;
-	//	$get_instituicao = false;
-	//	$get_escola_curso = true;
-		//$get_escola_curso_serie = true;
-		//$get_matricula = true;
-		//include("include/pmieducar/educar_campo_lista.php");
-
-
-
 		$this->campoLista("ref_cod_curso","Curso",$cursos,$this->ref_cod_curso,"getSerie();");
 		$this->campoLista("ref_ref_cod_serie","S&eacute;rie",array('' => 'Selecione uma série'),'');
-		//$this->campoOculto("ref_ref_cod_serie_antiga",$this->ref_ref_cod_serie);
 		$this->inputsHelper()->date('data_cancel', array('label' => 'Data da reclassifica&ccedil;&atilde;o', 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y')));
 		$this->campoMemo("descricao_reclassificacao","Descri&ccedil;&atilde;o",$this->descricao_reclassificacao,100,10,true);
 
