@@ -97,6 +97,7 @@ function handleErrorOnDeleteResource(response){
 }
 
 var getResource = function(options, errorCallback) {
+  console.log(options);
   $j.ajax(options).error(errorCallback || handleErrorOnGetResource);
 };
 
