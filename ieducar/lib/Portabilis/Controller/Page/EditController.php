@@ -168,7 +168,7 @@ class Portabilis_Controller_Page_EditController extends Core_Controller_Page_Edi
     $actionName     = ucwords($dispatcher->getActionName());
 
     $style          = "/modules/$controllerName/Assets/Stylesheets/$actionName.css";
-    $script         = "/modules/$controllerName/Assets/Javascripts/$actionName.js" . "?version=". Portabilis_Assets_Version::VERSION;
+    $script         = "/modules/$controllerName/Assets/Javascripts/$actionName.js";
 
     if (file_exists($rootPath . $style))
       Portabilis_View_Helper_Application::loadStylesheet($this, $style);
