@@ -55,7 +55,8 @@ class IndexController extends Core_Controller_Page_ListController
     'Média aprovação' => 'media',
     'Média exame' => 'mediaRecuperacao',
     'Fórmula média' => 'formulaMedia',
-    'Fórmula recuperação' => 'formulaRecuperacao'
+    'Fórmula recuperação' => 'formulaRecuperacao',
+    'Recuperação paralela' => 'tipoRecuperacaoParalela'
   );
 
   protected function _preRender(){

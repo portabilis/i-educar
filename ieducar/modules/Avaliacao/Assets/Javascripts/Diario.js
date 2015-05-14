@@ -170,23 +170,15 @@ var changeParecer = function(event) {
 function afterChangeResource($resourceElement) {
   $resourceElement.removeAttr('disabled').siblings('img').remove();
 
-  var resourceElementTabIndex    = $resourceElement.attr('tabindex');
-  var focusedElementTabIndex = $j('.tabable:focus').first().attr('tabindex');
-  var lastElementTabIndex        = $resourceElement.closest('form').find('.tabable').last().attr('tabindex');
+  var resourceElementTabIndex = $resourceElement.attr('tabindex');
+  var nextTabIndex = parseInt(resourceElementTabIndex) + 1; 
+  var $nextElement = $j($resourceElement.closest('form').find('.tabable[tabindex="'+nextTabIndex+'"]')).first();
 
-  // percorre os proximos elementos enquanto não chegar no ultimo
-  for(var nextTabIndex = parseInt(resourceElementTabIndex) + 1; nextTabIndex < parseInt(lastElementTabIndex) + 1; nextTabIndex++) {
-    //var $nextElement = $j($resourceElement.closest('form').find('.tabable:[tabindex="'+nextTabIndex+'"]')).first();
-    var $nextElement = $j($resourceElement.closest('form').find('.tabable[tabindex="'+nextTabIndex+'"]')).first();
-
-    // seta foco no proximo elemento, caso este seja visivel e o elemento alterado ainda esteja focado
-    if($nextElement.is(':visible')) {
-      if(resourceElementTabIndex == focusedElementTabIndex)
-        $nextElement.focus();
-
-      break;
-    }
+  if(!$nextElement.is(':visible')){
+    $nextElement = $j($resourceElement.closest('form').find('.tabable[tabindex="'+(nextTabIndex+1)+'"]')).first(); 
   }
+
+  $nextElement.focus();
 }
 
 function postNota($notaFieldElement) {
@@ -224,13 +216,13 @@ function postNota($notaFieldElement) {
 function checkIfShowNotaRecuperacaoParalelaField(notaLancada, dataResponse){
   componente_curricular_id = dataResponse.componente_curricular_id
   matricula_id = dataResponse.matricula_id
-  notaRecuperacaoParalelaField = $j('#nota-recuperacao-paralela-' + matricula_id + '-cc-' + componente_curricular_id);
+  $jnotaRecuperacaoParalelaField = $j('#nota-recuperacao-paralela-' + matricula_id + '-cc-' + componente_curricular_id);
 
   if(usaRecuperacaoParalelaPorEtapa){
     if((notaLancada < mediaRecuperacaoParalela) || (mediaRecuperacaoParalela == null)){
-      notaRecuperacaoParalelaField.show();
+      $jnotaRecuperacaoParalelaField.show();
     }else{
-      notaRecuperacaoParalelaField.hide(); 
+      $jnotaRecuperacaoParalelaField.hide(); 
     }
   }
 }
@@ -612,7 +604,7 @@ function handleSearch($resultTable, dataResponse) {
   //set headers
   var $linha = $j('<tr />');
   $j('<th />').html(safeUtf8Decode('Matrícula')).appendTo($linha);
-  $j('<th />').attr('colspan', componenteCurricularSelected ? 0 : 4).html('Aluno').appendTo($linha);
+  $j('<th />').attr('colspan', componenteCurricularSelected ? 0 : 5).html('Aluno').appendTo($linha);
 
   if (componenteCurricularSelected)
     updateComponenteCurricularHeaders($linha, $j('<th />'));
@@ -627,7 +619,7 @@ function handleSearch($resultTable, dataResponse) {
 
     $j('<td />').html(value.matricula_id).addClass('center').appendTo($linha);
     $j('<td />').html(value.aluno_id + ' - ' +safeToUpperCase(value.nome))
-                .attr('colspan', componenteCurricularSelected ? 0 : 4)
+                .attr('colspan', componenteCurricularSelected ? 0 : 5)
                 .appendTo($linha);
 
     if (value.componentes_curriculares){            
@@ -799,13 +791,15 @@ function parecerField(matriculaId, componenteCurricularId, value) {
   return $j('<td />').addClass('center').html($parecerField);
 }
 
-function notaRecuperacaoParalelaField(matriculaId, componenteCurricularId, value) {
+function notaRecuperacaoParalelaField(matriculaId, componenteCurricularId, value, areaConhecimentoId) {
   return _notaField(matriculaId,
                     componenteCurricularId,
                     'nota-recuperacao-paralela-cc',
                     'nota-recuperacao-paralela-' + matriculaId + '-cc-' + componenteCurricularId,
-                    value);
+                    value,
+                    'area-id-' + areaConhecimentoId);
 }
+
 
 function updateComponenteCurricular($targetElement, matriculaId, cc) {
   var useNota                = $tableSearchDetails.data('details').tipo_nota != 'nenhum';
@@ -823,10 +817,6 @@ function updateComponenteCurricular($targetElement, matriculaId, cc) {
 
   if(useNota) {
 
-    if(!usaRecuperacaoParalelaPorEtapa){
-      notaField(matriculaId, cc.id, cc.nota_atual, cc.area_id).appendTo($targetElement);
-    }
-
     if(usaRecuperacaoParalelaPorEtapa){
       notaField(matriculaId, cc.id, cc.nota_original, cc.area_id).appendTo($targetElement);
 
@@ -834,7 +824,8 @@ function updateComponenteCurricular($targetElement, matriculaId, cc) {
       hasMediaRecuperacaoParalela = (mediaRecuperacaoParalela != null);
       hasNotaAtual = !!cc.nota_atual;
 
-      $notaRecuperacaoParalelaField = notaRecuperacaoParalelaField(matriculaId, cc.id, cc.nota_recuperacao_paralela, cc.area_id).appendTo($targetElement);
+      $notaRecuperacaoParalelaField = notaRecuperacaoParalelaField(matriculaId, cc.id, 10, cc.area_id);
+      $notaRecuperacaoParalelaField.appendTo($targetElement);
 
       shouldShowNotaRecuperacaoParalela = (((hasNotaRecuperacaoParalela) || 
                                            (cc.nota_original < mediaRecuperacaoParalela) || 
@@ -844,8 +835,11 @@ function updateComponenteCurricular($targetElement, matriculaId, cc) {
       if(!shouldShowNotaRecuperacaoParalela){
         $notaRecuperacaoParalelaField.children().hide();
       }
+    }else{
+      notaField(matriculaId, cc.id, cc.nota_atual, cc.area_id).appendTo($targetElement);
+      
     }
-    
+
     // mostra nota exame caso estiver selecionado a ultima etapa
     if ($tableSearchDetails.data('details').quantidade_etapas == $j('#etapa').val()) {
       var $fieldNotaExame = notaExameField(matriculaId, cc.id, cc.nota_exame);
@@ -1063,13 +1057,32 @@ function showNextSelectionButton() {
 function navegacaoTab(sentido){
     //se for no sentido vertical
     if(sentido=="2"){
+        i = 1;
 
-        $j('tr').each(function() {
-            
-            $j(this).find('td').each(function(i) {
-                $j(this).find('input, textarea, select').attr('tabindex', i+1);
-            });
-        });
+      $j(document).find('.nota-matricula-cc').each(function(){
+        $j(this).attr('tabindex', i);
+        i++;
+      });
+      $j(document).find('.nota-recuperacao-paralela-cc').each(function(){
+        $j(this).attr('tabindex', i);
+        i++;
+      });
+      $j(document).find('.nota-exame-matricula-cc').each(function(){
+        $j(this).attr('tabindex', i);
+        i++;
+      });
+      $j(document).find('.nn-matricula-cc').each(function(){
+        $j(this).attr('tabindex', i);
+        i++;
+      });
+      $j(document).find('.falta-matricula-cc').each(function(){
+        $j(this).attr('tabindex', i);
+        i++;
+      });
+      $j(document).find('.parecer-matricula-cc').each(function(){
+        $j(this).attr('tabindex', i);
+        i++;
+      });
     }
 }
 
