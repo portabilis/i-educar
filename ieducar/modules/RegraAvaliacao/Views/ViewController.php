@@ -59,7 +59,8 @@ class ViewController extends Core_Controller_Page_ViewController
     'Fórmula de cálculo de recuperação' => 'formulaRecuperacao',
     'Porcentagem presença' => 'porcentagemPresenca',
     'Parecer descritivo' => 'parecerDescritivo',
-    'Tipo de presença' => 'tipoPresenca'
+    'Tipo de presença' => 'tipoPresenca',
+    'Recuperação paralela' => 'tipoRecuperacaoParalela'
   );
   protected function _preRender(){
 
