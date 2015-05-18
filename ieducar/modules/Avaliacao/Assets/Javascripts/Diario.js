@@ -824,7 +824,7 @@ function updateComponenteCurricular($targetElement, matriculaId, cc) {
       hasMediaRecuperacaoParalela = (mediaRecuperacaoParalela != null);
       hasNotaAtual = !!cc.nota_atual;
 
-      $notaRecuperacaoParalelaField = notaRecuperacaoParalelaField(matriculaId, cc.id, 10, cc.area_id);
+      $notaRecuperacaoParalelaField = notaRecuperacaoParalelaField(matriculaId, cc.id, cc.nota_recuperacao_paralela, cc.area_id);
       $notaRecuperacaoParalelaField.appendTo($targetElement);
 
       shouldShowNotaRecuperacaoParalela = (((hasNotaRecuperacaoParalela) || 
