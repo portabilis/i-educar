@@ -845,7 +845,8 @@ class indice extends clsCadastro
 
     Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
 
-    $styles = array ('/modules/Cadastro/Assets/Stylesheets/Servidor.css');
+    $styles = array ('/modules/Cadastro/Assets/Stylesheets/Servidor.css',
+                     '/modules/Portabilis/Assets/Stylesheets/Frontend/Resource.css');
 
     Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
 
