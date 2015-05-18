@@ -103,7 +103,8 @@ class TurmaController extends ApiCoreController
                    $tiposBoletim::PARECER_DESCRITIVO_GERAL_DUQUE 				        => 'portabilis_boletim_parecer_geral_duque',
                    $tiposBoletim::BIMESTRAL_CONCEITUAL_PARAUAPEBAS      		    => 'portabilis_boletim_bimestral_conceitual_parauapebas',
                    $tiposBoletim::BIMESTRAL_CONCEITUAL_SIMPLIFICADO_PARAUAPEBAS => 'portabilis_boletim_bimestral_conceitual_simplificado_parauapebas',
-                   $tiposBoletim::BIMESTRAL_CONCEITUAL_RETRATO_CACADOR          => 'portabilis_boletim_primeiro_ano_bimestral_retrato_cacador');
+                   $tiposBoletim::BIMESTRAL_CONCEITUAL_RETRATO_CACADOR          => 'portabilis_boletim_primeiro_ano_bimestral_retrato_cacador',
+                   $tiposBoletim::BIMESTRAL_RETRATO_PARAGOMINAS                 => 'portabilis_boletim_bimestral_paragominas');
 
     return array('tipo-boletim' => $tipos[$tipo]);
   }
