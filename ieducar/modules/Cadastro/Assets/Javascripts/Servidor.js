@@ -7,9 +7,9 @@ $j('#tab1').addClass('servidorTab-active').removeClass('servidorTab');
 // Adiciona um ID à linha que termina o formulário para parar de esconder os campos
 $j('.tableDetalheLinhaSeparador').closest('tr').attr('id','stop');
 
-var msg = '<b>Novidade</b>: O cadastro de Servidores foi simplificado <br/>' + 
-          'e agora você não precisa mais cadastrar previamente um usuário,<br />' +
-          'apenas uma Pessoa Física.';
+var msg = '<b>Novidade</b>: O cadastro de Servidores foi simplificado!<br/>' +
+          'Agora você não precisa mais cadastrar previamente<br/>' + 
+          'um usuário, apenas uma Pessoa Física. :)';
 
 $j('<p>').addClass('right-top-notice notice')    
          .html(stringUtils.toUtf8(msg))    
