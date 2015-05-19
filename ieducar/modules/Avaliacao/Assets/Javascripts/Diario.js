@@ -170,15 +170,27 @@ var changeParecer = function(event) {
 function afterChangeResource($resourceElement) {
   $resourceElement.removeAttr('disabled').siblings('img').remove();
 
-  var resourceElementTabIndex = $resourceElement.attr('tabindex');
-  var nextTabIndex = parseInt(resourceElementTabIndex) + 1; 
-  var $nextElement = $j($resourceElement.closest('form').find('.tabable[tabindex="'+nextTabIndex+'"]')).first();
+  var resourceElementTabIndex = parseInt($resourceElement.attr('tabindex'));
+  var focusedElementTabIndex  = parseInt($j('.tabable:focus').first().attr('tabindex'));
+  var lastElementTabIndex     = parseInt($resourceElement.closest('form').find('.tabable').last().attr('tabindex'));
 
-  if(!$nextElement.is(':visible')){
-    $nextElement = $j($resourceElement.closest('form').find('.tabable[tabindex="'+(nextTabIndex+1)+'"]')).first(); 
+  // percorre os proximos elementos enquanto não chegar no ultimo
+  for(var nextTabIndex = resourceElementTabIndex + 1; nextTabIndex < lastElementTabIndex + 1; nextTabIndex++) {
+    //var $nextElement = $j($resourceElement.closest('form').find('.tabable:[tabindex="'+nextTabIndex+'"]')).first();
+    var $nextElement = $j($resourceElement.closest('form').find('.tabable[tabindex="'+nextTabIndex+'"]')).first();
+    var $nextNextElement = $j($resourceElement.closest('form').find('.tabable[tabindex="'+(nextTabIndex+1)+'"]')).first();
+
+    // seta foco no proximo elemento, caso este seja visivel e o elemento alterado ainda esteja focado
+    if($nextElement.is(':visible')) {
+      if(resourceElementTabIndex == focusedElementTabIndex){
+        $nextElement.focus();
+      }
+
+      break;
+    }else{
+      $nextNextElement.focus();
+    }
   }
-
-  $nextElement.focus();
 }
 
 function postNota($notaFieldElement) {
@@ -221,6 +233,7 @@ function checkIfShowNotaRecuperacaoParalelaField(notaLancada, dataResponse){
   if(usaRecuperacaoParalelaPorEtapa){
     if((notaLancada < mediaRecuperacaoParalela) || (mediaRecuperacaoParalela == null)){
       $jnotaRecuperacaoParalelaField.show();
+      $jnotaRecuperacaoParalelaField.focus();
     }else{
       $jnotaRecuperacaoParalelaField.hide(); 
     }
@@ -659,7 +672,7 @@ function handleSearch($resultTable, dataResponse) {
   // seta colspan [th, td].aluno quando exibe nota exame
   if ($tableSearchDetails.data('details').tipo_nota != 'nenhum' &&
       $tableSearchDetails.data('details').quantidade_etapas == $j('#etapa').val()) {
-    $resultTable.find('[colspan]:not(.area-conhecimento)').attr('colspan', componenteCurricularSelected ? 1 : 6);
+    $resultTable.find('[colspan]:not(.area-conhecimento)').attr('colspan', componenteCurricularSelected ? 1 : 7);
   }
 
   $resultTable.find('tr:even').addClass('even');
