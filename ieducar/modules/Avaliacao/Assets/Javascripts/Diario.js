@@ -19,16 +19,15 @@ var onClickSelectAllEvent = false;
 var onClickActionEvent    = false;
 var onClickDeleteEvent    = false;
 
-//irá rodar quando a página estiver pronta
+var usaRecuperacaoParalelaPorEtapa;
+var mediaRecuperacaoParalela;
+var sentidoTab;
+
 $(function() {
     navegacaoTab(dataResponse.navegacao_tab);
 });
 
-var usaRecuperacaoParalelaPorEtapa;
-var mediaRecuperacaoParalela;
-
 //url builders
-
 var deleteResourceUrlBuilder = {
   buildUrl : function(urlBase, resourceName, additionalVars) {
 
@@ -206,7 +205,7 @@ function postNota($notaFieldElement) {
     var additionalVars = {
       matricula_id             : $notaFieldElement.data('matricula_id'),
       componente_curricular_id : $notaFieldElement.data('componente_curricular_id'),
-      nota_original            : (usaRecuperacaoParalelaPorEtapa ? $notaFieldElement.val() : null)
+      nota_original            : $notaFieldElement.val()
     };
 
     var options = {
@@ -233,9 +232,13 @@ function checkIfShowNotaRecuperacaoParalelaField(notaLancada, dataResponse){
   if(usaRecuperacaoParalelaPorEtapa){
     if((notaLancada < mediaRecuperacaoParalela) || (mediaRecuperacaoParalela == null)){
       $jnotaRecuperacaoParalelaField.show();
-      $jnotaRecuperacaoParalelaField.focus();
+      // Somente seta o foco do campo quando o tab for horizontal,
+      // pois se for vertical não faz sentido e atrapalha a navegação
+      if(sentidoTab == "1"){
+        $jnotaRecuperacaoParalelaField.focus();
+      }
     }else{
-      $jnotaRecuperacaoParalelaField.hide(); 
+      $jnotaRecuperacaoParalelaField.hide();
     }
   }
 }
@@ -1097,6 +1100,8 @@ function navegacaoTab(sentido){
         i++;
       });
     }
+
+    sentidoTab = sentido;
 }
 
 function criaBotaoReplicarNotasPorArea(componentesCurriculares){
