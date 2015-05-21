@@ -811,8 +811,13 @@ class indice extends clsCadastro
       			 			  8 => '46', 30 => '47', 9 => '48', 10 => '49', 11 => '50', 12 => '51', 13 => '52',
       			 			  14 => '53', 28 => '54', 29 => '55', 16 => '56', 17 => '57', 20 => '58', 21 => '59', 
       			 			  23 => '60', 25 => '61', 26 => '62', 27 => '63', 99 => '64');
+      try{
+        $componentesTurma = App_Model_IedFinder::getComponentesTurma($serieid, $escolaId, $turmaId);
+      }catch(Exception $e){
+        $componentesTurma = array();
+      }
 
-      foreach(App_Model_IedFinder::getComponentesTurma($serieid, $escolaId, $turmaId) as $componente){
+      foreach($componentesTurma as $componente){
         // Só serão consideradas disciplinas tipificadas com o código do Educacenso
         if($componente->codigo_educacenso){
           // Pega o código educacenso
