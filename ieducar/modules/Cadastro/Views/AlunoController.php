@@ -404,9 +404,14 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     }
 
     // código aluno rede estadual
-   // $options = array('label' => $labels_botucatu ? Portabilis_String_Utils::toLatin1("Código rede estadual (RA)") : $this->_getLabel('aluno_estado_id'), 'required' => $labels_botucatu, 'size' => 25, 'max_length' => 25);
-   // $this->inputsHelper()->text('aluno_estado_id', $options);
-    $this->campoRA('aluno_estado_id', Portabilis_String_Utils::toLatin1("Código rede estadual (RA)"), $this->aluno_estado_id, FALSE);
+    // foi criado um campo "campoRA", mas ele funciona somente para botucatu
+    if($labels_botucatu){
+      $this->campoRA('aluno_estado_id', Portabilis_String_Utils::toLatin1("Código rede estadual (RA)"), $this->aluno_estado_id, FALSE);  
+    }else{
+      $options = array('label' => $this->_getLabel('aluno_estado_id'), 'required' => false, 'size' => 25, 'max_length' => 25);
+      $this->inputsHelper()->text('aluno_estado_id', $options);  
+    }
+    
     // código aluno sistema
     if($GLOBALS['coreExt']['Config']->app->alunos->mostrar_codigo_sistema){
     	$options = array('label' => Portabilis_String_Utils::toLatin1($GLOBALS['coreExt']['Config']->app->alunos->codigo_sistema), 'required' => false, 'size' => 25, 'max_length' => 30);
