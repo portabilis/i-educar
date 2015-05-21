@@ -176,13 +176,6 @@ class AlunoController extends ApiCoreController
         $sql     .= " and cod_aluno != $2";
         $params[] = $this->getRequest()->id;
       }
-      $count = strlen($this->getRequest()->aluno_estado_id);
-      if ($count < 13) {
-        $this->messenger->append("O Código rede estadual informado é inválido. ".
-                                 "{$this->getRequest()->aluno_estado_id}.");
-
-        return false;
-      }
       $alunoId = $this->fetchPreparedQuery($sql, $params, true, 'first-field');
 
       if ($alunoId) {

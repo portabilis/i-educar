@@ -339,7 +339,7 @@ class clsCampos extends Core_Controller_Page_Abstract
     $arr_componente = array(
       'cpf',
       $this->__adicionando_tabela ? $nome : $campo,
-      $obrigatorio ? "/[0-9]{3}\.[0-9]{3}\.[0-9]{3}-[0-9]{1}/" : '',
+      $obrigatorio,
       $valor,
       14,
       13,
