@@ -172,7 +172,7 @@ class clsPmieducarHistoricoDisciplinas
 	 */
 	function cadastra()
 	{
-		if( /*is_numeric( $this->sequencial ) && */is_numeric( $this->ref_ref_cod_aluno ) && is_numeric( $this->ref_sequencial ) && is_string( $this->nm_disciplina ) && is_string( $this->nota ) )
+		if( is_numeric( $this->ref_ref_cod_aluno ) && is_numeric( $this->ref_sequencial ) && is_string( $this->nm_disciplina ) && is_string( $this->nota ) )
 		{
 			$db = new clsBanco();
 
