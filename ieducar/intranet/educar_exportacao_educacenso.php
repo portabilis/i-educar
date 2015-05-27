@@ -87,7 +87,7 @@ class indice extends clsCadastro
     @session_write_close();
 
     $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_cadastra(585, $this->pessoa_logada, 7,
+    $obj_permissoes->permissao_cadastra(846, $this->pessoa_logada, 7,
       'educar_index.php');
     $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
 
@@ -110,10 +110,18 @@ class indice extends clsCadastro
     $this->inputsHelper()->input('ano');
     $this->inputsHelper()->date('data_ini',array( 'label' => Portabilis_String_Utils::toLatin1('Data início')));
     $this->inputsHelper()->date('data_fim',array( 'label' => 'Data fim'));
-    $escolas = Portabilis_Business_Professor::isProfessor($this->ref_cod_instituicao, $this->pessoa_logada) ? 
-                  Portabilis_Business_Professor::escolasAlocado($this->ref_cod_instituicao, $this->pessoa_logada) : 
-                                                                                  App_Model_IedFinder::getEscolas();
- 
+
+    $obj_permissoes = new clsPermissoes();
+    $nivel_acesso = $obj_permissoes->nivel_acesso($this->pessoa_logada);
+
+    if($nivel_acesso == "4"){
+      $escolas = Portabilis_Business_Professor::escolasAlocado($this->ref_cod_instituicao, $this->pessoa_logada);
+      $escolas = Portabilis_Array_Utils::setAsIdValue($escolas, 'id', 'nome');
+
+    }else{
+      $escolas = App_Model_IedFinder::getEscolas();
+    }
+
     if (is_array($escolas) && count($escolas)) {      
 
       $conteudo = '<br style="clear: left" />';
@@ -146,7 +154,7 @@ class indice extends clsCadastro
     @session_write_close();
     //Checa permissões
     $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_cadastra(585, $this->pessoa_logada, 7,
+    $obj_permissoes->permissao_cadastra(846, $this->pessoa_logada, 7,
       'educar_index.php');
     
     $conteudo = '';
