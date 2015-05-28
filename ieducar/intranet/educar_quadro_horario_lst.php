@@ -197,7 +197,7 @@ class indice extends clsConfig
               $resultado = $this->organizarHorariosIguais($resultado);
               foreach ($resultado as $registro) {
                 if($registro['ref_cod_disciplina'] == 0){
-                  $componente->abreviatura = 'VÁRIAS';
+                  $componente->abreviatura = 'EDUCAÇÃO INFANTIL';
                 }else{
                   $componente = $componenteMapper->find($registro['ref_cod_disciplina']); 
                 }
