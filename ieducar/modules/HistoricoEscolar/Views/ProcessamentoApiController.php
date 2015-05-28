@@ -627,11 +627,8 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         if (clsPmieducarTurma::verificaDisciplinaDispensada($turmaId, $ccId))
           $nota = $this->DISCIPLINA_DISPENSADA;
         elseif ($this->getRequest()->notas == 'buscar-boletim'){
-          if ($tpNota == $cnsNota::NUMERICA) {
+          if (($tpNota == $cnsNota::NUMERICA) || ($tpNota == $cnsNota::CONCEITUAL)) {
             $nota = (string)$mediasCc[$ccId][0]->mediaArredondada;
-          }
-          elseif ($tpNota == $cnsNota::CONCEITUAL){
-            $nota = (string)$mediasCc[$ccId][0]->media;
           }
         }
         else
