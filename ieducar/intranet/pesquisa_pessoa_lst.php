@@ -90,7 +90,7 @@ class indice extends clsListagem
       $this->$key = $value;
     }
 
-    if ($parametros->getPessoa() == 'F' || 1==1) {
+    if ($parametros->getPessoa() == 'F') {
       $this->addCabecalhos(array("CPF", "Nome"));
 
       // Filtros de Busca
