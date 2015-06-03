@@ -36,7 +36,7 @@
 	if( is_numeric( $_GET["cur"]  ) )
 	{
 		$db = new clsBanco();
-		$consulta = "SELECT DISTINCT
+/*		$consulta = "SELECT DISTINCT
 							ss.ref_serie_origem
 							,so.nm_serie
 						FROM
@@ -67,6 +67,15 @@
 						UNION
 
 						SELECT DISTINCT
+							s.cod_serie
+							,s.nm_serie
+						FROM   pmieducar.serie s
+						WHERE
+							s.ativo = 1
+						   AND s.ref_cod_curso = {$_GET["cur"]}
+						";*/
+
+		$consulta = "SELECT DISTINCT
 							s.cod_serie
 							,s.nm_serie
 						FROM   pmieducar.serie s
