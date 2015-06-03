@@ -1383,7 +1383,7 @@ if(!$this->isEnderecoExterno){
 	    $options = array('label' => Portabilis_String_Utils::toLatin1('Dependências existentes na escola – Despensa'), 'value' => $this->dependencia_dispensa);
 	    $this->inputsHelper()->checkbox('dependencia_dispensa', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('Dependências existentes na escola – Aumoxarifado'), 'value' => $this->dependencia_aumoxarifado);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Dependências existentes na escola – Almoxarifado'), 'value' => $this->dependencia_aumoxarifado);
 	    $this->inputsHelper()->checkbox('dependencia_aumoxarifado', $options);
 
 	    $options = array('label' => Portabilis_String_Utils::toLatin1('Dependências existentes na escola – Auditório'), 'value' => $this->dependencia_auditorio);
