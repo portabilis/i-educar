@@ -253,7 +253,7 @@ class indice extends clsCadastro
 		$cod_ocorrencia_disciplinar = $obj->cadastra();
 		if( $cod_ocorrencia_disciplinar )
 		{
-			if($this->visivel_pais){
+			if(($this->visivel_pais) && ($this->possuiConfiguracaoNovoEducacao())){
 				$resposta = json_decode($this->enviaOcorrenciaNovoEducacao($cod_ocorrencia_disciplinar));
 
 				if(is_array($resposta->errors)){
@@ -351,7 +351,7 @@ class indice extends clsCadastro
 
   	$tipo_ocorrencia = $det_tmp["nm_tipo"];
 
-  	$params   = array('token' 	  	 => $GLOBALS['coreExt']['Config']->app->novoeducacao->token,
+  	$params   = array('token' 	  	 => $GLOBALS['coreExt']['Config']->apis->access_key,
   			   		  'api_code' 	 => $cod_ocorrencia_disciplinar,
   			   		  'student_code' => $cod_aluno,
   			   		  'description'  => utf8_encode($this->observacao),
@@ -366,6 +366,11 @@ class indice extends clsCadastro
 
   	
 	return $requisicao->executaRequisicao();
+  }
+
+  protected function possuiConfiguracaoNovoEducacao(){
+  	 return (strlen($GLOBALS['coreExt']['Config']->app->novoeducacao->url) > 0 &&
+  	 		 strlen($GLOBALS['coreExt']['Config']->app->novoeducacao->caminho_api) > 0);
   }
 
 }
