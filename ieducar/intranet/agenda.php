@@ -221,7 +221,7 @@ class indice
 						<td valign=\"top\" height=\"40\" align=\"center\">{$nm_agenda}</td>
 					</tr>
 					<tr>
-						<td valign=\"bottom\" height=\"40\"><span class=\"titulo\">Calendario</span></td>
+						<td valign=\"bottom\" height=\"40\"><span class=\"titulo\">Calendário</span></td>
 					</tr>
 				</table>
 			</td>
