@@ -29,6 +29,7 @@ require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'Portabilis/Date/Utils.php';
+require_once 'modules/Api/Model/ApiExternaController.php';
 
 class clsIndexBase extends clsBase
 {
@@ -231,12 +232,10 @@ class indice extends clsCadastro
 						  $this->visivel_pais,
 						  Portabilis_String_Utils::toLatin1("Marque este campo, caso deseje que os pais do aluno possam visualizar tal ocorrência disciplinar."));
 
-		Portabilis_View_Helper_Application::loadJavascript($this, '/modules/Cadastro/Assets/Javascripts/OcorrenciaDisciplinar.js');
-
 	}
 
 	function Novo()
-	{
+	{	
 		@session_start();
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
@@ -251,9 +250,18 @@ class indice extends clsCadastro
 		$this->ref_cod_matricula = is_numeric($this->ref_cod_matricula) ? $this->ref_cod_matricula : $this->getRequest()->matricula_id;
 
 		$obj = new clsPmieducarMatriculaOcorrenciaDisciplinar( $this->ref_cod_matricula, $this->ref_cod_tipo_ocorrencia_disciplinar, null, $this->pessoa_logada, $this->pessoa_logada, $this->observacao, $this->getDataHoraCadastro(), $this->data_exclusao, $this->ativo, $this->visivel_pais);
-		$cadastrou = $obj->cadastra();
-		if( $cadastrou )
+		$cod_ocorrencia_disciplinar = $obj->cadastra();
+		if( $cod_ocorrencia_disciplinar )
 		{
+			if(($this->visivel_pais) && ($this->possuiConfiguracaoNovoEducacao())){
+				$resposta = json_decode($this->enviaOcorrenciaNovoEducacao($cod_ocorrencia_disciplinar));
+
+				if(is_array($resposta->errors)){
+					echo Portabilis_String_Utils::toLatin1("Erro ao enviar ocorrencia disciplinar ao sistema externo: " . $resposta->errors[0]);
+					die;
+				}
+
+			}
 			$this->mensagem .= "Cadastro efetuado com sucesso.<br>";
 			if ($voltaListagem)
 				header( "Location: educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$this->ref_cod_matricula}" );
@@ -330,6 +338,41 @@ class indice extends clsCadastro
   protected function getDataHoraCadastro() {
     return $this->data_cadastro = dataToBanco($this->data_cadastro) . " " . $this->hora_cadastro;
   }
+  protected function enviaOcorrenciaNovoEducacao($cod_ocorrencia_disciplinar){
+
+  	$obj_tmp   = new clsPmieducarMatricula($this->ref_cod_matricula);
+  	$det_tmp   = $obj_tmp->detalhe();
+  	$cod_aluno = $det_tmp["ref_cod_aluno"];
+
+  	$cod_escola = $det_tmp["ref_ref_cod_escola"];
+  	
+  	$obj_tmp = new clsPmieducarTipoOcorrenciaDisciplinar($this->ref_cod_tipo_ocorrencia_disciplinar);
+  	$det_tmp = $obj_tmp->detalhe();
+
+  	$tipo_ocorrencia = $det_tmp["nm_tipo"];
+
+  	$params   = array('token' 	  	 => $GLOBALS['coreExt']['Config']->apis->access_key,
+  			   		  'api_code' 	 => $cod_ocorrencia_disciplinar,
+  			   		  'student_code' => $cod_aluno,
+  			   		  'description'  => utf8_encode($this->observacao),
+  			   		  'occurred_at'  => $this->data_cadastro,
+  			   		  'unity_code' 	 => $cod_escola,
+  			   		  'kind'		 => utf8_encode($tipo_ocorrencia));
+  	$requisicao = new ApiExternaController(	array( 'url' 			=> $GLOBALS['coreExt']['Config']->app->novoeducacao->url,
+  												   'caminhoAPI'		=> $GLOBALS['coreExt']['Config']->app->novoeducacao->caminho_api,
+  												   'recurso'		=> 'ocorrencias-disciplinares',
+  												   'tipoRequisicao' => ApiExternaController::REQUISICAO_POST,
+  												   'params'			=> $params));
+
+  	
+	return $requisicao->executaRequisicao();
+  }
+
+  protected function possuiConfiguracaoNovoEducacao(){
+  	 return (strlen($GLOBALS['coreExt']['Config']->app->novoeducacao->url) > 0 &&
+  	 		 strlen($GLOBALS['coreExt']['Config']->app->novoeducacao->caminho_api) > 0);
+  }
+
 }
 
 // cria uma extensao da classe base

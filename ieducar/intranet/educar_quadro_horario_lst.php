@@ -194,9 +194,13 @@ class indice extends clsConfig
             $texto .= "<td valign=top align='center' width='100' style='cursor: pointer; ' onclick='envia( this, {$this->ref_cod_turma}, {$this->ref_cod_serie}, {$this->ref_cod_curso}, {$this->ref_cod_escola}, {$this->ref_cod_instituicao}, {$det_quadro["cod_quadro_horario"]}, {$c} );'>";
 
             if (is_array($resultado)) {
+              $resultado = $this->organizarHorariosIguais($resultado);
               foreach ($resultado as $registro) {
-                // Componente curricular
-                $componente = $componenteMapper->find($registro['ref_cod_disciplina']);
+                if($registro['ref_cod_disciplina'] == 0){
+                  $componente->abreviatura = 'EDUCAÇÃO INFANTIL';
+                }else{
+                  $componente = $componenteMapper->find($registro['ref_cod_disciplina']); 
+                }
 
                 // Servidor
                 $obj_servidor = new clsPmieducarServidor();
@@ -255,6 +259,21 @@ class indice extends clsConfig
       </table>';
 
     return $retorno;
+  }
+  function organizarHorariosIguais($valores){
+    $x = 1;
+    $quantidadeElementos = count($valores);
+    while ($x < $quantidadeElementos) {
+        $mesmoHorario = (($valores[0]['hora_inicial'] == $valores[$x]['hora_inicial']) && 
+                         ($valores[0]['hora_final'] == $valores[$x]['hora_final']));
+        
+        if($mesmoHorario){
+          unset($valores[$x]);
+          $valores[0]['ref_cod_disciplina'] = 0;
+        }
+        $x++;
+    }
+    return $valores;
   }
 }
 

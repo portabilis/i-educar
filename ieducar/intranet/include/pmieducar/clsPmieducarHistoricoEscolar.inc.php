@@ -1045,7 +1045,7 @@ class clsPmieducarHistoricoEscolar
 		if( is_numeric( $ref_cod_aluno ) )
 		{
 			$db = new clsBanco();
-			$sequencial = $db->campoUnico("SELECT COALESCE( MAX(sequencial), 0 ) FROM {$this->_tabela} WHERE ref_cod_aluno = {$ref_cod_aluno}" );
+			$sequencial = $db->campoUnico("SELECT COALESCE( MAX(sequencial), 0 ) FROM pmieducar.historico_escolar WHERE ref_cod_aluno = {$ref_cod_aluno}" );
 			return $sequencial;
 		}
 		return false;
@@ -1091,13 +1091,43 @@ class clsPmieducarHistoricoEscolar
 	                              $grade_curso_id
 	                            );
 
-	        return $historicoEscolar->cadastra();
+	        if($historicoEscolar->cadastra()){
+	        	$sequencial = self::getMaxSequencial($detMatricula['ref_cod_aluno']);	
+	        	$disciplinas = self::dadosDisciplinas($ref_cod_matricula);
+	        	foreach($disciplinas as $index => $disciplina){
+	        		$historicoDisciplina = new clsPmieducarHistoricoDisciplinas(($index+1), $detMatricula['ref_cod_aluno'], $sequencial, $disciplina, "");
+	        		$historicoDisciplina->cadastra();
+	        	}
+	        }
 	    }
 	    return false;
 	}
 
+	protected static function dadosDisciplinas($ref_cod_matricula){
+		$detMatricula = self::dadosMatricula($ref_cod_matricula);
+		$disciplinas = array();
+
+		$cod_serie = $detMatricula['cod_serie'];
+		$cod_escola = $detMatricula['ref_ref_cod_escola'];
+
+		$sql = "SELECT translate(upper(cc.nome),'áéíóúýàèìòùãõâêîôûäëïöüÿçÁÉÍÓÚÝÀÈÌÒÙÃÕÂÊÎÔÛÄËÏÖÜÇ','AEIOUYAEIOUAOAEIOUAEIOUYCAEIOUYAEIOUAOAEIOUAEIOUC')
+ 				  FROM pmieducar.escola_serie_disciplina esd
+ 				 INNER JOIN modules.componente_curricular cc ON(esd.ref_cod_disciplina = cc.id)
+ 				 WHERE esd.ref_ref_cod_serie = {$cod_serie}
+ 				   AND esd.ref_ref_cod_escola = {$cod_escola}";
+ 		$db = new clsBanco();
+ 		$db->Consulta($sql);
+
+
+ 		while($db->ProximoRegistro()){
+ 			list($disciplinas[]) = $db->Tupla();
+ 		}
+
+		return $disciplinas;
+	}
+
 	protected static function dadosMatricula($ref_cod_matricula){
-	    $sql = "SELECT m.ref_cod_aluno, nm_serie as nome_serie, m.ano, m.ref_ref_cod_escola, c.ref_cod_instituicao, c.nm_curso as nome_curso
+	    $sql = "SELECT m.ref_cod_aluno, nm_serie as nome_serie, s.cod_serie, m.ano, m.ref_ref_cod_escola, c.ref_cod_instituicao, c.nm_curso as nome_curso
 			FROM pmieducar.matricula m
 			INNER JOIN pmieducar.serie s ON m.ref_ref_cod_serie = s.cod_serie
 			INNER JOIN pmieducar.curso c ON m.ref_cod_curso = c.cod_curso

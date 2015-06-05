@@ -425,8 +425,12 @@ class indice extends clsDetalhe
     if ($obj_permissoes->permissao_cadastra(586, $this->pessoa_logada, 7)) {
       $this->url_novo   = 'educar_turma_cad.php';
       $this->url_editar = 'educar_turma_cad.php?cod_turma=' . $registro['cod_turma'];
+      
       $this->array_botao[]            = 'Reclassificar alunos alfabeticamente';
       $this->array_botao_url_script[] = "if(confirm(\"Deseja realmente reclassificar os alunos alfabeticamente?\\nAo utilizar esta opção para esta turma, a ordenação dos alunos no diário e em relatórios que é controlada por ordem de chegada após a data de fechamento da turma (campo Data de fechamento), passará a ter o controle novamente alfabético, desconsiderando a data de fechamento.\"))reclassifica_matriculas({$registro['cod_turma']})";      
+      
+      $this->array_botao[]            = 'Editar sequência de alunos na turma';
+      $this->array_botao_url_script[] = sprintf('go("educar_ordenar_alunos_turma.php?cod_turma=%d");', $registro['cod_turma']);
     }
 
     $this->url_cancelar = 'educar_turma_lst.php';

@@ -1328,7 +1328,6 @@ class clsPmieducarServidor
               OR ('{$array_horario[2]}' > qhh.hora_inicial AND '{$array_horario[2]}' < qhh.hora_final))
             OR ('{$array_horario[1]}' = qhh.hora_inicial AND '{$array_horario[2]}' = qhh.hora_final)
             OR ('{$array_horario[1]}' <= qhh.hora_inicial AND '{$array_horario[2]}' >= qhh.hora_final))
-
         AND qhh.ativo = '1' ";
 
       if (is_string($lst_matriculas)) {
