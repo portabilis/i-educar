@@ -1112,7 +1112,7 @@ if(!$this->isEnderecoExterno){
 						$obj_curso_det = $obj_curso->detalhe();
 						$nm_curso = $obj_curso_det["nm_curso"];
 						$nm_autorizacao = $this->escola_curso_autorizacao[$curso];
-						$this->campoTextoInv( "ref_cod_curso_{$curso}", "", $nm_curso, 30, 255, false, false, true );
+						$this->campoTextoInv( "ref_cod_curso_{$curso}", "", $nm_curso, 50, 255, false, false, true );
 						$this->campoTextoInv( "autorizacao_{$curso}", "", $nm_autorizacao, 20, 255, false, false, false, "", "<a href='#' onclick=\"getElementById('excluir_curso').value = '{$curso}'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bola_xis.gif' title='Excluir' border=0></a>" );
 						$aux[$curso] = $curso;
 						$aux_autorizacao[$curso] = $nm_autorizacao;						
