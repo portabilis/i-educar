@@ -33,7 +33,6 @@ require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
 
 require_once 'lib/Portabilis/Utils/Database.php';
 require_once 'lib/Portabilis/String/Utils.php';
@@ -281,13 +280,13 @@ class indice extends clsCadastro
      * Selecionar funcionário,
      * Escolher a pessoa (não o usuário)
      */
-    $opcoes = array('' => 'Pesquise o funcionario clicando na lupa ao lado');
+    $opcoes = array('' => 'Para procurar, clique na lupa ao lado.');
     if ($this->cod_servidor) {
       $servidor = new clsFuncionario($this->cod_servidor);
       $detalhe = $servidor->detalhe();
       //$detalhe = $detalhe['idpes']->detalhe();
 
-      $this->campoRotulo('nm_servidor', 'Servidor', $servidor->nome);
+      $this->campoRotulo('nm_servidor', 'Pessoa', $servidor->nome);
       $this->campoOculto('cod_servidor', $this->cod_servidor);
       $this->campoOculto(
           'ref_cod_instituicao_original', 
@@ -305,42 +304,23 @@ class indice extends clsCadastro
       );
 
       // Configurações do campo de pesquisa
-      $dados = array(
-        'nome' => 'Pessoa',
-        'campo' => '', // Como acao
-        'valor' => array(null => 'Para procurar, clique na lupa ao lado.'),
-        'default' => null,
-        'acao' => "",
-        'descricao' => "",
-        'caminho' => 'pesquisa_pessoa_lst.php',
-        'descricao2' => "",
-        'flag' => null,
-        'pag_cadastro' => null,
-        'disabled' => "",
-        'div' => false,
-        'serializedcampos' => $parametros->serializaCampos(),
-        'duplo' => false,
-        'obrigatorio' => true
-      ); 
-      $this->setOptionsListaPesquisa("cod_servidor", $dados);
-
-      // $this->campoListaPesq(
-      //   'cod_servidor', 
-      //   'Servidor', 
-      //   $opcoes,
-      //   $this->cod_servidor, 
-      //   'pesquisa_funcionario_lst.php', 
-      //   '', 
-      //   false, 
-      //   '', 
-      //   '',
-      //   null, 
-      //   null, 
-      //   '', 
-      //   false, 
-      //   $parametros->serializaCampos(), 
-      //   true
-      // );
+      $this->campoListaPesq(
+        'cod_servidor', 
+        'Pessoa', 
+        $opcoes,
+        $this->cod_servidor, 
+        'pesquisa_pessoa_lst.php', 
+        '', 
+        false, 
+        '', 
+        '',
+        null, 
+        null, 
+        '', 
+        false, 
+        $parametros->serializaCampos(), 
+        true
+      );
     }
     
     // ----
