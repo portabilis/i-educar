@@ -1206,6 +1206,8 @@ class indice extends clsCadastro
   function createOrUpdateRaca($pessoaId, $corRaca) {
     $pessoaId = (int) $pessoaId;
     $corRaca  = (int) $corRaca;
+        
+    if ($corRaca == 0) return false; //Quando não tiver cor/raça selecionado não faz update
 
     $raca = new clsCadastroFisicaRaca($pessoaId, $corRaca);
 
