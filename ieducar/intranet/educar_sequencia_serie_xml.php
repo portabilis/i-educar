@@ -36,53 +36,13 @@
 	if( is_numeric( $_GET["cur"]  ) )
 	{
 		$db = new clsBanco();
-/*		$consulta = "SELECT DISTINCT
-							ss.ref_serie_origem
-							,so.nm_serie
-						FROM
-							pmieducar.sequencia_serie ss
-							, pmieducar.serie so
-							, pmieducar.serie sd
-						WHERE
-							ss.ativo = 1
-							AND ref_serie_origem = so.cod_serie
-							AND ref_serie_destino = sd.cod_serie
-							AND ( so.ref_cod_curso = {$_GET["cur"]} OR sd.ref_cod_curso = {$_GET["cur"]} )
-
-						UNION
-
-						SELECT DISTINCT
-							ss.ref_serie_destino
-							,sd.nm_serie
-						FROM
-							pmieducar.sequencia_serie ss
-							, pmieducar.serie so
-							, pmieducar.serie sd
-						WHERE
-							ss.ativo = 1
-							AND ref_serie_origem = so.cod_serie
-							AND ref_serie_destino = sd.cod_serie
-							AND ( so.ref_cod_curso = {$_GET["cur"]} OR sd.ref_cod_curso = {$_GET["cur"]} )
-
-						UNION
-
-						SELECT DISTINCT
-							s.cod_serie
-							,s.nm_serie
-						FROM   pmieducar.serie s
-						WHERE
-							s.ativo = 1
-						   AND s.ref_cod_curso = {$_GET["cur"]}
-						";*/
-
 		$consulta = "SELECT DISTINCT
-							s.cod_serie
-							,s.nm_serie
-						FROM   pmieducar.serie s
-						WHERE
-							s.ativo = 1
-						   AND s.ref_cod_curso = {$_GET["cur"]}
-						";
+							s.cod_serie,
+							s.nm_serie
+					   FROM pmieducar.serie s
+					  INNER JOIN pmieducar.escola_serie es on (es.ref_cod_serie = s.cod_serie and es.ativo = 1)
+					  WHERE s.ativo = 1
+					    AND s.ref_cod_curso = {$_GET["cur"]} ";
 
 		$db->Consulta( $consulta );
 		while ( $db->ProximoRegistro() )
