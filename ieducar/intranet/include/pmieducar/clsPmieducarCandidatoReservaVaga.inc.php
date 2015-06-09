@@ -343,7 +343,7 @@ class clsPmieducarCandidatoReservaVaga
   {
     if (is_numeric($this->cod_candidato_reserva_vaga)) {
       $db = new clsBanco();
-      $db->Consulta("SELECT {$this->_todos_campos}, resp_pes.nome as nome_responsavel, pes.nome as nome, (SELECT nm_serie FROM pmieducar.serie WHERE cod_serie = ref_cod_serie) as serie FROM {$this->_tabela} 
+      $db->Consulta("SELECT {$this->_todos_campos}, resp_pes.nome as nome_responsavel, pes.nome as nome, crv.motivo as motivo, (SELECT nm_serie FROM pmieducar.serie WHERE cod_serie = ref_cod_serie) as serie FROM {$this->_tabela} 
                       INNER JOIN pmieducar.aluno a ON a.cod_aluno = crv.ref_cod_aluno 
                       INNER JOIN cadastro.pessoa pes ON pes.idpes = a.ref_idpes
                       INNER JOIN cadastro.fisica fis ON fis.idpes = pes.idpes
@@ -465,11 +465,13 @@ class clsPmieducarCandidatoReservaVaga
     return FALSE;
   }
 
-  function indefereSolicitacao()
+  function indefereSolicitacao($motivo = null)
   {
+    $motivo = $motivo == null ? "null" : "'". $motivo ."'";
+
     if (is_numeric($this->cod_candidato_reserva_vaga)) {
       $db = new clsBanco();
-      $db->Consulta("UPDATE pmieducar.candidato_reserva_vaga SET situacao = 'N', data_situacao = NOW()
+      $db->Consulta("UPDATE pmieducar.candidato_reserva_vaga SET situacao = 'N', motivo = $motivo, data_situacao = NOW()
                       WHERE cod_candidato_reserva_vaga = '{$this->cod_candidato_reserva_vaga}'");
       $db->ProximoRegistro();
       return $db->Tupla();
