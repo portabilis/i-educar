@@ -114,15 +114,30 @@ class indice extends clsCadastro
     $obj_permissoes = new clsPermissoes();
     $nivel_acesso = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
-    if($nivel_acesso == "4"){
-      $escolas = Portabilis_Business_Professor::escolasAlocado($this->ref_cod_instituicao, $this->pessoa_logada);
-      $escolas = Portabilis_Array_Utils::setAsIdValue($escolas, 'id', 'nome');
-
-    }else{
+    if($nivel_acesso ==  "4"){
+      $cod_escola = $obj_permissoes->getEscola($this->pessoa_logada);
+       
+      $obj_ref_cod_escola = new clsPmieducarEscola( $cod_escola );
+      $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
+      $idpes = $det_ref_cod_escola["ref_idpes"];
+      if ($idpes)
+      {
+        $obj_escola = new clsPessoaJuridica( $idpes );
+        $obj_escola_det = $obj_escola->detalhe();
+        $escolas = array($cod_escola => $obj_escola_det["fantasia"]);
+      }
+      else
+      {
+        $obj_escola = new clsPmieducarEscolaComplemento( $cod_escola );
+        $obj_escola_det = $obj_escola->detalhe();
+        $escolas = array($cod_escola => $obj_escola_det["nm_escola"]);
+      }
+       
+    }elseif($nivel_acesso < "4"){
       $escolas = App_Model_IedFinder::getEscolas();
     }
 
-    if (is_array($escolas) && count($escolas)) {      
+    if (is_array($escolas) && (count($escolas) > 0)) {      
 
       $conteudo = '<br style="clear: left" />';
       $conteudo .= '<div style="margin-bottom: 10px; float: left">';
@@ -140,11 +155,10 @@ class indice extends clsCadastro
       $escolas  = '<table cellspacing="0" cellpadding="0" border="0">';
       $escolas .= sprintf('<tr align="left"><td>%s</td></tr>', $conteudo);
       $escolas .= '</table>';
-    }
 
     $this->campoRotulo("escolas_", "<b>Escolas</b>",
       "<div id='escolas'>$escolas</div>", null, 'Selecione a(s) escola(s) que deseja exportar');
-
+    }
   }
 
   function Novo()
