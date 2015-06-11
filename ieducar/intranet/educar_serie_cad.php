@@ -91,6 +91,7 @@ class indice extends clsCadastro
   var $idade_final;
 
   var $regra_avaliacao_id;
+  var $regra_avaliacao_diferenciada_id;
 
   function Inicializar()
   {
@@ -134,9 +135,9 @@ class indice extends clsCadastro
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_index.php"                  => "i-Educar - Escola",
-         ""        => "{$nomeMenu} s&eacute;rie"             
+         ""        => "{$nomeMenu} s&eacute;rie"
     ));
-    $this->enviaLocalizacao($localizacao->montar());      
+    $this->enviaLocalizacao($localizacao->montar());
 
     $this->nome_url_cancelar = "Cancelar";
 
@@ -193,7 +194,8 @@ class indice extends clsCadastro
 
     $regras = array('' => 'Selecione') + $regras;
 
-    $this->campoLista('regra_avaliacao_id', 'Regra Avaliação', $regras, $this->regra_avaliacao_id);
+    $this->campoLista('regra_avaliacao_id', 'Regra de avaliação', $regras, $this->regra_avaliacao_id);
+    $this->campoLista('regra_avaliacao_diferenciada_id', 'Regra de avaliação diferenciada', $regras, $this->regra_avaliacao_diferenciada_id, '', FALSE, 'Será utilizada quando campo <b>Utilizar regra de avaliação diferenciada</b> estiver marcado no cadastro da escola', '', FALSE, FALSE);
 
     $opcoes = array('' => 'Selecione', 1 => 'n&atilde;o', 2 => 'sim');
 
@@ -223,7 +225,7 @@ class indice extends clsCadastro
     $obj = new clsPmieducarSerie(NULL, NULL, $this->pessoa_logada, $this->ref_cod_curso,
       $this->nm_serie, $this->etapa_curso, $this->concluinte, $this->carga_horaria,
       NULL, NULL, 1, $this->idade_inicial, $this->idade_final,
-      $this->regra_avaliacao_id, $this->observacao_historico, $this->dias_letivos);
+      $this->regra_avaliacao_id, $this->observacao_historico, $this->dias_letivos, $this->regra_avaliacao_diferenciada_id);
 
     $cadastrou = $obj->cadastra();
 
@@ -250,7 +252,7 @@ class indice extends clsCadastro
     $obj = new clsPmieducarSerie($this->cod_serie, $this->pessoa_logada, NULL,
       $this->ref_cod_curso, $this->nm_serie, $this->etapa_curso, $this->concluinte,
       $this->carga_horaria, NULL, NULL, 1, $this->idade_inicial,
-      $this->idade_final, $this->regra_avaliacao_id, $this->observacao_historico, $this->dias_letivos);
+      $this->idade_final, $this->regra_avaliacao_id, $this->observacao_historico, $this->dias_letivos, $this->regra_avaliacao_diferenciada_id);
 
     $editou = $obj->edita();
     if ($editou) {
@@ -309,6 +311,11 @@ function getRegra()
   campoRegras.disabled = true;
   campoRegras.options[0].text = 'Carregando regras';
 
+  var campoRegrasDiferenciadas = document.getElementById('regra_avaliacao_diferenciada_id');
+  campoRegrasDiferenciadas.length = 1;
+  campoRegrasDiferenciadas.disabled = true;
+  campoRegrasDiferenciadas.options[0].text = 'Carregando regras';
+
   var xml_qtd_etapas = new ajax(RegrasInstituicao);
   xml_qtd_etapas.envia("educar_serie_regra_xml.php?ins=" + campoInstituicao);
 }
@@ -338,6 +345,7 @@ function EtapasCurso(xml_qtd_etapas)
 function RegrasInstituicao(xml_qtd_regras)
 {
   var campoRegras = document.getElementById('regra_avaliacao_id');
+  var campoRegrasDiferenciadas = document.getElementById('regra_avaliacao_diferenciada_id');
   var DOM_array = xml_qtd_regras.getElementsByTagName('regra');
 
   if (DOM_array.length) {
@@ -345,14 +353,20 @@ function RegrasInstituicao(xml_qtd_regras)
     campoRegras.options[0].text = 'Selecione uma regra';
     campoRegras.disabled = false;
 
+    campoRegrasDiferenciadas.length = 1;
+    campoRegrasDiferenciadas.options[0].text = 'Selecione uma regra';
+    campoRegrasDiferenciadas.disabled = false;
+
     var loop = DOM_array.length;
 
     for (var i = 0; i < loop;i++) {
       campoRegras.options[i] = new Option(DOM_array[i].firstChild.data, i, false, false);
+      campoRegrasDiferenciadas.options[i] = new Option(DOM_array[i].firstChild.data, i, false, false);
     }
   }
   else {
-	  campoRegras.options[0].text = 'A instituição não possui uma Regra de Avaliação';
+    campoRegras.options[0].text = 'A instituição não possui uma Regra de Avaliação';
+	  campoRegrasDiferenciadas.options[0].text = 'A instituição não possui uma Regra de Avaliação';
   }
 }
 
