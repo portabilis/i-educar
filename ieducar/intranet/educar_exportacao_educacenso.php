@@ -374,7 +374,7 @@ class indice extends clsCadastro
 
       return $return."\n";
     }else{
-      $this->msg .= "Dados para formular o registro 00 da escola {$escolaId} não encontrados. Verifique se a escola possuí endereço normalizado, código do INEP e dados do gestor cadastrados.\n";
+      $this->msg .= "Dados para formular o registro 00 da escola {$escolaId} não encontrados. Verifique se a escola possuí endereço normalizado, código do INEP e dados do gestor cadastrados.<br/>";
       $this->error = true;
     }
   }
@@ -385,308 +385,115 @@ class indice extends clsCadastro
       \'10\' as r10s1,
       ece.cod_escola_inep as r10s2,
 
-      f.cpf as r10s3,
-      p.nome as r10s4,
-      e.cargo_gestor as r10s5,
-      p.email as r10s6,
       e.local_funcionamento,
-      e.condicao as r10s16,
+      e.condicao as r10s12,
       e.codigo_inep_escola_compartilhada,
-      e.agua_consumida as r10s24,
-      e.agua_rede_publica as r10s25,
-      e.agua_poco_artesiano as r10s26,
-      e.agua_cacimba_cisterna_poco as r10s27,
-      e.agua_fonte_rio as r10s28,
-      e.agua_inexistente as r10s29,
-      e.energia_rede_publica as r10s30,
-      e.energia_gerador as r10s31,
-      e.energia_outros as r10s32,
-      e.energia_inexistente as r10s33,
-      e.esgoto_rede_publica as r10s34,
-      e.esgoto_fossa as r10s35,
-      e.esgoto_inexistente as r10s36,
-      e.lixo_coleta_periodica as r10s37,
-      e.lixo_queima as r10s38,
-      e.lixo_joga_outra_area as r10s39,
-      e.lixo_recicla as r10s40,
-      e.lixo_enterra as r10s41,
-      e.lixo_outros as r10s42,
-      e.dependencia_sala_diretoria as r10s43,
-      e.dependencia_sala_professores as r10s44,
-      e.dependencia_sala_secretaria as r10s45,
-      e.dependencia_laboratorio_informatica as r10s46,
-      e.dependencia_laboratorio_ciencias as r10s47,
-      e.dependencia_sala_aee as r10s48,
-      e.dependencia_quadra_coberta as r10s49,
-      e.dependencia_quadra_descoberta as r10s50,
-      e.dependencia_cozinha as r10s51,
-      e.dependencia_biblioteca as r10s52,
-      e.dependencia_sala_leitura as r10s53,
-      e.dependencia_parque_infantil as r10s54,
-      e.dependencia_bercario as r10s55,
-      e.dependencia_banheiro_fora as r10s56,
-      e.dependencia_banheiro_dentro as r10s57,
-      e.dependencia_banheiro_infantil as r10s58,
-      e.dependencia_banheiro_deficiente as r10s59,
-      e.dependencia_vias_deficiente as r10s60,
-      e.dependencia_banheiro_chuveiro as r10s61,
-      e.dependencia_refeitorio as r10s62,
-      e.dependencia_dispensa as r10s63,
-      e.dependencia_aumoxarifado as r10s64,
-      e.dependencia_auditorio as r10s65,
-      e.dependencia_patio_coberto as r10s66,
-      e.dependencia_patio_descoberto as r10s67,
-      e.dependencia_alojamento_aluno as r10s68,
-      e.dependencia_alojamento_professor as r10s69,
-      e.dependencia_area_verde as r10s70,
-      e.dependencia_lavanderia as r10s71,
-      e.dependencia_nenhuma_relacionada as r10s72,
-      e.dependencia_numero_salas_existente as r10s73,
-      e.dependencia_numero_salas_utilizadas as r10s74,
+      e.agua_consumida as r10s20,
+      e.agua_rede_publica as r10s21,
+      e.agua_poco_artesiano as r10s22,
+      e.agua_cacimba_cisterna_poco as r10s23,
+      e.agua_fonte_rio as r10s24,
+      e.agua_inexistente as r10s25,
+      e.energia_rede_publica as r10s26,
+      e.energia_gerador as r10s27,
+      e.energia_outros as r10s28,
+      e.energia_inexistente as r10s29,
+      e.esgoto_rede_publica as r10s30,
+      e.esgoto_fossa as r10s31,
+      e.esgoto_inexistente as r10s32,
+      e.lixo_coleta_periodica as r10s33,
+      e.lixo_queima as r10s34,
+      e.lixo_joga_outra_area as r10s35,
+      e.lixo_recicla as r10s36,
+      e.lixo_enterra as r10s37,
+      e.lixo_outros as r10s38,
+      e.dependencia_sala_diretoria as r10s39,
+      e.dependencia_sala_professores as r10s40,
+      e.dependencia_sala_secretaria as r10s41,
+      e.dependencia_laboratorio_informatica as r10s42,
+      e.dependencia_laboratorio_ciencias as r10s43,
+      e.dependencia_sala_aee as r10s44,
+      e.dependencia_quadra_coberta as r10s45,
+      e.dependencia_quadra_descoberta as r10s46,
+      e.dependencia_cozinha as r10s47,
+      e.dependencia_biblioteca as r10s48,
+      e.dependencia_sala_leitura as r10s49,
+      e.dependencia_parque_infantil as r10s50,
+      e.dependencia_bercario as r10s51,
+      e.dependencia_banheiro_fora as r10s52,
+      e.dependencia_banheiro_dentro as r10s53,
+      e.dependencia_banheiro_infantil as r10s54,
+      e.dependencia_banheiro_deficiente as r10s55,
+      e.dependencia_vias_deficiente as r10s56,
+      e.dependencia_banheiro_chuveiro as r10s57,
+      e.dependencia_refeitorio as r10s58,
+      e.dependencia_dispensa as r10s59,
+      e.dependencia_aumoxarifado as r10s60,
+      e.dependencia_auditorio as r10s61,
+      e.dependencia_patio_coberto as r10s62,
+      e.dependencia_patio_descoberto as r10s63,
+      e.dependencia_alojamento_aluno as r10s64,
+      e.dependencia_alojamento_professor as r10s65,
+      e.dependencia_area_verde as r10s66,
+      e.dependencia_lavanderia as r10s67,
+      e.dependencia_nenhuma_relacionada as r10s68,
+      e.dependencia_numero_salas_existente as r10s69,
+      e.dependencia_numero_salas_utilizadas as r10s70,
 
-      e.televisoes as r10s75,
-      e.videocassetes as r10s76,
-      e.dvds as r10s77,
-      e.antenas_parabolicas as r10s78,
-      e.copiadoras as r10s79,
-      e.retroprojetores as r10s80,
-      e.impressoras as r10s81,
-      e.aparelhos_de_som as r10s82,
-      e.projetores_digitais  as r10s83,
-      e.faxs as r10s84,
-      e.maquinas_fotograficas as r10s85,
-      e.computadores as r10s86,
-      e.computadores_administrativo as r10s87,
-      e.computadores_alunos as r10s88,
-      e.acesso_internet as r10s89,
-      e.banda_larga as r10s90,
+      e.televisoes as r10s71,
+      e.videocassetes as r10s72,
+      e.dvds as r10s73,
+      e.antenas_parabolicas as r10s74,
+      e.copiadoras as r10s75,
+      e.retroprojetores as r10s76,
+      e.impressoras as r10s77,
+      e.aparelhos_de_som as r10s78,
+      e.projetores_digitais  as r10s79,
+      e.faxs as r10s80,
+      e.maquinas_fotograficas as r10s81,
+      e.computadores as r10s82,
+      e.computadores_administrativo as r10s84,
+      e.computadores_alunos as r10s85,
+      e.acesso_internet as r10s86,
+      e.banda_larga as r10s87,
 
-      total_funcionario as r10s91,
-      1 as r10s92,
-      atendimento_aee as r10s93,
-      atividade_complementar as r10s94,
+      total_funcionario as r10s88,
+      1 as r10s89,
+      atendimento_aee as r10s90,
+      atividade_complementar as r10s91,
 
       (SELECT 1
         FROM pmieducar.curso
         INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso)
         WHERE modalidade_curso = 1 AND escola_curso.ref_cod_escola = e.cod_escola
         LIMIT 1
-      ) as r10s95,
+      ) as r10s92,
 
       (SELECT 1
         FROM pmieducar.curso
         INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso)
         WHERE modalidade_curso = 2 AND escola_curso.ref_cod_escola = e.cod_escola
         LIMIT 1
-      ) as r10s96,
+      ) as r10s93,
 
       (SELECT 1
         FROM pmieducar.curso
         INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso)
         WHERE modalidade_curso = 3 AND escola_curso.ref_cod_escola = e.cod_escola
         LIMIT 1
-      ) as r10s97,
+      ) as r10s94,
 
-      (SELECT 1
-        FROM modules.etapas_curso_educacenso
-        INNER JOIN pmieducar.curso ON (curso.cod_curso = etapas_curso_educacenso.curso_id)
-        INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso)
-        WHERE escola_curso.ref_cod_escola = e.cod_escola
-        AND etapas_curso_educacenso.etapa_id = 1
-        LIMIT 1
-      ) as r10s98,
-
-      (SELECT 1
-        FROM modules.etapas_curso_educacenso
-        INNER JOIN pmieducar.curso ON (curso.cod_curso = etapas_curso_educacenso.curso_id)
-        INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso)
-        WHERE escola_curso.ref_cod_escola = e.cod_escola
-        AND etapas_curso_educacenso.etapa_id = 2
-        LIMIT 1
-      ) as r10s99,
-
-      (SELECT 1
-        FROM modules.etapas_curso_educacenso
-        INNER JOIN pmieducar.curso ON (curso.cod_curso = etapas_curso_educacenso.curso_id)
-        INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso)
-        WHERE escola_curso.ref_cod_escola = e.cod_escola
-        AND etapas_curso_educacenso.etapa_id = 3
-        LIMIT 1
-      ) as r10s100,
-
-      (SELECT 1
-        FROM modules.etapas_curso_educacenso
-        INNER JOIN pmieducar.curso ON (curso.cod_curso = etapas_curso_educacenso.curso_id)
-        INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso)
-        WHERE escola_curso.ref_cod_escola = e.cod_escola
-        AND etapas_curso_educacenso.etapa_id = 4
-        LIMIT 1
-      ) as r10s101,
-
-      (SELECT 1
-        FROM modules.etapas_curso_educacenso
-        INNER JOIN pmieducar.curso ON (curso.cod_curso = etapas_curso_educacenso.curso_id)
-        INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso)
-        WHERE escola_curso.ref_cod_escola = e.cod_escola
-        AND etapas_curso_educacenso.etapa_id = 5
-        LIMIT 1
-      ) as r10s102,
-
-      (SELECT 1
-        FROM modules.etapas_curso_educacenso
-        INNER JOIN pmieducar.curso ON (curso.cod_curso = etapas_curso_educacenso.curso_id)
-        INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso)
-        WHERE escola_curso.ref_cod_escola = e.cod_escola
-        AND etapas_curso_educacenso.etapa_id = 6
-        LIMIT 1
-      ) as r10s103,
-
-      (SELECT 1
-        FROM modules.etapas_curso_educacenso
-        INNER JOIN pmieducar.curso ON (curso.cod_curso = etapas_curso_educacenso.curso_id)
-        INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso)
-        WHERE escola_curso.ref_cod_escola = e.cod_escola
-        AND etapas_curso_educacenso.etapa_id = 7
-        LIMIT 1
-      ) as r10s104,
-
-      (SELECT 1
-        FROM modules.etapas_curso_educacenso
-        INNER JOIN pmieducar.curso ON (curso.cod_curso = etapas_curso_educacenso.curso_id)
-        INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso)
-        WHERE escola_curso.ref_cod_escola = e.cod_escola
-        AND etapas_curso_educacenso.etapa_id = 8
-        LIMIT 1
-      ) as r10s105,
-
-      (SELECT 1
-        FROM modules.etapas_curso_educacenso
-        INNER JOIN pmieducar.curso ON (curso.cod_curso = etapas_curso_educacenso.curso_id)
-        INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso)
-        WHERE escola_curso.ref_cod_escola = e.cod_escola
-        AND etapas_curso_educacenso.etapa_id = 1
-        LIMIT 1
-      ) as r10s106,
-
-      (SELECT 1
-        FROM modules.etapas_curso_educacenso
-        INNER JOIN pmieducar.curso ON (curso.cod_curso = etapas_curso_educacenso.curso_id)
-        INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso)
-        WHERE escola_curso.ref_cod_escola = e.cod_escola
-        AND etapas_curso_educacenso.etapa_id = 2
-        LIMIT 1
-      ) as r10s107,
-
-      (SELECT 1
-        FROM modules.etapas_curso_educacenso
-        INNER JOIN pmieducar.curso ON (curso.cod_curso = etapas_curso_educacenso.curso_id)
-        INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso)
-        WHERE escola_curso.ref_cod_escola = e.cod_escola
-        AND etapas_curso_educacenso.etapa_id = 3
-        LIMIT 1
-      ) as r10s108,
-
-      (SELECT 1
-        FROM modules.etapas_curso_educacenso
-        INNER JOIN pmieducar.curso ON (curso.cod_curso = etapas_curso_educacenso.curso_id)
-        INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso)
-        WHERE escola_curso.ref_cod_escola = e.cod_escola
-        AND etapas_curso_educacenso.etapa_id = 4
-        LIMIT 1
-      ) as r10s109,
-
-      (SELECT 1
-        FROM modules.etapas_curso_educacenso
-        INNER JOIN pmieducar.curso ON (curso.cod_curso = etapas_curso_educacenso.curso_id)
-        INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso)
-        WHERE escola_curso.ref_cod_escola = e.cod_escola
-        AND etapas_curso_educacenso.etapa_id = 5
-        LIMIT 1
-      ) as r10s110,
-
-      (SELECT 1
-        FROM modules.etapas_curso_educacenso
-        INNER JOIN pmieducar.curso ON (curso.cod_curso = etapas_curso_educacenso.curso_id)
-        INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso)
-        WHERE escola_curso.ref_cod_escola = e.cod_escola
-        AND etapas_curso_educacenso.etapa_id = 6
-        LIMIT 1
-      ) as r10s111,
-
-      (SELECT 1
-        FROM modules.etapas_curso_educacenso
-        INNER JOIN pmieducar.curso ON (curso.cod_curso = etapas_curso_educacenso.curso_id)
-        INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso)
-        WHERE escola_curso.ref_cod_escola = e.cod_escola
-        AND etapas_curso_educacenso.etapa_id = 7
-        LIMIT 1
-      ) as r10s112,
-
-      (SELECT 1
-        FROM modules.etapas_curso_educacenso
-        INNER JOIN pmieducar.curso ON (curso.cod_curso = etapas_curso_educacenso.curso_id)
-        INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso)
-        WHERE escola_curso.ref_cod_escola = e.cod_escola
-        AND etapas_curso_educacenso.etapa_id = 8
-        LIMIT 1
-      ) as r10s113,
-
-      (SELECT 1
-        FROM modules.etapas_curso_educacenso
-        INNER JOIN pmieducar.curso ON (curso.cod_curso = etapas_curso_educacenso.curso_id)
-        INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso)
-        WHERE escola_curso.ref_cod_escola = e.cod_escola
-        AND etapas_curso_educacenso.etapa_id = 9
-        LIMIT 1
-      ) as r10s114,
-
-      (SELECT 1
-        FROM modules.etapas_curso_educacenso
-        INNER JOIN pmieducar.curso ON (curso.cod_curso = etapas_curso_educacenso.curso_id)
-        INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso)
-        WHERE escola_curso.ref_cod_escola = e.cod_escola
-        AND etapas_curso_educacenso.etapa_id = 10
-        LIMIT 1
-      ) as r10s115,
-
-      (SELECT 1
-        FROM modules.etapas_curso_educacenso
-        INNER JOIN pmieducar.curso ON (curso.cod_curso = etapas_curso_educacenso.curso_id)
-        INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso)
-        WHERE escola_curso.ref_cod_escola = e.cod_escola
-        AND etapas_curso_educacenso.etapa_id = 9
-        LIMIT 1
-      ) as r10s116,
-
-      (SELECT 1
-        FROM modules.etapas_curso_educacenso
-        INNER JOIN pmieducar.curso ON (curso.cod_curso = etapas_curso_educacenso.curso_id)
-        INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso)
-        WHERE escola_curso.ref_cod_escola = e.cod_escola
-        AND etapas_curso_educacenso.etapa_id = 11
-        LIMIT 1
-      ) as r10s117,
-
-      (SELECT 1
-        FROM modules.etapas_curso_educacenso
-        INNER JOIN pmieducar.curso ON (curso.cod_curso = etapas_curso_educacenso.curso_id)
-        INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso)
-        WHERE escola_curso.ref_cod_escola = e.cod_escola
-        AND etapas_curso_educacenso.etapa_id = 10
-        LIMIT 1
-      ) as r10s118,
-
-      fundamental_ciclo as r10s119,
-      localizacao_diferenciada as r10s120,
-      didatico_nao_utiliza as r10s121,
-      didatico_quilombola as r10s122,
-      didatico_indigena as r10s123,
-      educacao_indigena as r10s124,
+      fundamental_ciclo as r10s96,
+      localizacao_diferenciada as r10s97,
+      didatico_nao_utiliza as r10s98,
+      didatico_quilombola as r10s99,
+      didatico_indigena as r10s100,
+      educacao_indigena as r10s101,
       lingua_ministrada,
-      espaco_brasil_aprendizado as r10s128,
-      abre_final_semana as r10s129,
-      codigo_lingua_indigena as r10s127,
-      proposta_pedagogica as r10s130
+      codigo_lingua_indigena as r10s104,
+      espaco_brasil_aprendizado as r10s105,
+      abre_final_semana as r10s106,
+      proposta_pedagogica as r10s107
 
       FROM pmieducar.escola e
       INNER JOIN modules.educacenso_cod_escola ece ON (e.cod_escola = ece.cod_escola)
@@ -700,73 +507,39 @@ class indice extends clsCadastro
       $d = '|';
       $return = '';
 
-      $r10s3 = $this->cpfToCenso($r10s3);
-
-      for($i = 7; $i <=15; $i++){
+      for($i = 3; $i <=11; $i++){
         if ($local_funcionamento == $i)
           ${'r10s'.$i} = 1;
         else
           ${'r10s'.$i} = 0;
       }
 
-      $r10s4 = strtoupper($r10s4);
-      $r10s6 = strtoupper($r10s6);
-
       if($codigo_inep_escola_compartilhada !=null){
-        $r10s17 = 1;
-        $r10s18 = $codigo_inep_escola_compartilhada;
+        $r10s13 = 1;
+        $r10s14 = $codigo_inep_escola_compartilhada;
       }else
-        $r10s17 = 0;
+        $r10s13 = 0;
 
+      $r10s96 = ($r10s96 == 1 && ($r10s92 == 1 || $r10s93 == 1)) ? 1 : NULL;
 
-      if (!$r10s95 == 1){
-        $r10s98 = 0;
-        $r10s99 = 0;
-        $r10s100 = 0;
-        $r10s101 = 0;
-        $r10s102 = 0;
-        $r10s103 = 0;
-        $r10s104 = 0;
-        $r10s105 = 0;
-      }
-      if (!$r10s96 == 1){
-        $r10s106 = 0;
-        $r10s107 = 0;
-        $r10s108 = 0;
-        $r10s109 = 0;
-        $r10s110 = 0;
-        $r10s111 = 0;
-        $r10s112 = 0;
-        $r10s113 = 0;
-        $r10s114 = 0;
-        $r10s115 = 0;
-      }
-      if (!$r10s97 == 1){
-        $r10s116 = 0;
-        $r10s117 = 0;
-        $r10s118 = 0;
-      }
+      if($lingua_ministrada && $r10s101){
+        $r10s102 = 1;
+        $r10s104 = $lingua_ministrada;
+      }elseif ($r10s124)
+        $r10s103 = 1;
 
-      // Esses valores não podem ser nulos, então casos não seja 1 é setado 0
-      for($i = 95; $i <=118; $i++)
-        ${'r10s'.$i} = ${'r10s'.$i} == 1 ? 1 : 0;
-
-      $r10s119 = $r10s119 == 1 ? 1 : NULL;
-
-      if($lingua_ministrada && $r10s124){
-        $r10s125 = 1;
-        $r10s127 = $lingua_ministrada;
-      }elseif ($r10s124) {
-        $r10s126 = 1;
-      }
-
-      for ($i=1; $i <= 130 ; $i++){
-        if($i>=75 && $i<=88)
+      for ($i=1; $i <= 107 ; $i++){
+        if($i>=71 && $i<=85)
           $return .= (${'r10s'.$i} == 0 ? '' : ${'r10s'.$i}).$d;
         else
           $return .= ${'r10s'.$i}.$d;
       }
+      $return = substr_replace($return, "", -1);
+
       return $return."\n";
+    }else{
+      $this->msg .= "Dados para formular o registro 10 da escola {$escolaId} não encontrados. Verifique se a escola possuí código do INEP cadastrado. <br/>";
+      $this->error = true;
     }
   }
 
