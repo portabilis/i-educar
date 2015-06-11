@@ -12,9 +12,9 @@
 
 	-- //@UNDO
 
-  DELETE FROM menu_tipo_usuario WHERE ref_cod_menu_submenu = 999244
-  DELETE FROM portal.menu_submenu WHERE cod_menu_submenu = 999244;
+  DELETE FROM menu_tipo_usuario WHERE ref_cod_menu_submenu = 999244;
   DELETE FROM pmicontrolesis.menu WHERE cod_menu = 999244;
+  DELETE FROM portal.menu_submenu WHERE cod_menu_submenu = 999244;
 
 
 	-- //
