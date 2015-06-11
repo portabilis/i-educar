@@ -550,76 +550,77 @@ class indice extends clsCadastro
         ece.cod_escola_inep as r20s2,
         t.cod_turma as r20s4,
         t.nm_turma as r20s5,
-        substring(t.hora_inicial,1,2) as r20s6,
-        substring(t.hora_inicial,4,2) as r20s7,
-        substring(t.hora_final,1,2) as r20s8,
-        substring(t.hora_final,4,2) as r20s9,
+        1 as r20s6,
+        substring(t.hora_inicial,1,2) as r20s7,
+        substring(t.hora_inicial,4,2) as r20s8,
+        substring(t.hora_final,1,2) as r20s9,
+        substring(t.hora_final,4,2) as r20s10,
         (SELECT 1
           FROM turma_dia_semana
           WHERE ref_cod_turma = t.cod_turma
           AND dia_semana = 1
           LIMIT 1
-        ) as r20s10,
+        ) as r20s11,
         (SELECT 1
           FROM turma_dia_semana
           WHERE ref_cod_turma = t.cod_turma
           AND dia_semana = 2
           LIMIT 1
-        ) as r20s11,
+        ) as r20s12,
         (SELECT 1
           FROM turma_dia_semana
           WHERE ref_cod_turma = t.cod_turma
           AND dia_semana = 3
           LIMIT 1
-        ) as r20s12,
+        ) as r20s13,
         (SELECT 1
           FROM turma_dia_semana
           WHERE ref_cod_turma = t.cod_turma
           AND dia_semana = 4
           LIMIT 1
-        ) as r20s13,
+        ) as r20s14,
         (SELECT 1
           FROM turma_dia_semana
           WHERE ref_cod_turma = t.cod_turma
           AND dia_semana = 5
           LIMIT 1
-        ) as r20s14,
+        ) as r20s15,
         (SELECT 1
           FROM turma_dia_semana
           WHERE ref_cod_turma = t.cod_turma
           AND dia_semana = 6
           LIMIT 1
-        ) as r20s15,
+        ) as r20s16,
         (SELECT 1
           FROM turma_dia_semana
           WHERE ref_cod_turma = t.cod_turma
           AND dia_semana = 7
           LIMIT 1
-        ) as r20s16,
-        t.tipo_atendimento as r20s17,
-        t.turma_mais_educacao as r20s18,
+        ) as r20s17,
+        t.tipo_atendimento as r20s18,
+        t.turma_mais_educacao as r20s19,
 
-        t.atividade_complementar_1 as r20s19,
-        t.atividade_complementar_2 as r20s20,
-        t.atividade_complementar_3 as r20s21,
-        t.atividade_complementar_4 as r20s22,
-        t.atividade_complementar_5 as r20s23,
-        t.atividade_complementar_6 as r20s24,
-        t.aee_braille as r20s25,
-        t.aee_recurso_optico as r20s26,
-        t.aee_estrategia_desenvolvimento as r20s27,
-        t.aee_tecnica_mobilidade as r20s28,
-        t.aee_libras as r20s29,
-        t.aee_caa as r20s30,
-        t.aee_curricular as r20s31,
-        t.aee_soroban as r20s32,
-        t.aee_informatica as r20s33,
-        t.aee_lingua_escrita as r20s34,
-        t.aee_autonomia as r20s35,
-        c.modalidade_curso as r20s36,
-        t.etapa_id as r20s37,
-        t.cod_curso_profissional as r20s38,
-        t.turma_sem_professor as r20s65,
+        t.atividade_complementar_1 as r20s20,
+        t.atividade_complementar_2 as r20s21,
+        t.atividade_complementar_3 as r20s22,
+        t.atividade_complementar_4 as r20s23,
+        t.atividade_complementar_5 as r20s24,
+        t.atividade_complementar_6 as r20s25,
+        t.aee_braille as r20s26,
+        t.aee_recurso_optico as r20s27,
+        t.aee_estrategia_desenvolvimento as r20s28,
+        t.aee_tecnica_mobilidade as r20s29,
+        t.aee_libras as r20s30,
+        t.aee_caa as r20s31,
+        t.aee_curricular as r20s32,
+        t.aee_soroban as r20s33,
+        t.aee_informatica as r20s34,
+        t.aee_lingua_escrita as r20s35,
+        t.aee_autonomia as r20s36,
+        c.modalidade_curso as r20s37,
+        t.etapa_id as r20s38,
+        t.cod_curso_profissional as r20s39,
+        t.turma_sem_professor as r20s66,
         s.cod_serie as serieId
 
         FROM pmieducar.turma t
@@ -633,30 +634,30 @@ class indice extends clsCadastro
     extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, array('return_only' => 'first-row', 'params' => array($turmaId))));
     if ($r20s1){
 
-      $r20s5 = strtoupper($r20s5);
+      $r20s5 = $this->upperAndUnaccent($r20s5);
 
       //Dias da semana  e tipo de atendimento não podem ser nullos, 1 ou 0
-      for($i = 10; $i <=17; $i++)
+      for($i = 11; $i <=18; $i++)
         ${'r20s'.$i} = ${'r20s'.$i} == 1 ? 1 : 0;
 
       // Atribui 0 (Não lecionado) para todas as disciplinas por padrão.
-      $r20s39 = $r20s40 = $r20s41 = $r20s42 = $r20s43 = $r20s44 = $r20s45 = $r20s46 = $r20s47 = $r20s48 = $r20s49 =
+      $r20s40 = $r20s41 = $r20s42 = $r20s43 = $r20s44 = $r20s45 = $r20s46 = $r20s47 = $r20s48 = $r20s49 =
       $r20s50 = $r20s51 = $r20s52 = $r20s53 = $r20s54 = $r20s55 = $r20s56 = $r20s57 = $r20s58 = $r20s59 = $r20s60 =
-      $r20s61 = $r20s62 = $r20s63 = $r20s64 = 0;
+      $r20s61 = $r20s62 = $r20s63 = $r20s64 = $r20s65 = 0;
 
       // Se a turma não presta atendimento educacional especializado AEE esses campos precisam ser nulos
-      if ($r20s17 != 5)
-        $r20s25 = $r20s26 = $r20s27 = $r20s28 = $r20s29 = $r20s30 = $r20s31 = $r20s32 = $r20s33 = $r20s34 = $r20s35 = NULL;
+      if ($r20s18 != 5)
+        $r20s26 = $r20s27 = $r20s28 = $r20s29 = $r20s30 = $r20s31 = $r20s32 = $r20s33 = $r20s34 = $r20s35 = $r20s36 = NULL;
 
-      if(!((($r20s37 >= 4 && $r20s37 <= 38) || $r20s37 == 41 || $r20s37 == 56 ) && in_array($r20s17, array(0, 2, 3))))
-        $r20s18 = NULL;
+      if(!((($r20s38 >= 4 && $r20s38 <= 38) || $r20s38 == 41 || $r20s38 == 56 ) && in_array($r20s18, array(0, 2, 3))))
+        $r20s19 = NULL;
 
 
       $coddigoEducacensoToSeq =
-      			 array( 1 => '39', 2 => '40', 3 => '41', 4 => '42', 5 => '43', 6 => '44', 7 => '45',
-      			 			  8 => '46', 30 => '47', 9 => '48', 10 => '49', 11 => '50', 12 => '51', 13 => '52',
-      			 			  14 => '53', 28 => '54', 29 => '55', 16 => '56', 17 => '57', 20 => '58', 21 => '59',
-      			 			  23 => '60', 25 => '61', 26 => '62', 27 => '63', 99 => '64');
+      			 array( 1 => '40', 2 => '41', 3 => '42', 4 => '43', 5 => '44', 6 => '45', 7 => '46',
+      			 			  8 => '47', 30 => '48', 9 => '49', 10 => '50', 11 => '51', 12 => '52', 13 => '53',
+      			 			  14 => '54', 28 => '55', 29 => '56', 16 => '57', 17 => '58', 20 => '59', 21 => '60',
+      			 			  23 => '61', 25 => '62', 26 => '63', 27 => '64', 99 => '65');
       try{
         $componentesTurma = App_Model_IedFinder::getComponentesTurma($serieid, $escolaId, $turmaId);
       }catch(Exception $e){
@@ -705,10 +706,15 @@ class indice extends clsCadastro
       $d = '|';
       $return = '';
 
-      for ($i=1; $i <= 65 ; $i++)
+      for ($i=1; $i <= 66 ; $i++)
         $return .= ${'r20s'.$i}.$d;
 
+      $return = substr_replace($return, "", -1);
+
       return $return."\n";
+    }else{
+      $this->msg .= "Dados para formular o registro 30 da escola {$escolaId} não encontrados. Verifique se a escola possuí código do INEP e registros de turmas cadastrados. <br/>";
+      $this->error = true;
     }
   }
 
