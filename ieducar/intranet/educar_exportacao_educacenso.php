@@ -849,6 +849,8 @@ class indice extends clsCadastro
       for ($i=1; $i <= $numeroRegistros ; $i++)
         $return .= ${'r40s'.$i}.$d;
 
+      $return = substr_replace($return, "", -1);
+
       return $return."\n";
     }
   }
