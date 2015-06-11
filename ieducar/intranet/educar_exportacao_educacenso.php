@@ -936,6 +936,8 @@ class indice extends clsCadastro
           $return .= ${'r50s'.$i}.$d;
       }
 
+      $return = substr_replace($return, "", -1);
+
       return $return."\n";
     }
   }
