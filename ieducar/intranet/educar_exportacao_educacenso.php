@@ -713,7 +713,7 @@ class indice extends clsCadastro
 
       return $return."\n";
     }else{
-      $this->msg .= "Dados para formular o registro 30 da escola {$escolaId} não encontrados. Verifique se a escola possuí código do INEP e registros de turmas cadastrados. <br/>";
+      $this->msg .= "Dados para formular o registro 20 da escola {$escolaId} não encontrados. Verifique se a escola possuí código do INEP e registros de turmas cadastrados. <br/>";
       $this->error = true;
     }
   }
@@ -792,6 +792,8 @@ class indice extends clsCadastro
 
       for ($i=1; $i <= $numeroRegistros ; $i++)
         $return .= ${'r30s'.$i}.$d;
+
+      $return = substr_replace($return, "", -1);
 
       return $return."\n";
     }
