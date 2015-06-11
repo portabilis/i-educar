@@ -160,8 +160,9 @@ class clsPmieducarEscola
   var $computadores_administrativo;
   var $computadores_alunos;
   var $acesso_internet;
-  var $banda_larga;    
-  var $ato_criacao;    
+  var $banda_larga;
+  var $ato_criacao;
+  var $utiliza_regra_diferenciada;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -227,23 +228,24 @@ class clsPmieducarEscola
                               $data_cadastro = NULL,
                               $data_exclusao = NULL,
                               $ativo = NULL,
-                              $bloquear_lancamento_diario_anos_letivos_encerrados = NULL) {
+                              $bloquear_lancamento_diario_anos_letivos_encerrados = NULL,
+                              $utiliza_regra_diferenciada = FALSE) {
     $db = new clsBanco();
     $this->_schema = 'pmieducar.';
     $this->_tabela = $this->_schema . 'escola';
 
-    $this->_campos_lista = $this->_todos_campos = 'e.cod_escola, e.ref_usuario_cad, e.ref_usuario_exc, e.ref_cod_instituicao, e.ref_cod_escola_localizacao, e.ref_cod_escola_rede_ensino, e.ref_idpes, e.sigla, e.data_cadastro, 
+    $this->_campos_lista = $this->_todos_campos = 'e.cod_escola, e.ref_usuario_cad, e.ref_usuario_exc, e.ref_cod_instituicao, e.ref_cod_escola_localizacao, e.ref_cod_escola_rede_ensino, e.ref_idpes, e.sigla, e.data_cadastro,
           e.data_exclusao, e.ativo, e.bloquear_lancamento_diario_anos_letivos_encerrados, e.situacao_funcionamento, e.dependencia_administrativa, e.latitude, e.longitude, e.regulamentacao, e.acesso, e.cargo_gestor, e.ref_idpes_gestor, e.area_terreno_total,
-          e.condicao, e.area_construida, e.area_disponivel, e.num_pavimentos, e.decreto_criacao, e.tipo_piso, e.medidor_energia, e.agua_consumida, e.agua_rede_publica, e.agua_poco_artesiano, e.agua_cacimba_cisterna_poco, e.agua_fonte_rio, 
-          e.agua_inexistente, e.energia_rede_publica, e.energia_outros, e.energia_gerador, e.energia_inexistente, e.esgoto_rede_publica, e.esgoto_fossa, e.esgoto_inexistente, e.lixo_coleta_periodica, e.lixo_queima, e.lixo_joga_outra_area, 
+          e.condicao, e.area_construida, e.area_disponivel, e.num_pavimentos, e.decreto_criacao, e.tipo_piso, e.medidor_energia, e.agua_consumida, e.agua_rede_publica, e.agua_poco_artesiano, e.agua_cacimba_cisterna_poco, e.agua_fonte_rio,
+          e.agua_inexistente, e.energia_rede_publica, e.energia_outros, e.energia_gerador, e.energia_inexistente, e.esgoto_rede_publica, e.esgoto_fossa, e.esgoto_inexistente, e.lixo_coleta_periodica, e.lixo_queima, e.lixo_joga_outra_area,
           e.lixo_recicla, e.lixo_enterra, e.lixo_outros, e.dependencia_sala_diretoria, e.dependencia_sala_professores, e.dependencia_sala_secretaria, e.dependencia_laboratorio_informatica, e.dependencia_laboratorio_ciencias, e.dependencia_sala_aee,
-          e.dependencia_quadra_coberta, e.dependencia_quadra_descoberta, e.dependencia_cozinha, e.dependencia_biblioteca, e.dependencia_sala_leitura, e.dependencia_parque_infantil, e.dependencia_bercario, e.dependencia_banheiro_fora, 
-          e.dependencia_banheiro_dentro, e.dependencia_banheiro_infantil, e.dependencia_banheiro_deficiente, e.dependencia_banheiro_chuveiro, e.dependencia_vias_deficiente, e.dependencia_refeitorio, e.dependencia_dispensa, e.dependencia_aumoxarifado, e.dependencia_auditorio, 
-          e.dependencia_patio_coberto, e.dependencia_patio_descoberto, e.dependencia_alojamento_aluno, e.dependencia_alojamento_professor, e.dependencia_area_verde, e.dependencia_lavanderia, e.dependencia_unidade_climatizada, 
+          e.dependencia_quadra_coberta, e.dependencia_quadra_descoberta, e.dependencia_cozinha, e.dependencia_biblioteca, e.dependencia_sala_leitura, e.dependencia_parque_infantil, e.dependencia_bercario, e.dependencia_banheiro_fora,
+          e.dependencia_banheiro_dentro, e.dependencia_banheiro_infantil, e.dependencia_banheiro_deficiente, e.dependencia_banheiro_chuveiro, e.dependencia_vias_deficiente, e.dependencia_refeitorio, e.dependencia_dispensa, e.dependencia_aumoxarifado, e.dependencia_auditorio,
+          e.dependencia_patio_coberto, e.dependencia_patio_descoberto, e.dependencia_alojamento_aluno, e.dependencia_alojamento_professor, e.dependencia_area_verde, e.dependencia_lavanderia, e.dependencia_unidade_climatizada,
           e.dependencia_quantidade_ambiente_climatizado, e.dependencia_nenhuma_relacionada, e.dependencia_numero_salas_existente, dependencia_numero_salas_utilizadas, e.porte_quadra_descoberta, e.porte_quadra_coberta, e.tipo_cobertura_patio,
-          e.total_funcionario, e.atendimento_aee, e.fundamental_ciclo, e.localizacao_diferenciada, e.didatico_nao_utiliza, e.didatico_quilombola, e.didatico_indigena, e.educacao_indigena, e.lingua_ministrada, e.espaco_brasil_aprendizado, 
-          e.abre_final_semana, e.codigo_lingua_indigena, e.atividade_complementar, e.proposta_pedagogica, e.local_funcionamento, e.codigo_inep_escola_compartilhada, e.televisoes, e.videocassetes, e.dvds, e.antenas_parabolicas, e.copiadoras, 
-          e.retroprojetores, e.impressoras, e.aparelhos_de_som, e.projetores_digitais, e.faxs, e.maquinas_fotograficas, e.computadores, e.computadores_administrativo, e.computadores_alunos, e.acesso_internet, e.banda_larga, e.ato_criacao         
+          e.total_funcionario, e.atendimento_aee, e.fundamental_ciclo, e.localizacao_diferenciada, e.didatico_nao_utiliza, e.didatico_quilombola, e.didatico_indigena, e.educacao_indigena, e.lingua_ministrada, e.espaco_brasil_aprendizado,
+          e.abre_final_semana, e.codigo_lingua_indigena, e.atividade_complementar, e.proposta_pedagogica, e.local_funcionamento, e.codigo_inep_escola_compartilhada, e.televisoes, e.videocassetes, e.dvds, e.antenas_parabolicas, e.copiadoras,
+          e.retroprojetores, e.impressoras, e.aparelhos_de_som, e.projetores_digitais, e.faxs, e.maquinas_fotograficas, e.computadores, e.computadores_administrativo, e.computadores_alunos, e.acesso_internet, e.banda_larga, e.ato_criacao, e.utiliza_regra_diferenciada
           ';
 
     if (is_numeric($ref_usuario_cad)) {
@@ -394,6 +396,7 @@ class clsPmieducarEscola
     }
 
     $this->bloquear_lancamento_diario_anos_letivos_encerrados = $bloquear_lancamento_diario_anos_letivos_encerrados;
+    $this->utiliza_regra_diferenciada = $utiliza_regra_diferenciada;
   }
 
   /**
@@ -460,6 +463,15 @@ class clsPmieducarEscola
         $gruda = ", ";
       }
 
+      $campos .= "{$gruda}utiliza_regra_diferenciada";
+
+      if ($this->utiliza_regra_diferenciada)
+        $valores .= "{$gruda}'t'";
+      else
+        $valores .= "{$gruda}'f'";
+
+      $gruda = ", ";
+
       if (is_numeric($this->situacao_funcionamento)) {
         $campos .= "{$gruda}situacao_funcionamento";
         $valores .= "{$gruda}'{$this->situacao_funcionamento}'";
@@ -476,13 +488,13 @@ class clsPmieducarEscola
         $campos .= "{$gruda}latitude";
         $valores .= "{$gruda}'{$this->latitude}'";
         $gruda = ", ";
-      }  
+      }
 
       if (is_numeric($this->longitude)) {
         $campos .= "{$gruda}longitude";
         $valores .= "{$gruda}'{$this->longitude}'";
         $gruda = ", ";
-      }          
+      }
 
       if (is_numeric($this->regulamentacao)) {
         $campos .= "{$gruda}regulamentacao";
@@ -524,7 +536,7 @@ class clsPmieducarEscola
         $campos .= "{$gruda}codigo_inep_escola_compartilhada";
         $valores .= "{$gruda}'{$this->codigo_inep_escola_compartilhada}'";
         $gruda = ", ";
-      }            
+      }
 
       if (is_numeric($this->num_pavimentos)) {
         $campos .= "{$gruda}num_pavimentos";
@@ -789,7 +801,7 @@ class clsPmieducarEscola
         $valores .= "{$gruda}'{$this->dependencia_banheiro_chuveiro}'";
         $gruda = ", ";
       }
-      
+
       if (is_numeric($this->dependencia_vias_deficiente)) {
         $campos .= "{$gruda}dependencia_vias_deficiente";
         $valores .= "{$gruda}'{$this->dependencia_vias_deficiente}'";
@@ -1016,7 +1028,7 @@ class clsPmieducarEscola
         $campos .= "{$gruda}copiadoras";
         $valores .= "{$gruda}'{$this->copiadoras}'";
         $gruda = ", ";
-      }      
+      }
 
       if (is_numeric($this->retroprojetores)) {
         $campos .= "{$gruda}retroprojetores";
@@ -1082,13 +1094,13 @@ class clsPmieducarEscola
         $campos .= "{$gruda}banda_larga";
         $valores .= "{$gruda}'{$this->banda_larga}'";
         $gruda = ", ";
-      }                                                                                             
+      }
 
       if (is_string($this->ato_criacao)) {
         $campos .= "{$gruda}ato_criacao";
         $valores .= "{$gruda}'{$this->ato_criacao}'";
         $gruda = ", ";
-      } 
+      }
 
       $campos .= "{$gruda}data_cadastro";
       $valores .= "{$gruda}NOW()";
@@ -1172,6 +1184,13 @@ class clsPmieducarEscola
         $gruda = ", ";
       }
 
+      if ($this->utiliza_regra_diferenciada)
+        $set .= "{$gruda}utiliza_regra_diferenciada = 't'";
+      else
+        $set .= "{$gruda}utiliza_regra_diferenciada = 'f' ";
+
+      $gruda = ", ";
+
       if (is_numeric($this->situacao_funcionamento)) {
         $set .= "{$gruda}situacao_funcionamento = '{$this->situacao_funcionamento}'";
         $gruda = ", ";
@@ -1190,7 +1209,7 @@ class clsPmieducarEscola
       if (is_numeric($this->longitude)) {
         $set .= "{$gruda}longitude = '{$this->longitude}'";
         $gruda = ", ";
-      }            
+      }
 
       if (is_numeric($this->regulamentacao)) {
         $set .= "{$gruda}regulamentacao = '{$this->regulamentacao}'";
@@ -1638,7 +1657,7 @@ class clsPmieducarEscola
       if (is_numeric($this->copiadoras)) {
         $set .= "{$gruda}copiadoras = '{$this->copiadoras}'";
         $gruda = ", ";
-      }      
+      }
 
       if (is_numeric($this->retroprojetores)) {
         $set .= "{$gruda}retroprojetores = '{$this->retroprojetores}'";
@@ -1698,8 +1717,8 @@ class clsPmieducarEscola
       if (is_string($this->ato_criacao)) {
         $set .= "{$gruda}ato_criacao = '{$this->ato_criacao}'";
         $gruda = ", ";
-      }            
-      
+      }
+
       if ($set) {
         $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_escola = '{$this->cod_escola}'");
         return TRUE;

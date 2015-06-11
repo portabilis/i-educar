@@ -59,6 +59,7 @@ class clsPmieducarSerie
   var $data_exclusao;
   var $ativo;
   var $regra_avaliacao_id;
+  var $regra_avaliacao_diferenciada_id;
 
   var $idade_inicial;
   var $idade_final;
@@ -121,12 +122,12 @@ class clsPmieducarSerie
     $etapa_curso = NULL, $concluinte = NULL, $carga_horaria = NULL,
     $data_cadastro = NULL, $data_exclusao = NULL, $ativo = NULL,
     $idade_inicial = NULL, $idade_final = NULL, $regra_avaliacao_id = NULL, $observacao_historico = null,
-    $dias_letivos = null)
+    $dias_letivos = null, $regra_avaliacao_diferenciada_id = null)
   {
     $db = new clsBanco();
     $this->_schema = "pmieducar.";
     $this->_tabela = "{$this->_schema}serie";
-    $this->_campos_lista = $this->_todos_campos = "s.cod_serie, s.ref_usuario_exc, s.ref_usuario_cad, s.ref_cod_curso, s.nm_serie, s.etapa_curso, s.concluinte, s.carga_horaria, s.data_cadastro, s.data_exclusao, s.ativo, s.idade_inicial, s.idade_final, s.regra_avaliacao_id, s.observacao_historico, s.dias_letivos";
+    $this->_campos_lista = $this->_todos_campos = "s.cod_serie, s.ref_usuario_exc, s.ref_usuario_cad, s.ref_cod_curso, s.nm_serie, s.etapa_curso, s.concluinte, s.carga_horaria, s.data_cadastro, s.data_exclusao, s.ativo, s.idade_inicial, s.idade_final, s.regra_avaliacao_id, s.observacao_historico, s.dias_letivos, s.regra_avaliacao_diferenciada_id ";
 
     if (is_numeric($ref_cod_curso)) {
       if (class_exists("clsPmieducarCurso")) {
@@ -205,6 +206,28 @@ class clsPmieducarSerie
       // Verificação fraca pois deixa ser uma regra de outra instituição
       if (isset($regra)) {
         $this->regra_avaliacao_id = $regra->id;
+      }
+    }
+
+    if (!is_null($regra_avaliacao_diferenciada_id) && is_numeric($regra_avaliacao_diferenciada_id)) {
+      $mapper = new RegraAvaliacao_Model_RegraDataMapper();
+
+      if (isset($curso)) {
+        $regras = $mapper->findAll(array(),
+          array('id' => $regra_avaliacao_diferenciada_id, 'instituicao' => $curso['ref_cod_instituicao'])
+        );
+
+        if (1 == count($regras)) {
+          $regra = $regras[0];
+        }
+      }
+      else {
+        $regra = $mapper->find($regra_avaliacao_diferenciada_id);
+      }
+
+      // Verificação fraca pois deixa ser uma regra de outra instituição
+      if (isset($regra)) {
+        $this->regra_avaliacao_diferenciada_id = $regra->id;
       }
     }
 
@@ -323,6 +346,12 @@ class clsPmieducarSerie
         $gruda = ", ";
       }
 
+      if (is_numeric($this->regra_avaliacao_diferenciada_id)) {
+        $campos .= "{$gruda}regra_avaliacao_diferenciada_id";
+        $valores .= "{$gruda}'{$this->regra_avaliacao_diferenciada_id}'";
+        $gruda = ", ";
+      }
+
       $campos .= "{$gruda}data_cadastro";
       $valores .= "{$gruda}NOW()";
       $gruda = ", ";
@@ -430,6 +459,13 @@ class clsPmieducarSerie
         $set .= "{$gruda}regra_avaliacao_id = '{$this->regra_avaliacao_id}'";
         $gruda = ", ";
       }
+
+      if (is_numeric($this->regra_avaliacao_diferenciada_id))
+        $set .= "{$gruda}regra_avaliacao_diferenciada_id = '{$this->regra_avaliacao_diferenciada_id}' ";
+      else
+        $set .= "{$gruda}regra_avaliacao_diferenciada_id = NULL ";
+
+      $gruda = ", ";
 
       if(is_string($this->observacao_historico)){
         $set .= "{$gruda}observacao_historico = '{$this->observacao_historico}'";

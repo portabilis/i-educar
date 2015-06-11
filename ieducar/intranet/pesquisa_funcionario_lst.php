@@ -59,8 +59,6 @@ class indice extends clsListagem
 		$id_pessoa  = $_SESSION['id_pessoa'];
 		$this->nome = "form1";
 
-    echo "<pre>";print_r($this);die;
-
 		if ($_GET["campos"]) {
 			$parametros	= new clsParametrosPesquisas();
 			$parametros->deserializaCampos( $_GET["campos"] );
