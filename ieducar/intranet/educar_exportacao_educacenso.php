@@ -1149,7 +1149,9 @@ class indice extends clsCadastro
 	    $return .= "\n";
     }
 
-    return $return;
+    $return = substr_replace($return, "", -1);
+
+    return $return."\n";
   }
 
   protected function exportaDadosRegistro60($escolaId, $ano, $data_ini, $data_fim, $alunoId){
