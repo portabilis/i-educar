@@ -120,6 +120,7 @@ class TurmaController extends ApiCoreController
                 FROM pmieducar.turma
                 WHERE ref_cod_instituicao = $1
                 AND ano = $2
+                AND ativo = 1
                 ORDER BY ref_ref_cod_escola, nm_turma';
 
       $turmas = $this->fetchPreparedQuery($sql, array($instituicaoId, $ano));

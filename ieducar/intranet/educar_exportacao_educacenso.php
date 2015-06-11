@@ -1146,12 +1146,12 @@ class indice extends clsCadastro
     	extract($reg);
 	    for ($i=1; $i <= $numeroRegistros ; $i++)
 	    	$return .= ${'r51s'.$i}.$d;
+
+      $return = substr_replace($return, "", -1);
 	    $return .= "\n";
     }
 
-    $return = substr_replace($return, "", -1);
-
-    return $return."\n";
+    return $return;
   }
 
   protected function exportaDadosRegistro60($escolaId, $ano, $data_ini, $data_fim, $alunoId){
@@ -1283,28 +1283,27 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
         \'70\' as r70s1,
         ece.cod_escola_inep as r70s2,
         fd.rg as r70s5,
-        oer.sigla as r70s7,
-        (SELECT cod_ibge FROM public.uf WHERE uf.sigla_uf = fd.sigla_uf_exp_rg) as r70s8,
-        fd.data_exp_rg as r70s9,
+        oer.sigla as r70s6,
+        (SELECT cod_ibge FROM public.uf WHERE uf.sigla_uf = fd.sigla_uf_exp_rg) as r70s7,
+        fd.data_exp_rg as r70s8,
         tipo_cert_civil,
-        num_termo as r70s12,
-        num_folha as r70s13,
-        num_livro as r70s14,
-        data_emissao_cert_civil as r70s15,
-        (SELECT cod_ibge FROM public.uf WHERE uf.sigla_uf = fd.sigla_uf_cert_civil) as r70s16,
-        cartorio_cert_civil_inep as r70s18,
-        certidao_nascimento as r70s19,
-        fis.cpf as r70s20,
-        fis.nis_pis_pasep as r70s22,
-        a.justificativa_falta_documentacao as r70s23,
-        b.zona_localizacao as r70s24,
-        ep.cep as r70s25,
-        l.idtlog || l.nome as r70s26,
-        ep.numero as r70s27,
-        ep.complemento as r70s28,
-        b.nome as r70s29,
-        uf.cod_ibge as r70s30,
-        mun.cod_ibge as r70s31
+        num_termo as r70s11,
+        num_folha as r70s12,
+        num_livro as r70s13,
+        data_emissao_cert_civil as r70s14,
+        (SELECT cod_ibge FROM public.uf WHERE uf.sigla_uf = fd.sigla_uf_cert_civil) as r70s15,
+        cartorio_cert_civil_inep as r70s17,
+        certidao_nascimento as r70s18,
+        fis.cpf as r70s19,
+        fis.nis_pis_pasep as r70s21,
+        b.zona_localizacao as r70s22,
+        ep.cep as r70s23,
+        l.idtlog || l.nome as r70s24,
+        ep.numero as r70s25,
+        ep.complemento as r70s26,
+        b.nome as r70s27,
+        uf.cod_ibge as r70s28,
+        mun.cod_ibge as r70s29
 
 
         FROM  pmieducar.aluno a
@@ -1335,50 +1334,43 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
     // Transforma todos resultados em variáveis
     $d = '|';
     $return = '';
-    $numeroRegistros = 31;
+    $numeroRegistros = 29;
 
     foreach (Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId, $ano, $data_ini, $data_fim, $alunoId))) as $reg) {
       extract($reg);
 
-      $r70s9 = Portabilis_Date_Utils::pgSQLToBr($r70s9);
-      $r70s15 = Portabilis_Date_Utils::pgSQLToBr($r70s15);
+      $r70s8 = Portabilis_Date_Utils::pgSQLToBr($r70s8);
+      $r70s14 = Portabilis_Date_Utils::pgSQLToBr($r70s14);
 
-      $r70s20 = $this->cpfToCenso($r70s20);
+      $r70s19 = $this->cpfToCenso($r70s19);
 
       // Validações referentes a certidões (Modelo antigo e novo, nascimento e casamento)
-      $r70s10 = $r70s11 = NULL;
-      if (is_null($tipo_cert_civil) && !empty($r70s19)){
-        $r70s10 = 2;
-        $r70s11 = NULL;
-        $r70s12 = $r70s13 = $r70s14 = $r70s15 = $r70s16 = $r70s17 = $r70s18 = NULL;
-        $r70s19 =  str_replace(' ', '',$r70s19);
+      $r70s9 = $r70s10 = NULL;
+      if (is_null($tipo_cert_civil) && !empty($r70s18)){
+        $r70s9 = 2;
+        $r70s10 = NULL;
+        $r70s11 = $r70s12 = $r70s13 = $r70s14 = $r70s15 = $r70s16 = $r70s17 = NULL;
+        $r70s18 =  str_replace(' ', '',$r70s18);
       }elseif($tipo_cert_civil == 91){
-        if (!(is_null($r70s12) || is_null($r70s16) || is_null($r70s18)))
-          $r70s10 = $r70s11 = 1;
+        if (!(is_null($r70s11) || is_null($r70s15) || is_null($r70s17)))
+          $r70s9 = $r70s10 = 1;
         else
-          $r70s10 = $r70s11 = $r70s12 = $r70s13 = $r70s14 = $r70s15 = $r70s16 = $r70s17 = $r70s18 = $r70s19 = NULL;
+          $r70s9 = $r70s10 = $r70s11 = $r70s12 = $r70s13 = $r70s14 = $r70s15 = $r70s16 = $r70s17 = $r70s18 = NULL;
 
       }elseif ($tipo_cert_civil == 92) {
-        if (!(is_null($r70s12) || is_null($r70s16) || is_null($r70s18))){
-          $r70s10 = 1;
-          $r70s11 = 2;
+        if (!(is_null($r70s11) || is_null($r70s15) || is_null($r70s17))){
+          $r70s9 = 1;
+          $r70s10 = 2;
         }else
-          $r70s10 = $r70s11 = $r70s12 = $r70s13 = $r70s14 = $r70s15 = $r70s16 = $r70s17 = $r70s18 = $r70s19 = NULL;
+          $r70s9 = $r70s10 = $r70s11 = $r70s12 = $r70s13 = $r70s14 = $r70s15 = $r70s16 = $r70s17 = $r70s18 = NULL;
       }else
-        $r70s10 = $r70s11 = $r70s12 = $r70s13 = $r70s14 = $r70s15 = $r70s16 = $r70s17 = $r70s18 = $r70s19 = NULL;
+        $r70s9 = $r70s10 = $r70s11 = $r70s12 = $r70s13 = $r70s14 = $r70s15 = $r70s16 = $r70s17 = $r70s18 = NULL;
       // fim das validações de certidões //
-
-      $nenhumaDocumentacao = TRUE;
-      for ($i=5; $i <= 22; $i++){
-        if (!is_null(${'r70s'.$i}))
-          $nenhumaDocumentacao = FALSE;
-      }
-
-      if ($nenhumaDocumentacao)
-        $r70s23 = is_numeric($r70s23) ? $r70s23 : 2;
 
       for ($i=1; $i <= $numeroRegistros ; $i++)
         $return .= ${'r70s'.$i}.$d;
+
+      $return = substr_replace($return, "", -1);
       $return .= "\n";
     }
 
