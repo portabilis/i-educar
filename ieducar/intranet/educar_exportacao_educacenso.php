@@ -1146,12 +1146,12 @@ class indice extends clsCadastro
     	extract($reg);
 	    for ($i=1; $i <= $numeroRegistros ; $i++)
 	    	$return .= ${'r51s'.$i}.$d;
+
+      $return = substr_replace($return, "", -1);
 	    $return .= "\n";
     }
 
-    $return = substr_replace($return, "", -1);
-
-    return $return."\n";
+    return $return;
   }
 
   protected function exportaDadosRegistro60($escolaId, $ano, $data_ini, $data_fim, $alunoId){
@@ -1164,26 +1164,25 @@ class indice extends clsCadastro
       \'60\' as r60s1,
       ece.cod_escola_inep as r60s2,
       p.nome as r60s5,
-      fis.nis_pis_pasep as r60s6,
-      fis.data_nasc as r60s7, /*tratar formato*/
-      fis.sexo as r60s8, /*tratar na aplicação formato*/
-      r.raca_educacenso as r60s9,
-      /*se não tiver r60s11 e 12 é 0 se tiver um dos dois é 1*/
-      COALESCE( a.nm_mae,(SELECT nome FROM cadastro.pessoa WHERE pessoa.idpes = fis.idpes_mae)) as r60s11,
-      COALESCE(a.nm_pai, (SELECT nome FROM cadastro.pessoa WHERE pessoa.idpes = fis.idpes_pai)) as r60s12,
-      fis.nacionalidade as r60s13,
-      (SELECT cod_ibge FROM public.pais WHERE pais.idpais = fis.idpais_estrangeiro) as r60s14,
-      uf.cod_ibge as r60s15,
-      mun.cod_ibge as r60s16,
-      recurso_prova_inep_aux_ledor as rs60s31,
-      recurso_prova_inep_aux_transcricao as rs60s32,
-      recurso_prova_inep_guia_interprete as rs60s33,
-      recurso_prova_inep_interprete_libras as rs60s34,
-      recurso_prova_inep_leitura_labial as rs60s35,
-      recurso_prova_inep_prova_ampliada_16 as rs60s36,
-      recurso_prova_inep_prova_ampliada_20 as rs60s37,
-      recurso_prova_inep_prova_ampliada_24 as rs60s38,
-      recurso_prova_inep_prova_braille as rs60s39
+      fis.data_nasc as r60s6, /*tratar formato*/
+      fis.sexo as r60s7, /*tratar na aplicação formato*/
+      r.raca_educacenso as r60s8,
+      /*se não tiver r60s10 e 11 é 0 se tiver um dos dois é 1*/
+      COALESCE( a.nm_mae,(SELECT nome FROM cadastro.pessoa WHERE pessoa.idpes = fis.idpes_mae)) as r60s10,
+      COALESCE(a.nm_pai, (SELECT nome FROM cadastro.pessoa WHERE pessoa.idpes = fis.idpes_pai)) as r60s11,
+      fis.nacionalidade as r60s12,
+      (SELECT cod_ibge FROM public.pais WHERE pais.idpais = fis.idpais_estrangeiro) as r60s13,
+      uf.cod_ibge as r60s14,
+      mun.cod_ibge as r60s15,
+      recurso_prova_inep_aux_ledor as rs60s30,
+      recurso_prova_inep_aux_transcricao as rs60s31,
+      recurso_prova_inep_guia_interprete as rs60s32,
+      recurso_prova_inep_interprete_libras as rs60s33,
+      recurso_prova_inep_leitura_labial as rs60s34,
+      recurso_prova_inep_prova_ampliada_16 as rs60s35,
+      recurso_prova_inep_prova_ampliada_20 as rs60s36,
+      recurso_prova_inep_prova_ampliada_24 as rs60s37,
+      recurso_prova_inep_prova_braille as rs60s38
 
       FROM  pmieducar.aluno a
       INNER JOIN cadastro.fisica fis ON (fis.idpes = a.ref_idpes)
@@ -1206,7 +1205,7 @@ class indice extends clsCadastro
     // Transforma todos resultados em variáveis
     $d = '|';
     $return = '';
-    $numeroRegistros = 40;
+    $numeroRegistros = 39;
 
     $sqlDeficiencias = 'select distinct(deficiencia_educacenso) as id from cadastro.fisica_deficiencia,
                         cadastro.deficiencia where cod_deficiencia = ref_cod_deficiencia and ref_idpes = $1
@@ -1215,43 +1214,44 @@ class indice extends clsCadastro
     foreach (Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId, $ano, $data_ini, $data_fim, $alunoId))) as $reg) {
       extract($reg);
 
-      $r60s5 = strtoupper($r60s5);
+      $r60s5 = $this->upperAndUnaccent($r60s5);
 
-      $r60s7 = Portabilis_Date_Utils::pgSQLToBr($r60s7);
-      $r60s8 = $r60s8 == 'M' ? 1 : 2;
-      $r60s9 = is_numeric($r60s9) ? $r60s9 : 0;
-      $r60s10 = (int) !(is_null($r60s11) && is_null($r60s12));
+      $r60s6 = Portabilis_Date_Utils::pgSQLToBr($r60s6);
+      $r60s7 = $r60s7 == 'M' ? 1 : 2;
+      $r60s8 = is_numeric($r60s8) ? $r60s8 : 0;
+      $r60s9 = (int) !(is_null($r60s10) && is_null($r60s11));
 
       $deficiencias = Portabilis_Utils_Database::fetchPreparedQuery($sqlDeficiencias, array( 'params' => array($idpes)));
 
       // Reseta deficiências (DEFAULT NULL)
-      $r60s17 = 0;
-      $r60s18 = $r60s19 = $r60s20 = $r60s21 = $r60s22 = $r60s23 = $r60s24 =
-                            $r60s25 = $r60s26 = $r60s27 = $r60s28 = $r60s29 = $r60s30 = NULL;
+      $r60s16 = 0;
+      $r60s17 = $r60s18 = $r60s19 = $r60s20 = $r60s21 = $r60s22 = $r60s23 = $r60s24 =
+                 $r60s25 = $r60s26 = $r60s27 = $r60s28 = $r60s29 = NULL;
 
       // Caso não exista nenhum curso seta seq 40 como 1
-      $r60s40 = (int) is_null($r60s31) && is_null($r60s32) && is_null($r60s33) && is_null($r60s34)
-                && is_null($r60s35) && is_null($r60s36) && is_null($r60s37) && is_null($r60s38) && is_null($r60s39);
-      // Define 'tipodeficiencia' => 'seqleiaute'
-      $deficienciaToSeq = array(  1 => '18',
-                                  2 => '19',
-                                  3 => '20',
-                                  4 => '21',
-                                  5 => '22',
-                                  6 => '23',
-                                  7 => '24',
-                                  8 => '25',
-                                  9 => '26',
-                                 10 => '27',
-                                 11 => '28',
-                                 12 => '29',
-                                 13 => '30');
+      $r60s39 = (int) is_null($r60s30) && is_null($r60s31) && is_null($r60s32) && is_null($r60s33) && is_null($r60s34)
+                && is_null($r60s35) && is_null($r60s36) && is_null($r60s37) && is_null($r60s38);
 
-      // Se tiver alguma deficiência, a seq 17 deve ser 1
+      // Define 'tipodeficiencia' => 'seqleiaute'
+      $deficienciaToSeq = array(  1 => '17',
+                                  2 => '18',
+                                  3 => '19',
+                                  4 => '20',
+                                  5 => '21',
+                                  6 => '22',
+                                  7 => '23',
+                                  8 => '24',
+                                  9 => '25',
+                                 10 => '26',
+                                 11 => '27',
+                                 12 => '28',
+                                 13 => '29');
+
+      // Se tiver alguma deficiência, a seq 16 deve ser 1
       if (count($deficiencias)>0){
-        $r60s17 = 1;
-        $r60s18 = $r60s19 = $r60s20 = $r60s21 = $r60s22 = $r60s23 = $r60s24 =
-                  $r60s25 = $r60s26 = $r60s27 = $r60s28 = $r60s29 = $r60s30 = 0;
+        $r60s16 = 1;
+        $r60s17 = $r60s18 = $r60s19 = $r60s20 = $r60s21 = $r60s22 = $r60s23 = $r60s24 =
+                  $r60s25 = $r60s26 = $r60s27 = $r60s28 = $r60s29 = 0;
 
         foreach ($deficiencias as $deficiencia_educacenso) {
           $deficiencia_educacenso = $deficiencia_educacenso['id'];
@@ -1261,11 +1261,13 @@ class indice extends clsCadastro
         }
       }
       // Se o aluno não tiver deficiências não pode ser informado recursos para provas
-      if ($r60s17)
-        $r60s40 = NULL;
+      if ($r60s16)
+        $r60s39 = NULL;
 
       for ($i=1; $i <= $numeroRegistros ; $i++)
         $return .= ${'r60s'.$i}.$d;
+
+      $return = substr_replace($return, "", -1);
       $return .= "\n";
     }
 
@@ -1281,28 +1283,27 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
         \'70\' as r70s1,
         ece.cod_escola_inep as r70s2,
         fd.rg as r70s5,
-        oer.sigla as r70s7,
-        (SELECT cod_ibge FROM public.uf WHERE uf.sigla_uf = fd.sigla_uf_exp_rg) as r70s8,
-        fd.data_exp_rg as r70s9,
+        oer.sigla as r70s6,
+        (SELECT cod_ibge FROM public.uf WHERE uf.sigla_uf = fd.sigla_uf_exp_rg) as r70s7,
+        fd.data_exp_rg as r70s8,
         tipo_cert_civil,
-        num_termo as r70s12,
-        num_folha as r70s13,
-        num_livro as r70s14,
-        data_emissao_cert_civil as r70s15,
-        (SELECT cod_ibge FROM public.uf WHERE uf.sigla_uf = fd.sigla_uf_cert_civil) as r70s16,
-        cartorio_cert_civil_inep as r70s18,
-        certidao_nascimento as r70s19,
-        fis.cpf as r70s20,
-        fis.nis_pis_pasep as r70s22,
-        a.justificativa_falta_documentacao as r70s23,
-        b.zona_localizacao as r70s24,
-        ep.cep as r70s25,
-        l.idtlog || l.nome as r70s26,
-        ep.numero as r70s27,
-        ep.complemento as r70s28,
-        b.nome as r70s29,
-        uf.cod_ibge as r70s30,
-        mun.cod_ibge as r70s31
+        num_termo as r70s11,
+        num_folha as r70s12,
+        num_livro as r70s13,
+        data_emissao_cert_civil as r70s14,
+        (SELECT cod_ibge FROM public.uf WHERE uf.sigla_uf = fd.sigla_uf_cert_civil) as r70s15,
+        cartorio_cert_civil_inep as r70s17,
+        certidao_nascimento as r70s18,
+        fis.cpf as r70s19,
+        fis.nis_pis_pasep as r70s21,
+        b.zona_localizacao as r70s22,
+        ep.cep as r70s23,
+        l.idtlog || l.nome as r70s24,
+        ep.numero as r70s25,
+        ep.complemento as r70s26,
+        b.nome as r70s27,
+        uf.cod_ibge as r70s28,
+        mun.cod_ibge as r70s29
 
 
         FROM  pmieducar.aluno a
@@ -1333,50 +1334,43 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
     // Transforma todos resultados em variáveis
     $d = '|';
     $return = '';
-    $numeroRegistros = 31;
+    $numeroRegistros = 29;
 
     foreach (Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId, $ano, $data_ini, $data_fim, $alunoId))) as $reg) {
       extract($reg);
 
-      $r70s9 = Portabilis_Date_Utils::pgSQLToBr($r70s9);
-      $r70s15 = Portabilis_Date_Utils::pgSQLToBr($r70s15);
+      $r70s8 = Portabilis_Date_Utils::pgSQLToBr($r70s8);
+      $r70s14 = Portabilis_Date_Utils::pgSQLToBr($r70s14);
 
-      $r70s20 = $this->cpfToCenso($r70s20);
+      $r70s19 = $this->cpfToCenso($r70s19);
 
       // Validações referentes a certidões (Modelo antigo e novo, nascimento e casamento)
-      $r70s10 = $r70s11 = NULL;
-      if (is_null($tipo_cert_civil) && !empty($r70s19)){
-        $r70s10 = 2;
-        $r70s11 = NULL;
-        $r70s12 = $r70s13 = $r70s14 = $r70s15 = $r70s16 = $r70s17 = $r70s18 = NULL;
-        $r70s19 =  str_replace(' ', '',$r70s19);
+      $r70s9 = $r70s10 = NULL;
+      if (is_null($tipo_cert_civil) && !empty($r70s18)){
+        $r70s9 = 2;
+        $r70s10 = NULL;
+        $r70s11 = $r70s12 = $r70s13 = $r70s14 = $r70s15 = $r70s16 = $r70s17 = NULL;
+        $r70s18 =  str_replace(' ', '',$r70s18);
       }elseif($tipo_cert_civil == 91){
-        if (!(is_null($r70s12) || is_null($r70s16) || is_null($r70s18)))
-          $r70s10 = $r70s11 = 1;
+        if (!(is_null($r70s11) || is_null($r70s15) || is_null($r70s17)))
+          $r70s9 = $r70s10 = 1;
         else
-          $r70s10 = $r70s11 = $r70s12 = $r70s13 = $r70s14 = $r70s15 = $r70s16 = $r70s17 = $r70s18 = $r70s19 = NULL;
+          $r70s9 = $r70s10 = $r70s11 = $r70s12 = $r70s13 = $r70s14 = $r70s15 = $r70s16 = $r70s17 = $r70s18 = NULL;
 
       }elseif ($tipo_cert_civil == 92) {
-        if (!(is_null($r70s12) || is_null($r70s16) || is_null($r70s18))){
-          $r70s10 = 1;
-          $r70s11 = 2;
+        if (!(is_null($r70s11) || is_null($r70s15) || is_null($r70s17))){
+          $r70s9 = 1;
+          $r70s10 = 2;
         }else
-          $r70s10 = $r70s11 = $r70s12 = $r70s13 = $r70s14 = $r70s15 = $r70s16 = $r70s17 = $r70s18 = $r70s19 = NULL;
+          $r70s9 = $r70s10 = $r70s11 = $r70s12 = $r70s13 = $r70s14 = $r70s15 = $r70s16 = $r70s17 = $r70s18 = NULL;
       }else
-        $r70s10 = $r70s11 = $r70s12 = $r70s13 = $r70s14 = $r70s15 = $r70s16 = $r70s17 = $r70s18 = $r70s19 = NULL;
+        $r70s9 = $r70s10 = $r70s11 = $r70s12 = $r70s13 = $r70s14 = $r70s15 = $r70s16 = $r70s17 = $r70s18 = NULL;
       // fim das validações de certidões //
-
-      $nenhumaDocumentacao = TRUE;
-      for ($i=5; $i <= 22; $i++){
-        if (!is_null(${'r70s'.$i}))
-          $nenhumaDocumentacao = FALSE;
-      }
-
-      if ($nenhumaDocumentacao)
-        $r70s23 = is_numeric($r70s23) ? $r70s23 : 2;
 
       for ($i=1; $i <= $numeroRegistros ; $i++)
         $return .= ${'r70s'.$i}.$d;
+
+      $return = substr_replace($return, "", -1);
       $return .= "\n";
     }
 
