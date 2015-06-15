@@ -267,7 +267,7 @@ class clsPublicDistrito
       $this->operacao = $operacao;
     }
 
-    if (is_numeric($cod_ibge)) {
+    if (is_string($cod_ibge)) {
       $this->cod_ibge = $cod_ibge;
     }
   }
@@ -352,7 +352,7 @@ class clsPublicDistrito
         $gruda    = ', ';
       }
 
-      if (is_numeric($this->cod_ibge)) {
+      if (is_string($this->cod_ibge)) {
         $campos  .= "{$gruda}cod_ibge";
         $valores .= "{$gruda}'{$this->cod_ibge}'";
         $gruda    = ', ';
@@ -434,7 +434,7 @@ class clsPublicDistrito
         $gruda = ', ';
       }
 
-      if (is_numeric($this->cod_ibge)) {
+      if (is_string($this->cod_ibge)) {
         $set  .= "{$gruda}cod_ibge = '{$this->cod_ibge}'";
         $gruda = ', ';
       }
@@ -471,7 +471,7 @@ class clsPublicDistrito
     $filtros = ' WHERE d.idmun = m.idmun AND m.sigla_uf = u.sigla_uf AND u.idpais = p.idpais ';
 
     if (is_numeric($int_idmun)) {
-      $filtros .= "{$whereAnd} d.idmun = '{$int_idmun}'";      
+      $filtros .= "{$whereAnd} d.idmun = '{$int_idmun}'";
       $whereAnd = ' AND ';
     }
 
@@ -540,7 +540,7 @@ class clsPublicDistrito
       $whereAnd = ' AND ';
     }
 
-    if (is_numeric($cod_ibge)) {
+    if (is_string($cod_ibge)) {
       $filtros .= "{$whereAnd} d.cod_ibge = '{$cod_ibge}'";
       $whereAnd = ' AND ';
     }

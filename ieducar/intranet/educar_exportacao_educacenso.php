@@ -355,7 +355,7 @@ class indice extends clsCadastro
       $return = '';
 
       $r00s2 = substr($r00s2, 0, 8);
-      $r10s3 = $this->cpfToCenso($r10s3);
+      $r00s3 = $this->cpfToCenso($r00s3);
 
       $r00s8 = Portabilis_Date_Utils::pgSQLToBr($r00s8);
       $r00s9 = Portabilis_Date_Utils::pgSQLToBr($r00s9);

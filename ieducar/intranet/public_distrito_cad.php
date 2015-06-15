@@ -126,9 +126,9 @@ class indice extends clsCadastro
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         ""        => "{$nomeMenu} distrito"             
+         ""        => "{$nomeMenu} distrito"
     ));
-    $this->enviaLocalizacao($localizacao->montar());    
+    $this->enviaLocalizacao($localizacao->montar());
 
     return $retorno;
   }
@@ -199,8 +199,8 @@ class indice extends clsCadastro
     $this->campoLista('idmun', 'Município', $opcoes, $this->idmun);
 
     $this->campoTexto('nome', 'Nome', $this->nome, 30, 255, TRUE);
-    
-    $this->campoNumero('cod_ibge', 'C&oacute;digo INEP', $this->cod_ibge, 6, 6);
+
+    $this->campoTexto('cod_ibge', 'C&oacute;digo INEP', $this->cod_ibge, 7, 7);
   }
 
   function Novo()
