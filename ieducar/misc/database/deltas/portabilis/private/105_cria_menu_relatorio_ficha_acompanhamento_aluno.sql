@@ -4,9 +4,9 @@
 -- @version  $Id$
 
 
-insert into portal.menu_submenu values (999819, 55, 2,'Ficha acompanhamento aluno', 'module/Reports/FichaAcompanhamentoAluno', null, 3);
+insert into portal.menu_submenu values (999819, 55, 2,'Ficha de acompanhamento do aluno', 'module/Reports/FichaAcompanhamentoAluno', null, 3);
 insert into portal.menu_funcionario values(1,0,0,999819);
-insert into pmicontrolesis.menu values (999819, 999819, 999450, 'Ficha acompanhamento aluno', 0, 'module/Reports/FichaAcompanhamentoAluno', '_self', 1, 15, 192);
+insert into pmicontrolesis.menu values (999819, 999819, 999450, 'Ficha de acompanhamento do aluno', 0, 'module/Reports/FichaAcompanhamentoAluno', '_self', 1, 15, 192);
 insert into pmieducar.menu_tipo_usuario values(1,999819,1,0,1);
 
 --undo
