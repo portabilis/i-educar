@@ -1183,15 +1183,15 @@ if(!$this->isEnderecoExterno){
 	    $this->inputsHelper()->select('condicao', $options);
 
 			$resources = array(0  => 'Selecione',
-			                   7  => Portabilis_String_Utils::toLatin1('Prédio escolar'),
-			                   8  => Portabilis_String_Utils::toLatin1('Templo/Igreja'),
-			                   9  => Portabilis_String_Utils::toLatin1('Sala de empresa'),
-			                   10 => Portabilis_String_Utils::toLatin1('Casa do professor'),
-			                   11 => Portabilis_String_Utils::toLatin1('Salas em outra escola'),
-			                   12 => Portabilis_String_Utils::toLatin1('Galpão/ Rancho/ Paiol/ Barracão'),
-			                   13 => Portabilis_String_Utils::toLatin1('Unidade de internação Socioeducativa'),
-			                   14 => Portabilis_String_Utils::toLatin1('Unidade prisional'),
-			                   15 => 'Outros');
+			                   3  => Portabilis_String_Utils::toLatin1('Prédio escolar'),
+			                   4  => Portabilis_String_Utils::toLatin1('Templo/Igreja'),
+			                   5  => Portabilis_String_Utils::toLatin1('Sala de empresa'),
+			                   6 => Portabilis_String_Utils::toLatin1('Casa do professor'),
+			                   7 => Portabilis_String_Utils::toLatin1('Salas em outra escola'),
+			                   8 => Portabilis_String_Utils::toLatin1('Galpão/ Rancho/ Paiol/ Barracão'),
+			                   9 => Portabilis_String_Utils::toLatin1('Unidade de internação Socioeducativa'),
+			                   10 => Portabilis_String_Utils::toLatin1('Unidade prisional'),
+			                   11 => 'Outros');
 
   		$options = array('label' => Portabilis_String_Utils::toLatin1('Local de funcionamento'), 'resources' => $resources, 'value' => $this->local_funcionamento, 'size' => 70, 'required' => false);
 	    $this->inputsHelper()->select('local_funcionamento', $options);
