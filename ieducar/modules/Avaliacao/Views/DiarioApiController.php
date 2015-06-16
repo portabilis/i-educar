@@ -344,7 +344,7 @@ class DiarioApiController extends ApiCoreController
 
   protected function canPost() {
     return $this->validatesPresenceOf('etapa') &&
-           $this->validatesPresenceOf('matricula_id') && 
+           $this->validatesPresenceOf('matricula_id') &&
            $this->canChange();
   }
 
@@ -528,7 +528,7 @@ class DiarioApiController extends ApiCoreController
 
     $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
     $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
-    $this->appendResponse('situacao',     $this->getSituacaoMatricula());    
+    $this->appendResponse('situacao',     $this->getSituacaoMatricula());
   }
 
   protected function deleteNotaRecuperacaoParalela(){
@@ -548,7 +548,7 @@ class DiarioApiController extends ApiCoreController
       $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
       $this->appendResponse('matricula_id',  $this->getRequest()->matricula_id);
       $this->appendResponse('situacao',      $this->getSituacaoMatricula());
-      $this->appendResponse('nota_original', $notaOriginal); 
+      $this->appendResponse('nota_original', $notaOriginal);
     }
   }
 
@@ -1191,12 +1191,25 @@ class DiarioApiController extends ApiCoreController
     return $itensRegra;
   }
 
+  protected function getNotaLimits(){
+    $notaLimits = array();
+
+    if ($this->canGetRegraAvaliacao()) {
+      $regra              = $this->serviceBoletim()->getRegra();
+      $notaLimits['nota_maxima_geral'] = $regra->get('notaMaximaGeral');
+      $notaLimits['nota_maxima_exame_final'] = $regra->get('notaMaximaExameFinal');
+      $notaLimits['qtd_casas_decimais'] = $regra->get('qtdCasasDecimais');
+    }
+
+    return $notaLimits;
+  }
+
   public function canChange(){
     $user = $this->getSession()->id_pessoa;
     $processoAp = $this->_processoAp;
     $obj_permissao = new clsPermissoes();
 
-    return $obj_permissao->permissao_cadastra($processoAp, $user, 7);    
+    return $obj_permissao->permissao_cadastra($processoAp, $user, 7);
   }
 
   public function Gerar() {
@@ -1204,6 +1217,7 @@ class DiarioApiController extends ApiCoreController
       $this->appendResponse('matriculas', $this->getMatriculas());
       $this->appendResponse('navegacao_tab', $this->getNavegacaoTab());
       $this->appendResponse('can_change', $this->canChange());
+      $this->appendResponse('nota_limits', $this->getNotaLimits());
     }
 
     elseif ($this->isRequestFor('post', 'nota') || $this->isRequestFor('post', 'nota_exame'))
@@ -1220,7 +1234,7 @@ class DiarioApiController extends ApiCoreController
 
     elseif ($this->isRequestFor('delete', 'nota') || $this->isRequestFor('delete', 'nota_exame'))
         $this->deleteNota();
-    
+
     elseif ($this->isRequestFor('delete', 'nota_recuperacao_paralela'))
             $this->deleteNotaRecuperacaoParalela();
 
