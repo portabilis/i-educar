@@ -816,13 +816,14 @@ function parecerField(matriculaId, componenteCurricularId, value) {
   return $j('<td />').addClass('center').html($parecerField);
 }
 
-function notaRecuperacaoParalelaField(matriculaId, componenteCurricularId, value, areaConhecimentoId) {
+function notaRecuperacaoParalelaField(matriculaId, componenteCurricularId, value, areaConhecimentoId, maxLength) {
   return _notaField(matriculaId,
                     componenteCurricularId,
                     'nota-recuperacao-paralela-cc',
                     'nota-recuperacao-paralela-' + matriculaId + '-cc-' + componenteCurricularId,
                     value,
-                    'area-id-' + areaConhecimentoId);
+                    'area-id-' + areaConhecimentoId,
+                    maxLength);
 }
 
 function getNotaGeralMaxLength(){
@@ -857,8 +858,8 @@ function updateComponenteCurricular($targetElement, matriculaId, cc) {
       hasMediaRecuperacaoParalela = (mediaRecuperacaoParalela != null);
       hasNotaAtual = !!cc.nota_atual;
 
-      $notaRecuperacaoParalelaField = notaRecuperacaoParalelaField(matriculaId, cc.id, cc.nota_recuperacao_paralela, cc.area_id);
-      $notaRecuperacaoParalelaField.attr('max-length', getNotaGeralMaxLength()).appendTo($targetElement);
+      $notaRecuperacaoParalelaField = notaRecuperacaoParalelaField(matriculaId, cc.id, cc.nota_recuperacao_paralela, cc.area_id, getNotaGeralMaxLength());
+      $notaRecuperacaoParalelaField.appendTo($targetElement);
 
       shouldShowNotaRecuperacaoParalela = (((hasNotaRecuperacaoParalela) ||
                                            (cc.nota_original < mediaRecuperacaoParalela) ||
