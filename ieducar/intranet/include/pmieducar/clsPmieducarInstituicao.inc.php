@@ -67,6 +67,7 @@ class clsPmieducarInstituicao
   var $percentagem_maxima_ocupacao_salas;
   var $quantidade_alunos_metro_quadrado;
   var $gerar_historico_transferencia;  
+  var $restringir_multiplas_enturmacoes;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -133,7 +134,7 @@ class clsPmieducarInstituicao
     $this->_schema = "pmieducar.";
     $this->_tabela = "{$this->_schema}instituicao";
 
-    $this->_campos_lista = $this->_todos_campos = "cod_instituicao, ref_usuario_exc, ref_usuario_cad, ref_idtlog, ref_sigla_uf, cep, cidade, bairro, logradouro, numero, complemento, nm_responsavel, ddd_telefone, telefone, data_cadastro, data_exclusao, ativo, nm_instituicao, data_base_transferencia, data_base_remanejamento, controlar_espaco_utilizacao_aluno, percentagem_maxima_ocupacao_salas, quantidade_alunos_metro_quadrado, exigir_vinculo_turma_professor, gerar_historico_transferencia, matricula_apenas_bairro_escola, restringir_historico_escolar, coordenador_transporte";
+    $this->_campos_lista = $this->_todos_campos = "cod_instituicao, ref_usuario_exc, ref_usuario_cad, ref_idtlog, ref_sigla_uf, cep, cidade, bairro, logradouro, numero, complemento, nm_responsavel, ddd_telefone, telefone, data_cadastro, data_exclusao, ativo, nm_instituicao, data_base_transferencia, data_base_remanejamento, controlar_espaco_utilizacao_aluno, percentagem_maxima_ocupacao_salas, quantidade_alunos_metro_quadrado, exigir_vinculo_turma_professor, gerar_historico_transferencia, matricula_apenas_bairro_escola, restringir_historico_escolar, coordenador_transporte, restringir_multiplas_enturmacoes";
 
     if (is_numeric($ref_usuario_cad)) {
       if (class_exists('clsPmieducarUsuario')) {
@@ -448,10 +449,20 @@ class clsPmieducarInstituicao
 
       if (strripos($this->coordenador_transporte, '-') and strripos($this->coordenador_transporte, '('))
         $this->coordenador_transporte = $this->parte_string($this->coordenador_transporte, '-', '(');
-          
+
       if (is_string($this->coordenador_transporte)) {
         $campos .= "{$gruda}coordenador_transporte";
         $valores .= "{$gruda}'{$this->coordenador_transporte}'";
+        $gruda = ", ";
+      }
+
+      if (dbBool($this->restringir_multiplas_enturmacoes)) {
+        $campos .= "{$gruda}restringir_multiplas_enturmacoes";
+        $valores .= "{$gruda} true ";
+        $gruda = ", ";
+      }else{
+        $campos .= "{$gruda}restringir_multiplas_enturmacoes";
+        $valores .= "{$gruda} false ";
         $gruda = ", ";
       }
 
@@ -625,13 +636,21 @@ class clsPmieducarInstituicao
         $gruda = ", ";
       }else{
         $set .= "{$gruda}quantidade_alunos_metro_quadrado = NULL";
-        $gruda = ", "; 
+        $gruda = ", ";
+      }
+
+      if (dbBool($this->restringir_multiplas_enturmacoes)) {
+        $set .= "{$gruda}restringir_multiplas_enturmacoes = true ";
+        $gruda = ", ";
+      }else{
+        $set .= "{$gruda}restringir_multiplas_enturmacoes = false ";
+        $gruda = ", ";
       }
 
       if ($set) {
         $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_instituicao = '{$this->cod_instituicao}'");
         return TRUE;
-      }      
+      }
     }
 
     return FALSE;
