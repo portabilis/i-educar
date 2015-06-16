@@ -149,3 +149,23 @@ function validatesIfNumericValueIsInRange(value, targetId, initialRange, finalRa
 
   return true;
 }
+
+function validatesIfDecimalPlacesInRange(value, targetId, initialRange, finalRange){
+  if (! $j.isNumeric(value) || decimalPlaces(value) < initialRange || decimalPlaces(value) > finalRange) {
+    messageUtils.error('Informe um valor com número de casas decimais entre ' + initialRange + ' e ' + finalRange, targetId);
+    return false;
+  }
+
+  return true;
+}
+
+function decimalPlaces(num) {
+  var match = (''+num).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
+  if (!match) { return 0; }
+  return Math.max(
+       0,
+       // Number of digits right of decimal point.
+       (match[1] ? match[1].length : 0)
+       // Adjust for scientific notation.
+       - (match[2] ? +match[2] : 0));
+}
