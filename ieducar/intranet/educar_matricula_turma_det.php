@@ -156,6 +156,8 @@ class indice extends clsDetalhe
     $obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();
     $registro['ref_cod_instituicao'] = $obj_cod_instituicao_det['nm_instituicao'];
 
+    $habilita_enturmar = ($obj_cod_instituicao_det['restringir_multiplas_enturmacoes'] == "f");
+
     // Nome da escola
     $obj_ref_cod_escola = new clsPmieducarEscola($registro['ref_ref_cod_escola']);
     $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
@@ -352,10 +354,12 @@ class indice extends clsDetalhe
         $this->array_botao_url_script[] = "enturmar({$this->ref_cod_matricula}, {$this->ref_cod_turma}, \"transferir\")";
       }
 
-      //nova enturmação
-      if (! $this->possuiEnturmacaoTurmaDestino && $canCreate) {
-        $this->array_botao[]            = 'Enturmar na turma selecionada';
-        $this->array_botao_url_script[] = "enturmar({$this->ref_cod_matricula}, {$this->ref_cod_turma}, \"nova\")";
+      if ($habilita_enturmar){
+        //nova enturmação
+        if (! $this->possuiEnturmacaoTurmaDestino && $canCreate) {
+          $this->array_botao[]            = 'Enturmar na turma selecionada';
+          $this->array_botao_url_script[] = "enturmar({$this->ref_cod_matricula}, {$this->ref_cod_turma}, \"nova\")";
+        }
       }
     }
 
