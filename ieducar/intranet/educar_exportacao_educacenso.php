@@ -733,8 +733,8 @@ class indice extends clsCadastro
         (SELECT nome FROM cadastro.pessoa WHERE pessoa.idpes = fis.idpes_mae) as r30s11,
         fis.nacionalidade as r30s12,
         (SELECT cod_ibge FROM public.pais WHERE pais.idpais = fis.idpais_estrangeiro) as r30s13,
-        m.cod_ibge as r30s14,
-        uf.cod_ibge as r30s15
+        uf.cod_ibge as r30s14,
+        m.cod_ibge as r30s15
 
 
         FROM  pmieducar.servidor s
@@ -759,6 +759,9 @@ class indice extends clsCadastro
       $r30s8 = Portabilis_Date_Utils::pgSQLToBr($r30s8);
       $r30s9 = $r30s9 == 'M' ? 1 : 2;
       $r30s10 = is_numeric($r30s10) ? $r30s10 : 0;
+
+      if($r30s12 == '1' || $r30s12 == '2')
+        $r30s13 = 76;
 
       $sql = 'select distinct(deficiencia_educacenso) as id from cadastro.fisica_deficiencia,
               cadastro.deficiencia where cod_deficiencia = ref_cod_deficiencia and ref_idpes = $1
