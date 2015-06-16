@@ -115,6 +115,18 @@ class EditController extends Core_Controller_Page_EditController
     'mediaRecuperacaoParalela' => array(
       'label'   => 'Média da recuperação paralela',
       'help'    => ''
+    ),
+    'notaMaximaGeral' => array(
+      'label'   => 'Nota máxima geral',
+      'help'    => 'Informe o valor máximo para notas no geral'
+    ),
+    'notaMaximaExameFinal' => array(
+      'label'   => 'Nota máxima exame final',
+      'help'    => 'Informe o valor máximo para nota do exame final'
+    ),
+    'qtdCasasDecimais' => array(
+      'label'   => 'Quantidade máxima de casas decimais',
+      'help'    => 'Informe o número máximo de casas decimais'
     )
   );
 
@@ -221,9 +233,9 @@ var tabela_arredondamento = new function() {
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_index.php"                  => "i-Educar - Escola",
-         ""        => "$nomeMenu regra de avalia&ccedil;&atilde;o"             
+         ""        => "$nomeMenu regra de avalia&ccedil;&atilde;o"
     ));
-    $this->enviaLocalizacao($localizacao->montar());    
+    $this->enviaLocalizacao($localizacao->montar());
   }
 
   /**
@@ -303,7 +315,7 @@ var tabela_arredondamento = new function() {
     $this->campoRadio('tipoPresenca', $this->_getLabel('tipoPresenca'),
       $tipoPresenca->getEnums(), $this->getEntity()->get('tipoPresenca'), '',
       $this->_getHelp('tipoPresenca'));
-    
+
     $tipoRecuperacaoParalela = RegraAvaliacao_Model_TipoRecuperacaoParalela::getInstance();
     // echo"<pre>";var_dump($tipoRecuperacaoParalela);die;
     $this->campoLista('tipoRecuperacaoParalela', $this->_getLabel('tipoRecuperacaoParalela'),
@@ -311,8 +323,17 @@ var tabela_arredondamento = new function() {
       $this->_getHelp('tipoRecuperacaoParalela'), '', FALSE, FALSE);
 
 
-    $this->campoTexto('mediaRecuperacaoParalela', $this->_getLabel('mediaRecuperacaoParalela'), 
-                       $this->getEntity()->mediaRecuperacaoParalela, 5, 50, FALSE, FALSE, 
+    $this->campoTexto('mediaRecuperacaoParalela', $this->_getLabel('mediaRecuperacaoParalela'),
+                       $this->getEntity()->mediaRecuperacaoParalela, 5, 50, FALSE, FALSE,
                        FALSE, $this->_getHelp('mediaRecuperacaoParalela'));
+
+    $this->campoNumero('notaMaximaGeral', $this->_getLabel('notaMaximaGeral'), $this->getEntity()->notaMaximaGeral,
+      3, 3, TRUE, FALSE, FALSE, $this->_getHelp('notaMaximaGeral'));
+
+    $this->campoNumero('notaMaximaExameFinal', $this->_getLabel('notaMaximaExameFinal'), $this->getEntity()->notaMaximaExameFinal,
+      3, 3, TRUE, FALSE, FALSE, $this->_getHelp('notaMaximaExameFinal'));
+
+    $this->campoNumero('qtdCasasDecimais', $this->_getLabel('qtdCasasDecimais'), $this->getEntity()->qtdCasasDecimais,
+      3, 3, TRUE, FALSE, FALSE, $this->_getHelp('qtdCasasDecimais'));
   }
 }

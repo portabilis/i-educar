@@ -62,7 +62,10 @@ class RegraAvaliacao_Model_RegraDataMapper extends CoreExt_DataMapper
     'tipoPresenca'             => 'tipo_presenca',
     'mediaRecuperacao'         => 'media_recuperacao',
     'tipoRecuperacaoParalela'  => 'tipo_recuperacao_paralela',
-    'mediaRecuperacaoParalela' => 'media_recuperacao_paralela'
+    'mediaRecuperacaoParalela' => 'media_recuperacao_paralela',
+    'notaMaximaGeral' => 'nota_maxima_geral',
+    'notaMaximaExameFinal' => 'nota_maxima_exame_final',
+    'qtdCasasDecimais' => 'qtd_casas_decimais'
   );
 
   /**

@@ -60,7 +60,10 @@ class ViewController extends Core_Controller_Page_ViewController
     'Porcentagem presença' => 'porcentagemPresenca',
     'Parecer descritivo' => 'parecerDescritivo',
     'Tipo de presença' => 'tipoPresenca',
-    'Recuperação paralela' => 'tipoRecuperacaoParalela'
+    'Recuperação paralela' => 'tipoRecuperacaoParalela',
+    'Nota máxima' => 'notaMaximaGeral',
+    'Nota máxima para exame final' => 'notaMaximaExameFinal',
+    'Número máximo de casas decimais' => 'qtdCasasDecimais'
   );
   protected function _preRender(){
 
@@ -71,8 +74,8 @@ class ViewController extends Core_Controller_Page_ViewController
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_index.php"                  => "i-Educar - Escola",
-         ""                                  => "Detalhe da regra de avalia&ccedil;&otilde;o"             
+         ""                                  => "Detalhe da regra de avalia&ccedil;&otilde;o"
     ));
-    $this->enviaLocalizacao($localizacao->montar());     
-  }  
+    $this->enviaLocalizacao($localizacao->montar());
+  }
 }

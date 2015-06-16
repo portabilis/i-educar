@@ -63,7 +63,10 @@ class RegraAvaliacao_Model_Regra extends CoreExt_Entity
     'tipoPresenca'             => NULL,
     'mediaRecuperacao'         => NULL,
     'tipoRecuperacaoParalela'  => NULL,
-    'mediaRecuperacaoParalela' => NULL
+    'mediaRecuperacaoParalela' => NULL,
+    'notaMaximaGeral' => NULL,
+    'notaMaximaExameFinal' => NULL,
+    'qtdCasasDecimais' => NULL
   );
 
   protected $_dataTypes = array(
@@ -71,7 +74,9 @@ class RegraAvaliacao_Model_Regra extends CoreExt_Entity
     'porcentagemPresenca' => 'numeric',
     'mediaRecuperacao' => 'numeric',
     'tipoRecuperacaoParalela' => 'numeric',
-    'mediaRecuperacaoParalela' => 'numeric'
+    'notaMaximaGeral' => 'numeric',
+    'notaMaximaExameFinal' => 'numeric',
+    'qtdCasasDecimais' => 'numeric'
   );
 
   protected $_references = array(
