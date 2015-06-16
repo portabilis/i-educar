@@ -1,5 +1,6 @@
 <?php
-
+//error_reporting(E_ALL);
+//ini_set("display_errors", 1);
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -78,6 +79,8 @@ class indice extends clsCadastro
 
   var $ano;
   var $ref_cod_instituicao;
+  var $msg = "";
+  var $error = false;
 
 
   function Inicializar()
@@ -97,8 +100,8 @@ class indice extends clsCadastro
          "educar_index.php"                  => "i-Educar - Escola",
          ""                                  => "Exporta&ccedil;&atilde;o para o Educacenso"
     ));
-    $this->enviaLocalizacao($localizacao->montar());    
-    
+    $this->enviaLocalizacao($localizacao->montar());
+
     return 'Novo';
   }
 
@@ -108,21 +111,36 @@ class indice extends clsCadastro
     $this->acao_enviar      = 'document.formcadastro.submit()';
 
     $this->inputsHelper()->input('ano');
-    $this->inputsHelper()->date('data_ini',array( 'label' => Portabilis_String_Utils::toLatin1('Data início')));
-    $this->inputsHelper()->date('data_fim',array( 'label' => 'Data fim'));
+    $this->inputsHelper()->date('data_ini',array( 'label' => Portabilis_String_Utils::toLatin1('Data início'), 'value' => $this->data_ini));
+    $this->inputsHelper()->date('data_fim',array( 'label' => 'Data fim', 'value' => $this->data_fim));
 
     $obj_permissoes = new clsPermissoes();
     $nivel_acesso = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
-    if($nivel_acesso == "4"){
-      $escolas = Portabilis_Business_Professor::escolasAlocado($this->ref_cod_instituicao, $this->pessoa_logada);
-      $escolas = Portabilis_Array_Utils::setAsIdValue($escolas, 'id', 'nome');
+    if($nivel_acesso ==  "4"){
+      $cod_escola = $obj_permissoes->getEscola($this->pessoa_logada);
 
-    }else{
+      $obj_ref_cod_escola = new clsPmieducarEscola( $cod_escola );
+      $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
+      $idpes = $det_ref_cod_escola["ref_idpes"];
+      if ($idpes)
+      {
+        $obj_escola = new clsPessoaJuridica( $idpes );
+        $obj_escola_det = $obj_escola->detalhe();
+        $escolas = array($cod_escola => $obj_escola_det["fantasia"]);
+      }
+      else
+      {
+        $obj_escola = new clsPmieducarEscolaComplemento( $cod_escola );
+        $obj_escola_det = $obj_escola->detalhe();
+        $escolas = array($cod_escola => $obj_escola_det["nm_escola"]);
+      }
+
+    }elseif($nivel_acesso < "4"){
       $escolas = App_Model_IedFinder::getEscolas();
     }
 
-    if (is_array($escolas) && count($escolas)) {      
+    if (is_array($escolas) && (count($escolas) > 0)) {
 
       $conteudo = '<br style="clear: left" />';
       $conteudo .= '<div style="margin-bottom: 10px; float: left">';
@@ -140,11 +158,10 @@ class indice extends clsCadastro
       $escolas  = '<table cellspacing="0" cellpadding="0" border="0">';
       $escolas .= sprintf('<tr align="left"><td>%s</td></tr>', $conteudo);
       $escolas .= '</table>';
-    }
 
     $this->campoRotulo("escolas_", "<b>Escolas</b>",
       "<div id='escolas'>$escolas</div>", null, 'Selecione a(s) escola(s) que deseja exportar');
-
+    }
   }
 
   function Novo()
@@ -156,14 +173,19 @@ class indice extends clsCadastro
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(846, $this->pessoa_logada, 7,
       'educar_index.php');
-    
+
     $conteudo = '';
 
-    foreach ($this->escolas as $key => $escolaId) {  
-      $conteudo .= $this->exportaDadosCensoPorEscola($escolaId, 
-              $this->ano, 
-              Portabilis_Date_Utils::brToPgSQL($this->data_ini), 
+    foreach ($this->escolas as $key => $escolaId) {
+      $conteudo .= $this->exportaDadosCensoPorEscola($escolaId,
+              $this->ano,
+              Portabilis_Date_Utils::brToPgSQL($this->data_ini),
               Portabilis_Date_Utils::brToPgSQL($this->data_fim));
+    }
+
+    if($this->error){
+      $this->mensagem = $this->msg;
+      return false;
     }
 
     header('Content-type: text/plain');
@@ -195,7 +217,7 @@ class indice extends clsCadastro
       $registro80 = $this->exportaDadosRegistro80($escolaId, $ano, $data_ini, $data_fim, $alunoId['id']);
       if(!empty($registro60) && !empty($registro70) && !empty($registro80))
         $export .= $registro60 . $registro70 . $registro80;
-    }    
+    }
     return $export;
   }
 
@@ -212,7 +234,7 @@ class indice extends clsCadastro
   }
 
   protected function getAlunos($escolaId, $ano, $data_ini, $data_fim){
-    $sql = 
+    $sql =
      'SELECT
       distinct(a.cod_aluno) as id
 
@@ -225,65 +247,96 @@ class indice extends clsCadastro
 
       WHERE e.cod_escola = $1
       AND COALESCE(m.data_matricula,m.data_cadastro) BETWEEN DATE($3) AND DATE($4)
-      AND (m.aprovado = 3 OR DATE(COALESCE(m.data_cancel,m.data_exclusao)) > DATE($4))      
+      AND (m.aprovado = 3 OR DATE(COALESCE(m.data_cancel,m.data_exclusao)) > DATE($4))
       AND m.ano = $2
     ';
     return Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId, $ano, $data_ini, $data_fim)));
-  }  
+  }
 
   protected function exportaDadosRegistro00($escolaId, $ano){
-    $sql = 
-    	' SELECT 
+    $sql =
+    	' SELECT
         \'00\' as r00s1,
         ece.cod_escola_inep as r00s2,
-        e.situacao_funcionamento as r00s3,
 
-        (SELECT min(ano_letivo_modulo.data_inicio) 
-          FROM pmieducar.ano_letivo_modulo 
-          WHERE ano_letivo_modulo.ref_ano = $2 AND ano_letivo_modulo.ref_ref_cod_escola = e.cod_escola) as r00s4,
+      gestor_f.cpf as r00s3,
+      gestor_p.nome as r00s4,
+      e.cargo_gestor as r00s5,
+      gestor_p.email as r00s6,
 
-        (SELECT max(ano_letivo_modulo.data_fim) 
-          FROM pmieducar.ano_letivo_modulo 
-          WHERE ano_letivo_modulo.ref_ano = $2 AND ano_letivo_modulo.ref_ref_cod_escola = e.cod_escola) as r00s5,
+      e.situacao_funcionamento as r00s7,
 
-        p.nome as r00s6,
-        e.latitude as r00s7,
-        e.longitude as r00s8,
-        ep.cep as r00s9,
-        l.idtlog || l.nome as r00s10,
-        ep.numero as r00s11,
-        b.nome as r00s13,
-        uf.cod_ibge as r00s14,
-        m.cod_ibge as r00s15,
-        d.cod_ibge as r00s16,
+        (SELECT min(ano_letivo_modulo.data_inicio)
+          FROM pmieducar.ano_letivo_modulo
+          WHERE ano_letivo_modulo.ref_ano = $2 AND ano_letivo_modulo.ref_ref_cod_escola = e.cod_escola) as r00s8,
+
+        (SELECT max(ano_letivo_modulo.data_fim)
+          FROM pmieducar.ano_letivo_modulo
+          WHERE ano_letivo_modulo.ref_ano = $2 AND ano_letivo_modulo.ref_ref_cod_escola = e.cod_escola) as r00s9,
+
+        p.nome as r00s10,
+        e.latitude as r00s11,
+        e.longitude as r00s12,
+        ep.cep as r00s13,
+        l.idtlog || l.nome as r00s14,
+        ep.numero as r00s15,
+        ep.complemento as r00s16,
+        b.nome as r00s17,
+        uf.cod_ibge as r00s18,
+        m.cod_ibge as r00s19,
+        d.cod_ibge as r00s20,
 
         (SELECT COALESCE(
           (SELECT min(fone_pessoa.ddd)
                 FROM cadastro.fone_pessoa
                 WHERE j.idpes = fone_pessoa.idpes),
-          (SELECT min(ddd_telefone) 
-            FROM pmieducar.escola_complemento 
-            WHERE escola_complemento.ref_cod_escola = e.cod_escola))) as r00s17,
+          (SELECT min(ddd_telefone)
+            FROM pmieducar.escola_complemento
+            WHERE escola_complemento.ref_cod_escola = e.cod_escola))) as r00s21,
 
         (SELECT COALESCE(
           (SELECT min(fone_pessoa.fone)
                 FROM cadastro.fone_pessoa
                 WHERE j.idpes = fone_pessoa.idpes),
-          (SELECT min(telefone) 
-            FROM pmieducar.escola_complemento 
-            WHERE escola_complemento.ref_cod_escola = e.cod_escola))) as r00s18,
+          (SELECT min(telefone)
+            FROM pmieducar.escola_complemento
+            WHERE escola_complemento.ref_cod_escola = e.cod_escola))) as r00s22,
 
-        (SELECT COALESCE(p.email,(SELECT email FROM pmieducar.escola_complemento where ref_cod_escola = e.cod_escola))) as r00s22,
 
-        e.dependencia_administrativa as r00s24,
-        b.zona_localizacao as r00s25,
-        e.regulamentacao as r00s35
+        (SELECT COALESCE(
+          (SELECT min(fone_pessoa.fone)
+                FROM cadastro.fone_pessoa
+                WHERE j.idpes = fone_pessoa.idpes AND fone_pessoa.tipo = 3),
+          (SELECT min(fax)
+            FROM pmieducar.escola_complemento
+            WHERE escola_complemento.ref_cod_escola = e.cod_escola))) as r00s24,
+
+        (SELECT COALESCE(
+          (SELECT min(fone_pessoa.fone)
+                FROM cadastro.fone_pessoa
+                WHERE j.idpes = fone_pessoa.idpes AND fone_pessoa.tipo = 4),
+          (SELECT min(fax)
+            FROM pmieducar.escola_complemento
+            WHERE escola_complemento.ref_cod_escola = e.cod_escola))) as r00s25,
+
+        (SELECT COALESCE(p.email,(SELECT email FROM pmieducar.escola_complemento where ref_cod_escola = e.cod_escola))) as r00s26,
+
+        e.dependencia_administrativa as r00s28,
+        b.zona_localizacao as r00s29,
+        0 as r00s32,
+        0 as r00s33,
+        0 as r00s34,
+        0 as r00s35,
+        0 as r00s36,
+        e.regulamentacao as r00s39
 
 
         FROM pmieducar.escola e
         INNER JOIN modules.educacenso_cod_escola ece ON (e.cod_escola = ece.cod_escola)
         INNER JOIN cadastro.pessoa p ON (e.ref_idpes = p.idpes)
         INNER JOIN cadastro.juridica j ON (j.idpes = p.idpes)
+        INNER JOIN cadastro.pessoa gestor_p ON (gestor_p.idpes = e.ref_idpes_gestor)
+        INNER JOIN cadastro.fisica gestor_f ON (gestor_f.idpes = gestor_p.idpes)
         INNER JOIN cadastro.endereco_pessoa ep ON (ep.idpes = p.idpes)
         INNER JOIN urbano.cep_logradouro_bairro clb ON (clb.idbai = ep.idbai AND clb.idlog = ep.idlog AND clb.cep = ep.cep)
         INNER JOIN public.bairro b ON (clb.idbai = b.idbai)
@@ -301,327 +354,146 @@ class indice extends clsCadastro
       $d = '|';
       $return = '';
 
-      $r00s4 = Portabilis_Date_Utils::pgSQLToBr($r00s4);
-      $r00s5 = Portabilis_Date_Utils::pgSQLToBr($r00s5);
+      $r00s2 = substr($r00s2, 0, 8);
+      $r00s3 = $this->cpfToCenso($r00s3);
 
-      $r00s6 = strtoupper($r00s6);
-      $r00s22 = strtoupper($r00s22);
+      $r00s8 = Portabilis_Date_Utils::pgSQLToBr($r00s8);
+      $r00s9 = Portabilis_Date_Utils::pgSQLToBr($r00s9);
 
-      for ($i=1; $i <= 35 ; $i++)
+      $r00s10 = $this->upperAndUnaccent($r00s10);
+      $r00s14 = $this->upperAndUnaccent($r00s14);
+      $r00s15 = $this->upperAndUnaccent($r00s15);
+      $r00s16 = $this->upperAndUnaccent($r00s16);
+      $r00s17 = $this->upperAndUnaccent($r00s17);
+      $r00s26 = $this->upperAndUnaccent($r00s26);
+
+      for ($i=1; $i <= 42 ; $i++)
         $return .= ${'r00s'.$i}.$d;
 
+      $return = substr_replace($return, "", -1);
+
       return $return."\n";
+    }else{
+      $this->msg .= "Dados para formular o registro 00 da escola {$escolaId} não encontrados. Verifique se a escola possuí endereço normalizado, código do INEP e dados do gestor cadastrados.<br/>";
+      $this->error = true;
     }
   }
 
   protected function exportaDadosRegistro10($escolaId){
-    $sql = 
+    $sql =
     	'SELECT
       \'10\' as r10s1,
       ece.cod_escola_inep as r10s2,
 
-      f.cpf as r10s3,
-      p.nome as r10s4,
-      e.cargo_gestor as r10s5,
-      p.email as r10s6,
       e.local_funcionamento,
-      e.condicao as r10s16,
+      e.condicao as r10s12,
       e.codigo_inep_escola_compartilhada,
-      e.agua_consumida as r10s24,
-      e.agua_rede_publica as r10s25,
-      e.agua_poco_artesiano as r10s26,
-      e.agua_cacimba_cisterna_poco as r10s27,
-      e.agua_fonte_rio as r10s28,
-      e.agua_inexistente as r10s29,
-      e.energia_rede_publica as r10s30,
-      e.energia_gerador as r10s31,
-      e.energia_outros as r10s32,
-      e.energia_inexistente as r10s33,
-      e.esgoto_rede_publica as r10s34,
-      e.esgoto_fossa as r10s35,
-      e.esgoto_inexistente as r10s36,
-      e.lixo_coleta_periodica as r10s37,
-      e.lixo_queima as r10s38,
-      e.lixo_joga_outra_area as r10s39,
-      e.lixo_recicla as r10s40,
-      e.lixo_enterra as r10s41,
-      e.lixo_outros as r10s42,
-      e.dependencia_sala_diretoria as r10s43,
-      e.dependencia_sala_professores as r10s44,
-      e.dependencia_sala_secretaria as r10s45,
-      e.dependencia_laboratorio_informatica as r10s46,
-      e.dependencia_laboratorio_ciencias as r10s47,
-      e.dependencia_sala_aee as r10s48,
-      e.dependencia_quadra_coberta as r10s49,
-      e.dependencia_quadra_descoberta as r10s50,
-      e.dependencia_cozinha as r10s51,
-      e.dependencia_biblioteca as r10s52,
-      e.dependencia_sala_leitura as r10s53,
-      e.dependencia_parque_infantil as r10s54,
-      e.dependencia_bercario as r10s55,
-      e.dependencia_banheiro_fora as r10s56,
-      e.dependencia_banheiro_dentro as r10s57,
-      e.dependencia_banheiro_infantil as r10s58,
-      e.dependencia_banheiro_deficiente as r10s59,
-      e.dependencia_vias_deficiente as r10s60,
-      e.dependencia_banheiro_chuveiro as r10s61,
-      e.dependencia_refeitorio as r10s62,
-      e.dependencia_dispensa as r10s63,
-      e.dependencia_aumoxarifado as r10s64,
-      e.dependencia_auditorio as r10s65,
-      e.dependencia_patio_coberto as r10s66,
-      e.dependencia_patio_descoberto as r10s67,
-      e.dependencia_alojamento_aluno as r10s68,
-      e.dependencia_alojamento_professor as r10s69,
-      e.dependencia_area_verde as r10s70,
-      e.dependencia_lavanderia as r10s71,
-      e.dependencia_nenhuma_relacionada as r10s72,
-      e.dependencia_numero_salas_existente as r10s73,
-      e.dependencia_numero_salas_utilizadas as r10s74,
+      e.agua_consumida as r10s20,
+      e.agua_rede_publica as r10s21,
+      e.agua_poco_artesiano as r10s22,
+      e.agua_cacimba_cisterna_poco as r10s23,
+      e.agua_fonte_rio as r10s24,
+      e.agua_inexistente as r10s25,
+      e.energia_rede_publica as r10s26,
+      e.energia_gerador as r10s27,
+      e.energia_outros as r10s28,
+      e.energia_inexistente as r10s29,
+      e.esgoto_rede_publica as r10s30,
+      e.esgoto_fossa as r10s31,
+      e.esgoto_inexistente as r10s32,
+      e.lixo_coleta_periodica as r10s33,
+      e.lixo_queima as r10s34,
+      e.lixo_joga_outra_area as r10s35,
+      e.lixo_recicla as r10s36,
+      e.lixo_enterra as r10s37,
+      e.lixo_outros as r10s38,
+      e.dependencia_sala_diretoria as r10s39,
+      e.dependencia_sala_professores as r10s40,
+      e.dependencia_sala_secretaria as r10s41,
+      e.dependencia_laboratorio_informatica as r10s42,
+      e.dependencia_laboratorio_ciencias as r10s43,
+      e.dependencia_sala_aee as r10s44,
+      e.dependencia_quadra_coberta as r10s45,
+      e.dependencia_quadra_descoberta as r10s46,
+      e.dependencia_cozinha as r10s47,
+      e.dependencia_biblioteca as r10s48,
+      e.dependencia_sala_leitura as r10s49,
+      e.dependencia_parque_infantil as r10s50,
+      e.dependencia_bercario as r10s51,
+      e.dependencia_banheiro_fora as r10s52,
+      e.dependencia_banheiro_dentro as r10s53,
+      e.dependencia_banheiro_infantil as r10s54,
+      e.dependencia_banheiro_deficiente as r10s55,
+      e.dependencia_vias_deficiente as r10s56,
+      e.dependencia_banheiro_chuveiro as r10s57,
+      e.dependencia_refeitorio as r10s58,
+      e.dependencia_dispensa as r10s59,
+      e.dependencia_aumoxarifado as r10s60,
+      e.dependencia_auditorio as r10s61,
+      e.dependencia_patio_coberto as r10s62,
+      e.dependencia_patio_descoberto as r10s63,
+      e.dependencia_alojamento_aluno as r10s64,
+      e.dependencia_alojamento_professor as r10s65,
+      e.dependencia_area_verde as r10s66,
+      e.dependencia_lavanderia as r10s67,
+      e.dependencia_nenhuma_relacionada as r10s68,
+      e.dependencia_numero_salas_existente as r10s69,
+      e.dependencia_numero_salas_utilizadas as r10s70,
 
-      e.televisoes as r10s75,
-      e.videocassetes as r10s76,
-      e.dvds as r10s77,
-      e.antenas_parabolicas as r10s78,
-      e.copiadoras as r10s79,
-      e.retroprojetores as r10s80,
-      e.impressoras as r10s81,
-      e.aparelhos_de_som as r10s82,
-      e.projetores_digitais  as r10s83,
-      e.faxs as r10s84,
-      e.maquinas_fotograficas as r10s85,
-      e.computadores as r10s86,
-      e.computadores_administrativo as r10s87,
-      e.computadores_alunos as r10s88,
-      e.acesso_internet as r10s89,
-      e.banda_larga as r10s90,
+      e.televisoes as r10s71,
+      e.videocassetes as r10s72,
+      e.dvds as r10s73,
+      e.antenas_parabolicas as r10s74,
+      e.copiadoras as r10s75,
+      e.retroprojetores as r10s76,
+      e.impressoras as r10s77,
+      e.aparelhos_de_som as r10s78,
+      e.projetores_digitais  as r10s79,
+      e.faxs as r10s80,
+      e.maquinas_fotograficas as r10s81,
+      e.computadores as r10s82,
+      e.computadores_administrativo as r10s84,
+      e.computadores_alunos as r10s85,
+      e.acesso_internet as r10s86,
+      e.banda_larga as r10s87,
 
-      total_funcionario as r10s91,
-      1 as r10s92,
-      atendimento_aee as r10s93,
-      atividade_complementar as r10s94,
+      total_funcionario as r10s88,
+      1 as r10s89,
+      atendimento_aee as r10s90,
+      atividade_complementar as r10s91,
 
-      (SELECT 1 
-        FROM pmieducar.curso 
+      (SELECT 1
+        FROM pmieducar.curso
         INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso)
         WHERE modalidade_curso = 1 AND escola_curso.ref_cod_escola = e.cod_escola
         LIMIT 1
-      ) as r10s95,
+      ) as r10s92,
 
-      (SELECT 1 
-        FROM pmieducar.curso 
+      (SELECT 1
+        FROM pmieducar.curso
         INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso)
-        WHERE modalidade_curso = 2 AND escola_curso.ref_cod_escola = e.cod_escola 
+        WHERE modalidade_curso = 2 AND escola_curso.ref_cod_escola = e.cod_escola
         LIMIT 1
-      ) as r10s96,
+      ) as r10s93,
 
-      (SELECT 1 
-        FROM pmieducar.curso 
+      (SELECT 1
+        FROM pmieducar.curso
         INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso)
-        WHERE modalidade_curso = 3 AND escola_curso.ref_cod_escola = e.cod_escola 
+        WHERE modalidade_curso = 3 AND escola_curso.ref_cod_escola = e.cod_escola
         LIMIT 1
-      ) as r10s97,
+      ) as r10s94,
 
-      (SELECT 1 
-        FROM modules.etapas_curso_educacenso
-        INNER JOIN pmieducar.curso ON (curso.cod_curso = etapas_curso_educacenso.curso_id)
-        INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso) 
-        WHERE escola_curso.ref_cod_escola = e.cod_escola
-        AND etapas_curso_educacenso.etapa_id = 1
-        LIMIT 1
-      ) as r10s98,
-
-      (SELECT 1 
-        FROM modules.etapas_curso_educacenso
-        INNER JOIN pmieducar.curso ON (curso.cod_curso = etapas_curso_educacenso.curso_id)
-        INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso) 
-        WHERE escola_curso.ref_cod_escola = e.cod_escola
-        AND etapas_curso_educacenso.etapa_id = 2
-        LIMIT 1
-      ) as r10s99,
-
-      (SELECT 1 
-        FROM modules.etapas_curso_educacenso
-        INNER JOIN pmieducar.curso ON (curso.cod_curso = etapas_curso_educacenso.curso_id)
-        INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso) 
-        WHERE escola_curso.ref_cod_escola = e.cod_escola
-        AND etapas_curso_educacenso.etapa_id = 3
-        LIMIT 1
-      ) as r10s100,
-
-      (SELECT 1 
-        FROM modules.etapas_curso_educacenso
-        INNER JOIN pmieducar.curso ON (curso.cod_curso = etapas_curso_educacenso.curso_id)
-        INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso) 
-        WHERE escola_curso.ref_cod_escola = e.cod_escola
-        AND etapas_curso_educacenso.etapa_id = 4
-        LIMIT 1
-      ) as r10s101,
-
-      (SELECT 1 
-        FROM modules.etapas_curso_educacenso
-        INNER JOIN pmieducar.curso ON (curso.cod_curso = etapas_curso_educacenso.curso_id)
-        INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso) 
-        WHERE escola_curso.ref_cod_escola = e.cod_escola
-        AND etapas_curso_educacenso.etapa_id = 5
-        LIMIT 1
-      ) as r10s102,
-
-      (SELECT 1 
-        FROM modules.etapas_curso_educacenso
-        INNER JOIN pmieducar.curso ON (curso.cod_curso = etapas_curso_educacenso.curso_id)
-        INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso) 
-        WHERE escola_curso.ref_cod_escola = e.cod_escola
-        AND etapas_curso_educacenso.etapa_id = 6
-        LIMIT 1
-      ) as r10s103,
-
-      (SELECT 1 
-        FROM modules.etapas_curso_educacenso
-        INNER JOIN pmieducar.curso ON (curso.cod_curso = etapas_curso_educacenso.curso_id)
-        INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso) 
-        WHERE escola_curso.ref_cod_escola = e.cod_escola
-        AND etapas_curso_educacenso.etapa_id = 7
-        LIMIT 1
-      ) as r10s104,
-
-      (SELECT 1 
-        FROM modules.etapas_curso_educacenso
-        INNER JOIN pmieducar.curso ON (curso.cod_curso = etapas_curso_educacenso.curso_id)
-        INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso) 
-        WHERE escola_curso.ref_cod_escola = e.cod_escola
-        AND etapas_curso_educacenso.etapa_id = 8
-        LIMIT 1
-      ) as r10s105,
-
-      (SELECT 1 
-        FROM modules.etapas_curso_educacenso
-        INNER JOIN pmieducar.curso ON (curso.cod_curso = etapas_curso_educacenso.curso_id)
-        INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso) 
-        WHERE escola_curso.ref_cod_escola = e.cod_escola
-        AND etapas_curso_educacenso.etapa_id = 1
-        LIMIT 1
-      ) as r10s106,
-
-      (SELECT 1 
-        FROM modules.etapas_curso_educacenso
-        INNER JOIN pmieducar.curso ON (curso.cod_curso = etapas_curso_educacenso.curso_id)
-        INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso) 
-        WHERE escola_curso.ref_cod_escola = e.cod_escola
-        AND etapas_curso_educacenso.etapa_id = 2
-        LIMIT 1
-      ) as r10s107,
-
-      (SELECT 1 
-        FROM modules.etapas_curso_educacenso
-        INNER JOIN pmieducar.curso ON (curso.cod_curso = etapas_curso_educacenso.curso_id)
-        INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso) 
-        WHERE escola_curso.ref_cod_escola = e.cod_escola
-        AND etapas_curso_educacenso.etapa_id = 3
-        LIMIT 1
-      ) as r10s108,
-
-      (SELECT 1 
-        FROM modules.etapas_curso_educacenso
-        INNER JOIN pmieducar.curso ON (curso.cod_curso = etapas_curso_educacenso.curso_id)
-        INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso) 
-        WHERE escola_curso.ref_cod_escola = e.cod_escola
-        AND etapas_curso_educacenso.etapa_id = 4
-        LIMIT 1
-      ) as r10s109,
-
-      (SELECT 1 
-        FROM modules.etapas_curso_educacenso
-        INNER JOIN pmieducar.curso ON (curso.cod_curso = etapas_curso_educacenso.curso_id)
-        INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso) 
-        WHERE escola_curso.ref_cod_escola = e.cod_escola
-        AND etapas_curso_educacenso.etapa_id = 5
-        LIMIT 1
-      ) as r10s110,
-
-      (SELECT 1 
-        FROM modules.etapas_curso_educacenso
-        INNER JOIN pmieducar.curso ON (curso.cod_curso = etapas_curso_educacenso.curso_id)
-        INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso) 
-        WHERE escola_curso.ref_cod_escola = e.cod_escola
-        AND etapas_curso_educacenso.etapa_id = 6
-        LIMIT 1
-      ) as r10s111,
-
-      (SELECT 1 
-        FROM modules.etapas_curso_educacenso
-        INNER JOIN pmieducar.curso ON (curso.cod_curso = etapas_curso_educacenso.curso_id)
-        INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso) 
-        WHERE escola_curso.ref_cod_escola = e.cod_escola
-        AND etapas_curso_educacenso.etapa_id = 7
-        LIMIT 1
-      ) as r10s112,
-
-      (SELECT 1 
-        FROM modules.etapas_curso_educacenso
-        INNER JOIN pmieducar.curso ON (curso.cod_curso = etapas_curso_educacenso.curso_id)
-        INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso) 
-        WHERE escola_curso.ref_cod_escola = e.cod_escola
-        AND etapas_curso_educacenso.etapa_id = 8
-        LIMIT 1
-      ) as r10s113,
-
-      (SELECT 1 
-        FROM modules.etapas_curso_educacenso
-        INNER JOIN pmieducar.curso ON (curso.cod_curso = etapas_curso_educacenso.curso_id)
-        INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso) 
-        WHERE escola_curso.ref_cod_escola = e.cod_escola
-        AND etapas_curso_educacenso.etapa_id = 9
-        LIMIT 1
-      ) as r10s114,
-
-      (SELECT 1 
-        FROM modules.etapas_curso_educacenso
-        INNER JOIN pmieducar.curso ON (curso.cod_curso = etapas_curso_educacenso.curso_id)
-        INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso) 
-        WHERE escola_curso.ref_cod_escola = e.cod_escola
-        AND etapas_curso_educacenso.etapa_id = 10
-        LIMIT 1
-      ) as r10s115,
-
-      (SELECT 1 
-        FROM modules.etapas_curso_educacenso
-        INNER JOIN pmieducar.curso ON (curso.cod_curso = etapas_curso_educacenso.curso_id)
-        INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso) 
-        WHERE escola_curso.ref_cod_escola = e.cod_escola
-        AND etapas_curso_educacenso.etapa_id = 9
-        LIMIT 1
-      ) as r10s116,
-
-      (SELECT 1 
-        FROM modules.etapas_curso_educacenso
-        INNER JOIN pmieducar.curso ON (curso.cod_curso = etapas_curso_educacenso.curso_id)
-        INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso) 
-        WHERE escola_curso.ref_cod_escola = e.cod_escola
-        AND etapas_curso_educacenso.etapa_id = 11
-        LIMIT 1
-      ) as r10s117,
-
-      (SELECT 1 
-        FROM modules.etapas_curso_educacenso
-        INNER JOIN pmieducar.curso ON (curso.cod_curso = etapas_curso_educacenso.curso_id)
-        INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso) 
-        WHERE escola_curso.ref_cod_escola = e.cod_escola
-        AND etapas_curso_educacenso.etapa_id = 10
-        LIMIT 1
-      ) as r10s118,
-
-      fundamental_ciclo as r10s119,
-      localizacao_diferenciada as r10s120,
-      didatico_nao_utiliza as r10s121,
-      didatico_quilombola as r10s122,
-      didatico_indigena as r10s123,
-      educacao_indigena as r10s124,
+      fundamental_ciclo as r10s96,
+      localizacao_diferenciada as r10s97,
+      didatico_nao_utiliza as r10s98,
+      didatico_quilombola as r10s99,
+      didatico_indigena as r10s100,
+      educacao_indigena as r10s101,
       lingua_ministrada,
-      espaco_brasil_aprendizado as r10s128,
-      abre_final_semana as r10s129,
-      codigo_lingua_indigena as r10s127,
-      proposta_pedagogica as r10s130
+      codigo_lingua_indigena as r10s104,
+      espaco_brasil_aprendizado as r10s105,
+      abre_final_semana as r10s106,
+      proposta_pedagogica as r10s107
 
       FROM pmieducar.escola e
       INNER JOIN modules.educacenso_cod_escola ece ON (e.cod_escola = ece.cod_escola)
@@ -635,153 +507,120 @@ class indice extends clsCadastro
       $d = '|';
       $return = '';
 
-      $r10s3 = $this->cpfToCenso($r10s3);
-
-      for($i = 7; $i <=15; $i++){
+      for($i = 3; $i <=11; $i++){
         if ($local_funcionamento == $i)
           ${'r10s'.$i} = 1;
         else
           ${'r10s'.$i} = 0;
       }
 
-      $r10s4 = strtoupper($r10s4);
-      $r10s6 = strtoupper($r10s6);      
-
       if($codigo_inep_escola_compartilhada !=null){
-        $r10s17 = 1;
-        $r10s18 = $codigo_inep_escola_compartilhada;
+        $r10s13 = 1;
+        $r10s14 = $codigo_inep_escola_compartilhada;
       }else
-        $r10s17 = 0;
+        $r10s13 = 0;
 
+      $r10s96 = ($r10s96 == 1 && ($r10s92 == 1 || $r10s93 == 1)) ? 1 : NULL;
 
-      if (!$r10s95 == 1){
-        $r10s98 = 0;
-        $r10s99 = 0;
-        $r10s100 = 0;
-        $r10s101 = 0;
-        $r10s102 = 0;
-        $r10s103 = 0;
-        $r10s104 = 0;
-        $r10s105 = 0;
-      }
-      if (!$r10s96 == 1){
-        $r10s106 = 0;
-        $r10s107 = 0;
-        $r10s108 = 0;
-        $r10s109 = 0;
-        $r10s110 = 0;
-        $r10s111 = 0;
-        $r10s112 = 0;
-        $r10s113 = 0;
-        $r10s114 = 0;
-        $r10s115 = 0;
-      }
-      if (!$r10s97 == 1){
-        $r10s116 = 0;
-        $r10s117 = 0;
-        $r10s118 = 0;
-      }
+      if($lingua_ministrada && $r10s101){
+        $r10s102 = 1;
+        $r10s104 = $lingua_ministrada;
+      }elseif ($r10s124)
+        $r10s103 = 1;
 
-      // Esses valores não podem ser nulos, então casos não seja 1 é setado 0
-      for($i = 95; $i <=118; $i++)
-        ${'r10s'.$i} = ${'r10s'.$i} == 1 ? 1 : 0;        
-
-      $r10s119 = $r10s119 == 1 ? 1 : NULL;
-
-      if($lingua_ministrada && $r10s124){
-        $r10s125 = 1;
-        $r10s127 = $lingua_ministrada;
-      }elseif ($r10s124) {
-        $r10s126 = 1;
-      }      
-
-      for ($i=1; $i <= 130 ; $i++){
-        if($i>=75 && $i<=88)
+      for ($i=1; $i <= 107 ; $i++){
+        if($i>=71 && $i<=85)
           $return .= (${'r10s'.$i} == 0 ? '' : ${'r10s'.$i}).$d;
         else
           $return .= ${'r10s'.$i}.$d;
       }
-      return $return."\n"; 
+      $return = substr_replace($return, "", -1);
+
+      return $return."\n";
+    }else{
+      $this->msg .= "Dados para formular o registro 10 da escola {$escolaId} não encontrados. Verifique se a escola possuí código do INEP cadastrado. <br/>";
+      $this->error = true;
     }
   }
 
   protected function exportaDadosRegistro20($escolaId, $turmaId){
-    $sql = 
-    	' SELECT 
+    $sql =
+    	' SELECT
         \'20\' as r20s1,
         ece.cod_escola_inep as r20s2,
         t.cod_turma as r20s4,
         t.nm_turma as r20s5,
-        substring(t.hora_inicial,1,2) as r20s6,
-        substring(t.hora_inicial,4,2) as r20s7,
-        substring(t.hora_final,1,2) as r20s8,
-        substring(t.hora_final,4,2) as r20s9,
-        (SELECT 1 
-          FROM turma_dia_semana 
+        1 as r20s6,
+        substring(t.hora_inicial,1,2) as r20s7,
+        substring(t.hora_inicial,4,2) as r20s8,
+        substring(t.hora_final,1,2) as r20s9,
+        substring(t.hora_final,4,2) as r20s10,
+        (SELECT 1
+          FROM turma_dia_semana
           WHERE ref_cod_turma = t.cod_turma
           AND dia_semana = 1
           LIMIT 1
-        ) as r20s10,
-        (SELECT 1 
-          FROM turma_dia_semana 
+        ) as r20s11,
+        (SELECT 1
+          FROM turma_dia_semana
           WHERE ref_cod_turma = t.cod_turma
           AND dia_semana = 2
           LIMIT 1
-        ) as r20s11,
-        (SELECT 1 
-          FROM turma_dia_semana 
+        ) as r20s12,
+        (SELECT 1
+          FROM turma_dia_semana
           WHERE ref_cod_turma = t.cod_turma
           AND dia_semana = 3
           LIMIT 1
-        ) as r20s12,
-        (SELECT 1 
-          FROM turma_dia_semana 
+        ) as r20s13,
+        (SELECT 1
+          FROM turma_dia_semana
           WHERE ref_cod_turma = t.cod_turma
           AND dia_semana = 4
           LIMIT 1
-        ) as r20s13,
-        (SELECT 1 
-          FROM turma_dia_semana 
+        ) as r20s14,
+        (SELECT 1
+          FROM turma_dia_semana
           WHERE ref_cod_turma = t.cod_turma
           AND dia_semana = 5
           LIMIT 1
-        ) as r20s14,
-        (SELECT 1 
-          FROM turma_dia_semana 
+        ) as r20s15,
+        (SELECT 1
+          FROM turma_dia_semana
           WHERE ref_cod_turma = t.cod_turma
           AND dia_semana = 6
           LIMIT 1
-        ) as r20s15,
-        (SELECT 1 
-          FROM turma_dia_semana 
+        ) as r20s16,
+        (SELECT 1
+          FROM turma_dia_semana
           WHERE ref_cod_turma = t.cod_turma
           AND dia_semana = 7
           LIMIT 1
-        ) as r20s16,
-        t.tipo_atendimento as r20s17,
-        t.turma_mais_educacao as r20s18,
+        ) as r20s17,
+        t.tipo_atendimento as r20s18,
+        t.turma_mais_educacao as r20s19,
 
-        t.atividade_complementar_1 as r20s19,
-        t.atividade_complementar_2 as r20s20,
-        t.atividade_complementar_3 as r20s21,
-        t.atividade_complementar_4 as r20s22,
-        t.atividade_complementar_5 as r20s23,
-        t.atividade_complementar_6 as r20s24,
-        t.aee_braille as r20s25,
-        t.aee_recurso_optico as r20s26,
-        t.aee_estrategia_desenvolvimento as r20s27,
-        t.aee_tecnica_mobilidade as r20s28,
-        t.aee_libras as r20s29,
-        t.aee_caa as r20s30,
-        t.aee_curricular as r20s31,
-        t.aee_soroban as r20s32,
-        t.aee_informatica as r20s33,
-        t.aee_lingua_escrita as r20s34,
-        t.aee_autonomia as r20s35,
-        c.modalidade_curso as r20s36,
-        t.etapa_id as r20s37,
-        t.cod_curso_profissional as r20s38,
-        t.turma_sem_professor as r20s65,
+        t.atividade_complementar_1 as r20s20,
+        t.atividade_complementar_2 as r20s21,
+        t.atividade_complementar_3 as r20s22,
+        t.atividade_complementar_4 as r20s23,
+        t.atividade_complementar_5 as r20s24,
+        t.atividade_complementar_6 as r20s25,
+        t.aee_braille as r20s26,
+        t.aee_recurso_optico as r20s27,
+        t.aee_estrategia_desenvolvimento as r20s28,
+        t.aee_tecnica_mobilidade as r20s29,
+        t.aee_libras as r20s30,
+        t.aee_caa as r20s31,
+        t.aee_curricular as r20s32,
+        t.aee_soroban as r20s33,
+        t.aee_informatica as r20s34,
+        t.aee_lingua_escrita as r20s35,
+        t.aee_autonomia as r20s36,
+        c.modalidade_curso as r20s37,
+        t.etapa_id as r20s38,
+        t.cod_curso_profissional as r20s39,
+        t.turma_sem_professor as r20s66,
         s.cod_serie as serieId
 
         FROM pmieducar.turma t
@@ -795,30 +634,30 @@ class indice extends clsCadastro
     extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, array('return_only' => 'first-row', 'params' => array($turmaId))));
     if ($r20s1){
 
-      $r20s5 = strtoupper($r20s5);
+      $r20s5 = $this->upperAndUnaccent($r20s5);
 
-      //Dias da semana  e tipo de atendimento não podem ser nullos, 1 ou 0 
-      for($i = 10; $i <=17; $i++)
+      //Dias da semana  e tipo de atendimento não podem ser nullos, 1 ou 0
+      for($i = 11; $i <=18; $i++)
         ${'r20s'.$i} = ${'r20s'.$i} == 1 ? 1 : 0;
 
       // Atribui 0 (Não lecionado) para todas as disciplinas por padrão.
-      $r20s39 = $r20s40 = $r20s41 = $r20s42 = $r20s43 = $r20s44 = $r20s45 = $r20s46 = $r20s47 = $r20s48 = $r20s49 = 
-      $r20s50 = $r20s51 = $r20s52 = $r20s53 = $r20s54 = $r20s55 = $r20s56 = $r20s57 = $r20s58 = $r20s59 = $r20s60 = 
-      $r20s61 = $r20s62 = $r20s63 = $r20s64 = 0;
+      $r20s40 = $r20s41 = $r20s42 = $r20s43 = $r20s44 = $r20s45 = $r20s46 = $r20s47 = $r20s48 = $r20s49 =
+      $r20s50 = $r20s51 = $r20s52 = $r20s53 = $r20s54 = $r20s55 = $r20s56 = $r20s57 = $r20s58 = $r20s59 = $r20s60 =
+      $r20s61 = $r20s62 = $r20s63 = $r20s64 = $r20s65 = 0;
 
       // Se a turma não presta atendimento educacional especializado AEE esses campos precisam ser nulos
-      if ($r20s17 != 5)
-        $r20s25 = $r20s26 = $r20s27 = $r20s28 = $r20s29 = $r20s30 = $r20s31 = $r20s32 = $r20s33 = $r20s34 = $r20s35 = NULL;
+      if ($r20s18 != 5)
+        $r20s26 = $r20s27 = $r20s28 = $r20s29 = $r20s30 = $r20s31 = $r20s32 = $r20s33 = $r20s34 = $r20s35 = $r20s36 = NULL;
 
-      if(!((($r20s37 >= 4 && $r20s37 <= 38) || $r20s37 == 41 || $r20s37 == 56 ) && in_array($r20s17, array(0, 2, 3))))
-        $r20s18 = NULL;
+      if(!((($r20s38 >= 4 && $r20s38 <= 38) || $r20s38 == 41 || $r20s38 == 56 ) && in_array($r20s18, array(0, 2, 3))))
+        $r20s19 = NULL;
 
 
-      $coddigoEducacensoToSeq = 
-      			 array( 1 => '39', 2 => '40', 3 => '41', 4 => '42', 5 => '43', 6 => '44', 7 => '45', 
-      			 			  8 => '46', 30 => '47', 9 => '48', 10 => '49', 11 => '50', 12 => '51', 13 => '52',
-      			 			  14 => '53', 28 => '54', 29 => '55', 16 => '56', 17 => '57', 20 => '58', 21 => '59', 
-      			 			  23 => '60', 25 => '61', 26 => '62', 27 => '63', 99 => '64');
+      $coddigoEducacensoToSeq =
+      			 array( 1 => '40', 2 => '41', 3 => '42', 4 => '43', 5 => '44', 6 => '45', 7 => '46',
+      			 			  8 => '47', 30 => '48', 9 => '49', 10 => '50', 11 => '51', 12 => '52', 13 => '53',
+      			 			  14 => '54', 28 => '55', 29 => '56', 16 => '57', 17 => '58', 20 => '59', 21 => '60',
+      			 			  23 => '61', 25 => '62', 26 => '63', 27 => '64', 99 => '65');
       try{
         $componentesTurma = App_Model_IedFinder::getComponentesTurma($serieid, $escolaId, $turmaId);
       }catch(Exception $e){
@@ -833,17 +672,17 @@ class indice extends clsCadastro
           $codigoEducacenso = $codigoEducacenso->getKey($componente->codigo_educacenso);
 
           // Código da disciplina no i-Educar
-          $codigoSistema = $componente->id;        
+          $codigoSistema = $componente->id;
 
           // Verifica se é disciplina padrão ano letivo. Se for, será considerado que existe professor
           // vinculado a disciplina na sala de aula
 
-          $padraoAnoLetivo = 
-            !(bool)Portabilis_Utils_Database::selectField('SELECT 1 
-                                                            FROM componente_curricular_turma 
-                                                            WHERE turma_id = $1 
-                                                            AND componente_curricular_id = $2 
-                                                            LIMIT 1', 
+          $padraoAnoLetivo =
+            !(bool)Portabilis_Utils_Database::selectField('SELECT 1
+                                                            FROM componente_curricular_turma
+                                                            WHERE turma_id = $1
+                                                            AND componente_curricular_id = $2
+                                                            LIMIT 1',
                                                             array('params' => array($turmaId, $codigoSistema)));
 
           $professorVinculado = true;
@@ -857,25 +696,30 @@ class indice extends clsCadastro
                                                               array('params' => array($turmaId, $codigoSistema)));
             $professorVinculado = $professorVinculado['docente_vinculado'];
           }
-          
+
           if (array_key_exists($codigoEducacenso, $coddigoEducacensoToSeq)){
           	${ 'r20s'. $coddigoEducacensoToSeq[$codigoEducacenso] } = $professorVinculado ? 2 : 1;
         	}
         }
-          
+
       }
       $d = '|';
       $return = '';
 
-      for ($i=1; $i <= 65 ; $i++)
+      for ($i=1; $i <= 66 ; $i++)
         $return .= ${'r20s'.$i}.$d;
 
+      $return = substr_replace($return, "", -1);
+
       return $return."\n";
+    }else{
+      $this->msg .= "Dados para formular o registro 20 da escola {$escolaId} não encontrados. Verifique se a escola possuí código do INEP e registros de turmas cadastrados. <br/>";
+      $this->error = true;
     }
   }
-  
+
   protected function exportaDadosRegistro30($servidorId){
-    $sql = 
+    $sql =
     	' SELECT
         \'30\' as r30s1,
         ece.cod_escola_inep as r30s2,
@@ -917,13 +761,13 @@ class indice extends clsCadastro
       $r30s10 = is_numeric($r30s10) ? $r30s10 : 0;
 
       $sql = 'select distinct(deficiencia_educacenso) as id from cadastro.fisica_deficiencia,
-              cadastro.deficiencia where cod_deficiencia = ref_cod_deficiencia and ref_idpes = $1 
+              cadastro.deficiencia where cod_deficiencia = ref_cod_deficiencia and ref_idpes = $1
               and deficiencia_educacenso is not null';
 
       $deficiencias = Portabilis_Utils_Database::fetchPreparedQuery($sql, array( 'params' => array($r30s4)));
-      
+
       $r30s17 = $r30s18 = $r30s19 = $r30s20 = $r30s21 = $r30s22 = $r30s23 = $r30s24 = 0;
-      
+
       $deficienciaToSeq = array( 1 => '17',
                                  2 => '18',
                                  3 => '19',
@@ -941,7 +785,7 @@ class indice extends clsCadastro
           $r30s16 = 1;
         }
       }
-      
+
       $d = '|';
       $return = '';
       $numeroRegistros = 24;
@@ -949,12 +793,14 @@ class indice extends clsCadastro
       for ($i=1; $i <= $numeroRegistros ; $i++)
         $return .= ${'r30s'.$i}.$d;
 
+      $return = substr_replace($return, "", -1);
+
       return $return."\n";
     }
   }
 
   protected function exportaDadosRegistro40($servidorId){
-    $sql = 
+    $sql =
     'SELECT
 
 		\'40\' as r40s1,
@@ -988,7 +834,7 @@ class indice extends clsCadastro
 		INNER JOIN public.logradouro l ON (l.idlog = cl.idlog)
 		WHERE s.cod_servidor = $1
 
-		LIMIT 1    
+		LIMIT 1
     ';
 
     // Transforma todos resultados em variáveis
@@ -1003,13 +849,15 @@ class indice extends clsCadastro
       for ($i=1; $i <= $numeroRegistros ; $i++)
         $return .= ${'r40s'.$i}.$d;
 
+      $return = substr_replace($return, "", -1);
+
       return $return."\n";
     }
   }
 
   protected function exportaDadosRegistro50($servidorId){
 
-  	$sql = 
+  	$sql =
   	'SELECT
 
 		\'50\' as r50s1,
@@ -1070,7 +918,7 @@ class indice extends clsCadastro
 
 		LIMIT 1
   	';
-    
+
     // Transforma todos resultados em variáveis
     extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, array('return_only' => 'first-row', 'params' => array($servidorId))));
       if ($r50s1){
@@ -1088,13 +936,15 @@ class indice extends clsCadastro
           $return .= ${'r50s'.$i}.$d;
       }
 
+      $return = substr_replace($return, "", -1);
+
       return $return."\n";
     }
   }
 
   protected function exportaDadosRegistro51($servidorId){
 
-  	$sql = 
+  	$sql =
   	 'SELECT
 
 			\'51\' as r51s1,
@@ -1108,7 +958,7 @@ class indice extends clsCadastro
 			SELECT distinct(cc.codigo_educacenso)
 
 				FROM modules.componente_curricular cc
-				INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)	
+				INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)
 
 				WHERE	ptd.professor_turma_id = pt.id
 				ORDER BY codigo_educacenso
@@ -1120,10 +970,10 @@ class indice extends clsCadastro
 			SELECT distinct(cc.codigo_educacenso)
 
 				FROM modules.componente_curricular cc
-				INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)	
+				INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)
 
 				WHERE	ptd.professor_turma_id = pt.id
-				
+
 				ORDER BY codigo_educacenso
 				OFFSET 1
 				LIMIT 1
@@ -1133,10 +983,10 @@ class indice extends clsCadastro
 			SELECT distinct(cc.codigo_educacenso)
 
 				FROM modules.componente_curricular cc
-				INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)	
+				INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)
 
 				WHERE	ptd.professor_turma_id = pt.id
-				
+
 				ORDER BY codigo_educacenso
 				OFFSET 2
 				LIMIT 1
@@ -1146,10 +996,10 @@ class indice extends clsCadastro
 			SELECT distinct(cc.codigo_educacenso)
 
 				FROM modules.componente_curricular cc
-				INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)	
+				INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)
 
 				WHERE	ptd.professor_turma_id = pt.id
-				
+
 				ORDER BY codigo_educacenso
 				OFFSET 3
 				LIMIT 1
@@ -1159,10 +1009,10 @@ class indice extends clsCadastro
 			SELECT distinct(cc.codigo_educacenso)
 
 				FROM modules.componente_curricular cc
-				INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)	
+				INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)
 
 				WHERE	ptd.professor_turma_id = pt.id
-				
+
 				ORDER BY codigo_educacenso
 				OFFSET 4
 				LIMIT 1
@@ -1172,10 +1022,10 @@ class indice extends clsCadastro
 			SELECT distinct(cc.codigo_educacenso)
 
 				FROM modules.componente_curricular cc
-				INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)	
+				INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)
 
 				WHERE	ptd.professor_turma_id = pt.id
-				
+
 				ORDER BY codigo_educacenso
 				OFFSET 5
 				LIMIT 1
@@ -1185,10 +1035,10 @@ class indice extends clsCadastro
 			SELECT distinct(cc.codigo_educacenso)
 
 				FROM modules.componente_curricular cc
-				INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)	
+				INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)
 
 				WHERE	ptd.professor_turma_id = pt.id
-				
+
 				ORDER BY codigo_educacenso
 				OFFSET 6
 				LIMIT 1
@@ -1198,10 +1048,10 @@ class indice extends clsCadastro
 			SELECT distinct(cc.codigo_educacenso)
 
 				FROM modules.componente_curricular cc
-				INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)	
+				INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)
 
 				WHERE	ptd.professor_turma_id = pt.id
-				
+
 				ORDER BY codigo_educacenso
 				OFFSET 7
 				LIMIT 1
@@ -1211,10 +1061,10 @@ class indice extends clsCadastro
 			SELECT distinct(cc.codigo_educacenso)
 
 				FROM modules.componente_curricular cc
-				INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)	
+				INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)
 
 				WHERE	ptd.professor_turma_id = pt.id
-				
+
 				ORDER BY codigo_educacenso
 				OFFSET 8
 				LIMIT 1
@@ -1224,10 +1074,10 @@ class indice extends clsCadastro
 			SELECT distinct(cc.codigo_educacenso)
 
 				FROM modules.componente_curricular cc
-				INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)	
+				INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)
 
 				WHERE	ptd.professor_turma_id = pt.id
-				
+
 				ORDER BY codigo_educacenso
 				OFFSET 9
 				LIMIT 1
@@ -1237,10 +1087,10 @@ class indice extends clsCadastro
 			SELECT distinct(cc.codigo_educacenso)
 
 				FROM modules.componente_curricular cc
-				INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)	
+				INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)
 
 				WHERE	ptd.professor_turma_id = pt.id
-				
+
 				ORDER BY codigo_educacenso
 				OFFSET 10
 				LIMIT 1
@@ -1250,10 +1100,10 @@ class indice extends clsCadastro
 			SELECT distinct(cc.codigo_educacenso)
 
 				FROM modules.componente_curricular cc
-				INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)	
+				INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)
 
 				WHERE	ptd.professor_turma_id = pt.id
-				
+
 				ORDER BY codigo_educacenso
 				OFFSET 11
 				LIMIT 1
@@ -1263,10 +1113,10 @@ class indice extends clsCadastro
 			SELECT distinct(cc.codigo_educacenso)
 
 				FROM modules.componente_curricular cc
-				INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)	
+				INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)
 
 				WHERE	ptd.professor_turma_id = pt.id
-				
+
 				ORDER BY codigo_educacenso
 				OFFSET 12
 				LIMIT 1
@@ -1286,7 +1136,7 @@ class indice extends clsCadastro
 			AND e.cod_escola = t.ref_ref_cod_escola
   	';
 
-    
+
     // Transforma todos resultados em variáveis
 		$d = '|';
     $return = '';
@@ -1296,15 +1146,17 @@ class indice extends clsCadastro
     	extract($reg);
 	    for ($i=1; $i <= $numeroRegistros ; $i++)
 	    	$return .= ${'r51s'.$i}.$d;
+
+      $return = substr_replace($return, "", -1);
 	    $return .= "\n";
     }
 
     return $return;
   }
-  
+
   protected function exportaDadosRegistro60($escolaId, $ano, $data_ini, $data_fim, $alunoId){
 
-    $sql = 
+    $sql =
      'SELECT
 
       distinct(a.cod_aluno) as r60s4,
@@ -1312,26 +1164,25 @@ class indice extends clsCadastro
       \'60\' as r60s1,
       ece.cod_escola_inep as r60s2,
       p.nome as r60s5,
-      fis.nis_pis_pasep as r60s6,
-      fis.data_nasc as r60s7, /*tratar formato*/
-      fis.sexo as r60s8, /*tratar na aplicação formato*/
-      r.raca_educacenso as r60s9,
-      /*se não tiver r60s11 e 12 é 0 se tiver um dos dois é 1*/
-      COALESCE( a.nm_mae,(SELECT nome FROM cadastro.pessoa WHERE pessoa.idpes = fis.idpes_mae)) as r60s11,
-      COALESCE(a.nm_pai, (SELECT nome FROM cadastro.pessoa WHERE pessoa.idpes = fis.idpes_pai)) as r60s12,
-      fis.nacionalidade as r60s13,
-      (SELECT cod_ibge FROM public.pais WHERE pais.idpais = fis.idpais_estrangeiro) as r60s14,
-      uf.cod_ibge as r60s15,
-      mun.cod_ibge as r60s16,
-      recurso_prova_inep_aux_ledor as rs60s31,
-      recurso_prova_inep_aux_transcricao as rs60s32,
-      recurso_prova_inep_guia_interprete as rs60s33,
-      recurso_prova_inep_interprete_libras as rs60s34,
-      recurso_prova_inep_leitura_labial as rs60s35,
-      recurso_prova_inep_prova_ampliada_16 as rs60s36,
-      recurso_prova_inep_prova_ampliada_20 as rs60s37,
-      recurso_prova_inep_prova_ampliada_24 as rs60s38,
-      recurso_prova_inep_prova_braille as rs60s39
+      fis.data_nasc as r60s6, /*tratar formato*/
+      fis.sexo as r60s7, /*tratar na aplicação formato*/
+      r.raca_educacenso as r60s8,
+      /*se não tiver r60s10 e 11 é 0 se tiver um dos dois é 1*/
+      COALESCE( a.nm_mae,(SELECT nome FROM cadastro.pessoa WHERE pessoa.idpes = fis.idpes_mae)) as r60s10,
+      COALESCE(a.nm_pai, (SELECT nome FROM cadastro.pessoa WHERE pessoa.idpes = fis.idpes_pai)) as r60s11,
+      fis.nacionalidade as r60s12,
+      (SELECT cod_ibge FROM public.pais WHERE pais.idpais = fis.idpais_estrangeiro) as r60s13,
+      uf.cod_ibge as r60s14,
+      mun.cod_ibge as r60s15,
+      recurso_prova_inep_aux_ledor as rs60s30,
+      recurso_prova_inep_aux_transcricao as rs60s31,
+      recurso_prova_inep_guia_interprete as rs60s32,
+      recurso_prova_inep_interprete_libras as rs60s33,
+      recurso_prova_inep_leitura_labial as rs60s34,
+      recurso_prova_inep_prova_ampliada_16 as rs60s35,
+      recurso_prova_inep_prova_ampliada_20 as rs60s36,
+      recurso_prova_inep_prova_ampliada_24 as rs60s37,
+      recurso_prova_inep_prova_braille as rs60s38
 
       FROM  pmieducar.aluno a
       INNER JOIN cadastro.fisica fis ON (fis.idpes = a.ref_idpes)
@@ -1346,7 +1197,7 @@ class indice extends clsCadastro
 
       WHERE e.cod_escola = $1
       AND COALESCE(m.data_matricula,m.data_cadastro) BETWEEN DATE($3) AND DATE($4)
-      AND (m.aprovado = 3 OR DATE(COALESCE(m.data_cancel,m.data_exclusao)) > DATE($4))      
+      AND (m.aprovado = 3 OR DATE(COALESCE(m.data_cancel,m.data_exclusao)) > DATE($4))
       AND m.ano = $2
       AND a.cod_aluno = $5
     ';
@@ -1354,52 +1205,56 @@ class indice extends clsCadastro
     // Transforma todos resultados em variáveis
     $d = '|';
     $return = '';
-    $numeroRegistros = 40;
+    $numeroRegistros = 39;
 
     $sqlDeficiencias = 'select distinct(deficiencia_educacenso) as id from cadastro.fisica_deficiencia,
-                        cadastro.deficiencia where cod_deficiencia = ref_cod_deficiencia and ref_idpes = $1 
+                        cadastro.deficiencia where cod_deficiencia = ref_cod_deficiencia and ref_idpes = $1
                         and deficiencia_educacenso is not null';
 
     foreach (Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId, $ano, $data_ini, $data_fim, $alunoId))) as $reg) {
       extract($reg);
 
-      $r60s5 = strtoupper($r60s5);
-      
-      $r60s7 = Portabilis_Date_Utils::pgSQLToBr($r60s7);
-      $r60s8 = $r60s8 == 'M' ? 1 : 2;
-      $r60s9 = is_numeric($r60s9) ? $r60s9 : 0;
-      $r60s10 = (int) !(is_null($r60s11) && is_null($r60s12));
+      $r60s5 = $this->upperAndUnaccent($r60s5);
+
+      $r60s6 = Portabilis_Date_Utils::pgSQLToBr($r60s6);
+      $r60s7 = $r60s7 == 'M' ? 1 : 2;
+      $r60s8 = is_numeric($r60s8) ? $r60s8 : 0;
+      $r60s9 = (int) !(is_null($r60s10) && is_null($r60s11));
+
+      if($r60s12 == '1' || $r60s12 == '2')
+        $r60s13 = 76;
 
       $deficiencias = Portabilis_Utils_Database::fetchPreparedQuery($sqlDeficiencias, array( 'params' => array($idpes)));
-      
+
       // Reseta deficiências (DEFAULT NULL)
-      $r60s17 = 0;
-      $r60s18 = $r60s19 = $r60s20 = $r60s21 = $r60s22 = $r60s23 = $r60s24 = 
-                            $r60s25 = $r60s26 = $r60s27 = $r60s28 = $r60s29 = $r60s30 = NULL;
-      
+      $r60s16 = 0;
+      $r60s17 = $r60s18 = $r60s19 = $r60s20 = $r60s21 = $r60s22 = $r60s23 = $r60s24 =
+                 $r60s25 = $r60s26 = $r60s27 = $r60s28 = $r60s29 = NULL;
+
       // Caso não exista nenhum curso seta seq 40 como 1
-      $r60s40 = (int) is_null($r60s31) && is_null($r60s32) && is_null($r60s33) && is_null($r60s34)
-                && is_null($r60s35) && is_null($r60s36) && is_null($r60s37) && is_null($r60s38) && is_null($r60s39);
+      $r60s39 = (int) is_null($r60s30) && is_null($r60s31) && is_null($r60s32) && is_null($r60s33) && is_null($r60s34)
+                && is_null($r60s35) && is_null($r60s36) && is_null($r60s37) && is_null($r60s38);
+
       // Define 'tipodeficiencia' => 'seqleiaute'
-      $deficienciaToSeq = array(  1 => '18',
-                                  2 => '19',
-                                  3 => '20',
-                                  4 => '21',
-                                  5 => '22',
-                                  6 => '23',
-                                  7 => '24',
-                                  8 => '25', 
-                                  9 => '26', 
-                                 10 => '27', 
-                                 11 => '28', 
-                                 12 => '29', 
-                                 13 => '30');
-      
-      // Se tiver alguma deficiência, a seq 17 deve ser 1
+      $deficienciaToSeq = array(  1 => '17',
+                                  2 => '18',
+                                  3 => '19',
+                                  4 => '20',
+                                  5 => '21',
+                                  6 => '22',
+                                  7 => '23',
+                                  8 => '24',
+                                  9 => '25',
+                                 10 => '26',
+                                 11 => '27',
+                                 12 => '28',
+                                 13 => '29');
+
+      // Se tiver alguma deficiência, a seq 16 deve ser 1
       if (count($deficiencias)>0){
-        $r60s17 = 1;
-        $r60s18 = $r60s19 = $r60s20 = $r60s21 = $r60s22 = $r60s23 = $r60s24 = 
-                  $r60s25 = $r60s26 = $r60s27 = $r60s28 = $r60s29 = $r60s30 = 0;
+        $r60s16 = 1;
+        $r60s17 = $r60s18 = $r60s19 = $r60s20 = $r60s21 = $r60s22 = $r60s23 = $r60s24 =
+                  $r60s25 = $r60s26 = $r60s27 = $r60s28 = $r60s29 = 0;
 
         foreach ($deficiencias as $deficiencia_educacenso) {
           $deficiencia_educacenso = $deficiencia_educacenso['id'];
@@ -1409,48 +1264,49 @@ class indice extends clsCadastro
         }
       }
       // Se o aluno não tiver deficiências não pode ser informado recursos para provas
-      if ($r60s17)
-        $r60s40 = NULL;
+      if ($r60s16)
+        $r60s39 = NULL;
 
       for ($i=1; $i <= $numeroRegistros ; $i++)
         $return .= ${'r60s'.$i}.$d;
+
+      $return = substr_replace($return, "", -1);
       $return .= "\n";
     }
 
     return $return;
-  }  
+  }
 
 protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim, $alunoId){
 
-    $sql = 
+    $sql =
      '  SELECT
 
         distinct(a.cod_aluno) as r70s4,
         \'70\' as r70s1,
         ece.cod_escola_inep as r70s2,
         fd.rg as r70s5,
-        oer.sigla as r70s7,
-        (SELECT cod_ibge FROM public.uf WHERE uf.sigla_uf = fd.sigla_uf_exp_rg) as r70s8,
-        fd.data_exp_rg as r70s9,
+        oer.sigla as r70s6,
+        (SELECT cod_ibge FROM public.uf WHERE uf.sigla_uf = fd.sigla_uf_exp_rg) as r70s7,
+        fd.data_exp_rg as r70s8,
         tipo_cert_civil,
-        num_termo as r70s12,
-        num_folha as r70s13,
-        num_livro as r70s14,
-        data_emissao_cert_civil as r70s15,
-        (SELECT cod_ibge FROM public.uf WHERE uf.sigla_uf = fd.sigla_uf_cert_civil) as r70s16,
-        cartorio_cert_civil_inep as r70s18,
-        certidao_nascimento as r70s19,
-        fis.cpf as r70s20,
-        fis.nis_pis_pasep as r70s22,
-        a.justificativa_falta_documentacao as r70s23,
-        b.zona_localizacao as r70s24,
-        ep.cep as r70s25,
-        l.idtlog || l.nome as r70s26,
-        ep.numero as r70s27,
-        ep.complemento as r70s28,        
-        b.nome as r70s29,
-        uf.cod_ibge as r70s30,
-        mun.cod_ibge as r70s31
+        num_termo as r70s11,
+        num_folha as r70s12,
+        num_livro as r70s13,
+        data_emissao_cert_civil as r70s14,
+        (SELECT cod_ibge FROM public.uf WHERE uf.sigla_uf = fd.sigla_uf_cert_civil) as r70s15,
+        cartorio_cert_civil_inep as r70s17,
+        certidao_nascimento as r70s18,
+        fis.cpf as r70s19,
+        fis.nis_pis_pasep as r70s21,
+        b.zona_localizacao as r70s22,
+        ep.cep as r70s23,
+        l.idtlog || l.nome as r70s24,
+        ep.numero as r70s25,
+        ep.complemento as r70s26,
+        b.nome as r70s27,
+        uf.cod_ibge as r70s28,
+        mun.cod_ibge as r70s29
 
 
         FROM  pmieducar.aluno a
@@ -1474,57 +1330,50 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
         WHERE e.cod_escola = $1
         AND COALESCE(m.data_matricula,m.data_cadastro) BETWEEN DATE($3) AND DATE($4)
         AND (m.aprovado = 3 OR DATE(COALESCE(m.data_cancel,m.data_exclusao)) > DATE($4))
-        AND m.ano = $2     
+        AND m.ano = $2
         AND a.cod_aluno = $5
     ';
 
     // Transforma todos resultados em variáveis
     $d = '|';
     $return = '';
-    $numeroRegistros = 31;
+    $numeroRegistros = 29;
 
     foreach (Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId, $ano, $data_ini, $data_fim, $alunoId))) as $reg) {
       extract($reg);
 
-      $r70s9 = Portabilis_Date_Utils::pgSQLToBr($r70s9);
-      $r70s15 = Portabilis_Date_Utils::pgSQLToBr($r70s15);
+      $r70s8 = Portabilis_Date_Utils::pgSQLToBr($r70s8);
+      $r70s14 = Portabilis_Date_Utils::pgSQLToBr($r70s14);
 
-      $r70s20 = $this->cpfToCenso($r70s20);
+      $r70s19 = $this->cpfToCenso($r70s19);
 
       // Validações referentes a certidões (Modelo antigo e novo, nascimento e casamento)
-      $r70s10 = $r70s11 = NULL;
-      if (is_null($tipo_cert_civil) && !empty($r70s19)){
-        $r70s10 = 2;
-        $r70s11 = NULL;
-        $r70s12 = $r70s13 = $r70s14 = $r70s15 = $r70s16 = $r70s17 = $r70s18 = NULL;
-        $r70s19 =  str_replace(' ', '',$r70s19);
+      $r70s9 = $r70s10 = NULL;
+      if (is_null($tipo_cert_civil) && !empty($r70s18)){
+        $r70s9 = 2;
+        $r70s10 = NULL;
+        $r70s11 = $r70s12 = $r70s13 = $r70s14 = $r70s15 = $r70s16 = $r70s17 = NULL;
+        $r70s18 =  str_replace(' ', '',$r70s18);
       }elseif($tipo_cert_civil == 91){
-        if (!(is_null($r70s12) || is_null($r70s16) || is_null($r70s18)))
-          $r70s10 = $r70s11 = 1;        
+        if (!(is_null($r70s11) || is_null($r70s15) || is_null($r70s17)))
+          $r70s9 = $r70s10 = 1;
         else
-          $r70s10 = $r70s11 = $r70s12 = $r70s13 = $r70s14 = $r70s15 = $r70s16 = $r70s17 = $r70s18 = $r70s19 = NULL;        
-        
+          $r70s9 = $r70s10 = $r70s11 = $r70s12 = $r70s13 = $r70s14 = $r70s15 = $r70s16 = $r70s17 = $r70s18 = NULL;
+
       }elseif ($tipo_cert_civil == 92) {
-        if (!(is_null($r70s12) || is_null($r70s16) || is_null($r70s18))){
-          $r70s10 = 1;
-          $r70s11 = 2;  
+        if (!(is_null($r70s11) || is_null($r70s15) || is_null($r70s17))){
+          $r70s9 = 1;
+          $r70s10 = 2;
         }else
-          $r70s10 = $r70s11 = $r70s12 = $r70s13 = $r70s14 = $r70s15 = $r70s16 = $r70s17 = $r70s18 = $r70s19 = NULL;              
+          $r70s9 = $r70s10 = $r70s11 = $r70s12 = $r70s13 = $r70s14 = $r70s15 = $r70s16 = $r70s17 = $r70s18 = NULL;
       }else
-        $r70s10 = $r70s11 = $r70s12 = $r70s13 = $r70s14 = $r70s15 = $r70s16 = $r70s17 = $r70s18 = $r70s19 = NULL;
+        $r70s9 = $r70s10 = $r70s11 = $r70s12 = $r70s13 = $r70s14 = $r70s15 = $r70s16 = $r70s17 = $r70s18 = NULL;
       // fim das validações de certidões //
-
-      $nenhumaDocumentacao = TRUE;
-      for ($i=5; $i <= 22; $i++){
-        if (!is_null(${'r70s'.$i}))
-          $nenhumaDocumentacao = FALSE;
-      }
-
-      if ($nenhumaDocumentacao)
-        $r70s23 = is_numeric($r70s23) ? $r70s23 : 2;
 
       for ($i=1; $i <= $numeroRegistros ; $i++)
         $return .= ${'r70s'.$i}.$d;
+
+      $return = substr_replace($return, "", -1);
       $return .= "\n";
     }
 
@@ -1533,7 +1382,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
 
   protected function exportaDadosRegistro80($escolaId, $ano, $data_ini, $data_fim, $alunoId){
 
-    $sql = 
+    $sql =
      '  SELECT
 
         \'80\' as r80s1,
@@ -1545,7 +1394,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
         \'3\' as r80s10,
         ta.responsavel as transporte_escolar,
         (
-          SELECT 1 
+          SELECT 1
           FROM modules.veiculo v
           INNER JOIN modules.itinerario_transporte_escolar ite ON (ite.ref_cod_veiculo = v.cod_veiculo)
           INNER JOIN modules.rota_transporte_escolar rte ON (ite.ref_cod_rota_transporte_escolar = rte.cod_rota_transporte_escolar)
@@ -1554,7 +1403,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
           AND v.ref_cod_tipo_veiculo = 1
         ) as r80s13,
         (
-          SELECT 1 
+          SELECT 1
           FROM modules.veiculo v
           INNER JOIN modules.itinerario_transporte_escolar ite ON (ite.ref_cod_veiculo = v.cod_veiculo)
           INNER JOIN modules.rota_transporte_escolar rte ON (ite.ref_cod_rota_transporte_escolar = rte.cod_rota_transporte_escolar)
@@ -1563,7 +1412,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
           AND v.ref_cod_tipo_veiculo = 2
         ) as r80s14,
         (
-          SELECT 1 
+          SELECT 1
           FROM modules.veiculo v
           INNER JOIN modules.itinerario_transporte_escolar ite ON (ite.ref_cod_veiculo = v.cod_veiculo)
           INNER JOIN modules.rota_transporte_escolar rte ON (ite.ref_cod_rota_transporte_escolar = rte.cod_rota_transporte_escolar)
@@ -1572,7 +1421,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
           AND v.ref_cod_tipo_veiculo = 3
         ) as r80s15,
         (
-          SELECT 1 
+          SELECT 1
           FROM modules.veiculo v
           INNER JOIN modules.itinerario_transporte_escolar ite ON (ite.ref_cod_veiculo = v.cod_veiculo)
           INNER JOIN modules.rota_transporte_escolar rte ON (ite.ref_cod_rota_transporte_escolar = rte.cod_rota_transporte_escolar)
@@ -1581,7 +1430,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
           AND v.ref_cod_tipo_veiculo = 4
         ) as r80s16,
         (
-          SELECT 1 
+          SELECT 1
           FROM modules.veiculo v
           INNER JOIN modules.itinerario_transporte_escolar ite ON (ite.ref_cod_veiculo = v.cod_veiculo)
           INNER JOIN modules.rota_transporte_escolar rte ON (ite.ref_cod_rota_transporte_escolar = rte.cod_rota_transporte_escolar)
@@ -1590,7 +1439,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
           AND v.ref_cod_tipo_veiculo = 5
         ) as r80s17,
         (
-          SELECT 1 
+          SELECT 1
           FROM modules.veiculo v
           INNER JOIN modules.itinerario_transporte_escolar ite ON (ite.ref_cod_veiculo = v.cod_veiculo)
           INNER JOIN modules.rota_transporte_escolar rte ON (ite.ref_cod_rota_transporte_escolar = rte.cod_rota_transporte_escolar)
@@ -1599,7 +1448,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
           AND v.ref_cod_tipo_veiculo = 6
         ) as r80s18,
         (
-          SELECT 1 
+          SELECT 1
           FROM modules.veiculo v
           INNER JOIN modules.itinerario_transporte_escolar ite ON (ite.ref_cod_veiculo = v.cod_veiculo)
           INNER JOIN modules.rota_transporte_escolar rte ON (ite.ref_cod_rota_transporte_escolar = rte.cod_rota_transporte_escolar)
@@ -1608,7 +1457,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
           AND v.ref_cod_tipo_veiculo = 7
         ) as r80s19,
         (
-          SELECT 1 
+          SELECT 1
           FROM modules.veiculo v
           INNER JOIN modules.itinerario_transporte_escolar ite ON (ite.ref_cod_veiculo = v.cod_veiculo)
           INNER JOIN modules.rota_transporte_escolar rte ON (ite.ref_cod_rota_transporte_escolar = rte.cod_rota_transporte_escolar)
@@ -1617,7 +1466,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
           AND v.ref_cod_tipo_veiculo = 8
         ) as r80s20,
         (
-          SELECT 1 
+          SELECT 1
           FROM modules.veiculo v
           INNER JOIN modules.itinerario_transporte_escolar ite ON (ite.ref_cod_veiculo = v.cod_veiculo)
           INNER JOIN modules.rota_transporte_escolar rte ON (ite.ref_cod_rota_transporte_escolar = rte.cod_rota_transporte_escolar)
@@ -1626,7 +1475,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
           AND v.ref_cod_tipo_veiculo = 9
         ) as r80s21,
         (
-          SELECT 1 
+          SELECT 1
           FROM modules.veiculo v
           INNER JOIN modules.itinerario_transporte_escolar ite ON (ite.ref_cod_veiculo = v.cod_veiculo)
           INNER JOIN modules.rota_transporte_escolar rte ON (ite.ref_cod_rota_transporte_escolar = rte.cod_rota_transporte_escolar)
@@ -1635,7 +1484,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
           AND v.ref_cod_tipo_veiculo = 10
         ) as r80s22,
         (
-          SELECT 1 
+          SELECT 1
           FROM modules.veiculo v
           INNER JOIN modules.itinerario_transporte_escolar ite ON (ite.ref_cod_veiculo = v.cod_veiculo)
           INNER JOIN modules.rota_transporte_escolar rte ON (ite.ref_cod_rota_transporte_escolar = rte.cod_rota_transporte_escolar)
@@ -1655,8 +1504,8 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
 
         WHERE e.cod_escola = $1
         AND COALESCE(m.data_matricula,m.data_cadastro) BETWEEN DATE($3) AND DATE($4)
-        AND (m.aprovado = 3 OR DATE(COALESCE(m.data_cancel,m.data_exclusao)) > DATE($4))        
-        AND m.ano = $2    
+        AND (m.aprovado = 3 OR DATE(COALESCE(m.data_cancel,m.data_exclusao)) > DATE($4))
+        AND m.ano = $2
         AND a.cod_aluno = $5
     ';
 
@@ -1672,7 +1521,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
       $r80s11 = $r80s12 = NULL;
       if ($transporte_escolar){
         $veiculo = false;
-        for ($i=13; $i <= 23 ; $i++) { 
+        for ($i=13; $i <= 23 ; $i++) {
           if (${'r80s'.$i} == 1)
             $veiculo = true;
         }
@@ -1680,25 +1529,31 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
           $r80s11 == 1;
         $r80s12 = $transporte_escolar;
       }else{
-        for ($i=13; $i <= 23 ; $i++) { 
-          ${'r80s'.$i} = NULL;          
+        for ($i=13; $i <= 23 ; $i++) {
+          ${'r80s'.$i} = NULL;
         }
       }
       // fim validações transporte escolar
 
       for ($i=1; $i <= $numeroRegistros ; $i++)
         $return .= ${'r80s'.$i}.$d;
+
+      $return = substr_replace($return, "", -1);
       $return .= "\n";
     }
 
     return $return;
-  }  
+  }
 
   protected function cpfToCenso($cpf){
     $cpf = str_replace(array('.', '-'), '', int2CPF($cpf));
     return $cpf == '00000000000' ? NULL : $cpf;
-  }    
-}  
+  }
+
+  protected function upperAndUnaccent($string){
+    return strtoupper(str_replace('?', '', Portabilis_String_Utils::unaccent($string)));
+  }
+}
 // Instancia objeto de página
 $pagina = new clsIndexBase();
 
@@ -1724,6 +1579,6 @@ function marcarCheck(idValue) {
 
             campo.elements[i].checked = campo.CheckTodos.checked;
         }
-    }     
+    }
 }
 </script>

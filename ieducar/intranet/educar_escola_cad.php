@@ -113,36 +113,36 @@ class indice extends clsCadastro
 	var $regulamentacao;
 	var $acesso;
 	var $gestor_id;
-	var $cargo_gestor;	
-	var $local_funcionamento;	
-	var $condicao;	
-	var $codigo_inep_escola_compartilhada;	
-	var $decreto_criacao;	
-	var $area_terreno_total;	
-	var $area_construida;	
-	var $area_disponivel;	
-	var $num_pavimentos;	
-	var $tipo_piso;	
-	var $medidor_energia;	
-	var $agua_consumida;	
-	var $agua_rede_publica;	
-	var $agua_poco_artesiano;	
-	var $agua_cacimba_cisterna_poco;	
-	var $agua_fonte_rio;	
-	var $agua_inexistente;	
-	var $energia_rede_publica;	
-	var $energia_gerador;	
-	var $energia_outros;	
-	var $energia_inexistente;	
-	var $esgoto_rede_publica;	
-	var $esgoto_fossa;	
-	var $esgoto_inexistente;	
-	var $lixo_coleta_periodica;	
-	var $lixo_queima;	
-	var $lixo_joga_outra_area;	
-	var $lixo_recicla;	
-	var $lixo_enterra;	
-	var $lixo_outros;	
+	var $cargo_gestor;
+	var $local_funcionamento;
+	var $condicao;
+	var $codigo_inep_escola_compartilhada;
+	var $decreto_criacao;
+	var $area_terreno_total;
+	var $area_construida;
+	var $area_disponivel;
+	var $num_pavimentos;
+	var $tipo_piso;
+	var $medidor_energia;
+	var $agua_consumida;
+	var $agua_rede_publica;
+	var $agua_poco_artesiano;
+	var $agua_cacimba_cisterna_poco;
+	var $agua_fonte_rio;
+	var $agua_inexistente;
+	var $energia_rede_publica;
+	var $energia_gerador;
+	var $energia_outros;
+	var $energia_inexistente;
+	var $esgoto_rede_publica;
+	var $esgoto_fossa;
+	var $esgoto_inexistente;
+	var $lixo_coleta_periodica;
+	var $lixo_queima;
+	var $lixo_joga_outra_area;
+	var $lixo_recicla;
+	var $lixo_enterra;
+	var $lixo_outros;
 	var $dependencia_sala_diretoria;
   var $dependencia_sala_professores;
   var $dependencia_sala_secretaria;
@@ -179,8 +179,8 @@ class indice extends clsCadastro
   var $dependencia_numero_salas_utilizadas;
   var $porte_quadra_descoberta;
   var $porte_quadra_coberta;
-  var $tipo_cobertura_patio;    
-  var $total_funcionario;    
+  var $tipo_cobertura_patio;
+  var $total_funcionario;
 	var $atendimento_aee;
 	var $atividade_complementar;
 	var $fundamental_ciclo;
@@ -208,8 +208,9 @@ class indice extends clsCadastro
   var $computadores_administrativo;
   var $computadores_alunos;
   var $acesso_internet;
-  var $banda_larga; 	
-  var $ato_criacao; 	
+  var $banda_larga;
+  var $ato_criacao;
+  var $utiliza_regra_diferenciada;
 
 	var $incluir_curso;
 	var $excluir_curso;
@@ -467,15 +468,15 @@ class indice extends clsCadastro
 		}
 
 		$this->url_cancelar = ($retorno == "Editar") ? "educar_escola_det.php?cod_escola={$registro["cod_escola"]}" : "educar_escola_lst.php";
-		
+
 	    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
 	    $localizacao = new LocalizacaoSistema();
 	    $localizacao->entradaCaminhos( array(
 	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
 	         "educar_index.php"                  => "i-Educar - Escola",
-	         ""        => "{$nomeMenu} escola"             
+	         ""        => "{$nomeMenu} escola"
 	    ));
-	    $this->enviaLocalizacao($localizacao->montar());		
+	    $this->enviaLocalizacao($localizacao->montar());
 
 		$this->nome_url_cancelar = "Cancelar";
 
@@ -1021,13 +1022,14 @@ if(!$this->isEnderecoExterno){
 
   		$this->campoCheck("bloquear_lancamento_diario_anos_letivos_encerrados", "Bloquear lançamento no diário para anos letivos encerrados", $this->bloquear_lancamento_diario_anos_letivos_encerrados);
 
+      $this->campoCheck("utiliza_regra_diferenciada", "Utiliza regra diferenciada", dbBool($this->utiliza_regra_diferenciada), '', FALSE, FALSE, FALSE, 'Se marcado, utilizará regra de avaliação diferenciada informada na Série');
 
   		$resources = array(1 => 'Em atividade',
 	                       2 => 'Paralisada',
 	                       3 => 'Extinta');
 
 	    $options = array('label' => Portabilis_String_Utils::toLatin1('Situação de funcionamento'), 'resources' => $resources, 'value' => $this->situacao_funcionamento);
-	    $this->inputsHelper()->select('situacao_funcionamento', $options);	   	   
+	    $this->inputsHelper()->select('situacao_funcionamento', $options);
 
   		$resources = array(1 => 'Federal',
 	                       2 => 'Estadual',
@@ -1042,10 +1044,10 @@ if(!$this->isEnderecoExterno){
 		                   2 => Portabilis_String_Utils::toLatin1('Em tramitação'));
 
   		$options = array('label' => Portabilis_String_Utils::toLatin1('Regulamentação/ Autorização no conselho ou órgão público de educação'), 'resources' => $resources, 'value' => $this->regulamentacao, 'size' => 70,);
-	    $this->inputsHelper()->select('regulamentacao', $options);  	
+	    $this->inputsHelper()->select('regulamentacao', $options);
 
 	    $options = array('label' => Portabilis_String_Utils::toLatin1('Ato de criação'), 'value' => $this->ato_criacao, 'size' => 70, 'required' => false);
-	    $this->inputsHelper()->text('ato_criacao', $options);  		
+	    $this->inputsHelper()->text('ato_criacao', $options);
 
 	    $hiddenInputOptions = array('options' => array('value' => $this->gestor_id));
 	    $helperOptions      = array('objectName' => 'gestor', 'hiddenInputOptions' => $hiddenInputOptions);
@@ -1084,7 +1086,7 @@ if(!$this->isEnderecoExterno){
 			}
 			if ( $_POST["ref_cod_curso"] )
 			{
-				$this->escola_curso[$_POST["ref_cod_curso"]] = $_POST["ref_cod_curso"];				
+				$this->escola_curso[$_POST["ref_cod_curso"]] = $_POST["ref_cod_curso"];
 
 				if($this->autorizacao)
 					$this->escola_curso_autorizacao[$_POST["ref_cod_curso"]] = $this->autorizacao;
@@ -1112,10 +1114,10 @@ if(!$this->isEnderecoExterno){
 						$obj_curso_det = $obj_curso->detalhe();
 						$nm_curso = $obj_curso_det["nm_curso"];
 						$nm_autorizacao = $this->escola_curso_autorizacao[$curso];
-						$this->campoTextoInv( "ref_cod_curso_{$curso}", "", $nm_curso, 30, 255, false, false, true );
+						$this->campoTextoInv( "ref_cod_curso_{$curso}", "", $nm_curso, 50, 255, false, false, true );
 						$this->campoTextoInv( "autorizacao_{$curso}", "", $nm_autorizacao, 20, 255, false, false, false, "", "<a href='#' onclick=\"getElementById('excluir_curso').value = '{$curso}'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bola_xis.gif' title='Excluir' border=0></a>" );
 						$aux[$curso] = $curso;
-						$aux_autorizacao[$curso] = $nm_autorizacao;						
+						$aux_autorizacao[$curso] = $nm_autorizacao;
 					}
 
 				}
@@ -1171,7 +1173,7 @@ if(!$this->isEnderecoExterno){
 				$this->campoTexto( "autorizacao", "Autorização", "", 30, 255, false );
 			}
 			$this->campoOculto( "incluir_curso", "" );
-			$this->campoQuebra();			
+			$this->campoQuebra();
 
 			$resources = array(1 => Portabilis_String_Utils::toLatin1('Próprio'),
 			                   2 => 'Alugado',
@@ -1181,23 +1183,23 @@ if(!$this->isEnderecoExterno){
 	    $this->inputsHelper()->select('condicao', $options);
 
 			$resources = array(0  => 'Selecione',
-			                   7  => Portabilis_String_Utils::toLatin1('Prédio escolar'),
-			                   8  => Portabilis_String_Utils::toLatin1('Templo/Igreja'),
-			                   9  => Portabilis_String_Utils::toLatin1('Sala de empresa'),
-			                   10 => Portabilis_String_Utils::toLatin1('Casa do professor'),
-			                   11 => Portabilis_String_Utils::toLatin1('Salas em outra escola'),
-			                   12 => Portabilis_String_Utils::toLatin1('Galpão/ Rancho/ Paiol/ Barracão'),
-			                   13 => Portabilis_String_Utils::toLatin1('Unidade de internação Socioeducativa'),
-			                   14 => Portabilis_String_Utils::toLatin1('Unidade prisional'),
-			                   15 => 'Outros');
+			                   3  => Portabilis_String_Utils::toLatin1('Prédio escolar'),
+			                   4  => Portabilis_String_Utils::toLatin1('Templo/Igreja'),
+			                   5  => Portabilis_String_Utils::toLatin1('Sala de empresa'),
+			                   6 => Portabilis_String_Utils::toLatin1('Casa do professor'),
+			                   7 => Portabilis_String_Utils::toLatin1('Salas em outra escola'),
+			                   8 => Portabilis_String_Utils::toLatin1('Galpão/ Rancho/ Paiol/ Barracão'),
+			                   9 => Portabilis_String_Utils::toLatin1('Unidade de internação Socioeducativa'),
+			                   10 => Portabilis_String_Utils::toLatin1('Unidade prisional'),
+			                   11 => 'Outros');
 
   		$options = array('label' => Portabilis_String_Utils::toLatin1('Local de funcionamento'), 'resources' => $resources, 'value' => $this->local_funcionamento, 'size' => 70, 'required' => false);
-	    $this->inputsHelper()->select('local_funcionamento', $options);		    
+	    $this->inputsHelper()->select('local_funcionamento', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('Código de escola que compartilha o prédio'), 
-	    	'label_hint' => Portabilis_String_Utils::toLatin1('Caso compartilhe o prédio escolar com outra escola preencha com o código INEP'), 
-	    	'resources' => $resources, 'value' => $this->codigo_inep_escola_compartilhada, 'required' => false, 
-	    	'size' => 8, 'max_length' => 8, 'placeholder' => '');		    
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Código de escola que compartilha o prédio'),
+	    	'label_hint' => Portabilis_String_Utils::toLatin1('Caso compartilhe o prédio escolar com outra escola preencha com o código INEP'),
+	    	'resources' => $resources, 'value' => $this->codigo_inep_escola_compartilhada, 'required' => false,
+	    	'size' => 8, 'max_length' => 8, 'placeholder' => '');
 	    $this->inputsHelper()->integer('codigo_inep_escola_compartilhada', $options);
 
 			$resources = array( null => 'Selecione',
@@ -1481,14 +1483,14 @@ if(!$this->isEnderecoExterno){
 	    $this->inputsHelper()->checkbox('acesso_internet', $options);
 
 	    $options = array('label' => Portabilis_String_Utils::toLatin1('Possui banda larga'), 'value' => $this->banda_larga);
-	    $this->inputsHelper()->checkbox('banda_larga', $options);	    	    	    	    	   
+	    $this->inputsHelper()->checkbox('banda_larga', $options);
 
 			$resources = array( 0 => Portabilis_String_Utils::toLatin1('Não oferece'),
 			                    1    => Portabilis_String_Utils::toLatin1('Não exclusivamente'),
 			                    2    => 'Exclusivamente');
 
   		$options = array('label' => Portabilis_String_Utils::toLatin1('Atendimento educacional especializado - AEE'), 'resources' => $resources, 'value' => $this->atendimento_aee, 'required' => false, 'size' => 70,);
-	    $this->inputsHelper()->select('atendimento_aee', $options);		
+	    $this->inputsHelper()->select('atendimento_aee', $options);
 
 	    $resources = array( 0 => Portabilis_String_Utils::toLatin1('Não oferece'),
 		                    1    => Portabilis_String_Utils::toLatin1('Não exclusivamente'),
@@ -1509,7 +1511,7 @@ if(!$this->isEnderecoExterno){
 		                    7 => Portabilis_String_Utils::toLatin1('Não se aplica'));
 
   		$options = array('label' => Portabilis_String_Utils::toLatin1('Localização diferenciada da escola'), 'resources' => $resources, 'value' => $this->localizacao_diferenciada, 'required' => false, 'size' => 70,);
-	    $this->inputsHelper()->select('localizacao_diferenciada', $options);	
+	    $this->inputsHelper()->select('localizacao_diferenciada', $options);
 
 	    $options = array('label' => Portabilis_String_Utils::toLatin1('Materiais didáticos específicos para atendimento à diversidade sócio-cultural - Não utiliza'), 'value' => $this->didatico_nao_utiliza);
 	    $this->inputsHelper()->checkbox('didatico_nao_utiliza', $options);
@@ -1521,7 +1523,7 @@ if(!$this->isEnderecoExterno){
 	    $this->inputsHelper()->checkbox('didatico_indigena', $options);
 
 	    $options = array('label' => Portabilis_String_Utils::toLatin1('Educação indígena'), 'value' => $this->educacao_indigena);
-	    $this->inputsHelper()->checkbox('educacao_indigena', $options);			
+	    $this->inputsHelper()->checkbox('educacao_indigena', $options);
 
 	    $resources = array( 1    => Portabilis_String_Utils::toLatin1('Língua Portuguesa'),
 	    					2    => Portabilis_String_Utils::toLatin1('Línguia Indígena'));
@@ -1562,6 +1564,7 @@ if(!$this->isEnderecoExterno){
 		$obj_permissoes->permissao_cadastra( 561, $this->pessoa_logada, 3, "educar_escola_lst.php" );
 
     $this->bloquear_lancamento_diario_anos_letivos_encerrados = is_null($this->bloquear_lancamento_diario_anos_letivos_encerrados) ? 0 : 1;
+    $this->utiliza_regra_diferenciada = !is_null($this->utiliza_regra_diferenciada);
 
 		if ($this->com_cnpj)
 		{
@@ -1637,20 +1640,20 @@ if(!$this->isEnderecoExterno){
 					$obj->dependencia_dispensa = $this->dependencia_dispensa == 'on' ? 1 : 0;
 					$obj->dependencia_aumoxarifado = $this->dependencia_aumoxarifado == 'on' ? 1 : 0;
 					$obj->dependencia_auditorio = $this->dependencia_auditorio == 'on' ? 1 : 0;
-					$obj->dependencia_patio_coberto = $this->dependencia_patio_coberto == 'on' ? 1 : 0;					
-					$obj->dependencia_patio_descoberto = $this->dependencia_patio_descoberto == 'on' ? 1 : 0;					
-					$obj->dependencia_alojamento_aluno = $this->dependencia_alojamento_aluno == 'on' ? 1 : 0;					
-					$obj->dependencia_alojamento_professor = $this->dependencia_alojamento_professor == 'on' ? 1 : 0;					
-					$obj->dependencia_area_verde = $this->dependencia_area_verde == 'on' ? 1 : 0;					
-					$obj->dependencia_lavanderia = $this->dependencia_lavanderia == 'on' ? 1 : 0;					
+					$obj->dependencia_patio_coberto = $this->dependencia_patio_coberto == 'on' ? 1 : 0;
+					$obj->dependencia_patio_descoberto = $this->dependencia_patio_descoberto == 'on' ? 1 : 0;
+					$obj->dependencia_alojamento_aluno = $this->dependencia_alojamento_aluno == 'on' ? 1 : 0;
+					$obj->dependencia_alojamento_professor = $this->dependencia_alojamento_professor == 'on' ? 1 : 0;
+					$obj->dependencia_area_verde = $this->dependencia_area_verde == 'on' ? 1 : 0;
+					$obj->dependencia_lavanderia = $this->dependencia_lavanderia == 'on' ? 1 : 0;
 					$obj->dependencia_unidade_climatizada = $this->dependencia_unidade_climatizada;
 					$obj->dependencia_quantidade_ambiente_climatizado = $this->dependencia_quantidade_ambiente_climatizado;
-					$obj->dependencia_nenhuma_relacionada = $this->dependencia_nenhuma_relacionada == 'on' ? 1 : 0;					
+					$obj->dependencia_nenhuma_relacionada = $this->dependencia_nenhuma_relacionada == 'on' ? 1 : 0;
 					$obj->dependencia_numero_salas_utilizadas = $this->dependencia_numero_salas_utilizadas;
 					$obj->dependencia_numero_salas_existente = $this->dependencia_numero_salas_existente;
 					$obj->porte_quadra_descoberta = $this->porte_quadra_descoberta;
 					$obj->porte_quadra_coberta = $this->porte_quadra_coberta;
-					$obj->tipo_cobertura_patio = $this->tipo_cobertura_patio;										
+					$obj->tipo_cobertura_patio = $this->tipo_cobertura_patio;
 					$obj->total_funcionario = $this->total_funcionario;
 					$obj->atendimento_aee = $this->atendimento_aee;
 					$obj->atividade_complementar = $this->atividade_complementar;
@@ -1731,8 +1734,8 @@ if(!$this->isEnderecoExterno){
 						}
 
 						//-----------------------CADASTRA CURSO------------------------//
-						$this->escola_curso = unserialize( urldecode( $this->escola_curso ) );		
-						$this->escola_curso_autorizacao = unserialize( urldecode($this->escola_curso_autorizacao) );			
+						$this->escola_curso = unserialize( urldecode( $this->escola_curso ) );
+						$this->escola_curso_autorizacao = unserialize( urldecode($this->escola_curso_autorizacao) );
 
 						if ($this->escola_curso)
 						{
@@ -1778,10 +1781,10 @@ if(!$this->isEnderecoExterno){
 		}
 		else if( $this->sem_cnpj )
 		{
-			$obj = new clsPmieducarEscola( null, $this->pessoa_logada, null, $this->ref_cod_instituicao, $this->ref_cod_escola_localizacao, $this->ref_cod_escola_rede_ensino, null, $this->sigla, null, null, 1, null, $this->bloquear_lancamento_diario_anos_letivos_encerrados );
+			$obj = new clsPmieducarEscola( null, $this->pessoa_logada, null, $this->ref_cod_instituicao, $this->ref_cod_escola_localizacao, $this->ref_cod_escola_rede_ensino, null, $this->sigla, null, null, 1, null, $this->bloquear_lancamento_diario_anos_letivos_encerrados, $this->utiliza_regra_diferenciada );
 			$obj->dependencia_administrativa = $this->dependencia_administrativa;
 			$obj->latitude = $this->latitude;
-			$obj->longitude = $this->longitude;			
+			$obj->longitude = $this->longitude;
 			$obj->regulamentacao = $this->regulamentacao;
 			$obj->situacao_funcionamento = $this->situacao_funcionamento;
 			$obj->acesso = $this->acesso;
@@ -1794,7 +1797,7 @@ if(!$this->isEnderecoExterno){
 			$obj->area_terreno_total = $this->area_terreno_total;
 			$obj->area_construida = $this->area_construida;
 			$obj->area_disponivel = $this->area_disponivel;
-			$obj->num_pavimentos = $this->num_pavimentos;		
+			$obj->num_pavimentos = $this->num_pavimentos;
 			$obj->tipo_piso = $this->tipo_piso;
 			$obj->medidor_energia = $this->medidor_energia;
 			$obj->agua_consumida = $this->agua_consumida;
@@ -1802,7 +1805,7 @@ if(!$this->isEnderecoExterno){
 			$obj->agua_poco_artesiano = $this->agua_poco_artesiano == 'on' ? 1 : 0;
 			$obj->agua_cacimba_cisterna_poco = $this->agua_cacimba_cisterna_poco == 'on' ? 1 : 0;
 			$obj->agua_fonte_rio = $this->agua_fonte_rio == 'on' ? 1 : 0;
-			$obj->agua_inexistente = $this->agua_inexistente == 'on' ? 1 : 0;	
+			$obj->agua_inexistente = $this->agua_inexistente == 'on' ? 1 : 0;
 			$obj->energia_rede_publica = $this->energia_rede_publica == 'on' ? 1 : 0;
 			$obj->energia_gerador = $this->energia_gerador == 'on' ? 1 : 0;
 			$obj->energia_outros = $this->energia_outros == 'on' ? 1 : 0;
@@ -1840,14 +1843,14 @@ if(!$this->isEnderecoExterno){
 			$obj->dependencia_aumoxarifado = $this->dependencia_aumoxarifado == 'on' ? 1 : 0;
 			$obj->dependencia_auditorio = $this->dependencia_auditorio == 'on' ? 1 : 0;
 			$obj->dependencia_patio_coberto = $this->dependencia_patio_coberto == 'on' ? 1 : 0;
-			$obj->dependencia_patio_descoberto = $this->dependencia_patio_descoberto == 'on' ? 1 : 0;					
-			$obj->dependencia_alojamento_aluno = $this->dependencia_alojamento_aluno == 'on' ? 1 : 0;					
-			$obj->dependencia_alojamento_professor = $this->dependencia_alojamento_professor == 'on' ? 1 : 0;					
-			$obj->dependencia_area_verde = $this->dependencia_area_verde == 'on' ? 1 : 0;					
-			$obj->dependencia_lavanderia = $this->dependencia_lavanderia == 'on' ? 1 : 0;					
+			$obj->dependencia_patio_descoberto = $this->dependencia_patio_descoberto == 'on' ? 1 : 0;
+			$obj->dependencia_alojamento_aluno = $this->dependencia_alojamento_aluno == 'on' ? 1 : 0;
+			$obj->dependencia_alojamento_professor = $this->dependencia_alojamento_professor == 'on' ? 1 : 0;
+			$obj->dependencia_area_verde = $this->dependencia_area_verde == 'on' ? 1 : 0;
+			$obj->dependencia_lavanderia = $this->dependencia_lavanderia == 'on' ? 1 : 0;
 			$obj->dependencia_unidade_climatizada = $this->dependencia_unidade_climatizada;
 			$obj->dependencia_quantidade_ambiente_climatizado = $this->dependencia_quantidade_ambiente_climatizado;
-			$obj->dependencia_nenhuma_relacionada = $this->dependencia_nenhuma_relacionada == 'on' ? 1 : 0;					
+			$obj->dependencia_nenhuma_relacionada = $this->dependencia_nenhuma_relacionada == 'on' ? 1 : 0;
 			$obj->dependencia_numero_salas_utilizadas = $this->dependencia_numero_salas_utilizadas;
 			$obj->dependencia_numero_salas_existente = $this->dependencia_numero_salas_existente;
 			$obj->porte_quadra_descoberta = $this->porte_quadra_descoberta;
@@ -1883,7 +1886,7 @@ if(!$this->isEnderecoExterno){
 			$obj->computadores_alunos = $this->computadores_alunos;
 			$obj->acesso_internet = $this->acesso_internet == 'on' ? 1 : 0;
 			$obj->banda_larga = $this->banda_larga == 'on' ? 1 : 0;
-			$obj->ato_criacao = $this->ato_criacao;			
+			$obj->ato_criacao = $this->ato_criacao;
 			$cadastrou = $obj->cadastra();
 
 
@@ -1897,7 +1900,7 @@ if(!$this->isEnderecoExterno){
 					//-----------------------CADASTRA CURSO------------------------//
 					$this->escola_curso = unserialize( urldecode( $this->escola_curso ) );
 					$this->escola_curso_autorizacao = unserialize( urldecode($this->escola_curso_autorizacao) );
-					
+
 					if ($this->escola_curso)
 					{
 						foreach ( $this->escola_curso AS $campo )
@@ -1946,13 +1949,14 @@ if(!$this->isEnderecoExterno){
 		$obj_permissoes->permissao_cadastra( 561, $this->pessoa_logada, 7, "educar_escola_lst.php" );
 
     $this->bloquear_lancamento_diario_anos_letivos_encerrados = is_null($this->bloquear_lancamento_diario_anos_letivos_encerrados) ? 0 : 1;
+    $this->utiliza_regra_diferenciada = !is_null($this->utiliza_regra_diferenciada);
 
 //
 //		echo "<br>cep: ".$this->cep;
 //		echo "<br>cep_: ".$this->cep_;die;
 		if ($this->cod_escola)
 		{
-			$obj = new clsPmieducarEscola($this->cod_escola, null, $this->pessoa_logada, $this->ref_cod_instituicao, $this->ref_cod_escola_localizacao, $this->ref_cod_escola_rede_ensino, $this->ref_idpes, $this->sigla, null, null, 1, $this->bloquear_lancamento_diario_anos_letivos_encerrados);
+			$obj = new clsPmieducarEscola($this->cod_escola, null, $this->pessoa_logada, $this->ref_cod_instituicao, $this->ref_cod_escola_localizacao, $this->ref_cod_escola_rede_ensino, $this->ref_idpes, $this->sigla, null, null, 1, $this->bloquear_lancamento_diario_anos_letivos_encerrados, $this->utiliza_regra_diferenciada);
 			$obj->dependencia_administrativa = $this->dependencia_administrativa;
 			$obj->latitude = $this->latitude;
 			$obj->longitude = $this->longitude;
@@ -1972,7 +1976,7 @@ if(!$this->isEnderecoExterno){
 			$obj->area_terreno_total = $this->area_terreno_total;
 			$obj->area_construida = $this->area_construida;
 			$obj->area_disponivel = $this->area_disponivel;
-			$obj->num_pavimentos = $this->num_pavimentos;			
+			$obj->num_pavimentos = $this->num_pavimentos;
 			$obj->tipo_piso = $this->tipo_piso;
 			$obj->medidor_energia = $this->medidor_energia;
 			$obj->agua_consumida = $this->agua_consumida;
@@ -1993,118 +1997,7 @@ if(!$this->isEnderecoExterno){
 			$obj->lixo_joga_outra_area = $this->lixo_joga_outra_area == 'on' ? 1 : 0;
 			$obj->lixo_recicla = $this->lixo_recicla == 'on' ? 1 : 0;
 			$obj->lixo_enterra = $this->lixo_enterra == 'on' ? 1 : 0;
-			$obj->lixo_outros = $this->lixo_outros == 'on' ? 1 : 0;	
-			$obj->dependencia_sala_diretoria = $this->dependencia_sala_diretoria == 'on' ? 1 : 0;
-			$obj->dependencia_sala_professores = $this->dependencia_sala_professores == 'on' ? 1 : 0;
-			$obj->dependencia_sala_secretaria = $this->dependencia_sala_secretaria == 'on' ? 1 : 0;
-			$obj->dependencia_laboratorio_informatica = $this->dependencia_laboratorio_informatica == 'on' ? 1 : 0;
-			$obj->dependencia_laboratorio_ciencias = $this->dependencia_laboratorio_ciencias == 'on' ? 1 : 0;
-			$obj->dependencia_sala_aee = $this->dependencia_sala_aee == 'on' ? 1 : 0;
-			$obj->dependencia_quadra_coberta = $this->dependencia_quadra_coberta == 'on' ? 1 : 0;
-			$obj->dependencia_quadra_descoberta = $this->dependencia_quadra_descoberta == 'on' ? 1 : 0;
-			$obj->dependencia_cozinha = $this->dependencia_cozinha == 'on' ? 1 : 0;
-			$obj->dependencia_biblioteca = $this->dependencia_biblioteca == 'on' ? 1 : 0;
-			$obj->dependencia_sala_leitura = $this->dependencia_sala_leitura == 'on' ? 1 : 0;
-			$obj->dependencia_parque_infantil = $this->dependencia_parque_infantil == 'on' ? 1 : 0;
-			$obj->dependencia_bercario = $this->dependencia_bercario == 'on' ? 1 : 0;
-			$obj->dependencia_banheiro_fora = $this->dependencia_banheiro_fora == 'on' ? 1 : 0;
-			$obj->dependencia_banheiro_dentro = $this->dependencia_banheiro_dentro == 'on' ? 1 : 0;
-			$obj->dependencia_banheiro_infantil = $this->dependencia_banheiro_infantil == 'on' ? 1 : 0;
-			$obj->dependencia_banheiro_deficiente = $this->dependencia_banheiro_deficiente == 'on' ? 1 : 0;
-			$obj->dependencia_banheiro_chuveiro = $this->dependencia_banheiro_chuveiro == 'on' ? 1 : 0;
-			$obj->dependencia_vias_deficiente = $this->dependencia_vias_deficiente == 'on' ? 1 : 0;
-			$obj->dependencia_refeitorio = $this->dependencia_refeitorio == 'on' ? 1 : 0;
-			$obj->dependencia_dispensa = $this->dependencia_dispensa == 'on' ? 1 : 0;
-			$obj->dependencia_aumoxarifado = $this->dependencia_aumoxarifado == 'on' ? 1 : 0;
-			$obj->dependencia_auditorio = $this->dependencia_auditorio == 'on' ? 1 : 0;
-			$obj->dependencia_patio_coberto = $this->dependencia_patio_coberto == 'on' ? 1 : 0;	
-			$obj->dependencia_patio_descoberto = $this->dependencia_patio_descoberto == 'on' ? 1 : 0;					
-			$obj->dependencia_alojamento_aluno = $this->dependencia_alojamento_aluno == 'on' ? 1 : 0;					
-			$obj->dependencia_alojamento_professor = $this->dependencia_alojamento_professor == 'on' ? 1 : 0;					
-			$obj->dependencia_area_verde = $this->dependencia_area_verde == 'on' ? 1 : 0;					
-			$obj->dependencia_lavanderia = $this->dependencia_lavanderia == 'on' ? 1 : 0;					
-			$obj->dependencia_unidade_climatizada = $this->dependencia_unidade_climatizada;
-			$obj->dependencia_quantidade_ambiente_climatizado = $this->dependencia_quantidade_ambiente_climatizado;
-			$obj->dependencia_nenhuma_relacionada = $this->dependencia_nenhuma_relacionada == 'on' ? 1 : 0;					
-			$obj->dependencia_numero_salas_utilizadas = $this->dependencia_numero_salas_utilizadas;
-			$obj->dependencia_numero_salas_existente = $this->dependencia_numero_salas_existente;
-			$obj->porte_quadra_descoberta = $this->porte_quadra_descoberta;
-			$obj->porte_quadra_coberta = $this->porte_quadra_coberta;
-			$obj->tipo_cobertura_patio = $this->tipo_cobertura_patio;	
-			$obj->total_funcionario = $this->total_funcionario;
-			$obj->atendimento_aee = $this->atendimento_aee;
-			$obj->atividade_complementar = $this->atividade_complementar;
-			$obj->fundamental_ciclo = $this->fundamental_ciclo == 'on' ? 1 : 0;
-			$obj->localizacao_diferenciada = $this->localizacao_diferenciada;
-			$obj->didatico_nao_utiliza = $this->didatico_nao_utiliza == 'on' ? 1 : 0;
-			$obj->didatico_quilombola = $this->didatico_quilombola == 'on' ? 1 : 0;
-			$obj->didatico_indigena = $this->didatico_indigena == 'on' ? 1 : 0;
-			$obj->educacao_indigena = $this->educacao_indigena == 'on' ? 1 : 0;
-			$obj->lingua_ministrada = $this->lingua_ministrada;
-			$obj->espaco_brasil_aprendizado = $this->espaco_brasil_aprendizado == 'on' ? 1 : 0;
-			$obj->abre_final_semana = $this->abre_final_semana == 'on' ? 1 : 0;
-			$obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
-			$obj->proposta_pedagogica = $this->proposta_pedagogica == 'on' ? 1 : 0;
-			$obj->televisoes = $this->televisoes;
-			$obj->videocassetes = $this->videocassetes;
-			$obj->dvds = $this->dvds;
-			$obj->antenas_parabolicas = $this->antenas_parabolicas;
-			$obj->copiadoras = $this->copiadoras;
-			$obj->retroprojetores = $this->retroprojetores;
-			$obj->impressoras = $this->impressoras;
-			$obj->aparelhos_de_som = $this->aparelhos_de_som;
-			$obj->projetores_digitais = $this->projetores_digitais;
-			$obj->faxs = $this->faxs;
-			$obj->maquinas_fotograficas = $this->maquinas_fotograficas;
-			$obj->computadores = $this->computadores;
-			$obj->computadores_administrativo = $this->computadores_administrativo;
-			$obj->computadores_alunos = $this->computadores_alunos;
-			$obj->acesso_internet = $this->acesso_internet == 'on' ? 1 : 0;
-			$obj->banda_larga = $this->banda_larga == 'on' ? 1 : 0;
-			$obj->ato_criacao = $this->ato_criacao;			
-			$editou = $obj->edita();
-
-		}
-		else
-		{
-			$obj = new clsPmieducarEscola(null, $this->pessoa_logada, null, $this->ref_cod_instituicao, $this->ref_cod_escola_localizacao, $this->ref_cod_escola_rede_ensino, $this->ref_idpes, $this->sigla, null, null, 1, $this->bloquear_lancamento_diario_anos_letivos_encerrados);
-			$obj->situacao_funcionamento = $this->situacao_funcionamento;
-			$obj->dependencia_administrativa = $this->dependencia_administrativa;
-			$obj->latitude = $this->latitude;
-			$obj->longitude = $this->longitude;			
-			$obj->regulamentacao = $this->regulamentacao;
-			$obj->acesso = $this->acesso;
-			$obj->ref_idpes_gestor = $this->gestor_id;
-			$obj->cargo_gestor = $this->cargo_gestor;
-			$obj->local_funcionamento = $this->local_funcionamento;
-			$obj->condicao = $this->condicao;
-			$obj->codigo_inep_escola_compartilhada = $this->codigo_inep_escola_compartilhada;
-			$obj->decreto_criacao = $this->decreto_criacao;
-			$obj->area_terreno_total = $this->area_terreno_total;
-			$obj->area_construida = $this->area_construida;
-			$obj->area_disponivel = $this->area_disponivel;
-			$obj->num_pavimentos = $this->num_pavimentos;	
-			$obj->tipo_piso = $this->tipo_piso;
-			$obj->medidor_energia = $this->medidor_energia;
-			$obj->agua_consumida = $this->agua_consumida;
-			$obj->agua_rede_publica = $this->agua_rede_publica == 'on' ? 1 : 0;
-			$obj->agua_poco_artesiano = $this->agua_poco_artesiano == 'on' ? 1 : 0;
-			$obj->agua_cacimba_cisterna_poco = $this->agua_cacimba_cisterna_poco == 'on' ? 1 : 0;
-			$obj->agua_fonte_rio = $this->agua_fonte_rio == 'on' ? 1 : 0;
-			$obj->agua_inexistente = $this->agua_inexistente == 'on' ? 1 : 0;		
-			$obj->energia_rede_publica = $this->energia_rede_publica == 'on' ? 1 : 0;
-			$obj->energia_gerador = $this->energia_gerador == 'on' ? 1 : 0;
-			$obj->energia_outros = $this->energia_outros == 'on' ? 1 : 0;
-			$obj->energia_inexistente = $this->energia_inexistente == 'on' ? 1 : 0;
-			$obj->esgoto_rede_publica = $this->esgoto_rede_publica == 'on' ? 1 : 0;
-			$obj->esgoto_fossa = $this->esgoto_fossa == 'on' ? 1 : 0;
-			$obj->esgoto_inexistente = $this->esgoto_inexistente == 'on' ? 1 : 0;
-			$obj->lixo_coleta_periodica = $this->lixo_coleta_periodica == 'on' ? 1 : 0;
-			$obj->lixo_queima = $this->lixo_queima == 'on' ? 1 : 0;
-			$obj->lixo_joga_outra_area = $this->lixo_joga_outra_area == 'on' ? 1 : 0;
-			$obj->lixo_recicla = $this->lixo_recicla == 'on' ? 1 : 0;
-			$obj->lixo_enterra = $this->lixo_enterra == 'on' ? 1 : 0;
-			$obj->lixo_outros = $this->lixo_outros == 'on' ? 1 : 0;		
+			$obj->lixo_outros = $this->lixo_outros == 'on' ? 1 : 0;
 			$obj->dependencia_sala_diretoria = $this->dependencia_sala_diretoria == 'on' ? 1 : 0;
 			$obj->dependencia_sala_professores = $this->dependencia_sala_professores == 'on' ? 1 : 0;
 			$obj->dependencia_sala_secretaria = $this->dependencia_sala_secretaria == 'on' ? 1 : 0;
@@ -2129,14 +2022,14 @@ if(!$this->isEnderecoExterno){
 			$obj->dependencia_aumoxarifado = $this->dependencia_aumoxarifado == 'on' ? 1 : 0;
 			$obj->dependencia_auditorio = $this->dependencia_auditorio == 'on' ? 1 : 0;
 			$obj->dependencia_patio_coberto = $this->dependencia_patio_coberto == 'on' ? 1 : 0;
-			$obj->dependencia_patio_descoberto = $this->dependencia_patio_descoberto == 'on' ? 1 : 0;					
-			$obj->dependencia_alojamento_aluno = $this->dependencia_alojamento_aluno == 'on' ? 1 : 0;					
-			$obj->dependencia_alojamento_professor = $this->dependencia_alojamento_professor == 'on' ? 1 : 0;					
-			$obj->dependencia_area_verde = $this->dependencia_area_verde == 'on' ? 1 : 0;					
-			$obj->dependencia_lavanderia = $this->dependencia_lavanderia == 'on' ? 1 : 0;					
+			$obj->dependencia_patio_descoberto = $this->dependencia_patio_descoberto == 'on' ? 1 : 0;
+			$obj->dependencia_alojamento_aluno = $this->dependencia_alojamento_aluno == 'on' ? 1 : 0;
+			$obj->dependencia_alojamento_professor = $this->dependencia_alojamento_professor == 'on' ? 1 : 0;
+			$obj->dependencia_area_verde = $this->dependencia_area_verde == 'on' ? 1 : 0;
+			$obj->dependencia_lavanderia = $this->dependencia_lavanderia == 'on' ? 1 : 0;
 			$obj->dependencia_unidade_climatizada = $this->dependencia_unidade_climatizada;
 			$obj->dependencia_quantidade_ambiente_climatizado = $this->dependencia_quantidade_ambiente_climatizado;
-			$obj->dependencia_nenhuma_relacionada = $this->dependencia_nenhuma_relacionada == 'on' ? 1 : 0;					
+			$obj->dependencia_nenhuma_relacionada = $this->dependencia_nenhuma_relacionada == 'on' ? 1 : 0;
 			$obj->dependencia_numero_salas_utilizadas = $this->dependencia_numero_salas_utilizadas;
 			$obj->dependencia_numero_salas_existente = $this->dependencia_numero_salas_existente;
 			$obj->porte_quadra_descoberta = $this->porte_quadra_descoberta;
@@ -2172,7 +2065,118 @@ if(!$this->isEnderecoExterno){
 			$obj->computadores_alunos = $this->computadores_alunos;
 			$obj->acesso_internet = $this->acesso_internet == 'on' ? 1 : 0;
 			$obj->banda_larga = $this->banda_larga == 'on' ? 1 : 0;
-			$obj->ato_criacao = $this->ato_criacao;			
+			$obj->ato_criacao = $this->ato_criacao;
+			$editou = $obj->edita();
+
+		}
+		else
+		{
+			$obj = new clsPmieducarEscola(null, $this->pessoa_logada, null, $this->ref_cod_instituicao, $this->ref_cod_escola_localizacao, $this->ref_cod_escola_rede_ensino, $this->ref_idpes, $this->sigla, null, null, 1, $this->bloquear_lancamento_diario_anos_letivos_encerrados, $this->utiliza_regra_diferenciada);
+			$obj->situacao_funcionamento = $this->situacao_funcionamento;
+			$obj->dependencia_administrativa = $this->dependencia_administrativa;
+			$obj->latitude = $this->latitude;
+			$obj->longitude = $this->longitude;
+			$obj->regulamentacao = $this->regulamentacao;
+			$obj->acesso = $this->acesso;
+			$obj->ref_idpes_gestor = $this->gestor_id;
+			$obj->cargo_gestor = $this->cargo_gestor;
+			$obj->local_funcionamento = $this->local_funcionamento;
+			$obj->condicao = $this->condicao;
+			$obj->codigo_inep_escola_compartilhada = $this->codigo_inep_escola_compartilhada;
+			$obj->decreto_criacao = $this->decreto_criacao;
+			$obj->area_terreno_total = $this->area_terreno_total;
+			$obj->area_construida = $this->area_construida;
+			$obj->area_disponivel = $this->area_disponivel;
+			$obj->num_pavimentos = $this->num_pavimentos;
+			$obj->tipo_piso = $this->tipo_piso;
+			$obj->medidor_energia = $this->medidor_energia;
+			$obj->agua_consumida = $this->agua_consumida;
+			$obj->agua_rede_publica = $this->agua_rede_publica == 'on' ? 1 : 0;
+			$obj->agua_poco_artesiano = $this->agua_poco_artesiano == 'on' ? 1 : 0;
+			$obj->agua_cacimba_cisterna_poco = $this->agua_cacimba_cisterna_poco == 'on' ? 1 : 0;
+			$obj->agua_fonte_rio = $this->agua_fonte_rio == 'on' ? 1 : 0;
+			$obj->agua_inexistente = $this->agua_inexistente == 'on' ? 1 : 0;
+			$obj->energia_rede_publica = $this->energia_rede_publica == 'on' ? 1 : 0;
+			$obj->energia_gerador = $this->energia_gerador == 'on' ? 1 : 0;
+			$obj->energia_outros = $this->energia_outros == 'on' ? 1 : 0;
+			$obj->energia_inexistente = $this->energia_inexistente == 'on' ? 1 : 0;
+			$obj->esgoto_rede_publica = $this->esgoto_rede_publica == 'on' ? 1 : 0;
+			$obj->esgoto_fossa = $this->esgoto_fossa == 'on' ? 1 : 0;
+			$obj->esgoto_inexistente = $this->esgoto_inexistente == 'on' ? 1 : 0;
+			$obj->lixo_coleta_periodica = $this->lixo_coleta_periodica == 'on' ? 1 : 0;
+			$obj->lixo_queima = $this->lixo_queima == 'on' ? 1 : 0;
+			$obj->lixo_joga_outra_area = $this->lixo_joga_outra_area == 'on' ? 1 : 0;
+			$obj->lixo_recicla = $this->lixo_recicla == 'on' ? 1 : 0;
+			$obj->lixo_enterra = $this->lixo_enterra == 'on' ? 1 : 0;
+			$obj->lixo_outros = $this->lixo_outros == 'on' ? 1 : 0;
+			$obj->dependencia_sala_diretoria = $this->dependencia_sala_diretoria == 'on' ? 1 : 0;
+			$obj->dependencia_sala_professores = $this->dependencia_sala_professores == 'on' ? 1 : 0;
+			$obj->dependencia_sala_secretaria = $this->dependencia_sala_secretaria == 'on' ? 1 : 0;
+			$obj->dependencia_laboratorio_informatica = $this->dependencia_laboratorio_informatica == 'on' ? 1 : 0;
+			$obj->dependencia_laboratorio_ciencias = $this->dependencia_laboratorio_ciencias == 'on' ? 1 : 0;
+			$obj->dependencia_sala_aee = $this->dependencia_sala_aee == 'on' ? 1 : 0;
+			$obj->dependencia_quadra_coberta = $this->dependencia_quadra_coberta == 'on' ? 1 : 0;
+			$obj->dependencia_quadra_descoberta = $this->dependencia_quadra_descoberta == 'on' ? 1 : 0;
+			$obj->dependencia_cozinha = $this->dependencia_cozinha == 'on' ? 1 : 0;
+			$obj->dependencia_biblioteca = $this->dependencia_biblioteca == 'on' ? 1 : 0;
+			$obj->dependencia_sala_leitura = $this->dependencia_sala_leitura == 'on' ? 1 : 0;
+			$obj->dependencia_parque_infantil = $this->dependencia_parque_infantil == 'on' ? 1 : 0;
+			$obj->dependencia_bercario = $this->dependencia_bercario == 'on' ? 1 : 0;
+			$obj->dependencia_banheiro_fora = $this->dependencia_banheiro_fora == 'on' ? 1 : 0;
+			$obj->dependencia_banheiro_dentro = $this->dependencia_banheiro_dentro == 'on' ? 1 : 0;
+			$obj->dependencia_banheiro_infantil = $this->dependencia_banheiro_infantil == 'on' ? 1 : 0;
+			$obj->dependencia_banheiro_deficiente = $this->dependencia_banheiro_deficiente == 'on' ? 1 : 0;
+			$obj->dependencia_banheiro_chuveiro = $this->dependencia_banheiro_chuveiro == 'on' ? 1 : 0;
+			$obj->dependencia_vias_deficiente = $this->dependencia_vias_deficiente == 'on' ? 1 : 0;
+			$obj->dependencia_refeitorio = $this->dependencia_refeitorio == 'on' ? 1 : 0;
+			$obj->dependencia_dispensa = $this->dependencia_dispensa == 'on' ? 1 : 0;
+			$obj->dependencia_aumoxarifado = $this->dependencia_aumoxarifado == 'on' ? 1 : 0;
+			$obj->dependencia_auditorio = $this->dependencia_auditorio == 'on' ? 1 : 0;
+			$obj->dependencia_patio_coberto = $this->dependencia_patio_coberto == 'on' ? 1 : 0;
+			$obj->dependencia_patio_descoberto = $this->dependencia_patio_descoberto == 'on' ? 1 : 0;
+			$obj->dependencia_alojamento_aluno = $this->dependencia_alojamento_aluno == 'on' ? 1 : 0;
+			$obj->dependencia_alojamento_professor = $this->dependencia_alojamento_professor == 'on' ? 1 : 0;
+			$obj->dependencia_area_verde = $this->dependencia_area_verde == 'on' ? 1 : 0;
+			$obj->dependencia_lavanderia = $this->dependencia_lavanderia == 'on' ? 1 : 0;
+			$obj->dependencia_unidade_climatizada = $this->dependencia_unidade_climatizada;
+			$obj->dependencia_quantidade_ambiente_climatizado = $this->dependencia_quantidade_ambiente_climatizado;
+			$obj->dependencia_nenhuma_relacionada = $this->dependencia_nenhuma_relacionada == 'on' ? 1 : 0;
+			$obj->dependencia_numero_salas_utilizadas = $this->dependencia_numero_salas_utilizadas;
+			$obj->dependencia_numero_salas_existente = $this->dependencia_numero_salas_existente;
+			$obj->porte_quadra_descoberta = $this->porte_quadra_descoberta;
+			$obj->porte_quadra_coberta = $this->porte_quadra_coberta;
+			$obj->tipo_cobertura_patio = $this->tipo_cobertura_patio;
+			$obj->total_funcionario = $this->total_funcionario;
+			$obj->atendimento_aee = $this->atendimento_aee;
+			$obj->atividade_complementar = $this->atividade_complementar;
+			$obj->fundamental_ciclo = $this->fundamental_ciclo == 'on' ? 1 : 0;
+			$obj->localizacao_diferenciada = $this->localizacao_diferenciada;
+			$obj->didatico_nao_utiliza = $this->didatico_nao_utiliza == 'on' ? 1 : 0;
+			$obj->didatico_quilombola = $this->didatico_quilombola == 'on' ? 1 : 0;
+			$obj->didatico_indigena = $this->didatico_indigena == 'on' ? 1 : 0;
+			$obj->educacao_indigena = $this->educacao_indigena == 'on' ? 1 : 0;
+			$obj->lingua_ministrada = $this->lingua_ministrada;
+			$obj->espaco_brasil_aprendizado = $this->espaco_brasil_aprendizado == 'on' ? 1 : 0;
+			$obj->abre_final_semana = $this->abre_final_semana == 'on' ? 1 : 0;
+			$obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
+			$obj->proposta_pedagogica = $this->proposta_pedagogica == 'on' ? 1 : 0;
+			$obj->televisoes = $this->televisoes;
+			$obj->videocassetes = $this->videocassetes;
+			$obj->dvds = $this->dvds;
+			$obj->antenas_parabolicas = $this->antenas_parabolicas;
+			$obj->copiadoras = $this->copiadoras;
+			$obj->retroprojetores = $this->retroprojetores;
+			$obj->impressoras = $this->impressoras;
+			$obj->aparelhos_de_som = $this->aparelhos_de_som;
+			$obj->projetores_digitais = $this->projetores_digitais;
+			$obj->faxs = $this->faxs;
+			$obj->maquinas_fotograficas = $this->maquinas_fotograficas;
+			$obj->computadores = $this->computadores;
+			$obj->computadores_administrativo = $this->computadores_administrativo;
+			$obj->computadores_alunos = $this->computadores_alunos;
+			$obj->acesso_internet = $this->acesso_internet == 'on' ? 1 : 0;
+			$obj->banda_larga = $this->banda_larga == 'on' ? 1 : 0;
+			$obj->ato_criacao = $this->ato_criacao;
 			$editou = $obj->cadastra();
 			$this->cod_escola = $editou;
 

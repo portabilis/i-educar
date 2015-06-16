@@ -234,8 +234,8 @@ class App_Model_IedFinder extends CoreExt_Entity
 
     // Carrega as turmas da escola
     $turma->setOrderBy('nm_turma ASC');
-    $turmas = $turma->lista(NULL, NULL, NULL, $serieId, $escolaId, NULL, NULL, NULL, NULL, NULL,NULL, NULL, 
-                            NULL,NULL, NULL, NULL,NULL, NULL, NULL,NULL, NULL, NULL, NULL, NULL, NULL,NULL, 
+    $turmas = $turma->lista(NULL, NULL, NULL, $serieId, $escolaId, NULL, NULL, NULL, NULL, NULL,NULL, NULL,
+                            NULL,NULL, NULL, NULL,NULL, NULL, NULL,NULL, NULL, NULL, NULL, NULL, NULL,NULL,
                             NULL, NULL,NULL, NULL, NULL,NULL, NULL, NULL,NULL, NULL, $ano);
 
     $ret = array();
@@ -547,13 +547,19 @@ class App_Model_IedFinder extends CoreExt_Entity
   {
     $matricula = self::getMatricula($codMatricula);
     $serie     = self::getSerie($matricula['ref_ref_cod_serie']);
+    $escola     = self::getEscola($matricula['ref_ref_cod_escola']);
 
     if (is_null($mapper)) {
       require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
       $mapper = new RegraAvaliacao_Model_RegraDataMapper();
     }
 
-    return $mapper->find($serie['regra_avaliacao_id']);
+    if(dbBool($escola['utiliza_regra_diferenciada']) && is_numeric($serie['regra_avaliacao_diferenciada_id']) )
+      $intRegra = $serie['regra_avaliacao_diferenciada_id'];
+    else
+      $intRegra = $serie['regra_avaliacao_id'];
+
+    return $mapper->find($intRegra);
   }
 
   /**
@@ -804,11 +810,11 @@ class App_Model_IedFinder extends CoreExt_Entity
   * @return array
   */
   public static function getAreasConhecimento($instituicaoId){
-   
+
     $resultado = array();
 
     $sql = 'SELECT area_conhecimento.id AS id_teste,
-                   area_conhecimento.nome AS nome 
+                   area_conhecimento.nome AS nome
               FROM modules.area_conhecimento
              WHERE instituicao_id = $1
              ORDER BY to_ascii(lower(nome)) ASC';
@@ -823,7 +829,7 @@ class App_Model_IedFinder extends CoreExt_Entity
   * @return array
   */
   public static function getTurnos(){
-   
+
     $sql = 'SELECT id, nome
               FROM pmieducar.turma_turno
               WHERE ativo = 1
