@@ -156,7 +156,7 @@ class indice extends clsDetalhe
     $obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();
     $registro['ref_cod_instituicao'] = $obj_cod_instituicao_det['nm_instituicao'];
 
-    $habilita_enturmar = ($obj_cod_instituicao_det['restringir_multiplas_enturmacoes'] == "f");
+    $habilita_enturmar = ($obj_cod_instituicao_det['restringir_multiplas_enturmacoes'] != "t");
 
     // Nome da escola
     $obj_ref_cod_escola = new clsPmieducarEscola($registro['ref_ref_cod_escola']);
