@@ -128,6 +128,11 @@ class RegraAvaliacao_Model_Regra extends CoreExt_Entity
   );
 
   /**
+   * @var array
+   */
+  protected $_regraRecuperacoes = array();
+
+  /**
    * @see CoreExt_Entity#getDataMapper()
    */
   public function getDataMapper()
@@ -235,6 +240,31 @@ class RegraAvaliacao_Model_Regra extends CoreExt_Entity
         'min' => 1, 'max' => 10
       ))
       );
+  }
+
+  /**
+   * Método finder para RegraAvaliacao_Model_RegraRecuperacao. Wrapper simples
+   * para o mesmo método de RegraAvaliacao_Model_TabelaDataMapper.
+   *
+   * @return array
+   */
+  public function findRegraRecuperacao()
+  {
+    if (0 == count($this->_regraRecuperacoes)) {
+      $this->_regraRecuperacoes = $this->getDataMapper()->findRegraRecuperacao($this);
+    }
+    return $this->_regraRecuperacoes;
+  }
+
+  public function getRegraRecuperacaoByEtapa($etapa){
+
+    foreach ($this->findRegraRecuperacao() as $key => $_regraRecuperacao) {
+      if (in_array($etapa, $_regraRecuperacao->getEtapas())){
+        return $_regraRecuperacao;
+      }
+    }
+
+    return null;
   }
 
   /**

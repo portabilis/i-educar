@@ -51,6 +51,7 @@ class Avaliacao_Model_NotaComponente extends Avaliacao_Model_Etapa
     'nota'                    => NULL,
     'notaArredondada'         => NULL,
     'notaRecuperacaoParalela' => NULL,
+    'notaRecuperacaoEspecifica' => NULL,
     'notaOriginal'            => NULL
   );
 

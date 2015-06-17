@@ -172,10 +172,52 @@ class RegraAvaliacao_Model_RegraDataMapper extends CoreExt_DataMapper
     if (isset($instance->instituicao)) {
       $where['instituicao'] = $instance->instituicao;
     }
-    if (isset($instance->tipoNota)) {
-      $where['tipoNota'] = $instance->get('tipoNota');
-    }
 
     return $this->getTabelaDataMapper()->findAll(array(), $where);
+  }
+
+  /**
+   * @var RegraAvaliacao_Model_RegraRecuperacaoDataMapper
+   */
+  protected $_regraRecuperacaoDataMapper = NULL;
+
+  /**
+   * Setter.
+   * @param RegraAvaliacao_Model_RegraRecuperacaoDataMapper $mapper
+   * @return CoreExt_DataMapper Provê interface fluída
+   */
+  public function setRegraRecuperacaoDataMapper(RegraAvaliacao_Model_RegraRecuperacaoDataMapper $mapper)
+  {
+    $this->_regraRecuperacaoDataMapper = $mapper;
+    return $this;
+  }
+
+  /**
+   * Getter.
+   * @return RegraAvaliacao_Model_RegraRecuperacaoDataMappers
+   */
+  public function getRegraRecuperacaoDataMapper()
+  {
+    if (is_null($this->_regraRecuperacaoDataMapper)) {
+      require_once 'RegraAvaliacao/Model/RegraRecuperacaoDataMapper.php';
+      $this->setRegraRecuperacaoDataMapper(new RegraAvaliacao_Model_RegraRecuperacaoDataMapper());
+    }
+    return $this->_regraRecuperacaoDataMapper;
+  }
+
+  /**
+   * Finder para instâncias de RegraAvaliacao_Model_RegraRecuperacao que tenham
+   * referências a instância RegraAvaliacao_Model_Regra passada como
+   * parâmetro.
+   *
+   * @param RegraAvaliacao_Model_Regra $instance
+   * @return array Um array de instâncias RegraAvaliacao_Model_RegraRecuperacao
+   */
+  public function findRegraRecuperacao(RegraAvaliacao_Model_Regra $instance)
+  {
+    $where = array(
+      'regraAvaliacao' => $instance->id
+    );
+    return $this->getRegraRecuperacaoDataMapper()->findAll(array(), $where);
   }
 }

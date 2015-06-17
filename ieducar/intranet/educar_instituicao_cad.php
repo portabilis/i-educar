@@ -79,6 +79,7 @@ class indice extends clsCadastro
 	var $gerar_historico_transferencia;
 	var $matricula_apenas_bairro_escola;
 	var $restringir_historico_escolar;
+	var $restringir_multiplas_enturmacoes;
 
 	function Inicializar()
 	{
@@ -124,6 +125,7 @@ class indice extends clsCadastro
         $this->gerar_historico_transferencia 	= dbBool($this->gerar_historico_transferencia);
         $this->matricula_apenas_bairro_escola 	= dbBool($this->matricula_apenas_bairro_escola);
         $this->restringir_historico_escolar   	= dbBool($this->restringir_historico_escolar);
+        $this->restringir_multiplas_enturmacoes	= dbBool($this->restringir_multiplas_enturmacoes);
 
 		return $retorno;
 	}
@@ -219,6 +221,8 @@ class indice extends clsCadastro
 															  6,
 															  false);
 		$this->campoNumero( "quantidade_alunos_metro_quadrado", "Quantidade máxima de alunos permitidos por metro quadrado", $this->quantidade_alunos_metro_quadrado, 6, 6 );
+
+	$this->campoCheck("restringir_multiplas_enturmacoes", "Não permitir múltiplas enturmações para o aluno no mesmo curso e série/ano", $this->restringir_multiplas_enturmacoes);
 	}
 
 	function Novo()
@@ -233,6 +237,7 @@ class indice extends clsCadastro
 		$obj->gerar_historico_transferencia 	= !is_null($this->gerar_historico_transferencia);
 		$obj->matricula_apenas_bairro_escola 	= !is_null($this->matricula_apenas_bairro_escola);
 		$obj->restringir_historico_escolar 		= !is_null($this->restringir_historico_escolar);
+		$obj->restringir_multiplas_enturmacoes  = !is_null($this->restringir_multiplas_enturmacoes);
 		$obj->coordenador_transporte 			= $this->pessoa_coordenador_transporte;
 		$obj->controlar_espaco_utilizacao_aluno = is_null($this->controlar_espaco_utilizacao_aluno) ? 0 : 1;
 		$obj->percentagem_maxima_ocupacao_salas = Portabilis_Currency_Utils::moedaBrToUs($this->percentagem_maxima_ocupacao_salas);
@@ -263,6 +268,7 @@ class indice extends clsCadastro
 		$obj->gerar_historico_transferencia 	= !is_null($this->gerar_historico_transferencia);
 		$obj->matricula_apenas_bairro_escola 	= !is_null($this->matricula_apenas_bairro_escola);
 		$obj->restringir_historico_escolar 		= !is_null($this->restringir_historico_escolar);
+		$obj->restringir_multiplas_enturmacoes 	= !is_null($this->restringir_multiplas_enturmacoes);
 		$obj->coordenador_transporte 			= $this->pessoa_coordenador_transporte;
 		$obj->controlar_espaco_utilizacao_aluno = is_null($this->controlar_espaco_utilizacao_aluno) ? 0 : 1;
 		$obj->percentagem_maxima_ocupacao_salas = Portabilis_Currency_Utils::moedaBrToUs($this->percentagem_maxima_ocupacao_salas);
