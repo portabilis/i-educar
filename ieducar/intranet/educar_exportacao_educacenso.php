@@ -1402,6 +1402,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
 
         \'80\' as r80s1,
         ece.cod_escola_inep as r80s2,
+        eca.cod_aluno_inep as r80s3,
         a.cod_aluno as r80s4,
         t.cod_turma as r80s6,
         t.turma_unificada as r80s8,
@@ -1516,6 +1517,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
         INNER JOIN pmieducar.escola e ON (m.ref_ref_cod_escola = e.cod_escola)
         INNER JOIN modules.educacenso_cod_escola ece ON (ece.cod_escola = e.cod_escola)
         LEFT JOIN modules.transporte_aluno ta ON (ta.aluno_id = a.cod_aluno)
+        LEFT JOIN modules.educacenso_cod_aluno eca ON a.cod_aluno = eca.cod_aluno
 
         WHERE e.cod_escola = $1
         AND COALESCE(m.data_matricula,m.data_cadastro) BETWEEN DATE($3) AND DATE($4)
