@@ -23,6 +23,6 @@ CREATE TABLE modules.regra_avaliacao_recuperacao
   CONSTRAINT regra_avaliacao_regra_avaliacao_recuperacao_fk FOREIGN KEY (regra_avaliacao_id)
       REFERENCES modules.regra_avaliacao (id) MATCH SIMPLE
       ON UPDATE RESTRICT ON DELETE RESTRICT
-)
+);
 
 ALTER TABLE modules.nota_componente_curricular ADD COLUMN nota_recuperacao_especifica character varying(10);
