@@ -1298,6 +1298,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
         distinct(a.cod_aluno) as r70s4,
         \'70\' as r70s1,
         ece.cod_escola_inep as r70s2,
+        eca.cod_aluno_inep as r70s3,
         fd.rg as r70s5,
         oer.sigla as r70s6,
         (SELECT cod_ibge FROM public.uf WHERE uf.sigla_uf = fd.sigla_uf_exp_rg) as r70s7,
@@ -1339,6 +1340,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
         INNER JOIN public.uf ON (uf.sigla_uf = mun.sigla_uf)
         INNER JOIN public.pais ON (pais.idpais = uf.idpais)
         INNER JOIN public.logradouro l ON (l.idlog = cl.idlog)
+        LEFT JOIN modules.educacenso_cod_aluno eca ON a.cod_aluno = eca.cod_aluno
 
         WHERE e.cod_escola = $1
         AND COALESCE(m.data_matricula,m.data_cadastro) BETWEEN DATE($3) AND DATE($4)
