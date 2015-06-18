@@ -1174,6 +1174,7 @@ class indice extends clsCadastro
       p.idpes,
       \'60\' as r60s1,
       ece.cod_escola_inep as r60s2,
+      eca.cod_aluno_inep as r60s3,
       p.nome as r60s5,
       fis.data_nasc as r60s6, /*tratar formato*/
       fis.sexo as r60s7, /*tratar na aplicação formato*/
@@ -1205,6 +1206,7 @@ class indice extends clsCadastro
       LEFT JOIN cadastro.raca r ON (r.cod_raca = rc.ref_cod_raca)
       LEFT JOIN public.municipio mun ON (mun.idmun = fis.idmun_nascimento)
       LEFT JOIN public.uf ON (uf.sigla_uf = mun.sigla_uf)
+      LEFT JOIN modules.educacenso_cod_aluno eca ON a.cod_aluno = eca.cod_aluno
 
       WHERE e.cod_escola = $1
       AND COALESCE(m.data_matricula,m.data_cadastro) BETWEEN DATE($3) AND DATE($4)
