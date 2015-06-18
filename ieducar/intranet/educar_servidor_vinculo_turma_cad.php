@@ -64,12 +64,12 @@ class indice extends clsCadastro
   var $servidor_id;
   var $funcao_exercida;
   var $tipo_vinculo;
-  
+
   var $ref_cod_instituicao;
   var $ref_cod_escola;
   var $ref_cod_curso;
   var $ref_cod_serie;
-  var $ref_cod_turma;  
+  var $ref_cod_turma;
 
   function Inicializar()
   {
@@ -88,7 +88,7 @@ class indice extends clsCadastro
     $backUrl = sprintf(
       'educar_servidor_vinculo_turma_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',
       $this->servidor_id, $this->ref_cod_instituicao
-    );  
+    );
 
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7, $backUrl);
@@ -107,14 +107,14 @@ class indice extends clsCadastro
       if ($registro) {
         $this->ref_cod_turma        = $registro['turma_id'];
         $this->funcao_exercida = $registro['funcao_exercida'];
-        $this->tipo_vinculo    = $registro['tipo_vinculo'];   
+        $this->tipo_vinculo    = $registro['tipo_vinculo'];
 
         $obj_turma = new clsPmieducarTurma($this->ref_cod_turma);
         $obj_turma = $obj_turma->detalhe();
         $this->ref_cod_escola = $obj_turma['ref_ref_cod_escola'];
 
         $this->ref_cod_curso = $obj_turma['ref_cod_curso'];
-        $this->ref_cod_serie = $obj_turma['ref_ref_cod_serie'];   
+        $this->ref_cod_serie = $obj_turma['ref_ref_cod_serie'];
         if(!isset($_GET['copia']))
           $retorno     = 'Editar';
       }
@@ -132,20 +132,22 @@ class indice extends clsCadastro
 
   function Gerar()
   {
-    
+
     $this->campoOculto('id', $this->id);
     $this->campoOculto('servidor_id', $this->servidor_id);
     $this->inputsHelper()->dynamic(array('ano', 'instituicao', 'escola', 'curso', 'serie'));
     $this->inputsHelper()->dynamic(array('turma'), array('required' => !is_null($this->ref_cod_turma)));
 
-    $resources = array( null => 'Selecione',
-                        1    => 'Docente',
-                        2    => 'Auxiliar/Assistente educacional',
-                        3    => 'Profissional/Monitor de atividade complementar',
-                        4    => 'Tradutor Intérprete de LIBRAS');
+    $resources = array( null  => 'Selecione',
+                        1     => 'Docente',
+                        2     => 'Auxiliar/Assistente educacional',
+                        3     => 'Profissional/Monitor de atividade complementar',
+                        4     => 'Tradutor Intérprete de LIBRAS',
+                        5     => 'Docente titular - coordenador de tutoria (de módulo ou disciplina) - EAD',
+                        6     => 'Docente tutor (de módulo ou disciplina)');
 
     $options = array('label' => Portabilis_String_Utils::toLatin1('Função exercida'), 'resources' => $resources, 'value' => $this->funcao_exercida);
-    $this->inputsHelper()->select('funcao_exercida', $options);   
+    $this->inputsHelper()->select('funcao_exercida', $options);
 
         $resources = array( null => 'Selecione',
                             1    => Portabilis_String_Utils::toLatin1('Concursado/efetivo/estável'),
@@ -154,7 +156,7 @@ class indice extends clsCadastro
                             4    => 'Contrato CLT');
 
     $options = array('label' => Portabilis_String_Utils::toLatin1('Tipo do vínculo'), 'resources' => $resources, 'value' => $this->tipo_vinculo);
-    $this->inputsHelper()->select('tipo_vinculo', $options);   
+    $this->inputsHelper()->select('tipo_vinculo', $options);
 
     $this->inputsHelper()->multipleSearchComponenteCurricular(null, array('label' => 'Componentes lecionados', 'required' => false));
 
@@ -163,7 +165,7 @@ class indice extends clsCadastro
       );
 
     Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
-        
+
   }
 
   function Novo()
@@ -217,13 +219,13 @@ class indice extends clsCadastro
     $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7, $backUrl);
 
     $obj = new clsModulesProfessorTurma($this->id, $this->ano, $this->ref_cod_instituicao, $this->servidor_id, $this->ref_cod_turma, $this->funcao_exercida, $this->tipo_vinculo);
-    
+
     if ($obj->existe2()){
       $this->mensagem .= 'Não é possível cadastrar pois já existe um vínculo com essa turma.<br>';
       return FALSE;
     }
     $obj->edita();
-    $this->gravaComponentes($this->id);  
+    $this->gravaComponentes($this->id);
 
     $this->mensagem .= 'Edição efetuada com sucesso.<br>';
     header('Location: ' . $backUrl);
@@ -247,12 +249,12 @@ class indice extends clsCadastro
 
     $this->excluiComponentes($this->id);
     $obj = new clsModulesProfessorTurma($this->id);
-    $obj->excluir(); 
+    $obj->excluir();
 
     $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
     header('Location:' . $backUrl);
     die();
-    
+
   }
 
   function gravaComponentes($professor_turma_id){
@@ -262,10 +264,10 @@ class indice extends clsCadastro
         Portabilis_Utils_Database::fetchPreparedQuery('INSERT INTO modules.professor_turma_disciplina VALUES ($1,$2)',array( 'params' =>  array($professor_turma_id, $componenteCurricularId) ));
       }
     }
-  }  
+  }
 
   function excluiComponentes($professor_turma_id){
-    Portabilis_Utils_Database::fetchPreparedQuery('DELETE FROM modules.professor_turma_disciplina WHERE professor_turma_id = $1', array( 'params' => array($professor_turma_id)));    
+    Portabilis_Utils_Database::fetchPreparedQuery('DELETE FROM modules.professor_turma_disciplina WHERE professor_turma_id = $1', array( 'params' => array($professor_turma_id)));
   }
 }
 
