@@ -759,7 +759,7 @@ function handleSearch($resultTable, dataResponse) {
   var $faltaFields = $resultTable.find('.falta-matricula-cc');
   var $parecerFields = $resultTable.find('.parecer-matricula-cc');
   var $notaRecuperacaoParalelaFields = $resultTable.find('.nota-recuperacao-paralela-cc');
-  var $notaRecuperacaoEspecificaFields = $resultTable.find('.nota-recuperacao-especifica-cc');
+  var $notaRecuperacaoEspecificaFields = $resultTable.find('.nota-recuperacao-especifica-matricula-cc');
 
   $notaFields.on('change', changeNota);
   $notaExameFields.on('change', changeNotaExame);
@@ -898,8 +898,8 @@ function notaRecuperacaoParalelaField(matriculaId, componenteCurricularId, value
 function notaRecuperacaoEspecificaField(matriculaId, componenteCurricularId, value, areaConhecimentoId, maxLength) {
   return _notaField(matriculaId,
                     componenteCurricularId,
-                    'nota-recuperacao-especifica-cc',
-                    'nota-recuperacao-especifica-' + matriculaId + '-cc-' + componenteCurricularId,
+                    'nota-recuperacao-especifica-matricula-cc',
+                    'nota-recuperacao-especifica-matricula-' + matriculaId + '-cc-' + componenteCurricularId,
                     value,
                     'area-id-' + areaConhecimentoId,
                     maxLength);
@@ -959,7 +959,7 @@ function updateComponenteCurricular($targetElement, matriculaId, cc) {
         $notaRecuperacaoEspecificaField = notaRecuperacaoEspecificaField(matriculaId, cc.id, cc.nota_recuperacao_especifica, cc.area_id, getNotaRecuperacaoEspecificaMaxLength());
         $notaRecuperacaoEspecificaField.appendTo($targetElement);
 
-        var shouldShowNotaRecuperacaoEspecifica = true;
+        var shouldShowNotaRecuperacaoEspecifica = cc.should_show_recuperacao_especifica;
 
         if(!shouldShowNotaRecuperacaoEspecifica){
           $notaRecuperacaoEspecificaField.children().hide();
@@ -1095,6 +1095,7 @@ function updateResourceRow(dataResponse) {
 
   var $situacaoField  = $j('#situacao-matricula-' + matriculaId + '-cc-' + ccId);
   var $fieldNotaExame = $j('#nota-exame-matricula-' + matriculaId + '-cc-' + ccId);
+  var $fieldNotaEspecifica = $j('#nota-recuperacao-especifica-matricula-' + matriculaId + '-cc-' + ccId);
   var $fieldNN = $j('#nn-matricula-' + matriculaId + '-cc-' + ccId);
 
   $situacaoField.html(dataResponse.situacao);
@@ -1112,6 +1113,11 @@ function updateResourceRow(dataResponse) {
     $fieldNN.text('-');
   }else
     $fieldNN.text(dataResponse.nota_necessaria_exame);
+
+  if(window.habilita_campo_etapa_especifica && dataResponse.should_show_recuperacao_especifica)
+    $fieldNotaEspecifica.show();
+  else
+    $fieldNotaEspecifica.hide();
 }
 
 function colorizeSituacaoTd(tdElement, situacao) {
