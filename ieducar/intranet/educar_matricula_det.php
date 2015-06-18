@@ -308,7 +308,7 @@ class indice extends clsDetalhe
           $this->array_botao[]            = 'Cancelar Solicitação Transferência (escola do sistema)';
           $this->array_botao_url_script[] = "go(\"educar_transferencia_solicitacao_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}&cancela=true\")";
         }
-        else {
+        elseif ($registro['aprovado'] == App_Model_MatriculaSituacao::EM_ANDAMENTO) {
           if ($registro['ref_ref_cod_serie']) {
             $this->array_botao[]            = ( $GLOBALS['coreExt']['Config']->app->database->dbname == 'botucatu' ? 'Deslocamento / Transferência' : 'Solicitar Transferência' );
             $this->array_botao_url_script[] = "go(\"educar_transferencia_solicitacao_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\")";
