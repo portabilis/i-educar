@@ -1289,15 +1289,6 @@ document.getElementById('ref_cod_escola').onchange = function()
   if (document.getElementById('ref_cod_escola').value == '') {
     getCurso();
   }
-
-  $('img_colecao').style.display = 'none;';
-
-  if ($F('ref_cod_instituicao') == '') {
-    $('img_turma').style.display = 'none;';
-  }
-  else {
-    $('img_turma').style.display = '';
-  }
 }
 
 document.getElementById('ref_cod_curso').onchange = function()
@@ -1310,13 +1301,6 @@ document.getElementById('ref_cod_curso').onchange = function()
   getEscolaCursoSerie();
 
   PadraoAnoEscolar_xml();
-
-  if (this.value == '') {
-    $('img_colecao').style.display = 'none;';
-  }
-  else {
-    $('img_colecao').style.display = '';
-  }
 }
 
 function PadraoAnoEscolar_xml()
