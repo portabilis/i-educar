@@ -4,9 +4,9 @@
 -- @version  $Id$
 
 
-insert into portal.menu_submenu values (999820, 55, 2,'Relatório Cadastral de Servidores', 'module/Reports/RelacaoServidores', null, 3);
+insert into portal.menu_submenu values (999820, 55, 2,'Relatório cadastral de servidores', 'module/Reports/RelacaoServidores', null, 3);
 insert into portal.menu_funcionario values(1,0,0,999820);
-insert into pmicontrolesis.menu values (999820, 999820, 999302, 'Relatório Cadastral de Servidores', 0, 'module/Reports/RelacaoServidores', '_self', 1, 15, 192);
+insert into pmicontrolesis.menu values (999820, 999820, 999302, 'Relatório cadastral de servidores', 0, 'module/Reports/RelacaoServidores', '_self', 1, 15, 192);
 insert into pmieducar.menu_tipo_usuario values(1,999820,1,0,1);
 
 --undo
