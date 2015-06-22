@@ -9,3 +9,6 @@ Para solicitar serviços de migração de dados, instalação/implantação, atu
 
 ### Instalação e atualização
 Na wiki você encontra instruções para [instalação](http://goo.gl/thhmv) e [atualização](http://goo.gl/EBDPt)
+
+### Contribuições
+Documentação de [como contribuir](https://github.com/portabilis/ieducar/wiki/Como-contribuir)
