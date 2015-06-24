@@ -1568,7 +1568,9 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
   }
 
   protected function upperAndUnaccent($string){
-    return strtoupper(str_replace('?', '', Portabilis_String_Utils::unaccent($string)));
+    $string = strtr($string,'àáâãäçèéêëìíîïñòóôõöùúûüıÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜİ','aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY');
+
+    return strtoupper(str_replace('?', '', $string));
   }
 }
 // Instancia objeto de página
