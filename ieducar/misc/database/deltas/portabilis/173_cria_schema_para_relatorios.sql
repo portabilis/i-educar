@@ -131,10 +131,16 @@ $BODY$SELECT CASE
   LANGUAGE sql VOLATILE;
 ALTER FUNCTION relatorio.get_texto_situacao_simplificado(integer)
   OWNER TO ieducar;
+
+-- Permições nas tabelas para uso da view
+GRANT ALL PRIVILEGES ON TABLE matricula TO ieducar;
+GRANT ALL PRIVILEGES ON TABLE matricula_turma TO ieducar;
+GRANT ALL PRIVILEGES ON TABLE transferencia_solicitacao TO ieducar;
+
 -- undo
 
 DROP VIEW relatorio.view_situacao;
-DROP TABLE pmieducar.situacao_matricula;
+DROP TABLE relatorio.situacao_matricula;
 DROP FUNCTION relatorio.get_texto_sem_caracter_especial(character varying);
 DROP FUNCTION relatorio.get_texto_situacao(integer);
 DROP FUNCTION relatorio.get_texto_situacao_simplificado(integer);
