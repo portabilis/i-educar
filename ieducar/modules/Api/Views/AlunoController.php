@@ -151,7 +151,7 @@ class AlunoController extends ApiCoreController
       if ($this->getRequest()->id) {
         $sql          .= ' AND a.cod_aluno != $2';
         $params[]      = $this->getRequest()->id;
-      }      
+      }
 
       $alunoId = $this->fetchPreparedQuery($sql, $params, true, 'first-field');
 
@@ -179,12 +179,12 @@ class AlunoController extends ApiCoreController
       $alunoId = $this->fetchPreparedQuery($sql, $params, true, 'first-field');
 
       if($GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu'){
-        $count = strlen($this->getRequest()->aluno_estado_id);    
-        if ($count < 13) {   
-          $this->messenger->append("O Código rede estadual informado é inválido. ".    
-                                   "{$this->getRequest()->aluno_estado_id}.");   
-     
-          return false;    
+        $count = strlen($this->getRequest()->aluno_estado_id);
+        if ($count < 13) {
+          $this->messenger->append("O Código rede estadual informado é inválido. ".
+                                   "{$this->getRequest()->aluno_estado_id}.");
+
+          return false;
         }
       }
 
@@ -505,6 +505,7 @@ class AlunoController extends ApiCoreController
     $aluno->recurso_prova_inep_prova_ampliada_24     = $this->getRequest()->recurso_prova_inep_prova_ampliada_24 == 'on' ? 1 : 0;
     $aluno->recurso_prova_inep_prova_braille         = $this->getRequest()->recurso_prova_inep_prova_braille == 'on' ? 1 : 0;
     $aluno->justificativa_falta_documentacao         = $this->getRequest()->justificativa_falta_documentacao;
+    $aluno->veiculo_transporte_escolar               = $this->getRequest()->veiculo_transporte_escolar;
 
     $this->file_foto = $_FILES["file"];
     $this->del_foto = $_POST["file_delete"];
@@ -628,17 +629,17 @@ class AlunoController extends ApiCoreController
 
       $params     = array($this->getRequest()->escola_id);
     }else{
-      $sql = "SELECT cod_matricula as matricula_id, 
+      $sql = "SELECT cod_matricula as matricula_id,
               ref_cod_aluno as aluno_id,
               ref_ref_cod_escola as escola_id
-              FROM pmieducar.matricula 
+              FROM pmieducar.matricula
               WHERE ref_cod_aluno IN ({$alunoId})
-              AND matricula.ativo = 1 
+              AND matricula.ativo = 1
               ORDER BY ano DESC, matricula_id";
-              
+
       $params     = array();
     }
-    
+
     $matriculas = $this->fetchPreparedQuery($sql, $params);
 
     $_ocorrenciasMatricula  = new clsPmieducarMatriculaOcorrenciaDisciplinar();
@@ -854,6 +855,7 @@ class AlunoController extends ApiCoreController
         'recurso_prova_inep_prova_ampliada_24',
         'recurso_prova_inep_prova_braille',
         'justificativa_falta_documentacao',
+        'veiculo_transporte_escolar',
         'url_laudo_medico',
         'codigo_sistema',
         'url_foto_aluno'
@@ -929,8 +931,8 @@ class AlunoController extends ApiCoreController
               WHERE
                 idpes = ref_idpes
              ) AS nome_aluno
-              FROM pmieducar.aluno 
-              WHERE ativo = 1 
+              FROM pmieducar.aluno
+              WHERE ativo = 1
               ORDER BY nome_aluno ASC";
 
       $alunos = $this->fetchPreparedQuery($sql);
@@ -977,12 +979,12 @@ class AlunoController extends ApiCoreController
                   INNER JOIN cadastro.pessoa ON (pessoa.idpes = fisica.idpes)
                   WHERE idpes_pai = $1
                   OR idpes_mae = $1
-                  OR idpes_responsavel = $1';        
+                  OR idpes_responsavel = $1';
 
         $alunos = $this->fetchPreparedQuery($sql, array($idpesGuardian));
 
         $attrs = array('aluno_id', 'nome_aluno');
-        $alunos = Portabilis_Array_Utils::filterSet($alunos, $attrs);        
+        $alunos = Portabilis_Array_Utils::filterSet($alunos, $attrs);
 
         foreach ($alunos as &$aluno) {
           $aluno['nome_aluno'] = Portabilis_String_Utils::toUtf8($aluno['nome_aluno']);
@@ -991,7 +993,7 @@ class AlunoController extends ApiCoreController
         return array('alunos' => $alunos);
       }else{
         $this->messenger->append('Não foi encontrado nenhum vínculos entre esse aluno e cpf.');
-      }      
+      }
     }
   }
 
@@ -1032,7 +1034,7 @@ class AlunoController extends ApiCoreController
 
       $matriculas = Portabilis_Array_Utils::filterSet($matriculas, $attrs);
 
-      foreach ($matriculas as $index => $matricula) {        
+      foreach ($matriculas as $index => $matricula) {
         $turma = $this->loadTurmaByMatriculaId($matricula['id']);
 
         if(dbBool($only_valid_boletim) && (is_null($turma['id']) || is_null($turma['tipo_boletim']))){
@@ -1200,7 +1202,7 @@ class AlunoController extends ApiCoreController
   }
 
   protected function createOrUpdatePessoaTransporte($ref_idpes){
-    
+
     $pt                          = new clsModulesPessoaTransporte(NULL, NULL, $ref_idpes);
     $det = $pt->detalhe();
 
@@ -1208,10 +1210,10 @@ class AlunoController extends ApiCoreController
 
     $pt                          = new clsModulesPessoaTransporte($id);
     // após cadastro não muda mais id pessoa
-    $pt->ref_idpes               = $ref_idpes; 
-    $pt->ref_idpes_destino       = $this->getRequest()->pessoaj_id; 
-    $pt->ref_cod_ponto_transporte_escolar       = $this->getRequest()->transporte_ponto; 
-    $pt->ref_cod_rota_transporte_escolar       = $this->getRequest()->transporte_rota; 
+    $pt->ref_idpes               = $ref_idpes;
+    $pt->ref_idpes_destino       = $this->getRequest()->pessoaj_id;
+    $pt->ref_cod_ponto_transporte_escolar       = $this->getRequest()->transporte_ponto;
+    $pt->ref_cod_rota_transporte_escolar       = $this->getRequest()->transporte_rota;
     $pt->observacao                     = Portabilis_String_Utils::toLatin1($this->getRequest()->transporte_observacao);
 
     return (is_null($id) ? $pt->cadastra() : $pt->edita());
@@ -1381,7 +1383,7 @@ class AlunoController extends ApiCoreController
     $isAdmin = ($this->pessoa_logada == 1);
     session_write_close();
     return $isAdmin;
-    
+
   }
 
   public function Gerar() {
