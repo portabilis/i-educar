@@ -183,6 +183,24 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('Matrícula', $registro['matricula']));
     }
 
+    // Dados no Educacenso/Inep.
+      $docenteMapper = new Educacenso_Model_DocenteDataMapper();
+
+      $docenteInep = null;
+      try {
+        $docenteInep = $docenteMapper->find(array('docente' => $registro['cod_servidor']));
+      } catch (Exception $e) {
+
+      }
+
+      if (isset($docenteInep)) {
+        $this->addDetalhe(array('Código Educacenso/Inep', $docenteInep->docenteInep));
+
+        if (isset($docenteInep->nomeInep)) {
+          $this->addDetalhe(array('Nome Educacenso/Inep', $docenteInep->nomeInep));
+        }
+      }
+
     if ($registro['nome']) {
       $this->addDetalhe(array('Nome', $registro['nome']));
     }
@@ -215,9 +233,6 @@ class indice extends clsDetalhe
 
     $obj_funcao = new clsPmieducarServidorFuncao();
     $lst_funcao = $obj_funcao->lista($this->ref_cod_instituicao, $this->cod_servidor);
-
-    // Inep.
-    $docente = false;
 
     if ($lst_funcao) {
       $tabela .= "
@@ -293,7 +308,7 @@ class indice extends clsDetalhe
             <td><b>{$det_funcao['nm_funcao']}</b></td>
           </tr>";
 
-        $this->is_professor = $docente = (bool) $det_funcao['professor'];
+        $this->is_professor = (bool) $det_funcao['professor'];
 
         $class = $class == "formlttd" ? "formmdtd" : "formlttd" ;
       }
@@ -428,24 +443,6 @@ class indice extends clsDetalhe
         "<div id='horarios' name='det_pree' style='display:none;'>" . $tabela . "</div>"
       ));
     }
-
-    // Dados no Educacenso/Inep.
-      $docenteMapper = new Educacenso_Model_DocenteDataMapper();
-
-      $docenteInep = null;
-      try {
-        $docenteInep = $docenteMapper->find(array('docente' => $registro['cod_servidor']));
-      } catch (Exception $e) {
-
-      }
-
-      if (isset($docenteInep)) {
-        $this->addDetalhe(array('Código Educacenso/Inep', $docenteInep->docenteInep));
-
-        if (isset($docenteInep->nomeInep)) {
-          $this->addDetalhe(array('Nome Educacenso/Inep', $docenteInep->nomeInep));
-        }
-      }
 
     $obj_permissoes = new clsPermissoes();
     if ($obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7)) {
