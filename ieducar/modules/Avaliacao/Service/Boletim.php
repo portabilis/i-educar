@@ -1213,7 +1213,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     // Carrega as médias pois este método pode ser chamado após a chamada a saveNotas()
     $mediasComponentes = $this->_loadNotaComponenteCurricularMedia()
                               ->getMediasComponentes();
-    
+
     $componentes = $this->getComponentes();
 
     if(is_numeric($disciplina_dispensada)){
@@ -2599,6 +2599,58 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
           continue;
         }
         $notas[$etapa] = $nota;
+      }
+
+      // Verifica regras de recuperações (Recuperações específicas por etapa)
+      $regra = $this->getRegra();
+      $regrasRecuperacoes = $regra->findRegraRecuperacao();
+
+      $cont = 0;
+      foreach ($regrasRecuperacoes as $key => $_regraRecuperacao) {
+        $cont++;
+        $notaRecuperacao = $this->getNotaComponente($id, $_regraRecuperacao->getLastEtapa());
+        if($notaRecuperacao && is_numeric($notaRecuperacao->notaRecuperacaoEspecifica)){
+          // Caso tenha nota de recuperação para regra atual, atribuí variável RE+N
+          $notas['RE'.$cont] = $notaRecuperacao->notaRecuperacaoEspecifica;
+          $notaRecuperacao->notaRecuperacaoEspecifica;
+
+          $somaEtapasRecuperacao = 0;
+          $countEtapasRecuperacao = 0;
+
+          foreach ($_regraRecuperacao->etapas as $etapa){
+            $somaEtapasRecuperacao += $notas['E' . $etapa];
+            $countEtapasRecuperacao++;
+          }
+
+          $mediaEtapasRecuperacao = $somaEtapasRecuperacao / $countEtapasRecuperacao;
+          $mediaEtapasRecuperacaoComRecuperacao = ($mediaEtapasRecuperacao + $notaRecuperacao->notaRecuperacaoEspecifica) / 2;
+
+          // Caso média com recuperação seja maior que média das somas das etapas sem recuperação, atribuí variável MRE+N
+          if($notaRecuperacao->notaRecuperacaoEspecifica > $somaEtapasRecuperacao)
+            $notas['MRE'.$cont] = $mediaEtapasRecuperacaoComRecuperacao;
+          else
+            $notas['MRE'.$cont] = $mediaEtapasRecuperacao;
+
+          // Caso nota de recuperação seja maior que soma das etapas, atribuí variável SRE+N
+          if($notaRecuperacao->notaRecuperacaoEspecifica > $somaEtapasRecuperacao)
+            $notas['SRE'.$cont] = $notaRecuperacao->notaRecuperacaoEspecifica;
+          else
+            $notas['SRE'.$cont] = $somaEtapasRecuperacao;
+
+        }else{
+          // Caso tenha nota de recuperação para regra atual, atribuí variaveis MRE+N E SRE+N
+          // considerando apenas soma das etapas
+          $somaEtapasRecuperacao = 0;
+          $countEtapasRecuperacao = 0;
+
+          foreach ($_regraRecuperacao->etapas as $etapa){
+            $somaEtapasRecuperacao += $notas['E' . $etapa];
+            $countEtapasRecuperacao++;
+          }
+
+          $notas['MRE'.$cont] = $somaEtapasRecuperacao / $countEtapasRecuperacao;
+          $notas['SRE'.$cont] = $somaEtapasRecuperacao;
+        }
       }
 
       // Calcula a média

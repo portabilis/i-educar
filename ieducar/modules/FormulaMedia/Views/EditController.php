@@ -70,6 +70,9 @@ class EditController extends Core_Controller_Page_EditController
                    &middot; Et - Total de etapas<br />
                    &middot; Se - Soma das notas das etapas<br />
                    &middot; Rc - Nota da recuperação<br />
+                   &middot; RSPN - Recuperação específica n (de 1 a 10)<br />
+                   &middot; SRSPN - Soma das etapas ou Recuperação específica (Pega maior) n (de 1 a 10)<br />
+                   &middot; MRSPN - Média das etapas ou Média das etapas com Recuperação específica (Pega maior) n (de 1 a 10)<br />
                    Símbolos disponíveis:<br />
                    &middot; (), +, /, *, x<br />
                    A variável "Rc" está disponível apenas<br />
@@ -89,9 +92,9 @@ class EditController extends Core_Controller_Page_EditController
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_index.php"                  => "i-Educar - Escola",
-         ""        => "$nomeMenu f&oacute;rmula de m&eacute;dia"             
+         ""        => "$nomeMenu f&oacute;rmula de m&eacute;dia"
     ));
-    $this->enviaLocalizacao($localizacao->montar());   
+    $this->enviaLocalizacao($localizacao->montar());
   }
 
   /**

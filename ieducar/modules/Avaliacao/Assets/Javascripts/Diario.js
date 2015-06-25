@@ -1114,8 +1114,7 @@ function updateResourceRow(dataResponse) {
   }else
     $fieldNN.text(dataResponse.nota_necessaria_exame);
 
-  if(window.habilita_campo_etapa_especifica && dataResponse.should_show_recuperacao_especifica
-      && (!$fieldNotaEspecifica.is(':visible'))){
+  if(window.habilita_campo_etapa_especifica && dataResponse.should_show_recuperacao_especifica ){
     $fieldNotaEspecifica.show();
     $fieldNotaEspecifica.focus();
   }else
