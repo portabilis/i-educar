@@ -429,8 +429,7 @@ class indice extends clsDetalhe
       ));
     }
 
-    // Dados do docente no Educacenso/Inep.
-    if ($docente) {
+    // Dados no Educacenso/Inep.
       $docenteMapper = new Educacenso_Model_DocenteDataMapper();
 
       $docenteInep = null;
@@ -441,13 +440,12 @@ class indice extends clsDetalhe
       }
 
       if (isset($docenteInep)) {
-        $this->addDetalhe(array('Código do docente no Educacenso/Inep', $docenteInep->docenteInep));
+        $this->addDetalhe(array('Código Educacenso/Inep', $docenteInep->docenteInep));
 
         if (isset($docenteInep->nomeInep)) {
-          $this->addDetalhe(array('Nome do docente no Educacenso/Inep', $docenteInep->nomeInep));
+          $this->addDetalhe(array('Nome Educacenso/Inep', $docenteInep->nomeInep));
         }
       }
-    }
 
     $obj_permissoes = new clsPermissoes();
     if ($obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7)) {
