@@ -34,7 +34,7 @@ insert into relatorio.situacao_matricula (cod_situacao, descricao) values (10, '
 
 CREATE OR REPLACE VIEW relatorio.view_situacao AS 
  SELECT matricula.cod_matricula, situacao_matricula.cod_situacao, matricula_turma.ref_cod_turma AS cod_turma, matricula_turma.sequencial
-   FROM situacao_matricula, matricula
+   FROM relatorio.situacao_matricula, matricula
    LEFT JOIN matricula_turma ON matricula_turma.ref_cod_matricula = matricula.cod_matricula
   WHERE 
    CASE
