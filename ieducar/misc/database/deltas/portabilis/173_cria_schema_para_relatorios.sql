@@ -34,18 +34,21 @@ insert into relatorio.situacao_matricula (cod_situacao, descricao) values (10, '
 
 CREATE OR REPLACE VIEW relatorio.view_situacao AS 
  SELECT matricula.cod_matricula, situacao_matricula.cod_situacao, matricula_turma.ref_cod_turma AS cod_turma, matricula_turma.sequencial
-   FROM relatorio.situacao_matricula, pmieducar.matricula
-   JOIN pmieducar.matricula_turma ON matricula_turma.ref_cod_matricula = matricula.cod_matricula
+   FROM situacao_matricula, matricula
+   LEFT JOIN matricula_turma ON matricula_turma.ref_cod_matricula = matricula.cod_matricula
   WHERE 
    CASE
        WHEN matricula.aprovado = 4 THEN matricula_turma.ativo = 1 OR (EXISTS ( SELECT 1
-          FROM pmieducar.transferencia_solicitacao
-         WHERE pmieducar.transferencia_solicitacao.ref_cod_matricula_saida = matricula.cod_matricula AND transferencia_solicitacao.ativo = 1
+          FROM transferencia_solicitacao
+         WHERE transferencia_solicitacao.ref_cod_matricula_saida = matricula.cod_matricula AND transferencia_solicitacao.ativo = 1
         LIMIT 1)) AND matricula_turma.sequencial = (( SELECT max(matricula_turma.sequencial) AS max
-          FROM pmieducar.matricula_turma
+          FROM matricula_turma
          WHERE matricula_turma.ref_cod_matricula = matricula.cod_matricula)) OR matricula_turma.transferido OR matricula_turma.reclassificado
        WHEN matricula.aprovado = 6 THEN matricula_turma.ativo = 1 OR matricula_turma.sequencial = (( SELECT max(matricula_turma.sequencial) AS max
-          FROM pmieducar.matricula_turma
+          FROM matricula_turma
+         WHERE matricula_turma.ref_cod_matricula = matricula.cod_matricula)) OR matricula_turma.abandono
+       WHEN matricula.aprovado = 5 THEN matricula_turma.ativo = 1 OR matricula_turma.sequencial = (( SELECT max(matricula_turma.sequencial) AS max
+          FROM matricula_turma
          WHERE matricula_turma.ref_cod_matricula = matricula.cod_matricula)) OR matricula_turma.abandono
        ELSE matricula_turma.ativo = 1 OR matricula_turma.abandono OR matricula_turma.reclassificado OR matricula_turma.transferido OR matricula_turma.remanejado
    END AND 
@@ -59,7 +62,6 @@ CREATE OR REPLACE VIEW relatorio.view_situacao AS
 
 ALTER TABLE relatorio.view_situacao
   OWNER TO ieducar;
-
 
 -- Função para tirar o caracter especial do campo enviado via parâmetro
 
