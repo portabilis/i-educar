@@ -1507,7 +1507,9 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
           INNER JOIN modules.pessoa_transporte pt ON (pt.ref_cod_rota_transporte_escolar = rte.cod_rota_transporte_escolar)
           WHERE pt.ref_idpes = fis.idpes
           AND v.ref_cod_tipo_veiculo = 11
-        ) as r80s23
+        ) as r80s23,
+
+        a.veiculo_transporte_escolar
 
         FROM  pmieducar.aluno a
         INNER JOIN cadastro.fisica fis ON (fis.idpes = a.ref_idpes)
@@ -1544,6 +1546,10 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
         }
         if ($veiculo)
           $r80s11 == 1;
+        elseif($veiculo_transporte_escolar){
+          $r80s11 == 1;
+          ${'r80s'.$veiculo_transporte_escolar + 12} = 1;
+        }
         $r80s12 = $transporte_escolar;
       }else{
         for ($i=13; $i <= 23 ; $i++) {
@@ -1568,7 +1574,9 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
   }
 
   protected function upperAndUnaccent($string){
-    return strtoupper(str_replace('?', '', Portabilis_String_Utils::unaccent($string)));
+    $string = strtr($string,'àáâãäçèéêëìíîïñòóôõöùúûüýÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝ','aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY');
+
+    return strtoupper(str_replace('?', '', $string));
   }
 }
 // Instancia objeto de página

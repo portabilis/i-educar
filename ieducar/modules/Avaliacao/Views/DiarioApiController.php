@@ -1145,16 +1145,18 @@ class DiarioApiController extends ApiCoreController
         // Caso não exiba, já busca se existe a nota de recuperação e deleta ela
         $notaRecuperacao = $this->serviceBoletim()->getNotaComponente($componenteCurricularId, $regraRecuperacao->getLastEtapa());
 
-        $nota = new Avaliacao_Model_NotaComponente(array(
-          'componenteCurricular'        => $componenteCurricularId,
-          'nota'                        => $notaRecuperacao->notaOriginal,
-          'etapa'                       => $notaRecuperacao->etapa,
-          'notaOriginal'                => $notaRecuperacao->notaOriginal,
-          'notaRecuperacaoParalela'     => $notaRecuperacao->notaRecuperacaoParalela
-          ));
+        if($notaRecuperacao){
+          $nota = new Avaliacao_Model_NotaComponente(array(
+            'componenteCurricular'        => $componenteCurricularId,
+            'nota'                        => $notaRecuperacao->notaOriginal,
+            'etapa'                       => $notaRecuperacao->etapa,
+            'notaOriginal'                => $notaRecuperacao->notaOriginal,
+            'notaRecuperacaoParalela'     => $notaRecuperacao->notaRecuperacaoParalela
+            ));
 
-        $this->serviceBoletim()->addNota($nota);
-        $this->trySaveServiceBoletim();
+          $this->serviceBoletim()->addNota($nota);
+          $this->trySaveServiceBoletim();
+        }
         return false;
       }
     }

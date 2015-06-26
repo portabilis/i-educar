@@ -435,15 +435,6 @@ class indice extends clsCadastro
       } catch (Exception $e) {
         
       }
-
-      if (isset($docenteInep)) {
-        $this->campoRotulo('_inep_cod_docente', 'Código do docente no Educacenso/Inep', $docenteInep->docenteInep);
-
-        if (isset($docenteInep->nomeInep)) {
-          $this->campoRotulo('_inep_nome_docente', 'Nome do docente no Educacenso/Inep', $docenteInep->nomeInep);
-        }
-      }
-
     }
 
     $opcoes = array('' => 'Selecione');

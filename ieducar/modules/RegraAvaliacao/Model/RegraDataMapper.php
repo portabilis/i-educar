@@ -218,6 +218,10 @@ class RegraAvaliacao_Model_RegraDataMapper extends CoreExt_DataMapper
     $where = array(
       'regraAvaliacao' => $instance->id
     );
-    return $this->getRegraRecuperacaoDataMapper()->findAll(array(), $where);
+
+    $orderby = array(
+      'etapasRecuperadas' => 'ASC'
+    );
+    return $this->getRegraRecuperacaoDataMapper()->findAll(array(), $where, $orderby);
   }
 }

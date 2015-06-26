@@ -1391,8 +1391,11 @@ if(!$this->isEnderecoExterno){
 	    $options = array('label' => Portabilis_String_Utils::toLatin1('Dependências existentes na escola – Auditório'), 'value' => $this->dependencia_auditorio);
 	    $this->inputsHelper()->checkbox('dependencia_auditorio', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('Dependências existentes na escola – Pátio coberto'), 'value' => $this->dependencia_patio_coberto);
-	    $this->inputsHelper()->checkbox('dependencia_patio_coberto', $options);
+      $options = array('label' => Portabilis_String_Utils::toLatin1('Dependências existentes na escola – Pátio coberto'), 'value' => $this->dependencia_patio_coberto);
+      $this->inputsHelper()->checkbox('dependencia_patio_coberto', $options);
+
+      $options = array('label' => Portabilis_String_Utils::toLatin1('Dependências existentes na escola – Pátio descoberto'), 'value' => $this->dependencia_patio_descoberto);
+      $this->inputsHelper()->checkbox('dependencia_patio_descoberto', $options);
 
 	    $resources = array( null => 'Selecione',
 		                    1    => 'Lage',
