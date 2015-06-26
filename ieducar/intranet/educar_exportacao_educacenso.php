@@ -1545,10 +1545,10 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
             $veiculo = true;
         }
         if ($veiculo)
-          $r80s11 == 1;
+          $r80s11 = 1;
         elseif($veiculo_transporte_escolar){
-          $r80s11 == 1;
-          ${'r80s'.$veiculo_transporte_escolar + 12} = 1;
+          $r80s11 = 1;
+          ${'r80s'.($veiculo_transporte_escolar + 12)} = 1;
         }
         $r80s12 = $transporte_escolar;
       }else{
