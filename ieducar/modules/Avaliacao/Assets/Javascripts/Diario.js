@@ -220,9 +220,9 @@ function postNota($notaFieldElement) {
       dataType : 'json',
       data : {att_value : $notaFieldElement.val()},
       success : function(dataResponse) {
-        checkIfShowNotaRecuperacaoParalelaField($notaFieldElement.val(), dataResponse);
         afterChangeResource($notaFieldElement);
         handleChange(dataResponse);
+        checkIfShowNotaRecuperacaoParalelaField($notaFieldElement.val(), dataResponse);
       }
     };
 
@@ -1101,11 +1101,15 @@ function updateResourceRow(dataResponse) {
   $situacaoField.html(dataResponse.situacao);
   colorizeSituacaoTd($situacaoField.closest('td'), dataResponse.situacao);
 
-  if (! $fieldNotaExame.is(':visible') &&
-     ($fieldNotaExame.val() != '' || safeToLowerCase(dataResponse.situacao) == 'em exame')) {
+  if(!$fieldNotaExame.is(':visible') &&
+    ($fieldNotaExame.val() != '' || safeToLowerCase(dataResponse.situacao) == 'em exame')) {
 
     $fieldNotaExame.show();
-    $fieldNotaExame.focus();
+
+    if(sentidoTab=="1"){
+      $fieldNotaExame.focus();
+    }
+
     $fieldNN.text(dataResponse.nota_necessaria_exame);
   }
   else if($fieldNotaExame.val() == '' && safeToLowerCase(dataResponse.situacao) != 'em exame'){
