@@ -2611,7 +2611,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $notaRecuperacao = $this->getNotaComponente($id, $_regraRecuperacao->getLastEtapa());
         if($notaRecuperacao && is_numeric($notaRecuperacao->notaRecuperacaoEspecifica)){
           // Caso tenha nota de recuperação para regra atual, atribuí variável RE+N
-          $notas['RE'.$cont] = $notaRecuperacao->notaRecuperacaoEspecifica;
+          $notas['RSP'.$cont] = $notaRecuperacao->notaRecuperacaoEspecifica;
           $notaRecuperacao->notaRecuperacaoEspecifica;
 
           $somaEtapasRecuperacao = 0;
@@ -2627,18 +2627,18 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
           // Caso média com recuperação seja maior que média das somas das etapas sem recuperação, atribuí variável MRE+N
           if($notaRecuperacao->notaRecuperacaoEspecifica > $somaEtapasRecuperacao)
-            $notas['MRE'.$cont] = $mediaEtapasRecuperacaoComRecuperacao;
+            $notas['RSPM'.$cont] = $mediaEtapasRecuperacaoComRecuperacao;
           else
-            $notas['MRE'.$cont] = $mediaEtapasRecuperacao;
+            $notas['RSPM'.$cont] = $mediaEtapasRecuperacao;
 
           // Caso nota de recuperação seja maior que soma das etapas, atribuí variável SRE+N
           if($notaRecuperacao->notaRecuperacaoEspecifica > $somaEtapasRecuperacao)
-            $notas['SRE'.$cont] = $notaRecuperacao->notaRecuperacaoEspecifica;
+            $notas['RSPS'.$cont] = $notaRecuperacao->notaRecuperacaoEspecifica;
           else
-            $notas['SRE'.$cont] = $somaEtapasRecuperacao;
+            $notas['RSPS'.$cont] = $somaEtapasRecuperacao;
 
         }else{
-          // Caso tenha nota de recuperação para regra atual, atribuí variaveis MRE+N E SRE+N
+          // Caso tenha nota de recuperação para regra atual, atribuí variaveis RSPM+N E RSPS+N
           // considerando apenas soma das etapas
           $somaEtapasRecuperacao = 0;
           $countEtapasRecuperacao = 0;
@@ -2648,8 +2648,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             $countEtapasRecuperacao++;
           }
 
-          $notas['MRE'.$cont] = $somaEtapasRecuperacao / $countEtapasRecuperacao;
-          $notas['SRE'.$cont] = $somaEtapasRecuperacao;
+          $notas['RSPM'.$cont] = $somaEtapasRecuperacao / $countEtapasRecuperacao;
+          $notas['RSPS'.$cont] = $somaEtapasRecuperacao;
         }
       }
 
