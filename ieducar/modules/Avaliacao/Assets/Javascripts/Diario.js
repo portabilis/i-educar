@@ -1114,11 +1114,13 @@ function updateResourceRow(dataResponse) {
   }else
     $fieldNN.text(dataResponse.nota_necessaria_exame);
 
-  if(window.habilita_campo_etapa_especifica && dataResponse.should_show_recuperacao_especifica ){
-    $fieldNotaEspecifica.show();
-    $fieldNotaEspecifica.focus();
-  }else
-    $fieldNotaEspecifica.hide();
+  if(dataResponse.resource != 'nota_exame' && dataResponse.resource != 'nota_recuperacao_especifica'){
+    if(window.habilita_campo_etapa_especifica && dataResponse.should_show_recuperacao_especifica ){
+      $fieldNotaEspecifica.show();
+      $fieldNotaEspecifica.focus();
+    }else
+      $fieldNotaEspecifica.hide();
+  }
 }
 
 function colorizeSituacaoTd(tdElement, situacao) {
