@@ -2617,8 +2617,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
           $somaEtapasRecuperacao = 0;
           $countEtapasRecuperacao = 0;
 
-          foreach ($_regraRecuperacao->etapas as $etapa){
-            $somaEtapasRecuperacao += $notas['E' . $etapa];
+          foreach ($_regraRecuperacao->getEtapas() as $__etapa){
+            $somaEtapasRecuperacao += $notas['E' . $__etapa];
             $countEtapasRecuperacao++;
           }
 
@@ -2626,7 +2626,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
           $mediaEtapasRecuperacaoComRecuperacao = ($mediaEtapasRecuperacao + $notaRecuperacao->notaRecuperacaoEspecifica) / 2;
 
           // Caso média com recuperação seja maior que média das somas das etapas sem recuperação, atribuí variável MRE+N
-          if($notaRecuperacao->notaRecuperacaoEspecifica > $somaEtapasRecuperacao)
+          if($mediaEtapasRecuperacaoComRecuperacao > $mediaEtapasRecuperacao)
             $notas['RSPM'.$cont] = $mediaEtapasRecuperacaoComRecuperacao;
           else
             $notas['RSPM'.$cont] = $mediaEtapasRecuperacao;
@@ -2643,8 +2643,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
           $somaEtapasRecuperacao = 0;
           $countEtapasRecuperacao = 0;
 
-          foreach ($_regraRecuperacao->etapas as $etapa){
-            $somaEtapasRecuperacao += $notas['E' . $etapa];
+          foreach ($_regraRecuperacao->getEtapas() as $__etapa){
+            $somaEtapasRecuperacao += $notas['E' . $__etapa];
             $countEtapasRecuperacao++;
           }
 
