@@ -28,7 +28,6 @@ require_once ("include/clsBase.inc.php");
 require_once ("include/clsListagem.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once( "include/urbano/geral.inc.php" );
-
 class clsIndexBase extends clsBase
 {
 	function Formular()
@@ -38,7 +37,6 @@ class clsIndexBase extends clsBase
 		$this->addEstilo('localizacaoSistema');
 	}
 }
-
 class indice extends clsListagem
 {
 	/**
@@ -47,28 +45,24 @@ class indice extends clsListagem
 	 * @var int
 	 */
 	var $pessoa_logada;
-
 	/**
 	 * Titulo no topo da pagina
 	 *
 	 * @var int
 	 */
 	var $__titulo;
-
 	/**
 	 * Quantidade de registros a ser apresentada em cada pagina
 	 *
 	 * @var int
 	 */
 	var $__limite;
-
 	/**
 	 * Inicio dos registros a serem exibidos (limit)
 	 *
 	 * @var int
 	 */
 	var $__offset;
-
 	var $cep;
 	var $idlog;
 	var $nroini;
@@ -81,7 +75,6 @@ class indice extends clsListagem
 	var $operacao;
 	var $idsis_rev;
 	var $idsis_cad;
-
 	var $idpais;
 	var $sigla_uf;
 	var $idmun;
@@ -91,21 +84,16 @@ class indice extends clsListagem
 		@session_start();
 		$this->pessoa_logada = $_SESSION['id_pessoa'];
 		session_write_close();
-
 		$this->__titulo = "Cep Logradouro - Listagem";
-
 		foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
 			$this->$var = ( $val === "" ) ? null: $val;
-
 		
-
 		$this->addCabecalhos( array(
 			"Logradouro",
 			"Munic&iacute;pio",
 			"Estado",
 			"Pais"
 		) );
-
 		$opcoes = array( "" => "Selecione" );
 		if( class_exists( "clsPais" ) )
 		{
@@ -125,7 +113,6 @@ class indice extends clsListagem
 			$opcoes = array( "" => "Erro na geracao" );
 		}
 		$this->campoLista( "idpais", "Pais", $opcoes, $this->idpais, "", false, "", "", false, false );
-
 		$opcoes = array( "" => "Selecione" );
 		if( class_exists( "clsUf" ) )
 		{
@@ -148,7 +135,6 @@ class indice extends clsListagem
 			$opcoes = array( "" => "Erro na geracao" );
 		}
 		$this->campoLista( "sigla_uf", "Estado", $opcoes, $this->sigla_uf, "", false, "", "", false, false );
-
 		$opcoes = array( "" => "Selecione" );
 		if( class_exists( "clsMunicipio" ) )
 		{
@@ -195,16 +181,12 @@ class indice extends clsListagem
 			$opcoes = array( "" => "Erro na geracao" );
 		}
 		$this->campoLista( "idlog", "Logradouro", $opcoes, $this->idlog, "", false, "", "", false, false );
-
-
 		// Paginador
 		$this->__limite = 20;
 		$this->__offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->__limite-$this->__limite: 0;
-
 		$obj_cep_logradouro = new clsUrbanoCepLogradouro();
 		$obj_cep_logradouro->setOrderby( "nm_logradouro ASC" );
 		$obj_cep_logradouro->setLimite( $this->__limite, $this->__offset );
-
 		$lista = $obj_cep_logradouro->lista_(
 			null,
 			null,
@@ -224,9 +206,7 @@ class indice extends clsListagem
 			$this->idlog
 			
 		);
-
 		$total = $obj_cep_logradouro->_total;
-
 		// monta a lista
 		if( is_array( $lista ) && count( $lista ) )
 		{
@@ -241,7 +221,6 @@ class indice extends clsListagem
 			}
 		}
 		$this->addPaginador2( "urbano_cep_logradouro_lst.php", $total, $_GET, $this->nome, $this->__limite );
-
 		$obj_permissao = new clsPermissoes();
 		
 		if($obj_permissao->permissao_cadastra(758, $this->pessoa_logada,7,null,true))
@@ -249,9 +228,7 @@ class indice extends clsListagem
       		$this->acao = "go(\"urbano_cep_logradouro_cad.php\")";
 			$this->nome_acao = "Novo";
 	    }
-
 		$this->largura = "100%";
-
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
@@ -271,31 +248,25 @@ $pagina->MakeAll();
 ?>
 
 <script>
-
 document.getElementById('idpais').onchange = function()
 {
 	var campoPais = document.getElementById('idpais').value;
-
 	var campoUf= document.getElementById('sigla_uf');
 	campoUf.length = 1;
 	campoUf.disabled = true;
 	campoUf.options[0].text = 'Carregando estado...';
-
 	var xml_uf = new ajax( getUf );
 	xml_uf.envia( "public_uf_xml.php?pais="+campoPais );
 }
-
 function getUf( xml_uf )
 {
 	var campoUf = document.getElementById('sigla_uf');
 	var DOM_array = xml_uf.getElementsByTagName( "estado" );
-
 	if(DOM_array.length)
 	{
 		campoUf.length = 1;
 		campoUf.options[0].text = 'Selecione um estado';
 		campoUf.disabled = false;
-
 		for( var i = 0; i < DOM_array.length; i++ )
 		{
 			campoUf.options[campoUf.options.length] = new Option( DOM_array[i].firstChild.data, DOM_array[i].getAttribute("sigla_uf"),false,false);
@@ -306,31 +277,25 @@ function getUf( xml_uf )
 		campoUf.options[0].text = 'O pais não possui nenhum estado';
 	}
 }
-
 document.getElementById('sigla_uf').onchange = function()
 {
 	var campoUf = document.getElementById('sigla_uf').value;
-
 	var campoMunicipio= document.getElementById('idmun');
 	campoMunicipio.length = 1;
 	campoMunicipio.disabled = true;
 	campoMunicipio.options[0].text = 'Carregando município...';
-
 	var xml_municipio = new ajax( getMunicipio );
 	xml_municipio.envia( "public_municipio_xml.php?uf="+campoUf );
 }
-
 function getMunicipio( xml_municipio )
 {
 	var campoMunicipio = document.getElementById('idmun');
 	var DOM_array = xml_municipio.getElementsByTagName( "municipio" );
-
 	if(DOM_array.length)
 	{
 		campoMunicipio.length = 1;
 		campoMunicipio.options[0].text = 'Selecione um município';
 		campoMunicipio.disabled = false;
-
 		for( var i = 0; i < DOM_array.length; i++ )
 		{
 			campoMunicipio.options[campoMunicipio.options.length] = new Option( DOM_array[i].firstChild.data, DOM_array[i].getAttribute("idmun"),false,false);
@@ -341,31 +306,25 @@ function getMunicipio( xml_municipio )
 		campoMunicipio.options[0].text = 'O estado não possui nenhum município';
 	}
 }
-
 document.getElementById('idmun').onchange = function()
 {
 	var campoMunicipio = document.getElementById('idmun').value;
-
 	var campoLogradouro = document.getElementById('idlog');
 	campoLogradouro.length = 1;
 	campoLogradouro.disabled = true;
 	campoLogradouro.options[0].text = 'Carregando logradouro...';
-
 	var xml_logradouro = new ajax( getLogradouro );
 	xml_logradouro.envia( "public_logradouro_xml.php?mun="+campoMunicipio );
 }
-
 function getLogradouro( xml_logradouro )
 {
 	var campoLogradouro = document.getElementById('idlog');
 	var DOM_array = xml_logradouro.getElementsByTagName( "logradouro" );
-
 	if(DOM_array.length)
 	{
 		campoLogradouro.length = 1;
 		campoLogradouro.options[0].text = 'Selecione um logradouro';
 		campoLogradouro.disabled = false;
-
 		for( var i = 0; i < DOM_array.length; i++ )
 		{
 			campoLogradouro.options[campoLogradouro.options.length] = new Option( DOM_array[i].firstChild.data, DOM_array[i].getAttribute("idlog"),false,false);
@@ -376,5 +335,4 @@ function getLogradouro( xml_logradouro )
 		campoLogradouro.options[0].text = 'O município não possui nenhum logradouro';
 	}
 }
-
 </script>
