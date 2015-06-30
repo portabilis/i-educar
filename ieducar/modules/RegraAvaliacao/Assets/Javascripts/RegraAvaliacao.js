@@ -22,3 +22,10 @@ $j(function(){
     }
 	}
 });
+// fix checkbox
+$j('[name^="recuperacao[excluir]"]').on('change', function(){
+  if($j(this).is(':checked'))
+    $j(this).val('on');
+  else
+    $j(this).val('');
+});

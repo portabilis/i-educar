@@ -134,7 +134,7 @@ class EditController extends Core_Controller_Page_EditController
       'help'   => 'Exemplo: Recuperação semestral I'
     ),
     'recuperacaoEtapasRecuperadas' => array(
-      'label'  => '<span style="padding-left: 10px"></span>Etapas recuperadas:',
+      'label'  => '<span style="padding-left: 10px"></span>Etapas:',
       'help'   => 'Separe as etapas com ponto e vírgula. Exemplo: 1;2.'
     ),
     'recuperacaoSubstituiMenorNota' => array(
@@ -146,8 +146,11 @@ class EditController extends Core_Controller_Page_EditController
       'help'   => 'Abaixo de qual média habilitar campo.'
     ),
     'recuperacaoNotaMaxima' => array(
-      'label'  => '<span style="padding-left: 10px"></span>Nota máxima:',
+      'label'  => '<span style="padding-left: 10px"></span>Nota máx:',
       'help'   => 'Nota máxima permitida para lançamento.'
+    ),
+    'recuperacaoExcluir' => array(
+      'label'  => '<span style="padding-left: 10px"></span>Excluir:'
     )
   );
 
@@ -434,6 +437,7 @@ var tabela_arredondamento = new function() {
         $recuperacaoSubstituiMenorNota = sprintf("recuperacao[substitui_menor_nota][%d]", $i);
         $recuperacaoMedia = sprintf("recuperacao[media][%d]", $i);
         $recuperacaoNotaMaxima = sprintf("recuperacao[nota_maxima][%d]", $i);
+        $recuperacaoExcluir = sprintf("recuperacao[excluir][%d]", $i);
 
         $this->campoRotulo($recuperacaoLabel, 'Recuperação ' . ($i + 1),
           $this->_getLabel(''), TRUE);
@@ -459,8 +463,12 @@ var tabela_arredondamento = new function() {
 
         // Nota máxima
         $this->campoTexto($recuperacaoNotaMaxima, $this->_getLabel('recuperacaoNotaMaxima'),
-          $recuperacao->notaMaxima, 4, 4, FALSE, FALSE, FALSE,
+          $recuperacao->notaMaxima, 4, 4, FALSE, FALSE, TRUE,
           $this->_getHelp('recuperacaoNotaMaxima'));
+
+        // Exclusão
+        $this->campoCheck($recuperacaoExcluir, $this->_getLabel('recuperacaoExcluir'),
+        FALSE, '', FALSE, FALSE, FALSE);
       }
 
       // Quebra
@@ -518,12 +526,16 @@ var tabela_arredondamento = new function() {
 
       // Se a instância já existir, use-a para garantir UPDATE
       if (NULL != ($instance = $this->_getRecuperacao($id))) {
-        $insert[$id] = $instance->setOptions($data);
+          $insert[$id] = $instance->setOptions($data);
       }
       else {
         $instance = new RegraAvaliacao_Model_RegraRecuperacao($data);
         if (!$instance->isNull()) {
-          $insert['new_' . $i] = $instance;
+          if($recuperacoes['excluir'][$i] && is_numeric($id)){
+            $this->getDataMapper()->getRegraRecuperacaoDataMapper()->delete($instance);
+          }
+          else
+            $insert['new_' . $i] = $instance;
         }
       }
     }
@@ -533,12 +545,11 @@ var tabela_arredondamento = new function() {
       // Atribui uma tabela de arredondamento a instância de tabela valor
       $regraRecuperacao->regraAvaliacao = $entity;
 
-      // Se não tiver nome, passa para o próximo
       if ($regraRecuperacao->isValid()) {
         $this->getDataMapper()->getRegraRecuperacaoDataMapper()->save($regraRecuperacao);
       }
       else {
-        $this->mensagem = 'Erro no formulário';
+        $this->mensagem .= 'Erro no formulário';
         return FALSE;
       }
     }
@@ -548,7 +559,7 @@ var tabela_arredondamento = new function() {
     }
     catch (Exception $e) {
       // TODO: ver @todo do docblock
-      $this->mensagem = 'Erro no preenchimento do formulário. ';
+      $this->mensagem .= 'Erro no preenchimento do formulário. ';
       return FALSE;
     }
 
