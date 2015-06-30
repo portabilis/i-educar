@@ -443,6 +443,11 @@ class clsUrbanoCepLogradouroBairro
 		}
 		return false;
 	}
+	function editaCepBairro($cep, $idBairro){
+		$db = new clsBanco();
+		$db->Consulta("UPDATE {$this->_tabela} SET idbai = '{$this->idbai}', cep = '{$this->cep}' WHERE idbai = $idBairro AND idlog = '{$this->idlog}' AND cep = '$cep'");
+		return true;
+	}
 	/**
 	 * Retorna uma lista filtrados de acordo com os parametros
 	 * 
@@ -713,13 +718,9 @@ class clsUrbanoCepLogradouroBairro
 	{
 		if( is_numeric( $this->idbai ) && is_numeric( $this->idlog ) && is_numeric( $this->cep ) )
 		{
-		/*
-			delete
-		$db = new clsBanco();
-		$db->Consulta( "DELETE FROM {$this->_tabela} WHERE idbai = '{$this->idbai}' AND idlog = '{$this->idlog}' AND cep = '{$this->cep}'" );
-		return true;
-		*/
-		
+			$db = new clsBanco();
+			$db->Consulta( "DELETE FROM {$this->_tabela} WHERE idbai = '{$this->idbai}' AND idlog = '{$this->idlog}' AND cep = '{$this->cep}'" );
+			return true;
 		}
 		return false;
 	}
