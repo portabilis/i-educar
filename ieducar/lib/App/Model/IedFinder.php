@@ -350,7 +350,7 @@ class App_Model_IedFinder extends CoreExt_Entity
    */
   public static function getEscolaSerieDisciplina($serieId, $escolaId,
     ComponenteCurricular_Model_ComponenteDataMapper $mapper = NULL,
-    $disciplinaId = null)
+    $disciplinaId = null, $etapa = null)
   {
     if (is_null($serieId))
       throw new App_Model_Exception('O parametro serieId não pode ser nulo');
@@ -362,7 +362,7 @@ class App_Model_IedFinder extends CoreExt_Entity
     $escolaSerieDisciplina = self::addClassToStorage('clsPmieducarEscolaSerieDisciplina',
       NULL, 'include/pmieducar/clsPmieducarEscolaSerieDisciplina.inc.php');
 
-    $disciplinas = $escolaSerieDisciplina->lista($serieId, $escolaId, $disciplinaId, 1);
+    $disciplinas = $escolaSerieDisciplina->lista($serieId, $escolaId, $disciplinaId, 1, false, $etapa);
 
     if (FALSE === $disciplinas) {
       throw new App_Model_Exception(sprintf(
@@ -401,7 +401,7 @@ class App_Model_IedFinder extends CoreExt_Entity
   public static function getComponentesTurma($serieId, $escola, $turma,
     ComponenteCurricular_Model_TurmaDataMapper $mapper = NULL,
     ComponenteCurricular_Model_ComponenteDataMapper $componenteMapper = NULL,
-    $componenteCurricularId = null)
+    $componenteCurricularId = null, $etapa = null)
   {
     if (is_null($mapper)) {
       require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
@@ -417,7 +417,7 @@ class App_Model_IedFinder extends CoreExt_Entity
 
     // Não existem componentes específicos para a turma
     if (0 == count($componentesTurma)) {
-      return self::getEscolaSerieDisciplina($serieId, $escola, $componenteMapper, $componenteCurricularId);
+      return self::getEscolaSerieDisciplina($serieId, $escola, $componenteMapper, $componenteCurricularId, $etapa);
     }
 
     $componentes = array();
@@ -578,7 +578,7 @@ class App_Model_IedFinder extends CoreExt_Entity
   public static function getComponentesPorMatricula($codMatricula,
     ComponenteCurricular_Model_ComponenteDataMapper $componenteMapper = NULL,
     ComponenteCurricular_Model_TurmaDataMapper $turmaMapper = NULL,
-    $componenteCurricularId = null)
+    $componenteCurricularId = null, $etapa = null)
   {
     $matricula = self::getMatricula($codMatricula);
 

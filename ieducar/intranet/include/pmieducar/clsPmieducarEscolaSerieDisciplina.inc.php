@@ -48,6 +48,8 @@ class clsPmieducarEscolaSerieDisciplina
   var $ref_cod_disciplina;
   var $ativo;
   var $carga_horaria;
+  var $etapas_especificas;
+  var $etapas_utilizadas;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -105,13 +107,13 @@ class clsPmieducarEscolaSerieDisciplina
    */
   function clsPmieducarEscolaSerieDisciplina($ref_ref_cod_serie = NULL,
     $ref_ref_cod_escola = NULL, $ref_cod_disciplina = NULL, $ativo = NULL,
-    $carga_horaria = NULL)
+    $carga_horaria = NULL, $etapas_especificas = NULL, $etapas_utilizadas = NULL)
   {
     $db = new clsBanco();
     $this->_schema = 'pmieducar.';
     $this->_tabela = $this->_schema . 'escola_serie_disciplina';
 
-    $this->_campos_lista = $this->_todos_campos = 'ref_ref_cod_serie, ref_ref_cod_escola, ref_cod_disciplina, carga_horaria';
+    $this->_campos_lista = $this->_todos_campos = 'ref_ref_cod_serie, ref_ref_cod_escola, ref_cod_disciplina, carga_horaria, etapas_especificas, etapas_utilizadas';
 
     if (is_numeric($ref_cod_disciplina)) {
       $componenteMapper = new ComponenteCurricular_Model_ComponenteDataMapper();
@@ -158,6 +160,16 @@ class clsPmieducarEscolaSerieDisciplina
     if (is_numeric($carga_horaria)) {
       $this->carga_horaria = $carga_horaria;
     }
+
+    if (is_numeric($etapas_especificas)) {
+      $this->etapas_especificas = $etapas_especificas;
+    }
+
+    if (is_string($etapas_utilizadas)) {
+      $this->etapas_utilizadas = $etapas_utilizadas;
+    }
+
+
   }
 
   /**
@@ -208,6 +220,22 @@ class clsPmieducarEscolaSerieDisciplina
         $gruda = ", ";
       }
 
+      if(is_numeric($this->etapas_especificas)){
+        $campos .= "{$gruda}etapas_especificas";
+        $valores .= "{$gruda}'{$this->etapas_especificas}'";
+        $gruda = ", ";
+      }
+
+      if(is_string($this->etapas_utilizadas)){
+        $campos .= "{$gruda}etapas_utilizadas";
+        $valores .= "{$gruda}'{$this->etapas_utilizadas}'";
+        $gruda = ", ";
+      }elseif(is_null($this->etapas_utilizadas)){
+        $campos .= "{$gruda}etapas_utilizadas";
+        $valores .= "{$gruda}NULL";
+        $gruda = ", ";
+      }
+
       $campos .= "{$gruda}ativo";
       $valores .= "{$gruda}'1'";
       $gruda = ", ";
@@ -246,6 +274,17 @@ class clsPmieducarEscolaSerieDisciplina
         $set .= "{$gruda}carga_horaria = NULL";
       }
 
+      if(is_string($this->etapas_especificas)){
+        $set .= "{$gruda}etapas_especificas = '{$this->etapas_especificas}'";
+        $gruda = ", ";
+      }
+      if(is_string($this->etapas_utilizadas)){
+        $set .= "{$gruda}etapas_utilizadas = '{$this->etapas_utilizadas}'";
+        $gruda = ", ";
+      }elseif(is_null($this->etapas_utilizadas)){
+        $set .= "{$gruda}etapas_utilizadas = NULL";
+      }
+
       if ($set) {
         $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE ref_ref_cod_serie = '{$this->ref_ref_cod_serie}' AND ref_ref_cod_escola = '{$this->ref_ref_cod_escola}' AND ref_cod_disciplina = '{$this->ref_cod_disciplina}'");
         return TRUE;
@@ -262,7 +301,7 @@ class clsPmieducarEscolaSerieDisciplina
    *   componentes curriculares
    */
   function lista($int_ref_ref_cod_serie = NULL, $int_ref_ref_cod_escola = NULL,
-    $int_ref_cod_disciplina = NULL, $int_ativo = NULL, $boo_nome_disc = FALSE)
+    $int_ref_cod_disciplina = NULL, $int_ativo = NULL, $boo_nome_disc = FALSE, $int_etapa = NULL)
   {
     $whereAnd = " WHERE ";
 
@@ -292,6 +331,11 @@ class clsPmieducarEscolaSerieDisciplina
 
     if (is_numeric($int_ativo)) {
       $filtros .= "{$whereAnd} escola_serie_disciplina.ativo = '{$int_ativo}'";
+      $whereAnd = " AND ";
+    }
+
+    if (is_numeric($int_etapa)){
+      $filtros .= "{$whereAnd} (case when escola_serie_disciplina.etapas_especificas = 1 then '{$int_etapa}' = ANY (string_to_array(escola_serie_disciplina.etapas_utilizadas,',')::int[]) else true end)";
       $whereAnd = " AND ";
     }
 
@@ -387,7 +431,7 @@ class clsPmieducarEscolaSerieDisciplina
   {
     if (is_numeric($this->ref_ref_cod_serie) && is_numeric($this->ref_ref_cod_escola)) {
       $db = new clsBanco();
-      $db->Consulta("UPDATE {$this->_tabela} SET ativo = '0' WHERE ref_ref_cod_serie = '{$this->ref_ref_cod_serie}' AND ref_ref_cod_escola = '{$this->ref_ref_cod_escola}'");
+      $db->Consulta("UPDATE {$this->_tabela} SET ativo = '0', etapas_especificas = '0' WHERE ref_ref_cod_serie = '{$this->ref_ref_cod_serie}' AND ref_ref_cod_escola = '{$this->ref_ref_cod_escola}'");
       return TRUE;
     }
 

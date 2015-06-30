@@ -160,12 +160,12 @@ class DiarioApiController extends ApiCoreController
       }
     }
 
-    if (! $hasPreviousNotas) {
-      $this->messenger->append("Nota somente pode ser lançada após lançar notas nas etapas: " .
-                               join(', ', $etapasWithoutNotas) . ' deste componente curricular.');
-    }
+    // if (! $hasPreviousNotas) {
+    //   $this->messenger->append("Nota somente pode ser lançada após lançar notas nas etapas: " .
+    //                            join(', ', $etapasWithoutNotas) . ' deste componente curricular.');
+    // }
 
-    return $hasPreviousNotas;
+    return true;
   }
 
 
@@ -973,7 +973,9 @@ class DiarioApiController extends ApiCoreController
     $componentesCurriculares  = array();
 
     $componenteCurricularId   = $this->getRequest()->componente_curricular_id;
-    $_componentesCurriculares = App_Model_IedFinder::getComponentesPorMatricula($matriculaId, null, null, $componenteCurricularId);
+    $etapa = $this->getRequest()->etapa;
+
+    $_componentesCurriculares = App_Model_IedFinder::getComponentesPorMatricula($matriculaId, null, null, $componenteCurricularId, $etapa);
 
     $turmaId = $this->getRequest()->turma_id;
 

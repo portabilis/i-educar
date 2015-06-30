@@ -75,7 +75,11 @@ class ComponenteCurricularController extends ApiCoreController
 		$instituicaoId = $this->getRequest()->instituicao_id;
 		$turmaId       = $this->getRequest()->turma_id;
 		$ano           = $this->getRequest()->ano;
-  	
+    $etapa         = $this->getRequest()->etapa;
+
+    if($etapa == ""){
+      $etapa = "0";
+    } 	
 
       $isProfessor   = Portabilis_Business_Professor::isProfessor($instituicaoId, $userId);
 
@@ -99,7 +103,7 @@ class ComponenteCurricularController extends ApiCoreController
                 	   cct.componente_curricular_id = cc.id and al.ano = $2 and 
                 	   cct.escola_id = al.ref_cod_escola and 
                 	   cc.area_conhecimento_id = ac.id and
-                	   (turma.ref_cod_disciplina_dispensada <> cc.id OR turma.ref_cod_disciplina_dispensada is null) 
+                	   (turma.ref_cod_disciplina_dispensada <> cc.id OR turma.ref_cod_disciplina_dispensada is null)
                  order by ac.secao, ac.nome, cc.ordenamento, cc.nome";
         
 
@@ -124,10 +128,11 @@ class ComponenteCurricularController extends ApiCoreController
                   		 esd.ativo = 1 and 
                   		 al.ativo = 1 and 
                   		 cc.area_conhecimento_id = ac.id and 
-                  		 (t.ref_cod_disciplina_dispensada <> cc.id OR t.ref_cod_disciplina_dispensada is null) 
+                  		 (t.ref_cod_disciplina_dispensada <> cc.id OR t.ref_cod_disciplina_dispensada is null) and
+                       (case when esd.etapas_especificas = 1 then $3 = ANY (string_to_array(etapas_utilizadas,',')::int[]) else true end)
                   order by ac.secao, ac.nome, cc.ordenamento, cc.nome";
 
-          $componentesCurriculares = $this->fetchPreparedQuery($sql, array($turmaId, $ano));
+          $componentesCurriculares = $this->fetchPreparedQuery($sql, array($turmaId, $ano, $etapa));
         }
       }
 
