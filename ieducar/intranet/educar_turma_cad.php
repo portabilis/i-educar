@@ -414,10 +414,10 @@ class indice extends clsCadastro
 		    	$opcoes["{$componente->id}"] = "{$componente->nome}";
 	    	}
     	$opcoes = $opcaoPadrao + $opcoes;
-    	$this->campoLista('ref_cod_disciplina_dispensada', 'Disciplina dispensada', $opcoes, $this->ref_cod_disciplina_dispensada, '', FALSE, '', '', FALSE, FALSE);	
+    	$this->campoLista('ref_cod_disciplina_dispensada', 'Disciplina dispensada', $opcoes, $this->ref_cod_disciplina_dispensada, '', FALSE, '', '', FALSE, FALSE);
     	}
     }
-   
+
     $ativo = isset($this->cod_turma) ? dbBool($this->visivel) : true;
     $this->campoCheck('visivel', 'Ativo', $ativo);
 
@@ -577,7 +577,7 @@ class indice extends clsCadastro
       $qtd_modulo = count($this->turma_modulo) == 0 ? 1 : (count($this->turma_modulo) + 1);
       echo "
         <script type=\"text/javascript\">
-          window.setTimeout(function() { 
+          window.setTimeout(function() {
             document.getElementById(\"event_incluir_dia_semana\").focus();
           }, 500);
         </script>

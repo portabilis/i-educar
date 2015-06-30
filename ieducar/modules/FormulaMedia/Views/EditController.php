@@ -71,8 +71,8 @@ class EditController extends Core_Controller_Page_EditController
                    &middot; Se - Soma das notas das etapas<br />
                    &middot; Rc - Nota da recuperação<br />
                    &middot; RSPN - Recuperação específica n (de 1 a 10)<br />
-                   &middot; SRSPN - Soma das etapas ou Recuperação específica (Pega maior) n (de 1 a 10)<br />
-                   &middot; MRSPN - Média das etapas ou Média das etapas com Recuperação específica (Pega maior) n (de 1 a 10)<br />
+                   &middot; RSPSN - Soma das etapas ou Recuperação específica (Pega maior) n (de 1 a 10)<br />
+                   &middot; RSPMN - Média das etapas ou Média das etapas com Recuperação específica (Pega maior) n (de 1 a 10)<br />
                    Símbolos disponíveis:<br />
                    &middot; (), +, /, *, x<br />
                    A variável "Rc" está disponível apenas<br />

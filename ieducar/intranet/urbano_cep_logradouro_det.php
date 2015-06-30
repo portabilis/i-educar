@@ -29,7 +29,6 @@ require_once ("include/clsDetalhe.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once( "include/urbano/geral.inc.php" );
 require_once( "include/public/clsPublicBairro.inc.php" );
-
 class clsIndexBase extends clsBase
 {
 	function Formular()
@@ -39,7 +38,6 @@ class clsIndexBase extends clsBase
 		$this->addEstilo('localizacaoSistema');
 	}
 }
-
 class indice extends clsDetalhe
 {
 	/**
@@ -70,9 +68,7 @@ class indice extends clsDetalhe
 		
 		$this->titulo = "Cep Logradouro - Detalhe";
 		
-
 		$this->idlog=$_GET["idlog"];
-
 		
 		$obj_cep_logradouro = new clsUrbanoCepLogradouro();
 		$lst_cep_logradouro = $obj_cep_logradouro->lista( null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, $this->idlog);
@@ -143,18 +139,14 @@ class indice extends clsDetalhe
 		{
 			$this->addDetalhe( array( "Tabela de CEP-Bairro", "{$tab_endereco}") );
 		}
-
 		$obj_permissao = new clsPermissoes();		
-
 		if($obj_permissao->permissao_cadastra(758, $this->pessoa_logada,7,null,true))
 	    {
       		$this->url_novo = "urbano_cep_logradouro_cad.php";
 			$this->url_editar = "urbano_cep_logradouro_cad.php?cep={$registro["cep"]}&idlog={$registro["idlog"]}";
 	    }		
-
 		$this->url_cancelar = "urbano_cep_logradouro_lst.php";
 		$this->largura = "100%";
-
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
@@ -163,7 +155,6 @@ class indice extends clsDetalhe
     $this->enviaLocalizacao($localizacao->montar());		
 	}
 }
-
 // cria uma extensao da classe base
 $pagina = new clsIndexBase();
 // cria o conteudo

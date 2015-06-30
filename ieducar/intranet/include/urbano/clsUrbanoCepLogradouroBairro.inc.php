@@ -29,9 +29,7 @@
 *
 * Criado em 13/02/2007 14:26 pelo gerador automatico de classes
 */
-
 require_once( "include/urbano/geral.inc.php" );
-
 class clsUrbanoCepLogradouroBairro
 {
 	var $idlog;
@@ -45,66 +43,55 @@ class clsUrbanoCepLogradouroBairro
 	var $operacao;
 	var $idsis_rev;
 	var $idsis_cad;
-
 	// propriedades padrao
-
 	/**
 	 * Armazena o total de resultados obtidos na ultima chamada ao metodo lista
 	 *
 	 * @var int
 	 */
 	var $_total;
-
 	/**
 	 * Nome do schema
 	 *
 	 * @var string
 	 */
 	var $_schema;
-
 	/**
 	 * Nome da tabela
 	 *
 	 * @var string
 	 */
 	var $_tabela;
-
 	/**
 	 * Lista separada por virgula, com os campos que devem ser selecionados na proxima chamado ao metodo lista
 	 *
 	 * @var string
 	 */
 	var $_campos_lista;
-
 	/**
 	 * Lista com todos os campos da tabela separados por virgula, padrao para selecao no metodo lista
 	 *
 	 * @var string
 	 */
 	var $_todos_campos;
-
 	/**
 	 * Valor que define a quantidade de registros a ser retornada pelo metodo lista
 	 *
 	 * @var int
 	 */
 	var $_limite_quantidade;
-
 	/**
 	 * Define o valor de offset no retorno dos registros no metodo lista
 	 *
 	 * @var int
 	 */
 	var $_limite_offset;
-
 	/**
 	 * Define o campo padrao para ser usado como padrao de ordenacao no metodo lista
 	 *
 	 * @var string
 	 */
 	var $_campo_order_by;
-
-
 	/**
 	 * Construtor (PHP 4)
 	 * 
@@ -127,9 +114,7 @@ class clsUrbanoCepLogradouroBairro
 		$db = new clsBanco();
 		$this->_schema = "urbano.";
 		$this->_tabela = "{$this->_schema}cep_logradouro_bairro";
-
 		$this->_campos_lista = $this->_todos_campos = "clb.idlog, clb.cep, clb.idbai, clb.idpes_rev, clb.data_rev, clb.origem_gravacao, clb.idpes_cad, clb.data_cad, clb.operacao, clb.idsis_rev, clb.idsis_cad";
-
 		if( is_numeric( $idsis_rev ) )
 		{
 			if( class_exists( "clsAcessoSistema" ) )
@@ -301,8 +286,6 @@ class clsUrbanoCepLogradouroBairro
 				}
 			}
 		}
-
-
 		if( is_string( $data_rev ) )
 		{
 			$this->data_rev = $data_rev;
@@ -319,9 +302,7 @@ class clsUrbanoCepLogradouroBairro
 		{
 			$this->operacao = $operacao;
 		}
-
 	}
-
 	/**
 	 * Cria um novo registro
 	 *
@@ -332,11 +313,9 @@ class clsUrbanoCepLogradouroBairro
 		if( is_numeric( $this->idlog ) && is_numeric( $this->cep ) && is_numeric( $this->idbai ) && is_string( $this->origem_gravacao ) && is_string( $this->operacao ) && is_numeric( $this->idsis_cad ) )
 		{
 			$db = new clsBanco();
-
 			$campos = "";
 			$valores = "";
 			$gruda = "";
-
 			if( is_numeric( $this->idlog ) )
 			{
 				$campos .= "{$gruda}idlog";
@@ -400,14 +379,11 @@ class clsUrbanoCepLogradouroBairro
 				$valores .= "{$gruda}'{$this->idsis_cad}'";
 				$gruda = ", ";
 			}
-
-
 			$db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
 			return true;
 		}
 		return false;
 	}
-
 	/**
 	 * Edita os dados de um registro
 	 *
@@ -417,10 +393,8 @@ class clsUrbanoCepLogradouroBairro
 	{
 		if( is_numeric( $this->idbai ) && is_numeric( $this->idlog ) && is_numeric( $this->cep ) )
 		{
-
 			$db = new clsBanco();
 			$set = "";
-
 			if( is_numeric( $this->idpes_rev ) )
 			{
 				$set .= "{$gruda}idpes_rev = '{$this->idpes_rev}'";
@@ -461,8 +435,6 @@ class clsUrbanoCepLogradouroBairro
 				$set .= "{$gruda}idsis_cad = '{$this->idsis_cad}'";
 				$gruda = ", ";
 			}
-
-
 			if( $set )
 			{
 				$db->Consulta( "UPDATE {$this->_tabela} SET $set WHERE idbai = '{$this->idbai}' AND idlog = '{$this->idlog}' AND cep = '{$this->cep}'" );
@@ -471,7 +443,11 @@ class clsUrbanoCepLogradouroBairro
 		}
 		return false;
 	}
-
+	function editaCepBairro($cep, $idBairro){
+		$db = new clsBanco();
+		$db->Consulta("UPDATE {$this->_tabela} SET idbai = '{$this->idbai}', cep = '{$this->cep}' WHERE idbai = $idBairro AND idlog = '{$this->idlog}' AND cep = '$cep'");
+		return true;
+	}
 	/**
 	 * Retorna uma lista filtrados de acordo com os parametros
 	 * 
@@ -495,9 +471,7 @@ class clsUrbanoCepLogradouroBairro
 		
 		$sql = "SELECT {$this->_campos_lista}{$select} FROM {$this->_tabela} {$from}";
 		$whereAnd = " AND ";
-
 		$filtros = " WHERE clb.idlog = l.idlog AND l.idmun = m.idmun AND m.sigla_uf = u.sigla_uf AND u.idpais = p.idpais ";
-
 		if( is_numeric( $int_idlog ) )
 		{
 			$filtros .= "{$whereAnd} clb.idlog = '{$int_idlog}'";
@@ -578,24 +552,18 @@ class clsUrbanoCepLogradouroBairro
 			$filtros .= "{$whereAnd} m.idmun = '{$int_idmun}'";
 			$whereAnd = " AND ";
 		}
-
-
 		$db = new clsBanco();
 		$countCampos = count( explode( ",", $this->_campos_lista ) );
 		$resultado = array();
-
 		$sql .= $filtros . $this->getOrderby() . $this->getLimite();
 //echo "<pre>"; print_r($sql);die;
 		$this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} {$from}{$filtros}" );
-
 		$db->Consulta( $sql );
-
 		if( $countCampos > 1 )
 		{
 			while ( $db->ProximoRegistro() )
 			{
 				$tupla = $db->Tupla();
-
 				$tupla["_total"] = $this->_total;
 				$resultado[] = $tupla;
 			}
@@ -622,9 +590,7 @@ class clsUrbanoCepLogradouroBairro
 		
 		$sql = "SELECT {$this->_campos_lista}{$select} FROM {$this->_tabela} {$from}";
 		$whereAnd = " AND ";
-
 		$filtros = " WHERE l.idmun = m.idmun AND m.sigla_uf = u.sigla_uf AND u.idpais = p.idpais  ";
-
 		if( is_numeric( $int_idlog ) )
 		{
 			$filtros .= "{$whereAnd} clb.idlog = '{$int_idlog}'";
@@ -646,23 +612,17 @@ class clsUrbanoCepLogradouroBairro
 			$filtros .= "{$whereAnd} m.idmun = '{$int_idmun}'";
 			$whereAnd = " AND ";
 		}
-
 		$db = new clsBanco();
 		$countCampos = count( explode( ",", $this->_campos_lista ) );
 		$resultado = array();
-
 		$sql .= $filtros . $this->getOrderby() . $this->getLimite();
-
 		$this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} {$from}{$filtros}" );
-
 		$db->Consulta( $sql );
-
 		if( $countCampos > 1 )
 		{
 			while ( $db->ProximoRegistro() )
 			{
 				$tupla = $db->Tupla();
-
 				$tupla["_total"] = $this->_total;
 				$resultado[] = $tupla;
 			}
@@ -681,7 +641,6 @@ class clsUrbanoCepLogradouroBairro
 		}
 		return false;
 	}
-
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
@@ -693,7 +652,6 @@ class clsUrbanoCepLogradouroBairro
 	{
 		if( is_numeric( $this->idbai ) && is_numeric( $this->idlog ) && is_numeric( $this->cep ) )
 		{
-
 			$db = new clsBanco();
 			$db->Consulta( "SELECT {$this->_todos_campos} FROM {$this->_tabela} clb WHERE clb.idbai = '{$this->idbai}' AND clb.idlog = '{$this->idlog}' AND clb.cep = '{$this->cep}'" );
 			$db->ProximoRegistro();
@@ -701,7 +659,6 @@ class clsUrbanoCepLogradouroBairro
 		}
 		return false;
 	}
-
 	/**
 	 * Retorna true se o registro existir. Caso contrário retorna false.
 	 *
@@ -720,7 +677,6 @@ class clsUrbanoCepLogradouroBairro
 		}
 		return false;
 	}
-
 	/**
 	 * Retorna true se o registro existir. Caso contrário retorna false.
 	 *
@@ -753,7 +709,6 @@ class clsUrbanoCepLogradouroBairro
 		}
 		return false;
 	}
-
 	/**
 	 * Exclui um registro
 	 *
@@ -763,19 +718,12 @@ class clsUrbanoCepLogradouroBairro
 	{
 		if( is_numeric( $this->idbai ) && is_numeric( $this->idlog ) && is_numeric( $this->cep ) )
 		{
-
-		/*
-			delete
-		$db = new clsBanco();
-		$db->Consulta( "DELETE FROM {$this->_tabela} WHERE idbai = '{$this->idbai}' AND idlog = '{$this->idlog}' AND cep = '{$this->cep}'" );
-		return true;
-		*/
-
-		
+			$db = new clsBanco();
+			$db->Consulta( "DELETE FROM {$this->_tabela} WHERE idbai = '{$this->idbai}' AND idlog = '{$this->idlog}' AND cep = '{$this->cep}'" );
+			return true;
 		}
 		return false;
 	}
-
 	/**
 	 * Exclui todos os registros
 	 *
@@ -791,7 +739,6 @@ class clsUrbanoCepLogradouroBairro
 		}
 		return false;
 	}
-
 	/**
 	 * Define quais campos da tabela serao selecionados na invocacao do metodo lista
 	 *
@@ -801,7 +748,6 @@ class clsUrbanoCepLogradouroBairro
 	{
 		$this->_campos_lista = $str_campos;
 	}
-
 	/**
 	 * Define que o metodo Lista devera retornoar todos os campos da tabela
 	 *
@@ -811,7 +757,6 @@ class clsUrbanoCepLogradouroBairro
 	{
 		$this->_campos_lista = $this->_todos_campos;
 	}
-
 	/**
 	 * Define limites de retorno para o metodo lista
 	 *
@@ -822,7 +767,6 @@ class clsUrbanoCepLogradouroBairro
 		$this->_limite_quantidade = $intLimiteQtd;
 		$this->_limite_offset = $intLimiteOffset;
 	}
-
 	/**
 	 * Retorna a string com o trecho da query resposavel pelo Limite de registros
 	 *
@@ -841,7 +785,6 @@ class clsUrbanoCepLogradouroBairro
 		}
 		return "";
 	}
-
 	/**
 	 * Define campo para ser utilizado como ordenacao no metolo lista
 	 *
@@ -851,13 +794,11 @@ class clsUrbanoCepLogradouroBairro
 	{
 		// limpa a string de possiveis erros (delete, insert, etc)
 		//$strNomeCampo = eregi_replace();
-
 		if( is_string( $strNomeCampo ) && $strNomeCampo )
 		{
 			$this->_campo_order_by = $strNomeCampo;
 		}
 	}
-
 	/**
 	 * Retorna a string com o trecho da query resposavel pela Ordenacao dos registros
 	 *
@@ -871,6 +812,5 @@ class clsUrbanoCepLogradouroBairro
 		}
 		return "";
 	}
-
 }
 ?>
