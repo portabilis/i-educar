@@ -160,10 +160,10 @@ class DiarioApiController extends ApiCoreController
       }
     }
 
-    // if (! $hasPreviousNotas) {
-    //   $this->messenger->append("Nota somente pode ser lançada após lançar notas nas etapas: " .
-    //                            join(', ', $etapasWithoutNotas) . ' deste componente curricular.');
-    // }
+    if (! $hasPreviousNotas) {
+      $this->messenger->append("Nota somente pode ser lançada após lançar notas nas etapas: " .
+                               join(', ', $etapasWithoutNotas) . ' deste componente curricular.');
+    }
 
     return true;
   }
