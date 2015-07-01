@@ -192,6 +192,7 @@ resourceOptions.handleGet = function(dataResponse) {
   tipo_resp = dataResponse.tipo_responsavel;
   $j('#religiao_id').val(dataResponse.religiao_id);
   $j('#tipo_transporte').val(dataResponse.tipo_transporte);
+  $j('#veiculo_transporte_escolar').val(dataResponse.veiculo_transporte_escolar).trigger('change');
   $j('#alfabetizado').attr('checked', dataResponse.alfabetizado);
 
   if(dataResponse.url_laudo_medico){
@@ -481,10 +482,10 @@ resourceOptions.handleGet = function(dataResponse) {
     $j('#transporte_rota').val(dataResponse.ref_cod_rota_transporte_escolar);
     chamaGetPonto();
 
-    $j('#transporte_observacao').val(dataResponse.observacao); 
+    $j('#transporte_observacao').val(dataResponse.observacao);
     if (dataResponse.ref_idpes_destino){
-      $j('#pessoaj_transporte_destino').val(dataResponse.ref_idpes_destino+' - '+dataResponse.nome_destino);  
-      $j('#pessoaj_id').val(dataResponse.ref_idpes_destino);    
+      $j('#pessoaj_transporte_destino').val(dataResponse.ref_idpes_destino+' - '+dataResponse.nome_destino);
+      $j('#pessoaj_id').val(dataResponse.ref_idpes_destino);
     }
   }
 };
@@ -662,13 +663,13 @@ function disableJustificativaFields(){
 }
 
 function enableJustificativaFields(){
-  $jField = $j('#justificativa_falta_documentacao');  
+  $jField = $j('#justificativa_falta_documentacao');
   $jField.removeAttr('disabled');
 
-  if(!$j('#labels_botucatu').length){    
+  if(!$j('#labels_botucatu').length){
     $jField.removeClass('geral');
     $jField.addClass('obrigatorio');
-  }  
+  }
 }
 
 var handleGetPersonParentDetails = function(dataResponse, parentType) {
@@ -781,7 +782,7 @@ function afterChangePessoa(targetWindow, parentType, parentId, parentName) {
     if (targetWindow == null || parentType != null){
       window.setTimeout(function() {
         messageUtils.success('Pessoa alterada com sucesso', $tempNomeField);
-        
+
         $tempIdField.val(parentId);
         if(!parentType){
           getPersonDetails(parentId);
@@ -966,8 +967,8 @@ function canShowParentsFields(){
             row.show();
           }
         });
-        if (typeof camposTransporte == 'function') { 
-          camposTransporte(); 
+        if (typeof camposTransporte == 'function') {
+          camposTransporte();
         }
       }
     );
@@ -996,7 +997,7 @@ function canShowParentsFields(){
         });
         first_click_medica = false;
       });
- 
+
     var first_click_moradia = true;
     // MORADIA
     $j('#tab4').click(
@@ -1203,7 +1204,7 @@ function canShowParentsFields(){
           if ($j( "#data-nasc-pessoa-parent" ).val() != ''){
             bValid = bValid && checkRegexp( datanascParent, /(^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$)/i, "O campo data de nascimento deve ser preenchido no formato dd/mm/yyyy." );
           }
-          
+
 
           if ( bValid ) {
             postPessoa(nameParent, nameParent.val(), sexoParent.val(), estadocivilParent.val(), datanascParent.val(), null, (editar_pessoa ? $j('#'+pessoaPaiOuMae+'_id').val() : null), pessoaPaiOuMae);
@@ -1623,13 +1624,13 @@ if($j('#transporte_rota').length > 0){
       campoPonto.options[0].text = 'Selecione uma rota acima';
 
     }else{
-      
+
       campoPonto.length = 1;
       campoPonto.disabled = true;
       campoPonto.options[0].text = 'Carregando pontos...';
-      
+
       var xml_ponto = new ajax( getPonto );
-      xml_ponto.envia( "ponto_xml.php?rota="+campoRota ); 
+      xml_ponto.envia( "ponto_xml.php?rota="+campoRota );
     }
   }
 

@@ -63,10 +63,11 @@ class clsPmieducarAluno
   var $recurso_prova_inep_prova_ampliada_16;
   var $recurso_prova_inep_prova_ampliada_20;
   var $recurso_prova_inep_prova_ampliada_24;
-  var $recurso_prova_inep_prova_braille;  
-  var $justificativa_falta_documentacao;  
-  var $url_laudo_medico;  
-  var $codigo_sistema;  
+  var $recurso_prova_inep_prova_braille;
+  var $justificativa_falta_documentacao;
+  var $url_laudo_medico;
+  var $codigo_sistema;
+  var $veiculo_transporte_escolar;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -131,11 +132,11 @@ class clsPmieducarAluno
     $this->_schema = 'pmieducar.';
     $this->_tabela = $this->_schema . 'aluno a';
 
-    $this->_campos_lista = $this->_todos_campos = 'a.cod_aluno, a.ref_cod_religiao, a.ref_usuario_exc, 
+    $this->_campos_lista = $this->_todos_campos = 'a.cod_aluno, a.ref_cod_religiao, a.ref_usuario_exc,
         a.ref_usuario_cad, a.ref_idpes, a.data_cadastro, a.data_exclusao, a.ativo, a.caminho_foto, a.analfabeto, a.nm_pai, a.nm_mae,tipo_responsavel, a.aluno_estado_id,
         a.recurso_prova_inep_aux_ledor, a.recurso_prova_inep_aux_transcricao, a.recurso_prova_inep_guia_interprete, a.recurso_prova_inep_interprete_libras, a.recurso_prova_inep_leitura_labial,
         a.recurso_prova_inep_prova_ampliada_16, a.recurso_prova_inep_prova_ampliada_20, a.recurso_prova_inep_prova_ampliada_24, a.recurso_prova_inep_prova_braille,
-        a.justificativa_falta_documentacao, a.url_laudo_medico, a.codigo_sistema';
+        a.justificativa_falta_documentacao, a.url_laudo_medico, a.codigo_sistema, a.veiculo_transporte_escolar ';
 
     if (is_numeric($ref_usuario_exc)) {
       if (class_exists('clsPmieducarUsuario')) {
@@ -326,44 +327,44 @@ class clsPmieducarAluno
         $campos  .= "{$gruda}recurso_prova_inep_guia_interprete";
         $valores .= "{$gruda}'{$this->recurso_prova_inep_guia_interprete}'";
         $gruda = ', ';
-      }                  
+      }
 
       if (is_numeric($this->recurso_prova_inep_interprete_libras)) {
         $campos  .= "{$gruda}recurso_prova_inep_interprete_libras";
         $valores .= "{$gruda}'{$this->recurso_prova_inep_interprete_libras}'";
         $gruda = ', ';
-      }                  
+      }
 
       if (is_numeric($this->recurso_prova_inep_leitura_labial)) {
         $campos  .= "{$gruda}recurso_prova_inep_leitura_labial";
         $valores .= "{$gruda}'{$this->recurso_prova_inep_leitura_labial}'";
         $gruda = ', ';
-      }                  
+      }
 
       if (is_numeric($this->recurso_prova_inep_prova_ampliada_16)) {
         $campos  .= "{$gruda}recurso_prova_inep_prova_ampliada_16";
         $valores .= "{$gruda}'{$this->recurso_prova_inep_prova_ampliada_16}'";
         $gruda = ', ';
-      }                  
+      }
 
       if (is_numeric($this->recurso_prova_inep_prova_ampliada_20)) {
         $campos  .= "{$gruda}recurso_prova_inep_prova_ampliada_20";
         $valores .= "{$gruda}'{$this->recurso_prova_inep_prova_ampliada_20}'";
         $gruda = ', ';
-      }                  
+      }
 
       if (is_numeric($this->recurso_prova_inep_prova_ampliada_24)) {
         $campos  .= "{$gruda}recurso_prova_inep_prova_ampliada_24";
         $valores .= "{$gruda}'{$this->recurso_prova_inep_prova_ampliada_24}'";
         $gruda = ', ';
-      }                  
+      }
 
       if (is_numeric($this->recurso_prova_inep_prova_braille)) {
         $campos  .= "{$gruda}recurso_prova_inep_prova_braille";
         $valores .= "{$gruda}'{$this->recurso_prova_inep_prova_braille}'";
         $gruda = ', ';
-      }   
-      
+      }
+
       if (is_numeric($this->justificativa_falta_documentacao)) {
         $campos  .= "{$gruda}justificativa_falta_documentacao";
         $valores .= "{$gruda}'{$this->justificativa_falta_documentacao}'";
@@ -380,7 +381,13 @@ class clsPmieducarAluno
         $campos  .= "{$gruda}codigo_sistema";
         $valores .= "{$gruda}'{$this->codigo_sistema}'";
         $gruda = ', ';
-      }      
+      }
+
+      if (is_numeric($this->veiculo_transporte_escolar)) {
+        $campos  .= "{$gruda}veiculo_transporte_escolar";
+        $valores .= "{$gruda}'{$this->veiculo_transporte_escolar}'";
+        $gruda = ', ';
+      }
 
       $db->Consulta("INSERT INTO pmieducar.aluno ($campos) VALUES ($valores)");
       return $db->InsertId("pmieducar.aluno_cod_aluno_seq");
@@ -525,7 +532,7 @@ class clsPmieducarAluno
       if (is_numeric($this->recurso_prova_inep_prova_braille)) {
         $set .= "{$gruda}recurso_prova_inep_prova_braille = '{$this->recurso_prova_inep_prova_braille}'";
         $gruda = ', ';
-      }                                                        
+      }
 
       if (is_numeric($this->justificativa_falta_documentacao)) {
         $set .= "{$gruda}justificativa_falta_documentacao = '{$this->justificativa_falta_documentacao}'";
@@ -540,7 +547,15 @@ class clsPmieducarAluno
       if (is_string($this->codigo_sistema)) {
         $set .= "{$gruda}codigo_sistema = '{$this->codigo_sistema}'";
         $gruda = ', ';
-      }            
+      }
+
+      if (is_string($this->veiculo_transporte_escolar)) {
+        $set .= "{$gruda}veiculo_transporte_escolar = '{$this->veiculo_transporte_escolar}'";
+        $gruda = ', ';
+      }else{
+        $set .= "{$gruda}veiculo_transporte_escolar = NULL ";
+        $gruda = ', ';
+      }
 
       if ($set) {
         $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_aluno = '{$this->cod_aluno}'" );
@@ -784,7 +799,7 @@ class clsPmieducarAluno
     $int_analfabeto = NULL, $str_nm_pai = NULL, $str_nm_mae = NULL,
     $int_ref_cod_escola = NULL, $str_tipo_responsavel = NULL, $data_nascimento = NULL,
     $str_nm_pai2 = NULL, $str_nm_mae2 = NULL, $str_nm_responsavel2 = NULL, $cod_inep = NULL,
-    $aluno_estado_id = NULL, $ano = NULL, $ref_cod_instituicao = NULL, $ref_cod_escola = NULL, 
+    $aluno_estado_id = NULL, $ano = NULL, $ref_cod_instituicao = NULL, $ref_cod_escola = NULL,
     $ref_cod_curso = NULL, $ref_cod_serie = NULL, $idsetorbai = NULL)//, $periodo = NULL )
   {
     $filtra_baseado_matricula = is_numeric($ano) || is_numeric($ref_cod_instituicao) || is_numeric($ref_cod_escola) || is_numeric($ref_cod_curso) || is_numeric($ref_cod_serie);// || is_numeric($periodo);
@@ -1020,10 +1035,10 @@ class clsPmieducarAluno
     if(is_numeric($periodo)){
       $filtros .= "{$whereAnd} EXISTS(
                       select 1
-                
+
                 FROM pmieducar.matricula_turma mt,
-                     pmieducar.turma 
-                     WHERE mt.ref_cod_matricula = m.cod_matricula and 
+                     pmieducar.turma
+                     WHERE mt.ref_cod_matricula = m.cod_matricula and
                      mt.ativo = 1 and
                      turma.cod_turma = mt.ref_cod_turma
                      AND turma_turno_id = {$periodo}
@@ -1091,7 +1106,7 @@ class clsPmieducarAluno
       $sqlCount .= '
         INNER JOIN cadastro.endereco_pessoa ep ON (a.ref_idpes = ep.idpes)
         INNER JOIN public.bairro b ON (ep.idbai = b.idbai)
-        INNER JOIN public.setor_bai sb ON (sb.idsetorbai = b.idsetorbai) 
+        INNER JOIN public.setor_bai sb ON (sb.idsetorbai = b.idsetorbai)
       ';
 
     $sqlCount .= $filtros;

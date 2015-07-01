@@ -20,41 +20,40 @@
  * com este programa; se não, escreva para a Free Software Foundation, Inc., no
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @author      Lucas Schmoeller da Silva <lucas@portabilis.com.br>
  * @category    i-Educar
  * @license     @@license@@
- * @package     Avaliacao
+ * @package     RegraAvaliacao
  * @subpackage  Modules
- * @since       Arquivo disponível desde a versão 1.1.0
+ * @since       ?
  * @version     $Id$
  */
 
 require_once 'CoreExt/DataMapper.php';
-require_once 'Avaliacao/Model/NotaComponente.php';
+require_once 'RegraAvaliacao/Model/RegraRecuperacao.php';
+require_once 'App/Model/IedFinder.php';
 
 /**
- * Avaliacao_Model_NotaComponenteDataMapper class.
+ * RegraAvaliacao_Model_RegraRecuperacaoDataMapper class.
  *
- * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @author      Lucas Schmoeller da Silva <lucas@portabilis.com.br>
  * @category    i-Educar
  * @license     @@license@@
- * @package     Avaliacao
+ * @package     RegraAvaliacao
  * @subpackage  Modules
- * @since       Classe disponível desde a versão 1.1.0
+ * @since       ?
  * @version     @@package_version@@
  */
-class Avaliacao_Model_NotaComponenteDataMapper extends CoreExt_DataMapper
+class RegraAvaliacao_Model_RegraRecuperacaoDataMapper extends CoreExt_DataMapper
 {
-  protected $_entityClass = 'Avaliacao_Model_NotaComponente';
-  protected $_tableName   = 'nota_componente_curricular';
+  protected $_entityClass = 'RegraAvaliacao_Model_RegraRecuperacao';
+  protected $_tableName   = 'regra_avaliacao_recuperacao';
   protected $_tableSchema = 'modules';
 
   protected $_attributeMap = array(
-    'notaAluno'                 => 'nota_aluno_id',
-    'componenteCurricular'      => 'componente_curricular_id',
-    'notaArredondada'           => 'nota_arredondada',
-    'notaRecuperacaoParalela'   => 'nota_recuperacao',
-    'notaRecuperacaoEspecifica'	=> 'nota_recuperacao_especifica',
-    'notaOriginal'		          => 'nota_original'
+    'regraAvaliacao'       => 'regra_avaliacao_id',
+    'etapasRecuperadas'    => 'etapas_recuperadas',
+    'substituiMenorNota'   => 'substitui_menor_nota',
+    'notaMaxima'            => 'nota_maxima'
   );
 }

@@ -723,6 +723,7 @@ class indice extends clsCadastro
     	' SELECT
         \'30\' as r30s1,
         ece.cod_escola_inep as r30s2,
+        ecd.cod_docente_inep as r30s3,
         s.cod_servidor as r30s4,
         p.nome as r30s5,
         p.email as r30s6,
@@ -748,6 +749,7 @@ class indice extends clsCadastro
         LEFT JOIN cadastro.raca r ON (r.cod_raca = rc.ref_cod_raca)
         LEFT JOIN public.municipio m ON (m.idmun = fis.idmun_nascimento)
         LEFT JOIN public.uf ON (uf.sigla_uf = m.sigla_uf)
+        LEFT JOIN modules.educacenso_cod_docente ecd ON ecd.cod_servidor = s.cod_servidor
         WHERE s.cod_servidor = $1
 
         LIMIT 1
@@ -808,6 +810,7 @@ class indice extends clsCadastro
 
 		\'40\' as r40s1,
 		ece.cod_escola_inep as r40s2,
+    ecd.cod_docente_inep as r40s3,
 		s.cod_servidor as r40s4,
 		fis.cpf as r40s5,
 		b.zona_localizacao as r40s6,
@@ -835,6 +838,7 @@ class indice extends clsCadastro
 		INNER JOIN public.uf ON (uf.sigla_uf = m.sigla_uf)
 		INNER JOIN public.pais ON (pais.idpais = uf.idpais)
 		INNER JOIN public.logradouro l ON (l.idlog = cl.idlog)
+    LEFT JOIN modules.educacenso_cod_docente ecd ON ecd.cod_servidor = s.cod_servidor
 		WHERE s.cod_servidor = $1
 
 		LIMIT 1
@@ -865,29 +869,30 @@ class indice extends clsCadastro
 
 		\'50\' as r50s1,
 		ece.cod_escola_inep as r50s2,
+    ecd.cod_docente_inep as r50s3,
 		s.cod_servidor as r50s4,
 		esc.escolaridade as r50s5,
 		situacao_curso_superior_1 as r50s6,
 		formacao_complementacao_pedagogica_1 as r50s7,
-		codigo_curso_superior_1 as r50s8,
+		(SELECT curso_id FROM modules.educacenso_curso_superior ecs WHERE ecs.id = codigo_curso_superior_1) as r50s8,
 		ano_inicio_curso_superior_1 as r50s9,
 		ano_conclusao_curso_superior_1 as r50s10,
 		tipo_instituicao_curso_superior_1 as r50s11,
-		instituicao_curso_superior_1 as r50s12,
+		(SELECT ies_id FROM modules.educacenso_ies ei WHERE ei.id = instituicao_curso_superior_1) as r50s12,
 		situacao_curso_superior_2 as r50s13,
 		formacao_complementacao_pedagogica_2 as r50s14,
-		codigo_curso_superior_2 as r50s15,
+    (SELECT curso_id FROM modules.educacenso_curso_superior ecs WHERE ecs.id = codigo_curso_superior_2) as r50s15,
 		ano_inicio_curso_superior_2 as r50s16,
 		ano_conclusao_curso_superior_2 as r50s17,
 		tipo_instituicao_curso_superior_2 as r50s18,
-		instituicao_curso_superior_2 as r50s19,
+		(SELECT ies_id FROM modules.educacenso_ies ei WHERE ei.id = instituicao_curso_superior_2) as r50s19,
 		situacao_curso_superior_3 as r50s20,
 		formacao_complementacao_pedagogica_3 as r50s21,
-		codigo_curso_superior_3 as r50s22,
+		(SELECT curso_id FROM modules.educacenso_curso_superior ecs WHERE ecs.id = codigo_curso_superior_3) as r50s22,
 		ano_inicio_curso_superior_3 as r50s23,
 		ano_conclusao_curso_superior_3 as r50s24,
 		tipo_instituicao_curso_superior_3 as r50s25,
-		instituicao_curso_superior_3 as r50s26,
+		(SELECT ies_id FROM modules.educacenso_ies ei WHERE ei.id = instituicao_curso_superior_3) as r50s26,
 		pos_especializacao as r50s27,
 		pos_mestrado as r50s28,
 		pos_doutorado as r50s29,
@@ -917,6 +922,7 @@ class indice extends clsCadastro
 		INNER JOIN pmieducar.escola e ON (sa.ref_cod_escola = e.cod_escola)
 		INNER JOIN modules.educacenso_cod_escola ece ON (ece.cod_escola = e.cod_escola)
 		INNER JOIN cadastro.escolaridade esc ON (esc.idesco = s.ref_idesco)
+    LEFT JOIN modules.educacenso_cod_docente ecd ON ecd.cod_servidor = s.cod_servidor
 		WHERE s.cod_servidor = $1
 
 		LIMIT 1
@@ -952,6 +958,7 @@ class indice extends clsCadastro
 
 			\'51\' as r51s1,
 			ece.cod_escola_inep as r51s2,
+      ecd.cod_docente_inep as r51s3,
 			s.cod_servidor as r51s4,
 			t.cod_turma as r51s6,
 			pt.funcao_exercida as r51s7,
@@ -1135,6 +1142,7 @@ class indice extends clsCadastro
 			INNER JOIN modules.educacenso_cod_escola ece ON (ece.cod_escola = e.cod_escola)
 			INNER JOIN modules.professor_turma pt ON (pt.servidor_id = s.cod_servidor)
 			INNER JOIN pmieducar.turma t ON (pt.turma_id = t.cod_turma)
+      LEFT JOIN modules.educacenso_cod_docente ecd ON ecd.cod_servidor = s.cod_servidor
 			WHERE s.cod_servidor = $1
 			AND e.cod_escola = t.ref_ref_cod_escola
   	';
@@ -1166,6 +1174,7 @@ class indice extends clsCadastro
       p.idpes,
       \'60\' as r60s1,
       ece.cod_escola_inep as r60s2,
+      eca.cod_aluno_inep as r60s3,
       p.nome as r60s5,
       fis.data_nasc as r60s6, /*tratar formato*/
       fis.sexo as r60s7, /*tratar na aplicação formato*/
@@ -1197,6 +1206,7 @@ class indice extends clsCadastro
       LEFT JOIN cadastro.raca r ON (r.cod_raca = rc.ref_cod_raca)
       LEFT JOIN public.municipio mun ON (mun.idmun = fis.idmun_nascimento)
       LEFT JOIN public.uf ON (uf.sigla_uf = mun.sigla_uf)
+      LEFT JOIN modules.educacenso_cod_aluno eca ON a.cod_aluno = eca.cod_aluno
 
       WHERE e.cod_escola = $1
       AND COALESCE(m.data_matricula,m.data_cadastro) BETWEEN DATE($3) AND DATE($4)
@@ -1288,6 +1298,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
         distinct(a.cod_aluno) as r70s4,
         \'70\' as r70s1,
         ece.cod_escola_inep as r70s2,
+        eca.cod_aluno_inep as r70s3,
         fd.rg as r70s5,
         oer.sigla as r70s6,
         (SELECT cod_ibge FROM public.uf WHERE uf.sigla_uf = fd.sigla_uf_exp_rg) as r70s7,
@@ -1329,6 +1340,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
         INNER JOIN public.uf ON (uf.sigla_uf = mun.sigla_uf)
         INNER JOIN public.pais ON (pais.idpais = uf.idpais)
         INNER JOIN public.logradouro l ON (l.idlog = cl.idlog)
+        LEFT JOIN modules.educacenso_cod_aluno eca ON a.cod_aluno = eca.cod_aluno
 
         WHERE e.cod_escola = $1
         AND COALESCE(m.data_matricula,m.data_cadastro) BETWEEN DATE($3) AND DATE($4)
@@ -1390,6 +1402,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
 
         \'80\' as r80s1,
         ece.cod_escola_inep as r80s2,
+        eca.cod_aluno_inep as r80s3,
         a.cod_aluno as r80s4,
         t.cod_turma as r80s6,
         t.turma_unificada as r80s8,
@@ -1494,7 +1507,9 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
           INNER JOIN modules.pessoa_transporte pt ON (pt.ref_cod_rota_transporte_escolar = rte.cod_rota_transporte_escolar)
           WHERE pt.ref_idpes = fis.idpes
           AND v.ref_cod_tipo_veiculo = 11
-        ) as r80s23
+        ) as r80s23,
+
+        a.veiculo_transporte_escolar
 
         FROM  pmieducar.aluno a
         INNER JOIN cadastro.fisica fis ON (fis.idpes = a.ref_idpes)
@@ -1504,6 +1519,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
         INNER JOIN pmieducar.escola e ON (m.ref_ref_cod_escola = e.cod_escola)
         INNER JOIN modules.educacenso_cod_escola ece ON (ece.cod_escola = e.cod_escola)
         LEFT JOIN modules.transporte_aluno ta ON (ta.aluno_id = a.cod_aluno)
+        LEFT JOIN modules.educacenso_cod_aluno eca ON a.cod_aluno = eca.cod_aluno
 
         WHERE e.cod_escola = $1
         AND COALESCE(m.data_matricula,m.data_cadastro) BETWEEN DATE($3) AND DATE($4)
@@ -1529,7 +1545,11 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
             $veiculo = true;
         }
         if ($veiculo)
-          $r80s11 == 1;
+          $r80s11 = 1;
+        elseif($veiculo_transporte_escolar){
+          $r80s11 = 1;
+          ${'r80s'.($veiculo_transporte_escolar + 12)} = 1;
+        }
         $r80s12 = $transporte_escolar;
       }else{
         for ($i=13; $i <= 23 ; $i++) {
@@ -1554,7 +1574,9 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
   }
 
   protected function upperAndUnaccent($string){
-    return strtoupper(str_replace('?', '', Portabilis_String_Utils::unaccent($string)));
+    $string = strtr($string,'àáâãäçèéêëìíîïñòóôõöùúûüýÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝ','aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY');
+
+    return strtoupper(str_replace('?', '', $string));
   }
 }
 // Instancia objeto de página

@@ -26,8 +26,6 @@
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 require_once ("include/clsBanco.inc.php");
 require_once ("include/Geral.inc.php");
-
-
 class clsBairro
 {
 	var $idbai;
@@ -46,7 +44,6 @@ class clsBairro
 	
 	var $tabela;
 	var $schema = "public";
-
 	/**
 	 * Construtor
 	 *
@@ -65,7 +62,6 @@ class clsBairro
 		
 		$this->geom = $str_geom;
 		$this->nome = $str_nome;
-
 		$this->idpes_cad = $int_idpes_cad;
 		$this->idpes_rev = $int_idpes_rev;
 		$this->idsis_cad = $int_idsis_cad;
@@ -76,7 +72,6 @@ class clsBairro
 		
 		$this->tabela = "bairro";
 	}
-
 	/**
 	 * Funcao que cadastra um novo registro com os valores atuais
 	 *
@@ -121,19 +116,16 @@ class clsBairro
 				$campos .= ", zona_localizacao";
 				$values .= ", '{$this->zona_localizacao}' ";
 			}
-
 			if( is_numeric( $this->iddis) )
 			{
 				$campos .= ", iddis";
 				$values .= ", '{$this->iddis}' ";
 			}		
 			$db->Consulta( "INSERT INTO {$this->schema}.{$this->tabela} ( idmun, origem_gravacao, operacao, idsis_cad, nome, data_cad$campos ) VALUES ( '{$this->idmun}', 'U', 'I', '9', '{$this->nome}', NOW()$values )" );
-
 			return $db->InsertId("{$this->schema}.seq_bairro");
 		}
 		return false;
 	}
-
 	/**
 	 * Edita o registro atual
 	 *
@@ -145,7 +137,6 @@ class clsBairro
 		if( is_numeric( $this->idmun ) && is_string( $this->nome ) )
 		{
 			$set = "SET idmun = '{$this->idmun}', nome = '{$this->nome}'";
-
 			if( is_string( $this->geom ) )
 			{
 				$set .= ", geom = '{$this->geom}'";
@@ -161,7 +152,6 @@ class clsBairro
 		}
 		return false;
 	}
-
 	/**
 	 * Remove o registro atual
 	 *
@@ -187,7 +177,6 @@ class clsBairro
 		}
 		return false;
 	}
-
 	/**
 	 * Exibe uma lista baseada nos parametros de filtragem passados
 	 *
@@ -231,13 +220,11 @@ class clsBairro
 		{
 			$orderBy = "ORDER BY $str_orderBy";
 		}
-
 		$limit = "";
 		if( is_numeric( $int_limite_ini ) && is_numeric( $int_limite_qtd ) )
 		{
 			$limit = " LIMIT $int_limite_ini,$int_limite_qtd";
 		}
-
 		$db = new clsBanco();
 		$db->Consulta( "SELECT COUNT(0) AS total FROM {$this->schema}.{$this->tabela} $where" );
 		$db->ProximoRegistro();
@@ -257,7 +244,6 @@ class clsBairro
 		}
 		return false;
 	}
-
 	/**
 	 * Retorna um array com os detalhes do objeto
 	 *
@@ -276,7 +262,6 @@ class clsBairro
 				$this->idmun = $tupla["idmun"];
 				$this->geom = $tupla["geom"];
 				$this->nome = $tupla["nome"];
-
 				$tupla["idmun"] = new clsMunicipio( $tupla["idmun"] );
 				return $tupla;
 			}

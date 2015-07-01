@@ -30,6 +30,7 @@
 
 require_once 'Core/Controller/Page/EditController.php';
 require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
+require_once 'RegraAvaliacao/Model/RegraRecuperacaoDataMapper.php';
 
 /**
  * EditController class.
@@ -115,6 +116,41 @@ class EditController extends Core_Controller_Page_EditController
     'mediaRecuperacaoParalela' => array(
       'label'   => 'Média da recuperação paralela',
       'help'    => ''
+    ),
+    'notaMaximaGeral' => array(
+      'label'   => 'Nota máxima geral',
+      'help'    => 'Informe o valor máximo para notas no geral'
+    ),
+    'notaMaximaExameFinal' => array(
+      'label'   => 'Nota máxima exame final',
+      'help'    => 'Informe o valor máximo para nota do exame final'
+    ),
+    'qtdCasasDecimais' => array(
+      'label'   => 'Quantidade máxima de casas decimais',
+      'help'    => 'Informe o número máximo de casas decimais'
+    ),
+    'recuperacaoDescricao' => array(
+      'label'  => 'Descrição do exame:',
+      'help'   => 'Exemplo: Recuperação semestral I'
+    ),
+    'recuperacaoEtapasRecuperadas' => array(
+      'label'  => '<span style="padding-left: 10px"></span>Etapas:',
+      'help'   => 'Separe as etapas com ponto e vírgula. Exemplo: 1;2.'
+    ),
+    'recuperacaoSubstituiMenorNota' => array(
+      'label'  => '<span style="padding-left: 10px"></span>Substituí menor nota:',
+      'help'   => 'Caso marcado irá substituir menor nota.'
+    ),
+    'recuperacaoMedia' => array(
+      'label'  => '<span style="padding-left: 10px"></span>Média:',
+      'help'   => 'Abaixo de qual média habilitar campo.'
+    ),
+    'recuperacaoNotaMaxima' => array(
+      'label'  => '<span style="padding-left: 10px"></span>Nota máx:',
+      'help'   => 'Nota máxima permitida para lançamento.'
+    ),
+    'recuperacaoExcluir' => array(
+      'label'  => '<span style="padding-left: 10px"></span>Excluir:'
     )
   );
 
@@ -182,6 +218,57 @@ var tabela_arredondamento = new function() {
 }
 ';
 
+  /**
+   * Array de instâncias RegraAvaliacao_Model_RegraRecuperacao.
+   * @var array
+   */
+  protected $_recuperacoes = array();
+
+  /**
+   * Setter.
+   * @param array $recuperacoes
+   * @return Core_Controller_Page_Abstract Provê interface fluída
+   */
+  protected function _setRecuperacoes(array $recuperacoes = array())
+  {
+    foreach ($recuperacoes as $key => $recuperacao) {
+      $this->_recuperacoes[$recuperacao->id] = $recuperacao;
+    }
+    return $this;
+  }
+
+  /**
+   * Getter.
+   * @return array
+   */
+  protected function _getRecuperacoes()
+  {
+    return $this->_recuperacoes;
+  }
+
+  /**
+   * Getter
+   * @param int $id
+   * @return RegraAvaliacao_Model_RegraRecuperacao
+   */
+  protected function _getRecuperacao($id)
+  {
+    return isset($this->_recuperacoes[$id]) ? $this->_recuperacoes[$id] : NULL;
+  }
+
+  /**
+   * @see Core_Controller_Page_EditController#_preConstruct()
+   * @todo Interação com a API está errada. Isso já é feito em _initNovo()
+   *   na superclasse. VER.
+   */
+  protected function _preConstruct()
+  {
+    if (isset($this->getRequest()->id) && 0 < $this->getRequest()->id) {
+      //$this->setEntity($this->getDataMapper()->find($this->getRequest()->id));
+      //$this->_setRecuperacoes($this->getDataMapper()->findRegraRecuperacao($this->getEntity()));
+    }
+  }
+
   protected function _preRender()
   {
     parent::_preRender();
@@ -221,9 +308,9 @@ var tabela_arredondamento = new function() {
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_index.php"                  => "i-Educar - Escola",
-         ""        => "$nomeMenu regra de avalia&ccedil;&atilde;o"             
+         ""        => "$nomeMenu regra de avalia&ccedil;&atilde;o"
     ));
-    $this->enviaLocalizacao($localizacao->montar());    
+    $this->enviaLocalizacao($localizacao->montar());
   }
 
   /**
@@ -303,16 +390,179 @@ var tabela_arredondamento = new function() {
     $this->campoRadio('tipoPresenca', $this->_getLabel('tipoPresenca'),
       $tipoPresenca->getEnums(), $this->getEntity()->get('tipoPresenca'), '',
       $this->_getHelp('tipoPresenca'));
-    
+
+    $this->campoNumero('notaMaximaGeral', $this->_getLabel('notaMaximaGeral'), $this->getEntity()->notaMaximaGeral,
+      3, 3, TRUE, FALSE, FALSE, $this->_getHelp('notaMaximaGeral'));
+
+    $this->campoNumero('notaMaximaExameFinal', $this->_getLabel('notaMaximaExameFinal'), $this->getEntity()->notaMaximaExameFinal,
+      3, 3, TRUE, FALSE, FALSE, $this->_getHelp('notaMaximaExameFinal'));
+
+    $this->campoNumero('qtdCasasDecimais', $this->_getLabel('qtdCasasDecimais'), $this->getEntity()->qtdCasasDecimais,
+      3, 3, TRUE, FALSE, FALSE, $this->_getHelp('qtdCasasDecimais'));
+
     $tipoRecuperacaoParalela = RegraAvaliacao_Model_TipoRecuperacaoParalela::getInstance();
-    // echo"<pre>";var_dump($tipoRecuperacaoParalela);die;
+
     $this->campoLista('tipoRecuperacaoParalela', $this->_getLabel('tipoRecuperacaoParalela'),
       $tipoRecuperacaoParalela->getEnums(), $this->getEntity()->get('tipoRecuperacaoParalela'), '', FALSE,
       $this->_getHelp('tipoRecuperacaoParalela'), '', FALSE, FALSE);
 
 
-    $this->campoTexto('mediaRecuperacaoParalela', $this->_getLabel('mediaRecuperacaoParalela'), 
-                       $this->getEntity()->mediaRecuperacaoParalela, 5, 50, FALSE, FALSE, 
+    $this->campoTexto('mediaRecuperacaoParalela', $this->_getLabel('mediaRecuperacaoParalela'),
+                       $this->getEntity()->mediaRecuperacaoParalela, 5, 50, FALSE, FALSE,
                        FALSE, $this->_getHelp('mediaRecuperacaoParalela'));
+
+    // Parte condicional
+    if (!$this->getEntity()->isNew()) {
+      // Quebra
+      $this->campoQuebra();
+
+      // Ajuda
+      $help = 'Caso seja necessário adicionar mais etapas, '
+            . 'salve o formulário. Automaticamente 3 campos '
+            . 'novos ficarão disponíveis.<br /> '
+            . 'As etapas devem ser separadas por ponto e vírgula(;). <br /><br />';
+
+      $this->campoRotulo('__help1', '<strong>Recuperações específicas</strong><br />', $help, FALSE, '', '');
+
+      // Cria campos para a postagem de notas
+      $recuperacoes = $this->getDataMapper()->findRegraRecuperacao($this->getEntity());
+
+      for ($i = 0, $loop = count($recuperacoes); $i < ($loop == 0 ? 5 : $loop + 3); $i++) {
+        $recuperacao = $recuperacoes[$i];
+
+        $recuperacaoLabel        = sprintf("recuperacao[label][%d]", $i);
+        $recuperacaoId           = sprintf("recuperacao[id][%d]", $i);
+        $recuperacaoDescricao    = sprintf("recuperacao[descricao][%d]", $i);
+        $recuperacaoEtapasRecuperadas    = sprintf("recuperacao[etapas_recuperadas][%d]", $i);
+        $recuperacaoSubstituiMenorNota = sprintf("recuperacao[substitui_menor_nota][%d]", $i);
+        $recuperacaoMedia = sprintf("recuperacao[media][%d]", $i);
+        $recuperacaoNotaMaxima = sprintf("recuperacao[nota_maxima][%d]", $i);
+        $recuperacaoExcluir = sprintf("recuperacao[excluir][%d]", $i);
+
+        $this->campoRotulo($recuperacaoLabel, 'Recuperação ' . ($i + 1),
+          $this->_getLabel(''), TRUE);
+
+        // Id
+        $this->campoOculto($recuperacaoId, $recuperacao->id);
+
+        // Nome
+        $this->campoTexto($recuperacaoDescricao, $this->_getLabel('recuperacaoDescricao'),
+          $recuperacao->descricao, 10, 25, FALSE, FALSE, TRUE, $this->_getHelp('recuperacaoDescricao'));
+
+        // Etapas recuperadas
+        $this->campoTexto($recuperacaoEtapasRecuperadas, $this->_getLabel('recuperacaoEtapasRecuperadas'),
+        $recuperacao->etapasRecuperadas, 5, 25, FALSE, FALSE, TRUE, $this->_getHelp('recuperacaoEtapasRecuperadas'));
+
+        // Substituí menor nota
+        $this->campoCheck($recuperacaoSubstituiMenorNota, $this->_getLabel('recuperacaoSubstituiMenorNota'),
+        $recuperacao->substituiMenorNota, '', TRUE, FALSE, FALSE, $this->_getHelp('recuperacaoSubstituiMenorNota'));
+
+        // Média
+        $this->campoTexto($recuperacaoMedia, $this->_getLabel('recuperacaoMedia'),
+          $recuperacao->media, 4, 4, FALSE, FALSE, TRUE, $this->_getHelp('recuperacaoMedia'));
+
+        // Nota máxima
+        $this->campoTexto($recuperacaoNotaMaxima, $this->_getLabel('recuperacaoNotaMaxima'),
+          $recuperacao->notaMaxima, 4, 4, FALSE, FALSE, TRUE,
+          $this->_getHelp('recuperacaoNotaMaxima'));
+
+        // Exclusão
+        $this->campoCheck($recuperacaoExcluir, $this->_getLabel('recuperacaoExcluir'),
+        FALSE, '', FALSE, FALSE, FALSE);
+      }
+
+      // Quebra
+      $this->campoQuebra();
+    }
+  }
+
+  protected function _save()
+  {
+
+    $data = array();
+
+    foreach ($_POST as $key => $val) {
+      if (array_key_exists($key, $this->_formMap)) {
+        $data[$key] = $val;
+      }
+    }
+
+    // Verifica pela existência do field identity
+    if (isset($this->getRequest()->id) && 0 < $this->getRequest()->id) {
+      $this->setEntity($this->getDataMapper()->find($this->getRequest()->id));
+      $entity = $this->getEntity();
+    }
+
+    if (isset($entity)) {
+      $this->getEntity()->setOptions($data);
+    }
+    else {
+      $this->setEntity($this->getDataMapper()->createNewEntityInstance($data));
+    }
+
+    // Processa os dados da requisição, apenas os valores para a tabela de valores.
+    $recuperacoes = $this->getRequest()->recuperacao;
+
+    // A contagem usa um dos índices do formulário, senão ia contar sempre 4.
+    $loop    = count($recuperacoes['id']);
+
+    // Array de objetos a persistir
+    $insert  = array();
+
+    // Cria um array de objetos a persistir
+    for ($i = 0; $i < $loop; $i++) {
+      $id = $recuperacoes['id'][$i];
+
+      // Não atribui a instância de $entity senão não teria sucesso em verificar
+      // se a instância é isNull().
+      $data = array(
+        'id' => $id,
+        'descricao' => $recuperacoes['descricao'][$i],
+        'etapasRecuperadas' => $recuperacoes['etapas_recuperadas'][$i],
+        'substituiMenorNota' => $recuperacoes['substitui_menor_nota'][$i],
+        'media' => $recuperacoes['media'][$i],
+        'notaMaxima' => $recuperacoes['nota_maxima'][$i]
+      );
+
+      // Se a instância já existir, use-a para garantir UPDATE
+      if (NULL != ($instance = $this->_getRecuperacao($id))) {
+          $insert[$id] = $instance->setOptions($data);
+      }
+      else {
+        $instance = new RegraAvaliacao_Model_RegraRecuperacao($data);
+        if (!$instance->isNull()) {
+          if($recuperacoes['excluir'][$i] && is_numeric($id)){
+            $this->getDataMapper()->getRegraRecuperacaoDataMapper()->delete($instance);
+          }
+          else
+            $insert['new_' . $i] = $instance;
+        }
+      }
+    }
+
+    // Persiste
+    foreach ($insert as $regraRecuperacao) {
+      // Atribui uma tabela de arredondamento a instância de tabela valor
+      $regraRecuperacao->regraAvaliacao = $entity;
+
+      if ($regraRecuperacao->isValid()) {
+        $this->getDataMapper()->getRegraRecuperacaoDataMapper()->save($regraRecuperacao);
+      }
+      else {
+        $this->mensagem .= 'Erro no formulário';
+        return FALSE;
+      }
+    }
+
+    try {
+      $entity = $this->getDataMapper()->save($this->getEntity());
+    }
+    catch (Exception $e) {
+      // TODO: ver @todo do docblock
+      $this->mensagem .= 'Erro no preenchimento do formulário. ';
+      return FALSE;
+    }
+
+    return TRUE;
   }
 }

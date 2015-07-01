@@ -306,7 +306,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
       'recurso_prova_inep_prova_ampliada_24' => array('label' => 'Necessita de prova ampliada? (Fonte 24)'),
 
       'recurso_prova_inep_prova_braille' => array('label' => 'Necessita de prova em Braille?'),
-      
+
       'transporte_rota' => array(
         'label'  => 'Rota',
         'help'   => '',
@@ -314,11 +314,11 @@ class AlunoController extends Portabilis_Controller_Page_EditController
       'transporte_ponto' => array(
         'label'  => 'Ponto de embarque',
         'help'   => '',
-      ),    
+      ),
       'transporte_destino' => array(
         'label'  => 'Destino (Caso for diferente da rota)',
         'help'   => '',
-      ),        
+      ),
       'transporte_observacao' => array(
         'label'  => 'Observações',
         'help'   => '',
@@ -406,18 +406,18 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     // código aluno rede estadual
     // foi criado um campo "campoRA", mas ele funciona somente para botucatu
     if($labels_botucatu){
-      $this->campoRA('aluno_estado_id', Portabilis_String_Utils::toLatin1("Código rede estadual (RA)"), $this->aluno_estado_id, FALSE);  
+      $this->campoRA('aluno_estado_id', Portabilis_String_Utils::toLatin1("Código rede estadual (RA)"), $this->aluno_estado_id, FALSE);
     }else{
       $options = array('label' => $this->_getLabel('aluno_estado_id'), 'required' => false, 'size' => 25, 'max_length' => 25);
-      $this->inputsHelper()->text('aluno_estado_id', $options);  
+      $this->inputsHelper()->text('aluno_estado_id', $options);
     }
-    
+
     // código aluno sistema
     if($GLOBALS['coreExt']['Config']->app->alunos->mostrar_codigo_sistema){
     	$options = array('label' => Portabilis_String_Utils::toLatin1($GLOBALS['coreExt']['Config']->app->alunos->codigo_sistema), 'required' => false, 'size' => 25, 'max_length' => 30);
     	$this->inputsHelper()->text('codigo_sistema', $options);
     }
-    
+
 
     // nome
     $options = array('label' => $this->_getLabel('pessoa'), 'size' => 68);
@@ -607,7 +607,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
     // pai
     $this->inputPai();
-    
+
     // mãe
     $this->inputMae();
 
@@ -661,10 +661,29 @@ class AlunoController extends Portabilis_Controller_Page_EditController
                      'required'  => true);
 
     $this->inputsHelper()->select('tipo_transporte', $options);
-   
+
+    $veiculos = array(null        => 'Nenhum',
+                      1  => Portabilis_String_Utils::toLatin1('Rodoviário - Vans/Kombis'),
+                      2  => Portabilis_String_Utils::toLatin1('Rodoviário - Microônibus'),
+                      3  => Portabilis_String_Utils::toLatin1('Rodoviário - Ônibus'),
+                      4  => Portabilis_String_Utils::toLatin1('Rodoviário - Bicicleta'),
+                      5  => Portabilis_String_Utils::toLatin1('Rodoviário - Tração animal'),
+                      6  => Portabilis_String_Utils::toLatin1('Rodoviário - Outro'),
+                      7  => Portabilis_String_Utils::toLatin1('Aquaviário/Embarcação - Capacidade de até 5 alunos'),
+                      8  => Portabilis_String_Utils::toLatin1('Aquaviário/Embarcação - Capacidade entre 5 a 15 alunos'),
+                      9  => Portabilis_String_Utils::toLatin1('Aquaviário/Embarcação - Capacidade entre 15 a 35 alunos'),
+                      10 => Portabilis_String_Utils::toLatin1('Aquaviário/Embarcação - Capacidade acima de 35 alunos'),
+                      11 => Portabilis_String_Utils::toLatin1('Ferroviário - Trem/Metrô'));
+
+    $options = array('label'     => 'Ve&iacute;culo utilizado',
+                     'resources' => $veiculos,
+                     'required'  => false);
+
+    $this->inputsHelper()->select('veiculo_transporte_escolar', $options);
+
     if ($this->getClsPermissoes()->permissao_cadastra( 21240, $this->getOption('id_usuario'), 7)){
-      
-      // Cria lista de rotas 
+
+      // Cria lista de rotas
       $obj_rota = new clsModulesRotaTransporteEscolar();
       $obj_rota->setOrderBy(' descricao asc ');
       $lista_rota = $obj_rota->lista();
@@ -672,18 +691,18 @@ class AlunoController extends Portabilis_Controller_Page_EditController
       foreach ($lista_rota as $reg) {
         $rota_resources["{$reg['cod_rota_transporte_escolar']}"] = "{$reg['descricao']}";
       }
-      
+
       // Transporte Rota
       $options = array('label' =>Portabilis_String_Utils::toLatin1($this->_getLabel('transporte_rota')), 'required' => false, 'resources' => $rota_resources);
-      $this->inputsHelper()->select('transporte_rota',$options); 
+      $this->inputsHelper()->select('transporte_rota',$options);
 
       // Ponto de Embarque
       $options = array('label' =>Portabilis_String_Utils::toLatin1($this->_getLabel('transporte_ponto')), 'required' => false, 'resources' => array("" => "Selecione uma rota acima"));
-      $this->inputsHelper()->select('transporte_ponto',$options);     
+      $this->inputsHelper()->select('transporte_ponto',$options);
 
       // Transporte Destino
       $options = array('label' =>Portabilis_String_Utils::toLatin1($this->_getLabel('transporte_destino')), 'required' => false);
-      $this->inputsHelper()->simpleSearchPessoaj('transporte_destino',$options); 
+      $this->inputsHelper()->simpleSearchPessoaj('transporte_destino',$options);
 
       // Transporte observacoes
       $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('transporte_observacao')), 'required' => false, 'size' => 50, 'max_length' => 255);
