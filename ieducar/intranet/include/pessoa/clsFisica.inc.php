@@ -553,12 +553,12 @@ class clsFisica
 			if($this->sus) {
 			   $set .= "$gruda sus = '{$this->sus}'";
 			   $gruda = ", ";
-			}	
+			}
 
-			if(is_numeric($this->nis_pis_pasep)) {
+			if($this->nis_pis_pasep) {
 			   $set .= "$gruda nis_pis_pasep = {$this->nis_pis_pasep}";
 			   $gruda = ", ";
-			}						
+			}
 
 			if(is_numeric($this->ref_cod_sistema) || $this->ref_cod_sistema == "NULL") {
 				$set .= "$gruda ref_cod_sistema = {$this->ref_cod_sistema}";

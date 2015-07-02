@@ -549,7 +549,7 @@ class clsPmieducarAluno
         $gruda = ', ';
       }
 
-      if (is_string($this->veiculo_transporte_escolar)) {
+      if (is_numeric($this->veiculo_transporte_escolar)) {
         $set .= "{$gruda}veiculo_transporte_escolar = '{$this->veiculo_transporte_escolar}'";
         $gruda = ', ';
       }else{

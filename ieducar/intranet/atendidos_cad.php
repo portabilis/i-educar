@@ -1182,7 +1182,7 @@ class indice extends clsCadastro
     $fisica->idpais_estrangeiro   = $_REQUEST['pais_origem_id'];
     $fisica->idmun_nascimento     = $_REQUEST['naturalidade_id'];
     $fisica->sus                  = $this->sus;
-    $fisica->nis_pis_pasep        = $this->nis_pis_pasep;
+    $fisica->nis_pis_pasep        = $this->nis_pis_pasep ? $this->nis_pis_pasep : "NULL";
     $fisica->ocupacao             = $this->ocupacao;
     $fisica->empresa              = $this->empresa;
     $fisica->ddd_telefone_empresa = $this->ddd_telefone_empresa;
