@@ -4,8 +4,8 @@
 -- @version  $Id$
 
 
-insert into portal.menu_submenu values (999823, 55, 2,'Boletim Parecer Aluno', 'module/Reports/BoletimParecerAluno', null, 3);
-insert into pmicontrolesis.menu values (999823, 999823, 999450, 'Boletim Parecer Aluno', 0, 'module/Reports/BoletimParecerAluno', '_self', 1, 15, 192, null);
+insert into portal.menu_submenu values (999823, 55, 2,'Parecer descritivo por etapa', 'module/Reports/BoletimParecerAluno', null, 3);
+insert into pmicontrolesis.menu values (999823, 999823, 999450, 'Parecer descritivo por etapa', 0, 'module/Reports/BoletimParecerAluno', '_self', 1, 15, 192, null);
 insert into pmieducar.menu_tipo_usuario values(1,999823,1,1,1);
 
 --undo
