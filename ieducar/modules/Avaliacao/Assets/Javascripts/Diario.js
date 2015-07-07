@@ -177,7 +177,7 @@ var changeNotaGeralEtapa = function(event) {
   // setDefaultFaltaIfEmpty($element.data('matricula_id'), $element.data('componente_curricular_id'));
   changeResource($element, postNotaGeral, deleteNotaGeral);
 
-  var $fieldsNotaGeral = $('.nota-geral-etapa');
+  var $fieldsNotaGeral = $j('.nota-geral-etapa');
 
   $fieldsNotaGeral.val($element.val());
   $fieldsNotaGeral.data('old_value', $element.val());

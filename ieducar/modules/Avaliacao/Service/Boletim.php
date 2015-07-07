@@ -1379,6 +1379,11 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
           $situacaoGeral = App_Model_MatriculaSituacao::APROVADO;
         }
       }
+      
+      foreach($mediasComponentes as $id => $mediaComponente){
+        $situacao->componentesCurriculares[$id]->situacao = $situacaoGeral;
+      }
+
 
       $situacao->situacao = $situacaoGeral;
 
@@ -1411,9 +1416,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       else {
         $media = $mediaComponente[0]->media;
       }
-
-      $situacao->componentesCurriculares[$id] = new stdClass();
-      $situacao->componentesCurriculares[$id]->situacao = 0;
 
       if ($etapa == $this->getOption('etapas') && $media < $this->getRegra()->media &&
           $this->hasRecuperacao()) {
@@ -2636,10 +2638,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   public function save()
   {
     try {
-      $this->saveNotas()#TODO AJustar
-           ->saveFaltas()#TODO AJustar
-           ->savePareceres()#TODO AJustar
-           ->promover();#TODO AJustar
+      $this->saveNotas()
+           ->saveFaltas()
+           ->savePareceres()
+           ->promover();
     }
     catch (CoreExt_Service_Exception $e) {
       throw $e;
@@ -2662,13 +2664,13 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $notaAluno = $this->_getNotaAluno();
     $notas = $this->getNotas();
 
-     // echo"<pre>";var_dump($notas);die;
 
     foreach ($notas as $nota) {
       $nota->notaAluno = $notaAluno;
       if($nota instanceof Avaliacao_Model_NotaComponente){
         $nota->id = $this->_getNotaIdEtapa($nota);
         $this->getNotaComponenteDataMapper()->save($nota);
+
       }elseif($nota instanceof Avaliacao_Model_NotaGeral){
          $nota->id = $this->_getNotaGeralIdEtapa($nota);
          $this->getNotaGeralDataMapper()->save($nota);
@@ -2677,7 +2679,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
     // Atualiza as médias
     $this->_updateNotaComponenteMedia();
-
     return $this;
   }
 
@@ -2822,6 +2823,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     require_once 'Avaliacao/Model/NotaComponenteMedia.php';
     $this->_loadNotas(FALSE);
     $regra = $this->getRegra();
+    if(is_null($etapa)) {$etapa = 1;}
 
     if($regra->get('notaGeralPorEtapa') == "1"){
       $notasGerais = array('Se' => 0, 'Et' => $this->getOption('etapas'));
@@ -2829,7 +2831,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       foreach($this->_notasGerais as $id => $notaGeral){
 
         $etapasNotas = CoreExt_Entity::entityFilterAttr($notaGeral, 'etapa', 'nota');
-
 
         // Cria o array formatado para o cálculo da fórmula da média
         foreach ($etapasNotas as $etapa => $nota) {
@@ -2841,12 +2842,13 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
           $notasGerais[$etapa] = $nota;
         }
       }
+      
+      // //Calcula a média geral
 
-      //Calcula a média geral
       $mediaGeral = $this->_calculaMedia($notasGerais);
 
       // Cria uma nova instância de média, já com a nota arredondada e a etapa
-      $mediaGeral = new Avaliacao_Model_MediaGeral(array(
+      $mediaGeralEtapa = new Avaliacao_Model_MediaGeral(array(
         'notaAluno' => $this->_getNotaAluno()->id,
         'media' => $mediaGeral,
         'mediaArredondada' => $this->arredondaNota($mediaGeral),
@@ -2856,19 +2858,18 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       try {
         // Se existir, marca como "old" para possibilitar a atualização
         $this->getMediaGeralDataMapper()->find(array(
-          $mediaGeral->get('notaAluno')
+          $mediaGeralEtapa->get('notaAluno')
         ));
 
-        $mediaGeral->markOld();
+        $mediaGeralEtapa->markOld();
       }
       catch (Exception $e) {
         // Prossegue, sem problemas.
       }
 
       // Salva a média
-      $this->getMediaGeralDataMapper()->save($mediaGeral);
+      $this->getMediaGeralDataMapper()->save($mediaGeralEtapa);
     }else{
-
 
       foreach ($this->_notasComponentes as $id => $notasComponentes) {
         // Cria um array onde o índice é a etapa
