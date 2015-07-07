@@ -6,8 +6,8 @@
   ini_set("max_execution_time", 120);
 */
 
-error_reporting(E_ERROR);
-ini_set("display_errors", 1);
+//error_reporting(E_ERROR);
+//ini_set("display_errors", 1);
 
 /**
  * i-Educar - Sistema de gestão escolar
@@ -540,7 +540,7 @@ class DiarioApiController extends ApiCoreController
       $this->serviceBoletim()->addNotaGeral($nota);
       $this->trySaveServiceBoletim();
       $this->messenger->append('Nota geral da matrícula '. $this->getRequest()->matricula_id .' alterada com sucesso.', 'success');
-    }  
+    }
     $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
     $this->appendResponse('situacao',     $this->getSituacaoMatricula());
 
@@ -1127,7 +1127,7 @@ class DiarioApiController extends ApiCoreController
   }
 
   protected function getNotaGeral($etapa = null){
-    
+
     if (is_null($etapa))
       $etapa = $this->getRequest()->etapa;
 

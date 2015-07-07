@@ -217,6 +217,9 @@ class indice extends clsDetalhe
       elseif ($registro['aprovado'] == 7) {
         $aprovado = 'Em Exame';
       }
+      elseif ($registro['aprovado'] == 12) {
+        $aprovado = 'Aprovado com depend&ecirc;ncia';
+      }
 
       $this->addDetalhe(array('Situação', $aprovado));
     }
@@ -341,14 +344,14 @@ class indice extends clsDetalhe
       if ($registro['aprovado'] == App_Model_MatriculaSituacao::ABANDONO) {
         $this->array_botao[]            = "Desfazer abandono";
         $this->array_botao_url_script[] = "deleteAbandono({$registro['cod_matricula']})";
-      }    
+      }
 
       if ($registro['aprovado'] == App_Model_MatriculaSituacao::RECLASSIFICADO){
         $this->array_botao[]            = 'Desfazer reclassificação';
         $this->array_botao_url_script[] = "deleteReclassificacao({$registro['cod_matricula']})";
       }
     }
-    
+
     $this->url_cancelar = 'educar_aluno_det.php?cod_aluno=' . $registro['ref_cod_aluno'];
     $this->largura      = '100%';
 
