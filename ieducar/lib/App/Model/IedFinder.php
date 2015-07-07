@@ -588,23 +588,27 @@ class App_Model_IedFinder extends CoreExt_Entity
 
     $serie = self::getSerie($codSerie);
 
-    // Disciplinas da escola na série em que o aluno está matriculado
-    $componentes = self::getComponentesTurma(
-      $codSerie, $codEscola, $turma, $turmaMapper, $componenteMapper, $componenteCurricularId, $etapa
-    );
-
-    // Dispensas do aluno
-    $disciplinasDispensa = self::getDisciplinasDispensadasPorMatricula(
-      $codMatricula, $codSerie, $codEscola
-    );
-
     $ret = array();
-    foreach ($componentes as $id => $componente) {
-      if (in_array($id, $disciplinasDispensa)) {
-        continue;
-      }
 
-      $ret[$id] = $componente;
+    if(is_numeric($turma) && is_numeric($codSerie) && is_numeric($codEscola)){
+
+      // Disciplinas da escola na série em que o aluno está matriculado
+      $componentes = self::getComponentesTurma(
+        $codSerie, $codEscola, $turma, $turmaMapper, $componenteMapper, $componenteCurricularId
+      );
+
+      // Dispensas do aluno
+      $disciplinasDispensa = self::getDisciplinasDispensadasPorMatricula(
+        $codMatricula, $codSerie, $codEscola
+      );
+
+      foreach ($componentes as $id => $componente) {
+        if (in_array($id, $disciplinasDispensa)) {
+          continue;
+        }
+
+        $ret[$id] = $componente;
+      }
     }
 
     return $ret;
