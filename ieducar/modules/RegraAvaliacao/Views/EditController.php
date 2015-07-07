@@ -151,6 +151,9 @@ class EditController extends Core_Controller_Page_EditController
     ),
     'recuperacaoExcluir' => array(
       'label'  => '<span style="padding-left: 10px"></span>Excluir:'
+    ),
+    'notaGeralPorEtapa' => array(
+      'label' => 'Utilizar uma nota geral por etapa'
     )
   );
 
@@ -400,6 +403,10 @@ var tabela_arredondamento = new function() {
     $this->campoNumero('qtdCasasDecimais', $this->_getLabel('qtdCasasDecimais'), $this->getEntity()->qtdCasasDecimais,
       3, 3, TRUE, FALSE, FALSE, $this->_getHelp('qtdCasasDecimais'));
 
+    // Nota geral por etapa
+    $this->campoCheck('notaGeralPorEtapa', $this->_getLabel('notaGeralPorEtapa'),
+        $this->getEntity()->notaGeralPorEtapa, '', FALSE, FALSE, FALSE, $this->_getHelp('notaGeralPorEtapa'));
+
     $tipoRecuperacaoParalela = RegraAvaliacao_Model_TipoRecuperacaoParalela::getInstance();
 
     $this->campoLista('tipoRecuperacaoParalela', $this->_getLabel('tipoRecuperacaoParalela'),
@@ -491,6 +498,10 @@ var tabela_arredondamento = new function() {
     if (isset($this->getRequest()->id) && 0 < $this->getRequest()->id) {
       $this->setEntity($this->getDataMapper()->find($this->getRequest()->id));
       $entity = $this->getEntity();
+    }
+    //fixup for checkbox nota geral
+    if(!isset($data['notaGeralPorEtapa'])){
+      $data['notaGeralPorEtapa'] = '0';
     }
 
     if (isset($entity)) {

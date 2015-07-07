@@ -64,9 +64,10 @@ class RegraAvaliacao_Model_Regra extends CoreExt_Entity
     'mediaRecuperacao'         => NULL,
     'tipoRecuperacaoParalela'  => NULL,
     'mediaRecuperacaoParalela' => NULL,
-    'notaMaximaGeral' => NULL,
-    'notaMaximaExameFinal' => NULL,
-    'qtdCasasDecimais' => NULL
+    'notaMaximaGeral'          => NULL,
+    'notaMaximaExameFinal'     => NULL,
+    'qtdCasasDecimais'         => NULL,
+    'notaGeralPorEtapa'        => NULL
   );
 
   protected $_dataTypes = array(
