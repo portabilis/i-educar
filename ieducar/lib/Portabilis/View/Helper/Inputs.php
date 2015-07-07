@@ -237,6 +237,12 @@ class Portabilis_View_Helper_Inputs {
 
   }
 
+  public function simpleSearchEscola($attrName, $inputOptions = array(), $helperOptions = array()) {
+
+    $this->simpleSearchResourceInput('simpleSearchEscola', $attrName, $inputOptions, $helperOptions);
+
+  }
+
   public function simpleSearchProjeto($attrName, $inputOptions = array(), $helperOptions = array()) {
 
     $this->simpleSearchResourceInput('simpleSearchProjeto', $attrName, $inputOptions, $helperOptions);
