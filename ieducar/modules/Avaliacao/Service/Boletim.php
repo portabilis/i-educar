@@ -956,13 +956,13 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     foreach ($notas as $nota) {
       $notasComponentes[$nota->get('componenteCurricular')][] = $nota;
     }
-    
+
     //Carrega as notas indexadas pela etapa
     $notasGerais = array();
     $notas = $this->getNotaGeralDataMapper()->findAll(
       array(), array('notaAluno' => $notaAluno->id), array('etapa' => 'ASC')
     );
-    
+
     foreach($notas as $nota){
       $notasGerais[$nota->get('etapa')] = $nota;
     }
@@ -1000,7 +1000,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       array(), array('notaAluno' => $notaAluno->id)
     );
 
-    
     foreach ($mediasGerais as $mediaGeral) {
       $mediasGerais = $mediaGeral;
     }
@@ -1184,12 +1183,13 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
   function getSituacaoNotaFalta($flagSituacaoNota, $flagSituacaoFalta)
   {
-    $situacao              = new stdClass();
-    $situacao->situacao    = App_Model_MatriculaSituacao::EM_ANDAMENTO;
-    $situacao->aprovado    = TRUE;
-    $situacao->andamento   = FALSE;
-    $situacao->recuperacao = FALSE;
-    $situacao->retidoFalta = FALSE;
+    $situacao                          = new stdClass();
+    $situacao->situacao                = App_Model_MatriculaSituacao::EM_ANDAMENTO;
+    $situacao->aprovado                = TRUE;
+    $situacao->andamento               = FALSE;
+    $situacao->recuperacao             = FALSE;
+    $situacao->aprovadoComDependencia  = FALSE;
+    $situacao->retidoFalta             = FALSE;
 
     switch ($flagSituacaoNota) {
       case App_Model_MatriculaSituacao::EM_ANDAMENTO:
@@ -1198,6 +1198,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         break;
       case App_Model_MatriculaSituacao::APROVADO_APOS_EXAME:
         $situacao->recuperacao = TRUE;
+        break;
+      case App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA:
+        $situacao->aprovadoComDependencia = TRUE;
         break;
       case App_Model_MatriculaSituacao::EM_EXAME:
         $situacao->aprovado    = FALSE;
@@ -1233,6 +1236,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
     elseif (! $situacao->andamento and $situacao->aprovado and $situacao->recuperacao)
       $situacao->situacao = App_Model_MatriculaSituacao::APROVADO_APOS_EXAME;
+
+    elseif (! $situacao->andamento and $situacao->aprovado and $situacao->aprovadoComDependencia)
+      $situacao->situacao = App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA;
 
     elseif (! $situacao->andamento and $situacao->aprovado)
       $situacao->situacao = App_Model_MatriculaSituacao::APROVADO;
@@ -1373,9 +1379,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
           $situacaoGeral = App_Model_MatriculaSituacao::APROVADO;
         }
       }
-      
+
       $situacao->situacao = $situacaoGeral;
-      
+
       return $situacao;
     }
 
@@ -1393,7 +1399,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       $situacaoGeral = App_Model_MatriculaSituacao::EM_ANDAMENTO;
     }
 
+    $qtdComponenteReprovado = 0;
+
     foreach ($mediasComponentes as $id => $mediaComponente) {
+
       $etapa = $mediaComponente[0]->etapa;
 
       if ($this->getRegra()->get('tipoNota') == RegraAvaliacao_Model_Nota_TipoValor::NUMERICA) {
@@ -1411,9 +1420,11 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::EM_EXAME;
       }
       elseif ($etapa == $this->getOption('etapas') && $media < $this->getRegra()->media) {
+        $qtdComponenteReprovado++;
         $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::REPROVADO;
       }
       elseif ($etapa == 'Rc' && $media < $this->getRegra()->mediaRecuperacao) {
+        $qtdComponenteReprovado++;
         $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::REPROVADO;
       }
       elseif ($etapa == 'Rc' && $media >= $this->getRegra()->mediaRecuperacao && $this->hasRecuperacao()) {
@@ -1431,6 +1442,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $situacaoGeral = $situacao->componentesCurriculares[$id]->situacao;
       }
     }
+
+    if($situacaoGeral == App_Model_MatriculaSituacao::REPROVADO
+        && $qtdComponenteReprovado <= $this->getRegra()->get('qtdDisciplinasDependencia'))
+      $situacaoGeral = App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA;
 
     // Situação geral
     $situacao->situacao = $situacaoGeral;
@@ -1788,7 +1803,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     }
     return TRUE;
   }
-  
+
   /**
    * Retorna o field identity de um componente curricular de uma instância de
    * Avaliacao_Model_NotaComponente já esteja persistida.
@@ -2757,7 +2772,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
         case RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_AUTO_MEDIA_PRESENCA:
 
-          if ($situacaoBoletim->aprovado && !$situacaoBoletim->retidoFalta)
+          if ($situacaoBoletim->aprovado && !$situacaoBoletim->retidoFalta && $situacaoBoletim->aprovadoComDependencia)
+            $novaSituacaoMatricula = App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA;
+          elseif ($situacaoBoletim->aprovado && !$situacaoBoletim->retidoFalta)
             $novaSituacaoMatricula = App_Model_MatriculaSituacao::APROVADO;
           else
             $novaSituacaoMatricula = App_Model_MatriculaSituacao::REPROVADO;
@@ -2765,7 +2782,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
         case RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_AUTO_SOMENTE_MEDIA:
 
-          if ($situacaoBoletim->aprovado)
+          if ($situacaoBoletim->aprovado && $situacaoBoletim->aprovadoComDependencia)
+            $novaSituacaoMatricula = App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA;
+          elseif ($situacaoBoletim->aprovado)
             $novaSituacaoMatricula = App_Model_MatriculaSituacao::APROVADO;
           else
             $novaSituacaoMatricula = App_Model_MatriculaSituacao::REPROVADO;
@@ -2811,8 +2830,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
         $etapasNotas = CoreExt_Entity::entityFilterAttr($notaGeral, 'etapa', 'nota');
 
-        
-        
+
         // Cria o array formatado para o cálculo da fórmula da média
         foreach ($etapasNotas as $etapa => $nota) {
           if (is_numeric($etapa)) {
@@ -2823,7 +2841,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
           $notasGerais[$etapa] = $nota;
         }
       }
-       
+
       //Calcula a média geral
       $mediaGeral = $this->_calculaMedia($notasGerais);
 

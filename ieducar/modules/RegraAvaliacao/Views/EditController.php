@@ -129,6 +129,10 @@ class EditController extends Core_Controller_Page_EditController
       'label'   => 'Quantidade máxima de casas decimais',
       'help'    => 'Informe o número máximo de casas decimais'
     ),
+    'qtdDisciplinasDependencia' => array(
+      'label'   => 'Quantidade de disciplinas dependência',
+      'help'    => 'Preencha a quantidade de disciplinas permitidas para aprovação do aluno com dependência. Preencha com 0 caso não exista.'
+    ),
     'recuperacaoDescricao' => array(
       'label'  => 'Descrição do exame:',
       'help'   => 'Exemplo: Recuperação semestral I'
@@ -402,6 +406,9 @@ var tabela_arredondamento = new function() {
 
     $this->campoNumero('qtdCasasDecimais', $this->_getLabel('qtdCasasDecimais'), $this->getEntity()->qtdCasasDecimais,
       3, 3, TRUE, FALSE, FALSE, $this->_getHelp('qtdCasasDecimais'));
+
+    $this->campoNumero('qtdDisciplinasDependencia', $this->_getLabel('qtdDisciplinasDependencia'), $this->getEntity()->qtdDisciplinasDependencia,
+      3, 3, TRUE, FALSE, FALSE, $this->_getHelp('qtdDisciplinasDependencia'));
 
     // Nota geral por etapa
     $this->campoCheck('notaGeralPorEtapa', $this->_getLabel('notaGeralPorEtapa'),
