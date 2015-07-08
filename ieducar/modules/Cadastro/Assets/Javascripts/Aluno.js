@@ -630,6 +630,24 @@ var handleGetPersonDetails = function(dataResponse) {
   else
     enableJustificativaFields();
 
+  var validaRg = function(){
+    var rg = $j('#rg').val().replace(" ", "");
+    var dataEmissao = $j('#data_emissao_rg').val().replace(" ", "");
+
+    if (rg != '' && dataEmissao != '')
+      disableJustificativaFields();
+    else
+      enableJustificativaFields();
+  }
+
+  $j('#rg').change(function(){
+    validaRg();
+  });
+
+  $j('#data_emissao_rg').change(function(){
+    validaRg();
+  });
+
   // # TODO show aluno photo
   //$j('#aluno_foto').val(dataResponse.url_foto);
   canShowParentsFields();
