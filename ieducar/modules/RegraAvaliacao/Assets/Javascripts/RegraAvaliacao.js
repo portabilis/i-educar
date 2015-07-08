@@ -1,7 +1,22 @@
 $j(function(){
 	$tipoRecuperacaoParalelaField = $j('#tipoRecuperacaoParalela');
-	$tipoRecuperacaoParalelaField.on('change', tipoRecuperacaoParalelaChange);
+	$usaNotaGeralPorEtapaField = $j('#notaGeralPorEtapa');
+
+  $tipoRecuperacaoParalelaField.on('change', tipoRecuperacaoParalelaChange);
 	$tipoRecuperacaoParalelaField.trigger('change');
+
+  $usaNotaGeralPorEtapaField.on('change', usaNotaGeralPorEtapaChange);
+  $usaNotaGeralPorEtapaField.trigger('change');
+
+  function usaNotaGeralPorEtapaChange(){
+    if($j(this).val() == 1) {
+      $tipoRecuperacaoParalelaField.val("");
+      $tipoRecuperacaoParalelaField.closest('tr').hide();
+    }else{
+      $tipoRecuperacaoParalelaField.closest('tr').show();
+    }
+    $tipoRecuperacaoParalelaField.trigger('change');
+  }
 
 	function tipoRecuperacaoParalelaChange(){
 		if($j(this).val() == 1 ) {
@@ -22,7 +37,7 @@ $j(function(){
     }
 	}
 });
-// fix checkbox
+// fix checkboxes
 $j('[name^="recuperacao[excluir]"]').on('change', function(){
   if($j(this).is(':checked'))
     $j(this).val('on');

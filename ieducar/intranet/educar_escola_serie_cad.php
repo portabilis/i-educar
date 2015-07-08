@@ -540,15 +540,14 @@ class indice extends clsCadastro
     return FALSE;
   }
   private function checkIfUseNotaGeralPorEtapa(){
-    $obj_serie = new clsPmieducarSerie($this->ref_cod_serie);
-    $det_serie = $obj_serie->detalhe();
-    $regra_avaliacao_id = $det_serie["regra_avaliacao_id"];
-    
-    $regra_avaliacao_mapper = new RegraAvaliacao_Model_RegraDataMapper();
-
-    $regra_avaliacao = $regra_avaliacao_mapper->find($regra_avaliacao_id);
-
-    return ($regra_avaliacao->notaGeralPorEtapa == 1);
+    if(isset($this->ref_cod_serie)){
+      $obj_serie = new clsPmieducarSerie($this->ref_cod_serie);
+      $det_serie = $obj_serie->detalhe();
+      $regra_avaliacao_id = $det_serie["regra_avaliacao_id"];
+      $regra_avaliacao_mapper = new RegraAvaliacao_Model_RegraDataMapper();
+      $regra_avaliacao = $regra_avaliacao_mapper->find($regra_avaliacao_id);
+    }
+      return ($regra_avaliacao->notaGeralPorEtapa == 1);
   }
 }
 
