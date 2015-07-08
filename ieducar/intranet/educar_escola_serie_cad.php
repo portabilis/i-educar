@@ -101,6 +101,9 @@ class indice extends clsCadastro
 
   var $carga_horaria;
 
+  var $etapas_especificas;
+  var $etapas_utilizadas;
+
   function Inicializar()
   {
     $retorno = 'Novo';
@@ -237,6 +240,8 @@ class indice extends clsCadastro
         foreach ($registros as $campo) {
           $this->escola_serie_disciplina[$campo['ref_cod_disciplina']] = $campo['ref_cod_disciplina'];
           $this->escola_serie_disciplina_carga[$campo['ref_cod_disciplina']] = floatval($campo['carga_horaria']);
+          $this->escola_serie_disciplina_etapa_especifica[$campo['ref_cod_disciplina']] = intval($campo['etapas_especificas']);
+          $this->escola_serie_disciplina_etapa_utilizada[$campo['ref_cod_disciplina']] = $campo['etapas_utilizadas'];
         }
       }
     }
@@ -262,19 +267,25 @@ class indice extends clsCadastro
         $conteudo .= '  <span style="display: block; float: left; width: 250px;">Nome</span>';
         $conteudo .= '  <span style="display: block; float: left; width: 100px;">Carga horária</span>';
         $conteudo .= '  <span style="display: block; float: left">Usar padrão do componente?</span>';
+        $conteudo .= '  <span style="display: block; float: left; margin-left: 30px;">Usado em etapas específicas?</span>';
         $conteudo .= '</div>';
         $conteudo .= '<br style="clear: left" />';
         $conteudo .= '<div style="margin-bottom: 10px; float: left">';
         $conteudo .= "  <label style='display: block; float: left; width: 350px;'><input type='checkbox' name='CheckTodos' onClick='marcarCheck(".'"disciplinas[]"'.");'/>Marcar Todos</label>";
         $conteudo .= "  <label style='display: block; float: left; width: 100px;'><input type='checkbox' name='CheckTodos2' onClick='marcarCheck(".'"usar_componente[]"'.");';/>Marcar Todos</label>";
+        $conteudo .= "  <label style='display: block; float: left; width: 100px; margin-left: 84px;'><input type='checkbox' name='CheckTodos3' onClick='marcarCheck(".'"etapas_especificas[]"'.");';/>Marcar Todos</label>";
         $conteudo .= '</div>';
         $conteudo .= '<br style="clear: left" />';
         foreach ($lista as $registro) {
           $checked = '';
+          $checkedEtapaEspecifica = '';
           $usarComponente = FALSE;
 
           if ($this->escola_serie_disciplina[$registro->id] == $registro->id) {
             $checked = 'checked="checked"';
+            if($this->escola_serie_disciplina_etapa_especifica[$registro->id] == "1"){
+              $checkedEtapaEspecifica = 'checked="checked"';  
+            }
           }
 
           if (is_null($this->escola_serie_disciplina_carga[$registro->id]) ||
@@ -286,11 +297,15 @@ class indice extends clsCadastro
           }
 
           $cargaComponente = $registro->cargaHoraria;
+          $etapas_utilizadas = $this->escola_serie_disciplina_etapa_utilizada[$registro->id];
 
           $conteudo .= '<div style="margin-bottom: 10px; float: left">';
           $conteudo .= "  <label style='display: block; float: left; width: 250px'><input type=\"checkbox\" $checked name=\"disciplinas[$registro->id]\" id=\"disciplinas[]\" value=\"{$registro->id}\">{$registro}</label>";
           $conteudo .= "  <label style='display: block; float: left; width: 100px;'><input type='text' name='carga_horaria[$registro->id]' value='{$cargaHoraria}' size='5' maxlength='7'></label>";
           $conteudo .= "  <label style='display: block; float: left'><input type='checkbox' id='usar_componente[]' name='usar_componente[$registro->id]' value='1' ". ($usarComponente == TRUE ? $checked : '') .">($cargaComponente h)</label>";
+          $conteudo .= "  <input style='margin-left:140px; float:left;' type='checkbox' id='etapas_especificas[]' name='etapas_especificas[$registro->id]' value='1' ". ($usarComponente == TRUE ? $checkedEtapaEspecifica : '') ."></label>";
+          $conteudo .= "  <label style='display: block; float: left; width: 100px;'>Etapas utilizadas: <input type='text' name='etapas_utilizadas[$registro->id]' value='{$etapas_utilizadas}' size='5' maxlength='7'></label>";
+
           $conteudo .= '</div>';
           $conteudo .= '<br style="clear: left" />';
 
@@ -363,7 +378,8 @@ class indice extends clsCadastro
       if ($this->disciplinas) {
         foreach ($this->disciplinas as $key => $campo) {
           $obj = new clsPmieducarEscolaSerieDisciplina($this->ref_cod_serie,
-            $this->ref_cod_escola, $campo, 1, $this->carga_horaria[$key]);
+            $this->ref_cod_escola, $campo, 1, $this->carga_horaria[$key], 
+            $this->etapas_especificas[$key], $this->etapas_utilizadas[$key]);
 
           if ($obj->existe()) {
             $cadastrou1 = $obj->edita();
@@ -443,8 +459,10 @@ class indice extends clsCadastro
             $carga_horaria = $this->carga_horaria[$key];
           }
 
+          $etapas_especificas = $this->etapas_especificas[$key];
+          $etapas_utilizadas = $this->etapas_utilizadas[$key];
           $obj = new clsPmieducarEscolaSerieDisciplina($this->ref_cod_serie,
-            $this->ref_cod_escola, $campo, 1, $carga_horaria);
+            $this->ref_cod_escola, $campo, 1, $carga_horaria, $etapas_especificas, $etapas_utilizadas);
 
           $existe = $obj->existe();
 
@@ -570,7 +588,7 @@ function getDisciplina(xml_disciplina)
       conteudo += '<div style="margin-bottom: 10px; float: left">';
       conteudo += '  <label style="display: block; float: left; width: 250px;"><input type="checkbox" name="disciplinas['+ id +']" id="disciplinas[]" value="'+ id +'">'+ DOM_array[i].firstChild.data +'</label>';
       conteudo += '  <label style="display: block; float: left; width: 100px;"><input type="text" name="carga_horaria['+ id +']" value="" size="5" maxlength="7"></label>';
-      conteudo += '  <label style="display: block; float: left"><input type="checkbox" id="usar_componente[]" name="usar_componente['+ id +']" value="1">('+ DOM_array[i].getAttribute("carga_horaria") +' h)</label>';
+      conteudo += '  <label style="display: block; float: left"><input type="checkbox" id="usar_componente[]" name="usar_componente['+ id +']" value="1">('+ DOM_array[i].getAttribute("usar_componente") +' h)</label>';
       conteudo += '</div>';
       conteudo += '<br style="clear: left" />';
     }
@@ -655,26 +673,52 @@ function atualizaLstSerie(xml)
 }
 
 function marcarCheck(idValue) {
-    // testar com formcadastro
-    var contaForm = document.formcadastro.elements.length;
-    var campo = document.formcadastro;
-    var i;
-    if (idValue == 'disciplinas[]'){
-      for (i=0; i<contaForm; i++) {
-          if (campo.elements[i].id == idValue) {
-
-              campo.elements[i].checked = campo.CheckTodos.checked;
-          }
-      }
-    }else {
-      for (i=0; i<contaForm; i++) {
-          if (campo.elements[i].id == idValue) {
-
-              campo.elements[i].checked = campo.CheckTodos2.checked;
-          }
-      }
-
+  // testar com formcadastro
+  var contaForm = document.formcadastro.elements.length;
+  var campo = document.formcadastro;
+  var i;
+  if (idValue == 'disciplinas[]'){
+    for (i=0; i<contaForm; i++) {
+        if (campo.elements[i].id == idValue) {
+            campo.elements[i].checked = campo.CheckTodos.checked;
+        }
     }
-     
+  }else if(idValue == 'usar_componente[]') {
+    for (i=0; i<contaForm; i++) {
+        if (campo.elements[i].id == idValue) {
+            campo.elements[i].checked = campo.CheckTodos2.checked;
+        }
+    }
+
+  }else if(idValue == 'etapas_especificas[]'){
+    for (i=0; i<contaForm; i++) {
+        if (campo.elements[i].id == idValue) {
+            campo.elements[i].checked = campo.CheckTodos3.checked;
+        }
+    }
+  }
 }
+
+/*function onEtapasEspecificasChange(){
+  var cod_matricula;
+
+  cod_matricula = onlyNumbers($j(this).attr('name'));
+
+  if($j(this).is(":checked")){
+    $j('#etapas_utilizadas_' + cod_matricula).show();
+  }else{
+    $j('#etapas_utilizadas_' + cod_matricula).hide();
+  }
+}
+
+function onlyNumbers(text){
+  return text.match((/\d+/))[0];
+}
+
+$j('.etapas_especificas').on('change', onEtapasEspecificasChange);
+
+$j('.etapas_especificas').each(function(){
+  $j('.etapas_especificas').trigger("change");
+})*/
+
 </script>

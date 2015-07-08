@@ -22,6 +22,7 @@ var onClickDeleteEvent    = false;
 var usaRecuperacaoParalelaPorEtapa;
 var mediaRecuperacaoParalela;
 var sentidoTab;
+var usaNotaGeralPorEtapa;
 
 $(function() {
     navegacaoTab(dataResponse.navegacao_tab);
@@ -171,6 +172,17 @@ var changeParecer = function(event) {
   }
 };
 
+var changeNotaGeralEtapa = function(event) {
+  var $element = $j(this);
+  // setDefaultFaltaIfEmpty($element.data('matricula_id'), $element.data('componente_curricular_id'));
+  changeResource($element, postNotaGeral, deleteNotaGeral);
+
+  var $fieldsNotaGeral = $j('.nota-geral-etapa');
+
+  $fieldsNotaGeral.val($element.val());
+  $fieldsNotaGeral.data('old_value', $element.val());
+
+};
 
 function afterChangeResource($resourceElement) {
   $resourceElement.removeAttr('disabled').siblings('img').remove();
@@ -410,6 +422,24 @@ function postParecer($parecerFieldElement) {
   postResource(options, handleErrorOnPostResource);
 }
 
+function postNotaGeral($notaGeralElementField) {
+  var additionalVars = {
+    matricula_id             : $notaGeralElementField.data('matricula_id')
+  };
+
+  var options = {
+    url : postResourceUrlBuilder.buildUrl(API_URL_BASE, 'nota_geral', additionalVars),
+    dataType : 'json',
+    data : {att_value : $notaGeralElementField.val()},
+    success : function(dataResponse) {
+      afterChangeResource($notaGeralElementField);
+      handleChange(dataResponse);
+    }
+  };
+
+  $notaGeralElementField.data('old_value', $notaGeralElementField.val());
+  postResource(options, handleErrorOnPostResource);
+}
 
 function confirmDelete(resourceName) {
   return confirm(safeUtf8Decode('Confirma exclusão ' + resourceName.replace('_',' ') + '?'));
@@ -583,6 +613,23 @@ function deleteParecer($parecerFieldElement) {
   deleteResource(resourceName, $parecerFieldElement, options, handleErrorOnDeleteResource);
 }
 
+function deleteNotaGeral($notaGeralElementField) {
+
+  var additionalVars = {
+    matricula_id             : $notaGeralElementField.data('matricula_id')
+   };
+
+  var options = {
+    url : deleteResourceUrlBuilder.buildUrl(API_URL_BASE, 'nota_geral', additionalVars),
+    dataType : 'json',
+    success : function(dataResponse) {
+      afterChangeResource($notaGeralElementField);
+      handleChange(dataResponse);
+    }
+  };
+
+  deleteResource(resourceName, $notaGeralElementField, options, handleErrorOnDeleteResource);
+}
 
 //callback handlers
 
@@ -598,6 +645,7 @@ function setTableSearchDetails($tableSearchDetails, dataDetails) {
   var componenteCurricularSelected = ($j('#ref_cod_componente_curricular').val() != '');
 
   usaRecuperacaoParalelaPorEtapa = (dataDetails.tipo_recuperacao_paralela == 'por_etapa');
+  usaNotaGeralPorEtapa = (dataDetails.nota_geral_por_etapa == 'SIM');
 
   if(dataDetails.tipo_recuperacao_paralela == 'etapas_especificas' && dataDetails.habilita_campo_etapa_especifica){
     window.habilita_campo_etapa_especifica = true;
@@ -629,6 +677,7 @@ function setTableSearchDetails($tableSearchDetails, dataDetails) {
   $j('<th />').html('Tipo presen&#231;a').appendTo($linha);
   $j('<th />').html('Tipo parecer').appendTo($linha);
   $j('<th />').html(safeUtf8Decode('Recuperação paralela')).appendTo($linha);
+  $j('<th />').html(safeUtf8Decode('Nota geral por etapa')).appendTo($linha);
 
   $linha.appendTo($tableSearchDetails);
 
@@ -660,6 +709,7 @@ function setTableSearchDetails($tableSearchDetails, dataDetails) {
   $j('<td />').html(safeToUpperCase(dataDetails.tipo_presenca.replace('_', ' '))).appendTo($linha);
   $j('<td />').html(safeToUpperCase(dataDetails.tipo_parecer_descritivo.replace('_', ' '))).appendTo($linha);
   $j('<td />').html(safeToUpperCase(dataDetails.tipo_recuperacao_paralela.replace('_', ' '))).appendTo($linha);
+  $j('<td />').html(safeToUpperCase(dataDetails.nota_geral_por_etapa.replace('_', ' '))).appendTo($linha);
 
   mediaRecuperacaoParalela = dataDetails.media_recuperacao_paralela;
 
@@ -760,6 +810,7 @@ function handleSearch($resultTable, dataResponse) {
   var $parecerFields = $resultTable.find('.parecer-matricula-cc');
   var $notaRecuperacaoParalelaFields = $resultTable.find('.nota-recuperacao-paralela-cc');
   var $notaRecuperacaoEspecificaFields = $resultTable.find('.nota-recuperacao-especifica-matricula-cc');
+  var $notaGeralEtapaFields = $resultTable.find('.nota-geral-etapa');
 
   $notaFields.on('change', changeNota);
   $notaExameFields.on('change', changeNotaExame);
@@ -767,6 +818,7 @@ function handleSearch($resultTable, dataResponse) {
   $parecerFields.on('change', changeParecer);
   $notaRecuperacaoParalelaFields.on('change', changeNotaRecuperacaoParalela);
   $notaRecuperacaoEspecificaFields.on('change', changeNotaRecuperacaoEspecifica);
+  $notaGeralEtapaFields.on('change', changeNotaGeralEtapa);
 
   $resultTable.addClass('styled').find('.tabable:first').focus();
   navegacaoTab(dataResponse.navegacao_tab);
@@ -842,6 +894,21 @@ function notaExameField(matriculaId, componenteCurricularId, value, maxLength) {
                     value,
                     null,
                     maxLength);
+}
+
+function notaGeralEtapaField(matriculaId, value, maxLength){
+  var $notaField = $j('<input />').addClass('nota-geral-etapa')
+                                    .attr('id', 'nota-geral-etapa-' + matriculaId)
+                                    .attr('maxlength', maxLength)
+                                    .attr('size', maxLength)
+                                    .val(value)
+                                    .data('matricula_id', matriculaId);
+
+  $notaField.data('old_value', value);
+
+  setNextTabIndex($notaField);
+
+  return $j('<td />').html($notaField).addClass('center');
 }
 
 function notaNecessariaField(matriculaId, componenteCurricularId, value){
@@ -988,6 +1055,9 @@ function updateComponenteCurricular($targetElement, matriculaId, cc) {
     }
 
   }
+  if(usaNotaGeralPorEtapa){
+    notaGeralEtapaField(matriculaId, cc.nota_geral_etapa, 5).appendTo($targetElement);
+  }
 
   faltaField(matriculaId, cc.id, cc.falta_atual).appendTo($targetElement);
 
@@ -1015,7 +1085,9 @@ function updateComponenteCurricularHeaders($targetElement, $tagElement) {
       $tagElement.clone().addClass('center').html(safeUtf8Decode('Nota necessária no '+nomenclatura_exame)).appendTo($targetElement);
     }
   }
-
+  if(usaNotaGeralPorEtapa){
+    $tagElement.clone().addClass('center').html('Nota geral da etapa').appendTo($targetElement);
+  }
   $tagElement.clone().addClass('center').html('Falta').appendTo($targetElement);
 
   if (useParecer)

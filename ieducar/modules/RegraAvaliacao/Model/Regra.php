@@ -50,23 +50,27 @@ require_once 'RegraAvaliacao/Model/TipoRecuperacaoParalela.php';
 class RegraAvaliacao_Model_Regra extends CoreExt_Entity
 {
   protected $_data = array(
-    'instituicao'              => NULL,
-    'nome'                     => NULL,
-    'tipoNota'                 => NULL,
-    'tipoProgressao'           => NULL,
-    'tabelaArredondamento'     => NULL,
-    'media'                    => NULL,
-    'formulaMedia'             => NULL,
-    'formulaRecuperacao'       => NULL,
-    'porcentagemPresenca'      => NULL,
-    'parecerDescritivo'        => NULL,
-    'tipoPresenca'             => NULL,
-    'mediaRecuperacao'         => NULL,
-    'tipoRecuperacaoParalela'  => NULL,
-    'mediaRecuperacaoParalela' => NULL,
-    'notaMaximaGeral' => NULL,
-    'notaMaximaExameFinal' => NULL,
-    'qtdCasasDecimais' => NULL
+
+    'instituicao'               => NULL,
+    'nome'                      => NULL,
+    'tipoNota'                  => NULL,
+    'tipoProgressao'            => NULL,
+    'tabelaArredondamento'      => NULL,
+    'media'                     => NULL,
+    'formulaMedia'              => NULL,
+    'formulaRecuperacao'        => NULL,
+    'porcentagemPresenca'       => NULL,
+    'parecerDescritivo'         => NULL,
+    'tipoPresenca'              => NULL,
+    'mediaRecuperacao'          => NULL,
+    'tipoRecuperacaoParalela'   => NULL,
+    'mediaRecuperacaoParalela'  => NULL,
+    'notaMaximaGeral'           => NULL,
+    'notaMaximaExameFinal'      => NULL,
+    'qtdCasasDecimais'          => NULL,
+    'notaGeralPorEtapa'         => NULL,
+    'qtdDisciplinasDependencia' => NULL
+
   );
 
   protected $_dataTypes = array(
@@ -76,7 +80,8 @@ class RegraAvaliacao_Model_Regra extends CoreExt_Entity
     'tipoRecuperacaoParalela' => 'numeric',
     'notaMaximaGeral' => 'numeric',
     'notaMaximaExameFinal' => 'numeric',
-    'qtdCasasDecimais' => 'numeric'
+    'qtdCasasDecimais' => 'numeric',
+    'qtdDisciplinasDependencia' => 'numeric'
   );
 
   protected $_references = array(

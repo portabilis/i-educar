@@ -4,6 +4,7 @@
     var $anoField                  = getElementFor('ano');
     var $turmaField                = getElementFor('turma');
     var $componenteCurricularField = getElementFor('componente_curricular');
+    var $etapaField                = getElementFor('etapa');
 
     var handleGetComponentesCurriculares = function(response) {
       var selectOptions = jsonResourcesToSelectOptions(response['options']);
@@ -18,7 +19,8 @@
 
         var data = {
           ano      : $anoField.attr('value'),
-          turma_id : $turmaField.attr('value')
+          turma_id : $turmaField.attr('value'),
+          etapa    : $etapaField.attr('value')
         };
 
         var urlForGetComponentesCurriculares = getResourceUrlBuilder.buildUrl(
@@ -38,7 +40,7 @@
     };
 
     // bind onchange event
-    $turmaField.change(updateComponentesCurriculares);
+    $etapaField.change(updateComponentesCurriculares);
 
   }); // ready
 })(jQuery);

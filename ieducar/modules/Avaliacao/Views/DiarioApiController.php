@@ -6,9 +6,6 @@
   ini_set("max_execution_time", 120);
 */
 
-//error_reporting(E_ALL);
-//ini_set("display_errors", 1);
-
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -41,6 +38,7 @@
 //require_once 'Core/Controller/Page/EditController.php';
 
 require_once 'Avaliacao/Model/NotaComponenteDataMapper.php';
+require_once 'Avaliacao/Model/NotaGeralDataMapper.php';
 require_once 'Avaliacao/Service/Boletim.php';
 require_once 'App/Model/MatriculaSituacao.php';
 require_once 'RegraAvaliacao/Model/TipoPresenca.php';
@@ -143,6 +141,7 @@ class DiarioApiController extends ApiCoreController
   protected function validatesPreviousNotasHasBeenSet() {
     $hasPreviousNotas   = true;
     $etapasWithoutNotas = array();
+    $regra = $this->serviceBoletim()->getRegra();
 
     if($this->getRequest()->etapa == 'Rc')
       $etapaRequest = $this->serviceBoletim()->getOption('etapas');
@@ -160,12 +159,17 @@ class DiarioApiController extends ApiCoreController
       }
     }
 
+    if($regra->get('notaGeralPorEtapa') == "1"){
+      return true;
+    }
+
     if (! $hasPreviousNotas) {
       $this->messenger->append("Nota somente pode ser lançada após lançar notas nas etapas: " .
                                join(', ', $etapasWithoutNotas) . ' deste componente curricular.');
+      return false;
     }
 
-    return $hasPreviousNotas;
+    return true;
   }
 
 
@@ -360,6 +364,15 @@ class DiarioApiController extends ApiCoreController
            $this->validatesPreviousNotasHasBeenSet();
   }
 
+  protected function canPostNotaGeral() {
+    return $this->canPost() &&
+           $this->validatesIsNumeric('att_value');
+           // $this->validatesRegraAvaliacaoHasNota() &&
+           // $this->validatesRegraAvaliacaoHasFormulaRecuperacao() &&
+           // $this->validatesRegraAvaliacaoHasFormulaRecuperacaoWithTypeRecuperacao() &&
+           // $this->validatesPreviousNotasHasBeenSet();
+  }
+
 
   protected function canPostFalta() {
     return $this->canPost() &&
@@ -512,6 +525,24 @@ class DiarioApiController extends ApiCoreController
       $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $notaNecessariaExame);
     else
       $this->deleteNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id);
+  }
+
+  protected function postNotaGeral(){
+    if ($this->canPostNotaGeral()) {
+      $notaGeral = urldecode($this->getRequest()->att_value);
+      $nota = new Avaliacao_Model_NotaGeral(array(
+                  'etapa'                   => $this->getRequest()->etapa,
+                  'nota'                    => $notaGeral));
+
+      $this->serviceBoletim()->addNotaGeral($nota);
+      $this->trySaveServiceBoletim();
+      $this->messenger->append('Nota geral da matrícula '. $this->getRequest()->matricula_id .' alterada com sucesso.', 'success');
+
+    }
+
+    $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
+    $this->appendResponse('situacao',     $this->getSituacaoMatricula());
+
   }
 
   protected function postNotaRecuperacaoParalela() {
@@ -973,7 +1004,9 @@ class DiarioApiController extends ApiCoreController
     $componentesCurriculares  = array();
 
     $componenteCurricularId   = $this->getRequest()->componente_curricular_id;
-    $_componentesCurriculares = App_Model_IedFinder::getComponentesPorMatricula($matriculaId, null, null, $componenteCurricularId);
+    $etapa = $this->getRequest()->etapa;
+
+    $_componentesCurriculares = App_Model_IedFinder::getComponentesPorMatricula($matriculaId, null, null, $componenteCurricularId, $etapa);
 
     $turmaId = $this->getRequest()->turma_id;
 
@@ -997,6 +1030,7 @@ class DiarioApiController extends ApiCoreController
       $componente['nota_recuperacao_especifica'] = $this->getNotaRecuperacaoEspecificaAtual($etapa, $componente['id']);
       $componente['should_show_recuperacao_especifica'] = $this->shouldShowRecuperacaoEspecifica($etapa, $componente['id']);
       $componente['nota_original']             = $this->getNotaOriginal($etapa, $componente['id']);
+      $componente['nota_geral_etapa']          = $this->getNotaGeral($etapa);
 
       if (!empty($componente['nota_necessaria_exame']))
         $this->createOrUpdateNotaExame($matriculaId, $componente['id'], $componente['nota_necessaria_exame']);
@@ -1091,6 +1125,16 @@ class DiarioApiController extends ApiCoreController
     return str_replace(',', '.', $nota);
   }
 
+  protected function getNotaGeral($etapa = null){
+
+    if (is_null($etapa))
+      $etapa = $this->getRequest()->etapa;
+
+    $nota = urldecode($this->serviceBoletim()->getNotaGeral($etapa)->nota);
+
+    return str_replace(',', '.', $nota);
+
+  }
   protected function getNotaRecuperacaoParalelaAtual($etapa = null, $componenteCurricularId = null) {
     // defaults
     if (is_null($componenteCurricularId))
@@ -1411,8 +1455,11 @@ class DiarioApiController extends ApiCoreController
       }
 
     }
-
-
+    if($regra->get('notaGeralPorEtapa') == '1'){
+      $itensRegra['nota_geral_por_etapa'] = "SIM";
+    }else{
+      $itensRegra['nota_geral_por_etapa'] = "NAO UTILIZA";
+    }
 
     return $itensRegra;
   }
@@ -1461,6 +1508,9 @@ class DiarioApiController extends ApiCoreController
     elseif ($this->isRequestFor('post', 'parecer'))
       $this->postParecer();
 
+    elseif ($this->isRequestFor('post', 'nota_geral'))
+      $this->postNotaGeral();
+
     elseif ($this->isRequestFor('delete', 'nota') || $this->isRequestFor('delete', 'nota_exame'))
         $this->deleteNota();
 
@@ -1475,6 +1525,9 @@ class DiarioApiController extends ApiCoreController
 
     elseif ($this->isRequestFor('delete', 'parecer'))
         $this->deleteParecer();
+
+    // elseif ($this->isRequestFor('delete', 'nota_geral'))
+      // $this->deleteNotaGeral();
 
     else
       $this->notImplementedOperationError();

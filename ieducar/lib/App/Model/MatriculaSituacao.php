@@ -42,28 +42,30 @@ require_once 'CoreExt/Enum.php';
  */
 class App_Model_MatriculaSituacao extends CoreExt_Enum
 {
-  const APROVADO            = 1;
-  const REPROVADO           = 2;
-  const EM_ANDAMENTO        = 3;
-  const TRANSFERIDO         = 4;
-  const RECLASSIFICADO      = 5;
-  const ABANDONO            = 6;
-  const EM_EXAME            = 7;
-  const APROVADO_APOS_EXAME = 8;
-  const RETIDO_FALTA        = 9;
-  const APROVADO_SEM_EXAME  = 10;
-  const PRE_MATRICULA  = 11;
+  const APROVADO                   = 1;
+  const REPROVADO                  = 2;
+  const EM_ANDAMENTO               = 3;
+  const TRANSFERIDO                = 4;
+  const RECLASSIFICADO             = 5;
+  const ABANDONO                   = 6;
+  const EM_EXAME                   = 7;
+  const APROVADO_APOS_EXAME        = 8;
+  const RETIDO_FALTA               = 9;
+  const APROVADO_SEM_EXAME         = 10;
+  const PRE_MATRICULA              = 11;
+  const APROVADO_COM_DEPENDENCIA   = 12;
 
   protected $_data = array(
-    self::APROVADO            => 'Aprovado',
-    self::REPROVADO           => 'Retido',
-    self::EM_ANDAMENTO        => 'Em andamento',
-    self::TRANSFERIDO         => 'Transferido',
-    self::RECLASSIFICADO      => 'Reclassificado',
-    self::ABANDONO            => 'Abandono',
-    self::EM_EXAME            => 'Em exame',
-    self::APROVADO_APOS_EXAME => 'Aprovado após exame',
-    self::PRE_MATRICULA        => 'Pré-matrícula'
+    self::APROVADO                 => 'Aprovado',
+    self::REPROVADO                => 'Retido',
+    self::EM_ANDAMENTO             => 'Em andamento',
+    self::TRANSFERIDO              => 'Transferido',
+    self::RECLASSIFICADO           => 'Reclassificado',
+    self::ABANDONO                 => 'Abandono',
+    self::EM_EXAME                 => 'Em exame',
+    self::APROVADO_APOS_EXAME      => 'Aprovado após exame',
+    self::PRE_MATRICULA            => 'Pré-matrícula',
+    self::APROVADO_COM_DEPENDENCIA => 'Aprovado com dependência'
   );
 
   public static function getInstance()

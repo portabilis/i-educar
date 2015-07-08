@@ -164,10 +164,22 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   protected $_notasComponentes = array();
 
   /**
+   * Notas do aluno por etapa.
+   * @var array
+   */
+  protected $_notasGerais = array();
+
+  /**
    * Médias do aluno nos componentes cursados.
    * @var array
    */
   protected $_mediasComponentes = array();
+
+ /**
+   * Média geral do aluno.
+   * @var array
+   */
+  protected $_mediasGerais = array();
 
   /**
    * Notas adicionadas no boletim para inclusão ou edição.
@@ -257,7 +269,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   {
     $this->setOptions($options)
          ->_setMatriculaInfo()
-         ->_loadNotaComponenteCurricular()
+         ->_loadNotas()
          ->_loadFalta()
          ->_loadParecerDescritivo();
   }
@@ -321,6 +333,16 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     if (isset($options['ParecerDescritivoAbstractDataMapper'])) {
       $this->setParecerDescritivoAbstractDataMapper($options['ParecerDescritivoAbstractDataMapper']);
       unset($options['ParecerDescritivoAbstractDataMapper']);
+    }
+
+    if (isset($options['NotaGeralDataMapper'])) {
+      $this->setNotaGeralDataMapper($options['NotaGeralDataMapper']);
+      unset($options['NotaGeralDataMapper']);
+    }
+
+    if (isset($options['MediaGeralDataMapper'])) {
+      $this->setMediaGeralDataMapper($options['MediaGeralDataMapper']);
+      unset($options['MediaGeralDataMapper']);
     }
 
     $defaultOptions = array_keys($this->getOptions());
@@ -487,6 +509,54 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     return $this->_notaComponenteDataMapper;
   }
 
+   /**
+   * Getter.
+   * @return Avaliacao_Model_NotaGeralDataMapper
+   */
+  public function getNotaGeralDataMapper()
+  {
+    if (is_null($this->_notaGeralDataMapper)) {
+      require_once 'Avaliacao/Model/NotaGeralDataMapper.php';
+      $this->setNotaGeralDataMapper(new Avaliacao_Model_NotaGeralDataMapper());
+    }
+    return $this->_notaGeralDataMapper;
+  }
+
+  /**
+   * Setter.
+   * @param setNotaGeralDataMapper $mapper
+   * @return App_Service_Boletim Provê interface fluída
+   */
+  public function setNotaGeralDataMapper(Avaliacao_Model_NotaGeralDataMapper $mapper)
+  {
+    $this->_notaGeralDataMapper = $mapper;
+    return $this;
+  }
+
+     /**
+   * Getter.
+   * @return Avaliacao_Model_NotaGeralDataMapper
+   */
+  public function getMediaGeralDataMapper()
+  {
+    if (is_null($this->_mediaGeralDataMapper)) {
+      require_once 'Avaliacao/Model/MediaGeralDataMapper.php';
+      $this->setMediaGeralDataMapper(new Avaliacao_Model_MediaGeralDataMapper());
+    }
+    return $this->_mediaGeralDataMapper;
+  }
+
+  /**
+   * Setter.
+   * @param setMediaGeralDataMapper $mapper
+   * @return App_Service_Boletim Provê interface fluída
+   */
+  public function setMediaGeralDataMapper(Avaliacao_Model_MediaGeralDataMapper $mapper)
+  {
+    $this->_mediaGeralDataMapper = $mapper;
+    return $this;
+  }
+
   /**
    * Setter.
    * @param Avaliacao_Model_NotaMediaComponenteDataMapper $mapper
@@ -647,6 +717,11 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     return $this->_notasComponentes;
   }
 
+  public function getNotasGerais()
+  {
+    return $this->_notasGerais;
+  }
+
   /**
    * Retorna as instâncias de Avaliacao_Model_NotaComponenteMedia do aluno.
    * @return array
@@ -654,6 +729,15 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   public function getMediasComponentes()
   {
     return $this->_mediasComponentes;
+  }
+
+/**
+   * Retorna as instâncias de Avaliacao_Model_MediaGeral do aluno.
+   * @return array
+   */
+  public function getMediasGerais()
+  {
+    return $this->_mediasGerais;
   }
 
   /**
@@ -711,6 +795,26 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $notasComponente = $componentes[$id];
 
     foreach ($notasComponente as $nota) {
+      if ($nota->etapa == $etapa) {
+        return $nota;
+      }
+    }
+
+    return NULL;
+  }
+
+  /**
+   * Retorna uma instância de Avaliacao_Model_NotaGeral.
+   *
+   * @param int $id O identificador de ComponenteCurricular_Model_Componente
+   * @param int $etapa A etapa para o qual a nota foi lançada
+   * @return Avaliacao_Model_NotaComponente|NULL
+   */
+  public function getNotaGeral($etapa = 1)
+  {
+    $notasGerais = $this->getNotasGerais();
+
+    foreach ($notasGerais as $nota) {
       if ($nota->etapa == $etapa) {
         return $nota;
       }
@@ -833,14 +937,14 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    * @param bool $loadMedias FALSE caso não seja necessário carregar as médias
    * @return App_Service_Boletim Provê interface fluída
    */
-  protected function _loadNotaComponenteCurricular($loadMedias = TRUE)
+  protected function _loadNotas($loadMedias = TRUE)
   {
     // Cria uma entrada no boletim caso o aluno/matrícula não a tenha
     if (!$this->hasNotaAluno()) {
       $this->_createNotaAluno();
     }
 
-    // Senão tiver, vai criar
+    // Se não tiver, vai criar
     $notaAluno = $this->_getNotaAluno();
 
     $notas = $this->getNotaComponenteDataMapper()->findAll(
@@ -853,22 +957,31 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       $notasComponentes[$nota->get('componenteCurricular')][] = $nota;
     }
 
+    //Carrega as notas indexadas pela etapa
+    $notasGerais = array();
+    $notas = $this->getNotaGeralDataMapper()->findAll(
+      array(), array('notaAluno' => $notaAluno->id), array('etapa' => 'ASC')
+    );
 
+    foreach($notas as $nota){
+      $notasGerais[$nota->get('etapa')] = $nota;
+    }
 
     $this->_notasComponentes = $notasComponentes;
+    $this->_notasGerais = $notasGerais;
 
     if (FALSE == $loadMedias) {
       return $this;
     }
 
-    return $this->_loadNotaComponenteCurricularMedia();
+    return $this->_loadMedias();
   }
 
   /**
    * Carrega as médias dos componentes curriculares já lançadas.
    * @return App_Service_Boletim Provê interface fluída
    */
-  protected function _loadNotaComponenteCurricularMedia()
+  protected function _loadMedias()
   {
     $notaAluno = $this->_getNotaAluno();
 
@@ -881,7 +994,18 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       $mediasComponentes[$media->get('componenteCurricular')][] = $media;
     }
 
+    $mediasGerais = array();
+
+    $mediasGerais = $this->getMediaGeralDataMapper()->findAll(
+      array(), array('notaAluno' => $notaAluno->id)
+    );
+
+    foreach ($mediasGerais as $mediaGeral) {
+      $mediasGerais = $mediaGeral;
+    }
+
     $this->_mediasComponentes = $mediasComponentes;
+    $this->_mediasGerais = $mediasGerais;
 
     return $this;
   }
@@ -1059,12 +1183,13 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
   function getSituacaoNotaFalta($flagSituacaoNota, $flagSituacaoFalta)
   {
-    $situacao              = new stdClass();
-    $situacao->situacao    = App_Model_MatriculaSituacao::EM_ANDAMENTO;
-    $situacao->aprovado    = TRUE;
-    $situacao->andamento   = FALSE;
-    $situacao->recuperacao = FALSE;
-    $situacao->retidoFalta = FALSE;
+    $situacao                          = new stdClass();
+    $situacao->situacao                = App_Model_MatriculaSituacao::EM_ANDAMENTO;
+    $situacao->aprovado                = TRUE;
+    $situacao->andamento               = FALSE;
+    $situacao->recuperacao             = FALSE;
+    $situacao->aprovadoComDependencia  = FALSE;
+    $situacao->retidoFalta             = FALSE;
 
     switch ($flagSituacaoNota) {
       case App_Model_MatriculaSituacao::EM_ANDAMENTO:
@@ -1073,6 +1198,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         break;
       case App_Model_MatriculaSituacao::APROVADO_APOS_EXAME:
         $situacao->recuperacao = TRUE;
+        break;
+      case App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA:
+        $situacao->aprovadoComDependencia = TRUE;
         break;
       case App_Model_MatriculaSituacao::EM_EXAME:
         $situacao->aprovado    = FALSE;
@@ -1108,6 +1236,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
     elseif (! $situacao->andamento and $situacao->aprovado and $situacao->recuperacao)
       $situacao->situacao = App_Model_MatriculaSituacao::APROVADO_APOS_EXAME;
+
+    elseif (! $situacao->andamento and $situacao->aprovado and $situacao->aprovadoComDependencia)
+      $situacao->situacao = App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA;
 
     elseif (! $situacao->andamento and $situacao->aprovado)
       $situacao->situacao = App_Model_MatriculaSituacao::APROVADO;
@@ -1201,6 +1332,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $situacao->situacao = 0;
     $situacao->componentesCurriculares = array();
 
+    // Carrega as médias pois este método pode ser chamado após a chamada a saveNotas()
+    $mediasComponentes = $this->_loadMedias()
+                              ->getMediasComponentes();
+
     $disciplina_dispensada = clsPmieducarTurma::getDisciplinaDispensada($this->getOption('ref_cod_turma'));
 
     // A situação é "aprovado" por padrão
@@ -1210,9 +1345,50 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       return $situacao;
     }
 
-    // Carrega as médias pois este método pode ser chamado após a chamada a saveNotas()
-    $mediasComponentes = $this->_loadNotaComponenteCurricularMedia()
-                              ->getMediasComponentes();
+    if($this->getRegra()->get('notaGeralPorEtapa') == "1"){
+       $mediasGerais = $this->getMediasGerais();
+
+      if (0 == count($mediasGerais)) {
+        $situacaoGeral = App_Model_MatriculaSituacao::EM_ANDAMENTO;
+      }
+
+      foreach ($mediasGerais as $id => $mediaGeral) {
+        if ($this->getRegra()->get('tipoNota') == RegraAvaliacao_Model_Nota_TipoValor::NUMERICA) {
+          $media = $mediaGeral[0]->mediaArredondada;
+        }
+        else {
+          $media = $mediaGeral[0]->media;
+        }
+
+        if ($etapa == $this->getOption('etapas') && $media < $this->getRegra()->media && $this->hasRecuperacao()) {
+          $situacaoGeral = App_Model_MatriculaSituacao::EM_EXAME;
+        }
+        elseif ($etapa == $this->getOption('etapas') && $media < $this->getRegra()->media) {
+          $situacaoGeral = App_Model_MatriculaSituacao::REPROVADO;
+        }
+        elseif ($etapa == 'Rc' && $media < $this->getRegra()->mediaRecuperacao) {
+          $situacaoGeral = App_Model_MatriculaSituacao::REPROVADO;
+        }
+        elseif ($etapa == 'Rc' && $media >= $this->getRegra()->mediaRecuperacao && $this->hasRecuperacao()) {
+          $situacaoGeral = App_Model_MatriculaSituacao::APROVADO_APOS_EXAME;
+        }
+        elseif ($etapa < $this->getOption('etapas') && $etapa != 'Rc') {
+          $situacaoGeral = App_Model_MatriculaSituacao::EM_ANDAMENTO;
+        }
+        else {
+          $situacaoGeral = App_Model_MatriculaSituacao::APROVADO;
+        }
+      }
+      
+      foreach($mediasComponentes as $id => $mediaComponente){
+        $situacao->componentesCurriculares[$id]->situacao = $situacaoGeral;
+      }
+
+
+      $situacao->situacao = $situacaoGeral;
+
+      return $situacao;
+    }
 
     $componentes = $this->getComponentes();
 
@@ -1228,7 +1404,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       $situacaoGeral = App_Model_MatriculaSituacao::EM_ANDAMENTO;
     }
 
+    $qtdComponenteReprovado = 0;
+
     foreach ($mediasComponentes as $id => $mediaComponente) {
+
       $etapa = $mediaComponente[0]->etapa;
 
       if ($this->getRegra()->get('tipoNota') == RegraAvaliacao_Model_Nota_TipoValor::NUMERICA) {
@@ -1238,17 +1417,16 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $media = $mediaComponente[0]->media;
       }
 
-      $situacao->componentesCurriculares[$id] = new stdClass();
-      $situacao->componentesCurriculares[$id]->situacao = 0;
-
       if ($etapa == $this->getOption('etapas') && $media < $this->getRegra()->media &&
           $this->hasRecuperacao()) {
         $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::EM_EXAME;
       }
       elseif ($etapa == $this->getOption('etapas') && $media < $this->getRegra()->media) {
+        $qtdComponenteReprovado++;
         $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::REPROVADO;
       }
       elseif ($etapa == 'Rc' && $media < $this->getRegra()->mediaRecuperacao) {
+        $qtdComponenteReprovado++;
         $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::REPROVADO;
       }
       elseif ($etapa == 'Rc' && $media >= $this->getRegra()->mediaRecuperacao && $this->hasRecuperacao()) {
@@ -1266,6 +1444,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $situacaoGeral = $situacao->componentesCurriculares[$id]->situacao;
       }
     }
+
+    if($situacaoGeral == App_Model_MatriculaSituacao::REPROVADO
+        && $qtdComponenteReprovado <= $this->getRegra()->get('qtdDisciplinasDependencia'))
+      $situacaoGeral = App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA;
 
     // Situação geral
     $situacao->situacao = $situacaoGeral;
@@ -1508,7 +1690,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       $tipoFaltaPorComponente = $this->getRegra()->get('tipoPresenca') ==
                                 RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE;
 
-      // inicializa situacaoFaltaCc a ser usado caso tipoFaltaPorComponente
+      // inicializa 0FaltaCc a ser usado caso tipoFaltaPorComponente
       $situacaoFaltaCc           = new stdClass();
       $situacaoFaltaCc->situacao = App_Model_MatriculaSituacao::EM_ANDAMENTO;
 
@@ -1610,6 +1792,21 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   }
 
   /**
+   * Verifica se existe uma nota geral lançada com aquele id
+   *
+   * @param int $id
+   * @return bool
+   */
+  protected function _hasNotaGeral($id)
+  {
+    $notasGerais = $this->getNotasGerais();
+    if (!isset($notasGerais[$id])) {
+      return FALSE;
+    }
+    return TRUE;
+  }
+
+  /**
    * Retorna o field identity de um componente curricular de uma instância de
    * Avaliacao_Model_NotaComponente já esteja persistida.
    *
@@ -1619,7 +1816,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   protected function _getNotaIdEtapa(Avaliacao_Model_NotaComponente $instance)
   {
     $componenteCurricular = $instance->get('componenteCurricular');
-
     if (!$this->_hasNotaComponente($componenteCurricular)) {
       return NULL;
     }
@@ -1628,6 +1824,21 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     foreach ($notasComponentes[$componenteCurricular] as $notaComponente) {
       if ($instance->etapa == $notaComponente->etapa) {
         return $notaComponente->id;
+      }
+    }
+
+    return NULL;
+  }
+
+    /**
+   * Retorna o id de uma nota já lançada, retorna null caso não seja encontrada
+   */
+  protected function _getNotaGeralIdEtapa(Avaliacao_Model_NotaGeral $instance)
+  {
+    $notasGerais = $this->getNotasGerais();
+    foreach ($notasGerais as $notaGeral) {
+      if ($instance->etapa == $notaGeral->etapa) {
+        return $notaGeral->id;
       }
     }
 
@@ -1931,8 +2142,22 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
     $nota->notaArredondada = $this->arredondaNota($nota);
     $this->_notas[$key]    = $nota;
+ 
+    return $this;
+  }
+
+  public function addNotaGeral(Avaliacao_Model_NotaGeral $notaGeral)
+  {
+    $key = 'ng_' . spl_object_hash($notaGeral);
+
+    $notaGeral = $this->_addValidators($notaGeral);
+    $notaGeral = $this->_updateEtapa($notaGeral);
+
+    $notaGeral->notaArredondada = $this->arredondaNota($notaGeral);
+    $this->_notas[$key]    = $notaGeral;
 
     return $this;
+
   }
 
   /**
@@ -2268,6 +2493,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   {
     if ($nota instanceof Avaliacao_Model_NotaComponente) {
       $nota = $nota->nota;
+    }elseif($nota instanceof Avaliacao_Model_NotaGeral){
+      $nota = $nota->nota;
     }
 
     if (!is_numeric($nota)) {
@@ -2437,15 +2664,21 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $notaAluno = $this->_getNotaAluno();
     $notas = $this->getNotas();
 
+
     foreach ($notas as $nota) {
       $nota->notaAluno = $notaAluno;
-      $nota->id = $this->_getNotaIdEtapa($nota);
-      $this->getNotaComponenteDataMapper()->save($nota);
+      if($nota instanceof Avaliacao_Model_NotaComponente){
+        $nota->id = $this->_getNotaIdEtapa($nota);
+        $this->getNotaComponenteDataMapper()->save($nota);
+
+      }elseif($nota instanceof Avaliacao_Model_NotaGeral){
+         $nota->id = $this->_getNotaGeralIdEtapa($nota);
+         $this->getNotaGeralDataMapper()->save($nota);
+      }
     }
 
     // Atualiza as médias
     $this->_updateNotaComponenteMedia();
-
     return $this;
   }
 
@@ -2540,7 +2773,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
         case RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_AUTO_MEDIA_PRESENCA:
 
-          if ($situacaoBoletim->aprovado && !$situacaoBoletim->retidoFalta)
+          if ($situacaoBoletim->aprovado && !$situacaoBoletim->retidoFalta && $situacaoBoletim->aprovadoComDependencia)
+            $novaSituacaoMatricula = App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA;
+          elseif ($situacaoBoletim->aprovado && !$situacaoBoletim->retidoFalta)
             $novaSituacaoMatricula = App_Model_MatriculaSituacao::APROVADO;
           else
             $novaSituacaoMatricula = App_Model_MatriculaSituacao::REPROVADO;
@@ -2548,7 +2783,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
         case RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_AUTO_SOMENTE_MEDIA:
 
-          if ($situacaoBoletim->aprovado)
+          if ($situacaoBoletim->aprovado && $situacaoBoletim->aprovadoComDependencia)
+            $novaSituacaoMatricula = App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA;
+          elseif ($situacaoBoletim->aprovado)
             $novaSituacaoMatricula = App_Model_MatriculaSituacao::APROVADO;
           else
             $novaSituacaoMatricula = App_Model_MatriculaSituacao::REPROVADO;
@@ -2584,102 +2821,151 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   protected function _updateNotaComponenteMedia()
   {
     require_once 'Avaliacao/Model/NotaComponenteMedia.php';
-    $this->_loadNotaComponenteCurricular(FALSE);
+    $this->_loadNotas(FALSE);
+    $regra = $this->getRegra();
+    if(is_null($etapa)) {$etapa = 1;}
 
-    foreach ($this->_notasComponentes as $id => $notasComponentes) {
-      // Cria um array onde o índice é a etapa
-      $etapasNotas = CoreExt_Entity::entityFilterAttr($notasComponentes, 'etapa', 'nota');
-      $notas = array('Se' => 0, 'Et' => $this->getOption('etapas'));
+    if($regra->get('notaGeralPorEtapa') == "1"){
+      $notasGerais = array('Se' => 0, 'Et' => $this->getOption('etapas'));
 
-      // Cria o array formatado para o cálculo da fórmula da média
-      foreach ($etapasNotas as $etapa => $nota) {
-        if (is_numeric($etapa)) {
-          $notas['E' . $etapa] = $nota;
-          $notas['Se'] += $nota;
-          continue;
-        }
-        $notas[$etapa] = $nota;
-      }
+      foreach($this->_notasGerais as $id => $notaGeral){
 
-      // Verifica regras de recuperações (Recuperações específicas por etapa)
-      $regra = $this->getRegra();
-      $regrasRecuperacoes = $regra->findRegraRecuperacao();
+        $etapasNotas = CoreExt_Entity::entityFilterAttr($notaGeral, 'etapa', 'nota');
 
-      $cont = 0;
-      foreach ($regrasRecuperacoes as $key => $_regraRecuperacao) {
-        $cont++;
-        $notaRecuperacao = $this->getNotaComponente($id, $_regraRecuperacao->getLastEtapa());
-        if($notaRecuperacao && is_numeric($notaRecuperacao->notaRecuperacaoEspecifica)){
-          // Caso tenha nota de recuperação para regra atual, atribuí variável RE+N
-          $notas['RSP'.$cont] = $notaRecuperacao->notaRecuperacaoEspecifica;
-          $notaRecuperacao->notaRecuperacaoEspecifica;
-
-          $somaEtapasRecuperacao = 0;
-          $countEtapasRecuperacao = 0;
-
-          foreach ($_regraRecuperacao->getEtapas() as $__etapa){
-            $somaEtapasRecuperacao += $notas['E' . $__etapa];
-            $countEtapasRecuperacao++;
+        // Cria o array formatado para o cálculo da fórmula da média
+        foreach ($etapasNotas as $etapa => $nota) {
+          if (is_numeric($etapa)) {
+            $notasGerais['E' . $etapa] = $nota;
+            $notasGerais['Se'] += $nota;
+            continue;
           }
-
-          $mediaEtapasRecuperacao = $somaEtapasRecuperacao / $countEtapasRecuperacao;
-          $mediaEtapasRecuperacaoComRecuperacao = ($mediaEtapasRecuperacao + $notaRecuperacao->notaRecuperacaoEspecifica) / 2;
-
-          // Caso média com recuperação seja maior que média das somas das etapas sem recuperação, atribuí variável MRE+N
-          if($mediaEtapasRecuperacaoComRecuperacao > $mediaEtapasRecuperacao)
-            $notas['RSPM'.$cont] = $mediaEtapasRecuperacaoComRecuperacao;
-          else
-            $notas['RSPM'.$cont] = $mediaEtapasRecuperacao;
-
-          // Caso nota de recuperação seja maior que soma das etapas, atribuí variável SRE+N
-          if($notaRecuperacao->notaRecuperacaoEspecifica > $somaEtapasRecuperacao)
-            $notas['RSPS'.$cont] = $notaRecuperacao->notaRecuperacaoEspecifica;
-          else
-            $notas['RSPS'.$cont] = $somaEtapasRecuperacao;
-
-        }else{
-          // Caso tenha nota de recuperação para regra atual, atribuí variaveis RSPM+N E RSPS+N
-          // considerando apenas soma das etapas
-          $somaEtapasRecuperacao = 0;
-          $countEtapasRecuperacao = 0;
-
-          foreach ($_regraRecuperacao->getEtapas() as $__etapa){
-            $somaEtapasRecuperacao += $notas['E' . $__etapa];
-            $countEtapasRecuperacao++;
-          }
-
-          $notas['RSPM'.$cont] = $somaEtapasRecuperacao / $countEtapasRecuperacao;
-          $notas['RSPS'.$cont] = $somaEtapasRecuperacao;
+          $notasGerais[$etapa] = $nota;
         }
       }
+      
+      // //Calcula a média geral
 
-      // Calcula a média
-      $media = $this->_calculaMedia($notas);
+      $mediaGeral = $this->_calculaMedia($notasGerais);
 
       // Cria uma nova instância de média, já com a nota arredondada e a etapa
-      $notaComponenteCurricularMedia = new Avaliacao_Model_NotaComponenteMedia(array(
+      $mediaGeralEtapa = new Avaliacao_Model_MediaGeral(array(
         'notaAluno' => $this->_getNotaAluno()->id,
-        'componenteCurricular' => $id,
-        'media' => $media,
-        'mediaArredondada' => $this->arredondaNota($media),
+        'media' => $mediaGeral,
+        'mediaArredondada' => $this->arredondaNota($mediaGeral),
         'etapa' => $etapa
       ));
 
       try {
         // Se existir, marca como "old" para possibilitar a atualização
-        $this->getNotaComponenteMediaDataMapper()->find(array(
-          $notaComponenteCurricularMedia->get('notaAluno'),
-          $notaComponenteCurricularMedia->get('componenteCurricular'),
+        $this->getMediaGeralDataMapper()->find(array(
+          $mediaGeralEtapa->get('notaAluno')
         ));
 
-        $notaComponenteCurricularMedia->markOld();
+        $mediaGeralEtapa->markOld();
       }
       catch (Exception $e) {
         // Prossegue, sem problemas.
       }
 
       // Salva a média
-      $this->getNotaComponenteMediaDataMapper()->save($notaComponenteCurricularMedia);
+      $this->getMediaGeralDataMapper()->save($mediaGeralEtapa);
+    }else{
+
+      foreach ($this->_notasComponentes as $id => $notasComponentes) {
+        // Cria um array onde o índice é a etapa
+        $etapasNotas = CoreExt_Entity::entityFilterAttr($notasComponentes, 'etapa', 'nota');
+        $notas = array('Se' => 0, 'Et' => $this->getOption('etapas'));
+
+        // Cria o array formatado para o cálculo da fórmula da média
+        foreach ($etapasNotas as $etapa => $nota) {
+          if (is_numeric($etapa)) {
+            $notas['E' . $etapa] = $nota;
+            $notas['Se'] += $nota;
+            continue;
+          }
+          $notas[$etapa] = $nota;
+        }
+
+        // Verifica regras de recuperações (Recuperações específicas por etapa)
+
+        $regrasRecuperacoes = $regra->findRegraRecuperacao();
+
+        $cont = 0;
+        foreach ($regrasRecuperacoes as $key => $_regraRecuperacao) {
+          $cont++;
+          $notaRecuperacao = $this->getNotaComponente($id, $_regraRecuperacao->getLastEtapa());
+          if($notaRecuperacao && is_numeric($notaRecuperacao->notaRecuperacaoEspecifica)){
+            // Caso tenha nota de recuperação para regra atual, atribuí variável RE+N
+            $notas['RSP'.$cont] = $notaRecuperacao->notaRecuperacaoEspecifica;
+            $notaRecuperacao->notaRecuperacaoEspecifica;
+
+            $somaEtapasRecuperacao = 0;
+            $countEtapasRecuperacao = 0;
+
+            foreach ($_regraRecuperacao->getEtapas() as $__etapa){
+              $somaEtapasRecuperacao += $notas['E' . $__etapa];
+              $countEtapasRecuperacao++;
+            }
+
+            $mediaEtapasRecuperacao = $somaEtapasRecuperacao / $countEtapasRecuperacao;
+            $mediaEtapasRecuperacaoComRecuperacao = ($mediaEtapasRecuperacao + $notaRecuperacao->notaRecuperacaoEspecifica) / 2;
+
+            // Caso média com recuperação seja maior que média das somas das etapas sem recuperação, atribuí variável MRE+N
+            if($mediaEtapasRecuperacaoComRecuperacao > $mediaEtapasRecuperacao)
+              $notas['RSPM'.$cont] = $mediaEtapasRecuperacaoComRecuperacao;
+            else
+              $notas['RSPM'.$cont] = $mediaEtapasRecuperacao;
+
+            // Caso nota de recuperação seja maior que soma das etapas, atribuí variável SRE+N
+            if($notaRecuperacao->notaRecuperacaoEspecifica > $somaEtapasRecuperacao)
+              $notas['RSPS'.$cont] = $notaRecuperacao->notaRecuperacaoEspecifica;
+            else
+              $notas['RSPS'.$cont] = $somaEtapasRecuperacao;
+
+          }else{
+            // Caso tenha nota de recuperação para regra atual, atribuí variaveis RSPM+N E RSPS+N
+            // considerando apenas soma das etapas
+            $somaEtapasRecuperacao = 0;
+            $countEtapasRecuperacao = 0;
+
+            foreach ($_regraRecuperacao->getEtapas() as $__etapa){
+              $somaEtapasRecuperacao += $notas['E' . $__etapa];
+              $countEtapasRecuperacao++;
+            }
+
+            $notas['RSPM'.$cont] = $somaEtapasRecuperacao / $countEtapasRecuperacao;
+            $notas['RSPS'.$cont] = $somaEtapasRecuperacao;
+          }
+        }
+
+        // Calcula a média por componente curricular
+        $media = $this->_calculaMedia($notas);
+
+        // Cria uma nova instância de média, já com a nota arredondada e a etapa
+        $notaComponenteCurricularMedia = new Avaliacao_Model_NotaComponenteMedia(array(
+          'notaAluno' => $this->_getNotaAluno()->id,
+          'componenteCurricular' => $id,
+          'media' => $media,
+          'mediaArredondada' => $this->arredondaNota($media),
+          'etapa' => $etapa
+        ));
+
+        try {
+          // Se existir, marca como "old" para possibilitar a atualização
+          $this->getNotaComponenteMediaDataMapper()->find(array(
+            $notaComponenteCurricularMedia->get('notaAluno'),
+            $notaComponenteCurricularMedia->get('componenteCurricular'),
+          ));
+
+          $notaComponenteCurricularMedia->markOld();
+        }
+        catch (Exception $e) {
+          // Prossegue, sem problemas.
+        }
+
+        // Salva a média
+        $this->getNotaComponenteMediaDataMapper()->save($notaComponenteCurricularMedia);
+      }
     }
   }
 
