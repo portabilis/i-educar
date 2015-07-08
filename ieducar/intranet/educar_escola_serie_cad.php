@@ -34,6 +34,7 @@ require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'ComponenteCurricular/Model/AnoEscolarDataMapper.php';
 require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
+require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
 require_once 'Avaliacao/Fixups/CleanComponentesCurriculares.php';
 
 /**
@@ -103,6 +104,7 @@ class indice extends clsCadastro
 
   var $etapas_especificas;
   var $etapas_utilizadas;
+  var $utilizaNotaGeralPorEtapa;
 
   function Inicializar()
   {
@@ -113,6 +115,8 @@ class indice extends clsCadastro
 
     $this->ref_cod_serie = $_GET['ref_cod_serie'];
     $this->ref_cod_escola = $_GET['ref_cod_escola'];
+
+    $this->utilizaNotaGeralPorEtapa = $this->checkIfUseNotaGeralPorEtapa();
 
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(585, $this->pessoa_logada, 7,
@@ -240,8 +244,11 @@ class indice extends clsCadastro
         foreach ($registros as $campo) {
           $this->escola_serie_disciplina[$campo['ref_cod_disciplina']] = $campo['ref_cod_disciplina'];
           $this->escola_serie_disciplina_carga[$campo['ref_cod_disciplina']] = floatval($campo['carga_horaria']);
-          $this->escola_serie_disciplina_etapa_especifica[$campo['ref_cod_disciplina']] = intval($campo['etapas_especificas']);
-          $this->escola_serie_disciplina_etapa_utilizada[$campo['ref_cod_disciplina']] = $campo['etapas_utilizadas'];
+          
+          if($this->utilizaNotaGeralPorEtapa){
+            $this->escola_serie_disciplina_etapa_especifica[$campo['ref_cod_disciplina']] = intval($campo['etapas_especificas']);
+            $this->escola_serie_disciplina_etapa_utilizada[$campo['ref_cod_disciplina']] = $campo['etapas_utilizadas'];
+          }
         }
       }
     }
@@ -259,21 +266,22 @@ class indice extends clsCadastro
       $anoEscolar = new ComponenteCurricular_Model_AnoEscolarDataMapper();
       $lista = $anoEscolar->findComponentePorSerie($this->ref_cod_serie);
 
-      // Instancia o mapper de componente curricular
-      $mapper = new ComponenteCurricular_Model_ComponenteDataMapper();
-
       if (is_array($lista) && count($lista)) {
         $conteudo .= '<div style="margin-bottom: 10px; float: left">';
         $conteudo .= '  <span style="display: block; float: left; width: 250px;">Nome</span>';
         $conteudo .= '  <span style="display: block; float: left; width: 100px;">Carga horária</span>';
         $conteudo .= '  <span style="display: block; float: left">Usar padrão do componente?</span>';
-        $conteudo .= '  <span style="display: block; float: left; margin-left: 30px;">Usado em etapas específicas?</span>';
+        if($this->utilizaNotaGeralPorEtapa){
+          $conteudo .= '  <span style="display: block; float: left; margin-left: 30px;">Usado em etapas específicas?</span>';
+        }
         $conteudo .= '</div>';
         $conteudo .= '<br style="clear: left" />';
         $conteudo .= '<div style="margin-bottom: 10px; float: left">';
         $conteudo .= "  <label style='display: block; float: left; width: 350px;'><input type='checkbox' name='CheckTodos' onClick='marcarCheck(".'"disciplinas[]"'.");'/>Marcar Todos</label>";
         $conteudo .= "  <label style='display: block; float: left; width: 100px;'><input type='checkbox' name='CheckTodos2' onClick='marcarCheck(".'"usar_componente[]"'.");';/>Marcar Todos</label>";
-        $conteudo .= "  <label style='display: block; float: left; width: 100px; margin-left: 84px;'><input type='checkbox' name='CheckTodos3' onClick='marcarCheck(".'"etapas_especificas[]"'.");';/>Marcar Todos</label>";
+        if($this->utilizaNotaGeralPorEtapa){
+          $conteudo .= "  <label style='display: block; float: left; width: 100px; margin-left: 84px;'><input type='checkbox' name='CheckTodos3' onClick='marcarCheck(".'"etapas_especificas[]"'.");';/>Marcar Todos</label>";
+        }
         $conteudo .= '</div>';
         $conteudo .= '<br style="clear: left" />';
         foreach ($lista as $registro) {
@@ -303,9 +311,10 @@ class indice extends clsCadastro
           $conteudo .= "  <label style='display: block; float: left; width: 250px'><input type=\"checkbox\" $checked name=\"disciplinas[$registro->id]\" id=\"disciplinas[]\" value=\"{$registro->id}\">{$registro}</label>";
           $conteudo .= "  <label style='display: block; float: left; width: 100px;'><input type='text' name='carga_horaria[$registro->id]' value='{$cargaHoraria}' size='5' maxlength='7'></label>";
           $conteudo .= "  <label style='display: block; float: left'><input type='checkbox' id='usar_componente[]' name='usar_componente[$registro->id]' value='1' ". ($usarComponente == TRUE ? $checked : '') .">($cargaComponente h)</label>";
-          $conteudo .= "  <input style='margin-left:140px; float:left;' type='checkbox' id='etapas_especificas[]' name='etapas_especificas[$registro->id]' value='1' ". ($usarComponente == TRUE ? $checkedEtapaEspecifica : '') ."></label>";
-          $conteudo .= "  <label style='display: block; float: left; width: 100px;'>Etapas utilizadas: <input type='text' name='etapas_utilizadas[$registro->id]' value='{$etapas_utilizadas}' size='5' maxlength='7'></label>";
-
+          if($this->utilizaNotaGeralPorEtapa){
+            $conteudo .= "  <input style='margin-left:140px; float:left;' type='checkbox' id='etapas_especificas[]' name='etapas_especificas[$registro->id]' value='1' ". ($usarComponente == TRUE ? $checkedEtapaEspecifica : '') ."></label>";
+            $conteudo .= "  <label style='display: block; float: left; width: 100px;'>Etapas utilizadas: <input type='text' class='etapas_utilizadas' name='etapas_utilizadas[$registro->id]' value='{$etapas_utilizadas}' size='5' maxlength='7'></label>";
+          }
           $conteudo .= '</div>';
           $conteudo .= '<br style="clear: left" />';
 
@@ -530,6 +539,17 @@ class indice extends clsCadastro
     echo "<!--\nErro ao excluir clsPmieducarEscolaSerie\nvalores obrigatorios\nif( is_numeric( $this->ref_cod_escola_ ) && is_numeric( $this->ref_cod_serie_ ) && is_numeric( $this->pessoa_logada ) )\n-->";
     return FALSE;
   }
+  private function checkIfUseNotaGeralPorEtapa(){
+    $obj_serie = new clsPmieducarSerie($this->ref_cod_serie);
+    $det_serie = $obj_serie->detalhe();
+    $regra_avaliacao_id = $det_serie["regra_avaliacao_id"];
+    
+    $regra_avaliacao_mapper = new RegraAvaliacao_Model_RegraDataMapper();
+
+    $regra_avaliacao = $regra_avaliacao_mapper->find($regra_avaliacao_id);
+
+    return ($regra_avaliacao->notaGeralPorEtapa == 1);
+  }
 }
 
 // Instancia objeto de página
@@ -698,6 +718,8 @@ function marcarCheck(idValue) {
     }
   }
 }
+
+$j('.etapas_utilizadas').mask("9,9,9,9", {placeholder: "1,2,3..."});
 
 /*function onEtapasEspecificasChange(){
   var cod_matricula;
