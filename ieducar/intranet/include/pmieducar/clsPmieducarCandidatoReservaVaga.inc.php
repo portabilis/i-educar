@@ -478,4 +478,36 @@ class clsPmieducarCandidatoReservaVaga
     }
     return FALSE;
   }
+
+  /**
+   * Retorna um array com os dados de um registro.
+   * @return array
+   */
+  function candidatoExistente($nome, $dataNascimento, $anoLetivo)
+  {
+    $query = "SELECT pessoa.nome AS nome_aluno, 
+                     to_char(fisica.data_nasc,'dd/mm/yyyy') AS data_nascimento, 
+                     pessoa_responsavel.nome AS nome_responsavel,
+                     public.formata_cpf(fisica_responsavel.cpf) AS cpf_responsavel,
+                     pessoa.idpes AS idpes
+                FROM pmieducar.candidato_reserva_vaga 
+               INNER JOIN pmieducar.aluno ON (aluno.cod_aluno = candidato_reserva_vaga.ref_cod_aluno)
+               INNER JOIN cadastro.fisica ON (fisica.idpes = aluno.ref_idpes)
+               INNER JOIN cadastro.pessoa ON (pessoa.idpes = aluno.ref_idpes)
+                LEFT JOIN cadastro.pessoa pessoa_responsavel ON (pessoa_responsavel.idpes = fisica.idpes_responsavel)
+                LEFT JOIN cadastro.fisica fisica_responsavel ON (fisica_responsavel.idpes = fisica.idpes_responsavel)
+               WHERE fisica.data_nasc = '$dataNascimento'
+                 AND candidato_reserva_vaga.ano_letivo = $anoLetivo
+                 AND translate(public.fcn_upper(pessoa.nome),
+                     'åáàãâäéèêëíìîïóòõôöúùüûçÿıñÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇİÑ',
+                     'aaaaaaeeeeiiiiooooouuuucyynAAAAAAEEEEIIIIOOOOOUUUUCYN') = translate(public.fcn_upper('$nome'),
+                     'åáàãâäéèêëíìîïóòõôöúùüûçÿıñÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇİÑ',
+                     'aaaaaaeeeeiiiiooooouuuucyynAAAAAAEEEEIIIIOOOOOUUUUCYN')";
+    $db = new clsBanco();
+    $db->Consulta($query);
+
+    if($db->ProximoRegistro()) return $db->Tupla();
+
+    return false;
+  }
 }
