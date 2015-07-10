@@ -352,6 +352,9 @@ class indice extends clsDetalhe
       }
     }
 
+    $this->array_botao[]     = 'Dependências';
+    $this->array_botao_url_script[] = "go(\"educar_matricula_dependencia_lst.php?ref_cod_matricula={$registro['cod_matricula']}\")";
+
     $this->url_cancelar = 'educar_aluno_det.php?cod_aluno=' . $registro['ref_cod_aluno'];
     $this->largura      = '100%';
 
