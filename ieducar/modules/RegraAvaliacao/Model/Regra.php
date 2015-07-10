@@ -50,7 +50,6 @@ require_once 'RegraAvaliacao/Model/TipoRecuperacaoParalela.php';
 class RegraAvaliacao_Model_Regra extends CoreExt_Entity
 {
   protected $_data = array(
-
     'instituicao'               => NULL,
     'nome'                      => NULL,
     'tipoNota'                  => NULL,
@@ -70,7 +69,6 @@ class RegraAvaliacao_Model_Regra extends CoreExt_Entity
     'qtdCasasDecimais'          => NULL,
     'notaGeralPorEtapa'         => NULL,
     'qtdDisciplinasDependencia' => NULL
-
   );
 
   protected $_dataTypes = array(

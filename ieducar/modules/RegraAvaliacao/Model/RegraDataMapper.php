@@ -51,7 +51,6 @@ class RegraAvaliacao_Model_RegraDataMapper extends CoreExt_DataMapper
   protected $_tableSchema = 'modules';
 
   protected $_attributeMap = array(
-
     'instituicao'                 => 'instituicao_id',
     'tipoNota'                    => 'tipo_nota',
     'tipoProgressao'              => 'tipo_progressao',
@@ -69,7 +68,6 @@ class RegraAvaliacao_Model_RegraDataMapper extends CoreExt_DataMapper
     'qtdCasasDecimais'            => 'qtd_casas_decimais',
     'notaGeralPorEtapa'           => 'nota_geral_por_etapa',
     'qtdDisciplinasDependencia'   => 'qtd_disciplinas_dependencia'
-
   );
 
   /**

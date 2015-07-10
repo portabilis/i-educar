@@ -32,7 +32,7 @@
 require_once 'lib/Portabilis/View/Helper/Input/SimpleSearch.php';
 
 /**
- * Portabilis_View_Helper_Input_SimpleSearchServidor class.
+ * Portabilis_View_Helper_Input_SimpleSearchEscola class.
  *
  * @author    Caroline Salib Canto <caroline@portabilis.com.br>
  * @category  i-Educar

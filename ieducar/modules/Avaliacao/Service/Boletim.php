@@ -1379,11 +1379,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
           $situacaoGeral = App_Model_MatriculaSituacao::APROVADO;
         }
       }
-      
+
       foreach($mediasComponentes as $id => $mediaComponente){
         $situacao->componentesCurriculares[$id]->situacao = $situacaoGeral;
       }
-
 
       $situacao->situacao = $situacaoGeral;
 
@@ -2142,7 +2141,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
     $nota->notaArredondada = $this->arredondaNota($nota);
     $this->_notas[$key]    = $nota;
- 
+
     return $this;
   }
 
@@ -2842,9 +2841,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
           $notasGerais[$etapa] = $nota;
         }
       }
-      
-      // //Calcula a média geral
 
+      //Calcula a média geral
       $mediaGeral = $this->_calculaMedia($notasGerais);
 
       // Cria uma nova instância de média, já com a nota arredondada e a etapa

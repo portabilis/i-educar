@@ -79,6 +79,7 @@ require_once 'include/pmieducar/clsPmieducarInstituicao.inc.php';
 require_once 'include/pmieducar/clsPmieducarMaterialDidatico.inc.php';
 require_once 'include/pmieducar/clsPmieducarMaterialTipo.inc.php';
 require_once 'include/pmieducar/clsPmieducarMatricula.inc.php';
+require_once 'include/pmieducar/clsPmieducarMatriculaDependencia.inc.php';
 require_once 'include/pmieducar/clsPmieducarMatriculaExcessao.inc.php';
 require_once 'include/pmieducar/clsPmieducarMatriculaOcorrenciaDisciplinar.inc.php';
 require_once 'include/pmieducar/clsPmieducarMatriculaTurma.inc.php';
