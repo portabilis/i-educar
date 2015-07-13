@@ -75,6 +75,7 @@ class Portabilis_Utils_Validation {
       $segundoDigito = 0;
 
 
+
     return ($primeiroDigito == $cpf[9] && $segundoDigito == $cpf[10]);
   }
 }

@@ -548,6 +548,7 @@ class clsCadastroRaca
 			$this->_campo_order_by = $strNomeCampo;
 		}
 	}
+	
 
 	/**
 	 * Retorna a string com o trecho da query resposavel pela Ordenacao dos registros

@@ -115,6 +115,7 @@ class clsBanco extends clsBancoSQL_
     return $db;
   }
 
+
   /**
    * Retorna um valor formatado de acordo com o tipo output do tipo booleano
    * no PostgreSQL.
