@@ -154,6 +154,7 @@ class indice extends clsCadastro
 		$this->campoTexto("num_livro", "Livro", $this->num_livro, "8", "8", false);
 		$this->campoTexto("num_folha", "Folha", $this->num_folha, "4", "4", false);
 		$this->campoTexto('certidao_nascimento', 'Certidão nascimento', $this->certidao_nascimento, '37', '40', FALSE);
+		$this->campoTexto('certidao_casamento', 'Certidão casamento', $this->certidao_casamento, '37', '40', FALSE);
 
 		$this->campoData("data_emissao_cert_civil", "Emissão Certidão Civil", $this->data_emissao_cert_civil, false);
 		$this->campoLista("sigla_uf_cert_civil", "Sigla Certidão Civil", $listaEstado, $this->sigla_uf_cert_civil, false, false, false, false, false);
@@ -188,7 +189,7 @@ class indice extends clsCadastro
 		// remove caracteres não numericos
 		$this->rg = preg_replace("/[^0-9]/", "", $this->rg);
 
-		$ObjDocumento = new clsDocumento($this->idpes, $this->rg, $this->data_exp_rg, $this->sigla_uf_exp_rg, $this->tipo_cert_civil, $this->num_termo, $this->num_livro, $this->num_folha, $this->data_emissao_cert_civil, $this->sigla_uf_cert_civil, $this->cartorio_cert_civil, $this->num_cart_trabalho, $this->serie_cart_trabalho, $this->data_emissao_cart_trabalho, $this->sigla_uf_cart_trabalho, $this->num_tit_eleitor, $this->zona_tit_eleitor, $this->secao_tit_eleitor, $this->idorg_exp_rg, $this->certidao_nascimento );
+		$ObjDocumento = new clsDocumento($this->idpes, $this->rg, $this->data_exp_rg, $this->sigla_uf_exp_rg, $this->tipo_cert_civil, $this->num_termo, $this->num_livro, $this->num_folha, $this->data_emissao_cert_civil, $this->sigla_uf_cert_civil, $this->cartorio_cert_civil, $this->num_cart_trabalho, $this->serie_cart_trabalho, $this->data_emissao_cart_trabalho, $this->sigla_uf_cart_trabalho, $this->num_tit_eleitor, $this->zona_tit_eleitor, $this->secao_tit_eleitor, $this->idorg_exp_rg, $this->certidao_nascimento, $this->certidao_casamento );
 
 		if( $ObjDocumento->cadastra() ) {
 			echo "<script>window.close()</script>";
@@ -217,7 +218,7 @@ class indice extends clsCadastro
 		// remove caracteres não numericos
 		$this->rg = preg_replace("/[^0-9]/", "", $this->rg);
 
-		$ObjDocumento = new clsDocumento($this->idpes, $this->rg, $this->data_exp_rg, $this->sigla_uf_exp_rg, $this->tipo_cert_civil, $this->num_termo, $this->num_livro, $this->num_folha, $this->data_emissao_cert_civil, $this->sigla_uf_cert_civil, $this->cartorio_cert_civil, $this->num_cart_trabalho, $this->serie_cart_trabalho, $this->data_emissao_cart_trabalho, $this->sigla_uf_cart_trabalho, $this->num_tit_eleitor, $this->zona_tit_eleitor, $this->secao_tit_eleitor, $this->idorg_exp_rg, $this->certidao_nascimento );
+		$ObjDocumento = new clsDocumento($this->idpes, $this->rg, $this->data_exp_rg, $this->sigla_uf_exp_rg, $this->tipo_cert_civil, $this->num_termo, $this->num_livro, $this->num_folha, $this->data_emissao_cert_civil, $this->sigla_uf_cert_civil, $this->cartorio_cert_civil, $this->num_cart_trabalho, $this->serie_cart_trabalho, $this->data_emissao_cart_trabalho, $this->sigla_uf_cart_trabalho, $this->num_tit_eleitor, $this->zona_tit_eleitor, $this->secao_tit_eleitor, $this->idorg_exp_rg, $this->certidao_nascimento , $this->certidao_casamento );
 
     if ($ObjDocumento->edita()) {
       echo '<script>window.close()</script>';

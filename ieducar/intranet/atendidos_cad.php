@@ -386,8 +386,9 @@ class indice extends clsCadastro
     $selectOptions = array(
       null                               => 'Tipo certidão civil',
       'certidao_nascimento_novo_formato' => 'Nascimento (novo formato)',
+      'certidao_casamento_novo_formato'  => 'Casamento (novo formato)',
       91                                 => 'Nascimento (antigo formato)',
-      92                                 => 'Casamento'
+      92                                 => 'Casamento (antigo formato)'
     );
 
 
@@ -395,6 +396,8 @@ class indice extends clsCadastro
     // considera este o tipo da certidão
     if (! empty($documentos['certidao_nascimento']))
       $tipoCertidaoCivil = 'certidao_nascimento_novo_formato';
+    else if (! empty($documentos['certidao_casamento']))
+      $tipoCertidaoCivil = 'certidao_casamento_novo_formato';
     else
       $tipoCertidaoCivil = $documentos['tipo_cert_civil'];
 
@@ -460,10 +463,24 @@ class indice extends clsCadastro
       'placeholder' => 'Certidão nascimento',
       'value'       => $documentos['certidao_nascimento'],
       'max_length'  => 50,
-      'size'        => 50
+      'size'        => 50,
+      'inline'      => true
     );
 
     $this->inputsHelper()->text('certidao_nascimento', $options);
+
+    // certidao casamento (novo padrão)
+
+    $options = array(
+      'required'    => false,
+      'label'       => '',
+      'placeholder' => 'Certidão casamento',
+      'value'       => $documentos['certidao_casamento'],
+      'max_length'  => 50,
+      'size'        => 50
+    );
+
+    $this->inputsHelper()->text('certidao_casamento', $options);
 
 
     // uf emissão certidão civil
@@ -503,7 +520,7 @@ class indice extends clsCadastro
       'value'       => $documentos['cartorio_cert_civil_inep']
     );
 
-    $this->inputsHelper()->integer('cartorio_cert_civil_inep', $options);
+    $this->inputsHelper()->integer('cartorio_cert_civil_inep', $options); 
 
 
     // cartório emissão certidão civil
@@ -1245,11 +1262,16 @@ class indice extends clsCadastro
     //
     if ($_REQUEST['tipo_certidao_civil'] == 'certidao_nascimento_novo_formato') {
       $documentos->tipo_cert_civil     = null;
+      $documentos->certidao_casamento  = ''; 
       $documentos->certidao_nascimento = $_REQUEST['certidao_nascimento'];
-    }
-    else {
+    }else if ($_REQUEST['tipo_certidao_civil'] == 'certidao_casamento_novo_formato') {
+      $documentos->tipo_cert_civil     = null;
+      $documentos->certidao_nascimento = '';      
+      $documentos->certidao_casamento = $_REQUEST['certidao_casamento'];
+    }else{
       $documentos->tipo_cert_civil     = $_REQUEST['tipo_certidao_civil'];
       $documentos->certidao_nascimento = '';
+      $documentos->certidao_casamento  = '';      
     }
 
     $documentos->num_termo                  = $_REQUEST['termo_certidao_civil'];
