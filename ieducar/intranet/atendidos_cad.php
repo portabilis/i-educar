@@ -255,6 +255,7 @@ class indice extends clsCadastro
 
     $this->inputsHelper()->select('sexo', $options);
 
+
     // estado civil
 
     $this->inputsHelper()->estadoCivil(array('label' => '', 'required' => empty($parentType) && $camposObrigatorios));
