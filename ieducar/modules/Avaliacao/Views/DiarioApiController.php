@@ -501,7 +501,8 @@ class DiarioApiController extends ApiCoreController
                   'componenteCurricular' => $this->getRequest()->componente_curricular_id,
                   'nota'                 => urldecode($this->getRequest()->att_value),
                   'etapa'                => $this->getRequest()->etapa,
-                  'notaOriginal'         => urldecode($this->getRequest()->nota_original));
+                  'notaOriginal'         => urldecode($this->getRequest()->nota_original),
+                  'situacao'             => $this->getSituacaoMatriculaId());
 
       if($_notaAntiga = $this->serviceBoletim()->getNotaComponente($this->getRequest()->componente_curricular_id, $this->getRequest()->etapa)){
         $array_nota['notaRecuperacaoParalela'] = $_notaAntiga->notaRecuperacaoParalela;
@@ -997,6 +998,24 @@ class DiarioApiController extends ApiCoreController
     return $this->safeString($situacao);
   }
 
+  protected function getSituacaoMatriculaId($ccId = null) {
+    if (is_null($ccId))
+      $ccId = $this->getRequest()->componente_curricular_id;
+
+    $situacao = 'Situação não recuperada';
+
+    try {
+      $situacaoCc = $this->serviceBoletim()->getSituacaoComponentesCurriculares()->componentesCurriculares[$ccId];
+      $situacao   = $situacaoCc->situacao;
+    }
+    catch (Exception $e) {
+      $matriculaId = $this->getRequest()->matricula_id;
+      $this->messenger->append("Erro ao recuperar situação da matrícula '$matriculaId': " .
+                               $e->getMessage());
+    }
+
+    return $this->safeString($situacao);
+  }
 
   // outros metodos auxiliares
 
