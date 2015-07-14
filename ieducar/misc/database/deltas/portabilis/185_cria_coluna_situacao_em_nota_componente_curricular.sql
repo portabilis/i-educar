@@ -3,8 +3,8 @@
 -- @license  @@license@@
 -- @version  $Id$
 
-ALTER TABLE modules.nota_componente_curricular ADD COLUMN situacao integer;
+ALTER TABLE modules.nota_componente_curricular_media ADD COLUMN situacao integer;
 
   -- undo
 
-ALTER TABLE modules.nota_componente_curricular DROP COLUMN situacao;
+ALTER TABLE modules.nota_componente_curricular_media DROP COLUMN situacao;

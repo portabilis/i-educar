@@ -49,7 +49,8 @@ class Avaliacao_Model_NotaComponenteMedia extends CoreExt_Entity
     'componenteCurricular' => NULL,
     'media'                => NULL,
     'mediaArredondada'     => NULL,
-    'etapa'                => NULL
+    'etapa'                => NULL,
+    'situacao'             => NULL
   );
 
   protected $_dataTypes = array(

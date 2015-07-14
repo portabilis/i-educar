@@ -2975,7 +2975,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
           'componenteCurricular' => $id,
           'media' => $media,
           'mediaArredondada' => $this->arredondaNota($media),
-          'etapa' => $etapa
+          'etapa' => $etapa,
+          'situacao' => $this->getSituacaoComponentesCurriculares()->componentesCurriculares[$id]->situacao
         ));
 
         try {
