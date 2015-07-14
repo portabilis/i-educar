@@ -80,6 +80,7 @@ class indice extends clsCadastro
 	var $matricula_apenas_bairro_escola;
 	var $restringir_historico_escolar;
 	var $restringir_multiplas_enturmacoes;
+	var $auditar_notas;
 
 	function Inicializar()
 	{
@@ -126,6 +127,7 @@ class indice extends clsCadastro
         $this->matricula_apenas_bairro_escola 	= dbBool($this->matricula_apenas_bairro_escola);
         $this->restringir_historico_escolar   	= dbBool($this->restringir_historico_escolar);
         $this->restringir_multiplas_enturmacoes	= dbBool($this->restringir_multiplas_enturmacoes);
+        $this->auditar_notas					= dbBool($this->auditar_notas);
 
 		return $retorno;
 	}
@@ -223,6 +225,8 @@ class indice extends clsCadastro
 		$this->campoNumero( "quantidade_alunos_metro_quadrado", "Quantidade máxima de alunos permitidos por metro quadrado", $this->quantidade_alunos_metro_quadrado, 6, 6 );
 
 	$this->campoCheck("restringir_multiplas_enturmacoes", "Não permitir múltiplas enturmações para o aluno no mesmo curso e série/ano", $this->restringir_multiplas_enturmacoes);
+
+	$this->campoCheck("auditar_notas", "Utilizar auditoria no lançamento de notas", $this->auditar_notas);
 	}
 
 	function Novo()
@@ -241,6 +245,7 @@ class indice extends clsCadastro
 		$obj->coordenador_transporte 			= $this->pessoa_coordenador_transporte;
 		$obj->controlar_espaco_utilizacao_aluno = is_null($this->controlar_espaco_utilizacao_aluno) ? 0 : 1;
 		$obj->percentagem_maxima_ocupacao_salas = Portabilis_Currency_Utils::moedaBrToUs($this->percentagem_maxima_ocupacao_salas);
+		$obj->auditar_notas = !is_null($this->auditar_notas);
 		$cadastrou = $obj->cadastra();
 		if( $cadastrou )
 		{
@@ -272,6 +277,7 @@ class indice extends clsCadastro
 		$obj->coordenador_transporte 			= $this->pessoa_coordenador_transporte;
 		$obj->controlar_espaco_utilizacao_aluno = is_null($this->controlar_espaco_utilizacao_aluno) ? 0 : 1;
 		$obj->percentagem_maxima_ocupacao_salas = Portabilis_Currency_Utils::moedaBrToUs($this->percentagem_maxima_ocupacao_salas);
+		$obj->auditar_notas 					= !is_null($this->auditar_notas);
 		$editou = $obj->edita();
 		if( $editou )
 		{
