@@ -235,7 +235,7 @@ class indice extends clsCadastro
         $valores = Portabilis_Utils_Database::fetchPreparedQuery($sql,
                 array( 'params' => array($this->cod_matricula_dependencia, $cont), 'return_only' => 'first-row'));
 
-        $nota    = str_replace('.', ',', $valores['nota']);
+        $nota    = (double) $valores['nota'];
         $falta   = $valores['falta'];
         $parecer = $valores['parecer'];
 
@@ -309,6 +309,7 @@ class indice extends clsCadastro
       $parecer = $this->parecer[$key];
 
       if(is_numeric($nota) || is_numeric($falta) || !empty($parecer)){
+        $falta = (int) $falta;
         Portabilis_Utils_Database::fetchPreparedQuery($insertSql,
               array( 'params' => array($this->cod_matricula_dependencia, $key, $nota, $falta, $parecer)));
       }
