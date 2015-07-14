@@ -2516,7 +2516,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    */
   public function preverNotaRecuperacao($id)
   {
-    /* @TODO Método original
+    /*
+    --start Método original
     if (is_null($this->getRegra()->formulaRecuperacao) || !isset($this->_notasComponentes[$id])) {
       return NULL;
     }
@@ -2542,7 +2543,14 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     }
 
     return $this->getRegra()->tabelaArredondamento->predictValue($formula, $data);
-     @TODO Método gambiarra que funciona*/
+
+    --end Método original
+
+      O método antigo talvez funcione quando utilizado recuperação para notas conceituais, já que antes o sistema era
+    sempre baseado na Tabela de Arredondamento, enquanto hoje as notas numéricas simplesmente ignoram a Tabela.
+
+     --start Método gambiarra que funciona
+     */
 
     if (is_null($this->getRegra()->formulaRecuperacao) || !isset($this->_notasComponentes[$id])) {
       return NULL;
@@ -2565,13 +2573,85 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       $data['E' . $nota->etapa] = $nota->nota;
     }
 
-    for($i = 0.1 ; $i<=10; $i+=0.1){
+    $data = $this->_calculateNotasRecuperacoesEspecificas($id, $data);
+
+    $increment = 0.1;
+    $notaMax = $this->getRegra()->notaMaximaExameFinal;
+
+    if($this->getRegra()->qtdCasasDecimais == 0)
+      $increment = 1;
+
+    // Definida varíavel de incremento e nota máxima, vai testando notas de Recuperação até que o resultado
+    // da média seja superior a média de aprovação de recuperação
+    for($i = $increment ; $i <= $notaMax; $i+= $increment){
       $data['Rc']=$i;
       if ($this->getRegra()->formulaRecuperacao->execFormulaMedia($data) >= $this->getRegra()->mediaRecuperacao)
         return $i;
     }
 
     return null;
+  }
+
+  /**
+   * Recupera notas e calcula variáveis relacionadas com as recuperações específicas
+   *
+   * @param  int $id
+   * @return array $data
+   */
+
+  protected function _calculateNotasRecuperacoesEspecificas($id, $data = array()){
+    // Verifica regras de recuperações (Recuperações específicas por etapa)
+    $regrasRecuperacoes = $this->getRegra()->findRegraRecuperacao();
+
+    $cont = 0;
+    foreach ($regrasRecuperacoes as $key => $_regraRecuperacao) {
+      $cont++;
+      $notaRecuperacao = $this->getNotaComponente($id, $_regraRecuperacao->getLastEtapa());
+      if($notaRecuperacao && is_numeric($notaRecuperacao->notaRecuperacaoEspecifica)){
+        // Caso tenha nota de recuperação para regra atual, atribuí variável RE+N
+        $data['RSP'.$cont] = $notaRecuperacao->notaRecuperacaoEspecifica;
+        $notaRecuperacao->notaRecuperacaoEspecifica;
+
+        $somaEtapasRecuperacao = 0;
+        $countEtapasRecuperacao = 0;
+
+        foreach ($_regraRecuperacao->getEtapas() as $__etapa){
+          $somaEtapasRecuperacao += $data['E' . $__etapa];
+          $countEtapasRecuperacao++;
+        }
+
+        $mediaEtapasRecuperacao = $somaEtapasRecuperacao / $countEtapasRecuperacao;
+        $mediaEtapasRecuperacaoComRecuperacao = ($mediaEtapasRecuperacao + $notaRecuperacao->notaRecuperacaoEspecifica) / 2;
+
+        // Caso média com recuperação seja maior que média das somas das etapas sem recuperação, atribuí variável MRE+N
+        if($mediaEtapasRecuperacaoComRecuperacao > $mediaEtapasRecuperacao)
+          $data['RSPM'.$cont] = $mediaEtapasRecuperacaoComRecuperacao;
+        else
+          $data['RSPM'.$cont] = $mediaEtapasRecuperacao;
+
+        // Caso nota de recuperação seja maior que soma das etapas, atribuí variável SRE+N
+        if($notaRecuperacao->notaRecuperacaoEspecifica > $somaEtapasRecuperacao)
+          $data['RSPS'.$cont] = $notaRecuperacao->notaRecuperacaoEspecifica;
+        else
+          $data['RSPS'.$cont] = $somaEtapasRecuperacao;
+
+      }else{
+        // Caso tenha nota de recuperação para regra atual, atribuí variaveis RSPM+N E RSPS+N
+        // considerando apenas soma das etapas
+        $somaEtapasRecuperacao = 0;
+        $countEtapasRecuperacao = 0;
+
+        foreach ($_regraRecuperacao->getEtapas() as $__etapa){
+          $somaEtapasRecuperacao += $data['E' . $__etapa];
+          $countEtapasRecuperacao++;
+        }
+
+        $data['RSPM'.$cont] = $somaEtapasRecuperacao / $countEtapasRecuperacao;
+        $data['RSPS'.$cont] = $somaEtapasRecuperacao;
+      }
+    }
+
+    return $data;
   }
 
   /**
@@ -2884,57 +2964,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
           $notas[$etapa] = $nota;
         }
 
-        // Verifica regras de recuperações (Recuperações específicas por etapa)
-
-        $regrasRecuperacoes = $regra->findRegraRecuperacao();
-
-        $cont = 0;
-        foreach ($regrasRecuperacoes as $key => $_regraRecuperacao) {
-          $cont++;
-          $notaRecuperacao = $this->getNotaComponente($id, $_regraRecuperacao->getLastEtapa());
-          if($notaRecuperacao && is_numeric($notaRecuperacao->notaRecuperacaoEspecifica)){
-            // Caso tenha nota de recuperação para regra atual, atribuí variável RE+N
-            $notas['RSP'.$cont] = $notaRecuperacao->notaRecuperacaoEspecifica;
-            $notaRecuperacao->notaRecuperacaoEspecifica;
-
-            $somaEtapasRecuperacao = 0;
-            $countEtapasRecuperacao = 0;
-
-            foreach ($_regraRecuperacao->getEtapas() as $__etapa){
-              $somaEtapasRecuperacao += $notas['E' . $__etapa];
-              $countEtapasRecuperacao++;
-            }
-
-            $mediaEtapasRecuperacao = $somaEtapasRecuperacao / $countEtapasRecuperacao;
-            $mediaEtapasRecuperacaoComRecuperacao = ($mediaEtapasRecuperacao + $notaRecuperacao->notaRecuperacaoEspecifica) / 2;
-
-            // Caso média com recuperação seja maior que média das somas das etapas sem recuperação, atribuí variável MRE+N
-            if($mediaEtapasRecuperacaoComRecuperacao > $mediaEtapasRecuperacao)
-              $notas['RSPM'.$cont] = $mediaEtapasRecuperacaoComRecuperacao;
-            else
-              $notas['RSPM'.$cont] = $mediaEtapasRecuperacao;
-
-            // Caso nota de recuperação seja maior que soma das etapas, atribuí variável SRE+N
-            if($notaRecuperacao->notaRecuperacaoEspecifica > $somaEtapasRecuperacao)
-              $notas['RSPS'.$cont] = $notaRecuperacao->notaRecuperacaoEspecifica;
-            else
-              $notas['RSPS'.$cont] = $somaEtapasRecuperacao;
-
-          }else{
-            // Caso tenha nota de recuperação para regra atual, atribuí variaveis RSPM+N E RSPS+N
-            // considerando apenas soma das etapas
-            $somaEtapasRecuperacao = 0;
-            $countEtapasRecuperacao = 0;
-
-            foreach ($_regraRecuperacao->getEtapas() as $__etapa){
-              $somaEtapasRecuperacao += $notas['E' . $__etapa];
-              $countEtapasRecuperacao++;
-            }
-
-            $notas['RSPM'.$cont] = $somaEtapasRecuperacao / $countEtapasRecuperacao;
-            $notas['RSPS'.$cont] = $somaEtapasRecuperacao;
-          }
-        }
+        $notas = $this->_calculateNotasRecuperacoesEspecificas($id, $notas);
 
         // Calcula a média por componente curricular
         $media = $this->_calculaMedia($notas);
