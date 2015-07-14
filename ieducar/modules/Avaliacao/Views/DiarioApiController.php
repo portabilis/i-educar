@@ -48,6 +48,7 @@ require_once 'RegraAvaliacao/Model/TipoParecerDescritivo.php';
 
 require_once 'include/pmieducar/clsPmieducarTurma.inc.php';
 require_once 'include/pmieducar/clsPmieducarMatricula.inc.php';
+require_once 'include/modules/clsModulesAuditoriaNota.inc.php';
 require_once 'include/modules/clsModulesNotaExame.inc.php';
 
 require_once 'Portabilis/Controller/ApiCoreController.php';
@@ -512,6 +513,7 @@ class DiarioApiController extends ApiCoreController
 
       $this->serviceBoletim()->addNota($nota);
       $this->trySaveServiceBoletim();
+      $this->inserirAuditoriaNotas($_notaAntiga, $nota);
       $this->messenger->append('Nota matrícula '. $this->getRequest()->matricula_id .' alterada com sucesso.', 'success');
     }
 
@@ -664,8 +666,10 @@ class DiarioApiController extends ApiCoreController
         $this->messenger->append('Nota matrícula '. $this->getRequest()->matricula_id .' inexistente ou já removida.', 'notice');
       else
       {
+        $_notaAntiga = $this->serviceBoletim()->getNotaComponente($this->getRequest()->componente_curricular_id, $this->getRequest()->etapa);
         $this->serviceBoletim()->deleteNota($this->getRequest()->etapa, $this->getRequest()->componente_curricular_id);
         $this->trySaveServiceBoletim();
+        $this->inserirAuditoriaNotas($_notaAntiga, $nota);
         $this->messenger->append('Nota matrícula '. $this->getRequest()->matricula_id .' removida com sucesso.', 'success');
       }
     }
@@ -1474,6 +1478,21 @@ class DiarioApiController extends ApiCoreController
     }
 
     return $notaLimits;
+  }
+
+  protected function inserirAuditoriaNotas($notaAntiga, $notaNova){
+    if($this->usaAuditoriaNotas()){
+      $objAuditoria = new clsModulesAuditoriaNota($notaAntiga, $notaNova, $this->getRequest()->turma_id);
+      $objAuditoria->cadastra();
+    }
+  }
+
+  protected function usaAuditoriaNotas(){
+    $objInstituicao = new clsPmieducarInstituicao($this->getRequest()->instituicao_id);
+    $detInstituicao = $objInstituicao->detalhe();
+    $utilizaAuditoriaNotas = dbBool($detInstituicao["auditar_notas"]);
+
+    return $utilizaAuditoriaNotas;
   }
 
   public function canChange(){
