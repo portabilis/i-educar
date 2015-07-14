@@ -399,16 +399,16 @@ var tabela_arredondamento = new function() {
       $this->_getHelp('tipoPresenca'));
 
     $this->campoNumero('notaMaximaGeral', $this->_getLabel('notaMaximaGeral'), $this->getEntity()->notaMaximaGeral,
-      3, 3, TRUE, FALSE, FALSE, $this->_getHelp('notaMaximaGeral'));
+      3, 3, TRUE, $this->_getHelp('notaMaximaGeral'));
 
     $this->campoNumero('notaMaximaExameFinal', $this->_getLabel('notaMaximaExameFinal'), $this->getEntity()->notaMaximaExameFinal,
-      3, 3, TRUE, FALSE, FALSE, $this->_getHelp('notaMaximaExameFinal'));
+      3, 3, TRUE, $this->_getHelp('notaMaximaExameFinal'));
 
     $this->campoNumero('qtdCasasDecimais', $this->_getLabel('qtdCasasDecimais'), $this->getEntity()->qtdCasasDecimais,
-      3, 3, TRUE, FALSE, FALSE, $this->_getHelp('qtdCasasDecimais'));
+      3, 3, TRUE, $this->_getHelp('qtdCasasDecimais'));
 
     $this->campoNumero('qtdDisciplinasDependencia', $this->_getLabel('qtdDisciplinasDependencia'), $this->getEntity()->qtdDisciplinasDependencia,
-      3, 3, TRUE, FALSE, FALSE, $this->_getHelp('qtdDisciplinasDependencia'));
+      3, 3, TRUE, $this->_getHelp('qtdDisciplinasDependencia'));
 
     // Nota geral por etapa
     $this->campoCheck('notaGeralPorEtapa', $this->_getLabel('notaGeralPorEtapa'),
