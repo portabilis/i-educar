@@ -67,6 +67,27 @@ class FichaAlunoController extends Portabilis_Controller_ReportCoreController
     $this->report->addArg('instituicao',  (int)$this->getRequest()->ref_cod_instituicao);
     $this->report->addArg('escola',       (int)$this->getRequest()->ref_cod_escola);
     $this->report->addArg('aluno',        (int)$this->getRequest()->aluno_id);
+    $this->report->addArg('foto', $this->loadPhotoPath());
+}
+
+  function loadPhotoPath() {
+    $studentPhotoPath = $this->studentPhotoPath();
+    $studentHasPhoto = is_string($studentPhotoPath) && strlen($studentPhotoPath) > 0;
+
+    return $studentHasPhoto ? $studentPhotoPath : $this->pixelPath();
+  }
+
+  function studentPhotoPath() {
+    $sql = "SELECT f.caminho FROM pmieducar.aluno a, cadastro.fisica_foto f " .
+           "WHERE a.cod_aluno = $1 and a.ref_idpes = f.idpes";
+
+    $studentId = $this->getRequest()->aluno_id;
+
+    return Portabilis_Utils_Database::selectField($sql, $studentId);
+  }
+
+  function pixelPath() {
+    return $_SERVER['DOCUMENT_ROOT'] . '/modules/Reports/Assets/Images/pixel.png';
   }
 }
 
