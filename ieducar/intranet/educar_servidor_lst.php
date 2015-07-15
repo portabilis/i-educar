@@ -1,6 +1,6 @@
 <?php
-error_reporting(E_ERROR);
-ini_set("display_errors", 1);
+// error_reporting(E_ERROR);
+// ini_set("display_errors", 1);
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -118,7 +118,7 @@ class indice extends clsListagem
       // $detalhe = $detalhe['idpes']->detalhe();
 
       $opcoes[$detalhe['idpes']] = $detalhe['nome'];
-      $opcoes[$detalhe['matricula']] = $detalhe['matricula'];
+     // $opcoes[$detalhe['matricula']] = $detalhe['matricula'];
     }
 
     $parametros = new clsParametrosPesquisas();
@@ -154,7 +154,7 @@ class indice extends clsListagem
       NULL,
       NULL,
       TRUE,
-      $this->matricula,
+      NULL, 
       NULL,
       NULL,
       NULL,
@@ -191,6 +191,7 @@ class indice extends clsListagem
           $det_cod_servidor      = $obj_cod_servidor->detalhe();
           $registro['matricula'] = $det_cod_servidor['matricula'];
           $det_cod_servidor      = $det_cod_servidor['idpes']->detalhe();
+          $det_cod_servidor      = $det_cod_servidor;
          $registro['nome']      = $det_cod_servidor['nome'];
           $registro['cpf']      = $det_cod_servidor['cpf'];
         } else {
