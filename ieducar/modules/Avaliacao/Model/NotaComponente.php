@@ -52,8 +52,7 @@ class Avaliacao_Model_NotaComponente extends Avaliacao_Model_Etapa
     'notaArredondada'         => NULL,
     'notaRecuperacaoParalela' => NULL,
     'notaRecuperacaoEspecifica' => NULL,
-    'notaOriginal'            => NULL,
-    'situacao'                => NULL
+    'notaOriginal'            => NULL
   );
 
   protected $_dataTypes = array(

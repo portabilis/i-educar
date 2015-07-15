@@ -124,12 +124,13 @@ class indice extends clsDetalhe
     $det_cod_servidor = $obj_cod_servidor->detalhe();
 
     $registro['matricula'] = $det_cod_servidor['matricula'];
+
     
     /**
      * TODO: Verificar utilização do método detalhes
      * Iago Effting
      */
-    // $det_cod_servidor = $det_cod_servidor['idpes']->detalhe(); // verificar
+    $det_cod_servidor = $det_cod_servidor['idpes']->detalhe(); // verificar
     $registro['nome'] = $det_cod_servidor['nome'];
 
     // Instituição
@@ -179,6 +180,10 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('Servidor', $registro['cod_servidor']));
     }
 
+    if ($registro['nome']) {
+      $this->addDetalhe(array('Nome', $registro['nome']));
+    }
+
     if ($registro['matricula']) {
       $this->addDetalhe(array('Matrícula', $registro['matricula']));
     }
@@ -201,8 +206,8 @@ class indice extends clsDetalhe
         }
       }
 
-    if ($registro['nome']) {
-      $this->addDetalhe(array('Nome', $registro['nome']));
+    if ($registro['idpes']) {
+      $this->addDetalhe(array('Nome', $registro['Nome']));
     }
 
     if ($registro['ref_cod_instituicao']) {

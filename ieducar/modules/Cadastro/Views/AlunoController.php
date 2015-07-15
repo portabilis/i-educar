@@ -79,6 +79,11 @@ class AlunoController extends Portabilis_Controller_Page_EditController
       'help'   => '',
     ),
 
+    'certidao_casamento' => array(
+      'label'  => 'Certidão de Casamento',
+      'help'   => '',
+    ),
+
     'pai' => array(
       'label'  => 'Pai',
       'help'   => '',
@@ -474,7 +479,8 @@ class AlunoController extends Portabilis_Controller_Page_EditController
       null                               => $escolha_certidao,
       'certidao_nascimento_novo_formato' => 'Nascimento (novo formato)',
       91                                 => 'Nascimento (antigo formato)',
-      92                                 => 'Casamento'
+      'certidao_casamento_novo_formato'  => 'Casamento (novo formato)',
+      92                                 => 'Casamento (antigo formato)'
     );
 
 
@@ -482,6 +488,8 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     // considera este o tipo da certidão
     if (! empty($documentos['certidao_nascimento']))
       $tipoCertidaoCivil = 'certidao_nascimento_novo_formato';
+    else if (! empty($documentos['certidao_casamento']))
+      $tipoCertidaoCivil = 'certidao_casamento_novo_formato';
     else
       $tipoCertidaoCivil = $documentos['tipo_cert_civil'];
 
@@ -494,6 +502,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     );
 
     $this->inputsHelper()->select('tipo_certidao_civil', $options);
+
 
     // termo certidao civil
 
@@ -546,10 +555,25 @@ class AlunoController extends Portabilis_Controller_Page_EditController
       'placeholder' => $placeholderCertidao,
       'value'       => $documentos['certidao_nascimento'],
       'max_length'  => 50,
-      'size'        => 50
+      'size'        => 50,
+      'inline'      => true
     );
 
     $this->inputsHelper()->text('certidao_nascimento', $options);
+
+
+    // certidao casamento (novo padrão)
+    $placeholderCertidao = Portabilis_String_Utils::toLatin1('Certidão casamento');
+    $options = array(
+      'required'    => false,
+      'label'       => '',
+      'placeholder' => $placeholderCertidao,
+      'value'       => $documentos['certidao_casamento'],
+      'max_length'  => 50,
+      'size'        => 50,
+    );
+
+    $this->inputsHelper()->text('certidao_casamento', $options);
 
 
     // uf emissão certidão civil

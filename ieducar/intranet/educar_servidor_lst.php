@@ -1,6 +1,6 @@
 <?php
-// error_reporting(E_ALL);
-// ini_set("display_errors", 1);
+error_reporting(E_ERROR);
+ini_set("display_errors", 1);
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -72,7 +72,6 @@ class indice extends clsListagem
   var $titulo;
   var $limite;
   var $offset;
-
   var $cod_servidor;
   var $ref_idesco;
   var $ref_cod_funcao;
@@ -80,7 +79,9 @@ class indice extends clsListagem
   var $data_cadastro;
   var $data_exclusao;
   var $ativo;
-
+  var $nome;
+  var $matricula;
+  var $ref_cod_escola;
   var $ref_cod_instituicao;
 
   function Gerar()
@@ -104,12 +105,12 @@ class indice extends clsListagem
     ));
 
     $get_escola      = true;
-    $obrigatorio     = true;
+    $obrigatorio     = false;
     $exibe_nm_escola = true;
 
     include 'include/pmieducar/educar_campo_lista.php';
 
-    $opcoes = array('' => 'Pesquise o funcionario clicando na lupa ao lado');
+
 
     if ($this->cod_servidor) {
       $objTemp = new clsFuncionario($this->cod_servidor);
@@ -117,51 +118,14 @@ class indice extends clsListagem
       // $detalhe = $detalhe['idpes']->detalhe();
 
       $opcoes[$detalhe['idpes']] = $detalhe['nome'];
+      $opcoes[$detalhe['matricula']] = $detalhe['matricula'];
     }
 
     $parametros = new clsParametrosPesquisas();
     $parametros->setSubmit(0);
-    $parametros->adicionaCampoSelect( 'cod_servidor', 'idpes', 'nome');
+    $this->campoTexto("nome","Nome do servidor", $this->nome,50,255,false);
+    //$this->campoTexto("matricula","Matricula", $this->matricula,50,255,false);    
 
-
-    // Configurações do campo de pesquisa
-    $dados = array(
-      'nome' => 'Pessoa',
-      'campo' => '', // Como acao
-      'valor' => array(null => 'Para procurar, clique na lupa ao lado.'),
-      'default' => null,
-      'acao' => "",
-      'descricao' => "",
-      'caminho' => 'pesquisa_pessoa_lst.php',
-      'descricao2' => "",
-      'flag' => null,
-      'pag_cadastro' => null,
-      'disabled' => "",
-      'div' => false,
-      'serializedcampos' => $parametros->serializaCampos() . '&com_matricula=false',
-      'duplo' => false,
-      'obrigatorio' => true
-    ); 
-    $this->setOptionsListaPesquisa("cod_servidor", $dados);
-
-    //
-    // $this->campoListaPesq(
-    //   'cod_servidor', 
-    //   'Servidor', 
-    //   $opcoes, 
-    //   $this->cod_servidor, 
-    //   'pesquisa_funcionario_lst.php', 
-    //   '', 
-    //   false, 
-    //   '', 
-    //   '', 
-    //   null, 
-    //   null, 
-    //   '', 
-    //   false,
-    //   $parametros->serializaCampos() . '&com_matricula=false', 
-    //   true
-    // );
 
     // Paginador
     $this->limite = 20;
@@ -186,20 +150,20 @@ class indice extends clsListagem
       NULL,
       NULL,
       NULL,
-      NULL,
+      $this->nome,
       NULL,
       NULL,
       TRUE,
+      $this->matricula,
+      NULL,
+      NULL,
+      NULL,
+      isset($_GET['busca']) ? $this->ref_cod_escola : NULL,
       NULL,
       NULL,
       NULL,
       NULL,
-      ! isset($_GET['busca']) ? $this->ref_cod_escola : NULL,
-      NULL,
-      NULL,
-      NULL,
-      NULL,
-      ! isset($_GET['busca']) ? 1 : NULL
+      isset($_GET['busca']) ? 1 : NULL
     );
 
     $total = $obj_servidor->_total;
@@ -226,9 +190,8 @@ class indice extends clsListagem
           $obj_cod_servidor      = new clsFuncionario($registro['cod_servidor']);
           $det_cod_servidor      = $obj_cod_servidor->detalhe();
           $registro['matricula'] = $det_cod_servidor['matricula'];
-          //$det_cod_servidor      = $det_cod_servidor['idpes']->detalhe();
-          $det_cod_servidor      = $det_cod_servidor;
-         // $registro['nome']      = $det_cod_servidor['nome'];
+          $det_cod_servidor      = $det_cod_servidor['idpes']->detalhe();
+         $registro['nome']      = $det_cod_servidor['nome'];
           $registro['cpf']      = $det_cod_servidor['cpf'];
         } else {
           $registro['cod_servidor'] = 'Erro na geracao';
