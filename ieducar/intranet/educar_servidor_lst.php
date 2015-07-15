@@ -191,7 +191,6 @@ class indice extends clsListagem
           $det_cod_servidor      = $obj_cod_servidor->detalhe();
           $registro['matricula'] = $det_cod_servidor['matricula'];
           $det_cod_servidor      = $det_cod_servidor['idpes']->detalhe();
-          $det_cod_servidor      = $det_cod_servidor;
          $registro['nome']      = $det_cod_servidor['nome'];
           $registro['cpf']      = $det_cod_servidor['cpf'];
         } else {
