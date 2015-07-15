@@ -122,17 +122,17 @@ var checkTipoCertidaoCivil = function() {
 
   if ($j.inArray(tipoCertidaoCivil, ['91', '92']) > -1) {
     $certidaoCivilFields.show();
-    $j('#tr_tipo_certidao_civil td:first span').html(stringUtils.toUtf8('Tipo certidão civil / Termo / Livro / Folha'));
+    $j('#tr_tipo_certidao_civil td:first span').html(stringUtils.toUtf8('Tipo certidão civil'));
   }
 
   else if (tipoCertidaoCivil == 'certidao_nascimento_novo_formato') {
     $certidaoNascimentoField.show();
-    $j('#tr_tipo_certidao_civil td:first span').html(stringUtils.toUtf8('Tipo certidão civil / Certidão nascimento'));
+    $j('#tr_tipo_certidao_civil td:first span').html(stringUtils.toUtf8('Tipo certidão civil'));
   }
 
     else if (tipoCertidaoCivil == 'certidao_casamento_novo_formato') {
     $certidaoCasamentoField.show();
-    $j('#tr_tipo_certidao_civil td:first span').html(stringUtils.toUtf8('Tipo certidão civil / Certidão casamento'));
+    $j('#tr_tipo_certidao_civil td:first span').html(stringUtils.toUtf8('Tipo certidão civil'));
   }
 
 
