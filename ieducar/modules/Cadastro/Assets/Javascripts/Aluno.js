@@ -654,12 +654,12 @@ var handleGetPersonDetails = function(dataResponse) {
 }
 // hide or show *certidao* fields, by #tipo_certidao_civil
   var checkTipoCertidaoCivil = function() {
-  var $certidaoCivilFields     = $j('#termo_certidao_civil, #livro_certidao_civil, #folha_certidao_civil');
-  var $certidaoNascimentoField = $j('#certidao_nascimento');
+  var $certidaoCivilFields     = $j('#termo_certidao_civil, #livro_certidao_civil, #folha_certidao_civil').hide();
+  var $certidaoNascimentoField = $j('#certidao_nascimento').hide();
+  var $certidaoCasamentoField  = $j('#certidao_casamento').hide();
   var tipoCertidaoCivil        = $j('#tipo_certidao_civil').val();
 
-  $certidaoCivilFields.hide();
-  $certidaoNascimentoField.hide();
+
 
   if ($j.inArray(tipoCertidaoCivil, ['91', '92']) > -1) {
     $certidaoCivilFields.show();
@@ -671,8 +671,15 @@ var handleGetPersonDetails = function(dataResponse) {
     $j('#tr_tipo_certidao_civil td:first span').html(stringUtils.toUtf8('Tipo certidão civil / Certidão nascimento'));
   }
 
-}
+    else if (tipoCertidaoCivil == 'certidao_casamento_novo_formato') {
+    $certidaoCasamentoField.show();
+    $j('#tr_tipo_certidao_civil td:first span').html(stringUtils.toUtf8('Tipo certidão civil / Certidão casamento'));
+  }
 
+
+
+
+}
 function disableJustificativaFields(){
   $jField = $j('#justificativa_falta_documentacao');
   $jField.removeClass('obrigatorio');

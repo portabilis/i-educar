@@ -1334,11 +1334,17 @@ class AlunoController extends ApiCoreController
     //
     if ($this->getRequest()->tipo_certidao_civil == 'certidao_nascimento_novo_formato') {
       $documentos->tipo_cert_civil     = null;
+      $documentos->certidao_casamento  = '';       
       $documentos->certidao_nascimento = $this->getRequest()->certidao_nascimento;
+    }else if ($this->getRequest()->tipo_certidao_civil == 'certidao_casamento_novo_formato') {
+      $documentos->tipo_cert_civil     = null;
+      $documentos->certidao_nascimento  = '';       
+      $documentos->certidao_casamento = $this->getRequest()->certidao_casamento;
     }
     else {
       $documentos->tipo_cert_civil     = $this->getRequest()->tipo_certidao_civil;
       $documentos->certidao_nascimento = '';
+      $documentos->certidao_casamento  = '';       
     }
 
     $documentos->num_termo                  = $this->getRequest()->termo_certidao_civil;
