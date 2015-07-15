@@ -1,5 +1,6 @@
 <?php
-
+// error_reporting(E_ERROR);
+// ini_set("display_errors", 1);
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -30,8 +31,16 @@
 
 require_once 'lib/Portabilis/Report/ReportFactory.php';
 
-require_once 'relatorios/phpjasperxml/class/fpdf/fpdf.php';
-require_once 'relatorios/phpjasperxml/class/PHPJasperXML.inc';
+require_once 'relatorios/phpjasperxml/class/tcpdf/tcpdf.php';
+require_once 'relatorios/phpjasperxml/class/PHPJasperXML.inc.php';
+
+//Faz um require de todos os gráficos
+$diretorioGraficos = 'relatorios/phpjasperxml/class/pchart2/class/';
+
+$arquivos = glob( $diretorioGraficos . '/*.php' );
+foreach ( $arquivos as $arquivo )
+    require( $arquivo );
+
 
 //set_include_path(get_include_path() . PATH_SEPARATOR . 'include/portabilis/libs');
 //require_once 'include/portabilis/libs/XML/RPC2/Client.php';
@@ -93,14 +102,14 @@ class Portabilis_Report_ReportFactoryPHPJasperXML extends Portabilis_Report_Repo
     $builder                 = new PHPJasperXML();
     $builder->debugsql       = false;
     $builder->arrayParameter = $report->args;
+    $builder->cndriver       = "psql";
 
     $builder->xml_dismantle($xml);
 
     $builder->transferDBtoArray($this->settings['db']->hostname,
                                 $this->settings['db']->username,
                                 $this->settings['db']->password,
-                                $this->settings['db']->dbname,
-                                $this->settings['db']->port);
+                                $this->settings['db']->dbname);
 
     // I: standard output, D: Download file, F: file
     $builder->outpage('I');
