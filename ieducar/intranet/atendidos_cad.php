@@ -387,8 +387,8 @@ class indice extends clsCadastro
     $selectOptions = array(
       null                               => 'Tipo certidão civil',
       'certidao_nascimento_novo_formato' => 'Nascimento (novo formato)',
-      'certidao_casamento_novo_formato'  => 'Casamento (novo formato)',
       91                                 => 'Nascimento (antigo formato)',
+      'certidao_casamento_novo_formato'  => 'Casamento (novo formato)',
       92                                 => 'Casamento (antigo formato)'
     );
 
