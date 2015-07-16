@@ -68,7 +68,8 @@ class RegraAvaliacao_Model_Regra extends CoreExt_Entity
     'notaMaximaExameFinal'      => NULL,
     'qtdCasasDecimais'          => NULL,
     'notaGeralPorEtapa'         => NULL,
-    'qtdDisciplinasDependencia' => NULL
+    'qtdDisciplinasDependencia' => NULL,
+    'aprovaMediaDisciplina'     => NULL
   );
 
   protected $_dataTypes = array(
