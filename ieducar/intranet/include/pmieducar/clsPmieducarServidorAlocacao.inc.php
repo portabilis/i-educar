@@ -120,10 +120,19 @@ class clsPmieducarServidorAlocacao
   /**
    * Construtor.
    */
-  function clsPmieducarServidorAlocacao($cod_servidor_alocacao = NULL,
-    $ref_ref_cod_instituicao = NULL, $ref_usuario_exc = NULL, $ref_usuario_cad = NULL,
-    $ref_cod_escola = NULL, $ref_cod_servidor = NULL, $data_cadastro = NULL,
-    $data_exclusao = NULL, $ativo = NULL, $carga_horaria = NULL, $periodo = NULL, $ref_cod_servidor_funcao)
+  function clsPmieducarServidorAlocacao(
+    $cod_servidor_alocacao = NULL,
+    $ref_ref_cod_instituicao = NULL,
+    $ref_usuario_exc = NULL, 
+    $ref_usuario_cad = NULL,
+    $ref_cod_escola = NULL, 
+    $ref_cod_servidor = NULL, 
+    $data_cadastro = NULL,
+    $data_exclusao = NULL, 
+    $ativo = NULL, 
+    $carga_horaria = NULL, 
+    $periodo = NULL, 
+    $ref_cod_servidor_funcao = NULL)
   {
     $db = new clsBanco();
     $this->_schema = 'pmieducar.';
