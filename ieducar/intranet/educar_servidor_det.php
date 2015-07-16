@@ -1,6 +1,6 @@
 <?php
-error_reporting(E_ALL);
-ini_set("display_errors", 1);
+// error_reporting(E_ALL);
+// ini_set("display_errors", 1);
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -130,8 +130,8 @@ class indice extends clsDetalhe
      * TODO: Verificar utilização do método detalhes
      * Iago Effting
      */
-    $det_cod_servidor = $det_cod_servidor['idpes']->detalhe(); // verificar
-    $registro['nome'] = $det_cod_servidor['nome'];
+    // $det_cod_servidor = $det_cod_servidor['idpes']->detalhe(); // verificar
+    // $registro['nome'] = $det_cod_servidor['nome'];
 
     // Instituição
     $obj_ref_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
