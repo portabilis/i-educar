@@ -39,11 +39,14 @@ class RegraController extends ApiCoreController
     return $this->validatesPresenceOf('instituicao_id');
   }
 
+  protected function canGetRegras() {
+    return $this->validatesPresenceOf('instituicao_id')
+      && $this->validatesPresenceOf('ano');
+  }
 
   protected function getTabelasDeArredondamento() {
     if($this->canGetTabelasDeArredondamento()){
       $instituicaoId = $this->getRequest()->instituicao_id;
-      $ano = $this->getRequest()->ano;
 
       $sql = "SELECT ta.id, tav.nome, tav.descricao, tav.valor_maximo
                 FROM modules.tabela_arredondamento ta
@@ -65,9 +68,52 @@ class RegraController extends ApiCoreController
     }
   }
 
+  protected function getRegras() {
+    if($this->canGetRegras()){
+      $instituicaoId = $this->getRequest()->instituicao_id;
+      $ano = $this->getRequest()->ano;
+
+      $sql = "SELECT *,
+                id, tabela_arredondamento_id, tipo_nota, tipo_presenca, parecer_descritivo, cod_turma as turma_id
+                FROM modules.regra_avaliacao ra
+                LEFT JOIN pmieducar.serie s ON s.regra_avaliacao_id = ra.id
+                LEFT JOIN pmieducar.turma t ON t.ref_ref_cod_serie = s.cod_serie
+                WHERE s.ativo = 1
+                AND t.ativo = 1
+                AND ra.instituicao_id = $1
+                AND t.ano = $2";
+
+      $_regras = $this->fetchPreparedQuery($sql, array($instituicaoId, $ano));
+
+      $attrs = array('id', 'tabela_arredondamento_id', 'tipo_nota', 'tipo_presenca', 'parecer_descritivo', 'turma_id');
+      $_regras = Portabilis_Array_Utils::filterSet($_regras, $attrs);
+      $regras = array();
+      $__regras = array();
+
+      foreach ($_regras as $regra) {
+        $__regras[$regra['id']]['id'] = $regra['id'];
+        $__regras[$regra['id']]['tabela_arredondamento_id'] = $regra['tabela_arredondamento_id'];
+        $__regras[$regra['id']]['tipo_nota'] = $regra['tipo_nota'];
+        $__regras[$regra['id']]['tipo_presenca'] = $regra['tipo_presenca'];
+        $__regras[$regra['id']]['parecer_descritivo'] = $regra['parecer_descritivo'];
+        $__regras[$regra['id']]['turmas'][] = array(
+          'turma_id' => $regra['turma_id']
+        );
+      }
+
+      foreach ($__regras as $regra) {
+        $regras[] = $regra;
+      }
+
+      return array('regras' => $regras);
+    }
+  }
+
   public function Gerar() {
     if ($this->isRequestFor('get', 'tabelas-de-arredondamento'))
       $this->appendResponse($this->getTabelasDeArredondamento());
+    elseif ($this->isRequestFor('get', 'regras'))
+      $this->appendResponse($this->getRegras());
     else
       $this->notImplementedOperationError();
   }
