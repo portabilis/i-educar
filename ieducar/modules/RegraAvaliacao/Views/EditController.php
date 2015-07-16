@@ -158,6 +158,10 @@ class EditController extends Core_Controller_Page_EditController
     ),
     'notaGeralPorEtapa' => array(
       'label' => 'Utilizar uma nota geral por etapa'
+    ),
+    'aprovaMediaDisciplina' => array(
+      'label' => 'Aprovar alunos pela média das disciplinas',
+      'help'  => 'Alunos reprovados podem ser aprovados se a média das médias das disciplinas for superior a nota de aprovação de exame final'
     )
   );
 
@@ -413,6 +417,9 @@ var tabela_arredondamento = new function() {
     // Nota geral por etapa
     $this->campoCheck('notaGeralPorEtapa', $this->_getLabel('notaGeralPorEtapa'),
         $this->getEntity()->notaGeralPorEtapa, '', FALSE, FALSE, FALSE, $this->_getHelp('notaGeralPorEtapa'));
+
+    $this->campoCheck('aprovaMediaDisciplina', $this->_getLabel('aprovaMediaDisciplina'),
+        $this->getEntity()->aprovaMediaDisciplina, '', FALSE, FALSE, FALSE, $this->_getHelp('aprovaMediaDisciplina'));
 
     $tipoRecuperacaoParalela = RegraAvaliacao_Model_TipoRecuperacaoParalela::getInstance();
 

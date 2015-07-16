@@ -1404,7 +1404,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     }
 
     $qtdComponenteReprovado = 0;
-
+    $qtdComponentes = 0;
+    $somaMedias = 0;
     foreach ($mediasComponentes as $id => $mediaComponente) {
 
       $etapa = $mediaComponente[0]->etapa;
@@ -1415,6 +1416,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       else {
         $media = $mediaComponente[0]->media;
       }
+
+      $qtdComponentes++;
+      $somaMedias += $media;
 
       if ($etapa == $this->getOption('etapas') && $media < $this->getRegra()->media &&
           $this->hasRecuperacao()) {
@@ -1447,6 +1451,15 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     if($situacaoGeral == App_Model_MatriculaSituacao::REPROVADO
         && $qtdComponenteReprovado <= $this->getRegra()->get('qtdDisciplinasDependencia'))
       $situacaoGeral = App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA;
+
+
+    if($situacaoGeral == App_Model_MatriculaSituacao::REPROVADO
+        && $this->getRegra()->get('aprovaMediaDisciplina')
+        && ($somaMedias / $qtdComponentes) >= $this->getRegra()->mediaRecuperacao){
+
+      $situacaoGeral = App_Model_MatriculaSituacao::APROVADO;
+
+    }
 
     // Situação geral
     $situacao->situacao = $situacaoGeral;
