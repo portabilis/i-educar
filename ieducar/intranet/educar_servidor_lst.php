@@ -118,13 +118,13 @@ class indice extends clsListagem
       // $detalhe = $detalhe['idpes']->detalhe();
 
       $opcoes[$detalhe['idpes']] = $detalhe['nome'];
-     // $opcoes[$detalhe['matricula']] = $detalhe['matricula'];
+     $opcoes[$detalhe['ref_cod_pessoa_fj']] = $detalhe['matricula'];
     }
 
     $parametros = new clsParametrosPesquisas();
     $parametros->setSubmit(0);
     $this->campoTexto("nome","Nome do servidor", $this->nome,50,255,false);
-    //$this->campoTexto("matricula","Matricula", $this->matricula,50,255,false);    
+    $this->campoTexto("matricula","Matricula", $this->matricula,50,255,false);    
 
 
     // Paginador
@@ -151,6 +151,7 @@ class indice extends clsListagem
       NULL,
       NULL,
       $this->nome,
+      $this->matricula,
       NULL,
       NULL,
       TRUE,
