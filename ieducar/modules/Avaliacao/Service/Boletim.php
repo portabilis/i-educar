@@ -114,6 +114,11 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   protected $_faltaAbstractDataMapper = NULL;
 
   /**
+   * @var Avaliacao_Model_NotaGeralAbstractDataMapper
+   */
+  protected $_notaGeralAbstractDataMapper = NULL;
+
+  /**
    * @var Avaliacao_Model_NotaComponenteMediaDataMapper
    */
   protected $_notaComponenteMediaDataMapper = NULL;
@@ -333,6 +338,11 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     if (isset($options['ParecerDescritivoAbstractDataMapper'])) {
       $this->setParecerDescritivoAbstractDataMapper($options['ParecerDescritivoAbstractDataMapper']);
       unset($options['ParecerDescritivoAbstractDataMapper']);
+    }
+
+    if (isset($options['NotaGeralAbstractDataMapper'])) {
+      $this->setNotaGeralAbstractDataMapper($options['NotaGeralAbstractDataMapper']);
+      unset($options['NotaGeralAbstractDataMapper']);
     }
 
     if (isset($options['NotaGeralDataMapper'])) {
@@ -706,6 +716,29 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     }
 
     return $this->_parecerDescritivoAbstractDataMapper;
+  }
+
+  public function setNotaGeralAbstractDataMapper(Avaliacao_Model_NotaGeralDataMapper $mapper)
+  {
+    $this->_notaGeralAbstractDataMapper = $mapper;
+    return $this;
+  }
+
+  public function getNotaGeralAbstractDataMapper()
+  {
+
+    if (is_null($this->_notaGeralAbstractDataMapper)) {
+
+      $filename = 'Avaliacao/Model/NotaGeralDataMapper.php';
+      $class    = 'Avaliacao_Model_NotaGeralDataMapper';
+
+      require_once $filename;
+
+      $this->setNotaGeralAbstractDataMapper(new $class());
+
+    }
+
+    return $this->_notaGeralAbstractDataMapper;
   }
 
   /**
@@ -1724,7 +1757,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
       $situacao->componentesCurriculares[$ccId] = $this->getSituacaoNotaFalta($situacaoNota, $situacaoFalta);
     }
-
     // #FIXME verificar porque para regras sem nota, não é retornado a situacao.
 
     return $situacao;
@@ -3064,6 +3096,16 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   {
     $parecer = $this->getParecerDescritivo($etapa, $ComponenteCurricularId);
     $this->getParecerDescritivoAbstractDataMapper()->delete($parecer);
+
+    return $this;
+  }
+
+  public function deleteNotaGeral($etapa)
+  {
+    $notaGeral = $this->getNotaGeral($etapa);
+    if(!is_null($notaGeral)){
+      $this->getNotaGeralAbstractDataMapper()->delete($notaGeral);
+    }
 
     return $this;
   }

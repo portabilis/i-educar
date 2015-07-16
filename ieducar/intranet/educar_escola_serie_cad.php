@@ -272,7 +272,7 @@ class indice extends clsCadastro
         $conteudo .= '  <span style="display: block; float: left; width: 100px;">Carga horária</span>';
         $conteudo .= '  <span style="display: block; float: left">Usar padrão do componente?</span>';
         if($this->utilizaNotaGeralPorEtapa){
-          $conteudo .= '  <span style="display: block; float: left; margin-left: 30px;">Usado em etapas específicas?</span>';
+          $conteudo .= '  <span style="display: block; float: left; margin-left: 30px;">Usado em etapas específicas?(Exemplo: 1,2 / 1,3)</span>';
         }
         $conteudo .= '</div>';
         $conteudo .= '<br style="clear: left" />';

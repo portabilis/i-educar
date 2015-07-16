@@ -424,7 +424,8 @@ function postParecer($parecerFieldElement) {
 
 function postNotaGeral($notaGeralElementField) {
   var additionalVars = {
-    matricula_id             : $notaGeralElementField.data('matricula_id')
+    matricula_id             : $notaGeralElementField.data('matricula_id'),
+    componente_curricular_id : $notaGeralElementField.data('componente_curricular_id')
   };
 
   var options = {
@@ -614,13 +615,14 @@ function deleteParecer($parecerFieldElement) {
 }
 
 function deleteNotaGeral($notaGeralElementField) {
+  resourceName = 'nota_geral';
 
   var additionalVars = {
     matricula_id             : $notaGeralElementField.data('matricula_id')
    };
 
   var options = {
-    url : deleteResourceUrlBuilder.buildUrl(API_URL_BASE, 'nota_geral', additionalVars),
+    url : deleteResourceUrlBuilder.buildUrl(API_URL_BASE, resourceName, additionalVars),
     dataType : 'json',
     success : function(dataResponse) {
       afterChangeResource($notaGeralElementField);
@@ -896,13 +898,14 @@ function notaExameField(matriculaId, componenteCurricularId, value, maxLength) {
                     maxLength);
 }
 
-function notaGeralEtapaField(matriculaId, value, maxLength){
+function notaGeralEtapaField(matriculaId, componenteCurricularId, value, maxLength){
   var $notaField = $j('<input />').addClass('nota-geral-etapa')
                                     .attr('id', 'nota-geral-etapa-' + matriculaId)
                                     .attr('maxlength', maxLength)
                                     .attr('size', maxLength)
                                     .val(value)
-                                    .data('matricula_id', matriculaId);
+                                    .data('matricula_id', matriculaId)
+                                    .data('componente_curricular_id', componenteCurricularId);
 
   $notaField.data('old_value', value);
 
@@ -1056,7 +1059,7 @@ function updateComponenteCurricular($targetElement, matriculaId, cc) {
 
   }
   if(usaNotaGeralPorEtapa){
-    notaGeralEtapaField(matriculaId, cc.nota_geral_etapa, 5).appendTo($targetElement);
+    notaGeralEtapaField(matriculaId, cc.id, cc.nota_geral_etapa, 5).appendTo($targetElement);
   }
 
   faltaField(matriculaId, cc.id, cc.falta_atual).appendTo($targetElement);
@@ -1169,7 +1172,10 @@ function updateResourceRow(dataResponse) {
   var $fieldNotaExame = $j('#nota-exame-matricula-' + matriculaId + '-cc-' + ccId);
   var $fieldNotaEspecifica = $j('#nota-recuperacao-especifica-matricula-' + matriculaId + '-cc-' + ccId);
   var $fieldNN = $j('#nn-matricula-' + matriculaId + '-cc-' + ccId);
-
+  console.log(usaNotaGeralPorEtapa);
+  if(usaNotaGeralPorEtapa){
+    $situacaoField = $j('.situacao-matricula-cc');
+  }
   $situacaoField.html(dataResponse.situacao);
   colorizeSituacaoTd($situacaoField.closest('td'), dataResponse.situacao);
 
