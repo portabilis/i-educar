@@ -153,7 +153,7 @@ class indice extends clsCadastro
     if (! $lst_matricula) {
       $this->campoCheck('matricula_transferencia',
         'Matrícula de Transferência', '',
-        'Caso seja transfência externa por favor marque esta opção.');
+        'Caso seja transferência externa por favor marque esta opção.');
     }
 
     // inputs
