@@ -76,6 +76,11 @@ class PictureController {
     function sendPicture($imageName){
 
         $this->imageName = $imageName;
+
+        if (! $this->hasExtension($this->imageName)) {
+            $this->imageName = $this->imageName . '.' . $this->getExtension();
+        }
+
         $tmp = $this->imageFile["tmp_name"];
         include('s3_config.php');
         //Rename image name.
@@ -147,8 +152,12 @@ class PictureController {
     }
 
 
-    function getExtension($name) 
+    function getExtension($name)
     {
+        if (is_null($name)) {
+            $name = $this->imageFile["name"];
+        }
+
         $i = strrpos($name,".");
         if (!$i)
           return "";
@@ -156,6 +165,11 @@ class PictureController {
         $ext = substr($name,$i+1,$l);
 
         return $ext;
+    }
+
+    function hasExtension($fileName) {
+        $lastThreeChars = substr($fileName, -3);
+        return in_array($lastThreeChars, $this->suportedExtensions);
     }
 }
 
