@@ -118,20 +118,20 @@ class indice extends clsDetalhe
     $obj_ref_cod_funcao = new clsPmieducarFuncao($registro['ref_cod_funcao'], NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, $this->ref_cod_instituicao);
     $det_ref_cod_funcao = $obj_ref_cod_funcao->detalhe();
     $registro['ref_cod_funcao'] = $det_ref_cod_funcao['nm_funcao'];
-
+echo $registro['nome'];
     // Nome
-    $obj_cod_servidor = new clsFuncionario($registro['cod_servidor']);
-    $det_cod_servidor = $obj_cod_servidor->detalhe();
 
-    $registro['matricula'] = $det_cod_servidor['matricula'];
 
-    
-    /**
-     * TODO: Verificar utilização do método detalhes
-     * Iago Effting
-     */
-    // $det_cod_servidor = $det_cod_servidor['idpes']->detalhe(); // verificar
-    // $registro['nome'] = $det_cod_servidor['nome'];
+
+     $obj_cod_servidor      = new clsFuncionario($registro['cod_servidor']);
+     $det_cod_servidor      = $obj_cod_servidor->detalhe();
+     $registro['matricula'] = $det_cod_servidor['matricula'];
+
+      $obj_cod_servidor      = new clsPessoaFisica($registro['cod_servidor']);
+     $det_cod_servidor      = $obj_cod_servidor->detalhe();
+     $registro['nome'] = $det_cod_servidor['nome'];
+     
+
 
     // Instituição
     $obj_ref_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);

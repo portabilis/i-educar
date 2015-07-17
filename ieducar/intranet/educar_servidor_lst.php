@@ -118,7 +118,7 @@ class indice extends clsListagem
       // $detalhe = $detalhe['idpes']->detalhe();
 
       $opcoes[$detalhe['idpes']] = $detalhe['nome'];
-     $opcoes[$detalhe['ref_cod_pessoa_fj']] = $detalhe['matricula'];
+     $opcoes[$detalhe['idpes']] = $detalhe['matricula'];
     }
 
     $parametros = new clsParametrosPesquisas();
