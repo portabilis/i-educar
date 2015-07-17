@@ -104,6 +104,7 @@ class indice extends clsListagem
 		$this->addCabecalhos( array(
 			"Tipo",
 			"Nome",
+			"Codigo",			
 			"Munic&iacute;pio",
 			"Estado",
 			"Pais"
@@ -225,7 +226,8 @@ class indice extends clsListagem
 			null,
 			null,
 			$this->idpais,
-			$this->sigla_uf
+			$this->sigla_uf,
+			$this->idlog
 		);
 
 		$total = $obj_logradouro->_total;
@@ -251,6 +253,7 @@ class indice extends clsListagem
 				$this->addLinhas( array(
 					"<a href=\"public_logradouro_det.php?idlog={$registro["idlog"]}\">{$registro["idtlog"]}</a>",
 					"<a href=\"public_logradouro_det.php?idlog={$registro["idlog"]}\">{$registro["nome"]}</a>",
+					"<a href=\"public_logradouro_det.php?idlog={$registro["idlog"]}\">{$registro["idlog"]}</a>",
 					"<a href=\"public_logradouro_det.php?idlog={$registro["idlog"]}\">{$registro["nm_municipio"]}</a>",
 					"<a href=\"public_logradouro_det.php?idlog={$registro["idlog"]}\">{$registro["nm_estado"]}</a>",
 					"<a href=\"public_logradouro_det.php?idlog={$registro["idlog"]}\">{$registro["nm_pais"]}</a>"

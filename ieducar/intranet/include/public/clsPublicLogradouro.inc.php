@@ -128,7 +128,20 @@ class clsPublicLogradouro
 	 *
 	 * @return object
 	 */
-	function clsPublicLogradouro( $idlog = null, $idtlog = null, $nome = null, $idmun = null, $geom = null, $ident_oficial = null, $idpes_rev = null, $data_rev = null, $origem_gravacao = null, $idpes_cad = null, $data_cad = null, $operacao = null, $idsis_rev = null, $idsis_cad = null )
+	function clsPublicLogradouro( $idlog           = null, 
+								  $idtlog          = null, 
+								  $nome            = null, 
+								  $idmun           = null, 
+								  $geom            = null, 
+								  $ident_oficial   = null, 
+								  $idpes_rev       = null, 
+								  $data_rev        = null, 
+								  $origem_gravacao = null, 
+								  $idpes_cad       = null, 
+								  $data_cad        = null, 
+								  $operacao        = null, 
+								  $idsis_rev       = null, 
+								  $idsis_cad       = null )
 	{
 		$db = new clsBanco();
 		$this->_schema = "public.";
@@ -525,7 +538,24 @@ class clsPublicLogradouro
 	 *
 	 * @return array
 	 */
-	function lista( $str_idtlog = null, $str_nome = null, $int_idmun = null, $str_geom = null, $str_ident_oficial = null, $int_idpes_rev = null, $date_data_rev_ini = null, $date_data_rev_fim = null, $str_origem_gravacao = null, $int_idpes_cad = null, $date_data_cad_ini = null, $date_data_cad_fim = null, $str_operacao = null, $int_idsis_rev = null, $int_idsis_cad = null, $int_idpais = null, $str_sigla_uf = null, $int_idlog = null )
+	function lista( $str_idtlog          = null, 
+		            $str_nome            = null, 
+		            $int_idmun           = null, 
+		            $str_geom            = null, 
+		            $str_ident_oficial   = null, 
+		            $int_idpes_rev       = null, 
+		            $date_data_rev_ini   = null, 
+		            $date_data_rev_fim   = null, 
+		            $str_origem_gravacao = null, 
+		            $int_idpes_cad       = null, 
+		            $date_data_cad_ini   = null, 
+		            $date_data_cad_fim   = null, 
+		            $str_operacao        = null, 
+		            $int_idsis_rev       = null, 
+		            $int_idsis_cad       = null, 
+		            $int_idpais          = null, 
+		            $str_sigla_uf        = null, 
+		            $int_idlog           = null )
 	{
 		$select  = ", m.nome AS nm_municipio, m.sigla_uf, u.nome AS nm_estado, u.idpais, p.nome AS nm_pais ";
 		$from = "l, public.municipio m, public.uf u, public.pais p ";
