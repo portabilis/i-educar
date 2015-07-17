@@ -1,5 +1,4 @@
 <?php
-
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -30,10 +29,9 @@
  */
 
 require_once 'CoreExt/DataMapper.php';
-require_once 'Avaliacao/Model/NotaAluno.php';
 
 /**
- * Avaliacao_Model_NotaAluno class.
+ * Avaliacao_Model_NotaGeralAbstractDataMapper class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
@@ -43,17 +41,14 @@ require_once 'Avaliacao/Model/NotaAluno.php';
  * @since       Classe disponível desde a versão 1.1.0
  * @version     @@package_version@@
  */
-class Avaliacao_Model_NotaAlunoDataMapper extends CoreExt_DataMapper
+abstract class Avaliacao_Model_NotaGeralAbstractDataMapper extends CoreExt_DataMapper
 {
-  protected $_entityClass = 'Avaliacao_Model_NotaAluno';
-  protected $_tableName   = 'nota_aluno';
   protected $_tableSchema = 'modules';
 
-  protected $_attributeMap = array(
-    'matricula' => 'matricula_id'
-  );
-
-  protected $_primaryKey = array(
-  	'matricula'
-  );
+  public function __construct(clsBanco $db = NULL)
+  {
+    parent::__construct($db);
+    $this->_attributeMap['notaAluno'] = 'nota_aluno_id';
+    $this->_attributeMap['notaArredondada'] = 'nota_arredondada';
+  }
 }

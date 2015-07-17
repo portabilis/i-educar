@@ -543,8 +543,8 @@ class DiarioApiController extends ApiCoreController
       $this->messenger->append('Nota geral da matrícula '. $this->getRequest()->matricula_id .' alterada com sucesso.', 'success');
     }
     $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
-    $this->appendResponse('situacao',     $this->getSituacaoMatricula());
-
+    $this->appendResponse('situacao',     $this->getSituacaoMatricula($this->getRequest()->componente_curricular_id));
+    $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
   }
 
   protected function postNotaRecuperacaoParalela() {
@@ -770,6 +770,19 @@ class DiarioApiController extends ApiCoreController
         $this->messenger->append('Parecer descritivo matrícula '. $this->getRequest()->matricula_id .' removido com sucesso.', 'success');
       }
     }
+
+    $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
+    $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
+    $this->appendResponse('situacao',     $this->getSituacaoMatricula());
+  }
+
+  protected function deleteNotaGeral() {
+
+    $this->serviceBoletim()->deleteNotaGeral($this->getRequest()->etapa);
+
+    $this->trySaveServiceBoletim();
+
+    $this->messenger->append('Nota geral da matrícula '. $this->getRequest()->matricula_id .' removida com sucesso.', 'success');
 
     $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
     $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
@@ -1544,8 +1557,8 @@ class DiarioApiController extends ApiCoreController
     elseif ($this->isRequestFor('delete', 'parecer'))
         $this->deleteParecer();
 
-    // elseif ($this->isRequestFor('delete', 'nota_geral'))
-      // $this->deleteNotaGeral();
+    elseif ($this->isRequestFor('delete', 'nota_geral'))
+      $this->deleteNotaGeral();
 
     else
       $this->notImplementedOperationError();

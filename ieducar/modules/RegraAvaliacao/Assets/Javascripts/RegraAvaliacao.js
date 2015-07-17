@@ -45,7 +45,7 @@ $j('[name^="recuperacao[excluir]"]').on('change', function(){
     $j(this).val('');
 });
 
-$j('#notaGeralPorEtapa').on('change', function(){
+$j('#notaGeralPorEtapa, #aprovaMediaDisciplina').on('change', function(){
   if($j(this).is(':checked'))
     $j(this).val('1');
   else

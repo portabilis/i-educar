@@ -124,7 +124,7 @@ class indice extends clsListagem
     $parametros = new clsParametrosPesquisas();
     $parametros->setSubmit(0);
     $this->campoTexto("nome","Nome do servidor", $this->nome,50,255,false);
-    $this->campoTexto("matricula","Matricula", $this->matricula,50,255,false);    
+    $this->campoTexto("matricula","Matrícula", $this->matricula,50,255,false);    
 
 
     // Paginador
