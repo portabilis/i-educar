@@ -57,6 +57,7 @@ class clsDocumento
 	var $secao_tit_eleitor;
 	var $idorg_exp_rg;
 	var $certidao_nascimento;
+	var $certidao_casamento;	
 	var $cartorio_cert_civil_inep;
 
 	var $tabela;
@@ -67,7 +68,7 @@ class clsDocumento
 	 *
 	 * @return Object:clsDocumento
 	 */
-	function clsDocumento( $int_idpes = false, $int_rg = false, $str_data_exp_rg = false, $str_sigla_uf_exp_rg = false, $int_tipo_cert_civil = false, $int_num_termo = false, $int_num_livro = false, $int_num_folha = false, $str_data_emissao_cert_civil = false, $str_sigla_uf_cert_civil = false, $str_cartorio_cert_civil = false, $int_num_cart_trabalho = false, $int_serie_cart_trabalho = false, $str_data_emissao_cart_trabalho = false, $str_sigla_uf_cart_trabalho = false, $int_num_tit_eleitor = false, $int_zona_tit_eleitor = false, $int_secao_tit_eleitor = false, $int_idorg_exp_rg = false, $str_certidao_nascimento = null)
+	function clsDocumento( $int_idpes = false, $int_rg = false, $str_data_exp_rg = false, $str_sigla_uf_exp_rg = false, $int_tipo_cert_civil = false, $int_num_termo = false, $int_num_livro = false, $int_num_folha = false, $str_data_emissao_cert_civil = false, $str_sigla_uf_cert_civil = false, $str_cartorio_cert_civil = false, $int_num_cart_trabalho = false, $int_serie_cart_trabalho = false, $str_data_emissao_cart_trabalho = false, $str_sigla_uf_cart_trabalho = false, $int_num_tit_eleitor = false, $int_zona_tit_eleitor = false, $int_secao_tit_eleitor = false, $int_idorg_exp_rg = false, $str_certidao_nascimento = null, $str_certidao_casamento = null)
 	{
 		$objPessoa = new clsFisica($int_idpes);
 		if($objPessoa->detalhe())
@@ -115,6 +116,7 @@ class clsDocumento
 		}
 
     $this->certidao_nascimento = $str_certidao_nascimento;
+    $this->certidao_casamento = $str_certidao_casamento;    
 
 		$this->tabela = "documento";
 	}
@@ -232,6 +234,11 @@ class clsDocumento
 			{
 				$campos .= ", certidao_nascimento";
 				$values .= ", '{$this->certidao_nascimento}'";
+			}
+			if( is_string( $this->certidao_casamento ) and (!empty($this->certidao_casamento)))
+			{
+				$campos .= ", certidao_casamento";
+				$values .= ", '{$this->certidao_casamento}'";
 			}
 
 			$db->Consulta( "INSERT INTO {$this->schema}.{$this->tabela} ( idpes , origem_gravacao, idsis_cad, data_cad, operacao $campos ) VALUES ( '{$this->idpes}', 'M', 17, NOW(), 'I' $values )" );
@@ -465,6 +472,11 @@ class clsDocumento
 			$set .= $gruda."certidao_nascimento = '{$this->certidao_nascimento}'";
 			$gruda = ", ";
 		}
+		if( ! is_null( $this->certidao_casamento ))
+		{
+			$set .= $gruda."certidao_casamento = '{$this->certidao_casamento}'";
+			$gruda = ", ";
+		}
 
 		if($set)
 		{
@@ -591,6 +603,11 @@ class clsDocumento
 		if( ! is_null( $this->certidao_nascimento ))
 		{
 			$set .= $gruda."certidao_nascimento = '{$this->certidao_nascimento}'";
+			$gruda = ", ";
+		}
+		if( ! is_null( $this->certidao_casamento ))
+		{
+			$set .= $gruda."certidao_casamento = '{$this->certidao_casamento}'";
 			$gruda = ", ";
 		}
 
@@ -775,7 +792,7 @@ class clsDocumento
 		if($objPessoa->detalhe())
 		{
 			$db = new clsBanco();
-			$db->Consulta("SELECT rg, data_exp_rg, sigla_uf_exp_rg, tipo_cert_civil, cartorio_cert_civil_inep, num_termo, num_livro, num_folha, data_emissao_cert_civil, sigla_uf_cert_civil, cartorio_cert_civil, num_cart_trabalho, serie_cart_trabalho, data_emissao_cart_trabalho, sigla_uf_cart_trabalho, num_tit_eleitor, zona_tit_eleitor, secao_tit_eleitor, idorg_exp_rg, certidao_nascimento FROM {$this->schema}.{$this->tabela} WHERE idpes = '{$this->idpes}'");
+			$db->Consulta("SELECT rg, data_exp_rg, sigla_uf_exp_rg, tipo_cert_civil, cartorio_cert_civil_inep, num_termo, num_livro, num_folha, data_emissao_cert_civil, sigla_uf_cert_civil, cartorio_cert_civil, num_cart_trabalho, serie_cart_trabalho, data_emissao_cart_trabalho, sigla_uf_cart_trabalho, num_tit_eleitor, zona_tit_eleitor, secao_tit_eleitor, idorg_exp_rg, certidao_nascimento , certidao_casamento FROM {$this->schema}.{$this->tabela} WHERE idpes = '{$this->idpes}'");
 			if( $db->ProximoRegistro() )
 			{
 				$tupla = $db->Tupla();
@@ -796,6 +813,7 @@ class clsDocumento
 				$this->zona_tit_eleitor = $tupla["zona_tit_eleitor"];
 				$this->secao_tit_eleitor = $tupla["secao_tit_eleitor"];
 				$this->certidao_nascimento = $tupla["certidao_nascimento"];
+				$this->certidao_nascimento = $tupla["certidao_casamento"];				
 
 				$tupla["idpes"] = $tupla["idpes"];
 				$tupla["idorg_exp_rg"] = $tupla["idorg_exp_rg"];

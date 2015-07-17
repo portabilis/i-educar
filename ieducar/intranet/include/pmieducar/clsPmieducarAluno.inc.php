@@ -1181,6 +1181,31 @@ class clsPmieducarAluno
    * Retorna um array com os dados de um registro.
    * @return array
    */
+  function existeAluno($nome, $dataNascimento)
+  {
+    $query = "SELECT aluno.cod_aluno AS cod_aluno
+                FROM pmieducar.aluno
+               INNER JOIN cadastro.fisica ON (fisica.idpes = aluno.ref_idpes)
+               INNER JOIN cadastro.pessoa ON (pessoa.idpes = aluno.ref_idpes)
+               WHERE fisica.data_nasc = '$dataNascimento'
+                 AND translate(public.fcn_upper(pessoa.nome),
+                     'åáàãâäéèêëíìîïóòõôöúùüûçÿıñÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇİÑ',
+                     'aaaaaaeeeeiiiiooooouuuucyynAAAAAAEEEEIIIIOOOOOUUUUCYN') = translate(public.fcn_upper('$nome'),
+                     'åáàãâäéèêëíìîïóòõôöúùüûçÿıñÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇİÑ',
+                     'aaaaaaeeeeiiiiooooouuuucyynAAAAAAEEEEIIIIOOOOOUUUUCYN')";
+
+    $db = new clsBanco();
+    $db->Consulta($query);
+
+    if($db->ProximoRegistro()) return $db->Tupla();
+
+    return false;
+  }
+
+  /**
+   * Retorna um array com os dados de um registro.
+   * @return array
+   */
   function existePessoa()
   {
     if (is_numeric($this->ref_idpes)) {

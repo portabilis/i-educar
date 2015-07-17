@@ -57,9 +57,9 @@ class ServidorController extends ApiCoreController
 
     $sqls[] = "SELECT p.idpes as id, p.nome
                 FROM cadastro.pessoa p
-                INNER JOIN cadastro.fisica f ON (p.idpes = f.idpes)
-                INNER JOIN portal.funcionario fun ON (fun.ref_cod_pessoa_fj = f.idpes)
-                INNER JOIN pmieducar.servidor s ON (s.cod_servidor = fun.ref_cod_pessoa_fj)
+                 LEFT JOIN cadastro.fisica f ON (p.idpes = f.idpes)
+                 LEFT JOIN portal.funcionario fun ON (fun.ref_cod_pessoa_fj = f.idpes)
+                INNER JOIN pmieducar.servidor s ON (s.cod_servidor = p.idpes)
                 LEFT JOIN pmieducar.servidor_alocacao sa ON (s.cod_servidor = sa.ref_cod_servidor)
 
                 WHERE p.idpes LIKE '%'||$1||'%'
@@ -77,9 +77,9 @@ class ServidorController extends ApiCoreController
 
     $sqls[] = "SELECT p.idpes as id, p.nome
                 FROM cadastro.pessoa p
-                INNER JOIN cadastro.fisica f ON (p.idpes = f.idpes)
-                INNER JOIN portal.funcionario fun ON (fun.ref_cod_pessoa_fj = f.idpes)
-                INNER JOIN pmieducar.servidor s ON (s.cod_servidor = fun.ref_cod_pessoa_fj)
+                 LEFT JOIN cadastro.fisica f ON (p.idpes = f.idpes)
+                 LEFT JOIN portal.funcionario fun ON (fun.ref_cod_pessoa_fj = f.idpes)
+                INNER JOIN pmieducar.servidor s ON (s.cod_servidor = p.idpes)
                 LEFT JOIN pmieducar.servidor_alocacao sa ON (s.cod_servidor = sa.ref_cod_servidor)
 
                 WHERE p.nome ILIKE '%'||$1||'%'

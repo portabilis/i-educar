@@ -116,6 +116,43 @@ class EscolaController extends ApiCoreController
              && $this->validatesPresenceOf('curso_id')  && $this->validatesPresenceOf('serie_id') 
              && $this->validatesPresenceOf('turma_turno_id');
   }
+/*  protected function searchOptions() {
+    $instituicaoId = $this->getRequest()->instituicao_id ? $this->getRequest()->instituicao_id : 0;
+    return array('sqlParams'    => array($instituicaoId));
+
+  }*/
+
+  protected function formatResourceValue($resource) {
+    $nome    = $this->toUtf8($resource['name'], array('transform' => true));
+
+    return $nome;
+  }
+
+  protected function canGetServidoresDisciplinasTurmas() {
+    return  $this->validatesPresenceOf('ano') &&
+            $this->validatesPresenceOf('instituicao_id');
+  }
+
+  protected function sqlsForStringSearch() {
+
+  $sqls[] = "SELECT e.cod_escola as id, j.fantasia as name
+               FROM pmieducar.escola e, cadastro.juridica j
+              WHERE j.idpes = e.ref_idpes
+                AND e.ativo = 1
+                AND j.fantasia ILIKE '%'||$1||'%'
+                LIMIT 8";
+
+  $sqls[] = "SELECT e.cod_escola as id, ec.nm_escola as name
+               FROM pmieducar.escola e, pmieducar.escola_complemento ec
+              WHERE e.cod_escola = ec.ref_cod_escola
+                AND e.ativo = 1
+                AND ec.nm_escola ILIKE '%'||$1||'%'
+                LIMIT 8";
+
+
+    return $sqls;
+  }
+
 
   protected function getEscolas(){
     if ($this->canGetEscolas()){
@@ -291,6 +328,9 @@ protected function getInformacaoEscolas(){
   public function Gerar() {
     if ($this->isRequestFor('get', 'escola'))
       $this->appendResponse($this->get());
+
+    else if ($this->isRequestFor('get', 'escola-search'))
+      $this->appendResponse($this->search());
 
     elseif ($this->isRequestFor('put', 'escola'))
       $this->appendResponse($this->put());

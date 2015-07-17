@@ -96,6 +96,7 @@ class TurmaController extends ApiCoreController
                    $tiposBoletim::PARECER_SEMESTRAL_MODELO1      				        => 'portabilis_boletim_parecer_semestral_modelo1',
                    $tiposBoletim::PARECER_DESCRITIVO_COMPONENTE  				        => 'portabilis_boletim_parecer',
                    $tiposBoletim::PARECER_DESCRITIVO_GERAL       				        => 'portabilis_boletim_parecer_geral',
+                   $tiposBoletim::BIMESTRAL_MODELO2                             => 'portabilis_boletim_modelo2',
                    $tiposBoletim::BIMESTRAL_PACAJA               				        => 'portabilis_boletim_bimestral_pacaja',
                    $tiposBoletim::ANUAL                          				        => 'portabilis_boletim_anual',
                    $tiposBoletim::BIMESTRAL_SEM_EXAME            				        => 'portabilis_boletim_bimestral_sem_exame',
@@ -105,7 +106,8 @@ class TurmaController extends ApiCoreController
                    $tiposBoletim::BIMESTRAL_CONCEITUAL_SIMPLIFICADO_PARAUAPEBAS => 'portabilis_boletim_bimestral_conceitual_simplificado_parauapebas',
                    $tiposBoletim::BIMESTRAL_CONCEITUAL_RETRATO_CACADOR          => 'portabilis_boletim_primeiro_ano_bimestral_retrato_cacador',
                    $tiposBoletim::BIMESTRAL_RETRATO_PARAGOMINAS                 => 'portabilis_boletim_bimestral_paragominas',
-                   $tiposBoletim::TRIMESTRAL_RECUPERACAO_PARALELA               => 'portabilis_boletim_trimestral_recuperacao_paralela');
+                   $tiposBoletim::TRIMESTRAL_RECUPERACAO_PARALELA               => 'portabilis_boletim_trimestral_recuperacao_paralela',
+                   $tiposBoletim::ACOMPANHAMENTO_EDUCACAO_INTANTIL              => 'portabilis_boletim_acompanhamento_educ_infantil');
 
     return array('tipo-boletim' => $tipos[$tipo]);
   }

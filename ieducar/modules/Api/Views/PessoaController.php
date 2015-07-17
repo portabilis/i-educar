@@ -120,6 +120,7 @@ class PessoaController extends ApiCoreController
             (select rg from cadastro.documento where documento.idpes = fisica.idpes) as rg,
             (select num_termo from cadastro.documento where documento.idpes = fisica.idpes) as num_termo,
             (select certidao_nascimento from cadastro.documento where documento.idpes = fisica.idpes) as certidao_nascimento,
+            (select certidao_casamento from cadastro.documento where documento.idpes = fisica.idpes) as certidao_casamento,            
             (SELECT COALESCE((SELECT cep FROM cadastro.endereco_pessoa WHERE idpes = $2),
              (SELECT cep FROM cadastro.endereco_externo WHERE idpes = $2))) as cep,
 
@@ -183,7 +184,8 @@ class PessoaController extends ApiCoreController
 
     $details['possui_documento'] = !(is_null($details['rg']) && is_null($details['cpf'])
                                       && is_null($details['nis_pis_pasep']) && is_null($details['num_termo'])
-                                        && is_null($details['certidao_nascimento']) );
+                                        && is_null($details['certidao_nascimento'])
+                                         && is_null($details['certidao_casamento']) );
 
     $attrs   = array('cpf', 'rg', 'data_nascimento', 'pai_id', 'mae_id', 'responsavel_id', 'nome_pai', 'nome_mae',
                        'nome_responsavel','sexo','estadocivil', 'cep', 'logradouro', 'idtlog', 'bairro',

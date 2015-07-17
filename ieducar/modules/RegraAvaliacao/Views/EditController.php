@@ -129,6 +129,10 @@ class EditController extends Core_Controller_Page_EditController
       'label'   => 'Quantidade máxima de casas decimais',
       'help'    => 'Informe o número máximo de casas decimais'
     ),
+    'qtdDisciplinasDependencia' => array(
+      'label'   => 'Quantidade de disciplinas dependência',
+      'help'    => 'Preencha a quantidade de disciplinas permitidas para aprovação do aluno com dependência. Preencha com 0 caso não exista.'
+    ),
     'recuperacaoDescricao' => array(
       'label'  => 'Descrição do exame:',
       'help'   => 'Exemplo: Recuperação semestral I'
@@ -151,6 +155,13 @@ class EditController extends Core_Controller_Page_EditController
     ),
     'recuperacaoExcluir' => array(
       'label'  => '<span style="padding-left: 10px"></span>Excluir:'
+    ),
+    'notaGeralPorEtapa' => array(
+      'label' => 'Utilizar uma nota geral por etapa'
+    ),
+    'aprovaMediaDisciplina' => array(
+      'label' => 'Aprovar alunos pela média das disciplinas',
+      'help'  => 'Alunos reprovados podem ser aprovados se a média das médias das disciplinas for superior a nota de aprovação de exame final'
     )
   );
 
@@ -392,13 +403,23 @@ var tabela_arredondamento = new function() {
       $this->_getHelp('tipoPresenca'));
 
     $this->campoNumero('notaMaximaGeral', $this->_getLabel('notaMaximaGeral'), $this->getEntity()->notaMaximaGeral,
-      3, 3, TRUE, FALSE, FALSE, $this->_getHelp('notaMaximaGeral'));
+      3, 3, TRUE, $this->_getHelp('notaMaximaGeral'));
 
     $this->campoNumero('notaMaximaExameFinal', $this->_getLabel('notaMaximaExameFinal'), $this->getEntity()->notaMaximaExameFinal,
-      3, 3, TRUE, FALSE, FALSE, $this->_getHelp('notaMaximaExameFinal'));
+      3, 3, TRUE, $this->_getHelp('notaMaximaExameFinal'));
 
     $this->campoNumero('qtdCasasDecimais', $this->_getLabel('qtdCasasDecimais'), $this->getEntity()->qtdCasasDecimais,
-      3, 3, TRUE, FALSE, FALSE, $this->_getHelp('qtdCasasDecimais'));
+      3, 3, TRUE, $this->_getHelp('qtdCasasDecimais'));
+
+    $this->campoNumero('qtdDisciplinasDependencia', $this->_getLabel('qtdDisciplinasDependencia'), $this->getEntity()->qtdDisciplinasDependencia,
+      3, 3, TRUE, $this->_getHelp('qtdDisciplinasDependencia'));
+
+    // Nota geral por etapa
+    $this->campoCheck('notaGeralPorEtapa', $this->_getLabel('notaGeralPorEtapa'),
+        $this->getEntity()->notaGeralPorEtapa, '', FALSE, FALSE, FALSE, $this->_getHelp('notaGeralPorEtapa'));
+
+    $this->campoCheck('aprovaMediaDisciplina', $this->_getLabel('aprovaMediaDisciplina'),
+        $this->getEntity()->aprovaMediaDisciplina, '', FALSE, FALSE, FALSE, $this->_getHelp('aprovaMediaDisciplina'));
 
     $tipoRecuperacaoParalela = RegraAvaliacao_Model_TipoRecuperacaoParalela::getInstance();
 
@@ -491,6 +512,10 @@ var tabela_arredondamento = new function() {
     if (isset($this->getRequest()->id) && 0 < $this->getRequest()->id) {
       $this->setEntity($this->getDataMapper()->find($this->getRequest()->id));
       $entity = $this->getEntity();
+    }
+    //fixup for checkbox nota geral
+    if(!isset($data['notaGeralPorEtapa'])){
+      $data['notaGeralPorEtapa'] = '0';
     }
 
     if (isset($entity)) {

@@ -62,7 +62,8 @@ var handleGetMatriculas = function(dataResponse) {
               {val: 3, text: 'Em andamento'},
               {val: 4, text: 'Transferido'},
               {val: 5, text: 'Reclassificado'},
-              {val: 6, text: 'Abandono'}
+              {val: 6, text: 'Abandono'},
+              {val: 12, text: 'Aprovado com depend\u00eacia'}
         ];
 
         var sel = $j('<select>')
@@ -79,7 +80,7 @@ var handleGetMatriculas = function(dataResponse) {
       }else{
         $j('<td>').html(matricula.situacao).appendTo($tr);
       }
-      
+
 
       $j('<td>').html(matricula.turma_nome).appendTo($tr);
       $j('<td>').html(matricula.ultima_enturmacao).appendTo($tr);
@@ -278,7 +279,7 @@ if(possui_ficha_medica){
   });
 }
 
-if(possui_uniforme_escolar){  
+if(possui_uniforme_escolar){
   // Atribui um id a linha, para identificar até onde/a partir de onde esconder os campos
   $j('#funiforme').closest('tr').attr('id','tfuniforme');
 

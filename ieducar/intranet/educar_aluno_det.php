@@ -263,6 +263,7 @@ class indice extends clsDetalhe
       $registro['sigla_uf_exp_rg'] 	   = $detalheDocumento['sigla_uf_exp_rg'];
       $registro['tipo_cert_civil'] 	   = $detalheDocumento['tipo_cert_civil'];
       $registro['certidao_nascimento'] = $detalheDocumento['certidao_nascimento'];
+      $registro['certidao_casamento']  = $detalheDocumento['certidao_casamento'];      
       $registro['num_termo']       	   = $detalheDocumento['num_termo'];
       $registro['num_livro']       	   = $detalheDocumento['num_livro'];
       $registro['num_folha']       	   = $detalheDocumento['num_folha'];
@@ -621,15 +622,18 @@ class indice extends clsDetalhe
      * @todo CoreExt_Enum?
      */
     if(!$registro['tipo_cert_civil'] && $registro['certidao_nascimento']){
-    	$this->addDetalhe(array('Tipo Certificado Civil', 'Nascimento (novo formato)'));
-    	$this->addDetalhe(array('Número Certidão Civil', $registro['certidao_nascimento']));
+      $this->addDetalhe(array('Tipo Certidão Civil', 'Nascimento (novo formato)'));
+      $this->addDetalhe(array('Número Certidão Civil', $registro['certidao_nascimento']));
+    }else if(!$registro['tipo_cert_civil'] && $registro['certidao_casamento']){
+      $this->addDetalhe(array('Tipo Certidão Civil', 'Casamento (novo formato)'));
+      $this->addDetalhe(array('Número Certidão Civil', $registro['certidao_casamento']));
     }else{
       $lista_tipo_cert_civil       = array();
       $lista_tipo_cert_civil["0"] = 'Selecione';
       $lista_tipo_cert_civil[91]  = 'Nascimento (antigo formato)';
-      $lista_tipo_cert_civil[92]  = 'Casamento';
+      $lista_tipo_cert_civil[92]  = 'Casamento (antigo formato)';
 
-      $this->addDetalhe(array('Tipo Certificado Civil', $lista_tipo_cert_civil[$registro['tipo_cert_civil']]));
+      $this->addDetalhe(array('Tipo Certidão Civil', $lista_tipo_cert_civil[$registro['tipo_cert_civil']]));
 
     	if ($registro['num_termo']) {
     	  $this->addDetalhe(array('Termo', $registro['num_termo']));

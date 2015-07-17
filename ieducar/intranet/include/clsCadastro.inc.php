@@ -411,6 +411,7 @@ class clsCadastro extends clsCampos
         }";
       }
 
+
       /**
        * Campo tabela
        */

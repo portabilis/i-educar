@@ -98,7 +98,7 @@ var getPersonByCpf = function(cpf) {
     // como no caso, onde o usuário pressiona cancelar por exemplo.
     async    : false
   };
-
+ 
   getResource(options);
 }
 
@@ -113,22 +113,30 @@ var checkTipoNacionalidade = function() {
 
 // hide or show *certidao* fields, by #tipo_certidao_civil
 var checkTipoCertidaoCivil = function() {
-  var $certidaoCivilFields     = $j('#termo_certidao_civil, #livro_certidao_civil, #folha_certidao_civil');
-  var $certidaoNascimentoField = $j('#certidao_nascimento');
+  var $certidaoCivilFields     = $j('#termo_certidao_civil, #livro_certidao_civil, #folha_certidao_civil').hide();
+  var $certidaoNascimentoField = $j('#certidao_nascimento').hide();
+  var $certidaoCasamentoField  = $j('#certidao_casamento').hide();
   var tipoCertidaoCivil        = $j('#tipo_certidao_civil').val();
 
-  $certidaoCivilFields.hide();
-  $certidaoNascimentoField.hide();
+
 
   if ($j.inArray(tipoCertidaoCivil, ['91', '92']) > -1) {
     $certidaoCivilFields.show();
-    $j('#tr_tipo_certidao_civil td:first span').html(stringUtils.toUtf8('Tipo certidão civil / Termo / Livro / Folha'));
+    $j('#tr_tipo_certidao_civil td:first span').html(stringUtils.toUtf8('Tipo certidão civil'));
   }
 
   else if (tipoCertidaoCivil == 'certidao_nascimento_novo_formato') {
     $certidaoNascimentoField.show();
-    $j('#tr_tipo_certidao_civil td:first span').html(stringUtils.toUtf8('Tipo certidão civil / Certidão nascimento'));
+    $j('#tr_tipo_certidao_civil td:first span').html(stringUtils.toUtf8('Tipo certidão civil'));
   }
+
+    else if (tipoCertidaoCivil == 'certidao_casamento_novo_formato') {
+    $certidaoCasamentoField.show();
+    $j('#tr_tipo_certidao_civil td:first span').html(stringUtils.toUtf8('Tipo certidão civil'));
+  }
+
+
+
 
 }
 
