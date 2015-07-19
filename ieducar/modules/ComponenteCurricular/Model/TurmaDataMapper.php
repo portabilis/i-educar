@@ -60,7 +60,9 @@ class ComponenteCurricular_Model_TurmaDataMapper extends CoreExt_DataMapper
     'escola'               => 'escola_id',
     'turma'                => 'turma_id',
     'cargaHoraria'         => 'carga_horaria',
-    'docenteVinculado'         => 'docente_vinculado'
+    'docenteVinculado'     => 'docente_vinculado',
+    'etapasEspecificas'    => 'etapas_especificas',
+    'etapasUtilizadas'     => 'etapas_utilizadas'
   );
 
   protected $_primaryKey = array(
@@ -114,6 +116,8 @@ class ComponenteCurricular_Model_TurmaDataMapper extends CoreExt_DataMapper
         $insert[$id] = $objects[$id];
         $insert[$id]->cargaHoraria = $componente['cargaHoraria'];
         $insert[$id]->docenteVinculado = $componente['docenteVinculado'];
+        $insert[$id]->etapasEspecificas = $componente['etapasEspecificas'];
+        $insert[$id]->etapasUtilizadas = $componente['etapasUtilizadas'];
         continue;
       }
 
@@ -124,6 +128,8 @@ class ComponenteCurricular_Model_TurmaDataMapper extends CoreExt_DataMapper
         'turma'                => $turma,
         'cargaHoraria'         => $componente['cargaHoraria'],
         'docenteVinculado'     => $componente['docenteVinculado'],
+        'etapasEspecificas'    => $componente['etapasEspecificas'],
+        'etapasUtilizadas'     => $componente['etapasUtilizadas']
       ));
     }
 
