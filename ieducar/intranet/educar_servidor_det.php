@@ -118,7 +118,7 @@ class indice extends clsDetalhe
     $obj_ref_cod_funcao = new clsPmieducarFuncao($registro['ref_cod_funcao'], NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, $this->ref_cod_instituicao);
     $det_ref_cod_funcao = $obj_ref_cod_funcao->detalhe();
     $registro['ref_cod_funcao'] = $det_ref_cod_funcao['nm_funcao'];
-echo $registro['nome'];
+// echo $registro['nome'];
     // Nome
 
 
