@@ -102,7 +102,7 @@ class indice extends clsListagem
 		
 
 		$this->addCabecalhos( array(
-			"Codigo",	
+			"Código",	
 			"Tipo",
 			"Nome",		
 			"Munic&iacute;pio",
