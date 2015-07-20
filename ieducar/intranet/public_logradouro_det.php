@@ -103,9 +103,13 @@ class indice extends clsDetalhe
 		}
 
 		
+		if( $registro["idlog"] )
+		{
+			$this->addDetalhe( array( "Código", "{$registro["idlog"]}") );
+		}		
 		if( $registro["idtlog"] )
 		{
-			$this->addDetalhe( array( "Idtlog", "{$registro["idtlog"]}") );
+			$this->addDetalhe( array( "Tipo", "{$registro["idtlog"]}") );
 		}
 		if( $registro["nome"] )
 		{
@@ -121,20 +125,13 @@ class indice extends clsDetalhe
 		}
 		if( $registro["nm_pais"] )
 		{
-			$this->addDetalhe( array( "Pais", "{$registro["nm_pais"]}") );
+			$this->addDetalhe( array( "País", "{$registro["nm_pais"]}") );
 		}
 		if( $registro["ident_oficial"] )
 		{
 			$this->addDetalhe( array( "Ident Oficial", "{$registro["ident_oficial"]}") );
 		}
-		if( $registro["origem_gravacao"] )
-		{
-			$this->addDetalhe( array( "Origem Gravac&atilde;o", "{$registro["origem_gravacao"]}") );
-		}
-		if( $registro["operacao"] )
-		{
-			$this->addDetalhe( array( "Operac&atilde;o", "{$registro["operacao"]}") );
-		}
+		
 
 		$obj_permissao = new clsPermissoes();
 

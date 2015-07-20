@@ -139,7 +139,7 @@ class indice extends clsCadastro
       echo '<!--\nErro\nClasse clsPais nao encontrada\n-->';
       $opcoes = array('' => 'Erro na geracao');
     }
-    $this->campoLista('idpais', 'Pais', $opcoes, $this->idpais);
+    $this->campoLista('idpais', 'País', $opcoes, $this->idpais);
 
     $opcoes = array('' => 'Selecione');
     if (class_exists('clsUf')) {
@@ -309,7 +309,7 @@ function getUf(xml_uf) {
     }
   }
   else {
-    campoUf.options[0].text = 'O pais não possui nenhum estado';
+    campoUf.options[0].text = 'O país não possui nenhum estado';
   }
 }
 

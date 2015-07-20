@@ -102,12 +102,12 @@ class indice extends clsListagem
 		
 
 		$this->addCabecalhos( array(
+			"Codigo",	
 			"Tipo",
-			"Nome",
-			"Codigo",			
+			"Nome",		
 			"Munic&iacute;pio",
 			"Estado",
-			"Pais"
+			"País"
 		) );
 
 		// Filtros de Foreign Keys
@@ -129,7 +129,7 @@ class indice extends clsListagem
 			echo "<!--\nErro\nClasse clsPais nao encontrada\n-->";
 			$opcoes = array( "" => "Erro na geracao" );
 		}
-		$this->campoLista( "idpais", "Pais", $opcoes, $this->idpais, "", false, "", "", false, false );
+		$this->campoLista( "idpais", "País", $opcoes, $this->idpais, "", false, "", "", false, false );
 
 		$opcoes = array( "" => "Selecione" );
 		if( class_exists( "clsUf" ) )
@@ -251,9 +251,9 @@ class indice extends clsListagem
 				}
 
 				$this->addLinhas( array(
+					"<a href=\"public_logradouro_det.php?idlog={$registro["idlog"]}\">{$registro["idlog"]}</a>",
 					"<a href=\"public_logradouro_det.php?idlog={$registro["idlog"]}\">{$registro["idtlog"]}</a>",
 					"<a href=\"public_logradouro_det.php?idlog={$registro["idlog"]}\">{$registro["nome"]}</a>",
-					"<a href=\"public_logradouro_det.php?idlog={$registro["idlog"]}\">{$registro["idlog"]}</a>",
 					"<a href=\"public_logradouro_det.php?idlog={$registro["idlog"]}\">{$registro["nm_municipio"]}</a>",
 					"<a href=\"public_logradouro_det.php?idlog={$registro["idlog"]}\">{$registro["nm_estado"]}</a>",
 					"<a href=\"public_logradouro_det.php?idlog={$registro["idlog"]}\">{$registro["nm_pais"]}</a>"
@@ -322,7 +322,7 @@ function getUf( xml_uf )
 	}
 	else
 	{
-		campoUf.options[0].text = 'O pais não possui nenhum estado';
+		campoUf.options[0].text = 'O país não possui nenhum estado';
 	}
 }
 
