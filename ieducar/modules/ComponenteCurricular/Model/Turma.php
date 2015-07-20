@@ -50,7 +50,9 @@ class ComponenteCurricular_Model_Turma extends CoreExt_Entity
     'escola'               => NULL,
     'turma'                => NULL,
     'cargaHoraria'         => NULL,
-    'docenteVinculado'     => NULL
+    'docenteVinculado'     => NULL,
+    'etapasEspecificas'    => NULL,
+    'etapasUtilizadas'     => NULL
   );
 
   protected $_dataTypes = array(

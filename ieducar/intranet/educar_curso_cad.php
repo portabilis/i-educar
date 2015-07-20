@@ -277,7 +277,7 @@ class indice extends clsCadastro
     // Outros campos
     $this->campoTexto('nm_curso', 'Curso', $this->nm_curso, 30, 255, TRUE);
 
-    $this->campoTexto('sgl_curso', 'Sigla Curso', $this->sgl_curso, 15, 15, TRUE);
+    $this->campoTexto('sgl_curso', 'Sigla Curso', $this->sgl_curso, 15, 15, false);
 
     $this->campoNumero('qtd_etapas', 'Quantidade Etapas', $this->qtd_etapas, 2, 2, TRUE);
 
