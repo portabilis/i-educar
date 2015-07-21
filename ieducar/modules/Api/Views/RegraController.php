@@ -69,7 +69,13 @@ class RegraController extends ApiCoreController
         );
       }
 
-      return array('tabelas' => $_tabelas);
+      $tabelas = array();
+
+      foreach ($_tabelas as $tabela) {
+        $tabelas[] = $tabela;
+      }
+
+      return array('tabelas' => $tabelas);
     }
   }
 
