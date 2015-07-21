@@ -50,8 +50,8 @@ class Portabilis_View_Helper_DynamicInput_SituacaoMatricula extends Portabilis_V
                        2 => 'Reprovado',
                        3 => 'Em andamento',
                        4 => 'Transferido',
+                       5 => 'Reclassificado',
                        6 => 'Abandono',
-                       7 => 'Reclassificado',
                        9 => 'Exceto Transferidos/Abandono',
                        10 => 'Todas',
                        12 => 'Aprovado com depend&ecirc;ncia');
