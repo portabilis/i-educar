@@ -48,23 +48,28 @@ class RegraController extends ApiCoreController
     if($this->canGetTabelasDeArredondamento()){
       $instituicaoId = $this->getRequest()->instituicao_id;
 
-      $sql = "SELECT ta.id, tav.nome, tav.descricao, tav.valor_maximo
+      $sql = "SELECT ta.id, ta.nome, tav.nome as rotulo, tav.descricao, tav.valor_maximo
                 FROM modules.tabela_arredondamento ta
                 INNER JOIN modules.tabela_arredondamento_valor tav ON tav.tabela_arredondamento_id = ta.id
                 WHERE ta.instituicao_id = $1";
 
       $tabelas = $this->fetchPreparedQuery($sql, array($instituicaoId));
 
-      $attrs = array('id', 'nome', 'descricao', 'valor_maximo');
+      $attrs = array('id', 'nome', 'rotulo', 'descricao', 'valor_maximo');
       $tabelas = Portabilis_Array_Utils::filterSet($tabelas, $attrs);
+      $_tabelas = array();
 
-      foreach ($tabelas as &$tabela) {
-        $tabela['nome'] = Portabilis_String_Utils::toUtf8($tabela['nome']);
-        $tabela['descricao'] = Portabilis_String_Utils::toUtf8($tabela['descricao']);
-        $tabela['valor_maximo'] = Portabilis_String_Utils::toUtf8($tabela['valor_maximo']);
+      foreach ($tabelas as $tabela) {
+        $_tabela[$tabela['id']]['id'] = $tabela['id'];
+        $_tabela[$tabela['id']]['nome'] = Portabilis_String_Utils::toUtf8($tabela['nome']);
+        $_tabela[$tabela['id']]['valores'][] = array(
+          'rotulo' => Portabilis_String_Utils::toUtf8($tabela['rotulo']),
+          'descricao' => Portabilis_String_Utils::toUtf8($tabela['descricao']),
+          'valor_maximo' => Portabilis_String_Utils::toUtf8($tabela['valor_maximo'])
+        );
       }
 
-      return array('tabelas' => $tabelas);
+      return array('tabelas' => $_tabelas);
     }
   }
 
