@@ -83,7 +83,8 @@ class indice extends clsListagem
   var $ref_cod_instituicao;
   var $professor;
   var $ref_cod_escola;
-  var $nome_servidor;
+  var $nome;
+  var $matricula;
   var $ref_cod_servidor;
   var $periodo;
   var $carga_horaria_usada;
@@ -135,7 +136,7 @@ class indice extends clsListagem
     }
 
     $this->ref_cod_instituicao = $_SESSION['ref_cod_instituicao'] = $_GET['ref_cod_instituicao'] ? $_GET['ref_cod_instituicao'] : $_SESSION['ref_cod_instituicao'];
-    $this->ref_cod_servidor    = $_SESSION['ref_cod_servidor']    = $_GET['ref_cod_servidor'] ? $_GET['ref_cod_servidor'] : $_SESSION['ref_cod_servidor'];
+    $this->cod_servidor    = $_SESSION['cod_servidor']    = $_GET['cod_servidor'] ? $_GET['cod_servidor'] : $_SESSION['cod_servidor'];
     $this->professor           = $_SESSION['professor']           = $_GET['professor'] ? $_GET['professor'] : $_SESSION['professor'];
     $this->horario             = $_SESSION['horario']             = $_GET['horario'] ? $_GET['horario'] : $_SESSION['horario'];
     $this->ref_cod_escola      = $_GET['ref_cod_escola'] ? $_GET['ref_cod_escola'] : $_SESSION['ref_cod_escola'];
@@ -225,12 +226,17 @@ class indice extends clsListagem
       'Institui&ccedil;&atilde;o'
     ));
 
-    $this->campoTexto('nome_servidor', 'Nome Servidor', $this->nome_servidor, 30, 255, FALSE);
+    
+
+
+    $this->campoTexto("nome","Nome do servidor", $this->nome,50,255,false);
+  //  $this->campoTexto("matricula","Matrícula", $this->matricula,50,255,false);    
     $this->campoOculto('tipo', $_GET['tipo']);
 
     // Paginador
     $this->limite = 20;
-    $this->offset = ($_GET['pagina_{$this->nome}']) ? $_GET['pagina_{$this->nome}'] * $this->limite-$this->limite: 0;
+    $this->offset = ($_GET['pagina_' . $this->nome]) ?
+      $_GET['pagina_' . $this->nome] * $this->limite - $this->limite : 0;
 
     $obj_servidor = new clsPmieducarServidor();
     $obj_servidor->setOrderby('carga_horaria ASC');
@@ -250,8 +256,8 @@ class indice extends clsListagem
     // Passa NULL para $alocacao_escola_instituicao senão o seu filtro anula
     // um anterior (referente a selecionar somente servidores não alocados),
     // selecionando apenas servidores alocados na instituição
-    $lista = $obj_servidor->lista(
-      NULL,
+ $lista = $obj_servidor->lista(
+      $this->cod_servidor,
       NULL,
       $this->ref_idesco,
       $this->carga_horaria,
@@ -261,26 +267,24 @@ class indice extends clsListagem
       NULL,
       1,
       $this->ref_cod_instituicao,
-      $_SESSION['tipo'],
-      $array_hora,
-      $this->ref_cod_servidor,
-      $this->nome_servidor,
-      $this->professor,
-      $this->horario,
-      FALSE,
-      $this->lst_matriculas,
-      $this->matutino,
-      $this->vespertino,
-      $this->noturno,
-      $this->ref_cod_escola,
-      $hr_mat,
-      $hr_ves,
-      $hr_not,
-      $_SESSION['dia_semana'],
-      $this->ref_cod_escola,
-      $this->identificador,
-      $this->ref_cod_curso,
-      $this->ref_cod_disciplina
+      NULL,
+      NULL,
+      NULL,
+      $this->nome,
+      $this->matricula,
+      NULL,
+      NULL,
+      TRUE,
+      NULL, 
+      NULL,
+      NULL,
+      NULL,
+      NULL,
+      NULL,
+      NULL,
+      NULL,
+      NULL,
+      NULL
     );
 
     // Se for uma listagem de professores, recupera as disciplinas dadas para
@@ -289,7 +293,7 @@ class indice extends clsListagem
     $disciplinas = array();
     if ('true' == $this->professor) {
       $disciplinas = $obj_servidor->getServidorDisciplinasQuadroHorarioHorarios(
-        $this->ref_cod_servidor, $this->ref_cod_instituicao);
+        $this->cod_servidor, $this->ref_cod_instituicao);
     }
 
     $total = $obj_servidor->_total;
@@ -304,27 +308,16 @@ class indice extends clsListagem
     // monta a lista
     if (is_array($lista) && count($lista)) {
       foreach ($lista as $registro) {
-        if (class_exists('clsFuncionario')) {
-          $obj_cod_servidor      = new clsFuncionario( $registro['cod_servidor'] );
+         if (class_exists('clsFuncionario')) {
+          $obj_cod_servidor      = new clsFuncionario($registro['cod_servidor']);
           $det_cod_servidor      = $obj_cod_servidor->detalhe();
           $registro['matricula'] = $det_cod_servidor['matricula'];
-
-          // Se servidor for professor, verifica se possui as mesmas
-          // disciplinas do servidor a ser substituido (este passo somente é
-          // executado ao buscar um servidor substituto)
-          if ($this->professor == 'true') {
-            $disciplinasSubstituto = clsPmieducarServidor::getServidorDisciplinas(
-              $registro['cod_servidor'], $this->ref_cod_instituicao);
-
-            // Se os arrays diferirem, passa para o próximo resultado
-            if ($disciplinasSubstituto != $disciplinas) {
-              continue;
-            }
-          }
-        }
-        else {
-          $registro["cod_servidor"] = "Erro na geracao";
-          echo "<!--\nErro\nClasse nao existente: clsFuncionario\n-->";
+          // $det_cod_servidor      = $det_cod_servidor['idpes']->detalhe();
+          $det_cod_servidor      = $det_cod_servidor;
+         // $registro['nome']      = $det_cod_servidor['nome'];
+         // $registro['cpf']      = $det_cod_servidor['cpf'];
+        } else {
+          $registro['cod_servidor'] = 'Erro na geracao';
         }
 
         if ($_SESSION['tipo']) {
@@ -360,10 +353,10 @@ class indice extends clsListagem
       }
     }
 
-    $this->addPaginador2('educar_pesquisa_servidor_lst.php', $total, $_GET,
-      $this->nome, $this->limite);
-
+ $this->addPaginador2('educar_servidor_lst.php', $total, $_GET, $this->nome, $this->limite);
     $obj_permissoes = new clsPermissoes();
+
+
     $this->largura = '100%';
   }
 }
