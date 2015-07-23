@@ -527,7 +527,16 @@ class indice extends clsCadastro
       }else
         $r10s13 = 0;
 
-      $r10s96 = ($r10s96 == 1 && ($r10s92 == 1 || $r10s93 == 1)) ? 1 : NULL;
+      if($r10s3 == 0)
+        $r10s13 = NULL;
+
+      $r10s96 = ($r10s96 == 1 && ($r10s92 == 1 || $r10s93 == 1)) ? 1 : (($r10s92 == 1 || $r10s93 == 1) ? 0 : NULL);
+
+      if($r10s91 != 2)
+        $r10s93 = $r10s94 = $r10s95 = 0;
+
+      $r10s98 = 1;
+      $r10s99 = $r10s100 = 0;
 
       if($lingua_ministrada && $r10s101){
         $r10s102 = 1;
