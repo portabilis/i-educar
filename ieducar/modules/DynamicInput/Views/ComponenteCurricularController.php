@@ -103,13 +103,13 @@ class ComponenteCurricularController extends ApiCoreController
                 	   cct.componente_curricular_id = cc.id and al.ano = $2 and 
                 	   cct.escola_id = al.ref_cod_escola and 
                 	   cc.area_conhecimento_id = ac.id and
-                	   (turma.ref_cod_disciplina_dispensada <> cc.id OR turma.ref_cod_disciplina_dispensada is null)
+                	   (turma.ref_cod_disciplina_dispensada <> cc.id OR turma.ref_cod_disciplina_dispensada is null) and
+                     (case when cct.etapas_especificas = 1 then $3 = ANY (string_to_array(cct.etapas_utilizadas,',')::int[]) else true end)
                  order by ac.secao, ac.nome, cc.ordenamento, cc.nome";
-        
 
-        $componentesCurriculares = $this->fetchPreparedQuery($sql, array($turmaId, $ano));
+        $componentesCurriculares = $this->fetchPreparedQuery($sql, array($turmaId, $ano, $etapa));
 
-        if (count($ComponentesCurriculares) < 1) {
+        if (count($componentesCurriculares) < 1) {
           $sql = "select cc.id,
                          cc.nome,
                          ac.nome as area_conhecimento,
@@ -118,7 +118,6 @@ class ComponenteCurricularController extends ApiCoreController
                     from pmieducar.turma as t
                    inner join pmieducar.escola_serie_disciplina esd on (esd.ref_ref_cod_escola = t.ref_ref_cod_escola)
                    inner join modules.componente_curricular cc on (esd.ref_cod_disciplina = cc.id)
-                    left join modules.componente_curricular_turma cct on (cct.escola_id = t.ref_ref_cod_escola and cct.turma_id = t.cod_turma and cct.componente_curricular_id = cc.id)
                    inner join modules.area_conhecimento ac on (cc.area_conhecimento_id = ac.id)
                    inner join pmieducar.escola_ano_letivo al on (esd.ref_ref_cod_escola = al.ref_cod_escola)
                    where t.cod_turma = $1 and
@@ -128,7 +127,7 @@ class ComponenteCurricularController extends ApiCoreController
                          esd.ativo = 1 and
                          al.ativo = 1 and
                          (t.ref_cod_disciplina_dispensada <> cc.id OR t.ref_cod_disciplina_dispensada is null) and
-                         (case when cct.etapas_especificas = 1 then $3 = ANY (string_to_array(cct.etapas_utilizadas,',')::int[]) when esd.etapas_especificas = 1 then $3 = ANY (string_to_array(esd.etapas_utilizadas,',')::int[]) else true end)
+                         (case when esd.etapas_especificas = 1 then $3 = ANY (string_to_array(esd.etapas_utilizadas,',')::int[]) else true end)
                    order by ac.secao, ac.nome, cc.ordenamento, cc.nome";
 
           $componentesCurriculares = $this->fetchPreparedQuery($sql, array($turmaId, $ano, $etapa));
