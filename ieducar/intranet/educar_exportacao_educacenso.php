@@ -779,6 +779,8 @@ class indice extends clsCadastro
     // Transforma todos resultados em variáveis
     extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, array('return_only' => 'first-row', 'params' => array($servidorId))));
     if ($r30s1){
+      $r30s5 = $this->upperAndUnaccent($r30s5);
+      $r30s6 = strtoupper($r30s6);
       $r30s8 = Portabilis_Date_Utils::pgSQLToBr($r30s8);
       $r30s9 = $r30s9 == 'M' ? 1 : 2;
       $r30s10 = is_numeric($r30s10) ? $r30s10 : 0;
@@ -811,6 +813,9 @@ class indice extends clsCadastro
           $r30s16 = 1;
         }
       }
+
+      if($r30s16 = 0)
+        $r30s17 = $r30s18 = $r30s19 = $r30s20 = $r30s21 = $r30s22 = $r30s23 = $r30s24 = NULL;
 
       $d = '|';
       $return = '';
@@ -869,6 +874,11 @@ class indice extends clsCadastro
     extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, array('return_only' => 'first-row', 'params' => array($servidorId))));
     if ($r40s1){
       $r40s5 = $this->cpfToCenso($r40s5);
+
+      $r40s8  = $this->upperAndUnaccent($r40s8);
+      $r40s9  = $this->upperAndUnaccent($r40s9);
+      $r40s10 = $this->upperAndUnaccent($r40s10);
+      $r40s11 = $this->upperAndUnaccent($r40s11);
 
       $d = '|';
       $return = '';
@@ -1300,6 +1310,9 @@ class indice extends clsCadastro
       // Se o aluno não tiver deficiências não pode ser informado recursos para provas
       if ($r60s16)
         $r60s39 = NULL;
+      else
+        $r60s17 = $r60s18 = $r60s19 = $r60s20 = $r60s21 = $r60s22 = $r60s23 = $r60s24 =
+                  $r60s25 = $r60s26 = $r60s27 = $r60s28 = $r60s29 = NULL;
 
       for ($i=1; $i <= $numeroRegistros ; $i++)
         $return .= ${'r60s'.$i}.$d;
