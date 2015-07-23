@@ -85,6 +85,11 @@
     <!--img src="https://s3-sa-east-1.amazonaws.com/apps-core-images/uploads/dia-da-mulher.png" style="float:left;"-->
     <div id="flash-container">
 
+
+    <p style="min-height: 0px;" class="flash update-browser">
+        <b>Aviso de indisponibilidade tempor&aacute;ria</b><br>
+        Prezados clientes, comunicamos que no dia de hoje os servi&ccedil;os ser&atilde;o interrompidos do per&iacute;odo de 12:30 at&eacute; 13:00 para que possamos melhorar nossos servi&ccedil;os! ;)
+      </p>
       <!--p style="min-height: 0px;  background-color: #F5829C; color: white;" class="flash update-browser"> 
         Desejamos a todas um Feliz Dia Internacional da Mulher! Voc&ecirc;s s&atilde;o exemplo de amor, perseveran&ccedil;a, coragem e determina&ccedil;&atilde;o. Estes s&atilde;o os votos da Equipe Portabilis. ;)
       </p-->
