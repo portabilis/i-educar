@@ -211,6 +211,7 @@ class indice extends clsCadastro
   var $banda_larga;
   var $ato_criacao;
   var $utiliza_regra_diferenciada;
+  var $orgao_regional;
 
 	var $incluir_curso;
 	var $excluir_curso;
@@ -1024,6 +1025,8 @@ if(!$this->isEnderecoExterno){
 
       $this->campoCheck("utiliza_regra_diferenciada", "Utiliza regra diferenciada", dbBool($this->utiliza_regra_diferenciada), '', FALSE, FALSE, FALSE, 'Se marcado, utilizará regra de avaliação diferenciada informada na Série');
 
+      $this->campoNumero( "orgao_regional", Portabilis_String_Utils::toLatin1("Código do orgão regional"),  $this->orgao_regional, "5", "5", true );
+
   		$resources = array(1 => 'Em atividade',
 	                       2 => 'Paralisada',
 	                       3 => 'Extinta');
@@ -1586,7 +1589,8 @@ if(!$this->isEnderecoExterno){
 					$obj->situacao_funcionamento = $this->situacao_funcionamento;
 					$obj->dependencia_administrativa = $this->dependencia_administrativa;
 					$obj->latitude = $this->latitude;
-					$obj->longitude = $this->longitude;
+          $obj->longitude = $this->longitude;
+					$obj->orgao_regional = $this->orgao_regional;
 					$obj->regulamentacao = $this->regulamentacao;
 					$obj->acesso = $this->acesso;
 					$obj->ref_idpes_gestor = $this->gestor_id;
@@ -1788,6 +1792,7 @@ if(!$this->isEnderecoExterno){
 			$obj->dependencia_administrativa = $this->dependencia_administrativa;
 			$obj->latitude = $this->latitude;
 			$obj->longitude = $this->longitude;
+      $obj->orgao_regional = $this->orgao_regional;
 			$obj->regulamentacao = $this->regulamentacao;
 			$obj->situacao_funcionamento = $this->situacao_funcionamento;
 			$obj->acesso = $this->acesso;
@@ -1963,6 +1968,7 @@ if(!$this->isEnderecoExterno){
 			$obj->dependencia_administrativa = $this->dependencia_administrativa;
 			$obj->latitude = $this->latitude;
 			$obj->longitude = $this->longitude;
+      $obj->orgao_regional = $this->orgao_regional;
 			$obj->regulamentacao = $this->regulamentacao;
 			$obj->situacao_funcionamento = $this->situacao_funcionamento;
 			$obj->acesso = $this->acesso;
@@ -2079,6 +2085,7 @@ if(!$this->isEnderecoExterno){
 			$obj->dependencia_administrativa = $this->dependencia_administrativa;
 			$obj->latitude = $this->latitude;
 			$obj->longitude = $this->longitude;
+      $obj->orgao_regional = $this->orgao_regional;
 			$obj->regulamentacao = $this->regulamentacao;
 			$obj->acesso = $this->acesso;
 			$obj->ref_idpes_gestor = $this->gestor_id;

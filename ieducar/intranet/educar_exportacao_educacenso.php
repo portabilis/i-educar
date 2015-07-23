@@ -321,6 +321,7 @@ class indice extends clsCadastro
 
         (SELECT COALESCE(p.email,(SELECT email FROM pmieducar.escola_complemento where ref_cod_escola = e.cod_escola))) as r00s26,
 
+        e.orgao_regional as r00s27,
         e.dependencia_administrativa as r00s28,
         b.zona_localizacao as r00s29,
         0 as r00s32,
@@ -328,7 +329,8 @@ class indice extends clsCadastro
         0 as r00s34,
         0 as r00s35,
         0 as r00s36,
-        e.regulamentacao as r00s39
+        e.regulamentacao as r00s39,
+        0 as r00s40
 
 
         FROM pmieducar.escola e
@@ -356,6 +358,8 @@ class indice extends clsCadastro
 
       $r00s2 = substr($r00s2, 0, 8);
       $r00s3 = $this->cpfToCenso($r00s3);
+      $r00s4 = $this->upperAndUnaccent($r00s4);
+      $r00s6 = strtoupper($r00s6);
 
       $r00s8 = Portabilis_Date_Utils::pgSQLToBr($r00s8);
       $r00s9 = Portabilis_Date_Utils::pgSQLToBr($r00s9);
@@ -366,6 +370,9 @@ class indice extends clsCadastro
       $r00s16 = $this->upperAndUnaccent($r00s16);
       $r00s17 = $this->upperAndUnaccent($r00s17);
       $r00s26 = $this->upperAndUnaccent($r00s26);
+
+      if($r00s28 <> 4)
+        $r00s32 = $r00s33 = $r00s34 = $r00s35 = $r00s36 = '';
 
       for ($i=1; $i <= 42 ; $i++)
         $return .= ${'r00s'.$i}.$d;
