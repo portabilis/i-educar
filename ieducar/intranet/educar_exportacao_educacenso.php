@@ -875,6 +875,11 @@ class indice extends clsCadastro
     if ($r40s1){
       $r40s5 = $this->cpfToCenso($r40s5);
 
+      $r40s8  = $this->upperAndUnaccent($r40s8);
+      $r40s9  = $this->upperAndUnaccent($r40s9);
+      $r40s10 = $this->upperAndUnaccent($r40s10);
+      $r40s11 = $this->upperAndUnaccent($r40s11);
+
       $d = '|';
       $return = '';
       $numeroRegistros = 13;
