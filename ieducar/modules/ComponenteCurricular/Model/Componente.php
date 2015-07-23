@@ -113,6 +113,6 @@ class ComponenteCurricular_Model_Componente extends CoreExt_Entity
    */
   public function __toString()
   {
-    return $this->nome . ' ('.$this->area_conhecimento . '/' . $this->abreviatura.')';
+    return $this->nome;
   }
 }
