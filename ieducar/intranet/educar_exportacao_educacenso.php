@@ -779,6 +779,8 @@ class indice extends clsCadastro
     // Transforma todos resultados em variáveis
     extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, array('return_only' => 'first-row', 'params' => array($servidorId))));
     if ($r30s1){
+      $r30s5 = $this->upperAndUnaccent($r30s5);
+      $r30s6 = strtoupper($r30s6);
       $r30s8 = Portabilis_Date_Utils::pgSQLToBr($r30s8);
       $r30s9 = $r30s9 == 'M' ? 1 : 2;
       $r30s10 = is_numeric($r30s10) ? $r30s10 : 0;
@@ -811,6 +813,9 @@ class indice extends clsCadastro
           $r30s16 = 1;
         }
       }
+
+      if($r30s16 = 0)
+        $r30s17 = $r30s18 = $r30s19 = $r30s20 = $r30s21 = $r30s22 = $r30s23 = $r30s24 = NULL;
 
       $d = '|';
       $return = '';
