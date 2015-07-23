@@ -1334,7 +1334,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
         ece.cod_escola_inep as r70s2,
         eca.cod_aluno_inep as r70s3,
         fd.rg as r70s5,
-        oer.sigla as r70s6,
+        oer.codigo_educacenso as r70s6,
         (SELECT cod_ibge FROM public.uf WHERE uf.sigla_uf = fd.sigla_uf_exp_rg) as r70s7,
         fd.data_exp_rg as r70s8,
         tipo_cert_civil,
@@ -1395,6 +1395,11 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
       $r70s14 = Portabilis_Date_Utils::pgSQLToBr($r70s14);
 
       $r70s19 = $this->cpfToCenso($r70s19);
+
+      $r70s24 = $this->upperAndUnaccent($r70s24);
+      $r70s25 = $this->upperAndUnaccent($r70s25);
+      $r70s26 = $this->upperAndUnaccent($r70s26);
+      $r70s27 = $this->upperAndUnaccent($r70s27);
 
       // Validações referentes a certidões (Modelo antigo e novo, nascimento e casamento)
       $r70s9 = $r70s10 = NULL;
