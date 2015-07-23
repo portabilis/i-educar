@@ -151,7 +151,7 @@ class indice extends clsCadastro
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_index.php"                  => "i-Educar - Escola",
-         ""        => "{$nomeMenu} v&iacute;nculo entre escola e s&eacute;rie"             
+         ""        => "{$nomeMenu} v&iacute;nculo entre escola e s&eacute;rie"
     ));
     $this->enviaLocalizacao($localizacao->montar());
 
@@ -244,7 +244,7 @@ class indice extends clsCadastro
         foreach ($registros as $campo) {
           $this->escola_serie_disciplina[$campo['ref_cod_disciplina']] = $campo['ref_cod_disciplina'];
           $this->escola_serie_disciplina_carga[$campo['ref_cod_disciplina']] = floatval($campo['carga_horaria']);
-          
+
           if($this->utilizaNotaGeralPorEtapa){
             $this->escola_serie_disciplina_etapa_especifica[$campo['ref_cod_disciplina']] = intval($campo['etapas_especificas']);
             $this->escola_serie_disciplina_etapa_utilizada[$campo['ref_cod_disciplina']] = $campo['etapas_utilizadas'];
@@ -269,6 +269,7 @@ class indice extends clsCadastro
       if (is_array($lista) && count($lista)) {
         $conteudo .= '<div style="margin-bottom: 10px; float: left">';
         $conteudo .= '  <span style="display: block; float: left; width: 250px;">Nome</span>';
+        $conteudo .= '  <span style="display: block; float: left; width: 100px;">Nome abreviado</span>';
         $conteudo .= '  <span style="display: block; float: left; width: 100px;">Carga horária</span>';
         $conteudo .= '  <span style="display: block; float: left">Usar padrão do componente?</span>';
         if($this->utilizaNotaGeralPorEtapa){
@@ -292,7 +293,7 @@ class indice extends clsCadastro
           if ($this->escola_serie_disciplina[$registro->id] == $registro->id) {
             $checked = 'checked="checked"';
             if($this->escola_serie_disciplina_etapa_especifica[$registro->id] == "1"){
-              $checkedEtapaEspecifica = 'checked="checked"';  
+              $checkedEtapaEspecifica = 'checked="checked"';
             }
           }
 
@@ -309,6 +310,7 @@ class indice extends clsCadastro
 
           $conteudo .= '<div style="margin-bottom: 10px; float: left">';
           $conteudo .= "  <label style='display: block; float: left; width: 250px'><input type=\"checkbox\" $checked name=\"disciplinas[$registro->id]\" id=\"disciplinas[]\" value=\"{$registro->id}\">{$registro}</label>";
+          $conteudo .= "  <span style='display: block; float: left; width: 100px'>{$registro->abreviatura}</span>";
           $conteudo .= "  <label style='display: block; float: left; width: 100px;'><input type='text' name='carga_horaria[$registro->id]' value='{$cargaHoraria}' size='5' maxlength='7'></label>";
           $conteudo .= "  <label style='display: block; float: left'><input type='checkbox' id='usar_componente[]' name='usar_componente[$registro->id]' value='1' ". ($usarComponente == TRUE ? $checked : '') .">($cargaComponente h)</label>";
           if($this->utilizaNotaGeralPorEtapa){
@@ -387,7 +389,7 @@ class indice extends clsCadastro
       if ($this->disciplinas) {
         foreach ($this->disciplinas as $key => $campo) {
           $obj = new clsPmieducarEscolaSerieDisciplina($this->ref_cod_serie,
-            $this->ref_cod_escola, $campo, 1, $this->carga_horaria[$key], 
+            $this->ref_cod_escola, $campo, 1, $this->carga_horaria[$key],
             $this->etapas_especificas[$key], $this->etapas_utilizadas[$key]);
 
           if ($obj->existe()) {
@@ -497,10 +499,10 @@ class indice extends clsCadastro
         $obj_ano_letivo = new clsPmieducarEscolaAnoLetivo();
         $existe_ano_andamento = $obj_ano_letivo->lista($this->ref_cod_escola,null,null,null,1,null,null,null,null,1);
         foreach ($existe_ano_andamento as $reg) {
-          CleanComponentesCurriculares::destroyOldResources($reg['ano']);  
+          CleanComponentesCurriculares::destroyOldResources($reg['ano']);
         }
-        
-        
+
+
       }
 
       $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
@@ -593,13 +595,13 @@ function getDisciplina(xml_disciplina)
     conteudo += '  <label span="display: block; float: left; width: 100px">Carga horária</span>';
     conteudo += '  <label span="display: block; float: left">Usar padrão do componente?</span>';
     conteudo += '</div>';
-    
+
     conteudo += '<br style="clear: left" />';
     conteudo += '<div style="margin-bottom: 10px; float: left">';
-    conteudo += "  <label style='display: block; float: left; width: 350px;'><input type='checkbox' name='CheckTodos' onClick='marcarCheck("+'"disciplinas[]"'+");'/>Marcar Todos</label>";
-    conteudo += "  <label style='display: block; float: left; width: 100px;'><input type='checkbox' name='CheckTodos2' onClick='marcarCheck("+'"usar_componente[]"'+");';/>Marcar Todos</label>";
+    conteudo += "  <label style='display: block; float: left; width: 350px;'><input type='checkbox' name='CheckTodos' onClick='marcarCheck("+'"disciplinas[]"'+");'/>Marcar todos</label>";
+    conteudo += "  <label style='display: block; float: left; width: 100px;'><input type='checkbox' name='CheckTodos2' onClick='marcarCheck("+'"usar_componente[]"'+");';/>Marcar todos</label>";
     conteudo += '</div>';
-    conteudo += '<br style="clear: left" />';    
+    conteudo += '<br style="clear: left" />';
 
     for (var i = 0; i < DOM_array.length; i++) {
       id = DOM_array[i].getAttribute("cod_disciplina");
