@@ -1575,6 +1575,11 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
     foreach (Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId, $ano, $data_ini, $data_fim, $alunoId))) as $reg) {
       extract($reg);
 
+      $r80s9 = NULL;
+
+      for ($i=13; $i <= 23 ; $i++)
+          ${'r80s'.$i} = 0;
+
       // validações transporte escolar
       $r80s11 = $r80s12 = NULL;
       if ($transporte_escolar){
