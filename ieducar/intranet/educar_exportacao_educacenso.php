@@ -645,6 +645,11 @@ class indice extends clsCadastro
         INNER JOIN pmieducar.escola e ON (t.ref_ref_cod_escola = e.cod_escola)
         INNER JOIN modules.educacenso_cod_escola ece ON (e.cod_escola = ece.cod_escola)
         WHERE t.cod_turma = $1
+        AND (SELECT 1
+              FROM pmieducar.matricula_turma mt
+              WHERE mt.ref_cod_turma = t.cod_turma
+              AND mt.ativo = 1
+              LIMIT 1) IS NOT NULL
     ';
     // Transforma todos resultados em variáveis
     extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, array('return_only' => 'first-row', 'params' => array($turmaId))));
