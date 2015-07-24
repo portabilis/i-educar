@@ -3,7 +3,7 @@
 -- @license  @@license@@
 -- @version  $Id$
 
-update relatorio.matricula_situacao set cod_situacao = 5 where cod_situacao = 7;
+update relatorio.situacao_matricula set cod_situacao = 5 where cod_situacao = 7;
 
 CREATE OR REPLACE VIEW relatorio.view_situacao AS
     SELECT matricula.cod_matricula,
