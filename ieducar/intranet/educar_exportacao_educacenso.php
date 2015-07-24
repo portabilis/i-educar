@@ -321,6 +321,7 @@ class indice extends clsCadastro
 
         (SELECT COALESCE(p.email,(SELECT email FROM pmieducar.escola_complemento where ref_cod_escola = e.cod_escola))) as r00s26,
 
+        e.orgao_regional as r00s27,
         e.dependencia_administrativa as r00s28,
         b.zona_localizacao as r00s29,
         0 as r00s32,
@@ -328,7 +329,8 @@ class indice extends clsCadastro
         0 as r00s34,
         0 as r00s35,
         0 as r00s36,
-        e.regulamentacao as r00s39
+        e.regulamentacao as r00s39,
+        0 as r00s40
 
 
         FROM pmieducar.escola e
@@ -356,6 +358,8 @@ class indice extends clsCadastro
 
       $r00s2 = substr($r00s2, 0, 8);
       $r00s3 = $this->cpfToCenso($r00s3);
+      $r00s4 = $this->upperAndUnaccent($r00s4);
+      $r00s6 = strtoupper($r00s6);
 
       $r00s8 = Portabilis_Date_Utils::pgSQLToBr($r00s8);
       $r00s9 = Portabilis_Date_Utils::pgSQLToBr($r00s9);
@@ -366,6 +370,9 @@ class indice extends clsCadastro
       $r00s16 = $this->upperAndUnaccent($r00s16);
       $r00s17 = $this->upperAndUnaccent($r00s17);
       $r00s26 = $this->upperAndUnaccent($r00s26);
+
+      if($r00s28 <> 4)
+        $r00s32 = $r00s33 = $r00s34 = $r00s35 = $r00s36 = '';
 
       for ($i=1; $i <= 42 ; $i++)
         $return .= ${'r00s'.$i}.$d;
@@ -520,7 +527,16 @@ class indice extends clsCadastro
       }else
         $r10s13 = 0;
 
-      $r10s96 = ($r10s96 == 1 && ($r10s92 == 1 || $r10s93 == 1)) ? 1 : NULL;
+      if($r10s3 == 0)
+        $r10s13 = NULL;
+
+      $r10s96 = ($r10s96 == 1 && ($r10s92 == 1 || $r10s93 == 1)) ? 1 : (($r10s92 == 1 || $r10s93 == 1) ? 0 : NULL);
+
+      if($r10s91 != 2)
+        $r10s93 = $r10s94 = $r10s95 = 0;
+
+      $r10s98 = 1;
+      $r10s99 = $r10s100 = 0;
 
       if($lingua_ministrada && $r10s101){
         $r10s102 = 1;
@@ -629,6 +645,11 @@ class indice extends clsCadastro
         INNER JOIN pmieducar.escola e ON (t.ref_ref_cod_escola = e.cod_escola)
         INNER JOIN modules.educacenso_cod_escola ece ON (e.cod_escola = ece.cod_escola)
         WHERE t.cod_turma = $1
+        AND (SELECT 1
+              FROM pmieducar.matricula_turma mt
+              WHERE mt.ref_cod_turma = t.cod_turma
+              AND mt.ativo = 1
+              LIMIT 1) IS NOT NULL
     ';
     // Transforma todos resultados em variáveis
     extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, array('return_only' => 'first-row', 'params' => array($turmaId))));
@@ -758,6 +779,8 @@ class indice extends clsCadastro
     // Transforma todos resultados em variáveis
     extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, array('return_only' => 'first-row', 'params' => array($servidorId))));
     if ($r30s1){
+      $r30s5 = $this->upperAndUnaccent($r30s5);
+      $r30s6 = strtoupper($r30s6);
       $r30s8 = Portabilis_Date_Utils::pgSQLToBr($r30s8);
       $r30s9 = $r30s9 == 'M' ? 1 : 2;
       $r30s10 = is_numeric($r30s10) ? $r30s10 : 0;
@@ -790,6 +813,9 @@ class indice extends clsCadastro
           $r30s16 = 1;
         }
       }
+
+      if($r30s16 = 0)
+        $r30s17 = $r30s18 = $r30s19 = $r30s20 = $r30s21 = $r30s22 = $r30s23 = $r30s24 = NULL;
 
       $d = '|';
       $return = '';
@@ -848,6 +874,11 @@ class indice extends clsCadastro
     extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, array('return_only' => 'first-row', 'params' => array($servidorId))));
     if ($r40s1){
       $r40s5 = $this->cpfToCenso($r40s5);
+
+      $r40s8  = $this->upperAndUnaccent($r40s8);
+      $r40s9  = $this->upperAndUnaccent($r40s9);
+      $r40s10 = $this->upperAndUnaccent($r40s10);
+      $r40s11 = $this->upperAndUnaccent($r40s11);
 
       $d = '|';
       $return = '';
@@ -1279,6 +1310,9 @@ class indice extends clsCadastro
       // Se o aluno não tiver deficiências não pode ser informado recursos para provas
       if ($r60s16)
         $r60s39 = NULL;
+      else
+        $r60s17 = $r60s18 = $r60s19 = $r60s20 = $r60s21 = $r60s22 = $r60s23 = $r60s24 =
+                  $r60s25 = $r60s26 = $r60s27 = $r60s28 = $r60s29 = NULL;
 
       for ($i=1; $i <= $numeroRegistros ; $i++)
         $return .= ${'r60s'.$i}.$d;
@@ -1300,7 +1334,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
         ece.cod_escola_inep as r70s2,
         eca.cod_aluno_inep as r70s3,
         fd.rg as r70s5,
-        oer.sigla as r70s6,
+        oer.codigo_educacenso as r70s6,
         (SELECT cod_ibge FROM public.uf WHERE uf.sigla_uf = fd.sigla_uf_exp_rg) as r70s7,
         fd.data_exp_rg as r70s8,
         tipo_cert_civil,
@@ -1361,6 +1395,11 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
       $r70s14 = Portabilis_Date_Utils::pgSQLToBr($r70s14);
 
       $r70s19 = $this->cpfToCenso($r70s19);
+
+      $r70s24 = $this->upperAndUnaccent($r70s24);
+      $r70s25 = $this->upperAndUnaccent($r70s25);
+      $r70s26 = $this->upperAndUnaccent($r70s26);
+      $r70s27 = $this->upperAndUnaccent($r70s27);
 
       // Validações referentes a certidões (Modelo antigo e novo, nascimento e casamento)
       $r70s9 = $r70s10 = NULL;
@@ -1535,6 +1574,11 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
 
     foreach (Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId, $ano, $data_ini, $data_fim, $alunoId))) as $reg) {
       extract($reg);
+
+      $r80s9 = NULL;
+
+      for ($i=13; $i <= 23 ; $i++)
+          ${'r80s'.$i} = 0;
 
       // validações transporte escolar
       $r80s11 = $r80s12 = NULL;
