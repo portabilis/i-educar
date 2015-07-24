@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gest�o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja�
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa � software livre; voc� pode redistribu�-lo e/ou modific�-lo
+ * sob os termos da Licen�a P�blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers�o 2 da Licen�a, como (a seu crit�rio)
+ * qualquer vers�o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa � distribu��do na expectativa de que seja �til, por�m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl��cita de COMERCIABILIDADE OU
+ * ADEQUA��O A UMA FINALIDADE ESPEC�FICA. Consulte a Licen�a P�blica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc� deve ter recebido uma c�pia da Licen�a P�blica Geral do GNU junto
+ * com este programa; se n�o, escreva para a Free Software Foundation, Inc., no
+ * endere�o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja� <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo disponível desde a versão 1.0.0
+ * @since     Arquivo dispon�vel desde a vers�o 1.0.0
  * @version   $Id$
  */
 
@@ -36,11 +36,11 @@ require_once 'include/pmieducar/geral.inc.php';
 /**
  * clsIndexBase class.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja� <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe dispon�vel desde a vers�o 1.0.0
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
@@ -57,11 +57,11 @@ class clsIndexBase extends clsBase
 /**
  * indice class.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja� <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe dispon�vel desde a vers�o 1.0.0
  * @version   @@package_version@@
  */
 class indice extends clsListagem
@@ -83,8 +83,7 @@ class indice extends clsListagem
   var $ref_cod_instituicao;
   var $professor;
   var $ref_cod_escola;
-  var $nome;
-  var $matricula;
+  var $nome_servidor;
   var $ref_cod_servidor;
   var $periodo;
   var $carga_horaria_usada;
@@ -120,7 +119,7 @@ class indice extends clsListagem
     $_SESSION['ref_cod_curso']      = $_GET['ref_cod_curso'] ? $_GET['ref_cod_curso'] : $_SESSION['ref_cod_curso'];
 
     /**
-     * Controle para cálculo de horas
+     * Controle para c�lculo de horas
      */
     $_SESSION['identificador'] = $_GET['identificador'] ?
       $_GET['identificador'] : $_SESSION['identificador'];
@@ -136,7 +135,7 @@ class indice extends clsListagem
     }
 
     $this->ref_cod_instituicao = $_SESSION['ref_cod_instituicao'] = $_GET['ref_cod_instituicao'] ? $_GET['ref_cod_instituicao'] : $_SESSION['ref_cod_instituicao'];
-    $this->cod_servidor    = $_SESSION['cod_servidor']    = $_GET['cod_servidor'] ? $_GET['cod_servidor'] : $_SESSION['cod_servidor'];
+    $this->ref_cod_servidor    = $_SESSION['ref_cod_servidor']    = $_GET['ref_cod_servidor'] ? $_GET['ref_cod_servidor'] : $_SESSION['ref_cod_servidor'];
     $this->professor           = $_SESSION['professor']           = $_GET['professor'] ? $_GET['professor'] : $_SESSION['professor'];
     $this->horario             = $_SESSION['horario']             = $_GET['horario'] ? $_GET['horario'] : $_SESSION['horario'];
     $this->ref_cod_escola      = $_GET['ref_cod_escola'] ? $_GET['ref_cod_escola'] : $_SESSION['ref_cod_escola'];
@@ -226,17 +225,12 @@ class indice extends clsListagem
       'Institui&ccedil;&atilde;o'
     ));
 
-    
-
-
-    $this->campoTexto("nome","Nome do servidor", $this->nome,50,255,false);
-  //  $this->campoTexto("matricula","Matrícula", $this->matricula,50,255,false);    
+    $this->campoTexto('nome_servidor', 'Nome Servidor', $this->nome_servidor, 30, 255, FALSE);
     $this->campoOculto('tipo', $_GET['tipo']);
 
     // Paginador
     $this->limite = 20;
-    $this->offset = ($_GET['pagina_' . $this->nome]) ?
-      $_GET['pagina_' . $this->nome] * $this->limite - $this->limite : 0;
+    $this->offset = ($_GET['pagina_{$this->nome}']) ? $_GET['pagina_{$this->nome}'] * $this->limite-$this->limite: 0;
 
     $obj_servidor = new clsPmieducarServidor();
     $obj_servidor->setOrderby('carga_horaria ASC');
@@ -247,20 +241,19 @@ class indice extends clsListagem
         $_SESSION['hora_final']);
     }
 
-    // Marca a disciplina como NULL se não for informada, restringindo a busca
-    // aos professores e não selecionar aqueles em que o curso não seja
+    // Marca a disciplina como NULL se n�o for informada, restringindo a busca
+    // aos professores e n�o selecionar aqueles em que o curso n�o seja
     // globalizado e sem disciplinas cadastradas
     $this->ref_cod_disciplina = $this->ref_cod_disciplina ?
       $this->ref_cod_disciplina : NULL;
 
-
-    // Passa NULL para $alocacao_escola_instituicao senão o seu filtro anula
-    // um anterior (referente a selecionar somente servidores não alocados),
-    // selecionando apenas servidores alocados na instituição
- $lista = $obj_servidor->lista(
-      $this->cod_servidor,
+    // Passa NULL para $alocacao_escola_instituicao sen�o o seu filtro anula
+    // um anterior (referente a selecionar somente servidores n�o alocados),
+    // selecionando apenas servidores alocados na institui��o
+    $lista = $obj_servidor->lista(
       NULL,
       NULL,
+      $this->ref_idesco,
       $this->carga_horaria,
       NULL,
       NULL,
@@ -268,37 +261,36 @@ class indice extends clsListagem
       NULL,
       1,
       $this->ref_cod_instituicao,
-      $_SESSION['tipo'], 
-      $array_hora,   
-      NULL, 
-      $this->nome,    
-      $this->matricula,    
-      true,   
-      $this->horario,  
+      $_SESSION['tipo'],
+      $array_hora,
+      $this->ref_cod_servidor,
+      $this->nome_servidor,
+      $this->lst_matriculas,
+      $this->professor,
+      $this->horario,
       TRUE,
-      NULL,
-      $this->matutino,    
-      $this->vespertino, 
-      $this->noturno,    
-      $this->ref_cod_escola,   
-      $hr_mat,   
-      $hr_ves,   
-      $hr_not,   
-      $_SESSION['dia_semana'],   
-      $this->ref_cod_escola,  
-      $this->identificador,   
-      $this->ref_cod_curso,    
-      $this->ref_cod_disciplina    
-
+      TRUE,
+      $this->matutino,
+      $this->vespertino,
+      $this->noturno,
+      $this->ref_cod_escola,
+      $hr_mat,
+      $hr_ves,
+      $hr_not,
+      $_SESSION['dia_semana'],
+      $this->ref_cod_escola,
+      $this->identificador,
+      $this->ref_cod_curso,
+      $this->ref_cod_disciplina
     );
 
     // Se for uma listagem de professores, recupera as disciplinas dadas para
-    // comparação com a de outros professores (somente quando a busca é para
-    // substituição de servidores)
+    // compara��o com a de outros professores (somente quando a busca � para
+    // substitui��o de servidores)
     $disciplinas = array();
     if ('true' == $this->professor) {
       $disciplinas = $obj_servidor->getServidorDisciplinasQuadroHorarioHorarios(
-        $this->cod_servidor, $this->ref_cod_instituicao);
+        $this->ref_cod_servidor, $this->ref_cod_instituicao);
     }
 
     $total = $obj_servidor->_total;
@@ -313,16 +305,27 @@ class indice extends clsListagem
     // monta a lista
     if (is_array($lista) && count($lista)) {
       foreach ($lista as $registro) {
-         if (class_exists('clsFuncionario')) {
-          $obj_cod_servidor      = new clsFuncionario($registro['cod_servidor']);
+        if (class_exists('clsFuncionario')) {
+          $obj_cod_servidor      = new clsFuncionario( $registro['cod_servidor'] );
           $det_cod_servidor      = $obj_cod_servidor->detalhe();
           $registro['matricula'] = $det_cod_servidor['matricula'];
-          // $det_cod_servidor      = $det_cod_servidor['idpes']->detalhe();
-          $det_cod_servidor      = $det_cod_servidor;
-         // $registro['nome']      = $det_cod_servidor['nome'];
-         // $registro['cpf']      = $det_cod_servidor['cpf'];
-        } else {
-          $registro['cod_servidor'] = 'Erro na geracao';
+
+          // Se servidor for professor, verifica se possui as mesmas
+          // disciplinas do servidor a ser substituido (este passo somente �
+          // executado ao buscar um servidor substituto)
+          if ($this->professor == 'true') {
+            $disciplinasSubstituto = clsPmieducarServidor::getServidorDisciplinas(
+              $registro['cod_servidor'], $this->ref_cod_instituicao);
+
+            // Se os arrays diferirem, passa para o pr�ximo resultado
+            if ($disciplinasSubstituto != $disciplinas) {
+              continue;
+            }
+          }
+        }
+        else {
+          $registro["cod_servidor"] = "Erro na geracao";
+          echo "<!--\nErro\nClasse nao existente: clsFuncionario\n-->";
         }
 
         if ($_SESSION['tipo']) {
@@ -358,24 +361,24 @@ class indice extends clsListagem
       }
     }
 
- $this->addPaginador2('educar_servidor_lst.php', $total, $_GET, $this->nome, $this->limite);
+    $this->addPaginador2('educar_pesquisa_servidor_lst.php', $total, $_GET,
+      $this->nome, $this->limite);
+
     $obj_permissoes = new clsPermissoes();
-
-
     $this->largura = '100%';
   }
 }
 
-// Instancia objeto de página
+// Instancia objeto de p�gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conteúdo
+// Instancia objeto de conte�do
 $miolo = new indice();
 
-// Atribui o conteúdo à  página
+// Atribui o conte�do �� p�gina
 $pagina->addForm($miolo);
 
-// Gera o código HTML
+// Gera o c�digo HTML
 $pagina->MakeAll();
 ?>
 <script type="text/javascript">
