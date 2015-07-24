@@ -82,7 +82,7 @@ class indice extends clsCadastro
   var $carga_horaria_alocada;
   var $carga_horaria_disponivel;
   var $periodo;
-
+  var $ref_cod_funcionario_vinculo;
   var $alocacao_array          = array();
   var $alocacao_excluida_array = array();
 
@@ -131,7 +131,8 @@ class indice extends clsCadastro
           $this->alocacao_array[$qtd_registros][] = $campo['ref_cod_escola'];
           $this->alocacao_array[$qtd_registros][] = $campo['periodo'];          
           $this->alocacao_array[$qtd_registros][] = $campo["carga_horaria"];
-          $this->alocacao_array[$qtd_registros][] = $campo['ref_cod_servidor_funcao'];          
+          $this->alocacao_array[$qtd_registros][] = $campo['ref_cod_servidor_funcao'];  
+          $this->alocacao_array[$qtd_registros][] = $campo['ref_cod_funcionario_vinculo'];          
 
           $qtd_registros++;
         }
@@ -182,7 +183,7 @@ class indice extends clsCadastro
 
     // Início tabela
 
-    $this->campoTabelaInicio("alocaoes_servidor","Aloca&ccedil;&otilde;es do servidor",array("Escola","Período","Carga hor&aacute;ria", "Fun&ccedil;&atilde;o"),$this->alocacao_array);
+    $this->campoTabelaInicio("alocaoes_servidor","Aloca&ccedil;&otilde;es do servidor",array("Escola","Período","Carga hor&aacute;ria", "Fun&ccedil;&atilde;o", "V&iacute;nculo"),$this->alocacao_array);
 
     // Escolas
     $obj_escola = new clsPmieducarEscola();
@@ -231,6 +232,11 @@ class indice extends clsCadastro
     $this->campoLista('cod_servidor_funcao', 'Função', $opcoes, $this->cod_servidor_funcao,
       '', FALSE, '', '', FALSE, FALSE);
 
+$opcoes = array("" => "Selecione", 5 => "Comissionado", 4 => "Contratado", 3 => "Efetivo", 6 => "Estagi&aacute;rio");
+
+    $this->campoLista("ref_cod_funcionario_vinculo", "V&iacute;nculo", $opcoes, $this->ref_cod_funcionario_vinculo, NULL, FALSE,
+      '', '', FALSE, FALSE);
+
     $this->campoTabelaFim();
   }
 
@@ -259,7 +265,8 @@ class indice extends clsCadastro
             $this->alocacao_array[$key][] = $value;
             $this->alocacao_array[$key][] = $this->periodo[$key];
             $this->alocacao_array[$key][] = $this->carga_horaria_alocada[$key];
-            $this->alocacao_array[$key][] = $this->cod_servidor_funcao[$key];  
+            $this->alocacao_array[$key][] = $this->cod_servidor_funcao[$key]; 
+            $this->alocacao_array[$key][] = $this->ref_cod_funcionario_vinculo[$key];  
           }
           return false;
         }else{
@@ -274,7 +281,7 @@ class indice extends clsCadastro
           $obj = new clsPmieducarServidorAlocacao(NULL, $this->ref_ref_cod_instituicao,
             NULL, $this->pessoa_logada, $value,
             $this->ref_cod_servidor, NULL, NULL, $this->ativo,
-            $cargaHoraria, $this->periodo[$key], $this->cod_servidor_funcao[$key]);        
+            $cargaHoraria, $this->periodo[$key], $this->cod_servidor_funcao[$key], $this->ref_cod_funcionario_vinculo[$key]);        
           $cadastrou = FALSE;
 
           $cadastrou = $obj->cadastra();
@@ -294,7 +301,8 @@ class indice extends clsCadastro
         $this->alocacao_array[$key][] = $value;
         $this->alocacao_array[$key][] = $this->periodo[$key];
         $this->alocacao_array[$key][] = $this->carga_horaria_alocada[$key];
-        $this->alocacao_array[$key][] = $this->cod_servidor_funcao[$key];  
+        $this->alocacao_array[$key][] = $this->cod_servidor_funcao[$key]; 
+        $this->alocacao_array[$key][] = $this->ref_cod_funcionario_vinculo[$key];  
       }
       return false;
     }    

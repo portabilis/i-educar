@@ -54,7 +54,7 @@ class clsPmieducarServidorAlocacao
   var $ativo;
   var $carga_horaria;
   var $periodo;
-
+  var $ref_cod_funcionario_vinculo;
   /**
    * Carga horária máxima para um período de alocação (em horas).
    * @var float
@@ -132,13 +132,14 @@ class clsPmieducarServidorAlocacao
     $ativo = NULL, 
     $carga_horaria = NULL, 
     $periodo = NULL, 
-    $ref_cod_servidor_funcao = NULL)
+    $ref_cod_servidor_funcao = NULL, 
+    $ref_cod_funcionario_vinculo = NULL)
   {
     $db = new clsBanco();
     $this->_schema = 'pmieducar.';
     $this->_tabela = $this->_schema . 'servidor_alocacao';
 
-    $this->_campos_lista = $this->_todos_campos = 'cod_servidor_alocacao, ref_ref_cod_instituicao, ref_usuario_exc, ref_usuario_cad, ref_cod_escola, ref_cod_servidor, data_cadastro, data_exclusao, ativo, carga_horaria, periodo, ref_cod_servidor_funcao ';
+    $this->_campos_lista = $this->_todos_campos = 'cod_servidor_alocacao, ref_ref_cod_instituicao, ref_usuario_exc, ref_usuario_cad, ref_cod_escola, ref_cod_servidor, data_cadastro, data_exclusao, ativo, carga_horaria, periodo, ref_cod_servidor_funcao, ref_cod_funcionario_vinculo ';
 
     if (is_numeric($ref_usuario_cad)) {
       $usuario = new clsPmieducarUsuario($ref_usuario_cad);
@@ -189,6 +190,10 @@ class clsPmieducarServidorAlocacao
 
     if (is_numeric($ref_cod_servidor_funcao)) {
       $this->ref_cod_servidor_funcao = $ref_cod_servidor_funcao;
+    }
+
+    if (is_numeric($ref_cod_funcionario_vinculo)) {
+      $this->ref_cod_funcionario_vinculo = $ref_cod_funcionario_vinculo;
     }
 
     // Valida a carga horária
@@ -249,6 +254,12 @@ class clsPmieducarServidorAlocacao
       if (is_numeric($this->ref_cod_servidor_funcao)) {
         $campos  .= "{$gruda}ref_cod_servidor_funcao";
         $valores .= "{$gruda}'{$this->ref_cod_servidor_funcao}'";
+        $gruda    = ', ';
+      }
+
+      if (is_numeric($this->ref_cod_funcionario_vinculo)) {
+        $campos  .= "{$gruda}ref_cod_funcionario_vinculo";
+        $valores .= "{$gruda}'{$this->ref_cod_funcionario_vinculo}'";
         $gruda    = ', ';
       }
 
@@ -321,6 +332,11 @@ class clsPmieducarServidorAlocacao
 
       if (is_numeric($this->ref_cod_servidor_funcao)) {
         $set  .= "{$gruda}ref_cod_servidor_funcao = '{$this->ref_cod_servidor_funcao}'";
+        $gruda = ', ';
+      }
+
+      if (is_numeric($this->ref_cod_funcionario_vinculo)) {
+        $set  .= "{$gruda}ref_cod_funcionario_vinculo = '{$this->ref_cod_funcionario_vinculo}'";
         $gruda = ', ';
       }
 
