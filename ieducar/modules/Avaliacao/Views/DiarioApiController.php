@@ -1501,11 +1501,7 @@ class DiarioApiController extends ApiCoreController
   }
 
   protected function usaAuditoriaNotas(){
-    $objInstituicao = new clsPmieducarInstituicao($this->getRequest()->instituicao_id);
-    $detInstituicao = $objInstituicao->detalhe();
-    $utilizaAuditoriaNotas = dbBool($detInstituicao["auditar_notas"]);
-
-    return $utilizaAuditoriaNotas;
+    return ($GLOBALS['coreExt']['Config']->app->auditoria->notas == "1");
   }
 
   public function canChange(){
