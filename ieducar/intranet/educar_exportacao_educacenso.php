@@ -1265,6 +1265,9 @@ class indice extends clsCadastro
       $r60s8 = is_numeric($r60s8) ? $r60s8 : 0;
       $r60s9 = (int) !(is_null($r60s10) && is_null($r60s11));
 
+      $r60s10 = $this->upperAndUnaccent($r60s10);
+      $r60s11 = $this->upperAndUnaccent($r60s11);
+
       if($r60s12 == '1' || $r60s12 == '2')
         $r60s13 = 76;
 
