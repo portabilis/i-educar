@@ -370,6 +370,7 @@ class indice extends clsCadastro
       $r00s16 = $this->upperAndUnaccent($r00s16);
       $r00s17 = $this->upperAndUnaccent($r00s17);
       $r00s26 = $this->upperAndUnaccent($r00s26);
+      $r00s27 = str_pad($r00s27, 5, "0", STR_PAD_LEFT);
 
       if($r00s28 <> 4)
         $r00s32 = $r00s33 = $r00s34 = $r00s35 = $r00s36 = '';
