@@ -784,9 +784,17 @@ class indice extends clsCadastro
       $r30s8 = Portabilis_Date_Utils::pgSQLToBr($r30s8);
       $r30s9 = $r30s9 == 'M' ? 1 : 2;
       $r30s10 = is_numeric($r30s10) ? $r30s10 : 0;
+      $r30s11 = $this->upperAndUnaccent($r30s11);
 
       if($r30s12 == '1' || $r30s12 == '2')
         $r30s13 = 76;
+
+      if($r30s12 == "1"){
+        if(is_null($r30s14) || is_null($r30s15)){
+          $this->msg .= "Dados para formular o registro 30 da escola {$escolaId} não encontrados. Verifique se os municípios e UFs dos servidores brasileiros possuem código INEP cadastrados.<br/>";
+          $this->error = true;
+        }
+      }
 
       $sql = 'select distinct(deficiencia_educacenso) as id from cadastro.fisica_deficiencia,
               cadastro.deficiencia where cod_deficiencia = ref_cod_deficiencia and ref_idpes = $1
@@ -794,7 +802,7 @@ class indice extends clsCadastro
 
       $deficiencias = Portabilis_Utils_Database::fetchPreparedQuery($sql, array( 'params' => array($r30s4)));
 
-      $r30s17 = $r30s18 = $r30s19 = $r30s20 = $r30s21 = $r30s22 = $r30s23 = $r30s24 = 0;
+      $r30s17 = $r30s18 = $r30s19 = $r30s20 = $r30s21 = $r30s22 = $r30s23 = $r30s24 = null;
 
       $deficienciaToSeq = array( 1 => '17',
                                  2 => '18',
