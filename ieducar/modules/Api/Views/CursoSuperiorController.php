@@ -38,7 +38,7 @@ class CursoSuperiorController extends ApiCoreController
   protected function sqlsForStringSearch() {
 
     $sqls[] = "SELECT   id,
-                        (nome || ' - ' || (case grau_academico
+                        (nome || ' / ' || (case grau_academico
                                                when 1 then 'Tecnologo'
                                                when 2 then 'Licenciatura'
                                                when 3 then 'Bacharelado' end)) as name
