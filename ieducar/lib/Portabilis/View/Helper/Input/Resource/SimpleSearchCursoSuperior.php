@@ -47,7 +47,12 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchCursoSuperior extends Po
 
   protected function resourceValue($id) {
     if ($id) {
-      $sql       = "select nome from modules.educacenso_curso_superior where id = $1";
+      $sql       = "select (nome || ' / ' || (case grau_academico
+                                               when 1 then 'Tecnologo'
+                                               when 2 then 'Licenciatura'
+                                               when 3 then 'Bacharelado' end)) as nome
+                      from modules.educacenso_curso_superior where id = $1";
+
       $options   = array('params' => $id, 'return_only' => 'first-row');
       $curso_superior = Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
       $nome      = $curso_superior['nome'];

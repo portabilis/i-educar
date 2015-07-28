@@ -992,30 +992,30 @@ class indice extends clsCadastro
           					&& is_null($r50s36) && is_null($r50s37) && is_null($r50s38) && is_null($r50s39) && is_null($r50s40)
           					&& is_null($r50s41) && is_null($r50s42) && is_null($r50s43) && is_null($r50s44) && is_null($r50s45);
 
-      if($grau_academico_curso_superior_1 == BACHARELADO || $grau_academico_curso_superior_1 == TECNOLOGO){
+      if($grau_academico_curso_superior_1 == self::BACHARELADO || $grau_academico_curso_superior_1 == self::TECNOLOGO){
         if(is_null($r50s7)){
           $this->msg .= "Dados para formular o registro 50 do servidor {$servidorId} com problemas. O registro 7 é obrigatório para cursos do tipo BACHARELADO ou TECNOLOGO.<br/>";
           $this->error = true;
         }
-      }elseif($grau_academico_curso_superior_1 == LICENCIATURA){
+      }elseif($grau_academico_curso_superior_1 == self::LICENCIATURA){
         $r50s7 = NULL;
       }
 
-      if($grau_academico_curso_superior_2 == BACHARELADO || $grau_academico_curso_superior_2 == TECNOLOGO){
+      if($grau_academico_curso_superior_2 == self::BACHARELADO || $grau_academico_curso_superior_2 == self::TECNOLOGO){
         if(is_null($r50s14)){
           $this->msg .= "Dados para formular o registro 50 do servidor {$servidorId} com problemas. O registro 14 é obrigatório para cursos do tipo BACHARELADO ou TECNOLOGO.<br/>";
           $this->error = true;
         }
-      }elseif($grau_academico_curso_superior_2 == LICENCIATURA){
+      }elseif($grau_academico_curso_superior_2 == self::LICENCIATURA){
         $r50s14 = NULL;
       }
 
-      if($grau_academico_curso_superior_3 == BACHARELADO || $grau_academico_curso_superior_3 == TECNOLOGO){
+      if($grau_academico_curso_superior_3 == self::BACHARELADO || $grau_academico_curso_superior_3 == self::TECNOLOGO){
         if(is_null($r50s21)){
           $this->msg .= "Dados para formular o registro 50 do servidor {$servidorId} com problemas. O registro 21 é obrigatório para cursos do tipo BACHARELADO ou TECNOLOGO.<br/>";
           $this->error = true;
         }
-      }elseif($grau_academico_curso_superior_3 == LICENCIATURA){
+      }elseif($grau_academico_curso_superior_3 == self::LICENCIATURA){
         $r50s21 = NULL;
       }
 
