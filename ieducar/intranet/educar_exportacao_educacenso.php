@@ -226,7 +226,7 @@ class indice extends clsCadastro
   }
 
   protected function getServidores($escolaId){
-    $sql = 'SELECT cod_servidor as id
+    $sql = 'SELECT distinct cod_servidor as id
               FROM pmieducar.servidor
               INNER JOIN pmieducar.servidor_alocacao ON (ref_cod_servidor = cod_servidor)
               WHERE ref_cod_escola = $1';
