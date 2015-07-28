@@ -997,6 +997,8 @@ class indice extends clsCadastro
           $this->msg .= "Dados para formular o registro 50 do servidor {$servidorId} com problemas. O registro 7 é obrigatório para cursos do tipo BACHARELADO ou TECNOLOGO.<br/>";
           $this->error = true;
         }
+      }elseif($grau_academico_curso_superior_1 == LICENCIATURA){
+        $r50s7 = NULL;
       }
 
       if($grau_academico_curso_superior_2 == BACHARELADO || $grau_academico_curso_superior_2 == TECNOLOGO){
@@ -1004,6 +1006,8 @@ class indice extends clsCadastro
           $this->msg .= "Dados para formular o registro 50 do servidor {$servidorId} com problemas. O registro 14 é obrigatório para cursos do tipo BACHARELADO ou TECNOLOGO.<br/>";
           $this->error = true;
         }
+      }elseif($grau_academico_curso_superior_2 == LICENCIATURA){
+        $r50s14 = NULL;
       }
 
       if($grau_academico_curso_superior_3 == BACHARELADO || $grau_academico_curso_superior_3 == TECNOLOGO){
@@ -1011,6 +1015,8 @@ class indice extends clsCadastro
           $this->msg .= "Dados para formular o registro 50 do servidor {$servidorId} com problemas. O registro 21 é obrigatório para cursos do tipo BACHARELADO ou TECNOLOGO.<br/>";
           $this->error = true;
         }
+      }elseif($grau_academico_curso_superior_3 == LICENCIATURA){
+        $r50s21 = NULL;
       }
 
       $cont= 0;
