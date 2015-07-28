@@ -83,6 +83,10 @@ class indice extends clsCadastro
   var $error = false;
 
 
+  const TECNOLOGO = 1;
+  const LICENCIATURA = 2;
+  const BACHARELADO = 3;
+
   function Inicializar()
   {
     @session_start();
@@ -921,7 +925,8 @@ class indice extends clsCadastro
 		esc.escolaridade as r50s5,
 		situacao_curso_superior_1 as r50s6,
 		formacao_complementacao_pedagogica_1 as r50s7,
-		(SELECT curso_id FROM modules.educacenso_curso_superior ecs WHERE ecs.id = codigo_curso_superior_1) as r50s8,
+    (SELECT curso_id FROM modules.educacenso_curso_superior ecs WHERE ecs.id = codigo_curso_superior_1) as r50s8,
+		(SELECT grau_academico FROM modules.educacenso_curso_superior ecs WHERE ecs.id = codigo_curso_superior_1) as grau_academico_curso_superior_1,
 		ano_inicio_curso_superior_1 as r50s9,
 		ano_conclusao_curso_superior_1 as r50s10,
 		tipo_instituicao_curso_superior_1 as r50s11,
@@ -929,6 +934,7 @@ class indice extends clsCadastro
 		situacao_curso_superior_2 as r50s13,
 		formacao_complementacao_pedagogica_2 as r50s14,
     (SELECT curso_id FROM modules.educacenso_curso_superior ecs WHERE ecs.id = codigo_curso_superior_2) as r50s15,
+    (SELECT grau_academico FROM modules.educacenso_curso_superior ecs WHERE ecs.id = codigo_curso_superior_2) as grau_academico_curso_superior_2,
 		ano_inicio_curso_superior_2 as r50s16,
 		ano_conclusao_curso_superior_2 as r50s17,
 		tipo_instituicao_curso_superior_2 as r50s18,
@@ -936,6 +942,7 @@ class indice extends clsCadastro
 		situacao_curso_superior_3 as r50s20,
 		formacao_complementacao_pedagogica_3 as r50s21,
 		(SELECT curso_id FROM modules.educacenso_curso_superior ecs WHERE ecs.id = codigo_curso_superior_3) as r50s22,
+    (SELECT grau_academico FROM modules.educacenso_curso_superior ecs WHERE ecs.id = codigo_curso_superior_3) as grau_academico_curso_superior_3,
 		ano_inicio_curso_superior_3 as r50s23,
 		ano_conclusao_curso_superior_3 as r50s24,
 		tipo_instituicao_curso_superior_3 as r50s25,
@@ -984,6 +991,28 @@ class indice extends clsCadastro
       $r50s46 = (int) is_null($r50s31) && is_null($r50s32) && is_null($r50s33) && is_null($r50s34) && is_null($r50s35)
           					&& is_null($r50s36) && is_null($r50s37) && is_null($r50s38) && is_null($r50s39) && is_null($r50s40)
           					&& is_null($r50s41) && is_null($r50s42) && is_null($r50s43) && is_null($r50s44) && is_null($r50s45);
+
+      if($grau_academico_curso_superior_1 == BACHARELADO || $grau_academico_curso_superior_1 == TECNOLOGO){
+        if(is_null($r50s7)){
+          $this->msg .= "Dados para formular o registro 50 do servidor {$servidorId} com problemas. O registro 7 é obrigatório para cursos do tipo BACHARELADO ou TECNOLOGO.<br/>";
+          $this->error = true;
+        }
+      }
+
+      if($grau_academico_curso_superior_2 == BACHARELADO || $grau_academico_curso_superior_2 == TECNOLOGO){
+        if(is_null($r50s14)){
+          $this->msg .= "Dados para formular o registro 50 do servidor {$servidorId} com problemas. O registro 14 é obrigatório para cursos do tipo BACHARELADO ou TECNOLOGO.<br/>";
+          $this->error = true;
+        }
+      }
+
+      if($grau_academico_curso_superior_3 == BACHARELADO || $grau_academico_curso_superior_3 == TECNOLOGO){
+        if(is_null($r50s21)){
+          $this->msg .= "Dados para formular o registro 50 do servidor {$servidorId} com problemas. O registro 21 é obrigatório para cursos do tipo BACHARELADO ou TECNOLOGO.<br/>";
+          $this->error = true;
+        }
+      }
+
       $cont= 0;
       for ($i=1; $i <= $numeroRegistros; $i++){
         if($i >= 31)

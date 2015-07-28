@@ -35,6 +35,20 @@ class CursoSuperiorController extends ApiCoreController
 {
   // search options
 
+  protected function sqlsForStringSearch() {
+
+    $sqls[] = "SELECT   id,
+                        (nome || ' - ' || (case grau_academico
+                                               when 1 then 'Tecnologo'
+                                               when 2 then 'Licenciatura'
+                                               when 3 then 'Bacharelado' end)) as name
+                from modules.educacenso_curso_superior 
+                WHERE nome ILIKE '%'||$1||'%'
+                LIMIT 15";
+
+    return $sqls;
+  }
+
   protected function searchOptions() {
     return array('namespace' => 'modules', 'table' => 'educacenso_curso_superior', 'idAttr' => 'id');
   }
