@@ -1186,7 +1186,7 @@ class indice extends clsCadastro
 			INNER JOIN cadastro.pessoa p ON (fis.idpes = p.idpes)
 			INNER JOIN modules.professor_turma pt ON (pt.servidor_id = s.cod_servidor)
 			INNER JOIN pmieducar.turma t ON (pt.turma_id = t.cod_turma)
-      INNER JOIN pmieducar.escola e ON (t.ref_cod_escola = e.cod_escola)
+      INNER JOIN pmieducar.escola e ON (t.ref_ref_cod_escola = e.cod_escola)
       INNER JOIN modules.educacenso_cod_escola ece ON (ece.cod_escola = e.cod_escola)
       LEFT JOIN modules.educacenso_cod_docente ecd ON ecd.cod_servidor = s.cod_servidor
 			WHERE s.cod_servidor = $1
