@@ -531,6 +531,16 @@ class indice extends clsCadastro
       if($r10s3 == 0)
         $r10s13 = NULL;
 
+      if($r10s3 <> 1 && $r10s8 <> 1)
+        $r10s12 = NULL;
+
+      if($r10s3 == 1){
+        if(is_null($r10s12)){
+          $this->msg .= "Dados para formular o registro 10 campo 12 da escola {$escolaId} com problemas. Obrigatório quando o campo 3 for igual a 1 <br/>";
+          $this->error = true;
+        }
+      }
+
       $r10s96 = ($r10s96 == 1 && ($r10s92 == 1 || $r10s93 == 1)) ? 1 : (($r10s92 == 1 || $r10s93 == 1) ? 0 : NULL);
 
       if($r10s91 != 2)
