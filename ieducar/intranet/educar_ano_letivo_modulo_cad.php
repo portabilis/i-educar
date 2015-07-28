@@ -135,11 +135,37 @@ class indice extends clsCadastro
     $det_escola = $obj_escola->detalhe();
     $ref_cod_instituicao = $det_escola['ref_cod_instituicao'];
 
+    $obj = new clsPmieducarAnoLetivoModulo();
+    $obj->setOrderBy('sequencial ASC');
+    $registros = $obj->lista($this->ref_ano - 1, $this->ref_ref_cod_escola);
+    $cont = 0;
+    $modulosAnoAnterior = "";
+    if ($registros) {
+
+      $tabela = "<table border=0 style='' cellpadding=2 width='100%'>";
+      $tabela .= "<tr bgcolor=$cor><td colspan='2'><b>Modulos do ano anterior (".($this->ref_ano - 1).")</b></td></tr><tr><td>";
+      $tabela .= "<table cellpadding=\"2\" cellspacing=\"2\" border=\"0\" align=\"left\" width='300px'>";
+      $tabela .= "<tr bgcolor='#A1B3BD'><th width='100px'>Etapa<a name='ano_letivo'/></th><th width='200px'>Período</th></tr>";
+
+     foreach ($registros as $campo) {
+      $cor = "#E3E8EF"; #$cor == "#FFFFFF" ? "#E3E8EF" : "#FFFFFF";
+      $cont++;
+      $tabela .= "<tr bgcolor='$cor'><td align='center'>{$cont}</td><td align='center'>".dataFromPgToBr($campo['data_inicio'])." à ".dataFromPgToBr($campo['data_fim'])."</td></tr>";
+      //$modulosAnoAnterior .= ++$cont."ª Etapa: De ".dataFromPgToBr($campo['data_inicio'])." à ".dataFromPgToBr($campo['data_fim']);
+     }
+
+     $tabela .="</table>";
+     $tabela .= "<tr><td colspan='2'><b> Adicione os módulos abaixo para {$this->ref_ano} semelhante ao exemplo do ano anterior: </b></td></tr><tr><td>";
+     $tabela .= "</table>";
+    }
+
     $ref_ano_ = $this->ref_ano;
     $this->campoTexto('ref_ano_', 'Ano', $ref_ano_, 4, 4, FALSE, FALSE, FALSE,
       '', '', '', '', TRUE);
 
     $this->campoQuebra();
+    if ($tabela)
+      $this->campoRotulo('modulosAnoAnterior', '-', $tabela);
 
     // Módulos do ano letivo
     if ($_POST['ano_letivo_modulo']) {
