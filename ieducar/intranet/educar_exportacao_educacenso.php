@@ -82,6 +82,7 @@ class indice extends clsCadastro
   var $msg = "";
   var $error = false;
 
+  var $turma_presencial_ou_semi;
 
   const TECNOLOGO = 1;
   const LICENCIATURA = 2;
@@ -739,6 +740,8 @@ class indice extends clsCadastro
         }
 
       }
+
+      $this->turma_presencial_ou_semi = $r20s6;
       $d = '|';
       $return = '';
 
@@ -1660,6 +1663,14 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
           ${'r80s'.$i} = NULL;
         }
       }
+
+      if($this->turma_presencial_ou_semi == 1 || $this->turma_presencial_ou_semi == 2){
+        if(is_null($r80s11)){
+          $this->msg .= "Dados para formular o registro 20 campo 11 da escola {$escolaId} com problemas. Verifique se o campo transporte escolar foi preenchido no aluno {$alunoId}.<br/>";
+          $this->error = true;
+        }
+      }
+
       // fim validações transporte escolar
 
       for ($i=1; $i <= $numeroRegistros ; $i++)
