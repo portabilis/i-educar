@@ -1370,15 +1370,15 @@ class indice extends clsCadastro
         $r60s17 = $r60s18 = $r60s19 = $r60s20 = $r60s21 = $r60s22 = $r60s23 = $r60s24 =
                   $r60s25 = $r60s26 = $r60s27 = $r60s28 = $r60s29 = NULL;
 
-      if($r60s17 == 0 && $r60s21 == 0){
+      if($r60s16 == 0){
+        for($i=30; $i <= 39; $i++){
+          ${'r60s'.$i} = NULL;
+        }
+      }else{
         for($i=30; $i <= 38; $i++){
           ${'r60s'.$i} = 0;
         }
         $r60s39 = 1;
-      }elseif($r6016 == 0){
-        for($i=30; $i <= 39; $i++){
-          ${'r60s'.$i} = NULL;
-        }
       }
 
       for ($i=1; $i <= $numeroRegistros ; $i++)
