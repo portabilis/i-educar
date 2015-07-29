@@ -1644,29 +1644,54 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
           ${'r80s'.$i} = 0;
 
       // validações transporte escolar
-      $r80s11 = $r80s12 = NULL;
-      if ($transporte_escolar){
-        $veiculo = false;
-        for ($i=13; $i <= 23 ; $i++) {
-          if (${'r80s'.$i} == 1)
-            $veiculo = true;
-        }
-        if ($veiculo)
-          $r80s11 = 1;
-        elseif($veiculo_transporte_escolar){
-          $r80s11 = 1;
-          ${'r80s'.($veiculo_transporte_escolar + 12)} = 1;
-        }
-        $r80s12 = $transporte_escolar;
+
+      // if ($transporte_escolar){
+      //   $veiculo = false;
+      //   for ($i=13; $i <= 23 ; $i++) {
+      //     if (${'r80s'.$i} == 1)
+      //       $veiculo = true;
+      //   }
+      //   if ($veiculo)
+      //     $r80s11 = 1;
+      //   elseif($veiculo_transporte_escolar){
+      //     $r80s11 = 1;
+      //     ${'r80s'.($veiculo_transporte_escolar + 12)} = 1;
+      //   }
+      //   $r80s12 = $transporte_escolar;
+      // }else{
+      //   for ($i=13; $i <= 23 ; $i++) {
+      //     ${'r80s'.$i} = NULL;
+      //   }
+      // }
+
+      if(is_null($transporte_escolar)){
+        $r80s11 = NULL;
       }else{
-        for ($i=13; $i <= 23 ; $i++) {
+        $r80s11 = (($transporte_escolar == 0 ) ? 0 : 1);
+        if($r80s11){
+          $r80s12 = $transporte_escolar;
+        }
+      }
+      ${'r80s'.($veiculo_transporte_escolar + 12)} = 1;
+      $utiliza_algum_veiculo = FALSE;
+      for($i=13; $i<=23;$i++){
+        $utiliza_algum_veiculo = (${'r80s'.$i} == 1) || $utiliza_algum_veiculo;
+      }
+
+      if(!$transporte_escolar){
+        for($i=13; $i<=23;$i++){
           ${'r80s'.$i} = NULL;
         }
       }
 
+      if($transporte_escolar && !$utiliza_algum_veiculo){
+        $this->msg .= "Dados para formular o registro 80 campo 11 da escola {$escolaId} com problemas. Verifique se o campo tipo de veículo foi preenchido no aluno {$alunoId}.<br/>";
+        $this->error = true;
+      }
+
       if($this->turma_presencial_ou_semi == 1 || $this->turma_presencial_ou_semi == 2){
         if(is_null($r80s11)){
-          $this->msg .= "Dados para formular o registro 20 campo 11 da escola {$escolaId} com problemas. Verifique se o campo transporte escolar foi preenchido no aluno {$alunoId}.<br/>";
+          $this->msg .= "Dados para formular o registro 80 campo 11 da escola {$escolaId} com problemas. Verifique se o campo transporte escolar foi preenchido para aluno {$alunoId}.<br/>";
           $this->error = true;
         }
       }
