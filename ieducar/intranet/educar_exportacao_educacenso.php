@@ -735,7 +735,7 @@ class indice extends clsCadastro
           }
 
           if (array_key_exists($codigoEducacenso, $coddigoEducacensoToSeq)){
-          	${ 'r20s'. $coddigoEducacensoToSeq[$codigoEducacenso] } = $professorVinculado ? 2 : 1;
+          	${ 'r20s'. $coddigoEducacensoToSeq[$codigoEducacenso] } = $professorVinculado ? 1 : 2;
         	}
         }
 
