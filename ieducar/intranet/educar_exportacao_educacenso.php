@@ -1375,6 +1375,10 @@ class indice extends clsCadastro
           ${'r60s'.$i} = 0;
         }
         $r60s39 = 1;
+      }elseif($r6016 == 0){
+        for($i=30; $i <= 39; $i++){
+          ${'r60s'.$i} = NULL;
+        }
       }
 
       for ($i=1; $i <= $numeroRegistros ; $i++)
