@@ -57,9 +57,9 @@ class ReservavagaController extends ApiCoreController
                 LEFT JOIN cadastro.fisica fisica_responsavel ON (fisica_responsavel.idpes = fisica.idpes_responsavel)
                WHERE fisica.data_nasc = $3
                  AND candidato_reserva_vaga.ano_letivo = $2
-                 AND translate(public.fcn_upper(pessoa.nome),
+                 AND translate(public.fcn_upper(trim(pessoa.nome)),
                      'åáàãâäéèêëíìîïóòõôöúùüûçÿýñÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ',
-                     'aaaaaaeeeeiiiiooooouuuucyynAAAAAAEEEEIIIIOOOOOUUUUCYN') = translate(public.fcn_upper($1),
+                     'aaaaaaeeeeiiiiooooouuuucyynAAAAAAEEEEIIIIOOOOOUUUUCYN') = translate(public.fcn_upper(trim($1)),
                      'åáàãâäéèêëíìîïóòõôöúùüûçÿýñÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ',
                      'aaaaaaeeeeiiiiooooouuuucyynAAAAAAEEEEIIIIOOOOOUUUUCYN')";
 
@@ -88,9 +88,9 @@ class ReservavagaController extends ApiCoreController
                 WHERE fisica.data_nasc = $3
                   AND responsavel.cpf = $2
                   AND matricula.aprovado = 3
-                  AND translate(public.fcn_upper(pessoa.nome),
+                  AND translate(public.fcn_upper(trim(pessoa.nome)),
                       'åáàãâäéèêëíìîïóòõôöúùüûçÿýñÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ',
-                      'aaaaaaeeeeiiiiooooouuuucyynAAAAAAEEEEIIIIOOOOOUUUUCYN') = translate(public.fcn_upper($1),
+                      'aaaaaaeeeeiiiiooooouuuucyynAAAAAAEEEEIIIIOOOOOUUUUCYN') = translate(public.fcn_upper(trim($1)),
                       'åáàãâäéèêëíìîïóòõôöúùüûçÿýñÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ',
                       'aaaaaaeeeeiiiiooooouuuucyynAAAAAAEEEEIIIIOOOOOUUUUCYN')";
 
