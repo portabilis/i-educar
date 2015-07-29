@@ -1022,6 +1022,10 @@ class indice extends clsCadastro
         $r50s21 = NULL;
       }
 
+      if($r50s6 != 1){ $r50s7 = NULL;}
+      if($r50s13 != 1){ $r50s14 = NULL;}
+      if($r50s20 != 1){ $r50s21 = NULL;}
+
       $cont= 0;
       for ($i=1; $i <= $numeroRegistros; $i++){
         if($i >= 31)
