@@ -714,25 +714,13 @@ class indice extends clsCadastro
           // Verifica se é disciplina padrão ano letivo. Se for, será considerado que existe professor
           // vinculado a disciplina na sala de aula
 
-          $padraoAnoLetivo =
-            !(bool)Portabilis_Utils_Database::selectField('SELECT 1
-                                                            FROM componente_curricular_turma
-                                                            WHERE turma_id = $1
-                                                            AND componente_curricular_id = $2
-                                                            LIMIT 1',
-                                                            array('params' => array($turmaId, $codigoSistema)));
-
-          $professorVinculado = true;
-          if (!$padraoAnoLetivo){
-            $professorVinculado =
-              Portabilis_Utils_Database::selectField('SELECT docente_vinculado
-                                                              FROM componente_curricular_turma
-                                                              WHERE turma_id = $1
-                                                              AND componente_curricular_id = $2
-                                                              LIMIT 1',
-                                                              array('params' => array($turmaId, $codigoSistema)));
-            $professorVinculado = $professorVinculado['docente_vinculado'];
-          }
+          $professorVinculado = (bool)Portabilis_Utils_Database::selectField('select 1 
+                                                                          from modules.professor_turma
+                                                                         inner join modules.professor_turma_disciplina on(professor_turma_disciplina.professor_turma_id = professor_turma.id)
+                                                                         where professor_turma.turma_id = $1
+                                                                           and professor_turma.funcao_exercida = 1
+                                                                           and professor_turma_disciplina.componente_curricular_id = $2',
+                                                                           array('params' => array($turmaId, $codigoSistema)));;
 
           if (array_key_exists($codigoEducacenso, $coddigoEducacensoToSeq)){
           	${ 'r20s'. $coddigoEducacensoToSeq[$codigoEducacenso] } = $professorVinculado ? 1 : 2;
