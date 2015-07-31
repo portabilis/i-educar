@@ -4,6 +4,6 @@
   -- @license  @@license@@
   -- @version  $Id$
 
-  ALTER TABLE pmieducar.instituicao ADD COLUMN permicao_filtro_abandono_transferencia boolean;
+  ALTER TABLE pmieducar.instituicao ADD COLUMN permissao_filtro_abandono_transferencia boolean;
 
   -- //
