@@ -80,7 +80,7 @@ class indice extends clsCadastro
 	var $matricula_apenas_bairro_escola;
 	var $restringir_historico_escolar;
 	var $restringir_multiplas_enturmacoes;
-	var $permicao_filtro_abandono_transferencia;
+	var $permissao_filtro_abandono_transferencia;
 	function Inicializar()
 	{
 		$retorno = "Novo";
@@ -126,7 +126,7 @@ class indice extends clsCadastro
         $this->matricula_apenas_bairro_escola 	= dbBool($this->matricula_apenas_bairro_escola);
         $this->restringir_historico_escolar   	= dbBool($this->restringir_historico_escolar);
         $this->restringir_multiplas_enturmacoes	= dbBool($this->restringir_multiplas_enturmacoes);
-        $this->permicao_filtro_abandono_transferencia	= dbBool($this->permicao_filtro_abandono_transferencia);
+        $this->permissao_filtro_abandono_transferencia	= dbBool($this->permissao_filtro_abandono_transferencia);
 
 		return $retorno;
 	}
@@ -224,7 +224,7 @@ class indice extends clsCadastro
 		$this->campoNumero( "quantidade_alunos_metro_quadrado", "Quantidade máxima de alunos permitidos por metro quadrado", $this->quantidade_alunos_metro_quadrado, 6, 6 );
 
 	$this->campoCheck("restringir_multiplas_enturmacoes", "Não permitir múltiplas enturmações para o aluno no mesmo curso e série/ano", $this->restringir_multiplas_enturmacoes);
-	$this->campoCheck("permicao_filtro_abandono_transferencia", "Não permitir a apresentação de alunos com matrícula em abandono ou transferida na emissão do relatório de frequência", $this->permicao_filtro_abandono_transferencia);
+	$this->campoCheck("permissao_filtro_abandono_transferencia", "Não permitir a apresentação de alunos com matrícula em abandono ou transferida na emissão do relatório de frequência", $this->permissao_filtro_abandono_transferencia);
 
 	}
 
@@ -241,7 +241,7 @@ class indice extends clsCadastro
 		$obj->matricula_apenas_bairro_escola 	= !is_null($this->matricula_apenas_bairro_escola);
 		$obj->restringir_historico_escolar 		= !is_null($this->restringir_historico_escolar);
 		$obj->restringir_multiplas_enturmacoes  = !is_null($this->restringir_multiplas_enturmacoes);
-		$obj->permicao_filtro_abandono_transferencia  = !is_null($this->permicao_filtro_abandono_transferencia);		
+		$obj->permissao_filtro_abandono_transferencia  = !is_null($this->permissao_filtro_abandono_transferencia);		
 		$obj->coordenador_transporte 			= $this->pessoa_coordenador_transporte;
 		$obj->controlar_espaco_utilizacao_aluno = is_null($this->controlar_espaco_utilizacao_aluno) ? 0 : 1;
 		$obj->percentagem_maxima_ocupacao_salas = Portabilis_Currency_Utils::moedaBrToUs($this->percentagem_maxima_ocupacao_salas);
@@ -274,7 +274,7 @@ class indice extends clsCadastro
 		$obj->matricula_apenas_bairro_escola 	= !is_null($this->matricula_apenas_bairro_escola);
 		$obj->restringir_historico_escolar 		= !is_null($this->restringir_historico_escolar);
 		$obj->restringir_multiplas_enturmacoes 	= !is_null($this->restringir_multiplas_enturmacoes);
-		$obj->permicao_filtro_abandono_transferencia 	= !is_null($this->permicao_filtro_abandono_transferencia);
+		$obj->permissao_filtro_abandono_transferencia 	= !is_null($this->permissao_filtro_abandono_transferencia);
 		$obj->coordenador_transporte 			= $this->pessoa_coordenador_transporte;
 		$obj->controlar_espaco_utilizacao_aluno = is_null($this->controlar_espaco_utilizacao_aluno) ? 0 : 1;
 		$obj->percentagem_maxima_ocupacao_salas = Portabilis_Currency_Utils::moedaBrToUs($this->percentagem_maxima_ocupacao_salas);
