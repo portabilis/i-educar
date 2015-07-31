@@ -74,8 +74,8 @@ return "select aluno.cod_aluno as aluno_id,
   inner join pmieducar.instituicao on (escola.ref_cod_instituicao = instituicao.cod_instituicao)
     and aluno.ativo = matricula.ativo 
     and matricula.ativo = 1
-    and case when ($4 <> 1 and instituicao.permicao_filtro_abandono_transferencia = true) then matricula.aprovado in (1, 2, 3, 7, 8, 9)
-             when ($4 <> 1 and instituicao.permicao_filtro_abandono_transferencia = false) then matricula.aprovado in (1, 2, 3, 4, 6, 7, 8, 9)
+    and case when ($4 <> 1 and instituicao.permissao_filtro_abandono_transferencia = true) then matricula.aprovado in (1, 2, 3, 7, 8, 9)
+             when ($4 <> 1 and instituicao.permissao_filtro_abandono_transferencia = false) then matricula.aprovado in (1, 2, 3, 4, 6, 7, 8, 9)
         else matricula.aprovado = 3 end
     and (matricula.cod_matricula like $1||'%' or matricula.ref_cod_aluno like $1||'%') 
     and (select case when $2 != 0 then matricula.ref_ref_cod_escola = $2 else true end) 
@@ -95,8 +95,8 @@ return "select aluno.cod_aluno as aluno_id,
   inner join pmieducar.instituicao on (escola.ref_cod_instituicao = instituicao.cod_instituicao)
   where aluno.ativo = matricula.ativo 
     and matricula.ativo = 1 
-    and case when ($4 <> 1 and instituicao.permicao_filtro_abandono_transferencia = true) then matricula.aprovado in (1, 2, 3, 7, 8, 9)
-             when ($4 <> 1 and instituicao.permicao_filtro_abandono_transferencia = false) then matricula.aprovado in (1, 2, 3, 4, 6, 7, 8, 9)
+    and case when ($4 <> 1 and instituicao.permissao_filtro_abandono_transferencia = true) then matricula.aprovado in (1, 2, 3, 7, 8, 9)
+             when ($4 <> 1 and instituicao.permissao_filtro_abandono_transferencia = false) then matricula.aprovado in (1, 2, 3, 4, 6, 7, 8, 9)
         else matricula.aprovado = 3 end
     and lower(to_ascii(pessoa.nome)) like '%'||lower(to_ascii($1))||'%' 
     and (select case when $2 != 0 then matricula.ref_ref_cod_escola = $2 else true end) 
