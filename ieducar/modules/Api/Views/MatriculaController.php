@@ -70,10 +70,13 @@ return "select aluno.cod_aluno as aluno_id,
    from cadastro.pessoa
   inner join pmieducar.aluno on(pessoa.idpes = aluno.ref_idpes)
   inner join pmieducar.matricula on(aluno.cod_aluno = matricula.ref_cod_aluno)
+  inner join pmieducar.escola on(escola.cod_escola = matricula.ref_ref_cod_escola)
+  inner join pmieducar.instituicao on (escola.ref_cod_instituicao = instituicao.cod_instituicao)
     and aluno.ativo = matricula.ativo 
-    and matricula.ativo = 1 
-    and case when $4 = 1 then matricula.aprovado = 3 
-        else matricula.aprovado in (1, 2, 3, 4, 6, 7, 8, 9) end 
+    and matricula.ativo = 1
+    and case when ($4 <> 1 and instituicao.permicao_filtro_abandono_transferencia = true) then matricula.aprovado in (1, 2, 3, 7, 8, 9)
+             when ($4 <> 1 and instituicao.permicao_filtro_abandono_transferencia = false) then matricula.aprovado in (1, 2, 3, 4, 6, 7, 8, 9)
+        else matricula.aprovado = 3 end
     and (matricula.cod_matricula like $1||'%' or matricula.ref_cod_aluno like $1||'%') 
     and (select case when $2 != 0 then matricula.ref_ref_cod_escola = $2 else true end) 
     and (select case when $3 != 0 then matricula.ano = $3 else true end) limit 15";
@@ -88,10 +91,13 @@ return "select aluno.cod_aluno as aluno_id,
    from cadastro.pessoa
   inner join pmieducar.aluno on(pessoa.idpes = aluno.ref_idpes)
   inner join pmieducar.matricula on(aluno.cod_aluno = matricula.ref_cod_aluno)
+  inner join pmieducar.escola on(escola.cod_escola = matricula.ref_ref_cod_escola)
+  inner join pmieducar.instituicao on (escola.ref_cod_instituicao = instituicao.cod_instituicao)
   where aluno.ativo = matricula.ativo 
     and matricula.ativo = 1 
-    and case when $4 = 1 then matricula.aprovado = 3 
-        else matricula.aprovado in (1, 2, 3, 4, 6, 7, 8, 9) end 
+    and case when ($4 <> 1 and instituicao.permicao_filtro_abandono_transferencia = true) then matricula.aprovado in (1, 2, 3, 7, 8, 9)
+             when ($4 <> 1 and instituicao.permicao_filtro_abandono_transferencia = false) then matricula.aprovado in (1, 2, 3, 4, 6, 7, 8, 9)
+        else matricula.aprovado = 3 end
     and lower(to_ascii(pessoa.nome)) like '%'||lower(to_ascii($1))||'%' 
     and (select case when $2 != 0 then matricula.ref_ref_cod_escola = $2 else true end) 
     and (select case when $3 != 0 then matricula.ano = $3 else true end) limit 15";

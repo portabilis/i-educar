@@ -68,7 +68,7 @@ class clsPmieducarInstituicao
   var $quantidade_alunos_metro_quadrado;
   var $gerar_historico_transferencia;
   var $restringir_multiplas_enturmacoes;
-
+  var $permicao_filtro_abandono_transferencia;
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
    * @var int
@@ -134,7 +134,7 @@ class clsPmieducarInstituicao
     $this->_schema = "pmieducar.";
     $this->_tabela = "{$this->_schema}instituicao";
 
-    $this->_campos_lista = $this->_todos_campos = "cod_instituicao, ref_usuario_exc, ref_usuario_cad, ref_idtlog, ref_sigla_uf, cep, cidade, bairro, logradouro, numero, complemento, nm_responsavel, ddd_telefone, telefone, data_cadastro, data_exclusao, ativo, nm_instituicao, data_base_transferencia, data_base_remanejamento, controlar_espaco_utilizacao_aluno, percentagem_maxima_ocupacao_salas, quantidade_alunos_metro_quadrado, exigir_vinculo_turma_professor, gerar_historico_transferencia, matricula_apenas_bairro_escola, restringir_historico_escolar, coordenador_transporte, restringir_multiplas_enturmacoes";
+    $this->_campos_lista = $this->_todos_campos = "cod_instituicao, ref_usuario_exc, ref_usuario_cad, ref_idtlog, ref_sigla_uf, cep, cidade, bairro, logradouro, numero, complemento, nm_responsavel, ddd_telefone, telefone, data_cadastro, data_exclusao, ativo, nm_instituicao, data_base_transferencia, data_base_remanejamento, controlar_espaco_utilizacao_aluno, percentagem_maxima_ocupacao_salas, quantidade_alunos_metro_quadrado, exigir_vinculo_turma_professor, gerar_historico_transferencia, matricula_apenas_bairro_escola, restringir_historico_escolar, coordenador_transporte, restringir_multiplas_enturmacoes, permicao_filtro_abandono_transferencia";
 
     if (is_numeric($ref_usuario_cad)) {
       if (class_exists('clsPmieducarUsuario')) {
@@ -466,6 +466,16 @@ class clsPmieducarInstituicao
         $gruda = ", ";
       }
 
+      if (dbBool($this->permicao_filtro_abandono_transferencia)) {
+        $campos .= "{$gruda}permicao_filtro_abandono_transferencia";
+        $valores .= "{$gruda} true ";
+        $gruda = ", ";
+      }else{
+        $campos .= "{$gruda}permicao_filtro_abandono_transferencia";
+        $valores .= "{$gruda} false ";
+        $gruda = ", ";
+      }
+
       $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
       return $db->InsertId("{$this->_tabela}_cod_instituicao_seq");
     }
@@ -644,6 +654,14 @@ class clsPmieducarInstituicao
         $gruda = ", ";
       }else{
         $set .= "{$gruda}restringir_multiplas_enturmacoes = false ";
+        $gruda = ", ";
+      }
+
+      if (dbBool($this->permicao_filtro_abandono_transferencia)) {
+        $set .= "{$gruda}permicao_filtro_abandono_transferencia = true ";
+        $gruda = ", ";
+      }else{
+        $set .= "{$gruda}permicao_filtro_abandono_transferencia = false ";
         $gruda = ", ";
       }
 
