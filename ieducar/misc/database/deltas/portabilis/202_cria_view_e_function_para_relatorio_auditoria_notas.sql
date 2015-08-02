@@ -46,14 +46,16 @@ select substr(auditoria.usuario, 0, strpos(auditoria.usuario, '-'))::int as usua
        (case when operacao = 1 then relatorio.get_valor_campo_auditoria('aluno_id', 'nota', valor_novo)
        else relatorio.get_valor_campo_auditoria('aluno_id', 'nota', valor_antigo) end)::int as aluno_id,
        (case when operacao = 1 then relatorio.get_valor_campo_auditoria('etapa', 'componenteCurricular', valor_novo)
-       else relatorio.get_valor_campo_auditoria('etapa', 'componenteCurricular', valor_antigo) end)::int as etapa,
+       else relatorio.get_valor_campo_auditoria('etapa', 'componenteCurricular', valor_antigo) end) as etapa,
        (case when operacao = 1 then relatorio.get_valor_campo_auditoria('componenteCurricular', '', valor_novo)
        else relatorio.get_valor_campo_auditoria('componenteCurricular', '', valor_antigo) end) as componente_curricular,
-       relatorio.get_valor_campo_auditoria('nota', 'etapa', valor_antigo)::decimal as nota_antiga,
-       relatorio.get_valor_campo_auditoria('nota', 'etapa', valor_novo)::decimal as nota_nova
+       relatorio.get_valor_campo_auditoria('nota', 'etapa', valor_antigo) as nota_antiga,
+       relatorio.get_valor_campo_auditoria('nota', 'etapa', valor_novo) as nota_nova
 from modules.auditoria;
 ALTER TABLE relatorio.view_auditoria
   OWNER TO ieducar;
+
+GRANT ALL PRIVILEGES ON TABLE auditoria TO ieducar;
 
   -- undo
 
