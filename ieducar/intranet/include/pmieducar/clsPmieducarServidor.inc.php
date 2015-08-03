@@ -1,6 +1,5 @@
 <?php
-// error_reporting(E_ERROR);
-// ini_set("display_errors", 1);
+
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -936,7 +935,6 @@ class clsPmieducarServidor
     $array_horario               = NULL,
     $str_not_in_servidor         = NULL,
     $str_nome_servidor           = NULL,
-    $str_matricula_servidor      = NULL,    
     $boo_professor               = FALSE,
     $str_horario                 = NULL,
     $bool_ordena_por_nome        = FALSE,
@@ -988,40 +986,12 @@ class clsPmieducarServidor
     $filtros      = '';
     $tabela_compl = '';
 
-    if ($int_ref_cod_disciplina != NULL) {
-     
-    
-
     if (is_bool($bool_ordena_por_nome)) {
-      $tabela_compl         .= ', cadastro.pessoa p, pmieducar.servidor_disciplina sd, modules.componente_curricular cc';
-      $this->_campos_lista2 .= ', p.nome, cc.nome as "disicplina"';
-      $filtros              .= $whereAnd . ' s.cod_servidor = p.idpes AND sd.ref_cod_servidor = s.cod_servidor AND sd.ref_cod_disciplina = cc.id';
-      $whereAnd              = ' AND ';
-      $this->setOrderby('p.nome');
-    }
-    else {
-      $this->_campos_lista2 = $this->_todos_campos2;
-      $this->setOrderby(' 1 ');
-    }
-
-    $sql = "SELECT {$this->_campos_lista2} FROM {$this->_schema}servidor s{$tabela_compl}";
-
-    if (is_numeric($int_cod_servidor)) {
-      $filtros .= "{$whereAnd} s.cod_servidor = '{$int_cod_servidor}'";
-      $whereAnd = " AND ";
-    }
-
-    if (is_numeric($int_ref_cod_disciplina)) {
-      $filtros .= "{$whereAnd} sd.ref_cod_disciplina = '{$int_ref_cod_disciplina}'";
-      $whereAnd = " AND ";
-    }
-}else{
-     if (is_bool($bool_ordena_por_nome)) {
       $tabela_compl         .= ', cadastro.pessoa p';
       $this->_campos_lista2 .= ', p.nome';
-      $filtros              .= $whereAnd . ' s.cod_servidor = p.idpes';
+      $filtros              .= $whereAnd . ' s.cod_servidor = p.idpes ';
       $whereAnd              = ' AND ';
-      $this->setOrderby('p.nome');
+      $this->setOrderby('nome');
     }
     else {
       $this->_campos_lista2 = $this->_todos_campos2;
@@ -1034,7 +1004,7 @@ class clsPmieducarServidor
       $filtros .= "{$whereAnd} s.cod_servidor = '{$int_cod_servidor}'";
       $whereAnd = " AND ";
     }
-}
+
     if (is_numeric($int_ref_idesco)) {
       $filtros .= "{$whereAnd} s.ref_idesco = '{$int_ref_idesco}'";
       $whereAnd = " AND ";
@@ -1088,15 +1058,6 @@ class clsPmieducarServidor
       $whereAnd = " AND ";
     }
 
-        // Busca tipo LIKE pela matricula do servidor
-    if (is_string($str_matricula_servidor)) {
-      $filtros .= "{$whereAnd} EXISTS (SELECT 1
-  FROM portal.funcionario f
-  WHERE cod_servidor = f.ref_cod_pessoa_fj
-  AND to_ascii(f.matricula) LIKE to_ascii('%$str_matricula_servidor%')) ";
-      $whereAnd = " AND ";
-    }
-
     // Seleciona apenas servidores que tenham a carga atual maior ou igual ao
     // do servidor atual
     if (is_string($str_tipo) && $str_tipo == 'livre') {
@@ -1120,7 +1081,8 @@ class clsPmieducarServidor
       $whereAnd = " AND ";
     }
     else {
-      if (is_numeric($int_ref_cod_escola)
+      if (is_numeric($alocacao_escola_instituicao) &&
+        (is_numeric($int_ref_cod_instituicao) || is_numeric($int_ref_cod_escola))
       ) {
         $filtros .= "
     {$whereAnd} s.cod_servidor IN
