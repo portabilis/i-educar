@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gestï¿½o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaï¿½
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa ï¿½ software livre; vocï¿½ pode redistribuï¿½-lo e/ou modificï¿½-lo
+ * sob os termos da Licenï¿½a Pï¿½blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versï¿½o 2 da Licenï¿½a, como (a seu critï¿½rio)
+ * qualquer versï¿½o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa ï¿½ distribuï¿½ï¿½do na expectativa de que seja ï¿½til, porï¿½m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implï¿½ï¿½cita de COMERCIABILIDADE OU
+ * ADEQUAï¿½ï¿½O A UMA FINALIDADE ESPECï¿½FICA. Consulte a Licenï¿½a Pï¿½blica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Vocï¿½ deve ter recebido uma cï¿½pia da Licenï¿½a Pï¿½blica Geral do GNU junto
+ * com este programa; se nï¿½o, escreva para a Free Software Foundation, Inc., no
+ * endereï¿½o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itajaï¿½ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo disponível desde a versão 1.0.0
+ * @since     Arquivo disponï¿½vel desde a versï¿½o 1.0.0
  * @version   $Id$
  */
 
@@ -36,11 +36,11 @@ require_once 'include/pmieducar/geral.inc.php';
 /**
  * clsIndexBase class.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itajaï¿½ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe disponï¿½vel desde a versï¿½o 1.0.0
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
@@ -57,11 +57,11 @@ class clsIndexBase extends clsBase
 /**
  * indice class.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itajaï¿½ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe disponï¿½vel desde a versï¿½o 1.0.0
  * @version   @@package_version@@
  */
 class indice extends clsListagem
@@ -119,7 +119,7 @@ class indice extends clsListagem
     $_SESSION['ref_cod_curso']      = $_GET['ref_cod_curso'] ? $_GET['ref_cod_curso'] : $_SESSION['ref_cod_curso'];
 
     /**
-     * Controle para cálculo de horas
+     * Controle para cï¿½lculo de horas
      */
     $_SESSION['identificador'] = $_GET['identificador'] ?
       $_GET['identificador'] : $_SESSION['identificador'];
@@ -241,15 +241,15 @@ class indice extends clsListagem
         $_SESSION['hora_final']);
     }
 
-    // Marca a disciplina como NULL se não for informada, restringindo a busca
-    // aos professores e não selecionar aqueles em que o curso não seja
+    // Marca a disciplina como NULL se nï¿½o for informada, restringindo a busca
+    // aos professores e nï¿½o selecionar aqueles em que o curso nï¿½o seja
     // globalizado e sem disciplinas cadastradas
     $this->ref_cod_disciplina = $this->ref_cod_disciplina ?
       $this->ref_cod_disciplina : NULL;
 
-    // Passa NULL para $alocacao_escola_instituicao senão o seu filtro anula
-    // um anterior (referente a selecionar somente servidores não alocados),
-    // selecionando apenas servidores alocados na instituição
+    // Passa NULL para $alocacao_escola_instituicao senï¿½o o seu filtro anula
+    // um anterior (referente a selecionar somente servidores nï¿½o alocados),
+    // selecionando apenas servidores alocados na instituiï¿½ï¿½o
     $lista = $obj_servidor->lista(
       NULL,
       NULL,
@@ -265,10 +265,11 @@ class indice extends clsListagem
       $array_hora,
       $this->ref_cod_servidor,
       $this->nome_servidor,
+      $this->lst_matriculas,
       $this->professor,
       $this->horario,
-      FALSE,
-      $this->lst_matriculas,
+      TRUE,
+      TRUE,
       $this->matutino,
       $this->vespertino,
       $this->noturno,
@@ -284,8 +285,8 @@ class indice extends clsListagem
     );
 
     // Se for uma listagem de professores, recupera as disciplinas dadas para
-    // comparação com a de outros professores (somente quando a busca é para
-    // substituição de servidores)
+    // comparaï¿½ï¿½o com a de outros professores (somente quando a busca ï¿½ para
+    // substituiï¿½ï¿½o de servidores)
     $disciplinas = array();
     if ('true' == $this->professor) {
       $disciplinas = $obj_servidor->getServidorDisciplinasQuadroHorarioHorarios(
@@ -310,13 +311,13 @@ class indice extends clsListagem
           $registro['matricula'] = $det_cod_servidor['matricula'];
 
           // Se servidor for professor, verifica se possui as mesmas
-          // disciplinas do servidor a ser substituido (este passo somente é
+          // disciplinas do servidor a ser substituido (este passo somente ï¿½
           // executado ao buscar um servidor substituto)
           if ($this->professor == 'true') {
             $disciplinasSubstituto = clsPmieducarServidor::getServidorDisciplinas(
               $registro['cod_servidor'], $this->ref_cod_instituicao);
 
-            // Se os arrays diferirem, passa para o próximo resultado
+            // Se os arrays diferirem, passa para o prï¿½ximo resultado
             if ($disciplinasSubstituto != $disciplinas) {
               continue;
             }
@@ -368,16 +369,16 @@ class indice extends clsListagem
   }
 }
 
-// Instancia objeto de página
+// Instancia objeto de pï¿½gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conteúdo
+// Instancia objeto de conteï¿½do
 $miolo = new indice();
 
-// Atribui o conteúdo à  página
+// Atribui o conteï¿½do ï¿½ï¿½ pï¿½gina
 $pagina->addForm($miolo);
 
-// Gera o código HTML
+// Gera o cï¿½digo HTML
 $pagina->MakeAll();
 ?>
 <script type="text/javascript">

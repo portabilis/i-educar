@@ -120,7 +120,7 @@ class indice extends clsListagem
 		) );
 
 		// Paginador
-		$this->limite = 20;
+		$this->limite = 20000000000;
 		$this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
 		

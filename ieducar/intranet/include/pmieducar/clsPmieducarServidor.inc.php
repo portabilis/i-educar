@@ -988,12 +988,16 @@ class clsPmieducarServidor
     $filtros      = '';
     $tabela_compl = '';
 
+    if ($int_ref_cod_disciplina != NULL) {
+     
+    
+
     if (is_bool($bool_ordena_por_nome)) {
-      $tabela_compl         .= ', cadastro.pessoa p';
-      $this->_campos_lista2 .= ', p.nome';
-      $filtros              .= $whereAnd . ' s.cod_servidor = p.idpes ';
+      $tabela_compl         .= ', cadastro.pessoa p, pmieducar.servidor_disciplina sd, modules.componente_curricular cc';
+      $this->_campos_lista2 .= ', p.nome, cc.nome as "disicplina"';
+      $filtros              .= $whereAnd . ' s.cod_servidor = p.idpes AND sd.ref_cod_servidor = s.cod_servidor AND sd.ref_cod_disciplina = cc.id';
       $whereAnd              = ' AND ';
-      $this->setOrderby('nome');
+      $this->setOrderby('p.nome');
     }
     else {
       $this->_campos_lista2 = $this->_todos_campos2;
@@ -1007,6 +1011,30 @@ class clsPmieducarServidor
       $whereAnd = " AND ";
     }
 
+    if (is_numeric($int_ref_cod_disciplina)) {
+      $filtros .= "{$whereAnd} sd.ref_cod_disciplina = '{$int_ref_cod_disciplina}'";
+      $whereAnd = " AND ";
+    }
+}else{
+     if (is_bool($bool_ordena_por_nome)) {
+      $tabela_compl         .= ', cadastro.pessoa p';
+      $this->_campos_lista2 .= ', p.nome';
+      $filtros              .= $whereAnd . ' s.cod_servidor = p.idpes';
+      $whereAnd              = ' AND ';
+      $this->setOrderby('p.nome');
+    }
+    else {
+      $this->_campos_lista2 = $this->_todos_campos2;
+      $this->setOrderby(' 1 ');
+    }
+
+    $sql = "SELECT {$this->_campos_lista2} FROM {$this->_schema}servidor s{$tabela_compl}";
+
+    if (is_numeric($int_cod_servidor)) {
+      $filtros .= "{$whereAnd} s.cod_servidor = '{$int_cod_servidor}'";
+      $whereAnd = " AND ";
+    }
+}
     if (is_numeric($int_ref_idesco)) {
       $filtros .= "{$whereAnd} s.ref_idesco = '{$int_ref_idesco}'";
       $whereAnd = " AND ";

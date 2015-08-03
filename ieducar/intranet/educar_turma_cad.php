@@ -147,6 +147,10 @@ class indice extends clsCadastro
   var $etapa_educacenso;
   var $ref_cod_disciplina_dispensada;
 
+  var $etapas_especificas;
+  var $etapas_utilizadas;
+  var $utilizaNotaGeralPorEtapa;
+
   var $dias_da_semana = array(
     '' => 'Selecione',
     1  => 'Domingo',
@@ -178,6 +182,12 @@ class indice extends clsCadastro
       $det_esc  = $obj_esc->detalhe();
       $obj_ser  = new clsPmieducarSerie($registro['ref_ref_cod_serie']);
       $det_ser  = $obj_ser->detalhe();
+
+      $regra_avaliacao_id = $det_ser["regra_avaliacao_id"];
+      $regra_avaliacao_mapper = new RegraAvaliacao_Model_RegraDataMapper();
+      $regra_avaliacao = $regra_avaliacao_mapper->find($regra_avaliacao_id);
+
+      $this->utilizaNotaGeralPorEtapa = ($regra_avaliacao->notaGeralPorEtapa == 1);
 
       $this->ref_cod_escola      = $det_esc['cod_escola'];
       $this->ref_cod_instituicao = $det_esc['ref_cod_instituicao'];
@@ -488,7 +498,10 @@ class indice extends clsCadastro
         $conteudo .= '<div style="margin-bottom: 10px;">';
         $conteudo .= '  <span style="display: block; float: left; width: 250px;">Nome</span>';
         $conteudo .= '  <span style="display: block; float: left; width: 100px;">Carga hor&aacute;ria</span>';
-        $conteudo .= '  <span style="display: block; float: left;width: 200px;">Usar padr&atilde;o do componente?</span>';
+        $conteudo .= '  <span style="display: block; float: left;width: 100px;">Usar padr&atilde;o do componente?</span>';
+        if($this->utilizaNotaGeralPorEtapa){
+          $conteudo .= '  <span style="display: block; float: left;width: 150px;">Usar etapas espec&iacute;ficas?</span>';
+        }
         $conteudo .= '  <span style="display: block; float: left">Possui docente v&iacute;nculado?</span>';
         $conteudo .= '</div>';
         $conteudo .= '<br style="clear: left" />';
@@ -497,6 +510,13 @@ class indice extends clsCadastro
           $checked = '';
           $usarComponente = FALSE;
           $docenteVinculado = FALSE;
+          $checkedEtapaEspecifica = '';
+          $etapaUtilizada = '';
+
+          if($componentes[$registro->id]->etapasEspecificas == "1"){
+            $checkedEtapaEspecifica = 'checked="checked"';
+            $etapaUtilizada = $componentes[$registro->id]->etapasUtilizadas;
+          }
 
           if (isset($componentes[$registro->id])) {
             $checked = 'checked="checked"';
@@ -518,7 +538,11 @@ class indice extends clsCadastro
           $conteudo .= '<div style="margin-bottom: 10px; float: left">';
           $conteudo .= "  <label style='display: block; float: left; width: 250px'><input type=\"checkbox\" $checked name=\"disciplinas[$registro->id]\" id=\"disciplinas[]\" value=\"{$registro->id}\">{$registro}</label>";
           $conteudo .= "  <label style='display: block; float: left; width: 100px;'><input type='text' name='carga_horaria[$registro->id]' value='{$cargaHoraria}' size='5' maxlength='7'></label>";
-          $conteudo .= "  <label style='display: block; float: left; width: 200px;'><input type='checkbox' name='usar_componente[$registro->id]' value='1' ". ($usarComponente == TRUE ? $checked : '') .">($cargaComponente h)</label>";
+          $conteudo .= "  <label style='display: block; float: left; width: 100px;'><input type='checkbox' name='usar_componente[$registro->id]' value='1' ". ($usarComponente == TRUE ? $checked : '') .">($cargaComponente h)</label>";
+          if($this->utilizaNotaGeralPorEtapa){
+            $conteudo .= "  <input style='float:left;' type='checkbox' id='etapas_especificas[]' name='etapas_especificas[$registro->id]' value='1' ". $checkedEtapaEspecifica ."></label>";
+            $conteudo .= "  <label style='display: block; float: left; width: 150px;'>Etapas utilizadas: <input type='text' class='etapas_utilizadas' name='etapas_utilizadas[$registro->id]' value='{$etapaUtilizada}' size='5' maxlength='7'></label>";
+          }
           $conteudo .= "  <label style='display: block; float: left'><input type='checkbox' name='docente_vinculado[$registro->id]' value='1' ". ($docenteVinculado == TRUE ? $checked : '') ."></label>";
           $conteudo .= '</div>';
           $conteudo .= '<br style="clear: left" />';
@@ -1384,10 +1408,17 @@ class indice extends clsCadastro
       $docente_ = isset($docente[$key]) ?
         1 : 0;
 
+      $etapasEspecificas = isset($this->etapas_especificas[$key]) ?
+        1 : 0;
+
+      $etapasUtilizadas = ($etapasEspecificas == 1) ? $this->etapas_utilizadas[$key] : NULL;
+
       $componentesTurma[] = array(
         'id'           => $value,
         'cargaHoraria' => $carga,
-        'docenteVinculado' => $docente_
+        'docenteVinculado' => $docente_,
+        'etapasEspecificas' => $etapasEspecificas,
+        'etapasUtilizadas' => $etapasUtilizadas
       );
     }
 
@@ -2289,5 +2320,6 @@ $j(document).ready( function(){
   $j('#scripts').closest('tr').hide();
 });
 
+$j('.etapas_utilizadas').mask("9,9,9,9", {placeholder: "1,2,3..."});
 
 </script>

@@ -1252,9 +1252,7 @@ class clsPmieducarMatriculaTurma
   }   
 
   function marcaAlunoReclassificado(){
-    
-    if ($this->ref_cod_matricula && !is_null($this->getDataBaseTransferencia())){
-        
+    if ($this->ref_cod_matricula){
         $db = new clsBanco();
         $db->CampoUnico("UPDATE pmieducar.matricula_turma SET reclassificado = TRUE WHERE ref_cod_matricula = {$this->ref_cod_matricula} AND ativo = 1");    
     }

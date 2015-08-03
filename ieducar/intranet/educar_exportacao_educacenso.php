@@ -82,6 +82,11 @@ class indice extends clsCadastro
   var $msg = "";
   var $error = false;
 
+  var $turma_presencial_ou_semi;
+
+  const TECNOLOGO = 1;
+  const LICENCIATURA = 2;
+  const BACHARELADO = 3;
 
   function Inicializar()
   {
@@ -226,7 +231,7 @@ class indice extends clsCadastro
   }
 
   protected function getServidores($escolaId){
-    $sql = 'SELECT cod_servidor as id
+    $sql = 'SELECT distinct cod_servidor as id
               FROM pmieducar.servidor
               INNER JOIN pmieducar.servidor_alocacao ON (ref_cod_servidor = cod_servidor)
               WHERE ref_cod_escola = $1';
@@ -321,6 +326,7 @@ class indice extends clsCadastro
 
         (SELECT COALESCE(p.email,(SELECT email FROM pmieducar.escola_complemento where ref_cod_escola = e.cod_escola))) as r00s26,
 
+        e.orgao_regional as r00s27,
         e.dependencia_administrativa as r00s28,
         b.zona_localizacao as r00s29,
         0 as r00s32,
@@ -328,7 +334,8 @@ class indice extends clsCadastro
         0 as r00s34,
         0 as r00s35,
         0 as r00s36,
-        e.regulamentacao as r00s39
+        e.regulamentacao as r00s39,
+        0 as r00s40
 
 
         FROM pmieducar.escola e
@@ -356,6 +363,8 @@ class indice extends clsCadastro
 
       $r00s2 = substr($r00s2, 0, 8);
       $r00s3 = $this->cpfToCenso($r00s3);
+      $r00s4 = $this->upperAndUnaccent($r00s4);
+      $r00s6 = strtoupper($r00s6);
 
       $r00s8 = Portabilis_Date_Utils::pgSQLToBr($r00s8);
       $r00s9 = Portabilis_Date_Utils::pgSQLToBr($r00s9);
@@ -366,6 +375,10 @@ class indice extends clsCadastro
       $r00s16 = $this->upperAndUnaccent($r00s16);
       $r00s17 = $this->upperAndUnaccent($r00s17);
       $r00s26 = $this->upperAndUnaccent($r00s26);
+      $r00s27 = str_pad($r00s27, 5, "0", STR_PAD_LEFT);
+
+      if($r00s28 <> 4)
+        $r00s32 = $r00s33 = $r00s34 = $r00s35 = $r00s36 = '';
 
       for ($i=1; $i <= 42 ; $i++)
         $return .= ${'r00s'.$i}.$d;
@@ -520,7 +533,26 @@ class indice extends clsCadastro
       }else
         $r10s13 = 0;
 
-      $r10s96 = ($r10s96 == 1 && ($r10s92 == 1 || $r10s93 == 1)) ? 1 : NULL;
+      if($r10s3 == 0)
+        $r10s13 = NULL;
+
+      if($r10s3 <> 1 && $r10s8 <> 1)
+        $r10s12 = NULL;
+
+      if($r10s3 == 1){
+        if(is_null($r10s12)){
+          $this->msg .= "Dados para formular o registro 10 campo 12 da escola {$escolaId} com problemas. Obrigatório quando o campo 3 for igual a 1 <br/>";
+          $this->error = true;
+        }
+      }
+
+      $r10s96 = ($r10s96 == 1 && ($r10s92 == 1 || $r10s93 == 1)) ? 1 : (($r10s92 == 1 || $r10s93 == 1) ? 0 : NULL);
+
+      if($r10s91 != 2)
+        $r10s93 = $r10s94 = $r10s95 = 0;
+
+      $r10s98 = 1;
+      $r10s99 = $r10s100 = 0;
 
       if($lingua_ministrada && $r10s101){
         $r10s102 = 1;
@@ -629,6 +661,11 @@ class indice extends clsCadastro
         INNER JOIN pmieducar.escola e ON (t.ref_ref_cod_escola = e.cod_escola)
         INNER JOIN modules.educacenso_cod_escola ece ON (e.cod_escola = ece.cod_escola)
         WHERE t.cod_turma = $1
+        AND (SELECT 1
+              FROM pmieducar.matricula_turma mt
+              WHERE mt.ref_cod_turma = t.cod_turma
+              AND mt.ativo = 1
+              LIMIT 1) IS NOT NULL
     ';
     // Transforma todos resultados em variáveis
     extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, array('return_only' => 'first-row', 'params' => array($turmaId))));
@@ -677,32 +714,22 @@ class indice extends clsCadastro
           // Verifica se é disciplina padrão ano letivo. Se for, será considerado que existe professor
           // vinculado a disciplina na sala de aula
 
-          $padraoAnoLetivo =
-            !(bool)Portabilis_Utils_Database::selectField('SELECT 1
-                                                            FROM componente_curricular_turma
-                                                            WHERE turma_id = $1
-                                                            AND componente_curricular_id = $2
-                                                            LIMIT 1',
-                                                            array('params' => array($turmaId, $codigoSistema)));
-
-          $professorVinculado = true;
-          if (!$padraoAnoLetivo){
-            $professorVinculado =
-              Portabilis_Utils_Database::selectField('SELECT docente_vinculado
-                                                              FROM componente_curricular_turma
-                                                              WHERE turma_id = $1
-                                                              AND componente_curricular_id = $2
-                                                              LIMIT 1',
-                                                              array('params' => array($turmaId, $codigoSistema)));
-            $professorVinculado = $professorVinculado['docente_vinculado'];
-          }
+          $professorVinculado = (bool)Portabilis_Utils_Database::selectField('select 1 
+                                                                          from modules.professor_turma
+                                                                         inner join modules.professor_turma_disciplina on(professor_turma_disciplina.professor_turma_id = professor_turma.id)
+                                                                         where professor_turma.turma_id = $1
+                                                                           and professor_turma.funcao_exercida = 1
+                                                                           and professor_turma_disciplina.componente_curricular_id = $2',
+                                                                           array('params' => array($turmaId, $codigoSistema)));;
 
           if (array_key_exists($codigoEducacenso, $coddigoEducacensoToSeq)){
-          	${ 'r20s'. $coddigoEducacensoToSeq[$codigoEducacenso] } = $professorVinculado ? 2 : 1;
+          	${ 'r20s'. $coddigoEducacensoToSeq[$codigoEducacenso] } = $professorVinculado ? 1 : 2;
         	}
         }
 
       }
+
+      $this->turma_presencial_ou_semi = $r20s6;
       $d = '|';
       $return = '';
 
@@ -712,9 +739,6 @@ class indice extends clsCadastro
       $return = substr_replace($return, "", -1);
 
       return $return."\n";
-    }else{
-      $this->msg .= "Dados para formular o registro 20 da escola {$escolaId} não encontrados. Verifique se a escola possuí código do INEP e registros de turmas cadastrados. <br/>";
-      $this->error = true;
     }
   }
 
@@ -758,12 +782,22 @@ class indice extends clsCadastro
     // Transforma todos resultados em variáveis
     extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, array('return_only' => 'first-row', 'params' => array($servidorId))));
     if ($r30s1){
+      $r30s5 = $this->upperAndUnaccent($r30s5);
+      $r30s6 = strtoupper($r30s6);
       $r30s8 = Portabilis_Date_Utils::pgSQLToBr($r30s8);
       $r30s9 = $r30s9 == 'M' ? 1 : 2;
       $r30s10 = is_numeric($r30s10) ? $r30s10 : 0;
+      $r30s11 = $this->upperAndUnaccent($r30s11);
 
       if($r30s12 == '1' || $r30s12 == '2')
         $r30s13 = 76;
+
+      if($r30s12 == "1"){
+        if(is_null($r30s14) || is_null($r30s15)){
+          $this->msg .= "Dados para formular o registro 30 da escola {$escolaId} não encontrados. Verifique se os municípios e UFs dos servidores brasileiros possuem código INEP cadastrados.<br/>";
+          $this->error = true;
+        }
+      }
 
       $sql = 'select distinct(deficiencia_educacenso) as id from cadastro.fisica_deficiencia,
               cadastro.deficiencia where cod_deficiencia = ref_cod_deficiencia and ref_idpes = $1
@@ -771,7 +805,7 @@ class indice extends clsCadastro
 
       $deficiencias = Portabilis_Utils_Database::fetchPreparedQuery($sql, array( 'params' => array($r30s4)));
 
-      $r30s17 = $r30s18 = $r30s19 = $r30s20 = $r30s21 = $r30s22 = $r30s23 = $r30s24 = 0;
+      $r30s17 = $r30s18 = $r30s19 = $r30s20 = $r30s21 = $r30s22 = $r30s23 = $r30s24 = null;
 
       $deficienciaToSeq = array( 1 => '17',
                                  2 => '18',
@@ -790,6 +824,9 @@ class indice extends clsCadastro
           $r30s16 = 1;
         }
       }
+
+      if($r30s16 = 0)
+        $r30s17 = $r30s18 = $r30s19 = $r30s20 = $r30s21 = $r30s22 = $r30s23 = $r30s24 = NULL;
 
       $d = '|';
       $return = '';
@@ -849,6 +886,11 @@ class indice extends clsCadastro
     if ($r40s1){
       $r40s5 = $this->cpfToCenso($r40s5);
 
+      $r40s8  = $this->upperAndUnaccent($r40s8);
+      $r40s9  = $this->upperAndUnaccent($r40s9);
+      $r40s10 = $this->upperAndUnaccent($r40s10);
+      $r40s11 = $this->upperAndUnaccent($r40s11);
+
       $d = '|';
       $return = '';
       $numeroRegistros = 13;
@@ -874,7 +916,8 @@ class indice extends clsCadastro
 		esc.escolaridade as r50s5,
 		situacao_curso_superior_1 as r50s6,
 		formacao_complementacao_pedagogica_1 as r50s7,
-		(SELECT curso_id FROM modules.educacenso_curso_superior ecs WHERE ecs.id = codigo_curso_superior_1) as r50s8,
+    (SELECT curso_id FROM modules.educacenso_curso_superior ecs WHERE ecs.id = codigo_curso_superior_1) as r50s8,
+		(SELECT grau_academico FROM modules.educacenso_curso_superior ecs WHERE ecs.id = codigo_curso_superior_1) as grau_academico_curso_superior_1,
 		ano_inicio_curso_superior_1 as r50s9,
 		ano_conclusao_curso_superior_1 as r50s10,
 		tipo_instituicao_curso_superior_1 as r50s11,
@@ -882,6 +925,7 @@ class indice extends clsCadastro
 		situacao_curso_superior_2 as r50s13,
 		formacao_complementacao_pedagogica_2 as r50s14,
     (SELECT curso_id FROM modules.educacenso_curso_superior ecs WHERE ecs.id = codigo_curso_superior_2) as r50s15,
+    (SELECT grau_academico FROM modules.educacenso_curso_superior ecs WHERE ecs.id = codigo_curso_superior_2) as grau_academico_curso_superior_2,
 		ano_inicio_curso_superior_2 as r50s16,
 		ano_conclusao_curso_superior_2 as r50s17,
 		tipo_instituicao_curso_superior_2 as r50s18,
@@ -889,6 +933,7 @@ class indice extends clsCadastro
 		situacao_curso_superior_3 as r50s20,
 		formacao_complementacao_pedagogica_3 as r50s21,
 		(SELECT curso_id FROM modules.educacenso_curso_superior ecs WHERE ecs.id = codigo_curso_superior_3) as r50s22,
+    (SELECT grau_academico FROM modules.educacenso_curso_superior ecs WHERE ecs.id = codigo_curso_superior_3) as grau_academico_curso_superior_3,
 		ano_inicio_curso_superior_3 as r50s23,
 		ano_conclusao_curso_superior_3 as r50s24,
 		tipo_instituicao_curso_superior_3 as r50s25,
@@ -937,6 +982,38 @@ class indice extends clsCadastro
       $r50s46 = (int) is_null($r50s31) && is_null($r50s32) && is_null($r50s33) && is_null($r50s34) && is_null($r50s35)
           					&& is_null($r50s36) && is_null($r50s37) && is_null($r50s38) && is_null($r50s39) && is_null($r50s40)
           					&& is_null($r50s41) && is_null($r50s42) && is_null($r50s43) && is_null($r50s44) && is_null($r50s45);
+
+      if($grau_academico_curso_superior_1 == self::BACHARELADO || $grau_academico_curso_superior_1 == self::TECNOLOGO){
+        if(is_null($r50s7)){
+          $this->msg .= "Dados para formular o registro 50 do servidor {$servidorId} com problemas. O registro 7 é obrigatório para cursos do tipo BACHARELADO ou TECNOLOGO.<br/>";
+          $this->error = true;
+        }
+      }elseif($grau_academico_curso_superior_1 == self::LICENCIATURA){
+        $r50s7 = NULL;
+      }
+
+      if($grau_academico_curso_superior_2 == self::BACHARELADO || $grau_academico_curso_superior_2 == self::TECNOLOGO){
+        if(is_null($r50s14)){
+          $this->msg .= "Dados para formular o registro 50 do servidor {$servidorId} com problemas. O registro 14 é obrigatório para cursos do tipo BACHARELADO ou TECNOLOGO.<br/>";
+          $this->error = true;
+        }
+      }elseif($grau_academico_curso_superior_2 == self::LICENCIATURA){
+        $r50s14 = NULL;
+      }
+
+      if($grau_academico_curso_superior_3 == self::BACHARELADO || $grau_academico_curso_superior_3 == self::TECNOLOGO){
+        if(is_null($r50s21)){
+          $this->msg .= "Dados para formular o registro 50 do servidor {$servidorId} com problemas. O registro 21 é obrigatório para cursos do tipo BACHARELADO ou TECNOLOGO.<br/>";
+          $this->error = true;
+        }
+      }elseif($grau_academico_curso_superior_3 == self::LICENCIATURA){
+        $r50s21 = NULL;
+      }
+
+      if($r50s6 != 1){ $r50s7 = NULL;}
+      if($r50s13 != 1){ $r50s14 = NULL;}
+      if($r50s20 != 1){ $r50s21 = NULL;}
+
       $cont= 0;
       for ($i=1; $i <= $numeroRegistros; $i++){
         if($i >= 31)
@@ -1137,11 +1214,10 @@ class indice extends clsCadastro
 			INNER JOIN portal.funcionario f ON (s.cod_servidor = f.ref_cod_pessoa_fj)
 			INNER JOIN cadastro.fisica fis ON (fis.idpes = f.ref_cod_pessoa_fj)
 			INNER JOIN cadastro.pessoa p ON (fis.idpes = p.idpes)
-			INNER JOIN pmieducar.servidor_alocacao sa ON (sa.ref_cod_servidor = s.cod_servidor)
-			INNER JOIN pmieducar.escola e ON (sa.ref_cod_escola = e.cod_escola)
-			INNER JOIN modules.educacenso_cod_escola ece ON (ece.cod_escola = e.cod_escola)
 			INNER JOIN modules.professor_turma pt ON (pt.servidor_id = s.cod_servidor)
 			INNER JOIN pmieducar.turma t ON (pt.turma_id = t.cod_turma)
+      INNER JOIN pmieducar.escola e ON (t.ref_ref_cod_escola = e.cod_escola)
+      INNER JOIN modules.educacenso_cod_escola ece ON (ece.cod_escola = e.cod_escola)
       LEFT JOIN modules.educacenso_cod_docente ecd ON ecd.cod_servidor = s.cod_servidor
 			WHERE s.cod_servidor = $1
 			AND e.cod_escola = t.ref_ref_cod_escola
@@ -1234,6 +1310,9 @@ class indice extends clsCadastro
       $r60s8 = is_numeric($r60s8) ? $r60s8 : 0;
       $r60s9 = (int) !(is_null($r60s10) && is_null($r60s11));
 
+      $r60s10 = $this->upperAndUnaccent($r60s10);
+      $r60s11 = $this->upperAndUnaccent($r60s11);
+
       if($r60s12 == '1' || $r60s12 == '2')
         $r60s13 = 76;
 
@@ -1279,6 +1358,20 @@ class indice extends clsCadastro
       // Se o aluno não tiver deficiências não pode ser informado recursos para provas
       if ($r60s16)
         $r60s39 = NULL;
+      else
+        $r60s17 = $r60s18 = $r60s19 = $r60s20 = $r60s21 = $r60s22 = $r60s23 = $r60s24 =
+                  $r60s25 = $r60s26 = $r60s27 = $r60s28 = $r60s29 = NULL;
+
+      if($r60s16 == 0){
+        for($i=30; $i <= 39; $i++){
+          ${'r60s'.$i} = NULL;
+        }
+      }else{
+        for($i=30; $i <= 38; $i++){
+          ${'r60s'.$i} = 0;
+        }
+        $r60s39 = 1;
+      }
 
       for ($i=1; $i <= $numeroRegistros ; $i++)
         $return .= ${'r60s'.$i}.$d;
@@ -1300,7 +1393,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
         ece.cod_escola_inep as r70s2,
         eca.cod_aluno_inep as r70s3,
         fd.rg as r70s5,
-        oer.sigla as r70s6,
+        oer.codigo_educacenso as r70s6,
         (SELECT cod_ibge FROM public.uf WHERE uf.sigla_uf = fd.sigla_uf_exp_rg) as r70s7,
         fd.data_exp_rg as r70s8,
         tipo_cert_civil,
@@ -1361,6 +1454,11 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
       $r70s14 = Portabilis_Date_Utils::pgSQLToBr($r70s14);
 
       $r70s19 = $this->cpfToCenso($r70s19);
+
+      $r70s24 = $this->upperAndUnaccent($r70s24);
+      $r70s25 = $this->upperAndUnaccent($r70s25);
+      $r70s26 = $this->upperAndUnaccent($r70s26);
+      $r70s27 = $this->upperAndUnaccent($r70s27);
 
       // Validações referentes a certidões (Modelo antigo e novo, nascimento e casamento)
       $r70s9 = $r70s10 = NULL;
@@ -1536,26 +1634,64 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
     foreach (Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId, $ano, $data_ini, $data_fim, $alunoId))) as $reg) {
       extract($reg);
 
+      $r80s9 = NULL;
+
+      for ($i=13; $i <= 23 ; $i++)
+          ${'r80s'.$i} = 0;
+
       // validações transporte escolar
-      $r80s11 = $r80s12 = NULL;
-      if ($transporte_escolar){
-        $veiculo = false;
-        for ($i=13; $i <= 23 ; $i++) {
-          if (${'r80s'.$i} == 1)
-            $veiculo = true;
-        }
-        if ($veiculo)
-          $r80s11 = 1;
-        elseif($veiculo_transporte_escolar){
-          $r80s11 = 1;
-          ${'r80s'.($veiculo_transporte_escolar + 12)} = 1;
-        }
-        $r80s12 = $transporte_escolar;
+
+      // if ($transporte_escolar){
+      //   $veiculo = false;
+      //   for ($i=13; $i <= 23 ; $i++) {
+      //     if (${'r80s'.$i} == 1)
+      //       $veiculo = true;
+      //   }
+      //   if ($veiculo)
+      //     $r80s11 = 1;
+      //   elseif($veiculo_transporte_escolar){
+      //     $r80s11 = 1;
+      //     ${'r80s'.($veiculo_transporte_escolar + 12)} = 1;
+      //   }
+      //   $r80s12 = $transporte_escolar;
+      // }else{
+      //   for ($i=13; $i <= 23 ; $i++) {
+      //     ${'r80s'.$i} = NULL;
+      //   }
+      // }
+
+      if(is_null($transporte_escolar)){
+        $r80s11 = NULL;
       }else{
-        for ($i=13; $i <= 23 ; $i++) {
+        $r80s11 = (($transporte_escolar == 0 ) ? 0 : 1);
+        if($r80s11){
+          $r80s12 = $transporte_escolar;
+        }
+      }
+      ${'r80s'.($veiculo_transporte_escolar + 12)} = 1;
+      $utiliza_algum_veiculo = FALSE;
+      for($i=13; $i<=23;$i++){
+        $utiliza_algum_veiculo = (${'r80s'.$i} == 1) || $utiliza_algum_veiculo;
+      }
+
+      if(!$transporte_escolar){
+        for($i=13; $i<=23;$i++){
           ${'r80s'.$i} = NULL;
         }
       }
+
+      if($transporte_escolar && !$utiliza_algum_veiculo){
+        $this->msg .= "Dados para formular o registro 80 campo 11 da escola {$escolaId} com problemas. Verifique se o campo tipo de veículo foi preenchido no aluno {$alunoId}.<br/>";
+        $this->error = true;
+      }
+
+      if($this->turma_presencial_ou_semi == 1 || $this->turma_presencial_ou_semi == 2){
+        if(is_null($r80s11)){
+          $this->msg .= "Dados para formular o registro 80 campo 11 da escola {$escolaId} com problemas. Verifique se o campo transporte escolar foi preenchido para aluno {$alunoId}.<br/>";
+          $this->error = true;
+        }
+      }
+
       // fim validações transporte escolar
 
       for ($i=1; $i <= $numeroRegistros ; $i++)

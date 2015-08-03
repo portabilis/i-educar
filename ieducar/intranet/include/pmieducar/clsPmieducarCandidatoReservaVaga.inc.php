@@ -110,14 +110,14 @@ class clsPmieducarCandidatoReservaVaga
    */
   function __construct($cod_candidato_reserva_vaga = NULL, $ano_letivo = NULL, $data_solicitacao = NULL,
     $ref_cod_aluno = NULL, $ref_cod_serie = NULL, $ref_cod_turno = NULL,
-    $ref_cod_pessoa_cad = NULL)
+    $ref_cod_pessoa_cad = NULL, $ref_cod_escola = NULL)
   {
     $db = new clsBanco();
     $this->_schema = 'pmieducar.';
     $this->_tabela = $this->_schema . 'candidato_reserva_vaga crv ';
 
     $this->_campos_lista = $this->_todos_campos = ' crv.cod_candidato_reserva_vaga, crv.ano_letivo, crv.data_solicitacao, 
-      crv.ref_cod_aluno, crv.ref_cod_serie, crv.ref_cod_turno, crv.ref_cod_pessoa_cad, crv.data_cad, crv.data_update, crv.data_situacao, crv.situacao, crv.ref_cod_matricula  ';
+      crv.ref_cod_aluno, crv.ref_cod_serie, crv.ref_cod_turno, crv.ref_cod_pessoa_cad, crv.data_cad, crv.data_update, crv.data_situacao, crv.situacao, crv.ref_cod_matricula, crv.ref_cod_escola  ';
 
     if (is_numeric($cod_candidato_reserva_vaga)) {
       $this->cod_candidato_reserva_vaga = $cod_candidato_reserva_vaga;
@@ -145,6 +145,10 @@ class clsPmieducarCandidatoReservaVaga
 
     if (is_numeric($ref_cod_pessoa_cad)) {
       $this->ref_cod_pessoa_cad = $ref_cod_pessoa_cad;
+    }
+
+    if (is_numeric($ref_cod_escola)) {
+      $this->ref_cod_escola = $ref_cod_escola;
     }
   }
 
@@ -212,6 +216,10 @@ class clsPmieducarCandidatoReservaVaga
       $valores .= "{$gruda}NOW()";
       $gruda = ', ';
 
+      $campos  .= "{$gruda}ref_cod_escola";
+      $valores .= "{$gruda}'{$this->ref_cod_escola}'";
+      $gruda = ', ';
+
       $db->Consulta("INSERT INTO pmieducar.candidato_reserva_vaga ($campos) VALUES ($valores)");
       return $db->InsertId("pmieducar.candidato_reserva_vaga_seq");
     }
@@ -255,7 +263,12 @@ class clsPmieducarCandidatoReservaVaga
       }
 
       $campos  .= "{$gruda}data_update = NOW() ";
-      $gruda = ', ';      
+      $gruda = ', ';
+
+      if (is_numeric($this->ref_cod_escola)) {
+        $set .= "{$gruda}ref_cod_escola = '{$this->ref_cod_escola}'";
+        $gruda = ', ';
+      }
 
       if ($set) {
         $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_candidato_reserva_vaga = '{$this->cod_candidato_reserva_vaga}'" );
@@ -270,7 +283,7 @@ class clsPmieducarCandidatoReservaVaga
    * Retorna uma lista de registros filtrados de acordo com os parâmetros.
    * @return array
    */
-  function lista($ano_letivo = NULL, $nome = NULL, $nome_responsavel = NULL)
+  function lista($ano_letivo = NULL, $nome = NULL, $nome_responsavel = NULL, $ref_cod_escola = NULL)
   {
     $filtros = '';
     $this->resetCamposLista();
@@ -300,6 +313,10 @@ class clsPmieducarCandidatoReservaVaga
       $whereAnd = ' AND ';
     }
 
+    if(is_numeric($ref_cod_escola)){
+      $filtros .= " {$whereAnd} ref_cod_escola = {$ref_cod_escola} ";
+      $whereAnd = ' AND ';
+    }
 
     $db = new clsBanco();
     $countCampos = count(explode(',', $this->_campos_lista));
@@ -479,35 +496,4 @@ class clsPmieducarCandidatoReservaVaga
     return FALSE;
   }
 
-  /**
-   * Retorna um array com os dados de um registro.
-   * @return array
-   */
-  function candidatoExistente($nome, $dataNascimento, $anoLetivo)
-  {
-    $query = "SELECT pessoa.nome AS nome_aluno, 
-                     to_char(fisica.data_nasc,'dd/mm/yyyy') AS data_nascimento, 
-                     pessoa_responsavel.nome AS nome_responsavel,
-                     public.formata_cpf(fisica_responsavel.cpf) AS cpf_responsavel,
-                     pessoa.idpes AS idpes
-                FROM pmieducar.candidato_reserva_vaga 
-               INNER JOIN pmieducar.aluno ON (aluno.cod_aluno = candidato_reserva_vaga.ref_cod_aluno)
-               INNER JOIN cadastro.fisica ON (fisica.idpes = aluno.ref_idpes)
-               INNER JOIN cadastro.pessoa ON (pessoa.idpes = aluno.ref_idpes)
-                LEFT JOIN cadastro.pessoa pessoa_responsavel ON (pessoa_responsavel.idpes = fisica.idpes_responsavel)
-                LEFT JOIN cadastro.fisica fisica_responsavel ON (fisica_responsavel.idpes = fisica.idpes_responsavel)
-               WHERE fisica.data_nasc = '$dataNascimento'
-                 AND candidato_reserva_vaga.ano_letivo = $anoLetivo
-                 AND translate(public.fcn_upper(pessoa.nome),
-                     'åáàãâäéèêëíìîïóòõôöúùüûçÿıñÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇİÑ',
-                     'aaaaaaeeeeiiiiooooouuuucyynAAAAAAEEEEIIIIOOOOOUUUUCYN') = translate(public.fcn_upper('$nome'),
-                     'åáàãâäéèêëíìîïóòõôöúùüûçÿıñÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇİÑ',
-                     'aaaaaaeeeeiiiiooooouuuucyynAAAAAAEEEEIIIIOOOOOUUUUCYN')";
-    $db = new clsBanco();
-    $db->Consulta($query);
-
-    if($db->ProximoRegistro()) return $db->Tupla();
-
-    return false;
-  }
 }

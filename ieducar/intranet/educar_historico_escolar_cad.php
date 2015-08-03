@@ -121,7 +121,7 @@ class indice extends clsCadastro
 				}
 				if(!isset($_GET['copia']))
 					$retorno = "Editar";
-				else 
+				else
 					$this->fexcluir = false;
 			}
 		}
@@ -133,7 +133,7 @@ class indice extends clsCadastro
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_index.php"                  => "i-Educar - Escola",
-         ""        => "{$nomeMenu} hist&oacute;rico escolar"             
+         ""        => "{$nomeMenu} hist&oacute;rico escolar"
     ));
     $this->enviaLocalizacao($localizacao->montar());
 
@@ -240,7 +240,7 @@ class indice extends clsCadastro
 		$this->campoCheck( "aceleracao", "Aceleração", $this->aceleracao );
 		$this->campoMemo( "observacao", "Observa&ccedil;&atilde;o", $this->observacao, 60, 5, false );
 
-		$opcoes = array( "" => "Selecione", 1 => "Aprovado", 2 => "Reprovado", 3 => "Em Andamento", 4 => "Transferido" , 6 => 'Abandono');
+		$opcoes = array( "" => "Selecione", 1 => "Aprovado", 2 => "Reprovado", 3 => "Em Andamento", 4 => "Transferido" , 6 => 'Abandono', 12 => 'Aprovado com depend&ecirc;ncia');
 		$this->campoLista( "aprovado", "Situa&ccedil;&atilde;o", $opcoes, $this->aprovado );
 
 		$this->campoTexto( "registro", "Registro (arquivo)", $this->registro, 30, 50, false);

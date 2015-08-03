@@ -427,7 +427,18 @@ class App_Model_IedFinder extends CoreExt_Entity
       $componente->id           = $componenteTurma->get('componenteCurricular');
       $componente->cargaHoraria = $componenteTurma->cargaHoraria;
 
-      $componentes[] = $componente;
+      $disponivelEtapa = true;
+
+      if ($componenteTurma->etapasEspecificas == 1) {
+
+        $etapas = $componenteTurma->etapasUtilizadas;
+
+        $disponivelEtapa = (strpos($etapas, $etapa) === false ? false : true);
+      }
+
+      if ($disponivelEtapa) {
+        $componentes[] = $componente;
+      }
     }
 
     return self::_hydrateComponentes($componentes, $serieId, $componenteMapper);
@@ -594,7 +605,7 @@ class App_Model_IedFinder extends CoreExt_Entity
 
       // Disciplinas da escola na série em que o aluno está matriculado
       $componentes = self::getComponentesTurma(
-        $codSerie, $codEscola, $turma, $turmaMapper, $componenteMapper, $componenteCurricularId
+        $codSerie, $codEscola, $turma, $turmaMapper, $componenteMapper, $componenteCurricularId, $etapa
       );
 
       // Dispensas do aluno
