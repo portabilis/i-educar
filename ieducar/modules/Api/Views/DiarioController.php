@@ -33,11 +33,18 @@
 require_once 'Portabilis/Controller/ApiCoreController.php';
 require_once 'Avaliacao/Service/Boletim.php';
 require_once 'Avaliacao/Model/NotaComponenteDataMapper.php';
+require_once 'Avaliacao/Model/FaltaComponenteDataMapper.php';
+require_once 'RegraAvaliacao/Model/TipoPresenca.php';
+
 require_once 'Portabilis/String/Utils.php';
 
 class DiarioController extends ApiCoreController
 {
   protected $_processoAp        = 642;
+
+  protected function getRegra($turmaId) {
+    return App_Model_IedFinder::getRegraAvaliacaoPorTurma($turmaId);
+  }
 
   protected function trySaveServiceBoletim($turmaId, $alunoId) {
     try {
@@ -97,6 +104,10 @@ class DiarioController extends ApiCoreController
     return $this->validatesPresenceOf('turmas') && $this->validatesPresenceOf('etapa');
   }
 
+  protected function canPostFaltasPorComponente(){
+    return $this->validatesPresenceOf('turmas') && $this->validatesPresenceOf('etapa');
+  }
+
   protected function postNotas(){
     if($this->canPostNotas()){
       $turmas = $this->getRequest()->turmas;
@@ -133,9 +144,49 @@ class DiarioController extends ApiCoreController
     }
   }
 
+
+  protected function postFaltasPorComponente(){
+    if($this->canPostFaltasPorComponente()){
+      $turmas = $this->getRequest()->turmas;
+      $etapa = $this->getRequest()->etapa;
+
+      foreach ($turmas as $turma) {
+        $turmaId = $turma['turma_id'];
+        $alunos = $turma['alunos'];
+
+        if($this->getRegra($turmaId)->get('tipoPresenca') != RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE){
+          throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de faltas por componente."));
+        }
+
+        foreach ($alunos as $aluno) {
+          $alunoId = $aluno['aluno_id'];
+
+          $componentesCurriculares = $aluno['componentes_curriculares'];
+          foreach ($componentesCurriculares as $componenteCurricular) {
+            $componenteCurricularId = $componenteCurricular['componente_curricular_id'];
+            $faltas = $componenteCurricular['faltas'];
+
+            $falta = new Avaliacao_Model_FaltaComponente(array(
+              'componenteCurricular' => $componenteCurricularId,
+              'quantidade'           => $faltas,
+              'etapa'                => $etapa
+            ));
+
+            $this->serviceBoletim($turmaId, $alunoId)->addFalta($falta);
+            $this->trySaveServiceBoletim($turmaId, $alunoId);
+          }
+        }
+      }
+
+      $this->messenger->append('Faltas postadas com sucesso!', 'success');
+    }
+  }
+
   public function Gerar() {
     if ($this->isRequestFor('post', 'notas'))
       $this->appendResponse($this->postNotas());
+    elseif ($this->isRequestFor('post', 'faltas-por-componente'))
+      $this->appendResponse($this->postFaltasPorComponente());
     else
       $this->notImplementedOperationError();
   }

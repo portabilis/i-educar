@@ -574,6 +574,35 @@ class App_Model_IedFinder extends CoreExt_Entity
   }
 
   /**
+   * Retorna uma instância de RegraAvaliacao_Model_Regra a partir dos dados
+   * da turma.
+   *
+   * @param int $turmaId
+   * @param RegraAvaliacao_Model_RegraDataMapper $mapper
+   * @return RegraAvaliacao_Model_Regra
+   * @throws App_Model_Exception
+   */
+  public static function getRegraAvaliacaoPorTurma($turmaId,
+    RegraAvaliacao_Model_RegraDataMapper $mapper = NULL)
+  {
+    $turma = self::getTurma($turmaId);
+    $serie     = self::getSerie($turma['ref_ref_cod_serie']);
+    $escola     = self::getEscola($turma['ref_ref_cod_escola']);
+
+    if (is_null($mapper)) {
+      require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
+      $mapper = new RegraAvaliacao_Model_RegraDataMapper();
+    }
+
+    if(dbBool($escola['utiliza_regra_diferenciada']) && is_numeric($serie['regra_avaliacao_diferenciada_id']) )
+      $intRegra = $serie['regra_avaliacao_diferenciada_id'];
+    else
+      $intRegra = $serie['regra_avaliacao_id'];
+
+    return $mapper->find($intRegra);
+  }
+
+  /**
    * Retorna um array de instâncias ComponenteCurricular_Model_Componente ao
    * qual um aluno cursa através de sua matrícula.
    *
