@@ -153,7 +153,7 @@ class indice extends clsListagem
       $this->nome,
       $this->matricula,
       NULL,
-      NULL,
+      TRUE,
       TRUE,
       NULL, 
       NULL,
