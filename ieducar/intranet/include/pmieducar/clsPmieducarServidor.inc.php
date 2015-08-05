@@ -1134,6 +1134,7 @@ class clsPmieducarServidor
           'AND (sd.ref_cod_disciplina = %d or todas_disciplinas = %d) AND sd.ref_cod_curso = %d',
           $int_ref_cod_disciplina, $int_ref_cod_curso);
       }
+ if (is_numeric($int_ref_cod_disciplina)) {
       $filtros .= "
     {$whereAnd} EXISTS
       (SELECT
@@ -1150,6 +1151,24 @@ class clsPmieducarServidor
         sd.ref_cod_disciplina = '{$int_ref_cod_disciplina}'
         {$servidorDisciplinas})";
       $whereAnd = " AND ";
+}else{
+    $filtros .= "
+    {$whereAnd} EXISTS
+      (SELECT
+         1
+       FROM
+         pmieducar.servidor_funcao sf, pmieducar.funcao f, pmieducar.servidor_disciplina sd
+       WHERE
+        f.cod_funcao = sf.ref_cod_funcao AND
+        f.professor = 1 AND
+        sf.ref_ref_cod_instituicao = s.ref_cod_instituicao AND
+        s.cod_servidor = sf.ref_cod_servidor AND
+        s.cod_servidor = sd.ref_cod_servidor AND
+        s.ref_cod_instituicao = sd.ref_ref_cod_instituicao
+        {$servidorDisciplinas})";
+      $whereAnd = " AND ";
+}
+
     }
     if (is_string($str_horario) && $str_horario == "S") {
       $filtros .= "
