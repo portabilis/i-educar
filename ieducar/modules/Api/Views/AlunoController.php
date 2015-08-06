@@ -1029,7 +1029,8 @@ class AlunoController extends ApiCoreController
         'ref_cod_aluno'       => 'aluno_id',
         'nome'                => 'aluno_nome',
         'aprovado'            => 'situacao',
-        'ano'
+        'ano',
+        'dependencia'
       );
 
       $matriculas = Portabilis_Array_Utils::filterSet($matriculas, $attrs);
@@ -1066,7 +1067,7 @@ class AlunoController extends ApiCoreController
 
       $attrs = array('id', 'instituicao_id', 'escola_id', 'curso_id', 'serie_id', 'aluno_id', 'aluno_nome', 'situacao', 'ano', 'turma_id',
           'turma_nome', 'escola_nome', 'escola_nome', 'curso_nome', 'serie_nome', 'ultima_enturmacao', 'data_entrada', 'data_entrada', 'data_saida', 'user_can_access', 'user_can_change_date',
-          'codigo_situacao', 'user_can_change_situacao','transferencia_em_aberto');
+          'codigo_situacao', 'user_can_change_situacao','transferencia_em_aberto', 'dependencia');
 
       $matriculas = Portabilis_Array_Utils::filterSet($matriculas, $attrs);
 
@@ -1334,17 +1335,17 @@ class AlunoController extends ApiCoreController
     //
     if ($this->getRequest()->tipo_certidao_civil == 'certidao_nascimento_novo_formato') {
       $documentos->tipo_cert_civil     = null;
-      $documentos->certidao_casamento  = '';       
+      $documentos->certidao_casamento  = '';
       $documentos->certidao_nascimento = $this->getRequest()->certidao_nascimento;
     }else if ($this->getRequest()->tipo_certidao_civil == 'certidao_casamento_novo_formato') {
       $documentos->tipo_cert_civil     = null;
-      $documentos->certidao_nascimento  = '';       
+      $documentos->certidao_nascimento  = '';
       $documentos->certidao_casamento = $this->getRequest()->certidao_casamento;
     }
     else {
       $documentos->tipo_cert_civil     = $this->getRequest()->tipo_certidao_civil;
       $documentos->certidao_nascimento = '';
-      $documentos->certidao_casamento  = '';       
+      $documentos->certidao_casamento  = '';
     }
 
     $documentos->num_termo                  = $this->getRequest()->termo_certidao_civil;

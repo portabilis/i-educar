@@ -1484,7 +1484,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       }
     }
 
-    if($situacaoGeral == App_Model_MatriculaSituacao::REPROVADO
+    $matricula = $this->getOption('matriculaData');
+
+    if(!dbBool($matricula['dependencia']) && $situacaoGeral == App_Model_MatriculaSituacao::REPROVADO
         && $qtdComponenteReprovado <= $this->getRegra()->get('qtdDisciplinasDependencia'))
       $situacaoGeral = App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA;
 
