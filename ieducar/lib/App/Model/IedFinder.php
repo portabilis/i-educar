@@ -642,12 +642,33 @@ class App_Model_IedFinder extends CoreExt_Entity
         $codMatricula, $codSerie, $codEscola
       );
 
-      foreach ($componentes as $id => $componente) {
-        if (in_array($id, $disciplinasDispensa)) {
-          continue;
+      if(dbBool($matricula['dependencia'])){
+
+        // Disciplinas dependência
+        $disciplinasDependencia = self::getDisciplinasDependenciaPorMatricula(
+          $codMatricula, $codSerie, $codEscola
+        );
+
+        foreach ($componentes as $id => $componente) {
+          if (in_array($id, $disciplinasDispensa)) {
+            continue;
+          }
+          if (!in_array($id, $disciplinasDependencia)) {
+            continue;
+          }
+
+          $ret[$id] = $componente;
         }
 
-        $ret[$id] = $componente;
+
+      }else{
+        foreach ($componentes as $id => $componente) {
+          if (in_array($id, $disciplinasDispensa)) {
+            continue;
+          }
+
+          $ret[$id] = $componente;
+        }
       }
     }
 
@@ -681,6 +702,36 @@ class App_Model_IedFinder extends CoreExt_Entity
     }
 
     return $disciplinasDispensa;
+  }
+
+  /**
+   * Retorna array com as referências de pmieducar.disciplina_dependencia
+   * a modules.componente_curricular ('ref_ref_cod_disciplina').
+   *
+   * @param int $codMatricula
+   * @param int $codSerie
+   * @param int $codEscola
+   * @return array
+   */
+  public static function getDisciplinasDependenciaPorMatricula($codMatricula,
+    $codSerie, $codEscola)
+  {
+
+    $disciplinas = self::addClassToStorage('clsPmieducarDisciplinaDependencia',
+      NULL, 'include/pmieducar/clsPmieducarDisciplinaDependencia.inc.php');
+
+    $disciplinas = $disciplinas->lista($codMatricula, $codSerie, $codEscola);
+
+    if (FALSE === $disciplinas) {
+      return array();
+    }
+
+    $disciplinasDependencia = array();
+    foreach ($disciplinas as $disciplina) {
+      $disciplinasDependencia[] = $disciplina['ref_cod_disciplina'];
+    }
+
+    return $disciplinasDependencia;
   }
 
   /**

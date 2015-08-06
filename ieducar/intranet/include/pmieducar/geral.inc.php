@@ -53,6 +53,7 @@ require_once 'include/pmieducar/clsPmieducarDisciplinaDisciplinaTopico.inc.php';
 require_once 'include/pmieducar/clsPmieducarDisciplinaSerie.inc.php';
 require_once 'include/pmieducar/clsPmieducarDisciplinaTopico.inc.php';
 require_once 'include/pmieducar/clsPmieducarDispensaDisciplina.inc.php';
+require_once 'include/pmieducar/clsPmieducarDisciplinaDependencia.inc.php';
 require_once 'include/pmieducar/clsPmieducarDocumentos.inc.php';
 require_once 'include/pmieducar/clsPmieducarEndereco.inc.php';
 require_once 'include/pmieducar/clsPmieducarEnderecoExterno.inc.php';
