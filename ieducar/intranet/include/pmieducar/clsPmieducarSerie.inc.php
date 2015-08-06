@@ -1,5 +1,8 @@
 <?php
 
+error_reporting(E_ERROR);
+ini_set("display_errors", 1);
+
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -64,6 +67,9 @@ class clsPmieducarSerie
   var $idade_inicial;
   var $idade_final;
 
+  var $alerta_faixa_etaria;
+  var $bloquear_matricula_faixa_etaria;
+
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
    * @var int
@@ -122,12 +128,12 @@ class clsPmieducarSerie
     $etapa_curso = NULL, $concluinte = NULL, $carga_horaria = NULL,
     $data_cadastro = NULL, $data_exclusao = NULL, $ativo = NULL,
     $idade_inicial = NULL, $idade_final = NULL, $regra_avaliacao_id = NULL, $observacao_historico = null,
-    $dias_letivos = null, $regra_avaliacao_diferenciada_id = null)
+    $dias_letivos = null, $regra_avaliacao_diferenciada_id = null, $alerta_faixa_etaria = false, $bloquear_matricula_faixa_etaria = false)
   {
     $db = new clsBanco();
     $this->_schema = "pmieducar.";
     $this->_tabela = "{$this->_schema}serie";
-    $this->_campos_lista = $this->_todos_campos = "s.cod_serie, s.ref_usuario_exc, s.ref_usuario_cad, s.ref_cod_curso, s.nm_serie, s.etapa_curso, s.concluinte, s.carga_horaria, s.data_cadastro, s.data_exclusao, s.ativo, s.idade_inicial, s.idade_final, s.regra_avaliacao_id, s.observacao_historico, s.dias_letivos, s.regra_avaliacao_diferenciada_id ";
+    $this->_campos_lista = $this->_todos_campos = "s.cod_serie, s.ref_usuario_exc, s.ref_usuario_cad, s.ref_cod_curso, s.nm_serie, s.etapa_curso, s.concluinte, s.carga_horaria, s.data_cadastro, s.data_exclusao, s.ativo, s.idade_inicial, s.idade_final, s.regra_avaliacao_id, s.observacao_historico, s.dias_letivos, s.regra_avaliacao_diferenciada_id, s.alerta_faixa_etaria, s.bloquear_matricula_faixa_etaria ";
 
     if (is_numeric($ref_cod_curso)) {
       if (class_exists("clsPmieducarCurso")) {
@@ -271,6 +277,14 @@ class clsPmieducarSerie
       $this->idade_final = $idade_final;
     }
 
+    if (dbBool($alerta_faixa_etaria)) {
+      $this->alerta_faixa_etaria = $alerta_faixa_etaria;
+    }
+
+    if (dbBool($bloquear_matricula_faixa_etaria)) {
+      $this->bloquear_matricula_faixa_etaria = $bloquear_matricula_faixa_etaria;
+    }
+
     $this->observacao_historico = $observacao_historico;
     $this->dias_letivos         = $dias_letivos;
   }
@@ -370,6 +384,26 @@ class clsPmieducarSerie
         $campos  .= "{$gruda}dias_letivos";
         $valores .= "{$gruda}'{$this->dias_letivos}'";
         $gruda    = ", ";
+      }
+
+      if (dbBool($this->alerta_faixa_etaria)) {
+        $campos .= "{$gruda}alerta_faixa_etaria";
+        $valores .= "{$gruda} true ";
+        $gruda = ", ";
+      }else{
+        $campos .= "{$gruda}alerta_faixa_etaria";
+        $valores .= "{$gruda} false ";
+        $gruda = ", ";
+      }
+
+      if (dbBool($this->bloquear_matricula_faixa_etaria)) {
+        $campos .= "{$gruda}bloquear_matricula_faixa_etaria";
+        $valores .= "{$gruda} true ";
+        $gruda = ", ";
+      }else{
+        $campos .= "{$gruda}bloquear_matricula_faixa_etaria";
+        $valores .= "{$gruda} false ";
+        $gruda = ", ";
       }
 
       $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
@@ -474,6 +508,22 @@ class clsPmieducarSerie
 
       if (is_numeric($this->dias_letivos)) {
         $set .= "{$gruda}dias_letivos = '{$this->dias_letivos}'";
+        $gruda = ", ";
+      }
+
+      if (dbBool($this->alerta_faixa_etaria)) {
+        $set .= "{$gruda}alerta_faixa_etaria = true ";
+        $gruda = ", ";
+      }else{
+        $set .= "{$gruda}alerta_faixa_etaria = false ";
+        $gruda = ", ";
+      }
+
+      if (dbBool($this->bloquear_matricula_faixa_etaria)) {
+        $set .= "{$gruda}bloquear_matricula_faixa_etaria = true ";
+        $gruda = ", ";
+      }else{
+        $set .= "{$gruda}bloquear_matricula_faixa_etaria = false ";
         $gruda = ", ";
       }
 
@@ -779,4 +829,28 @@ class clsPmieducarSerie
 
     return $resultado;
   }
+
+  /**
+   * Verifica se a pessoa enviada por parâmetro está dentro do período de corte etário pré-definido.
+   *
+   * @param int $codAluno
+   * @return boolean
+   */
+  function verificaPeriodoCorteEtario($codAluno){
+    $db = new clsBanco();
+
+    $sql = "SELECT serie.idade_inicial,
+                   serie.idade_final
+              FROM pmieducar.aluno, cadastro.fisica, pmieducar.serie
+             INNER JOIN pmieducar.curso ON (curso.cod_curso = serie.ref_cod_curso)
+             INNER JOIN pmieducar.instituicao ON (instituicao.cod_instituicao = curso.ref_cod_instituicao)
+             WHERE serie.cod_serie = {$this->cod_serie}
+               AND aluno.cod_aluno = {$codAluno}
+               AND fisica.idpes = aluno.ref_idpes
+               AND fisica.data_nasc >= (replace(instituicao.data_base_matricula, EXTRACT(YEAR FROM instituicao.data_base_matricula), EXTRACT(YEAR FROM now()) - idade_final))::date
+               AND fisica.data_nasc <= (replace(instituicao.data_base_matricula, EXTRACT(YEAR FROM instituicao.data_base_matricula), EXTRACT(YEAR FROM now()) - idade_inicial))::date";
+    $db->Consulta($sql);
+    return $db->ProximoRegistro();
+  }
+
 }

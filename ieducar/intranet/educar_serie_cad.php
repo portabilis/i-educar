@@ -93,6 +93,9 @@ class indice extends clsCadastro
   var $regra_avaliacao_id;
   var $regra_avaliacao_diferenciada_id;
 
+  var $alerta_faixa_etaria;
+  var $bloquear_matricula_faixa_etaria;
+
   function Inicializar()
   {
     $retorno = 'Novo';
@@ -140,6 +143,9 @@ class indice extends clsCadastro
     $this->enviaLocalizacao($localizacao->montar());
 
     $this->nome_url_cancelar = "Cancelar";
+
+    $this->alerta_faixa_etaria  = dbBool($this->alerta_faixa_etaria);
+    $this->bloquear_matricula_faixa_etaria  = dbBool($this->bloquear_matricula_faixa_etaria);
 
     return $retorno;
   }
@@ -211,6 +217,10 @@ class indice extends clsCadastro
     $this->campoNumero('idade_final', '&nbsp;até', $this->idade_final, 2, 2, FALSE);
 
 		$this->campoMemo( "observacao_historico", "Observa&ccedil;&atilde;o histórico", $this->observacao_historico, 60, 5, false );
+
+    $this->campoCheck("alerta_faixa_etaria", "Exibir alerta ao tentar matricular alunos fora da faixa etária da série/ano", $this->alerta_faixa_etaria);
+    $this->campoCheck("bloquear_matricula_faixa_etaria", "Bloquear matrículas de alunos fora da faixa etária da série/ano", $this->bloquear_matricula_faixa_etaria);
+
   }
 
   function Novo()
@@ -225,7 +235,8 @@ class indice extends clsCadastro
     $obj = new clsPmieducarSerie(NULL, NULL, $this->pessoa_logada, $this->ref_cod_curso,
       $this->nm_serie, $this->etapa_curso, $this->concluinte, $this->carga_horaria,
       NULL, NULL, 1, $this->idade_inicial, $this->idade_final,
-      $this->regra_avaliacao_id, $this->observacao_historico, $this->dias_letivos, $this->regra_avaliacao_diferenciada_id);
+      $this->regra_avaliacao_id, $this->observacao_historico, $this->dias_letivos,
+      $this->regra_avaliacao_diferenciada_id, !is_null($this->alerta_faixa_etaria), !is_null($this->bloquear_matricula_faixa_etaria));
 
     $cadastrou = $obj->cadastra();
 
@@ -252,7 +263,8 @@ class indice extends clsCadastro
     $obj = new clsPmieducarSerie($this->cod_serie, $this->pessoa_logada, NULL,
       $this->ref_cod_curso, $this->nm_serie, $this->etapa_curso, $this->concluinte,
       $this->carga_horaria, NULL, NULL, 1, $this->idade_inicial,
-      $this->idade_final, $this->regra_avaliacao_id, $this->observacao_historico, $this->dias_letivos, $this->regra_avaliacao_diferenciada_id);
+      $this->idade_final, $this->regra_avaliacao_id, $this->observacao_historico, $this->dias_letivos,
+      $this->regra_avaliacao_diferenciada_id, !is_null($this->alerta_faixa_etaria), !is_null($this->bloquear_matricula_faixa_etaria));
 
     $editou = $obj->edita();
     if ($editou) {

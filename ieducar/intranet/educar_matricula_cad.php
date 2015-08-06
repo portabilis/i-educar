@@ -381,6 +381,49 @@ class indice extends clsCadastro
           }
         }
     }
+      $serie = new clsPmieducarSerie($this->ref_cod_serie);
+      $detSerie = $serie->detalhe();
+
+      $alertaFaixaEtaria = $detSerie['alerta_faixa_etaria'] == "t";
+      $bloquearMatriculaFaixaEtaria = $detSerie['bloquear_matricula_faixa_etaria'] == "t";
+
+      $verificarDataCorte = $alertaFaixaEtaria || $bloquearMatriculaFaixaEtaria;
+
+      @session_start();
+      $reload = $_SESSION['reload_faixa_etaria'];
+      @session_write_close();
+
+      if ($verificarDataCorte && !$reload) {
+
+        $reload = 1;
+        @session_start();
+        $_SESSION['reload_faixa_etaria'] = $reload;
+        @session_write_close();
+
+        $instituicao = new clsPmiEducarInstituicao($this->ref_cod_instituicao);
+        $instituicao = $instituicao->detalhe();
+
+        $dataCorte = $instituicao["data_base_matricula"];
+        $idadeInicial = $detSerie['idade_inicial'];
+        $idadeFinal = $detSerie['idade_final'];
+
+        $dentroPeriodoCorte = $serie->verificaPeriodoCorteEtario($this->ref_cod_aluno);
+
+        if ($bloquearMatriculaFaixaEtaria && !$dentroPeriodoCorte) {
+          $this->mensagem = Portabilis_String_Utils::toLatin1('Não foi possível realizar matrícula, a idade do aluno está fora da faixa etária da série.');
+          return FALSE;
+        } else if ($alertaFaixaEtaria && !$dentroPeriodoCorte) {
+            echo "<script type=\"text/javascript\">
+                    var msg = '".Portabilis_String_Utils::toLatin1('A idade do aluno encontra-se fora da faixa etária pré-definida na série, deseja continuar com a matrícula?')."';
+                    if (!confirm(msg)) {
+                      window.location = 'educar_aluno_det.php?cod_aluno=".$this->ref_cod_aluno."';
+                    } else {
+                      parent.document.getElementById('formcadastro').submit();
+                    }
+                  </script>";
+            return TRUE;
+        }
+      }
 
       $obj_reserva_vaga = new clsPmieducarReservaVaga();
       $lst_reserva_vaga = $obj_reserva_vaga->lista(NULL, $this->ref_cod_escola,
