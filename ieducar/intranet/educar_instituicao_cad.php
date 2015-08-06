@@ -230,7 +230,7 @@ class indice extends clsCadastro
     	$this->inputsHelper()->text('data_base', array('label' => 'Data base para matrícula (dia/mês)',
 					    								'size' => 5,
 					    								'max_length' => 5,
-					    								'placeholder' => Portabilis_String_Utils::toLatin1('dd/mm'),
+					    								'placeholder' => 'dd/mm',
 					    								'required' => false,
 					    								'value' => Portabilis_Date_Utils::pgSQLToBr_ddmm($this->data_base_matricula)));
 	}
@@ -353,5 +353,7 @@ $pagina->MakeAll();
 			$j('#quantidade_alunos_metro_quadrado').closest('tr').show();
 		}
 	}
+
+	$j('#data_base').mask("99/99");
 
 </script>
