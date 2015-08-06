@@ -264,7 +264,7 @@ class indice extends clsDetalhe
       $registro['sigla_uf_exp_rg'] 	   = $detalheDocumento['sigla_uf_exp_rg'];
       $registro['tipo_cert_civil'] 	   = $detalheDocumento['tipo_cert_civil'];
       $registro['certidao_nascimento'] = $detalheDocumento['certidao_nascimento'];
-      $registro['certidao_casamento']  = $detalheDocumento['certidao_casamento'];      
+      $registro['certidao_casamento']  = $detalheDocumento['certidao_casamento'];
       $registro['num_termo']       	   = $detalheDocumento['num_termo'];
       $registro['num_livro']       	   = $detalheDocumento['num_livro'];
       $registro['num_folha']       	   = $detalheDocumento['num_folha'];
@@ -920,6 +920,8 @@ class indice extends clsDetalhe
 
     $this->addDetalhe("<input type='hidden' id='escola_id' name='aluno_id' value='{$registro['ref_cod_escola']}' />");
     $this->addDetalhe("<input type='hidden' id='aluno_id' name='aluno_id' value='{$registro['cod_aluno']}' />");
+    $mostraDependencia = $GLOBALS['coreExt']['Config']->app->matricula->dependencia;
+    $this->addDetalhe("<input type='hidden' id='can_show_dependencia' name='can_show_dependencia' value='{$mostraDependencia}' />");
 
     // js
 

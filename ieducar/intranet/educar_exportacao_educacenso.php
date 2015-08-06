@@ -1675,7 +1675,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
       }
 
       if(!$transporte_escolar){
-        for($i=13; $i<=23;$i++){
+        for($i=12; $i<=23;$i++){
           ${'r80s'.$i} = NULL;
         }
       }

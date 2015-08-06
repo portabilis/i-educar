@@ -91,6 +91,7 @@ class indice extends clsCadastro
 
   var $semestre;
   var $is_padrao;
+  var $dependencia;
 
   var $ref_cod_candidato_reserva_vaga;
 
@@ -137,7 +138,7 @@ class indice extends clsCadastro
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_index.php"                  => "i-Educar - Escola",
-         ""        => "{$nomeMenu} matr&iacute;cula"             
+         ""        => "{$nomeMenu} matr&iacute;cula"
     ));
     $this->enviaLocalizacao($localizacao->montar());
 
@@ -184,6 +185,10 @@ class indice extends clsCadastro
     $this->inputsHelper()->date('data_matricula', array('label' => Portabilis_String_Utils::toLatin1('Data da matrícula'), 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y') ));
     $this->inputsHelper()->hidden('ano_em_andamento', array('value' => '1'));
 
+    if($GLOBALS['coreExt']['Config']->app->matricula->dependencia == 1)
+      $this->inputsHelper()->checkbox('dependencia',
+                                      array('label' => Portabilis_String_Utils::toLatin1('Matrícula de dependência?')));
+
     if (is_numeric($this->ref_cod_curso)) {
       $obj_curso = new clsPmieducarCurso($this->ref_cod_curso);
       $det_curso = $obj_curso->detalhe();
@@ -203,7 +208,7 @@ class indice extends clsCadastro
   }
   function Enturmar(){
     $enturmacoes_turma_dest = Portabilis_Utils_Database::fetchPreparedQuery("
-                                                                  select * from pmieducar.matricula_turma 
+                                                                  select * from pmieducar.matricula_turma
                                                                   where ref_cod_turma = {$this->ref_cod_turma} and ativo = 1");
     $qtq_alunos = count($enturmacoes_turma_dest);
     $db = new clsBanco();
@@ -211,7 +216,7 @@ class indice extends clsCadastro
     $saldo_turma = $max_aluno - $qtq_alunos;
 //echo $this->ref_cod_turma;die;
     $enturmacoes = Portabilis_Utils_Database::fetchPreparedQuery("
-                                                                  select * from pmieducar.matricula_turma 
+                                                                  select * from pmieducar.matricula_turma
                                                                   where ref_cod_turma = {$this->ref_cod_turma_copiar_enturmacoes} and ativo = 1");
     $qtd_alunos_new = count($enturmacoes);
     if ($qtd_alunos_new < $saldo_turma){
@@ -232,22 +237,22 @@ class indice extends clsCadastro
           NULL, 1, $datah);
         $matricula_new = $obj->cadastra();
         $db = new clsBanco();
-        $existe = $db->CampoUnico("select 1 from pmieducar.matricula_turma, pmieducar.matricula 
-                                      where ref_cod_matricula = cod_matricula 
-                                      and ref_cod_turma = {$this->ref_cod_turma} 
+        $existe = $db->CampoUnico("select 1 from pmieducar.matricula_turma, pmieducar.matricula
+                                      where ref_cod_matricula = cod_matricula
+                                      and ref_cod_turma = {$this->ref_cod_turma}
                                       and ref_cod_aluno = {$dado_matricula_old[0]['ref_cod_aluno']}");
           $db = new clsBanco();
           $db->CampoUnico("insert into pmieducar.matricula_turma
                            (ref_cod_matricula,
                             ref_cod_turma,
                             sequencial,
-                            ref_usuario_exc, 
+                            ref_usuario_exc,
                             ref_usuario_cad,
                             data_cadastro,
                             ativo,
                             data_enturmacao)
                            values
-                           ({$matricula_new}, {$this->ref_cod_turma}, {$enturmar['sequencial']}, NULL, 
+                           ({$matricula_new}, {$this->ref_cod_turma}, {$enturmar['sequencial']}, NULL,
                             {$enturmar['ref_usuario_cad']}, '{$datah}', {$enturmar['ativo']}, '{$data}')");
         }
       }
@@ -261,6 +266,8 @@ class indice extends clsCadastro
   }
   function Novo()
   {
+
+    $dependencia = $this->dependencia == 'on';
 
     $db = new clsBanco();
     $somente_do_bairro = $db->CampoUnico("SELECT matricula_apenas_bairro_escola FROM pmieducar.instituicao where cod_instituicao = {$this->ref_cod_instituicao}");
@@ -301,17 +308,17 @@ class indice extends clsCadastro
                                                                      );
 
     if(! $this->existeVagasDisponíveis())
-      return false;    
+      return false;
 
     if(is_array($anoLetivoEmAndamentoEscola)) {
       require_once 'include/pmieducar/clsPmieducarSerie.inc.php';
       $db = new clsBanco();
 
-      $db->Consulta("select ref_ref_cod_serie, ref_cod_curso from pmieducar.matricula where ativo = 1 and ref_ref_cod_escola = $this->ref_cod_escola and ref_cod_curso = $this->ref_cod_curso and ref_cod_aluno = $this->ref_cod_aluno and aprovado not in (1,2,4,5,6,7,8,9)");
+      $db->Consulta("select ref_ref_cod_serie, ref_cod_curso from pmieducar.matricula where ativo = 1 and ref_ref_cod_escola = $this->ref_cod_escola and ref_cod_curso = $this->ref_cod_curso and ref_cod_aluno = $this->ref_cod_aluno and aprovado = 3 AND dependencia = FALSE ");
 
       $db->ProximoRegistro();
       $m = $db->Tupla();
-      if (is_array($m) && count($m)) {
+      if (is_array($m) && count($m) && !$dependencia) {
 
         $curso = $this->getCurso($this->ref_cod_curso);
 
@@ -338,16 +345,16 @@ class indice extends clsCadastro
 
       else
       {
-        $db->Consulta("select ref_ref_cod_escola, ref_cod_curso, ref_ref_cod_serie from pmieducar.matricula where ativo = 1 and ref_ref_cod_escola != $this->ref_cod_escola and ref_cod_aluno = $this->ref_cod_aluno and aprovado not in (1,2,4,5,6,7,8,9) and not exists (select 1 from pmieducar.transferencia_solicitacao as ts where ts.ativo = 1 and ts.ref_cod_matricula_saida = matricula.cod_matricula)");
+        $db->Consulta("select ref_ref_cod_escola, ref_cod_curso, ref_ref_cod_serie from pmieducar.matricula where ativo = 1 and ref_ref_cod_escola != $this->ref_cod_escola and ref_cod_aluno = $this->ref_cod_aluno AND dependencia = FALSE and aprovado = 3 and not exists (select 1 from pmieducar.transferencia_solicitacao as ts where ts.ativo = 1 and ts.ref_cod_matricula_saida = matricula.cod_matricula )");
 
         $db->ProximoRegistro();
         $m = $db->Tupla();
-        if (is_array($m) && count($m)){
+        if (is_array($m) && count($m) && !$dependencia){
           if ($m['ref_cod_curso'] == $this->ref_cod_curso || $GLOBALS['coreExt']['Config']->app->matricula->multiplas_matriculas == 0){
             require_once 'include/pmieducar/clsPmieducarEscola.inc.php';
             require_once 'include/pessoa/clsJuridica.inc.php';
 
-            $serie = new clsPmieducarSerie($m['ref_ref_cod_serie'], null, null, $m['ref_cod_curso']);          
+            $serie = new clsPmieducarSerie($m['ref_ref_cod_serie'], null, null, $m['ref_cod_curso']);
             $serie = $serie->detalhe();
             if (is_array($serie) && count($serie))
               $serie = $serie['nm_serie'];
@@ -511,7 +518,7 @@ class indice extends clsCadastro
           $objTurma = new clsPmieducarTurma($this->ref_cod_turma);
           $maximoAlunosSala = $objTurma->maximoAlunosSala();
           $excedeuLimiteMatriculas = (($matriculados + $reservados) >= $maximoAlunosSala);
-          
+
           if($excedeuLimiteMatriculas){
              echo sprintf('
               <script>
@@ -542,6 +549,32 @@ class indice extends clsCadastro
       if (! $this->removerFlagUltimaMatricula($this->ref_cod_aluno)) {
         return false;
       }
+
+      $anoValidacao = $this->ano - 2;
+
+      $db->Consulta("SELECT *
+                      FROM pmieducar.matricula m
+                      WHERE m.ano <= {$anoValidacao}
+                      AND m.aprovado = 12
+                      AND m.ativo = 1
+                      AND m.ref_cod_aluno = {$this->ref_cod_aluno}
+                      AND m.ref_ref_cod_escola <> {$this->ref_cod_serie}
+                      AND (SELECT 1
+                            FROM pmieducar.matricula s_m
+                            WHERE s_m.ref_cod_aluno = m.ref_cod_aluno
+                            AND s_m.ativo = 1
+                            AND s_m.ano > m.ano
+                            AND s_m.dependencia = TRUE
+                            AND s_m.aprovado = 1
+                            LIMIT 1) IS NULL ");
+
+      $db->ProximoRegistro();
+      $m = $db->Tupla();
+      if (is_array($m) && count($m) && !$dependencia) {
+        $this->mensagem .= "Esse aluno foi aprovado com depend&ecirc;ncia e n&atilde;o foi aprovado na depend&ecirc;ncia.<br />";
+        return false;
+      }
+
       $this->data_matricula = Portabilis_Date_Utils::brToPgSQL($this->data_matricula);
       $obj = new clsPmieducarMatricula(NULL, $this->ref_cod_reserva_vaga,
         $this->ref_cod_escola, $this->ref_cod_serie, NULL,
@@ -549,10 +582,12 @@ class indice extends clsCadastro
         1, NULL, NULL, NULL, NULL, $this->ref_cod_curso,
         NULL, $this->semestre,$this->data_matricula);
 
+      $obj->dependencia = $dependencia;
+
       $cadastrou = $obj->cadastra();
-      
-      $cod_matricula = $cadastrou;      
-      
+
+      $cod_matricula = $cadastrou;
+
       if ($cadastrou) {
 
         if (is_numeric($this->ref_cod_candidato_reserva_vaga)){
@@ -579,7 +614,7 @@ class indice extends clsCadastro
               );
 
               $det_matricula = $obj_matricula->detalhe();
-              
+
               // Criar histórico de transferencia
               clsPmieducarHistoricoEscolar::gerarHistoricoTransferencia($det_matricula['cod_matricula'], $this->pessoa_logada);
 
@@ -662,13 +697,13 @@ class indice extends clsCadastro
                                                 $int_ref_ref_cod_escola = NULL, $int_ref_ref_cod_serie = $this->ref_cod_serie,
                                                 $int_ref_usuario_exc = NULL, $int_ref_usuario_cad = NULL,
                                                 $ref_cod_aluno = $this->ref_cod_aluno, $int_aprovado = 4,
-                                                $date_data_cadastro_ini = NULL, $date_data_cadastro_fim = NULL, 
-                                                $date_data_exclusao_ini = NULL, $date_data_exclusao_fim = NULL, 
+                                                $date_data_cadastro_ini = NULL, $date_data_cadastro_fim = NULL,
+                                                $date_data_exclusao_ini = NULL, $date_data_exclusao_fim = NULL,
                                                 $int_ativo = 1, $int_ano = $this->ano, $int_ref_cod_curso2 = NULL,
                                                 $int_ref_cod_instituicao = NULL, $int_ultima_matricula = NULL,
-                                                $int_modulo = NULL, $int_padrao_ano_escolar = NULL, 
+                                                $int_modulo = NULL, $int_padrao_ano_escolar = NULL,
                                                 $int_analfabeto = NULL, $int_formando = NULL, $str_descricao_reclassificacao = NULL,
-                                                $int_matricula_reclassificacao = NULL, $boo_com_deficiencia = NULL, 
+                                                $int_matricula_reclassificacao = NULL, $boo_com_deficiencia = NULL,
                                                 $int_ref_cod_curso = NULL, $bool_curso_sem_avaliacao = NULL,
                                                 $arr_int_cod_matricula = NULL, $int_mes_defasado = NULL, $boo_data_nasc = NULL,
                                                 $boo_matricula_transferencia = NULL, $int_semestre = NULL, $int_ref_cod_turma = NULL,
@@ -755,7 +790,7 @@ class indice extends clsCadastro
     $lista_transferencia = $obj_transferencia_antiga->lista(null,null,null,null,$this->cod_matricula);
 
     if (is_array($lista_transferencia)){
-      
+
       foreach ($lista_transferencia as $transf) {
 
         $obj_mat = new clsPmieducarMatricula($transf['ref_cod_matricula_saida']);
@@ -770,7 +805,7 @@ class indice extends clsCadastro
       }
     }
 
-    
+
     // Verifica se a série da matrícula cancelada é sequência de alguma outra série
     if (is_array($lst_sequencia)) {
       $det_sequencia    = array_shift($lst_sequencia);
@@ -843,9 +878,9 @@ function enturmacaoMatricula($matriculaId, $turmaDestinoId) {
     $enturmacaoExists = new clsPmieducarMatriculaTurma();
     $enturmacaoExists = $enturmacaoExists->lista($matriculaId,
                                                  $turmaDestinoId,
-                                                NULL, 
+                                                NULL,
                                                  NULL,
-                                                 NULL, 
+                                                 NULL,
                                                  NULL,
                                                  NULL,
                                                 NULL,
@@ -855,10 +890,10 @@ function enturmacaoMatricula($matriculaId, $turmaDestinoId) {
     if (! $enturmacaoExists) {
       $enturmacao = new clsPmieducarMatriculaTurma($matriculaId,
                                                    $turmaDestinoId,
-                                                  $this->pessoa_logada, 
-                                                   $this->pessoa_logada, 
+                                                  $this->pessoa_logada,
+                                                   $this->pessoa_logada,
                                                    NULL,
-                                                   NULL, 
+                                                   NULL,
                                                    1);
       $enturmacao->data_enturmacao = $this->data_matricula;
       return $enturmacao->cadastra();
@@ -867,7 +902,7 @@ function enturmacaoMatricula($matriculaId, $turmaDestinoId) {
   }
 
   function existeVagasDisponíveis(){
-  
+
     // Caso quantidade de matrículas naquela turma seja maior ou igual que a capacidade da turma deve bloquear
     if($this->_getQtdMatriculaTurma() >= $this->_getMaxAlunoTurma()){
       $this->mensagem .= Portabilis_String_Utils::toLatin1("Não existem vagas disponíveis para essa turma!") . '<br/>';
@@ -899,15 +934,15 @@ function enturmacaoMatricula($matriculaId, $turmaDestinoId) {
     $obj_t = new clsPmieducarTurma($this->ref_cod_turma);
     $det_t = $obj_t->detalhe();
 
-    $lista_t = $obj_t->lista($int_cod_turma = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, 
-    $int_ref_ref_cod_serie = $this->ref_cod_serie, $int_ref_ref_cod_escola = $this->ref_cod_escola, $int_ref_cod_infra_predio_comodo = null, 
-    $str_nm_turma = null, $str_sgl_turma = null, $int_max_aluno = null, $int_multiseriada = null, $date_data_cadastro_ini = null, 
-    $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_turma_tipo = null, 
-    $time_hora_inicial_ini = null, $time_hora_inicial_fim = null, $time_hora_final_ini = null, $time_hora_final_fim = null, $time_hora_inicio_intervalo_ini = null, 
-    $time_hora_inicio_intervalo_fim = null, $time_hora_fim_intervalo_ini = null, $time_hora_fim_intervalo_fim = null, $int_ref_cod_curso = null, $int_ref_cod_instituicao = null, 
-    $int_ref_cod_regente = null, $int_ref_cod_instituicao_regente = null, $int_ref_ref_cod_escola_mult = null, $int_ref_ref_cod_serie_mult = null, $int_qtd_min_alunos_matriculados = null, 
+    $lista_t = $obj_t->lista($int_cod_turma = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null,
+    $int_ref_ref_cod_serie = $this->ref_cod_serie, $int_ref_ref_cod_escola = $this->ref_cod_escola, $int_ref_cod_infra_predio_comodo = null,
+    $str_nm_turma = null, $str_sgl_turma = null, $int_max_aluno = null, $int_multiseriada = null, $date_data_cadastro_ini = null,
+    $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_turma_tipo = null,
+    $time_hora_inicial_ini = null, $time_hora_inicial_fim = null, $time_hora_final_ini = null, $time_hora_final_fim = null, $time_hora_inicio_intervalo_ini = null,
+    $time_hora_inicio_intervalo_fim = null, $time_hora_fim_intervalo_ini = null, $time_hora_fim_intervalo_fim = null, $int_ref_cod_curso = null, $int_ref_cod_instituicao = null,
+    $int_ref_cod_regente = null, $int_ref_cod_instituicao_regente = null, $int_ref_ref_cod_escola_mult = null, $int_ref_ref_cod_serie_mult = null, $int_qtd_min_alunos_matriculados = null,
     $bool_verifica_serie_multiseriada = false, $bool_tem_alunos_aguardando_nota = null, $visivel = null, $turma_turno_id = $det_t['turma_turno_id'], $tipo_boletim = null, $ano = $this->ano, $somenteAnoLetivoEmAndamento = FALSE);
-    
+
     $max_aluno_turmas = 0;
 
     foreach ($lista_t as $reg) {
@@ -920,13 +955,13 @@ function enturmacaoMatricula($matriculaId, $turmaDestinoId) {
   function _getQtdAlunosFila(){
     $obj_t = new clsPmieducarTurma($this->ref_cod_turma);
     $det_t = $obj_t->detalhe();
-    
+
     $sql = 'SELECT count(1) as qtd
-              FROM pmieducar.matricula 
-              WHERE ano = $1 
-              AND ref_ref_cod_escola = $2 
-              AND ref_cod_curso = $3 
-              AND ref_ref_cod_serie = $4 
+              FROM pmieducar.matricula
+              WHERE ano = $1
+              AND ref_ref_cod_escola = $2
+              AND ref_cod_curso = $3
+              AND ref_ref_cod_serie = $4
               AND turno_pre_matricula = $5
               AND aprovado = 11 ';
 
@@ -951,7 +986,7 @@ function enturmacaoMatricula($matriculaId, $turmaDestinoId) {
               $bool_matricula_ativo = NULL, $bool_escola_andamento = FALSE,
               $mes_matricula_inicial = FALSE, $get_serie_mult = FALSE,
               $int_ref_cod_serie_mult = NULL, $int_semestre = NULL,
-              $pegar_ano_em_andamento = FALSE, $parar=NULL, $diario = FALSE, 
+              $pegar_ano_em_andamento = FALSE, $parar=NULL, $diario = FALSE,
               $int_turma_turno_id = $det_t['turma_turno_id'], $int_ano_turma = $det_t['ano']));
   }
 
