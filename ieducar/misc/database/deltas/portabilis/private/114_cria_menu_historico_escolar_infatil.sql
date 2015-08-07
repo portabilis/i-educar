@@ -4,8 +4,8 @@
 -- @version  $Id$
 
 
-insert into portal.menu_submenu values (999829, 55, 2,'Histórico escolar educação infántil', 'module/Reports/HistoricoEscolarEducacaoInfantil', null, 3);
-insert into pmicontrolesis.menu values (999829, 999829, 999460, 'Histórico escolar educação infántil', 0, 'module/Reports/HistoricoEscolarEducacaoInfantil', '_self', 1, 15, 122, null);
+insert into portal.menu_submenu values (999829, 55, 2,'Histórico escolar educação infantil', 'module/Reports/HistoricoEscolarEducacaoInfantil', null, 3);
+insert into pmicontrolesis.menu values (999829, 999829, 999460, 'Histórico escolar educação infantil', 0, 'module/Reports/HistoricoEscolarEducacaoInfantil', '_self', 1, 15, 122, null);
 insert into pmieducar.menu_tipo_usuario values(1,999829,1,0,1);
 
 --undo
