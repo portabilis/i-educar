@@ -23,29 +23,55 @@ var $loadingLaudoMedico =  $j('<img>').attr('src', 'imagens/indicator.gif')
                                       .hide()
                                       .insertAfter($j('#laudo_medico'));
 
-var $linkExcluirLaudo =  $j('<div>').append($j('<span>').html(stringUtils.toUtf8('Excluir laudo médico'))
-                                                        .addClass('decorated')
-                                                        .attr('id','link_excluir_laudo_medico')
-                                                        .css('margin-left', '1px')
-                                                        .css('cursor','pointer')
-                                                        .click( function(){
-                                                          $j('#url_laudo_medico').val('');
-                                                          $j('#laudo_medico').val('').removeClass('success');
-                                                          messageUtils.notice('Laudo médico excluído com sucesso!');
-                                                          $linkExcluirLaudo.hide();
-                                                        })
-                                                        )
-                                    .append($j('<a>').html(stringUtils.toUtf8('Laudo médico atual'))
-                                                     .attr('id','link_laudo_medico_atual')
-                                                     .attr('target','_blank')
-                                                     .addClass('decorated')
-                                                     .css('margin-left','10px'))
-                                    .hide()
-                                    .insertBefore($j('#laudo_medico'));
+var $arrayLaudoMedico = [];
+var $arrayUrlLaudoMedico = [];
+
+function excluirLaudoMedico(event){
+  $arrayUrlLaudoMedico[event.data.i] = '';
+  $j('#laudo_medico').val('').removeClass('success');
+  messageUtils.notice('Laudo médico excluído com sucesso!');
+  $j('#laudo'+event.data.i).hide();
+  montaUrlLaudoMedico();
+}
 
 function laudoMedicoObrigatorio(){
   $j('#laudo_medico').addClass('error');
   messageUtils.error(stringUtils.toUtf8('Deve ser anexado um laudo médico para alunos com deficiências'));
+}
+
+function addLaudoMedico(url){
+  $index = $arrayLaudoMedico.length + 1;
+  //$j('#url_laudo_medico').val(url);
+  $arrayUrlLaudoMedico[$index] = url;
+  $arrayLaudoMedico[$arrayLaudoMedico.length] = $j('<div>').append($j('<span>').html(stringUtils.toUtf8('Laudo '+$index+':'))
+                                                                          .attr('id', 'laudo'+$index)
+                                                                          .append($j('<a>').html(stringUtils.toUtf8('Excluir'))
+                                                                                           .addClass('decorated')
+                                                                                           .attr('id','link_excluir_laudo_medico_'+$index)
+                                                                                           .css('cursor','pointer')
+                                                                                           .css('margin-left','10px')
+                                                                                           .click({i: $index}, excluirLaudoMedico))
+                                                                          .append($j('<a>').html(stringUtils.toUtf8('Visualizar'))
+                                                                                           .addClass('decorated')
+                                                                                           .attr('id','link_visualizar_laudo_medico_'+$index)
+                                                                                           .attr('target','_blank')
+                                                                                           .attr('href',url)
+                                                                                           .css('cursor','pointer')
+                                                                                           .css('margin-left','10px'))
+                                                                          ).insertBefore($j('#laudo_medico'));
+  montaUrlLaudoMedico();
+}
+
+function montaUrlLaudoMedico(){
+  var url = $arrayUrlLaudoMedico.toString().replace(",,",",");
+  //Remove o primeiro ou ultimo caracter caso seja virgula
+  if (url.substring(url.length-1, url.length) == ","){
+    url = url.substring(0, url.length-1);
+  }
+  if (url.substring(0, 1) == ","){
+    url = url.substring(1, url.length);
+  }
+  $j('#url_laudo_medico').val(url);
 }
 
 var newSubmitForm = function(event) {
@@ -196,9 +222,10 @@ resourceOptions.handleGet = function(dataResponse) {
   $j('#alfabetizado').attr('checked', dataResponse.alfabetizado);
 
   if(dataResponse.url_laudo_medico){
-    $j('#url_laudo_medico').val(dataResponse.url_laudo_medico);
-    $j('#link_laudo_medico_atual').attr('href',dataResponse.url_laudo_medico);
-    $linkExcluirLaudo.show();
+    var arrayLaudo = dataResponse.url_laudo_medico.split(",");
+    for (i = 0; i < arrayLaudo.length; i++) {
+      addLaudoMedico(arrayLaudo[i]);
+    }
   }
 
   /***********************************************
@@ -857,7 +884,6 @@ function canShowParentsFields(){
 
     function prepareUpload(event)
     {
-      $linkExcluirLaudo.hide();
       $j('#laudo_medico').removeClass('error');
       uploadFiles(event.target.files);
     }
@@ -892,9 +918,7 @@ function canShowParentsFields(){
               }else{
                 messageUtils.success('Laudo médico carregado com sucesso');
                 $j('#laudo_medico').addClass('success');
-                $j('#url_laudo_medico').val(dataResponse.file_url);
-                $j('#link_laudo_medico_atual').attr('href',dataResponse.file_url);
-                $linkExcluirLaudo.show();
+                addLaudoMedico(dataResponse.file_url);
               }
 
             },
