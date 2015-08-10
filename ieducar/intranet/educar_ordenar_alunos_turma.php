@@ -83,7 +83,7 @@ class indice extends clsCadastro{
     if (is_numeric($this->cod_turma)) {
       $matriculasTurma = new clsPmieducarMatriculaTurma();
       $matriculasTurma->setOrderby('sequencial_fechamento, nome_ascii');
-      $matriculasTurma = $matriculasTurma->lista(null, $this->cod_turma);
+      $matriculasTurma = $matriculasTurma->lista(null, $this->cod_turma, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, true);
       if ($matriculasTurma) {
         foreach ($matriculasTurma as $campo => $val) {
           $this->campoTexto('nome_aluno_' . $val['ref_cod_matricula'], '', $val['nome_ascii'], 60, false, false, false, true, '', '', '', '', true);
@@ -94,7 +94,7 @@ class indice extends clsCadastro{
       }
     }
 
-    $this->url_cancelar = "educar_turma_det.php?cod_serie={$this->cod_turma}";
+    $this->url_cancelar = "educar_turma_det.php?cod_turma={$this->cod_turma}";
 
     $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
     $localizacao = new LocalizacaoSistema();

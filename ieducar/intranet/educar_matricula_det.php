@@ -33,6 +33,7 @@ require_once 'include/clsDetalhe.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'include/pmieducar/clsPermissoes.inc.php';
+require_once 'lib/Portabilis/Date/Utils.php';
 
 require_once 'App/Model/MatriculaSituacao.php';
 require_once 'Portabilis/View/Helper/Application.php';
@@ -175,18 +176,24 @@ class indice extends clsDetalhe
 
     $existeTurma = false;
     $nomesTurmas = array();
+    $datasEnturmacoes = array();
     foreach ($enturmacoes as $enturmacao) {
       $turma         = new clsPmieducarTurma($enturmacao['ref_cod_turma']);
       $turma         = $turma->detalhe();
       $nomesTurmas[] = $turma['nm_turma'];
+      $datasEnturmacoes[] = Portabilis_Date_Utils::pgSQLToBr($enturmacao['data_enturmacao']);
     }
     $nomesTurmas = implode('<br />', $nomesTurmas);
+    $datasEnturmacoes = implode('<br />', $datasEnturmacoes);
 
     if ($nomesTurmas){
       $this->addDetalhe(array('Turma', $nomesTurmas));
+      $this->addDetalhe(array('Data Enturmação', $datasEnturmacoes));
       $existeTurma = true;
-    }else
+    }else {
       $this->addDetalhe(array('Turma', ''));
+      $this->addDetalhe(array('Data Enturmação', ''));
+    }
 
     if ($registro['ref_cod_reserva_vaga']) {
       $this->addDetalhe(array('Número Reserva Vaga', $registro['ref_cod_reserva_vaga']));
