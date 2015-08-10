@@ -402,11 +402,6 @@ class indice extends clsCadastro
 
       if ($verificarDataCorte && !$reload) {
 
-        $reload = 1;
-        @session_start();
-        $_SESSION['reload_faixa_etaria'] = $reload;
-        @session_write_close();
-
         $instituicao = new clsPmiEducarInstituicao($this->ref_cod_instituicao);
         $instituicao = $instituicao->detalhe();
 
@@ -417,7 +412,7 @@ class indice extends clsCadastro
         $dentroPeriodoCorte = $serie->verificaPeriodoCorteEtario($this->ref_cod_aluno);
 
         if ($bloquearMatriculaFaixaEtaria && !$dentroPeriodoCorte) {
-          $this->mensagem = Portabilis_String_Utils::toLatin1('Não foi possível realizar matrícula, a idade do aluno está fora da faixa etária da série.');
+          $this->mensagem = Portabilis_String_Utils::toLatin1('Não foi possível realizar a matrícula, pois a idade do aluno está fora da faixa etária da série');
           return FALSE;
         } else if ($alertaFaixaEtaria && !$dentroPeriodoCorte) {
             echo "<script type=\"text/javascript\">
@@ -428,7 +423,13 @@ class indice extends clsCadastro
                       parent.document.getElementById('formcadastro').submit();
                     }
                   </script>";
-            return TRUE;
+          //Permite que o usuário possa salvar a matrícula na próxima tentativa
+          $reload = 1;
+          @session_start();
+          $_SESSION['reload_faixa_etaria'] = $reload;
+          @session_write_close();
+
+          return TRUE;
         }
       }
 
