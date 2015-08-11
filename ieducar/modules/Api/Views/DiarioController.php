@@ -36,6 +36,7 @@ require_once 'Avaliacao/Model/NotaComponenteDataMapper.php';
 require_once 'Avaliacao/Model/FaltaComponenteDataMapper.php';
 require_once 'Avaliacao/Model/FaltaGeralDataMapper.php';
 require_once 'Avaliacao/Model/ParecerDescritivoComponenteDataMapper.php';
+require_once 'Avaliacao/Model/ParecerDescritivoGeralDataMapper.php';
 require_once 'RegraAvaliacao/Model/TipoPresenca.php';
 require_once 'RegraAvaliacao/Model/TipoParecerDescritivo.php';
 
@@ -115,6 +116,14 @@ class DiarioController extends ApiCoreController
     return $this->validatesPresenceOf('turmas') && $this->validatesPresenceOf('etapa');
   }
 
+  protected function canPostPareceresPorEtapaComponente(){
+    return $this->validatesPresenceOf('turmas') && $this->validatesPresenceOf('etapa');
+  }
+
+  protected function canPostPareceresPorEtapaGeral(){
+    return $this->validatesPresenceOf('turmas') && $this->validatesPresenceOf('etapa');
+  }
+
   protected function postNotas(){
     if($this->canPostNotas()){
       $turmas = $this->getRequest()->turmas;
@@ -189,7 +198,7 @@ class DiarioController extends ApiCoreController
   }
 
   protected function postPareceresPorEtapaComponente(){
-    if($this->canPostFaltasPorComponente()){
+    if($this->canPostPareceresPorEtapaComponente()){
       $turmas = $this->getRequest()->turmas;
       $etapa = $this->getRequest()->etapa;
 
@@ -218,6 +227,37 @@ class DiarioController extends ApiCoreController
             $this->serviceBoletim($turmaId, $alunoId)->addParecer($falta);
             $this->trySaveServiceBoletim($turmaId, $alunoId);
           }
+        }
+      }
+
+      $this->messenger->append('Pareceres postados com sucesso!', 'success');
+    }
+  }
+
+  protected function postPareceresPorEtapaGeral(){
+    if($this->canPostPareceresPorEtapaGeral()){
+      $turmas = $this->getRequest()->turmas;
+      $etapa = $this->getRequest()->etapa;
+
+      foreach ($turmas as $turma) {
+        $turmaId = $turma['turma_id'];
+        $alunos = $turma['alunos'];
+
+        if($this->getRegra($turmaId)->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL){
+          throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de pareceres por etapa geral."));
+        }
+
+        foreach ($alunos as $aluno) {
+          $alunoId = $aluno['aluno_id'];
+          $parecer = $aluno['parecer'];
+
+          $falta = new Avaliacao_Model_ParecerDescritivoGeral(array(
+            'parecer'           => $parecer,
+            'etapa'                => $etapa
+          ));
+
+          $this->serviceBoletim($turmaId, $alunoId)->addParecer($falta);
+          $this->trySaveServiceBoletim($turmaId, $alunoId);
         }
       }
 
@@ -265,6 +305,8 @@ class DiarioController extends ApiCoreController
       $this->appendResponse($this->postFaltasGeral());
     elseif ($this->isRequestFor('post', 'pareceres-por-etapa-e-componente'))
       $this->appendResponse($this->postPareceresPorEtapaComponente());
+    elseif ($this->isRequestFor('post', 'pareceres-por-etapa-geral'))
+      $this->appendResponse($this->postPareceresPorEtapaGeral());
     else
       $this->notImplementedOperationError();
   }
