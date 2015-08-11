@@ -2199,7 +2199,7 @@ function valida_xml(xml)
     var qtdDiaSemana = document.getElementsByName('dia_semana').length;
 
     if (qtdModulo == 1) {
-      alert("ATENCAO!\nE necessario incluir um 'Modulo'!");
+      alert("ATEN\u00c7\u00c3O!\n\u00c9 necess\u00e1rio incluir um 'M\u00f3dulo'!");
       document.getElementById('ref_cod_modulo').focus();
       return false;
     }
