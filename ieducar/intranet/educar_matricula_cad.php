@@ -402,11 +402,6 @@ class indice extends clsCadastro
 
       if ($verificarDataCorte && !$reload) {
 
-        $reload = 1;
-        @session_start();
-        $_SESSION['reload_faixa_etaria'] = $reload;
-        @session_write_close();
-
         $instituicao = new clsPmiEducarInstituicao($this->ref_cod_instituicao);
         $instituicao = $instituicao->detalhe();
 
@@ -417,7 +412,7 @@ class indice extends clsCadastro
         $dentroPeriodoCorte = $serie->verificaPeriodoCorteEtario($this->ref_cod_aluno);
 
         if ($bloquearMatriculaFaixaEtaria && !$dentroPeriodoCorte) {
-          $this->mensagem = Portabilis_String_Utils::toLatin1('Não foi possível realizar matrícula, a idade do aluno está fora da faixa etária da série.');
+          $this->mensagem = Portabilis_String_Utils::toLatin1('Não foi possível realizar a matrícula, pois a idade do aluno está fora da faixa etária da série');
           return FALSE;
         } else if ($alertaFaixaEtaria && !$dentroPeriodoCorte) {
             echo "<script type=\"text/javascript\">
@@ -428,7 +423,13 @@ class indice extends clsCadastro
                       parent.document.getElementById('formcadastro').submit();
                     }
                   </script>";
-            return TRUE;
+          //Permite que o usuário possa salvar a matrícula na próxima tentativa
+          $reload = 1;
+          @session_start();
+          $_SESSION['reload_faixa_etaria'] = $reload;
+          @session_write_close();
+
+          return TRUE;
         }
       }
 
@@ -558,7 +559,7 @@ class indice extends clsCadastro
                       AND m.aprovado = 12
                       AND m.ativo = 1
                       AND m.ref_cod_aluno = {$this->ref_cod_aluno}
-                      AND m.ref_ref_cod_escola <> {$this->ref_cod_serie}
+                      AND m.ref_ref_cod_serie <> {$this->ref_cod_serie}
                       AND (SELECT 1
                             FROM pmieducar.matricula s_m
                             WHERE s_m.ref_cod_aluno = m.ref_cod_aluno
@@ -572,6 +573,23 @@ class indice extends clsCadastro
       $m = $db->Tupla();
       if (is_array($m) && count($m) && !$dependencia) {
         $this->mensagem .= "Esse aluno foi aprovado com depend&ecirc;ncia e n&atilde;o foi aprovado na depend&ecirc;ncia.<br />";
+        return false;
+      }
+
+      $db->Consulta("SELECT *
+                      FROM pmieducar.matricula m
+                      WHERE m.ano = {$this->ano}
+                      AND m.aprovado = 3
+                      AND m.ativo = 1
+                      AND m.ref_cod_aluno = {$this->ref_cod_aluno}
+                      AND m.ref_ref_cod_serie = {$this->ref_cod_serie}
+                      AND m.ref_ref_cod_escola = {$this->ref_cod_escola}
+                      AND dependencia ");
+
+      $db->ProximoRegistro();
+      $m = $db->Tupla();
+      if (is_array($m) && count($m) && $dependencia) {
+        $this->mensagem .= "Esse aluno j&aacute; tem uma matr&iacute;cula de depend&ecirc;ncia nesta escola e s&eacute;rie.";
         return false;
       }
 

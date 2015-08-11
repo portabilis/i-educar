@@ -600,8 +600,12 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('Deficiências', $tabela));
     }
 
-    if ($registro['url_laudo_medico'] && $registro['url_laudo_medico'] != '')
-      $this->addDetalhe(array('Laudo médico do aluno', "<a href='{$registro['url_laudo_medico']}' target='_blank' > Visualizar laudo </a>"));
+    if ($registro['url_laudo_medico'] && $registro['url_laudo_medico'] != '') {
+      $urlLaudoMedico = explode(",", $registro['url_laudo_medico']);
+      for ($i = 0; $i < count($urlLaudoMedico); $i++) {
+        $this->addDetalhe(array('Laudo médico do aluno', "<a href='{$urlLaudoMedico[$i]}' target='_blank' > Visualizar laudo ". (count($urlLaudoMedico) > 1 ? ($i+1) : "")." </a>"));
+      }
+    }
 
     if ($registro['rg']) {
       $this->addDetalhe(array('RG', $registro['rg']));
