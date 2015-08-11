@@ -204,7 +204,7 @@ class indice extends clsCadastro
     $export = $this->exportaDadosRegistro00($escolaId, $ano);
     $export .= $this->exportaDadosRegistro10($escolaId);
     foreach ($this->getTurmas($escolaId, $ano) as $turmaId => $turmaNome) {
-      $export .= $this->exportaDadosRegistro20($escolaId, $turmaId);
+      $export .= $this->exportaDadosRegistro20($escolaId, $turmaId, $data_ini, $data_fim);
     }
     foreach ($this->getServidores($escolaId) as $servidor) {
 
@@ -575,7 +575,7 @@ class indice extends clsCadastro
     }
   }
 
-  protected function exportaDadosRegistro20($escolaId, $turmaId){
+  protected function exportaDadosRegistro20($escolaId, $turmaId, $data_ini, $data_fim){
     $sql =
     	' SELECT
         \'20\' as r20s1,
@@ -663,12 +663,14 @@ class indice extends clsCadastro
         WHERE t.cod_turma = $1
         AND (SELECT 1
               FROM pmieducar.matricula_turma mt
+             INNER JOIN pmieducar.matricula m ON(mt.ref_cod_matricula = m.cod_matricula)
               WHERE mt.ref_cod_turma = t.cod_turma
               AND mt.ativo = 1
+              AND COALESCE(m.data_matricula,m.data_cadastro) BETWEEN DATE($2) AND DATE($3)
               LIMIT 1) IS NOT NULL
     ';
     // Transforma todos resultados em variáveis
-    extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, array('return_only' => 'first-row', 'params' => array($turmaId))));
+    extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, array('return_only' => 'first-row', 'params' => array($turmaId, $data_ini, $data_fim))));
     if ($r20s1){
 
       $r20s5 = $this->upperAndUnaccent($r20s5);
@@ -1624,6 +1626,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
         AND (m.aprovado = 3 OR DATE(COALESCE(m.data_cancel,m.data_exclusao)) > DATE($4))
         AND m.ano = $2
         AND a.cod_aluno = $5
+        AND m.ativo = 1
     ';
 
     // Transforma todos resultados em variáveis
