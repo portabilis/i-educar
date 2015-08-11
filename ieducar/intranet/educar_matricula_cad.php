@@ -559,7 +559,7 @@ class indice extends clsCadastro
                       AND m.aprovado = 12
                       AND m.ativo = 1
                       AND m.ref_cod_aluno = {$this->ref_cod_aluno}
-                      AND m.ref_ref_cod_escola <> {$this->ref_cod_serie}
+                      AND m.ref_ref_cod_serie <> {$this->ref_cod_serie}
                       AND (SELECT 1
                             FROM pmieducar.matricula s_m
                             WHERE s_m.ref_cod_aluno = m.ref_cod_aluno
@@ -573,6 +573,23 @@ class indice extends clsCadastro
       $m = $db->Tupla();
       if (is_array($m) && count($m) && !$dependencia) {
         $this->mensagem .= "Esse aluno foi aprovado com depend&ecirc;ncia e n&atilde;o foi aprovado na depend&ecirc;ncia.<br />";
+        return false;
+      }
+
+      $db->Consulta("SELECT *
+                      FROM pmieducar.matricula m
+                      WHERE m.ano = {$this->ano}
+                      AND m.aprovado = 3
+                      AND m.ativo = 1
+                      AND m.ref_cod_aluno = {$this->ref_cod_aluno}
+                      AND m.ref_ref_cod_serie = {$this->ref_cod_serie}
+                      AND m.ref_ref_cod_escola = {$this->ref_cod_escola}
+                      AND dependencia ");
+
+      $db->ProximoRegistro();
+      $m = $db->Tupla();
+      if (is_array($m) && count($m) && $dependencia) {
+        $this->mensagem .= "Esse aluno j&aacute; tem uma matr&iacute;cula de depend&ecirc;ncia nesta escola e s&eacute;rie.";
         return false;
       }
 

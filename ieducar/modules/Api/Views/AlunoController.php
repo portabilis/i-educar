@@ -1000,7 +1000,7 @@ class AlunoController extends ApiCoreController
   protected function getMatriculas() {
     if ($this->canGetMatriculas()) {
       $matriculas = new clsPmieducarMatricula();
-      $matriculas->setOrderby('ano DESC, coalesce(m.data_matricula, m.data_cadastro) DESC, ref_ref_cod_serie DESC, cod_matricula DESC, aprovado');
+      $matriculas->setOrderby('ano DESC, coalesce(m.data_matricula, m.data_cadastro) DESC, (CASE WHEN dependencia THEN 1 ELSE 0 END), ref_ref_cod_serie DESC, cod_matricula DESC, aprovado');
 
       $only_valid_boletim = $this->getRequest()->only_valid_boletim;
 
