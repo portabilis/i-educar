@@ -124,6 +124,10 @@ class DiarioController extends ApiCoreController
     return $this->validatesPresenceOf('turmas');
   }
 
+  protected function canPostPareceresAnualGeral(){
+    return $this->validatesPresenceOf('turmas');
+  }
+
   protected function canPostPareceresPorEtapaGeral(){
     return $this->validatesPresenceOf('turmas') && $this->validatesPresenceOf('etapa');
   }
@@ -304,6 +308,35 @@ class DiarioController extends ApiCoreController
     }
   }
 
+  protected function postPareceresAnualGeral(){
+    if($this->canPostPareceresAnualGeral()){
+      $turmas = $this->getRequest()->turmas;
+
+      foreach ($turmas as $turma) {
+        $turmaId = $turma['turma_id'];
+        $alunos = $turma['alunos'];
+
+        if($this->getRegra($turmaId)->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL){
+          throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de pareceres anual geral."));
+        }
+
+        foreach ($alunos as $aluno) {
+          $alunoId = $aluno['aluno_id'];
+          $parecer = $aluno['parecer'];
+
+          $falta = new Avaliacao_Model_ParecerDescritivoGeral(array(
+            'parecer'           => $parecer
+          ));
+
+          $this->serviceBoletim($turmaId, $alunoId)->addParecer($falta);
+          $this->trySaveServiceBoletim($turmaId, $alunoId);
+        }
+      }
+
+      $this->messenger->append('Pareceres postados com sucesso!', 'success');
+    }
+  }
+
   protected function postFaltasGeral(){
     if($this->canPostFaltasPorComponente()){
       $turmas = $this->getRequest()->turmas;
@@ -348,6 +381,8 @@ class DiarioController extends ApiCoreController
       $this->appendResponse($this->postPareceresPorEtapaGeral());
     elseif ($this->isRequestFor('post', 'pareceres-anual-por-componente'))
       $this->appendResponse($this->postPareceresAnualPorComponente());
+    elseif ($this->isRequestFor('post', 'pareceres-anual-geral'))
+      $this->appendResponse($this->postPareceresAnualGeral());
     else
       $this->notImplementedOperationError();
   }
