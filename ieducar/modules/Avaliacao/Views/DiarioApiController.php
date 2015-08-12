@@ -631,6 +631,7 @@ class DiarioApiController extends ApiCoreController
     $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
     $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
     $this->appendResponse('situacao',     $this->getSituacaoMatricula());
+    $this->appendResponse('should_show_recuperacao_especifica', $this->shouldShowRecuperacaoEspecifica());
   }
 
 

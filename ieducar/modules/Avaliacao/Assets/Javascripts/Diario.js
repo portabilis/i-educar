@@ -1172,7 +1172,7 @@ function updateResourceRow(dataResponse) {
   var $fieldNotaExame = $j('#nota-exame-matricula-' + matriculaId + '-cc-' + ccId);
   var $fieldNotaEspecifica = $j('#nota-recuperacao-especifica-matricula-' + matriculaId + '-cc-' + ccId);
   var $fieldNN = $j('#nn-matricula-' + matriculaId + '-cc-' + ccId);
-  console.log(usaNotaGeralPorEtapa);
+
   if(usaNotaGeralPorEtapa){
     $situacaoField = $j('.situacao-matricula-cc');
   }
