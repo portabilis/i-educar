@@ -38,6 +38,8 @@ if (class_exists('clsPmiajudaPagina')) {
 require_once 'Portabilis/View/Helper/Application.php';
 require_once 'Portabilis/View/Helper/Inputs.php';
 
+require_once 'include/localizacaoSistema.php';
+
 define('alTopLeft', 'valign=top align=left');
 define('alTopCenter', 'valign=top align=center');
 define('alTopRight', 'valign=top align=right');
@@ -81,7 +83,7 @@ class clsListagem extends clsCampos
   var $funcAcao = '';
   var $funcAcaoNome = '';
   var $rotulo_anterior;
-  var $locale = "<b>=> PAGINA SEM LOCALIZACAO, COLOQUE POR GENTILEZA. <=</b>";
+  var $locale = null;
 
   var $array_botao;
   var $array_botao_url;
@@ -123,10 +125,10 @@ class clsListagem extends clsCampos
 
     $this->bannerClose = $boolFechaBanner;
   }
-  
+
   function enviaLocalizacao($localizao){
-      if($localizao)
-        $this->locale = $localizao;
+    if($localizao)
+      $this->locale = $localizao;
   }
 
   function addCabecalhos($coluna)
@@ -309,10 +311,12 @@ class clsListagem extends clsCampos
       $server = $_SERVER['SERVER_NAME'];
       $endereco = $_SERVER ['REQUEST_URI'];
       $enderecoPagina = $_SERVER['PHP_SELF'];
-      
-      //$barra = '<b>Localizacao: http://'.$server.$endereco.'</b><br>';
-      //$barra = '<tr><td><b>Localizacao:'. $enderecoPagina .'</b><br></tr></td>';
-      $barra = '<b>Filtros de busca</b>';  
+
+      $server = $_SERVER['SERVER_NAME'];
+      $endereco = $_SERVER ['REQUEST_URI'];
+      $enderecoPagina = $_SERVER['PHP_SELF'];
+
+      $barra = '<b>Filtros de busca</b>';
 
       if (class_exists('clsPmiajudaPagina')) {
         $ajudaPagina = new clsPmiajudaPagina();
@@ -393,6 +397,18 @@ class clsListagem extends clsCampos
               $retorno .=  "<input name='$nome' id='$nome' type='hidden' value='".urlencode($componente[3])."'>";
             }
           }
+        }
+
+        if ($this->locale){
+
+          $retorno .=  "
+            <table class='tablelistagem' $width border='0'  cellpadding='0' cellspacing='0'>";
+
+          $retorno .=  "<tr height='10px'>
+                          <td class='fundoLocalizacao' colspan='2'>{$this->locale}</td>
+                        </tr>";
+
+          $retorno .= "</table>";
         }
 
         $retorno .=  "

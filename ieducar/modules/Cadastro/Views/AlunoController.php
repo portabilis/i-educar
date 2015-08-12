@@ -306,6 +306,14 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
   protected function _preConstruct()
   {
+    $nomeMenu = $this->getRequest()->id == null ? "Cadastrar" : "Editar";
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "M&oacute;dulo Escola",
+         ""        => "$nomeMenu aluno"
+    ));
+    $this->enviaLocalizacao($localizacao->montar());
   }
 
 

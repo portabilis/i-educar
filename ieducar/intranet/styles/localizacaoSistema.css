@@ -1,75 +1,48 @@
 #localizacao{
   overflow: hidden;
   width: 100%;
-}
-
-#localizacao li{
-  float: left;
-  margin: 0 .5em 0 1em;
+  margin-left: -7px;
+  margin-bottom: 5px;
 }
 
 #localizacao a{
-  font-family: arial, verdana, sans-serif, "Times New Roman";
+  float: left;
+  margin-left: 10px;  
+  list-style: none;
+}
+
+#localizacao a{
+  
   font-size: 11px;
   font-style: normal;
   font-variant: normal;
   font-weight: bold;
   letter-spacing: 0pt;
   line-height: normal;
-  background: #A1B3BD;
-  padding: .4em 1em;
   float: left;
   text-decoration: none;
-  color: #fff;
-  text-shadow: 0 1px 0 rgba(255,255,255,.5); 
   position: relative;
+  color: #184e7f;
 }
 
 #localizacao a:hover{
-  background: #184e7f;
+  color: #FFF;
 }
 
-#localizacao a::before{
-  content: "";
-  position: absolute;
-  top: 50%;
-  margin-top: -1.5em;   
-  border-width: 1.5em 0 1.5em 1em;
-  border-style: solid;
-  border-color: #A1B3BD #A1B3BD #A1B3BD transparent;
-  left: -1em;
-}
-
-#localizacao a:hover::before{
-  border-color: #184e7f #184e7f #184e7f transparent;
-}
-
-#localizacao a::after{
-  content: "";
-  position: absolute;
-  top: 50%; 
-  margin-top: -1.5em;   
-  border-top: 1.5em solid transparent;
-  border-bottom: 1.5em solid transparent;
-  border-left: 1em solid #A1B3BD;
-  right: -1em;
-}
-
-#localizacao a:hover::after{
-  border-left-color: #184e7f;
-  content: "";
-}
-
-#localizacao .current,
-#localizacao .current:hover{
-  font-weight: bold;
-  background: none;
-}
-
-#localizacao .current::after,
-#localizacao .current::before{
-  content: normal;
-}
 .fundoLocalizacao {
    background-color: #E4E9ED; 
+   height: 10px; 
+}
+.flechinha {
+  color: #000 !important;
+}
+.flechinha:hover {
+  color: #000 !important; 
+}
+
+.pagina_atual {
+  border-bottom: 2px solid #546c76;
+}
+.pagina_atual:hover {
+  color: #184e7f !important;
 }

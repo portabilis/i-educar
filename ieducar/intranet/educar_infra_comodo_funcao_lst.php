@@ -36,7 +36,7 @@ class clsIndexBase extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} i-Educar - Fun&ccedil;&atilde;o C&ocirc;modo" );
 		$this->processoAp = "572";
-                $this->addEstilo( "localizacaoSistema" );
+        $this->addEstilo( "localizacaoSistema" );
 	}
 }
 
@@ -198,14 +198,14 @@ class indice extends clsListagem
 		}
 
 		$this->largura = "100%";
-                
-                $localizacao = new LocalizacaoSistema();
-                $localizacao->entradaCaminhos( array(
-                    $_SERVER['SERVER_NAME']."/intranet" => "i-Educar",
-                    "educar_index.php"                  => "Escola",
-                    ""                                  => "Listagem de Função Cômodo"
-                ));
-                $this->enviaLocalizacao($localizacao->montar());
+
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos( array(
+            $_SERVER['SERVER_NAME']."/intranet" => "i-Educar",
+            "educar_index.php"                  => "Escola",
+            ""                                  => "Listagem de Função Cômodo"
+        ));
+        $this->enviaLocalizacao($localizacao->montar());
 	}
 }
 // cria uma extensao da classe base

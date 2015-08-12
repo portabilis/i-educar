@@ -37,7 +37,7 @@ class clsIndexBase extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} i-Educar - Instituicao" );
 		$this->processoAp = "559";
-                $this->addEstilo( "localizacaoSistema" );
+        $this->addEstilo( "localizacaoSistema" );
 	}
 }
 
@@ -105,7 +105,7 @@ class indice extends clsListagem
 		$this->addCabecalhos( array( "Nome da Institui&ccedil;&atilde;o" ) );
 
 		// outros Filtros
-		$this->campoTexto( "nm_instituicao", "Nome da Instituição", $this->nm_instituicao, 30, 255, false );
+		$this->campoTexto( "nm_instituicao", "Nome da Institui&ccedil;&atilde;o", $this->nm_instituicao, 30, 255, false );
 
 		// Paginador
 		$this->limite = 20;
@@ -151,14 +151,14 @@ class indice extends clsListagem
 			$this->nome_acao = "Novo";
 		}
 		$this->largura = "100%";
-                
-                $localizacao = new LocalizacaoSistema();
-                $localizacao->entradaCaminhos( array(
-                    $_SERVER['SERVER_NAME']."/intranet" => "i-Educar",
-                    "educar_index.php"                  => "Escola",
-                    ""                                  => "Lista de Instituição"
-                ));
-                $this->enviaLocalizacao($localizacao->montar());
+
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos( array(
+            $_SERVER['SERVER_NAME']."/intranet" => "i-Educar",
+            "educar_index.php"                  => "Escola",
+            ""                                  => "Lista de Instituição"
+        ));
+        $this->enviaLocalizacao($localizacao->montar());
 	}
 }
 // cria uma extensao da classe base

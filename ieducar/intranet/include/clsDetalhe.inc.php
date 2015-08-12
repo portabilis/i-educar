@@ -29,6 +29,7 @@
  */
 
 require_once 'Core/Controller/Page/Abstract.php';
+require_once 'include/localizacaoSistema.php';
 
 /**
  * clsDetalhe class.
@@ -52,6 +53,7 @@ class clsDetalhe extends Core_Controller_Page_Abstract
   var $bannerClose = FALSE;
   var $largura;
   var $detalhe = array();
+  var $locale = null;
 
   var $url_novo;
   var $caption_novo = "Novo";
@@ -84,6 +86,11 @@ class clsDetalhe extends Core_Controller_Page_Abstract
 
   function addDetalhe($detalhe) {
     $this->detalhe[] = $detalhe;
+  }
+
+  function enviaLocalizacao($localizao){
+    if($localizao)
+      $this->locale = $localizao;
   }
 
   function Gerar() {
@@ -143,6 +150,18 @@ class clsDetalhe extends Core_Controller_Page_Abstract
             </tr>
           </table>";
       }
+    }
+
+    if ($this->locale){
+
+      $retorno .=  "
+        <table class='tableDetalhe' $width border='0'  cellpadding='0' cellspacing='0'>";
+
+      $retorno .=  "<tr height='10px'>
+                      <td class='fundoLocalizacao' colspan='2'>{$this->locale}</td>
+                    </tr>";
+
+      $retorno .= "</table>";
     }
 
     $retorno .= "

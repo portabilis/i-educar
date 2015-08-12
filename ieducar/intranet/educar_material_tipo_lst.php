@@ -41,7 +41,7 @@ class clsIndexBase extends clsBase
 			$this->SetTitulo( "{$this->_instituicao} i-Educar - Tipo Material Did&aacute;tico" );
 
 		$this->processoAp = "563";
-                $this->addEstilo( "localizacaoSistema" );
+        $this->addEstilo( "localizacaoSistema" );
 	}
 }
 
@@ -203,14 +203,14 @@ class indice extends clsListagem
 		//**
 
 		$this->largura = "100%";
-                
-                $localizacao = new LocalizacaoSistema();
-                $localizacao->entradaCaminhos( array(
-                    $_SERVER['SERVER_NAME']."/intranet" => "i-Educar",
-                    "educar_index.php"                  => "Escola",
-                    ""                                  => "Lista de Tipos de materiais"
-                ));
-                $this->enviaLocalizacao($localizacao->montar());
+
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos( array(
+            $_SERVER['SERVER_NAME']."/intranet" => "i-Educar",
+            "educar_index.php"                  => "Escola",
+            ""                                  => "Lista de Tipos de materiais"
+        ));
+        $this->enviaLocalizacao($localizacao->montar());
 
 	}
 }

@@ -49,6 +49,7 @@ class clsIndexBase extends clsBase
   {
     $this->SetTitulo($this->_instituicao . ' i-Educar - Matricula Turma');
     $this->processoAp = 578;
+    $this->addEstilo("localizacaoSistema");
   }
 }
 
@@ -250,6 +251,14 @@ WHERE
     $this->array_botao_url[] = "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}";
 
     $this->largura = '100%';
+
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "M&oacute;dulo Escola",
+         ""                                  => "Listagem de enturma&ccedil;&otilde;es da matr&iacute;cula"
+    ));
+    $this->enviaLocalizacao($localizacao->montar());
   }
 }
 

@@ -54,6 +54,7 @@ class clsIndexBase extends clsBase
     $this->SetTitulo($this->_instituicao . ' i-Educar - Calendário Ano Letivo');
     $this->addScript('calendario');
     $this->processoAp = 620;
+    $this->addEstilo("localizacaoSistema");
   }
 }
 
@@ -504,6 +505,14 @@ class indice extends clsConfig
     $retorno .='
         </tbody>
       </table>';
+
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "M&oacute;dulo Escola",
+         ""                                  => "Calend&aacute;rio do ano letivo"
+    ));
+     $this->enviaLocalizacao($localizacao->montar());
 
     return $retorno;
   }

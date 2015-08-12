@@ -185,14 +185,14 @@ class indice extends clsListagem
     }
 
     $this->largura = "100%";
-    
+
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
-                    $_SERVER['SERVER_NAME']."/intranet" => "i-Educar",
-                    "educar_index.php"                  => "Escola",
-                    ""                                  => "Lista de Séries"
-                ));
-                $this->enviaLocalizacao($localizacao->montar());
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "M&oacute;dulo Escola",
+         ""        => "Listagem de s&eacute;ries"
+    ));
+    $this->enviaLocalizacao($localizacao->montar());
   }
 }
 
