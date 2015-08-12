@@ -234,7 +234,9 @@ class indice extends clsCadastro
     $sql = 'SELECT distinct cod_servidor as id
               FROM pmieducar.servidor
               INNER JOIN pmieducar.servidor_alocacao ON (ref_cod_servidor = cod_servidor)
-              WHERE ref_cod_escola = $1';
+              WHERE ref_cod_escola = $1
+                AND servidor.ativo = 1
+                AND servidor_alocacao.ativo = 1';
     return Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId)));
   }
 
