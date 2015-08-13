@@ -883,11 +883,6 @@ class clsPmieducarTurma
 				$set .= "{$gruda}multiseriada = '{$this->multiseriada}'";
 				$gruda = ", ";
 			}
-			else
-			{
-				$set .= "{$gruda}multiseriada = '0'";
-				$gruda = ", ";
-			}
 
 			if( is_string( $this->data_cadastro ) )
 			{
@@ -951,19 +946,10 @@ class clsPmieducarTurma
 				$set .= "{$gruda}ref_ref_cod_escola_mult = '{$this->ref_ref_cod_escola_mult}'";
 				$gruda = ", ";
 			}
-			else
-			{
-				$set .= "{$gruda}ref_ref_cod_escola_mult = NULL";
-				$gruda = ", ";
-			}
+
 			if( is_numeric( $this->ref_ref_cod_serie_mult ) )
 			{
 				$set .= "{$gruda}ref_ref_cod_serie_mult = '{$this->ref_ref_cod_serie_mult}'";
-				$gruda = ", ";
-			}
-			else
-			{
-				$set .= "{$gruda}ref_ref_cod_serie_mult = NULL";
 				$gruda = ", ";
 			}
 			if (dbBool($this->visivel))
@@ -971,18 +957,9 @@ class clsPmieducarTurma
 				$set .= "{$gruda}visivel = TRUE";
 				$gruda = ", ";
 			}
-			else
-			{
-				$set .= "{$gruda}visivel = FALSE";
-				$gruda = ", ";
-			}
 
 			if(is_numeric($this->turma_turno_id)) {
 				$set  .= "{$gruda}turma_turno_id = '{$this->turma_turno_id}'";
-				$gruda = ", ";
-			}
-			else {
-				$set  .= "{$gruda}turma_turno_id = NULL";
 				$gruda = ", ";
 			}
 
@@ -990,26 +967,14 @@ class clsPmieducarTurma
 				$set  .= "{$gruda}tipo_boletim = '{$this->tipo_boletim}'";
 				$gruda = ", ";
 			}
-			else {
-				$set  .= "{$gruda}tipo_boletim = NULL";
-				$gruda = ", ";
-			}
 
 			if(is_numeric($this->ano)) {
 				$set  .= "{$gruda}ano = '{$this->ano}'";
 				$gruda = ", ";
 			}
-			else {
-				$set  .= "{$gruda}ano = NULL";
-				$gruda = ", ";
-			}
 
 			if(is_string($this->data_fechamento) && $this->data_fechamento!='') {
 				$set  .= "{$gruda}data_fechamento = '{$this->data_fechamento}'";
-				$gruda = ", ";
-			}
-			else {
-				$set  .= "{$gruda}data_fechamento = NULL";
 				$gruda = ", ";
 			}
 
@@ -1140,9 +1105,6 @@ class clsPmieducarTurma
 
 			if(is_numeric($this->ref_cod_disciplina_dispensada)){
 				$set  .= "{$gruda}ref_cod_disciplina_dispensada = '{$this->ref_cod_disciplina_dispensada}'";
-				$gruda = ", ";
-			}elseif(is_null($this->ref_cod_disciplina_dispensada)){
-				$set  .= "{$gruda}ref_cod_disciplina_dispensada = NULL";
 				$gruda = ", ";
 			}
 
