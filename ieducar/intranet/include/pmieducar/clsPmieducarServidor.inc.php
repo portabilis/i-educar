@@ -808,6 +808,7 @@ class clsPmieducarServidor
     $array_horario               = NULL,
     $str_not_in_servidor         = NULL,
     $str_nome_servidor           = NULL,
+    $str_matricula_servidor      = NULL, 
     $boo_professor               = FALSE,
     $str_horario                 = NULL,
     $bool_ordena_por_nome        = FALSE,
@@ -911,6 +912,15 @@ class clsPmieducarServidor
   FROM cadastro.pessoa p
   WHERE cod_servidor = p.idpes
   AND to_ascii(p.nome) LIKE to_ascii('%$str_nome_servidor%')) ";
+      $whereAnd = " AND ";
+    }
+
+      // Busca tipo LIKE pela matricula do servidor
+    if (is_string($str_matricula_servidor)) {
+      $filtros .= "{$whereAnd} EXISTS (SELECT 1
+  FROM portal.funcionario f
+  WHERE cod_servidor = f.ref_cod_pessoa_fj
+  AND to_ascii(f.matricula) LIKE to_ascii('%$str_matricula_servidor%')) ";
       $whereAnd = " AND ";
     }
     // Seleciona apenas servidores que tenham a carga atual maior ou igual ao

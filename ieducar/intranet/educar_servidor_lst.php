@@ -118,7 +118,7 @@ class indice extends clsListagem
       // $detalhe = $detalhe['idpes']->detalhe();
 
       $opcoes[$detalhe['idpes']] = $detalhe['nome'];
-     $opcoes[$detalhe['idpes']] = $detalhe['matricula'];
+     $opcoes[$detalhe['ref_cod_pessoa_fj']] = $detalhe['matricula'];
     }
 
     $parametros = new clsParametrosPesquisas();
@@ -153,13 +153,13 @@ class indice extends clsListagem
       $this->nome,
       $this->matricula,
       NULL,
+      NULL,
       TRUE,
       TRUE,
       NULL, 
       NULL,
       NULL,
-      NULL,
-      isset($_GET['busca']) ? $this->ref_cod_escola : NULL,
+      $this->ref_cod_escola,
       NULL,
       NULL,
       NULL,
