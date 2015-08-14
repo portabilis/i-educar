@@ -943,8 +943,7 @@ class clsPmieducarServidor
       $whereAnd = " AND ";
     }
     else {
-      if (is_numeric($alocacao_escola_instituicao) &&
-        (is_numeric($int_ref_cod_instituicao) || is_numeric($int_ref_cod_escola))
+      if ((is_numeric($int_ref_cod_escola))
       ) {
         $filtros .= "
     {$whereAnd} s.cod_servidor IN

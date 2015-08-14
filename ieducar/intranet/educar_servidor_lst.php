@@ -146,7 +146,7 @@ class indice extends clsListagem
       NULL,
       NULL,
       1,
-      $this->ref_cod_instituicao,
+      null,
       NULL,
       NULL,
       NULL,
@@ -164,7 +164,7 @@ class indice extends clsListagem
       NULL,
       NULL,
       NULL,
-      isset($_GET['busca']) ? 1 : NULL
+      null
     );
 
     $total = $obj_servidor->_total;

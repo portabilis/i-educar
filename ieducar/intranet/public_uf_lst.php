@@ -115,7 +115,7 @@ class indice extends clsListagem
 		$this->campoLista( "idpais", "Pais", $opcoes, $this->idpais, "", false, "", "", false, false );
 
 		// outros Filtros
-		$this->campoTexto( "sigla_uf", "Sigla Uf", $this->sigla_uf, 2, 2, false );
+		$this->campoTexto( "sigla_uf", "Sigla Uf", $this->sigla_uf, 3, 3, false );
 		$this->campoTexto( "nome", "Nome", $this->nome, 30, 30, false );
 
 
