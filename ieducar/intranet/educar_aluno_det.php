@@ -601,10 +601,18 @@ class indice extends clsDetalhe
     }
 
     if ($registro['url_laudo_medico'] && $registro['url_laudo_medico'] != '') {
+      $tabela = '<table border="0" width="300" cellpadding="3"><tr bgcolor="#A1B3BD" align="center"><td>Laudo médico</td></tr>';
+      $cor    = '#D1DADF';
+
       $urlLaudoMedico = explode(",", $registro['url_laudo_medico']);
       for ($i = 0; $i < count($urlLaudoMedico); $i++) {
-        $this->addDetalhe(array('Laudo médico do aluno', "<a href='{$urlLaudoMedico[$i]}' target='_blank' > Visualizar laudo ". (count($urlLaudoMedico) > 1 ? ($i+1) : "")." </a>"));
+        $cor = $cor == '#D1DADF' ? '#E4E9ED' : '#D1DADF';
+
+        $tabela .= "<tr bgcolor='{$cor}' align='center'><td><a href='{$urlLaudoMedico[$i]}' target='_blank' > Visualizar laudo ". (count($urlLaudoMedico) > 1 ? ($i+1) : "")." </a></td></tr>";
       }
+
+      $tabela .= '</table>';
+      $this->addDetalhe(array('Laudo médico do aluno', $tabela));
     }
 
     if ($registro['rg']) {
