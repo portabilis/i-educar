@@ -63,14 +63,18 @@ function addLaudoMedico(url){
 }
 
 function montaUrlLaudoMedico(){
-  var url = $arrayUrlLaudoMedico.toString().replace(",,",",");
-  //Remove o primeiro ou ultimo caracter caso seja virgula
+  var url = '';
+
+  for (var i = 0; i < $arrayUrlLaudoMedico.length; i++) {
+    if ($arrayUrlLaudoMedico[i]){
+      url += $arrayUrlLaudoMedico[i]+','
+    }
+  }
+  //Remove a ultima vírgula
   if (url.substring(url.length-1, url.length) == ","){
     url = url.substring(0, url.length-1);
   }
-  if (url.substring(0, 1) == ","){
-    url = url.substring(1, url.length);
-  }
+
   $j('#url_laudo_medico').val(url);
 }
 
