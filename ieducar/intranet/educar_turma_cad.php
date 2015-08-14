@@ -1711,35 +1711,28 @@ var evtOnLoad = function()
   setVisibility('tr_hora_inicio_intervalo', true);
   setVisibility('tr_hora_fim_intervalo', true);
 
-  if (document.getElementById('ref_cod_curso').value) {
-    if (document.getElementById('padrao_ano_escolar').value == 0) {
-      setVisibility('tr_ref_cod_modulo', true);
-      setVisibility('ref_cod_modulo', true);
-      setVisibility('tr_data_inicio', true);
-      setVisibility('tr_data_fim', true);
-      setVisibility('tr_bt_incluir_modulo', true);
+  if (document.getElementById('padrao_ano_escolar').value == 0) {
+    setVisibility('tr_ref_cod_modulo', true);
+    setVisibility('ref_cod_modulo', true);
+    setVisibility('tr_data_inicio', true);
+    setVisibility('tr_data_fim', true);
+    setVisibility('tr_bt_incluir_modulo', true);
 
-      setVisibility('tr_dia_semana', true);
-      setVisibility('tr_ds_hora_inicial', true);
-      setVisibility('tr_ds_hora_final', true);
-      setVisibility('tr_bt_incluir_dia_semana', true);
+    setVisibility('tr_dia_semana', true);
+    setVisibility('tr_ds_hora_inicial', true);
+    setVisibility('tr_ds_hora_final', true);
+    setVisibility('tr_bt_incluir_dia_semana', true);
 
-      var hr_tag = document.getElementsByTagName('hr');
-      for (var ct = 0;ct < hr_tag.length; ct++) {
-        setVisibility(hr_tag[ct].parentNode.parentNode, true);
-      }
-    } else {
-      $j('tr_ref_cod_modulo').closest('tr').hide();
-      $j('ref_cod_modulo').closest('tr').hide();
-      $j('tr_data_inicio').closest('tr').hide();
-      $j('tr_data_fim').closest('tr').hide();
-      $j('tr_bt_incluir_modulo').closest('tr').hide();
-
-      var modulos = document.getElementsByName('tr_ref_cod_modulo');
-      for (var i = 0; i < modulos.length; i++) {
-        $j(modulos[i]).closest('tr').hide();
-      }
+    var hr_tag = document.getElementsByTagName('hr');
+    for (var ct = 0;ct < hr_tag.length; ct++) {
+      setVisibility(hr_tag[ct].parentNode.parentNode, true);
     }
+  } else {
+    setVisibility('tr_ref_cod_modulo',false);
+    setVisibility('ref_cod_modulo',false);
+    setVisibility('tr_data_inicio',false);
+    setVisibility('tr_data_fim',false);
+    setVisibility('tr_bt_incluir_modulo',false);
   }
 }
 
