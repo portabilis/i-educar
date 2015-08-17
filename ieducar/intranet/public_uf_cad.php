@@ -134,7 +134,8 @@ class indice extends clsCadastro
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
 
-		$obj = new clsPublicUf($this->sigla_uf);
+
+		$obj = new clsPublicUf(strtoupper($this->sigla_uf));
 		$duplica= $obj->verificaDuplicidade();
 		if($duplica){
 			$this->mensagem = "A sigla já existe para outro estado.<br>";
@@ -164,7 +165,12 @@ class indice extends clsCadastro
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
 
-
+		$obj = new clsPublicUf(strtoupper($this->sigla_uf));
+		$duplica= $obj->verificaDuplicidade();
+		if($duplica){
+			$this->mensagem = "A sigla já existe para outro estado.<br>";
+			return false;
+		}else{
 		$obj = new clsPublicUf( $this->sigla_uf, $this->nome, $this->geom, $this->idpais, $this->cod_ibge );
 		$editou = $obj->edita();
 		if( $editou )
@@ -179,7 +185,7 @@ class indice extends clsCadastro
 		echo "<!--\nErro ao editar clsPublicUf\nvalores obrigatorios\nif( is_string( $this->sigla_uf ) )\n-->";
 		return false;
 	}
-
+}
 	function Excluir()
 	{
 		@session_start();

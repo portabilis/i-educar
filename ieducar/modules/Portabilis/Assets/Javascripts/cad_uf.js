@@ -1,36 +1,17 @@
-$j('#sigla_uf').mask('AAA');
+   $j('#idpais').change(function() {
+       abreSiglaUfBrasilEstrangeira();
+    });
 
 
 
-    
- $j('#sigla_uf').change(function() {
-    verificaSiglaUf();
+ function abreSiglaUfBrasilEstrangeira(){
 
- });
+	
 
-
-    
- $j('#sigla_uf').keyup(function() {
- if($j('#idpais').val() == 45){
-   $j('#sigla_uf').val($j('#sigla_uf').val().substring(0,2));
- }
-
- });
-
-
- 
- function verificaSiglaUf(){
-
+ 	$j('#sigla_uf').val('');
  if($j('#idpais').val() != 45){
-
-    if($j('#sigla_uf').val().length < 2){
-        
-       $j('#sigla_uf').val("");
-    alert("O campo UF deve ter 2 ou 3 caracteres para estados estrangeiros!");
+	$j('#sigla_uf').attr('maxlength', '3');
+ }else{
+	$j('#sigla_uf').attr('maxlength', '2');
     }
-
  }
-
- }
-
-
