@@ -102,6 +102,7 @@ class indice extends clsDetalhe
   {
     @session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
+    unset($_SESSION['reload_faixa_etaria']);
     session_write_close();
 
     // Verificação de permissão para cadastro.
@@ -263,7 +264,7 @@ class indice extends clsDetalhe
       $registro['sigla_uf_exp_rg'] 	   = $detalheDocumento['sigla_uf_exp_rg'];
       $registro['tipo_cert_civil'] 	   = $detalheDocumento['tipo_cert_civil'];
       $registro['certidao_nascimento'] = $detalheDocumento['certidao_nascimento'];
-      $registro['certidao_casamento']  = $detalheDocumento['certidao_casamento'];      
+      $registro['certidao_casamento']  = $detalheDocumento['certidao_casamento'];
       $registro['num_termo']       	   = $detalheDocumento['num_termo'];
       $registro['num_livro']       	   = $detalheDocumento['num_livro'];
       $registro['num_folha']       	   = $detalheDocumento['num_folha'];
@@ -599,8 +600,20 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('Deficiências', $tabela));
     }
 
-    if ($registro['url_laudo_medico'] && $registro['url_laudo_medico'] != '')
-      $this->addDetalhe(array('Laudo médico do aluno', "<a href='{$registro['url_laudo_medico']}' target='_blank' > Visualizar laudo </a>"));
+    if ($registro['url_laudo_medico'] && $registro['url_laudo_medico'] != '') {
+      $tabela = '<table border="0" width="300" cellpadding="3"><tr bgcolor="#A1B3BD" align="center"><td>Laudo médico</td></tr>';
+      $cor    = '#D1DADF';
+
+      $urlLaudoMedico = explode(",", $registro['url_laudo_medico']);
+      for ($i = 0; $i < count($urlLaudoMedico); $i++) {
+        $cor = $cor == '#D1DADF' ? '#E4E9ED' : '#D1DADF';
+
+        $tabela .= "<tr bgcolor='{$cor}' align='center'><td><a href='{$urlLaudoMedico[$i]}' target='_blank' > Visualizar laudo ". (count($urlLaudoMedico) > 1 ? ($i+1) : "")." </a></td></tr>";
+      }
+
+      $tabela .= '</table>';
+      $this->addDetalhe(array('Laudo médico do aluno', $tabela));
+    }
 
     if ($registro['rg']) {
       $this->addDetalhe(array('RG', $registro['rg']));
@@ -919,6 +932,8 @@ class indice extends clsDetalhe
 
     $this->addDetalhe("<input type='hidden' id='escola_id' name='aluno_id' value='{$registro['ref_cod_escola']}' />");
     $this->addDetalhe("<input type='hidden' id='aluno_id' name='aluno_id' value='{$registro['cod_aluno']}' />");
+    $mostraDependencia = $GLOBALS['coreExt']['Config']->app->matricula->dependencia;
+    $this->addDetalhe("<input type='hidden' id='can_show_dependencia' name='can_show_dependencia' value='{$mostraDependencia}' />");
 
     // js
 

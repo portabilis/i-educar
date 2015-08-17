@@ -116,10 +116,16 @@ class indice extends clsCadastro
 
 
 		// text
-		$this->campoTexto( "sigla_uf", "Sigla Uf", $this->sigla_uf, 2, 2, true );
+		$this->campoTexto( "sigla_uf", "Sigla Uf", $this->sigla_uf, 3, 3, true );
 		$this->campoTexto( "nome", "Nome", $this->nome, 30, 30, true );
 		$this->campoNumero( "cod_ibge", "C&oacute;digo INEP", $this->cod_ibge);
 //		$this->campoTexto( "geom", "Geom", $this->geom, 30, 255, false );
+
+				$scripts = array(
+			'/modules/Portabilis/Assets/Javascripts/cad_uf.js'
+			);
+
+		Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
 	}
 
 	function Novo()
@@ -127,6 +133,16 @@ class indice extends clsCadastro
 		@session_start();
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
+
+
+		$obj = new clsPublicUf(strtoupper($this->sigla_uf));
+		$duplica= $obj->verificaDuplicidade();
+		if($duplica){
+			$this->mensagem = "A sigla já existe para outro estado.<br>";
+			return false;
+		}else{
+
+		
 
 		$obj = new clsPublicUf( $this->sigla_uf, $this->nome, $this->geom, $this->idpais, $this->cod_ibge );
 		$cadastrou = $obj->cadastra();
@@ -142,14 +158,19 @@ class indice extends clsCadastro
 		echo "<!--\nErro ao cadastrar clsPublicUf\nvalores obrigatorios\nis_string( $this->sigla_uf ) && is_string( $this->nome )\n-->";
 		return false;
 	}
-
+	}
 	function Editar()
 	{
 		@session_start();
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
 
-
+		$obj = new clsPublicUf(strtoupper($this->sigla_uf));
+		$duplica= $obj->verificaDuplicidade();
+		if($duplica){
+			$this->mensagem = "A sigla já existe para outro estado.<br>";
+			return false;
+		}else{
 		$obj = new clsPublicUf( $this->sigla_uf, $this->nome, $this->geom, $this->idpais, $this->cod_ibge );
 		$editou = $obj->edita();
 		if( $editou )
@@ -164,7 +185,7 @@ class indice extends clsCadastro
 		echo "<!--\nErro ao editar clsPublicUf\nvalores obrigatorios\nif( is_string( $this->sigla_uf ) )\n-->";
 		return false;
 	}
-
+}
 	function Excluir()
 	{
 		@session_start();

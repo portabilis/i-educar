@@ -20,6 +20,9 @@ function fixupTabelaMatriculas() {
   $j('<th>').html('Entrada').appendTo($tr);
   $j('<th>').html(stringUtils.toUtf8('Saída')).appendTo($tr);
 
+  if($j('#can_show_dependencia').val() == 1)
+    $j('<th>').html(stringUtils.toUtf8('Dependência')).appendTo($tr);
+
   $tr.appendTo($table);
   $table.appendTo($parentTd);
 }
@@ -119,6 +122,11 @@ var handleGetMatriculas = function(dataResponse) {
       if (matricula.transferencia_em_aberto) {
         transferenciaEmAberto = true;
         $tr.addClass('notice');
+      }
+
+      if($j('#can_show_dependencia').val() == 1){
+        var dependencia = matricula.dependencia == 't' ? 'Sim' : stringUtils.toUtf8('Não');
+        $j('<td>').html(dependencia).appendTo($tr);
       }
 
       $tr.appendTo($matriculasTable);

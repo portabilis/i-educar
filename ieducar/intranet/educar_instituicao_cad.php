@@ -81,6 +81,7 @@ class indice extends clsCadastro
 	var $restringir_historico_escolar;
 	var $restringir_multiplas_enturmacoes;
 	var $permissao_filtro_abandono_transferencia;
+	var $data_base_matricula;
 
 	function Inicializar()
 	{
@@ -195,28 +196,28 @@ class indice extends clsCadastro
 
 
 		if ($GLOBALS['coreExt']['Config']->app->instituicao->data_base_deslocamento) {
-  		$this->campoData('data_base_transferencia', 'Data máxima para deslocamento', Portabilis_Date_Utils::pgSQLToBr($this->data_base_transferencia), null, null, false);
-  		$this->campoData('data_base_remanejamento', 'Data máxima para troca de sala', Portabilis_Date_Utils::pgSQLToBr($this->data_base_remanejamento), null, null, false);
-  	}
+	  		$this->campoData('data_base_transferencia', 'Data máxima para deslocamento', Portabilis_Date_Utils::pgSQLToBr($this->data_base_transferencia), null, null, false);
+	  		$this->campoData('data_base_remanejamento', 'Data máxima para troca de sala', Portabilis_Date_Utils::pgSQLToBr($this->data_base_remanejamento), null, null, false);
+	  	}
 
-	///$hiddenInputOptions = array('options' => array('value' => $this->coordenador_transporte));
-	//$helperOptions      = array('objectName' => 'gestor', 'hiddenInputOptions' => $hiddenInputOptions);
-  	$options            = array('label'      => 'Coordenador(a) de transporte',
-	                                'size'       => 50,
-	                                'value'		 => $this->coordenador_transporte,
-	                                'required'   => false);
+		///$hiddenInputOptions = array('options' => array('value' => $this->coordenador_transporte));
+		//$helperOptions      = array('objectName' => 'gestor', 'hiddenInputOptions' => $hiddenInputOptions);
+	  	$options            = array('label'      => 'Coordenador(a) de transporte',
+		                                'size'       => 50,
+		                                'value'		 => $this->coordenador_transporte,
+		                                'required'   => false);
 
-	$this->inputsHelper()->simpleSearchPessoa('coordenador_transporte', $options, $helperOptions);
+		$this->inputsHelper()->simpleSearchPessoa('coordenador_transporte', $options, $helperOptions);
 
-    $this->campoCheck("exigir_vinculo_turma_professor", "Exigir vínculo com turma para lançamento de notas do professor?", $this->exigir_vinculo_turma_professor );
+	    $this->campoCheck("exigir_vinculo_turma_professor", "Exigir vínculo com turma para lançamento de notas do professor?", $this->exigir_vinculo_turma_professor );
 
-    $this->campoCheck("gerar_historico_transferencia", "Gerar histórico de transferência ao transferir matrícula?", $this->gerar_historico_transferencia);
+	    $this->campoCheck("gerar_historico_transferencia", "Gerar histórico de transferência ao transferir matrícula?", $this->gerar_historico_transferencia);
 
-    $this->campoCheck("matricula_apenas_bairro_escola", "Permitir matrícula de alunos apenas do bairro da escola?", $this->matricula_apenas_bairro_escola);
+	    $this->campoCheck("matricula_apenas_bairro_escola", "Permitir matrícula de alunos apenas do bairro da escola?", $this->matricula_apenas_bairro_escola);
 
-	$this->campoCheck("restringir_historico_escolar", "Restringir modificações de históricos escolares?", $this->restringir_historico_escolar, NULL, false, false, false, 'Com esta opção selecionada, somente será possível cadastrar/editar históricos escolares de alunos que pertençam a mesma escola do funcionário.' );
+		$this->campoCheck("restringir_historico_escolar", "Restringir modificações de históricos escolares?", $this->restringir_historico_escolar, NULL, false, false, false, 'Com esta opção selecionada, somente será possível cadastrar/editar históricos escolares de alunos que pertençam a mesma escola do funcionário.' );
 
-  	$this->campoCheck("controlar_espaco_utilizacao_aluno", "Controlar espaço utilizado pelo aluno?", $this->controlar_espaco_utilizacao_aluno );
+	  	$this->campoCheck("controlar_espaco_utilizacao_aluno", "Controlar espaço utilizado pelo aluno?", $this->controlar_espaco_utilizacao_aluno );
 		$this->campoMonetario( "percentagem_maxima_ocupacao_salas", "Percentagem máxima de ocupação da sala",
 															  Portabilis_Currency_Utils::moedaUsToBr($this->percentagem_maxima_ocupacao_salas),
 															  6,
@@ -224,9 +225,15 @@ class indice extends clsCadastro
 															  false);
 		$this->campoNumero( "quantidade_alunos_metro_quadrado", "Quantidade máxima de alunos permitidos por metro quadrado", $this->quantidade_alunos_metro_quadrado, 6, 6 );
 
-	$this->campoCheck("restringir_multiplas_enturmacoes", "Não permitir múltiplas enturmações para o aluno no mesmo curso e série/ano", $this->restringir_multiplas_enturmacoes);
-	$this->campoCheck("permissao_filtro_abandono_transferencia", "Não permitir a apresentação de alunos com matrícula em abandono ou transferida na emissão do relatório de frequência", $this->permissao_filtro_abandono_transferencia);
+		$this->campoCheck("restringir_multiplas_enturmacoes", "Não permitir múltiplas enturmações para o aluno no mesmo curso e série/ano", $this->restringir_multiplas_enturmacoes);
+		$this->campoCheck("permissao_filtro_abandono_transferencia", "Não permitir a apresentação de alunos com matrícula em abandono ou transferida na emissão do relatório de frequência", $this->permissao_filtro_abandono_transferencia);
 
+    	$this->inputsHelper()->text('data_base', array('label' => 'Data base para matrícula (dia/mês)',
+					    								'size' => 5,
+					    								'max_length' => 5,
+					    								'placeholder' => 'dd/mm',
+					    								'required' => false,
+					    								'value' => Portabilis_Date_Utils::pgSQLToBr_ddmm($this->data_base_matricula)));
 	}
 
 	function Novo()
@@ -246,6 +253,7 @@ class indice extends clsCadastro
 		$obj->coordenador_transporte 			= $this->pessoa_coordenador_transporte;
 		$obj->controlar_espaco_utilizacao_aluno = is_null($this->controlar_espaco_utilizacao_aluno) ? 0 : 1;
 		$obj->percentagem_maxima_ocupacao_salas = Portabilis_Currency_Utils::moedaBrToUs($this->percentagem_maxima_ocupacao_salas);
+		$obj->data_base_matricula               = Portabilis_Date_Utils::brToPgSQL_ddmm($this->data_base);
 		$obj->auditar_notas = !is_null($this->auditar_notas);
 		$cadastrou = $obj->cadastra();
 		if( $cadastrou )
@@ -279,6 +287,7 @@ class indice extends clsCadastro
 		$obj->coordenador_transporte 			= $this->pessoa_coordenador_transporte;
 		$obj->controlar_espaco_utilizacao_aluno = is_null($this->controlar_espaco_utilizacao_aluno) ? 0 : 1;
 		$obj->percentagem_maxima_ocupacao_salas = Portabilis_Currency_Utils::moedaBrToUs($this->percentagem_maxima_ocupacao_salas);
+		$obj->data_base_matricula               = Portabilis_Date_Utils::brToPgSQL_ddmm($this->data_base);
 
 		$editou = $obj->edita();
 		if( $editou )
@@ -345,5 +354,7 @@ $pagina->MakeAll();
 			$j('#quantidade_alunos_metro_quadrado').closest('tr').show();
 		}
 	}
+
+	$j('#data_base').mask("99/99");
 
 </script>

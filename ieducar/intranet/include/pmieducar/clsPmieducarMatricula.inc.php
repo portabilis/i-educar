@@ -68,6 +68,7 @@ class clsPmieducarMatricula
   var $data_matricula;
   var $data_cancel;
   var $turno_pre_matricula;
+  var $dependencia;
 
   /**
    * caso seja a primeira matricula do aluno
@@ -139,13 +140,13 @@ class clsPmieducarMatricula
     $data_cadastro = NULL, $data_exclusao = NULL, $ativo = NULL, $ano = NULL,
     $ultima_matricula = NULL, $modulo = NULL, $formando = NULL,
     $descricao_reclassificacao = NULL, $matricula_reclassificacao = NULL,
-    $ref_cod_curso = NULL, $matricula_transferencia = NULL, $semestre = NULL, 
+    $ref_cod_curso = NULL, $matricula_transferencia = NULL, $semestre = NULL,
     $data_matricula = NULL, $data_cancel = NULL, $ref_cod_abandono = NULL) {
     $db = new clsBanco();
     $this->_schema = 'pmieducar.';
     $this->_tabela = $this->_schema . 'matricula';
 
-    $this->_campos_lista = $this->_todos_campos = "m.cod_matricula, m.ref_cod_reserva_vaga, m.ref_ref_cod_escola, m.ref_ref_cod_serie, m.ref_usuario_exc, m.ref_usuario_cad, m.ref_cod_aluno, m.aprovado, m.data_cadastro, m.data_exclusao, m.ativo, m.ano, m.ultima_matricula, m.modulo,formando,descricao_reclassificacao,matricula_reclassificacao, m.ref_cod_curso,m.matricula_transferencia,m.semestre, m.data_matricula, m.data_cancel, m.ref_cod_abandono_tipo, m.turno_pre_matricula ";
+    $this->_campos_lista = $this->_todos_campos = "m.cod_matricula, m.ref_cod_reserva_vaga, m.ref_ref_cod_escola, m.ref_ref_cod_serie, m.ref_usuario_exc, m.ref_usuario_cad, m.ref_cod_aluno, m.aprovado, m.data_cadastro, m.data_exclusao, m.ativo, m.ano, m.ultima_matricula, m.modulo,formando,descricao_reclassificacao,matricula_reclassificacao, m.ref_cod_curso,m.matricula_transferencia,m.semestre, m.data_matricula, m.data_cancel, m.ref_cod_abandono_tipo, m.turno_pre_matricula, m.dependencia ";
 
     if (is_numeric($ref_usuario_exc)) {
       if (class_exists("clsPmieducarUsuario")) {
@@ -318,7 +319,10 @@ class clsPmieducarMatricula
 
     if (is_string($data_cancel)) {
       $this->data_cancel = $data_cancel;
-    }        
+    }
+    if (is_bool($dependencia)) {
+      $this->dependencia = $dependencia;
+    }
   }
 
   /**
@@ -445,7 +449,7 @@ class clsPmieducarMatricula
         $campos .= "{$gruda}data_matricula";
         $valores .= "{$gruda}'{$this->data_matricula}'";
         $gruda = ", ";
-      }      
+      }
 
       if (is_string($this->data_cancel)) {
         $campos .= "{$gruda}data_cancel";
@@ -453,9 +457,9 @@ class clsPmieducarMatricula
         $gruda = ", ";
       }
 
-      if (is_numeric($this->turno_pre_matricula)) {
-        $campos .= "{$gruda}turno_pre_matricula";
-        $valores .= "{$gruda}'{$this->turno_pre_matricula}'";
+      if ($this->dependencia) {
+        $campos .= "{$gruda}dependencia";
+        $valores .= "{$gruda}true ";
         $gruda = ", ";
       }
 
@@ -592,6 +596,11 @@ class clsPmieducarMatricula
         $gruda = ", ";
       }
 
+      if ($this->dependencia) {
+        $set .= "{$gruda}dependencia = true ";
+        $gruda = ", ";
+      }
+
       if ($set) {
         $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_matricula = '{$this->cod_matricula}'");
         return TRUE;
@@ -609,13 +618,13 @@ class clsPmieducarMatricula
     $int_ref_ref_cod_escola = NULL, $int_ref_ref_cod_serie = NULL,
     $int_ref_usuario_exc = NULL, $int_ref_usuario_cad = NULL,
     $ref_cod_aluno = NULL, $int_aprovado = NULL,
-    $date_data_cadastro_ini = NULL, $date_data_cadastro_fim = NULL, 
-    $date_data_exclusao_ini = NULL, $date_data_exclusao_fim = NULL, 
+    $date_data_cadastro_ini = NULL, $date_data_cadastro_fim = NULL,
+    $date_data_exclusao_ini = NULL, $date_data_exclusao_fim = NULL,
     $int_ativo = NULL, $int_ano = NULL, $int_ref_cod_curso2 = NULL,
     $int_ref_cod_instituicao = NULL, $int_ultima_matricula = NULL,
-    $int_modulo = NULL, $int_padrao_ano_escolar = NULL, 
+    $int_modulo = NULL, $int_padrao_ano_escolar = NULL,
     $int_analfabeto = NULL, $int_formando = NULL, $str_descricao_reclassificacao = NULL,
-    $int_matricula_reclassificacao = NULL, $boo_com_deficiencia = NULL, 
+    $int_matricula_reclassificacao = NULL, $boo_com_deficiencia = NULL,
     $int_ref_cod_curso = NULL, $bool_curso_sem_avaliacao = NULL,
     $arr_int_cod_matricula = NULL, $int_mes_defasado = NULL, $boo_data_nasc = NULL,
     $boo_matricula_transferencia = NULL, $int_semestre = NULL, $int_ref_cod_turma = NULL,
@@ -785,21 +794,21 @@ class clsPmieducarMatricula
 
     if (is_numeric($int_ref_cod_turma)) {
       if ($matriculas_turmas_transferidas_abandono)
-        $filtros .= "{$whereAnd} EXISTS (SELECT 1 
-                                           FROM pmieducar.matricula_turma mt 
-                                          WHERE ((mt.ativo = 1) OR (NOT EXISTS 
+        $filtros .= "{$whereAnd} EXISTS (SELECT 1
+                                           FROM pmieducar.matricula_turma mt
+                                          WHERE ((mt.ativo = 1) OR (NOT EXISTS
                                                    (
                                                      SELECT 1
-                                                     FROM pmieducar.matricula_turma sub_mt 
-                                                      INNER JOIN pmieducar.matricula sub_m ON (sub_m.cod_matricula = sub_mt.ref_cod_matricula) 
+                                                     FROM pmieducar.matricula_turma sub_mt
+                                                      INNER JOIN pmieducar.matricula sub_m ON (sub_m.cod_matricula = sub_mt.ref_cod_matricula)
                                                       WHERE sub_mt.ativo = 1
                                                       AND sub_m.ref_cod_aluno = a.cod_aluno
                                                       AND (sub_mt.ref_cod_turma = {$int_ref_cod_turma}
                                                            OR sub_m.ref_ref_cod_serie = m.ref_ref_cod_serie)
                                                    )
                                                  )
-                                               ) 
-                                               AND mt.ref_cod_turma = {$int_ref_cod_turma} 
+                                               )
+                                               AND mt.ref_cod_turma = {$int_ref_cod_turma}
                                                AND mt.ref_cod_matricula = m.cod_matricula)";
       else
         $filtros .= "{$whereAnd} EXISTS (SELECT 1 FROM pmieducar.matricula_turma mt WHERE mt.ativo = 1 AND mt.ref_cod_turma = {$int_ref_cod_turma} AND mt.ref_cod_matricula = m.cod_matricula)";
@@ -1116,20 +1125,20 @@ class clsPmieducarMatricula
     return $db->CampoUnico($sql);
   }
   /**
-  * Seta a matricula para abandono e seta a observação passada por parâmetro 
+  * Seta a matricula para abandono e seta a observação passada por parâmetro
   * @author lucassch
   * @return boolean
   */
   function cadastraObs($obs, $tipoAbandono){
-      
+
     if (is_numeric($this->cod_matricula)){
       if (trim($obs)=='')
         $obs = "Não informado";
       $db = new clsBanco();
-      $consulta = "UPDATE {$this->_tabela} 
-                      SET aprovado = 6, 
-                          observacao = '$obs', 
-                          ref_cod_abandono_tipo = '$tipoAbandono' 
+      $consulta = "UPDATE {$this->_tabela}
+                      SET aprovado = 6,
+                          observacao = '$obs',
+                          ref_cod_abandono_tipo = '$tipoAbandono'
                     WHERE cod_matricula = $this->cod_matricula";
       $db->Consulta($consulta);
 

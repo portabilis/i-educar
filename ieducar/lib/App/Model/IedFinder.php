@@ -574,6 +574,35 @@ class App_Model_IedFinder extends CoreExt_Entity
   }
 
   /**
+   * Retorna uma instância de RegraAvaliacao_Model_Regra a partir dos dados
+   * da turma.
+   *
+   * @param int $turmaId
+   * @param RegraAvaliacao_Model_RegraDataMapper $mapper
+   * @return RegraAvaliacao_Model_Regra
+   * @throws App_Model_Exception
+   */
+  public static function getRegraAvaliacaoPorTurma($turmaId,
+    RegraAvaliacao_Model_RegraDataMapper $mapper = NULL)
+  {
+    $turma = self::getTurma($turmaId);
+    $serie     = self::getSerie($turma['ref_ref_cod_serie']);
+    $escola     = self::getEscola($turma['ref_ref_cod_escola']);
+
+    if (is_null($mapper)) {
+      require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
+      $mapper = new RegraAvaliacao_Model_RegraDataMapper();
+    }
+
+    if(dbBool($escola['utiliza_regra_diferenciada']) && is_numeric($serie['regra_avaliacao_diferenciada_id']) )
+      $intRegra = $serie['regra_avaliacao_diferenciada_id'];
+    else
+      $intRegra = $serie['regra_avaliacao_id'];
+
+    return $mapper->find($intRegra);
+  }
+
+  /**
    * Retorna um array de instâncias ComponenteCurricular_Model_Componente ao
    * qual um aluno cursa através de sua matrícula.
    *
@@ -613,12 +642,33 @@ class App_Model_IedFinder extends CoreExt_Entity
         $codMatricula, $codSerie, $codEscola
       );
 
-      foreach ($componentes as $id => $componente) {
-        if (in_array($id, $disciplinasDispensa)) {
-          continue;
+      if(dbBool($matricula['dependencia'])){
+
+        // Disciplinas dependência
+        $disciplinasDependencia = self::getDisciplinasDependenciaPorMatricula(
+          $codMatricula, $codSerie, $codEscola
+        );
+
+        foreach ($componentes as $id => $componente) {
+          if (in_array($id, $disciplinasDispensa)) {
+            continue;
+          }
+          if (!in_array($id, $disciplinasDependencia)) {
+            continue;
+          }
+
+          $ret[$id] = $componente;
         }
 
-        $ret[$id] = $componente;
+
+      }else{
+        foreach ($componentes as $id => $componente) {
+          if (in_array($id, $disciplinasDispensa)) {
+            continue;
+          }
+
+          $ret[$id] = $componente;
+        }
       }
     }
 
@@ -652,6 +702,36 @@ class App_Model_IedFinder extends CoreExt_Entity
     }
 
     return $disciplinasDispensa;
+  }
+
+  /**
+   * Retorna array com as referências de pmieducar.disciplina_dependencia
+   * a modules.componente_curricular ('ref_ref_cod_disciplina').
+   *
+   * @param int $codMatricula
+   * @param int $codSerie
+   * @param int $codEscola
+   * @return array
+   */
+  public static function getDisciplinasDependenciaPorMatricula($codMatricula,
+    $codSerie, $codEscola)
+  {
+
+    $disciplinas = self::addClassToStorage('clsPmieducarDisciplinaDependencia',
+      NULL, 'include/pmieducar/clsPmieducarDisciplinaDependencia.inc.php');
+
+    $disciplinas = $disciplinas->lista($codMatricula, $codSerie, $codEscola);
+
+    if (FALSE === $disciplinas) {
+      return array();
+    }
+
+    $disciplinasDependencia = array();
+    foreach ($disciplinas as $disciplina) {
+      $disciplinasDependencia[] = $disciplina['ref_cod_disciplina'];
+    }
+
+    return $disciplinasDependencia;
   }
 
   /**

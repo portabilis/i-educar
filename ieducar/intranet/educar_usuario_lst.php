@@ -82,8 +82,6 @@ class indice extends clsListagem
 		}
 		$this->campoLista( "ref_cod_tipo_usuario", "Tipo Usu&aacute;rio", $opcoes, $this->ref_cod_tipo_usuario,null,null,null,null,null,false);
 
-
-
 		$obj_usuario = new clsPmieducarUsuario($this->pessoa_logada);
 		$detalhe = $obj_usuario->detalhe();
 
@@ -112,12 +110,9 @@ class indice extends clsListagem
 			$opcoes = array( "" => "Selecione", "8" => "Biblioteca");
 		}
 		$this->campoLista( "ref_cod_nivel_usuario", "N&iacute;vel de Acesso", $opcoes, $this->ref_cod_nivel_usuario,null,null,null,null,null,false );
-		
-		if ($super_usuario_det)
-		{
-			$get_escola = true;
-			include("include/pmieducar/educar_campo_lista.php");
-		}		
+
+		$this->inputsHelper()->dynamic('instituicao',  array('required' =>  false, 'show-select' => true, 'value' => $this->ref_cod_instituicao));
+		$this->inputsHelper()->dynamic('escola',  array('required' =>  false, 'show-select' => true, 'value' => $this->ref_cod_escola));
 
 		// Paginador
 		$limite = 10;
@@ -127,7 +122,7 @@ class indice extends clsListagem
 		$obj_func->setOrderby("to_ascii(nome) ASC");
 		$obj_func->setLimite($limite, $iniciolimit);
 		$lst_func = $obj_func->listaFuncionarioUsuario($_GET["matricula"], $_GET['nm_pessoa'],$_GET['matricula_interna'],
-				$this->ref_cod_escola, $super_usuario_det ? NULL : $this->ref_cod_instituicao, $this->ref_cod_tipo_usuario, $this->ref_cod_nivel_usuario);
+				$this->ref_cod_escola, $this->ref_cod_instituicao, $this->ref_cod_tipo_usuario, $this->ref_cod_nivel_usuario);
 
 		if($lst_func)
 		{

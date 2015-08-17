@@ -79,13 +79,22 @@ class TurmaController extends ApiCoreController
         $turmas = Portabilis_Business_Professor::turmasAlocado($instituicaoId, $escolaId, $serieId, $userId);
 
       else {
-        $sql    = "select cod_turma as id, nm_turma || ' - ' || COALESCE(ano::varchar,'SEM ANO') as nome from pmieducar.turma where ref_ref_cod_escola = $1
+        if(is_numeric($ano)){
+$sql    = "select cod_turma as id, nm_turma || ' - ' || COALESCE(ano::varchar,'SEM ANO') as nome from pmieducar.turma where ref_ref_cod_escola = $1
+                   and (ref_ref_cod_serie = $2 or ref_ref_cod_serie_mult = $2) and ativo = 1 and
+                   visivel != 'f' and turma.ano = $3 order by nm_turma asc";
+
+        $turmas = $this->fetchPreparedQuery($sql, array($escolaId, $serieId, $ano));
+        }else{
+          $sql    = "select cod_turma as id, nm_turma || ' - ' || COALESCE(ano::varchar,'SEM ANO') as nome from pmieducar.turma where ref_ref_cod_escola = $1
                    and (ref_ref_cod_serie = $2 or ref_ref_cod_serie_mult = $2) and ativo = 1 and
                    visivel != 'f' order by nm_turma asc";
 
         $turmas = $this->fetchPreparedQuery($sql, array($escolaId, $serieId));
+        }
+  
       }
-
+      // echo "<pre>";print_r($ano);die();
       // caso no ano letivo esteja definido para filtrar turmas por ano,
       // somente retorna as turmas do ano letivo.
 

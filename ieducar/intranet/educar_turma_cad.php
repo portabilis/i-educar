@@ -611,16 +611,29 @@ class indice extends clsCadastro
       $qtd_modulo = 0;
 
     if (is_numeric($this->cod_turma) && !$_POST) {
-      $obj = new clsPmieducarTurmaModulo();
-      $registros = $obj->lista($this->cod_turma);
+      if (!$this->padrao_ano_escolar) {
 
-      if ($registros and !$this->padrao_ano_escolar) {
-        foreach ($registros as $campo) {
-          $this->turma_modulo[$campo[$qtd_modulo]]['sequencial_']     = $campo['sequencial'];
-          $this->turma_modulo[$campo[$qtd_modulo]]['ref_cod_modulo_'] = $campo['ref_cod_modulo'];
-          $this->turma_modulo[$campo[$qtd_modulo]]['data_inicio_']    = dataFromPgToBr($campo['data_inicio']);
-          $this->turma_modulo[$campo[$qtd_modulo]]['data_fim_']       = dataFromPgToBr($campo['data_fim']);
-          $qtd_modulo++;
+        $obj = new clsPmieducarTurmaModulo();
+        $registros = $obj->lista($this->cod_turma);
+
+        if ($registros) {
+          foreach ($registros as $campo) {
+            $this->turma_modulo[$campo[$qtd_modulo]]['sequencial_']     = $campo['sequencial'];
+            $this->turma_modulo[$campo[$qtd_modulo]]['ref_cod_modulo_'] = $campo['ref_cod_modulo'];
+            $this->turma_modulo[$campo[$qtd_modulo]]['data_inicio_']    = dataFromPgToBr($campo['data_inicio']);
+            $this->turma_modulo[$campo[$qtd_modulo]]['data_fim_']       = dataFromPgToBr($campo['data_fim']);
+            $qtd_modulo++;
+          }
+        } else {
+          $anoLetivoModulos = new clsPmieducarAnoLetivoModulo();
+          $anoLetivoModulos = $anoLetivoModulos->lista($this->ano, $this->ref_cod_escola);
+          foreach ($anoLetivoModulos as $campo) {
+            $this->turma_modulo[$campo[$qtd_modulo]]['sequencial_']     = $campo['sequencial'];
+            $this->turma_modulo[$campo[$qtd_modulo]]['ref_cod_modulo_'] = $campo['ref_cod_modulo'];
+            $this->turma_modulo[$campo[$qtd_modulo]]['data_inicio_']    = dataFromPgToBr($campo['data_inicio']);
+            $this->turma_modulo[$campo[$qtd_modulo]]['data_fim_']       = dataFromPgToBr($campo['data_fim']);
+            $qtd_modulo++;
+          }
         }
       }
     }
@@ -1663,13 +1676,6 @@ var evtOnLoad = function()
   setVisibility('tr_hora_inicio_intervalo',false);
   setVisibility('tr_hora_fim_intervalo',false);
 
-  // Inclui módulo
-  setVisibility('tr_ref_cod_modulo',false);
-  setVisibility('ref_cod_modulo',false);
-  setVisibility('tr_data_inicio',false);
-  setVisibility('tr_data_fim',false);
-  setVisibility('tr_bt_incluir_modulo',false);
-
   // Inclui dia da semana
   //setVisibility('tr_dia_semana',false);
   //setVisibility('tr_ds_hora_inicial',false);
@@ -1705,24 +1711,28 @@ var evtOnLoad = function()
   setVisibility('tr_hora_inicio_intervalo', true);
   setVisibility('tr_hora_fim_intervalo', true);
 
-  if (document.getElementById('ref_cod_curso').value) {
-    if (document.getElementById('padrao_ano_escolar').value == 0) {
-      setVisibility('tr_ref_cod_modulo', true);
-      setVisibility('ref_cod_modulo', true);
-      setVisibility('tr_data_inicio', true);
-      setVisibility('tr_data_fim', true);
-      setVisibility('tr_bt_incluir_modulo', true);
+  if (document.getElementById('padrao_ano_escolar').value == 0) {
+    setVisibility('tr_ref_cod_modulo', true);
+    setVisibility('ref_cod_modulo', true);
+    setVisibility('tr_data_inicio', true);
+    setVisibility('tr_data_fim', true);
+    setVisibility('tr_bt_incluir_modulo', true);
 
-      setVisibility('tr_dia_semana', true);
-      setVisibility('tr_ds_hora_inicial', true);
-      setVisibility('tr_ds_hora_final', true);
-      setVisibility('tr_bt_incluir_dia_semana', true);
+    setVisibility('tr_dia_semana', true);
+    setVisibility('tr_ds_hora_inicial', true);
+    setVisibility('tr_ds_hora_final', true);
+    setVisibility('tr_bt_incluir_dia_semana', true);
 
-      var hr_tag = document.getElementsByTagName('hr');
-      for (var ct = 0;ct < hr_tag.length; ct++) {
-        setVisibility(hr_tag[ct].parentNode.parentNode, true);
-      }
+    var hr_tag = document.getElementsByTagName('hr');
+    for (var ct = 0;ct < hr_tag.length; ct++) {
+      setVisibility(hr_tag[ct].parentNode.parentNode, true);
     }
+  } else {
+    setVisibility('tr_ref_cod_modulo',false);
+    setVisibility('ref_cod_modulo',false);
+    setVisibility('tr_data_inicio',false);
+    setVisibility('tr_data_fim',false);
+    setVisibility('tr_bt_incluir_modulo',false);
   }
 }
 
@@ -2182,7 +2192,7 @@ function valida_xml(xml)
     var qtdDiaSemana = document.getElementsByName('dia_semana').length;
 
     if (qtdModulo == 1) {
-      alert("ATENCAO!\nE necessario incluir um 'Modulo'!");
+      alert("ATEN\u00c7\u00c3O!\n\u00c9 necess\u00e1rio incluir um 'M\u00f3dulo'!");
       document.getElementById('ref_cod_modulo').focus();
       return false;
     }

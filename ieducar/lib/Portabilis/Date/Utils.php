@@ -57,6 +57,20 @@ class Portabilis_Date_Utils
   }
 
   /**
+   * Recebe uma data no formato dd/mm e retorna no formato postgres yyyy-mm-dd.
+   * @param string $date
+   */
+  public static function brToPgSQL_ddmm($date) {
+    if (! $date)
+      return $date;
+
+    // #TODO usar classe nativa datetime http://www.phptherightway.com/#date_and_time ?
+    list($dia, $mes) = explode("/", $date);
+    $ano = '1900';
+    return "$ano-$mes-$dia";
+  }
+
+  /**
    * Recebe uma data no formato postgres yyyy-mm-dd hh:mm:ss.uuuu e retorna no formato br dd/mm/yyyy hh:mm:ss.
    * @param string $timestamp
    */
@@ -75,6 +89,19 @@ class Portabilis_Date_Utils
       if ($hasMicroseconds)
         $pgFormat .= '.u';
     }
+
+    $d = DateTime::createFromFormat($pgFormat, $timestamp);
+
+    return ($d ? $d->format($brFormat) : null);
+  }
+
+  /**
+   * Recebe uma data no formato postgres yyyy-mm-dd hh:mm:ss.uuuu e retorna no formato br dd/mm.
+   * @param string $timestamp
+   */
+  public static function pgSQLToBr_ddmm($timestamp) {
+    $pgFormat = 'Y-m-d';
+    $brFormat = 'd/m';
 
     $d = DateTime::createFromFormat($pgFormat, $timestamp);
 

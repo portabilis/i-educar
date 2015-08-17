@@ -107,7 +107,9 @@ class TurmaController extends ApiCoreController
                    $tiposBoletim::BIMESTRAL_CONCEITUAL_RETRATO_CACADOR          => 'portabilis_boletim_primeiro_ano_bimestral_retrato_cacador',
                    $tiposBoletim::BIMESTRAL_RETRATO_PARAGOMINAS                 => 'portabilis_boletim_bimestral_paragominas',
                    $tiposBoletim::TRIMESTRAL_RECUPERACAO_PARALELA               => 'portabilis_boletim_trimestral_recuperacao_paralela',
-                   $tiposBoletim::ACOMPANHAMENTO_EDUCACAO_INTANTIL              => 'portabilis_boletim_acompanhamento_educ_infantil');
+                   $tiposBoletim::ACOMPANHAMENTO_EDUCACAO_INTANTIL              => 'portabilis_boletim_acompanhamento_educ_infantil',
+                   $tiposBoletim::AVALIACAO_INFANTIL_SEMESTRAL                  => 'portabilis_boletim_avaliacao_infantil_balneario_camboriu',
+                   $tiposBoletim::TRIMESTRAL_CONCEITUAL_PARECER                 => 'portabilis_boletim_conceitual_trimestral_parecer');
 
     return array('tipo-boletim' => $tipos[$tipo]);
   }
