@@ -8,10 +8,10 @@
 
 	
 
- 	$j('#sigla_uf').val('').toUpperCase();
+ 	$j('#sigla_uf').val('');
  if($j('#idpais').val() != 45){
-	$j('#sigla_uf').attr('maxlength', '3').toUpperCase();
+	$j('#sigla_uf').attr('maxlength', '3');
  }else{
-	$j('#sigla_uf').attr('maxlength', '2').toUpperCase();
+	$j('#sigla_uf').attr('maxlength', '2');
     }
  }
