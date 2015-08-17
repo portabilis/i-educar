@@ -12,6 +12,6 @@
  if($j('#idpais').val() != 45){
 	$j('#sigla_uf').attr('maxlength', '3').toUpperCase();
  }else{
-	$j('#sigla_uf')attr('maxlength', '2').toUpperCase();
+	$j('#sigla_uf').attr('maxlength', '2').toUpperCase();
     }
  }
