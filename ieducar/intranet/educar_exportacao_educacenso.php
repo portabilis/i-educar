@@ -1225,6 +1225,7 @@ class indice extends clsCadastro
       LEFT JOIN modules.educacenso_cod_docente ecd ON ecd.cod_servidor = s.cod_servidor
 			WHERE s.cod_servidor = $1
 			AND e.cod_escola = t.ref_ref_cod_escola
+      AND t.ativo = 1
   	';
 
 
