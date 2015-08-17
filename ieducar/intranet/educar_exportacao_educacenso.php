@@ -206,12 +206,12 @@ class indice extends clsCadastro
     foreach ($this->getTurmas($escolaId, $ano) as $turmaId => $turmaNome) {
       $export .= $this->exportaDadosRegistro20($escolaId, $turmaId, $data_ini, $data_fim);
     }
-    foreach ($this->getServidores($escolaId) as $servidor) {
+    foreach ($this->getServidores($escolaId, $ano) as $servidor) {
 
       $registro30 = $this->exportaDadosRegistro30($servidor['id']);
       $registro40 = $this->exportaDadosRegistro40($servidor['id']);
       $registro50 = $this->exportaDadosRegistro50($servidor['id']);
-      $registro51 = $this->exportaDadosRegistro51($servidor['id']);
+      $registro51 = $this->exportaDadosRegistro51($servidor['id'], $escolaId, $data_ini, $data_fim);
       if(!empty($registro30) && !empty($registro40) && !empty($registro50))
         $export .= $registro30 . $registro40 . $registro50 . $registro51;
     }
@@ -230,14 +230,16 @@ class indice extends clsCadastro
     return App_Model_IedFinder::getTurmas($escolaId, NULL, $ano);
   }
 
-  protected function getServidores($escolaId){
+  protected function getServidores($escolaId, $ano){
     $sql = 'SELECT distinct cod_servidor as id
-              FROM pmieducar.servidor
-              INNER JOIN pmieducar.servidor_alocacao ON (ref_cod_servidor = cod_servidor)
-              WHERE ref_cod_escola = $1
-                AND servidor.ativo = 1
-                AND servidor_alocacao.ativo = 1';
-    return Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId)));
+              from pmieducar.servidor
+             inner join modules.professor_turma on(servidor.cod_servidor = professor_turma.servidor_id)
+             inner join pmieducar.turma on(professor_turma.turma_id = turma.cod_turma)
+             where turma.ref_ref_cod_escola = $1
+               and servidor.ativo = 1
+               and professor_turma.ano = $2
+               and turma.ativo = 1';
+    return Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId, $ano)));
   }
 
   protected function getAlunos($escolaId, $ano, $data_ini, $data_fim){
@@ -669,8 +671,8 @@ class indice extends clsCadastro
               WHERE mt.ref_cod_turma = t.cod_turma
               AND mt.ativo = 1
               AND COALESCE(m.data_matricula,m.data_cadastro) BETWEEN DATE($2) AND DATE($3)
-              LIMIT 1) IS NOT NULL
-    ';
+              LIMIT 1) IS NOT NULL';
+
     // Transforma todos resultados em variáveis
     extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, array('return_only' => 'first-row', 'params' => array($turmaId, $data_ini, $data_fim))));
     if ($r20s1){
@@ -1032,7 +1034,7 @@ class indice extends clsCadastro
     }
   }
 
-  protected function exportaDadosRegistro51($servidorId){
+  protected function exportaDadosRegistro51($servidorId, $escolaId, $data_ini, $data_fim){
 
   	$sql =
   	 'SELECT
@@ -1225,7 +1227,15 @@ class indice extends clsCadastro
       LEFT JOIN modules.educacenso_cod_docente ecd ON ecd.cod_servidor = s.cod_servidor
 			WHERE s.cod_servidor = $1
 			AND e.cod_escola = t.ref_ref_cod_escola
+      AND e.cod_escola = $2
       AND t.ativo = 1
+      AND (SELECT 1
+              FROM pmieducar.matricula_turma mt
+             INNER JOIN pmieducar.matricula m ON(mt.ref_cod_matricula = m.cod_matricula)
+              WHERE mt.ref_cod_turma = t.cod_turma
+              AND mt.ativo = 1
+              AND COALESCE(m.data_matricula,m.data_cadastro) BETWEEN DATE($3) AND DATE($4)
+              LIMIT 1) IS NOT NULL
   	';
 
 
@@ -1234,7 +1244,7 @@ class indice extends clsCadastro
     $return = '';
     $numeroRegistros = 21;
 
-    foreach (Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($servidorId))) as $reg) {
+    foreach (Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($servidorId, $escolaId, $data_ini, $data_fim))) as $reg) {
     	extract($reg);
 	    for ($i=1; $i <= $numeroRegistros ; $i++)
 	    	$return .= ${'r51s'.$i}.$d;
@@ -1242,7 +1252,6 @@ class indice extends clsCadastro
       $return = substr_replace($return, "", -1);
 	    $return .= "\n";
     }
-
     return $return;
   }
 
