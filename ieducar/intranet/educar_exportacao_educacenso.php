@@ -764,7 +764,7 @@ class indice extends clsCadastro
         s.cod_servidor as r30s4,
         p.nome as r30s5,
         p.email as r30s6,
-        fis.nis_pis_pasep as r30s7,
+        null as r30s7,
         fis.data_nasc as r30s8,
         fis.sexo as r30s9,
         r.raca_educacenso as r30s10,
