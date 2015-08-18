@@ -224,6 +224,33 @@ class indice extends clsCadastro
     $this->campoMemo('observacao', 'Observa&ccedil;&atilde;o', $this->observacao, 60, 10, FALSE);
   }
 
+  function validaQuantidadeDisciplinasDependencia(){
+    $db = new clsBanco();
+    $db->consulta("SELECT qtd_disciplinas_dependencia
+                    FROM modules.regra_avaliacao
+                    INNER JOIN pmieducar.serie ON serie.regra_avaliacao_id = regra_avaliacao.id
+                    WHERE serie.cod_serie = {$this->ref_cod_serie} ");
+
+    $db->ProximoRegistro();
+    $m = $db->Tupla();
+    $qtdDisciplinasLimite = $m['qtd_disciplinas_dependencia'];
+
+    $db->consulta("SELECT COUNT(1) as qtd
+                    FROM pmieducar.disciplina_dependencia
+                    WHERE ref_cod_matricula = {$this->ref_cod_matricula} ");
+    $db->ProximoRegistro();
+    $m = $db->Tupla();
+    $qtdDisciplinas = $m['qtd'];
+
+    $valid = $qtdDisciplinas < $qtdDisciplinasLimite;
+
+    if(!$valid){
+      $this->mensagem .= "A regra desta s&eacute;rie limita a quantidade de disciplinas de depend&ecirc;ncia para {$qtdDisciplinasLimite}. <br/>";
+    }
+
+    return $valid;
+  }
+
   function Novo()
   {
     @session_start();
@@ -233,6 +260,11 @@ class indice extends clsCadastro
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7,
       'educar_disciplina_dependencia_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
+
+    if(!$this->validaQuantidadeDisciplinasDependencia()){
+      return false;
+    }
+
 
     $sql = 'SELECT MAX(cod_disciplina_dependencia) + 1 FROM pmieducar.disciplina_dependencia';
     $db  = new clsBanco();
