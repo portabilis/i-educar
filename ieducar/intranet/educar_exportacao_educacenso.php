@@ -208,9 +208,9 @@ class indice extends clsCadastro
     }
     foreach ($this->getServidores($escolaId, $ano, $data_ini, $data_fim) as $servidor) {
 
-      $registro30 = $this->exportaDadosRegistro30($servidor['id']);
-      $registro40 = $this->exportaDadosRegistro40($servidor['id']);
-      $registro50 = $this->exportaDadosRegistro50($servidor['id']);
+      $registro30 = $this->exportaDadosRegistro30($servidor['id'], $escolaId);
+      $registro40 = $this->exportaDadosRegistro40($servidor['id'], $escolaId);
+      $registro50 = $this->exportaDadosRegistro50($servidor['id'], $escolaId);
       $registro51 = $this->exportaDadosRegistro51($servidor['id'], $escolaId, $data_ini, $data_fim);
       if(!empty($registro30) && !empty($registro40) && !empty($registro50))
         $export .= $registro30 . $registro40 . $registro50 . $registro51;
@@ -755,7 +755,7 @@ class indice extends clsCadastro
     }
   }
 
-  protected function exportaDadosRegistro30($servidorId){
+  protected function exportaDadosRegistro30($servidorId, $escolaId){
     $sql =
     	' SELECT
         \'30\' as r30s1,
@@ -788,12 +788,12 @@ class indice extends clsCadastro
         LEFT JOIN public.uf ON (uf.sigla_uf = m.sigla_uf)
         LEFT JOIN modules.educacenso_cod_docente ecd ON ecd.cod_servidor = s.cod_servidor
         WHERE s.cod_servidor = $1
-
+          AND e.cod_escola = $2
         LIMIT 1
     ';
 
     // Transforma todos resultados em variáveis
-    extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, array('return_only' => 'first-row', 'params' => array($servidorId))));
+    extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, array('return_only' => 'first-row', 'params' => array($servidorId, $escolaId))));
     if ($r30s1){
       $r30s5 = $this->upperAndUnaccent($r30s5);
       $r30s6 = strtoupper($r30s6);
@@ -854,7 +854,7 @@ class indice extends clsCadastro
     }
   }
 
-  protected function exportaDadosRegistro40($servidorId){
+  protected function exportaDadosRegistro40($servidorId, $escolaId){
     $sql =
     'SELECT
 
@@ -890,12 +890,12 @@ class indice extends clsCadastro
 		INNER JOIN public.logradouro l ON (l.idlog = cl.idlog)
     LEFT JOIN modules.educacenso_cod_docente ecd ON ecd.cod_servidor = s.cod_servidor
 		WHERE s.cod_servidor = $1
-
+      AND e.cod_escola = $2
 		LIMIT 1
     ';
 
     // Transforma todos resultados em variáveis
-    extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, array('return_only' => 'first-row', 'params' => array($servidorId))));
+    extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, array('return_only' => 'first-row', 'params' => array($servidorId, $escolaId))));
     if ($r40s1){
       $r40s5 = $this->cpfToCenso($r40s5);
 
@@ -917,7 +917,7 @@ class indice extends clsCadastro
     }
   }
 
-  protected function exportaDadosRegistro50($servidorId){
+  protected function exportaDadosRegistro50($servidorId, $escolaId){
 
   	$sql =
   	'SELECT
@@ -982,12 +982,12 @@ class indice extends clsCadastro
 		INNER JOIN cadastro.escolaridade esc ON (esc.idesco = s.ref_idesco)
     LEFT JOIN modules.educacenso_cod_docente ecd ON ecd.cod_servidor = s.cod_servidor
 		WHERE s.cod_servidor = $1
-
+      AND e.cod_escola = $2
 		LIMIT 1
   	';
 
     // Transforma todos resultados em variáveis
-    extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, array('return_only' => 'first-row', 'params' => array($servidorId))));
+    extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, array('return_only' => 'first-row', 'params' => array($servidorId, $escolaId))));
       if ($r50s1){
       $d = '|';
       $return = '';
