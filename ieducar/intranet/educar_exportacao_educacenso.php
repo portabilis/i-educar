@@ -1492,6 +1492,9 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
       $r70s26 = $this->upperAndUnaccent($r70s26);
       $r70s27 = $this->upperAndUnaccent($r70s27);
 
+      if($r70s21 == 0){
+        $r70s21 = null;
+      }
       // Validações referentes a certidões (Modelo antigo e novo, nascimento e casamento)
       $r70s9 = $r70s10 = NULL;
       if (is_null($tipo_cert_civil) && !empty($r70s18)){
