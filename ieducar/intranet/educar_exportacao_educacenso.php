@@ -727,13 +727,22 @@ class indice extends clsCadastro
           // Verifica se é disciplina padrão ano letivo. Se for, será considerado que existe professor
           // vinculado a disciplina na sala de aula
 
-          $professorVinculado = (bool)Portabilis_Utils_Database::selectField('select 1 
-                                                                          from modules.professor_turma
-                                                                         inner join modules.professor_turma_disciplina on(professor_turma_disciplina.professor_turma_id = professor_turma.id)
-                                                                         where professor_turma.turma_id = $1
-                                                                           and professor_turma.funcao_exercida = 1
-                                                                           and professor_turma_disciplina.componente_curricular_id = $2',
-                                                                           array('params' => array($turmaId, $codigoSistema)));;
+          $professorVinculado = (bool)Portabilis_Utils_Database::selectField
+          ('SELECT 1 
+              from modules.professor_turma
+            inner join modules.professor_turma_disciplina on(professor_turma_disciplina.professor_turma_id = professor_turma.id)
+             where professor_turma.turma_id = $1
+               and professor_turma.funcao_exercida = 1
+               and professor_turma_disciplina.componente_curricular_id = $2
+               and (SELECT 1
+                      FROM pmieducar.matricula_turma mt
+                     INNER JOIN pmieducar.matricula m ON(mt.ref_cod_matricula = m.cod_matricula)
+                     WHERE mt.ref_cod_turma = professor_turma.turma_id
+                       AND mt.ativo = 1
+                       AND COALESCE(m.data_matricula,m.data_cadastro) BETWEEN DATE($3) AND DATE($4)
+                     LIMIT 1) IS NOT NULL
+               ',
+               array('params' => array($turmaId, $codigoSistema, $data_ini, $data_fim)));;
 
           if (array_key_exists($codigoEducacenso, $coddigoEducacensoToSeq)){
           	${ 'r20s'. $coddigoEducacensoToSeq[$codigoEducacenso] } = $professorVinculado ? 1 : 2;
@@ -1243,7 +1252,6 @@ class indice extends clsCadastro
               AND mt.ativo = 1
               AND COALESCE(m.data_matricula,m.data_cadastro) BETWEEN DATE($3) AND DATE($4)
             LIMIT 1) IS NOT NULL
-
   	';
 
 

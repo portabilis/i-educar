@@ -82,6 +82,7 @@ class indice extends clsCadastro
 	var $restringir_multiplas_enturmacoes;
 	var $permissao_filtro_abandono_transferencia;
 	var $data_base_matricula;
+
 	function Inicializar()
 	{
 		$retorno = "Novo";
