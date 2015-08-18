@@ -1522,7 +1522,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
         $return .= ${'r70s'.$i}.$d;
 
       $return = substr_replace($return, "", -1);
-      echo"<pre>";var_dump($return);die;
+
       $return .= "\n";
     }
 
