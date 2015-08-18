@@ -211,11 +211,10 @@ class indice extends clsCadastro
       $registro30 = $this->exportaDadosRegistro30($servidor['id']);
       $registro40 = $this->exportaDadosRegistro40($servidor['id']);
       $registro50 = $this->exportaDadosRegistro50($servidor['id']);
-      $registro51 = $this->exportaDadosRegistro51($servidor['id']);
+      $registro51 = $this->exportaDadosRegistro51($servidor['id'], $escolaId, $data_ini, $data_fim);
       if(!empty($registro30) && !empty($registro40) && !empty($registro50))
         $export .= $registro30 . $registro40 . $registro50 . $registro51;
     }
-
     foreach ($this->getAlunos($escolaId, $ano, $data_ini, $data_fim) as $alunoId) {
       $registro60 = $this->exportaDadosRegistro60($escolaId, $ano, $data_ini, $data_fim, $alunoId['id']);
       $registro70 = $this->exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim, $alunoId['id']);
@@ -1042,7 +1041,7 @@ class indice extends clsCadastro
     }
   }
 
-  protected function exportaDadosRegistro51($servidorId, $escolaId){
+  protected function exportaDadosRegistro51($servidorId, $escolaId, $data_ini, $data_fim){
 
   	$sql =
   	 'SELECT
@@ -1237,6 +1236,14 @@ class indice extends clsCadastro
 			AND e.cod_escola = t.ref_ref_cod_escola
       AND e.cod_escola = $2
       AND t.ativo = 1
+      and (SELECT 1
+             FROM pmieducar.matricula_turma mt
+            INNER JOIN pmieducar.matricula m ON(mt.ref_cod_matricula = m.cod_matricula)
+            WHERE mt.ref_cod_turma = t.cod_turma
+              AND mt.ativo = 1
+              AND COALESCE(m.data_matricula,m.data_cadastro) BETWEEN DATE($3) AND DATE($4)
+            LIMIT 1) IS NOT NULL
+
   	';
 
 
@@ -1245,7 +1252,7 @@ class indice extends clsCadastro
     $return = '';
     $numeroRegistros = 21;
 
-    foreach (Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($servidorId, $escolaId))) as $reg) {
+    foreach (Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($servidorId, $escolaId, $data_ini, $data_fim))) as $reg) {
     	extract($reg);
 	    for ($i=1; $i <= $numeroRegistros ; $i++)
 	    	$return .= ${'r51s'.$i}.$d;
