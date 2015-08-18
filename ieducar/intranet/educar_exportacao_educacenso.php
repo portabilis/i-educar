@@ -850,6 +850,8 @@ class indice extends clsCadastro
       if($r30s16 = 0)
         $r30s17 = $r30s18 = $r30s19 = $r30s20 = $r30s21 = $r30s22 = $r30s23 = $r30s24 = NULL;
 
+      $r30s7 = null;
+
       $d = '|';
       $return = '';
       $numeroRegistros = 24;
