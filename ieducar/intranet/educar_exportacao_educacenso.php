@@ -785,7 +785,7 @@ class indice extends clsCadastro
         fis.sexo as r30s9,
         r.raca_educacenso as r30s10,
         (SELECT nome FROM cadastro.pessoa WHERE pessoa.idpes = fis.idpes_mae) as r30s11,
-        fis.nacionalidade as r30s12,
+        coalesce(fis.nacionalidade,1) as r30s12,
         (SELECT cod_ibge FROM public.pais WHERE pais.idpais = fis.idpais_estrangeiro) as r30s13,
         uf.cod_ibge as r30s14,
         m.cod_ibge as r30s15
