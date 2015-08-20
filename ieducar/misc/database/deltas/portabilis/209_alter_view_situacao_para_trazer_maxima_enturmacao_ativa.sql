@@ -64,9 +64,7 @@ CREATE OR REPLACE VIEW relatorio.view_situacao AS
        WHEN situacao_matricula.cod_situacao = 9 THEN (matricula.aprovado = ANY (ARRAY[1::smallint, 2::smallint, 3::smallint, 5::smallint, 12::smallint])) AND (NOT matricula_turma.reclassificado OR matricula_turma.reclassificado IS NULL) AND (NOT matricula_turma.abandono OR matricula_turma.abandono IS NULL) AND (NOT matricula_turma.remanejado OR matricula_turma.remanejado IS NULL) AND (NOT matricula_turma.transferido OR matricula_turma.transferido IS NULL)
        WHEN situacao_matricula.cod_situacao = ANY (ARRAY[1, 2, 3, 12]) THEN matricula.aprovado = situacao_matricula.cod_situacao AND (NOT matricula_turma.reclassificado OR matricula_turma.reclassificado IS NULL) AND (NOT matricula_turma.abandono OR matricula_turma.abandono IS NULL) AND (NOT matricula_turma.remanejado OR matricula_turma.remanejado IS NULL) AND (NOT matricula_turma.transferido OR matricula_turma.transferido IS NULL)
        ELSE matricula.aprovado = situacao_matricula.cod_situacao
-   END AND matricula_turma.sequencial = ( SELECT max(mt.sequencial) AS max
-      FROM matricula_turma mt
-     WHERE mt.ref_cod_matricula = matricula.cod_matricula AND mt.ref_cod_turma = matricula_turma.ref_cod_turma AND mt.ativo = 1);
+   END;
 
 ALTER TABLE relatorio.view_situacao
   OWNER TO ieducar;
