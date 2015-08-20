@@ -96,6 +96,9 @@ var getResourceUrlBuilder = {
 
 
 function changeResource($resourceElement, postFunction, deleteFunction) {
+  //Substitui traveções por hífen antes de gravar
+  $resourceElement.val($resourceElement.val().replace(/\u2013|\u2014/g, "-"));
+
   if ($j.trim($resourceElement.val())  == '')
     deleteFunction($resourceElement);
   else
