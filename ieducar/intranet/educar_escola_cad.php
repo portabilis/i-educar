@@ -1025,7 +1025,7 @@ if(!$this->isEnderecoExterno){
 
       $this->campoCheck("utiliza_regra_diferenciada", "Utiliza regra diferenciada", dbBool($this->utiliza_regra_diferenciada), '', FALSE, FALSE, FALSE, 'Se marcado, utilizará regra de avaliação diferenciada informada na Série');
 
-      $this->campoNumero( "orgao_regional", Portabilis_String_Utils::toLatin1("Código do orgão regional"),  $this->orgao_regional, "5", "5", true );
+      $this->campoNumero( "orgao_regional", Portabilis_String_Utils::toLatin1("Código do orgão regional"),  $this->orgao_regional, "5", "5", false );
 
   		$resources = array(1 => 'Em atividade',
 	                       2 => 'Paralisada',
