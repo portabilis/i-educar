@@ -37,6 +37,7 @@ require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
 require_once 'Portabilis/Model/Report/TipoBoletim.php';
 require_once "App/Model/IedFinder.php";
+require_once 'include/funcoes.inc.php';
 
 class TurmaController extends ApiCoreController
 {
@@ -147,7 +148,8 @@ class TurmaController extends ApiCoreController
       $turmaId       = $this->getRequest()->turma_id;
       $disciplinaId  = $this->getRequest()->disciplina_id;
 
-      $sql = 'SELECT a.cod_aluno as id
+      $sql = 'SELECT a.cod_aluno as id,
+                    m.dependencia
               FROM pmieducar.matricula_turma mt
               INNER JOIN pmieducar.matricula m ON mt.ref_cod_matricula = m.cod_matricula
               INNER JOIN pmieducar.aluno a ON a.cod_aluno = m.ref_cod_aluno
@@ -166,13 +168,23 @@ class TurmaController extends ApiCoreController
 
       if(is_numeric($disciplinaId)){
         $params[] = $disciplinaId;
-        $sql .= 'AND  (
+        $sql .= 'AND
+                  CASE m.dependencia THEN
+                    (
+                      SELECT 1 FROM pmieducar.disciplina_dependencia dd
+                      WHERE dd.ref_cod_matricula = m.cod_matricula
+                      AND dd.ref_cod_disciplina = $3
+                      LIMIT 1
+                    ) IS NOT NULL
+                  ELSE
+                   (
                     SELECT 1 FROM pmieducar.dispensa_disciplina dd
                     WHERE dd.ativo = 1
                     AND dd.ref_cod_matricula = m.cod_matricula
                     AND dd.ref_cod_disciplina = $3
                     LIMIT 1
                   ) IS NULL
+                END
         ';
       }
 
@@ -180,8 +192,12 @@ class TurmaController extends ApiCoreController
 
       $alunos = $this->fetchPreparedQuery($sql, $params);
 
-      $attrs = array('id');
+      $attrs = array('id','dependencia');
       $alunos = Portabilis_Array_Utils::filterSet($alunos, $attrs);
+
+      foreach ($alunos as &$aluno) {
+        $aluno['dependencia'] = dbBool($aluno['dependencia']);
+      }
 
       return array('alunos' => $alunos);
     }
