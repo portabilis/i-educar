@@ -126,12 +126,8 @@ class clsListagem extends clsCampos
 
     $this->bannerClose = $boolFechaBanner;
   }
-<<<<<<< HEAD
 
-  function enviaLocalizacao($localizao){
-=======
   function enviaLocalizacao($localizao, $appendInTop = FALSE){
->>>>>>> 7f86007... Adicionando breadcrumbs a todo sistema
     if($localizao)
       $this->locale = $localizao;
 

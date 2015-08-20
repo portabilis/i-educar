@@ -163,22 +163,16 @@ class indice extends clsDetalhe
 		$this->url_editar = "educar_acervo_colecao_cad.php?cod_acervo_colecao={$registro["cod_acervo_colecao"]}";
 		}
 
-<<<<<<< HEAD
 		$this->url_cancelar = "educar_acervo_colecao_lst.php";
 		$this->largura = "100%";
-=======
-	$this->url_cancelar = "educar_acervo_colecao_lst.php";
-	$this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "M&oacute;dulo Biblioteca",
-         ""                                  => "Detalhe da cole&ccedil;&atilde;o"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());	
-	
->>>>>>> 7f86007... Adicionando breadcrumbs a todo sistema
+	    $localizacao = new LocalizacaoSistema();
+	    $localizacao->entradaCaminhos( array(
+	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+	         "educar_index.php"                  => "M&oacute;dulo Biblioteca",
+	         ""                                  => "Detalhe da cole&ccedil;&atilde;o"
+	    ));
+	    $this->enviaLocalizacao($localizacao->montar());
 	}
 }
 

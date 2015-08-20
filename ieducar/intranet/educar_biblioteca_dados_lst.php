@@ -36,11 +36,7 @@ class clsIndexBase extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} i-Educar - Dados Biblioteca" );
 		$this->processoAp = "629";
-<<<<<<< HEAD
-                $this->addEstilo( "localizacaoSistema" );
-=======
 		$this->addEstilo('localizacaoSistema');
->>>>>>> 7f86007... Adicionando breadcrumbs a todo sistema
 	}
 }
 
@@ -224,25 +220,14 @@ class indice extends clsListagem
 		}
 		$this->addPaginador2( "educar_biblioteca_dados_lst.php", $total, $_GET, $this->nome, $this->limite );
 		$this->largura = "100%";
-<<<<<<< HEAD
-                
-                $localizacao = new LocalizacaoSistema();
-                $localizacao->entradaCaminhos( array(
-                    $_SERVER['SERVER_NAME']."/intranet" => "i-Educar",
-                    "educar_biblioteca_index.php"                  => "Biblioteca",
-                    ""                                  => "Lista de Dados das bibliotecas"
-                ));
-                $this->enviaLocalizacao($localizacao->montar());
-=======
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "M&oacute;dulo Biblioteca",
-         ""                                  => "Listagem de dados das bibliotecas"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());		
->>>>>>> 7f86007... Adicionando breadcrumbs a todo sistema
+	    $localizacao = new LocalizacaoSistema();
+	    $localizacao->entradaCaminhos( array(
+	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+	         "educar_index.php"                  => "M&oacute;dulo Biblioteca",
+	         ""                                  => "Listagem de dados das bibliotecas"
+	    ));
+	    $this->enviaLocalizacao($localizacao->montar());
 	}
 }
 // cria uma extensao da classe base

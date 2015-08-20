@@ -38,11 +38,7 @@ class clsIndex extends clsBase
 	{
 		$this->SetTitulo( "{$this->_instituicao} Vínculo Funcionários!" );
 		$this->processoAp = "190";
-<<<<<<< HEAD
-                $this->addEstilo( "localizacaoSistema" );
-=======
 		$this->addEstilo('localizacaoSistema');
->>>>>>> 7f86007... Adicionando breadcrumbs a todo sistema
 	}
 }
 

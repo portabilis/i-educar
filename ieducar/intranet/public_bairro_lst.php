@@ -53,11 +53,7 @@ class clsIndexBase extends clsBase
   {
     $this->SetTitulo($this->_instituicao . ' Bairro');
     $this->processoAp = 756;
-<<<<<<< HEAD
-    $this->addEstilo( "localizacaoSistema" );
-=======
     $this->addEstilo('localizacaoSistema');
->>>>>>> 7f86007... Adicionando breadcrumbs a todo sistema
   }
 }
 
@@ -246,23 +242,13 @@ class indice extends clsListagem
     $this->nome_acao = 'Novo';
 
     $this->largura = '100%';
-<<<<<<< HEAD
-    
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-        $_SERVER['SERVER_NAME']."/intranet" => "i-Educar",
-        ""                                  => "Bairro"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
-=======
 
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          ""                                  => "Listagem de bairros"
     ));
-    $this->enviaLocalizacao($localizacao->montar());    
->>>>>>> 7f86007... Adicionando breadcrumbs a todo sistema
+    $this->enviaLocalizacao($localizacao->montar());
   }
 }
 
