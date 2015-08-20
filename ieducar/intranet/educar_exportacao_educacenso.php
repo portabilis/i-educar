@@ -1297,7 +1297,7 @@ class indice extends clsCadastro
       /*se não tiver r60s10 e 11 é 0 se tiver um dos dois é 1*/
       COALESCE( a.nm_mae,(SELECT nome FROM cadastro.pessoa WHERE pessoa.idpes = fis.idpes_mae)) as r60s10,
       COALESCE(a.nm_pai, (SELECT nome FROM cadastro.pessoa WHERE pessoa.idpes = fis.idpes_pai)) as r60s11,
-      fis.nacionalidade as r60s12,
+      COALESCE(fis.nacionalidade,1) as r60s12,
       (SELECT cod_ibge FROM public.pais WHERE pais.idpais = fis.idpais_estrangeiro) as r60s13,
       uf.cod_ibge as r60s14,
       mun.cod_ibge as r60s15,
