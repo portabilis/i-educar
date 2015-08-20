@@ -215,6 +215,7 @@ class indice extends clsCadastro
       if(!empty($registro30) && !empty($registro40) && !empty($registro50))
         $export .= $registro30 . $registro40 . $registro50 . $registro51;
     }
+
     foreach ($this->getAlunos($escolaId, $ano, $data_ini, $data_fim) as $alunoId) {
       $registro60 = $this->exportaDadosRegistro60($escolaId, $ano, $data_ini, $data_fim, $alunoId['id']);
       $registro70 = $this->exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim, $alunoId['id']);
@@ -732,7 +733,6 @@ class indice extends clsCadastro
               from modules.professor_turma
             inner join modules.professor_turma_disciplina on(professor_turma_disciplina.professor_turma_id = professor_turma.id)
              where professor_turma.turma_id = $1
-               and professor_turma.funcao_exercida = 1
                and professor_turma_disciplina.componente_curricular_id = $2
                and (SELECT 1
                       FROM pmieducar.matricula_turma mt
@@ -792,8 +792,7 @@ class indice extends clsCadastro
 
 
         FROM  pmieducar.servidor s
-        INNER JOIN portal.funcionario f ON (s.cod_servidor = f.ref_cod_pessoa_fj)
-        INNER JOIN cadastro.fisica fis ON (fis.idpes = f.ref_cod_pessoa_fj)
+        INNER JOIN cadastro.fisica fis ON (fis.idpes = s.cod_servidor)
         INNER JOIN cadastro.pessoa p ON (fis.idpes = p.idpes)
         INNER JOIN pmieducar.servidor_alocacao sa ON (sa.ref_cod_servidor = s.cod_servidor)
         INNER JOIN pmieducar.escola e ON (sa.ref_cod_escola = e.cod_escola)
@@ -891,8 +890,7 @@ class indice extends clsCadastro
 		m.cod_ibge as r40s13
 
 		FROM 	pmieducar.servidor s
-		INNER JOIN portal.funcionario f ON (s.cod_servidor = f.ref_cod_pessoa_fj)
-		INNER JOIN cadastro.fisica fis ON (fis.idpes = f.ref_cod_pessoa_fj)
+		INNER JOIN cadastro.fisica fis ON (fis.idpes = s.cod_servidor)
 		INNER JOIN cadastro.pessoa p ON (fis.idpes = p.idpes)
 		INNER JOIN pmieducar.servidor_alocacao sa ON (sa.ref_cod_servidor = s.cod_servidor)
 		INNER JOIN pmieducar.escola e ON (sa.ref_cod_escola = e.cod_escola)
@@ -991,13 +989,12 @@ class indice extends clsCadastro
 		curso_nenhum as r50s46
 
 		FROM 	pmieducar.servidor s
-		INNER JOIN portal.funcionario f ON (s.cod_servidor = f.ref_cod_pessoa_fj)
-		INNER JOIN cadastro.fisica fis ON (fis.idpes = f.ref_cod_pessoa_fj)
+		INNER JOIN cadastro.fisica fis ON (fis.idpes = s.cod_servidor)
 		INNER JOIN cadastro.pessoa p ON (fis.idpes = p.idpes)
 		INNER JOIN pmieducar.servidor_alocacao sa ON (sa.ref_cod_servidor = s.cod_servidor)
 		INNER JOIN pmieducar.escola e ON (sa.ref_cod_escola = e.cod_escola)
 		INNER JOIN modules.educacenso_cod_escola ece ON (ece.cod_escola = e.cod_escola)
-		INNER JOIN cadastro.escolaridade esc ON (esc.idesco = s.ref_idesco)
+		LEFT JOIN cadastro.escolaridade esc ON (esc.idesco = s.ref_idesco)
     LEFT JOIN modules.educacenso_cod_docente ecd ON ecd.cod_servidor = s.cod_servidor
 		WHERE s.cod_servidor = $1
       AND e.cod_escola = $2
@@ -1242,8 +1239,7 @@ class indice extends clsCadastro
 
 
 			FROM 	pmieducar.servidor s
-			INNER JOIN portal.funcionario f ON (s.cod_servidor = f.ref_cod_pessoa_fj)
-			INNER JOIN cadastro.fisica fis ON (fis.idpes = f.ref_cod_pessoa_fj)
+			INNER JOIN cadastro.fisica fis ON (fis.idpes = s.cod_servidor)
 			INNER JOIN cadastro.pessoa p ON (fis.idpes = p.idpes)
 			INNER JOIN modules.professor_turma pt ON (pt.servidor_id = s.cod_servidor)
 			INNER JOIN pmieducar.turma t ON (pt.turma_id = t.cod_turma)
