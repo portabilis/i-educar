@@ -728,7 +728,7 @@ class indice extends clsCadastro
           // vinculado a disciplina na sala de aula
 
           $professorVinculado = (bool)Portabilis_Utils_Database::selectField
-          ('SELECT 1 
+          ('SELECT 1
               from modules.professor_turma
             inner join modules.professor_turma_disciplina on(professor_turma_disciplina.professor_turma_id = professor_turma.id)
              where professor_turma.turma_id = $1
@@ -742,10 +742,17 @@ class indice extends clsCadastro
                        AND COALESCE(m.data_matricula,m.data_cadastro) BETWEEN DATE($3) AND DATE($4)
                      LIMIT 1) IS NOT NULL
                ',
-               array('params' => array($turmaId, $codigoSistema, $data_ini, $data_fim)));;
+               array('params' => array($turmaId, $codigoSistema, $data_ini, $data_fim)));
 
           if (array_key_exists($codigoEducacenso, $coddigoEducacensoToSeq)){
-          	${ 'r20s'. $coddigoEducacensoToSeq[$codigoEducacenso] } = $professorVinculado ? 1 : 2;
+            if(${ 'r20s'. $coddigoEducacensoToSeq[$codigoEducacenso]} == 1){
+              continue;
+            }elseif(${ 'r20s'. $coddigoEducacensoToSeq[$codigoEducacenso]} == 2){
+              if(!$professorVinculado){
+                continue;
+              }
+            }
+          	${ 'r20s'. $coddigoEducacensoToSeq[$codigoEducacenso]} = ($professorVinculado ? 1 : 2);
         	}
         }
 
