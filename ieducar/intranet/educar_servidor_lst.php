@@ -96,7 +96,7 @@ class indice extends clsListagem
     foreach ($_GET AS $var => $val) {
       $this->$var = ($val === '') ? NULL : $val;
     }
-    
+
     $this->addCabecalhos( array(
       'Nome do Servidor',
       'Matrícula',
@@ -124,7 +124,7 @@ class indice extends clsListagem
     $parametros = new clsParametrosPesquisas();
     $parametros->setSubmit(0);
     $this->campoTexto("nome","Nome do servidor", $this->nome,50,255,false);
-    $this->campoTexto("matricula","Matrícula", $this->matricula,50,255,false);    
+    $this->campoTexto("matricula","Matrícula", $this->matricula,50,255,false);
 
 
     // Paginador
@@ -153,10 +153,10 @@ class indice extends clsListagem
       $this->nome,
       $this->matricula,
       NULL,
+      TRUE,
+      TRUE,
+      TRUE,
       NULL,
-      TRUE,
-      TRUE,
-      NULL, 
       NULL,
       NULL,
       $this->ref_cod_escola,
@@ -224,14 +224,14 @@ class indice extends clsListagem
     }
 
     $this->largura = '100%';
-    
+
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_index.php"                  => "i-Educar - Escola",
          ""                                  => "Listagem de servidores"
     ));
-    $this->enviaLocalizacao($localizacao->montar());    
+    $this->enviaLocalizacao($localizacao->montar());
   }
 }
 
