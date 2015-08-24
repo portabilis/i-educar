@@ -933,9 +933,8 @@ class clsPmieducarServidor
       $whereAnd = " AND ";
     }
     else {
-      if (is_numeric($alocacao_escola_instituicao) &&
-        (is_numeric($int_ref_cod_instituicao) || is_numeric($int_ref_cod_escola))
-      ) {
+      if (is_numeric($int_ref_cod_instituicao) || is_numeric($int_ref_cod_escola))
+     {
         $filtros .= "
     {$whereAnd} s.cod_servidor IN
       (SELECT a.ref_cod_servidor
@@ -1130,7 +1129,11 @@ class clsPmieducarServidor
       }
       else {
         $servidorDisciplinas = sprintf(
-          'AND (sd.ref_cod_disciplina = %d or todas_disciplinas = %d) AND sd.ref_cod_curso = %d',
+          'AND (case when %1$d = 0 then
+                  sd.ref_cod_curso = %2$d
+                else
+                  (sd.ref_cod_disciplina = %1$d AND sd.ref_cod_curso = %2$d)
+                end)',
           $int_ref_cod_disciplina, $int_ref_cod_curso);
       }
       $filtros .= "
