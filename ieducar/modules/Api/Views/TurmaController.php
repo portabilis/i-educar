@@ -169,7 +169,7 @@ class TurmaController extends ApiCoreController
       if(is_numeric($disciplinaId)){
         $params[] = $disciplinaId;
         $sql .= 'AND
-                  CASE m.dependencia THEN
+                  CASE WHEN m.dependencia THEN
                     (
                       SELECT 1 FROM pmieducar.disciplina_dependencia dd
                       WHERE dd.ref_cod_matricula = m.cod_matricula
