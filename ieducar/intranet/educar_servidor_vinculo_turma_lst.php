@@ -126,7 +126,7 @@ class indice extends clsListagem
     $options = array('label' => Portabilis_String_Utils::toLatin1('Função exercida'), 'resources' => $resources_funcao, 'value' => $this->funcao_exercida);
     $this->inputsHelper()->select('funcao_exercida', $options);   
 
-    $resources_tipo = array(  null => 'Selecione',
+    $resources_tipo = array(  null => 'Nenhum',
                               1    => Portabilis_String_Utils::toLatin1('Concursado/efetivo/estável'),
                               2    => Portabilis_String_Utils::toLatin1('Contrato temporário'),
                               3    => 'Contrato terceirizado',
