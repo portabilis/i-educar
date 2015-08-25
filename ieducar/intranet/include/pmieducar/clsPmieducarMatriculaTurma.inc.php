@@ -1232,7 +1232,7 @@ class clsPmieducarMatriculaTurma
       $data = $data ? $data : date('Y-m-d');
       if ($dataBaseRemanejamento && strtotime($dataBaseRemanejamento) < strtotime($data) ) {
         $db = new clsBanco();  
-        $db->CampoUnico("UPDATE pmieducar.matricula_turma SET remanejado = TRUE WHERE ref_cod_matricula = {$this->ref_cod_matricula} AND sequencial = {$this->sequencial}");
+        $db->CampoUnico("UPDATE pmieducar.matricula_turma SET transferido = false, remanejado = true, abandono = false, reclassificado = false WHERE ref_cod_matricula = {$this->ref_cod_matricula} AND sequencial = {$this->sequencial}");
       }
     }
   }  
@@ -1246,7 +1246,7 @@ class clsPmieducarMatriculaTurma
       $data = $data ? $data : date('Y-m-d');
       if ($dataBaseTransferencia && strtotime($dataBaseTransferencia) < strtotime($data) ) {
         $db = new clsBanco();
-        $db->CampoUnico("UPDATE pmieducar.matricula_turma SET transferido = TRUE WHERE ref_cod_matricula = {$this->ref_cod_matricula} AND sequencial = {$this->sequencial}");
+        $db->CampoUnico("UPDATE pmieducar.matricula_turma SET transferido = true, remanejado = false, abandono = false, reclassificado = false WHERE ref_cod_matricula = {$this->ref_cod_matricula} AND sequencial = {$this->sequencial}");
       }
     }
   }   
@@ -1254,17 +1254,16 @@ class clsPmieducarMatriculaTurma
   function marcaAlunoReclassificado(){
     if ($this->ref_cod_matricula){
         $db = new clsBanco();
-        $db->CampoUnico("UPDATE pmieducar.matricula_turma SET reclassificado = TRUE WHERE ref_cod_matricula = {$this->ref_cod_matricula} AND ativo = 1");    
+        $db->CampoUnico("UPDATE pmieducar.matricula_turma SET transferido = false, remanejado = false, abandono = false, reclassificado = true WHERE ref_cod_matricula = {$this->ref_cod_matricula} AND ativo = 1");    
     }
   }
 
   function marcaAlunoAbandono(){
-    if ($this->ref_cod_matricula && $this->sequencial && !is_null($this->getDataBaseTransferencia())){
-        
+    if ($this->ref_cod_matricula && $this->sequencial){
         $db = new clsBanco();
-        $db->CampoUnico("UPDATE pmieducar.matricula_turma SET abandono = TRUE WHERE ref_cod_matricula = {$this->ref_cod_matricula} AND sequencial = {$this->sequencial}");    
+        $db->CampoUnico("UPDATE pmieducar.matricula_turma SET transferido = false, remanejado = false, abandono = true, reclassificado = false WHERE ref_cod_matricula = {$this->ref_cod_matricula} AND sequencial = {$this->sequencial}");
     }
-  }  
+  }
 
   function dadosAlunosNaoEnturmados($ref_cod_escola = NULL, $ref_cod_serie = NULL,
     $ref_cod_curso = NULL, $int_ano = NULL, $verificar_multiseriado = FALSE,
