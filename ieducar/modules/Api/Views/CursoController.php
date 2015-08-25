@@ -66,16 +66,16 @@ class CursoController extends ApiCoreController
                   ORDER BY c.nm_curso ASC ";
       }else{
         $sql = "SELECT cod_curso, nm_curso
-                  FROM pmieducar.curso 
-                    WHERE ref_cod_instituicao = $1 
+                  FROM pmieducar.curso
+                    WHERE ref_cod_instituicao = $1
                     AND ativo = 1
-                    ORDER BY nm_curso ASC ";        
+                    ORDER BY nm_curso ASC ";
       }
       $params     = array($this->getRequest()->instituicao_id);
 
       $cursos = $this->fetchPreparedQuery($sql, $params);
 
-      $sqlSerie = "SELECT DISTINCT s.cod_serie, s.nm_serie                  
+      $sqlSerie = "SELECT DISTINCT s.cod_serie, s.nm_serie
                     FROM pmieducar.serie s
                     INNER JOIN pmieducar.escola_serie es ON es.ref_cod_serie = s.cod_serie
                     WHERE es.ativo = 1
@@ -83,7 +83,7 @@ class CursoController extends ApiCoreController
       if($escolaId)
         $sqlSerie .= " AND es.ref_cod_escola IN ({$escolaId}) ";
 
-      $sqlTurma = "SELECT DISTINCT t.cod_turma, t.nm_turma                  
+      $sqlTurma = "SELECT DISTINCT t.cod_turma, t.nm_turma, t.ref_ref_cod_escola as escola_id
                     FROM pmieducar.turma t
                     WHERE t.ativo = 1
                     AND t.ano = {$ano}
@@ -106,7 +106,7 @@ class CursoController extends ApiCoreController
                 $turma['nm_turma'] = Portabilis_String_Utils::toUtf8($turma['nm_turma']);
               }
               $attrs['turmas'] = 'turmas';
-              $serie['turmas'] = Portabilis_Array_Utils::filterSet($turmas, array('cod_turma', 'nm_turma'));
+              $serie['turmas'] = Portabilis_Array_Utils::filterSet($turmas, array('cod_turma', 'nm_turma', 'escola_id'));
             }
           }
           $curso['series'] = Portabilis_Array_Utils::filterSet($series, $attrs);
