@@ -297,6 +297,7 @@ class clsPessoaFisica extends clsPessoaFj
         $this->cpf                      = $detalhe_fisica['cpf'];
         $this->ref_cod_religiao         = $detalhe_fisica['ref_cod_religiao'];
         $this->sus                      = $detalhe_fisica['sus'];
+        $this->nis_pis_pasep            = $detalhe_fisica['nis_pis_pasep'];
 
         $tupla['idpes'] = $this->idpes;
         $tupla[]        = & $tupla['idpes'];

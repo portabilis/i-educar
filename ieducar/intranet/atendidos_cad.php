@@ -109,6 +109,7 @@ class indice extends clsCadastro
   var $zona_localizacao;
   var $cor_raca;
   var $sus;
+  var $nis_pis_pasep;
 
   var $caminho_det;
   var $caminho_lst;
@@ -135,7 +136,7 @@ class indice extends clsCadastro
         $this->idtlog, $this->sigla_uf, $this->complemento, $this->numero,
         $this->bloco, $this->apartamento, $this->andar, $this->zona_localizacao, $this->estado_civil,
         $this->pai_id, $this->mae_id, $this->tipo_nacionalidade, $this->pais_origem, $this->naturalidade,
-        $this->letra, $this->sus
+        $this->letra, $this->sus, $this->nis_pis_pasep
       ) =
 
       $objPessoa->queryRapida(
@@ -144,7 +145,7 @@ class indice extends clsCadastro
         'tipo', 'sexo', 'cidade', 'bairro', 'logradouro', 'cep', 'idlog',
         'idbai', 'idtlog', 'sigla_uf', 'complemento', 'numero', 'bloco', 'apartamento',
         'andar', 'zona_localizacao', 'ideciv', 'idpes_pai', 'idpes_mae', 'nacionalidade',
-        'idpais_estrangeiro', 'idmun_nascimento', 'letra', 'sus'
+        'idpais_estrangeiro', 'idmun_nascimento', 'letra', 'sus', 'nis_pis_pasep'
       );
 
       $this->id_federal      = is_numeric($this->id_federal) ? int2CPF($this->id_federal) : '';
@@ -329,6 +330,19 @@ class indice extends clsCadastro
     );
 
     $this->inputsHelper()->uf($options, $helperOptions);
+
+    // Código NIS (PIS/PASEP)
+
+    $options = array(
+      'required'    => false,
+      'label'       => 'NIS (PIS/PASEP)',
+      'placeholder' => '',
+      'value'       => $this->nis_pis_pasep,
+      'max_length'  => 11,
+      'size'        => 20
+    );
+
+    $this->inputsHelper()->integer('nis_pis_pasep', $options);
 
     // Carteira do SUS
 
@@ -1065,6 +1079,7 @@ class indice extends clsCadastro
     $fisica->idpais_estrangeiro = $_REQUEST['pais_origem_id'];
     $fisica->idmun_nascimento   = $_REQUEST['naturalidade_id'];
     $fisica->sus                = $this->sus;
+    $fisica->nis_pis_pasep      = $this->nis_pis_pasep;
 
     $sql = "select 1 from cadastro.fisica WHERE idpes = $1 limit 1";
 
