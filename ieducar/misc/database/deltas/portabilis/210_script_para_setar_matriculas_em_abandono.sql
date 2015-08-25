@@ -2,7 +2,6 @@
 -- @author   Caroline Salib Canto <caroline@portabilis.com.br>
 -- @license  @@license@@
 -- @version  $Id$
- -- Remove funções desnecessárias
 
 UPDATE pmieducar.matricula_turma
    SET abandono = TRUE
