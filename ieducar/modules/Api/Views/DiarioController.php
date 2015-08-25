@@ -228,7 +228,7 @@ class DiarioController extends ApiCoreController
 
             $falta = new Avaliacao_Model_ParecerDescritivoComponente(array(
               'componenteCurricular' => $componenteCurricularId,
-              'parecer'           => $parecer,
+              'parecer'           => Portabilis_String_Utils::toLatin1($parecer),
               'etapa'                => $etapa
             ));
 
