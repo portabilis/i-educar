@@ -149,13 +149,13 @@ class indice extends clsCadastro
     $options = array('label' => Portabilis_String_Utils::toLatin1('Função exercida'), 'resources' => $resources, 'value' => $this->funcao_exercida);
     $this->inputsHelper()->select('funcao_exercida', $options);
 
-        $resources = array( null => 'Selecione',
+        $resources = array( null => 'Nenhum',
                             1    => Portabilis_String_Utils::toLatin1('Concursado/efetivo/estável'),
                             2    => Portabilis_String_Utils::toLatin1('Contrato temporário'),
                             3    => 'Contrato terceirizado',
                             4    => 'Contrato CLT');
 
-    $options = array('label' => Portabilis_String_Utils::toLatin1('Tipo do vínculo'), 'resources' => $resources, 'value' => $this->tipo_vinculo);
+    $options = array('label' => Portabilis_String_Utils::toLatin1('Tipo do vínculo'), 'resources' => $resources, 'value' => $this->tipo_vinculo, 'required' => false);
     $this->inputsHelper()->select('tipo_vinculo', $options);
 
     $this->inputsHelper()->multipleSearchComponenteCurricular(null, array('label' => 'Componentes lecionados', 'required' => false));

@@ -228,7 +228,7 @@ class DiarioController extends ApiCoreController
 
             $falta = new Avaliacao_Model_ParecerDescritivoComponente(array(
               'componenteCurricular' => $componenteCurricularId,
-              'parecer'           => $parecer,
+              'parecer'           => Portabilis_String_Utils::toLatin1($parecer),
               'etapa'                => $etapa
             ));
 
@@ -264,7 +264,7 @@ class DiarioController extends ApiCoreController
 
             $falta = new Avaliacao_Model_ParecerDescritivoComponente(array(
               'componenteCurricular' => $componenteCurricularId,
-              'parecer'           => $parecer
+              'parecer'           => Portabilis_String_Utils::toLatin1($parecer)
             ));
 
             $this->serviceBoletim($turmaId, $alunoId)->addParecer($falta);
@@ -295,7 +295,7 @@ class DiarioController extends ApiCoreController
           $parecer = $aluno['parecer'];
 
           $falta = new Avaliacao_Model_ParecerDescritivoGeral(array(
-            'parecer'           => $parecer,
+            'parecer'           => Portabilis_String_Utils::toLatin1($parecer),
             'etapa'                => $etapa
           ));
 
@@ -325,7 +325,7 @@ class DiarioController extends ApiCoreController
           $parecer = $aluno['parecer'];
 
           $falta = new Avaliacao_Model_ParecerDescritivoGeral(array(
-            'parecer'           => $parecer
+            'parecer'           => Portabilis_String_Utils::toLatin1($parecer)
           ));
 
           $this->serviceBoletim($turmaId, $alunoId)->addParecer($falta);
