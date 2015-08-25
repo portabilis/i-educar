@@ -29,7 +29,6 @@
  */
 
 require_once 'include/clsCampos.inc.php';
-require_once 'include/localizacaoSistema.php';
 
 if (class_exists('clsPmiajudaPagina')) {
   require_once 'include/pmiajuda/clsPmiajudaPagina.inc.php';
@@ -428,12 +427,7 @@ class clsListagem extends clsCampos
 
         $retorno .=  "
           <table class='tablelistagem' $width border='0' cellpadding='2' cellspacing='1'>";
-        
-        $retorno .=  "
-            <tr>
-              <td class='fundoLocalizacao' colspan='2' height='24'>{$this->locale}</td>
-            </tr>";
-              
+
         $retorno .=  "
             <tr>
               <td class='formdktd' colspan='2' height='24'>{$barra}</td>
