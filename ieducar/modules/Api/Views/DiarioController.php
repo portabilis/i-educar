@@ -295,7 +295,7 @@ class DiarioController extends ApiCoreController
           $parecer = $aluno['parecer'];
 
           $falta = new Avaliacao_Model_ParecerDescritivoGeral(array(
-            'parecer'           => $parecer,
+            'parecer'           => Portabilis_String_Utils::toLatin1($parecer),
             'etapa'                => $etapa
           ));
 
