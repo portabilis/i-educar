@@ -69,6 +69,7 @@ class clsFisica
 	var $ref_cod_sistema;
 	var $cpf;
 	var $ref_cod_religiao;
+	var $sus;
 
 	var $tabela;
 	var $schema;
@@ -327,6 +328,12 @@ class clsFisica
 				$valores .= ", $this->cpf";
 			}
 
+			if(!empty($this->sus))
+			{
+				$campos .= ", sus";
+				$valores .= ", '$this->sus'";
+			}
+
 			$db->Consulta( "INSERT INTO {$this->schema}.{$this->tabela} (idpes, origem_gravacao, idsis_cad, data_cad, operacao, idpes_cad $campos) VALUES ( '{$this->idpes}', 'M', 17, NOW(), 'I', '$this->idpes_cad' $valores )" );
 			return true;
 
@@ -474,6 +481,11 @@ class clsFisica
 
 			if($this->cpf) {
 			   $set .= "$gruda cpf = {$this->cpf}";
+			   $gruda = ", ";
+			}
+
+			if($this->sus) {
+			   $set .= "$gruda sus = '{$this->sus}'";
 			   $gruda = ", ";
 			}
 
@@ -790,7 +802,7 @@ class clsFisica
 		if($this->idpes)
 		{
 			$db = new clsBanco();
-			$db->Consulta("SELECT idpes, data_nasc, sexo, idpes_mae, idpes_pai, idpes_responsavel, idesco, ideciv, idpes_con, data_uniao, data_obito, nacionalidade, idpais_estrangeiro, data_chegada_brasil, idmun_nascimento, ultima_empresa, idocup, nome_mae, nome_pai, nome_conjuge, nome_responsavel, justificativa_provisorio, cpf , ref_cod_religiao FROM {$this->schema}.{$this->tabela} WHERE idpes = {$this->idpes}");
+			$db->Consulta("SELECT idpes, data_nasc, sexo, idpes_mae, idpes_pai, idpes_responsavel, idesco, ideciv, idpes_con, data_uniao, data_obito, nacionalidade, idpais_estrangeiro, data_chegada_brasil, idmun_nascimento, ultima_empresa, idocup, nome_mae, nome_pai, nome_conjuge, nome_responsavel, justificativa_provisorio, cpf , ref_cod_religiao, sus FROM {$this->schema}.{$this->tabela} WHERE idpes = {$this->idpes}");
 			if( $db->ProximoRegistro() )
 			{
 				$tupla = $db->Tupla();

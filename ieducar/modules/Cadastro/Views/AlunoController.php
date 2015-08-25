@@ -449,6 +449,10 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     $options = array('label' => $this->_getLabel('fator_rh'), 'size' => 5, 'max_length' => 1, 'required' => false, 'placeholder' => '' );
     $this->inputsHelper()->text('fator_rh',$options);            
 
+    // sus
+    $options = array('label' => $this->_getLabel('sus'), 'size' => 20, 'max_length' => 20, 'required' => false, 'placeholder' => '' );
+    $this->inputsHelper()->text('sus',$options);
+
     // alergia_medicamento
     $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('alergia_medicamento') ), 'required' => false, 'placeholder' => '');
     $this->inputsHelper()->checkbox('alergia_medicamento',$options);            

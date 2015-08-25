@@ -108,6 +108,7 @@ class indice extends clsCadastro
   var $retorno;
   var $zona_localizacao;
   var $cor_raca;
+  var $sus;
 
   var $caminho_det;
   var $caminho_lst;
@@ -134,7 +135,7 @@ class indice extends clsCadastro
         $this->idtlog, $this->sigla_uf, $this->complemento, $this->numero,
         $this->bloco, $this->apartamento, $this->andar, $this->zona_localizacao, $this->estado_civil,
         $this->pai_id, $this->mae_id, $this->tipo_nacionalidade, $this->pais_origem, $this->naturalidade,
-        $this->letra
+        $this->letra, $this->sus
       ) =
 
       $objPessoa->queryRapida(
@@ -143,7 +144,7 @@ class indice extends clsCadastro
         'tipo', 'sexo', 'cidade', 'bairro', 'logradouro', 'cep', 'idlog',
         'idbai', 'idtlog', 'sigla_uf', 'complemento', 'numero', 'bloco', 'apartamento',
         'andar', 'zona_localizacao', 'ideciv', 'idpes_pai', 'idpes_mae', 'nacionalidade',
-        'idpais_estrangeiro', 'idmun_nascimento', 'letra'
+        'idpais_estrangeiro', 'idmun_nascimento', 'letra', 'sus'
       );
 
       $this->id_federal      = is_numeric($this->id_federal) ? int2CPF($this->id_federal) : '';
@@ -329,6 +330,18 @@ class indice extends clsCadastro
 
     $this->inputsHelper()->uf($options, $helperOptions);
 
+    // Carteira do SUS
+
+    $options = array(
+      'required'    => false,
+      'label'       => 'Número da carteira do SUS',
+      'placeholder' => '',
+      'value'       => $this->sus,
+      'max_length'  => 20,
+      'size'        => 20
+    );
+
+    $this->inputsHelper()->text('sus', $options);
 
     // tipo de certidao civil
 
@@ -1051,6 +1064,7 @@ class indice extends clsCadastro
     $fisica->nacionalidade      = $_REQUEST['tipo_nacionalidade'];
     $fisica->idpais_estrangeiro = $_REQUEST['pais_origem_id'];
     $fisica->idmun_nascimento   = $_REQUEST['naturalidade_id'];
+    $fisica->sus                = $this->sus;
 
     $sql = "select 1 from cadastro.fisica WHERE idpes = $1 limit 1";
 
