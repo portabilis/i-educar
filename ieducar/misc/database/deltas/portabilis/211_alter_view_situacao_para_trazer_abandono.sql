@@ -10,40 +10,28 @@ CREATE OR REPLACE VIEW relatorio.view_situacao AS
                     WHEN matricula_turma.remanejado THEN 'Remanejado'::character varying
                     WHEN matricula_turma.transferido THEN 'Transferido'::character varying
                     WHEN matricula_turma.reclassificado THEN 'Reclassificado'::character varying
-                    WHEN matricula_turma.abandono THEN COALESCE(( SELECT abandono_tipo.nome
-                       FROM abandono_tipo
-                      WHERE matricula.ref_cod_abandono_tipo = abandono_tipo.cod_abandono_tipo AND abandono_tipo.ativo = 1
-                     LIMIT 1), 'Abandono'::character varying)
+                    WHEN matricula_turma.abandono THEN 'Abandono'::character varying
                     WHEN matricula.aprovado = 1 THEN 'Aprovado'::character varying
                     WHEN matricula.aprovado = 12 THEN 'Ap. Depen.'::character varying
                     WHEN matricula.aprovado = 2 THEN 'Reprovado'::character varying
                     WHEN matricula.aprovado = 3 THEN 'Andamento'::character varying
                     WHEN matricula.aprovado = 4 THEN 'Transferido'::character varying
                     WHEN matricula.aprovado = 5 THEN 'Reclassificado'::character varying
-                    WHEN matricula.aprovado = 6 THEN ( SELECT COALESCE(abandono_tipo.nome, 'Abandono'::character varying) AS "coalesce"
-                       FROM abandono_tipo
-                      WHERE matricula.ref_cod_abandono_tipo = abandono_tipo.cod_abandono_tipo AND abandono_tipo.ativo = 1
-                     LIMIT 1)
+                    WHEN matricula.aprovado = 6 THEN 'Abandono'::character varying
                     ELSE 'Recl'::character varying
                 END AS "case") AS texto_situacao, ( SELECT 
                 CASE
                     WHEN matricula_turma.remanejado THEN 'Rem'::character varying
                     WHEN matricula_turma.transferido THEN 'Trs'::character varying
                     WHEN matricula_turma.reclassificado THEN 'Recl'::character varying
-                    WHEN matricula_turma.abandono THEN ( SELECT COALESCE(abandono_tipo.nome, 'Aba'::character varying) AS "coalesce"
-                       FROM abandono_tipo
-                      WHERE matricula.ref_cod_abandono_tipo = abandono_tipo.cod_abandono_tipo AND abandono_tipo.ativo = 1
-                     LIMIT 1)
+                    WHEN matricula_turma.abandono THEN 'Aba'::character varying
                     WHEN matricula.aprovado = 1 THEN 'Apr'::character varying
                     WHEN matricula.aprovado = 12 THEN 'ApDp'::character varying
                     WHEN matricula.aprovado = 2 THEN 'Rep'::character varying
                     WHEN matricula.aprovado = 3 THEN 'And'::character varying
                     WHEN matricula.aprovado = 4 THEN 'Trs'::character varying
                     WHEN matricula.aprovado = 5 THEN 'Recl'::character varying
-                    WHEN matricula.aprovado = 6 THEN COALESCE(( SELECT abandono_tipo.nome
-                       FROM abandono_tipo
-                      WHERE matricula.ref_cod_abandono_tipo = abandono_tipo.cod_abandono_tipo AND abandono_tipo.ativo = 1
-                     LIMIT 1), 'Aba'::character varying)
+                    WHEN matricula.aprovado = 6 THEN 'Aba'::character varying
                     ELSE 'Recl'::character varying
                 END AS "case") AS texto_situacao_simplificado
    FROM relatorio.situacao_matricula, matricula
