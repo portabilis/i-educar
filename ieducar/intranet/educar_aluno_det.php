@@ -722,11 +722,11 @@ class indice extends clsDetalhe
       if (trim($reg['desc_fratura_trauma'])!='') $this->addDetalhe(array('Qual', $reg['desc_fratura_trauma']));                      
       $this->addDetalhe(array('Tem plano de saúde', ($reg['plano_saude'] == 'S' ? 'Sim': 'Não') ));        
       if (trim($reg['desc_plano_saude'])!='') $this->addDetalhe(array('Qual', $reg['desc_plano_saude']));   
-      $this->addDetalhe(array('<span id="tit_dados_hospital">Em caso de emergência, levar para hospital ou clínica</span>'));   
+      $this->addDetalhe(array('<span id="tr_tit_dados_hospital">Em caso de emergência, levar para hospital ou clínica</span>'));   
       $this->addDetalhe(array('Nome', $reg['hospital_clinica'])); 
-      $this->addDetalhe(array('Endereco', $reg['hospital_clinica_endereco']));    
+      $this->addDetalhe(array('Endereço', $reg['hospital_clinica_endereco']));    
       $this->addDetalhe(array('Telefone', $reg['hospital_clinica_telefone']));    
-      $this->addDetalhe(array('<span id="tit_dados_responsavel">Em caso de emergência, se não for possível contatar os responsáveis, comunicar</span>'));         
+      $this->addDetalhe(array('<span id="tr_tit_dados_responsavel">Em caso de emergência, se não for possível contatar os responsáveis, comunicar</span>'));         
       $this->addDetalhe(array('Nome', $reg['responsavel']));    
       $this->addDetalhe(array('Parentesco', $reg['responsavel_parentesco']));    
       $this->addDetalhe(array('Telefone', $reg['responsavel_parentesco_telefone']));    
