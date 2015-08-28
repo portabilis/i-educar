@@ -991,7 +991,7 @@ class clsPmieducarTurma
 			if(is_numeric($this->atividade_complementar_1)) {
 				$set  .= "{$gruda}atividade_complementar_1 = '{$this->atividade_complementar_1}'";
 				$gruda = ", ";
-			}elseif(is_null($this->atividade_complementar_1)){
+			}elseif(trim($this->atividade_complementar_1) == ""){
 				$set  .= "{$gruda}atividade_complementar_1 = NULL";
 				$gruda = ", ";
 			}
@@ -999,7 +999,7 @@ class clsPmieducarTurma
 			if(is_numeric($this->atividade_complementar_2)) {
 				$set  .= "{$gruda}atividade_complementar_2 = '{$this->atividade_complementar_2}'";
 				$gruda = ", ";
-			}elseif(is_null($this->atividade_complementar_2)){
+			}elseif(trim($this->atividade_complementar_2) == ""){
 				$set  .= "{$gruda}atividade_complementar_2 = NULL";
 				$gruda = ", ";
 			}
@@ -1007,7 +1007,7 @@ class clsPmieducarTurma
 			if(is_numeric($this->atividade_complementar_3)) {
 				$set  .= "{$gruda}atividade_complementar_3 = '{$this->atividade_complementar_3}'";
 				$gruda = ", ";
-			}elseif(is_null($this->atividade_complementar_3)){
+			}elseif(trim($this->atividade_complementar_3) == ""){
 				$set  .= "{$gruda}atividade_complementar_3 = NULL";
 				$gruda = ", ";
 			}
@@ -1015,7 +1015,7 @@ class clsPmieducarTurma
 			if(is_numeric($this->atividade_complementar_4)) {
 				$set  .= "{$gruda}atividade_complementar_4 = '{$this->atividade_complementar_4}'";
 				$gruda = ", ";
-			}elseif(is_null($this->atividade_complementar_4)){
+			}elseif(trim($this->atividade_complementar_4) == ""){
 				$set  .= "{$gruda}atividade_complementar_4 = NULL";
 				$gruda = ", ";
 			}
@@ -1023,7 +1023,7 @@ class clsPmieducarTurma
 			if(is_numeric($this->atividade_complementar_5)) {
 				$set  .= "{$gruda}atividade_complementar_5 = '{$this->atividade_complementar_5}'";
 				$gruda = ", ";
-			}elseif(is_null($this->atividade_complementar_5)){
+			}elseif(trim($this->atividade_complementar_5) == ""){
 				$set  .= "{$gruda}atividade_complementar_5 = NULL";
 				$gruda = ", ";
 			}
@@ -1031,7 +1031,7 @@ class clsPmieducarTurma
 			if(is_numeric($this->atividade_complementar_6)) {
 				$set  .= "{$gruda}atividade_complementar_6 = '{$this->atividade_complementar_6}'";
 				$gruda = ", ";
-			}elseif(is_null($this->atividade_complementar_6)){
+			}elseif(trim($this->atividade_complementar_6) == ""){
 				$set  .= "{$gruda}atividade_complementar_6 = NULL";
 				$gruda = ", ";
 			}
