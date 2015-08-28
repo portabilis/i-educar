@@ -1007,9 +1007,6 @@ class indice extends clsCadastro
       $d = '|';
       $return = '';
       $numeroRegistros = 46;
-      $r50s46 = (int) is_null($r50s31) && is_null($r50s32) && is_null($r50s33) && is_null($r50s34) && is_null($r50s35)
-          					&& is_null($r50s36) && is_null($r50s37) && is_null($r50s38) && is_null($r50s39) && is_null($r50s40)
-          					&& is_null($r50s41) && is_null($r50s42) && is_null($r50s43) && is_null($r50s44) && is_null($r50s45);
 
       if($grau_academico_curso_superior_1 == self::BACHARELADO || $grau_academico_curso_superior_1 == self::TECNOLOGO){
         if(is_null($r50s7)){

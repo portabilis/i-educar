@@ -2555,7 +2555,29 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       ));
     }
 
-    return $this->getRegra()->tabelaArredondamento->round($nota);
+    return $this->getRegra()->tabelaArredondamento->round($nota, 1);
+  }
+
+  /**
+   * Arredonda uma nota através da tabela de arredondamento da regra de avaliação.
+   * @param Avaliacao_Model_NotaComponente|int $nota
+   * @return mixed
+   * @throws CoreExt_Exception_InvalidArgumentException
+   */
+  public function arredondaMedia($media)
+  {
+    if ($media instanceof Avaliacao_Model_NotaComponenteMedia) {
+      $media = $media->nota;
+    }
+
+    if (!is_numeric($media)) {
+      require_once 'CoreExt/Exception/InvalidArgumentException.php';
+      throw new CoreExt_Exception_InvalidArgumentException(sprintf(
+        'O parâmetro $nota ("%s") não é um valor numérico.', $media
+      ));
+    }
+
+    return $this->getRegra()->tabelaArredondamento->round($media, 2);
   }
 
   /**
@@ -2981,7 +3003,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       $mediaGeralEtapa = new Avaliacao_Model_MediaGeral(array(
         'notaAluno' => $this->_getNotaAluno()->id,
         'media' => $mediaGeral,
-        'mediaArredondada' => $this->arredondaNota($mediaGeral),
+        'mediaArredondada' => $this->arredondaMedia($mediaGeral),
         'etapa' => $etapa
       ));
 
@@ -3030,7 +3052,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
               'notaAluno' => $this->_getNotaAluno()->id,
               'componenteCurricular' => $id,
               'media' => $media,
-              'mediaArredondada' => $this->arredondaNota($media),
+              'mediaArredondada' => $this->arredondaMedia($media),
               'etapa' => $etapa
             ));
 

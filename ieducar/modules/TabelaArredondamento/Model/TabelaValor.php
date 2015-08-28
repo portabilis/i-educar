@@ -50,7 +50,9 @@ class TabelaArredondamento_Model_TabelaValor extends CoreExt_Entity
     'nome'                 => NULL,
     'descricao'            => NULL,
     'valorMinimo'          => NULL,
-    'valorMaximo'          => NULL
+    'valorMaximo'          => NULL,
+    'acao'                 => NULL,
+    'casaDecimalExata'     => NULL
   );
 
   protected $_dataTypes = array(
@@ -63,6 +65,12 @@ class TabelaArredondamento_Model_TabelaValor extends CoreExt_Entity
       'value' => NULL,
       'class' => 'TabelaArredondamento_Model_TabelaDataMapper',
       'file'  => 'TabelaArredondamento/Model/TabelaDataMapper.php'
+    ),
+    'acao' => array(
+      'value' => 0,
+      'class' => 'TabelaArredondamento_Model_TipoArredondamentoMedia',
+      'file'  => 'TabelaArredondamento/Model/TipoArredondamentoMedia.php',
+      'null'  => true
     )
   );
 
@@ -89,29 +97,7 @@ class TabelaArredondamento_Model_TabelaValor extends CoreExt_Entity
   {
     $validators = array();
 
-    // Validação condicional
-    switch ($this->tabelaArredondamento->get('tipoNota')) {
-      case RegraAvaliacao_Model_Nota_TipoValor::NUMERICA:
-        $validators['nome'] = new CoreExt_Validate_Numeric(
-          array('min' => 0.00, 'max' => 10.0)
-        );
-        break;
-      case RegraAvaliacao_Model_Nota_TipoValor::CONCEITUAL:
-        $validators['nome'] = new CoreExt_Validate_String(
-          array('min' => 1, 'max' => 5)
-        );
-        $validators['descricao'] = new CoreExt_Validate_String(
-          array('min' => 2, 'max' => 25)
-        );
-        break;
-    }
-
-    $ret =
-    $validators  + array(
-      'valorMinimo' => new CoreExt_Validate_Numeric(array('min' => 0.00, 'max' => 9.999)),
-      'valorMaximo' => new CoreExt_Validate_Numeric(array('min' => 0.001, 'max' => 10.0)),
-    );
-    return $ret;
+    return $validators;
   }
 
   public function __toString()

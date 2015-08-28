@@ -190,7 +190,7 @@ class clsModulesProfessorTurma
         $campos .= "{$gruda}tipo_vinculo";
         $valores .= "{$gruda}'{$this->tipo_vinculo}'";
         $gruda = ", ";
-    }    
+    }
 
     $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
     return $db->InsertId("{$this->_tabela}_id_seq");
@@ -240,6 +240,9 @@ class clsModulesProfessorTurma
 
     if (is_numeric($this->tipo_vinculo)) {
         $set .= "{$gruda}tipo_vinculo = '{$this->tipo_vinculo}'";
+        $gruda = ", ";
+    }elseif(is_null($this->tipo_vinculo)){
+      $set .= "{$gruda}tipo_vinculo = NULL";
         $gruda = ", ";
     }
 
