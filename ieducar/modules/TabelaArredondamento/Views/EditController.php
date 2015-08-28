@@ -295,10 +295,16 @@ class EditController extends Core_Controller_Page_EditController
       $this->campoTexto($valor_nome_fake, $this->_getLabel('casa_decimal'),
         $i, 1, 1, FALSE, FALSE, TRUE, '', '', '', 'onKeyUp', TRUE);
 
+      if($valorNota){
+        $tipoArredondamento = $valorNota->get('acao');
+      }else{
+        $tipoArredondamento = 0;
+      }
+
       // Tipo de arredondamento de média (ou ação)
       $tipoArredondamentoMedia = TabelaArredondamento_Model_TipoArredondamentoMedia::getInstance();
       $this->campoLista($valor_tipo_recuperacao, $this->_getLabel('acao'),
-        $tipoArredondamentoMedia->getEnums(), $valorNota->get('acao'), '', TRUE,
+        $tipoArredondamentoMedia->getEnums(), $tipoArredondamento, '', TRUE,
         $this->_getHelp('tipoRecuperacaoParalela'), '', FALSE, FALSE);
 
       // Casa decimal exata para o caso de arredondamento deste tipo
