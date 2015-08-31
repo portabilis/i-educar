@@ -255,6 +255,12 @@ class Portabilis_View_Helper_Inputs {
 
   }
 
+  public function simpleSearchCliente($attrName, $inputOptions = array(), $helperOptions = array()) {
+
+    $this->simpleSearchResourceInput('simpleSearchCliente', $attrName, $inputOptions, $helperOptions);
+
+  }
+
   // multiple search resource input helper
 
 

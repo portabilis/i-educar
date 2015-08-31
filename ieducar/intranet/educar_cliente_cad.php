@@ -164,6 +164,7 @@ class indice extends clsCadastro
 
 		}
     else {
+      $this->campoTexto("codigo","Código",$this->cod_cliente,9,9,null,null,null,null,null,null,null,true);
       $this->campoOculto('ref_idpes', $this->ref_idpes);
       $this->campoRotulo('nm_cliente', 'Cliente', $detalhe['nome']);
     }

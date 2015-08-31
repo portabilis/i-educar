@@ -1,3 +1,6 @@
 ieducar/configuration/*.ini
 .idea/*
 *~
+# Vagrant
+/.vagrant
+Vagrantfile
