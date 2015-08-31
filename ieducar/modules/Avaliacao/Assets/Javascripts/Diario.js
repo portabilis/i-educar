@@ -23,6 +23,7 @@ var usaRecuperacaoParalelaPorEtapa;
 var mediaRecuperacaoParalela;
 var sentidoTab;
 var usaNotaGeralPorEtapa;
+var showBotaoReplicarNotas;
 
 $(function() {
     navegacaoTab(dataResponse.navegacao_tab);
@@ -648,6 +649,7 @@ function handleChange(dataResponse) {
 
 function setTableSearchDetails($tableSearchDetails, dataDetails) {
   var componenteCurricularSelected = ($j('#ref_cod_componente_curricular').val() != '');
+  showBotaoReplicarNotas = ($j('#mostrar_botao_replicar_todos').val() == "1");
 
   usaRecuperacaoParalelaPorEtapa = (dataDetails.tipo_recuperacao_paralela == 'por_etapa');
   usaNotaGeralPorEtapa = (dataDetails.nota_geral_por_etapa == 'SIM');
@@ -795,7 +797,7 @@ function handleSearch($resultTable, dataResponse) {
     if (! componenteCurricularSelected && value.componentes_curriculares)
       updateComponenteCurriculares($resultTable, value.matricula_id, value.componentes_curriculares);
 
-    if (!componenteCurricularSelected)
+    if ((!componenteCurricularSelected) && (showBotaoReplicarNotas))
       criaBotaoReplicarNotasPorArea(value.componentes_curriculares);
 
   });
@@ -836,7 +838,7 @@ function handleSearch($resultTable, dataResponse) {
     $j('#form_resultado select').removeAttr('disabled');
     $j('#form_resultado textarea').removeAttr('disabled');
   }
-  if (componenteCurricularSelected)
+  if ((componenteCurricularSelected) && (showBotaoReplicarNotas))
     criaBotaoReplicarNotas();
 
 }
@@ -1332,8 +1334,10 @@ function criaBotaoReplicarNotasPorArea(componentesCurriculares){
                                        .first()))
                    .unbind();
     $j('#replicar-todas-notas-' + value).on('click', function(){
-      $j('.area-id-' + value).val($j('.area-id-' + value).first().val())
-                                   .trigger('change');
+      if(confirm(safeUtf8Decode("Você deseja realmente modificar todos os conceitos desta área de conhecimento?"))){
+        $j('.area-id-' + value).val($j('.area-id-' + value).first().val())
+                                    .trigger('change');
+      }
     });
   });
 }
@@ -1347,8 +1351,10 @@ function criaBotaoReplicarNotas(){
                                        .first()))
                    .unbind();
     $j('#replicar-todas-notas').on('click', function(){
-      $j('.nota-matricula-cc').val($j('.nota-matricula-cc').first().val())
+      if(confirm(safeUtf8Decode("Você deseja realmente modificar todos os conceitos desta área de conhecimento?"))){
+        $j('.nota-matricula-cc').val($j('.nota-matricula-cc').first().val())
                                    .trigger('change');
+        }
     });
   }
 }
