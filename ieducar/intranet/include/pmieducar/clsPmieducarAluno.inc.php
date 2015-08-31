@@ -68,7 +68,16 @@ class clsPmieducarAluno
   var $url_laudo_medico;
   var $codigo_sistema;
   var $veiculo_transporte_escolar;
-
+  var $autorizado_um;
+  var $parentesco_um;
+  var $autorizado_dois;
+  var $parentesco_dois;
+  var $autorizado_tres;
+  var $parentesco_tres;
+  var $autorizado_quatro;
+  var $parentesco_quatro;
+  var $autorizado_cinco;
+  var $parentesco_cinco;
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
    * @var int
@@ -122,11 +131,32 @@ class clsPmieducarAluno
   /**
    * Construtor.
    */
-  function clsPmieducarAluno($cod_aluno = NULL, $ref_cod_aluno_beneficio = NULL,
-    $ref_cod_religiao = NULL, $ref_usuario_exc = NULL, $ref_usuario_cad = NULL,
-    $ref_idpes = NULL, $data_cadastro = NULL, $data_exclusao = NULL, $ativo = NULL,
-    $caminho_foto = NULL,$analfabeto = NULL, $nm_pai = NULL, $nm_mae = NULL,
-    $tipo_responsavel = NULL, $aluno_estado_id = NULL)
+  function clsPmieducarAluno(
+    $cod_aluno = NULL, 
+    $ref_cod_aluno_beneficio = NULL,
+    $ref_cod_religiao = NULL, 
+    $ref_usuario_exc = NULL, 
+    $ref_usuario_cad = NULL,
+    $ref_idpes = NULL, 
+    $data_cadastro = NULL, 
+    $data_exclusao = NULL, 
+    $ativo = NULL,
+    $caminho_foto = NULL,
+    $analfabeto = NULL, 
+    $nm_pai = NULL, 
+    $nm_mae = NULL,
+    $tipo_responsavel = NULL, 
+    $aluno_estado_id = NULL,
+    $autorizado_um = NULL,
+    $parentesco_um = NULL,
+    $autorizado_dois = NULL,
+    $parentesco_dois = NULL,
+    $autorizado_tres = NULL,
+    $parentesco_tres = NULL,
+    $autorizado_quatro = NULL,
+    $parentesco_quatro = NULL,
+    $autorizado_cinco = NULL,
+    $parentesco_cinco = NULL)
   {
     $db = new clsBanco();
     $this->_schema = 'pmieducar.';
@@ -136,7 +166,8 @@ class clsPmieducarAluno
         a.ref_usuario_cad, a.ref_idpes, a.data_cadastro, a.data_exclusao, a.ativo, a.caminho_foto, a.analfabeto, a.nm_pai, a.nm_mae,tipo_responsavel, a.aluno_estado_id,
         a.recurso_prova_inep_aux_ledor, a.recurso_prova_inep_aux_transcricao, a.recurso_prova_inep_guia_interprete, a.recurso_prova_inep_interprete_libras, a.recurso_prova_inep_leitura_labial,
         a.recurso_prova_inep_prova_ampliada_16, a.recurso_prova_inep_prova_ampliada_20, a.recurso_prova_inep_prova_ampliada_24, a.recurso_prova_inep_prova_braille,
-        a.justificativa_falta_documentacao, a.url_laudo_medico, a.codigo_sistema, a.veiculo_transporte_escolar ';
+        a.justificativa_falta_documentacao, a.url_laudo_medico, a.codigo_sistema, a.veiculo_transporte_escolar, a.parentesco_um, a.autorizado_um, a.parentesco_dois, a.autorizado_dois, 
+        a.parentesco_tres, a.autorizado_tres, a.parentesco_quatro, a.autorizado_quatro, a.parentesco_cinco, a.autorizado_cinco';
 
     if (is_numeric($ref_usuario_exc)) {
       if (class_exists('clsPmieducarUsuario')) {
@@ -230,6 +261,46 @@ class clsPmieducarAluno
 
     if (is_string($tipo_responsavel)) {
       $this->tipo_responsavel = $tipo_responsavel;
+    }
+
+    if (is_string($autorizado_um)) {
+      $this->autorizado_um = $autorizado_um;
+    }
+
+    if (is_string($parentesco_um)) {
+      $this->parentesco_um = $parentesco_um;
+    }
+
+    if (is_string($autorizado_dois)) {
+      $this->autorizado_dois = $autorizado_dois;
+    }
+
+    if (is_string($parentesco_dois)) {
+      $this->parentesco_dois = $parentesco_dois;
+    }
+
+    if (is_string($autorizado_tres)) {
+      $this->autorizado_tres = $autorizado_tres;
+    }
+
+    if (is_string($parentesco_tres)) {
+      $this->parentesco_tres = $parentesco_tres;
+    }
+
+    if (is_string($autorizado_quatro)) {
+      $this->autorizado_quatro = $autorizado_quatro;
+    }
+
+    if (is_string($parentesco_quatro)) {
+      $this->parentesco_quatro = $parentesco_quatro;
+    }
+
+    if (is_string($autorizado_cinco)) {
+      $this->autorizado_cinco = $autorizado_cinco;
+    }
+
+    if (is_string($parentesco_cinco)) {
+      $this->parentesco_cinco = $parentesco_cinco;
     }
 
     $this->aluno_estado_id = $aluno_estado_id;
@@ -386,6 +457,66 @@ class clsPmieducarAluno
       if (is_numeric($this->veiculo_transporte_escolar)) {
         $campos  .= "{$gruda}veiculo_transporte_escolar";
         $valores .= "{$gruda}'{$this->veiculo_transporte_escolar}'";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->autorizado_um) && $this->autorizado_um != "NULL") {
+        $campos  .= "{$gruda}autorizado_um";
+        $valores .= "{$gruda}'{$this->autorizado_um}'";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->parentesco_um) && $this->parentesco_um != "NULL") {
+        $campos  .= "{$gruda}parentesco_um";
+        $valores .= "{$gruda}'{$this->parentesco_um}'";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->autorizado_dois) && $this->autorizado_dois != "NULL") {
+        $campos  .= "{$gruda}autorizado_dois";
+        $valores .= "{$gruda}'{$this->autorizado_dois}'";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->parentesco_dois) && $this->parentesco_dois != "NULL") {
+        $campos  .= "{$gruda}parentesco_dois";
+        $valores .= "{$gruda}'{$this->parentesco_dois}'";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->autorizado_tres) && $this->autorizado_tres != "NULL") {
+        $campos  .= "{$gruda}autorizado_tres";
+        $valores .= "{$gruda}'{$this->autorizado_tres}'";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->parentesco_tres) && $this->parentesco_tres != "NULL") {
+        $campos  .= "{$gruda}parentesco_tres";
+        $valores .= "{$gruda}'{$this->parentesco_tres}'";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->autorizado_quatro) && $this->autorizado_quatro != "NULL") {
+        $campos  .= "{$gruda}autorizado_quatro";
+        $valores .= "{$gruda}'{$this->autorizado_quatro}'";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->parentesco_quatro) && $this->parentesco_quatro != "NULL") {
+        $campos  .= "{$gruda}parentesco_quatro";
+        $valores .= "{$gruda}'{$this->parentesco_quatro}'";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->autorizado_cinco) && $this->autorizado_cinco != "NULL") {
+        $campos  .= "{$gruda}autorizado_cinco";
+        $valores .= "{$gruda}'{$this->autorizado_cinco}'";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->parentesco_cinco) && $this->parentesco_cinco != "NULL") {
+        $campos  .= "{$gruda}parentesco_cinco";
+        $valores .= "{$gruda}'{$this->parentesco_cinco}'";
         $gruda = ', ';
       }
 
@@ -557,6 +688,96 @@ class clsPmieducarAluno
         $gruda = ', ';
       }
 
+      if (is_string($this->autorizado_um) && $this->autorizado_um != "NULL") {
+        $set .= "{$gruda}autorizado_um = '{$this->autorizado_um}'";
+        $gruda = ', ';
+      }
+      elseif ($this->autorizado_um == "NULL") {
+        $set .= "{$gruda}autorizado_um = NULL";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->parentesco_um) && $this->parentesco_um != "NULL") {
+        $set .= "{$gruda}parentesco_um = '{$this->parentesco_um}'";
+        $gruda = ', ';
+      }
+      elseif ($this->parentesco_um == "NULL") {
+        $set .= "{$gruda}parentesco_um = NULL";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->autorizado_dois) && $this->autorizado_dois != "NULL") {
+        $set .= "{$gruda}autorizado_dois = '{$this->autorizado_dois}'";
+        $gruda = ', ';
+      }
+      elseif ($this->autorizado_dois == "NULL") {
+        $set .= "{$gruda}autorizado_dois = NULL";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->parentesco_dois) && $this->parentesco_dois != "NULL") {
+        $set .= "{$gruda}parentesco_dois = '{$this->parentesco_dois}'";
+        $gruda = ', ';
+      }
+      elseif ($this->parentesco_dois == "NULL") {
+        $set .= "{$gruda}parentesco_dois = NULL";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->autorizado_tres) && $this->autorizado_tres != "NULL") {
+        $set .= "{$gruda}autorizado_tres = '{$this->autorizado_tres}'";
+        $gruda = ', ';
+      }
+      elseif ($this->autorizado_tres == "NULL") {
+        $set .= "{$gruda}autorizado_tres = NULL";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->parentesco_tres) && $this->parentesco_tres != "NULL") {
+        $set .= "{$gruda}parentesco_tres = '{$this->parentesco_tres}'";
+        $gruda = ', ';
+      }
+      elseif ($this->parentesco_tres == "NULL") {
+        $set .= "{$gruda}parentesco_tres = NULL";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->autorizado_quatro) && $this->autorizado_quatro != "NULL") {
+        $set .= "{$gruda}autorizado_quatro = '{$this->autorizado_quatro}'";
+        $gruda = ', ';
+      }
+      elseif ($this->autorizado_quatro == "NULL") {
+        $set .= "{$gruda}autorizado_quatro = NULL";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->parentesco_quatro) && $this->parentesco_quatro != "NULL") {
+        $set .= "{$gruda}parentesco_quatro = '{$this->parentesco_quatro}'";
+        $gruda = ', ';
+      }
+      elseif ($this->parentesco_quatro == "NULL") {
+        $set .= "{$gruda}parentesco_quatro = NULL";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->autorizado_cinco) && $this->autorizado_cinco != "NULL") {
+        $set .= "{$gruda}autorizado_cinco = '{$this->autorizado_cinco}'";
+        $gruda = ', ';
+      }
+      elseif ($this->autorizado_cinco == "NULL") {
+        $set .= "{$gruda}autorizado_cinco = NULL";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->parentesco_cinco) && $this->parentesco_cinco != "NULL") {
+        $set .= "{$gruda}parentesco_cinco = '{$this->parentesco_cinco}'";
+        $gruda = ', ';
+      }
+      elseif ($this->parentesco_cinco == "NULL") {
+        $set .= "{$gruda}parentesco_cinco = NULL";
+        $gruda = ', ';
+      }
+
       if ($set) {
         $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_aluno = '{$this->cod_aluno}'" );
         return TRUE;
@@ -570,14 +791,38 @@ class clsPmieducarAluno
    * Retorna uma lista de registros filtrados de acordo com os parâmetros.
    * @return array
    */
-  function lista($int_cod_aluno = null, $int_ref_cod_aluno_beneficio = null,
-    $int_ref_cod_religiao = null, $int_ref_usuario_exc = null,
-    $int_ref_usuario_cad = null, $int_ref_idpes = null, $date_data_cadastro_ini = null,
-    $date_data_cadastro_fim = null, $date_data_exclusao_ini = null,
-    $date_data_exclusao_fim = null, $int_ativo = null, $str_caminho_foto = null,
-    $str_nome_aluno = null,$str_nome_responsavel = null, $int_cpf_responsavel = null,
-    $int_analfabeto = null, $str_nm_pai = null, $str_nm_mae = null,
-    $int_ref_cod_escola = null,$str_tipo_responsavel = null)
+  function lista(
+    $int_cod_aluno = null, 
+    $int_ref_cod_aluno_beneficio = null,
+    $int_ref_cod_religiao = null, 
+    $int_ref_usuario_exc = null,
+    $int_ref_usuario_cad = null, 
+    $int_ref_idpes = null, 
+    $date_data_cadastro_ini = null,
+    $date_data_cadastro_fim = null, 
+    $date_data_exclusao_ini = null,
+    $date_data_exclusao_fim = null, 
+    $int_ativo = null, 
+    $str_caminho_foto = null,
+    $str_nome_aluno = null,
+    $str_nome_responsavel = null, 
+    $int_cpf_responsavel = null,
+    $int_analfabeto = null, 
+    $str_nm_pai = null, 
+    $str_nm_mae = null,
+    $int_ref_cod_escola = null,
+    $str_tipo_responsavel = null,
+    $str_autorizado_um = null,
+    $str_parentesco_um = null,
+    $str_autorizado_dois = null,
+    $str_parentesco_dois = null,
+    $str_autorizado_tres = null,
+    $str_parentesco_tres = null,
+    $str_autorizado_quatro = null,
+    $str_parentesco_quatro = null,
+    $str_autorizado_cinco = null,
+    $str_parentesco_cinco = null
+    )
   {
     $filtros = '';
     $this->resetCamposLista();
@@ -800,7 +1045,17 @@ class clsPmieducarAluno
     $int_ref_cod_escola = NULL, $str_tipo_responsavel = NULL, $data_nascimento = NULL,
     $str_nm_pai2 = NULL, $str_nm_mae2 = NULL, $str_nm_responsavel2 = NULL, $cod_inep = NULL,
     $aluno_estado_id = NULL, $ano = NULL, $ref_cod_instituicao = NULL, $ref_cod_escola = NULL,
-    $ref_cod_curso = NULL, $ref_cod_serie = NULL, $idsetorbai = NULL)//, $periodo = NULL )
+    $ref_cod_curso = NULL, $ref_cod_serie = NULL, $idsetorbai = NULL,
+    $autorizado_um = NULL,
+    $parentesco_um = NULL,
+    $autorizado_dois = NULL,
+    $parentesco_dois = NULL,
+    $autorizado_tres = NULL,
+    $parentesco_tres = NULL,
+    $autorizado_quatro = NULL,
+    $parentesco_quatro = NULL,
+    $autorizado_cinco = NULL,
+    $parentesco_cinco = NULL)//, $periodo = NULL )
   {
     $filtra_baseado_matricula = is_numeric($ano) || is_numeric($ref_cod_instituicao) || is_numeric($ref_cod_escola) || is_numeric($ref_cod_curso) || is_numeric($ref_cod_serie);// || is_numeric($periodo);
 
