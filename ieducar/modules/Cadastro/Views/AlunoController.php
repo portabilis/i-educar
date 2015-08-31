@@ -639,7 +639,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
     $options = array(
       'required'    => false,
-      'label'       => 'Nome autorizado a buscar o aluno / Parentesco (um)',
+      'label'       => 'Nome autorizado a buscar o aluno / Parentesco',
 
       'placeholder' => 'Nome autorizado',
       'max_length'  => 150,
@@ -665,7 +665,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
     $options = array(
       'required'    => false,
-      'label'       => 'Nome autorizado a buscar o aluno / Parentesco (dois)',
+      'label'       => 'Nome autorizado a buscar o aluno / Parentesco',
       'placeholder' => 'Nome autorizado',
 
       'max_length'  => 150,
@@ -692,7 +692,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
     $options = array(
       'required'    => false,
-      'label'       => 'Nome autorizado a buscar o aluno / Parentesco (tres)',
+      'label'       => 'Nome autorizado a buscar o aluno / Parentesco',
       'placeholder' => 'Nome autorizado',
 
       'max_length'  => 150,
@@ -721,7 +721,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
     $options = array(
       'required'    => false,
-      'label'       => 'Nome autorizado a buscar o aluno / Parentesco (quatro)',
+      'label'       => 'Nome autorizado a buscar o aluno / Parentesco',
       'placeholder' => 'Nome autorizado',
 
       'max_length'  => 150,
@@ -750,7 +750,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
     $options = array(
       'required'    => false,
-      'label'       => 'Nome autorizado a buscar o aluno / Parentesco (cinco)',
+      'label'       => 'Nome autorizado a buscar o aluno / Parentesco',
       'placeholder' => 'Nome autorizado',
 
       'max_length'  => 150,
