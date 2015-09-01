@@ -20,53 +20,44 @@
  * com este programa; se não, escreva para a Free Software Foundation, Inc., no
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @author      Gabriel Matos de Souza <gabriel@portabilis.com.br>
  * @category    i-Educar
  * @license     @@license@@
- * @package     AreaConhecimento
+ * @package     RegraAvaliacao
  * @subpackage  Modules
  * @since       Arquivo disponível desde a versão 1.1.0
  * @version     $Id$
  */
 
-require_once 'CoreExt/Entity.php';
-require_once 'App/Model/IedFinder.php';
+require_once 'CoreExt/Enum.php';
 
 /**
- * AreaConhecimento_Model_Area class.
+ * TabelaArredondamento_Model_TipoArredondamentoMedia class.
  *
- * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @author      Gabriel Matos de Souza <gabriel@portabilis.com.br>
  * @category    i-Educar
  * @license     @@license@@
- * @package     AreaConhecimento
+ * @package     RegraAvaliacao
  * @subpackage  Modules
  * @since       Classe disponível desde a versão 1.1.0
  * @version     @@package_version@@
  */
-class AreaConhecimento_Model_Area extends CoreExt_Entity
+class TabelaArredondamento_Model_TipoArredondamentoMedia extends CoreExt_Enum
 {
+  const NAO_ARREDONDAR = 0;
+  const ARREDONDAR_PARA_NOTA_INFERIOR = 1;
+  const ARREDONDAR_PARA_NOTA_SUPERIOR = 2;
+  const ARREDONDAR_PARA_NOTA_ESPECIFICA = 3;
+
   protected $_data = array(
-    'instituicao' => NULL,
-    'nome' => NULL,
-    'secao' => NULL,
-    'ordenamento_ac' => NULL
+    self::NAO_ARREDONDAR => 'N&atilde;o utilizar arredondamento para esta casa decimal',
+    self::ARREDONDAR_PARA_NOTA_INFERIOR => 'Arredondar para o n&uacute;mero inteiro imediatamente inferior',
+    self::ARREDONDAR_PARA_NOTA_SUPERIOR => 'Arredondar para o n&uacute;mero inteiro imediatamente superior',
+    self::ARREDONDAR_PARA_NOTA_ESPECIFICA => 'Arredondar para a casa decimal espec&iacute;fica'
   );
 
-  public function getDefaultValidatorCollection()
+  public static function getInstance()
   {
-    $instituicoes = array_keys(App_Model_IedFinder::getInstituicoes());
-
-    return array(
-      'instituicao' => new CoreExt_Validate_Choice(array('choices' => $instituicoes)),
-      'nome' => new CoreExt_Validate_String(array('min' => 5, 'max' => 60)),
-      'secao' => new CoreExt_Validate_String(array('min' => 0, 'max' => 50)),
-      'ordenamento_ac' => new CoreExt_Validate_Choice(array('min' => 0, 'max' => 50))
-    );
+    return self::_getInstance(__CLASS__);
   }
-
-  public function __toString()
-  {
-    return $this->nome;
-  }
-
 }

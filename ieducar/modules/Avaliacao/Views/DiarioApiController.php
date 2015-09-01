@@ -1057,24 +1057,28 @@ class DiarioApiController extends ApiCoreController
       //buscando pela área do conhecimento
       $area                                = $this->getAreaConhecimento($componente['id']);
       $nomeArea                            = (($area->secao != '') ? $area->secao . ' - ' : '') . $area->nome;
+      $componente['ordenamento_ac']        = $area->ordenamento_ac;
       $componente['area_id']               = $area->id;
       $componente['area_nome']             = $this->safeString(mb_strtoupper($nomeArea,'iso-8859-1'), false);
 
       //criando chave para ordenamento temporário
       //área de conhecimento + componente curricular
-      $componente['ordem_nome_area_conhecimento'] = Portabilis_String_Utils::unaccent(strtoupper($nomeArea));
-      $componente['ordem_componente_curricular']  = Portabilis_String_Utils::unaccent(strtoupper($_componente->get('nome')));
+
+      $componente['ordem_nome_area_conhecimento'] = strtr($nomeArea, "áàãâéêíóôõúüçÁÀÃÂÉÊÍÓÔÕÚÜÇ", "aaaaeeiooouucAAAAEEIOOOUUC");
+      $componente['ordem_componente_curricular']  = strtr($_componente->get('nome', "áàãâéêíóôõúüçÁÀÃÂÉÊÍÓÔÕÚÜÇ", "aaaaeeiooouucAAAAEEIOOOUUC"));
       $componentesCurriculares[]           = $componente;
     }
 
     $ordenamentoComponentes  = array();
 
     foreach($componentesCurriculares as $chave=>$componente){
+      $ordenamentoComponentes['ordenamento_ac'][$chave] = $componente['ordenamento_ac'];
       $ordenamentoComponentes['ordenamento'][$chave] = $componente['ordenamento'];
       $ordenamentoComponentes['ordem_nome_area_conhecimento'][$chave] = $componente['ordem_nome_area_conhecimento'];
-      $ordenamentoComponentes['ordem_componente_curricular'][$chave] = $componente['ordem_componente_curricular'];
+      $ordenamentoComponentes['ordem_componente_curricular'][$chave]  = $componente['ordem_componente_curricular'];
     }
-    array_multisort($ordenamentoComponentes['ordem_nome_area_conhecimento'], SORT_ASC,
+    array_multisort($ordenamentoComponentes['ordenamento_ac'], SORT_ASC, SORT_NUMERIC,
+                    $ordenamentoComponentes['ordem_nome_area_conhecimento'], SORT_ASC,
                     $ordenamentoComponentes['ordenamento'], SORT_ASC, SORT_NUMERIC,
                     $ordenamentoComponentes['ordem_componente_curricular'], SORT_ASC,
                     $componentesCurriculares);
@@ -1107,6 +1111,7 @@ class DiarioApiController extends ApiCoreController
     $areaConhecimento->id   = $area[0]->area_conhecimento->id;
     $areaConhecimento->nome = $area[0]->area_conhecimento->nome;
     $areaConhecimento->secao = $area[0]->area_conhecimento->secao;
+    $areaConhecimento->ordenamento_ac = $area[0]->area_conhecimento->ordenamento_ac;
 
     return $areaConhecimento;
   }

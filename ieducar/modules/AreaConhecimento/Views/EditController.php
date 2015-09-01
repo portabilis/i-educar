@@ -66,6 +66,11 @@ class EditController extends Core_Controller_Page_EditController
       'label'  => 'Seção',
       'help'   => 'A seção que abrange a área de conhecimento. Exemplo: "<em>Lógico Matemático</em>".',
       'entity' => 'secao'
+    ),  
+    'ordenamento_ac' => array(
+      'label'  => 'Ordenamento',
+      'help'   => '',
+      'entity' => 'ordenamento_ac'
     ),    
   );
 
@@ -103,6 +108,11 @@ class EditController extends Core_Controller_Page_EditController
 
     // Seção
     $this->campoTexto('secao', $this->_getLabel('secao'), $this->getEntity()->secao,
-      50, 50, FALSE, FALSE, FALSE, $this->_getHelp('secao'));    
+      50, 50, FALSE, FALSE, FALSE, $this->_getHelp('secao'));  
+
+    // Ordenamento
+    $this->campoTexto('ordenamento_ac', $this->_getLabel('ordenamento_ac'), $this->getEntity()->ordenamento_ac,
+      10, 50, FALSE, FALSE, FALSE, $this->_getHelp('ordenamento_ac'));    
   }
+
 }

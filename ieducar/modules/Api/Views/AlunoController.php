@@ -484,7 +484,16 @@ class AlunoController extends ApiCoreController
     $aluno->cod_aluno               = $id;
     $aluno->aluno_estado_id         = strtoupper(Portabilis_String_Utils::toLatin1($this->getRequest()->aluno_estado_id));
     $aluno->codigo_sistema          = Portabilis_String_Utils::toLatin1($this->getRequest()->codigo_sistema);
-
+    $aluno->autorizado_um           = Portabilis_String_Utils::toLatin1($this->getRequest()->autorizado_um);
+    $aluno->parentesco_um           = Portabilis_String_Utils::toLatin1($this->getRequest()->parentesco_um);
+    $aluno->autorizado_dois         = Portabilis_String_Utils::toLatin1($this->getRequest()->autorizado_dois);
+    $aluno->parentesco_dois         = Portabilis_String_Utils::toLatin1($this->getRequest()->parentesco_dois);
+    $aluno->autorizado_tres         = Portabilis_String_Utils::toLatin1($this->getRequest()->autorizado_tres);
+    $aluno->parentesco_tres         = Portabilis_String_Utils::toLatin1($this->getRequest()->parentesco_tres);
+    $aluno->autorizado_quatro       = Portabilis_String_Utils::toLatin1($this->getRequest()->autorizado_quatro);
+    $aluno->parentesco_quatro       = Portabilis_String_Utils::toLatin1($this->getRequest()->parentesco_quatro);
+    $aluno->autorizado_cinco        = Portabilis_String_Utils::toLatin1($this->getRequest()->autorizado_cinco);
+    $aluno->parentesco_cinco        = Portabilis_String_Utils::toLatin1($this->getRequest()->parentesco_cinco);
     // após cadastro não muda mais id pessoa
     if (is_null($id))
       $aluno->ref_idpes             = $this->getRequest()->pessoa_id;
@@ -518,6 +527,7 @@ class AlunoController extends ApiCoreController
 
     //laudo medico
     $aluno->url_laudo_medico         = Portabilis_String_Utils::toLatin1($this->getRequest()->url_laudo_medico);
+
     return (is_null($id) ? $aluno->cadastra() : $aluno->edita());
   }
 
@@ -858,9 +868,19 @@ class AlunoController extends ApiCoreController
         'veiculo_transporte_escolar',
         'url_laudo_medico',
         'codigo_sistema',
-        'url_foto_aluno'
+        'url_foto_aluno',
+        'autorizado_um',
+        'parentesco_um',
+        'autorizado_dois',
+        'parentesco_dois',
+        'autorizado_tres',
+        'parentesco_tres',
+        'autorizado_quatro',
+        'parentesco_quatro',
+        'autorizado_cinco',
+        'parentesco_cinco'
       );
-
+      
       $aluno = Portabilis_Array_Utils::filter($aluno, $attrs);
 
       $aluno['nome']             = $this->loadNomeAluno($id);
@@ -869,7 +889,21 @@ class AlunoController extends ApiCoreController
       $aluno['aluno_inep_id']    = $this->loadAlunoInepId($id);
       $aluno['ativo']            = $aluno['ativo'] == 1;
       $aluno['aluno_estado_id']  = Portabilis_String_Utils::toUtf8($aluno['aluno_estado_id']);
-      $aluno['codigo_sistema']  = Portabilis_String_Utils::toUtf8($aluno['codigo_sistema']);
+      $aluno['codigo_sistema']   = Portabilis_String_Utils::toUtf8($aluno['codigo_sistema']);
+
+      $aluno['autorizado_um']    = Portabilis_String_Utils::toUtf8($aluno['autorizado_um']);
+      $aluno['parentesco_um']    = Portabilis_String_Utils::toUtf8($aluno['parentesco_um']);
+      $aluno['autorizado_dois']  = Portabilis_String_Utils::toUtf8($aluno['autorizado_dois']);
+      $aluno['parentesco_dois']  = Portabilis_String_Utils::toUtf8($aluno['parentesco_dois']);
+      $aluno['autorizado_tres']  = Portabilis_String_Utils::toUtf8($aluno['autorizado_tres']);
+      $aluno['parentesco_tres']  = Portabilis_String_Utils::toUtf8($aluno['parentesco_tres']);
+      $aluno['autorizado_quatro']= Portabilis_String_Utils::toUtf8($aluno['autorizado_quatro']);
+      $aluno['parentesco_quatro']= Portabilis_String_Utils::toUtf8($aluno['parentesco_quatro']);
+      $aluno['autorizado_cinco'] = Portabilis_String_Utils::toUtf8($aluno['autorizado_cinco']);
+      $aluno['parentesco_cinco'] = Portabilis_String_Utils::toUtf8($aluno['parentesco_cinco']);
+
+
+
 
       $aluno['alfabetizado']     = $aluno['analfabeto'] == 0;
       unset($aluno['analfabeto']);

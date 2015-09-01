@@ -97,7 +97,9 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     'responsavel' => array(
       'label'  => 'Responsável',
       'help'   => '',
-    ),
+    ), 
+
+
 
     'alfabetizado' => array(
       'label'  => 'Alfabetizado',
@@ -419,8 +421,12 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
     // código aluno sistema
     if($GLOBALS['coreExt']['Config']->app->alunos->mostrar_codigo_sistema){
-    	$options = array('label' => Portabilis_String_Utils::toLatin1($GLOBALS['coreExt']['Config']->app->alunos->codigo_sistema), 'required' => false, 'size' => 25, 'max_length' => 30);
-    	$this->inputsHelper()->text('codigo_sistema', $options);
+      $options = array(
+        'label' => Portabilis_String_Utils::toLatin1($GLOBALS['coreExt']['Config']->app->alunos->codigo_sistema), 
+        'required' => false, 
+        'size' => 25, 
+        'max_length' => 30);
+      $this->inputsHelper()->text('codigo_sistema', $options);
     }
 
 
@@ -630,6 +636,146 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     $this->inputsHelper()->textArea('cartorio_emissao_certidao_civil', $options);
 
     // pai
+
+    $options = array(
+      'required'    => false,
+      'label'       => 'Nome autorizado a buscar o aluno / Parentesco',
+
+      'placeholder' => 'Nome autorizado',
+      'max_length'  => 150,
+      'size'        => 50,
+      'inline'      => true
+    );
+
+    $this->inputsHelper()->text('autorizado_um', $options);
+
+   $options = array(
+      'required'    => false,
+      'label'       => '',
+
+      'placeholder' => 'Parentesco',
+      'max_length'  => 150,
+      'size'        => 15
+    );
+
+    $this->inputsHelper()->text('parentesco_um', $options);
+  
+
+  //dois
+
+    $options = array(
+      'required'    => false,
+      'label'       => 'Nome autorizado a buscar o aluno / Parentesco',
+      'placeholder' => 'Nome autorizado',
+
+      'max_length'  => 150,
+      'size'        => 50,
+      'inline'      => true
+    );
+
+    $this->inputsHelper()->text('autorizado_dois', $options);
+  
+
+
+    $options = array(
+      'required'    => false,
+      'label'       => '',
+      'placeholder' => 'Parentesco',
+
+      'max_length'  => 150,
+      'size'        => 15
+    );
+
+    $this->inputsHelper()->text('parentesco_dois', $options);
+  
+  //tres
+
+    $options = array(
+      'required'    => false,
+      'label'       => 'Nome autorizado a buscar o aluno / Parentesco',
+      'placeholder' => 'Nome autorizado',
+
+      'max_length'  => 150,
+      'size'        => 50,
+      'inline'      => true
+    );
+
+    $this->inputsHelper()->text('autorizado_tres', $options);
+  
+
+
+    $options = array(
+      'required'    => false,
+      'label'       => '',
+      'placeholder' => 'Parentesco',
+
+      'max_length'  => 150,
+      'size'        => 15
+    );
+
+    $this->inputsHelper()->text('parentesco_tres', $options);
+  
+
+  //quatro
+
+
+    $options = array(
+      'required'    => false,
+      'label'       => 'Nome autorizado a buscar o aluno / Parentesco',
+      'placeholder' => 'Nome autorizado',
+
+      'max_length'  => 150,
+      'size'        => 50,
+      'inline'      => true
+    );
+
+    $this->inputsHelper()->text('autorizado_quatro', $options);
+  
+
+
+    $options = array(
+      'required'    => false,
+      'label'       => '',
+      'placeholder' => 'Parentesco',
+
+      'max_length'  => 150,
+      'size'        => 15
+    );
+
+    $this->inputsHelper()->text('parentesco_quatro', $options);
+  
+
+  //cinco
+
+
+    $options = array(
+      'required'    => false,
+      'label'       => 'Nome autorizado a buscar o aluno / Parentesco',
+      'placeholder' => 'Nome autorizado',
+
+      'max_length'  => 150,
+      'size'        => 50,
+      'inline'      => true
+    );
+
+    $this->inputsHelper()->text('autorizado_cinco', $options);
+  
+
+    $options = array(
+      'required'    => false,
+      'label'       => '',
+      'placeholder' => 'Parentesco',
+
+      'max_length'  => 150,
+      'size'        => 15
+    );
+
+    $this->inputsHelper()->text('parentesco_cinco', $options);
+
+
+
+
+
     $this->inputPai();
 
     // mãe
@@ -1302,6 +1448,15 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
   }
 
+
+
+  
+
+
+ 
+
+
+
   protected function inputPai() {
     $this->addParentsInput('pai');
   }
@@ -1309,6 +1464,8 @@ class AlunoController extends Portabilis_Controller_Page_EditController
   protected function inputMae() {
     $this->addParentsInput('mae', 'mãe');
   }
+
+  
 
   protected function addParentsInput($parentType, $parentTypeLabel = '') {
     if (! $parentTypeLabel)

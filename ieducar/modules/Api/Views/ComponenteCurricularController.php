@@ -80,17 +80,17 @@ class ComponenteCurricularController extends ApiCoreController
 
       $instituicaoId = $this->getRequest()->instituicao_id;
 
-      $sql = 'SELECT id, nome
+      $sql = 'SELECT id, nome, area_conhecimento_id
                 FROM modules.componente_curricular
                 WHERE instituicao_id = $1
                 ORDER BY nome ';
 
       $disciplinas = $this->fetchPreparedQuery($sql, array($instituicaoId));
 
-      $attrs = array('id', 'nome');
+      $attrs = array('id', 'nome', 'area_conhecimento_id');
       $disciplinas = Portabilis_Array_Utils::filterSet($disciplinas, $attrs);
 
-      foreach ($disciplinas as &$disciplina) {
+      foreach ($disciplinas as &$disciplina){
         $disciplina['nome'] = Portabilis_String_Utils::toUtf8($disciplina['nome']);
       }
 

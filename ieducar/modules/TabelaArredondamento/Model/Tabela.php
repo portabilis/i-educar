@@ -32,6 +32,7 @@
 require_once 'CoreExt/Entity.php';
 require_once 'App/Model/IedFinder.php';
 require_once 'lib/Portabilis/Utils/Float.php';
+require_once 'RegraAvaliacao/Model/Nota/TipoValor.php';
 
 /**
  * TabelaArredondamento_Model_Tabela class.
@@ -110,26 +111,28 @@ class TabelaArredondamento_Model_Tabela extends CoreExt_Entity
    * @param $value
    * @return mixed
    */
-  public function round($value)
+  public function round($value, $tipoNota)
   {
-    /*
-    if (0 > $value || 10 < $value) {
-      require_once 'CoreExt/Exception/InvalidArgumentException.php';
-      throw new CoreExt_Exception_InvalidArgumentException('O valor para '
-                . 'arredondamento deve estar entre 0 e 10.');
-    }*/
-
-    /* Inicializa o retorno com o valor recebido (limitando a para uma casa decimal),
-       o qual será retornado caso não tenha sido definido opcoes na tabela de arredondamento,
-       do contrário será arredondado a nota conforme opções da tabela de arredondamento. */
-    $return = Portabilis_Utils_Float::limitDecimal($value, array('limit' => 1));
 
     // carrega tabela de arredondamento, caso ainda não tenha sido carregada.
     if (0 == count($this->_tabelaValores))
       $this->_tabelaValores = $this->getDataMapper()->findTabelaValor($this);
 
-    // somente será arredondado a nota, caso tenha sido definido opções de arredondamento, na respectiva tabela.
-    if (count($this->_tabelaValores) > 0) {
+    $return = Portabilis_Utils_Float::limitDecimal($value, array('limit' => 1));
+
+    // Se não houver tabela com valores de arredondamento irá retornar o valor
+    if (!count($this->_tabelaValores) > 0) {
+      return $return;
+    }
+
+    // Se o tipo de nota não for uma média final e o tipo de nota for numérica retorna o valor (não arredonda)
+    // isso porque o arredondamento se dará apenas para médias numericas e notas e médias conceituais
+    if($this->get('tipoNota') == RegraAvaliacao_Model_Nota_TipoValor::NUMERICA && $tipoNota == 1){
+      return $return;
+    }
+
+    if($this->get('tipoNota') == RegraAvaliacao_Model_Nota_TipoValor::CONCEITUAL){
+
       // Multiplicador para transformar os números em uma escala inteira.
       $scale = pow(10, $this->_precision);
 
@@ -146,9 +149,37 @@ class TabelaArredondamento_Model_Tabela extends CoreExt_Entity
         $return = $tabelaValor->nome;
       }
     }
+    elseif($this->get('tipoNota') == RegraAvaliacao_Model_Nota_TipoValor::NUMERICA){
+      foreach($this->_tabelaValores as $tabelaValor){
+          $notaString = strval($return);
+          $notaString = explode('.', $return);
+
+          $notaInteira     = $notaString[0];
+          $casaDecimalNota = $notaString[1];
+
+          if($casaDecimalNota == $tabelaValor->nome){
+
+            switch ($tabelaValor->get('acao')) {
+              case TabelaArredondamento_Model_TipoArredondamentoMedia::ARREDONDAR_PARA_NOTA_INFERIOR:
+                $return = floor($return);
+                break;
+
+              case TabelaArredondamento_Model_TipoArredondamentoMedia::ARREDONDAR_PARA_NOTA_SUPERIOR:
+                $return = ceil($return);
+                break;
+
+              case TabelaArredondamento_Model_TipoArredondamentoMedia::ARREDONDAR_PARA_NOTA_ESPECIFICA:
+                $casaDecimalExata = strval($tabelaValor->get('casaDecimalExata'));
+                $return = floatval($notaInteira . '.' . $casaDecimalExata);
+                break;
+            }
+          }
+      }
+    }
 
     return $return;
   }
+
 
   /**
    * Prevê em qual range de arredondamento de acordo com um valor esperado. A

@@ -1,3 +1,43 @@
+   $j('#autorizado_um').closest('tr').show();
+   $j('#parentesco_um').closest('tr').show();
+
+
+
+
+
+$j('#autorizado_um').change(abriCampoDois);
+$j('#autorizado_dois').change(abriCampoTres);
+$j('#autorizado_tres').change(abriCampoQuatro);
+$j('#autorizado_quatro').change(abriCampoCinco);
+
+
+
+function abriCampoDois(){
+$j('#autorizado_dois').closest('tr').show();
+$j('#parentesco_dois').closest('tr').show();
+}
+
+function abriCampoTres(){
+$j('#autorizado_tres').closest('tr').show();
+$j('#parentesco_tres').closest('tr').show();
+}
+
+function abriCampoQuatro(){
+$j('#autorizado_quatro').closest('tr').show();
+$j('#parentesco_quatro').closest('tr').show();
+}
+
+function abriCampoCinco(){
+$j('#autorizado_cinco').closest('tr').show();
+$j('#parentesco_cinco').closest('tr').show();
+}
+
+
+
+
+
+
+
 var editar_pessoa   = false;
 var person_details;
 var pai_details;
@@ -224,6 +264,56 @@ resourceOptions.handleGet = function(dataResponse) {
   $j('#tipo_transporte').val(dataResponse.tipo_transporte);
   $j('#veiculo_transporte_escolar').val(dataResponse.veiculo_transporte_escolar).trigger('change');
   $j('#alfabetizado').attr('checked', dataResponse.alfabetizado);
+  $j('#autorizado_um').val(dataResponse.autorizado_um);
+  $j('#parentesco_um').val(dataResponse.parentesco_um);
+  $j('#autorizado_dois').val(dataResponse.autorizado_dois);
+  $j('#parentesco_dois').val(dataResponse.parentesco_dois);
+  $j('#autorizado_tres').val(dataResponse.autorizado_tres);
+  $j('#parentesco_tres').val(dataResponse.parentesco_tres);
+  $j('#autorizado_quatro').val(dataResponse.autorizado_quatro);
+  $j('#parentesco_quatro').val(dataResponse.parentesco_quatro);
+  $j('#autorizado_cinco').val(dataResponse.autorizado_cinco);
+  $j('#parentesco_cinco').val(dataResponse.parentesco_cinco);
+
+
+if($j('#autorizado_um').val() == ''){
+   $j('#autorizado_dois').closest('tr').hide();
+   $j('#autorizado_dois').closest('tr').hide();
+}else{
+   $j('#autorizado_dois').closest('tr').show();
+   $j('#autorizado_dois').closest('tr').show();
+}
+
+if($j('#autorizado_dois').val() == ''){
+   $j('#autorizado_tres').closest('tr').hide();
+   $j('#autorizado_tres').closest('tr').hide();
+}else{
+   $j('#autorizado_tres').closest('tr').show();
+   $j('#autorizado_tres').closest('tr').show();
+}
+
+if($j('#autorizado_tres').val() == ''){
+   $j('#autorizado_quatro').closest('tr').hide();
+   $j('#autorizado_quatro').closest('tr').hide();
+}else{
+   $j('#autorizado_quatro').closest('tr').show();
+   $j('#autorizado_quatro').closest('tr').show();
+}
+
+if($j('#autorizado_quatro').val() == ''){
+   $j('#autorizado_cinco').closest('tr').hide();
+   $j('#parentesco_cinco').closest('tr').hide();
+}else{
+   $j('#parentesco_cinco').closest('tr').show();
+   $j('#parentesco_cinco').closest('tr').show();
+}
+
+
+
+
+
+
+
 
   if(dataResponse.url_laudo_medico){
     var arrayLaudo = dataResponse.url_laudo_medico.split(",");
@@ -1731,4 +1821,6 @@ if($j('#transporte_rota').length > 0){
   $j('#tipo_transporte').on('change', function(){
     camposTransporte();
   });
+
+
 }

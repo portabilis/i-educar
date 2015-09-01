@@ -228,6 +228,16 @@ return "select aluno.cod_aluno as aluno_id,
       $sql = 'update pmieducar.matricula set aprovado = $1, ref_cod_abandono_tipo = $2 where cod_matricula = $3';
       $this->fetchPreparedQuery($sql, array($situacaoAndamento, $tipoSemAbandono, $matriculaId));
 
+      $params = array($matriculaId, 0);
+      $sql = 'SELECT max(sequencial) as codigo FROM pmieducar.matricula_turma where ref_cod_matricula = $1 and ativo = $2';
+      $sequencial = $this->fetchPreparedQuery($sql, $params, false, 'first-field');
+
+      $sql = 'UPDATE pmieducar.matricula_turma set ativo = 1, transferido = false, remanejado = false, abandono = false, reclassificado = false where sequencial = $1 and ref_cod_matricula = $2';
+
+      $params = array($sequencial, $matriculaId);
+      $this->fetchPreparedQuery($sql, $params);
+
+
       $this->messenger->append('Abandono desfeito.', 'success');
     }
   }
@@ -338,7 +348,6 @@ return "select aluno.cod_aluno as aluno_id,
       $situacaoAntiga = $matricula->aprovado;
       $situacaoNova   = $this->getRequest()->nova_situacao;
 
-      
       if($situacaoNova == App_Model_MatriculaSituacao::TRANSFERIDO || $situacaoNova == App_Model_MatriculaSituacao::ABANDONO){
         $enturmacoes = new clsPmieducarMatriculaTurma();
         $enturmacoes = $enturmacoes->lista($matriculaId, null, null, null, null, null, null, null, 1 );
@@ -349,19 +358,22 @@ return "select aluno.cod_aluno as aluno_id,
             $enturmacao = new clsPmieducarMatriculaTurma( $matriculaId, $enturmacao['ref_cod_turma'], 1, null, null, date("Y-m-d H:i:s"), 0, null, $enturmacao['sequencial']);
             if(!$enturmacao->edita()){
               return false;
-            }else{
-              $enturmacao->marcaAlunoTransferido();
             }
+
+            if ($situacaoNova == App_Model_MatriculaSituacao::TRANSFERIDO)
+              $enturmacao->marcaAlunoTransferido();
+            elseif ($situacaoNova == App_Model_MatriculaSituacao::ABANDONO)
+              $enturmacao->marcaAlunoAbandono();
+
           }
         }
       }elseif($situacaoNova == App_Model_MatriculaSituacao::APROVADO || $situacaoNova == App_Model_MatriculaSituacao::EM_ANDAMENTO || $situacaoNova == App_Model_MatriculaSituacao::REPROVADO){
-        
+
         $params = array($matriculaId, 0);
         $sql = 'SELECT max(sequencial) as codigo FROM pmieducar.matricula_turma where ref_cod_matricula = $1 and ativo = $2';
         $sequencial = $this->fetchPreparedQuery($sql, $params, false, 'first-field');
 
-        $sql = 'UPDATE pmieducar.matricula_turma set ativo = 1 where sequencial = $1 and ref_cod_matricula = $2';
-
+        $sql = 'UPDATE pmieducar.matricula_turma set ativo = 1, transferido = false, remanejado = false, abandono = false, reclassificado = false where sequencial = $1 and ref_cod_matricula = $2';
 
         $params = array($sequencial, $matriculaId);
         $this->fetchPreparedQuery($sql, $params);
@@ -372,7 +384,7 @@ return "select aluno.cod_aluno as aluno_id,
       if($matricula->edita()){
         return $this->messenger->append('Situação da matrícula alterada com sucesso.', 'success');
       }
-    }  
+    }
   }
 
   public function Gerar() {

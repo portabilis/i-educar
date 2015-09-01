@@ -32,6 +32,7 @@
 require_once 'Core/Controller/Page/EditController.php';
 require_once 'TabelaArredondamento/Model/TabelaDataMapper.php';
 require_once 'TabelaArredondamento/Model/TabelaValor.php';
+require_once 'TabelaArredondamento/Model/TipoArredondamentoMedia.php';
 
 /**
  * EditController class.
@@ -82,6 +83,18 @@ class EditController extends Core_Controller_Page_EditController
     'valor_valor_maximo' => array(
       'label'  => '<span style="padding-left: 10px"></span>Valor máximo:',
       'help'   => 'O valor numérico máximo da nota.'
+    ),
+    'acao' => array(
+      'label'  => '<span style="padding-left: 10px"></span>Ação:',
+      'help'   => 'A ação de arredondamento da nota.'
+    ),
+    'casa_decimal' => array(
+      'label'  => '<span style="padding-left: 10px"></span>Casa decimal:',
+      'help'   => 'A casa decimal exata para qual a nota deve ser arredondada.'
+    ),
+    'casa_decimal_exata' => array(
+      'label'  => '<span style="padding-left: 10px"></span>Casa decimal exata:',
+      'help'   => 'A casa decimal a ser arredondada.'
     )
   );
 
@@ -139,7 +152,9 @@ class EditController extends Core_Controller_Page_EditController
   function _preRender(){
 
     parent::_preRender();
-    
+
+    Portabilis_View_Helper_Application::loadJavascript($this, '/modules/RegraAvaliacao/Assets/Javascripts/TabelaArredondamento.js');
+
     Portabilis_View_Helper_Application::loadStylesheet($this, 'intranet/styles/localizacaoSistema.css');
 
     $nomeMenu = $this->getRequest()->id == null ? "Cadastrar" : "Editar";
@@ -147,10 +162,10 @@ class EditController extends Core_Controller_Page_EditController
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_index.php"                  => "i-Educar - Escola",
-         ""        => "$nomeMenu tabela de arredondamento"             
+         ""        => "$nomeMenu tabela de arredondamento"
     ));
-    $this->enviaLocalizacao($localizacao->montar());   
-  }  
+    $this->enviaLocalizacao($localizacao->montar());
+  }
 
   /**
    * @see clsCadastro#Gerar()
@@ -172,9 +187,7 @@ class EditController extends Core_Controller_Page_EditController
     $notaTipoValor = RegraAvaliacao_Model_Nota_TipoValor::getInstance();
     $notaTipos = $notaTipoValor->getEnums();
     unset($notaTipos[RegraAvaliacao_Model_Nota_TipoValor::NENHUM]);
-    /*
-    $this->campoRadio('tipoNota', $this->_getLabel('tipoNota'), $notaTipos,
-      $this->getEntity()->get('tipoNota'), '', $this->_getHelp('tipoNota'));*/
+
     if ($this->getEntity()->id!='')
       $this->campoTexto('tipNota',$this->_getLabel('tipoNota'),$notaTipos[$this->getEntity()->get('tipoNota')],40,40,false,false,false,'','','','',true);
     else
@@ -185,53 +198,10 @@ class EditController extends Core_Controller_Page_EditController
     if (!$this->getEntity()->isNew()) {
       // Quebra
       $this->campoQuebra();
-
-      // Ajuda
-      $help = 'Caso seja necessário adicionar mais notas, '
-            . 'salve o formulário. Automaticamente 3 campos '
-            . 'novos ficarão disponíveis.<br /><br />';
-
-      $this->campoRotulo('__help1', '<strong>Notas para arredondamento</strong><br />', $help, FALSE, '', '');
-
-      // Cria campos para a postagem de notas
-      $valores = $this->getDataMapper()->findTabelaValor($this->getEntity());
-
-      for ($i = 0, $loop = count($valores); $i < ($loop == 0 ? 5 : $loop + 3); $i++) {
-        $valorNota = $valores[$i];
-
-        $valor_label        = sprintf("valor[label][%d]", $i);
-        $valor_id           = sprintf("valor[id][%d]", $i);
-        $valor_nome         = sprintf("valor[nome][%d]", $i);
-        $valor_descricao    = sprintf("valor[descricao][%d]", $i);
-        $valor_valor_minimo = sprintf("valor[valor_minimo][%d]", $i);
-        $valor_valor_maximo = sprintf("valor[valor_maximo][%d]", $i);
-
-        $this->campoRotulo($valor_label, 'Arredondamento ' . ($i + 1),
-          $this->_getLabel(''), TRUE);
-
-        // Id
-        $this->campoOculto($valor_id, $valorNota->id);
-
-        // Nome
-        $this->campoTexto($valor_nome, $this->_getLabel('valor_nome'),
-          $valorNota->nome, 5, 5, FALSE, FALSE, TRUE, $this->_getHelp('valor_nome'));
-
-        // Descrição (se conceitual)
-        if (RegraAvaliacao_Model_Nota_TipoValor::CONCEITUAL == $this->getEntity()->get('tipoNota')) {
-          $this->campoTexto($valor_descricao, $this->_getLabel('valor_descricao'),
-            $valorNota->descricao, 15, 25, FALSE, FALSE, TRUE,
-            $this->_getHelp('valor_descricao'));
-        }
-
-        // Valor mínimo
-        $this->campoTexto($valor_valor_minimo, $this->_getLabel('valor_valor_minimo'),
-          $valorNota->valorMinimo, 6, 6, FALSE, FALSE, TRUE,
-          $this->_getHelp('valor_valor_minimo'));
-
-        // Valor máximo
-        $this->campoTexto($valor_valor_maximo, $this->_getLabel('valor_valor_maximo'),
-          $valorNota->valorMaximo, 6, 6, FALSE, FALSE, FALSE,
-          $this->_getHelp('valor_valor_maximo'));
+      if (RegraAvaliacao_Model_Nota_TipoValor::CONCEITUAL == $this->getEntity()->get('tipoNota')) {
+        $this->carregaCamposNotasConceituais();
+      }elseif(RegraAvaliacao_Model_Nota_TipoValor::NUMERICA == $this->getEntity()->get('tipoNota')){
+        $this->carregaCamposNotasNumericas();
       }
 
       // Quebra
@@ -239,6 +209,110 @@ class EditController extends Core_Controller_Page_EditController
     }
   }
 
+  private function carregaCamposNotasConceituais(){
+    // Ajuda
+    $help = 'Caso seja necessário adicionar mais notas, '
+          . 'salve o formulário. Automaticamente 3 campos '
+          . 'novos ficarão disponíveis.<br /><br />';
+
+    $this->campoRotulo('__help1', '<strong>Notas para arredondamento</strong><br />', $help, FALSE, '', '');
+
+    // Cria campos para a postagem de notas
+    $valores = $this->getDataMapper()->findTabelaValor($this->getEntity());
+
+    for ($i = 0, $loop = count($valores); $i < ($loop == 0 ? 5 : $loop + 3); $i++) {
+      $valorNota = $valores[$i];
+
+      $valor_label            = sprintf("valor[label][%d]", $i);
+      $valor_id               = sprintf("valor[id][%d]", $i);
+      $valor_nome             = sprintf("valor[nome][%d]", $i);
+      $valor_descricao        = sprintf("valor[descricao][%d]", $i);
+      $valor_valor_minimo     = sprintf("valor[valor_minimo][%d]", $i);
+      $valor_valor_maximo     = sprintf("valor[valor_maximo][%d]", $i);
+      $valor_tipo_recuperacao = sprintf("valor[acao][%d]", $i);
+
+      $this->campoRotulo($valor_label, 'Arredondamento ' . ($i + 1),
+        $this->_getLabel(''), TRUE);
+
+      // Id
+      $this->campoOculto($valor_id, $valorNota->id);
+
+      // Nome
+      $this->campoTexto($valor_nome, $this->_getLabel('valor_nome'),
+        $valorNota->nome, 5, 5, FALSE, FALSE, TRUE, $this->_getHelp('valor_nome'));
+
+      // Descrição (se conceitual)
+      $this->campoTexto($valor_descricao, $this->_getLabel('valor_descricao'),
+        $valorNota->descricao, 15, 25, FALSE, FALSE, TRUE,
+        $this->_getHelp('valor_descricao'));
+
+      // Valor mínimo
+      $this->campoTexto($valor_valor_minimo, $this->_getLabel('valor_valor_minimo'),
+        $valorNota->valorMinimo, 6, 6, FALSE, FALSE, TRUE,
+        $this->_getHelp('valor_valor_minimo'));
+
+      // Valor máximo
+      $this->campoTexto($valor_valor_maximo, $this->_getLabel('valor_valor_maximo'),
+        $valorNota->valorMaximo, 6, 6, FALSE, FALSE, FALSE,
+        $this->_getHelp('valor_valor_maximo'));
+
+    }
+  }
+  private function carregaCamposNotasNumericas(){
+    // Ajuda
+    // $help = 'Caso seja necessário adicionar mais notas, '
+    //       . 'salve o formulário. Automaticamente 3 campos '
+    //       . 'novos ficarão disponíveis.<br /><br />';
+
+    $this->campoRotulo('__help1', '<strong>Notas para arredondamento de médias</strong><br />', $help, FALSE, '', '');
+
+    // Cria campos para a postagem de notas
+    $valores = $this->getDataMapper()->findTabelaValor($this->getEntity());
+
+    for ($i = 0; $i <= 9; $i++) {
+      $valorNota = $valores[$i];
+
+      $valor_label              = sprintf("valor[label][%d]", $i);
+      $valor_id                 = sprintf("valor[id][%d]", $i);
+      $valor_nome               = sprintf("valor[nome][%d]", $i);
+      $valor_nome_fake          = sprintf("valor[nome_fake][%d]", $i);
+      $valor_tipo_recuperacao   = sprintf("valor[acao][%d]", $i);
+      $valor_casa_decimal_exata = sprintf("valor[casaDecimalExata][%d]", $i);
+      $valor_valor_minimo       = sprintf("valor[valor_minimo][%d]", $i);
+      $valor_valor_maximo       = sprintf("valor[valor_maximo][%d]", $i);
+
+      $this->campoRotulo($valor_label, 'Arredondamento ' . ($i + 1),
+        $this->_getLabel(''), TRUE);
+
+      // Id
+      $this->campoOculto($valor_id, $valorNota->id);
+
+
+      // Foi feito um campo oculto com a informação a ser gravada pois o framework não grava informações de campos desabilitados
+      $this->campoOculto($valor_nome, $i);
+
+      // Este campo serve apenas para ser exibido ao usuário, ele não grava a informação no banco, pois o framework não grava campos desabilitados
+      $this->campoTexto($valor_nome_fake, $this->_getLabel('casa_decimal'),
+        $i, 1, 1, FALSE, FALSE, TRUE, '', '', '', 'onKeyUp', TRUE);
+
+      if($valorNota){
+        $tipoArredondamento = $valorNota->get('acao');
+      }else{
+        $tipoArredondamento = 0;
+      }
+
+      // Tipo de arredondamento de média (ou ação)
+      $tipoArredondamentoMedia = TabelaArredondamento_Model_TipoArredondamentoMedia::getInstance();
+      $this->campoLista($valor_tipo_recuperacao, $this->_getLabel('acao'),
+        $tipoArredondamentoMedia->getEnums(), $tipoArredondamento, '', TRUE,
+        $this->_getHelp('tipoRecuperacaoParalela'), '', FALSE, FALSE);
+
+      // Casa decimal exata para o caso de arredondamento deste tipo
+      $this->campoTexto($valor_casa_decimal_exata, $this->_getLabel('casa_decimal_exata'),
+        $valorNota->casaDecimalExata, 1, 1, FALSE, FALSE, FALSE, '', '', '', 'onKeyUp', FALSE);
+
+    }
+  }
   protected function _save()
   {
     // Verifica pela existência do field identity
@@ -268,11 +342,13 @@ class EditController extends Core_Controller_Page_EditController
       // Não atribui a instância de $entity senão não teria sucesso em verificar
       // se a instância é isNull().
       $data = array(
-        'id' => $id,
-        'nome' => $valores['nome'][$i],
-        'descricao' => $valores['descricao'][$i],
-        'valorMinimo' => $valores['valor_minimo'][$i],
-        'valorMaximo' => $valores['valor_maximo'][$i]
+        'id'               => $id,
+        'nome'             => $valores['nome'][$i],
+        'descricao'        => $valores['descricao'][$i],
+        'valorMinimo'      => $valores['valor_minimo'][$i],
+        'valorMaximo'      => $valores['valor_maximo'][$i],
+        'acao'             => $valores['acao'][$i],
+        'casaDecimalExata' => $valores['casaDecimalExata'][$i]
       );
 
       // Se a instância já existir, use-a para garantir UPDATE
