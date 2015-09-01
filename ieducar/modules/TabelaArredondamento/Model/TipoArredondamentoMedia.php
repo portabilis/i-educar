@@ -51,8 +51,8 @@ class TabelaArredondamento_Model_TipoArredondamentoMedia extends CoreExt_Enum
 
   protected $_data = array(
     self::NAO_ARREDONDAR => 'N&atilde;o utilizar arredondamento para esta casa decimal',
-    self::ARREDONDAR_PARA_NOTA_INFERIOR => 'Arredondar para a nota imediatamente inferior',
-    self::ARREDONDAR_PARA_NOTA_SUPERIOR => 'Arredondar para a nota imediatamente superior',
+    self::ARREDONDAR_PARA_NOTA_INFERIOR => 'Arredondar para o n&uacute;mero inteiro imediatamente inferior',
+    self::ARREDONDAR_PARA_NOTA_SUPERIOR => 'Arredondar para o n&uacute;mero inteiro imediatamente superior',
     self::ARREDONDAR_PARA_NOTA_ESPECIFICA => 'Arredondar para a casa decimal espec&iacute;fica'
   );
 
