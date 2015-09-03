@@ -113,8 +113,12 @@ class EscolaController extends ApiCoreController
 
   protected function canGetEscolas(){
     return $this->validatesPresenceOf('instituicao_id') && $this->validatesPresenceOf('ano')
-             && $this->validatesPresenceOf('curso_id')  && $this->validatesPresenceOf('serie_id') 
+             && $this->validatesPresenceOf('curso_id')  && $this->validatesPresenceOf('serie_id')
              && $this->validatesPresenceOf('turma_turno_id');
+  }
+
+  protected function canGetEtapasPorEscola(){
+    return $this->validatesPresenceOf('instituicao_id') && $this->validatesPresenceOf('ano');
   }
 /*  protected function searchOptions() {
     $instituicaoId = $this->getRequest()->instituicao_id ? $this->getRequest()->instituicao_id : 0;
@@ -151,6 +155,38 @@ class EscolaController extends ApiCoreController
 
 
     return $sqls;
+  }
+
+  protected function getEtapasPorEscola(){
+    if ($this->canGetEtapasPorEscola()){
+      $ano = $this->getRequest()->ano;
+
+      $sql = 'SELECT ref_ref_cod_escola as escola_id, data_inicio, data_fim
+                FROM pmieducar.ano_letivo_modulo
+                WHERE ref_ano = $1
+                ORDER BY escola_id, sequencial';
+
+      $_etapas = $this->fetchPreparedQuery($sql, array($ano));
+
+      $attrs = array('escola_id', 'data_inicio', 'data_fim');
+      $_etapas = Portabilis_Array_Utils::filterSet($_etapas, $attrs);
+      $escolas = array();
+      $escolasEtapas = array();
+
+      foreach ($_etapas as $etapa) {
+        $escolasEtapas[$etapa['escola_id']]['escola_id'] = $etapa['escola_id'];
+        $escolasEtapas[$etapa['escola_id']]['etapas'][] = array(
+          'data_inicio' => $etapa['data_inicio'],
+          'data_fim' => $etapa['data_fim']
+        );
+      }
+
+      foreach ($escolasEtapas as $etapa) {
+        $escolas[] = $etapa;
+      }
+
+      return array('escolas' => $escolas);
+    }
   }
 
 
@@ -220,11 +256,11 @@ class EscolaController extends ApiCoreController
   function _getQtdAlunosFila($escolaId){
 
     $sql = 'SELECT count(1) as qtd
-              FROM pmieducar.matricula 
-              WHERE ano = $1 
-              AND ref_ref_cod_escola = $2 
-              AND ref_cod_curso = $3 
-              AND ref_ref_cod_serie = $4 
+              FROM pmieducar.matricula
+              WHERE ano = $1
+              AND ref_ref_cod_escola = $2
+              AND ref_cod_curso = $3
+              AND ref_ref_cod_serie = $4
               AND turno_pre_matricula = $5
               AND aprovado = 11 ';
 
@@ -249,20 +285,20 @@ class EscolaController extends ApiCoreController
               $bool_matricula_ativo = true, $bool_escola_andamento = true,
               $mes_matricula_inicial = FALSE, $get_serie_mult = FALSE,
               $int_ref_cod_serie_mult = NULL, $int_semestre = NULL,
-              $pegar_ano_em_andamento = FALSE, $parar=NULL, $diario = FALSE, 
+              $pegar_ano_em_andamento = FALSE, $parar=NULL, $diario = FALSE,
               $int_turma_turno_id = $this->getRequest()->turma_turno_id, $int_ano_turma = $this->getRequest()->ano))));
   }
   function _getMaxAlunoTurno($escolaId){
     $obj_t = new clsPmieducarTurma();
     $det_t = $obj_t->detalhe();
 
-    $lista_t = $obj_t->lista($int_cod_turma = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, 
-    $int_ref_ref_cod_serie = $this->getRequest()->serie_id, $int_ref_ref_cod_escola = $escolaId, $int_ref_cod_infra_predio_comodo = null, 
-    $str_nm_turma = null, $str_sgl_turma = null, $int_max_aluno = null, $int_multiseriada = null, $date_data_cadastro_ini = null, 
-    $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = 1, $int_ref_cod_turma_tipo = null, 
-    $time_hora_inicial_ini = null, $time_hora_inicial_fim = null, $time_hora_final_ini = null, $time_hora_final_fim = null, $time_hora_inicio_intervalo_ini = null, 
-    $time_hora_inicio_intervalo_fim = null, $time_hora_fim_intervalo_ini = null, $time_hora_fim_intervalo_fim = null, $int_ref_cod_curso = $this->getRequest()->curso_id, $int_ref_cod_instituicao = null, 
-    $int_ref_cod_regente = null, $int_ref_cod_instituicao_regente = null, $int_ref_ref_cod_escola_mult = null, $int_ref_ref_cod_serie_mult = null, $int_qtd_min_alunos_matriculados = null, 
+    $lista_t = $obj_t->lista($int_cod_turma = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null,
+    $int_ref_ref_cod_serie = $this->getRequest()->serie_id, $int_ref_ref_cod_escola = $escolaId, $int_ref_cod_infra_predio_comodo = null,
+    $str_nm_turma = null, $str_sgl_turma = null, $int_max_aluno = null, $int_multiseriada = null, $date_data_cadastro_ini = null,
+    $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = 1, $int_ref_cod_turma_tipo = null,
+    $time_hora_inicial_ini = null, $time_hora_inicial_fim = null, $time_hora_final_ini = null, $time_hora_final_fim = null, $time_hora_inicio_intervalo_ini = null,
+    $time_hora_inicio_intervalo_fim = null, $time_hora_fim_intervalo_ini = null, $time_hora_fim_intervalo_fim = null, $int_ref_cod_curso = $this->getRequest()->curso_id, $int_ref_cod_instituicao = null,
+    $int_ref_cod_regente = null, $int_ref_cod_instituicao_regente = null, $int_ref_ref_cod_escola_mult = null, $int_ref_ref_cod_serie_mult = null, $int_qtd_min_alunos_matriculados = null,
     $bool_verifica_serie_multiseriada = false, $bool_tem_alunos_aguardando_nota = null, $visivel = null, $turma_turno_id = $this->getRequest()->turma_turno_id, $tipo_boletim = null, $ano = $this->getRequest()->ano, $somenteAnoLetivoEmAndamento = FALSE);
 
     $max_aluno_turmas = 0;
@@ -337,6 +373,9 @@ protected function getInformacaoEscolas(){
 
     elseif ($this->isRequestFor('get', 'escolas'))
       $this->appendResponse($this->getEscolas());
+
+    elseif ($this->isRequestFor('get', 'etapas-por-escola'))
+      $this->appendResponse($this->getEtapasPorEscola());
 
   	elseif ($this->isRequestFor('get', 'info-escolas'))
   		$this->appendResponse($this->getInformacaoEscolas());
