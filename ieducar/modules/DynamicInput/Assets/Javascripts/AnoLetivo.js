@@ -7,6 +7,27 @@
     var handleGetAnoEscolares = function(response) {
       var selectOptions = jsonResourcesToSelectOptions(response['options']);
       updateSelect($anoLetivoField, selectOptions, "Selecione um ano escolar");
+
+$j('#ref_cod_curso').change(selecionaAno);
+
+
+
+
+            function selecionaAno(){
+var numeroElementos = $j('#ano').length;
+     var ultimoAno = $('#ano option').eq(numeroElementos).val();
+
+
+$j('#ano option').each(function(){
+    var $this = $(this); 
+
+    if ($this.val() == ultimoAno) { 
+        $this.prop('selected', true); 
+        return false; 
+    }
+});
+}
+
     }
 
     var updateAnoEscolares = function(){
