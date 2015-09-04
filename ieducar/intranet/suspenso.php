@@ -79,7 +79,7 @@
     <div id="error">
       <div class="content">
         <h1>Acesso suspenso</h1>
-        <p class="explanation">Desculpe-nos, o acesso ao sistema foi suspenso. Por favor, entre em contato com o responsável pelo sistema em sua entidade e tente novamente.</strong>
+        <p class="explanation">Desculpe, o sistema está temporariamente indisponível. Contate o responsável pelo sistema em seu município. Obrigado pela compreensão.</strong>
         </p>
       </div>
     </div>
