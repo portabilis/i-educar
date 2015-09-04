@@ -354,7 +354,7 @@ class indice extends clsDetalhe
         $this->array_botao_url_script[] = "enturmar({$this->ref_cod_matricula}, {$this->ref_cod_turma}, \"transferir\")";
       }
 
-      if ($habilita_enturmar){
+      if ($habilita_enturmar || !$this->possuiEnturmacao){
         //nova enturmação
         if (! $this->possuiEnturmacaoTurmaDestino && $canCreate) {
           $this->array_botao[]            = 'Enturmar na turma selecionada';
