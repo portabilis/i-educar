@@ -44,6 +44,10 @@ class RegraController extends ApiCoreController
       && $this->validatesPresenceOf('ano');
   }
 
+  protected function canGetRegrasRecuperacao() {
+    return $this->validatesPresenceOf('instituicao_id');
+  }
+
   protected function getTabelasDeArredondamento() {
     if($this->canGetTabelasDeArredondamento()){
       $instituicaoId = $this->getRequest()->instituicao_id;
@@ -79,13 +83,51 @@ class RegraController extends ApiCoreController
     }
   }
 
+  protected function getRegrasRecuperacao(){
+    if($this->canGetRegrasRecuperacao()){
+      $instituicaoId = $this->getRequest()->instituicao_id;
+
+      $sql = "SELECT
+                rar.id,
+                rar.regra_avaliacao_id,
+                rar.descricao,
+                rar.etapas_recuperadas,
+                rar.media,
+                rar.nota_maxima
+                FROM modules.regra_avaliacao_recuperacao rar
+                INNER JOIN modules.regra_avaliacao ra ON rar.regra_avaliacao_id = ra.id
+                WHERE ra.instituicao_id = $1
+                ";
+
+      $regrasRecuperacao = $this->fetchPreparedQuery($sql, array($instituicaoId));
+
+      $attrs = array('id', 'regra_avaliacao_id', 'descricao', 'etapas_recuperadas', 'media', 'nota_maxima');
+
+      $regrasRecuperacao = Portabilis_Array_Utils::filterSet($regrasRecuperacao, $attrs);
+
+      foreach ($regrasRecuperacao as &$regra) {
+        $regra['descricao'] = Portabilis_String_Utils::toUtf8($regra['descricao']);
+        $regra['etapas_recuperadas'] = explode(';', $regra['etapas_recuperadas']);
+      }
+
+      return array('regras-recuperacao' => $regrasRecuperacao);
+    }
+  }
+
   protected function getRegras() {
     if($this->canGetRegras()){
       $instituicaoId = $this->getRequest()->instituicao_id;
       $ano = $this->getRequest()->ano;
 
-      $sql = "SELECT *,
-                id, tabela_arredondamento_id, tipo_nota, tipo_presenca, parecer_descritivo, cod_turma as turma_id
+      $sql = "SELECT
+                id,
+                tabela_arredondamento_id,
+                tipo_nota,
+                tipo_presenca,
+                parecer_descritivo,
+                cod_turma as turma_id,
+                tipo_recuperacao_paralela AS tipo_recuperacao,
+                media_recuperacao_paralela
                 FROM modules.regra_avaliacao ra
                 LEFT JOIN pmieducar.serie s ON s.regra_avaliacao_id = ra.id
                 LEFT JOIN pmieducar.turma t ON t.ref_ref_cod_serie = s.cod_serie
@@ -96,7 +138,8 @@ class RegraController extends ApiCoreController
 
       $_regras = $this->fetchPreparedQuery($sql, array($instituicaoId, $ano));
 
-      $attrs = array('id', 'tabela_arredondamento_id', 'tipo_nota', 'tipo_presenca', 'parecer_descritivo', 'turma_id');
+      $attrs = array('id', 'tabela_arredondamento_id', 'tipo_nota', 'tipo_presenca', 'parecer_descritivo',
+                      'turma_id', 'tipo_recuperacao', 'media_recuperacao_paralela');
       $_regras = Portabilis_Array_Utils::filterSet($_regras, $attrs);
       $regras = array();
       $__regras = array();
@@ -107,6 +150,8 @@ class RegraController extends ApiCoreController
         $__regras[$regra['id']]['tipo_nota'] = $regra['tipo_nota'];
         $__regras[$regra['id']]['tipo_presenca'] = $regra['tipo_presenca'];
         $__regras[$regra['id']]['parecer_descritivo'] = $regra['parecer_descritivo'];
+        $__regras[$regra['id']]['tipo_recuperacao'] = $regra['tipo_recuperacao'];
+        $__regras[$regra['id']]['media_recuperacao_paralela'] = $regra['media_recuperacao_paralela'];
         $__regras[$regra['id']]['turmas'][] = array(
           'turma_id' => $regra['turma_id']
         );
@@ -125,6 +170,8 @@ class RegraController extends ApiCoreController
       $this->appendResponse($this->getTabelasDeArredondamento());
     elseif ($this->isRequestFor('get', 'regras'))
       $this->appendResponse($this->getRegras());
+    elseif ($this->isRequestFor('get', 'regras-recuperacao'))
+      $this->appendResponse($this->getRegrasRecuperacao());
     else
       $this->notImplementedOperationError();
   }
