@@ -14,8 +14,9 @@ $j('#ref_cod_curso').change(selecionaAno);
 
 
             function selecionaAno(){
-var numeroElementos = $j('#ano').length;
-     var ultimoAno = $('#ano option').eq(numeroElementos).val();
+var numeroElementos = $j('#ano option').length;
+posicaoElemento = numeroElementos - 1;
+     var ultimoAno = $('#ano option').eq(posicaoElemento).val();
 
 
 $j('#ano option').each(function(){
