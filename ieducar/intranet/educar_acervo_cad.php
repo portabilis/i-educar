@@ -632,7 +632,7 @@ fixupAutoresSize();
 
 $assuntos = $j('#assuntos');
 
-$assuntos.trigger('liszt:updated');
+$assuntos.trigger('chosen:updated');
 
 var handleGetAssuntos = function(dataResponse) {
 
@@ -641,7 +641,7 @@ var handleGetAssuntos = function(dataResponse) {
     $assuntos.children("[value=" + value + "]").attr('selected', '');
   });
 
-  $assuntos.trigger('liszt:updated');
+  $assuntos.trigger('chosen:updated');
 }
 
 var getAssuntos = function() {
@@ -669,7 +669,7 @@ getAssuntos();
 
 $autores = $j('#autores');
 
-$autores.trigger('liszt:updated');
+$autores.trigger('chosen:updated');
 var testezin;
 
 var handleGetAutores = function(dataResponse) {
@@ -680,7 +680,7 @@ var handleGetAutores = function(dataResponse) {
     $autores.children("[value=" + value + "]").attr('selected', '');
   });
 
-  $autores.trigger('liszt:updated');
+  $autores.trigger('chosen:updated');
 }
 
 var getAutores = function() {

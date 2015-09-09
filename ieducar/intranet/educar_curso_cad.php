@@ -693,7 +693,7 @@ function fixupEtapacursoSize(){
 
   $etapacurso = $j('#etapacurso');
 
-  $etapacurso.trigger('liszt:updated');
+  $etapacurso.trigger('chosen:updated');
   var testezin;
 
 var handleGetEtapacurso = function(dataResponse) {
@@ -704,7 +704,7 @@ var handleGetEtapacurso = function(dataResponse) {
     $etapacurso.children("[value=" + value + "]").attr('selected', '');
   });
 
-  $etapacurso.trigger('liszt:updated');
+  $etapacurso.trigger('chosen:updated');
 }
 
 var getEtapacurso = function() {

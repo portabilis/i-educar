@@ -10,7 +10,7 @@ $j(document).ready(function() {
 
   $componentecurricular = $j('#componentecurricular');
 
-  $componentecurricular.trigger('liszt:updated');
+  $componentecurricular.trigger('chosen:updated');
 
   var handleGetComponenteCurricular = function(dataResponse) {
     testezin = dataResponse['componentecurricular'];
@@ -20,7 +20,7 @@ $j(document).ready(function() {
       $componentecurricular.children("[value=" + value + "]").attr('selected', '');
     });
 
-    $componentecurricular.trigger('liszt:updated');
+    $componentecurricular.trigger('chosen:updated');
   }
 
   var getComponenteCurricular = function() {

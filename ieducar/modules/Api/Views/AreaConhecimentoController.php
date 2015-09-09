@@ -67,9 +67,37 @@ class AreaConhecimentoController extends ApiCoreController
     }
   }
 
+  protected function getAreasDeConhecimentoForEscolaSerie() {
+
+     $escolaId = $this->getRequest()->escola_id;
+     $serieId = $this->getRequest()->serie_id;
+
+     $sql    = 'SELECT ac.id as id,
+                       to_ascii(ac.nome) as nome
+                  from modules.area_conhecimento ac
+                 where ac.id in(select area_conhecimento.id 
+                                  from modules.area_conhecimento
+                                 inner join modules.componente_curricular cc on(cc.area_conhecimento_id = ac.id)
+                     inner join pmieducar.escola_serie_disciplina esd on(esd.ref_cod_disciplina = cc.id)
+                     where esd.ref_ref_cod_escola = $1
+                       and ref_ref_cod_serie = $2)
+                 order by to_ascii(lower(ac.nome)) ASC';
+
+
+    $paramsSql = array($escolaId, $serieId);
+    $areasConhecimento = $this->fetchPreparedQuery($sql, $paramsSql);
+    $options = array();
+    $options = Portabilis_Array_Utils::setAsIdValue($areasConhecimento, 'id', 'nome');
+
+    return array('options' => $options);
+
+  }
+
   public function Gerar() {
     if ($this->isRequestFor('get', 'areas-de-conhecimento'))
       $this->appendResponse($this->getAreasDeConhecimento());
+    elseif($this->isRequestFor('get', 'areaconhecimento-escolaserie'))
+      $this->appendResponse($this->getAreasDeConhecimentoForEscolaSerie());
     else
       $this->notImplementedOperationError();
   }
