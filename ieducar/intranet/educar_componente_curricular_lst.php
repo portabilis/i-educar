@@ -31,6 +31,7 @@ require_once ("include/clsListagem.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once( "include/modules/clsModulesComponenteCurricular.inc.php" );
 require_once( "modules/ComponenteCurricular/Model/TipoBase.php" );
+require_once( "modules/AreaConhecimento/Model/AreaDataMapper.php" );
 
 class clsIndexBase extends clsBase
 {
@@ -108,8 +109,8 @@ class indice extends clsListagem
 		include("include/pmieducar/educar_campo_lista.php");
 
 		// outros Filtros
-    $this->campoTexto( "nome", "Nome", $this->nome, 30, 255, false );
-		$this->campoTexto( "abreviatura", "Abreviatura", $this->abreviatura, 30, 255, false );
+    $this->campoTexto( "nome", "Nome", $this->nome, 41, 255, false );
+		$this->campoTexto( "abreviatura", "Abreviatura", $this->abreviatura, 41, 255, false );
 
     $tipos = ComponenteCurricular_Model_TipoBase::getInstance();
     $tipos = $tipos->getEnums();
@@ -119,10 +120,31 @@ class indice extends clsListagem
       'label'       => 'Base Curricular',
       'placeholder' => 'Base curricular',
       'value'       => $this->tipo_base,
-      'resources'   => $tipos
+      'resources'   => $tipos,
+      'required'    => false
     );
 
     $this->inputsHelper()->select('tipo_base', $options);
+
+    $objAreas = new AreaConhecimento_Model_AreaDataMapper();
+    $objAreas = $objAreas->findAll(array('id', 'nome'));
+    $areas = array();
+
+    foreach ($objAreas as $area) {
+      $areas[$area->id] = $area->nome;
+    }
+
+    $areas = Portabilis_Array_Utils::insertIn(null, 'Selecionar', $areas);
+
+    $options = array(
+      'label'       => 'Área de conhecimento',
+      'placeholder' => 'Área de conhecimento',
+      'value'       => $this->area_conhecimento_id,
+      'resources'   => $areas,
+      'required'    => false
+    );
+
+    $this->inputsHelper()->select('area_conhecimento_id', $options);
 
 
 		// Paginador
@@ -137,7 +159,8 @@ class indice extends clsListagem
         $this->ref_cod_instituicao,
         $this->nome,
         $this->abreaviatura,
-        $this->tipo_base
+        $this->tipo_base,
+        $this->area_conhecimento_id
       );
 
 		$total = $objCC->_total;
