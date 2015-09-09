@@ -47,10 +47,10 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchEscola extends Portabi
 
   protected function getOptions($resources) {
 
-    if (empty($resources)) {
-      $resources = Portabilis_Utils_Database::fetchPreparedQuery('SELECT cod_escola, nome FROM pmieducar.escola INNER JOIN cadastro.pessoa ON (ref_idpes = idpes) WHERE escola.ativo = 1');
-      $resources = Portabilis_Array_Utils::setAsIdValue($resources, 'cod_escola', 'nome');
-    }
+    // if (empty($resources)) {
+    //   $resources = Portabilis_Utils_Database::fetchPreparedQuery('SELECT cod_escola, nome FROM pmieducar.escola INNER JOIN cadastro.pessoa ON (ref_idpes = idpes) WHERE escola.ativo = 1');
+    //   $resources = Portabilis_Array_Utils::setAsIdValue($resources, 'cod_escola', 'nome');
+    // }
 
     return $this->insertOption(null, '', $resources);
   }
@@ -72,5 +72,12 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchEscola extends Portabi
                        $optionsVarName.placeholder = safeUtf8Decode('Selecione as escolas');";
 
     Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js, $afterReady = true);
+  }
+  protected function loadAssets() {
+    Portabilis_View_Helper_Application::loadChosenLib($this->viewInstance);
+    $jsFile = '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/MultipleSearch.js';
+    Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $jsFile);
+    $jsFile = '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/Resource/MultipleSearchEscola.js';
+    Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $jsFile);
   }
 }

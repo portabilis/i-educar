@@ -312,6 +312,7 @@ class EscolaController extends ApiCoreController
 
 protected function getInformacaoEscolas(){
 
+
   $sql = " SELECT escola.cod_escola as cod_escola,
 				  juridica.fantasia as nome,
 				  coalesce(endereco_pessoa.cep, endereco_externo.cep) as cep,
@@ -341,7 +342,7 @@ protected function getInformacaoEscolas(){
 		    where escola.ativo = 1
 		      and fone_pessoa.tipo = 1";
 
-  $escolas = $this->fetchPreparedQuery($sql);
+  $escolas = $this->fetchPreparedQuery($sql, array($cursoId));
 
   if(empty($escolas)){
   	$this->messenger->append("Desculpe, mas não existem escolas cadastradas");
@@ -359,6 +360,26 @@ protected function getInformacaoEscolas(){
   	$attrs = array('cod_escola', 'nome', 'cep', 'numero', 'complemento', 'logradouro', 'bairro', 'municipio', 'uf', 'pais', 'email', 'ddd', 'fone', 'nome_responsavel');
   	return array( 'escolas' => Portabilis_Array_Utils::filterSet($escolas, $attrs));
 	}
+}
+
+protected function getEscolasCurso(){
+  $cursoId = $this->getRequest()->curso_id;
+  if(is_numeric($cursoId)){
+    $sql = "SELECT cod_escola as id,
+                   to_ascii(pessoa.nome) as nome
+              from pmieducar.escola
+             inner join cadastro.pessoa on(escola.ref_idpes = pessoa.idpes)
+             inner join pmieducar.escola_curso on(escola.cod_escola = escola_curso.ref_cod_escola)
+             inner join pmieducar.curso on(escola_curso.ref_cod_curso = curso.cod_curso)
+            where escola.ativo = 1
+              and curso.ativo = 1
+              and escola_curso.ativo = 1
+              and curso.cod_curso = $1";
+    $escolas = $this->fetchPreparedQuery($sql, array($cursoId));
+    $escolas = Portabilis_Array_Utils::setAsIdValue($escolas, 'id', 'nome');
+  }
+
+  return array('options' => $escolas);
 }
 
   public function Gerar() {
@@ -379,6 +400,9 @@ protected function getInformacaoEscolas(){
 
   	elseif ($this->isRequestFor('get', 'info-escolas'))
   		$this->appendResponse($this->getInformacaoEscolas());
+
+    elseif ($this->isRequestFor('get', 'escolas-curso'))
+      $this->appendResponse($this->getEscolasCurso());
 
     else
       $this->notImplementedOperationError();
