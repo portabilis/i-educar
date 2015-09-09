@@ -244,7 +244,7 @@ resourceOptions.handleGet = function(dataResponse) {
     $beneficios.children("[value=" + id + "]").attr('selected', '');
   });
 
-  $beneficios.trigger('liszt:updated');
+  $beneficios.trigger('chosen:updated');
 
   $j.each(dataResponse.projetos, function(i, object){
     if(i > 0)
@@ -728,7 +728,7 @@ var handleGetPersonDetails = function(dataResponse) {
     $deficiencias.children("[value=" + id + "]").attr('selected', '');
   });
 
-  $deficiencias.trigger('liszt:updated');
+  $deficiencias.trigger('chosen:updated');
 
   $j('#tipo_responsavel').find('option').remove().end();
   if ( $j('#pai').val()=='' && $j('#mae').val()==''){
@@ -974,7 +974,7 @@ function canShowParentsFields(){
     // laudo médico
     $j('#laudo_medico').on('change', prepareUpload);
 
-    $j('#deficiencias').trigger('liszt:updated');
+    $j('#deficiencias').trigger('chosen:updated');
 
     function prepareUpload(event)
     {

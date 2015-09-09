@@ -45,10 +45,6 @@ class AreaConhecimentoController extends ApiCoreController{
      return array('namespace' => 'modules', 'table' => 'area_conhecimento', 'labelAttr' => 'nome', 'idAttr' => 'id');
    }
 
-  // protected function search(){
-  //   return $this->getAreasConhecimento();
-  // }
-
   public function Gerar() {
     if ($this->isRequestFor('get', 'area_conhecimento'))
       $this->appendResponse($this->getAreasConhecimento());

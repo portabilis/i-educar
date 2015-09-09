@@ -103,7 +103,7 @@
             }
           });
           if (nbItems) {
-            select.trigger("liszt:updated");
+            select.trigger("chosen:updated");
           } else {
             select.data().chosen.no_results_clear();
             select.data().chosen.no_results(field.attr('value'));

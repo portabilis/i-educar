@@ -46,11 +46,6 @@ require_once 'lib/Portabilis/String/Utils.php';
 class Portabilis_View_Helper_Input_Resource_MultipleSearchAreasConhecimento extends Portabilis_View_Helper_Input_MultipleSearch {
 
   protected function getOptions($resources) {
-    if (empty($resources)) {
-      $resources = Portabilis_Utils_Database::fetchPreparedQuery('SELECT * FROM modules.area_conhecimento');
-      $resources = Portabilis_Array_Utils::setAsIdValue($resources, 'id', 'nome');
-    }
-
     return $this->insertOption(null, '', $resources);
   }
 
@@ -75,12 +70,11 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchAreasConhecimento exte
 
     Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js, $afterReady = true);
   }
+  protected function loadAssets() {
+    Portabilis_View_Helper_Application::loadChosenLib($this->viewInstance);
+    $jsFile = '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/MultipleSearch.js';
+    Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $jsFile);
+    $jsFile = '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/Resource/MultipleSearchAreaconhecimento.js';
+    Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $jsFile);
+  }
 }
-/*echo "<script>
-      $j(function(){
-        
-      });
-  
-
-
-</script>";*/

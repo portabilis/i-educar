@@ -1394,14 +1394,14 @@ var handleGetInformacoesServidor = function(dataResponse){
     $deficiencias.children("[value=" + id + "]").attr('selected', '');
   });
 
-  $deficiencias.trigger('liszt:updated');  
+  $deficiencias.trigger('chosen:updated');  
 };
 
 function atualizaInformacoesServidor(){
 
   $j('#deficiencias').closest('tr').hide();
   $j('#deficiencias option').removeAttr('selected');
-  $j('#deficiencias').trigger('liszt:updated');
+  $j('#deficiencias').trigger('chosen:updated');
   $j('#cod_docente_inep').closest('tr').hide();
 
   var servidor_id = $j('#cod_servidor').val();
