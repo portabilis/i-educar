@@ -96,7 +96,7 @@ class EditController extends Core_Controller_Page_EditController
 
   protected function _preRender()
   {
-    parent::_preRender();    
+    parent::_preRender();
 
     Portabilis_View_Helper_Application::loadStylesheet($this, 'intranet/styles/localizacaoSistema.css');
 
@@ -105,10 +105,10 @@ class EditController extends Core_Controller_Page_EditController
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_index.php"                  => "i-Educar - Escola",
-         ""        => "$nomeMenu componente curricular"             
+         ""        => "$nomeMenu componente curricular"
     ));
-    $this->enviaLocalizacao($localizacao->montar());    
-  }  
+    $this->enviaLocalizacao($localizacao->montar());
+  }
 
   /**
    * @see clsCadastro#Gerar()
@@ -146,7 +146,7 @@ class EditController extends Core_Controller_Page_EditController
     $codigos = ComponenteCurricular_Model_CodigoEducacenso::getInstance();
     $this->campoLista('codigo_educacenso', $this->_getLabel('codigo_educacenso'),
       $codigos->getEnums(), $this->getEntity()->get('codigo_educacenso'));
-  
+
     // Ordenamento
     $this-> campoNumero('ordenamento',
                         $this->_getLabel('ordenamento'),
@@ -157,22 +157,36 @@ class EditController extends Core_Controller_Page_EditController
                         $this->_getHelp('ordenamento'));
   }
 
+  /**
+   * OVERRIDE
+   * Insere um novo registro no banco de dados e redireciona para a página
+   * definida pela opção "new_success".
+   * @see clsCadastro#Novo()
+   */
+  public function Novo()
+  {
+    if ($this->_save()) {
+      header("Location: /intranet/educar_componente_curricular_lst.php");
+    }
+    return FALSE;
+  }
+
   protected function _save(){
     $data = array();
 
     foreach ($_POST as $key => $val) {
       if (array_key_exists($key, $this->_formMap)) {
-        
+
         if($key == "ordenamento"){
-          
+
           if((trim($val) == "") || (is_null($val))) {
             $data[$key] = 99999;
             continue;
           }
         }
-        
+
         $data[$key] = $val;
-      }  
+      }
     }
 
 
