@@ -342,7 +342,7 @@ protected function getInformacaoEscolas(){
 		    where escola.ativo = 1
 		      and fone_pessoa.tipo = 1";
 
-  $escolas = $this->fetchPreparedQuery($sql, array($cursoId));
+  $escolas = $this->fetchPreparedQuery($sql);
 
   if(empty($escolas)){
   	$this->messenger->append("Desculpe, mas não existem escolas cadastradas");
