@@ -1,105 +1,46 @@
 --
--- @author   Caroline Salib Canto <caroline@portabilis.com.br>
+-- @author   Gabriel Matos de Souza <gabriel@portabilis.com.br>
 -- @license  @@license@@
 -- @version  $Id$
- -- Cria função que retorna o nome do módulo da turma enviada por parâmetro
+ -- Aumenta tamanho do campo UF em municipio
 
-CREATE OR REPLACE FUNCTION relatorio.get_nome_modulo(integer) RETURNS character varying AS $BODY$
-SELECT MIN(modulo.nm_tipo)
-FROM pmieducar.turma
-INNER JOIN pmieducar.curso ON (curso.cod_curso = turma.ref_cod_curso)
-LEFT JOIN pmieducar.ano_letivo_modulo ON (ano_letivo_modulo.ref_ano = turma.ano
-                                          AND ano_letivo_modulo.ref_ref_cod_escola = turma.ref_ref_cod_escola
-                                          AND curso.padrao_ano_escolar = 1)
-LEFT JOIN pmieducar.turma_modulo ON (turma_modulo.ref_cod_turma = turma.cod_turma
-                                     AND curso.padrao_ano_escolar = 0)
-INNER JOIN pmieducar.modulo ON (CASE
-                                    WHEN curso.padrao_ano_escolar = 1 THEN modulo.cod_modulo = ano_letivo_modulo.ref_cod_modulo
-                                    ELSE modulo.cod_modulo = turma_modulo.ref_cod_modulo
-                                END)
-WHERE turma.cod_turma = $1;$BODY$ LANGUAGE SQL VOLATILE;
+DROP VIEW cadastro.v_endereco;
 
+ALTER TABLE  public.municipio ALTER COLUMN sigla_uf TYPE varchar(3);
 
-ALTER FUNCTION relatorio.get_nome_modulo(integer) OWNER TO ieducar;
-
- -- Cria uma view para obter os módulos da turma ou ano letivo de forma organizada
-
-CREATE OR REPLACE VIEW relatorio.view_modulo AS
-SELECT turma.cod_turma,
-       modulo.cod_modulo,
-       modulo.nm_tipo AS nome,
-       (CASE
-            WHEN curso.padrao_ano_escolar = 1 THEN ano_letivo_modulo.sequencial
-            ELSE turma_modulo.sequencial
-        END) AS sequencial
-FROM pmieducar.turma
-INNER JOIN pmieducar.curso ON (curso.cod_curso = turma.ref_cod_curso)
-LEFT JOIN pmieducar.ano_letivo_modulo ON (ano_letivo_modulo.ref_ano = turma.ano
-                                          AND ano_letivo_modulo.ref_ref_cod_escola = turma.ref_ref_cod_escola
-                                          AND curso.padrao_ano_escolar = 1)
-LEFT JOIN pmieducar.turma_modulo ON (turma_modulo.ref_cod_turma = turma.cod_turma
-                                     AND curso.padrao_ano_escolar = 0)
-INNER JOIN pmieducar.modulo ON (CASE
-                                    WHEN curso.padrao_ano_escolar = 1 THEN modulo.cod_modulo = ano_letivo_modulo.ref_cod_modulo
-                                    ELSE modulo.cod_modulo = turma_modulo.ref_cod_modulo
-                                END);
-
-
-ALTER TABLE relatorio.view_modulo OWNER TO ieducar;
-
- -- Cria uma view para obter os componentes curriculares da turma corretamente
-
-CREATE OR REPLACE VIEW relatorio.view_modulo AS
-SELECT DISTINCT turma.cod_turma,
-       modulo_curso.cod_modulo AS cod_modulo_curso,
-       modulo_turma.cod_modulo AS cod_modulo_turma,
-       (CASE WHEN curso.padrao_ano_escolar = 0 AND modulo_turma.cod_modulo is not null
-        THEN modulo_turma.nm_tipo ELSE modulo_curso.nm_tipo END) AS nome,
-       (CASE WHEN curso.padrao_ano_escolar = 0 AND modulo_turma.cod_modulo is not null
-        THEN turma_modulo.sequencial ELSE ano_letivo_modulo.sequencial END) AS sequencial
-FROM pmieducar.turma
-INNER JOIN pmieducar.curso ON (curso.cod_curso = turma.ref_cod_curso)
- LEFT JOIN pmieducar.ano_letivo_modulo ON (ano_letivo_modulo.ref_ano = turma.ano
-                                          AND ano_letivo_modulo.ref_ref_cod_escola = turma.ref_ref_cod_escola)
- LEFT JOIN pmieducar.turma_modulo ON (turma_modulo.ref_cod_turma = turma.cod_turma)
- LEFT JOIN pmieducar.modulo modulo_curso ON (modulo_curso.cod_modulo = ano_letivo_modulo.ref_cod_modulo)
- LEFT JOIN pmieducar.modulo modulo_turma ON (modulo_turma.cod_modulo = turma_modulo.ref_cod_modulo);
-ALTER TABLE relatorio.view_modulo OWNER TO ieducar;
-
- -- Cria função que retorna a nota do exame
-
-CREATE OR REPLACE FUNCTION relatorio.get_nota_exame(integer, integer) RETURNS character varying AS $BODY$
-  (SELECT CASE WHEN nota_componente_curricular.nota_arredondada = 10 THEN '10,0' WHEN char_length(nota_componente_curricular.nota_arredondada) = 1 THEN replace(nota_componente_curricular.nota_arredondada,'.',',') || ',0' ELSE replace(nota_componente_curricular.nota_arredondada,'.',',') END
-   FROM modules.nota_componente_curricular, modules.nota_aluno
-   WHERE nota_componente_curricular.componente_curricular_id = $1
-     AND nota_componente_curricular.etapa = 'Rc'
-     AND nota_aluno.id = nota_componente_curricular.nota_aluno_id
-     AND nota_aluno.matricula_id = $2); $BODY$ LANGUAGE SQL VOLATILE;
-
-
-ALTER FUNCTION relatorio.get_nota_exame(integer, integer) OWNER TO ieducar;
-
--- Permissões de acesso para as views
-
-GRANT ALL PRIVILEGES ON TABLE turma TO ieducar;
-GRANT ALL PRIVILEGES ON TABLE curso TO ieducar;
-GRANT ALL PRIVILEGES ON TABLE ano_letivo_modulo TO ieducar;
-GRANT ALL PRIVILEGES ON TABLE turma_modulo TO ieducar;
-GRANT ALL PRIVILEGES ON TABLE modulo TO ieducar;
-GRANT ALL PRIVILEGES ON TABLE escola_serie_disciplina TO ieducar;
-GRANT ALL PRIVILEGES ON TABLE componente_curricular TO ieducar;
-GRANT ALL PRIVILEGES ON TABLE componente_curricular_turma TO ieducar;
+CREATE OR REPLACE VIEW cadastro.v_endereco AS
+  SELECT
+    e.idpes, e.cep, e.idlog, e.numero, e.letra, e.complemento, e.idbai, e.bloco, e.andar, e.apartamento, l.nome AS logradouro, l.idtlog, b.nome AS bairro, m.nome AS cidade, m.sigla_uf, b.zona_localizacao
+  FROM
+    endereco_pessoa e, logradouro l, bairro b, municipio m
+  WHERE
+    e.idlog = l.idlog AND e.idbai = b.idbai AND b.idmun = m.idmun AND e.tipo = 1::numeric
+  UNION
+  SELECT
+    e.idpes, e.cep, NULL::"unknown" AS idlog, e.numero, e.letra, e.complemento, NULL::"unknown" AS idbai, e.bloco, e.andar, e.apartamento, e.logradouro, e.idtlog, e.bairro, e.cidade, e.sigla_uf, e.zona_localizacao
+  FROM
+    endereco_externo e
+  WHERE
+    e.tipo = 1::numeric;
 
  -- undo
 
-DROP FUNCTION relatorio.get_nome_modulo(integer);
+DROP VIEW cadastro.v_endereco;
 
+ALTER TABLE  public.municipio ALTER COLUMN sigla_uf TYPE varchar(2);
 
-DROP FUNCTION relatorio.get_nota_exame(integer, integer);
-
-
-DROP VIEW relatorio.view_modulo;
-
-
-DROP VIEW relatorio.view_componente_curricular;
+CREATE OR REPLACE VIEW cadastro.v_endereco AS
+  SELECT
+    e.idpes, e.cep, e.idlog, e.numero, e.letra, e.complemento, e.idbai, e.bloco, e.andar, e.apartamento, l.nome AS logradouro, l.idtlog, b.nome AS bairro, m.nome AS cidade, m.sigla_uf, b.zona_localizacao
+  FROM
+    endereco_pessoa e, logradouro l, bairro b, municipio m
+  WHERE
+    e.idlog = l.idlog AND e.idbai = b.idbai AND b.idmun = m.idmun AND e.tipo = 1::numeric
+  UNION
+  SELECT
+    e.idpes, e.cep, NULL::"unknown" AS idlog, e.numero, e.letra, e.complemento, NULL::"unknown" AS idbai, e.bloco, e.andar, e.apartamento, e.logradouro, e.idtlog, e.bairro, e.cidade, e.sigla_uf, e.zona_localizacao
+  FROM
+    endereco_externo e
+  WHERE
+    e.tipo = 1::numeric;
 
