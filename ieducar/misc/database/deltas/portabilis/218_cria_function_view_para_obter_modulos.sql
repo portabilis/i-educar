@@ -24,47 +24,51 @@ ALTER FUNCTION relatorio.get_nome_modulo(integer) OWNER TO ieducar;
 
  -- Cria uma view para obter os módulos da turma ou ano letivo de forma organizada
 
-CREATE OR REPLACE VIEW relatorio.view_modulo AS
-SELECT turma.cod_turma,
-       modulo.cod_modulo,
-       modulo.nm_tipo AS nome,
-       (CASE
-            WHEN curso.padrao_ano_escolar = 1 THEN ano_letivo_modulo.sequencial
-            ELSE turma_modulo.sequencial
-        END) AS sequencial
-FROM pmieducar.turma
-INNER JOIN pmieducar.curso ON (curso.cod_curso = turma.ref_cod_curso)
-LEFT JOIN pmieducar.ano_letivo_modulo ON (ano_letivo_modulo.ref_ano = turma.ano
-                                          AND ano_letivo_modulo.ref_ref_cod_escola = turma.ref_ref_cod_escola
-                                          AND curso.padrao_ano_escolar = 1)
-LEFT JOIN pmieducar.turma_modulo ON (turma_modulo.ref_cod_turma = turma.cod_turma
-                                     AND curso.padrao_ano_escolar = 0)
-INNER JOIN pmieducar.modulo ON (CASE
-                                    WHEN curso.padrao_ano_escolar = 1 THEN modulo.cod_modulo = ano_letivo_modulo.ref_cod_modulo
-                                    ELSE modulo.cod_modulo = turma_modulo.ref_cod_modulo
-                                END);
+CREATE OR REPLACE VIEW relatorio.view_modulo AS 
+ SELECT DISTINCT turma.cod_turma, modulo_curso.cod_modulo AS cod_modulo_curso, modulo_turma.cod_modulo AS cod_modulo_turma, 
+        CASE
+            WHEN curso.padrao_ano_escolar = 0 AND modulo_turma.cod_modulo IS NOT NULL THEN modulo_turma.nm_tipo
+            ELSE modulo_curso.nm_tipo
+        END AS nome, 
+        CASE
+            WHEN curso.padrao_ano_escolar = 0 AND modulo_turma.cod_modulo IS NOT NULL THEN turma_modulo.sequencial
+            ELSE ano_letivo_modulo.sequencial
+        END AS sequencial
+   FROM pmieducar.turma
+   JOIN pmieducar.curso ON curso.cod_curso = turma.ref_cod_curso
+   LEFT JOIN pmieducar.ano_letivo_modulo ON ano_letivo_modulo.ref_ano = turma.ano AND ano_letivo_modulo.ref_ref_cod_escola = turma.ref_ref_cod_escola
+   LEFT JOIN pmieducar.turma_modulo ON turma_modulo.ref_cod_turma = turma.cod_turma
+   LEFT JOIN pmieducar.modulo modulo_curso ON modulo_curso.cod_modulo = ano_letivo_modulo.ref_cod_modulo
+   LEFT JOIN pmieducar.modulo modulo_turma ON modulo_turma.cod_modulo = turma_modulo.ref_cod_modulo
+  ORDER BY turma.cod_turma, modulo_curso.cod_modulo, modulo_turma.cod_modulo, 
+CASE
+    WHEN curso.padrao_ano_escolar = 0 AND modulo_turma.cod_modulo IS NOT NULL THEN modulo_turma.nm_tipo
+    ELSE modulo_curso.nm_tipo
+END, 
+CASE
+    WHEN curso.padrao_ano_escolar = 0 AND modulo_turma.cod_modulo IS NOT NULL THEN turma_modulo.sequencial
+    ELSE ano_letivo_modulo.sequencial
+END;
 
-
-ALTER TABLE relatorio.view_modulo OWNER TO ieducar;
+ALTER TABLE relatorio.view_modulo
+  OWNER TO ieducar;
 
  -- Cria uma view para obter os componentes curriculares da turma corretamente
 
-CREATE OR REPLACE VIEW relatorio.view_modulo AS
-SELECT DISTINCT turma.cod_turma,
-       modulo_curso.cod_modulo AS cod_modulo_curso,
-       modulo_turma.cod_modulo AS cod_modulo_turma,
-       (CASE WHEN curso.padrao_ano_escolar = 0 AND modulo_turma.cod_modulo is not null
-        THEN modulo_turma.nm_tipo ELSE modulo_curso.nm_tipo END) AS nome,
-       (CASE WHEN curso.padrao_ano_escolar = 0 AND modulo_turma.cod_modulo is not null
-        THEN turma_modulo.sequencial ELSE ano_letivo_modulo.sequencial END) AS sequencial
-FROM pmieducar.turma
-INNER JOIN pmieducar.curso ON (curso.cod_curso = turma.ref_cod_curso)
- LEFT JOIN pmieducar.ano_letivo_modulo ON (ano_letivo_modulo.ref_ano = turma.ano
-                                          AND ano_letivo_modulo.ref_ref_cod_escola = turma.ref_ref_cod_escola)
- LEFT JOIN pmieducar.turma_modulo ON (turma_modulo.ref_cod_turma = turma.cod_turma)
- LEFT JOIN pmieducar.modulo modulo_curso ON (modulo_curso.cod_modulo = ano_letivo_modulo.ref_cod_modulo)
- LEFT JOIN pmieducar.modulo modulo_turma ON (modulo_turma.cod_modulo = turma_modulo.ref_cod_modulo);
-ALTER TABLE relatorio.view_modulo OWNER TO ieducar;
+CREATE OR REPLACE VIEW relatorio.view_componente_curricular AS 
+ SELECT escola_serie_disciplina.ref_cod_disciplina AS id, turma.cod_turma, componente_curricular.nome, componente_curricular.abreviatura
+   FROM pmieducar.turma
+   JOIN pmieducar.escola_serie_disciplina ON escola_serie_disciplina.ref_ref_cod_serie = turma.ref_ref_cod_serie AND escola_serie_disciplina.ref_ref_cod_escola = turma.ref_ref_cod_escola
+   JOIN modules.componente_curricular ON componente_curricular.id = escola_serie_disciplina.ref_cod_disciplina AND (( SELECT count(cct.componente_curricular_id) AS count
+   FROM modules.componente_curricular_turma cct
+  WHERE cct.turma_id = turma.cod_turma)) = 0
+UNION ALL 
+ SELECT componente_curricular_turma.componente_curricular_id AS id, componente_curricular_turma.turma_id AS cod_turma, componente_curricular.nome, componente_curricular.abreviatura
+   FROM modules.componente_curricular_turma
+   JOIN modules.componente_curricular ON componente_curricular.id = componente_curricular_turma.componente_curricular_id;
+
+ALTER TABLE relatorio.view_componente_curricular
+  OWNER TO ieducar;
 
  -- Cria função que retorna a nota do exame
 
