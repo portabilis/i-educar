@@ -123,7 +123,7 @@ class indice extends clsListagem
 		{
 			$objTemp = new clsPmieducarTipoUsuario();
 			$objTemp->setOrderby('nm_tipo ASC');
-			$lista = $objTemp->lista();
+			$lista = $objTemp->lista(null,null,null,null,null,null,null,null,1);
 			if ( is_array( $lista ) && count( $lista ) )
 			{
 				foreach ( $lista as $registro )
