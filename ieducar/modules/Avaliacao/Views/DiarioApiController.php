@@ -525,7 +525,7 @@ class DiarioApiController extends ApiCoreController
     $this->appendResponse('situacao',     $this->getSituacaoMatricula());
     $this->appendResponse('nota_necessaria_exame', $notaNecessariaExame = $this->getNotaNecessariaExame($this->getRequest()->componente_curricular_id));
 
-    if (!empty($notaNecessariaExame) && $this->getSituacaoMatricula()=='Em Exame')
+    if (!empty($notaNecessariaExame) && in_array($this->getSituacaoMatricula(), array('Em Exame', 'Aprovado Após Exame', 'Retido')))
       $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $notaNecessariaExame);
     else
       $this->deleteNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id);
@@ -572,7 +572,7 @@ class DiarioApiController extends ApiCoreController
     $this->appendResponse('nota_necessaria_exame', $notaNecessariaExame = $this->getNotaNecessariaExame($this->getRequest()->componente_curricular_id));
     $this->appendResponse('nota_nova', ($notaNova > $notaOriginal ? $notaNova : null));
 
-    if (!empty($notaNecessariaExame) && $this->getSituacaoMatricula()=='Em Exame')
+    if (!empty($notaNecessariaExame) && in_array($this->getSituacaoMatricula(), array('Em Exame', 'Aprovado Após Exame', 'Retido')))
       $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $notaNecessariaExame);
     else
       $this->deleteNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id);
@@ -604,7 +604,7 @@ class DiarioApiController extends ApiCoreController
     $this->appendResponse('situacao',     $this->getSituacaoMatricula());
     $this->appendResponse('nota_necessaria_exame', $notaNecessariaExame = $this->getNotaNecessariaExame($this->getRequest()->componente_curricular_id));
 
-    if (!empty($notaNecessariaExame) && $this->getSituacaoMatricula()=='Em Exame')
+    if (!empty($notaNecessariaExame) && in_array($this->getSituacaoMatricula(), array('Em Exame', 'Aprovado Após Exame', 'Retido')))
       $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $notaNecessariaExame);
     else
       $this->deleteNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id);
