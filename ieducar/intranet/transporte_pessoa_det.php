@@ -110,7 +110,7 @@ class indice extends clsDetalhe
     }else if($registro['turno'] == 0){
       $nm_turno = "";
     }
-    $this->addDetalhe( array("turno", $nm_turno) );
+    $this->addDetalhe( array("Turno", $nm_turno) );
     $obj_permissao = new clsPermissoes();
 
     if($obj_permissao->permissao_cadastra(21240, $this->pessoa_logada,7,null,true))
