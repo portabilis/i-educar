@@ -99,7 +99,8 @@ resourceOptions.handleGet = function(dataResponse) {
   $j('#rota').val(dataResponse.rota);
   chamaGetPonto();
 
-  $j('#observacao').val(dataResponse.observacao);  
+  $j('#observacao').val(dataResponse.observacao);
+  $j('#turno').val(dataResponse.turno);  
 
   $j('#nome').val(dataResponse.pessoa+' - '+dataResponse.pessoa_nome);  
   $j('#pessoa_id').val(dataResponse.pessoa);  

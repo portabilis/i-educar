@@ -70,6 +70,10 @@ class PessoatransporteController extends Portabilis_Controller_Page_EditControll
     'observacao' => array(
       'label'  => 'Observações',
       'help'   => '',
+    ),         
+    'turno' => array(
+      'label'  => 'Turno',
+      'help'   => '',
     ),      
   );
 
@@ -135,7 +139,12 @@ class PessoatransporteController extends Portabilis_Controller_Page_EditControll
 
     // observacoes
     $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('observacao')), 'required' => false, 'size' => 50, 'max_length' => 255);
-    $this->inputsHelper()->textArea('observacao', $options);
+    $this->inputsHelper()->textArea('observacao', $options);     
+
+ // turno
+    $options = array('label' =>Portabilis_String_Utils::toLatin1($this->_getLabel('turno')), 'required' => false);
+    $this->inputsHelper()->select('turno', array('required' => false, 'resources' => array( 0 => "Selecione", 1 => 'Matutino', 2 => 'Vespertino', 3 => 'Noturno')));
+
 
 
     $this->loadResourceAssets($this->getDispatcher());

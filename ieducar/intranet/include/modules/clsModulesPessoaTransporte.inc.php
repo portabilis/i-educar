@@ -47,6 +47,7 @@ class clsModulesPessoaTransporte
   var $ref_cod_ponto_transporte_escolar;
   var $ref_idpes_destino;
   var $observacao;
+  var $turno;
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
    * @var int
@@ -102,14 +103,14 @@ class clsModulesPessoaTransporte
    */
   function clsModulesPessoaTransporte( $cod_pessoa_transporte = NULL, $ref_cod_rota_transporte_escolar = NULL,
   $ref_idpes = null ,$ref_cod_ponto_transporte_escolar = NULL, $ref_idpes_destino = NULL,
-   $observacao = NULL)
+   $observacao = NULL, $turno = NULL)
   {
     $db = new clsBanco();
     $this->_schema = "modules.";
     $this->_tabela = "{$this->_schema}pessoa_transporte";
 
     $this->_campos_lista = $this->_todos_campos = "cod_pessoa_transporte, ref_cod_rota_transporte_escolar,
-                                                  ref_idpes, ref_cod_ponto_transporte_escolar, ref_idpes_destino, observacao"; 
+                                                  ref_idpes, ref_cod_ponto_transporte_escolar, ref_idpes_destino, observacao, turno"; 
 
     if (is_numeric($cod_pessoa_transporte)) {
       $this->cod_pessoa_transporte = $cod_pessoa_transporte;
@@ -133,6 +134,10 @@ class clsModulesPessoaTransporte
 
     if (is_string($observacao)) {
       $this->observacao = $observacao;
+    }
+
+    if (is_numeric($turno)) {
+      $this->turno = $turno;
     }
 
   }
@@ -188,6 +193,12 @@ class clsModulesPessoaTransporte
         $gruda = ", ";
     }
 
+    if (is_numeric($this->turno)) {
+        $campos .= "{$gruda}turno";
+        $valores .= "{$gruda}'{$this->turno}'";
+        $gruda = ", ";
+    }
+
     $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
     return $db->InsertId("{$this->_tabela}_seq");
     }
@@ -235,6 +246,11 @@ class clsModulesPessoaTransporte
 
     if (is_string($this->observacao)) {
         $set .= "{$gruda}observacao = '{$this->observacao}'";
+        $gruda = ", ";
+    }
+
+    if (is_numeric($this->turno)) {
+        $set .= "{$gruda}turno = '{$this->turno}'";
         $gruda = ", ";
     }
 
