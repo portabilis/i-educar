@@ -79,6 +79,7 @@ class EnderecoController extends ApiCoreController
 
   protected function deleteEndereco() {
     $cep      = idFederal2int($this->getRequest()->cep);
+    $cep      = $cep == '' ? 0 : $cep;
     $idBairro = $this->getRequest()->id_bairro;
     $idLog    = $this->getRequest()->id_log;
 
@@ -98,7 +99,7 @@ class EnderecoController extends ApiCoreController
     }
 
     $sql = "DELETE FROM urbano.cep_logradouro_bairro
-             WHERE cep_logradouro_bairro.cep = $1
+             WHERE cep_logradouro_bairro.cep = '$1'
                AND cep_logradouro_bairro.idbai = $2
                AND cep_logradouro_bairro.idlog = $3;";
 
