@@ -143,7 +143,7 @@ class indice extends clsDetalhe
 		if($obj_permissao->permissao_cadastra(758, $this->pessoa_logada,7,null,true))
 	    {
       		$this->url_novo = "urbano_cep_logradouro_cad.php";
-			$this->url_editar = "urbano_cep_logradouro_cad.php?cep={$registro["cep"]}&idlog={$registro["idlog"]}";
+			$this->url_editar = "urbano_cep_logradouro_cad.php?idlog={$registro["idlog"]}";
 	    }		
 		$this->url_cancelar = "urbano_cep_logradouro_lst.php";
 		$this->largura = "100%";
