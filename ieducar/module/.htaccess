@@ -1,0 +1,26 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  RewriteBase /module/
+
+  RewriteCond %{SCRIPT_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} -d [OR]
+  RewriteCond %{REQUEST_FILENAME} -s [OR]
+  RewriteCond %{REQUEST_FILENAME} -f
+
+  # Se for um arquivo e o tamanho for maior que zero, faz nada
+  RewriteRule ^.*$ - [L]
+  RewriteRule ^(.*)/(imagens|scripts|styles)/(.*)$ /intranet/$2/$3 [NC,L]
+
+  RewriteRule ^(.*/)(.*intranet/.*)$ /$2 [NC,L,R=301]
+  RewriteRule ^(.*/)(.*index\.php)$ /$2 [NC,L,R=301]
+  RewriteRule ^(.*/)(.*logof\.php)$ /intranet/logof\.php [NC,L,R=301]
+  RewriteRule ^(.*/)(.*meusdados\.php)$ /intranet/meusdados\.php [NC,L,R=301]
+  RewriteRule ^(.*/)(.*_xml.*)(\.php)$  /intranet/$2.php [NC,L,R=301]
+  RewriteRule ^(.*/)(.*erro_banco\.php)$ /intranet/erro_banco\.php [NC,L,R=301]
+
+  RewriteRule ^(.*/)(.*educar_pesquisa_cliente_lst\.php)$ /intranet/educar_pesquisa_cliente_lst\.php [NC,L,R=301]
+  RewriteRule ^(.*/)(.*educar_pesquisa_obra_lst\.php)$ /intranet/educar_pesquisa_obra_lst\.php [NC,L,R=301]
+
+  RewriteRule ^.*$ index.php [NC,L]
+</IfModule>

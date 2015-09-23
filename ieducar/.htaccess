@@ -1,0 +1,102 @@
+# $Id$
+
+#
+# i-Educar - Sistema de gestão escolar
+#
+# Copyright (C) 2006  Prefeitura Municipal de Itajaí
+#                     <ctima@itajai.sc.gov.br>
+#
+# Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+# sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+# Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+# qualquer versão posterior.
+#
+# Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+# NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+# ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+# do GNU para mais detalhes.
+#
+# Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+# com este programa; se não, escreva para a Free Software Foundation, Inc., no
+# endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+#
+
+#
+# Esse arquivo tem por finalidade configurar o ambiente Apache/PHP/i-Educar,
+# aplicando algumas restrições de acesso para maior segurança. As
+# configurações do php.ini são sobrescritas com os valores mínimos necessários
+# para o bom funcionamento do i-Educar.
+#
+# Para uma melhor performance, é aconselhado colocar o conteúdo desse arquivo
+# em um virtual host ou no apache.conf e, logo após, configurar a diretiva
+# AllowOverride do respectivo arquivo para None.
+#
+# Esse arquivo foi baseado no .htaccess distribuído com o Drupal CMS.
+#
+# @author   Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+# @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+# @link     http://cvs.drupal.org/viewvc.py/drupal/drupal/.htaccess?view=markup  .htaccess do Drupal CMS
+# @version  $Id$
+#
+
+
+# Protege arquivos e diretórios de serem listados ou servidos. Arquivo info.php
+# e arquivos SQL são protegidos assim como os diretórios misc, test e
+# diretórios comuns a SCMs como CVS e SVN (para proteger deployments desse tipo).
+<FilesMatch "\.(.*sql|ini|svn-base)$|^(misc|tests|configuration|spikes|Entries.*|Repository|Root|Tag|Template|all-wcprops|entries|format)$|^info\.php$">
+  Order allow,deny
+</FilesMatch>
+
+# Não mostra listagem de diretórios para URLs que mapeiam para um diretório.
+Options -Indexes
+
+# Segue links simbólicos para diretórios. De outra forma, o Apache teria um
+# overhead ao ter que verificar em toda requisição se um dado arquivo é
+# diretório ou link (fazendo chamadas stat).
+# @link http://www.ibm.com/developerworks/linux/library/l-tune-lamp-2.html#listing2
+Options +FollowSymLinks
+
+# Força mensagem de erro 404 simples para requisições a favicon.ico inexistente.
+<Files favicon.ico>
+  # Não há fecha-aspa para compatibilidade com Apache 1.3
+  ErrorDocument 404 "O arquivo favicon.ico não foi encontrado.
+</Files>
+
+# Configura o handler DirectoryIndex padrão.
+DirectoryIndex index.php index.html index.htm
+
+# PHP 5, Apache 1 e 2.
+# error_reporting E_ERROR = 1 (recomendado para produção).
+# display_errors em off. Recomenda-se configurar o PHP para fazer logging de
+# erros no ambiente de produção. Para desenvolvimento, as diretivas mencionadas
+# podem ser liberadas, para um debugging mais fácil.
+#
+# TODO: configurar short_open_tag para off quando todos os arquivos PHP estiverem
+# de acordo com o CS, seguindo a convenção <?php ?>.
+#
+# @link http://php.net/configuration.changes
+<IfModule mod_php5.c>
+  php_value memory_limit                64M
+  php_value error_reporting             1
+  php_flag  display_errors              off
+  php_flag  magic_quotes_gpc            off
+  php_flag  register_globals            off
+  php_flag  session.auto_start          off
+  php_flag  short_open_tag              on
+</IfModule>
+
+# Desabilita acesso para qualquer arquivo caso o
+<IfModule !mod_php5.c>
+  Order allow,deny
+  Deny from all
+</IfModule>
+
+
+# ConfiguraÃ§Ã£o desabilitada (uma vez que o ambiente padrÃ£o jÃ¡ Ã© production), permitindo definir o ambiente via virtual host.
+
+# Configura o ambiente de execução do i-Educar (production|development|testing).
+# Essa variável define qual seção de configuração do arquivo
+# configuration/ieducar.ini será carregada pelo arquivo includes/bootstrap.php
+
+# comentado definiÃ§Ã£o (uma vez que o ambiente padrÃ£o jÃ¡ Ã© production), permitindo assim definir o ambiente via virtual host.
+#SetEnv CORE_EXT_CONFIGURATION_ENV production

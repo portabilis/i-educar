@@ -1,0 +1,17 @@
+TODO
+====
+
+1. Analisar a obrigatoriedade de selecionar alguma turma no cadastro de
+   Calendário Dia
+
+No momento em que é cadastrado um dia no calendário, pode-se selecionar as
+turmas que serão afetadas (por ser um dia extra letivo ou não letivo). Deve-se
+analisar qual é a melhor estratégia para tornar claro que a não seleção de
+turma(s) afeta na contagem de dias letivos para a(s) turma(s).
+
+
+2. Verificar uma forma efetiva de remover registros quando uma turma for
+   removida do banco de dados (ou apenas "desativada")
+
+Existe apenas uma restrição referencial a pmieducar.calendario_dia. Testar
+a inclusão de uma segunda restrição para pmieducar.turma.

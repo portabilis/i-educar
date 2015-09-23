@@ -1,0 +1,15 @@
+paths:
+    migrations: %%PHINX_CONFIG_DIR%%/ieducar/misc/database/migrations
+
+environments:
+    default_migration_table: phinxlog
+    default_database: development
+    development:
+        adapter: pgsql
+        host: localhost
+        name: ieducar
+        user: ieducar
+        pass: 'ieducar'
+        port: 5433
+        charset: latin1
+

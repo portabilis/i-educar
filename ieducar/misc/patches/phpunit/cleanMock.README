@@ -1,0 +1,33 @@
+--
+-- @author   Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+-- @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+-- @link     http://github.com/eriksencosta/phpunit/commit/ae26bcc3c3bc81321f741c6d99e8389b1b937fb4  PHPUnit fork
+--
+
+Patch para o PHPUnit com a diretiva de configuração "cleanMock" para o arquivo
+phpunit.xml
+
+Na release 3.4.7 do PHPUnit, foi corrigido o bug TRAC-986, reduzindo o consumo
+de memória para testes que utilizam mock objects:
+
+http://github.com/sebastianbergmann/phpunit/commit/8b5044ff919f51e1da653e49bc7413f3e9f6dc29
+
+O código simplesmente a desaloca o objeto na memória, disponibilizando-o ao GC
+do PHP.
+
+No entanto, essa correção quebrou alguns testes do i-Educar que lidam com
+classes legadas (namespace App). As instâncias dessas classes são mantidas no
+registry da classe CoreExt_Entity para facilitar o setup dos testes.
+
+Para resolver esse problema, foi implementado uma nova opção de configuração no
+PHPUnit chamada "cleanMock". Quando seu valor está "false", o PHPUnit não irá
+desalocar o mock automaticamente. Caso "cleanMock" não seja configurado, o
+comportamento default do PHPUnit é realizado.
+
+Todo o histórico de implementação dessa feature está disponível em:
+
+http://github.com/eriksencosta/phpunit/commit/ae26bcc3c3bc81321f741c6d99e8389b1b937fb4
+
+Enquanto a feature não for incorporada por padrão no core do PHPUnit, esse
+patch deverá ser mantido e a sua aplicação deverá ser estimulada através da
+documentação oficial.

@@ -1,0 +1,13 @@
+.div-frequencia {
+	background-color: white;
+	display: inline;
+	color: black;
+}
+.frequencia-acima{
+	color: green;
+	font-weight: bold;	
+}
+.frequencia-abaixo{
+	color: red;
+	font-weight: bold;
+}

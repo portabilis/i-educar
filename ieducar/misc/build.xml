@@ -1,0 +1,185 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Configurações para o processo de build Phing
+ *
+ * Este arquivo de build precisa de alguns ajustes antes da criação de uma
+ * release. Mude a propriedade project.conf.version para o número de versão
+ * desejado e a propriedade project.conf.buildin para apontar para o diretório
+ * de build desejado (o padrão é /tmp).
+ *
+ * Dois pacotes compactados serão criados, um Gzip e outro Zip.
+ *
+ * Este build não executa os testes unitários e funcionais.
+ *
+ * Arquivo codificado em UTF-8 para maior compatibilidade com o utilitário
+ * CLI phing.
+ *
+ * @author   Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
+ * @link     http://phing.info/docs/guide/current/  Phing Documentation
+ * @todo     Incluir tarefas de geração de API (PhpDocumentorTask)
+ * @version  $Id: build.xml 768 2010-12-09 02:20:10Z eriksencosta@gmail.com $
+ */
+-->
+<project name="i-Educar" description="Sistema de gestão escolar" default="release" basedir="../">
+  <!-- Configuração geral do build -->
+  <property name="project.conf.version"   value="1.1.0" />
+  <property name="project.conf.curdir"    value="" />
+  <property name="project.conf.buildin"   value="/tmp" />
+  <property name="project.conf.buildbase" value="${project.conf.buildin}/release-${project.conf.version}" />
+  <property name="project.conf.builddir"  value="${project.conf.buildin}/release-${project.conf.version}/ieducar" />
+  <property name="project.conf.buildgzip" value="${project.conf.buildin}/ieducar-${project.conf.version}.tar.gz" />
+  <property name="project.conf.buildzip"  value="${project.conf.buildin}/ieducar-${project.conf.version}.zip" />
+
+  <!-- Configuração de acesso ao banco de dados para o DbDeployTask -->
+  <property name="project.conf.dbdeploy.hostname"  value="localhost" />
+  <property name="project.conf.dbdeploy.username"  value="ieducar" />
+  <property name="project.conf.dbdeploy.dbname"    value="ieducar" />
+  <property name="project.conf.dbdeploy.password"  value="" />
+  <property name="project.conf.dbdeploy.psql_path" value="" />
+
+  <!-- Variáveis para substituição de tokens -->
+  <property name="project.conf.license" value="http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL" />
+
+  <!-- Apenas para saber quanta memória o build consome -->
+  <property name="build.report.memory_peak" value="" />
+
+  <!-- project.conf.dbdeploy.psql -->
+  <!--
+  Procura pelo psql no path do sistema.
+
+  O comando which retorna um status code. Para saber qual o comando
+  registrado no $PATH, gravamos para um arquivo, recuperamos o seu conteúdo
+  e gravamos o valor em ${project.conf.dbdeploy.psql_path}.
+  -->
+  <exec command="which psql > ${project.conf.buildin}/psql_path.txt" escape="false" />
+
+  <php function="file_get_contents" returnProperty="project.conf.dbdeploy.psql_path">
+    <param value="${project.conf.buildin}/psql_path.txt" />
+  </php>
+
+  <php function="trim" returnProperty="project.conf.dbdeploy.psql_path">
+    <param value="${project.conf.dbdeploy.psql_path}" />
+  </php>
+  <!-- /project.conf.dbdeploy.psql -->
+
+  <!-- Pega o diretório atual como workaround ao chdir das classes de teste base -->
+  <php function="getcwd" returnProperty="project.conf.curdir" />
+
+  <!-- project.conf.release_hash -->
+  <!--
+  Gera um hash único no momento do build para uso como chave de geração de
+  Id de sessão. Ver: http://php.net/session_id
+  -->
+  <php function="time" returnProperty="project.conf.timestamp" />
+
+  <!-- Gera um uniqid -->
+  <php function="uniqid" returnProperty="project.conf.uniqid">
+    <param value="${project.conf.version}-${project.conf.timestamp}" />
+    <param value="TRUE" />
+  </php>
+
+  <!-- Hash sha1 do uniqid para distribuição -->
+  <php function="sha1" returnProperty="project.conf.hash">
+    <param value="${project.conf.uniqid}" />
+  </php>
+  <!-- /project.conf.release_hash -->
+
+  <!-- Inclui todos os arquivos do projeto, ignorando alguns arquivos e diretórios -->
+  <fileset dir="${project.basedir}" id="allfiles">
+    <include name="**" />
+    <exclude name=".svn/" />
+    <exclude name=".git/" />
+    <exclude name=".settings/" />
+    <exclude name=".gitignore" />
+    <exclude name=".gitmodules" />
+    <exclude name=".project" />
+    <exclude name=".buildpath" />
+    <exclude name=".DS_STORE" />
+    <exclude name="tests/" />
+    <exclude name="**/build.xml" />
+    <exclude name="**/coverage.db" />
+    <exclude name="spikes/" />
+    <exclude name="deploy/" />
+    <exclude name="misc/database/deltas/**" />
+  </fileset>
+
+  <!-- Prepara o ambiente para a o processo de build -->
+  <target name="prepare">
+    <echo msg="Preparando o build para a release ${project.conf.version}" />
+
+    <echo msg="Apagando diretório alvo ${project.conf.builddir}" />
+    <delete dir="${project.conf.builddir}" verbose="on" includeemptydirs="on" failonerror="on" />
+
+    <echo msg="Apagando pacotes gzip e zip ${project.conf.buildgzip} e  ${project.conf.buildzip}" />
+    <delete file="${project.conf.buildgzip}" verbose="on" failonerror="on" />
+    <delete file="${project.conf.buildzip}"  verbose="on" failonerror="on" />
+
+    <echo msg="Criando diretório do build ${project.conf.builddir}" />
+    <delete dir="${project.conf.builddir}" verbose="on" includeemptydirs="on" failonerror="on" />
+    <mkdir dir="${project.conf.builddir}" />
+    <mkdir dir="${project.conf.builddir}/deploy" />
+  </target>
+
+  <!-- Tarefa de migração de banco de dados -->
+  <target name="migrate" description="Migração de BD" depends="prepare">
+
+    <!-- Carrega a tarefa dbdeploy -->
+    <taskdef name="dbdeploy" classname="phing.tasks.ext.dbdeploy.DbDeployTask"/>
+
+    <!-- Propriedades com o destino dos arquivos SQL -->
+    <property name="project.conf.dbdeploy.deployfile" value="deploy/deploy.sql" />
+    <property name="project.conf.dbdeploy.undofile"   value="deploy/undo.sql" />
+
+    <!-- Gera os scripts de dbdeploy -->
+    <dbdeploy
+      url="pgsql:host=${project.conf.dbdeploy.hostname};dbname=${project.conf.dbdeploy.dbname}"
+      userid="${project.conf.dbdeploy.username}"
+      password="${project.conf.dbdeploy.password}"
+      dir="${project.conf.curdir}/ieducar/misc/database/deltas"
+      outputfile="${project.conf.builddir}/${project.conf.dbdeploy.deployfile}"
+      undooutputfile="${project.conf.builddir}/${project.conf.dbdeploy.undofile}" />
+
+    <!-- Executa o psql através de chamada shell, por velocidade -->
+    <exec
+      command="${project.conf.dbdeploy.psql_path} -U ${project.conf.dbdeploy.username} ${project.conf.dbdeploy.dbname} &lt; ${project.conf.dbdeploy.deployfile}"
+      dir="${project.conf.builddir}"
+      checkreturn="true" />
+  </target>
+
+  <!-- Copia os arquivos do projeto para o diretório de build -->
+  <target name="build" depends="prepare">
+    <echo msg="Criando o build" />
+    <delete dir="${project.conf.builddir}/deploy" verbose="on" includeemptydirs="on" failonerror="on" />
+    <copy todir="${project.conf.builddir}">
+      <filterchain id="filters">
+        <replacetokens begintoken="@@" endtoken="@@">
+          <token key="package_version" value="${project.conf.version}" />
+          <token key="license"         value="${project.conf.license}" />
+          <token key="release_hash"    value="${project.conf.hash}" />
+        </replacetokens>
+      </filterchain>
+      <fileset refid="allfiles" />
+    </copy>
+  </target>
+
+  <!-- Empacota o build com Gzip -->
+  <target name="gzip" depends="build">
+    <echo msg="Gzipping ${project.conf.builddir}" />
+    <tar basedir="${project.conf.buildbase}" destfile="${project.conf.buildgzip}" compression="gzip" />
+  </target>
+
+  <!-- Empacota o build com Zip -->
+  <target name="zip" depends="build">
+    <echo msg="Zipping ${project.conf.builddir}" />
+    <zip basedir="${project.conf.buildbase}" destfile="${project.conf.buildzip}" />
+  </target>
+
+  <!-- Cria uma nova release -->
+  <target name="release" depends="migrate, build, gzip, zip">
+    <echo msg="OK! Build construído com sucesso." />
+    <php function="memory_get_peak_usage" returnProperty="build.report.memory_peak" />
+    <echo msg="Pico de memória: ${build.report.memory_peak}." />
+  </target>
+</project>

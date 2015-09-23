@@ -1,0 +1,90 @@
+body {
+  background-color: white;
+}
+
+#flash-container {
+  min-height: 41px;
+}
+
+#flash-container, #menu, #corpo, #rodape {
+
+  /* login-form.widght + 42px */
+  width: 706px;
+}
+
+#login-form {
+  float: left;
+  background-color: #fcfcfc;
+  padding: 20px 40px;
+  width: 255px;
+
+  -moz-box-shadow: 0px 0px 5px #d9d9d9;
+  -webkit-box-shadow: 0px 0px 5px #d9d9d9;
+  box-shadow: 0px 0px 5px #d9d9d9;
+
+  border: 1px solid #ccc;
+}
+
+#login-form, #login-form form {
+  margin-bottom: 0;
+}
+
+#login-form label {
+  display: block;
+}
+
+.forget-password {
+  margin-top: 9px;
+}
+
+input#senha, input#login {
+  width: 241px;
+}
+
+input.submit, input#senha, input#login {
+  margin: 0px;
+  margin-bottom: 9px;
+}
+
+#recaptcha_widget_div {
+  margin-bottom: 9px;
+}
+
+#service-info {
+  margin-left: 372px;
+}
+
+#service-info .title {
+  color: #184E7F;
+}
+
+#service-info p.service, #service-info p.requiriments {
+  font-size: 125%;
+}
+
+#service-info ul.service-about {
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+ul.unstyled, ol.unstyled {
+  list-style: none;
+}
+
+#service-info ul.requiriments {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+#rodape {
+  margin-top: 10px;
+  padding: 10px;
+  /* border-top: 1px solid #e9e9e9; */
+  padding-left: 0px;
+  padding-right: 0px;
+  text-align: center;
+}
+
+#rodape .contact {
+  font-weight: bold;
+}

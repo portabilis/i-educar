@@ -1,0 +1,20 @@
+-- //
+
+--
+-- Adiciona o campo carga_horaria nas tabelas pmieducar.escola_serie_disciplina 
+-- e modules.componente_curricular_ano_escolar
+--
+-- @author   Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+-- @license  @@license@@
+-- @version  $Id$
+--
+
+ALTER TABLE modules.componente_curricular_ano_escolar ADD COLUMN carga_horaria decimal(6,3);
+ALTER TABLE pmieducar.escola_serie_disciplina ADD COLUMN carga_horaria decimal(6,3);
+
+-- //@UNDO
+
+ALTER TABLE modules.componente_curricular_ano_escolar DROP COLUMN carga_horaria;
+ALTER TABLE modules.componente_curricular_ano_escolar DROP COLUMN carga_horaria;
+
+-- //
