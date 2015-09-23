@@ -4,30 +4,30 @@
 
 
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gestï¿½o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaï¿½
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa ï¿½ software livre; vocï¿½ pode redistribuï¿½-lo e/ou modificï¿½-lo
+ * sob os termos da Licenï¿½a Pï¿½blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versï¿½o 2 da Licenï¿½a, como (a seu critï¿½rio)
+ * qualquer versï¿½o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa ï¿½ distribuï¿½ï¿½do na expectativa de que seja ï¿½til, porï¿½m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implï¿½ï¿½cita de COMERCIABILIDADE OU
+ * ADEQUAï¿½ï¿½O A UMA FINALIDADE ESPECï¿½FICA. Consulte a Licenï¿½a Pï¿½blica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Vocï¿½ deve ter recebido uma cï¿½pia da Licenï¿½a Pï¿½blica Geral do GNU junto
+ * com este programa; se nï¿½o, escreva para a Free Software Foundation, Inc., no
+ * endereï¿½o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itajaï¿½ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo disponível desde a versão 1.0.0
+ * @since     Arquivo disponï¿½vel desde a versï¿½o 1.0.0
  * @version   $Id$
  */
 
@@ -36,11 +36,11 @@ require_once 'include/pmieducar/geral.inc.php';
 /**
  * clsPmieducarMatricula class.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itajaï¿½ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe disponï¿½vel desde a versï¿½o 1.0.0
  * @version   @@package_version@@
  */
 class clsPmieducarMatricula
@@ -73,7 +73,7 @@ class clsPmieducarMatricula
   /**
    * caso seja a primeira matricula do aluno
    * marcar como true este atributo
-   * necessário para contabilizar como admitido por transferência
+   * necessï¿½rio para contabilizar como admitido por transferï¿½ncia
    * no relatorio de movimentacao mensal
    *
    * @var bool
@@ -82,7 +82,7 @@ class clsPmieducarMatricula
   var $matricula_transferencia;
 
   /**
-   * Armazena o total de resultados obtidos na última chamada ao método lista().
+   * Armazena o total de resultados obtidos na ï¿½ltima chamada ao mï¿½todo lista().
    * @var int
    */
   var $_total;
@@ -100,33 +100,33 @@ class clsPmieducarMatricula
   var $_tabela;
 
   /**
-   * Lista separada por vírgula, com os campos que devem ser selecionados na
-   * próxima chamado ao método lista().
+   * Lista separada por vï¿½rgula, com os campos que devem ser selecionados na
+   * prï¿½xima chamado ao mï¿½todo lista().
    * @var string
    */
   var $_campos_lista;
 
   /**
-   * Lista com todos os campos da tabela separados por vírgula, padrão para
-   * seleção no método lista.
+   * Lista com todos os campos da tabela separados por vï¿½rgula, padrï¿½o para
+   * seleï¿½ï¿½o no mï¿½todo lista.
    * @var string
    */
   var $_todos_campos;
 
   /**
-   * Valor que define a quantidade de registros a ser retornada pelo método lista().
+   * Valor que define a quantidade de registros a ser retornada pelo mï¿½todo lista().
    * @var int
    */
   var $_limite_quantidade;
 
   /**
-   * Define o valor de offset no retorno dos registros no método lista().
+   * Define o valor de offset no retorno dos registros no mï¿½todo lista().
    * @var int
    */
   var $_limite_offset;
 
   /**
-   * Define o campo para ser usado como padrão de ordenação no método lista().
+   * Define o campo para ser usado como padrï¿½o de ordenaï¿½ï¿½o no mï¿½todo lista().
    * @var string
    */
   var $_campo_order_by;
@@ -611,7 +611,7 @@ class clsPmieducarMatricula
   }
 
   /**
-   * Retorna uma lista de registros filtrados de acordo com os parâmetros.
+   * Retorna uma lista de registros filtrados de acordo com os parï¿½metros.
    * @return array
    */
   function lista($int_cod_matricula = NULL, $int_ref_cod_reserva_vaga = NULL,
@@ -811,7 +811,7 @@ class clsPmieducarMatricula
                                                AND mt.ref_cod_turma = {$int_ref_cod_turma}
                                                AND mt.ref_cod_matricula = m.cod_matricula)";
       else
-        $filtros .= "{$whereAnd} EXISTS (SELECT 1 FROM pmieducar.matricula_turma mt WHERE mt.ativo = 1 AND mt.ref_cod_turma = {$int_ref_cod_turma} AND mt.ref_cod_matricula = m.cod_matricula)";
+        $filtros .= "{$whereAnd} EXISTS (SELECT 1 FROM pmieducar.matricula_turma mt WHERE (mt.ativo = 1 OR m.aprovado IN (4,6)) AND mt.ref_cod_turma = {$int_ref_cod_turma} AND mt.ref_cod_matricula = m.cod_matricula)";
 
       $whereAnd = " AND ";
     }
@@ -938,7 +938,7 @@ class clsPmieducarMatricula
   }
 
   /**
-   * Define quais campos da tabela serão selecionados no método Lista().
+   * Define quais campos da tabela serï¿½o selecionados no mï¿½todo Lista().
    */
   function setCamposLista($str_campos)
   {
@@ -946,7 +946,7 @@ class clsPmieducarMatricula
   }
 
   /**
-   * Define que o método Lista() deverpa retornar todos os campos da tabela.
+   * Define que o mï¿½todo Lista() deverpa retornar todos os campos da tabela.
    */
   function resetCamposLista()
   {
@@ -954,7 +954,7 @@ class clsPmieducarMatricula
   }
 
   /**
-   * Define limites de retorno para o método Lista().
+   * Define limites de retorno para o mï¿½todo Lista().
    */
   function setLimite($intLimiteQtd, $intLimiteOffset = NULL)
   {
@@ -963,7 +963,7 @@ class clsPmieducarMatricula
   }
 
   /**
-   * Retorna a string com o trecho da query responsável pelo limite de
+   * Retorna a string com o trecho da query responsï¿½vel pelo limite de
    * registros retornados/afetados.
    *
    * @return string
@@ -981,7 +981,7 @@ class clsPmieducarMatricula
   }
 
   /**
-   * Define o campo para ser utilizado como ordenação no método Lista().
+   * Define o campo para ser utilizado como ordenaï¿½ï¿½o no mï¿½todo Lista().
    */
   function setOrderby($strNomeCampo)
   {
@@ -991,7 +991,7 @@ class clsPmieducarMatricula
   }
 
   /**
-   * Retorna a string com o trecho da query responsável pela Ordenação dos
+   * Retorna a string com o trecho da query responsï¿½vel pela Ordenaï¿½ï¿½o dos
    * registros.
    *
    * @return string
@@ -1125,7 +1125,7 @@ class clsPmieducarMatricula
     return $db->CampoUnico($sql);
   }
   /**
-  * Seta a matricula para abandono e seta a observação passada por parâmetro
+  * Seta a matricula para abandono e seta a observaï¿½ï¿½o passada por parï¿½metro
   * @author lucassch
   * @return boolean
   */
@@ -1133,7 +1133,7 @@ class clsPmieducarMatricula
 
     if (is_numeric($this->cod_matricula)){
       if (trim($obs)=='')
-        $obs = "Não informado";
+        $obs = "Nï¿½o informado";
       $db = new clsBanco();
       $consulta = "UPDATE {$this->_tabela}
                       SET aprovado = 6,
