@@ -346,7 +346,7 @@ class indice extends clsDetalhe
 
       if($registro['aprovado'] == 4 &&
          $this->canCancelTransferenciaExterna($registro['cod_matricula'], $registro['ref_cod_aluno'])) {
-        $this->array_botao[]            = 'Cancelar transferência (escola externa)';
+        $this->array_botao[]            = 'Cancelar transferência';
 
 
         # TODO ver se código, seta matricula como em andamento, ativa ultima matricula_turma for matricula, e desativa transferencia solicitacao

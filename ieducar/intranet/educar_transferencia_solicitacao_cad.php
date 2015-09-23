@@ -147,9 +147,6 @@ class indice extends clsCadastro
 		$det_matricula = $obj_matricula->detalhe();
 		$ref_cod_instituicao = $det_matricula['ref_cod_instituicao'];
 
-		$opcoes = array( 1 => "Escola do Sistema",2 => "Escola Externa" );
-		$this->campoRadio( "transferencia_tipo", "Transfer&ecirc;ncia Tipo", $opcoes, $this->transferencia_tipo );
-
 		$opcoes = array("" => "Selecione");
 		$objTemp = new clsPmieducarEscola();
 
@@ -159,8 +156,10 @@ class indice extends clsCadastro
 			$opcoes["{$escola['cod_escola']}"] = "{$escola['nome']}";
 		}
 
+		$opcoes[0] = 'OUTRA';
+
 		$this->campoLista("ref_cod_escola_destino", "Escola", $opcoes, null, '', false, 'Destino do aluno', '', false, false);
-		$this->campoTexto('escola_destino_externa', "Escola ", "", 30, 255, false, false, false, 'Destino do aluno');
+		$this->campoTexto('escola_destino_externa', "Nome da escola ", "", 30, 255, false, false, false, '');
 
 		// foreign keys
 		$opcoes = array( "" => "Selecione" );
@@ -182,8 +181,8 @@ class indice extends clsCadastro
 			echo "<!--\nErro\nClasse clsPmieducarTransferenciaTipo nao encontrada\n-->";
 			$opcoes = array( "" => "Erro na geracao" );
 		}
-		$this->campoLista( "ref_cod_transferencia_tipo", "Transfer&ecirc;ncia Motivo", $opcoes, $this->ref_cod_transferencia_tipo );
-		$this->inputsHelper()->date('data_cancel', array('label' => 'Data da transferência', 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y')));
+		$this->campoLista( "ref_cod_transferencia_tipo", "Motivo", $opcoes, $this->ref_cod_transferencia_tipo );
+		$this->inputsHelper()->date('data_cancel', array('label' => 'Data', 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y')));
 		// text
 		$this->campoMemo( "observacao", "Observa&ccedil;&atilde;o", $this->observacao, 60, 5, false );
 	}
@@ -229,49 +228,47 @@ class indice extends clsCadastro
 		$editou = $obj->edita();
 
 		$obj->data_cancel = $this->data_cancel;
-		if ($this->transferencia_tipo == 2)
+
+		$this->data_transferencia = date("Y-m-d");
+		$this->ativo = 1;
+
+		$obj_matricula = new clsPmieducarMatricula( $this->ref_cod_matricula );
+		$det_matricula = $obj_matricula->detalhe();
+		$aprovado = $det_matricula["aprovado"];
+
+		if ($aprovado == 3)
 		{
-			$this->data_transferencia = date("Y-m-d");
-			$this->ativo = 1;
-
-			$obj_matricula = new clsPmieducarMatricula( $this->ref_cod_matricula );
-			$det_matricula = $obj_matricula->detalhe();
-			$aprovado = $det_matricula["aprovado"];
-
-			if ($aprovado == 3)
+			$obj = new clsPmieducarMatricula( $this->ref_cod_matricula, null,null,null,$this->pessoa_logada,null,null,4,null,null,1 );
+			$obj->data_cancel = $this->data_cancel;
+			$editou = $obj->edita();
+			if( !$editou )
 			{
-				$obj = new clsPmieducarMatricula( $this->ref_cod_matricula, null,null,null,$this->pessoa_logada,null,null,4,null,null,1 );
-				$obj->data_cancel = $this->data_cancel;
-				$editou = $obj->edita();
-				if( !$editou )
-				{
-					$this->mensagem = "N&atilde;o foi poss&iacute;vel editar a Matr&iacute;cula do Aluno.<br>";
-					return false;
-				}
+				$this->mensagem = "N&atilde;o foi poss&iacute;vel editar a Matr&iacute;cula do Aluno.<br>";
+				return false;
+			}
 
-				$enturmacoes = new clsPmieducarMatriculaTurma();
-				$enturmacoes = $enturmacoes->lista($this->ref_cod_matricula, null, null, null, null, null, null, null, 1 );
+			$enturmacoes = new clsPmieducarMatriculaTurma();
+			$enturmacoes = $enturmacoes->lista($this->ref_cod_matricula, null, null, null, null, null, null, null, 1 );
 
-				if($enturmacoes)
-				{
-          			// foreach necessário pois metodo edita e exclui da classe clsPmieducarMatriculaTurma, necessitam do
-          			// código da turma e do sequencial
+			if($enturmacoes)
+			{
+        			// foreach necessário pois metodo edita e exclui da classe clsPmieducarMatriculaTurma, necessitam do
+        			// código da turma e do sequencial
 					foreach ($enturmacoes as $enturmacao) {
 					  $enturmacao = new clsPmieducarMatriculaTurma( $this->ref_cod_matricula, $enturmacao['ref_cod_turma'], $this->pessoa_logada, null, null, null, 0, null, $enturmacao['sequencial']);
 
 					  if(! $enturmacao->edita())
 					  {
-    				  $this->mensagem = "N&atilde;o foi poss&iacute;vel desativar as enturma&ccedil;&otilde;es da matr&iacute;cula.";
+	  				  $this->mensagem = "N&atilde;o foi poss&iacute;vel desativar as enturma&ccedil;&otilde;es da matr&iacute;cula.";
 						  return false;
 					  }else{
 					  	$enturmacao->marcaAlunoTransferido($this->data_cancel);
 					  }
-          			}
+	        }
 				}
 			}
 			clsPmieducarHistoricoEscolar::gerarHistoricoTransferencia($this->ref_cod_matricula, $this->pessoa_logada);
-		}
-
+		
 		$obj = new clsPmieducarTransferenciaSolicitacao( null, $this->ref_cod_transferencia_tipo, null, $this->pessoa_logada, null, $this->ref_cod_matricula, $this->observacao, null, null, $this->ativo, $this->data_transferencia, $this->escola_destino_externa, $this->ref_cod_escola_destino);
 		$cadastrou = $obj->cadastra();
 		if( $cadastrou )
