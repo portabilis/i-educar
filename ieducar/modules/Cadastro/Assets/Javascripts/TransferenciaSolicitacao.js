@@ -10,7 +10,7 @@ $j(function(){
 
 	function onEscolaDestinoSistemaClick(){
 		console.log($j(this).val());
-		if($j(this).val() == 'OUTRA'){
+		if($j(this).val() == 0){
 			$campoEscolaDestinoExterna.closest("tr").show();
 		}else{
 			$campoEscolaDestinoExterna.closest("tr").hide();
