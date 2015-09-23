@@ -32,6 +32,18 @@ require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/urbano/geral.inc.php';
+
+/*
+require_once 'include/clsBase.inc.php';
+require_once 'include/clsCadastro.inc.php';
+require_once 'include/clsBanco.inc.php';
+require_once 'include/pmieducar/geral.inc.php';
+
+require_once 'lib/Portabilis/Utils/Database.php';
+require_once 'lib/Portabilis/String/Utils.php';
+
+require_once 'Educacenso/Model/DocenteDataMapper.php';
+*/
 class clsIndexBase extends clsBase
 {
   function Formular()
@@ -61,9 +73,11 @@ class indice extends clsCadastro
   var $tab_cep = array();
   var $cep;
   var $idbai;
+  var $retorno;
+
   function Inicializar()
   {
-    $retorno = 'Novo';
+    $this->retorno = 'Novo';
     @session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     @session_write_close();
@@ -79,7 +93,7 @@ class indice extends clsCadastro
         foreach ($registro as $campo => $val) {
           $this->$campo = $val;
         }
-        $retorno = 'Editar';
+        $this->retorno = 'Editar';
         // CEP
         $this->tab_cep = $this->getListCepBairro();
       }
@@ -87,21 +101,24 @@ class indice extends clsCadastro
     else {
       $this->tab_cep[] = array();
     }
-    $this->url_cancelar = $retorno == 'Editar' ?
-      'urbano_cep_logradouro_det.php?cep=' . $registro['cep'] . '&idlog=' . $registro['idlog'] :
+    $this->url_cancelar = $this->retorno == 'Editar' ?
+      'urbano_cep_logradouro_det.php?idlog=' . $registro['idlog'] :
       'urbano_cep_logradouro_lst.php';
     $this->nome_url_cancelar = 'Cancelar';
-    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+    $nomeMenu = $this->retorno == "Editar" ? $this->retorno : "Cadastrar";
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          ""        => "{$nomeMenu} CEP"
     ));
     $this->enviaLocalizacao($localizacao->montar());
-    return $retorno;
+    return $this->retorno;
   }
   function Gerar()
   {
+
+    $habilitaCampo = ($this->retorno == 'Editar');
+
     // foreign keys
     $opcoes = array('' => 'Selecione');
     if (class_exists('clsPais')) {
@@ -117,7 +134,7 @@ class indice extends clsCadastro
       echo '<!--\nErro\nClasse clsPais nao encontrada\n-->';
       $opcoes = array('' => 'Erro na geracao');
     }
-    $this->campoLista('idpais', 'Pais', $opcoes, $this->idpais);
+    $this->campoLista('idpais', 'Pais', $opcoes, $this->idpais, '', FALSE, '','', $habilitaCampo);
     $opcoes = array('' => 'Selecione');
     if (class_exists('clsUf')) {
       if ($this->idpais) {
@@ -134,7 +151,7 @@ class indice extends clsCadastro
       echo '<!--\nErro\nClasse clsUf nao encontrada\n-->';
       $opcoes = array('' => 'Erro na geracao');
     }
-    $this->campoLista('sigla_uf', 'Estado', $opcoes, $this->sigla_uf);
+    $this->campoLista('sigla_uf', 'Estado', $opcoes, $this->sigla_uf, '', FALSE, '','', $habilitaCampo);
     $opcoes = array('' => 'Selecione');
     if (class_exists('clsMunicipio')) {
       if ($this->sigla_uf) {
@@ -152,7 +169,7 @@ class indice extends clsCadastro
       echo '<!--\nErro\nClasse clsMunicipio nao encontrada\n-->';
       $opcoes = array('' => 'Erro na geracao');
     }
-    $this->campoLista('idmun', 'Munic&iacute;pio', $opcoes, $this->idmun);
+    $this->campoLista('idmun', 'Munic&iacute;pio', $opcoes, $this->idmun, '', FALSE, '','', $habilitaCampo);
     $opcoes = array('' => 'Selecione');
     if (class_exists('clsLogradouro')) {
       if ($this->idmun) {
@@ -171,7 +188,8 @@ class indice extends clsCadastro
       echo '<!--\nErro\nClasse clsLogradouro nao encontrada\n-->';
       $opcoes = array('' => 'Erro na geracao');
     }
-    $this->campoLista('idlog', 'Logradouro', $opcoes, $this->idlog);
+    $this->campoLista('idlog', 'Logradouro', $opcoes, $this->idlog, '', FALSE, '','', $habilitaCampo);
+
     // Tabela CEP
     $this->campoTabelaInicio('tab_cep', 'Tabela de CEP', array('CEP', 'Bairro'), $this->tab_cep, 400);
     $opcoes_bairro = array('' => 'Selecione');
@@ -188,6 +206,13 @@ class indice extends clsCadastro
     $this->campoCep('cep', 'CEP', $this->cep, true);
     $this->campoLista('idbai', 'Bairro', $opcoes_bairro, $this->idbai);
     $this->campoTabelaFim();
+
+    $scripts = array(
+      '/modules/Portabilis/Assets/Javascripts/Utils.js',
+      '/modules/Portabilis/Assets/Javascripts/ClientApi.js'
+    );
+
+    Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
   }
   function Novo()
   {
@@ -198,6 +223,8 @@ class indice extends clsCadastro
     session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
+
+    $this->idlog = $_GET['idlog'];
 
     $tab_cep_aux = $this->getListCepBairro();
 
@@ -419,7 +446,7 @@ function getBairroUnico(xml_bairro) {
 }
 // Quando seleciona um logradouro, busca por registros de CEP e bairro já
 // existentes no banco de dados
-document.getElementById('idlog').onchange = function() {
+/*document.getElementById('idlog').onchange = function() {
   var campoLogradouro = document.getElementById('idlog').value;
   var xml_cep = new ajax(getCepBairro);
   xml_cep.envia('urbano_cep_logradouro_bairro_xml.php?log=' + campoLogradouro);
@@ -460,8 +487,52 @@ function getBairro_(xml_bairro, DOM_array) {
       campoBairro.options[0].text = 'O município não possui nenhum bairro';
     }
   }
-}
-$j(document).ready( function(){
-   $j('#tab_cep').find('img[alt="excluir"]').hide();
-} );
+}*/
+
+
+$j(document).ready(function(){
+
+  for (var i = 0; i < tab_add_1.id; i++) {
+    //Remove evento de click antigo
+    $j("a[id='link_remove["+i+"]']").attr('onclick','').unbind('click');
+    //Adiciona novo evento de click para excluir via Ajax
+
+    var valorCep = $j("input[id='cep["+i+"]']").val();
+    var idBairro = $j("select[id='idbai["+i+"]'] option:selected").val();
+
+    $j("a[id='link_remove["+i+"]']").click({cep: valorCep, bairro: idBairro, button: document.getElementById('link_remove['+i+']')}, onclickExcluirCepBairro);
+
+  //  $j("input[id='cep["+i+"]']").prop('disabled', true);
+  //  $j("select[id='idbai["+i+"]']").prop('disabled', true);
+  }
+
+  function onclickExcluirCepBairro(event) {
+    if(!confirm("Tem certeza que deseja excluir este CEP?")) return false;
+
+    var idLog    = $j("select[id='idlog'] option:selected").val();
+
+    var options = {
+      url       : deleteResourceUrlBuilder.buildUrl('/module/Api/endereco', 'delete_endereco'),
+      dataType  : 'json',
+      data      : {
+        cep       : event.data.cep,
+        id_bairro : event.data.bairro,
+        id_log    : idLog
+      },
+      success   : function(dataResponse){
+        if (!dataResponse.any_error_msg)
+          tab_add_1.removeRow(event.data.button);
+
+        handleDeleteCepBairro(dataResponse);
+      }
+    };
+      deleteResource(options)
+  }
+
+  var handleDeleteCepBairro = function(dataResponse) {
+    handleMessages(dataResponse.msgs);
+  }
+
+});
+
 </script>
