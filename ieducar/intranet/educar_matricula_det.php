@@ -188,7 +188,7 @@ class indice extends clsDetalhe
 
     if ($nomesTurmas){
       $this->addDetalhe(array('Turma', $nomesTurmas));
-      $this->addDetalhe(array('Data Enturmação', $datasEnturmacoes));
+      $this->addDetalhe(array('Data Enturmação Atual', $datasEnturmacoes));
       $existeTurma = true;
     }else {
       $this->addDetalhe(array('Turma', ''));
