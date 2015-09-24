@@ -824,7 +824,8 @@ class clsPmieducarServidor
     $int_identificador           = NULL,
     $int_ref_cod_curso           = NULL,
     $int_ref_cod_disciplina      = NULL,
-    $int_ref_cod_subnivel        = NULL
+    $int_ref_cod_subnivel        = NULL,
+    $bool_servidor_sem_alocacao  = FALSE
     ) {
     // Extrai as informações de hora inicial e hora final, para definir melhor
     // o lookup de carga horária de servidores alocados, para operações como
@@ -936,7 +937,7 @@ class clsPmieducarServidor
       if (is_numeric($int_ref_cod_instituicao) || is_numeric($int_ref_cod_escola))
      {
         $filtros .= "
-    {$whereAnd} s.cod_servidor IN
+    {$whereAnd} (s.cod_servidor IN
       (SELECT a.ref_cod_servidor
         FROM pmieducar.servidor_alocacao a
         WHERE ";
@@ -949,7 +950,11 @@ class clsPmieducarServidor
           }
           $filtros .= " ref_cod_escola = '{$int_ref_cod_escola}' ";
         }
-        $filtros .= ') ';
+        if($bool_servidor_sem_alocacao){
+          $filtros .= ') OR NOT EXISTS(SELECT 1 FROM pmieducar.servidor_alocacao where servidor_alocacao.ativo = 1 and servidor_alocacao.ref_cod_servidor = s.cod_servidor)) ';
+        }else{
+          $filtros .= ')) ';
+        }
       }
       if (is_array($array_horario)) {
         $cond = "AND";
