@@ -241,8 +241,7 @@ class indice extends clsDetalhe
       if (is_array($lst_transferencia)) {
         $det_transferencia = array_shift($lst_transferencia);
       }
-      // echo "<pre>"; var_dump($det_transferencia["ref_cod_escola_destino"]); die;
-      if(!is_null($det_transferencia["ref_cod_escola_destino"])) {
+      if(!$det_transferencia["ref_cod_escola_destino"] == "0") {
         $tmp_obj = new clsPmieducarEscola($det_transferencia["ref_cod_escola_destino"]);
         $tmp_det = $tmp_obj->detalhe();
         $this->addDetalhe(array("Escola destino", $tmp_det["nome"]));
