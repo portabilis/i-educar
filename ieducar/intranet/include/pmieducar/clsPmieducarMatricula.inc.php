@@ -681,15 +681,14 @@ class clsPmieducarMatricula
                                                       INNER JOIN pmieducar.matricula sub_m ON (sub_m.cod_matricula = sub_mt.ref_cod_matricula)
                                                       WHERE sub_mt.ativo = 1
                                                       AND sub_m.ref_cod_aluno = a.cod_aluno
-                                                      AND (sub_mt.ref_cod_turma = {$int_ref_cod_turma}
-                                                           OR sub_m.ref_ref_cod_serie = m.ref_ref_cod_serie)
+                                                      AND sub_mt.ref_cod_turma = {$int_ref_cod_turma}
                                                    )
                                                  )
                                                )
                                                AND mt.ref_cod_turma = {$int_ref_cod_turma}
                                                AND mt.ref_cod_matricula = m.cod_matricula)";
       else
-        $filtros .= "{$whereAnd} EXISTS (SELECT 1 FROM pmieducar.matricula_turma mt WHERE (mt.ativo = 1 OR m.aprovado IN (4,6)) AND mt.ref_cod_turma = {$int_ref_cod_turma} AND mt.ref_cod_matricula = m.cod_matricula)";
+        $filtros .= "{$whereAnd} EXISTS (SELECT 1 FROM pmieducar.matricula_turma mt WHERE mt.ativo = 1 AND mt.ref_cod_turma = {$int_ref_cod_turma} AND mt.ref_cod_matricula = m.cod_matricula)";
       $whereAnd = " AND ";
     }
     if (is_array($arr_int_cod_matricula) && count($arr_int_cod_matricula)) {
@@ -715,6 +714,7 @@ class clsPmieducarMatricula
     $sql .= $filtros . $this->getOrderby() . $this->getLimite();
     $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} m, {$this->_schema}curso c, {$this->_schema}aluno a, cadastro.pessoa p {$filtros}");
     $db->Consulta($sql);
+
     if ($countCampos > 1) {
       while ($db->ProximoRegistro()) {
         $tupla = $db->Tupla();
