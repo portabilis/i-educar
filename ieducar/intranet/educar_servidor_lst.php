@@ -164,9 +164,12 @@ class indice extends clsListagem
       NULL,
       NULL,
       NULL,
-      null
+      NULL,
+      NULL,
+      NULL,
+      NULL,
+      TRUE
     );
-
     $total = $obj_servidor->_total;
 
     // UrlHelper
