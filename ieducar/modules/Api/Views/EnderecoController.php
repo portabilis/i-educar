@@ -88,21 +88,26 @@ class EnderecoController extends ApiCoreController
              INNER JOIN cadastro.endereco_pessoa ON (endereco_pessoa.idpes = pessoa.idpes)
              WHERE endereco_pessoa.cep = $1
                AND endereco_pessoa.idbai = $2
-               AND endereco_pessoa.idlog = $3 LIMIT 1;";
+               AND endereco_pessoa.idlog = $3 LIMIT 10;";
 
-   $params = array($cep, $idBairro, $idLog);
-   $pessoa = $this->fetchPreparedQuery($sql, $params, false);
+    $params = array($cep, $idBairro, $idLog);
+    $pessoa = $this->fetchPreparedQuery($sql, $params, false);
 
     if (is_array($pessoa) && count($pessoa) > 0) {
-      $this->messenger->append('Não foi possível excluir esse CEP pois o mesmo está sendo utilizado por ' . $pessoa[0][nome], 'error');
+      $pessoa_str = '';
+
+      for ($i=0; $i < count($pessoa); $i++) {
+        $pessoa_str .= "<br />" . $pessoa[$i][nome];
+      }
+
+      $this->messenger->append('Não foi possível excluir esse CEP pois o mesmo está sendo utilizado por: ' . $pessoa_str, 'error');
       return $pessoa;
     }
 
     $sql = "DELETE FROM urbano.cep_logradouro_bairro
-             WHERE cep_logradouro_bairro.cep = '$1'
+             WHERE cep_logradouro_bairro.cep = $1
                AND cep_logradouro_bairro.idbai = $2
                AND cep_logradouro_bairro.idlog = $3;";
-
 
     $params = array($cep, $idBairro, $idLog);
     $this->fetchPreparedQuery($sql, $params);

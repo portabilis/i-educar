@@ -224,7 +224,7 @@ class indice extends clsCadastro
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
-    $this->idlog = $_GET['idlog'];
+    $this->idlog = !$this->idlog ? $_GET['idlog'] : $this->idlog;
 
     $tab_cep_aux = $this->getListCepBairro();
 
