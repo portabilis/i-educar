@@ -1,0 +1,60 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "hash": "c450e2f87029169099b3e63a39f05745",
+    "content-hash": "b35d2290b213512526775e3f70878c56",
+    "packages": [
+        {
+            "name": "cossou/jasperphp",
+            "version": "v1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cossou/JasperPHP.git",
+                "reference": "f196d9a951ad43c37a961554e28049b38f4b276c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cossou/JasperPHP/zipball/f196d9a951ad43c37a961554e28049b38f4b276c",
+                "reference": "f196d9a951ad43c37a961554e28049b38f4b276c",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "JasperPHP": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Hélder Duarte",
+                    "email": "cossou@gmail.com"
+                }
+            ],
+            "description": "Create Reports in PHP with JasperReports",
+            "homepage": "https://github.com/cossou/JasperPHP",
+            "keywords": [
+                "jasper",
+                "jasperreports",
+                "java",
+                "pdf",
+                "reports"
+            ],
+            "time": "2015-04-28 10:10:36"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}
