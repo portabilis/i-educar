@@ -89,7 +89,7 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
       } else if ($GLOBALS['coreExt']['Config']->app->database->dbname == 'test' || $GLOBALS['coreExt']['Config']->app->database->dbname == 'desenvolvimento') {
         $this->report->addArg('SUBREPORT_DIR', "/sites_media_root/services-test/reports/jasper/");
       } else {
-        $this->report->addArg('SUBREPORT_DIR', "/home/vagrant/ieducar/ieducar/modules/Reports/ReportSources/Portabilis/");
+        $this->report->addArg('SUBREPORT_DIR', "modules/Reports/ReportSources/Portabilis/");
       }
 
       $this->report->addArg('database', ($GLOBALS['coreExt']['Config']->app->database->dbname == 'test' ? $GLOBALS['coreExt']['Config']->report->database_teste : $GLOBALS['coreExt']['Config']->app->database->dbname ));

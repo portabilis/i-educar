@@ -1,6 +1,6 @@
 <?php
- error_reporting(E_ERROR);
- ini_set("display_errors", 1);
+ // error_reporting(E_ERROR);
+ // ini_set("display_errors", 1);
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -54,7 +54,7 @@ class Portabilis_Report_ReportFactoryPHPJasper extends Portabilis_Report_ReportF
 
   function getReportsPath() {
     $rootPath   = dirname(dirname(dirname(dirname(__FILE__))));
-    $reportsPath = $rootPath . "/modules/Reports/ReportSources/Portabilis";
+    $reportsPath = $rootPath . "/modules/Reports/ReportSources/Portabilis/";
 
     return $reportsPath;
   }
