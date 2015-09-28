@@ -88,6 +88,7 @@ class indice extends clsCadastro
   var $excluir_disciplina;
 
   var $idade_inicial;
+  var $idade_ideal;
   var $idade_final;
 
   var $regra_avaliacao_id;
@@ -211,6 +212,8 @@ class indice extends clsCadastro
 
     $this->campoNumero('dias_letivos', 'Dias letivos', $this->dias_letivos, 3, 3, TRUE);
 
+    $this->campoNumero('idade_ideal', 'Idade ideal', $this->idade_ideal, 2, 2, false);
+
     $this->campoNumero('idade_inicial', 'Faixa et&aacute;ria', $this->idade_inicial,
       2, 2, FALSE, '', '', FALSE, FALSE, TRUE);
 
@@ -236,7 +239,7 @@ class indice extends clsCadastro
       $this->nm_serie, $this->etapa_curso, $this->concluinte, $this->carga_horaria,
       NULL, NULL, 1, $this->idade_inicial, $this->idade_final,
       $this->regra_avaliacao_id, $this->observacao_historico, $this->dias_letivos,
-      $this->regra_avaliacao_diferenciada_id, !is_null($this->alerta_faixa_etaria), !is_null($this->bloquear_matricula_faixa_etaria));
+      $this->regra_avaliacao_diferenciada_id, !is_null($this->alerta_faixa_etaria), !is_null($this->bloquear_matricula_faixa_etaria), $this->idade_ideal);
 
     $cadastrou = $obj->cadastra();
 
@@ -264,7 +267,7 @@ class indice extends clsCadastro
       $this->ref_cod_curso, $this->nm_serie, $this->etapa_curso, $this->concluinte,
       $this->carga_horaria, NULL, NULL, 1, $this->idade_inicial,
       $this->idade_final, $this->regra_avaliacao_id, $this->observacao_historico, $this->dias_letivos,
-      $this->regra_avaliacao_diferenciada_id, !is_null($this->alerta_faixa_etaria), !is_null($this->bloquear_matricula_faixa_etaria));
+      $this->regra_avaliacao_diferenciada_id, !is_null($this->alerta_faixa_etaria), !is_null($this->bloquear_matricula_faixa_etaria),$this->idade_ideal);
 
     $editou = $obj->edita();
     if ($editou) {

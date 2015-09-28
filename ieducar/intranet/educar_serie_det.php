@@ -158,6 +158,8 @@ class indice extends clsDetalhe
 
     $this->addDetalhe(array('Dias letivos', $registro['dias_letivos']));
 
+    $this->addDetalhe(array('Idade ideal', $registro['idade_ideal']));
+
     if ($registro['observacao_historico']) {
       $this->addDetalhe(array('Observação histórico', $registro['observacao_historico']));
     }

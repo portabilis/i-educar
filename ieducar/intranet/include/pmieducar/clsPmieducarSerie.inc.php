@@ -66,6 +66,7 @@ class clsPmieducarSerie
 
   var $idade_inicial;
   var $idade_final;
+  var $idade_ideal;  
 
   var $alerta_faixa_etaria;
   var $bloquear_matricula_faixa_etaria;
@@ -128,12 +129,12 @@ class clsPmieducarSerie
     $etapa_curso = NULL, $concluinte = NULL, $carga_horaria = NULL,
     $data_cadastro = NULL, $data_exclusao = NULL, $ativo = NULL,
     $idade_inicial = NULL, $idade_final = NULL, $regra_avaliacao_id = NULL, $observacao_historico = null,
-    $dias_letivos = null, $regra_avaliacao_diferenciada_id = null, $alerta_faixa_etaria = false, $bloquear_matricula_faixa_etaria = false)
+    $dias_letivos = null, $regra_avaliacao_diferenciada_id = null, $alerta_faixa_etaria = false, $bloquear_matricula_faixa_etaria = false,$idade_ideal = null)
   {
     $db = new clsBanco();
     $this->_schema = "pmieducar.";
     $this->_tabela = "{$this->_schema}serie";
-    $this->_campos_lista = $this->_todos_campos = "s.cod_serie, s.ref_usuario_exc, s.ref_usuario_cad, s.ref_cod_curso, s.nm_serie, s.etapa_curso, s.concluinte, s.carga_horaria, s.data_cadastro, s.data_exclusao, s.ativo, s.idade_inicial, s.idade_final, s.regra_avaliacao_id, s.observacao_historico, s.dias_letivos, s.regra_avaliacao_diferenciada_id, s.alerta_faixa_etaria, s.bloquear_matricula_faixa_etaria ";
+    $this->_campos_lista = $this->_todos_campos = "s.cod_serie, s.ref_usuario_exc, s.ref_usuario_cad, s.ref_cod_curso, s.nm_serie, s.etapa_curso, s.concluinte, s.carga_horaria, s.data_cadastro, s.data_exclusao, s.ativo, s.idade_inicial, s.idade_final, s.regra_avaliacao_id, s.observacao_historico, s.dias_letivos, s.regra_avaliacao_diferenciada_id, s.alerta_faixa_etaria, s.bloquear_matricula_faixa_etaria, s.idade_ideal ";
 
     if (is_numeric($ref_cod_curso)) {
       if (class_exists("clsPmieducarCurso")) {
@@ -285,6 +286,10 @@ class clsPmieducarSerie
       $this->bloquear_matricula_faixa_etaria = $bloquear_matricula_faixa_etaria;
     }
 
+    if (is_numeric($idade_ideal)) {
+      $this->idade_ideal = $idade_ideal;
+    }
+
     $this->observacao_historico = $observacao_historico;
     $this->dias_letivos         = $dias_letivos;
   }
@@ -298,7 +303,8 @@ class clsPmieducarSerie
     if (is_numeric($this->ref_usuario_cad) && is_numeric($this->ref_cod_curso) &&
       is_string($this->nm_serie) && is_numeric($this->etapa_curso) &&
       is_numeric($this->concluinte) && is_numeric($this->carga_horaria) &&
-      is_numeric($this->dias_letivos))
+      is_numeric($this->dias_letivos) &&
+      is_numeric($this->idade_ideal) )
     {
       $db = new clsBanco();
 
@@ -383,6 +389,12 @@ class clsPmieducarSerie
       if (is_numeric($this->dias_letivos)) {
         $campos  .= "{$gruda}dias_letivos";
         $valores .= "{$gruda}'{$this->dias_letivos}'";
+        $gruda    = ", ";
+      }
+
+      if (is_numeric($this->idade_ideal)) {
+        $campos  .= "{$gruda}idade_ideal";
+        $valores .= "{$gruda}'{$this->idade_ideal}'";
         $gruda    = ", ";
       }
 
@@ -511,6 +523,15 @@ class clsPmieducarSerie
         $gruda = ", ";
       }
 
+      if (is_numeric($this->idade_ideal)) {
+        $set .= "{$gruda}idade_ideal = '{$this->idade_ideal}'";
+        $gruda = ", ";
+      }
+      else {
+        $set .= "{$gruda}idade_ideal = NULL";
+        $gruda = ", ";
+      }
+
       if (dbBool($this->alerta_faixa_etaria)) {
         $set .= "{$gruda}alerta_faixa_etaria = true ";
         $gruda = ", ";
@@ -547,7 +568,7 @@ class clsPmieducarSerie
     $date_data_exclusao_ini = NULL, $date_data_exclusao_fim = NULL,
     $int_ativo = NULL, $int_ref_cod_instituicao = NULL,
     $int_idade_inicial = NULL, $int_idade_final = NULL, $int_ref_cod_escola = NULL,
-    $regra_avaliacao_id = NULL)
+    $regra_avaliacao_id = NULL, $int_idade_ideal = NULL)
   {
     $sql = "SELECT {$this->_campos_lista}, c.ref_cod_instituicao FROM {$this->_tabela} s, {$this->_schema}curso c";
 
@@ -635,6 +656,11 @@ class clsPmieducarSerie
 
     if (is_numeric($int_idade_inicial)) {
       $filtros .= "{$whereAnd} idade_inicial = '{$int_idade_inicial}'";
+      $whereAnd = " AND ";
+    }
+
+    if (is_numeric($int_idade_ideal)) {
+      $filtros .= "{$whereAnd} idade_ideal = '{$int_idade_ideal}'";
       $whereAnd = " AND ";
     }
 
