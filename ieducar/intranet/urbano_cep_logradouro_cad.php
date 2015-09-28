@@ -267,8 +267,8 @@ class indice extends clsCadastro
       die();
     }
     else {
-      $this->mensagem = 'É necessario adicionar pelo menos um CEP e bairro.<br>';
-      return FALSE;
+      header('Location: urbano_cep_logradouro_lst.php');
+      die();
     }
   }
   function Excluir()
@@ -493,17 +493,17 @@ function getBairro_(xml_bairro, DOM_array) {
 $j(document).ready(function(){
 
   for (var i = 0; i < tab_add_1.id; i++) {
-    //Remove evento de click antigo
-    $j("a[id='link_remove["+i+"]']").attr('onclick','').unbind('click');
-    //Adiciona novo evento de click para excluir via Ajax
 
     var valorCep = $j("input[id='cep["+i+"]']").val();
     var idBairro = $j("select[id='idbai["+i+"]'] option:selected").val();
 
-    $j("a[id='link_remove["+i+"]']").click({cep: valorCep, bairro: idBairro, button: document.getElementById('link_remove['+i+']')}, onclickExcluirCepBairro);
+    if (idBairro == '') continue;
 
-  //  $j("input[id='cep["+i+"]']").prop('disabled', true);
-  //  $j("select[id='idbai["+i+"]']").prop('disabled', true);
+    //Remove evento de click antigo
+    $j("a[id='link_remove["+i+"]']").attr('onclick','').unbind('click');
+    //Adiciona novo evento de click para excluir via Ajax
+
+    $j("a[id='link_remove["+i+"]']").click({cep: valorCep, bairro: idBairro, button: document.getElementById('link_remove['+i+']')}, onclickExcluirCepBairro);
   }
 
   function onclickExcluirCepBairro(event) {
