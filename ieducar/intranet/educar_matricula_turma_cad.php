@@ -165,13 +165,13 @@ class indice extends clsCadastro
 
   
   function transferirEnturmacao($matriculaId, $turmaOrigemId, $turmaDestinoId) {
-    if($this->removerEnturmacao($matriculaId, $turmaOrigemId))
+    if($this->removerEnturmacao($matriculaId, $turmaOrigemId, TRUE))
       return $this->novaEnturmacao($matriculaId, $turmaDestinoId);
     return false;
   }
 
 
-  function removerEnturmacao($matriculaId, $turmaId) {
+  function removerEnturmacao($matriculaId, $turmaId, $remanejado = FALSE) {
     $sequencialEnturmacao = $this->getSequencialEnturmacaoByTurmaId($matriculaId, $turmaId);
     $enturmacao = new clsPmieducarMatriculaTurma($matriculaId,
                                                  $turmaId,
@@ -184,7 +184,9 @@ class indice extends clsCadastro
                                                  $sequencialEnturmacao);
 
     if ($enturmacao->edita()){
-      $enturmacao->marcaAlunoRemanejado($this->data_enturmacao);
+      if ($remanejado) {
+        $enturmacao->marcaAlunoRemanejado($this->data_enturmacao);
+      }
       return true;
     }else
       return false;
