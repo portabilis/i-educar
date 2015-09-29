@@ -212,7 +212,7 @@ class indice extends clsCadastro
 
     $this->campoNumero('dias_letivos', 'Dias letivos', $this->dias_letivos, 3, 3, TRUE);
 
-    $this->campoNumero('idade_ideal', 'Idade ideal', $this->idade_ideal, 2, 2, false);
+    $this->campoNumero('idade_ideal', 'Idade padrão', $this->idade_ideal, 2, 2, false);
 
     $this->campoNumero('idade_inicial', 'Faixa et&aacute;ria', $this->idade_inicial,
       2, 2, FALSE, '', '', FALSE, FALSE, TRUE);
