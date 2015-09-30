@@ -950,7 +950,7 @@ class clsPmieducarServidor
           }
           $filtros .= " ref_cod_escola = '{$int_ref_cod_escola}' ";
         }
-        if($bool_servidor_sem_alocacao){
+        if($bool_servidor_sem_alocacao && !is_numeric($int_ref_cod_escola)){
           $filtros .= ') OR NOT EXISTS(SELECT 1 FROM pmieducar.servidor_alocacao where servidor_alocacao.ativo = 1 and servidor_alocacao.ref_cod_servidor = s.cod_servidor)) ';
         }else{
           $filtros .= ')) ';
@@ -1187,6 +1187,7 @@ class clsPmieducarServidor
       $this->getOrderby() . $this->getLimite();
     $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_schema}servidor s{$tabela_compl} {$filtros}");
     // Executa a query
+     // echo"<pre>";var_dump($sql);die;
     $db->Consulta($sql);
     if ($countCampos > 1) {
       while ($db->ProximoRegistro()) {
