@@ -190,7 +190,7 @@ class PessoaController extends ApiCoreController
     $attrs   = array('cpf', 'rg', 'data_nascimento', 'pai_id', 'mae_id', 'responsavel_id', 'nome_pai', 'nome_mae',
                        'nome_responsavel','sexo','estadocivil', 'cep', 'logradouro', 'idtlog', 'bairro',
                        'zona_localizacao', 'idbai', 'idlog', 'idmun', 'idmun_nascimento', 'complemento',
-                       'apartamento', 'andar', 'bloco', 'numero' , 'letra', 'possui_documento', 'iddis', 'distrito', 'fone_fixo', 'fone_mov', 'ddd_fone_fixo', 'ddd_fone_mov');
+                       'apartamento', 'andar', 'bloco', 'numero' , 'letra', 'possui_documento', 'iddis', 'distrito', 'ddd_fone_fixo', 'fone_fixo', 'fone_mov', 'ddd_fone_mov');
     $details = Portabilis_Array_Utils::filter($details, $attrs);
 
     $details['aluno_id']         = $alunoId;
@@ -199,17 +199,15 @@ class PessoaController extends ApiCoreController
     $details['nome_responsavel'] = $this->toUtf8($details['nome_responsavel'], array('transform' => true));
     $details['cep']              = int2CEP($details['cep']);
 
-    $details['bairro']           = $this->toUtf8($details['bairro']);
-    $details['distrito']           = $this->toUtf8($details['distrito']);
-    $details['logradouro']       = $this->toUtf8($details['logradouro']);
-    $detaihandleGetPersonls['complemento']      = $this->toUtf8($details['complemento']);
-    $details['letra']            = $this->toUtf8($details['letra']);
-    $details['bloco']            = $this->toUtf8($details['bloco']);
-    if ($details['fone_fixo'])
-      $details['fone_fixo']            = $this->toUtf8("({$details['ddd_fone_fixo']}){$details['fone_fixo']}");
-    if ($details['fone_mov'])
-      $details['fone_mov']            = $this->toUtf8("({$details['ddd_fone_mov']}){$details['fone_mov']}");
-
+    $details['bairro']                     = $this->toUtf8($details['bairro']);
+    $details['distrito']                   = $this->toUtf8($details['distrito']);
+    $details['logradouro']                 = $this->toUtf8($details['logradouro']);
+    $detaihandleGetPersonls['complemento'] = $this->toUtf8($details['complemento']);
+    $details['ddd_fone_fixo']              = $this->toUtf8($details['ddd_fone_fixo']);
+    $details['fone_fixo']                  = $this->toUtf8($details['fone_fixo']);
+    $details['ddd_fone_mov']               = $this->toUtf8($details['ddd_fone_mov']);
+    $details['fone_mov']                   = $this->toUtf8($details['fone_mov']);
+   
     if($details['idmun']){
 
       $_sql = " SELECT nome, sigla_uf FROM public.municipio WHERE idmun = $1; ";
@@ -437,7 +435,9 @@ class PessoaController extends ApiCoreController
     //$fisica->idpes_pai          = "NULL";
     //$fisica->idpes_mae          = "NULL";
     $fisica->idmun_nascimento   = $this->getRequest()->naturalidade;
+    $ddd_fone_fixo              = $this->getRequest()->ddd_telefone_1;
     $fone_fixo                  = $this->getRequest()->telefone_1;
+    $ddd_fone_mov               = $this->getRequest()->ddd_telefone_mov;
     $fone_mov                   = $this->getRequest()->telefone_mov;
 
     $sql = "select 1 from cadastro.fisica WHERE idpes = $1 limit 1";
@@ -448,18 +448,21 @@ class PessoaController extends ApiCoreController
       $fisica->edita();
     
 
+    
+
     if ($fone_fixo){
-      $ddd_fixo = substr($fone_fixo, 1,2);
-      $fone_fixo = substr($fone_fixo, 4);
+      $ddd_fixo = $ddd_fone_fixo;
+      $fone_fixo = $fone_fixo;
       $telefone = new clsPessoaTelefone($fisica->idpes, 1, $fone_fixo, $ddd_fixo);
       $telefone->cadastra();
     }
     if ($fone_mov){
-      $ddd_mov = substr($fone_mov, 1,2);
-      $fone_mov = substr($fone_mov, 4);
+      $ddd_mov = $ddd_fone_mov;
+      $fone_mov = $fone_mov;
       $telefone = new clsPessoaTelefone($fisica->idpes, 2, $fone_mov, $ddd_mov);
       $telefone->cadastra();
     }
+   
 
   }
 //select fone from fone_pessoa where fone_pessoa.idpes = 18664 AND fone_pessoa.tipo = 1
