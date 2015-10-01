@@ -241,8 +241,7 @@ class indice extends clsDetalhe
       if (is_array($lst_transferencia)) {
         $det_transferencia = array_shift($lst_transferencia);
       }
-      // echo "<pre>"; var_dump($det_transferencia["ref_cod_escola_destino"]); die;
-      if(!is_null($det_transferencia["ref_cod_escola_destino"])) {
+      if(!$det_transferencia["ref_cod_escola_destino"] == "0") {
         $tmp_obj = new clsPmieducarEscola($det_transferencia["ref_cod_escola_destino"]);
         $tmp_det = $tmp_obj->detalhe();
         $this->addDetalhe(array("Escola destino", $tmp_det["nome"]));
@@ -346,7 +345,7 @@ class indice extends clsDetalhe
 
       if($registro['aprovado'] == App_Model_MatriculaSituacao::TRANSFERIDO &&
          $this->canCancelTransferenciaExterna($registro['cod_matricula'], $registro['ref_cod_aluno'])) {
-        $this->array_botao[]            = 'Cancelar transferência (escola externa)';
+        $this->array_botao[]            = 'Cancelar transferência';
 
 
         # TODO ver se código, seta matricula como em andamento, ativa ultima matricula_turma for matricula, e desativa transferencia solicitacao

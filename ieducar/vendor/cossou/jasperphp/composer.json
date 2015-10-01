@@ -1,0 +1,25 @@
+{
+    "name": "cossou/jasperphp",
+    "description": "Create Reports in PHP with JasperReports",
+    "license": "MIT",
+    "keywords": [
+        "reports",
+        "jasper",
+        "jasperreports",
+        "reports",
+        "pdf",
+        "java"
+      ],
+    "homepage": "https://github.com/cossou/JasperPHP",
+    "authors": [
+        {
+            "name": "Hélder Duarte",
+            "email": "cossou@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "JasperPHP": "src/"
+        }
+    }
+}

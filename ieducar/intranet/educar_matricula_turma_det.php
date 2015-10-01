@@ -256,7 +256,7 @@ class indice extends clsDetalhe
         $selectEnturmacoes = "<input id='ref_cod_turma_origem' type='hidden' value = '{$enturmacoes[0]['ref_cod_turma']}'/>{$enturmacoes[0]['nm_turma']}";
       }
 
-      $this->addDetalhe(array('<b>Enturmação</b>', $selectEnturmacoes));
+      $this->addDetalhe(array('<b>Enturmação atual</b>', $selectEnturmacoes));
     }    
 
     if(!$this->possuiEnturmacaoTurmaDestino)
