@@ -210,6 +210,7 @@ class indice extends clsCadastro
   var $acesso_internet;
   var $banda_larga;
   var $ato_criacao;
+  var $ato_autorizativo;
   var $utiliza_regra_diferenciada;
   var $orgao_regional;
 
@@ -1052,6 +1053,9 @@ if(!$this->isEnderecoExterno){
 	    $options = array('label' => Portabilis_String_Utils::toLatin1('Ato de criação'), 'value' => $this->ato_criacao, 'size' => 70, 'required' => false);
 	    $this->inputsHelper()->text('ato_criacao', $options);
 
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Ato autorizativo'), 'value' => $this->ato_autorizativo, 'size' => 70, 'required' => false);
+	    $this->inputsHelper()->text('ato_autorizativo', $options);
+
 	    $hiddenInputOptions = array('options' => array('value' => $this->gestor_id));
 	    $helperOptions      = array('objectName' => 'gestor', 'hiddenInputOptions' => $hiddenInputOptions);
 
@@ -1691,6 +1695,7 @@ if(!$this->isEnderecoExterno){
 					$obj->acesso_internet = $this->acesso_internet == 'on' ? 1 : 0;
 					$obj->banda_larga = $this->banda_larga == 'on' ? 1 : 0;
 					$obj->ato_criacao = $this->ato_criacao;
+					$obj->ato_autorizativo = $this->ato_autorizativo;
 					$cadastrou1 = $obj->cadastra();
 
 					if( $cadastrou1 )
@@ -1895,6 +1900,7 @@ if(!$this->isEnderecoExterno){
 			$obj->acesso_internet = $this->acesso_internet == 'on' ? 1 : 0;
 			$obj->banda_larga = $this->banda_larga == 'on' ? 1 : 0;
 			$obj->ato_criacao = $this->ato_criacao;
+			$obj->ato_autorizativo = $this->ato_autorizativo;
 			$cadastrou = $obj->cadastra();
 
 
@@ -2075,6 +2081,7 @@ if(!$this->isEnderecoExterno){
 			$obj->acesso_internet = $this->acesso_internet == 'on' ? 1 : 0;
 			$obj->banda_larga = $this->banda_larga == 'on' ? 1 : 0;
 			$obj->ato_criacao = $this->ato_criacao;
+			$obj->ato_autorizativo = $this->ato_autorizativo;
 			$editou = $obj->edita();
 
 		}
@@ -2187,6 +2194,7 @@ if(!$this->isEnderecoExterno){
 			$obj->acesso_internet = $this->acesso_internet == 'on' ? 1 : 0;
 			$obj->banda_larga = $this->banda_larga == 'on' ? 1 : 0;
 			$obj->ato_criacao = $this->ato_criacao;
+			$obj->ato_autorizativo = $this->ato_autorizativo;
 			$editou = $obj->cadastra();
 			$this->cod_escola = $editou;
 

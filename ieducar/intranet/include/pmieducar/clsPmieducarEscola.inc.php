@@ -162,6 +162,7 @@ class clsPmieducarEscola
   var $acesso_internet;
   var $banda_larga;
   var $ato_criacao;
+  var $ato_autorizativo;
   var $utiliza_regra_diferenciada;
   var $orgao_regional;
 
@@ -246,7 +247,7 @@ class clsPmieducarEscola
           e.dependencia_quantidade_ambiente_climatizado, e.dependencia_nenhuma_relacionada, e.dependencia_numero_salas_existente, dependencia_numero_salas_utilizadas, e.porte_quadra_descoberta, e.porte_quadra_coberta, e.tipo_cobertura_patio,
           e.total_funcionario, e.atendimento_aee, e.fundamental_ciclo, e.localizacao_diferenciada, e.didatico_nao_utiliza, e.didatico_quilombola, e.didatico_indigena, e.educacao_indigena, e.lingua_ministrada, e.espaco_brasil_aprendizado,
           e.abre_final_semana, e.codigo_lingua_indigena, e.atividade_complementar, e.proposta_pedagogica, e.local_funcionamento, e.codigo_inep_escola_compartilhada, e.televisoes, e.videocassetes, e.dvds, e.antenas_parabolicas, e.copiadoras,
-          e.retroprojetores, e.impressoras, e.aparelhos_de_som, e.projetores_digitais, e.faxs, e.maquinas_fotograficas, e.computadores, e.computadores_administrativo, e.computadores_alunos, e.acesso_internet, e.banda_larga, e.ato_criacao, e.utiliza_regra_diferenciada, e.orgao_regional
+          e.retroprojetores, e.impressoras, e.aparelhos_de_som, e.projetores_digitais, e.faxs, e.maquinas_fotograficas, e.computadores, e.computadores_administrativo, e.computadores_alunos, e.acesso_internet, e.banda_larga, e.ato_criacao, e.ato_autorizativo, e.utiliza_regra_diferenciada, e.orgao_regional
           ';
 
     if (is_numeric($ref_usuario_cad)) {
@@ -1109,6 +1110,12 @@ class clsPmieducarEscola
         $gruda = ", ";
       }
 
+      if (is_string($this->ato_autorizativo)) {
+        $campos .= "{$gruda}ato_autorizativo";
+        $valores .= "{$gruda}'{$this->ato_autorizativo}'";
+        $gruda = ", ";
+      }
+
       $campos .= "{$gruda}data_cadastro";
       $valores .= "{$gruda}NOW()";
       $gruda = ", ";
@@ -1723,6 +1730,11 @@ class clsPmieducarEscola
 
       if (is_string($this->ato_criacao)) {
         $set .= "{$gruda}ato_criacao = '{$this->ato_criacao}'";
+        $gruda = ", ";
+      }
+
+      if (is_string($this->ato_autorizativo)) {
+        $set .= "{$gruda}ato_autorizativo = '{$this->ato_autorizativo}'";
         $gruda = ", ";
       }
 
