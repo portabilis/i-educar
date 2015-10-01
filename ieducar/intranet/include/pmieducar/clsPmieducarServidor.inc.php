@@ -1187,6 +1187,7 @@ class clsPmieducarServidor
       $this->getOrderby() . $this->getLimite();
     $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_schema}servidor s{$tabela_compl} {$filtros}");
     // Executa a query
+     // echo"<pre>";var_dump($sql);die;
     $db->Consulta($sql);
     if ($countCampos > 1) {
       while ($db->ProximoRegistro()) {
