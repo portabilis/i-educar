@@ -193,7 +193,7 @@
       </p>
 
 
-          <div id="div-outubro-rosa" style="top: -388px">
+      <div id="div-outubro-rosa" style="top: -388px">
         <a href="http://pt.wikipedia.org/wiki/Outubro_Rosa" target="_blank"><img src="https://s3.amazonaws.com/apps-ieducar-images/outubro-rosa/outubro-rosa.png"/></a>
       </div>
       <!--div id="div-copa-no-brasil" style="top: -390px;">
