@@ -185,6 +185,9 @@ class indice extends clsCadastro
 		$this->inputsHelper()->date('data_cancel', array('label' => 'Data', 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y')));
 		// text
 		$this->campoMemo( "observacao", "Observa&ccedil;&atilde;o", $this->observacao, 60, 5, false );
+
+		$styles = array ('/modules/Portabilis/Assets/Stylesheets/Frontend/Resource.css');
+ 		Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
 	}
 
 	function Novo()
