@@ -18,3 +18,12 @@ $j(function(){
 		}
 	}
 });
+
+var msg = '<b>Novidade</b>: O processo de transferência foi simplificado!<br/>' +
+          'Agora você não precisa mais o tipo de transferência que será utilizado.<br/>' +
+          'Basta, preencher os campos: Escola, Motivo e Data e o aluno ficará<br/>'+
+          'com a situação de transferido automaticamente.';
+
+$j('<p>').addClass('right-top-notice notice')
+         .html(stringUtils.toUtf8(msg))
+         .appendTo($j('#tr_nm_aluno').closest('td'));
