@@ -16,7 +16,10 @@ INSERT INTO pmieducar.tipo_autor VALUES (1, 'Autor');
 INSERT INTO pmieducar.tipo_autor VALUES (2, 'Evento');
 INSERT INTO pmieducar.tipo_autor VALUES (3, 'Entidade coletiva');
 INSERT INTO pmieducar.tipo_autor VALUES (4, 'Anônimo');
-
+ ALTER TABLE pmieducar.acervo ALTER COLUMN volume drop not null;
+ ALTER TABLE pmieducar.acervo ALTER COLUMN num_edicao drop not null;
+ ALTER TABLE pmieducar.acervo ALTER COLUMN ano drop not null;
+ ALTER TABLE pmieducar.acervo ALTER COLUMN num_paginas drop not null;
  --undo
 
  ALTER TABLE pmieducar.acervo DROP COLUMN dimencao;
@@ -24,5 +27,9 @@ INSERT INTO pmieducar.tipo_autor VALUES (4, 'Anônimo');
  ALTER TABLE pmieducar.acervo DROP COLUMN dimencao_ilustrativo;
  ALTER TABLE pmieducar.acervo DROP COLUMN local;
  ALTER TABLE pmieducar.acervo DROP COLUMN ref_cod_tipoautor;
-  ALTER TABLE pmieducar.acervo ALTER COLUMN isbn type int;
+ ALTER TABLE pmieducar.acervo ALTER COLUMN isbn type int;
   DROP TABLE pmieducar.tipo_autor;
+ ALTER TABLE pmieducar.acervo ALTER COLUMN volume type int set not null;
+ ALTER TABLE pmieducar.acervo ALTER COLUMN num_edicao type int set not null;
+ ALTER TABLE pmieducar.acervo ALTER COLUMN ano type int set not null;
+ ALTER TABLE pmieducar.acervo ALTER COLUMN num_paginas type int set not null;
