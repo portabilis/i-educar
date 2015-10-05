@@ -71,7 +71,12 @@ class indice extends clsCadastro
 	var $data_exclusao;
 	var $ativo;
 	var $ref_cod_biblioteca;
-
+	var $dimencao;
+	var $ref_cod_tipo_autor;
+	var $tipo_autor;
+	var $material_ilustrativo;
+	var $dimencao_ilustrativo;
+	var $local;
 	var $ref_cod_instituicao;
 	var $ref_cod_escola;
 
@@ -259,30 +264,34 @@ class indice extends clsCadastro
 
 		//-----------------------INCLUI AUTOR------------------------//
 
+        $opcoes = array( "" => "Selecione", 1 => "Autor", 2 => "Evento", 3 => "Entidade coletiva", 4 => "Anônimo");
+		$this->campoLista( "ref_cod_tipo_autor", "Tipo de autor", $opcoes, $this->ref_cod_tipo_autor, false, true , false , false  , false, false  );
+		$this->campoTexto( "tipo_autor", "", $this->tipo_autor, 40, 255, false);
 		$helperOptions = array('objectName' => 'autores');
-    	$options       = array('label' => 'Autores', 'size' => 50, 'required' => false,
-                           'options' => array('value' => null));
+    	$options       = array('label' => 'Autores', 'size' => 50, 'required' => false, 'options' => array('value' => null));
 		$this->inputsHelper()->multipleSearchAutores('', $options, $helperOptions);
 
 		// text
 		$this->campoTexto( "titulo", "T&iacute;tulo", $this->titulo, 40, 255, true );
 		$this->campoTexto( "sub_titulo", "Subt&iacute;tulo", $this->sub_titulo, 40, 255, false );
 		$this->campoTexto( "estante", "Estante", $this->estante, 20, 15, false );
+		$this->campoTexto( "dimencao", "Dimenção", $this->dimencao, 20, 255, false );
+		$this->campoTexto( "material_ilustrativo", "Material ilustrativo", $this->material_ilustrativo, 20, 255, false );
+		$this->campoTexto( "dimencao_ilustrativo", "Dimenção da ilustração", $this->dimencao_ilustrativo, 20, 255, false );
+		$this->campoTexto( "local", "Local", $this->local, 20, 255, false );
 
  		$helperOptions = array('objectName' => 'assuntos');
-  	$options       = array('label' => 'Assuntos', 'size' => 50, 'required' => false,
-                            'options' => array('value' => null));
-
+  	    $options       = array('label' => 'Assuntos', 'size' => 50, 'required' => false, 'options' => array('value' => null));
  		$this->inputsHelper()->multipleSearchAssuntos('', $options, $helperOptions);
 
 		$this->campoTexto( "cdd", "CDD", $this->cdd, 20, 15, false );
 		$this->campoTexto( "cdu", "CDU", $this->cdu, 20, 15, false );
 		$this->campoTexto( "cutter", "Cutter", $this->cutter, 20, 15, false );
-		$this->campoNumero( "volume", "Volume", $this->volume, 20, 255, true );
-		$this->campoNumero( "num_edicao", "N&uacute;mero Edic&atilde;o", $this->num_edicao, 20, 255, true );
-		$this->campoNumero( "ano", "Ano", $this->ano, 5, 4, true );
-		$this->campoNumero( "num_paginas", "N&uacute;mero P&aacute;ginas", $this->num_paginas, 5, 255, true );
-		$this->campoNumero( "isbn", "ISBN", $this->isbn, 20, 13, false );
+		$this->campoNumero( "volume", "Volume", $this->volume, 20, 255, false );
+		$this->campoNumero( "num_edicao", "N&uacute;mero Edic&atilde;o", $this->num_edicao, 20, 255, false );
+		$this->campoNumero( "ano", "Ano", $this->ano, 5, 4, false );
+		$this->campoNumero( "num_paginas", "N&uacute;mero P&aacute;ginas", $this->num_paginas, 5, 255, false );
+		$this->campoTexto( "isbn", "ISBN", $this->isbn, 20, 13, false );
 
 	}
 
@@ -294,12 +303,9 @@ class indice extends clsCadastro
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra( 598, $this->pessoa_logada, 11,  "educar_acervo_lst.php" );
 
-		if (!is_array($this->getRequest()->autores) || count($this->getRequest()->autores) == 1){
-			$this->mensagem = "&Eacute; necess&aacute;rio informar ao menos um autor.<br>";
-			return false;
-		}
+		
 
-		$obj = new clsPmieducarAcervo( null, $this->ref_cod_exemplar_tipo, $this->ref_cod_acervo, null, $this->pessoa_logada, $this->ref_cod_acervo_colecao, $this->ref_cod_acervo_idioma, $this->ref_cod_acervo_editora, $this->titulo, $this->sub_titulo, $this->cdu, $this->cutter, $this->volume, $this->num_edicao, $this->ano, $this->num_paginas, $this->isbn, null, null, 1, $this->ref_cod_biblioteca, $this->cdd, $this->estante );
+		$obj = new clsPmieducarAcervo( null, $this->ref_cod_exemplar_tipo, $this->ref_cod_acervo, null, $this->pessoa_logada, $this->ref_cod_acervo_colecao, $this->ref_cod_acervo_idioma, $this->ref_cod_acervo_editora, $this->titulo, $this->sub_titulo, $this->cdu, $this->cutter, $this->volume, $this->num_edicao, $this->ano, $this->num_paginas, $this->isbn, null, null, 1, $this->ref_cod_biblioteca, $this->cdd, $this->estante, $this->dimencao, $this->material_ilustrativo, $this->dimencao_ilustrativo, $this->local , $this->ref_cod_tipo_autor , $this->tipo_autor );
 		$cadastrou = $obj->cadastra();
 		if( $cadastrou )
 		{			
@@ -313,7 +319,7 @@ class indice extends clsCadastro
 			return true;
 		}
 		$this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-		echo "<!--\nErro ao cadastrar clsPmieducarAcervo\nvalores obrigatorios\nis_numeric( $this->ref_cod_exemplar_tipo ) && is_numeric( $this->ref_usuario_cad ) && is_numeric( $this->ref_cod_acervo_colecao ) && is_numeric( $this->ref_cod_acervo_idioma ) && is_numeric( $this->ref_cod_acervo_editora ) && is_string( $this->titulo ) && is_numeric( $this->volume ) && is_numeric( $this->num_edicao ) && is_numeric( $this->ano ) && is_numeric( $this->num_paginas ) && is_numeric( $this->isbn )\n-->";
+		echo "<!--\nErro ao cadastrar clsPmieducarAcervo\nvalores obrigatorios\nis_numeric( $this->ref_cod_exemplar_tipo ) && is_numeric( $this->ref_usuario_cad ) && is_numeric( $this->ref_cod_acervo_colecao ) && is_numeric( $this->ref_cod_acervo_idioma ) && is_numeric( $this->ref_cod_acervo_editora ) && is_string( $this->titulo ) && is_numeric( $this->volume ) && is_numeric( $this->num_edicao ) && is_numeric( $this->ano ) && is_numeric( $this->num_paginas ) && is_string( $this->isbn )\n-->";
 		return false;
 	}
 
@@ -326,12 +332,9 @@ class indice extends clsCadastro
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra( 598, $this->pessoa_logada, 11,  "educar_acervo_lst.php" );
 
-		if (!is_array($this->getRequest()->autores) || count($this->getRequest()->autores) == 1){
-			$this->mensagem = "&Eacute; necess&aacute;rio informar ao menos um autor.<br>";
-			return false;
-		}
+		
 
-		$obj = new clsPmieducarAcervo($this->cod_acervo, $this->ref_cod_exemplar_tipo, $this->ref_cod_acervo, $this->pessoa_logada, null, $this->ref_cod_acervo_colecao, $this->ref_cod_acervo_idioma, $this->ref_cod_acervo_editora, $this->titulo, $this->sub_titulo, $this->cdu, $this->cutter, $this->volume, $this->num_edicao, $this->ano, $this->num_paginas, $this->isbn, null, null, 1, $this->ref_cod_biblioteca, $this->cdd, $this->estante);
+		$obj = new clsPmieducarAcervo($this->cod_acervo, $this->ref_cod_exemplar_tipo, $this->ref_cod_acervo, $this->pessoa_logada, null, $this->ref_cod_acervo_colecao, $this->ref_cod_acervo_idioma, $this->ref_cod_acervo_editora, $this->titulo, $this->sub_titulo, $this->cdu, $this->cutter, $this->volume, $this->num_edicao, $this->ano, $this->num_paginas, $this->isbn, null, null, 1, $this->ref_cod_biblioteca, $this->cdd, $this->estante, $this->dimencao, $this->material_ilustrativo, $this->dimencao_ilustrativo, $this->local, $this->ref_cod_tipo_autor , $this->tipo_autor);
 		$editou = $obj->edita();
 		if( $editou )
 		{
@@ -409,6 +412,41 @@ $pagina->MakeAll();
 ?>
 
 <script>
+
+
+if($j('#tipo_autor').val() == ""){
+$j('#tipo_autor').hide();
+}else{
+	$j('#tipo_autor').show();
+}
+if($j('#ref_cod_tipo_autor').val() == 1){
+$j('#autores').closest('tr').show();
+}else{
+$j('#autores').closest('tr').hide();
+}
+$j('#ref_cod_tipo_autor').click(abriCampo);
+
+
+function abriCampo(){
+if($j('#ref_cod_tipo_autor').val() == 2 || $j('#ref_cod_tipo_autor').val() == 3){
+$j('#tipo_autor').show();
+$j('#autores').closest('tr').hide();
+	$j('#autores').val("");
+}else{
+	$j('#tipo_autor').hide();
+	$j('#tipo_autor').val("");
+	if($j('#ref_cod_tipo_autor').val() == 1){
+		$j('#autores').closest('tr').show();
+	}
+	
+}
+}
+
+
+
+
+
+
 
 document.getElementById('ref_cod_acervo_colecao').disabled = true;
 document.getElementById('ref_cod_acervo_colecao').options[0].text = 'Selecione uma biblioteca';
@@ -706,5 +744,5 @@ var getAutores = function() {
 
 getAutores();
 // Para parecer como campo obrigatório, já que o required => true não está funcionando corretamente
-$j('#autores').closest('tr').find('td:first span').append($j('<span>').addClass('campo_obrigatorio').html('*'));
+
 </script>
