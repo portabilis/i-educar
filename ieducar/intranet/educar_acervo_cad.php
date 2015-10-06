@@ -287,10 +287,10 @@ class indice extends clsCadastro
 		$this->campoTexto( "cdd", "CDD", $this->cdd, 20, 15, false );
 		$this->campoTexto( "cdu", "CDU", $this->cdu, 20, 15, false );
 		$this->campoTexto( "cutter", "Cutter", $this->cutter, 20, 15, false );
-		$this->campoNumero( "volume", "Volume", $this->volume, 20, 255, false );
-		$this->campoNumero( "num_edicao", "N&uacute;mero Edic&atilde;o", $this->num_edicao, 20, 255, false );
-		$this->campoNumero( "ano", "Ano", $this->ano, 5, 4, false );
-		$this->campoNumero( "num_paginas", "N&uacute;mero P&aacute;ginas", $this->num_paginas, 5, 255, false );
+		$this->campoTexto( "volume", "Volume", $this->volume, 20, 255, false );
+		$this->campoTexto( "num_edicao", "N&uacute;mero Edic&atilde;o", $this->num_edicao, 20, 255, false );
+		$this->campoTexto( "ano", "Ano", $this->ano, 5, 4, false );
+		$this->campoTexto( "num_paginas", "N&uacute;mero P&aacute;ginas", $this->num_paginas, 5, 255, false );
 		$this->campoTexto( "isbn", "ISBN", $this->isbn, 20, 13, false );
 
 	}
@@ -319,7 +319,7 @@ class indice extends clsCadastro
 			return true;
 		}
 		$this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-		echo "<!--\nErro ao cadastrar clsPmieducarAcervo\nvalores obrigatorios\nis_numeric( $this->ref_cod_exemplar_tipo ) && is_numeric( $this->ref_usuario_cad ) && is_numeric( $this->ref_cod_acervo_colecao ) && is_numeric( $this->ref_cod_acervo_idioma ) && is_numeric( $this->ref_cod_acervo_editora ) && is_string( $this->titulo ) && is_numeric( $this->volume ) && is_numeric( $this->num_edicao ) && is_numeric( $this->ano ) && is_numeric( $this->num_paginas ) && is_string( $this->isbn )\n-->";
+		echo "<!--\nErro ao cadastrar clsPmieducarAcervo\nvalores obrigatorios\nis_numeric( $this->ref_cod_exemplar_tipo ) && is_numeric( $this->ref_usuario_cad ) && is_numeric( $this->ref_cod_acervo_colecao ) && is_numeric( $this->ref_cod_acervo_idioma ) && is_numeric( $this->ref_cod_acervo_editora ) && is_string( $this->titulo ) && is_string( $this->isbn )\n-->";
 		return false;
 	}
 
