@@ -20,7 +20,9 @@ INSERT INTO pmieducar.tipo_autor VALUES (4, 'Anônimo');
  ALTER TABLE pmieducar.acervo ALTER COLUMN num_edicao drop not null;
  ALTER TABLE pmieducar.acervo ALTER COLUMN ano drop not null;
  ALTER TABLE pmieducar.acervo ALTER COLUMN num_paginas drop not null;
-      UPDATE pmieducar.acervo SET tipo_autor = 1 WHERE cod_acervo < 500;
+      update pmieducar.acervo set ref_cod_tipo_autor = 1 
+       where cod_acervo in(select ref_cod_acervo 
+        from pmieducar.acervo_acervo_autor);
  --undo
 
  ALTER TABLE pmieducar.acervo DROP COLUMN dimencao;
@@ -34,4 +36,6 @@ INSERT INTO pmieducar.tipo_autor VALUES (4, 'Anônimo');
  ALTER TABLE pmieducar.acervo ALTER COLUMN num_edicao type int set not null;
  ALTER TABLE pmieducar.acervo ALTER COLUMN ano type int set not null;
  ALTER TABLE pmieducar.acervo ALTER COLUMN num_paginas type int set not null;
-      UPDATE pmieducar.acervo SET tipo_autor = null WHERE cod_acervo < 500;
+      update pmieducar.acervo set ref_cod_tipo_autor = null
+       where cod_acervo in(select ref_cod_acervo 
+        from pmieducar.acervo_acervo_autor);
