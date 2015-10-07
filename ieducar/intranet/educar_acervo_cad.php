@@ -412,36 +412,49 @@ $pagina->MakeAll();
 ?>
 
 <script>
+if($j('#ref_cod_tipo_autor').val() == 2 || $j('#ref_cod_tipo_autor').val() == 3){
 
-
-if($j('#tipo_autor').val() == ""){
-$j('#tipo_autor').hide();
-}else{
-	$j('#tipo_autor').show();
-}
-if($j('#ref_cod_tipo_autor').val() == 1){
-$j('#autores').closest('tr').show();
-}else{
+$j('#tipo_autor').show();
 $j('#autores').closest('tr').hide();
+$j('#autores').val("");
+
+}else if($j('#ref_cod_tipo_autor').val() == 1){
+
+$j('#tipo_autor').hide();
+$j('#tipo_autor').val("");
+$j('#autores').closest('tr').show();
+	
+}else{
+$j('#tipo_autor').hide();
+$j('#tipo_autor').val("");
+$j('#autores').closest('tr').hide();
+$j('#autores').val("");
 }
 $j('#ref_cod_tipo_autor').click(abriCampo);
 
 
+
+
 function abriCampo(){
 if($j('#ref_cod_tipo_autor').val() == 2 || $j('#ref_cod_tipo_autor').val() == 3){
+
 $j('#tipo_autor').show();
 $j('#autores').closest('tr').hide();
-	$j('#autores').val("");
-}else{
-	$j('#tipo_autor').hide();
-	$j('#tipo_autor').val("");
-	if($j('#ref_cod_tipo_autor').val() == 1){
-		$j('#autores').closest('tr').show();
-	}
-	
-}
-}
+$j('#autores').val("");
 
+}else if($j('#ref_cod_tipo_autor').val() == 1){
+
+$j('#tipo_autor').hide();
+$j('#tipo_autor').val("");
+$j('#autores').closest('tr').show();
+	
+}else{
+$j('#tipo_autor').hide();
+$j('#tipo_autor').val("");
+$j('#autores').closest('tr').hide();
+$j('#autores').val("");
+}
+}
 
 
 
