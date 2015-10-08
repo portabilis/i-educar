@@ -111,7 +111,7 @@ class EditController extends Core_Controller_Page_EditController
       50, 50, FALSE, FALSE, FALSE, $this->_getHelp('secao'));  
 
     // Ordenamento
-    $this->campoTexto('ordenamento_ac', $this->_getLabel('ordenamento_ac'), $this->getEntity()->ordenamento_ac==999999 ? null : $this->getEntity()->ordenamento_ac,
+    $this->campoTexto('ordenamento_ac', $this->_getLabel('ordenamento_ac'), $this->getEntity()->ordenamento_ac==99999 ? null : $this->getEntity()->ordenamento_ac,
       10, 50, FALSE, FALSE, FALSE, $this->_getHelp('ordenamento_ac'));    
   }
 
@@ -124,7 +124,7 @@ class EditController extends Core_Controller_Page_EditController
         if($key == "ordenamento_ac"){
 
           if((trim($val) == "") || (is_null($val))) {
-            $data[$key] = 999999;
+            $data[$key] = 99999;
             continue;
           }
         }
