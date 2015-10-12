@@ -1199,6 +1199,7 @@ class AlunoController extends ApiCoreController
         $this->saveProjetos($id);
         $this->createOrUpdatePessoaTransporte($pessoaId);
         $this->createOrUpdateDocumentos($pessoaId);
+        $this->createOrUpdatePessoa($pessoaId);
 
         $this->messenger->append('Cadastrado realizado com sucesso', 'success', false, 'error');
       }
@@ -1227,6 +1228,7 @@ class AlunoController extends ApiCoreController
       $this->saveProjetos($id);
       $this->createOrUpdatePessoaTransporte($pessoaId);
       $this->createOrUpdateDocumentos($pessoaId);
+      $this->createOrUpdatePessoa($pessoaId);
 
       $this->messenger->append('Cadastro alterado com sucesso', 'success', false, 'error');
     }
@@ -1411,6 +1413,13 @@ class AlunoController extends ApiCoreController
     else
       $documentos->edita_aluno();
   }
+
+  protected function createOrUpdatePessoa($idPessoa){
+    $fisica      = new clsFisica($idPessoa);
+    $fisica->cpf = idFederal2int($this->getRequest()->id_federal);
+    $fisica      = $fisica->edita();
+  }
+
   protected function loadAcessoDataEntradaSaida(){
   	@session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
