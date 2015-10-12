@@ -38,6 +38,7 @@ require_once 'App/Model/ZonaLocalizacao.php';
 require_once 'lib/Portabilis/Controller/Page/EditController.php';
 require_once 'Usuario/Model/FuncionarioDataMapper.php';
 require_once 'include/modules/clsModulesRotaTransporteEscolar.inc.php';
+require_once 'Portabilis/String/Utils.php';
 
 class AlunoController extends Portabilis_Controller_Page_EditController
 {
@@ -466,6 +467,14 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     );
 
     $this->inputsHelper()->date('data_emissao_rg', $options);
+
+    // cpf
+    if (is_numeric($this->cod_pessoa_fj)){
+      $fisica   = new clsFisica($this->cod_pessoa_fj);
+      $fisica   = $fisica->detalhe();
+      $valorCpf = is_numeric($fisica['cpf']) ? int2CPF($fisica['cpf']) : '';
+    }
+    $this->campoCpf("id_federal", "CPF", $valorCpf);
 
     // justificativa_falta_documentacao
     $resources = array(null          => 'Selecione',

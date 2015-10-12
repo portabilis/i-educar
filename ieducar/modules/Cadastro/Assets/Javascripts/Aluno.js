@@ -48,6 +48,7 @@ var pessoaPaiOuMae;
 
 var $idField        = $j('#id');
 var $nomeField      = $j('#pessoa_nome');
+var $cpfField       = $j('#id_federal');
 
 var $resourceNotice = $j('<span>').html('')
                                   .addClass('error resource-notice')
@@ -57,6 +58,12 @@ var $resourceNotice = $j('<span>').html('')
 
 var $pessoaNotice = $resourceNotice.clone()
                                    .appendTo($nomeField.parent());
+
+var $cpfNotice    = $j('<span>').html('')
+                                .addClass('error resource-notice')
+                                .hide()
+                                .width($j('#pessoa_nome').outerWidth() - 12)
+                                .appendTo($cpfField.parent());
 
 var $loadingLaudoMedico =  $j('<img>').attr('src', 'imagens/indicator.gif')
                                       .css('margin-top', '3px')
@@ -1645,6 +1652,76 @@ function canShowParentsFields(){
 
     $j('#pai_id').change( function(){ getPersonParentDetails($j(this).val(), 'pai') });
     $j('#mae_id').change( function(){ getPersonParentDetails($j(this).val(), 'mae' ) });
+
+    $cpfField.focusout(function() {
+      $j(document).removeData('submit_form_after_ajax_validation');
+      validatesUniquenessOfCpf();
+    });
+
+    var validatesUniquenessOfCpf = function() {
+      var cpf = $cpfField.val();
+
+      $cpfNotice.hide();
+
+      if(cpf && validatesCpf())
+        getPersonByCpf(cpf);
+    }
+
+    var handleGetPersonByCpf = function(dataResponse) {
+      handleMessages(dataResponse.msgs);
+      $cpfNotice.hide();
+
+      var pessoaId = dataResponse.id;
+
+      if (pessoaId && pessoaId != $j('#pessoa_id').val()) {
+        $cpfNotice.html(stringUtils.toUtf8('CPF já utilizado pela pessoa código ' + pessoaId + ', ')).slideDown('fast');
+
+        $j('<a>').addClass('decorated')
+                 .attr('href', '/intranet/atendidos_cad.php?cod_pessoa_fj=' + pessoaId)
+                 .attr('target', '_blank')
+                 .html('acessar cadastro.')
+                 .appendTo($cpfNotice);
+
+        $j('body,html').animate({ scrollTop: $j('body').offset().top }, 'fast');
+
+        $submitButton.attr('disabled', 'disabled').hide();
+      } else {
+        $submitButton.removeAttr('disabled').show();
+      }
+    }
+
+    var getPersonByCpf = function(cpf) {
+      var options = {
+        url      : getResourceUrlBuilder.buildUrl('/module/Api/pessoa', 'pessoa'),
+        dataType : 'json',
+        data     : { cpf : cpf },
+        success  : handleGetPersonByCpf,
+
+        // forçado requisições sincronas, evitando erro com requisições ainda não concluidas,
+        // como no caso, onde o usuário pressiona cancelar por exemplo.
+        async    : false
+      };
+
+      getResource(options);
+    }
+
+    var validatesCpf = function() {
+      var valid = true;
+      var cpf   = $cpfField.val();
+
+      $cpfNotice.hide();
+
+      if (cpf && ! validationUtils.validatesCpf(cpf)) {
+        $cpfNotice.html(stringUtils.toUtf8('O CPF informado é inválido')).slideDown('fast');
+
+        //Esconde botão Gravar
+        $submitButton.attr('disabled', 'disabled').hide();
+
+        valid = false;
+      }
+
+      return valid;
+    }
 
   }); // ready
 
