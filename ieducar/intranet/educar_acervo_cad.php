@@ -264,7 +264,7 @@ class indice extends clsCadastro
 
 		//-----------------------INCLUI AUTOR------------------------//
 
-        $opcoes = array( "" => "Selecione", 1 => "Autor - Nome pessoal", 2 => "Autor - Evento", 3 => "Autor - Entidade coletiva", 4 => "Obra Anônimo");
+        $opcoes = array( "" => "Selecione", 1 => "Autor - Nome pessoal", 2 => "Autor - Evento", 3 => "Autor - Entidade coletiva", 4 => "Obra anônima");
 		$this->campoLista( "ref_cod_tipo_autor", "Tipo de autor", $opcoes, $this->ref_cod_tipo_autor, false, true , false , false  , false, false  );
 		$this->campoTexto( "tipo_autor", "", $this->tipo_autor, 40, 255, false);
 		$helperOptions = array('objectName' => 'autores');
