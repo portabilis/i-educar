@@ -243,6 +243,10 @@ class AlunoController extends ApiCoreController
   }
 
   protected function validaTurnoProjeto($alunoId, $turnoId) {
+    if($GLOBALS['coreExt']['Config']->app->projetos->ignorar_turno_igual_matricula == 1){
+       return true;
+    }
+
     $sql  = 'SELECT 1
               FROM pmieducar.turma t
               INNER JOIN pmieducar.matricula_turma mt ON (mt.ref_cod_turma = t.cod_turma)
@@ -252,7 +256,9 @@ class AlunoController extends ApiCoreController
               AND m.ativo = 1
               AND m.aprovado = 3
               AND m.ref_cod_aluno = $1';
-    return !(bool) $this->fetchPreparedQuery($sql, array($alunoId, $turnoId), false, 'first-field');
+    $turnoValido = !(bool) $this->fetchPreparedQuery($sql, array($alunoId, $turnoId), false, 'first-field');
+
+    return $turnoValido;
   }
 
   protected function loadTransporte($alunoId) {
