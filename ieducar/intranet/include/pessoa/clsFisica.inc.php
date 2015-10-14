@@ -81,6 +81,7 @@ class clsFisica
 	var $pessoa_contato;
 	var $renda_mensal;
 	var $data_admissao;
+	var $falecido;
 
 	var $tabela;
 	var $schema;
@@ -90,7 +91,7 @@ class clsFisica
 	 *
 	 * @return Object:clsFisica
 	 */
-	function clsFisica( $idpes=false, $data_nasc=false, $sexo=false, $idpes_mae=false, $idpes_pai=false, $idpes_responsavel=false, $idesco=false, $ideciv=false, $idpes_con=false, $data_uniao=false, $data_obito=false, $nacionalidade=false, $idpais_estrangeiro=false, $data_chagada_brasil=false, $idmun_nascimento=false, $ultima_empresa=false, $idocup=false, $nome_mae=false, $nome_pai=false, $nome_conjuge=false, $nome_responsavel=false, $justificativa_provisorio=false, $idpes_cad = false, $idpes_rev = false, $ref_cod_sistema = false, $cpf = false, $ref_cod_religiao = false, $ocupacao = false, $empresa = false, $ddd_telefone_empresa = false, $telefone_empresa = false, $renda_mensal = false, $data_admissao = false )
+	function clsFisica( $idpes=false, $data_nasc=false, $sexo=false, $idpes_mae=false, $idpes_pai=false, $idpes_responsavel=false, $idesco=false, $ideciv=false, $idpes_con=false, $data_uniao=false, $data_obito=false, $nacionalidade=false, $idpais_estrangeiro=false, $data_chagada_brasil=false, $idmun_nascimento=false, $ultima_empresa=false, $idocup=false, $nome_mae=false, $nome_pai=false, $nome_conjuge=false, $nome_responsavel=false, $justificativa_provisorio=false, $idpes_cad = false, $idpes_rev = false, $ref_cod_sistema = false, $cpf = false, $ref_cod_religiao = false, $ocupacao = false, $empresa = false, $ddd_telefone_empresa = false, $telefone_empresa = false, $renda_mensal = false, $data_admissao = false, $falecido = false )
 	{
 		$objPessoa = new clsPessoa_($idpes);
 		if ($objPessoa->detalhe())
@@ -400,6 +401,14 @@ class clsFisica
 				$valores .= ", '$this->data_admissao'";
 			}
 
+			if($this->falecido){
+				$campos .=  ", falecido";
+				$valores .= ", 't'";
+			}else{
+				$campos .=  ", falecido";
+				$valores .= ", 'f'";
+			}
+
 			$db->Consulta( "INSERT INTO {$this->schema}.{$this->tabela} (idpes, origem_gravacao, idsis_cad, data_cad, operacao, idpes_cad $campos) VALUES ( '{$this->idpes}', 'M', 17, NOW(), 'I', '$this->idpes_cad' $valores )" );
 			return true;
 
@@ -614,6 +623,15 @@ class clsFisica
 				$gruda = ", ";
 			}else{
 				$set .= "$gruda data_admissao = NULL";
+				$gruda = ", ";
+			}
+
+			if($this->falecido)
+			{
+				$set  .= "$gruda falecido = 't'";
+				$gruda = ", ";
+			}else{
+				$set .= "$gruda falecido = 'f'";
 				$gruda = ", ";
 			}
 
@@ -920,7 +938,7 @@ class clsFisica
 		if($this->idpes)
 		{
 			$db = new clsBanco();
-			$db->Consulta("SELECT idpes, data_nasc, sexo, idpes_mae, idpes_pai, idpes_responsavel, idesco, ideciv, idpes_con, data_uniao, data_obito, nacionalidade, idpais_estrangeiro, data_chegada_brasil, idmun_nascimento, ultima_empresa, idocup, nome_mae, nome_pai, nome_conjuge, nome_responsavel, justificativa_provisorio, cpf , ref_cod_religiao, sus, nis_pis_pasep, ocupacao, empresa, ddd_telefone_empresa, telefone_empresa, pessoa_contato, data_admissao, renda_mensal FROM {$this->schema}.{$this->tabela} WHERE idpes = {$this->idpes}");
+			$db->Consulta("SELECT idpes, data_nasc, sexo, idpes_mae, idpes_pai, idpes_responsavel, idesco, ideciv, idpes_con, data_uniao, data_obito, nacionalidade, idpais_estrangeiro, data_chegada_brasil, idmun_nascimento, ultima_empresa, idocup, nome_mae, nome_pai, nome_conjuge, nome_responsavel, justificativa_provisorio, cpf , ref_cod_religiao, sus, nis_pis_pasep, ocupacao, empresa, ddd_telefone_empresa, telefone_empresa, pessoa_contato, data_admissao, renda_mensal, falecido FROM {$this->schema}.{$this->tabela} WHERE idpes = {$this->idpes}");
 			if( $db->ProximoRegistro() )
 			{
 				$tupla = $db->Tupla();

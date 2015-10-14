@@ -207,6 +207,7 @@ class PessoaController extends ApiCoreController
     $details['fone_fixo']                  = $this->toUtf8($details['fone_fixo']);
     $details['ddd_fone_mov']               = $this->toUtf8($details['ddd_fone_mov']);
     $details['fone_mov']                   = $this->toUtf8($details['fone_mov']);
+    $details['falecido']                   = $this->toUtf8($details['falecido']);
    
     if($details['idmun']){
 
@@ -269,7 +270,7 @@ class PessoaController extends ApiCoreController
 
   protected function loadPessoaParent(){
     if ($this->getRequest()->id){
-      $_sql = " SELECT (select nome from cadastro.pessoa where pessoa.idpes = fisica.idpes) as nome ,ideciv as estadocivil, data_nasc, sexo FROM cadastro.fisica WHERE idpes = $1; ";
+      $_sql = " SELECT (select nome from cadastro.pessoa where pessoa.idpes = fisica.idpes) as nome ,ideciv as estadocivil, data_nasc, sexo, falecido FROM cadastro.fisica WHERE idpes = $1; ";
 
       $details = $this->fetchPreparedQuery($_sql, $this->getRequest()->id, false, 'first-row');
 
@@ -278,6 +279,8 @@ class PessoaController extends ApiCoreController
       $details['nome'] = Portabilis_String_Utils::toUtf8($details['nome']);
 
       $details['id'] = $this->getRequest()->id;
+
+      $details['falecido'] = dbBool($details['falecido']);
 
       return $details;
     }else
@@ -439,6 +442,7 @@ class PessoaController extends ApiCoreController
     $fone_fixo                  = $this->getRequest()->telefone_1;
     $ddd_fone_mov               = $this->getRequest()->ddd_telefone_mov;
     $fone_mov                   = $this->getRequest()->telefone_mov;
+    $fisica->falecido           = $this->getRequest()->falecido == "true";
 
     $sql = "select 1 from cadastro.fisica WHERE idpes = $1 limit 1";
 
