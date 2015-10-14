@@ -151,17 +151,17 @@ class indice extends clsCadastro
         $this->bloco, $this->apartamento, $this->andar, $this->zona_localizacao, $this->estado_civil,
         $this->pai_id, $this->mae_id, $this->tipo_nacionalidade, $this->pais_origem, $this->naturalidade,
         $this->letra, $this->sus, $this->nis_pis_pasep, $this->ocupacao, $this->empresa, $this->ddd_telefone_empresa,
-        $this->telefone_empresa, $this->pessoa_contato, $this->renda_mensal, $this->data_admissao, $this->renda_mensal, $this->data_admissao
+        $this->telefone_empresa, $this->pessoa_contato, $this->renda_mensal, $this->data_admissao, $this->falecido
       ) =
 
-      $objPessoa->queryRapida(
+       $objPessoa->queryRapida(
         $this->cod_pessoa_fj, 'nome', 'cpf', 'data_nasc',  'ddd_1', 'fone_1',
         'ddd_2', 'fone_2', 'ddd_mov', 'fone_mov', 'ddd_fax', 'fone_fax', 'email',
         'tipo', 'sexo', 'cidade', 'bairro', 'logradouro', 'cep', 'idlog',
         'idbai', 'idtlog', 'sigla_uf', 'complemento', 'numero', 'bloco', 'apartamento',
         'andar', 'zona_localizacao', 'ideciv', 'idpes_pai', 'idpes_mae', 'nacionalidade',
         'idpais_estrangeiro', 'idmun_nascimento', 'letra', 'sus', 'nis_pis_pasep', 'ocupacao',
-        'empresa', 'ddd_telefone_empresa', 'telefone_empresa', 'pessoa_contato', 'renda_mensal', 'data_admissao'
+        'empresa', 'ddd_telefone_empresa', 'telefone_empresa', 'pessoa_contato', 'renda_mensal', 'data_admissao', 'falecido'
       );
 
       $this->id_federal      = is_numeric($this->id_federal)   ? int2CPF($this->id_federal) : '';
@@ -683,6 +683,11 @@ class indice extends clsCadastro
 
     $this->inputsHelper()->simpleSearchPais('nome', $options, $helperOptions);
 
+
+    //Falecido
+    $options = array('label' => 'Falecido?', 'required' => false, 'value' => dbBool($this->falecido));
+
+    $this->inputsHelper()->checkbox('falecido', $options);
 
     // naturalidade
 
@@ -1210,6 +1215,8 @@ class indice extends clsCadastro
     $this->renda_mensal           = str_replace(',', '.', $this->renda_mensal);
     $fisica->renda_mensal         = $this->renda_mensal;
     $fisica->data_admissao        = $this->data_admissao ? Portabilis_Date_Utils::brToPgSQL($this->data_admissao) : null;
+    $fisica->falecido             = $this->falecido;
+
 
     $sql = "select 1 from cadastro.fisica WHERE idpes = $1 limit 1";
 

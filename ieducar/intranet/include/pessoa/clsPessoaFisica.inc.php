@@ -308,6 +308,7 @@ class clsPessoaFisica extends clsPessoaFj
         $this->pessoa_contato           = $detalhe_fisica['pessoa_contato'];
         $this->renda_mensal             = $detalhe_fisica['renda_mensal'];
         $this->data_admissao            = $detalhe_fisica['data_admissao'];
+        $this->falecido                 = $detalhe_fisica['falecido'];
 
         $tupla['idpes'] = $this->idpes;
         $tupla[]        = & $tupla['idpes'];
@@ -380,6 +381,9 @@ class clsPessoaFisica extends clsPessoaFj
 
         $tupla['justificativa_provisorio'] = $this->justificativa_provisorio;
         $tupla[]                           = & $tupla['justificativa_provisorio'];
+
+        $tupla['falecido'] = $this->falecido;
+        $tupla[]                           = & $tupla['falecido'];
 
         return $tupla;
       }
