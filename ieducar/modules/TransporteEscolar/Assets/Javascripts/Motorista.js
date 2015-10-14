@@ -16,7 +16,22 @@ var $pessoaNotice = $resourceNotice.clone()
 
 // ajax
 
+resourceOptions.handlePost = function(dataResponse) {
+  $nomeField.attr('disabled', 'disabled');
+  $j('.pessoa-links .cadastrar-pessoa').hide();
 
+  if (! dataResponse.any_error_msg)
+    window.setTimeout(function() { document.location = '/intranet/transporte_motorista_det.php?cod_motorista=' + resource.id(); }, 500);
+  else
+    $submitButton.removeAttr('disabled').val('Gravar');
+}
+
+resourceOptions.handlePut = function(dataResponse) {
+  if (! dataResponse.any_error_msg)
+    window.setTimeout(function() { document.location = '/intranet/transporte_motorista_det.php?cod_motorista=' + resource.id(); }, 500);
+  else
+    $submitButton.removeAttr('disabled').val('Gravar');
+}
 
 resourceOptions.handleGet = function(dataResponse) {
   handleMessages(dataResponse.msgs);
@@ -46,6 +61,7 @@ var handleGetPersonDetails = function(dataResponse) {
   handleMessages(dataResponse.msgs);
   $pessoaNotice.hide();
 
+  var alunoId = dataResponse.aluno_id;
 
     $j('.pessoa-links .editar-pessoa').attr('href', '/intranet/atendidos_cad.php?cod_pessoa_fj=' + dataResponse.id)
                                       .show().css('display', 'inline');
@@ -53,7 +69,7 @@ var handleGetPersonDetails = function(dataResponse) {
     $submitButton.removeAttr('disabled').show();
   
 
-    $j('#id').val(dataResponse.id);
+  $j('#pessoa_id').val(dataResponse.id);
   $nomeField.val(dataResponse.id + ' - ' + dataResponse.nome);
 
 
@@ -75,12 +91,14 @@ var getPersonDetails = function(personId) {
 }
 
 var updatePersonDetails = function() {
-
+  if ($j('#pessoa_nome').val() && $j('#pessoa_id').val())
+    getPersonDetails($j('#pessoa_id').val());
+  else
     clearPersonDetails();
 }
 
 var clearPersonDetails = function() {
-
+  $j('#pessoa_id').val('');
   $j('.pessoa-links .editar-pessoa').hide();
 }
 
@@ -93,18 +111,16 @@ var simpleSearchPessoaOptions = {
 
 // children callbacks
 
-function afterChangePessoa(targetWindow, pessoaId) {
+function afterChangePessoa(targetWindow, parentType, parentId, parentName) {
   targetWindow.close();
 
   // timeout para usuario perceber mudança
   window.setTimeout(function() {
-    messageUtils.success('Pessoa alterada com sucesso');
-location.reload();
-    $j('#id').val(dataResponse.id);
-    $j('#pessoa_nome').val(dataResponse.nome);
-    getPersonDetails(pessoaId);
-
-
+    messageUtils.success('Pessoa alterada com sucesso', $nomeField);
+    $j('#pessoa_id').val(parentId);
+    $nomeField.val(parentId + ' - ' + parentName);
+    if ($nomeField.is(':active'))
+      $nomeField.focus();
   }, 500);
 }
 
