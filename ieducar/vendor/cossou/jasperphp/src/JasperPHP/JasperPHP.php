@@ -63,7 +63,16 @@ class JasperPHP
                     throw new \Exception("Invalid format!", 1);
         }
 
-        $command = __DIR__ . $this->executable;
+        $params_command = $command = __DIR__ . $this->executable;
+
+        $params_command .= " params " . $input_file . " 2>&1 ";
+
+        exec($params_command, $params_output);
+
+        foreach ($params_output as $key => &$param) {
+          $exploded = explode(" ", $param);
+          $param = $exploded[1];
+        }
 
         $command .= " pr ";
 
@@ -85,6 +94,7 @@ class JasperPHP
             $command .= " -P";
             foreach ($parameters as $key => $value)
             {
+              if(in_array($key, $params_output))
                 $command .= " " . $key . "=" . $value;
             }
         }
