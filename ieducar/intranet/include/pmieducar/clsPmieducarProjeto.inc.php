@@ -386,6 +386,10 @@ class clsPmieducarProjeto
 	}
 
 	function cadastraProjetoDoAluno($alunoId, $projetoId, $dataInclusao, $dataDesligamento, $turnoId){
+
+		if($this->alunoPossuiProjeto($alunoId, $projetoId) ){
+			return false;
+		}
 		$dataInclusao = '\'' . $dataInclusao . '\'';
 		$dataDesligamento = !empty($dataDesligamento) ? '\'' . $dataDesligamento . '\'': 'NULL';
 		$db = new clsBanco();
@@ -415,6 +419,17 @@ class clsPmieducarProjeto
 		}
 
 		return false;
+	}
+	function alunoPossuiProjeto($alunoId, $projetoId){
+		$db = new clsBanco();
+		$db->Consulta( "SELECT 1
+			              FROM  pmieducar.projeto_aluno,
+			                    pmieducar.projeto
+			              WHERE ref_cod_projeto = cod_projeto
+			              AND ref_cod_aluno = {$alunoId}
+			              AND ref_cod_projeto = {$projetoId}" );
+
+		return $db->ProximoRegistro();
 	}
 }
 ?>
