@@ -138,6 +138,7 @@ require_once 'include/pmieducar/clsPmieducarServidorCursoMinistra.inc.php';
 require_once 'include/pmieducar/clsPmieducarAbandonoTipo.inc.php';
 require_once 'include/pmieducar/clsPmieducarDistribuicaoUniforme.inc.php';
 require_once 'include/pmieducar/clsPmieducarCandidatoReservaVaga.inc.php';
+require_once 'include/pmieducar/clsPmieducarSerieVaga.inc.php';
 
 //Biblioteca
 require_once 'include/pmieducar/clsPmieducarBiblioteca.inc.php';
