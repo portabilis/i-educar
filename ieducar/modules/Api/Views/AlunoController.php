@@ -1175,14 +1175,18 @@ class AlunoController extends ApiCoreController
         $dataDesligamento = Portabilis_Date_Utils::brToPgSQL($this->getRequest()->projeto_data_desligamento[$key]);
         $turnoId = $value;
         if (is_numeric($projetoId) && is_numeric($turnoId) && !empty($dataInclusao)){
-          if($this->validaTurnoProjeto($alunoId, $turnoId))
-            $obj->cadastraProjetoDoAluno($alunoId, $projetoId, $dataInclusao, $dataDesligamento, $turnoId);
-          else
+          if($this->validaTurnoProjeto($alunoId, $turnoId)){
+            if(!$obj->cadastraProjetoDoAluno($alunoId, $projetoId, $dataInclusao, $dataDesligamento, $turnoId)){
+              $this->messenger->append('O aluno não pode ser cadastrado no mesmo projeto mais de uma vez.');
+            }
+          }
+          else{
             $this->messenger->append('O aluno não pode ser cadastrado em projetos no mesmo turno em que estuda, por favor, verifique.');
-        }else
+          }
+        }else{
           $this->messenger->append('Para cadastrar o aluno em um projeto é necessário no mínimo informar a data de inclusão e o turno.');
+        }
       }
-
     }
   }
 
