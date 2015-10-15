@@ -142,7 +142,7 @@ class JasperPHP
         exec($this->the_command, $output, $return_var);
 
         if($return_var != 0)
-            throw new \Exception("Erro ao executar o relatorio! Detalhes: " . $output[0] , 1);
+            throw new \Exception("Erro ao executar o relatorio! Detalhes: " . join($output, " "), 1);
 
         return $output;
     }
