@@ -1258,7 +1258,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
     $this->inputsHelper()->date( 'projeto_data_desligamento', array('required' => false));
 
-    $this->inputsHelper()->select('projeto_turno', array('required' => false, 'resources' => array( '' => "Selecione", 1 => 'Matutino', 2 => 'Vespertino', 3 => 'Noturno')));
+    $this->inputsHelper()->select('projeto_turno', array('required' => false, 'resources' => array( '' => "Selecione", 1 => 'Matutino', 2 => 'Vespertino', 3 => 'Noturno', 4 => 'Integral')));
 
     $this->campoTabelaFim();
 
