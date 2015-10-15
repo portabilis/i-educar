@@ -128,7 +128,7 @@ class JasperPHP
     public function execute($run_as_user = false)
     {
         if( $this->redirect_output && !$this->windows)
-            $this->the_command .= " > /dev/null 2>&1";
+            $this->the_command .= " 2>&1";
 
         if( $this->background && !$this->windows )
             $this->the_command .= " &";
@@ -142,7 +142,7 @@ class JasperPHP
         exec($this->the_command, $output, $return_var);
 
         if($return_var != 0)
-            throw new \Exception("There was and error executing the report! Time to check the logs!" . $output , 1);
+            throw new \Exception("Erro ao executar o relatorio! Detalhes: " . $output[0] , 1);
 
         return $output;
     }
