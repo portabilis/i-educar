@@ -339,6 +339,9 @@ class clsFisica
 			{
 				$campos .= ", ref_cod_religiao";
 				$valores .= ", $this->ref_cod_religiao";
+			}else{
+				$campos .= ", ref_cod_religiao";
+				$valores .= ", NULL";
 			}
 
 			if(is_numeric($this->cpf))
@@ -576,6 +579,9 @@ class clsFisica
 
 			if(is_numeric($this->ref_cod_religiao)) {
 				$set .= "$gruda ref_cod_religiao = {$this->ref_cod_religiao}";
+				$gruda = ", ";
+			}else{
+				$set .= "$gruda ref_cod_religiao = NULL";
 				$gruda = ", ";
 			}
 
