@@ -185,6 +185,7 @@ function safeCapitalize(value) {
 function safeCapitalizeFirstCaracter(value) {
   if (typeof(value) == 'string') {
     value = value.toLowerCase();
+    value = value.trim();
     value = value.substr(0, 1).toUpperCase() + value.substr(1);
   }
 
