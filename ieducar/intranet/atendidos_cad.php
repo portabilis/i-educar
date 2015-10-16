@@ -151,7 +151,7 @@ class indice extends clsCadastro
         $this->bloco, $this->apartamento, $this->andar, $this->zona_localizacao, $this->estado_civil,
         $this->pai_id, $this->mae_id, $this->tipo_nacionalidade, $this->pais_origem, $this->naturalidade,
         $this->letra, $this->sus, $this->nis_pis_pasep, $this->ocupacao, $this->empresa, $this->ddd_telefone_empresa,
-        $this->telefone_empresa, $this->pessoa_contato, $this->renda_mensal, $this->data_admissao, $this->falecido
+        $this->telefone_empresa, $this->pessoa_contato, $this->renda_mensal, $this->data_admissao, $this->falecido, $this->religiao_id
       ) =
 
        $objPessoa->queryRapida(
@@ -161,7 +161,7 @@ class indice extends clsCadastro
         'idbai', 'idtlog', 'sigla_uf', 'complemento', 'numero', 'bloco', 'apartamento',
         'andar', 'zona_localizacao', 'ideciv', 'idpes_pai', 'idpes_mae', 'nacionalidade',
         'idpais_estrangeiro', 'idmun_nascimento', 'letra', 'sus', 'nis_pis_pasep', 'ocupacao',
-        'empresa', 'ddd_telefone_empresa', 'telefone_empresa', 'pessoa_contato', 'renda_mensal', 'data_admissao', 'falecido'
+        'empresa', 'ddd_telefone_empresa', 'telefone_empresa', 'pessoa_contato', 'renda_mensal', 'data_admissao', 'falecido', 'ref_cod_religiao'
       );
 
       $this->id_federal      = is_numeric($this->id_federal)   ? int2CPF($this->id_federal) : '';
@@ -699,6 +699,9 @@ class indice extends clsCadastro
     $this->inputsHelper()->simpleSearchMunicipio('nome', $options, $helperOptions);
 
 
+    // Religião
+    $this->inputsHelper()->religiao(array('required' => false));
+
     // Detalhes do Endereço
     if ($this->idlog && $this->idbai){
 
@@ -1216,7 +1219,7 @@ class indice extends clsCadastro
     $fisica->renda_mensal         = $this->renda_mensal;
     $fisica->data_admissao        = $this->data_admissao ? Portabilis_Date_Utils::brToPgSQL($this->data_admissao) : null;
     $fisica->falecido             = $this->falecido;
-
+    $fisica->ref_cod_religiao     = $this->religiao_id;
 
     $sql = "select 1 from cadastro.fisica WHERE idpes = $1 limit 1";
 
