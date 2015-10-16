@@ -202,10 +202,10 @@ class indice extends clsCadastro
           $this->$campo = $val;
         }
 
-        $obj_matricula_turma = new clsPmieducarMatriculaTurma();
-        $detalhe_turma = $obj_matricula_turma->lista(NULL, $this->cod_turma);
+         $objTurma = new clsPmieducarTurma($this->cod_turma);
+         $possuiAlunosVinculados = $objTurma->possuiAlunosVinculados();
 
-        if($detalhe_turma)
+        if($possuiAlunosVinculados)
           $this->script_excluir = "excluir_turma_com_matriculas();";
 
         $this->fexcluir = $obj_permissoes->permissao_excluir(
@@ -2229,11 +2229,7 @@ function valida_xml(xml)
 function excluir_turma_com_matriculas(){
 
   document.formcadastro.reset();
-
-  if (confirm('Existe(m) matr\u00edcula(s) vinculada(s) a essa turma, caso exclu\u00edda n\u00e3o ser\u00e1 poss\u00edvel emitir relat\u00f3rios! \nDeseja realmente excluir essa turma?')) {
-    document.formcadastro.tipoacao.value = 'Excluir';
-    document.formcadastro.submit();
-  }
+  alert(stringUtils.toUtf8('Não foi possível excluir a turma, pois a mesma possui matrículas vinculadas.'));
 }
 
 function validaCampoServidor()
