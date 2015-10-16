@@ -1574,6 +1574,8 @@ function canShowParentsFields(){
 
       $j('#nome-pessoa-parent').focus();
 
+      $j('#falecido-parent').attr('checked', false);
+
       $j('#dialog-form-pessoa-parent form p:first-child').html('Cadastrar pessoa '+(parentType == 'mae' ? 'm&atilde;e' : parentType)).css('margin-left', '0.75em');
 
       pessoaPaiOuMae = parentType;
