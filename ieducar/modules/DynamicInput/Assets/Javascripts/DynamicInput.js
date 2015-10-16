@@ -10,7 +10,7 @@ function updateSelect($targetElement, options, emptyOptionHtml) {
         if (optgroup != null) {
           optgroup.appendTo($targetElement);
         }
-        optgroup = $j('<optgroup />').attr('label', $j(value).data('group'));
+        optgroup = $j('<optgroup />').attr('label', safeCapitalizeFirstCaracter($j(value).data('group')));
         groups.push($j(value).data('group'));
       }
       $j(value).appendTo(optgroup);
@@ -87,7 +87,7 @@ function jsonResourcesToSelectOptions(resources) {
       });
     }
     
-    opt.html(safeCapitalize(newValue));
+    opt.html(safeCapitalizeFirstCaracter(newValue));
     
     options.push(opt);    
   });
