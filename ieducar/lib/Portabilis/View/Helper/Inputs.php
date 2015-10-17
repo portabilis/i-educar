@@ -261,6 +261,12 @@ class Portabilis_View_Helper_Inputs {
 
   }
 
+  public function simpleSearchAcervo($attrName, $inputOptions = array(), $helperOptions = array()) {
+
+    $this->simpleSearchResourceInput('simpleSearchAcervo', $attrName, $inputOptions, $helperOptions);
+
+  }
+
   // multiple search resource input helper
 
 

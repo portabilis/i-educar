@@ -83,6 +83,7 @@ class indice extends clsListagem
   var $matricula;
   var $ref_cod_escola;
   var $ref_cod_instituicao;
+  var $servidor_sem_alocacao;
 
   function Gerar()
   {
@@ -125,7 +126,7 @@ class indice extends clsListagem
     $parametros->setSubmit(0);
     $this->campoTexto("nome","Nome do servidor", $this->nome,50,255,false);
     $this->campoTexto("matricula","Matrícula", $this->matricula,50,255,false);
-
+    $this->campoCheck("servidor_sem_alocacao","Incluir servidores sem alocação", isset($_GET['servidor_sem_alocacao']));
 
     // Paginador
     $this->limite = 20;
@@ -168,7 +169,7 @@ class indice extends clsListagem
       NULL,
       NULL,
       NULL,
-      TRUE
+      isset($_GET['servidor_sem_alocacao'])
     );
     $total = $obj_servidor->_total;
 

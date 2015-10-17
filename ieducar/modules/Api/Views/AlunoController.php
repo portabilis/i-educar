@@ -243,6 +243,10 @@ class AlunoController extends ApiCoreController
   }
 
   protected function validaTurnoProjeto($alunoId, $turnoId) {
+    if($GLOBALS['coreExt']['Config']->app->projetos->ignorar_turno_igual_matricula == 1){
+       return true;
+    }
+
     $sql  = 'SELECT 1
               FROM pmieducar.turma t
               INNER JOIN pmieducar.matricula_turma mt ON (mt.ref_cod_turma = t.cod_turma)
@@ -252,7 +256,9 @@ class AlunoController extends ApiCoreController
               AND m.ativo = 1
               AND m.aprovado = 3
               AND m.ref_cod_aluno = $1';
-    return !(bool) $this->fetchPreparedQuery($sql, array($alunoId, $turnoId), false, 'first-field');
+    $turnoValido = !(bool) $this->fetchPreparedQuery($sql, array($alunoId, $turnoId), false, 'first-field');
+
+    return $turnoValido;
   }
 
   protected function loadTransporte($alunoId) {
@@ -1169,14 +1175,18 @@ class AlunoController extends ApiCoreController
         $dataDesligamento = Portabilis_Date_Utils::brToPgSQL($this->getRequest()->projeto_data_desligamento[$key]);
         $turnoId = $value;
         if (is_numeric($projetoId) && is_numeric($turnoId) && !empty($dataInclusao)){
-          if($this->validaTurnoProjeto($alunoId, $turnoId))
-            $obj->cadastraProjetoDoAluno($alunoId, $projetoId, $dataInclusao, $dataDesligamento, $turnoId);
-          else
+          if($this->validaTurnoProjeto($alunoId, $turnoId)){
+            if(!$obj->cadastraProjetoDoAluno($alunoId, $projetoId, $dataInclusao, $dataDesligamento, $turnoId)){
+              $this->messenger->append('O aluno não pode ser cadastrado no mesmo projeto mais de uma vez.');
+            }
+          }
+          else{
             $this->messenger->append('O aluno não pode ser cadastrado em projetos no mesmo turno em que estuda, por favor, verifique.');
-        }else
+          }
+        }else{
           $this->messenger->append('Para cadastrar o aluno em um projeto é necessário no mínimo informar a data de inclusão e o turno.');
+        }
       }
-
     }
   }
 
@@ -1199,6 +1209,7 @@ class AlunoController extends ApiCoreController
         $this->saveProjetos($id);
         $this->createOrUpdatePessoaTransporte($pessoaId);
         $this->createOrUpdateDocumentos($pessoaId);
+        $this->createOrUpdatePessoa($pessoaId);
 
         $this->messenger->append('Cadastrado realizado com sucesso', 'success', false, 'error');
       }
@@ -1227,6 +1238,7 @@ class AlunoController extends ApiCoreController
       $this->saveProjetos($id);
       $this->createOrUpdatePessoaTransporte($pessoaId);
       $this->createOrUpdateDocumentos($pessoaId);
+      $this->createOrUpdatePessoa($pessoaId);
 
       $this->messenger->append('Cadastro alterado com sucesso', 'success', false, 'error');
     }
@@ -1411,6 +1423,13 @@ class AlunoController extends ApiCoreController
     else
       $documentos->edita_aluno();
   }
+
+  protected function createOrUpdatePessoa($idPessoa){
+    $fisica      = new clsFisica($idPessoa);
+    $fisica->cpf = idFederal2int($this->getRequest()->id_federal);
+    $fisica      = $fisica->edita();
+  }
+
   protected function loadAcessoDataEntradaSaida(){
   	@session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];

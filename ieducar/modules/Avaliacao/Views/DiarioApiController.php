@@ -1068,7 +1068,7 @@ class DiarioApiController extends ApiCoreController
       //área de conhecimento + componente curricular
 
       $componente['ordem_nome_area_conhecimento'] = strtr($nomeArea, "áàãâéêíóôõúüçÁÀÃÂÉÊÍÓÔÕÚÜÇ", "aaaaeeiooouucAAAAEEIOOOUUC");
-      $componente['ordem_componente_curricular']  = strtr($_componente->get('nome', "áàãâéêíóôõúüçÁÀÃÂÉÊÍÓÔÕÚÜÇ", "aaaaeeiooouucAAAAEEIOOOUUC"));
+      $componente['ordem_componente_curricular']  = strtr(($_componente->get('nome')),"áàãâéêíóôõúüçÁÀÃÂÉÊÍÓÔÕÚÜÇ", "aaaaeeiooouucAAAAEEIOOOUUC");
       $componentesCurriculares[]           = $componente;
     }
 

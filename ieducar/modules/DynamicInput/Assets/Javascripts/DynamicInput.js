@@ -61,7 +61,7 @@ function xmlResourcesToSelectOptions(resources, parentNodeName, nodeIdAttrName, 
 }
 
 
-function jsonResourcesToSelectOptions(resources) {
+function jsonResourcesToSelectOptions(resources, captalizeFirstCaracter) {
   var options = [];
 
   $j.each(resources, function(id, value) {
@@ -86,9 +86,12 @@ function jsonResourcesToSelectOptions(resources) {
         }
       });
     }
-    
-    opt.html(safeCapitalize(newValue));
-    
+
+    if (captalizeFirstCaracter)
+      opt.html(safeCapitalizeFirstCaracter(newValue));
+    else
+      opt.html(safeCapitalize(newValue));
+
     options.push(opt);    
   });
 

@@ -63,7 +63,16 @@ class JasperPHP
                     throw new \Exception("Invalid format!", 1);
         }
 
-        $command = __DIR__ . $this->executable;
+        $params_command = $command = __DIR__ . $this->executable;
+
+        $params_command .= " params " . $input_file . " 2>&1 ";
+
+        exec($params_command, $params_output);
+
+        foreach ($params_output as $key => &$param) {
+          $exploded = explode(" ", $param);
+          $param = $exploded[1];
+        }
 
         $command .= " pr ";
 
@@ -85,6 +94,7 @@ class JasperPHP
             $command .= " -P";
             foreach ($parameters as $key => $value)
             {
+              if(in_array($key, $params_output))
                 $command .= " " . $key . "=" . $value;
             }
         }
@@ -128,7 +138,7 @@ class JasperPHP
     public function execute($run_as_user = false)
     {
         if( $this->redirect_output && !$this->windows)
-            $this->the_command .= " > /dev/null 2>&1";
+            $this->the_command .= " 2>&1";
 
         if( $this->background && !$this->windows )
             $this->the_command .= " &";
@@ -142,7 +152,7 @@ class JasperPHP
         exec($this->the_command, $output, $return_var);
 
         if($return_var != 0)
-            throw new \Exception("There was and error executing the report! Time to check the logs!" . $output , 1);
+            throw new \Exception("Erro ao executar o relatorio! Detalhes: " . join($output, " "), 1);
 
         return $output;
     }

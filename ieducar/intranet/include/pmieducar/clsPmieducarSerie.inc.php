@@ -303,8 +303,7 @@ class clsPmieducarSerie
     if (is_numeric($this->ref_usuario_cad) && is_numeric($this->ref_cod_curso) &&
       is_string($this->nm_serie) && is_numeric($this->etapa_curso) &&
       is_numeric($this->concluinte) && is_numeric($this->carga_horaria) &&
-      is_numeric($this->dias_letivos) &&
-      is_numeric($this->idade_ideal) )
+      is_numeric($this->dias_letivos) )
     {
       $db = new clsBanco();
 

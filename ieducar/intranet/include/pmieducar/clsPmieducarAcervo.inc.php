@@ -56,6 +56,12 @@ class clsPmieducarAcervo
 	var $data_exclusao;
 	var $ativo;
 	var $ref_cod_biblioteca;
+	var $dimencao;
+	var $ref_cod_tipo_autor;
+	var $tipo_autor;
+	var $material_ilustrativo;
+	var $dimencao_ilustrativo;
+	var $local;
 
 	// propriedades padrao
 
@@ -121,13 +127,69 @@ class clsPmieducarAcervo
 	 *
 	 * @return object
 	 */
-	function clsPmieducarAcervo( $cod_acervo = null, $ref_cod_exemplar_tipo = null, $ref_cod_acervo = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $ref_cod_acervo_colecao = null, $ref_cod_acervo_idioma = null, $ref_cod_acervo_editora = null, $titulo = null, $sub_titulo = null, $cdu = null, $cutter = null, $volume = null, $num_edicao = null, $ano = null, $num_paginas = null, $isbn = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $ref_cod_biblioteca = null, $cdd = null, $estante = null )
+	function clsPmieducarAcervo( $cod_acervo = null, 
+		                         $ref_cod_exemplar_tipo = null, 
+		                         $ref_cod_acervo = null, 
+		                         $ref_usuario_exc = null, 
+		                         $ref_usuario_cad = null, 
+		                         $ref_cod_acervo_colecao = null, 
+		                         $ref_cod_acervo_idioma = null, 
+		                         $ref_cod_acervo_editora = null, 
+		                         $titulo = null, 
+		                         $sub_titulo = null, 
+		                         $cdu = null, 
+		                         $cutter = null, 
+		                         $volume = null, 
+		                         $num_edicao = null, 
+		                         $ano = null, 
+		                         $num_paginas = null, 
+		                         $isbn = null, 
+		                         $data_cadastro = null,
+		                         $data_exclusao = null, 
+		                         $ativo = null, 
+		                         $ref_cod_biblioteca = null, 
+		                         $cdd = null, 
+		                         $estante = null , 
+		                         $dimencao = null , 
+		                         $material_ilustrativo = null , 
+		                         $dimencao_ilustrativo = null , 
+		                         $local = null , 
+		                         $ref_cod_tipo_autor = null , 
+		                         $tipo_autor = null )
 	{
 		$db = new clsBanco();
 		$this->_schema = "pmieducar.";
 		$this->_tabela = "{$this->_schema}acervo";
 
-		$this->_campos_lista = $this->_todos_campos = "a.cod_acervo, a.ref_cod_exemplar_tipo, a.ref_cod_acervo, a.ref_usuario_exc, a.ref_usuario_cad, a.ref_cod_acervo_colecao, a.ref_cod_acervo_idioma, a.ref_cod_acervo_editora, a.titulo, a.sub_titulo, a.cdu, a.cutter, a.volume, a.num_edicao, a.ano, a.num_paginas, a.isbn, a.data_cadastro, a.data_exclusao, a.ativo, a.ref_cod_biblioteca, a.cdd, a.estante";
+		$this->_campos_lista = $this->_todos_campos = "a.cod_acervo, 
+		                                               a.ref_cod_exemplar_tipo, 
+		                                               a.ref_cod_acervo, 
+		                                               a.ref_usuario_exc, 
+		                                               a.ref_usuario_cad, 
+		                                               a.ref_cod_acervo_colecao, 
+		                                               a.ref_cod_acervo_idioma, 
+		                                               a.ref_cod_acervo_editora, 
+		                                               a.titulo, 
+		                                               a.sub_titulo, 
+		                                               a.cdu, 
+		                                               a.cutter, 
+		                                               a.volume, 
+		                                               a.num_edicao, 
+		                                               a.ano, 
+		                                               a.num_paginas, 
+		                                               a.isbn, 
+		                                               a.data_cadastro, 
+		                                               a.data_exclusao, 
+		                                               a.ativo, 
+		                                               a.ref_cod_biblioteca, 
+		                                               a.cdd, 
+		                                               a.estante, 
+		                                               a.dimencao, 
+		                                               a.material_ilustrativo, 
+		                                               a.dimencao_ilustrativo, 
+		                                               a.local, 
+		                                               a.ref_cod_tipo_autor, 
+		                                               a.tipo_autor";
 
 		if( is_numeric( $ref_cod_biblioteca ) )
 		{
@@ -382,20 +444,28 @@ class clsPmieducarAcervo
 		if( is_numeric( $volume ) )
 		{
 			$this->volume = $volume;
+		}else{
+			$this->volume = "null";
 		}
 		if( is_numeric( $num_edicao ) )
 		{
 			$this->num_edicao = $num_edicao;
+		}else{
+			$this->num_edicao = "null";
 		}
 		if( is_numeric( $ano ) )
 		{
 			$this->ano = $ano;
+		}else{
+			$this->ano  = "null";
 		}
 		if( is_numeric( $num_paginas ) )
 		{
 			$this->num_paginas = $num_paginas;
+		}else{
+			$this->num_paginas  = "null";
 		}
-		if( is_numeric( $isbn ) )
+		if( is_string( $isbn ) )
 		{
 			$this->isbn = $isbn;
 		}
@@ -414,6 +484,12 @@ class clsPmieducarAcervo
 
     $this->cdd     = $cdd;
     $this->estante = $estante;
+    $this->dimencao = $dimencao;
+    $this->material_ilustrativo = $material_ilustrativo;
+    $this->dimencao_ilustrativo = $dimencao_ilustrativo;
+    $this->local = $local;
+    $this->ref_cod_tipo_autor = $ref_cod_tipo_autor;
+    $this->tipo_autor = $tipo_autor;
 	}
 
 	/**
@@ -423,7 +499,12 @@ class clsPmieducarAcervo
 	 */
 	function cadastra()
 	{
-		if( is_numeric( $this->ref_cod_exemplar_tipo ) && is_numeric( $this->ref_usuario_cad ) && is_numeric( $this->ref_cod_acervo_idioma ) && is_numeric( $this->ref_cod_acervo_editora ) && is_string( $this->titulo ) && is_numeric( $this->volume ) && is_numeric( $this->num_edicao ) && is_numeric( $this->ano ) && is_numeric( $this->num_paginas ) && is_numeric( $this->ref_cod_biblioteca ) )
+		if( is_numeric( $this->ref_cod_exemplar_tipo ) && 
+			is_numeric( $this->ref_usuario_cad ) && 
+			is_numeric( $this->ref_cod_acervo_idioma ) && 
+			is_numeric( $this->ref_cod_acervo_editora ) && 
+			is_string( $this->titulo ) && 
+			is_numeric( $this->ref_cod_biblioteca ) )
 		{
 			$db = new clsBanco();
 
@@ -515,7 +596,7 @@ class clsPmieducarAcervo
 				$valores .= "{$gruda}'{$this->num_paginas}'";
 				$gruda = ", ";
 			}
-			if( is_numeric( $this->isbn ) )
+			if( is_string( $this->isbn ) )
 			{
 				$campos .= "{$gruda}isbn";
 				$valores .= "{$gruda}'{$this->isbn}'";
@@ -546,6 +627,48 @@ class clsPmieducarAcervo
 			{
 				$campos .= "{$gruda}estante";
 				$valores .= "{$gruda}'{$this->estante}'";
+				$gruda = ", ";
+			}
+
+			if( is_string( $this->dimencao ) )
+			{
+				$campos .= "{$gruda}dimencao";
+				$valores .= "{$gruda}'{$this->dimencao}'";
+				$gruda = ", ";
+			}
+
+			if( is_string( $this->material_ilustrativo ) )
+			{
+				$campos .= "{$gruda}material_ilustrativo";
+				$valores .= "{$gruda}'{$this->material_ilustrativo}'";
+				$gruda = ", ";
+			}
+
+			if( is_string( $this->dimencao_ilustrativo ) )
+			{
+				$campos .= "{$gruda}dimencao_ilustrativo";
+				$valores .= "{$gruda}'{$this->dimencao_ilustrativo}'";
+				$gruda = ", ";
+			}
+
+			if( is_string( $this->local ) )
+			{
+				$campos .= "{$gruda}local";
+				$valores .= "{$gruda}'{$this->local}'";
+				$gruda = ", ";
+			}
+
+			if( is_numeric( $this->ref_cod_tipo_autor ) )
+			{
+				$campos .= "{$gruda}ref_cod_tipo_autor";
+				$valores .= "{$gruda}'{$this->ref_cod_tipo_autor}'";
+				$gruda = ", ";
+			}
+
+			if( is_string( $this->tipo_autor ) )
+			{
+				$campos .= "{$gruda}tipo_autor";
+				$valores .= "{$gruda}'{$this->tipo_autor}'";
 				$gruda = ", ";
 			}
 
@@ -643,7 +766,7 @@ class clsPmieducarAcervo
 				$set .= "{$gruda}num_paginas = '{$this->num_paginas}'";
 				$gruda = ", ";
 			}
-			if( is_numeric( $this->isbn ) )
+			if( is_string( $this->isbn ) )
 			{
 				$set .= "{$gruda}isbn = '{$this->isbn}'";
 				$gruda = ", ";
@@ -672,9 +795,39 @@ class clsPmieducarAcervo
 				$gruda = ", ";
 			}
 
-			if( is_string( $this->estante ) )
+			if( is_string( $this->dimencao ) )
 			{
-				$set .= "{$gruda}estante = '{$this->estante}'";
+				$set .= "{$gruda}dimencao = '{$this->dimencao}'";
+				$gruda = ", ";
+			}
+
+			if( is_string( $this->material_ilustrativo ) )
+			{
+				$set .= "{$gruda}material_ilustrativo = '{$this->material_ilustrativo}'";
+				$gruda = ", ";
+			}
+
+			if( is_string( $this->dimencao_ilustrativo ) )
+			{
+				$set .= "{$gruda}dimencao_ilustrativo = '{$this->dimencao_ilustrativo}'";
+				$gruda = ", ";
+			}
+
+			if( is_string( $this->local ) )
+			{
+				$set .= "{$gruda}local = '{$this->local}'";
+				$gruda = ", ";
+			}
+
+			if( is_numeric( $this->ref_cod_tipo_autor ) )
+			{
+				$set .= "{$gruda}ref_cod_tipo_autor = '{$this->ref_cod_tipo_autor}'";
+				$gruda = ", ";
+			}
+
+			if( is_string( $this->tipo_autor ) )
+			{
+				$set .= "{$gruda}tipo_autor = '{$this->tipo_autor}'";
 				$gruda = ", ";
 			}
 
@@ -692,7 +845,28 @@ class clsPmieducarAcervo
 	 *
 	 * @return array
 	 */
-	function lista( $int_cod_acervo = null, $int_ref_cod_exemplar_tipo = null, $int_ref_cod_acervo = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_ref_cod_acervo_colecao = null, $int_ref_cod_acervo_idioma = null, $int_ref_cod_acervo_editora = null, $str_titulo = null, $str_sub_titulo = null, $str_cdu = null, $str_cutter = null, $int_volume = null, $int_num_edicao = null, $int_ano = null, $int_num_paginas = null, $int_isbn = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_biblioteca = null, $int_ref_cod_instituicao = null, $int_ref_cod_escola = null, $str_nm_autor = null )
+	function lista( $int_cod_acervo = null, 
+		            $int_ref_cod_exemplar_tipo = null, 
+		            $int_ref_cod_acervo = null, 
+		            $int_ref_usuario_exc = null, 
+		            $int_ref_usuario_cad = null, 
+		            $int_ref_cod_acervo_colecao = null, 
+		            $int_ref_cod_acervo_idioma = null, 
+		            $int_ref_cod_acervo_editora = null, 
+		            $str_titulo = null, 
+		            $str_sub_titulo = null, 
+		            $str_cdu = null, 
+		            $str_cutter = null, 
+		            $str_isbn = null, 
+		            $date_data_cadastro_ini = null, 
+		            $date_data_cadastro_fim = null, 
+		            $date_data_exclusao_ini = null, 
+		            $date_data_exclusao_fim = null, 
+		            $int_ativo = null, 
+		            $int_ref_cod_biblioteca = null, 
+		            $int_ref_cod_instituicao = null, 
+		            $int_ref_cod_escola = null, 
+		            $str_nm_autor = null )
 	{
 		$sql = "SELECT {$this->_campos_lista}, aa.cod_acervo_autor FROM {$this->_tabela} a, {$this->_schema}biblioteca b, {$this->_schema}acervo_acervo_autor aaa, {$this->_schema}acervo_autor aa";
 
@@ -779,9 +953,9 @@ class clsPmieducarAcervo
 			$filtros .= "{$whereAnd} a.num_paginas = '{$int_num_paginas}'";
 			$whereAnd = " AND ";
 		}
-		if( is_numeric( $int_isbn ) )
+		if( is_string( $str_isbn ) )
 		{
-			$filtros .= "{$whereAnd} a.isbn = '{$int_isbn}'";
+			$filtros .= "{$whereAnd} a.isbn = '{$str_isbn}'";
 			$whereAnd = " AND ";
 		}
 		if( is_string( $date_data_cadastro_ini ) )
@@ -882,7 +1056,12 @@ class clsPmieducarAcervo
 	}
 
 
-	function listaAcervoBiblioteca($int_ref_cod_biblioteca = null, $str_titulo = null, $ativo = null, $int_ref_cod_acervo_colecao = null,  $int_ref_cod_exemplar_tipo = null, $int_ref_cod_acervo_editora = null)
+	function listaAcervoBiblioteca($int_ref_cod_biblioteca = null, 
+		                           $str_titulo = null, 
+		                           $ativo = null, 
+		                           $int_ref_cod_acervo_colecao = null,  
+		                           $int_ref_cod_exemplar_tipo = null, 
+		                           $int_ref_cod_acervo_editora = null)
 	{
 		$sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela} a";
 

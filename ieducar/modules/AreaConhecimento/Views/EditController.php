@@ -68,8 +68,8 @@ class EditController extends Core_Controller_Page_EditController
       'entity' => 'secao'
     ),  
     'ordenamento_ac' => array(
-      'label'  => 'Ordenamento',
-      'help'   => '',
+      'label'  => 'Ordem de apresentação',
+      'help'   => 'Ordem respeitada no lançamento de notas/faltas.',
       'entity' => 'ordenamento_ac'
     ),    
   );
@@ -111,8 +111,50 @@ class EditController extends Core_Controller_Page_EditController
       50, 50, FALSE, FALSE, FALSE, $this->_getHelp('secao'));  
 
     // Ordenamento
-    $this->campoTexto('ordenamento_ac', $this->_getLabel('ordenamento_ac'), $this->getEntity()->ordenamento_ac,
+    $this->campoTexto('ordenamento_ac', $this->_getLabel('ordenamento_ac'), $this->getEntity()->ordenamento_ac==99999 ? null : $this->getEntity()->ordenamento_ac,
       10, 50, FALSE, FALSE, FALSE, $this->_getHelp('ordenamento_ac'));    
+  }
+
+  protected function _save(){
+    $data = array();
+
+    foreach ($_POST as $key => $val) {
+      if (array_key_exists($key, $this->_formMap)) {
+
+        if($key == "ordenamento_ac"){
+
+          if((trim($val) == "") || (is_null($val))) {
+            $data[$key] = 99999;
+            continue;
+          }
+        }
+
+        $data[$key] = $val;
+      }
+    }
+
+
+    // Verifica pela existência do field identity
+    if (isset($this->getRequest()->id) && 0 < $this->getRequest()->id) {
+      $entity = $this->setEntity($this->getDataMapper()->find($this->getRequest()->id));
+    }
+
+    if (isset($entity)) {
+      $this->getEntity()->setOptions($data);
+    }
+    else {
+      $this->setEntity($this->getDataMapper()->createNewEntityInstance($data));
+    }
+
+    try {
+      $this->getDataMapper()->save($this->getEntity());
+      return TRUE;
+    }
+    catch (Exception $e) {
+      // TODO: ver @todo do docblock
+      $this->mensagem = 'Erro no preenchimento do formulário. ';
+      return FALSE;
+    }
   }
 
 }

@@ -111,19 +111,16 @@ var simpleSearchPessoaOptions = {
 
 // children callbacks
 
-function afterChangePessoa(targetWindow, pessoaId) {
+function afterChangePessoa(targetWindow, parentType, parentId, parentName) {
   targetWindow.close();
 
   // timeout para usuario perceber mudança
   window.setTimeout(function() {
     messageUtils.success('Pessoa alterada com sucesso', $nomeField);
-
-    $j('#pessoa_id').val(pessoaId);
-    getPersonDetails(pessoaId);
-
+    $j('#pessoa_id').val(parentId);
+    $nomeField.val(parentId + ' - ' + parentName);
     if ($nomeField.is(':active'))
       $nomeField.focus();
-
   }, 500);
 }
 
