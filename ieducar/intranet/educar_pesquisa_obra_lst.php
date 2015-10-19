@@ -95,6 +95,7 @@ class indice extends clsListagem
 
 		$this->titulo = "Obra - Listagem";
 
+
 		$this->addCabecalhos( array(
 			"Obra",
 			"Autor",
@@ -127,11 +128,7 @@ class indice extends clsListagem
 			null,
 			null,
 			null,
-			null,
-			null,
-			null,
-			null,
-			$this->isbn,
+			$this->isbn ? $this->isbn : null,
 			null,
 			null,
 			null,
