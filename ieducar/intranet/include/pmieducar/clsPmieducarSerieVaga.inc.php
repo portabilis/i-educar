@@ -47,6 +47,7 @@ class clsPmieducarSerieVaga
   var $ref_cod_escola;
   var $ref_cod_curso;
   var $ref_cod_serie;
+  var $turno;
   var $vagas;
 
   /**
@@ -103,13 +104,13 @@ class clsPmieducarSerieVaga
    * Construtor.
    */
   function clsPmieducarSerieVaga($cod_serie_vaga = NULL, $ano = NULL, $ref_cod_instituicao = NULL,
-                                  $ref_cod_escola = NULL, $ref_cod_curso = NULL, $ref_cod_serie = NULL, $vagas = NULL)
+                                  $ref_cod_escola = NULL, $ref_cod_curso = NULL, $ref_cod_serie = NULL, $turno = NULL, $vagas = NULL)
   {
     $db = new clsBanco();
     $this->_schema = 'pmieducar.';
     $this->_tabela = $this->_schema . 'serie_vaga';
 
-    $this->_campos_lista = $this->_todos_campos = ' cod_serie_vaga, ano, ref_cod_instituicao, ref_cod_escola, ref_cod_curso, ref_cod_serie, vagas ';
+    $this->_campos_lista = $this->_todos_campos = ' cod_serie_vaga, ano, ref_cod_instituicao, ref_cod_escola, ref_cod_curso, ref_cod_serie, turno, vagas ';
 
     if (is_numeric($cod_serie_vaga)){
       $this->cod_serie_vaga = $cod_serie_vaga;
@@ -129,6 +130,9 @@ class clsPmieducarSerieVaga
     if (is_numeric($ref_cod_serie)){
       $this->ref_cod_serie = $ref_cod_serie;
     }
+    if (is_numeric($turno)){
+      $this->turno = $turno;
+    }
     if (is_numeric($vagas)){
       $this->vagas = $vagas;
     }
@@ -141,7 +145,8 @@ class clsPmieducarSerieVaga
   function cadastra()
   {
     if ( is_numeric($this->cod_serie_vaga) && is_numeric($this->ano) && is_numeric($this->ref_cod_instituicao) &&
-          is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_curso) && is_numeric($this->ref_cod_serie) && is_numeric($this->vagas) )
+          is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_curso) && is_numeric($this->ref_cod_serie) &&
+            is_numeric($this->turno) && is_numeric($this->vagas) )
     {
       $db = new clsBanco();
 
@@ -182,6 +187,12 @@ class clsPmieducarSerieVaga
       if (is_numeric($this->ref_cod_serie)) {
         $campos  .= "{$gruda}ref_cod_serie";
         $valores .= "{$gruda}'{$this->ref_cod_serie}'";
+        $gruda    = ', ';
+      }
+
+      if (is_numeric($this->turno)) {
+        $campos  .= "{$gruda}turno";
+        $valores .= "{$gruda}'{$this->turno}'";
         $gruda    = ', ';
       }
 
@@ -227,7 +238,8 @@ class clsPmieducarSerieVaga
    * Retorna uma lista de registros filtrados de acordo com os parâmetros.
    * @return array
    */
-  function lista($ano = NULL, $int_ref_cod_escola = NULL, $int_ref_cod_curso = NULL, $int_ref_cod_serie = NULL)
+  function lista($ano = NULL, $int_ref_cod_escola = NULL, $int_ref_cod_curso = NULL, $int_ref_cod_serie = NULL,
+                  $turno = NULL)
   {
     $sql     = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
     $filtros = '';
@@ -251,6 +263,11 @@ class clsPmieducarSerieVaga
 
     if (is_numeric($int_ref_cod_serie)) {
       $filtros .= "{$whereAnd} ref_cod_serie = '{$int_ref_cod_serie}'";
+      $whereAnd = ' AND ';
+    }
+
+    if (is_numeric($turno)) {
+      $filtros .= "{$whereAnd} turno = '{$turno}'";
       $whereAnd = ' AND ';
     }
 
