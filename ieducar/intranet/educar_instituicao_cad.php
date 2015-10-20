@@ -82,6 +82,7 @@ class indice extends clsCadastro
 	var $restringir_multiplas_enturmacoes;
   var $permissao_filtro_abandono_transferencia;
 	var $multiplas_reserva_vaga;
+  var $reserva_integral_somente_com_renda;
 	var $data_base_matricula;
 
 	function Inicializar()
@@ -130,7 +131,8 @@ class indice extends clsCadastro
         $this->restringir_historico_escolar   	= dbBool($this->restringir_historico_escolar);
         $this->restringir_multiplas_enturmacoes	= dbBool($this->restringir_multiplas_enturmacoes);
         $this->permissao_filtro_abandono_transferencia  = dbBool($this->permissao_filtro_abandono_transferencia);
-        $this->multiplas_reserva_vaga	= dbBool($this->multiplas_reserva_vaga);
+        $this->multiplas_reserva_vaga = dbBool($this->multiplas_reserva_vaga);
+        $this->reserva_integral_somente_com_renda	= dbBool($this->reserva_integral_somente_com_renda);
 
 		return $retorno;
 	}
@@ -230,7 +232,9 @@ class indice extends clsCadastro
 		$this->campoCheck("restringir_multiplas_enturmacoes", "Não permitir múltiplas enturmações para o aluno no mesmo curso e série/ano", $this->restringir_multiplas_enturmacoes);
     $this->campoCheck("permissao_filtro_abandono_transferencia", "Não permitir a apresentação de alunos com matrícula em abandono ou transferida na emissão do relatório de frequência", $this->permissao_filtro_abandono_transferencia);
 
-		$this->campoCheck("multiplas_reserva_vaga", "Permite multiplas reserva de vaga para mesmo candidato em escolas diferentes", $this->multiplas_reserva_vaga);
+    $this->campoCheck("multiplas_reserva_vaga", "Permite multiplas reserva de vaga para mesmo candidato em escolas diferentes", $this->multiplas_reserva_vaga);
+
+		$this->campoCheck("reserva_integral_somente_com_renda", "Permite turno integral na reserva de vaga somente quando informado renda", $this->reserva_integral_somente_com_renda);
 
     	$this->inputsHelper()->text('data_base', array('label' => 'Data base para matrícula (dia/mês)',
 					    								'size' => 5,
@@ -254,7 +258,8 @@ class indice extends clsCadastro
 		$obj->restringir_historico_escolar 		= !is_null($this->restringir_historico_escolar);
 		$obj->restringir_multiplas_enturmacoes  = !is_null($this->restringir_multiplas_enturmacoes);
     $obj->permissao_filtro_abandono_transferencia  = !is_null($this->permissao_filtro_abandono_transferencia);
-		$obj->multiplas_reserva_vaga  = !is_null($this->multiplas_reserva_vaga);
+    $obj->multiplas_reserva_vaga  = !is_null($this->multiplas_reserva_vaga);
+		$obj->reserva_integral_somente_com_renda  = !is_null($this->reserva_integral_somente_com_renda);
 		$obj->coordenador_transporte 			= $this->pessoa_coordenador_transporte;
 		$obj->controlar_espaco_utilizacao_aluno = is_null($this->controlar_espaco_utilizacao_aluno) ? 0 : 1;
 		$obj->percentagem_maxima_ocupacao_salas = Portabilis_Currency_Utils::moedaBrToUs($this->percentagem_maxima_ocupacao_salas);
@@ -289,7 +294,8 @@ class indice extends clsCadastro
 		$obj->restringir_historico_escolar 		= !is_null($this->restringir_historico_escolar);
 		$obj->restringir_multiplas_enturmacoes 	= !is_null($this->restringir_multiplas_enturmacoes);
     $obj->permissao_filtro_abandono_transferencia   = !is_null($this->permissao_filtro_abandono_transferencia);
-		$obj->multiplas_reserva_vaga 	= !is_null($this->multiplas_reserva_vaga);
+    $obj->multiplas_reserva_vaga  = !is_null($this->multiplas_reserva_vaga);
+		$obj->reserva_integral_somente_com_renda 	= !is_null($this->reserva_integral_somente_com_renda);
 		$obj->coordenador_transporte 			= $this->pessoa_coordenador_transporte;
 		$obj->controlar_espaco_utilizacao_aluno = is_null($this->controlar_espaco_utilizacao_aluno) ? 0 : 1;
 		$obj->percentagem_maxima_ocupacao_salas = Portabilis_Currency_Utils::moedaBrToUs($this->percentagem_maxima_ocupacao_salas);
