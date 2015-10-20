@@ -99,9 +99,6 @@
       <!-- #&ERROLOGIN&# -->
 
       <!-- #&PENDENCIA_ADMINISTRATIVA&# -->
-      <p style="min-height: 0px;" class="flash success">
-        Para melhorarmos ainda mais o produto i-Educar, precisamos fazer uma pequena paradinha para manuten&ccedil;&atilde;o. O servi&ccedil;o poder&aacute; ficar inst&aacute;vel durante o per&iacute;odo das <b>07:00h</b> e as <b>09:00h</b> desta <b> ter&ccedil;a-feira (20/10)</b>. Agradecemos sua compreens&atilde;o.
-      </p>
     </div>
 
     <div id="corpo">
