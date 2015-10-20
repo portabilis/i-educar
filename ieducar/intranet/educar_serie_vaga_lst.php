@@ -1,6 +1,6 @@
 <?php
-error_reporting(E_ERROR);
-ini_set("display_errors", 1);
+//error_reporting(E_ERROR);
+//ini_set("display_errors", 1);
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -103,7 +103,22 @@ class indice extends clsListagem
     ));
 
 
-    $this->inputsHelper()->dynamic(array('ano', 'instituicao', 'escola', 'curso', 'serie'), array('required' => FALSE));
+    $this->inputsHelper()->dynamic(array('ano'), array('required' => FALSE));
+
+    $obj_permissao = new clsPermissoes();
+    $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
+
+    $get_escola = true;
+//    $get_escola_curso = true;
+    $get_escola_curso_serie = true;
+    $sem_padrao = true;
+    $get_curso = true;
+    include("include/pmieducar/educar_campo_lista.php");
+
+    if ( $this->ref_cod_escola )
+    {
+      $this->ref_ref_cod_escola = $this->ref_cod_escola;
+    }
 
     // Paginador
     $this->limite = 20;
