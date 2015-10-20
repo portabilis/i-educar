@@ -70,6 +70,7 @@ class clsPmieducarInstituicao
   var $restringir_multiplas_enturmacoes;
   var $permissao_filtro_abandono_transferencia;
   var $data_base_matricula;
+  var $multiplas_reserva_vaga;
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
    * @var int
@@ -134,7 +135,7 @@ class clsPmieducarInstituicao
     $db = new clsBanco();
     $this->_schema = "pmieducar.";
     $this->_tabela = "{$this->_schema}instituicao";
-    $this->_campos_lista = $this->_todos_campos = "cod_instituicao, ref_usuario_exc, ref_usuario_cad, ref_idtlog, ref_sigla_uf, cep, cidade, bairro, logradouro, numero, complemento, nm_responsavel, ddd_telefone, telefone, data_cadastro, data_exclusao, ativo, nm_instituicao, data_base_transferencia, data_base_remanejamento, controlar_espaco_utilizacao_aluno, percentagem_maxima_ocupacao_salas, quantidade_alunos_metro_quadrado, exigir_vinculo_turma_professor, gerar_historico_transferencia, matricula_apenas_bairro_escola, restringir_historico_escolar, coordenador_transporte, restringir_multiplas_enturmacoes, permissao_filtro_abandono_transferencia, data_base_matricula";
+    $this->_campos_lista = $this->_todos_campos = "cod_instituicao, ref_usuario_exc, ref_usuario_cad, ref_idtlog, ref_sigla_uf, cep, cidade, bairro, logradouro, numero, complemento, nm_responsavel, ddd_telefone, telefone, data_cadastro, data_exclusao, ativo, nm_instituicao, data_base_transferencia, data_base_remanejamento, controlar_espaco_utilizacao_aluno, percentagem_maxima_ocupacao_salas, quantidade_alunos_metro_quadrado, exigir_vinculo_turma_professor, gerar_historico_transferencia, matricula_apenas_bairro_escola, restringir_historico_escolar, coordenador_transporte, restringir_multiplas_enturmacoes, permissao_filtro_abandono_transferencia, data_base_matricula, multiplas_reserva_vaga";
 
     if (is_numeric($ref_usuario_cad)) {
       if (class_exists('clsPmieducarUsuario')) {
@@ -387,7 +388,7 @@ class clsPmieducarInstituicao
         $campos .= "{$gruda}data_base_remanejamento";
         $valores .= "{$gruda}'{$this->data_base_remanejamento}'";
         $gruda = ", ";
-      }      
+      }
 
       if (is_string($this->data_base_transferencia)) {
         $campos .= "{$gruda}data_base_transferencia";
@@ -417,7 +418,7 @@ class clsPmieducarInstituicao
         $campos .= "{$gruda}quantidade_alunos_metro_quadrado";
         $valores .= "{$gruda}'{$this->quantidade_alunos_metro_quadrado}'";
         $gruda = ", ";
-      } 
+      }
 
       if (dbBool($this->gerar_historico_transferencia)) {
         $campos .= "{$gruda}gerar_historico_transferencia";
@@ -472,6 +473,16 @@ class clsPmieducarInstituicao
         $gruda = ", ";
       }else{
         $campos .= "{$gruda}permissao_filtro_abandono_transferencia";
+        $valores .= "{$gruda} false ";
+        $gruda = ", ";
+      }
+
+      if (dbBool($this->multiplas_reserva_vaga)) {
+        $campos .= "{$gruda}multiplas_reserva_vaga";
+        $valores .= "{$gruda} true ";
+        $gruda = ", ";
+      }else{
+        $campos .= "{$gruda}multiplas_reserva_vaga";
         $valores .= "{$gruda} false ";
         $gruda = ", ";
       }
@@ -587,7 +598,7 @@ class clsPmieducarInstituicao
         $gruda = ", ";
       }else{
         $set .= "{$gruda}data_base_transferencia = NULL ";
-        $gruda = ", ";        
+        $gruda = ", ";
       }
 
       if (is_string($this->data_base_remanejamento) AND !empty($this->data_base_remanejamento) ) {
@@ -595,14 +606,14 @@ class clsPmieducarInstituicao
         $gruda = ", ";
       }else{
         $set .= "{$gruda}data_base_remanejamento = NULL ";
-        $gruda = ", ";        
+        $gruda = ", ";
       }
 
       if (is_numeric($this->controlar_espaco_utilizacao_aluno)) {
         $set .= "{$gruda}controlar_espaco_utilizacao_aluno = '{$this->controlar_espaco_utilizacao_aluno}'";
         $gruda = ", ";
       }
-      
+
       if (is_numeric($this->exigir_vinculo_turma_professor)) {
         $set .= "{$gruda}exigir_vinculo_turma_professor = '{$this->exigir_vinculo_turma_professor}'";
         $gruda = ", ";
@@ -668,6 +679,14 @@ class clsPmieducarInstituicao
         $gruda = ", ";
       }else{
         $set .= "{$gruda}permissao_filtro_abandono_transferencia = false ";
+        $gruda = ", ";
+      }
+
+      if (dbBool($this->multiplas_reserva_vaga)) {
+        $set .= "{$gruda}multiplas_reserva_vaga = true ";
+        $gruda = ", ";
+      }else{
+        $set .= "{$gruda}multiplas_reserva_vaga = false ";
         $gruda = ", ";
       }
 

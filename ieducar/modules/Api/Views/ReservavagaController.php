@@ -41,12 +41,52 @@ require_once 'include/funcoes.inc.php';
 class ReservavagaController extends ApiCoreController
 {
 
+  protected function permiteMultiplasReservas() {
+
+    $sql = "SELECT instituicao.multiplas_reserva_vaga
+              FROM pmieducar.instituicao
+              LIMIT 1 ";
+
+    return dbBool($this->fetchPreparedQuery($sql, array(), true, 'first-field'));
+  }
+
   protected function getCandidato() {
     $nome = $this->getRequest()->nome;
     $anoLetivo = $this->getRequest()->ano;
     $dataNascimento = $this->getRequest()->dataNascimento;
+    $escola = $this->getRequest()->escola;
 
-    if ($nome && $anoLetivo && $dataNascimento){
+    $codigo = 0;
+
+    if($this->permiteMultiplasReservas()){
+      if($nome && $anoLetivo && $dataNascimento && $escola){
+
+
+        $sql = "SELECT candidato_reserva_vaga.cod_candidato_reserva_vaga AS codigo
+                  FROM pmieducar.candidato_reserva_vaga
+                 INNER JOIN pmieducar.aluno ON (aluno.cod_aluno = candidato_reserva_vaga.ref_cod_aluno)
+                 INNER JOIN cadastro.fisica ON (fisica.idpes = aluno.ref_idpes)
+                 INNER JOIN cadastro.pessoa ON (pessoa.idpes = aluno.ref_idpes)
+                  LEFT JOIN cadastro.pessoa pessoa_responsavel ON (pessoa_responsavel.idpes = fisica.idpes_responsavel)
+                  LEFT JOIN cadastro.fisica fisica_responsavel ON (fisica_responsavel.idpes = fisica.idpes_responsavel)
+                 WHERE fisica.data_nasc = $3
+                   AND candidato_reserva_vaga.ano_letivo = $2
+                   AND candidato_reserva_vaga.ref_cod_escola = $4
+                   AND translate(public.fcn_upper(trim(pessoa.nome)),
+                       'åáàãâäéèêëíìîïóòõôöúùüûçÿýñÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ',
+                       'aaaaaaeeeeiiiiooooouuuucyynAAAAAAEEEEIIIIOOOOOUUUUCYN') = translate(public.fcn_upper(trim($1)),
+                       'åáàãâäéèêëíìîïóòõôöúùüûçÿýñÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ',
+                       'aaaaaaeeeeiiiiooooouuuucyynAAAAAAEEEEIIIIOOOOOUUUUCYN')";
+
+        $params = array($nome, $anoLetivo, Portabilis_Date_Utils::brToPgSQL($dataNascimento), $escola);
+
+        $candidato = $this->fetchPreparedQuery($sql, $params);
+
+        if(!empty($candidato)){
+          $codigo = $candidato[0]['codigo'];
+        }
+      }
+    }elseif ($nome && $anoLetivo && $dataNascimento){
 
       $sql = "SELECT candidato_reserva_vaga.cod_candidato_reserva_vaga AS codigo
                 FROM pmieducar.candidato_reserva_vaga
@@ -66,10 +106,10 @@ class ReservavagaController extends ApiCoreController
       $candidato = $this->fetchPreparedQuery($sql, array($nome, $anoLetivo, Portabilis_Date_Utils::brToPgSQL($dataNascimento)));
 
       if(!empty($candidato)){
-        return array('codigo' => $candidato[0]['codigo']);
+        $codigo = $candidato[0]['codigo'];
       }
     }
-    return array('codigo' => 0);
+    return array('codigo' => $codigo);
   }
 
   protected function getAlunoAndamento() {
