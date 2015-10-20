@@ -234,7 +234,7 @@ class indice extends clsCadastro
 
     $this->campoCheck("multiplas_reserva_vaga", "Permite multiplas reserva de vaga para mesmo candidato em escolas diferentes", $this->multiplas_reserva_vaga);
 
-		$this->campoCheck("reserva_integral_somente_com_renda", "Permite turno integral na reserva de vaga somente quando informado renda", $this->reserva_integral_somente_com_renda);
+		$this->campoCheck("reserva_integral_somente_com_renda", "Permitir reserva de vaga para o turno integral somente quando a renda for informada", $this->reserva_integral_somente_com_renda);
 
     	$this->inputsHelper()->text('data_base', array('label' => 'Data base para matrícula (dia/mês)',
 					    								'size' => 5,
