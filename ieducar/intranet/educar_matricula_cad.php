@@ -614,7 +614,7 @@ class indice extends clsCadastro
         if (is_numeric($this->ref_cod_candidato_reserva_vaga)){
           $obj_crv = new clsPmieducarCandidatoReservaVaga($this->ref_cod_candidato_reserva_vaga);
           $obj_crv->vinculaMatricula($cod_matricula);
-
+          $obj_crv->indefereOutrasReservas($this->ref_cod_aluno);
         }
 
         $obj_transferencia = new clsPmieducarTransferenciaSolicitacao();
@@ -736,8 +736,8 @@ class indice extends clsCadastro
             //   $db->consulta("SELECT modules.copia_notas_transf({$matriculaTransferida['cod_matricula']},{$cod_matricula})");
             // }
             $db = new clsBanco();
-            $db->Consulta("SELECT matricula.cod_matricula 
-                             from pmieducar.matricula 
+            $db->Consulta("SELECT matricula.cod_matricula
+                             from pmieducar.matricula
                             where matricula.ativo = 1
                               and matricula.aprovado = 4
                               and matricula.ref_ref_cod_serie = {$this->ref_cod_serie}
