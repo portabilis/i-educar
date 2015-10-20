@@ -133,6 +133,19 @@ class indice extends clsCadastro
 
     $this->inputsHelper()->dynamic(array('ano', 'instituicao', 'escola', 'curso', 'serie'), array('disabled' => is_numeric($this->cod_serie_vaga)));
 
+    $options = array(
+      'value'     => $this->turno,
+      'resources' => array(
+        0 => 'Selecione',
+        1 => 'Matutino',
+        2 => 'Vespertino',
+        3 => 'Noturno',
+        4 => 'Integral'
+    ),
+      'disabled' => is_numeric($this->cod_serie_vaga)
+    );
+    $this->inputsHelper()->select('turno', $options);
+
     $this->campoNumero('vagas', 'Vagas', $this->vagas, 3, 3, TRUE);
   }
 
@@ -151,9 +164,9 @@ class indice extends clsCadastro
     $max_cod_serie = $max_cod_serie > 0 ? $max_cod_serie : 1;
 
     $obj = new clsPmieducarSerieVaga($max_cod_serie, $this->ano, $this->ref_cod_instituicao,
-                                  $this->ref_cod_escola, $this->ref_cod_curso, $this->ref_cod_serie, $this->vagas);
+                                  $this->ref_cod_escola, $this->ref_cod_curso, $this->ref_cod_serie, $this->turno, $this->vagas);
 
-    $lista = $obj->lista($this->ano, $this->ref_cod_escola, $this->ref_cod_curso, $this->ref_cod_serie);
+    $lista = $obj->lista($this->ano, $this->ref_cod_escola, $this->ref_cod_curso, $this->ref_cod_serie, $this->turno);
     if(count($lista[0])){
       $this->mensagem = 'J&aacute; existe cadastro para est&aacute; s&eacute;rie/ano!<br />';
       return FALSE;

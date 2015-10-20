@@ -77,6 +77,7 @@ class indice extends clsListagem
   var $ref_cod_escola;
   var $ref_cod_curso;
   var $ref_cod_serie;
+  var $turno;
 
   function Gerar()
   {
@@ -99,7 +100,7 @@ class indice extends clsListagem
       'Intranet');
 
     $this->addCabecalhos(array(
-      'Ano', 'Escola', 'Curso', 'Série', 'Vagas'
+      'Ano', 'Escola', 'Curso', 'Série', 'Turno', 'Vagas'
     ));
 
 
@@ -119,6 +120,21 @@ class indice extends clsListagem
     {
       $this->ref_ref_cod_escola = $this->ref_cod_escola;
     }
+
+    $turnos = array(
+        0 => 'Selecione',
+        1 => 'Matutino',
+        2 => 'Vespertino',
+        3 => 'Noturno',
+        4 => 'Integral'
+    );
+
+    $options = array(
+      'value'     => $this->turno,
+      'resources' => $turnos,
+      'required' => false
+    );
+    $this->inputsHelper()->select('turno', $options);
 
     // Paginador
     $this->limite = 20;
@@ -166,6 +182,7 @@ class indice extends clsListagem
           $urlHelper->l($nm_escola, $url, $options),
           $urlHelper->l($nm_curso, $url, $options),
           $urlHelper->l($nm_serie, $url, $options),
+          $urlHelper->l($turnos[$registro['turno']], $url, $options),
           $urlHelper->l($registro['vagas'], $url, $options)
         ));
       }
