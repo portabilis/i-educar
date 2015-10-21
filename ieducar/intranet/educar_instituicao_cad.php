@@ -232,9 +232,9 @@ class indice extends clsCadastro
 		$this->campoCheck("restringir_multiplas_enturmacoes", "Não permitir múltiplas enturmações para o aluno no mesmo curso e série/ano", $this->restringir_multiplas_enturmacoes);
     $this->campoCheck("permissao_filtro_abandono_transferencia", "Não permitir a apresentação de alunos com matrícula em abandono ou transferida na emissão do relatório de frequência", $this->permissao_filtro_abandono_transferencia);
 
-    $this->campoCheck("multiplas_reserva_vaga", "Permite multiplas reserva de vaga para mesmo candidato em escolas diferentes", $this->multiplas_reserva_vaga);
+    $this->campoCheck("multiplas_reserva_vaga", "Permitir múltiplas reservas de vagas para o mesmo candidato em escolas diferentes", $this->multiplas_reserva_vaga);
 
-		$this->campoCheck("reserva_integral_somente_com_renda", "Permite turno integral na reserva de vaga somente quando informado renda", $this->reserva_integral_somente_com_renda);
+		$this->campoCheck("reserva_integral_somente_com_renda", "Permitir reserva de vaga para o turno integral somente quando a renda for informada", $this->reserva_integral_somente_com_renda);
 
     	$this->inputsHelper()->text('data_base', array('label' => 'Data base para matrícula (dia/mês)',
 					    								'size' => 5,

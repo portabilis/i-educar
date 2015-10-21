@@ -668,7 +668,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     );
 
     $this->inputsHelper()->text('parentesco_um', $options);
-  
+
 
   //dois
 
@@ -683,7 +683,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     );
 
     $this->inputsHelper()->text('autorizado_dois', $options);
-  
+
 
 
     $options = array(
@@ -696,7 +696,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     );
 
     $this->inputsHelper()->text('parentesco_dois', $options);
-  
+
   //tres
 
     $options = array(
@@ -710,7 +710,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     );
 
     $this->inputsHelper()->text('autorizado_tres', $options);
-  
+
 
 
     $options = array(
@@ -723,7 +723,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     );
 
     $this->inputsHelper()->text('parentesco_tres', $options);
-  
+
 
   //quatro
 
@@ -739,7 +739,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     );
 
     $this->inputsHelper()->text('autorizado_quatro', $options);
-  
+
 
 
     $options = array(
@@ -752,7 +752,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     );
 
     $this->inputsHelper()->text('parentesco_quatro', $options);
-  
+
 
   //cinco
 
@@ -768,7 +768,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     );
 
     $this->inputsHelper()->text('autorizado_cinco', $options);
-  
+
 
     $options = array(
       'required'    => false,
@@ -907,16 +907,19 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
     $this->inputsHelper()->multipleSearchDeficiencias('', $options, $helperOptions);
 
+    // alfabetizado
+    $options = array('label' => $this->_getLabel('alfabetizado'), 'value' => 'checked');
+    $this->inputsHelper()->checkbox('alfabetizado', $options);
+
+    if($GLOBALS['coreExt']['Config']->app->alunos->nao_apresentar_campo_alfabetizado)
+      $this->inputsHelper()->hidden('alfabetizado');
+
     $this->campoArquivo('laudo_medico',Portabilis_String_Utils::toLatin1($this->_getLabel('laudo_medico')),$this->laudo_medico,40,Portabilis_String_Utils::toLatin1("<br/> <span style='font-style: italic; font-size= 10px;''>São aceitos arquivos nos formatos jpg, png, pdf e gif. Tamanho máximo: 250KB</span>", array('escape' => false)));
 
     $this->inputsHelper()->hidden('url_laudo_medico');
 
     if($GLOBALS['coreExt']['Config']->app->alunos->laudo_medico_obrigatorio == 1)
       $this->inputsHelper()->hidden('url_laudo_medico_obrigatorio');
-
-    // alfabetizado
-    $options = array('label' => $this->_getLabel('alfabetizado'), 'value' => 'checked');
-    $this->inputsHelper()->checkbox('alfabetizado', $options);
 
 
     /* *************************************
@@ -1459,10 +1462,10 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
 
 
-  
 
 
- 
+
+
 
 
 
@@ -1474,7 +1477,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     $this->addParentsInput('mae', 'mãe');
   }
 
-  
+
 
   protected function addParentsInput($parentType, $parentTypeLabel = '') {
     if (! $parentTypeLabel)
