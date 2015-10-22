@@ -109,7 +109,7 @@ class PessoaController extends ApiCoreController
   protected function loadDetails($pessoaId = null) {
     $alunoId = $this->tryLoadAlunoId($pessoaId);
 
-    $sql = "select cpf, data_nasc as data_nascimento, idpes_pai as pai_id,
+    $sql = "select cpf, data_nasc as data_nascimento, idpes_pai as pai_id, ref_cod_religiao as religiao_id,
             idpes_mae as mae_id, idpes_responsavel as responsavel_id,
             ideciv as estadocivil, sexo, nis_pis_pasep,
             coalesce((select nome from cadastro.pessoa where idpes = fisica.idpes_pai),
@@ -187,7 +187,7 @@ class PessoaController extends ApiCoreController
                                         && is_null($details['certidao_nascimento'])
                                          && is_null($details['certidao_casamento']) );
 
-    $attrs   = array('cpf', 'rg', 'data_nascimento', 'pai_id', 'mae_id', 'responsavel_id', 'nome_pai', 'nome_mae',
+    $attrs   = array('cpf', 'rg', 'data_nascimento', 'religiao_id', 'pai_id', 'mae_id', 'responsavel_id', 'nome_pai', 'nome_mae',
                        'nome_responsavel','sexo','estadocivil', 'cep', 'logradouro', 'idtlog', 'bairro',
                        'zona_localizacao', 'idbai', 'idlog', 'idmun', 'idmun_nascimento', 'complemento',
                        'apartamento', 'andar', 'bloco', 'numero' , 'letra', 'possui_documento', 'iddis', 'distrito', 'ddd_fone_fixo', 'fone_fixo', 'fone_mov', 'ddd_fone_mov');

@@ -735,6 +735,8 @@ var handleGetPersonDetails = function(dataResponse) {
   $j('#responsavel_nome').val(nomeResponsavel);
   $j('#responsavel_id').val(dataResponse.responsavel_id);
 
+  $j('#religiao_id').val(dataResponse.religiao_id);
+
   // deficiencias
 
   $deficiencias = $j('#deficiencias');
