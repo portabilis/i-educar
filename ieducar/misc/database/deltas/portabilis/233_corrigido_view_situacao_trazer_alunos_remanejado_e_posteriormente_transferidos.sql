@@ -49,17 +49,14 @@ WHERE (CASE WHEN matricula.aprovado = 4 THEN (matricula_turma.ativo = 1
                                                        AND transferencia_solicitacao.ativo = 1 LIMIT 1))
                                               OR matricula_turma.transferido
                                               OR matricula_turma.reclassificado
-                                              OR matricula_turma.remanejado)
-       AND matricula_turma.sequencial =
-         (SELECT MAX(sequencial)
-          FROM pmieducar.matricula_turma mt
-          WHERE mt.ref_cod_matricula = matricula.cod_matricula) WHEN matricula.aprovado = 6 THEN matricula_turma.ativo = 1
+                                              OR matricula_turma.remanejado) WHEN matricula.aprovado = 6 THEN matricula_turma.ativo = 1
        OR matricula_turma.abandono WHEN matricula.aprovado = 5 THEN matricula_turma.ativo = 1
        OR matricula_turma.reclassificado ELSE (matricula_turma.ativo = 1
                                                OR matricula_turma.transferido
                                                OR matricula_turma.reclassificado
                                                OR matricula_turma.abandono
                                                OR (matricula_turma.remanejado -- Se for remanejado não pode ser a ultima enturmação
+
                                                    AND matricula_turma.sequencial <
                                                      (SELECT MAX(sequencial)
                                                       FROM pmieducar.matricula_turma mt
