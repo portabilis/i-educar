@@ -758,6 +758,7 @@ var handleGetPersonDetails = function(dataResponse) {
   } else{
       $j('#tipo_responsavel').append('<option value="mae" selected >M&atilde;e</option>');
       $j('#tipo_responsavel').append('<option value="pai" selected >Pai</option>');
+      $j('#tipo_responsavel').append('<option value="pai_mae" >Pai e M&atilde;e</option>');
       $j('#tipo_responsavel').append('<option value="outra_pessoa" >Outra pessoa</option>');
   }
   $j('#tipo_responsavel').val(tipo_resp).change();
