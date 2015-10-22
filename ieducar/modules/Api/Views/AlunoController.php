@@ -507,7 +507,6 @@ class AlunoController extends ApiCoreController
     if(!$GLOBALS['coreExt']['Config']->app->alunos->nao_apresentar_campo_alfabetizado)
       $aluno->analfabeto              = $this->getRequest()->alfabetizado ? 0 : 1;
 
-    $aluno->ref_cod_religiao        = $this->getRequest()->religiao_id;
     $aluno->tipo_responsavel        = $tiposResponsavel[$this->getRequest()->tipo_responsavel];
     $aluno->ref_usuario_exc         = $this->getSession()->id_pessoa;
 
@@ -855,7 +854,6 @@ class AlunoController extends ApiCoreController
       $attrs  = array(
         'cod_aluno'               => 'id',
         'ref_cod_aluno_beneficio' => 'beneficio_id',
-        'ref_cod_religiao'        => 'religiao_id',
         'ref_idpes'               => 'pessoa_id',
         'tipo_responsavel'        => 'tipo_responsavel',
         'ref_usuario_exc'         => 'destroyed_by',
@@ -950,9 +948,10 @@ class AlunoController extends ApiCoreController
         $aluno = Portabilis_Array_Utils::merge($objPessoaTransporte,$aluno);
       }
 
-      $sql = "select sus from cadastro.fisica where idpes = $1";
+      $sql = "select sus, ref_cod_religiao from cadastro.fisica where idpes = $1";
       $camposFisica = $this->fetchPreparedQuery($sql, $aluno['pessoa_id'], false, 'first-row');
       $aluno['sus'] = $camposFisica['sus'];
+      $aluno['religiao_id'] = $camposFisica['ref_cod_religiao'];
 
       $aluno['beneficios'] = $this->loadBeneficios($id);
 
@@ -1427,9 +1426,10 @@ class AlunoController extends ApiCoreController
   }
 
   protected function createOrUpdatePessoa($idPessoa){
-    $fisica      = new clsFisica($idPessoa);
-    $fisica->cpf = idFederal2int($this->getRequest()->id_federal);
-    $fisica      = $fisica->edita();
+    $fisica                   = new clsFisica($idPessoa);
+    $fisica->cpf              = idFederal2int($this->getRequest()->id_federal);
+    $fisica->ref_cod_religiao = $this->getRequest()->religiao_id;
+    $fisica                   = $fisica->edita();
   }
 
   protected function loadAcessoDataEntradaSaida(){
