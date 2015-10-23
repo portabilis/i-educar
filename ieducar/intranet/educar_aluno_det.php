@@ -494,8 +494,6 @@ class indice extends clsDetalhe
 
     $responsavel = $tmp_obj->getResponsavelAluno();
 
-    echo print_r($responsavel);
-
     if ($responsavel && is_null($registro['ref_idpes_responsavel'])) {
       $this->addDetalhe(array('Nome do Responsável', $responsavel['nome_responsavel']));
     }
