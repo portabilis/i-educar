@@ -300,7 +300,9 @@ class indice extends clsDetalhe
           $this->array_botao_url_script[] = "go(\"educar_dispensa_disciplina_lst.php?ref_cod_matricula={$registro['cod_matricula']}\")";
         }
 
-        if ($registro['ref_ref_cod_serie'] && $existeTurma) {
+        $dependencia = $registro['dependencia'] == 't';
+
+        if ($registro['ref_ref_cod_serie'] && $existeTurma && $dependencia) {
           $this->array_botao[]            = 'Disciplinas de depend&ecirc;ncia';
           $this->array_botao_url_script[] = "go(\"educar_disciplina_dependencia_lst.php?ref_cod_matricula={$registro['cod_matricula']}\")";
         }

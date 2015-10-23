@@ -382,6 +382,16 @@ protected function getEscolasCurso(){
   return array('options' => $escolas);
 }
 
+protected function getEscolaAnoLetivo(){
+  $escolaId    = $this->getRequest()->escola_id;
+
+  if(is_numeric($escolaId)){
+    $sql = "SELECT ano FROM pmieducar.escola_ano_letivo WHERE ref_cod_escola = $1 AND andamento = 1 AND ativo = 1;";
+    $ano = $this->fetchPreparedQuery($sql, array($escolaId));
+  }
+  return $ano[0];
+}
+
   public function Gerar() {
     if ($this->isRequestFor('get', 'escola'))
       $this->appendResponse($this->get());
@@ -403,6 +413,9 @@ protected function getEscolasCurso(){
 
     elseif ($this->isRequestFor('get', 'escolas-curso'))
       $this->appendResponse($this->getEscolasCurso());
+
+    elseif ($this->isRequestFor('get', 'escola-ano-letivo'))
+      $this->appendResponse($this->getEscolaAnoLetivo());
 
     else
       $this->notImplementedOperationError();

@@ -1519,6 +1519,28 @@ class clsPmieducarAluno
         }
       }
 
+      if ($registro['tipo_responsavel'] == 'a') {
+        if (!$det_fisica_aluno) {
+          $obj_fisica= new clsFisica($registro['ref_idpes']);
+          $det_fisica_aluno = $obj_fisica->detalhe();
+        }
+
+        if ($det_fisica_aluno['idpes_mae'] && $det_fisica_aluno['idpes_pai']) {
+
+          $obj_mae = new clsPessoa_($det_fisica_aluno['idpes_mae']);
+          $det_mae = $obj_mae->detalhe();
+
+          $obj_pai = new clsPessoa_($det_fisica_aluno['idpes_pai']);
+          $det_pai = $obj_pai->detalhe();
+
+          $registro['nome_responsavel'] = $det_pai['nome'] . ", " . $det_mae['nome'];
+
+          if ($det_fisica['cpf']) {
+            $registro['cpf_responsavel'] = int2CPF($det_fisica['cpf']);
+          }
+        }
+      }
+
       if (!$registro['nome_responsavel']) {
         if ($registro['tipo_responsavel'] != NULL) {
           if ($registro['tipo_responsavel'] == 'p') {
