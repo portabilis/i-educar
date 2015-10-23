@@ -41,15 +41,14 @@ SELECT matricula.cod_matricula,
 FROM relatorio.situacao_matricula,
      pmieducar.matricula
 LEFT JOIN pmieducar.matricula_turma ON matricula_turma.ref_cod_matricula = matricula.cod_matricula
-WHERE (CASE WHEN matricula.aprovado = 4 THEN (matricula_turma.ativo = 1
-                                              OR (EXISTS
-                                                    (SELECT 1
-                                                     FROM pmieducar.transferencia_solicitacao
-                                                     WHERE transferencia_solicitacao.ref_cod_matricula_saida = matricula.cod_matricula
-                                                       AND transferencia_solicitacao.ativo = 1 LIMIT 1))
-                                              OR matricula_turma.transferido
-                                              OR matricula_turma.reclassificado
-                                              OR matricula_turma.remanejado) WHEN matricula.aprovado = 6 THEN matricula_turma.ativo = 1
+WHERE (CASE WHEN matricula.aprovado = 4 THEN ((matricula_turma.ativo = 1
+                                               OR matricula_turma.transferido
+                                               OR matricula_turma.reclassificado
+                                               OR matricula_turma.remanejado)
+                                              OR matricula_turma.sequencial =
+                                                (SELECT MAX(sequencial)
+                                                 FROM pmieducar.matricula_turma mt
+                                                 WHERE mt.ref_cod_matricula = matricula.cod_matricula)) WHEN matricula.aprovado = 6 THEN matricula_turma.ativo = 1
        OR matricula_turma.abandono WHEN matricula.aprovado = 5 THEN matricula_turma.ativo = 1
        OR matricula_turma.reclassificado ELSE (matricula_turma.ativo = 1
                                                OR matricula_turma.transferido
@@ -86,4 +85,3 @@ WHERE (CASE WHEN matricula.aprovado = 4 THEN (matricula_turma.ativo = 1
 
 
 ALTER TABLE relatorio.view_situacao OWNER TO ieducar;
-
