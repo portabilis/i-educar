@@ -75,14 +75,16 @@ class indice extends clsCadastro
 
   function Gerar() {
     // inputs
+    $anoLetivoHelperOptions = array('situacoes' => array('em_andamento', 'nao_iniciado'), 'objectName' => 'ano_destino');
 
-    $anoLetivoHelperOptions = array('situacoes' => array('em_andamento', 'nao_iniciado'));
-
+    $this->inputsHelper()->hidden('ano');
     $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'curso', 'serie'));
     $this->inputsHelper()->dynamic('turma', array('label' => 'Selecione a turma do ano anterior', 'required' => FALSE));
     $this->inputsHelper()->dynamic('anoLetivo', array('label' => 'Ano destino'), $anoLetivoHelperOptions);
     $this->inputsHelper()->date('data_matricula', array('label' => 'Data da matrícula', 'placeholder' => 'dd/mm/yyyy'));
-    $this->inputsHelper()->hidden('nao_filtrar_ano', array('value' => '1'));
+
+    $scripts = array('/modules/Cadastro/Assets/Javascripts/RematriculaAutomatica.js');
+    Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
   }
 
   /**
