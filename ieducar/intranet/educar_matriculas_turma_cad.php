@@ -251,7 +251,7 @@ class indice extends clsCadastro
     }
 
     if ($this->matriculas_turma) {
-      $this->campoRotulo('titulo', 'Matr&iacute;culas', "<b>&nbsp;Alunos matriculados&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Marque alunos para desenturmar</b><label style='display: block; width: 350px; margin-left: 196px;'><input type='checkbox' name='CheckTodos' onClick='marcarCheck(".'"check_desenturma[]"'.");'/>Marcar Todos</label>");
+      $this->campoRotulo('titulo', 'Matr&iacute;culas', "<b>&nbsp;Alunos j&aacute; matriculados e enturmados&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Marque alunos para desenturmar</b><label style='display: block; width: 350px; margin-left: 256px;'><input type='checkbox' name='CheckTodos' onClick='marcarCheck(".'"check_desenturma[]"'.");'/>Marcar todos</label>");
       foreach ($this->matriculas_turma as $matricula => $campo) {
         $obj_matricula = new clsPmieducarMatricula($matricula);
         $det_matricula = $obj_matricula->detalhe();
@@ -262,7 +262,7 @@ class indice extends clsCadastro
         $nm_aluno = $det_aluno['nome_aluno'];
 
         $this->campoTextoInv('ref_cod_matricula_' . $matricula, '', $nm_aluno,
-          30, 255, FALSE, FALSE, TRUE, '', '', '', '', 'ref_cod_matricula');
+          40, 255, FALSE, FALSE, TRUE, '', '', '', '', 'ref_cod_matricula');
 
         $this->campoCheck('check_desenturma['.$matricula.']','',$matricula);
       }
