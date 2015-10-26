@@ -128,6 +128,11 @@ class indice extends clsDetalhe
       }
     }
 
+
+
+
+
+
     if ($this->ref_idpes) {
       $obj_pessoa_fj = new clsPessoaFj($this->ref_idpes);
       $det_pessoa_fj = $obj_pessoa_fj->detalhe();
@@ -171,6 +176,7 @@ class indice extends clsDetalhe
       $registro['url']    = $det_pessoa_fj['url'];
 
       $registro['nacionalidade'] = $det_fisica['nacionalidade'];
+      $registro['nis_pis_pasep'] = $det_fisica['nis_pis_pasep'];
 
       $registro['naturalidade']  = $det_fisica['idmun_nascimento']->detalhe();
       $registro['naturalidade']  = $registro['naturalidade']['nome'];
@@ -397,6 +403,7 @@ class indice extends clsDetalhe
       else
         $this->addDetalhe(array('Nome Aluno', $registro['nome_aluno']));
     }
+
 
 
 
@@ -699,7 +706,11 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('Responsável transporte', $transporteAluno->responsavel));
     }
 
-    if ($this->obj_permissao->permissao_cadastra(578, $this->pessoa_logada, 7)) {
+   if ($registro['nis_pis_pasep']) {
+        $this->addDetalhe(array('Nis', $registro['nis_pis_pasep']));
+    }
+
+     if ($this->obj_permissao->permissao_cadastra(578, $this->pessoa_logada, 7)) {
       $this->url_novo   = '/module/Cadastro/aluno';
       $this->url_editar = '/module/Cadastro/aluno?id=' . $registro['cod_aluno'];
 
