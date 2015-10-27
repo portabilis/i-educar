@@ -166,7 +166,8 @@ class TurmaController extends ApiCoreController
                 AND t.ref_cod_instituicao = $1
                 AND t.cod_turma  = $2
                 AND (CASE WHEN $3 = '' THEN mt.ativo = 1
-                     ELSE m.data_matricula::date = $3
+                     ELSE $3 >= m.data_matricula::date
+                      AND $3 <= coalesce(m.data_cancel, now())::date
                       AND mt.sequencial = (SELECT MAX(sequencial)
                                              FROM pmieducar.matricula_turma
                                             WHERE matricula_turma.ref_cod_matricula = m.cod_matricula
