@@ -149,24 +149,30 @@ class TurmaController extends ApiCoreController
       $instituicaoId = $this->getRequest()->instituicao_id;
       $turmaId       = $this->getRequest()->turma_id;
       $disciplinaId  = $this->getRequest()->disciplina_id;
+      $dataMatricula = $this->getRequest()->data_matricula;
 
-      $sql = 'SELECT a.cod_aluno as id,
-                    m.dependencia
-              FROM pmieducar.matricula_turma mt
+      if (!$dataMatricula) $dataMatricula = '';
+
+      $sql = "SELECT a.cod_aluno as id,
+                     m.dependencia
+               FROM pmieducar.matricula_turma mt
               INNER JOIN pmieducar.matricula m ON mt.ref_cod_matricula = m.cod_matricula
               INNER JOIN pmieducar.aluno a ON a.cod_aluno = m.ref_cod_aluno
               INNER JOIN pmieducar.turma t ON t.cod_turma = mt.ref_cod_turma
               INNER JOIN cadastro.pessoa p ON p.idpes = a.ref_idpes
+              WHERE m.ativo = 1
+                AND a.ativo = 1
+                AND t.ativo = 1
+                AND t.ref_cod_instituicao = $1
+                AND t.cod_turma  = $2
+                AND (CASE WHEN $3 = '' THEN mt.ativo = 1
+                     ELSE m.data_matricula::date = $3
+                      AND mt.sequencial = (SELECT MAX(sequencial)
+                                             FROM pmieducar.matricula_turma
+                                            WHERE matricula_turma.ref_cod_matricula = m.cod_matricula
+                                              AND matricula_turma.ref_cod_turma = t.cod_turma) END)";
 
-              WHERE mt.ativo = 1
-              AND m.ativo = 1
-              AND a.ativo = 1
-              AND t.ativo = 1
-              AND t.ref_cod_instituicao = $1
-              AND t.cod_turma  = $2  ';
-
-      $params = array($instituicaoId, $turmaId);
-
+      $params = array($instituicaoId, $turmaId, $dataMatricula);
 
       if(is_numeric($disciplinaId)){
         $params[] = $disciplinaId;
@@ -175,7 +181,7 @@ class TurmaController extends ApiCoreController
                     (
                       SELECT 1 FROM pmieducar.disciplina_dependencia dd
                       WHERE dd.ref_cod_matricula = m.cod_matricula
-                      AND dd.ref_cod_disciplina = $3
+                      AND dd.ref_cod_disciplina = $4
                       LIMIT 1
                     ) IS NOT NULL
                   ELSE
@@ -183,7 +189,7 @@ class TurmaController extends ApiCoreController
                     SELECT 1 FROM pmieducar.dispensa_disciplina dd
                     WHERE dd.ativo = 1
                     AND dd.ref_cod_matricula = m.cod_matricula
-                    AND dd.ref_cod_disciplina = $3
+                    AND dd.ref_cod_disciplina = $4
                     LIMIT 1
                   ) IS NULL
                 END
