@@ -259,7 +259,7 @@ class indice extends clsCadastro
       header("Location: educar_matriculas_turma_cad.php?ref_cod_turma= {$this->ref_cod_turma}");
         die;
     }else{
-      $this->mensagem = Portabilis_String_Utils::toLatin1("A turma n&atilde;o tem saldo de vagas suficiente.");
+      $this->mensagem = Portabilis_String_Utils::toLatin1("A turma não tem saldo de vagas suficiente.");
       //header("Location: educar_matricula_cad.php?ref_cod_turma_copiar_enturmacoes= {$this->ref_cod_turma_copiar_enturmacoes}");
       return FALSE;
     }
@@ -337,7 +337,7 @@ class indice extends clsCadastro
           else
             $nomeSerie = '';
 
-          $this->mensagem .= "Este aluno j&aacute; est&aacute; matriculado no(a) '$nomeSerie' deste curso e escola. Como este curso n&atilde;o &eacute; multi seriado, n&atilde;o &eacute; possivel manter mais de uma matricula em andamento para o mesmo curso.<br />";
+          $this->mensagem .= "Este aluno já está matriculado no(a) '$nomeSerie' deste curso e escola. Como este curso não é multi seriado, não é possivel manter mais de uma matricula em andamento para o mesmo curso.<br />";
 
           return false;
         }
@@ -412,11 +412,11 @@ class indice extends clsCadastro
         $dentroPeriodoCorte = $serie->verificaPeriodoCorteEtario($this->ref_cod_aluno);
 
         if ($bloquearMatriculaFaixaEtaria && !$dentroPeriodoCorte) {
-          $this->mensagem = Portabilis_String_Utils::toLatin1('N&atilde;o foi poss&iacute;vel realizar a matr&iacute;cula, pois a idade do aluno est&aacute; fora da faixa et&aacute;ria da s&eacute;rie');
+          $this->mensagem = Portabilis_String_Utils::toLatin1('Não foi possível realizar a matrícula, pois a idade do aluno está fora da faixa etária da série');
           return FALSE;
         } else if ($alertaFaixaEtaria && !$dentroPeriodoCorte) {
             echo "<script type=\"text/javascript\">
-                    var msg = '".Portabilis_String_Utils::toLatin1('A idade do aluno encontra-se fora da faixa et&aacute;ria pr&eacute;-definida na s&eacute;rie, deseja continuar com a matr&iacute;cula?')."';
+                    var msg = '".Portabilis_String_Utils::toLatin1('A idade do aluno encontra-se fora da faixa etária pré-definida na série, deseja continuar com a matrícula?')."';
                     if (!confirm(msg)) {
                       window.location = 'educar_aluno_det.php?cod_aluno=".$this->ref_cod_aluno."';
                     } else {
@@ -448,7 +448,7 @@ class indice extends clsCadastro
 
         $editou = $obj_reserva_vaga->edita();
         if (! $editou) {
-          $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br />';
+          $this->mensagem = 'Edição não realizada.<br />';
           return FALSE;
         }
       }
@@ -469,7 +469,7 @@ class indice extends clsCadastro
           }
         }
         else {
-          $this->mensagem = 'A s&eacute;rie selecionada n&atilde;o possui turmas cadastradas.<br />';
+          $this->mensagem = 'A série selecionada não possui turmas cadastradas.<br />';
           return FALSE;
         }
 
@@ -698,12 +698,12 @@ class indice extends clsCadastro
                 $editou3 = $obj->edita();
 
                 if (! $editou3) {
-                  $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br />';
+                  $this->mensagem = 'Edição não realizada.<br />';
                   return FALSE;
                 }
               }
               else {
-                $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br />';
+                $this->mensagem = 'Edição não realizada.<br />';
                 return FALSE;
               }
             }
@@ -763,11 +763,11 @@ class indice extends clsCadastro
         #return true;
       }
 
-      $this->mensagem = 'Cadastro n&atilde;o realizado.<br />';
+      $this->mensagem = 'Cadastro não realizado.<br />';
       return FALSE;
     }
     else {
-      $this->mensagem = Portabilis_String_Utils::toLatin1('O ano (letivo) selecionado n&atilde;o est&aacute; em andamento na escola selecionada.<br />');
+      $this->mensagem = Portabilis_String_Utils::toLatin1('O ano (letivo) selecionado não está em andamento na escola selecionada.<br />');
       return FALSE;
     }
   }
@@ -795,7 +795,7 @@ class indice extends clsCadastro
     }
 
     if(! $result) {
-		  $this->mensagem = "N&atilde;o foi poss&iacute;vel desativar as " .
+      $this->mensagem = "N&atilde;o foi poss&iacute;vel desativar as " .
                         "enturma&ccedil;&otilde;es da matr&iacute;cula.";
     }
 
@@ -869,7 +869,7 @@ class indice extends clsCadastro
 
         $editou1 = $obj->edita();
         if (! $editou1) {
-          $this->mensagem = 'N&atilde;o foi poss&iacute;vel editar a "&Uacute;ltima Matr&iacute;cula da Sequ&ecirc;ncia".<br />';
+          $this->mensagem = 'Não foi possível editar a "Última Matrícula da Sequência".<br />';
           return FALSE;
         }
       }
@@ -883,12 +883,12 @@ class indice extends clsCadastro
     $excluiu = $obj->excluir();
 
     if ($excluiu) {
-      $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br />';
+      $this->mensagem .= 'Exclusão efetuada com sucesso.<br />';
       header('Location: educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno);
       die();
     }
 
-    $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br />';
+    $this->mensagem = 'Exclusão não realizada.<br />';
     return FALSE;
   }
 
@@ -945,13 +945,13 @@ function enturmacaoMatricula($matriculaId, $turmaDestinoId) {
 
     // Caso quantidade de matrículas naquela turma seja maior ou igual que a capacidade da turma deve bloquear
     if($this->_getQtdMatriculaTurma() >= $this->_getMaxAlunoTurma()){
-      $this->mensagem .= Portabilis_String_Utils::toLatin1("N&atilde;o existem vagas dispon&iacute;veis para essa turma!") . '<br/>';
+      $this->mensagem .= Portabilis_String_Utils::toLatin1("Não existem vagas disponíveis para essa turma!") . '<br/>';
       return false;
     }
 
     // Caso a capacidade de alunos naquele turno seja menor ou igual ao ao número de alunos matrículados + alunos na reserva de vaga externa deve bloquear
     if ($this->_getMaxAlunoTurno() <= ($this->_getQtdAlunosFila() + $this->_getQtdMatriculaTurno() )){
-      $this->mensagem .= Portabilis_String_Utils::toLatin1("N&atilde;o existem vagas dispon&iacute;veis para essa s&eacute;rie/turno!") . '<br/>';
+      $this->mensagem .= Portabilis_String_Utils::toLatin1("Não existem vagas disponíveis para essa série/turno!") . '<br/>';
       return false;
     }
 
