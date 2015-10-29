@@ -72,6 +72,7 @@ class clsPmieducarInstituicao
   var $data_base_matricula;
   var $multiplas_reserva_vaga;
   var $reserva_integral_somente_com_renda;
+  var $data_expiracao_reserva_vaga;
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
    * @var int
@@ -137,7 +138,7 @@ class clsPmieducarInstituicao
     $this->_schema = "pmieducar.";
     $this->_tabela = "{$this->_schema}instituicao";
     $this->_campos_lista = $this->_todos_campos = "cod_instituicao, ref_usuario_exc, ref_usuario_cad, ref_idtlog, ref_sigla_uf, cep, cidade, bairro, logradouro, numero, complemento, nm_responsavel, ddd_telefone, telefone, data_cadastro, data_exclusao, ativo, nm_instituicao, data_base_transferencia, data_base_remanejamento, controlar_espaco_utilizacao_aluno, percentagem_maxima_ocupacao_salas, quantidade_alunos_metro_quadrado, exigir_vinculo_turma_professor, gerar_historico_transferencia, matricula_apenas_bairro_escola, restringir_historico_escolar, coordenador_transporte, restringir_multiplas_enturmacoes, permissao_filtro_abandono_transferencia, data_base_matricula, multiplas_reserva_vaga,
-      reserva_integral_somente_com_renda ";
+      reserva_integral_somente_com_renda, data_expiracao_reserva_vaga ";
 
     if (is_numeric($ref_usuario_cad)) {
       if (class_exists('clsPmieducarUsuario')) {
@@ -398,6 +399,12 @@ class clsPmieducarInstituicao
         $gruda = ", ";
       }
 
+      if (is_string($this->data_expiracao_reserva_vaga)) {
+        $campos .= "{$gruda}data_expiracao_reserva_vaga";
+        $valores .= "{$gruda}'{$this->data_expiracao_reserva_vaga}'";
+        $gruda = ", ";
+      }
+
       if (is_numeric($this->exigir_vinculo_turma_professor)) {
         $campos .= "{$gruda}exigir_vinculo_turma_professor";
         $valores .= "{$gruda}'{$this->exigir_vinculo_turma_professor}'";
@@ -610,6 +617,14 @@ class clsPmieducarInstituicao
         $gruda = ", ";
       }else{
         $set .= "{$gruda}data_base_transferencia = NULL ";
+        $gruda = ", ";
+      }
+
+      if (is_string($this->data_expiracao_reserva_vaga) AND !empty($this->data_expiracao_reserva_vaga)) {
+        $set .= "{$gruda}data_expiracao_reserva_vaga = '{$this->data_expiracao_reserva_vaga}'";
+        $gruda = ", ";
+      }else{
+        $set .= "{$gruda}data_expiracao_reserva_vaga = NULL ";
         $gruda = ", ";
       }
 

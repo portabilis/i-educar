@@ -242,7 +242,7 @@ class CoreExt_Config implements Countable, Iterator
     if (is_array($arr2)) {
       foreach ($arr2 as $key => $val) {
         if (is_array($arr2[$key])) {
-          $merged[$key] = is_array($merged[$key]) ?
+          $merged[$key] = isset($merged[$key]) && is_array($merged[$key]) ?
             $this->arrayMergeRecursiveDistinct($merged[$key], $arr2[$key]) : $arr2[$key];
         }
         else {
