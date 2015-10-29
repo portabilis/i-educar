@@ -152,8 +152,6 @@ class TurmaController extends ApiCoreController
       $disciplinaId  = $this->getRequest()->disciplina_id;
       $dataMatricula = $this->getRequest()->data_matricula;
 
-    //  if (!$dataMatricula) $dataMatricula = 'null';
-
       $sql = "SELECT a.cod_aluno as id,
                      m.dependencia
                FROM pmieducar.matricula_turma mt
