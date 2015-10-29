@@ -113,7 +113,9 @@ class TurmaController extends ApiCoreController
                    $tiposBoletim::TRIMESTRAL_CONCEITUAL_PARECER                 => 'portabilis_boletim_conceitual_trimestral_parecer',
                    $tiposBoletim::BIMESTRAL_RECUPERACAO_SEMESTRAL               => 'portabilis_boletim_recuperacao_semestral',
                    $tiposBoletim::BIMESTRAL_CONCEITUAL_COCALDOSUL               => 'portabilis_boletim_bimestral_conceitual_cocaldosul',
-                   $tiposBoletim::BOLETIM_6AO9_SAOMIGUELDOSCAMPOS               => 'portabilis_boletim_6ao9_saomigueldoscampos');
+                   $tiposBoletim::BOLETIM_6AO9_SAOMIGUELDOSCAMPOS               => 'portabilis_boletim_6ao9_saomigueldoscampos',
+                   $tiposBoletim::TRIMESTRAL_CONCEITUAL_BC                      => 'portabilis_boletim_primeiro_ano_trimestral_bc',
+    );
 
     return array('tipo-boletim' => $tipos[$tipo]);
   }
@@ -152,8 +154,6 @@ class TurmaController extends ApiCoreController
       $disciplinaId  = $this->getRequest()->disciplina_id;
       $dataMatricula = $this->getRequest()->data_matricula;
 
-      if (!$dataMatricula) $dataMatricula = '';
-
       $sql = "SELECT a.cod_aluno as id,
                      m.dependencia
                FROM pmieducar.matricula_turma mt
@@ -166,9 +166,9 @@ class TurmaController extends ApiCoreController
                 AND t.ativo = 1
                 AND t.ref_cod_instituicao = $1
                 AND t.cod_turma  = $2
-                AND (CASE WHEN $3 = '' THEN mt.ativo = 1
+                AND (CASE WHEN coalesce($3, current_date)::date = current_date THEN mt.ativo = 1
                ELSE $3 >= mt.data_enturmacao::date
-                AND $3 <= coalesce(mt.data_exclusao, now())::date END)";
+                AND $3 < coalesce(m.data_cancel, coalesce(mt.data_exclusao, date 'tomorrow'))::date END)";
 
       $params = array($instituicaoId, $turmaId, $dataMatricula);
 
