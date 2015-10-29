@@ -168,7 +168,7 @@ class TurmaController extends ApiCoreController
                 AND t.cod_turma  = $2
                 AND (CASE WHEN $3 = '' THEN mt.ativo = 1
                ELSE $3 >= mt.data_enturmacao::date
-                AND $3 < coalesce(m.data_cancel, coalesce(mt.data_exclusao, now()))::date END)";
+                AND $3 < coalesce(m.data_cancel, coalesce(mt.data_exclusao, date 'tomorrow'))::date END)";
 
       $params = array($instituicaoId, $turmaId, $dataMatricula);
 
