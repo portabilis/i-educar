@@ -104,7 +104,7 @@ class EditController extends Core_Controller_Page_EditController
 
     // Nome
     $this->campoTexto('nome', $this->_getLabel('nome'), $this->getEntity()->nome,
-      60, 60, TRUE, FALSE, FALSE, $this->_getHelp('nome'));
+      60, 200, TRUE, FALSE, FALSE, $this->_getHelp('nome'));
 
     // Seção
     $this->campoTexto('secao', $this->_getLabel('secao'), $this->getEntity()->secao,
