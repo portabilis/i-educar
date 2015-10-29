@@ -707,7 +707,7 @@ class indice extends clsDetalhe
     }
 
    if ($registro['nis_pis_pasep']) {
-        $this->addDetalhe(array('Nis', $registro['nis_pis_pasep']));
+        $this->addDetalhe(array('NIS', $registro['nis_pis_pasep']));
     }
 
      if ($this->obj_permissao->permissao_cadastra(578, $this->pessoa_logada, 7)) {
