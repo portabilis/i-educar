@@ -787,6 +787,22 @@ var handleGetPersonDetails = function(dataResponse) {
     validaRg();
   });
 
+  $j('#certidao_nascimento').val(dataResponse.certidao_nascimento);
+  $j('#certidao_casamento').val(dataResponse.certidao_casamento);
+  $j('#termo_certidao_civil').val(dataResponse.num_termo);
+  $j('#livro_certidao_civil').val(dataResponse.num_livro);
+  $j('#folha_certidao_civil').val(dataResponse.num_folha);
+
+  if (dataResponse.certidao_nascimento.trim()){
+    $j('#tipo_certidao_civil').val('certidao_nascimento_novo_formato').change();
+  }
+  else if (dataResponse.certidao_casamento.trim()){
+    $j('#tipo_certidao_civil').val('certidao_casamento_novo_formato').change();
+  }
+  else{
+    $j('#tipo_certidao_civil').val(dataResponse.tipo_cert_civil).change();
+  }
+
   // # TODO show aluno photo
   //$j('#aluno_foto').val(dataResponse.url_foto);
   canShowParentsFields();
