@@ -46,7 +46,7 @@ class JasperPHP
         return $this;
     }
 
-    public function process($input_file, $output_file = false, $format = array("pdf"), $parameters = array(), $db_connection = array(), $background = true, $redirect_output = true)
+    public function process($input_file, $output_file = false, $format = array("pdf"), $parameters = array(), $db_connection = array(), $background = true, $redirect_output = true, $filter_params = true)
     {
         if(is_null($input_file) || empty($input_file))
             throw new \Exception("No input file", 1);
@@ -67,11 +67,12 @@ class JasperPHP
 
         $params_command .= " params " . $input_file . " 2>&1 ";
 
-        exec($params_command, $params_output);
-
-        foreach ($params_output as $key => &$param) {
-          $exploded = explode(" ", $param);
-          $param = $exploded[1];
+        if($filter_params){
+          exec($params_command, $params_output);
+          foreach ($params_output as $key => &$param) {
+            $exploded = explode(" ", $param);
+            $param = $exploded[1];
+          }
         }
 
         $command .= " pr ";
@@ -94,8 +95,8 @@ class JasperPHP
             $command .= " -P";
             foreach ($parameters as $key => $value)
             {
-              if(in_array($key, $params_output))
-                $command .= " " . $key . "=" . $value;
+              if(!$filter_params || in_array($key, $params_output))
+                $command .= " " . $key . "=\"" . $value."\"";
             }
         }
 

@@ -127,6 +127,17 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('Série', $registro['ref_ref_cod_serie']));
     }
 
+    if ($registro['turno']) {
+      $turnos = array(
+        0 => 'Selecione',
+        1 => 'Matutino',
+        2 => 'Vespertino',
+        3 => 'Noturno',
+        4 => 'Integral'
+      );
+      $this->addDetalhe(array('Turno', $turnos[$registro['turno']]));
+    }
+
     if ($registro['vagas']) {
       $this->addDetalhe(array('Vagas', $registro['vagas']));
     }

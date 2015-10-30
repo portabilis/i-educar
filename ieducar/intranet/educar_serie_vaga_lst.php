@@ -1,6 +1,6 @@
 <?php
-error_reporting(E_ERROR);
-ini_set("display_errors", 1);
+//error_reporting(E_ERROR);
+//ini_set("display_errors", 1);
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -77,6 +77,7 @@ class indice extends clsListagem
   var $ref_cod_escola;
   var $ref_cod_curso;
   var $ref_cod_serie;
+  var $turno;
 
   function Gerar()
   {
@@ -99,11 +100,41 @@ class indice extends clsListagem
       'Intranet');
 
     $this->addCabecalhos(array(
-      'Ano', 'Escola', 'Curso', 'Série', 'Vagas'
+      'Ano', 'Escola', 'Curso', 'Série', 'Turno', 'Vagas'
     ));
 
 
-    $this->inputsHelper()->dynamic(array('ano', 'instituicao', 'escola', 'curso', 'serie'), array('required' => FALSE));
+    $this->inputsHelper()->dynamic(array('ano'), array('required' => FALSE));
+
+    $obj_permissao = new clsPermissoes();
+    $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
+
+    $get_escola = true;
+//    $get_escola_curso = true;
+    $get_escola_curso_serie = true;
+    $sem_padrao = true;
+    $get_curso = true;
+    include("include/pmieducar/educar_campo_lista.php");
+
+    if ( $this->ref_cod_escola )
+    {
+      $this->ref_ref_cod_escola = $this->ref_cod_escola;
+    }
+
+    $turnos = array(
+        0 => 'Selecione',
+        1 => 'Matutino',
+        2 => 'Vespertino',
+        3 => 'Noturno',
+        4 => 'Integral'
+    );
+
+    $options = array(
+      'value'     => $this->turno,
+      'resources' => $turnos,
+      'required' => false
+    );
+    $this->inputsHelper()->select('turno', $options);
 
     // Paginador
     $this->limite = 20;
@@ -151,6 +182,7 @@ class indice extends clsListagem
           $urlHelper->l($nm_escola, $url, $options),
           $urlHelper->l($nm_curso, $url, $options),
           $urlHelper->l($nm_serie, $url, $options),
+          $urlHelper->l($turnos[$registro['turno']], $url, $options),
           $urlHelper->l($registro['vagas'], $url, $options)
         ));
       }

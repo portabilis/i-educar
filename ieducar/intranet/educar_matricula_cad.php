@@ -323,7 +323,7 @@ class indice extends clsCadastro
         $curso = $this->getCurso($this->ref_cod_curso);
 
         if ($m['ref_ref_cod_serie'] == $this->ref_cod_serie) {
-          $this->mensagem .= "Este aluno já está matriculado nesta série e curso, não é possivel matricular um aluno mais de uma vez na mesma série.<br />";
+          $this->mensagem .= "Este aluno j&aacute; est&aacute; matriculado nesta s&eacute;rie e curso, n&atilde;o &eacute; possivel matricular um aluno mais de uma vez na mesma s&eacute;rie.<br />";
 
           return false;
         }
@@ -382,7 +382,7 @@ class indice extends clsCadastro
             else
               $curso = '';
 
-            $this->mensagem .= "Este aluno já está matriculado no(a) '$serie' do curso '$curso' na escola '$escola', para matricular este aluno na sua escola solicite transferência ao secretário(a) da escola citada.<br />";
+            $this->mensagem .= "Este aluno j&aacute; est&aacute; matriculado no(a) '$serie' do curso '$curso' na escola '$escola', para matricular este aluno na sua escola solicite transfer&ecirc;ncia ao secret&aacute;rio(a) da escola citada.<br />";
 
             return false;
           }
@@ -614,7 +614,7 @@ class indice extends clsCadastro
         if (is_numeric($this->ref_cod_candidato_reserva_vaga)){
           $obj_crv = new clsPmieducarCandidatoReservaVaga($this->ref_cod_candidato_reserva_vaga);
           $obj_crv->vinculaMatricula($cod_matricula);
-
+          $obj_crv->indefereOutrasReservas($this->ref_cod_aluno);
         }
 
         $obj_transferencia = new clsPmieducarTransferenciaSolicitacao();
@@ -736,8 +736,8 @@ class indice extends clsCadastro
             //   $db->consulta("SELECT modules.copia_notas_transf({$matriculaTransferida['cod_matricula']},{$cod_matricula})");
             // }
             $db = new clsBanco();
-            $db->Consulta("SELECT matricula.cod_matricula 
-                             from pmieducar.matricula 
+            $db->Consulta("SELECT matricula.cod_matricula
+                             from pmieducar.matricula
                             where matricula.ativo = 1
                               and matricula.aprovado = 4
                               and matricula.ref_ref_cod_serie = {$this->ref_cod_serie}
@@ -795,7 +795,7 @@ class indice extends clsCadastro
     }
 
     if(! $result) {
-		  $this->mensagem = "N&atilde;o foi poss&iacute;vel desativar as " .
+      $this->mensagem = "N&atilde;o foi poss&iacute;vel desativar as " .
                         "enturma&ccedil;&otilde;es da matr&iacute;cula.";
     }
 

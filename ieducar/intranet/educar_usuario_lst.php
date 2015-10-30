@@ -113,7 +113,30 @@ class indice extends clsListagem
 
 		$this->inputsHelper()->dynamic('instituicao',  array('required' =>  false, 'show-select' => true, 'value' => $this->ref_cod_instituicao));
 		$this->inputsHelper()->dynamic('escola',  array('required' =>  false, 'show-select' => true, 'value' => $this->ref_cod_escola));
+        $selectOptions = array(
+        0 => 'Selecione',
+        1  => 'Inativo',
+        2  => 'Ativo'
+        );
 
+        $options = array('required'  => false,
+      					 'label'     => 'Status',
+      					 'value'     => $this->int_ativo,
+      					 'resources' => $selectOptions);
+
+        $this->inputsHelper()->select( "int_ativo", $options);
+        //gambiarra pois o inputsHelper está bugado
+        switch ($this->int_ativo) {
+   case 0:
+         $this->int_ativo = null;
+         break;
+   case 1:
+         $this->int_ativo = 0;
+         break;
+   case 2:
+         $this->int_ativo = 1;
+         break;
+}
 		// Paginador
 		$limite = 10;
 		$iniciolimit = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$limite-$limite: 0;
@@ -121,8 +144,16 @@ class indice extends clsListagem
 		$obj_func = new clsFuncionario();
 		$obj_func->setOrderby("to_ascii(nome) ASC");
 		$obj_func->setLimite($limite, $iniciolimit);
-		$lst_func = $obj_func->listaFuncionarioUsuario($_GET["matricula"], $_GET['nm_pessoa'],$_GET['matricula_interna'],
-				$this->ref_cod_escola, $this->ref_cod_instituicao, $this->ref_cod_tipo_usuario, $this->ref_cod_nivel_usuario);
+		$lst_func = $obj_func->listaFuncionarioUsuario(
+			$_GET["matricula"], 
+			$_GET['nm_pessoa'],
+			$_GET['matricula_interna'],
+			$this->ref_cod_escola, 
+			$this->ref_cod_instituicao, 
+			$this->ref_cod_tipo_usuario, 
+			$this->ref_cod_nivel_usuario,
+            $this->int_ativo
+			);
 
 		if($lst_func)
 		{

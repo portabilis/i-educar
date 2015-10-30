@@ -185,7 +185,7 @@ $j('#tab1').addClass('alunoTab-active').removeClass('alunoTab');
 
 // hide nos campos das outras abas (deixando só os campos da primeira aba)
 $j('.tablecadastro >tbody  > tr').each(function(index, row) {
-  if (index> $j('#tr_alfabetizado').index() - 1 ){
+  if (index> $j('#tr_laudo_medico').index() - 1){
     if (row.id!='stop')
       row.hide();
     else
@@ -735,6 +735,8 @@ var handleGetPersonDetails = function(dataResponse) {
   $j('#responsavel_nome').val(nomeResponsavel);
   $j('#responsavel_id').val(dataResponse.responsavel_id);
 
+  $j('#religiao_id').val(dataResponse.religiao_id);
+
   // deficiencias
 
   $deficiencias = $j('#deficiencias');
@@ -758,6 +760,7 @@ var handleGetPersonDetails = function(dataResponse) {
   } else{
       $j('#tipo_responsavel').append('<option value="mae" selected >M&atilde;e</option>');
       $j('#tipo_responsavel').append('<option value="pai" selected >Pai</option>');
+      $j('#tipo_responsavel').append('<option value="pai_mae" >Pai e M&atilde;e</option>');
       $j('#tipo_responsavel').append('<option value="outra_pessoa" >Outra pessoa</option>');
   }
   $j('#tipo_responsavel').val(tipo_resp).change();
@@ -783,6 +786,22 @@ var handleGetPersonDetails = function(dataResponse) {
   $j('#data_emissao_rg').change(function(){
     validaRg();
   });
+
+  $j('#certidao_nascimento').val(dataResponse.certidao_nascimento);
+  $j('#certidao_casamento').val(dataResponse.certidao_casamento);
+  $j('#termo_certidao_civil').val(dataResponse.num_termo);
+  $j('#livro_certidao_civil').val(dataResponse.num_livro);
+  $j('#folha_certidao_civil').val(dataResponse.num_folha);
+
+  if (dataResponse.certidao_nascimento.trim()){
+    $j('#tipo_certidao_civil').val('certidao_nascimento_novo_formato').change();
+  }
+  else if (dataResponse.certidao_casamento.trim()){
+    $j('#tipo_certidao_civil').val('certidao_casamento_novo_formato').change();
+  }
+  else{
+    $j('#tipo_certidao_civil').val(dataResponse.tipo_cert_civil).change();
+  }
 
   // # TODO show aluno photo
   //$j('#aluno_foto').val(dataResponse.url_foto);
@@ -1116,7 +1135,7 @@ function canShowParentsFields(){
         $j('.alunoTab-active').toggleClass('alunoTab-active alunoTab');
         $j('#tab1').toggleClass('alunoTab alunoTab-active')
         $j('.tablecadastro >tbody  > tr').each(function(index, row) {
-          if (index> $j('#tr_alfabetizado').index() - 1){
+          if (index> $j('#tr_laudo_medico').index() - 1){
             if (row.id!='stop')
               row.hide();
             else
@@ -1139,7 +1158,7 @@ function canShowParentsFields(){
         $j('#tab2').toggleClass('alunoTab alunoTab-active')
         $j('.tablecadastro >tbody  > tr').each(function(index, row) {
           if (row.id!='stop'){
-            if (index> $j('#tr_alfabetizado').index() - 1 && index < $j('#tr_responsavel_parentesco_celular').index() - 1){
+            if (index> $j('#tr_laudo_medico').index() - 1 && index < $j('#tr_responsavel_parentesco_celular').index() - 1){
               if (first_click_medica)
                 $j('#'+row.id).find('td').toggleClass('formlttd formmdtd');
               row.show();

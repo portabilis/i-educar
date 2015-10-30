@@ -80,8 +80,11 @@ class indice extends clsCadastro
 	var $matricula_apenas_bairro_escola;
 	var $restringir_historico_escolar;
 	var $restringir_multiplas_enturmacoes;
-	var $permissao_filtro_abandono_transferencia;
-	var $data_base_matricula;
+  var $permissao_filtro_abandono_transferencia;
+	var $multiplas_reserva_vaga;
+  var $reserva_integral_somente_com_renda;
+  var $data_base_matricula;
+	var $data_expiracao_reserva_vaga;
 
 	function Inicializar()
 	{
@@ -128,7 +131,9 @@ class indice extends clsCadastro
         $this->matricula_apenas_bairro_escola 	= dbBool($this->matricula_apenas_bairro_escola);
         $this->restringir_historico_escolar   	= dbBool($this->restringir_historico_escolar);
         $this->restringir_multiplas_enturmacoes	= dbBool($this->restringir_multiplas_enturmacoes);
-        $this->permissao_filtro_abandono_transferencia	= dbBool($this->permissao_filtro_abandono_transferencia);
+        $this->permissao_filtro_abandono_transferencia  = dbBool($this->permissao_filtro_abandono_transferencia);
+        $this->multiplas_reserva_vaga = dbBool($this->multiplas_reserva_vaga);
+        $this->reserva_integral_somente_com_renda	= dbBool($this->reserva_integral_somente_com_renda);
 
 		return $retorno;
 	}
@@ -197,7 +202,7 @@ class indice extends clsCadastro
 
 		if ($GLOBALS['coreExt']['Config']->app->instituicao->data_base_deslocamento) {
 	  		$this->campoData('data_base_transferencia', 'Data máxima para deslocamento', Portabilis_Date_Utils::pgSQLToBr($this->data_base_transferencia), null, null, false);
-	  		$this->campoData('data_base_remanejamento', 'Data máxima para troca de sala', Portabilis_Date_Utils::pgSQLToBr($this->data_base_remanejamento), null, null, false);
+        $this->campoData('data_base_remanejamento', 'Data máxima para troca de sala', Portabilis_Date_Utils::pgSQLToBr($this->data_base_remanejamento), null, null, false);
 	  	}
 
 		///$hiddenInputOptions = array('options' => array('value' => $this->coordenador_transporte));
@@ -226,7 +231,11 @@ class indice extends clsCadastro
 		$this->campoNumero( "quantidade_alunos_metro_quadrado", "Quantidade máxima de alunos permitidos por metro quadrado", $this->quantidade_alunos_metro_quadrado, 6, 6 );
 
 		$this->campoCheck("restringir_multiplas_enturmacoes", "Não permitir múltiplas enturmações para o aluno no mesmo curso e série/ano", $this->restringir_multiplas_enturmacoes);
-		$this->campoCheck("permissao_filtro_abandono_transferencia", "Não permitir a apresentação de alunos com matrícula em abandono ou transferida na emissão do relatório de frequência", $this->permissao_filtro_abandono_transferencia);
+    $this->campoCheck("permissao_filtro_abandono_transferencia", "Não permitir a apresentação de alunos com matrícula em abandono ou transferida na emissão do relatório de frequência", $this->permissao_filtro_abandono_transferencia);
+
+    $this->campoCheck("multiplas_reserva_vaga", "Permitir múltiplas reservas de vagas para o mesmo candidato em escolas diferentes", $this->multiplas_reserva_vaga);
+
+		$this->campoCheck("reserva_integral_somente_com_renda", "Permitir reserva de vaga para o turno integral somente quando a renda for informada", $this->reserva_integral_somente_com_renda);
 
     	$this->inputsHelper()->text('data_base', array('label' => 'Data base para matrícula (dia/mês)',
 					    								'size' => 5,
@@ -234,6 +243,8 @@ class indice extends clsCadastro
 					    								'placeholder' => 'dd/mm',
 					    								'required' => false,
 					    								'value' => Portabilis_Date_Utils::pgSQLToBr_ddmm($this->data_base_matricula)));
+
+    $this->campoData('data_expiracao_reserva_vaga', 'Data para indeferimento automático da reserva de vaga', Portabilis_Date_Utils::pgSQLToBr($this->data_expiracao_reserva_vaga), null, null, false);
 	}
 
 	function Novo()
@@ -243,13 +254,16 @@ class indice extends clsCadastro
 		@session_write_close();
 		$obj = new clsPmieducarInstituicao( null, $this->ref_usuario_exc, $this->pessoa_logada, $this->ref_idtlog, $this->ref_sigla_uf, str_replace( "-", "", $this->cep ), $this->cidade, $this->bairro, $this->logradouro, $this->numero, $this->complemento, $this->nm_responsavel, $this->ddd_telefone, $this->telefone, $this->data_cadastro, $this->data_exclusao, 1, $this->nm_instituicao, null, null, $this->quantidade_alunos_metro_quadrado);
 		$obj->data_base_remanejamento 			= Portabilis_Date_Utils::brToPgSQL($this->data_base_remanejamento);
-		$obj->data_base_transferencia 			= Portabilis_Date_Utils::brToPgSQL($this->data_base_transferencia);
+    $obj->data_base_transferencia       = Portabilis_Date_Utils::brToPgSQL($this->data_base_transferencia);
+		$obj->data_expiracao_reserva_vaga 			= Portabilis_Date_Utils::brToPgSQL($this->data_expiracao_reserva_vaga);
 		$obj->exigir_vinculo_turma_professor	= is_null($this->exigir_vinculo_turma_professor) ? 0 : 1;
 		$obj->gerar_historico_transferencia 	= !is_null($this->gerar_historico_transferencia);
 		$obj->matricula_apenas_bairro_escola 	= !is_null($this->matricula_apenas_bairro_escola);
 		$obj->restringir_historico_escolar 		= !is_null($this->restringir_historico_escolar);
 		$obj->restringir_multiplas_enturmacoes  = !is_null($this->restringir_multiplas_enturmacoes);
-		$obj->permissao_filtro_abandono_transferencia  = !is_null($this->permissao_filtro_abandono_transferencia);		
+    $obj->permissao_filtro_abandono_transferencia  = !is_null($this->permissao_filtro_abandono_transferencia);
+    $obj->multiplas_reserva_vaga  = !is_null($this->multiplas_reserva_vaga);
+		$obj->reserva_integral_somente_com_renda  = !is_null($this->reserva_integral_somente_com_renda);
 		$obj->coordenador_transporte 			= $this->pessoa_coordenador_transporte;
 		$obj->controlar_espaco_utilizacao_aluno = is_null($this->controlar_espaco_utilizacao_aluno) ? 0 : 1;
 		$obj->percentagem_maxima_ocupacao_salas = Portabilis_Currency_Utils::moedaBrToUs($this->percentagem_maxima_ocupacao_salas);
@@ -277,13 +291,16 @@ class indice extends clsCadastro
 
 		$obj = new clsPmieducarInstituicao( $this->cod_instituicao, $this->ref_usuario_exc, $this->pessoa_logada, $this->ref_idtlog, $this->ref_sigla_uf, str_replace( "-", "", $this->cep ), $this->cidade, $this->bairro, $this->logradouro, $this->numero, $this->complemento, $this->nm_responsavel, $this->ddd_telefone, $this->telefone, $this->data_cadastro, $this->data_exclusao, 1, $this->nm_instituicao, null, null, $this->quantidade_alunos_metro_quadrado);
 		$obj->data_base_remanejamento 			= Portabilis_Date_Utils::brToPgSQL($this->data_base_remanejamento);
-		$obj->data_base_transferencia 			= Portabilis_Date_Utils::brToPgSQL($this->data_base_transferencia);
+    $obj->data_base_transferencia       = Portabilis_Date_Utils::brToPgSQL($this->data_base_transferencia);
+		$obj->data_expiracao_reserva_vaga 			= Portabilis_Date_Utils::brToPgSQL($this->data_expiracao_reserva_vaga);
 		$obj->exigir_vinculo_turma_professor 	= is_null($this->exigir_vinculo_turma_professor) ? 0 : 1;
 		$obj->gerar_historico_transferencia 	= !is_null($this->gerar_historico_transferencia);
 		$obj->matricula_apenas_bairro_escola 	= !is_null($this->matricula_apenas_bairro_escola);
 		$obj->restringir_historico_escolar 		= !is_null($this->restringir_historico_escolar);
 		$obj->restringir_multiplas_enturmacoes 	= !is_null($this->restringir_multiplas_enturmacoes);
-		$obj->permissao_filtro_abandono_transferencia 	= !is_null($this->permissao_filtro_abandono_transferencia);
+    $obj->permissao_filtro_abandono_transferencia   = !is_null($this->permissao_filtro_abandono_transferencia);
+    $obj->multiplas_reserva_vaga  = !is_null($this->multiplas_reserva_vaga);
+		$obj->reserva_integral_somente_com_renda 	= !is_null($this->reserva_integral_somente_com_renda);
 		$obj->coordenador_transporte 			= $this->pessoa_coordenador_transporte;
 		$obj->controlar_espaco_utilizacao_aluno = is_null($this->controlar_espaco_utilizacao_aluno) ? 0 : 1;
 		$obj->percentagem_maxima_ocupacao_salas = Portabilis_Currency_Utils::moedaBrToUs($this->percentagem_maxima_ocupacao_salas);

@@ -276,7 +276,8 @@ class clsFuncionario extends clsPessoaFisica
     $int_ref_cod_escola = null,
     $int_ref_cod_instituicao = null,
     $int_ref_cod_tipo_usuario = null,
-    $int_nivel = null)
+    $int_nivel = null,
+    $int_ativo = null)
 	{
 		$sql = " SELECT f.ref_cod_pessoa_fj, f.nome, f.matricula, f.matricula_interna, f.ativo, tu.nm_tipo, tu.nivel
 							FROM {$this->schema_portal}.v_funcionario f 
@@ -320,6 +321,11 @@ class clsFuncionario extends clsPessoaFisica
 
 		if (is_numeric($int_nivel)) {
 			$filtros .= "{$whereAnd} tu.nivel = '$int_nivel'";
+			$whereAnd = " AND ";
+		}
+
+		if (is_numeric($int_ativo)) {
+			$filtros .= "{$whereAnd} f.ativo = '$int_ativo'";
 			$whereAnd = " AND ";
 		}
 

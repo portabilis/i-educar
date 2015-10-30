@@ -108,7 +108,7 @@ class AlunoController extends ApiCoreController
 
 
   protected function validatesResponsavelTipo() {
-    $expectedValues = array('mae', 'pai', 'outra_pessoa');
+    $expectedValues = array('mae', 'pai', 'outra_pessoa', 'pai_mae');
 
     return $this->validatesPresenceOf('tipo_responsavel') &&
            $this->validator->validatesValueInSetOf($this->getRequest()->tipo_responsavel,
@@ -484,7 +484,7 @@ class AlunoController extends ApiCoreController
 
 
   protected function createOrUpdateAluno($id = null){
-    $tiposResponsavel               = array('pai' => 'p', 'mae' => 'm', 'outra_pessoa' => 'r');
+    $tiposResponsavel               = array('pai' => 'p', 'mae' => 'm', 'outra_pessoa' => 'r', 'pai_mae' => 'a');
 
     $aluno                          = new clsPmieducarAluno();
     $aluno->cod_aluno               = $id;
@@ -504,8 +504,9 @@ class AlunoController extends ApiCoreController
     if (is_null($id))
       $aluno->ref_idpes             = $this->getRequest()->pessoa_id;
 
-    $aluno->ref_cod_religiao        = $this->getRequest()->religiao_id;
-    $aluno->analfabeto              = $this->getRequest()->alfabetizado ? 0 : 1;
+    if(!$GLOBALS['coreExt']['Config']->app->alunos->nao_apresentar_campo_alfabetizado)
+      $aluno->analfabeto              = $this->getRequest()->alfabetizado ? 0 : 1;
+
     $aluno->tipo_responsavel        = $tiposResponsavel[$this->getRequest()->tipo_responsavel];
     $aluno->ref_usuario_exc         = $this->getSession()->id_pessoa;
 
@@ -775,7 +776,7 @@ class AlunoController extends ApiCoreController
   // api
 
   protected function tipoResponsavel($aluno) {
-    $tipos = array('p' => 'pai', 'm' => 'mae', 'r' => 'outra_pessoa');
+    $tipos = array('p' => 'pai', 'm' => 'mae', 'r' => 'outra_pessoa', 'a' => 'pai_mae');
     $tipo  = $tipos[$aluno['tipo_responsavel']];
 
     // no antigo cadastro de aluno, caso não fosse encontrado um tipo de responsavel
@@ -853,7 +854,6 @@ class AlunoController extends ApiCoreController
       $attrs  = array(
         'cod_aluno'               => 'id',
         'ref_cod_aluno_beneficio' => 'beneficio_id',
-        'ref_cod_religiao'        => 'religiao_id',
         'ref_idpes'               => 'pessoa_id',
         'tipo_responsavel'        => 'tipo_responsavel',
         'ref_usuario_exc'         => 'destroyed_by',
@@ -886,7 +886,7 @@ class AlunoController extends ApiCoreController
         'autorizado_cinco',
         'parentesco_cinco'
       );
-      
+
       $aluno = Portabilis_Array_Utils::filter($aluno, $attrs);
 
       $aluno['nome']             = $this->loadNomeAluno($id);
@@ -948,9 +948,10 @@ class AlunoController extends ApiCoreController
         $aluno = Portabilis_Array_Utils::merge($objPessoaTransporte,$aluno);
       }
 
-      $sql = "select sus from cadastro.fisica where idpes = $1";
+      $sql = "select sus, ref_cod_religiao from cadastro.fisica where idpes = $1";
       $camposFisica = $this->fetchPreparedQuery($sql, $aluno['pessoa_id'], false, 'first-row');
       $aluno['sus'] = $camposFisica['sus'];
+      $aluno['religiao_id'] = $camposFisica['ref_cod_religiao'];
 
       $aluno['beneficios'] = $this->loadBeneficios($id);
 
@@ -1425,9 +1426,10 @@ class AlunoController extends ApiCoreController
   }
 
   protected function createOrUpdatePessoa($idPessoa){
-    $fisica      = new clsFisica($idPessoa);
-    $fisica->cpf = idFederal2int($this->getRequest()->id_federal);
-    $fisica      = $fisica->edita();
+    $fisica                   = new clsFisica($idPessoa);
+    $fisica->cpf              = idFederal2int($this->getRequest()->id_federal);
+    $fisica->ref_cod_religiao = $this->getRequest()->religiao_id;
+    $fisica                   = $fisica->edita();
   }
 
   protected function loadAcessoDataEntradaSaida(){

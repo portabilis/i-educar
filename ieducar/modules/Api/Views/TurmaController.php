@@ -111,7 +111,11 @@ class TurmaController extends ApiCoreController
                    $tiposBoletim::ACOMPANHAMENTO_EDUCACAO_INTANTIL              => 'portabilis_boletim_acompanhamento_educ_infantil',
                    $tiposBoletim::AVALIACAO_INFANTIL_SEMESTRAL                  => 'portabilis_boletim_avaliacao_infantil_balneario_camboriu',
                    $tiposBoletim::TRIMESTRAL_CONCEITUAL_PARECER                 => 'portabilis_boletim_conceitual_trimestral_parecer',
-                   $tiposBoletim::BIMESTRAL_RECUPERACAO_SEMESTRAL               => 'portabilis_boletim_recuperacao_semestral');
+                   $tiposBoletim::BIMESTRAL_RECUPERACAO_SEMESTRAL               => 'portabilis_boletim_recuperacao_semestral',
+                   $tiposBoletim::BIMESTRAL_CONCEITUAL_COCALDOSUL               => 'portabilis_boletim_bimestral_conceitual_cocaldosul',
+                   $tiposBoletim::BOLETIM_6AO9_SAOMIGUELDOSCAMPOS               => 'portabilis_boletim_6ao9_saomigueldoscampos',
+                   $tiposBoletim::TRIMESTRAL_CONCEITUAL_BC                      => 'portabilis_boletim_primeiro_ano_trimestral_bc',
+    );
 
     return array('tipo-boletim' => $tipos[$tipo]);
   }
@@ -148,24 +152,25 @@ class TurmaController extends ApiCoreController
       $instituicaoId = $this->getRequest()->instituicao_id;
       $turmaId       = $this->getRequest()->turma_id;
       $disciplinaId  = $this->getRequest()->disciplina_id;
+      $dataMatricula = $this->getRequest()->data_matricula;
 
-      $sql = 'SELECT a.cod_aluno as id,
-                    m.dependencia
-              FROM pmieducar.matricula_turma mt
+      $sql = "SELECT a.cod_aluno as id,
+                     m.dependencia
+               FROM pmieducar.matricula_turma mt
               INNER JOIN pmieducar.matricula m ON mt.ref_cod_matricula = m.cod_matricula
               INNER JOIN pmieducar.aluno a ON a.cod_aluno = m.ref_cod_aluno
               INNER JOIN pmieducar.turma t ON t.cod_turma = mt.ref_cod_turma
               INNER JOIN cadastro.pessoa p ON p.idpes = a.ref_idpes
+              WHERE m.ativo = 1
+                AND a.ativo = 1
+                AND t.ativo = 1
+                AND t.ref_cod_instituicao = $1
+                AND t.cod_turma  = $2
+                AND (CASE WHEN coalesce($3, current_date)::date = current_date THEN mt.ativo = 1
+               ELSE $3 >= mt.data_enturmacao::date
+                AND $3 < coalesce(m.data_cancel, coalesce(mt.data_exclusao, date 'tomorrow'))::date END)";
 
-              WHERE mt.ativo = 1
-              AND m.ativo = 1
-              AND a.ativo = 1
-              AND t.ativo = 1
-              AND t.ref_cod_instituicao = $1
-              AND t.cod_turma  = $2  ';
-
-      $params = array($instituicaoId, $turmaId);
-
+      $params = array($instituicaoId, $turmaId, $dataMatricula);
 
       if(is_numeric($disciplinaId)){
         $params[] = $disciplinaId;
@@ -174,7 +179,7 @@ class TurmaController extends ApiCoreController
                     (
                       SELECT 1 FROM pmieducar.disciplina_dependencia dd
                       WHERE dd.ref_cod_matricula = m.cod_matricula
-                      AND dd.ref_cod_disciplina = $3
+                      AND dd.ref_cod_disciplina = $4
                       LIMIT 1
                     ) IS NOT NULL
                   ELSE
@@ -182,7 +187,7 @@ class TurmaController extends ApiCoreController
                     SELECT 1 FROM pmieducar.dispensa_disciplina dd
                     WHERE dd.ativo = 1
                     AND dd.ref_cod_matricula = m.cod_matricula
-                    AND dd.ref_cod_disciplina = $3
+                    AND dd.ref_cod_disciplina = $4
                     LIMIT 1
                   ) IS NULL
                 END
