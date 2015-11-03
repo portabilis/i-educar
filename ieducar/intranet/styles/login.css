@@ -94,6 +94,12 @@ ul.unstyled, ol.unstyled {
   left: -180px;
   width: 100px;
 }
+#div-novembro-azul {
+  position: relative;
+  padding-top: 66px;
+  left: -180px;
+  width: 100px;
+}
 
 #div-copa-no-brasil img{  
   height: 180px;
@@ -111,6 +117,10 @@ ul.unstyled, ol.unstyled {
 }
 
 #div-outubro-rosa img{  
+  height: 180px;
+}
+
+#div-novembro-azul img{
   height: 180px;
 }
 
