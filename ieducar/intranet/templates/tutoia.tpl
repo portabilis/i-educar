@@ -175,8 +175,8 @@
         Prefeitura Mun. de Tut&oacute;ia - MA - Fone: (98) 3479-1098 - E-mail: <a href="mailto:nte.semedtutoia@gmail.com" >nte.semedtutoia@gmail.com </a>
       </p>
 
-      <div id="div-outubro-rosa" style="top: -380px">
-        <a href="https://www.google.com.br/#q=Campanha+Outubro+rosa" target="_blank"><img src="https://s3.amazonaws.com/apps-ieducar-images/outubro-rosa/outubro-rosa.png"/></a>
+      <div id="div-novembro-azul" style="top: -385px">
+        <a href="https://www.google.com.br/#q=Campanha+Novembro+azul" target="_blank"><img src="https://s3.amazonaws.com/apps-ieducar-images/novembro-azul/novembro-azul.jpg"/></a>
       </div>
       <!--div id="div-copa-no-brasil">
         <img src="https://cloud.githubusercontent.com/assets/1082624/3250687/b08b862c-f1a8-11e3-87f9-a1bfef5949c3.jpg"/>
