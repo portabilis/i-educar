@@ -66,10 +66,8 @@ class DiarioController extends ApiCoreController
     $sql = 'SELECT m.cod_matricula AS id
               FROM pmieducar.matricula m
               INNER JOIN pmieducar.matricula_turma mt ON m.cod_matricula = mt.ref_cod_matricula
-              WHERE m.ativo = 1
-              AND mt.ativo = 1
-              AND mt.ref_cod_turma = $1
-              AND m.ref_cod_aluno = $2
+              WHERE mt.ref_cod_turma = $1
+                AND m.ref_cod_aluno = $2
               LIMIT 1';
 
     $matriculaId = $this->fetchPreparedQuery($sql, array($turmaId, $alunoId), true, 'first-field');
