@@ -161,9 +161,6 @@
 
         <a target="_blank" class="light" href="http://suporte.portabilis.com.br"> Obter Suporte </a>
       </p>
-        <!--div id="div-outubro-rosa">
-        <a href="https://www.google.com.br/#q=Campanha+Outubro+rosa" target="_blank"><img src="https://s3.amazonaws.com/apps-ieducar-images/outubro-rosa/outubro-rosa.png"/></a>
-      </div-->
 
       <!--div id="div-copa-no-brasil">
         <img src="https://cloud.githubusercontent.com/assets/1082624/3250687/b08b862c-f1a8-11e3-87f9-a1bfef5949c3.jpg"/>
