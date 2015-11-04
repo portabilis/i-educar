@@ -318,6 +318,7 @@ document.getElementById('idmun').onchange = function()
 }
 function getLogradouro( xml_logradouro )
 {
+	// console.log(xml_logradouro);
 	var campoLogradouro = document.getElementById('idlog');
 	var DOM_array = xml_logradouro.getElementsByTagName( "logradouro" );
 	if(DOM_array.length)
@@ -327,7 +328,9 @@ function getLogradouro( xml_logradouro )
 		campoLogradouro.disabled = false;
 		for( var i = 0; i < DOM_array.length; i++ )
 		{
-			campoLogradouro.options[campoLogradouro.options.length] = new Option( DOM_array[i].firstChild.data, DOM_array[i].getAttribute("idlog"),false,false);
+			if(DOM_array[i].firstChild){
+				campoLogradouro.options[campoLogradouro.options.length] = new Option( DOM_array[i].firstChild.data, DOM_array[i].getAttribute("idlog"),false,false);
+			}
 		}
 	}
 	else
