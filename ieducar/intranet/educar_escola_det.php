@@ -531,7 +531,7 @@ class indice extends clsDetalhe
 
 				//verifica se o ano nao possui matricula em andamento para permitir finalizar o ano
 				$obj_matricula_ano = new clsPmieducarMatricula();
-				$matricula_em_andamento = $obj_matricula_ano->lista(null,null,$this->cod_escola,null,null,null,null,3,null,null,null,null,1,$ano['ano'],null,null,1,null,1,null,null,null,null,null,null,false);
+				$matricula_em_andamento = $obj_matricula_ano->lista(null,null,$this->cod_escola,null,null,null,null,3,null,null,null,null,1,$ano['ano'],null,null,1,null,null,null,null,null,null,null,null,false);
 				if(!$matricula_em_andamento && $existe_ano_andamento && $ano['andamento'] == 1 && $canEdit)
 					$excluir = "<td><a href='#' onclick=\"preencheForm('{$ano['ano']}','{$ano['ref_cod_escola']}','finalizar');\" ><img src=\"imagens/i-educar/nvp_bot_finalizar_ano.gif\" border=0 style='padding-left:10px;'></a></td>";
 				else
