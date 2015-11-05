@@ -390,8 +390,10 @@ function getLogradouro(xml_logradouro) {
     campoLogradouro.options[0].text = 'Selecione um logradouro';
     campoLogradouro.disabled = false;
     for (var i = 0; i < DOM_array.length; i++) {
+      if(DOM_array[i].firstChild){
       campoLogradouro.options[campoLogradouro.options.length] = new Option(DOM_array[i].firstChild.data,
         DOM_array[i].getAttribute('idlog'), false, false);
+    }
     }
   }
   else {
