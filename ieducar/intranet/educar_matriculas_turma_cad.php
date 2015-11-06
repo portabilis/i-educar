@@ -290,10 +290,11 @@ class indice extends clsCadastro
     }
 
     if (count($opcoes)) {
-      $this->inputsHelper()->date('data_enturmacao', array('label' => 'Data da enturma&ccedil;&acirc;o', 'value' => date('Y-m-d')));
+        $this->inputsHelper()->date('data_enturmacao', array('label' => 'Data da enturma&ccedil;&acirc;o', 'value' => date('Y-m-d')));
+        $this->campoRotulo('titulo', 'Aluno', "<input checked type='checkbox' name='CheckTodosDois' onClick='marcarCheckDois(".'"ref_cod_matricula[]"'.");'/>Marcar todos</label>");
       asort($opcoes);
       foreach ($opcoes as $key => $aluno) {
-        $this->campoCheck('ref_cod_matricula[' . $key . ']', 'Aluno', $key,
+        $this->campoCheck('ref_cod_matricula[' . $key . ']', 'Aluno:', $key,
           $aluno, NULL, NULL, NULL);
       }
     }
@@ -419,6 +420,30 @@ $pagina->MakeAll();
             if (campo.elements[i].id == idValue) {
 
                 campo.elements[i].checked = campo.CheckTodos.checked;
+            }
+        }
+  }
+
+
+
+  function fixUpCheckBoxesDois(){
+    $j('input[name^=ref_cod_matricula]').each(function(index, element){
+      element.id = 'ref_cod_matricula[]';
+      element.checked = true;
+    });
+  }
+
+  fixUpCheckBoxesDois();
+
+  function marcarCheckDois(idValueDois) {
+      // testar com formcadastro
+      var contaFormDois = document.formcadastro.elements.length;
+      var campoDois = document.formcadastro;
+      var i;
+        for (i=0; i<contaFormDois; i++) {
+            if (campoDois.elements[i].id == idValueDois) {
+
+                campoDois.elements[i].checked = campoDois.CheckTodosDois.checked;
             }
         }
   }
