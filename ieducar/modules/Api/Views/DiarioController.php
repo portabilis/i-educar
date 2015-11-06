@@ -50,6 +50,21 @@ class DiarioController extends ApiCoreController
     return App_Model_IedFinder::getRegraAvaliacaoPorTurma($turmaId);
   }
 
+  protected function getComponentesPorMatricula($matriculaId) {
+    return App_Model_IedFinder::getComponentesPorMatricula($matriculaId);
+  }
+
+  protected function validateComponenteCurricular($matriculaId, $componenteCurricularId){
+
+    $componentes = $this->getComponentesPorMatricula($matriculaId);
+    $componentes = CoreExt_Entity::entityFilterAttr($componentes, 'id', 'id');
+    $valid = in_array($componenteCurricularId, $componentes);
+    if(!$valid){
+      throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("Componente curricular de código $componenteCurricularId não existe para essa turma/matrícula."));
+    }
+    return $valid;
+  }
+
   protected function trySaveServiceBoletim($turmaId, $alunoId) {
     try {
       $this->serviceBoletim($turmaId, $alunoId)->save();
@@ -145,19 +160,22 @@ class DiarioController extends ApiCoreController
           $componentesCurriculares = $aluno['componentes_curriculares'];
           foreach ($componentesCurriculares as $componenteCurricular) {
             $componenteCurricularId = $componenteCurricular['componente_curricular_id'];
-            $valor = $componenteCurricular['valor'];
+
+            if($this->validateComponenteCurricular($this->findMatriculaByTurmaAndAluno($turmaId, $alunoId), $componenteCurricularId)){
+              $valor = $componenteCurricular['valor'];
 
 
-            $array_nota = array(
-                  'componenteCurricular' => $componenteCurricularId,
-                  'nota'                 => $valor,
-                  'etapa'                => $etapa,
-                  'notaOriginal'         => $valor);
+              $array_nota = array(
+                    'componenteCurricular' => $componenteCurricularId,
+                    'nota'                 => $valor,
+                    'etapa'                => $etapa,
+                    'notaOriginal'         => $valor);
 
-            $nota = new Avaliacao_Model_NotaComponente($array_nota);
+              $nota = new Avaliacao_Model_NotaComponente($array_nota);
 
-            $this->serviceBoletim($turmaId, $alunoId)->addNota($nota);
-            $this->trySaveServiceBoletim($turmaId, $alunoId);
+              $this->serviceBoletim($turmaId, $alunoId)->addNota($nota);
+              $this->trySaveServiceBoletim($turmaId, $alunoId);
+            }
           }
         }
       }
@@ -185,16 +203,20 @@ class DiarioController extends ApiCoreController
           $componentesCurriculares = $aluno['componentes_curriculares'];
           foreach ($componentesCurriculares as $componenteCurricular) {
             $componenteCurricularId = $componenteCurricular['componente_curricular_id'];
-            $faltas = $componenteCurricular['faltas'];
 
-            $falta = new Avaliacao_Model_FaltaComponente(array(
-              'componenteCurricular' => $componenteCurricularId,
-              'quantidade'           => $faltas,
-              'etapa'                => $etapa
-            ));
+            if($this->validateComponenteCurricular($this->findMatriculaByTurmaAndAluno($turmaId, $alunoId), $componenteCurricularId)){
 
-            $this->serviceBoletim($turmaId, $alunoId)->addFalta($falta);
-            $this->trySaveServiceBoletim($turmaId, $alunoId);
+              $faltas = $componenteCurricular['faltas'];
+
+              $falta = new Avaliacao_Model_FaltaComponente(array(
+                'componenteCurricular' => $componenteCurricularId,
+                'quantidade'           => $faltas,
+                'etapa'                => $etapa
+              ));
+
+              $this->serviceBoletim($turmaId, $alunoId)->addFalta($falta);
+              $this->trySaveServiceBoletim($turmaId, $alunoId);
+            }
           }
         }
       }
@@ -222,16 +244,20 @@ class DiarioController extends ApiCoreController
           $componentesCurriculares = $aluno['componentes_curriculares'];
           foreach ($componentesCurriculares as $componenteCurricular) {
             $componenteCurricularId = $componenteCurricular['componente_curricular_id'];
-            $parecer = $componenteCurricular['parecer'];
 
-            $falta = new Avaliacao_Model_ParecerDescritivoComponente(array(
-              'componenteCurricular' => $componenteCurricularId,
-              'parecer'           => Portabilis_String_Utils::toLatin1($parecer),
-              'etapa'                => $etapa
-            ));
+            if($this->validateComponenteCurricular($this->findMatriculaByTurmaAndAluno($turmaId, $alunoId), $componenteCurricularId)){
 
-            $this->serviceBoletim($turmaId, $alunoId)->addParecer($falta);
-            $this->trySaveServiceBoletim($turmaId, $alunoId);
+              $parecer = $componenteCurricular['parecer'];
+
+              $falta = new Avaliacao_Model_ParecerDescritivoComponente(array(
+                'componenteCurricular' => $componenteCurricularId,
+                'parecer'           => Portabilis_String_Utils::toLatin1($parecer),
+                'etapa'                => $etapa
+              ));
+
+              $this->serviceBoletim($turmaId, $alunoId)->addParecer($falta);
+              $this->trySaveServiceBoletim($turmaId, $alunoId);
+            }
           }
         }
       }
@@ -258,15 +284,19 @@ class DiarioController extends ApiCoreController
           $componentesCurriculares = $aluno['componentes_curriculares'];
           foreach ($componentesCurriculares as $componenteCurricular) {
             $componenteCurricularId = $componenteCurricular['componente_curricular_id'];
-            $parecer = $componenteCurricular['parecer'];
 
-            $falta = new Avaliacao_Model_ParecerDescritivoComponente(array(
-              'componenteCurricular' => $componenteCurricularId,
-              'parecer'           => Portabilis_String_Utils::toLatin1($parecer)
-            ));
+            if($this->validateComponenteCurricular($this->findMatriculaByTurmaAndAluno($turmaId, $alunoId), $componenteCurricularId)){
 
-            $this->serviceBoletim($turmaId, $alunoId)->addParecer($falta);
-            $this->trySaveServiceBoletim($turmaId, $alunoId);
+              $parecer = $componenteCurricular['parecer'];
+
+              $falta = new Avaliacao_Model_ParecerDescritivoComponente(array(
+                'componenteCurricular' => $componenteCurricularId,
+                'parecer'           => Portabilis_String_Utils::toLatin1($parecer)
+              ));
+
+              $this->serviceBoletim($turmaId, $alunoId)->addParecer($falta);
+              $this->trySaveServiceBoletim($turmaId, $alunoId);
+            }
           }
         }
       }

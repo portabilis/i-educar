@@ -2340,7 +2340,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
     $validators = $this->_validators;
 
-    if ($this->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
+    if ($validatable instanceof Avaliacao_Model_NotaComponente || $this->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
       $validatable->setValidator('componenteCurricular', $validators['componenteCurricular']);
     }
     $validatable->setValidator('etapa', $validators['etapa']);
@@ -2421,8 +2421,12 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    */
   protected function _updateEtapa(Avaliacao_Model_Etapa $instance)
   {
-    if (!is_null($instance->etapa) && $instance->isValid('etapa')) {
-      return $instance;
+    if (!is_null($instance->etapa)) {
+      if($instance->isValid('etapa')){
+        return $instance;
+      }else{
+        throw new CoreExt_Exception_InvalidArgumentException('A etapa informada é inválida.');
+      }
     }
 
     $proximaEtapa = 1;
@@ -2475,7 +2479,11 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   protected function _updateParecerEtapa(Avaliacao_Model_ParecerDescritivoAbstract $instance)
   {
     if (!is_null($instance->etapa)) {
-      return $instance;
+      if($instance->isValid('etapa')){
+        return $instance;
+      }else{
+        throw new CoreExt_Exception_InvalidArgumentException('A etapa informada é inválida.');
+      }
     }
 
     $proximaEtapa = 1;
