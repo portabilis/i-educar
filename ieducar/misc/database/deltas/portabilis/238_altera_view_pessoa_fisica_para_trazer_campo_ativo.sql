@@ -13,6 +13,10 @@ CREATE OR REPLACE VIEW cadastro.v_pessoa_fisica AS
 ALTER TABLE cadastro.v_pessoa_fisica
   OWNER TO ieducar;
 
+
+GRANT ALL PRIVILEGES ON TABLE pessoa TO ieducar;
+GRANT ALL PRIVILEGES ON TABLE fisica TO ieducar;
+
 -- undo
 
 DROP VIEW cadastro.v_pessoa_fisica;
