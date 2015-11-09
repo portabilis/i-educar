@@ -347,13 +347,14 @@ class PessoaController extends ApiCoreController
 
     // search by idpes or cpf
     $sqls[] = "select distinct pessoa.idpes as id, pessoa.nome as name from cadastro.pessoa,
-               cadastro.fisica where fisica.idpes = pessoa.idpes and (pessoa.idpes like $1||'%' or
+               cadastro.fisica where fisica.idpes = pessoa.idpes and fisica.ativo = 1 and (pessoa.idpes like $1||'%' or
                trim(leading '0' from fisica.cpf) like trim(leading '0' from $1)||'%' or
                fisica.cpf like $1||'%') order by id limit 15";
 
     // search by rg
-    $sqls[] = "select distinct pessoa.idpes as id, pessoa.nome as name from cadastro.pessoa, cadastro.documento
-               where pessoa.idpes = documento.idpes and ((documento.rg like $1||'%') or
+    $sqls[] = "select distinct pessoa.idpes as id, pessoa.nome as name from cadastro.pessoa, cadastro.documento, 
+               cadastro.fisica where fisica.idpes = pessoa.idpes and fisica.ativo = 1 and
+               pessoa.idpes = documento.idpes and ((documento.rg like $1||'%') or
                trim(leading '0' from documento.rg) like trim(leading '0' from $1)||'%') order by id limit 15";
 
     return $sqls;
@@ -615,7 +616,7 @@ class PessoaController extends ApiCoreController
     // $selectFields                    = join(', ', $searchOptions['selectFields']);
 
      return "select distinct pessoa.idpes as id, pessoa.nome as name from cadastro.pessoa inner join cadastro.fisica ON (fisica.idpes = pessoa.idpes)
-            where lower(to_ascii(pessoa.nome)) like '%'||lower(to_ascii($1))||'%' order by id, name limit 15";
+            where fisica.ativo = 1 and lower(to_ascii(pessoa.nome)) like '%'||lower(to_ascii($1))||'%' order by id, name limit 15";
     // return "select distinct $selectFields from $namespace.$table
     //         where lower(to_ascii($labelAttr)) like '%'||lower(to_ascii($1))||'%' order by $labelAttr limit 15";
   }

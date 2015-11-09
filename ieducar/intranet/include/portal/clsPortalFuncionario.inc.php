@@ -786,9 +786,9 @@ class clsPortalFuncionario
 
 		$whereAnd = " WHERE ";
 
-		if( is_numeric( $int_ref_cod_pessoa_fj ) )
+		if( is_numeric( $this->ref_cod_pessoa_fj ) )
 		{
-			$filtros .= "{$whereAnd} ref_cod_pessoa_fj = '{$int_ref_cod_pessoa_fj}'";
+			$filtros .= "{$whereAnd} ref_cod_pessoa_fj = '{$this->ref_cod_pessoa_fj}'";
 			$whereAnd = " AND ";
 		}
 		if( is_string( $str_matricula ) )
