@@ -406,7 +406,7 @@ min = (document.forms[0].novo_hora_inicio.value.substring(3,5));
                
 
 if ((hrs < 00 ) || (hrs > 23) || ( min < 00) ||( min > 59)){ 
-alert('Por favor, insira uma hor\u00e1rio v\u00e1lido!');
+alert('Por favor, insira um hor\u00e1rio v\u00e1lido!');
 document.forms[0].novo_hora_inicio.value = "";
 }       
 } 
@@ -416,7 +416,7 @@ min = (document.forms[0].novo_hora_fim.value.substring(3,5));
                
 
 if ((hrs < 00 ) || (hrs > 23) || ( min < 00) ||( min > 59)){ 
-alert('Por favor, insira uma hor\u00e1rio v\u00e1lido!');
+alert('Por favor, insira um hor\u00e1rio v\u00e1lido!');
 document.forms[0].novo_hora_fim.value = "";
 }       
 } 
