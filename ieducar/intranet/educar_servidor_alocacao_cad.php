@@ -164,10 +164,11 @@ class indice extends clsCadastro
       $this->carga_horaria_disponivel = $det['carga_horaria'];
     }
 
+
     if ($this->ref_cod_servidor) {
-      $objTemp = new clsFuncionario($this->ref_cod_servidor);
+      $objTemp = new clsPessoaFisica($this->ref_cod_servidor);
       $detalhe = $objTemp->detalhe();
-      $detalhe = $detalhe['idpes']->detalhe();
+      //$detalhe = $detalhe['idpes']->detalhe();
       $nm_servidor = $detalhe['nome'];
     }
 
