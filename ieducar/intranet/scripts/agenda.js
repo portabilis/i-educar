@@ -406,18 +406,17 @@ min = (document.forms[0].novo_hora_inicio.value.substring(3,5));
                
 
 if ((hrs < 00 ) || (hrs > 23) || ( min < 00) ||( min > 59)){ 
-alert('Por favor, insira uma hora v\u00e1lida!');
+alert('Por favor, insira uma hor\u00e1rio v\u00e1lido!');
 document.forms[0].novo_hora_inicio.value = "";
 }       
 } 
-
 function verifica_hora_fim(novo_hora_fim){ 
 hrs = (document.forms[0].novo_hora_fim.value.substring(0,2)); 
 min = (document.forms[0].novo_hora_fim.value.substring(3,5)); 
                
 
 if ((hrs < 00 ) || (hrs > 23) || ( min < 00) ||( min > 59)){ 
-alert('Por favor, insira uma hora v\u00e1lida!');
+alert('Por favor, insira uma hor\u00e1rio v\u00e1lido!');
 document.forms[0].novo_hora_fim.value = "";
 }       
 } 
