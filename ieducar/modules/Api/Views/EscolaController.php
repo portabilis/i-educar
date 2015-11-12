@@ -199,7 +199,6 @@ class EscolaController extends ApiCoreController
       $turmaTurnoId = $this->getRequest()->turma_turno_id;
 
       $sql = " SELECT DISTINCT cod_escola
-
                 FROM pmieducar.escola e
                 INNER JOIN pmieducar.escola_curso ec ON (e.cod_escola = ec.ref_cod_escola)
                 INNER JOIN pmieducar.curso c ON (c.cod_curso = ec.ref_cod_curso)
@@ -219,8 +218,8 @@ class EscolaController extends ApiCoreController
                 AND s.ativo = 1
                 AND t.ativo = 1
                 AND eal.ativo = 1
-                AND eal.andamento = 1
-				AND eal.ano = $1";
+                AND eal.andamento <> 2
+				        AND eal.ano = $1";
       $escolaIds = $this->fetchPreparedQuery($sql, array($ano, $turmaTurnoId, $cursoId, $instituicaoId, $serieId));
 
       foreach($escolaIds as $escolaId){
