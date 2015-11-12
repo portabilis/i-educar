@@ -67,6 +67,17 @@
 	 	$obj_permissoes = new clsPermissoes();
 	 	$nivel_usuario = $obj_permissoes->nivel_acesso( $this->pessoa_logada );
 
+
+		// $retorno .= '<tr id="tr_status">
+		// 			 <td valign="top" class="formlttd">
+		// 			 <span class="form">Ano</span>
+		// 			 <span class="campo_obrigatorio">*</span>
+		// 			 <br/>
+		// 			 <sub style="vertical-align: top;"/>
+		// 			 </td>';
+		// $retorno .= '<td valign="top" class="formlttd"><span class="form">';
+		// $retorno .= "<input type='number' value='".date("Y")."' class='geral' name='ano' id='ano' style='width:50px;' />";
+
 		if ( $nivel_usuario == 1 )
 		{
 			if ( class_exists( "clsPmieducarInstituicao" ) )
