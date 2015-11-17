@@ -131,7 +131,7 @@ class miolo1 extends clsListagem
     // consulta dados
 
     $pre_select = ' SELECT
-        c.idlog, c.cep, c.idbai, u.sigla_uf, m.nome, t.idtlog, m.idmun, b.zona_localizacao ';
+        c.idlog, c.cep, c.idbai, u.sigla_uf, m.nome, t.idtlog, m.idmun, b.zona_localizacao, t.descricao ';
         
     $select = '
       FROM
@@ -176,7 +176,7 @@ class miolo1 extends clsListagem
     $result = Portabilis_Utils_Database::fetchPreparedQuery($pre_select.$select, array('params' => array_values($params)));   
 
     foreach ($result as $record) {
-      list($idlog, $cep, $idbai, $uf, $cidade, $tipoLogradouroId, $id_mun, $zona) = $record;
+      list($idlog, $cep, $idbai, $uf, $cidade, $tipoLogradouroId, $id_mun, $zona, $descricao) = $record;
 
       $cidade     = addslashes($cidade);
 
@@ -193,15 +193,15 @@ class miolo1 extends clsListagem
 
       $url = sprintf(
         '<a href="javascript:void(0);" onclick="cv_set_campo(\'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\');">%%s</a>',
-        $_SESSION['campo1'], $bairro, $_SESSION['campo2'],
+        $_SESSION['campo1'], $bairro.' / Zona'.$zona, $_SESSION['campo2'],
         $idbai, $_SESSION['campo3'], $cep,
-        $_SESSION['campo4'], $logradouro,
+        $_SESSION['campo4'], $descricao." ".$logradouro,
         $_SESSION['campo5'], $idlog,
-        $_SESSION['campo6'], $uf, $_SESSION['campo7'], $cidade,
-        $_SESSION['campo8'], $tipoLogradouroId, $_SESSION['campo9'], $s_end,
-        $_SESSION['campo10'], $cep2, $_SESSION['campo11'], $uf,
+        '', '', '', '',
+        '', '', '', '',
+        $_SESSION['campo10'], $cep2, $_SESSION['campo11'], $id_mun.' - '.$cidade.' ('.$uf.')',
         $_SESSION['campo12'], $_SESSION['campo13'], $id_mun,
-        $_SESSION['campo14'], $zona
+        '', ''
       );
 
       $this->addLinhas(array(
@@ -406,5 +406,21 @@ function liberaCamposOuvidoria()
   obj14.value = null;
 
   window.parent.fechaExpansivel('div_dinamico_' + (parent.DOM_divs.length * 1 - 1));
+}
+
+function liberaCampos(){
+
+  parent.document.getElementById('municipio_municipio').disabled = false;
+  parent.document.getElementById('bairro_bairro').disabled = false;
+  parent.document.getElementById('logradouro_logradouro').disabled = false;
+  parent.document.getElementById('logradouro').disabled = false;
+  parent.document.getElementById('bairro').disabled = false;
+  parent.document.getElementById('idtlog').disabled = false;
+  parent.document.getElementById('zona_localizacao').disabled = false;
+  parent.document.getElementById('logradouro').value = '';
+  parent.document.getElementById('bairro').value = '';
+  parent.document.getElementById('idtlog').value = '';
+  parent.document.getElementById('zona_localizacao').value = '';
+
 }
 </script>

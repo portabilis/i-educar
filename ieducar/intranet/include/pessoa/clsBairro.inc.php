@@ -41,6 +41,7 @@ class clsBairro
 	var $operacao;
 	var $idsis_cad;
 	var $idsis_rev;
+	var $zona_localizacao;
 	
 	var $tabela;
 	var $schema = "public";
@@ -50,7 +51,7 @@ class clsBairro
 	 *
 	 * @return Object:clsBairro
 	 */
-	function clsBairro( $int_idbai = false, $int_idmun=false, $str_geom=false, $str_nome=false , $int_idpes_cad = false, $int_idpes_rev = false, $str_origem_gravacao = false, $str_operacao=false, $int_idsis_cad=false, $int_idsis_rev=false )
+	function clsBairro( $int_idbai = false, $int_idmun=false, $str_geom=false, $str_nome=false , $int_idpes_cad = false, $int_idpes_rev = false, $str_origem_gravacao = false, $str_operacao=false, $int_idsis_cad=false, $int_idsis_rev=false, $zona_localizacao = null )
 	{
 		$this->idbai = $int_idbai;
 		
@@ -70,6 +71,7 @@ class clsBairro
 		$this->idsis_rev = $int_idsis_rev;
 		$this->operacao = $str_operacao;
 		$this->origem_gravacao = $str_origem_gravacao;
+		$this->zona_localizacao = $zona_localizacao;
 		
 		$this->tabela = "bairro";
 	}
@@ -113,9 +115,14 @@ class clsBairro
 				$campos .= ", origem_gravacao";
 				$values .= ", '{$this->origem_gravacao}'";
 			}
-			$db->Consulta( "INSERT INTO {$this->schema}.{$this->tabela} ( idmun, nome, data_cad$campos ) VALUES ( '{$this->idmun}', '{$this->nome}', NOW()$values )" );
+			if( is_numeric( $this->zona_localizacao) )
+			{
+				$campos .= ", zona_localizacao";
+				$values .= ", '{$this->zona_localizacao}' ";
+			}
+			$db->Consulta( "INSERT INTO {$this->schema}.{$this->tabela} ( idmun, origem_gravacao, operacao, idsis_cad, nome, data_cad$campos ) VALUES ( '{$this->idmun}', 'U', 'I', '9', '{$this->nome}', NOW()$values )" );
 
-			return true;
+			return $db->InsertId("{$this->schema}.seq_bairro");
 		}
 		return false;
 	}

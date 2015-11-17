@@ -110,6 +110,9 @@ class indice extends clsCadastro
   var $cor_raca;
   var $sus;
   var $nis_pis_pasep;
+  var $municipio_id;
+  var $bairro_id;
+  var $logradouro_id;
 
   var $caminho_det;
   var $caminho_lst;
@@ -642,7 +645,45 @@ class indice extends clsCadastro
 
 
     // Detalhes do Endereço
+    if ($this->idlog){ 
 
+      $objLogradouro = new clsLogradouro($this->idlog);
+      $detalheLogradouro = $objLogradouro->detalhe();
+      if ($detalheLogradouro)
+        $this->municipio_id = $detalheLogradouro['idmun'];
+
+    // Caso seja um endereço externo, tentamos então recuperar a cidade pelo cep
+    }elseif($this->cep){
+
+      $numCep = idFederal2int($this->cep);
+
+      $sql = "SELECT idmun, count(idmun) as count_mun FROM public.logradouro l, urbano.cep_logradouro cl 
+              WHERE cl.idlog = l.idlog AND cl.cep = '{$numCep}' group by idmun order by count_mun desc limit 1";
+
+      $options = array('return_only' => 'first-field');
+      $result = Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
+
+      if ($result)
+        $this->municipio_id = $result;
+
+    }
+    if ($this->cod_pessoa_fj){
+
+      $objPE = new clsPessoaEndereco($this->cod_pessoa_fj);
+      $det = $objPE->detalhe();
+
+      if($det){
+
+        $this->bairro_id = $det['idbai'];
+        $this->logradouro_id = $det['idlog'];
+      }
+    }
+
+    if (!($this->bairro_id && $this->municipio_id && $this->logradouro_id)){
+      $this->bairro_id = null;
+      $this->municipio_id = null;
+      $this->logradouro_id = null;
+    }
     $this->campoOculto('idbai', $this->idbai);
     $this->campoOculto('idlog', $this->idlog);
     $this->campoOculto('cep', $this->cep);
@@ -651,14 +692,13 @@ class indice extends clsCadastro
     $this->campoOculto('id_cidade', $this->cidade);
 
 
-    // o endereçamento é opcional ao cadastrar pai ou mãe.
-    $enderecamentoObrigatorio = empty($parentType);
+    // o endereçamento é opcional
+    $enderecamentoObrigatorio = false;
 
+    // Caso o cep já esteja definido, os campos já vem desbloqueados inicialmente
+    $desativarCamposDefinidosViaCep = empty($this->cep);
 
-    // considera como endereço localizado por CEP quando alguma das variaveis de instancia
-    // idbai (bairro) ou idlog (logradouro) estão definidas, neste caso desabilita a edição
-    // dos campos definidos via CEP.
-    $desativarCamposDefinidosViaCep = ((bool)$GLOBALS['coreExt']['Config']->app->obriga_endereco_normalizado_pf) || ($this->idbai || $this->idlog);
+    $this->campoRotulo('','<b>Enderaçamento</b>', '<i>Digite um cep ou clique na lupa para busca avançada</i>');
 
     $this->campoCep(
       'cep_',
@@ -666,46 +706,25 @@ class indice extends clsCadastro
       $this->cep,
       $enderecamentoObrigatorio,
       '-',
-      "&nbsp;<img id='lupa' src=\"imagens/lupa.png\" border=\"0\" onclick=\"showExpansivel(500, 550, '<iframe name=\'miolo\' id=\'miolo\' frameborder=\'0\' height=\'100%\' width=\'500\' marginheight=\'0\' marginwidth=\'0\' src=\'educar_pesquisa_cep_log_bairro.php?campo1=bairro&campo2=idbai&campo3=cep&campo4=logradouro&campo5=idlog&campo6=ref_sigla_uf&campo7=cidade&campo8=ref_idtlog&campo9=isEnderecoExterno&campo10=cep_&campo11=sigla_uf&campo12=idtlog&campo13=id_cidade&campo14=zona_localizacao\'></iframe>');\">",
-      $desativarCamposDefinidosViaCep
+      "&nbsp;<img id='lupa' src=\"imagens/lupa.png\" border=\"0\" onclick=\"showExpansivel(500, 550, '<iframe name=\'miolo\' id=\'miolo\' frameborder=\'0\' height=\'100%\' width=\'500\' marginheight=\'0\' marginwidth=\'0\' src=\'educar_pesquisa_cep_log_bairro.php?campo1=bairro&campo2=idbai&campo3=cep&campo4=logradouro&campo5=idlog&campo6=ref_sigla_uf&campo7=cidade&campo8=ref_idtlog&campo9=isEnderecoExterno&campo10=cep_&campo11=municipio_municipio&campo12=idtlog&campo13=municipio_id&campo14=zona_localizacao\'></iframe>');\">",
+      false
     );
 
+    $options       = array('label' => Portabilis_String_Utils::toLatin1('Município'), 'required'   => $enderecamentoObrigatorio, 'disabled' => $desativarCamposDefinidosViaCep);  
 
-    // estado
+    $helperOptions = array('objectName'         => 'municipio',
+                           'hiddenInputOptions' => array('options' => array('value' => $this->municipio_id)));
+
+    $this->inputsHelper()->simpleSearchMunicipio('municipio', $options, $helperOptions);
+
+    $helperOptions = array('hiddenInputOptions' => array('options' => array('value' => $this->bairro_id)));
+
+    $options       = array( 'label' => Portabilis_String_Utils::toLatin1('Bairro / Zona de Localização - Buscar'), 'required'   => $enderecamentoObrigatorio, 'disabled' => $desativarCamposDefinidosViaCep);
+
+    $this->inputsHelper()->simpleSearchBairro('bairro', $options, $helperOptions);
 
     $options = array(
-      'label'    => 'Estado / Cidade',
-      'value'    => $this->sigla_uf,
-      'disabled' => $desativarCamposDefinidosViaCep,
-      'inline'   => true,
-      'required' => $enderecamentoObrigatorio
-    );
-
-    $helperOptions = array(
-      'attrName' => 'sigla_uf'
-    );
-
-    $this->inputsHelper()->uf($options, $helperOptions);
-
-
-    // cidade
-
-    $options = array(
-      'label'       => '',
-      'placeholder' => 'Cidade',
-      'value'       => $this->cidade,
-      'max_length'  => 60,
-      'disabled'    => $desativarCamposDefinidosViaCep,
-      'required'    => $enderecamentoObrigatorio
-    );
-
-    $this->inputsHelper()->text('cidade', $options);
-
-
-    // bairro
-
-    $options = array(
-      'label'       => 'Bairro / Zona localização',
+      'label'       => 'Bairro / Zona de Localização - Cadastrar',
       'placeholder' => 'Bairro',
       'value'       => $this->bairro,
       'max_length'  => 40,
@@ -725,7 +744,7 @@ class indice extends clsCadastro
 
     $options = array(
       'label'       => '',
-      'placeholder' => 'Zona localização',
+      'placeholder' => 'Zona localização ',
       'value'       => $this->zona_localizacao,
       'disabled'    => $desativarCamposDefinidosViaCep,
       'resources'   => $zonas,
@@ -734,11 +753,16 @@ class indice extends clsCadastro
 
     $this->inputsHelper()->select('zona_localizacao', $options);
 
+    $helperOptions = array('hiddenInputOptions' => array('options' => array('value' => $this->logradouro_id)));
+
+    $options       = array('label' => 'Tipo / Logradouro - Buscar', 'required'   => $enderecamentoObrigatorio, 'disabled' => $desativarCamposDefinidosViaCep);  
+
+    $this->inputsHelper()->simpleSearchLogradouro('logradouro', $options, $helperOptions);
 
     // tipo logradouro
 
     $options = array(
-      'label'       => 'Tipo / Logradouro',
+      'label'       => 'Tipo / Logradouro - Cadastrar',
       'value'       => $this->idtlog,
       'disabled'    => $desativarCamposDefinidosViaCep,
       'inline'      => true,
@@ -1183,11 +1207,29 @@ class indice extends clsCadastro
   }
 
   protected function _createOrUpdatePessoaEndereco($pessoaId) {
+
+    $cep = idFederal2Int($this->cep_);
+
+    $objCepLogradouro = new ClsCepLogradouro($cep, $this->logradouro_id);
+
+    if (! $objCepLogradouro->existe())
+      $objCepLogradouro->cadastra();
+
+    $objCepLogradouroBairro = new ClsCepLogradouroBairro();
+    $objCepLogradouroBairro->cep = $cep;
+    $objCepLogradouroBairro->idbai = $this->bairro_id;
+    $objCepLogradouroBairro->idlog = $this->logradouro_id;
+
+
+    if (! $objCepLogradouroBairro->existe())
+      $objCepLogradouroBairro->cadastra();
+
+    #die("Morram <br> $cep <br> {$this->bairro_id} <br> {$this->logradouro_id}");
     $endereco = new clsPessoaEndereco(
       $pessoaId,
-      idFederal2Int($this->cep),
-      $this->idlog,
-      $this->idbai,
+      $cep,
+      $this->logradouro_id,
+      $this->bairro_id,
       $this->numero,
       addslashes($this->complemento),
       FALSE,
@@ -1232,13 +1274,53 @@ class indice extends clsCadastro
   }
 
   protected function createOrUpdateEndereco($pessoaId) {
-    $enderecoExterno = ! empty($this->cep_);
 
-    if (! $enderecoExterno && $this->cep && $this->idbai && $this->idlog)
+    if ($this->cep_ && is_numeric($this->bairro_id) && is_numeric($this->logradouro_id))
+      $this->_createOrUpdatePessoaEndereco($pessoaId);
+    else if($this->cep_ && is_numeric($this->municipio_id)){
+
+      if (!is_numeric($this->bairro_id)){
+        if ($this->canCreateBairro())
+          $this->bairro_id = $this->createBairro();
+        else
+          return;
+      }
+
+      if (!is_numeric($this->logradouro_id)){
+        if($this->canCreateLogradouro())
+          $this->logradouro_id = $this->createLogradouro();
+        else
+          return;
+      }
+
       $this->_createOrUpdatePessoaEndereco($pessoaId);
 
-    elseif($enderecoExterno)
-      $this->_createOrUpdateEnderecoExterno($pessoaId);
+    }else{
+      $endereco = new clsPessoaEndereco($pessoaId);
+      $endereco->exclui();
+    }
+
+  }
+
+  protected function canCreateBairro(){
+    return !empty($this->bairro) && !empty($this->zona_localizacao);
+  }
+
+  protected function canCreateLogradouro(){
+    return !empty($this->logradouro) && !empty($this->idtlog);
+  }
+
+  protected function createBairro(){
+    $objBairro = new clsBairro(null,$this->municipio_id,null,addslashes($this->bairro), $this->currentUserId());
+    $objBairro->zona_localizacao = $this->zona_localizacao;
+
+    return $objBairro->cadastra();
+  }
+
+  protected function createLogradouro(){
+    $objLogradouro = new clsLogradouro(null,$this->idtlog, $this->logradouro, $this->municipio_id,
+                                           null, 'S', $this->currentUserId());
+    return $objLogradouro->cadastra();
   }
 
   protected function createOrUpdateTelefones($pessoaId) {

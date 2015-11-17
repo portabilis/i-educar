@@ -56,7 +56,8 @@ class Portabilis_View_Helper_Input_SimpleSearch extends Portabilis_View_Helper_I
                             'apiResource'       => $objectName . '-search',
                             'searchPath'         => '',
                             'addHiddenInput'     => true,
-                            'hiddenInputOptions' => array());
+                            'hiddenInputOptions' => array(),
+                            'showIdOnValue'     => true);
 
     $options = $this->mergeOptions($options, $defaultOptions);
 
@@ -68,8 +69,12 @@ class Portabilis_View_Helper_Input_SimpleSearch extends Portabilis_View_Helper_I
     // load value if received an resource id
     $resourceId = $options['hiddenInputOptions']['options']['value'];
 
-    if ($resourceId && ! $options['options']['value'])
-      $options['options']['value'] = $resourceId . " - ". $this->resourceValue($resourceId);
+    if ($resourceId && ! $options['options']['value']){
+      if ($options['showIdOnValue'])
+        $options['options']['value'] = $resourceId . " - ". $this->resourceValue($resourceId);
+      else
+        $options['options']['value'] = $this->resourceValue($resourceId);
+    }
 
     $this->hiddenInput($objectName, $attrName, $options);
     $this->textInput($objectName, $attrName, $options);

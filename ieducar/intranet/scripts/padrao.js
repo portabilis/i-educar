@@ -734,50 +734,66 @@ function cv_set_campo(campo1, valor1, campo2, valor2, campo3, valor3, campo4,
   valor9, campo10, valor10, campo11, valor11, campo12, campo13, valor13,
   campo14, valor14)
 {
-  obj1          = parent.document.getElementById(campo1);
-  obj1.value    = valor1;
-  obj1.disabled = true;
+  obj1 = parent.document.getElementById(campo1);
+  if (obj1){
+    obj1.value = valor1;
+  }
 
-  obj2       = parent.document.getElementById(campo2);
-  obj2.value = valor2;
+  obj2 = parent.document.getElementById(campo2);
+  if (obj2){
+    obj2.value = valor2;
+  }
 
-  obj3       = parent.document.getElementById(campo3);
-  obj3.value = valor3;
+  obj3 = parent.document.getElementById(campo3);
+  if (obj3){
+    obj3.value = valor3;
+  }
 
-  obj4          = parent.document.getElementById(campo4);
-  obj4.value    = valor4;
-  obj4.disabled = true;
+  obj4 = parent.document.getElementById(campo4);
+  if (obj4){
+    obj4.value = valor4;
+  }
 
-  obj5       = parent.document.getElementById(campo5);
-  obj5.value = valor5;
+  obj5 = parent.document.getElementById(campo5);
+  if (obj5){
+    obj5.value = valor5;
+  }
 
-  obj6       = parent.document.getElementById(campo6);
-  obj6.value = valor6;
+  obj6 = parent.document.getElementById(campo6);
+  if (obj6){
+    obj6.value = valor6;
+  }
 
-  obj7          = parent.document.getElementById(campo7);
-  obj7.value    = valor7;
-  obj7.disabled = true;
+  obj7 = parent.document.getElementById(campo7);
+  if (obj7){
+    obj7.value = valor7;
+  }
 
-  obj8       = parent.document.getElementById(campo8);
-  obj8.value = valor8;
+  obj8 = parent.document.getElementById(campo8);
+  if (obj8){
+    obj8.value = valor8;
+  }
 
   obj9 = parent.document.getElementById(campo9);
-
   if (obj9) {
     obj9.value = valor9;
   }
 
-  obj10          = parent.document.getElementById(campo10);
-  obj10.value    = valor10;
-  obj10.disabled = true;
+  obj10 = parent.document.getElementById(campo10);
+  if (obj10){
+    obj10.value = valor10;
+  }
 
-  obj11          = parent.document.getElementById(campo11);
-  obj11.value    = valor11;
-  obj11.disabled = true;
+  obj11 = parent.document.getElementById(campo11);
+  if (obj11) {
+    obj11.value = valor11;
+  }
 
-  obj12          = parent.document.getElementById(campo12);
-  obj12.value    = valor8;
-  obj12.disabled = true;
+  obj12 = parent.document.getElementById(campo12);
+  if (obj12) {
+    obj12.value    = valor8;
+    obj12.disabled = true;
+  }
 
   if (parent.document.getElementById(campo13)) {
     obj13       = parent.document.getElementById(campo13);

@@ -82,7 +82,7 @@ class clsCepLogradouro
 				$valores .= ", '$this->nrofin' ";
 			}
 
-			$db->Consulta( "INSERT INTO {$this->schema}.{$this->tabela} (cep,  idlog $campos) VALUES ( '{$this->cep}', '{$this->idlog}' $values )" );
+			$db->Consulta( "INSERT INTO {$this->schema}.{$this->tabela} (cep,  idlog, origem_gravacao, data_cad, operacao, idsis_Cad  $campos) VALUES ( '{$this->cep}', '{$this->idlog}','U', NOW(), 'I', '9' $values )" );
 
 		}
 		return false;
@@ -130,7 +130,23 @@ class clsCepLogradouro
 		}
 		return false;
 	}
-	
+
+ 	/**
+	* Retorna um array com os dados de um registro.
+    * @return array
+    */
+    function existe()
+    {
+        if (is_numeric($this->cep) && is_numeric($this->idlog)) {
+            $db = new clsBanco();
+            $db->Consulta("SELECT 1 FROM {$this->schema}.{$this->tabela} WHERE cep = '{$this->cep}' AND idlog = '{$this->idlog}' ");
+            $db->ProximoRegistro();
+            return $db->Tupla();
+        }
+
+        return FALSE;
+    }
+
 	/**
 	 * Remove o registro atual
 	 *
@@ -184,7 +200,7 @@ class clsCepLogradouro
 		$limit = "";
 		if(is_numeric($int_limite_ini) && 				   	    is_numeric($int_limite_qtd))
 		{
-			$limit = " LIMIT $int_limite_ini,$int_limite_qtd";
+			$limit = " LIMIT $int_limite_qtd OFFSET $int_limite_ini";
 		}
 		
 		$db = new clsBanco();

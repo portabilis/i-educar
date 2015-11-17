@@ -201,6 +201,18 @@ class Portabilis_View_Helper_Inputs {
 
   }      
 
+  public function simpleSearchBairro($attrName, $inputOptions = array(), $helperOptions = array()) {
+
+    $this->simpleSearchResourceInput('simpleSearchBairro', $attrName, $inputOptions, $helperOptions);
+
+  }
+
+  public function simpleSearchLogradouro($attrName, $inputOptions = array(), $helperOptions = array()) {
+
+    $this->simpleSearchResourceInput('simpleSearchLogradouro', $attrName, $inputOptions, $helperOptions);
+
+  }
+
   // multiple search resource input helper
 
 
