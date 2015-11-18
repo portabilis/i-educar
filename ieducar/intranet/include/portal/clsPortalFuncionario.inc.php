@@ -1104,5 +1104,24 @@ class clsPortalFuncionario
 		return "";
 	}
 
+	/**
+	 * Retorna a string com o nome do vinculo cujo código foi passado por parâmetro
+	 *
+	 * @return string
+	 */
+	function getNomeVinculo($cod_funcionario_vinculo) {
+
+		if(is_numeric($cod_funcionario_vinculo)) {
+			$db = new clsBanco();
+			$db->Consulta( "SELECT nm_vinculo FROM portal.funcionario_vinculo WHERE cod_funcionario_vinculo = '{$cod_funcionario_vinculo}'" );
+			if( $db->ProximoRegistro() )
+			{
+				$registro = $db->Tupla();
+				return $registro['nm_vinculo'];
+			}
+		}
+		return false;
+	}
+
 }
 ?>

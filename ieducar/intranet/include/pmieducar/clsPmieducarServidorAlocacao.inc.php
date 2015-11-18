@@ -55,6 +55,7 @@ class clsPmieducarServidorAlocacao
   var $carga_horaria;
   var $periodo;
   var $ref_cod_funcionario_vinculo;
+  var $ano;
   /**
    * Carga horária máxima para um período de alocação (em horas).
    * @var float
@@ -133,13 +134,14 @@ class clsPmieducarServidorAlocacao
     $carga_horaria = NULL, 
     $periodo = NULL, 
     $ref_cod_servidor_funcao = NULL, 
-    $ref_cod_funcionario_vinculo = NULL)
+    $ref_cod_funcionario_vinculo = NULL,
+    $ano)
   {
     $db = new clsBanco();
     $this->_schema = 'pmieducar.';
     $this->_tabela = $this->_schema . 'servidor_alocacao';
 
-    $this->_campos_lista = $this->_todos_campos = 'cod_servidor_alocacao, ref_ref_cod_instituicao, ref_usuario_exc, ref_usuario_cad, ref_cod_escola, ref_cod_servidor, data_cadastro, data_exclusao, ativo, carga_horaria, periodo, ref_cod_servidor_funcao, ref_cod_funcionario_vinculo ';
+    $this->_campos_lista = $this->_todos_campos = 'cod_servidor_alocacao, ref_ref_cod_instituicao, ref_usuario_exc, ref_usuario_cad, ref_cod_escola, ref_cod_servidor, data_cadastro, data_exclusao, ativo, carga_horaria, periodo, ref_cod_servidor_funcao, ref_cod_funcionario_vinculo, ano ';
 
     if (is_numeric($ref_usuario_cad)) {
       $usuario = new clsPmieducarUsuario($ref_usuario_cad);
@@ -209,6 +211,10 @@ class clsPmieducarServidorAlocacao
     if (is_numeric($periodo)) {
       $this->periodo = $periodo;
     }
+
+    if (is_numeric($ano)) {
+      $this->ano = $ano;
+    }
   }
 
   /**
@@ -275,6 +281,12 @@ class clsPmieducarServidorAlocacao
         $gruda    = ', ';
       }
 
+      if (is_numeric($this->ano)) {
+        $campos  .= "{$gruda}ano";
+        $valores .= "{$gruda}'{$this->ano}'";
+        $gruda    = ', ';
+      }
+
       $campos  .= "{$gruda}data_cadastro";
       $valores .= "{$gruda}NOW()";
       $gruda    = ", ";
@@ -286,7 +298,6 @@ class clsPmieducarServidorAlocacao
       $db->Consulta("INSERT INTO {$this->_tabela} ($campos) VALUES ($valores)");
       return $db->InsertId("{$this->_tabela}_cod_servidor_alocacao_seq");
     }
-
     return FALSE;
   }
 
