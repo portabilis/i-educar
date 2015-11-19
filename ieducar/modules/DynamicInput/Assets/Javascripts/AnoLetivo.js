@@ -2,7 +2,7 @@
   $(document).ready(function(){
 
     var $escolaField       = getElementFor('escola');
-    var $anoLetivoField    = getElementFor('ano');
+    var $anoLetivoField    = getElementFor('ano_letivo');
 
     var handleGetAnoEscolares = function(response) {
       var selectOptions = jsonResourcesToSelectOptions(response['options']);
