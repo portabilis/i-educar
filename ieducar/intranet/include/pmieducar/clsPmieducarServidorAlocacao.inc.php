@@ -387,7 +387,7 @@ class clsPmieducarServidorAlocacao
     $int_ref_cod_servidor = NULL, $date_data_cadastro_ini = NULL,
     $date_data_cadastro_fim = NULL, $date_data_exclusao_ini = NULL,
     $date_data_exclusao_fim = NULL, $int_ativo = NULL, $int_carga_horaria = NULL,
-    $int_periodo = NULL, $bool_busca_nome = FALSE, $boo_professor = NULL)
+    $int_periodo = NULL, $bool_busca_nome = FALSE, $boo_professor = NULL, $ano = NULL)
   {
     $filtros  = '';
     $whereAnd = ' WHERE ';
@@ -457,6 +457,11 @@ class clsPmieducarServidorAlocacao
 
     if (is_string($date_data_exclusao_fim)) {
       $filtros .= "{$whereAnd} sa.data_exclusao <= '{$date_data_exclusao_fim}'";
+      $whereAnd = ' AND ';
+    }
+
+    if (is_numeric($ano)) {
+      $filtros .= "{$whereAnd} sa.ano <= '{$ano}'";
       $whereAnd = ' AND ';
     }
 
