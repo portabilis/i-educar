@@ -46,6 +46,14 @@
   padding-left: 94px;
 }
 
+.cal_esq_qh
+{
+  height: 38px;
+  background-image: url('/intranet/imagens/i-educar/cal_topo.gif');
+  background-repeat: no-repeat;
+  padding-left: 12px;
+}
+
 .header
 {
   background-color: #A0AAB3;

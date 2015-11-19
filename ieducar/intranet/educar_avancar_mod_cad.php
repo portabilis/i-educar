@@ -75,7 +75,7 @@ class indice extends clsCadastro
 
   function Gerar() {
     // inputs
-    $anoLetivoHelperOptions = array('situacoes' => array('em_andamento', 'nao_iniciado'), 'objectName' => 'ano_destino');
+    $anoLetivoHelperOptions = array('situacoes' => array('em_andamento', 'nao_iniciado'));
 
     $this->inputsHelper()->hidden('ano');
     $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'curso', 'serie'));

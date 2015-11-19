@@ -46,7 +46,7 @@ class Portabilis_View_Helper_DynamicInput_AnoLetivo extends Portabilis_View_Help
 
   // subscreve para não acrescentar '_id' no final
   protected function inputName() {
-    return 'ano';
+    return 'ano_letivo';
   }
 
   protected function filtroSituacao() {

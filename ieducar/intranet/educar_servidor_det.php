@@ -479,7 +479,7 @@ class indice extends clsDetalhe
       $this->array_botao_url_script[] = "go(\"educar_falta_atraso_lst.php?{$get_padrao}\");";
 
       $this->array_botao[] = 'Alocar Servidor';
-      $this->array_botao_url_script[] = "go(\"educar_servidor_alocacao_cad.php?{$get_padrao}\");";
+      $this->array_botao_url_script[] = "go(\"educar_servidor_alocacao_lst.php?{$get_padrao}\");";
 
       $this->array_botao[] = 'Alterar Nível';
       $this->array_botao_url_script[] = "popless();";

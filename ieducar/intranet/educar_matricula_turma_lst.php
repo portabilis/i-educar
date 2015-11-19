@@ -83,6 +83,7 @@ class indice extends clsListagem
   var $ref_cod_turma_origem;
   var $ref_cod_curso;
   var $ref_cod_instituicao;
+  var $ano_letivo;
 
   var $sequencial;
 
@@ -107,7 +108,8 @@ class indice extends clsListagem
 
     $this->ref_cod_serie  = $det_matricula['ref_ref_cod_serie'];
     $this->ref_cod_escola = $det_matricula['ref_ref_cod_escola'];
-    $this->ref_cod_turma = $_GET['ref_cod_turma'];
+    $this->ref_cod_turma  = $_GET['ref_cod_turma'];
+    $this->ano_letivo     = $_GET['ano_letivo'];
 
     
 
@@ -142,7 +144,7 @@ class indice extends clsListagem
     $lista = $objTemp->lista3(NULL, NULL, NULL, $this->ref_cod_serie,
       $this->ref_cod_escola, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
       NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-      $this->ref_cod_curso);
+      $this->ref_cod_curso, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, $this->ano_letivo);
 
     if (is_array($lista) && count($lista)) {
       foreach ($lista as $registro) {
@@ -160,6 +162,7 @@ class indice extends clsListagem
     $this->campoOculto('ref_cod_serie', '');
     $this->campoOculto('ref_cod_turma', '');
     $this->campoOculto('ref_cod_escola', '');
+    $this->campoOculto('ano_letivo', $this->ano_letivo);
 
     // Paginador
     $this->limite = 20;
@@ -173,7 +176,7 @@ class indice extends clsListagem
     $lista = $obj_matricula_turma->lista3($this->ref_cod_turma, NULL, NULL,
       $this->ref_cod_serie,$this->ref_cod_escola, NULL, NULL, NULL, NULL, NULL,
       NULL, NULL, NULL, NULL,1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-      NULL,$this->ref_cod_curso, NULL, NULL, NULL, NULL, NULL, NULL, TRUE);
+      NULL,$this->ref_cod_curso, NULL, NULL, NULL, NULL, NULL, NULL, TRUE, NULL, NULL, $this->ano_letivo);
 
     if (is_numeric($this->ref_cod_serie) && is_numeric($this->ref_cod_curso) &&
       is_numeric($this->ref_cod_escola)) {
@@ -214,7 +217,10 @@ WHERE
 
     $enturmacoesMatricula = new clsPmieducarMatriculaTurma();
     $enturmacoesMatricula = $enturmacoesMatricula->lista3($this->ref_cod_matricula, NULL, NULL,
-                                                         NULL, NULL, NULL, NULL, NULL, 1);
+                                                         NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL,
+                                                         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+                                                         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+                                                         NULL, NULL, $this->ano_letivo);
 
     $turmasThisSerie = $lista;
     // lista turmas disponiveis para enturmacao, somente lista as turmas sem enturmacao
@@ -231,9 +237,9 @@ WHERE
       else
         $enturmado = "Não";
 
-      $script = sprintf('onclick="enturmar(\'%s\',\'%s\',\'%s\',\'%s\');"',
+      $script = sprintf('onclick="enturmar(\'%s\',\'%s\',\'%s\',\'%s\',\'%d\');"',
                         $this->ref_cod_escola, $turma['ref_ref_cod_serie'],
-                        $this->ref_cod_matricula, $turma['cod_turma']);
+                        $this->ref_cod_matricula, $turma['cod_turma'], $this->ano_letivo);
 
       $this->addLinhas(array(sprintf('<a href="#" %s>%s</a>', $script, $turma['nm_turma']), $enturmado));
     }
@@ -271,8 +277,7 @@ $pagina->addForm($miolo);
 $pagina->MakeAll();
 ?>
 <script type="text/javascript">
-function enturmar(ref_cod_escola, ref_cod_serie, ref_cod_matricula, ref_cod_turma,
-  ref_cod_turma_origem)
+function enturmar(ref_cod_escola, ref_cod_serie, ref_cod_matricula, ref_cod_turma, ano_letivo)
 {
   document.formcadastro.method = 'post';
   document.formcadastro.action = 'educar_matricula_turma_det.php';
@@ -281,6 +286,7 @@ function enturmar(ref_cod_escola, ref_cod_serie, ref_cod_matricula, ref_cod_turm
   document.formcadastro.ref_cod_serie.value     = ref_cod_serie;
   document.formcadastro.ref_cod_matricula.value = ref_cod_matricula;
   document.formcadastro.ref_cod_turma.value     = ref_cod_turma;
+  document.formcadastro.ano_letivo.value        = ano_letivo;
 
   document.formcadastro.submit();
 }
