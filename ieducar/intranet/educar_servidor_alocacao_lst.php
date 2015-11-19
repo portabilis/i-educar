@@ -80,6 +80,7 @@ class indice extends clsListagem
   var $data_exclusao;
   var $ref_cod_escola;
   var $ref_cod_instituicao;
+  var $ano_letivo;
 
   function Gerar()
   {
@@ -120,6 +121,7 @@ class indice extends clsListagem
     //include 'include/pmieducar/educar_campo_lista.php';
     $this->inputsHelper()->dynamic('instituicao', array('required' => false, 'show-select' => true, 'value' => $this->ref_cod_instituicao));
     $this->inputsHelper()->dynamic('escola', array('required' => false, 'show-select' => true, 'value' => $this->ref_cod_escola));
+    $this->inputsHelper()->dynamic('anoLetivo', array('required' => false, 'show-select' => true, 'value' => $this->ano_letivo));
 
     $parametros = new clsParametrosPesquisas();
     $parametros->setSubmit(0);
@@ -139,7 +141,17 @@ class indice extends clsListagem
       null,
       null,
       $this->ref_cod_escola,
-      $this->ref_cod_servidor
+      $this->ref_cod_servidor,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      $this->ano_letivo
     );
     $total = $obj_servidor_alocacao->_total;
 
@@ -190,12 +202,19 @@ class indice extends clsListagem
     }
 
     $this->addPaginador2('educar_servidor_alocacao_lst.php', $total, $_GET, $this->nome, $this->limite);
+
     $obj_permissoes = new clsPermissoes();
 
-    if ($obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7)) {
-      $this->acao      = "go(\"educar_servidor_alocacao_cad.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}\")";
-      $this->nome_acao = 'Novo';
+    $this->array_botao = array();
+    $this->array_botao_url = array();
+    if( $obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7 ) )
+    {
+      $this->array_botao_url[]= "educar_servidor_alocacao_cad.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}";
+      $this->array_botao[]= "Novo";
     }
+
+    $this->array_botao[] = "Voltar";
+    $this->array_botao_url[] = "educar_servidor_det.php?cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}";
 
     $this->largura = '100%';
 
