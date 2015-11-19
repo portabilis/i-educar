@@ -576,9 +576,10 @@ class clsPmieducarServidorAlocacao
    */
   function excluir()
   {
-    if (is_numeric($this->cod_servidor_alocacao) && is_numeric($this->ref_usuario_exc)) {
-      $this->ativo = 0;
-      return $this->edita();
+    if (is_numeric($this->cod_servidor_alocacao)) {
+      $db = new clsBanco();
+      $db->Consulta("DELETE FROM {$this->_tabela} WHERE cod_servidor_alocacao = '{$this->cod_servidor_alocacao}'");
+      return TRUE;
     }
 
     return FALSE;
