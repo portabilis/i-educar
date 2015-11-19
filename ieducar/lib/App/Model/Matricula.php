@@ -72,4 +72,13 @@ class App_Model_Matricula
 
     return $instance->edita();
   }
+  public static function setNovaSituacao($matricula, $novaSituacao){
+    $instance = CoreExt_Entity::addClassToStorage('clsPmieducarMatricula', NULL,
+      'include/pmieducar/clsPmieducarMatricula.inc.php');
+
+    $instance->cod_matricula = $matricula;
+    $instance->aprovado = $novaSituacao;
+
+    return $instance->edita();
+  }
 }

@@ -34,6 +34,7 @@ require_once 'CoreExt/Entity.php';
 require_once 'App/Model/IedFinder.php';
 require_once 'App/Model/Matricula.php';
 require_once 'App/Model/MatriculaSituacao.php';
+require_once 'include/pmieducar/clsPermissoes.inc.php';
 
 /**
  * Avaliacao_Service_Boletim class.
@@ -839,6 +840,19 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     return NULL;
   }
 
+  public function getMediaComponente($id)
+  {
+    $componentes = $this->getMediasComponentes();
+
+    if (!isset($componentes[$id])) {
+      return NULL;
+    }
+
+    $mediaComponente = $componentes[$id];
+
+    return $mediaComponente[0];
+  }
+
   /**
    * Retorna uma instância de Avaliacao_Model_NotaGeral.
    *
@@ -1443,6 +1457,12 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $qtdComponentes = 0;
     $somaMedias = 0;
     foreach ($mediasComponentes as $id => $mediaComponente) {
+
+      if($this->getRegra()->get('tipoProgressao') == RegraAvaliacao_Model_TipoProgressao::CONTINUADA){
+         $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::APROVADO;
+         $situacaoGeral = App_Model_MatriculaSituacao::APROVADO;
+         continue;
+      }
 
       $etapa = $mediaComponente[0]->etapa;
 
@@ -2598,41 +2618,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    */
   public function preverNotaRecuperacao($id)
   {
-    /*
-    --start Método original
-    if (is_null($this->getRegra()->formulaRecuperacao) || !isset($this->_notasComponentes[$id])) {
-      return NULL;
-    }
-
-    $notas      = $this->_notasComponentes[$id];
-    $somaEtapas = array_sum(CoreExt_Entity::entityFilterAttr($notas, 'etapa', 'nota'));
-    $formula    = $this->getRegra()->formulaRecuperacao;
-
-    $data = array(
-      'formulaValues' => array(
-        'Se' => $somaEtapas,
-        'Et' => $this->getOption('etapas'),
-        'Rc' => NULL
-      ),
-      'expected' => array(
-        'var'   => 'Rc',
-        'value' => $this->getRegra()->media
-      )
-    );
-
-    foreach ($notas as $nota) {
-      $data['formulaValues']['E' . $nota->etapa] = $nota->nota;
-    }
-
-    return $this->getRegra()->tabelaArredondamento->predictValue($formula, $data);
-
-    --end Método original
-
-      O método antigo talvez funcione quando utilizado recuperação para notas conceituais, já que antes o sistema era
-    sempre baseado na Tabela de Arredondamento, enquanto hoje as notas numéricas simplesmente ignoram a Tabela.
-
-     --start Método gambiarra que funciona
-     */
 
     if (is_null($this->getRegra()->formulaRecuperacao) || !isset($this->_notasComponentes[$id])) {
       return NULL;
@@ -2879,31 +2864,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     return $this;
   }
 
-  protected function updateSituacaoMatricula($situacaoNotasFaltas)
-  {
-    $matriculaSituacao = null;
-
-    //se a situacao da matricula não é aprovado e a situacao da nota e falta estão aprovadas, aprova a matricula
-    if (($this->getOption('aprovado') != App_Model_MatriculaSituacao::APROVADO) &&
-        ($situacaoNotasFaltas->aprovado && ! $situacaoNotasFaltas->andamento))
-    {
-      $matriculaSituacao = App_Model_MatriculaSituacao::APROVADO;
-    }
-    //se a situacao da matricula não é reprovado e a situacao da nota e falta não estão aprovadas e nem em andamento, reprova a matricula
-    elseif (($this->getOption('aprovado') != App_Model_MatriculaSituacao::REPROVADO) &&
-            (! $situacaoNotasFaltas->aprovado && ! $situacaoNotasFaltas->andamento))
-    {
-      $matriculaSituacao = App_Model_MatriculaSituacao::REPROVADO;
-    }
-    elseif ($this->getOption('aprovado') != App_Model_MatriculaSituacao::EM_ANDAMENTO)
-    {
-      $matriculaSituacao = App_Model_MatriculaSituacao::EM_ANDAMENTO;
-    }
-
-    if ($matriculaSituacao)
-      $this->_updateMatricula($this->getOption('matricula'), $this->getOption('usuario'), $matriculaSituacao);
-  }
-
   /**
    * Promove o aluno de etapa escolar caso esteja aprovado de acordo com o
    * necessário estabelecido por tipoProgressao de
@@ -2932,7 +2892,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
           $novaSituacaoMatricula = App_Model_MatriculaSituacao::APROVADO;
           break;
 
-        case RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_AUTO_MEDIA_PRESENCA:
+        case RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MEDIA_PRESENCA:
 
           if ($situacaoBoletim->aprovado && !$situacaoBoletim->retidoFalta && $situacaoBoletim->aprovadoComDependencia)
             $novaSituacaoMatricula = App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA;
@@ -2942,7 +2902,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             $novaSituacaoMatricula = App_Model_MatriculaSituacao::REPROVADO;
           break;
 
-        case RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_AUTO_SOMENTE_MEDIA:
+        case RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_SOMENTE_MEDIA:
 
           if ($situacaoBoletim->aprovado && $situacaoBoletim->aprovadoComDependencia)
             $novaSituacaoMatricula = App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA;
@@ -2975,6 +2935,39 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     return $this->_updateMatricula($this->getOption('matricula'), $this->getOption('usuario'), $novaSituacaoMatricula);
   }
 
+
+  public function updateMediaComponente($media, $componente, $etapa){
+    $notaComponenteCurricularMedia = new Avaliacao_Model_NotaComponenteMedia(array(
+      'notaAluno' => $this->_getNotaAluno()->id,
+      'componenteCurricular' => $componente,
+      'media' => $media,
+      'mediaArredondada' => $this->arredondaMedia($media),
+      'etapa' => $etapa,
+    ));
+
+    try {
+      // Se existir, marca como "old" para possibilitar a atualização
+      $this->getNotaComponenteMediaDataMapper()->find(array(
+        $notaComponenteCurricularMedia->get('notaAluno'),
+        $notaComponenteCurricularMedia->get('componenteCurricular'),
+      ));
+
+      $notaComponenteCurricularMedia->markOld();
+    }
+    catch (Exception $e) {
+      // Prossegue, sem problemas.
+    }
+
+  // Salva a média
+    $this->getNotaComponenteMediaDataMapper()->save($notaComponenteCurricularMedia);
+    //Atualiza a situação de acordo com o que foi inserido na média anteriormente
+    $notaComponenteCurricularMedia->markOld();
+    $notaComponenteCurricularMedia->situacao = $this->getSituacaoComponentesCurriculares()->componentesCurriculares[$id]->situacao;
+    $this->getNotaComponenteMediaDataMapper()->save($notaComponenteCurricularMedia);
+  }
+public function alterarSituacao($novaSituacao, $matriculaId){
+  return App_Model_Matricula::setNovaSituacao($matriculaId, $novaSituacao);
+}
 
   /**
    * Atualiza a média dos componentes curriculares.
