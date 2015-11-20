@@ -54,6 +54,7 @@ class clsPmieducarCandidatoReservaVaga
   var $ref_cod_matricula;
   var $situacao;
   var $data_situacao;
+  var $quantidade_membros;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -110,14 +111,14 @@ class clsPmieducarCandidatoReservaVaga
    */
   function __construct($cod_candidato_reserva_vaga = NULL, $ano_letivo = NULL, $data_solicitacao = NULL,
     $ref_cod_aluno = NULL, $ref_cod_serie = NULL, $ref_cod_turno = NULL,
-    $ref_cod_pessoa_cad = NULL, $ref_cod_escola = NULL)
+    $ref_cod_pessoa_cad = NULL, $ref_cod_escola = NULL, $quantidade_membros = NULL)
   {
     $db = new clsBanco();
     $this->_schema = 'pmieducar.';
     $this->_tabela = $this->_schema . 'candidato_reserva_vaga crv ';
 
     $this->_campos_lista = $this->_todos_campos = ' crv.cod_candidato_reserva_vaga, crv.ano_letivo, crv.data_solicitacao,
-      crv.ref_cod_aluno, crv.ref_cod_serie, crv.ref_cod_turno, crv.ref_cod_pessoa_cad, crv.data_cad, crv.data_update, crv.data_situacao, crv.situacao, crv.ref_cod_matricula, crv.ref_cod_escola  ';
+      crv.ref_cod_aluno, crv.ref_cod_serie, crv.ref_cod_turno, crv.ref_cod_pessoa_cad, crv.data_cad, crv.data_update, crv.data_situacao, crv.situacao, crv.ref_cod_matricula, crv.ref_cod_escola, crv.quantidade_membros  ';
 
     if (is_numeric($cod_candidato_reserva_vaga)) {
       $this->cod_candidato_reserva_vaga = $cod_candidato_reserva_vaga;
@@ -149,6 +150,10 @@ class clsPmieducarCandidatoReservaVaga
 
     if (is_numeric($ref_cod_escola)) {
       $this->ref_cod_escola = $ref_cod_escola;
+    }
+
+    if (is_numeric($quantidade_membros)) {
+      $this->quantidade_membros = $quantidade_membros;
     }
   }
 
@@ -199,6 +204,12 @@ class clsPmieducarCandidatoReservaVaga
       if (is_numeric($this->ref_cod_turno)) {
         $campos  .= "{$gruda}ref_cod_turno";
         $valores .= "{$gruda}'{$this->ref_cod_turno}'";
+        $gruda = ', ';
+      }
+
+      if (is_numeric($this->quantidade_membros)) {
+        $campos  .= "{$gruda}quantidade_membros";
+        $valores .= "{$gruda}'{$this->quantidade_membros}'";
         $gruda = ', ';
       }
 
@@ -267,6 +278,11 @@ class clsPmieducarCandidatoReservaVaga
 
       if (is_numeric($this->ref_cod_escola)) {
         $set .= "{$gruda}ref_cod_escola = '{$this->ref_cod_escola}'";
+        $gruda = ', ';
+      }
+
+      if (is_numeric($this->quantidade_membros)) {
+        $set .= "{$gruda}quantidade_membros = '{$this->quantidade_membros}'";
         $gruda = ', ';
       }
 
