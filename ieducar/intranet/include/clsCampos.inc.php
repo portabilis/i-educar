@@ -88,7 +88,7 @@ class clsCampos extends Core_Controller_Page_Abstract
     }
 
     $this->campos['tabbed_add_' . $this->__id_tabbed] = $this->__id_tabbed;
-  } 
+  }
   function campoTabFim()
   {
     $this->campos['fim_tab']          = 1;
@@ -1927,11 +1927,7 @@ class clsCampos extends Core_Controller_Page_Abstract
               $disabled = '';
             }
 
-            if (! $componente[6]) {
-              $componente[6] = $componente[11];
-            }
-
-            $retorno .= "<input style='text-align:right'  onKeyup=\"formataMonetario(this, event);\" $componente[8] = \"{$componente[7]}\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$componente[3]}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" {$disabled}> {$componente[6]}";
+            $retorno .= "<input style='text-align:right'  onKeyup=\"formataMonetario(this, event);\" $componente[8] = \"{$componente[7]}\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$componente[3]}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" {$disabled}> {$componente[11]}";
             break;
 
           case 'monetarioDuplo':
