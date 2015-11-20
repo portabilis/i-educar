@@ -159,6 +159,10 @@ class EditController extends Core_Controller_Page_EditController
     'notaGeralPorEtapa' => array(
       'label' => 'Utilizar uma nota geral por etapa'
     ),
+    'reprovaDireto' => array(
+      'label' => 'Reprova direto',
+      'help' => 'Marcando esse campo, sistema não abrirá campo de nota de exame para alunos que não poderão alcançar a média necessária'
+    ),
     'aprovaMediaDisciplina' => array(
       'label' => 'Aprovar alunos pela média das disciplinas',
       'help'  => 'Alunos reprovados podem ser aprovados se a média das médias das disciplinas for superior a nota de aprovação de exame final'
@@ -414,6 +418,9 @@ var tabela_arredondamento = new function() {
     $this->campoNumero('qtdDisciplinasDependencia', $this->_getLabel('qtdDisciplinasDependencia'), $this->getEntity()->qtdDisciplinasDependencia,
       3, 3, TRUE, $this->_getHelp('qtdDisciplinasDependencia'));
 
+    $this->campoCheck('reprovaDireto', $this->_getLabel('reprovaDireto'),
+        $this->getEntity()->reprovaDireto, '', FALSE, FALSE, FALSE, $this->_getHelp('reprovaDireto'));
+
     // Nota geral por etapa
     $this->campoCheck('notaGeralPorEtapa', $this->_getLabel('notaGeralPorEtapa'),
         $this->getEntity()->notaGeralPorEtapa, '', FALSE, FALSE, FALSE, $this->_getHelp('notaGeralPorEtapa'));
@@ -516,6 +523,11 @@ var tabela_arredondamento = new function() {
     //fixup for checkbox nota geral
     if(!isset($data['notaGeralPorEtapa'])){
       $data['notaGeralPorEtapa'] = '0';
+    }
+
+    //fixup for checkbox
+    if(!isset($data['reprovaDireto'])){
+      $data['reprovaDireto'] = '0';
     }
 
     if (isset($entity)) {

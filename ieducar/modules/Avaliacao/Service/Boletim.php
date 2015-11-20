@@ -1478,7 +1478,16 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
       if ($etapa == $this->getOption('etapas') && $media < $this->getRegra()->media &&
           $this->hasRecuperacao()) {
+
+        // lets make some changes here >:)
         $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::EM_EXAME;
+
+        if($this->getRegra()->reprovaDireto){
+          if(!is_numeric($this->preverNotaRecuperacao($id))){
+            $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::REPROVADO;
+            $qtdComponenteReprovado++;
+          }
+        }
       }
       elseif ($etapa == $this->getOption('etapas') && $media < $this->getRegra()->media) {
         $qtdComponenteReprovado++;
@@ -2650,7 +2659,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
     // Definida varíavel de incremento e nota máxima, vai testando notas de Recuperação até que o resultado
     // da média seja superior a média de aprovação de recuperação
-    for($i = $increment ; $i <= $notaMax; $i+= $increment){
+    for($i = $increment ; $i <= $notaMax; $i = round($i+$increment, 1)){
       $data['Rc']=$i;
       if ($this->getRegra()->formulaRecuperacao->execFormulaMedia($data) >= $this->getRegra()->mediaRecuperacao)
         return $i;
