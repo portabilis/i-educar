@@ -153,20 +153,30 @@ class TurmaController extends ApiCoreController
       $dataMatricula = $this->getRequest()->data_matricula;
 
       $sql = "SELECT a.cod_aluno as id,
-                     m.dependencia
-               FROM pmieducar.matricula_turma mt
-              INNER JOIN pmieducar.matricula m ON mt.ref_cod_matricula = m.cod_matricula
-              INNER JOIN pmieducar.aluno a ON a.cod_aluno = m.ref_cod_aluno
-              INNER JOIN pmieducar.turma t ON t.cod_turma = mt.ref_cod_turma
+                     m.dependencia,
+                     mt.sequencial_fechamento as sequencia,
+              FROM pmieducar.aluno a
+              INNER JOIN pmieducar.matricula m ON m.ref_cod_aluno = a.cod_aluno
+              INNER JOIN pmieducar.matricula_turma mt ON m.cod_matricula = mt.ref_cod_matricula
+              INNER JOIN pmieducar.turma t ON mt.ref_cod_turma = t.cod_turma
               INNER JOIN cadastro.pessoa p ON p.idpes = a.ref_idpes
               WHERE m.ativo = 1
                 AND a.ativo = 1
                 AND t.ativo = 1
                 AND t.ref_cod_instituicao = $1
                 AND t.cod_turma  = $2
-                AND (CASE WHEN coalesce($3, current_date)::date = current_date THEN mt.ativo = 1
-                     ELSE $3 >= mt.data_enturmacao::date
-                     AND $3 < coalesce(mt.data_exclusao, date 'tomorrow')::date END)";
+                AND (CASE WHEN coalesce($3, current_date)::date = current_date THEN mt.ativo = 1 else true END)
+                AND (CASE WHEN mt.ativo = 0 THEN
+                        mt.sequencial = ( select max(matricula_turma.sequencial)
+                                                       from pmieducar.matricula_turma
+                                                      where matricula_turma.ref_cod_matricula = mt.ref_cod_matricula
+                                                        and matricula_turma.ref_cod_turma = mt.ref_cod_turma
+                                                        and ($3::date >= matricula_turma.data_enturmacao::date
+                                                            and $3::date < matricula_turma.data_exclusao::date)
+                                                        and matricula_turma.ativo = 0
+                                        )
+                     ELSE true
+                     END)";
 
       $params = array($instituicaoId, $turmaId, $dataMatricula);
 
@@ -192,11 +202,11 @@ class TurmaController extends ApiCoreController
         ';
       }
 
-      $sql .= " ORDER BY sequencial_fechamento, translate(upper(p.nome),'áéíóúýàèìòùãõâêîôûäëïöüÿçÁÉÍÓÚÝÀÈÌÒÙÃÕÂÊÎÔÛÄËÏÖÜÇ','AEIOUYAEIOUAOAEIOUAEIOUYCAEIOUYAEIOUAOAEIOUAEIOUC')";
+      $sql .= " ORDER BY mt.sequencial_fechamento, translate(upper(p.nome),'áéíóúýàèìòùãõâêîôûäëïöüÿçÁÉÍÓÚÝÀÈÌÒÙÃÕÂÊÎÔÛÄËÏÖÜÇ','AEIOUYAEIOUAOAEIOUAEIOUYCAEIOUYAEIOUAOAEIOUAEIOUC')";
 
       $alunos = $this->fetchPreparedQuery($sql, $params);
 
-      $attrs = array('id','dependencia');
+      $attrs = array('id','dependencia', 'sequencia');
       $alunos = Portabilis_Array_Utils::filterSet($alunos, $attrs);
 
       foreach ($alunos as &$aluno) {
