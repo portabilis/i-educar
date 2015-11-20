@@ -1,44 +1,41 @@
 <?php
-
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo disponÌvel desde a vers„o 1.0.0
+ * @since     Arquivo dispon√≠vel desde a vers√£o 1.0.0
  * @version   $Id$
  */
-
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsListagem.inc.php';
-
 /**
  * clsIndex class.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponÌvel desde a vers„o 1.0.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
  * @version   @@package_version@@
  */
 class clsIndex extends clsBase
@@ -51,25 +48,22 @@ class clsIndex extends clsBase
     $this->renderMenuSuspenso = FALSE;
   }
 }
-
 /**
  * miolo1 class.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponÌvel desde a vers„o 1.0.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
  * @version   @@package_version@@
  */
 class miolo1 extends clsListagem
 {
   var $funcao_js = 'cv_libera_campos(\'cep_\', \'ref_sigla_uf_\', \'cidade\', \'nm_bairro\', \'ref_idtlog\', \'nm_logradouro\', \'isEnderecoExterno\', \'zona_localizacao\')';
-
   function Gerar()
   {
     global $coreExt;
-
     @session_start();
     $_SESSION['campo1']  = $_GET['campo1']  ? $_GET['campo1']  : $_SESSION['campo1'];
     $_SESSION['campo2']  = $_GET['campo2']  ? $_GET['campo2']  : $_SESSION['campo2'];
@@ -85,54 +79,40 @@ class miolo1 extends clsListagem
     $_SESSION['campo12'] = $_GET['campo12'] ? $_GET['campo12'] : $_SESSION['campo12'];
     $_SESSION['campo13'] = $_GET['campo13'] ? $_GET['campo13'] : $_SESSION['campo13'];
     $_SESSION['campo14'] = $_GET['campo14'] ? $_GET['campo14'] : $_SESSION['campo14'];
-
     $this->nome = 'form1';
-
     $this->funcao_js = sprintf(
       'cv_libera_campos(\'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\')',
       $_SESSION['campo10'], $_SESSION['campo11'], $_SESSION['campo7'],
       $_SESSION['campo1'], $_SESSION['campo12'], $_SESSION['campo4'],
       $_SESSION['campo9'], $_SESSION['campo14']
     );
-
-    $this->titulo = 'EndereÁo';
-
+    $this->titulo = 'Endere√ßo';
     // Paginador
     $limite = 7;
     $iniciolimit = $_GET['pagina_' . $this->nome] ?
       ($_GET['pagina_' . $this->nome] * $limite - $limite) : 0;
-
     // Filtros
     $this->campoTexto('nm_bairro', 'Bairro', $_GET['nm_bairro'], 40, 255);
     $this->campoCep('nr_cep', 'CEP', $_GET['nr_cep']);
     $this->campoTexto('nm_logradouro', 'Logradouro', $_GET['nm_logradouro'], 50, 255);
     $this->campoTexto('cidade', 'Cidade', $_GET['cidade'], 60, 60);
-
     // uf
-
     $defaultProvince = isset($_GET['ref_sigla_uf']) ? $_GET['ref_sigla_uf'] : $coreExt['Config']->app->locale->province;
-
     $options = array(
       'required' => false,
       'label'    => 'Estado',
       'value'    => $defaultProvince
     );
-
     $helperOptions = array(
       'attrName' => 'ref_sigla_uf'
     );
-
     $this->inputsHelper()->uf($options, $helperOptions);
-
-
     $this->addCabecalhos(array('Bairro', 'CEP', 'Logradouro', 'UF', 'Cidade'));
-
-
     // consulta dados
+    $pre_select = '
+      SELECT
+        c.idlog, c.cep, c.idbai, u.sigla_uf, m.nome, t.idtlog, m.idmun, b.zona_localizacao, t.descricao ';
 
-    $pre_select = ' SELECT
-        c.idlog, c.cep, c.idbai, u.sigla_uf, m.nome, t.idtlog, m.idmun, b.zona_localizacao ';
-        
     $select = '
       FROM
         urbano.cep_logradouro_bairro c, public.bairro b, public.logradouro l,
@@ -143,67 +123,50 @@ class miolo1 extends clsListagem
         l.idmun = b.idmun AND
         l.idmun = m.idmun AND
         l.idtlog = t.idtlog AND
-        m.sigla_uf = u.sigla_uf ';
-
+        m.sigla_uf = u.sigla_uf';
     $params = array();
-
     if (isset($_GET['nr_cep']))
       $params['c.cep'] = idFederal2int($_GET['nr_cep']);
-
     if (isset($_GET['nm_bairro']))
       $params['b.nome'] = $_GET['nm_bairro'];
-
     if (isset($_GET['nm_logradouro']))
       $params['l.nome'] = $_GET['nm_logradouro'];
-
     if (isset($_GET['ref_sigla_uf']))
       $params['u.sigla_uf'] = $_GET['ref_sigla_uf'];
-
     if (isset($_GET['cidade']))
       $params['m.nome'] = $_GET['cidade'];
-
     $paramCount = 1;
-
     foreach ($params as $name => $value) {
       $select .= " AND $name ILIKE '%'||\$$paramCount||'%'";
       $paramCount++;
     }
-
     $total  = Portabilis_Utils_Database::selectField(' SELECT COUNT(0) '.$select, array('params' => array_values($params)));
-
-    $select .= sprintf(' LIMIT %s OFFSET %s', $limite, $iniciolimit);    
-
-    $result = Portabilis_Utils_Database::fetchPreparedQuery($pre_select.$select, array('params' => array_values($params)));   
+    $select .= sprintf(' LIMIT %s OFFSET %s', $limite, $iniciolimit);
+    $result = Portabilis_Utils_Database::fetchPreparedQuery($pre_select.$select, array('params' => array_values($params)));
 
     foreach ($result as $record) {
-      list($idlog, $cep, $idbai, $uf, $cidade, $tipoLogradouroId, $id_mun, $zona) = $record;
-
+      list($idlog, $cep, $idbai, $uf, $cidade, $tipoLogradouroId, $id_mun, $zona, $descricao) = $record;
       $cidade     = addslashes($cidade);
-
       $logradouro = new clsLogradouro($idlog);
       $logradouro = $logradouro->detalhe();
       $logradouro = addslashes($logradouro['nome']);
-
       $bairro     = new clsBairro($idbai);
       $bairro     = $bairro->detalhe();
       $bairro     = addslashes($bairro['nome']);
-
       $cep2  = int2CEP($cep);
       $s_end = '0';
-
       $url = sprintf(
-        '<a href="javascript:void(0);" onclick="cv_set_campo(\'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\');">%%s</a>',
-        $_SESSION['campo1'], $bairro, $_SESSION['campo2'],
+        '<a href="javascript:void(0);" onclick="cv_set_campo(\'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\');liberaCampos();parent.fixUpPlaceholderEndereco();">%%s</a>',
+        $_SESSION['campo1'], $bairro.' / Zona'.$zona, $_SESSION['campo2'],
         $idbai, $_SESSION['campo3'], $cep,
-        $_SESSION['campo4'], $logradouro,
+        $_SESSION['campo4'], $descricao." ".$logradouro,
         $_SESSION['campo5'], $idlog,
-        $_SESSION['campo6'], $uf, $_SESSION['campo7'], $cidade,
-        $_SESSION['campo8'], $tipoLogradouroId, $_SESSION['campo9'], $s_end,
-        $_SESSION['campo10'], $cep2, $_SESSION['campo11'], $uf,
+        '', '', '', '',
+        '', '', '', '',
+        $_SESSION['campo10'], $cep2, $_SESSION['campo11'], $id_mun.' - '.$cidade.' ('.$uf.')',
         $_SESSION['campo12'], $_SESSION['campo13'], $id_mun,
-        $_SESSION['campo14'], $zona
+        '', ''
       );
-
       $this->addLinhas(array(
         sprintf($url, $bairro),
         sprintf($url, $cep2),
@@ -212,51 +175,43 @@ class miolo1 extends clsListagem
         sprintf($url, $cidade)
       ));
     }
-
     $this->largura = '100%';
     $this->addPaginador2('educar_pesquisa_cep_log_bairro.php', $total, $_GET,
       $this->nome, $limite);
 
-    if(!((bool)$coreExt['Config']->app->obriga_endereco_normalizado_pf)){
-
-      if ($_GET['param']) {
-        $this->rodape = '
-          <table border="0" cellspacing="0" cellpadding="0" width="100%" align="center">
-            <tr width="100%">
-              <td>
-                <div align="center">[ <a href="javascript:void(0);" onclick="liberaCamposOuvidoria()">Cadastrar Novo EndereÁo</a> ]</div>
-              </td>
-            </tr>
-          </table>';
-      }
-      else {
-        $this->rodape = sprintf('
-          <table border="0" cellspacing="0" cellpadding="0" width="100%%" align="center">
-            <tr width="100%%">
-              <td>
-                <div align="center">[ <a href="javascript:void(0);" onclick="%s">Cadastrar Novo EndereÁo</a> ]</div>
-              </td>
-            </tr>
-          </table>',
-          $this->funcao_js
-        );
-      }
+/*
+    if ($_GET['param']) {
+      $this->rodape = '
+        <table border="0" cellspacing="0" cellpadding="0" width="100%" align="center">
+          <tr width="100%">
+            <td>
+              <div align="center">[ <a href="javascript:void(0);" onclick="liberaCamposOuvidoria()">Cadastrar Novo Endere√ßo</a> ]</div>
+            </td>
+          </tr>
+        </table>';
     }
-
+    else {
+      $this->rodape = sprintf('
+        <table border="0" cellspacing="0" cellpadding="0" width="100%%" align="center">
+          <tr width="100%%">
+            <td>
+              <div align="center">[ <a href="javascript:void(0);" onclick="%s">Cadastrar Novo Endere√ßo</a> ]</div>
+            </td>
+          </tr>
+        </table>',
+        $this->funcao_js
+      );
+    }*/
     @session_write_close();
   }
 }
-
-// Instancia objeto de p·gina
+// Instancia objeto de p√°gina
 $pagina = new clsIndex();
-
-// Instancia objeto de conte˙do
+// Instancia objeto de conte√∫do
 $miolo = new miolo1();
-
-// Atribui o conte˙do ‡† p·gina
+// Atribui o conte√∫do √†  p√°gina
 $pagina->addForm($miolo);
-
-// Gera o cÛdigo HTML
+// Gera o c√≥digo HTML
 $pagina->MakeAll();
 ?>
 <script type="text/javascript">
@@ -264,148 +219,128 @@ function setFiltro()
 {
   alert('filtro');
 }
-
-// FunÁ„o especÌfica para ouvidoria
+// Fun√ß√£o espec√≠fica para ouvidoria
 function setaCamposOuvidoria(valor1, valor2, valor3, valor4, valor5, valor6,
   valor7, valor8, valor9, valor10, valor11, valor12)
 {
   // Campo oculto flag atualiza
   parent.document.getElementById('atualiza').value  = 'false';
   parent.document.getElementById('nendereco').value = 'false';
-
   // Campo oculto cep
   obj1 = parent.document.getElementById('cep');
   obj1.value = valor1;
-
-  // Campo visÌvel cep
+  // Campo vis√≠vel cep
   obj2 = parent.document.getElementById('cep_');
   obj2.value    = valor2;
   obj2.disabled = true;
-
   // Campo oculto sigla_uf
   obj3 = parent.document.getElementById('sigla_uf');
   obj3.value = valor3;
-
-   // Campo visÌvel sigla_uf
+   // Campo vis√≠vel sigla_uf
   obj4 = parent.document.getElementById('sigla_uf_');
   obj4.value    = valor4;
   obj4.disabled = true;
-
   // Campo oculto cidade
   obj5 = parent.document.getElementById('cidade');
   obj5.value = valor5;
-
-   // Campo visÌvel cidade
+   // Campo vis√≠vel cidade
   obj6 = parent.document.getElementById('cidade_');
   obj6.value    = valor6;
   obj6.disabled = true;
-
   // Campo oculto nmCidade
   obj14 = parent.document.getElementById('nmCidade');
   obj14.value = valor6;
-
   // Campo oculto Bairro
   obj7 = parent.document.getElementById('idbai');
   obj7.value = valor7;
-
-   // Campo visÌvel Bairro
+   // Campo vis√≠vel Bairro
   obj8 = parent.document.getElementById('bairro_');
   obj8.value    = valor8;
   obj8.disabled = true;
-
   obj13 = parent.document.getElementById('bairro');
   obj13.value = valor8;
-
   // Campo oculto idtlog ("tipo logradouro")
   obj9 = parent.document.getElementById('idtlog');
   obj9.value = valor9;
-
-  // Campo visÌvel idtlog_ ("tipo logradouro")
+  // Campo vis√≠vel idtlog_ ("tipo logradouro")
   obj10 = parent.document.getElementById('idtlog_');
   obj10.value    = valor10;
   obj10.disabled = true;
-
   // Campo oculto logradouro
   obj11 = parent.document.getElementById('idlog');
   obj11.value = valor11;
-
-  // Campo visÌvel logradouro
+  // Campo vis√≠vel logradouro
   obj12 = parent.document.getElementById('logradouro_');
   obj12.value    = valor12;
   obj12.disabled = true;
-
   obj14 = parent.document.getElementById('logradouro');
   obj14.value = valor12;
-
   window.parent.fechaExpansivel('div_dinamico_' + (parent.DOM_divs.length * 1 - 1));
 }
-
 function liberaCamposOuvidoria()
 {
   parent.document.getElementById('atualiza').value  = 'false';
   parent.document.getElementById('nendereco').value = 'true';
-
   // Campo oculto cep
   obj1 = parent.document.getElementById('cep');
   obj1.value = null;
-
-   // Campo visÌvel cep
+   // Campo vis√≠vel cep
   obj2 = parent.document.getElementById('cep_');
   obj2.value    = null;
   obj2.disabled = false;
-
   // Campo oculto sigla_uf
   obj3 = parent.document.getElementById('sigla_uf');
   obj3.value = null;
-
-   // Campo visÌvel sigla_uf
+   // Campo vis√≠vel sigla_uf
   obj4 = parent.document.getElementById('sigla_uf_');
   obj4.value    = null;
   obj4.disabled = false;
-
   // Campo oculto cidade
   obj5 = parent.document.getElementById('cidade');
   obj5.value = null;
-
-  // Campo visÌvel cidade
+  // Campo vis√≠vel cidade
   obj6 = parent.document.getElementById('cidade_');
   obj6.value    = null;
   obj6.disabled = false;
-
   // Campo oculto bairro
   obj7 = parent.document.getElementById('idbai');
   obj7.value = null;
-
-   // Campo visÌvel bairro
+   // Campo vis√≠vel bairro
   obj8 = parent.document.getElementById('bairro_');
   obj8.value    = null;
   obj8.disabled = false;
-
   obj13 = parent.document.getElementById('bairro');
   obj13.value = null;
-
   // Campo oculto idtlog ("tipo logradouro")
   obj9 = parent.document.getElementById('idtlog');
   obj9.value = null;
-
-  // Campo visÌvel itlog_ ("tipo logradouro")
+  // Campo vis√≠vel itlog_ ("tipo logradouro")
   obj10 = parent.document.getElementById('idtlog_');
   obj10.value    = null;
   obj10.disabled = false;
-
   // Campo oculto logradouro
   obj11 = parent.document.getElementById('idlog');
   obj11.value = null;
-
-  // Campo visÌvel logradouro_
+  // Campo vis√≠vel logradouro_
   obj12 = parent.document.getElementById('logradouro_');
   obj12.value    = null;
   obj12.disabled = false;
-
   obj14 = parent.document.getElementById('logradouro');
   obj14.value = null;
-
   window.parent.fechaExpansivel('div_dinamico_' + (parent.DOM_divs.length * 1 - 1));
 }
+function liberaCampos(){
 
+  parent.document.getElementById('municipio_municipio').disabled = false;
+  parent.document.getElementById('bairro_bairro').disabled = false;
+  parent.document.getElementById('logradouro_logradouro').disabled = false;
+  parent.document.getElementById('logradouro').disabled = false;
+  parent.document.getElementById('bairro').disabled = false;
+  parent.document.getElementById('idtlog').disabled = false;
+  parent.document.getElementById('zona_localizacao').disabled = false;
+  parent.document.getElementById('logradouro').value = '';
+  parent.document.getElementById('bairro').value = '';
+  parent.document.getElementById('idtlog').value = '';
+  parent.document.getElementById('zona_localizacao').value = '';
+}
 </script>
