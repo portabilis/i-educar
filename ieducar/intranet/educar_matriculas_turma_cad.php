@@ -294,10 +294,12 @@ class indice extends clsCadastro
       asort($opcoes);
     $this->campoRotulo('tituloDois', 'Matr&iacute;culas', "<b>&nbsp;Alunos j&aacute; matriculados e n&atilde;o enturmados&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Marque o(s) aluno(s) para enturmar</b><label style='display: block; width: 350px; margin-left: 256px;'>&nbsp;&nbsp;&nbsp;<input checked type='checkbox' name='CheckTodosDois' onClick='marcarCheckDois(".'"ref_cod_matricula[]"'.");'/>Marcar todos</label>");
       foreach ($opcoes as $key => $aluno) {
-        $this->campoTextoInv('ref_cod_matricula' . $aluno, '', $aluno,
-          40, 255, FALSE, FALSE, TRUE, '', '', '', '', 'ref_cod_matricula');
+        $this->campoRotulo($key,'','<table  style="font-size:11px; font-family: arial, verdana, lucida, helvetica, sans-serif;" border="0px"><tr><td width="258px">'.$aluno.'</td><td><input value="$key" type="checkbox" name="ref_cod_matricula['.$key.']" id="ref_cod_matricula[]"></td></tr></table>
+','');
 
-        $this->campoCheck('ref_cod_matricula['.$key.']','',$key);
+// $nome, $campo, $valor, $duplo = FALSE, $descricao = '', $separador = ':'
+
+// $nome, $campo, $valor, $desc = '',      $duplo = FALSE, $script = FALSE, $disable = FALSE, $dica = NULL
       }
     }
     else if ($alunosEnturmados){

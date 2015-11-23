@@ -740,7 +740,7 @@ class clsCampos extends Core_Controller_Page_Abstract
       '',
       $valor,
       6 => $descricao,
-      'separador' => $separador
+      'separador' => $campo == '' ? '' : $separador
     );
 
     if (! $this->__adicionando_tabela) {
