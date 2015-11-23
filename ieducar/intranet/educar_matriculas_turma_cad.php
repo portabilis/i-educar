@@ -251,7 +251,7 @@ class indice extends clsCadastro
     }
 
     if ($this->matriculas_turma) {
-      $this->campoRotulo('titulo', 'Matr&iacute;culas', "<b>&nbsp;Alunos j&aacute; matriculados e enturmados&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Marque alunos para desenturmar</b><label style='display: block; width: 350px; margin-left: 256px;'><input type='checkbox' name='CheckTodos' onClick='marcarCheck(".'"check_desenturma[]"'.");'/>Marcar todos</label>");
+      $this->campoRotulo('titulo', 'Matr&iacute;culas', "<b>&nbsp;Alunos j&aacute; matriculados e enturmados&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Marque o(s) aluno(s) para desenturmar</b><label style='display: block; width: 350px; margin-left: 256px;'>&nbsp;&nbsp;&nbsp;<input type='checkbox' name='CheckTodos' onClick='marcarCheck(".'"check_desenturma[]"'.");'/>Marcar todos</label>");
       foreach ($this->matriculas_turma as $matricula => $campo) {
         $obj_matricula = new clsPmieducarMatricula($matricula);
         $det_matricula = $obj_matricula->detalhe();
@@ -290,12 +290,16 @@ class indice extends clsCadastro
     }
 
     if (count($opcoes)) {
-        $this->inputsHelper()->date('data_enturmacao', array('label' => 'Data da enturma&ccedil;&acirc;o', 'value' => date('Y-m-d')));
-        $this->campoRotulo('titulo', 'Aluno', "<input checked type='checkbox' name='CheckTodosDois' onClick='marcarCheckDois(".'"ref_cod_matricula[]"'.");'/>Marcar todos</label>");
+      $this->inputsHelper()->date('data_enturmacao', array('label' => 'Data da enturma&ccedil;&acirc;o', 'value' => date('Y-m-d')));
       asort($opcoes);
+    $this->campoRotulo('tituloDois', 'Matr&iacute;culas', "<b>&nbsp;Alunos j&aacute; matriculados e n&atilde;o enturmados&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Marque o(s) aluno(s) para enturmar</b><label style='display: block; width: 350px; margin-left: 256px;'>&nbsp;&nbsp;&nbsp;<input checked type='checkbox' name='CheckTodosDois' onClick='marcarCheckDois(".'"ref_cod_matricula[]"'.");'/>Marcar todos</label>");
       foreach ($opcoes as $key => $aluno) {
-        $this->campoCheck('ref_cod_matricula[' . $key . ']', 'Aluno:', $key,
-          $aluno, NULL, NULL, NULL);
+        $this->campoRotulo($key,'','<table  style="font-size:11px; font-family: arial, verdana, lucida, helvetica, sans-serif;" border="0px"><tr><td width="258px">'.$aluno.'</td><td><input value="$key" type="checkbox" name="ref_cod_matricula['.$key.']" id="ref_cod_matricula[]"></td></tr></table>
+','');
+
+// $nome, $campo, $valor, $duplo = FALSE, $descricao = '', $separador = ':'
+
+// $nome, $campo, $valor, $desc = '',      $duplo = FALSE, $script = FALSE, $disable = FALSE, $dica = NULL
       }
     }
     else if ($alunosEnturmados){
@@ -423,8 +427,6 @@ $pagina->MakeAll();
             }
         }
   }
-
-
 
   function fixUpCheckBoxesDois(){
     $j('input[name^=ref_cod_matricula]').each(function(index, element){

@@ -163,7 +163,7 @@ class indice extends clsCadastro
     return false;
   }
 
-  
+
   function transferirEnturmacao($matriculaId, $turmaOrigemId, $turmaDestinoId) {
     if($this->removerEnturmacao($matriculaId, $turmaOrigemId, TRUE))
       return $this->novaEnturmacao($matriculaId, $turmaDestinoId);
@@ -175,10 +175,10 @@ class indice extends clsCadastro
     $sequencialEnturmacao = $this->getSequencialEnturmacaoByTurmaId($matriculaId, $turmaId);
     $enturmacao = new clsPmieducarMatriculaTurma($matriculaId,
                                                  $turmaId,
-                                                 $this->pessoa_logada, 
+                                                 $this->pessoa_logada,
                                                  NULL, 
                                                  NULL,
-                                                 NULL, 
+                                                 $this->data_enturmacao,
                                                  0,
                                                  NULL,
                                                  $sequencialEnturmacao);

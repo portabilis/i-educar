@@ -342,9 +342,13 @@ class clsPmieducarMatriculaTurma
         $set .= "{$gruda}data_cadastro = '{$this->data_cadastro}'";
         $gruda = ", ";
       }
-
-      $set .= "{$gruda}data_exclusao = NOW()";
-      $gruda = ", ";
+      if (is_string($this->data_exclusao)) {
+        $set .= "{$gruda}data_exclusao = '{$this->data_exclusao}'";
+        $gruda = ", ";
+      }elseif(is_null($this->data_exclusao)){
+        $set .= "{$gruda}data_exclusao = NOW()";
+        $gruda = ", ";
+      }
 
       if (is_numeric($this->ativo)) {
         $set .= "{$gruda}ativo = '{$this->ativo}'";
