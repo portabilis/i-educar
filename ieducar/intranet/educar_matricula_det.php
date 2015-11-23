@@ -227,6 +227,9 @@ class indice extends clsDetalhe
       elseif ($registro['aprovado'] == 12) {
         $aprovado = 'Aprovado com depend&ecirc;ncia';
       }
+      elseif ($registro['aprovado'] == 13) {
+        $aprovado = 'Aprovado pelo conselho';
+      }
 
       $this->addDetalhe(array('Situação', $aprovado));
     }

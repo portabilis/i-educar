@@ -198,9 +198,10 @@ var changeMedia = function(event){
 var changeSituacao = function(event){
   var $element = $j(this);
 
-  changeResource($element, postSituacao);
-
-  $element.data('old_value', $element.val());
+  if($element.val() != 0){
+    changeResource($element, postSituacao);
+    $element.data('old_value', $element.val());
+  }
 };
 
 function afterChangeResource($resourceElement) {
@@ -1296,7 +1297,7 @@ function updateResourceRow(dataResponse) {
   var $fieldNotaExame = $j('#nota-exame-matricula-' + matriculaId + '-cc-' + ccId);
   var $fieldNotaEspecifica = $j('#nota-recuperacao-especifica-matricula-' + matriculaId + '-cc-' + ccId);
   var $fieldNN = $j('#nn-matricula-' + matriculaId + '-cc-' + ccId);
-  var $fieldMedia = $j('#media-' + matriculaId + '-cc-' + ccId);
+  var $fieldMedia = $j('#media-matricula-' + matriculaId + '-cc-' + ccId);
 
   if(usaNotaGeralPorEtapa){
     $situacaoField = $j('.situacao-matricula-cc');
@@ -1332,56 +1333,42 @@ function updateResourceRow(dataResponse) {
 }
 
 function changeMediaValue(elementId, value){
-  if($tableSearchDetails.data('details').tipo_nota == 'conceitual'){
-    var selected = false;
-    $j('#' + elementId + ' option').each(function(){
-      valorOption = $j(this).val();
-      if(valorOption != ""){
-        if((value == valorOption) || ((valorOption >= value) && !selected)) {
-          $j(this).attr('selected', 'selected');
-          selected = true;
-        }else{
-          $j(this).removeAttr('selected');
+  if(value != undefined){
+    if($tableSearchDetails.data('details').tipo_nota == 'conceitual'){
+      var selected = false;
+      $j('#' + elementId + ' option').each(function(){
+        valorOption = $j(this).val();
+        if(valorOption != ""){
+          if((value == valorOption) || ((valorOption >= value) && !selected)) {
+            $j(this).attr('selected', 'selected');
+            selected = true;
+          }else{
+            $j(this).removeAttr('selected');
+          }
         }
-      }
-    });
-  }else{
-    $j('#' + elementId).val(value.toFixed(2));
+      });
+    }else{
+      $j('#' + elementId).val(value);
+    }
   }
 }
 
 function situacaoFinalField($matriculaId, $situacao){
 
   var $selectSituacao  = $j('<select />').attr('id', 'situacao' + '-matricula-' + $matriculaId + '-cc-').addClass('situacao-cc').data('matricula_id', $matriculaId);
+  var $optionDefault              = $j('<option />').html('').val(0).attr('selected', 'selected');
+  var $optionAprovado             = $j('<option />').html('Aprovado').val(1);
+  var $optionRetido               = $j('<option />').html('Retido').val(2);
+  var $optionAprovadoPeloConselho = $j('<option />').html('Aprovado pelo conselho').val(13);
 
-  var $optionAprovado  = $j('<option />').html('Aprovado').val(1);
-  var $optionRetido    = $j('<option />').html('Retido').val(2);
-  var $optionAndamento = $j('<option />').html('Em andamento').val(3);
-
-  switch($situacao){
-    case 1:
-      $optionAprovado.attr('selected', 'selected');
-      break;
-
-    case 2:
-      $optionRetido.attr('selected', 'selected');
-      break;
-
-    case 3:
-      $optionAndamento.attr('selected', 'selected');
-      break;
-
-    default:
-      $optionAprovado.attr('selected', 'selected');
-  }
-
+  $optionDefault.appendTo($selectSituacao);
   $optionAprovado.appendTo($selectSituacao);
   $optionRetido.appendTo($selectSituacao);
-  $optionAndamento.appendTo($selectSituacao);
+  $optionAprovadoPeloConselho.appendTo($selectSituacao);
 
   var $element = $j('<tr />').addClass('center resultado-final');
-  $j('<td />').addClass('center resultado-final').html('Resultado final').appendTo($element);
-  $j('<td />').addClass('resultado-final-esquerda').attr('colspan', '10').html($selectSituacao).appendTo($element);
+  $j('<td />').addClass('center resultado-final').html(safeUtf8Decode('Situação final')).appendTo($element);
+  $j('<td />').addClass('resultado-final-esquerda').attr('colspan', '6').html($selectSituacao).appendTo($element);
 
   return $element;
 }

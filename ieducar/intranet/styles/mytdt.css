@@ -41,16 +41,14 @@ td.resultado-final {
   color: #FFF !important;
   font-weight: bold;
   font-size: 13px;
-  width:100%;
 }
 td.resultado-final-esquerda {
   background-color: #546C76 !important;
   color: #FFF !important;
   font-weight: bold;
   font-size: 13px;
-  width:100%;
   text-align: left;
 }
-select.situacao {
-  width: 140px;
+.situacao-cc {
+  width: 180px;
 }
