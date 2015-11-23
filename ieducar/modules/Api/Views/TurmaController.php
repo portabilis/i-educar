@@ -154,7 +154,7 @@ class TurmaController extends ApiCoreController
 
       $sql = "SELECT a.cod_aluno as id,
                      m.dependencia,
-                     mt.sequencial_fechamento as sequencia,
+                     mt.sequencial_fechamento as sequencia
               FROM pmieducar.aluno a
               INNER JOIN pmieducar.matricula m ON m.ref_cod_aluno = a.cod_aluno
               INNER JOIN pmieducar.matricula_turma mt ON m.cod_matricula = mt.ref_cod_matricula
