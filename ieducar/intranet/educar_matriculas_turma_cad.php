@@ -294,10 +294,10 @@ class indice extends clsCadastro
       asort($opcoes);
     $this->campoRotulo('tituloDois', 'Matr&iacute;culas', "<b>&nbsp;Alunos j&aacute; matriculados e n&atilde;o enturmados&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Marque o(s) aluno(s) para enturmar</b><label style='display: block; width: 350px; margin-left: 256px;'>&nbsp;&nbsp;&nbsp;<input checked type='checkbox' name='CheckTodosDois' onClick='marcarCheckDois(".'"ref_cod_matricula[]"'.");'/>Marcar todos</label>");
       foreach ($opcoes as $key => $aluno) {
-        $this->campoTextoInv('ref_cod_matricula_' . $aluno, '', $aluno,
+        $this->campoTextoInv('ref_cod_matricula' . $aluno, '', $aluno,
           40, 255, FALSE, FALSE, TRUE, '', '', '', '', 'ref_cod_matricula');
 
-        $this->campoCheck('ref_cod_matricula_['.$key.']','',$key);
+        $this->campoCheck('ref_cod_matricula['.$key.']','',$key);
       }
     }
     else if ($alunosEnturmados){
