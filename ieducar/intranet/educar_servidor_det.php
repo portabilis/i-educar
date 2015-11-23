@@ -156,8 +156,8 @@ class indice extends clsDetalhe
       NULL,
       NULL,
       NULL,
-      NULL,
-      1
+      1,
+      date('Y')
     );
 
     if ($lista) {
