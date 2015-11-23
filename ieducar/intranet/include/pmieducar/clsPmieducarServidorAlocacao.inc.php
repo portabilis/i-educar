@@ -461,7 +461,7 @@ class clsPmieducarServidorAlocacao
     }
 
     if (is_numeric($ano)) {
-      $filtros .= "{$whereAnd} sa.ano <= '{$ano}'";
+      $filtros .= "{$whereAnd} sa.ano = '{$ano}'";
       $whereAnd = ' AND ';
     }
 
