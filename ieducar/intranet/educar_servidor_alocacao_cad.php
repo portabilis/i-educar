@@ -245,9 +245,26 @@ class indice extends clsCadastro
     $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7,
         "educar_servidor_alocacao_lst.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_ref_cod_instituicao}");
 
-    $carga_horaria_disponivel = urldecode($this->carga_horaria_disponivel);
+    $servidorAlocacao = new clsPmieducarServidorAlocacao($this->cod_servidor_alocacao,
+                                                 $this->ref_ref_cod_instituicao,
+                                                 null,
+                                                 null,
+                                                 null,
+                                                 $this->ref_cod_servidor,
+                                                 null,
+                                                 null,
+                                                 null,
+                                                 null,
+                                                 null,
+                                                 null,
+                                                 null,
+                                                 $this->ano);
 
-    if ($this->hhmmToMinutes($carga_horaria_disponivel) >= $this->arrayHhmmToMinutes($this->carga_horaria_alocada)){
+    $carga_horaria_disponivel = $this->hhmmToMinutes($this->carga_horaria_disponivel);
+    $carga_horaria_alocada    = $this->hhmmToMinutes($this->carga_horaria_alocada);
+    $carga_horaria_alocada   += $this->hhmmToMinutes($servidorAlocacao->getCargaHorariaAno());
+
+    if ($carga_horaria_disponivel >= $carga_horaria_alocada){
 
     $obj_novo = new clsPmieducarServidorAlocacao(null,
                                                  $this->ref_ref_cod_instituicao,
