@@ -168,12 +168,13 @@ class TurmaController extends ApiCoreController
                 AND (CASE WHEN coalesce($3, current_date)::date = current_date THEN mt.ativo = 1 else true END)
                 AND (CASE WHEN mt.ativo = 0 THEN
                         mt.sequencial = ( select max(matricula_turma.sequencial)
-                                                       from pmieducar.matricula_turma
-                                                      where matricula_turma.ref_cod_matricula = mt.ref_cod_matricula
-                                                        and matricula_turma.ref_cod_turma = mt.ref_cod_turma
-                                                        and ($3::date >= matricula_turma.data_enturmacao::date
-                                                            and $3::date < matricula_turma.data_exclusao::date)
-                                                        and matricula_turma.ativo = 0
+                                            from pmieducar.matricula_turma
+                                           inner join pmieducar.matricula on(matricula_turma.ref_cod_matricula = matricula.cod_matricula)
+                                           where matricula_turma.ref_cod_matricula = mt.ref_cod_matricula
+                                             and matricula_turma.ref_cod_turma = mt.ref_cod_turma
+                                             and ($3::date >= matricula_turma.data_enturmacao::date
+                                                 and $3::date < coalesce(matricula.data_cancel::date, matricula_turma.data_exclusao::date))
+                                             and matricula_turma.ativo = 0
                                         )
                      ELSE true
                      END)";
