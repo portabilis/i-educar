@@ -165,27 +165,30 @@ class TurmaController extends ApiCoreController
                 AND t.ativo = 1
                 AND t.ref_cod_instituicao = $1
                 AND t.cod_turma  = $2
-                AND (CASE WHEN coalesce($3, current_date)::date = current_date THEN mt.ativo = 1 else true END)
-                AND (CASE WHEN mt.ativo = 0 THEN
-                        mt.sequencial = ( select max(matricula_turma.sequencial)
-                                            from pmieducar.matricula_turma
-                                           inner join pmieducar.matricula on(matricula_turma.ref_cod_matricula = matricula.cod_matricula)
-                                           where matricula_turma.ref_cod_matricula = mt.ref_cod_matricula
-                                             and matricula_turma.ref_cod_turma = mt.ref_cod_turma
-                                             and ($3::date >= matricula_turma.data_enturmacao::date
-                                                 and $3::date < coalesce(matricula.data_cancel::date, matricula_turma.data_exclusao::date, current_date))
-                                             and matricula_turma.ativo = 0
-                                             and not exists(select 1
-                                                              from pmieducar.matricula_turma mt_sub
-                                                             where mt_sub.ativo = 1
-                                                               and mt_sub.ref_cod_matricula = mt.ref_cod_matricula
-                                                               and mt_sub.ref_cod_turma = mt.ref_cod_turma
-                                                            )
-                                        )
+                AND (CASE WHEN coalesce($3, current_date)::date = current_date 
+                      THEN mt.ativo = 1
                      ELSE
-                        ($3::date >= mt.data_enturmacao::date
-                        and $3::date < coalesce(m.data_cancel::date, mt.data_exclusao::date, current_date))
-                     END)";
+                       (CASE WHEN mt.ativo = 0 THEN
+                          mt.sequencial = ( select max(matricula_turma.sequencial)
+                                              from pmieducar.matricula_turma
+                                             inner join pmieducar.matricula on(matricula_turma.ref_cod_matricula = matricula.cod_matricula)
+                                             where matricula_turma.ref_cod_matricula = mt.ref_cod_matricula
+                                               and matricula_turma.ref_cod_turma = mt.ref_cod_turma
+                                               and ($3::date >= matricula_turma.data_enturmacao::date
+                                                   and $3::date < coalesce(matricula.data_cancel::date, matricula_turma.data_exclusao::date, current_date))
+                                               and matricula_turma.ativo = 0
+                                               and not exists(select 1
+                                                                from pmieducar.matricula_turma mt_sub
+                                                               where mt_sub.ativo = 1
+                                                                 and mt_sub.ref_cod_matricula = mt.ref_cod_matricula
+                                                                 and mt_sub.ref_cod_turma = mt.ref_cod_turma
+                                                              )
+                                          )
+                       ELSE
+                          ($3::date >= mt.data_enturmacao::date
+                          and $3::date < coalesce(m.data_cancel::date, mt.data_exclusao::date, current_date))
+                       END)
+                      END)";
 
       $params = array($instituicaoId, $turmaId, $dataMatricula);
 
@@ -225,6 +228,9 @@ class TurmaController extends ApiCoreController
       return array('alunos' => $alunos);
     }
   }
+  protected function getAlunosExameTurma(){
+
+  }
 
   public function Gerar() {
     if ($this->isRequestFor('get', 'tipo-boletim'))
@@ -235,6 +241,8 @@ class TurmaController extends ApiCoreController
       $this->appendResponse($this->getTurmasPorEscola());
     else if($this->isRequestFor('get', 'alunos-matriculados-turma'))
       $this->appendResponse($this->getAlunosMatriculadosTurma());
+    else if($this->isRequestFor('get', 'alunos-exame-turma'))
+      $this->appendResponse($this->getAlunosExameTurma());
     else
       $this->notImplementedOperationError();
   }
