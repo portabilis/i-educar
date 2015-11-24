@@ -461,7 +461,7 @@ class clsPmieducarServidorAlocacao
     }
 
     if (is_numeric($ano)) {
-      $filtros .= "{$whereAnd} sa.ano <= '{$ano}'";
+      $filtros .= "{$whereAnd} sa.ano = '{$ano}'";
       $whereAnd = ' AND ';
     }
 
@@ -743,6 +743,31 @@ class clsPmieducarServidorAlocacao
   {
     if (is_string($this->_campo_group_by)) {
       return " GROUP BY {$this->_campo_group_by} ";
+    }
+    return '';
+  }
+
+  /**
+   * Retorna a string com a soma da carga horária já alocada do servidor em determinado ano
+   *
+   * @return string
+   */
+  function getCargaHorariaAno() {
+
+    if (is_numeric($this->ref_cod_servidor) && is_numeric($this->ano)) {
+      $db = new clsBanco();
+      $sql = "SELECT SUM(carga_horaria)
+                FROM pmieducar.servidor_alocacao
+               WHERE ref_cod_servidor = {$this->ref_cod_servidor}
+                 AND ano = {$this->ano}";
+
+      if ($this->cod_servidor_alocacao) {
+        $sql .= "AND cod_servidor_alocacao != {$this->cod_servidor_alocacao}";
+      }
+      $db->Consulta($sql);
+      $db->ProximoRegistro();
+      $registro = $db->Tupla();
+      return $registro[0];
     }
     return '';
   }

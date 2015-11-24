@@ -2911,7 +2911,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             $novaSituacaoMatricula = App_Model_MatriculaSituacao::REPROVADO;
           break;
 
-        case RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_SOMENTE_MEDIA:
+        case RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_SOMENTE_MEDIA || RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MANUAL:
 
           if ($situacaoBoletim->aprovado && $situacaoBoletim->aprovadoComDependencia)
             $novaSituacaoMatricula = App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA;
@@ -2922,7 +2922,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
           break;
 
-        case RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MANUAL && is_null($novaSituacaoMatricula):
+        case is_null($novaSituacaoMatricula):
 
           $tipoProgressaoInstance = RegraAvaliacao_Model_TipoProgressao::getInstance();
           $exceptionMsg = sprintf('Para atualizar a matrícula em uma regra %s é '

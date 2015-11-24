@@ -1235,7 +1235,9 @@ class DiarioApiController extends ApiCoreController
       throw new Exception('Não foi possivel obter a média atual, pois não foi recebido o id do componente curricular.');
     }
 
-    $media = urldecode($this->serviceBoletim()->getMediaComponente($componenteCurricularId)->media);
+    $media = urldecode($this->serviceBoletim()->getMediaComponente($componenteCurricularId)->mediaArredondada);
+
+    // $media = round($media,1);
 
     return str_replace(',', '.', $media);
   }
