@@ -127,7 +127,9 @@ class RegraController extends ApiCoreController
                 parecer_descritivo,
                 cod_turma as turma_id,
                 tipo_recuperacao_paralela AS tipo_recuperacao,
-                media_recuperacao_paralela
+                media_recuperacao_paralela,
+                nota_maxima_geral,
+                nota_maxima_exame_final as nota_maxima_exame
                 FROM modules.regra_avaliacao ra
                 LEFT JOIN pmieducar.serie s ON s.regra_avaliacao_id = ra.id
                 LEFT JOIN pmieducar.turma t ON t.ref_ref_cod_serie = s.cod_serie
@@ -139,7 +141,8 @@ class RegraController extends ApiCoreController
       $_regras = $this->fetchPreparedQuery($sql, array($instituicaoId, $ano));
 
       $attrs = array('id', 'tabela_arredondamento_id', 'tipo_nota', 'tipo_presenca', 'parecer_descritivo',
-                      'turma_id', 'tipo_recuperacao', 'media_recuperacao_paralela');
+                      'turma_id', 'tipo_recuperacao', 'media_recuperacao_paralela', 'nota_maxima_geral',
+                      'nota_maxima_exame');
       $_regras = Portabilis_Array_Utils::filterSet($_regras, $attrs);
       $regras = array();
       $__regras = array();
@@ -152,6 +155,8 @@ class RegraController extends ApiCoreController
         $__regras[$regra['id']]['parecer_descritivo'] = $regra['parecer_descritivo'];
         $__regras[$regra['id']]['tipo_recuperacao'] = $regra['tipo_recuperacao'];
         $__regras[$regra['id']]['media_recuperacao_paralela'] = $regra['media_recuperacao_paralela'];
+        $__regras[$regra['id']]['nota_maxima_geral'] = $regra['nota_maxima_geral'];
+        $__regras[$regra['id']]['nota_maxima_exame'] = $regra['nota_maxima_exame'];
         $__regras[$regra['id']]['turmas'][] = array(
           'turma_id' => $regra['turma_id']
         );
