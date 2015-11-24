@@ -175,10 +175,18 @@ class TurmaController extends ApiCoreController
                                            where matricula_turma.ref_cod_matricula = mt.ref_cod_matricula
                                              and matricula_turma.ref_cod_turma = mt.ref_cod_turma
                                              and ($3::date >= matricula_turma.data_enturmacao::date
-                                                 and $3::date < coalesce(matricula.data_cancel::date, matricula_turma.data_exclusao::date))
+                                                 and $3::date < coalesce(matricula.data_cancel::date, matricula_turma.data_exclusao::date, current_date))
                                              and matricula_turma.ativo = 0
+                                             and not exists(select 1
+                                                              from pmieducar.matricula_turma mt_sub
+                                                             where mt_sub.ativo = 1
+                                                               and mt_sub.ref_cod_matricula = mt.ref_cod_matricula
+                                                               and mt_sub.ref_cod_turma = mt.ref_cod_turma
+                                                            )
                                         )
-                     ELSE true
+                     ELSE
+                        ($3::date >= mt.data_enturmacao::date
+                        and $3::date < coalesce(m.data_cancel::date, mt.data_exclusao::date, current_date))
                      END)";
 
       $params = array($instituicaoId, $turmaId, $dataMatricula);
