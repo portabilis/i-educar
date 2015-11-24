@@ -107,27 +107,28 @@ class indice extends clsCadastro
     $obj_aluno = new clsPmieducarAluno($aluno_principal);
     $obj_aluno = $obj_aluno->detalhe();
     $cod_aluno_principal = $obj_aluno['cod_aluno'];
-//faz uma array de codigo dos alunos duplicados
+
     $alunos_duplicados = $this->aluno_duplicado;
-// Conta o numero de alunos duplicados dentro da array menos um, pois a array inicia no zero
     $numeroAlunosDuplicadoArray = count($alunos_duplicados) - 1;
-// variaveis iniciais usadas dentro do while;
+
     $db = new clsBanco();
     $contPessoa = -1;
     $montaSql = '';
-    $numeroGrande = 9999;
-// while para passar por cada aluno duplicado
+    $db->consulta("SELECT max(sequencial) as maior_seq    from  pmieducar.historico_escolar      where ref_cod_aluno = {$cod_aluno_principal}");
+    $db->ProximoRegistro();
+    $maiorSeqAlunoPrincipal = $db->Tupla();
+   
+    $comecoSequencial = 100 + $maiorSeqAlunoPrincipal['maior_seq'];
     while( $numeroAlunosDuplicadoArray > $contPessoa){
-// passa para o proximo aluno
       $contPessoa++;
-// verifica se o aluno duplicado é igual o aluno principal   
-// Destroi a variavel string dos alunos duplicados, pois contem numero e letras, e o unicio valor util é o codigo que está na posição zero que é armazenado
-// dentro da variavel string $montaSql
-// $explode[0] é o codigo do aluno no momento
-// while passa por cada disciplina do historico escolar e manda o sequencial para --9999 e tambem para o hisorico escolar de cada aluno e de cada sequencial
         $explode = explode(" ", $alunos_duplicados[$contPessoa]);
         $montaSql .= $explode[0].", ";
-     if($explode[0] != $cod_aluno_principal){ 
+        $db->consulta("SELECT count(*) as qtd     from pmieducar.historico_escolar     where ref_cod_aluno = {$explode[0]} ");      
+        $db->ProximoRegistro();
+        $temRegistro = $db->Tupla();
+        if($temRegistro['qtd'] > 0){
+     if($explode[0] != $cod_aluno_principal){
+        
         $iHisEsc = -1;
         $arraySeqHisEsco  = array($db->consulta("SELECT sequencial     from historico_escolar     where ref_cod_aluno = {$explode[0]}     GROUP BY ref_cod_aluno, sequencial         order by  ref_cod_aluno, sequencial "));
   while($db->ProximoRegistro()){
@@ -146,29 +147,34 @@ class indice extends clsCadastro
         $numElementsHisDisci  = count($arraySeqHisDisci) - 1;
         $i = -1;
      if($numElementsHistorico == $numElementsHisDisci){
+      $mairoSeqAlunoDuplicado = $db->consulta("SELECT max(sequencial)     from historico_escolar     where ref_cod_aluno = {$explode[0]}     GROUP BY ref_cod_aluno, sequencial   order by  ref_cod_aluno, sequencial ");
+        $numeroGrande += $comecoSequencial + $mairoSeqAlunoDuplicado;
   while($i < $numElementsHisDisci){
         $i++;
         $db->consulta("UPDATE pmieducar.historico_escolar     SET sequencial     = {$numeroGrande} where ref_cod_aluno     = {$explode[0]} and sequencial     = $arraySeqHisEsco[$i]");
         $db->consulta("UPDATE pmieducar.historico_disciplinas SET ref_sequencial = {$numeroGrande} where ref_ref_cod_aluno = {$explode[0]} and ref_sequencial = $arraySeqHisDisci[$i]");
-        $numeroGrande--;            
+        $numeroGrande++;            
         }
         }
-        }
-     else{
+        }else{
         $this->mensagem = 'Impossivel de unificar alunos iguais.<br />';
         return false;
-          }
-    }
+        }
+    }}
     $montaSql = substr($montaSql, 0, -2);
     
     $db->consulta("UPDATE pmieducar.historico_escolar SET ref_cod_aluno = {$cod_aluno_principal} where ref_cod_aluno in ({$montaSql})");
     $db->consulta("UPDATE pmieducar.historico_disciplinas SET ref_ref_cod_aluno = {$cod_aluno_principal} where ref_ref_cod_aluno in ({$montaSql})");
     $db->consulta("UPDATE pmieducar.matricula SET ref_cod_aluno = {$cod_aluno_principal} where ref_cod_aluno in ({$montaSql})");
-    $db->consulta("UPDATE pmieducar.aluno SET ativo = 0 where cod_aluno in ({$montaSql})");
+    $db->consulta("UPDATE pmieducar.aluno SET ativo = 0, data_exclusao = now(), ref_usuario_exc = {$this->pessoa_logada} where cod_aluno in ({$montaSql})");
     $this->mensagem = "<span class='success'>Alunos unificados com sucesso.</span>";
     return true;
   }
 }
+
+
+
+
 // Instancia objeto de página
 $pagina = new clsIndexBase();
 
