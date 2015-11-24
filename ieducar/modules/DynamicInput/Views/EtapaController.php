@@ -55,6 +55,9 @@ class EtapaController extends ApiCoreController
            $this->validatesId('turma') &&
            $this->validatesPresenceOf('ano');
   }
+  protected function canGetEtapasEscola() {
+    return $this->validatesId('escola');
+  }
 
   protected function getEtapas() {
     if ($this->canGetEtapas()) {
@@ -90,9 +93,35 @@ class EtapaController extends ApiCoreController
     }
   }
 
+    protected function getEtapasEscola() {
+    if ($this->canGetEtapasEscola()) {
+
+
+        $escolaId = $this->getRequest()->escola_id;
+        $ano      = $this->getRequest()->ano;
+
+        $sql = "select padrao.sequencial as etapa, modulo.nm_tipo as nome from pmieducar.ano_letivo_modulo
+                as padrao, pmieducar.modulo where padrao.ref_ano = $1 and padrao.ref_ref_cod_escola = $2
+                and padrao.ref_cod_modulo = modulo.cod_modulo and modulo.ativo = 1 order by padrao.sequencial";
+
+        $etapas = $this->fetchPreparedQuery($sql, array($ano, $escolaId));
+      
+
+      
+
+      $options = array();
+      foreach ($etapas as $etapa)
+        $options['__' . $etapa['etapa']] = $etapa['etapa'] . 'º ' . $this->toUtf8($etapa['nome']);
+
+      return array('options' => $options);
+    }
+  }
+
   public function Gerar() {
     if ($this->isRequestFor('get', 'etapas'))
       $this->appendResponse($this->getEtapas());
+    else if ($this->isRequestFor('get', 'etapasEscola'))
+      $this->appendResponse($this->getEtapasEscola()); 
     else
       $this->notImplementedOperationError();
   }
