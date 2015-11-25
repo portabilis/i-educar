@@ -234,13 +234,13 @@ class indice extends clsListagem
 
 		foreach ( $alunos AS $registro ) {
 	    $alunoInepId      = $this->tryLoadAlunoInepId($registro["cod_aluno"]);
-	    $nomeAluno        = strtoupper($registro["nome_aluno"]);
+	    $nomeAluno        = mb_strtoupper($registro["nome_aluno"]);
 	    $nomeMae          = strtoupper($this->loadNomeMae($registro));
 
 	    // responsavel
 			$aluno->cod_aluno = $registro["cod_aluno"];
 	    $responsavel      = $aluno->getResponsavelAluno();
-	    $nomeResponsavel  = strtoupper($responsavel["nome_responsavel"]);
+	    $nomeResponsavel  = mb_strtoupper($responsavel["nome_responsavel"]);
 	    if($GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu'){
 	    	$linhas = array(
 				"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$registro["cod_aluno"]}</a>",
