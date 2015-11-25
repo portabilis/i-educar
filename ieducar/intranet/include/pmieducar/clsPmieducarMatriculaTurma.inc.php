@@ -1411,7 +1411,7 @@ class clsPmieducarMatriculaTurma
 
     $getSequencial = FALSE;
     $db = new clsBanco();
-    $possui_fechamento = $db->CampoUnico("SELECT data_fechamento FROM pmieducar.turma WHERE cod_turma = {$turmaId}");
+    $possui_fechamento = $db->CampoUnico("SELECT instituicao.data_fechamento FROM pmieducar.turma inner join pmieducar.instituicao on (turma.ref_cod_instituicao = instituicao.cod_instituicao) WHERE cod_turma = {$turmaId}");
     if (is_string($possui_fechamento)){
       if (strtotime($possui_fechamento) < strtotime($dataEnturmacao))
         $getSequencial = true;      

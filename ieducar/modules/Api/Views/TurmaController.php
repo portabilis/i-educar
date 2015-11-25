@@ -65,6 +65,12 @@ class TurmaController extends ApiCoreController
             $this->validatesPresenceOf('turma_id');
   }
 
+  protected function canGetAlunosExameTurma(){
+    return  $this->validatesPresenceOf('instituicao_id') &&
+            $this->validatesPresenceOf('turma_id') &&
+            $this->validatesPresenceOf('disciplina_id');
+  }
+
   // api
 
   protected function ordenaTurmaAlfabetica(){
@@ -231,7 +237,36 @@ class TurmaController extends ApiCoreController
     }
   }
   protected function getAlunosExameTurma(){
+    $instituicaoId = $this->getRequest()->instituicao_id;
+    $turmaId       = $this->getRequest()->turma_id;
+    $disciplinaId  = $this->getRequest()->disciplina_id;
 
+    $sql = "SELECT aluno.cod_aluno as id,
+                   nota_exame.nota_exame as nota_exame
+              from pmieducar.aluno
+             inner join cadastro.pessoa on(aluno.ref_idpes = pessoa.idpes)
+             inner join pmieducar.matricula on(aluno.cod_aluno = matricula.ref_cod_aluno)
+             inner join pmieducar.matricula_turma on(matricula.cod_matricula = matricula_turma.ref_cod_matricula)
+             inner join modules.nota_exame on(matricula.cod_matricula = nota_exame.ref_cod_matricula)
+             inner join pmieducar.turma on(matricula_turma.ref_cod_turma = turma.cod_turma)
+             where aluno.ativo = 1
+               and matricula.ativo = 1
+               and matricula_turma.ativo = 1
+               and turma.ref_cod_instituicao = $1
+               and matricula_turma.ref_cod_turma = $2
+               and (case when $3 = 0 then true else $3 = nota_exame.ref_cod_componente_curricular end)";
+
+    $sql .= " ORDER BY matricula_turma.sequencial_fechamento, translate(upper(pessoa.nome),'áéíóúýàèìòùãõâêîôûäëïöüÿçÁÉÍÓÚÝÀÈÌÒÙÃÕÂÊÎÔÛÄËÏÖÜÇ','AEIOUYAEIOUAOAEIOUAEIOUYCAEIOUYAEIOUAOAEIOUAEIOUC')";
+
+    $params = array($instituicaoId, $turmaId, $disciplinaId);
+
+    $alunos = $this->fetchPreparedQuery($sql, $params);
+
+    $attrs = array('id','nota_exame');
+
+    $alunos = Portabilis_Array_Utils::filterSet($alunos, $attrs);
+
+    return array('alunos' => $alunos);
   }
 
   public function Gerar() {

@@ -1,4 +1,4 @@
-<?php
+,<?php
 // error_reporting(E_ALL);
 // ini_set("display_errors", 1);
 /**
@@ -94,7 +94,6 @@ class indice extends clsCadastro
   var $hora_final;
   var $hora_inicio_intervalo;
   var $hora_fim_intervalo;
-  var $data_fechamento;
 
   var $ref_cod_instituicao;
   var $ref_cod_curso;
@@ -411,7 +410,7 @@ class indice extends clsCadastro
 
     $this->campoNumero('max_aluno', 'M&aacute;ximo de Alunos', $this->max_aluno, 3, 3, TRUE);
 
-    $this->campoData('data_fechamento', 'Data de fechamento', Portabilis_Date_Utils::pgSQLToBr($this->data_fechamento), false, '', false, '', false, '', Portabilis_String_Utils::toLatin1('Após essa data alunos enturmados não serão ordenados por ordem alfabética'));
+   
 
     unset($opcoes);
     if (!is_null($this->ref_ref_cod_serie)){
@@ -999,7 +998,6 @@ class indice extends clsCadastro
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     @session_write_close();
 
-    $this->data_fechamento = Portabilis_Date_Utils::brToPgSQL($this->data_fechamento);
 
     if(! $this->canCreateTurma($this->ref_cod_escola, $this->ref_ref_cod_serie, $this->turma_turno_id))
       return false;
@@ -1035,7 +1033,7 @@ class indice extends clsCadastro
           $this->hora_inicio_intervalo, $this->hora_fim_intervalo, $this->ref_cod_regente,
           $this->ref_cod_instituicao_regente, $this->ref_cod_instituicao,
           $this->ref_cod_curso, $this->ref_ref_cod_serie_mult, $this->ref_cod_escola,
-          $this->visivel, $this->turma_turno_id, $this->tipo_boletim, $this->ano, $this->data_fechamento);
+          $this->visivel, $this->turma_turno_id, $this->tipo_boletim, $this->ano);
         $obj->tipo_atendimento = $this->tipo_atendimento;
         $obj->turma_mais_educacao = $this->turma_mais_educacao == 'on' ? 1 : 0;
         $obj->atividade_complementar_1 = $this->atividade_complementar_1;
@@ -1130,7 +1128,7 @@ class indice extends clsCadastro
         $this->ref_cod_regente, $this->ref_cod_instituicao_regente,
         $this->ref_cod_instituicao, $this->ref_cod_curso,
         $this->ref_ref_cod_serie_mult, $this->ref_cod_escola, $this->visivel,
-        $this->turma_turno_id, $this->tipo_boletim, $this->ano, $this->data_fechamento);
+        $this->turma_turno_id, $this->tipo_boletim, $this->ano);
       $obj->tipo_atendimento = $this->tipo_atendimento;
       $obj->turma_mais_educacao = $this->turma_mais_educacao == 'on' ? 1 : 0;
       $obj->atividade_complementar_1 = $this->atividade_complementar_1;
@@ -1199,7 +1197,7 @@ class indice extends clsCadastro
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     @session_write_close();
 
-    $this->data_fechamento = Portabilis_Date_Utils::brToPgSQL($this->data_fechamento);
+
 
     $this->ref_cod_instituicao_regente = $this->ref_cod_instituicao;
 
@@ -1235,7 +1233,7 @@ class indice extends clsCadastro
           $this->visivel,
           $this->turma_turno_id,
           $this->tipo_boletim,
-          $this->ano, $this->data_fechamento);
+          $this->ano);
         $obj->tipo_atendimento = $this->tipo_atendimento;
         $obj->turma_mais_educacao = $this->turma_mais_educacao == 'on' ? 1 : 0;
         $obj->atividade_complementar_1 = $this->atividade_complementar_1;
@@ -1331,7 +1329,7 @@ class indice extends clsCadastro
         $this->hora_inicio_intervalo, $this->hora_fim_intervalo, $this->ref_cod_regente,
         $this->ref_cod_instituicao_regente, $this->ref_cod_instituicao,
         $this->ref_cod_curso, $this->ref_ref_cod_serie_mult, $this->ref_cod_escola,
-        $this->visivel, $this->turma_turno_id, $this->tipo_boletim, $this->ano, $this->data_fechamento);
+        $this->visivel, $this->turma_turno_id, $this->tipo_boletim, $this->ano);
       $obj->tipo_atendimento = $this->tipo_atendimento;
       $obj->turma_mais_educacao = $this->turma_mais_educacao == 'on' ? 1 : 0;
       $obj->atividade_complementar_1 = $this->atividade_complementar_1;
@@ -2166,26 +2164,7 @@ function valida_xml(xml)
     var campoHoraInicioIntervalo = document.getElementById('hora_inicio_intervalo').value;
     var campoHoraFimIntervalo = document.getElementById('hora_fim_intervalo').value;
 
-    if (campoHoraInicial == '') {
-      alert("Preencha o campo 'Hora Inicial' corretamente!");
-      document.getElementById('hora_inicial').focus();
-      return false;
-    }
-    else if (campoHoraFinal == '') {
-      alert("Preencha o campo 'Hora Final' corretamente!");
-      document.getElementById('hora_final').focus();
-      return false;
-    }
-    else if (campoHoraInicioIntervalo == '') {
-      alert("Preencha o campo 'Hora Inicio Intervalo' corretamente!");
-      document.getElementById('hora_inicio_intervalo').focus();
-      return false;
-    }
-    else if (campoHoraFimIntervalo == '') {
-      alert("Preencha o campo 'Hora Fim Intervalo' corretamente!");
-      document.getElementById('hora_fim_intervalo').focus();
-      return false;
-    }
+    
   }
   else if (document.getElementById('padrao_ano_escolar').value == 0) {
     var qtdModulo = document.getElementsByName('ref_cod_modulo').length;
