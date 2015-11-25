@@ -1,4 +1,4 @@
-<?php
+,<?php
 // error_reporting(E_ALL);
 // ini_set("display_errors", 1);
 /**
@@ -2166,26 +2166,7 @@ function valida_xml(xml)
     var campoHoraInicioIntervalo = document.getElementById('hora_inicio_intervalo').value;
     var campoHoraFimIntervalo = document.getElementById('hora_fim_intervalo').value;
 
-    if (campoHoraInicial == '') {
-      alert("Preencha o campo 'Hora Inicial' corretamente!");
-      document.getElementById('hora_inicial').focus();
-      return false;
-    }
-    else if (campoHoraFinal == '') {
-      alert("Preencha o campo 'Hora Final' corretamente!");
-      document.getElementById('hora_final').focus();
-      return false;
-    }
-    else if (campoHoraInicioIntervalo == '') {
-      alert("Preencha o campo 'Hora Inicio Intervalo' corretamente!");
-      document.getElementById('hora_inicio_intervalo').focus();
-      return false;
-    }
-    else if (campoHoraFimIntervalo == '') {
-      alert("Preencha o campo 'Hora Fim Intervalo' corretamente!");
-      document.getElementById('hora_fim_intervalo').focus();
-      return false;
-    }
+    
   }
   else if (document.getElementById('padrao_ano_escolar').value == 0) {
     var qtdModulo = document.getElementsByName('ref_cod_modulo').length;
