@@ -330,7 +330,7 @@ class indice extends clsCadastro
     $this->campoOculto('ref_ref_cod_serie_',$this->ref_ref_cod_serie_);
 
     if ($anoVisivel)
-      $this->inputsHelper()->dynamic('anoLetivo');
+      $this->inputsHelper()->dynamic('anoLetivo', array('show-select' => true, 'value' => $this->ano));
     else
       $this->campoOculto('ano',$this->ano);
 
@@ -1033,7 +1033,7 @@ class indice extends clsCadastro
           $this->hora_inicio_intervalo, $this->hora_fim_intervalo, $this->ref_cod_regente,
           $this->ref_cod_instituicao_regente, $this->ref_cod_instituicao,
           $this->ref_cod_curso, $this->ref_ref_cod_serie_mult, $this->ref_cod_escola,
-          $this->visivel, $this->turma_turno_id, $this->tipo_boletim, $this->ano);
+          $this->visivel, $this->turma_turno_id, $this->tipo_boletim, $this->ano_letivo);
         $obj->tipo_atendimento = $this->tipo_atendimento;
         $obj->turma_mais_educacao = $this->turma_mais_educacao == 'on' ? 1 : 0;
         $obj->atividade_complementar_1 = $this->atividade_complementar_1;
@@ -1128,7 +1128,7 @@ class indice extends clsCadastro
         $this->ref_cod_regente, $this->ref_cod_instituicao_regente,
         $this->ref_cod_instituicao, $this->ref_cod_curso,
         $this->ref_ref_cod_serie_mult, $this->ref_cod_escola, $this->visivel,
-        $this->turma_turno_id, $this->tipo_boletim, $this->ano);
+        $this->turma_turno_id, $this->tipo_boletim, $this->ano_letivo);
       $obj->tipo_atendimento = $this->tipo_atendimento;
       $obj->turma_mais_educacao = $this->turma_mais_educacao == 'on' ? 1 : 0;
       $obj->atividade_complementar_1 = $this->atividade_complementar_1;
@@ -1197,8 +1197,6 @@ class indice extends clsCadastro
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     @session_write_close();
 
-
-
     $this->ref_cod_instituicao_regente = $this->ref_cod_instituicao;
 
     if (isset($this->multiseriada)) {
@@ -1233,7 +1231,7 @@ class indice extends clsCadastro
           $this->visivel,
           $this->turma_turno_id,
           $this->tipo_boletim,
-          $this->ano);
+          $this->ano_letivo);
         $obj->tipo_atendimento = $this->tipo_atendimento;
         $obj->turma_mais_educacao = $this->turma_mais_educacao == 'on' ? 1 : 0;
         $obj->atividade_complementar_1 = $this->atividade_complementar_1;
@@ -1329,7 +1327,7 @@ class indice extends clsCadastro
         $this->hora_inicio_intervalo, $this->hora_fim_intervalo, $this->ref_cod_regente,
         $this->ref_cod_instituicao_regente, $this->ref_cod_instituicao,
         $this->ref_cod_curso, $this->ref_ref_cod_serie_mult, $this->ref_cod_escola,
-        $this->visivel, $this->turma_turno_id, $this->tipo_boletim, $this->ano);
+        $this->visivel, $this->turma_turno_id, $this->tipo_boletim, $this->ano_letivo);
       $obj->tipo_atendimento = $this->tipo_atendimento;
       $obj->turma_mais_educacao = $this->turma_mais_educacao == 'on' ? 1 : 0;
       $obj->atividade_complementar_1 = $this->atividade_complementar_1;
