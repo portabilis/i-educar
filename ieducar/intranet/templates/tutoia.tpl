@@ -106,7 +106,8 @@
         Ol&aacute;, <br />
         Sabemos o quanto voc&ecirc;s est&atilde;o ocupados e preocupados neste fim de ano para que todas as atividades sejam conclu&iacute;das de forma plena no sistema. Por isso, queremos reafirmar nosso comprometimento em ajud&aacute;-los com estas tarefas. <br />
 
-        Atualizamos o Manual de encerramento e in&iacute;cio do ano letivo para auxili&aacute;-los neste ano. Clique <a href="https://drive.google.com/uc?export=download&id=0B4FIX4vLOqLXckZ4YUVGYVRLVWc"> aqui </a> para obter.
+        Atualizamos o <b> Manual de encerramento e in&iacute;cio do ano letivo</b> para auxili&aacute;-los neste ano. Clique <a href="https://drive.google.com/uc?export=download&id=0B4FIX4vLOqLXckZ4YUVGYVRLVWc"> aqui </a> para obter. <br />
+        Se tiver d&uacute;vidas, fale conosco ou com o respons&aacute;vel pelo sistema na sua institui&ccedil;&atilde;o.
       </p>
 
       <!-- #&ERROLOGIN&# -->
