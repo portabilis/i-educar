@@ -69,7 +69,7 @@ class RegraAvaliacao_Model_RegraDataMapper extends CoreExt_DataMapper
     'notaGeralPorEtapa'           => 'nota_geral_por_etapa',
     'qtdDisciplinasDependencia'   => 'qtd_disciplinas_dependencia',
     'aprovaMediaDisciplina'       => 'aprova_media_disciplina',
-    'reprovaDireto'               => 'reprova_direto',
+    'reprovacaoAutomatica'        => 'reprovacao_automatica',
   );
 
   /**

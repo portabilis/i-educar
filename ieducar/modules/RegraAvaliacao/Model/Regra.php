@@ -70,7 +70,7 @@ class RegraAvaliacao_Model_Regra extends CoreExt_Entity
     'notaGeralPorEtapa'         => NULL,
     'qtdDisciplinasDependencia' => NULL,
     'aprovaMediaDisciplina'     => NULL,
-    'reprovaDireto'             => NULL
+    'reprovacaoAutomatica'      => NULL
   );
 
   protected $_dataTypes = array(
