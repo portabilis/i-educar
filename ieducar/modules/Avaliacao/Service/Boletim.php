@@ -255,6 +255,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
   private $notaLancada = NULL;
 
+  private $_currentComponenteCurricular = NULL;
+
   protected $_situacaoPrioridade = array(
     App_Model_MatriculaSituacao::EM_ANDAMENTO        => 1,
     App_Model_MatriculaSituacao::EM_EXAME            => 2,
@@ -2213,6 +2215,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    */
   public function addNota(Avaliacao_Model_NotaComponente $nota)
   {
+    $this->setCurrentComponenteCurricular($nota->get('componenteCurricular'));
+
     $key = 'n_' . spl_object_hash($nota);
 
     $nota = $this->_addValidators($nota);
@@ -2806,6 +2810,14 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     }
   }
 
+  public function setCurrentComponenteCurricular($componenteId){
+    $this->_currentComponenteCurricular = $componenteId;
+  }
+
+  public function getCurrentComponenteCurricular(){
+    return $this->_currentComponenteCurricular;
+  }
+
   /**
    * Insere ou atualiza as notas no boletim do aluno.
    * @return Avaliacao_Service_Boletim Provê interface fluída
@@ -3036,7 +3048,7 @@ public function alterarSituacao($novaSituacao, $matriculaId){
       foreach ($this->_notasComponentes as $id => $notasComponentes) {
         //busca última nota lançada e somente atualiza a média e situação da nota do mesmo componente curricular
         //pois atualizar todas as médias de todos os componentes pode deixar o sistema com perda de performance e excesso de processamento
-        if(!isset($notaLancada) || $this->notaLancada->get('componenteCurricular') == $id){
+        if(!isset($this->_currentComponenteCurricular) || $this->_currentComponenteCurricular == $id){
           // Cria um array onde o índice é a etapa
           $etapasNotas = CoreExt_Entity::entityFilterAttr($notasComponentes, 'etapa', 'nota');
           $notas = array('Se' => 0, 'Et' => $this->getOption('etapas'));
