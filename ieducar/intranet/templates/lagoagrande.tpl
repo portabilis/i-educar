@@ -101,6 +101,13 @@
         Comunicamos que o nosso servi&ccedil;o de Suporte via telefone apresentar&aacute; instabilidades neste m&ecirc;s de Novembro, em virtude da mudan&ccedil;a de endere&ccedil;o da sede da Portabilis. <br/>Pedimos desculpas pelo transtorno tempor&aacute;rio e informamos que voc&ecirc; ainda poder&aacute; nos contatar pelo e-mail de suporte (<a href='mailto:suporte@portabilis.com.br'>suporte@portabilis.com.br</a>) ou diretamente pela ferramenta de HelpDesk (<a href='http://suporte.portabilis.com.br'>http://suporte.portabilis.com.br'</a>).
      </p> -->
 
+      <p style="min-height: 0px;" class="flash success">
+        Ol&aacute;, <br />
+        Sabemos o quanto voc&ecirc;s est&atilde;o ocupados e preocupados neste fim de ano para que todas as atividades sejam conclu&iacute;das de forma plena no sistema. Por isso, queremos reafirmar nosso comprometimento em ajud&aacute;-los com estas tarefas. <br />
+
+        Atualizamos o Manual de encerramento e in&iacute;cio do ano letivo para auxili&aacute;-los neste ano. Clique <a href="https://drive.google.com/uc?export=download&id=0B4FIX4vLOqLXckZ4YUVGYVRLVWc"> aqui </a> para obter.
+      </p>
+
       <!-- #&ERROLOGIN&# -->
 
       <!-- #&PENDENCIA_ADMINISTRATIVA&# -->
