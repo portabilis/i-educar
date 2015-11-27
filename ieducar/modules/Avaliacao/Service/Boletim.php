@@ -3036,56 +3036,54 @@ public function alterarSituacao($novaSituacao, $matriculaId){
       foreach ($this->_notasComponentes as $id => $notasComponentes) {
         //busca última nota lançada e somente atualiza a média e situação da nota do mesmo componente curricular
         //pois atualizar todas as médias de todos os componentes pode deixar o sistema com perda de performance e excesso de processamento
-        if($this->notaLancada){
-          if($this->notaLancada->get('componenteCurricular') == $id){
-            // Cria um array onde o índice é a etapa
-            $etapasNotas = CoreExt_Entity::entityFilterAttr($notasComponentes, 'etapa', 'nota');
-            $notas = array('Se' => 0, 'Et' => $this->getOption('etapas'));
+        if(!isset($notaLancada) || $this->notaLancada->get('componenteCurricular') == $id){
+          // Cria um array onde o índice é a etapa
+          $etapasNotas = CoreExt_Entity::entityFilterAttr($notasComponentes, 'etapa', 'nota');
+          $notas = array('Se' => 0, 'Et' => $this->getOption('etapas'));
 
-            // Cria o array formatado para o cálculo da fórmula da média
-            foreach ($etapasNotas as $etapa => $nota) {
-              if (is_numeric($etapa)) {
-                $notas['E' . $etapa] = $nota;
-                $notas['Se'] += $nota;
-                continue;
-              }
-              $notas[$etapa] = $nota;
+          // Cria o array formatado para o cálculo da fórmula da média
+          foreach ($etapasNotas as $etapa => $nota) {
+            if (is_numeric($etapa)) {
+              $notas['E' . $etapa] = $nota;
+              $notas['Se'] += $nota;
+              continue;
             }
+            $notas[$etapa] = $nota;
+          }
 
-            $notas = $this->_calculateNotasRecuperacoesEspecificas($id, $notas);
+          $notas = $this->_calculateNotasRecuperacoesEspecificas($id, $notas);
 
-            // Calcula a média por componente curricular
-            $media = $this->_calculaMedia($notas);
+          // Calcula a média por componente curricular
+          $media = $this->_calculaMedia($notas);
 
-            // Cria uma nova instância de média, já com a nota arredondada e a etapa
-            $notaComponenteCurricularMedia = new Avaliacao_Model_NotaComponenteMedia(array(
-              'notaAluno' => $this->_getNotaAluno()->id,
-              'componenteCurricular' => $id,
-              'media' => $media,
-              'mediaArredondada' => $this->arredondaMedia($media),
-              'etapa' => $etapa
+          // Cria uma nova instância de média, já com a nota arredondada e a etapa
+          $notaComponenteCurricularMedia = new Avaliacao_Model_NotaComponenteMedia(array(
+            'notaAluno' => $this->_getNotaAluno()->id,
+            'componenteCurricular' => $id,
+            'media' => $media,
+            'mediaArredondada' => $this->arredondaMedia($media),
+            'etapa' => $etapa
+          ));
+
+          try {
+            // Se existir, marca como "old" para possibilitar a atualização
+            $this->getNotaComponenteMediaDataMapper()->find(array(
+              $notaComponenteCurricularMedia->get('notaAluno'),
+              $notaComponenteCurricularMedia->get('componenteCurricular'),
             ));
 
-            try {
-              // Se existir, marca como "old" para possibilitar a atualização
-              $this->getNotaComponenteMediaDataMapper()->find(array(
-                $notaComponenteCurricularMedia->get('notaAluno'),
-                $notaComponenteCurricularMedia->get('componenteCurricular'),
-              ));
-
-              $notaComponenteCurricularMedia->markOld();
-            }
-            catch (Exception $e) {
-              // Prossegue, sem problemas.
-            }
-
-          // Salva a média
-            $this->getNotaComponenteMediaDataMapper()->save($notaComponenteCurricularMedia);
-            //Atualiza a situação de acordo com o que foi inserido na média anteriormente
             $notaComponenteCurricularMedia->markOld();
-            $notaComponenteCurricularMedia->situacao = $this->getSituacaoComponentesCurriculares()->componentesCurriculares[$id]->situacao;
-            $this->getNotaComponenteMediaDataMapper()->save($notaComponenteCurricularMedia);
           }
+          catch (Exception $e) {
+            // Prossegue, sem problemas.
+          }
+
+        // Salva a média
+          $this->getNotaComponenteMediaDataMapper()->save($notaComponenteCurricularMedia);
+          //Atualiza a situação de acordo com o que foi inserido na média anteriormente
+          $notaComponenteCurricularMedia->markOld();
+          $notaComponenteCurricularMedia->situacao = $this->getSituacaoComponentesCurriculares()->componentesCurriculares[$id]->situacao;
+          $this->getNotaComponenteMediaDataMapper()->save($notaComponenteCurricularMedia);
         }
       }
     }
