@@ -530,6 +530,11 @@ var tabela_arredondamento = new function() {
       $data['reprovacaoAutomatica'] = '0';
     }
 
+    //fixup for checkbox
+    if(!isset($data['aprovaMediaDisciplina'])){
+      $data['aprovaMediaDisciplina'] = '0';
+    }
+
     if (isset($entity)) {
       $this->getEntity()->setOptions($data);
     }

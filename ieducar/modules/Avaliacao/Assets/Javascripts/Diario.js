@@ -888,7 +888,7 @@ function handleSearch($resultTable, dataResponse) {
     if (! componenteCurricularSelected && value.componentes_curriculares)
       updateComponenteCurriculares($resultTable, value.matricula_id, value.componentes_curriculares);
 
-    if(($tableSearchDetails.data('details').quantidade_etapas == $j('#etapa').val()) && progressaoManual){
+    if(($tableSearchDetails.data('details').quantidade_etapas == $j('#etapa').val()) && progressaoManual && !componenteCurricularSelected){
       situacaoFinalField(dataResponse.matricula_id, dataResponse.situacao).appendTo($resultTable);
     }
 
@@ -900,7 +900,7 @@ function handleSearch($resultTable, dataResponse) {
   // seta colspan [th, td].aluno quando exibe nota exame
   if ($tableSearchDetails.data('details').tipo_nota != 'nenhum' &&
       $tableSearchDetails.data('details').quantidade_etapas == $j('#etapa').val()) {
-    $resultTable.find('[colspan]:not(.area-conhecimento)').attr('colspan', componenteCurricularSelected ? 1 : 7);
+    $resultTable.find('[colspan]:not(.area-conhecimento)').attr('colspan', componenteCurricularSelected ? 1 : 10);
   }
 
   $resultTable.find('tr:even').addClass('even');
@@ -1174,6 +1174,7 @@ function updateComponenteCurricular($targetElement, matriculaId, cc) {
       $fieldNN.appendTo($targetElement);
 
       if(progressaoManual){
+        cc.media = Number(cc.media).toFixed(1);
         var $fieldMedia = mediaField(matriculaId, cc.id, cc.media, getNotaGeralMaxLength());
         $fieldMedia.appendTo($targetElement);
       }
@@ -1348,7 +1349,7 @@ function changeMediaValue(elementId, value){
         }
       });
     }else{
-      $j('#' + elementId).val(value);
+      $j('#' + elementId).val(Number(value).toFixed(1));
     }
   }
 }
