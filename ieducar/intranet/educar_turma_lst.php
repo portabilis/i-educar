@@ -192,7 +192,7 @@ class indice extends clsListagem
 			null,
 			$this->ref_cod_curso,
 			$this->ref_cod_instituicao,
-			null, null, null, null, null, $visivel, null, null, $this->ano
+			null, null, null, null, null, $visivel, null, null, $this->ano_letivo
 		);
 
 		$total = $obj_turma->_total;
