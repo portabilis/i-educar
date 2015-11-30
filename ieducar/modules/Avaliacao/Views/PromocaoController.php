@@ -46,8 +46,9 @@ class PromocaoController extends Portabilis_Controller_Page_ListController
   protected $_formMap    = array();
 
   public function Gerar() {
-    $this->inputsHelper()->dynamic('instituicao', array('id' => 'instituicao_id'));
     $this->inputsHelper()->dynamic('ano', array('id' => 'ano_escolar'));
+    $this->inputsHelper()->dynamic('instituicao', array('id' => 'instituicao_id'));
+    $this->inputsHelper()->dynamic('escola', array('required' => false));
 
     $this->loadResourceAssets($this->getDispatcher());
   }

@@ -71,12 +71,21 @@ class PromocaoApiController extends ApiCoreController
   }
 
   protected function loadNextMatriculaId($currentMatriculaId) {
-    $sql = "select m.cod_matricula from pmieducar.matricula as m, pmieducar.matricula_turma as mt
-            where m.ano = $1 and m.ativo = 1 and m.aprovado = 3
-            and mt.ref_cod_matricula = m.cod_matricula and mt.ativo = 1 and
-            ref_cod_matricula > $2 order by ref_cod_matricula limit 1";
+    $escolaId = is_null($this->getRequest()->escola) ? 0 : $this->getRequest()->escola;
+    $sql = "select m.cod_matricula
+              from pmieducar.matricula as m,
+                   pmieducar.matricula_turma as mt
+             where m.ano = $1
+               and m.ativo = 1
+               and m.aprovado = 3
+               and mt.ref_cod_matricula = m.cod_matricula
+               and mt.ativo = 1
+               and ref_cod_matricula > $2
+               and (case when $3 = 0 then true else $3 = m.ref_ref_cod_escola end)
+             order by ref_cod_matricula
+             limit 1";
 
-    $options = array('params'      => array($this->getRequest()->ano_escolar, $currentMatriculaId),
+    $options = array('params'      => array($this->getRequest()->ano_escolar, $currentMatriculaId, $escolaId),
                      'return_only' => 'first-field');
 
     return Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
@@ -278,11 +287,18 @@ class PromocaoApiController extends ApiCoreController
 
   protected function getQuantidadeMatriculas(){
     if($this->canGetQuantidadeMatriculas()) {
-      $sql = "select count(m.cod_matricula) from pmieducar.matricula as m,
-              pmieducar.matricula_turma as mt where m.ano = $1 and
-              m.ativo = 1 and m.aprovado = 3 and mt.ref_cod_matricula = m.cod_matricula and mt.ativo = 1";
+      $escolaId = is_null($this->getRequest()->escola) ? 0 : $this->getRequest()->escola;
+      $sql = "select count(m.cod_matricula)
+               from pmieducar.matricula as m,
+                    pmieducar.matricula_turma as mt
+              where m.ano = $1
+                and m.ativo = 1
+                and m.aprovado = 3
+                and mt.ref_cod_matricula = m.cod_matricula
+                and mt.ativo = 1
+                and (case when $2 = 0 then true else $2 = m.ref_ref_cod_escola end)";
 
-      $options = array('params' => $this->getRequest()->ano_escolar, 'return_only' => 'first-field');
+      $options = array('params' => array($this->getRequest()->ano_escolar, $escolaId), 'return_only' => 'first-field');
       return Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
     }
   }
