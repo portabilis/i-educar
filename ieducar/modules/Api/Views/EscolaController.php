@@ -330,7 +330,7 @@ protected function getInformacaoEscolas(){
 		    inner join cadastro.juridica on(escola.ref_idpes = juridica.idpes)
 		     left join cadastro.pessoa on(juridica.idpes = pessoa.idpes)
 		     left join cadastro.pessoa pessoa_responsavel on(escola.ref_idpes_gestor = pessoa_responsavel.idpes)
-		     left join cadastro.fone_pessoa on(fone_pessoa.idpes = pessoa.idpes)
+		     left join cadastro.fone_pessoa on(fone_pessoa.idpes = pessoa.idpes and fone_pessoa.tipo = 1)
 		     left join cadastro.endereco_pessoa on(escola.ref_idpes = endereco_pessoa.idpes)
 		     left join cadastro.endereco_externo on(escola.ref_idpes = endereco_externo.idpes)
 		     left join public.logradouro on(endereco_pessoa.idlog = logradouro.idlog)
@@ -338,8 +338,7 @@ protected function getInformacaoEscolas(){
 		     left join public.uf on(municipio.sigla_uf = uf.sigla_uf)
 		     left join public.bairro on(endereco_pessoa.idbai = bairro.idbai and municipio.idmun = bairro.idmun)
 		     left join public.pais on(uf.idpais = pais.idpais)
-		    where escola.ativo = 1
-		      and fone_pessoa.tipo = 1";
+		    where escola.ativo = 1";
 
   $escolas = $this->fetchPreparedQuery($sql);
 
