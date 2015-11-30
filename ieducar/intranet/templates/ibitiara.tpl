@@ -124,6 +124,12 @@
         Se tiver d&uacute;vidas, fale conosco ou com o respons&aacute;vel pelo sistema na sua institui&ccedil;&atilde;o.
       </p>
 
+      <p style="min-height: 0px;margin-top:10px;" class="flash warning">
+        Ol&aacute;, <br />
+        Para melhorarmos ainda mais nossos servi&ccedil;os iremos fazer uma manuten&ccedil;&atilde;o hoje <b>(30/11/2015)</b> no per&iacute;odo entre &agrave;s <b>23:00 e 23:30.</b> <br />
+        Agradecemos a sua compreens&atilde;o.
+      </p>
+
       <!-- #&ERROLOGIN&# -->
 
       <!-- #&PENDENCIA_ADMINISTRATIVA&# -->
