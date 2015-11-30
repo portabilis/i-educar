@@ -31,6 +31,7 @@ var postPromocaoMatricula = function(){
       data : {
         instituicao_id : $j('#instituicao_id').val(),
         ano_escolar : $j('#ano_escolar').val(),
+        escola : $j('#ref_cod_escola').val()
       },
       success : handlePostPromocaoMatricula,
       error : handlePostPromocaoMatricula
@@ -82,7 +83,7 @@ function handleDelete(dataResponse){
 }
 
 function handleSearch($resultTable, dataResponse) {
-  var $text = $j('<p />').html('Quantidade de matrículas em andamento: ' +
+  var $text = $j('<p />').html(stringUtils.toUtf8('Quantidade de matrículas em andamento na rede: ') +
                               dataResponse.quantidade_matriculas + '<br />');
 
   $j('<input />').attr('type', 'checkbox').attr('id', 'continuar-processo').attr('name', 'continuar-processo').appendTo($text);
