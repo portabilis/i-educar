@@ -61,12 +61,17 @@ class EditController extends Core_Controller_Page_EditController
       'label'  => 'Nome',
       'help'   => 'O nome da área de conhecimento. Exemplo: "<em>Ciências da natureza</em>".',
       'entity' => 'nome'
+    ),
+    'secao' => array(
+      'label'  => 'Seção',
+      'help'   => 'A seção que abrange a área de conhecimento. Exemplo: "<em>Lógico Matemático</em>".',
+      'entity' => 'secao'
     )
   );
 
   protected function _preRender()
   {
-    parent::_preRender();    
+    parent::_preRender();
 
     Portabilis_View_Helper_Application::loadStylesheet($this, 'intranet/styles/localizacaoSistema.css');
 
@@ -75,10 +80,10 @@ class EditController extends Core_Controller_Page_EditController
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_index.php"                  => "i-Educar - Escola",
-         ""        => "$nomeMenu &aacute;rea de conhecimento"             
+         ""        => "$nomeMenu &aacute;rea de conhecimento"
     ));
-    $this->enviaLocalizacao($localizacao->montar());    
-  }  
+    $this->enviaLocalizacao($localizacao->montar());
+  }
 
   /**
    * @see clsCadastro#Gerar()
@@ -95,5 +100,9 @@ class EditController extends Core_Controller_Page_EditController
     // Nome
     $this->campoTexto('nome', $this->_getLabel('nome'), $this->getEntity()->nome,
       60, 60, TRUE, FALSE, FALSE, $this->_getHelp('nome'));
+
+    // Seção
+    $this->campoTexto('secao', $this->_getLabel('secao'), $this->getEntity()->secao,
+      50, 50, FALSE, FALSE, FALSE, $this->_getHelp('secao'));
   }
 }
