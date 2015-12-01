@@ -66,7 +66,7 @@ class clsPmieducarTurma
 	var $ref_ref_cod_serie_mult;
   var $ref_ref_cod_escola_mult;
   var $visivel;
-  
+  var $data_fechamento;
 
   var $tipo_atendimento;
   var $turma_mais_educacao;
@@ -161,13 +161,13 @@ class clsPmieducarTurma
 	 *
 	 * @return object
 	 */
-	function clsPmieducarTurma( $cod_turma = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $ref_ref_cod_serie = null, $ref_ref_cod_escola = null, $ref_cod_infra_predio_comodo = null, $nm_turma = null, $sgl_turma = null, $max_aluno = null, $multiseriada = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $ref_cod_turma_tipo = null, $hora_inicial = null, $hora_final = null, $hora_inicio_intervalo = null, $hora_fim_intervalo = null, $ref_cod_regente = null, $ref_cod_instituicao_regente = null, $ref_cod_instituicao = null, $ref_cod_curso = null, $ref_ref_cod_serie_mult = null, $ref_ref_cod_escola_mult = null, $visivel = null, $turma_turno_id = null, $tipo_boletim = null, $ano = null, $ref_cod_disciplina_dispensada = NULL)
+	function clsPmieducarTurma( $cod_turma = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $ref_ref_cod_serie = null, $ref_ref_cod_escola = null, $ref_cod_infra_predio_comodo = null, $nm_turma = null, $sgl_turma = null, $max_aluno = null, $multiseriada = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $ref_cod_turma_tipo = null, $hora_inicial = null, $hora_final = null, $hora_inicio_intervalo = null, $hora_fim_intervalo = null, $ref_cod_regente = null, $ref_cod_instituicao_regente = null, $ref_cod_instituicao = null, $ref_cod_curso = null, $ref_ref_cod_serie_mult = null, $ref_ref_cod_escola_mult = null, $visivel = null, $turma_turno_id = null, $tipo_boletim = null, $ano = null, $data_fechamento = NULL, $ref_cod_disciplina_dispensada = NULL)
 	{
 		$db = new clsBanco();
 		$this->_schema = "pmieducar.";
 		$this->_tabela = "{$this->_schema}turma";
 
-		$this->_campos_lista = $this->_todos_campos = "t.cod_turma, t.ref_usuario_exc, t.ref_usuario_cad, t.ref_ref_cod_serie, t.ref_ref_cod_escola, t.ref_cod_infra_predio_comodo, t.nm_turma, t.sgl_turma, t.max_aluno, t.multiseriada, t.data_cadastro, t.data_exclusao, t.ativo, t.ref_cod_turma_tipo, t.hora_inicial, t.hora_final, t.hora_inicio_intervalo, t.hora_fim_intervalo, t.ref_cod_regente, t.ref_cod_instituicao_regente,t.ref_cod_instituicao, t.ref_cod_curso, t.ref_ref_cod_serie_mult, t.ref_ref_cod_escola_mult, t.visivel, t.turma_turno_id, t.tipo_boletim, t.ano, 
+		$this->_campos_lista = $this->_todos_campos = "t.cod_turma, t.ref_usuario_exc, t.ref_usuario_cad, t.ref_ref_cod_serie, t.ref_ref_cod_escola, t.ref_cod_infra_predio_comodo, t.nm_turma, t.sgl_turma, t.max_aluno, t.multiseriada, t.data_cadastro, t.data_exclusao, t.ativo, t.ref_cod_turma_tipo, t.hora_inicial, t.hora_final, t.hora_inicio_intervalo, t.hora_fim_intervalo, t.ref_cod_regente, t.ref_cod_instituicao_regente,t.ref_cod_instituicao, t.ref_cod_curso, t.ref_ref_cod_serie_mult, t.ref_ref_cod_escola_mult, t.visivel, t.turma_turno_id, t.tipo_boletim, t.ano, t.data_fechamento,
 		t.tipo_atendimento, t.turma_mais_educacao, t.atividade_complementar_1, t.atividade_complementar_2, t.atividade_complementar_3, t.atividade_complementar_4, t.atividade_complementar_5, t.atividade_complementar_6, t.aee_braille, t.aee_recurso_optico, t.aee_estrategia_desenvolvimento, t.aee_tecnica_mobilidade, t.aee_libras, t.aee_caa, t.aee_curricular, t.aee_soroban, t.aee_informatica, t.aee_lingua_escrita, t.aee_autonomia, t.etapa_id, t.cod_curso_profissional, t.turma_sem_professor, t.turma_unificada, t.etapa_educacenso, t.ref_cod_disciplina_dispensada, t.parecer_1_etapa, t.parecer_2_etapa,
         t.parecer_3_etapa, t.parecer_4_etapa ";
 
@@ -493,7 +493,7 @@ class clsPmieducarTurma
     $this->turma_turno_id  = $turma_turno_id;
     $this->tipo_boletim    = $tipo_boletim;
     $this->ano             = $ano;
-
+    $this->data_fechamento = $data_fechamento;
 
     if (is_numeric($ref_cod_disciplina_dispensada) || is_null($ref_cod_disciplina_dispensada)){
     	$this->ref_cod_disciplina_dispensada = $ref_cod_disciplina_dispensada;
@@ -656,6 +656,12 @@ class clsPmieducarTurma
 			if(is_numeric($this->ano)){
 				$campos  .= "{$gruda}ano";
 				$valores .= "{$gruda}'{$this->ano}'";
+				$gruda    = ", ";
+			}
+
+			if(is_string($this->data_fechamento)  && $this->data_fechamento!=''){
+				$campos  .= "{$gruda}data_fechamento";
+				$valores .= "{$gruda}'{$this->data_fechamento}'";
 				$gruda    = ", ";
 			}
 
@@ -964,6 +970,11 @@ class clsPmieducarTurma
 
 			if(is_numeric($this->ano)) {
 				$set  .= "{$gruda}ano = '{$this->ano}'";
+				$gruda = ", ";
+			}
+
+			if(is_string($this->data_fechamento) && $this->data_fechamento!='') {
+				$set  .= "{$gruda}data_fechamento = '{$this->data_fechamento}'";
 				$gruda = ", ";
 			}
 

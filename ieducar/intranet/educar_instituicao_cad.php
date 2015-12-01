@@ -85,7 +85,6 @@ class indice extends clsCadastro
   var $reserva_integral_somente_com_renda;
   var $data_base_matricula;
 	var $data_expiracao_reserva_vaga;
-	var $data_fechamento;
 
 	function Inicializar()
 	{
@@ -246,12 +245,6 @@ class indice extends clsCadastro
 					    								'value' => Portabilis_Date_Utils::pgSQLToBr_ddmm($this->data_base_matricula)));
 
     $this->campoData('data_expiracao_reserva_vaga', 'Data para indeferimento automático da reserva de vaga', Portabilis_Date_Utils::pgSQLToBr($this->data_expiracao_reserva_vaga), null, null, false);
-		$this->inputsHelper()->text('data_fechamento', array('label' => 'Data do fechamento da turma (dia/mês)',
-					    								'size' => 5,
-					    								'max_length' => 5,
-					    								'placeholder' => 'dd/mm',
-					    								'required' => false,
-					    								'value' => Portabilis_Date_Utils::pgSQLToBr_ddmm($this->data_fechamento)));
 	}
 
 	function Novo()
@@ -275,7 +268,6 @@ class indice extends clsCadastro
 		$obj->controlar_espaco_utilizacao_aluno = is_null($this->controlar_espaco_utilizacao_aluno) ? 0 : 1;
 		$obj->percentagem_maxima_ocupacao_salas = Portabilis_Currency_Utils::moedaBrToUs($this->percentagem_maxima_ocupacao_salas);
 		$obj->data_base_matricula               = Portabilis_Date_Utils::brToPgSQL_ddmm($this->data_base);
-		$obj->data_fechamento               = Portabilis_Date_Utils::brToPgSQL_ddmm($this->data_fechamento);
 		$obj->auditar_notas = !is_null($this->auditar_notas);
 		$cadastrou = $obj->cadastra();
 		if( $cadastrou )
@@ -313,7 +305,6 @@ class indice extends clsCadastro
 		$obj->controlar_espaco_utilizacao_aluno = is_null($this->controlar_espaco_utilizacao_aluno) ? 0 : 1;
 		$obj->percentagem_maxima_ocupacao_salas = Portabilis_Currency_Utils::moedaBrToUs($this->percentagem_maxima_ocupacao_salas);
 		$obj->data_base_matricula               = Portabilis_Date_Utils::brToPgSQL_ddmm($this->data_base);
-		$obj->data_fechamento               = Portabilis_Date_Utils::brToPgSQL_ddmm($this->data_fechamento);
 
 		$editou = $obj->edita();
 		if( $editou )
@@ -382,6 +373,5 @@ $pagina->MakeAll();
 	}
 
 	$j('#data_base').mask("99/99");
-	$j('#data_fechamento').mask("99/99");
 
 </script>
