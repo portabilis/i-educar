@@ -31,7 +31,7 @@
 require_once 'Core/View/Tabulable.php';
 require_once 'include/clsDetalhe.inc.php';
 require_once 'CoreExt/View/Helper/UrlHelper.php';
-//require_once 'Portabilis/View/Helper/Application.php';
+require_once 'Portabilis/View/Helper/Application.php';
 
 /**
  * Core_Controller_Page_ViewController abstract class.
