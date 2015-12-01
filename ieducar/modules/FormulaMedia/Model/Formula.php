@@ -68,7 +68,9 @@ class FormulaMedia_Model_Formula extends CoreExt_Entity
     'RSPS1', 'RSPS2', 'RSPS3', 'RSPS4', 'RSPS5', 'RSPS6', 'RSPS7', 'RSPS8', 'RSPS9', 'RSPS10',
     'RSPM1', 'RSPM2', 'RSPM3', 'RSPM4', 'RSPM5', 'RSPM6', 'RSPM7', 'RSPM8', 'RSPM9', 'RSPM10',
     '/', '*', 'x', '+',
-    '(', ')'
+    '(', ')',
+    '?', ':',
+    '>', '<'
   );
 
   /**
