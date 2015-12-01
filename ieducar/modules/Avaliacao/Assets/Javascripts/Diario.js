@@ -955,11 +955,49 @@ function _notaField(matriculaId, componenteCurricularId, klass, id, value, areaC
 
     // adiciona opcoes notas ao select
     var $option = $j('<option />').appendTo($notaField);
+    for(key in opcoesNotas) {
+      var $option = $j('<option />').val(key).html(opcoesNotas[key]);
+
+      if (value == key)
+        $option.attr('selected', 'selected');
+
+      $option.appendTo($notaField);
+    }
+  }
+  else {
+    var $notaField = $j('<input />').addClass(klass)
+                                    .attr('id', id)
+                                    .attr('maxlength', maxLength)
+                                    .attr('size', maxLength)
+                                    .val(value)
+                                    .data('matricula_id', matriculaId)
+                                    .data('componente_curricular_id', componenteCurricularId);
+  }
+
+  $notaField.data('old_value', value);
+  setNextTabIndex($notaField);
+
+  return $j('<td />').html($notaField).addClass('center');
+}
+
+function _mediaField(matriculaId, componenteCurricularId, klass, id, value, areaConhecimentoId, maxLength) {
+  if($tableSearchDetails.data('details').tipo_nota == 'conceitual') {
+    var opcoesNotas = $tableSearchDetails.data('details').opcoes_notas;
+
+    var $notaField = $j('<select />')
+                     .addClass(klass)
+                     .addClass(areaConhecimentoId)
+                     .attr('id', id)
+                     .data('matricula_id', matriculaId)
+                     .data('componente_curricular_id', componenteCurricularId);
+
+    // adiciona opcoes notas ao select
+    var $option = $j('<option />').appendTo($notaField);
     var selected = false;
     for(key in opcoesNotas) {
       var $option = $j('<option />').val(key).html(opcoesNotas[key]);
 
-      if ((value == key) || ((value >= key) && !selected)){
+      if ((key == value) || ((key >= value) && !selected)){
         $option.attr('selected', 'selected');
         selected = true;
       }
@@ -982,7 +1020,6 @@ function _notaField(matriculaId, componenteCurricularId, klass, id, value, areaC
 
   return $j('<td />').html($notaField).addClass('center');
 }
-
 
 function notaField(matriculaId, componenteCurricularId, value, areaConhecimentoId, maxLength) {
   return _notaField(matriculaId,
@@ -1083,7 +1120,7 @@ function notaRecuperacaoEspecificaField(matriculaId, componenteCurricularId, val
 }
 
 function mediaField(matriculaId, componenteCurricularId, value, maxLength){
-  return _notaField(matriculaId,
+  return _mediaField(matriculaId,
                     componenteCurricularId,
                     'media-cc',
                     'media-matricula-' + matriculaId + '-cc-' + componenteCurricularId,
@@ -1174,8 +1211,12 @@ function updateComponenteCurricular($targetElement, matriculaId, cc) {
       $fieldNN.appendTo($targetElement);
 
       if(progressaoManual){
-        cc.media = Number(cc.media).toFixed(1);
-        var $fieldMedia = mediaField(matriculaId, cc.id, cc.media, getNotaGeralMaxLength());
+        if($tableSearchDetails.data('details').tipo_nota == 'numerica'){
+          var $fieldMedia = mediaField(matriculaId, cc.id, cc.media_arredondada, getNotaGeralMaxLength());
+        }else{
+          var $fieldMedia = mediaField(matriculaId, cc.id, cc.media, getNotaGeralMaxLength());
+        }
+
         $fieldMedia.appendTo($targetElement);
       }
     }
@@ -1330,17 +1371,17 @@ function updateResourceRow(dataResponse) {
     }else
       $fieldNotaEspecifica.hide();
   }
-  changeMediaValue($fieldMedia.attr('id'), dataResponse.media);
+  changeMediaValue($fieldMedia.attr('id'), dataResponse.media, dataResponse.media_arredondada);
 }
 
-function changeMediaValue(elementId, value){
-  if(value != undefined){
+function changeMediaValue(elementId, nota, notaArredondada){
+  if(nota != undefined){
     if($tableSearchDetails.data('details').tipo_nota == 'conceitual'){
       var selected = false;
       $j('#' + elementId + ' option').each(function(){
         valorOption = $j(this).val();
         if(valorOption != ""){
-          if((value == valorOption) || ((valorOption >= value) && !selected)) {
+          if((nota == valorOption) || ((valorOption >= nota) && !selected)) {
             $j(this).attr('selected', 'selected');
             selected = true;
           }else{
@@ -1349,7 +1390,7 @@ function changeMediaValue(elementId, value){
         }
       });
     }else{
-      $j('#' + elementId).val(Number(value).toFixed(1));
+      $j('#' + elementId).val(notaArredondada);
     }
   }
 }
