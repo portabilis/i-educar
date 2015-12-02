@@ -180,8 +180,7 @@ class indice extends clsCadastro
 
     $anoLetivoHelperOptions = array('situacoes' => array('em_andamento', 'nao_iniciado'));
 
-    $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'curso', 'serie', 'turma'));
-    $this->inputsHelper()->dynamic('anoLetivo', array('label' => 'Ano destino'), $anoLetivoHelperOptions);
+    $this->inputsHelper()->dynamic(array('ano', 'instituicao', 'escola', 'curso', 'serie', 'turma'));
     $this->inputsHelper()->date('data_matricula', array('label' => Portabilis_String_Utils::toLatin1('Data da matrícula'), 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y') ));
     $this->inputsHelper()->hidden('ano_em_andamento', array('value' => '1'));
 
@@ -314,7 +313,7 @@ class indice extends clsCadastro
       require_once 'include/pmieducar/clsPmieducarSerie.inc.php';
       $db = new clsBanco();
 
-      $db->Consulta("select ref_ref_cod_serie, ref_cod_curso from pmieducar.matricula where ativo = 1 and ref_ref_cod_escola = $this->ref_cod_escola and ref_cod_curso = $this->ref_cod_curso and ref_cod_aluno = $this->ref_cod_aluno and aprovado = 3 AND dependencia = FALSE ");
+      $db->Consulta("select ref_ref_cod_serie, ref_cod_curso from pmieducar.matricula where ano = $this->ano and ativo = 1 and ref_ref_cod_escola = $this->ref_cod_escola and ref_cod_curso = $this->ref_cod_curso and ref_cod_aluno = $this->ref_cod_aluno and aprovado = 3 AND dependencia = FALSE ");
 
       $db->ProximoRegistro();
       $m = $db->Tupla();

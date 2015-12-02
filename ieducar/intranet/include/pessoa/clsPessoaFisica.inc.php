@@ -150,8 +150,7 @@ class clsPessoaFisica extends clsPessoaFj
 
   function lista($str_nome = FALSE, $numeric_cpf = FALSE, $inicio_limite = FALSE,
     $qtd_registros = FALSE, $str_orderBy = FALSE, $int_ref_cod_sistema = FALSE,
-    $int_idpes = FALSE
-  ) {
+    $int_idpes = FALSE, $ativo = 1) {
     $whereAnd = '';
     $where    = '';
 
@@ -177,6 +176,11 @@ class clsPessoaFisica extends clsPessoaFj
 
     if (is_numeric($int_idpes)) {
       $where   .= "{$whereAnd} idpes = '$int_idpes'";
+      $whereAnd = ' AND ';
+    }
+
+    if (is_numeric($ativo)) {
+      $where   .= "{$whereAnd} ativo = $ativo";
       $whereAnd = ' AND ';
     }
 
@@ -560,18 +564,7 @@ class clsPessoaFisica extends clsPessoaFj
   {
     if ($this->idpes) {
       $db  = new clsBanco();
-      $obj = new clsFuncionario($this->idpes);
-
-      if (! $obj->detalhe()) {
-        $db->Consulta('DELETE FROM cadastro.fone_pessoa WHERE idpes = ' . $this->idpes);
-        $db->Consulta('DELETE FROM cadastro.fisica WHERE idpes = ' . $this->idpes);
-        $db->Consulta('DELETE FROM cadastro.documento WHERE idpes = ' . $this->idpes);
-        $db->Consulta('DELETE FROM cadastro.endereco_pessoa WHERE idpes = ' . $this->idpes);
-        $db->Consulta('DELETE FROM cadastro.endereco_externo WHERE idpes = ' . $this->idpes);
-        $db->Consulta('DELETE FROM cadastro.documento WHERE idpes = ' . $this->idpes);
-        $db->Consulta('DELETE FROM cadastro.documento WHERE idpes = ' . $this->idpes);
-        $db->Consulta('DELETE FROM cadastro.pessoa WHERE idpes = ' . $this->idpes);
-      }
+      $db->Consulta('UPDATE cadastro.fisica SET ativo = 0 WHERE idpes = ' . $this->idpes);
     }
   }
 

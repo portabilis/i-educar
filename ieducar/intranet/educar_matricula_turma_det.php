@@ -79,6 +79,7 @@ class indice extends clsDetalhe
   var $ref_cod_escola;
   var $ref_cod_turma_origem;
   var $ref_cod_curso;
+  var $ano_letivo;
 
   var $sequencial;
 
@@ -364,7 +365,7 @@ class indice extends clsDetalhe
     }
 
     $this->array_botao[] = 'Voltar';
-    $this->array_botao_url_script[] = "go(\"educar_matricula_turma_lst.php?ref_cod_matricula={$this->ref_cod_matricula}\");";
+    $this->array_botao_url_script[] = "go(\"educar_matricula_turma_lst.php?ref_cod_matricula={$this->ref_cod_matricula}&ano_letivo={$this->ano_letivo}\");";
 
     $this->largura = '100%';
 

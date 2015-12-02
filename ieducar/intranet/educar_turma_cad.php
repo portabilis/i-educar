@@ -331,7 +331,7 @@ class indice extends clsCadastro
     $this->campoOculto('ref_ref_cod_serie_',$this->ref_ref_cod_serie_);
 
     if ($anoVisivel)
-      $this->inputsHelper()->dynamic('anoLetivo');
+      $this->inputsHelper()->dynamic('anoLetivo', array('show-select' => true, 'value' => $this->ano));
     else
       $this->campoOculto('ano',$this->ano);
 
@@ -1035,7 +1035,7 @@ class indice extends clsCadastro
           $this->hora_inicio_intervalo, $this->hora_fim_intervalo, $this->ref_cod_regente,
           $this->ref_cod_instituicao_regente, $this->ref_cod_instituicao,
           $this->ref_cod_curso, $this->ref_ref_cod_serie_mult, $this->ref_cod_escola,
-          $this->visivel, $this->turma_turno_id, $this->tipo_boletim, $this->ano, $this->data_fechamento);
+          $this->visivel, $this->turma_turno_id, $this->tipo_boletim, $this->ano_letivo);
         $obj->tipo_atendimento = $this->tipo_atendimento;
         $obj->turma_mais_educacao = $this->turma_mais_educacao == 'on' ? 1 : 0;
         $obj->atividade_complementar_1 = $this->atividade_complementar_1;
@@ -1130,7 +1130,7 @@ class indice extends clsCadastro
         $this->ref_cod_regente, $this->ref_cod_instituicao_regente,
         $this->ref_cod_instituicao, $this->ref_cod_curso,
         $this->ref_ref_cod_serie_mult, $this->ref_cod_escola, $this->visivel,
-        $this->turma_turno_id, $this->tipo_boletim, $this->ano, $this->data_fechamento);
+        $this->turma_turno_id, $this->tipo_boletim, $this->ano_letivo);
       $obj->tipo_atendimento = $this->tipo_atendimento;
       $obj->turma_mais_educacao = $this->turma_mais_educacao == 'on' ? 1 : 0;
       $obj->atividade_complementar_1 = $this->atividade_complementar_1;
@@ -1199,8 +1199,6 @@ class indice extends clsCadastro
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     @session_write_close();
 
-    $this->data_fechamento = Portabilis_Date_Utils::brToPgSQL($this->data_fechamento);
-
     $this->ref_cod_instituicao_regente = $this->ref_cod_instituicao;
 
     if (isset($this->multiseriada)) {
@@ -1235,7 +1233,7 @@ class indice extends clsCadastro
           $this->visivel,
           $this->turma_turno_id,
           $this->tipo_boletim,
-          $this->ano, $this->data_fechamento);
+          $this->ano_letivo);
         $obj->tipo_atendimento = $this->tipo_atendimento;
         $obj->turma_mais_educacao = $this->turma_mais_educacao == 'on' ? 1 : 0;
         $obj->atividade_complementar_1 = $this->atividade_complementar_1;
@@ -1331,7 +1329,7 @@ class indice extends clsCadastro
         $this->hora_inicio_intervalo, $this->hora_fim_intervalo, $this->ref_cod_regente,
         $this->ref_cod_instituicao_regente, $this->ref_cod_instituicao,
         $this->ref_cod_curso, $this->ref_ref_cod_serie_mult, $this->ref_cod_escola,
-        $this->visivel, $this->turma_turno_id, $this->tipo_boletim, $this->ano, $this->data_fechamento);
+        $this->visivel, $this->turma_turno_id, $this->tipo_boletim, $this->ano_letivo);
       $obj->tipo_atendimento = $this->tipo_atendimento;
       $obj->turma_mais_educacao = $this->turma_mais_educacao == 'on' ? 1 : 0;
       $obj->atividade_complementar_1 = $this->atividade_complementar_1;
@@ -2166,26 +2164,7 @@ function valida_xml(xml)
     var campoHoraInicioIntervalo = document.getElementById('hora_inicio_intervalo').value;
     var campoHoraFimIntervalo = document.getElementById('hora_fim_intervalo').value;
 
-    if (campoHoraInicial == '') {
-      alert("Preencha o campo 'Hora Inicial' corretamente!");
-      document.getElementById('hora_inicial').focus();
-      return false;
-    }
-    else if (campoHoraFinal == '') {
-      alert("Preencha o campo 'Hora Final' corretamente!");
-      document.getElementById('hora_final').focus();
-      return false;
-    }
-    else if (campoHoraInicioIntervalo == '') {
-      alert("Preencha o campo 'Hora Inicio Intervalo' corretamente!");
-      document.getElementById('hora_inicio_intervalo').focus();
-      return false;
-    }
-    else if (campoHoraFimIntervalo == '') {
-      alert("Preencha o campo 'Hora Fim Intervalo' corretamente!");
-      document.getElementById('hora_fim_intervalo').focus();
-      return false;
-    }
+    
   }
   else if (document.getElementById('padrao_ano_escolar').value == 0) {
     var qtdModulo = document.getElementsByName('ref_cod_modulo').length;

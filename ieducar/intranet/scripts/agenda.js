@@ -238,8 +238,8 @@ function novoForm(array_compromissos)
 	conteudo = '<form id="novo_form" action="'+acao+ document.getElementById( "parametros" ).value + '" method="POST"><br>';
 	conteudo += '<table border="0" cellpadding="0" cellspacing="3">';
 	conteudo += '<tr>';
-	conteudo += '<td width="25%">Inicio <input type="text" name="novo_hora_inicio" id="novo_hora_inicio" class="agenda_hora" title="Horas (hh:mm)" maxlength="5"onKeyPress="formataHora(this, event);"></td>';
-	conteudo += '<td width="25%">Fim <input type="text" name="novo_hora_fim" id="novo_hora_fim" class="agenda_hora" title="Horas (hh:mm)" maxlength="5"onKeyPress="formataHora(this, event);"></td>';
+	conteudo += '<td width="25%">Inicio <input type="text" name="novo_hora_inicio" id="novo_hora_inicio" class="agenda_hora" title="Horas (hh:mm)" onChange="verifica_hora(this.value)" maxlength="5"onKeyPress="formataHora(this, event);"></td>';
+	conteudo += '<td width="25%">Fim <input type="text" name="novo_hora_fim" id="novo_hora_fim" class="agenda_hora" title="Horas (hh:mm)" maxlength="5" onChange="verifica_hora_fim(this.value)" onKeyPress="formataHora(this, event);"></td>';
 	conteudo += '<td colspan="2" width="50%" align="right">Data:<input type="text" name="novo_data" id="novo_data" value="' + document.getElementById( "data_atual" ).value + '" class="agenda_data" title="Data (dd/mm/aaaa)" maxlength="10" onKeyPress="formataData(this, event);"></td>';
 	conteudo += '</tr>';
 	conteudo += '<tr><td colspan="4" style="height:1px;background-color: #9cbdd7;"></td></tr>';
@@ -399,3 +399,24 @@ function formataHora(campo, e)
 		}
 	}
 }
+
+function verifica_hora(novo_hora_inicio){ 
+hrs = (document.forms[0].novo_hora_inicio.value.substring(0,2)); 
+min = (document.forms[0].novo_hora_inicio.value.substring(3,5)); 
+               
+
+if ((hrs < 00 ) || (hrs > 23) || ( min < 00) ||( min > 59)){ 
+alert('Por favor, insira um hor\u00e1rio v\u00e1lido!');
+document.forms[0].novo_hora_inicio.value = "";
+}       
+} 
+function verifica_hora_fim(novo_hora_fim){ 
+hrs = (document.forms[0].novo_hora_fim.value.substring(0,2)); 
+min = (document.forms[0].novo_hora_fim.value.substring(3,5)); 
+               
+
+if ((hrs < 00 ) || (hrs > 23) || ( min < 00) ||( min > 59)){ 
+alert('Por favor, insira um hor\u00e1rio v\u00e1lido!');
+document.forms[0].novo_hora_fim.value = "";
+}       
+} 

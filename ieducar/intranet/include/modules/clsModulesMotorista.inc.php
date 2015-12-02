@@ -284,11 +284,12 @@ class clsModulesMotorista
    * Retorna uma lista de registros filtrados de acordo com os parâmetros.
    * @return array
    */
-  function lista($cod_motorista = NULL, $nome_motorista = NULL,
+  function lista($cod_motorista = NULL,
+    $nome_motorista = NULL,
     $cnh = NULL, $tipo_cnh = NULL,
-    $ref_cod_empresa_transporte_escolar = NULL)
-  {
-    
+    $ref_cod_empresa_transporte_escolar = NULL,
+    $ref_idpes = NULL) {
+
     $sql = "SELECT {$this->_campos_lista}, (
           SELECT
             nome
@@ -302,6 +303,11 @@ class clsModulesMotorista
     $whereAnd = " WHERE ";
     if (is_numeric($cod_motorista)) {
       $filtros .= "{$whereAnd} cod_motorista = '{$cod_motorista}'";
+      $whereAnd = " AND ";
+    }
+
+    if (is_numeric($ref_idpes)) {
+      $filtros .= "{$whereAnd} ref_idpes = '{$ref_idpes}'";
       $whereAnd = " AND ";
     }
 

@@ -955,7 +955,7 @@ if(!$this->isEnderecoExterno){
 							$det_mun = $obj_mun->detalhe();
 
 							if($det_mun)
-								$this->cidade = strtoupper(ucfirst(strtolower($det_mun["nome"])));
+								$this->cidade = mb_strtoupper(ucfirst(strtolower($det_mun["nome"])));
 
 							$this->sigla_uf = $this->sigla_uf_ =  $det_mun['sigla_uf']->sigla_uf;
 						}

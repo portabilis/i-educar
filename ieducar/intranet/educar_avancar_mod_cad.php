@@ -75,7 +75,7 @@ class indice extends clsCadastro
 
   function Gerar() {
     // inputs
-    $anoLetivoHelperOptions = array('situacoes' => array('em_andamento', 'nao_iniciado'), 'objectName' => 'ano_destino');
+    $anoLetivoHelperOptions = array('situacoes' => array('em_andamento', 'nao_iniciado'));
 
     $this->inputsHelper()->hidden('ano');
     $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'curso', 'serie'));
@@ -112,7 +112,7 @@ class indice extends clsCadastro
 
 
   protected function rematricularAlunos($escolaId, $cursoId, $serieId, $turmaId, $ano) {
-    $result = $this->selectMatriculas($escolaId, $cursoId, $serieId, $turmaId, $ano);
+    $result = $this->selectMatriculas($escolaId, $cursoId, $serieId, $turmaId, $this->ano_letivo);
     $count = 0;
     $nomesAlunos;
 
@@ -123,9 +123,9 @@ class indice extends clsCadastro
       $this->db2->Consulta("UPDATE pmieducar.matricula SET ultima_matricula = '0' WHERE cod_matricula = $matriculaId");
 
       if ($result && $situacao == 1)
-        $result = $this->rematricularAlunoAprovado($escolaId, $serieId, $ano, $alunoId);
+        $result = $this->rematricularAlunoAprovado($escolaId, $serieId, $this->ano_letivo, $alunoId);
       elseif ($result && $situacao == 2)
-        $result = $this->rematricularAlunoReprovado($escolaId, $cursoId, $serieId, $ano, $alunoId);
+        $result = $this->rematricularAlunoReprovado($escolaId, $cursoId, $serieId, $this->ano_letivo, $alunoId);
 
       if (! $result)
         break;
@@ -135,14 +135,14 @@ class indice extends clsCadastro
 
     if ($result && empty($this->mensagem)){
       if ($count > 0){
-        $mensagem = "<span class='success'>Rematriculado os seguinte(s) $count aluno(s) com sucesso em $ano: </br></br>";
+        $mensagem = "<span class='success'>Rematriculado os seguinte(s) $count aluno(s) com sucesso em $this->ano_letivo: </br></br>";
         foreach ($nomesAlunos as $nome) {
           $mensagem .= "{$nome} </br>";
         }
         $mensagem .= "</br> As enturmações podem ser realizadas em: Movimentação > Enturmação.</span>";
         $this->mensagem = $mensagem;
       }else{
-        $this->mensagem = "<span class='notice'>Nenhum aluno rematriculado. Certifique-se que a turma possui alunos aprovados ou reprovados não matriculados em ".($ano-1).".</span>";
+        $this->mensagem = "<span class='notice'>Nenhum aluno rematriculado. Certifique-se que a turma possui alunos aprovados ou reprovados não matriculados em ".($this->ano_letivo-1).".</span>";
       }
     }elseif(empty($this->mensagem))
       $this->mensagem = "Ocorreu algum erro inesperado durante as rematrículas, por favor, tente novamente.";
@@ -153,7 +153,7 @@ class indice extends clsCadastro
 
   protected function selectMatriculas($escolaId, $cursoId, $serieId, $turmaId, $ano) {
     try {
-      $anoAnterior = $ano - 1;
+      $anoAnterior = $this->ano_letivo  - 1;
 
       $sql = "SELECT cod_matricula, ref_cod_aluno, aprovado,
                                       (SELECT upper(nome)
@@ -169,7 +169,7 @@ class indice extends clsCadastro
                      ano  = $anoAnterior AND
                      NOT EXISTS(select 1 from pmieducar.matricula m2 where
                      m2.ref_cod_aluno = m.ref_cod_aluno AND
-                     m2.ano = $ano AND
+                     m2.ano = $this->ano_letivo AND
                      m2.ativo = 1 AND
                      m2.ref_ref_cod_escola = m.ref_ref_cod_escola)";
 
@@ -197,7 +197,7 @@ class indice extends clsCadastro
                                             WHERE cod_serie = $nextSerieId");
 
       if ($this->escolaSerieConfigurada($escolaId, $nextSerieId)){
-      	 return $this->matricularAluno($escolaId, $nextCursoId, $nextSerieId, $ano, $alunoId);
+      	 return $this->matricularAluno($escolaId, $nextCursoId, $nextSerieId, $this->ano_letivo, $alunoId);
       }
       else{
       	$this->mensagem = "A série de destino não está configurada na escola. Favor efetuar o cadastro em Cadastro > Série > Escola-Série";
@@ -212,7 +212,7 @@ class indice extends clsCadastro
 
 
   protected function rematricularAlunoReprovado($escolaId, $cursoId, $serieId, $ano, $alunoId) {
-    return $this->matricularAluno($escolaId, $cursoId, $serieId, $ano, $alunoId);
+    return $this->matricularAluno($escolaId, $cursoId, $serieId, $this->ano_letivo, $alunoId);
   }
 
 
@@ -220,7 +220,7 @@ class indice extends clsCadastro
     try {
       $this->db2->Consulta(sprintf("INSERT INTO pmieducar.matricula
         (ref_ref_cod_escola, ref_ref_cod_serie, ref_usuario_cad, ref_cod_aluno, aprovado, data_cadastro, ano, ref_cod_curso, ultima_matricula, data_matricula) VALUES ('%d', '%d', '%d', '%d', '3', 'NOW()', '%d', '%d', '1','{$this->data_matricula}')",
-      $escolaId, $serieId, $this->pessoa_logada, $alunoId, $ano, $cursoId));
+      $escolaId, $serieId, $this->pessoa_logada, $alunoId, $this->ano_letivo, $cursoId));
     }
     catch (Exception $e) {
       $this->mensagem = "Erro durante matrícula do aluno: $alunoId";

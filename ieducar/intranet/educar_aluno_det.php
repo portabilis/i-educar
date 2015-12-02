@@ -137,6 +137,8 @@ class indice extends clsDetalhe
       $obj_pessoa_fj = new clsPessoaFj($this->ref_idpes);
       $det_pessoa_fj = $obj_pessoa_fj->detalhe();
 
+      
+
       $obj_fisica = new clsFisica($this->ref_idpes);
       $det_fisica = $obj_fisica->detalhe();
 
@@ -155,7 +157,7 @@ class indice extends clsDetalhe
       if ($detalheFoto)
         $caminhoFoto  = $detalheFoto['caminho'];
 
-      $registro['nome_aluno'] = strtoupper($det_pessoa_fj['nome']);
+      $registro['nome_aluno'] = mb_strtoupper($det_pessoa_fj['nome']);
       $registro['cpf']        = int2IdFederal($det_fisica['cpf']);
       $registro['data_nasc']  = dataToBrasil($det_fisica['data_nasc']);
       $registro['sexo']       = $det_fisica['sexo'] == 'F' ? 'Feminino' : 'Masculino';

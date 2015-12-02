@@ -39,6 +39,8 @@ require_once 'include/pessoa/clsCadastroRaca.inc.php';
 require_once 'include/pessoa/clsCadastroFisicaRaca.inc.php';
 require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
 require_once 'include/pmieducar/clsPmieducarAluno.inc.php';
+require_once 'include/modules/clsModulesPessoaTransporte.inc.php';
+require_once 'include/modules/clsModulesMotorista.inc.php';
 require_once 'image_check.php';
 
 require_once 'App/Model/ZonaLocalizacao.php';
@@ -134,6 +136,13 @@ class indice extends clsCadastro
   function Inicializar()
   {
 
+    @session_start();
+    $this->pessoa_logada = $_SESSION['id_pessoa'];
+    @session_write_close();
+
+    $obj_permissoes = new clsPermissoes();
+    $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 7, 'atendidos_lst.php');
+
     $this->cod_pessoa_fj = @$_GET['cod_pessoa_fj'];
     $this->retorno       = 'Novo';
 
@@ -179,6 +188,10 @@ class indice extends clsCadastro
       $raca           = $raca->detalhe();
       $this->cod_raca = is_array($raca) ? $raca['ref_cod_raca'] : null;
     }
+
+    $this->fexcluir = $obj_permissoes->permissao_excluir(
+          561, $this->pessoa_logada, 7, 'atendidos_lst.php'
+        );
 
     $this->nome_url_cancelar = 'Cancelar';
 
@@ -1011,8 +1024,77 @@ class indice extends clsCadastro
   }
 
   function Excluir() {
-    echo '<script>document.location="atendidos_lst.php";</script>';
-    return TRUE;
+    $idPes = $this->cod_pessoa_fj;
+
+    $aluno = new clsPmieducarAluno();
+    $aluno = $aluno->lista(null, null, null, null, null, $idPes, null, null, null, null, 1);
+
+    if ($aluno) {
+      $this->mensagem = 'Exclusão não realizada.';
+      $this->mensagem .= '<br />Esta pessoa possuí vínculo com aluno.';
+
+      return FALSE;
+    }
+
+    $usuario = new clsPmieducarUsuario();
+    $usuario = $usuario->lista($idPes, null, null, null, null, null, null, null, null, null, TRUE);
+    $funcionario = new clsPortalFuncionario();
+    $funcionario->ref_cod_pessoa_fj = $idPes;
+    $funcionario = $funcionario->lista(null, null, 1);
+
+    if ($funcionario && $usuario) {
+      $this->mensagem = 'Exclusão não realizada.';
+      $this->mensagem .= '<br />Esta pessoa possuí vínculo com usuário do sistema.';
+
+      return FALSE;
+    }
+
+    $servidor = new clsPmieducarServidor();
+    $servidor = $servidor->lista($idPes, null, null, null, null, null, null, null, 1);
+
+    if ($servidor) {
+      $this->mensagem = 'Exclusão não realizada.';
+      $this->mensagem .= '<br />Esta pessoa possuí vínculo com servidor.';
+
+      return FALSE;
+    }
+
+    $cliente = new clsPmieducarCliente();
+    $cliente = $cliente->lista(null, null, null, $idPes, null, null, null, null, null, null, 1);
+
+    if ($cliente) {
+      $this->mensagem = 'Exclusão não realizada.';
+      $this->mensagem .= '<br />Esta pessoa possuí vínculo com cliente.';
+
+      return FALSE;
+    }
+
+    $usuarioTransporte = new clsModulesPessoaTransporte();
+    $usuarioTransporte = $usuarioTransporte->lista(null, $idPes);
+
+    if ($usuarioTransporte) {
+      $this->mensagem = 'Exclusão não realizada.';
+      $this->mensagem .= '<br />Esta pessoa possuí vínculo com usuário de transporte.';
+
+      return FALSE;
+    }
+
+    $motorista = new clsModulesMotorista();
+    $motorista = $motorista->lista(null, null, null, null, null, $idPes);
+
+    if ($motorista) {
+      $this->mensagem = 'Exclusão não realizada.';
+      $this->mensagem .= '<br />Esta pessoa possuí vínculo com motorista.';
+
+      return FALSE;
+    }
+
+    $pessoaFisica = new clsPessoaFisica($idPes);
+    $pessoaFisica->excluir();
+
+    $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.';
+    header('Location: atendidos_lst.php');
+    die();
   }
 
   function afterChangePessoa($id) {

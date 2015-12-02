@@ -981,6 +981,10 @@ class AlunoController extends ApiCoreController
       $attrs = array('aluno_id', 'nome_aluno');
       $alunos = Portabilis_Array_Utils::filterSet($alunos, $attrs);
 
+      foreach ($alunos as &$aluno) {
+        $aluno['nome_aluno'] = Portabilis_String_Utils::toUtf8($aluno['nome_aluno']);
+      }
+
       return array('alunos' => $alunos);
     }
   }

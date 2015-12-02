@@ -35,3 +35,20 @@ td.area-conhecimento img.seta-baixo {
 .tr-componente-curricular {
   display: none;
 }
+
+td.resultado-final {
+  background-color: #546C76 !important;
+  color: #FFF !important;
+  font-weight: bold;
+  font-size: 13px;
+}
+td.resultado-final-esquerda {
+  background-color: #546C76 !important;
+  color: #FFF !important;
+  font-weight: bold;
+  font-size: 13px;
+  text-align: left;
+}
+.situacao-cc {
+  width: 180px;
+}

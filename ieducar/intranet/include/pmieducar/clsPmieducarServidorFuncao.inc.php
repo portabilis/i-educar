@@ -156,8 +156,9 @@ class clsPmieducarServidorFuncao
 			}
 		}
 
-
-
+ 		if (is_numeric($cod_servidor_funcao)) {
+			$this->cod_servidor_funcao = $cod_servidor_funcao;
+		}
 	}
 
 	/**
@@ -317,20 +318,25 @@ class clsPmieducarServidorFuncao
 	{
 		if(is_numeric($this->cod_servidor_funcao)){
 			$sql = sprintf(
-        "SELECT %s FROM %s WHERE cod_servidor_funcao = '%d'",
-        $this->_todos_campos, $this->_tabela, $this->cod_servidor_funcao
-      );
-		}elseif( is_numeric( $this->ref_ref_cod_instituicao ) && is_numeric( $this->ref_cod_servidor ) ) #&& is_numeric( $this->ref_cod_funcao ) )
+				"SELECT %s FROM %s WHERE cod_servidor_funcao = '%d'",
+				$this->_todos_campos, $this->_tabela, $this->cod_servidor_funcao
+			);
+			$db = new clsBanco();
+			$db->Consulta($sql);
+			$db->ProximoRegistro();
+			return $db->Tupla();
+		}
+		elseif( is_numeric( $this->ref_ref_cod_instituicao ) && is_numeric( $this->ref_cod_servidor ) ) #&& is_numeric( $this->ref_cod_funcao ) )
 		{
-      $sql = sprintf(
-        "SELECT %s FROM %s WHERE ref_ref_cod_instituicao = '%d' AND ref_cod_servidor = '%d'",
-        $this->_todos_campos, $this->_tabela, $this->ref_ref_cod_instituicao,
-        $this->ref_cod_servidor
-      );
+			$sql = sprintf(
+				"SELECT %s FROM %s WHERE ref_ref_cod_instituicao = '%d' AND ref_cod_servidor = '%d'",
+				$this->_todos_campos, $this->_tabela, $this->ref_ref_cod_instituicao,
+				$this->ref_cod_servidor
+			);
 
-      if (is_numeric($this->ref_cod_funcao)) {
-        $sql .= sprintf(" AND ref_cod_funcao = '%d'", $this->ref_cod_funcao);
-      }
+			if (is_numeric($this->ref_cod_funcao)) {
+				$sql .= sprintf(" AND ref_cod_funcao = '%d'", $this->ref_cod_funcao);
+			}
 
 			$db = new clsBanco();
 			#$db->Consulta( "SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE ref_ref_cod_instituicao = '{$this->ref_ref_cod_instituicao}' AND ref_cod_servidor = '{$this->ref_cod_servidor}' AND ref_cod_funcao = '{$this->ref_cod_funcao}'" );

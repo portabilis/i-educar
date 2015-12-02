@@ -22,6 +22,7 @@ CREATE OR REPLACE VIEW relatorio.view_situacao AS
                         AND abandono_tipo.ativo = 1 LIMIT 1)
               WHEN matricula.aprovado = 1 THEN 'Aprovado'::character varying
               WHEN matricula.aprovado = 12 THEN 'Aprovado com dependência'::character varying
+              WHEN matricula.aprovado = 13 THEN 'Aprovado pelo conselho'::character varying
               WHEN matricula.aprovado = 2 THEN 'Reprovado'::character varying
               WHEN matricula.aprovado = 3 THEN 'Andamento'::character varying
               WHEN matricula.aprovado = 4 THEN 'Transferido'::character varying
@@ -45,6 +46,7 @@ CREATE OR REPLACE VIEW relatorio.view_situacao AS
                         AND abandono_tipo.ativo = 1 LIMIT 1)
               WHEN matricula.aprovado = 1 THEN 'Apr'::character varying
               WHEN matricula.aprovado = 12 THEN 'ApDp'::character varying
+              WHEN matricula.aprovado = 13 THEN 'ApCo'::character varying
               WHEN matricula.aprovado = 2 THEN 'Rep'::character varying
               WHEN matricula.aprovado = 3 THEN 'And'::character varying
               WHEN matricula.aprovado = 4 THEN 'Trs'::character varying
@@ -129,6 +131,7 @@ CREATE OR REPLACE VIEW relatorio.view_situacao AS
                         AND abandono_tipo.ativo = 1 LIMIT 1)
               WHEN matricula.aprovado = 1 THEN 'Aprovado'::character varying
               WHEN matricula.aprovado = 12 THEN 'Aprovado com dependência'::character varying
+              WHEN matricula.aprovado = 13 THEN 'Aprovado pelo conselho'::character varying
               WHEN matricula.aprovado = 2 THEN 'Reprovado'::character varying
               WHEN matricula.aprovado = 3 THEN 'Andamento'::character varying
               WHEN matricula.aprovado = 4 THEN 'Transferido'::character varying
@@ -152,6 +155,7 @@ CREATE OR REPLACE VIEW relatorio.view_situacao AS
                         AND abandono_tipo.ativo = 1 LIMIT 1)
               WHEN matricula.aprovado = 1 THEN 'Apr'::character varying
               WHEN matricula.aprovado = 12 THEN 'ApDp'::character varying
+              WHEN matricula.aprovado = 13 THEN 'ApCo'::character varying
               WHEN matricula.aprovado = 2 THEN 'Rep'::character varying
               WHEN matricula.aprovado = 3 THEN 'And'::character varying
               WHEN matricula.aprovado = 4 THEN 'Trs'::character varying

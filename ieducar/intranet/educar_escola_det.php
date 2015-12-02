@@ -27,7 +27,8 @@
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsDetalhe.inc.php");
 require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
+require_once ("include/pmieducar/geral.inc.php");
+require_once ("Portabilis/View/Helper/Application.php");
 
 class clsIndexBase extends clsBase
 {
@@ -473,6 +474,10 @@ class indice extends clsDetalhe
 			$this->array_botao_url = array ("educar_escola_ano_letivo_cad.php?cod_escola={$registro["cod_escola"]}");
 		}
 
+	    $styles = array ('/modules/Cadastro/Assets/Stylesheets/EscolaAnosLetivos.css');
+
+	    Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
+
 		$this->url_cancelar = "educar_escola_lst.php";
 		$this->largura      = "100%";
 
@@ -500,7 +505,7 @@ class indice extends clsDetalhe
 		$obj_ano_letivo->setOrderby("ano");
 		$lista_ano_letivo = $obj_ano_letivo->lista($this->cod_escola,null,null,null,null,null,null,null,null,1);
 
-		$tabela = "<table border=0 cellpadding=2 width='100%'>";
+		$tabela = "<table class='anosLetivos'>";
 
 		$obj_permissoes = new clsPermissoes();
 		$canEdit = $obj_permissoes->permissao_cadastra( 561, $this->pessoa_logada, 7 );
@@ -523,9 +528,10 @@ class indice extends clsDetalhe
 			{
 
 				$incluir = $excluir = "";
-				//se nao existe ano em andamento permite inicializar um ano letivo
 				if(!$existe_ano_andamento && $ano['andamento'] != 2 && $canEdit)
-					$incluir = "<td><a href='#' onclick=\"preencheForm('{$ano['ano']}','{$ano['ref_cod_escola']}','iniciar');\"><img src=\"imagens/i-educar/nvp_bot_iniciar_ano.gif\" border=0 style='padding-left:10px;'></a></td>";
+					$incluir = "<td class='evento'><a href='#' onclick=\"preencheForm('{$ano['ano']}','{$ano['ref_cod_escola']}','iniciar');\"><img src=\"imagens/i-educar/start.gif\"> Iniciar ano letivo</a></td>";
+				elseif ($ano['andamento'] == 0)
+					$incluir = "<td class='evento'><a href='#' onclick=\"preencheForm('{$ano['ano']}','{$ano['ref_cod_escola']}','iniciar');\"><img src=\"imagens/i-educar/start.gif\"> Iniciar ano letivo</a></td>";
 				else
 					$incluir = "<td width='130'>&nbsp;</td>";
 
@@ -533,7 +539,7 @@ class indice extends clsDetalhe
 				$obj_matricula_ano = new clsPmieducarMatricula();
 				$matricula_em_andamento = $obj_matricula_ano->lista(null,null,$this->cod_escola,null,null,null,null,3,null,null,null,null,1,$ano['ano'],null,null,1,null,null,null,null,null,null,null,null,false);
 				if(!$matricula_em_andamento && $existe_ano_andamento && $ano['andamento'] == 1 && $canEdit)
-					$excluir = "<td><a href='#' onclick=\"preencheForm('{$ano['ano']}','{$ano['ref_cod_escola']}','finalizar');\" ><img src=\"imagens/i-educar/nvp_bot_finalizar_ano.gif\" border=0 style='padding-left:10px;'></a></td>";
+					$excluir = "<td class='evento'><a href='#' onclick=\"preencheForm('{$ano['ano']}','{$ano['ref_cod_escola']}','finalizar');\" ><img src=\"imagens/i-educar/stop.png\"> Finalizar ano letivo</a></td>";
 				else
 				{
 
@@ -542,10 +548,11 @@ class indice extends clsDetalhe
 
 				$editar = "";//"<td align='center'> - </td>";
 
-				if($ano['andamento'] == 2)
-					$incluir = "<td colspan='3' align='center'><span class='formlttd'><b>--- Ano Finalizado ---</b></span></td>";
-				elseif($canEdit)
-					$editar = "<td><a href='#' onclick=\"preencheForm('{$ano['ano']}','{$ano['ref_cod_escola']}','editar');\" ><img src=\"imagens/i-educar/nvp_bot_editar_ano.gif\" alt=\"Editar Ano Letivo\" border=0 style='padding-left:10px;'></a></td>";
+				if($ano['andamento'] == 2) {
+					$incluir = "<td class='evento'><a href='#' onclick=\"preencheForm('{$ano['ano']}','{$ano['ref_cod_escola']}','reabrir');\"><img src=\"imagens/banco_imagens/reload.jpg\"> Reabrir ano letivo</a></td>";
+				    $incluir .= "<td colspan='1' align='center'><span class='formlttd'><b>--- Ano Finalizado ---</b></span></td>";
+				} elseif($canEdit)
+					$editar = "<td class='evento'><a href='#' onclick=\"preencheForm('{$ano['ano']}','{$ano['ref_cod_escola']}','editar');\" ><img src=\"imagens/banco_imagens/e.gif\" > Editar ano letivo</a></td>";
 
 				$tabela .= "<tr bgcolor='$cor'><td style='padding-left:20px'><img src=\"imagens/noticia.jpg\" border='0'> {$ano['ano']}</td>{$incluir}{$excluir}{$editar}</tr>";
 			}

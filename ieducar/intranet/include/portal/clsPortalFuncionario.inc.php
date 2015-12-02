@@ -786,9 +786,9 @@ class clsPortalFuncionario
 
 		$whereAnd = " WHERE ";
 
-		if( is_numeric( $int_ref_cod_pessoa_fj ) )
+		if( is_numeric( $this->ref_cod_pessoa_fj ) )
 		{
-			$filtros .= "{$whereAnd} ref_cod_pessoa_fj = '{$int_ref_cod_pessoa_fj}'";
+			$filtros .= "{$whereAnd} ref_cod_pessoa_fj = '{$this->ref_cod_pessoa_fj}'";
 			$whereAnd = " AND ";
 		}
 		if( is_string( $str_matricula ) )
@@ -1102,6 +1102,25 @@ class clsPortalFuncionario
 			return " ORDER BY {$this->_campo_order_by} ";
 		}
 		return "";
+	}
+
+	/**
+	 * Retorna a string com o nome do vinculo cujo código foi passado por parâmetro
+	 *
+	 * @return string
+	 */
+	function getNomeVinculo($cod_funcionario_vinculo) {
+
+		if(is_numeric($cod_funcionario_vinculo)) {
+			$db = new clsBanco();
+			$db->Consulta( "SELECT nm_vinculo FROM portal.funcionario_vinculo WHERE cod_funcionario_vinculo = '{$cod_funcionario_vinculo}'" );
+			if( $db->ProximoRegistro() )
+			{
+				$registro = $db->Tupla();
+				return $registro['nm_vinculo'];
+			}
+		}
+		return false;
 	}
 
 }

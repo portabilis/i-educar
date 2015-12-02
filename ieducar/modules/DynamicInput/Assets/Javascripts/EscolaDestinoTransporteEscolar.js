@@ -5,7 +5,7 @@
 
      var handleGetEscolaDestinoTransporteEscolar = function(response) {
        var selectOptions = jsonResourcesToSelectOptions(response['options']);
-       updateSelect($escolaDestinoTransporteEscolar, selectOptions, "Todas");
+       updateSelect($escolaDestinoTransporteEscolar, selectOptions, "Todos");
      };
 
      var updateEscolaDestinoTransporteEscolar = function(){

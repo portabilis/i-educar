@@ -274,7 +274,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
-        header('Location: educar_escola_lst.php');
+        header('Location: educar_escola_det.php?cod_escola='.$this->ref_ref_cod_escola.'#ano_letivo');
 
         die();
       }

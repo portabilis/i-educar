@@ -55,6 +55,7 @@ class clsPmieducarServidorAlocacao
   var $carga_horaria;
   var $periodo;
   var $ref_cod_funcionario_vinculo;
+  var $ano;
   /**
    * Carga horária máxima para um período de alocação (em horas).
    * @var float
@@ -133,13 +134,14 @@ class clsPmieducarServidorAlocacao
     $carga_horaria = NULL, 
     $periodo = NULL, 
     $ref_cod_servidor_funcao = NULL, 
-    $ref_cod_funcionario_vinculo = NULL)
+    $ref_cod_funcionario_vinculo = NULL,
+    $ano)
   {
     $db = new clsBanco();
     $this->_schema = 'pmieducar.';
     $this->_tabela = $this->_schema . 'servidor_alocacao';
 
-    $this->_campos_lista = $this->_todos_campos = 'cod_servidor_alocacao, ref_ref_cod_instituicao, ref_usuario_exc, ref_usuario_cad, ref_cod_escola, ref_cod_servidor, data_cadastro, data_exclusao, ativo, carga_horaria, periodo, ref_cod_servidor_funcao, ref_cod_funcionario_vinculo ';
+    $this->_campos_lista = $this->_todos_campos = 'cod_servidor_alocacao, ref_ref_cod_instituicao, ref_usuario_exc, ref_usuario_cad, ref_cod_escola, ref_cod_servidor, data_cadastro, data_exclusao, ativo, carga_horaria, periodo, ref_cod_servidor_funcao, ref_cod_funcionario_vinculo, ano ';
 
     if (is_numeric($ref_usuario_cad)) {
       $usuario = new clsPmieducarUsuario($ref_usuario_cad);
@@ -209,6 +211,10 @@ class clsPmieducarServidorAlocacao
     if (is_numeric($periodo)) {
       $this->periodo = $periodo;
     }
+
+    if (is_numeric($ano)) {
+      $this->ano = $ano;
+    }
   }
 
   /**
@@ -275,6 +281,12 @@ class clsPmieducarServidorAlocacao
         $gruda    = ', ';
       }
 
+      if (is_numeric($this->ano)) {
+        $campos  .= "{$gruda}ano";
+        $valores .= "{$gruda}'{$this->ano}'";
+        $gruda    = ', ';
+      }
+
       $campos  .= "{$gruda}data_cadastro";
       $valores .= "{$gruda}NOW()";
       $gruda    = ", ";
@@ -286,7 +298,6 @@ class clsPmieducarServidorAlocacao
       $db->Consulta("INSERT INTO {$this->_tabela} ($campos) VALUES ($valores)");
       return $db->InsertId("{$this->_tabela}_cod_servidor_alocacao_seq");
     }
-
     return FALSE;
   }
 
@@ -376,7 +387,7 @@ class clsPmieducarServidorAlocacao
     $int_ref_cod_servidor = NULL, $date_data_cadastro_ini = NULL,
     $date_data_cadastro_fim = NULL, $date_data_exclusao_ini = NULL,
     $date_data_exclusao_fim = NULL, $int_ativo = NULL, $int_carga_horaria = NULL,
-    $int_periodo = NULL, $bool_busca_nome = FALSE, $boo_professor = NULL)
+    $int_periodo = NULL, $bool_busca_nome = FALSE, $boo_professor = NULL, $ano = NULL)
   {
     $filtros  = '';
     $whereAnd = ' WHERE ';
@@ -446,6 +457,11 @@ class clsPmieducarServidorAlocacao
 
     if (is_string($date_data_exclusao_fim)) {
       $filtros .= "{$whereAnd} sa.data_exclusao <= '{$date_data_exclusao_fim}'";
+      $whereAnd = ' AND ';
+    }
+
+    if (is_numeric($ano)) {
+      $filtros .= "{$whereAnd} sa.ano = '{$ano}'";
       $whereAnd = ' AND ';
     }
 
@@ -560,9 +576,10 @@ class clsPmieducarServidorAlocacao
    */
   function excluir()
   {
-    if (is_numeric($this->cod_servidor_alocacao) && is_numeric($this->ref_usuario_exc)) {
-      $this->ativo = 0;
-      return $this->edita();
+    if (is_numeric($this->cod_servidor_alocacao)) {
+      $db = new clsBanco();
+      $db->Consulta("DELETE FROM {$this->_tabela} WHERE cod_servidor_alocacao = '{$this->cod_servidor_alocacao}'");
+      return TRUE;
     }
 
     return FALSE;
@@ -726,6 +743,31 @@ class clsPmieducarServidorAlocacao
   {
     if (is_string($this->_campo_group_by)) {
       return " GROUP BY {$this->_campo_group_by} ";
+    }
+    return '';
+  }
+
+  /**
+   * Retorna a string com a soma da carga horária já alocada do servidor em determinado ano
+   *
+   * @return string
+   */
+  function getCargaHorariaAno() {
+
+    if (is_numeric($this->ref_cod_servidor) && is_numeric($this->ano)) {
+      $db = new clsBanco();
+      $sql = "SELECT SUM(carga_horaria)
+                FROM pmieducar.servidor_alocacao
+               WHERE ref_cod_servidor = {$this->ref_cod_servidor}
+                 AND ano = {$this->ano}";
+
+      if ($this->cod_servidor_alocacao) {
+        $sql .= "AND cod_servidor_alocacao != {$this->cod_servidor_alocacao}";
+      }
+      $db->Consulta($sql);
+      $db->ProximoRegistro();
+      $registro = $db->Tupla();
+      return $registro[0];
     }
     return '';
   }

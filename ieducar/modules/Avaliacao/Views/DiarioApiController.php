@@ -522,10 +522,12 @@ class DiarioApiController extends ApiCoreController
     $this->appendResponse('should_show_recuperacao_especifica', $this->shouldShowRecuperacaoEspecifica());
     $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
     $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
-    $this->appendResponse('situacao',     $this->getSituacaoMatricula());
+    $this->appendResponse('situacao',     $this->getSituacaoComponente());
     $this->appendResponse('nota_necessaria_exame', $notaNecessariaExame = $this->getNotaNecessariaExame($this->getRequest()->componente_curricular_id));
+    $this->appendResponse('media', $this->getMediaAtual($this->getRequest()->componente_curricular_id));
+    $this->appendResponse('media_arredondada', $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id));
 
-    if (!empty($notaNecessariaExame) && in_array($this->getSituacaoMatricula(), array('Em Exame', 'Aprovado Após Exame', 'Retido')))
+    if (!empty($notaNecessariaExame) && in_array($this->getSituacaoComponente(), array('Em Exame', 'Aprovado Após Exame', 'Retido')))
       $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $notaNecessariaExame);
     else
       $this->deleteNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id);
@@ -543,8 +545,55 @@ class DiarioApiController extends ApiCoreController
       $this->messenger->append('Nota geral da matrícula '. $this->getRequest()->matricula_id .' alterada com sucesso.', 'success');
     }
     $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
-    $this->appendResponse('situacao',     $this->getSituacaoMatricula($this->getRequest()->componente_curricular_id));
+    $this->appendResponse('situacao',     $this->getSituacaoComponente($this->getRequest()->componente_curricular_id));
     $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
+    $this->appendResponse('media', $this->getMediaAtual($this->getRequest()->componente_curricular_id));
+    $this->appendResponse('media_arredondada', $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id));
+  }
+
+  protected function postMedia(){
+    if ($this->canPostMedia()) {
+      $mediaLancada = urldecode($this->getRequest()->att_value);
+      $componenteCurricular = $this->getRequest()->componente_curricular_id;
+      $etapa = $this->getRequest()->etapa;
+
+      $this->serviceBoletim()->updateMediaComponente($mediaLancada, $componenteCurricular, $etapa);
+      $this->messenger->append('Média da matrícula '. $this->getRequest()->matricula_id .' alterada com sucesso.', 'success');
+      $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
+      $this->appendResponse('situacao',     $this->getSituacaoComponente($this->getRequest()->componente_curricular_id));
+      $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
+      $this->appendResponse('media', $this->getMediaAtual($this->getRequest()->componente_curricular_id));
+      $this->appendResponse('media_arredondada', $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id));
+    }else{
+      $this->messenger->append('Usuário não possui permissão para alterar a média do aluno.', 'error');
+    }
+  }
+
+  protected function deleteMedia(){
+    if ($this->canDeleteMedia()) {
+
+      $media = $this->getMediaAtual();
+      if (empty($media) && ! is_numeric($media))
+        $this->messenger->append('Média matrícula '. $this->getRequest()->matricula_id .' inexistente ou já removida.', 'notice');
+      else
+      {
+        $this->serviceBoletim()->updateMediaComponente(0, $this->getRequest()->componente_curricular_id, $this->getRequest()->etapa);
+        $this->trySaveServiceBoletim();
+        $this->messenger->append('Média matrícula '. $this->getRequest()->matricula_id .' removida com sucesso.', 'success');
+      }
+    }
+
+    $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
+    $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
+    $this->appendResponse('situacao',     $this->getSituacaoComponente());
+  }
+
+  protected function canPostMedia(){
+    return $this->canPostSituacaoAndNota();
+  }
+
+  protected function canDeleteMedia(){
+    return true;
   }
 
   protected function postNotaRecuperacaoParalela() {
@@ -568,11 +617,13 @@ class DiarioApiController extends ApiCoreController
 
     $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
     $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
-    $this->appendResponse('situacao',     $this->getSituacaoMatricula());
+    $this->appendResponse('situacao',     $this->getSituacaoComponente());
     $this->appendResponse('nota_necessaria_exame', $notaNecessariaExame = $this->getNotaNecessariaExame($this->getRequest()->componente_curricular_id));
     $this->appendResponse('nota_nova', ($notaNova > $notaOriginal ? $notaNova : null));
+    $this->appendResponse('media', $this->getMediaAtual($this->getRequest()->componente_curricular_id));
+    $this->appendResponse('media_arredondada', $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id));
 
-    if (!empty($notaNecessariaExame) && in_array($this->getSituacaoMatricula(), array('Em Exame', 'Aprovado Após Exame', 'Retido')))
+    if (!empty($notaNecessariaExame) && in_array($this->getSituacaoComponente(), array('Em Exame', 'Aprovado Após Exame', 'Retido')))
       $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $notaNecessariaExame);
     else
       $this->deleteNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id);
@@ -601,10 +652,12 @@ class DiarioApiController extends ApiCoreController
     $this->appendResponse('should_show_recuperacao_especifica', true);
     $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
     $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
-    $this->appendResponse('situacao',     $this->getSituacaoMatricula());
+    $this->appendResponse('situacao',     $this->getSituacaoComponente());
     $this->appendResponse('nota_necessaria_exame', $notaNecessariaExame = $this->getNotaNecessariaExame($this->getRequest()->componente_curricular_id));
+    $this->appendResponse('media', $this->getMediaAtual($this->getRequest()->componente_curricular_id));
+    $this->appendResponse('media_arredondada', $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id));
 
-    if (!empty($notaNecessariaExame) && in_array($this->getSituacaoMatricula(), array('Em Exame', 'Aprovado Após Exame', 'Retido')))
+    if (!empty($notaNecessariaExame) && in_array($this->getSituacaoComponente(), array('Em Exame', 'Aprovado Após Exame', 'Retido')))
       $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $notaNecessariaExame);
     else
       $this->deleteNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id);
@@ -630,7 +683,7 @@ class DiarioApiController extends ApiCoreController
 
     $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
     $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
-    $this->appendResponse('situacao',     $this->getSituacaoMatricula());
+    $this->appendResponse('situacao',     $this->getSituacaoComponente());
     $this->appendResponse('should_show_recuperacao_especifica', $this->shouldShowRecuperacaoEspecifica());
   }
 
@@ -653,7 +706,7 @@ class DiarioApiController extends ApiCoreController
 
     $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
     $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
-    $this->appendResponse('situacao',     $this->getSituacaoMatricula());
+    $this->appendResponse('situacao',     $this->getSituacaoComponente());
   }
 
 
@@ -677,7 +730,9 @@ class DiarioApiController extends ApiCoreController
 
     $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
     $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
-    $this->appendResponse('situacao',     $this->getSituacaoMatricula());
+    $this->appendResponse('situacao',     $this->getSituacaoComponente());
+    $this->appendResponse('media', $this->getMediaAtual($this->getRequest()->componente_curricular_id));
+    $this->appendResponse('media_arredondada', $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id));
   }
 
   protected function deleteNotaRecuperacaoParalela(){
@@ -697,8 +752,10 @@ class DiarioApiController extends ApiCoreController
 
       $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
       $this->appendResponse('matricula_id',  $this->getRequest()->matricula_id);
-      $this->appendResponse('situacao',      $this->getSituacaoMatricula());
+      $this->appendResponse('situacao',      $this->getSituacaoComponente());
       $this->appendResponse('nota_original', $notaOriginal);
+      $this->appendResponse('media', $this->getMediaAtual($this->getRequest()->componente_curricular_id));
+      $this->appendResponse('media_arredondada', $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id));
     }
   }
 
@@ -719,8 +776,10 @@ class DiarioApiController extends ApiCoreController
 
       $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
       $this->appendResponse('matricula_id',  $this->getRequest()->matricula_id);
-      $this->appendResponse('situacao',      $this->getSituacaoMatricula());
+      $this->appendResponse('situacao',      $this->getSituacaoComponente());
       $this->appendResponse('nota_original', $notaOriginal);
+      $this->appendResponse('media', $this->getMediaAtual($this->getRequest()->componente_curricular_id));
+      $this->appendResponse('media_arredondada', $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id));
     }
   }
 
@@ -747,7 +806,7 @@ class DiarioApiController extends ApiCoreController
 
     $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
     $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
-    $this->appendResponse('situacao',     $this->getSituacaoMatricula());
+    $this->appendResponse('situacao',     $this->getSituacaoComponente());
   }
 
 
@@ -774,7 +833,7 @@ class DiarioApiController extends ApiCoreController
 
     $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
     $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
-    $this->appendResponse('situacao',     $this->getSituacaoMatricula());
+    $this->appendResponse('situacao',     $this->getSituacaoComponente());
   }
 
   protected function deleteNotaGeral() {
@@ -787,7 +846,7 @@ class DiarioApiController extends ApiCoreController
 
     $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
     $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
-    $this->appendResponse('situacao',     $this->getSituacaoMatricula());
+    $this->appendResponse('situacao',     $this->getSituacaoComponente());
   }
 
 
@@ -871,7 +930,6 @@ class DiarioApiController extends ApiCoreController
     // adiciona regras de avaliacao
     if(! empty($matriculas)) {
       $this->appendResponse('details', $this->getRegraAvaliacao());
-      $this->appendResponse('situacao', $this->getSituacaoMatricula());
     }
 
     $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
@@ -994,9 +1052,9 @@ class DiarioApiController extends ApiCoreController
   }
 
 
-  // metodos auxiliares getSituacaoMatricula
+  // metodos auxiliares getSituacaoComponente
 
-  protected function getSituacaoMatricula($ccId = null) {
+  protected function getSituacaoComponente($ccId = null) {
     if (is_null($ccId))
       $ccId = $this->getRequest()->componente_curricular_id;
 
@@ -1040,7 +1098,7 @@ class DiarioApiController extends ApiCoreController
       $componente['nota_exame']                = $this->getNotaExame($componente['id']);
       $componente['falta_atual']               = $this->getFaltaAtual($etapa = null, $componente['id']);
       $componente['parecer_atual']             = $this->getParecerAtual($componente['id']);
-      $componente['situacao']                  = $this->getSituacaoMatricula($componente['id']);
+      $componente['situacao']                  = $this->getSituacaoComponente($componente['id']);
 
       $gravaNotaExame = ($componente['situacao'] == 'Em Exame' || $componente['situacao'] == 'Aprovado Após Exame' || $componente['situacao'] == 'Retido');
 
@@ -1051,6 +1109,8 @@ class DiarioApiController extends ApiCoreController
       $componente['should_show_recuperacao_especifica'] = $this->shouldShowRecuperacaoEspecifica($etapa, $componente['id']);
       $componente['nota_original']             = $this->getNotaOriginal($etapa, $componente['id']);
       $componente['nota_geral_etapa']          = $this->getNotaGeral($etapa);
+      $componente['media']                     = $this->getMediaAtual($componente['id']);
+      $componente['media_arredondada']         = $this->getMediaArredondadaAtual($componente['id']);
 
       if (!empty($componente['nota_necessaria_exame']))
         $this->createOrUpdateNotaExame($matriculaId, $componente['id'], $componente['nota_necessaria_exame']);
@@ -1160,6 +1220,41 @@ class DiarioApiController extends ApiCoreController
     return str_replace(',', '.', $nota);
 
   }
+
+  protected function getMediaAtual($componenteCurricularId = null) {
+    // defaults
+    if (is_null($componenteCurricularId))
+      $componenteCurricularId = $this->getRequest()->componente_curricular_id;
+
+    // validacao
+    if (! is_numeric($componenteCurricularId)) {
+      throw new Exception('Não foi possivel obter a média atual, pois não foi recebido o id do componente curricular.');
+    }
+
+    $media = urldecode($this->serviceBoletim()->getMediaComponente($componenteCurricularId)->media);
+
+    // $media = round($media,1);
+
+    return str_replace(',', '.', $media);
+  }
+
+    protected function getMediaArredondadaAtual($componenteCurricularId = null) {
+    // defaults
+    if (is_null($componenteCurricularId))
+      $componenteCurricularId = $this->getRequest()->componente_curricular_id;
+
+    // validacao
+    if (! is_numeric($componenteCurricularId)) {
+      throw new Exception('Não foi possivel obter a média atual, pois não foi recebido o id do componente curricular.');
+    }
+
+    $media = urldecode($this->serviceBoletim()->getMediaComponente($componenteCurricularId)->mediaArredondada);
+
+    // $media = round($media,1);
+
+    return str_replace(',', '.', $media);
+  }
+
   protected function getNotaRecuperacaoParalelaAtual($etapa = null, $componenteCurricularId = null) {
     // defaults
     if (is_null($componenteCurricularId))
@@ -1431,6 +1526,10 @@ class DiarioApiController extends ApiCoreController
         $itensRegra['tipo_nota'] = $tpNota;
 
 
+      //Lançamento de nota manual
+      $tpProgressao = $this->serviceBoletim()->getRegra()->get('tipoProgressao');
+      $itensRegra['progressao_manual'] = ($tpProgressao == RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MANUAL);
+
       // tipo parecer
       $cnsParecer = RegraAvaliacao_Model_TipoParecerDescritivo;
       $tpParecer  = $this->serviceBoletim()->getRegra()->get('parecerDescritivo');
@@ -1521,6 +1620,30 @@ class DiarioApiController extends ApiCoreController
     return $obj_permissao->permissao_cadastra($processoAp, $user, 7);
   }
 
+  public function postSituacao(){
+    if($this->canPostSituacaoAndNota()){
+      $novaSituacao = $this->getRequest()->att_value;
+      $matriculaId = $this->getRequest()->matricula_id;
+
+      $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
+
+      $this->serviceBoletim()->alterarSituacao($novaSituacao, $matriculaId);
+      $this->messenger->append('Situação da matrícula '. $this->getRequest()->matricula_id .' alterada com sucesso.', 'success');
+    }else{
+      $this->messenger->append('Usuário não possui permissão para alterar a situação da matrícula.', 'error');
+    }
+  }
+
+  public function canPostSituacaoAndNota(){
+
+    @session_start();
+    $this->pessoa_logada = $_SESSION['id_pessoa'];
+    $acesso = new clsPermissoes();
+    session_write_close();
+    return $acesso->permissao_cadastra(630, $this->pessoa_logada, 7, null, true);
+
+  }
+
   public function Gerar() {
     if ($this->isRequestFor('get', 'matriculas')){
       $this->appendResponse('matriculas', $this->getMatriculas());
@@ -1546,6 +1669,15 @@ class DiarioApiController extends ApiCoreController
 
     elseif ($this->isRequestFor('post', 'nota_geral'))
       $this->postNotaGeral();
+
+    elseif ($this->isRequestFor('post', 'media'))
+      $this->postMedia();
+
+    elseif ($this->isRequestFor('delete', 'media'))
+      $this->deleteMedia();
+
+    elseif ($this->isRequestFor('post', 'situacao'))
+      $this->postSituacao();
 
     elseif ($this->isRequestFor('delete', 'nota') || $this->isRequestFor('delete', 'nota_exame'))
         $this->deleteNota();

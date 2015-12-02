@@ -187,6 +187,22 @@ var changeNotaGeralEtapa = function(event) {
   $fieldsNotaGeral.data('old_value', $element.val());
 
 };
+var changeMedia = function(event){
+  var $element = $j(this);
+
+  changeResource($element, postMedia, deleteMedia);
+
+  $element.data('old_value', $element.val());
+};
+
+var changeSituacao = function(event){
+  var $element = $j(this);
+
+  if($element.val() != 0){
+    changeResource($element, postSituacao);
+    $element.data('old_value', $element.val());
+  }
+};
 
 function afterChangeResource($resourceElement) {
   $resourceElement.removeAttr('disabled').siblings('img').remove();
@@ -248,8 +264,8 @@ function postNota($notaFieldElement) {
 }
 
 function checkIfShowNotaRecuperacaoParalelaField(notaLancada, dataResponse){
-  componente_curricular_id = dataResponse.componente_curricular_id
-  matricula_id = dataResponse.matricula_id
+  componente_curricular_id = dataResponse.componente_curricular_id;
+  matricula_id = dataResponse.matricula_id;
   $jnotaRecuperacaoParalelaField = $j('#nota-recuperacao-paralela-' + matricula_id + '-cc-' + componente_curricular_id);
 
   if(usaRecuperacaoParalelaPorEtapa){
@@ -445,6 +461,76 @@ function postNotaGeral($notaGeralElementField) {
   $notaGeralElementField.data('old_value', $notaGeralElementField.val());
   postResource(options, handleErrorOnPostResource);
 }
+function postMedia($mediaElementField) {
+  var additionalVars = {
+    matricula_id             : $mediaElementField.data('matricula_id'),
+    componente_curricular_id : $mediaElementField.data('componente_curricular_id'),
+    etapa                    : $j('#etapa').val()
+  };
+
+  var options = {
+    url : postResourceUrlBuilder.buildUrl(API_URL_BASE, 'media', additionalVars),
+    dataType : 'json',
+    data : {att_value : $mediaElementField.val()},
+    success : function(dataResponse) {
+      afterChangeResource($mediaElementField);
+      handleChange(dataResponse);
+    }
+  };
+
+  $mediaElementField.data('old_value', $mediaElementField.val());
+  postResource(options, handleErrorOnPostResource);
+}
+
+function deleteMedia($mediaFieldElement){
+
+  var resourceName = 'media';
+
+  var additionalVars = {
+    instituicao_id : $j('#ref_cod_instituicao').val(),
+    escola_id : $j('#ref_cod_escola').val(),
+    curso_id : $j('#ref_cod_curso').val(),
+    serie_id : $j('#ref_ref_cod_serie').val(),
+    turma_id : $j('#ref_cod_turma').val(),
+    ano_escolar : $j('#ano').val(),
+    componente_curricular_id : $mediaFieldElement.data('componente_curricular_id'),
+    etapa : $j('#etapa').val(),
+    matricula_id : $mediaFieldElement.data('matricula_id')
+   };
+
+  var options = {
+    url : deleteResourceUrlBuilder.buildUrl(API_URL_BASE, resourceName, additionalVars),
+    dataType : 'json',
+    success : function(dataResponse) {
+      checkIfShowNotaRecuperacaoParalelaField($mediaFieldElement.val(), dataResponse);
+      afterChangeResource($mediaFieldElement);
+      handleChange(dataResponse);
+    }
+  };
+
+  deleteResource(resourceName, $mediaFieldElement, options, handleErrorOnDeleteResource);
+}
+
+function postSituacao($situacaoElementField) {
+
+  var additionalVars = {
+    matricula_id : $situacaoElementField.data('matricula_id')
+  };
+
+  var options = {
+    url : postResourceUrlBuilder.buildUrl(API_URL_BASE, 'situacao', additionalVars),
+    dataType : 'json',
+    data : {att_value : $situacaoElementField.val()},
+    success : function(dataResponse) {
+      afterChangeResource($situacaoElementField);
+      handleChange(dataResponse);
+    }
+  };
+
+  $situacaoElementField.data('old_value', $situacaoElementField.val());
+  postResource(options, handleErrorOnPostResource);
+}
+
 
 function confirmDelete(resourceName) {
   return confirm(safeUtf8Decode('Confirma exclusão ' + resourceName.replace('_',' ') + '?'));
@@ -640,8 +726,11 @@ function deleteNotaGeral($notaGeralElementField) {
 //callback handlers
 
 function handleChange(dataResponse) {
+
+  var componenteCurricularId = dataResponse.componente_curricular_id ? dataResponse.componente_curricular_id : "";
+
   var targetId = dataResponse.resource + '-matricula-' + dataResponse.matricula_id +
-                 '-cc-' + dataResponse.componente_curricular_id;
+                 '-cc-' + componenteCurricularId;
   handleMessages(dataResponse.msgs, targetId);
   updateResourceRow(dataResponse);
 }
@@ -663,6 +752,8 @@ function setTableSearchDetails($tableSearchDetails, dataDetails) {
     window.tipo_recuperacao_paralela_nome = '';
     window.tipo_recuperacao_paralela_nota_maxima = 0;
   }
+
+  progressaoManual = dataDetails.progressao_manual;
 
   $j('<caption />').html('<strong>Lan&#231;amento de notas por turma</strong>').appendTo($tableSearchDetails);
 
@@ -797,6 +888,10 @@ function handleSearch($resultTable, dataResponse) {
     if (! componenteCurricularSelected && value.componentes_curriculares)
       updateComponenteCurriculares($resultTable, value.matricula_id, value.componentes_curriculares);
 
+    if(($tableSearchDetails.data('details').quantidade_etapas == $j('#etapa').val()) && progressaoManual && !componenteCurricularSelected){
+      situacaoFinalField(dataResponse.matricula_id, dataResponse.situacao).appendTo($resultTable);
+    }
+
     if ((!componenteCurricularSelected) && (showBotaoReplicarNotas))
       criaBotaoReplicarNotasPorArea(value.componentes_curriculares);
 
@@ -805,7 +900,7 @@ function handleSearch($resultTable, dataResponse) {
   // seta colspan [th, td].aluno quando exibe nota exame
   if ($tableSearchDetails.data('details').tipo_nota != 'nenhum' &&
       $tableSearchDetails.data('details').quantidade_etapas == $j('#etapa').val()) {
-    $resultTable.find('[colspan]:not(.area-conhecimento)').attr('colspan', componenteCurricularSelected ? 1 : 7);
+    $resultTable.find('[colspan]:not(.area-conhecimento)').attr('colspan', componenteCurricularSelected ? 1 : 10);
   }
 
   $resultTable.find('tr:even').addClass('even');
@@ -818,6 +913,8 @@ function handleSearch($resultTable, dataResponse) {
   var $notaRecuperacaoParalelaFields = $resultTable.find('.nota-recuperacao-paralela-cc');
   var $notaRecuperacaoEspecificaFields = $resultTable.find('.nota-recuperacao-especifica-matricula-cc');
   var $notaGeralEtapaFields = $resultTable.find('.nota-geral-etapa');
+  var $mediaFields = $resultTable.find('.media-cc');
+  var $situacaoField = $resultTable.find('.situacao-cc');
 
   $notaFields.on('change', changeNota);
   $notaExameFields.on('change', changeNotaExame);
@@ -826,6 +923,8 @@ function handleSearch($resultTable, dataResponse) {
   $notaRecuperacaoParalelaFields.on('change', changeNotaRecuperacaoParalela);
   $notaRecuperacaoEspecificaFields.on('change', changeNotaRecuperacaoEspecifica);
   $notaGeralEtapaFields.on('change', changeNotaGeralEtapa);
+  $mediaFields.on('change', changeMedia);
+  $situacaoField.on('change', changeSituacao);
 
   $resultTable.addClass('styled').find('.tabable:first').focus();
   navegacaoTab(dataResponse.navegacao_tab);
@@ -881,6 +980,48 @@ function _notaField(matriculaId, componenteCurricularId, klass, id, value, areaC
   return $j('<td />').html($notaField).addClass('center');
 }
 
+function _mediaField(matriculaId, componenteCurricularId, klass, id, value, areaConhecimentoId, maxLength) {
+  if($tableSearchDetails.data('details').tipo_nota == 'conceitual') {
+    var opcoesNotas = $tableSearchDetails.data('details').opcoes_notas;
+
+    var $notaField = $j('<select />')
+                     .addClass(klass)
+                     .addClass(areaConhecimentoId)
+                     .attr('id', id)
+                     .data('matricula_id', matriculaId)
+                     .data('componente_curricular_id', componenteCurricularId);
+
+    // adiciona opcoes notas ao select
+    var $option = $j('<option />').appendTo($notaField);
+    var selected = false;
+    for(key in opcoesNotas) {
+      var $option = $j('<option />').val(key).html(opcoesNotas[key]);
+
+      key = parseFloat(key);
+
+      if ((key == value) || ((key >= value) && !selected)){
+        $option.attr('selected', 'selected');
+        selected = true;
+      }
+
+      $option.appendTo($notaField);
+    }
+  }
+  else {
+    var $notaField = $j('<input />').addClass(klass)
+                                    .attr('id', id)
+                                    .attr('maxlength', maxLength)
+                                    .attr('size', maxLength)
+                                    .val(value)
+                                    .data('matricula_id', matriculaId)
+                                    .data('componente_curricular_id', componenteCurricularId);
+  }
+
+  $notaField.data('old_value', value);
+  setNextTabIndex($notaField);
+
+  return $j('<td />').html($notaField).addClass('center');
+}
 
 function notaField(matriculaId, componenteCurricularId, value, areaConhecimentoId, maxLength) {
   return _notaField(matriculaId,
@@ -980,6 +1121,16 @@ function notaRecuperacaoEspecificaField(matriculaId, componenteCurricularId, val
                     maxLength);
 }
 
+function mediaField(matriculaId, componenteCurricularId, value, maxLength){
+  return _mediaField(matriculaId,
+                    componenteCurricularId,
+                    'media-cc',
+                    'media-matricula-' + matriculaId + '-cc-' + componenteCurricularId,
+                    value,
+                    0,
+                    maxLength);
+}
+
 function getNotaGeralMaxLength(){
   return window.notaLimits.nota_maxima_geral.toString().length + window.notaLimits.qtd_casas_decimais + 1;
 }
@@ -1044,7 +1195,7 @@ function updateComponenteCurricular($targetElement, matriculaId, cc) {
       notaField(matriculaId, cc.id, cc.nota_atual, cc.area_id, getNotaGeralMaxLength()).appendTo($targetElement);
     }
 
-    // mostra nota exame caso estiver selecionado a ultima etapa
+    // mostra nota exame, média final e situação do aluno caso estiver selecionado a ultima etapa
     if ($tableSearchDetails.data('details').quantidade_etapas == $j('#etapa').val()) {
       var $fieldNotaExame = notaExameField(matriculaId, cc.id, cc.nota_exame, getNotaExameFinalMaxLength());
 
@@ -1060,6 +1211,16 @@ function updateComponenteCurricular($targetElement, matriculaId, cc) {
       // Adiciona campo com nota necessária
 
       $fieldNN.appendTo($targetElement);
+
+      if(progressaoManual){
+        if($tableSearchDetails.data('details').tipo_nota == 'numerica'){
+          var $fieldMedia = mediaField(matriculaId, cc.id, cc.media_arredondada, getNotaGeralMaxLength());
+        }else{
+          var $fieldMedia = mediaField(matriculaId, cc.id, cc.media, getNotaGeralMaxLength());
+        }
+
+        $fieldMedia.appendTo($targetElement);
+      }
     }
 
   }
@@ -1091,6 +1252,9 @@ function updateComponenteCurricularHeaders($targetElement, $tagElement) {
     if ($tableSearchDetails.data('details').quantidade_etapas == $j('#etapa').val()){
       $tagElement.clone().addClass('center').html('Nota '+nomenclatura_exame).appendTo($targetElement);
       $tagElement.clone().addClass('center').html(safeUtf8Decode('Nota necessária no '+nomenclatura_exame)).appendTo($targetElement);
+      if(progressaoManual){
+        $tagElement.clone().addClass('center').html(safeUtf8Decode('Média final')).appendTo($targetElement);
+      }
     }
   }
   if(usaNotaGeralPorEtapa){
@@ -1177,6 +1341,7 @@ function updateResourceRow(dataResponse) {
   var $fieldNotaExame = $j('#nota-exame-matricula-' + matriculaId + '-cc-' + ccId);
   var $fieldNotaEspecifica = $j('#nota-recuperacao-especifica-matricula-' + matriculaId + '-cc-' + ccId);
   var $fieldNN = $j('#nn-matricula-' + matriculaId + '-cc-' + ccId);
+  var $fieldMedia = $j('#media-matricula-' + matriculaId + '-cc-' + ccId);
 
   if(usaNotaGeralPorEtapa){
     $situacaoField = $j('.situacao-matricula-cc');
@@ -1208,6 +1373,48 @@ function updateResourceRow(dataResponse) {
     }else
       $fieldNotaEspecifica.hide();
   }
+  changeMediaValue($fieldMedia.attr('id'), dataResponse.media, dataResponse.media_arredondada);
+}
+
+function changeMediaValue(elementId, nota, notaArredondada){
+  if(nota != undefined){
+    if($tableSearchDetails.data('details').tipo_nota == 'conceitual'){
+      var selected = false;
+      $j('#' + elementId + ' option').each(function(){
+        valorOption = parseFloat($j(this).val());
+        if(valorOption != ""){
+          if((valorOption == nota) || ((valorOption >= nota)) && !selected) {
+            $j(this).attr('selected', 'selected');
+            selected = true;
+          }else{
+            $j(this).removeAttr('selected');
+          }
+        }
+      });
+    }else{
+      $j('#' + elementId).val(notaArredondada);
+    }
+  }
+}
+
+function situacaoFinalField($matriculaId, $situacao){
+
+  var $selectSituacao  = $j('<select />').attr('id', 'situacao' + '-matricula-' + $matriculaId + '-cc-').addClass('situacao-cc').data('matricula_id', $matriculaId);
+  var $optionDefault              = $j('<option />').html('').val(0).attr('selected', 'selected');
+  var $optionAprovado             = $j('<option />').html('Aprovado').val(1);
+  var $optionRetido               = $j('<option />').html('Retido').val(2);
+  var $optionAprovadoPeloConselho = $j('<option />').html('Aprovado pelo conselho').val(13);
+
+  $optionDefault.appendTo($selectSituacao);
+  $optionAprovado.appendTo($selectSituacao);
+  $optionRetido.appendTo($selectSituacao);
+  $optionAprovadoPeloConselho.appendTo($selectSituacao);
+
+  var $element = $j('<tr />').addClass('center resultado-final');
+  $j('<td />').addClass('center resultado-final').html(safeUtf8Decode('Situação final')).appendTo($element);
+  $j('<td />').addClass('resultado-final-esquerda').attr('colspan', '6').html($selectSituacao).appendTo($element);
+
+  return $element;
 }
 
 function colorizeSituacaoTd(tdElement, situacao) {

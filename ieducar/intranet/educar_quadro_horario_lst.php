@@ -183,7 +183,24 @@ class indice extends clsConfig
         $det_quadro = $obj_quadro->detalhe();
 
         if (is_array($det_quadro)) {
-          $quadro_horario = "<table class='calendar' cellspacing='0' cellpadding='0' border='0'><tr><td class='cal_esq' >&nbsp;</td><td background='imagens/i-educar/cal_bg.gif' width='100%' class='mes'>{$det_turma["nm_turma"]}</td><td align='right' class='cal_dir'>&nbsp;</td></tr><tr><td colspan='3' class='bordaM' style='border-bottom: 1px solid #8A959B;'  align='center'><table cellspacing='0' cellpadding='0'  border='0' ><tr class='header'><td style='border-right: 1px dotted #FFFFFF;width: 100px;'>DOM</td><td style='border-right: 1px dotted #FFFFFF;width: 100px;'>SEG</td><td style='border-right: 1px dotted #FFFFFF;width: 100px;'>TER</td><td style='border-right: 1px dotted #FFFFFF;width: 100px;'>QUA</td><td style='border-right: 1px dotted #FFFFFF;width: 100px;'>QUI</td><td style='border-right: 1px dotted #FFFFFF;width: 100px;'>SEX</td><td style='width: 100px;'>SAB</td></tr>";
+          $quadro_horario = "<table class='calendar' cellspacing='0' cellpadding='0' border='0'>
+                            <tr>
+                              <td class='cal_esq_qh' >&nbsp;</td>
+                              <td background='imagens/i-educar/cal_bg.gif' width='100%' class='mes'>{$det_turma["nm_turma"]}</td>
+                              <td align='right' class='cal_dir'>&nbsp;</td>
+                              </tr>
+                            <tr>
+                              <td colspan='3' class='bordaM' style='border-bottom: 1px solid #8A959B;'  align='center'>
+                                <table cellspacing='0' cellpadding='0'  border='0' >
+                                  <tr class='header'>
+                                    <td style='border-right: 1px dotted #FFFFFF;width: 100px;'>DOM</td>
+                                    <td style='border-right: 1px dotted #FFFFFF;width: 100px;'>SEG</td>
+                                    <td style='border-right: 1px dotted #FFFFFF;width: 100px;'>TER</td>
+                                    <td style='border-right: 1px dotted #FFFFFF;width: 100px;'>QUA</td>
+                                    <td style='border-right: 1px dotted #FFFFFF;width: 100px;'>QUI</td>
+                                    <td style='border-right: 1px dotted #FFFFFF;width: 100px;'>SEX</td>
+                                    <td style='width: 100px;'>SAB</td>
+                                  </tr>";
           $texto = '<tr>';
 
           for ($c = 1; $c <= 7; $c++) {
