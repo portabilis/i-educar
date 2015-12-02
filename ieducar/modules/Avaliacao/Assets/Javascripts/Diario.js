@@ -997,6 +997,8 @@ function _mediaField(matriculaId, componenteCurricularId, klass, id, value, area
     for(key in opcoesNotas) {
       var $option = $j('<option />').val(key).html(opcoesNotas[key]);
 
+      key = parseFloat(key);
+
       if ((key == value) || ((key >= value) && !selected)){
         $option.attr('selected', 'selected');
         selected = true;
@@ -1379,9 +1381,9 @@ function changeMediaValue(elementId, nota, notaArredondada){
     if($tableSearchDetails.data('details').tipo_nota == 'conceitual'){
       var selected = false;
       $j('#' + elementId + ' option').each(function(){
-        valorOption = $j(this).val();
+        valorOption = parseFloat($j(this).val());
         if(valorOption != ""){
-          if((nota == valorOption) || ((valorOption >= nota) && !selected)) {
+          if((valorOption == nota) || ((valorOption >= nota)) && !selected) {
             $j(this).attr('selected', 'selected');
             selected = true;
           }else{
