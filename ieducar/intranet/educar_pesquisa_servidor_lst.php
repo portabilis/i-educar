@@ -92,6 +92,7 @@ class indice extends clsListagem
   var $vespertino = FALSE;
   var $noturno    = FALSE;
   var $identificador;
+  var $ano_alocacao;
   function Gerar()
   {
     @session_start();
@@ -109,6 +110,7 @@ class indice extends clsListagem
     $_SESSION['min_not']            = $_GET['min_not'] ? $_GET['min_not'] : $_SESSION['min_not'];
     $_SESSION['ref_cod_disciplina'] = $_GET['ref_cod_disciplina'] ? $_GET['ref_cod_disciplina'] : $_SESSION['ref_cod_disciplina'];
     $_SESSION['ref_cod_curso']      = $_GET['ref_cod_curso'] ? $_GET['ref_cod_curso'] : $_SESSION['ref_cod_curso'];
+    $_SESSION['ano_alocacao']       = $_GET['ano_alocacao'] ? $_GET['ano_alocacao'] : $_SESSION['ano_alocacao'];
     /**
      * Controle para cálculo de horas
      */
@@ -132,6 +134,7 @@ class indice extends clsListagem
     $this->ref_cod_disciplina  = $_SESSION['ref_cod_disciplina']  = $_GET['ref_cod_disciplina'] ? $_GET['ref_cod_disciplina'] : $_SESSION['ref_cod_disciplina'];
     $this->ref_cod_curso       = $_SESSION['ref_cod_curso']       = $_GET['ref_cod_curso'] ? $_GET['ref_cod_curso'] : $_SESSION['ref_cod_curso'];
     $this->identificador       = $_SESSION['identificador']       = $_GET['identificador'] ? $_GET['identificador'] : $_SESSION['identificador'];
+    $this->ano_alocacao        = $_SESSION['ano_alocacao']        = $_GET['ano_alocacao'] ? $_GET['ano_alocacao'] : $_SESSION['ano_alocacao'];
     if (isset($_GET['lst_matriculas']) && isset($_SESSION['lst_matriculas'])) {
       $this->lst_matriculas = $_GET['lst_matriculas'] ?
         $_GET['lst_matriculas'] : $_SESSION['lst_matriculas'];
@@ -240,7 +243,10 @@ class indice extends clsListagem
       $this->ref_cod_escola,
       $this->identificador,
       $this->ref_cod_curso,
-      $this->ref_cod_disciplina
+      $this->ref_cod_disciplina,
+      NULL,
+      NULL,
+      $this->ano_alocacao
     );
 
     // Se for uma listagem de professores, recupera as disciplinas dadas para

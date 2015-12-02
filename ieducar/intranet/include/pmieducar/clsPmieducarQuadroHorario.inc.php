@@ -41,6 +41,7 @@ class clsPmieducarQuadroHorario
 	var $data_cadastro;
 	var $data_exclusao;
 	var $ativo;
+	var $ano;
 
 	// propriedades padrao
 
@@ -106,7 +107,7 @@ class clsPmieducarQuadroHorario
 	 *
 	 * @return object
 	 */
-	function clsPmieducarQuadroHorario( $cod_quadro_horario = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $ref_cod_turma = null, $data_cadastro = null, $data_exclusao = null, $ativo = null )
+	function clsPmieducarQuadroHorario( $cod_quadro_horario = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $ref_cod_turma = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $ano = null )
 	{
 		$db = new clsBanco();
 		$this->_schema = "pmieducar.";
@@ -216,6 +217,10 @@ class clsPmieducarQuadroHorario
 		{
 			$this->ativo = $ativo;
 		}
+		if( is_numeric( $ano ) )
+		{
+			$this->ano = $ano;
+		}
 
 	}
 
@@ -244,6 +249,12 @@ class clsPmieducarQuadroHorario
 			{
 				$campos .= "{$gruda}ref_cod_turma";
 				$valores .= "{$gruda}'{$this->ref_cod_turma}'";
+				$gruda = ", ";
+			}
+			if( is_numeric( $this->ano ) )
+			{
+				$campos .= "{$gruda}ano";
+				$valores .= "{$gruda}'{$this->ano}'";
 				$gruda = ", ";
 			}
 			$campos .= "{$gruda}data_cadastro";
@@ -286,6 +297,11 @@ class clsPmieducarQuadroHorario
 			if( is_numeric( $this->ref_cod_turma ) )
 			{
 				$set .= "{$gruda}ref_cod_turma = '{$this->ref_cod_turma}'";
+				$gruda = ", ";
+			}
+			if( is_numeric( $this->ano ) )
+			{
+				$set .= "{$gruda}ano = '{$this->ano}'";
 				$gruda = ", ";
 			}
 			if( is_string( $this->data_cadastro ) )
