@@ -71,7 +71,7 @@ class PromocaoApiController extends ApiCoreController
   }
 
   protected function loadNextMatriculaId($currentMatriculaId) {
-    $escolaId = is_null($this->getRequest()->escola) ? 0 : $this->getRequest()->escola;
+    $escolaId = $this->getRequest()->escola == "" ? 0 : $this->getRequest()->escola;
     $sql = "select m.cod_matricula
               from pmieducar.matricula as m,
                    pmieducar.matricula_turma as mt
