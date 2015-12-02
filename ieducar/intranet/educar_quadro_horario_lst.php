@@ -141,6 +141,7 @@ class indice extends clsConfig
       $this->ref_cod_curso       = $_POST['ref_cod_curso'] ? $_POST['ref_cod_curso'] : NULL;
       $this->ref_cod_escola      = $_POST['ref_cod_escola'] ? $_POST['ref_cod_escola'] : NULL;
       $this->ref_cod_instituicao = $_POST['ref_cod_instituicao'] ? $_POST['ref_cod_instituicao'] : NULL;
+      $this->ano                 = $_POST['ano'] ? $_POST['ano'] : NULL;
       $this->busca               = $_GET['busca'] ? $_GET['busca'] : NULL;
     }
     else {
@@ -168,6 +169,7 @@ class indice extends clsConfig
     $obrigatorio     = FALSE;
     $get_instituicao = TRUE;
     $get_escola      = TRUE;
+    $get_ano         = TRUE;
     $get_curso       = TRUE;
     $get_serie       = TRUE;
     $get_turma       = TRUE;
@@ -208,7 +210,7 @@ class indice extends clsConfig
             $resultado    = $obj_horarios->retornaHorario($this->ref_cod_instituicao,
               $this->ref_cod_escola, $this->ref_cod_serie, $this->ref_cod_turma, $c);
 
-            $texto .= "<td valign=top align='center' width='100' style='cursor: pointer; ' onclick='envia( this, {$this->ref_cod_turma}, {$this->ref_cod_serie}, {$this->ref_cod_curso}, {$this->ref_cod_escola}, {$this->ref_cod_instituicao}, {$det_quadro["cod_quadro_horario"]}, {$c} );'>";
+            $texto .= "<td valign=top align='center' width='100' style='cursor: pointer; ' onclick='envia( this, {$this->ref_cod_turma}, {$this->ref_cod_serie}, {$this->ref_cod_curso}, {$this->ref_cod_escola}, {$this->ref_cod_instituicao}, {$det_quadro["cod_quadro_horario"]}, {$c}, {$this->ano} );'>";
 
             if (is_array($resultado)) {
               $resultado = $this->organizarHorariosIguais($resultado);
@@ -261,11 +263,11 @@ class indice extends clsConfig
             <td align=\"center\" colspan=\"2\">";
 
       if (!$det_quadro) {
-        $retorno .= "<input type=\"button\" value=\"Novo Quadro de Hor&aacute;rios\" onclick=\"window.location='educar_quadro_horario_cad.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao};'\" class=\"botaolistagem\"/>";
+        $retorno .= "<input type=\"button\" value=\"Novo Quadro de Hor&aacute;rios\" onclick=\"window.location='educar_quadro_horario_cad.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}&ano={$this->ano}'\" class=\"botaolistagem\"/>";
       }
       else {
         if ($obj_permissoes->permissao_excluir(641, $this->pessoa_logada, 7))
-          $retorno .= "<input type=\"button\" value=\"Excluir Quadro de Hor&aacute;rios\" onclick=\"window.location='educar_quadro_horario_cad.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}&ref_cod_quadro_horario={$det_quadro["cod_quadro_horario"]}'\" class=\"botaolistagem\"/>";
+          $retorno .= "<input type=\"button\" value=\"Excluir Quadro de Hor&aacute;rios\" onclick=\"window.location='educar_quadro_horario_cad.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}&ano={$this->ano}&ref_cod_quadro_horario={$det_quadro["cod_quadro_horario"]}'\" class=\"botaolistagem\"/>";
       }
 
       $retorno .= "</td>
@@ -312,6 +314,7 @@ var campoEscola = document.getElementById('ref_cod_escola');
 var campoCurso = document.getElementById('ref_cod_curso');
 var campoSerie = document.getElementById('ref_cod_serie');
 var campoTurma = document.getElementById('ref_cod_turma');
+var campoAno   = document.getElementById('ano');
 
 campoInstituicao.onchange = function()
 {
@@ -341,6 +344,10 @@ campoEscola.onchange = function()
 {
   var campoEscola_ = document.getElementById( 'ref_cod_escola' ).value;
 
+  campoAno.length = 1;
+  campoAno.disabled = true;
+  campoAno.options[0].text = 'Selecione uma escola antes';
+
   campoCurso.length = 1;
   campoCurso.disabled = true;
   campoCurso.options[0].text = 'Carregando curso';
@@ -355,9 +362,29 @@ campoEscola.onchange = function()
 
   var xml_curso = new ajax(getCurso);
   xml_curso.envia('educar_curso_xml.php?esc=' + campoEscola_);
+
+  var xml_ano = new ajax(getAnoLetivo);
+  xml_ano.envia('educar_escola_ano_letivo_xml.php?esc=' + campoEscola_);
 };
 
 campoCurso.onchange = function()
+{
+  var campoEscola_ = document.getElementById('ref_cod_escola').value;
+  var campoCurso_ = document.getElementById('ref_cod_curso').value;
+
+  campoSerie.length = 1;
+  campoSerie.disabled = true;
+  campoSerie.options[0].text = 'Carregando série';
+
+  campoTurma.length = 1;
+  campoTurma.disabled = true;
+  campoTurma.options[0].text = 'Selecione uma Série antes';
+
+  var xml_serie = ajax(getSerie);
+  xml_serie.envia('educar_escola_curso_serie_xml.php?esc=' + campoEscola_ + '&cur=' + campoCurso_);
+};
+
+campoAno.onchange = function()
 {
   var campoEscola_ = document.getElementById('ref_cod_escola').value;
   var campoCurso_ = document.getElementById('ref_cod_curso').value;
@@ -378,13 +405,14 @@ campoSerie.onchange = function()
 {
   var campoEscola_ = document.getElementById('ref_cod_escola').value;
   var campoSerie_ = document.getElementById('ref_cod_serie').value;
+  var campoAno_ = document.getElementById('ano').value;
 
   campoTurma.length = 1;
   campoTurma.disabled = true;
   campoTurma.options[0].text = 'Carregando turma';
 
   var xml_turma = new ajax(getTurma);
-  xml_turma.envia('educar_turma_xml.php?esc=' + campoEscola_ + '&ser=' + campoSerie_);
+  xml_turma.envia('educar_turma_xml.php?esc=' + campoEscola_ + '&ser=' + campoSerie_ + '&ano=' + campoAno_);
 };
 
 if (document.getElementById('botao_busca')) {
@@ -396,16 +424,16 @@ if (document.getElementById('botao_busca')) {
   };
 }
 
-function envia(obj, var1, var2, var3, var4, var5, var6, var7)
+function envia(obj, var1, var2, var3, var4, var5, var6, var7, var8)
 {
   var identificador = Math.round(1000000000 * Math.random());
 
   if (obj.innerHTML) {
-    document.formcadastro.action = 'educar_quadro_horario_horarios_cad.php?ref_cod_turma=' + var1 + '&ref_cod_serie=' + var2 + '&ref_cod_curso=' + var3 + '&ref_cod_escola=' + var4 + '&ref_cod_instituicao=' + var5 + '&ref_cod_quadro_horario=' + var6 + '&dia_semana=' + var7 + '&identificador=' + identificador;
+    document.formcadastro.action = 'educar_quadro_horario_horarios_cad.php?ref_cod_turma=' + var1 + '&ref_cod_serie=' + var2 + '&ref_cod_curso=' + var3 + '&ref_cod_escola=' + var4 + '&ref_cod_instituicao=' + var5 + '&ref_cod_quadro_horario=' + var6 + '&dia_semana=' + var7 + '&ano=' + var8 + '&identificador=' + identificador;
     document.formcadastro.submit();
   }
   else {
-    document.formcadastro.action = 'educar_quadro_horario_horarios_cad.php?ref_cod_turma=' + var1 + '&ref_cod_serie=' + var2 + '&ref_cod_curso=' + var3 + '&ref_cod_escola=' + var4 + '&ref_cod_instituicao=' + var5 + '&ref_cod_quadro_horario=' + var6 + '&dia_semana=' + var7 + '&identificador=' + identificador;
+    document.formcadastro.action = 'educar_quadro_horario_horarios_cad.php?ref_cod_turma=' + var1 + '&ref_cod_serie=' + var2 + '&ref_cod_curso=' + var3 + '&ref_cod_escola=' + var4 + '&ref_cod_instituicao=' + var5 + '&ref_cod_quadro_horario=' + var6 + '&dia_semana=' + var7 + '&ano=' + var8 + '&identificador=' + identificador;
     document.formcadastro.submit();
   }
 }
