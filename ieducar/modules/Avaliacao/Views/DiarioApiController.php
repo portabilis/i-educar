@@ -525,6 +525,7 @@ class DiarioApiController extends ApiCoreController
     $this->appendResponse('situacao',     $this->getSituacaoComponente());
     $this->appendResponse('nota_necessaria_exame', $notaNecessariaExame = $this->getNotaNecessariaExame($this->getRequest()->componente_curricular_id));
     $this->appendResponse('media', $this->getMediaAtual($this->getRequest()->componente_curricular_id));
+    $this->appendResponse('media_arredondada', $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id));
 
     if (!empty($notaNecessariaExame) && in_array($this->getSituacaoComponente(), array('Em Exame', 'Aprovado Após Exame', 'Retido')))
       $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $notaNecessariaExame);
@@ -547,6 +548,7 @@ class DiarioApiController extends ApiCoreController
     $this->appendResponse('situacao',     $this->getSituacaoComponente($this->getRequest()->componente_curricular_id));
     $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
     $this->appendResponse('media', $this->getMediaAtual($this->getRequest()->componente_curricular_id));
+    $this->appendResponse('media_arredondada', $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id));
   }
 
   protected function postMedia(){
@@ -561,6 +563,7 @@ class DiarioApiController extends ApiCoreController
       $this->appendResponse('situacao',     $this->getSituacaoComponente($this->getRequest()->componente_curricular_id));
       $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
       $this->appendResponse('media', $this->getMediaAtual($this->getRequest()->componente_curricular_id));
+      $this->appendResponse('media_arredondada', $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id));
     }else{
       $this->messenger->append('Usuário não possui permissão para alterar a média do aluno.', 'error');
     }
@@ -618,6 +621,7 @@ class DiarioApiController extends ApiCoreController
     $this->appendResponse('nota_necessaria_exame', $notaNecessariaExame = $this->getNotaNecessariaExame($this->getRequest()->componente_curricular_id));
     $this->appendResponse('nota_nova', ($notaNova > $notaOriginal ? $notaNova : null));
     $this->appendResponse('media', $this->getMediaAtual($this->getRequest()->componente_curricular_id));
+    $this->appendResponse('media_arredondada', $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id));
 
     if (!empty($notaNecessariaExame) && in_array($this->getSituacaoComponente(), array('Em Exame', 'Aprovado Após Exame', 'Retido')))
       $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $notaNecessariaExame);
@@ -651,6 +655,7 @@ class DiarioApiController extends ApiCoreController
     $this->appendResponse('situacao',     $this->getSituacaoComponente());
     $this->appendResponse('nota_necessaria_exame', $notaNecessariaExame = $this->getNotaNecessariaExame($this->getRequest()->componente_curricular_id));
     $this->appendResponse('media', $this->getMediaAtual($this->getRequest()->componente_curricular_id));
+    $this->appendResponse('media_arredondada', $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id));
 
     if (!empty($notaNecessariaExame) && in_array($this->getSituacaoComponente(), array('Em Exame', 'Aprovado Após Exame', 'Retido')))
       $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $notaNecessariaExame);
@@ -727,6 +732,7 @@ class DiarioApiController extends ApiCoreController
     $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
     $this->appendResponse('situacao',     $this->getSituacaoComponente());
     $this->appendResponse('media', $this->getMediaAtual($this->getRequest()->componente_curricular_id));
+    $this->appendResponse('media_arredondada', $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id));
   }
 
   protected function deleteNotaRecuperacaoParalela(){
@@ -749,6 +755,7 @@ class DiarioApiController extends ApiCoreController
       $this->appendResponse('situacao',      $this->getSituacaoComponente());
       $this->appendResponse('nota_original', $notaOriginal);
       $this->appendResponse('media', $this->getMediaAtual($this->getRequest()->componente_curricular_id));
+      $this->appendResponse('media_arredondada', $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id));
     }
   }
 
@@ -772,6 +779,7 @@ class DiarioApiController extends ApiCoreController
       $this->appendResponse('situacao',      $this->getSituacaoComponente());
       $this->appendResponse('nota_original', $notaOriginal);
       $this->appendResponse('media', $this->getMediaAtual($this->getRequest()->componente_curricular_id));
+      $this->appendResponse('media_arredondada', $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id));
     }
   }
 
@@ -1102,6 +1110,7 @@ class DiarioApiController extends ApiCoreController
       $componente['nota_original']             = $this->getNotaOriginal($etapa, $componente['id']);
       $componente['nota_geral_etapa']          = $this->getNotaGeral($etapa);
       $componente['media']                     = $this->getMediaAtual($componente['id']);
+      $componente['media_arredondada']         = $this->getMediaArredondadaAtual($componente['id']);
 
       if (!empty($componente['nota_necessaria_exame']))
         $this->createOrUpdateNotaExame($matriculaId, $componente['id'], $componente['nota_necessaria_exame']);
@@ -1223,6 +1232,23 @@ class DiarioApiController extends ApiCoreController
     }
 
     $media = urldecode($this->serviceBoletim()->getMediaComponente($componenteCurricularId)->media);
+
+    // $media = round($media,1);
+
+    return str_replace(',', '.', $media);
+  }
+
+    protected function getMediaArredondadaAtual($componenteCurricularId = null) {
+    // defaults
+    if (is_null($componenteCurricularId))
+      $componenteCurricularId = $this->getRequest()->componente_curricular_id;
+
+    // validacao
+    if (! is_numeric($componenteCurricularId)) {
+      throw new Exception('Não foi possivel obter a média atual, pois não foi recebido o id do componente curricular.');
+    }
+
+    $media = urldecode($this->serviceBoletim()->getMediaComponente($componenteCurricularId)->mediaArredondada);
 
     // $media = round($media,1);
 

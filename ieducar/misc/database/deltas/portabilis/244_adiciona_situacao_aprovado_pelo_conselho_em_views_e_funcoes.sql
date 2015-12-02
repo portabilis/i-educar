@@ -89,6 +89,8 @@ WHERE (CASE WHEN matricula.aprovado = 4 THEN ((matricula_turma.ativo = 1
 
 ALTER TABLE relatorio.view_situacao OWNER TO ieducar;
 
+GRANT ALL PRIVILEGES ON TABLE relatorio.situacao_matricula TO ieducar;
+
    -- UNDO
 
   DELETE FROM relatorio.situacao_matricula where cod_situacao = 13;

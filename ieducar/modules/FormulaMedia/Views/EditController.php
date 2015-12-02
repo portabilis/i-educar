@@ -75,6 +75,7 @@ class EditController extends Core_Controller_Page_EditController
                    &middot; RSPMN - Média das etapas ou Média das etapas com Recuperação específica (Pega maior) n (de 1 a 10)<br />
                    Símbolos disponíveis:<br />
                    &middot; (), +, /, *, x<br />
+                   &middot; < > ? :
                    A variável "Rc" está disponível apenas<br />
                    quando Tipo de fórmula for "Recuperação".'
     ),
@@ -115,7 +116,7 @@ class EditController extends Core_Controller_Page_EditController
 
     // Fórmula de média
     $this->campoTexto('formulaMedia', $this->_getLabel('formulaMedia'),
-      $this->getEntity()->formulaMedia, 40, 50, TRUE, FALSE, FALSE,
+      $this->getEntity()->formulaMedia, 40, 200, TRUE, FALSE, FALSE,
       $this->_getHelp('formulaMedia'));
 
     // Fórmula de recuperação
