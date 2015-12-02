@@ -95,6 +95,7 @@ class indice extends clsCadastro
   var $excluir_horario;
   var $lst_matriculas;
   var $identificador;
+  var $ano_alocacao;
 
   var $min_mat = 0;
   var $min_ves = 0;
@@ -114,6 +115,7 @@ class indice extends clsCadastro
     $this->ref_cod_quadro_horario = $_GET['ref_cod_quadro_horario'];
     $this->dia_semana             = $_GET['dia_semana'];
     $this->identificador          = $_GET['identificador'];
+    $this->ano_alocacao           = $_GET['ano'];
 
     @session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
@@ -122,7 +124,7 @@ class indice extends clsCadastro
     $obj_permissoes = new clsPermissoes();
 
     $obj_permissoes->permissao_cadastra(641, $this->pessoa_logada, 7,
-      "educar_quadro_horario_lst.php?ref_cod_instituicao={$this->ref_cod_instituicao}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_serie={$this->ref_ref_cod_serie}&ref_cod_turma={$this->ref_cod_turma}");
+      "educar_quadro_horario_lst.php?ref_cod_instituicao={$this->ref_cod_instituicao}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_serie={$this->ref_ref_cod_serie}&ref_cod_turma={$this->ref_cod_turma}$ano={$this->ano_alocacao}");
 
     if (!$_POST) {
       $obj_quadro_horarios_aux = new clsPmieducarQuadroHorarioHorariosAux();
@@ -191,7 +193,7 @@ class indice extends clsCadastro
       die;
     }
 
-    $this->url_cancelar = "educar_quadro_horario_lst.php?ref_cod_instituicao={$this->ref_cod_instituicao}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_serie={$this->ref_ref_cod_serie}&ref_cod_turma={$this->ref_cod_turma}&busca=S";
+    $this->url_cancelar = "educar_quadro_horario_lst.php?ref_cod_instituicao={$this->ref_cod_instituicao}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_serie={$this->ref_ref_cod_serie}&ref_cod_turma={$this->ref_cod_turma}&ano={$this->ano_alocacao}&busca=S";
     $this->nome_url_cancelar = 'Cancelar';
 
     $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
@@ -487,6 +489,7 @@ class indice extends clsCadastro
     $this->campoOculto('ref_cod_turma', $this->ref_cod_turma);
     $this->campoOculto('quadro_horario', serialize($this->quadro_horario));
     $this->campoOculto('ref_cod_curso_', $this->ref_cod_curso);
+    $this->campoOculto('ano_alocacao', $this->ano_alocacao);
     $this->campoOculto('lst_matriculas', urlencode($this->lst_matriculas));
     $this->campoOculto('min_mat', $this->min_mat);
     $this->campoOculto('min_ves', $this->min_ves);
@@ -537,7 +540,7 @@ class indice extends clsCadastro
 
       foreach ($opcoes_disc as $displina) {
 
-          $parametros = "?ref_cod_instituicao={$this->ref_cod_instituicao}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_serie={$this->ref_ref_cod_serie}&ref_cod_turma={$this->ref_cod_turma}&busca=S";
+          $parametros = "?ref_cod_instituicao={$this->ref_cod_instituicao}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_serie={$this->ref_ref_cod_serie}&ref_cod_turma={$this->ref_cod_turma}&ano={$this->ano_alocacao}&busca=S";
 
           $obj_horario = new clsPmieducarQuadroHorarioHorarios(
             $this->ref_cod_quadro_horario, $this->ref_ref_cod_serie,
@@ -561,7 +564,7 @@ class indice extends clsCadastro
     }
     else{
       foreach ($this->quadro_horario as $registro) {
-        $parametros = "?ref_cod_instituicao={$registro["ref_cod_instituicao_servidor_"]}&ref_cod_escola={$registro["ref_ref_cod_escola_"]}&ref_cod_curso={$this->ref_cod_curso_}&ref_cod_serie={$registro["ref_ref_cod_serie_"]}&ref_cod_turma={$this->ref_cod_turma}&busca=S";
+        $parametros = "?ref_cod_instituicao={$registro["ref_cod_instituicao_servidor_"]}&ref_cod_escola={$registro["ref_ref_cod_escola_"]}&ref_cod_curso={$this->ref_cod_curso_}&ref_cod_serie={$registro["ref_ref_cod_serie_"]}&ref_cod_turma={$this->ref_cod_turma}&ano={$this->ano_alocacao}&busca=S";
 
         $obj_horario = new clsPmieducarQuadroHorarioHorarios(
           $registro['ref_cod_quadro_horario_'], $registro['ref_ref_cod_serie_'],
@@ -639,7 +642,7 @@ class indice extends clsCadastro
       }
       foreach ($opcoes_disc as $displina) {
 
-        $parametros = "?ref_cod_instituicao={$this->ref_cod_instituicao}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_serie={$this->ref_ref_cod_serie}&ref_cod_turma={$this->ref_cod_turma}&busca=S";
+        $parametros = "?ref_cod_instituicao={$this->ref_cod_instituicao}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_serie={$this->ref_ref_cod_serie}&ref_cod_turma={$this->ref_cod_turma}&ano={$this->ano_alocacao}&busca=S";
 
         $obj_horario = new clsPmieducarQuadroHorarioHorarios(
           $this->ref_cod_quadro_horario, $this->ref_ref_cod_serie,
@@ -662,7 +665,7 @@ class indice extends clsCadastro
       }
     }elseif (is_array($this->quadro_horario)) {
       foreach ($this->quadro_horario as $registro) {
-        $parametros  = "?ref_cod_instituicao={$registro["ref_cod_instituicao_servidor_"]}&ref_cod_escola={$registro["ref_ref_cod_escola_"]}&ref_cod_curso={$this->ref_cod_curso_}&ref_cod_serie={$registro["ref_ref_cod_serie_"]}&ref_cod_turma={$this->ref_cod_turma}&busca=S";
+        $parametros  = "?ref_cod_instituicao={$registro["ref_cod_instituicao_servidor_"]}&ref_cod_escola={$registro["ref_ref_cod_escola_"]}&ref_cod_curso={$this->ref_cod_curso_}&ref_cod_serie={$registro["ref_ref_cod_serie_"]}&ref_cod_turma={$this->ref_cod_turma}&ano={$this->ano_alocacao}&busca=S";
         $obj_horario = new clsPmieducarQuadroHorarioHorarios(
           $registro['ref_cod_quadro_horario_'], $registro['ref_ref_cod_serie_'],
           $registro['ref_ref_cod_escola_'], $registro['ref_ref_cod_disciplina_'],
@@ -825,6 +828,7 @@ function validaCampoServidor()
     var identificador;
     var ref_cod_disciplina;
     var ref_cod_curso;
+    var ano_alocacao;
 
     if (document.getElementById('ref_cod_instituicao').value) {
       ref_cod_instituicao = document.getElementById('ref_cod_instituicao').value;
@@ -872,6 +876,10 @@ function validaCampoServidor()
 
     if (document.getElementById('ref_cod_curso').value) {
       ref_cod_curso = document.getElementById('ref_cod_curso').value;
+    }
+
+    if (document.getElementById('ano_alocacao').value) {
+      ano_alocacao = document.getElementById('ano_alocacao').value;
     }
 
     if (document.getElementById('hora_inicial').value && document.getElementById('hora_final').value) {
@@ -936,10 +944,10 @@ function validaCampoServidor()
 
     if (verificaQuadroHorario()) {
       if (document.getElementById('lst_matriculas').value) {
-        pesquisa_valores_popless('educar_pesquisa_servidor_lst.php?campo1=ref_cod_servidor&matricula=1&ref_cod_servidor=0&ref_cod_instituicao=' + ref_cod_instituicao + '&ref_cod_escola=' + ref_cod_escola + '&dia_semana=' + dia_semana + '&hora_inicial=' + hora_inicial + '&hora_final=' + hora_final + '&horario=S' + '&lst_matriculas=' + lst_matriculas + '&min_mat=' + min_mat + '&min_ves=' + min_ves + '&min_not=' + min_not + '&identificador=' + identificador + '&ref_cod_disciplina=' + ref_cod_disciplina + '&ref_cod_curso=' + ref_cod_curso, 'ref_cod_servidor');
+        pesquisa_valores_popless('educar_pesquisa_servidor_lst.php?campo1=ref_cod_servidor&matricula=1&ref_cod_servidor=0&ref_cod_instituicao=' + ref_cod_instituicao + '&ref_cod_escola=' + ref_cod_escola + '&dia_semana=' + dia_semana + '&hora_inicial=' + hora_inicial + '&hora_final=' + hora_final + '&horario=S' + '&lst_matriculas=' + lst_matriculas + '&min_mat=' + min_mat + '&min_ves=' + min_ves + '&min_not=' + min_not + '&identificador=' + identificador + '&ref_cod_disciplina=' + ref_cod_disciplina + '&ref_cod_curso=' + ref_cod_curso + '&ano_alocacao=' + ano_alocacao, 'ref_cod_servidor');
       }
       else {
-        pesquisa_valores_popless('educar_pesquisa_servidor_lst.php?campo1=ref_cod_servidor&matricula=1&ref_cod_servidor=0&ref_cod_instituicao=' + ref_cod_instituicao + '&ref_cod_escola=' + ref_cod_escola + '&dia_semana=' + dia_semana + '&hora_inicial=' + hora_inicial + '&hora_final=' + hora_final + '&horario=S' + '&min_mat=' + min_mat + '&min_ves=' + min_ves + '&min_not=' + min_not + '&identificador=' + identificador + '&ref_cod_disciplina=' + ref_cod_disciplina + '&ref_cod_curso=' + ref_cod_curso, 'ref_cod_servidor');
+        pesquisa_valores_popless('educar_pesquisa_servidor_lst.php?campo1=ref_cod_servidor&matricula=1&ref_cod_servidor=0&ref_cod_instituicao=' + ref_cod_instituicao + '&ref_cod_escola=' + ref_cod_escola + '&dia_semana=' + dia_semana + '&hora_inicial=' + hora_inicial + '&hora_final=' + hora_final + '&horario=S' + '&min_mat=' + min_mat + '&min_ves=' + min_ves + '&min_not=' + min_not + '&identificador=' + identificador + '&ref_cod_disciplina=' + ref_cod_disciplina + '&ref_cod_curso=' + ref_cod_curso+ '&ano_alocacao=' + ano_alocacao, 'ref_cod_servidor');
       }
     }
   }

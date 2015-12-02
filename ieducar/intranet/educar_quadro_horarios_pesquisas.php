@@ -235,7 +235,7 @@
 					$retorno .= '<td valign="top" class="formmdtd"><span class="form">';
 
 					$disabled = !$this->ref_cod_escola && $nivel_usuario == 1 /*&& !$this->ref_cod_curso */?  "disabled='true' " : "" ;
-					$retorno .=  " <select onchange=\"getCurso();\" class='geral' name='ref_cod_escola' {$disabled} id='ref_cod_escola'>";
+					$retorno .=  " <select onchange=\"getCurso();getAnoLetivo();\" class='geral' name='ref_cod_escola' {$disabled} id='ref_cod_escola'>";
 
 					reset( $opcoes_escola );
 					while ( list( $chave, $texto ) = each( $opcoes_escola ) )
@@ -254,6 +254,60 @@
 									</tr>';
 				}
 			}
+		}
+		if ( $get_ano )
+		{
+			if( class_exists( "clsPmieducarEscolaAnoLetivo" ) )
+			{
+				$opcoes_ano = array( "" => "Selecione" );
+
+				// EDITAR
+				if ( $this->ref_cod_escola )
+				{
+					$obj_esc_ano = new clsPmieducarEscolaAnoLetivo();
+					$lst_esc_ano = $obj_esc_ano->lista($this->ref_cod_escola);
+					if ( is_array( $lst_esc_ano ) && count( $lst_esc_ano ) )
+					{
+						foreach ( $lst_esc_ano as $detalhe )
+						{
+							$opcoes_ano["{$detalhe['ano']}"] = "{$detalhe['ano']}";
+						}
+					}
+				}
+			}
+			else
+			{
+				echo "<!--\nErro\nClasse clsPmieducarEscolaAnoLetivo n&atilde;o encontrada\n-->";
+				$opcoes_ano = array( "" => "Erro na gera&ccedil;&atilde;o" );
+			}
+			$retorno .= '<tr id="tr_ano">
+						 <td valign="top" class="formlttd">
+						 <span class="form">Ano</span>
+						 <span class="campo_obrigatorio">*</span>
+						 <br/>
+						 <sub style="vertical-align: top;"/>
+						 </td>';
+			$retorno .= '<td valign="top" class="formlttd"><span class="form">';
+
+			$disabled = !$this->ano && $nivel_usuario == 1 ?  "disabled='true' " : "" ;
+			$retorno .=  " <select onchange=\"getSerie();\" class='geral' name='ano' {$disabled} id='ano'>";
+
+			if ( is_array( $opcoes_ano ) )
+				reset( $opcoes_ano );
+			while ( list( $chave, $texto ) = each( $opcoes_ano ) )
+			{
+				$retorno .=  "<option id=\"ano".urlencode( $chave )."\" value=\"".urlencode( $chave )."\"";
+
+				if ( $chave == $this->ano )
+				{
+					$retorno .= " selected";
+				}
+				$retorno .=  ">$texto</option>";
+			}
+			$retorno .=  "</select>";
+			$retorno .= '</span>
+							</td>
+							</tr>';
 		}
 		if ( $get_curso )
 		{
@@ -454,26 +508,12 @@
 			$opcoes_turma = array( "" => "Selecione" );
 			if( class_exists( "clsPmieducarTurma" ) )
 			{
-				/*$todas_turmas = "turma = new Array();\n";
-				$obj_turma = new clsPmieducarTurma();
-				$obj_turma->setOrderby("nm_turma ASC");
-				$lst_turma = $obj_turma->lista( null, null, null, null, null, null, null, null, null, null, null, null, null,null, 1, null );
-
-				if ( is_array( $lst_turma ) && count( $lst_turma ) )
-				{
-					foreach ( $lst_turma as $turma )
-					{
-						$todas_turmas .= "turma[turma.length] = new Array( {$turma["cod_turma"]}, '{$turma['nm_turma']}', '{$turma["ref_ref_cod_serie"]}', '{$turma["ref_ref_cod_escola"]}','{$turma["ref_cod_curso"]}', '{$turma["ref_cod_instituicao"]}' );\n";
-					}
-				}
-				echo "<script>{$todas_turmas}</script>";*/
-
 				// EDITAR
 				if ( $this->ref_cod_serie /*|| $this->ref_cod_curso*/)
 				{
 					$obj_turma = new clsPmieducarTurma();
 					$obj_turma->setOrderby("nm_turma ASC");
-					$lst_turma = $obj_turma->lista( null, null, null, $this->ref_cod_serie, $this->ref_cod_escola, null, null, null, null, null, null, null, null, 1, null, null, null, null, null, null, null, null, null, null, $this->ref_cod_curso, $this->ref_cod_instituicao, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, TRUE );
+					$lst_turma = $obj_turma->lista( null, null, null, $this->ref_cod_serie, $this->ref_cod_escola, null, null, null, null, null, null, null, null, 1, null, null, null, null, null, null, null, null, null, null, $this->ref_cod_curso, $this->ref_cod_instituicao, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, $this->ano );
 					if ( is_array( $lst_turma ) && count( $lst_turma ) )
 					{
 						foreach ( $lst_turma as $turma )
@@ -545,6 +585,10 @@
 							return false;
 						//}
 					}
+					if ( !document.getElementById( "ano" ).value ) {
+					alert( "Por favor, selecione um ano" );
+					return false;
+					}
 					if ( !document.getElementById( "ref_cod_curso" ).value ) {
 					alert( "Por favor, selecione um curso" );
 					return false;
@@ -570,6 +614,10 @@
 					alert( "Por favor, selecione uma escola" );
 					return false;
 					}
+					if ( !document.getElementById( "ano" ).value ) {
+					alert( "Por favor, selecione um ano" );
+					return false;
+					}
 					if ( !document.getElementById( "ref_cod_curso" ).value ) {
 					alert( "Por favor, selecione um curso" );
 					return false;
@@ -586,6 +634,10 @@
 		elseif ( $nivel_usuario == 4 )
 		{
 			$validacao = '
+					if ( !document.getElementById( "ano" ).value ) {
+					alert( "Por favor, selecione um ano" );
+					return false;
+					}
 					if ( !document.getElementById( "ref_cod_curso" ).value ) {
 					alert( "Por favor, selecione um curso" );
 					return false;
@@ -701,6 +753,25 @@ function getCurso( xml_curso )
 		campoCurso.options[0].text = 'A escola não possui nenhum curso';
 }
 
+function getAnoLetivo( xml_ano )
+{
+ 	var DOM_array = xml_ano.getElementsByTagName( "ano" );
+
+	if(DOM_array.length)
+	{
+		campoAno.length = 1;
+		campoAno.options[0].text = 'Selecione um ano';
+		campoAno.disabled = false;
+
+		for( var i = 0; i < DOM_array.length; i++ )
+		{
+			campoAno.options[campoAno.options.length] = new Option( DOM_array[i].firstChild.data, DOM_array[i].firstChild.data,false,false);
+		}
+	}
+	else
+ 		campoAno.options[0].text = 'A escola não possui nenhum ano';
+}
+
 function getSerie( xml_serie )
 {
 	var DOM_array = xml_serie.getElementsByTagName( "serie" );
@@ -722,6 +793,8 @@ function getSerie( xml_serie )
 
 function getTurma( xml_turma )
 {
+
+	console.log(xml_turma);
 	var DOM_array = xml_turma.getElementsByTagName( "turma" );
 
 	if(DOM_array.length)
