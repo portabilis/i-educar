@@ -623,6 +623,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         $nome = $componenteCurricular->nome;
         $sequencial = $this->getNextHistoricoDisciplinasSequencial($historicoSequencial, $alunoId);
         $nota = '';
+        $notaConceitualNumerica = '';
 
         if (clsPmieducarTurma::verificaDisciplinaDispensada($turmaId, $ccId))
           $nota = $this->DISCIPLINA_DISPENSADA;
@@ -630,6 +631,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
           if ($tpNota == $cnsNota::CONCEITUAL) {
             if($GLOBALS['coreExt']['Config']->app->processar_historicos_conceituais == "1"){
               $nota = (string)$mediasCc[$ccId][0]->mediaArredondada;
+              $notaConceitualNumerica = (string)$mediasCc[$ccId][0]->media;
             }
           }elseif($tpNota == $cnsNota::NUMERICA){
             $nota = (string)$mediasCc[$ccId][0]->mediaArredondada;
@@ -645,6 +647,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
           $nota = str_replace(',', '.', $nota);
           $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['nome'] = $componenteCurricular->area_conhecimento->nome;
           $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['nota'] += $nota;
+          $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['nota_conceitual_numerica'] += $notaConceitualNumerica;
           $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['falta'] += $this->getFalta($situacaoFaltasCc[$ccId]);
           $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['count']++;
         }else
@@ -667,7 +670,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
             "alunoId" => $alunoId,
             "historicoSequencial" => $historicoSequencial,
             "nome" => $value['nome'],
-            "nota" => number_format(($value['nota']/$value['count']), 2, ',', ''),
+            "nota" => number_format(($value['nota_conceitual_numerica']/$value['count']), 2, ',', ''),
             "falta" => round($value['falta']/$value['count'])
           ));
         }
