@@ -431,17 +431,17 @@ class DiarioController extends ApiCoreController
   }
 
   protected function validateMatricula($matriculaId){
-    $resultado = array();
 
-    $sql = "SELECT m.ativo as ativo
-              FROM pmieducar.matricula m
-              WHERE m.cod_matricula = $1
-              LIMIT 1";
+    $ativo = false;
 
-    $ativo = $this->fetchPreparedQuery($sql, array($matriculaId), true, 'first-field');
+    if(!empty($matriculaId)){
+      $sql = "SELECT m.ativo as ativo
+                FROM pmieducar.matricula m
+                WHERE m.cod_matricula = $1
+                LIMIT 1";
 
-    if(empty($matriculaId))
-      throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("Não foi possível encontrar a matrícula {$matriculaId}."));
+      $ativo = $this->fetchPreparedQuery($sql, array($matriculaId), true, 'first-field');
+    }
 
     return $ativo;
   }
