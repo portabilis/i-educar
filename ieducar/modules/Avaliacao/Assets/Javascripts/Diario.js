@@ -816,7 +816,6 @@ function setTableSearchDetails($tableSearchDetails, dataDetails) {
 
   nomenclatura_exame = dataDetails.nomenclatura_exame;
 
-  //dataDetails.opcoes_notas = safeSortArray(dataDetails.opcoes_notas);
   $tableSearchDetails.data('details', dataDetails);
 }
 
@@ -955,10 +954,10 @@ function _notaField(matriculaId, componenteCurricularId, klass, id, value, areaC
 
     // adiciona opcoes notas ao select
     var $option = $j('<option />').appendTo($notaField);
-    for(key in opcoesNotas) {
-      var $option = $j('<option />').val(key).html(opcoesNotas[key]);
+    for(var i = 0; i < opcoesNotas.length; i++) {
+      var $option = $j('<option />').val(opcoesNotas[i].valor_maximo).html(opcoesNotas[i].descricao);
 
-      if (value == key)
+      if (value == opcoesNotas[i].valor_maximo)
         $option.attr('selected', 'selected');
 
       $option.appendTo($notaField);
@@ -994,12 +993,13 @@ function _mediaField(matriculaId, componenteCurricularId, klass, id, value, area
     // adiciona opcoes notas ao select
     var $option = $j('<option />').appendTo($notaField);
     var selected = false;
-    for(key in opcoesNotas) {
-      var $option = $j('<option />').val(key).html(opcoesNotas[key]);
+    for(var i = 0; i < opcoesNotas.length; i++) {
+      var $option = $j('<option />').val(opcoesNotas[i].valor_maximo).html(opcoesNotas[i].descricao);
 
-      key = parseFloat(key);
+      valorMinimo = parseFloat(opcoesNotas[i].valor_minimo);
+      valorMaximo = parseFloat(opcoesNotas[i].valor_maximo);
 
-      if ((key == value) || ((key >= value) && !selected)){
+      if ((valorMaximo == value) || ((value > valorMinimo && value < valorMaximo) && !selected)){
         $option.attr('selected', 'selected');
         selected = true;
       }
@@ -1377,20 +1377,22 @@ function updateResourceRow(dataResponse) {
 }
 
 function changeMediaValue(elementId, nota, notaArredondada){
+
   if(nota != undefined){
     if($tableSearchDetails.data('details').tipo_nota == 'conceitual'){
-      var selected = false;
-      $j('#' + elementId + ' option').each(function(){
-        valorOption = parseFloat($j(this).val());
-        if(valorOption != ""){
-          if((valorOption == nota) || ((valorOption >= nota)) && !selected) {
-            $j(this).attr('selected', 'selected');
-            selected = true;
-          }else{
-            $j(this).removeAttr('selected');
+        var valorSelecionado = 0;
+        var opcoesNotas = $tableSearchDetails.data('details').opcoes_notas;
+        for(var i = 0 ; i < opcoesNotas.length; i++){
+
+          valorMinimo = parseFloat(opcoesNotas[i].valor_minimo);
+          valorMaximo = parseFloat(opcoesNotas[i].valor_maximo);
+
+          if ((valorMaximo == nota) || (nota > valorMinimo && nota < valorMaximo)){
+            valorSelecionado = valorMaximo;
           }
-        }
-      });
+        };
+        $j('#' + elementId).val(valorSelecionado);
+
     }else{
       $j('#' + elementId).val(notaArredondada);
     }
