@@ -1132,9 +1132,10 @@ class clsPmieducarServidor
         if (is_array($disciplinas)) {
           foreach ($disciplinas as $disciplina) {
             $servidorDisciplinas[] = sprintf(
-              'AND (sd.ref_cod_disciplina = %d AND sd.ref_cod_curso = %d)',
+              '(sd.ref_cod_disciplina = %d AND sd.ref_cod_curso = %d)',
               $disciplina['ref_cod_disciplina'], $disciplina['ref_cod_curso']);
           }
+          $servidorDisciplinas = sprintf('AND (%s)', implode(' AND ', $servidorDisciplinas));
         }
         else {
           $servidorDisciplinas = '';
@@ -1149,24 +1150,21 @@ class clsPmieducarServidor
                 end)',
           $int_ref_cod_disciplina, $int_ref_cod_curso);
       }
-
-      foreach ($servidorDisciplinas as $servidorDisciplina) {
-        $filtros .= "
-      {$whereAnd} EXISTS
-        (SELECT
-           1
-         FROM
-           pmieducar.servidor_funcao sf, pmieducar.funcao f, pmieducar.servidor_disciplina sd
-         WHERE
-          f.cod_funcao = sf.ref_cod_funcao AND
-          f.professor = 1 AND
-          sf.ref_ref_cod_instituicao = s.ref_cod_instituicao AND
-          s.cod_servidor = sf.ref_cod_servidor AND
-          s.cod_servidor = sd.ref_cod_servidor AND
-          s.ref_cod_instituicao = sd.ref_ref_cod_instituicao
-          {$servidorDisciplina})";
-        $whereAnd = " AND ";
-      }
+      $filtros .= "
+    {$whereAnd} EXISTS
+      (SELECT
+         1
+       FROM
+         pmieducar.servidor_funcao sf, pmieducar.funcao f, pmieducar.servidor_disciplina sd
+       WHERE
+        f.cod_funcao = sf.ref_cod_funcao AND
+        f.professor = 1 AND
+        sf.ref_ref_cod_instituicao = s.ref_cod_instituicao AND
+        s.cod_servidor = sf.ref_cod_servidor AND
+        s.cod_servidor = sd.ref_cod_servidor AND
+        s.ref_cod_instituicao = sd.ref_ref_cod_instituicao
+        {$servidorDisciplinas})";
+      $whereAnd = " AND ";
     }
     if (is_string($str_horario) && $str_horario == "S") {
       $filtros .= "
@@ -1198,6 +1196,7 @@ class clsPmieducarServidor
       $this->getOrderby() . $this->getLimite();
     $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_schema}servidor s{$tabela_compl} {$filtros}");
     // Executa a query
+     // echo"<pre>";var_dump($sql);die;
     $db->Consulta($sql);
     if ($countCampos > 1) {
       while ($db->ProximoRegistro()) {
