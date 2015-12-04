@@ -205,13 +205,13 @@ class DiarioController extends ApiCoreController
         foreach ($alunos as $aluno) {
           $alunoId = $aluno['aluno_id'];
 
+          $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
+
           if($this->validateMatricula($matriculaId)){
 
             $componentesCurriculares = $aluno['componentes_curriculares'];
             foreach ($componentesCurriculares as $componenteCurricular) {
               $componenteCurricularId = $componenteCurricular['componente_curricular_id'];
-
-              $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
 
               if($this->validateComponenteCurricular($matriculaId, $componenteCurricularId)){
 
@@ -338,12 +338,13 @@ class DiarioController extends ApiCoreController
           throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de pareceres por etapa geral."));
         }
 
-        $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
+        foreach ($alunos as $aluno) {
 
-        if($this->validateMatricula($matriculaId)){
+          $alunoId = $aluno['aluno_id'];
+          $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
 
-          foreach ($alunos as $aluno) {
-            $alunoId = $aluno['aluno_id'];
+          if($this->validateMatricula($matriculaId)){
+
             $parecer = $aluno['parecer'];
 
             $falta = new Avaliacao_Model_ParecerDescritivoGeral(array(
