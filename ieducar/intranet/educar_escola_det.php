@@ -62,14 +62,21 @@ class indice extends clsDetalhe
 	var $ativo;
 	var $nm_escola;
 
+	const POLI_INSTITUCIONAL = 1;
+	const INSTITUCIONAL = 2;
+
 	function Gerar()
 	{
 		@session_start();
 		$this->pessoa_logada = $_SESSION['id_pessoa'];
 		session_write_close();
 
+	    // Verificação de permissão para cadastro.
+	    $this->obj_permissao = new clsPermissoes();
+
+	    $this->nivel_usuario = $this->obj_permissao->nivel_acesso($this->pessoa_logada);
+
 		$this->titulo = "Escola - Detalhe";
-		
 
 		$this->cod_escola = $_GET["cod_escola"];
 
@@ -549,7 +556,9 @@ class indice extends clsDetalhe
 				$editar = "";//"<td align='center'> - </td>";
 
 				if($ano['andamento'] == 2) {
-					$incluir = "<td class='evento'><a href='#' onclick=\"preencheForm('{$ano['ano']}','{$ano['ref_cod_escola']}','reabrir');\"><img src=\"imagens/banco_imagens/reload.jpg\"> Reabrir ano letivo</a></td>";
+					if ($this->nivel_usuario == self::POLI_INSTITUCIONAL || $this->nivel_usuario == self::INSTITUCIONAL) {
+						$incluir = "<td class='evento'><a href='#' onclick=\"preencheForm('{$ano['ano']}','{$ano['ref_cod_escola']}','reabrir');\"><img src=\"imagens/banco_imagens/reload.jpg\"> Reabrir ano letivo</a></td>";
+				    }
 				    $incluir .= "<td colspan='1' align='center'><span class='formlttd'><b>--- Ano Finalizado ---</b></span></td>";
 				} elseif($canEdit)
 					$editar = "<td class='evento'><a href='#' onclick=\"preencheForm('{$ano['ano']}','{$ano['ref_cod_escola']}','editar');\" ><img src=\"imagens/banco_imagens/e.gif\" > Editar ano letivo</a></td>";
