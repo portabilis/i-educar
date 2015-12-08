@@ -45,7 +45,7 @@ class clsIndexBase extends clsBase
   function Formular()
   {
     $this->SetTitulo($this->_instituicao . ' i-Educar - Unifica&ccedil;&atilde;o de alunos');
-    $this->processoAp = "578";
+    $this->processoAp = "999847";
     $this->addEstilo("localizacaoSistema");
   }
 }
@@ -67,7 +67,7 @@ class indice extends clsCadastro
     @session_write_close();
 
     $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7,
+    $obj_permissoes->permissao_cadastra(999847, $this->pessoa_logada, 7,
       'index.php'); 
 
     $localizacao = new LocalizacaoSistema();
@@ -100,7 +100,7 @@ class indice extends clsCadastro
     @session_write_close();
 
     $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7,
+    $obj_permissoes->permissao_cadastra(999847, $this->pessoa_logada, 7,
       'index.php');
     // Pega o codigo do aluno principal
     $aluno_principal = $this->aluno_id;
