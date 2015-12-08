@@ -102,71 +102,40 @@ class indice extends clsCadastro
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(999847, $this->pessoa_logada, 7,
       'index.php');
-    // Pega o codigo do aluno principal
-    $aluno_principal = $this->aluno_id;
-    $obj_aluno = new clsPmieducarAluno($aluno_principal);
-    $obj_aluno = $obj_aluno->detalhe();
-    $cod_aluno_principal = $obj_aluno['cod_aluno'];
 
-    $alunos_duplicados = $this->aluno_duplicado;
-    $numeroAlunosDuplicadoArray = count($alunos_duplicados) - 1;
+    $cod_aluno_principal = $this->aluno_id;
 
-    $db = new clsBanco();
-    $contPessoa = -1;
-    $montaSql = '';
-    $db->consulta("SELECT max(sequencial) as maior_seq    from  pmieducar.historico_escolar      where ref_cod_aluno = {$cod_aluno_principal}");
-    $db->ProximoRegistro();
-    $maiorSeqAlunoPrincipal = $db->Tupla();
-   
-    $comecoSequencial = 100 + $maiorSeqAlunoPrincipal['maior_seq'];
-    while( $numeroAlunosDuplicadoArray > $contPessoa){
-      $contPessoa++;
-        $explode = explode(" ", $alunos_duplicados[$contPessoa]);
-        $montaSql .= $explode[0].", ";
-        $db->consulta("SELECT count(*) as qtd     from pmieducar.historico_escolar     where ref_cod_aluno = {$explode[0]} ");      
-        $db->ProximoRegistro();
-        $temRegistro = $db->Tupla();
-        if($temRegistro['qtd'] > 0){
-     if($explode[0] != $cod_aluno_principal){
-        
-        $iHisEsc = -1;
-        $arraySeqHisEsco  = array($db->consulta("SELECT sequencial     from historico_escolar     where ref_cod_aluno = {$explode[0]}     GROUP BY ref_cod_aluno, sequencial         order by  ref_cod_aluno, sequencial "));
-  while($db->ProximoRegistro()){
-        $iHisEsc++;
-        $varHisEsc[$iHisEsc] = $db->Tupla();
-        $arraySeqHisEsco[$iHisEsc] = $varHisEsc[$iHisEsc][0];
-        }
-        $iHisDisc = -1;
-        $arraySeqHisDisci = array($db->consulta("SELECT ref_sequencial from historico_disciplinas where ref_ref_cod_aluno = {$explode[0]} GROUP BY ref_ref_cod_aluno, ref_sequencial order by  ref_ref_cod_aluno, ref_sequencial "));        
-  while($db->ProximoRegistro()){
-        $iHisDisc++;
-        $varHisDisc[$iHisDisc] = $db->Tupla();
-        $arraySeqHisDisci[$iHisDisc] = $varHisDisc[$iHisDisc][0];
-        }
-        $numElementsHistorico = count($arraySeqHisEsco) - 1;
-        $numElementsHisDisci  = count($arraySeqHisDisci) - 1;
-        $i = -1;
-     if($numElementsHistorico == $numElementsHisDisci){
-      $mairoSeqAlunoDuplicado = $db->consulta("SELECT max(sequencial)     from historico_escolar     where ref_cod_aluno = {$explode[0]}     GROUP BY ref_cod_aluno, sequencial   order by  ref_cod_aluno, sequencial ");
-        $numeroGrande += $comecoSequencial + $mairoSeqAlunoDuplicado;
-  while($i < $numElementsHisDisci){
-        $i++;
-        $db->consulta("UPDATE pmieducar.historico_escolar     SET sequencial     = {$numeroGrande} where ref_cod_aluno     = {$explode[0]} and sequencial     = $arraySeqHisEsco[$i]");
-        $db->consulta("UPDATE pmieducar.historico_disciplinas SET ref_sequencial = {$numeroGrande} where ref_ref_cod_aluno = {$explode[0]} and ref_sequencial = $arraySeqHisDisci[$i]");
-        $numeroGrande++;            
-        }
-        }
-        }else{
+    //Monta um array com o código dos alunos selecionados na tabela
+    foreach ($this->aluno_duplicado as $key => $value) {
+      $explode = explode(" ", $value);
+
+      if($explode[0] == $cod_aluno_principal){
         $this->mensagem = 'Impossivel de unificar alunos iguais.<br />';
         return false;
-        }
-    }}
-    $montaSql = substr($montaSql, 0, -2);
-    
-    $db->consulta("UPDATE pmieducar.historico_escolar SET ref_cod_aluno = {$cod_aluno_principal} where ref_cod_aluno in ({$montaSql})");
-    $db->consulta("UPDATE pmieducar.historico_disciplinas SET ref_ref_cod_aluno = {$cod_aluno_principal} where ref_ref_cod_aluno in ({$montaSql})");
-    $db->consulta("UPDATE pmieducar.matricula SET ref_cod_aluno = {$cod_aluno_principal} where ref_cod_aluno in ({$montaSql})");
-    $db->consulta("UPDATE pmieducar.aluno SET ativo = 0, data_exclusao = now(), ref_usuario_exc = {$this->pessoa_logada} where cod_aluno in ({$montaSql})");
+      }
+
+      $cod_alunos[] = $explode[0];
+    }
+
+    $cod_alunos = implode(",", $cod_alunos);
+
+    $db = new clsBanco();
+    $db->consulta("UPDATE pmieducar.historico_escolar
+                      SET ref_cod_aluno = {$cod_aluno_principal},
+                          sequencial = he.seq+he.max_seq
+                      FROM
+                        (SELECT ref_cod_aluno AS aluno,
+                                sequencial AS seq,
+                           COALESCE((SELECT max(sequencial)
+                            FROM pmieducar.historico_escolar
+                            WHERE ref_cod_aluno = {$cod_aluno_principal}),0) AS max_seq
+                         FROM pmieducar.historico_escolar
+                         WHERE ref_cod_aluno IN ({$cod_alunos})) AS he
+                      WHERE sequencial = he.seq
+                        AND ref_cod_aluno = he.aluno");
+    $db->consulta("UPDATE pmieducar.matricula SET ref_cod_aluno = {$cod_aluno_principal} where ref_cod_aluno in ({$cod_alunos})");
+    $db->consulta("UPDATE pmieducar.aluno SET ativo = 0, data_exclusao = now(), ref_usuario_exc = {$this->pessoa_logada} where cod_aluno in ({$cod_alunos})");
+
     $this->mensagem = "<span class='success'>Alunos unificados com sucesso.</span>";
     return true;
   }
