@@ -2215,6 +2215,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    */
   public function addNota(Avaliacao_Model_NotaComponente $nota)
   {
+     echo"<pre>";var_dump($this);die;
     $this->setCurrentComponenteCurricular($nota->get('componenteCurricular'));
 
     $key = 'n_' . spl_object_hash($nota);
@@ -2362,6 +2363,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
       // Pode informar uma nota para as etapas
       $etapas = $this->getOption('etapas');
+
       $etapas = array_merge(range(1, $etapas, 1), array('Rc'));
 
       $validators['etapa'] = new CoreExt_Validate_Choice(
