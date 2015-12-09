@@ -92,7 +92,7 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
         $this->report->addArg('SUBREPORT_DIR', "modules/Reports/ReportSources/Portabilis/");
       }
 
-      $this->report->addArg('database', ($GLOBALS['coreExt']['Config']->app->database->dbname == 'test' ? (is_null($GLOBALS['coreExt']['Config']->report->database_teste) ? "" : $GLOBALS['coreExt']['Config']->report->database_teste)  : $GLOBALS['coreExt']['Config']->app->database->dbname ));
+      $this->report->addArg('database', ($GLOBALS['coreExt']['Config']->app->database->dbname == 'test' ? $GLOBALS['coreExt']['Config']->report->database_teste : $GLOBALS['coreExt']['Config']->app->database->dbname ));
 
       $this->report->addArg('data_emissao', (int) $GLOBALS['coreExt']['Config']->report->header->show_data_emissao);
       $this->validatesPresenseOfRequiredArgsInReport();
