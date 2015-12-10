@@ -3022,6 +3022,8 @@ public function alterarSituacao($novaSituacao, $matriculaId){
     $this->_loadNotas(FALSE);
     $regra = $this->getRegra();
 
+    if(is_null($etapa)) {$etapa = 1;}
+
     if($regra->get('notaGeralPorEtapa') == "1"){
       $notasGerais = array('Se' => 0, 'Et' => $this->getOption('etapas'));
 
