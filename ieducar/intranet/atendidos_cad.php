@@ -141,7 +141,7 @@ class indice extends clsCadastro
     @session_write_close();
 
     $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 7, 'atendidos_lst.php');
+    $obj_permissoes->permissao_cadastra(43, $this->pessoa_logada, 7, 'atendidos_lst.php');
 
     $this->cod_pessoa_fj = @$_GET['cod_pessoa_fj'];
     $this->retorno       = 'Novo';
@@ -190,7 +190,7 @@ class indice extends clsCadastro
     }
 
     $this->fexcluir = $obj_permissoes->permissao_excluir(
-          561, $this->pessoa_logada, 7, 'atendidos_lst.php'
+          43, $this->pessoa_logada, 7, 'atendidos_lst.php'
         );
 
     $this->nome_url_cancelar = 'Cancelar';
