@@ -1,5 +1,4 @@
 <?php
-
 // O tempo máximo default (30) pode ser atingido ao carregar as matriculas sem selecionar componente curricular,
 // o ideal seria fazer o caregamento assincrono das matriculas.
 /*if (ini_get("max_execution_time") < 120)
@@ -540,6 +539,7 @@ class DiarioApiController extends ApiCoreController
                   'etapa'                   => $this->getRequest()->etapa,
                   'nota'                    => $notaGeral));
 
+      $this->serviceBoletim()->updateMediaGeral(0, $this->getRequest()->etapa);
       $this->serviceBoletim()->addNotaGeral($nota);
       $this->trySaveServiceBoletim();
       $this->messenger->append('Nota geral da matrícula '. $this->getRequest()->matricula_id .' alterada com sucesso.', 'success');
@@ -837,13 +837,12 @@ class DiarioApiController extends ApiCoreController
   }
 
   protected function deleteNotaGeral() {
-
+    $this->serviceBoletim()->updateMediaGeral(0, $this->getRequest()->etapa);
     $this->serviceBoletim()->deleteNotaGeral($this->getRequest()->etapa);
 
     $this->trySaveServiceBoletim();
 
     $this->messenger->append('Nota geral da matrícula '. $this->getRequest()->matricula_id .' removida com sucesso.', 'success');
-
     $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
     $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
     $this->appendResponse('situacao',     $this->getSituacaoComponente());

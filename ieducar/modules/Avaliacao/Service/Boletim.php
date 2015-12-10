@@ -1,5 +1,4 @@
 <?php
-
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -2986,6 +2985,30 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $notaComponenteCurricularMedia->situacao = $this->getSituacaoComponentesCurriculares()->componentesCurriculares[$id]->situacao;
     $this->getNotaComponenteMediaDataMapper()->save($notaComponenteCurricularMedia);
   }
+
+ public function updateMediaGeral($media, $etapa){
+    $mediaGeral = new Avaliacao_Model_MediaGeral(array(
+      'notaAluno' => $this->_getNotaAluno()->id,
+      'media' => $media,
+      'mediaArredondada' => $this->arredondaMedia($media),
+      'etapa' => $etapa,
+    ));
+
+    try {
+      // Se existir, marca como "old" para possibilitar a atualização
+      $this->getMediaGeralDataMapper()->find(array(
+        $mediaGeral->get('notaAluno')
+      ));
+      $mediaGeral->markOld();
+    }
+    catch (Exception $e) {
+      // Prossegue, sem problemas.
+    }
+
+    // Salva a média
+    $this->getMediaGeralDataMapper()->save($mediaGeral);
+  }
+
 public function alterarSituacao($novaSituacao, $matriculaId){
   return App_Model_Matricula::setNovaSituacao($matriculaId, $novaSituacao);
 }
@@ -2998,7 +3021,6 @@ public function alterarSituacao($novaSituacao, $matriculaId){
     require_once 'Avaliacao/Model/NotaComponenteMedia.php';
     $this->_loadNotas(FALSE);
     $regra = $this->getRegra();
-    if(is_null($etapa)) {$etapa = 1;}
 
     if($regra->get('notaGeralPorEtapa') == "1"){
       $notasGerais = array('Se' => 0, 'Et' => $this->getOption('etapas'));
