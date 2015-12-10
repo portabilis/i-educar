@@ -55,6 +55,6 @@ class Avaliacao_Model_MediaGeralDataMapper extends CoreExt_DataMapper
   );
 
   protected $_primaryKey = array(
-    'notaAluno', 'etapa'
+    'notaAluno'
   );
 }
