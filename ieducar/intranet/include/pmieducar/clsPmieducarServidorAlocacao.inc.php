@@ -773,7 +773,7 @@ class clsPmieducarServidorAlocacao
   }
 
   function periodoAlocado() {
-    if (is_numeric($this->ref_cod_escola) && is_numeric($this->periodo) && is_numeric($this->cod_servidor_alocacao)
+    if (is_numeric($this->ref_cod_escola) && is_numeric($this->periodo)
         && is_numeric($this->ano) && is_numeric($this->ref_cod_servidor)){
 
       $db = new clsBanco();
@@ -783,8 +783,11 @@ class clsPmieducarServidorAlocacao
                  AND ref_cod_servidor = {$this->ref_cod_servidor}
                  AND ano = {$this->ano}
                  AND periodo = {$this->periodo}
-                 AND ativo = 1
-                 AND cod_servidor_alocacao <> {$this->cod_servidor_alocacao}";
+                 AND ativo = 1";
+
+      if (is_numeric($this->cod_servidor_alocacao)) {
+       $sql .= " AND cod_servidor_alocacao <> {$this->cod_servidor_alocacao}";
+      }
 
       $db->Consulta($sql);
       $db->ProximoRegistro();
