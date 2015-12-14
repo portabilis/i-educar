@@ -11,7 +11,9 @@ var simpleSearchMatriculaOptions = {
 
     somente_andamento : function() {
       return $j('#somente_andamento').length ? true : false
-    } 
+    },
+
+    filtro_abandono_transferencia : 0
   },
 
   canSearch : function() { 
