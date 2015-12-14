@@ -56,51 +56,72 @@ class MatriculaController extends ApiCoreController
     $escolaId       = $this->getRequest()->escola_id ? $this->getRequest()->escola_id : 0;
     $ano            = $this->getRequest()->ano       ? $this->getRequest()->ano       : 0;
     $andamento      = $this->getRequest()->andamento ? 1 : 0;
+    $utilizaFiltroAbandonoTransferencia = $this->getRequest()->filtro_abandono_transferencia ? 1 : 0;
 
-    return array('sqlParams'    => array($escolaId, $ano, $andamento),
+    return array('sqlParams'    => array($escolaId, $ano, $andamento, $utilizaFiltroAbandonoTransferencia),
                  'selectFields' => array('aluno_id'));
   }
 
   protected function sqlsForNumericSearch() {
     // seleciona por (codigo matricula ou codigo aluno), opcionalmente por codigo escola e
     // opcionalmente por ano.
-return "select aluno.cod_aluno as aluno_id,
-        matricula.cod_matricula as id, 
-        pessoa.nome as name
-   from cadastro.pessoa
-  inner join pmieducar.aluno on(pessoa.idpes = aluno.ref_idpes)
-  inner join pmieducar.matricula on(aluno.cod_aluno = matricula.ref_cod_aluno)
-  inner join pmieducar.escola on(escola.cod_escola = matricula.ref_ref_cod_escola)
-  inner join pmieducar.instituicao on (escola.ref_cod_instituicao = instituicao.cod_instituicao)
-    and aluno.ativo = matricula.ativo 
-    and matricula.ativo = 1
-    and case when ($4 <> 1 and instituicao.permissao_filtro_abandono_transferencia = true) then matricula.aprovado in (1, 2, 3, 7, 8, 9)
-             when ($4 <> 1 and instituicao.permissao_filtro_abandono_transferencia = false) then matricula.aprovado in (1, 2, 3, 4, 6, 7, 8, 9)
-        else matricula.aprovado = 3 end
-    and (matricula.cod_matricula like $1||'%' or matricula.ref_cod_aluno like $1||'%') 
-    and (select case when $2 != 0 then matricula.ref_ref_cod_escola = $2 else true end) 
-    and (select case when $3 != 0 then matricula.ano = $3 else true end) limit 15";
+    return "select aluno.cod_aluno as aluno_id,
+            matricula.cod_matricula as id, 
+            pessoa.nome as name
+       from cadastro.pessoa
+      inner join pmieducar.aluno on(pessoa.idpes = aluno.ref_idpes)
+      inner join pmieducar.matricula on(aluno.cod_aluno = matricula.ref_cod_aluno)
+      inner join pmieducar.escola on(escola.cod_escola = matricula.ref_ref_cod_escola)
+      inner join pmieducar.instituicao on (escola.ref_cod_instituicao = instituicao.cod_instituicao)
+        and aluno.ativo = 1
+        and matricula.ativo = 1
+        and (case when $4 = 1 then
+              matricula.aprovado = 3
+             else
+              (case when $5 = 1 then
+                (case when instituicao.permissao_filtro_abandono_transferencia then
+                  matricula.aprovado in (1, 2, 3, 7, 8, 9)
+                 else
+                  matricula.aprovado in (1, 2, 3, 4, 6, 7, 8, 9)
+                 end)
+               else
+                matricula.aprovado in (1, 2, 3, 4, 6, 7, 8, 9)
+               end)
+             end)
+        and (matricula.cod_matricula like $1||'%' or matricula.ref_cod_aluno like $1||'%') 
+        and (select case when $2 != 0 then matricula.ref_ref_cod_escola = $2 else true end) 
+        and (select case when $3 != 0 then matricula.ano = $3 else true end) limit 15";
   }
 
 
   protected function sqlsForStringSearch() {
     // seleciona por nome aluno, opcionalmente por codigo escola e opcionalmente por ano.
-return "select aluno.cod_aluno as aluno_id,
-        matricula.cod_matricula as id, 
-        pessoa.nome as name
-   from cadastro.pessoa
-  inner join pmieducar.aluno on(pessoa.idpes = aluno.ref_idpes)
-  inner join pmieducar.matricula on(aluno.cod_aluno = matricula.ref_cod_aluno)
-  inner join pmieducar.escola on(escola.cod_escola = matricula.ref_ref_cod_escola)
-  inner join pmieducar.instituicao on (escola.ref_cod_instituicao = instituicao.cod_instituicao)
-  where aluno.ativo = matricula.ativo 
-    and matricula.ativo = 1 
-    and case when ($4 <> 1 and instituicao.permissao_filtro_abandono_transferencia = true) then matricula.aprovado in (1, 2, 3, 7, 8, 9)
-             when ($4 <> 1 and instituicao.permissao_filtro_abandono_transferencia = false) then matricula.aprovado in (1, 2, 3, 4, 6, 7, 8, 9)
-        else matricula.aprovado = 3 end
-    and lower(to_ascii(pessoa.nome)) like '%'||lower(to_ascii($1))||'%' 
-    and (select case when $2 != 0 then matricula.ref_ref_cod_escola = $2 else true end) 
-    and (select case when $3 != 0 then matricula.ano = $3 else true end) limit 15";
+    return "select aluno.cod_aluno as aluno_id,
+            matricula.cod_matricula as id, 
+            pessoa.nome as name
+       from cadastro.pessoa
+      inner join pmieducar.aluno on(pessoa.idpes = aluno.ref_idpes)
+      inner join pmieducar.matricula on(aluno.cod_aluno = matricula.ref_cod_aluno)
+      inner join pmieducar.escola on(escola.cod_escola = matricula.ref_ref_cod_escola)
+      inner join pmieducar.instituicao on (escola.ref_cod_instituicao = instituicao.cod_instituicao)
+      where aluno.ativo = 1
+        and matricula.ativo = 1
+        and (case when $4 = 1 then
+              matricula.aprovado = 3
+             else
+              (case when $5 = 1 then
+                (case when instituicao.permissao_filtro_abandono_transferencia then
+                  matricula.aprovado in (1, 2, 3, 7, 8, 9)
+                 else
+                  matricula.aprovado in (1, 2, 3, 4, 6, 7, 8, 9)
+                 end)
+               else
+                matricula.aprovado in (1, 2, 3, 4, 6, 7, 8, 9)
+               end)
+             end)
+        and lower(to_ascii(pessoa.nome)) like '%'||lower(to_ascii($1))||'%' 
+        and (select case when $2 != 0 then matricula.ref_ref_cod_escola = $2 else true end) 
+        and (select case when $3 != 0 then matricula.ano = $3 else true end) limit 15";
   }
 
 
