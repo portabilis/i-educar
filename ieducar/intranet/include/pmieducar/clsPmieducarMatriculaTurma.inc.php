@@ -204,11 +204,11 @@ class clsPmieducarMatriculaTurma
       }
     }
 
-    if (is_string($data_cadastro)) {
+    if (!empty($data_cadastro)) {
       $this->data_cadastro = $data_cadastro;
     }
 
-    if (is_string($data_exclusao)) {
+    if (!empty($data_exclusao)) {
       $this->data_exclusao = $data_exclusao;
     }
 
