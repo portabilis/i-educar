@@ -618,7 +618,6 @@ class indice extends clsCadastro
 
         if ($registros) {
           foreach ($registros as $campo) {
-            // echo "$campo['ref_cod_modulo'] <br>";
             $this->turma_modulo[$qtd_modulo]['sequencial_']     = $campo['sequencial'];
             $this->turma_modulo[$qtd_modulo]['ref_cod_modulo_'] = $campo['ref_cod_modulo'];
             $this->turma_modulo[$qtd_modulo]['data_inicio_']    = dataFromPgToBr($campo['data_inicio']);
