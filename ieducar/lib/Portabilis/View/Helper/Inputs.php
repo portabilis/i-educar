@@ -305,6 +305,9 @@ class Portabilis_View_Helper_Inputs {
   public function multipleSearchEscola($attrName, $inputOptions = array(), $helperOptions = array()) {
     $this->multipleSearchResourceInput('multipleSearchEscola', $attrName, $inputOptions, $helperOptions);
   }
+  public function multipleSearchDocumentosAtestadoVaga($attrName, $inputOptions = array(), $helperOptions = array()) {
+    $this->multipleSearchResourceInput('multipleSearchDocumentosAtestadoVaga', $attrName, $inputOptions, $helperOptions);
+  }
 
    /*public function multipleSearchAjaxAreasConhecimento($attrName, $inputOptions = array(), $helperOptions = array()) {
     $this->multipleSearchResourceInput('multipleSearchAjaxAreasConhecimento', $attrName, $inputOptions, $helperOptions);

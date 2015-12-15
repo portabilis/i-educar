@@ -771,4 +771,31 @@ class clsPmieducarServidorAlocacao
     }
     return '';
   }
+
+  function periodoAlocado() {
+    if (is_numeric($this->ref_cod_escola) && is_numeric($this->periodo)
+        && is_numeric($this->ano) && is_numeric($this->ref_cod_servidor)){
+
+      $db = new clsBanco();
+      $sql = "SELECT *
+                FROM pmieducar.servidor_alocacao
+               WHERE ref_cod_escola = {$this->ref_cod_escola}
+                 AND ref_cod_servidor = {$this->ref_cod_servidor}
+                 AND ano = {$this->ano}
+                 AND periodo = {$this->periodo}
+                 AND ativo = 1";
+
+      if (is_numeric($this->cod_servidor_alocacao)) {
+       $sql .= " AND cod_servidor_alocacao <> {$this->cod_servidor_alocacao}";
+      }
+
+      $db->Consulta($sql);
+      $db->ProximoRegistro();
+      $registro = $db->Tupla();
+      return $registro ? true : false;
+    }
+
+    return false;
+  }
+
 }

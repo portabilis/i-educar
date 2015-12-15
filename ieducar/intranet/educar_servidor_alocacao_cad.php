@@ -266,7 +266,7 @@ class indice extends clsCadastro
 
     if ($carga_horaria_disponivel >= $carga_horaria_alocada){
 
-    $obj_novo = new clsPmieducarServidorAlocacao(null,
+    $obj_novo = new clsPmieducarServidorAlocacao($this->cod_servidor_alocacao,
                                                  $this->ref_ref_cod_instituicao,
                                                  null,
                                                  $this->pessoa_logada,
@@ -280,6 +280,11 @@ class indice extends clsCadastro
                                                  $this->cod_servidor_funcao,
                                                  $this->ref_cod_funcionario_vinculo,
                                                  $this->ano);
+
+      if ($obj_novo->periodoAlocado()) {
+        $this->mensagem = 'Período informado já foi alocado. Por favor, selecione outro.<br />';
+        return FALSE;
+      }
 
       $cadastrou = $obj_novo->cadastra();
 

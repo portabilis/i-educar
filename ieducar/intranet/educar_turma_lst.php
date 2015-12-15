@@ -149,6 +149,8 @@ class indice extends clsListagem
 
 		$this->campoTexto( "nm_turma", "Turma", $this->nm_turma, 30, 255, false );
 		$this->campoLista("visivel", "Situação", array("" => "Selecione", "1" => "Ativo", "2" => "Inativo"), $this->visivel);
+		$this->inputsHelper()->turmaTurno();
+
 		// Paginador
 		$this->limite = 20;
 		$this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
@@ -192,7 +194,7 @@ class indice extends clsListagem
 			null,
 			$this->ref_cod_curso,
 			$this->ref_cod_instituicao,
-			null, null, null, null, null, $visivel, null, null, $this->ano_letivo
+			null, null, null, null, null, $visivel, $this->turma_turno_id, null, $this->ano_letivo
 		);
 
 		$total = $obj_turma->_total;
