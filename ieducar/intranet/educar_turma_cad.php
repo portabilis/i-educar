@@ -618,20 +618,20 @@ class indice extends clsCadastro
 
         if ($registros) {
           foreach ($registros as $campo) {
-            $this->turma_modulo[$campo[$qtd_modulo]]['sequencial_']     = $campo['sequencial'];
-            $this->turma_modulo[$campo[$qtd_modulo]]['ref_cod_modulo_'] = $campo['ref_cod_modulo'];
-            $this->turma_modulo[$campo[$qtd_modulo]]['data_inicio_']    = dataFromPgToBr($campo['data_inicio']);
-            $this->turma_modulo[$campo[$qtd_modulo]]['data_fim_']       = dataFromPgToBr($campo['data_fim']);
+            $this->turma_modulo[$qtd_modulo]['sequencial_']     = $campo['sequencial'];
+            $this->turma_modulo[$qtd_modulo]['ref_cod_modulo_'] = $campo['ref_cod_modulo'];
+            $this->turma_modulo[$qtd_modulo]['data_inicio_']    = dataFromPgToBr($campo['data_inicio']);
+            $this->turma_modulo[$qtd_modulo]['data_fim_']       = dataFromPgToBr($campo['data_fim']);
             $qtd_modulo++;
           }
         } else {
           $anoLetivoModulos = new clsPmieducarAnoLetivoModulo();
           $anoLetivoModulos = $anoLetivoModulos->lista($this->ano, $this->ref_cod_escola);
           foreach ($anoLetivoModulos as $campo) {
-            $this->turma_modulo[$campo[$qtd_modulo]]['sequencial_']     = $campo['sequencial'];
-            $this->turma_modulo[$campo[$qtd_modulo]]['ref_cod_modulo_'] = $campo['ref_cod_modulo'];
-            $this->turma_modulo[$campo[$qtd_modulo]]['data_inicio_']    = dataFromPgToBr($campo['data_inicio']);
-            $this->turma_modulo[$campo[$qtd_modulo]]['data_fim_']       = dataFromPgToBr($campo['data_fim']);
+            $this->turma_modulo[$qtd_modulo]['sequencial_']     = $campo['sequencial'];
+            $this->turma_modulo[$qtd_modulo]['ref_cod_modulo_'] = $campo['ref_cod_modulo'];
+            $this->turma_modulo[$qtd_modulo]['data_inicio_']    = dataFromPgToBr($campo['data_inicio']);
+            $this->turma_modulo[$qtd_modulo]['data_fim_']       = dataFromPgToBr($campo['data_fim']);
             $qtd_modulo++;
           }
         }
