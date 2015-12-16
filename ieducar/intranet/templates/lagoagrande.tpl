@@ -102,13 +102,6 @@
         Comunicamos que o nosso servi&ccedil;o de Suporte via telefone apresentar&aacute; instabilidades neste m&ecirc;s de Novembro, em virtude da mudan&ccedil;a de endere&ccedil;o da sede da Portabilis. <br/>Pedimos desculpas pelo transtorno tempor&aacute;rio e informamos que voc&ecirc; ainda poder&aacute; nos contatar pelo e-mail de suporte (<a href='mailto:suporte@portabilis.com.br'>suporte@portabilis.com.br</a>) ou diretamente pela ferramenta de HelpDesk (<a href='http://suporte.portabilis.com.br'>http://suporte.portabilis.com.br'</a>).
      </p> -->
 
-      <p style="min-height: 0px;" class="flash success">
-        Ol&aacute;, <br />
-        Sabemos o quanto voc&ecirc;s est&atilde;o ocupados e preocupados neste fim de ano para que todas as atividades sejam conclu&iacute;das de forma plena no sistema. Por isso, queremos reafirmar nosso comprometimento em ajud&aacute;-los com estas tarefas. <br />
-
-        Atualizamos o <b> Manual de encerramento e in&iacute;cio do ano letivo</b> para auxili&aacute;-los neste ano. Clique <a href="https://drive.google.com/uc?export=download&id=0B4FIX4vLOqLXckZ4YUVGYVRLVWc"> aqui </a> para obter. <br />
-        Se tiver d&uacute;vidas, fale conosco ou com o respons&aacute;vel pelo sistema na sua institui&ccedil;&atilde;o.
-      </p><br/>
       <p style="min-height: 0px;" class="flash exclamation">
       <strong>Caros clientes,</strong>
         <br/>Nos dias 24/12 e 31/12 nosso atendimento de suporte ter&aacute; hor&aacute;rio especial, funcionando das 08:00 &agrave;s 12:00 horas. Sendo assim, pedimos que todos os contatos posteriores a este hor&aacute;rio nas datas informadas, sejam feitos via e-mail suporte@portabilis.com.br, pois ser&atilde;o atendidos normalmente. <strong>Agradecemos pela compreens&atilde;o.</strong>
