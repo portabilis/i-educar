@@ -594,5 +594,48 @@ class clsPmieducarAnoLetivoModulo
 		return false;
 	}
 
+	/**
+	 * Retorna o nome do módulo de acordo com o ano, escola e sequencial
+	 *
+	 * @return string
+	 */
+	function getNomeModulo() {
+		if (is_numeric($this->ref_ano) && is_numeric($this->ref_ref_cod_escola) && is_numeric($this->sequencial)) {
+			$db = new clsBanco();
+			$resultado = $db->CampoUnico("SELECT sequencial || 'º ' || nm_tipo AS nome_modulo
+										    FROM pmieducar.ano_letivo_modulo
+										   INNER JOIN pmieducar.modulo ON (modulo.cod_modulo = ano_letivo_modulo.ref_cod_modulo)
+										   WHERE ref_ano = {$this->ref_ano}
+										     AND ref_ref_cod_escola = {$this->ref_ref_cod_escola}
+										     AND sequencial = {$this->sequencial}");
+			return $resultado;
+		}
+		return false;
+	}
+
+	/**
+	 * Retorna um array com id e nome das etapas da escola
+	 *
+	 * @return array
+	 */
+	function getEtapas() {
+		if (is_numeric($this->ref_ano) && is_numeric($this->ref_ref_cod_escola)) {
+			$db = new clsBanco();
+			$sql = "SELECT sequencial AS id, sequencial || 'º ' || nm_tipo AS nome
+				      FROM pmieducar.ano_letivo_modulo
+				     INNER JOIN pmieducar.modulo ON (modulo.cod_modulo = ano_letivo_modulo.ref_cod_modulo)
+				     WHERE ref_ano = {$this->ref_ano}
+				       AND ref_ref_cod_escola = {$this->ref_ref_cod_escola}";
+
+			$db->Consulta($sql);
+
+			while ( $db->ProximoRegistro() )
+			{
+				$resultado[] = $db->Tupla();
+			}
+			return $resultado;
+		}
+		return false;
+	}
 }
 ?>

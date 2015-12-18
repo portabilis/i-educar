@@ -930,4 +930,31 @@ class App_Model_IedFinder extends CoreExt_Entity
   {
     return array();
   }
+
+  /**
+   * Retorna um array com as etapas a partir da escola e ano letivo.
+   *
+   * @param int $ano
+   * @param int $escola
+   * @return array
+   * @throws App_Model_Exception
+   */
+  public static function getEtapasEscola($ano, $escola)
+  {
+    $etapas = self::addClassToStorage('clsPmieducarAnoLetivoModulo', NULL,
+      'include/pmieducar/clsPmieducarAnoLetivoModulo.inc.php');
+
+    $etapas->ref_ano = $ano;
+    $etapas->ref_ref_cod_escola = $escola;
+
+    $etapas = $etapas->getEtapas();
+
+    $ret = array();
+    foreach ($etapas as $etapa) {
+      $ret[$etapa['id']] = $etapa['nome'];
+    }
+
+    return $ret;
+  }
+
 }
