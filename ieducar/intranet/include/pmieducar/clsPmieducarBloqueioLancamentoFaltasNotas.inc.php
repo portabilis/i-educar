@@ -213,12 +213,12 @@ class clsPmieducarBloqueioLancamentoFaltasNotas
         $gruda = ', ';
       }
 
-      if (is_numeric($this->data_inicio)) {
+      if (is_string($this->data_inicio)) {
         $set  .= "{$gruda}data_inicio = '{$this->data_inicio}'";
         $gruda = ', ';
       }
 
-      if (is_numeric($this->data_fim)) {
+      if (is_string($this->data_fim)) {
         $set  .= "{$gruda}data_fim = '{$this->data_fim}'";
         $gruda = ', ';
       }
@@ -311,6 +311,15 @@ class clsPmieducarBloqueioLancamentoFaltasNotas
       $db->Consulta( "SELECT 1 FROM {$this->_tabela} WHERE cod_bloqueio = '{$this->cod_bloqueio}' ");
       $db->ProximoRegistro();
       return $db->Tupla();
+    } elseif (is_numeric($this->ano) && is_numeric($this->ref_cod_escola) && is_numeric($this->etapa)) {
+      $db = new clsBanco();
+      $db->Consulta("SELECT 1
+                       FROM pmieducar.bloqueio_lancamento_faltas_notas
+                      WHERE ref_cod_escola = {$this->ref_cod_escola}
+                        AND ano = {$this->ano}
+                        AND etapa = {$this->etapa}");
+      $db->ProximoRegistro();
+      return $db->Tupla();
     }
     return FALSE;
   }
@@ -394,5 +403,30 @@ class clsPmieducarBloqueioLancamentoFaltasNotas
       return " ORDER BY {$this->_campo_order_by} ";
     }
     return '';
+  }
+
+  /**
+   * Retorna um boleano identificando se está atualmente dentro do periodo para lançamento de faltas notas
+   * registros.
+   *
+   * @return bool
+   */
+  function verificaPeriodo() {
+    if (is_numeric($this->ano) && is_numeric($this->ref_cod_escola) && is_numeric($this->etapa)) {
+
+      if (!$this->existe()) return TRUE;
+      $db = new clsBanco();
+
+      $db->Consulta("SELECT 1
+                       FROM pmieducar.bloqueio_lancamento_faltas_notas
+                      WHERE ref_cod_escola = {$this->ref_cod_escola}
+                        AND ano = {$this->ano}
+                        AND etapa = {$this->etapa}
+                        AND data_inicio <= now()::date
+                        AND data_fim >= now()::date");
+      $db->ProximoRegistro();
+      return $db->Tupla();
+    }
+    return FALSE;
   }
 }

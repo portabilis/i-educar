@@ -47,6 +47,7 @@ require_once 'RegraAvaliacao/Model/TipoParecerDescritivo.php';
 
 require_once 'include/pmieducar/clsPmieducarTurma.inc.php';
 require_once 'include/pmieducar/clsPmieducarMatricula.inc.php';
+require_once 'include/pmieducar/clsPmieducarBloqueioLancamentoFaltasNotas.inc.php';
 require_once 'include/modules/clsModulesAuditoriaNota.inc.php';
 require_once 'include/modules/clsModulesNotaExame.inc.php';
 
@@ -330,6 +331,28 @@ class DiarioApiController extends ApiCoreController
     return true;
   }
 
+  protected function validatesPeriodoLancamentoFaltasNotas() {
+
+    $bloqueioLancamentoFaltasNotas = new clsPmieducarBloqueioLancamentoFaltasNotas(NULL,
+                                                                                   $this->getRequest()->ano_escolar,
+                                                                                   $this->getRequest()->escola_id,
+                                                                                   $this->getRequest()->etapa);
+
+    $bloquearLancamento = $bloqueioLancamentoFaltasNotas->verificaPeriodo();
+
+    $user = $this->getSession()->id_pessoa;
+    $processoAp = 999849;
+    $obj_permissao = new clsPermissoes();
+
+    $permissaoLancamento = $obj_permissao->permissao_cadastra($processoAp, $user, 7);
+
+    if($bloquearLancamento || $permissaoLancamento){
+      return true;
+    }
+
+    $this->messenger->append('Não é permitido realizar esta alteração fora do período de lançamento de notas/faltas', 'error');
+    return false;
+  }
 
   // responders validations
 
@@ -351,7 +374,8 @@ class DiarioApiController extends ApiCoreController
   protected function canPost() {
     return $this->validatesPresenceOf('etapa') &&
            $this->validatesPresenceOf('matricula_id') &&
-           $this->canChange();
+           $this->canChange() &&
+           $this->validatesPeriodoLancamentoFaltasNotas();
   }
 
 
