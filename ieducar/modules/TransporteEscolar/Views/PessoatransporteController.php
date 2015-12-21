@@ -149,10 +149,5 @@ class PessoatransporteController extends Portabilis_Controller_Page_EditControll
 
     $this->loadResourceAssets($this->getDispatcher());
   }
-
-  function Excluir(){
-    die( $this->getOption('delete_success') );
-  }
-
 }
 ?>
