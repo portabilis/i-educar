@@ -136,8 +136,8 @@ class indice extends clsListagem
     $obj_servidor = new clsPmieducarServidor();
     $obj_servidor->setOrderby('carga_horaria ASC');
     $obj_servidor->setLimite($this->limite, $this->offset);
-
-    $lista = $obj_servidor->lista(
+    echo 'banana '.  $this->matricula;
+     $lista = $obj_servidor->lista(
       $this->cod_servidor,
       NULL,
       $this->ref_idesco,
@@ -152,7 +152,7 @@ class indice extends clsListagem
       NULL,
       NULL,
       $this->nome,
-      $this->matricula,
+      NULL,
       NULL,
       TRUE,
       TRUE,
@@ -169,7 +169,9 @@ class indice extends clsListagem
       NULL,
       NULL,
       NULL,
-      isset($_GET['servidor_sem_alocacao'])
+      NULL,
+      isset($_GET['servidor_sem_alocacao']),
+      $this->matricula
     );
     $total = $obj_servidor->_total;
 
