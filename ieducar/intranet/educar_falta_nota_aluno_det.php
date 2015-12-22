@@ -634,7 +634,7 @@ class indice extends clsDetalhe
 				}
 				else
 				{
-					$aprovado_ = "Em Andamento";
+					$aprovado_ = "Cursando";
 				}
 			}
 			$this->addDetalhe( array( "Situa&ccedil;&atilde;o", "{$aprovado_}") );

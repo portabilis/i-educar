@@ -224,7 +224,7 @@ class indice extends clsDetalhe
 			}
 			elseif ($registro["aprovado"] == 3)
 			{
-				$registro["aprovado"] = "Em Andamento";
+				$registro["aprovado"] = "Cursando";
 			}
 			elseif ($registro["aprovado"] == 4)
 			{

@@ -209,7 +209,7 @@ class indice extends clsDetalhe
         $aprovado = 'Reprovado';
       }
       elseif ($registro['aprovado'] == 3) {
-        $aprovado = 'Em Andamento';
+        $aprovado = 'Cursando';
       }
       elseif ($registro['aprovado'] == 4) {
         $aprovado = 'Transferido';

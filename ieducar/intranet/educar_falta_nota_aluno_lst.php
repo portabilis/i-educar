@@ -138,7 +138,7 @@ class indice extends clsListagem
       '' => 'Selecione',
       1  => 'Aprovado',
       2  => 'Reprovado',
-      3  => 'Em Andamento'
+      3  => 'Cursando'
     );
 
     $this->campoLista('aprovado', 'Situa&ccedil;&atilde;o', $opcoes,

@@ -59,7 +59,7 @@ class App_Model_MatriculaSituacao extends CoreExt_Enum
   protected $_data = array(
     self::APROVADO                 => 'Aprovado',
     self::REPROVADO                => 'Retido',
-    self::EM_ANDAMENTO             => 'Em andamento',
+    self::EM_ANDAMENTO             => 'Cursando',
     self::TRANSFERIDO              => 'Transferido',
     self::RECLASSIFICADO           => 'Reclassificado',
     self::ABANDONO                 => 'Abandono',
