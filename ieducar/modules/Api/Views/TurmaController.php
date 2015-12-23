@@ -250,12 +250,16 @@ class TurmaController extends ApiCoreController
              inner join pmieducar.matricula_turma on(matricula.cod_matricula = matricula_turma.ref_cod_matricula)
              inner join modules.nota_exame on(matricula.cod_matricula = nota_exame.ref_cod_matricula)
              inner join pmieducar.turma on(matricula_turma.ref_cod_turma = turma.cod_turma)
+             inner join modules.nota_aluno on(matricula.cod_matricula = nota_aluno.matricula_id)
+             inner join modules.nota_componente_curricular_media on(nota_aluno.id = nota_componente_curricular_media.nota_aluno_id
+                                                                    and nota_componente_curricular_media.componente_curricular_id = nota_exame.ref_cod_componente_curricular)
              where aluno.ativo = 1
                and matricula.ativo = 1
                and matricula_turma.ativo = 1
                and turma.ref_cod_instituicao = $1
                and matricula_turma.ref_cod_turma = $2
-               and (case when $3 = 0 then true else $3 = nota_exame.ref_cod_componente_curricular end)";
+               and (case when $3 = 0 then true else $3 = nota_exame.ref_cod_componente_curricular end)
+               and nota_componente_curricular_media.situacao = 7";
 
     $sql .= " ORDER BY matricula_turma.sequencial_fechamento, translate(upper(pessoa.nome),'áéíóúýàèìòùãõâêîôûäëïöüÿçÁÉÍÓÚÝÀÈÌÒÙÃÕÂÊÎÔÛÄËÏÖÜÇ','AEIOUYAEIOUAOAEIOUAEIOUYCAEIOUYAEIOUAOAEIOUAEIOUC')";
 
