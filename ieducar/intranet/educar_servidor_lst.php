@@ -136,7 +136,7 @@ class indice extends clsListagem
     $obj_servidor = new clsPmieducarServidor();
     $obj_servidor->setOrderby('carga_horaria ASC');
     $obj_servidor->setLimite($this->limite, $this->offset);
-    echo 'banana '.  $this->matricula;
+
      $lista = $obj_servidor->lista(
       $this->cod_servidor,
       NULL,
