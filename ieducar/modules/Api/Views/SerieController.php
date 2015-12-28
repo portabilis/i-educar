@@ -35,6 +35,7 @@ require_once 'Portabilis/Array/Utils.php';
 require_once 'Portabilis/String/Utils.php';
 require_once 'Portabilis/Array/Utils.php';
 require_once 'Portabilis/Date/Utils.php';
+require_once 'include/pmieducar/geral.inc.php';
 
 class SerieController extends ApiCoreController
 {
@@ -86,9 +87,43 @@ class SerieController extends ApiCoreController
     }
   }
 
+  protected function canGetBloqueioFaixaEtaria(){
+    return $this->validatesPresenceOf('instituicao_id') && $this->validatesPresenceOf('serie_id') && $this->validatesPresenceOf('data_nascimento');
+  }
+
+  protected function getBloqueioFaixaEtaria(){
+    if($this->canGetBloqueioFaixaEtaria()){
+      $instituicaoId  = $this->getRequest()->instituicao_id;
+      $serieId        = $this->getRequest()->serie_id;
+      $dataNascimento = $this->getRequest()->data_nascimento;
+
+      $objSerie = new clsPmieducarSerie($serieId);
+      $detSerie = $objSerie->detalhe();
+
+      $permiteFaixaEtaria = $objSerie->verificaPeriodoCorteEtarioDataNascimento($dataNascimento);
+
+      $alertaFaixaEtaria = $detSerie['alerta_faixa_etaria'] == "t";
+      $bloquearMatriculaFaixaEtaria = $detSerie['bloquear_matricula_faixa_etaria'] == "t";
+
+      $retorno = array('bloqueado' => false, 'mensagem_bloqueio' => '');
+      if(!$permiteFaixaEtaria){
+        if($alertaFaixaEtaria || $bloquearMatriculaFaixaEtaria){
+          $retorno['bloqueado'] = $bloquearMatriculaFaixaEtaria;
+
+          if($alertaFaixaEtaria){
+            $retorno['mensagem_bloqueio'] = 'A idade do aluno encontra-se fora da faixa etária pré-definida para esta série.';
+          }
+        }
+      }
+      return $retorno;
+    }
+  }
+
   public function Gerar() {
     if ($this->isRequestFor('get', 'series'))
       $this->appendResponse($this->getSeries());
+    elseif ($this->isRequestFor('get', 'bloqueio-faixa-etaria'))
+      $this->appendResponse($this->getBloqueioFaixaEtaria());
     else
       $this->notImplementedOperationError();
   }
