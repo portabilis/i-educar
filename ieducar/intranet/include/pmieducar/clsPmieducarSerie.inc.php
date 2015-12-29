@@ -884,7 +884,7 @@ class clsPmieducarSerie
    * @param int $dataNascimento
    * @return boolean
    */
-  function verificaPeriodoCorteEtarioDataNascimento($dataNascimento){
+  function verificaPeriodoCorteEtarioDataNascimento($dataNascimento, $ano){
     $db = new clsBanco();
 
     $sql = "SELECT 1
@@ -892,8 +892,8 @@ class clsPmieducarSerie
              INNER JOIN pmieducar.curso ON (curso.cod_curso = serie.ref_cod_curso)
              INNER JOIN pmieducar.instituicao ON (instituicao.cod_instituicao = curso.ref_cod_instituicao)
              WHERE serie.cod_serie = {$this->cod_serie}
-               AND '{$dataNascimento}' >= (replace(instituicao.data_base_matricula, EXTRACT(YEAR FROM instituicao.data_base_matricula), EXTRACT(YEAR FROM now()) - idade_final))::date
-               AND '{$dataNascimento}' <= (replace(instituicao.data_base_matricula, EXTRACT(YEAR FROM instituicao.data_base_matricula), EXTRACT(YEAR FROM now()) - idade_inicial))::date";
+               AND '{$dataNascimento}' >= (replace(instituicao.data_base_matricula, EXTRACT(YEAR FROM instituicao.data_base_matricula), {$ano} - idade_final))::date
+               AND '{$dataNascimento}' <= (replace(instituicao.data_base_matricula, EXTRACT(YEAR FROM instituicao.data_base_matricula), {$ano} - idade_inicial))::date";
     $db->Consulta($sql);
     return $db->ProximoRegistro();
   }

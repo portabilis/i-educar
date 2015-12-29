@@ -96,11 +96,12 @@ class SerieController extends ApiCoreController
       $instituicaoId  = $this->getRequest()->instituicao_id;
       $serieId        = $this->getRequest()->serie_id;
       $dataNascimento = $this->getRequest()->data_nascimento;
+      $ano = isset($this->getRequest()->ano) ? $this->getRequest()->ano : date("Y");
 
       $objSerie = new clsPmieducarSerie($serieId);
       $detSerie = $objSerie->detalhe();
 
-      $permiteFaixaEtaria = $objSerie->verificaPeriodoCorteEtarioDataNascimento($dataNascimento);
+      $permiteFaixaEtaria = $objSerie->verificaPeriodoCorteEtarioDataNascimento($dataNascimento, $ano);
 
       $alertaFaixaEtaria = $detSerie['alerta_faixa_etaria'] == "t";
       $bloquearMatriculaFaixaEtaria = $detSerie['bloquear_matricula_faixa_etaria'] == "t";
@@ -109,10 +110,8 @@ class SerieController extends ApiCoreController
       if(!$permiteFaixaEtaria){
         if($alertaFaixaEtaria || $bloquearMatriculaFaixaEtaria){
           $retorno['bloqueado'] = $bloquearMatriculaFaixaEtaria;
+          $retorno['mensagem_bloqueio'] = 'A idade do aluno encontra-se fora da faixa etária pré-definida para esta série.';
 
-          if($alertaFaixaEtaria){
-            $retorno['mensagem_bloqueio'] = 'A idade do aluno encontra-se fora da faixa etária pré-definida para esta série.';
-          }
         }
       }
       return $retorno;
