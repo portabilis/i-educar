@@ -1607,7 +1607,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $etapa                              = 0;
     $faltasComponentes                  = array();
 
-    $disciplina_dispensada = clsPmieducarTurma::getDisciplinaDispensada($this->getOption('ref_cod_turma'));
+    $disciplinaDispensadaTurma = clsPmieducarTurma::getDisciplinaDispensada($this->getOption('ref_cod_turma'));
+    $disciplinasDispensadasMatricula = App_Model_IedFinder::getDisciplinasDispensadasPorMatricula($this->getOption('matricula'), $this->getOption('ref_cod_serie'), $this->getOption('ref_cod_escola'));
 
     // Carrega faltas lançadas (persistidas)
     $this->_loadFalta();
@@ -1682,9 +1683,15 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
       $componentes = $this->getComponentes();
 
-      if(is_numeric($disciplina_dispensada)){
-        unset($componentes[$disciplina_dispensada]);
-        unset($faltasComponentes[$disciplina_dispensada]);
+      if(is_numeric($disciplinaDispensadaTurma)){
+        unset($componentes[$disciplinaDispensadaTurma]);
+        unset($faltasComponentes[$disciplinaDispensadaTurma]);
+      }
+      if(is_array($disciplinasDispensadasMatricula)){
+        foreach($disciplinasDispensadasMatricula as $disciplina){
+          unset($componentes[$disciplina]);
+          unset($faltasComponentes[$disciplina]);
+        }
       }
       if (0 == count($faltasComponentes) ||
           count($faltasComponentes) != count($componentes)) {
