@@ -112,7 +112,6 @@ class indice extends clsCadastro
     @session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     @session_write_close();
-
     $this->ref_cod_serie = $_GET['ref_cod_serie'];
     $this->ref_cod_escola = $_GET['ref_cod_escola'];
 
@@ -546,10 +545,12 @@ class indice extends clsCadastro
       $obj_serie = new clsPmieducarSerie($this->ref_cod_serie);
       $det_serie = $obj_serie->detalhe();
       $regra_avaliacao_id = $det_serie["regra_avaliacao_id"];
-      $regra_avaliacao_mapper = new RegraAvaliacao_Model_RegraDataMapper();
-      $regra_avaliacao = $regra_avaliacao_mapper->find($regra_avaliacao_id);
+      if(isset($regra_avaliacao_id)){
+        $regra_avaliacao_mapper = new RegraAvaliacao_Model_RegraDataMapper();
+        $regra_avaliacao = $regra_avaliacao_mapper->find($regra_avaliacao_id);
+      }
     }
-      return ($regra_avaliacao->notaGeralPorEtapa == 1);
+    return ($regra_avaliacao->notaGeralPorEtapa == 1);
   }
 }
 
