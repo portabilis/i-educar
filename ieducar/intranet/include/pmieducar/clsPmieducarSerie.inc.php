@@ -885,17 +885,41 @@ class clsPmieducarSerie
    * @return boolean
    */
   function verificaPeriodoCorteEtarioDataNascimento($dataNascimento, $ano){
-    $db = new clsBanco();
 
-    $sql = "SELECT 1
-              FROM  pmieducar.serie
-             INNER JOIN pmieducar.curso ON (curso.cod_curso = serie.ref_cod_curso)
-             INNER JOIN pmieducar.instituicao ON (instituicao.cod_instituicao = curso.ref_cod_instituicao)
-             WHERE serie.cod_serie = {$this->cod_serie}
-               AND '{$dataNascimento}' >= (replace(instituicao.data_base_matricula, EXTRACT(YEAR FROM instituicao.data_base_matricula), {$ano} - idade_final))::date
-               AND '{$dataNascimento}' <= (replace(instituicao.data_base_matricula, EXTRACT(YEAR FROM instituicao.data_base_matricula), {$ano} - idade_inicial))::date";
-    $db->Consulta($sql);
-    return $db->ProximoRegistro();
+    $detSerie = $this->detalhe();
+    $idadeInicial = $detSerie["idade_inicial"];
+    $idadeFinal   = $detSerie["idade_final"];
+
+    $instituicaoId = $this->getInstituicaoByCurso($detSerie["ref_cod_curso"]);
+    $objInstituicao = new clsPmieducarInstituicao($instituicaoId);
+    $detInstituicao = $objInstituicao->detalhe();
+    $dataBaseMatricula = $detInstituicao["data_base_matricula"];
+
+    $dataLimite = $ano . "-" . date("m-d", strtotime($dataBaseMatricula));
+
+    $dataNascimento = new DateTime($dataNascimento);
+    $dataLimite     = new DateTime($dataLimite);
+
+    $diferencaDatas = $dataNascimento->diff($dataLimite);
+
+    $idadeNaData = $diferencaDatas->y;
+    $idadesPermitidas = range($idadeInicial, $idadeFinal);
+
+    $idadeCompativel = false;
+    foreach($idadesPermitidas as $idade){
+      if($idade == $idadeNaData){
+        $idadeCompativel = true;
+      }
+    }
+
+    return $idadeCompativel;
+  }
+
+  function getInstituicaoByCurso($codCurso){
+    $objCurso = new clsPmieducarCurso($codCurso);
+    $detCurso = $objCurso->detalhe();
+
+    return $detCurso["ref_cod_instituicao"];
   }
 
 }
