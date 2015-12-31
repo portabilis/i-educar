@@ -895,7 +895,13 @@ class clsPmieducarSerie
     $detInstituicao = $objInstituicao->detalhe();
     $dataBaseMatricula = $detInstituicao["data_base_matricula"];
 
-    $dataLimite = $ano . "-" . date("m-d", strtotime($dataBaseMatricula));
+    $dataBaseMatricula = explode('-', $dataBaseMatricula);
+
+    $anoLimite = $ano;
+    $mesLimite = $dataBaseMatricula[1];
+    $diaLimite = $dataBaseMatricula[2];
+
+    $dataLimite = $anoLimite . '-' . $mesLimite . '-' . $diaLimite;
 
     $dataNascimento = new DateTime($dataNascimento);
     $dataLimite     = new DateTime($dataLimite);
