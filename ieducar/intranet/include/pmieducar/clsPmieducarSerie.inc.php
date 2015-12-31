@@ -900,13 +900,13 @@ class clsPmieducarSerie
     $dataNascimento = new DateTime($dataNascimento);
     $dataLimite     = new DateTime($dataLimite);
 
-     echo"<pre>";var_dump($dataNascimento);die;
 
     $diferencaDatas = $dataNascimento->diff($dataLimite);
 
+     echo"<pre>";var_dump($diferencaDatas);
     $idadeNaData = $diferencaDatas->y;
     $idadesPermitidas = range($idadeInicial, $idadeFinal);
-
+ echo"<pre>";var_dump($idadesPermitidas);die;
     $idadeCompativel = false;
     foreach($idadesPermitidas as $idade){
       if($idade == $idadeNaData){
