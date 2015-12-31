@@ -900,6 +900,8 @@ class clsPmieducarSerie
     $dataNascimento = new DateTime($dataNascimento);
     $dataLimite     = new DateTime($dataLimite);
 
+     echo"<pre>";var_dump($dataNascimento);die;
+
     $diferencaDatas = $dataNascimento->diff($dataLimite);
 
     $idadeNaData = $diferencaDatas->y;
