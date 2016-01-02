@@ -103,9 +103,8 @@
         Prezados clientes, comunicamos que no feriad&atilde;o de carnaval, de 16 &agrave; 17 de Fevereiro, iremos atender em car&aacute;ter de plant&atilde;o. Se voc&ecirc; precisar de ajuda, entre em contato atrav&eacute;s dos telefones (48) 9811-3030 (TIM), (48) 9187-6262 (Vivo) ou (48) 8835-3082 (Claro). Atenderemos via e-mail <a href='mailto:suporte@portabilis.com.br'>suporte@portabilis.com.br</a> e help-desk <a href='http://suporte.portabilis.com.br'>http://suporte.portabilis.com.br</a> normalmente. Obrigado pela compreens&atilde;o e bom descanso para os que n&atilde;o precisar&atilde;o trabalhar. :)
       </p>-->
 
-      <p style="min-height: 0px;" class="flash exclamation">
-      <strong>Caros clientes,</strong>
-        <br/>Nos dias 24/12 e 31/12 nosso atendimento de suporte ter&aacute; hor&aacute;rio especial, funcionando das 08:00 &agrave;s 12:00 horas. Sendo assim, pedimos que todos os contatos posteriores a este hor&aacute;rio nas datas informadas, sejam feitos via e-mail suporte@portabilis.com.br, pois ser&atilde;o atendidos normalmente. <strong>Agradecemos pela compreens&atilde;o.</strong>
+      <p style="min-height: 0px;" class="flash warning">
+      <strong>Instabilidade nos servi&ccedil;os:</strong> Comunicamos a todos os nossos clientes que nossos sites e aplica&ccedil;&otilde;es est&atilde;o passando por instabilidades e podem ficar indispon&iacute;veis momentaneamente. Nossa equipe est&aacute; trabalhando para solucionar este problema o mais breve. Qualquer d&uacute;vida, entre em contato pelo e-mail suporte@portabilis.com.br. Obrigado pela compreens&atilde;o.
       </p>
 
       <!-- #&ERROLOGIN&# -->
