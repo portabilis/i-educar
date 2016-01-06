@@ -856,29 +856,6 @@ class clsPmieducarSerie
   }
 
   /**
-   * Verifica se a pessoa enviada por parâmetro está dentro do período de corte etário pré-definido.
-   *
-   * @param int $codAluno
-   * @return boolean
-   */
-  function verificaPeriodoCorteEtario($codAluno){
-    $db = new clsBanco();
-
-    $sql = "SELECT serie.idade_inicial,
-                   serie.idade_final
-              FROM pmieducar.aluno, cadastro.fisica, pmieducar.serie
-             INNER JOIN pmieducar.curso ON (curso.cod_curso = serie.ref_cod_curso)
-             INNER JOIN pmieducar.instituicao ON (instituicao.cod_instituicao = curso.ref_cod_instituicao)
-             WHERE serie.cod_serie = {$this->cod_serie}
-               AND aluno.cod_aluno = {$codAluno}
-               AND fisica.idpes = aluno.ref_idpes
-               AND fisica.data_nasc >= (replace(instituicao.data_base_matricula, EXTRACT(YEAR FROM instituicao.data_base_matricula), EXTRACT(YEAR FROM now()) - idade_final))::date
-               AND fisica.data_nasc <= (replace(instituicao.data_base_matricula, EXTRACT(YEAR FROM instituicao.data_base_matricula), EXTRACT(YEAR FROM now()) - idade_inicial))::date";
-    $db->Consulta($sql);
-    return $db->ProximoRegistro();
-  }
-
-  /**
    * Verifica se a data de nascimento enviada por parâmetro está dentro do período de corte etário pré-definido.
    *
    * @param int $dataNascimento
