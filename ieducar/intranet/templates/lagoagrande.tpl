@@ -79,7 +79,7 @@
 	</head>
 	<body onload="loginpage_onload();" class="hidden fade-in">
     <!--img src="https://s3-sa-east-1.amazonaws.com/apps-core-images/uploads/dia-da-mulher.png" style="float:left;"-->
-    <img src="templates/imagens/mensagem-natal.png" height="300px" style="position:absolute; left: 40px; top: -2px;" />
+    <!-- <img src="templates/imagens/mensagem-natal.png" height="300px" style="position:absolute; left: 40px; top: -2px;" /> -->
     <div id="flash-container">
 
       <!--p style="min-height: 0px;  background-color: #F5829C; color: white;" class="flash update-browser"> 
@@ -101,10 +101,6 @@
    <!--   <p style="min-height: 0px;" class="flash update-browser">
         Comunicamos que o nosso servi&ccedil;o de Suporte via telefone apresentar&aacute; instabilidades neste m&ecirc;s de Novembro, em virtude da mudan&ccedil;a de endere&ccedil;o da sede da Portabilis. <br/>Pedimos desculpas pelo transtorno tempor&aacute;rio e informamos que voc&ecirc; ainda poder&aacute; nos contatar pelo e-mail de suporte (<a href='mailto:suporte@portabilis.com.br'>suporte@portabilis.com.br</a>) ou diretamente pela ferramenta de HelpDesk (<a href='http://suporte.portabilis.com.br'>http://suporte.portabilis.com.br'</a>).
      </p> -->
-
-      <p style="min-height: 0px;" class="flash warning">
-      <strong>Instabilidade nos servi&ccedil;os:</strong> Comunicamos a todos os nossos clientes que nossos sites e aplica&ccedil;&otilde;es est&atilde;o passando por instabilidades e podem ficar indispon&iacute;veis momentaneamente. Nossa equipe est&aacute; trabalhando para solucionar este problema o mais breve. Qualquer d&uacute;vida, entre em contato pelo e-mail suporte@portabilis.com.br. Obrigado pela compreens&atilde;o.
-      </p>
 
       <!-- #&ERROLOGIN&# -->
 
