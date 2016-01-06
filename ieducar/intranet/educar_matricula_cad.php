@@ -408,7 +408,13 @@ class indice extends clsCadastro
         $idadeInicial = $detSerie['idade_inicial'];
         $idadeFinal = $detSerie['idade_final'];
 
-        $dentroPeriodoCorte = $serie->verificaPeriodoCorteEtario($this->ref_cod_aluno);
+        $objAluno = new clsPmieducarAluno($this->ref_cod_aluno);
+        $detAluno = $objAluno->detalhe();
+
+        $objPes = new clsPessoaFisica($detAluno["ref_idpes"]);
+        $detPes = $objPes->detalhe();
+
+        $dentroPeriodoCorte = $serie->verificaPeriodoCorteEtarioDataNascimento($detPes["data_nasc"], $this->ano);
 
         if ($bloquearMatriculaFaixaEtaria && !$dentroPeriodoCorte) {
           $this->mensagem = Portabilis_String_Utils::toLatin1('Não foi possível realizar a matrícula, pois a idade do aluno está fora da faixa etária da série');
