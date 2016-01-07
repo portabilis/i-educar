@@ -1414,7 +1414,7 @@ class clsPmieducarMatriculaTurma
     $possui_fechamento = $db->CampoUnico("SELECT data_fechamento FROM pmieducar.turma WHERE cod_turma = {$turmaId}");
     if (is_string($possui_fechamento)){
       if (strtotime($possui_fechamento) < strtotime($dataEnturmacao))
-        $getSequencial = true;      
+        $getSequencial = true;
     }
 
     $dataBaseTransferencia = $this->getDataBaseTransferencia();
