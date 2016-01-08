@@ -32,12 +32,6 @@ $j('#autorizado_cinco').closest('tr').show();
 $j('#parentesco_cinco').closest('tr').show();
 }
 
-
-
-
-
-
-
 var editar_pessoa   = false;
 var person_details;
 var pai_details;
@@ -755,6 +749,17 @@ var handleGetPersonDetails = function(dataResponse) {
   }
 
   $j('#mae_id').trigger('change');
+
+
+  if (dataResponse.responsavel_id){
+    $j('#responsavel_nome').val(dataResponse.responsavel_id + ' - ' + nomeResponsavel);
+    $j('#responsavel_id').val(dataResponse.responsavel_id);
+  }else{
+    $j('#responsavel_nome').val('');
+    $j('#responsavel_id').val('');
+  }
+
+  $j('#responsavel_id').trigger('change');
 
   if (dataResponse.responsavel_id)
     nomeResponsavel = dataResponse.responsavel_id + ' - ' + nomeResponsavel;
