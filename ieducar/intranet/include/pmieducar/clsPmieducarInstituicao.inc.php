@@ -138,7 +138,7 @@ class clsPmieducarInstituicao
     $this->_schema = "pmieducar.";
     $this->_tabela = "{$this->_schema}instituicao";
     $this->_campos_lista = $this->_todos_campos = "cod_instituicao, ref_usuario_exc, ref_usuario_cad, ref_idtlog, ref_sigla_uf, cep, cidade, bairro, logradouro, numero, complemento, nm_responsavel, ddd_telefone, telefone, data_cadastro, data_exclusao, ativo, nm_instituicao, data_base_transferencia, data_base_remanejamento, controlar_espaco_utilizacao_aluno, percentagem_maxima_ocupacao_salas, quantidade_alunos_metro_quadrado, exigir_vinculo_turma_professor, gerar_historico_transferencia, matricula_apenas_bairro_escola, restringir_historico_escolar, coordenador_transporte, restringir_multiplas_enturmacoes, permissao_filtro_abandono_transferencia, data_base_matricula, multiplas_reserva_vaga,
-      reserva_integral_somente_com_renda, data_expiracao_reserva_vaga ";
+      reserva_integral_somente_com_renda, data_expiracao_reserva_vaga, data_fechamento ";
 
     if (is_numeric($ref_usuario_cad)) {
       if (class_exists('clsPmieducarUsuario')) {
@@ -512,6 +512,12 @@ class clsPmieducarInstituicao
         $gruda = ", ";
       }
 
+      if (is_string($this->data_fechamento)) {
+        $campos .= "{$gruda}data_fechamento";
+        $valores .= "{$gruda}'{$this->data_fechamento}'";
+        $gruda = ", ";
+      }
+
       $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
       return $db->InsertId("{$this->_tabela}_cod_instituicao_seq");
     }
@@ -730,6 +736,14 @@ class clsPmieducarInstituicao
         $gruda = ", ";
       }else{
         $set .= "{$gruda}data_base_matricula = NULL ";
+        $gruda = ", ";
+      }
+
+      if (is_string($this->data_fechamento) AND !empty($this->data_fechamento)) {
+        $set .= "{$gruda}data_fechamento = '{$this->data_fechamento}'";
+        $gruda = ", ";
+      }else{
+        $set .= "{$gruda}data_fechamento = NULL ";
         $gruda = ", ";
       }
 

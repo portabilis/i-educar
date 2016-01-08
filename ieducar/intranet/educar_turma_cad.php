@@ -94,7 +94,6 @@ class indice extends clsCadastro
   var $hora_final;
   var $hora_inicio_intervalo;
   var $hora_fim_intervalo;
-  var $data_fechamento;
 
   var $ref_cod_instituicao;
   var $ref_cod_curso;
@@ -410,8 +409,6 @@ class indice extends clsCadastro
     $this->campoTexto('sgl_turma', $GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu' ? 'C&oacute;digo da sala Prodesp/GDAE' : 'Sigla', $this->sgl_turma, 15, 15, FALSE);
 
     $this->campoNumero('max_aluno', 'M&aacute;ximo de Alunos', $this->max_aluno, 3, 3, TRUE);
-
-    $this->campoData('data_fechamento', 'Data de fechamento', Portabilis_Date_Utils::pgSQLToBr($this->data_fechamento), false, '', false, '', false, '', Portabilis_String_Utils::toLatin1('Após essa data alunos enturmados não serão ordenados por ordem alfabética'));
 
     unset($opcoes);
     if (!is_null($this->ref_ref_cod_serie)){
@@ -998,8 +995,6 @@ class indice extends clsCadastro
     @session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     @session_write_close();
-
-    $this->data_fechamento = Portabilis_Date_Utils::brToPgSQL($this->data_fechamento);
 
     if(! $this->canCreateTurma($this->ref_cod_escola, $this->ref_ref_cod_serie, $this->turma_turno_id))
       return false;
