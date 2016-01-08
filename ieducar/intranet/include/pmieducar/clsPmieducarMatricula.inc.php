@@ -396,6 +396,10 @@ class clsPmieducarMatricula
         $valores .= "{$gruda}'{$this->data_cancel}'";
         $gruda = ", ";
       }
+      if (is_numeric($this->turno_pre_matricula)) {
+        $campos .= "{$gruda}turno_pre_matricula";
+        $valores .= "{$gruda}'{$this->turno_pre_matricula}'";
+      }
       if ($this->dependencia) {
         $campos .= "{$gruda}dependencia";
         $valores .= "{$gruda}true ";
