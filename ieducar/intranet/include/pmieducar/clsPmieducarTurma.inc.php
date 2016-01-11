@@ -2508,7 +2508,8 @@ and  e.cod_escola = t.ref_ref_cod_escola
               from pmieducar.matricula
              inner join pmieducar.matricula_turma on(matricula.cod_matricula = matricula_turma.ref_cod_matricula)
              where matricula.ativo = 1
-               and matricula_turma.ref_cod_turma = $1";
+               and matricula_turma.ref_cod_turma = $1
+               and matricula_turma.ativo = 1";
      $params = array('params' => $this->cod_turma, 'return_only' => 'first-field');
      return Portabilis_Utils_Database::fetchPreparedQuery($sql, $params);
   }
