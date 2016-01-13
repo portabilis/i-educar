@@ -42,7 +42,7 @@ class clsIndexBase extends clsBase
   function Formular()
   {
     $this->SetTitulo($this->_instituicao . ' i-Educar');
-    $this->processoAp = '561';
+    $this->processoAp = '845';
     $this->addEstilo('localizacaoSistema');
   }
 }
@@ -60,7 +60,7 @@ class indice extends clsCadastro
     session_write_close();
 
     $obj_permissao = new clsPermissoes();
-    $obj_permissao->permissao_cadastra(561, $this->pessoa_logada, 7, 'educar_index.php');
+    $obj_permissao->permissao_cadastra(845, $this->pessoa_logada, 7, 'educar_index.php');
 
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
