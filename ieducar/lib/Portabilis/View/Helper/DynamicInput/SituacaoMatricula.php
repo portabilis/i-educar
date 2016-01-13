@@ -48,7 +48,7 @@ class Portabilis_View_Helper_DynamicInput_SituacaoMatricula extends Portabilis_V
 
     $resources = array(1 => 'Aprovado',
                        2 => 'Reprovado',
-                       3 => 'Em andamento',
+                       3 => 'Cursando',
                        4 => 'Transferido',
                        5 => 'Reclassificado',
                        6 => 'Abandono',

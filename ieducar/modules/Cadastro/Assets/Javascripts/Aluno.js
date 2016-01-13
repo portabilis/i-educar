@@ -32,12 +32,6 @@ $j('#autorizado_cinco').closest('tr').show();
 $j('#parentesco_cinco').closest('tr').show();
 }
 
-
-
-
-
-
-
 var editar_pessoa   = false;
 var person_details;
 var pai_details;
@@ -140,6 +134,9 @@ var $paiIdField   = $j('#pai_id');
 var $maeNomeField = $j('#mae_nome');
 var $maeIdField   = $j('#mae_id');
 
+var $responsavelNomeField = $j('#responsavel_nome');
+var $responsavelIdField   = $j('#responsavel_id');
+
 var $pessoaPaiActionBar  = $j('<span>').html('')
                                        .addClass('pessoa-links pessoa-pai-links')
                                        .width($paiNomeField.outerWidth() - 12)
@@ -149,6 +146,12 @@ var $pessoaMaeActionBar = $pessoaPaiActionBar.clone()
                                          .removeClass('pessoa-pai-links')
                                          .addClass('pessoa-mae-links')
                                          .appendTo($maeNomeField.parent());
+
+var $pessoaResponsavelActionBar = $pessoaPaiActionBar.clone()
+                                         .removeClass('pessoa-pai-links')
+                                         .addClass('pessoa-responsavel-links')
+                                         .appendTo($responsavelNomeField.parent());
+
 
 var $linkToCreatePessoaPai = $j('<a>').addClass('cadastrar-pessoa-pai decorated')
                                       .attr('id', 'cadastrar-pessoa-pai-link')
@@ -173,6 +176,18 @@ var $linkToEditPessoaMae = $linkToEditPessoaPai.clone()
                                                .attr('id', 'editar-pessoa-mae-link')
                                                .appendTo($pessoaMaeActionBar);
 
+var $linkToCreatePessoaResponsavel = $linkToCreatePessoaPai.clone()
+                                                   .removeClass('cadastrar-pessoa-pai')
+                                                   .attr('id', 'cadastrar-pessoa-responsavel-link')
+                                                   .addClass('cadastrar-pessoa-responsavel')
+                                                   .appendTo($pessoaResponsavelActionBar)
+                                                   .css('display', 'none');
+
+var $linkToEditPessoaResponsavel = $linkToEditPessoaPai.clone()
+                                               .removeClass('editar-pessoa-pai')
+                                               .addClass('editar-pessoa-responsavel')
+                                               .attr('id', 'editar-pessoa-responsavel-link')
+                                               .appendTo($pessoaResponsavelActionBar);
 
 
 // adiciona id 'stop' na linha separadora
@@ -653,6 +668,10 @@ var changeVisibilityOfLinksToPessoaMae = function() {
   changeVisibilityOfLinksToPessoaParent('mae');
 }
 
+var changeVisibilityOfLinksToPessoaResponsavel = function() {
+  changeVisibilityOfLinksToPessoaParent('responsavel');
+}
+
 var simpleSearchPaiOptions = {
   autocompleteOptions : { close  : changeVisibilityOfLinksToPessoaPai }
 };
@@ -661,8 +680,13 @@ var simpleSearchMaeOptions = {
   autocompleteOptions : { close : changeVisibilityOfLinksToPessoaMae }
 };
 
+var simpleSearchResponsavelOptions = {
+  autocompleteOptions : { close : changeVisibilityOfLinksToPessoaResponsavel }
+};
+
 $paiIdField.change(changeVisibilityOfLinksToPessoaPai);
 $maeIdField.change(changeVisibilityOfLinksToPessoaMae);
+$responsavelIdField.change(changeVisibilityOfLinksToPessoaResponsavel);
 
 var handleGetPersonDetails = function(dataResponse) {
 
@@ -726,6 +750,17 @@ var handleGetPersonDetails = function(dataResponse) {
 
   $j('#mae_id').trigger('change');
 
+
+  if (dataResponse.responsavel_id){
+    $j('#responsavel_nome').val(dataResponse.responsavel_id + ' - ' + nomeResponsavel);
+    $j('#responsavel_id').val(dataResponse.responsavel_id);
+  }else{
+    $j('#responsavel_nome').val('');
+    $j('#responsavel_id').val('');
+  }
+
+  $j('#responsavel_id').trigger('change');
+
   if (dataResponse.responsavel_id)
     nomeResponsavel = dataResponse.responsavel_id + ' - ' + nomeResponsavel;
 
@@ -751,6 +786,7 @@ var handleGetPersonDetails = function(dataResponse) {
   if ( $j('#pai').val()=='' && $j('#mae').val()==''){
       $j('#tipo_responsavel').append('<option value="outra_pessoa" selected >Outra pessoa</option>');
       $j('#responsavel_nome').show();
+      $j('#cadastrar-pessoa-responsavel-link').show();
   }else if ($j('#pai').val()==''){
       $j('#tipo_responsavel').append('<option value="mae" selected >M&atilde;e</option>');
       $j('#tipo_responsavel').append('<option value="outra_pessoa" >Outra pessoa</option>');
@@ -862,7 +898,13 @@ var handleGetPersonParentDetails = function(dataResponse, parentType) {
         $maeNomeField.val(dataResponse.id + ' - '+ dataResponse.nome);
         $maeIdField.val(dataResponse.id);
         changeVisibilityOfLinksToPessoaMae();
-      }else{
+      }
+      else if (parentType=='responsavel'){
+        $responsavelNomeField.val(dataResponse.id + ' - '+ dataResponse.nome);
+        $responsavelIdField.val(dataResponse.id);
+        changeVisibilityOfLinksToPessoaResponsavel();
+      }
+      else{
         $paiNomeField.val(dataResponse.id + ' - '+ dataResponse.nome);
         $paiIdField.val(dataResponse.id);
         changeVisibilityOfLinksToPessoaPai();
@@ -980,7 +1022,18 @@ function afterChangePessoa(targetWindow, parentType, parentId, parentName) {
 
 function afterChangePessoaParent(pessoaId, parentType) {
 
-  $tempField = (parentType == 'pai' ? $paiNomeField : $maeNomeField);
+  $tempField = $paiNomeField;
+
+  switch(parentType) {
+      case 'mae':
+          $tempField = $maeNomeField;
+          break;
+      case 'responsavel':
+          $tempField = $responsavelNomeField;
+          break;
+      default:
+          $tempField = $paiNomeField;
+  }
 
   messageUtils.success('Pessoa '+parentType+' alterada com sucesso', $tempField);
 
@@ -1098,10 +1151,13 @@ function canShowParentsFields(){
     // responsavel
 
     var checkTipoResponsavel = function(){
-      if ($j('#tipo_responsavel').val() == 'outra_pessoa')
+      if ($j('#tipo_responsavel').val() == 'outra_pessoa') {
         $j('#responsavel_nome').show();
-      else
+        $j('#cadastrar-pessoa-responsavel-link').show();
+      } else {
         $j('#responsavel_nome').hide();
+        $j('#cadastrar-pessoa-responsavel-link').hide();
+      }
     }
 
     checkTipoResponsavel();
@@ -1358,7 +1414,7 @@ function canShowParentsFields(){
       }
     });
 
-    $j('body').append('<div id="dialog-form-pessoa-parent"><form><p></p><table><tr><td valign="top"><fieldset><label for="nome-pessoa-parent">Nome</label>    <input type="text " name="nome-pessoa-parent" id="nome-pessoa-parent" size="58" maxlength="255" class="text">    <label for="sexo-pessoa-parent">Sexo</label>  <select class="select ui-widget-content ui-corner-all" name="sexo-pessoa-parent" id="sexo-pessoa-parent" ><option value="" selected>Sexo</option><option value="M">Masculino</option><option value="F">Feminino</option></select>    <label for="estado-civil-pessoa-parent">Estado civil</label>   <select class="select ui-widget-content ui-corner-all" name="estado-civil-pessoa-parent" id="estado-civil-pessoa-parent"  ><option id="estado-civil-pessoa-parent_" value="" selected>Estado civil</option><option id="estado-civil-pessoa-parent_2" value="2">Casado(a)</option><option id="estado-civil-pessoa-parent_6" value="6">Companheiro(a)</option><option id="estado-civil-pessoa-parent_3" value="3">Divorciado(a)</option><option id="estado-civil-pessoa-parent_4" value="4">Separado(a)</option><option id="estado-civil-pessoa-parent_1" value="1">Solteiro(a)</option><option id="estado-civil-pessoa-parent_5" value="5">Vi&uacute;vo(a)</option></select><label for="data-nasc-pessoa-parent"> Data de nascimento </label> <input onKeyPress="formataData(this, event);" class="" placeholder="dd/mm/yyyy" type="text" name="data-nasc-pessoa-parent" id="data-nasc-pessoa-parent" value="" size="11" maxlength="10"> Falecido?<input type="checkbox" name="falecido-parent" id="falecido-parent" style="display:inline;"> </fieldset><p><a id="link_cadastro_detalhado_parent" target="_blank">Cadastro detalhado</a></p></form></div>');
+    $j('body').append('<div id="dialog-form-pessoa-parent"><form><p></p><table><tr><td valign="top"><fieldset><label for="nome-pessoa-parent">Nome</label>    <input type="text " name="nome-pessoa-parent" id="nome-pessoa-parent" size="58" maxlength="255" class="text">    <label for="sexo-pessoa-parent">Sexo</label>  <select class="select ui-widget-content ui-corner-all" name="sexo-pessoa-parent" id="sexo-pessoa-parent" ><option value="" selected>Sexo</option><option value="M">Masculino</option><option value="F">Feminino</option></select>    <label for="estado-civil-pessoa-parent">Estado civil</label>   <select class="select ui-widget-content ui-corner-all" name="estado-civil-pessoa-parent" id="estado-civil-pessoa-parent"  ><option id="estado-civil-pessoa-parent_" value="" selected>Estado civil</option><option id="estado-civil-pessoa-parent_2" value="2">Casado(a)</option><option id="estado-civil-pessoa-parent_6" value="6">Companheiro(a)</option><option id="estado-civil-pessoa-parent_3" value="3">Divorciado(a)</option><option id="estado-civil-pessoa-parent_4" value="4">Separado(a)</option><option id="estado-civil-pessoa-parent_1" value="1">Solteiro(a)</option><option id="estado-civil-pessoa-parent_5" value="5">Vi&uacute;vo(a)</option></select><label for="data-nasc-pessoa-parent"> Data de nascimento </label> <input onKeyPress="formataData(this, event);" class="" placeholder="dd/mm/yyyy" type="text" name="data-nasc-pessoa-parent" id="data-nasc-pessoa-parent" value="" size="11" maxlength="10"> <div id="falecido-modal"> Falecido?<input type="checkbox" name="falecido-parent" id="falecido-parent" style="display:inline;"> </div></fieldset><p><a id="link_cadastro_detalhado_parent" target="_blank">Cadastro detalhado</a></p></form></div>');
 
     $j('#dialog-form-pessoa-parent').find(':input').css('display', 'block');
 
@@ -1553,6 +1609,18 @@ function canShowParentsFields(){
 
     });
 
+    $j("#cadastrar-pessoa-responsavel-link").click(function() {
+
+        if($j('#pessoa_id').val()){
+
+          openModalParent('responsavel');
+
+        }else{
+          alertSelecionarPessoaAluno();
+        }
+
+    });
+
     $j("#editar-pessoa-pai-link").click(function() {
 
         if($j('#pessoa_id').val()){
@@ -1569,6 +1637,16 @@ function canShowParentsFields(){
         if($j('#pessoa_id').val()){
 
           openEditModalParent('mae');
+
+        }
+
+    });
+
+    $j("#editar-pessoa-responsavel-link").click(function() {
+
+        if($j('#pessoa_id').val()){
+
+          openEditModalParent('responsavel');
 
         }
 
@@ -1595,7 +1673,25 @@ function canShowParentsFields(){
 
       $j('#falecido-parent').attr('checked', false);
 
-      $j('#dialog-form-pessoa-parent form p:first-child').html('Cadastrar pessoa '+(parentType == 'mae' ? 'm&atilde;e' : parentType)).css('margin-left', '0.75em');
+      var tipoPessoa = 'pai';
+
+      switch(parentType) {
+          case 'mae':
+              tipoPessoa = 'm&atilde;e';
+              break;
+          case 'responsavel':
+              tipoPessoa = 'respons&aacute;vel';
+              break;
+          default:
+              tipoPessoa = 'pai';
+      }
+
+      if (parentType == 'responsavel')
+        $j('#falecido-modal').hide();
+      else
+        $j('#falecido-modal').show();
+
+      $j('#dialog-form-pessoa-parent form p:first-child').html('Cadastrar pessoa ' + tipoPessoa).css('margin-left', '0.75em');
 
       pessoaPaiOuMae = parentType;
 
@@ -1621,6 +1717,12 @@ function canShowParentsFields(){
       datanascParent.val(window[parentType+'_details'].data_nascimento);
       // console.log(window[parentType+'_details'].falecido);
       falecidoParent.prop('checked', (window[parentType+'_details'].falecido));
+
+      if (parentType == 'responsavel')
+        $j('#falecido-modal').hide();
+      else
+        $j('#falecido-modal').show();
+
 
       $j('#dialog-form-pessoa-parent form p:first-child').html('Editar pessoa '+(parentType == 'mae' ? 'm&atilde;e' : parentType)).css('margin-left', '0.75em');
 
@@ -1675,7 +1777,8 @@ function canShowParentsFields(){
     }
 
     $j('#pai_id').change( function(){ getPersonParentDetails($j(this).val(), 'pai') });
-    $j('#mae_id').change( function(){ getPersonParentDetails($j(this).val(), 'mae' ) });
+    $j('#mae_id').change( function(){ getPersonParentDetails($j(this).val(), 'mae') });
+    $j('#responsavel_id').change( function(){ getPersonParentDetails($j(this).val(), 'responsavel') });
 
     $cpfField.focusout(function() {
       $j(document).removeData('submit_form_after_ajax_validation');
@@ -1775,6 +1878,8 @@ function canShowParentsFields(){
             afterChangePessoaParent(dataResponse.pessoa_id, 'mae');
           else if(parentType=='pai')
             afterChangePessoaParent(dataResponse.pessoa_id, 'pai');
+          else if(parentType=='responsavel')
+            afterChangePessoaParent(dataResponse.pessoa_id, 'responsavel');
           else
             postEnderecoPessoa(dataResponse.pessoa_id);
         }

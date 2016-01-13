@@ -52,7 +52,7 @@ var handleGetMatriculas = function(dataResponse) {
       else
         var linkToMatricula = '';
 
-      if (!matricula.transferencia_em_aberto && matricula.situacao=='Em andamento')
+      if (!matricula.transferencia_em_aberto && matricula.situacao=='Cursando')
         matricula.data_saida = '';
 
       $j('<td>').html(linkToMatricula).appendTo($tr).addClass('center');
@@ -62,7 +62,7 @@ var handleGetMatriculas = function(dataResponse) {
         var situacoes = [
               {val: 1, text: 'Aprovado'},
               {val: 2, text: 'Retido'},
-              {val: 3, text: 'Em andamento'},
+              {val: 3, text: 'Cursando'},
               {val: 4, text: 'Transferido'},
               {val: 5, text: 'Reclassificado'},
               {val: 6, text: 'Abandono'},

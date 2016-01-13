@@ -50,7 +50,16 @@ class Portabilis_View_Helper_DynamicInput_EtapaEscola extends Portabilis_View_He
   }
 
   protected function inputOptions($options) {
-    // não implementado load resources ainda, por enquanto busca somente com ajax.
+    $resources     = $options['resources'];
+    $instituicaoId = $this->getInstituicaoId($options['instituicaoId']);
+    $escolaId      = $this->getEscolaId($options['escolaId']);
+    $ano           = $this->viewInstance->ano;
+    $userId        = $this->getCurrentUserId();
+
+    if ($escolaId && empty($resources))
+      $resources = App_Model_IedFinder::getEtapasEscola($ano, $escolaId);
+
+
     return $this->insertOption(null, "Selecione uma etapa", $resources);
   }
 

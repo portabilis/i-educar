@@ -235,7 +235,7 @@ class indice extends clsListagem
         elseif ($situacao == 2)
           $situacao = 'Reprovado';
         elseif ($situacao == 3)
-          $situacao = 'Em Andamento';
+          $situacao = 'Cursando';
         elseif ($situacao == 4)
           $situacao = 'Transferido';
         elseif ($situacao == 5)

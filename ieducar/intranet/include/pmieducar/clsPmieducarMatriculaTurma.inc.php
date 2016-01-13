@@ -1411,10 +1411,25 @@ class clsPmieducarMatriculaTurma
 
     $getSequencial = FALSE;
     $db = new clsBanco();
-    $possui_fechamento = $db->CampoUnico("SELECT data_fechamento FROM pmieducar.turma WHERE cod_turma = {$turmaId}");
-    if (is_string($possui_fechamento)){
-      if (strtotime($possui_fechamento) < strtotime($dataEnturmacao))
-        $getSequencial = true;      
+    $objTurma = new clsPmieducarTurma($turmaId);
+    $detTurma = $objTurma->detalhe();
+    $objInstituicao = new clsPmieducarInstituicao($detTurma["ref_cod_instituicao"]);
+    $detInstituicao = $objInstituicao->detalhe();
+    $dataFechamento = $detInstituicao["data_fechamento"];
+
+    $possuiDataFechamento = is_string($dataFechamento);
+
+    if($possuiDataFechamento){
+      $objMatricula = new clsPmieducarMatricula($this->ref_cod_matricula);
+      $detMatricula = $objMatricula->detalhe();
+      $ano = $detMatricula["ano"];
+
+      $dataFechamento = explode("-", $dataFechamento);
+
+      $dataFechamento = $ano . "-" . $dataFechamento[1] . "-" . $dataFechamento[2];
+
+      if (strtotime($dataFechamento) < strtotime($dataEnturmacao))
+        $getSequencial = true;
     }
 
     $dataBaseTransferencia = $this->getDataBaseTransferencia();

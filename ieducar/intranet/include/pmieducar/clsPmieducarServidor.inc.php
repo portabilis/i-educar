@@ -826,7 +826,8 @@ class clsPmieducarServidor
     $int_ref_cod_disciplina      = NULL,
     $int_ref_cod_subnivel        = NULL,
     $bool_servidor_sem_alocacao  = FALSE,
-    $ano_alocacao                = NULL
+    $ano_alocacao                = NULL,
+    $int_matricula_funcionario   = NULL
     ) {
     // Extrai as informações de hora inicial e hora final, para definir melhor
     // o lookup de carga horária de servidores alocados, para operações como
@@ -856,9 +857,9 @@ class clsPmieducarServidor
     $filtros      = '';
     $tabela_compl = '';
     if (is_bool($bool_ordena_por_nome)) {
-      $tabela_compl         .= ', cadastro.pessoa p';
+      $tabela_compl         .= ', cadastro.pessoa p, portal.funcionario func';
       $this->_campos_lista2 .= ', p.nome';
-      $filtros              .= $whereAnd . ' s.cod_servidor = p.idpes ';
+      $filtros              .= $whereAnd . ' s.cod_servidor = p.idpes AND s.cod_servidor = func.ref_cod_pessoa_fj ';
       $whereAnd              = ' AND ';
       $this->setOrderby('nome');
     }
@@ -905,6 +906,10 @@ class clsPmieducarServidor
     }
     if (is_numeric($int_ref_cod_instituicao)) {
       $filtros .= "{$whereAnd} s.ref_cod_instituicao = '{$int_ref_cod_instituicao}'";
+      $whereAnd = " AND ";
+    }
+    if (is_numeric($int_matricula_funcionario)) {
+      $filtros .= "{$whereAnd} func.matricula = '{$int_matricula_funcionario}'";
       $whereAnd = " AND ";
     }
     // Busca tipo LIKE pelo nome do servidor

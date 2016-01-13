@@ -1,7 +1,7 @@
 // before page is ready
 
-$deleteButton = $j('<input value=" Excluir " type="button" style="display: inline; margin-left: 6px;">').html('')
-                              .addClass('botaolistagem').insertAfter('#btn_enviar');
+// $deleteButton = $j('<input value=" Excluir " type="button" style="display: inline; margin-left: 6px;">').html('')
+                              // .addClass('botaolistagem').insertAfter('#btn_enviar');
                               
 var $idField        = $j('#id');
 var $nomeField      = $j('#pessoa_nome');

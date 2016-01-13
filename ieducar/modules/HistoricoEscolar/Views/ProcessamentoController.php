@@ -108,7 +108,7 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
           <select id='situacao' class='obrigatorio disable-on-search'>
             <option value=''>Selecione</option>
             <option value='buscar-matricula'>Usar do boletim</option>
-            <option value='em-andamento'>Em andamento</option>
+            <option value='em-andamento'>Cursando</option>
             <option value='aprovado'>Aprovado</option>
             <option value='reprovado'>Reprovado</option>
             <option value='transferido'>Transferido</option>
