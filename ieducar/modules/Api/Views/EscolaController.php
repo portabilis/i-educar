@@ -118,13 +118,8 @@ class EscolaController extends ApiCoreController
   }
 
   protected function canGetEtapasPorEscola(){
-    return $this->validatesPresenceOf('instituicao_id') && $this->validatesPresenceOf('ano');
+    return $this->validatesPresenceOf('instituicao_id');
   }
-/*  protected function searchOptions() {
-    $instituicaoId = $this->getRequest()->instituicao_id ? $this->getRequest()->instituicao_id : 0;
-    return array('sqlParams'    => array($instituicaoId));
-
-  }*/
 
   protected function formatResourceValue($resource) {
     $nome    = $this->toUtf8($resource['name'], array('transform' => true));
@@ -159,22 +154,29 @@ class EscolaController extends ApiCoreController
 
   protected function getEtapasPorEscola(){
     if ($this->canGetEtapasPorEscola()){
-      $ano = $this->getRequest()->ano;
+      $ano = $this->getRequest()->ano ? $this->getRequest()->ano : 0;
 
-      $sql = 'SELECT ref_ref_cod_escola as escola_id, data_inicio, data_fim
+      $sql = 'SELECT ref_ref_cod_escola as escola_id, 
+                     data_inicio as data_inicio,
+                     data_fim as data_fim,
+                     ano as ano
                 FROM pmieducar.ano_letivo_modulo
-                WHERE ref_ano = $1
-                ORDER BY escola_id, sequencial';
+                inner join pmieducar.escola_ano_letivo on(escola_ano_letivo.ref_cod_escola = ano_letivo_modulo.ref_ref_cod_escola
+                                                          AND ano_letivo_modulo.ref_ano = escola_ano_letivo.ano)
+               WHERE (CASE WHEN $1 = 0 THEN true else ref_ano = $1 END)
+                 and escola_ano_letivo.andamento = 1
+               ORDER BY ano, escola_id, sequencial';
 
       $_etapas = $this->fetchPreparedQuery($sql, array($ano));
 
-      $attrs = array('escola_id', 'data_inicio', 'data_fim');
+      $attrs = array('escola_id', 'data_inicio', 'data_fim', 'ano');
       $_etapas = Portabilis_Array_Utils::filterSet($_etapas, $attrs);
       $escolas = array();
       $escolasEtapas = array();
 
       foreach ($_etapas as $etapa) {
         $escolasEtapas[$etapa['escola_id']]['escola_id'] = $etapa['escola_id'];
+        $escolasEtapas[$etapa['escola_id']]['ano'] = $etapa['ano'];
         $escolasEtapas[$etapa['escola_id']]['etapas'][] = array(
           'data_inicio' => $etapa['data_inicio'],
           'data_fim' => $etapa['data_fim']
