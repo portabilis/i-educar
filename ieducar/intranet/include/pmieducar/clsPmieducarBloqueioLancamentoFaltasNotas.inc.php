@@ -412,7 +412,7 @@ class clsPmieducarBloqueioLancamentoFaltasNotas
    * @return bool
    */
   function verificaPeriodo() {
-    if (is_numeric($this->ano) && is_numeric($this->ref_cod_escola) && is_numeric($this->etapa)) {
+    if (is_numeric($this->ano) && is_numeric($this->ref_cod_escola)) {
 
       if (!$this->existe()) return TRUE;
       $db = new clsBanco();
