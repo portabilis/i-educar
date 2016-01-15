@@ -156,39 +156,39 @@ class EscolaController extends ApiCoreController
     if ($this->canGetEtapasPorEscola()){
       $ano = $this->getRequest()->ano ? $this->getRequest()->ano : 0;
 
-      $sql = 'SELECT ref_ref_cod_escola as escola_id, 
-                     data_inicio as data_inicio,
-                     data_fim as data_fim,
+      $sql = 'SELECT ref_cod_escola as escola_id,
                      ano as ano
-                FROM pmieducar.ano_letivo_modulo
-                inner join pmieducar.escola_ano_letivo on(escola_ano_letivo.ref_cod_escola = ano_letivo_modulo.ref_ref_cod_escola
-                                                          AND ano_letivo_modulo.ref_ano = escola_ano_letivo.ano)
-               WHERE (CASE WHEN $1 = 0 THEN true else ref_ano = $1 END)
-                 and escola_ano_letivo.andamento = 1
-               ORDER BY ano, escola_id, sequencial';
+                FROM pmieducar.escola_ano_letivo
+               WHERE (CASE WHEN $1 = 0 THEN true ELSE ano = $1 END)
+                 AND andamento = 1
+               ORDER BY ref_cod_escola, ano';
 
-      $_etapas = $this->fetchPreparedQuery($sql, array($ano));
+      $anosLetivos = $this->fetchPreparedQuery($sql, array($ano));             
 
-      $attrs = array('escola_id', 'data_inicio', 'data_fim', 'ano');
-      $_etapas = Portabilis_Array_Utils::filterSet($_etapas, $attrs);
-      $escolas = array();
-      $escolasEtapas = array();
+      $attrs = array('escola_id', 'ano');
+      $anosLetivos = Portabilis_Array_Utils::filterSet($anosLetivos, $attrs);
 
-      foreach ($_etapas as $etapa) {
-        $escolasEtapas[$etapa['escola_id']]['escola_id'] = $etapa['escola_id'];
-        $escolasEtapas[$etapa['escola_id']]['ano'] = $etapa['ano'];
-        $escolasEtapas[$etapa['escola_id']]['etapas'][] = array(
-          'data_inicio' => $etapa['data_inicio'],
-          'data_fim' => $etapa['data_fim']
-        );
+      foreach($anosLetivos as $index => $anoLetivo){
+        $anosLetivos[$index] = array_merge($anosLetivos[$index], $this->getEtapasAnoEscola($anoLetivo["ano"], $anoLetivo["escola_id"]));
       }
-
-      foreach ($escolasEtapas as $etapa) {
-        $escolas[] = $etapa;
-      }
-
-      return array('escolas' => $escolas);
+        
+      return array('escolas' => $anosLetivos);
     }
+  }
+
+  private function getEtapasAnoEscola($ano, $escola){
+    $sql = 'SELECT data_inicio, 
+                   data_fim
+              FROM pmieducar.ano_letivo_modulo
+             WHERE ref_ano = $1
+               AND ref_ref_cod_escola = $2
+          ORDER BY sequencial';
+    $etapas = array();
+    $etapas = $this->fetchPreparedQuery($sql, array($ano, $escola));
+    $attrs = array('data_inicio', 'data_fim');
+    $etapas = Portabilis_Array_Utils::filterSet($etapas, $attrs);
+
+    return array("etapas" => $etapas);
   }
 
 
