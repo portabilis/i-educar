@@ -872,7 +872,8 @@ class clsPmieducarSerie
     $detInstituicao = $objInstituicao->detalhe();
     $dataBaseMatricula = $detInstituicao["data_base_matricula"];
 
-    $dataBaseMatricula = explode('-', $dataBaseMatricula);
+    //Caso não tenha data base na matricula, não verifica se está dentro do periodo
+    if (!is_string($dataBaseMatricula)) return true;
 
     $anoLimite = $ano;
     $mesLimite = $dataBaseMatricula[1];
