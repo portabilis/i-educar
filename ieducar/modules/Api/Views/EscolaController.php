@@ -118,7 +118,7 @@ class EscolaController extends ApiCoreController
   }
 
   protected function canGetEtapasPorEscola(){
-    return $this->validatesPresenceOf('instituicao_id') && $this->validatesPresenceOf('ano');
+    return $this->validatesPresenceOf('instituicao_id');
   }
 /*  protected function searchOptions() {
     $instituicaoId = $this->getRequest()->instituicao_id ? $this->getRequest()->instituicao_id : 0;
