@@ -909,7 +909,7 @@ class clsPmieducarServidor
       $whereAnd = " AND ";
     }
     if (is_numeric($int_matricula_funcionario)) {
-      $filtros .= "{$whereAnd} func.matricula = '{$int_matricula_funcionario}'";
+      $filtros .= "{$whereAnd} func.matricula LIKe '%{$int_matricula_funcionario}%'";
       $whereAnd = " AND ";
     }
     // Busca tipo LIKE pelo nome do servidor
