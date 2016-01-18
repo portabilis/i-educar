@@ -253,11 +253,6 @@ class clsLogradouro
 			$where .= "{$whereAnd}idmun = '$int_idmun'";
 			$whereAnd = " AND ";
 		}
-		if( is_numeric( $int_idmun ) )
-		{
-			$where .= "{$whereAnd}idmun = '$int_idmun'";
-			$whereAnd = " AND ";
-		}
 		if( is_string( $str_geom ) )
 		{
 			$where .= "{$whereAnd}geom LIKE '%$str_geom%'";
