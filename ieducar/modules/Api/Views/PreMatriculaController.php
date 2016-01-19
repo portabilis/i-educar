@@ -101,7 +101,7 @@ class PreMatriculaController extends ApiCoreController
 	    return array("cod_matricula" => 0);
 	   }
 
-	   if($this->getRequest()->aluno_id){
+	   if($alunoIdParametro){
 	   	 $obj_a = new clsPmieducarAluno($alunoIdParametro);
 	   	 if($obj_a->detalhe()){
 
@@ -109,14 +109,15 @@ class PreMatriculaController extends ApiCoreController
 	  		$obj_m->ref_cod_aluno = $alunoIdParametro;
 	  		$obj_m->edita();
 
-	  		// $obj_a = new clsPmieducarAluno($alunoIdParametro);
 	  		$obj_a->ativo = 1;
 	  		$obj_a->edita();
 
-	  		$this->excluirInformacoesAluno($alunoIdMatricula);
+        if($alunoIdParametro != $alunoIdMatricula){
+	  		 $this->excluirInformacoesAluno($alunoIdMatricula);
+        }
 
 	  		return array("cod_matricula" => $this->enturmaPreMatricula($alunoIdParametro, $turmaId, $matriculaId, false));
-	 	}
+	 	  }
 	   }
 
       $obj_a = new clsPmieducarAluno($alunoIdMatricula);
