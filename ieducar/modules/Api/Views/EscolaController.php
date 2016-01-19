@@ -120,11 +120,6 @@ class EscolaController extends ApiCoreController
   protected function canGetEtapasPorEscola(){
     return $this->validatesPresenceOf('instituicao_id');
   }
-/*  protected function searchOptions() {
-    $instituicaoId = $this->getRequest()->instituicao_id ? $this->getRequest()->instituicao_id : 0;
-    return array('sqlParams'    => array($instituicaoId));
-
-  }*/
 
   protected function formatResourceValue($resource) {
     $nome    = $this->toUtf8($resource['name'], array('transform' => true));
@@ -159,7 +154,7 @@ class EscolaController extends ApiCoreController
 
   protected function getEtapasPorEscola(){
     if ($this->canGetEtapasPorEscola()){
-      $ano = $this->getRequest()->ano;
+      $ano = $this->getRequest()->ano ? $this->getRequest()->ano : 0;
 
       $sql = 'SELECT ref_cod_escola as escola_id,
                      ano as ano
@@ -196,6 +191,7 @@ class EscolaController extends ApiCoreController
     return array("etapas" => $etapas);
   }
 
+
   protected function getEscolas(){
     if ($this->canGetEscolas()){
       $instituicaoId = $this->getRequest()->instituicao_id;
@@ -225,25 +221,25 @@ class EscolaController extends ApiCoreController
                 AND t.ativo = 1
                 AND eal.ativo = 1
                 AND eal.andamento <> 2
-				        AND eal.ano = $1";
+                AND eal.ano = $1";
       $escolaIds = $this->fetchPreparedQuery($sql, array($ano, $turmaTurnoId, $cursoId, $instituicaoId, $serieId));
 
       foreach($escolaIds as $escolaId){
-      	// $this->messenger->append("Escola: " . $escolaId[0] . " Maximo de alunos no turno: " . $this->_getMaxAlunoTurno($escolaId[0]) . " Quantidade alunos fila: " . $this->_getQtdAlunosFila($escolaId[0]) . " Quantidade matriculas turno: " . $this->_getQtdMatriculaTurno($escolaId[0]));
-      	if(!$this->existeVagasDisponiveis($escolaId[0])){
-      		if (($key = array_search($escolaId, $escolaIds)) !== false) {
-    			unset($escolaIds[$key]);
-			}
-      	}
+        // $this->messenger->append("Escola: " . $escolaId[0] . " Maximo de alunos no turno: " . $this->_getMaxAlunoTurno($escolaId[0]) . " Quantidade alunos fila: " . $this->_getQtdAlunosFila($escolaId[0]) . " Quantidade matriculas turno: " . $this->_getQtdMatriculaTurno($escolaId[0]));
+        if(!$this->existeVagasDisponiveis($escolaId[0])){
+          if (($key = array_search($escolaId, $escolaIds)) !== false) {
+          unset($escolaIds[$key]);
+      }
+        }
       }
       if(empty($escolaIds)){
-      	$this->messenger->append("Desculpe, mas aparentemente não existem mais vagas disponíveis para a seleção informada. Altere a seleção e tente novamente.");
-      	return array( 'escolas' => 0);
+        $this->messenger->append("Desculpe, mas aparentemente não existem mais vagas disponíveis para a seleção informada. Altere a seleção e tente novamente.");
+        return array( 'escolas' => 0);
       }
       else{
       $attrs = array('cod_escola');
       return array( 'escolas' => Portabilis_Array_Utils::filterSet($escolaIds, $attrs));
-  	  }
+      }
     }
   }
 
@@ -270,8 +266,8 @@ class EscolaController extends ApiCoreController
               AND aprovado = 11 ';
 
     return (int) Portabilis_Utils_Database::selectField($sql, array($this->getRequest()->ano, $escolaId,
-    									                            $this->getRequest()->curso_id, $this->getRequest()->serie_id,
-    									                            $this->getRequest()->turma_turno_id));
+                                                  $this->getRequest()->curso_id, $this->getRequest()->serie_id,
+                                                  $this->getRequest()->turma_turno_id));
   }
 
   function _getQtdMatriculaTurno($escolaId){
@@ -319,51 +315,51 @@ protected function getInformacaoEscolas(){
 
 
   $sql = " SELECT escola.cod_escola as cod_escola,
-				  juridica.fantasia as nome,
-				  coalesce(endereco_pessoa.cep, endereco_externo.cep) as cep,
-				  coalesce(endereco_pessoa.numero, endereco_externo.numero) as numero,
-				  coalesce(endereco_pessoa.complemento, endereco_externo.complemento) as complemento,
-				  coalesce(logradouro.nome,endereco_externo.logradouro) as logradouro,
-				  coalesce(bairro.nome, endereco_externo.bairro) as bairro,
-				  coalesce(municipio.nome, endereco_externo.cidade) as municipio,
-				  coalesce(uf.sigla_uf, endereco_externo.sigla_uf) as uf,
-				  pais.nome as pais,
-				  pessoa.email as email,
-				  fone_pessoa.ddd as ddd,
-				  fone_pessoa.fone as fone,
-				  pessoa_responsavel.nome as nome_responsavel
-		     from pmieducar.escola
-		    inner join cadastro.juridica on(escola.ref_idpes = juridica.idpes)
-		     left join cadastro.pessoa on(juridica.idpes = pessoa.idpes)
-		     left join cadastro.pessoa pessoa_responsavel on(escola.ref_idpes_gestor = pessoa_responsavel.idpes)
-		     left join cadastro.fone_pessoa on(fone_pessoa.idpes = pessoa.idpes and fone_pessoa.tipo = 1)
-		     left join cadastro.endereco_pessoa on(escola.ref_idpes = endereco_pessoa.idpes)
-		     left join cadastro.endereco_externo on(escola.ref_idpes = endereco_externo.idpes)
-		     left join public.logradouro on(endereco_pessoa.idlog = logradouro.idlog)
-		     left join public.municipio on(logradouro.idmun = municipio.idmun)
-		     left join public.uf on(municipio.sigla_uf = uf.sigla_uf)
-		     left join public.bairro on(endereco_pessoa.idbai = bairro.idbai and municipio.idmun = bairro.idmun)
-		     left join public.pais on(uf.idpais = pais.idpais)
-		    where escola.ativo = 1";
+          juridica.fantasia as nome,
+          coalesce(endereco_pessoa.cep, endereco_externo.cep) as cep,
+          coalesce(endereco_pessoa.numero, endereco_externo.numero) as numero,
+          coalesce(endereco_pessoa.complemento, endereco_externo.complemento) as complemento,
+          coalesce(logradouro.nome,endereco_externo.logradouro) as logradouro,
+          coalesce(bairro.nome, endereco_externo.bairro) as bairro,
+          coalesce(municipio.nome, endereco_externo.cidade) as municipio,
+          coalesce(uf.sigla_uf, endereco_externo.sigla_uf) as uf,
+          pais.nome as pais,
+          pessoa.email as email,
+          fone_pessoa.ddd as ddd,
+          fone_pessoa.fone as fone,
+          pessoa_responsavel.nome as nome_responsavel
+         from pmieducar.escola
+        inner join cadastro.juridica on(escola.ref_idpes = juridica.idpes)
+         left join cadastro.pessoa on(juridica.idpes = pessoa.idpes)
+         left join cadastro.pessoa pessoa_responsavel on(escola.ref_idpes_gestor = pessoa_responsavel.idpes)
+         left join cadastro.fone_pessoa on(fone_pessoa.idpes = pessoa.idpes and fone_pessoa.tipo = 1)
+         left join cadastro.endereco_pessoa on(escola.ref_idpes = endereco_pessoa.idpes)
+         left join cadastro.endereco_externo on(escola.ref_idpes = endereco_externo.idpes)
+         left join public.logradouro on(endereco_pessoa.idlog = logradouro.idlog)
+         left join public.municipio on(logradouro.idmun = municipio.idmun)
+         left join public.uf on(municipio.sigla_uf = uf.sigla_uf)
+         left join public.bairro on(endereco_pessoa.idbai = bairro.idbai and municipio.idmun = bairro.idmun)
+         left join public.pais on(uf.idpais = pais.idpais)
+        where escola.ativo = 1";
 
   $escolas = $this->fetchPreparedQuery($sql);
 
   if(empty($escolas)){
-  	$this->messenger->append("Desculpe, mas não existem escolas cadastradas");
-  	return array( 'escolas' => 0);
+    $this->messenger->append("Desculpe, mas não existem escolas cadastradas");
+    return array( 'escolas' => 0);
   }
   else{
-  	foreach($escolas as &$escola){
-  		$escola['nome'] = Portabilis_String_Utils::toUtf8($escola['nome']);
-  		$escola['complemento'] = Portabilis_String_Utils::toUtf8($escola['complemento']);
-  		$escola['logradouro'] = Portabilis_String_Utils::toUtf8($escola['logradouro']);
-  		$escola['bairro'] = Portabilis_String_Utils::toUtf8($escola['bairro']);
-  		$escola['municipio'] = Portabilis_String_Utils::toUtf8($escola['municipio']);
-  		$escola['nome_responsavel'] = Portabilis_String_Utils::toUtf8($escola['nome_responsavel']);
-  	}
-  	$attrs = array('cod_escola', 'nome', 'cep', 'numero', 'complemento', 'logradouro', 'bairro', 'municipio', 'uf', 'pais', 'email', 'ddd', 'fone', 'nome_responsavel');
-  	return array( 'escolas' => Portabilis_Array_Utils::filterSet($escolas, $attrs));
-	}
+    foreach($escolas as &$escola){
+      $escola['nome'] = Portabilis_String_Utils::toUtf8($escola['nome']);
+      $escola['complemento'] = Portabilis_String_Utils::toUtf8($escola['complemento']);
+      $escola['logradouro'] = Portabilis_String_Utils::toUtf8($escola['logradouro']);
+      $escola['bairro'] = Portabilis_String_Utils::toUtf8($escola['bairro']);
+      $escola['municipio'] = Portabilis_String_Utils::toUtf8($escola['municipio']);
+      $escola['nome_responsavel'] = Portabilis_String_Utils::toUtf8($escola['nome_responsavel']);
+    }
+    $attrs = array('cod_escola', 'nome', 'cep', 'numero', 'complemento', 'logradouro', 'bairro', 'municipio', 'uf', 'pais', 'email', 'ddd', 'fone', 'nome_responsavel');
+    return array( 'escolas' => Portabilis_Array_Utils::filterSet($escolas, $attrs));
+  }
 }
 
 protected function getEscolasCurso(){
@@ -412,8 +408,8 @@ protected function getEscolaAnoLetivo(){
     elseif ($this->isRequestFor('get', 'etapas-por-escola'))
       $this->appendResponse($this->getEtapasPorEscola());
 
-  	elseif ($this->isRequestFor('get', 'info-escolas'))
-  		$this->appendResponse($this->getInformacaoEscolas());
+    elseif ($this->isRequestFor('get', 'info-escolas'))
+      $this->appendResponse($this->getInformacaoEscolas());
 
     elseif ($this->isRequestFor('get', 'escolas-curso'))
       $this->appendResponse($this->getEscolasCurso());
