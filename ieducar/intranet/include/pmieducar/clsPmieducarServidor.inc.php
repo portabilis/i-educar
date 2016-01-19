@@ -827,7 +827,7 @@ class clsPmieducarServidor
     $int_ref_cod_subnivel        = NULL,
     $bool_servidor_sem_alocacao  = FALSE,
     $ano_alocacao                = NULL,
-    $int_matricula_funcionario   = NULL
+    $matricula_funcionario       = NULL
     ) {
     // Extrai as informações de hora inicial e hora final, para definir melhor
     // o lookup de carga horária de servidores alocados, para operações como
@@ -908,8 +908,8 @@ class clsPmieducarServidor
       $filtros .= "{$whereAnd} s.ref_cod_instituicao = '{$int_ref_cod_instituicao}'";
       $whereAnd = " AND ";
     }
-    if (is_numeric($int_matricula_funcionario)) {
-      $filtros .= "{$whereAnd} func.matricula LIKe '%{$int_matricula_funcionario}%'";
+    if (is_string($matricula_funcionario)) {
+      $filtros .= "{$whereAnd} public.fcn_upper(func.matricula) LIKE public.fcn_upper('%{$matricula_funcionario}%')";
       $whereAnd = " AND ";
     }
     // Busca tipo LIKE pelo nome do servidor
@@ -917,7 +917,7 @@ class clsPmieducarServidor
       $filtros .= "{$whereAnd} EXISTS (SELECT 1
   FROM cadastro.pessoa p
   WHERE cod_servidor = p.idpes
-  AND to_ascii(p.nome) LIKE to_ascii('%$str_nome_servidor%')) ";
+  AND public.fcn_upper(to_ascii(p.nome)) LIKE public.fcn_upper(to_ascii('%$str_nome_servidor%'))) ";
       $whereAnd = " AND ";
     }
     // Seleciona apenas servidores que tenham a carga atual maior ou igual ao
@@ -1201,7 +1201,7 @@ class clsPmieducarServidor
       $this->getOrderby() . $this->getLimite();
     $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_schema}servidor s{$tabela_compl} {$filtros}");
     // Executa a query
-     // echo"<pre>";var_dump($sql);die;
+    //echo"<pre>";var_dump($sql);die;
     $db->Consulta($sql);
     if ($countCampos > 1) {
       while ($db->ProximoRegistro()) {
