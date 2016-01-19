@@ -201,6 +201,16 @@ class PreMatriculaController extends ApiCoreController
       $escolaId = $this->getRequest()->escola_id;
       $turnoId = $this->getRequest()->turno_id;
 
+      $qtdFila = $this->_getQtdAlunosFila($anoLetivo, $escolaId, $cursoId, $serieId, $turnoId);
+      $maxAlunoTurno = $this->_getMaxAlunoTurno($anoLetivo, $escolaId, $serieId, $turnoId);
+      $qtdMatriculaTurno = $this->_getQtdMatriculaTurno($anoLetivo, $escolaId, $cursoId, $serieId, $turnoId);
+
+      if($maxAlunoTurno <= $qtdFila + $qtdMatriculaTurno){
+        // $this->messenger->append("Quantidade de reservas: ".$qtdFila.". Máximo de alunos permitido no turno: ".$maxAlunoTurno.". Quantidade de alunos matriculados no turno: ".$qtdMatriculaTurno);
+        $this->messenger->append("Aparentemente não existem vagas disponíveis para a seleção informada. Altere a seleção e tente novamente.");
+        return array("cod_matricula" => 0);
+      }
+
       // Dados do aluno
       $nomeAluno = Portabilis_String_utils::toLatin1($this->getRequest()->nome_aluno);
       $dataNascAluno = $this->getRequest()->data_nasc_aluno;
@@ -233,16 +243,6 @@ class PreMatriculaController extends ApiCoreController
 
       if(is_array($deficiencias))
         $this->updateDeficiencias($pessoaAlunoId, $deficiencias);
-
-      $qtdFila = $this->_getQtdAlunosFila($anoLetivo, $escolaId, $cursoId, $serieId, $turnoId);
-      $maxAlunoTurno = $this->_getMaxAlunoTurno($anoLetivo, $escolaId, $serieId, $turnoId);
-      $qtdMatriculaTurno = $this->_getQtdMatriculaTurno($anoLetivo, $escolaId, $cursoId, $serieId, $turnoId);
-
-      if($maxAlunoTurno <= $qtdFila + $qtdMatriculaTurno){
-        // $this->messenger->append("Quantidade de reservas: ".$qtdFila.". Máximo de alunos permitido no turno: ".$maxAlunoTurno.". Quantidade de alunos matriculados no turno: ".$qtdMatriculaTurno);
-        $this->messenger->append("Aparentemente não existem vagas disponíveis para a seleção informada. Altere a seleção e tente novamente.");
-        return array("cod_matricula" => 0);
-      }
 
       return array("cod_matricula" => $this->cadastraPreMatricula($escolaId, $serieId, $anoLetivo, $cursoId, $alunoId, $turnoId));
     }
@@ -393,7 +393,7 @@ class PreMatriculaController extends ApiCoreController
   	// $this->messenger->append($escolaId, $serieId, $anoLetivo, $cursoId, $alunoId, $turmaId, $matriculaId);
 
   	$obj_a = new clsPmieducarAluno($alunoId);
-	$obj_a->ativo = 1;
+	  $obj_a->ativo = 1;
 	if($maeIsResponsavel){
 		$obj_a->tipo_responsavel = 'm';
 	}
@@ -401,6 +401,7 @@ class PreMatriculaController extends ApiCoreController
 
     $obj_m = new clsPmieducarMatricula($matriculaId);
     $obj_m->aprovado = 3;
+    $obj_m->ativo = 1;
     $obj_m->edita();
 
     $enturmacao = new clsPmieducarMatriculaTurma($matriculaId,
