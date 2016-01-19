@@ -228,75 +228,7 @@ class clsLogradouro
 			return $resultado;
 		}
 		return false;
-	} 
-/**
-	 * Exibe uma lista baseada nos parametros de filtragem passados incluindo id municipio
-	 *
-	 * @return Array
-	 */
-	function listamun( $str_idtlog=false, $str_nome=false, $int_idmun=false, $int_idmun=false, $str_geom=false, $str_ident_oficial=false, $int_limite_ini=0, $int_limite_qtd=20, $str_orderBy = false )
-	{
-		// verificacoes de filtros a serem usados
-		$whereAnd = "WHERE ";
-		if( is_string( $str_idtlog ) )
-		{
-			$where .= "{$whereAnd}idtlog LIKE '%$str_idtlog%'";
-			$whereAnd = " AND ";
-		}
-		if( is_string( $str_nome ) )
-		{
-			$where .= "{$whereAnd}nome LIKE '%$str_nome%'";
-			$whereAnd = " AND ";
-		}
-		if( is_numeric( $int_idmun ) )
-		{
-			$where .= "{$whereAnd}idmun = '$int_idmun'";
-			$whereAnd = " AND ";
-		}
-		if( is_string( $str_geom ) )
-		{
-			$where .= "{$whereAnd}geom LIKE '%$str_geom%'";
-			$whereAnd = " AND ";
-		}
-		
-		if( is_string( $str_ident_oficial ) )
-		{
-			$where .= "{$whereAnd}ident_oficial LIKE '%$str_ident_oficial%'";
-			$whereAnd = " AND ";
-		}
-		
-		if($str_orderBy)
-		{
-			$orderBy = "ORDER BY $str_orderBy";
-		}
-		
-		$limit = "";
-		if( is_numeric( $int_limite_ini ) && is_numeric( $int_limite_qtd ) )
-		{
-			$limit = " LIMIT $int_limite_ini,$int_limite_qtd";
-		}
-		
-		$db = new clsBanco();
-		$db->Consulta( "SELECT COUNT(0) AS total FROM {$this->schema}.{$this->tabela} $where" );
-		$db->ProximoRegistro();
-		$total = $db->Campo( "total" );
-	
-		$db->Consulta( "SELECT idlog, idtlog, nome, idmun, geom, ident_oficial FROM {$this->schema}.{$this->tabela} $where $orderBy $limit" );
-		$resultado = array();
-		while ( $db->ProximoRegistro() ) 
-		{
-			$tupla = $db->Tupla();
-			$tupla["idtlog"] = new clsTipoLogradouro( $tupla["idtlog"] );
-
-			$tupla["total"] = $total;
-			$resultado[] = $tupla;
-		}
-		if( count( $resultado ) )
-		{
-			return $resultado;
-		}
-		return false;
-	} 
+	}
 	/**
 	 * Retorna um array com os detalhes do objeto
 	 *
