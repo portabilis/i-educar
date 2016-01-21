@@ -116,7 +116,11 @@
      <!-- <p style="min-height: 0px;" class="flash update-browser">
         Comunicamos que o nosso servi&ccedil;o de Suporte via telefone apresentar&aacute; instabilidades neste m&ecirc;s de Novembro, em virtude da mudan&ccedil;a de endere&ccedil;o da sede da Portabilis. <br/>Pedimos desculpas pelo transtorno tempor&aacute;rio e informamos que voc&ecirc; ainda poder&aacute; nos contatar pelo e-mail de suporte (<a href='mailto:suporte@portabilis.com.br'>suporte@portabilis.com.br</a>) ou diretamente pela ferramenta de HelpDesk (<a href='http://suporte.portabilis.com.br'>http://suporte.portabilis.com.br'</a>).
      </p> -->
-
+      <p style="min-height: 0px;" class="flash update-browser">
+        <b>Aviso de manuten&ccedil;&atilde;o</b><br/>
+        Para melhorarmos ainda mais o i-Educar, precisamos fazer uma paradinha para manuten&ccedil;&atilde;o. :)<br/>
+        O servi&ccedil;o poder&aacute; sofrer instabilidades entre as <b>22:00h</b> e <b>00:00h</b> desta <b>quinta-feira</b> (<b>21/01</b>).
+      </p>
       <!-- #&ERROLOGIN&# -->
 
       <!-- #&PENDENCIA_ADMINISTRATIVA&# -->
