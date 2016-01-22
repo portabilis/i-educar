@@ -96,11 +96,7 @@
         <b>Aviso de atendimento diferenciado</b><br>
         Prezados clientes, comunicamos que no feriad&atilde;o de carnaval, de 16 &agrave; 17 de Fevereiro, iremos atender em car&aacute;ter de plant&atilde;o. Se voc&ecirc; precisar de ajuda, entre em contato atrav&eacute;s dos telefones (48) 9811-3030 (TIM), (48) 9187-6262 (Vivo) ou (48) 8835-3082 (Claro). Atenderemos via e-mail <a href='mailto:suporte@portabilis.com.br'>suporte@portabilis.com.br</a> e help-desk <a href='http://suporte.portabilis.com.br'>http://suporte.portabilis.com.br</a> normalmente. Obrigado pela compreens&atilde;o e bom descanso para os que n&atilde;o precisar&atilde;o trabalhar. :)
       </p>-->
-      <p style="min-height: 0px;" class="flash update-browser">
-        <b>Aviso de manuten&ccedil;&atilde;o</b><br/>
-        Para melhorarmos ainda mais o i-Educar, precisamos fazer uma paradinha para manuten&ccedil;&atilde;o. :)<br/>
-        O servi&ccedil;o poder&aacute; sofrer instabilidades entre as <b>22:00h</b> e <b>00:00h</b> desta <b>quinta-feira</b> (<b>21/01</b>).
-      </p>
+      
       <!-- #&ERROLOGIN&# -->
 
       <!-- #&PENDENCIA_ADMINISTRATIVA&# -->
