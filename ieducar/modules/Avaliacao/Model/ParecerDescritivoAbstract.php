@@ -63,7 +63,8 @@ abstract class Avaliacao_Model_ParecerDescritivoAbstract extends Avaliacao_Model
   public function getDefaultValidatorCollection()
   {
     $etapa  = $this->getValidator('etapa');
-    $etapas = $etapa->getOption('choices') + array('An');
+    $etapas = $etapa->getOption('choices');
+    $etapas[] = 'An';
 
     $etapa->setOptions(array('choices' => $etapas));
 
