@@ -857,10 +857,9 @@ class clsPmieducarServidor
     $filtros      = '';
     $tabela_compl = '';
     if (is_bool($bool_ordena_por_nome)) {
-      $tabela_compl         .= ', cadastro.pessoa p, portal.funcionario func';
+      $tabela_compl         .= ' LEFT JOIN cadastro.pessoa p ON s.cod_servidor = p.idpes ';
+      $tabela_compl         .=' LEFT JOIN portal.funcionario func ON s.cod_servidor = func.ref_cod_pessoa_fj';
       $this->_campos_lista2 .= ', p.nome';
-      $filtros              .= $whereAnd . ' s.cod_servidor = p.idpes AND s.cod_servidor = func.ref_cod_pessoa_fj ';
-      $whereAnd              = ' AND ';
       $this->setOrderby('nome');
     }
     else {
