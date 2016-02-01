@@ -55,7 +55,8 @@ class Portabilis_View_Helper_DynamicInput_SituacaoMatricula extends Portabilis_V
                        9 => 'Exceto Transferidos/Abandono',
                        10 => 'Todas',
                        12 => 'Aprovado com depend&ecirc;ncia',
-                       13 => 'Aprovado pelo conselho');
+                       13 => 'Aprovado pelo conselho',
+                       14 => 'Reprovado por faltas');
 
     return $this->insertOption(10, "Todas", $resources);
   }
