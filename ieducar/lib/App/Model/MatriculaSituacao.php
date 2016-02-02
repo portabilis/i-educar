@@ -50,7 +50,6 @@ class App_Model_MatriculaSituacao extends CoreExt_Enum
   const ABANDONO                   = 6;
   const EM_EXAME                   = 7;
   const APROVADO_APOS_EXAME        = 8;
-  const RETIDO_FALTA               = 9;
   const APROVADO_SEM_EXAME         = 10;
   const PRE_MATRICULA              = 11;
   const APROVADO_COM_DEPENDENCIA   = 12;
