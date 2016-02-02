@@ -1,14 +1,13 @@
  -- @author   Caroline Salib Canto <caroline@portabilis.com.br>
 -- @license  @@license@@
 -- @version  $Id$
-
--- Adicionado situação nova na tabela situacao_matricula
+ -- Adicionado situação nova na tabela situacao_matricula
 
 INSERT INTO relatorio.situacao_matricula
 VALUES (14,
         'Reprovado por faltas');
 
--- Adicionado texo de situação Reprovado por Faltas na view
+ -- Adicionado texo de situação Reprovado por Faltas na view
 
 CREATE OR REPLACE VIEW relatorio.view_situacao AS
 SELECT matricula.cod_matricula,
@@ -86,7 +85,16 @@ WHERE CASE
                     OR matricula_turma.remanejado IS NULL)
                AND (NOT matricula_turma.transferido
                     OR matricula_turma.transferido IS NULL)
-          WHEN situacao_matricula.cod_situacao = ANY (ARRAY[1, 2, 3, 12, 13, 14]) THEN matricula.aprovado = situacao_matricula.cod_situacao
+          WHEN situacao_matricula.cod_situacao = 2 THEN (matricula.aprovado = ANY (ARRAY[2::smallint, 14::smallint]))
+               AND (NOT matricula_turma.reclassificado
+                    OR matricula_turma.reclassificado IS NULL)
+               AND (NOT matricula_turma.abandono
+                    OR matricula_turma.abandono IS NULL)
+               AND (NOT matricula_turma.remanejado
+                    OR matricula_turma.remanejado IS NULL)
+               AND (NOT matricula_turma.transferido
+                    OR matricula_turma.transferido IS NULL)
+          WHEN situacao_matricula.cod_situacao = ANY (ARRAY[1, 3, 12, 13]) THEN matricula.aprovado = situacao_matricula.cod_situacao
                AND (NOT matricula_turma.reclassificado
                     OR matricula_turma.reclassificado IS NULL)
                AND (NOT matricula_turma.abandono
