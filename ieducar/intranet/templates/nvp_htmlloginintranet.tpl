@@ -101,8 +101,8 @@
       <!-- #&ERROLOGIN&# -->
 
       <!-- #&PENDENCIA_ADMINISTRATIVA&# -->
-      <p style="min-height: 0px;" class="flash warning">
-       <strong>Instabilidade nos servi&ccedil;os:</strong> Comunicamos a todos os nossos clientes que o i-Educar poder&aacute; apresentar instabilidades entre 01:00h e 03:00h da manh&atilde; desta quinta-feira (04/02), pois nosso servidor passar&aacute; por manuten&ccedil;&otilde;es. Qualquer d&uacute;vida, entre em contato pelo e-mail suporte@portabilis.com.br. Obrigado pela compreens&atilde;o.
+      <p style="min-height: 0px;" class="flash update-browser">
+       <strong>Aviso de atendimento diferenciado</strong> Prezados clientes, comunicamos que teremos um hor&aacute;rio especial de funcionamento durante o feriado de carnaval nos dias 08 a 09 de Fevereiro. No dia 08/02 iremos atender em car&aacute;ter de plant&atilde;o. Se voc&ecirc; precisar de ajuda, entre em contato atrav&eacute;s dos telefones (48) 9811-3030 (TIM), (48) 9187-6262 (Vivo) ou (48) 8835-3082 (Claro). Atenderemos tamb&eacute;m via e-mail suporte@portabilis.com.br e help-desk http://suporte.portabilis.com.br. J&aacute; no dia 09/02 n&atilde;o haver&aacute; expediente. Retornaremos &agrave;s atividades normalmente na quarta-feira, dia 10/02. <strong>Obrigado pela compreens&atilde;o. :)</strong>
       </p>
     </div>
 
