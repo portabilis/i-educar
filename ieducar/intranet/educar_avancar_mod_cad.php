@@ -98,6 +98,7 @@ class indice extends clsCadastro
 
     $this->db  = new clsBanco();
     $this->db2 = new clsBanco();
+    $this->db3 = new clsBanco();
     $this->data_matricula = Portabilis_Date_Utils::brToPgSQL($this->data_matricula);
     $result = $this->rematricularAlunos($this->ref_cod_escola, $this->ref_cod_curso,
                                         $this->ref_cod_serie, $this->ref_cod_turma, $_POST['ano']);
@@ -114,32 +115,73 @@ class indice extends clsCadastro
   protected function rematricularAlunos($escolaId, $cursoId, $serieId, $turmaId, $ano) {
     $result = $this->selectMatriculas($escolaId, $cursoId, $serieId, $turmaId, $this->ano_letivo);
     $count = 0;
+    $countDepPendente = 0;
     $nomesAlunos;
+    $nomesAlunosDepPendente;
 
     while ($result && $this->db->ProximoRegistro()) {
       list($matriculaId, $alunoId, $situacao, $nomeAluno) = $this->db->Tupla();
-      $nomesAlunos[] = $nomeAluno;
 
       $this->db2->Consulta("UPDATE pmieducar.matricula SET ultima_matricula = '0' WHERE cod_matricula = $matriculaId");
 
-      if ($result && $situacao == 1)
-        $result = $this->rematricularAlunoAprovado($escolaId, $serieId, $this->ano_letivo, $alunoId);
-      elseif ($result && $situacao == 2)
-        $result = $this->rematricularAlunoReprovado($escolaId, $cursoId, $serieId, $this->ano_letivo, $alunoId);
+      $possuiDependenciaPendente = false;
+
+      $resultApDep = $this->db2->Consulta("SELECT ref_ref_cod_serie
+                            FROM pmieducar.matricula
+                            WHERE aprovado = 12
+                            AND ref_cod_aluno = '{$alunoId}'
+                            AND ano < '{$ano}'
+                            AND ativo = 1
+                            AND dependencia = FALSE
+      ");
+
+      while($resultApDep && $this->db2->ProximoRegistro()){
+        $regApDep = $this->db2->Tupla();
+        $serieApDep = $regApDep["ref_ref_cod_serie"];
+        $ap = $this->db3->UnicoCampo("SELECT 1
+                            FROM pmieducar.matricula
+                            WHERE aprovado = 1
+                            AND ref_cod_aluno = '{$alunoId}'
+                            AND ativo = 1
+                            AND ref_ref_cod_serie = '{$serieApDep}'
+                            AND dependencia = TRUE ");
+
+        $possuiDependenciaPendente = $possuiDependenciaPendente || !((bool)$ap);
+      }
+
+      if (!$possuiDependenciaPendente){
+        if ($result && $situacao == 1 || $situacao == 12)
+          $result = $this->rematricularAlunoAprovado($escolaId, $serieId, $this->ano_letivo, $alunoId);
+        elseif ($result && $situacao == 2)
+          $result = $this->rematricularAlunoReprovado($escolaId, $cursoId, $serieId, $this->ano_letivo, $alunoId);
+
+        $nomesAlunos[] = $nomeAluno;
+        $count += 1;
+      }else{
+        $nomesAlunosDepPendente[] = $nomeAluno;
+        $countDepPendente++;
+      }
 
       if (! $result)
         break;
-
-      $count += 1;
     }
 
     if ($result && empty($this->mensagem)){
-      if ($count > 0){
-        $mensagem = "<span class='success'>Rematriculado os seguinte(s) $count aluno(s) com sucesso em $this->ano_letivo: </br></br>";
-        foreach ($nomesAlunos as $nome) {
-          $mensagem .= "{$nome} </br>";
+      if ($count > 0 || $countDepPendente > 0){
+        $mensagem = "";
+        if($count > 0){
+          $mensagem .= "<span class='success'>Rematriculado os seguinte(s) $count aluno(s) com sucesso em $this->ano_letivo: </br></br>";
+          foreach ($nomesAlunos as $nome) {
+            $mensagem .= "{$nome} </br>";
+          }
+          $mensagem .= "</br> As enturmações podem ser realizadas em: Movimentação > Enturmação.</span>";
         }
-        $mensagem .= "</br> As enturmações podem ser realizadas em: Movimentação > Enturmação.</span>";
+        if($countDepPendente > 0){
+          $mensagem .= "<br/><br/><span class='notice'>Os seguinte(s) $countDepPendente aluno(s) não foram matrículados pois tem dependências pendentes:</br></br>";
+          foreach ($nomesAlunosDepPendente as $nome) {
+            $mensagem .= "{$nome} </br>";
+          }
+        }
         $this->mensagem = $mensagem;
       }else{
         $this->mensagem = "<span class='notice'>Nenhum aluno rematriculado. Certifique-se que a turma possui alunos aprovados ou reprovados não matriculados em ".($this->ano_letivo-1).".</span>";
@@ -162,11 +204,12 @@ class indice extends clsCadastro
                                                           aluno.cod_aluno = ref_cod_aluno) as nome
                    FROM
                      pmieducar.matricula m, pmieducar.matricula_turma
-                   WHERE aprovado in (1, 2) AND m.ativo = 1 AND ref_ref_cod_escola = $escolaId AND
+                   WHERE aprovado in (1, 2, 12) AND m.ativo = 1 AND ref_ref_cod_escola = $escolaId AND
                      ref_ref_cod_serie = $serieId AND ref_cod_curso = $cursoId AND
                      cod_matricula = ref_cod_matricula AND
                      matricula_turma.ativo = 1 AND
                      ano  = $anoAnterior AND
+                     m.dependencia = FALSE AND
                      NOT EXISTS(select 1 from pmieducar.matricula m2 where
                      m2.ref_cod_aluno = m.ref_cod_aluno AND
                      m2.ano = $this->ano_letivo AND

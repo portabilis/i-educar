@@ -50,11 +50,11 @@ class App_Model_MatriculaSituacao extends CoreExt_Enum
   const ABANDONO                   = 6;
   const EM_EXAME                   = 7;
   const APROVADO_APOS_EXAME        = 8;
-  const RETIDO_FALTA               = 9;
   const APROVADO_SEM_EXAME         = 10;
   const PRE_MATRICULA              = 11;
   const APROVADO_COM_DEPENDENCIA   = 12;
   const APROVADO_PELO_CONSELHO     = 13;
+  const REPROVADO_POR_FALTAS       = 14;
 
   protected $_data = array(
     self::APROVADO                 => 'Aprovado',
@@ -67,7 +67,8 @@ class App_Model_MatriculaSituacao extends CoreExt_Enum
     self::APROVADO_APOS_EXAME      => 'Aprovado após exame',
     self::PRE_MATRICULA            => 'Pré-matrícula',
     self::APROVADO_COM_DEPENDENCIA => 'Aprovado com depend&ecirc;ncia',
-    self::APROVADO_PELO_CONSELHO   => 'Aprovado pelo conselho'
+    self::APROVADO_PELO_CONSELHO   => 'Aprovado pelo conselho',
+    self::REPROVADO_POR_FALTAS     => 'Reprovado por faltas'
   );
 
   public static function getInstance()
