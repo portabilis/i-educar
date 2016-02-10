@@ -77,7 +77,7 @@ class indice extends clsCadastro
     // inputs
     $anoLetivoHelperOptions = array('situacoes' => array('em_andamento', 'nao_iniciado'));
 
-    $this->inputsHelper()->hidden('ano');
+    $this->inputsHelper()->dynamic('ano');
     $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'curso', 'serie'));
     $this->inputsHelper()->dynamic('turma', array('label' => 'Selecione a turma do ano anterior', 'required' => FALSE));
     $this->inputsHelper()->dynamic('anoLetivo', array('label' => 'Ano destino'), $anoLetivoHelperOptions);
@@ -100,6 +100,7 @@ class indice extends clsCadastro
     $this->db2 = new clsBanco();
     $this->db3 = new clsBanco();
     $this->data_matricula = Portabilis_Date_Utils::brToPgSQL($this->data_matricula);
+
     $result = $this->rematricularAlunos($this->ref_cod_escola, $this->ref_cod_curso,
                                         $this->ref_cod_serie, $this->ref_cod_turma, $_POST['ano']);
 
@@ -300,3 +301,7 @@ $pagina->addForm($miolo);
 // Gera o código HTML
 $pagina->MakeAll();
 ?>
+
+<script type="text/javascript">
+  $j('#ano').closest('tr').hide();
+</script>
