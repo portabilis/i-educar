@@ -1,5 +1,4 @@
 <?php
-
 /**
  * i-Educar - Sistema de gestão escolar
  *
