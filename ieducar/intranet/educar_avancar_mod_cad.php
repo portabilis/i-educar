@@ -301,7 +301,3 @@ $pagina->addForm($miolo);
 // Gera o código HTML
 $pagina->MakeAll();
 ?>
-
-<script type="text/javascript">
-  $j('#ano').closest('tr').hide();
-</script>
