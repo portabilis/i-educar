@@ -1377,7 +1377,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     $options = array(
       'required'    => false,
       'value'       => '',
-      'max_length'  => 20
+      'max_length'  => 50
     );
 
     $this->inputsHelper()->text('complemento', $options);
