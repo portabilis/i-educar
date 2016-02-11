@@ -299,7 +299,7 @@ class clsPmieducarCandidatoReservaVaga
    * Retorna uma lista de registros filtrados de acordo com os parâmetros.
    * @return array
    */
-  function lista($ano_letivo = NULL, $nome = NULL, $nome_responsavel = NULL, $ref_cod_escola = NULL)
+  function lista($ano_letivo = NULL, $nome = NULL, $nome_responsavel = NULL, $ref_cod_escola = NULL, $ref_cod_serie = NULL, $ref_cod_curso = NULL, $ref_cod_turno = NULL)
   {
     $filtros = '';
     $this->resetCamposLista();
@@ -309,7 +309,8 @@ class clsPmieducarCandidatoReservaVaga
               INNER JOIN pmieducar.aluno a ON a.cod_aluno = crv.ref_cod_aluno
               INNER JOIN cadastro.pessoa pes ON pes.idpes = a.ref_idpes
               INNER JOIN cadastro.fisica fis ON fis.idpes = pes.idpes
-              INNER JOIN cadastro.pessoa resp_pes ON fis.idpes_responsavel = resp_pes.idpes ";
+              INNER JOIN cadastro.pessoa resp_pes ON fis.idpes_responsavel = resp_pes.idpes
+              INNER JOIN pmieducar.serie AS ser ON ser.cod_serie = crv.ref_cod_serie ";
     $whereAnd = ' WHERE ';
 
     $filtros = '';
@@ -334,6 +335,21 @@ class clsPmieducarCandidatoReservaVaga
       $whereAnd = ' AND ';
     }
 
+    if(is_numeric($ref_cod_serie)){
+      $filtros .= " {$whereAnd} crv.ref_cod_serie = {$ref_cod_serie} ";
+      $whereAnd = ' AND ';
+    }
+
+    if(is_numeric($ref_cod_curso)){
+      $filtros .= " {$whereAnd} ser.ref_cod_curso = {$ref_cod_curso} ";
+      $whereAnd = ' AND ';
+    }
+
+    if($ref_cod_turno != 0){
+      $filtros .= " {$whereAnd} crv.ref_cod_turno = {$ref_cod_turno} ";
+      $whereAnd = ' AND ';
+    }
+
     $db = new clsBanco();
     $countCampos = count(explode(',', $this->_campos_lista));
     $resultado = array();
@@ -343,7 +359,8 @@ class clsPmieducarCandidatoReservaVaga
               INNER JOIN pmieducar.aluno a ON a.cod_aluno = crv.ref_cod_aluno
               INNER JOIN cadastro.pessoa pes ON pes.idpes = a.ref_idpes
               INNER JOIN cadastro.fisica fis ON fis.idpes = pes.idpes
-              INNER JOIN cadastro.pessoa resp_pes ON fis.idpes_responsavel = resp_pes.idpes {$filtros}");
+              INNER JOIN cadastro.pessoa resp_pes ON fis.idpes_responsavel = resp_pes.idpes
+              INNER JOIN pmieducar.serie AS ser ON ser.cod_serie = crv.ref_cod_serie {$filtros}");
 
     $db->Consulta($sql);
 
