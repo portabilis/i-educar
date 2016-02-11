@@ -1,6 +1,7 @@
 
 $j(document).ready(function(){
 
+  $j('#ano').closest('tr').hide();
 
   var $escolaField = getElementFor('escola');
 
@@ -24,5 +25,8 @@ $j(document).ready(function(){
   };
 
   $escolaField.change(updateEscolaAnoLetivo);
+
+  //Atualiza o ano letivo para usuários cuja escola já venha selecionada
+  updateEscolaAnoLetivo();
 
 }); // ready
