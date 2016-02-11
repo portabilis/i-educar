@@ -20,3 +20,10 @@ UNION
 
 ALTER TABLE cadastro.v_endereco
   OWNER TO ieducar;
+
+
+GRANT ALL PRIVILEGES ON TABLE endereco_pessoa TO ieducar;
+GRANT ALL PRIVILEGES ON TABLE logradouro TO ieducar;
+GRANT ALL PRIVILEGES ON TABLE bairro TO ieducar;
+GRANT ALL PRIVILEGES ON TABLE municipio TO ieducar;
+GRANT ALL PRIVILEGES ON TABLE endereco_externo TO ieducar;
