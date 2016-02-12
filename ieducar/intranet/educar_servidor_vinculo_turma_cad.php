@@ -133,9 +133,16 @@ class indice extends clsCadastro
   function Gerar()
   {
 
+    if($this->id){
+      $objProfessorTurma = new clsModulesProfessorTurma($this->id);
+      $detProfessorTurma = $objProfessorTurma->detalhe();
+      $ano = $detProfessorTurma["ano"];
+    }
+
     $this->campoOculto('id', $this->id);
     $this->campoOculto('servidor_id', $this->servidor_id);
-    $this->inputsHelper()->dynamic(array('ano', 'instituicao', 'escola', 'curso', 'serie'));
+    $this->inputsHelper()->dynamic('ano', array('value' => (is_null($ano) ? date("Y") : $ano)));
+    $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'curso', 'serie'));
     $this->inputsHelper()->dynamic(array('turma'), array('required' => !is_null($this->ref_cod_turma)));
 
     $resources = array( null  => 'Selecione',
