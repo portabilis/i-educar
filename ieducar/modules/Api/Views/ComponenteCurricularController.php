@@ -98,6 +98,56 @@ class ComponenteCurricularController extends ApiCoreController
     }
   }
 
+    protected function getComponentesCurricularesForMultipleSearch() {
+    if ($this->canGetComponentesCurriculares()) {
+      $turmaId       = $this->getRequest()->turma_id;
+      $ano           = $this->getRequest()->ano;
+
+      $sql = "select cc.id, 
+                     to_ascii(cc.nome) as nome
+                from pmieducar.turma, 
+                     modules.componente_curricular_turma as cct, 
+                     modules.componente_curricular as cc, 
+                     modules.area_conhecimento as ac,
+                     pmieducar.escola_ano_letivo as al 
+               where turma.cod_turma = $1 and 
+                     cct.turma_id = turma.cod_turma and
+                     cct.escola_id = turma.ref_ref_cod_escola and 
+                     cct.componente_curricular_id = cc.id and al.ano = $2 and 
+                     cct.escola_id = al.ref_cod_escola and 
+                     cc.area_conhecimento_id = ac.id
+               order by ac.secao, ac.nome, cc.ordenamento, cc.nome";
+        
+
+      $componentesCurriculares = $this->fetchPreparedQuery($sql, array($turmaId, $ano));
+
+      if(count($componentesCurriculares) < 1){
+        $sql = "select cc.id, 
+                       to_ascii(cc.nome) as nome
+                  from pmieducar.turma as t, 
+                       pmieducar.escola_serie_disciplina as esd, 
+                       modules.componente_curricular as cc, 
+                       modules.area_conhecimento as ac, 
+                       pmieducar.escola_ano_letivo as al 
+                 where t.cod_turma = $1 and 
+                       esd.ref_ref_cod_escola = t.ref_ref_cod_escola and 
+                       esd.ref_ref_cod_serie = t.ref_ref_cod_serie and 
+                       esd.ref_cod_disciplina = cc.id and al.ano = $2 and 
+                       esd.ref_ref_cod_escola = al.ref_cod_escola and t.ativo = 1 and                  
+                       esd.ativo = 1 and 
+                       al.ativo = 1 and 
+                       cc.area_conhecimento_id = ac.id
+                 order by ac.secao, ac.nome, cc.ordenamento, cc.nome";
+
+        $componentesCurriculares = $this->fetchPreparedQuery($sql, array($turmaId, $ano));
+      }
+
+      $componentesCurriculares = Portabilis_Array_Utils::setAsIdValue($componentesCurriculares, 'id', 'nome');
+
+      return array('options' => $componentesCurriculares);
+    }
+  }
+
   public function Gerar() {
     if ($this->isRequestFor('get', 'componente_curricular-search'))
       $this->appendResponse($this->search());
@@ -105,6 +155,8 @@ class ComponenteCurricularController extends ApiCoreController
       $this->appendResponse($this->getComponentesCurricularesSearch());
     elseif ($this->isRequestFor('get', 'componentes-curriculares'))
       $this->appendResponse($this->getComponentesCurriculares());
+    elseif($this->isRequestFor('get', 'componentes-curriculares-for-multiple-search'))
+      $this->appendResponse($this->getComponentesCurricularesForMultipleSearch());
     else
       $this->notImplementedOperationError();
   }

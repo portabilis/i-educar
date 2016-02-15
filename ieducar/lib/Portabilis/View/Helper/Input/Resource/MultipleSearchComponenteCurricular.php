@@ -75,4 +75,12 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchComponenteCurricular e
 
     Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js, $afterReady = true);
   }
+
+   protected function loadAssets() {
+    Portabilis_View_Helper_Application::loadChosenLib($this->viewInstance);
+    $jsFile = '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/MultipleSearch.js';
+    Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $jsFile);
+    $jsFile = '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/Resource/MultipleSearchComponenteCurricular.js';
+    Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $jsFile);
+  }
 }
