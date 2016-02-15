@@ -103,10 +103,6 @@
 
       <!-- #&PENDENCIA_ADMINISTRATIVA&# -->
 
-      <p style="min-height: 0px;" class="flash update-browser">
-      Para melhorarmos ainda mais o produto i-Educar, precisamos fazer alguns ajustes de manuten&ccedil;&atilde;o. O servi&ccedil;o poder&aacute; apresentar instabilidades entre <b>12:00h</b> e <b>14:00h</b> desta <b>segunda-feira (15/02)</b>. Qualquer d&uacute;vida, entre em contato pelo e-mail suporte@portabilis.com.br. Obrigado pela compreens&atilde;o.
-      </p>
-
     </div>
 
     <div id="corpo">
