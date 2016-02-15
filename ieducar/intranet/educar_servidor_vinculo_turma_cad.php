@@ -165,6 +165,7 @@ class indice extends clsCadastro
     $options = array('label' => Portabilis_String_Utils::toLatin1('Tipo do vínculo'), 'resources' => $resources, 'value' => $this->tipo_vinculo, 'required' => false);
     $this->inputsHelper()->select('tipo_vinculo', $options);
 
+    $this->inputsHelper()->checkbox('selecionar_todos', array('label' => 'Selecionar/remover todos'));
     $this->inputsHelper()->multipleSearchComponenteCurricular(null, array('label' => 'Componentes lecionados', 'required' => false));
 
     $scripts = array(

@@ -10,10 +10,11 @@ $j(document).ready(function() {
 
   $componentecurricular = $j('#componentecurricular');
 
+  $selecionarTodosElement = $j('#selecionar_todos');
+
   $componentecurricular.trigger('chosen:updated');
 
   var handleGetComponenteCurricular = function(dataResponse) {
-    testezin = dataResponse['componentecurricular'];
     
     $j.each(dataResponse['componentecurricular'], function(id, value) {
       
@@ -44,4 +45,10 @@ $j(document).ready(function() {
   }
 
   getComponenteCurricular();  
+
+  $selecionarTodosElement.on('change',function(){
+    $j('#componentecurricular option').attr('selected', $j(this).prop('checked'));
+    $componentecurricular.trigger("chosen:updated");
+  });
+
 });
