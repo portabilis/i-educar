@@ -531,6 +531,7 @@
           situacao : $('#situacao').val(),
           extra_curricular : $('#extra-curricular').is(':checked') ? 1 : 0,
           media_area_conhecimento : $('#media-area-conhecimento').is(':checked') ? 1 : 0,
+          processar_media_geral : $('#processar-media-geral').is(':checked') ? 1 : 0,
           grade_curso_id : $('#grade-curso').val(),
           percentual_frequencia : percentualFrequencia,
           notas : notas,

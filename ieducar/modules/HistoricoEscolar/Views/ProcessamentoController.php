@@ -210,6 +210,11 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
         <td colspan='2'><input type='checkbox' id='media-area-conhecimento' name='media-area-conhecimento'></input></td>
       </tr>
 
+      <tr>
+        <td><label for='processar-media-geral'>Processar m&eacute;dia geral dos alunos</label><br></td>
+        <td colspan='2'><input type='checkbox' id='processar-media-geral' name='processar-media-geral'></input></td>
+      </tr>
+
     </table>";
 
 
