@@ -616,6 +616,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
       $mediasCc = $this->getService()->getMediasComponentes();
       $turmaId = $this->getRequest()->turma_id ?: $turmaId;
       $mediaAreaConhecimento = $this->getRequest()->media_area_conhecimento;
+      $processarMediaGeral = $this->getRequest()->processar_media_geral;
 
       foreach ($this->getService()->getComponentes() as $componenteCurricular)
       {
@@ -675,6 +676,9 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
           ));
         }
       }
+      if ($processarMediaGeral){
+        $componentesCurriculares['media_geral'] = $this->insereComponenteMediaGeral($historicoSequencial, $alunoId);
+      }
     }
     else{
       foreach ($this->getRequest()->disciplinas as $disciplina){
@@ -690,6 +694,13 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         ));
       }
     }
+  }
+
+  protected function insereComponenteMediaGeral($historicoSequencial, $alunoId){
+    $sequencial = $this->getNextHistoricoDisciplinasSequencial($historicoSequencial, $alunoId);
+    $historicoEscolar = new clsPmieducarHistoricoEscolar($alunoId, $historicoSequencial);
+
+    $historicoEscolar->insereComponenteMediaGeral($sequencial);
   }
 
   protected function getFalta($situacaoFaltaComponenteCurricular=null){

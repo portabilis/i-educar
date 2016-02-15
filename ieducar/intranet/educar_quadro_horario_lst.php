@@ -224,9 +224,15 @@ class indice extends clsConfig
                 // Servidor
                 $obj_servidor = new clsPmieducarServidor();
 
-                $det_servidor = array_shift($obj_servidor->lista(
-                  $registro['ref_servidor'], NULL, NULL, NULL, NULL, NULL, NULL,
-                  NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, TRUE));
+                if ($registro['ref_servidor_substituto']) {
+                  $det_servidor = array_shift($obj_servidor->lista(
+                    $registro['ref_servidor_substituto'], NULL, NULL, NULL, NULL, NULL, NULL,
+                    NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, TRUE));
+                } else {
+                  $det_servidor = array_shift($obj_servidor->lista(
+                    $registro['ref_servidor'], NULL, NULL, NULL, NULL, NULL, NULL,
+                    NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, TRUE));
+                }
 
                 $det_servidor['nome'] = array_shift(explode(' ',$det_servidor['nome']));
 
