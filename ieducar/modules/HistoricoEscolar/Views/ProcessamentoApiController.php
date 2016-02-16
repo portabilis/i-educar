@@ -644,6 +644,10 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         if(is_numeric($nota))
           $nota = sprintf("%.1f", $nota);
 
+        if ($processarMediaGeral) {
+          $nota = '-';
+        }
+
         if($mediaAreaConhecimento){
           $nota = str_replace(',', '.', $nota);
           $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['nome'] = $componenteCurricular->area_conhecimento->nome;
@@ -666,12 +670,18 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
           $sequencial = $this->getNextHistoricoDisciplinasSequencial($historicoSequencial, $alunoId);
 
+          $nota = number_format(($value['nota_conceitual_numerica']/$value['count']), 2, ',', '');
+
+          if ($processarMediaGeral) {
+            $nota = '-';
+          }
+
           $this->_createHistoricoDisciplinas(array(
             "sequencial" => $sequencial,
             "alunoId" => $alunoId,
             "historicoSequencial" => $historicoSequencial,
             "nome" => $value['nome'],
-            "nota" => number_format(($value['nota_conceitual_numerica']/$value['count']), 2, ',', ''),
+            "nota" => $nota,
             "falta" => round($value['falta']/$value['count'])
           ));
         }
