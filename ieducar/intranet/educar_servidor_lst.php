@@ -169,8 +169,8 @@ class indice extends clsListagem
       NULL,
       NULL,
       NULL,
-      NULL,
       isset($_GET['servidor_sem_alocacao']),
+      NULL,
       $this->matricula
     );
     $total = $obj_servidor->_total;
