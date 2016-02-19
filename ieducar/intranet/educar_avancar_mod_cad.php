@@ -178,7 +178,7 @@ class indice extends clsCadastro
           $mensagem .= "</br> As enturmações podem ser realizadas em: Movimentação > Enturmação.</span>";
         }
         if($countDepPendente > 0){
-          $mensagem .= "<br/><br/><span class='notice'>Os seguinte(s) $countDepPendente aluno(s) não foram matrículados pois tem dependências pendentes:</br></br>";
+          $mensagem .= "<br/><br/><span class='error'>Os seguinte(s) $countDepPendente aluno(s) não foram matrículados pois tem dependências pendentes:</br></br>";
           foreach ($nomesAlunosDepPendente as $nome) {
             $mensagem .= "{$nome} </br>";
           }
