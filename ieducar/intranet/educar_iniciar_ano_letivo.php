@@ -175,7 +175,8 @@ class indice extends clsCadastro
 		$existe_matricula_andamento = $obj_matriculas->lista(null,null,$this->ref_cod_escola,null,null,null,null,3,null,null,null,null,1,$this->ano,null,null,1,null,null,null,null,null,null,null,null,true);
 		if($existe_matricula_andamento)
 		{
-			$editou = $obj_matriculas->aprova_matricula_andamento_curso_sem_avaliacao();
+      // REVER CHAMADA DE MÉTODO, NÃO FAZ SENTIDO, ESTÁ COLOCANDO TODOS ALUNOS COMO APROVADOS SEM NENHUM FILTRO
+			//$editou = $obj_matriculas->aprova_matricula_andamento_curso_sem_avaliacao();
 			if(!editou)
 			{
 				echo "<script>
