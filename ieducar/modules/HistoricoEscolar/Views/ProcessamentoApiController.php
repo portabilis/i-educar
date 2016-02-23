@@ -616,6 +616,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
       $mediasCc = $this->getService()->getMediasComponentes();
       $turmaId = $this->getRequest()->turma_id ?: $turmaId;
       $mediaAreaConhecimento = $this->getRequest()->media_area_conhecimento;
+      $processarMediaGeral = $this->getRequest()->processar_media_geral;
 
       foreach ($this->getService()->getComponentes() as $componenteCurricular)
       {
@@ -643,6 +644,10 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         if(is_numeric($nota))
           $nota = sprintf("%.1f", $nota);
 
+        if ($processarMediaGeral) {
+          $nota = '-';
+        }
+
         if($mediaAreaConhecimento){
           $nota = str_replace(',', '.', $nota);
           $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['nome'] = $componenteCurricular->area_conhecimento->nome;
@@ -665,15 +670,24 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
           $sequencial = $this->getNextHistoricoDisciplinasSequencial($historicoSequencial, $alunoId);
 
+          $nota = number_format(($value['nota_conceitual_numerica']/$value['count']), 2, ',', '');
+
+          if ($processarMediaGeral) {
+            $nota = '-';
+          }
+
           $this->_createHistoricoDisciplinas(array(
             "sequencial" => $sequencial,
             "alunoId" => $alunoId,
             "historicoSequencial" => $historicoSequencial,
             "nome" => $value['nome'],
-            "nota" => number_format(($value['nota_conceitual_numerica']/$value['count']), 2, ',', ''),
+            "nota" => $nota,
             "falta" => round($value['falta']/$value['count'])
           ));
         }
+      }
+      if ($processarMediaGeral){
+        $componentesCurriculares['media_geral'] = $this->insereComponenteMediaGeral($historicoSequencial, $alunoId);
       }
     }
     else{
@@ -690,6 +704,13 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         ));
       }
     }
+  }
+
+  protected function insereComponenteMediaGeral($historicoSequencial, $alunoId){
+    $sequencial = $this->getNextHistoricoDisciplinasSequencial($historicoSequencial, $alunoId);
+    $historicoEscolar = new clsPmieducarHistoricoEscolar($alunoId, $historicoSequencial);
+
+    $historicoEscolar->insereComponenteMediaGeral($sequencial);
   }
 
   protected function getFalta($situacaoFaltaComponenteCurricular=null){
