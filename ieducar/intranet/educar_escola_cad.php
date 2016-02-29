@@ -211,6 +211,7 @@ class indice extends clsCadastro
   var $banda_larga;
   var $ato_criacao;
   var $ato_autorizativo;
+  var $secretario_id;
   var $utiliza_regra_diferenciada;
   var $orgao_regional;
 
@@ -318,6 +319,7 @@ class indice extends clsCadastro
 					$this->$campo = $val;
 
 				$this->gestor_id = $registro['ref_idpes_gestor'];
+				$this->secretario_id = $registro['ref_idpes_secretario_escolar'];
 
 				$objEndereco = new clsPessoaEndereco( $this->ref_idpes );
 						$detEndereco = $objEndereco->detalhe();
@@ -1066,6 +1068,15 @@ if(!$this->isEnderecoExterno){
 	    $this->inputsHelper()->simpleSearchPessoa('nome', $options, $helperOptions);
 
 
+	    $hiddenInputOptions = array('options' => array('value' => $this->secretario_id));
+	    $helperOptions      = array('objectName' => 'secretario', 'hiddenInputOptions' => $hiddenInputOptions);
+
+	    $options            = array('label'    => 'Secretário escolar',
+	    							'size'     => 50,
+	    							'required' => false);
+
+	    $this->inputsHelper()->simpleSearchPessoa('nome', $options, $helperOptions);
+
 	    $resources = array( 1    => 'Diretor',
 		                    2    => 'Outro cargo');
 
@@ -1593,7 +1604,7 @@ if(!$this->isEnderecoExterno){
 					$obj->situacao_funcionamento = $this->situacao_funcionamento;
 					$obj->dependencia_administrativa = $this->dependencia_administrativa;
 					$obj->latitude = $this->latitude;
-          $obj->longitude = $this->longitude;
+          			$obj->longitude = $this->longitude;
 					$obj->orgao_regional = $this->orgao_regional;
 					$obj->regulamentacao = $this->regulamentacao;
 					$obj->acesso = $this->acesso;
@@ -1696,6 +1707,7 @@ if(!$this->isEnderecoExterno){
 					$obj->banda_larga = $this->banda_larga == 'on' ? 1 : 0;
 					$obj->ato_criacao = $this->ato_criacao;
 					$obj->ato_autorizativo = $this->ato_autorizativo;
+					$obj->ref_idpes_secretario_escolar = $this->secretario_id;
 					$cadastrou1 = $obj->cadastra();
 
 					if( $cadastrou1 )
@@ -1797,7 +1809,7 @@ if(!$this->isEnderecoExterno){
 			$obj->dependencia_administrativa = $this->dependencia_administrativa;
 			$obj->latitude = $this->latitude;
 			$obj->longitude = $this->longitude;
-      $obj->orgao_regional = $this->orgao_regional;
+      		$obj->orgao_regional = $this->orgao_regional;
 			$obj->regulamentacao = $this->regulamentacao;
 			$obj->situacao_funcionamento = $this->situacao_funcionamento;
 			$obj->acesso = $this->acesso;
@@ -1901,9 +1913,8 @@ if(!$this->isEnderecoExterno){
 			$obj->banda_larga = $this->banda_larga == 'on' ? 1 : 0;
 			$obj->ato_criacao = $this->ato_criacao;
 			$obj->ato_autorizativo = $this->ato_autorizativo;
+			$obj->ref_idpes_secretario_escolar = $this->secretario_id;
 			$cadastrou = $obj->cadastra();
-
-
 
 			if ($cadastrou)
 			{
@@ -1954,7 +1965,6 @@ if(!$this->isEnderecoExterno){
 
 	function Editar()
 	{
-
 		@session_start();
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
@@ -1974,7 +1984,7 @@ if(!$this->isEnderecoExterno){
 			$obj->dependencia_administrativa = $this->dependencia_administrativa;
 			$obj->latitude = $this->latitude;
 			$obj->longitude = $this->longitude;
-      $obj->orgao_regional = $this->orgao_regional;
+      		$obj->orgao_regional = $this->orgao_regional;
 			$obj->regulamentacao = $this->regulamentacao;
 			$obj->situacao_funcionamento = $this->situacao_funcionamento;
 			$obj->acesso = $this->acesso;
@@ -2082,6 +2092,7 @@ if(!$this->isEnderecoExterno){
 			$obj->banda_larga = $this->banda_larga == 'on' ? 1 : 0;
 			$obj->ato_criacao = $this->ato_criacao;
 			$obj->ato_autorizativo = $this->ato_autorizativo;
+			$obj->ref_idpes_secretario_escolar = $this->secretario_id;
 			$editou = $obj->edita();
 
 		}
@@ -2092,7 +2103,7 @@ if(!$this->isEnderecoExterno){
 			$obj->dependencia_administrativa = $this->dependencia_administrativa;
 			$obj->latitude = $this->latitude;
 			$obj->longitude = $this->longitude;
-      $obj->orgao_regional = $this->orgao_regional;
+      		$obj->orgao_regional = $this->orgao_regional;
 			$obj->regulamentacao = $this->regulamentacao;
 			$obj->acesso = $this->acesso;
 			$obj->ref_idpes_gestor = $this->gestor_id;
@@ -2195,6 +2206,7 @@ if(!$this->isEnderecoExterno){
 			$obj->banda_larga = $this->banda_larga == 'on' ? 1 : 0;
 			$obj->ato_criacao = $this->ato_criacao;
 			$obj->ato_autorizativo = $this->ato_autorizativo;
+			$obj->ref_idpes_secretario_escolar = $this->secretario_id;
 			$editou = $obj->cadastra();
 			$this->cod_escola = $editou;
 
