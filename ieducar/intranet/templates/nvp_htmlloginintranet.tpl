@@ -83,7 +83,7 @@
     <div id="flash-container">
 
       <!--p style="min-height: 0px;  background-color: #F5829C; color: white;" class="flash update-browser"> 
-        Desejamos a todas um Feliz Dia Internacional da Mulher! Voc&ecirc;s s&atilde;o exemplo de amor, perseveran&ccedil;a, coragem e determina&ccedil;&atilde;o. Estes s&atilde;o os votos da Equipe Portabilis. ;)
+        Desejamos a todas um Feliz Dia Internacional da Mulher!<br>Voc&ecirc;s s&atilde;o exemplo de amor, perseveran&ccedil;a, coragem e determina&ccedil;&atilde;o. Estes s&atilde;o os votos da Equipe Portabilis. ;)
       </p-->
 
       <!--[if lt IE 7]>
@@ -101,6 +101,7 @@
       <!-- #&ERROLOGIN&# -->
 
       <!-- #&PENDENCIA_ADMINISTRATIVA&# -->
+
 
     </div>
 

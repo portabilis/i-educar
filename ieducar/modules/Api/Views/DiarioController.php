@@ -107,7 +107,7 @@ class DiarioController extends ApiCoreController
     $matriculaId = $this->fetchPreparedQuery($sql, array($turmaId, $alunoId), true, 'first-field');
 
     if(empty($matriculaId))
-      throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("Não foi possível encontrar uma matrícula para o aluno {$alunoId}."));
+      throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("Não foi possível encontrar uma matrícula na turma {$turmaId} para o aluno {$alunoId}."));
 
     return $matriculaId;
   }
@@ -137,15 +137,15 @@ class DiarioController extends ApiCoreController
   }
 
   protected function canPostNotas(){
-    return $this->validatesPresenceOf('turmas') && $this->validatesPresenceOf('etapa');
+    return $this->validatesPresenceOf('notas') && $this->validatesPresenceOf('etapa');
   }
 
   protected function canPostFaltasPorComponente(){
-    return $this->validatesPresenceOf('turmas') && $this->validatesPresenceOf('etapa');
+    return $this->validatesPresenceOf('faltas') && $this->validatesPresenceOf('etapa');
   }
 
   protected function canPostFaltasGeral(){
-    return $this->validatesPresenceOf('turmas') && $this->validatesPresenceOf('etapa');
+    return $this->validatesPresenceOf('faltas') && $this->validatesPresenceOf('etapa');
   }
 
   protected function canPostPareceresPorEtapaComponente(){
@@ -166,78 +166,56 @@ class DiarioController extends ApiCoreController
 
   protected function postNotas(){
     if($this->canPostNotas()){
-      $turmas = $this->getRequest()->turmas;
       $etapa = $this->getRequest()->etapa;
+      $notas = $this->getRequest()->notas;
 
-      foreach ($turmas as $turma) {
-        $turmaId = $turma['turma_id'];
-        $alunos = $turma['alunos'];
+      foreach ($notas as $turmaId => $notaTurma) {
 
-        foreach ($alunos as $aluno) {
-          $alunoId = $aluno['aluno_id'];
+        foreach($notaTurma as $alunoId => $notaTurmaAluno){
 
-          $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
+          foreach ($notaTurmaAluno as $componenteCurricularId => $notaTurmaAlunoDisciplina){
+            if($this->validateComponenteTurma($turmaId, $componenteCurricularId)){
+              $valor = $notaTurmaAlunoDisciplina['valor'];
+              $array_nota = array(
+                    'componenteCurricular' => $componenteCurricularId,
+                    'nota'                 => $valor,
+                    'etapa'                => $etapa,
+                    'notaOriginal'         => $valor);
 
-          if($this->validateMatricula($matriculaId)){
-            $componentesCurriculares = $aluno['componentes_curriculares'];
-            foreach ($componentesCurriculares as $componenteCurricular) {
-              $componenteCurricularId = $componenteCurricular['componente_curricular_id'];
+              $nota = new Avaliacao_Model_NotaComponente($array_nota);
 
-              if($this->validateComponenteTurma($turmaId, $componenteCurricularId)){
-
-                $valor = $componenteCurricular['valor'];
-
-                $array_nota = array(
-                      'componenteCurricular' => $componenteCurricularId,
-                      'nota'                 => $valor,
-                      'etapa'                => $etapa,
-                      'notaOriginal'         => $valor);
-
-                $nota = new Avaliacao_Model_NotaComponente($array_nota);
-
-                $this->serviceBoletim($turmaId, $alunoId)->addNota($nota);
-                $this->trySaveServiceBoletim($turmaId, $alunoId);
-              }
+              $this->serviceBoletim($turmaId, $alunoId)->addNota($nota);
+              $this->trySaveServiceBoletim($turmaId, $alunoId);
             }
           }
         }
+        $this->messenger->append('Notas postadas com sucesso!', 'success');
       }
-
-      $this->messenger->append('Notas postadas com sucesso!', 'success');
     }
   }
 
   protected function postFaltasPorComponente(){
     if($this->canPostFaltasPorComponente()){
-      $turmas = $this->getRequest()->turmas;
       $etapa = $this->getRequest()->etapa;
+      $faltas = $this->getRequest()->faltas;
 
-      foreach ($turmas as $turma) {
-        $turmaId = $turma['turma_id'];
-        $alunos = $turma['alunos'];
-
+      foreach ($faltas as $turmaId => $faltaTurma) {
         if($this->getRegra($turmaId)->get('tipoPresenca') != RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE){
           throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de faltas por componente."));
         }
+        foreach ($faltaTurma as $alunoId => $faltaTurmaAluno) {
 
-        foreach ($alunos as $aluno) {
-          $alunoId = $aluno['aluno_id'];
+          foreach ($faltaTurmaAluno as $componenteCurricularId => $faltaTurmaAlunoDisciplina){
+            $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
 
-          $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
-
-          if($this->validateMatricula($matriculaId)){
-
-            $componentesCurriculares = $aluno['componentes_curriculares'];
-            foreach ($componentesCurriculares as $componenteCurricular) {
-              $componenteCurricularId = $componenteCurricular['componente_curricular_id'];
-
+            if($this->validateMatricula($matriculaId)){
+              
               if($this->validateComponenteTurma($turmaId, $componenteCurricularId)){
-
-                $faltas = $componenteCurricular['faltas'];
+                $valor = $faltaTurmaAlunoDisciplina["valor"];
 
                 $falta = new Avaliacao_Model_FaltaComponente(array(
                   'componenteCurricular' => $componenteCurricularId,
-                  'quantidade'           => $faltas,
+                  'quantidade'           => $valor,
                   'etapa'                => $etapa
                 ));
 
@@ -246,6 +224,34 @@ class DiarioController extends ApiCoreController
               }
             }
           }
+        }
+      }
+
+      $this->messenger->append('Faltas postadas com sucesso!', 'success');
+    }
+  }
+
+  protected function postFaltasGeral(){
+    if($this->canPostFaltasPorComponente()){
+      $etapa = $this->getRequest()->etapa;
+      $faltas = $this->getRequest()->faltas;
+
+      foreach ($faltas as $turmaId => $faltaTurma) {
+        if($this->getRegra($turmaId)->get('tipoPresenca') != RegraAvaliacao_Model_TipoPresenca::GERAL){
+          throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de faltas geral."));
+        }
+
+        foreach ($faltaTurma as $alunoId => $faltaTurmaAluno) {
+          $faltas = $faltaTurmaAluno['valor'];
+          $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
+
+          $falta = new Avaliacao_Model_FaltaGeral(array(
+            'quantidade'           => $faltas,
+            'etapa'                => $etapa
+          ));
+
+          $this->serviceBoletim($turmaId, $alunoId)->addFalta($falta);
+          $this->trySaveServiceBoletim($turmaId, $alunoId);
         }
       }
 
@@ -405,39 +411,6 @@ class DiarioController extends ApiCoreController
       }
 
       $this->messenger->append('Pareceres postados com sucesso!', 'success');
-    }
-  }
-
-  protected function postFaltasGeral(){
-    if($this->canPostFaltasPorComponente()){
-      $turmas = $this->getRequest()->turmas;
-      $etapa = $this->getRequest()->etapa;
-
-      foreach ($turmas as $turma) {
-        $turmaId = $turma['turma_id'];
-        $alunos = $turma['alunos'];
-
-        if($this->getRegra($turmaId)->get('tipoPresenca') != RegraAvaliacao_Model_TipoPresenca::GERAL){
-          throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de faltas geral."));
-        }
-
-        foreach ($alunos as $aluno) {
-          $alunoId = $aluno['aluno_id'];
-          $faltas = $aluno['faltas'];
-
-          $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
-
-          $falta = new Avaliacao_Model_FaltaGeral(array(
-            'quantidade'           => $faltas,
-            'etapa'                => $etapa
-          ));
-
-          $this->serviceBoletim($turmaId, $alunoId)->addFalta($falta);
-          $this->trySaveServiceBoletim($turmaId, $alunoId);
-        }
-      }
-
-      $this->messenger->append('Faltas postadas com sucesso!', 'success');
     }
   }
 
