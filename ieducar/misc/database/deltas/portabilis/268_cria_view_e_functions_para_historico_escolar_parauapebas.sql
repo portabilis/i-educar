@@ -42,25 +42,26 @@ ALTER FUNCTION relatorio.get_ddd_escola(integer) OWNER TO ieducar;
  -- Cria view que centraliza os dados da escola
 
 CREATE OR REPLACE VIEW relatorio.view_dados_escola AS
-SELECT escola.cod_escola AS cod_escola,
+SELECT escola.cod_escola,
        relatorio.get_nome_escola(escola.cod_escola) AS nome,
-       pessoa.email AS email,
-       endereco_pessoa.cep AS cep,
-       endereco_pessoa.numero AS numero,
-       logradouro.nome AS logradouro,
-       bairro.nome AS bairro,
+       pessoa.email,
+       COALESCE(endereco_pessoa.cep, endereco_externo.cep) AS cep,
+       COALESCE(endereco_pessoa.numero, endereco_externo.numero) AS numero,
+       COALESCE(logradouro.nome, endereco_externo.logradouro) AS logradouro,
+       COALESCE(bairro.nome, endereco_externo.bairro) AS bairro,
        educacenso_cod_escola.cod_escola_inep AS inep,
        relatorio.get_telefone_escola(escola.cod_escola) AS telefone,
        relatorio.get_ddd_escola(escola.cod_escola) AS telefone_ddd
 FROM pmieducar.escola
-INNER JOIN cadastro.pessoa ON (escola.ref_idpes = pessoa.idpes)
-LEFT JOIN modules.educacenso_cod_escola ON (educacenso_cod_escola.cod_escola = escola.cod_escola)
-LEFT JOIN cadastro.endereco_pessoa ON (endereco_pessoa.idpes = pessoa.idpes)
-LEFT JOIN public.logradouro ON (logradouro.idlog = endereco_pessoa.idlog)
-LEFT JOIN public.bairro ON (bairro.idbai = endereco_pessoa.idbai);
+JOIN cadastro.pessoa ON escola.ref_idpes::numeric = pessoa.idpes
+LEFT JOIN modules.educacenso_cod_escola ON educacenso_cod_escola.cod_escola = escola.cod_escola
+LEFT JOIN cadastro.endereco_pessoa ON endereco_pessoa.idpes = pessoa.idpes
+LEFT JOIN cadastro.endereco_externo ON endereco_externo.idpes = pessoa.idpes
+LEFT JOIN public.logradouro ON logradouro.idlog = endereco_pessoa.idlog
+LEFT JOIN public.bairro ON bairro.idbai = endereco_pessoa.idbai;
 
 
-ALTER TABLE relatorio.view_modulo OWNER TO ieducar;
+ALTER TABLE relatorio.view_dados_escola OWNER TO ieducar;
 
  -- Cria function para retornar o texto da nacionalidade
 
@@ -118,7 +119,7 @@ SELECT CASE
            WHEN $1 = 12 THEN 'ApDp'::character varying
            WHEN $1 = 13 THEN 'ApCo'::character varying
            WHEN $1 = 14 THEN 'RpFt'::character varying
-           ELSE 'Recl'::character varying
+           ELSE ''::character varying
        END AS situacao; $BODY$ LANGUAGE SQL VOLATILE;
 
 
@@ -190,7 +191,7 @@ ALTER FUNCTION relatorio.get_nota_historico_parauapebas(integer, integer, intege
 
 CREATE OR REPLACE FUNCTION relatorio.get_ch_historico_parauapebas(integer, integer, integer) RETURNS integer AS $BODY$
 SELECT ccae.carga_horaria::integer
-FROM historico_escolar he
+FROM pmieducar.historico_escolar he
 INNER JOIN modules.componente_curricular cc ON (UPPER(cc.nome) = UPPER(relatorio.get_disciplina_historico_parauapebas(he.ref_cod_aluno, $3)))
 INNER JOIN modules.componente_curricular_ano_escolar ccae ON (ccae.componente_curricular_id = cc.id)
 WHERE he.ref_cod_aluno = $1
@@ -199,12 +200,12 @@ WHERE he.ref_cod_aluno = $1
     (SELECT s.cod_serie
      FROM pmieducar.serie s
      WHERE s.ativo = 1
-       AND UPPER(s.nm_serie) = UPPER(he.nm_serie)
+       AND relatorio.get_texto_sem_espaco(s.nm_serie) = relatorio.get_texto_sem_espaco(he.nm_serie)
        AND s.ref_cod_curso =
          (SELECT c.cod_curso
           FROM pmieducar.curso c
           WHERE c.ativo = 1
-            AND UPPER(c.nm_curso) = UPPER(he.nm_curso) LIMIT 1) LIMIT 1) LIMIT 1; $BODY$ LANGUAGE SQL VOLATILE;
+            AND relatorio.get_texto_sem_espaco(c.nm_curso) = relatorio.get_texto_sem_espaco(he.nm_curso) LIMIT 1) LIMIT 1) LIMIT 1; $BODY$ LANGUAGE SQL VOLATILE;
 
 
 ALTER FUNCTION relatorio.get_ch_historico_parauapebas(integer, integer, integer) OWNER TO ieducar;
@@ -217,3 +218,7 @@ SELECT translate(public.fcn_upper(regexp_replace($1,' ','','g')), 'åáàãâä�
 
 ALTER FUNCTION relatorio.get_texto_sem_espaco(character varying) OWNER TO ieducar;
 
+ -- Permissões em tabelas para usuário ieducar
+ GRANT ALL PRIVILEGES ON TABLE escola TO ieducar;
+
+ GRANT ALL PRIVILEGES ON TABLE educacenso_cod_escola TO ieducar;
