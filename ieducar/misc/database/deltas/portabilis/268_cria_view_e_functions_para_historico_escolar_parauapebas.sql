@@ -151,7 +151,6 @@ SELECT cc.nome
 FROM historico_disciplinas hd
 INNER JOIN modules.componente_curricular cc ON upper(cc.nome) = upper(hd.nm_disciplina)
 WHERE hd.ref_ref_cod_aluno = $1
-  AND cc.tipo_base = 1
   AND hd.ref_sequencial IN
     (SELECT sshe.sequencial
      FROM pmieducar.historico_escolar sshe

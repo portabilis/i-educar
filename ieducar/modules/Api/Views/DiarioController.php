@@ -1,6 +1,6 @@
 <?php
-//error_reporting(E_ERROR);
-//ini_set("display_errors", 1);
+// error_reporting(E_ERROR);
+// ini_set("display_errors", 1);
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -108,7 +108,7 @@ class DiarioController extends ApiCoreController
     $matriculaId = $this->fetchPreparedQuery($sql, array($turmaId, $alunoId), true, 'first-field');
 
     if(empty($matriculaId))
-      throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("Não foi possível encontrar uma matrícula para o aluno {$alunoId}."));
+      throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("Não foi possível encontrar uma matrícula na turma {$turmaId} para o aluno {$alunoId}."));
 
     return $matriculaId;
   }
@@ -138,107 +138,85 @@ class DiarioController extends ApiCoreController
   }
 
   protected function canPostNotas(){
-    return $this->validatesPresenceOf('turmas') && $this->validatesPresenceOf('etapa');
+    return $this->validatesPresenceOf('notas') && $this->validatesPresenceOf('etapa');
   }
 
   protected function canPostFaltasPorComponente(){
-    return $this->validatesPresenceOf('turmas') && $this->validatesPresenceOf('etapa');
+    return $this->validatesPresenceOf('faltas') && $this->validatesPresenceOf('etapa');
   }
 
   protected function canPostFaltasGeral(){
-    return $this->validatesPresenceOf('turmas') && $this->validatesPresenceOf('etapa');
+    return $this->validatesPresenceOf('faltas') && $this->validatesPresenceOf('etapa');
   }
 
   protected function canPostPareceresPorEtapaComponente(){
-    return $this->validatesPresenceOf('turmas') && $this->validatesPresenceOf('etapa');
+    return $this->validatesPresenceOf('pareceres') && $this->validatesPresenceOf('etapa');
   }
 
   protected function canPostPareceresAnualPorComponente(){
-    return $this->validatesPresenceOf('turmas');
+    return $this->validatesPresenceOf('pareceres');
   }
 
   protected function canPostPareceresAnualGeral(){
-    return $this->validatesPresenceOf('turmas');
+    return $this->validatesPresenceOf('pareceres');
   }
 
   protected function canPostPareceresPorEtapaGeral(){
-    return $this->validatesPresenceOf('turmas') && $this->validatesPresenceOf('etapa');
+    return $this->validatesPresenceOf('pareceres') && $this->validatesPresenceOf('etapa');
   }
 
   protected function postNotas(){
     if($this->canPostNotas()){
-      $turmas = $this->getRequest()->turmas;
       $etapa = $this->getRequest()->etapa;
+      $notas = $this->getRequest()->notas;
 
-      foreach ($turmas as $turma) {
-        $turmaId = $turma['turma_id'];
-        $alunos = $turma['alunos'];
+      foreach ($notas as $turmaId => $notaTurma) {
 
-        foreach ($alunos as $aluno) {
-          $alunoId = $aluno['aluno_id'];
+        foreach($notaTurma as $alunoId => $notaTurmaAluno){
 
-          $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
+          foreach ($notaTurmaAluno as $componenteCurricularId => $notaTurmaAlunoDisciplina){
+            if($this->validateComponenteTurma($turmaId, $componenteCurricularId)){
+              $valor = $notaTurmaAlunoDisciplina['valor'];
+              $array_nota = array(
+                    'componenteCurricular' => $componenteCurricularId,
+                    'nota'                 => $valor,
+                    'etapa'                => $etapa,
+                    'notaOriginal'         => $valor);
 
-          if($this->validateMatricula($matriculaId)){
-            $componentesCurriculares = $aluno['componentes_curriculares'];
-            foreach ($componentesCurriculares as $componenteCurricular) {
-              $componenteCurricularId = $componenteCurricular['componente_curricular_id'];
+              $nota = new Avaliacao_Model_NotaComponente($array_nota);
 
-              if($this->validateComponenteTurma($turmaId, $componenteCurricularId)){
-
-                $valor = $componenteCurricular['valor'];
-
-                $array_nota = array(
-                      'componenteCurricular' => $componenteCurricularId,
-                      'nota'                 => $valor,
-                      'etapa'                => $etapa,
-                      'notaOriginal'         => $valor);
-
-                $nota = new Avaliacao_Model_NotaComponente($array_nota);
-
-                $this->serviceBoletim($turmaId, $alunoId)->addNota($nota);
-                $this->trySaveServiceBoletim($turmaId, $alunoId);
-              }
+              $this->serviceBoletim($turmaId, $alunoId)->addNota($nota);
+              $this->trySaveServiceBoletim($turmaId, $alunoId);
             }
           }
         }
+        $this->messenger->append('Notas postadas com sucesso!', 'success');
       }
-
-      $this->messenger->append('Notas postadas com sucesso!', 'success');
     }
   }
 
   protected function postFaltasPorComponente(){
     if($this->canPostFaltasPorComponente()){
-      $turmas = $this->getRequest()->turmas;
       $etapa = $this->getRequest()->etapa;
+      $faltas = $this->getRequest()->faltas;
 
-      foreach ($turmas as $turma) {
-        $turmaId = $turma['turma_id'];
-        $alunos = $turma['alunos'];
-
+      foreach ($faltas as $turmaId => $faltaTurma) {
         if($this->getRegra($turmaId)->get('tipoPresenca') != RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE){
           throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de faltas por componente."));
         }
+        foreach ($faltaTurma as $alunoId => $faltaTurmaAluno) {
 
-        foreach ($alunos as $aluno) {
-          $alunoId = $aluno['aluno_id'];
+          foreach ($faltaTurmaAluno as $componenteCurricularId => $faltaTurmaAlunoDisciplina){
+            $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
 
-          $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
-
-          if($this->validateMatricula($matriculaId)){
-
-            $componentesCurriculares = $aluno['componentes_curriculares'];
-            foreach ($componentesCurriculares as $componenteCurricular) {
-              $componenteCurricularId = $componenteCurricular['componente_curricular_id'];
-
+            if($this->validateMatricula($matriculaId)){
+              
               if($this->validateComponenteTurma($turmaId, $componenteCurricularId)){
-
-                $faltas = $componenteCurricular['faltas'];
+                $valor = $faltaTurmaAlunoDisciplina["valor"];
 
                 $falta = new Avaliacao_Model_FaltaComponente(array(
                   'componenteCurricular' => $componenteCurricularId,
-                  'quantidade'           => $faltas,
+                  'quantidade'           => $valor,
                   'etapa'                => $etapa
                 ));
 
@@ -254,178 +232,18 @@ class DiarioController extends ApiCoreController
     }
   }
 
-  protected function postPareceresPorEtapaComponente(){
-    if($this->canPostPareceresPorEtapaComponente()){
-      $turmas = $this->getRequest()->turmas;
-      $etapa = $this->getRequest()->etapa;
-
-      foreach ($turmas as $turma) {
-        $turmaId = $turma['turma_id'];
-        $alunos = $turma['alunos'];
-
-        if($this->getRegra($turmaId)->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE){
-          throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de pareceres por etapa e componente."));
-        }
-
-        foreach ($alunos as $aluno) {
-          $alunoId = $aluno['aluno_id'];
-
-          $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
-
-          if($this->validateMatricula($matriculaId)){
-
-            $componentesCurriculares = $aluno['componentes_curriculares'];
-            foreach ($componentesCurriculares as $componenteCurricular) {
-              $componenteCurricularId = $componenteCurricular['componente_curricular_id'];
-
-              if($this->validateComponenteTurma($turmaId, $componenteCurricularId)){
-
-                $parecer = $componenteCurricular['parecer'];
-
-                $falta = new Avaliacao_Model_ParecerDescritivoComponente(array(
-                  'componenteCurricular' => $componenteCurricularId,
-                  'parecer'           => Portabilis_String_Utils::toLatin1($parecer),
-                  'etapa'                => $etapa
-                ));
-
-                $this->serviceBoletim($turmaId, $alunoId)->addParecer($falta);
-                $this->trySaveServiceBoletim($turmaId, $alunoId);
-              }
-            }
-          }
-        }
-      }
-
-      $this->messenger->append('Pareceres postados com sucesso!', 'success');
-    }
-  }
-
-  protected function postPareceresAnualPorComponente(){
-    if($this->canPostPareceresAnualPorComponente()){
-      $turmas = $this->getRequest()->turmas;
-
-      foreach ($turmas as $turma) {
-        $turmaId = $turma['turma_id'];
-        $alunos = $turma['alunos'];
-
-        if($this->getRegra($turmaId)->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE){
-          throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de pareceres anual por componente."));
-        }
-
-        foreach ($alunos as $aluno) {
-          $alunoId = $aluno['aluno_id'];
-
-          $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
-
-          $componentesCurriculares = $aluno['componentes_curriculares'];
-
-          if($this->validateComponenteTurma($turmaId)){
-            foreach ($componentesCurriculares as $componenteCurricular) {
-              $componenteCurricularId = $componenteCurricular['componente_curricular_id'];
-
-              if($this->validateComponenteCurricular($matriculaId, $componenteCurricularId)){
-
-                $parecer = $componenteCurricular['parecer'];
-
-                $falta = new Avaliacao_Model_ParecerDescritivoComponente(array(
-                  'componenteCurricular' => $componenteCurricularId,
-                  'parecer'           => Portabilis_String_Utils::toLatin1($parecer)
-                ));
-
-                $this->serviceBoletim($turmaId, $alunoId)->addParecer($falta);
-                $this->trySaveServiceBoletim($turmaId, $alunoId);
-              }
-            }
-          }
-        }
-      }
-
-      $this->messenger->append('Pareceres postados com sucesso!', 'success');
-    }
-  }
-
-  protected function postPareceresPorEtapaGeral(){
-    if($this->canPostPareceresPorEtapaGeral()){
-      $turmas = $this->getRequest()->turmas;
-      $etapa = $this->getRequest()->etapa;
-
-      foreach ($turmas as $turma) {
-        $turmaId = $turma['turma_id'];
-        $alunos = $turma['alunos'];
-
-        if($this->getRegra($turmaId)->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL){
-          throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de pareceres por etapa geral."));
-        }
-
-        foreach ($alunos as $aluno) {
-
-          $alunoId = $aluno['aluno_id'];
-          $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
-
-          $parecer = $aluno['parecer'];
-
-          $falta = new Avaliacao_Model_ParecerDescritivoGeral(array(
-            'parecer'           => Portabilis_String_Utils::toLatin1($parecer),
-            'etapa'                => $etapa
-          ));
-
-          $this->serviceBoletim($turmaId, $alunoId)->addParecer($falta);
-          $this->trySaveServiceBoletim($turmaId, $alunoId);
-        }
-      }
-
-      $this->messenger->append('Pareceres postados com sucesso!', 'success');
-    }
-  }
-
-  protected function postPareceresAnualGeral(){
-    if($this->canPostPareceresAnualGeral()){
-      $turmas = $this->getRequest()->turmas;
-
-      foreach ($turmas as $turma) {
-        $turmaId = $turma['turma_id'];
-        $alunos = $turma['alunos'];
-
-        if($this->getRegra($turmaId)->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL){
-          throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de pareceres anual geral."));
-        }
-
-        foreach ($alunos as $aluno) {
-          $alunoId = $aluno['aluno_id'];
-          $parecer = $aluno['parecer'];
-
-          $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
-
-          $falta = new Avaliacao_Model_ParecerDescritivoGeral(array(
-            'parecer'           => Portabilis_String_Utils::toLatin1($parecer)
-          ));
-
-          $this->serviceBoletim($turmaId, $alunoId)->addParecer($falta);
-          $this->trySaveServiceBoletim($turmaId, $alunoId);
-        }
-      }
-
-      $this->messenger->append('Pareceres postados com sucesso!', 'success');
-    }
-  }
-
   protected function postFaltasGeral(){
     if($this->canPostFaltasPorComponente()){
-      $turmas = $this->getRequest()->turmas;
       $etapa = $this->getRequest()->etapa;
+      $faltas = $this->getRequest()->faltas;
 
-      foreach ($turmas as $turma) {
-        $turmaId = $turma['turma_id'];
-        $alunos = $turma['alunos'];
-
+      foreach ($faltas as $turmaId => $faltaTurma) {
         if($this->getRegra($turmaId)->get('tipoPresenca') != RegraAvaliacao_Model_TipoPresenca::GERAL){
           throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de faltas geral."));
         }
 
-        foreach ($alunos as $aluno) {
-          $alunoId = $aluno['aluno_id'];
-          $faltas = $aluno['faltas'];
-
+        foreach ($faltaTurma as $alunoId => $faltaTurmaAluno) {
+          $faltas = $faltaTurmaAluno['valor'];
           $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
 
           $falta = new Avaliacao_Model_FaltaGeral(array(
@@ -439,6 +257,133 @@ class DiarioController extends ApiCoreController
       }
 
       $this->messenger->append('Faltas postadas com sucesso!', 'success');
+    }
+  }
+
+  protected function postPareceresPorEtapaComponente(){
+    if($this->canPostPareceresPorEtapaComponente()){
+      $pareceres = $this->getRequest()->pareceres;
+      $etapa = $this->getRequest()->etapa;
+
+      foreach ($pareceres as $turmaId => $parecerTurma) {
+        if($this->getRegra($turmaId)->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE){
+          throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de pareceres por etapa e componente."));
+        }
+
+        foreach ($parecerTurma as $alunoId => $parecerTurmaAluno) {
+          $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
+          
+          if($this->validateMatricula($matriculaId)){
+            foreach ($parecerTurmaAluno as $componenteCurricularId => $parecerTurmaAlunoComponente) {
+              if($this->validateComponenteTurma($turmaId, $componenteCurricularId)){
+
+                $parecer = $parecerTurmaAlunoComponente['valor'];
+
+                $parecerDescritivo = new Avaliacao_Model_ParecerDescritivoComponente(array(
+                  'componenteCurricular' => $componenteCurricularId,
+                  'parecer'              => Portabilis_String_Utils::toLatin1($parecer),
+                  'etapa'                => $etapa
+                ));
+
+                $this->serviceBoletim($turmaId, $alunoId)->addParecer($parecerDescritivo);
+                $this->trySaveServiceBoletim($turmaId, $alunoId);
+              }
+            }
+          }
+        }
+      }
+
+      $this->messenger->append('Pareceres postados com sucesso!', 'success');
+    }
+  }
+
+  protected function postPareceresAnualPorComponente(){
+    if($this->canPostPareceresAnualPorComponente()){
+      $pareceres = $this->getRequest()->pareceres;
+
+      foreach ($pareceres as $turmaId => $parecerTurma) {
+        if($this->getRegra($turmaId)->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE){
+          throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de pareceres anual por componente."));
+        }
+
+        foreach ($parecerTurma as $alunoId => $parecerTurmaAluno) {
+          $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
+
+          if($this->validateMatricula($matriculaId)){
+
+            foreach ($parecerTurmaAluno as $componenteCurricularId => $parecerTurmaAlunoComponente) {
+              if($this->validateComponenteCurricular($matriculaId, $componenteCurricularId)){
+
+                $parecer = $parecerTurmaAlunoComponente['valor'];
+
+                $parecerDescritivo = new Avaliacao_Model_ParecerDescritivoComponente(array(
+                  'componenteCurricular' => $componenteCurricularId,
+                  'parecer'              => Portabilis_String_Utils::toLatin1($parecer)
+                ));
+
+                $this->serviceBoletim($turmaId, $alunoId)->addParecer($parecerDescritivo);
+                $this->trySaveServiceBoletim($turmaId, $alunoId);
+              }
+            }
+          }
+        }
+      }
+
+      $this->messenger->append('Pareceres postados com sucesso!', 'success');
+    }
+  }
+
+  protected function postPareceresPorEtapaGeral(){
+    if($this->canPostPareceresPorEtapaGeral()){
+      $pareceres = $this->getRequest()->pareceres;
+      $etapa = $this->getRequest()->etapa;
+
+      foreach ($pareceres as $turmaId => $parecerTurma) {
+        if($this->getRegra($turmaId)->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL){
+          throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de pareceres por etapa geral."));
+        }
+
+        foreach ($parecerTurma as $alunoId => $parecerTurmaAluno) {
+          $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
+          $parecer = $parecerTurmaAluno['valor'];
+
+          $parecerDescritivo = new Avaliacao_Model_ParecerDescritivoGeral(array(
+            'parecer'           => Portabilis_String_Utils::toLatin1($parecer),
+            'etapa'             => $etapa
+          ));
+
+          $this->serviceBoletim($turmaId, $alunoId)->addParecer($parecerDescritivo);
+          $this->trySaveServiceBoletim($turmaId, $alunoId);
+        }
+      }
+
+      $this->messenger->append('Pareceres postados com sucesso!', 'success');
+    }
+  }
+
+  protected function postPareceresAnualGeral(){
+    if($this->canPostPareceresAnualGeral()){
+      $pareceres = $this->getRequest()->pareceres;
+
+      foreach ($pareceres as $turmaId => $parecerTurma) {
+        if($this->getRegra($turmaId)->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL){
+          throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de pareceres anual geral."));
+        }
+
+        foreach ($parecerTurma as $alunoId => $parecerTurmaAluno) {
+          $parecer = $parecerTurmaAluno['valor'];
+          $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
+
+          $parecerDescritivo = new Avaliacao_Model_ParecerDescritivoGeral(array(
+            'parecer' => Portabilis_String_Utils::toLatin1($parecer)
+          ));
+
+          $this->serviceBoletim($turmaId, $alunoId)->addParecer($parecerDescritivo);
+          $this->trySaveServiceBoletim($turmaId, $alunoId);
+        }
+      }
+
+      $this->messenger->append('Pareceres postados com sucesso!', 'success');
     }
   }
 
