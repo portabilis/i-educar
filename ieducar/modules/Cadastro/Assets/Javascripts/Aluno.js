@@ -128,6 +128,61 @@ var newSubmitForm = function(event) {
   submitFormExterno();
 }
 
+var $loadingDocumento =  $j('<img>').attr('src', 'imagens/indicator.gif')
+                                      .css('margin-top', '3px')
+                                      .hide()
+                                      .insertAfter($j('#documento'));
+
+var $arrayDocumento = [];
+var $arrayUrlDocumento= [];
+
+function excluirDocumento(event){
+  $arrayUrlDocumento[event.data.i] = '';
+  $j('#documento').val('').removeClass('success');
+  messageUtils.notice('Documento excluído com sucesso!');
+  $j('#documento'+event.data.i).hide();
+  montaUrlDocumento();
+}
+
+function addDocumento(url){
+  $index = $arrayDocumento.length + 1;
+  //$j('#url_documento').val(url);
+  $arrayUrlDocumento[$index] = url;
+  $arrayDocumento[$arrayDocumento.length] = $j('<div>').append($j('<span>').html(stringUtils.toUtf8('Documento '+$index+':'))
+                                                                          .attr('id', 'documento'+$index)
+                                                                          .append($j('<a>').html(stringUtils.toUtf8('Excluir'))
+                                                                                           .addClass('decorated')
+                                                                                           .attr('id','link_excluir_documento_'+$index)
+                                                                                           .css('cursor','pointer')
+                                                                                           .css('margin-left','10px')
+                                                                                           .click({i: $index}, excluirDocumento))
+                                                                          .append($j('<a>').html(stringUtils.toUtf8('Visualizar'))
+                                                                                           .addClass('decorated')
+                                                                                           .attr('id','link_visualizar_documento_'+$index)
+                                                                                           .attr('target','_blank')
+                                                                                           .attr('href',url)
+                                                                                           .css('cursor','pointer')
+                                                                                           .css('margin-left','10px'))
+                                                                          ).insertBefore($j('#documento'));
+  montaUrlDocumento();
+}
+
+function montaUrlDocumento(){
+  var url = '';
+
+  for (var i = 0; i < $arrayUrlDocumento.length; i++) {
+    if ($arrayUrlDocumento[i]){
+      url += $arrayUrlDocumento[i]+','
+    }
+  }
+  //Remove a ultima vírgula
+  if (url.substring(url.length-1, url.length) == ","){
+    url = url.substring(0, url.length-1);
+  }
+
+  $j('#url_documento').val(url);
+}
+
 var $paiNomeField = $j('#pai_nome');
 var $paiIdField   = $j('#pai_id');
 
@@ -337,12 +392,15 @@ if($j('#autorizado_quatro').val() == ''){
 
 
 
-  if(dataResponse.url_laudo_medico){
-    var arrayLaudo = dataResponse.url_laudo_medico.split(",");
-    for (i = 0; i < arrayLaudo.length; i++) {
-      addLaudoMedico(arrayLaudo[i]);
+ 
+
+  if(dataResponse.url_documento){
+    var arrayDocumento = dataResponse.url_documento.split(",");
+    for (i = 0; i < arrayDocumento.length; i++) {
+      addDocumento(arrayDocumento[i]);
     }
   }
+
 
   /***********************************************
       CAMPOS DA FICHA MÉDICA
@@ -1061,12 +1119,20 @@ function canShowParentsFields(){
     // laudo médico
     $j('#laudo_medico').on('change', prepareUpload);
 
+    $j('#documento').on('change', prepareUploadDocumento);
+
     $j('#deficiencias').trigger('chosen:updated');
 
     function prepareUpload(event)
     {
       $j('#laudo_medico').removeClass('error');
       uploadFiles(event.target.files);
+    }
+
+    function prepareUploadDocumento(event)
+    {
+      $j('#documento').removeClass('error');
+      uploadFilesDocumento(event.target.files);
     }
 
     function uploadFiles(files)
@@ -1112,6 +1178,55 @@ function canShowParentsFields(){
             {
               $j('#laudo_medico').removeAttr('disabled');
               $loadingLaudoMedico.hide();
+              $j('#btn_enviar').removeAttr('disabled').val('Gravar');
+            }
+        });
+      }
+    }
+
+    function uploadFilesDocumento(files)
+    {
+      if (files && files.length>0){
+        $j('#documento').attr('disabled', 'disabled');
+        $j('#btn_enviar').attr('disabled', 'disabled').val('Aguarde...');
+        $loadingDocumento.show();
+        messageUtils.notice('Carregando documento...');
+
+        var data = new FormData();
+        $j.each(files, function(key, value)
+        {
+          data.append(key, value);
+        });
+
+        $j.ajax({
+            url: '/intranet/upload.php?files',
+            type: 'POST',
+            data: data,
+            cache: false,
+            dataType: 'json',
+            processData: false,
+            contentType: false,
+            success: function(dataResponse)
+            {
+              if (dataResponse.error){
+                $j('#documento').val("").addClass('error');
+                messageUtils.error(dataResponse.error);
+              }else{
+                messageUtils.success('Documento carregado com sucesso');
+                $j('#documento').addClass('success');
+                addDocumento(dataResponse.file_url);
+              }
+
+            },
+            error: function()
+            {
+              $j('#documento').val("").addClass('error');
+              messageUtils.error('Não foi possível enviar o arquivo');
+            },
+            complete: function()
+            {
+              $j('#documento').removeAttr('disabled');
+              $loadingDocumento.hide();
               $j('#btn_enviar').removeAttr('disabled').val('Gravar');
             }
         });

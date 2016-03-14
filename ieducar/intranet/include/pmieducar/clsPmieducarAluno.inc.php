@@ -66,6 +66,7 @@ class clsPmieducarAluno
   var $recurso_prova_inep_prova_braille;
   var $justificativa_falta_documentacao;
   var $url_laudo_medico;
+  var $url_documento;
   var $codigo_sistema;
   var $veiculo_transporte_escolar;
   var $autorizado_um;
@@ -167,7 +168,7 @@ class clsPmieducarAluno
         a.recurso_prova_inep_aux_ledor, a.recurso_prova_inep_aux_transcricao, a.recurso_prova_inep_guia_interprete, a.recurso_prova_inep_interprete_libras, a.recurso_prova_inep_leitura_labial,
         a.recurso_prova_inep_prova_ampliada_16, a.recurso_prova_inep_prova_ampliada_20, a.recurso_prova_inep_prova_ampliada_24, a.recurso_prova_inep_prova_braille,
         a.justificativa_falta_documentacao, a.url_laudo_medico, a.codigo_sistema, a.veiculo_transporte_escolar, a.parentesco_um, a.autorizado_um, a.parentesco_dois, a.autorizado_dois, 
-        a.parentesco_tres, a.autorizado_tres, a.parentesco_quatro, a.autorizado_quatro, a.parentesco_cinco, a.autorizado_cinco';
+        a.parentesco_tres, a.autorizado_tres, a.parentesco_quatro, a.autorizado_quatro, a.parentesco_cinco, a.autorizado_cinco, a.url_documento';
 
     if (is_numeric($ref_usuario_exc)) {
       if (class_exists('clsPmieducarUsuario')) {
@@ -442,6 +443,12 @@ class clsPmieducarAluno
         $gruda = ', ';
       }
 
+      if (is_string($this->url_documento)) {
+        $campos  .= "{$gruda}url_documento";
+        $valores .= "{$gruda}'{$this->url_documento}'";
+        $gruda = ', ';
+      }
+
       if (is_string($this->url_laudo_medico)) {
         $campos  .= "{$gruda}url_laudo_medico";
         $valores .= "{$gruda}'{$this->url_laudo_medico}'";
@@ -667,6 +674,11 @@ class clsPmieducarAluno
 
       if (is_numeric($this->justificativa_falta_documentacao)) {
         $set .= "{$gruda}justificativa_falta_documentacao = '{$this->justificativa_falta_documentacao}'";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->url_documento)) {
+        $set .= "{$gruda}url_documento = '{$this->url_documento}'";
         $gruda = ', ';
       }
 
