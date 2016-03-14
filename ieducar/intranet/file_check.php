@@ -50,7 +50,7 @@ class FileController {
         if ($suportedExtensions != null)
             $this->suportedExtensions = $suportedExtensions;
         else
-            $this->suportedExtensions = array('jpg', 'pdf','png');
+            $this->suportedExtensions = array('jpg', 'pdf','png', 'doc', 'docx', 'xls');
     }
 
     function sendFile(){
