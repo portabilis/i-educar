@@ -392,7 +392,12 @@ if($j('#autorizado_quatro').val() == ''){
 
 
 
- 
+  if(dataResponse.url_laudo_medico){
+    var arrayLaudo = dataResponse.url_laudo_medico.split(",");
+    for (i = 0; i < arrayLaudo.length; i++) {
+      addLaudoMedico(arrayLaudo[i]);
+    }
+  }
 
   if(dataResponse.url_documento){
     var arrayDocumento = dataResponse.url_documento.split(",");
