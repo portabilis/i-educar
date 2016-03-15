@@ -618,7 +618,7 @@ class indice extends clsDetalhe
       for ($i = 0; $i < count($urlDocumento); $i++) {
         $cor = $cor == '#D1DADF' ? '#E4E9ED' : '#D1DADF';
 
-        $tabela .= "<tr bgcolor='{$cor}' align='center'><td><a href='{$urlDocumento[$i]}' target='_blank' > Visualizar Documento ". (count($urlDocumento) > 1 ? ($i+1) : "")." </a></td></tr>";
+        $tabela .= "<tr bgcolor='{$cor}' align='center'><td><a href='{$urlDocumento[$i]}' target='_blank' > Visualizar documento ". (count($urlDocumento) > 1 ? ($i+1) : "")." </a></td></tr>";
       }
 
       $tabela .= '</table>';
