@@ -976,7 +976,7 @@ function enturmacaoMatricula($matriculaId, $turmaDestinoId) {
   }
 
   function _getMaxAlunoTurno(){
-    $obj_t = new clsPmieducarTurma($this->ref_cod_turma);
+    $obj_t = new clsPmieducarTurma();
     $det_t = $obj_t->detalhe();
 
     $lista_t = $obj_t->lista($int_cod_turma = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null,
