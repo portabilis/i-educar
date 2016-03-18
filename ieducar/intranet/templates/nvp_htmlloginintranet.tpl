@@ -15,6 +15,7 @@
     <script type="text/javascript" src="scripts/suporte_freshdesk.js?1"></script>
 
   <script type='text/javascript' src='scripts/jquery/jquery-1.8.3.min.js'></script>
+  <script type="text/javascript" src="scripts/mensagens.js"></script>
 
   <script type="text/javascript">
 
@@ -82,26 +83,7 @@
     <!-- <img src="templates/imagens/mensagem-natal.png" height="300px" style="position:absolute; left: 40px; top: -2px;" /> -->
     <div id="flash-container">
 
-      <!--p style="min-height: 0px;  background-color: #F5829C; color: white;" class="flash update-browser"> 
-        Desejamos a todas um Feliz Dia Internacional da Mulher!<br>Voc&ecirc;s s&atilde;o exemplo de amor, perseveran&ccedil;a, coragem e determina&ccedil;&atilde;o. Estes s&atilde;o os votos da Equipe Portabilis. ;)
-      </p-->
-
-      <!--[if lt IE 7]>
-      <p style="min-height: 32px;" class="flash update-browser"><strong>Seu navegador est&aacute desatualizado.</strong> Para melhor navega&ccedil;&atildeo  no sistema, por favor, atualize seu navegador.<a href="http://br.mozdev.org/download/" target="_blank"><img style="margin-top:4px;" src="http://www.mozilla.org/contribute/buttons/110x32bubble_r_pt.png" alt="Firefox" width="110" height="32" style="border-style:none;" title="Mozilla Firefox" /></a></p>
-      <![endif]-->
-
-           <!--p style="min-height: 0px;" class="flash exclamation"><strong>Caros clientes,</strong><br/> De 24/12 &agrave; 31/12 nosso atendimento de suporte ter&aacute; hor&aacute;rio de funcionamento especial. Sendo assim, pedimos que todos os contatos sejam feitos atrav&eacute;s do e-mail, pois ser&atilde;o atendidos normalmente. Se o contato for urgente, temos plant&atilde;o nos seguintes n&uacute;meros: (48) 9811-3030 (TIM), (48) 9187-6262 (Vivo) e (48) 8835-3082 (Claro). <strong>Obrigado pela compreens&atilde;o.</strong></p>
-      <br/>
-     <!--p style="min-height: 0px;" class="flash error">Desejamos a todos os nossos clientes e amigos um Feliz Natal e boas festas! Obrigado pela oportunidade de trabalharmos juntos neste ano e nos reencontramos em 2014 com muito mais garra ainda para continuar apoiando voc&ecirc;s nos seus trabalhos. :)</p-->
-
-    <!--  <p style="min-height: 0px;" class="flash update-browser">
-        Comunicamos que o nosso servi&ccedil;o de Suporte via telefone apresentar&aacute; instabilidades neste m&ecirc;s de Novembro, em virtude da mudan&ccedil;a de endere&ccedil;o da sede da Portabilis. <br/>Pedimos desculpas pelo transtorno tempor&aacute;rio e informamos que voc&ecirc; ainda poder&aacute; nos contatar pelo e-mail de suporte (<a href='mailto:suporte@portabilis.com.br'>suporte@portabilis.com.br</a>) ou diretamente pela ferramenta de HelpDesk (<a href='http://suporte.portabilis.com.br'>http://suporte.portabilis.com.br'</a>).
-     </p> -->
-      
-      <!-- #&ERROLOGIN&# -->
-
-      <!-- #&PENDENCIA_ADMINISTRATIVA&# -->
-
+      <div class="mensagens" id="mensagens"></div>
 
     </div>
 

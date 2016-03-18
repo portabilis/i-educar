@@ -97,6 +97,7 @@ class indice extends clsDetalhe
   var $ref_cod_raca;
   var $sus;
   var $url_laudo_medico;
+  var $url_documento;
 
   function Gerar()
   {
@@ -607,6 +608,21 @@ class indice extends clsDetalhe
       $tabela .= '</table>';
 
       $this->addDetalhe(array('Deficiências', $tabela));
+    }
+
+    if ($registro['url_documento'] && $registro['url_documento'] != '') {
+      $tabela = '<table border="0" width="300" cellpadding="3"><tr bgcolor="#A1B3BD" align="center"><td>Documentos</td></tr>';
+      $cor    = '#D1DADF';
+
+      $urlDocumento = explode(",", $registro['url_documento']);
+      for ($i = 0; $i < count($urlDocumento); $i++) {
+        $cor = $cor == '#D1DADF' ? '#E4E9ED' : '#D1DADF';
+
+        $tabela .= "<tr bgcolor='{$cor}' align='center'><td><a href='{$urlDocumento[$i]}' target='_blank' > Visualizar documento ". (count($urlDocumento) > 1 ? ($i+1) : "")." </a></td></tr>";
+      }
+
+      $tabela .= '</table>';
+      $this->addDetalhe(array('Documentos do aluno', $tabela));
     }
 
     if ($registro['url_laudo_medico'] && $registro['url_laudo_medico'] != '') {

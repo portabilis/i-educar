@@ -215,7 +215,14 @@ class indice extends clsCadastro
                      m2.ref_cod_aluno = m.ref_cod_aluno AND
                      m2.ano = $this->ano_letivo AND
                      m2.ativo = 1 AND
-                     m2.ref_ref_cod_escola = m.ref_ref_cod_escola)";
+                     m2.ref_ref_cod_escola = m.ref_ref_cod_escola) AND
+                     NOT EXISTS(select 1 from pmieducar.matricula m2 where
+                     m2.ref_cod_aluno = m.ref_cod_aluno AND
+                     m2.ano = $this->ano_letivo AND
+                     m2.ativo = 1 AND
+                     m2.ref_ref_cod_serie = (SELECT ref_serie_destino FROM pmieducar.sequencia_serie
+                                              WHERE ref_serie_origem = $serieId AND ativo = 1)
+                     )";
 
       if ($turmaId)
         $sql .= "AND ref_cod_turma = $turmaId";

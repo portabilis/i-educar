@@ -532,8 +532,12 @@ class AlunoController extends ApiCoreController
     $pessoaId = $this->getRequest()->pessoa_id;
     $this->savePhoto($pessoaId );
 
+    //documentos
+    $aluno->url_documento         = Portabilis_String_Utils::toLatin1($this->getRequest()->url_documento);
+
     //laudo medico
     $aluno->url_laudo_medico         = Portabilis_String_Utils::toLatin1($this->getRequest()->url_laudo_medico);
+
 
     return (is_null($id) ? $aluno->cadastra() : $aluno->edita());
   }
@@ -873,6 +877,7 @@ class AlunoController extends ApiCoreController
         'justificativa_falta_documentacao',
         'veiculo_transporte_escolar',
         'url_laudo_medico',
+        'url_documento',
         'codigo_sistema',
         'url_foto_aluno',
         'autorizado_um',
