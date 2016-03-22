@@ -868,10 +868,14 @@ class clsPmieducarAcervo
 		            $int_ref_cod_escola = null, 
 		            $str_nm_autor = null )
 	{
-		$sql = "SELECT {$this->_campos_lista}, aa.cod_acervo_autor FROM {$this->_tabela} a, {$this->_schema}biblioteca b, {$this->_schema}acervo_acervo_autor aaa, {$this->_schema}acervo_autor aa";
+		$sql = "SELECT {$this->_campos_lista}, aa.cod_acervo_autor 
+		          FROM {$this->_schema}biblioteca b,
+		          	   {$this->_tabela} a
+		    LEFT JOIN  pmieducar.acervo_acervo_autor aaa on (a.cod_acervo = aaa.ref_cod_acervo)
+		    LEFT JOIN  pmieducar.acervo_autor aa on (aaa.ref_cod_acervo_autor = aa.cod_acervo_autor)";
 
 		$whereAnd = " AND ";
-		$filtros = " WHERE a.ref_cod_biblioteca = b.cod_biblioteca AND a.cod_acervo = aaa.ref_cod_acervo AND aaa.ref_cod_acervo_autor = aa.cod_acervo_autor ";
+		$filtros = " WHERE a.ref_cod_biblioteca = b.cod_biblioteca";
 
 		if( is_numeric( $int_cod_acervo ) )
 		{
@@ -1009,7 +1013,7 @@ class clsPmieducarAcervo
 			$filtro .= "{$whereAnd} b.ref_cod_escola = '{$int_ref_cod_escola}'";
 			$whereAnd = " AND ";
 		}
-		if( is_string( $str_nm_autor ) )
+		if( !empty( $str_nm_autor ) )
 		{
 			$filtros .= "{$whereAnd} aa.nm_autor LIKE '%{$str_nm_autor}%'";
 			$whereAnd = " AND ";
@@ -1026,7 +1030,9 @@ class clsPmieducarAcervo
 
 		$sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
-		$this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} a, {$this->_schema}biblioteca b, {$this->_schema}acervo_acervo_autor aaa, {$this->_schema}acervo_autor aa {$filtros}" );
+		$this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM  {$this->_schema}biblioteca b, {$this->_tabela} a
+		    LEFT JOIN  pmieducar.acervo_acervo_autor aaa on (a.cod_acervo = aaa.ref_cod_acervo)
+		    LEFT JOIN  pmieducar.acervo_autor aa on (aaa.ref_cod_acervo_autor = aa.cod_acervo_autor) {$filtros}" );
 
 		$db->Consulta( $sql );
 
