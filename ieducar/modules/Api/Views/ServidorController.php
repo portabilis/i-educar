@@ -98,8 +98,11 @@ class ServidorController extends ApiCoreController
       $instituicaoId = $this->getRequest()->instituicao_id;
       $ano = $this->getRequest()->ano;
 
-      $sql = "SELECT s.cod_servidor as id, p.nome as name, pt.turma_id, ptd.componente_curricular_id as disciplina_id
-
+      $sql = "SELECT s.cod_servidor as id,
+                     p.nome as name,
+                     pt.turma_id,
+                     pt.area_especifica as area_especifica,
+                     ptd.componente_curricular_id as disciplina_id
               FROM pmieducar.servidor s
               INNER JOIN cadastro.pessoa p ON s.cod_servidor = p.idpes
               INNER JOIN modules.professor_turma pt ON s.cod_servidor = pt.servidor_id AND s.ref_cod_instituicao = pt.instituicao_id
@@ -107,11 +110,11 @@ class ServidorController extends ApiCoreController
 
               WHERE s.ref_cod_instituicao = $1
               AND pt.ano = $2
-              GROUP BY s.cod_servidor, p.nome, pt.turma_id, ptd.componente_curricular_id ";
+              GROUP BY s.cod_servidor, p.nome, pt.turma_id, pt.area_especifica, ptd.componente_curricular_id ";
 
       $_servidores = $this->fetchPreparedQuery($sql, array($instituicaoId, $ano));
 
-      $attrs = array('id', 'name', 'turma_id', 'disciplina_id');
+      $attrs = array('id', 'name', 'turma_id', 'area_especifica', 'disciplina_id');
       $_servidores = Portabilis_Array_Utils::filterSet($_servidores, $attrs);
       $servidores = array();
       $__servidores = array();
@@ -119,9 +122,10 @@ class ServidorController extends ApiCoreController
       foreach ($_servidores as $servidor) {
         $__servidores[$servidor['id']]['id'] = $servidor['id'];
         $__servidores[$servidor['id']]['name'] = Portabilis_String_Utils::toUtf8($servidor['name']);
+        $__servidores[$servidor['id']]['area_especifica'] = $servidor['area_especifica'];
         $__servidores[$servidor['id']]['disciplinas_turmas'][] = array(
           'turma_id' => $servidor['turma_id'],
-          'disciplina_id' => $servidor['disciplina_id']
+          'disciplina_id' => $servidor['disciplina_id'],
         );
       }
 
