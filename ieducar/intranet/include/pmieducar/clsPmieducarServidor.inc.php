@@ -963,7 +963,10 @@ class clsPmieducarServidor
           }
           $filtros .= " a.ano = '{$ano_alocacao}'";
         }
-        if($bool_servidor_sem_alocacao){
+        if($bool_servidor_sem_alocacao && is_numeric($ano_alocacao)){
+          $filtros .= ') OR NOT EXISTS(SELECT 1 FROM pmieducar.servidor_alocacao where servidor_alocacao.ativo = 1 and servidor_alocacao.ref_cod_servidor = s.cod_servidor ';
+          $filtros .= "and servidor_alocacao.ano = {$ano_alocacao})) ";
+        }else if($bool_servidor_sem_alocacao){
           $filtros .= ') OR NOT EXISTS(SELECT 1 FROM pmieducar.servidor_alocacao where servidor_alocacao.ativo = 1 and servidor_alocacao.ref_cod_servidor = s.cod_servidor)) ';
         }else{
           $filtros .= ')) ';
