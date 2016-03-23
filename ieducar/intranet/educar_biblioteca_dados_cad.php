@@ -222,9 +222,9 @@ class indice extends clsCadastro
 		$opcoes = $this->dias_da_semana;
 
 		if ( $aux )
-			$this->campoLista( "dia", "Dia da Semana", $opcoes, $this->dia,"",false,"","<a href='#' onclick=\"getElementById('incluir_dia_semana').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>",false,false );
+			$this->campoLista( "dia", "Dia da Semana", $opcoes, $this->dia,"",false,"","<a href='#' id=\"event_incluir_dia_semana\"><img src='imagens/nvp_bot_adiciona.gif' alt='adicionar' title='Incluir' border=0></a>",false,false );
 		else
-			$this->campoLista( "dia", "Dia da Semana", $opcoes, $this->dia,"",false,"","<a href='#' onclick=\"getElementById('incluir_dia_semana').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>" );
+			$this->campoLista( "dia", "Dia da Semana", $opcoes, $this->dia,"",false,"","<a href='#' id=\"event_incluir_dia_semana\"><img src='imagens/nvp_bot_adiciona.gif' alt='adicionar' title='Incluir' border=0></a>" );
 
 		$this->campoOculto( "incluir_dia_semana", "" );
 //		$this->campoRotulo( "bt_incluir_dia_semana", "Dia da Semana", "<a href='#' onclick=\"getElementById('incluir_dia_semana').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_incluir2.gif' title='Incluir' border=0></a>" );
@@ -291,7 +291,7 @@ class indice extends clsCadastro
 		$this->campoData( "data_feriado", " Data Feriado", $this->data_feriado );
 
 		$this->campoOculto( "incluir_feriado", "" );
-		$this->campoRotulo( "bt_incluir_feriado", "Feriado", "<a href='#' onclick=\"getElementById('incluir_feriado').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>" );
+		$this->campoRotulo( "bt_incluir_feriado", "Feriado", "<a href='#' id=\"event_incluir_feriado\"><img src='imagens/nvp_bot_adiciona.gif' alt='adicionar' title='Incluir' border=0></a>" );
 
 		$this->campoQuebra();
 	//-----------------------FIM INCLUI FERIADO------------------------//
@@ -422,3 +422,21 @@ $pagina->addForm( $miolo );
 // gera o html
 $pagina->MakeAll();
 ?>
+
+<script type='text/javascript'>
+document.getElementById('event_incluir_feriado').onclick = incluirFeriado;
+
+function incluirFeriado(){
+  document.getElementById('incluir_feriado').value = 'S';
+  document.getElementById('tipoacao').value = '';
+  acao();
+}
+
+document.getElementById('event_incluir_dia_semana').onclick = incluirDiaSemana;
+
+function incluirDiaSemana(){
+  document.getElementById('incluir_dia_semana').value = 'S';
+  document.getElementById('tipoacao').value = '';
+  acao();
+}
+</script>
