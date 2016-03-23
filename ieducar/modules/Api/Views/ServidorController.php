@@ -107,7 +107,6 @@ class ServidorController extends ApiCoreController
               INNER JOIN cadastro.pessoa p ON s.cod_servidor = p.idpes
               INNER JOIN modules.professor_turma pt ON s.cod_servidor = pt.servidor_id AND s.ref_cod_instituicao = pt.instituicao_id
               INNER JOIN modules.professor_turma_disciplina ptd ON pt.id = ptd.professor_turma_id
-
               WHERE s.ref_cod_instituicao = $1
               AND pt.ano = $2
               GROUP BY s.cod_servidor, p.nome, pt.turma_id, pt.area_especifica, ptd.componente_curricular_id ";
@@ -122,10 +121,10 @@ class ServidorController extends ApiCoreController
       foreach ($_servidores as $servidor) {
         $__servidores[$servidor['id']]['id'] = $servidor['id'];
         $__servidores[$servidor['id']]['name'] = Portabilis_String_Utils::toUtf8($servidor['name']);
-        $__servidores[$servidor['id']]['area_especifica'] = $servidor['area_especifica'];
         $__servidores[$servidor['id']]['disciplinas_turmas'][] = array(
           'turma_id' => $servidor['turma_id'],
           'disciplina_id' => $servidor['disciplina_id'],
+          'area_especifica' => $servidor['area_especifica']
         );
       }
 
