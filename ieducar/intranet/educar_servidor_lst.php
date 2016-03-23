@@ -108,6 +108,7 @@ class indice extends clsListagem
     $get_escola      = true;
     $obrigatorio     = false;
     $exibe_nm_escola = true;
+    $get_ano = true;
 
     include 'include/pmieducar/educar_campo_lista.php';
 
@@ -170,7 +171,7 @@ class indice extends clsListagem
       NULL,
       NULL,
       isset($_GET['servidor_sem_alocacao']),
-      NULL,
+      $this->ano,
       $this->matricula
     );
     $total = $obj_servidor->_total;
