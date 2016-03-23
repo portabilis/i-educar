@@ -83,6 +83,10 @@
     <!-- <img src="templates/imagens/mensagem-natal.png" height="300px" style="position:absolute; left: 40px; top: -2px;" /> -->
     <div id="flash-container">
 
+      <!-- #&ERROLOGIN&# -->
+
+      <!-- #&PENDENCIA_ADMINISTRATIVA&# -->
+
       <!-- <div class="mensagens" id="mensagens"></div> -->
 
     </div>
