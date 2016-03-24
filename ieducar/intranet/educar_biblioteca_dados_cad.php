@@ -170,6 +170,8 @@ class indice extends clsCadastro
 
 		if ( $_POST["biblioteca_dia_semana"] )
 			$this->biblioteca_dia_semana = unserialize( urldecode( $_POST["biblioteca_dia_semana"] ) );
+
+		$qtde_registro = 0;
 		if( is_numeric( $this->cod_biblioteca ) && !$_POST )
 		{
 			$obj = new clsPmieducarBibliotecaDia();
@@ -178,63 +180,25 @@ class indice extends clsCadastro
 			{
 				foreach ( $registros AS $campo )
 				{
-					$this->biblioteca_dia_semana["dia_"][] = $campo["dia"];
+					$this->biblioteca_dias_semana_tabela[$qtde_registro] =  $campo["dia"];
+					$qtde_registro++;
 				}
 			}
 		}
-		if ( $_POST["dia"] )
-		{
-			$this->biblioteca_dia_semana["dia_"][] = $_POST["dia"];
-			unset( $this->dia );
-		}
 
-		$this->campoOculto( "excluir_dia_semana", "" );
-		unset($aux);
+      $this->campoTabelaInicio("dia_semana", "Dias da semana",array("Dias da semana"),$this->biblioteca_dias_semana_tabela, 300);
 
-		if ( $this->biblioteca_dia_semana )
-		{
-			foreach ( $this->biblioteca_dia_semana as $key => $campo )
-			{
-				if($campo)
-				{
-					foreach ($campo as $chave => $dias)
-					{
-						if ( $this->excluir_dia_semana == $dias )
-						{
-							$this->biblioteca_dia_semana[$chave] = null;
-							$this->excluir_dia_semana = null;
-						}
-						else
-						{
-							$this->campoTextoInv( "dia_{$dias}", "", $this->dias_da_semana[$dias], 8, 8, false, false, false, "", "<a href='#' onclick=\"getElementById('excluir_dia_semana').value = '{$dias}'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bola_xis.gif' title='Excluir' border=0></a>" );
-							$aux["dia_"][] = $dias;
-						}
-					}
-
-				}
-			}
-			unset($this->biblioteca_dia_semana);
-			$this->biblioteca_dia_semana = $aux;
-		}
+      $this->campoLista('dia_semana', 'Dia', $this->dias_da_semana);
+      $this->campoTabelaFim();
 
 		$this->campoOculto( "biblioteca_dia_semana", serialize( $this->biblioteca_dia_semana ) );
 
-		$opcoes = $this->dias_da_semana;
-
-		if ( $aux )
-			$this->campoLista( "dia", "Dia da Semana", $opcoes, $this->dia,"",false,"","<a href='#' id=\"event_incluir_dia_semana\"><img src='imagens/nvp_bot_adiciona.gif' alt='adicionar' title='Incluir' border=0></a>",false,false );
-		else
-			$this->campoLista( "dia", "Dia da Semana", $opcoes, $this->dia,"",false,"","<a href='#' id=\"event_incluir_dia_semana\"><img src='imagens/nvp_bot_adiciona.gif' alt='adicionar' title='Incluir' border=0></a>" );
-
-		$this->campoOculto( "incluir_dia_semana", "" );
-//		$this->campoRotulo( "bt_incluir_dia_semana", "Dia da Semana", "<a href='#' onclick=\"getElementById('incluir_dia_semana').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_incluir2.gif' title='Incluir' border=0></a>" );
 
 		$this->campoQuebra();
 	//-----------------------FIM INCLUI DIA SEMANA------------------------//
 
 	//-----------------------INCLUI FERIADO------------------------//
 		$this->campoQuebra();
-
 		if ( $_POST["biblioteca_feriado"] )
 			$this->biblioteca_feriado = unserialize( urldecode( $_POST["biblioteca_feriado"] ) );
 		if( is_numeric( $this->cod_biblioteca ) && !$_POST )
@@ -294,7 +258,9 @@ class indice extends clsCadastro
 		$this->campoRotulo( "bt_incluir_feriado", "Feriado", "<a href='#' id=\"event_incluir_feriado\"><img src='imagens/nvp_bot_adiciona.gif' alt='adicionar' title='Incluir' border=0></a>" );
 
 		$this->campoQuebra();
+
 	//-----------------------FIM INCLUI FERIADO------------------------//
+
 	}
 
 	function Editar()
@@ -317,31 +283,34 @@ class indice extends clsCadastro
 		$editou = $obj->edita();
 		if( $editou )
 		{
-		//-----------------------EDITA DISCIPLINA------------------------//
-			$obj  = new clsPmieducarBibliotecaDia( $this->cod_biblioteca );
-			$excluiu = $obj->excluirTodos();
-			if ( $excluiu )
-			{
-				$this->biblioteca_dia_semana = unserialize( urldecode( $this->biblioteca_dia_semana ) );
-				if ($this->biblioteca_dia_semana)
-				{
-					foreach ( $this->biblioteca_dia_semana AS $campo )
-					{
-						for ($i = 0; $i < sizeof($campo) ; $i++)
-						{
-							$obj = new clsPmieducarBibliotecaDia( $this->cod_biblioteca, $campo[$i] );
-							$cadastrou1  = $obj->cadastra();
-							if ( !$cadastrou1 )
+		//-----------------------EDITA DIA SEMANA------------------------//
+
+			if ($this->dia_semana) {
+		      $obj  = new clsPmieducarBibliotecaDia( $this->cod_biblioteca );
+			  $excluiu = $obj->excluirTodos();
+		      if ($excluiu) {
+
+		        foreach ($this->dia_semana as $key => $campo) {
+		          $obj = new clsPmieducarBibliotecaDia(
+		          	$this->cod_biblioteca,
+		          	$this->dia_semana[$key]
+		          );
+		          $cadastrou1 = $obj->cadastra();
+
+		          if ( !$cadastrou1 )
 							{
 								$this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
 								echo "<!--\nErro ao editar clsPmieducarBibliotecaDia\nvalores obrigat&oacute;rios\nis_numeric( $this->cod_biblioteca ) && is_numeric( {$campo[$i]} ) \n-->";
 								return false;
 							}
-						}
-					}
-				}
-			}
-		//-----------------------FIM EDITA DISCIPLINA------------------------//
+		        }
+
+		        $this->mensagem .= 'Edição efetuada com sucesso.<br />';
+		        header('Location: educar_biblioteca_dados_det.php');
+		        die();
+		      }
+		    }
+		//-----------------------FIM DIA DA SEMANA------------------------//
 
 		//-----------------------EDITA FERIADO------------------------//
 			$obj  = new clsPmieducarBibliotecaFeriados();
@@ -387,7 +356,7 @@ class indice extends clsCadastro
 		$obj_permissoes->permissao_excluir( 629, $this->pessoa_logada, 11,  "educar_biblioteca_dados_lst.php" );
 
 
-		$obj = new clsPmieducarBiblioteca($this->cod_biblioteca, null, null, null, "NULL", "NULL", "NULL", null,null, "NULL", 1, "NULL");
+		$obj = new clsPmieducarBiblioteca($this->cod_biblioteca, null, null, null, "NULL", "NULL", "NULL", null,null, 0, 1, "NULL");
 		$editou = $obj->edita();
 		if( $editou )
 		{
