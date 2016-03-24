@@ -55,7 +55,7 @@ class AcervoController extends ApiCoreController
   protected function sqlsForNumericSearch() {
      return "SELECT acervo.cod_acervo as id, initcap(acervo.titulo) as nome
                FROM pmieducar.acervo
-              INNER JOIN pmieducar.acervo_acervo_autor ON (acervo_acervo_autor.ref_cod_acervo = acervo.cod_acervo)
+              LEFT JOIN pmieducar.acervo_acervo_autor ON (acervo.cod_acervo = acervo_acervo_autor.ref_cod_acervo)
               INNER JOIN pmieducar.exemplar ON (exemplar.ref_cod_acervo = acervo.cod_acervo)
               INNER JOIN pmieducar.biblioteca ON (biblioteca.cod_biblioteca = acervo.ref_cod_biblioteca)
               WHERE (case when $2 = 0 then true else biblioteca.cod_biblioteca = $2 end)
@@ -65,7 +65,7 @@ class AcervoController extends ApiCoreController
   protected function sqlsForStringSearch() {
      return "SELECT acervo.cod_acervo as id, initcap(acervo.titulo) as nome
                FROM pmieducar.acervo
-              INNER JOIN pmieducar.acervo_acervo_autor ON (acervo_acervo_autor.ref_cod_acervo = acervo.cod_acervo)
+              LEFT JOIN pmieducar.acervo_acervo_autor ON (acervo.cod_acervo = acervo_acervo_autor.ref_cod_acervo)
               INNER JOIN pmieducar.exemplar ON (exemplar.ref_cod_acervo = acervo.cod_acervo)
               INNER JOIN pmieducar.biblioteca ON (biblioteca.cod_biblioteca = acervo.ref_cod_biblioteca)
               WHERE (case when $2 = 0 then true else biblioteca.cod_biblioteca = $2 end)

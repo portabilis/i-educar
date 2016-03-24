@@ -15,7 +15,7 @@
     <script type="text/javascript" src="scripts/suporte_freshdesk.js?1"></script>
 
   <script type='text/javascript' src='scripts/jquery/jquery-1.8.3.min.js'></script>
-  <script type="text/javascript" src="scripts/mensagens.js"></script>
+  <!-- <script type="text/javascript" src="scripts/mensagens.js"></script> -->
 
   <script type="text/javascript">
 
@@ -83,7 +83,11 @@
     <!-- <img src="templates/imagens/mensagem-natal.png" height="300px" style="position:absolute; left: 40px; top: -2px;" /> -->
     <div id="flash-container">
 
-      <div class="mensagens" id="mensagens"></div>
+      <!-- #&ERROLOGIN&# -->
+
+      <!-- #&PENDENCIA_ADMINISTRATIVA&# -->
+
+      <!-- <div class="mensagens" id="mensagens"></div> -->
 
     </div>
 
