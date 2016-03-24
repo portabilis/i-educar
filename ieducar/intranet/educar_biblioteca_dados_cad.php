@@ -289,8 +289,8 @@ class indice extends clsCadastro
 		      $obj  = new clsPmieducarBibliotecaDia( $this->cod_biblioteca );
 			  $excluiu = $obj->excluirTodos();
 		      if ($excluiu) {
-
-		        foreach ($this->dia_semana as $key => $campo) {
+		      	$naoRetornaDuplicados = array_unique($this->dia_semana);
+		        foreach ($naoRetornaDuplicados as $key => $campo) {
 		          $obj = new clsPmieducarBibliotecaDia(
 		          	$this->cod_biblioteca,
 		          	$this->dia_semana[$key]
