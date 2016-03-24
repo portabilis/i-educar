@@ -943,25 +943,16 @@ class clsPmieducarServidor
       $filtros .= " {$whereAnd} (s.cod_servidor IN
                   (SELECT a.ref_cod_servidor
                     FROM pmieducar.servidor_alocacao a
-                    WHERE a.ativo = 1 AND ";
+                    WHERE a.ativo = 1 ";
 
       if (is_numeric($int_ref_cod_instituicao)) {
-        $filtros .= " a.ref_ref_cod_instituicao = '{$int_ref_cod_instituicao}'";
+        $filtros .= " AND a.ref_ref_cod_instituicao = '{$int_ref_cod_instituicao}'";
       }
       if (is_numeric($int_ref_cod_escola)) {
-        if (is_numeric($int_ref_cod_instituicao)) {
-          $filtros .= " " . $whereAnd;
-        }
-        $filtros .= " ref_cod_escola = '{$int_ref_cod_escola}' ";
+        $filtros .= " AND ref_cod_escola = '{$int_ref_cod_escola}' ";
       }
       if (is_numeric($ano_alocacao)) {
-        if (is_numeric($int_ref_cod_instituicao)) {
-          $filtros .= " " . $whereAnd;
-        } elseif (is_numeric($int_ref_cod_escola)) {
-          $filtros .= " " . $whereAnd;
-        }
-        echo "string";
-        $filtros .= " a.ano = '{$ano_alocacao}'";
+        $filtros .= " AND a.ano = '{$ano_alocacao}'";
       }
       if($bool_servidor_sem_alocacao){
         $filtros .= ') OR NOT EXISTS(SELECT 1 FROM pmieducar.servidor_alocacao where servidor_alocacao.ativo = 1 and servidor_alocacao.ref_cod_servidor = s.cod_servidor ';
