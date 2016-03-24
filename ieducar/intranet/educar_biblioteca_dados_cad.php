@@ -186,7 +186,7 @@ class indice extends clsCadastro
 			}
 		}
 
-      $this->campoTabelaInicio("dia_semana", "Dias da semana",array("Dias da semana"),$this->biblioteca_dias_semana_tabela, 300);
+      $this->campoTabelaInicio("dia_semana_biblioteca", "Dias da semana",array("Dias da semana"),$this->biblioteca_dias_semana_tabela, 200);
 
       $this->campoLista('dia_semana', 'Dia', $this->dias_da_semana);
       $this->campoTabelaFim();
