@@ -858,7 +858,7 @@ class clsPmieducarServidor
     $tabela_compl = '';
     if (is_bool($bool_ordena_por_nome)) {
       $tabela_compl         .= ' LEFT JOIN cadastro.pessoa p ON s.cod_servidor = p.idpes ';
-      $tabela_compl         .=' LEFT JOIN portal.funcionario func ON s.cod_servidor = func.ref_cod_pessoa_fj';
+      $tabela_compl         .= ' LEFT JOIN portal.funcionario func ON s.cod_servidor = func.ref_cod_pessoa_fj';
       $this->_campos_lista2 .= ', p.nome';
       $this->setOrderby('nome');
     }
@@ -939,39 +939,39 @@ class clsPmieducarServidor
       $whereAnd = " AND ";
     }
     else {
-      if (is_numeric($int_ref_cod_instituicao) || is_numeric($int_ref_cod_escola))
-     {
-        $filtros .= "
-    {$whereAnd} (s.cod_servidor IN
-      (SELECT a.ref_cod_servidor
-        FROM pmieducar.servidor_alocacao a
-        WHERE a.ativo = 1 AND ";
-        if (is_numeric($int_ref_cod_instituicao)) {
-          $filtros .= " a.ref_ref_cod_instituicao = '{$int_ref_cod_instituicao}'";
-        }
-        if (is_numeric($int_ref_cod_escola)) {
-          if (is_numeric($int_ref_cod_instituicao)) {
-            $filtros .= " " . $whereAnd;
-          }
-          $filtros .= " ref_cod_escola = '{$int_ref_cod_escola}' ";
-        }
-        if (is_numeric($ano_alocacao)) {
-          if (is_numeric($int_ref_cod_instituicao)) {
-            $filtros .= " " . $whereAnd;
-          } elseif (is_numeric($int_ref_cod_escola)) {
-            $filtros .= " " . $whereAnd;
-          }
-          $filtros .= " a.ano = '{$ano_alocacao}'";
-        }
-        if($bool_servidor_sem_alocacao && is_numeric($ano_alocacao)){
-          $filtros .= ') OR NOT EXISTS(SELECT 1 FROM pmieducar.servidor_alocacao where servidor_alocacao.ativo = 1 and servidor_alocacao.ref_cod_servidor = s.cod_servidor ';
-          $filtros .= "and servidor_alocacao.ano = {$ano_alocacao})) ";
-        }else if($bool_servidor_sem_alocacao){
-          $filtros .= ') OR NOT EXISTS(SELECT 1 FROM pmieducar.servidor_alocacao where servidor_alocacao.ativo = 1 and servidor_alocacao.ref_cod_servidor = s.cod_servidor)) ';
-        }else{
-          $filtros .= ')) ';
-        }
+
+      $filtros .= " {$whereAnd} (s.cod_servidor IN
+                  (SELECT a.ref_cod_servidor
+                    FROM pmieducar.servidor_alocacao a
+                    WHERE a.ativo = 1 AND ";
+
+      if (is_numeric($int_ref_cod_instituicao)) {
+        $filtros .= " a.ref_ref_cod_instituicao = '{$int_ref_cod_instituicao}'";
       }
+      if (is_numeric($int_ref_cod_escola)) {
+        if (is_numeric($int_ref_cod_instituicao)) {
+          $filtros .= " " . $whereAnd;
+        }
+        $filtros .= " ref_cod_escola = '{$int_ref_cod_escola}' ";
+      }
+      if (is_numeric($ano_alocacao)) {
+        if (is_numeric($int_ref_cod_instituicao)) {
+          $filtros .= " " . $whereAnd;
+        } elseif (is_numeric($int_ref_cod_escola)) {
+          $filtros .= " " . $whereAnd;
+        }
+        echo "string";
+        $filtros .= " a.ano = '{$ano_alocacao}'";
+      }
+      if($bool_servidor_sem_alocacao){
+        $filtros .= ') OR NOT EXISTS(SELECT 1 FROM pmieducar.servidor_alocacao where servidor_alocacao.ativo = 1 and servidor_alocacao.ref_cod_servidor = s.cod_servidor ';
+        $filtros .= "and servidor_alocacao.ano = {$ano_alocacao})) ";
+      }else if($bool_servidor_sem_alocacao){
+        $filtros .= ') OR NOT EXISTS(SELECT 1 FROM pmieducar.servidor_alocacao where servidor_alocacao.ativo = 1 and servidor_alocacao.ref_cod_servidor = s.cod_servidor)) ';
+      }else{
+        $filtros .= ')) ';
+      }
+
       if (is_array($array_horario)) {
         $cond = "AND";
         if (is_numeric($int_ref_cod_instituicao)) {
