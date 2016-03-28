@@ -903,6 +903,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
       $situacoesMatricula = array('aprovado' => App_Model_MatriculaSituacao::APROVADO,
                          'reprovado' => App_Model_MatriculaSituacao::REPROVADO,
                          'em-andamento' => App_Model_MatriculaSituacao::EM_ANDAMENTO,
+                         'aprovado-conselho' => App_Model_MatriculaSituacao::APROVADO_PELO_CONSELHO
                    );
 
       foreach($alunos as $aluno)

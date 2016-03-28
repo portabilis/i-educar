@@ -105,6 +105,8 @@ class indice extends clsCadastro
 
     $cod_aluno_principal = $this->aluno_id;
 
+    if (!$cod_aluno_principal) return;
+
     //Monta um array com o código dos alunos selecionados na tabela
     foreach ($this->aluno_duplicado as $key => $value) {
       $explode = explode(" ", $value);

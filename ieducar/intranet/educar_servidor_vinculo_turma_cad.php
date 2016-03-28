@@ -64,6 +64,7 @@ class indice extends clsCadastro
   var $servidor_id;
   var $funcao_exercida;
   var $tipo_vinculo;
+  var $area_especifica;
 
   var $ref_cod_instituicao;
   var $ref_cod_escola;
@@ -108,6 +109,7 @@ class indice extends clsCadastro
         $this->ref_cod_turma        = $registro['turma_id'];
         $this->funcao_exercida = $registro['funcao_exercida'];
         $this->tipo_vinculo    = $registro['tipo_vinculo'];
+        $this->area_especifica = $registro['area_especifica'];
 
         $obj_turma = new clsPmieducarTurma($this->ref_cod_turma);
         $obj_turma = $obj_turma->detalhe();
@@ -164,6 +166,10 @@ class indice extends clsCadastro
 
     $options = array('label' => Portabilis_String_Utils::toLatin1('Tipo do vínculo'), 'resources' => $resources, 'value' => $this->tipo_vinculo, 'required' => false);
     $this->inputsHelper()->select('tipo_vinculo', $options);
+    $this->inputsHelper()->checkbox('area_especifica',
+                                    array('label' => 'Professor de área específica?', 
+                                          'value' => $this->area_especifica,
+                                          'help'  =>  Portabilis_String_Utils::toLatin1('Apenas para professores que lecionam disciplina específica em tumas que apuram presença geral.')));
 
     $this->inputsHelper()->checkbox('selecionar_todos', array('label' => 'Selecionar/remover todos'));
     $this->inputsHelper()->multipleSearchComponenteCurricular(null, array('label' => 'Componentes lecionados', 'required' => false));
@@ -191,7 +197,7 @@ class indice extends clsCadastro
     $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7, $backUrl);
 
     if ($this->ref_cod_turma){
-      $obj = new clsModulesProfessorTurma(NULL, $this->ano, $this->ref_cod_instituicao, $this->servidor_id, $this->ref_cod_turma, $this->funcao_exercida, $this->tipo_vinculo);
+      $obj = new clsModulesProfessorTurma(NULL, $this->ano, $this->ref_cod_instituicao, $this->servidor_id, $this->ref_cod_turma, $this->funcao_exercida, $this->tipo_vinculo, $this->area_especifica);
       if ($obj->existe2()){
         $this->mensagem .= 'Não é possível cadastrar pois já existe um vínculo com essa turma.<br>';
         return FALSE;
@@ -201,7 +207,7 @@ class indice extends clsCadastro
 
       $obj = new clsPmieducarTurma();
       foreach ($obj->lista(NULL,NULL,NULL,$this->ref_cod_serie,$this->ref_cod_escola,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,$this->ano) as $reg) {
-        $obj = new clsModulesProfessorTurma(NULL, $this->ano, $this->ref_cod_instituicao, $this->servidor_id, $reg['cod_turma'], $this->funcao_exercida, $this->tipo_vinculo);
+        $obj = new clsModulesProfessorTurma(NULL, $this->ano, $this->ref_cod_instituicao, $this->servidor_id, $reg['cod_turma'], $this->funcao_exercida, $this->tipo_vinculo, $this->area_especifica);
         $this->gravaComponentes($obj->cadastra());
       }
     }
@@ -226,7 +232,7 @@ class indice extends clsCadastro
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7, $backUrl);
 
-    $obj = new clsModulesProfessorTurma($this->id, $this->ano, $this->ref_cod_instituicao, $this->servidor_id, $this->ref_cod_turma, $this->funcao_exercida, $this->tipo_vinculo);
+    $obj = new clsModulesProfessorTurma($this->id, $this->ano, $this->ref_cod_instituicao, $this->servidor_id, $this->ref_cod_turma, $this->funcao_exercida, $this->tipo_vinculo, $this->area_especifica);
 
     if ($obj->existe2()){
       $this->mensagem .= 'Não é possível cadastrar pois já existe um vínculo com essa turma.<br>';
