@@ -939,7 +939,6 @@ class clsPmieducarServidor
       $whereAnd = " AND ";
     }
     else {
-
       $filtros .= " {$whereAnd} (s.cod_servidor IN
                   (SELECT a.ref_cod_servidor
                     FROM pmieducar.servidor_alocacao a

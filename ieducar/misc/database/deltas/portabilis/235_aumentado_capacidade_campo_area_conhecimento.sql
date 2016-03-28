@@ -7,7 +7,6 @@ DROP VIEW relatorio.view_componente_curricular;
 
 ALTER TABLE modules.area_conhecimento ALTER COLUMN nome TYPE varchar(200);
 
-
 CREATE OR REPLACE VIEW relatorio.view_componente_curricular AS
  (SELECT escola_serie_disciplina.ref_cod_disciplina AS id,
   turma.cod_turma, componente_curricular.nome,

@@ -885,6 +885,7 @@ class clsPmieducarSerie
     $dataLimite     = new DateTime($dataLimite);
 
     $diferencaDatas = $dataNascimento->diff($dataLimite);
+
     $idadeNaData = $diferencaDatas->y;
     $idadesPermitidas = range($idadeInicial, $idadeFinal);
 
