@@ -48,7 +48,7 @@ class clsModulesProfessorTurma
   var $turma_id;
   var $funcao_exercida;
   var $tipo_vinculo;
-  var $area_especifica;
+  var $permite_lancar_faltas_componente;
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
    * @var int
@@ -102,13 +102,13 @@ class clsModulesProfessorTurma
   /**
    * Construtor.
    */
-  function clsModulesProfessorTurma( $id = NULL,$ano = NULL, $instituicao_id = NULL, $servidor_id = NULL, $turma_id = NULL, $funcao_exercida = NULL, $tipo_vinculo = NULL, $area_especifica = NULL)
+  function clsModulesProfessorTurma( $id = NULL,$ano = NULL, $instituicao_id = NULL, $servidor_id = NULL, $turma_id = NULL, $funcao_exercida = NULL, $tipo_vinculo = NULL, $permite_lancar_faltas_componente = NULL)
   {
     $db = new clsBanco();
     $this->_schema = "modules.";
     $this->_tabela = "{$this->_schema}professor_turma";
 
-    $this->_campos_lista = $this->_todos_campos = " pt.id, pt.ano, pt.instituicao_id, pt.servidor_id, pt.turma_id, pt.funcao_exercida, pt.tipo_vinculo, pt.area_especifica"; 
+    $this->_campos_lista = $this->_todos_campos = " pt.id, pt.ano, pt.instituicao_id, pt.servidor_id, pt.turma_id, pt.funcao_exercida, pt.tipo_vinculo, pt.permite_lancar_faltas_componente"; 
 
     if (is_numeric($id)) {
       $this->id = $id;
@@ -138,10 +138,10 @@ class clsModulesProfessorTurma
       $this->tipo_vinculo = $tipo_vinculo;
     }
 
-    if (isset($area_especifica)) {
-      $this->area_especifica = '1';
+    if (isset($permite_lancar_faltas_componente)) {
+      $this->permite_lancar_faltas_componente = '1';
     }else{
-      $this->area_especifica = '0';
+      $this->permite_lancar_faltas_componente = '0';
     }
 
   }
@@ -198,9 +198,9 @@ class clsModulesProfessorTurma
         $gruda = ", ";
     }
 
-    if (is_numeric($this->area_especifica)) {
-      $campos .= "{$gruda}area_especifica";
-      $valores .= "{$gruda}'{$this->area_especifica}'";
+    if (is_numeric($this->permite_lancar_faltas_componente)) {
+      $campos .= "{$gruda}permite_lancar_faltas_componente";
+      $valores .= "{$gruda}'{$this->permite_lancar_faltas_componente}'";
       $gruda = ", ";
     }
 
@@ -258,8 +258,8 @@ class clsModulesProfessorTurma
         $gruda = ", ";
     }
 
-    if (is_numeric($this->area_especifica)) {
-      $set .= "{$gruda}area_especifica = '{$this->area_especifica}'";
+    if (is_numeric($this->permite_lancar_faltas_componente)) {
+      $set .= "{$gruda}permite_lancar_faltas_componente = '{$this->permite_lancar_faltas_componente}'";
       $gruda = ", ";
     }
 
