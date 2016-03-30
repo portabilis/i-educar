@@ -10,7 +10,8 @@ $j(document).ready(function() {
   $componentecurricular.trigger('chosen:updated');
   $serieField = $j('#ref_cod_serie');
   $professorAreaEspecificaField = $j('#permite_lancar_faltas_componente');
-  $serieField.trigger('change');
+
+  getRegraAvaliacao();
 
   var handleGetComponenteCurricular = function(dataResponse) {
     
@@ -60,11 +61,8 @@ $j(document).ready(function() {
     }
   };
 
-  var handleGetRegraAvaliacao = function(dataResponse){
-    toggleProfessorAreaEspecifica(dataResponse["tipo_presenca"]);
-  }
 
-  var getRegraAvaliacao = function(){
+  function getRegraAvaliacao(){
     $serieId = $serieField.val();
 
     var params = { serie_id: $serieId };
@@ -78,6 +76,8 @@ $j(document).ready(function() {
     getResource(options);
   };
 
-  getRegraAvaliacao();
+  function handleGetRegraAvaliacao(dataResponse){
+    toggleProfessorAreaEspecifica(dataResponse["tipo_presenca"]);
+  }
 
 });
