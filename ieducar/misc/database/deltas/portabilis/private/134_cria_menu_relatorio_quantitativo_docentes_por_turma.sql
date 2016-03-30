@@ -3,7 +3,7 @@
 -- @license  @@license@@
 -- @version  $Id$
 
-insert into pmicontrolesis.menu values(999857,NULL,21126,'Quantitativos',0,NULL,'_self',1,15,17);
+insert into pmicontrolesis.menu values(999858,NULL,21126,'Quantitativos',0,NULL,'_self',1,15,17);
 
 insert into portal.menu_submenu values (999859, 55, 2,'Relatório quantitativo de docentes por turma', 'module/Reports/DocentesPorTurma', null, 3);
 insert into portal.menu_funcionario values(1,0,0,999859);
