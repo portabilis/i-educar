@@ -9,7 +9,8 @@ $j(document).ready(function() {
   $selecionarTodosElement = $j('#selecionar_todos');
   $componentecurricular.trigger('chosen:updated');
   $serieField = $j('#ref_cod_serie');
-  $professorAreaEspecificaField = $j('#area_especifica');
+  $professorAreaEspecificaField = $j('#permite_lancar_faltas_componente');
+  $serieField.trigger('change');
 
   var handleGetComponenteCurricular = function(dataResponse) {
     
@@ -66,17 +67,15 @@ $j(document).ready(function() {
   var getRegraAvaliacao = function(){
     $serieId = $serieField.val();
 
-    if($serieId != ''){
-      var params = { serie_id: $serieId };
+    var params = { serie_id: $serieId };
 
-      var options = {
-        url      : getResourceUrlBuilder.buildUrl('/module/Api/Regra', 'regra-serie', params),
-        dataType : 'json',
-        data     : {},
-        success  : handleGetRegraAvaliacao,
-      };
-      getResource(options);
-    }
+    var options = {
+      url      : getResourceUrlBuilder.buildUrl('/module/Api/Regra', 'regra-serie', params),
+      dataType : 'json',
+      data     : {},
+      success  : handleGetRegraAvaliacao,
+    };
+    getResource(options);
   };
 
   getRegraAvaliacao();
