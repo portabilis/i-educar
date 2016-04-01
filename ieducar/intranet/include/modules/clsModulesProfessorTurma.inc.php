@@ -48,7 +48,7 @@ class clsModulesProfessorTurma
   var $turma_id;
   var $funcao_exercida;
   var $tipo_vinculo;
-
+  var $area_especifica;
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
    * @var int
@@ -102,13 +102,13 @@ class clsModulesProfessorTurma
   /**
    * Construtor.
    */
-  function clsModulesProfessorTurma( $id = NULL,$ano = NULL, $instituicao_id = NULL, $servidor_id = NULL, $turma_id = NULL, $funcao_exercida = NULL, $tipo_vinculo = NULL)
+  function clsModulesProfessorTurma( $id = NULL,$ano = NULL, $instituicao_id = NULL, $servidor_id = NULL, $turma_id = NULL, $funcao_exercida = NULL, $tipo_vinculo = NULL, $area_especifica = NULL)
   {
     $db = new clsBanco();
     $this->_schema = "modules.";
     $this->_tabela = "{$this->_schema}professor_turma";
 
-    $this->_campos_lista = $this->_todos_campos = " pt.id, pt.ano, pt.instituicao_id, pt.servidor_id, pt.turma_id, pt.funcao_exercida, pt.tipo_vinculo"; 
+    $this->_campos_lista = $this->_todos_campos = " pt.id, pt.ano, pt.instituicao_id, pt.servidor_id, pt.turma_id, pt.funcao_exercida, pt.tipo_vinculo, pt.area_especifica"; 
 
     if (is_numeric($id)) {
       $this->id = $id;
@@ -136,6 +136,12 @@ class clsModulesProfessorTurma
 
     if (is_numeric($tipo_vinculo)) {
       $this->tipo_vinculo = $tipo_vinculo;
+    }
+
+    if (isset($area_especifica)) {
+      $this->area_especifica = '1';
+    }else{
+      $this->area_especifica = '0';
     }
 
   }
@@ -192,6 +198,12 @@ class clsModulesProfessorTurma
         $gruda = ", ";
     }
 
+    if (is_numeric($this->area_especifica)) {
+      $campos .= "{$gruda}area_especifica";
+      $valores .= "{$gruda}'{$this->area_especifica}'";
+      $gruda = ", ";
+    }
+
     $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
     return $db->InsertId("{$this->_tabela}_id_seq");
     }
@@ -244,6 +256,11 @@ class clsModulesProfessorTurma
     }elseif(is_null($this->tipo_vinculo)){
       $set .= "{$gruda}tipo_vinculo = NULL";
         $gruda = ", ";
+    }
+
+    if (is_numeric($this->area_especifica)) {
+      $set .= "{$gruda}area_especifica = '{$this->area_especifica}'";
+      $gruda = ", ";
     }
 
     if ($set) {

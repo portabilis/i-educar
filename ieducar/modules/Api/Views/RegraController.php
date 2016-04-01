@@ -48,6 +48,10 @@ class RegraController extends ApiCoreController
     return $this->validatesPresenceOf('instituicao_id');
   }
 
+  protected function canGetRegraSerie() {
+    return $this->validatesPresenceOf('serie_id');
+  }
+
   protected function getTabelasDeArredondamento() {
     if($this->canGetTabelasDeArredondamento()){
       $instituicaoId = $this->getRequest()->instituicao_id;
@@ -170,6 +174,25 @@ class RegraController extends ApiCoreController
     }
   }
 
+  function getRegraSerie(){
+    $serieId = $this->getRequest()->serie_id;
+    if($this->canGetRegraSerie()){
+      $sql = "SELECT *
+                FROM modules.regra_avaliacao
+               WHERE regra_avaliacao.id = (SELECT regra_avaliacao_id
+                                             FROM pmieducar.serie
+                                            WHERE serie.cod_serie = $1) LIMIT 1";
+      $regra = $this->fetchPreparedQuery($sql, array('params' => $serieId));
+      $atributos = array('id', 'tabela_arredondamento_id', 'tipo_nota', 'tipo_presenca', 'parecer_descritivo',
+                      'turma_id', 'tipo_recuperacao', 'media_recuperacao_paralela', 'nota_maxima_geral',
+                      'nota_maxima_exame');
+
+      $regra = Portabilis_Array_Utils::filterSet($regra, $atributos);
+
+      return $regra[0];
+    }
+  }
+
   public function Gerar() {
     if ($this->isRequestFor('get', 'tabelas-de-arredondamento'))
       $this->appendResponse($this->getTabelasDeArredondamento());
@@ -177,6 +200,8 @@ class RegraController extends ApiCoreController
       $this->appendResponse($this->getRegras());
     elseif ($this->isRequestFor('get', 'regras-recuperacao'))
       $this->appendResponse($this->getRegrasRecuperacao());
+    elseif ($this->isRequestFor('get', 'regra-serie'))
+      $this->appendResponse($this->getRegraSerie());
     else
       $this->notImplementedOperationError();
   }
