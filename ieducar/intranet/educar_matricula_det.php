@@ -417,7 +417,8 @@ class indice extends clsDetalhe
               FROM pmieducar.matricula
              WHERE matricula.ativo = 1
                AND matricula.ref_cod_aluno = $alunoId
-             ORDER BY matricula.data_cadastro DESC
+               AND matricula.aprovado = 4
+             ORDER BY matricula.cod_matricula DESC
              limit 1";
 
     $db = new clsBanco();
