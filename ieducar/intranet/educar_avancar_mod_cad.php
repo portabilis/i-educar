@@ -79,6 +79,7 @@ class indice extends clsCadastro
     $this->inputsHelper()->dynamic('turma', array('label' => 'Selecione a turma do ano anterior'));
     $this->inputsHelper()->dynamic('anoLetivo', array('label' => 'Ano destino'), $anoLetivoHelperOptions);
     $this->inputsHelper()->date('data_matricula', array('label' => 'Data da matrícula', 'placeholder' => 'dd/mm/yyyy'));
+    $this->inputsHelper()->hidden('nao_filtrar_ano', array('value' => '1'));
   }
 
   /**
@@ -138,8 +139,8 @@ class indice extends clsCadastro
         $mensagem .= "</br> As enturmações podem ser realizadas em: Movimentação > Enturmação.</span>";
         $this->mensagem = $mensagem;
       }else{
-        $this->mensagem = "<span class='notice'>Nenhum aluno rematriculado. Certifique-se que a turma possui alunos aprovados ou reprovados não matriculados em $ano.</span>";
-      }      
+        $this->mensagem = "<span class='notice'>Nenhum aluno rematriculado. Certifique-se que a turma possui alunos aprovados ou reprovados não matriculados em ".($ano-1).".</span>";
+      }
     }elseif(empty($this->mensagem))
       $this->mensagem = "Ocorreu algum erro inesperado durante as rematrículas, por favor, tente novamente.";
 

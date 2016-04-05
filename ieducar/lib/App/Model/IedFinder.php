@@ -237,7 +237,7 @@ class App_Model_IedFinder extends CoreExt_Entity
 
     $ret = array();
     foreach ($turmas as $turma) {
-      $ret[$turma['cod_turma']] = $turma['nm_turma'];
+      $ret[$turma['cod_turma']] = $turma['nm_turma'].' - '.($turma['ano'] == null ? 'Sem ano' : $turma['ano'] );
     }
 
     return $ret;
