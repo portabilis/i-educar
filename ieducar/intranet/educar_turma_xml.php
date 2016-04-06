@@ -40,17 +40,18 @@
 		$anoLetivo = $_GET["ano"] ? $_GET["ano"] : "NULL";
 
 		$db = new clsBanco();
-//		$db->Consulta( "SELECT cod_turma, nm_turma FROM pmieducar.turma WHERE ref_ref_cod_escola = {$_GET["esc"]} AND ref_ref_cod_serie = {$_GET["ser"]} AND ativo = 1 ORDER BY nm_turma ASC" );
-		$db->Consulta( "SELECT cod_turma, nm_turma || ' - ' || ano::varchar AS nm_turma FROM pmieducar.turma
-						 WHERE ref_ref_cod_escola = {$_GET["esc"]}
-						   AND (ref_ref_cod_serie = {$_GET["ser"]}  OR ref_ref_cod_serie_mult = {$_GET["ser"]})
-						   AND ativo = 1
-						   AND (CASE WHEN $anoLetivo is NULL THEN
-						   				turma.ano = (SELECT ano FROM pmieducar.escola_ano_letivo enl
-						   	                  WHERE enl.ref_cod_escola = turma.ref_ref_cod_escola
-						   	                    AND andamento = 1)
-						   	         ELSE turma.ano = $anoLetivo END)
-		                 ORDER BY nm_turma ASC" );
+
+		$db->Consulta( "SELECT cod_turma,
+						       nm_turma || ' - ' || turma.ano::varchar AS nm_turma
+						 FROM pmieducar.turma
+						INNER JOIN pmieducar.escola_ano_letivo ON (escola_ano_letivo.ref_cod_escola = turma.ref_ref_cod_escola
+						                                           AND escola_ano_letivo.ano = turma.ano)
+						WHERE ref_ref_cod_escola = {$_GET["esc"]}
+						  AND (ref_ref_cod_serie = {$_GET["ser"]} OR ref_ref_cod_serie_mult = {$_GET["ser"]})
+						  AND turma.ativo = 1
+						  AND escola_ano_letivo.andamento = 1
+						  AND (CASE WHEN {$anoLetivo} IS NULL THEN TRUE ELSE escola_ano_letivo.ano = {$anoLetivo} END)
+						ORDER BY nm_turma ASC");
 		while ( $db->ProximoRegistro() )
 		{
 			list( $cod, $nome ) = $db->Tupla();
