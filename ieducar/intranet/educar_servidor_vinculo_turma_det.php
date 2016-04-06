@@ -102,7 +102,9 @@ class indice extends clsDetalhe
                                 1    => 'Docente',
                                 2    => 'Auxiliar/Assistente educacional',
                                 3    => 'Profissional/Monitor de atividade complementar',
-                                4    => 'Tradutor Intérprete de LIBRAS');
+                                4    => 'Tradutor Intérprete de LIBRAS',
+                                5    => 'Docente titular - coordenador de tutoria (de módulo ou disciplina) - EAD',
+                                6    => 'Docente tutor (de módulo ou disciplina)');
 
     $resources_tipo = array(  null => 'Selecione',
                               1    => 'Concursado/efetivo/estável',
