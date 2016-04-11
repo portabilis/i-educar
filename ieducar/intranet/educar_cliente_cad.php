@@ -208,10 +208,9 @@ class indice extends clsCadastro
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(603, $this->pessoa_logada, 11,  'educar_cliente_lst.php');
 
-    $obj = new clsPmieducarCliente(NULL, NULL, NULL, $this->ref_idpes);
-    $detalhe = $obj->detalhe();
-
-    if (!$detalhe) {
+    $obj = new clsPmieducarCliente();
+    $lista = $obj->lista(NULL, NULL, NULL, $this->ref_idpes, NULL, NULL, NULL, NULL, NULL, NULL, 1);
+    if (!$lista) {
       $obj_cliente = new clsPmieducarCliente();
       $lst_cliente = $obj_cliente->lista(NULL, NULL, NULL, NULL, $this->login);
 
@@ -253,11 +252,10 @@ class indice extends clsCadastro
       }
     }
     else {
-      $obj = new clsPmieducarCliente(NULL, NULL, NULL, $this->ref_idpes);
-      $registro = $obj->detalhe();
-
+      $obj = new clsPmieducarCliente();
+      $registro = $obj->lista(NULL, NULL, NULL, $this->ref_idpes, NULL, NULL, NULL, NULL, NULL, NULL, 1);
       if ($registro) {
-        $this->cod_cliente = $registro['cod_cliente'];
+        $this->cod_cliente = $registro[0]['cod_cliente'];
       }
 
       $this->ativo = 1;

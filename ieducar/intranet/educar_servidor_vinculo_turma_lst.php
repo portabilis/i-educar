@@ -121,7 +121,9 @@ class indice extends clsListagem
                                 1    => 'Docente',
                                 2    => 'Auxiliar/Assistente educacional',
                                 3    => 'Profissional/Monitor de atividade complementar',
-                                4    => 'Tradutor Intérprete de LIBRAS');
+                                4    => 'Tradutor Intérprete de LIBRAS',
+                                5    => 'Docente titular - coordenador de tutoria (de módulo ou disciplina) - EAD',
+                                6    => 'Docente tutor (de módulo ou disciplina)');
 
     $options = array('label' => Portabilis_String_Utils::toLatin1('Função exercida'), 'resources' => $resources_funcao, 'value' => $this->funcao_exercida);
     $this->inputsHelper()->select('funcao_exercida', $options);   

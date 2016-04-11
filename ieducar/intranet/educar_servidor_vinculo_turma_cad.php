@@ -119,9 +119,10 @@ class indice extends clsCadastro
         $this->ref_cod_serie = $obj_turma['ref_ref_cod_serie'];
         if(!isset($_GET['copia']))
           $retorno     = 'Editar';
+
+        if(isset($_GET['copia'])) $this->ano = date("Y");
       }
     }
-
 
     $this->url_cancelar = ($retorno == 'Editar') ?
       'educar_servidor_vinculo_turma_det.php?id=' . $this->id :
@@ -140,6 +141,8 @@ class indice extends clsCadastro
       $detProfessorTurma = $objProfessorTurma->detalhe();
       $ano = $detProfessorTurma["ano"];
     }
+
+    if (isset($_GET['copia'])) $ano = NULL;
 
     $this->campoOculto('id', $this->id);
     $this->campoOculto('servidor_id', $this->servidor_id);
@@ -296,3 +299,5 @@ $pagina->addForm($miolo);
 
 // Gera o código HTML
 $pagina->MakeAll();
+
+?>
