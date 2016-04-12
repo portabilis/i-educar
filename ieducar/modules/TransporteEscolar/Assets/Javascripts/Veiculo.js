@@ -75,7 +75,7 @@ resourceOptions.handleGet = function(dataResponse) {
     $j('#motorista_id').val(dataResponse.motorista);  
   }
 
-  $j('#descricao_ativo').val(dataResponse.descricao_ativo);  
+  $j('#descricao_inativo').val(dataResponse.descricao_inativo);  
   $j('#empresa_empresa').val(dataResponse.empresa+' - '+dataResponse.empresaNome);  
   $j('#empresa_id').val(dataResponse.empresa);
   $j('#observacao').val(dataResponse.observacao);  
