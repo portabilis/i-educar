@@ -223,7 +223,7 @@ class TurmaController extends ApiCoreController
         ';
       }
 
-      $sql .= " ORDER BY mt.sequencial_fechamento, translate(upper(p.nome),'áéíóúýàèìòùãõâêîôûäëïöüÿçÁÉÍÓÚÝÀÈÌÒÙÃÕÂÊÎÔÛÄËÏÖÜÇ','AEIOUYAEIOUAOAEIOUAEIOUYCAEIOUYAEIOUAOAEIOUAEIOUC')";
+      $sql .= " ORDER BY translate(upper(p.nome),'áéíóúýàèìòùãõâêîôûäëïöüÿçÁÉÍÓÚÝÀÈÌÒÙÃÕÂÊÎÔÛÄËÏÖÜÇ','AEIOUYAEIOUAOAEIOUAEIOUYCAEIOUYAEIOUAOAEIOUAEIOUC')";
 
       $alunos = $this->fetchPreparedQuery($sql, $params);
 
