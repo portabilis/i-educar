@@ -64,9 +64,12 @@ resourceOptions.handleGet = function(dataResponse) {
 
   if (dataResponse.ativo == 'N'){
     $j('#ativo').attr('checked',false);  
-    $j('#ativo').val('');   
-  }  
-  
+    $j('#ativo').val('');
+    $j('#descricao_inativo').closest('tr').show();
+  }else{
+    $j('#descricao_inativo').closest('tr').hide();
+  }
+
   if (dataResponse.motorista){
     $j('#motorista_motorista').val(dataResponse.motorista+' - '+dataResponse.motoristaNome);  
     $j('#motorista_id').val(dataResponse.motorista);  
@@ -76,9 +79,6 @@ resourceOptions.handleGet = function(dataResponse) {
   $j('#empresa_empresa').val(dataResponse.empresa+' - '+dataResponse.empresaNome);  
   $j('#empresa_id').val(dataResponse.empresa);
   $j('#observacao').val(dataResponse.observacao);  
-
-  
-  
 
 };
 
@@ -159,7 +159,6 @@ function afterChangePessoa(targetWindow, pessoaId) {
   $(document).ready(function() {
 
     // pessoa
-
     var $pessoaActionBar  = $j('<span>').html('')
                                         .addClass('pessoa-links')
                                         .width($nomeField.outerWidth() - 12)
@@ -186,6 +185,19 @@ function afterChangePessoa(targetWindow, pessoaId) {
     else
       $nomeField.attr('disabled', 'disabled');
 
+    $j('#ativo').on('click', function(){
+      if($j('#ativo').val() == 'on'){
+        $j('#descricao_inativo').closest('tr').hide();
+      }else{
+        $j('#descricao_inativo').closest('tr').show();
+      }
+    });
+
+    if($j('#ativo').is(":checked")){
+      $j('#descricao_inativo').closest('tr').hide();
+    }else{
+      $j('#descricao_inativo').closest('tr').show();
+    }
 
   }); // ready
 })(jQuery);
