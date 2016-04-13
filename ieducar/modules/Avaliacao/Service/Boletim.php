@@ -1399,38 +1399,39 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     }
 
     if($this->getRegra()->get('notaGeralPorEtapa') == "1"){
-       $mediasGerais = $this->getMediasGerais();
+
+       $mediaGeral = $this->getMediasGerais();
 
       if (0 == count($mediasGerais)) {
         $situacaoGeral = App_Model_MatriculaSituacao::EM_ANDAMENTO;
       }
 
-      foreach ($mediasGerais as $id => $mediaGeral) {
-        if ($this->getRegra()->get('tipoNota') == RegraAvaliacao_Model_Nota_TipoValor::NUMERICA) {
-          $media = $mediaGeral[0]->mediaArredondada;
-        }
-        else {
-          $media = $mediaGeral[0]->media;
-        }
+      if ($this->getRegra()->get('tipoNota') == RegraAvaliacao_Model_Nota_TipoValor::NUMERICA) {
+        $media = $mediaGeral->mediaArredondada;
+      }
+      else {
+        $media = $mediaGeral->media;
+      }
 
-        if ($etapa == $this->getOption('etapas') && $media < $this->getRegra()->media && $this->hasRecuperacao()) {
-          $situacaoGeral = App_Model_MatriculaSituacao::EM_EXAME;
-        }
-        elseif ($etapa == $this->getOption('etapas') && $media < $this->getRegra()->media) {
-          $situacaoGeral = App_Model_MatriculaSituacao::REPROVADO;
-        }
-        elseif ($etapa == 'Rc' && $media < $this->getRegra()->mediaRecuperacao) {
-          $situacaoGeral = App_Model_MatriculaSituacao::REPROVADO;
-        }
-        elseif ($etapa == 'Rc' && $media >= $this->getRegra()->mediaRecuperacao && $this->hasRecuperacao()) {
-          $situacaoGeral = App_Model_MatriculaSituacao::APROVADO_APOS_EXAME;
-        }
-        elseif ($etapa < $this->getOption('etapas') && $etapa != 'Rc') {
-          $situacaoGeral = App_Model_MatriculaSituacao::EM_ANDAMENTO;
-        }
-        else {
-          $situacaoGeral = App_Model_MatriculaSituacao::APROVADO;
-        }
+      $etapa = $mediaGeral->etapa;
+
+      if ($etapa == $this->getOption('etapas') && $media < $this->getRegra()->media && $this->hasRecuperacao()) {
+        $situacaoGeral = App_Model_MatriculaSituacao::EM_EXAME;
+      }
+      elseif ($etapa == $this->getOption('etapas') && $media < $this->getRegra()->media) {
+        $situacaoGeral = App_Model_MatriculaSituacao::REPROVADO;
+      }
+      elseif ($etapa == 'Rc' && $media < $this->getRegra()->mediaRecuperacao) {
+        $situacaoGeral = App_Model_MatriculaSituacao::REPROVADO;
+      }
+      elseif ($etapa == 'Rc' && $media >= $this->getRegra()->mediaRecuperacao && $this->hasRecuperacao()) {
+        $situacaoGeral = App_Model_MatriculaSituacao::APROVADO_APOS_EXAME;
+      }
+      elseif ($etapa < $this->getOption('etapas') && $etapa != 'Rc') {
+        $situacaoGeral = App_Model_MatriculaSituacao::EM_ANDAMENTO;
+      }
+      else {
+        $situacaoGeral = App_Model_MatriculaSituacao::APROVADO;
       }
 
       foreach($mediasComponentes as $id => $mediaComponente){
