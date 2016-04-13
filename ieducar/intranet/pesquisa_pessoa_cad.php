@@ -97,6 +97,7 @@ class indice extends clsCadastro
 	var $retorno;
 	var $vazio;
 	var $letra;
+	var $observacoes;
 
 	function Inicializar()
 	{
@@ -164,7 +165,7 @@ class indice extends clsCadastro
 					     ,$this->numero
 					     ,$this->bloco
 					     ,$this->apartamento
-					     ,$this->andar ) = $obj_fisica->queryRapida( $this->cod_pessoa_fj
+					     ,$this->andar) = $obj_fisica->queryRapida( $this->cod_pessoa_fj
 					     											,"nome"
 					     											,"cpf"
 					     											,"data_nasc"
@@ -494,6 +495,15 @@ class indice extends clsCadastro
 				$this->campoTexto( "http", "Site",  $this->http, "50", "255", false );
 				$this->campoTexto( "email", "E-mail",  $this->email, "50", "255", false );
 
+				$obs_options = array(
+			      'required'    => false,
+			      'label'       => 'Observações:',
+			      'cols'        => 45,
+			      'placeholder' => '',
+			      'max_length'  => 255
+			    );
+				 $this->inputsHelper()->textArea( 'observacoes', $obs_options);
+
 				if( is_numeric( $this->cod_pessoa_fj ) != 0 && $this->cod_pessoa_fj )
 				{
 					$this->campoRotulo( "documentos", "<b><i>Documentos</i></b>", "<a href='#' onclick=\" openPage( 'adicionar_documentos_cad.php?id_pessoa={$this->cod_pessoa_fj}', '400', '400', 'yes', '10', '10' ); \"><img src='imagens/nvp_bot_ad_doc.png' border='0'></a>" );
@@ -653,12 +663,80 @@ class indice extends clsCadastro
 			{
 				$this->id_federal = idFederal2Int( $this->id_federal );
 
-				$objFisica 			  = new clsFisica( $idpes, $this->data_nasc, $this->sexo, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, $this->id_federal );
+				$objFisica 			  = new clsFisica( $idpes,
+					                                   $this->data_nasc,
+					                                   $this->sexo,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   $this->id_federal,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   $this->observacoes );
 				$objFisica->cadastra();
 			}
 			else
 			{
-				$objFisica 			  = new clsFisica( $idpes, $this->data_nasc, $this->sexo, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, $this->ref_cod_sistema );
+				$objFisica 			  = new clsFisica( $idpes,
+					                                   $this->data_nasc,
+					                                   $this->sexo,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   $this->ref_cod_sistema,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   $this->observacoes );
 				$objFisica->cadastra();
 			}
 
@@ -899,11 +977,11 @@ class indice extends clsCadastro
 			{
 				$this->id_federal = idFederal2Int( $this->id_federal );
 
-				$objFisica = new clsFisica( $this->cod_pessoa_fj, $this->data_nasc, $this->sexo, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, "NULL", $this->id_federal );
+				$objFisica = new clsFisica( $this->cod_pessoa_fj, $this->data_nasc, $this->sexo, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, "NULL", $this->id_federal, false, false, false, false, false, false, false, false, $this->observacoes  );
 				$objFisica->edita();
 			}
 			else {
-				$objFisica = new clsFisica( $this->cod_pessoa_fj, $this->data_nasc, $this->sexo, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, $this->ref_cod_sistema, $this->id_federal );
+				$objFisica = new clsFisica( $this->cod_pessoa_fj, $this->data_nasc, $this->sexo, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, $this->ref_cod_sistema, $this->id_federal, false, false, false, false, false, false, false, false, $this->observacoes  );
 				$objFisica->edita();
 			}
 

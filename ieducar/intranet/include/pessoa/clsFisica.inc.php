@@ -82,6 +82,7 @@ class clsFisica
 	var $renda_mensal;
 	var $data_admissao;
 	var $falecido;
+	var $observacoes;
 
 	var $tabela;
 	var $schema;
@@ -91,7 +92,41 @@ class clsFisica
 	 *
 	 * @return Object:clsFisica
 	 */
-	function clsFisica( $idpes=false, $data_nasc=false, $sexo=false, $idpes_mae=false, $idpes_pai=false, $idpes_responsavel=false, $idesco=false, $ideciv=false, $idpes_con=false, $data_uniao=false, $data_obito=false, $nacionalidade=false, $idpais_estrangeiro=false, $data_chagada_brasil=false, $idmun_nascimento=false, $ultima_empresa=false, $idocup=false, $nome_mae=false, $nome_pai=false, $nome_conjuge=false, $nome_responsavel=false, $justificativa_provisorio=false, $idpes_cad = false, $idpes_rev = false, $ref_cod_sistema = false, $cpf = false, $ref_cod_religiao = false, $ocupacao = false, $empresa = false, $ddd_telefone_empresa = false, $telefone_empresa = false, $renda_mensal = false, $data_admissao = false, $falecido = false )
+	function clsFisica( $idpes=false,
+		                $data_nasc=false,
+		                $sexo=false,
+		                $idpes_mae=false,
+		                $idpes_pai=false,
+		                $idpes_responsavel=false,
+		                $idesco=false,
+		                $ideciv=false,
+		                $idpes_con=false,
+		                $data_uniao=false,
+		                $data_obito=false,
+		                $nacionalidade=false,
+		                $idpais_estrangeiro=false,
+		                $data_chagada_brasil=false,
+		                $idmun_nascimento=false,
+		                $ultima_empresa=false,
+		                $idocup=false,
+		                $nome_mae=false,
+		                $nome_pai=false,
+		                $nome_conjuge=false,
+		                $nome_responsavel=false,
+		                $justificativa_provisorio=false,
+		                $idpes_cad = false,
+		                $idpes_rev = false,
+		                $ref_cod_sistema = false,
+		                $cpf = false,
+		                $ref_cod_religiao = false,
+		                $ocupacao = false,
+		                $empresa = false,
+		                $ddd_telefone_empresa = false,
+		                $telefone_empresa = false,
+		                $renda_mensal = false,
+		                $data_admissao = false,
+		                $falecido = false,
+		                $observacoes = false )
 	{
 		$objPessoa = new clsPessoa_($idpes);
 		if ($objPessoa->detalhe())
@@ -183,6 +218,7 @@ class clsFisica
 		$this->pessoa_contato		= $pessoa_contato;
 		$this->renda_mensal			= $renda_mensal;
 		$this->data_admissao		= $data_admissao;
+		$this->observacoes          = $observacoes;
 
 		$cpf = idFederal2int($cpf);
 
@@ -354,7 +390,7 @@ class clsFisica
 			{
 				$campos .= ", sus";
 				$valores .= ", '$this->sus'";
-			}	
+			}
 
 			if(is_numeric($this->nis_pis_pasep))
 			{
@@ -379,7 +415,7 @@ class clsFisica
 				$campos  .= ", ddd_telefone_empresa";
 				$valores .= ", $this->ddd_telefone_empresa";
 			}
-			
+
 			if(is_numeric($this->telefone_empresa))
 			{
 				$campos  .= ", telefone_empresa";
@@ -410,6 +446,12 @@ class clsFisica
 			}else{
 				$campos .=  ", falecido";
 				$valores .= ", 'f'";
+			}
+
+			if(is_string($this->observacoes))
+			{
+				$campos .=  ", observacoes";
+				$valores .= ", '$this->observacoes'";
 			}
 
 			$db->Consulta( "INSERT INTO {$this->schema}.{$this->tabela} (idpes, origem_gravacao, idsis_cad, data_cad, operacao, idpes_cad $campos) VALUES ( '{$this->idpes}', 'M', 17, NOW(), 'I', '$this->idpes_cad' $valores )" );
