@@ -82,7 +82,6 @@ class clsFisica
 	var $renda_mensal;
 	var $data_admissao;
 	var $falecido;
-	var $observacoes;
 
 	var $tabela;
 	var $schema;
@@ -125,8 +124,7 @@ class clsFisica
 		                $telefone_empresa = false,
 		                $renda_mensal = false,
 		                $data_admissao = false,
-		                $falecido = false,
-		                $observacoes = false )
+		                $falecido = false)
 	{
 		$objPessoa = new clsPessoa_($idpes);
 		if ($objPessoa->detalhe())
@@ -218,7 +216,6 @@ class clsFisica
 		$this->pessoa_contato		= $pessoa_contato;
 		$this->renda_mensal			= $renda_mensal;
 		$this->data_admissao		= $data_admissao;
-		$this->observacoes          = $observacoes;
 
 		$cpf = idFederal2int($cpf);
 
@@ -446,12 +443,6 @@ class clsFisica
 			}else{
 				$campos .=  ", falecido";
 				$valores .= ", 'f'";
-			}
-
-			if(is_string($this->observacoes))
-			{
-				$campos .=  ", observacoes";
-				$valores .= ", '$this->observacoes'";
 			}
 
 			$db->Consulta( "INSERT INTO {$this->schema}.{$this->tabela} (idpes, origem_gravacao, idsis_cad, data_cad, operacao, idpes_cad $campos) VALUES ( '{$this->idpes}', 'M', 17, NOW(), 'I', '$this->idpes_cad' $valores )" );
