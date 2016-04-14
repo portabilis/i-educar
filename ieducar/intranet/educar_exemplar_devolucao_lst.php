@@ -28,6 +28,7 @@ require_once ("include/clsBase.inc.php");
 require_once ("include/clsListagem.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once( "include/pmieducar/geral.inc.php" );
+require_once ('Portabilis/Date/Utils.php');
 
 class clsIndexBase extends clsBase
 {
@@ -97,7 +98,7 @@ class indice extends clsListagem
 		foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
 			$this->$var = ( $val === "" ) ? null: $val;
 
-		
+
 
 		$lista_busca = array(
 			"Cliente",
@@ -153,8 +154,8 @@ class indice extends clsListagem
 			null,
 			$this->ref_cod_cliente,
 			$this->ref_cod_exemplar,
-			$this->data_retirada,
-			$this->data_retirada,
+      Portabilis_Date_Utils::brToPgSQL($this->data_retirada),
+			Portabilis_Date_Utils::brToPgSQL($this->data_retirada),
 			null,
 			null,
 			null,
@@ -163,7 +164,8 @@ class indice extends clsListagem
 			false,
 			$this->ref_cod_instituicao,
 			$this->ref_cod_escola,
-			$this->nm_obra
+      $this->nm_obra,
+			$this->tombo
 		);
 
 		$total = $obj_exemplar_emprestimo->_total;
@@ -256,7 +258,7 @@ class indice extends clsListagem
          "educar_biblioteca_index.php"                  => "i-Educar - Biblioteca",
          ""                                  => "Listagem de exemplares para devolu&ccedil;&atilde;o"
     ));
-    $this->enviaLocalizacao($localizacao->montar());		
+    $this->enviaLocalizacao($localizacao->montar());
 	}
 }
 // cria uma extensao da classe base
