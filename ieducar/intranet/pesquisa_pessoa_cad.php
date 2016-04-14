@@ -827,9 +827,7 @@ class indice extends clsCadastro
 				                             false,
 				                             false,
 				                             $this->orgao_emissao_rg);
-			if (is_numeric($idpes)){
-				echo "Sou um numeral ". $idpes . "<br />";
-			}
+
 			$ObjDocumento->cadastra();
 
 			$objTelefone 		  = new clsPessoaTelefone( $idpes, 1, $this->telefone_1, $this->ddd_telefone_1 );
