@@ -45,6 +45,7 @@ class clsPmieducarCliente
 	var $data_cadastro;
 	var $data_exclusao;
 	var $ativo;
+	var $observacoes;
 
 	// propriedades padrao
 
@@ -113,13 +114,13 @@ class clsPmieducarCliente
 	 */
 	function clsPmieducarCliente($cod_cliente = NULL, $ref_usuario_exc = NULL,
 	  $ref_usuario_cad = NULL, $ref_idpes = NULL, $login = NULL, $senha = NULL, $data_cadastro = NULL,
-	  $data_exclusao = NULL, $ativo = NULL) {
+	  $data_exclusao = NULL, $ativo = NULL, $observacoes = NULL) {
 
 		$db = new clsBanco();
 		$this->_schema = "pmieducar.";
 		$this->_tabela = "{$this->_schema}cliente";
 
-		$this->_campos_lista = $this->_todos_campos = "c.cod_cliente, c.ref_usuario_exc, c.ref_usuario_cad, c.ref_idpes, c.login, c.senha, c.data_cadastro, c.data_exclusao, c.ativo";
+		$this->_campos_lista = $this->_todos_campos = "c.cod_cliente, c.ref_usuario_exc, c.ref_usuario_cad, c.ref_idpes, c.login, c.senha, c.data_cadastro, c.data_exclusao, c.ativo, c.observacoes";
 
 		if( is_numeric( $ref_usuario_cad ) )
 		{
@@ -231,6 +232,10 @@ class clsPmieducarCliente
 		{
 			$this->ativo = $ativo;
 		}
+		if (is_string($observacoes))
+		{
+			$this->observacoes = $observacoes;
+		}
 
 	}
 
@@ -279,7 +284,14 @@ class clsPmieducarCliente
 			$campos .= "{$gruda}ativo";
 			$valores .= "{$gruda}'1'";
 			$gruda = ", ";
+			if( is_string( $this->observacoes ) )
+			{
+				$campos .= "{$gruda}observacoes";
+				$valores .= "{$gruda}'{$this->observacoes}'";
+				$gruda = ", ";
+			}
 
+			// echo $this->observacoes; die;
 
 			$db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
 			return $db->InsertId( "{$this->_tabela}_cod_cliente_seq");
@@ -335,6 +347,11 @@ class clsPmieducarCliente
 			if( is_numeric( $this->ativo ) )
 			{
 				$set .= "{$gruda}ativo = '{$this->ativo}'";
+				$gruda = ", ";
+			}
+			if( is_string( $this->observacoes ) )
+			{
+				$set .= "{$gruda}observacoes = '{$this->observacoes}'";
 				$gruda = ", ";
 			}
 
