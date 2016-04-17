@@ -544,10 +544,11 @@ var handleGetPersonParentDetails = function(dataResponse, parentType) {
         $maeNomeField.val(dataResponse.id + ' - '+ dataResponse.nome);
         $maeIdField.val(dataResponse.id);
         changeVisibilityOfLinksToPessoaMae();
-      }else
+      } else {
         $paiNomeField.val(dataResponse.id + ' - '+ dataResponse.nome);
         $paiIdField.val(dataResponse.id);
         changeVisibilityOfLinksToPessoaPai();
+      }
     }
 }
 
@@ -822,7 +823,7 @@ function canShowParentsFields(){
     $j('#municipio_pessoa-aluno').closest('tr').hide();
 
 
-    $j('body').append('<div id="dialog-form-pessoa-aluno" ><form><p></p><table><tr><td valign="top"><fieldset><legend>Dados b&aacute;sicos</legend><label for="nome-pessoa-aluno">Nome</label>    <input type="text " name="nome-pessoa-aluno" id="nome-pessoa-aluno" size="58" maxlength="255" class="text">    <label for="sexo-pessoa-aluno">Sexo</label>  <select class="select ui-widget-content ui-corner-all" name="sexo-pessoa-aluno" id="sexo-pessoa-aluno" ><option value="" selected>Sexo</option><option value="M">Masculino</option><option value="F">Feminino</option></select>    <label for="estado-civil-pessoa-aluno">Estado civil</label>   <select class="select ui-widget-content ui-corner-all" name="estado-civil-pessoa-aluno" id="estado-civil-pessoa-aluno"  ><option id="estado-civil-pessoa-aluno_" value="" selected>Estado civil</option><option id="estado-civil-pessoa-aluno_2" value="2">Casado(a)</option><option id="estado-civil-pessoa-aluno_6" value="6">Companheiro(a)</option><option id="estado-civil-pessoa-aluno_3" value="3">Divorciado(a)</option><option id="estado-civil-pessoa-aluno_4" value="4">Separado(a)</option><option id="estado-civil-pessoa-aluno_1" value="1">Solteiro(a)</option><option id="estado-civil-pessoa-aluno_5" value="5">Vi&uacute;vo(a)</option></select> <label for="data-nasc-pessoa-aluno"> Data de nascimento </label> <input onKeyPress="formataData(this, event);" class="" placeholder="dd/mm/yyyy" type="text" name="data-nasc-pessoa-aluno" id="data-nasc-pessoa-aluno" value="" size="11" maxlength="10" > <label for="naturalidade_pessoa-aluno"> Naturalidade </label>  </fieldset> </td><td><fieldset valign="top"> <legend>Dados do endere&ccedil;o</legend> <table></table></fieldset></td><td><fieldset ><table></table></fieldset></td></tr></table></form></div>');    
+    $j('body').append('<div id="dialog-form-pessoa-aluno" ><form><p></p><table><tr><td valign="top"><fieldset><legend>Dados b&aacute;sicos</legend><label for="nome-pessoa-aluno">Nome</label>    <input type="text " name="nome-pessoa-aluno" id="nome-pessoa-aluno" size="58" maxlength="255" class="text">    <label for="sexo-pessoa-aluno">Sexo</label>  <select class="select ui-widget-content ui-corner-all" name="sexo-pessoa-aluno" id="sexo-pessoa-aluno" ><option value="" selected>Sexo</option><option value="M">Masculino</option><option value="F">Feminino</option></select>    <label for="estado-civil-pessoa-aluno">Estado civil</label>   <select class="select ui-widget-content ui-corner-all" name="estado-civil-pessoa-aluno" id="estado-civil-pessoa-aluno"  ><option id="estado-civil-pessoa-aluno_" value="" selected>Estado civil</option><option id="estado-civil-pessoa-aluno_2" value="2">Casado(a)</option><option id="estado-civil-pessoa-aluno_6" value="6">Companheiro(a)</option><option id="estado-civil-pessoa-aluno_3" value="3">Divorciado(a)</option><option id="estado-civil-pessoa-aluno_4" value="4">Separado(a)</option><option id="estado-civil-pessoa-aluno_1" value="1">Solteiro(a)</option><option id="estado-civil-pessoa-aluno_5" value="5">Vi&uacute;vo(a)</option></select> <label for="data-nasc-pessoa-aluno"> Data de nascimento </label> <input onKeyPress="formataData(this, event);" class="" placeholder="dd/mm/yyyy" type="text" name="data-nasc-pessoa-aluno" id="data-nasc-pessoa-aluno" value="" size="11" maxlength="10" > <label for="naturalidade_pessoa-aluno"> Naturalidade </label>  </fieldset> </td><td><fieldset valign="top"> <legend>Dados do endere&ccedil;o</legend> <table></table></fieldset></td><td><fieldset ><table></table></fieldset></td></tr></table><p><a id="link_cadastro_detalhado" target="_blank">Cadastro detalhado</a></p></form></div>');
 
     var name = $j("#nome-pessoa-aluno"),
       sexo = $j( "#sexo-pessoa-aluno" ),
@@ -990,7 +991,7 @@ function canShowParentsFields(){
 
         $j('#nome-pessoa-aluno').focus();
 
-        $j('#dialog-form-pessoa-aluno form p:first-child').html('Cadastrar pessoa aluno');
+        $j('#dialog-form-pessoa-aluno form p:first-child').html('Cadastrar pessoa aluno').css('margin-left', '0.75em');
 
         editar_pessoa = false;
 
@@ -1063,7 +1064,7 @@ function canShowParentsFields(){
 
         $j('#nome-pessoa-aluno').focus();
 
-        $j('#dialog-form-pessoa-aluno form p:first-child').html('Editar pessoa aluno');
+        $j('#dialog-form-pessoa-aluno form p:first-child').html('Editar pessoa aluno').css('margin-left', '0.75em');
 
         editar_pessoa = true;
 
@@ -1132,8 +1133,7 @@ function canShowParentsFields(){
 
       $j('#nome-pessoa-parent').focus();
 
-      $j('#dialog-form-pessoa-parent form p:first-child').html('Cadastrar pessoa '+(parentType == 'mae' ? 'm&atilde;e' : parentType));
-
+      $j('#dialog-form-pessoa-parent form p:first-child').html('Cadastrar pessoa '+(parentType == 'mae' ? 'm&atilde;e' : parentType)).css('margin-left', '0.75em');
       pessoaPaiOuMae = parentType;
 
       editar_pessoa = false;
@@ -1142,7 +1142,7 @@ function canShowParentsFields(){
 
     function openEditModalParent(parentType){
 
-      $j('#link_cadastro_detalhado_parent').attr('href','/intranet/atendidos_cad.php?cod_pessoa_fj='+ $j('#'+parentType+'_id').val() +'parent_type='+parentType);
+      $j('#link_cadastro_detalhado_parent').attr('href','/intranet/atendidos_cad.php?cod_pessoa_fj='+ $j('#'+parentType+'_id').val() +'&parent_type='+parentType);
 
       $j( "#dialog-form-pessoa-parent" ).dialog( "open" );
 
@@ -1156,8 +1156,8 @@ function canShowParentsFields(){
       estadocivilParent.val(window[parentType+'_details'].estadocivil);
       sexoParent.val(window[parentType+'_details'].sexo);
 
-      $j('#dialog-form-pessoa-parent form p:first-child').html('Editar pessoa '+(parentType == 'mae' ? 'm&atilde;e' : parentType));
-
+      $j('#dialog-form-pessoa-parent form p:first-child').html('Editar pessoa '+(parentType == 'mae' ? 'm&atilde;e' : parentType)).css('margin-left', '0.75em');
+  
       pessoaPaiOuMae = parentType;
 
       editar_pessoa = true;

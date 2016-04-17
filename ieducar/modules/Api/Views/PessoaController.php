@@ -374,7 +374,7 @@ class PessoaController extends ApiCoreController
   protected function createOrUpdatePessoa($pessoaId = null) {
     $pessoa        = new clsPessoa_();
     $pessoa->idpes = $pessoaId;
-    $pessoa->nome  = addslashes(urldecode($this->getRequest()->nome));
+    $pessoa->nome  = Portabilis_String_Utils::toLatin1($this->getRequest()->nome);
 
     $sql = "select 1 from cadastro.pessoa WHERE idpes = $1 limit 1";
 
