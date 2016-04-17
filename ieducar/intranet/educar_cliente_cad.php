@@ -66,6 +66,7 @@ class indice extends clsCadastro
 	var $ativo;
 	var $del_cod_cliente;
 	var $del_cod_cliente_tipo;
+  var $observacoes;
 
 
   function Inicializar()
@@ -94,7 +95,9 @@ class indice extends clsCadastro
 				$this->login_ = $this->login;
 				$this->senha_ = $this->senha;
 
-				$obj_permissoes = new clsPermissoes();
+        $observacoes =  $this->observacoes;
+
+      	$obj_permissoes = new clsPermissoes();
 				if( $obj_permissoes->permissao_excluir( 603, $this->pessoa_logada, 11 ) )
 				{
 					$this->fexcluir = true;
@@ -189,6 +192,16 @@ class indice extends clsCadastro
 		}
 
     $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'biblioteca', 'bibliotecaTipoCliente'));
+
+    $obs_options = array(
+      'required'    => false,
+      'label'       => 'Observações:',
+      'cols'        => 35,
+      'placeholder' => '',
+      'max_length'  => 255,
+      'value'       => $this->observacoes
+    );
+    $this->inputsHelper()->textArea( 'observacoes', $obs_options);
 	}
 
 
@@ -219,7 +232,7 @@ class indice extends clsCadastro
       }
       else {
         $obj = new clsPmieducarCliente($this->cod_cliente, NULL, $this->pessoa_logada,
-				  $this->ref_idpes, $this->login, $senha, $this->data_cadastro, $this->data_exclusao, 1);
+				  $this->ref_idpes, $this->login, $senha, $this->data_cadastro, $this->data_exclusao, 1, $this->observacoes);
 
         $cadastrou = $obj->cadastra();
         if ($cadastrou) {
@@ -309,7 +322,7 @@ class indice extends clsCadastro
     $obj_permissoes->permissao_cadastra(603, $this->pessoa_logada, 11, 'educar_cliente_lst.php');
 
     $obj = new clsPmieducarCliente($this->cod_cliente, $this->pessoa_logada, $this->pessoa_logada,
-      $this->ref_idpes, $this->login, $senha, $this->data_cadastro, $this->data_exclusao, $this->ativo);
+      $this->ref_idpes, $this->login, $senha, $this->data_cadastro, $this->data_exclusao, $this->ativo, $this->observacoes);
 
     $editou = $obj->edita();
 

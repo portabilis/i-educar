@@ -97,6 +97,10 @@ class indice extends clsCadastro
 	var $retorno;
 	var $vazio;
 	var $letra;
+	var	$rg;
+	var	$data_exp_rg;
+	var	$sigla_uf_exp_rg;
+	var	$idorg_exp_rg;
 
 	function Inicializar()
 	{
@@ -164,7 +168,7 @@ class indice extends clsCadastro
 					     ,$this->numero
 					     ,$this->bloco
 					     ,$this->apartamento
-					     ,$this->andar ) = $obj_fisica->queryRapida( $this->cod_pessoa_fj
+					     ,$this->andar) = $obj_fisica->queryRapida( $this->cod_pessoa_fj
 					     											,"nome"
 					     											,"cpf"
 					     											,"data_nasc"
@@ -422,6 +426,68 @@ class indice extends clsCadastro
 					$this->campoCpf( "id_federal", "CPF", "", false );
 				}
 
+				$options = array(
+			      'required'    => $required,
+			      'label'       => 'RG / Data emissão',
+			      'placeholder' => 'Documento identidade',
+			      'value'       => $documentos['rg'],
+			      'max_length'  => 25,
+			      'size'        => 27,
+			      'inline'      => true
+			    );
+
+			    $this->inputsHelper()->text('rg', $options);
+
+
+			    // data emissão rg
+
+			    $options = array(
+			      'required'    => false,
+			      'label'       => '',
+			      'placeholder' => 'Data emissão',
+			      'value'       => $documentos['data_exp_rg'],
+			      'size'        => 19
+			    );
+
+			    $this->inputsHelper()->date('data_emissao_rg', $options);
+
+
+			    // orgão emissão rg
+
+			    $selectOptions = array( null => 'Orgão emissor' );
+			    $orgaos        = new clsOrgaoEmissorRg();
+			    $orgaos        = $orgaos->lista();
+
+			    foreach ($orgaos as $orgao)
+			      $selectOptions[$orgao['idorg_rg']] = $orgao['sigla'];
+
+			    $selectOptions = Portabilis_Array_Utils::sortByValue($selectOptions);
+
+			    $options = array(
+			      'required'  => false,
+			      'label'     => '',
+			      'value'     => $documentos['idorg_exp_rg'],
+			      'resources' => $selectOptions,
+			      'inline'    => true
+			    );
+
+			    $this->inputsHelper()->select('orgao_emissao_rg', $options);
+
+
+			    // uf emissão rg
+
+			    $options = array(
+			      'required' => false,
+			      'label'    => '',
+			      'value'    => $documentos['sigla_uf_exp_rg']
+			    );
+
+			    $helperOptions = array(
+			      'attrName' => 'uf_emissao_rg'
+			    );
+
+			    $this->inputsHelper()->uf($options, $helperOptions);
+
 				if( $this->data_nasc )
 				{
 					$this->data_nasc = dataFromPgToBr($this->data_nasc);
@@ -647,20 +713,93 @@ class indice extends clsCadastro
 			$objPessoa 			  = new clsPessoa_( false, $this->nm_pessoa, $pessoaFj, $this->http, "F", false, false, $this->email );
 			$idpes 				  = $objPessoa->cadastra();
 
+
 			$this->data_nasc = dataToBanco($this->data_nasc);
 
 			if ( is_numeric( $this->id_federal ) )
 			{
 				$this->id_federal = idFederal2Int( $this->id_federal );
 
-				$objFisica 			  = new clsFisica( $idpes, $this->data_nasc, $this->sexo, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, $this->id_federal );
+				$objFisica 			  = new clsFisica( $idpes,
+					                                   $this->data_nasc,
+					                                   $this->sexo,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   $this->id_federal);
 				$objFisica->cadastra();
 			}
 			else
 			{
-				$objFisica 			  = new clsFisica( $idpes, $this->data_nasc, $this->sexo, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, $this->ref_cod_sistema );
+				$objFisica 			  = new clsFisica( $idpes,
+					                                   $this->data_nasc,
+					                                   $this->sexo,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   false,
+					                                   $this->ref_cod_sistema);
 				$objFisica->cadastra();
 			}
+
+			$this->rg = preg_replace("/[^0-9]/", "", $this->rg);
+			$ObjDocumento = new clsDocumento($objFisica->idpes,
+				                             $this->rg,
+				                             $this->data_emissao_rg,
+				                             $this->uf_emissao_rg,
+				                             false,
+				                             false,
+				                             false,
+				                             false,
+				                             false,
+				                             false,
+				                             false,
+				                             false,
+				                             false,
+				                             false,
+				                             false,
+				                             false,
+				                             false,
+				                             false,
+				                             $this->orgao_emissao_rg);
+
+			$ObjDocumento->cadastra();
 
 			$objTelefone 		  = new clsPessoaTelefone( $idpes, 1, $this->telefone_1, $this->ddd_telefone_1 );
 			$objTelefone->cadastra();
@@ -899,7 +1038,7 @@ class indice extends clsCadastro
 			{
 				$this->id_federal = idFederal2Int( $this->id_federal );
 
-				$objFisica = new clsFisica( $this->cod_pessoa_fj, $this->data_nasc, $this->sexo, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, "NULL", $this->id_federal );
+				$objFisica = new clsFisica( $this->cod_pessoa_fj, $this->data_nasc, $this->sexo, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, "NULL", $this->id_federal);
 				$objFisica->edita();
 			}
 			else {
