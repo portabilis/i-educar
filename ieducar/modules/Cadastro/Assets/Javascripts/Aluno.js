@@ -1,4 +1,10 @@
-// before page is ready
+var editar_pessoa   = false;
+var person_details;
+var pai_details;
+var mae_details;
+var pessoaPaiOuMae;
+
+ // before page is ready
 
 var $idField        = $j('#id');
 var $nomeField      = $j('#pessoa_nome');
@@ -11,6 +17,48 @@ var $resourceNotice = $j('<span>').html('')
 
 var $pessoaNotice = $resourceNotice.clone()
                                    .appendTo($nomeField.parent());
+
+var $paiNomeField = $j('#pai_nome');
+var $paiIdField   = $j('#pai_id');
+
+var $maeNomeField = $j('#mae_nome');
+var $maeIdField   = $j('#mae_id'); 
+
+var $pessoaPaiActionBar  = $j('<span>').html('')
+                                       .addClass('pessoa-links pessoa-pai-links')
+                                       .width($paiNomeField.outerWidth() - 12)
+                                       .appendTo($paiNomeField.parent());
+
+var $pessoaMaeActionBar = $pessoaPaiActionBar.clone()
+                                         .removeClass('pessoa-pai-links')
+                                         .addClass('pessoa-mae-links')
+                                         .appendTo($maeNomeField.parent());
+
+var $linkToCreatePessoaPai = $j('<a>').addClass('cadastrar-pessoa-pai decorated')
+                                      .attr('id', 'cadastrar-pessoa-pai-link')
+                                      .html('Cadastrar pessoa')
+                                      .appendTo($pessoaPaiActionBar);
+
+var $linkToEditPessoaPai = $j('<a>').hide()
+                                    .addClass('editar-pessoa-pai decorated')
+                                    .attr('id', 'editar-pessoa-pai-link')
+                                    .html('Editar pessoa')
+                                    .appendTo($pessoaPaiActionBar);
+
+var $linkToCreatePessoaMae = $linkToCreatePessoaPai.clone()
+                                                   .removeClass('cadastrar-pessoa-pai')
+                                                   .attr('id', 'cadastrar-pessoa-mae-link')
+                                                   .addClass('cadastrar-pessoa-mae')
+                                                   .appendTo($pessoaMaeActionBar);
+
+var $linkToEditPessoaMae = $linkToEditPessoaPai.clone()
+                                               .removeClass('editar-pessoa-pai')
+                                               .addClass('editar-pessoa-mae')
+                                               .attr('id', 'editar-pessoa-mae-link')
+                                               .appendTo($pessoaMaeActionBar);                             
+
+
+
 
 // adiciona id 'stop' na linha separadora
 $j('.tableDetalheLinhaSeparador').closest('tr').attr('id','stop');
@@ -349,9 +397,51 @@ resourceOptions.handleGet = function(dataResponse) {
 
 };
 
+// pessoa links callbacks
+
+var changeVisibilityOfLinksToPessoaParent = function(parentType) {
+  var $nomeField  = $j(buildId(parentType + '_nome'));
+  var $idField    = $j(buildId(parentType + '_id'));
+  var $linkToEdit = $j('.pessoa-' + parentType + '-links .editar-pessoa-' + parentType);
+
+  if($nomeField.val() && $idField.val()) {
+    $linkToEdit.show().css('display', 'inline');
+  }
+  else {
+    $nomeField.val('')
+    $idField.val('');
+
+    $linkToEdit.hide();
+  }
+}
+
+var changeVisibilityOfLinksToPessoaPai = function() {
+  changeVisibilityOfLinksToPessoaParent('pai');
+}
+
+var changeVisibilityOfLinksToPessoaMae = function() {
+  changeVisibilityOfLinksToPessoaParent('mae');
+}
+
+var simpleSearchPaiOptions = {
+  autocompleteOptions : { close  : changeVisibilityOfLinksToPessoaPai }
+};
+
+var simpleSearchMaeOptions = {
+  autocompleteOptions : { close : changeVisibilityOfLinksToPessoaMae }
+};
+
+$paiIdField.change(changeVisibilityOfLinksToPessoaPai);
+$maeIdField.change(changeVisibilityOfLinksToPessoaMae);
+
 var handleGetPersonDetails = function(dataResponse) {
   handleMessages(dataResponse.msgs);
   $pessoaNotice.hide();
+  person_details = dataResponse;
+
+  mae_details = dataResponse.mae_details;
+
+  pai_details = dataResponse.pai_details;
 
   var alunoId = dataResponse.aluno_id;
 
@@ -369,8 +459,7 @@ var handleGetPersonDetails = function(dataResponse) {
   }
 
   else {
-    $j('.pessoa-links .editar-pessoa').attr('href', '/intranet/atendidos_cad.php?cod_pessoa_fj=' + dataResponse.id)
-                                      .show().css('display', 'inline');
+    $j('.pessoa-links .editar-pessoa').show().css('display', 'inline');
 
     $submitButton.removeAttr('disabled').show();
   }
@@ -382,11 +471,27 @@ var handleGetPersonDetails = function(dataResponse) {
   var nomeMae         = dataResponse.nome_mae;
   var nomeResponsavel = dataResponse.nome_responsavel;
 
-  if (dataResponse.pai_id)
-    nomePai = dataResponse.pai_id + ' - ' + nomePai;
+  if (dataResponse.pai_id){
+    pai_details.nome = nomePai;
+    $j('#pai_nome').val(dataResponse.pai_id + ' - ' + nomePai);
+    $j('#pai_id').val(dataResponse.pai_id);
+  }else{
+    $j('#pai_nome').val('');
+    $j('#pai_id').val('');
+  }
 
-  if (dataResponse.mae_id)
-    nomeMae = dataResponse.mae_id + ' - ' + nomeMae;
+  $j('#pai_id').trigger('change');
+
+  if (dataResponse.mae_id){
+    mae_details.nome = nomeMae;
+    $j('#mae_nome').val(dataResponse.mae_id + ' - ' + nomeMae);
+    $j('#mae_id').val(dataResponse.mae_id);  
+  }else{
+    $j('#mae_nome').val('');
+    $j('#mae_id').val('');  
+  }
+
+  $j('#mae_id').trigger('change');
 
   if (dataResponse.responsavel_id)
     nomeResponsavel = dataResponse.responsavel_id + ' - ' + nomeResponsavel;
@@ -394,8 +499,6 @@ var handleGetPersonDetails = function(dataResponse) {
   $j('#data_nascimento').val(dataResponse.data_nascimento);
   $j('#rg').val(dataResponse.rg);
 
-  $j('#pai').val(nomePai);
-  $j('#mae').val(nomeMae);
   $j('#responsavel_nome').val(nomeResponsavel);
   $j('#responsavel_id').val(dataResponse.responsavel_id);
 
@@ -428,6 +531,24 @@ var handleGetPersonDetails = function(dataResponse) {
 
   // # TODO show aluno photo
   //$j('#aluno_foto').val(dataResponse.url_foto);
+    canShowParentsFields();
+}
+
+var handleGetPersonParentDetails = function(dataResponse, parentType) {
+
+    window[parentType+'_details'] = dataResponse;
+
+    if(dataResponse.id){
+
+      if(parentType=='mae'){
+        $maeNomeField.val(dataResponse.id + ' - '+ dataResponse.nome);
+        $maeIdField.val(dataResponse.id);
+        changeVisibilityOfLinksToPessoaMae();
+      }else
+        $paiNomeField.val(dataResponse.id + ' - '+ dataResponse.nome);
+        $paiIdField.val(dataResponse.id);
+        changeVisibilityOfLinksToPessoaPai();
+    }
 }
 
 var getPersonDetails = function(personId) {
@@ -445,7 +566,25 @@ var getPersonDetails = function(personId) {
   getResource(options);
 }
 
+var getPersonParentDetails = function(personId,parentType) {
+  var additionalVars = {
+    id : personId
+  };
+
+  var options = {
+    url      : getResourceUrlBuilder.buildUrl('/module/Api/pessoa', 'pessoa-parent', additionalVars),
+    dataType : 'json',
+    data     : {},
+    success  : function(data){
+      handleGetPersonParentDetails(data, parentType)
+    }
+  };
+
+  getResource(options);
+}
+
 var updatePersonDetails = function() {
+  canShowParentsFields();
   if ($j('#pessoa_nome').val() && $j('#pessoa_id').val())
     getPersonDetails($j('#pessoa_id').val());
   else
@@ -469,7 +608,8 @@ var simpleSearchPessoaOptions = {
 // children callbacks
 
 function afterChangePessoa(targetWindow, pessoaId) {
-  targetWindow.close();
+  if (targetWindow != null)
+    targetWindow.close();
 
   // timeout para usuario perceber mudança
   window.setTimeout(function() {
@@ -484,13 +624,34 @@ function afterChangePessoa(targetWindow, pessoaId) {
   }, 500);
 }
 
+function afterChangePessoaParent(pessoaId, parentType) {
+
+  $tempField = (parentType == 'pai' ? $paiNomeField : $maeNomeField);
+
+  messageUtils.success('Pessoa '+parentType+' alterada com sucesso', $tempField);
+
+  getPersonParentDetails(pessoaId, parentType);
+
+  if ($tempField.is(':active'))
+    $tempField.focus();
+}
+
+function canShowParentsFields(){
+  if ($j('#pessoa_id').val()){
+    $paiNomeField.removeAttr('disabled');
+    $maeNomeField.removeAttr('disabled');
+  }else{
+    $paiNomeField.attr('disabled', 'true');
+    $maeNomeField.attr('disabled', 'true');
+  }
+}
 
 // when page is ready
 
 (function($) {
   $(document).ready(function() {
 
-    // pessoa
+    canShowParentsFields();
 
     var $pessoaActionBar  = $j('<span>').html('')
                                         .addClass('pessoa-links')
@@ -499,15 +660,13 @@ function afterChangePessoa(targetWindow, pessoaId) {
 
     $j('<a>').hide()
              .addClass('cadastrar-pessoa decorated')
-             .attr('href', '/intranet/atendidos_cad.php')
-             .attr('target', '_blank')
+             .attr('id', 'cadastrar-pessoa-link')
              .html('Cadastrar pessoa')
              .appendTo($pessoaActionBar);
 
     $j('<a>').hide()
              .addClass('editar-pessoa decorated')
-             .attr('href', '#')
-             .attr('target', '_blank')
+             .attr('id', 'editar-pessoa-link')
              .html('Editar pessoa')
              .appendTo($pessoaActionBar);
 
@@ -627,7 +786,7 @@ function afterChangePessoa(targetWindow, pessoaId) {
 
           if (index<84 && index!=0){
             row.hide();
-          }else{
+          }else if(index<111){
             row.show();
           }          
         });
@@ -656,5 +815,469 @@ function afterChangePessoa(targetWindow, pessoaId) {
       }
     });
 
+    // MODAL pessoa-aluno
+
+    //  Esse simplesSearch é carregado no final do arquivo, então a sua linha deve ser escondida,
+    // é só campo será 'puxado' para a modal
+    $j('#municipio_pessoa-aluno').closest('tr').hide();
+
+
+    $j('body').append('<div id="dialog-form-pessoa-aluno" ><form><p></p><table><tr><td valign="top"><fieldset><legend>Dados b&aacute;sicos</legend><label for="nome-pessoa-aluno">Nome</label>    <input type="text " name="nome-pessoa-aluno" id="nome-pessoa-aluno" size="58" maxlength="255" class="text">    <label for="sexo-pessoa-aluno">Sexo</label>  <select class="select ui-widget-content ui-corner-all" name="sexo-pessoa-aluno" id="sexo-pessoa-aluno" ><option value="" selected>Sexo</option><option value="M">Masculino</option><option value="F">Feminino</option></select>    <label for="estado-civil-pessoa-aluno">Estado civil</label>   <select class="select ui-widget-content ui-corner-all" name="estado-civil-pessoa-aluno" id="estado-civil-pessoa-aluno"  ><option id="estado-civil-pessoa-aluno_" value="" selected>Estado civil</option><option id="estado-civil-pessoa-aluno_2" value="2">Casado(a)</option><option id="estado-civil-pessoa-aluno_6" value="6">Companheiro(a)</option><option id="estado-civil-pessoa-aluno_3" value="3">Divorciado(a)</option><option id="estado-civil-pessoa-aluno_4" value="4">Separado(a)</option><option id="estado-civil-pessoa-aluno_1" value="1">Solteiro(a)</option><option id="estado-civil-pessoa-aluno_5" value="5">Vi&uacute;vo(a)</option></select> <label for="data-nasc-pessoa-aluno"> Data de nascimento </label> <input onKeyPress="formataData(this, event);" class="" placeholder="dd/mm/yyyy" type="text" name="data-nasc-pessoa-aluno" id="data-nasc-pessoa-aluno" value="" size="11" maxlength="10" > <label for="naturalidade_pessoa-aluno"> Naturalidade </label>  </fieldset> </td><td><fieldset valign="top"> <legend>Dados do endere&ccedil;o</legend> <table></table></fieldset></td><td><fieldset ><table></table></fieldset></td></tr></table></form></div>');    
+
+    var name = $j("#nome-pessoa-aluno"),
+      sexo = $j( "#sexo-pessoa-aluno" ),
+      estadocivil  = $j( "#estado-civil-pessoa-aluno" ),
+      datanasc     = $j( "#data-nasc-pessoa-aluno" ),
+      municipio    = $j( "#naturalidade_aluno_pessoa-aluno" ),
+      municipio_id = $j( "#naturalidade_aluno_id" ),
+      complemento  = $j( "#complemento" ),
+      numero       = $j( "#numero" ),
+      letra        = $j( "#letra" ),
+      apartamento  = $j( "#apartamento" ),
+      bloco        = $j( "#bloco" ),
+      andar        = $j( "#andar" ),
+      allFields = $j( [] ).add( name ).add( sexo ).add( estadocivil ).add(datanasc).add(municipio).add(municipio_id)
+      .add(complemento).add(numero).add(letra).add(apartamento).add(bloco).add(andar);
+
+    municipio.show().toggleClass('geral text').attr('display', 'block').appendTo('#dialog-form-pessoa-aluno tr td:first-child fieldset');
+
+    $j('<label>').html('CEP').attr('for', 'cep_').insertBefore($j('#cep_'));
+    $j('#cep_').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
+    $j('<label>').html('Munic&iacute;pio').attr('for', 'municipio_municipio').insertBefore($j('#municipio_municipio'));
+    $j('#municipio_municipio').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();      
+    $j('<label>').html('Logradouro').attr('for', 'logradouro_logradouro').insertBefore($j('#logradouro_logradouro'));
+    $j('#logradouro_logradouro').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
+    $j('<label>').html('Tipo de logradouro').attr('for', 'idtlog').insertBefore($j('#idtlog'));
+    $j('#idtlog').toggleClass('geral text');
+    $j('<label>').html('Logradouro').attr('for', 'logradouro').insertBefore($j('#logradouro'));
+    $j('#logradouro').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
+    $j('<label>').html('Bairro').attr('for', 'bairro_bairro').insertBefore($j('#bairro_bairro'));
+    $j('#bairro_bairro').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
+    $j('<label>').html('Zona de localiza&ccedil;&atilde;o').attr('for', 'zona_localizacao').insertBefore($j('#zona_localizacao'));
+    $j('#zona_localizacao').toggleClass('geral text');
+    $j('<label>').html('Bairro').attr('for', 'bairro').insertBefore($j('#bairro'));
+    $j('#bairro').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
+
+    $j('<label>').html('Complemento').attr('for', 'complemento').insertBefore($j('#complemento'));
+    $j('#complemento').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
+    $j('<label>').html('N&uacute;mero').attr('for', 'numero').insertBefore($j('#numero'));
+    $j('#numero').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(3) fieldset table').find('td').removeClass();      
+    $j('<label>').html('Letra').attr('for', 'letra').insertBefore($j('#letra'));
+    $j('#letra').toggleClass('geral text');
+    $j('<label>').html('N&ordm; de apartamento').attr('for', 'apartamento').insertBefore($j('#apartamento'));
+    $j('#apartamento').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(3) fieldset table').find('td').removeClass();      
+    $j('<label>').html('Bloco').attr('for', 'bloco').insertBefore($j('#bloco'));
+    $j('#bloco').toggleClass('geral text');
+    $j('<label>').html('Andar').attr('for', 'andar').insertBefore($j('#andar'));
+    $j('#andar').toggleClass('geral text');
+
+    $j('#dialog-form-pessoa-aluno').find(':input').css('display', 'block');
+    $j('#cep_').css('display', 'inline');
+
+    $j( "#dialog-form-pessoa-aluno" ).dialog({
+      autoOpen: false,
+      height: 'auto',
+      width: 'auto',
+      modal: true,
+      resizable: false,
+      draggable: false,
+      buttons: {
+        "Gravar" : function() {
+          var bValid = true;
+          allFields.removeClass( "error" );
+
+          bValid = bValid && checkLength( name, "nome", 3, 255 );
+          bValid = bValid && checkSelect( sexo, "sexo");
+          bValid = bValid && checkSelect( estadocivil, "estado civil");
+          bValid = bValid && checkRegexp( datanasc, /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[012])\/[12][0-9]{3}$/i, "O campo data de nascimento deve ser preenchido no formato dd/mm/yyyy." );
+          bValid = bValid && checkSimpleSearch( municipio, municipio_id, "munic\u00edpio");
+          bValid = bValid && ($j('#cep_').val() == '' ? true : validateEndereco());
+
+          if ( bValid ) {
+            postPessoa($j('#pessoa_nome'), name.val(), sexo.val(), estadocivil.val(), datanasc.val(), municipio_id.val(), (editar_pessoa ? $j('#pessoa_id').val() : null), null);
+            $j( this ).dialog( "close" );
+          }
+        },
+        "Cancelar": function() {
+
+            $j( this ).dialog( "close" );
+        }
+      },
+      close: function() {
+
+        allFields.val( "" ).removeClass( "error" );
+
+      },
+      hide: {
+          effect: "clip",
+          duration: 500
+      },
+
+      show: {
+        effect: "clip",
+        duration: 500
+      }
+    });
+
+    $j('body').append('<div id="dialog-form-pessoa-parent"><form><p></p><table><tr><td valign="top"><fieldset><label for="nome-pessoa-parent">Nome</label>    <input type="text " name="nome-pessoa-parent" id="nome-pessoa-parent" size="58" maxlength="255" class="text">    <label for="sexo-pessoa-parent">Sexo</label>  <select class="select ui-widget-content ui-corner-all" name="sexo-pessoa-parent" id="sexo-pessoa-parent" ><option value="" selected>Sexo</option><option value="M">Masculino</option><option value="F">Feminino</option></select>    <label for="estado-civil-pessoa-parent">Estado civil</label>   <select class="select ui-widget-content ui-corner-all" name="estado-civil-pessoa-parent" id="estado-civil-pessoa-parent"  ><option id="estado-civil-pessoa-parent_" value="" selected>Estado civil</option><option id="estado-civil-pessoa-parent_2" value="2">Casado(a)</option><option id="estado-civil-pessoa-parent_6" value="6">Companheiro(a)</option><option id="estado-civil-pessoa-parent_3" value="3">Divorciado(a)</option><option id="estado-civil-pessoa-parent_4" value="4">Separado(a)</option><option id="estado-civil-pessoa-parent_1" value="1">Solteiro(a)</option><option id="estado-civil-pessoa-parent_5" value="5">Vi&uacute;vo(a)</option></select></fieldset><p><a id="link_cadastro_detalhado_parent" target="_blank">Cadastro detalhado</a></p></form></div>');    
+
+    $j('#dialog-form-pessoa-parent').find(':input').css('display', 'block');
+
+    var nameParent = $j("#nome-pessoa-parent"),
+      sexoParent = $j( "#sexo-pessoa-parent" ),
+      estadocivilParent  = $j( "#estado-civil-pessoa-parent" ),
+      allFields = $j( [] ).add( nameParent ).add( sexoParent ).add( estadocivilParent );
+
+    $j( "#dialog-form-pessoa-parent" ).dialog({
+      autoOpen: false,
+      height: 'auto',
+      width: 'auto',
+      modal: true,
+      resizable: false,
+      draggable: false,
+      buttons: {
+        "Gravar" : function() {
+          var bValid = true;
+          allFields.removeClass( "ui-state-error" );
+
+          bValid = bValid && checkLength( nameParent, "nome", 3, 255 );
+          bValid = bValid && checkSelect( sexoParent, "sexo");
+          bValid = bValid && checkSelect( estadocivilParent, "estado civil");
+
+          if ( bValid ) {
+            postPessoa(nameParent, nameParent.val(), sexoParent.val(), estadocivilParent.val(), null, null, (editar_pessoa ? $j('#'+pessoaPaiOuMae+'_id').val() : null), pessoaPaiOuMae);
+            $j( this ).dialog( "close" );
+          }
+        },
+        "Cancelar": function() {
+
+            $j( this ).dialog( "close" );
+        }
+      },
+      close: function() {
+
+        allFields.val( "" ).removeClass( "error" );
+
+      },
+      hide: {
+          effect: "clip",
+          duration: 500
+      },
+
+      show: {
+        effect: "clip",
+        duration: 500
+      }
+    });
+
+    $j('#link_cadastro_detalhado').click(function(){
+      $j( "#dialog-form-pessoa-aluno" ).dialog( "close" );
+    });
+
+    $j("#cadastrar-pessoa-link").click(function() {
+
+        $j('#link_cadastro_detalhado').attr('href','/intranet/atendidos_cad.php');
+
+        $j( "#dialog-form-pessoa-aluno" ).dialog( "open" );
+
+        $j('#cep_').val('');
+        clearEnderecoFields();
+        hideEnderecoFields();
+
+        $j(".ui-widget-overlay").click(function(){
+          $j(".ui-dialog-titlebar-close").trigger('click');
+        });
+
+        $j('#nome-pessoa-aluno').focus();
+
+        $j('#dialog-form-pessoa-aluno form p:first-child').html('Cadastrar pessoa aluno');
+
+        editar_pessoa = false;
+
+    });
+
+    $j("#editar-pessoa-link").click(function() {
+
+        $j('#link_cadastro_detalhado').attr('href','/intranet/atendidos_cad.php?cod_pessoa_fj=' + person_details.id);
+        clearEnderecoFields();
+
+        name.val(person_details.nome);
+        datanasc.val(person_details.data_nascimento);
+        estadocivil.val(person_details.estadocivil);
+        sexo.val(person_details.sexo);
+
+        if (person_details.idmun_nascimento){
+
+          $j('#naturalidade_aluno_id').val(person_details.idmun_nascimento);
+          $j('#naturalidade_aluno_pessoa-aluno').val(person_details.idmun_nascimento+' - '+person_details.municipio_nascimento+' ('+person_details.sigla_uf_nascimento+')');
+
+        }
+
+        $j('#cep_').val(person_details.cep);
+
+        if ($j('#cep_').val()){
+
+          $j('#municipio_municipio').removeAttr('disabled');
+          $j('#bairro_bairro').removeAttr('disabled');
+          $j('#logradouro_logradouro').removeAttr('disabled');
+          $j('#bairro').removeAttr('disabled');
+          $j('#zona_localizacao').removeAttr('disabled');
+          $j('#idtlog').removeAttr('disabled');
+          $j('#logradouro').removeAttr('disabled');
+
+          $j('#complemento').val(person_details.complemento);
+          $j('#numero').val(person_details.numero);
+          $j('#letra').val(person_details.letra);
+          $j('#apartamento').val(person_details.apartamento);
+          $j('#bloco').val(person_details.bloco);
+          $j('#andar').val(person_details.andar);
+
+          $j('#municipio_id').val(person_details.idmun);
+
+          $j('#municipio_municipio').val(person_details.idmun+' - '+person_details.municipio+' ('+person_details.sigla_uf+')');
+
+          if (person_details.idbai && person_details.idlog){
+
+            $j('#bairro_id').val(person_details.idbai);
+            $j('#logradouro_id').val(person_details.idlog);
+            $j('#bairro_bairro').val(person_details.bairro + ' / Zona '+(person_details.zona_localizacao == "1" ? "Urbana" : "Rural"));
+            $j('#logradouro_logradouro').val($j("#idtlog option[value='"+person_details.idtlog+"']").text() + ' '+person_details.logradouro);
+
+          }else{
+
+            $j('#bairro').val(person_details.bairro);
+            $j('#logradouro').val(person_details.logradouro);
+            $j('#idtlog').val(person_details.idtlog);
+            $j('#zona_localizacao').val(person_details.zona_localizacao);
+
+          }
+        }
+
+        hideEnderecoFields();
+
+        $j( "#dialog-form-pessoa-aluno" ).dialog("open");
+
+        $j(".ui-widget-overlay").click(function(){
+          $j(".ui-dialog-titlebar-close").trigger('click');
+        });
+
+        $j('#nome-pessoa-aluno').focus();
+
+        $j('#dialog-form-pessoa-aluno form p:first-child').html('Editar pessoa aluno');
+
+        editar_pessoa = true;
+
+    });
+
+    $j("#cadastrar-pessoa-pai-link").click(function() {
+
+        if($j('#pessoa_id').val()){
+
+          openModalParent('pai');
+
+        }else{
+
+          alertSelecionarPessoaAluno();
+        }
+
+    });
+
+
+    $j("#cadastrar-pessoa-mae-link").click(function() {
+
+        if($j('#pessoa_id').val()){
+
+          openModalParent('mae');
+
+        }else{
+          alertSelecionarPessoaAluno();
+        }
+
+    });
+
+    $j("#editar-pessoa-pai-link").click(function() {
+
+        if($j('#pessoa_id').val()){
+
+          openEditModalParent('pai');
+
+        }
+
+    });
+
+
+    $j("#editar-pessoa-mae-link").click(function() {
+
+        if($j('#pessoa_id').val()){
+
+          openEditModalParent('mae');
+
+        }
+
+    });
+
+    function alertSelecionarPessoaAluno(){
+      messageUtils.error('Primeiro cadastre/selecione uma pessoa para o aluno. ');
+    }
+
+    function openModalParent(parentType){
+
+      $j('#link_cadastro_detalhado_parent').attr('href','/intranet/atendidos_cad.php?parent_type='+parentType);
+
+      $j( "#dialog-form-pessoa-parent" ).dialog( "open" );
+
+      $j(".ui-widget-overlay").click(function(){
+        $j(".ui-dialog-titlebar-close").trigger('click');
+      });
+
+      $j('#nome-pessoa-parent').focus();
+
+      $j('#dialog-form-pessoa-parent form p:first-child').html('Cadastrar pessoa '+(parentType == 'mae' ? 'm&atilde;e' : parentType));
+
+      pessoaPaiOuMae = parentType;
+
+      editar_pessoa = false;
+
+    }
+
+    function openEditModalParent(parentType){
+
+      $j('#link_cadastro_detalhado_parent').attr('href','/intranet/atendidos_cad.php?cod_pessoa_fj='+ $j('#'+parentType+'_id').val() +'parent_type='+parentType);
+
+      $j( "#dialog-form-pessoa-parent" ).dialog( "open" );
+
+      $j(".ui-widget-overlay").click(function(){
+        $j(".ui-dialog-titlebar-close").trigger('click');
+      });
+
+      $j('#nome-pessoa-parent').focus();
+
+      nameParent.val(window[parentType+'_details'].nome);
+      estadocivilParent.val(window[parentType+'_details'].estadocivil);
+      sexoParent.val(window[parentType+'_details'].sexo);
+
+      $j('#dialog-form-pessoa-parent form p:first-child').html('Editar pessoa '+(parentType == 'mae' ? 'm&atilde;e' : parentType));
+
+      pessoaPaiOuMae = parentType;
+
+      editar_pessoa = true;
+    }
+
+    function checkLength( o, n, min, max ) {
+      if ( o.val().length > max || o.val().length < min ) {
+        o.addClass( "error" );
+        messageUtils.error( "Tamanho do " + n + " deve ter entre " +
+          min + " e " + max + " caracteres." );
+        return false;
+      } else {
+        return true;
+      }
+    }
+
+    function checkRegexp( o, regexp, n ) {
+      if ( !( regexp.test( o.val() ) ) ) {
+        o.addClass( "error" );
+        messageUtils.error( n );
+        return false;
+      } else {
+        return true;
+      }
+    }
+
+    function checkSelect(comp, name) {
+
+      if ( comp.val() == '') {
+        comp.addClass( "error" );
+        messageUtils.error( "Selecione um "+name+"." );
+        return false;
+      } else {
+        return true;
+      }
+
+    }
+
+    function checkSimpleSearch(comp, hiddenComp, name) {
+
+      if ( hiddenComp.val() == '') {
+        comp.addClass( "error" );
+        messageUtils.error( "Selecione um "+name+"." );
+        return false;
+      } else {
+        return true;
+      }
+
+    }
+
+    $j('#pai_id').change( function(){ getPersonParentDetails($j(this).val(), 'pai') });
+    $j('#mae_id').change( function(){ getPersonParentDetails($j(this).val(), 'mae' ) });
   }); // ready
+
+  function postPessoa($pessoaField, nome, sexo, estadocivil, datanasc, naturalidade, pessoa_id, parentType) {
+
+      var data = {
+        nome             : nome,
+        sexo             : sexo,
+        estadocivil      : estadocivil,
+        datanasc         : datanasc,
+        naturalidade     : naturalidade,
+        pessoa_id        : pessoa_id
+      };
+
+      var options = {
+        url : postResourceUrlBuilder.buildUrl('/module/Api/pessoa', 'pessoa', {}),
+        dataType : 'json',
+        data : data,
+        success : function(dataResponse) {
+          if(parentType=='mae')
+            afterChangePessoaParent(dataResponse.pessoa_id, 'mae');
+          else if(parentType=='pai')
+            afterChangePessoaParent(dataResponse.pessoa_id, 'pai');
+          else
+            postEnderecoPessoa(dataResponse.pessoa_id);
+        }
+      };
+
+      postResource(options);
+
+  }
+
+  function postEnderecoPessoa(pessoa_id) {
+
+    if (checkCepFields($j('#cep_').val())){
+
+      var data = {
+        pessoa_id          : pessoa_id,
+        cep                : $j('#cep_').val(),
+        municipio_id       : $j('#municipio_id').val(),
+        bairro             : $j('#bairro').val(),
+        bairro_id          : $j('#bairro_id').val(),
+        zona_localizacao   : $j('#zona_localizacao').val(),
+        logradouro         : $j('#logradouro').val(),
+        idtlog             : $j('#idtlog').val(),
+        logradouro_id      : $j('#logradouro_id').val(),
+        apartamento        : $j('#apartamento').val(),
+        complemento        : $j('#complemento').val(),
+        numero             : $j('#numero').val(),
+        letra              : $j('#letra').val(),
+        bloco              : $j('#bloco').val(),
+        andar              : $j('#andar').val()
+      };
+
+      var options = {
+        url : postResourceUrlBuilder.buildUrl('/module/Api/pessoa', 'pessoa-endereco', {}),
+        dataType : 'json',
+        data : data,
+        success : function(dataResponse) {
+          afterChangePessoa(null,pessoa_id);
+        }
+      };
+
+      postResource(options);
+
+    }else{
+      afterChangePessoa(null,pessoa_id);
+    }
+
+  }
+
 })(jQuery);

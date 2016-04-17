@@ -788,8 +788,9 @@ protected function createOrUpdateUniforme($id) {
         $aluno = Portabilis_Array_Utils::merge($objMoradia,$aluno);
       }
 
-      $sql = "select sus from cadastro.fisica where idpes = $1";
-      $aluno['sus'] = Portabilis_String_Utils::toUtf8($this->fetchPreparedQuery($sql, $aluno['pessoa_id'], false, 'first-field'));
+      $sql = "select sus, idpes_mae, idpes_pai from cadastro.fisica where idpes = $1";
+      $camposFisica = Portabilis_String_Utils::toUtf8($this->fetchPreparedQuery($sql, $aluno['pessoa_id'], false, 'first-row'));
+      $aluno['sus'] = $camposFisica['sus'];
 
       return $aluno;
     }
@@ -856,6 +857,34 @@ protected function createOrUpdateUniforme($id) {
     }
   }
 
+  protected function saveParents(){
+
+     $maeId = $this->getRequest()->mae_id;
+     $paiId = $this->getRequest()->pai_id;
+     $pessoaId = $this->getRequest()->pessoa_id;
+
+     if($maeId || $paiId){
+
+       $sql = "UPDATE cadastro.fisica set ";
+
+       $virgulaOuNada = '';
+
+       if ($maeId){
+         $sql .= " idpes_mae = {$maeId} ";
+         $virgulaOuNada = ", ";
+       }
+
+       if ($paiId){
+         $sql .= "{$virgulaOuNada} idpes_pai = {$paiId} ";
+         $virgulaOuNada = ", ";
+       }
+
+       $sql .= " WHERE idpes = {$pessoaId}";
+
+       Portabilis_Utils_Database::fetchPreparedQuery($sql);
+     }
+  }
+
   protected function getOcorrenciasDisciplinares() {
     if ($this->canGetOcorrenciasDisciplinares())
       return $this->loadOcorrenciasDisciplinares();
@@ -865,6 +894,8 @@ protected function createOrUpdateUniforme($id) {
     if ($this->canPost()) {
       $id = $this->createOrUpdateAluno();
       $pessoaId = $this->getRequest()->pessoa_id;
+
+      $this->saveParents();
 
       if (is_numeric($id)) {
         $this->updateResponsavel();
@@ -888,6 +919,8 @@ protected function createOrUpdateUniforme($id) {
   protected function put() {
     $id = $this->getRequest()->id;
     $pessoaId = $this->getRequest()->pessoa_id;
+
+    $this->saveParents();
 
     if ($this->canPut() && $this->createOrUpdateAluno($id)) {
       $this->updateResponsavel();

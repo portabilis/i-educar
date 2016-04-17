@@ -268,7 +268,7 @@ function showExpansivel( largura, altura, conteudo )
 	expansivel.setAttribute("id", "div_dinamico_"+exp_id);
 	insertAfter(expansivel, document.getElementById("DOM_expansivel"));
 	DOM_divs[exp_id] = expansivel;
-	expansivel.style.zIndex = 30+exp_id;
+	expansivel.style.zIndex = 1003+exp_id;
 	expansivel.style.position = "absolute";
 
 	if( typeof window.innerHeight == 'number' )
@@ -1539,7 +1539,7 @@ function getPDFouvidoriaEquipe()
 
 	Obj = document.getElementById('imprimir');
 	Obj.value = 'Gerando Arquivo...';
-	Obj.onclick = function() { alert('O sistema est· gerando o arquivo. Aguarde!')};
+	Obj.onclick = function() { alert('O sistema est√° gerando o arquivo. Aguarde!')};
 	//document.location.href = strURL;
 }
 
@@ -1566,7 +1566,7 @@ function getPDFouvidoriaTipoServico()
 	DOM_loadXMLDoc( strURL );
 	Obj = document.getElementById('imprimir');
 	Obj.value = 'Gerando Arquivo...';
-	Obj.onclick = function() { alert('O sistema est· gerando o arquivo. Aguarde!')};
+	Obj.onclick = function() { alert('O sistema est√° gerando o arquivo. Aguarde!')};
 	//document.location.href = strURL;
 }
 
@@ -1594,7 +1594,7 @@ function getPDFouvidoriaAtendimento()
 	DOM_loadXMLDoc( strURL );
 	Obj = document.getElementById('imprimir');
 	Obj.value = 'Gerando Arquivo...';
-	Obj.onclick = function() { alert('O sistema est· gerando o arquivo. Aguarde!')};
+	Obj.onclick = function() { alert('O sistema est√° gerando o arquivo. Aguarde!')};
 }
 
 function getPDFouvidoriaAtendimentoDone()
@@ -1626,7 +1626,7 @@ function getPDFestoquesaida()
 	DOM_loadXMLDoc( strURL );
 	Obj = document.getElementById('imprimir');
 	Obj.value = 'Gerando Arquivo...';
-	Obj.onclick = function() { alert('O sistema est· gerando o arquivo. Aguarde!')};
+	Obj.onclick = function() { alert('O sistema est√° gerando o arquivo. Aguarde!')};
 }
 
 function getPDFestoquesaidaDone()
@@ -1657,7 +1657,7 @@ function getPDFouvidoriaAtendimentoSetor()
 	DOM_loadXMLDoc( strURL );
 	Obj = document.getElementById('imprimir');
 	Obj.value = 'Gerando Arquivo...';
-	Obj.onclick = function() { alert('O sistema est· gerando o arquivo. Aguarde!')};
+	Obj.onclick = function() { alert('O sistema est√° gerando o arquivo. Aguarde!')};
 	
 }
 
@@ -1695,7 +1695,7 @@ function getPDFouvidoriaOrdem()
 	DOM_loadXMLDoc( strURL );
 	Obj = document.getElementById('imprimir');
 	Obj.value = 'Gerando Arquivo...';
-	Obj.onclick = function() { alert('O sistema est· gerando o arquivo. Aguarde!')};
+	Obj.onclick = function() { alert('O sistema est√° gerando o arquivo. Aguarde!')};
 	//document.location.href = strURL;
 }
 
@@ -1707,7 +1707,7 @@ function getPDFouvidoriaOrdemDone()
 	Obj = document.getElementById('imprimir');
 	Obj.value = 'Clique para baixar arquivo!';
 	Obj.onclick = function() { document.location.href = link;};
-	//alert('Arquivo ConcluÌdo');
+	//alert('Arquivo Conclu?o');
 	document.location.href = link;
 }
 
@@ -1717,7 +1717,7 @@ function fecha_notificacao( id_notificacao )
 	{
 		if( DOM_itensArray[0].firstChild.data == 0 )
 		{
-			alert( 'Erro de permiss„o. A notificaÁ„o n„o foi deletada.' );
+			alert( 'Erro de permiss√£o. A notifica√ß√£o n√£o foi deletada.' );
 			document.getElementById('notificacao_' + id_notificacao).style.display='block';
 		}
 	}

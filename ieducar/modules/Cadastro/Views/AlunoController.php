@@ -31,6 +31,7 @@
  * @version   $Id$
  */
 
+require_once 'App/Model/ZonaLocalizacao.php';
 require_once 'lib/Portabilis/Controller/Page/EditController.php';
 require_once 'Usuario/Model/FuncionarioDataMapper.php';
 
@@ -356,14 +357,17 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     $options = array('label' => $this->_getLabel('rg'), 'disabled' => true, 'required' => false, 'size' => 25);
     $this->inputsHelper()->integer('rg', $options);
 
-    // pai
+    $this->inputPai();
+    $this->inputMae();
+
+/*    // pai
     $options = array('label' => $this->_getLabel('pai'), 'disabled' => true, 'required' => false, 'size' => 68);
     $this->inputsHelper()->text('pai', $options);
 
 
     // mãe
     $options = array('label' => $this->_getLabel('mae'), 'disabled' => true, 'required' => false, 'size' => 68);
-    $this->inputsHelper()->text('mae', $options);
+    $this->inputsHelper()->text('mae', $options);*/
 
 
     // responsável
@@ -805,7 +809,217 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('lixo') ), 'required' => false, 'placeholder' => '');
     $this->inputsHelper()->checkbox('lixo',$options);   
 
+    $this->inputsHelper()->simpleSearchMunicipio('pessoa-aluno', array('required' => false, 'size' => 57), array('objectName' => 'naturalidade_aluno'));
+
+    $enderecamentoObrigatorio = false;
+    $desativarCamposDefinidosViaCep = true;
+
+    $this->campoCep(
+      'cep_',
+      'CEP',
+      '',
+      $enderecamentoObrigatorio,
+      '-',
+            "&nbsp;<img id='lupa' src=\"imagens/lupa.png\" border=\"0\" onclick=\"showExpansivel(500, 550, '<iframe name=\'miolo\' id=\'miolo\' frameborder=\'0\' height=\'100%\' width=\'500\' marginheight=\'0\' marginwidth=\'0\' src=\'/intranet/educar_pesquisa_cep_log_bairro.php?campo1=bairro_bairro&campo2=bairro_id&campo3=cep&campo4=logradouro_logradouro&campo5=logradouro_id&campo6=ref_sigla_uf&campo7=cidade&campo8=ref_idtlog&campo9=isEnderecoExterno&campo10=cep_&campo11=municipio_municipio&campo12=idtlog&campo13=municipio_id&campo14=zona_localizacao\'></iframe>');\">",
+      false
+    );
+
+    $options       = array('label' => Portabilis_String_Utils::toLatin1('Município'), 'required'   => $enderecamentoObrigatorio, 'disabled' => $desativarCamposDefinidosViaCep);
+
+    $helperOptions = array('objectName'         => 'municipio',
+                           'hiddenInputOptions' => array('options' => array('value' => $this->municipio_id)));
+
+    $this->inputsHelper()->simpleSearchMunicipio('municipio', $options, $helperOptions);
+
+    $helperOptions = array('hiddenInputOptions' => array('options' => array('value' => $this->bairro_id)));
+
+    $options       = array( 'label' => Portabilis_String_Utils::toLatin1('Bairro / Zona de Localização - <b>Buscar</b>'), 'required'   => $enderecamentoObrigatorio, 'disabled' => $desativarCamposDefinidosViaCep);
+
+
+    $this->inputsHelper()->simpleSearchBairro('bairro', $options, $helperOptions);
+
+    $options = array(
+      'label'       => 'Bairro / Zona de Localização - <b>Cadastrar</b>',
+      'placeholder' => 'Bairro',
+      'value'       => $this->bairro,
+      'max_length'  => 40,
+      'disabled'    => $desativarCamposDefinidosViaCep,
+      'inline'      => true,
+      'required'    => $enderecamentoObrigatorio
+    );
+
+    $this->inputsHelper()->text('bairro', $options);
+
+    // zona localização
+
+    $zonas = App_Model_ZonaLocalizacao::getInstance();
+    $zonas = $zonas->getEnums();
+    $zonas = Portabilis_Array_Utils::insertIn(null, 'Zona localiza&ccedil;&atilde;o', $zonas);
+
+    $options = array(
+      'label'       => '',
+      'placeholder' => 'Zona localização',
+      'value'       => $this->zona_localizacao,
+      'disabled'    => $desativarCamposDefinidosViaCep,
+      'resources'   => $zonas,
+      'required'    => $enderecamentoObrigatorio
+    );
+
+    $this->inputsHelper()->select('zona_localizacao', $options);
+
+    $helperOptions = array('hiddenInputOptions' => array('options' => array('value' => $this->logradouro_id)));
+
+    $options       = array('label' => 'Tipo / Logradouro - <b>Buscar</b>', 'required'   => $enderecamentoObrigatorio, 'disabled' => $desativarCamposDefinidosViaCep);
+
+    $this->inputsHelper()->simpleSearchLogradouro('logradouro', $options, $helperOptions);
+
+    // tipo logradouro
+
+    $options = array(
+      'label'       => 'Tipo / Logradouro - <b>Cadastrar</b>',
+      'value'       => $this->idtlog,
+      'disabled'    => $desativarCamposDefinidosViaCep,
+      'inline'      => true,
+      'required'    => $enderecamentoObrigatorio
+    );
+
+    $helperOptions = array(
+      'attrName' => 'idtlog'
+    );
+
+    $this->inputsHelper()->tipoLogradouro($options, $helperOptions);
+
+
+    // logradouro
+
+    $options = array(
+      'label'       => '',
+      'placeholder' => 'Logradouro',
+      'value'       => '',
+      'max_length'  => 150,
+      'disabled'    => $desativarCamposDefinidosViaCep,
+      'required'    => $enderecamentoObrigatorio
+    );
+
+    $this->inputsHelper()->text('logradouro', $options);
+
+        // complemento
+
+    $options = array(
+      'required'    => false,
+      'value'       => '',
+      'max_length'  => 20
+    );
+
+    $this->inputsHelper()->text('complemento', $options);
+
+
+    // numero
+
+    $options = array(
+      'required'    => false,
+      'label'       => 'Número / Letra',
+      'placeholder' => Portabilis_String_Utils::toLatin1('Número'),
+      'value'       => '',
+      'max_length'  => 6,
+      'inline'      => true
+    );
+
+    $this->inputsHelper()->integer('numero', $options);
+
+
+    // letra
+
+    $options = array(
+      'required'    => false,
+      'label'       => '',
+      'placeholder' => 'Letra',
+      'value'       => $this->letra,
+      'max_length'  => 1,
+      'size'        => 15
+    );
+
+    $this->inputsHelper()->text('letra', $options);
+
+
+    // apartamento
+
+    $options = array(
+      'required'    => false,
+      'label'       => 'Nº apartamento / Bloco / Andar',
+      'placeholder' =>  'Apartamento',
+      'value'       => $this->apartamento,
+      'max_length'  => 6,
+      'inline'      => true
+    );
+
+    $this->inputsHelper()->integer('apartamento', $options);
+
+
+    // bloco
+
+    $options = array(
+      'required'    => false,
+      'label'       => '',
+      'placeholder' => 'Bloco',
+      'value'       => $this->bloco,
+      'max_length'  => 20,
+      'size'        => 15,
+      'inline'      => true
+    );
+
+    $this->inputsHelper()->text('bloco', $options);
+
+
+    // andar
+
+    $options = array(
+      'required'    => false,
+      'label'       => '',
+      'placeholder' => 'Andar',
+      'value'       => $this->andar,
+      'max_length'  => 2
+    );
+
+    $this->inputsHelper()->integer('andar', $options);
+
+    $script = '/modules/Cadastro/Assets/Javascripts/Endereco.js';
+
+    Portabilis_View_Helper_Application::loadJavascript($this, $script);
+
     $this->loadResourceAssets($this->getDispatcher());
+
+  }
+
+  protected function addParentsInput($parentType, $parentTypeLabel = '') {
+    if (! $parentTypeLabel)
+      $parentTypeLabel = $parentType;
+
+
+    $parentId = $this->{$parentType . '_id'};
+
+
+    // mostra uma dica nos casos em que foi informado apenas o nome dos pais,
+    //pela antiga interface do cadastro de alunos.
+
+
+
+    $hiddenInputOptions = array('options' => array('value' => $parentId));
+    $helperOptions      = array('objectName' => $parentType, 'hiddenInputOptions' => $hiddenInputOptions);
+
+    $options            = array('label'      => 'Pessoa ' . $parentTypeLabel,
+                                'size'       => 69,
+                                'required'   => false);
+
+    $this->inputsHelper()->simpleSearchPessoa('nome', $options, $helperOptions);
+  }
+
+  protected function inputPai() {
+    $this->addParentsInput('pai');
+  }
+
+  protected function inputMae() {
+    $this->addParentsInput('mae', 'mãe');
   }
 }
 ?>

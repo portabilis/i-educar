@@ -29,6 +29,7 @@ function hideEnderecoFields(){
 
 function preenchaCampoCepPrimeiro(){
   messageUtils.error('Digite um CEP primeiro...');
+  $j('#cep_').focus();
 }
 
 
@@ -131,7 +132,7 @@ function bloqueiaBuscaBairro(){
   if (checkCepFields($j('#cep_').val())){
     $j('#bairro_bairro').closest('tr').hide();
     $j('#bairro').closest('tr').show();
-    $j('#bairro').val($j('#bairro_bairro').val());
+    $j('#bairro').val($j('#bairro').val() ? $j('#bairro').val() :$j('#bairro_bairro').val());
     $j('#bairro_bairro').val('');
     $j('#bairro_id').val('');
   }
@@ -153,7 +154,7 @@ function bloqueiaBuscaLogradouro(){
   if (checkCepFields($j('#cep_').val())){
     $j('#logradouro_logradouro').closest('tr').hide();
     $j('#idtlog').closest('tr').show();
-    $j('#logradouro').val($j('#logradouro_logradouro').val());
+    $j('#logradouro').val($j('#logradouro').val() ? $j('#logradouro').val() :$j('#logradouro_logradouro').val());
     $j('#logradouro_logradouro').val('');
     $j('#logradouro_id').val('');
   }else{
@@ -273,10 +274,19 @@ function validateEndereco(){
 
   var err = false;
 
+  if (!checkCepFields($j('#cep_').val())){
+
+    $j('#municipio_municipio').addClass('error');
+    $j('#municipio_id').addClass('error');
+    messageUtils.error('Informe um CEP no formato NNNNN-NNN.'); 
+    err = true;   
+
+  }
+
   if (!$j('#municipio_id').val()){
     $j('#municipio_municipio').addClass('error');
     $j('#municipio_id').addClass('error');
-    messageUtils.error('Selecione um município corretamente');
+    messageUtils.error('Selecione um município corretamente.');
     err = true;
   }
 
