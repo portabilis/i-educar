@@ -608,19 +608,41 @@ var simpleSearchPessoaOptions = {
 
 // children callbacks
 
-function afterChangePessoa(targetWindow, pessoaId) {
+function afterChangePessoa(targetWindow, parentType, parentId, parentName) {
   if (targetWindow != null)
     targetWindow.close();
 
+  var $tempIdField;
+  var $tempNomeField;
+
+  console.log(parentType);
+  console.log(parentId);
+  console.log(parentName);
+
+  if(parentType){
+    $tempIdField   = $j(buildId(parentType + '_id'));
+    $tempNomeField = $j(buildId(parentType + '_nome'));
+  }else{
+    $tempIdField = $j('pessoa_id');
+    $tempNomeField = $nomeField;
+  }
+
+
   // timeout para usuario perceber mudança
   window.setTimeout(function() {
-    messageUtils.success('Pessoa alterada com sucesso', $nomeField);
+    messageUtils.success('Pessoa alterada com sucesso', $tempNomeField);
 
-    $j('#pessoa_id').val(pessoaId);
-    getPersonDetails(pessoaId);
+    $tempIdField.val(parentId);
+    if(!parentType){
+      getPersonDetails(pessoaId);
+    }else{
+      $tempNomeField.val(parentId + ' - ' +parentName);
+    }
 
-    if ($nomeField.is(':active'))
-      $nomeField.focus();
+    if ($tempNomeField.is(':active'))
+    $tempNomeField.focus();
+
+    changeVisibilityOfLinksToPessoaParent(parentType);
 
   }, 500);
 }
@@ -973,6 +995,10 @@ function canShowParentsFields(){
 
     $j('#link_cadastro_detalhado').click(function(){
       $j( "#dialog-form-pessoa-aluno" ).dialog( "close" );
+    });
+
+    $j('#link_cadastro_detalhado_parent').click(function(){
+      $j( "#dialog-form-pessoa-parent" ).dialog( "close" );
     });
 
     $j("#cadastrar-pessoa-link").click(function() {

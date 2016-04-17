@@ -932,7 +932,7 @@ class indice extends clsCadastro
         if (parentType)
           window.opener.afterChangePessoa(self, parentType, $id, \$j('#nm_pessoa').val());
         else
-          window.opener.afterChangePessoa(self, $id);
+          window.opener.afterChangePessoa(self, null, $id, \$j('#nm_pessoa').val());
       }
       else
         document.location = 'atendidos_lst.php';
