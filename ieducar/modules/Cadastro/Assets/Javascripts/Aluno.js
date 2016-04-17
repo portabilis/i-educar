@@ -615,10 +615,6 @@ function afterChangePessoa(targetWindow, parentType, parentId, parentName) {
   var $tempIdField;
   var $tempNomeField;
 
-  console.log(parentType);
-  console.log(parentId);
-  console.log(parentName);
-
   if(parentType){
     $tempIdField   = $j(buildId(parentType + '_id'));
     $tempNomeField = $j(buildId(parentType + '_nome'));
@@ -634,7 +630,7 @@ function afterChangePessoa(targetWindow, parentType, parentId, parentName) {
 
     $tempIdField.val(parentId);
     if(!parentType){
-      getPersonDetails(pessoaId);
+      getPersonDetails(parentId);
     }else{
       $tempNomeField.val(parentId + ' - ' +parentName);
     }
@@ -1294,14 +1290,14 @@ function canShowParentsFields(){
         dataType : 'json',
         data : data,
         success : function(dataResponse) {
-          afterChangePessoa(null,pessoa_id);
+          afterChangePessoa(null,null,pessoa_id);
         }
       };
 
       postResource(options);
 
     }else{
-      afterChangePessoa(null,pessoa_id);
+      afterChangePessoa(null,null,pessoa_id);
     }
 
   }
