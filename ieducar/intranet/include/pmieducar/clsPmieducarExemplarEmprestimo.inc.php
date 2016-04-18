@@ -387,7 +387,7 @@ class clsPmieducarExemplarEmprestimo
 	 *
 	 * @return array
 	 */
-	function lista( $int_cod_emprestimo = null, $int_ref_usuario_devolucao = null, $int_ref_usuario_cad = null, $int_ref_cod_cliente = null, $int_ref_cod_exemplar = null, $date_data_retirada_ini = null, $date_data_retirada_fim = null, $date_data_devolucao_ini = null, $date_data_devolucao_fim = null, $int_valor_multa = null, $devolvido = false, $int_ref_cod_biblioteca = null, $multa = false, $int_ref_cod_instituicao = null, $int_ref_cod_escola = null, $str_titulo_exemplar = null )
+	function lista( $int_cod_emprestimo = null, $int_ref_usuario_devolucao = null, $int_ref_usuario_cad = null, $int_ref_cod_cliente = null, $int_ref_cod_exemplar = null, $date_data_retirada_ini = null, $date_data_retirada_fim = null, $date_data_devolucao_ini = null, $date_data_devolucao_fim = null, $int_valor_multa = null, $devolvido = false, $int_ref_cod_biblioteca = null, $multa = false, $int_ref_cod_instituicao = null, $int_ref_cod_escola = null, $str_titulo_exemplar = null, $tombo = null)
 	{
 		$sql = "SELECT {$this->_campos_lista}, a.ref_cod_biblioteca, b.ref_cod_instituicao, b.ref_cod_escola FROM {$this->_tabela} ee, {$this->_schema}exemplar e, {$this->_schema}acervo a, {$this->_schema}biblioteca b";
 
@@ -478,9 +478,14 @@ class clsPmieducarExemplarEmprestimo
 			$filtros .= "{$whereAnd} b.ref_cod_escola = '{$int_ref_cod_escola}'";
 			$whereAnd = " AND ";
 		}
-		if( is_string( $str_titulo_exemplar ) )
+    if( is_string( $str_titulo_exemplar ) )
+    {
+      $filtros .= "{$whereAnd} a.titulo LIKE '%{$str_titulo_exemplar}%'";
+      $whereAnd = " AND ";
+    }
+		if( is_numeric( $tombo ) )
 		{
-			$filtros .= "{$whereAnd} a.titulo LIKE '%{$str_titulo_exemplar}%'";
+			$filtros .= "{$whereAnd} e.tombo = {$tombo} ";
 			$whereAnd = " AND ";
 		}
 
