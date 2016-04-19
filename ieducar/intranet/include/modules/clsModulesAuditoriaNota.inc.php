@@ -256,6 +256,8 @@ class clsModulesAuditoriaNota {
 		$detPessoa = $objPessoa->detalhe();
 		$nomePessoa = $detPessoa["nome"];
 
+		$nomePessoa = Portabilis_String_Utils::toLatin1($nomePessoa);
+
 		return $nomePessoa;
 
 	}
