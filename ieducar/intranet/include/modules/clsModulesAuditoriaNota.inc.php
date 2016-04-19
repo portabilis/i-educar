@@ -126,7 +126,6 @@ class clsModulesAuditoriaNota {
 		$valores .= "{$separador}'{$this->dataHora}'";
 		$separador = ", ";
 
-
 		$db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
 
 	}
@@ -168,7 +167,7 @@ class clsModulesAuditoriaNota {
 
 			$arrayInformacoes = $this->getInfosMatricula($notaAlunoId);
 
-			$arrayInformacoes += array("nota" => $nota->nota,
+			$arrayInformacoes += array("nota" => $nota->notaArredondada,
 																 "etapa" => $nota->etapa,
 																 "componenteCurricular" => $componenteCurricular);
 
