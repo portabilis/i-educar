@@ -468,7 +468,7 @@ class clsPmieducarQuadroHorarioHorarios
     $time_hora_inicial_fim = NULL, $time_hora_final_ini = NULL,
     $time_hora_final_fim = NULL, $date_data_cadastro_ini = NULL,
     $date_data_cadastro_fim = NULL, $date_data_exclusao_ini = NULL,
-    $date_data_exclusao_fim = NULL, $int_ativo = NULL, $int_dia_semana = NULL)
+    $date_data_exclusao_fim = NULL, $int_ativo = NULL, $int_dia_semana = NULL, $bool_filtrar_ano = false)
   {
     $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela} qhh";
     $filtros = '';
@@ -571,6 +571,13 @@ class clsPmieducarQuadroHorarioHorarios
 
     if (is_numeric($int_dia_semana)) {
       $filtros .= "{$whereAnd} qhh.dia_semana = '{$int_dia_semana}'";
+      $whereAnd = ' AND ';
+    }
+
+    //Só trás horários do ultimo quadro de horários
+    if ($bool_filtrar_ano) {
+      $filtros .= "{$whereAnd} EXISTS (SELECT qh.ano FROM pmieducar.quadro_horario qh WHERE qh.cod_quadro_horario = qhh.ref_cod_quadro_horario AND qh.ano =
+                                        (SELECT max(ano) FROM quadro_horario WHERE quadro_horario.cod_quadro_horario = qh.cod_quadro_horario))";
       $whereAnd = ' AND ';
     }
 
