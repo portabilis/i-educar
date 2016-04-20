@@ -18,6 +18,7 @@
   <link rel=stylesheet type='text/css' href='styles/portabilis.css' /-->
   <link rel=stylesheet type='text/css' href='styles/min-portabilis.css?rand=3' />
   <link rel=stylesheet type='text/css' href='styles/mytdt.css' />
+  <link rel=stylesheet type='text/css' href='styles/jquery.modal.css' />
   <script src="http://maps.google.com/maps/api/js?sensor=true" type="text/javascript" charset="utf-8"></script>
 
   <!-- #&ESTILO&# -->
@@ -31,6 +32,7 @@
   <!-- #&FRESHDESK&# -->
 
   <script type="text/javascript" src="scripts/jquery/jquery-1.8.3.min.js"></script>
+  <script type="text/javascript" src="scripts/jquery/jquery.modal.min.js"></script>
   <script type="text/javascript" src="scripts/prototype/prototype-1.7.1.0.js"></script>
   <script type="text/javascript" src="scripts/scriptaculous/effects.js"></script>
   <script type="text/javascript" src="scripts/jquery.mask.min.js"></script>
