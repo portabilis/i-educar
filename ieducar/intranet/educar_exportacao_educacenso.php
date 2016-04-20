@@ -112,46 +112,15 @@ class indice extends clsCadastro
 
   function Gerar()
   {
-    $this->nome_url_sucesso = "Exportar";
-    $this->acao_enviar      = 'document.formcadastro.submit()';
 
     $this->inputsHelper()->dynamic(array('ano', 'instituicao', 'escola'));
     $this->inputsHelper()->date('data_ini',array( 'label' => Portabilis_String_Utils::toLatin1('Data início'), 'value' => $this->data_ini));
     $this->inputsHelper()->date('data_fim',array( 'label' => 'Data fim', 'value' => $this->data_fim));
-  }
 
-  function Novo()
-  {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
-    //Checa permissões
-    $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_cadastra(846, $this->pessoa_logada, 7,
-      'educar_index.php');
+    Portabilis_View_Helper_Application::loadJavascript($this, '/modules/Educacenso/Assets/Javascripts/Educacenso.js');
 
-    if (!($this->ref_cod_escola && $this->data_ini && $this->data_fim)) {
-      $this->mensagem = "Preencha todos os campos para continuar";
-      return false;
-    }
-
-    $conteudo = '';
-
-    $conteudo .= $this->exportaDadosCensoPorEscola($this->ref_cod_escola,
-            $this->ano,
-            Portabilis_Date_Utils::brToPgSQL($this->data_ini),
-            Portabilis_Date_Utils::brToPgSQL($this->data_fim));
-
-    if($this->error){
-      $this->mensagem = $this->msg;
-      return false;
-    }
-
-    header('Content-type: text/plain');
-    header('Content-Length: ' . strlen($conteudo));
-    header('Content-Disposition: attachment; filename=exportacao.txt');
-    echo $conteudo;
-    die;
+    $this->nome_url_sucesso = "Exportar";
+    $this->acao_enviar      = " ";
   }
 
   protected function exportaDadosCensoPorEscola($escolaId, $ano, $data_ini, $data_fim){
