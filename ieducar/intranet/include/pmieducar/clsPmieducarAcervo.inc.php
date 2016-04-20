@@ -1109,7 +1109,7 @@ class clsPmieducarAcervo
 					               $str_cdd = null,
 					               $str_cutter = null,
 					               $str_isbn = null,
-		                           $ref_cod_acervo_autor = NULL
+		                           $nm_autor = NULL
 		                           )
 	{
 		$sql = "SELECT {$this->_campos_lista},(SELECT DISTINCT '' || (replace(textcat_all(aa.nm_autor),' <br> ',', '))) as nm_autor FROM {$this->_tabela} a ".
@@ -1180,9 +1180,9 @@ class clsPmieducarAcervo
 			$whereAnd = " AND ";
 		}
 
-		if(is_numeric($ref_cod_acervo_autor))
+		if(is_string($nm_autor))
 		{
-			$filtros .= "{$whereAnd} aaa.ref_cod_acervo_autor = {$ref_cod_acervo_autor}";
+			$filtros .= "{$whereAnd} aa.nm_autor LIKE '%{$nm_autor}%'";
 			$whereAnd = " AND ";
 		}
 

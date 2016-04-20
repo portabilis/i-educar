@@ -93,6 +93,7 @@ class indice extends clsListagem
 	var $ref_cod_biblioteca;
 	var $ref_cod_assunto_acervo;
 	var $ref_cod_acervo_autor;
+	var $nm_autor;
 
 	function Gerar()
 	{
@@ -169,18 +170,6 @@ class indice extends clsListagem
 					$opcoes_editora[$editora["cod_acervo_editora"]] = $editora["nm_editora"];
 				}
 			}
-
-			$obj_autor = new clsPmieducarAcervoAutor();
-			$obj_autor->setCamposLista("cod_acervo_autor, nm_autor");
-			$obj_autor->setOrderby("nm_autor ASC");
-			$lst_autor = $obj_autor->lista(null, null, null, null, null, null, null, null, null, null, $this->ref_cod_biblioteca, null, null);
-			if (is_array($lst_autor))
-			{
-				foreach ($lst_autor as $autor)
-				{
-					$opcoes_autor[$autor["cod_acervo_autor"]] = $autor["nm_autor"];
-				}
-			}
 		}
 
 		$this->campoLista("ref_cod_acervo_colecao", "Acervo Coleção", $opcoes_colecao, $this->ref_cod_acervo_colecao, "", false, "", "", false, false);
@@ -206,7 +195,7 @@ class indice extends clsListagem
 		$this->campoTexto( "cdd", "CDD", $this->cdd, 30, 255, false );
 		$this->campoTexto( "cutter", "Cutter", $this->cutter, 30, 255, false );
 		$this->campoTexto( "isbn", "ISBN", $this->isbn, 30, 255, false );
-		$this->campoLista("ref_cod_acervo_autor", "Autor", $opcoes_autor, $this->ref_cod_acervo_autor, "", false, "", "", false, false);
+		$this->campoTexto( "nm_autor", "Autor", $this->nm_autor, 30, 255, false );
 
 		// Paginador
 		$this->limite = 20;
@@ -224,7 +213,7 @@ class indice extends clsListagem
 		$obj_acervo->ref_cod_acervo_assunto = $this->ref_cod_assunto_acervo;
 
 
-		$lista = $obj_acervo->listaAcervoBiblioteca($this->ref_cod_biblioteca, $this->titulo_livro, 1, $this->ref_cod_acervo_colecao, $this->ref_cod_exemplar_tipo, $this->ref_cod_acervo_editora, $this->sub_titulo, $this->cdd, $this->cutter, $this->isbn, $this->ref_cod_acervo_autor);
+		$lista = $obj_acervo->listaAcervoBiblioteca($this->ref_cod_biblioteca, $this->titulo_livro, 1, $this->ref_cod_acervo_colecao, $this->ref_cod_exemplar_tipo, $this->ref_cod_acervo_editora, $this->sub_titulo, $this->cdd, $this->cutter, $this->isbn, $this->nm_autor);
 
 		$total = $obj_acervo->_total;
 
@@ -348,25 +337,6 @@ function getAcervoEditora(xml_acervo_editora)
 		campoEditora.options[0].text = 'A biblioteca não possui nenhuma editora';	
 }
 
-function getAcervoAutor(xml_acervo_autor)
-{
-	var campoAutor = document.getElementById('ref_cod_acervo_autor');
-	var DOM_array = xml_acervo_autor.getElementsByTagName( "acervo_autor" );
-	if(DOM_array.length)
-	{
-		campoAutor.length = 1;
-		campoAutor.options[0].text = 'Selecione um autor';
-		campoAutor.disabled = false;
-
-		for( var i = 0; i < DOM_array.length; i++ )
-		{
-			campoAutor.options[campoAutor.options.length] = new Option( DOM_array[i].firstChild.data, DOM_array[i].getAttribute("cod_acervo_autor"),false,false);
-		}
-	}
-	else
-		campoAutor.options[0].text = 'A biblioteca não possui nenhum autor';
-}
-
 document.getElementById('ref_cod_biblioteca').onchange = function()
 {
 	var campoBiblioteca = document.getElementById('ref_cod_biblioteca').value;
@@ -391,13 +361,6 @@ document.getElementById('ref_cod_biblioteca').onchange = function()
 	campoEditora.options[0].text = 'Carregando editora';
 	var xml_acervo_editora = new ajax(getAcervoEditora);
 	xml_acervo_editora.envia("educar_acervo_editora_xml.php?bib="+campoBiblioteca);
-
-	var campoAutor = document.getElementById('ref_cod_acervo_autor');
-	campoAutor.length = 1;
-	campoAutor.disabled = true;
-	campoAutor.options[0].text = 'Carregando autor';
-	var xml_acervo_autor = new ajax(getAcervoAutor);
-	xml_acervo_autor.envia("educar_acervo_autor_xml.php?bib="+campoBiblioteca);
 
 };
 
