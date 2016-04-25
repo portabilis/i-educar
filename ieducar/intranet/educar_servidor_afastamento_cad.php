@@ -207,7 +207,6 @@ class indice extends clsCadastro {
 
     $det_servidor = $obj_servidor->detalhe();
 
-
     if ($det_servidor) {
       $obj_funcao = new clsPmieducarFuncao($det_servidor['ref_cod_funcao'],
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, $this->ref_cod_instituicao);
@@ -219,7 +218,7 @@ class indice extends clsCadastro {
         // Pega a lista de aulas alocadas para este servidor
         $lista = $obj->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL,
           $this->ref_cod_instituicao, NULL, $this->ref_cod_servidor, NULL,
-          NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL);
+          NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, true);
 
         if ($lista) {
 

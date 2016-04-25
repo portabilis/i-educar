@@ -81,6 +81,7 @@ class indice extends clsListagem
 	var $sub_titulo;
 	var $cdu;
 	var $cutter;
+	var $cdd;
 	var $volume;
 	var $num_edicao;
 	var $ano;
@@ -91,6 +92,8 @@ class indice extends clsListagem
 	var $ativo;
 	var $ref_cod_biblioteca;
 	var $ref_cod_assunto_acervo;
+	var $ref_cod_acervo_autor;
+	var $nm_autor;
 
 	function Gerar()
 	{
@@ -103,10 +106,11 @@ class indice extends clsListagem
 		foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
 			$this->$var = ( $val === "" ) ? null: $val;
 
-		
-
 		$lista_busca = array(
-			"Obra"
+			"Obra",
+			"Autor(es)",
+			"CDD - Cutter",
+			"ISBN"
 		);
 
 		// Filtros de Foreign Keys
@@ -114,6 +118,9 @@ class indice extends clsListagem
 		$get_biblioteca = true;
 		$get_cabecalho = "lista_busca";
 		include("include/pmieducar/educar_campo_lista.php");
+
+		//retira escola e instituição do cabeçalho
+		unset($lista_busca[5], $lista_busca[6]);
 
 		$this->addCabecalhos($lista_busca);
 
@@ -123,6 +130,8 @@ class indice extends clsListagem
 		$opcoes_exemplar[""] = "Selecione";
 		$opcoes_editora = array();
 		$opcoes_editora[""] = "Selecione";
+		$opcoes_autor = array();
+		$opcoes_autor[""] = "Selecione";
 
 		if (is_numeric($this->ref_cod_biblioteca))
 		{
@@ -137,7 +146,7 @@ class indice extends clsListagem
 					$opcoes_colecao[$colecao["cod_acervo_colecao"]] = $colecao["nm_colecao"];
 				}
 			}
-			
+
 			$obj_tp_exemplar = new clsPmieducarExemplarTipo();
 			$obj_tp_exemplar->setCamposLista("cod_exemplar_tipo, nm_tipo");
 			$obj_tp_exemplar->setOrderby("nm_tipo ASC");
@@ -162,6 +171,7 @@ class indice extends clsListagem
 				}
 			}
 		}
+
 		$this->campoLista("ref_cod_acervo_colecao", "Acervo Coleção", $opcoes_colecao, $this->ref_cod_acervo_colecao, "", false, "", "", false, false);
 		$this->campoLista("ref_cod_exemplar_tipo", "Tipo Exemplar", $opcoes_exemplar, $this->ref_cod_exemplar_tipo, "", false, "", "", false, false);
 		$this->campoLista("ref_cod_acervo_editora", "Editora", $opcoes_editora, $this->ref_cod_acervo_editora, "", false, "", "", false, false);
@@ -178,9 +188,14 @@ class indice extends clsListagem
         }		
 
         $this->campoLista('ref_cod_assunto_acervo', 'Assunto', $opcoes, $this->ref_cod_assunto_acervo, '', FALSE, '',
-    	  '', FALSE, FALSE);		
-		
+    	  '', FALSE, FALSE);
+
 		$this->campoTexto( "titulo_livro", "Titulo", $this->titulo_livro, 30, 255, false );
+		$this->campoTexto( "sub_titulo", "Subtítulo", $this->sub_titulo, 30, 255, false );
+		$this->campoTexto( "cdd", "CDD", $this->cdd, 30, 255, false );
+		$this->campoTexto( "cutter", "Cutter", $this->cutter, 30, 255, false );
+		$this->campoTexto( "isbn", "ISBN", $this->isbn, 30, 255, false );
+		$this->campoTexto( "nm_autor", "Autor", $this->nm_autor, 30, 255, false );
 
 		// Paginador
 		$this->limite = 20;
@@ -191,44 +206,15 @@ class indice extends clsListagem
 			$obj_bib_user = new clsPmieducarBibliotecaUsuario();
 			$this->ref_cod_biblioteca = $obj_bib_user->listaBibliotecas($this->pessoa_logada);
 		}
-		
-		
+
 		$obj_acervo = new clsPmieducarAcervo();
 		$obj_acervo->setOrderby( "titulo ASC" );
 		$obj_acervo->setLimite( $this->limite, $this->offset );
 		$obj_acervo->ref_cod_acervo_assunto = $this->ref_cod_assunto_acervo;
-		
-				
-		
-		$lista = $obj_acervo->listaAcervoBiblioteca($this->ref_cod_biblioteca, $this->titulo_livro, 1, $this->ref_cod_acervo_colecao, $this->ref_cod_exemplar_tipo, $this->ref_cod_acervo_editora);
-		
-		/*$lista = $obj_acervo->lista(
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			$this->titulo_livro,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			1,
-			$this->ref_cod_biblioteca,
-			$this->ref_cod_instituicao,
-			$this->ref_cod_escola
-		);*/
+
+
+		$lista = $obj_acervo->listaAcervoBiblioteca($this->ref_cod_biblioteca, $this->titulo_livro, 1, $this->ref_cod_acervo_colecao, $this->ref_cod_exemplar_tipo, $this->ref_cod_acervo_editora, $this->sub_titulo, $this->cdd, $this->cutter, $this->isbn, $this->nm_autor);
+
 		$total = $obj_acervo->_total;
 
 		// monta a lista
@@ -242,20 +228,6 @@ class indice extends clsListagem
 					$obj_ref_cod_biblioteca = new clsPmieducarBiblioteca( $registro["ref_cod_biblioteca"] );
 					$det_ref_cod_biblioteca = $obj_ref_cod_biblioteca->detalhe();
 					$registro["ref_cod_biblioteca"] = $det_ref_cod_biblioteca["nm_biblioteca"];
-					$registro["ref_cod_instituicao"] = $det_ref_cod_biblioteca["ref_cod_instituicao"];
-					$registro["ref_cod_escola"] = $det_ref_cod_biblioteca["ref_cod_escola"];
-					if( $registro["ref_cod_instituicao"] )
-					{
-						$obj_ref_cod_instituicao = new clsPmieducarInstituicao( $registro["ref_cod_instituicao"] );
-						$det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
-						$registro["ref_cod_instituicao"] = $det_ref_cod_instituicao["nm_instituicao"];
-					}
-					if( $registro["ref_cod_escola"] )
-					{
-						$obj_ref_cod_escola = new clsPmieducarEscola();
-						$det_ref_cod_escola = array_shift($obj_ref_cod_escola->lista($registro["ref_cod_escola"]));
-						$registro["ref_cod_escola"] = $det_ref_cod_escola["nome"];
-					}
 				}
 				else
 				{
@@ -264,18 +236,16 @@ class indice extends clsListagem
 				}
 
 				$lista_busca = array(
-					"<a href=\"educar_acervo_det.php?cod_acervo={$registro["cod_acervo"]}\">{$registro["titulo"]}</a>"
+					"<a href=\"educar_acervo_det.php?cod_acervo={$registro["cod_acervo"]}\">{$registro["titulo"]} {$registro["sub_titulo"]}</a>",
+					"<a href=\"educar_acervo_det.php?cod_acervo={$registro["cod_acervo"]}\">{$registro["nm_autor"]}</a>",
+					"<a href=\"educar_acervo_det.php?cod_acervo={$registro["cod_acervo"]}\">{$registro["cdd"]} {$registro["cutter"]}</a>",
+					"<a href=\"educar_acervo_det.php?cod_acervo={$registro["cod_acervo"]}\">{$registro["isbn"]}</a>"
 				);
 
 				if ($qtd_bibliotecas > 1 && ($nivel_usuario == 4 || $nivel_usuario == 8))
 					$lista_busca[] = "<a href=\"educar_acervo_det.php?cod_acervo={$registro["cod_acervo"]}\">{$registro["ref_cod_biblioteca"]}</a>";
 				else if ($nivel_usuario == 1 || $nivel_usuario == 2 || $nivel_usuario == 4)
 					$lista_busca[] = "<a href=\"educar_acervo_det.php?cod_acervo={$registro["cod_acervo"]}\">{$registro["ref_cod_biblioteca"]}</a>";
-				if ($nivel_usuario == 1 || $nivel_usuario == 2)
-					$lista_busca[] = "<a href=\"educar_acervo_det.php?cod_acervo={$registro["cod_acervo"]}\">{$registro["ref_cod_escola"]}</a>";
-				if ($nivel_usuario == 1)
-					$lista_busca[] = "<a href=\"educar_acervo_det.php?cod_acervo={$registro["cod_acervo"]}\">{$registro["ref_cod_instituicao"]}</a>";
-
 				$this->addLinhas($lista_busca);
 			}
 		}
@@ -370,28 +340,28 @@ function getAcervoEditora(xml_acervo_editora)
 document.getElementById('ref_cod_biblioteca').onchange = function()
 {
 	var campoBiblioteca = document.getElementById('ref_cod_biblioteca').value;
-	
+
 	var campoTipo = document.getElementById('ref_cod_exemplar_tipo');
 	campoTipo.length = 1;
 	campoTipo.disabled = true;
 	campoTipo.options[0].text = 'Carregando tipo de exemplar';
 	var xml_exemplar_tipo = new ajax( getExemplarTipo );
 	xml_exemplar_tipo.envia( "educar_exemplar_tipo_xml.php?bib="+campoBiblioteca );
-	
+
 	var campoColecao = document.getElementById('ref_cod_acervo_colecao');
 	campoColecao.length = 1;
 	campoColecao.disabled = true;
 	campoColecao.options[0].text = 'Carregando coleção';
 	var xml_acervo_colecao = new ajax(getAcervoColecao);
 	xml_acervo_colecao.envia("educar_acervo_colecao_xml.php?bib="+campoBiblioteca);
-	
+
 	var campoEditora = document.getElementById('ref_cod_acervo_editora');
 	campoEditora.length = 1;
 	campoEditora.disabled = true;
 	campoEditora.options[0].text = 'Carregando editora';
 	var xml_acervo_editora = new ajax(getAcervoEditora);
 	xml_acervo_editora.envia("educar_acervo_editora_xml.php?bib="+campoBiblioteca);
-	
+
 };
 
 </script>

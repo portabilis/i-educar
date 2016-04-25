@@ -112,92 +112,15 @@ class indice extends clsCadastro
 
   function Gerar()
   {
-    $this->nome_url_sucesso = "Exportar";
-    $this->acao_enviar      = 'document.formcadastro.submit()';
 
-    $this->inputsHelper()->input('ano');
+    $this->inputsHelper()->dynamic(array('ano', 'instituicao', 'escola'));
     $this->inputsHelper()->date('data_ini',array( 'label' => Portabilis_String_Utils::toLatin1('Data início'), 'value' => $this->data_ini));
     $this->inputsHelper()->date('data_fim',array( 'label' => 'Data fim', 'value' => $this->data_fim));
 
-    $obj_permissoes = new clsPermissoes();
-    $nivel_acesso = $obj_permissoes->nivel_acesso($this->pessoa_logada);
+    Portabilis_View_Helper_Application::loadJavascript($this, '/modules/Educacenso/Assets/Javascripts/Educacenso.js');
 
-    if($nivel_acesso ==  "4"){
-      $cod_escola = $obj_permissoes->getEscola($this->pessoa_logada);
-
-      $obj_ref_cod_escola = new clsPmieducarEscola( $cod_escola );
-      $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
-      $idpes = $det_ref_cod_escola["ref_idpes"];
-      if ($idpes)
-      {
-        $obj_escola = new clsPessoaJuridica( $idpes );
-        $obj_escola_det = $obj_escola->detalhe();
-        $escolas = array($cod_escola => $obj_escola_det["fantasia"]);
-      }
-      else
-      {
-        $obj_escola = new clsPmieducarEscolaComplemento( $cod_escola );
-        $obj_escola_det = $obj_escola->detalhe();
-        $escolas = array($cod_escola => $obj_escola_det["nm_escola"]);
-      }
-
-    }elseif($nivel_acesso < "4"){
-      $escolas = App_Model_IedFinder::getEscolas();
-    }
-
-    if (is_array($escolas) && (count($escolas) > 0)) {
-
-      $conteudo = '<br style="clear: left" />';
-      $conteudo .= '<div style="margin-bottom: 10px; float: left">';
-      $conteudo .= "  <label style='display: block; float: left;'><input type='checkbox' name='CheckTodos' onClick='marcarCheck(".'"escolas[]"'.");'/><b>Marcar todas</b></label>";
-      $conteudo .= '</div>';
-      $conteudo .= '<br style="clear: left" />';
-      foreach ($escolas as $key => $value) {
-
-        $conteudo .= '<div style="margin-bottom: 10px; float: left">';
-        $conteudo .= "  <label style='display: block; float: left;'><input type=\"checkbox\" name=\"escolas[$key]\" id=\"escolas[]\" value=\"{$key}\">{$value}</label>";
-        $conteudo .= '</div>';
-        $conteudo .= '<br style="clear: left" />';
-      }
-
-      $escolas  = '<table cellspacing="0" cellpadding="0" border="0">';
-      $escolas .= sprintf('<tr align="left"><td>%s</td></tr>', $conteudo);
-      $escolas .= '</table>';
-
-    $this->campoRotulo("escolas_", "<b>Escolas</b>",
-      "<div id='escolas'>$escolas</div>", null, 'Selecione a(s) escola(s) que deseja exportar');
-    }
-  }
-
-  function Novo()
-  {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
-    //Checa permissões
-    $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_cadastra(846, $this->pessoa_logada, 7,
-      'educar_index.php');
-
-    $conteudo = '';
-
-    foreach ($this->escolas as $key => $escolaId) {
-      $conteudo .= $this->exportaDadosCensoPorEscola($escolaId,
-              $this->ano,
-              Portabilis_Date_Utils::brToPgSQL($this->data_ini),
-              Portabilis_Date_Utils::brToPgSQL($this->data_fim));
-    }
-
-    if($this->error){
-      $this->mensagem = $this->msg;
-      return false;
-    }
-
-    header('Content-type: text/plain');
-    header('Content-Length: ' . strlen($conteudo));
-    header('Content-Disposition: attachment; filename=exportacao.txt');
-    echo $conteudo;
-    die();
+    $this->nome_url_sucesso = "Exportar";
+    $this->acao_enviar      = " ";
   }
 
   protected function exportaDadosCensoPorEscola($escolaId, $ano, $data_ini, $data_fim){

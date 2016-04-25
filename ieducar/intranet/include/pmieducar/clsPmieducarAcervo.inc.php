@@ -121,6 +121,8 @@ class clsPmieducarAcervo
 	 */
 	var $_campo_order_by;
 
+	var $_campo_group_by;
+
 
 	/**
 	 * Construtor (PHP 4)
@@ -190,6 +192,35 @@ class clsPmieducarAcervo
 		                                               a.local, 
 		                                               a.ref_cod_tipo_autor, 
 		                                               a.tipo_autor";
+		$this->_campo_group_by = "a.cod_acervo,
+						          a.ref_cod_exemplar_tipo,
+						       	  a.ref_cod_acervo,
+						       	  a.ref_usuario_exc,
+						       	  a.ref_usuario_cad,
+						       	  a.ref_cod_acervo_colecao,
+						       	  a.ref_cod_acervo_idioma,
+						       	  a.ref_cod_acervo_editora,
+						       	  a.titulo,
+						       	  a.sub_titulo,
+						       	  a.cdu,
+						       	  a.cutter,
+						       	  a.volume,
+						       	  a.num_edicao,
+						       	  a.ano,
+						       	  a.num_paginas,
+						       	  a.isbn,
+						       	  a.data_cadastro,
+						       	  a.data_exclusao,
+						       	  a.ativo,
+						       	  a.ref_cod_biblioteca,
+						       	  a.cdd,
+						       	  a.estante,
+						       	  a.dimencao,
+						       	  a.material_ilustrativo,
+						       	  a.dimencao_ilustrativo,
+						       	  a.local,
+						       	  a.ref_cod_tipo_autor,
+						       	  a.tipo_autor";
 
 		if( is_numeric( $ref_cod_biblioteca ) )
 		{
@@ -856,6 +887,7 @@ class clsPmieducarAcervo
 		            $str_titulo = null, 
 		            $str_sub_titulo = null, 
 		            $str_cdu = null, 
+		            $str_cdd = null, 
 		            $str_cutter = null, 
 		            $str_isbn = null, 
 		            $date_data_cadastro_ini = null, 
@@ -930,6 +962,11 @@ class clsPmieducarAcervo
 		if( is_string( $str_cdu ) )
 		{
 			$filtros .= "{$whereAnd} a.cdu LIKE '%{$str_cdu}%'";
+			$whereAnd = " AND ";
+		}
+		if( is_string( $str_cdd ) )
+		{
+			$filtros .= "{$whereAnd} a.cdd LIKE '%{$str_cdd}%'";
 			$whereAnd = " AND ";
 		}
 		if( is_string( $str_cutter ) )
@@ -1062,14 +1099,22 @@ class clsPmieducarAcervo
 	}
 
 
-	function listaAcervoBiblioteca($int_ref_cod_biblioteca = null, 
-		                           $str_titulo = null, 
-		                           $ativo = null, 
-		                           $int_ref_cod_acervo_colecao = null,  
-		                           $int_ref_cod_exemplar_tipo = null, 
-		                           $int_ref_cod_acervo_editora = null)
+	function listaAcervoBiblioteca($int_ref_cod_biblioteca = null,
+		                           $str_titulo = null,
+		                           $ativo = null,
+		                           $int_ref_cod_acervo_colecao = null,
+		                           $int_ref_cod_exemplar_tipo = null,
+		                           $int_ref_cod_acervo_editora = null,
+		                           $str_sub_titulo = NULL,
+					               $str_cdd = null,
+					               $str_cutter = null,
+					               $str_isbn = null,
+		                           $nm_autor = NULL
+		                           )
 	{
-		$sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela} a";
+		$sql = "SELECT {$this->_campos_lista},(SELECT DISTINCT '' || (replace(textcat_all(aa.nm_autor),' <br> ',', '))) as nm_autor FROM {$this->_tabela} a ".
+		       "LEFT JOIN acervo_acervo_autor aaa ON (aaa.ref_cod_acervo = a.cod_acervo) ".
+		       "LEFT JOIN acervo_autor aa ON (aa.cod_acervo_autor = aaa.ref_cod_acervo_autor)";
 
 		$whereAnd = " WHERE ";
 		if(is_array($int_ref_cod_biblioteca))
@@ -1080,7 +1125,7 @@ class clsPmieducarAcervo
 		}
 		elseif (is_numeric($int_ref_cod_biblioteca))
 		{
-			$filtros .= "{$whereAnd} ref_cod_biblioteca = '{$int_ref_cod_biblioteca}'";
+			$filtros .= "{$whereAnd} a.ref_cod_biblioteca = '{$int_ref_cod_biblioteca}'";
 			$whereAnd = " AND ";
 		}
 
@@ -1089,7 +1134,21 @@ class clsPmieducarAcervo
 			$filtros .= "{$whereAnd} (SELECT 1 FROM pmieducar.acervo_acervo_assunto WHERE ref_cod_acervo = cod_acervo AND ref_cod_acervo_assunto = {$this->ref_cod_acervo_assunto} ) IS NOT NULL";
 			$whereAnd = " AND ";
 		}	
-
+		if(is_string($str_cdd))
+		{
+			$filtros .= "{$whereAnd} cdd LIKE '%{$str_cdd}%'";
+			$whereAnd = " AND ";
+		}
+		if(is_string($str_cutter))
+		{
+			$filtros .= "{$whereAnd} cutter LIKE '%{$str_cutter}%'";
+			$whereAnd = " AND ";
+		}
+		if(is_string($str_isbn))
+		{
+			$filtros .= "{$whereAnd} isbn LIKE '%{$str_isbn}%'";
+			$whereAnd = " AND ";
+		}
 		if(is_string($str_titulo))
 		{
 			$filtros .= "{$whereAnd} titulo LIKE '%{$str_titulo}%'";
@@ -1097,7 +1156,7 @@ class clsPmieducarAcervo
 		}
 		if (is_numeric($ativo))
 		{
-			$filtros .= "{$whereAnd} ativo = {$ativo}";
+			$filtros .= "{$whereAnd} a.ativo = {$ativo}";
 			$whereAnd = " AND ";
 		}
 		if (is_numeric($int_ref_cod_acervo_colecao))
@@ -1115,10 +1174,25 @@ class clsPmieducarAcervo
 			$filtros .= "{$whereAnd} ref_cod_acervo_editora = {$int_ref_cod_acervo_editora}";
 			$whereAnd = " AND ";
 		}
+		if(is_string($str_sub_titulo))
+		{
+			$filtros .= "{$whereAnd} sub_titulo LIKE '%{$str_sub_titulo}%'";
+			$whereAnd = " AND ";
+		}
 
-		$sql .= $filtros . $this->getOrderby() . $this->getLimite();
+		if(is_string($nm_autor))
+		{
+			$filtros .= "{$whereAnd} aa.nm_autor LIKE '%{$nm_autor}%'";
+			$whereAnd = " AND ";
+		}
+
+		$sql .= $filtros . $this->getGroupby() .$this->getOrderby() . $this->getLimite();
+
 		$db = new clsBanco();
-		$this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} a {$filtros}" );
+		$this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} a
+			                             LEFT JOIN acervo_acervo_autor aaa ON (aaa.ref_cod_acervo = a.cod_acervo)
+			                             LEFT JOIN acervo_autor aa ON (aa.cod_acervo_autor = aaa.ref_cod_acervo_autor) 
+			                             {$filtros}" );
 
 		$db->Consulta( $sql );
 		$countCampos = count( explode( ",", $this->_campos_lista ) );
@@ -1286,6 +1360,16 @@ class clsPmieducarAcervo
 		}
 		return "";
 	}
+
+	function getGroupby()
+	{
+		if( is_string( $this->_campo_order_by ) )
+		{
+			return " GROUP BY {$this->_campo_group_by} ";
+		}
+		return "";
+	}
+
 
 }
 ?>
