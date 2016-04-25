@@ -2,7 +2,7 @@ $j(document).ready(function(){
 
 	var modalLoad = '<div id="modal_load" class="modal">' +
 					'<div style="float:left;width:100px;">' +
-  					'	<img src="http://www.tourismthailand.org/images/loading/load.gif" width="100px" height="100px" alt="">' +
+  					'	<img src="imagens/educacenso/load_modal_educacenso.gif" width="100px" height="100px" alt="">' +
   					'</div>'+
   					'<div style="float:right;width:300px;">'+
   					'	<p style="margin-left: 20px; margin-top: 30px;font-family: verdana, arial; font-size: 18px;">Analisando as informa&ccedil;&otilde;es</p>' +
@@ -37,17 +37,27 @@ $j(document).ready(function(){
     		return;
     	}
 
-      doc.fromHTML(paginaResposta, 15, 15, {
-          'width': 170,
-              'elementHandlers': specialElementHandlers
+      $j("#modal_load").modal({
+        escapeClose: false,
+        clickClose: false,
+        showClose: false
       });
-      doc.output('dataurlnewwindow');
 
-    	$j("#modal_load").modal({
-  		  escapeClose: false,
-  		  clickClose: false,
-  		  showClose: false
-  		});
+      //Simula analise
+      setTimeout(function()
+      {
+        finishAnalysis();
+      }, 3000);
+
     });
+
+    var finishAnalysis = function() {
+        $j.modal.close();
+        doc.fromHTML(paginaResposta, 15, 15, {
+            'width': 170,
+                'elementHandlers': specialElementHandlers
+        });
+        doc.output('dataurlnewwindow');
+    }
 
 });
