@@ -33,6 +33,7 @@
 
   <script type="text/javascript" src="scripts/jquery/jquery-1.8.3.min.js"></script>
   <script type="text/javascript" src="scripts/jquery/jquery.modal.min.js"></script>
+  <script type="text/javascript" src="scripts/jquery/jspdf.min.js"></script>
   <script type="text/javascript" src="scripts/prototype/prototype-1.7.1.0.js"></script>
   <script type="text/javascript" src="scripts/scriptaculous/effects.js"></script>
   <script type="text/javascript" src="scripts/jquery.mask.min.js"></script>
