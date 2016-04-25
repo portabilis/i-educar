@@ -303,7 +303,7 @@ class indice extends clsListagem
         }
         else {
           if (is_string($_SESSION['campo1']) && is_string($_SESSION['campo2'])) {
-            $script = " onclick=\"addVal1('{$_SESSION['campo1']}','{$registro['nome']}','{$registro['cod_servidor']}'); addVal1('{$_SESSION['campo2']}','{$registro['nome']}','{$registro['cod_servidor']}'); $setAll fecha();\"";
+            $script = " onclick=\"addVal1('{$_SESSION['campo1']}','{$registro['cod_servidor']}','{$registro['nome']}'); addVal1('{$_SESSION['campo2']}','{$registro['cod_servidor']}','{$registro['nome']}'); $setAll fecha();\"";
           }
           elseif (is_string($_SESSION['campo2'])) {
             $script = " onclick=\"addVal1('{$_SESSION['campo2']}','{$registro['cod_servidor']}','{$registro['nome']}'); $setAll fecha();\"";
