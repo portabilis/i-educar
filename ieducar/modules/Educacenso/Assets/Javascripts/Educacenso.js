@@ -1,7 +1,7 @@
 $j(document).ready(function(){
 
-	var modalLoad = '<div id="modal_load" class="modal">' +
-					'<div style="float:left;width:100px;">' +
+	var modalLoad = '<div id="modal_load" class="modal" style="display:none;">' +
+				  	'<div style="float:left;width:100px;">' +
   					'	<img src="imagens/educacenso/load_modal_educacenso.gif" width="100px" height="100px" alt="">' +
   					'</div>'+
   					'<div style="float:right;width:300px;">'+
