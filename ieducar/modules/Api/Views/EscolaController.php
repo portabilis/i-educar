@@ -327,7 +327,8 @@ protected function getInformacaoEscolas(){
           pessoa.email as email,
           fone_pessoa.ddd as ddd,
           fone_pessoa.fone as fone,
-          pessoa_responsavel.nome as nome_responsavel
+          pessoa_responsavel.nome as nome_responsavel,
+          educacenso_cod_escola.cod_escola_inep as inep
          from pmieducar.escola
         inner join cadastro.juridica on(escola.ref_idpes = juridica.idpes)
          left join cadastro.pessoa on(juridica.idpes = pessoa.idpes)
@@ -340,6 +341,7 @@ protected function getInformacaoEscolas(){
          left join public.uf on(municipio.sigla_uf = uf.sigla_uf)
          left join public.bairro on(endereco_pessoa.idbai = bairro.idbai and municipio.idmun = bairro.idmun)
          left join public.pais on(uf.idpais = pais.idpais)
+         left join modules.educacenso_cod_escola on (educacenso_cod_escola.cod_escola = escola.cod_escola)
         where escola.ativo = 1";
 
   $escolas = $this->fetchPreparedQuery($sql);
@@ -357,7 +359,7 @@ protected function getInformacaoEscolas(){
       $escola['municipio'] = Portabilis_String_Utils::toUtf8($escola['municipio']);
       $escola['nome_responsavel'] = Portabilis_String_Utils::toUtf8($escola['nome_responsavel']);
     }
-    $attrs = array('cod_escola', 'nome', 'cep', 'numero', 'complemento', 'logradouro', 'bairro', 'municipio', 'uf', 'pais', 'email', 'ddd', 'fone', 'nome_responsavel');
+    $attrs = array('cod_escola', 'nome', 'cep', 'numero', 'complemento', 'logradouro', 'bairro', 'municipio', 'uf', 'pais', 'email', 'ddd', 'fone', 'nome_responsavel', 'inep');
     return array( 'escolas' => Portabilis_Array_Utils::filterSet($escolas, $attrs));
   }
 }

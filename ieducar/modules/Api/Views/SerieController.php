@@ -56,7 +56,7 @@ class SerieController extends ApiCoreController
       if(is_array($cursoId))
         $cursoId = implode(",", $cursoId);
 
-      $sql = "SELECT distinct s.cod_serie, s.nm_serie
+      $sql = "SELECT distinct s.cod_serie, s.nm_serie, s.idade_ideal
                 FROM pmieducar.serie s
                 INNER JOIN pmieducar.escola_serie es ON es.ref_cod_serie = s.cod_serie
                 INNER JOIN pmieducar.curso c ON s.ref_cod_curso = c.cod_curso
@@ -78,7 +78,8 @@ class SerieController extends ApiCoreController
 
       $attrs = array(
         'cod_serie'       => 'id',
-        'nm_serie'        => 'nome'
+        'nm_serie'        => 'nome',
+        'idade_ideal'     => 'idade_padrao'
       );
 
       $series = Portabilis_Array_Utils::filterSet($series, $attrs);
