@@ -133,18 +133,30 @@ class TurmaController extends ApiCoreController
 
       $ano = $this->getRequest()->ano;
       $instituicaoId = $this->getRequest()->instituicao_id;
+      $turnoId = $this->getRequest()->turno_id;
 
+      if ($turnoId) {
+        $sql = 'SELECT cod_turma as id, nm_turma as nome, ref_ref_cod_escola as escola_id, turma_turno_id as turno_id
+                  FROM pmieducar.turma
+                  WHERE ref_cod_instituicao = $1
+                  AND ano = $2
+                  AND ativo = 1
+                  AND turma_turno_id = $3
+                  ORDER BY ref_ref_cod_escola, nm_turma';
 
-      $sql = 'SELECT cod_turma as id, nm_turma as nome, ref_ref_cod_escola as escola_id
-                FROM pmieducar.turma
-                WHERE ref_cod_instituicao = $1
-                AND ano = $2
-                AND ativo = 1
-                ORDER BY ref_ref_cod_escola, nm_turma';
+        $turmas = $this->fetchPreparedQuery($sql, array($instituicaoId, $ano, $turnoId));
+      } else {
+        $sql = 'SELECT cod_turma as id, nm_turma as nome, ref_ref_cod_escola as escola_id, turma_turno_id as turno_id
+                  FROM pmieducar.turma
+                  WHERE ref_cod_instituicao = $1
+                  AND ano = $2
+                  AND ativo = 1
+                  ORDER BY ref_ref_cod_escola, nm_turma';
 
-      $turmas = $this->fetchPreparedQuery($sql, array($instituicaoId, $ano));
+        $turmas = $this->fetchPreparedQuery($sql, array($instituicaoId, $ano));
+      }
 
-      $attrs = array('id', 'nome', 'escola_id');
+      $attrs = array('id', 'nome', 'escola_id', 'turno_id');
       $turmas = Portabilis_Array_Utils::filterSet($turmas, $attrs);
 
       foreach ($turmas as &$turma) {
