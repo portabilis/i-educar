@@ -107,34 +107,35 @@ class DiarioController extends ApiCoreController
 
     $matriculaId = $this->fetchPreparedQuery($sql, array($turmaId, $alunoId), true, 'first-field');
 
-    if(empty($matriculaId))
-      throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("Não foi possível encontrar uma matrícula na turma {$turmaId} para o aluno {$alunoId}."));
-
     return $matriculaId;
   }
 
   protected function serviceBoletim($turmaId, $alunoId) {
     $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
+    if($matriculaId){
 
-    if (! isset($this->_boletimServiceInstances))
-      $this->_boletimServiceInstances = array();
+      if (! isset($this->_boletimServiceInstances))
+        $this->_boletimServiceInstances = array();
 
-    // set service
-    if (! isset($this->_boletimServiceInstances[$matriculaId])) {
-      try {
-        $params = array('matricula' => $matriculaId);
-        $this->_boletimServiceInstances[$matriculaId] = new Avaliacao_Service_Boletim($params);
+      // set service
+      if (! isset($this->_boletimServiceInstances[$matriculaId])) {
+        try {
+          $params = array('matricula' => $matriculaId);
+          $this->_boletimServiceInstances[$matriculaId] = new Avaliacao_Service_Boletim($params);
+        }
+        catch (Exception $e){
+          $this->messenger->append(Portabilis_String_Utils::toLatin1("Erro ao instanciar serviço boletim para matricula {$matriculaId}: ") . $e->getMessage(), 'error', true);
+        }
       }
-      catch (Exception $e){
-        $this->messenger->append(Portabilis_String_Utils::toLatin1("Erro ao instanciar serviço boletim para matricula {$matriculaId}: ") . $e->getMessage(), 'error', true);
-      }
+
+      // validates service
+      if (is_null($this->_boletimServiceInstances[$matriculaId]))
+        throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("Não foi possivel instanciar o serviço boletim para a matrícula $matriculaId."));
+
+      return $this->_boletimServiceInstances[$matriculaId];
+    }else{
+      return false;
     }
-
-    // validates service
-    if (is_null($this->_boletimServiceInstances[$matriculaId]))
-      throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("Não foi possivel instanciar o serviço boletim para a matrícula $matriculaId."));
-
-    return $this->_boletimServiceInstances[$matriculaId];
   }
 
   protected function canPostNotas(){
@@ -177,6 +178,7 @@ class DiarioController extends ApiCoreController
           foreach ($notaTurmaAluno as $componenteCurricularId => $notaTurmaAlunoDisciplina){
             if($this->validateComponenteTurma($turmaId, $componenteCurricularId)){
               $valor = $notaTurmaAlunoDisciplina['valor'];
+              $valor = truncate($valor, 4);
               $array_nota = array(
                     'componenteCurricular' => $componenteCurricularId,
                     'nota'                 => $valor,
@@ -185,8 +187,11 @@ class DiarioController extends ApiCoreController
 
               $nota = new Avaliacao_Model_NotaComponente($array_nota);
 
-              $this->serviceBoletim($turmaId, $alunoId)->addNota($nota);
-              $this->trySaveServiceBoletim($turmaId, $alunoId);
+              if($this->serviceBoletim($turmaId, $alunoId)){
+                $this->serviceBoletim($turmaId, $alunoId)->addNota($nota);
+                $this->trySaveServiceBoletim($turmaId, $alunoId);
+              }
+              
             }
           }
         }
@@ -208,20 +213,22 @@ class DiarioController extends ApiCoreController
 
           foreach ($faltaTurmaAluno as $componenteCurricularId => $faltaTurmaAlunoDisciplina){
             $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
+            if($matriculaId){
 
-            if($this->validateMatricula($matriculaId)){
-              
-              if($this->validateComponenteTurma($turmaId, $componenteCurricularId)){
-                $valor = $faltaTurmaAlunoDisciplina["valor"];
+              if($this->validateMatricula($matriculaId)){
+                
+                if($this->validateComponenteTurma($turmaId, $componenteCurricularId)){
+                  $valor = $faltaTurmaAlunoDisciplina["valor"];
 
-                $falta = new Avaliacao_Model_FaltaComponente(array(
-                  'componenteCurricular' => $componenteCurricularId,
-                  'quantidade'           => $valor,
-                  'etapa'                => $etapa
-                ));
+                  $falta = new Avaliacao_Model_FaltaComponente(array(
+                    'componenteCurricular' => $componenteCurricularId,
+                    'quantidade'           => $valor,
+                    'etapa'                => $etapa
+                  ));
 
-                $this->serviceBoletim($turmaId, $alunoId)->addFalta($falta);
-                $this->trySaveServiceBoletim($turmaId, $alunoId);
+                  $this->serviceBoletim($turmaId, $alunoId)->addFalta($falta);
+                  $this->trySaveServiceBoletim($turmaId, $alunoId);
+                }
               }
             }
           }
@@ -244,15 +251,17 @@ class DiarioController extends ApiCoreController
 
         foreach ($faltaTurma as $alunoId => $faltaTurmaAluno) {
           $faltas = $faltaTurmaAluno['valor'];
-          $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
+          
+          if($this->findMatriculaByTurmaAndAluno($turmaId, $alunoId)){
 
-          $falta = new Avaliacao_Model_FaltaGeral(array(
-            'quantidade'           => $faltas,
-            'etapa'                => $etapa
-          ));
+            $falta = new Avaliacao_Model_FaltaGeral(array(
+              'quantidade'           => $faltas,
+              'etapa'                => $etapa
+            ));
 
-          $this->serviceBoletim($turmaId, $alunoId)->addFalta($falta);
-          $this->trySaveServiceBoletim($turmaId, $alunoId);
+            $this->serviceBoletim($turmaId, $alunoId)->addFalta($falta);
+            $this->trySaveServiceBoletim($turmaId, $alunoId);
+          }
         }
       }
 
@@ -271,22 +280,23 @@ class DiarioController extends ApiCoreController
         }
 
         foreach ($parecerTurma as $alunoId => $parecerTurmaAluno) {
-          $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
+          if($this->findMatriculaByTurmaAndAluno($turmaId, $alunoId)){
           
-          if($this->validateMatricula($matriculaId)){
-            foreach ($parecerTurmaAluno as $componenteCurricularId => $parecerTurmaAlunoComponente) {
-              if($this->validateComponenteTurma($turmaId, $componenteCurricularId)){
+            if($this->validateMatricula($matriculaId)){
+              foreach ($parecerTurmaAluno as $componenteCurricularId => $parecerTurmaAlunoComponente) {
+                if($this->validateComponenteTurma($turmaId, $componenteCurricularId)){
 
-                $parecer = $parecerTurmaAlunoComponente['valor'];
+                  $parecer = $parecerTurmaAlunoComponente['valor'];
 
-                $parecerDescritivo = new Avaliacao_Model_ParecerDescritivoComponente(array(
-                  'componenteCurricular' => $componenteCurricularId,
-                  'parecer'              => Portabilis_String_Utils::toLatin1($parecer),
-                  'etapa'                => $etapa
-                ));
+                  $parecerDescritivo = new Avaliacao_Model_ParecerDescritivoComponente(array(
+                    'componenteCurricular' => $componenteCurricularId,
+                    'parecer'              => Portabilis_String_Utils::toLatin1($parecer),
+                    'etapa'                => $etapa
+                  ));
 
-                $this->serviceBoletim($turmaId, $alunoId)->addParecer($parecerDescritivo);
-                $this->trySaveServiceBoletim($turmaId, $alunoId);
+                  $this->serviceBoletim($turmaId, $alunoId)->addParecer($parecerDescritivo);
+                  $this->trySaveServiceBoletim($turmaId, $alunoId);
+                }
               }
             }
           }
@@ -307,22 +317,23 @@ class DiarioController extends ApiCoreController
         }
 
         foreach ($parecerTurma as $alunoId => $parecerTurmaAluno) {
-          $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
+          if($this->findMatriculaByTurmaAndAluno($turmaId, $alunoId)){
 
-          if($this->validateMatricula($matriculaId)){
+            if($this->validateMatricula($matriculaId)){
 
-            foreach ($parecerTurmaAluno as $componenteCurricularId => $parecerTurmaAlunoComponente) {
-              if($this->validateComponenteCurricular($matriculaId, $componenteCurricularId)){
+              foreach ($parecerTurmaAluno as $componenteCurricularId => $parecerTurmaAlunoComponente) {
+                if($this->validateComponenteCurricular($matriculaId, $componenteCurricularId)){
 
-                $parecer = $parecerTurmaAlunoComponente['valor'];
+                  $parecer = $parecerTurmaAlunoComponente['valor'];
 
-                $parecerDescritivo = new Avaliacao_Model_ParecerDescritivoComponente(array(
-                  'componenteCurricular' => $componenteCurricularId,
-                  'parecer'              => Portabilis_String_Utils::toLatin1($parecer)
-                ));
+                  $parecerDescritivo = new Avaliacao_Model_ParecerDescritivoComponente(array(
+                    'componenteCurricular' => $componenteCurricularId,
+                    'parecer'              => Portabilis_String_Utils::toLatin1($parecer)
+                  ));
 
-                $this->serviceBoletim($turmaId, $alunoId)->addParecer($parecerDescritivo);
-                $this->trySaveServiceBoletim($turmaId, $alunoId);
+                  $this->serviceBoletim($turmaId, $alunoId)->addParecer($parecerDescritivo);
+                  $this->trySaveServiceBoletim($turmaId, $alunoId);
+                }
               }
             }
           }
@@ -344,16 +355,17 @@ class DiarioController extends ApiCoreController
         }
 
         foreach ($parecerTurma as $alunoId => $parecerTurmaAluno) {
-          $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
-          $parecer = $parecerTurmaAluno['valor'];
+          if($this->findMatriculaByTurmaAndAluno($turmaId, $alunoId)){
+            $parecer = $parecerTurmaAluno['valor'];
 
-          $parecerDescritivo = new Avaliacao_Model_ParecerDescritivoGeral(array(
-            'parecer'           => Portabilis_String_Utils::toLatin1($parecer),
-            'etapa'             => $etapa
-          ));
+            $parecerDescritivo = new Avaliacao_Model_ParecerDescritivoGeral(array(
+              'parecer'           => Portabilis_String_Utils::toLatin1($parecer),
+              'etapa'             => $etapa
+            ));
 
-          $this->serviceBoletim($turmaId, $alunoId)->addParecer($parecerDescritivo);
-          $this->trySaveServiceBoletim($turmaId, $alunoId);
+            $this->serviceBoletim($turmaId, $alunoId)->addParecer($parecerDescritivo);
+            $this->trySaveServiceBoletim($turmaId, $alunoId);
+          }
         }
       }
 
@@ -372,14 +384,15 @@ class DiarioController extends ApiCoreController
 
         foreach ($parecerTurma as $alunoId => $parecerTurmaAluno) {
           $parecer = $parecerTurmaAluno['valor'];
-          $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
+          if($this->findMatriculaByTurmaAndAluno($turmaId, $alunoId)){
 
-          $parecerDescritivo = new Avaliacao_Model_ParecerDescritivoGeral(array(
-            'parecer' => Portabilis_String_Utils::toLatin1($parecer)
-          ));
+            $parecerDescritivo = new Avaliacao_Model_ParecerDescritivoGeral(array(
+              'parecer' => Portabilis_String_Utils::toLatin1($parecer)
+            ));
 
-          $this->serviceBoletim($turmaId, $alunoId)->addParecer($parecerDescritivo);
-          $this->trySaveServiceBoletim($turmaId, $alunoId);
+            $this->serviceBoletim($turmaId, $alunoId)->addParecer($parecerDescritivo);
+            $this->trySaveServiceBoletim($turmaId, $alunoId);
+          }
         }
       }
 
@@ -401,6 +414,10 @@ class DiarioController extends ApiCoreController
     }
 
     return $ativo;
+  }
+
+  private function truncate($x, $digits) { 
+    return round($x - 5 * pow(10, -($digits + 1)), $digits); 
   }
 
   public function Gerar() {

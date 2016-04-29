@@ -461,8 +461,6 @@ class clsPmieducarMatricula
         $set .= "{$gruda}aprovado = '{$this->aprovado}'";
         $gruda = ", ";
       }
-      $set .= "{$gruda}data_exclusao = NOW()";
-      $gruda = ", ";
       if (is_numeric($this->ativo)) {
         $set .= "{$gruda}ativo = '{$this->ativo}'";
         $gruda = ", ";
@@ -506,6 +504,9 @@ class clsPmieducarMatricula
       if (is_string($this->data_cancel)) {
         $set .= "{$gruda}data_cancel = '{$this->data_cancel}'";
         $gruda = ", ";
+      }elseif(is_null($this->data_cancel)){
+        $set .= "{$gruda}data_cancel = NULL";
+        $gruda = ", ";
       }
       if (is_numeric($this->turno_pre_matricula)) {
         $set .= "{$gruda}turno_pre_matricula = '{$this->turno_pre_matricula}'";
@@ -513,6 +514,13 @@ class clsPmieducarMatricula
       }
       if ($this->dependencia) {
         $set .= "{$gruda}dependencia = true ";
+        $gruda = ", ";
+      }
+      if (is_string($this->data_exclusao)) {
+        $set .= "{$gruda}data_exclusao = '{$this->data_exclusao}'";
+        $gruda = ", ";
+      }elseif(is_null($this->data_exclusao)){
+        $set .= "{$gruda}data_exclusao = NULL";
         $gruda = ", ";
       }
       if ($set) {

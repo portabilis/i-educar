@@ -112,7 +112,11 @@ class indice extends clsCadastro
 
 
   function reabrirMatricula($matriculaId) {
-    $matricula = new clsPmieducarMatricula($matriculaId, NULL, NULL, NULL, $this->pessoa_logada, NULL, NULL, 3);
+    $matricula = new clsPmieducarMatricula($matriculaId);
+    $matricula->ref_usuario_exc = NULL;
+    $matricula->aprovado = 3;
+    $matricula->data_exclusao = NULL;
+    $matricula->data_cancel = NULL;
     $matricula->edita();
 
     $sql = "select ref_cod_turma, sequencial from pmieducar.matricula_turma where ref_cod_matricula = $matriculaId and sequencial = (select max(sequencial) from pmieducar.matricula_turma where ref_cod_matricula = $matriculaId) and not exists(select 1 from pmieducar.matricula_turma where ref_cod_matricula = $matriculaId and ativo = 1 limit 1) limit 1";

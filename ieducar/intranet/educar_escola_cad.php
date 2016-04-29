@@ -1037,9 +1037,9 @@ if(!$this->isEnderecoExterno){
 	    $options = array('label' => Portabilis_String_Utils::toLatin1('Situação de funcionamento'), 'resources' => $resources, 'value' => $this->situacao_funcionamento);
 	    $this->inputsHelper()->select('situacao_funcionamento', $options);
 
-  		$resources = array(1 => 'Federal',
+  		$resources = array(3 => 'Municipal',
+  						   1 => 'Federal',
 	                       2 => 'Estadual',
-	                       3 => 'Municipal',
 	                       4 => 'Privada');
 
   		$options = array('label' => Portabilis_String_Utils::toLatin1('Dependência administrativa'), 'resources' => $resources, 'value' => $this->dependencia_administrativa);
@@ -1193,7 +1193,8 @@ if(!$this->isEnderecoExterno){
 			$this->campoOculto( "incluir_curso", "" );
 			$this->campoQuebra();
 
-			$resources = array(1 => Portabilis_String_Utils::toLatin1('Próprio'),
+			$resources = array(0 => 'Selecione',
+				               1 => Portabilis_String_Utils::toLatin1('Próprio'),
 			                   2 => 'Alugado',
 			                   3 => 'Cedido');
 
@@ -1506,14 +1507,14 @@ if(!$this->isEnderecoExterno){
 	    $options = array('label' => Portabilis_String_Utils::toLatin1('Possui banda larga'), 'value' => $this->banda_larga);
 	    $this->inputsHelper()->checkbox('banda_larga', $options);
 
-			$resources = array( 0 => Portabilis_String_Utils::toLatin1('Não oferece'),
+			$resources = array( 0    => 'Selecione',
 			                    1    => Portabilis_String_Utils::toLatin1('Não exclusivamente'),
 			                    2    => 'Exclusivamente');
 
   		$options = array('label' => Portabilis_String_Utils::toLatin1('Atendimento educacional especializado - AEE'), 'resources' => $resources, 'value' => $this->atendimento_aee, 'required' => false, 'size' => 70,);
 	    $this->inputsHelper()->select('atendimento_aee', $options);
 
-	    $resources = array( 0 => Portabilis_String_Utils::toLatin1('Não oferece'),
+	    $resources = array( 0    => 'Selecione',
 		                    1    => Portabilis_String_Utils::toLatin1('Não exclusivamente'),
 		                    2    => 'Exclusivamente');
 
@@ -1523,7 +1524,8 @@ if(!$this->isEnderecoExterno){
 	    $options = array('label' => Portabilis_String_Utils::toLatin1('Ensino fundamental organizado em ciclos'), 'value' => $this->fundamental_ciclo);
 	    $this->inputsHelper()->checkbox('fundamental_ciclo', $options);
 
-	    $resources = array( 1 => Portabilis_String_Utils::toLatin1('Área de assentamento'),
+	    $resources = array( 0 => 'Selecione',
+	    	                1 => Portabilis_String_Utils::toLatin1('Área de assentamento'),
 		                    2 => Portabilis_String_Utils::toLatin1('Terra indígena'),
 		                    3 => Portabilis_String_Utils::toLatin1('Área remanescente de quilombos'),
 		                    4 => Portabilis_String_Utils::toLatin1('Unidade de uso sustentável'),
