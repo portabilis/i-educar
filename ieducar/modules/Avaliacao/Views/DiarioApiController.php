@@ -924,12 +924,13 @@ class DiarioApiController extends ApiCoreController
       foreach($alunos as $aluno) {
         $matricula   = array();
         $matriculaId = $aluno['ref_cod_matricula'];
+        $turmaId     = $aluno['ref_cod_turma'];
 
         // seta id da matricula a ser usado pelo metodo serviceBoletim
         $this->setCurrentMatriculaId($matriculaId);
 
         if(! (dbBool($aluno['remanejado']) || dbBool($aluno['transferido']) || dbBool($aluno['abandono']) || dbBool($aluno['reclassificado'])))
-          $matricula['componentes_curriculares'] = $this->loadComponentesCurricularesForMatricula($matriculaId);
+          $matricula['componentes_curriculares'] = $this->loadComponentesCurricularesForMatricula($matriculaId, $turmaId);
 
         $matricula['matricula_id']             = $aluno['ref_cod_matricula'];
         $matricula['aluno_id']                 = $aluno['ref_cod_aluno'];
@@ -1098,13 +1099,13 @@ class DiarioApiController extends ApiCoreController
 
   // outros metodos auxiliares
 
-  protected function loadComponentesCurricularesForMatricula($matriculaId) {
+  protected function loadComponentesCurricularesForMatricula($matriculaId, $turmaId) {
     $componentesCurriculares  = array();
 
     $componenteCurricularId   = $this->getRequest()->componente_curricular_id;
     $etapa = $this->getRequest()->etapa;
 
-    $_componentesCurriculares = App_Model_IedFinder::getComponentesPorMatricula($matriculaId, null, null, $componenteCurricularId, $etapa);
+    $_componentesCurriculares = App_Model_IedFinder::getComponentesPorMatricula($matriculaId, null, null, $componenteCurricularId, $etapa, $turmaId);
 
     $turmaId = $this->getRequest()->turma_id;
 
