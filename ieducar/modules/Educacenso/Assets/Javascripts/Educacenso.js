@@ -6,24 +6,17 @@ $j(document).ready(function(){
   					'</div>'+
   					'<div style="float:right;width:300px;">'+
   					'	<p style="margin-left: 20px; margin-top: 30px;font-family: verdana, arial; font-size: 18px;">Analisando as informa&ccedil;&otilde;es</p>' +
-  					'	<p id="registro_load" style="margin-left: 20px; margin-top: 10px;font-family: verdana, arial; font-size: 10px;">Registro 00 teste</p>' +
+  					'	<p id="registro_load" style="margin-left: 20px; margin-top: 10px;font-family: verdana, arial; font-size: 10px;">Analisando registro 00</p>' +
   					'</div>'+
   					'</div>';
 
-    var paginaResposta = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Analize exportação</title></head><body>'+
+    var headerPaginaResposta = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Analize exportação</title></head><body>'+
 						 '<div id="content">'+
-						 '  <h3>Analise de exporta&ccedil;&atilde;o</h3>'+
-						 '  <p>Este e um exemplo de problema relatado pela analise do i-Educar.</p>'+
+						 '  <h1>'+stringUtils.toUtf8("Análise de exportação")+'</h1>'+
 						 '</div>'+
-						 '<div id="editor"></div>'+
-						 '</body></html>';
+						 '<div id="editor"></div>';
 
-    var doc = new jsPDF();
-    var specialElementHandlers = {
-        '#editor': function (element, renderer) {
-            return true;
-        }
-    };
+    var paginaResposta = "";
 
     $j("body").append(modalLoad);
     $j("#btn_enviar").click(function(){
@@ -43,21 +36,59 @@ $j(document).ready(function(){
         showClose: false
       });
 
-      //Simula analise
-      setTimeout(function()
-      {
-        finishAnalysis();
-      }, 3000);
-
+      paginaResposta = headerPaginaResposta;
+      analisaRegistro00();
     });
 
     var finishAnalysis = function() {
-        $j.modal.close();
-        doc.fromHTML(paginaResposta, 15, 15, {
-            'width': 170,
-                'elementHandlers': specialElementHandlers
-        });
-        doc.output('dataurlnewwindow');
+      paginaResposta += '</body></html>';
+
+      var doc = new jsPDF();
+      var specialElementHandlers = {
+          '#editor': function (element, renderer) {
+              return true;
+          }
+      };
+
+      $j.modal.close();
+      doc.fromHTML(paginaResposta, 15, 15, {
+          'width': 170,
+              'elementHandlers': specialElementHandlers
+      });
+      doc.output('dataurlnewwindow');
     }
+
+    var analisaRegistro00 = function(){
+        var urlForGetAnaliseRegistro = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', 'registro-00', {
+          escola : $j("#ref_cod_escola").val(),
+          ano    : $j("#ano").val()
+        });
+
+        var options = {
+          url : urlForGetAnaliseRegistro,
+          dataType : 'json',
+          success  : handleGetAnaliseRegistro
+        };
+        getResources(options);
+    };
+
+    var handleGetAnaliseRegistro = function(response) {
+      var htmlAnalise = "<h2>"+response.title+"</h2>";
+
+      if (response.any_error_msg) {
+        htmlAnalise += "<p class='errorMessage'>"+response.msgs[0].msg+"</p>";
+      } else {
+        //Monta uma lista em HTML com as mensagens retornadas da análise
+        htmlAnalise += "<ul>";
+        for (i = 0; i < response.mensagens.length; i++) {
+          htmlAnalise += "<li>"+response.mensagens[i].text+"</li>";
+          htmlAnalise += "<p>"+response.mensagens[i].path+"</p>";
+        }
+        htmlAnalise +="</ul>";
+      }
+      paginaResposta += htmlAnalise;
+
+      finishAnalysis();
+    };
 
 });

@@ -178,6 +178,7 @@ class DiarioController extends ApiCoreController
           foreach ($notaTurmaAluno as $componenteCurricularId => $notaTurmaAlunoDisciplina){
             if($this->validateComponenteTurma($turmaId, $componenteCurricularId)){
               $valor = $notaTurmaAlunoDisciplina['valor'];
+              $valor = truncate($valor, 4);
               $array_nota = array(
                     'componenteCurricular' => $componenteCurricularId,
                     'nota'                 => $valor,
@@ -413,6 +414,10 @@ class DiarioController extends ApiCoreController
     }
 
     return $ativo;
+  }
+
+  private function truncate($x, $digits) { 
+    return round($x - 5 * pow(10, -($digits + 1)), $digits); 
   }
 
   public function Gerar() {
