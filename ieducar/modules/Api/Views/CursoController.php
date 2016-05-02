@@ -83,7 +83,7 @@ class CursoController extends ApiCoreController
       if($escolaId)
         $sqlSerie .= " AND es.ref_cod_escola IN ({$escolaId}) ";
 
-      $sqlTurma = "SELECT DISTINCT t.cod_turma, t.nm_turma, t.ref_ref_cod_escola as escola_id
+      $sqlTurma = "SELECT DISTINCT t.cod_turma, t.nm_turma, t.ref_ref_cod_escola as escola_id, t.turma_turno_id
                     FROM pmieducar.turma t
                     WHERE t.ativo = 1
                     AND t.ano = {$ano}
@@ -106,7 +106,7 @@ class CursoController extends ApiCoreController
                 $turma['nm_turma'] = Portabilis_String_Utils::toUtf8($turma['nm_turma']);
               }
               $attrs['turmas'] = 'turmas';
-              $serie['turmas'] = Portabilis_Array_Utils::filterSet($turmas, array('cod_turma', 'nm_turma', 'escola_id'));
+              $serie['turmas'] = Portabilis_Array_Utils::filterSet($turmas, array('cod_turma', 'nm_turma', 'escola_id', 'turma_turno_id'));
             }
           }
           $curso['series'] = Portabilis_Array_Utils::filterSet($series, $attrs);
