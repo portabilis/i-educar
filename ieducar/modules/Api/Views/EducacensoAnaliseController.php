@@ -47,14 +47,16 @@ class EducacensoAnaliseController extends ApiCoreController
                    fisica_gestor.cpf AS cpf_gestor_escolar,
                    pessoa_gestor.nome AS nome_gestor_escolar,
                    escola.cargo_gestor AS cargo_gestor_escolar,
-                   modulo1.data_inicio AS data_inicio,
-                   modulo2.data_fim AS data_fim,
+                   EXTRACT(YEAR FROM modulo1.data_inicio) AS data_inicio,
+                   EXTRACT(YEAR FROM modulo2.data_fim) AS data_fim,
                    escola.latitude AS latitude,
-                   escola.longitude AS logitude,
-                   municipio.nome AS municipio,
-                   municipio.sigla_uf AS uf_municipio,
-                   distrito.nome AS distrito
+                   escola.longitude AS longitude,
+                   municipio.cod_ibge AS inep_municipio,
+                   uf.cod_ibge AS inep_uf,
+                   distrito.cod_ibge AS inep_distrito,
+                   pessoa.nome AS nome_escola
               FROM pmieducar.escola
+             INNER JOIN cadastro.pessoa ON (pessoa.idpes = escola.ref_idpes)
              INNER JOIN pmieducar.escola_ano_letivo ON (escola_ano_letivo.ref_cod_escola = escola.cod_escola)
              INNER JOIN pmieducar.ano_letivo_modulo modulo1 ON (modulo1.ref_ref_cod_escola = escola.cod_escola
                           AND modulo1.ref_ano = escola_ano_letivo.ano
@@ -71,6 +73,7 @@ class EducacensoAnaliseController extends ApiCoreController
               LEFT JOIN cadastro.endereco_pessoa ON (endereco_pessoa.idpes = escola.ref_idpes)
               LEFT JOIN public.bairro ON (bairro.idbai = endereco_pessoa.idbai)
               LEFT JOIN public.municipio ON (municipio.idmun = bairro.idmun)
+              LEFT JOIN public.uf ON (uf.sigla_uf = municipio.sigla_uf)
               LEFT JOIN public.distrito ON (distrito.idmun = bairro.idmun)
              WHERE escola.cod_escola = $1
                AND escola_ano_letivo.ano = $2";
@@ -79,12 +82,64 @@ class EducacensoAnaliseController extends ApiCoreController
 
     if(empty($escola)){
       $this->messenger->append("O ano letivo {$ano} não foi definido.");
-      return array( 'escolas' => 0);
+      return null;
     }
-    else{
-      $attrs = array('inep', 'cpf_gestor_escolar', 'nome_gestor_escolar', 'cargo_gestor_escolar', 'data_inicio', 'data_fim', 'latitude', 'longitude', 'municipio', 'uf_municipio', 'distrito');
-      return array( 'escola' => Portabilis_Array_Utils::filterSet($escola, $attrs));
+
+    $escola       = $escola[0];
+    $nomeEscola   = $escola["nome_escola"];
+    $anoAtual     = date("Y");
+    $anoAnterior  = $anoAtual-1;
+    $anoPosterior = $anoAtual+1;
+
+    $mensagem = array();
+
+    if (!$escola["inep"]) {
+      $mensagem[] = array("text" => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verifique se a escola possui o código INEP cadastrado.",
+                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dados gerais > Campo: Código INEP)");
     }
+    if (!$escola["cpf_gestor_escolar"]) {
+      $mensagem[] = array("text" => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verifique se o(a) gestor(a) escolar possui o CPF cadastrado.",
+                          "path" => "(Pessoa FJ > Pessoa física > Editar > Campo: CPF)");
+    }
+    if (!$escola["nome_gestor_escolar"]) {
+      $mensagem[] = array("text" => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verifique se o(a) gestor(a) escolar foi informado(a).",
+                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dados gerais > Campo: Gestor escolar)");
+    }
+    if (!$escola["cargo_gestor_escolar"]) {
+      $mensagem[] = array("text" => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verifique se o cargo do(a) gestor(a) escolar foi informado.",
+                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Campo: Cargo do gestor escolar)");
+    }
+    if ($escola["data_inicio"] != $anoAtual && $escola["data_inicio"] != $anoAnterior) {
+      $mensagem[] = array("text" => "Dados para formular o registro 00 da escola {$nomeEscola} possui valor inválido. Verifique se a data inicial da primeira etapa foi cadastrada corretamente.",
+                          "path" => "(Cadastros > Escola > Cadastrar > Editar ano letivo > Ok > Campo: Data inicial)");
+    }
+    if ($escola["data_fim"] != $anoAtual && $escola["data_fim"] != $anoPosterior) {
+      $mensagem[] = array("text" => "Dados para formular o registro 00 da escola {$nomeEscola} possui valor inválido. Verifique se a data final da última etapa foi cadastrada corretamente.",
+                          "path" => "(Cadastros > Escola > Cadastrar > Editar ano letivo > Ok > Campo: Data final)");
+    }
+    if ((!$escola["latitude"]) && $escola["longitude"]) {
+      $mensagem[] = array("text" => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que a longitude foi informada, portanto obrigatoriamente a latitude também deve ser informada.",
+                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dados gerais > Campo: Latitude)");
+    }
+    if ((!$escola["longitude"]) && $escola["latitude"]) {
+      $mensagem[] = array("text" => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que a latitude foi informada, portanto obrigatoriamente a longitude também deve ser informada.",
+                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dados gerais > Campo: Longitude)");
+    }
+    if (!$escola["inep_uf"]) {
+      $mensagem[] = array("text" => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verifique se o código da UF informada, foi cadastrado conforme a 'Tabela de UF'.",
+                          "path" => "(Endereçamento > Estado > Editar > Campo: Código INEP)");
+    }
+    if (!$escola["inep_municipio"]) {
+      $mensagem[] = array("text" => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verifique se o código do município informado, foi cadastrado conforme a 'Tabela de Municípios'.",
+                          "path" => "(Endereçamento > Município > Editar > Campo: Código INEP)");
+    }
+    if (!$escola["inep_distrito"]) {
+      $mensagem[] = array("text" => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verifique se o código do distrito informado, foi cadastrado conforme a 'Tabela de Distritos'.",
+                          "path" => "(Endereçamento > Distrito > Editar > Campo: Código INEP)");
+    }
+
+    return array('mensagens' => $mensagem,
+                 'title'     => "Análise exportação - Registro 00");
   }
 
   public function Gerar() {
