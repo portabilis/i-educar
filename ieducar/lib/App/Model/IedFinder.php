@@ -607,13 +607,16 @@ class App_Model_IedFinder extends CoreExt_Entity
   public static function getComponentesPorMatricula($codMatricula,
     ComponenteCurricular_Model_ComponenteDataMapper $componenteMapper = NULL,
     ComponenteCurricular_Model_TurmaDataMapper $turmaMapper = NULL,
-    $componenteCurricularId = null, $etapa = null)
+    $componenteCurricularId = null, $etapa = null, $turma = null)
   {
     $matricula = self::getMatricula($codMatricula);
 
     $codEscola = $matricula['ref_ref_cod_escola'];
     $codSerie  = $matricula['ref_ref_cod_serie'];
-    $turma     = $matricula['ref_cod_turma'];
+
+    if (!$turma) {
+      $turma = $matricula['ref_cod_turma'];
+    }
 
     $serie = self::getSerie($codSerie);
 
