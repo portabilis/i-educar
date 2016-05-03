@@ -299,7 +299,7 @@ class clsPmieducarCandidatoReservaVaga
    * Retorna uma lista de registros filtrados de acordo com os parâmetros.
    * @return array
    */
-  function lista($ano_letivo = NULL, $nome = NULL, $nome_responsavel = NULL, $ref_cod_escola = NULL, $ref_cod_serie = NULL, $ref_cod_curso = NULL, $ref_cod_turno = NULL)
+  function lista($ano_letivo = NULL, $nome = NULL, $nome_responsavel = NULL, $ref_cod_escola = NULL, $ref_cod_serie = NULL, $ref_cod_curso = NULL, $ref_cod_turno = NULL, $ref_cod_aluno = NULL, $situacaoEmEspera = FALSE)
   {
     $filtros = '';
     $this->resetCamposLista();
@@ -347,6 +347,16 @@ class clsPmieducarCandidatoReservaVaga
 
     if($ref_cod_turno != 0){
       $filtros .= " {$whereAnd} crv.ref_cod_turno = {$ref_cod_turno} ";
+      $whereAnd = ' AND ';
+    }
+
+    if(is_numeric($ref_cod_aluno)){
+      $filtros .= " {$whereAnd} ref_cod_aluno = {$ref_cod_aluno} ";
+      $whereAnd = ' AND ';
+    }
+
+    if($situacaoEmEspera){
+      $filtros .= " {$whereAnd} crv.situacao IS NULL";
       $whereAnd = ' AND ';
     }
 
@@ -405,6 +415,43 @@ class clsPmieducarCandidatoReservaVaga
     return FALSE;
   }
 
+  function atualizaDesistente($ano_letivo = NULL, $ref_cod_serie = NULL, $ref_cod_aluno = NULL)
+  {
+    $filtros = '';
+    $this->resetCamposLista();
+
+    $sql = "UPDATE {$this->_tabela}
+               SET situacao = 'D'";
+
+    $whereAnd = ' WHERE ';
+
+    $filtros = '';
+
+    if(is_numeric($ano_letivo)){
+      $filtros .= " {$whereAnd} ano_letivo = {$ano_letivo} ";
+      $whereAnd = ' AND ';
+    }
+
+    if(is_numeric($ref_cod_serie)){
+      $filtros .= " {$whereAnd} ref_cod_serie = {$ref_cod_serie} ";
+      $whereAnd = ' AND ';
+    }
+
+    if(is_numeric($ref_cod_aluno)){
+      $filtros .= " {$whereAnd} ref_cod_aluno = {$ref_cod_aluno} ";
+      $whereAnd = ' AND ';
+    }
+
+    $db = new clsBanco();
+    $countCampos = count(explode(',', $this->_campos_lista));
+    $resultado = array();
+
+    $sql .= $filtros . $this->getOrderby() . $this->getLimite();
+
+    $db->Consulta($sql);
+
+    return TRUE;
+  }
   /**
    * Retorna um array com os dados de um registro.
    * @return array

@@ -438,6 +438,36 @@ class indice extends clsCadastro
         }
       }
 
+      $obj_CandidatoReservaVaga = new clsPmieducarCandidatoReservaVaga();
+      $lst_CandidatoReservaVaga = $obj_CandidatoReservaVaga->lista($this->ano,
+                                                                    NULL,
+                                                                    NULL,
+                                                                    NULL,
+                                                                    $this->ref_cod_serie,
+                                                                    NULL,
+                                                                    NULL,
+                                                                    $this->ref_cod_aluno,
+                                                                    TRUE);
+
+      if (is_array($lst_CandidatoReservaVaga)){
+        if($lst_CandidatoReservaVaga[0]['ref_cod_escola'] != $this->ref_cod_escola){
+          echo "<script type=\"text/javascript\">
+                  var msg = '".Portabilis_String_Utils::toLatin1('O aluno possui uma reserva de vaga em outra escola, deseja matricula-lo assim mesmo?')."';
+                  if (!confirm(msg)) {
+                    window.location = 'educar_aluno_det.php?cod_aluno=".$this->ref_cod_aluno."';
+                  } else {
+                    parent.document.getElementById('formcadastro').submit();
+                  }
+                </script>";
+                $updateCandidatoReservaVaga = $obj_CandidatoReservaVaga->atualizaDesistente($this->ano,
+                                                                                   $this->ref_cod_serie,
+                                                                                   $this->ref_cod_aluno);
+          return TRUE;
+        }else{
+          return FALSE;
+        }
+      }
+
       $obj_reserva_vaga = new clsPmieducarReservaVaga();
       $lst_reserva_vaga = $obj_reserva_vaga->lista(NULL, $this->ref_cod_escola,
         $this->ref_cod_serie, NULL, NULL,$this->ref_cod_aluno, NULL, NULL,
