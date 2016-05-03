@@ -438,6 +438,10 @@ class indice extends clsCadastro
         }
       }
 
+      @session_start();
+      $reloadReserva = $_SESSION['reload_reserva_vaga'];
+      @session_write_close();
+
       $obj_CandidatoReservaVaga = new clsPmieducarCandidatoReservaVaga();
       $lst_CandidatoReservaVaga = $obj_CandidatoReservaVaga->lista($this->ano,
                                                                     NULL,
@@ -450,7 +454,7 @@ class indice extends clsCadastro
                                                                     TRUE);
 
       if (is_array($lst_CandidatoReservaVaga)){
-        if($lst_CandidatoReservaVaga[0]['ref_cod_escola'] != $this->ref_cod_escola){
+        if(($lst_CandidatoReservaVaga[0]['ref_cod_escola'] != $this->ref_cod_escola) && (!$reloadReserva)){
           echo "<script type=\"text/javascript\">
                   var msg = '".Portabilis_String_Utils::toLatin1('O aluno possui uma reserva de vaga em outra escola, deseja matricula-lo assim mesmo?')."';
                   if (!confirm(msg)) {
@@ -459,11 +463,18 @@ class indice extends clsCadastro
                     parent.document.getElementById('formcadastro').submit();
                   }
                 </script>";
-                $updateCandidatoReservaVaga = $obj_CandidatoReservaVaga->atualizaDesistente($this->ano,
-                                                                                   $this->ref_cod_serie,
-                                                                                   $this->ref_cod_aluno);
+            $reloadReserva = 1;
+            @session_start();
+            $_SESSION['reload_reserva_vaga'] = $reloadReserva;
+            @session_write_close();
           return TRUE;
-        }else{
+
+        }else if(($lst_CandidatoReservaVaga[0]['ref_cod_escola'] != $this->ref_cod_escola) && ($reloadReserva == 1)){
+          $updateCandidatoReservaVaga = $obj_CandidatoReservaVaga->atualizaDesistente($this->ano,
+                                                                                      $this->ref_cod_serie,
+                                                                                      $this->ref_cod_aluno);
+
+        } else{
           return FALSE;
         }
       }
