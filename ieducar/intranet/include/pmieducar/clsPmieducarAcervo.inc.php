@@ -1120,7 +1120,7 @@ class clsPmieducarAcervo
 		if(is_array($int_ref_cod_biblioteca))
 		{
 			$bibs = implode(", ", $int_ref_cod_biblioteca);
-			$filtros .= "{$whereAnd} (ref_cod_biblioteca IN ($bibs) OR ref_cod_biblioteca IS NULL)";
+			$filtros .= "{$whereAnd} (a.ref_cod_biblioteca IN ($bibs) OR a.ref_cod_biblioteca IS NULL)";
 			$whereAnd = " AND ";
 		}
 		elseif (is_numeric($int_ref_cod_biblioteca))
