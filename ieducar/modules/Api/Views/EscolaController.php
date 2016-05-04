@@ -364,22 +364,26 @@ protected function getInformacaoEscolas(){
   }
 }
 
-protected function getEscolasCurso(){
+protected function getEscolasMultipleSearch(){
   $cursoId = $this->getRequest()->curso_id;
-  if(is_numeric($cursoId)){
-    $sql = "SELECT cod_escola as id,
-                   to_ascii(pessoa.nome) as nome
-              from pmieducar.escola
-             inner join cadastro.pessoa on(escola.ref_idpes = pessoa.idpes)
-             inner join pmieducar.escola_curso on(escola.cod_escola = escola_curso.ref_cod_escola)
-             inner join pmieducar.curso on(escola_curso.ref_cod_curso = curso.cod_curso)
-            where escola.ativo = 1
-              and curso.ativo = 1
-              and escola_curso.ativo = 1
-              and curso.cod_curso = $1";
-    $escolas = $this->fetchPreparedQuery($sql, array($cursoId));
-    $escolas = Portabilis_Array_Utils::setAsIdValue($escolas, 'id', 'nome');
+
+  $sql = "SELECT cod_escola as id,
+                 to_ascii(pessoa.nome) as nome
+            from pmieducar.escola
+           inner join cadastro.pessoa on(escola.ref_idpes = pessoa.idpes)
+           inner join pmieducar.escola_curso on(escola.cod_escola = escola_curso.ref_cod_escola)
+           inner join pmieducar.curso on(escola_curso.ref_cod_curso = curso.cod_curso)
+          where escola.ativo = 1
+            and curso.ativo = 1
+            and escola_curso.ativo = 1";
+
+  if (is_numeric($cursoId)) {
+    $sql .= " and curso.cod_curso = $1";
+    $sql = $this->fetchPreparedQuery($sql, array($cursoId));
+  } else {
+    $sql = $this->fetchPreparedQuery($sql);
   }
+  $escolas = Portabilis_Array_Utils::setAsIdValue($sql, 'id', 'nome');
 
   return array('options' => $escolas);
 }
@@ -413,8 +417,8 @@ protected function getEscolaAnoLetivo(){
     elseif ($this->isRequestFor('get', 'info-escolas'))
       $this->appendResponse($this->getInformacaoEscolas());
 
-    elseif ($this->isRequestFor('get', 'escolas-curso'))
-      $this->appendResponse($this->getEscolasCurso());
+    elseif ($this->isRequestFor('get', 'escolas-multiple-search'))
+      $this->appendResponse($this->getEscolasMultipleSearch());
 
     elseif ($this->isRequestFor('get', 'escola-ano-letivo'))
       $this->appendResponse($this->getEscolaAnoLetivo());

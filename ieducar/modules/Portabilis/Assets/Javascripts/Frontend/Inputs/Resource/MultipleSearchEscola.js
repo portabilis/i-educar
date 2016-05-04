@@ -3,32 +3,34 @@
 
     var $escolaField = getElementFor('escola');
     var $cursoField  = getElementFor('curso');
+    var $instituicaoField  = getElementFor('instituicao');
 
-    var handleGetEscolaCurso = function(response) {
+    var handleGetEscolaMultipleSearch = function(response) {
       var selectOptions = response['options'];
       updateChozen($escolaField, selectOptions);
     }
 
-    var updateEscolaCurso = function(){
+    var updateEscolaMultipleSearch = function(){
       clearValues($escolaField);
-      if ($cursoField.val()) {
 
-        var urlForGetEscolaCurso = getResourceUrlBuilder.buildUrl('/module/Api/Escola', 'escolas-curso', {
+        var urlForGetEscolaMultipleSearch = getResourceUrlBuilder.buildUrl('/module/Api/Escola', 'escolas-multiple-search', {
           curso_id : $cursoField.val()
         });
 
         var options = {
-          url : urlForGetEscolaCurso,
+          url : urlForGetEscolaMultipleSearch,
           dataType : 'json',
-          success  : handleGetEscolaCurso
+          success  : handleGetEscolaMultipleSearch
         };
 
         getResources(options);
-      }
     };
 
-    // bind onchange event
-    $cursoField.change(updateEscolaCurso);
+    if ($cursoField.length ) {
+      $cursoField.change(updateEscolaMultipleSearch);
+    } else {
+      $instituicaoField.change(updateEscolaMultipleSearch);
+    }
 
   }); // ready
 })(jQuery);
