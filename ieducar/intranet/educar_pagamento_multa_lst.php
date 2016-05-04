@@ -166,13 +166,9 @@ class indice extends clsListagem
 				$lst_ex_em = $obj_ex_em->listaTotalMulta( $registro["ref_cod_cliente"] );
 
 				$multa_total = 0;
-
-				if ( $lst_ex_em ) {
-					foreach ( $lst_ex_em as $divida_total ) {
-						if ( $divida_total["cod_cliente"] == $registro["ref_cod_cliente"] )
-							$multa_total = $divida_total["valor_multa_total"];
-					}
-				}
+				$obj_total_divida = new clsPmieducarExemplarEmprestimo();
+				$total_obj_divida = $obj_total_divida->totalMultaPorBiblioteca( $registro["ref_cod_cliente"], $registro["ref_cod_biblioteca"], true );
+				$multa_total = $total_obj_divida[0]['sum'];
 
 				$obj_bib = new clsPmieducarBiblioteca( $registro["ref_cod_biblioteca"] );
 				$det_bib = $obj_bib->detalhe();

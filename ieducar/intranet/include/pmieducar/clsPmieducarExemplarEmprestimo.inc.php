@@ -735,6 +735,8 @@ class clsPmieducarExemplarEmprestimo
 			$sql2 .= " AND ee.valor_multa IS NOT NULL";
 		}
 		$sql  .= " GROUP BY c.cod_cliente, c.ref_idpes, b.cod_biblioteca, b.nm_biblioteca, e.cod_escola, i.nm_instituicao";
+
+		// echo $sql; die;
 		$this->_total = $db->CampoUnico( $sql2 );
 		$db->Consulta( $sql );
 
@@ -908,6 +910,67 @@ class clsPmieducarExemplarEmprestimo
 
 			$tupla["_total"] = $this->_total;
 			$resultado[] = $tupla;
+		}
+		if( count( $resultado ) )
+		{
+			return $resultado;
+		}
+		return false;
+	}
+
+		function totalMultaPorBiblioteca($int_ref_cod_cliente = null, $int_ref_cod_biblioteca = null, $multa = false)
+	{
+		$sql = "SELECT SUM(ee.valor_multa) FROM {$this->_tabela} ee, {$this->_schema}exemplar e, {$this->_schema}acervo a, {$this->_schema}biblioteca b";
+
+		$whereAnd = " AND ";
+
+		$filtros = " WHERE ee.ref_cod_exemplar = e.cod_exemplar AND e.ref_cod_acervo = a.cod_acervo AND a.ref_cod_biblioteca = b.cod_biblioteca ";
+
+		if( is_numeric( $int_ref_cod_cliente ) )
+		{
+			$filtros .= "{$whereAnd} ee.ref_cod_cliente = '{$int_ref_cod_cliente}'";
+			$whereAnd = " AND ";
+		}
+
+		if( is_numeric( $int_ref_cod_biblioteca ) )
+		{
+			$filtros .= "{$whereAnd} a.ref_cod_biblioteca = '{$int_ref_cod_biblioteca}'";
+			$whereAnd = " AND ";
+		}
+		if( !is_null( $multa ) ) {
+			if ( $multa ) {
+				$filtros .= "{$whereAnd} ee.valor_multa IS NOT NULL";
+				$whereAnd = " AND ";
+			}
+		}
+
+		$db = new clsBanco();
+		$countCampos = count( explode( ",", $this->_campos_lista ) );
+		$resultado = array();
+
+		$sql .= $filtros . $this->getOrderby() . $this->getLimite();
+
+		$this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} ee, {$this->_schema}exemplar e, {$this->_schema}acervo a, {$this->_schema}biblioteca b {$filtros}" );
+
+		$db->Consulta( $sql );
+
+		if( $countCampos > 1 )
+		{
+			while ( $db->ProximoRegistro() )
+			{
+				$tupla = $db->Tupla();
+
+				$tupla["_total"] = $this->_total;
+				$resultado[] = $tupla;
+			}
+		}
+		else
+		{
+			while ( $db->ProximoRegistro() )
+			{
+				$tupla = $db->Tupla();
+				$resultado[] = $tupla[$this->_campos_lista];
+			}
 		}
 		if( count( $resultado ) )
 		{

@@ -58,10 +58,11 @@ class indice extends clsCadastro
 	var $ref_idpes;
 	var $valor_pago_bib;
 	var $valor_divida;
-	var $valor_divida_bib;
 	var $valor_pagamento;
+	var $valor_pendente;
 	var $data_cadastro;
 	var $ref_cod_biblioteca;
+	var $total_divida;
 
 	function Inicializar()
 	{
@@ -80,6 +81,10 @@ class indice extends clsCadastro
 		$obj_permissoes->permissao_cadastra( 622, $this->pessoa_logada, 11,  "educar_pagamento_multa_lst.php" );
 
 		if ( is_numeric( $this->ref_cod_cliente ) ) {
+ 			$obj_total_divida = new clsPmieducarExemplarEmprestimo();
+			$total_obj_divida = $obj_total_divida->totalMultaPorBiblioteca( $this->ref_cod_cliente, $this->ref_cod_biblioteca, true );
+			$this->total_divida = $total_obj_divida[0]['sum'];
+
 			$obj_exemplar_emprestimo = new clsPmieducarExemplarEmprestimo();
 			$lst_exemplar_emprestimo = $obj_exemplar_emprestimo->listaDividaPagamentoCliente( $this->ref_cod_cliente, null, $this->ref_cod_cliente_tipo, $this->pessoa_logada, $this->ref_cod_biblioteca, $this->ref_cod_escola, $this->ref_cod_instituicao );
 			if ( $lst_exemplar_emprestimo ) {
@@ -103,7 +108,7 @@ class indice extends clsCadastro
 				if ( $det_pessoa )
 					$this->nm_pessoa = $det_pessoa["nome"];
 				$obj_divida = new clsPmieducarExemplarEmprestimo( null, null, null, $this->ref_cod_cliente );
-				$det_divida = $obj_divida->clienteDividaTotal( $this->ref_idpes, $this->ref_cod_cliente );
+				$det_divida = $obj_divida->clienteDividaTotal( $this->ref_idpes, $this->ref_cod_cliente, null,  $this->ref_cod_biblioteca);
 				if ( $det_divida ) {
 					foreach ( $det_divida as $divida )
 						$this->valor_divida = $divida["valor_multa"];
@@ -115,12 +120,13 @@ class indice extends clsCadastro
 		$this->nome_url_cancelar = "Cancelar";
 		$this->nome_url_sucesso  = "Pagar";
 		$this->acao_enviar       = "validaValor()";
+		$this->valor_pendente    = $this->total_divida - $this->valor_pago_bib;
 
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_biblioteca_index.php"                  => "i-Educar - Biblioteca",
-         ""        => "Pagamendo da d&iacute;vida"             
+         ""        => "Pagamendo da d&iacute;vida"
     ));
     $this->enviaLocalizacao($localizacao->montar());
 
@@ -135,11 +141,11 @@ class indice extends clsCadastro
 
 		$this->campoRotulo( "nm_cliente", "Cliente", $this->nm_pessoa );
 
-		$this->campoMonetario( "valor_divida", "Total da Dívida", $this->valor_divida, 11, 11, false, "", "", "onChange", true );
+		$this->campoMonetario( "total_divida", "Total de dívidas", $this->total_divida, 11, 11, false, "", "", "onChange", true );
 
-		$this->campoMonetario( "valor_divida_bib", "Total da Dívida (Biblioteca)", $this->valor_divida_bib, 11, 11, false, "", "", "onChange", true );
+		$this->campoMonetario( "valor_pago_bib", "Total pago", $this->valor_pago_bib, 11, 11, false, "", "", "onChange", true );
 
-		$this->campoMonetario( "valor_pago_bib", "Valor Pago (Biblioteca)", $this->valor_pago_bib, 11, 11, false, "", "", "onChange", true );
+		$this->campoMonetario( "valor_pendente", "Total pendente", $this->valor_pendente, 11, 11, false, "", "", "onChange", true );
 
 		$this->campoMonetario( "valor_pagamento", "Valor do Pagamento", $this->valor_pagamento, 11, 11, true );
 	}
@@ -232,18 +238,21 @@ $pagina->MakeAll();
 <script>
 	function validaValor()
 	{
-		var valor_divida_bib;
 		var valor_pago_bib;
 		var valor_pagamento;
+		var total_divida;
+		var valor_pendente;
 
-		if ( document.getElementById('valor_divida_bib') )
-			valor_divida_bib = document.getElementById('valor_divida_bib').value;
+		if ( document.getElementById('total_divida') )
+			total_divida = document.getElementById('total_divida').value;
 		if ( document.getElementById('valor_pago_bib') )
 			valor_pago_bib   = document.getElementById('valor_pago_bib').value;
 		if ( document.getElementById('valor_pagamento') )
 			valor_pagamento  = document.getElementById('valor_pagamento').value;
+		if ( document.getElementById('valor_pendente') )
+			valor_pendente  = document.getElementById('valor_pendente').value;
 
-		if ( ( valor_divida_bib.replace(",", ".") - valor_pago_bib.replace(",", ".") ) < valor_pagamento.replace(",", ".") ) {
+		if ( ( total_divida.replace(",", ".") - valor_pago_bib.replace(",", ".") ) < valor_pagamento.replace(",", ".") ) {
 			alert( "O valor de pagamento deve ser inferior ou igual ao valor devido na respectiva biblioteca." );
 			valor_pagamento  = document.getElementById('valor_pagamento').value = "";
 			return;

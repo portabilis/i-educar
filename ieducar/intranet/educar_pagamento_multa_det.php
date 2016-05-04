@@ -86,7 +86,7 @@ class indice extends clsDetalhe
 					$this->addDetalhe( array( "Login", "{$registro["login"]}") );
 
 					$obj_divida = new clsPmieducarExemplarEmprestimo();
-					$lst_divida = $obj_divida->lista( null, null, null, $registro["cod_cliente"], null, null, null, null, null, null, null, null, true );
+					$lst_divida = $obj_divida->lista( null, null, null, $registro["cod_cliente"], null, null, null, null, null, null, null, $registro['cod_biblioteca'], true );
 					if( $lst_divida ) {
 						$tabela = "<TABLE>
 								       <TR align=center>
@@ -125,7 +125,7 @@ class indice extends clsDetalhe
 						else
 							$color = " bgcolor=#FFFFFF ";
 						$tabela .= "<TR>
-										<TD {$color} colspan=3 align=right > <B>Total</B> </TD>
+										<TD {$color} colspan=3 align=right > <B>Total de dívidas</B> </TD>
 										<TD {$color} align=right > <B>"."R$".number_format( $total, 2, ",", "." )."</B> </TD>
 									</TR>";
 						$obj_multa  = new clsPmieducarPagamentoMulta( null, null, $registro["cod_cliente"], null, null, $det_tipo["ref_cod_biblioteca"] );
@@ -136,7 +136,7 @@ class indice extends clsDetalhe
 						else
 							$color = " bgcolor=#FFFFFF ";
 						$tabela .= "<TR>
-										<TD {$color} colspan=3 align=right > <B>Total Pago</B> </TD>
+										<TD {$color} colspan=3 align=right > <B>Total pago</B> </TD>
 										<TD {$color} align=right > <B>"."R$".number_format( $total_pago, 2, ",", "." )."</B> </TD>
 									</TR>";
 						$cont++;
@@ -153,16 +153,7 @@ class indice extends clsDetalhe
 							}
 						}
 						$tabela .= "<TR>
-										<TD {$color} colspan=3 align=right > <B>Total (Biblioteca)</B> </TD>
-										<TD {$color} align=right > <B>"."R$".number_format( $total_bib, 2, ",", "." )."</B> </TD>
-									</TR>";
-						$cont++;
-						if ( ($cont % 2) == 0 )
-							$color = " bgcolor=#E4E9ED ";
-						else
-							$color = " bgcolor=#FFFFFF ";
-						$tabela .= "<TR>
-										<TD {$color} colspan=3 align=right > <B>Total Devido</B> </TD>
+										<TD {$color} colspan=3 align=right > <B>Total pendente</B> </TD>
 										<TD {$color} align=right > <B>"."R$".number_format( ( $total - $total_pago ), 2, ",", "." )."</B> </TD>
 									</TR>";
 						$tabela .= "</TABLE>";
