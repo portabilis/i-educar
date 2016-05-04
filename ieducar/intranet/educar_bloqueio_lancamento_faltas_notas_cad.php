@@ -74,6 +74,7 @@ class indice extends clsCadastro
   var $etapa;
   var $data_inicio;
   var $data_fim;
+  var $modoEdicao;
 
   function Inicializar()
   {
@@ -124,6 +125,8 @@ class indice extends clsCadastro
         ));
         $this->enviaLocalizacao($localizacao->montar());
 
+    $this->modoEdicao = ($retorno == 'Editar');
+
      return $retorno;
   }
 
@@ -132,8 +135,37 @@ class indice extends clsCadastro
     // primary keys
     $this->campoOculto('cod_bloqueio', $this->cod_bloqueio);
 
-    $this->inputsHelper()->dynamic(array('ano', 'instituicao', 'escola'));
-    $this->inputsHelper()->dynamic('etapaEscola', array('value' => $this->etapa));
+    $this->inputsHelper()->dynamic(array('ano', 'instituicao'));
+
+    if ($this->modoEdicao) {
+      $objEscola = new clsPmieducarEscola($this->ref_cod_escola);
+      $objEscola = $objEscola->detalhe();
+
+      $options = array(
+        'required'    => false,
+        'label'       => 'Escola',
+        'placeholder' => '',
+        'value'       => $objEscola['nome'],
+        'size'        => 35,
+        'disabled'    => true
+      );
+
+      $this->inputsHelper()->text('escola', $options);
+    } else {
+      $this->inputsHelper()->multipleSearchEscola(null, array('label' => 'Escola(s)'));
+    }
+
+    $selectOptions = array(
+      1 => Portabilis_String_Utils::toLatin1('1ª Etapa'),
+      2 => Portabilis_String_Utils::toLatin1('2ª Etapa'),
+      3 => Portabilis_String_Utils::toLatin1('3ª Etapa'),
+      4 => Portabilis_String_Utils::toLatin1('4ª Etapa')
+    );
+
+    $options = array('label' => 'Etapa', 'resources' => $selectOptions, 'value' => '');
+
+    $this->inputsHelper()->select('etapa', $options);
+
 
     $this->inputsHelper()->date('data_inicio', array('label' => 'Data inicial', 'value' => dataToBrasil($this->data_inicio), 'placeholder' => ''));
     $this->inputsHelper()->date('data_fim', array('label' => 'Data final', 'value' => dataToBrasil($this->data_fim), 'placeholder' => ''));
@@ -148,18 +180,22 @@ class indice extends clsCadastro
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(999848, $this->pessoa_logada, 7, 'educar_bloqueio_lancamento_faltas_notas_lst.php');
 
-    $obj = new clsPmieducarBloqueioLancamentoFaltasNotas(null, $this->ano, $this->ref_cod_escola,
-                    $this->etapa, Portabilis_Date_Utils::brToPgSQL($this->data_inicio), Portabilis_Date_Utils::brToPgSQL($this->data_fim));
+    $array_escolas = array_filter($this->escola);
 
-    $cadastrou = $obj->cadastra();
-    if ($cadastrou) {
-      $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
-      header('Location: educar_bloqueio_lancamento_faltas_notas_lst.php');
-      die();
+    foreach ($array_escolas as $escolaId) {
+      $obj = new clsPmieducarBloqueioLancamentoFaltasNotas(null,
+                                                           $this->ano,
+                                                           $escolaId,
+                                                           $this->etapa,
+                                                           Portabilis_Date_Utils::brToPgSQL($this->data_inicio),
+                                                           Portabilis_Date_Utils::brToPgSQL($this->data_fim));
+
+      $obj->cadastra();
     }
 
-    $this->mensagem = 'Cadastro n&atilde;o realizado.<br />';
-    return FALSE;
+    $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
+    header('Location: educar_bloqueio_lancamento_faltas_notas_lst.php');
+    die();
   }
 
   function Editar()
