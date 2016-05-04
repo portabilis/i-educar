@@ -136,9 +136,13 @@ class indice extends clsListagem
         $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
         $nm_escola = $det_ref_cod_escola['nome'];
 
-      //Nome da etapa
-      $obj_etapa = new clsPmieducarAnoLetivoModulo($registro['ano'], $registro['ref_cod_escola'], $registro['etapa']);
-      $nm_etapa = $obj_etapa->getNomeModulo();
+        $etapas = array(
+          1 => Portabilis_String_Utils::toLatin1('1ª Etapa'),
+          2 => Portabilis_String_Utils::toLatin1('2ª Etapa'),
+          3 => Portabilis_String_Utils::toLatin1('3ª Etapa'),
+          4 => Portabilis_String_Utils::toLatin1('4ª Etapa')
+        );
+        $nm_etapa = $etapas[$registro['etapa']];
 
         // Dados para a url
         $url     = 'educar_bloqueio_lancamento_faltas_notas_det.php';
