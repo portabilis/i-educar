@@ -86,7 +86,7 @@ class EducacensoAnaliseController extends ApiCoreController
     }
 
     $escola       = $escola[0];
-    $nomeEscola   = Portabilis_String_Utils::toUtf8($escola["nome_escola"]);
+    $nomeEscola   = Portabilis_String_Utils::toUtf8(strtoupper($escola["nome_escola"]));
     $anoAtual     = date("Y");
     $anoAnterior  = $anoAtual-1;
     $anoPosterior = $anoAtual+1;
