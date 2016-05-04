@@ -82,11 +82,11 @@ class EducacensoAnaliseController extends ApiCoreController
 
     if(empty($escola)){
       $this->messenger->append("O ano letivo {$ano} não foi definido.");
-      return null;
+      return array('title' => "Análise exportação - Registro 00");
     }
 
     $escola       = $escola[0];
-    $nomeEscola   = $escola["nome_escola"];
+    $nomeEscola   = Portabilis_String_Utils::toUtf8($escola["nome_escola"]);
     $anoAtual     = date("Y");
     $anoAnterior  = $anoAtual-1;
     $anoPosterior = $anoAtual+1;
