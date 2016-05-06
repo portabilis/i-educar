@@ -415,7 +415,7 @@ class clsPmieducarCandidatoReservaVaga
     return FALSE;
   }
 
-  function atualizaDesistente($ano_letivo = NULL, $ref_cod_serie = NULL, $ref_cod_aluno = NULL)
+  function atualizaDesistente($ano_letivo = NULL, $ref_cod_serie = NULL, $ref_cod_aluno = NULL, $ref_cod_escola = NULL)
   {
     $filtros = '';
     $this->resetCamposLista();
@@ -439,6 +439,11 @@ class clsPmieducarCandidatoReservaVaga
 
     if(is_numeric($ref_cod_aluno)){
       $filtros .= " {$whereAnd} ref_cod_aluno = {$ref_cod_aluno} ";
+      $whereAnd = ' AND ';
+    }
+
+    if(is_numeric($ref_cod_escola)){
+      $filtros .= " {$whereAnd} ref_cod_escola <> {$ref_cod_escola} ";
       $whereAnd = ' AND ';
     }
 

@@ -452,9 +452,15 @@ class indice extends clsCadastro
                                                                     NULL,
                                                                     $this->ref_cod_aluno,
                                                                     TRUE);
-
+      $count = count($lst_CandidatoReservaVaga);
+      $count1 = 0;
       if (is_array($lst_CandidatoReservaVaga)){
-        if(($lst_CandidatoReservaVaga[0]['ref_cod_escola'] != $this->ref_cod_escola) && (!$reloadReserva)){
+        for ($i = 0; $i < $count; $i++){
+          if($lst_CandidatoReservaVaga[$i]['ref_cod_escola'] != $this->ref_cod_escola){
+            $count1 = $count1 + 1;
+          }
+        }
+        if(($count1 > 0) && (!$reloadReserva)){
           echo "<script type=\"text/javascript\">
                   var msg = '".Portabilis_String_Utils::toLatin1('O aluno possui uma reserva de vaga em outra escola, deseja matricula-lo assim mesmo?')."';
                   if (!confirm(msg)) {
@@ -469,13 +475,12 @@ class indice extends clsCadastro
             @session_write_close();
           return TRUE;
 
-        }else if(($lst_CandidatoReservaVaga[0]['ref_cod_escola'] != $this->ref_cod_escola) && ($reloadReserva == 1)){
+        }else if(($count1 > 0) && ($reloadReserva == 1)){
           $updateCandidatoReservaVaga = $obj_CandidatoReservaVaga->atualizaDesistente($this->ano,
                                                                                       $this->ref_cod_serie,
-                                                                                      $this->ref_cod_aluno);
+                                                                                      $this->ref_cod_aluno,
+                                                                                      $this->ref_cod_escola);
 
-        } else{
-          return FALSE;
         }
       }
 
@@ -654,6 +659,8 @@ class indice extends clsCadastro
       $cadastrou = $obj->cadastra();
 
       $cod_matricula = $cadastrou;
+
+      $this->ref_cod_candidato_reserva_vaga; die;
 
       if ($cadastrou) {
 
