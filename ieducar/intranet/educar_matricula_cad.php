@@ -660,8 +660,6 @@ class indice extends clsCadastro
 
       $cod_matricula = $cadastrou;
 
-      $this->ref_cod_candidato_reserva_vaga; die;
-
       if ($cadastrou) {
 
         if (is_numeric($this->ref_cod_candidato_reserva_vaga)){
