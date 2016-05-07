@@ -29,7 +29,7 @@
     if ($cursoField.length ) {
       $cursoField.change(updateEscolaMultipleSearch);
     } else {
-      $instituicaoField.change(updateEscolaMultipleSearch);
+      updateEscolaMultipleSearch();
     }
 
   }); // ready
