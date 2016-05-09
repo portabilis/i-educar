@@ -212,7 +212,7 @@ class indice extends clsCadastro
     $this->campoLista('periodo', 'Período', $periodo, $this->periodo, NULL, FALSE, '', '', FALSE, TRUE);
 
     // Carga horária
-    $this->campoHora('carga_horaria_alocada', 'Carga horária', $this->carga_horaria_alocada, TRUE);
+    $this->campoHoraServidor('carga_horaria_alocada', 'Carga horária', $this->carga_horaria_alocada, TRUE);
 
     // Funções
     $obj_funcoes = new clsPmieducarServidorFuncao();

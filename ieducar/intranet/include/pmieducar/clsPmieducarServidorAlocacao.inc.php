@@ -756,7 +756,7 @@ class clsPmieducarServidorAlocacao
 
     if (is_numeric($this->ref_cod_servidor) && is_numeric($this->ano)) {
       $db = new clsBanco();
-      $sql = "SELECT SUM(carga_horaria::time)
+      $sql = "SELECT SUM(carga_horaria::interval)
                 FROM pmieducar.servidor_alocacao
                WHERE ref_cod_servidor = {$this->ref_cod_servidor}
                  AND ano = {$this->ano}";

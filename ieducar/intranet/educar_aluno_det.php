@@ -104,6 +104,7 @@ class indice extends clsDetalhe
     @session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     unset($_SESSION['reload_faixa_etaria']);
+    unset($_SESSION['reload_reserva_vaga']);
     session_write_close();
 
     // Verificação de permissão para cadastro.
