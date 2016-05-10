@@ -92,16 +92,14 @@ class indice extends clsListagem
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
-    $this->ref_cod_servidor        = $_GET['ref_cod_servidor'];
-    $this->ref_ref_cod_instituicao = $_GET['ref_cod_instituicao'];
-
     $this->titulo = 'Faltas e atrasos - Listagem';
 
     foreach ($_GET as $var => $val) {
       $this->$var = ($val === '') ? NULL : $val;
     }
 
-    
+    $tmp_obj = new clsPmieducarServidor($this->ref_cod_servidor, NULL, NULL, NULL, NULL, NULL, NULL, $this->ref_cod_instituicao);
+    $registro = $tmp_obj->detalhe();
 
     $this->addCabecalhos(array(
       'Escola',
@@ -112,11 +110,14 @@ class indice extends clsListagem
       'Minutos'
     ));
 
-    // Filtros de Foreign Keys
-    $obrigatorio     = FALSE;
-    $get_instituicao = TRUE;
-    $get_escola      = TRUE;
-    include_once 'include/pmieducar/educar_campo_lista.php';
+    $fisica = new clsPessoaFisica($this->ref_cod_servidor);
+    $fisica = $fisica->detalhe();
+
+    $this->campoOculto('ref_cod_servidor', $this->ref_cod_servidor);
+    $this->campoRotulo('nm_servidor', 'Servidor', $fisica['nome']);
+
+    $this->inputsHelper()->dynamic('instituicao', array('required' => false, 'show-select' => true, 'value' => $this->ref_cod_instituicao));
+    $this->inputsHelper()->dynamic('escola', array('required' => false, 'show-select' => true, 'value' => $this->ref_cod_escola));
 
     // Paginador
     $this->limite = 20;
@@ -130,7 +131,7 @@ class indice extends clsListagem
     $obj_falta_atraso->setLimite($this->limite, $this->offset);
 
     // Recupera a lista de faltas/atrasos
-    $lista = $obj_falta_atraso->lista(NULL, NULL, NULL, NULL, NULL, $this->ref_cod_servidor);
+    $lista = $obj_falta_atraso->lista(NULL, $this->ref_cod_escola, $this->ref_ref_cod_instituicao, NULL, NULL, $this->ref_cod_servidor);
 
     $total = $obj_falta_atraso->_total;
 

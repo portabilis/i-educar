@@ -326,6 +326,9 @@ class EditController extends Core_Controller_Page_EditController
       return parent::_save();
     }
 
+    //Exclui todos os valores para inserir corretamente
+    $entity->deleteAllValues();
+
     // Processa os dados da requisição, apenas os valores para a tabela de valores.
     $valores = $this->getRequest()->valor;
 
@@ -342,7 +345,7 @@ class EditController extends Core_Controller_Page_EditController
       // Não atribui a instância de $entity senão não teria sucesso em verificar
       // se a instância é isNull().
       $data = array(
-        'id'               => $id,
+        // 'id'               => $id,
         'nome'             => $valores['nome'][$i],
         'descricao'        => $valores['descricao'][$i],
         'valorMinimo'      => $valores['valor_minimo'][$i],
@@ -351,15 +354,9 @@ class EditController extends Core_Controller_Page_EditController
         'casaDecimalExata' => $valores['casaDecimalExata'][$i]
       );
 
-      // Se a instância já existir, use-a para garantir UPDATE
-      if (NULL != ($instance = $this->_getValor($id))) {
-        $insert[$id] = $instance->setOptions($data);
-      }
-      else {
-        $instance = new TabelaArredondamento_Model_TabelaValor($data);
-        if (!$instance->isNull()) {
-          $insert['new_' . $i] = $instance;
-        }
+      $instance = new TabelaArredondamento_Model_TabelaValor($data);
+      if (!$instance->isNull()) {
+        $insert['new_' . $i] = $instance;
       }
     }
 
