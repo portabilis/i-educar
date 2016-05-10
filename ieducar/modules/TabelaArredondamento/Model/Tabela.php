@@ -303,4 +303,16 @@ class TabelaArredondamento_Model_Tabela extends CoreExt_Entity
   {
     return $this->nome;
   }
+
+  public function deleteAllValues()
+  {
+    // echo $this->_data['id']; die;
+    $tabelaArredondamentoId = $this->_data['id'];
+    if ($tabelaArredondamentoId) {
+      $db = new clsBanco();
+      $db->Consulta("DELETE FROM modules.tabela_arredondamento_valor WHERE tabela_arredondamento_id = " . $tabelaArredondamentoId);
+      return true;
+    }
+    return false;
+  }
 }
