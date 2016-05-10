@@ -158,7 +158,7 @@ class indice extends clsListagem
 		$lista = $objCC->lista(
         $this->ref_cod_instituicao,
         $this->nome,
-        $this->abreaviatura,
+        $this->abreviatura,
         $this->tipo_base,
         $this->area_conhecimento_id
       );
