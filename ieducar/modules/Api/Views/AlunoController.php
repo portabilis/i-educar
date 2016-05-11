@@ -1457,12 +1457,109 @@ class AlunoController extends ApiCoreController
 
   }
 
+  protected function canGetAlunosMatriculados(){
+    return  $this->validatesPresenceOf('instituicao_id') &&
+            $this->validatesPresenceOf('escola_id') &&
+            $this->validatesPresenceOf('data') &&
+            $this->validatesPresenceOf('ano');
+  }
+
+  protected function getAlunosMatriculados(){
+    if($this->canGetAlunosMatriculados()){
+      $instituicaoId = $this->getRequest()->instituicao_id;
+      $escolaId      = $this->getRequest()->escola_id;
+      $data          = $this->getRequest()->data;
+      $ano          = $this->getRequest()->ano;
+      $turnoId       = $this->getRequest()->turno_id;
+      $cursoId       = $this->getRequest()->curso_id;
+      $serieId       = $this->getRequest()->serie_id;
+      $turmaId       = $this->getRequest()->turma_id;
+
+
+      $sql = "SELECT a.cod_aluno as aluno_id
+              FROM pmieducar.aluno a
+              INNER JOIN pmieducar.matricula m ON m.ref_cod_aluno = a.cod_aluno
+              INNER JOIN pmieducar.matricula_turma mt ON m.cod_matricula = mt.ref_cod_matricula
+              INNER JOIN pmieducar.turma t ON mt.ref_cod_turma = t.cod_turma
+              INNER JOIN cadastro.pessoa p ON p.idpes = a.ref_idpes
+              INNER JOIN pmieducar.serie s ON s.cod_serie = m.ref_ref_cod_serie
+              INNER JOIN pmieducar.curso c ON c.cod_curso = m.ref_cod_curso
+              INNER JOIN pmieducar.escola e ON e.cod_escola = m.ref_ref_cod_escola
+
+              WHERE m.ativo = 1
+                AND a.ativo = 1
+                AND t.ativo = 1
+                AND t.ref_cod_instituicao = $1
+                AND e.cod_escola  = $2
+                AND (CASE WHEN coalesce($3, current_date)::date = current_date
+                      THEN mt.ativo = 1
+                     ELSE
+                       (CASE WHEN mt.ativo = 0 THEN
+                          mt.sequencial = ( select max(matricula_turma.sequencial)
+                                              from pmieducar.matricula_turma
+                                             inner join pmieducar.matricula on(matricula_turma.ref_cod_matricula = matricula.cod_matricula)
+                                             where matricula_turma.ref_cod_matricula = mt.ref_cod_matricula
+                                               and matricula_turma.ref_cod_turma = mt.ref_cod_turma
+                                               and ($3::date >= matricula_turma.data_enturmacao::date
+                                                   and $3::date < coalesce(matricula.data_cancel::date, matricula_turma.data_exclusao::date, current_date))
+                                               and matricula_turma.ativo = 0
+                                               and not exists(select 1
+                                                                from pmieducar.matricula_turma mt_sub
+                                                               where mt_sub.ativo = 1
+                                                                 and mt_sub.ref_cod_matricula = mt.ref_cod_matricula
+                                                                 and mt_sub.ref_cod_turma = mt.ref_cod_turma
+                                                              )
+                                          )
+                       ELSE
+                          ($3::date >= mt.data_enturmacao::date
+                          and $3::date < coalesce(m.data_cancel::date, mt.data_exclusao::date, current_date))
+                       END)
+                      END)
+              AND t.ano = $4";
+
+      $params = array($instituicaoId, $escolaId, $data, $ano);
+
+      if(is_numeric($turnoId)){
+        $params[] = $turnoId;
+        $sql .= 'AND t.turma_turno_id = $'.count($params).' ';
+      }
+
+      if(is_numeric($cursoId)){
+        $params[] = $cursoId;
+        $sql .= 'AND c.cod_curso = $'.count($params).' ';
+      }
+
+      if(is_numeric($serieId)){
+        $params[] = $serieId;
+        $sql .= 'AND s.cod_serie = $'.count($params).' ';
+      }
+
+      if(is_numeric($turmaId)){
+        $params[] = $turmaId;
+        $sql .= 'AND t.cod_turma = $'.count($params).' ';
+      }
+
+      $sql .= " ORDER BY to_ascii(upper(p.nome))";
+
+      $alunos = $this->fetchPreparedQuery($sql, $params);
+
+      $attrs = array('aluno_id');
+      $alunos = Portabilis_Array_Utils::filterSet($alunos, $attrs);
+
+      return array('alunos' => $alunos);
+    }
+  }
+
+
   public function Gerar() {
     if ($this->isRequestFor('get', 'aluno'))
       $this->appendResponse($this->get());
 
     elseif ($this->isRequestFor('get', 'aluno-search'))
       $this->appendResponse($this->search());
+
+    elseif ($this->isRequestFor('get', 'alunos-matriculados'))
+      $this->appendResponse($this->getAlunosMatriculados());
 
     elseif ($this->isRequestFor('get', 'matriculas'))
       $this->appendResponse($this->getMatriculas());
