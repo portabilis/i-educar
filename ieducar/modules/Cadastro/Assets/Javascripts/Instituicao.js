@@ -94,7 +94,7 @@ var $loadingDocumento =  $j('<img>').attr('src', 'imagens/indicator.gif')
   $(document).ready(function() {
 
 
-    $j('#tab1').click( 
+    $j('#tab1').click(
       function(){
 
         $j('.instituicaoTab-active').toggleClass('instituicaoTab-active instituicaoTab');
@@ -102,19 +102,19 @@ var $loadingDocumento =  $j('<img>').attr('src', 'imagens/indicator.gif')
         $j('.tablecadastro >tbody  > tr').each(function(index, row) {
           if (index>=linha_inicial_documentacao -1){
             if (row.id!='stop')
-              row.hide();    
+              row.hide();
             else
               return false;
           }else{
             if ($j('#cod_instituicao').val() != '' || $j.inArray(row.id, ['tr_deficiencias', 'tr_cod_docente_inep']) == -1)
               row.show();
           }
-        });        
+        });
       }
-    );  
+    );
 
     // Adicionais
-    $j('#tab2').click( 
+    $j('#tab2').click(
       function(){
         $j('.instituicaoTab-active').toggleClass('instituicaoTab-active instituicaoTab');
         $j('#tab2').toggleClass('instituicaoTab instituicaoTab-active')
@@ -127,7 +127,6 @@ var $loadingDocumento =  $j('<img>').attr('src', 'imagens/indicator.gif')
               }else{
                 $j('#'+row.id).find('td').removeClass('formmdtd');
                 $j('#'+row.id).find('td').addClass('formlttd');
-                
               }
               row.show();
             }else if (index>0){
@@ -170,7 +169,7 @@ var $loadingDocumento =  $j('<img>').attr('src', 'imagens/indicator.gif')
         });
 
         $j.ajax({
-            url: '/intranet/upload.php?files',
+            url: '/intranet/upload_just_pdf.php?files',
             type: 'POST',
             data: data,
             cache: false,
