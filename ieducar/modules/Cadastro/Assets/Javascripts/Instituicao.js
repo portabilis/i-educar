@@ -1,10 +1,11 @@
 
 //abas
 
-$j('.tablecadastro').children().children('tr:first').children('td:first').append('<div id="tabControl"><ul><li><div id="tab1" class="instituicaoTab"> <span class="tabText">Dados gerais</span></div></li><li><div id="tab2" class="instituicaoTab"> <span class="tabText">Documenta&ccedil;&atilde;o Padr&atilde;o</span></div></li></ul></div>');
-$j('.tablecadastro').children().children('tr:first').children('td:first').find('b').remove();
-$j('#tab1').addClass('instituicaoTab-active').removeClass('instituicaoTab');
-
+if ($j('#cod_instituicao').val()) {
+  $j('.tablecadastro').children().children('tr:first').children('td:first').append('<div id="tabControl"><ul><li><div id="tab1" class="instituicaoTab"> <span class="tabText">Dados gerais</span></div></li><li><div id="tab2" class="instituicaoTab"> <span class="tabText">Documenta&ccedil;&atilde;o Padr&atilde;o</span></div></li></ul></div>');
+  $j('.tablecadastro').children().children('tr:first').children('td:first').find('b').remove();
+  $j('#tab1').addClass('instituicaoTab-active').removeClass('instituicaoTab');
+}
 // Adiciona um ID à linha que termina o formulário para parar de esconder os campos
 $j('.tableDetalheLinhaSeparador').closest('tr').attr('id','stop');
 
