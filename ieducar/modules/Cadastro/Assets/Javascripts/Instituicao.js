@@ -2,7 +2,7 @@
 //abas
 
 if ($j('#cod_instituicao').val()) {
-  $j('.tablecadastro').children().children('tr:first').children('td:first').append('<div id="tabControl"><ul><li><div id="tab1" class="instituicaoTab"> <span class="tabText">Dados gerais</span></div></li><li><div id="tab2" class="instituicaoTab"> <span class="tabText">Documenta&ccedil;&atilde;o Padr&atilde;o</span></div></li></ul></div>');
+  $j('.tablecadastro').children().children('tr:first').children('td:first').append('<div id="tabControl"><ul><li><div id="tab1" class="instituicaoTab"> <span class="tabText">Dados gerais</span></div></li><li><div id="tab2" class="instituicaoTab"> <span class="tabText">Documenta&ccedil;&atilde;o padr&atilde;o</span></div></li></ul></div>');
   $j('.tablecadastro').children().children('tr:first').children('td:first').find('b').remove();
   $j('#tab1').addClass('instituicaoTab-active').removeClass('instituicaoTab');
 }
@@ -156,50 +156,54 @@ var $loadingDocumento =  $j('<img>').attr('src', 'imagens/indicator.gif')
 
     function uploadFilesDocumento(files)
     {
-      if (files && files.length>0){
-        $j('#documento').attr('disabled', 'disabled');
-        $j('#btn_enviar').attr('disabled', 'disabled').val('Aguarde...');
-        $loadingDocumento.show();
-        messageUtils.notice('Carregando documento...');
+      if ($j('#titulo_documento').val() !== '' ){
+        if (files && files.length>0){
+          $j('#documento').attr('disabled', 'disabled');
+          $j('#btn_enviar').attr('disabled', 'disabled').val('Aguarde...');
+          $loadingDocumento.show();
+          messageUtils.notice('Carregando documento...');
 
-        var data = new FormData();
-        $j.each(files, function(key, value)
-        {
-          data.append(key, value);
-        });
+          var data = new FormData();
+          $j.each(files, function(key, value)
+          {
+            data.append(key, value);
+          });
 
-        $j.ajax({
-            url: '/intranet/upload_just_pdf.php?files',
-            type: 'POST',
-            data: data,
-            cache: false,
-            dataType: 'json',
-            processData: false,
-            contentType: false,
-            success: function(dataResponse)
-            {
-              if (dataResponse.error){
+          $j.ajax({
+              url: '/intranet/upload_just_pdf.php?files',
+              type: 'POST',
+              data: data,
+              cache: false,
+              dataType: 'json',
+              processData: false,
+              contentType: false,
+              success: function(dataResponse)
+              {
+                if (dataResponse.error){
+                  $j('#documento').val("").addClass('error');
+                  messageUtils.error(dataResponse.error);
+                }else{
+                  messageUtils.success('Documento carregado com sucesso');
+                  $j('#documento').addClass('success');
+                  inserirDocumento(dataResponse.file_url);
+                }
+
+              },
+              error: function()
+              {
                 $j('#documento').val("").addClass('error');
-                messageUtils.error(dataResponse.error);
-              }else{
-                messageUtils.success('Documento carregado com sucesso');
-                $j('#documento').addClass('success');
-                inserirDocumento(dataResponse.file_url);
+                messageUtils.error('Não foi possível enviar o arquivo');
+              },
+              complete: function()
+              {
+                $j('#documento').removeAttr('disabled');
+                $loadingDocumento.hide();
+                $j('#btn_enviar').removeAttr('disabled').val('Gravar');
               }
-
-            },
-            error: function()
-            {
-              $j('#documento').val("").addClass('error');
-              messageUtils.error('Não foi possível enviar o arquivo');
-            },
-            complete: function()
-            {
-              $j('#documento').removeAttr('disabled');
-              $loadingDocumento.hide();
-              $j('#btn_enviar').removeAttr('disabled').val('Gravar');
-            }
-        });
+          });
+        }
+      }else{
+        alert('Favor, inserir um t\u00edtulo para este documento.')
       }
     }
 

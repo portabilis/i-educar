@@ -258,7 +258,7 @@ class indice extends clsCadastro
 
 	    $this->campoTexto( "titulo_documento", "Título", $this->titulo_documento, 30, 50, false );
 
-	    $this->campoArquivo('documento','Documentação Padrão',$this->documento,40,Portabilis_String_Utils::toLatin1("São aceitos apenas arquivos no formato PDF.", array('escape' => false)));
+	    $this->campoArquivo('documento','Documentação padrão',$this->documento,40,Portabilis_String_Utils::toLatin1("São aceitos apenas arquivos no formato PDF.", array('escape' => false)));
 	}
 
 	function Novo()
