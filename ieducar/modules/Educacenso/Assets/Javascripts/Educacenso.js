@@ -10,7 +10,7 @@ $j(document).ready(function(){
   					'</div>'+
   					'</div>';
 
-    var headerPaginaResposta = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Analize '+stringUtils.toUtf8('exportação')+'</title>'+
+    var headerPaginaResposta = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>'+stringUtils.toUtf8('Análise exportação')+'</title>'+
             '<link rel="stylesheet" href="../modules/Educacenso/Assets/Stylesheets/educacensoPdf.css"></head><body>'+
 						'<div id="content">'+
 						'  <h1 class="title">'+stringUtils.toUtf8("Análise de exportação")+'</h1>'+
