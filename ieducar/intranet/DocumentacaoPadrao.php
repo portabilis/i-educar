@@ -124,7 +124,7 @@ document.getElementById('ref_cod_instituicao').onchange = function()
 
 document.getElementById('relatorio').onchange = function()
 {
- if (this.selectedIndex!=="") {
+ if (this.selectedIndex!==0) {
     window.open(this.value,'_blank');
  }
 }
@@ -144,7 +144,7 @@ function getDocumento(instituicaoId) {
       	console.log(documentos[i].id, documentos[i].titulo_documento, documentos[i].url_documento);
       	var selectRelatorio = document.getElementById("relatorio");
       	var option = document.createElement("option");
-		selectRelatorio.options[0].text = 'Selecione um Relatório';
+		selectRelatorio.options[0].text = 'Selecione um relatório';
 		selectRelatorio.disabled = false;
       	option.text = documentos[i].titulo_documento;
 		option.value = documentos[i].url_documento;
