@@ -203,7 +203,8 @@ var $loadingDocumento =  $j('<img>').attr('src', 'imagens/indicator.gif')
           });
         }
       }else{
-        alert('Favor, inserir um t\u00edtulo para este documento.')
+        alert('Favor, inserir um t\u00edtulo para este documento.');
+        $j('#documento').val('').clone(true);
       }
     }
 
