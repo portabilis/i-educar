@@ -64,15 +64,15 @@ function excluirDocumento(event){
 getDocumento();
 
 function addDocumento(id, titulo, url){
-  $arrayDocumento[$arrayDocumento.length] = $j('<tr>').attr('id', id).append($j('<td>').html(stringUtils.toUtf8(titulo + ':'))
-                                                                          .css({ "text-align" : "right"}))
-                                                                          .append($j('<td>').append($j('<a>').html(stringUtils.toUtf8('Excluir'))
+  $arrayDocumento[$arrayDocumento.length] = $j('<div>').attr('id', id).append($j('<div>').html(stringUtils.toUtf8(titulo + ':'))
+                                                                          .css({ "text-align" : "right", "float" : "left"}))
+                                                                          .append($j('<span>').append($j('<a>').html(stringUtils.toUtf8('Excluir'))
                                                                                            .addClass('decorated')
                                                                                            .attr('id','link_excluir_documento_'+id)
                                                                                            .css({ "cursor": "pointer", "color" : "#B22222"})
                                                                                            .css('margin-left','10px')
                                                                                            .click({id: id}, excluirDocumento)))
-                                                                          .append($j('<td>').append($j('<a>').html(stringUtils.toUtf8('Visualizar'))
+                                                                          .append($j('<span>').append($j('<a>').html(stringUtils.toUtf8('Visualizar'))
                                                                                            .addClass('decorated')
                                                                                            .attr('id','link_visualizar_documento_'+id)
                                                                                            .attr('target','_blank')
