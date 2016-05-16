@@ -79,14 +79,14 @@ function addDocumento(id, titulo, url){
                                                                                            .attr('href',url)
                                                                                            .css({ "cursor": "pointer", "color" : "#556B2F"})
                                                                                            .css('margin-left','10px')))
-                                                                          .insertBefore($j('#documento'));
+                                                                          .insertAfter($j('#aviso_formato'));
 
 }
 
 var $loadingDocumento =  $j('<img>').attr('src', 'imagens/indicator.gif')
                                       .css('margin-top', '3px')
                                       .hide()
-                                      .insertAfter($j('#documento'));
+                                      .insertAfter($j('#aviso_formato'));
 
 // when page is ready
 
