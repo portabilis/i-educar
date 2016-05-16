@@ -33,7 +33,7 @@ class clsIndexBase extends clsBase
 {
 	function Formular()
 	{
-		$this->SetTitulo( "{$this->_instituicao} i-Educar - Documentação Padrão" );
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Documentação padrão" );
 		$this->processoAp = "578";
 		$this->addEstilo('localizacaoSistema');
 	}
@@ -81,7 +81,7 @@ class indice extends clsCadastro
 	    $localizacao->entradaCaminhos( array(
 	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
 	         "educar_escola_index.php"                  => "i-Educar - Escola",
-	         ""                                  => "Documentação Padrão"
+	         ""                                  => "Documentação padrão"
 	    ));
 	    $this->enviaLocalizacao($localizacao->montar());
 
