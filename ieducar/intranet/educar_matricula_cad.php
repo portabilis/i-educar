@@ -336,7 +336,7 @@ class indice extends clsCadastro
           else
             $nomeSerie = '';
 
-          $this->mensagem .= "Este aluno já está matriculado no(a) '$nomeSerie' deste curso e escola. Como este curso não é multi seriado, não é possivel manter mais de uma matricula em andamento para o mesmo curso.<br />";
+          $this->mensagem .= "Este aluno j&aacute; est&aacute; matriculado no(a) '$nomeSerie' deste curso e escola. Como este curso n&atilde;o &eacute; multi seriado, n&atilde;o &eacute; possivel manter mais de uma matricula em andamento para o mesmo curso.<br />";
 
           return false;
         }
@@ -520,7 +520,7 @@ class indice extends clsCadastro
           }
         }
         else {
-          $this->mensagem = 'A série selecionada não possui turmas cadastradas.<br />';
+          $this->mensagem = 'A s&eacute;rie selecionada n&atilde;o possui turmas cadastradas.<br />';
           return FALSE;
         }
 
@@ -749,12 +749,12 @@ class indice extends clsCadastro
                 $editou3 = $obj->edita();
 
                 if (! $editou3) {
-                  $this->mensagem = 'Edição não realizada.<br />';
+                  $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br />';
                   return FALSE;
                 }
               }
               else {
-                $this->mensagem = 'Edição não realizada.<br />';
+                $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br />';
                 return FALSE;
               }
             }
@@ -814,7 +814,7 @@ class indice extends clsCadastro
         #return true;
       }
 
-      $this->mensagem = 'Cadastro não realizado.<br />';
+      $this->mensagem = 'Cadastro n&atilde;o realizado.<br />';
       return FALSE;
     }
     else {
@@ -920,7 +920,7 @@ class indice extends clsCadastro
 
         $editou1 = $obj->edita();
         if (! $editou1) {
-          $this->mensagem = 'Não foi possível editar a "Última Matrícula da Sequência".<br />';
+          $this->mensagem = 'N&atilde;o foi poss&iacute;vel editar a "&Uacute;ltima Matr&iacute;cula da Sequ&ecirc;ncia".<br />';
           return FALSE;
         }
       }
@@ -934,12 +934,12 @@ class indice extends clsCadastro
     $excluiu = $obj->excluir();
 
     if ($excluiu) {
-      $this->mensagem .= 'Exclusão efetuada com sucesso.<br />';
+      $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br />';
       header('Location: educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno);
       die();
     }
 
-    $this->mensagem = 'Exclusão não realizada.<br />';
+    $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br />';
     return FALSE;
   }
 
