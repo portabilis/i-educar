@@ -658,154 +658,19 @@ class indice extends clsCadastro
 
       $cadastrou = $obj->cadastra();
 
-      $cod_matricula = $cadastrou;
+      $this->cod_matricula = $cadastrou;
 
       if ($cadastrou) {
 
         if (is_numeric($this->ref_cod_candidato_reserva_vaga)){
           $obj_crv = new clsPmieducarCandidatoReservaVaga($this->ref_cod_candidato_reserva_vaga);
-          $obj_crv->vinculaMatricula($cod_matricula);
+          $obj_crv->vinculaMatricula($this->cod_matricula);
           $obj_crv->indefereOutrasReservas($this->ref_cod_aluno);
         }
 
-        $obj_transferencia = new clsPmieducarTransferenciaSolicitacao();
+        $this->enturmacaoMatricula($this->cod_matricula, $this->ref_cod_turma);
 
-          $obj_transferencia = new clsPmieducarTransferenciaSolicitacao();
-          $lst_transferencia = $obj_transferencia->lista(NULL, NULL, NULL, NULL,
-            NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL,
-            $this->ref_cod_aluno, FALSE, NULL, NULL, NULL, FALSE, FALSE);
-
-          #TODO interna ?
-          // Verifica se existe solicitação de transferência (interna) do aluno
-          if (is_array($lst_transferencia)) {
-            #echo 'Encontrou solicitações de transferencia interna  (saida) com data de transferencia';
-            // Verifica cada solicitação de transferência do aluno
-            foreach ($lst_transferencia as $transferencia) {
-              $obj_matricula = new clsPmieducarMatricula(
-                $transferencia['ref_cod_matricula_saida']
-              );
-
-              $det_matricula = $obj_matricula->detalhe();
-
-              // Criar histórico de transferencia
-              clsPmieducarHistoricoEscolar::gerarHistoricoTransferencia($det_matricula['cod_matricula'], $this->pessoa_logada);
-
-              // Caso a solicitação seja para uma mesma série
-              if ($det_matricula['ref_ref_cod_serie'] == $this->ref_cod_serie) {
-                $ref_cod_transferencia = $transferencia['cod_transferencia_solicitacao'];
-                break;
-              }
-              // Caso a solicitação seja para a série da sequência
-              else {
-                $obj_sequencia = new clsPmieducarSequenciaSerie(
-                  $det_matricula['ref_ref_cod_serie'], $this->ref_cod_serie,
-                  NULL, NULL, NULL, NULL, 1
-                );
-
-                if ($obj_sequencia->existe()) {
-                  $ref_cod_transferencia = $transferencia['cod_transferencia_solicitacao'];
-                  break;
-                }
-              }
-
-              $ref_cod_transferencia = $transferencia['cod_transferencia_solicitacao'];
-            }
-
-            if ($ref_cod_transferencia) {
-              $obj_transferencia = new clsPmieducarTransferenciaSolicitacao(
-                $ref_cod_transferencia, NULL, $this->pessoa_logada, NULL,
-                $cadastrou, NULL, NULL, NULL, NULL, 1, date('Y-m-d')
-              );
-
-              $editou2 = $obj_transferencia->edita();
-
-              if ($editou2) {
-                $obj_transferencia = new clsPmieducarTransferenciaSolicitacao(
-                  $ref_cod_transferencia
-                );
-
-                $det_transferencia = $obj_transferencia->detalhe();
-                $matricula_saida   = $det_transferencia['ref_cod_matricula_saida'];
-
-                $obj_matricula = new clsPmieducarMatricula($matricula_saida);
-                $det_matricula = $obj_matricula->detalhe();
-
-                // Caso a situação da matrícula do aluno esteja em andamento
-                if ($det_matricula['aprovado'] == 3) {
-                  $obj_matricula = new clsPmieducarMatricula(
-                    $cadastrou, NULL, NULL, NULL, $this->pessoa_logada, NULL,
-                    NULL, NULL, NULL, NULL, 1, NULL, NULL, $det_matricula['modulo']
-                  );
-
-                  if ($obj_matricula->edita() && ! $this->desativaEnturmacoesMatricula($matricula_saida))
-                    return false;
-                }
-
-                $obj = new clsPmieducarMatricula(
-                  $matricula_saida, NULL, NULL, NULL,$this->pessoa_logada, NULL,
-                  NULL, 4, NULL, NULL, 1, NULL, 0
-                );
-
-                $editou3 = $obj->edita();
-
-                if (! $editou3) {
-                  $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br />';
-                  return FALSE;
-                }
-              }
-              else {
-                $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br />';
-                return FALSE;
-              }
-            }
-            $this->enturmacaoMatricula($cod_matricula, $this->ref_cod_turma);
-            // Se a matrícula anterior estava em andamento, copia as notas/faltas/pareceres
-            if ($det_matricula['aprovado']==3){
-              $db->Consulta(" SELECT modules.copia_notas_transf({$det_matricula['cod_matricula']},{$cod_matricula})");
-            }
-          }else{
-            // $objMatriculasTrasnferidas = new clsPmieducarMatricula();
-            // $matriculasTransferidas = $objMatriculasTrasnferidas->lista($int_cod_matricula = NULL, $int_ref_cod_reserva_vaga = NULL,
-            //                                     $int_ref_ref_cod_escola = NULL, $int_ref_ref_cod_serie = $this->ref_cod_serie,
-            //                                     $int_ref_usuario_exc = NULL, $int_ref_usuario_cad = NULL,
-            //                                     $ref_cod_aluno = $this->ref_cod_aluno, $int_aprovado = 4,
-            //                                     $date_data_cadastro_ini = NULL, $date_data_cadastro_fim = NULL,
-            //                                     $date_data_exclusao_ini = NULL, $date_data_exclusao_fim = NULL,
-            //                                     $int_ativo = 1, $int_ano = $this->ano, $int_ref_cod_curso2 = NULL,
-            //                                     $int_ref_cod_instituicao = NULL, $int_ultima_matricula = NULL,
-            //                                     $int_modulo = NULL, $int_padrao_ano_escolar = NULL,
-            //                                     $int_analfabeto = NULL, $int_formando = NULL, $str_descricao_reclassificacao = NULL,
-            //                                     $int_matricula_reclassificacao = NULL, $boo_com_deficiencia = NULL,
-            //                                     $int_ref_cod_curso = NULL, $bool_curso_sem_avaliacao = NULL,
-            //                                     $arr_int_cod_matricula = NULL, $int_mes_defasado = NULL, $boo_data_nasc = NULL,
-            //                                     $boo_matricula_transferencia = NULL, $int_semestre = NULL, $int_ref_cod_turma = NULL,
-            //                                     $int_ref_cod_abandono = NULL, $matriculas_turmas_transferidas_abandono = FALSE);
-            $this->enturmacaoMatricula($cod_matricula, $this->ref_cod_turma);
-
-            // foreach ($matriculasTransferidas as $matriculaTransferida) {
-            //   $db = new clsBanco();
-            //   $db->consulta("SELECT modules.copia_notas_transf({$matriculaTransferida['cod_matricula']},{$cod_matricula})");
-            // }
-            $db = new clsBanco();
-            $db->Consulta("SELECT matricula.cod_matricula
-                             from pmieducar.matricula
-                            where matricula.ativo = 1
-                              and matricula.aprovado = 4
-                              and matricula.ref_ref_cod_serie = {$this->ref_cod_serie}
-                              and matricula.ano = {$this->ano}
-                              and matricula.ref_cod_aluno = {$this->ref_cod_aluno}
-                            order by matricula.data_cadastro DESC
-                            limit 1");
-            $db->ProximoRegistro();
-            $matricula = $db->Tupla();
-            if(is_array($matricula)){
-              $cod_matricula_antiga = $matricula['cod_matricula'];
-              $db = new clsBanco();
-              $db->consulta("SELECT modules.copia_notas_transf({$cod_matricula_antiga},{$cod_matricula})");
-
-            }
-          }
-        //}
+        $this->verificaSolicitacaoTransferencia();
 
         #TODO set in $_SESSION['flash'] 'Aluno matriculado com sucesso'
         $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
@@ -823,6 +688,37 @@ class indice extends clsCadastro
     }
   }
 
+  function verificaSolicitacaoTransferencia() {
+    $obj_transferencia = new clsPmieducarTransferenciaSolicitacao();
+    $lst_transferencia = $obj_transferencia->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, $this->ref_cod_aluno, FALSE);
+
+    if (!is_array($lst_transferencia)) return;
+
+    foreach ($lst_transferencia as $transferencia) {
+      $obj_matricula = new clsPmieducarMatricula($transferencia['ref_cod_matricula_saida']);
+      $det_matricula = $obj_matricula->detalhe();
+
+      // Caso a solicitação em aberto seja para a mesma série selecionada
+      if ($det_matricula['ref_ref_cod_serie'] == $this->ref_cod_serie) {
+        $cod_transferencia = $transferencia['cod_transferencia_solicitacao'];
+        $cod_matricula_transferencia = $det_matricula['cod_matricula'];
+
+        $this->copiaNotasFaltas($cod_matricula_transferencia, $this->cod_matricula);
+        $this->atendeSolicitacaoTransferencia($cod_transferencia, $this->cod_matricula);
+        break;
+      }
+    }
+  }
+
+  function copiaNotasFaltas($matriculaAntiga, $matriculaNova) {
+    $db = new clsBanco();
+    $db->Consulta("SELECT modules.copia_notas_transf({$matriculaAntiga},{$matriculaNova});");
+  }
+
+  function atendeSolicitacaoTransferencia($codTranferencia, $codMatriculaEntrada) {
+    $obj_transferencia = new clsPmieducarTransferenciaSolicitacao($codTranferencia, NULL, $this->pessoa_logada, NULL, $codMatriculaEntrada, NULL, NULL, NULL, NULL, 0);
+    $obj_transferencia->edita();die;
+  }
 
   function desativaEnturmacoesMatricula($matriculaId) {
     $result = true;
