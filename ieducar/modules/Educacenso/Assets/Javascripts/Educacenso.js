@@ -10,11 +10,12 @@ $j(document).ready(function(){
   					'</div>'+
   					'</div>';
 
-    var headerPaginaResposta = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Analize exportação</title></head><body>'+
-						 '<div id="content">'+
-						 '  <h1>'+stringUtils.toUtf8("Análise de exportação")+'</h1>'+
-						 '</div>'+
-						 '<div id="editor"></div>';
+    var headerPaginaResposta = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>'+stringUtils.toUtf8('Análise exportação')+'</title>'+
+            '<link rel="stylesheet" href="../modules/Educacenso/Assets/Stylesheets/educacensoPdf.css"></head><body>'+
+						'<div id="content">'+
+						'  <h1 class="title">'+stringUtils.toUtf8("Análise de exportação")+'</h1>'+
+						'</div>'+
+						'<div id="editor"></div>';
 
     var paginaResposta = "";
 
@@ -43,7 +44,6 @@ $j(document).ready(function(){
     var finishAnalysis = function() {
       paginaResposta += '</body></html>';
 
-      var doc = new jsPDF();
       var specialElementHandlers = {
           '#editor': function (element, renderer) {
               return true;
@@ -51,11 +51,9 @@ $j(document).ready(function(){
       };
 
       $j.modal.close();
-      doc.fromHTML(paginaResposta, 15, 15, {
-          'width': 170,
-              'elementHandlers': specialElementHandlers
-      });
-      doc.output('dataurlnewwindow');
+
+      var newPage = window.open();
+      newPage.document.write(paginaResposta);
     }
 
     var analisaRegistro00 = function(){
@@ -73,7 +71,7 @@ $j(document).ready(function(){
     };
 
     var handleGetAnaliseRegistro = function(response) {
-      var htmlAnalise = "<h2>"+response.title+"</h2>";
+      var htmlAnalise = "<h2 class='subtitle'>"+response.title+"</h2>";
 
       if (response.any_error_msg) {
         htmlAnalise += "<p class='errorMessage'>"+response.msgs[0].msg+"</p>";

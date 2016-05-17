@@ -54,7 +54,7 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchMatricula extends Portab
   }
 
   protected function inputPlaceholder($inputOptions) {
-    return 'Informe o nome do aluno, código ou código da matricula';
+    return 'Informe o nome do aluno, código ou código da matrícula';
   }
 
   protected function loadAssets() {
