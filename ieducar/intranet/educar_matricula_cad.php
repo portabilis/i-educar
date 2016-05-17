@@ -717,7 +717,7 @@ class indice extends clsCadastro
 
   function atendeSolicitacaoTransferencia($codTranferencia, $codMatriculaEntrada) {
     $obj_transferencia = new clsPmieducarTransferenciaSolicitacao($codTranferencia, NULL, $this->pessoa_logada, NULL, $codMatriculaEntrada, NULL, NULL, NULL, NULL, 0);
-    $obj_transferencia->edita();die;
+    $obj_transferencia->edita();
   }
 
   function desativaEnturmacoesMatricula($matriculaId) {
