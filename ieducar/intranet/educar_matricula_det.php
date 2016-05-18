@@ -352,7 +352,7 @@ class indice extends clsDetalhe
       }
 
       if($registro['aprovado'] == App_Model_MatriculaSituacao::TRANSFERIDO &&
-         $this->canCancelTransferenciaExterna($registro['cod_matricula'], $registro['ref_cod_aluno'])) {
+         $this->canCancelTransferencia($registro['cod_matricula'])) {
         $this->array_botao[]            = 'Cancelar transferência';
 
 
@@ -412,20 +412,14 @@ class indice extends clsDetalhe
     return $acesso->permissao_excluir(627, $this->pessoa_logada, 7, null, true);
   }
 
-  function canCancelTransferenciaExterna($matriculaId, $alunoId) {
-    $sql = "SELECT matricula.cod_matricula
-              FROM pmieducar.matricula
-             WHERE matricula.ativo = 1
-               AND matricula.ref_cod_aluno = $alunoId
-               AND matricula.aprovado = 4
-             ORDER BY matricula.cod_matricula DESC
-             limit 1";
+  function canCancelTransferencia($matriculaId) {
+    $sql = "SELECT transferencia_solicitacao.cod_transferencia_solicitacao
+              FROM pmieducar.transferencia_solicitacao
+             WHERE ref_cod_matricula_saida = $matriculaId
+               AND ativo = 1";
 
     $db = new clsBanco();
-
-    $ultimaMatricula = $db->CampoUnico($sql);
-
-    return $ultimaMatricula == $matriculaId;
+    return $db->CampoUnico($sql);
 
   }
 }
