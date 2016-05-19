@@ -4,3 +4,4 @@ ieducar/configuration/*.ini
 # Vagrant
 /.vagrant
 Vagrantfile
+deploy/.ruby-version
