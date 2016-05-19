@@ -47,18 +47,19 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchDocumentosAtestadoVaga
   protected function getOptions($resources) {
 
     if (empty($resources)) {
-      $resources = array('certidao_nasci'      => 'Certid&atilde;o de nascimento e/ou carteira de identidade',
-                         'comprovante_resi'    => 'Comprovante de resid&ecirc;ncia',
-                         'foto_3_4'            => 'Foto 3/4',
-                         'historico_escola'    => 'Hist&oacute;rico escolar original',
-                         'atestado_frequencia' => 'Atestado de frequ&ecirc;ncia original',
-                         'decla_vacina'        => 'Declara&ccedil;&atilde;o de vacina da unidade de sa&uacute;de original',
-                         'carteira_sus'        => 'Carteira do SUS',
-                         'cartao_bolsa_fami'   => 'C&oacute;pia do cart&atilde;o bolsa fam&iacute;lia',
-                         'rg_aluno_pai'        => 'C&oacute;pia do RG (aluno e pai)',
-                         'cpf_aluno_pai'       => 'C&oacute;pia do CPF (aluno e pai)',
-                         'tit_eleitor'         => 'T&iacute;tulo de eleitor do respons&aacute;vel',
-                         'doc_nis'             => 'N&uacute;mero de Identifica&ccedil;&atilde;o Social - NIS'
+      $resources = array('certidao_nasci'         => 'Certid&atilde;o de nascimento e/ou carteira de identidade',
+                         'comprovante_resi'       => 'Comprovante de resid&ecirc;ncia',
+                         'foto_3_4'               => 'Foto 3/4',
+                         'historico_escola'       => 'Hist&oacute;rico escolar original',
+                         'atestado_frequencia'    => 'Atestado de frequ&ecirc;ncia original',
+                         'atestado_transferencia' => 'Atestado de Transfer&ecirc;ncia',
+                         'decla_vacina'           => 'Declara&ccedil;&atilde;o de vacina da unidade de sa&uacute;de original',
+                         'carteira_sus'           => 'Carteira do SUS',
+                         'cartao_bolsa_fami'      => 'C&oacute;pia do cart&atilde;o bolsa fam&iacute;lia',
+                         'rg_aluno_pai'           => 'C&oacute;pia do RG (aluno e pai)',
+                         'cpf_aluno_pai'          => 'C&oacute;pia do CPF (aluno e pai)',
+                         'tit_eleitor'            => 'T&iacute;tulo de eleitor do respons&aacute;vel',
+                         'doc_nis'                => 'N&uacute;mero de Identifica&ccedil;&atilde;o Social - NIS'
                          );
     }
 
