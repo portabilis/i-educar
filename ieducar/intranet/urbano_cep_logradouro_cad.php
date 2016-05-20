@@ -314,7 +314,7 @@ $pagina->addForm($miolo);
 $pagina->MakeAll();
 ?>
 
-<script type="text/javascript">
+<script type="text/javascript" charset="toLatin1">
 document.getElementById('idpais').onchange = function() {
   var campoPais = document.getElementById('idpais').value;
   var campoUf= document.getElementById('sigla_uf');
@@ -337,7 +337,7 @@ function getUf(xml_uf) {
     }
   }
   else {
-    campoUf.options[0].text = 'O pais não possui nenhum estado';
+    campoUf.options[0].text = 'O pa\u00eds n\u00e3o possui nenhum estado';
   }
 }
 document.getElementById('sigla_uf').onchange = function() {
@@ -345,7 +345,7 @@ document.getElementById('sigla_uf').onchange = function() {
   var campoMunicipio= document.getElementById('idmun');
   campoMunicipio.length = 1;
   campoMunicipio.disabled = true;
-  campoMunicipio.options[0].text = 'Carregando município...';
+  campoMunicipio.options[0].text = 'Carregando munic\u00edpio...';
   var xml_municipio = new ajax(getMunicipio);
   xml_municipio.envia('public_municipio_xml.php?uf=' + campoUf);
 }
@@ -354,7 +354,7 @@ function getMunicipio(xml_municipio) {
   var DOM_array = xml_municipio.getElementsByTagName('municipio');
   if (DOM_array.length) {
     campoMunicipio.length = 1;
-    campoMunicipio.options[0].text = 'Selecione um município';
+    campoMunicipio.options[0].text = 'Selecione um munic\u00edpio';
     campoMunicipio.disabled = false;
     for (var i = 0; i < DOM_array.length; i++) {
       campoMunicipio.options[campoMunicipio.options.length] = new Option(DOM_array[i].firstChild.data,
@@ -362,7 +362,7 @@ function getMunicipio(xml_municipio) {
     }
   }
   else {
-    campoMunicipio.options[0].text = 'O estado não possui nenhum município';
+    campoMunicipio.options[0].text = 'O estado n\u00e3o possui nenhum munic\u00edpio';
   }
 }
 document.getElementById('idmun').onchange = function() {
@@ -397,7 +397,7 @@ function getLogradouro(xml_logradouro) {
     }
   }
   else {
-    campoLogradouro.options[0].text = 'O município não possui nenhum logradouro';
+    campoLogradouro.options[0].text = 'O munic\u00edpio n\u00e3o possui nenhum logradouro';
   }
 }
 function getBairro(xml_bairro) {
@@ -414,7 +414,7 @@ function getBairro(xml_bairro) {
       }
     }
     else {
-      campoBairro.options[0].text = 'O município não possui nenhum bairro';
+      campoBairro.options[0].text = 'O munic\u00edpio n\u00e3o possui nenhum bairro';
     }
   }
 }
@@ -443,7 +443,7 @@ function getBairroUnico(xml_bairro) {
     }
   }
   else {
-    campoBairro.options[0].text = 'O município não possui nenhum bairro';
+    campoBairro.options[0].text = 'O munic\u00edpio n\u00e3o possui nenhum bairro';
   }
 }
 // Quando seleciona um logradouro, busca por registros de CEP e bairro já

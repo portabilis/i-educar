@@ -176,7 +176,8 @@ class TurmaController extends ApiCoreController
 
       $sql = "SELECT a.cod_aluno as id,
                      m.dependencia,
-                     mt.sequencial_fechamento as sequencia
+                     mt.sequencial_fechamento as sequencia,
+                     mt.data_enturmacao
               FROM pmieducar.aluno a
               INNER JOIN pmieducar.matricula m ON m.ref_cod_aluno = a.cod_aluno
               INNER JOIN pmieducar.matricula_turma mt ON m.cod_matricula = mt.ref_cod_matricula
@@ -187,7 +188,7 @@ class TurmaController extends ApiCoreController
                 AND t.ativo = 1
                 AND t.ref_cod_instituicao = $1
                 AND t.cod_turma  = $2
-                AND (CASE WHEN coalesce($3, current_date)::date = current_date 
+                AND (CASE WHEN coalesce($3, current_date)::date = current_date
                       THEN mt.ativo = 1
                      ELSE
                        (CASE WHEN mt.ativo = 0 THEN
@@ -240,7 +241,7 @@ class TurmaController extends ApiCoreController
 
       $alunos = $this->fetchPreparedQuery($sql, $params);
 
-      $attrs = array('id','dependencia', 'sequencia');
+      $attrs = array('id','dependencia', 'sequencia', 'data_enturmacao');
       $alunos = Portabilis_Array_Utils::filterSet($alunos, $attrs);
 
       foreach ($alunos as &$aluno) {

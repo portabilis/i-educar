@@ -43,8 +43,6 @@ class UnauthorizedController extends Portabilis_Controller_ErrorCoreController
   }
 
   public function Gerar() {
-    $linkToSupport = $GLOBALS['coreExt']['Config']->modules->error->link_to_support;
-
     echo "
       <div id='error' class='small'>
         <div class='content'>
@@ -57,7 +55,7 @@ class UnauthorizedController extends Portabilis_Controller_ErrorCoreController
           <ol>
             <li><a href='/intranet/index.php'>Volte para o sistema</a></li>
             <li>Solicite ao respons&aacute;vel pelo sistema, para adicionar ao seu usu&aacute;rio a permiss&atilde;o necess&aacute;ria e tente novamente</li>
-            <li>Caso o erro persista, por favor, <a target='_blank' href='$linkToSupport'>solicite suporte</a>.</li>
+            <li>Caso o erro persista, por favor, <a target='_blank' onclick='FreshWidget.show();'>solicite suporte</a>.</li>
           </ol>
         </p>
 
