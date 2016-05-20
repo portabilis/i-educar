@@ -342,19 +342,26 @@ class indice extends clsCadastro
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
 
-		$obj = new clsPmieducarInstituicao($this->cod_instituicao, $this->pessoa_logada, $this->ref_usuario_cad, $this->ref_idtlog, $this->ref_sigla_uf, $this->cep, $this->cidade, $this->bairro, $this->logradouro, $this->numero, $this->complemento, $this->nm_responsavel, $this->ddd_telefone, $this->telefone, $this->data_cadastro, $this->data_exclusao, $this->ativo);
-		$excluiu = $obj->excluir();
-		if( $excluiu )
-		{
-			$this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-			header( "Location: educar_instituicao_lst.php" );
-			die();
-			return true;
-		}
+		$verificaEscolasVinculadas = new clsPmieducarEscola();
+		$listaEscolasVinculadas = $verificaEscolasVinculadas->lista(null, null, null, $this->cod_instituicao);
+		if ( is_array($listaEscolasVinculadas)){
+			$this->mensagem = "Exclus&atilde;o n&atilde;o realizada. Esta instituic&atilde;o possui escolas vinculadas.<br>";
+			return false;
+		}else{
+			$obj = new clsPmieducarInstituicao($this->cod_instituicao, $this->pessoa_logada, $this->ref_usuario_cad, $this->ref_idtlog, $this->ref_sigla_uf, $this->cep, $this->cidade, $this->bairro, $this->logradouro, $this->numero, $this->complemento, $this->nm_responsavel, $this->ddd_telefone, $this->telefone, $this->data_cadastro, $this->data_exclusao, $this->ativo);
+			$excluiu = $obj->excluir();
+			if( $excluiu )
+			{
+				$this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
+				header( "Location: educar_instituicao_lst.php" );
+				die();
+				return true;
+			}
 
-		$this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-		echo "<!--\nErro ao excluir clsPmieducarInstituicao\nvalores obrigatorios\nif( is_numeric( $this->cod_instituicao ) )\n-->";
-		return false;
+			$this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
+			echo "<!--\nErro ao excluir clsPmieducarInstituicao\nvalores obrigatorios\nif( is_numeric( $this->cod_instituicao ) )\n-->";
+			return false;
+		}
 	}
 }
 
