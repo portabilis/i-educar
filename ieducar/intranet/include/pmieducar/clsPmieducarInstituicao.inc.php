@@ -387,19 +387,19 @@ class clsPmieducarInstituicao
         $gruda = ", ";
       }
 
-      if (is_string($this->data_base_remanejamento)) {
+      if ((is_string($this->data_base_remanejamento)) AND !empty($this->data_base_remanejamento) ) {
         $campos .= "{$gruda}data_base_remanejamento";
         $valores .= "{$gruda}'{$this->data_base_remanejamento}'";
         $gruda = ", ";
       }
 
-      if (is_string($this->data_base_transferencia)) {
+      if ((is_string($this->data_base_transferencia)) AND !empty($this->data_base_transferencia)) {
         $campos .= "{$gruda}data_base_transferencia";
         $valores .= "{$gruda}'{$this->data_base_transferencia}'";
         $gruda = ", ";
       }
 
-      if (is_string($this->data_expiracao_reserva_vaga)) {
+      if ((is_string($this->data_expiracao_reserva_vaga)) AND !empty($this->data_expiracao_reserva_vaga)) {
         $campos .= "{$gruda}data_expiracao_reserva_vaga";
         $valores .= "{$gruda}'{$this->data_expiracao_reserva_vaga}'";
         $gruda = ", ";
@@ -506,13 +506,13 @@ class clsPmieducarInstituicao
         $gruda = ", ";
       }
 
-      if (is_string($this->data_base_matricula)) {
+      if ((is_string($this->data_base_matricula)) AND !empty($this->data_base_matricula)) {
         $campos .= "{$gruda}data_base_matricula";
         $valores .= "{$gruda}'{$this->data_base_matricula}'";
         $gruda = ", ";
       }
 
-      if (is_string($this->data_fechamento)) {
+      if ((is_string($this->data_fechamento)) AND !empty($this->data_fechamento)) {
         $campos .= "{$gruda}data_fechamento";
         $valores .= "{$gruda}'{$this->data_fechamento}'";
         $gruda = ", ";
