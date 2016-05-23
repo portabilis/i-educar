@@ -1,28 +1,3 @@
-
-//abas
-
-if ($j('#cod_instituicao').val()) {
-  $j('.tablecadastro').children().children('tr:first').children('td:first').append('<div id="tabControl"><ul><li><div id="tab1" class="instituicaoTab"> <span class="tabText">Dados gerais</span></div></li><li><div id="tab2" class="instituicaoTab"> <span class="tabText">Documenta&ccedil;&atilde;o padr&atilde;o</span></div></li></ul></div>');
-  $j('.tablecadastro').children().children('tr:first').children('td:first').find('b').remove();
-  $j('#tab1').addClass('instituicaoTab-active').removeClass('instituicaoTab');
-}
-// Adiciona um ID à linha que termina o formulário para parar de esconder os campos
-$j('.tableDetalheLinhaSeparador').closest('tr').attr('id','stop');
-
-// Pega o número dessa linha
-linha_inicial_documentacao = $j('#tr_documento').index()-1;
-
-// hide nos campos das outras abas (deixando só os campos da primeira aba)
-$j('.tablecadastro >tbody  > tr').each(function(index, row) {
-  if (index>=linha_inicial_documentacao - 1){
-    if (row.id!='stop')
-      row.hide();
-    else{
-      return false;
-    }
-  }
-});
-
 var $arrayDocumento = [];
 
 function inserirDocumento(url) {
@@ -92,57 +67,6 @@ var $loadingDocumento =  $j('<img>').attr('src', 'imagens/indicator.gif')
 
 (function($) {
   $(document).ready(function() {
-
-
-    $j('#tab1').click(
-      function(){
-
-        $j('.instituicaoTab-active').toggleClass('instituicaoTab-active instituicaoTab');
-        $j('#tab1').toggleClass('instituicaoTab instituicaoTab-active')
-        $j('.tablecadastro >tbody  > tr').each(function(index, row) {
-          if (index>=linha_inicial_documentacao -1){
-            if (row.id!='stop')
-              row.hide();
-            else
-              return false;
-          }else{
-            if ($j('#cod_instituicao').val() != '' || $j.inArray(row.id, ['tr_deficiencias', 'tr_cod_docente_inep']) == -1)
-              row.show();
-          }
-        });
-      }
-    );
-
-    // Adicionais
-    $j('#tab2').click(
-      function(){
-        $j('.instituicaoTab-active').toggleClass('instituicaoTab-active instituicaoTab');
-        $j('#tab2').toggleClass('instituicaoTab instituicaoTab-active')
-        $j('.tablecadastro >tbody  > tr').each(function(index, row) {
-          if (row.id!='stop'){
-            if (index>=linha_inicial_documentacao -1){
-              if ((index - linha_inicial_documentacao + 1) % 2 == 0){
-                $j('#'+row.id).find('td').removeClass('formlttd');
-                $j('#'+row.id).find('td').addClass('formmdtd');
-              }else{
-                $j('#'+row.id).find('td').removeClass('formmdtd');
-                $j('#'+row.id).find('td').addClass('formlttd');
-              }
-              row.show();
-            }else if (index>0){
-              row.hide();
-            }
-          }else
-            return false;
-        });
-      });
-
-    // fix checkboxs
-    $j('.tablecadastro >tbody  > tr').each(function(index, row) {
-      if (index>=linha_inicial_documentacao){
-        $j('#'+row.id).find('input:checked').val('on');
-      }
-    });
 
     var titulo = $j('#titulo_documento').val();
     $j('#documento').on('change', prepareUploadDocumento);

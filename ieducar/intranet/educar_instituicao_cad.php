@@ -141,8 +141,6 @@ class indice extends clsCadastro
 
 	function Gerar()
 	{
-		Portabilis_View_Helper_Application::loadJavascript($this, array('/modules/Cadastro/Assets/Javascripts/Instituicao.js'));
-		Portabilis_View_Helper_Application::loadStylesheet($this, array('/modules/Cadastro/Assets/Stylesheets/Instituicao.css'));
 		// primary keys
 		$this->campoOculto( "cod_instituicao", $this->cod_instituicao );
 
@@ -255,10 +253,6 @@ class indice extends clsCadastro
 					    							'placeholder' => 'dd/mm',
 					    							'required' => false,
 					    							'value' => Portabilis_Date_Utils::pgSQLToBr_ddmm($this->data_fechamento)));
-
-	    $this->campoTexto( "titulo_documento", "Título", $this->titulo_documento, 30, 50, false );
-
-	    $this->campoArquivo('documento','Documentação padrão',$this->documento,40,Portabilis_String_Utils::toLatin1("<span id='aviso_formato'>São aceitos apenas arquivos no formato PDF.</span>", array('escape' => false)));
 	}
 
 	function Novo()
