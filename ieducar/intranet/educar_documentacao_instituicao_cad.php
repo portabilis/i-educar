@@ -69,10 +69,6 @@ class indice extends clsCadastro
 	    ));
 	    $this->enviaLocalizacao($localizacao->montar());
 
-		$obj_permissoes = new clsPermissoes();
-
-		$obj_permissoes->permissao_cadastra( 559, $this->pessoa_logada, 3, "educar_instituicao_lst.php" );
-
 		$this->cod_instituicao=$_GET["cod_instituicao"];
 
 		return $retorno;
