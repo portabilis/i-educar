@@ -30,10 +30,11 @@ var searchPath = '../module/Api/InstituicaoDocumentacao?oper=get&resource=getDoc
 function excluirDocumento(event){
   var searchPath = '../module/Api/InstituicaoDocumentacao?oper=get&resource=deleteDocuments';
   var params = {id : event.data['id']}
-
-  $j.get(searchPath, params, function(deleteID){
-    $j('#'+event.data['id']).hide();
-  });
+  if(confirm("Deseja realmente excluir este documento?")){
+    $j.get(searchPath, params, function(deleteID){
+      $j('#'+event.data['id']).hide();
+    });
+  }
 }
 
 getDocumento();
