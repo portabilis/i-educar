@@ -178,7 +178,7 @@ class DiarioController extends ApiCoreController
           foreach ($notaTurmaAluno as $componenteCurricularId => $notaTurmaAlunoDisciplina){
             if($this->validateComponenteTurma($turmaId, $componenteCurricularId)){
               $valor = $notaTurmaAlunoDisciplina['valor'];
-              $valor = truncate($valor, 4);
+              $valor = $this->truncate($valor, 4);
               $array_nota = array(
                     'componenteCurricular' => $componenteCurricularId,
                     'nota'                 => $valor,
