@@ -459,134 +459,14 @@ class indice extends clsCadastro
 
     $this->campoLista('tipo_boletim', 'Modelo relat&oacute;rio boletim', $tiposBoletim, $this->tipo_boletim);
 
-    $this->campoQuebra2();
+    $instituicao = new clsPmieducarInstituicao($this->ref_cod_instituicao);
+    $instituicao = $instituicao->detalhe();
 
-    if ($this->ref_ref_cod_serie) {
+    $podeCadastrarComponenteDiferenciado = dbBool($instituicao['componente_curricular_turma']);
 
-      $disciplinas = '';
-      $conteudo    = '';
-
-      // Instancia o mapper de componente curricular
-      $mapper = new ComponenteCurricular_Model_ComponenteDataMapper();
-
-      // Instancia o mapper de ano escolar
-      $anoEscolar = new ComponenteCurricular_Model_AnoEscolarDataMapper();
-      $lista = $anoEscolar->findComponentePorSerie($this->ref_ref_cod_serie);
-
-      // Instancia o mapper de turma
-      $componenteTurmaMapper = new ComponenteCurricular_Model_TurmaDataMapper();
-      $componentesTurma = array();
-
-      if (isset($this->cod_turma) && is_numeric($this->cod_turma)) {
-        $componentesTurma = $componenteTurmaMapper->findAll(
-          array(), array('turma' => $this->cod_turma)
-        );
-      }
-
-      $componentes = array();
-      foreach ($componentesTurma as $componenteTurma) {
-        $componentes[$componenteTurma->get('componenteCurricular')] = $componenteTurma;
-      }
-      unset($componentesTurma);
-
-      $this->escola_serie_disciplina = array();
-
-      if (is_array($lista) && count($lista)) {
-        $conteudo .= '<div style="margin-bottom: 10px;">';
-        $conteudo .= '  <span style="display: block; float: left; width: 250px;">Nome</span>';
-        $conteudo .= '  <span style="display: block; float: left; width: 100px;">Carga hor&aacute;ria</span>';
-        $conteudo .= '  <span style="display: block; float: left;width: 100px;">Usar padr&atilde;o do componente?</span>';
-        if($this->utilizaNotaGeralPorEtapa){
-          $conteudo .= '  <span style="display: block; float: left;width: 150px;">Usar etapas espec&iacute;ficas?</span>';
-        }
-        $conteudo .= '  <span style="display: block; float: left">Possui docente v&iacute;nculado?</span>';
-        $conteudo .= '</div>';
-        $conteudo .= '<br style="clear: left" />';
-
-        foreach ($lista as $registro) {
-          $checked = '';
-          $usarComponente = FALSE;
-          $docenteVinculado = FALSE;
-          $checkedEtapaEspecifica = '';
-          $etapaUtilizada = '';
-
-          if($componentes[$registro->id]->etapasEspecificas == "1"){
-            $checkedEtapaEspecifica = 'checked="checked"';
-            $etapaUtilizada = $componentes[$registro->id]->etapasUtilizadas;
-          }
-
-          if (isset($componentes[$registro->id])) {
-            $checked = 'checked="checked"';
-          }
-
-          if (is_null($componentes[$registro->id]->cargaHoraria) ||
-            0 == $componentes[$registro->id]->cargaHoraria) {
-            $usarComponente = TRUE;
-          }
-          else {
-            $cargaHoraria = $componentes[$registro->id]->cargaHoraria;
-          }
-          $cargaComponente = $registro->cargaHoraria;
-
-          if (1 == $componentes[$registro->id]->docenteVinculado) {
-            $docenteVinculado = TRUE;
-          }
-
-          $conteudo .= '<div style="margin-bottom: 10px; float: left">';
-          $conteudo .= "  <label style='display: block; float: left; width: 250px'><input type=\"checkbox\" $checked name=\"disciplinas[$registro->id]\" id=\"disciplinas[]\" value=\"{$registro->id}\">{$registro}</label>";
-          $conteudo .= "  <label style='display: block; float: left; width: 100px;'><input type='text' name='carga_horaria[$registro->id]' value='{$cargaHoraria}' size='5' maxlength='7'></label>";
-          $conteudo .= "  <label style='display: block; float: left; width: 100px;'><input type='checkbox' name='usar_componente[$registro->id]' value='1' ". ($usarComponente == TRUE ? $checked : '') .">($cargaComponente h)</label>";
-          if($this->utilizaNotaGeralPorEtapa){
-            $conteudo .= "  <input style='float:left;' type='checkbox' id='etapas_especificas[]' name='etapas_especificas[$registro->id]' value='1' ". $checkedEtapaEspecifica ."></label>";
-            $conteudo .= "  <label style='display: block; float: left; width: 150px;'>Etapas utilizadas: <input type='text' class='etapas_utilizadas' name='etapas_utilizadas[$registro->id]' value='{$etapaUtilizada}' size='5' maxlength='7'></label>";
-          }
-          $conteudo .= "  <label style='display: block; float: left'><input type='checkbox' name='docente_vinculado[$registro->id]' value='1' ". ($docenteVinculado == TRUE ? $checked : '') ."></label>";
-          $conteudo .= '</div>';
-          $conteudo .= '<br style="clear: left" />';
-
-          $cargaHoraria = '';
-        }
-
-        $disciplinas  = '<table cellspacing="0" cellpadding="0" border="0">';
-        $disciplinas .= sprintf('<tr align="left"><td>%s</td></tr>', $conteudo);
-        $disciplinas .= '</table>';
-      }
-      else {
-        $disciplinas = 'A s&eacute;rie/ano escolar n&atilde;o possui componentes curriculares cadastrados.';
-      }
+    if ($podeCadastrarComponenteDiferenciado) {
+      $this->montaListaComponentesSerieEscola();
     }
-
-    $componentes = $help = array();
-
-    try {
-      $componentes = App_Model_IedFinder::getEscolaSerieDisciplina(
-        $this->ref_ref_cod_serie, $this->ref_cod_escola
-      );
-    }
-    catch (Exception $e) {
-    }
-
-    foreach ($componentes as $componente) {
-      $help[] = sprintf('%s (%.0f h)', $componente->nome, $componente->cargaHoraria);
-    }
-
-    if (count($componentes)) {
-      $help = '<ul><li>' . implode('</li><li>', $help) . '</li></ul>';
-    }
-    else {
-      $help = '';
-    }
-
-    $label = 'Componentes curriculares:<br />'
-           . '<strong>Observa&ccedil;&atilde;o:</strong> caso n&atilde;o defina os componentes<br />'
-           . 'curriculares para a turma, esta usar&aacute; a defini&ccedil;&atilde;o<br />'
-           . 'da s&eacute;rie/ano escolar da escola:'
-           . '<span id="_escola_serie_componentes">%s</span>';
-
-    $label = sprintf($label, $help);
-
-    $this->campoRotulo('disciplinas_', $label,
-      "<div id='disciplinas'>$disciplinas</div>");
 
     $this->campoQuebra2();
 
@@ -987,6 +867,136 @@ class indice extends clsCadastro
 
     $options = array('label' => 'Etapa da turma', 'resources' => $etapas_educacenso, 'value' => $this->etapa_educacenso, 'required' => false, 'size' => 70,);
     $this->inputsHelper()->select('etapa_educacenso', $options);
+
+  }
+
+  function montaListaComponentesSerieEscola(){
+    $this->campoQuebra2();
+
+    if ($this->ref_ref_cod_serie) {
+
+      $disciplinas = '';
+      $conteudo    = '';
+
+      // Instancia o mapper de componente curricular
+      $mapper = new ComponenteCurricular_Model_ComponenteDataMapper();
+
+      // Instancia o mapper de ano escolar
+      $anoEscolar = new ComponenteCurricular_Model_AnoEscolarDataMapper();
+      $lista = $anoEscolar->findComponentePorSerie($this->ref_ref_cod_serie);
+
+      // Instancia o mapper de turma
+      $componenteTurmaMapper = new ComponenteCurricular_Model_TurmaDataMapper();
+      $componentesTurma = array();
+
+      if (isset($this->cod_turma) && is_numeric($this->cod_turma)) {
+        $componentesTurma = $componenteTurmaMapper->findAll(
+          array(), array('turma' => $this->cod_turma)
+        );
+      }
+
+      $componentes = array();
+      foreach ($componentesTurma as $componenteTurma) {
+        $componentes[$componenteTurma->get('componenteCurricular')] = $componenteTurma;
+      }
+      unset($componentesTurma);
+
+      $this->campoCheck('definir_componentes_diferenciados', 'Definir componentes curriculares diferenciados', $componentes);
+
+      $this->escola_serie_disciplina = array();
+
+      if (is_array($lista) && count($lista)) {
+        $conteudo .= '<div style="margin-bottom: 10px;">';
+        $conteudo .= '  <span style="display: block; float: left; width: 250px;">Nome</span>';
+        $conteudo .= '  <span style="display: block; float: left; width: 100px;">Carga hor&aacute;ria</span>';
+        $conteudo .= '  <span style="display: block; float: left;width: 100px;">Usar padr&atilde;o do componente?</span>';
+        if($this->utilizaNotaGeralPorEtapa){
+          $conteudo .= '  <span style="display: block; float: left;width: 150px;">Usar etapas espec&iacute;ficas?</span>';
+        }
+        $conteudo .= '  <span style="display: block; float: left">Possui docente v&iacute;nculado?</span>';
+        $conteudo .= '</div>';
+        $conteudo .= '<br style="clear: left" />';
+
+        foreach ($lista as $registro) {
+          $checked = '';
+          $usarComponente = FALSE;
+          $docenteVinculado = FALSE;
+          $checkedEtapaEspecifica = '';
+          $etapaUtilizada = '';
+
+          if($componentes[$registro->id]->etapasEspecificas == "1"){
+            $checkedEtapaEspecifica = 'checked="checked"';
+            $etapaUtilizada = $componentes[$registro->id]->etapasUtilizadas;
+          }
+
+          if (isset($componentes[$registro->id])) {
+            $checked = 'checked="checked"';
+          }
+
+          if (is_null($componentes[$registro->id]->cargaHoraria) ||
+            0 == $componentes[$registro->id]->cargaHoraria) {
+            $usarComponente = TRUE;
+          }
+          else {
+            $cargaHoraria = $componentes[$registro->id]->cargaHoraria;
+          }
+          $cargaComponente = $registro->cargaHoraria;
+
+          if (1 == $componentes[$registro->id]->docenteVinculado) {
+            $docenteVinculado = TRUE;
+          }
+
+          $conteudo .= '<div style="margin-bottom: 10px; float: left">';
+          $conteudo .= "  <label style='display: block; float: left; width: 250px'><input type=\"checkbox\" $checked name=\"disciplinas[$registro->id]\" id=\"disciplinas[]\" value=\"{$registro->id}\">{$registro}</label>";
+          $conteudo .= "  <label style='display: block; float: left; width: 100px;'><input type='text' name='carga_horaria[$registro->id]' value='{$cargaHoraria}' size='5' maxlength='7'></label>";
+          $conteudo .= "  <label style='display: block; float: left; width: 100px;'><input type='checkbox' name='usar_componente[$registro->id]' value='1' ". ($usarComponente == TRUE ? $checked : '') .">($cargaComponente h)</label>";
+          if($this->utilizaNotaGeralPorEtapa){
+            $conteudo .= "  <input style='float:left;' type='checkbox' id='etapas_especificas[]' name='etapas_especificas[$registro->id]' value='1' ". $checkedEtapaEspecifica ."></label>";
+            $conteudo .= "  <label style='display: block; float: left; width: 150px;'>Etapas utilizadas: <input type='text' class='etapas_utilizadas' name='etapas_utilizadas[$registro->id]' value='{$etapaUtilizada}' size='5' maxlength='7'></label>";
+          }
+          $conteudo .= "  <label style='display: block; float: left'><input type='checkbox' name='docente_vinculado[$registro->id]' value='1' ". ($docenteVinculado == TRUE ? $checked : '') ."></label>";
+          $conteudo .= '</div>';
+          $conteudo .= '<br style="clear: left" />';
+
+          $cargaHoraria = '';
+        }
+
+        $disciplinas  = '<table cellspacing="0" cellpadding="0" border="0">';
+        $disciplinas .= sprintf('<tr align="left"><td>%s</td></tr>', $conteudo);
+        $disciplinas .= '</table>';
+      }
+      else {
+        $disciplinas = 'A s&eacute;rie/ano escolar n&atilde;o possui componentes curriculares cadastrados.';
+      }
+    }
+
+    $componentes = $help = array();
+
+    try {
+      $componentes = App_Model_IedFinder::getEscolaSerieDisciplina(
+        $this->ref_ref_cod_serie, $this->ref_cod_escola
+      );
+    }
+    catch (Exception $e) {
+    }
+
+    foreach ($componentes as $componente) {
+      $help[] = sprintf('%s (%.0f h)', $componente->nome, $componente->cargaHoraria);
+    }
+
+    if (count($componentes)) {
+      $help = '<ul><li>' . implode('</li><li>', $help) . '</li></ul>';
+    }
+    else {
+      $help = '';
+    }
+
+    $label = 'Componentes curriculares definidos em Escola-s&eacute;rie';
+
+    $label = sprintf($label, $help);
+
+    $this->campoRotulo('disciplinas_', $label,
+      "<div id='disciplinas'>$disciplinas</div>");
 
   }
 
@@ -2298,8 +2308,19 @@ function incluirDiaSemana(){
 
 $j(document).ready( function(){
   $j('#scripts').closest('tr').hide();
+
+  disableInputsDisciplinas();
 });
 
 $j('.etapas_utilizadas').mask("9,9,9,9", {placeholder: "1,2,3..."});
 
+$j("#definir_componentes_diferenciados").on("click", function(){
+  disableInputsDisciplinas();
+});
+
+function disableInputsDisciplinas() {
+  var disable = $j('#definir_componentes_diferenciados').prop('checked');
+
+  $j("#disciplinas").find("input").attr("disabled", !disable);
+}
 </script>
