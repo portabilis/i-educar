@@ -75,6 +75,26 @@ class indice extends clsCadastro
 		$this->pessoa_logada = $_SESSION['id_pessoa'];
 		session_write_close();
 
+		$obj_usuario = new clsPmieducarUsuario($this->pessoa_logada);
+		$obj_usuario_det = $obj_usuario->detalhe();
+ 		$this->ref_cod_instituicao = $obj_usuario_det["ref_cod_instituicao"];
+
+ 		$obj_permissoes = new clsPermissoes();
+
+		$nivelUsuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
+		if ($nivelUsuario == 4){
+			$this->campoOculto( "ref_cod_instituicao", $this->ref_cod_instituicao );
+
+			$obj_instituicao = new clsPmieducarInstituicao();
+		    $lst_instituicao = $obj_instituicao->lista($this->ref_cod_instituicao);
+
+		    if (is_array($lst_instituicao)) {
+		        $det_instituicao      = array_shift($lst_instituicao);
+		        $this->nm_instituicao = $det_instituicao['nm_instituicao'];
+				$this->campoRotulo('nm_instituicao', 'Institução', $this->nm_instituicao);
+		    }
+		}
+
 		$this->largura = "100%";
 
 	    $localizacao = new LocalizacaoSistema();
@@ -102,7 +122,19 @@ $pagina->addForm( $miolo );
 $pagina->MakeAll();
 ?>
 
+<style type="text/css">
+	select#relatorio{
+		min-width: 180px;
+	}
+</style>
 <script>
+
+var instituicaoId = document.getElementById('ref_cod_instituicao').value;
+if (instituicaoId != '') {
+	var selectRelatorio = document.getElementById('relatorio');
+	 selectRelatorio.length = 1;
+	 getDocumento(instituicaoId);
+}
 
 document.getElementById('btn_enviar').style.display = 'none';
 
@@ -114,7 +146,6 @@ document.getElementById('ref_cod_instituicao').onchange = function()
 	 selectRelatorio.disabled = true;
 	 selectRelatorio.options[0].text = 'Carregando Relatorios';
 	 var instituicaoId = document.getElementById('ref_cod_instituicao').value;
-	 console.log(instituicaoId);
 	 getDocumento(instituicaoId);
   }else{
   	selectRelatorio.length = 1;
@@ -141,7 +172,6 @@ function getDocumento(instituicaoId) {
     var documentos = data.documentos;
 
     for (var i = documentos.length - 1; i >= 0; i--) {
-      	console.log(documentos[i].id, documentos[i].titulo_documento, documentos[i].url_documento);
       	var selectRelatorio = document.getElementById("relatorio");
       	var option = document.createElement("option");
 		selectRelatorio.options[0].text = 'Selecione um relatório';
