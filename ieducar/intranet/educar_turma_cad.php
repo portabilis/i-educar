@@ -1530,7 +1530,7 @@ class indice extends clsCadastro
     if($escolaSerie['bloquear_cadastro_turma_para_serie_com_vagas'] == 1) {
       $turmas = new clsPmieducarTurma();
 
-      $turmas = $turmas->lista(null, null, null, $serieId, $escolaId, null, null, null, null, null, null, null, null, null, 1, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, true, $turnoId);
+      $turmas = $turmas->lista(null, null, null, $serieId, $escolaId, null, null, null, null, null, null, null, null, null, 1, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, true, $turnoId, null, null, true);
 
       foreach($turmas as $turma) {
         $countMatriculas = $this->getCountMatriculas($escolaId, $turma['cod_turma']);
