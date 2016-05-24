@@ -86,6 +86,7 @@ class indice extends clsCadastro
   var $data_base_matricula;
 	var $data_expiracao_reserva_vaga;
 	var $data_fechamento;
+	var $componente_curricular_turma;
 
 	function Inicializar()
 	{
@@ -134,6 +135,7 @@ class indice extends clsCadastro
         $this->restringir_multiplas_enturmacoes	= dbBool($this->restringir_multiplas_enturmacoes);
         $this->permissao_filtro_abandono_transferencia  = dbBool($this->permissao_filtro_abandono_transferencia);
         $this->multiplas_reserva_vaga = dbBool($this->multiplas_reserva_vaga);
+        $this->componente_curricular_turma = dbBool($this->componente_curricular_turma);
         $this->reserva_integral_somente_com_renda	= dbBool($this->reserva_integral_somente_com_renda);
 
 		return $retorno;
@@ -238,6 +240,10 @@ class indice extends clsCadastro
 
 		$this->campoCheck("reserva_integral_somente_com_renda", "Permitir reserva de vaga para o turno integral somente quando a renda for informada", $this->reserva_integral_somente_com_renda);
 
+    $this->campoCheck("componente_curricular_turma",
+    			      "Permitir definir componentes curriculares diferenciados nas turmas",
+    			      $this->componente_curricular_turma);
+
     	$this->inputsHelper()->text('data_base', array('label' => 'Data base para matrícula (dia/mês)',
 					    								'size' => 5,
 					    								'max_length' => 5,
@@ -271,6 +277,7 @@ class indice extends clsCadastro
 		$obj->restringir_multiplas_enturmacoes  = !is_null($this->restringir_multiplas_enturmacoes);
     $obj->permissao_filtro_abandono_transferencia  = !is_null($this->permissao_filtro_abandono_transferencia);
     $obj->multiplas_reserva_vaga  = !is_null($this->multiplas_reserva_vaga);
+    	$obj->componente_curricular_turma  = !is_null($this->componente_curricular_turma);
 		$obj->reserva_integral_somente_com_renda  = !is_null($this->reserva_integral_somente_com_renda);
 		$obj->coordenador_transporte 			= $this->pessoa_coordenador_transporte;
 		$obj->controlar_espaco_utilizacao_aluno = is_null($this->controlar_espaco_utilizacao_aluno) ? 0 : 1;
@@ -309,6 +316,7 @@ class indice extends clsCadastro
 		$obj->restringir_multiplas_enturmacoes 	= !is_null($this->restringir_multiplas_enturmacoes);
     $obj->permissao_filtro_abandono_transferencia   = !is_null($this->permissao_filtro_abandono_transferencia);
     $obj->multiplas_reserva_vaga  = !is_null($this->multiplas_reserva_vaga);
+    	$obj->componente_curricular_turma  = !is_null($this->componente_curricular_turma);
 		$obj->reserva_integral_somente_com_renda 	= !is_null($this->reserva_integral_somente_com_renda);
 		$obj->coordenador_transporte 			= $this->pessoa_coordenador_transporte;
 		$obj->controlar_espaco_utilizacao_aluno = is_null($this->controlar_espaco_utilizacao_aluno) ? 0 : 1;
