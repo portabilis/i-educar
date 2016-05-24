@@ -666,7 +666,7 @@ class indice extends clsCadastro
 
       if ($cadastrou) {
 
-        if ((is_numeric($this->ref_cod_candidato_reserva_vaga)) || ($countEscolasIguais > 0)){
+        if ($countEscolasIguais > 0){
           $obj_crv = new clsPmieducarCandidatoReservaVaga($this->ref_cod_candidato_reserva_vaga);
           $obj_crv->vinculaMatricula($this->cod_matricula);
           $obj_crv->indefereOutrasReservas($this->ref_cod_aluno);
