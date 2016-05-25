@@ -459,14 +459,7 @@ class indice extends clsCadastro
 
     $this->campoLista('tipo_boletim', 'Modelo relat&oacute;rio boletim', $tiposBoletim, $this->tipo_boletim);
 
-    $instituicao = new clsPmieducarInstituicao($this->ref_cod_instituicao);
-    $instituicao = $instituicao->detalhe();
-
-    $podeCadastrarComponenteDiferenciado = dbBool($instituicao['componente_curricular_turma']);
-
-    if ($podeCadastrarComponenteDiferenciado) {
-      $this->montaListaComponentesSerieEscola();
-    }
+    $this->montaListaComponentesSerieEscola();
 
     $this->campoQuebra2();
 
@@ -901,7 +894,27 @@ class indice extends clsCadastro
       }
       unset($componentesTurma);
 
-      $this->campoCheck('definir_componentes_diferenciados', 'Definir componentes curriculares diferenciados', $componentes);
+      $instituicao = new clsPmieducarInstituicao($this->ref_cod_instituicao);
+      $instituicao = $instituicao->detalhe();
+
+      $podeCadastrarComponenteDiferenciado = dbBool($instituicao['componente_curricular_turma']);
+
+      if ($podeCadastrarComponenteDiferenciado) {
+        $checkDefinirComponente = ($componentes == true);
+        $disableDefinirComponente = false;
+      } else {
+        $disableDefinirComponente = true;
+
+      }
+
+      $this->campoCheck('definir_componentes_diferenciados',
+        'Definir componentes curriculares diferenciados',
+        $checkDefinirComponente,
+        NULL,
+        FALSE,
+        FALSE,
+        $disableDefinirComponente,
+        Portabilis_String_Utils::toLatin1('Está opção poderá ser utilizada, somente se no cadastro da instituição o parâmetro de permissão esteja habilitado'));
 
       $this->escola_serie_disciplina = array();
 
