@@ -421,7 +421,7 @@ class clsPmieducarCandidatoReservaVaga
     $this->resetCamposLista();
 
     $sql = "UPDATE {$this->_tabela}
-               SET situacao = 'D'";
+               SET situacao = 'D', data_situacao = NOW()";
 
     $whereAnd = ' WHERE ';
 
@@ -555,12 +555,14 @@ class clsPmieducarCandidatoReservaVaga
     return '';
   }
 
-  function vinculaMatricula($ref_cod_matricula)
+  function vinculaMatricula($ref_cod_escola, $ref_cod_matricula, $ref_cod_aluno)
   {
-    if (is_numeric($this->cod_candidato_reserva_vaga) && is_numeric($ref_cod_matricula)) {
+    if (is_numeric($ref_cod_escola) && is_numeric($ref_cod_matricula) && is_numeric($ref_cod_aluno)) {
+      $sql = "UPDATE pmieducar.candidato_reserva_vaga SET ref_cod_matricula = '{$ref_cod_matricula}', situacao = 'A', data_situacao = NOW()
+                      WHERE ref_cod_escola = '{$ref_cod_escola}'
+                      AND ref_cod_aluno = '{$ref_cod_aluno}'";
       $db = new clsBanco();
-      $db->Consulta("UPDATE pmieducar.candidato_reserva_vaga SET ref_cod_matricula = '{$ref_cod_matricula}', situacao = 'A', data_situacao = NOW()
-                      WHERE cod_candidato_reserva_vaga = '{$this->cod_candidato_reserva_vaga}'");
+      $db->Consulta($sql);
       $db->ProximoRegistro();
       return $db->Tupla();
     }

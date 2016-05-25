@@ -619,6 +619,7 @@ class indice extends clsCadastro
       $count = count($lst_CandidatoReservaVaga);
       $countEscolasDiferentes = 0;
       $countEscolasIguais = 0;
+
       if (is_array($lst_CandidatoReservaVaga)){
         for ($i = 0; $i < $count; $i++){
           if($lst_CandidatoReservaVaga[$i]['ref_cod_escola'] != $this->ref_cod_escola){
@@ -627,6 +628,7 @@ class indice extends clsCadastro
             $countEscolasIguais = $countEscolasIguais + 1;
           }
         }
+
         if(($countEscolasDiferentes > 0) && (!$reloadReserva)){
           echo "<script type=\"text/javascript\">
                   var msg = '".Portabilis_String_Utils::toLatin1('O aluno possui uma reserva de vaga em outra escola, deseja matricula-lo assim mesmo?')."';
@@ -668,8 +670,7 @@ class indice extends clsCadastro
 
         if ($countEscolasIguais > 0){
           $obj_crv = new clsPmieducarCandidatoReservaVaga($this->ref_cod_candidato_reserva_vaga);
-          $obj_crv->vinculaMatricula($this->cod_matricula);
-          $obj_crv->indefereOutrasReservas($this->ref_cod_aluno);
+          $obj_crv->vinculaMatricula($this->ref_cod_escola, $this->cod_matricula, $this->ref_cod_aluno);
         }
 
         $this->enturmacaoMatricula($this->cod_matricula, $this->ref_cod_turma);
