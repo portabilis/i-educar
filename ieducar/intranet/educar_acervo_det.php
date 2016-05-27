@@ -28,6 +28,7 @@ require_once ("include/clsBase.inc.php");
 require_once ("include/clsDetalhe.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once( "include/pmieducar/geral.inc.php" );
+require_once ("include/pmieducar/clsPmieducarCategoriaAcervo.inc.php");
 
 class clsIndexBase extends clsBase
 {
@@ -320,7 +321,15 @@ class indice extends clsDetalhe
 				$this->addDetalhe( array( "Assuntos", "{$assuntos}") );
 		}
 
-
+		$obj_categoria = new clsPmieducarCategoriaAcervo();
+		$obj_categoria = $obj_categoria->listaCategoriasPorObra($this->cod_acervo);
+		if (count($obj_categoria)){
+			foreach ($obj_categoria as $obj_cat) {
+				$categorias.= '<span style="background-color: #A1B3BD; padding: 2px;"><b>'.$obj_cat['descricao'].'</b></span>&nbsp; ';
+			}
+			if(!empty($categorias))
+				$this->addDetalhe( array( "Categorias", "{$categorias}") );
+		}		
 
 		$obj_permissoes = new clsPermissoes();
 		if( $obj_permissoes->permissao_cadastra( 598, $this->pessoa_logada, 11 ) )

@@ -30,6 +30,8 @@ require_once "include/clsBase.inc.php";
 require_once "include/clsCadastro.inc.php";
 require_once "include/clsBanco.inc.php";
 require_once "include/pmieducar/geral.inc.php";
+require_once "include/pmieducar/clsPmieducarCategoriaObra.inc.php";
+require_once "include/pmieducar/clsPmieducarCategoriaAcervo.inc.php";
 
 class clsIndexBase extends clsBase
 {
@@ -284,6 +286,10 @@ class indice extends clsCadastro
   	    $options       = array('label' => 'Assuntos', 'size' => 50, 'required' => false, 'options' => array('value' => null));
  		$this->inputsHelper()->multipleSearchAssuntos('', $options, $helperOptions);
 
+ 		$helperOptions = array('objectName' => 'categorias');
+  	    $options       = array('label' => 'Categorias', 'size' => 50, 'required' => false, 'options' => array('value' => null));
+ 		$this->inputsHelper()->multipleSearchCategoriaObra('', $options, $helperOptions);
+
 		$this->campoTexto( "cdd", "CDD", $this->cdd, 20, 15, false );
 		$this->campoTexto( "cdu", "CDU", $this->cdu, 20, 15, false );
 		$this->campoTexto( "cutter", "Cutter", $this->cutter, 20, 15, false );
@@ -312,6 +318,7 @@ class indice extends clsCadastro
 			#cadastra assuntos para a obra
 			$this->gravaAssuntos($cadastrou);
 			$this->gravaAutores($cadastrou);
+			$this->gravaCategorias($cadastrou);
 			
 			$this->mensagem .= "Cadastro efetuado com sucesso.<br>";
 			header( "Location: educar_acervo_lst.php" );
@@ -342,6 +349,7 @@ class indice extends clsCadastro
 			#cadastra assuntos para a obra
 			$this->gravaAssuntos($this->cod_acervo);
 			$this->gravaAutores($this->cod_acervo);
+			$this->gravaCategorias($this->cod_acervo);
 
 			$this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
 			header( "Location: educar_acervo_lst.php" );
@@ -367,6 +375,8 @@ class indice extends clsCadastro
 		$excluiu = $obj->excluir();
 		if( $excluiu )
 		{
+			$objCategoria = new clsPmieducarCategoriaAcervo();
+			$objCategoria->deletaCategoriaDaObra($this->cod_acervo);
 			$this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
 			header( "Location: educar_acervo_lst.php" );
 			die();
@@ -388,6 +398,17 @@ class indice extends clsCadastro
 			}
 		}
 	}
+
+	function gravaCategorias($cod_acervo){
+		$objCategoria = new clsPmieducarCategoriaAcervo();
+		$objCategoria->deletaCategoriaDaObra($cod_acervo);
+		foreach ($this->getRequest()->categorias as $categoriaId) {
+			if (!empty($categoriaId)){
+				$objCategoria = new clsPmieducarCategoriaAcervo();
+				$objCategoria->cadastraCategoriaParaObra($cod_acervo, $categoriaId);
+			}
+		}
+	}		
 
 	function gravaAutores($cod_acervo){
 		$objAutor = new clsPmieducarAcervoAcervoAutor();
@@ -455,11 +476,6 @@ $j('#autores').closest('tr').hide();
 $j('#autores').val("");
 }
 }
-
-
-
-
-
 
 document.getElementById('ref_cod_acervo_colecao').disabled = true;
 document.getElementById('ref_cod_acervo_colecao').options[0].text = 'Selecione uma biblioteca';
@@ -717,6 +733,44 @@ var getAssuntos = function() {
 }
 
 getAssuntos();
+
+function fixupCategoriasSize(){
+	$j('#categorias_chzn ul').css('width', '307px');	
+}
+fixupCategoriasSize();
+
+$categorias = $j('#categorias');
+
+$categorias.trigger('chosen:updated');
+
+var handleGetCategorias = function(dataResponse) {
+  $j.each(dataResponse['categorias'], function(id, value) {
+    $categorias.children("[value=" + value + "]").attr('selected', '');
+  });
+
+  $categorias.trigger('chosen:updated');
+}
+
+var getCategorias = function() {
+  var $cod_acervo = $j('#cod_acervo').val();
+  
+  if ($j('#cod_acervo').val()!='') {    
+    var additionalVars = {
+      id : $j('#cod_acervo').val(),
+    };
+
+    var options = {
+      url      : getResourceUrlBuilder.buildUrl('/module/Api/categoria', 'categorias', additionalVars),
+      dataType : 'json',
+      data     : {},
+      success  : handleGetCategorias,      
+    };
+
+    getResource(options);
+  }
+}
+
+getCategorias();
 
 $autores = $j('#autores');
 

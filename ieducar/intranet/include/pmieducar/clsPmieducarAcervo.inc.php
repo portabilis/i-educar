@@ -62,6 +62,7 @@ class clsPmieducarAcervo
 	var $material_ilustrativo;
 	var $dimencao_ilustrativo;
 	var $local;
+	var $categoria;
 
 	// propriedades padrao
 
