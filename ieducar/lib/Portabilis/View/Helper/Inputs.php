@@ -282,6 +282,10 @@ class Portabilis_View_Helper_Inputs {
     $this->multipleSearchResourceInput('multipleSearchAssuntos', $attrName, $inputOptions, $helperOptions);
   }
 
+  public function multipleSearchCategoriaObra($attrName, $inputOptions = array(), $helperOptions = array()) {
+    $this->multipleSearchResourceInput('multipleSearchCategoriaObra', $attrName, $inputOptions, $helperOptions);
+  }
+
   public function multipleSearchAutores($attrName, $inputOptions = array(), $helperOptions = array()) {
     $this->multipleSearchResourceInput('multipleSearchAutores', $attrName, $inputOptions, $helperOptions);
   }
