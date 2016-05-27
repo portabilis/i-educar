@@ -142,9 +142,227 @@ class EducacensoAnaliseController extends ApiCoreController
                  'title'     => "Análise exportação - Registro 00");
   }
 
+  protected function analisaEducacensoRegistro10() {
+
+    $escola = $this->getRequest()->escola;
+    $ano    = $this->getRequest()->ano;
+
+    $sql = "SELECT escola.local_funcionamento AS local_funcionamento,
+                   escola.condicao AS condicao,
+                   escola.agua_consumida AS agua_consumida,
+                   pessoa.nome AS nome_escola,
+                   escola.agua_rede_publica AS agua_rede_publica,
+                   escola.agua_poco_artesiano AS agua_poco_artesiano,
+                   escola.agua_cacimba_cisterna_poco AS agua_cacimba_cisterna_poco,
+                   escola.agua_fonte_rio AS agua_fonte_rio,
+                   escola.agua_inexistente AS agua_inexistente,
+                   escola.energia_rede_publica AS energia_rede_publica,
+                   escola.energia_gerador AS energia_gerador,
+                   escola.energia_outros AS energia_outros,
+                   escola.energia_inexistente AS energia_inexistente,
+                   escola.esgoto_fossa AS esgoto_fossa,
+                   escola.esgoto_inexistente AS esgoto_inexistente,
+                   escola.lixo_coleta_periodica AS lixo_coleta_periodica,
+                   escola.lixo_queima AS lixo_queima,
+                   escola.lixo_joga_outra_area AS lixo_joga_outra_area,
+                   escola.lixo_recicla AS lixo_recicla,
+                   escola.lixo_enterra AS lixo_enterra,
+                   escola.lixo_outros AS lixo_outros,
+                   escola.dependencia_sala_diretoria AS dependencia_sala_diretoria,
+                   escola.dependencia_sala_professores AS dependencia_sala_professores,
+                   escola.dependencia_sala_secretaria AS dependncia_sala_secretaria,
+                   escola.dependencia_laboratorio_informatica AS dependencia_laboratorio_informatica,
+                   escola.dependencia_laboratorio_ciencias AS dependencia_laboratorio_ciencias,
+                   escola.dependencia_sala_aee AS dependencia_sala_aee,
+                   escola.dependencia_quadra_coberta AS dependencia_quadra_coberta,
+                   escola.dependencia_quadra_descoberta AS dependencia_quadra_descoberta,
+                   escola.dependencia_cozinha AS dependencia_cozinha,
+                   escola.dependencia_biblioteca AS dependencia_biblioteca,
+                   escola.dependencia_sala_leitura AS dependencia_sala_leitura,
+                   escola.dependencia_parque_infantil AS dependencia_parque_infantil,
+                   escola.dependencia_bercario AS dependencia_bercario,
+                   escola.dependencia_banheiro_fora AS dependencia_banheiro_fora,
+                   escola.dependencia_banheiro_dentro AS dependencia_banheiro_dentro,
+                   escola.dependencia_banheiro_infantil AS dependencia_banheiro_infantil,
+                   escola.dependencia_banheiro_deficiente AS dependencia_banheiro_deficiente,
+                   escola.dependencia_banheiro_chuveiro AS dependencia_banheiro_chuveiro,
+                   escola.dependencia_refeitorio AS dependencia_refeitorio,
+                   escola.dependencia_dispensa AS dependencia_dispensa,
+                   escola.dependencia_aumoxarifado AS dependencia_aumoxarifado,
+                   escola.dependencia_auditorio AS dependencia_auditorio,
+                   escola.dependencia_patio_coberto AS dependencia_patio_coberto,
+                   escola.dependencia_patio_descoberto AS dependencia_patio_descoberto,
+                   escola.dependencia_alojamento_aluno AS dependencia_alojamento_aluno,
+                   escola.dependencia_alojamento_professor AS dependencia_alojamento_professor,
+                   escola.dependencia_area_verde AS dependencia_area_verde,
+                   escola.dependencia_lavanderia AS dependencia_lavanderia,
+                   escola.dependencia_nenhuma_relacionada AS dependencia_nenhuma_relacionada,
+                   escola.dependencia_numero_salas_existente AS dependencia_numero_salas_existente,
+                   escola.dependencia_numero_salas_utilizadas AS dependencia_numero_salas_utilizadas, 
+                   escola.televisoes AS televisoes,
+                   escola.videocassetes AS videocassetes,
+                   escola.dvds AS dvds,
+                   escola.antenas_parabolicas AS antenas_parabolicas,
+                   escola.copiadoras AS copiadoras,
+                   escola.retroprojetores AS retroprojetores,
+                   escola.impressoras AS impressoras,
+                   escola.aparelhos_de_som AS aparelhos_de_som,
+                   escola.projetores_digitais AS projetores_digitais,
+                   escola.faxs AS faxs,
+                   escola.maquinas_fotograficas AS maquinas_fotograficas,
+                   escola.computadores AS computadores,
+                   escola.computadores_administrativo AS computadores_administrativo,
+                   escola.computadores_alunos AS computadores_alunos,
+                   escola.total_funcionario AS total_funcionario,
+                   escola.atendimento_aee AS atendimento_aee,
+                   escola.atividade_complementar AS atividade_complementar,
+                   escola.localizacao_diferenciada AS localizacao_diferenciada,
+                   escola.didatico_nao_utiliza AS didatico_nao_utiliza,
+                   escola.didatico_quilombola AS didatico_quilombola,
+                   escola.didatico_indigena AS didatico_indigena,
+                   escola.lingua_ministrada AS lingua_ministrada
+              FROM pmieducar.escola
+             INNER JOIN cadastro.pessoa ON (pessoa.idpes = escola.ref_idpes)
+             WHERE escola.cod_escola = $1";
+
+    $escola = $this->fetchPreparedQuery($sql, array($escola));
+
+    if(empty($escola)){
+      $this->messenger->append("Ocorreu algum problema ao decorrer da análise.");
+      return array('title' => "Análise exportação - Registro 10");
+    }
+
+    $escola        = $escola[0];
+    $nomeEscola    = Portabilis_String_Utils::toUtf8(strtoupper($escola["nome_escola"]));
+    $predioEscolar = 3; //Valor fixo definido no cadastro de escola
+    
+    $existeAbastecimentoAgua = ($escola["agua_rede_publica"] ||
+                                $escola["agua_poco_artesiano"] ||
+                                $escola["agua_cacimba_cisterna_poco"] ||
+                                $escola["agua_fonte_rio"] ||
+                                $escola["agua_inexistente"]);
+
+    $existeAbastecimentoEnergia = ($escola["energia_rede_publica"] ||
+                                   $escola["energia_gerador"] ||
+                                   $escola["energia_outros"] ||
+                                   $escola["energia_inexistente"]);
+
+    $existeEsgotoSanitario = ($escola["esgoto_fossa"] || $escola["esgoto_inexistente"]);
+
+    $existeDestinacaoLixo = ($escola["lixo_coleta_periodica"] ||
+                             $escola["lixo_queima"] ||
+                             $escola["lixo_joga_outra_area"] ||
+                             $escola["lixo_recicla"] ||
+                             $escola["lixo_enterra"] ||
+                             $escola["lixo_outros"]);
+
+    $existeDependencia = ($escola["dependencia_sala_diretoria"] || $escola["dependencia_sala_professores"] ||
+                          $escola["dependncia_sala_secretaria"] || $escola["dependencia_laboratorio_informatica"] ||
+                          $escola["dependencia_laboratorio_ciencias"] || $escola["dependencia_sala_aee"] ||
+                          $escola["dependencia_quadra_coberta"] || $escola["dependencia_quadra_descoberta"] ||
+                          $escola["dependencia_cozinha"] || $escola["dependencia_biblioteca"] ||
+                          $escola["dependencia_sala_leitura"] || $escola["dependencia_parque_infantil"] ||
+                          $escola["dependencia_bercario"] || $escola["dependencia_banheiro_fora"] ||
+                          $escola["dependencia_banheiro_dentro"] || $escola["dependencia_banheiro_infantil"] ||
+                          $escola["dependencia_banheiro_deficiente"] || $escola["dependencia_banheiro_chuveiro"] ||
+                          $escola["dependencia_refeitorio"] || $escola["dependencia_dispensa"] ||
+                          $escola["dependencia_aumoxarifado"] || $escola["dependencia_auditorio"] ||
+                          $escola["dependencia_patio_coberto"] || $escola["dependencia_patio_descoberto"] ||
+                          $escola["dependencia_alojamento_aluno"] || $escola["dependencia_alojamento_professor"] ||
+                          $escola["dependencia_area_verde"] || $escola["dependencia_lavanderia"] ||
+                          $escola["dependencia_nenhuma_relacionada"]);
+
+    $existeEquipamentos = ($escola["televisoes"] || $escola["videocassetes"] ||
+                           $escola["dvds"] || $escola["antenas_parabolicas"] ||
+                           $escola["copiadoras"] || $escola["retroprojetores"] ||
+                           $escola["impressoras"] || $escola["aparelhos_de_som"] ||
+                           $escola["projetores_digitais"] || $escola["faxs"] ||
+                           $escola["maquinas_fotograficas"] || $escola["computadores"] ||
+                           $escola["computadores_administrativo"] || $escola["computadores_alunos"]);
+
+    $existeMaterialDidatico = ($escola["didatico_nao_utiliza"] || $escola["didatico_quilombola"] || $escola["didatico_indigena"]);
+
+    $mensagem = array();
+
+    if (!$escola["local_funcionamento"]) {
+      $mensagem[] = array("text" => "Dados para formular o registro 10 da escola {$nomeEscola} não encontrados. não encontrados. Verifique se o local de funcionamento da escola foi informado.",
+                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Infraestrutura > Campo: Local de funcionamento)");
+    }
+    if($escola["local_funcionamento"] == $predioEscolar && !$escola["condicao"]) {
+      $mensagem[] = array("text" => "Dados para formular o registro 10 da escola {$nomeEscola} não encontrados. Verificamos que o local de funcionamento da escola é em um prédio escolar, portanto obrigatoriamente é necessário informar qual a forma de ocupação do prédio.",
+                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Infraestrutura > Campo: Condição)");
+    }
+    if (!$escola["agua_consumida"]) {
+      $mensagem[] = array("text" => "Dados para formular o registro 10 da escola {$nomeEscola} não encontrados. Verifique se a água consumida pelos alunos foi informada",
+                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Infraestrutura > Campo: Água consumida pelos alunos)");
+    }
+    if (!$existeAbastecimentoAgua) {
+      $mensagem[] = array("text" => "Dados para formular o registro 10 da escola {$nomeEscola} não encontrados. Verifique se uma das formas do abastecimento de água foi informada.",
+                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Infraestrutura > Campos: Abastecimento de água)");
+    }
+    if (!$existeAbastecimentoEnergia) {
+      $mensagem[] = array("text" => "Dados para formular o registro 10 da escola {$nomeEscola} não encontrados. Verifique se uma das formas do abastecimento de energia elétrica foi informada.",
+                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Infraestrutura > Campos: Abastecimento de energia elétrica)");
+    }
+    if (!$existeEsgotoSanitario) {
+      $mensagem[] = array("text" => "Dados para formular o registro 10 da escola {$nomeEscola} não encontrados. Verifique se alguma opção de esgoto sanitário foi informada.",
+                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Infraestrutura > Campos: Esgoto sanitário)");
+    }
+    if (!$existeDestinacaoLixo) {
+      $mensagem[] = array("text" => "Dados para formular o registro 10 da escola {$nomeEscola} não encontrados. Verifique se uma das formas da destinação do lixo foi informada.",
+                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Infraestrutura > Campos: Destinação do lixo)");
+    }
+    if (!$existeDependencia) {
+      $mensagem[] = array("text" => "Dados para formular o registro 10 da escola {$nomeEscola} não encontrados. Nenhum campo foi preenchido referente as dependências existentes na escola, portanto todos serão registrados como NÃO.",
+                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dependências > Campos: Dependências existentes na escola)");
+    }
+    if($escola["local_funcionamento"] == $predioEscolar && !$escola["dependencia_numero_salas_existente"]) {
+      $mensagem[] = array("text" => "Dados para formular o registro 10 da escola {$nomeEscola} não encontrados. Verificamos que o local de funcionamento da escola é em um prédio escolar, portanto obrigatoriamente é necessário informar o número de salas de aula existentes na escola.",
+                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dependências > Campo: Dependências existentes na escola - Número de salas de aula existentes na escola)");
+    }
+    if (!$escola['dependencia_numero_salas_utilizadas']) {
+      $mensagem[] = array("text" => "Dados para formular o registro 10 da escola {$nomeEscola} não encontrados. Verifique se o número de salas utilizadas como sala de aula foi informado.",
+                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dependências > Campo: Dependências existentes na escola – Número de salas utilizadas como sala de aula)");
+    }
+    if (!$existeEquipamentos) {
+      $mensagem[] = array("text" => "Dados para formular o registro 10 da escola {$nomeEscola} não encontrados. Nenhum campo foi preenchido referente a quantidade de equipamentos existentes na escola, portanto todos serão registrados como NÃO.",
+                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Equipamentos > Campos: Quantidade de equipamentos)");
+    }
+    if (!$escola["total_funcionario"]) {
+      $mensagem[] = array("text" => "Dados para formular o registro 10 da escola {$nomeEscola} não encontrados. Verifique se o total de funcionários da escola foi informado.",
+                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dependências > Campo: Total de funcionários da escola)");
+    }
+    if (!$escola["atendimento_aee"]) {
+      $mensagem[] = array("text" => "Dados para formular o registro 10 da escola {$nomeEscola} não encontrados. Verifique se o atendimento educacional especializado - AEE foi informado.",
+                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dados do ensino > Campo: Atendimento educacional especializado - AEE)");
+    }
+    if (!$escola["atividade_complementar"]) {
+      $mensagem[] = array("text" => "Dados para formular o registro 10 da escola {$nomeEscola} não encontrados. Verifique se a atividade complementar foi informada.",
+                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dados do ensino > Campo: Atividade complementar)");
+    }
+    if (!$escola["localizacao_diferenciada"]) {
+      $mensagem[] = array("text" => "Dados para formular o registro 10 da escola {$nomeEscola} não encontrados. Verifique se a localização diferenciada da escola foi informada.",
+                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dados do ensino > Campo: Localização diferenciada da escola)");
+    }
+    if (!$existeMaterialDidatico) {
+      $mensagem[] = array("text" => "Dados para formular o registro 10 da escola {$nomeEscola} não encontrados. Verifique se algum material didático específico para atendimento à diversidade sócio-cultural foi informado.",
+                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dados do ensino > Campo: Materiais didáticos específicos para atendimento à diversidade sócio-cultural)");
+    }
+    if (!$escola["lingua_ministrada"]) {
+      $mensagem[] = array("text" => "Dados para formular o registro 10 da escola {$nomeEscola} não encontrados. Verificamos que a escola trabalha com educação indígena, portanto obrigatoriamente é necessário informar a língua em que o ensino é ministrado.",
+                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dados do ensino > Campo: Língua em que o ensino é ministrado)");
+    }
+
+    return array('mensagens' => $mensagem,
+                 'title'     => "Análise exportação - Registro 10");
+  }
+
+
   public function Gerar() {
     if ($this->isRequestFor('get', 'registro-00'))
       $this->appendResponse($this->analisaEducacensoRegistro00());
+    else if ($this->isRequestFor('get', 'registro-10'))
+      $this->appendResponse($this->analisaEducacensoRegistro10());
     else
       $this->notImplementedOperationError();
   }
