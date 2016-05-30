@@ -62,7 +62,7 @@ class InstituicaoDocumentacaoController extends ApiCoreController
 
     $var1 = $this->getRequest()->instituicao_id;
 
-    $sql = "SELECT * FROM pmieducar.instituicao_documentacao WHERE instituicao_id = $var1";
+    $sql = "SELECT * FROM pmieducar.instituicao_documentacao WHERE instituicao_id = $var1 ORDER BY id DESC";
 
     $instituicao = $this->fetchPreparedQuery($sql);
 

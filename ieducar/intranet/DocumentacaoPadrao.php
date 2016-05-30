@@ -171,7 +171,7 @@ function getDocumento(instituicaoId) {
 
     var documentos = data.documentos;
 
-    for (var i = documentos.length - 1; i >= 0; i--) {
+    for (var i = 0; i < documentos.length; i++) {
       	var selectRelatorio = document.getElementById("relatorio");
       	var option = document.createElement("option");
 		selectRelatorio.options[0].text = 'Selecione um relatório';
