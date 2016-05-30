@@ -83,9 +83,8 @@ var $loadingDocumento =  $j('<img>').attr('src', 'imagens/indicator.gif')
 (function($) {
   $(document).ready(function() {
 
-    $('#btn_enviar').click(function() {
-       window.location = "educar_instituicao_lst.php";
-    });
+    $('#btn_enviar').hide();
+
     var titulo = $j('#titulo_documento').val();
     $j('#documento').on('change', prepareUploadDocumento);
 
