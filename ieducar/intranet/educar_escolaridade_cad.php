@@ -131,6 +131,12 @@ class indice extends clsCadastro
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
+    $tamanhoDesc = strlen($this->descricao);
+    if($tamanhoDesc > 60){
+      $this->mensagem = 'A descrição deve conter no máximo 60 caracteres.<br>';
+      return FALSE;
+    }
+
     $obj = new clsCadastroEscolaridade(NULL, $this->descricao, $this->escolaridade);
     $cadastrou = $obj->cadastra();
 

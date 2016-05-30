@@ -1,36 +1,18 @@
-
-//abas
-
-if ($j('#cod_instituicao').val()) {
-  $j('.tablecadastro').children().children('tr:first').children('td:first').append('<div id="tabControl"><ul><li><div id="tab1" class="instituicaoTab"> <span class="tabText">Dados gerais</span></div></li><li><div id="tab2" class="instituicaoTab"> <span class="tabText">Documenta&ccedil;&atilde;o padr&atilde;o</span></div></li></ul></div>');
-  $j('.tablecadastro').children().children('tr:first').children('td:first').find('b').remove();
-  $j('#tab1').addClass('instituicaoTab-active').removeClass('instituicaoTab');
-}
-// Adiciona um ID à linha que termina o formulário para parar de esconder os campos
-$j('.tableDetalheLinhaSeparador').closest('tr').attr('id','stop');
-
-// Pega o número dessa linha
-linha_inicial_documentacao = $j('#tr_documento').index()-1;
-
-// hide nos campos das outras abas (deixando só os campos da primeira aba)
-$j('.tablecadastro >tbody  > tr').each(function(index, row) {
-  if (index>=linha_inicial_documentacao - 1){
-    if (row.id!='stop')
-      row.hide();
-    else{
-      return false;
-    }
-  }
-});
-
 var $arrayDocumento = [];
 
 function inserirDocumento(url) {
   var searchPath = '../module/Api/InstituicaoDocumentacao?oper=get&resource=insertDocuments';
-  var params = {instituicao_id : $j('#cod_instituicao').val(), titulo_documento : $j('#titulo_documento').val(), url_documento : url}
+  var ref_cod_escola;
+  if($j('#ref_cod_escola').val() == ''){
+    var ref_cod_escola = 'null';
+  }else{
+    var ref_cod_escola = $j('#ref_cod_escola').val();
+  }
+  var params = {instituicao_id : $j('#cod_instituicao').val(), titulo_documento : $j('#titulo_documento').val(), url_documento : url, ref_usuario_cad : $j('#pessoa_logada').val(), ref_cod_escola : ref_cod_escola}
+  console.log(params);
 
   $j.get(searchPath, params, function(idDocumento){
-    addDocumento(idDocumento.id, $j('#titulo_documento').val(), url);
+    addDocumento(idDocumento.id, $j('#titulo_documento').val(), url, "inline");
     $j('#titulo_documento').val('');
   });
 }
@@ -45,9 +27,15 @@ var searchPath = '../module/Api/InstituicaoDocumentacao?oper=get&resource=getDoc
   $j.get(searchPath, params, function(data){
 
     var documentos = data.documentos;
+    var escola = $j('#ref_cod_escola').val();
+    console.log(escola);
 
     for (var i = documentos.length - 1; i >= 0; i--) {
-      addDocumento(documentos[i].id, documentos[i].titulo_documento, documentos[i].url_documento);
+      if (escola == documentos[i].ref_cod_escola || escola == '') {
+        addDocumento(documentos[i].id, documentos[i].titulo_documento, documentos[i].url_documento, "inline");
+      }else{
+        addDocumento(documentos[i].id, documentos[i].titulo_documento, documentos[i].url_documento, "none");
+      }
     }
   });
 }
@@ -55,21 +43,23 @@ var searchPath = '../module/Api/InstituicaoDocumentacao?oper=get&resource=getDoc
 function excluirDocumento(event){
   var searchPath = '../module/Api/InstituicaoDocumentacao?oper=get&resource=deleteDocuments';
   var params = {id : event.data['id']}
-
-  $j.get(searchPath, params, function(deleteID){
-    $j('#'+event.data['id']).hide();
-  });
+  if(confirm("Deseja realmente excluir este documento?")){
+    $j.get(searchPath, params, function(deleteID){
+      $j('#'+event.data['id']).hide();
+    });
+  }
 }
 
 getDocumento();
 
-function addDocumento(id, titulo, url){
+function addDocumento(id, titulo, url, display){
+  console.log(display);
   $arrayDocumento[$arrayDocumento.length] = $j('<div>').attr('id', id).append($j('<div>').html(stringUtils.toUtf8(titulo + ':'))
                                                                           .css({ "text-align" : "right", "float" : "left"}))
                                                                           .append($j('<span>').append($j('<a>').html(stringUtils.toUtf8('Excluir'))
                                                                                            .addClass('decorated')
                                                                                            .attr('id','link_excluir_documento_'+id)
-                                                                                           .css({ "cursor": "pointer", "color" : "#B22222"})
+                                                                                           .css({ "cursor": "pointer", "color" : "#B22222", "display" : display})
                                                                                            .css('margin-left','10px')
                                                                                            .click({id: id}, excluirDocumento)))
                                                                           .append($j('<span>').append($j('<a>').html(stringUtils.toUtf8('Visualizar'))
@@ -93,56 +83,7 @@ var $loadingDocumento =  $j('<img>').attr('src', 'imagens/indicator.gif')
 (function($) {
   $(document).ready(function() {
 
-
-    $j('#tab1').click(
-      function(){
-
-        $j('.instituicaoTab-active').toggleClass('instituicaoTab-active instituicaoTab');
-        $j('#tab1').toggleClass('instituicaoTab instituicaoTab-active')
-        $j('.tablecadastro >tbody  > tr').each(function(index, row) {
-          if (index>=linha_inicial_documentacao -1){
-            if (row.id!='stop')
-              row.hide();
-            else
-              return false;
-          }else{
-            if ($j('#cod_instituicao').val() != '' || $j.inArray(row.id, ['tr_deficiencias', 'tr_cod_docente_inep']) == -1)
-              row.show();
-          }
-        });
-      }
-    );
-
-    // Adicionais
-    $j('#tab2').click(
-      function(){
-        $j('.instituicaoTab-active').toggleClass('instituicaoTab-active instituicaoTab');
-        $j('#tab2').toggleClass('instituicaoTab instituicaoTab-active')
-        $j('.tablecadastro >tbody  > tr').each(function(index, row) {
-          if (row.id!='stop'){
-            if (index>=linha_inicial_documentacao -1){
-              if ((index - linha_inicial_documentacao + 1) % 2 == 0){
-                $j('#'+row.id).find('td').removeClass('formlttd');
-                $j('#'+row.id).find('td').addClass('formmdtd');
-              }else{
-                $j('#'+row.id).find('td').removeClass('formmdtd');
-                $j('#'+row.id).find('td').addClass('formlttd');
-              }
-              row.show();
-            }else if (index>0){
-              row.hide();
-            }
-          }else
-            return false;
-        });
-      });
-
-    // fix checkboxs
-    $j('.tablecadastro >tbody  > tr').each(function(index, row) {
-      if (index>=linha_inicial_documentacao){
-        $j('#'+row.id).find('input:checked').val('on');
-      }
-    });
+    $('#btn_enviar').hide();
 
     var titulo = $j('#titulo_documento').val();
     $j('#documento').on('change', prepareUploadDocumento);

@@ -123,6 +123,9 @@ class indice extends clsDetalhe
              ""        => "Detalhe da institui&ccedil;&otilde;o"
         ));
         $this->enviaLocalizacao($localizacao->montar());
+
+        $this->array_botao[] = 'Documentação Padrão';
+        $this->array_botao_url_script[] = "go(\"educar_documentacao_instituicao_cad.php?cod_instituicao={$registro["cod_instituicao"]}\")";
 	}
 }
 

@@ -146,6 +146,12 @@ class indice extends clsCadastro
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7,  "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}" );
 
+		$tamanhoObs = strlen($this->observacao);
+		if($tamanhoObs > 300){
+			$this->mensagem = "O campo observação deve conter no máximo 300 caracteres.<br>";
+			return FALSE;
+		}
+
 		$obj_matricula = new clsPmieducarMatricula( $this->ref_cod_matricula,null,null,null,$this->pessoa_logada,null,null,6 );
 		$obj_matricula->data_cancel = Portabilis_Date_Utils::brToPgSQL($this->data_cancel);
 

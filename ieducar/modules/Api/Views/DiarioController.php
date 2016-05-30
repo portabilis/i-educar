@@ -177,7 +177,9 @@ class DiarioController extends ApiCoreController
 
           foreach ($notaTurmaAluno as $componenteCurricularId => $notaTurmaAlunoDisciplina){
             if($this->validateComponenteTurma($turmaId, $componenteCurricularId)){
-              $valor = $notaTurmaAlunoDisciplina['valor'];
+              $valor = $notaTurmaAlunoDisciplina['nota'];
+              $notaRecuperacao = $notaTurmaAlunoDisciplina['recuperacao'];
+              $nomeCampoRecuperacao = $this->defineCampoTipoRecuperacao($turmaId);
               $valor = $this->truncate($valor, 4);
               $array_nota = array(
                     'componenteCurricular' => $componenteCurricularId,
@@ -185,13 +187,16 @@ class DiarioController extends ApiCoreController
                     'etapa'                => $etapa,
                     'notaOriginal'         => $valor);
 
+              if(!empty($nomeCampoRecuperacao)){
+                $array_nota[$nomeCampoRecuperacao] = $notaRecuperacao;
+              }
+
               $nota = new Avaliacao_Model_NotaComponente($array_nota);
 
               if($this->serviceBoletim($turmaId, $alunoId)){
                 $this->serviceBoletim($turmaId, $alunoId)->addNota($nota);
                 $this->trySaveServiceBoletim($turmaId, $alunoId);
-              }
-              
+              }             
             }
           }
         }
@@ -199,6 +204,23 @@ class DiarioController extends ApiCoreController
       }
     }
   }
+
+  private function defineCampoTipoRecuperacao($turmaId){
+    $regra = $this->getRegra($turmaId);
+    $campoRecuperacao = '';
+    switch ($regra->get('tipoRecuperacaoParalela')) {
+      case RegraAvaliacao_Model_TipoRecuperacaoParalela::USAR_POR_ETAPA:
+        $campoRecuperacao = 'notaRecuperacao';
+        break;
+
+      case RegraAvaliacao_Model_TipoRecuperacaoParalela::USAR_POR_ETAPAS_ESPECIFICAS:
+        $campoRecuperacao = 'notaRecuperacaoEspecifica';
+        break;
+    }
+
+    return $campoRecuperacao;
+  }
+
 
   protected function postFaltasPorComponente(){
     if($this->canPostFaltasPorComponente()){

@@ -56,21 +56,7 @@ $j(document).ready(function(){
       newPage.document.write(paginaResposta);
     }
 
-    var analisaRegistro00 = function(){
-        var urlForGetAnaliseRegistro = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', 'registro-00', {
-          escola : $j("#ref_cod_escola").val(),
-          ano    : $j("#ano").val()
-        });
-
-        var options = {
-          url : urlForGetAnaliseRegistro,
-          dataType : 'json',
-          success  : handleGetAnaliseRegistro
-        };
-        getResources(options);
-    };
-
-    var handleGetAnaliseRegistro = function(response) {
+    var montaHtmlRegistro = function(response) {
       var htmlAnalise = "<h2 class='subtitle'>"+response.title+"</h2>";
 
       if (response.any_error_msg) {
@@ -85,8 +71,46 @@ $j(document).ready(function(){
         htmlAnalise +="</ul>";
       }
       paginaResposta += htmlAnalise;
+    };
 
+    var analisaRegistro00 = function(){
+        var urlForGetAnaliseRegistro = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', 'registro-00', {
+          escola : $j("#ref_cod_escola").val(),
+          ano    : $j("#ano").val()
+        });
+
+        var options = {
+          url : urlForGetAnaliseRegistro,
+          dataType : 'json',
+          success  : handleGetAnaliseRegistro00
+        };
+        getResources(options);
+    };
+
+    var handleGetAnaliseRegistro00 = function(response) {
+      montaHtmlRegistro(response);
+      $j("#registro_load").val("Analisando registro 10");
+      analisaRegistro10();
+    };
+
+    var analisaRegistro10 = function(){
+        var urlForGetAnaliseRegistro = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', 'registro-10', {
+          escola : $j("#ref_cod_escola").val(),
+          ano    : $j("#ano").val()
+        });
+
+        var options = {
+          url : urlForGetAnaliseRegistro,
+          dataType : 'json',
+          success  : handleGetAnaliseRegistro10
+        };
+        getResources(options);
+    };
+
+    var handleGetAnaliseRegistro10 = function(response) {
+      montaHtmlRegistro(response);
       finishAnalysis();
     };
+
 
 });

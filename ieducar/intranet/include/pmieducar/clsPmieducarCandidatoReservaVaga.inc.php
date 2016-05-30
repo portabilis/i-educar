@@ -304,7 +304,7 @@ class clsPmieducarCandidatoReservaVaga
     $filtros = '';
     $this->resetCamposLista();
 
-    $sql = "SELECT {$this->_campos_lista}, resp_pes.nome as nome_responsavel, pes.nome as nome
+    $sql = "SELECT {$this->_campos_lista}, resp_pes.nome as nome_responsavel, pes.nome as nome, relatorio.get_nome_escola(crv.ref_cod_escola) as nm_escola
               FROM {$this->_tabela}
               INNER JOIN pmieducar.aluno a ON a.cod_aluno = crv.ref_cod_aluno
               INNER JOIN cadastro.pessoa pes ON pes.idpes = a.ref_idpes
@@ -403,7 +403,7 @@ class clsPmieducarCandidatoReservaVaga
   {
     if (is_numeric($this->cod_candidato_reserva_vaga)) {
       $db = new clsBanco();
-      $db->Consulta("SELECT {$this->_todos_campos}, resp_pes.nome as nome_responsavel, pes.nome as nome, crv.motivo as motivo, (SELECT nm_serie FROM pmieducar.serie WHERE cod_serie = ref_cod_serie) as serie FROM {$this->_tabela}
+      $db->Consulta("SELECT {$this->_todos_campos}, resp_pes.nome as nome_responsavel, pes.nome as nome, crv.motivo as motivo, relatorio.get_nome_escola(crv.ref_cod_escola) as nm_escola, (SELECT nm_serie FROM pmieducar.serie WHERE cod_serie = ref_cod_serie) as serie FROM {$this->_tabela}
                       INNER JOIN pmieducar.aluno a ON a.cod_aluno = crv.ref_cod_aluno
                       INNER JOIN cadastro.pessoa pes ON pes.idpes = a.ref_idpes
                       INNER JOIN cadastro.fisica fis ON fis.idpes = pes.idpes
@@ -421,7 +421,7 @@ class clsPmieducarCandidatoReservaVaga
     $this->resetCamposLista();
 
     $sql = "UPDATE {$this->_tabela}
-               SET situacao = 'D'";
+               SET situacao = 'D', data_situacao = NOW()";
 
     $whereAnd = ' WHERE ';
 
@@ -555,12 +555,14 @@ class clsPmieducarCandidatoReservaVaga
     return '';
   }
 
-  function vinculaMatricula($ref_cod_matricula)
+  function vinculaMatricula($ref_cod_escola, $ref_cod_matricula, $ref_cod_aluno)
   {
-    if (is_numeric($this->cod_candidato_reserva_vaga) && is_numeric($ref_cod_matricula)) {
+    if (is_numeric($ref_cod_escola) && is_numeric($ref_cod_matricula) && is_numeric($ref_cod_aluno)) {
+      $sql = "UPDATE pmieducar.candidato_reserva_vaga SET ref_cod_matricula = '{$ref_cod_matricula}', situacao = 'A', data_situacao = NOW()
+                      WHERE ref_cod_escola = '{$ref_cod_escola}'
+                      AND ref_cod_aluno = '{$ref_cod_aluno}'";
       $db = new clsBanco();
-      $db->Consulta("UPDATE pmieducar.candidato_reserva_vaga SET ref_cod_matricula = '{$ref_cod_matricula}', situacao = 'A', data_situacao = NOW()
-                      WHERE cod_candidato_reserva_vaga = '{$this->cod_candidato_reserva_vaga}'");
+      $db->Consulta($sql);
       $db->ProximoRegistro();
       return $db->Tupla();
     }

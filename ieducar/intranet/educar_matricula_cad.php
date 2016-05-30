@@ -438,51 +438,6 @@ class indice extends clsCadastro
         }
       }
 
-      @session_start();
-      $reloadReserva = $_SESSION['reload_reserva_vaga'];
-      @session_write_close();
-
-      $obj_CandidatoReservaVaga = new clsPmieducarCandidatoReservaVaga();
-      $lst_CandidatoReservaVaga = $obj_CandidatoReservaVaga->lista($this->ano,
-                                                                    NULL,
-                                                                    NULL,
-                                                                    NULL,
-                                                                    $this->ref_cod_serie,
-                                                                    NULL,
-                                                                    NULL,
-                                                                    $this->ref_cod_aluno,
-                                                                    TRUE);
-      $count = count($lst_CandidatoReservaVaga);
-      $count1 = 0;
-      if (is_array($lst_CandidatoReservaVaga)){
-        for ($i = 0; $i < $count; $i++){
-          if($lst_CandidatoReservaVaga[$i]['ref_cod_escola'] != $this->ref_cod_escola){
-            $count1 = $count1 + 1;
-          }
-        }
-        if(($count1 > 0) && (!$reloadReserva)){
-          echo "<script type=\"text/javascript\">
-                  var msg = '".Portabilis_String_Utils::toLatin1('O aluno possui uma reserva de vaga em outra escola, deseja matricula-lo assim mesmo?')."';
-                  if (!confirm(msg)) {
-                    window.location = 'educar_aluno_det.php?cod_aluno=".$this->ref_cod_aluno."';
-                  } else {
-                    parent.document.getElementById('formcadastro').submit();
-                  }
-                </script>";
-            $reloadReserva = 1;
-            @session_start();
-            $_SESSION['reload_reserva_vaga'] = $reloadReserva;
-            @session_write_close();
-          return TRUE;
-
-        }else if(($count1 > 0) && ($reloadReserva == 1)){
-          $updateCandidatoReservaVaga = $obj_CandidatoReservaVaga->atualizaDesistente($this->ano,
-                                                                                      $this->ref_cod_serie,
-                                                                                      $this->ref_cod_aluno,
-                                                                                      $this->ref_cod_escola);
-
-        }
-      }
 
       $obj_reserva_vaga = new clsPmieducarReservaVaga();
       $lst_reserva_vaga = $obj_reserva_vaga->lista(NULL, $this->ref_cod_escola,
@@ -647,6 +602,57 @@ class indice extends clsCadastro
         return false;
       }
 
+            @session_start();
+      $reloadReserva = $_SESSION['reload_reserva_vaga'];
+      @session_write_close();
+
+      $obj_CandidatoReservaVaga = new clsPmieducarCandidatoReservaVaga();
+      $lst_CandidatoReservaVaga = $obj_CandidatoReservaVaga->lista($this->ano,
+                                                                    NULL,
+                                                                    NULL,
+                                                                    NULL,
+                                                                    $this->ref_cod_serie,
+                                                                    NULL,
+                                                                    NULL,
+                                                                    $this->ref_cod_aluno,
+                                                                    TRUE);
+      $count = count($lst_CandidatoReservaVaga);
+      $countEscolasDiferentes = 0;
+      $countEscolasIguais = 0;
+
+      if (is_array($lst_CandidatoReservaVaga)){
+        for ($i = 0; $i < $count; $i++){
+          if($lst_CandidatoReservaVaga[$i]['ref_cod_escola'] != $this->ref_cod_escola){
+            $countEscolasDiferentes = $countEscolasDiferentes + 1;
+          }elseif ($lst_CandidatoReservaVaga[$i]['ref_cod_escola'] == $this->ref_cod_escola) {
+            $countEscolasIguais = $countEscolasIguais + 1;
+          }
+        }
+
+        if(($countEscolasDiferentes > 0) && (!$reloadReserva)){
+          echo "<script type=\"text/javascript\">
+                  var msg = '".Portabilis_String_Utils::toLatin1('O aluno possui uma reserva de vaga em outra escola, deseja matricula-lo assim mesmo?')."';
+                  if (!confirm(msg)) {
+                    window.location = 'educar_aluno_det.php?cod_aluno=".$this->ref_cod_aluno."';
+                  } else {
+                    parent.document.getElementById('formcadastro').submit();
+                  }
+                </script>";
+            $reloadReserva = 1;
+            @session_start();
+            $_SESSION['reload_reserva_vaga'] = $reloadReserva;
+            @session_write_close();
+          return TRUE;
+
+        }else if(($countEscolasDiferentes > 0) && ($reloadReserva == 1)){
+          $updateCandidatoReservaVaga = $obj_CandidatoReservaVaga->atualizaDesistente($this->ano,
+                                                                                      $this->ref_cod_serie,
+                                                                                      $this->ref_cod_aluno,
+                                                                                      $this->ref_cod_escola);
+
+        }
+      }
+
       $this->data_matricula = Portabilis_Date_Utils::brToPgSQL($this->data_matricula);
       $obj = new clsPmieducarMatricula(NULL, $this->ref_cod_reserva_vaga,
         $this->ref_cod_escola, $this->ref_cod_serie, NULL,
@@ -662,10 +668,9 @@ class indice extends clsCadastro
 
       if ($cadastrou) {
 
-        if (is_numeric($this->ref_cod_candidato_reserva_vaga)){
+        if ($countEscolasIguais > 0){
           $obj_crv = new clsPmieducarCandidatoReservaVaga($this->ref_cod_candidato_reserva_vaga);
-          $obj_crv->vinculaMatricula($this->cod_matricula);
-          $obj_crv->indefereOutrasReservas($this->ref_cod_aluno);
+          $obj_crv->vinculaMatricula($this->ref_cod_escola, $this->cod_matricula, $this->ref_cod_aluno);
         }
 
         $this->enturmacaoMatricula($this->cod_matricula, $this->ref_cod_turma);
