@@ -2,10 +2,17 @@ var $arrayDocumento = [];
 
 function inserirDocumento(url) {
   var searchPath = '../module/Api/InstituicaoDocumentacao?oper=get&resource=insertDocuments';
-  var params = {instituicao_id : $j('#cod_instituicao').val(), titulo_documento : $j('#titulo_documento').val(), url_documento : url}
+  var ref_cod_escola;
+  if($j('#ref_cod_escola').val() == ''){
+    var ref_cod_escola = 'null';
+  }else{
+    var ref_cod_escola = $j('#ref_cod_escola').val();
+  }
+  var params = {instituicao_id : $j('#cod_instituicao').val(), titulo_documento : $j('#titulo_documento').val(), url_documento : url, ref_usuario_cad : $j('#pessoa_logada').val(), ref_cod_escola : ref_cod_escola}
+  console.log(params);
 
   $j.get(searchPath, params, function(idDocumento){
-    addDocumento(idDocumento.id, $j('#titulo_documento').val(), url);
+    addDocumento(idDocumento.id, $j('#titulo_documento').val(), url, "inline");
     $j('#titulo_documento').val('');
   });
 }
@@ -20,9 +27,15 @@ var searchPath = '../module/Api/InstituicaoDocumentacao?oper=get&resource=getDoc
   $j.get(searchPath, params, function(data){
 
     var documentos = data.documentos;
+    var escola = $j('#ref_cod_escola').val();
+    console.log(escola);
 
     for (var i = documentos.length - 1; i >= 0; i--) {
-      addDocumento(documentos[i].id, documentos[i].titulo_documento, documentos[i].url_documento);
+      if (escola == documentos[i].ref_cod_escola || escola == '') {
+        addDocumento(documentos[i].id, documentos[i].titulo_documento, documentos[i].url_documento, "inline");
+      }else{
+        addDocumento(documentos[i].id, documentos[i].titulo_documento, documentos[i].url_documento, "none");
+      }
     }
   });
 }
@@ -39,13 +52,14 @@ function excluirDocumento(event){
 
 getDocumento();
 
-function addDocumento(id, titulo, url){
+function addDocumento(id, titulo, url, display){
+  console.log(display);
   $arrayDocumento[$arrayDocumento.length] = $j('<div>').attr('id', id).append($j('<div>').html(stringUtils.toUtf8(titulo + ':'))
                                                                           .css({ "text-align" : "right", "float" : "left"}))
                                                                           .append($j('<span>').append($j('<a>').html(stringUtils.toUtf8('Excluir'))
                                                                                            .addClass('decorated')
                                                                                            .attr('id','link_excluir_documento_'+id)
-                                                                                           .css({ "cursor": "pointer", "color" : "#B22222"})
+                                                                                           .css({ "cursor": "pointer", "color" : "#B22222", "display" : display})
                                                                                            .css('margin-left','10px')
                                                                                            .click({id: id}, excluirDocumento)))
                                                                           .append($j('<span>').append($j('<a>').html(stringUtils.toUtf8('Visualizar'))

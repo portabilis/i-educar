@@ -78,8 +78,14 @@ class indice extends clsCadastro
 	{
 		Portabilis_View_Helper_Application::loadJavascript($this, array('/modules/Cadastro/Assets/Javascripts/Instituicao.js'));
 		Portabilis_View_Helper_Application::loadStylesheet($this, array('/modules/Cadastro/Assets/Stylesheets/Instituicao.css'));
-		// primary keys
+
+		$obj_usuario = new clsPmieducarUsuario($this->pessoa_logada);
+		$obj_usuario_det = $obj_usuario->detalhe();
+ 		$this->ref_cod_escola = $obj_usuario_det["ref_cod_escola"];
+
 		$this->campoOculto( "cod_instituicao", $this->cod_instituicao );
+		$this->campoOculto( "pessoa_logada", $this->pessoa_logada );
+		$this->campoOculto( "ref_cod_escola", $this->ref_cod_escola );
 
 
 	    $this->campoTexto( "titulo_documento", "Título", $this->titulo_documento, 30, 50, false );

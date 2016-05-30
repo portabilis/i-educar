@@ -45,9 +45,10 @@ class InstituicaoDocumentacaoController extends ApiCoreController
     $var1 = $this->getRequest()->instituicao_id;
     $var2 = $this->getRequest()->titulo_documento;
     $var3 = $this->getRequest()->url_documento;
+    $var4 = $this->getRequest()->ref_usuario_cad;
+    $var5 = $this->getRequest()->ref_cod_escola;
 
-    $sql = "INSERT INTO pmieducar.instituicao_documentacao (instituicao_id, titulo_documento, url_documento) VALUES ($var1, '$var2', '$var3')";
-
+    $sql = "INSERT INTO pmieducar.instituicao_documentacao (instituicao_id, titulo_documento, url_documento, ref_usuario_cad, ref_cod_escola) VALUES ($var1, '$var2', '$var3', $var4, $var5)";
     $this->fetchPreparedQuery($sql);
 
     $sql = "SELECT MAX(id) FROM pmieducar.instituicao_documentacao WHERE instituicao_id = $var1";
@@ -65,7 +66,7 @@ class InstituicaoDocumentacaoController extends ApiCoreController
 
     $instituicao = $this->fetchPreparedQuery($sql);
 
-    $attrs = array('id', 'titulo_documento', 'url_documento');
+    $attrs = array('id', 'titulo_documento', 'url_documento', 'ref_usuario_cad', 'ref_cod_escola');
     $instituicao = Portabilis_Array_Utils::filterSet($instituicao, $attrs);
 
     return array('documentos' => $instituicao);
