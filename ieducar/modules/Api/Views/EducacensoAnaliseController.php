@@ -54,9 +54,9 @@ class EducacensoAnaliseController extends ApiCoreController
                    municipio.cod_ibge AS inep_municipio,
                    uf.cod_ibge AS inep_uf,
                    distrito.cod_ibge AS inep_distrito,
-                   pessoa.nome AS nome_escola
+                   juridica.fantasia AS nome_escola
               FROM pmieducar.escola
-             INNER JOIN cadastro.pessoa ON (pessoa.idpes = escola.ref_idpes)
+             INNER JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
              INNER JOIN pmieducar.escola_ano_letivo ON (escola_ano_letivo.ref_cod_escola = escola.cod_escola)
              INNER JOIN pmieducar.ano_letivo_modulo modulo1 ON (modulo1.ref_ref_cod_escola = escola.cod_escola
                           AND modulo1.ref_ano = escola_ano_letivo.ano
@@ -149,7 +149,6 @@ class EducacensoAnaliseController extends ApiCoreController
     $sql = "SELECT escola.local_funcionamento AS local_funcionamento,
                    escola.condicao AS condicao,
                    escola.agua_consumida AS agua_consumida,
-                   pessoa.nome AS nome_escola,
                    escola.agua_rede_publica AS agua_rede_publica,
                    escola.agua_poco_artesiano AS agua_poco_artesiano,
                    escola.agua_cacimba_cisterna_poco AS agua_cacimba_cisterna_poco,
@@ -219,9 +218,11 @@ class EducacensoAnaliseController extends ApiCoreController
                    escola.didatico_nao_utiliza AS didatico_nao_utiliza,
                    escola.didatico_quilombola AS didatico_quilombola,
                    escola.didatico_indigena AS didatico_indigena,
-                   escola.lingua_ministrada AS lingua_ministrada
+                   escola.lingua_ministrada AS lingua_ministrada,
+                   escola.educacao_indigena AS educacao_indigena,
+                   juridica.fantasia AS nome_escola
               FROM pmieducar.escola
-             INNER JOIN cadastro.pessoa ON (pessoa.idpes = escola.ref_idpes)
+             INNER JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
              WHERE escola.cod_escola = $1";
 
     $escola = $this->fetchPreparedQuery($sql, array($escola));
@@ -284,7 +285,7 @@ class EducacensoAnaliseController extends ApiCoreController
     $mensagem = array();
 
     if (!$escola["local_funcionamento"]) {
-      $mensagem[] = array("text" => "Dados para formular o registro 10 da escola {$nomeEscola} não encontrados. não encontrados. Verifique se o local de funcionamento da escola foi informado.",
+      $mensagem[] = array("text" => "Dados para formular o registro 10 da escola {$nomeEscola} não encontrados. Verifique se o local de funcionamento da escola foi informado.",
                           "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Infraestrutura > Campo: Local de funcionamento)");
     }
     if($escola["local_funcionamento"] == $predioEscolar && !$escola["condicao"]) {
@@ -292,7 +293,7 @@ class EducacensoAnaliseController extends ApiCoreController
                           "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Infraestrutura > Campo: Condição)");
     }
     if (!$escola["agua_consumida"]) {
-      $mensagem[] = array("text" => "Dados para formular o registro 10 da escola {$nomeEscola} não encontrados. Verifique se a água consumida pelos alunos foi informada",
+      $mensagem[] = array("text" => "Dados para formular o registro 10 da escola {$nomeEscola} não encontrados. Verifique se a água consumida pelos alunos foi informada.",
                           "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Infraestrutura > Campo: Água consumida pelos alunos)");
     }
     if (!$existeAbastecimentoAgua) {
@@ -347,7 +348,7 @@ class EducacensoAnaliseController extends ApiCoreController
       $mensagem[] = array("text" => "Dados para formular o registro 10 da escola {$nomeEscola} não encontrados. Verifique se algum material didático específico para atendimento à diversidade sócio-cultural foi informado.",
                           "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dados do ensino > Campo: Materiais didáticos específicos para atendimento à diversidade sócio-cultural)");
     }
-    if (!$escola["lingua_ministrada"]) {
+    if ($escola['educacao_indigena'] && !$escola["lingua_ministrada"]) {
       $mensagem[] = array("text" => "Dados para formular o registro 10 da escola {$nomeEscola} não encontrados. Verificamos que a escola trabalha com educação indígena, portanto obrigatoriamente é necessário informar a língua em que o ensino é ministrado.",
                           "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dados do ensino > Campo: Língua em que o ensino é ministrado)");
     }
@@ -361,8 +362,7 @@ class EducacensoAnaliseController extends ApiCoreController
     $escola = $this->getRequest()->escola;
     $ano    = $this->getRequest()->ano;
 
-    $sql = "SELECT pessoa.nome AS nome_escola,
-                   turma.nm_turma AS nome_turma,
+    $sql = "SELECT turma.nm_turma AS nome_turma,
                    turma.hora_inicial AS hora_inicial,
                    turma.hora_final AS hora_final,
                    (SELECT TRUE
@@ -385,9 +385,10 @@ class EducacensoAnaliseController extends ApiCoreController
                    turma.aee_soroban AS aee_soroban,
                    turma.aee_informatica AS aee_informatica,
                    turma.aee_lingua_escrita AS aee_lingua_escrita,
-                   turma.aee_autonomia AS aee_autonomia
+                   turma.aee_autonomia AS aee_autonomia,
+                   juridica.fantasia AS nome_escola
               FROM pmieducar.escola
-             INNER JOIN cadastro.pessoa ON (pessoa.idpes = escola.ref_idpes)
+             INNER JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
              INNER JOIN pmieducar.turma ON (turma.ref_ref_cod_escola = escola.cod_escola)
              WHERE escola.cod_escola = $1
                AND turma.ano = $2
