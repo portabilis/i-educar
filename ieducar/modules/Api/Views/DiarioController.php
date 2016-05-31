@@ -210,7 +210,7 @@ class DiarioController extends ApiCoreController
     $campoRecuperacao = '';
     switch ($regra->get('tipoRecuperacaoParalela')) {
       case RegraAvaliacao_Model_TipoRecuperacaoParalela::USAR_POR_ETAPA:
-        $campoRecuperacao = 'notaRecuperacao';
+        $campoRecuperacao = 'notaRecuperacaoParalela';
         break;
 
       case RegraAvaliacao_Model_TipoRecuperacaoParalela::USAR_POR_ETAPAS_ESPECIFICAS:
