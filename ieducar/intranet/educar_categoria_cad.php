@@ -161,7 +161,7 @@ class indice extends clsCadastro
 			return true;
 		}
 
-		$this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
+		$this->mensagem = "N&atilde;o &eacute; poss&iacute;vel excluir esta categoria. Verifique se a mesma possui v&iacute;nculo com obras.<br>";
 		echo "<!--\nErro ao excluir clsPmieducarCategoriaObra\nvalores obrigat&oacute;rios\nif( is_numeric( $this->id ) && is_numeric( $this->pessoa_logada ) )\n-->";
 		return false;
 	}
