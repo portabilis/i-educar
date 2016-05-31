@@ -145,7 +145,6 @@ class EducacensoAnaliseController extends ApiCoreController
   protected function analisaEducacensoRegistro10() {
 
     $escola = $this->getRequest()->escola;
-    $ano    = $this->getRequest()->ano;
 
     $sql = "SELECT escola.local_funcionamento AS local_funcionamento,
                    escola.condicao AS condicao,
@@ -198,7 +197,7 @@ class EducacensoAnaliseController extends ApiCoreController
                    escola.dependencia_lavanderia AS dependencia_lavanderia,
                    escola.dependencia_nenhuma_relacionada AS dependencia_nenhuma_relacionada,
                    escola.dependencia_numero_salas_existente AS dependencia_numero_salas_existente,
-                   escola.dependencia_numero_salas_utilizadas AS dependencia_numero_salas_utilizadas, 
+                   escola.dependencia_numero_salas_utilizadas AS dependencia_numero_salas_utilizadas,
                    escola.televisoes AS televisoes,
                    escola.videocassetes AS videocassetes,
                    escola.dvds AS dvds,
@@ -235,7 +234,7 @@ class EducacensoAnaliseController extends ApiCoreController
     $escola        = $escola[0];
     $nomeEscola    = Portabilis_String_Utils::toUtf8(strtoupper($escola["nome_escola"]));
     $predioEscolar = 3; //Valor fixo definido no cadastro de escola
-    
+
     $existeAbastecimentoAgua = ($escola["agua_rede_publica"] ||
                                 $escola["agua_poco_artesiano"] ||
                                 $escola["agua_cacimba_cisterna_poco"] ||
@@ -357,12 +356,107 @@ class EducacensoAnaliseController extends ApiCoreController
                  'title'     => "Análise exportação - Registro 10");
   }
 
+  protected function analisaEducacensoRegistro20() {
+
+    $escola = $this->getRequest()->escola;
+    $ano    = $this->getRequest()->ano;
+
+    $sql = "SELECT pessoa.nome AS nome_escola,
+                   turma.nm_turma AS nome_turma,
+                   turma.hora_inicial AS hora_inicial,
+                   turma.hora_final AS hora_final,
+                   (SELECT TRUE
+                      FROM pmieducar.turma_dia_semana
+                     WHERE ref_cod_turma = turma.cod_turma LIMIT 1) AS dias_semana,
+                   turma.tipo_atendimento AS tipo_atendimento,
+                   turma.atividade_complementar_1 AS atividade_complementar_1,
+                   turma.atividade_complementar_2 AS atividade_complementar_2,
+                   turma.atividade_complementar_3 AS atividade_complementar_3,
+                   turma.atividade_complementar_4 AS atividade_complementar_4,
+                   turma.atividade_complementar_5 AS atividade_complementar_5,
+                   turma.atividade_complementar_6 AS atividade_complementar_6,
+                   turma.aee_braille AS aee_braille,
+                   turma.aee_recurso_optico AS aee_recurso_optico ,
+                   turma.aee_estrategia_desenvolvimento AS aee_estrategia_desenvolvimento,
+                   turma.aee_tecnica_mobilidade AS aee_tecnica_mobilidade,
+                   turma.aee_libras AS aee_libras,
+                   turma.aee_caa AS aee_caa,
+                   turma.aee_curricular AS aee_curricular,
+                   turma.aee_soroban AS aee_soroban,
+                   turma.aee_informatica AS aee_informatica,
+                   turma.aee_lingua_escrita AS aee_lingua_escrita,
+                   turma.aee_autonomia AS aee_autonomia
+              FROM pmieducar.escola
+             INNER JOIN cadastro.pessoa ON (pessoa.idpes = escola.ref_idpes)
+             INNER JOIN pmieducar.turma ON (turma.ref_ref_cod_escola = escola.cod_escola)
+             WHERE escola.cod_escola = $1
+               AND turma.ano = $2
+               AND turma.ativo = 1
+               AND escola.ativo = 1";
+
+    $turmas = $this->fetchPreparedQuery($sql, array($escola, $ano));
+
+    if(empty($turmas)){
+      $this->messenger->append("Ocorreu algum problema ao decorrer da análise.");
+      return array('title' => "Análise exportação - Registro 20");
+    }
+
+    $mensagem = array();
+
+    foreach ($turmas as $turma) {
+
+      $nomeEscola = Portabilis_String_Utils::toUtf8(strtoupper($turma["nome_escola"]));
+      $nomeTurma  = Portabilis_String_Utils::toUtf8(strtoupper($turma["nome_turma"]));
+      $atividadeComplementar = ($turma["tipo_atendimento"] == 4); //Código 4 fixo no cadastro de turma
+      $existeAtividadeComplementar = ($turma["atividade_complementar_1"] || $turma["atividade_complementar_2"] ||
+                                      $turma["atividade_complementar_3"] || $turma["atividade_complementar_4"] ||
+                                      $turma["atividade_complementar_5"] || $turma["atividade_complementar_6"]);
+      $atendimentoAee = ($turma["tipo_atendimento"] == 5); //Código 5 fixo no cadastro de turma
+      $existeAee = ($turma["aee_braille"] || $turma["aee_recurso_optico"] ||
+                    $turma["aee_estrategia_desenvolvimento"] || $turma["aee_tecnica_mobilidade"] ||
+                    $turma["aee_libras"] || $turma["aee_caa"] ||
+                    $turma["aee_curricular"] || $turma["aee_soroban"] ||
+                    $turma["aee_informatica"] || $turma["aee_lingua_escrita"] ||
+                    $turma["aee_autonomia"]);
+
+      if (!$turma["hora_inicial"]) {
+        $mensagem[] = array("text" => "Dados para formular o registro 20 da escola {$nomeEscola} não encontrados. Verifique se o horário inicial da turma {$nomeTurma} foi cadastrado.",
+                            "path" => "(Cadastros > Turma > Cadastrar > Editar > Aba: Dados gerais > Campo: Hora inicial)");
+      }
+      if (!$turma["hora_final"]) {
+        $mensagem[] = array("text" => "Dados para formular o registro 20 da escola {$nomeEscola} não encontrados. Verifique se o horário final da turma {$nomeTurma} foi cadastrado.",
+                            "path" => "(Cadastros > Turma > Cadastrar > Editar > Aba: Dados gerais > Campo: Hora final)");
+      }
+      if (!$turma["dias_semana"]) {
+        $mensagem[] = array("text" => "Dados para formular o registro 20 da escola {$nomeEscola} não encontrados. É necessário informar ao menos um dia da semana para a turma presencial {$nomeTurma}.",
+                            "path" => "(Cadastros > Turma > Cadastrar > Editar > Aba: Dados gerais > Campos: Dia semana, Hora inicial e Hora final)");
+      }
+      if (!$turma["tipo_atendimento"]) {
+        $mensagem[] = array("text" => "Dados para formular o registro 20 da escola {$nomeEscola} não encontrados. Verifique se o tipo de atendimento da turma {$nomeTurma} foi cadastrado.",
+                            "path" => "(Cadastros > Turma > Cadastrar > Editar > Aba: Dados adicionais > Campo: Tipo de atendimento)");
+      }
+      if ($atividadeComplementar && !$existeAtividadeComplementar) {
+        $mensagem[] = array("text" => "Dados para formular o registro 20 da escola {$nomeEscola} não encontrados. Verificamos que o tipo de atendimento da turma {$nomeTurma} é de atividade complementar, portanto obrigatoriamente é necessário informar o código de ao menos uma atividade conforme a 'Tabela de Tipo de Atividade Complementar'.",
+                            "path" => "(Cadastros > Turma > Cadastrar > Editar > Aba: Dados adicionais > Campo: Código do tipo de atividade complementar)");   
+      }
+      if ($atendimentoAee && !$existeAee) {
+        $mensagem[] = array("text" => "Dados para formular o registro 20 da escola {$nomeEscola} não encontrados. Verificamos que o tipo de atendimento da turma {$nomeTurma} é de educação especializada - AEE, portanto obrigatoriamente é necessário informar ao menos uma atividade realizada. ",
+                            "path" => "(Cadastros > Turma > Cadastrar > Editar > Aba: Dados adicionais > Campos: De Ensino do Sistema Braille à Estratégias para autonomia no ambiente escolar)");
+      }
+    }
+
+    return array('mensagens' => $mensagem,
+                 'title'     => "Análise exportação - Registro 20");
+
+  }
 
   public function Gerar() {
     if ($this->isRequestFor('get', 'registro-00'))
       $this->appendResponse($this->analisaEducacensoRegistro00());
     else if ($this->isRequestFor('get', 'registro-10'))
       $this->appendResponse($this->analisaEducacensoRegistro10());
+    else if ($this->isRequestFor('get', 'registro-20'))
+      $this->appendResponse($this->analisaEducacensoRegistro20());
     else
       $this->notImplementedOperationError();
   }

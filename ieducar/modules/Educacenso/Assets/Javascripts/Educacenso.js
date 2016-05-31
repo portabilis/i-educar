@@ -95,8 +95,7 @@ $j(document).ready(function(){
 
     var analisaRegistro10 = function(){
         var urlForGetAnaliseRegistro = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', 'registro-10', {
-          escola : $j("#ref_cod_escola").val(),
-          ano    : $j("#ano").val()
+          escola : $j("#ref_cod_escola").val()
         });
 
         var options = {
@@ -109,8 +108,29 @@ $j(document).ready(function(){
 
     var handleGetAnaliseRegistro10 = function(response) {
       montaHtmlRegistro(response);
+      $j("#registro_load").val("Analisando registro 20");
+      analisaRegistro20();
+    };
+
+    var analisaRegistro20 = function(){
+        var urlForGetAnaliseRegistro = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', 'registro-20', {
+          escola : $j("#ref_cod_escola").val(),
+          ano    : $j("#ano").val()
+        });
+
+        var options = {
+          url : urlForGetAnaliseRegistro,
+          dataType : 'json',
+          success  : handleGetAnaliseRegistro20
+        };
+        getResources(options);
+    };
+
+    var handleGetAnaliseRegistro20 = function(response) {
+      montaHtmlRegistro(response);
       finishAnalysis();
     };
+
 
 
 });
