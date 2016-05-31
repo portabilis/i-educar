@@ -217,10 +217,17 @@ class clsPmieducarCategoriaObra
 	function excluir(){
 		if(is_numeric($this->id)){
 			$db = new clsBanco();
-			$db->Consulta("DELETE FROM {$this->_tabela} WHERE id = '{$this->id}'");
-			return true;
+			$getVinculoObra = $db->Consulta("SELECT *
+							          		   FROM relacao_categoria_acervo 
+							         		  WHERE categoria_id = {$this->id}");
+			if(pg_num_rows($getVinculoObra) > 0){
+				return false;
+			}
+			else{
+				$db->Consulta("DELETE FROM {$this->_tabela} WHERE id = '{$this->id}'");
+				return true;
+			}
 		}
-		return false;
 	}
 
 	function setCamposLista( $str_campos ){
