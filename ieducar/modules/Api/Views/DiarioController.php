@@ -438,7 +438,10 @@ class DiarioController extends ApiCoreController
     return $ativo;
   }
 
-  private function truncate($x, $digits) { 
+  private function truncate($x, $digits) {
+    if($x <= 0) {
+      return 0;
+    }
     return round($x - 5 * pow(10, -($digits + 1)), $digits); 
   }
 
