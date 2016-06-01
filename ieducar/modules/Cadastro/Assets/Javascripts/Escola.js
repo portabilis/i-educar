@@ -150,14 +150,14 @@ $j(document).ready(function() {
       });
     });
 
-  // INFRA
+  // DEPENDENCIAS
   $j('#tab3').click( 
     function(){
       $j('.escolaTab-active').toggleClass('escolaTab-active escolaTab');
       $j('#tab3').toggleClass('escolaTab escolaTab-active')
       $j('.tablecadastro >tbody  > tr').each(function(index, row) {
         if (row.id!='stop'){
-          if (index>=linha_inicial_dependencia && index < linha_inicial_dados){
+          if (index>=linha_inicial_dependencia && index < linha_inicial_equipamento){
             row.show();
           }else if (index>0){
             row.hide();
