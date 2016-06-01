@@ -18,6 +18,7 @@ $j(document).ready(function(){
 						'<div id="editor"></div>';
 
     var paginaResposta = "";
+    var falhaAnalise;
 
     $j("body").append(modalLoad);
     $j("#btn_enviar").click(function(){
@@ -38,6 +39,7 @@ $j(document).ready(function(){
       });
 
       paginaResposta = headerPaginaResposta;
+      falhaAnalise = false;
       analisaRegistro00();
     });
 
@@ -52,8 +54,10 @@ $j(document).ready(function(){
 
       $j.modal.close();
 
-      var newPage = window.open();
-      newPage.document.write(paginaResposta);
+      if (falhaAnalise) {
+        var newPage = window.open();
+        newPage.document.write(paginaResposta);
+      }
     }
 
     var montaHtmlRegistro = function(response) {
@@ -67,6 +71,8 @@ $j(document).ready(function(){
         for (i = 0; i < response.mensagens.length; i++) {
           htmlAnalise += "<li>"+response.mensagens[i].text+"</li>";
           htmlAnalise += "<p>"+response.mensagens[i].path+"</p>";
+
+          if (response.mensagens[i].fail) falhaAnalise = true;
         }
         htmlAnalise +="</ul>";
       }
