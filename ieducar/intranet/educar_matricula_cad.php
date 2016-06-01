@@ -305,7 +305,6 @@ class indice extends clsCadastro
                                                                      null,
                                                                      1
                                                                      );
-
     if(! $this->existeVagasDisponíveis())
       return false;
 
@@ -894,17 +893,19 @@ function enturmacaoMatricula($matriculaId, $turmaDestinoId) {
   }
 
   function existeVagasDisponíveis(){
+    $dependencia = $this->dependencia == 'on';
+    if(!$dependencia){
+      // Caso quantidade de matrículas naquela turma seja maior ou igual que a capacidade da turma deve bloquear
+      if($this->_getQtdMatriculaTurma() >= $this->_getMaxAlunoTurma()){
+        $this->mensagem .= Portabilis_String_Utils::toLatin1("Não existem vagas disponíveis para essa turma!") . '<br/>';
+        return false;
+      }
 
-    // Caso quantidade de matrículas naquela turma seja maior ou igual que a capacidade da turma deve bloquear
-    if($this->_getQtdMatriculaTurma() >= $this->_getMaxAlunoTurma()){
-      $this->mensagem .= Portabilis_String_Utils::toLatin1("Não existem vagas disponíveis para essa turma!") . '<br/>';
-      return false;
-    }
-
-    // Caso a capacidade de alunos naquele turno seja menor ou igual ao ao número de alunos matrículados + alunos na reserva de vaga externa deve bloquear
-    if ($this->_getMaxAlunoTurno() <= ($this->_getQtdAlunosFila() + $this->_getQtdMatriculaTurno() )){
-      $this->mensagem .= Portabilis_String_Utils::toLatin1("Não existem vagas disponíveis para essa série/turno!") . '<br/>';
-      return false;
+      // Caso a capacidade de alunos naquele turno seja menor ou igual ao ao número de alunos matrículados + alunos na reserva de vaga externa deve bloquear
+      if ($this->_getMaxAlunoTurno() <= ($this->_getQtdAlunosFila() + $this->_getQtdMatriculaTurno() )){
+        $this->mensagem .= Portabilis_String_Utils::toLatin1("Não existem vagas disponíveis para essa série/turno!") . '<br/>';
+        return false;
+      }
     }
 
     return true;
@@ -912,8 +913,8 @@ function enturmacaoMatricula($matriculaId, $turmaDestinoId) {
 
   function _getQtdMatriculaTurma(){
     $obj_mt = new clsPmieducarMatriculaTurma();
-    $ativo = 1;
-    return count($obj_mt->lista(NULL, $this->ref_cod_turma, NULL, NULL, NULL, NULL, NULL, NULL, $ativo));
+    $lst_mt = $obj_mt->enturmacoesSemDependencia($this->ref_cod_turma);
+    return $lst_mt[0];
   }
 
   function _getMaxAlunoTurma(){
