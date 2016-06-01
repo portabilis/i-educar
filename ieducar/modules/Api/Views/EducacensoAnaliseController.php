@@ -432,7 +432,7 @@ class EducacensoAnaliseController extends ApiCoreController
         $mensagem[] = array("text" => "Dados para formular o registro 20 da escola {$nomeEscola} não encontrados. É necessário informar ao menos um dia da semana para a turma presencial {$nomeTurma}.",
                             "path" => "(Cadastros > Turma > Cadastrar > Editar > Aba: Dados gerais > Campos: Dia semana, Hora inicial e Hora final)");
       }
-      if (!$turma["tipo_atendimento"]) {
+      if (is_null($turma["tipo_atendimento"])) {
         $mensagem[] = array("text" => "Dados para formular o registro 20 da escola {$nomeEscola} não encontrados. Verifique se o tipo de atendimento da turma {$nomeTurma} foi cadastrado.",
                             "path" => "(Cadastros > Turma > Cadastrar > Editar > Aba: Dados adicionais > Campo: Tipo de atendimento)");
       }
@@ -442,7 +442,7 @@ class EducacensoAnaliseController extends ApiCoreController
       }
       if ($atendimentoAee && !$existeAee) {
         $mensagem[] = array("text" => "Dados para formular o registro 20 da escola {$nomeEscola} não encontrados. Verificamos que o tipo de atendimento da turma {$nomeTurma} é de educação especializada - AEE, portanto obrigatoriamente é necessário informar ao menos uma atividade realizada. ",
-                            "path" => "(Cadastros > Turma > Cadastrar > Editar > Aba: Dados adicionais > Campos: De Ensino do Sistema Braille à Estratégias para autonomia no ambiente escolar)");
+                            "path" => "(Cadastros > Turma > Cadastrar > Editar > Aba: Dados adicionais > Campos: De Ensino do sistema braille à Estratégias para autonomia no ambiente escolar)");
       }
     }
 

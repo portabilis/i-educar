@@ -422,24 +422,23 @@ function getEtapaParecer() {
 
 
 function postParecer($parecerFieldElement) {
-  var additionalVars = {
+  var data = {
     matricula_id             : $parecerFieldElement.data('matricula_id'),
     componente_curricular_id : $parecerFieldElement.data('componente_curricular_id'),
-    etapa : getEtapaParecer()
+    etapa : getEtapaParecer(),
+    oper: "post",
+    resource: "parecer",
+    att_value : $parecerFieldElement.val()
   };
 
-  var options = {
-    url : postResourceUrlBuilder.buildUrl(API_URL_BASE, 'parecer', additionalVars),
-    dataType : 'json',
-    data : {att_value : $parecerFieldElement.val()},
-    success : function(dataResponse) {
+  $j.post( API_URL_BASE, data)
+    .done(function(dataResponse) {
       afterChangeResource($parecerFieldElement);
       handleChange(dataResponse);
-    }
-  };
-
-  $parecerFieldElement.data('old_value', $parecerFieldElement.val());
-  postResource(options, handleErrorOnPostResource);
+    })
+    .fail(function() {
+      errorCallback || handleErrorOnDeleteResource;
+    });
 }
 
 function postNotaGeral($notaGeralElementField) {

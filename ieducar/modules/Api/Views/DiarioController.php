@@ -210,7 +210,7 @@ class DiarioController extends ApiCoreController
     $campoRecuperacao = '';
     switch ($regra->get('tipoRecuperacaoParalela')) {
       case RegraAvaliacao_Model_TipoRecuperacaoParalela::USAR_POR_ETAPA:
-        $campoRecuperacao = 'notaRecuperacao';
+        $campoRecuperacao = 'notaRecuperacaoParalela';
         break;
 
       case RegraAvaliacao_Model_TipoRecuperacaoParalela::USAR_POR_ETAPAS_ESPECIFICAS:
@@ -438,8 +438,11 @@ class DiarioController extends ApiCoreController
     return $ativo;
   }
 
-  private function truncate($x, $digits) { 
-    return round($x - 5 * pow(10, -($digits + 1)), $digits); 
+  private function truncate($val, $f="0"){
+    if(($p = strpos($val, '.')) !== false) {
+        $val = floatval(substr($val, 0, $p + 1 + $f));
+    }
+    return $val;
   }
 
   public function Gerar() {
