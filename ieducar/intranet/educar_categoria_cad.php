@@ -163,6 +163,8 @@ class indice extends clsCadastro
 
 		$this->mensagem = "N&atilde;o &eacute; poss&iacute;vel excluir esta categoria. Verifique se a mesma possui v&iacute;nculo com obras.<br>";
 		echo "<!--\nErro ao excluir clsPmieducarCategoriaObra\nvalores obrigat&oacute;rios\nif( is_numeric( $this->id ) && is_numeric( $this->pessoa_logada ) )\n-->";
+		$this->array_botao[] = 'Voltar';
+		$this->array_botao_url_script[] = "go('educar_categoria_obra_det.php?id=". $this->id ."')";
 		return false;
 	}
 }
