@@ -95,6 +95,7 @@ $j(document).ready(function(){
 
       if (response.any_error_msg) {
         htmlAnalise += "<p class='errorMessage'>"+response.msgs[0].msg+"</p>";
+        falhaAnalise = true;
       } else {
         //Monta uma lista em HTML com as mensagens retornadas da análise
         htmlAnalise += "<ul>";
