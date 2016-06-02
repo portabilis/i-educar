@@ -10,6 +10,19 @@ $j(document).ready(function(){
   					'</div>'+
   					'</div>';
 
+  var modalExport = '<div id="modal_export" class="modal" style="display:none; text-align:center">' +
+            '<div id="modal_gif_load" style="float:left;width:100px;">' +
+            ' <img src="imagens/educacenso/load_modal_educacenso.gif" width="100px" height="100px" alt="">' +
+            '</div>'+
+            '<div id="modal_mensagem_exportacao" style="float:right;width:300px;">'+
+            ' <p style="margin-left: 20px; margin-top: 30px;font-family: verdana, arial; font-size: 18px;">Aguarde, os dados est&atilde;o sendo exportados</p>' +
+            '</div>'+
+            '<div id="modal_mensagem_sucesso" style="width:400px;display:none;">'+
+            ' <p style=" margin-top: 20px;font-family: verdana, arial; font-size: 18px;">Exporta&ccedil;&atilde;o realizada com sucesso.</p>' +
+            ' <a id="download_file" href="#" download="exportacao.txt" style="margin-top: 10px;font-family: verdana, arial;font-size: 14px;">Clique aqui para realizar o download</a>' +
+            '</div>'+
+            '</div>';
+
     var headerPaginaResposta = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>'+stringUtils.toUtf8('Análise exportação')+'</title>'+
             '<link rel="stylesheet" href="../modules/Educacenso/Assets/Stylesheets/educacensoPdf.css"></head><body>'+
 						'<div id="content">'+
@@ -21,6 +34,8 @@ $j(document).ready(function(){
     var falhaAnalise;
 
     $j("body").append(modalLoad);
+    $j("body").append(modalExport);
+
     $j("#btn_enviar").click(function(){
 
     	var escola = $j("#ref_cod_escola").val();
@@ -40,6 +55,7 @@ $j(document).ready(function(){
 
       paginaResposta = headerPaginaResposta;
       falhaAnalise = false;
+      $j("#registro_load").text("Analisando registro 00");
       analisaRegistro00();
     });
 
@@ -57,6 +73,13 @@ $j(document).ready(function(){
       if (falhaAnalise) {
         var newPage = window.open();
         newPage.document.write(paginaResposta);
+      } else {
+        $j("#modal_export").modal({
+          escapeClose: false,
+          clickClose: false,
+          showClose: false
+        });
+        educacensoExport();
       }
     }
 
@@ -79,6 +102,58 @@ $j(document).ready(function(){
       paginaResposta += htmlAnalise;
     };
 
+    var educacensoExport = function(){
+        var urlForEducacensoExport = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoExport', 'educacenso-export', {
+          escola   : $j("#ref_cod_escola").val(),
+          ano      : $j("#ano").val(),
+          data_ini : $j("#data_ini").val(),
+          data_fim : $j("#data_fim").val()
+        });
+
+        var options = {
+          url : urlForEducacensoExport,
+          dataType : 'json',
+          success  : handleEducacensoExport
+        };
+        getResources(options);
+    };
+
+    var handleEducacensoExport = function(response) {
+      if (response.error) {
+        console.log(response.mensagem);
+        return;
+      }
+
+      //Realiza alterações na modal para mostrar resultado de sucesso
+      $j("#modal_gif_load").css("display", "none");
+      $j("#modal_mensagem_exportacao").css("display", "none");
+      $j("#modal_mensagem_sucesso").css("display", "block");
+
+      //Cria evento para download do arquivo de exportação
+      var create = document.getElementById('download_file'), conteudo = response.conteudo;
+      create.addEventListener('click', function () {
+        var link = document.getElementById('download_file');
+        link.href = makeTextFile(conteudo);
+        $j.modal.close();
+      }, false);
+
+    };
+
+    var textFile = null,
+      makeTextFile = function (text) {
+        var data = new Blob([text], {type: 'text/plain'});
+
+        // If we are replacing a previously generated file we need to
+        // manually revoke the object URL to avoid memory leaks.
+        if (textFile !== null) {
+          window.URL.revokeObjectURL(textFile);
+        }
+
+        textFile = window.URL.createObjectURL(data);
+
+        return textFile;
+      };
+
     var analisaRegistro00 = function(){
         var urlForGetAnaliseRegistro = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', 'registro-00', {
           escola : $j("#ref_cod_escola").val(),
@@ -95,7 +170,7 @@ $j(document).ready(function(){
 
     var handleGetAnaliseRegistro00 = function(response) {
       montaHtmlRegistro(response);
-      $j("#registro_load").val("Analisando registro 10");
+      $j("#registro_load").text("Analisando registro 10");
       analisaRegistro10();
     };
 
@@ -114,7 +189,7 @@ $j(document).ready(function(){
 
     var handleGetAnaliseRegistro10 = function(response) {
       montaHtmlRegistro(response);
-      $j("#registro_load").val("Analisando registro 20");
+      $j("#registro_load").text("Analisando registro 20");
       analisaRegistro20();
     };
 
@@ -136,7 +211,5 @@ $j(document).ready(function(){
       montaHtmlRegistro(response);
       finishAnalysis();
     };
-
-
 
 });
