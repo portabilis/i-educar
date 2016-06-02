@@ -95,47 +95,58 @@ class EducacensoAnaliseController extends ApiCoreController
 
     if (!$escola["inep"]) {
       $mensagem[] = array("text" => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verifique se a escola possui o código INEP cadastrado.",
-                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dados gerais > Campo: Código INEP)");
+                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dados gerais > Campo: Código INEP)",
+                          "fail" => true);
     }
     if (!$escola["cpf_gestor_escolar"]) {
       $mensagem[] = array("text" => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verifique se o(a) gestor(a) escolar possui o CPF cadastrado.",
-                          "path" => "(Pessoa FJ > Pessoa física > Editar > Campo: CPF)");
+                          "path" => "(Pessoa FJ > Pessoa física > Editar > Campo: CPF)",
+                          "fail" => true);
     }
     if (!$escola["nome_gestor_escolar"]) {
       $mensagem[] = array("text" => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verifique se o(a) gestor(a) escolar foi informado(a).",
-                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dados gerais > Campo: Gestor escolar)");
+                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dados gerais > Campo: Gestor escolar)",
+                          "fail" => true);
     }
     if (!$escola["cargo_gestor_escolar"]) {
       $mensagem[] = array("text" => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verifique se o cargo do(a) gestor(a) escolar foi informado.",
-                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Campo: Cargo do gestor escolar)");
+                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Campo: Cargo do gestor escolar)",
+                          "fail" => true);
     }
     if ($escola["data_inicio"] != $anoAtual && $escola["data_inicio"] != $anoAnterior) {
       $mensagem[] = array("text" => "Dados para formular o registro 00 da escola {$nomeEscola} possui valor inválido. Verifique se a data inicial da primeira etapa foi cadastrada corretamente.",
-                          "path" => "(Cadastros > Escola > Cadastrar > Editar ano letivo > Ok > Campo: Data inicial)");
+                          "path" => "(Cadastros > Escola > Cadastrar > Editar ano letivo > Ok > Campo: Data inicial)",
+                          "fail" => true);
     }
     if ($escola["data_fim"] != $anoAtual && $escola["data_fim"] != $anoPosterior) {
       $mensagem[] = array("text" => "Dados para formular o registro 00 da escola {$nomeEscola} possui valor inválido. Verifique se a data final da última etapa foi cadastrada corretamente.",
-                          "path" => "(Cadastros > Escola > Cadastrar > Editar ano letivo > Ok > Campo: Data final)");
+                          "path" => "(Cadastros > Escola > Cadastrar > Editar ano letivo > Ok > Campo: Data final)",
+                          "fail" => true);
     }
     if ((!$escola["latitude"]) && $escola["longitude"]) {
       $mensagem[] = array("text" => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que a longitude foi informada, portanto obrigatoriamente a latitude também deve ser informada.",
-                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dados gerais > Campo: Latitude)");
+                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dados gerais > Campo: Latitude)",
+                          "fail" => true);
     }
     if ((!$escola["longitude"]) && $escola["latitude"]) {
       $mensagem[] = array("text" => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que a latitude foi informada, portanto obrigatoriamente a longitude também deve ser informada.",
-                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dados gerais > Campo: Longitude)");
+                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dados gerais > Campo: Longitude)",
+                          "fail" => true);
     }
     if (!$escola["inep_uf"]) {
       $mensagem[] = array("text" => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verifique se o código da UF informada, foi cadastrado conforme a 'Tabela de UF'.",
-                          "path" => "(Endereçamento > Estado > Editar > Campo: Código INEP)");
+                          "path" => "(Endereçamento > Estado > Editar > Campo: Código INEP)",
+                          "fail" => true);
     }
     if (!$escola["inep_municipio"]) {
       $mensagem[] = array("text" => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verifique se o código do município informado, foi cadastrado conforme a 'Tabela de Municípios'.",
-                          "path" => "(Endereçamento > Município > Editar > Campo: Código INEP)");
+                          "path" => "(Endereçamento > Município > Editar > Campo: Código INEP)",
+                          "fail" => true);
     }
     if (!$escola["inep_distrito"]) {
       $mensagem[] = array("text" => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verifique se o código do distrito informado, foi cadastrado conforme a 'Tabela de Distritos'.",
-                          "path" => "(Endereçamento > Distrito > Editar > Campo: Código INEP)");
+                          "path" => "(Endereçamento > Distrito > Editar > Campo: Código INEP)",
+                          "fail" => true);
     }
 
     return array('mensagens' => $mensagem,
@@ -286,43 +297,53 @@ class EducacensoAnaliseController extends ApiCoreController
 
     if (!$escola["local_funcionamento"]) {
       $mensagem[] = array("text" => "Dados para formular o registro 10 da escola {$nomeEscola} não encontrados. Verifique se o local de funcionamento da escola foi informado.",
-                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Infraestrutura > Campo: Local de funcionamento)");
+                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Infraestrutura > Campo: Local de funcionamento)",
+                          "fail" => true);
     }
     if($escola["local_funcionamento"] == $predioEscolar && !$escola["condicao"]) {
       $mensagem[] = array("text" => "Dados para formular o registro 10 da escola {$nomeEscola} não encontrados. Verificamos que o local de funcionamento da escola é em um prédio escolar, portanto obrigatoriamente é necessário informar qual a forma de ocupação do prédio.",
-                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Infraestrutura > Campo: Condição)");
+                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Infraestrutura > Campo: Condição)",
+                          "fail" => true);
     }
     if (!$escola["agua_consumida"]) {
       $mensagem[] = array("text" => "Dados para formular o registro 10 da escola {$nomeEscola} não encontrados. Verifique se a água consumida pelos alunos foi informada.",
-                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Infraestrutura > Campo: Água consumida pelos alunos)");
+                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Infraestrutura > Campo: Água consumida pelos alunos)",
+                          "fail" => true);
     }
     if (!$existeAbastecimentoAgua) {
       $mensagem[] = array("text" => "Dados para formular o registro 10 da escola {$nomeEscola} não encontrados. Verifique se uma das formas do abastecimento de água foi informada.",
-                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Infraestrutura > Campos: Abastecimento de água)");
+                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Infraestrutura > Campos: Abastecimento de água)",
+                          "fail" => true);
     }
     if (!$existeAbastecimentoEnergia) {
       $mensagem[] = array("text" => "Dados para formular o registro 10 da escola {$nomeEscola} não encontrados. Verifique se uma das formas do abastecimento de energia elétrica foi informada.",
-                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Infraestrutura > Campos: Abastecimento de energia elétrica)");
+                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Infraestrutura > Campos: Abastecimento de energia elétrica)",
+                          "fail" => true);
     }
     if (!$existeEsgotoSanitario) {
       $mensagem[] = array("text" => "Dados para formular o registro 10 da escola {$nomeEscola} não encontrados. Verifique se alguma opção de esgoto sanitário foi informada.",
-                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Infraestrutura > Campos: Esgoto sanitário)");
+                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Infraestrutura > Campos: Esgoto sanitário)",
+                          "fail" => true);
     }
     if (!$existeDestinacaoLixo) {
       $mensagem[] = array("text" => "Dados para formular o registro 10 da escola {$nomeEscola} não encontrados. Verifique se uma das formas da destinação do lixo foi informada.",
-                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Infraestrutura > Campos: Destinação do lixo)");
+                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Infraestrutura > Campos: Destinação do lixo)",
+                          "fail" => true);
     }
     if (!$existeDependencia) {
       $mensagem[] = array("text" => "Dados para formular o registro 10 da escola {$nomeEscola} não encontrados. Nenhum campo foi preenchido referente as dependências existentes na escola, portanto todos serão registrados como NÃO.",
-                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dependências > Campos: Dependências existentes na escola)");
+                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dependências > Campos: Dependências existentes na escola)",
+                          "fail" => true);
     }
     if($escola["local_funcionamento"] == $predioEscolar && !$escola["dependencia_numero_salas_existente"]) {
       $mensagem[] = array("text" => "Dados para formular o registro 10 da escola {$nomeEscola} não encontrados. Verificamos que o local de funcionamento da escola é em um prédio escolar, portanto obrigatoriamente é necessário informar o número de salas de aula existentes na escola.",
-                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dependências > Campo: Dependências existentes na escola - Número de salas de aula existentes na escola)");
+                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dependências > Campo: Dependências existentes na escola - Número de salas de aula existentes na escola)",
+                          "fail" => true);
     }
     if (!$escola['dependencia_numero_salas_utilizadas']) {
       $mensagem[] = array("text" => "Dados para formular o registro 10 da escola {$nomeEscola} não encontrados. Verifique se o número de salas utilizadas como sala de aula foi informado.",
-                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dependências > Campo: Dependências existentes na escola – Número de salas utilizadas como sala de aula)");
+                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dependências > Campo: Dependências existentes na escola – Número de salas utilizadas como sala de aula)",
+                          "fail" => true);
     }
     if (!$existeEquipamentos) {
       $mensagem[] = array("text" => "Dados para formular o registro 10 da escola {$nomeEscola} não encontrados. Nenhum campo foi preenchido referente a quantidade de equipamentos existentes na escola, portanto todos serão registrados como NÃO.",
@@ -330,27 +351,33 @@ class EducacensoAnaliseController extends ApiCoreController
     }
     if (!$escola["total_funcionario"]) {
       $mensagem[] = array("text" => "Dados para formular o registro 10 da escola {$nomeEscola} não encontrados. Verifique se o total de funcionários da escola foi informado.",
-                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dependências > Campo: Total de funcionários da escola)");
+                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dependências > Campo: Total de funcionários da escola)",
+                          "fail" => true);
     }
     if (!$escola["atendimento_aee"]) {
       $mensagem[] = array("text" => "Dados para formular o registro 10 da escola {$nomeEscola} não encontrados. Verifique se o atendimento educacional especializado - AEE foi informado.",
-                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dados do ensino > Campo: Atendimento educacional especializado - AEE)");
+                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dados do ensino > Campo: Atendimento educacional especializado - AEE)",
+                          "fail" => true);
     }
     if (!$escola["atividade_complementar"]) {
       $mensagem[] = array("text" => "Dados para formular o registro 10 da escola {$nomeEscola} não encontrados. Verifique se a atividade complementar foi informada.",
-                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dados do ensino > Campo: Atividade complementar)");
+                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dados do ensino > Campo: Atividade complementar)",
+                          "fail" => true);
     }
     if (!$escola["localizacao_diferenciada"]) {
       $mensagem[] = array("text" => "Dados para formular o registro 10 da escola {$nomeEscola} não encontrados. Verifique se a localização diferenciada da escola foi informada.",
-                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dados do ensino > Campo: Localização diferenciada da escola)");
+                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dados do ensino > Campo: Localização diferenciada da escola)",
+                          "fail" => true);
     }
     if (!$existeMaterialDidatico) {
       $mensagem[] = array("text" => "Dados para formular o registro 10 da escola {$nomeEscola} não encontrados. Verifique se algum material didático específico para atendimento à diversidade sócio-cultural foi informado.",
-                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dados do ensino > Campo: Materiais didáticos específicos para atendimento à diversidade sócio-cultural)");
+                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dados do ensino > Campo: Materiais didáticos específicos para atendimento à diversidade sócio-cultural)",
+                          "fail" => true);
     }
     if ($escola['educacao_indigena'] && !$escola["lingua_ministrada"]) {
       $mensagem[] = array("text" => "Dados para formular o registro 10 da escola {$nomeEscola} não encontrados. Verificamos que a escola trabalha com educação indígena, portanto obrigatoriamente é necessário informar a língua em que o ensino é ministrado.",
-                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dados do ensino > Campo: Língua em que o ensino é ministrado)");
+                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dados do ensino > Campo: Língua em que o ensino é ministrado)",
+                          "fail" => true);
     }
 
     return array('mensagens' => $mensagem,
@@ -422,27 +449,33 @@ class EducacensoAnaliseController extends ApiCoreController
 
       if (!$turma["hora_inicial"]) {
         $mensagem[] = array("text" => "Dados para formular o registro 20 da escola {$nomeEscola} não encontrados. Verifique se o horário inicial da turma {$nomeTurma} foi cadastrado.",
-                            "path" => "(Cadastros > Turma > Cadastrar > Editar > Aba: Dados gerais > Campo: Hora inicial)");
+                            "path" => "(Cadastros > Turma > Cadastrar > Editar > Aba: Dados gerais > Campo: Hora inicial)",
+                          "fail" => true);
       }
       if (!$turma["hora_final"]) {
         $mensagem[] = array("text" => "Dados para formular o registro 20 da escola {$nomeEscola} não encontrados. Verifique se o horário final da turma {$nomeTurma} foi cadastrado.",
-                            "path" => "(Cadastros > Turma > Cadastrar > Editar > Aba: Dados gerais > Campo: Hora final)");
+                            "path" => "(Cadastros > Turma > Cadastrar > Editar > Aba: Dados gerais > Campo: Hora final)",
+                          "fail" => true);
       }
       if (!$turma["dias_semana"]) {
         $mensagem[] = array("text" => "Dados para formular o registro 20 da escola {$nomeEscola} não encontrados. É necessário informar ao menos um dia da semana para a turma presencial {$nomeTurma}.",
-                            "path" => "(Cadastros > Turma > Cadastrar > Editar > Aba: Dados gerais > Campos: Dia semana, Hora inicial e Hora final)");
+                            "path" => "(Cadastros > Turma > Cadastrar > Editar > Aba: Dados gerais > Campos: Dia semana, Hora inicial e Hora final)",
+                          "fail" => true);
       }
       if (is_null($turma["tipo_atendimento"])) {
         $mensagem[] = array("text" => "Dados para formular o registro 20 da escola {$nomeEscola} não encontrados. Verifique se o tipo de atendimento da turma {$nomeTurma} foi cadastrado.",
-                            "path" => "(Cadastros > Turma > Cadastrar > Editar > Aba: Dados adicionais > Campo: Tipo de atendimento)");
+                            "path" => "(Cadastros > Turma > Cadastrar > Editar > Aba: Dados adicionais > Campo: Tipo de atendimento)",
+                          "fail" => true);
       }
       if ($atividadeComplementar && !$existeAtividadeComplementar) {
         $mensagem[] = array("text" => "Dados para formular o registro 20 da escola {$nomeEscola} não encontrados. Verificamos que o tipo de atendimento da turma {$nomeTurma} é de atividade complementar, portanto obrigatoriamente é necessário informar o código de ao menos uma atividade conforme a 'Tabela de Tipo de Atividade Complementar'.",
-                            "path" => "(Cadastros > Turma > Cadastrar > Editar > Aba: Dados adicionais > Campo: Código do tipo de atividade complementar)");   
+                            "path" => "(Cadastros > Turma > Cadastrar > Editar > Aba: Dados adicionais > Campo: Código do tipo de atividade complementar)",
+                          "fail" => true);   
       }
       if ($atendimentoAee && !$existeAee) {
         $mensagem[] = array("text" => "Dados para formular o registro 20 da escola {$nomeEscola} não encontrados. Verificamos que o tipo de atendimento da turma {$nomeTurma} é de educação especializada - AEE, portanto obrigatoriamente é necessário informar ao menos uma atividade realizada. ",
-                            "path" => "(Cadastros > Turma > Cadastrar > Editar > Aba: Dados adicionais > Campos: De Ensino do sistema braille à Estratégias para autonomia no ambiente escolar)");
+                            "path" => "(Cadastros > Turma > Cadastrar > Editar > Aba: Dados adicionais > Campos: De Ensino do sistema braille à Estratégias para autonomia no ambiente escolar)",
+                          "fail" => true);
       }
     }
 
