@@ -1361,19 +1361,24 @@ class AlunoController extends ApiCoreController
   protected function validatePhoto(){
 
     $this->arquivoFoto = $this->file_foto;
-    if (!empty($this->arquivoFoto["name"])){
-      $this->arquivoFoto["name"] = mb_strtolower($this->arquivoFoto["name"], 'UTF-8');
-      $this->objPhoto = new PictureController($this->arquivoFoto);
-      if ($this->objPhoto->validatePicture()){
-        return TRUE;
-      } else {
-        $this->mensagem = $this->objPhoto->getErrorMessage();
+    if((round($this->arquivoFoto['size'] / 1024)) < 150){
+      if (!empty($this->arquivoFoto["name"])){
+        $this->arquivoFoto["name"] = mb_strtolower($this->arquivoFoto["name"], 'UTF-8');
+        $this->objPhoto = new PictureController($this->arquivoFoto);
+        if ($this->objPhoto->validatePicture()){
+          return TRUE;
+        } else {
+          $this->mensagem = $this->objPhoto->getErrorMessage();
+          return false;
+        }
         return false;
+      }else{
+        $this->objPhoto = null;
+        return true;
       }
-      return false;
     }else{
-      $this->objPhoto = null;
-      return true;
+      $this->messenger->append("Não é permitido arquivos que ultrapassem 150KB.");
+      return false;
     }
 
   }
