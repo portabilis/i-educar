@@ -103,6 +103,7 @@ class DiarioController extends ApiCoreController
               WHERE m.ativo = 1
               AND  mt.ref_cod_turma = $1
               AND m.ref_cod_aluno = $2
+            ORDER BY m.aprovado
               LIMIT 1';
 
     $matriculaId = $this->fetchPreparedQuery($sql, array($turmaId, $alunoId), true, 'first-field');
