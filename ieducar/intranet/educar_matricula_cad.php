@@ -966,8 +966,7 @@ function enturmacaoMatricula($matriculaId, $turmaDestinoId) {
     $det_t = $obj_t->detalhe();
 
     $obj_mt = new clsPmieducarMatriculaTurma();
-
-    return (int) count($obj_mt->lista($int_ref_cod_matricula = NULL, $int_ref_cod_turma = NULL,
+    $lst_mt = $obj_mt->lista($int_ref_cod_matricula = NULL, $int_ref_cod_turma = NULL,
               $int_ref_usuario_exc = NULL, $int_ref_usuario_cad = NULL,
               $date_data_cadastro_ini = NULL, $date_data_cadastro_fim = NULL,
               $date_data_exclusao_ini = NULL, $date_data_exclusao_fim = NULL, $int_ativo = 1,
@@ -980,7 +979,8 @@ function enturmacaoMatricula($matriculaId, $turmaDestinoId) {
               $mes_matricula_inicial = FALSE, $get_serie_mult = FALSE,
               $int_ref_cod_serie_mult = NULL, $int_semestre = NULL,
               $pegar_ano_em_andamento = FALSE, $parar=NULL, $diario = FALSE,
-              $int_turma_turno_id = $det_t['turma_turno_id'], $int_ano_turma = $det_t['ano']));
+              $int_turma_turno_id = $det_t['turma_turno_id'], $int_ano_turma = $det_t['ano'], $dependencia = 'f');
+    return count($lst_mt);
   }
 
 
