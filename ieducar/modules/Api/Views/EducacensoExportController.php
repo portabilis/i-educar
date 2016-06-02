@@ -91,14 +91,7 @@ class EducacensoExportController extends ApiCoreController
       return array("error" => true,
                    "mensagem" => $this->msg);
     }
-      header("Content-Type: application/force-download");
-      header("Content-Type: application/octet-stream;");
-    header('Content-type: text/plain');
-    header('Content-Length: ' . strlen($conteudo));
-    header('Content-Disposition: attachment; filename=exportacao.txt');
-    // $fp = fopen('exportacao.txt', 'w');
-    // fwrite($fp, $conteudo);
-    // fclose($fp);
+
     return array('conteudo' => $conteudo);
   }
 

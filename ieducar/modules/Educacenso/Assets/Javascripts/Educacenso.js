@@ -53,11 +53,18 @@ $j(document).ready(function(){
         showClose: false
       });
 
+      resetParameters();
+      analisaRegistro00();
+    });
+
+    var resetParameters = function() {
       paginaResposta = headerPaginaResposta;
       falhaAnalise = false;
       $j("#registro_load").text("Analisando registro 00");
-      analisaRegistro00();
-    });
+      $j("#modal_gif_load").css("display", "block");
+      $j("#modal_mensagem_exportacao").css("display", "block");
+      $j("#modal_mensagem_sucesso").css("display", "none");
+    }
 
     var finishAnalysis = function() {
       paginaResposta += '</body></html>';
@@ -121,6 +128,8 @@ $j(document).ready(function(){
     var handleEducacensoExport = function(response) {
       if (response.error) {
         console.log(response.mensagem);
+        $j.modal.close();
+        alert("Ocorreu um erro ao realizar a exporta\u00e7\u00e3o.");
         return;
       }
 
