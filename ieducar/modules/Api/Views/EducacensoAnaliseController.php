@@ -462,7 +462,7 @@ class EducacensoAnaliseController extends ApiCoreController
                             "path" => "(Cadastros > Turma > Cadastrar > Editar > Aba: Dados gerais > Campos: Dia semana, Hora inicial e Hora final)",
                           "fail" => true);
       }
-      if (is_null($turma["tipo_atendimento"])) {
+      if (is_null($turma["tipo_atendimento"]) || $turma["tipo_atendimento"] < 0) {
         $mensagem[] = array("text" => "Dados para formular o registro 20 da escola {$nomeEscola} não encontrados. Verifique se o tipo de atendimento da turma {$nomeTurma} foi cadastrado.",
                             "path" => "(Cadastros > Turma > Cadastrar > Editar > Aba: Dados adicionais > Campo: Tipo de atendimento)",
                           "fail" => true);
