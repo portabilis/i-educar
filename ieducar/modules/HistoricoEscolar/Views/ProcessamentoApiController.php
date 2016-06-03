@@ -670,8 +670,9 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
           $sequencial = $this->getNextHistoricoDisciplinasSequencial($historicoSequencial, $alunoId);
 
-          $nota = number_format(($value['nota_conceitual_numerica']/$value['count']), 2, ',', '');
-
+          if ($tpNota == $cnsNota::NUMERICA) {
+            $nota = number_format(($value['nota_conceitual_numerica']/$value['count']), 2, ',', '');
+          }
           if ($processarMediaGeral) {
             $nota = '-';
           }

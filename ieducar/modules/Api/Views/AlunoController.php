@@ -1367,7 +1367,7 @@ class AlunoController extends ApiCoreController
       if ($this->objPhoto->validatePicture()){
         return TRUE;
       } else {
-        $this->mensagem = $this->objPhoto->getErrorMessage();
+        $this->messenger->append($this->objPhoto->getErrorMessage());
         return false;
       }
       return false;

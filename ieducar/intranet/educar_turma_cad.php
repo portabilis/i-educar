@@ -711,12 +711,15 @@ class indice extends clsCadastro
 
     $this->acao_enviar = 'valida()';
 
-    $resources = array( 0 => Portabilis_String_Utils::toLatin1('Não se aplica'),
-                        1    => 'Classe hospitalar',
-                        2    => Portabilis_String_Utils::toLatin1('Unidade de internação socioeducativa'),
-                        3    => 'Unidade prisional',
-                        4    => 'Atividade complementar',
-                        5    => 'Atendimento educacional especializado (AEE)');
+    $resources = array( -1 => 'Selecione',
+                        0 => Portabilis_String_Utils::toLatin1('Não se aplica'),
+                        1 => 'Classe hospitalar',
+                        2 => Portabilis_String_Utils::toLatin1('Unidade de internação socioeducativa'),
+                        3 => 'Unidade prisional',
+                        4 => 'Atividade complementar',
+                        5 => 'Atendimento educacional especializado (AEE)');
+
+    // echo (is_null($this->tipo_atendimento) ? "nulo" : 'false');
 
     $options = array('label' => 'Tipo de atendimento', 'resources' => $resources, 'value' => $this->tipo_atendimento, 'required' => false, 'size' => 70,);
     $this->inputsHelper()->select('tipo_atendimento', $options);
