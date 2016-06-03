@@ -118,12 +118,12 @@ class PictureController {
                     return true;   
                 }
                 else{
-                    $this->errorMessage = "N&atilde;o &eacute; permitido fotos com mais de 150KB.";
+                    $this->errorMessage = "O cadastro n&atilde;o pode ser realizado, a foto possui um tamanho maior do que o permitido.";
                     return false;
                 }
             }
             else{
-                $this->errorMessage = "Deve ser enviado uma imagem do tipo jpeg, jpg, png ou gif.";
+                $this->errorMessage = "O cadastro n&atilde;o pode ser realizado, a foto do aluno possui um formato diferente daqueles permitidos.";
                 return false;
             }
         }
