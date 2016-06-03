@@ -123,7 +123,7 @@ class PictureController {
                 }
             }
             else{
-                $this->errorMessage = "O cadastro n&atilde;o pode ser realizado, a foto do aluno possui um formato diferente daqueles permitidos.";
+                $this->errorMessage = "O cadastro n&atilde;o pode ser realizado, a foto possui um formato diferente daqueles permitidos.";
                 return false;
             }
         }
