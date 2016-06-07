@@ -530,6 +530,11 @@ if($j('#autorizado_quatro').val() == ''){
   // campos texto
   $j('#altura').val(dataResponse.altura);
   $j('#peso').val(dataResponse.peso);
+  $j("#grupo_sanguineo").on('keypress', function(event){
+    if(event.keyCode === 32){
+      return false;
+    }
+  });
   $j('#grupo_sanguineo').val(dataResponse.grupo_sanguineo);
   $j('#fator_rh').val(dataResponse.fator_rh);
   $j('#desc_alergia_medicamento').val(dataResponse.desc_alergia_medicamento);
