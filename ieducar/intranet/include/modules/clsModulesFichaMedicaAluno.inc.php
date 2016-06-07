@@ -370,17 +370,50 @@ class clsModulesFichaMedicaAluno
       $valores .= "{$gruda}{$this->ref_cod_aluno}";
       $gruda = ", ";
 
-      $campos .= "{$gruda}altura";
-      $valores .= "{$gruda}'{$this->altura}'";
-      $gruda = ", ";
+      if($this->altura == "" || 
+         $this->altura == " " || 
+         $this->altura == "  " ||
+         $this->altura == "   " ||
+         $this->altura == "    "){
+          $campos .= "{$gruda}altura";
+          $valores .= "{$gruda}NULL";
+          $gruda = ", ";
+      }
+      else{
+        $campos .= "{$gruda}altura";
+        $valores .= "{$gruda}'{$this->altura}'";
+        $gruda = ", ";
+      }
       
-      $campos .= "{$gruda}peso";
-      $valores .= "{$gruda}'{$this->peso}'";
-      $gruda = ", ";
+      if($this->peso == "" || 
+         $this->peso == " " || 
+         $this->peso == "  " ||
+         $this->peso == "   " ||
+         $this->peso == "    " ||
+         $this->peso == "     " ||
+         $this->peso == "      "){
+          $campos .= "{$gruda}peso";
+          $valores .= "{$gruda}NULL";
+          $gruda = ", ";
+      }
+      else{
+        $campos .= "{$gruda}peso";
+        $valores .= "{$gruda}'{$this->peso}'";
+        $gruda = ", ";
+      }
       
-      $campos .= "{$gruda}grupo_sanguineo";
-      $valores .= "{$gruda}'{$this->grupo_sanguineo}'";
-      $gruda = ", ";
+      if($this->grupo_sanguineo == "" || 
+         $this->grupo_sanguineo == " " || 
+         $this->grupo_sanguineo == "  "){
+          $campos .= "{$gruda}grupo_sanguineo";
+          $valores .= "{$gruda}NULL";
+          $gruda = ", ";
+      }
+      else{
+        $campos .= "{$gruda}grupo_sanguineo";
+        $valores .= "{$gruda}'{$this->grupo_sanguineo}'";
+        $gruda = ", ";
+      }
       
       $campos .= "{$gruda}fator_rh";
       $valores .= "{$gruda}'{$this->fator_rh}'";
@@ -563,12 +596,37 @@ class clsModulesFichaMedicaAluno
       $db  = new clsBanco();
       $set = '';
 
-      $set .= "altura = '{$this->altura}'";
+      if($this->altura == "" || 
+         $this->altura == " " || 
+         $this->altura == "  " ||
+         $this->altura == "   " ||
+         $this->altura == "    "){
+        $set .= "altura = NULL";
+      }
+      else{
+        $set .= "altura = '{$this->altura}'";
+      }
   
-      $set .= ",peso = '{$this->peso}'";
-  
-      $set .= ",grupo_sanguineo = '{$this->grupo_sanguineo}'";
-  
+      if($this->peso == "" || 
+         $this->peso == " " || 
+         $this->peso == "  " ||
+         $this->peso == "   " ||
+         $this->peso == "    " ||
+         $this->peso == "     " ||
+         $this->peso == "      "){
+        $set .= ",peso = NULL";
+      }
+      else{
+        $set .= ",peso = '{$this->peso}'";
+      }
+      
+      if($this->grupo_sanguineo == "" || $this->grupo_sanguineo == " " || $this->grupo_sanguineo == "  "){
+        $set .= ",grupo_sanguineo = NULL";
+      }
+      else{
+        $set .= ",grupo_sanguineo = '{$this->grupo_sanguineo}'";
+      }
+
       $set .= ",fator_rh = '{$this->fator_rh}'";
   
       $set .= ",alergia_medicamento = '{$this->alergia_medicamento}'";
@@ -650,7 +708,7 @@ class clsModulesFichaMedicaAluno
       $set .= ",responsavel_parentesco_telefone = '{$this->responsavel_parentesco_telefone}'";
   
       $set .= ",responsavel_parentesco_celular = '{$this->responsavel_parentesco_celular}'";
-  
+
       if ($set) {
         $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE ref_cod_aluno = '{$this->ref_cod_aluno}'");
         return TRUE;
