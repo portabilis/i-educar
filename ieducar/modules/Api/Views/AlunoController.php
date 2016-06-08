@@ -323,6 +323,7 @@ class AlunoController extends ApiCoreController
     $obj->altura                                = Portabilis_String_Utils::toLatin1($this->getRequest()->altura);
     $obj->peso                                  = Portabilis_String_Utils::toLatin1($this->getRequest()->peso);
     $obj->grupo_sanguineo                       = Portabilis_String_Utils::toLatin1($this->getRequest()->grupo_sanguineo);
+    $obj->grupo_sanguineo = trim($obj->grupo_sanguineo);
     $obj->fator_rh                              = Portabilis_String_Utils::toLatin1($this->getRequest()->fator_rh);
     $obj->alergia_medicamento                   = ($this->getRequest()->alergia_medicamento == 'on' ? 'S' : 'N');
     $obj->desc_alergia_medicamento              = Portabilis_String_Utils::toLatin1($this->getRequest()->desc_alergia_medicamento);
