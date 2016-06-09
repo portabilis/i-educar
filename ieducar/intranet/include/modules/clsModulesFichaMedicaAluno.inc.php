@@ -370,50 +370,17 @@ class clsModulesFichaMedicaAluno
       $valores .= "{$gruda}{$this->ref_cod_aluno}";
       $gruda = ", ";
 
-      if($this->altura == "" || 
-         $this->altura == " " || 
-         $this->altura == "  " ||
-         $this->altura == "   " ||
-         $this->altura == "    "){
-          $campos .= "{$gruda}altura";
-          $valores .= "{$gruda}NULL";
-          $gruda = ", ";
-      }
-      else{
-        $campos .= "{$gruda}altura";
-        $valores .= "{$gruda}'{$this->altura}'";
-        $gruda = ", ";
-      }
+      $campos .= "{$gruda}altura";
+      $valores .= "{$gruda}'{$this->altura}'";
+      $gruda = ", ";
       
-      if($this->peso == "" || 
-         $this->peso == " " || 
-         $this->peso == "  " ||
-         $this->peso == "   " ||
-         $this->peso == "    " ||
-         $this->peso == "     " ||
-         $this->peso == "      "){
-          $campos .= "{$gruda}peso";
-          $valores .= "{$gruda}NULL";
-          $gruda = ", ";
-      }
-      else{
-        $campos .= "{$gruda}peso";
-        $valores .= "{$gruda}'{$this->peso}'";
-        $gruda = ", ";
-      }
+      $campos .= "{$gruda}peso";
+      $valores .= "{$gruda}'{$this->peso}'";
+      $gruda = ", ";
       
-      if($this->grupo_sanguineo == "" || 
-         $this->grupo_sanguineo == " " || 
-         $this->grupo_sanguineo == "  "){
-          $campos .= "{$gruda}grupo_sanguineo";
-          $valores .= "{$gruda}NULL";
-          $gruda = ", ";
-      }
-      else{
-        $campos .= "{$gruda}grupo_sanguineo";
-        $valores .= "{$gruda}'{$this->grupo_sanguineo}'";
-        $gruda = ", ";
-      }
+      $campos .= "{$gruda}grupo_sanguineo";
+      $valores .= "{$gruda}'{$this->grupo_sanguineo}'";
+      $gruda = ", ";
       
       $campos .= "{$gruda}fator_rh";
       $valores .= "{$gruda}'{$this->fator_rh}'";
@@ -596,36 +563,11 @@ class clsModulesFichaMedicaAluno
       $db  = new clsBanco();
       $set = '';
 
-      if($this->altura == "" || 
-         $this->altura == " " || 
-         $this->altura == "  " ||
-         $this->altura == "   " ||
-         $this->altura == "    "){
-        $set .= "altura = NULL";
-      }
-      else{
-        $set .= "altura = '{$this->altura}'";
-      }
+      $set .= "altura = '{$this->altura}'";
   
-      if($this->peso == "" || 
-         $this->peso == " " || 
-         $this->peso == "  " ||
-         $this->peso == "   " ||
-         $this->peso == "    " ||
-         $this->peso == "     " ||
-         $this->peso == "      "){
-        $set .= ",peso = NULL";
-      }
-      else{
-        $set .= ",peso = '{$this->peso}'";
-      }
+      $set .= ",peso = '{$this->peso}'";
       
-      if($this->grupo_sanguineo == "" || $this->grupo_sanguineo == " " || $this->grupo_sanguineo == "  "){
-        $set .= ",grupo_sanguineo = NULL";
-      }
-      else{
-        $set .= ",grupo_sanguineo = '{$this->grupo_sanguineo}'";
-      }
+      $set .= ",grupo_sanguineo = '{$this->grupo_sanguineo}'";
 
       $set .= ",fator_rh = '{$this->fator_rh}'";
   
