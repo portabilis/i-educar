@@ -31,6 +31,7 @@
 
 require_once 'Core/Controller/Page/EditController.php';
 require_once 'AreaConhecimento/Model/AreaDataMapper.php';
+require_once '../intranet/include/clsBanco.inc.php';
 
 /**
  * EditController class.
@@ -155,6 +156,33 @@ class EditController extends Core_Controller_Page_EditController
       $this->mensagem = 'Erro no preenchimento do formulário. ';
       return FALSE;
     }
+  }
+
+  function Excluir()
+  {
+    if (isset($this->getRequest()->id)) {
+
+      $sql = "SELECT id FROM modules.componente_curricular WHERE area_conhecimento_id = ". $this->getRequest()->id;
+      $db = new clsBanco();
+      $db->Consulta($sql);
+      if($db->numLinhas()){
+        $this->mensagem = 'Não é possível excluir esta área de conhecimento, pois a mesma possui vinculo com componentes curriculares.';
+        return FALSE;
+      }
+
+      if ($this->getDataMapper()->delete($this->getRequest()->id)) {
+        if (is_array($this->getOption('delete_success_params'))) {
+          $params = http_build_query($this->getOption('delete_success_params'));
+        }
+
+        $this->redirect(
+          $this->getDispatcher()->getControllerName() . '/' .
+          $this->getOption('delete_success') .
+          (isset($params) ? '?' . $params : '')
+        );
+      }
+    }
+    return FALSE;
   }
 
 }

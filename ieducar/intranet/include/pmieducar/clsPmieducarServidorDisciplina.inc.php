@@ -232,8 +232,12 @@ class clsPmieducarServidorDisciplina
       $whereAnd = " AND ";
     }
 
-    if (is_numeric($int_ref_cod_servidor)) {
+    if (is_numeric($int_ref_cod_servidor) && $int_ref_cod_servidor > 0) {
       $filtros .= "{$whereAnd} ref_cod_servidor = '{$int_ref_cod_servidor}'";
+      $whereAnd = " AND ";
+    }
+    else{
+      $filtros .= "{$whereAnd} ref_cod_servidor = '0'";
       $whereAnd = " AND ";
     }
 

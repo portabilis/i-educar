@@ -566,9 +566,9 @@ class clsModulesFichaMedicaAluno
       $set .= "altura = '{$this->altura}'";
   
       $set .= ",peso = '{$this->peso}'";
-  
+      
       $set .= ",grupo_sanguineo = '{$this->grupo_sanguineo}'";
-  
+
       $set .= ",fator_rh = '{$this->fator_rh}'";
   
       $set .= ",alergia_medicamento = '{$this->alergia_medicamento}'";
@@ -650,7 +650,7 @@ class clsModulesFichaMedicaAluno
       $set .= ",responsavel_parentesco_telefone = '{$this->responsavel_parentesco_telefone}'";
   
       $set .= ",responsavel_parentesco_celular = '{$this->responsavel_parentesco_celular}'";
-  
+
       if ($set) {
         $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE ref_cod_aluno = '{$this->ref_cod_aluno}'");
         return TRUE;
