@@ -670,7 +670,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
           $sequencial = $this->getNextHistoricoDisciplinasSequencial($historicoSequencial, $alunoId);
 
-          if ($tpNota == $cnsNota::NUMERICA) {
+          if ($this->getRequest()->notas == 'buscar-boletim') {
             $nota = number_format(($value['nota_conceitual_numerica']/$value['count']), 2, ',', '');
           }
           if ($processarMediaGeral) {
