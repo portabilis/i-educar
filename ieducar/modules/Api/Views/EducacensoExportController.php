@@ -86,13 +86,12 @@ class EducacensoExportController extends ApiCoreController
                   Portabilis_Date_Utils::brToPgSQL($data_ini),
                   Portabilis_Date_Utils::brToPgSQL($data_fim));
 
-
     if($this->error){
       return array("error" => true,
                    "mensagem" => $this->msg);
     }
 
-    return array('conteudo' => $conteudo);
+    return array('conteudo' => Portabilis_String_Utils::toUtf8($conteudo));
   }
 
   protected function exportaDadosCensoPorEscola($escolaId, $ano, $data_ini, $data_fim){
