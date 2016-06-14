@@ -304,22 +304,20 @@ class DiarioController extends ApiCoreController
 
         foreach ($parecerTurma as $alunoId => $parecerTurmaAluno) {
           if($this->findMatriculaByTurmaAndAluno($turmaId, $alunoId)){
-          
-            if($this->validateMatricula($matriculaId)){
-              foreach ($parecerTurmaAluno as $componenteCurricularId => $parecerTurmaAlunoComponente) {
-                if($this->validateComponenteTurma($turmaId, $componenteCurricularId)){
+            
+            foreach ($parecerTurmaAluno as $componenteCurricularId => $parecerTurmaAlunoComponente) {
+              if($this->validateComponenteTurma($turmaId, $componenteCurricularId)){
 
-                  $parecer = $parecerTurmaAlunoComponente['valor'];
+                $parecer = $parecerTurmaAlunoComponente['valor'];
 
-                  $parecerDescritivo = new Avaliacao_Model_ParecerDescritivoComponente(array(
-                    'componenteCurricular' => $componenteCurricularId,
-                    'parecer'              => Portabilis_String_Utils::toLatin1($parecer),
-                    'etapa'                => $etapa
-                  ));
+                $parecerDescritivo = new Avaliacao_Model_ParecerDescritivoComponente(array(
+                  'componenteCurricular' => $componenteCurricularId,
+                  'parecer'              => Portabilis_String_Utils::toLatin1($parecer),
+                  'etapa'                => $etapa
+                ));
 
-                  $this->serviceBoletim($turmaId, $alunoId)->addParecer($parecerDescritivo);
-                  $this->trySaveServiceBoletim($turmaId, $alunoId);
-                }
+                $this->serviceBoletim($turmaId, $alunoId)->addParecer($parecerDescritivo);
+                $this->trySaveServiceBoletim($turmaId, $alunoId);
               }
             }
           }
@@ -342,21 +340,18 @@ class DiarioController extends ApiCoreController
         foreach ($parecerTurma as $alunoId => $parecerTurmaAluno) {
           if($this->findMatriculaByTurmaAndAluno($turmaId, $alunoId)){
 
-            if($this->validateMatricula($matriculaId)){
+            foreach ($parecerTurmaAluno as $componenteCurricularId => $parecerTurmaAlunoComponente) {
+              if($this->validateComponenteCurricular($matriculaId, $componenteCurricularId)){
 
-              foreach ($parecerTurmaAluno as $componenteCurricularId => $parecerTurmaAlunoComponente) {
-                if($this->validateComponenteCurricular($matriculaId, $componenteCurricularId)){
+                $parecer = $parecerTurmaAlunoComponente['valor'];
 
-                  $parecer = $parecerTurmaAlunoComponente['valor'];
+                $parecerDescritivo = new Avaliacao_Model_ParecerDescritivoComponente(array(
+                  'componenteCurricular' => $componenteCurricularId,
+                  'parecer'              => Portabilis_String_Utils::toLatin1($parecer)
+                ));
 
-                  $parecerDescritivo = new Avaliacao_Model_ParecerDescritivoComponente(array(
-                    'componenteCurricular' => $componenteCurricularId,
-                    'parecer'              => Portabilis_String_Utils::toLatin1($parecer)
-                  ));
-
-                  $this->serviceBoletim($turmaId, $alunoId)->addParecer($parecerDescritivo);
-                  $this->trySaveServiceBoletim($turmaId, $alunoId);
-                }
+                $this->serviceBoletim($turmaId, $alunoId)->addParecer($parecerDescritivo);
+                $this->trySaveServiceBoletim($turmaId, $alunoId);
               }
             }
           }
