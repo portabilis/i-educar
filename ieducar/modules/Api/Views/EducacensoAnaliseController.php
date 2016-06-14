@@ -169,6 +169,7 @@ class EducacensoAnaliseController extends ApiCoreController
                    escola.energia_gerador AS energia_gerador,
                    escola.energia_outros AS energia_outros,
                    escola.energia_inexistente AS energia_inexistente,
+                   escola.esgoto_rede_publica AS esgoto_rede_publica,
                    escola.esgoto_fossa AS esgoto_fossa,
                    escola.esgoto_inexistente AS esgoto_inexistente,
                    escola.lixo_coleta_periodica AS lixo_coleta_periodica,
@@ -258,7 +259,7 @@ class EducacensoAnaliseController extends ApiCoreController
                                    $escola["energia_outros"] ||
                                    $escola["energia_inexistente"]);
 
-    $existeEsgotoSanitario = ($escola["esgoto_fossa"] || $escola["esgoto_inexistente"]);
+    $existeEsgotoSanitario = ($escola["esgoto_rede_publica"] || $escola["esgoto_fossa"] || $escola["esgoto_inexistente"]);
 
     $existeDestinacaoLixo = ($escola["lixo_coleta_periodica"] ||
                              $escola["lixo_queima"] ||
