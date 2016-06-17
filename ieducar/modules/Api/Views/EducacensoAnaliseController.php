@@ -86,7 +86,7 @@ class EducacensoAnaliseController extends ApiCoreController
     }
 
     $escola       = $escola[0];
-    $nomeEscola   = Portabilis_String_Utils::toUtf8(strtoupper($escola["nome_escola"]));
+    $nomeEscola   = Portabilis_String_Utils::toUtf8(mb_strtoupper($escola["nome_escola"]));
     $anoAtual     = date("Y");
     $anoAnterior  = $anoAtual-1;
     $anoPosterior = $anoAtual+1;
@@ -245,7 +245,7 @@ class EducacensoAnaliseController extends ApiCoreController
     }
 
     $escola        = $escola[0];
-    $nomeEscola    = Portabilis_String_Utils::toUtf8(strtoupper($escola["nome_escola"]));
+    $nomeEscola    = Portabilis_String_Utils::toUtf8(mb_strtoupper($escola["nome_escola"]));
     $predioEscolar = 3; //Valor fixo definido no cadastro de escola
 
     $existeAbastecimentoAgua = ($escola["agua_rede_publica"] ||
@@ -434,8 +434,8 @@ class EducacensoAnaliseController extends ApiCoreController
 
     foreach ($turmas as $turma) {
 
-      $nomeEscola = Portabilis_String_Utils::toUtf8(strtoupper($turma["nome_escola"]));
-      $nomeTurma  = Portabilis_String_Utils::toUtf8(strtoupper($turma["nome_turma"]));
+      $nomeEscola = Portabilis_String_Utils::toUtf8(mb_strtoupper($turma["nome_escola"]));
+      $nomeTurma  = Portabilis_String_Utils::toUtf8(mb_strtoupper($turma["nome_turma"]));
       $atividadeComplementar = ($turma["tipo_atendimento"] == 4); //Código 4 fixo no cadastro de turma
       $existeAtividadeComplementar = ($turma["atividade_complementar_1"] || $turma["atividade_complementar_2"] ||
                                       $turma["atividade_complementar_3"] || $turma["atividade_complementar_4"] ||
@@ -529,8 +529,8 @@ class EducacensoAnaliseController extends ApiCoreController
     $mensagem = array();
 
     $escola        = $escola[0];
-    $nomeEscola    = Portabilis_String_Utils::toUtf8(strtoupper($escola["nome_escola"]));
-    $nomeServidor  = Portabilis_String_Utils::toUtf8(strtoupper($escola["nome_servidor"]));
+    $nomeEscola    = Portabilis_String_Utils::toUtf8(mb_strtoupper($escola["nome_escola"]));
+    $nomeServidor  = Portabilis_String_Utils::toUtf8(mb_strtoupper($escola["nome_servidor"]));
     $brasileiro = 1;
 
     if (!$escola["cor_raca"]) {
