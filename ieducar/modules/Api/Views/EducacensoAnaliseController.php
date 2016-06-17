@@ -471,7 +471,7 @@ class EducacensoAnaliseController extends ApiCoreController
       if ($atividadeComplementar && !$existeAtividadeComplementar) {
         $mensagem[] = array("text" => "Dados para formular o registro 20 da escola {$nomeEscola} não encontrados. Verificamos que o tipo de atendimento da turma {$nomeTurma} é de atividade complementar, portanto obrigatoriamente é necessário informar o código de ao menos uma atividade conforme a 'Tabela de Tipo de Atividade Complementar'.",
                             "path" => "(Cadastros > Turma > Cadastrar > Editar > Aba: Dados adicionais > Campo: Código do tipo de atividade complementar)",
-                          "fail" => true);   
+                          "fail" => true);
       }
       if ($atendimentoAee && !$existeAee) {
         $mensagem[] = array("text" => "Dados para formular o registro 20 da escola {$nomeEscola} não encontrados. Verificamos que o tipo de atendimento da turma {$nomeTurma} é de educação especializada - AEE, portanto obrigatoriamente é necessário informar ao menos uma atividade realizada. ",
@@ -485,6 +485,80 @@ class EducacensoAnaliseController extends ApiCoreController
 
   }
 
+
+  protected function analisaEducacensoRegistro30() {
+
+    $escola = $this->getRequest()->escola;
+    $ano    = $this->getRequest()->ano;
+
+    $sql = "SELECT juridica.fantasia AS nome_escola,
+                   fisica_raca.ref_cod_raca AS cor_raca,
+                   fisica.nacionalidade AS nacionalidade,
+                   uf.cod_ibge AS uf_inep,
+                   municipio.cod_ibge AS municipio_inep,
+                   pessoa.nome AS nome_servidor
+              FROM modules.professor_turma
+             INNER JOIN pmieducar.turma ON (turma.cod_turma = professor_turma.turma_id)
+             INNER JOIN pmieducar.escola ON (escola.cod_escola = turma.ref_ref_cod_escola)
+             INNER JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
+              LEFT JOIN cadastro.fisica_raca ON (fisica_raca.ref_idpes = professor_turma.servidor_id)
+             INNER JOIN cadastro.pessoa ON (pessoa.idpes = professor_turma.servidor_id)
+             INNER JOIN cadastro.fisica ON (fisica.idpes = professor_turma.servidor_id)
+             INNER JOIN cadastro.endereco_pessoa ON (endereco_pessoa.idpes = professor_turma.servidor_id)
+              LEFT JOIN public.municipio ON (municipio.idmun = fisica.idmun_nascimento)
+              LEFT JOIN public.uf ON (uf.sigla_uf = municipio.sigla_uf)
+             WHERE professor_turma.ano = $1
+               AND turma.ano = professor_turma.ano
+               AND escola.cod_escola = $2
+             GROUP BY professor_turma.servidor_id,
+                      juridica.fantasia,
+                      fisica_raca.ref_cod_raca,
+                      fisica.nacionalidade,
+                      uf.cod_ibge,
+                      municipio.cod_ibge,
+                      pessoa.nome
+              ORDER BY nome_servidor";
+
+    $escola = $this->fetchPreparedQuery($sql, array($ano, $escola));
+
+    if(empty($escola)){
+      $this->messenger->append("Nenhum registro encontrado.");
+      return array('title' => "Análise exportação - Registro 30");
+    }
+
+    $mensagem = array();
+
+    $escola        = $escola[0];
+    $nomeEscola    = Portabilis_String_Utils::toUtf8(strtoupper($escola["nome_escola"]));
+    $nomeServidor  = Portabilis_String_Utils::toUtf8(strtoupper($escola["nome_servidor"]));
+    $brasileiro = 1;
+
+    if (!$escola["cor_raca"]) {
+      $mensagem[] = array("text" => "Dados para formular o registro 30 da escola {$nomeEscola} não encontrados. Verifique se a raça do(a) servidor(a) {$nomeServidor} foi informada.",
+                          "path" => "(Pessoa FJ > Pessoa física > Editar > Campo: Raça)",
+                          "fail" => true);
+    }
+    if (!$escola["nacionalidade"]) {
+      $mensagem[] = array("text" => "Dados para formular o registro 30 da escola {$nomeEscola} não encontrados. Verifique se a nacionalidade do(a) servidor(a) {$nomeServidor} foi informada.",
+                          "path" => "(Pessoa FJ > Pessoa física > Editar > Campo: Nacionalidade)",
+                          "fail" => true);
+    } else {
+      if ($escola["nacionalidade"] == $brasileiro && !$escola['uf_inep']) {
+        $mensagem[] = array("text" => "Dados para formular o registro 30 da escola {$nomeEscola} não encontrados. Verificamos que a nacionalidade do(a) servidor(a) {$nomeServidor} é brasileiro(a), portanto é necessário preencher o código da UF de nascimento conforme a 'Tabela de UF'.",
+                            "path" => "(Endereçamento > Estado > Editar > Campo: Código INEP)",
+                            "fail" => true);
+      }
+      if ($escola["nacionalidade"] == $brasileiro && !$escola['municipio_inep']) {
+        $mensagem[] = array("text" => "Dados para formular o registro 30 da escola {$nomeEscola} não encontrados. Verificamos que a nacionalidade do(a) servidor(a) {$nomeServidor} é brasileiro(a), portanto é necessário preencher o código do município de nascimento conforme a 'Tabela de Municípios'",
+                            "path" => "(Endereçamento > Estado > Editar > Campo: Código INEP)",
+                            "fail" => true);
+      }
+    }
+    return array('mensagens' => $mensagem,
+                 'title'     => "Análise exportação - Registro 30");
+
+  }
+
   public function Gerar() {
     if ($this->isRequestFor('get', 'registro-00'))
       $this->appendResponse($this->analisaEducacensoRegistro00());
@@ -492,6 +566,8 @@ class EducacensoAnaliseController extends ApiCoreController
       $this->appendResponse($this->analisaEducacensoRegistro10());
     else if ($this->isRequestFor('get', 'registro-20'))
       $this->appendResponse($this->analisaEducacensoRegistro20());
+    else if ($this->isRequestFor('get', 'registro-30'))
+      $this->appendResponse($this->analisaEducacensoRegistro30());
     else
       $this->notImplementedOperationError();
   }
