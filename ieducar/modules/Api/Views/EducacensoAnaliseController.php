@@ -485,7 +485,6 @@ class EducacensoAnaliseController extends ApiCoreController
 
   }
 
-
   protected function analisaEducacensoRegistro30() {
 
     $escola = $this->getRequest()->escola;
@@ -504,7 +503,7 @@ class EducacensoAnaliseController extends ApiCoreController
               LEFT JOIN cadastro.fisica_raca ON (fisica_raca.ref_idpes = professor_turma.servidor_id)
              INNER JOIN cadastro.pessoa ON (pessoa.idpes = professor_turma.servidor_id)
              INNER JOIN cadastro.fisica ON (fisica.idpes = professor_turma.servidor_id)
-             INNER JOIN cadastro.endereco_pessoa ON (endereco_pessoa.idpes = professor_turma.servidor_id)
+              LEFT JOIN cadastro.endereco_pessoa ON (endereco_pessoa.idpes = professor_turma.servidor_id)
               LEFT JOIN public.municipio ON (municipio.idmun = fisica.idmun_nascimento)
               LEFT JOIN public.uf ON (uf.sigla_uf = municipio.sigla_uf)
              WHERE professor_turma.ano = $1
@@ -519,43 +518,112 @@ class EducacensoAnaliseController extends ApiCoreController
                       pessoa.nome
               ORDER BY nome_servidor";
 
-    $escola = $this->fetchPreparedQuery($sql, array($ano, $escola));
+    $servidor = $this->fetchPreparedQuery($sql, array($ano, $escola));
 
-    if(empty($escola)){
-      $this->messenger->append("Nenhum registro encontrado.");
+    if(empty($servidor)){
+      $this->messenger->append("Nenhum servidor encontrado.");
       return array('title' => "Análise exportação - Registro 30");
     }
 
     $mensagem = array();
 
-    $escola        = $escola[0];
-    $nomeEscola    = Portabilis_String_Utils::toUtf8(mb_strtoupper($escola["nome_escola"]));
-    $nomeServidor  = Portabilis_String_Utils::toUtf8(mb_strtoupper($escola["nome_servidor"]));
+    $servidor      = $servidor[0];
+    $nomeEscola    = Portabilis_String_Utils::toUtf8(mb_strtoupper($servidor["nome_escola"]));
+    $nomeServidor  = Portabilis_String_Utils::toUtf8(mb_strtoupper($servidor["nome_servidor"]));
     $brasileiro = 1;
 
-    if (!$escola["cor_raca"]) {
+    if (!$servidor["cor_raca"]) {
       $mensagem[] = array("text" => "Dados para formular o registro 30 da escola {$nomeEscola} não encontrados. Verifique se a raça do(a) servidor(a) {$nomeServidor} foi informada.",
                           "path" => "(Pessoa FJ > Pessoa física > Editar > Campo: Raça)",
                           "fail" => true);
     }
-    if (!$escola["nacionalidade"]) {
+    if (!$servidor["nacionalidade"]) {
       $mensagem[] = array("text" => "Dados para formular o registro 30 da escola {$nomeEscola} não encontrados. Verifique se a nacionalidade do(a) servidor(a) {$nomeServidor} foi informada.",
                           "path" => "(Pessoa FJ > Pessoa física > Editar > Campo: Nacionalidade)",
                           "fail" => true);
     } else {
-      if ($escola["nacionalidade"] == $brasileiro && !$escola['uf_inep']) {
+      if ($servidor["nacionalidade"] == $brasileiro && !$servidor['uf_inep']) {
         $mensagem[] = array("text" => "Dados para formular o registro 30 da escola {$nomeEscola} não encontrados. Verificamos que a nacionalidade do(a) servidor(a) {$nomeServidor} é brasileiro(a), portanto é necessário preencher o código da UF de nascimento conforme a 'Tabela de UF'.",
                             "path" => "(Endereçamento > Estado > Editar > Campo: Código INEP)",
                             "fail" => true);
       }
-      if ($escola["nacionalidade"] == $brasileiro && !$escola['municipio_inep']) {
-        $mensagem[] = array("text" => "Dados para formular o registro 30 da escola {$nomeEscola} não encontrados. Verificamos que a nacionalidade do(a) servidor(a) {$nomeServidor} é brasileiro(a), portanto é necessário preencher o código do município de nascimento conforme a 'Tabela de Municípios'",
+      if ($servidor["nacionalidade"] == $brasileiro && !$servidor['municipio_inep']) {
+        $mensagem[] = array("text" => "Dados para formular o registro 30 da escola {$nomeEscola} não encontrados. Verificamos que a nacionalidade do(a) servidor(a) {$nomeServidor} é brasileiro(a), portanto é necessário preencher o código do município de nascimento conforme a 'Tabela de Municípios'.",
                             "path" => "(Endereçamento > Estado > Editar > Campo: Código INEP)",
                             "fail" => true);
       }
     }
     return array('mensagens' => $mensagem,
                  'title'     => "Análise exportação - Registro 30");
+
+  }
+
+  protected function analisaEducacensoRegistro40() {
+
+    $escola = $this->getRequest()->escola;
+    $ano    = $this->getRequest()->ano;
+
+    $sql = "SELECT juridica.fantasia AS nome_escola,
+                   fisica.nacionalidade AS nacionalidade,
+                   uf.cod_ibge AS uf_inep,
+                   municipio.cod_ibge AS municipio_inep,
+                   pessoa.nome AS nome_servidor,
+                   fisica.cpf AS cpf,
+                   endereco_pessoa.cep AS cep
+             FROM modules.professor_turma
+            INNER JOIN pmieducar.turma ON (turma.cod_turma = professor_turma.turma_id)
+            INNER JOIN pmieducar.escola ON (escola.cod_escola = turma.ref_ref_cod_escola)
+            INNER JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
+            INNER JOIN cadastro.pessoa ON (pessoa.idpes = professor_turma.servidor_id)
+            INNER JOIN cadastro.fisica ON (fisica.idpes = professor_turma.servidor_id)
+             LEFT JOIN cadastro.endereco_pessoa ON (endereco_pessoa.idpes = professor_turma.servidor_id)
+             LEFT JOIN public.municipio ON (municipio.idmun = fisica.idmun_nascimento)
+             LEFT JOIN public.uf ON (uf.sigla_uf = municipio.sigla_uf)
+            WHERE professor_turma.ano = $1
+              AND turma.ano = professor_turma.ano
+              AND escola.cod_escola = $2
+            GROUP BY professor_turma.servidor_id,
+                     juridica.fantasia,
+                     fisica.nacionalidade,
+                     uf.cod_ibge,
+                     municipio.cod_ibge,
+                     pessoa.nome,
+                     fisica.cpf,
+                     endereco_pessoa.cep
+            ORDER BY pessoa.nome";
+
+    $servidor = $this->fetchPreparedQuery($sql, array($ano, $escola));
+
+    if(empty($servidor)){
+      $this->messenger->append("Nenhum servidor encontrado.");
+      return array('title' => "Análise exportação - Registro 40");
+    }
+
+    $mensagem = array();
+
+    $servidor      = $servidor[0];
+    $nomeEscola    = Portabilis_String_Utils::toUtf8(mb_strtoupper($servidor["nome_escola"]));
+    $nomeServidor  = Portabilis_String_Utils::toUtf8(mb_strtoupper($servidor["nome_servidor"]));
+    $brasileiro = 1;
+
+    if ($servidor["nacionalidade"] == $brasileiro && !$servidor['cpf']) {
+      $mensagem[] = array("text" => "Dados para formular o registro 40 da escola {$nomeEscola} não encontrados. Verificamos que a nacionalidade do(a) servidor(a) {$nomeServidor} é brasileiro(a)/naturalizado brasileiro(a), portanto é necessário informar seu CPF.",
+                          "path" => "(Pessoa FJ > Pessoa física > Editar > Campo: CPF)",
+                          "fail" => true);
+    }
+    if (!$servidor["cep"] && !$servidor['uf_inep']) {
+      $mensagem[] = array("text" => "Dados para formular o registro 40 da escola {$nomeEscola} não encontrados. Verificamos que no cadastro do(a) servidor(a) {$nomeServidor} o endereçamento foi informado, portanto é necessário cadastrar código da UF informada conforme a 'Tabela de UF'.",
+                          "path" => "(Endereçamento > Estado > Editar > Campo: Código INEP)",
+                          "fail" => true);
+    }
+    if (!$servidor["cep"] && !$servidor['municipio_inep']) {
+      $mensagem[] = array("text" => "Dados para formular o registro 40 da escola {$nomeEscola} não encontrados. Verificamos que no cadastro do(a) servidor(a) {$nomeServidor} o endereçamento foi informado, portanto é necessário cadastrar código do município informado conforme a 'Tabela de Municípios'.",
+                          "path" => "(Endereçamento > Município > Editar > Campo: Código INEP)",
+                          "fail" => true);
+    }
+
+    return array('mensagens' => $mensagem,
+                 'title'     => "Análise exportação - Registro 40");
 
   }
 
@@ -568,6 +636,8 @@ class EducacensoAnaliseController extends ApiCoreController
       $this->appendResponse($this->analisaEducacensoRegistro20());
     else if ($this->isRequestFor('get', 'registro-30'))
       $this->appendResponse($this->analisaEducacensoRegistro30());
+    else if ($this->isRequestFor('get', 'registro-40'))
+      $this->appendResponse($this->analisaEducacensoRegistro40());
     else
       $this->notImplementedOperationError();
   }
