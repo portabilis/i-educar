@@ -627,6 +627,222 @@ class EducacensoAnaliseController extends ApiCoreController
 
   }
 
+  protected function analisaEducacensoRegistro50() {
+
+    $escola = $this->getRequest()->escola;
+    $ano    = $this->getRequest()->ano;
+
+    $sql = "SELECT juridica.fantasia AS nome_escola,
+                   pessoa.nome AS nome_servidor,
+                   servidor.ref_idesco AS escolaridade,
+                   servidor.situacao_curso_superior_1 AS situacao_curso_superior_1,
+                   servidor.codigo_curso_superior_1 AS codigo_curso_superior_1,
+                   servidor.ano_inicio_curso_superior_1 AS ano_inicio_curso_superior_1,
+                   servidor.ano_conclusao_curso_superior_1 AS ano_conclusao_curso_superior_1,
+                   servidor.instituicao_curso_superior_1 AS instituicao_curso_superior_1,
+                   servidor.situacao_curso_superior_2 AS situacao_curso_superior_2,
+                   servidor.codigo_curso_superior_2 AS codigo_curso_superior_2,
+                   servidor.ano_inicio_curso_superior_2 AS ano_inicio_curso_superior_2,
+                   servidor.ano_conclusao_curso_superior_2 AS ano_conclusao_curso_superior_2,
+                   servidor.instituicao_curso_superior_2 AS instituicao_curso_superior_2,
+                   servidor.situacao_curso_superior_3 AS situacao_curso_superior_3,
+                   servidor.codigo_curso_superior_3 AS codigo_curso_superior_3,
+                   servidor.ano_inicio_curso_superior_3 AS ano_inicio_curso_superior_3,
+                   servidor.ano_conclusao_curso_superior_3 AS ano_conclusao_curso_superior_3,
+                   servidor.instituicao_curso_superior_3 AS instituicao_curso_superior_3,
+                   servidor.pos_especializacao AS pos_especializacao,
+                   servidor.pos_mestrado AS pos_mestrado,
+                   servidor.pos_doutorado AS pos_doutorado,
+                   servidor.pos_nenhuma AS pos_nenhuma,
+                   servidor.curso_creche AS curso_creche,
+                   servidor.curso_pre_escola AS curso_pre_escola,
+                   servidor.curso_anos_iniciais AS curso_anos_iniciais,
+                   servidor.curso_anos_finais AS curso_anos_finais,
+                   servidor.curso_ensino_medio AS curso_ensino_medio,
+                   servidor.curso_eja AS curso_eja,
+                   servidor.curso_educacao_especial AS curso_educacao_especial,
+                   servidor.curso_educacao_indigena AS curso_educacao_indigena,
+                   servidor.curso_educacao_campo AS curso_educacao_campo,
+                   servidor.curso_educacao_ambiental AS curso_educacao_ambiental,
+                   servidor.curso_educacao_direitos_humanos AS curso_educacao_direitos_humanos,
+                   servidor.curso_genero_diversidade_sexual AS curso_genero_diversidade_sexual,
+                   servidor.curso_direito_crianca_adolescente AS curso_direito_crianca_adolescente,
+                   servidor.curso_relacoes_etnicorraciais AS curso_relacoes_etnicorraciais,
+                   servidor.curso_outros AS curso_outros,
+                   servidor.curso_nenhum AS curso_nenhum
+              FROM modules.professor_turma
+             INNER JOIN pmieducar.servidor ON (servidor.cod_servidor = professor_turma.servidor_id)
+             INNER JOIN pmieducar.turma ON (turma.cod_turma = professor_turma.turma_id)
+             INNER JOIN pmieducar.escola ON (escola.cod_escola = turma.ref_ref_cod_escola)
+             INNER JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
+             INNER JOIN cadastro.pessoa ON (pessoa.idpes = professor_turma.servidor_id)
+             WHERE professor_turma.ano = $1
+               AND turma.ano = professor_turma.ano
+               AND escola.cod_escola = $2
+             GROUP BY professor_turma.servidor_id,
+                      juridica.fantasia,
+                      pessoa.nome,
+                      servidor.ref_idesco,
+                      servidor.situacao_curso_superior_1,
+                      servidor.codigo_curso_superior_1 ,
+                      servidor.ano_inicio_curso_superior_1,
+                      servidor.ano_conclusao_curso_superior_1,
+                      servidor.instituicao_curso_superior_1,
+                      servidor.situacao_curso_superior_2,
+                      servidor.codigo_curso_superior_2,
+                      servidor.ano_inicio_curso_superior_2,
+                      servidor.ano_conclusao_curso_superior_2,
+                      servidor.instituicao_curso_superior_2,
+                      servidor.situacao_curso_superior_3,
+                      servidor.codigo_curso_superior_3,
+                      servidor.ano_inicio_curso_superior_3,
+                      servidor.ano_conclusao_curso_superior_3,
+                      servidor.instituicao_curso_superior_3,
+                      servidor.pos_especializacao,
+                      servidor.pos_mestrado,
+                      servidor.pos_doutorado,
+                      servidor.pos_nenhuma,
+                      servidor.curso_creche,
+                      servidor.curso_pre_escola,
+                      servidor.curso_anos_iniciais,
+                      servidor.curso_anos_finais,
+                      servidor.curso_ensino_medio,
+                      servidor.curso_eja,
+                      servidor.curso_educacao_especial,
+                      servidor.curso_educacao_indigena,
+                      servidor.curso_educacao_campo,
+                      servidor.curso_educacao_ambiental,
+                      servidor.curso_educacao_direitos_humanos,
+                      servidor.curso_genero_diversidade_sexual,
+                      servidor.curso_direito_crianca_adolescente,
+                      servidor.curso_relacoes_etnicorraciais,
+                      servidor.curso_outros,
+                      servidor.curso_nenhum
+             ORDER BY pessoa.nome";
+
+    $servidor = $this->fetchPreparedQuery($sql, array($ano, $escola));
+
+    if(empty($servidor)){
+      $this->messenger->append("Nenhum servidor encontrado.");
+      return array('title' => "Análise exportação - Registro 50");
+    }
+
+    $mensagem = array();
+
+    $servidor      = $servidor[0];
+    $nomeEscola    = Portabilis_String_Utils::toUtf8(mb_strtoupper($servidor["nome_escola"]));
+    $nomeServidor  = Portabilis_String_Utils::toUtf8(mb_strtoupper($servidor["nome_servidor"]));
+    $superiorCompleto  = 6;
+    $situacaoConcluido = 1;
+    $situacaoCursando  = 2;
+
+    $existeCursoConcluido = ($servidor["situacao_curso_superior_1"] == $situacaoConcluido ||
+                             $servidor["situacao_curso_superior_2"] == $situacaoConcluido ||
+                             $servidor["situacao_curso_superior_3"] == $situacaoConcluido);
+    $existePosGraduacao = ($servidor["pos_especializacao"] || $servidor["pos_mestrado"] ||
+                           $servidor["pos_doutorado"] || $servidor["pos_nenhuma"]);
+
+    $existeCursoFormacaoContinuada = ($servidor["curso_creche"] ||
+                                      $servidor["curso_pre_escola"] ||
+                                      $servidor["curso_anos_iniciais"] ||
+                                      $servidor["curso_anos_finais"] ||
+                                      $servidor["curso_ensino_medio"] ||
+                                      $servidor["curso_eja"] ||
+                                      $servidor["curso_educacao_especial"] ||
+                                      $servidor["curso_educacao_indigena"] ||
+                                      $servidor["curso_educacao_campo"] ||
+                                      $servidor["curso_educacao_ambiental"] ||
+                                      $servidor["curso_educacao_direitos_humanos"] ||
+                                      $servidor["curso_genero_diversidade_sexual"] ||
+                                      $servidor["curso_direito_crianca_adolescente"] ||
+                                      $servidor["curso_relacoes_etnicorraciais"] ||
+                                      $servidor["curso_outros"] ||
+                                      $servidor["curso_nenhum"]);
+
+    if (!$servidor["escolaridade"]) {
+      $mensagem[] = array("text" => "Dados para formular o registro 50 da escola {$nomeEscola} não encontrados. Verifique se a escolaridade do(a) servidor(a) {$nomeServidor} foi informada.",
+                          "path" => "(Servidores > Cadastrar > Editar > Aba: Dados adicionais > Campo: Escolaridade)",
+                          "fail" => true);
+    }
+    if ($servidor["escolaridade"] == $superiorCompleto && !$servidor["situacao_curso_superior_1"]) {
+        $mensagem[] = array("text" => "Dados para formular o registro 50 da escola {$nomeEscola} não encontrados. Verificamos que a escolaridade do(a) servidor(a) {$nomeServidor} é superior, portanto é necessário informar a situação do curso superior 1.",
+                            "path" => "(Servidores > Cadastrar > Editar > Aba: Dados adicionais > Campo: Situação do curso superior 1)",
+                            "fail" => true);
+    }
+    if ($servidor["situacao_curso_superior_1"] && !$servidor["codigo_curso_superior_1"]) {
+      $mensagem[] = array("text" => "Dados para formular o registro 50 da escola {$nomeEscola} não encontrados. Verificamos que a escolaridade do(a) servidor(a) {$nomeServidor} é superior, portanto é necessário informar o nome do curso superior 1.",
+                          "path" => "(Servidores > Cadastrar > Editar > Aba: Dados adicionais > Campo: Curso superior 1)",
+                          "fail" => true);
+    }
+    if ($servidor["situacao_curso_superior_1"] == $situacaoCursando && !$servidor["ano_inicio_curso_superior_1"]) {
+      $mensagem[] = array("text" => "Dados para formular o registro 50 da escola {$nomeEscola} não encontrados. Verificamos que o(a) servidor(a) {$nomeServidor} está cursando um curso superior, portanto é necessário informar o ano de início deste respectivo curso.",
+                          "path" => "(Servidores > Cadastrar > Editar > Aba: Dados adicionais > Campo: Ano de início do curso superior 1)",
+                          "fail" => true);
+    }
+    if ($servidor["situacao_curso_superior_1"] == $situacaoConcluido && !$servidor["ano_conclusao_curso_superior_1"]) {
+      $mensagem[] = array("text" => "Dados para formular o registro 50 da escola {$nomeEscola} não encontrados. Verificamos que o(a) servidor(a) {$nomeServidor} concluiu um curso superior, portanto é necessário informar o ano de conclusão deste respectivo curso.",
+                          "path" => "(Servidores > Cadastrar > Editar > Aba: Dados adicionais > Campo: Ano de conclusão do curso superior 1)",
+                          "fail" => true);
+    }
+    if ($servidor["situacao_curso_superior_1"] && !$servidor["instituicao_curso_superior_1"]) {
+      $mensagem[] = array("text" => "Dados para formular o registro 50 da escola {$nomeEscola} não encontrados. Verificamos que a escolaridade do(a) servidor(a) {$nomeServidor} é superior, portanto é necessário informar o nome da instituição do curso superior 1.",
+                          "path" => "(Servidores > Cadastrar > Editar > Aba: Dados adicionais > Campo: Instituição do curso superior 1)",
+                          "fail" => true);
+    }
+    if ($servidor["situacao_curso_superior_2"] && !$servidor["codigo_curso_superior_2"]) {
+      $mensagem[] = array("text" => "Dados para formular o registro 50 da escola {$nomeEscola} não encontrados. Verificamos que a escolaridade do(a) servidor(a) {$nomeServidor} é superior, portanto é necessário informar o nome do curso superior 2.",
+                          "path" => "(Servidores > Cadastrar > Editar > Aba: Dados adicionais > Campo: Curso superior 2)",
+                          "fail" => true);
+    }
+    if ($servidor["situacao_curso_superior_2"] == $situacaoCursando && !$servidor["ano_inicio_curso_superior_2"]) {
+      $mensagem[] = array("text" => "Dados para formular o registro 50 da escola {$nomeEscola} não encontrados. Verificamos que o(a) servidor(a) {$nomeServidor} está cursando um curso superior, portanto é necessário informar o ano de início deste respectivo curso.",
+                          "path" => "(Servidores > Cadastrar > Editar > Aba: Dados adicionais > Campo: Ano de início do curso superior 2)",
+                          "fail" => true);
+    }
+    if ($servidor["situacao_curso_superior_2"] == $situacaoConcluido && !$servidor["ano_conclusao_curso_superior_2"]) {
+      $mensagem[] = array("text" => "Dados para formular o registro 50 da escola {$nomeEscola} não encontrados. Verificamos que o(a) servidor(a) {$nomeServidor} concluiu um curso superior, portanto é necessário informar o ano de conclusão deste respectivo curso.",
+                          "path" => "(Servidores > Cadastrar > Editar > Aba: Dados adicionais > Campo: Ano de conclusão do curso superior 2)",
+                          "fail" => true);
+    }
+    if ($servidor["situacao_curso_superior_2"] && !$servidor["instituicao_curso_superior_2"]) {
+      $mensagem[] = array("text" => "Dados para formular o registro 50 da escola {$nomeEscola} não encontrados. Verificamos que a escolaridade do(a) servidor(a) {$nomeServidor} é superior, portanto é necessário informar o nome da instituição do curso superior 2.",
+                          "path" => "(Servidores > Cadastrar > Editar > Aba: Dados adicionais > Campo: Instituição do curso superior 2)",
+                          "fail" => true);
+    }
+    if ($servidor["situacao_curso_superior_3"] && !$servidor["codigo_curso_superior_3"]) {
+      $mensagem[] = array("text" => "Dados para formular o registro 50 da escola {$nomeEscola} não encontrados. Verificamos que a escolaridade do(a) servidor(a) {$nomeServidor} é superior, portanto é necessário informar o nome do curso superior 3.",
+                          "path" => "(Servidores > Cadastrar > Editar > Aba: Dados adicionais > Campo: Curso superior 3)",
+                          "fail" => true);
+    }
+    if ($servidor["situacao_curso_superior_3"] == $situacaoCursando && !$servidor["ano_inicio_curso_superior_3"]) {
+      $mensagem[] = array("text" => "Dados para formular o registro 50 da escola {$nomeEscola} não encontrados. Verificamos que o(a) servidor(a) {$nomeServidor} está cursando um curso superior, portanto é necessário informar o ano de início deste respectivo curso.",
+                          "path" => "(Servidores > Cadastrar > Editar > Aba: Dados adicionais > Campo: Ano de início do curso superior 3)",
+                          "fail" => true);
+    }
+    if ($servidor["situacao_curso_superior_3"] == $situacaoConcluido && !$servidor["ano_conclusao_curso_superior_3"]) {
+      $mensagem[] = array("text" => "Dados para formular o registro 50 da escola {$nomeEscola} não encontrados. Verificamos que o(a) servidor(a) {$nomeServidor} concluiu um curso superior, portanto é necessário informar o ano de conclusão deste respectivo curso.",
+                          "path" => "(Servidores > Cadastrar > Editar > Aba: Dados adicionais > Campo: Ano de conclusão do curso superior 3)",
+                          "fail" => true);
+    }
+    if ($servidor["situacao_curso_superior_3"] && !$servidor["instituicao_curso_superior_3"]) {
+      $mensagem[] = array("text" => "Dados para formular o registro 50 da escola {$nomeEscola} não encontrados. Verificamos que a escolaridade do(a) servidor(a) {$nomeServidor} é superior, portanto é necessário informar o nome da instituição do curso superior 3.",
+                          "path" => "(Servidores > Cadastrar > Editar > Aba: Dados adicionais > Campo: Instituição do curso superior 3)",
+                          "fail" => true);
+    }
+    if ($existeCursoConcluido && !$existePosGraduacao) {
+      $mensagem[] = array("text" => "Dados para formular o registro 50 da escola {$nomeEscola} não encontrados. Verifique se alguma das opções de Pós-Graduação foi informada para o(a) servidor(a) {$nomeServidor}.",
+                          "path" => "(Servidores > Cadastrar > Editar > Aba: Dados adicionais > Campos: Pós-Graduação)",
+                          "fail" => true);
+    }
+    if (!$existeCursoFormacaoContinuada) {
+      $mensagem[] = array("text" => "Dados para formular o registro 50 da escola {$nomeEscola} não encontrados. Verifique se alguma das opções de Curso de Formação Continuada foi informada para o(a) servidor(a) {$nomeServidor}.",
+                          "path" => "(Servidores > Cadastrar > Editar > Aba: Dados adicionais > Campos: Curso de Formação Continuada)",
+                          "fail" => true);
+    }
+    return array('mensagens' => $mensagem,
+                 'title'     => "Análise exportação - Registro 50");
+  }
+
   public function Gerar() {
     if ($this->isRequestFor('get', 'registro-00'))
       $this->appendResponse($this->analisaEducacensoRegistro00());
@@ -638,6 +854,8 @@ class EducacensoAnaliseController extends ApiCoreController
       $this->appendResponse($this->analisaEducacensoRegistro30());
     else if ($this->isRequestFor('get', 'registro-40'))
       $this->appendResponse($this->analisaEducacensoRegistro40());
+    else if ($this->isRequestFor('get', 'registro-50'))
+      $this->appendResponse($this->analisaEducacensoRegistro50());
     else
       $this->notImplementedOperationError();
   }

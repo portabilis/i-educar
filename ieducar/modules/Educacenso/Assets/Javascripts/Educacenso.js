@@ -259,7 +259,28 @@ $j(document).ready(function(){
 
     var handleGetAnaliseRegistro40 = function(response) {
       montaHtmlRegistro(response);
+      $j("#registro_load").text("Analisando registro 50");
+      analisaRegistro50();
+    };
+
+    var analisaRegistro50 = function(){
+        var urlForGetAnaliseRegistro = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', 'registro-50', {
+          escola : $j("#ref_cod_escola").val(),
+          ano    : $j("#ano").val()
+        });
+
+        var options = {
+          url : urlForGetAnaliseRegistro,
+          dataType : 'json',
+          success  : handleGetAnaliseRegistro50
+        };
+        getResources(options);
+    };
+
+    var handleGetAnaliseRegistro50 = function(response) {
+      montaHtmlRegistro(response);
       finishAnalysis();
     };
+
 
 });
