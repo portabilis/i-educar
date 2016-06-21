@@ -843,6 +843,54 @@ class EducacensoAnaliseController extends ApiCoreController
                  'title'     => "Análise exportação - Registro 50");
   }
 
+  protected function analisaEducacensoRegistro51() {
+
+    $escola = $this->getRequest()->escola;
+    $ano    = $this->getRequest()->ano;
+
+    $sql = "SELECT juridica.fantasia AS nome_escola,
+                   pessoa.nome AS nome_servidor,
+                   professor_turma.tipo_vinculo AS tipo_vinculo
+              FROM modules.professor_turma
+             INNER JOIN pmieducar.turma ON (turma.cod_turma = professor_turma.turma_id)
+             INNER JOIN pmieducar.escola ON (escola.cod_escola = turma.ref_ref_cod_escola)
+              LEFT JOIN cadastro.fisica_raca ON (fisica_raca.ref_idpes = professor_turma.servidor_id)
+             INNER JOIN cadastro.pessoa ON (pessoa.idpes = professor_turma.servidor_id)
+             INNER JOIN cadastro.fisica ON (fisica.idpes = professor_turma.servidor_id)
+             INNER JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
+             WHERE professor_turma.ano = $1
+               AND turma.ano = professor_turma.ano
+               AND escola.cod_escola = $2
+             GROUP BY professor_turma.servidor_id,
+                      juridica.fantasia,
+                      pessoa.nome,
+                      professor_turma.tipo_vinculo
+             ORDER BY pessoa.nome";
+
+    $servidor = $this->fetchPreparedQuery($sql, array($ano, $escola));
+
+    if(empty($servidor)){
+      $this->messenger->append("Nenhum servidor encontrado.");
+      return array('title' => "Análise exportação - Registro 51");
+    }
+
+    $mensagem = array();
+
+    $servidor      = $servidor[0];
+    $nomeEscola    = Portabilis_String_Utils::toUtf8(mb_strtoupper($servidor["nome_escola"]));
+    $nomeServidor  = Portabilis_String_Utils::toUtf8(mb_strtoupper($servidor["nome_servidor"]));
+
+    if (!$servidor["tipo_vinculo"]) {
+      $mensagem[] = array("text" => "Dados para formular o registro 51 da escola {$nomeEscola} não encontrados. Verifique se o(a) servidor(a) {$nomeServidor} possui vínculos com funções cadastradas.",
+                          "path" => "(Servidores > Cadastrar > Vincular professor a turmas > Campo: Função exercida)",
+                          "fail" => true);
+    }
+
+    return array('mensagens' => $mensagem,
+                 'title'     => "Análise exportação - Registro 51");
+
+  }
+
   public function Gerar() {
     if ($this->isRequestFor('get', 'registro-00'))
       $this->appendResponse($this->analisaEducacensoRegistro00());
@@ -856,6 +904,8 @@ class EducacensoAnaliseController extends ApiCoreController
       $this->appendResponse($this->analisaEducacensoRegistro40());
     else if ($this->isRequestFor('get', 'registro-50'))
       $this->appendResponse($this->analisaEducacensoRegistro50());
+    else if ($this->isRequestFor('get', 'registro-51'))
+      $this->appendResponse($this->analisaEducacensoRegistro51());
     else
       $this->notImplementedOperationError();
   }
