@@ -223,6 +223,7 @@ class EducacensoAnaliseController extends ApiCoreController
                    escola.computadores AS computadores,
                    escola.computadores_administrativo AS computadores_administrativo,
                    escola.computadores_alunos AS computadores_alunos,
+                   escola.impressoras_multifuncionais AS impressoras_multifuncionais,
                    escola.total_funcionario AS total_funcionario,
                    escola.atendimento_aee AS atendimento_aee,
                    escola.atividade_complementar AS atividade_complementar,
@@ -290,7 +291,8 @@ class EducacensoAnaliseController extends ApiCoreController
                            $escola["impressoras"] || $escola["aparelhos_de_som"] ||
                            $escola["projetores_digitais"] || $escola["faxs"] ||
                            $escola["maquinas_fotograficas"] || $escola["computadores"] ||
-                           $escola["computadores_administrativo"] || $escola["computadores_alunos"]);
+                           $escola["computadores_administrativo"] || $escola["computadores_alunos"] ||
+                           $escola["impressoras_multifuncionais"]);
 
     $existeMaterialDidatico = ($escola["didatico_nao_utiliza"] || $escola["didatico_quilombola"] || $escola["didatico_indigena"]);
 
