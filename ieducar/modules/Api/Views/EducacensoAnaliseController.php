@@ -579,7 +579,8 @@ class EducacensoAnaliseController extends ApiCoreController
             INNER JOIN cadastro.pessoa ON (pessoa.idpes = professor_turma.servidor_id)
             INNER JOIN cadastro.fisica ON (fisica.idpes = professor_turma.servidor_id)
              LEFT JOIN cadastro.endereco_pessoa ON (endereco_pessoa.idpes = professor_turma.servidor_id)
-             LEFT JOIN public.municipio ON (municipio.idmun = fisica.idmun_nascimento)
+             LEFT JOIN public.logradouro ON (logradouro.idlog = endereco_pessoa.idlog)
+             LEFT JOIN public.municipio ON (municipio.idmun = logradouro.idmun)
              LEFT JOIN public.uf ON (uf.sigla_uf = municipio.sigla_uf)
             WHERE professor_turma.ano = $1
               AND turma.ano = professor_turma.ano
