@@ -382,6 +382,7 @@ class EducacensoExportController extends ApiCoreController
       e.faxs as r10s80,
       e.maquinas_fotograficas as r10s81,
       e.computadores as r10s82,
+      e.impressoras_multifuncionais as r10s83,
       e.computadores_administrativo as r10s84,
       e.computadores_alunos as r10s85,
       e.acesso_internet as r10s86,
