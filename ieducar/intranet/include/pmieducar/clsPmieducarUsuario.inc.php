@@ -559,6 +559,85 @@ class clsPmieducarUsuario
 		return false;
 	}
 
+	function listaExportacao($int_ref_cod_escola = null,
+		                     $int_ref_cod_instituicao = null,
+		                     $int_ref_cod_tipo_usuario = null,
+		                     $int_ativo = null)
+	{
+		$sql = "SELECT p.nome,
+                       f.matricula,
+                       p.email,
+                       CASE
+                           WHEN u.ativo = 1 THEN 'Ativo'
+                           ELSE 'Inativo'
+                       END AS status,
+                       tu.nm_tipo,
+                       i.nm_instituicao,
+                       relatorio.get_nome_escola(u.ref_cod_escola) AS nm_escola
+                  FROM {$this->_tabela} u
+                 INNER JOIN cadastro.pessoa p ON (p.idpes = u.cod_usuario)
+                 INNER JOIN portal.funcionario f ON (f.ref_cod_pessoa_fj = p.idpes)
+                 INNER JOIN pmieducar.tipo_usuario tu ON (tu.cod_tipo_usuario = u.ref_cod_tipo_usuario
+                                                          AND tu.ativo = 1)
+                 INNER JOIN pmieducar.instituicao i ON (i.cod_instituicao = u.ref_cod_instituicao)";
+
+		$whereAnd = " AND ";
+		$filtros = " WHERE u.ref_cod_tipo_usuario = tu.cod_tipo_usuario ";
+
+		if( is_numeric( $int_ref_cod_escola ) )
+		{
+			$filtros .= "{$whereAnd} u.ref_cod_escola = '{$int_ref_cod_escola}'";
+			$whereAnd = " AND ";
+		}
+		if( is_numeric( $int_ref_cod_instituicao ) )
+		{
+			$filtros .= "{$whereAnd} u.ref_cod_instituicao = '{$int_ref_cod_instituicao}'";
+			$whereAnd = " AND ";
+		}
+		if( is_numeric( $int_ref_cod_tipo_usuario ) )
+		{
+			$filtros .= "{$whereAnd} u.ref_cod_tipo_usuario = '{$int_ref_cod_tipo_usuario}'";
+			$whereAnd = " AND ";
+		}
+		if( is_numeric( $int_ativo ) || $int_ativo )
+		{
+			$filtros .= "{$whereAnd} u.ativo = '{$int_ativo}'";
+			$whereAnd = " AND ";
+		}
+
+		$db = new clsBanco();
+		$countCampos = count( explode( ",", $this->_campos_lista ) );
+		$resultado = array();
+
+		$sql .= $filtros . $this->getOrderby() . $this->getLimite();
+
+		$db->Consulta( $sql );
+
+		if( $countCampos > 1 )
+		{
+			while ( $db->ProximoRegistro() )
+			{
+				$tupla = $db->Tupla();
+
+				$tupla["_total"] = $this->_total;
+				$resultado[] = $tupla;
+			}
+		}
+		else
+		{
+			while ( $db->ProximoRegistro() )
+			{
+				$tupla = $db->Tupla();
+				$resultado[] = $tupla[$this->_campos_lista];
+			}
+		}
+		if( count( $resultado ) )
+		{
+			return $resultado;
+		}
+		return false;
+	}
+
 	/**
 	 * Retorna um array com os dados de um registro
 	 *
