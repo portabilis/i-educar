@@ -606,19 +606,19 @@ class EducacensoAnaliseController extends ApiCoreController
     $servidor      = $servidor[0];
     $nomeEscola    = Portabilis_String_Utils::toUtf8(mb_strtoupper($servidor["nome_escola"]));
     $nomeServidor  = Portabilis_String_Utils::toUtf8(mb_strtoupper($servidor["nome_servidor"]));
-    $brasileiro = 1;
+    $naturalidadeBrasileiro = ($servidor["nacionalidade"] == 1 || $servidor["nacionalidade"] == 2);
 
-    if ($servidor["nacionalidade"] == $brasileiro && !$servidor['cpf']) {
+    if ($naturalidadeBrasileiro && !$servidor['cpf']) {
       $mensagem[] = array("text" => "Dados para formular o registro 40 da escola {$nomeEscola} não encontrados. Verificamos que a nacionalidade do(a) servidor(a) {$nomeServidor} é brasileiro(a)/naturalizado brasileiro(a), portanto é necessário informar seu CPF.",
                           "path" => "(Pessoa FJ > Pessoa física > Editar > Campo: CPF)",
                           "fail" => true);
     }
-    if (!$servidor["cep"] && !$servidor['uf_inep']) {
+    if ($servidor["cep"] && !$servidor['uf_inep']) {
       $mensagem[] = array("text" => "Dados para formular o registro 40 da escola {$nomeEscola} não encontrados. Verificamos que no cadastro do(a) servidor(a) {$nomeServidor} o endereçamento foi informado, portanto é necessário cadastrar código da UF informada conforme a 'Tabela de UF'.",
                           "path" => "(Endereçamento > Estado > Editar > Campo: Código INEP)",
                           "fail" => true);
     }
-    if (!$servidor["cep"] && !$servidor['municipio_inep']) {
+    if ($servidor["cep"] && !$servidor['municipio_inep']) {
       $mensagem[] = array("text" => "Dados para formular o registro 40 da escola {$nomeEscola} não encontrados. Verificamos que no cadastro do(a) servidor(a) {$nomeServidor} o endereçamento foi informado, portanto é necessário cadastrar código do município informado conforme a 'Tabela de Municípios'.",
                           "path" => "(Endereçamento > Município > Editar > Campo: Código INEP)",
                           "fail" => true);
