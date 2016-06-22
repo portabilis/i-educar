@@ -551,7 +551,7 @@ class EducacensoAnaliseController extends ApiCoreController
       }
       if ($servidor["nacionalidade"] == $brasileiro && !$servidor['municipio_inep']) {
         $mensagem[] = array("text" => "Dados para formular o registro 30 da escola {$nomeEscola} não encontrados. Verificamos que a nacionalidade do(a) servidor(a) {$nomeServidor} é brasileiro(a), portanto é necessário preencher o código do município de nascimento conforme a 'Tabela de Municípios'.",
-                            "path" => "(Endereçamento > Estado > Editar > Campo: Código INEP)",
+                            "path" => "(Endereçamento > Município > Editar > Campo: Código INEP)",
                             "fail" => true);
       }
     }
