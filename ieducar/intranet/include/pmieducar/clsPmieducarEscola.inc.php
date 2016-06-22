@@ -159,6 +159,7 @@ class clsPmieducarEscola
   var $computadores;
   var $computadores_administrativo;
   var $computadores_alunos;
+  var $impressoras_multifuncionais;
   var $acesso_internet;
   var $banda_larga;
   var $ato_criacao;
@@ -248,7 +249,7 @@ class clsPmieducarEscola
           e.dependencia_quantidade_ambiente_climatizado, e.dependencia_nenhuma_relacionada, e.dependencia_numero_salas_existente, dependencia_numero_salas_utilizadas, e.porte_quadra_descoberta, e.porte_quadra_coberta, e.tipo_cobertura_patio,
           e.total_funcionario, e.atendimento_aee, e.fundamental_ciclo, e.localizacao_diferenciada, e.didatico_nao_utiliza, e.didatico_quilombola, e.didatico_indigena, e.educacao_indigena, e.lingua_ministrada, e.espaco_brasil_aprendizado,
           e.abre_final_semana, e.codigo_lingua_indigena, e.atividade_complementar, e.proposta_pedagogica, e.local_funcionamento, e.codigo_inep_escola_compartilhada, e.televisoes, e.videocassetes, e.dvds, e.antenas_parabolicas, e.copiadoras,
-          e.retroprojetores, e.impressoras, e.aparelhos_de_som, e.projetores_digitais, e.faxs, e.maquinas_fotograficas, e.computadores, e.computadores_administrativo, e.computadores_alunos, e.acesso_internet, e.banda_larga, e.ato_criacao, e.ato_autorizativo, e.ref_idpes_secretario_escolar, e.utiliza_regra_diferenciada, e.orgao_regional
+          e.retroprojetores, e.impressoras, e.aparelhos_de_som, e.projetores_digitais, e.faxs, e.maquinas_fotograficas, e.computadores, e.computadores_administrativo, e.computadores_alunos, e.impressoras_multifuncionais, e.acesso_internet, e.banda_larga, e.ato_criacao, e.ato_autorizativo, e.ref_idpes_secretario_escolar, e.utiliza_regra_diferenciada, e.orgao_regional
           ';
 
     if (is_numeric($ref_usuario_cad)) {
@@ -1087,6 +1088,12 @@ class clsPmieducarEscola
         $gruda = ", ";
       }
 
+      if (is_numeric($this->impressoras_multifuncionais)) {
+        $campos .= "{$gruda}impressoras_multifuncionais";
+        $valores .= "{$gruda}'{$this->impressoras_multifuncionais}'";
+        $gruda = ", ";
+      }
+
       if (is_numeric($this->acesso_internet)) {
         $campos .= "{$gruda}acesso_internet";
         $valores .= "{$gruda}'{$this->acesso_internet}'";
@@ -1722,6 +1729,11 @@ class clsPmieducarEscola
 
       if (is_numeric($this->computadores_alunos)) {
         $set .= "{$gruda}computadores_alunos = '{$this->computadores_alunos}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->impressoras_multifuncionais)) {
+        $set .= "{$gruda}impressoras_multifuncionais = '{$this->impressoras_multifuncionais}'";
         $gruda = ", ";
       }
 

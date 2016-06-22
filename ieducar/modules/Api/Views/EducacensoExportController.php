@@ -127,6 +127,7 @@ class EducacensoExportController extends ApiCoreController
       if(!empty($registro60) && !empty($registro70) && !empty($registro80))
         $export .= $registro60 . $registro70 . $registro80;
     }
+    $export .= $this->exportaDadosRegistro99();
     return $export;
   }
 
@@ -1644,6 +1645,10 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
     }
 
     return $return;
+  }
+
+  protected function exportaDadosRegistro99() {
+    return "99\n";
   }
 
   protected function cpfToCenso($cpf){

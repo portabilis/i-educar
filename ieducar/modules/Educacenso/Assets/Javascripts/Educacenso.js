@@ -239,7 +239,68 @@ $j(document).ready(function(){
 
     var handleGetAnaliseRegistro30 = function(response) {
       montaHtmlRegistro(response);
+      $j("#registro_load").text("Analisando registro 40");
+      analisaRegistro40();
+    };
+
+    var analisaRegistro40 = function(){
+        var urlForGetAnaliseRegistro = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', 'registro-40', {
+          escola : $j("#ref_cod_escola").val(),
+          ano    : $j("#ano").val()
+        });
+
+        var options = {
+          url : urlForGetAnaliseRegistro,
+          dataType : 'json',
+          success  : handleGetAnaliseRegistro40
+        };
+        getResources(options);
+    };
+
+    var handleGetAnaliseRegistro40 = function(response) {
+      montaHtmlRegistro(response);
+      $j("#registro_load").text("Analisando registro 50");
+      analisaRegistro50();
+    };
+
+    var analisaRegistro50 = function(){
+        var urlForGetAnaliseRegistro = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', 'registro-50', {
+          escola : $j("#ref_cod_escola").val(),
+          ano    : $j("#ano").val()
+        });
+
+        var options = {
+          url : urlForGetAnaliseRegistro,
+          dataType : 'json',
+          success  : handleGetAnaliseRegistro50
+        };
+        getResources(options);
+    };
+
+    var handleGetAnaliseRegistro50 = function(response) {
+      montaHtmlRegistro(response);
+      $j("#registro_load").text("Analisando registro 51");
+      analisaRegistro51();
+    };
+
+    var analisaRegistro51 = function(){
+        var urlForGetAnaliseRegistro = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', 'registro-51', {
+          escola : $j("#ref_cod_escola").val(),
+          ano    : $j("#ano").val()
+        });
+
+        var options = {
+          url : urlForGetAnaliseRegistro,
+          dataType : 'json',
+          success  : handleGetAnaliseRegistro51
+        };
+        getResources(options);
+    };
+
+    var handleGetAnaliseRegistro51 = function(response) {
+      montaHtmlRegistro(response);
       finishAnalysis();
     };
+
 
 });
