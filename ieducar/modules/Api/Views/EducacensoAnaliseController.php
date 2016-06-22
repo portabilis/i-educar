@@ -884,8 +884,8 @@ class EducacensoAnaliseController extends ApiCoreController
     $nomeServidor  = Portabilis_String_Utils::toUtf8(mb_strtoupper($servidor["nome_servidor"]));
 
     if (!$servidor["tipo_vinculo"]) {
-      $mensagem[] = array("text" => "Dados para formular o registro 51 da escola {$nomeEscola} não encontrados. Verifique se o(a) servidor(a) {$nomeServidor} possui vínculos com funções cadastradas.",
-                          "path" => "(Servidores > Cadastrar > Vincular professor a turmas > Campo: Função exercida)",
+      $mensagem[] = array("text" => "Dados para formular o registro 51 da escola {$nomeEscola} não encontrados. Verificamos que o(a) servidor(a) {$nomeServidor} é docente e possui vínculo com turmas, portanto é necessário informar qual o seu tipo de vínculo.",
+                          "path" => "(Servidores > Cadastrar > Vincular professor a turmas > Campo: Tipo do vínculo)",
                           "fail" => true);
     }
 
