@@ -1448,7 +1448,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
         \'3\' as r80s10,
         ta.responsavel as transporte_escolar,
         (
-          SELECT 1
+          SELECT COUNT(1)
           FROM modules.veiculo v
           INNER JOIN modules.itinerario_transporte_escolar ite ON (ite.ref_cod_veiculo = v.cod_veiculo)
           INNER JOIN modules.rota_transporte_escolar rte ON (ite.ref_cod_rota_transporte_escolar = rte.cod_rota_transporte_escolar)
@@ -1457,7 +1457,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
           AND v.ref_cod_tipo_veiculo = 1
         ) as r80s13,
         (
-          SELECT 1
+          SELECT COUNT(1)
           FROM modules.veiculo v
           INNER JOIN modules.itinerario_transporte_escolar ite ON (ite.ref_cod_veiculo = v.cod_veiculo)
           INNER JOIN modules.rota_transporte_escolar rte ON (ite.ref_cod_rota_transporte_escolar = rte.cod_rota_transporte_escolar)
@@ -1466,7 +1466,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
           AND v.ref_cod_tipo_veiculo = 2
         ) as r80s14,
         (
-          SELECT 1
+          SELECT COUNT(1)
           FROM modules.veiculo v
           INNER JOIN modules.itinerario_transporte_escolar ite ON (ite.ref_cod_veiculo = v.cod_veiculo)
           INNER JOIN modules.rota_transporte_escolar rte ON (ite.ref_cod_rota_transporte_escolar = rte.cod_rota_transporte_escolar)
@@ -1475,7 +1475,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
           AND v.ref_cod_tipo_veiculo = 3
         ) as r80s15,
         (
-          SELECT 1
+          SELECT COUNT(1)
           FROM modules.veiculo v
           INNER JOIN modules.itinerario_transporte_escolar ite ON (ite.ref_cod_veiculo = v.cod_veiculo)
           INNER JOIN modules.rota_transporte_escolar rte ON (ite.ref_cod_rota_transporte_escolar = rte.cod_rota_transporte_escolar)
@@ -1484,7 +1484,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
           AND v.ref_cod_tipo_veiculo = 4
         ) as r80s16,
         (
-          SELECT 1
+          SELECT COUNT(1)
           FROM modules.veiculo v
           INNER JOIN modules.itinerario_transporte_escolar ite ON (ite.ref_cod_veiculo = v.cod_veiculo)
           INNER JOIN modules.rota_transporte_escolar rte ON (ite.ref_cod_rota_transporte_escolar = rte.cod_rota_transporte_escolar)
@@ -1493,7 +1493,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
           AND v.ref_cod_tipo_veiculo = 5
         ) as r80s17,
         (
-          SELECT 1
+          SELECT COUNT(1)
           FROM modules.veiculo v
           INNER JOIN modules.itinerario_transporte_escolar ite ON (ite.ref_cod_veiculo = v.cod_veiculo)
           INNER JOIN modules.rota_transporte_escolar rte ON (ite.ref_cod_rota_transporte_escolar = rte.cod_rota_transporte_escolar)
@@ -1502,7 +1502,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
           AND v.ref_cod_tipo_veiculo = 6
         ) as r80s18,
         (
-          SELECT 1
+          SELECT COUNT(1)
           FROM modules.veiculo v
           INNER JOIN modules.itinerario_transporte_escolar ite ON (ite.ref_cod_veiculo = v.cod_veiculo)
           INNER JOIN modules.rota_transporte_escolar rte ON (ite.ref_cod_rota_transporte_escolar = rte.cod_rota_transporte_escolar)
@@ -1511,7 +1511,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
           AND v.ref_cod_tipo_veiculo = 7
         ) as r80s19,
         (
-          SELECT 1
+          SELECT COUNT(1)
           FROM modules.veiculo v
           INNER JOIN modules.itinerario_transporte_escolar ite ON (ite.ref_cod_veiculo = v.cod_veiculo)
           INNER JOIN modules.rota_transporte_escolar rte ON (ite.ref_cod_rota_transporte_escolar = rte.cod_rota_transporte_escolar)
@@ -1520,7 +1520,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
           AND v.ref_cod_tipo_veiculo = 8
         ) as r80s20,
         (
-          SELECT 1
+          SELECT COUNT(1)
           FROM modules.veiculo v
           INNER JOIN modules.itinerario_transporte_escolar ite ON (ite.ref_cod_veiculo = v.cod_veiculo)
           INNER JOIN modules.rota_transporte_escolar rte ON (ite.ref_cod_rota_transporte_escolar = rte.cod_rota_transporte_escolar)
@@ -1529,7 +1529,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
           AND v.ref_cod_tipo_veiculo = 9
         ) as r80s21,
         (
-          SELECT 1
+          SELECT COUNT(1)
           FROM modules.veiculo v
           INNER JOIN modules.itinerario_transporte_escolar ite ON (ite.ref_cod_veiculo = v.cod_veiculo)
           INNER JOIN modules.rota_transporte_escolar rte ON (ite.ref_cod_rota_transporte_escolar = rte.cod_rota_transporte_escolar)
@@ -1538,7 +1538,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
           AND v.ref_cod_tipo_veiculo = 10
         ) as r80s22,
         (
-          SELECT 1
+          SELECT COUNT(1)
           FROM modules.veiculo v
           INNER JOIN modules.itinerario_transporte_escolar ite ON (ite.ref_cod_veiculo = v.cod_veiculo)
           INNER JOIN modules.rota_transporte_escolar rte ON (ite.ref_cod_rota_transporte_escolar = rte.cod_rota_transporte_escolar)
