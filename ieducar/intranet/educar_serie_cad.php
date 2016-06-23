@@ -375,8 +375,8 @@ function RegrasInstituicao(xml_qtd_regras)
     var loop = DOM_array.length;
 
     for (var i = 0; i < loop;i++) {
-      campoRegras.options[i] = new Option(DOM_array[i].firstChild.data, i, false, false);
-      campoRegrasDiferenciadas.options[i] = new Option(DOM_array[i].firstChild.data, i, false, false);
+      campoRegras.options[i] = new Option(DOM_array[i].firstChild.data, DOM_array[i].id, false, false);
+      campoRegrasDiferenciadas.options[i] = new Option(DOM_array[i].firstChild.data, DOM_array[i].id, false, false);
     }
   }
   else {
