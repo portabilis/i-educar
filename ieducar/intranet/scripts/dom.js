@@ -370,6 +370,7 @@ function showExpansivelImprimir( largura, altura, arquivo, array,  titulo )
 	insertAfter(expansivel, document.getElementById("DOM_expansivel"));
 	DOM_divs[exp_id] = expansivel;
 	expansivel.style.position = "absolute";
+	expansivel.style.zIndex = 9;
 
 
 	url = '';
