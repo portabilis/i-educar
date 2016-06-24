@@ -1100,8 +1100,11 @@ function afterChangePessoaParent(pessoaId, parentType) {
           $tempField = $paiNomeField;
           $parente   = 'pai';
   }
-
-  messageUtils.success('Pessoa '+$parente+' alterada com sucesso', $tempField);
+  if (editar_pessoa) {
+    messageUtils.success('Pessoa '+$parente+' alterada com sucesso', $tempField);
+  }else{
+    messageUtils.success('Pessoa '+$parente+' cadastrada com sucesso', $tempField);
+  }
 
   getPersonParentDetails(pessoaId, parentType);
 
