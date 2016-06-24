@@ -815,7 +815,7 @@ class EducacensoAnaliseController extends ApiCoreController
                             "fail" => true);
       }
       if ($servidor["situacao_curso_superior_2"] && !$servidor["instituicao_curso_superior_2"]) {
-        $mensagem[] = array("text" => "Dados para formular o registro 50 da escola {$nomeEscola} não encontrados. Verificamos que o nome do curso superior 2 do(a) servidor(a) {$nomeServidor} foi informado, portanto é necessário informar também o nome da instituição deste respectivo curso.",
+        $mensagem[] = array("text" => "Dados para formular o registro 50 da escola {$nomeEscola} não encontrados. Verificamos que a situação do curso superior 2 do(a) servidor(a) {$nomeServidor} foi informada, portanto é necessário informar também o nome da instituição deste respectivo curso. ",
                             "path" => "(Servidores > Cadastrar > Editar > Aba: Dados adicionais > Campo: Instituição do curso superior 2)",
                             "fail" => true);
       }
@@ -835,7 +835,7 @@ class EducacensoAnaliseController extends ApiCoreController
                             "fail" => true);
       }
       if ($servidor["situacao_curso_superior_3"] && !$servidor["instituicao_curso_superior_3"]) {
-        $mensagem[] = array("text" => "Dados para formular o registro 50 da escola {$nomeEscola} não encontrados. Verificamos que o nome do curso superior 3 do(a) servidor(a) {$nomeServidor} foi informado, portanto é necessário informar também o nome da instituição deste respectivo curso.",
+        $mensagem[] = array("text" => "Dados para formular o registro 50 da escola {$nomeEscola} não encontrados. Verificamos que a situação do curso superior 3 do(a) servidor(a) {$nomeServidor} foi informada, portanto é necessário informar também o nome da instituição deste respectivo curso. ",
                             "path" => "(Servidores > Cadastrar > Editar > Aba: Dados adicionais > Campo: Instituição do curso superior 3)",
                             "fail" => true);
       }
