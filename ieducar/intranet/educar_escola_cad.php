@@ -1511,14 +1511,16 @@ if(!$this->isEnderecoExterno){
 	    $options = array('label' => Portabilis_String_Utils::toLatin1('Possui banda larga'), 'value' => $this->banda_larga);
 	    $this->inputsHelper()->checkbox('banda_larga', $options);
 
-			$resources = array( 0    => 'Selecione',
+			$resources = array( -1 => 'Selecione',
+								0    => Portabilis_String_Utils::toLatin1('Não oferece'),
 			                    1    => Portabilis_String_Utils::toLatin1('Não exclusivamente'),
 			                    2    => 'Exclusivamente');
 
   		$options = array('label' => Portabilis_String_Utils::toLatin1('Atendimento educacional especializado - AEE'), 'resources' => $resources, 'value' => $this->atendimento_aee, 'required' => false, 'size' => 70,);
 	    $this->inputsHelper()->select('atendimento_aee', $options);
 
-	    $resources = array( 0    => 'Selecione',
+	    $resources = array( -1 => 'Selecione',
+							0    => Portabilis_String_Utils::toLatin1('Não oferece'),
 		                    1    => Portabilis_String_Utils::toLatin1('Não exclusivamente'),
 		                    2    => 'Exclusivamente');
 

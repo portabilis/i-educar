@@ -357,12 +357,12 @@ class EducacensoAnaliseController extends ApiCoreController
                           "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dependências > Campo: Total de funcionários da escola)",
                           "fail" => true);
     }
-    if (!$escola["atendimento_aee"]) {
+    if ($escola["atendimento_aee"] < 0) {
       $mensagem[] = array("text" => "Dados para formular o registro 10 da escola {$nomeEscola} não encontrados. Verifique se o atendimento educacional especializado - AEE foi informado.",
                           "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dados do ensino > Campo: Atendimento educacional especializado - AEE)",
                           "fail" => true);
     }
-    if (!$escola["atividade_complementar"]) {
+    if ($escola["atividade_complementar"] < 0) {
       $mensagem[] = array("text" => "Dados para formular o registro 10 da escola {$nomeEscola} não encontrados. Verifique se a atividade complementar foi informada.",
                           "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dados do ensino > Campo: Atividade complementar)",
                           "fail" => true);
