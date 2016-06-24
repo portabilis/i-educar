@@ -1086,19 +1086,22 @@ function afterChangePessoa(targetWindow, parentType, parentId, parentName) {
 function afterChangePessoaParent(pessoaId, parentType) {
 
   $tempField = $paiNomeField;
-
+  var $parente = '';
   switch(parentType) {
       case 'mae':
           $tempField = $maeNomeField;
+          $parente = 'm\u00e3e';
           break;
       case 'responsavel':
           $tempField = $responsavelNomeField;
+          $parente = 'respons\u00e1vel';
           break;
       default:
           $tempField = $paiNomeField;
+          $parente   = 'pai';
   }
 
-  messageUtils.success('Pessoa '+parentType+' alterada com sucesso', $tempField);
+  messageUtils.success('Pessoa '+$parente+' alterada com sucesso', $tempField);
 
   getPersonParentDetails(pessoaId, parentType);
 
