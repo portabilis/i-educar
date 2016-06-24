@@ -39,6 +39,7 @@
 		$consulta = "SELECT DISTINCT
 							ss.ref_serie_origem
 							,so.nm_serie
+							,so.ref_cod_curso
 						FROM
 							pmieducar.sequencia_serie ss
 							, pmieducar.serie so
@@ -54,6 +55,7 @@
 						SELECT DISTINCT
 							ss.ref_serie_destino
 							,sd.nm_serie
+							,so.ref_cod_curso
 						FROM
 							pmieducar.sequencia_serie ss
 							, pmieducar.serie so
@@ -69,20 +71,21 @@
 						SELECT DISTINCT
 							s.cod_serie
 							,s.nm_serie
+							,s.ref_cod_curso
 						FROM   pmieducar.serie s
 						WHERE
 							s.ativo = 1
 						   AND s.ref_cod_curso = {$_GET["cur"]}
+
+						ORDER BY nm_serie
 						";
 
 		$db->Consulta( $consulta );
 		while ( $db->ProximoRegistro() )
 		{
-			list( $serie,$nm_serie ) = $db->Tupla();
-				if($_GET['ser_dif'] != $serie){
+			list( $serie,$nm_serie,$curso ) = $db->Tupla();
+				if($_GET['ser_dif'] != $serie && $curso == $_GET["cur"]){
 					echo "	<serie cod_serie=\"$serie\">{$nm_serie}</serie>\n";
-					//echo "	<item>{$serie}</item>\n";
-					//echo "	<item>{$nm_serie}</item>\n";
 				}
 		}
 	}
