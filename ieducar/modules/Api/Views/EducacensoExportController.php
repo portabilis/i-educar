@@ -1359,8 +1359,8 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
 
         FROM  pmieducar.aluno a
         INNER JOIN cadastro.fisica fis ON (fis.idpes = a.ref_idpes)
-        INNER JOIN cadastro.documento fd ON (fis.idpes = fd.idpes)
-        LEFT JOIN cadastro.orgao_emissor_rg oer ON (fd.idorg_exp_rg = oer.idorg_rg)
+         LEFT JOIN cadastro.documento fd ON (fis.idpes = fd.idpes)
+         LEFT JOIN cadastro.orgao_emissor_rg oer ON (fd.idorg_exp_rg = oer.idorg_rg)
         INNER JOIN cadastro.pessoa p ON (fis.idpes = p.idpes)
         INNER JOIN pmieducar.matricula m ON (m.ref_cod_aluno = a.cod_aluno)
         INNER JOIN pmieducar.escola e ON (m.ref_ref_cod_escola = e.cod_escola)
