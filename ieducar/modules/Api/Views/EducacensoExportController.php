@@ -595,7 +595,7 @@ class EducacensoExportController extends ApiCoreController
 
       //Dias da semana  e tipo de atendimento não podem ser nullos, 1 ou 0
       for($i = 11; $i <=18; $i++)
-        ${'r20s'.$i} = ${'r20s'.$i} == 1 ? 1 : 0;
+        ${'r20s'.$i} = ${'r20s'.$i};
 
       // Atribui 0 (Não lecionado) para todas as disciplinas por padrão.
       $r20s40 = $r20s41 = $r20s42 = $r20s43 = $r20s44 = $r20s45 = $r20s46 = $r20s47 = $r20s48 = $r20s49 =
@@ -1359,8 +1359,8 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
 
         FROM  pmieducar.aluno a
         INNER JOIN cadastro.fisica fis ON (fis.idpes = a.ref_idpes)
-        INNER JOIN cadastro.documento fd ON (fis.idpes = fd.idpes)
-        LEFT JOIN cadastro.orgao_emissor_rg oer ON (fd.idorg_exp_rg = oer.idorg_rg)
+         LEFT JOIN cadastro.documento fd ON (fis.idpes = fd.idpes)
+         LEFT JOIN cadastro.orgao_emissor_rg oer ON (fd.idorg_exp_rg = oer.idorg_rg)
         INNER JOIN cadastro.pessoa p ON (fis.idpes = p.idpes)
         INNER JOIN pmieducar.matricula m ON (m.ref_cod_aluno = a.cod_aluno)
         INNER JOIN pmieducar.escola e ON (m.ref_ref_cod_escola = e.cod_escola)
