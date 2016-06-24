@@ -55,8 +55,8 @@ class UsuarioExportController extends ApiCoreController
     $csv .= 'Matricula,';
     $csv .= 'E-mail,';
     $csv .= 'Status,';
-    $csv .= 'Tipo Usuário,';
-    $csv .= 'Instituição,';
+    $csv .= Portabilis_String_Utils::toLatin1('Tipo_Usuário,');
+    $csv .= Portabilis_String_Utils::toLatin1('Instituição,');
     $csv .= 'Escola,';
     $csv .= PHP_EOL;
     foreach ($lstUsers as $row) {
