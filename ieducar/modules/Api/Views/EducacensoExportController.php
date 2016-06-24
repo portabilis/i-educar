@@ -700,8 +700,9 @@ class EducacensoExportController extends ApiCoreController
         FROM  pmieducar.servidor s
         INNER JOIN cadastro.fisica fis ON (fis.idpes = s.cod_servidor)
         INNER JOIN cadastro.pessoa p ON (fis.idpes = p.idpes)
-        INNER JOIN pmieducar.servidor_alocacao sa ON (sa.ref_cod_servidor = s.cod_servidor)
-        INNER JOIN pmieducar.escola e ON (sa.ref_cod_escola = e.cod_escola)
+        INNER JOIN modules.professor_turma pt ON (pt.servidor_id = s.cod_servidor)
+        INNER JOIN pmieducar.turma t ON (t.cod_turma = pt.turma_id)
+        INNER JOIN pmieducar.escola e ON (e.cod_escola = t.ref_ref_cod_escola)
         INNER JOIN modules.educacenso_cod_escola ece ON (ece.cod_escola = e.cod_escola)
         LEFT JOIN cadastro.fisica_raca rc ON (rc.ref_idpes = fis.idpes)
         LEFT JOIN cadastro.raca r ON (r.cod_raca = rc.ref_cod_raca)
@@ -798,8 +799,9 @@ class EducacensoExportController extends ApiCoreController
 		FROM 	pmieducar.servidor s
 		INNER JOIN cadastro.fisica fis ON (fis.idpes = s.cod_servidor)
 		INNER JOIN cadastro.pessoa p ON (fis.idpes = p.idpes)
-		INNER JOIN pmieducar.servidor_alocacao sa ON (sa.ref_cod_servidor = s.cod_servidor)
-		INNER JOIN pmieducar.escola e ON (sa.ref_cod_escola = e.cod_escola)
+    INNER JOIN modules.professor_turma pt ON (pt.servidor_id = s.cod_servidor)
+    INNER JOIN pmieducar.turma t ON (t.cod_turma = pt.turma_id)
+    INNER JOIN pmieducar.escola e ON (e.cod_escola = t.ref_ref_cod_escola)
 		INNER JOIN modules.educacenso_cod_escola ece ON (ece.cod_escola = e.cod_escola)
 		INNER JOIN cadastro.endereco_pessoa ep ON (ep.idpes = p.idpes)
 		INNER JOIN urbano.cep_logradouro_bairro clb ON (clb.idbai = ep.idbai AND clb.idlog = ep.idlog AND clb.cep = ep.cep)
@@ -897,8 +899,9 @@ class EducacensoExportController extends ApiCoreController
 		FROM 	pmieducar.servidor s
 		INNER JOIN cadastro.fisica fis ON (fis.idpes = s.cod_servidor)
 		INNER JOIN cadastro.pessoa p ON (fis.idpes = p.idpes)
-		INNER JOIN pmieducar.servidor_alocacao sa ON (sa.ref_cod_servidor = s.cod_servidor)
-		INNER JOIN pmieducar.escola e ON (sa.ref_cod_escola = e.cod_escola)
+    INNER JOIN modules.professor_turma pt ON (pt.servidor_id = s.cod_servidor)
+    INNER JOIN pmieducar.turma t ON (t.cod_turma = pt.turma_id)
+    INNER JOIN pmieducar.escola e ON (e.cod_escola = t.ref_ref_cod_escola)
 		INNER JOIN modules.educacenso_cod_escola ece ON (ece.cod_escola = e.cod_escola)
 		LEFT JOIN cadastro.escolaridade esc ON (esc.idesco = s.ref_idesco)
     LEFT JOIN modules.educacenso_cod_docente ecd ON ecd.cod_servidor = s.cod_servidor
