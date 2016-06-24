@@ -82,6 +82,14 @@ class ReportController extends ApiCoreController
       $boletimReport->addArg('serie',       (int)$dadosMatricula['serie_id']);
       $boletimReport->addArg('turma',       (int)$dadosMatricula['turma_id']);
 
+      if (CORE_EXT_CONFIGURATION_ENV == "production") {
+        $boletimReport->addArg('SUBREPORT_DIR', "/sites_media_root/services/reports/jasper/");
+      } else if ($GLOBALS['coreExt']['Config']->app->database->dbname == 'test' || $GLOBALS['coreExt']['Config']->app->database->dbname == 'desenvolvimento') {
+        $boletimReport->addArg('SUBREPORT_DIR', "/sites_media_root/services-test/reports/jasper/");
+      } else {
+        $boletimReport->addArg('SUBREPORT_DIR', "modules/Reports/ReportSources/Portabilis/");
+      }
+
       $encoding     = 'base64';
 
       $dumpsOptions = array('options' => array('encoding' => $encoding));
