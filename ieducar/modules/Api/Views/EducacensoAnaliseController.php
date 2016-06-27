@@ -906,6 +906,74 @@ class EducacensoAnaliseController extends ApiCoreController
 
   }
 
+  protected function analisaEducacensoRegistro60() {
+
+    $escola = $this->getRequest()->escola;
+    $ano    = $this->getRequest()->ano;
+
+    $sql = "SELECT juridica.fantasia AS nome_escola,
+                   pessoa.nome AS nome_aluno,
+                   fisica_raca.ref_cod_raca AS cor_raca,
+                   fisica.nacionalidade AS nacionalidade,
+                   uf.cod_ibge AS uf_inep,
+                   municipio.cod_ibge AS municipio_inep
+              FROM pmieducar.aluno
+             INNER JOIN pmieducar.matricula ON (matricula.ref_cod_aluno = aluno.cod_aluno)
+             INNER JOIN pmieducar.escola ON (escola.cod_escola = matricula.ref_ref_cod_escola)
+             INNER JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
+             INNER JOIN cadastro.pessoa ON (pessoa.idpes = aluno.ref_idpes)
+             INNER JOIN cadastro.fisica ON (fisica.idpes = pessoa.idpes)
+              LEFT JOIN cadastro.fisica_raca ON (fisica_raca.ref_idpes = fisica.idpes)
+              LEFT JOIN cadastro.endereco_pessoa ON (endereco_pessoa.idpes = fisica.idpes)
+              LEFT JOIN public.municipio ON (municipio.idmun = fisica.idmun_nascimento)
+              LEFT JOIN public.uf ON (uf.sigla_uf = municipio.sigla_uf)
+             WHERE aluno.ativo = 1
+               AND matricula.ativo = 1
+               AND matricula.ano = $1
+               AND escola.cod_escola = $2";
+
+    $alunos = $this->fetchPreparedQuery($sql, array($ano, $escola));
+
+    if(empty($alunos)){
+      $this->messenger->append("Nenhum aluno encontrado.");
+      return array('title' => "Análise exportação - Registro 60");
+    }
+
+    $mensagem = array();
+    $brasileiro = 1;
+
+    foreach ($alunos as $aluno) {
+      $nomeEscola = Portabilis_String_Utils::toUtf8(mb_strtoupper($aluno["nome_escola"]));
+      $nomeAluno  = Portabilis_String_Utils::toUtf8(mb_strtoupper($aluno["nome_aluno"]));
+
+      if (!$aluno["cor_raca"]) {
+        $mensagem[] = array("text" => "Dados para formular o registro 60 da escola {$nomeEscola} não encontrados. Verifique se a raça do(a) aluno(a) {$nomeAluno} foi informada.",
+                            "path" => "(Pessoa FJ > Pessoa física > Editar > Campo: Raça)",
+                            "fail" => true);
+      }
+      if (!$aluno["nacionalidade"]) {
+        $mensagem[] = array("text" => "Dados para formular o registro 30 da escola {$nomeEscola} não encontrados. Verifique se a nacionalidade do(a) aluno(a) {$nomeAluno} foi informada.",
+                            "path" => "(Pessoa FJ > Pessoa física > Editar > Campo: Nacionalidade)",
+                            "fail" => true);
+      } else {
+        if ($aluno["nacionalidade"] == $brasileiro && !$aluno['uf_inep']) {
+          $mensagem[] = array("text" => "Dados para formular o registro 30 da escola {$nomeEscola} não encontrados. Verificamos que a nacionalidade do(a) aluno(a) {$nomeAluno} é brasileiro(a), portanto é necessário preencher o código da UF de nascimento conforme a 'Tabela de UF'.",
+                              "path" => "(Endereçamento > Estado > Editar > Campo: Código INEP)",
+                              "fail" => true);
+        }
+        if ($aluno["nacionalidade"] == $brasileiro && !$aluno['municipio_inep']) {
+          $mensagem[] = array("text" => "Dados para formular o registro 30 da escola {$nomeEscola} não encontrados. Verificamos que a nacionalidade do(a) aluno(a) {$nomeAluno} é brasileiro(a), portanto é necessário preencher o código do município de nascimento conforme a 'Tabela de Municípios'.",
+                              "path" => "(Endereçamento > Município > Editar > Campo: Código INEP)",
+                              "fail" => true);
+        }
+      }
+    }
+
+    return array('mensagens' => $mensagem,
+                 'title'     => "Análise exportação - Registro 60");
+
+  }
+
   public function Gerar() {
     if ($this->isRequestFor('get', 'registro-00'))
       $this->appendResponse($this->analisaEducacensoRegistro00());
@@ -921,6 +989,8 @@ class EducacensoAnaliseController extends ApiCoreController
       $this->appendResponse($this->analisaEducacensoRegistro50());
     else if ($this->isRequestFor('get', 'registro-51'))
       $this->appendResponse($this->analisaEducacensoRegistro51());
+    else if ($this->isRequestFor('get', 'registro-60'))
+      $this->appendResponse($this->analisaEducacensoRegistro60());
     else
       $this->notImplementedOperationError();
   }
