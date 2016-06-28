@@ -814,16 +814,16 @@ class EducacensoExportController extends ApiCoreController
     INNER JOIN pmieducar.turma t ON (t.cod_turma = pt.turma_id)
     INNER JOIN pmieducar.escola e ON (e.cod_escola = t.ref_ref_cod_escola)
 		INNER JOIN modules.educacenso_cod_escola ece ON (ece.cod_escola = e.cod_escola)
-		INNER JOIN cadastro.endereco_pessoa ep ON (ep.idpes = p.idpes)
-		INNER JOIN urbano.cep_logradouro_bairro clb ON (clb.idbai = ep.idbai AND clb.idlog = ep.idlog AND clb.cep = ep.cep)
-		INNER JOIN public.bairro b ON (clb.idbai = b.idbai)
-		INNER JOIN urbano.cep_logradouro cl ON (cl.idlog = clb.idlog AND clb.cep = cl.cep)
-		INNER JOIN public.distrito d ON (d.iddis = b.iddis)
-		INNER JOIN public.municipio m ON (d.idmun = m.idmun)
-		INNER JOIN public.uf ON (uf.sigla_uf = m.sigla_uf)
-		INNER JOIN public.pais ON (pais.idpais = uf.idpais)
-		INNER JOIN public.logradouro l ON (l.idlog = cl.idlog)
-    LEFT JOIN modules.educacenso_cod_docente ecd ON ecd.cod_servidor = s.cod_servidor
+		 LEFT JOIN cadastro.endereco_pessoa ep ON (ep.idpes = p.idpes)
+		 LEFT JOIN urbano.cep_logradouro_bairro clb ON (clb.idbai = ep.idbai AND clb.idlog = ep.idlog AND clb.cep = ep.cep)
+		 LEFT JOIN public.bairro b ON (clb.idbai = b.idbai)
+		 LEFT JOIN urbano.cep_logradouro cl ON (cl.idlog = clb.idlog AND clb.cep = cl.cep)
+		 LEFT JOIN public.distrito d ON (d.iddis = b.iddis)
+		 LEFT JOIN public.municipio m ON (d.idmun = m.idmun)
+		 LEFT JOIN public.uf ON (uf.sigla_uf = m.sigla_uf)
+		 LEFT JOIN public.pais ON (pais.idpais = uf.idpais)
+		 LEFT JOIN public.logradouro l ON (l.idlog = cl.idlog)
+     LEFT JOIN modules.educacenso_cod_docente ecd ON ecd.cod_servidor = s.cod_servidor
 		WHERE s.cod_servidor = $1
       AND e.cod_escola = $2
 		LIMIT 1
