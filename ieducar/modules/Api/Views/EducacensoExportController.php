@@ -394,24 +394,24 @@ class EducacensoExportController extends ApiCoreController
       atividade_complementar as r10s91,
 
       (SELECT 1
-        FROM pmieducar.curso
-        INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso)
-        WHERE modalidade_curso = 1 AND escola_curso.ref_cod_escola = e.cod_escola
-        LIMIT 1
+         FROM pmieducar.curso
+        INNER JOIN pmieducar.escola_curso ON (escola_curso.ref_cod_curso = curso.cod_curso)
+        WHERE escola_curso.ref_cod_escola = e.cod_escola
+          AND curso.modalidade_curso = 1
       ) as r10s92,
 
       (SELECT 1
-        FROM pmieducar.curso
-        INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso)
-        WHERE modalidade_curso = 2 AND escola_curso.ref_cod_escola = e.cod_escola
-        LIMIT 1
+         FROM pmieducar.curso
+        INNER JOIN pmieducar.escola_curso ON (escola_curso.ref_cod_curso = curso.cod_curso)
+        WHERE escola_curso.ref_cod_escola = e.cod_escola
+          AND curso.modalidade_curso = 2
       ) as r10s93,
 
       (SELECT 1
-        FROM pmieducar.curso
-        INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso)
-        WHERE modalidade_curso = 3 AND escola_curso.ref_cod_escola = e.cod_escola
-        LIMIT 1
+         FROM pmieducar.curso
+        INNER JOIN pmieducar.escola_curso ON (escola_curso.ref_cod_curso = curso.cod_curso)
+        WHERE escola_curso.ref_cod_escola = e.cod_escola
+          AND curso.modalidade_curso = 3
       ) as r10s94,
 
       fundamental_ciclo as r10s96,
@@ -432,6 +432,8 @@ class EducacensoExportController extends ApiCoreController
       INNER JOIN cadastro.fisica f ON (f.idpes = p.idpes)
       WHERE e.cod_escola = $1
     ';
+
+    $exclusivamente = 2;
 
     extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, array('return_only' => 'first-row', 'params' => array($escolaId))));
     if($r10s1){
@@ -466,8 +468,14 @@ class EducacensoExportController extends ApiCoreController
 
       $r10s96 = ($r10s96 == 1 && ($r10s92 == 1 || $r10s93 == 1)) ? 1 : (($r10s92 == 1 || $r10s93 == 1) ? 0 : NULL);
 
-      if($r10s91 != 2)
-        $r10s93 = $r10s94 = $r10s95 = 0;
+      if ($r10s90 == $exclusivamente || $r10s91 == $exclusivamente) {
+        $r10s92 = $r10s93 = $r10s94 = $r10s95 = 'NULL';
+      } else {
+        $r10s92 = ($r10s92 ? $r10s92 : 0);
+        $r10s93 = ($r10s93 ? $r10s93 : 0);
+        $r10s94 = ($r10s94 ? $r10s94 : 0);
+        $r10s95 = ($r10s95 ? $r10s95 : 0);
+      }
 
       $r10s98 = 1;
       $r10s99 = $r10s100 = 0;
