@@ -127,6 +127,7 @@ class EducacensoExportController extends ApiCoreController
       if(!empty($registro60) && !empty($registro70) && !empty($registro80))
         $export .= $registro60 . $registro70 . $registro80;
     }
+    $export .= $this->exportaDadosRegistro99();
     return $export;
   }
 
@@ -381,6 +382,7 @@ class EducacensoExportController extends ApiCoreController
       e.faxs as r10s80,
       e.maquinas_fotograficas as r10s81,
       e.computadores as r10s82,
+      e.impressoras_multifuncionais as r10s83,
       e.computadores_administrativo as r10s84,
       e.computadores_alunos as r10s85,
       e.acesso_internet as r10s86,
@@ -392,23 +394,26 @@ class EducacensoExportController extends ApiCoreController
       atividade_complementar as r10s91,
 
       (SELECT 1
-        FROM pmieducar.curso
-        INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso)
-        WHERE modalidade_curso = 1 AND escola_curso.ref_cod_escola = e.cod_escola
+         FROM pmieducar.curso
+        INNER JOIN pmieducar.escola_curso ON (escola_curso.ref_cod_curso = curso.cod_curso)
+        WHERE escola_curso.ref_cod_escola = e.cod_escola
+          AND curso.modalidade_curso = 1
         LIMIT 1
       ) as r10s92,
 
       (SELECT 1
-        FROM pmieducar.curso
-        INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso)
-        WHERE modalidade_curso = 2 AND escola_curso.ref_cod_escola = e.cod_escola
+         FROM pmieducar.curso
+        INNER JOIN pmieducar.escola_curso ON (escola_curso.ref_cod_curso = curso.cod_curso)
+        WHERE escola_curso.ref_cod_escola = e.cod_escola
+          AND curso.modalidade_curso = 2
         LIMIT 1
       ) as r10s93,
 
       (SELECT 1
-        FROM pmieducar.curso
-        INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso)
-        WHERE modalidade_curso = 3 AND escola_curso.ref_cod_escola = e.cod_escola
+         FROM pmieducar.curso
+        INNER JOIN pmieducar.escola_curso ON (escola_curso.ref_cod_curso = curso.cod_curso)
+        WHERE escola_curso.ref_cod_escola = e.cod_escola
+          AND curso.modalidade_curso = 3
         LIMIT 1
       ) as r10s94,
 
@@ -430,6 +435,8 @@ class EducacensoExportController extends ApiCoreController
       INNER JOIN cadastro.fisica f ON (f.idpes = p.idpes)
       WHERE e.cod_escola = $1
     ';
+
+    $exclusivamente = 2;
 
     extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, array('return_only' => 'first-row', 'params' => array($escolaId))));
     if($r10s1){
@@ -464,8 +471,14 @@ class EducacensoExportController extends ApiCoreController
 
       $r10s96 = ($r10s96 == 1 && ($r10s92 == 1 || $r10s93 == 1)) ? 1 : (($r10s92 == 1 || $r10s93 == 1) ? 0 : NULL);
 
-      if($r10s91 != 2)
-        $r10s93 = $r10s94 = $r10s95 = 0;
+      if ($r10s90 == $exclusivamente || $r10s91 == $exclusivamente) {
+        $r10s92 = $r10s93 = $r10s94 = $r10s95 = '';
+      } else {
+        $r10s92 = ($r10s92 ? $r10s92 : 0);
+        $r10s93 = ($r10s93 ? $r10s93 : 0);
+        $r10s94 = ($r10s94 ? $r10s94 : 0);
+        $r10s95 = ($r10s95 ? $r10s95 : 0);
+      }
 
       $r10s98 = 1;
       $r10s99 = $r10s100 = 0;
@@ -593,7 +606,7 @@ class EducacensoExportController extends ApiCoreController
 
       //Dias da semana  e tipo de atendimento não podem ser nullos, 1 ou 0
       for($i = 11; $i <=18; $i++)
-        ${'r20s'.$i} = ${'r20s'.$i} == 1 ? 1 : 0;
+        ${'r20s'.$i} = ${'r20s'.$i};
 
       // Atribui 0 (Não lecionado) para todas as disciplinas por padrão.
       $r20s40 = $r20s41 = $r20s42 = $r20s43 = $r20s44 = $r20s45 = $r20s46 = $r20s47 = $r20s48 = $r20s49 =
@@ -698,8 +711,9 @@ class EducacensoExportController extends ApiCoreController
         FROM  pmieducar.servidor s
         INNER JOIN cadastro.fisica fis ON (fis.idpes = s.cod_servidor)
         INNER JOIN cadastro.pessoa p ON (fis.idpes = p.idpes)
-        INNER JOIN pmieducar.servidor_alocacao sa ON (sa.ref_cod_servidor = s.cod_servidor)
-        INNER JOIN pmieducar.escola e ON (sa.ref_cod_escola = e.cod_escola)
+        INNER JOIN modules.professor_turma pt ON (pt.servidor_id = s.cod_servidor)
+        INNER JOIN pmieducar.turma t ON (t.cod_turma = pt.turma_id)
+        INNER JOIN pmieducar.escola e ON (e.cod_escola = t.ref_ref_cod_escola)
         INNER JOIN modules.educacenso_cod_escola ece ON (ece.cod_escola = e.cod_escola)
         LEFT JOIN cadastro.fisica_raca rc ON (rc.ref_idpes = fis.idpes)
         LEFT JOIN cadastro.raca r ON (r.cod_raca = rc.ref_cod_raca)
@@ -796,19 +810,20 @@ class EducacensoExportController extends ApiCoreController
 		FROM 	pmieducar.servidor s
 		INNER JOIN cadastro.fisica fis ON (fis.idpes = s.cod_servidor)
 		INNER JOIN cadastro.pessoa p ON (fis.idpes = p.idpes)
-		INNER JOIN pmieducar.servidor_alocacao sa ON (sa.ref_cod_servidor = s.cod_servidor)
-		INNER JOIN pmieducar.escola e ON (sa.ref_cod_escola = e.cod_escola)
+    INNER JOIN modules.professor_turma pt ON (pt.servidor_id = s.cod_servidor)
+    INNER JOIN pmieducar.turma t ON (t.cod_turma = pt.turma_id)
+    INNER JOIN pmieducar.escola e ON (e.cod_escola = t.ref_ref_cod_escola)
 		INNER JOIN modules.educacenso_cod_escola ece ON (ece.cod_escola = e.cod_escola)
-		INNER JOIN cadastro.endereco_pessoa ep ON (ep.idpes = p.idpes)
-		INNER JOIN urbano.cep_logradouro_bairro clb ON (clb.idbai = ep.idbai AND clb.idlog = ep.idlog AND clb.cep = ep.cep)
-		INNER JOIN public.bairro b ON (clb.idbai = b.idbai)
-		INNER JOIN urbano.cep_logradouro cl ON (cl.idlog = clb.idlog AND clb.cep = cl.cep)
-		INNER JOIN public.distrito d ON (d.iddis = b.iddis)
-		INNER JOIN public.municipio m ON (d.idmun = m.idmun)
-		INNER JOIN public.uf ON (uf.sigla_uf = m.sigla_uf)
-		INNER JOIN public.pais ON (pais.idpais = uf.idpais)
-		INNER JOIN public.logradouro l ON (l.idlog = cl.idlog)
-    LEFT JOIN modules.educacenso_cod_docente ecd ON ecd.cod_servidor = s.cod_servidor
+		 LEFT JOIN cadastro.endereco_pessoa ep ON (ep.idpes = p.idpes)
+		 LEFT JOIN urbano.cep_logradouro_bairro clb ON (clb.idbai = ep.idbai AND clb.idlog = ep.idlog AND clb.cep = ep.cep)
+		 LEFT JOIN public.bairro b ON (clb.idbai = b.idbai)
+		 LEFT JOIN urbano.cep_logradouro cl ON (cl.idlog = clb.idlog AND clb.cep = cl.cep)
+		 LEFT JOIN public.distrito d ON (d.iddis = b.iddis)
+		 LEFT JOIN public.municipio m ON (d.idmun = m.idmun)
+		 LEFT JOIN public.uf ON (uf.sigla_uf = m.sigla_uf)
+		 LEFT JOIN public.pais ON (pais.idpais = uf.idpais)
+		 LEFT JOIN public.logradouro l ON (l.idlog = cl.idlog)
+     LEFT JOIN modules.educacenso_cod_docente ecd ON ecd.cod_servidor = s.cod_servidor
 		WHERE s.cod_servidor = $1
       AND e.cod_escola = $2
 		LIMIT 1
@@ -895,8 +910,9 @@ class EducacensoExportController extends ApiCoreController
 		FROM 	pmieducar.servidor s
 		INNER JOIN cadastro.fisica fis ON (fis.idpes = s.cod_servidor)
 		INNER JOIN cadastro.pessoa p ON (fis.idpes = p.idpes)
-		INNER JOIN pmieducar.servidor_alocacao sa ON (sa.ref_cod_servidor = s.cod_servidor)
-		INNER JOIN pmieducar.escola e ON (sa.ref_cod_escola = e.cod_escola)
+    INNER JOIN modules.professor_turma pt ON (pt.servidor_id = s.cod_servidor)
+    INNER JOIN pmieducar.turma t ON (t.cod_turma = pt.turma_id)
+    INNER JOIN pmieducar.escola e ON (e.cod_escola = t.ref_ref_cod_escola)
 		INNER JOIN modules.educacenso_cod_escola ece ON (ece.cod_escola = e.cod_escola)
 		LEFT JOIN cadastro.escolaridade esc ON (esc.idesco = s.ref_idesco)
     LEFT JOIN modules.educacenso_cod_docente ecd ON ecd.cod_servidor = s.cod_servidor
@@ -1354,8 +1370,8 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
 
         FROM  pmieducar.aluno a
         INNER JOIN cadastro.fisica fis ON (fis.idpes = a.ref_idpes)
-        INNER JOIN cadastro.documento fd ON (fis.idpes = fd.idpes)
-        LEFT JOIN cadastro.orgao_emissor_rg oer ON (fd.idorg_exp_rg = oer.idorg_rg)
+         LEFT JOIN cadastro.documento fd ON (fis.idpes = fd.idpes)
+         LEFT JOIN cadastro.orgao_emissor_rg oer ON (fd.idorg_exp_rg = oer.idorg_rg)
         INNER JOIN cadastro.pessoa p ON (fis.idpes = p.idpes)
         INNER JOIN pmieducar.matricula m ON (m.ref_cod_aluno = a.cod_aluno)
         INNER JOIN pmieducar.escola e ON (m.ref_ref_cod_escola = e.cod_escola)
@@ -1644,6 +1660,10 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
     }
 
     return $return;
+  }
+
+  protected function exportaDadosRegistro99() {
+    return "99\n";
   }
 
   protected function cpfToCenso($cpf){

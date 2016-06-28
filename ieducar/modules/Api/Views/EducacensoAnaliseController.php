@@ -34,6 +34,7 @@
 
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'intranet/include/clsBanco.inc.php';
+require_once 'lib/Portabilis/Date/Utils.php';
 
 class EducacensoAnaliseController extends ApiCoreController
 {
@@ -86,7 +87,7 @@ class EducacensoAnaliseController extends ApiCoreController
     }
 
     $escola       = $escola[0];
-    $nomeEscola   = Portabilis_String_Utils::toUtf8(strtoupper($escola["nome_escola"]));
+    $nomeEscola   = Portabilis_String_Utils::toUtf8(mb_strtoupper($escola["nome_escola"]));
     $anoAtual     = date("Y");
     $anoAnterior  = $anoAtual-1;
     $anoPosterior = $anoAtual+1;
@@ -223,6 +224,7 @@ class EducacensoAnaliseController extends ApiCoreController
                    escola.computadores AS computadores,
                    escola.computadores_administrativo AS computadores_administrativo,
                    escola.computadores_alunos AS computadores_alunos,
+                   escola.impressoras_multifuncionais AS impressoras_multifuncionais,
                    escola.total_funcionario AS total_funcionario,
                    escola.atendimento_aee AS atendimento_aee,
                    escola.atividade_complementar AS atividade_complementar,
@@ -245,7 +247,7 @@ class EducacensoAnaliseController extends ApiCoreController
     }
 
     $escola        = $escola[0];
-    $nomeEscola    = Portabilis_String_Utils::toUtf8(strtoupper($escola["nome_escola"]));
+    $nomeEscola    = Portabilis_String_Utils::toUtf8(mb_strtoupper($escola["nome_escola"]));
     $predioEscolar = 3; //Valor fixo definido no cadastro de escola
 
     $existeAbastecimentoAgua = ($escola["agua_rede_publica"] ||
@@ -290,7 +292,8 @@ class EducacensoAnaliseController extends ApiCoreController
                            $escola["impressoras"] || $escola["aparelhos_de_som"] ||
                            $escola["projetores_digitais"] || $escola["faxs"] ||
                            $escola["maquinas_fotograficas"] || $escola["computadores"] ||
-                           $escola["computadores_administrativo"] || $escola["computadores_alunos"]);
+                           $escola["computadores_administrativo"] || $escola["computadores_alunos"] ||
+                           $escola["impressoras_multifuncionais"]);
 
     $existeMaterialDidatico = ($escola["didatico_nao_utiliza"] || $escola["didatico_quilombola"] || $escola["didatico_indigena"]);
 
@@ -355,12 +358,12 @@ class EducacensoAnaliseController extends ApiCoreController
                           "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dependências > Campo: Total de funcionários da escola)",
                           "fail" => true);
     }
-    if (!$escola["atendimento_aee"]) {
+    if ($escola["atendimento_aee"] < 0) {
       $mensagem[] = array("text" => "Dados para formular o registro 10 da escola {$nomeEscola} não encontrados. Verifique se o atendimento educacional especializado - AEE foi informado.",
                           "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dados do ensino > Campo: Atendimento educacional especializado - AEE)",
                           "fail" => true);
     }
-    if (!$escola["atividade_complementar"]) {
+    if ($escola["atividade_complementar"] < 0) {
       $mensagem[] = array("text" => "Dados para formular o registro 10 da escola {$nomeEscola} não encontrados. Verifique se a atividade complementar foi informada.",
                           "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dados do ensino > Campo: Atividade complementar)",
                           "fail" => true);
@@ -434,8 +437,8 @@ class EducacensoAnaliseController extends ApiCoreController
 
     foreach ($turmas as $turma) {
 
-      $nomeEscola = Portabilis_String_Utils::toUtf8(strtoupper($turma["nome_escola"]));
-      $nomeTurma  = Portabilis_String_Utils::toUtf8(strtoupper($turma["nome_turma"]));
+      $nomeEscola = Portabilis_String_Utils::toUtf8(mb_strtoupper($turma["nome_escola"]));
+      $nomeTurma  = Portabilis_String_Utils::toUtf8(mb_strtoupper($turma["nome_turma"]));
       $atividadeComplementar = ($turma["tipo_atendimento"] == 4); //Código 4 fixo no cadastro de turma
       $existeAtividadeComplementar = ($turma["atividade_complementar_1"] || $turma["atividade_complementar_2"] ||
                                       $turma["atividade_complementar_3"] || $turma["atividade_complementar_4"] ||
@@ -471,7 +474,7 @@ class EducacensoAnaliseController extends ApiCoreController
       if ($atividadeComplementar && !$existeAtividadeComplementar) {
         $mensagem[] = array("text" => "Dados para formular o registro 20 da escola {$nomeEscola} não encontrados. Verificamos que o tipo de atendimento da turma {$nomeTurma} é de atividade complementar, portanto obrigatoriamente é necessário informar o código de ao menos uma atividade conforme a 'Tabela de Tipo de Atividade Complementar'.",
                             "path" => "(Cadastros > Turma > Cadastrar > Editar > Aba: Dados adicionais > Campo: Código do tipo de atividade complementar)",
-                          "fail" => true);   
+                          "fail" => true);
       }
       if ($atendimentoAee && !$existeAee) {
         $mensagem[] = array("text" => "Dados para formular o registro 20 da escola {$nomeEscola} não encontrados. Verificamos que o tipo de atendimento da turma {$nomeTurma} é de educação especializada - AEE, portanto obrigatoriamente é necessário informar ao menos uma atividade realizada. ",
@@ -482,8 +485,604 @@ class EducacensoAnaliseController extends ApiCoreController
 
     return array('mensagens' => $mensagem,
                  'title'     => "Análise exportação - Registro 20");
-
   }
+
+  protected function analisaEducacensoRegistro30() {
+
+    $escola = $this->getRequest()->escola;
+    $ano    = $this->getRequest()->ano;
+
+    $sql = "SELECT juridica.fantasia AS nome_escola,
+                   fisica_raca.ref_cod_raca AS cor_raca,
+                   fisica.nacionalidade AS nacionalidade,
+                   uf.cod_ibge AS uf_inep,
+                   municipio.cod_ibge AS municipio_inep,
+                   pessoa.nome AS nome_servidor
+              FROM modules.professor_turma
+             INNER JOIN pmieducar.turma ON (turma.cod_turma = professor_turma.turma_id)
+             INNER JOIN pmieducar.escola ON (escola.cod_escola = turma.ref_ref_cod_escola)
+             INNER JOIN pmieducar.servidor ON (servidor.cod_servidor = professor_turma.servidor_id)
+             INNER JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
+              LEFT JOIN cadastro.fisica_raca ON (fisica_raca.ref_idpes = professor_turma.servidor_id)
+             INNER JOIN cadastro.pessoa ON (pessoa.idpes = professor_turma.servidor_id)
+             INNER JOIN cadastro.fisica ON (fisica.idpes = professor_turma.servidor_id)
+              LEFT JOIN cadastro.endereco_pessoa ON (endereco_pessoa.idpes = professor_turma.servidor_id)
+              LEFT JOIN public.municipio ON (municipio.idmun = fisica.idmun_nascimento)
+              LEFT JOIN public.uf ON (uf.sigla_uf = municipio.sigla_uf)
+             WHERE professor_turma.ano = $1
+               AND turma.ano = professor_turma.ano
+               AND escola.cod_escola = $2
+               AND servidor.ativo = 1
+             GROUP BY professor_turma.servidor_id,
+                      juridica.fantasia,
+                      fisica_raca.ref_cod_raca,
+                      fisica.nacionalidade,
+                      uf.cod_ibge,
+                      municipio.cod_ibge,
+                      pessoa.nome
+              ORDER BY nome_servidor";
+
+    $servidores = $this->fetchPreparedQuery($sql, array($ano, $escola));
+
+    if(empty($servidores)){
+      $this->messenger->append("Nenhum servidor encontrado.");
+      return array('title' => "Análise exportação - Registro 30");
+    }
+
+    $mensagem = array();
+    $brasileiro = 1;
+
+    foreach ($servidores as $servidor) {
+      $nomeEscola   = Portabilis_String_Utils::toUtf8(mb_strtoupper($servidor["nome_escola"]));
+      $nomeServidor = Portabilis_String_Utils::toUtf8(mb_strtoupper($servidor["nome_servidor"]));
+
+      if (!$servidor["cor_raca"]) {
+        $mensagem[] = array("text" => "Dados para formular o registro 30 da escola {$nomeEscola} não encontrados. Verifique se a raça do(a) servidor(a) {$nomeServidor} foi informada.",
+                            "path" => "(Pessoa FJ > Pessoa física > Editar > Campo: Raça)",
+                            "fail" => true);
+      }
+      if (!$servidor["nacionalidade"]) {
+        $mensagem[] = array("text" => "Dados para formular o registro 30 da escola {$nomeEscola} não encontrados. Verifique se a nacionalidade do(a) servidor(a) {$nomeServidor} foi informada.",
+                            "path" => "(Pessoa FJ > Pessoa física > Editar > Campo: Nacionalidade)",
+                            "fail" => true);
+      } else {
+        if ($servidor["nacionalidade"] == $brasileiro && !$servidor['uf_inep']) {
+          $mensagem[] = array("text" => "Dados para formular o registro 30 da escola {$nomeEscola} não encontrados. Verificamos que a nacionalidade do(a) servidor(a) {$nomeServidor} é brasileiro(a), portanto é necessário preencher o código da UF de nascimento conforme a 'Tabela de UF'.",
+                              "path" => "(Endereçamento > Estado > Editar > Campo: Código INEP)",
+                              "fail" => true);
+        }
+        if ($servidor["nacionalidade"] == $brasileiro && !$servidor['municipio_inep']) {
+          $mensagem[] = array("text" => "Dados para formular o registro 30 da escola {$nomeEscola} não encontrados. Verificamos que a nacionalidade do(a) servidor(a) {$nomeServidor} é brasileiro(a), portanto é necessário preencher o código do município de nascimento conforme a 'Tabela de Municípios'.",
+                              "path" => "(Endereçamento > Município > Editar > Campo: Código INEP)",
+                              "fail" => true);
+        }
+      }
+    }
+    return array('mensagens' => $mensagem,
+                 'title'     => "Análise exportação - Registro 30");
+  }
+
+  protected function analisaEducacensoRegistro40() {
+
+    $escola = $this->getRequest()->escola;
+    $ano    = $this->getRequest()->ano;
+
+    $sql = "SELECT juridica.fantasia AS nome_escola,
+                   fisica.nacionalidade AS nacionalidade,
+                   uf.cod_ibge AS uf_inep,
+                   municipio.cod_ibge AS municipio_inep,
+                   pessoa.nome AS nome_servidor,
+                   fisica.cpf AS cpf,
+                   endereco_pessoa.cep AS cep
+             FROM modules.professor_turma
+            INNER JOIN pmieducar.turma ON (turma.cod_turma = professor_turma.turma_id)
+            INNER JOIN pmieducar.escola ON (escola.cod_escola = turma.ref_ref_cod_escola)
+            INNER JOIN pmieducar.servidor ON (servidor.cod_servidor = professor_turma.servidor_id)
+            INNER JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
+            INNER JOIN cadastro.pessoa ON (pessoa.idpes = professor_turma.servidor_id)
+            INNER JOIN cadastro.fisica ON (fisica.idpes = professor_turma.servidor_id)
+             LEFT JOIN cadastro.endereco_pessoa ON (endereco_pessoa.idpes = professor_turma.servidor_id)
+             LEFT JOIN public.logradouro ON (logradouro.idlog = endereco_pessoa.idlog)
+             LEFT JOIN public.municipio ON (municipio.idmun = logradouro.idmun)
+             LEFT JOIN public.uf ON (uf.sigla_uf = municipio.sigla_uf)
+            WHERE professor_turma.ano = $1
+              AND turma.ano = professor_turma.ano
+              AND escola.cod_escola = $2
+              AND servidor.ativo = 1
+            GROUP BY professor_turma.servidor_id,
+                     juridica.fantasia,
+                     fisica.nacionalidade,
+                     uf.cod_ibge,
+                     municipio.cod_ibge,
+                     pessoa.nome,
+                     fisica.cpf,
+                     endereco_pessoa.cep
+            ORDER BY pessoa.nome";
+
+    $servidores = $this->fetchPreparedQuery($sql, array($ano, $escola));
+
+    if(empty($servidores)){
+      $this->messenger->append("Nenhum servidor encontrado.");
+      return array('title' => "Análise exportação - Registro 40");
+    }
+
+    $mensagem = array();
+
+    foreach ($servidores as $servidor) {
+      $nomeEscola   = Portabilis_String_Utils::toUtf8(mb_strtoupper($servidor["nome_escola"]));
+      $nomeServidor = Portabilis_String_Utils::toUtf8(mb_strtoupper($servidor["nome_servidor"]));
+      $naturalidadeBrasileiro = ($servidor["nacionalidade"] == 1 || $servidor["nacionalidade"] == 2);
+
+      if ($naturalidadeBrasileiro && !$servidor['cpf']) {
+        $mensagem[] = array("text" => "Dados para formular o registro 40 da escola {$nomeEscola} não encontrados. Verificamos que a nacionalidade do(a) servidor(a) {$nomeServidor} é brasileiro(a)/naturalizado brasileiro(a), portanto é necessário informar seu CPF.",
+                            "path" => "(Pessoa FJ > Pessoa física > Editar > Campo: CPF)",
+                            "fail" => true);
+      }
+      if ($servidor["cep"] && !$servidor['uf_inep']) {
+        $mensagem[] = array("text" => "Dados para formular o registro 40 da escola {$nomeEscola} não encontrados. Verificamos que no cadastro do(a) servidor(a) {$nomeServidor} o endereçamento foi informado, portanto é necessário cadastrar código da UF informada conforme a 'Tabela de UF'.",
+                            "path" => "(Endereçamento > Estado > Editar > Campo: Código INEP)",
+                            "fail" => true);
+      }
+      if ($servidor["cep"] && !$servidor['municipio_inep']) {
+        $mensagem[] = array("text" => "Dados para formular o registro 40 da escola {$nomeEscola} não encontrados. Verificamos que no cadastro do(a) servidor(a) {$nomeServidor} o endereçamento foi informado, portanto é necessário cadastrar código do município informado conforme a 'Tabela de Municípios'.",
+                            "path" => "(Endereçamento > Município > Editar > Campo: Código INEP)",
+                            "fail" => true);
+      }
+    }
+
+    return array('mensagens' => $mensagem,
+                 'title'     => "Análise exportação - Registro 40");
+  }
+
+  protected function analisaEducacensoRegistro50() {
+
+    $escola = $this->getRequest()->escola;
+    $ano    = $this->getRequest()->ano;
+
+    $sql = "SELECT juridica.fantasia AS nome_escola,
+                   pessoa.nome AS nome_servidor,
+                   servidor.ref_idesco AS escolaridade,
+                   servidor.situacao_curso_superior_1 AS situacao_curso_superior_1,
+                   servidor.codigo_curso_superior_1 AS codigo_curso_superior_1,
+                   servidor.ano_inicio_curso_superior_1 AS ano_inicio_curso_superior_1,
+                   servidor.ano_conclusao_curso_superior_1 AS ano_conclusao_curso_superior_1,
+                   servidor.instituicao_curso_superior_1 AS instituicao_curso_superior_1,
+                   servidor.situacao_curso_superior_2 AS situacao_curso_superior_2,
+                   servidor.codigo_curso_superior_2 AS codigo_curso_superior_2,
+                   servidor.ano_inicio_curso_superior_2 AS ano_inicio_curso_superior_2,
+                   servidor.ano_conclusao_curso_superior_2 AS ano_conclusao_curso_superior_2,
+                   servidor.instituicao_curso_superior_2 AS instituicao_curso_superior_2,
+                   servidor.situacao_curso_superior_3 AS situacao_curso_superior_3,
+                   servidor.codigo_curso_superior_3 AS codigo_curso_superior_3,
+                   servidor.ano_inicio_curso_superior_3 AS ano_inicio_curso_superior_3,
+                   servidor.ano_conclusao_curso_superior_3 AS ano_conclusao_curso_superior_3,
+                   servidor.instituicao_curso_superior_3 AS instituicao_curso_superior_3,
+                   servidor.pos_especializacao AS pos_especializacao,
+                   servidor.pos_mestrado AS pos_mestrado,
+                   servidor.pos_doutorado AS pos_doutorado,
+                   servidor.pos_nenhuma AS pos_nenhuma,
+                   servidor.curso_creche AS curso_creche,
+                   servidor.curso_pre_escola AS curso_pre_escola,
+                   servidor.curso_anos_iniciais AS curso_anos_iniciais,
+                   servidor.curso_anos_finais AS curso_anos_finais,
+                   servidor.curso_ensino_medio AS curso_ensino_medio,
+                   servidor.curso_eja AS curso_eja,
+                   servidor.curso_educacao_especial AS curso_educacao_especial,
+                   servidor.curso_educacao_indigena AS curso_educacao_indigena,
+                   servidor.curso_educacao_campo AS curso_educacao_campo,
+                   servidor.curso_educacao_ambiental AS curso_educacao_ambiental,
+                   servidor.curso_educacao_direitos_humanos AS curso_educacao_direitos_humanos,
+                   servidor.curso_genero_diversidade_sexual AS curso_genero_diversidade_sexual,
+                   servidor.curso_direito_crianca_adolescente AS curso_direito_crianca_adolescente,
+                   servidor.curso_relacoes_etnicorraciais AS curso_relacoes_etnicorraciais,
+                   servidor.curso_outros AS curso_outros,
+                   servidor.curso_nenhum AS curso_nenhum
+              FROM modules.professor_turma
+             INNER JOIN pmieducar.servidor ON (servidor.cod_servidor = professor_turma.servidor_id)
+             INNER JOIN pmieducar.turma ON (turma.cod_turma = professor_turma.turma_id)
+             INNER JOIN pmieducar.escola ON (escola.cod_escola = turma.ref_ref_cod_escola)
+             INNER JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
+             INNER JOIN cadastro.pessoa ON (pessoa.idpes = professor_turma.servidor_id)
+             WHERE professor_turma.ano = $1
+               AND turma.ano = professor_turma.ano
+               AND escola.cod_escola = $2
+               AND servidor.ativo = 1
+             GROUP BY professor_turma.servidor_id,
+                      juridica.fantasia,
+                      pessoa.nome,
+                      servidor.ref_idesco,
+                      servidor.situacao_curso_superior_1,
+                      servidor.codigo_curso_superior_1 ,
+                      servidor.ano_inicio_curso_superior_1,
+                      servidor.ano_conclusao_curso_superior_1,
+                      servidor.instituicao_curso_superior_1,
+                      servidor.situacao_curso_superior_2,
+                      servidor.codigo_curso_superior_2,
+                      servidor.ano_inicio_curso_superior_2,
+                      servidor.ano_conclusao_curso_superior_2,
+                      servidor.instituicao_curso_superior_2,
+                      servidor.situacao_curso_superior_3,
+                      servidor.codigo_curso_superior_3,
+                      servidor.ano_inicio_curso_superior_3,
+                      servidor.ano_conclusao_curso_superior_3,
+                      servidor.instituicao_curso_superior_3,
+                      servidor.pos_especializacao,
+                      servidor.pos_mestrado,
+                      servidor.pos_doutorado,
+                      servidor.pos_nenhuma,
+                      servidor.curso_creche,
+                      servidor.curso_pre_escola,
+                      servidor.curso_anos_iniciais,
+                      servidor.curso_anos_finais,
+                      servidor.curso_ensino_medio,
+                      servidor.curso_eja,
+                      servidor.curso_educacao_especial,
+                      servidor.curso_educacao_indigena,
+                      servidor.curso_educacao_campo,
+                      servidor.curso_educacao_ambiental,
+                      servidor.curso_educacao_direitos_humanos,
+                      servidor.curso_genero_diversidade_sexual,
+                      servidor.curso_direito_crianca_adolescente,
+                      servidor.curso_relacoes_etnicorraciais,
+                      servidor.curso_outros,
+                      servidor.curso_nenhum
+             ORDER BY pessoa.nome";
+
+    $servidores = $this->fetchPreparedQuery($sql, array($ano, $escola));
+
+    if(empty($servidores)){
+      $this->messenger->append("Nenhum servidor encontrado.");
+      return array('title' => "Análise exportação - Registro 50");
+    }
+
+    $mensagem = array();
+    $superiorCompleto  = 6;
+    $situacaoConcluido = 1;
+    $situacaoCursando  = 2;
+
+    foreach ($servidores as $servidor) {
+      $nomeEscola   = Portabilis_String_Utils::toUtf8(mb_strtoupper($servidor["nome_escola"]));
+      $nomeServidor = Portabilis_String_Utils::toUtf8(mb_strtoupper($servidor["nome_servidor"]));
+
+      $existeCursoConcluido = ($servidor["situacao_curso_superior_1"] == $situacaoConcluido ||
+                               $servidor["situacao_curso_superior_2"] == $situacaoConcluido ||
+                               $servidor["situacao_curso_superior_3"] == $situacaoConcluido);
+      $existePosGraduacao = ($servidor["pos_especializacao"] || $servidor["pos_mestrado"] ||
+                             $servidor["pos_doutorado"] || $servidor["pos_nenhuma"]);
+
+      $existeCursoFormacaoContinuada = ($servidor["curso_creche"] ||
+                                        $servidor["curso_pre_escola"] ||
+                                        $servidor["curso_anos_iniciais"] ||
+                                        $servidor["curso_anos_finais"] ||
+                                        $servidor["curso_ensino_medio"] ||
+                                        $servidor["curso_eja"] ||
+                                        $servidor["curso_educacao_especial"] ||
+                                        $servidor["curso_educacao_indigena"] ||
+                                        $servidor["curso_educacao_campo"] ||
+                                        $servidor["curso_educacao_ambiental"] ||
+                                        $servidor["curso_educacao_direitos_humanos"] ||
+                                        $servidor["curso_genero_diversidade_sexual"] ||
+                                        $servidor["curso_direito_crianca_adolescente"] ||
+                                        $servidor["curso_relacoes_etnicorraciais"] ||
+                                        $servidor["curso_outros"] ||
+                                        $servidor["curso_nenhum"]);
+
+      if (!$servidor["escolaridade"]) {
+        $mensagem[] = array("text" => "Dados para formular o registro 50 da escola {$nomeEscola} não encontrados. Verifique se a escolaridade do(a) servidor(a) {$nomeServidor} foi informada.",
+                            "path" => "(Servidores > Cadastrar > Editar > Aba: Dados adicionais > Campo: Escolaridade)",
+                            "fail" => true);
+      }
+      if ($servidor["escolaridade"] == $superiorCompleto && !$servidor["situacao_curso_superior_1"]) {
+          $mensagem[] = array("text" => "Dados para formular o registro 50 da escola {$nomeEscola} não encontrados. Verificamos que a escolaridade do(a) servidor(a) {$nomeServidor} é superior, portanto é necessário informar a situação do curso superior 1.",
+                              "path" => "(Servidores > Cadastrar > Editar > Aba: Dados adicionais > Campo: Situação do curso superior 1)",
+                              "fail" => true);
+      }
+      if ($servidor["situacao_curso_superior_1"] && !$servidor["codigo_curso_superior_1"]) {
+        $mensagem[] = array("text" => "Dados para formular o registro 50 da escola {$nomeEscola} não encontrados. Verificamos que a escolaridade do(a) servidor(a) {$nomeServidor} é superior, portanto é necessário informar o nome do curso superior 1.",
+                            "path" => "(Servidores > Cadastrar > Editar > Aba: Dados adicionais > Campo: Curso superior 1)",
+                            "fail" => true);
+      }
+      if ($servidor["situacao_curso_superior_1"] == $situacaoCursando && !$servidor["ano_inicio_curso_superior_1"]) {
+        $mensagem[] = array("text" => "Dados para formular o registro 50 da escola {$nomeEscola} não encontrados. Verificamos que o(a) servidor(a) {$nomeServidor} está cursando um curso superior, portanto é necessário informar o ano de início deste respectivo curso.",
+                            "path" => "(Servidores > Cadastrar > Editar > Aba: Dados adicionais > Campo: Ano de início do curso superior 1)",
+                            "fail" => true);
+      }
+      if ($servidor["situacao_curso_superior_1"] == $situacaoConcluido && !$servidor["ano_conclusao_curso_superior_1"]) {
+        $mensagem[] = array("text" => "Dados para formular o registro 50 da escola {$nomeEscola} não encontrados. Verificamos que o(a) servidor(a) {$nomeServidor} concluiu um curso superior, portanto é necessário informar o ano de conclusão deste respectivo curso.",
+                            "path" => "(Servidores > Cadastrar > Editar > Aba: Dados adicionais > Campo: Ano de conclusão do curso superior 1)",
+                            "fail" => true);
+      }
+      if ($servidor["situacao_curso_superior_1"] && !$servidor["instituicao_curso_superior_1"]) {
+        $mensagem[] = array("text" => "Dados para formular o registro 50 da escola {$nomeEscola} não encontrados. Verificamos que a escolaridade do(a) servidor(a) {$nomeServidor} é superior, portanto é necessário informar o nome da instituição do curso superior 1.",
+                            "path" => "(Servidores > Cadastrar > Editar > Aba: Dados adicionais > Campo: Instituição do curso superior 1)",
+                            "fail" => true);
+      }
+      if ($servidor["situacao_curso_superior_2"] && !$servidor["codigo_curso_superior_2"]) {
+        $mensagem[] = array("text" => "Dados para formular o registro 50 da escola {$nomeEscola} não encontrados. Verificamos que a situação do curso superior 2 do(a) servidor(a) {$nomeServidor} foi informada, portanto é necessário informar o nome do curso superior 2.",
+                            "path" => "(Servidores > Cadastrar > Editar > Aba: Dados adicionais > Campo: Curso superior 2)",
+                            "fail" => true);
+      }
+      if ($servidor["situacao_curso_superior_2"] == $situacaoCursando && !$servidor["ano_inicio_curso_superior_2"]) {
+        $mensagem[] = array("text" => "Dados para formular o registro 50 da escola {$nomeEscola} não encontrados. Verificamos que o(a) servidor(a) {$nomeServidor} está cursando um curso superior 2, portanto é necessário informar o ano de início deste respectivo curso.",
+                            "path" => "(Servidores > Cadastrar > Editar > Aba: Dados adicionais > Campo: Ano de início do curso superior 2)",
+                            "fail" => true);
+      }
+      if ($servidor["situacao_curso_superior_2"] == $situacaoConcluido && !$servidor["ano_conclusao_curso_superior_2"]) {
+        $mensagem[] = array("text" => "Dados para formular o registro 50 da escola {$nomeEscola} não encontrados. Verificamos que o(a) servidor(a) {$nomeServidor} concluiu um curso superior 2, portanto é necessário informar o ano de conclusão deste respectivo curso.",
+                            "path" => "(Servidores > Cadastrar > Editar > Aba: Dados adicionais > Campo: Ano de conclusão do curso superior 2)",
+                            "fail" => true);
+      }
+      if ($servidor["situacao_curso_superior_2"] && !$servidor["instituicao_curso_superior_2"]) {
+        $mensagem[] = array("text" => "Dados para formular o registro 50 da escola {$nomeEscola} não encontrados. Verificamos que a situação do curso superior 2 do(a) servidor(a) {$nomeServidor} foi informada, portanto é necessário informar também o nome da instituição deste respectivo curso. ",
+                            "path" => "(Servidores > Cadastrar > Editar > Aba: Dados adicionais > Campo: Instituição do curso superior 2)",
+                            "fail" => true);
+      }
+      if ($servidor["situacao_curso_superior_3"] && !$servidor["codigo_curso_superior_3"]) {
+        $mensagem[] = array("text" => "Dados para formular o registro 50 da escola {$nomeEscola} não encontrados. Verificamos que a situação do curso superior 3 do(a) servidor(a) {$nomeServidor} foi informada, portanto é necessário informar o nome do curso superior 3.",
+                            "path" => "(Servidores > Cadastrar > Editar > Aba: Dados adicionais > Campo: Curso superior 3)",
+                            "fail" => true);
+      }
+      if ($servidor["situacao_curso_superior_3"] == $situacaoCursando && !$servidor["ano_inicio_curso_superior_3"]) {
+        $mensagem[] = array("text" => "Dados para formular o registro 50 da escola {$nomeEscola} não encontrados. Verificamos que o(a) servidor(a) {$nomeServidor} está cursando um curso superior 3, portanto é necessário informar o ano de início deste respectivo curso.",
+                            "path" => "(Servidores > Cadastrar > Editar > Aba: Dados adicionais > Campo: Ano de início do curso superior 3)",
+                            "fail" => true);
+      }
+      if ($servidor["situacao_curso_superior_3"] == $situacaoConcluido && !$servidor["ano_conclusao_curso_superior_3"]) {
+        $mensagem[] = array("text" => "Dados para formular o registro 50 da escola {$nomeEscola} não encontrados. Verificamos que o(a) servidor(a) {$nomeServidor} concluiu um curso superior 3, portanto é necessário informar o ano de conclusão deste respectivo curso.",
+                            "path" => "(Servidores > Cadastrar > Editar > Aba: Dados adicionais > Campo: Ano de conclusão do curso superior 3)",
+                            "fail" => true);
+      }
+      if ($servidor["situacao_curso_superior_3"] && !$servidor["instituicao_curso_superior_3"]) {
+        $mensagem[] = array("text" => "Dados para formular o registro 50 da escola {$nomeEscola} não encontrados. Verificamos que a situação do curso superior 3 do(a) servidor(a) {$nomeServidor} foi informada, portanto é necessário informar também o nome da instituição deste respectivo curso. ",
+                            "path" => "(Servidores > Cadastrar > Editar > Aba: Dados adicionais > Campo: Instituição do curso superior 3)",
+                            "fail" => true);
+      }
+      if ($existeCursoConcluido && !$existePosGraduacao) {
+        $mensagem[] = array("text" => "Dados para formular o registro 50 da escola {$nomeEscola} não encontrados. Verifique se alguma das opções de Pós-Graduação foi informada para o(a) servidor(a) {$nomeServidor}.",
+                            "path" => "(Servidores > Cadastrar > Editar > Aba: Dados adicionais > Campos: Pós-Graduação)",
+                            "fail" => true);
+      }
+      if (!$existeCursoFormacaoContinuada) {
+        $mensagem[] = array("text" => "Dados para formular o registro 50 da escola {$nomeEscola} não encontrados. Verifique se alguma das opções de Curso de Formação Continuada foi informada para o(a) servidor(a) {$nomeServidor}.",
+                            "path" => "(Servidores > Cadastrar > Editar > Aba: Dados adicionais > Campos: Curso de Formação Continuada)",
+                            "fail" => true);
+      }
+    }
+
+    return array('mensagens' => $mensagem,
+                 'title'     => "Análise exportação - Registro 50");
+  }
+
+  protected function analisaEducacensoRegistro51() {
+
+    $escola = $this->getRequest()->escola;
+    $ano    = $this->getRequest()->ano;
+
+    $sql = "SELECT juridica.fantasia AS nome_escola,
+                   pessoa.nome AS nome_servidor,
+                   professor_turma.tipo_vinculo AS tipo_vinculo
+              FROM modules.professor_turma
+             INNER JOIN pmieducar.turma ON (turma.cod_turma = professor_turma.turma_id)
+             INNER JOIN pmieducar.escola ON (escola.cod_escola = turma.ref_ref_cod_escola)
+             INNER JOIN pmieducar.servidor ON (servidor.cod_servidor = professor_turma.servidor_id)
+              LEFT JOIN cadastro.fisica_raca ON (fisica_raca.ref_idpes = professor_turma.servidor_id)
+             INNER JOIN cadastro.pessoa ON (pessoa.idpes = professor_turma.servidor_id)
+             INNER JOIN cadastro.fisica ON (fisica.idpes = professor_turma.servidor_id)
+             INNER JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
+             WHERE professor_turma.ano = $1
+               AND turma.ano = professor_turma.ano
+               AND escola.cod_escola = $2
+               AND servidor.ativo = 1
+             GROUP BY professor_turma.servidor_id,
+                      juridica.fantasia,
+                      pessoa.nome,
+                      professor_turma.tipo_vinculo
+             ORDER BY pessoa.nome";
+
+    $servidores = $this->fetchPreparedQuery($sql, array($ano, $escola));
+
+    if(empty($servidores)){
+      $this->messenger->append("Nenhum servidor encontrado.");
+      return array('title' => "Análise exportação - Registro 51");
+    }
+
+    $mensagem = array();
+
+    foreach ($servidores as $servidor) {
+      $nomeEscola   = Portabilis_String_Utils::toUtf8(mb_strtoupper($servidor["nome_escola"]));
+      $nomeServidor = Portabilis_String_Utils::toUtf8(mb_strtoupper($servidor["nome_servidor"]));
+
+      if (!$servidor["tipo_vinculo"]) {
+        $mensagem[] = array("text" => "Dados para formular o registro 51 da escola {$nomeEscola} não encontrados. Verificamos que o(a) servidor(a) {$nomeServidor} é docente e possui vínculo com turmas, portanto é necessário informar qual o seu tipo de vínculo.",
+                            "path" => "(Servidores > Cadastrar > Vincular professor a turmas > Campo: Tipo do vínculo)",
+                            "fail" => true);
+      }
+    }
+
+    return array('mensagens' => $mensagem,
+                 'title'     => "Análise exportação - Registro 51");
+  }
+
+  protected function analisaEducacensoRegistro60() {
+
+    $escola   = $this->getRequest()->escola;
+    $ano      = $this->getRequest()->ano;
+    $data_ini = $this->getRequest()->data_ini;
+    $data_fim = $this->getRequest()->data_fim;
+
+    $sql = "SELECT juridica.fantasia AS nome_escola,
+                   pessoa.nome AS nome_aluno,
+                   fisica_raca.ref_cod_raca AS cor_raca,
+                   fisica.nacionalidade AS nacionalidade,
+                   uf.cod_ibge AS uf_inep,
+                   municipio.cod_ibge AS municipio_inep
+              FROM pmieducar.aluno
+             INNER JOIN pmieducar.matricula ON (matricula.ref_cod_aluno = aluno.cod_aluno)
+             INNER JOIN pmieducar.escola ON (escola.cod_escola = matricula.ref_ref_cod_escola)
+             INNER JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
+             INNER JOIN cadastro.pessoa ON (pessoa.idpes = aluno.ref_idpes)
+             INNER JOIN cadastro.fisica ON (fisica.idpes = pessoa.idpes)
+              LEFT JOIN cadastro.fisica_raca ON (fisica_raca.ref_idpes = fisica.idpes)
+              LEFT JOIN cadastro.endereco_pessoa ON (endereco_pessoa.idpes = fisica.idpes)
+              LEFT JOIN public.municipio ON (municipio.idmun = fisica.idmun_nascimento)
+              LEFT JOIN public.uf ON (uf.sigla_uf = municipio.sigla_uf)
+             WHERE aluno.ativo = 1
+               AND matricula.ativo = 1
+               AND matricula.ano = $1
+               AND escola.cod_escola = $2
+               AND COALESCE(matricula.data_matricula,matricula.data_cadastro) BETWEEN DATE($3) AND DATE($4)
+               AND (matricula.aprovado = 3 OR DATE(COALESCE(matricula.data_cancel,matricula.data_exclusao)) > DATE($4))
+             ORDER BY nome_aluno";
+
+    $alunos = $this->fetchPreparedQuery($sql, array($ano,
+                                                    $escola,
+                                                    Portabilis_Date_Utils::brToPgSQL($data_ini),
+                                                    Portabilis_Date_Utils::brToPgSQL($data_fim)));
+
+    if(empty($alunos)){
+      $this->messenger->append("Nenhum aluno encontrado.");
+      return array('title' => "Análise exportação - Registro 60");
+    }
+
+    $mensagem = array();
+    $brasileiro = 1;
+
+    foreach ($alunos as $aluno) {
+      $nomeEscola = Portabilis_String_Utils::toUtf8(mb_strtoupper($aluno["nome_escola"]));
+      $nomeAluno  = Portabilis_String_Utils::toUtf8(mb_strtoupper($aluno["nome_aluno"]));
+
+      if (!$aluno["cor_raca"]) {
+        $mensagem[] = array("text" => "Dados para formular o registro 60 da escola {$nomeEscola} não encontrados. Verifique se a raça do(a) aluno(a) {$nomeAluno} foi informada.",
+                            "path" => "(Pessoa FJ > Pessoa física > Editar > Campo: Raça)",
+                            "fail" => true);
+      }
+      if (!$aluno["nacionalidade"]) {
+        $mensagem[] = array("text" => "Dados para formular o registro 30 da escola {$nomeEscola} não encontrados. Verifique se a nacionalidade do(a) aluno(a) {$nomeAluno} foi informada.",
+                            "path" => "(Pessoa FJ > Pessoa física > Editar > Campo: Nacionalidade)",
+                            "fail" => true);
+      } else {
+        if ($aluno["nacionalidade"] == $brasileiro && !$aluno['uf_inep']) {
+          $mensagem[] = array("text" => "Dados para formular o registro 30 da escola {$nomeEscola} não encontrados. Verificamos que a nacionalidade do(a) aluno(a) {$nomeAluno} é brasileiro(a), portanto é necessário preencher o código da UF de nascimento conforme a 'Tabela de UF'.",
+                              "path" => "(Endereçamento > Estado > Editar > Campo: Código INEP)",
+                              "fail" => true);
+        }
+        if ($aluno["nacionalidade"] == $brasileiro && !$aluno['municipio_inep']) {
+          $mensagem[] = array("text" => "Dados para formular o registro 30 da escola {$nomeEscola} não encontrados. Verificamos que a nacionalidade do(a) aluno(a) {$nomeAluno} é brasileiro(a), portanto é necessário preencher o código do município de nascimento conforme a 'Tabela de Municípios'.",
+                              "path" => "(Endereçamento > Município > Editar > Campo: Código INEP)",
+                              "fail" => true);
+        }
+      }
+    }
+
+    return array('mensagens' => $mensagem,
+                 'title'     => "Análise exportação - Registro 60");
+  }
+
+  protected function analisaEducacensoRegistro70() {
+
+    $escola   = $this->getRequest()->escola;
+    $ano      = $this->getRequest()->ano;
+    $data_ini = $this->getRequest()->data_ini;
+    $data_fim = $this->getRequest()->data_fim;
+
+    $sql = "SELECT juridica.fantasia AS nome_escola,
+                   pessoa.nome AS nome_aluno,
+                   documento.rg AS rg,
+                   documento.sigla_uf_exp_rg AS sigla_uf_rg,
+                   documento.tipo_cert_civil AS tipo_cert_civil,
+                   documento.num_termo AS num_termo,
+                   documento.sigla_uf_cert_civil AS uf_cartorio,
+                   documento.cartorio_cert_civil_inep AS cod_cartorio,
+                   uf.cod_ibge AS uf_inep,
+                   municipio.cod_ibge AS municipio_inep,
+                   uf_cartorio.cod_ibge AS uf_inep_cartorio,
+                   endereco_pessoa.cep AS cep
+              FROM pmieducar.aluno
+             INNER JOIN pmieducar.matricula ON (matricula.ref_cod_aluno = aluno.cod_aluno)
+             INNER JOIN pmieducar.escola ON (escola.cod_escola = matricula.ref_ref_cod_escola)
+             INNER JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
+             INNER JOIN cadastro.pessoa ON (pessoa.idpes = aluno.ref_idpes)
+             INNER JOIN cadastro.fisica ON (fisica.idpes = pessoa.idpes)
+              LEFT JOIN cadastro.documento ON (documento.idpes = pessoa.idpes)
+              LEFT JOIN cadastro.endereco_pessoa ON (endereco_pessoa.idpes = pessoa.idpes)
+              LEFT JOIN public.logradouro ON (logradouro.idlog = endereco_pessoa.idlog)
+              LEFT JOIN public.municipio ON (municipio.idmun = logradouro.idmun)
+              LEFT JOIN public.uf ON (uf.sigla_uf = municipio.sigla_uf)
+              LEFT JOIN public.uf uf_cartorio ON (uf_cartorio.sigla_uf = documento.sigla_uf_cert_civil)
+             WHERE aluno.ativo = 1
+               AND matricula.ativo = 1
+               AND matricula.ano = $1
+               AND escola.cod_escola = $2
+               AND COALESCE(matricula.data_matricula,matricula.data_cadastro) BETWEEN DATE($3) AND DATE($4)
+               AND (matricula.aprovado = 3 OR DATE(COALESCE(matricula.data_cancel,matricula.data_exclusao)) > DATE($4))
+             ORDER BY nome_aluno";
+
+    $alunos = $this->fetchPreparedQuery($sql, array($ano,
+                                                    $escola,
+                                                    Portabilis_Date_Utils::brToPgSQL($data_ini),
+                                                    Portabilis_Date_Utils::brToPgSQL($data_fim)));
+
+    if(empty($alunos)){
+      $this->messenger->append("Nenhum aluno encontrado.");
+      return array('title' => "Análise exportação - Registro 70");
+    }
+
+    $mensagem = array();
+    $nascimentoAntigoFormato = 91;
+    $casamentoAntigoFormato  = 92;
+
+    foreach ($alunos as $aluno) {
+      $nomeEscola = Portabilis_String_Utils::toUtf8(mb_strtoupper($aluno["nome_escola"]));
+      $nomeAluno  = Portabilis_String_Utils::toUtf8(mb_strtoupper($aluno["nome_aluno"]));
+
+      if (!$aluno["rg"]) {
+        $mensagem[] = array("text" => "Dados para formular o registro 70 da escola {$nomeEscola} não encontrados. Verificamos que o número da identidade do(a) aluno(a) {$nomeAluno} foi informada, portanto é necessário informar também o órgão emissor da identidade.",
+                            "path" => "(Pessoa FJ > Pessoa física > Editar > Campo: RG / Data emissão)",
+                            "fail" => true);
+      }
+      if (!$aluno["sigla_uf_rg"]) {
+        $mensagem[] = array("text" => "Dados para formular o registro 70 da escola {$nomeEscola} não encontrados. Verificamos que o número da identidade do(a) aluno(a) {$nomeAluno} foi informada, portanto é necessário informar também estado da identidade.",
+                            "path" => "(Pessoa FJ > Pessoa física > Editar > Campo: RG / Data emissão)",
+                            "fail" => true);
+      }
+      if ($aluno["tipo_cert_civil"] == $nascimentoAntigoFormato || $aluno["tipo_cert_civil"] == $casamentoAntigoFormato) {
+        if (!$aluno["num_termo"]) {
+          $mensagem[] = array("text" => "Dados para formular o registro 70 da escola {$nomeEscola} não encontrados. Verificamos que o tipo da certidão civil do(a) aluno(a) {$nomeAluno} foi informada, portanto é necessário informar também o número do termo da certidão.",
+                              "path" => "(Pessoa FJ > Pessoa física > Editar > Campo: Termo)",
+                              "fail" => true);
+        }
+        if (!$aluno["uf_cartorio"]) {
+          $mensagem[] = array("text" => "Dados para formular o registro 70 da escola {$nomeEscola} não encontrados. Verificamos que o número do termo da certidão civil do(a) aluno(a) {$nomeAluno} foi informado, portanto é necessário informar também o estado do emissão.",
+                              "path" => "(Pessoa FJ > Pessoa física > Editar > Campo: Estado emissão / Data emissão)",
+                              "fail" => true);
+        }
+        if (!$aluno["uf_inep_cartorio"]) {
+          $mensagem[] = array("text" => "Dados para formular o registro 70 da escola {$nomeEscola} não encontrados. Verificamos que o estado do cartório do(a) aluno(a) {$nomeAluno} foi informado, portanto é necessário preencher o código deste estado conforme a 'Tabela de UF'.",
+                              "path" => "(Endereçamento > Estado > Editar > Campo: Código INEP)",
+                              "fail" => true);
+        }
+        if (!$aluno["cod_cartorio"]) {
+          $mensagem[] = array("text" => "Dados para formular o registro 70 da escola {$nomeEscola} não encontrados. Verificamos que o número da identidade do(a) aluno(a) {$nomeAluno} foi informada, portanto é necessário informar também o código do cartório conforme a 'Tabela de Cartórios'.",
+                              "path" => "(Endereçamento > Estado > Editar > Campo: Código INEP)",
+                              "fail" => true);
+        }
+      }
+      if ($aluno["cep"] && !$aluno['uf_inep']) {
+        $mensagem[] = array("text" => "Dados para formular o registro 40 da escola {$nomeEscola} não encontrados. Verificamos que no cadastro do(a) aluno(a) {$nomeAluno} o endereçamento foi informado, portanto é necessário cadastrar código da UF informada conforme a 'Tabela de UF'.",
+                            "path" => "(Endereçamento > Estado > Editar > Campo: Código INEP)",
+                            "fail" => true);
+      }
+      if ($aluno["cep"] && !$aluno['municipio_inep']) {
+        $mensagem[] = array("text" => "Dados para formular o registro 40 da escola {$nomeEscola} não encontrados. Verificamos que no cadastro do(a) aluno(a) {$nomeAluno} o endereçamento foi informado, portanto é necessário cadastrar código do município informado conforme a 'Tabela de Municípios'.",
+                            "path" => "(Endereçamento > Município > Editar > Campo: Código INEP)",
+                            "fail" => true);
+      }
+    }
+
+    return array('mensagens' => $mensagem,
+                 'title'     => "Análise exportação - Registro 70");
+  }
+
 
   public function Gerar() {
     if ($this->isRequestFor('get', 'registro-00'))
@@ -492,6 +1091,18 @@ class EducacensoAnaliseController extends ApiCoreController
       $this->appendResponse($this->analisaEducacensoRegistro10());
     else if ($this->isRequestFor('get', 'registro-20'))
       $this->appendResponse($this->analisaEducacensoRegistro20());
+    else if ($this->isRequestFor('get', 'registro-30'))
+      $this->appendResponse($this->analisaEducacensoRegistro30());
+    else if ($this->isRequestFor('get', 'registro-40'))
+      $this->appendResponse($this->analisaEducacensoRegistro40());
+    else if ($this->isRequestFor('get', 'registro-50'))
+      $this->appendResponse($this->analisaEducacensoRegistro50());
+    else if ($this->isRequestFor('get', 'registro-51'))
+      $this->appendResponse($this->analisaEducacensoRegistro51());
+    else if ($this->isRequestFor('get', 'registro-60'))
+      $this->appendResponse($this->analisaEducacensoRegistro60());
+    else if ($this->isRequestFor('get', 'registro-70'))
+      $this->appendResponse($this->analisaEducacensoRegistro70());
     else
       $this->notImplementedOperationError();
   }

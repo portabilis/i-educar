@@ -33,7 +33,7 @@ require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 
 /**
- * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ * @author    Paula Bonot <bonot@portabilis.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
@@ -44,7 +44,7 @@ class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Exporta&ccedil;&atilde;o Educacenso');
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Nova exporta&ccedil;&atilde;o');
     $this->processoAp = 846;
     $this->addEstilo('localizacaoSistema');
   }
@@ -71,22 +71,64 @@ class indice extends clsCadastro
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Educacenso",
-         ""                                  => "Exporta&ccedil;&atilde;o para o Educacenso"
+         "educar_index.php"                  => "Administrativo",
+         ""                                  => "Exporta&ccedil;&atilde;o de usu&aacute;rios"
     ));
     $this->enviaLocalizacao($localizacao->montar());
 
-    return 'Nova exportação';
+    return 'Novo';
   }
 
   function Gerar()
   {
 
-    $this->inputsHelper()->dynamic(array('ano', 'instituicao', 'escola'));
-    $this->inputsHelper()->date('data_ini',array( 'label' => Portabilis_String_Utils::toLatin1('Data início'), 'value' => $this->data_ini));
-    $this->inputsHelper()->date('data_fim',array( 'label' => 'Data fim', 'value' => $this->data_fim));
+    $this->inputsHelper()->dynamic(array('instituicao'));
+    $this->inputsHelper()->dynamic('escola', array('required' =>  false));
 
-    Portabilis_View_Helper_Application::loadJavascript($this, '/modules/Educacenso/Assets/Javascripts/Educacenso.js');
+    $resourcesStatus = array(1  => 'Ativo',
+                       0  => 'Inativo');
+    $optionsStatus   = array('label' => 'Status', 'resources' => $resourcesStatus, 'value' => 1);
+    $this->inputsHelper()->select('status', $optionsStatus);
+
+    $opcoes = array( "" => "Selecione" );
+    if( class_exists( "clsPmieducarTipoUsuario" ) )
+    {
+      $objTemp = new clsPmieducarTipoUsuario();
+      $objTemp->setOrderby('nm_tipo ASC');
+
+      $obj_libera_menu = new clsMenuFuncionario($this->pessoa_logada,false,false,0);
+      $obj_super_usuario = $obj_libera_menu->detalhe();
+
+      // verifica se pessoa logada é super-usuario
+      if ($obj_super_usuario) {
+        $lista = $objTemp->lista(null,null,null,null,null,null,null,null,1);
+      }else{
+        $lista = $objTemp->lista(null,null,null,null,null,null,null,null,1,$obj_permissao->nivel_acesso($this->pessoa_logada));
+      }
+
+      if ( is_array( $lista ) && count( $lista ) )
+      {
+        foreach ( $lista as $registro )
+        {
+          $opcoes["{$registro['cod_tipo_usuario']}"] = "{$registro['nm_tipo']}";
+          $opcoes_["{$registro['cod_tipo_usuario']}"] = "{$registro['nivel']}";
+        }
+      }
+    }
+    else
+    {
+      echo "<!--\nErro\nClasse clsPmieducarTipoUsuario n&atilde;o encontrada\n-->";
+      $opcoes = array( "" => "Erro na geração" );
+    }
+    $tamanho = sizeof($opcoes_);
+    echo "<script>\nvar cod_tipo_usuario = new Array({$tamanho});\n";
+    foreach ($opcoes_ as $key => $valor)
+      echo "cod_tipo_usuario[{$key}] = {$valor};\n";
+    echo "</script>";
+
+    $this->campoLista( "ref_cod_tipo_usuario", "Tipo Usu&aacute;rio", $opcoes, $this->ref_cod_tipo_usuario,"",null,null,null,null,false );
+
+    Portabilis_View_Helper_Application::loadJavascript($this, '/modules/ExportarUsuarios/exportarUsuarios.js');
 
     $this->nome_url_sucesso = "Exportar";
     $this->acao_enviar      = " ";
@@ -105,19 +147,3 @@ $pagina->addForm($miolo);
 // Gera o código HTML
 $pagina->MakeAll();
 ?>
-<script type="text/javascript">
-
-function marcarCheck(idValue) {
-    // testar com formcadastro
-    var contaForm = document.formcadastro.elements.length;
-    var campo = document.formcadastro;
-    var i;
-
-    for (i=0; i<contaForm; i++) {
-        if (campo.elements[i].id == idValue) {
-
-            campo.elements[i].checked = campo.CheckTodos.checked;
-        }
-    }
-}
-</script>

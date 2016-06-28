@@ -33,57 +33,20 @@
 	Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 
 	echo "<?xml version=\"1.0\" encoding=\"ISO-8859-15\"?>\n<query xmlns=\"sugestoes\">\n";
-	if( is_numeric( $_GET["cur"]  ) )
+	if(is_numeric($_GET["cur"]) && is_numeric($_GET["ser_dif"]))
 	{
 		$db = new clsBanco();
-		$consulta = "SELECT DISTINCT
-							ss.ref_serie_origem
-							,so.nm_serie
-						FROM
-							pmieducar.sequencia_serie ss
-							, pmieducar.serie so
-							, pmieducar.serie sd
-						WHERE
-							ss.ativo = 1
-							AND ref_serie_origem = so.cod_serie
-							AND ref_serie_destino = sd.cod_serie
-							AND ( so.ref_cod_curso = {$_GET["cur"]} OR sd.ref_cod_curso = {$_GET["cur"]} )
-
-						UNION
-
-						SELECT DISTINCT
-							ss.ref_serie_destino
-							,sd.nm_serie
-						FROM
-							pmieducar.sequencia_serie ss
-							, pmieducar.serie so
-							, pmieducar.serie sd
-						WHERE
-							ss.ativo = 1
-							AND ref_serie_origem = so.cod_serie
-							AND ref_serie_destino = sd.cod_serie
-							AND ( so.ref_cod_curso = {$_GET["cur"]} OR sd.ref_cod_curso = {$_GET["cur"]} )
-
-						UNION
-
-						SELECT DISTINCT
-							s.cod_serie
-							,s.nm_serie
-						FROM   pmieducar.serie s
-						WHERE
-							s.ativo = 1
-						   AND s.ref_cod_curso = {$_GET["cur"]}
-						";
-
+		$consulta = "SELECT cod_serie, nm_serie
+		               FROM pmieducar.serie
+		              WHERE ref_cod_curso = ". $_GET["cur"] .
+		              " AND cod_serie <>" .
+		              $_GET['ser_dif'] .
+		              " ORDER BY nm_serie" ;
 		$db->Consulta( $consulta );
 		while ( $db->ProximoRegistro() )
 		{
-			list( $serie,$nm_serie ) = $db->Tupla();
-				if($_GET['ser_dif'] != $serie){
-					echo "	<serie cod_serie=\"$serie\">{$nm_serie}</serie>\n";
-					//echo "	<item>{$serie}</item>\n";
-					//echo "	<item>{$nm_serie}</item>\n";
-				}
+			list( $serie,$nm_serie) = $db->Tupla();
+			echo "	<serie cod_serie=\"$serie\">{$nm_serie}</serie>\n";
 		}
 	}
 	echo "</query>";

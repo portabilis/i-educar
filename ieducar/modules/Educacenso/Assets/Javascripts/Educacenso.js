@@ -219,6 +219,130 @@ $j(document).ready(function(){
 
     var handleGetAnaliseRegistro20 = function(response) {
       montaHtmlRegistro(response);
+      $j("#registro_load").text("Analisando registro 30");
+      analisaRegistro30();
+    };
+
+    var analisaRegistro30 = function(){
+        var urlForGetAnaliseRegistro = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', 'registro-30', {
+          escola : $j("#ref_cod_escola").val(),
+          ano    : $j("#ano").val()
+        });
+
+        var options = {
+          url : urlForGetAnaliseRegistro,
+          dataType : 'json',
+          success  : handleGetAnaliseRegistro30
+        };
+        getResources(options);
+    };
+
+    var handleGetAnaliseRegistro30 = function(response) {
+      montaHtmlRegistro(response);
+      $j("#registro_load").text("Analisando registro 40");
+      analisaRegistro40();
+    };
+
+    var analisaRegistro40 = function(){
+        var urlForGetAnaliseRegistro = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', 'registro-40', {
+          escola : $j("#ref_cod_escola").val(),
+          ano    : $j("#ano").val()
+        });
+
+        var options = {
+          url : urlForGetAnaliseRegistro,
+          dataType : 'json',
+          success  : handleGetAnaliseRegistro40
+        };
+        getResources(options);
+    };
+
+    var handleGetAnaliseRegistro40 = function(response) {
+      montaHtmlRegistro(response);
+      $j("#registro_load").text("Analisando registro 50");
+      analisaRegistro50();
+    };
+
+    var analisaRegistro50 = function(){
+        var urlForGetAnaliseRegistro = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', 'registro-50', {
+          escola : $j("#ref_cod_escola").val(),
+          ano    : $j("#ano").val()
+        });
+
+        var options = {
+          url : urlForGetAnaliseRegistro,
+          dataType : 'json',
+          success  : handleGetAnaliseRegistro50
+        };
+        getResources(options);
+    };
+
+    var handleGetAnaliseRegistro50 = function(response) {
+      montaHtmlRegistro(response);
+      $j("#registro_load").text("Analisando registro 51");
+      analisaRegistro51();
+    };
+
+    var analisaRegistro51 = function(){
+        var urlForGetAnaliseRegistro = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', 'registro-51', {
+          escola : $j("#ref_cod_escola").val(),
+          ano    : $j("#ano").val()
+        });
+
+        var options = {
+          url : urlForGetAnaliseRegistro,
+          dataType : 'json',
+          success  : handleGetAnaliseRegistro51
+        };
+        getResources(options);
+    };
+
+    var handleGetAnaliseRegistro51 = function(response) {
+      montaHtmlRegistro(response);
+      $j("#registro_load").text("Analisando registro 60");
+      analisaRegistro60();
+    };
+
+    var analisaRegistro60 = function(){
+        var urlForGetAnaliseRegistro = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', 'registro-60', {
+          escola   : $j("#ref_cod_escola").val(),
+          ano      : $j("#ano").val(),
+          data_ini : $j("#data_ini").val(),
+          data_fim : $j("#data_fim").val()
+        });
+
+        var options = {
+          url : urlForGetAnaliseRegistro,
+          dataType : 'json',
+          success  : handleGetAnaliseRegistro60
+        };
+        getResources(options);
+    };
+
+    var handleGetAnaliseRegistro60 = function(response) {
+      montaHtmlRegistro(response);
+      $j("#registro_load").text("Analisando registro 70");
+      analisaRegistro70();
+    };
+
+    var analisaRegistro70 = function(){
+        var urlForGetAnaliseRegistro = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', 'registro-70', {
+          escola   : $j("#ref_cod_escola").val(),
+          ano      : $j("#ano").val(),
+          data_ini : $j("#data_ini").val(),
+          data_fim : $j("#data_fim").val()
+        });
+
+        var options = {
+          url : urlForGetAnaliseRegistro,
+          dataType : 'json',
+          success  : handleGetAnaliseRegistro70
+        };
+        getResources(options);
+    };
+
+    var handleGetAnaliseRegistro70 = function(response) {
+      montaHtmlRegistro(response);
       finishAnalysis();
     };
 

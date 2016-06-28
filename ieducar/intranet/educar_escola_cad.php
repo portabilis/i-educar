@@ -207,6 +207,7 @@ class indice extends clsCadastro
   var $computadores;
   var $computadores_administrativo;
   var $computadores_alunos;
+  var $impressoras_multifuncionais;
   var $acesso_internet;
   var $banda_larga;
   var $ato_criacao;
@@ -1501,20 +1502,25 @@ if(!$this->isEnderecoExterno){
 	    $options = array('label' => Portabilis_String_Utils::toLatin1('Quantidade de computadores de uso dos alunos'), 'resources' => $resources, 'value' => $this->computadores_alunos, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
 	    $this->inputsHelper()->integer('computadores_alunos', $options);
 
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Quantidade de impressoras multifuncionais'), 'resources' => $resources, 'value' => $this->impressoras_multifuncionais, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
+	    $this->inputsHelper()->integer('impressoras_multifuncionais', $options);
+
 	    $options = array('label' => Portabilis_String_Utils::toLatin1('Possui internet'), 'value' => $this->acesso_internet);
 	    $this->inputsHelper()->checkbox('acesso_internet', $options);
 
 	    $options = array('label' => Portabilis_String_Utils::toLatin1('Possui banda larga'), 'value' => $this->banda_larga);
 	    $this->inputsHelper()->checkbox('banda_larga', $options);
 
-			$resources = array( 0    => 'Selecione',
+			$resources = array( -1 => 'Selecione',
+								0    => Portabilis_String_Utils::toLatin1('Não oferece'),
 			                    1    => Portabilis_String_Utils::toLatin1('Não exclusivamente'),
 			                    2    => 'Exclusivamente');
 
   		$options = array('label' => Portabilis_String_Utils::toLatin1('Atendimento educacional especializado - AEE'), 'resources' => $resources, 'value' => $this->atendimento_aee, 'required' => false, 'size' => 70,);
 	    $this->inputsHelper()->select('atendimento_aee', $options);
 
-	    $resources = array( 0    => 'Selecione',
+	    $resources = array( -1 => 'Selecione',
+							0    => Portabilis_String_Utils::toLatin1('Não oferece'),
 		                    1    => Portabilis_String_Utils::toLatin1('Não exclusivamente'),
 		                    2    => 'Exclusivamente');
 
@@ -1705,6 +1711,7 @@ if(!$this->isEnderecoExterno){
 					$obj->computadores = $this->computadores;
 					$obj->computadores_administrativo = $this->computadores_administrativo;
 					$obj->computadores_alunos = $this->computadores_alunos;
+					$obj->impressoras_multifuncionais = $this->impressoras_multifuncionais;
 					$obj->acesso_internet = $this->acesso_internet == 'on' ? 1 : 0;
 					$obj->banda_larga = $this->banda_larga == 'on' ? 1 : 0;
 					$obj->ato_criacao = $this->ato_criacao;
@@ -1911,6 +1918,7 @@ if(!$this->isEnderecoExterno){
 			$obj->computadores = $this->computadores;
 			$obj->computadores_administrativo = $this->computadores_administrativo;
 			$obj->computadores_alunos = $this->computadores_alunos;
+			$obj->impressoras_multifuncionais = $this->impressoras_multifuncionais;
 			$obj->acesso_internet = $this->acesso_internet == 'on' ? 1 : 0;
 			$obj->banda_larga = $this->banda_larga == 'on' ? 1 : 0;
 			$obj->ato_criacao = $this->ato_criacao;
@@ -2090,6 +2098,7 @@ if(!$this->isEnderecoExterno){
 			$obj->computadores = $this->computadores;
 			$obj->computadores_administrativo = $this->computadores_administrativo;
 			$obj->computadores_alunos = $this->computadores_alunos;
+			$obj->impressoras_multifuncionais = $this->impressoras_multifuncionais;
 			$obj->acesso_internet = $this->acesso_internet == 'on' ? 1 : 0;
 			$obj->banda_larga = $this->banda_larga == 'on' ? 1 : 0;
 			$obj->ato_criacao = $this->ato_criacao;
@@ -2204,6 +2213,7 @@ if(!$this->isEnderecoExterno){
 			$obj->computadores = $this->computadores;
 			$obj->computadores_administrativo = $this->computadores_administrativo;
 			$obj->computadores_alunos = $this->computadores_alunos;
+			$obj->impressoras_multifuncionais = $this->impressoras_multifuncionais;
 			$obj->acesso_internet = $this->acesso_internet == 'on' ? 1 : 0;
 			$obj->banda_larga = $this->banda_larga == 'on' ? 1 : 0;
 			$obj->ato_criacao = $this->ato_criacao;
