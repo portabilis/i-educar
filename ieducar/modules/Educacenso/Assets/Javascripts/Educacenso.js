@@ -305,8 +305,10 @@ $j(document).ready(function(){
 
     var analisaRegistro60 = function(){
         var urlForGetAnaliseRegistro = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', 'registro-60', {
-          escola : $j("#ref_cod_escola").val(),
-          ano    : $j("#ano").val()
+          escola   : $j("#ref_cod_escola").val(),
+          ano      : $j("#ano").val(),
+          data_ini : $j("#data_ini").val(),
+          data_fim : $j("#data_fim").val()
         });
 
         var options = {
