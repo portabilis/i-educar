@@ -34,6 +34,7 @@
 
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'intranet/include/clsBanco.inc.php';
+require_once 'lib/Portabilis/Date/Utils.php';
 
 class EducacensoAnaliseController extends ApiCoreController
 {
@@ -908,8 +909,10 @@ class EducacensoAnaliseController extends ApiCoreController
 
   protected function analisaEducacensoRegistro60() {
 
-    $escola = $this->getRequest()->escola;
-    $ano    = $this->getRequest()->ano;
+    $escola   = $this->getRequest()->escola;
+    $ano      = $this->getRequest()->ano;
+    $data_ini = $this->getRequest()->data_ini;
+    $data_fim = $this->getRequest()->data_fim;
 
     $sql = "SELECT juridica.fantasia AS nome_escola,
                    pessoa.nome AS nome_aluno,
@@ -930,9 +933,14 @@ class EducacensoAnaliseController extends ApiCoreController
              WHERE aluno.ativo = 1
                AND matricula.ativo = 1
                AND matricula.ano = $1
-               AND escola.cod_escola = $2";
+               AND escola.cod_escola = $2
+               AND COALESCE(matricula.data_matricula,matricula.data_cadastro) BETWEEN DATE($3) AND DATE($4)
+               AND (matricula.aprovado = 3 OR DATE(COALESCE(matricula.data_cancel,matricula.data_exclusao)) > DATE($4))";
 
-    $alunos = $this->fetchPreparedQuery($sql, array($ano, $escola));
+    $alunos = $this->fetchPreparedQuery($sql, array($ano,
+                                                    $escola,
+                                                    Portabilis_Date_Utils::brToPgSQL($data_ini),
+                                                    Portabilis_Date_Utils::brToPgSQL($data_fim)));
 
     if(empty($alunos)){
       $this->messenger->append("Nenhum aluno encontrado.");
