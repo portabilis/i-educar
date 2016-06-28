@@ -398,6 +398,7 @@ class EducacensoExportController extends ApiCoreController
         INNER JOIN pmieducar.escola_curso ON (escola_curso.ref_cod_curso = curso.cod_curso)
         WHERE escola_curso.ref_cod_escola = e.cod_escola
           AND curso.modalidade_curso = 1
+        LIMIT 1
       ) as r10s92,
 
       (SELECT 1
@@ -405,6 +406,7 @@ class EducacensoExportController extends ApiCoreController
         INNER JOIN pmieducar.escola_curso ON (escola_curso.ref_cod_curso = curso.cod_curso)
         WHERE escola_curso.ref_cod_escola = e.cod_escola
           AND curso.modalidade_curso = 2
+        LIMIT 1
       ) as r10s93,
 
       (SELECT 1
@@ -412,6 +414,7 @@ class EducacensoExportController extends ApiCoreController
         INNER JOIN pmieducar.escola_curso ON (escola_curso.ref_cod_curso = curso.cod_curso)
         WHERE escola_curso.ref_cod_escola = e.cod_escola
           AND curso.modalidade_curso = 3
+        LIMIT 1
       ) as r10s94,
 
       fundamental_ciclo as r10s96,
