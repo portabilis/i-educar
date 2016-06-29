@@ -1121,6 +1121,8 @@ class EducacensoAnaliseController extends ApiCoreController
     }
 
     $mensagem = array();
+    $transporteEstadual  = 1;
+    $transporteMunicipal = 2;
 
     foreach ($alunos as $aluno) {
       $nomeEscola = Portabilis_String_Utils::toUtf8(mb_strtoupper($aluno["nome_escola"]));
@@ -1131,10 +1133,12 @@ class EducacensoAnaliseController extends ApiCoreController
                             "path" => "(Cadastros > Aluno > Alunos > Campo: Transporte público)",
                             "fail" => true);
       }
-      if (!$aluno["veiculo_transporte_escolar"]) {
-        $mensagem[] = array("text" => "Dados para formular o registro 80 da escola {$nomeEscola} não encontrados. Verificamos que o(a) aluno(a) {$nomeAluno} utiliza o transporte público, portanto é necessário informar qual o tipo de veículo utilizado.",
-                            "path" => "(Cadastros > Aluno > Alunos > Campo: Veículo utilizado)",
-                            "fail" => true);
+      if ($aluno["transporte_escolar"] == $transporteMunicipal || $aluno["transporte_escolar"] == $transporteEstadual) {
+        if (!$aluno["veiculo_transporte_escolar"]) {
+          $mensagem[] = array("text" => "Dados para formular o registro 80 da escola {$nomeEscola} não encontrados. Verificamos que o(a) aluno(a) {$nomeAluno} utiliza o transporte público, portanto é necessário informar qual o tipo de veículo utilizado.",
+                              "path" => "(Cadastros > Aluno > Alunos > Campo: Veículo utilizado)",
+                              "fail" => true);
+        }
       }
     }
 
