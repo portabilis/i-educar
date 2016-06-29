@@ -555,7 +555,7 @@ class indice extends clsCadastro
       'label'       => 'Passaporte',
       'value'       => $documentos['passaporte'],
       'cols'        => 45,
-      'max_length'  => 150
+      'max_length'  => 20
     );
 
     $this->inputsHelper()->text('passaporte', $options);
