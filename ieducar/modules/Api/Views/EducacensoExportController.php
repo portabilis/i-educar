@@ -394,23 +394,26 @@ class EducacensoExportController extends ApiCoreController
       atividade_complementar as r10s91,
 
       (SELECT 1
-        FROM pmieducar.curso
-        INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso)
-        WHERE modalidade_curso = 1 AND escola_curso.ref_cod_escola = e.cod_escola
+         FROM pmieducar.curso
+        INNER JOIN pmieducar.escola_curso ON (escola_curso.ref_cod_curso = curso.cod_curso)
+        WHERE escola_curso.ref_cod_escola = e.cod_escola
+          AND curso.modalidade_curso = 1
         LIMIT 1
       ) as r10s92,
 
       (SELECT 1
-        FROM pmieducar.curso
-        INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso)
-        WHERE modalidade_curso = 2 AND escola_curso.ref_cod_escola = e.cod_escola
+         FROM pmieducar.curso
+        INNER JOIN pmieducar.escola_curso ON (escola_curso.ref_cod_curso = curso.cod_curso)
+        WHERE escola_curso.ref_cod_escola = e.cod_escola
+          AND curso.modalidade_curso = 2
         LIMIT 1
       ) as r10s93,
 
       (SELECT 1
-        FROM pmieducar.curso
-        INNER JOIN pmieducar.escola_curso ON (curso.cod_curso = escola_curso.ref_cod_curso)
-        WHERE modalidade_curso = 3 AND escola_curso.ref_cod_escola = e.cod_escola
+         FROM pmieducar.curso
+        INNER JOIN pmieducar.escola_curso ON (escola_curso.ref_cod_curso = curso.cod_curso)
+        WHERE escola_curso.ref_cod_escola = e.cod_escola
+          AND curso.modalidade_curso = 3
         LIMIT 1
       ) as r10s94,
 
@@ -432,6 +435,8 @@ class EducacensoExportController extends ApiCoreController
       INNER JOIN cadastro.fisica f ON (f.idpes = p.idpes)
       WHERE e.cod_escola = $1
     ';
+
+    $exclusivamente = 2;
 
     extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, array('return_only' => 'first-row', 'params' => array($escolaId))));
     if($r10s1){
@@ -466,8 +471,14 @@ class EducacensoExportController extends ApiCoreController
 
       $r10s96 = ($r10s96 == 1 && ($r10s92 == 1 || $r10s93 == 1)) ? 1 : (($r10s92 == 1 || $r10s93 == 1) ? 0 : NULL);
 
-      if($r10s91 != 2)
-        $r10s93 = $r10s94 = $r10s95 = 0;
+      if ($r10s90 == $exclusivamente || $r10s91 == $exclusivamente) {
+        $r10s92 = $r10s93 = $r10s94 = $r10s95 = '';
+      } else {
+        $r10s92 = ($r10s92 ? $r10s92 : 0);
+        $r10s93 = ($r10s93 ? $r10s93 : 0);
+        $r10s94 = ($r10s94 ? $r10s94 : 0);
+        $r10s95 = ($r10s95 ? $r10s95 : 0);
+      }
 
       $r10s98 = 1;
       $r10s99 = $r10s100 = 0;
@@ -803,16 +814,16 @@ class EducacensoExportController extends ApiCoreController
     INNER JOIN pmieducar.turma t ON (t.cod_turma = pt.turma_id)
     INNER JOIN pmieducar.escola e ON (e.cod_escola = t.ref_ref_cod_escola)
 		INNER JOIN modules.educacenso_cod_escola ece ON (ece.cod_escola = e.cod_escola)
-		INNER JOIN cadastro.endereco_pessoa ep ON (ep.idpes = p.idpes)
-		INNER JOIN urbano.cep_logradouro_bairro clb ON (clb.idbai = ep.idbai AND clb.idlog = ep.idlog AND clb.cep = ep.cep)
-		INNER JOIN public.bairro b ON (clb.idbai = b.idbai)
-		INNER JOIN urbano.cep_logradouro cl ON (cl.idlog = clb.idlog AND clb.cep = cl.cep)
-		INNER JOIN public.distrito d ON (d.iddis = b.iddis)
-		INNER JOIN public.municipio m ON (d.idmun = m.idmun)
-		INNER JOIN public.uf ON (uf.sigla_uf = m.sigla_uf)
-		INNER JOIN public.pais ON (pais.idpais = uf.idpais)
-		INNER JOIN public.logradouro l ON (l.idlog = cl.idlog)
-    LEFT JOIN modules.educacenso_cod_docente ecd ON ecd.cod_servidor = s.cod_servidor
+		 LEFT JOIN cadastro.endereco_pessoa ep ON (ep.idpes = p.idpes)
+		 LEFT JOIN urbano.cep_logradouro_bairro clb ON (clb.idbai = ep.idbai AND clb.idlog = ep.idlog AND clb.cep = ep.cep)
+		 LEFT JOIN public.bairro b ON (clb.idbai = b.idbai)
+		 LEFT JOIN urbano.cep_logradouro cl ON (cl.idlog = clb.idlog AND clb.cep = cl.cep)
+		 LEFT JOIN public.distrito d ON (d.iddis = b.iddis)
+		 LEFT JOIN public.municipio m ON (d.idmun = m.idmun)
+		 LEFT JOIN public.uf ON (uf.sigla_uf = m.sigla_uf)
+		 LEFT JOIN public.pais ON (pais.idpais = uf.idpais)
+		 LEFT JOIN public.logradouro l ON (l.idlog = cl.idlog)
+     LEFT JOIN modules.educacenso_cod_docente ecd ON ecd.cod_servidor = s.cod_servidor
 		WHERE s.cod_servidor = $1
       AND e.cod_escola = $2
 		LIMIT 1
