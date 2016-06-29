@@ -999,6 +999,7 @@ class EducacensoAnaliseController extends ApiCoreController
                    uf.cod_ibge AS uf_inep,
                    municipio.cod_ibge AS municipio_inep,
                    uf_cartorio.cod_ibge AS uf_inep_cartorio,
+                   uf_rg.cod_ibge AS uf_inep_rg,
                    endereco_pessoa.cep AS cep
               FROM pmieducar.aluno
              INNER JOIN pmieducar.matricula ON (matricula.ref_cod_aluno = aluno.cod_aluno)
@@ -1012,6 +1013,7 @@ class EducacensoAnaliseController extends ApiCoreController
               LEFT JOIN public.municipio ON (municipio.idmun = logradouro.idmun)
               LEFT JOIN public.uf ON (uf.sigla_uf = municipio.sigla_uf)
               LEFT JOIN public.uf uf_cartorio ON (uf_cartorio.sigla_uf = documento.sigla_uf_cert_civil)
+              LEFT JOIN public.uf uf_rg ON (uf_rg.sigla_uf = documento.sigla_uf_rg)
              WHERE aluno.ativo = 1
                AND matricula.ativo = 1
                AND matricula.ano = $1
@@ -1047,6 +1049,11 @@ class EducacensoAnaliseController extends ApiCoreController
         if (!$aluno["sigla_uf_rg"]) {
           $mensagem[] = array("text" => "Dados para formular o registro 70 da escola {$nomeEscola} não encontrados. Verificamos que o número da identidade do(a) aluno(a) {$nomeAluno} foi informada, portanto é necessário informar também o estado da identidade.",
                               "path" => "(Pessoa FJ > Pessoa física > Editar > Campo: RG / Data emissão)",
+                              "fail" => true);
+        }
+        if ($aluno["sigla_uf_rg"] && !$aluno["uf_inep_rg"]) {
+          $mensagem[] = array("text" => "Dados para formular o registro 70 da escola {$nomeEscola} não encontrados. Verificamos que o estado do cartório do(a) aluno(a) {$nomeAluno} foi informado, portanto é necessário preencher o código deste estado conforme a 'Tabela de UF'.",
+                              "path" => "(Endereçamento > Estado > Editar > Campo: Código INEP)",
                               "fail" => true);
         }
       }
