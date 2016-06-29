@@ -656,7 +656,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
       'label'       => $labelPassaporte,
       'value'       => $documentos['passaporte'],
       'cols'        => 45,
-      'max_length'  => 150
+      'max_length'  => 20
     );
 
     $this->inputsHelper()->text('passaporte', $options);
