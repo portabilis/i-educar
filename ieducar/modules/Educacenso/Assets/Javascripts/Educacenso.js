@@ -45,7 +45,10 @@ $j(document).ready(function(){
     	if (!escola || !dataIni || !dataFim){
     		alert("Preencha os dados obrigat\u00f3rios antes de continuar.");
     		return;
-    	}
+    	} else if (!isValidDate(dataIni) || !isValidDate(dataFim)) {
+        alert("A data informada \u00e9 inv\u00e1lida.");
+        return;
+      }
 
       $j("#modal_load").modal({
         escapeClose: false,
@@ -56,6 +59,12 @@ $j(document).ready(function(){
       resetParameters();
       analisaRegistro00();
     });
+
+    function isValidDate(s) {
+      var bits = s.split('/');
+      var d = new Date(bits[2], bits[1] - 1, bits[0]);
+      return d && (d.getMonth() + 1) == bits[1] && d.getDate() == Number(bits[0]);
+    }
 
     var resetParameters = function() {
       paginaResposta = headerPaginaResposta;
