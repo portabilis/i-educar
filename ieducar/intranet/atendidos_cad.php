@@ -549,6 +549,16 @@ class indice extends clsCadastro
 
     $this->inputsHelper()->textArea('cartorio_emissao_certidao_civil', $options);
 
+    // Passaporte
+    $options = array(
+      'required'    => false,
+      'label'       => 'Passaporte',
+      'value'       => $documentos['passaporte'],
+      'cols'        => 45,
+      'max_length'  => 150
+    );
+
+    $this->inputsHelper()->text('passaporte', $options);
 
     // carteira de trabalho
 
@@ -1377,6 +1387,7 @@ class indice extends clsCadastro
 
     $documentos->sigla_uf_cert_civil        = $_REQUEST['uf_emissao_certidao_civil'];
     $documentos->cartorio_cert_civil        = addslashes($_REQUEST['cartorio_emissao_certidao_civil']);
+    $documentos->passaporte                 = addslashes($_REQUEST['passaporte']);
     $documentos->cartorio_cert_civil_inep   = $_REQUEST['cartorio_cert_civil_inep'];
 
 
