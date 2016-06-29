@@ -1083,6 +1083,63 @@ class EducacensoAnaliseController extends ApiCoreController
                  'title'     => "Análise exportação - Registro 70");
   }
 
+  protected function analisaEducacensoRegistro80() {
+
+    $escola   = $this->getRequest()->escola;
+    $ano      = $this->getRequest()->ano;
+    $data_ini = $this->getRequest()->data_ini;
+    $data_fim = $this->getRequest()->data_fim;
+
+    $sql = "SELECT juridica.fantasia AS nome_escola,
+                   pessoa.nome AS nome_aluno,
+                   transporte_aluno.responsavel AS transporte_escolar,
+                   aluno.veiculo_transporte_escolar AS veiculo_transporte_escolar
+              FROM pmieducar.aluno
+             INNER JOIN pmieducar.matricula ON (matricula.ref_cod_aluno = aluno.cod_aluno)
+             INNER JOIN pmieducar.escola ON (escola.cod_escola = matricula.ref_ref_cod_escola)
+             INNER JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
+             INNER JOIN cadastro.pessoa ON (pessoa.idpes = aluno.ref_idpes)
+              LEFT JOIN modules.transporte_aluno ON (transporte_aluno.aluno_id = aluno.cod_aluno)
+             WHERE aluno.ativo = 1
+               AND matricula.ativo = 1
+               AND matricula.ano = $1
+               AND escola.cod_escola = $2
+               AND COALESCE(matricula.data_matricula,matricula.data_cadastro) BETWEEN DATE($3) AND DATE($4)
+               AND (matricula.aprovado = 3 OR DATE(COALESCE(matricula.data_cancel,matricula.data_exclusao)) > DATE($4))
+             ORDER BY nome_aluno";
+
+    $alunos = $this->fetchPreparedQuery($sql, array($ano,
+                                                    $escola,
+                                                    Portabilis_Date_Utils::brToPgSQL($data_ini),
+                                                    Portabilis_Date_Utils::brToPgSQL($data_fim)));
+
+    if(empty($alunos)){
+      $this->messenger->append("Nenhum aluno encontrado.");
+      return array('title' => "Análise exportação - Registro 80");
+    }
+
+    $mensagem = array();
+
+    foreach ($alunos as $aluno) {
+      $nomeEscola = Portabilis_String_Utils::toUtf8(mb_strtoupper($aluno["nome_escola"]));
+      $nomeAluno  = Portabilis_String_Utils::toUtf8(mb_strtoupper($aluno["nome_aluno"]));
+
+      if (is_null($aluno["transporte_escolar"])) {
+        $mensagem[] = array("text" => "Dados para formular o registro 80 da escola {$nomeEscola} não encontrados. Verifique se o transporte púlblico foi informado para o(a) aluno(a) {$nomeAluno}.",
+                            "path" => "(Cadastros > Aluno > Alunos > Campo: Transporte público)",
+                            "fail" => true);
+      }
+      if (!$aluno["veiculo_transporte_escolar"]) {
+        $mensagem[] = array("text" => "Dados para formular o registro 80 da escola {$nomeEscola} não encontrados. Verificamos que o(a) aluno(a) {$nomeAluno} utiliza o transporte público, portanto é necessário informar qual o tipo de veículo utilizado.",
+                            "path" => "(Cadastros > Aluno > Alunos > Campo: Veículo utilizado)",
+                            "fail" => true);
+      }
+    }
+
+    return array('mensagens' => $mensagem,
+                 'title'     => "Análise exportação - Registro 80");
+  }
+
 
   public function Gerar() {
     if ($this->isRequestFor('get', 'registro-00'))
@@ -1103,6 +1160,8 @@ class EducacensoAnaliseController extends ApiCoreController
       $this->appendResponse($this->analisaEducacensoRegistro60());
     else if ($this->isRequestFor('get', 'registro-70'))
       $this->appendResponse($this->analisaEducacensoRegistro70());
+    else if ($this->isRequestFor('get', 'registro-80'))
+      $this->appendResponse($this->analisaEducacensoRegistro80());
     else
       $this->notImplementedOperationError();
   }
