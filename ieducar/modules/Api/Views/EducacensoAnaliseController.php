@@ -493,7 +493,7 @@ class EducacensoAnaliseController extends ApiCoreController
     $ano    = $this->getRequest()->ano;
 
     $sql = "SELECT juridica.fantasia AS nome_escola,
-                   fisica_raca.ref_cod_raca AS cor_raca,
+                   raca.raca_educacenso AS cor_raca,
                    fisica.nacionalidade AS nacionalidade,
                    uf.cod_ibge AS uf_inep,
                    municipio.cod_ibge AS municipio_inep,
@@ -504,6 +504,7 @@ class EducacensoAnaliseController extends ApiCoreController
              INNER JOIN pmieducar.servidor ON (servidor.cod_servidor = professor_turma.servidor_id)
              INNER JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
               LEFT JOIN cadastro.fisica_raca ON (fisica_raca.ref_idpes = professor_turma.servidor_id)
+              LEFT JOIN cadastro.raca ON (raca.cod_raca = fisica_raca.ref_cod_raca)
              INNER JOIN cadastro.pessoa ON (pessoa.idpes = professor_turma.servidor_id)
              INNER JOIN cadastro.fisica ON (fisica.idpes = professor_turma.servidor_id)
               LEFT JOIN cadastro.endereco_pessoa ON (endereco_pessoa.idpes = professor_turma.servidor_id)
@@ -515,7 +516,7 @@ class EducacensoAnaliseController extends ApiCoreController
                AND servidor.ativo = 1
              GROUP BY professor_turma.servidor_id,
                       juridica.fantasia,
-                      fisica_raca.ref_cod_raca,
+                      raca.raca_educacenso,
                       fisica.nacionalidade,
                       uf.cod_ibge,
                       municipio.cod_ibge,
@@ -536,7 +537,7 @@ class EducacensoAnaliseController extends ApiCoreController
       $nomeEscola   = Portabilis_String_Utils::toUtf8(mb_strtoupper($servidor["nome_escola"]));
       $nomeServidor = Portabilis_String_Utils::toUtf8(mb_strtoupper($servidor["nome_servidor"]));
 
-      if (!$servidor["cor_raca"]) {
+      if (is_null($servidor["cor_raca"])) {
         $mensagem[] = array("text" => "Dados para formular o registro 30 da escola {$nomeEscola} não encontrados. Verifique se a raça do(a) servidor(a) {$nomeServidor} foi informada.",
                             "path" => "(Pessoa FJ > Pessoa física > Editar > Campo: Raça)",
                             "fail" => true);
@@ -912,7 +913,7 @@ class EducacensoAnaliseController extends ApiCoreController
 
     $sql = "SELECT juridica.fantasia AS nome_escola,
                    pessoa.nome AS nome_aluno,
-                   fisica_raca.ref_cod_raca AS cor_raca,
+                   raca.raca_educacenso AS cor_raca,
                    fisica.nacionalidade AS nacionalidade,
                    uf.cod_ibge AS uf_inep,
                    municipio.cod_ibge AS municipio_inep
@@ -923,6 +924,7 @@ class EducacensoAnaliseController extends ApiCoreController
              INNER JOIN cadastro.pessoa ON (pessoa.idpes = aluno.ref_idpes)
              INNER JOIN cadastro.fisica ON (fisica.idpes = pessoa.idpes)
               LEFT JOIN cadastro.fisica_raca ON (fisica_raca.ref_idpes = fisica.idpes)
+              LEFT JOIN cadastro.raca ON (raca.cod_raca = fisica_raca.ref_cod_raca)
               LEFT JOIN cadastro.endereco_pessoa ON (endereco_pessoa.idpes = fisica.idpes)
               LEFT JOIN public.municipio ON (municipio.idmun = fisica.idmun_nascimento)
               LEFT JOIN public.uf ON (uf.sigla_uf = municipio.sigla_uf)
@@ -951,7 +953,7 @@ class EducacensoAnaliseController extends ApiCoreController
       $nomeEscola = Portabilis_String_Utils::toUtf8(mb_strtoupper($aluno["nome_escola"]));
       $nomeAluno  = Portabilis_String_Utils::toUtf8(mb_strtoupper($aluno["nome_aluno"]));
 
-      if (!$aluno["cor_raca"]) {
+      if (is_null($aluno["cor_raca"])) {
         $mensagem[] = array("text" => "Dados para formular o registro 60 da escola {$nomeEscola} não encontrados. Verifique se a raça do(a) aluno(a) {$nomeAluno} foi informada.",
                             "path" => "(Pessoa FJ > Pessoa física > Editar > Campo: Raça)",
                             "fail" => true);
