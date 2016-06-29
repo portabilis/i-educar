@@ -1663,7 +1663,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
   }
 
   protected function exportaDadosRegistro99() {
-    return "99\n";
+    return "99|\n";
   }
 
   protected function cpfToCenso($cpf){
