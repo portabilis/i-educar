@@ -343,7 +343,28 @@ $j(document).ready(function(){
 
     var handleGetAnaliseRegistro70 = function(response) {
       montaHtmlRegistro(response);
-      finishAnalysis();
+      $j("#registro_load").text("Analisando registro 80");
+      analisaRegistro80();
     };
 
+    var analisaRegistro80 = function(){
+        var urlForGetAnaliseRegistro = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', 'registro-80', {
+          escola   : $j("#ref_cod_escola").val(),
+          ano      : $j("#ano").val(),
+          data_ini : $j("#data_ini").val(),
+          data_fim : $j("#data_fim").val()
+        });
+
+        var options = {
+          url : urlForGetAnaliseRegistro,
+          dataType : 'json',
+          success  : handleGetAnaliseRegistro80
+        };
+        getResources(options);
+    };
+
+    var handleGetAnaliseRegistro80 = function(response) {
+      montaHtmlRegistro(response);
+      finishAnalysis();
+    };
 });
