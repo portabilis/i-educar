@@ -8,8 +8,8 @@ $j(document).ready(function(){
             ' <p style="margin-left: 20px; margin-top: 30px;font-family: verdana, arial; font-size: 18px;">Aguarde, os dados est&atilde;o sendo exportados</p>' +
             '</div>'+
             '<div id="modal_mensagem_sucesso" style="width:400px;display:none;">'+
-            ' <p style=" margin-top: 20px;font-family: verdana, arial; font-size: 18px;">Exporta&ccedil;&atilde;o realizada com sucesso.</p>' +
-            ' <a id="download_file" href="#" download="exportacao.csv" style="margin-top: 10px;font-family: verdana, arial;font-size: 14px;">Clique aqui para realizar o download</a>' +
+            ' <p style=" margin-top: 20px;font-family: verdana, arial; font-size: 18px;">Exporta&ccedil;&atilde;o realizada com sucesso!</p>' +
+            ' <a id="download_file" href="#" download="exportacao_usuarios_i-educar.csv" style="margin-top: 10px;font-family: verdana, arial;font-size: 14px;">Clique aqui para realizar o download</a>' +
             '</div>'+
             '</div>';
 
