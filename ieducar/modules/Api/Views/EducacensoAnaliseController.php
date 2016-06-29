@@ -1013,7 +1013,7 @@ class EducacensoAnaliseController extends ApiCoreController
               LEFT JOIN public.municipio ON (municipio.idmun = logradouro.idmun)
               LEFT JOIN public.uf ON (uf.sigla_uf = municipio.sigla_uf)
               LEFT JOIN public.uf uf_cartorio ON (uf_cartorio.sigla_uf = documento.sigla_uf_cert_civil)
-              LEFT JOIN public.uf uf_rg ON (uf_rg.sigla_uf = documento.sigla_uf_rg)
+              LEFT JOIN public.uf uf_rg ON (uf_rg.sigla_uf = documento.sigla_uf_exp_rg)
              WHERE aluno.ativo = 1
                AND matricula.ativo = 1
                AND matricula.ano = $1
