@@ -991,6 +991,7 @@ class EducacensoAnaliseController extends ApiCoreController
                    pessoa.nome AS nome_aluno,
                    documento.rg AS rg,
                    documento.sigla_uf_exp_rg AS sigla_uf_rg,
+                   documento.idorg_exp_rg AS orgao_emissor_rg,
                    documento.tipo_cert_civil AS tipo_cert_civil,
                    documento.num_termo AS num_termo,
                    documento.sigla_uf_cert_civil AS uf_cartorio,
@@ -1037,15 +1038,17 @@ class EducacensoAnaliseController extends ApiCoreController
       $nomeEscola = Portabilis_String_Utils::toUtf8(mb_strtoupper($aluno["nome_escola"]));
       $nomeAluno  = Portabilis_String_Utils::toUtf8(mb_strtoupper($aluno["nome_aluno"]));
 
-      if (!$aluno["rg"]) {
-        $mensagem[] = array("text" => "Dados para formular o registro 70 da escola {$nomeEscola} não encontrados. Verificamos que o número da identidade do(a) aluno(a) {$nomeAluno} foi informada, portanto é necessário informar também o órgão emissor da identidade.",
-                            "path" => "(Pessoa FJ > Pessoa física > Editar > Campo: RG / Data emissão)",
-                            "fail" => true);
-      }
-      if (!$aluno["sigla_uf_rg"]) {
-        $mensagem[] = array("text" => "Dados para formular o registro 70 da escola {$nomeEscola} não encontrados. Verificamos que o número da identidade do(a) aluno(a) {$nomeAluno} foi informada, portanto é necessário informar também estado da identidade.",
-                            "path" => "(Pessoa FJ > Pessoa física > Editar > Campo: RG / Data emissão)",
-                            "fail" => true);
+      if ($aluno["rg"]) {
+        if (!$aluno["sigla_uf_rg"]) {
+          $mensagem[] = array("text" => "Dados para formular o registro 70 da escola {$nomeEscola} não encontrados. Verificamos que o número da identidade do(a) aluno(a) {$nomeAluno} foi informada, portanto é necessário informar também o órgão emissor da identidade.",
+                              "path" => "(Pessoa FJ > Pessoa física > Editar > Campo: RG / Data emissão)",
+                              "fail" => true);
+        }
+        if (!$aluno["sigla_uf_rg"]) {
+          $mensagem[] = array("text" => "Dados para formular o registro 70 da escola {$nomeEscola} não encontrados. Verificamos que o número da identidade do(a) aluno(a) {$nomeAluno} foi informada, portanto é necessário informar também o estado da identidade.",
+                              "path" => "(Pessoa FJ > Pessoa física > Editar > Campo: RG / Data emissão)",
+                              "fail" => true);
+        }
       }
       if ($aluno["tipo_cert_civil"] == $nascimentoAntigoFormato || $aluno["tipo_cert_civil"] == $casamentoAntigoFormato) {
         if (!$aluno["num_termo"]) {
@@ -1054,11 +1057,11 @@ class EducacensoAnaliseController extends ApiCoreController
                               "fail" => true);
         }
         if (!$aluno["uf_cartorio"]) {
-          $mensagem[] = array("text" => "Dados para formular o registro 70 da escola {$nomeEscola} não encontrados. Verificamos que o número do termo da certidão civil do(a) aluno(a) {$nomeAluno} foi informado, portanto é necessário informar também o estado do emissão.",
+          $mensagem[] = array("text" => "Dados para formular o registro 70 da escola {$nomeEscola} não encontrados. Verificamos que o número do termo da certidão civil do(a) aluno(a) {$nomeAluno} foi informado, portanto é necessário informar também o estado de emissão.",
                               "path" => "(Pessoa FJ > Pessoa física > Editar > Campo: Estado emissão / Data emissão)",
                               "fail" => true);
         }
-        if (!$aluno["uf_inep_cartorio"]) {
+        if ($aluno["uf_cartorio"] && !$aluno["uf_inep_cartorio"]) {
           $mensagem[] = array("text" => "Dados para formular o registro 70 da escola {$nomeEscola} não encontrados. Verificamos que o estado do cartório do(a) aluno(a) {$nomeAluno} foi informado, portanto é necessário preencher o código deste estado conforme a 'Tabela de UF'.",
                               "path" => "(Endereçamento > Estado > Editar > Campo: Código INEP)",
                               "fail" => true);
