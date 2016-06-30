@@ -1052,7 +1052,7 @@ class EducacensoAnaliseController extends ApiCoreController
                               "fail" => true);
         }
         if ($aluno["sigla_uf_rg"] && !$aluno["uf_inep_rg"]) {
-          $mensagem[] = array("text" => "Dados para formular o registro 70 da escola {$nomeEscola} não encontrados. Verificamos que o estado do cartório do(a) aluno(a) {$nomeAluno} foi informado, portanto é necessário preencher o código deste estado conforme a 'Tabela de UF'.",
+          $mensagem[] = array("text" => "Dados para formular o registro 70 da escola {$nomeEscola} não encontrados. Verificamos que o estado da identidade do(a) aluno(a) {$nomeAluno} foi informado, portanto é necessário preencher o código deste estado conforme a 'Tabela de UF'.",
                               "path" => "(Endereçamento > Estado > Editar > Campo: Código INEP)",
                               "fail" => true);
         }
