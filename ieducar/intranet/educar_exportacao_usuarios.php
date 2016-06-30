@@ -76,7 +76,7 @@ class indice extends clsCadastro
     ));
     $this->enviaLocalizacao($localizacao->montar());
 
-    return 'Nova Exporta&ccedil;&atilde;o';
+    return 'Nova exporta&ccedil;&atilde;o';
   }
 
   function Gerar()
