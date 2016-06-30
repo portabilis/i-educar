@@ -1337,7 +1337,9 @@ class AlunoController extends ApiCoreController
   protected function savePhoto($id){
     if ($this->objPhoto!=null){
 
-      $caminhoFoto = $this->objPhoto->sendPicture($id);
+      //salva foto com data, para evitar problemas com o cache do navegador
+      $caminhoFoto = $this->objPhoto->sendPicture($id) . '?' . date('Y-m-d-H:i:s');
+
       if ($caminhoFoto!=''){
         //new clsCadastroFisicaFoto($id)->exclui();
         $obj = new clsCadastroFisicaFoto($id,$caminhoFoto);
