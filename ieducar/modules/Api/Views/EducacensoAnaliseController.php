@@ -642,7 +642,9 @@ class EducacensoAnaliseController extends ApiCoreController
 
     $sql = "SELECT juridica.fantasia AS nome_escola,
                    pessoa.nome AS nome_servidor,
-                   servidor.ref_idesco AS escolaridade,
+                   escolaridade.escolaridade AS escolaridade,
+                   escolaridade.descricao AS descricao_escolaridade,
+                   servidor.ref_idesco AS codigo_escolaridade,
                    servidor.situacao_curso_superior_1 AS situacao_curso_superior_1,
                    servidor.codigo_curso_superior_1 AS codigo_curso_superior_1,
                    servidor.ano_inicio_curso_superior_1 AS ano_inicio_curso_superior_1,
@@ -683,6 +685,7 @@ class EducacensoAnaliseController extends ApiCoreController
              INNER JOIN pmieducar.turma ON (turma.cod_turma = professor_turma.turma_id)
              INNER JOIN pmieducar.escola ON (escola.cod_escola = turma.ref_ref_cod_escola)
              INNER JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
+              LEFT JOIN cadastro.escolaridade ON (escolaridade.idesco = servidor.ref_idesco)
              INNER JOIN cadastro.pessoa ON (pessoa.idpes = professor_turma.servidor_id)
              WHERE professor_turma.ano = $1
                AND turma.ano = professor_turma.ano
@@ -726,7 +729,9 @@ class EducacensoAnaliseController extends ApiCoreController
                       servidor.curso_direito_crianca_adolescente,
                       servidor.curso_relacoes_etnicorraciais,
                       servidor.curso_outros,
-                      servidor.curso_nenhum
+                      servidor.curso_nenhum,
+                      escolaridade.escolaridade,
+                      escolaridade.descricao
              ORDER BY pessoa.nome";
 
     $servidores = $this->fetchPreparedQuery($sql, array($ano, $escola));
@@ -768,9 +773,14 @@ class EducacensoAnaliseController extends ApiCoreController
                                         $servidor["curso_outros"] ||
                                         $servidor["curso_nenhum"]);
 
-      if (!$servidor["escolaridade"]) {
+      if (!$servidor["codigo_escolaridade"]) {
         $mensagem[] = array("text" => "Dados para formular o registro 50 da escola {$nomeEscola} não encontrados. Verifique se a escolaridade do(a) servidor(a) {$nomeServidor} foi informada.",
                             "path" => "(Servidores > Cadastrar > Editar > Aba: Dados adicionais > Campo: Escolaridade)",
+                            "fail" => true);
+      }
+      if ($servidor["codigo_escolaridade"] && !$servidor["escolaridade"]) {
+        $mensagem[] = array("text" => "Dados para formular o registro 50 da escola {$nomeEscola} não encontrados. Verifique se o campo escolaridade educacenso foi informado para a escolaridade {$servidor['descricao_escolaridade']}.",
+                            "path" => "(Servidores > Escolaridade > Editar > Campo: Escolaridade Educacenso)",
                             "fail" => true);
       }
       if ($servidor["escolaridade"] == $superiorCompleto && !$servidor["situacao_curso_superior_1"]) {
