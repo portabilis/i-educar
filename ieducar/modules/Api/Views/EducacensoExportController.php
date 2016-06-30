@@ -91,7 +91,7 @@ class EducacensoExportController extends ApiCoreController
                    "mensagem" => $this->msg);
     }
 
-    return array('conteudo' => Portabilis_String_Utils::toUtf8($conteudo));
+    return array('conteudo' => $conteudo);
   }
 
   protected function exportaDadosCensoPorEscola($escolaId, $ano, $data_ini, $data_fim){
