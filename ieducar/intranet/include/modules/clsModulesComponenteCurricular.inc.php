@@ -193,6 +193,45 @@ class clsModulesComponenteCurricular
 		return false;
 	}
 
+	function listaComponentesPorCurso( $instituicao_id = null, $curso = null)
+	{
+		$sql = "SELECT DISTINCT(mca.componente_curricular_id) AS id, cc.nome AS nome
+                  FROM modules.componente_curricular_ano_escolar mca
+                 INNER JOIN pmieducar.serie s ON (s.cod_serie = mca.ano_escolar_id)
+                 INNER JOIN modules.componente_curricular cc ON (cc.id = mca.componente_curricular_id)";
+
+		$filtros = "";
+
+		$whereAnd = " WHERE ";
+
+		if( is_numeric( $instituicao_id ) )
+		{
+			$filtros .= "{$whereAnd} cc.instituicao_id = '{$instituicao_id}'";
+			$whereAnd = " AND ";
+		}
+
+	    if( is_numeric( $curso ) )
+	    {
+	      $filtros .= "{$whereAnd} s.ref_cod_curso = '{$curso}'";
+	      $whereAnd = " AND ";
+	    }
+
+		$db = new clsBanco();
+
+		$sql .= $filtros . $this->getOrderby() . $this->getLimite();
+
+		$db->Consulta( $sql );
+
+		while($db->ProximoRegistro()) {
+          $resultado[] = $db->Tupla();
+        }
+		if( count( $resultado ) )
+		{
+			return $resultado;
+		}
+		return false;
+	}
+
 	/**
 	 * Define quais campos da tabela serao selecionados na invocacao do metodo lista
 	 *
