@@ -45,7 +45,10 @@ $j(document).ready(function(){
     	if (!escola || !dataIni || !dataFim){
     		alert("Preencha os dados obrigat\u00f3rios antes de continuar.");
     		return;
-    	}
+    	} else if (!isValidDate(dataIni) || !isValidDate(dataFim)) {
+        alert("A data informada \u00e9 inv\u00e1lida.");
+        return;
+      }
 
       $j("#modal_load").modal({
         escapeClose: false,
@@ -56,6 +59,12 @@ $j(document).ready(function(){
       resetParameters();
       analisaRegistro00();
     });
+
+    function isValidDate(s) {
+      var bits = s.split('/');
+      var d = new Date(bits[2], bits[1] - 1, bits[0]);
+      return d && (d.getMonth() + 1) == bits[1] && d.getDate() == Number(bits[0]);
+    }
 
     var resetParameters = function() {
       paginaResposta = headerPaginaResposta;
@@ -343,7 +352,28 @@ $j(document).ready(function(){
 
     var handleGetAnaliseRegistro70 = function(response) {
       montaHtmlRegistro(response);
-      finishAnalysis();
+      $j("#registro_load").text("Analisando registro 80");
+      analisaRegistro80();
     };
 
+    var analisaRegistro80 = function(){
+        var urlForGetAnaliseRegistro = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', 'registro-80', {
+          escola   : $j("#ref_cod_escola").val(),
+          ano      : $j("#ano").val(),
+          data_ini : $j("#data_ini").val(),
+          data_fim : $j("#data_fim").val()
+        });
+
+        var options = {
+          url : urlForGetAnaliseRegistro,
+          dataType : 'json',
+          success  : handleGetAnaliseRegistro80
+        };
+        getResources(options);
+    };
+
+    var handleGetAnaliseRegistro80 = function(response) {
+      montaHtmlRegistro(response);
+      finishAnalysis();
+    };
 });

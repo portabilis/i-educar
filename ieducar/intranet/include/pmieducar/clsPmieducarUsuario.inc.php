@@ -566,9 +566,9 @@ class clsPmieducarUsuario
 	{
 		$sql = "SELECT p.nome,
                        f.matricula,
-                       p.email,
+                       f.email,
                        CASE
-                           WHEN u.ativo = 1 THEN 'Ativo'
+                           WHEN f.ativo = 1 THEN 'Ativo'
                            ELSE 'Inativo'
                        END AS status,
                        tu.nm_tipo,
@@ -601,7 +601,7 @@ class clsPmieducarUsuario
 		}
 		if( is_numeric( $int_ativo ) || $int_ativo )
 		{
-			$filtros .= "{$whereAnd} u.ativo = '{$int_ativo}'";
+			$filtros .= "{$whereAnd} f.ativo = '{$int_ativo}'";
 			$whereAnd = " AND ";
 		}
 
@@ -610,7 +610,6 @@ class clsPmieducarUsuario
 		$resultado = array();
 
 		$sql .= $filtros . $this->getOrderby() . $this->getLimite();
-
 		$db->Consulta( $sql );
 
 		if( $countCampos > 1 )

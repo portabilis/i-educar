@@ -31,6 +31,7 @@
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
+require_once 'include/modules/clsModulesComponenteCurricular.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
 require_once 'ComponenteCurricular/Model/AnoEscolarDataMapper.php';
@@ -175,21 +176,21 @@ class indice extends clsCadastro
     }
 
     if ($this->ref_cod_curso) {
-      foreach ($this->ref_cod_curso as $curso) {
-        $lst_disciplinas = $obj_disciplina->lista(NULL, NULL, NULL, NULL, NULL,
-          NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, $curso,
-          $this->ref_cod_instituicao);
-
-        $componenteAnoDataMapper = new ComponenteCurricular_Model_AnoEscolarDataMapper();
-        $componentes = $componenteAnoDataMapper->findComponentePorCurso($curso);
-
+      $cursosDifferente = array_unique($this->ref_cod_curso);
+      foreach ($cursosDifferente as $curso) {
+        $obj_componentes = new clsModulesComponenteCurricular;
+        $componentes     = $obj_componentes->listaComponentesPorCurso($this->ref_cod_instituicao, $curso);
         $opcoes_disc = array();
-          $opcoes_disc['todas_disciplinas']  = 'Todas as disciplinas';
-        foreach ($componentes as $componente) {
-          $opcoes_disc[$componente->id]  = $componente->nome;
-        }
+        $opcoes_disc['todas_disciplinas']  = 'Todas as disciplinas';
 
-        $lst_opcoes[] = array($opcoes_curso, $opcoes_disc);
+        $total_componentes = count($componentes);
+        for ($i=0; $i < $total_componentes; $i++) {
+          $opcoes_disc[$componentes[$i]['id']]  = $componentes[$i]['nome'];
+        }
+        $disciplinasCurso[$curso] = array($opcoes_curso, $opcoes_disc);
+      }
+      foreach ($this->ref_cod_curso as $curso) {
+        $lst_opcoes[] = $disciplinasCurso[$curso];
       }
     }
 

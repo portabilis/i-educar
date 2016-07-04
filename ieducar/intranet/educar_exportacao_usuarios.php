@@ -76,7 +76,7 @@ class indice extends clsCadastro
     ));
     $this->enviaLocalizacao($localizacao->montar());
 
-    return 'Novo';
+    return 'Nova exporta&ccedil;&atilde;o';
   }
 
   function Gerar()
@@ -126,7 +126,7 @@ class indice extends clsCadastro
       echo "cod_tipo_usuario[{$key}] = {$valor};\n";
     echo "</script>";
 
-    $this->campoLista( "ref_cod_tipo_usuario", "Tipo Usu&aacute;rio", $opcoes, $this->ref_cod_tipo_usuario,"",null,null,null,null,false );
+    $this->campoLista( "ref_cod_tipo_usuario", "Tipo usu&aacute;rio", $opcoes, $this->ref_cod_tipo_usuario,"",null,null,null,null,false );
 
     Portabilis_View_Helper_Application::loadJavascript($this, '/modules/ExportarUsuarios/exportarUsuarios.js');
 

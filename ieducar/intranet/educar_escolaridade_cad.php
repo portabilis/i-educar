@@ -121,7 +121,7 @@ class indice extends clsCadastro
                      5 => 'Ensino médio',
                      6 => 'Superior');
 
-    $options = array('label' => Portabilis_String_Utils::toLatin1('Escolaridade'), 'resources' => $resources, 'value' => $this->escolaridade);
+    $options = array('label' => Portabilis_String_Utils::toLatin1('Escolaridade educacenso'), 'resources' => $resources, 'value' => $this->escolaridade);
     $this->inputsHelper()->select('escolaridade', $options);    
   }
 

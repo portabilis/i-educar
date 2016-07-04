@@ -1337,7 +1337,9 @@ class AlunoController extends ApiCoreController
   protected function savePhoto($id){
     if ($this->objPhoto!=null){
 
-      $caminhoFoto = $this->objPhoto->sendPicture($id);
+      //salva foto com data, para evitar problemas com o cache do navegador
+      $caminhoFoto = $this->objPhoto->sendPicture($id) . '?' . date('Y-m-d-H:i:s');
+
       if ($caminhoFoto!=''){
         //new clsCadastroFisicaFoto($id)->exclui();
         $obj = new clsCadastroFisicaFoto($id,$caminhoFoto);
@@ -1420,6 +1422,7 @@ class AlunoController extends ApiCoreController
 
     $documentos->sigla_uf_cert_civil        = $this->getRequest()->uf_emissao_certidao_civil;
     $documentos->cartorio_cert_civil        = addslashes($this->getRequest()->cartorio_emissao_certidao_civil);
+    $documentos->passaporte                 = addslashes($this->getRequest()->passaporte);
     $documentos->cartorio_cert_civil_inep   = $this->getRequest()->cartorio_cert_civil_inep;
 
     // Alteração de documentos compativel com a versão anterior do cadastro,

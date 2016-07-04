@@ -649,6 +649,18 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
     $this->inputsHelper()->textArea('cartorio_emissao_certidao_civil', $options);
 
+    // Passaporte
+    $labelPassaporte = Portabilis_String_Utils::toLatin1('Passaporte');
+    $options = array(
+      'required'    => false,
+      'label'       => $labelPassaporte,
+      'value'       => $documentos['passaporte'],
+      'cols'        => 45,
+      'max_length'  => 20
+    );
+
+    $this->inputsHelper()->text('passaporte', $options);
+
     // pai
 
     $options = array(
