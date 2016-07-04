@@ -675,6 +675,30 @@ class EducacensoExportController extends ApiCoreController
 
       }
 
+      $atividadeComplementar = 4;
+      $atendimentoEducEspecializado = 5;
+
+      $educInfantilCreche = 1;
+      $educInfantilPreEscola = 2;
+      $educInfantilUnificada = 3;
+      $ejaEnsinoFundamental = 65;
+
+      //Percorre todos os campos de disciplinas
+      for ($i=40; $i < 66; $i++) {
+        if ($r20s18 == $atividadeComplementar || $r20s18 == $atendimentoEducEspecializado){
+          ${'r20s'. $i} = '';
+        } else if ($r20s38 == $educInfantilCreche ||
+                   $r20s38 == $educInfantilPreEscola ||
+                   $r20s38 == $educInfantilUnificada ||
+                   $r20s38 == $ejaEnsinoFundamental){
+          ${'r20s'. $i} = '';
+        }
+      }
+
+      if ($r20s18 == $atividadeComplementar || $r20s18 == $atendimentoEducEspecializado){
+        $r20s37 = $r20s38 = '';
+      }
+
       $this->turma_presencial_ou_semi = $r20s6;
       $d = '|';
       $return = '';
