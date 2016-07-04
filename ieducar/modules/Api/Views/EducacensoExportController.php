@@ -1689,8 +1689,8 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
                                  "/(ú|ù|û|ü)/",
                                  "/(Ú|Ù|Û|Ü)/",
                                  "/(ñ)/","/(Ñ)/",
-                                 "/(ç)/","/(Ç)/"),
-                            explode(" ","a A e E i I o O u U n N c C"), $string);
+                                 "/(ç)/","/(Ç)/", "/(ª)/"),
+                            explode(" ","a A e E i I o O u U n N c C "), $string);
 
     return strtoupper($string);
   }
