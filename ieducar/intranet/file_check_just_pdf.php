@@ -44,7 +44,7 @@ class FileController {
         if ($maxSize!=null)
             $this->maxSize = $maxSize;
         else
-            $this->maxSize = 250*1024;
+            $this->maxSize = 1024*1024;
 
         if ($suportedExtensions != null)
             $this->suportedExtensions = $suportedExtensions;
@@ -89,7 +89,7 @@ class FileController {
                     return true;
                 }
                 else{
-                    $this->errorMessage = "Não são permitidos arquivos com mais de 250KB.";
+                    $this->errorMessage = "Não são permitidos arquivos com mais de 1024KB.";
                     return false;
                 }
             }
