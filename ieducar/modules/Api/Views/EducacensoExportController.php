@@ -91,7 +91,7 @@ class EducacensoExportController extends ApiCoreController
                    "mensagem" => $this->msg);
     }
 
-    return array('conteudo' => Portabilis_String_Utils::toUtf8($conteudo));
+    return array('conteudo' => $conteudo);
   }
 
   protected function exportaDadosCensoPorEscola($escolaId, $ano, $data_ini, $data_fim){
@@ -701,11 +701,12 @@ class EducacensoExportController extends ApiCoreController
         fis.data_nasc as r30s8,
         fis.sexo as r30s9,
         r.raca_educacenso as r30s10,
-        (SELECT nome FROM cadastro.pessoa WHERE pessoa.idpes = fis.idpes_mae) as r30s11,
-        coalesce(fis.nacionalidade,1) as r30s12,
-        (SELECT cod_ibge FROM public.pais WHERE pais.idpais = fis.idpais_estrangeiro) as r30s13,
-        uf.cod_ibge as r30s14,
-        m.cod_ibge as r30s15
+        (SELECT nome FROM cadastro.pessoa WHERE pessoa.idpes = fis.idpes_mae) as r30s12,
+        (SELECT nome FROM cadastro.pessoa WHERE pessoa.idpes = fis.idpes_pai) as r30s13,
+        coalesce(fis.nacionalidade,1) as r30s14,
+        (SELECT cod_ibge FROM public.pais WHERE pais.idpais = fis.idpais_estrangeiro) as r30s15,
+        uf.cod_ibge as r30s16,
+        m.cod_ibge as r30s17
 
 
         FROM  pmieducar.servidor s
@@ -733,13 +734,17 @@ class EducacensoExportController extends ApiCoreController
       $r30s8 = Portabilis_Date_Utils::pgSQLToBr($r30s8);
       $r30s9 = $r30s9 == 'M' ? 1 : 2;
       $r30s10 = is_numeric($r30s10) ? $r30s10 : 0;
-      $r30s11 = $this->upperAndUnaccent($r30s11);
 
-      if($r30s12 == '1' || $r30s12 == '2')
-        $r30s13 = 76;
+      $r30s11 = ($r30s12 || $r30s13) ? 1 : 0;
 
-      if($r30s12 == "1"){
-        if(is_null($r30s14) || is_null($r30s15)){
+      $r30s12 = $this->upperAndUnaccent($r30s12);
+      $r30s13 = $this->upperAndUnaccent($r30s13);
+
+      if($r30s14 == '1' || $r30s14 == '2')
+        $r30s15 = 76;
+
+      if($r30s14 == "1"){
+        if(is_null($r30s16) || is_null($r30s17)){
           $this->msg .= "Dados para formular o registro 30 da escola {$escolaId} não encontrados. Verifique se os municípios e UFs dos servidores brasileiros possuem código INEP cadastrados.<br/>";
           $this->error = true;
         }
@@ -751,34 +756,34 @@ class EducacensoExportController extends ApiCoreController
 
       $deficiencias = Portabilis_Utils_Database::fetchPreparedQuery($sql, array( 'params' => array($r30s4)));
 
-      $r30s17 = $r30s18 = $r30s19 = $r30s20 = $r30s21 = $r30s22 = $r30s23 = $r30s24 = null;
+      $r30s19 = $r30s20 = $r30s21 = $r30s22 = $r30s23 = $r30s24 = $r30s25 = $r30s26 = null;
 
-      $deficienciaToSeq = array( 1 => '17',
-                                 2 => '18',
-                                 3 => '19',
-                                 4 => '20',
-                                 5 => '21',
-                                 6 => '22',
-                                 7 => '23',
-                                 8 => '24' );
-      $r30s16 = 0;
+      $deficienciaToSeq = array( 1 => '19',
+                                 2 => '20',
+                                 3 => '21',
+                                 4 => '22',
+                                 5 => '23',
+                                 6 => '24',
+                                 7 => '25',
+                                 8 => '26' );
+      $r30s18 = 0;
 
       foreach ($deficiencias as $deficiencia_educacenso) {
         $deficiencia_educacenso = $deficiencia_educacenso['id'];
         if (array_key_exists($deficiencia_educacenso, $deficienciaToSeq)){
           ${ 'r30s'. $deficienciaToSeq[$deficiencia_educacenso] } = 1;
-          $r30s16 = 1;
+          $r30s18 = 1;
         }
       }
 
-      if($r30s16 = 0)
-        $r30s17 = $r30s18 = $r30s19 = $r30s20 = $r30s21 = $r30s22 = $r30s23 = $r30s24 = NULL;
+      if($r30s18 = 0)
+        $r30s19 = $r30s20 = $r30s21 = $r30s22 = $r30s23 = $r30s24 = $r30s25 = $r30s26 = NULL;
 
       $r30s7 = null;
 
       $d = '|';
       $return = '';
-      $numeroRegistros = 24;
+      $numeroRegistros = 26;
 
       for ($i=1; $i <= $numeroRegistros ; $i++)
         $return .= ${'r30s'.$i}.$d;
