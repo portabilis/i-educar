@@ -280,18 +280,18 @@ class EducacensoExportController extends ApiCoreController
 
       $r00s2 = substr($r00s2, 0, 8);
       $r00s3 = $this->cpfToCenso($r00s3);
-      $r00s4 = $this->upperAndUnaccent($r00s4);
+      $r00s4 = $this->convertStringToCenso($r00s4);
       $r00s6 = strtoupper($r00s6);
 
       $r00s8 = Portabilis_Date_Utils::pgSQLToBr($r00s8);
       $r00s9 = Portabilis_Date_Utils::pgSQLToBr($r00s9);
 
-      $r00s10 = $this->upperAndUnaccent($r00s10);
-      $r00s14 = $this->upperAndUnaccent($r00s14);
-      $r00s15 = $this->upperAndUnaccent($r00s15);
-      $r00s16 = $this->upperAndUnaccent($r00s16);
-      $r00s17 = $this->upperAndUnaccent($r00s17);
-      $r00s26 = $this->upperAndUnaccent($r00s26);
+      $r00s10 = $this->convertStringToCenso($r00s10);
+      $r00s14 = $this->convertStringToCenso($r00s14);
+      $r00s15 = $this->convertStringToCenso($r00s15);
+      $r00s16 = $this->convertStringToCenso($r00s16);
+      $r00s17 = $this->convertStringToCenso($r00s17);
+      $r00s26 = $this->convertStringToCenso($r00s26);
       $r00s27 = str_pad($r00s27, 5, "0", STR_PAD_LEFT);
 
       if($r00s28 <> 4)
@@ -602,7 +602,7 @@ class EducacensoExportController extends ApiCoreController
     extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, array('return_only' => 'first-row', 'params' => array($turmaId, $data_ini, $data_fim))));
     if ($r20s1){
 
-      $r20s5 = $this->upperAndUnaccent($r20s5);
+      $r20s5 = $this->convertStringToCenso($r20s5);
 
       //Dias da semana  e tipo de atendimento não podem ser nullos, 1 ou 0
       for($i = 11; $i <=18; $i++)
@@ -675,6 +675,30 @@ class EducacensoExportController extends ApiCoreController
 
       }
 
+      $atividadeComplementar = 4;
+      $atendimentoEducEspecializado = 5;
+
+      $educInfantilCreche = 1;
+      $educInfantilPreEscola = 2;
+      $educInfantilUnificada = 3;
+      $ejaEnsinoFundamental = 65;
+
+      //Percorre todos os campos de disciplinas
+      for ($i=40; $i < 66; $i++) {
+        if ($r20s18 == $atividadeComplementar || $r20s18 == $atendimentoEducEspecializado){
+          ${'r20s'. $i} = '';
+        } else if ($r20s38 == $educInfantilCreche ||
+                   $r20s38 == $educInfantilPreEscola ||
+                   $r20s38 == $educInfantilUnificada ||
+                   $r20s38 == $ejaEnsinoFundamental){
+          ${'r20s'. $i} = '';
+        }
+      }
+
+      if ($r20s18 == $atividadeComplementar || $r20s18 == $atendimentoEducEspecializado){
+        $r20s37 = $r20s38 = '';
+      }
+
       $this->turma_presencial_ou_semi = $r20s6;
       $d = '|';
       $return = '';
@@ -729,7 +753,7 @@ class EducacensoExportController extends ApiCoreController
     // Transforma todos resultados em variáveis
     extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, array('return_only' => 'first-row', 'params' => array($servidorId, $escolaId))));
     if ($r30s1){
-      $r30s5 = $this->upperAndUnaccent($r30s5);
+      $r30s5 = $this->convertStringToCenso($r30s5);
       $r30s6 = strtoupper($r30s6);
       $r30s8 = Portabilis_Date_Utils::pgSQLToBr($r30s8);
       $r30s9 = $r30s9 == 'M' ? 1 : 2;
@@ -737,8 +761,8 @@ class EducacensoExportController extends ApiCoreController
 
       $r30s11 = ($r30s12 || $r30s13) ? 1 : 0;
 
-      $r30s12 = $this->upperAndUnaccent($r30s12);
-      $r30s13 = $this->upperAndUnaccent($r30s13);
+      $r30s12 = $this->convertStringToAlpha($r30s12);
+      $r30s13 = $this->convertStringToAlpha($r30s13);
 
       if($r30s14 == '1' || $r30s14 == '2')
         $r30s15 = 76;
@@ -839,10 +863,10 @@ class EducacensoExportController extends ApiCoreController
     if ($r40s1){
       $r40s5 = $this->cpfToCenso($r40s5);
 
-      $r40s8  = $this->upperAndUnaccent($r40s8);
-      $r40s9  = $this->upperAndUnaccent($r40s9);
-      $r40s10 = $this->upperAndUnaccent($r40s10);
-      $r40s11 = $this->upperAndUnaccent($r40s11);
+      $r40s8  = $this->convertStringToCenso($r40s8);
+      $r40s9  = $this->convertStringToCenso($r40s9);
+      $r40s10 = $this->convertStringToCenso($r40s10);
+      $r40s11 = $this->convertStringToCenso($r40s11);
 
       $d = '|';
       $return = '';
@@ -1157,7 +1181,9 @@ class EducacensoExportController extends ApiCoreController
 				ORDER BY codigo_educacenso
 				OFFSET 12
 				LIMIT 1
-			) as r51s21
+			) as r51s21,
+      t.tipo_atendimento AS tipo_atendimento,
+      t.etapa_id AS etapa_ensino
 
 
 			FROM 	pmieducar.servidor s
@@ -1187,10 +1213,39 @@ class EducacensoExportController extends ApiCoreController
     $return = '';
     $numeroRegistros = 21;
 
+    $docente = 1;
+    $docenteTitular = 5;
+    $docenteTutor = 6;
+
+    $atividadeComplementar = 4;
+    $atendimentoEducEspecializado = 5;
+
+    $educInfantilCreche = 1;
+    $educInfantilPreEscola = 2;
+    $educInfantilUnificada = 3;
+    $ejaEnsinoFundamental = 65;
+
     foreach (Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($servidorId, $escolaId, $data_ini, $data_fim))) as $reg) {
     	extract($reg);
-	    for ($i=1; $i <= $numeroRegistros ; $i++)
+	    for ($i=1; $i <= $numeroRegistros ; $i++) {
+
+        //Validação das disciplinas
+        if ($i > 8) {
+          $funcaoDocente = ($r51s7 == $docente || $r51s7 == $docenteTutor || $r51s7 == $docenteTitular);
+          $atividadeDiferenciada = ($tipo_atendimento == $atividadeComplementar ||
+                                    $tipo_atendimento == $atendimentoEducEspecializado);
+          $etapaEnsino = ($etapa_ensino == $educInfantilCreche ||
+                          $etapa_ensino == $educInfantilPreEscola ||
+                          $etapa_ensino == $educInfantilUnificada ||
+                          $etapa_ensino == $ejaEnsinoFundamental);
+
+          if (!$funcaoDocente || $atividadeDiferenciada || $etapaEnsino) {
+            ${'r51s'.$i} = '';
+          }
+        }
+
 	    	$return .= ${'r51s'.$i}.$d;
+      }
 
       $return = substr_replace($return, "", -1);
 	    $return .= "\n";
@@ -1260,15 +1315,15 @@ class EducacensoExportController extends ApiCoreController
     foreach (Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId, $ano, $data_ini, $data_fim, $alunoId))) as $reg) {
       extract($reg);
 
-      $r60s5 = $this->upperAndUnaccent($r60s5);
+      $r60s5 = $this->convertStringToCenso($r60s5);
 
       $r60s6 = Portabilis_Date_Utils::pgSQLToBr($r60s6);
       $r60s7 = $r60s7 == 'M' ? 1 : 2;
       $r60s8 = is_numeric($r60s8) ? $r60s8 : 0;
       $r60s9 = (int) !(is_null($r60s10) && is_null($r60s11));
 
-      $r60s10 = $this->upperAndUnaccent($r60s10);
-      $r60s11 = $this->upperAndUnaccent($r60s11);
+      $r60s10 = $this->convertStringToAlpha($r60s10);
+      $r60s11 = $this->convertStringToAlpha($r60s11);
 
       if($r60s12 == '1' || $r60s12 == '2')
         $r60s13 = 76;
@@ -1412,10 +1467,10 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
 
       $r70s19 = $this->cpfToCenso($r70s19);
 
-      $r70s24 = $this->upperAndUnaccent($r70s24);
-      $r70s25 = $this->upperAndUnaccent($r70s25);
-      $r70s26 = $this->upperAndUnaccent($r70s26);
-      $r70s27 = $this->upperAndUnaccent($r70s27);
+      $r70s24 = $this->convertStringToCenso($r70s24);
+      $r70s25 = $this->convertStringToCenso($r70s25);
+      $r70s26 = $this->convertStringToCenso($r70s26);
+      $r70s27 = $this->convertStringToCenso($r70s27);
 
       if($r70s21 == 0){ $r70s21 = null; }
       if($r70s5 == 0){ $r70s5 = null; }
@@ -1689,10 +1744,43 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
                                  "/(ú|ù|û|ü)/",
                                  "/(Ú|Ù|Û|Ü)/",
                                  "/(ñ)/","/(Ñ)/",
-                                 "/(ç)/","/(Ç)/", "/(ª)/"),
-                            explode(" ","a A e E i I o O u U n N c C "), $string);
+                                 "/(ç)/","/(Ç)/"),
+                            explode(" ","a A e E i I o O u U n N c C"), $string);
 
     return strtoupper($string);
+  }
+
+  protected function convertStringToAlpha($string){
+    $string = $this->upperAndUnaccent($string);
+
+    //Aceita apenas letras
+    $alphas = range('A','Z');
+    $caracteresAceitos = array(" ");
+    $caracteresAceitos = array_merge($alphas, $caracteresAceitos);
+
+
+    //Aplica filtro na string eliminando caracteres indesejados
+    $regex  = sprintf('/[^%s]/u', preg_quote(join($caracteresAceitos), '/'));
+    $string = preg_replace($regex, '', $string);
+
+    return $string;
+  }
+
+  protected function convertStringToCenso($string){
+    $string = $this->upperAndUnaccent($string);
+
+    //Aceita apenas letras e numeros e alguns caracteres especiais
+    $alphas = range('A','Z');
+    $numbers = range(1,9);
+    $caracteresAceitos = array(" ", "ª", "º", "-");
+    $caracteresAceitos = array_merge($numbers, $caracteresAceitos);
+    $caracteresAceitos = array_merge($alphas, $caracteresAceitos);
+
+    //Aplica filtro na string eliminando caracteres indesejados
+    $regex  = sprintf('/[^%s]/u', preg_quote(join($caracteresAceitos), '/'));
+    $string = preg_replace($regex, '', $string);
+
+    return $string;
   }
 
   public function Gerar() {

@@ -45,6 +45,16 @@ class ReportController extends ApiCoreController
            $this->validatesId('matricula');
   }
 
+  protected function canGetBoletimProfessor() {
+    return $this->validatesId('instituicao') &&
+           $this->validatesId('ano') &&
+           $this->validatesId('escola') &&
+           $this->validatesId('serie') &&
+           $this->validatesId('turma') &&
+           $this->validatesId('disciplina') &&
+           $this->validatesId('matricula');
+  }
+
 
   // load
 
@@ -101,8 +111,32 @@ class ReportController extends ApiCoreController
     }
   }
 
+  protected function getBoletimProfessor() {
+   if ($this->canGetBoletimProfessor()) {
+      $boletimProfessorReport = new BoletimProfessorReport();
+
+      $boletimProfessorReport->addArg('ano',   (int)$this->getRequest()->ano);
+      $boletimProfessorReport->addArg('instituicao',   (int)$this->getRequest()->instituicao);
+      $boletimProfessorReport->addArg('escola',   (int)$this->getRequest()->escola);
+      $boletimProfessorReport->addArg('curso',   (int)$this->getRequest()->curso);
+      $boletimProfessorReport->addArg('serie',   (int)$this->getRequest()->serie);
+      $boletimProfessorReport->addArg('orientacao', 1);
+
+      $encoding     = 'base64';
+
+      $dumpsOptions = array('options' => array('encoding' => $encoding));
+      $encoded      = $boletimProfessorReport->dumps($dumpsOptions);
+
+      return array('matricula_id' => $this->getRequest()->matricula_id,
+                   'encoding'     => $encoding,
+                   'encoded'      => $encoded);
+    }
+  }
+
   public function Gerar() {
     if ($this->isRequestFor('get', 'boletim'))
+      $this->appendResponse($this->getBoletim());
+    elseif ($this->isRequestFor('get', 'boletim-professor'))
       $this->appendResponse($this->getBoletim());
     else
       $this->notImplementedOperationError();
