@@ -45,7 +45,7 @@ class clsIndexBase extends clsBase
   function Formular()
   {
     $this->SetTitulo($this->_instituicao . ' i-Educar - Nova exporta&ccedil;&atilde;o');
-    $this->processoAp = 846;
+    $this->processoAp = 999869;
     $this->addEstilo('localizacaoSistema');
   }
 }
@@ -64,7 +64,7 @@ class indice extends clsCadastro
     @session_write_close();
 
     $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_cadastra(846, $this->pessoa_logada, 7,
+    $obj_permissoes->permissao_cadastra(999869, $this->pessoa_logada, 7,
       'educar_index.php');
     $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
 
