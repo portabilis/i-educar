@@ -1181,7 +1181,9 @@ class EducacensoExportController extends ApiCoreController
 				ORDER BY codigo_educacenso
 				OFFSET 12
 				LIMIT 1
-			) as r51s21
+			) as r51s21,
+      t.tipo_atendimento AS tipo_atendimento,
+      t.etapa_id AS etapa_ensino
 
 
 			FROM 	pmieducar.servidor s
@@ -1211,10 +1213,39 @@ class EducacensoExportController extends ApiCoreController
     $return = '';
     $numeroRegistros = 21;
 
+    $docente = 1;
+    $docenteTitular = 5;
+    $docenteTutor = 6;
+
+    $atividadeComplementar = 4;
+    $atendimentoEducEspecializado = 5;
+
+    $educInfantilCreche = 1;
+    $educInfantilPreEscola = 2;
+    $educInfantilUnificada = 3;
+    $ejaEnsinoFundamental = 65;
+
     foreach (Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($servidorId, $escolaId, $data_ini, $data_fim))) as $reg) {
     	extract($reg);
-	    for ($i=1; $i <= $numeroRegistros ; $i++)
+	    for ($i=1; $i <= $numeroRegistros ; $i++) {
+
+        //Validação das disciplinas
+        if ($i > 8) {
+          $funcaoDocente = ($r51s7 == $docente || $r51s7 == $docenteTutor || $r51s7 == $docenteTitular);
+          $atividadeDiferenciada = ($tipo_atendimento == $atividadeComplementar ||
+                                    $tipo_atendimento == $atendimentoEducEspecializado);
+          $etapaEnsino = ($etapa_ensino == $educInfantilCreche ||
+                          $etapa_ensino == $educInfantilPreEscola ||
+                          $etapa_ensino == $educInfantilUnificada ||
+                          $etapa_ensino == $ejaEnsinoFundamental);
+
+          if (!$funcaoDocente || $atividadeDiferenciada || $etapaEnsino) {
+            ${'r51s'.$i} = '';
+          }
+        }
+
 	    	$return .= ${'r51s'.$i}.$d;
+      }
 
       $return = substr_replace($return, "", -1);
 	    $return .= "\n";
