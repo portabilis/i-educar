@@ -86,7 +86,7 @@ class indice extends clsCadastro
 
 	    $this->campoTexto( "titulo_documento", "Título", $this->titulo_documento, 30, 50, false );
 
-	    $this->campoArquivo('documento','Documentação padrão',$this->documento,40,Portabilis_String_Utils::toLatin1("<span id='aviso_formato'>São aceitos apenas arquivos no formato PDF.</span>", array('escape' => false)));
+	    $this->campoArquivo('documento','Documentação padrão',$this->documento,40,Portabilis_String_Utils::toLatin1("<span id='aviso_formato'>São aceitos apenas arquivos no formato PDF com até 2MB.</span>", array('escape' => false)));
 
 		$this->array_botao[] = 'Salvar';
         $this->array_botao_url_script[] = "go('educar_instituicao_lst.php')";
