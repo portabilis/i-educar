@@ -99,12 +99,7 @@ class indice extends clsCadastro
       $obj_libera_menu = new clsMenuFuncionario($this->pessoa_logada,false,false,0);
       $obj_super_usuario = $obj_libera_menu->detalhe();
 
-      // verifica se pessoa logada é super-usuario
-      if ($obj_super_usuario) {
-        $lista = $objTemp->lista(null,null,null,null,null,null,null,null,1);
-      }else{
-        $lista = $objTemp->lista(null,null,null,null,null,null,null,null,1,$obj_permissao->nivel_acesso($this->pessoa_logada));
-      }
+      $lista = $objTemp->lista(null,null,null,null,null,null,null,null,1);
 
       if ( is_array( $lista ) && count( $lista ) )
       {
