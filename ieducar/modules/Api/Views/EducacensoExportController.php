@@ -873,44 +873,45 @@ class EducacensoExportController extends ApiCoreController
 		(SELECT grau_academico FROM modules.educacenso_curso_superior ecs WHERE ecs.id = codigo_curso_superior_1) as grau_academico_curso_superior_1,
 		ano_inicio_curso_superior_1 as r50s9,
 		ano_conclusao_curso_superior_1 as r50s10,
-		tipo_instituicao_curso_superior_1 as r50s11,
-		(SELECT ies_id FROM modules.educacenso_ies ei WHERE ei.id = instituicao_curso_superior_1) as r50s12,
-		situacao_curso_superior_2 as r50s13,
-		formacao_complementacao_pedagogica_2 as r50s14,
-    (SELECT curso_id FROM modules.educacenso_curso_superior ecs WHERE ecs.id = codigo_curso_superior_2) as r50s15,
+		-- tipo_instituicao_curso_superior_1 as r50s11,
+		(SELECT ies_id FROM modules.educacenso_ies ei WHERE ei.id = instituicao_curso_superior_1) as r50s11,
+		situacao_curso_superior_2 as r50s12,
+		formacao_complementacao_pedagogica_2 as r50s13,
+    (SELECT curso_id FROM modules.educacenso_curso_superior ecs WHERE ecs.id = codigo_curso_superior_2) as r50s14,
     (SELECT grau_academico FROM modules.educacenso_curso_superior ecs WHERE ecs.id = codigo_curso_superior_2) as grau_academico_curso_superior_2,
-		ano_inicio_curso_superior_2 as r50s16,
-		ano_conclusao_curso_superior_2 as r50s17,
-		tipo_instituicao_curso_superior_2 as r50s18,
-		(SELECT ies_id FROM modules.educacenso_ies ei WHERE ei.id = instituicao_curso_superior_2) as r50s19,
-		situacao_curso_superior_3 as r50s20,
-		formacao_complementacao_pedagogica_3 as r50s21,
-		(SELECT curso_id FROM modules.educacenso_curso_superior ecs WHERE ecs.id = codigo_curso_superior_3) as r50s22,
-    (SELECT grau_academico FROM modules.educacenso_curso_superior ecs WHERE ecs.id = codigo_curso_superior_3) as grau_academico_curso_superior_3,
-		ano_inicio_curso_superior_3 as r50s23,
-		ano_conclusao_curso_superior_3 as r50s24,
-		tipo_instituicao_curso_superior_3 as r50s25,
-		(SELECT ies_id FROM modules.educacenso_ies ei WHERE ei.id = instituicao_curso_superior_3) as r50s26,
-		pos_especializacao as r50s27,
-		pos_mestrado as r50s28,
-		pos_doutorado as r50s29,
-		pos_nenhuma as r50s30,
-		curso_creche as r50s31,
-		curso_pre_escola as r50s32,
-		curso_anos_iniciais as r50s33,
-		curso_anos_finais as r50s34,
-		curso_ensino_medio as r50s35,
-		curso_eja as r50s36,
-		curso_educacao_especial as r50s37,
-		curso_educacao_indigena as r50s38,
-		curso_educacao_campo as r50s39,
-		curso_educacao_ambiental as r50s49,
-		curso_educacao_direitos_humanos as r50s41,
-		curso_genero_diversidade_sexual as r50s42,
-		curso_direito_crianca_adolescente as r50s43,
-		curso_relacoes_etnicorraciais as r50s44,
-		curso_outros as r50s45,
-		curso_nenhum as r50s46
+		ano_inicio_curso_superior_2 as r50s15,
+		ano_conclusao_curso_superior_2 as r50s16,
+		-- tipo_instituicao_curso_superior_2 as r50s18,
+		(SELECT ies_id FROM modules.educacenso_ies ei WHERE ei.id = instituicao_curso_superior_2) as r50s17,
+		situacao_curso_superior_3 as r50s18,
+		formacao_complementacao_pedagogica_3 as r50s19,
+		(SELECT curso_id FROM modules.educacenso_curso_superior ecs WHERE ecs.id = codigo_curso_superior_3) as r50s20,
+    (SELECT grau_academico FROM modules.educacenso_curso_superior ecs
+    WHERE ecs.id = codigo_curso_superior_3) as grau_academico_curso_superior_3,
+		ano_inicio_curso_superior_3 as r50s21,
+		ano_conclusao_curso_superior_3 as r50s22,
+		-- tipo_instituicao_curso_superior_3 as r50s25,
+		(SELECT ies_id FROM modules.educacenso_ies ei WHERE ei.id = instituicao_curso_superior_3) as r50s23,
+		pos_especializacao as r50s24,
+		pos_mestrado as r50s25,
+		pos_doutorado as r50s26,
+		pos_nenhuma as r50s27,
+		curso_creche as r50s28,
+		curso_pre_escola as r50s29,
+		curso_anos_iniciais as r50s30,
+		curso_anos_finais as r50s31,
+		curso_ensino_medio as r50s32,
+		curso_eja as r50s33,
+		curso_educacao_especial as r50s34,
+		curso_educacao_indigena as r50s35,
+		curso_educacao_campo as r50s36,
+		curso_educacao_ambiental as r50s37,
+		curso_educacao_direitos_humanos as r50s38,
+		curso_genero_diversidade_sexual as r50s39,
+		curso_direito_crianca_adolescente as r50s40,
+		curso_relacoes_etnicorraciais as r50s41,
+		curso_outros as r50s42,
+		curso_nenhum as r50s43
 
 		FROM 	pmieducar.servidor s
 		INNER JOIN cadastro.fisica fis ON (fis.idpes = s.cod_servidor)
@@ -931,7 +932,7 @@ class EducacensoExportController extends ApiCoreController
       if ($r50s1){
       $d = '|';
       $return = '';
-      $numeroRegistros = 46;
+      $numeroRegistros = 43;
 
       if($grau_academico_curso_superior_1 == self::BACHARELADO || $grau_academico_curso_superior_1 == self::TECNOLOGO){
         if(is_null($r50s7)){
@@ -943,26 +944,26 @@ class EducacensoExportController extends ApiCoreController
       }
 
       if($grau_academico_curso_superior_2 == self::BACHARELADO || $grau_academico_curso_superior_2 == self::TECNOLOGO){
-        if(is_null($r50s14)){
+        if(is_null($r50s13)){
           $this->msg .= "Dados para formular o registro 50 do servidor {$servidorId} com problemas. O registro 14 é obrigatório para cursos do tipo BACHARELADO ou TECNOLOGO.<br/>";
           $this->error = true;
         }
       }elseif($grau_academico_curso_superior_2 == self::LICENCIATURA){
-        $r50s14 = NULL;
+        $r50s13 = NULL;
       }
 
       if($grau_academico_curso_superior_3 == self::BACHARELADO || $grau_academico_curso_superior_3 == self::TECNOLOGO){
-        if(is_null($r50s21)){
+        if(is_null($r50s19)){
           $this->msg .= "Dados para formular o registro 50 do servidor {$servidorId} com problemas. O registro 21 é obrigatório para cursos do tipo BACHARELADO ou TECNOLOGO.<br/>";
           $this->error = true;
         }
       }elseif($grau_academico_curso_superior_3 == self::LICENCIATURA){
-        $r50s21 = NULL;
+        $r50s19 = NULL;
       }
 
       if($r50s6 != 1){ $r50s7 = NULL;}
-      if($r50s13 != 1){ $r50s14 = NULL;}
-      if($r50s20 != 1){ $r50s21 = NULL;}
+      if($r50s12 != 1){ $r50s13 = NULL;}
+      if($r50s18 != 1){ $r50s19 = NULL;}
 
       $cont= 0;
       for ($i=1; $i <= $numeroRegistros; $i++){
