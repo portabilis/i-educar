@@ -34,6 +34,7 @@
 
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once "Reports/Reports/BoletimReport.php";
+require_once "Reports/Reports/BoletimProfessorReport.php";
 
 class ReportController extends ApiCoreController
 {
@@ -115,22 +116,23 @@ class ReportController extends ApiCoreController
       $boletimProfessorReport = new BoletimProfessorReport();
 
       $boletimProfessorReport->addArg('ano',   (int)$this->getRequest()->ano);
-      $boletimProfessorReport->addArg('instituicao',   (int)$this->getRequest()->instituicao);
-      $boletimProfessorReport->addArg('escola',   (int)$this->getRequest()->escola);
-      $boletimProfessorReport->addArg('curso',   (int)$this->getRequest()->curso);
-      $boletimProfessorReport->addArg('serie',   (int)$this->getRequest()->serie);
+      $boletimProfessorReport->addArg('instituicao',   (int)$this->getRequest()->instituicao_id);
+      $boletimProfessorReport->addArg('escola',   (int)$this->getRequest()->escola_id);
+      $boletimProfessorReport->addArg('curso',   (int)$this->getRequest()->curso_id);
+      $boletimProfessorReport->addArg('serie',   (int)$this->getRequest()->serie_id);
+      $boletimProfessorReport->addArg('turma',   (int)$this->getRequest()->turma_id);
       $boletimProfessorReport->addArg('professor',   (int)$this->getRequest()->professor);
-      $boletimProfessorReport->addArg('disciplina',   (int)$this->getRequest()->componente_curricular);
+      $boletimProfessorReport->addArg('disciplina',   (int)$this->getRequest()->componente_curricular_id);
       $boletimProfessorReport->addArg('orientacao', 2);
-      $boletimProfessorReport->addArg('modelo', 2);
+      $boletimProfessorReport->addArg('modelo', $GLOBALS['coreExt']['Config']->report->mostrar_relatorios == 'saomigueldoscampos' ? 2 : 1);
       $boletimProfessorReport->addArg('linha', 0);
 
       if (CORE_EXT_CONFIGURATION_ENV == "production") {
-        $boletimReport->addArg('SUBREPORT_DIR', "/sites_media_root/services/reports/jasper/");
+        $boletimProfessorReport->addArg('SUBREPORT_DIR', "/sites_media_root/services/reports/jasper/");
       } else if ($GLOBALS['coreExt']['Config']->app->database->dbname == 'test' || $GLOBALS['coreExt']['Config']->app->database->dbname == 'desenvolvimento') {
-        $boletimReport->addArg('SUBREPORT_DIR', "/sites_media_root/services-test/reports/jasper/");
+        $boletimProfessorReport->addArg('SUBREPORT_DIR', "/sites_media_root/services-test/reports/jasper/");
       } else {
-        $boletimReport->addArg('SUBREPORT_DIR', "modules/Reports/ReportSources/Portabilis/");
+        $boletimProfessorReport->addArg('SUBREPORT_DIR', "modules/Reports/ReportSources/Portabilis/");
       }
 
       $encoding     = 'base64';
@@ -138,8 +140,7 @@ class ReportController extends ApiCoreController
       $dumpsOptions = array('options' => array('encoding' => $encoding));
       $encoded      = $boletimProfessorReport->dumps($dumpsOptions);
 
-      return array('matricula_id' => $this->getRequest()->matricula_id,
-                   'encoding'     => $encoding,
+      return array('encoding'     => $encoding,
                    'encoded'      => $encoded);
     }
   }
