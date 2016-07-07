@@ -1084,8 +1084,8 @@ class EducacensoAnaliseController extends ApiCoreController
                               "fail" => true);
         }
         if (!$aluno["cod_cartorio"]) {
-          $mensagem[] = array("text" => "Dados para formular o registro 70 da escola {$nomeEscola} não encontrados. Verificamos que o número da identidade do(a) aluno(a) {$nomeAluno} foi informada, portanto é necessário informar também o código do cartório conforme a 'Tabela de Cartórios'.",
-                              "path" => "(Endereçamento > Estado > Editar > Campo: Código INEP)",
+          $mensagem[] = array("text" => "Dados para formular o registro 70 da escola {$nomeEscola} não encontrados. Verificamos que o número da certidão civil do(a) aluno(a) {$nomeAluno} foi informada, portanto é necessário informar também o código do cartório conforme a 'Tabela de Cartórios'.",
+                              "path" => "(Pessoa FJ > Pessoa física > Editar > Campo: Estado emissão / Data emissão)",
                               "fail" => true);
         }
       }
