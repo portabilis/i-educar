@@ -51,7 +51,7 @@ class ReportController extends ApiCoreController
            $this->validatesId('escola') &&
            $this->validatesId('serie') &&
            $this->validatesId('turma') &&
-           $this->validatesId('disciplina');
+           $this->validatesId('componente_curricular');
   }
 
 
@@ -120,7 +120,18 @@ class ReportController extends ApiCoreController
       $boletimProfessorReport->addArg('curso',   (int)$this->getRequest()->curso);
       $boletimProfessorReport->addArg('serie',   (int)$this->getRequest()->serie);
       $boletimProfessorReport->addArg('professor',   (int)$this->getRequest()->professor);
-      $boletimProfessorReport->addArg('orientacao', 1);
+      $boletimProfessorReport->addArg('disciplina',   (int)$this->getRequest()->componente_curricular);
+      $boletimProfessorReport->addArg('orientacao', 2);
+      $boletimProfessorReport->addArg('modelo', 2);
+      $boletimProfessorReport->addArg('linha', 0);
+
+      if (CORE_EXT_CONFIGURATION_ENV == "production") {
+        $boletimReport->addArg('SUBREPORT_DIR', "/sites_media_root/services/reports/jasper/");
+      } else if ($GLOBALS['coreExt']['Config']->app->database->dbname == 'test' || $GLOBALS['coreExt']['Config']->app->database->dbname == 'desenvolvimento') {
+        $boletimReport->addArg('SUBREPORT_DIR', "/sites_media_root/services-test/reports/jasper/");
+      } else {
+        $boletimReport->addArg('SUBREPORT_DIR', "modules/Reports/ReportSources/Portabilis/");
+      }
 
       $encoding     = 'base64';
 
