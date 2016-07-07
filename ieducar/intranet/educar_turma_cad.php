@@ -719,7 +719,7 @@ class indice extends clsCadastro
                         4 => 'Atividade complementar',
                         5 => 'Atendimento educacional especializado (AEE)');
 
-    // echo (is_null($this->tipo_atendimento) ? "nulo" : 'false');
+    if (is_null($this->tipo_atendimento)) $this->tipo_atendimento = -1;
 
     $options = array('label' => 'Tipo de atendimento', 'resources' => $resources, 'value' => $this->tipo_atendimento, 'required' => false, 'size' => 70,);
     $this->inputsHelper()->select('tipo_atendimento', $options);
