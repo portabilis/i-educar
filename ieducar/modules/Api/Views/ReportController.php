@@ -124,6 +124,7 @@ class ReportController extends ApiCoreController
       $boletimProfessorReport->addArg('professor',   (int)$this->getRequest()->professor);
       $boletimProfessorReport->addArg('disciplina',   (int)$this->getRequest()->componente_curricular_id);
       $boletimProfessorReport->addArg('orientacao', 2);
+      $boletimProfessorReport->addArg('situacao', 10);
       $boletimProfessorReport->addArg('modelo', $GLOBALS['coreExt']['Config']->report->mostrar_relatorios == 'saomigueldoscampos' ? 2 : 1);
       $boletimProfessorReport->addArg('linha', 0);
 
