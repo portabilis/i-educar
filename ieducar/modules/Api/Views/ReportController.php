@@ -51,8 +51,7 @@ class ReportController extends ApiCoreController
            $this->validatesId('escola') &&
            $this->validatesId('serie') &&
            $this->validatesId('turma') &&
-           $this->validatesId('disciplina') &&
-           $this->validatesId('matricula');
+           $this->validatesId('disciplina');
   }
 
 
@@ -120,6 +119,7 @@ class ReportController extends ApiCoreController
       $boletimProfessorReport->addArg('escola',   (int)$this->getRequest()->escola);
       $boletimProfessorReport->addArg('curso',   (int)$this->getRequest()->curso);
       $boletimProfessorReport->addArg('serie',   (int)$this->getRequest()->serie);
+      $boletimProfessorReport->addArg('professor',   (int)$this->getRequest()->professor);
       $boletimProfessorReport->addArg('orientacao', 1);
 
       $encoding     = 'base64';
