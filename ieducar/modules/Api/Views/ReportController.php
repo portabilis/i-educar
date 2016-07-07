@@ -51,7 +51,7 @@ class ReportController extends ApiCoreController
            $this->validatesId('escola') &&
            $this->validatesId('serie') &&
            $this->validatesId('turma') &&
-           $this->validatesId('componente_curricular');
+           $this->validatesPresenceOf('componente_curricular_id');
   }
 
 
