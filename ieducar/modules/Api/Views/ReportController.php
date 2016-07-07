@@ -137,7 +137,7 @@ class ReportController extends ApiCoreController
     if ($this->isRequestFor('get', 'boletim'))
       $this->appendResponse($this->getBoletim());
     elseif ($this->isRequestFor('get', 'boletim-professor'))
-      $this->appendResponse($this->getBoletim());
+      $this->appendResponse($this->getBoletimProfessor());
     else
       $this->notImplementedOperationError();
   }
