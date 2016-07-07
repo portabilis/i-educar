@@ -34,6 +34,7 @@
 
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once "Reports/Reports/BoletimReport.php";
+require_once "Reports/Reports/BoletimProfessorReport.php";
 
 class ReportController extends ApiCoreController
 {
@@ -43,6 +44,15 @@ class ReportController extends ApiCoreController
   protected function canGetBoletim() {
     return $this->validatesId('escola') &&
            $this->validatesId('matricula');
+  }
+
+  protected function canGetBoletimProfessor() {
+    return $this->validatesId('instituicao') &&
+           $this->validatesPresenceOf('ano') &&
+           $this->validatesId('escola') &&
+           $this->validatesId('serie') &&
+           $this->validatesId('turma') &&
+           $this->validatesPresenceOf('componente_curricular_id');
   }
 
 
@@ -101,9 +111,45 @@ class ReportController extends ApiCoreController
     }
   }
 
+  protected function getBoletimProfessor() {
+   if ($this->canGetBoletimProfessor()) {
+      $boletimProfessorReport = new BoletimProfessorReport();
+
+      $boletimProfessorReport->addArg('ano',   (int)$this->getRequest()->ano);
+      $boletimProfessorReport->addArg('instituicao',   (int)$this->getRequest()->instituicao_id);
+      $boletimProfessorReport->addArg('escola',   (int)$this->getRequest()->escola_id);
+      $boletimProfessorReport->addArg('curso',   (int)$this->getRequest()->curso_id);
+      $boletimProfessorReport->addArg('serie',   (int)$this->getRequest()->serie_id);
+      $boletimProfessorReport->addArg('turma',   (int)$this->getRequest()->turma_id);
+      $boletimProfessorReport->addArg('professor',   (int)$this->getRequest()->professor);
+      $boletimProfessorReport->addArg('disciplina',   (int)$this->getRequest()->componente_curricular_id);
+      $boletimProfessorReport->addArg('orientacao', 2);
+      $boletimProfessorReport->addArg('modelo', $GLOBALS['coreExt']['Config']->report->mostrar_relatorios == 'saomigueldoscampos' ? 2 : 1);
+      $boletimProfessorReport->addArg('linha', 0);
+
+      if (CORE_EXT_CONFIGURATION_ENV == "production") {
+        $boletimProfessorReport->addArg('SUBREPORT_DIR', "/sites_media_root/services/reports/jasper/");
+      } else if ($GLOBALS['coreExt']['Config']->app->database->dbname == 'test' || $GLOBALS['coreExt']['Config']->app->database->dbname == 'desenvolvimento') {
+        $boletimProfessorReport->addArg('SUBREPORT_DIR', "/sites_media_root/services-test/reports/jasper/");
+      } else {
+        $boletimProfessorReport->addArg('SUBREPORT_DIR', "modules/Reports/ReportSources/Portabilis/");
+      }
+
+      $encoding     = 'base64';
+
+      $dumpsOptions = array('options' => array('encoding' => $encoding));
+      $encoded      = $boletimProfessorReport->dumps($dumpsOptions);
+
+      return array('encoding'     => $encoding,
+                   'encoded'      => $encoded);
+    }
+  }
+
   public function Gerar() {
     if ($this->isRequestFor('get', 'boletim'))
       $this->appendResponse($this->getBoletim());
+    elseif ($this->isRequestFor('get', 'boletim-professor'))
+      $this->appendResponse($this->getBoletimProfessor());
     else
       $this->notImplementedOperationError();
   }
