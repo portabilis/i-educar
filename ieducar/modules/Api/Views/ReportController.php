@@ -47,7 +47,7 @@ class ReportController extends ApiCoreController
 
   protected function canGetBoletimProfessor() {
     return $this->validatesId('instituicao') &&
-           $this->validatesId('ano') &&
+           $this->validatesPresenceOf('ano') &&
            $this->validatesId('escola') &&
            $this->validatesId('serie') &&
            $this->validatesId('turma') &&
