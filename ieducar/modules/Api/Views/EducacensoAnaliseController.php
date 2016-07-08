@@ -1010,6 +1010,7 @@ class EducacensoAnaliseController extends ApiCoreController
                    municipio.cod_ibge AS municipio_inep,
                    uf_cartorio.cod_ibge AS uf_inep_cartorio,
                    uf_rg.cod_ibge AS uf_inep_rg,
+                   fisica.nacionalidade AS nacionalidade,
                    endereco_pessoa.cep AS cep
               FROM pmieducar.aluno
              INNER JOIN pmieducar.matricula ON (matricula.ref_cod_aluno = aluno.cod_aluno)
@@ -1045,6 +1046,7 @@ class EducacensoAnaliseController extends ApiCoreController
     $mensagem = array();
     $nascimentoAntigoFormato = 91;
     $casamentoAntigoFormato  = 92;
+    $estrangeiro = 3;
 
     foreach ($alunos as $aluno) {
       $nomeEscola = Portabilis_String_Utils::toUtf8(mb_strtoupper($aluno["nome_escola"]));
@@ -1067,7 +1069,8 @@ class EducacensoAnaliseController extends ApiCoreController
                               "fail" => true);
         }
       }
-      if ($aluno["tipo_cert_civil"] == $nascimentoAntigoFormato || $aluno["tipo_cert_civil"] == $casamentoAntigoFormato) {
+      $certidaoAntigoFormato = ($aluno["tipo_cert_civil"] == $nascimentoAntigoFormato || $aluno["tipo_cert_civil"] == $casamentoAntigoFormato);
+      if ($certidaoAntigoFormato && $aluno["nacionalidade"] != $estrangeiro) {
         if (!$aluno["num_termo"]) {
           $mensagem[] = array("text" => "Dados para formular o registro 70 da escola {$nomeEscola} não encontrados. Verificamos que o tipo da certidão civil do(a) aluno(a) {$nomeAluno} foi informada, portanto é necessário informar também o número do termo da certidão.",
                               "path" => "(Pessoa FJ > Pessoa física > Editar > Campo: Termo)",
