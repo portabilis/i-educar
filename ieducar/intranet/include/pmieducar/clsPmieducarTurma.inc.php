@@ -953,9 +953,11 @@ class clsPmieducarTurma
 				$gruda = ", ";
 			}
 
-			$this->visivel = dbBool($this->visivel) ? "TRUE" : "FALSE";
-			$set .= "{$gruda}visivel = '{$this->visivel}'";
-			$gruda = ", ";
+			if (is_bool($this->visivel)) {
+				$this->visivel = dbBool($this->visivel) ? "TRUE" : "FALSE";
+				$set .= "{$gruda}visivel = '{$this->visivel}'";
+				$gruda = ", ";
+			}
 
 			if(is_numeric($this->turma_turno_id)) {
 				$set  .= "{$gruda}turma_turno_id = '{$this->turma_turno_id}'";
