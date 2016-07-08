@@ -780,7 +780,7 @@ class EducacensoExportController extends ApiCoreController
 
       $deficiencias = Portabilis_Utils_Database::fetchPreparedQuery($sql, array( 'params' => array($r30s4)));
 
-      $r30s19 = $r30s20 = $r30s21 = $r30s22 = $r30s23 = $r30s24 = $r30s25 = $r30s26 = null;
+      $r30s19 = $r30s20 = $r30s21 = $r30s22 = $r30s23 = $r30s24 = $r30s25 = $r30s26 = 0;
 
       $deficienciaToSeq = array( 1 => '19',
                                  2 => '20',
@@ -800,7 +800,7 @@ class EducacensoExportController extends ApiCoreController
         }
       }
 
-      if($r30s18 = 0)
+      if($r30s18 == 0)
         $r30s19 = $r30s20 = $r30s21 = $r30s22 = $r30s23 = $r30s24 = $r30s25 = $r30s26 = NULL;
 
       $r30s7 = null;
