@@ -793,6 +793,65 @@ class clsPmieducarServidor
    * @return array|bool  Array com os resultados da query SELECT ou FALSE caso
    *                     nenhum registro tenha sido encontrado
    */
+  function lista_professor($cod_instituicao, $cod_escola, $str_nome_servidor){
+    session_start();
+    $this->_campos_lista = "p.nome, func.matricula, s.ref_cod_instituicao";
+    
+    $this->_schema = "pmieducar.";
+    $tabela_compl  = "LEFT JOIN cadastro.pessoa p ON (s.cod_servidor = p.idpes) 
+                      LEFT JOIN portal.funcionario func ON (s.cod_servidor = func.ref_cod_pessoa_fj)";
+    $filtros       = "WHERE s.ativo = '1' 
+                        AND s.ref_cod_instituicao = $cod_instituicao 
+                        AND (s.cod_servidor IN (SELECT a.ref_cod_servidor 
+                                                  FROM pmieducar.servidor_alocacao a 
+                                                 WHERE a.ativo = 1 
+                                                   AND a.ref_ref_cod_instituicao = $cod_instituicao 
+                                                   AND ref_cod_escola = $cod_escola)) 
+                        AND EXISTS (SELECT 1 
+                                      FROM pmieducar.servidor_funcao sf, 
+                                           pmieducar.funcao f, 
+                                           pmieducar.servidor_disciplina sd 
+                                     WHERE f.cod_funcao = sf.ref_cod_funcao 
+                                       AND f.professor = 1 
+                                       AND sf.ref_ref_cod_instituicao = s.ref_cod_instituicao 
+                                       AND s.cod_servidor = sf.ref_cod_servidor 
+                                       AND s.cod_servidor = sd.ref_cod_servidor 
+                                       AND s.ref_cod_instituicao = sd.ref_ref_cod_instituicao)";
+   
+    if ($str_nome_servidor != "") {
+      $filtros .= " AND p.nome like '%$str_nome_servidor%' ";
+    }
+
+    $sql = "SELECT {$this->_campos_lista} FROM {$this->_schema}servidor s {$tabela_compl} {$filtros} GROUP BY {$this->_campos_lista}" . $this->getOrderby();
+    
+    $db = new clsBanco();
+    $countCampos = count(explode(",", $this->_campos_lista));
+    $resultado = array();
+    
+    $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_schema}servidor s {$tabela_compl} {$filtros}");
+
+    $db->Consulta($sql);
+    
+    if($countCampos > 1){
+      while ($db->ProximoRegistro()){
+        $tupla = $db->Tupla();
+      
+        $tupla["_total"] = $this->_total;
+        $resultado[] = $tupla;
+      }
+    }
+    else{
+      while($db->ProximoRegistro()){
+        $tupla = $db->Tupla();
+        $resultado[] = $tupla[$this->_campos_lista];
+      }
+    }
+    if(count($resultado)){
+      return $resultado;
+    }
+    return false;
+  }
+
   function lista(
     $int_cod_servidor            = NULL,
     $int_ref_cod_deficiencia     = NULL,

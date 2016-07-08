@@ -370,8 +370,7 @@ class indice extends clsCadastro
       $array_servidor[$this->ref_cod_regente] = $det['nome'];
     }
 
-    $this->campoListaPesq('ref_cod_regente', 'Professor/Regente', $array_servidor,
-      $this->ref_cod_regente, '', '', FALSE, '', '', NULL, NULL, '', TRUE, FALSE, FALSE);
+    $this->campoListaPesq('ref_cod_regente', 'Professor/Regente', $array_servidor, $this->ref_cod_regente, '', '', FALSE, '', '', NULL, NULL, '', TRUE, FALSE, FALSE);
 
     // Turma tipo
     $opcoes = array('' => 'Selecione');
@@ -2249,7 +2248,7 @@ function validaCampoServidor()
     return false;
   }
 
-  pesquisa_valores_popless('educar_pesquisa_servidor_lst.php?campo1=ref_cod_regente&professor=1&ref_cod_servidor=0&ref_cod_instituicao=' + ref_cod_instituicao + '&ref_cod_escola=' + ref_cod_escola, 'ref_cod_servidor');
+  pesquisa_valores_popless('educar_pesquisa_professor_lst.php?campo1=ref_cod_regente&professor=1&ref_cod_servidor=0&ref_cod_instituicao=' + ref_cod_instituicao + '&ref_cod_escola=' + ref_cod_escola, 'ref_cod_servidor');
 }
 
 document.getElementById('ref_cod_regente_lupa').onclick = function()
