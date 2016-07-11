@@ -1095,17 +1095,17 @@ class EducacensoAnaliseController extends ApiCoreController
         }
       }
       if ($aluno["cep"] && !$aluno['uf_inep']) {
-        $mensagem[] = array("text" => "Dados para formular o registro 40 da escola {$nomeEscola} não encontrados. Verificamos que no cadastro do(a) aluno(a) {$nomeAluno} o endereçamento foi informado, portanto é necessário cadastrar código da UF informada conforme a 'Tabela de UF'.",
+        $mensagem[] = array("text" => "Dados para formular o registro 70 da escola {$nomeEscola} não encontrados. Verificamos que no cadastro do(a) aluno(a) {$nomeAluno} o endereçamento foi informado, portanto é necessário cadastrar código da UF informada conforme a 'Tabela de UF'.",
                             "path" => "(Endereçamento > Estado > Editar > Campo: Código INEP)",
                             "fail" => true);
       }
       if ($aluno["cep"] && !$aluno['municipio_inep']) {
-        $mensagem[] = array("text" => "Dados para formular o registro 40 da escola {$nomeEscola} não encontrados. Verificamos que no cadastro do(a) aluno(a) {$nomeAluno} o endereçamento foi informado, portanto é necessário cadastrar código do município informado conforme a 'Tabela de Municípios'.",
+        $mensagem[] = array("text" => "Dados para formular o registro 70 da escola {$nomeEscola} não encontrados. Verificamos que no cadastro do(a) aluno(a) {$nomeAluno} o endereçamento foi informado, portanto é necessário cadastrar código do município informado conforme a 'Tabela de Municípios'.",
                             "path" => "(Endereçamento > Município > Editar > Campo: Código INEP)",
                             "fail" => true);
       }
       if (!$aluno["zona_localizacao"]) {
-        $mensagem[] = array("text" => "Dados para formular o registro 40 da escola {$nomeEscola} não encontrados. Verifique se a zona/localização do (a) aluno(a) $nomeAluno foi informada.",
+        $mensagem[] = array("text" => "Dados para formular o registro 70 da escola {$nomeEscola} não encontrados. Verifique se a zona/localização do (a) aluno(a) $nomeAluno foi informada.",
                             "path" => "(Endereçamento > Bairro > Campo: Zona Localização)",
                             "fail" => true);}
     }
