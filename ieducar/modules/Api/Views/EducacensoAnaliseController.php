@@ -1011,7 +1011,8 @@ class EducacensoAnaliseController extends ApiCoreController
                    uf_cartorio.cod_ibge AS uf_inep_cartorio,
                    uf_rg.cod_ibge AS uf_inep_rg,
                    fisica.nacionalidade AS nacionalidade,
-                   endereco_pessoa.cep AS cep
+                   endereco_pessoa.cep AS cep,
+                   bairro.zona_localizacao AS zona_localizacao
               FROM pmieducar.aluno
              INNER JOIN pmieducar.matricula ON (matricula.ref_cod_aluno = aluno.cod_aluno)
              INNER JOIN pmieducar.escola ON (escola.cod_escola = matricula.ref_ref_cod_escola)
@@ -1025,6 +1026,7 @@ class EducacensoAnaliseController extends ApiCoreController
               LEFT JOIN public.uf ON (uf.sigla_uf = municipio.sigla_uf)
               LEFT JOIN public.uf uf_cartorio ON (uf_cartorio.sigla_uf = documento.sigla_uf_cert_civil)
               LEFT JOIN public.uf uf_rg ON (uf_rg.sigla_uf = documento.sigla_uf_exp_rg)
+              LEFT JOIN public.bairro ON (bairro.idbai = endereco_pessoa.idbai)
              WHERE aluno.ativo = 1
                AND matricula.ativo = 1
                AND matricula.ano = $1
@@ -1102,6 +1104,10 @@ class EducacensoAnaliseController extends ApiCoreController
                             "path" => "(Endereçamento > Município > Editar > Campo: Código INEP)",
                             "fail" => true);
       }
+      if (!$aluno["zona_localizacao"]) {
+        $mensagem[] = array("text" => "Dados para formular o registro 40 da escola {$nomeEscola} não encontrados. Verifique se a zona/localização do (a) aluno(a) $nomeAluno foi informada.",
+                            "path" => "(Endereçamento > Bairro > Campo: Zona Localização)",
+                            "fail" => true);}
     }
 
     return array('mensagens' => $mensagem,
