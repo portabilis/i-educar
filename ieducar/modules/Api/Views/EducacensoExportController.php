@@ -1437,16 +1437,16 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
         INNER JOIN pmieducar.matricula m ON (m.ref_cod_aluno = a.cod_aluno)
         INNER JOIN pmieducar.escola e ON (m.ref_ref_cod_escola = e.cod_escola)
         INNER JOIN modules.educacenso_cod_escola ece ON (ece.cod_escola = e.cod_escola)
-        INNER JOIN cadastro.endereco_pessoa ep ON (ep.idpes = p.idpes)
-        INNER JOIN urbano.cep_logradouro_bairro clb ON (clb.idbai = ep.idbai AND clb.idlog = ep.idlog AND clb.cep = ep.cep)
-        INNER JOIN public.bairro b ON (clb.idbai = b.idbai)
-        INNER JOIN urbano.cep_logradouro cl ON (cl.idlog = clb.idlog AND clb.cep = cl.cep)
-        INNER JOIN public.distrito d ON (d.iddis = b.iddis)
-        INNER JOIN public.municipio mun ON (d.idmun = mun.idmun)
-        INNER JOIN public.uf ON (uf.sigla_uf = mun.sigla_uf)
-        INNER JOIN public.pais ON (pais.idpais = uf.idpais)
-        INNER JOIN public.logradouro l ON (l.idlog = cl.idlog)
-        LEFT JOIN modules.educacenso_cod_aluno eca ON a.cod_aluno = eca.cod_aluno
+         LEFT JOIN cadastro.endereco_pessoa ep ON (ep.idpes = p.idpes)
+         LEFT JOIN urbano.cep_logradouro_bairro clb ON (clb.idbai = ep.idbai AND clb.idlog = ep.idlog AND clb.cep = ep.cep)
+         LEFT JOIN public.bairro b ON (clb.idbai = b.idbai)
+         LEFT JOIN urbano.cep_logradouro cl ON (cl.idlog = clb.idlog AND clb.cep = cl.cep)
+         LEFT JOIN public.distrito d ON (d.iddis = b.iddis)
+         LEFT JOIN public.municipio mun ON (d.idmun = mun.idmun)
+         LEFT JOIN public.uf ON (uf.sigla_uf = mun.sigla_uf)
+         LEFT JOIN public.pais ON (pais.idpais = uf.idpais)
+         LEFT JOIN public.logradouro l ON (l.idlog = cl.idlog)
+         LEFT JOIN modules.educacenso_cod_aluno eca ON a.cod_aluno = eca.cod_aluno
 
         WHERE e.cod_escola = $1
         AND COALESCE(m.data_matricula,m.data_cadastro) BETWEEN DATE($3) AND DATE($4)
