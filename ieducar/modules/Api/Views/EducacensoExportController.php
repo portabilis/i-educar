@@ -591,7 +591,6 @@ class EducacensoExportController extends ApiCoreController
         c.modalidade_curso as r20s37,
         t.etapa_educacenso as r20s38,
         t.cod_curso_profissional as r20s39,
-        t.turma_sem_professor as r20s66,
         s.cod_serie as serieId
 
         FROM pmieducar.turma t
@@ -713,7 +712,7 @@ class EducacensoExportController extends ApiCoreController
       $d = '|';
       $return = '';
 
-      for ($i=1; $i <= 66 ; $i++)
+      for ($i=1; $i <= 65 ; $i++)
         $return .= ${'r20s'.$i}.$d;
 
       $return = substr_replace($return, "", -1);
