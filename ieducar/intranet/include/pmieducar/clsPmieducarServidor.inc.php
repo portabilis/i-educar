@@ -546,6 +546,9 @@ class clsPmieducarServidor
       if (is_numeric($this->situacao_curso_superior_1)) {
         $set .= "{$gruda}situacao_curso_superior_1 = '{$this->situacao_curso_superior_1}'";
         $gruda = ", ";
+      } else {
+        $set .= "{$gruda}situacao_curso_superior_1 = NULL";
+        $gruda = ", ";
       }
       if (is_numeric($this->formacao_complementacao_pedagogica_1)) {
         $set .= "{$gruda}formacao_complementacao_pedagogica_1 = '{$this->formacao_complementacao_pedagogica_1}'";
@@ -580,6 +583,9 @@ class clsPmieducarServidor
       if (is_numeric($this->situacao_curso_superior_2)) {
         $set .= "{$gruda}situacao_curso_superior_2 = '{$this->situacao_curso_superior_2}'";
         $gruda = ", ";
+      } else {
+        $set .= "{$gruda}situacao_curso_superior_2 = NULL";
+        $gruda = ", ";
       }
       if (is_numeric($this->formacao_complementacao_pedagogica_2)) {
         $set .= "{$gruda}formacao_complementacao_pedagogica_2 = '{$this->formacao_complementacao_pedagogica_2}'";
@@ -613,6 +619,9 @@ class clsPmieducarServidor
       }
       if (is_numeric($this->situacao_curso_superior_3)) {
         $set .= "{$gruda}situacao_curso_superior_3 = '{$this->situacao_curso_superior_3}'";
+        $gruda = ", ";
+      } else {
+        $set .= "{$gruda}situacao_curso_superior_3 = NULL";
         $gruda = ", ";
       }
       if (is_numeric($this->formacao_complementacao_pedagogica_3)) {
