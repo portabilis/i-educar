@@ -427,7 +427,14 @@ class EducacensoExportController extends ApiCoreController
       codigo_lingua_indigena as r10s104,
       espaco_brasil_aprendizado as r10s105,
       abre_final_semana as r10s106,
-      proposta_pedagogica as r10s107
+      proposta_pedagogica as r10s107,
+
+      (SELECT 1
+         FROM pmieducar.turma
+        WHERE ref_ref_cod_escola = $1
+          AND etapa_educacenso IN (4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,41,56)
+        LIMIT 1
+      ) AS etapa_ensino_fundamental
 
       FROM pmieducar.escola e
       INNER JOIN modules.educacenso_cod_escola ece ON (e.cod_escola = ece.cod_escola)
@@ -469,7 +476,10 @@ class EducacensoExportController extends ApiCoreController
         }
       }
 
-      $r10s96 = ($r10s96 == 1 && ($r10s92 == 1 || $r10s93 == 1)) ? 1 : (($r10s92 == 1 || $r10s93 == 1) ? 0 : NULL);
+      if ($r10s96) {
+        $r10s96 = ($etapa_ensino_fundamental ? 1 : NULL);
+      } else
+        $r10s96 = 0;
 
       if ($r10s90 == $exclusivamente || $r10s91 == $exclusivamente) {
         $r10s92 = $r10s93 = $r10s94 = $r10s95 = '';
