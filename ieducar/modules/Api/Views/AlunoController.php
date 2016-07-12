@@ -276,7 +276,7 @@ class AlunoController extends ApiCoreController
     // quando não existia dados, para o novo cadastro foi adicionado a opcao 0 (nenhum),
     // então por compatibilidade esta API retorna nenhum, quando não foi encontrado dados.
     if (is_null($entity))
-      $tipo = $tiposTransporte[Transporte_Model_Responsavel::NENHUM];
+      $tipo = $tiposTransporte[NULL];
     else
       $tipo = $tiposTransporte[$entity->get('responsavel')];
 
