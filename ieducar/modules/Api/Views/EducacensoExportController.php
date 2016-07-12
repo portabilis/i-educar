@@ -1425,8 +1425,8 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
         ep.complemento as r70s26,
         b.nome as r70s27,
         uf.cod_ibge as r70s28,
-        mun.cod_ibge as r70s29
-
+        mun.cod_ibge as r70s29,
+        fis.nacionalidade AS nacionalidade
 
         FROM  pmieducar.aluno a
         INNER JOIN cadastro.fisica fis ON (fis.idpes = a.ref_idpes)
@@ -1458,6 +1458,8 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
     $d = '|';
     $return = '';
     $numeroRegistros = 29;
+
+    $estrangeiro = 3;
 
     foreach (Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId, $ano, $data_ini, $data_fim, $alunoId))) as $reg) {
       extract($reg);
@@ -1497,6 +1499,12 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
       }else
         $r70s9 = $r70s10 = $r70s11 = $r70s12 = $r70s13 = $r70s14 = $r70s15 = $r70s16 = $r70s17 = $r70s18 = NULL;
       // fim das validações de certidões //
+
+      if ($nacionalidade == $estrangeiro) {
+        for ($i=5; $i < 18; $i++) {
+          ${'r70s'.$i} = NULL;
+        }
+      }
 
       for ($i=1; $i <= $numeroRegistros ; $i++)
         $return .= ${'r70s'.$i}.$d;
