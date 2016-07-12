@@ -804,7 +804,7 @@ class clsPmieducarServidor
    */
   function lista_professor($cod_instituicao, $cod_escola, $str_nome_servidor){
     session_start();
-    $this->_campos_lista = "p.nome, func.matricula, s.ref_cod_instituicao";
+    $this->_campos_lista = "s.cod_servidor, p.nome, func.matricula, s.ref_cod_instituicao";
     
     $this->_schema = "pmieducar.";
     $tabela_compl  = "LEFT JOIN cadastro.pessoa p ON (s.cod_servidor = p.idpes) 
