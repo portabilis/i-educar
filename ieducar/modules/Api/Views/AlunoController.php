@@ -272,9 +272,8 @@ class AlunoController extends ApiCoreController
     $dataMapper = $this->getDataMapperFor('transporte', 'aluno');
     $entity     = $this->tryGetEntityOf($dataMapper, $alunoId);
 
-    // no antigo cadastro de alunos era considerado como não utiliza transporte,
-    // quando não existia dados, para o novo cadastro foi adicionado a opcao 0 (nenhum),
-    // então por compatibilidade esta API retorna nenhum, quando não foi encontrado dados.
+    //Alterado para retornar null quando não houver transporte, pois
+    //na validação do censo este campo é obrigatório e não deve vir pré-populado
     if (is_null($entity))
       $tipo = $tiposTransporte[NULL];
     else
