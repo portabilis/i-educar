@@ -988,6 +988,12 @@ class EducacensoExportController extends ApiCoreController
       if($r50s12 != 1){ $r50s13 = NULL;}
       if($r50s18 != 1){ $r50s19 = NULL;}
 
+      $situacaoConcluido = ($r50s6 == 1 && $r50s12 == 1 && $r50s18 == 1);
+
+      if (!$situacaoConcluido) {
+        $r50s24 = $r50s25 = $r50s26 = $r50s27 = NULL;
+      }
+
       $cont= 0;
       for ($i=1; $i <= $numeroRegistros; $i++){
         if($i >= 31)
