@@ -319,7 +319,7 @@ class clsPmieducarTurma
 		{
 			if( class_exists( "clsPmieducarServidor" ) )
 			{
-				$tmp_obj = new clsPmieducarServidor($ref_cod_regente,null,null,null,null,null,null,null,$ref_cod_instituicao_regente);
+				$tmp_obj = new clsPmieducarServidor($ref_cod_regente,null,null,null,null,null,null,$ref_cod_instituicao_regente,null);
 				if( method_exists( $tmp_obj, "existe") )
 				{
 					if( $tmp_obj->existe() )
@@ -892,6 +892,11 @@ class clsPmieducarTurma
 			if( is_numeric( $this->ref_cod_regente ) )
 			{
 				$set .= "{$gruda}ref_cod_regente = '{$this->ref_cod_regente}'";
+				$gruda = ", ";
+			}
+			else
+			{
+				$set .= "{$gruda}ref_cod_regente = null";
 				$gruda = ", ";
 			}
 			if( is_numeric( $this->ref_cod_instituicao_regente ) )

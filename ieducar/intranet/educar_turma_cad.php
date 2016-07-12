@@ -1214,7 +1214,16 @@ class indice extends clsCadastro
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     @session_write_close();
 
-    $this->ref_cod_instituicao_regente = $this->ref_cod_instituicao;
+    if (is_null($this->ref_cod_instituicao)) {
+      $turma = new clsPmieducarTurma($this->cod_turma);
+      $turma = $turma->detalhe();
+
+      $this->ref_cod_instituicao = $turma["ref_cod_instituicao"];
+      $this->ref_cod_instituicao_regente = $turma["ref_cod_instituicao"];
+    }
+    else{
+      $this->ref_cod_instituicao_regente = $this->ref_cod_instituicao;
+    }
 
     if (isset($this->multiseriada)) {
       $this->multiseriada = 1;
