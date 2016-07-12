@@ -1215,21 +1215,20 @@ class indice extends clsCadastro
 
   function Editar()
   {
-    $pmieducar_turma = new clsPmieducarTurma();
-    $int_ref_cod_instituicao = $pmieducar_turma->lista($this->cod_turma, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, false, null, null, null, null, null, FALSE);
-
-    if( is_array( $int_ref_cod_instituicao ) && count( $int_ref_cod_instituicao ) ){
-      foreach ( $int_ref_cod_instituicao AS $registro ){
-        $this->ref_cod_instituicao_regente = $registro['ref_cod_instituicao'];
-        $this->ref_cod_instituicao = $registro['ref_cod_instituicao'];
-      }
-    }
-
     @session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     @session_write_close();
 
-    $this->ref_cod_instituicao_regente = $this->ref_cod_instituicao;
+    if (is_null($this->ref_cod_instituicao)) {
+      $turma = new clsPmieducarTurma($this->cod_turma);
+      $turma = $turma->detalhe();
+
+      $this->ref_cod_instituicao = $turma["ref_cod_instituicao"];
+      $this->ref_cod_instituicao_regente = $turma["ref_cod_instituicao"];
+    }
+    else{
+      $this->ref_cod_instituicao_regente = $this->ref_cod_instituicao;
+    }
 
     if (isset($this->multiseriada)) {
       $this->multiseriada = 1;

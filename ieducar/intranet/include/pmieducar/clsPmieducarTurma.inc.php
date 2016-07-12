@@ -894,7 +894,7 @@ class clsPmieducarTurma
 				$set .= "{$gruda}ref_cod_regente = '{$this->ref_cod_regente}'";
 				$gruda = ", ";
 			}
-			elseif(!is_numeric( $this->ref_cod_regente ))
+			else
 			{
 				$set .= "{$gruda}ref_cod_regente = null";
 				$gruda = ", ";
