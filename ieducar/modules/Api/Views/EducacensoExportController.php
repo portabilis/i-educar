@@ -579,7 +579,7 @@ class EducacensoExportController extends ApiCoreController
         t.aee_lingua_escrita as r20s35,
         t.aee_autonomia as r20s36,
         c.modalidade_curso as r20s37,
-        t.etapa_id as r20s38,
+        t.etapa_educacenso as r20s38,
         t.cod_curso_profissional as r20s39,
         s.cod_serie as serieId
 
@@ -1183,7 +1183,7 @@ class EducacensoExportController extends ApiCoreController
 				LIMIT 1
 			) as r51s21,
       t.tipo_atendimento AS tipo_atendimento,
-      t.etapa_id AS etapa_ensino
+      t.etapa_educacenso AS etapa_ensino
 
 
 			FROM 	pmieducar.servidor s
