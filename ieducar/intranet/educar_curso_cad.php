@@ -372,7 +372,8 @@ class indice extends clsCadastro
     $resources = array(null => 'Selecione', 
                        1 => Portabilis_String_Utils::toLatin1('Ensino Regular'),
                        2 => Portabilis_String_Utils::toLatin1('Educação Especial'),
-                       3 => Portabilis_String_Utils::toLatin1('Educação Jovens e Adultos'));
+                       3 => Portabilis_String_Utils::toLatin1('Educação Jovens e Adultos')
+                       4 => Portabilis_String_Utils::toLatin1('Educação Profissional'));
 
     $options = array('label' => Portabilis_String_Utils::toLatin1('Modalidade do curso'), 'resources' => $resources, 'value' => $this->modalidade_curso);
     $this->inputsHelper()->select('modalidade_curso', $options);
