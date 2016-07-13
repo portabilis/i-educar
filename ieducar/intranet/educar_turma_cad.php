@@ -161,6 +161,8 @@ class indice extends clsCadastro
     7  => 'S&aacute;bado'
   );
 
+  var $nao_informar_educacenso;
+
   function Inicializar()
   {
     $retorno = 'Novo';
@@ -858,6 +860,10 @@ class indice extends clsCadastro
     $options = array('label' => 'Etapa da turma', 'resources' => $etapas_educacenso, 'value' => $this->etapa_educacenso, 'required' => false, 'size' => 70,);
     $this->inputsHelper()->select('etapa_educacenso', $options);
 
+    $options = array('label' => Portabilis_String_Utils::toLatin1('Não informar esta turma no Censo escolar'),
+                     'value' => $this->nao_informar_educacenso,
+                     'label_hint' => Portabilis_String_Utils::toLatin1('Caso este campo seja selecionado, esta turma e todas as matrículas vinculadas a mesma, não serão informadas no arquivo de exportação do Censo escolar'));
+    $this->inputsHelper()->checkbox('nao_informar_educacenso', $options);
   }
 
   function montaListaComponentesSerieEscola(){
@@ -1076,6 +1082,7 @@ class indice extends clsCadastro
         $obj->turma_unificada = $this->turma_unificada;
         $obj->etapa_educacenso = $this->etapa_educacenso;
         $obj->ref_cod_disciplina_dispensada = $this->ref_cod_disciplina_dispensada == "" ? NULL : $this->ref_cod_disciplina_dispensada;
+        $obj->nao_informar_educacenso = $this->nao_informar_educacenso == 'on' ? 1 : 0;
 
         $this->cod_turma = $cadastrou = $obj->cadastra();
 
@@ -1171,6 +1178,7 @@ class indice extends clsCadastro
       $obj->turma_unificada = $this->turma_unificada;
       $obj->etapa_educacenso = $this->etapa_educacenso;
       $obj->ref_cod_disciplina_dispensada = $this->ref_cod_disciplina_dispensada == "" ? NULL : $this->ref_cod_disciplina_dispensada;
+      $obj->nao_informar_educacenso = $this->nao_informar_educacenso == 'on' ? 1 : 0;
 
       $this->cod_turma = $cadastrou = $obj->cadastra();
 
@@ -1283,6 +1291,7 @@ class indice extends clsCadastro
         $obj->turma_unificada = $this->turma_unificada;
         $obj->etapa_educacenso = $this->etapa_educacenso;
         $obj->ref_cod_disciplina_dispensada = $this->ref_cod_disciplina_dispensada == "" ? NULL : $this->ref_cod_disciplina_dispensada;
+        $obj->nao_informar_educacenso = $this->nao_informar_educacenso == 'on' ? 1 : 0;
 
         $editou = $obj->edita();
 
@@ -1379,6 +1388,7 @@ class indice extends clsCadastro
       $obj->turma_unificada = $this->turma_unificada;
       $obj->etapa_educacenso = $this->etapa_educacenso;
       $obj->ref_cod_disciplina_dispensada = $this->ref_cod_disciplina_dispensada == "" ? NULL : $this->ref_cod_disciplina_dispensada;
+      $obj->nao_informar_educacenso = $this->nao_informar_educacenso == 'on' ? 1 : 0;
 
       $editou = $obj->edita();
     }
@@ -2188,7 +2198,7 @@ function valida_xml(xml)
     var campoHoraInicioIntervalo = document.getElementById('hora_inicio_intervalo').value;
     var campoHoraFimIntervalo = document.getElementById('hora_fim_intervalo').value;
 
-    
+
   }
   else if (document.getElementById('padrao_ano_escolar').value == 0) {
     var qtdModulo = document.getElementsByName('ref_cod_modulo').length;
