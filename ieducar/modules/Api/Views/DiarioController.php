@@ -74,7 +74,7 @@ class DiarioController extends ApiCoreController
   }
 
   protected function validateComponenteTurma($turmaId, $componenteCurricularId){
-    
+
     $componentesTurma = $this->getComponentesPorTurma($turmaId);
     $componentesTurma = CoreExt_Entity::entityFilterAttr($componentesTurma, 'id', 'id');
     $valid = in_array($componenteCurricularId, $componentesTurma);
@@ -103,6 +103,7 @@ class DiarioController extends ApiCoreController
               WHERE m.ativo = 1
               AND  mt.ref_cod_turma = $1
               AND m.ref_cod_aluno = $2
+              AND m.aprovado IN (1,2,3,13,12,14) -- PERMITIDO SOMENTE LANÇAR NOTAS PARA SITUAÇÕES APROVADO/REPROVADO/ANDAMENTO
             ORDER BY m.aprovado
               LIMIT 1';
 
@@ -197,7 +198,7 @@ class DiarioController extends ApiCoreController
               if($this->serviceBoletim($turmaId, $alunoId)){
                 $this->serviceBoletim($turmaId, $alunoId)->addNota($nota);
                 $this->trySaveServiceBoletim($turmaId, $alunoId);
-              }             
+              }
             }
           }
         }
@@ -239,7 +240,7 @@ class DiarioController extends ApiCoreController
             if($matriculaId){
 
               if($this->validateMatricula($matriculaId)){
-                
+
                 if($this->validateComponenteTurma($turmaId, $componenteCurricularId)){
                   $valor = $faltaTurmaAlunoDisciplina["valor"];
 
@@ -274,7 +275,7 @@ class DiarioController extends ApiCoreController
 
         foreach ($faltaTurma as $alunoId => $faltaTurmaAluno) {
           $faltas = $faltaTurmaAluno['valor'];
-          
+
           if($this->findMatriculaByTurmaAndAluno($turmaId, $alunoId)){
 
             $falta = new Avaliacao_Model_FaltaGeral(array(
@@ -304,7 +305,7 @@ class DiarioController extends ApiCoreController
 
         foreach ($parecerTurma as $alunoId => $parecerTurmaAluno) {
           if($this->findMatriculaByTurmaAndAluno($turmaId, $alunoId)){
-            
+
             foreach ($parecerTurmaAluno as $componenteCurricularId => $parecerTurmaAlunoComponente) {
               if($this->validateComponenteTurma($turmaId, $componenteCurricularId)){
 
