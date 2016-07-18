@@ -104,7 +104,7 @@ class indice extends clsCadastro
 
   var $etapas_especificas;
   var $etapas_utilizadas;
-  var $utilizaNotaGeralPorEtapa;
+  var $definirComponentePorEtapa;
 
   function Inicializar()
   {
@@ -115,7 +115,7 @@ class indice extends clsCadastro
     $this->ref_cod_serie = $_GET['ref_cod_serie'];
     $this->ref_cod_escola = $_GET['ref_cod_escola'];
 
-    $this->utilizaNotaGeralPorEtapa = $this->checkIfUseNotaGeralPorEtapa();
+    $this->definirComponentePorEtapa = $this->checkPermitirDefinirComponentesEtapa();
 
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(585, $this->pessoa_logada, 7,
@@ -244,7 +244,7 @@ class indice extends clsCadastro
           $this->escola_serie_disciplina[$campo['ref_cod_disciplina']] = $campo['ref_cod_disciplina'];
           $this->escola_serie_disciplina_carga[$campo['ref_cod_disciplina']] = floatval($campo['carga_horaria']);
 
-          if($this->utilizaNotaGeralPorEtapa){
+          if($this->definirComponentePorEtapa){
             $this->escola_serie_disciplina_etapa_especifica[$campo['ref_cod_disciplina']] = intval($campo['etapas_especificas']);
             $this->escola_serie_disciplina_etapa_utilizada[$campo['ref_cod_disciplina']] = $campo['etapas_utilizadas'];
           }
@@ -271,7 +271,7 @@ class indice extends clsCadastro
         $conteudo .= '  <span style="display: block; float: left; width: 100px;">Nome abreviado</span>';
         $conteudo .= '  <span style="display: block; float: left; width: 100px;">Carga horária</span>';
         $conteudo .= '  <span style="display: block; float: left">Usar padrão do componente?</span>';
-        if($this->utilizaNotaGeralPorEtapa){
+        if($this->definirComponentePorEtapa){
           $conteudo .= '  <span style="display: block; float: left; margin-left: 30px;">Usado em etapas específicas?(Exemplo: 1,2 / 1,3)</span>';
         }
         $conteudo .= '</div>';
@@ -279,7 +279,7 @@ class indice extends clsCadastro
         $conteudo .= '<div style="margin-bottom: 10px; float: left">';
         $conteudo .= "  <label style='display: block; float: left; width: 350px;'><input type='checkbox' name='CheckTodos' onClick='marcarCheck(".'"disciplinas[]"'.");'/>Marcar Todos</label>";
         $conteudo .= "  <label style='display: block; float: left; width: 100px;'><input type='checkbox' name='CheckTodos2' onClick='marcarCheck(".'"usar_componente[]"'.");';/>Marcar Todos</label>";
-        if($this->utilizaNotaGeralPorEtapa){
+        if($this->definirComponentePorEtapa){
           $conteudo .= "  <label style='display: block; float: left; width: 100px; margin-left: 84px;'><input type='checkbox' name='CheckTodos3' onClick='marcarCheck(".'"etapas_especificas[]"'.");';/>Marcar Todos</label>";
         }
         $conteudo .= '</div>';
@@ -312,7 +312,7 @@ class indice extends clsCadastro
           $conteudo .= "  <span style='display: block; float: left; width: 100px'>{$registro->abreviatura}</span>";
           $conteudo .= "  <label style='display: block; float: left; width: 100px;'><input type='text' name='carga_horaria[$registro->id]' value='{$cargaHoraria}' size='5' maxlength='7'></label>";
           $conteudo .= "  <label style='display: block; float: left'><input type='checkbox' id='usar_componente[]' name='usar_componente[$registro->id]' value='1' ". ($usarComponente == TRUE ? $checked : '') .">($cargaComponente h)</label>";
-          if($this->utilizaNotaGeralPorEtapa){
+          if($this->definirComponentePorEtapa){
             $conteudo .= "  <input style='margin-left:140px; float:left;' type='checkbox' id='etapas_especificas[]' name='etapas_especificas[$registro->id]' value='1' ". ($usarComponente == TRUE ? $checkedEtapaEspecifica : '') ."></label>";
             $conteudo .= "  <label style='display: block; float: left; width: 100px;'>Etapas utilizadas: <input type='text' class='etapas_utilizadas' name='etapas_utilizadas[$registro->id]' value='{$etapas_utilizadas}' size='5' maxlength='7'></label>";
           }
@@ -540,7 +540,7 @@ class indice extends clsCadastro
     echo "<!--\nErro ao excluir clsPmieducarEscolaSerie\nvalores obrigatorios\nif( is_numeric( $this->ref_cod_escola_ ) && is_numeric( $this->ref_cod_serie_ ) && is_numeric( $this->pessoa_logada ) )\n-->";
     return FALSE;
   }
-  private function checkIfUseNotaGeralPorEtapa(){
+  private function checkPermitirDefinirComponentesEtapa(){
     if(isset($this->ref_cod_serie)){
       $obj_serie = new clsPmieducarSerie($this->ref_cod_serie);
       $det_serie = $obj_serie->detalhe();
@@ -550,7 +550,7 @@ class indice extends clsCadastro
         $regra_avaliacao = $regra_avaliacao_mapper->find($regra_avaliacao_id);
       }
     }
-    return ($regra_avaliacao->notaGeralPorEtapa == 1);
+    return ($regra_avaliacao->definirComponentePorEtapa == 1);
   }
 }
 
