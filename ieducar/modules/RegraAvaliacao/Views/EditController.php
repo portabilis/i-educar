@@ -159,6 +159,9 @@ class EditController extends Core_Controller_Page_EditController
     'notaGeralPorEtapa' => array(
       'label' => 'Utilizar uma nota geral por etapa'
     ),
+    'definirComponentePorEtapa' => array(
+      'label' => 'Permitir definir componentes em etapas específicas'
+    ),
     'reprovacaoAutomatica' => array(
       'label' => 'Reprovação automática',
       'help' => 'Marcando esse campo o sistema não apresentará campo de nota de exame para os alunos que não poderão alcançar a média necessária'
@@ -425,6 +428,9 @@ var tabela_arredondamento = new function() {
     $this->campoCheck('notaGeralPorEtapa', $this->_getLabel('notaGeralPorEtapa'),
         $this->getEntity()->notaGeralPorEtapa, '', FALSE, FALSE, FALSE, $this->_getHelp('notaGeralPorEtapa'));
 
+    $this->campoCheck('definirComponentePorEtapa', $this->_getLabel('definirComponentePorEtapa'),
+        $this->getEntity()->definirComponentePorEtapa, '', FALSE, FALSE, FALSE, $this->_getHelp('definirComponentePorEtapa'));
+
     $this->campoCheck('aprovaMediaDisciplina', $this->_getLabel('aprovaMediaDisciplina'),
         $this->getEntity()->aprovaMediaDisciplina, '', FALSE, FALSE, FALSE, $this->_getHelp('aprovaMediaDisciplina'));
 
@@ -523,6 +529,11 @@ var tabela_arredondamento = new function() {
     //fixup for checkbox nota geral
     if(!isset($data['notaGeralPorEtapa'])){
       $data['notaGeralPorEtapa'] = '0';
+    }
+
+    //fixup for checkbox
+    if(!isset($data['definirComponentePorEtapa'])){
+      $data['definirComponentePorEtapa'] = '0';
     }
 
     //fixup for checkbox

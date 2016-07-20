@@ -68,6 +68,7 @@ class RegraAvaliacao_Model_Regra extends CoreExt_Entity
     'notaMaximaExameFinal'      => NULL,
     'qtdCasasDecimais'          => NULL,
     'notaGeralPorEtapa'         => NULL,
+    'definirComponentePorEtapa' => NULL,
     'qtdDisciplinasDependencia' => NULL,
     'aprovaMediaDisciplina'     => NULL,
     'reprovacaoAutomatica'      => NULL
