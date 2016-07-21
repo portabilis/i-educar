@@ -66,10 +66,11 @@ class clsPmieducarSerie
 
   var $idade_inicial;
   var $idade_final;
-  var $idade_ideal;  
+  var $idade_ideal;
 
   var $alerta_faixa_etaria;
   var $bloquear_matricula_faixa_etaria;
+  var $exigir_inep;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -129,12 +130,12 @@ class clsPmieducarSerie
     $etapa_curso = NULL, $concluinte = NULL, $carga_horaria = NULL,
     $data_cadastro = NULL, $data_exclusao = NULL, $ativo = NULL,
     $idade_inicial = NULL, $idade_final = NULL, $regra_avaliacao_id = NULL, $observacao_historico = null,
-    $dias_letivos = null, $regra_avaliacao_diferenciada_id = null, $alerta_faixa_etaria = false, $bloquear_matricula_faixa_etaria = false,$idade_ideal = null)
+    $dias_letivos = null, $regra_avaliacao_diferenciada_id = null, $alerta_faixa_etaria = false, $bloquear_matricula_faixa_etaria = false,$idade_ideal = null, $exigir_inep = false)
   {
     $db = new clsBanco();
     $this->_schema = "pmieducar.";
     $this->_tabela = "{$this->_schema}serie";
-    $this->_campos_lista = $this->_todos_campos = "s.cod_serie, s.ref_usuario_exc, s.ref_usuario_cad, s.ref_cod_curso, s.nm_serie, s.etapa_curso, s.concluinte, s.carga_horaria, s.data_cadastro, s.data_exclusao, s.ativo, s.idade_inicial, s.idade_final, s.regra_avaliacao_id, s.observacao_historico, s.dias_letivos, s.regra_avaliacao_diferenciada_id, s.alerta_faixa_etaria, s.bloquear_matricula_faixa_etaria, s.idade_ideal ";
+    $this->_campos_lista = $this->_todos_campos = "s.cod_serie, s.ref_usuario_exc, s.ref_usuario_cad, s.ref_cod_curso, s.nm_serie, s.etapa_curso, s.concluinte, s.carga_horaria, s.data_cadastro, s.data_exclusao, s.ativo, s.idade_inicial, s.idade_final, s.regra_avaliacao_id, s.observacao_historico, s.dias_letivos, s.regra_avaliacao_diferenciada_id, s.alerta_faixa_etaria, s.bloquear_matricula_faixa_etaria, s.idade_ideal, s.exigir_inep";
 
     if (is_numeric($ref_cod_curso)) {
       if (class_exists("clsPmieducarCurso")) {
@@ -290,6 +291,10 @@ class clsPmieducarSerie
       $this->idade_ideal = $idade_ideal;
     }
 
+    if (dbBool($exigir_inep)) {
+      $this->exigir_inep = $exigir_inep;
+    }
+
     $this->observacao_historico = $observacao_historico;
     $this->dias_letivos         = $dias_letivos;
   }
@@ -413,6 +418,16 @@ class clsPmieducarSerie
         $gruda = ", ";
       }else{
         $campos .= "{$gruda}bloquear_matricula_faixa_etaria";
+        $valores .= "{$gruda} false ";
+        $gruda = ", ";
+      }
+
+      if (dbBool($this->exigir_inep)) {
+        $campos .= "{$gruda}exigir_inep";
+        $valores .= "{$gruda} true ";
+        $gruda = ", ";
+      }else{
+        $campos .= "{$gruda}exigir_inep";
         $valores .= "{$gruda} false ";
         $gruda = ", ";
       }
@@ -544,6 +559,14 @@ class clsPmieducarSerie
         $gruda = ", ";
       }else{
         $set .= "{$gruda}bloquear_matricula_faixa_etaria = false ";
+        $gruda = ", ";
+      }
+
+      if (dbBool($this->exigir_inep)) {
+        $set .= "{$gruda}exigir_inep = true ";
+        $gruda = ", ";
+      }else{
+        $set .= "{$gruda}exigir_inep = false ";
         $gruda = ", ";
       }
 
