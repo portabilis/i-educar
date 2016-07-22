@@ -76,6 +76,15 @@ class indice extends clsCadastro
     ));
     $this->enviaLocalizacao($localizacao->montar());
 
+    $exportacao = $_POST["exportacao"];
+
+    if ($exportacao) {
+      $decoded_a = urldecode($exportacao);
+      $converted_to_latin = Portabilis_String_Utils::toLatin1($exportacao);
+      header('Content-Disposition: attachment; filename=exportacao.txt; content-type: text/plain;');
+      echo $converted_to_latin;
+    }
+
     return 'Nova exportação';
   }
 
