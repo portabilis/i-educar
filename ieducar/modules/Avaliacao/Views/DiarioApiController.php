@@ -151,7 +151,6 @@ class DiarioApiController extends ApiCoreController
     else
       $etapaRequest = $this->getRequest()->etapa;
 
-
     for($etapa = 1; $etapa <= $etapaRequest; $etapa++) {
       $nota = $this->getNotaAtual($etapa);
 
@@ -162,7 +161,7 @@ class DiarioApiController extends ApiCoreController
       }
     }
 
-    if($regra->get('notaGeralPorEtapa') == "1"){
+    if($regra->get('definirComponentePorEtapa') == "1"){
       return true;
     }
 
