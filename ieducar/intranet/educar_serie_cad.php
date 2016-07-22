@@ -96,6 +96,7 @@ class indice extends clsCadastro
 
   var $alerta_faixa_etaria;
   var $bloquear_matricula_faixa_etaria;
+  var $exigir_inep;
 
   function Inicializar()
   {
@@ -147,6 +148,7 @@ class indice extends clsCadastro
 
     $this->alerta_faixa_etaria  = dbBool($this->alerta_faixa_etaria);
     $this->bloquear_matricula_faixa_etaria  = dbBool($this->bloquear_matricula_faixa_etaria);
+    $this->exigir_inep  = dbBool($this->exigir_inep);
 
     return $retorno;
   }
@@ -224,6 +226,8 @@ class indice extends clsCadastro
     $this->campoCheck("alerta_faixa_etaria", "Exibir alerta ao tentar matricular alunos fora da faixa etária da série/ano", $this->alerta_faixa_etaria);
     $this->campoCheck("bloquear_matricula_faixa_etaria", "Bloquear matrículas de alunos fora da faixa etária da série/ano", $this->bloquear_matricula_faixa_etaria);
 
+    $this->campoCheck("exigir_inep", "Exigir INEP para a matrícula?", $this->exigir_inep);
+
   }
 
   function Novo()
@@ -239,7 +243,7 @@ class indice extends clsCadastro
       $this->nm_serie, $this->etapa_curso, $this->concluinte, $this->carga_horaria,
       NULL, NULL, 1, $this->idade_inicial, $this->idade_final,
       $this->regra_avaliacao_id, $this->observacao_historico, $this->dias_letivos,
-      $this->regra_avaliacao_diferenciada_id, !is_null($this->alerta_faixa_etaria), !is_null($this->bloquear_matricula_faixa_etaria), $this->idade_ideal);
+      $this->regra_avaliacao_diferenciada_id, !is_null($this->alerta_faixa_etaria), !is_null($this->bloquear_matricula_faixa_etaria), $this->idade_ideal, !is_null($this->exigir_inep));
 
     $cadastrou = $obj->cadastra();
 
@@ -267,7 +271,7 @@ class indice extends clsCadastro
       $this->ref_cod_curso, $this->nm_serie, $this->etapa_curso, $this->concluinte,
       $this->carga_horaria, NULL, NULL, 1, $this->idade_inicial,
       $this->idade_final, $this->regra_avaliacao_id, $this->observacao_historico, $this->dias_letivos,
-      $this->regra_avaliacao_diferenciada_id, !is_null($this->alerta_faixa_etaria), !is_null($this->bloquear_matricula_faixa_etaria),$this->idade_ideal);
+      $this->regra_avaliacao_diferenciada_id, !is_null($this->alerta_faixa_etaria), !is_null($this->bloquear_matricula_faixa_etaria),$this->idade_ideal, !is_null($this->exigir_inep));
 
     $editou = $obj->edita();
     if ($editou) {
