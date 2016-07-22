@@ -19,7 +19,7 @@ $j(document).ready(function(){
             '</div>'+
             '<div id="modal_mensagem_sucesso" style="width:400px;display:none;">'+
             ' <p style=" margin-top: 20px;font-family: verdana, arial; font-size: 18px;">Exporta&ccedil;&atilde;o realizada com sucesso.</p>' +
-            ' <a id="download_file" href="#" download="exportacao.txt" style="margin-top: 10px;font-family: verdana, arial;font-size: 14px;">Clique aqui para realizar o download</a>' +
+            ' <a id="download_file" href="#" style="margin-top: 10px;font-family: verdana, arial;font-size: 14px;">Clique aqui para realizar o download</a>' +
             '</div>'+
             '</div>';
 
@@ -151,27 +151,28 @@ $j(document).ready(function(){
       //Cria evento para download do arquivo de exportação
       var create = document.getElementById('download_file'), conteudo = response.conteudo;
       create.addEventListener('click', function () {
-        var link = document.getElementById('download_file');
-        link.href = makeTextFile(conteudo);
+        downloadExportFile(conteudo);
         $j.modal.close();
       }, false);
 
     };
 
-    var textFile = null,
-      makeTextFile = function (text) {
-        var data = new Blob([text], {type: 'text/plain'});
+    var downloadExportFile = function(conteudo){
+      //Cria um form para efetuar post na janela de exportacao
+      var form = document.createElement("form");
+      form.setAttribute("method", "POST");
+      form.setAttribute("action", "educar_exportacao_educacenso.php");
 
-        // If we are replacing a previously generated file we need to
-        // manually revoke the object URL to avoid memory leaks.
-        if (textFile !== null) {
-          window.URL.revokeObjectURL(textFile);
-        }
+      var hiddenField = document.createElement("input");
+      hiddenField.setAttribute("type", "hidden");
+      hiddenField.setAttribute("name", "exportacao");
+      hiddenField.setAttribute("value", conteudo);
 
-        textFile = window.URL.createObjectURL(data);
+      form.appendChild(hiddenField);
 
-        return textFile;
-      };
+      document.body.appendChild(form);
+      form.submit();
+    }
 
     var analisaRegistro00 = function(){
         var urlForGetAnaliseRegistro = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', 'registro-00', {
