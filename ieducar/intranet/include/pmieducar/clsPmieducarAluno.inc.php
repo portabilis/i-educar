@@ -1460,6 +1460,20 @@ class clsPmieducarAluno
     return FALSE;
   }
 
+  function verificaInep($cod_aluno = NULL)
+  {
+    if (is_numeric($cod_aluno)) {
+      $db = new clsBanco();
+      $sql = "SELECT cod_aluno_inep
+                FROM {$this->_tabela}
+               INNER JOIN modules.educacenso_cod_aluno eca ON (eca.cod_aluno = a.cod_aluno)
+               WHERE a.cod_aluno = $cod_aluno";
+      $db->Consulta($sql);
+      $db->ProximoRegistro();
+      return $db->Tupla();
+    }
+  }
+
   function getResponsavelAluno()
   {
     if ($this->cod_aluno) {
