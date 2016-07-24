@@ -600,6 +600,8 @@ class EducacensoExportController extends ApiCoreController
         INNER JOIN modules.educacenso_cod_escola ece ON (e.cod_escola = ece.cod_escola)
         WHERE t.cod_turma = $1
         AND COALESCE(t.nao_informar_educacenso, 0) = 0
+        AND t.ativo = 1
+        AND t.visivel = TRUE
         AND (SELECT 1
               FROM pmieducar.matricula_turma mt
              INNER JOIN pmieducar.matricula m ON(mt.ref_cod_matricula = m.cod_matricula)
@@ -1215,6 +1217,7 @@ class EducacensoExportController extends ApiCoreController
 			AND e.cod_escola = t.ref_ref_cod_escola
       AND e.cod_escola = $2
       AND t.ativo = 1
+      AND t.visivel = TRUE
       and (SELECT 1
              FROM pmieducar.matricula_turma mt
             INNER JOIN pmieducar.matricula m ON(mt.ref_cod_matricula = m.cod_matricula)
@@ -1662,6 +1665,8 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
 
         WHERE e.cod_escola = $1
         AND COALESCE(t.nao_informar_educacenso, 0) = 0
+        AND t.ativo = 1
+        AND t.visivel = TRUE
         AND COALESCE(m.data_matricula,m.data_cadastro) BETWEEN DATE($3) AND DATE($4)
         AND (m.aprovado = 3 OR DATE(COALESCE(m.data_cancel,m.data_exclusao)) > DATE($4))
         AND m.ano = $2
