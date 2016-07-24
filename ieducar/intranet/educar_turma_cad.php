@@ -1073,7 +1073,7 @@ class indice extends clsCadastro
         $obj->etapa_id = $this->etapa_id;
         $obj->cod_curso_profissional = $this->cod_curso_profissional;
         $obj->turma_sem_professor = $this->turma_sem_professor == 'on' ? 1 : 0;
-        $obj->turma_unificada = $this->turma_unificada;
+        $obj->turma_unificada = $this->turma_unificada == "" ? NULL : $this->turma_unificada;
         $obj->etapa_educacenso = $this->etapa_educacenso;
         $obj->ref_cod_disciplina_dispensada = $this->ref_cod_disciplina_dispensada == "" ? NULL : $this->ref_cod_disciplina_dispensada;
 
@@ -1168,7 +1168,7 @@ class indice extends clsCadastro
       $obj->etapa_id = $this->etapa_id;
       $obj->cod_curso_profissional = $this->cod_curso_profissional;
       $obj->turma_sem_professor = $this->turma_sem_professor == 'on' ? 1 : 0;
-      $obj->turma_unificada = $this->turma_unificada;
+      $obj->turma_unificada = $this->turma_unificada == "" ? NULL : $this->turma_unificada;
       $obj->etapa_educacenso = $this->etapa_educacenso;
       $obj->ref_cod_disciplina_dispensada = $this->ref_cod_disciplina_dispensada == "" ? NULL : $this->ref_cod_disciplina_dispensada;
 
@@ -1280,7 +1280,7 @@ class indice extends clsCadastro
         $obj->etapa_id = $this->etapa_id;
         $obj->cod_curso_profissional = $this->cod_curso_profissional;
         $obj->turma_sem_professor = $this->turma_sem_professor == 'on' ? 1 : 0;
-        $obj->turma_unificada = $this->turma_unificada;
+        $obj->turma_unificada = $this->turma_unificada == "" ? NULL : $this->turma_unificada;
         $obj->etapa_educacenso = $this->etapa_educacenso;
         $obj->ref_cod_disciplina_dispensada = $this->ref_cod_disciplina_dispensada == "" ? NULL : $this->ref_cod_disciplina_dispensada;
 
@@ -1376,7 +1376,7 @@ class indice extends clsCadastro
       $obj->etapa_id = $this->etapa_id;
       $obj->cod_curso_profissional = $this->cod_curso_profissional;
       $obj->turma_sem_professor = $this->turma_sem_professor == 'on' ? 1 : 0;
-      $obj->turma_unificada = $this->turma_unificada;
+      $obj->turma_unificada = $this->turma_unificada == "" ? NULL : $this->turma_unificada;
       $obj->etapa_educacenso = $this->etapa_educacenso;
       $obj->ref_cod_disciplina_dispensada = $this->ref_cod_disciplina_dispensada == "" ? NULL : $this->ref_cod_disciplina_dispensada;
 
