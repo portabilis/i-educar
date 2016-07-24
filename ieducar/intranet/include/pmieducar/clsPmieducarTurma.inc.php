@@ -810,7 +810,7 @@ class clsPmieducarTurma
 				$gruda    = ", ";
 			}
 
-			if(is_numeric($this->etapa_educacenso)){
+			if(is_numeric($this->ref_cod_disciplina_dispensada)){
 				$campos  .= "{$gruda}ref_cod_disciplina_dispensada";
 				$valores .= "{$gruda}'{$this->ref_cod_disciplina_dispensada}'";
 				$gruda    = ", ";
@@ -1127,6 +1127,9 @@ class clsPmieducarTurma
 			if(is_numeric($this->turma_unificada)) {
 				$set  .= "{$gruda}turma_unificada = '{$this->turma_unificada}'";
 				$gruda = ", ";
+			} elseif (is_null($this->turma_unificada)) {
+				$set  .= "{$gruda}turma_unificada = NULL";
+				$gruda = ", ";
 			}
 
 			if(is_numeric($this->etapa_educacenso)) {
@@ -1138,25 +1141,20 @@ class clsPmieducarTurma
 				$set  .= "{$gruda}ref_cod_disciplina_dispensada = '{$this->ref_cod_disciplina_dispensada}'";
 				$gruda = ", ";
 			}
-
-      if(is_string($this->parecer_1_etapa)) {
-        $set  .= "{$gruda}parecer_1_etapa = '{$this->parecer_1_etapa}'";
-        $gruda = ", ";
-      }
-      if(is_string($this->parecer_2_etapa)) {
-        $set  .= "{$gruda}parecer_2_etapa = '{$this->parecer_2_etapa}'";
-        $gruda = ", ";
-      }
-      if(is_string($this->parecer_3_etapa)) {
-        $set  .= "{$gruda}parecer_3_etapa = '{$this->parecer_3_etapa}'";
-        $gruda = ", ";
-      }
-      if(is_string($this->parecer_4_etapa)) {
-        $set  .= "{$gruda}parecer_4_etapa = '{$this->parecer_4_etapa}'";
-        $gruda = ", ";
-      }
-			if(is_numeric($this->nao_informar_educacenso)) {
-				$set  .= "{$gruda}nao_informar_educacenso = '{$this->nao_informar_educacenso}'";
+			if(is_string($this->parecer_1_etapa)) {
+				$set  .= "{$gruda}parecer_1_etapa = '{$this->parecer_1_etapa}'";
+				$gruda = ", ";
+			}
+			if(is_string($this->parecer_2_etapa)) {
+				$set  .= "{$gruda}parecer_2_etapa = '{$this->parecer_2_etapa}'";
+				$gruda = ", ";
+			}
+			if(is_string($this->parecer_3_etapa)) {
+				$set  .= "{$gruda}parecer_3_etapa = '{$this->parecer_3_etapa}'";
+				$gruda = ", ";
+			}
+			if(is_string($this->parecer_4_etapa)) {
+				$set  .= "{$gruda}parecer_4_etapa = '{$this->parecer_4_etapa}'";
 				$gruda = ", ";
 			}
 
