@@ -290,6 +290,16 @@ function afterChangePessoa(targetWindow, parentType, parentId, parentName) {
   }, 500);
 }
 
+function ativarPessoa(cod_pessoa){
+  var searchPath = '../module/Api/pessoa?oper=get&resource=reativarPessoa';
+  var params = {id : cod_pessoa}
+  if(confirm("Confirma reativa\u00e7\u00e3o do cadastro?")){
+    $j.get(searchPath, params, function(data){
+      window.location.href='atendidos_lst.php';
+    });
+  }
+}
+
 
 // simple search options
 
