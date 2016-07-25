@@ -871,7 +871,8 @@ class EducacensoAnaliseController extends ApiCoreController
 
     $sql = "SELECT juridica.fantasia AS nome_escola,
                    pessoa.nome AS nome_servidor,
-                   professor_turma.tipo_vinculo AS tipo_vinculo
+                   professor_turma.tipo_vinculo AS tipo_vinculo,
+                   professor_turma.funcao_exercida AS funcao_exercida
               FROM modules.professor_turma
              INNER JOIN pmieducar.turma ON (turma.cod_turma = professor_turma.turma_id)
              INNER JOIN pmieducar.escola ON (escola.cod_escola = turma.ref_ref_cod_escola)
@@ -887,7 +888,8 @@ class EducacensoAnaliseController extends ApiCoreController
              GROUP BY professor_turma.servidor_id,
                       juridica.fantasia,
                       pessoa.nome,
-                      professor_turma.tipo_vinculo
+                      professor_turma.tipo_vinculo,
+                      professor_turma.funcao_exercida
              ORDER BY pessoa.nome";
 
     $servidores = $this->fetchPreparedQuery($sql, array($ano, $escola));
@@ -898,12 +900,15 @@ class EducacensoAnaliseController extends ApiCoreController
     }
 
     $mensagem = array();
+    $docente = array(1,5,6);
 
     foreach ($servidores as $servidor) {
       $nomeEscola   = Portabilis_String_Utils::toUtf8(mb_strtoupper($servidor["nome_escola"]));
       $nomeServidor = Portabilis_String_Utils::toUtf8(mb_strtoupper($servidor["nome_servidor"]));
 
-      if (!$servidor["tipo_vinculo"]) {
+      $funcaoDocente = in_array($servidor["funcao_exercida"], $docente);
+
+      if ($funcaoDocente && !$servidor["tipo_vinculo"]) {
         $mensagem[] = array("text" => "Dados para formular o registro 51 da escola {$nomeEscola} não encontrados. Verificamos que o(a) servidor(a) {$nomeServidor} é docente e possui vínculo com turmas, portanto é necessário informar qual o seu tipo de vínculo.",
                             "path" => "(Servidores > Cadastrar > Vincular professor a turmas > Campo: Tipo do vínculo)",
                             "fail" => true);
