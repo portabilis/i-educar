@@ -71,6 +71,8 @@ class clsPessoaFisica extends clsPessoaFj
   var $cpf;
   var $ref_cod_religiao;
   var $tipo_endereco;
+  var $ativo;
+  var $data_exclusao;
 
   var $banco           = 'pmi';
   var $schema_cadastro = 'cadastro';
@@ -313,6 +315,8 @@ class clsPessoaFisica extends clsPessoaFj
         $this->renda_mensal             = $detalhe_fisica['renda_mensal'];
         $this->data_admissao            = $detalhe_fisica['data_admissao'];
         $this->falecido                 = $detalhe_fisica['falecido'];
+        $this->ativo                    = $detalhe_fisica['ativo'];
+        $this->data_exclusao            = $detalhe_fisica['data_exclusao'];
 
         $tupla['idpes'] = $this->idpes;
         $tupla[]        = & $tupla['idpes'];
@@ -389,6 +393,12 @@ class clsPessoaFisica extends clsPessoaFj
         $tupla['falecido'] = $this->falecido;
         $tupla[]                           = & $tupla['falecido'];
 
+        $tupla['ativo'] = $this->ativo;
+        $tupla[] = & $tupla['ativo'];
+
+        $tupla['data_exclusao'] = $this->data_exclusao;
+        $tupla[] = & $tupla['data_exclusao'];
+
         return $tupla;
       }
     }
@@ -436,6 +446,8 @@ class clsPessoaFisica extends clsPessoaFj
           $this->telefone_empresa         = $detalhe_fisica['telefone_empresa'];
           $this->renda_mensal             = $detalhe_fisica['renda_mensal'];
           $this->data_admissao            = $detalhe_fisica['data_admissao'];
+          $this->ativo                    = $detalhe_fisica['ativo'];
+          $this->data_exclusao            = $detalhe_fisica['data_exclusao'];
 
           $tupla['idpes'] = $this->idpes;
           $tupla[]        = & $tupla['idpes'];
@@ -506,6 +518,12 @@ class clsPessoaFisica extends clsPessoaFj
           $tupla['justificativa_provisorio'] = $this->justificativa_provisorio;
           $tupla[]                           = & $tupla['justificativa_provisorio'];
 
+          $tupla['ativo'] = $this->ativo;
+          $tupla[] = & $tupla['ativo'];
+
+          $tupla['data_exclusao'] = $this->data_exclusao;
+          $tupla[] = & $tupla['data_exclusao'];
+
           return $tupla;
         }
       }
@@ -563,8 +581,13 @@ class clsPessoaFisica extends clsPessoaFj
   function excluir()
   {
     if ($this->idpes) {
+      $this->pessoa_logada = $_SESSION['id_pessoa'];
       $db  = new clsBanco();
-      $db->Consulta('UPDATE cadastro.fisica SET ativo = 0 WHERE idpes = ' . $this->idpes);
+      $excluir = $db->Consulta('UPDATE cadastro.fisica SET ativo = 0 WHERE idpes = ' . $this->idpes);
+
+      if($excluir){
+        $db->Consulta("UPDATE cadastro.fisica SET ref_usuario_exc = $this->pessoa_logada, data_exclusao = NOW() WHERE idpes = $this->idpes");
+      }
     }
   }
 
@@ -572,6 +595,23 @@ class clsPessoaFisica extends clsPessoaFj
   {
     if (is_numeric($endereco)) {
       $this->tipo_endereco = $endereco;
+    }
+  }
+
+  function getNomeUsuario(){
+    if($this->idpes){
+      $db = new clsBanco();
+
+      $db->Consulta("SELECT pessoa.nome, funcionario.matricula, usuario.cod_usuario
+                       FROM cadastro.fisica
+                 INNER JOIN pmieducar.usuario ON (fisica.ref_usuario_exc = usuario.cod_usuario)
+                 INNER JOIN portal.funcionario ON (usuario.cod_usuario = funcionario.ref_cod_pessoa_fj)
+                 INNER JOIN cadastro.pessoa ON (pessoa.idpes = funcionario.ref_cod_pessoa_fj)
+                      WHERE fisica.idpes = $this->idpes");
+      if($db->ProximoRegistro()){
+        $tupla = $db->Tupla();
+        return $tupla['matricula'];
+      }
     }
   }
 }

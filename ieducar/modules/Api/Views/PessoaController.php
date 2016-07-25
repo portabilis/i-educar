@@ -585,6 +585,16 @@ class PessoaController extends ApiCoreController
     return $objLogradouro->cadastra();
   }
 
+  protected function reativarPessoa() {
+    $var1 = $this->getRequest()->id;
+
+    $sql = "UPDATE cadastro.fisica SET ativo = 1 WHERE idpes = $var1";
+
+    $fisica = $this->fetchPreparedQuery($sql);
+
+    return $fisica;
+  }
+
   public function Gerar() {
 
     if ($this->isRequestFor('get', 'pessoa-search'))
@@ -600,6 +610,8 @@ class PessoaController extends ApiCoreController
       $this->appendResponse($this->createOrUpdateEndereco());
     elseif ($this->isRequestFor('get', 'pessoa-parent'))
       $this->appendResponse($this->loadPessoaParent());
+    elseif ($this->isRequestFor('get', 'reativarPessoa'))
+      $this->appendResponse($this->reativarPessoa());
     else
       $this->notImplementedOperationError();
   }
