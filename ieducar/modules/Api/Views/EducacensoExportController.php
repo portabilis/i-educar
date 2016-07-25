@@ -1263,9 +1263,12 @@ class EducacensoExportController extends ApiCoreController
     	extract($reg);
 	    for ($i=1; $i <= $numeroRegistros ; $i++) {
 
+        $funcaoDocente = ($r51s7 == $docente || $r51s7 == $docenteTutor || $r51s7 == $docenteTitular);
+
+        if (!$funcaoDocente) $r51s8 = '';
+
         //Validação das disciplinas
         if ($i > 8) {
-          $funcaoDocente = ($r51s7 == $docente || $r51s7 == $docenteTutor || $r51s7 == $docenteTitular);
           $atividadeDiferenciada = ($tipo_atendimento == $atividadeComplementar ||
                                     $tipo_atendimento == $atendimentoEducEspecializado);
           $etapaEnsino = ($etapa_ensino == $educInfantilCreche ||
