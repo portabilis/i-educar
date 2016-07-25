@@ -437,6 +437,18 @@ class indice extends clsCadastro
         }
       }
 
+      $objAluno = new clsPmieducarAluno();
+      $alunoInep = $objAluno->verificaInep($this->ref_cod_aluno);
+
+      $objSerie = new clsPmieducarSerie($this->ref_cod_serie);
+      $serieDet = $objSerie->detalhe();
+
+      $exigeInep = $serieDet['exigir_inep'] == "t";
+
+      if (!$alunoInep && $exigeInep) {
+        $this->mensagem = 'N&atilde;o foi poss&iacute;vel realizar matr&iacute;cula, necess&aacute;rio inserir o INEP no cadastro do aluno.';
+        return FALSE;
+      }
 
       $obj_reserva_vaga = new clsPmieducarReservaVaga();
       $lst_reserva_vaga = $obj_reserva_vaga->lista(NULL, $this->ref_cod_escola,

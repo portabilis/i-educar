@@ -417,6 +417,14 @@ class EducacensoExportController extends ApiCoreController
         LIMIT 1
       ) as r10s94,
 
+      (SELECT 1
+         FROM pmieducar.curso
+        INNER JOIN pmieducar.escola_curso ON (escola_curso.ref_cod_curso = curso.cod_curso)
+        WHERE escola_curso.ref_cod_escola = e.cod_escola
+          AND curso.modalidade_curso = 4
+        LIMIT 1
+      ) as r10s95,
+
       fundamental_ciclo as r10s96,
       localizacao_diferenciada as r10s97,
       didatico_nao_utiliza as r10s98,
@@ -1255,9 +1263,12 @@ class EducacensoExportController extends ApiCoreController
     	extract($reg);
 	    for ($i=1; $i <= $numeroRegistros ; $i++) {
 
+        $funcaoDocente = ($r51s7 == $docente || $r51s7 == $docenteTutor || $r51s7 == $docenteTitular);
+
+        if (!$funcaoDocente) $r51s8 = '';
+
         //Validação das disciplinas
         if ($i > 8) {
-          $funcaoDocente = ($r51s7 == $docente || $r51s7 == $docenteTutor || $r51s7 == $docenteTitular);
           $atividadeDiferenciada = ($tipo_atendimento == $atividadeComplementar ||
                                     $tipo_atendimento == $atendimentoEducEspecializado);
           $etapaEnsino = ($etapa_ensino == $educInfantilCreche ||
