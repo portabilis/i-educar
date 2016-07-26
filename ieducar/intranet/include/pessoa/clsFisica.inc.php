@@ -82,6 +82,7 @@ class clsFisica
 	var $renda_mensal;
 	var $data_admissao;
 	var $falecido;
+	var $ativo;
 
 	var $tabela;
 	var $schema;
@@ -977,7 +978,7 @@ class clsFisica
 		if($this->idpes)
 		{
 			$db = new clsBanco();
-			$db->Consulta("SELECT idpes, data_nasc, sexo, idpes_mae, idpes_pai, idpes_responsavel, idesco, ideciv, idpes_con, data_uniao, data_obito, nacionalidade, idpais_estrangeiro, data_chegada_brasil, idmun_nascimento, ultima_empresa, idocup, nome_mae, nome_pai, nome_conjuge, nome_responsavel, justificativa_provisorio, cpf , ref_cod_religiao, sus, nis_pis_pasep, ocupacao, empresa, ddd_telefone_empresa, telefone_empresa, pessoa_contato, data_admissao, renda_mensal, falecido FROM {$this->schema}.{$this->tabela} WHERE idpes = {$this->idpes}");
+			$db->Consulta("SELECT idpes, data_nasc, sexo, idpes_mae, idpes_pai, idpes_responsavel, idesco, ideciv, idpes_con, data_uniao, data_obito, nacionalidade, idpais_estrangeiro, data_chegada_brasil, idmun_nascimento, ultima_empresa, idocup, nome_mae, nome_pai, nome_conjuge, nome_responsavel, justificativa_provisorio, cpf , ref_cod_religiao, sus, nis_pis_pasep, ocupacao, empresa, ddd_telefone_empresa, telefone_empresa, pessoa_contato, data_admissao, renda_mensal, falecido, ativo, data_exclusao FROM {$this->schema}.{$this->tabela} WHERE idpes = {$this->idpes}");
 			if( $db->ProximoRegistro() )
 			{
 				$tupla = $db->Tupla();
@@ -994,7 +995,7 @@ class clsFisica
 		}elseif($this->cpf)
 		{
 			$db = new clsBanco();
-			$db->Consulta("SELECT idpes, data_nasc, sexo, idpes_mae, idpes_pai, idpes_responsavel, idesco, ideciv, idpes_con, data_uniao, data_obito, nacionalidade, idpais_estrangeiro, data_chegada_brasil, idmun_nascimento, ultima_empresa, idocup, nome_mae, nome_pai, nome_conjuge, nome_responsavel, justificativa_provisorio,cpf, ref_cod_religiao, ocupacao, empresa, ddd_telefone_empresa, telefone_empresa, pessoa_contato, data_admissao, renda_mensal FROM {$this->schema}.{$this->tabela} WHERE cpf = '{$this->cpf}'");
+			$db->Consulta("SELECT idpes, data_nasc, sexo, idpes_mae, idpes_pai, idpes_responsavel, idesco, ideciv, idpes_con, data_uniao, data_obito, nacionalidade, idpais_estrangeiro, data_chegada_brasil, idmun_nascimento, ultima_empresa, idocup, nome_mae, nome_pai, nome_conjuge, nome_responsavel, justificativa_provisorio,cpf, ref_cod_religiao, ocupacao, empresa, ddd_telefone_empresa, telefone_empresa, pessoa_contato, data_admissao, renda_mensal, ativo, data_exclusao FROM {$this->schema}.{$this->tabela} WHERE cpf = '{$this->cpf}'");
 			if( $db->ProximoRegistro() )
 			{
 				$tupla = $db->Tupla();

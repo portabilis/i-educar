@@ -212,6 +212,25 @@ class indice extends clsCadastro
     $this->url_cancelar = $this->retorno == 'Editar' ?
       'atendidos_det.php?cod_pessoa=' . $this->cod_pessoa_fj : 'atendidos_lst.php';
 
+    $this->cod_pessoa_fj;
+    $objPessoa = new clsPessoaFisica($this->cod_pessoa_fj);
+    $db        = new clsBanco();
+
+    $detalhe = $objPessoa->queryRapida(
+      $this->cod_pessoa_fj, 'idpes', 'complemento','nome', 'cpf', 'data_nasc',
+      'logradouro', 'idtlog', 'numero', 'apartamento','cidade','sigla_uf',
+      'cep', 'ddd_1', 'fone_1', 'ddd_2', 'fone_2', 'ddd_mov', 'fone_mov',
+      'ddd_fax', 'fone_fax', 'email', 'url', 'tipo', 'sexo', 'zona_localizacao', 
+      'ativo', 'data_exclusao'
+    );
+
+    if(isset($this->cod_pessoa_fj) && !$detalhe['ativo'] == 1){
+      $getNomeUsuario = $objPessoa->getNomeUsuario();
+      $detalhe['data_exclusao'] = date_format(new DateTime($detalhe['data_exclusao']), 'd/m/Y');
+      $this->mensagem = "Este cadastro foi desativado em <strong>" . $detalhe['data_exclusao'] .  "</strong>, 
+                         pelo usuário <strong>" . $getNomeUsuario . "</strong>. <a href='javascript:ativarPessoa($this->cod_pessoa_fj);'>Reativar cadastro</a>";
+    }
+
     $this->campoCpf('id_federal', 'CPF', $this->id_federal, FALSE);
 
     $this->campoOculto('cod_pessoa_fj', $this->cod_pessoa_fj);
