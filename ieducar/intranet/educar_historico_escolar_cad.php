@@ -58,6 +58,7 @@ class indice extends clsCadastro
 	var $ano;
 	var $carga_horaria;
 	var $dias_letivos;
+	var $ref_cod_escola;
 	var $escola;
 	var $escola_cidade;
 	var $escola_uf;
@@ -142,6 +143,16 @@ class indice extends clsCadastro
 
 	function Gerar()
 	{
+		if(isset($_GET["ref_cod_aluno"]) && isset($_GET["sequencial"])){
+			$objCodNomeEscola = new clsPmieducarHistoricoEscolar($_GET["ref_cod_aluno"], $_GET["sequencial"]);
+			$registro = $objCodNomeEscola->getCodNomeEscola();
+			if($registro){
+				$arrRegistro = explode("-", $registro);
+				$nomeEscola = $arrRegistro[0];
+				$codigoEscola = $arrRegistro[1];
+			}
+		}
+
 		if( $_POST )
 			foreach( $_POST AS $campo => $val )
 				$this->$campo = ( !$this->$campo ) ?  $val : $this->$campo ;
@@ -149,6 +160,9 @@ class indice extends clsCadastro
 		// primary keys
 		$this->campoOculto( "ref_cod_aluno", $this->ref_cod_aluno );
 		$this->campoOculto( "sequencial", $this->sequencial );
+		$this->campoOculto("codigoEscola", $codigoEscola);
+		$this->campoOculto("nomeEscola", $nomeEscola);
+		$this->campoOculto("numeroSequencial", $_GET["sequencial"]);
 
 		$obj_aluno = new clsPmieducarAluno();
 		$lst_aluno = $obj_aluno->lista( $this->ref_cod_aluno,null,null,null,null,null,null,null,null,null,1 );
@@ -187,8 +201,21 @@ class indice extends clsCadastro
 			$this->campoTexto("instituicao", "Instiui&ccedil;&atilde;o", $inst['nm_instituicao'], 30, 255, false, false, false, "", "", "", "", true);
 		}
 
+		$opcoes = array("" => "Selecione");
+		$objTemp = new clsPmieducarEscola();
+
+		$lista = $objTemp->lista(null, null, null, 1);
+
+		foreach ($lista as $escola){
+			$opcoes["{$escola['cod_escola']}"] = "{$escola['nome']}";
+		}
+
+		$opcoes['outra'] = 'OUTRA';
+
+		$this->campoLista("ref_cod_escola", "Escola", $opcoes, null, '', false, '', '', false, true);
+		$this->campoTexto( "escola", "Nome da escola ", $this->escola, 30, 255, true );
+
 		// text
-		$this->campoTexto( "escola", "Escola", $this->escola, 30, 255, true );
 		$this->campoTexto( "escola_cidade", "Cidade da Escola", $this->escola_cidade, 30, 255, true );
 
 		$det_uf[] = array();
@@ -329,8 +356,7 @@ class indice extends clsCadastro
 			else
 				$this->extra_curricular = 0;
 
-//        echo "clsPmieducarHistoricoEscolar( $this->ref_cod_aluno, null, null, $this->pessoa_logada, $this->nm_serie, $this->ano, $this->carga_horaria, $this->dias_letivos, $this->escola, $this->escola_cidade, $this->escola_uf, $this->observacao, $this->aprovado, null, null, 1, null, $this->ref_cod_instituicao, 1, $this->extra_curricular )";
-			$obj = new clsPmieducarHistoricoEscolar( $this->ref_cod_aluno, null, null, $this->pessoa_logada, $this->nm_serie, $this->ano, $this->carga_horaria, $this->dias_letivos, $this->escola, $this->escola_cidade, $this->escola_uf, $this->observacao, $this->aprovado, null, null, 1, $this->faltas_globalizadas, $this->ref_cod_instituicao, 1, $this->extra_curricular, null, $this->frequencia, $this->registro, $this->livro, $this->folha, $this->nm_curso, $this->historico_grade_curso_id, $this->aceleracao);
+			$obj = new clsPmieducarHistoricoEscolar( $this->ref_cod_aluno, null, null, $this->pessoa_logada, $this->nm_serie, $this->ano, $this->carga_horaria, $this->dias_letivos, $this->escola, $this->escola_cidade, $this->escola_uf, $this->observacao, $this->aprovado, null, null, 1, $this->faltas_globalizadas, $this->ref_cod_instituicao, 1, $this->extra_curricular, null, $this->frequencia, $this->registro, $this->livro, $this->folha, $this->nm_curso, $this->historico_grade_curso_id, $this->aceleracao, $this->ref_cod_escola);
 			$cadastrou = $obj->cadastra();
 			if( $cadastrou )
 			{
@@ -401,7 +427,7 @@ class indice extends clsCadastro
 
 			$this->aceleracao = is_null($this->aceleracao) ? 0 : 1;
 
-			$obj = new clsPmieducarHistoricoEscolar( $this->ref_cod_aluno, $this->sequencial, $this->pessoa_logada, null, $this->nm_serie, $this->ano, $this->carga_horaria, $this->dias_letivos, $this->escola, $this->escola_cidade, $this->escola_uf, $this->observacao, $this->aprovado, null, null, 1, $this->faltas_globalizadas, $this->ref_cod_instituicao, 1, $this->extra_curricular, null, $this->frequencia, $this->registro, $this->livro, $this->folha, $this->nm_curso, $this->historico_grade_curso_id, $this->aceleracao);
+			$obj = new clsPmieducarHistoricoEscolar( $this->ref_cod_aluno, $this->sequencial, $this->pessoa_logada, null, $this->nm_serie, $this->ano, $this->carga_horaria, $this->dias_letivos, $this->escola, $this->escola_cidade, $this->escola_uf, $this->observacao, $this->aprovado, null, null, 1, $this->faltas_globalizadas, $this->ref_cod_instituicao, 1, $this->extra_curricular, null, $this->frequencia, $this->registro, $this->livro, $this->folha, $this->nm_curso, $this->historico_grade_curso_id, $this->aceleracao, $this->ref_cod_escola);
 			$editou = $obj->edita();
 
 			if( $editou )
@@ -517,6 +543,41 @@ $pagina->MakeAll();
 ?>
 
 <script type="text/javascript">
+	$j(document).ready(function(){
+		var codigoEscola = document.getElementById('codigoEscola').value;
+		var nomeEscola = document.getElementById('nomeEscola').value;
+		var numeroSequencial = document.getElementById('numeroSequencial').value;
+		nomeEscola = nomeEscola.replace(/[\+\+]/g , ' ');
+
+		if(codigoEscola === '' && nomeEscola === '' && numeroSequencial === ''){
+			$j('#ref_cod_escola').val("");
+			$j('#escola').closest('tr').hide();
+		}
+		else if(codigoEscola === '' && numeroSequencial !== ''){
+			$j('#ref_cod_escola').val('outra');
+			$j('#escola').closest('tr').show();
+			$j('#escola').val(nomeEscola);
+		}
+		else{
+			$j('#ref_cod_escola').val(codigoEscola);
+			$j('#escola').val('');
+			$j('#escola').closest('tr').hide();
+		}
+	});
+
+   	$j(function (){
+		$j('#ref_cod_escola').change(function (){
+			var ref_cod_escola_destino = $j('#ref_cod_escola').val();
+			if(ref_cod_escola_destino === 'outra'){
+				$j('#escola').closest('tr').show();
+			}
+			else{
+				$j('#escola').val('');
+				$j('#escola').closest('tr').hide();
+			}
+		});	
+	});
+
 	document.getElementById('cb_faltas_globalizadas').onclick =function()
 	{
 		setVisibility('tr_faltas_globalizadas',this.checked);
