@@ -224,7 +224,7 @@ class indice extends clsCadastro
       'ativo', 'data_exclusao'
     );
 
-    if(isset($this->cod_pessoa_fj) && !$detalhe['ativo'] == 1){
+    if(isset($this->cod_pessoa_fj) && !$detalhe['ativo'] == 1 && $this->retorno == 'Editar'){
       $getNomeUsuario = $objPessoa->getNomeUsuario();
       $detalhe['data_exclusao'] = date_format(new DateTime($detalhe['data_exclusao']), 'd/m/Y');
       $this->mensagem = "Este cadastro foi desativado em <strong>" . $detalhe['data_exclusao'] .  "</strong>, 
