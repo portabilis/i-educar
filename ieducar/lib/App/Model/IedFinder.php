@@ -960,4 +960,68 @@ class App_Model_IedFinder extends CoreExt_Entity
     return $ret;
   }
 
+  /**
+   * Retorna um array com as etapas definidas para o componente,
+   * quando a regra "Permitir definir componentes em etapas específicas" estiver sendo utilizada.
+   *
+   * @param int $turma
+   * @param int $componente
+   * @return array
+   * @throws App_Model_Exception
+   */
+  public static function getEtapasComponente($turma, $componente) {
+
+    $resultado = array();
+
+    $sql = 'SELECT componente_curricular_turma.etapas_utilizadas
+              FROM modules.componente_curricular_turma
+             WHERE componente_curricular_turma.turma_id = $1
+               AND componente_curricular_turma.componente_curricular_id = $2
+               AND componente_curricular_turma.etapas_especificas = 1';
+
+    $resultado = Portabilis_Utils_Database::fetchPreparedQuery($sql,array('params' => array($turma, $componente)));
+
+    if ($resultado) {
+      return $resultado[0]["etapas_utilizadas"];
+    }
+
+    $sql = 'SELECT escola_serie_disciplina.etapas_utilizadas
+              FROM pmieducar.escola_serie_disciplina
+             INNER JOIN pmieducar.turma ON (turma.ref_ref_cod_serie = escola_serie_disciplina.ref_ref_cod_serie
+               AND turma.ref_ref_cod_escola = escola_serie_disciplina.ref_ref_cod_escola)
+             WHERE turma.cod_turma = $1
+               AND escola_serie_disciplina.ref_cod_disciplina = $2
+               AND escola_serie_disciplina.etapas_especificas = 1';
+
+    $resultado = Portabilis_Utils_Database::fetchPreparedQuery($sql,array('params' => array($turma, $componente)));
+
+    if ($resultado) {
+      return $resultado[0]["etapas_utilizadas"];
+    }
+
+    return null;
+  }
+
+  //Retorna a quantidade de etapas resgatadas na function getEtapasComponente
+  public static function getQtdeEtapasComponente($turma, $componente) {
+    $resultado = self::getEtapasComponente($turma, $componente);
+
+    if (!$resultado) return null;
+
+    $resultado = explode(",",$resultado);
+
+    return count($resultado);
+  }
+
+  //Retorna a ultima etapa resgatada na function getEtapasComponente
+  public static function getUltimaEtapaComponente($turma, $componente) {
+    $resultado = self::getEtapasComponente($turma, $componente);
+
+    if (!$resultado) return null;
+
+    $resultado = explode(",",$resultado);
+
+    return array_pop($resultado);
+  }
+
 }

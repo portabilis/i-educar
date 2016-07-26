@@ -1466,6 +1466,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $qtdComponenteReprovado = 0;
     $qtdComponentes = 0;
     $somaMedias = 0;
+    $turmaId = $this->getOption('ref_cod_turma');
     foreach ($mediasComponentes as $id => $mediaComponente) {
 
       if($this->getRegra()->get('tipoProgressao') == RegraAvaliacao_Model_TipoProgressao::CONTINUADA){
@@ -1485,6 +1486,47 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
       $qtdComponentes++;
       $somaMedias += $media;
+      $totalEtapas = $this->getOption('etapas');
+
+      if ($this->getRegra()->get('definirComponentePorEtapa') == "1") {
+        $etapaEspecifica = App_Model_IedFinder::getUltimaEtapaComponente($turmaId, $id);
+
+        if ($etapaEspecifica) {
+          $totalEtapas = $etapaEspecifica;
+
+          if ($etapa == $totalEtapas && $media < $this->getRegra()->media &&
+              $this->hasRecuperacao()) {
+
+            // lets make some changes here >:)
+            $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::EM_EXAME;
+
+            if($this->getRegra()->reprovacaoAutomatica){
+              if(!is_numeric($this->preverNotaRecuperacao($id))){
+                $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::REPROVADO;
+                $qtdComponenteReprovado++;
+              }
+            }
+          }
+          elseif ($etapa == $totalEtapas && $media < $this->getRegra()->media) {
+            $qtdComponenteReprovado++;
+            $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::REPROVADO;
+          }
+          elseif ($etapa == 'Rc' && $media < $this->getRegra()->mediaRecuperacao) {
+            $qtdComponenteReprovado++;
+            $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::REPROVADO;
+          }
+          elseif ($etapa == 'Rc' && $media >= $this->getRegra()->mediaRecuperacao && $this->hasRecuperacao()) {
+            $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::APROVADO_APOS_EXAME;
+          }
+          elseif ($etapa < $totalEtapas && $etapa != 'Rc') {
+            $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::EM_ANDAMENTO;
+          }
+          else {
+            $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::APROVADO;
+          }
+          continue;
+        }
+      }
 
       if ($etapa == $this->getOption('etapas') && $media < $this->getRegra()->media &&
           $this->hasRecuperacao()) {
@@ -3088,6 +3130,7 @@ public function alterarSituacao($novaSituacao, $matriculaId){
       // Salva a média
       $this->getMediaGeralDataMapper()->save($mediaGeralEtapa);
     }else{
+      $turmaId = $this->getOption('ref_cod_turma');
 
       foreach ($this->_notasComponentes as $id => $notasComponentes) {
         //busca última nota lançada e somente atualiza a média e situação da nota do mesmo componente curricular
@@ -3095,7 +3138,15 @@ public function alterarSituacao($novaSituacao, $matriculaId){
         if(!isset($this->_currentComponenteCurricular) || $this->_currentComponenteCurricular == $id){
           // Cria um array onde o índice é a etapa
           $etapasNotas = CoreExt_Entity::entityFilterAttr($notasComponentes, 'etapa', 'nota');
-          $notas = array('Se' => 0, 'Et' => $this->getOption('etapas'));
+          $qtdeEtapas = $this->getOption('etapas');
+
+          if($regra->get('definirComponentePorEtapa') == "1"){
+            $qtdeEtapaEspecifica = App_Model_IedFinder::getQtdeEtapasComponente($turmaId, $id);
+
+            $qtdeEtapas = ($qtdeEtapaEspecifica ? $qtdeEtapaEspecifica : $qtdeEtapas);
+          }
+
+          $notas = array('Se' => 0, 'Et' => $qtdeEtapas);
 
           // Cria o array formatado para o cálculo da fórmula da média
           foreach ($etapasNotas as $etapa => $nota) {
