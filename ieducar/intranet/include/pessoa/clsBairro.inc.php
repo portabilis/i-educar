@@ -120,7 +120,10 @@ class clsBairro
 			{
 				$campos .= ", iddis";
 				$values .= ", '{$this->iddis}' ";
-			}		
+			}
+
+			$this->checkSequenceofBairro();
+
 			$db->Consulta( "INSERT INTO {$this->schema}.{$this->tabela} ( idmun, origem_gravacao, operacao, idsis_cad, nome, data_cad$campos ) VALUES ( '{$this->idmun}', 'U', 'I', '9', '{$this->nome}', NOW()$values )" );
 			return $db->InsertId("{$this->schema}.seq_bairro");
 		}
@@ -286,5 +289,22 @@ class clsBairro
 		return false;
 	}
 	
+	/**
+	 * Altera o sequencial do bairro caso o mesmo esteja irregular
+	 */
+	function checkSequenceofBairro() {
+		$db = new clsBanco();
+		$db->Consulta("SELECT last_value AS seq_bairro FROM public.seq_bairro;");
+		$db->ProximoRegistro();
+		$sequencial = $db->Tupla();
+		$sequencial = $sequencial["seq_bairro"];
+
+		$ultimoId = $this->UltimaChave();
+
+		if ($ultimoId >= $sequencial) {
+			$proximoId = $ultimoId+1;
+			$db->Consulta("SELECT setval('public.seq_bairro',{$proximoId},false);");
+		}
+	}
 }
 ?>
