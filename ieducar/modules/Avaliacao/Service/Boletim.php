@@ -1493,42 +1493,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
         if ($etapaEspecifica) {
           $totalEtapas = $etapaEspecifica;
-
-          if ($etapa == $totalEtapas && $media < $this->getRegra()->media &&
-              $this->hasRecuperacao()) {
-
-            // lets make some changes here >:)
-            $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::EM_EXAME;
-
-            if($this->getRegra()->reprovacaoAutomatica){
-              if(!is_numeric($this->preverNotaRecuperacao($id))){
-                $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::REPROVADO;
-                $qtdComponenteReprovado++;
-              }
-            }
-          }
-          elseif ($etapa == $totalEtapas && $media < $this->getRegra()->media) {
-            $qtdComponenteReprovado++;
-            $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::REPROVADO;
-          }
-          elseif ($etapa == 'Rc' && $media < $this->getRegra()->mediaRecuperacao) {
-            $qtdComponenteReprovado++;
-            $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::REPROVADO;
-          }
-          elseif ($etapa == 'Rc' && $media >= $this->getRegra()->mediaRecuperacao && $this->hasRecuperacao()) {
-            $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::APROVADO_APOS_EXAME;
-          }
-          elseif ($etapa < $totalEtapas && $etapa != 'Rc') {
-            $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::EM_ANDAMENTO;
-          }
-          else {
-            $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::APROVADO;
-          }
-          continue;
         }
       }
 
-      if ($etapa == $this->getOption('etapas') && $media < $this->getRegra()->media &&
+      if ($etapa == $totalEtapas && $media < $this->getRegra()->media &&
           $this->hasRecuperacao()) {
 
         // lets make some changes here >:)
@@ -1541,7 +1509,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
           }
         }
       }
-      elseif ($etapa == $this->getOption('etapas') && $media < $this->getRegra()->media) {
+      elseif ($etapa == $totalEtapas && $media < $this->getRegra()->media) {
         $qtdComponenteReprovado++;
         $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::REPROVADO;
       }
@@ -1552,7 +1520,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       elseif ($etapa == 'Rc' && $media >= $this->getRegra()->mediaRecuperacao && $this->hasRecuperacao()) {
         $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::APROVADO_APOS_EXAME;
       }
-      elseif ($etapa < $this->getOption('etapas') && $etapa != 'Rc') {
+      elseif ($etapa < $totalEtapas && $etapa != 'Rc') {
         $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::EM_ANDAMENTO;
       }
       else {
