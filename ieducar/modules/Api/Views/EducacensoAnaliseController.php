@@ -422,8 +422,10 @@ class EducacensoAnaliseController extends ApiCoreController
              INNER JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
              INNER JOIN pmieducar.turma ON (turma.ref_ref_cod_escola = escola.cod_escola)
              WHERE escola.cod_escola = $1
+               AND COALESCE(turma.nao_informar_educacenso, 0) = 0
                AND turma.ano = $2
                AND turma.ativo = 1
+               AND turma.visivel = TRUE
                AND escola.ativo = 1";
 
     $turmas = $this->fetchPreparedQuery($sql, array($escola, $ano));
@@ -511,6 +513,9 @@ class EducacensoAnaliseController extends ApiCoreController
               LEFT JOIN public.municipio ON (municipio.idmun = fisica.idmun_nascimento)
               LEFT JOIN public.uf ON (uf.sigla_uf = municipio.sigla_uf)
              WHERE professor_turma.ano = $1
+               AND turma.ativo = 1
+               AND turma.visivel = TRUE
+               AND COALESCE(turma.nao_informar_educacenso, 0) = 0
                AND turma.ano = professor_turma.ano
                AND escola.cod_escola = $2
                AND servidor.ativo = 1
@@ -587,6 +592,9 @@ class EducacensoAnaliseController extends ApiCoreController
              LEFT JOIN public.municipio ON (municipio.idmun = logradouro.idmun)
              LEFT JOIN public.uf ON (uf.sigla_uf = municipio.sigla_uf)
             WHERE professor_turma.ano = $1
+              AND turma.ativo = 1
+              AND turma.visivel = TRUE
+              AND COALESCE(turma.nao_informar_educacenso, 0) = 0
               AND turma.ano = professor_turma.ano
               AND escola.cod_escola = $2
               AND servidor.ativo = 1
@@ -688,6 +696,9 @@ class EducacensoAnaliseController extends ApiCoreController
               LEFT JOIN cadastro.escolaridade ON (escolaridade.idesco = servidor.ref_idesco)
              INNER JOIN cadastro.pessoa ON (pessoa.idpes = professor_turma.servidor_id)
              WHERE professor_turma.ano = $1
+               AND turma.ativo = 1
+               AND turma.visivel = TRUE
+               AND COALESCE(turma.nao_informar_educacenso, 0) = 0
                AND turma.ano = professor_turma.ano
                AND escola.cod_escola = $2
                AND servidor.ativo = 1
@@ -882,6 +893,9 @@ class EducacensoAnaliseController extends ApiCoreController
              INNER JOIN cadastro.fisica ON (fisica.idpes = professor_turma.servidor_id)
              INNER JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
              WHERE professor_turma.ano = $1
+               AND turma.ativo = 1
+               AND turma.visivel = TRUE
+               AND COALESCE(turma.nao_informar_educacenso, 0) = 0
                AND turma.ano = professor_turma.ano
                AND escola.cod_escola = $2
                AND servidor.ativo = 1
@@ -934,6 +948,8 @@ class EducacensoAnaliseController extends ApiCoreController
                    municipio.cod_ibge AS municipio_inep
               FROM pmieducar.aluno
              INNER JOIN pmieducar.matricula ON (matricula.ref_cod_aluno = aluno.cod_aluno)
+             INNER JOIN pmieducar.matricula_turma ON (matricula_turma.ref_cod_matricula = matricula.cod_matricula)
+             INNER JOIN pmieducar.turma ON (turma.cod_turma = matricula_turma.ref_cod_turma)
              INNER JOIN pmieducar.escola ON (escola.cod_escola = matricula.ref_ref_cod_escola)
              INNER JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
              INNER JOIN cadastro.pessoa ON (pessoa.idpes = aluno.ref_idpes)
@@ -944,6 +960,9 @@ class EducacensoAnaliseController extends ApiCoreController
               LEFT JOIN public.municipio ON (municipio.idmun = fisica.idmun_nascimento)
               LEFT JOIN public.uf ON (uf.sigla_uf = municipio.sigla_uf)
              WHERE aluno.ativo = 1
+               AND turma.ativo = 1
+               AND turma.visivel = TRUE
+               AND COALESCE(turma.nao_informar_educacenso, 0) = 0
                AND matricula.ativo = 1
                AND matricula.ano = $1
                AND escola.cod_escola = $2
@@ -1020,6 +1039,8 @@ class EducacensoAnaliseController extends ApiCoreController
                    bairro.zona_localizacao AS zona_localizacao
               FROM pmieducar.aluno
              INNER JOIN pmieducar.matricula ON (matricula.ref_cod_aluno = aluno.cod_aluno)
+             INNER JOIN pmieducar.matricula_turma ON (matricula_turma.ref_cod_matricula = matricula.cod_matricula)
+             INNER JOIN pmieducar.turma ON (turma.cod_turma = matricula_turma.ref_cod_turma)
              INNER JOIN pmieducar.escola ON (escola.cod_escola = matricula.ref_ref_cod_escola)
              INNER JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
              INNER JOIN cadastro.pessoa ON (pessoa.idpes = aluno.ref_idpes)
@@ -1033,6 +1054,9 @@ class EducacensoAnaliseController extends ApiCoreController
               LEFT JOIN public.uf uf_rg ON (uf_rg.sigla_uf = documento.sigla_uf_exp_rg)
               LEFT JOIN public.bairro ON (bairro.idbai = endereco_pessoa.idbai)
              WHERE aluno.ativo = 1
+               AND turma.ativo = 1
+               AND turma.visivel = TRUE
+               AND COALESCE(turma.nao_informar_educacenso, 0) = 0
                AND matricula.ativo = 1
                AND matricula.ano = $1
                AND escola.cod_escola = $2
@@ -1132,11 +1156,16 @@ class EducacensoAnaliseController extends ApiCoreController
                    aluno.veiculo_transporte_escolar AS veiculo_transporte_escolar
               FROM pmieducar.aluno
              INNER JOIN pmieducar.matricula ON (matricula.ref_cod_aluno = aluno.cod_aluno)
+             INNER JOIN pmieducar.matricula_turma ON (matricula_turma.ref_cod_matricula = matricula.cod_matricula)
+             INNER JOIN pmieducar.turma ON (turma.cod_turma = matricula_turma.ref_cod_turma)
              INNER JOIN pmieducar.escola ON (escola.cod_escola = matricula.ref_ref_cod_escola)
              INNER JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
              INNER JOIN cadastro.pessoa ON (pessoa.idpes = aluno.ref_idpes)
               LEFT JOIN modules.transporte_aluno ON (transporte_aluno.aluno_id = aluno.cod_aluno)
              WHERE aluno.ativo = 1
+               AND turma.ativo = 1
+               AND turma.visivel = TRUE
+               AND COALESCE(turma.nao_informar_educacenso, 0) = 0
                AND matricula.ativo = 1
                AND matricula.ano = $1
                AND escola.cod_escola = $2
