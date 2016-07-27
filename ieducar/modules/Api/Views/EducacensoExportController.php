@@ -766,6 +766,7 @@ class EducacensoExportController extends ApiCoreController
         LEFT JOIN public.uf ON (uf.sigla_uf = m.sigla_uf)
         LEFT JOIN modules.educacenso_cod_docente ecd ON ecd.cod_servidor = s.cod_servidor
         WHERE s.cod_servidor = $1
+          AND COALESCE(t.nao_informar_educacenso, 0) = 0
           AND e.cod_escola = $2
           AND t.ativo = 1
           AND t.visivel = TRUE
@@ -876,6 +877,7 @@ class EducacensoExportController extends ApiCoreController
 		 LEFT JOIN public.logradouro l ON (l.idlog = cl.idlog)
      LEFT JOIN modules.educacenso_cod_docente ecd ON ecd.cod_servidor = s.cod_servidor
 		WHERE s.cod_servidor = $1
+      AND COALESCE(t.nao_informar_educacenso, 0) = 0
       AND e.cod_escola = $2
       AND t.ativo = 1
       AND t.visivel = TRUE
@@ -971,6 +973,7 @@ class EducacensoExportController extends ApiCoreController
 		LEFT JOIN cadastro.escolaridade esc ON (esc.idesco = s.ref_idesco)
     LEFT JOIN modules.educacenso_cod_docente ecd ON ecd.cod_servidor = s.cod_servidor
 		WHERE s.cod_servidor = $1
+      AND COALESCE(t.nao_informar_educacenso, 0) = 0
       AND e.cod_escola = $2
       AND t.ativo = 1
       AND t.visivel = TRUE
@@ -1229,6 +1232,7 @@ class EducacensoExportController extends ApiCoreController
       LEFT JOIN modules.educacenso_cod_docente ecd ON ecd.cod_servidor = s.cod_servidor
 			WHERE s.cod_servidor = $1
 			AND e.cod_escola = t.ref_ref_cod_escola
+      AND COALESCE(t.nao_informar_educacenso, 0) = 0
       AND e.cod_escola = $2
       AND t.ativo = 1
       AND t.visivel = TRUE
