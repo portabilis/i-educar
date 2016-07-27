@@ -67,6 +67,7 @@ class RegraAvaliacao_Model_RegraDataMapper extends CoreExt_DataMapper
     'notaMaximaExameFinal'        => 'nota_maxima_exame_final',
     'qtdCasasDecimais'            => 'qtd_casas_decimais',
     'notaGeralPorEtapa'           => 'nota_geral_por_etapa',
+    'definirComponentePorEtapa'   => 'definir_componente_etapa',
     'qtdDisciplinasDependencia'   => 'qtd_disciplinas_dependencia',
     'aprovaMediaDisciplina'       => 'aprova_media_disciplina',
     'reprovacaoAutomatica'        => 'reprovacao_automatica',

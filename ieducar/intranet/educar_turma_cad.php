@@ -148,7 +148,7 @@ class indice extends clsCadastro
 
   var $etapas_especificas;
   var $etapas_utilizadas;
-  var $utilizaNotaGeralPorEtapa;
+  var $definirComponentePorEtapa;
 
   var $dias_da_semana = array(
     '' => 'Selecione',
@@ -188,7 +188,7 @@ class indice extends clsCadastro
       $regra_avaliacao_mapper = new RegraAvaliacao_Model_RegraDataMapper();
       $regra_avaliacao = $regra_avaliacao_mapper->find($regra_avaliacao_id);
 
-      $this->utilizaNotaGeralPorEtapa = ($regra_avaliacao->notaGeralPorEtapa == 1);
+      $this->definirComponentePorEtapa = ($regra_avaliacao->definirComponentePorEtapa == 1);
 
       $this->ref_cod_escola      = $det_esc['cod_escola'];
       $this->ref_cod_instituicao = $det_esc['ref_cod_instituicao'];
@@ -926,7 +926,7 @@ class indice extends clsCadastro
         $conteudo .= '  <span style="display: block; float: left; width: 250px;">Nome</span>';
         $conteudo .= '  <span style="display: block; float: left; width: 100px;">Carga hor&aacute;ria</span>';
         $conteudo .= '  <span style="display: block; float: left;width: 100px;">Usar padr&atilde;o do componente?</span>';
-        if($this->utilizaNotaGeralPorEtapa){
+        if($this->definirComponentePorEtapa){
           $conteudo .= '  <span style="display: block; float: left;width: 150px;">Usar etapas espec&iacute;ficas?</span>';
         }
         $conteudo .= '  <span style="display: block; float: left">Possui docente v&iacute;nculado?</span>';
@@ -966,7 +966,7 @@ class indice extends clsCadastro
           $conteudo .= "  <label style='display: block; float: left; width: 250px'><input type=\"checkbox\" $checked name=\"disciplinas[$registro->id]\" id=\"disciplinas[]\" value=\"{$registro->id}\">{$registro}</label>";
           $conteudo .= "  <label style='display: block; float: left; width: 100px;'><input type='text' name='carga_horaria[$registro->id]' value='{$cargaHoraria}' size='5' maxlength='7'></label>";
           $conteudo .= "  <label style='display: block; float: left; width: 100px;'><input type='checkbox' name='usar_componente[$registro->id]' value='1' ". ($usarComponente == TRUE ? $checked : '') .">($cargaComponente h)</label>";
-          if($this->utilizaNotaGeralPorEtapa){
+          if($this->definirComponentePorEtapa){
             $conteudo .= "  <input style='float:left;' type='checkbox' id='etapas_especificas[]' name='etapas_especificas[$registro->id]' value='1' ". $checkedEtapaEspecifica ."></label>";
             $conteudo .= "  <label style='display: block; float: left; width: 150px;'>Etapas utilizadas: <input type='text' class='etapas_utilizadas' name='etapas_utilizadas[$registro->id]' value='{$etapaUtilizada}' size='5' maxlength='7'></label>";
           }
