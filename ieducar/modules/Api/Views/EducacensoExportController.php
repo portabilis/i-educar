@@ -291,7 +291,7 @@ class EducacensoExportController extends ApiCoreController
       $r00s15 = $this->convertStringToCenso($r00s15);
       $r00s16 = $this->convertStringToCenso($r00s16);
       $r00s17 = $this->convertStringToCenso($r00s17);
-      $r00s26 = $this->convertStringToCenso($r00s26);
+      $r00s26 = strtoupper($r00s26);
       $r00s27 = str_pad($r00s27, 5, "0", STR_PAD_LEFT);
 
       if($r00s28 <> 4)
