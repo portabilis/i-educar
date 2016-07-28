@@ -202,11 +202,11 @@ class indice extends clsCadastro
 		}
 
 		$opcoes = array("" => "Selecione");
-		$objTemp = new clsPmieducarEscola();
+		$listar_escolas = new clsPmieducarEscola();
 
-		$lista = $objTemp->lista(null, null, null, 1);
+		$escolas = $listar_escolas->lista_escola();
 
-		foreach ($lista as $escola){
+		foreach ($escolas as $escola){
 			$opcoes["{$escola['cod_escola']}"] = "{$escola['nome']}";
 		}
 

@@ -352,10 +352,17 @@ class clsPmieducarHistoricoEscolar
     		$this->ref_cod_escola = $ref_cod_escola;
     		$db = new clsBanco();
 			$resultado = array();
-			$db->Consulta("SELECT pessoa.nome
-      						 FROM pmieducar.escola
-					   INNER JOIN cadastro.pessoa ON (escola.ref_idpes = pessoa.idpes)
-     						WHERE escola.cod_escola = $this->ref_cod_escola");
+			$db->Consulta("SELECT COALESCE((SELECT COALESCE (fcn_upper(ps.nome),fcn_upper(juridica.fantasia))
+                                      FROM cadastro.pessoa ps, cadastro.juridica
+                                     WHERE escola.ref_idpes = juridica.idpes
+                                       AND juridica.idpes = ps.idpes
+                                       AND ps.idpes = escola.ref_idpes),
+                                   (SELECT nm_escola
+                                      FROM pmieducar.escola_complemento
+                                    WHERE ref_cod_escola = escola.cod_escola)) AS nome
+                             FROM pmieducar.escola
+                            WHERE escola.cod_escola = $this->ref_cod_escola
+                         ORDER BY nome");
 			if($db->ProximoRegistro()){
          		$tupla = $db->Tupla();
          		$this->escola = $tupla['nome'];
