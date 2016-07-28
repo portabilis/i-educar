@@ -1323,7 +1323,8 @@ class EducacensoExportController extends ApiCoreController
       recurso_prova_inep_prova_ampliada_16 as rs60s35,
       recurso_prova_inep_prova_ampliada_20 as rs60s36,
       recurso_prova_inep_prova_ampliada_24 as rs60s37,
-      recurso_prova_inep_prova_braille as rs60s38
+      recurso_prova_inep_prova_braille as rs60s38,
+      fis.nacionalidade AS nacionalidade
 
       FROM  pmieducar.aluno a
       INNER JOIN cadastro.fisica fis ON (fis.idpes = a.ref_idpes)
@@ -1348,6 +1349,7 @@ class EducacensoExportController extends ApiCoreController
     $d = '|';
     $return = '';
     $numeroRegistros = 39;
+    $estrangeiro = 3;
 
     $sqlDeficiencias = 'select distinct(deficiencia_educacenso) as id from cadastro.fisica_deficiencia,
                         cadastro.deficiencia where cod_deficiencia = ref_cod_deficiencia and ref_idpes = $1
@@ -1368,6 +1370,9 @@ class EducacensoExportController extends ApiCoreController
 
       if($r60s12 == '1' || $r60s12 == '2')
         $r60s13 = 76;
+
+      if ($nacionalidade == $estrangeiro)
+        $r60s14 = $r60s15 = null;
 
       $deficiencias = Portabilis_Utils_Database::fetchPreparedQuery($sqlDeficiencias, array( 'params' => array($idpes)));
 
