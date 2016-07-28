@@ -624,8 +624,8 @@ class EducacensoExportController extends ApiCoreController
 
       $r20s5 = $this->convertStringToCenso($r20s5);
 
-      //Dias da semana  e tipo de atendimento não podem ser nullos, 1 ou 0
-      for($i = 11; $i <=18; $i++)
+      //Dias da semana não podem ser nullos, 1 ou 0
+      for($i = 11; $i <18; $i++)
         ${'r20s'.$i} = (${'r20s'.$i} ? '1' : '0');
 
       // Atribui 0 (Não lecionado) para todas as disciplinas por padrão.
@@ -639,7 +639,6 @@ class EducacensoExportController extends ApiCoreController
 
       if(!((($r20s38 >= 4 && $r20s38 <= 38) || $r20s38 == 41 || $r20s38 == 56 ) && in_array($r20s18, array(0, 2, 3))))
         $r20s19 = NULL;
-
 
       $coddigoEducacensoToSeq =
       			 array( 1 => '40', 2 => '41', 3 => '42', 4 => '43', 5 => '44', 6 => '45', 7 => '46',
