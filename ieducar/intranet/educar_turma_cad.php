@@ -606,7 +606,7 @@ class indice extends clsCadastro
 
     $this->campoData('data_inicio', 'Data In&iacute;cio', $this->data_inicio, FALSE);
     $this->campoData('data_fim', 'Data Fim', $this->data_fim, FALSE);
-    $this->campoTexto('dias_letivos', 'Dias Letivos', $this->dias_letivos_, FALSE);
+    $this->campoTexto('dias_letivos', 'Dias Letivos', $this->dias_letivos_, 9);
 
     $this->campoOculto('incluir_modulo', '');
 
