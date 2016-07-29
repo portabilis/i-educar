@@ -1153,7 +1153,9 @@ class EducacensoAnaliseController extends ApiCoreController
     $sql = "SELECT juridica.fantasia AS nome_escola,
                    pessoa.nome AS nome_aluno,
                    transporte_aluno.responsavel AS transporte_escolar,
-                   aluno.veiculo_transporte_escolar AS veiculo_transporte_escolar
+                   aluno.veiculo_transporte_escolar AS veiculo_transporte_escolar,
+                   turma.tipo_atendimento AS tipo_atendimento,
+                   aluno.recebe_escolarizacao_em_outro_espaco AS recebe_escolarizacao_em_outro_espaco
               FROM pmieducar.aluno
              INNER JOIN pmieducar.matricula ON (matricula.ref_cod_aluno = aluno.cod_aluno)
              INNER JOIN pmieducar.matricula_turma ON (matricula_turma.ref_cod_matricula = matricula.cod_matricula)
@@ -1186,6 +1188,8 @@ class EducacensoAnaliseController extends ApiCoreController
     $mensagem = array();
     $transporteEstadual  = 1;
     $transporteMunicipal = 2;
+    $atividadeComplementar = 4;
+    $atendimentoEducEspecializado = 5;
 
     foreach ($alunos as $aluno) {
       $nomeEscola = Portabilis_String_Utils::toUtf8(mb_strtoupper($aluno["nome_escola"]));
@@ -1200,6 +1204,14 @@ class EducacensoAnaliseController extends ApiCoreController
         if (!$aluno["veiculo_transporte_escolar"]) {
           $mensagem[] = array("text" => "Dados para formular o registro 80 da escola {$nomeEscola} não encontrados. Verificamos que o(a) aluno(a) {$nomeAluno} utiliza o transporte público, portanto é necessário informar qual o tipo de veículo utilizado.",
                               "path" => "(Cadastros > Aluno > Alunos > Campo: Veículo utilizado)",
+                              "fail" => true);
+        }
+      }
+      if ($aluno["tipo_atendimento"] != $atividadeComplementar &&
+          $aluno["tipo_atendimento"] != $atendimentoEducEspecializado) {
+        if (!$aluno["recebe_escolarizacao_em_outro_espaco"]) {
+          $mensagem[] = array("text" => "Dados para formular o registro 80 da escola {$nomeEscola} não encontrados. Verificamos que a turma vinculada a este aluno(a) {$nomeAluno} não é de Atividade complementar e nem de AEE, portanto é necessário informar se o mesmo recebe escolarização em um espaço diferente da respectiva escola.",
+                              "path" => "(Cadastros > Aluno > Alunos > Aba: Recursos prova INEP > Campo: Recebe escolarização em outro espaço (diferente da escola))",
                               "fail" => true);
         }
       }
