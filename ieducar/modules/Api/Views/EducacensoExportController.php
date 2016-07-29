@@ -1569,7 +1569,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
         a.cod_aluno as r80s4,
         t.cod_turma as r80s6,
         t.turma_unificada as r80s8,
-        t.etapa_educacenso as r80s9,
+        t.etapa_educacenso2 as r80s9,
         \'3\' as r80s10,
         ta.responsavel as transporte_escolar,
         (
@@ -1703,8 +1703,6 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
 
     foreach (Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId, $ano, $data_ini, $data_fim, $alunoId))) as $reg) {
       extract($reg);
-
-      $r80s9 = NULL;
 
       for ($i=13; $i <= 23 ; $i++)
           ${'r80s'.$i} = 0;
