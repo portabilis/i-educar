@@ -320,6 +320,8 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
       'recurso_prova_inep_prova_braille' => array('label' => 'Necessita de prova em Braille?'),
 
+      'recebe_escolarizacao_em_outro_espaco' => array('label' => 'Recebe escolarização em outro espaço (diferente da escola)'),
+
       'transporte_rota' => array(
         'label'  => 'Rota',
         'help'   => '',
@@ -1270,8 +1272,21 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('recurso_prova_inep_prova_ampliada_24') ), 'required' => false, 'placeholder' => '');
     $this->inputsHelper()->checkbox('recurso_prova_inep_prova_ampliada_24',$options);
 
-    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('recurso_prova_inep_prova_braille') ), 'required' => false, 'placeholder' => '');
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('recurso_prova_inep_prova_braille')), 'required' => false, 'placeholder' => '');
     $this->inputsHelper()->checkbox('recurso_prova_inep_prova_braille',$options);
+
+    $selectOptions = array(0 => 'Selecione',
+                           1 => 'Em hospital',
+                           2 => Portabilis_String_Utils::toLatin1('Em domicílio'),
+                           3 => Portabilis_String_Utils::toLatin1('Não recebe'));
+
+    $options = array(
+      'required'  => false,
+      'label'     => $this->_getLabel('recebe_escolarizacao_em_outro_espaco'),
+      'resources' => $selectOptions
+    );
+
+    $this->inputsHelper()->select('recebe_escolarizacao_em_outro_espaco', $options);
 
     // Projetos
 

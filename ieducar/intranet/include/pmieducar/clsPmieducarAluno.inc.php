@@ -64,6 +64,7 @@ class clsPmieducarAluno
   var $recurso_prova_inep_prova_ampliada_20;
   var $recurso_prova_inep_prova_ampliada_24;
   var $recurso_prova_inep_prova_braille;
+  var $recebe_escolarizacao_em_outro_espaco;
   var $justificativa_falta_documentacao;
   var $url_laudo_medico;
   var $url_documento;
@@ -166,7 +167,7 @@ class clsPmieducarAluno
     $this->_campos_lista = $this->_todos_campos = 'a.cod_aluno, a.ref_cod_religiao, a.ref_usuario_exc,
         a.ref_usuario_cad, a.ref_idpes, a.data_cadastro, a.data_exclusao, a.ativo, a.caminho_foto, a.analfabeto, a.nm_pai, a.nm_mae,tipo_responsavel, a.aluno_estado_id,
         a.recurso_prova_inep_aux_ledor, a.recurso_prova_inep_aux_transcricao, a.recurso_prova_inep_guia_interprete, a.recurso_prova_inep_interprete_libras, a.recurso_prova_inep_leitura_labial,
-        a.recurso_prova_inep_prova_ampliada_16, a.recurso_prova_inep_prova_ampliada_20, a.recurso_prova_inep_prova_ampliada_24, a.recurso_prova_inep_prova_braille,
+        a.recurso_prova_inep_prova_ampliada_16, a.recurso_prova_inep_prova_ampliada_20, a.recurso_prova_inep_prova_ampliada_24, a.recurso_prova_inep_prova_braille, a.recebe_escolarizacao_em_outro_espaco,
         a.justificativa_falta_documentacao, a.url_laudo_medico, a.codigo_sistema, a.veiculo_transporte_escolar, a.parentesco_um, a.autorizado_um, a.parentesco_dois, a.autorizado_dois, 
         a.parentesco_tres, a.autorizado_tres, a.parentesco_quatro, a.autorizado_quatro, a.parentesco_cinco, a.autorizado_cinco, a.url_documento';
 
@@ -437,6 +438,12 @@ class clsPmieducarAluno
         $gruda = ', ';
       }
 
+      if (is_numeric($this->recebe_escolarizacao_em_outro_espaco)) {
+        $campos  .= "{$gruda}recebe_escolarizacao_em_outro_espaco";
+        $valores .= "{$gruda}'{$this->recebe_escolarizacao_em_outro_espaco}'";
+        $gruda = ', ';
+      }
+
       if (is_numeric($this->justificativa_falta_documentacao)) {
         $campos  .= "{$gruda}justificativa_falta_documentacao";
         $valores .= "{$gruda}'{$this->justificativa_falta_documentacao}'";
@@ -669,6 +676,11 @@ class clsPmieducarAluno
 
       if (is_numeric($this->recurso_prova_inep_prova_braille)) {
         $set .= "{$gruda}recurso_prova_inep_prova_braille = '{$this->recurso_prova_inep_prova_braille}'";
+        $gruda = ', ';
+      }
+
+      if (is_numeric($this->recebe_escolarizacao_em_outro_espaco)) {
+        $set .= "{$gruda}recebe_escolarizacao_em_outro_espaco = '{$this->recebe_escolarizacao_em_outro_espaco}'";
         $gruda = ', ';
       }
 

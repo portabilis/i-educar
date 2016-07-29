@@ -520,6 +520,7 @@ class AlunoController extends ApiCoreController
     $aluno->recurso_prova_inep_prova_ampliada_20     = $this->getRequest()->recurso_prova_inep_prova_ampliada_20 == 'on' ? 1 : 0;
     $aluno->recurso_prova_inep_prova_ampliada_24     = $this->getRequest()->recurso_prova_inep_prova_ampliada_24 == 'on' ? 1 : 0;
     $aluno->recurso_prova_inep_prova_braille         = $this->getRequest()->recurso_prova_inep_prova_braille == 'on' ? 1 : 0;
+    $aluno->recebe_escolarizacao_em_outro_espaco     = $this->getRequest()->recebe_escolarizacao_em_outro_espaco;
     $aluno->justificativa_falta_documentacao         = $this->getRequest()->justificativa_falta_documentacao;
     $aluno->veiculo_transporte_escolar               = $this->getRequest()->veiculo_transporte_escolar;
 
@@ -874,6 +875,7 @@ class AlunoController extends ApiCoreController
         'recurso_prova_inep_prova_ampliada_20',
         'recurso_prova_inep_prova_ampliada_24',
         'recurso_prova_inep_prova_braille',
+        'recebe_escolarizacao_em_outro_espaco',
         'justificativa_falta_documentacao',
         'veiculo_transporte_escolar',
         'url_laudo_medico',
