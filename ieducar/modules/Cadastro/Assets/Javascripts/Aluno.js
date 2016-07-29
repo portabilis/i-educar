@@ -674,6 +674,7 @@ if($j('#autorizado_quatro').val() == ''){
     $j('#recurso_prova_inep_prova_braille').attr('checked',true);
     $j('#recurso_prova_inep_prova_braille').val('on');
   }
+  $j('#recebe_escolarizacao_em_outro_espaco').val(dataResponse.recebe_escolarizacao_em_outro_espaco).change();
 
   $j('#quartos').val(dataResponse.quartos);
   $j('#sala').val(dataResponse.sala);
@@ -1383,7 +1384,7 @@ function canShowParentsFields(){
         $j('#tab5').toggleClass('alunoTab alunoTab-active')
         $j('.tablecadastro >tbody  > tr').each(function(index, row) {
           if (row.id!='stop'){
-            if (index>= $j('#tr_lixo').index() - 1 &&index < $j('#tr_recurso_prova_inep_prova_braille').index()){
+            if (index>= $j('#tr_lixo').index() &&index < $j('#tr_recebe_escolarizacao_em_outro_espaco').index()){
               row.show();
             }else if(index!=0){
               row.hide();
@@ -1392,7 +1393,6 @@ function canShowParentsFields(){
             return false;
         });
       });
-
     // Projetos
     $j('#tab6').click(
       function(){
@@ -1400,7 +1400,7 @@ function canShowParentsFields(){
         $j('#tab6').toggleClass('alunoTab alunoTab-active')
         $j('.tablecadastro >tbody  > tr').each(function(index, row) {
           if (row.id!='stop'){
-            if (index>= $j('#tr_recurso_prova_inep_prova_braille').index() && index < $j('#tr_recurso_prova_inep_prova_braille').index() + 1){
+            if (index>= $j('#tr_recebe_escolarizacao_em_outro_espaco').index() && index < $j('#tr_recebe_escolarizacao_em_outro_espaco').index() + 1){
               row.show();
             }else if(index!=0){
               row.hide();
