@@ -1130,10 +1130,16 @@ class clsPmieducarTurma
 			if(is_numeric($this->etapa_educacenso)) {
 				$set  .= "{$gruda}etapa_educacenso = '{$this->etapa_educacenso}'";
 				$gruda = ", ";
+			} elseif (is_null($this->etapa_educacenso)) {
+				$set  .= "{$gruda}etapa_educacenso = NULL";
+				$gruda = ", ";
 			}
 
 			if(is_numeric($this->etapa_educacenso2)) {
 				$set  .= "{$gruda}etapa_educacenso2 = '{$this->etapa_educacenso2}'";
+				$gruda = ", ";
+			} elseif (is_null($this->etapa_educacenso2)) {
+				$set  .= "{$gruda}etapa_educacenso2 = NULL";
 				$gruda = ", ";
 			}
 
