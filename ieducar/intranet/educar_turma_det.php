@@ -293,6 +293,7 @@ class indice extends clsDetalhe
               <td bgcolor="#A1B3BD"><b>Nome</b></td>
               <td bgcolor="#A1B3BD"><b>Data Início</b></td>
               <td bgcolor="#A1B3BD"><b>Data Fim</b></td>
+              <td bgcolor="#A1B3BD"><b>Dias Letivos</b></td>
             </tr>';
 
         $cont = 0;
@@ -317,8 +318,9 @@ class indice extends clsDetalhe
               <td %s align=left>%s</td>
               <td %s align=left>%s</td>
               <td %s align=left>%s</td>
+              <td %s align=center>%s</td>
             </tr>',
-            $color, $nm_modulo, $color, $valor['data_inicio'], $color, $valor['data_fim']
+            $color, $nm_modulo, $color, $valor['data_inicio'], $color, $valor['data_fim'],$color, $valor['dias_letivos']
           );
 
           $cont++;

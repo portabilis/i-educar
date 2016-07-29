@@ -39,6 +39,7 @@ class clsPmieducarTurmaModulo
 	var $sequencial;
 	var $data_inicio;
 	var $data_fim;
+	var $dias_letivos;
 
 	// propriedades padrao
 
@@ -104,13 +105,13 @@ class clsPmieducarTurmaModulo
 	 *
 	 * @return object
 	 */
-	function clsPmieducarTurmaModulo( $ref_cod_turma = null, $ref_cod_modulo = null, $sequencial = null, $data_inicio = null, $data_fim = null )
+	function clsPmieducarTurmaModulo( $ref_cod_turma = null, $ref_cod_modulo = null, $sequencial = null, $data_inicio = null, $data_fim = null, $dias_letivos = null)
 	{
 		$db = new clsBanco();
 		$this->_schema = "pmieducar.";
 		$this->_tabela = "{$this->_schema}turma_modulo";
 
-		$this->_campos_lista = $this->_todos_campos = "ref_cod_turma, ref_cod_modulo, sequencial, data_inicio, data_fim";
+		$this->_campos_lista = $this->_todos_campos = "ref_cod_turma, ref_cod_modulo, sequencial, data_inicio, data_fim, dias_letivos";
 
 		if( is_numeric( $ref_cod_modulo ) )
 		{
@@ -182,6 +183,10 @@ class clsPmieducarTurmaModulo
 		{
 			$this->data_fim = $data_fim;
 		}
+		if( is_numeric( $dias_letivos ) )
+		{
+			$this->dias_letivos = $dias_letivos;
+		}
 
 	}
 
@@ -192,7 +197,7 @@ class clsPmieducarTurmaModulo
 	 */
 	function cadastra()
 	{
-		if( is_numeric( $this->ref_cod_turma ) && is_numeric( $this->ref_cod_modulo ) && is_numeric( $this->sequencial ) && is_string( $this->data_inicio ) && is_string( $this->data_fim ) )
+		if( is_numeric( $this->ref_cod_turma ) && is_numeric( $this->ref_cod_modulo ) && is_numeric( $this->sequencial ) && is_string( $this->data_inicio ) && is_string( $this->data_fim ))
 		{
 			$db = new clsBanco();
 
@@ -230,6 +235,12 @@ class clsPmieducarTurmaModulo
 				$valores .= "{$gruda}'{$this->data_fim}'";
 				$gruda = ", ";
 			}
+			if( is_numeric( $this->dias_letivos ) )
+			{
+				$campos .= "{$gruda}dias_letivos";
+				$valores .= "{$gruda}'{$this->dias_letivos}'";
+				$gruda = ", ";
+			}
 
 
 			$db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
@@ -261,6 +272,11 @@ class clsPmieducarTurmaModulo
 				$set .= "{$gruda}data_fim = '{$this->data_fim}'";
 				$gruda = ", ";
 			}
+			if( is_numeric( $this->dias_letivos ) )
+			{
+				$set .= "{$gruda}dias_letivos = '{$this->dias_letivos}'";
+				$gruda = ", ";
+			}
 
 
 			if( $set )
@@ -277,7 +293,7 @@ class clsPmieducarTurmaModulo
 	 *
 	 * @return array
 	 */
-	function lista( $int_ref_cod_turma = null, $int_ref_cod_modulo = null, $int_sequencial = null, $date_data_inicio_ini = null, $date_data_inicio_fim = null, $date_data_fim_ini = null, $date_data_fim_fim = null )
+	function lista( $int_ref_cod_turma = null, $int_ref_cod_modulo = null, $int_sequencial = null, $date_data_inicio_ini = null, $date_data_inicio_fim = null, $date_data_fim_ini = null, $date_data_fim_fim = null, $dias_letivos = null)
 	{
 		$sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
 		$filtros = "";
@@ -317,6 +333,11 @@ class clsPmieducarTurmaModulo
 		if( is_string( $date_data_fim_fim ) )
 		{
 			$filtros .= "{$whereAnd} data_fim <= '{$date_data_fim_fim}'";
+			$whereAnd = " AND ";
+		}
+		if( is_numeric( $dias_letivos ) )
+		{
+			$filtros .= "{$whereAnd} dias_letivos <= '{$dias_letivos}'";
 			$whereAnd = " AND ";
 		}
 
