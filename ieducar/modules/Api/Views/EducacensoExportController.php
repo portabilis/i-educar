@@ -1575,7 +1575,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
         t.cod_turma as r80s6,
         t.turma_unificada as r80s8,
         t.etapa_educacenso2 as r80s9,
-        \'3\' as r80s10,
+        a.recebe_escolarizacao_em_outro_espaco as r80s10,
         ta.responsavel as transporte_escolar,
         (
           SELECT COUNT(1)
@@ -1677,7 +1677,8 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
           AND v.ref_cod_tipo_veiculo = 11
         ) as r80s23,
 
-        a.veiculo_transporte_escolar
+        a.veiculo_transporte_escolar,
+        t.tipo_atendimento
 
         FROM  pmieducar.aluno a
         INNER JOIN cadastro.fisica fis ON (fis.idpes = a.ref_idpes)
@@ -1705,9 +1706,17 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
     $d = '|';
     $return = '';
     $numeroRegistros = 24;
+    $atividadeComplementar = 4;
+    $atendimentoEducEspecializado = 5;
 
     foreach (Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId, $ano, $data_ini, $data_fim, $alunoId))) as $reg) {
       extract($reg);
+
+      if ($tipo_atendimento == $atividadeComplementar || $tipo_atendimento == $atendimentoEducEspecializado) {
+        $r80s10 = '';
+      }
+
+      $r80s10 = ($r80s10 == 0 ? NULL : $r80s10);
 
       for ($i=13; $i <= 23 ; $i++)
           ${'r80s'.$i} = 0;
