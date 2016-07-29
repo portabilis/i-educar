@@ -1553,6 +1553,21 @@ class AlunoController extends ApiCoreController
     }
   }
 
+  protected function getNomeBairro() {
+    $var1 = $this->getRequest()->id;
+
+    $sql = "SELECT relatorio.get_texto_sem_caracter_especial(bairro.nome) as nome
+              FROM pmieducar.aluno
+        INNER JOIN cadastro.fisica ON (aluno.ref_idpes = fisica.idpes)
+        INNER JOIN cadastro.endereco_pessoa ON (fisica.idpes = endereco_pessoa.idpes)
+        INNER JOIN public.bairro ON (endereco_pessoa.idbai = bairro.idbai)
+             WHERE cod_aluno = $var1";
+
+    $bairro = $this->fetchPreparedQuery($sql);
+
+    return $bairro;
+  }
+
 
   public function Gerar() {
     if ($this->isRequestFor('get', 'aluno'))
@@ -1592,6 +1607,9 @@ class AlunoController extends ApiCoreController
 
     elseif ($this->isRequestFor('delete', 'aluno'))
       $this->appendResponse($this->delete());
+
+    elseif ($this->isRequestFor('get', 'get-nome-bairro'))
+      $this->appendResponse($this->getNomeBairro());
 
     else
       $this->notImplementedOperationError();

@@ -1677,10 +1677,14 @@ function canShowParentsFields(){
           $j('#distrito_distrito').val(person_details.iddis+' - '+person_details.distrito);
 
           if (person_details.idbai && person_details.idlog){
+            var params = $j('#id').val();
+            $j.get('/module/Api/aluno?&oper=get&resource=get-nome-bairro&id=' + params, function (data) {
+              $j('#bairro_bairro').empty();
+              $j('#bairro_bairro').val(data[0]['nome'] + ' / Zona '+(person_details.zona_localizacao == "1" ? "Urbana" : "Rural"));
+            });
 
             $j('#bairro_id').val(person_details.idbai);
             $j('#logradouro_id').val(person_details.idlog);
-            $j('#bairro_bairro').val(person_details.bairro + ' / Zona '+(person_details.zona_localizacao == "1" ? "Urbana" : "Rural"));
             $j('#logradouro_logradouro').val($j("#idtlog option[value='"+person_details.idtlog+"']").text() + ' '+person_details.logradouro);
 
           }else{
