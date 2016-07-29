@@ -139,11 +139,11 @@ class indice extends clsCadastro
   var $aee_informatica;
   var $aee_lingua_escrita;
   var $aee_autonomia;
-  var $etapa_id;
   var $cod_curso_profissional;
   var $turma_sem_professor;
   var $turma_unificada;
   var $etapa_educacenso;
+  var $etapa_educacenso2;
   var $ref_cod_disciplina_dispensada;
 
   var $etapas_especificas;
@@ -789,10 +789,6 @@ class indice extends clsCadastro
     $resources = Portabilis_Array_Utils::setAsIdValue($resources, 'id', 'nome');
     $resources = Portabilis_Array_Utils::merge($resources, array('null' => 'Selecione'));
 
-
-    $options = array('label' => 'Etapa de ensino', 'resources' => $resources, 'value' => $this->etapa_id, 'required' => false, 'size' => 70,);
-    $this->inputsHelper()->select('etapa_id', $options);
-
     $resources = array(
       null => 'Selecione',
       1    => 'Creche',
@@ -857,8 +853,11 @@ class indice extends clsCadastro
       68 => Portabilis_String_Utils::toLatin1('Curso FIC Concomitante ')
     );
 
-    $options = array('label' => 'Etapa da turma', 'resources' => $etapas_educacenso, 'value' => $this->etapa_educacenso, 'required' => false, 'size' => 70,);
+    $options = array('label' => 'Etapa de ensino', 'resources' => $etapas_educacenso, 'value' => $this->etapa_educacenso, 'required' => false, 'size' => 70,);
     $this->inputsHelper()->select('etapa_educacenso', $options);
+
+    $options = array('label' => 'Etapa da turma', 'resources' => $etapas_educacenso, 'value' => $this->etapa_educacenso2, 'required' => false, 'size' => 70,);
+    $this->inputsHelper()->select('etapa_educacenso2', $options);
 
     $options = array('label' => Portabilis_String_Utils::toLatin1('Não informar esta turma no Censo escolar'),
                      'value' => $this->nao_informar_educacenso,
@@ -1076,11 +1075,11 @@ class indice extends clsCadastro
         $obj->aee_informatica = $this->aee_informatica == 'on' ? 1 : 0;
         $obj->aee_lingua_escrita = $this->aee_lingua_escrita == 'on' ? 1 : 0;
         $obj->aee_autonomia = $this->aee_autonomia == 'on' ? 1 : 0;
-        $obj->etapa_id = $this->etapa_id;
         $obj->cod_curso_profissional = $this->cod_curso_profissional;
         $obj->turma_sem_professor = $this->turma_sem_professor == 'on' ? 1 : 0;
         $obj->turma_unificada = $this->turma_unificada == "" ? NULL : $this->turma_unificada;
-        $obj->etapa_educacenso = $this->etapa_educacenso;
+        $obj->etapa_educacenso = $this->etapa_educacenso == "" ? NULL : $this->etapa_educacenso;
+        $obj->etapa_educacenso2 = $this->etapa_educacenso2 == "" ? NULL : $this->etapa_educacenso2;
         $obj->ref_cod_disciplina_dispensada = $this->ref_cod_disciplina_dispensada == "" ? NULL : $this->ref_cod_disciplina_dispensada;
         $obj->nao_informar_educacenso = $this->nao_informar_educacenso == 'on' ? 1 : 0;
 
@@ -1172,11 +1171,11 @@ class indice extends clsCadastro
       $obj->aee_informatica = $this->aee_informatica == 'on' ? 1 : 0;
       $obj->aee_lingua_escrita = $this->aee_lingua_escrita == 'on' ? 1 : 0;
       $obj->aee_autonomia = $this->aee_autonomia == 'on' ? 1 : 0;
-      $obj->etapa_id = $this->etapa_id;
       $obj->cod_curso_profissional = $this->cod_curso_profissional;
       $obj->turma_sem_professor = $this->turma_sem_professor == 'on' ? 1 : 0;
       $obj->turma_unificada = $this->turma_unificada == "" ? NULL : $this->turma_unificada;
-      $obj->etapa_educacenso = $this->etapa_educacenso;
+      $obj->etapa_educacenso = $this->etapa_educacenso == "" ? NULL : $this->etapa_educacenso;
+      $obj->etapa_educacenso2 = $this->etapa_educacenso2 == "" ? NULL : $this->etapa_educacenso2;
       $obj->ref_cod_disciplina_dispensada = $this->ref_cod_disciplina_dispensada == "" ? NULL : $this->ref_cod_disciplina_dispensada;
       $obj->nao_informar_educacenso = $this->nao_informar_educacenso == 'on' ? 1 : 0;
 
@@ -1285,11 +1284,11 @@ class indice extends clsCadastro
         $obj->aee_informatica = $this->aee_informatica == 'on' ? 1 : 0;
         $obj->aee_lingua_escrita = $this->aee_lingua_escrita == 'on' ? 1 : 0;
         $obj->aee_autonomia = $this->aee_autonomia == 'on' ? 1 : 0;
-        $obj->etapa_id = $this->etapa_id;
         $obj->cod_curso_profissional = $this->cod_curso_profissional;
         $obj->turma_sem_professor = $this->turma_sem_professor == 'on' ? 1 : 0;
         $obj->turma_unificada = $this->turma_unificada == "" ? NULL : $this->turma_unificada;
-        $obj->etapa_educacenso = $this->etapa_educacenso;
+        $obj->etapa_educacenso = $this->etapa_educacenso == "" ? NULL : $this->etapa_educacenso;
+        $obj->etapa_educacenso2 = $this->etapa_educacenso2 == "" ? NULL : $this->etapa_educacenso2;
         $obj->ref_cod_disciplina_dispensada = $this->ref_cod_disciplina_dispensada == "" ? NULL : $this->ref_cod_disciplina_dispensada;
         $obj->nao_informar_educacenso = $this->nao_informar_educacenso == 'on' ? 1 : 0;
 
@@ -1382,11 +1381,11 @@ class indice extends clsCadastro
       $obj->aee_informatica = $this->aee_informatica == 'on' ? 1 : 0;
       $obj->aee_lingua_escrita = $this->aee_lingua_escrita == 'on' ? 1 : 0;
       $obj->aee_autonomia = $this->aee_autonomia == 'on' ? 1 : 0;
-      $obj->etapa_id = $this->etapa_id;
       $obj->cod_curso_profissional = $this->cod_curso_profissional;
       $obj->turma_sem_professor = $this->turma_sem_professor == 'on' ? 1 : 0;
       $obj->turma_unificada = $this->turma_unificada == "" ? NULL : $this->turma_unificada;
-      $obj->etapa_educacenso = $this->etapa_educacenso;
+      $obj->etapa_educacenso = $this->etapa_educacenso == "" ? NULL : $this->etapa_educacenso;
+      $obj->etapa_educacenso2 = $this->etapa_educacenso2 == "" ? NULL : $this->etapa_educacenso2;
       $obj->ref_cod_disciplina_dispensada = $this->ref_cod_disciplina_dispensada == "" ? NULL : $this->ref_cod_disciplina_dispensada;
       $obj->nao_informar_educacenso = $this->nao_informar_educacenso == 'on' ? 1 : 0;
 
