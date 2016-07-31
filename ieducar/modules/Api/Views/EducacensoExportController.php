@@ -810,17 +810,20 @@ class EducacensoExportController extends ApiCoreController
                                  4 => '22',
                                  5 => '23',
                                  6 => '24',
-                                 7 => '25',
-                                 8 => '26' );
+                                 7 => '25' );
       $r30s18 = 0;
 
+      $qtde_deficiencia = 0;
       foreach ($deficiencias as $deficiencia_educacenso) {
         $deficiencia_educacenso = $deficiencia_educacenso['id'];
         if (array_key_exists($deficiencia_educacenso, $deficienciaToSeq)){
           ${ 'r30s'. $deficienciaToSeq[$deficiencia_educacenso] } = 1;
           $r30s18 = 1;
+          $qtde_deficiencia++;
         }
       }
+
+      if ($qtde_deficiencia > 1) $r30s26 = 1;
 
       if($r30s18 == 0)
         $r30s19 = $r30s20 = $r30s21 = $r30s22 = $r30s23 = $r30s24 = $r30s25 = $r30s26 = NULL;
