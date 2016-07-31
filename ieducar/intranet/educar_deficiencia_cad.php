@@ -117,7 +117,6 @@ class indice extends clsCadastro
 								 5 => "Surdocegueira",
 								 6 => "Deficiência física",
 								 7 => "Deficiência Intelectual",
-								 8 => "Deficiência Múltipla",
 								 9 => "Autismo Infantil",
 								10 => "Síndrome de Asperger",
 								11 => "Síndrome de Rett",
