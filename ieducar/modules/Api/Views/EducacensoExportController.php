@@ -1463,6 +1463,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
         cartorio_cert_civil_inep as r70s17,
         certidao_nascimento as r70s18,
         fis.cpf as r70s19,
+        fd.passaporte as r70s20,
         fis.nis_pis_pasep as r70s21,
         b.zona_localizacao as r70s22,
         ep.cep as r70s23,
@@ -1550,6 +1551,8 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
         for ($i=5; $i < 18; $i++) {
           ${'r70s'.$i} = NULL;
         }
+      } else {
+        $r70s20 = NULL;
       }
 
       for ($i=1; $i <= $numeroRegistros ; $i++)
