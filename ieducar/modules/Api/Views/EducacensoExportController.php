@@ -1517,6 +1517,8 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
       $r70s8 = Portabilis_Date_Utils::pgSQLToBr($r70s8);
       $r70s14 = Portabilis_Date_Utils::pgSQLToBr($r70s14);
 
+      $r70s18 = $this->convertStringToCertNovoFormato($r70s18);
+
       $r70s19 = $this->cpfToCenso($r70s19);
 
       $r70s24 = $this->convertStringToCenso($r70s24);
@@ -1845,6 +1847,21 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
     $caracteresAceitos = array(" ", "ª", "º", "-");
     $caracteresAceitos = array_merge($numbers, $caracteresAceitos);
     $caracteresAceitos = array_merge($alphas, $caracteresAceitos);
+
+    //Aplica filtro na string eliminando caracteres indesejados
+    $regex  = sprintf('/[^%s]/u', preg_quote(join($caracteresAceitos), '/'));
+    $string = preg_replace($regex, '', $string);
+
+    return $string;
+  }
+
+  protected function convertStringToCertNovoFormato($string){
+    $string = $this->upperAndUnaccent($string);
+
+    //Aceita apenas números e letra X
+    $numbers = range(1,9);
+    $caracteresAceitos = array(" ", "x", "X");
+    $caracteresAceitos = array_merge($numbers, $caracteresAceitos);
 
     //Aplica filtro na string eliminando caracteres indesejados
     $regex  = sprintf('/[^%s]/u', preg_quote(join($caracteresAceitos), '/'));
