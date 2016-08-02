@@ -52,6 +52,7 @@ class clsPmieducarHistoricoEscolar
 	var $ativo;
 	var $faltas_globalizadas;
 	var $frequencia;
+	var $dependencia;
 
 	var $ref_cod_instituicao;
 	var $nm_serie;
@@ -123,13 +124,13 @@ class clsPmieducarHistoricoEscolar
 	 *
 	 * @return object
 	 */
-	function clsPmieducarHistoricoEscolar( $ref_cod_aluno = null, $sequencial = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_serie = null, $ano = null, $carga_horaria = null, $dias_letivos = null, $escola = null, $escola_cidade = null, $escola_uf = null, $observacao = null, $aprovado = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $faltas_globalizadas = null, $ref_cod_instituicao = null, $origem = null, $extra_curricular = null, $ref_cod_matricula = null, $frequencia = null, $registro = null, $livro = null, $folha = null, $nm_curso = null, $historico_grade_curso_id = null, $aceleracao = null , $ref_cod_escola = null)
+	function clsPmieducarHistoricoEscolar( $ref_cod_aluno = null, $sequencial = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_serie = null, $ano = null, $carga_horaria = null, $dias_letivos = null, $escola = null, $escola_cidade = null, $escola_uf = null, $observacao = null, $aprovado = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $faltas_globalizadas = null, $ref_cod_instituicao = null, $origem = null, $extra_curricular = null, $ref_cod_matricula = null, $frequencia = null, $registro = null, $livro = null, $folha = null, $nm_curso = null, $historico_grade_curso_id = null, $aceleracao = null , $ref_cod_escola = null, $dependencia = false)
 	{
 		$db = new clsBanco();
 		$this->_schema = "pmieducar.";
 		$this->_tabela = "{$this->_schema}historico_escolar";
 
-		$this->_campos_lista = $this->_todos_campos = "ref_cod_aluno, sequencial, ref_usuario_exc, ref_usuario_cad, ano, carga_horaria, dias_letivos, escola, escola_cidade, escola_uf, observacao, aprovado, data_cadastro, data_exclusao, ativo, faltas_globalizadas, ref_cod_instituicao, nm_serie, origem, extra_curricular, ref_cod_matricula, frequencia, registro, livro, folha, nm_curso, historico_grade_curso_id, aceleracao, ref_cod_escola";
+		$this->_campos_lista = $this->_todos_campos = "ref_cod_aluno, sequencial, ref_usuario_exc, ref_usuario_cad, ano, carga_horaria, dias_letivos, escola, escola_cidade, escola_uf, observacao, aprovado, data_cadastro, data_exclusao, ativo, faltas_globalizadas, ref_cod_instituicao, nm_serie, origem, extra_curricular, ref_cod_matricula, frequencia, registro, livro, folha, nm_curso, historico_grade_curso_id, aceleracao, ref_cod_escola, dependencia";
 
 		if( is_numeric( $ref_usuario_exc ) )
 		{
@@ -371,6 +372,9 @@ class clsPmieducarHistoricoEscolar
 		else{
 			$this->ref_cod_escola = null;
 		}
+		if (dbBool($dependencia)) {
+	      $this->dependencia = $dependencia;
+	    }
 	}
 
 	/**
@@ -565,6 +569,16 @@ class clsPmieducarHistoricoEscolar
 				$gruda = ", ";
       		}
 
+      		if (dbBool($this->dependencia)) {
+		        $campos .= "{$gruda}dependencia";
+		        $valores .= "{$gruda} true ";
+		        $gruda = ", ";
+		    }else{
+		        $campos .= "{$gruda}dependencia";
+		        $valores .= "{$gruda} false ";
+		        $gruda = ", ";
+		    }
+
 			$campos .= "{$gruda}data_cadastro";
 			$valores .= "{$gruda}NOW()";
 			$gruda = ", ";
@@ -758,6 +772,14 @@ class clsPmieducarHistoricoEscolar
       			$set .= "{$gruda}ref_cod_escola = NULL";
 				$gruda = ", ";
       		}
+
+      		if (dbBool($this->dependencia)) {
+		        $set .= "{$gruda}dependencia = true ";
+		        $gruda = ", ";
+		    }else{
+		        $set .= "{$gruda}dependencia = false ";
+		        $gruda = ", ";
+		    }
 
 			if( $set )
 			{
