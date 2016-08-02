@@ -199,7 +199,8 @@
           serie_id : $('#ref_cod_serie').val(),
           turma_id : $('#ref_cod_turma').val(),
           ano : $('#ano').val(),
-          etapa : $('#etapa').val()
+          etapa : $('#etapa').val(),
+          dependencia : document.getElementById("alunos_dependencia").checked ? 't' : 'f'
         };
 
         return resourceUrlBuilder.buildUrl(urlBase, $.extend(vars, additionalVars));

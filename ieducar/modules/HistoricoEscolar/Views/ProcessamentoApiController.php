@@ -894,7 +894,12 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         NULL,
         NULL,
         NULL,
-        NULL
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        $this->getRequest()->dependencia
       );
 
 
