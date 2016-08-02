@@ -1021,9 +1021,9 @@ if(!$this->isEnderecoExterno){
 //
 //			}
 
-			$this->inputsHelper()->text('latitude', array('max_length' => '20', 'size' => '20', 'required' => false, 'value' => $this->latitude));
+			$this->inputsHelper()->integer('latitude', array('max_length' => '20', 'size' => '20', 'required' => false, 'value' => $this->latitude));
 
-			$this->inputsHelper()->text('longitude', array('max_length' => '20', 'size' => '20', 'required' => false, 'value' => $this->longitude));
+			$this->inputsHelper()->integer('longitude', array('max_length' => '20', 'size' => '20', 'required' => false, 'value' => $this->longitude));
 
   		$this->campoCheck("bloquear_lancamento_diario_anos_letivos_encerrados", "Bloquear lançamento no diário para anos letivos encerrados", $this->bloquear_lancamento_diario_anos_letivos_encerrados);
 
