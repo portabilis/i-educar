@@ -65,7 +65,10 @@ class clsMenu
     $itens_menu      = array();
     $autorizado_menu = array();
 
-    @session_start();
+    if (!isset($_SESSION)) {
+      @session_start();
+    }
+
     $id_usuario  = $_SESSION['id_pessoa'];
     $opcoes_menu = $_SESSION['menu_opt'];
 
