@@ -151,7 +151,7 @@ class EducacensoAnaliseController extends ApiCoreController
                           "fail" => true);
     }
     if (!$escola["orgao_regional"]) {
-      $mensagem[] = array("text" => "Aviso: Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que o código do órgão regional de ensino não foi preenchido, caso seu estado possua uma subdivisão e a escola 'nome da escola' não for federal vinculada a Setec, o código deve ser inserido conforme a 'Tabela de Órgãos Regionais'.",
+      $mensagem[] = array("text" => "Aviso: Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que o código do órgão regional de ensino não foi preenchido, caso seu estado possua uma subdivisão e a escola {$nomeEscola} não for federal vinculada a Setec, o código deve ser inserido conforme a 'Tabela de Órgãos Regionais'.",
                           "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dados gerais > Campo: Código do órgão regional)",
                           "fail" => false);
     }
