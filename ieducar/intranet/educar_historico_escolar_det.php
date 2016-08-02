@@ -335,12 +335,12 @@ class indice extends clsDetalhe
    													    	AND historico_escolar.escola = (SELECT (SELECT relatorio.get_nome_escola(usuario.ref_cod_escola)) AS escola_usuario
 		   																					  FROM pmieducar.usuario 
 		  															 						 WHERE usuario.cod_usuario = $this->pessoa_logada)");
-    		if($escola_usuario_historico != ''){
+    		if($escola_usuario_historico != '' || $this->nivel_usuario == 1){
     			if ($registro['origem']) $this->url_editar = "educar_historico_escolar_cad.php?ref_cod_aluno={$registro["ref_cod_aluno"]}&sequencial={$registro["sequencial"]}";	
     		}
     	}
 
-    	if($escola_usuario == $escola_ultima_matricula){
+    	if(($escola_usuario == $escola_ultima_matricula || $this->nivel_usuario == 1)){
     		$escola_usuario_historico = $db->CampoUnico("SELECT historico_escolar.escola
   														   FROM pmieducar.historico_escolar 
    													  	  WHERE historico_escolar.ref_cod_aluno = $this->ref_cod_aluno
@@ -348,7 +348,7 @@ class indice extends clsDetalhe
    													    	AND historico_escolar.escola = (SELECT (SELECT relatorio.get_nome_escola(usuario.ref_cod_escola)) AS escola_usuario
 		   																					  FROM pmieducar.usuario 
 		  															 						 WHERE usuario.cod_usuario = $this->pessoa_logada)");
-    		if($escola_usuario_historico != ''){
+    		if($escola_usuario_historico != '' || $this->nivel_usuario == 1){
     			$this->addBotao('Copiar Histórico',"educar_historico_escolar_cad.php?ref_cod_aluno={$registro["ref_cod_aluno"]}&sequencial={$registro["sequencial"]}&copia=true");
     		}
     	}
