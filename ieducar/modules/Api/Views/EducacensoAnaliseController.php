@@ -971,6 +971,7 @@ class EducacensoAnaliseController extends ApiCoreController
                AND turma.visivel = TRUE
                AND COALESCE(turma.nao_informar_educacenso, 0) = 0
                AND matricula.ativo = 1
+               AND matricula_turma.ativo = 1
                AND matricula.ano = $1
                AND escola.cod_escola = $2
                AND COALESCE(matricula.data_matricula,matricula.data_cadastro) BETWEEN DATE($3) AND DATE($4)
@@ -1065,6 +1066,7 @@ class EducacensoAnaliseController extends ApiCoreController
                AND turma.visivel = TRUE
                AND COALESCE(turma.nao_informar_educacenso, 0) = 0
                AND matricula.ativo = 1
+               AND matricula_turma.ativo = 1
                AND matricula.ano = $1
                AND escola.cod_escola = $2
                AND COALESCE(matricula.data_matricula,matricula.data_cadastro) BETWEEN DATE($3) AND DATE($4)
@@ -1178,6 +1180,7 @@ class EducacensoAnaliseController extends ApiCoreController
                AND turma.visivel = TRUE
                AND COALESCE(turma.nao_informar_educacenso, 0) = 0
                AND matricula.ativo = 1
+               AND matricula_turma.ativo = 1
                AND matricula.ano = $1
                AND escola.cod_escola = $2
                AND COALESCE(matricula.data_matricula,matricula.data_cadastro) BETWEEN DATE($3) AND DATE($4)
