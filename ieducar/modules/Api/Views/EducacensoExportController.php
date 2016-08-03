@@ -1867,6 +1867,8 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
     $regex  = sprintf('/[^%s]/u', preg_quote(join($caracteresAceitos), '/'));
     $string = preg_replace($regex, '', $string);
 
+    $string = str_pad($string, 32, "0", STR_PAD_LEFT);
+
     return $string;
   }
 
