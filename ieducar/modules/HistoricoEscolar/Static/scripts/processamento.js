@@ -542,7 +542,8 @@
           livro : $('#livro').val(),
           folha : $('#folha').val(),
           disciplinas : disciplinas,
-          turma_id : $('#ref_cod_turma').val()
+          turma_id : $('#ref_cod_turma').val(),
+          dependencia : document.getElementById("alunos_dependencia").checked ? 't' : 'f'
         },
         success : function(dataResponse){
           afterChangeResource($resourceElement, postProcessamento);
