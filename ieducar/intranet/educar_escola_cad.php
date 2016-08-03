@@ -1021,9 +1021,9 @@ if(!$this->isEnderecoExterno){
 //
 //			}
 
-			$this->inputsHelper()->integer('latitude', array('max_length' => '20', 'size' => '20', 'required' => false, 'value' => $this->latitude));
+			$this->inputsHelper()->text('latitude', array('max_length' => '20', 'size' => '20', 'required' => false, 'value' => $this->latitude));
 
-			$this->inputsHelper()->integer('longitude', array('max_length' => '20', 'size' => '20', 'required' => false, 'value' => $this->longitude));
+			$this->inputsHelper()->text('longitude', array('max_length' => '20', 'size' => '20', 'required' => false, 'value' => $this->longitude));
 
   		$this->campoCheck("bloquear_lancamento_diario_anos_letivos_encerrados", "Bloquear lançamento no diário para anos letivos encerrados", $this->bloquear_lancamento_diario_anos_letivos_encerrados);
 
@@ -1592,6 +1592,8 @@ if(!$this->isEnderecoExterno){
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra( 561, $this->pessoa_logada, 3, "educar_escola_lst.php" );
 
+		if (!$this->validaLatitudeLongitude()) return false;
+
     $this->bloquear_lancamento_diario_anos_letivos_encerrados = is_null($this->bloquear_lancamento_diario_anos_letivos_encerrados) ? 0 : 1;
     $this->utiliza_regra_diferenciada = !is_null($this->utiliza_regra_diferenciada);
 
@@ -1981,6 +1983,8 @@ if(!$this->isEnderecoExterno){
 
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra( 561, $this->pessoa_logada, 7, "educar_escola_lst.php" );
+
+		if (!$this->validaLatitudeLongitude()) return false;
 
     $this->bloquear_lancamento_diario_anos_letivos_encerrados = is_null($this->bloquear_lancamento_diario_anos_letivos_encerrados) ? 0 : 1;
     $this->utiliza_regra_diferenciada = !is_null($this->utiliza_regra_diferenciada);
@@ -2496,6 +2500,30 @@ if(!$this->isEnderecoExterno){
     );
 
     $this->inputsHelper()->integer("p_telefone_{$type}", $options);
+  }
+
+  protected function validaLatitudeLongitude() {
+
+  	$numeros = range(0,9);
+    $caracteres = array(" ", ".", "-", null);
+
+    for ($i=0; $i<=strlen($this->latitude); $i++) {
+    	$char = substr($this->latitude,$i,1);
+    	if (!in_array($char,$numeros) && !in_array($char,$caracteres)) {
+	  		$this->mensagem = "O campo latitude contém caracteres inválidos (Caracteres aceitos: 0123456789 . -).<br>";
+	  		return false;
+    	}
+    }
+
+    for ($i=0; $i<=strlen($this->longitude); $i++) {
+    	$char = substr($this->longitude,$i,1);
+    	if (!in_array($char,$numeros) && !in_array($char,$caracteres)) {
+	  		$this->mensagem = "O campo longitude contém caracteres inválidos (Caracteres aceitos: 0123456789 . -).<br>";
+	  		return false;
+    	}
+    }
+
+  	return true;
   }
 }
 
