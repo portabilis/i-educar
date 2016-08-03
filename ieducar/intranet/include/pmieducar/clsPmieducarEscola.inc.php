@@ -488,13 +488,13 @@ class clsPmieducarEscola
         $gruda = ", ";
       }
 
-      if (is_numeric($this->latitude)) {
+      if ($this->latitude) {
         $campos .= "{$gruda}latitude";
         $valores .= "{$gruda}'{$this->latitude}'";
         $gruda = ", ";
       }
 
-      if (is_numeric($this->longitude)) {
+      if ($this->longitude) {
         $campos .= "{$gruda}longitude";
         $valores .= "{$gruda}'{$this->longitude}'";
         $gruda = ", ";
