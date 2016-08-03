@@ -55,7 +55,8 @@ class EducacensoAnaliseController extends ApiCoreController
                    municipio.cod_ibge AS inep_municipio,
                    uf.cod_ibge AS inep_uf,
                    distrito.cod_ibge AS inep_distrito,
-                   juridica.fantasia AS nome_escola
+                   juridica.fantasia AS nome_escola,
+                   escola.orgao_regional AS orgao_regional
               FROM pmieducar.escola
              INNER JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
              INNER JOIN pmieducar.escola_ano_letivo ON (escola_ano_letivo.ref_cod_escola = escola.cod_escola)
@@ -148,6 +149,11 @@ class EducacensoAnaliseController extends ApiCoreController
       $mensagem[] = array("text" => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verifique se o código do distrito informado, foi cadastrado conforme a 'Tabela de Distritos'.",
                           "path" => "(Endereçamento > Distrito > Editar > Campo: Código INEP)",
                           "fail" => true);
+    }
+    if (!$escola["orgao_regional"]) {
+      $mensagem[] = array("text" => "Aviso: Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que o código do órgão regional de ensino não foi preenchido, caso seu estado possua uma subdivisão e a escola {$nomeEscola} não for federal vinculada a Setec, o código deve ser inserido conforme a 'Tabela de Órgãos Regionais'.",
+                          "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dados gerais > Campo: Código do órgão regional)",
+                          "fail" => false);
     }
 
     return array('mensagens' => $mensagem,
