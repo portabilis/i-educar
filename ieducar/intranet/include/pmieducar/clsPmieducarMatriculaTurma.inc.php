@@ -1481,4 +1481,17 @@ class clsPmieducarMatriculaTurma
       return $db->Tupla();
   }
 
+  function verficaEnturmacaoDeDependencia($matriculaId, $turmaId){
+      $sql = "SELECT 1 FROM {$this->_tabela} mt
+              INNER JOIN matricula m ON (m.cod_matricula = mt.ref_cod_matricula)
+              WHERE mt.ref_cod_matricula = $matriculaId
+                AND m.dependencia = 't'
+                AND mt.ativo = 1
+                AND mt.ref_cod_turma = $turmaId";
+      $db = new clsBanco();
+      $db->Consulta($sql);
+      $db->ProximoRegistro();
+      return $db->Tupla();
+  }
+
 }
