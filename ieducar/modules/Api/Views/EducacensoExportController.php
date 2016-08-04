@@ -1843,7 +1843,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
 
     //Aceita apenas letras e numeros e alguns caracteres especiais
     $alphas = range('A','Z');
-    $numbers = range(1,9);
+    $numbers = range(0,9);
     $caracteresAceitos = array(" ", "ª", "º", "-");
     $caracteresAceitos = array_merge($numbers, $caracteresAceitos);
     $caracteresAceitos = array_merge($alphas, $caracteresAceitos);
@@ -1859,15 +1859,13 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
     $string = $this->upperAndUnaccent($string);
 
     //Aceita apenas números e letra X
-    $numbers = range(1,9);
+    $numbers = range(0,9);
     $caracteresAceitos = array(" ", "x", "X");
     $caracteresAceitos = array_merge($numbers, $caracteresAceitos);
 
     //Aplica filtro na string eliminando caracteres indesejados
     $regex  = sprintf('/[^%s]/u', preg_quote(join($caracteresAceitos), '/'));
     $string = preg_replace($regex, '', $string);
-
-    $string = str_pad($string, 32, "0", STR_PAD_LEFT);
 
     return $string;
   }
