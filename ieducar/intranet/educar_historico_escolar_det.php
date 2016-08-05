@@ -307,50 +307,61 @@ class indice extends clsDetalhe
     	//$year = date('Y');
     	$db = new clsBanco();
 
-    	$ref_cod_escola = $db->CampoUnico("SELECT ref_cod_escola 
+    	$restringir_historico_escolar = $db->CampoUnico("SELECT restringir_historico_escolar 
+    													   FROM pmieducar.instituicao 
+    													  WHERE cod_instituicao = (SELECT ref_cod_instituicao 
+    													  							 FROM pmieducar.usuario 
+    													  							WHERE cod_usuario = $this->pessoa_logada)");
+    	if($restringir_historico_escolar == 't'){
+    		$ref_cod_escola = $db->CampoUnico("SELECT ref_cod_escola 
     		                                 FROM pmieducar.historico_escolar 
     		                                WHERE ref_cod_aluno = $this->ref_cod_aluno 
     		                                  AND sequencial = $this->sequencial");
-    	//Verifica se a escola foi digitada manualmente no histórico
-    	if($ref_cod_escola == -1){
-    		$escola_usuario = $db->CampoUnico("SELECT ref_cod_escola
-  												 FROM pmieducar.usuario
- 												WHERE cod_usuario = $this->pessoa_logada;");
+    		//Verifica se a escola foi digitada manualmente no histórico
+	    	if($ref_cod_escola == ''){
+    			$escola_usuario = $db->CampoUnico("SELECT ref_cod_escola
+  													 FROM pmieducar.usuario
+ 													WHERE cod_usuario = $this->pessoa_logada;");
 
-    		$escola_ultima_matricula = $db->CampoUnico("SELECT ref_ref_cod_escola
-    													  FROM pmieducar.matricula
-   														 WHERE ref_cod_aluno = $this->ref_cod_aluno
-													  ORDER BY cod_matricula DESC
-   														 LIMIT 1");
+	    		$escola_ultima_matricula = $db->CampoUnico("SELECT ref_ref_cod_escola
+    														  FROM pmieducar.matricula
+   															 WHERE ref_cod_aluno = $this->ref_cod_aluno
+														  ORDER BY cod_matricula DESC
+   															 LIMIT 1");
 
-    		if(($escola_usuario == $escola_ultima_matricula) || $this->nivel_usuario == 1 || $this->nivel_usuario == 2){
-				if ($registro['origem']) $this->url_editar = "educar_historico_escolar_cad.php?ref_cod_aluno={$registro["ref_cod_aluno"]}&sequencial={$registro["sequencial"]}";
+	    		if(($escola_usuario == $escola_ultima_matricula) || $this->nivel_usuario == 1 || $this->nivel_usuario == 2){
+					if ($registro['origem']) $this->url_editar = "educar_historico_escolar_cad.php?ref_cod_aluno={$registro["ref_cod_aluno"]}&sequencial={$registro["sequencial"]}";
+    			}
+	    	}
+    		else{
+    			$escola_usuario_historico = $db->CampoUnico("SELECT historico_escolar.escola
+  															   FROM pmieducar.historico_escolar 
+   														  	  WHERE historico_escolar.ref_cod_aluno = $this->ref_cod_aluno
+   														        AND historico_escolar.sequencial = $this->sequencial
+   														    	AND historico_escolar.escola = (SELECT (SELECT relatorio.get_nome_escola(usuario.ref_cod_escola)) AS escola_usuario
+		   																						  FROM pmieducar.usuario 
+		  																 						 WHERE usuario.cod_usuario = $this->pessoa_logada)");
+	    		if($escola_usuario_historico != '' || $this->nivel_usuario == 1 || $this->nivel_usuario == 2){
+    				if ($registro['origem']) $this->url_editar = "educar_historico_escolar_cad.php?ref_cod_aluno={$registro["ref_cod_aluno"]}&sequencial={$registro["sequencial"]}";	
+    			}
+	    	}
+
+    		if(($escola_usuario == $escola_ultima_matricula || $this->nivel_usuario == 1 || $this->nivel_usuario == 2)){
+    			$escola_usuario_historico = $db->CampoUnico("SELECT historico_escolar.escola
+  															   FROM pmieducar.historico_escolar 
+   														  	  WHERE historico_escolar.ref_cod_aluno = $this->ref_cod_aluno
+   														        AND historico_escolar.sequencial = $this->sequencial
+   														    	AND historico_escolar.escola = (SELECT (SELECT relatorio.get_nome_escola(usuario.ref_cod_escola)) AS escola_usuario
+		   																						  FROM pmieducar.usuario 
+		  																 						 WHERE usuario.cod_usuario = $this->pessoa_logada)");
+	    		if($escola_usuario_historico != '' || $this->nivel_usuario == 1 || $this->nivel_usuario == 2){
+    				$this->addBotao('Copiar Histórico',"educar_historico_escolar_cad.php?ref_cod_aluno={$registro["ref_cod_aluno"]}&sequencial={$registro["sequencial"]}&copia=true");
+    			}
     		}
     	}
     	else{
-    		$escola_usuario_historico = $db->CampoUnico("SELECT historico_escolar.escola
-  														   FROM pmieducar.historico_escolar 
-   													  	  WHERE historico_escolar.ref_cod_aluno = $this->ref_cod_aluno
-   													        AND historico_escolar.sequencial = $this->sequencial
-   													    	AND historico_escolar.escola = (SELECT (SELECT relatorio.get_nome_escola(usuario.ref_cod_escola)) AS escola_usuario
-		   																					  FROM pmieducar.usuario 
-		  															 						 WHERE usuario.cod_usuario = $this->pessoa_logada)");
-    		if($escola_usuario_historico != '' || $this->nivel_usuario == 1){
-    			if ($registro['origem']) $this->url_editar = "educar_historico_escolar_cad.php?ref_cod_aluno={$registro["ref_cod_aluno"]}&sequencial={$registro["sequencial"]}";	
-    		}
-    	}
-
-    	if(($escola_usuario == $escola_ultima_matricula || $this->nivel_usuario == 1)){
-    		$escola_usuario_historico = $db->CampoUnico("SELECT historico_escolar.escola
-  														   FROM pmieducar.historico_escolar 
-   													  	  WHERE historico_escolar.ref_cod_aluno = $this->ref_cod_aluno
-   													        AND historico_escolar.sequencial = $this->sequencial
-   													    	AND historico_escolar.escola = (SELECT (SELECT relatorio.get_nome_escola(usuario.ref_cod_escola)) AS escola_usuario
-		   																					  FROM pmieducar.usuario 
-		  															 						 WHERE usuario.cod_usuario = $this->pessoa_logada)");
-    		if($escola_usuario_historico != '' || $this->nivel_usuario == 1){
-    			$this->addBotao('Copiar Histórico',"educar_historico_escolar_cad.php?ref_cod_aluno={$registro["ref_cod_aluno"]}&sequencial={$registro["sequencial"]}&copia=true");
-    		}
+    		$this->addBotao('Copiar Histórico',"educar_historico_escolar_cad.php?ref_cod_aluno={$registro["ref_cod_aluno"]}&sequencial={$registro["sequencial"]}&copia=true");
+    		if ($registro['origem']) $this->url_editar = "educar_historico_escolar_cad.php?ref_cod_aluno={$registro["ref_cod_aluno"]}&sequencial={$registro["sequencial"]}";
     	}
 
 		$this->url_cancelar = "educar_historico_escolar_lst.php?ref_cod_aluno={$registro["ref_cod_aluno"]}";
