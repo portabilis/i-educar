@@ -225,7 +225,7 @@ class indice extends clsDetalhe
       $totalVagas = $registro['max_aluno'];
     }
 
-    $this->addDetalhe(array('Total de vagas <br /> <sub style="vertical-align:top;"> Matrículas de dependência não são consideradas neste total</sub>', $totalVagas));
+    $this->addDetalhe(array('Total de vagas', $totalVagas));
 
     if (is_numeric($total_alunos)) {
       $this->addDetalhe(array('Alunos enturmados', $total_alunos));
