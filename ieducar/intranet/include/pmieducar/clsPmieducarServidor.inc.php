@@ -557,6 +557,9 @@ class clsPmieducarServidor
       if (is_numeric($this->codigo_curso_superior_1)) {
         $set .= "{$gruda}codigo_curso_superior_1 = '{$this->codigo_curso_superior_1}'";
         $gruda = ", ";
+      }else{
+        $set .= "{$gruda}codigo_curso_superior_1 = NULL";
+        $gruda = ", ";
       }
       if (is_numeric($this->ano_inicio_curso_superior_1)) {
         $set .= "{$gruda}ano_inicio_curso_superior_1 = '{$this->ano_inicio_curso_superior_1}'";
@@ -574,6 +577,9 @@ class clsPmieducarServidor
       }
       if (is_numeric($this->tipo_instituicao_curso_superior_1)) {
         $set .= "{$gruda}tipo_instituicao_curso_superior_1 = '{$this->tipo_instituicao_curso_superior_1}'";
+        $gruda = ", ";
+      } else {
+        $set .= "{$gruda}tipo_instituicao_curso_superior_1 = NULL";
         $gruda = ", ";
       }
       if (is_numeric($this->instituicao_curso_superior_1)) {
@@ -594,6 +600,9 @@ class clsPmieducarServidor
       if (is_numeric($this->codigo_curso_superior_2)) {
         $set .= "{$gruda}codigo_curso_superior_2 = '{$this->codigo_curso_superior_2}'";
         $gruda = ", ";
+      }else{
+        $set .= "{$gruda}codigo_curso_superior_2 = NULL";
+        $gruda = ", ";
       }
       if (is_numeric($this->ano_inicio_curso_superior_2)) {
         $set .= "{$gruda}ano_inicio_curso_superior_2 = '{$this->ano_inicio_curso_superior_2}'";
@@ -611,6 +620,9 @@ class clsPmieducarServidor
       }
       if (is_numeric($this->tipo_instituicao_curso_superior_2)) {
         $set .= "{$gruda}tipo_instituicao_curso_superior_2 = '{$this->tipo_instituicao_curso_superior_2}'";
+        $gruda = ", ";
+      } else {
+        $set .= "{$gruda}tipo_instituicao_curso_superior_2 = NULL";
         $gruda = ", ";
       }
       if (is_numeric($this->instituicao_curso_superior_2)) {
@@ -631,6 +643,9 @@ class clsPmieducarServidor
       if (is_numeric($this->codigo_curso_superior_3)) {
         $set .= "{$gruda}codigo_curso_superior_3 = '{$this->codigo_curso_superior_3}'";
         $gruda = ", ";
+      } else {
+        $set .= "{$gruda}codigo_curso_superior_3 = NULL";
+        $gruda = ", ";
       }
       if (is_numeric($this->ano_inicio_curso_superior_3)) {
         $set .= "{$gruda}ano_inicio_curso_superior_3 = '{$this->ano_inicio_curso_superior_3}'";
@@ -648,6 +663,9 @@ class clsPmieducarServidor
       }
       if (is_numeric($this->tipo_instituicao_curso_superior_3)) {
         $set .= "{$gruda}tipo_instituicao_curso_superior_3 = '{$this->tipo_instituicao_curso_superior_3}'";
+        $gruda = ", ";
+      } else {
+        $set .= "{$gruda}tipo_instituicao_curso_superior_3 = NULL";
         $gruda = ", ";
       }
       if (is_numeric($this->instituicao_curso_superior_3)) {
