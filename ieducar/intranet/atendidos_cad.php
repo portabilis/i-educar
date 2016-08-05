@@ -495,8 +495,8 @@ class indice extends clsCadastro
       'label'       => '',
       'placeholder' => 'Certidão nascimento',
       'value'       => $documentos['certidao_nascimento'],
-      'max_length'  => 50,
-      'size'        => 50,
+      'max_length'  => 32,
+      'size'        => 32,
       'inline'      => true
     );
 
@@ -509,8 +509,8 @@ class indice extends clsCadastro
       'label'       => '',
       'placeholder' => 'Certidão casamento',
       'value'       => $documentos['certidao_casamento'],
-      'max_length'  => 50,
-      'size'        => 50
+      'max_length'  => 32,
+      'size'        => 32
     );
 
     $this->inputsHelper()->text('certidao_casamento', $options);
@@ -1224,6 +1224,9 @@ class indice extends clsCadastro
     if (!$this->validatePhoto())
       return false;
 
+    if (!$this->validaCertidao())
+      return false;
+
     $pessoaId = $this->createOrUpdatePessoa($pessoaIdOrNull);
     $this->savePhoto($pessoaId);
     $this->createOrUpdatePessoaFisica($pessoaId);
@@ -1282,6 +1285,20 @@ class indice extends clsCadastro
 
   }
 
+  protected function validaCertidao() {
+    $certidaoNascimento = ($_REQUEST['tipo_certidao_civil'] == 'certidao_nascimento_novo_formato');
+    $certidaoCasamento = ($_REQUEST['tipo_certidao_civil'] == 'certidao_casamento_novo_formato');
+
+    if ($certidaoNascimento && strlen($this->certidao_nascimento) < 32) {
+      $this->mensagem = 'O campo referente a certidão de nascimento deve conter exatos 32 dígitos.';
+      return false;
+    } else if ($certidaoCasamento && strlen($this->certidao_casamento) < 32) {
+      $this->mensagem = 'O campo referente a certidão de casamento deve conter exatos 32 dígitos.';
+      return false;
+    }
+
+    return true;
+  }
 
   protected function createOrUpdatePessoa($pessoaId = null) {
     $pessoa        = new clsPessoa_();
