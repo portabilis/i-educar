@@ -563,11 +563,6 @@ class clsPmieducarHistoricoEscolar
 				$valores .= "{$gruda}'{$this->ref_cod_escola}'";
 				$gruda = ", ";	
       		}
-      		else{
-      			$campos .= "{$gruda}ref_cod_escola";
-				$valores .= "{$gruda}-1";
-				$gruda = ", ";
-      		}
 
       		if (dbBool($this->dependencia)) {
 		        $campos .= "{$gruda}dependencia";

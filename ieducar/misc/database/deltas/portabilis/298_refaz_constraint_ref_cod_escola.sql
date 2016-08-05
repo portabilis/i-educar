@@ -3,4 +3,4 @@
   -- @license  @@license@@
   -- @version  $Id$
 
-ALTER TABLE pmieducar.historico_escolar DROP CONSTRAINT historico_escolar_ref_cod_escola_fkey;
+ALTER TABLE pmieducar.historico_escolar ADD FOREIGN KEY(ref_cod_escola) REFERENCES pmieducar.escola(cod_escola);
