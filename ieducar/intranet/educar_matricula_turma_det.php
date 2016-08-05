@@ -134,7 +134,7 @@ class indice extends clsDetalhe
     $db = new clsBanco();
 
     $ano = $db->CampoUnico("select ano from pmieducar.matricula where cod_matricula = $this->ref_cod_matricula");
-    $sql = "select count(cod_matricula) as qtd_matriculas from pmieducar.matricula, pmieducar.matricula_turma, pmieducar.aluno where aluno.cod_aluno = matricula.ref_cod_aluno and ano = {$ano} and aluno.ativo = 1 and matricula.ativo = 1 and matricula_turma.ativo = matricula.ativo and cod_matricula = ref_cod_matricula and ref_cod_turma = $this->ref_cod_turma";
+    $sql = "select count(cod_matricula) as qtd_matriculas from pmieducar.matricula, pmieducar.matricula_turma, pmieducar.aluno where aluno.cod_aluno = matricula.ref_cod_aluno and ano = {$ano} and aluno.ativo = 1 and matricula.ativo = 1 and matricula_turma.ativo = matricula.ativo and matricula.dependencia = 'f' and cod_matricula = ref_cod_matricula and ref_cod_turma = $this->ref_cod_turma";
 
     $total_alunos = $db->CampoUnico($sql);
 
@@ -205,8 +205,9 @@ class indice extends clsDetalhe
     }
 
     //(enturmações) turma atual
-    $enturmacoes = new clsPmieducarMatriculaTurma();
-    $enturmacoes = $enturmacoes->lista($this->ref_cod_matricula, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
+    $objEnturmacoes = new clsPmieducarMatriculaTurma();
+    $enturmacoes = $objEnturmacoes->lista($this->ref_cod_matricula, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
+    $dependente = $objEnturmacoes->verficaEnturmacaoDeDependencia($this->ref_cod_matricula, $enturmacoes[0]['ref_cod_turma']);
 
     $this->possuiEnturmacao = ! empty($enturmacoes);
     $this->possuiEnturmacaoTurmaDestino = false;
@@ -278,8 +279,7 @@ class indice extends clsDetalhe
       ', $this->ref_cod_turma_origem, $this->sequencial)
     ));
 
-    // echo "<pre>";var_dump($totalVagas - $total_alunos);die;
-    if ($totalVagas - $total_alunos <= 0) {
+    if (($totalVagas - $total_alunos <= 0) && !$dependente) {
 
       $escolaSerie = $this->getEscolaSerie($det_ref_cod_escola['cod_escola'], $det_ser['cod_serie']);
 
