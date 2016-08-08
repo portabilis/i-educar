@@ -100,18 +100,8 @@ class indice extends clsListagem
 
 		$obj_permissao = new clsPermissoes();
 		$nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
-		if ($nivel_usuario == 1 || $nivel_usuario == 4)
-		{
-			if (!$this->extra_curricular)
-				$lista_busca[] = "Escola";
-
+			$lista_busca[] = "Escola";
 			$lista_busca[] = "Institui&ccedil;&atilde;o";
-		}
-		else if ($nivel_usuario == 2 || $nivel_usuario == 4)
-		{
-			if (!$this->extra_curricular)
-				$lista_busca[] = "Escola";
-		}
     $lista_busca = array_merge($lista_busca, array('Curso', 'Série', 'Registro', 'Livro', 'Folha'));
 
 		$this->addCabecalhos($lista_busca);
@@ -200,18 +190,9 @@ class indice extends clsListagem
 					"<a href=\"educar_historico_escolar_det.php?ref_cod_aluno={$registro["ref_cod_aluno"]}&sequencial={$registro["sequencial"]}\">{$registro["extra_curricular"]}</a>"
 				);
 
-				if ($nivel_usuario == 1 || $nivel_usuario == 4)
-				{
-					if (!$this->extra_curricular)
-						$lista_busca[] = "<a href=\"educar_historico_escolar_det.php?ref_cod_aluno={$registro["ref_cod_aluno"]}&sequencial={$registro["sequencial"]}\">{$registro["escola"]}</a>";
+				$lista_busca[] = "<a href=\"educar_historico_escolar_det.php?ref_cod_aluno={$registro["ref_cod_aluno"]}&sequencial={$registro["sequencial"]}\">{$registro["escola"]}</a>";
 
-					$lista_busca[] = "<a href=\"educar_historico_escolar_det.php?ref_cod_aluno={$registro["ref_cod_aluno"]}&sequencial={$registro["sequencial"]}\">{$registro["ref_cod_instituicao"]}</a>";
-				}
-				else if ($nivel_usuario == 2)
-				{
-					if (!$this->extra_curricular)
-						$lista_busca[] = "<a href=\"educar_historico_escolar_det.php?ref_cod_aluno={$registro["ref_cod_aluno"]}&sequencial={$registro["sequencial"]}\">{$registro["escola"]}</a>";
-				}
+				$lista_busca[] = "<a href=\"educar_historico_escolar_det.php?ref_cod_aluno={$registro["ref_cod_aluno"]}&sequencial={$registro["sequencial"]}\">{$registro["ref_cod_instituicao"]}</a>";
 
         $lista_busca[] = $registro['nm_curso'];
         $lista_busca[] = $registro['nm_serie'];
