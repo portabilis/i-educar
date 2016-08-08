@@ -576,7 +576,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
       'label'       => '',
       'placeholder' => $placeholderCertidao,
       'value'       => $documentos['certidao_nascimento'],
-      'max_length'  => 50,
+      'max_length'  => 32,
       'size'        => 50,
       'inline'      => true
     );
@@ -591,7 +591,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
       'label'       => '',
       'placeholder' => $placeholderCertidao,
       'value'       => $documentos['certidao_casamento'],
-      'max_length'  => 50,
+      'max_length'  => 32,
       'size'        => 50,
     );
 
