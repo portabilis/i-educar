@@ -119,12 +119,33 @@ function montaUrlLaudoMedico(){
   $j('#url_laudo_medico').val(url);
 }
 
+function certidaoNascimentoInvalida(){
+  $j('#certidao_nascimento').addClass('error');
+  messageUtils.error(stringUtils.toUtf8('O campo referente a certidão de nascimento deve conter exatos 32 dígitos.'));
+}
+
+
+function certidaoCasamentoInvalida(){
+  $j('#certidao_casamento').addClass('error');
+  messageUtils.error(stringUtils.toUtf8('O campo referente a certidão de casamento deve conter exatos 32 dígitos.'));
+}
+
 var newSubmitForm = function(event) {
   if ($j('#deficiencias').val().length > 1){
     if ($j('#url_laudo_medico_obrigatorio').length > 0 && $j('#url_laudo_medico').val().length < 1){
       return laudoMedicoObrigatorio();
     }
   }
+
+  var tipoCertidaoNascimento = ($j('#tipo_certidao_civil').val() == 'certidao_nascimento_novo_formato');
+  var tipoCertidaoCasamento = ($j('#tipo_certidao_civil').val() == 'certidao_casamento_novo_formato');
+
+  if (tipoCertidaoNascimento && $j('#certidao_nascimento').val().length < 32) {
+    return certidaoNascimentoInvalida();
+  } else if (tipoCertidaoCasamento && $j('#certidao_casamento').val().length < 32) {
+    return certidaoCasamentoInvalida();
+  }
+
   submitFormExterno();
 }
 
