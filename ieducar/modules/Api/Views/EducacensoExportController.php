@@ -1311,8 +1311,8 @@ class EducacensoExportController extends ApiCoreController
       fis.sexo as r60s7, /*tratar na aplicação formato*/
       r.raca_educacenso as r60s8,
       /*se não tiver r60s10 e 11 é 0 se tiver um dos dois é 1*/
-      COALESCE( a.nm_mae,(SELECT nome FROM cadastro.pessoa WHERE pessoa.idpes = fis.idpes_mae)) as r60s10,
-      COALESCE(a.nm_pai, (SELECT nome FROM cadastro.pessoa WHERE pessoa.idpes = fis.idpes_pai)) as r60s11,
+      COALESCE((SELECT nome FROM cadastro.pessoa WHERE pessoa.idpes = fis.idpes_mae), a.nm_mae) as r60s10,
+      COALESCE((SELECT nome FROM cadastro.pessoa WHERE pessoa.idpes = fis.idpes_pai), a.nm_pai) as r60s11,
       COALESCE(fis.nacionalidade,1) as r60s12,
       (SELECT cod_ibge FROM public.pais WHERE pais.idpais = fis.idpais_estrangeiro) as r60s13,
       uf.cod_ibge as r60s14,
