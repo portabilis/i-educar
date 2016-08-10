@@ -1,6 +1,7 @@
 (function($){
 
   $(function(){
+    $("tr#tr_alunos_dependencia td:first-child").width("455px");
     var $formFilter = $('#formcadastro');
     var $submitButton = $('#botao_busca');
     var $resultTable = $('#form_resultado .tablelistagem').addClass('horizontal-expand');
