@@ -548,16 +548,20 @@ $pagina->MakeAll();
 		var nomeEscola = document.getElementById('nomeEscola').value;
 		var numeroSequencial = document.getElementById('numeroSequencial').value;
 		nomeEscola = nomeEscola.replace(/[\+\+]/g , ' ');
+		nomeEscola = unescape(nomeEscola);
 
+		//Quando for novo cadastro
 		if(codigoEscola === '' && nomeEscola === '' && numeroSequencial === ''){
 			$j('#ref_cod_escola').val("");
 			$j('#escola').closest('tr').hide();
 		}
+		//Quando for edição e for outra
 		else if(codigoEscola === '' && numeroSequencial !== ''){
 			$j('#ref_cod_escola').val('outra');
 			$j('#escola').closest('tr').show();
 			$j('#escola').val(nomeEscola);
 		}
+		//Quando for edição e não for outra
 		else{
 			$j('#ref_cod_escola').val(codigoEscola);
 			$j('#escola').val('');
