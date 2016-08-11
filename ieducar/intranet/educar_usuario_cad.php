@@ -402,6 +402,11 @@ class indice extends clsCadastro
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
 
+	    if ($this->email && !filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
+	      $this->mensagem = "Formato do e-mail inválido.";
+	      return false;
+	    }
+
 		//setor recebe o id do ultimo subsetor selecionado
 		$this->ref_cod_setor_new = 0;
 		for( $i = 0; $i < 5; $i++ )
@@ -459,6 +464,11 @@ class indice extends clsCadastro
 		@session_start();
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
+
+	    if ($this->email && !filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
+	      $this->mensagem = "Formato do e-mail inválido.";
+	      return false;
+	    }
 
 		$this->ref_cod_setor_new = 0;
 		for( $i = 0; $i < 5; $i++ )
