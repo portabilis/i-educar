@@ -235,6 +235,7 @@ class indice extends clsCadastro
     $funcionario->ref_cod_pessoa_fj = $this->pessoa_logada;
     $funcionario->receber_novidades = ($this->receber_novidades ? 1 : 0);
     $funcionario->receber_anuncios = ($this->receber_anuncios ? 1 : 0);
+    $funcionario->atualizou_cadastro = 1;
 
     if ($this->senha_old != $this->senha) {
       $funcionario->senha = md5($this->senha);
