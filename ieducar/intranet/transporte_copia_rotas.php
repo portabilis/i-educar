@@ -42,8 +42,10 @@ class indice extends clsCadastro {
 		$this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
 
+
 		$obj_permissoes = new clsPermissoes();
-		$obj_permissoes->permissao_cadastra( 950, $this->pessoa_logada, 7, "transporte_copia_rotas.php" );
+		$obj_permissoes->permissao_cadastra( 950, $this->pessoa_logada, 7);
+		
     	$localizacao = new LocalizacaoSistema();
 		$localizacao->entradaCaminhos( array(
 	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
