@@ -207,9 +207,13 @@ class indice extends clsDetalhe
     //(enturmações) turma atual
     $objEnturmacoes = new clsPmieducarMatriculaTurma();
     $enturmacoes = $objEnturmacoes->lista($this->ref_cod_matricula, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
-    $dependente = $objEnturmacoes->verficaEnturmacaoDeDependencia($this->ref_cod_matricula, $enturmacoes[0]['ref_cod_turma']);
 
     $this->possuiEnturmacao = ! empty($enturmacoes);
+
+    if ($this->possuiEnturmacao) {
+      $dependente = $objEnturmacoes->verficaEnturmacaoDeDependencia($this->ref_cod_matricula, $enturmacoes[0]['ref_cod_turma']);
+    }
+
     $this->possuiEnturmacaoTurmaDestino = false;
     $this->turmaOrigemMesmaDestino = false;
 
