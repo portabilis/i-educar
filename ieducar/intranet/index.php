@@ -89,6 +89,40 @@ class indice
         $temp .= "<center><h3>Acesso negado para este usu&aacute;rio.</h3><br>Caso persista nas tentativas sua conta na intranet poder&aacute; ser bloqueada por tempo indeterminado.</center>";
       }
 
+      $funcionario = new clsPortalFuncionario($id_pessoa);
+      $funcionario = $funcionario->detalhe();
+
+      $atualiouCadastro = $funcionario['atualizou_cadastro'];
+
+      if (!$atualiouCadastro)
+        echo '
+          <script type="text/javascript" src="scripts/jquery/jquery-1.8.3.min.js"></script>
+          <link rel="stylesheet" href="scripts/jquery/jquery-ui.min-1.9.2/css/custom/jquery-ui-1.9.2.custom.min.css">
+          <script src="scripts/jquery/jquery-ui.min-1.9.2/js/jquery-ui-1.9.2.custom.min.js"></script>
+          <div id="dialog" title="Aviso">
+            É importante que seu cadastro no i-Educar esteja atualizado. Desta forma você poderá receber novidades sobre o produto. Por favor, acesse <strong>Meus dados</strong> e atualize suas preferências de e-mail.
+          </div>
+          <script>
+          var $j = jQuery.noConflict();
+
+          $j(function() {
+            $j( "#dialog" ).dialog({
+              width: 600,
+              position: { my: "center", at: "top", of: window },
+              buttons: [
+                {
+                  text: "Me leve para a página Meus dados.",
+                  click: function(){
+                    window.open("meusdados.php", "_self");
+                    $j(this).dialog("close");
+                  }
+                }
+              ]
+            });
+
+          });
+         </script>';
+
       $pendencia_administrativa = dbBool($GLOBALS['coreExt']['Config']->app->administrative_pending->exist);
       $texto_pendencia = $GLOBALS['coreExt']['Config']->app->administrative_pending->msg;
 
