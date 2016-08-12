@@ -8,7 +8,10 @@ RETURN (SELECT to_number(ccae.carga_horaria,'999')
               INNER JOIN modules.componente_curricular cc ON (upper(translate(cc.nome,'áàâãäåaaaÁÂÃÄÅAAAÀéèêëeeeeeEEEÉEEÈìíîïìiiiÌÍÎÏÌIIIóôõöoooòÒÓÔÕÖOOOùúûüuuuuÙÚÛÜUUUUçÇñÑýÝ','aaaaaaaaaAAAAAAAAAeeeeeeeeeEEEEEEEiiiiiiiiIIIIIIIIooooooooOOOOOOOOuuuuuuuuUUUUUUUUcCnNyY')) = upper(translate(nm_componente,'áàâãäåaaaÁÂÃÄÅAAAÀéèêëeeeeeEEEÉEEÈìíîïìiiiÌÍÎÏÌIIIóôõöoooòÒÓÔÕÖOOOùúûüuuuuÙÚÛÜUUUUçÇñÑýÝ','aaaaaaaaaAAAAAAAAAeeeeeeeeeEEEEEEEiiiiiiiiIIIIIIIIooooooooOOOOOOOOuuuuuuuuUUUUUUUUcCnNyY'))
                                                               AND cc.id = ccae.componente_curricular_id)
               INNER JOIN pmieducar.serie s ON (upper(translate(s.nm_serie,'áàâãäåaaaÁÂÃÄÅAAAÀéèêëeeeeeEEEÉEEÈìíîïìiiiÌÍÎÏÌIIIóôõöoooòÒÓÔÕÖOOOùúûüuuuuÙÚÛÜUUUUçÇñÑýÝ','aaaaaaaaaAAAAAAAAAeeeeeeeeeEEEEEEEiiiiiiiiIIIIIIIIooooooooOOOOOOOOuuuuuuuuUUUUUUUUcCnNyY')) = upper(translate(nm_serie,'áàâãäåaaaÁÂÃÄÅAAAÀéèêëeeeeeEEEÉEEÈìíîïìiiiÌÍÎÏÌIIIóôõöoooòÒÓÔÕÖOOOùúûüuuuuÙÚÛÜUUUUçÇñÑýÝ','aaaaaaaaaAAAAAAAAAeeeeeeeeeEEEEEEEiiiiiiiiIIIIIIIIooooooooOOOOOOOOuuuuuuuuUUUUUUUUcCnNyY'))
-                                               AND s.cod_serie = ccae.ano_escolar_id));
+                                               AND s.cod_serie = ccae.ano_escolar_id)
+               LEFT JOIN pmieducar.escola_serie es ON (es.ref_cod_escola = escola_id
+                                                       AND es.ref_cod_serie = s.cod_serie)
+ORDER BY ref_cod_escola LIMIT 1);
 END;
 $BODY$ LANGUAGE plpgsql VOLATILE;
 
