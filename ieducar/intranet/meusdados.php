@@ -174,8 +174,12 @@ class indice extends clsCadastro
 
     $this->campoQuebra();
 
+    if (is_null($this->receber_novidades)) $this->receber_novidades = 1;
+
     $options = array('label' => 'Desejo receber novidades do produto por e-mail', 'value' => $this->receber_novidades);
     $this->inputsHelper()->checkbox('receber_novidades', $options);
+
+    if (is_null($this->receber_anuncios)) $this->receber_anuncios = 1;
 
     $options = array('label' => 'Desejo receber anúncios sobre novos produtos e serviços por e-mail', 'value' => $this->receber_anuncios);
     $this->inputsHelper()->checkbox('receber_anuncios', $options);
