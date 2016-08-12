@@ -99,8 +99,8 @@ class indice
           <script type="text/javascript" src="scripts/jquery/jquery-1.8.3.min.js"></script>
           <link rel="stylesheet" href="scripts/jquery/jquery-ui.min-1.9.2/css/custom/jquery-ui-1.9.2.custom.min.css">
           <script src="scripts/jquery/jquery-ui.min-1.9.2/js/jquery-ui-1.9.2.custom.min.js"></script>
-          <div id="dialog" title="Aviso">
-            É importante que seu cadastro no i-Educar esteja atualizado. Desta forma você poderá receber novidades sobre o produto. Por favor, acesse <strong>Meus dados</strong> e atualize suas preferências de e-mail.
+          <div id="dialog" title="Atualização de dados">
+            Todos os dias estamos trabalhando para melhorar o i-Educar e nossos serviços especialmente para você! Para ficar por dentro destas novidades, por favor, atualize seus dados informando seu melhor e-mail.
           </div>
           <script>
           var $j = jQuery.noConflict();
@@ -111,7 +111,7 @@ class indice
               position: { my: "center", at: "top", of: window },
               buttons: [
                 {
-                  text: "Me leve para a página Meus dados.",
+                  text: "Ok, desejo atualizar agora!",
                   click: function(){
                     window.open("meusdados.php", "_self");
                     $j(this).dialog("close");
