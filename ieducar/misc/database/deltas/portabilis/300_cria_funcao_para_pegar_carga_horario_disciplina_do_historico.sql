@@ -1,7 +1,7 @@
 -- Cria função para pegar carga horaria por disciplina no historico
 -- @author Paula Bonot <bonot@portabilis.com.br>
 
-CREATE OR REPLACE FUNCTION relatorio.historico_carga_horaria_componente(nm_componente character varying, nm_serie character varying) RETURNS numeric AS $BODY$
+CREATE OR REPLACE FUNCTION relatorio.historico_carga_horaria_componente(nm_componente character varying, nm_serie character varying, escola_id integer) RETURNS numeric AS $BODY$
 BEGIN
 RETURN (SELECT to_number(ccae.carga_horaria,'999')
                FROM modules.componente_curricular_ano_escolar ccae
@@ -16,8 +16,8 @@ END;
 $BODY$ LANGUAGE plpgsql VOLATILE;
 
 
-ALTER FUNCTION relatorio.historico_carga_horaria_componente(character varying, character varying) OWNER TO ieducar;
+ALTER FUNCTION relatorio.historico_carga_horaria_componente(character varying, character varying, integer) OWNER TO ieducar;
 
 -- Undo
 
-DROP FUNCTION relatorio.historico_carga_horaria_componente(character varying, character varying);
+DROP FUNCTION relatorio.historico_carga_horaria_componente(character varying, character varying, integer);
