@@ -1021,9 +1021,9 @@ if(!$this->isEnderecoExterno){
 //
 //			}
 
-			$this->inputsHelper()->text('latitude', array('max_length' => '20', 'size' => '20', 'required' => false, 'value' => $this->latitude));
+			$this->inputsHelper()->text('latitude', array('max_length' => '20', 'size' => '20', 'required' => false, 'value' => $this->latitude, 'label_hint' => 'São aceito somente os seguintes caracteres: 0123456789 .-'));
 
-			$this->inputsHelper()->text('longitude', array('max_length' => '20', 'size' => '20', 'required' => false, 'value' => $this->longitude));
+			$this->inputsHelper()->text('longitude', array('max_length' => '20', 'size' => '20', 'required' => false, 'value' => $this->longitude, 'label_hint' => 'São aceito somente os seguintes caracteres: 0123456789 .-'));
 
   		$this->campoCheck("bloquear_lancamento_diario_anos_letivos_encerrados", "Bloquear lançamento no diário para anos letivos encerrados", $this->bloquear_lancamento_diario_anos_letivos_encerrados);
 
@@ -2504,21 +2504,20 @@ if(!$this->isEnderecoExterno){
 
   protected function validaLatitudeLongitude() {
 
-  	$numeros = range(0,9);
-    $caracteres = array(" ", ".", "-", null);
+    $caracteres = array(" ",".","-",null,'0','1','2','3','4','5','6','7','8','9');
+    $mensagemErro = "O campo: Latitude e/ou Longitude foi preenchido com valor inválido.";
 
     for ($i=0; $i<=strlen($this->latitude); $i++) {
     	$char = substr($this->latitude,$i,1);
-    	if (!in_array($char,$numeros) && !in_array($char,$caracteres)) {
-	  		$this->mensagem = "O campo latitude contém caracteres inválidos (Caracteres aceitos: 0123456789 . -).<br>";
+    	if (!in_array($char,$caracteres)) {
+	  		$this->mensagem = $mensagemErro;
 	  		return false;
     	}
     }
-
     for ($i=0; $i<=strlen($this->longitude); $i++) {
     	$char = substr($this->longitude,$i,1);
-    	if (!in_array($char,$numeros) && !in_array($char,$caracteres)) {
-	  		$this->mensagem = "O campo longitude contém caracteres inválidos (Caracteres aceitos: 0123456789 . -).<br>";
+    	if (!in_array($char,$caracteres)) {
+	  		$this->mensagem = $mensagemErro;
 	  		return false;
     	}
     }
