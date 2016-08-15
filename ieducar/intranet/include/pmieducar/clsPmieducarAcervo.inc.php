@@ -1113,7 +1113,13 @@ class clsPmieducarAcervo
 		                           $nm_autor = NULL
 		                           )
 	{
-		$sql = "SELECT {$this->_campos_lista},(SELECT DISTINCT '' || (replace(textcat_all(aa.nm_autor),' <br> ',', '))) as nm_autor FROM {$this->_tabela} a ".
+		$sql = "SELECT {$this->_campos_lista},
+		               (CASE WHEN a.ref_cod_tipo_autor = 2 OR a.ref_cod_tipo_autor = 3 
+								THEN a.tipo_autor
+            				 ELSE
+								(SELECT DISTINCT '' || (replace(textcat_all(aa.nm_autor),'',', ')))
+						END) AS nm_autor
+		        FROM {$this->_tabela} a ".
 		       "LEFT JOIN acervo_acervo_autor aaa ON (aaa.ref_cod_acervo = a.cod_acervo) ".
 		       "LEFT JOIN acervo_autor aa ON (aa.cod_acervo_autor = aaa.ref_cod_acervo_autor)";
 
@@ -1186,6 +1192,8 @@ class clsPmieducarAcervo
 			$filtros .= "{$whereAnd} aa.nm_autor LIKE '%{$nm_autor}%'";
 			$whereAnd = " AND ";
 		}
+
+		//echo $sql;die();
 
 		$sql .= $filtros . $this->getGroupby() .$this->getOrderby() . $this->getLimite();
 
