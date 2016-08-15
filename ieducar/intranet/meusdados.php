@@ -35,7 +35,7 @@ $desvio_diretorio = '';
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
-
+require_once 'include/RD_Station.php';
 
 class clsIndex extends clsBase
 {
@@ -44,7 +44,6 @@ class clsIndex extends clsBase
     $this->processoAp = '0';
   }
 }
-
 
 class indice extends clsCadastro
 {
@@ -64,7 +63,6 @@ class indice extends clsCadastro
   var $matricula_old;
 
   var $receber_novidades;
-  var $receber_anuncios;
 
   public function Inicializar() {
     @session_start();
@@ -100,7 +98,6 @@ class indice extends clsCadastro
 
         $this->senha_old = $funcionario["senha"];
         $this->matricula_old = $funcionario["matricula"];
-        $this->receber_anuncios = $funcionario["receber_anuncios"];
         $this->receber_novidades = $funcionario["receber_novidades"];
       }
     }
@@ -179,11 +176,6 @@ class indice extends clsCadastro
     $options = array('label' => 'Desejo receber novidades do produto por e-mail', 'value' => $this->receber_novidades);
     $this->inputsHelper()->checkbox('receber_novidades', $options);
 
-    if (is_null($this->receber_anuncios)) $this->receber_anuncios = 1;
-
-    $options = array('label' => 'Desejo receber anúncios sobre novos produtos e serviços por e-mail', 'value' => $this->receber_anuncios);
-    $this->inputsHelper()->checkbox('receber_anuncios', $options);
-
   }
 
   public function Novo() {
@@ -238,7 +230,6 @@ class indice extends clsCadastro
     }
     $funcionario->ref_cod_pessoa_fj = $this->pessoa_logada;
     $funcionario->receber_novidades = ($this->receber_novidades ? 1 : 0);
-    $funcionario->receber_anuncios = ($this->receber_anuncios ? 1 : 0);
     $funcionario->atualizou_cadastro = 1;
 
     if ($this->senha_old != $this->senha) {
@@ -246,6 +237,44 @@ class indice extends clsCadastro
     }
 
     $funcionario->edita();
+
+    $usuario = new clsPmieducarUsuario($this->pessoa_logada);
+    $usuario = $usuario->detalhe();
+
+    if ($usuario) {
+      $instituicao = new clsPmieducarInstituicao($usuario['ref_cod_instituicao']);
+      $instituicao = $instituicao->detalhe();
+
+      $instituicao = $instituicao['nm_instituicao'];
+
+      $escola = new clsPmieducarEscola($usuario['ref_cod_escola']);
+      $escola = $escola->detalhe();
+
+      $escola = $escola['nome'];
+    }
+
+    $dados = array(
+      "email" => $this->email,
+      "nome" => $this->nome,
+      "cargo" => $escola,
+      "empresa" => $instituicao,
+      "telefone" => ($this->telefone ? "$this->ddd_telefone $this->telefone" : null),
+      "celular" => ($this->celular ? "$this->ddd_celular $this->celular" : null),
+      "Assuntos de interesse" => ($this->receber_novidades ? "Todos os assuntos relacionados ao i-Educar" : "Nenhum"),
+      "lead" => array("lifecycle_stage" => 2)
+    );
+
+    // Instanciando a classe RD_Station
+    $rdstation = new RD_Station($dados);
+
+    // Token público do RD Station
+    $rdstation->token = "***REMOVED***";
+
+    // Identificador do formulário
+    $rdstation->identifier = 'Usuário no produto i-Educar';
+
+    // Criando os leads
+    $rdstation->createLead();
 
     $this->mensagem .= "Ediçãoo efetuada com sucesso.<br>";
     header( "Location: index.php" );
