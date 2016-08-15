@@ -115,7 +115,7 @@ class EducacensoExportController extends ApiCoreController
       $registro30 = $this->exportaDadosRegistro30($servidor['id'], $escolaId);
       $registro40 = $this->exportaDadosRegistro40($servidor['id'], $escolaId);
       $registro50 = $this->exportaDadosRegistro50($servidor['id'], $escolaId);
-      $registro51 = $this->exportaDadosRegistro51($servidor['id'], $escolaId, $data_ini, $data_fim);
+      $registro51 = $this->exportaDadosRegistro51($servidor['id'], $escolaId, $data_ini, $data_fim, $ano);
       if(!empty($registro30) && !empty($registro40) && !empty($registro50))
         $export .= $registro30 . $registro40 . $registro50 . $registro51;
     }
@@ -1040,7 +1040,7 @@ class EducacensoExportController extends ApiCoreController
     }
   }
 
-  protected function exportaDadosRegistro51($servidorId, $escolaId, $data_ini, $data_fim){
+  protected function exportaDadosRegistro51($servidorId, $escolaId, $data_ini, $data_fim, $ano){
 
   	$sql =
   	 'SELECT
@@ -1238,6 +1238,7 @@ class EducacensoExportController extends ApiCoreController
       AND e.cod_escola = $2
       AND t.ativo = 1
       AND t.visivel = TRUE
+      AND t.ano = $5
       and (SELECT 1
              FROM pmieducar.matricula_turma mt
             INNER JOIN pmieducar.matricula m ON(mt.ref_cod_matricula = m.cod_matricula)
@@ -1265,7 +1266,7 @@ class EducacensoExportController extends ApiCoreController
     $educInfantilUnificada = 3;
     $ejaEnsinoFundamental = 65;
 
-    foreach (Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($servidorId, $escolaId, $data_ini, $data_fim))) as $reg) {
+    foreach (Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($servidorId, $escolaId, $data_ini, $data_fim, $ano))) as $reg) {
     	extract($reg);
 	    for ($i=1; $i <= $numeroRegistros ; $i++) {
 
