@@ -35,7 +35,7 @@ $desvio_diretorio = '';
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
-
+require_once 'include/RD_Station.php';
 
 class clsIndex extends clsBase
 {
@@ -246,6 +246,44 @@ class indice extends clsCadastro
     }
 
     $funcionario->edita();
+
+    $usuario = new clsPmieducarUsuario($this->pessoa_logada);
+    $usuario = $usuario->detalhe();
+
+    if ($usuario) {
+      $instituicao = new clsPmieducarInstituicao($usuario['ref_cod_instituicao']);
+      $instituicao = $instituicao->detalhe();
+
+      $instituicao = $instituicao['nm_instituicao'];
+
+      $escola = new clsPmieducarEscola($usuario['ref_cod_escola']);
+      $escola = $escola->detalhe();
+
+      $escola = $escola['nome'];
+    }
+
+    $dados = array(
+      "email" => $this->email,
+      "nome" => $this->nome,
+      "cargo" => $escola,
+      "empresa" => $instituicao,
+      "telefone" => ($this->telefone ? "$this->ddd_telefone $this->telefone" : null),
+      "celular" => ($this->celular ? "$this->ddd_celular $this->celular" : null),
+      "Assuntos de interesse" => ($this->receber_novidades ? "Todos os assuntos relacionados ao i-Educar" : "Nenhum"),
+      "lead" => array("lifecycle_stage" => 2)
+    );
+
+    // Instanciando a classe RD_Station
+    $rdstation = new RD_Station($dados);
+
+    // Token público do RD Station
+    $rdstation->token = "***REMOVED***";
+
+    // Identificador do formulário
+    $rdstation->identifier = 'Usuário no produto i-Educar';
+
+    // Criando os leads
+    $rdstation->createLead();
 
     $this->mensagem .= "Ediçãoo efetuada com sucesso.<br>";
     header( "Location: index.php" );
