@@ -45,7 +45,6 @@ class clsIndex extends clsBase
   }
 }
 
-
 class indice extends clsCadastro
 {
 
@@ -64,7 +63,6 @@ class indice extends clsCadastro
   var $matricula_old;
 
   var $receber_novidades;
-  var $receber_anuncios;
 
   public function Inicializar() {
     @session_start();
@@ -100,7 +98,6 @@ class indice extends clsCadastro
 
         $this->senha_old = $funcionario["senha"];
         $this->matricula_old = $funcionario["matricula"];
-        $this->receber_anuncios = $funcionario["receber_anuncios"];
         $this->receber_novidades = $funcionario["receber_novidades"];
       }
     }
@@ -179,11 +176,6 @@ class indice extends clsCadastro
     $options = array('label' => 'Desejo receber novidades do produto por e-mail', 'value' => $this->receber_novidades);
     $this->inputsHelper()->checkbox('receber_novidades', $options);
 
-    if (is_null($this->receber_anuncios)) $this->receber_anuncios = 1;
-
-    $options = array('label' => 'Desejo receber anúncios sobre novos produtos e serviços por e-mail', 'value' => $this->receber_anuncios);
-    $this->inputsHelper()->checkbox('receber_anuncios', $options);
-
   }
 
   public function Novo() {
@@ -238,7 +230,6 @@ class indice extends clsCadastro
     }
     $funcionario->ref_cod_pessoa_fj = $this->pessoa_logada;
     $funcionario->receber_novidades = ($this->receber_novidades ? 1 : 0);
-    $funcionario->receber_anuncios = ($this->receber_anuncios ? 1 : 0);
     $funcionario->atualizou_cadastro = 1;
 
     if ($this->senha_old != $this->senha) {
