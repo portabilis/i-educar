@@ -1708,7 +1708,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
         AND a.cod_aluno = $5
         AND m.ativo = 1
         AND COALESCE(mt.remanejado, FALSE) = FALSE
-        AND (m.aprovado = 3 AND mt.ativo = 1)
+        AND (CASE WHEN m.aprovado = 3 THEN mt.ativo = 1 ELSE TRUE END)
     ';
 
     // Transforma todos resultados em variáveis
