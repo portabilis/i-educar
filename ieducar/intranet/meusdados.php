@@ -35,7 +35,8 @@ $desvio_diretorio = '';
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
-require_once 'include/RD_Station.php';
+require_once 'include/RDStationAPI.class.php';
+require_once 'lib/Portabilis/String/Utils.php';
 
 class clsIndex extends clsBase
 {
@@ -254,27 +255,18 @@ class indice extends clsCadastro
     }
 
     $dados = array(
-      "email" => $this->email,
-      "nome" => $this->nome,
-      "cargo" => $escola,
-      "empresa" => $instituicao,
+      "nome" => Portabilis_String_Utils::toUtf8($this->nome),
+      "empresa" => Portabilis_String_Utils::toUtf8($instituicao),
+      "cargo" => Portabilis_String_Utils::toUtf8($escola),
       "telefone" => ($this->telefone ? "$this->ddd_telefone $this->telefone" : null),
       "celular" => ($this->celular ? "$this->ddd_celular $this->celular" : null),
-      "Assuntos de interesse" => ($this->receber_novidades ? "Todos os assuntos relacionados ao i-Educar" : "Nenhum"),
-      "lead" => array("lifecycle_stage" => 2)
+      "Assuntos de interesse" => ($this->receber_novidades ? "Todos os assuntos relacionados ao i-Educar" : "Nenhum")
     );
 
-    // Instanciando a classe RD_Station
-    $rdstation = new RD_Station($dados);
+    $rdAPI = new RDStationAPI("***REMOVED***","***REMOVED***");
 
-    // Token público do RD Station
-    $rdstation->token = "***REMOVED***";
-
-    // Identificador do formulário
-    $rdstation->identifier = 'Usuário no produto i-Educar';
-
-    // Criando os leads
-    $rdstation->createLead();
+    $rdAPI->sendNewLead($this->email, $dados);
+    $rdAPI->updateLeadStageAndOpportunity($this->email, 2, true);
 
     $this->mensagem .= "Ediçãoo efetuada com sucesso.<br>";
     header( "Location: index.php" );
