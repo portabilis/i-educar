@@ -78,6 +78,8 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
 
     $this->inputsHelper()->dynamic(array('turma', 'matricula'), array('required' => false));
 
+    $this->campoCheck( "alunos_dependencia", "Processar somente hist&oacute;ricos de depend&ecirc;ncias", NULL, NULL, false, false, false, "Marque esta op&ccedil;&atilde;o para trazer somente alunos que possuem alguma depend&ecirc;ncia.");
+
     $resourceOptionsTable = "<table id='resource-options' class='styled horizontal-expand hide-on-search disable-on-apply-changes'>
 
       <tr>

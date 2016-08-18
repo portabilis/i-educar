@@ -1,6 +1,7 @@
 (function($){
 
   $(function(){
+    $("tr#tr_alunos_dependencia td:first-child").width("455px");
     var $formFilter = $('#formcadastro');
     var $submitButton = $('#botao_busca');
     var $resultTable = $('#form_resultado .tablelistagem').addClass('horizontal-expand');
@@ -199,7 +200,8 @@
           serie_id : $('#ref_cod_serie').val(),
           turma_id : $('#ref_cod_turma').val(),
           ano : $('#ano').val(),
-          etapa : $('#etapa').val()
+          etapa : $('#etapa').val(),
+          dependencia : document.getElementById("alunos_dependencia").checked ? 't' : 'f'
         };
 
         return resourceUrlBuilder.buildUrl(urlBase, $.extend(vars, additionalVars));
@@ -541,7 +543,8 @@
           livro : $('#livro').val(),
           folha : $('#folha').val(),
           disciplinas : disciplinas,
-          turma_id : $('#ref_cod_turma').val()
+          turma_id : $('#ref_cod_turma').val(),
+          dependencia : document.getElementById("alunos_dependencia").checked ? 't' : 'f'
         },
         success : function(dataResponse){
           afterChangeResource($resourceElement, postProcessamento);

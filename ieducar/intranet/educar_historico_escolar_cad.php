@@ -87,6 +87,7 @@ class indice extends clsCadastro
 	var $ultimo_sequencial;
 
 	var $aceleracao;
+	var $dependencia;
 
 	function Inicializar()
 	{
@@ -137,7 +138,7 @@ class indice extends clsCadastro
          ""        => "{$nomeMenu} hist&oacute;rico escolar"
     ));
     $this->enviaLocalizacao($localizacao->montar());
-
+    $this->dependencia  = dbBool($this->dependencia);
 		return $retorno;
 	}
 
@@ -274,6 +275,8 @@ class indice extends clsCadastro
 		$this->campoTexto( "livro", "Livro", $this->livro, 30, 50, false);
 		$this->campoTexto( "folha", "Folha", $this->folha, 30, 50, false);
 
+		$this->campoCheck("dependencia", "Histórico de dependência", $this->dependencia);
+
 
 	//---------------------INCLUI DISCIPLINAS---------------------//
 		$this->campoQuebra();
@@ -356,7 +359,7 @@ class indice extends clsCadastro
 			else
 				$this->extra_curricular = 0;
 
-			$obj = new clsPmieducarHistoricoEscolar( $this->ref_cod_aluno, null, null, $this->pessoa_logada, $this->nm_serie, $this->ano, $this->carga_horaria, $this->dias_letivos, $this->escola, $this->escola_cidade, $this->escola_uf, $this->observacao, $this->aprovado, null, null, 1, $this->faltas_globalizadas, $this->ref_cod_instituicao, 1, $this->extra_curricular, null, $this->frequencia, $this->registro, $this->livro, $this->folha, $this->nm_curso, $this->historico_grade_curso_id, $this->aceleracao, $this->ref_cod_escola);
+			$obj = new clsPmieducarHistoricoEscolar( $this->ref_cod_aluno, null, null, $this->pessoa_logada, $this->nm_serie, $this->ano, $this->carga_horaria, $this->dias_letivos, $this->escola, $this->escola_cidade, $this->escola_uf, $this->observacao, $this->aprovado, null, null, 1, $this->faltas_globalizadas, $this->ref_cod_instituicao, 1, $this->extra_curricular, null, $this->frequencia, $this->registro, $this->livro, $this->folha, $this->nm_curso, $this->historico_grade_curso_id, $this->aceleracao, $this->ref_cod_escola, !is_null($this->dependencia));
 			$cadastrou = $obj->cadastra();
 			if( $cadastrou )
 			{
@@ -427,7 +430,7 @@ class indice extends clsCadastro
 
 			$this->aceleracao = is_null($this->aceleracao) ? 0 : 1;
 
-			$obj = new clsPmieducarHistoricoEscolar( $this->ref_cod_aluno, $this->sequencial, $this->pessoa_logada, null, $this->nm_serie, $this->ano, $this->carga_horaria, $this->dias_letivos, $this->escola, $this->escola_cidade, $this->escola_uf, $this->observacao, $this->aprovado, null, null, 1, $this->faltas_globalizadas, $this->ref_cod_instituicao, 1, $this->extra_curricular, null, $this->frequencia, $this->registro, $this->livro, $this->folha, $this->nm_curso, $this->historico_grade_curso_id, $this->aceleracao, $this->ref_cod_escola);
+			$obj = new clsPmieducarHistoricoEscolar( $this->ref_cod_aluno, $this->sequencial, $this->pessoa_logada, null, $this->nm_serie, $this->ano, $this->carga_horaria, $this->dias_letivos, $this->escola, $this->escola_cidade, $this->escola_uf, $this->observacao, $this->aprovado, null, null, 1, $this->faltas_globalizadas, $this->ref_cod_instituicao, 1, $this->extra_curricular, null, $this->frequencia, $this->registro, $this->livro, $this->folha, $this->nm_curso, $this->historico_grade_curso_id, $this->aceleracao, $this->ref_cod_escola, !is_null($this->dependencia));
 			$editou = $obj->edita();
 
 			if( $editou )
