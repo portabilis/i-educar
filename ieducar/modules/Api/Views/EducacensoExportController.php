@@ -1554,7 +1554,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
       // fim das validações de certidões //
 
       if ($nacionalidade == $estrangeiro) {
-        for ($i=5; $i < 18; $i++) {
+        for ($i=5; $i < 19; $i++) {
           ${'r70s'.$i} = NULL;
         }
       } else {
