@@ -163,6 +163,7 @@ class indice extends clsListagem
     $this->campoRotulo('nm_pessoa', 'Nome do Aluno', $det_aluno['nome_aluno']);
     $this->campoRotulo('matricula', Portabilis_String_Utils::toLatin1('Matrícula'), $this->ref_cod_matricula);
     $this->campoRotulo('situacao', Portabilis_String_Utils::toLatin1('Situação'), $situacao);
+    $this->campoRotulo('data_saida', Portabilis_String_Utils::toLatin1('Data saída'), dataToBrasil($detalhe_matricula['data_cancel']));
 
     //Paginador
     $this->limite = 20;
@@ -183,7 +184,8 @@ class indice extends clsListagem
       {
         $ativo = $registro["ativo"] ? 'Sim' : Portabilis_String_Utils::toLatin1('Não');
         $dataEnturmacao = dataToBrasil($registro["data_enturmacao"]);
-        $dataSaida = dataToBrasil($detalhe_matricula["data_cancel"]);
+        $dataSaida = dataToBrasil($registro["data_exclusao"]);
+        $dataSaidaMatricula = dataToBrasil($detalhe_matricula["data_cancel"]);
         $transferido = $registro["transferido"] == 't' ? 'Sim' : Portabilis_String_Utils::toLatin1('Não');
         $remanejado = $registro["remanejado"] == 't' ? 'Sim' : Portabilis_String_Utils::toLatin1('Não');
         $abandono = $registro["abandono"] == 't' ? 'Sim' : Portabilis_String_Utils::toLatin1('Não');
