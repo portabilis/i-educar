@@ -1709,7 +1709,12 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
         AND a.cod_aluno = $5
         AND m.ativo = 1
         AND COALESCE(mt.remanejado, FALSE) = FALSE
-        AND (CASE WHEN m.aprovado = 3 THEN mt.ativo = 1 ELSE TRUE END)
+        AND (CASE WHEN m.aprovado = 3
+                  THEN mt.ativo = 1
+                  ELSE mt.sequencial = (SELECT MAX(sequencial)
+                                          FROM pmieducar.matricula_turma
+                                         WHERE matricula_turma.ref_cod_matricula = m.cod_matricula)
+            END)
     ';
 
     // Transforma todos resultados em variáveis
