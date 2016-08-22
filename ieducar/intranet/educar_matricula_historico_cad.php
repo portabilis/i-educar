@@ -74,8 +74,7 @@ class indice extends clsCadastro
          ""                                  => Portabilis_String_Utils::toLatin1("Editar enturmação")
     ));
     $this->enviaLocalizacao($localizacao->montar());
-
-    $this->nome_url_cancelar = "Cancelar";
+    $this->url_cancelar = "educar_matricula_historico_lst.php?ref_cod_matricula=".$this->ref_cod_matricula;
     return $retorno;
   }
 

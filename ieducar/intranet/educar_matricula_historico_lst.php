@@ -146,10 +146,10 @@ class indice extends clsListagem
 
     // Busca dados da matricula
     $obj_ref_cod_matricula = new clsPmieducarMatricula();
-    $detalhe_aluno = array_shift($obj_ref_cod_matricula->lista($this->ref_cod_matricula));
+    $detalhe_matricula = array_shift($obj_ref_cod_matricula->lista($this->ref_cod_matricula));
 
     $obj_aluno = new clsPmieducarAluno();
-    $det_aluno = array_shift($obj_aluno->lista($detalhe_aluno['ref_cod_aluno'],
+    $det_aluno = array_shift($obj_aluno->lista($detalhe_matricula['ref_cod_aluno'],
       NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1));
 
     $obj_escola = new clsPmieducarEscola($this->ref_cod_escola, NULL, NULL,
@@ -183,11 +183,11 @@ class indice extends clsListagem
       {
         $ativo = $registro["ativo"] ? 'Sim' : Portabilis_String_Utils::toLatin1('Não');
         $dataEnturmacao = dataToBrasil($registro["data_enturmacao"]);
-        $dataSaida = dataToBrasil($registro["data_exclusao"]);
-        $transferido = $registro["transferido"] ? 'Sim' : Portabilis_String_Utils::toLatin1('Não');
-        $remanejado = $registro["remanejado"] ? 'Sim' : Portabilis_String_Utils::toLatin1('Não');
-        $abandono = $registro["abandono"] ? 'Sim' : Portabilis_String_Utils::toLatin1('Não');
-        $reclassificado = $registro["reclassificado"] ? 'Sim' : Portabilis_String_Utils::toLatin1('Não');
+        $dataSaida = dataToBrasil($detalhe_matricula["data_cancel"]);
+        $transferido = $registro["transferido"] == 't' ? 'Sim' : Portabilis_String_Utils::toLatin1('Não');
+        $remanejado = $registro["remanejado"] == 't' ? 'Sim' : Portabilis_String_Utils::toLatin1('Não');
+        $abandono = $registro["abandono"] == 't' ? 'Sim' : Portabilis_String_Utils::toLatin1('Não');
+        $reclassificado = $registro["reclassificado"] == 't' ? 'Sim' : Portabilis_String_Utils::toLatin1('Não');
 
         $usuarioCriou = new clsPessoa_($registro['ref_usuario_cad']);
         $usuarioCriou = $usuarioCriou->detalhe();
