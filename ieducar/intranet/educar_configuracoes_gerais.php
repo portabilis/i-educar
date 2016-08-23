@@ -105,7 +105,9 @@ class indice extends clsCadastro
     $obj_permissoes = new clsPermissoes();
     $ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
 
-    $configuracoes = new clsPmieducarConfiguracoesGerais($ref_cod_instituicao, $this->permite_relacionamento_posvendas);
+    $permiteRelacionamentoPosvendas = ($this->permite_relacionamento_posvendas == 'on' ? 1 : 0);
+
+    $configuracoes = new clsPmieducarConfiguracoesGerais($ref_cod_instituicao, $permiteRelacionamentoPosvendas);
     $editou = $configuracoes->edita();
 
     if( $editou )

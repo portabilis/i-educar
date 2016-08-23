@@ -125,21 +125,22 @@ class clsPmieducarConfiguracoesGerais
    */
   function edita()
   {
-    if (is_numeric($this->ref_cod_instituicao)) {
-      $db = new clsBanco();
-      $set = '';
-      if ($this->permite_relacionamento_posvendas) {
-        $set .= "{$gruda}permite_relacionamento_posvendas = 1";
-        $gruda = ', ';
-      } else {
-        $set .= "{$gruda}permite_relacionamento_posvendas = 0";
-        $gruda = ', ';
-      }
+    $db = new clsBanco();
+    $set = '';
+    if (is_numeric($this->permite_relacionamento_posvendas)) {
+      $set .= "{$gruda}permite_relacionamento_posvendas = '{$this->permite_relacionamento_posvendas}'";
+      $gruda = ', ';
+    }
 
-      if ($set) {
-        $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE ref_cod_instituicao = '{$this->ref_cod_instituicao}'");
-        return TRUE;
-      }
+    if (is_numeric($this->ref_cod_instituicao)) {
+      $ref_cod_instituicao = $this->ref_cod_instituicao;
+    } else {
+      $ref_cod_instituicao = $this->getUltimaInstituicaoAtiva();
+    }
+
+    if ($set) {
+      $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE ref_cod_instituicao = '{$ref_cod_instituicao}'");
+      return TRUE;
     }
 
     return FALSE;
@@ -152,13 +153,28 @@ class clsPmieducarConfiguracoesGerais
   function detalhe()
   {
     if (is_numeric($this->ref_cod_instituicao)) {
-      $db = new clsBanco();
-      $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE ref_cod_instituicao = '{$this->ref_cod_instituicao}'");
-      $db->ProximoRegistro();
-      return $db->Tupla();
+      $ref_cod_instituicao = $this->ref_cod_instituicao;
+    } else {
+      $ref_cod_instituicao = $this->getUltimaInstituicaoAtiva();
     }
 
+    $db = new clsBanco();
+    $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE ref_cod_instituicao = '{$ref_cod_instituicao}'");
+    $db->ProximoRegistro();
+    return $db->Tupla();
+
     return FALSE;
+  }
+
+  function getUltimaInstituicaoAtiva() {
+    $db = new clsBanco();
+    $db->Consulta("SELECT cod_instituicao
+                     FROM pmieducar.instituicao
+                    WHERE ativo = 1
+                    ORDER BY cod_instituicao DESC LIMIT 1");
+    $db->ProximoRegistro();
+    $instituicao = $db->Tupla();
+    return $instituicao[0];
   }
 
 }

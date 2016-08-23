@@ -254,19 +254,27 @@ class indice extends clsCadastro
       $escola = $escola['nome'];
     }
 
+    $configuracoes = new clsPmieducarConfiguracoesGerais();
+    $configuracoes = $configuracoes->detalhe();
+
+    $permiteRelacionamentoPosvendas = ($configuracoes['permite_relacionamento_posvendas'] ? "Sim" : "Nao");
+
     $dados = array(
       "nome" => Portabilis_String_Utils::toUtf8($this->nome),
       "empresa" => Portabilis_String_Utils::toUtf8($instituicao),
       "cargo" => Portabilis_String_Utils::toUtf8($escola),
       "telefone" => ($this->telefone ? "$this->ddd_telefone $this->telefone" : null),
       "celular" => ($this->celular ? "$this->ddd_celular $this->celular" : null),
-      "Assuntos de interesse" => ($this->receber_novidades ? "Todos os assuntos relacionados ao i-Educar" : "Nenhum")
+      "Assuntos de interesse" => ($this->receber_novidades ? "Todos os assuntos relacionados ao i-Educar" : "Nenhum"),
+      "Permite relacionamento direto no pos-venda?" => $permiteRelacionamentoPosvendas
     );
+
+    // echo "<pre>";print_r($dados);die;
 
     $rdAPI = new RDStationAPI("***REMOVED***","***REMOVED***");
 
     $rdAPI->sendNewLead($this->email, $dados);
-    $rdAPI->updateLeadStageAndOpportunity($this->email, 2, true);
+    $rdAPI->updateLeadStage($this->email, 2);
 
     $this->mensagem .= "Ediçãoo efetuada com sucesso.<br>";
     header( "Location: index.php" );
