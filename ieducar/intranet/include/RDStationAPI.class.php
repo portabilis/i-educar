@@ -122,7 +122,7 @@ class RDStationAPI {
   $newStage: (Integer) 0 - Lead, 1 - Qualified Lead, 2 - Customer
   $opportunity: (Integer) true or false
   **/
-  public function updateLeadStageAndOpportunity($email, $newStage=0, $opportunity=false){
+  public function updateLeadStage($email, $newStage=0){
     if(empty($email)) throw new Exception("Inform lead email as the first argument.");
 
     $url = $this->getURL('leads').$email;
@@ -130,8 +130,7 @@ class RDStationAPI {
     $data = array(
       "auth_token" => $this->privateToken,
       "lead" => array(
-        "lifecycle_stage" => $newStage,
-        "opportunity" => $opportunity
+        "lifecycle_stage" => $newStage
       )
     );
 
