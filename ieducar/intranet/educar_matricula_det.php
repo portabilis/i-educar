@@ -371,6 +371,15 @@ class indice extends clsDetalhe
       }
     }
 
+    $obj_permissoes = new clsPermissoes();
+    $nivelUsuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
+    $administrador = 1;
+
+    if ($nivelUsuario == $administrador) {
+      $this->array_botao[]            = 'Histórico de enturmações';
+      $this->array_botao_url_script[] = "go(\"educar_matricula_historico_lst.php?ref_cod_matricula={$registro['cod_matricula']}\")";
+    }
+
     $this->url_cancelar = 'educar_aluno_det.php?cod_aluno=' . $registro['ref_cod_aluno'];
     $this->largura      = '100%';
 
