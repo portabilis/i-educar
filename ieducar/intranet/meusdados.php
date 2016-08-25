@@ -257,7 +257,9 @@ class indice extends clsCadastro
     $configuracoes = new clsPmieducarConfiguracoesGerais();
     $configuracoes = $configuracoes->detalhe();
 
-    $permiteRelacionamentoPosvendas = ($configuracoes['permite_relacionamento_posvendas'] ? "Sim" : "Nao");
+    $permiteRelacionamentoPosvendas =
+      ($configuracoes['permite_relacionamento_posvendas'] ?
+        "Sim" : Portabilis_String_Utils::toUtf8("Não"));
 
     $dados = array(
       "nome" => Portabilis_String_Utils::toUtf8($this->nome),
@@ -266,7 +268,7 @@ class indice extends clsCadastro
       "telefone" => ($this->telefone ? "$this->ddd_telefone $this->telefone" : null),
       "celular" => ($this->celular ? "$this->ddd_celular $this->celular" : null),
       "Assuntos de interesse" => ($this->receber_novidades ? "Todos os assuntos relacionados ao i-Educar" : "Nenhum"),
-      "Permite relacionamento direto no pos-venda?" => $permiteRelacionamentoPosvendas
+      Portabilis_String_Utils::toUtf8("Permite relacionamento direto no pós-venda?") => $permiteRelacionamentoPosvendas
     );
 
     // echo "<pre>";print_r($dados);die;
