@@ -24,7 +24,7 @@ class RDStationAPI {
   public $token;
   public $privateToken;
   public $baseURL = "https://www.rdstation.com.br/api/";
-  public $apiVersion = "1.2";
+  public $apiVersion = "1.3";
   public $defaultIdentifier = "Usuário no produto i-Educar";
 
   public function __construct($privateToken=NULL, $token=NULL){
