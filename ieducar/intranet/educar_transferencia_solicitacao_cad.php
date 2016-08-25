@@ -66,6 +66,8 @@ class indice extends clsCadastro
 	var $ref_cod_aluno;
 	var $nm_aluno;
 	var $escola_destino_externa;
+	var $estado_escola_destino_externa;
+	var $municipio_escola_destino_externa;
 	var $ref_cod_escola_destino;
 
 	function Inicializar()
@@ -164,6 +166,8 @@ class indice extends clsCadastro
 
 		$this->campoLista("ref_cod_escola_destino", "Escola", $opcoes, null, '', false, 'Destino do aluno', '', false, false);
 		$this->campoTexto('escola_destino_externa', "Nome da escola ", "", 30, 255, false, false, false, '');
+		$this->campoTexto('estado_escola_destino_externa', "Estado da escola ", "", 20, 50, false, false, false, '');
+		$this->campoTexto('municipio_escola_destino_externa', "Município da escola ", "", 20, 50, false, false, false, '');
 
 		// foreign keys
 		$opcoes = array( "" => "Selecione" );
@@ -276,7 +280,7 @@ class indice extends clsCadastro
 			}
 			clsPmieducarHistoricoEscolar::gerarHistoricoTransferencia($this->ref_cod_matricula, $this->pessoa_logada);
 		
-		$obj = new clsPmieducarTransferenciaSolicitacao( null, $this->ref_cod_transferencia_tipo, null, $this->pessoa_logada, null, $this->ref_cod_matricula, $this->observacao, null, null, $this->ativo, $this->data_transferencia, $this->escola_destino_externa, $this->ref_cod_escola_destino);
+		$obj = new clsPmieducarTransferenciaSolicitacao( null, $this->ref_cod_transferencia_tipo, null, $this->pessoa_logada, null, $this->ref_cod_matricula, $this->observacao, null, null, $this->ativo, $this->data_transferencia, $this->escola_destino_externa, $this->ref_cod_escola_destino, $this->estado_escola_destino_externa, $this->municipio_escola_destino_externa);
 		$cadastrou = $obj->cadastra();
 		if( $cadastrou )
 		{

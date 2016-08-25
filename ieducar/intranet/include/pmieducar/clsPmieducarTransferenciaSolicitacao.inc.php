@@ -47,6 +47,8 @@ class clsPmieducarTransferenciaSolicitacao
 	var $data_transferencia;
 	var $ref_cod_escola_destino;
 	var $escola_destino_externa;
+	var $estado_escola_destino_externa;
+	var $municipio_escola_destino_externa;
 
 	// propriedades padrao
 
@@ -112,13 +114,13 @@ class clsPmieducarTransferenciaSolicitacao
 	 *
 	 * @return object
 	 */
-	function clsPmieducarTransferenciaSolicitacao( $cod_transferencia_solicitacao = null, $ref_cod_transferencia_tipo = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $ref_cod_matricula_entrada = null, $ref_cod_matricula_saida = null, $observacao = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $data_transferencia = null, $escola_destino_externa = null, $ref_cod_escola_destino = null )
+	function clsPmieducarTransferenciaSolicitacao( $cod_transferencia_solicitacao = null, $ref_cod_transferencia_tipo = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $ref_cod_matricula_entrada = null, $ref_cod_matricula_saida = null, $observacao = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $data_transferencia = null, $escola_destino_externa = null, $ref_cod_escola_destino = null, $estado_escola_destino_externa = null, $municipio_escola_destino_externa = null)
 	{
 		$db = new clsBanco();
 		$this->_schema = "pmieducar.";
 		$this->_tabela = "{$this->_schema}transferencia_solicitacao";
 
-		$this->_campos_lista = $this->_todos_campos = "ts.cod_transferencia_solicitacao, ts.ref_cod_transferencia_tipo, ts.ref_usuario_exc, ts.ref_usuario_cad, ts.ref_cod_matricula_entrada, ts.ref_cod_matricula_saida, ts.observacao, ts.data_cadastro, ts.data_exclusao, ts.ativo, ts.data_transferencia, ts.escola_destino_externa, ts.ref_cod_escola_destino";
+		$this->_campos_lista = $this->_todos_campos = "ts.cod_transferencia_solicitacao, ts.ref_cod_transferencia_tipo, ts.ref_usuario_exc, ts.ref_usuario_cad, ts.ref_cod_matricula_entrada, ts.ref_cod_matricula_saida, ts.observacao, ts.data_cadastro, ts.data_exclusao, ts.ativo, ts.data_transferencia, ts.escola_destino_externa, ts.ref_cod_escola_destino, ts.estado_escola_destino_externa, ts.municipio_escola_destino_externa";
 
 		if( is_numeric( $ref_cod_transferencia_tipo ) )
 		{
@@ -291,8 +293,13 @@ class clsPmieducarTransferenciaSolicitacao
 		}
 		if( is_numeric( $ref_cod_escola_destino ) ){
 			$this->ref_cod_escola_destino = $ref_cod_escola_destino;
-		}		
-
+		}
+		if( is_string( $estado_escola_destino_externa ) ) {
+			$this->estado_escola_destino_externa = $estado_escola_destino_externa;
+		}
+		if( is_string( $municipio_escola_destino_externa ) ) {
+			$this->municipio_escola_destino_externa = $municipio_escola_destino_externa;
+		}
 	}
 
 	/**
@@ -368,6 +375,18 @@ class clsPmieducarTransferenciaSolicitacao
 			{
 				$campos .= "{$gruda}ref_cod_escola_destino";
 				$valores .= "{$gruda}'{$this->ref_cod_escola_destino}'";
+				$gruda = ", ";
+			}
+			if( is_string( $this->estado_escola_destino_externa ) )
+			{
+				$campos .= "{$gruda}estado_escola_destino_externa";
+				$valores .= "{$gruda}'{$this->estado_escola_destino_externa}'";
+				$gruda = ", ";
+			}
+			if( is_string( $this->municipio_escola_destino_externa ) )
+			{
+				$campos .= "{$gruda}municipio_escola_destino_externa";
+				$valores .= "{$gruda}'{$this->municipio_escola_destino_externa}'";
 				$gruda = ", ";
 			}
 
@@ -446,6 +465,16 @@ class clsPmieducarTransferenciaSolicitacao
 			if( is_string( $this->ref_cod_escola_destino ) )
 			{
 				$set .= "{$gruda}ref_cod_escola_destino = '{$this->ref_cod_escola_destino}'";
+				$gruda = ", ";
+			}
+			if( is_string( $this->estado_escola_destino_externa ) )
+			{
+				$set .= "{$gruda}estado_escola_destino_externa = '{$this->estado_escola_destino_externa}'";
+				$gruda = ", ";
+			}
+			if( is_string( $this->municipio_escola_destino_externa ) )
+			{
+				$set .= "{$gruda}municipio_escola_destino_externa = '{$this->municipio_escola_destino_externa}'";
 				$gruda = ", ";
 			}
 

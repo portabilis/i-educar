@@ -1,20 +1,29 @@
 $j(function(){
 	$campoEscolaDestinoExterna = $j('#escola_destino_externa');
+	$campoEstadoEscolaDestinoExterna = $j('#estado_escola_destino_externa');
+	$campoMunicipioEscolaDestinoExterna = $j('#municipio_escola_destino_externa');
 	$campoEscolaDestinoSistema = $j('#ref_cod_escola_destino');
 
 	$campoEscolaDestinoExterna.closest("tr").hide();
+	$campoEstadoEscolaDestinoExterna.closest("tr").hide();
+	$campoMunicipioEscolaDestinoExterna.closest("tr").hide();
 	$campoEscolaDestinoSistema.val('');
 
-	$campoEscolaDestinoSistema.on('click', onEscolaDestinoSistemaClick);
+	$campoEscolaDestinoSistema.on('change', onEscolaDestinoSistemaClick);
 
 
 	function onEscolaDestinoSistemaClick(){
-		console.log($j(this).val());
 		if($j(this).val() == 0){
 			$campoEscolaDestinoExterna.closest("tr").show();
+			$campoEstadoEscolaDestinoExterna.closest("tr").show();
+			$campoMunicipioEscolaDestinoExterna.closest("tr").show();
 		}else{
 			$campoEscolaDestinoExterna.closest("tr").hide();
-			$campoEscolaDestinoExterna.val("");
+			$campoEstadoEscolaDestinoExterna.closest("tr").hide();
+			$campoEscolaDestinoExterna.closest("tr").hide();
+			$campoMunicipioEscolaDestinoExterna.val("");
+			$campoEstadoEscolaDestinoExterna.val("");
+			$campoMunicipioEscolaDestinoExterna.val("");
 		}
 	}
 });
