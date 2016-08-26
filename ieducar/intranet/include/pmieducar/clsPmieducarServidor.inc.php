@@ -1011,7 +1011,7 @@ class clsPmieducarServidor
       $filtros .= "{$whereAnd} EXISTS (SELECT 1
   FROM cadastro.pessoa p
   WHERE cod_servidor = p.idpes
-  AND public.fcn_upper(to_ascii(p.nome)) LIKE public.fcn_upper(to_ascii('%$str_nome_servidor%'))) ";
+  AND public.fcn_upper(to_ascii(p.nome)) LIKE public.fcn_upper(to_ascii($$%$str_nome_servidor%$$))) ";
       $whereAnd = " AND ";
     }
     // Seleciona apenas servidores que tenham a carga atual maior ou igual ao

@@ -146,7 +146,8 @@ class indice extends clsListagem
 							$virgula = ",";
 						}
 						elseif ( $parametros->getCampoTipo( $cont ) == "select" ) {
-							$funcao .= "{$virgula} '{$campo}{$chave}', '{$pessoa[$parametros->getCampoIndice( $cont )]}', '{$pessoa[$parametros->getCampoValor( $cont )]}'";
+							$campoTexto = addslashes($pessoa[$parametros->getCampoValor( $cont )]);
+							$funcao .= "{$virgula} '{$campo}{$chave}', '{$pessoa[$parametros->getCampoIndice( $cont )]}', '{$campoTexto}'";
 							$virgula = ",";
 						}
 						$cont++;
