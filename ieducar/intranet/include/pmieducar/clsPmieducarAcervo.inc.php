@@ -1,4 +1,4 @@
-)<?php
+<?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 *																	     *
 *	@author Prefeitura Municipal de Itajaí								 *
