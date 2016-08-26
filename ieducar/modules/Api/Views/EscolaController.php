@@ -163,21 +163,22 @@ class EscolaController extends ApiCoreController
                  AND andamento = 1
                ORDER BY ref_cod_escola, ano';
 
-      $anosLetivos = $this->fetchPreparedQuery($sql, array($ano));             
+      $anosLetivos = $this->fetchPreparedQuery($sql, array($ano));
 
       $attrs = array('escola_id', 'ano');
       $anosLetivos = Portabilis_Array_Utils::filterSet($anosLetivos, $attrs);
 
       foreach($anosLetivos as $index => $anoLetivo){
         $anosLetivos[$index] = array_merge($anosLetivos[$index], $this->getEtapasAnoEscola($anoLetivo["ano"], $anoLetivo["escola_id"]));
+        $anosLetivos[$index] = array_merge($anosLetivos[$index], $this->getEtapasTurmasAnoEscola($anoLetivo["ano"], $anoLetivo["escola_id"]));
       }
-        
+
       return array('escolas' => $anosLetivos);
     }
   }
 
   private function getEtapasAnoEscola($ano, $escola){
-    $sql = 'SELECT data_inicio, 
+    $sql = 'SELECT data_inicio,
                    data_fim
               FROM pmieducar.ano_letivo_modulo
              WHERE ref_ano = $1
@@ -189,6 +190,23 @@ class EscolaController extends ApiCoreController
     $etapas = Portabilis_Array_Utils::filterSet($etapas, $attrs);
 
     return array("etapas" => $etapas);
+  }
+
+  private function getEtapasTurmasAnoEscola($ano, $escola)
+  {
+    $sql = 'SELECT tm.ref_cod_turma as turma_id,
+                   tm.data_inicio,
+                   tm.data_fim
+              FROM pmieducar.turma_modulo tm
+              INNER JOIN pmieducar.turma t ON (tm.ref_cod_turma = t.cod_turma)
+            WHERE t.ano = $1 and t.ref_ref_cod_escola = $2
+          ORDER BY tm.ref_cod_turma, tm.sequencial';
+    $etapas_de_turmas = array();
+    $etapas_de_turmas = $this->fetchPreparedQuery($sql, array($ano, $escola));
+    $attrs = array('turma_id', 'data_inicio', 'data_fim');
+    $etapas_de_turmas = Portabilis_Array_Utils::filterSet($etapas_de_turmas, $attrs);
+
+    return array("etapas_de_turmas" => $etapas_de_turmas);
   }
 
 
