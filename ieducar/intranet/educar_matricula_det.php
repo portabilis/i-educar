@@ -253,6 +253,8 @@ class indice extends clsDetalhe
         $this->addDetalhe(array("Escola destino", $tmp_det["nome"]));
       }else{
         $this->addDetalhe(array("Escola destino", $det_transferencia["escola_destino_externa"]));
+        $this->addDetalhe(array("Estado escola destino", $det_transferencia["estado_escola_destino_externa"]));
+        $this->addDetalhe(array("Município escola destino", $det_transferencia["municipio_escola_destino_externa"]));
       }
     }
 
