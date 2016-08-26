@@ -93,7 +93,7 @@ class indice extends clsCadastro
 
     $this->permite_relacionamento_posvendas = $configuracoes['permite_relacionamento_posvendas'];
 
-    $this->inputsHelper()->checkbox('permite_relacionamento_posvendas', array('label' => 'Permite relacionamento direto no pós-vendas?', 'value' => $this->permite_relacionamento_posvendas));
+    $this->inputsHelper()->checkbox('permite_relacionamento_posvendas', array('label' => 'Permite relacionamento direto no pós-venda?', 'value' => $this->permite_relacionamento_posvendas));
   }
 
   function Editar()
