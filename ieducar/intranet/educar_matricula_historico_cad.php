@@ -158,8 +158,29 @@ class indice extends clsCadastro
     $enturmacao->ref_usuario_exc = $this->pessoa_logada;
     $enturmacao->data_enturmacao = dataToBanco($this->data_enturmacao);
     $enturmacao->data_exclusao = dataToBanco($this->data_exclusao);
-    $editou = $enturmacao->edita();
 
+    $dataSaidaEnturmacaoAnterior = $enturmacao->getDataSaidaEnturmacaoAnterior($this->ref_cod_matricula, $this->sequencial);
+
+    $matricula = new clsPmieducarMatricula($this->ref_cod_matricula);
+    $matricula = $matricula->detalhe();
+    $dataSaidaMatricula = date("Y-m-d", strtotime($matricula['data_cancel']));
+
+    if ($enturmacao->data_exclusao && ($enturmacao->data_exclusao < $enturmacao->data_enturmacao)) {
+      $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br> A data de sa&iacute;da n&atilde;o pode ser anterior a data de enturma&ccedil;&atilde;o.";
+      return false;
+    }
+
+   if ($dataSaidaEnturmacaoAnterior && ($enturmacao->data_enturmacao < $dataSaidaEnturmacaoAnterior)) {
+      $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br> A data de enturma&ccedil;&atilde;o n&atilde;o pode ser anterior a data de sa&iacute;da da enturma&ccedil;&atilde;o antecessora.";
+      return false;
+    }
+
+    if ($dataSaidaMatricula && ($enturmacao->data_exclusao > $dataSaidaMatricula)) {
+      $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br> A data de sa&iacute;da n&atilde;o pode ser posterior a data de sa&iacute;da da matricula.";
+      return false;
+    }
+
+    $editou = $enturmacao->edita();
     if( $editou )
     {
       $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
