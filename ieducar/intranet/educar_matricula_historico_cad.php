@@ -158,9 +158,16 @@ class indice extends clsCadastro
     $enturmacao->ref_usuario_exc = $this->pessoa_logada;
     $enturmacao->data_enturmacao = dataToBanco($this->data_enturmacao);
     $enturmacao->data_exclusao = dataToBanco($this->data_exclusao);
-    // echo "<pre>"; print_r($enturmacao->data_exclusao); die;
-    if ($enturmacao->data_exclusao < $enturmacao->data_enturmacao) {
+
+    $dataSaidaEnturmacaoAnterior = $enturmacao->getDataSaidaEnturmacaoAnterior($this->ref_cod_matricula, $this->sequencial);
+
+    if ($enturmacao->data_exclusao && ($enturmacao->data_exclusao < $enturmacao->data_enturmacao)) {
       $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br> A data de sa&iacute;da n&atilde;o pode ser anterior a data de enturma&ccedil;&atilde;o.";
+      return false;
+    }
+
+   if ($dataSaidaEnturmacaoAnterior && ($enturmacao->data_enturmacao < $dataSaidaEnturmacaoAnterior)) {
+      $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br> A data de enturma&ccedil;&atilde;o n&atilde;o pode ser anterior a data de sa&iacute;da da enturma&ccedil;&atilde;o antecessora.";
       return false;
     }
 
