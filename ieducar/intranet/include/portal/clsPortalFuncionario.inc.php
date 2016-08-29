@@ -60,6 +60,8 @@ class clsPortalFuncionario
 	var $matricula_permanente;
 	var $matricula_interna;
 	var $tipo_menu;
+	var $receber_novidades;
+	var $atualizou_cadastro;
 
 	// propriedades padrao
 
@@ -157,7 +159,7 @@ class clsPortalFuncionario
 		$this->_schema = "portal.";
 		$this->_tabela = "{$this->_schema}funcionario";
 
-		$this->_campos_lista = $this->_todos_campos = "ref_cod_pessoa_fj, matricula, matricula_interna, senha, ativo, ref_sec, ramal, sequencial, opcao_menu, ref_cod_setor, ref_cod_funcionario_vinculo, tempo_expira_senha, tempo_expira_conta, data_troca_senha, data_reativa_conta, ref_ref_cod_pessoa_fj, proibido, ref_cod_setor_new, matricula_new, matricula_permanente, tipo_menu, email";
+		$this->_campos_lista = $this->_todos_campos = "ref_cod_pessoa_fj, matricula, matricula_interna, senha, ativo, ref_sec, ramal, sequencial, opcao_menu, ref_cod_setor, ref_cod_funcionario_vinculo, tempo_expira_senha, tempo_expira_conta, data_troca_senha, data_reativa_conta, ref_ref_cod_pessoa_fj, proibido, ref_cod_setor_new, matricula_new, matricula_permanente, tipo_menu, email, receber_novidades, atualizou_cadastro";
 
 		if( is_numeric( $ref_ref_cod_pessoa_fj ) )
 		{
@@ -735,6 +737,18 @@ class clsPortalFuncionario
 			if(is_string($this->email))
 			{
 				$set .= "{$gruda}email = '{$this->email}'";
+				$gruda = ", ";
+			}
+
+			if( is_numeric( $this->receber_novidades ) )
+			{
+				$set .= "{$gruda}receber_novidades = '{$this->receber_novidades}'";
+				$gruda = ", ";
+			}
+
+			if( is_numeric( $this->atualizou_cadastro ) )
+			{
+				$set .= "{$gruda}atualizou_cadastro = '{$this->atualizou_cadastro}'";
 				$gruda = ", ";
 			}
 
