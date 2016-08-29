@@ -28,6 +28,7 @@ require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once( "include/pmieducar/geral.inc.php" );
+require_once( "App/Model/MatriculaSituacao.php" );
 
 class clsIndexBase extends clsBase
 {
@@ -165,6 +166,8 @@ class indice extends clsCadastro
     $matricula = $matricula->detalhe();
     $dataSaidaMatricula = date("Y-m-d", strtotime($matricula['data_cancel']));
 
+    $seqUltimaEnturmacao = $enturmacao->getUltimaEnturmacao($this->ref_cod_matricula);
+
     if ($enturmacao->data_exclusao && ($enturmacao->data_exclusao < $enturmacao->data_enturmacao)) {
       $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br> A data de sa&iacute;da n&atilde;o pode ser anterior a data de enturma&ccedil;&atilde;o.";
       return false;
@@ -175,7 +178,17 @@ class indice extends clsCadastro
       return false;
     }
 
-    if ($dataSaidaMatricula && ($enturmacao->data_exclusao > $dataSaidaMatricula)) {
+    if ($dataSaidaMatricula &&
+
+        ($enturmacao->data_exclusao != $dataSaidaMatricula) &&
+
+        (App_Model_MatriculaSituacao::TRANSFERIDO    == $matricula['aprovado'] ||
+         App_Model_MatriculaSituacao::ABANDONO       == $matricula['aprovado'] ||
+         App_Model_MatriculaSituacao::RECLASSIFICADO == $matricula['aprovado']) &&
+         ($this->sequencial == $seqUltimaEnturmacao)
+
+        ) {
+
       $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br> A data de sa&iacute;da n&atilde;o pode ser posterior a data de sa&iacute;da da matricula.";
       return false;
     }
