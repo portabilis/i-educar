@@ -1224,6 +1224,20 @@ class clsPmieducarMatriculaTurma
     return false;
   }
 
+ function getUltimaEnturmacao($ref_matricula){
+    if (is_numeric($ref_matricula)){
+      $db = new clsBanco();
+      return $db->CampoUnico("SELECT MAX(matricula_turma.sequencial)
+                                FROM $this->_tabela
+                               INNER JOIN pmieducar.matricula ON (matricula.cod_matricula = matricula_turma.ref_cod_matricula)
+                               INNER JOIN relatorio.view_situacao ON (view_situacao.cod_matricula = matricula.cod_matricula
+                                                                      AND view_situacao.cod_turma = matricula_turma.ref_cod_turma
+                                                                      AND view_situacao.sequencial = matricula_turma.sequencial)
+                               WHERE ref_cod_matricula = $ref_matricula");
+    }
+    return false;
+  }
+
   function getDataBaseRemanejamento(){
     if ($this->ref_cod_matricula){
       $cod_instituicao = $this->getInstituicao();
