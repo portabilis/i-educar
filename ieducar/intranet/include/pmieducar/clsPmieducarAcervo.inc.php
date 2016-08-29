@@ -459,11 +459,11 @@ class clsPmieducarAcervo
 		}
 		if( is_string( $titulo ) )
 		{
-			$this->titulo = $titulo;
+			$this->titulo = addslashes($titulo);
 		}
 		if( is_string( $sub_titulo ) )
 		{
-			$this->sub_titulo = $sub_titulo;
+			$this->sub_titulo = addslashes($sub_titulo);
 		}
 		if( is_string( $cdu ) )
 		{
@@ -583,13 +583,13 @@ class clsPmieducarAcervo
 			if( is_string( $this->titulo ) )
 			{
 				$campos .= "{$gruda}titulo";
-				$valores .= "{$gruda}'{$this->titulo}'";
+				$valores .= "{$gruda}E'{$this->titulo}'";
 				$gruda = ", ";
 			}
 			if( is_string( $this->sub_titulo ) )
 			{
 				$campos .= "{$gruda}sub_titulo";
-				$valores .= "{$gruda}'{$this->sub_titulo}'";
+				$valores .= "{$gruda}E'{$this->sub_titulo}'";
 				$gruda = ", ";
 			}
 			if( is_string( $this->cdu ) )
@@ -952,27 +952,27 @@ class clsPmieducarAcervo
 		}
 		if( is_string( $str_titulo ) )
 		{
-			$filtros .= "{$whereAnd} a.titulo LIKE '%{$str_titulo}%'";
+			$filtros .= "{$whereAnd} a.titulo LIKE $$%{$str_titulo}%$$";
 			$whereAnd = " AND ";
 		}
 		if( is_string( $str_sub_titulo ) )
 		{
-			$filtros .= "{$whereAnd} a.sub_titulo LIKE '%{$str_sub_titulo}%'";
+			$filtros .= "{$whereAnd} a.sub_titulo LIKE $$%{$str_sub_titulo}%$$";
 			$whereAnd = " AND ";
 		}
 		if( is_string( $str_cdu ) )
 		{
-			$filtros .= "{$whereAnd} a.cdu LIKE '%{$str_cdu}%'";
+			$filtros .= "{$whereAnd} a.cdu LIKE $$%{$str_cdu}%$$";
 			$whereAnd = " AND ";
 		}
 		if( is_string( $str_cdd ) )
 		{
-			$filtros .= "{$whereAnd} a.cdd LIKE '%{$str_cdd}%'";
+			$filtros .= "{$whereAnd} a.cdd LIKE $$%{$str_cdd}%$$";
 			$whereAnd = " AND ";
 		}
 		if( is_string( $str_cutter ) )
 		{
-			$filtros .= "{$whereAnd} a.cutter LIKE '%{$str_cutter}%'";
+			$filtros .= "{$whereAnd} a.cutter LIKE $$%{$str_cutter}%$$";
 			$whereAnd = " AND ";
 		}
 		if( is_numeric( $int_volume ) )
@@ -1053,7 +1053,7 @@ class clsPmieducarAcervo
 		}
 		if( !empty( $str_nm_autor ) )
 		{
-			$filtros .= "{$whereAnd} aa.nm_autor LIKE '%{$str_nm_autor}%'";
+			$filtros .= "{$whereAnd} aa.nm_autor LIKE $$%{$str_nm_autor}%$$";
 			$whereAnd = " AND ";
 		}
 		/*else
@@ -1143,22 +1143,22 @@ class clsPmieducarAcervo
 		}	
 		if(is_string($str_cdd))
 		{
-			$filtros .= "{$whereAnd} cdd LIKE '%{$str_cdd}%'";
+			$filtros .= "{$whereAnd} cdd LIKE $$%{$str_cdd}%$$";
 			$whereAnd = " AND ";
 		}
 		if(is_string($str_cutter))
 		{
-			$filtros .= "{$whereAnd} cutter LIKE '%{$str_cutter}%'";
+			$filtros .= "{$whereAnd} cutter LIKE $$%{$str_cutter}%$$";
 			$whereAnd = " AND ";
 		}
 		if(is_string($str_isbn))
 		{
-			$filtros .= "{$whereAnd} isbn LIKE '%{$str_isbn}%'";
+			$filtros .= "{$whereAnd} isbn LIKE $$%{$str_isbn}%$$";
 			$whereAnd = " AND ";
 		}
 		if(is_string($str_titulo))
 		{
-			$filtros .= "{$whereAnd} titulo LIKE '%{$str_titulo}%'";
+			$filtros .= "{$whereAnd} titulo LIKE $$%{$str_titulo}%$$";
 			$whereAnd = " AND ";
 		}
 		if (is_numeric($ativo))
@@ -1183,13 +1183,13 @@ class clsPmieducarAcervo
 		}
 		if(is_string($str_sub_titulo))
 		{
-			$filtros .= "{$whereAnd} sub_titulo LIKE '%{$str_sub_titulo}%'";
+			$filtros .= "{$whereAnd} sub_titulo LIKE $$%{$str_sub_titulo}%$$";
 			$whereAnd = " AND ";
 		}
 
 		if(is_string($nm_autor))
 		{
-			$filtros .= "{$whereAnd} aa.nm_autor LIKE '%{$nm_autor}%'";
+			$filtros .= "{$whereAnd} aa.nm_autor LIKE $$%{$nm_autor}%$$";
 			$whereAnd = " AND ";
 		}
 
