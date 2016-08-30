@@ -218,7 +218,7 @@ class indice extends clsCadastro
 			 * desativa todas as enturmacoes da matricula anterior
 			 */
 			$obj_matricula_turma = new clsPmieducarMatriculaTurma($this->cod_matricula);
-			if(!$obj_matricula_turma->reclassificacao())
+			if(!$obj_matricula_turma->reclassificacao($this->data_cancel))
 			{
 				echo "<script>alert('Erro ao desativar enturmações da matrícula: {$this->cod_matricula}\nContate o administrador do sistema informando a matrícula!');</script>";
 			}
