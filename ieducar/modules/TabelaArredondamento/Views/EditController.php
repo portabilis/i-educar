@@ -348,8 +348,8 @@ class EditController extends Core_Controller_Page_EditController
         // 'id'               => $id,
         'nome'             => $valores['nome'][$i],
         'descricao'        => $valores['descricao'][$i],
-        'valorMinimo'      => $valores['valor_minimo'][$i],
-        'valorMaximo'      => $valores['valor_maximo'][$i],
+        'valorMinimo'      => str_replace(",", ".", $valores['valor_minimo'][$i]),
+        'valorMaximo'      => str_replace(",", ".", $valores['valor_maximo'][$i]),
         'acao'             => $valores['acao'][$i],
         'casaDecimalExata' => $valores['casaDecimalExata'][$i]
       );
