@@ -187,7 +187,7 @@ class indice extends clsCadastro
 				  	$this->mensagem = "N&atilde;o foi poss&iacute;vel desativar as enturma&ccedil;&otilde;es da matr&iacute;cula.";
 					return false;
 				  }else
-				  	$enturmacao->marcaAlunoAbandono();
+				  	$enturmacao->marcaAlunoAbandono($this->data_cancel);
 				  
       			}		
 				$this->mensagem .= "Abandono realizado com sucesso.<br>";
