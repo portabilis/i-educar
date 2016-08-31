@@ -1,36 +1,29 @@
-<table summary="" class='tabelanum1' id="tablenum1"  border='0' cellspacing='0' cellpadding='0'>
-<tr class="r2c1">
-	<td align="left" class="r2c1A" >&nbsp;Usuário atual: <b style="font-variant: small-caps;"><!-- #&USERLOGADO&# --></b></td>
-	<td align="center" class="r2c1A" >&nbsp;Último Acesso: <b><!-- #&ULTIMOACESSO&# --></b></td>
-
-	<td align="right"><a href="index.php"><img src="imagens/nvp_bot_intra_calendario.jpg" width="79" height="21" border="0" alt="Calendario" title="Calendário"></a><a href="meusdados.php"><img src="imagens/nvp_bot_intra_dados.jpg" width="80" height="21" border="0" alt="Meus Dados" title="Meus dados"></a><a href="logof.php"><img src="imagens/nvp_bot_intra_logout.jpg" width="56" height="21" border="0" alt="Logout" title="Sair"></a><!--a href="http://www.google.com.br/" target="_blank"><img src="imagens/nvp_bot_internet.jpg" width="62" height="21" border="0" alt="Acessar Internet" title="Acessar a Web"></a--></td>
-</tr>
-<tr>
-	<td colspan="3">
-	<table summary="" class='tabelanum2' border='0' cellspacing='0' cellpadding='0'>
-	<tr>
-		<td class="r3c1" width='170'><!-- #&MENU&# --></td>
-		<td valign=top>
-			<table summary="" class='tabelanum2' border='0' cellspacing='0' cellpadding='0'>
-			<tr>
-				<td height="0" id="menu_suspenso">
-					<input type="hidden" value="" id="posx">
-					<input type="hidden" value="" id="posy">
- 				</td>
-			</tr>
-			<tr>
-				<td height="100%" valign="top" id="corpo">
-				<!-- #&PROG_ALERT&# -->
-				<!-- #&NOTIFICACOES&# -->
-				<!-- #&CORPO&# -->
-				</td>
-			</tr>
-			</table>
-		</td>
-	</tr>
-	</table>
-	</td>
-</tr>
+<div class='container-fluid'>
+ 	<div class="row topbar-admin">
+        <div class="col-sm-4">
+        	&nbsp;Usuário atual: <b style="font-variant: small-caps;"><!-- #&USERLOGADO&# --></b>
+        </div>
+        <div class="col-sm-4 text-center">
+        	&nbsp;Último Acesso: <b><!-- #&ULTIMOACESSO&# --></b>
+        </div>
+        <div class="col-sm-4 text-right">
+        	<a href="index.php">Calendário</a> |
+        	<a href="meusdados.php">Meus Dados</a> |
+        	<a href="logof.php">Sair</a>
+        </div>
+    </div>
+<div class="row">
+		<div class="col-sm-2 reset-padding">
+			<!-- #&MENU&# -->
+			<input type="hidden" value="" id="posx">
+			<input type="hidden" value="" id="posy">
+		</div>
+		<div class="col-sm-10 reset-padding" id="menu_suspenso">
+			<!-- #&PROG_ALERT&# -->
+			<!-- #&NOTIFICACOES&# -->
+			<!-- #&CORPO&# -->
+		</div>
+</div>
 <tr class="rodape">
 	<td colspan="3"><center>
 		<!--img src="imagens/nvp_bot_html.jpg" width="77" height="27" border="0" alt="HTML Validate" title="HTML Validate">
@@ -42,4 +35,4 @@
 		<a href="enviar_email.php"><img src="imagens/nvp_bot_www.jpg" border="0" alt="Envie esta página por e-mail." title="Envie esta página por e-mail."></a>-->
 	</center></td>
 </tr>
-</table>
+</div>
