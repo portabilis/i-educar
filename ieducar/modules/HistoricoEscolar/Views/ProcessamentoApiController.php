@@ -905,14 +905,14 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         $this->getRequest()->dependencia
       );
 
-
       if (! is_array($alunos))
         $alunos = array();
 
       $situacoesMatricula = array('aprovado' => App_Model_MatriculaSituacao::APROVADO,
                          'reprovado' => App_Model_MatriculaSituacao::REPROVADO,
                          'em-andamento' => App_Model_MatriculaSituacao::EM_ANDAMENTO,
-                         'aprovado-conselho' => App_Model_MatriculaSituacao::APROVADO_PELO_CONSELHO
+                         'aprovado-conselho' => App_Model_MatriculaSituacao::APROVADO_PELO_CONSELHO,
+                         'aprovado-dependencia' => App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA
                    );
 
       foreach($alunos as $aluno)
