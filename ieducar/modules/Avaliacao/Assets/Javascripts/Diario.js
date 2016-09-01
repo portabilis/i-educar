@@ -216,17 +216,6 @@ function afterChangeResource($resourceElement) {
     //var $nextElement = $j($resourceElement.closest('form').find('.tabable:[tabindex="'+nextTabIndex+'"]')).first();
     var $nextElement = $j($resourceElement.closest('form').find('.tabable[tabindex="'+nextTabIndex+'"]')).first();
     var $nextNextElement = $j($resourceElement.closest('form').find('.tabable[tabindex="'+(nextTabIndex+1)+'"]')).first();
-
-    // seta foco no proximo elemento, caso este seja visivel e o elemento alterado ainda esteja focado
-    if($nextElement.is(':visible')) {
-      if(resourceElementTabIndex == focusedElementTabIndex){
-        $nextElement.focus();
-      }
-
-      break;
-    }else{
-      $nextNextElement.focus();
-    }
   }
 }
 
