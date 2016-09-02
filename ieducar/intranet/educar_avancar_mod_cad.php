@@ -96,6 +96,14 @@ class indice extends clsCadastro
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
+    $anoLetivo = new clsPmieducarEscolaAnoLetivo();
+    $anoLetivo = $anoLetivo->lista($this->ref_cod_escola, null, null, null, 1);
+
+    if (count($anoLetivo) > 1) {
+      $this->mensagem = "<span class='notice'>Nenhum aluno rematriculado. Certifique-se que somente um ano letivo encontra-se em aberto.</span>";
+      return false;
+    }
+
     $this->db  = new clsBanco();
     $this->db2 = new clsBanco();
     $this->db3 = new clsBanco();
