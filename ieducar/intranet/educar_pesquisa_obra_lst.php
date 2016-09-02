@@ -151,8 +151,9 @@ class indice extends clsListagem
 				$det_acervo_autor = $obj_acervo_autor->detalhe();
 				$registro["cod_acervo_autor"] = $det_acervo_autor["nm_autor"];
 				$script = " onclick=\"addVal1('{$_SESSION['campo1']}',{$registro['cod_acervo']}); addVal1('{$_SESSION['campo2']}','{$registro['titulo']}'); addVal1('cod_biblioteca','{$this->ref_cod_biblioteca}'); fecha();\"";
+				$tituloSubtitulo = $registro["titulo"] . " " . $registro["sub_titulo"];
 				$this->addLinhas( array(
-					"<a href=\"javascript:void(0);\" {$script}>{$registro["titulo"]}</a>",
+					"<a href=\"javascript:void(0);\" {$script}>{$tituloSubtitulo}</a>",
 					"<a href=\"javascript:void(0);\" {$script}>{$registro["cod_acervo_autor"]}</a>",
 					"<a href=\"javascript:void(0);\" {$script}>{$registro["isbn"]}</a>"
 				) );

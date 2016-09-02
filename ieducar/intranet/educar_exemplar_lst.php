@@ -297,7 +297,7 @@ class indice extends clsListagem
 				{
 					$obj_ref_cod_acervo = new clsPmieducarAcervo( $registro["ref_cod_acervo"] );
 					$det_ref_cod_acervo = $obj_ref_cod_acervo->detalhe();
-					$registro["ref_cod_acervo"] = $det_ref_cod_acervo["titulo"];
+					$registro["ref_cod_acervo"] = $det_ref_cod_acervo["titulo"] . " " . $det_ref_cod_acervo["sub_titulo"];
 				}
 				else
 				{
