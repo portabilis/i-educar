@@ -84,6 +84,7 @@
     <div id="flash-container">
 
       <!-- #&ERROLOGIN&# -->
+       <p style="min-height: 0px;" class="flash warning"><strong>Instabilidade nos servi&ccedil;os:</strong> Comunicamos a todos os nossos clientes que nossas aplica&ccedil;&otilde;es est&atilde;o passando por instabilidades e podem ficar indispon&iacute;veis momentaneamente devido a manuten&ccedil;&otilde;es em nossos servidores. Qualquer d&uacute;vida, entre em contato pelo e-mail suporte@portabilis.com.br. Obrigado pela compreens&atilde;o.</div></p>
 
       <!-- #&PENDENCIA_ADMINISTRATIVA&# -->
 
