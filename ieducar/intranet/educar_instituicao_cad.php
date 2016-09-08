@@ -203,10 +203,9 @@ class indice extends clsCadastro
 		$this->campoNumero( "telefone", "Telefone", $this->telefone, 11, 11 );
 
 
-		if ($GLOBALS['coreExt']['Config']->app->instituicao->data_base_deslocamento) {
-	  		$this->campoData('data_base_transferencia', 'Data máxima para deslocamento', Portabilis_Date_Utils::pgSQLToBr($this->data_base_transferencia), null, null, false);
+		$this->campoData('data_base_transferencia', 'Data máxima para deslocamento', Portabilis_Date_Utils::pgSQLToBr($this->data_base_transferencia), null, null, false);
+
         $this->campoData('data_base_remanejamento', 'Data máxima para troca de sala', Portabilis_Date_Utils::pgSQLToBr($this->data_base_remanejamento), null, null, false);
-	  	}
 
 		///$hiddenInputOptions = array('options' => array('value' => $this->coordenador_transporte));
 		//$helperOptions      = array('objectName' => 'gestor', 'hiddenInputOptions' => $hiddenInputOptions);
