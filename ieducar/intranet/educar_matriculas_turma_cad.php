@@ -251,7 +251,7 @@ class indice extends clsCadastro
     }
 
     if ($this->matriculas_turma) {
-      $this->campoRotulo('titulo', 'Matr&iacute;culas', "<b>&nbsp;Alunos j&aacute; matriculados e enturmados&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Marque o(s) aluno(s) para desenturmar</b><label style='display: block; width: 350px; margin-left: 256px;'>&nbsp;&nbsp;&nbsp;<input type='checkbox' name='CheckTodos' onClick='marcarCheck(".'"check_desenturma[]"'.");'/>Marcar todos</label>");
+      $this->campoRotulo('tituloUm', 'Matr&iacute;culas', "<b>&nbsp;Alunos j&aacute; matriculados e enturmados&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Marque o(s) aluno(s) para desenturmar</b><label style='display: block; width: 350px; margin-left: 256px;'>&nbsp;&nbsp;&nbsp;<input type='checkbox' name='CheckTodos' onClick='marcarCheck(".'"check_desenturma[]"'.");'/>Marcar todos</label>");
       foreach ($this->matriculas_turma as $matricula => $campo) {
         $obj_matricula = new clsPmieducarMatricula($matricula);
         $det_matricula = $obj_matricula->detalhe();
@@ -328,21 +328,41 @@ class indice extends clsCadastro
     }
 
     if ($this->matriculas_turma) {
-      foreach ($this->ref_cod_matricula as $matricula => $campo) {
-        $obj = new clsPmieducarMatriculaTurma($matricula, $this->ref_cod_turma,
-          NULL, $this->pessoa_logada, NULL, NULL, 1, NULL, $campo['sequencial_']);        
 
-        $existe = $obj->existe();
+      $totalAlunosParaEnturmar = count($this->ref_cod_matricula);
+      $objTurma = new clsPmieducarTurma();
+      $dadosTurma = $objTurma->lista($this->ref_cod_turma);
+      $maxAlunos = $dadosTurma[0]['max_aluno'];
+      $objEnturmacoes = new clsPmieducarMatriculaTurma();
+      $alunosEnturmados = $objEnturmacoes->enturmacoesSemDependencia($this->ref_cod_turma);
+      $vagasDisponiveis = $maxAlunos - $alunosEnturmados[0];
+      $objEscolaSerie = new clsPmieducarEscolaSerie();
+      $dadosEscolaSerie = $objEscolaSerie->lista($this->ref_ref_cod_escola, $this->ref_ref_cod_serie);
 
-        if (!$existe) {
-          $obj->data_enturmacao = $this->data_enturmacao;
-          $cadastrou = $obj->cadastra();
+      if ($vagasDisponiveis >= $totalAlunosParaEnturmar || !$dadosEscolaSerie[0]['bloquear_enturmacao_sem_vagas']) {
+        foreach ($this->ref_cod_matricula as $matricula => $campo) {
+          $obj = new clsPmieducarMatriculaTurma($matricula, $this->ref_cod_turma,
+            NULL, $this->pessoa_logada, NULL, NULL, 1, NULL, $campo['sequencial_']);
 
-          if (!$cadastrou) {
-            $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
-            return FALSE;
+          $existe = $obj->existe();
+
+          if (!$existe) {
+            $obj->data_enturmacao = $this->data_enturmacao;
+            $cadastrou = $obj->cadastra();
+
+            if (!$cadastrou) {
+              $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+              return FALSE;
+            }
           }
         }
+      }else{
+        if ($vagasDisponiveis > 0) {
+          $this->mensagem = 'Cadastro n&atilde;o realizado. H&aacute; apenas '. $vagasDisponiveis . ' vagas restantes para esta turma.';
+        }else{
+          $this->mensagem = 'Cadastro n&atilde;o realizado. N&atilde;o h&aacute; mais vagas dispon&iacute;veis para esta turma.';
+        }
+        return false;
       }
 
       $this->mensagem .= 'Cadastro efetuada com sucesso.<br>';
