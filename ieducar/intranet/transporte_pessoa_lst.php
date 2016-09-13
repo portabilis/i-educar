@@ -78,6 +78,7 @@ class indice extends clsListagem
 	var $ref_cod_rota_transporte_escolar;
 	var $nome_pessoa;
 	var $nome_destino;
+	var $ano_rota;
 
 	function Gerar()
 	{
@@ -91,21 +92,13 @@ class indice extends clsListagem
 		foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
 			$this->$var = ( $val === "" ) ? null: $val;
 
-		
-
-		// Cria lista de rotas 
-		$obj_rota = new clsModulesRotaTransporteEscolar();
-		$obj_rota->setOrderBy(' descricao asc ');
-		$lista_rota = $obj_rota->lista();
-		$select_rota = array("" => "Selecione uma rota" );
-		foreach ($lista_rota as $reg) {
-			$select_rota["{$reg['cod_rota_transporte_escolar']}"] = "{$reg['descricao']}";
-		}
-
 		$this->campoNumero("cod_pessoa_transporte","C&oacute;digo",$this->cod_pessoa_transporte,20,255,false);
 		$this->campoTexto("nome_pessoa","Nome da pessoa", $this->nome_pessoa,50,255,false);
 		$this->campoTexto("nome_destino","Nome do destino", $this->nome_destino,70,255,false);
-		$this->campoLista( "ref_cod_rota_transporte_escolar", "Rota", $select_rota, $this->ref_cod_rota_transporte_escolar, "", false, "", "", false, false );
+
+		$this->campoTexto("ano_rota","Ano", $this->ano_rota,20,4,false);
+
+		$this->inputsHelper()->dynamic('rotas',  array('required' =>  false));
 
 		$obj_permissoes = new clsPermissoes();
 
@@ -123,22 +116,19 @@ class indice extends clsListagem
 		$this->limite = 20000000000;
 		$this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
-		
 		$obj = new clsModulesPessoaTransporte();
 		$obj->setLimite($this->limite,$this->offset);
 
-		$lista = $obj->lista($this->cod_pessoa_transporte, null,
-			$this->ref_cod_rota_transporte_escolar,null, null,$this->nome_pessoa,$this->nome_destino
-			);
+		$lista = $obj->lista($this->cod_pessoa_transporte, null, $this->ref_cod_rota_transporte_escolar,null, null,$this->nome_pessoa,$this->nome_destino, $this->ano_rota);
 		$total = $lista->_total;
 
 		foreach ( $lista AS $registro ) {
 
 			$this->addLinhas( array(
-				"<a href=\"transporte_pessoa_det.php?cod_pt={$registro["cod_pessoa_transporte"]}\">{$registro["cod_pessoa_transporte"]}</a>",				
-				"<a href=\"transporte_pessoa_det.php?cod_pt={$registro["cod_pessoa_transporte"]}\">{$registro["nome_pessoa"]}</a>",	
-				"<a href=\"transporte_pessoa_det.php?cod_pt={$registro["cod_pessoa_transporte"]}\">{$registro["nome_rota"]}</a>",	
-				"<a href=\"transporte_pessoa_det.php?cod_pt={$registro["cod_pessoa_transporte"]}\">".(trim($registro["nome_destino"])=='' ? $registro["nome_destino2"] : $registro["nome_destino"])."</a>",	
+				"<a href=\"transporte_pessoa_det.php?cod_pt={$registro["cod_pessoa_transporte"]}\">{$registro["cod_pessoa_transporte"]}</a>",
+				"<a href=\"transporte_pessoa_det.php?cod_pt={$registro["cod_pessoa_transporte"]}\">{$registro["nome_pessoa"]}</a>",
+				"<a href=\"transporte_pessoa_det.php?cod_pt={$registro["cod_pessoa_transporte"]}\">{$registro["nome_rota"]}</a>",
+				"<a href=\"transporte_pessoa_det.php?cod_pt={$registro["cod_pessoa_transporte"]}\">".(trim($registro["nome_destino"])=='' ? $registro["nome_destino2"] : $registro["nome_destino"])."</a>",
 				"<a href=\"transporte_pessoa_det.php?cod_pt={$registro["cod_pessoa_transporte"]}\">{$registro["nome_ponto"]}</a>"
 			) );
 		}

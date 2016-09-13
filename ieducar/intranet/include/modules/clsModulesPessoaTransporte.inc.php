@@ -267,47 +267,35 @@ class clsModulesPessoaTransporte
    * Retorna uma lista de registros filtrados de acordo com os parâmetros.
    * @return array
    */
-  function lista($cod_pessoa_transporte = NULL, $ref_idpes = NULL,
-    $ref_cod_rota_transporte_escolar = NULL,
-    $ref_cod_ponto_transporte_escolar = NULL, $ref_idpes_destino = NULL, $nome_pessoa = NULL, $nome_destino = NULL)
+  function lista($cod_pessoa_transporte = NULL,
+                 $ref_idpes = NULL,
+                 $ref_cod_rota_transporte_escolar = NULL,
+                 $ref_cod_ponto_transporte_escolar = NULL,
+                 $ref_idpes_destino = NULL,
+                 $nome_pessoa = NULL,
+                 $nome_destino = NULL,
+                 $ano_rota = NULL)
   {
     
-    $sql = "SELECT {$this->_campos_lista}, (
-          SELECT
-            nome
-          FROM
-            cadastro.pessoa
-          WHERE
-            idpes = ref_idpes_destino
-         ) AS nome_destino, (
-          SELECT
-            nome
-          FROM
-            cadastro.pessoa
-          WHERE
-            idpes = ref_idpes
-         ) AS nome_pessoa, (
-          SELECT
-            descricao 
-          FROM
-            modules.rota_transporte_escolar
-          WHERE
-            ref_cod_rota_transporte_escolar = cod_rota_transporte_escolar
-         ) AS nome_rota, (
-          SELECT
-            descricao 
-          FROM
-            modules.ponto_transporte_escolar
-          WHERE
-            ref_cod_ponto_transporte_escolar = cod_ponto_transporte_escolar
-         ) AS nome_ponto, (
-          SELECT
-            nome
-          FROM
-            cadastro.pessoa p, modules.rota_transporte_escolar rt
-          WHERE
-            p.idpes = rt.ref_idpes_destino and ref_cod_rota_transporte_escolar = rt.cod_rota_transporte_escolar
-         ) AS nome_destino2 FROM {$this->_tabela}";
+    $sql = "SELECT pt.cod_pessoa_transporte,
+                   pt.ref_cod_rota_transporte_escolar,
+                   pt.ref_idpes,
+                   pt.ref_cod_ponto_transporte_escolar,
+                   pt.ref_idpes_destino,
+                   pt.observacao,
+                   pt.turno,
+                   pd.nome AS nome_destino,
+                   p.nome AS nome_pessoa,
+                   rte.descricao AS nome_rota,
+                   pte.descricao AS nome_ponto,
+                   pd2.nome AS nome_destino2
+             FROM {$this->_tabela} pt
+             LEFT JOIN cadastro.pessoa pd ON (pd.idpes = pt.ref_idpes_destino)
+             LEFT JOIN cadastro.pessoa p ON (p.idpes = pt.ref_idpes)
+             LEFT JOIN modules.rota_transporte_escolar rte ON (rte.cod_rota_transporte_escolar = pt.ref_cod_rota_transporte_escolar)
+             LEFT JOIN modules.ponto_transporte_escolar pte ON (pte.cod_ponto_transporte_escolar = pt.ref_cod_ponto_transporte_escolar)
+             LEFT JOIN cadastro.pessoa pd2 ON (pd2.idpes = rte.ref_idpes_destino
+                                           AND pt.ref_cod_rota_transporte_escolar = rte.cod_rota_transporte_escolar)";
     $filtros = "";
 
     $whereAnd = " WHERE ";
@@ -326,51 +314,50 @@ class clsModulesPessoaTransporte
     if (is_numeric($ref_cod_rota_transporte_escolar)) {
       $filtros .= "{$whereAnd} ref_cod_rota_transporte_escolar = '{$ref_cod_rota_transporte_escolar}'";
       $whereAnd = " AND ";
-    }    
+    }
 
     if (is_numeric($ref_cod_ponto_transporte_escolar)) {
       $filtros .= "{$whereAnd} ref_cod_ponto_transporte_escolar = '{$ref_cod_ponto_transporte_escolar}'";
       $whereAnd = " AND ";
-    }   
+    }
 
     if (is_numeric($ref_idpes_destino)) {
       $filtros .= "{$whereAnd} ref_idpes_destino = '{$ref_idpes_destino}'";
       $whereAnd = " AND ";
-    }       
+    }
 
     if (is_string($nome_pessoa)) {
         $filtros .= "
-        {$whereAnd} TO_ASCII(LOWER((
-          SELECT
-            nome
-          FROM
-            cadastro.pessoa
-          WHERE
-            idpes = ref_idpes
-         ))) LIKE TO_ASCII(LOWER('%{$nome_pessoa}%')) ";
+        {$whereAnd} TO_ASCII(LOWER((p.nome))) LIKE TO_ASCII(LOWER('%{$nome_pessoa}%')) ";
       $whereAnd = " AND ";
-    }       
+    }
 
     if (is_string($nome_destino)) {
         $filtros .= "
-        {$whereAnd} TO_ASCII(LOWER((
-          SELECT
-            nome
-          FROM
-            cadastro.pessoa
-          WHERE
-            idpes = ref_idpes_destino
-         ))) LIKE TO_ASCII(LOWER('%{$nome_destino}%')) ";
+        {$whereAnd} (TO_ASCII(LOWER((pd.nome))) LIKE TO_ASCII(LOWER('%{$nome_destino}%')) OR TO_ASCII(LOWER((pd2.nome))) LIKE TO_ASCII(LOWER('%{$nome_destino}%'))) ";
       $whereAnd = " AND ";
-    }             
+    }
+
+    if (is_numeric($ano_rota)) {
+      $filtros .= "{$whereAnd} rte.ano = '{$ano_rota}'";
+      $whereAnd = " AND ";
+    }
 
     $db = new clsBanco();
     $countCampos = count(explode(',', $this->_campos_lista))+2;
     $resultado = array();
 
     $sql .= $filtros . $whereNomes. $this->getOrderby() . $this->getLimite();
+    // echo $sql; die;
 
-    $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} {$filtros}");
+    $this->_total = $db->CampoUnico("SELECT COUNT(0)
+                                       FROM {$this->_tabela} pt
+                                       LEFT JOIN cadastro.pessoa pd ON (pd.idpes = pt.ref_idpes_destino)
+                                       LEFT JOIN cadastro.pessoa p ON (p.idpes = pt.ref_idpes)
+                                       LEFT JOIN modules.rota_transporte_escolar rte ON (rte.cod_rota_transporte_escolar = pt.ref_cod_rota_transporte_escolar)
+                                       LEFT JOIN modules.ponto_transporte_escolar pte ON (pte.cod_ponto_transporte_escolar = pt.ref_cod_ponto_transporte_escolar)
+                                       LEFT JOIN cadastro.pessoa pd2 ON (pd2.idpes = rte.ref_idpes_destino
+                                                                     AND pt.ref_cod_rota_transporte_escolar = rte.cod_rota_transporte_escolar) {$filtros}");
 
     $db->Consulta($sql);
 
