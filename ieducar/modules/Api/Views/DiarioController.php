@@ -207,6 +207,49 @@ class DiarioController extends ApiCoreController
     }
   }
 
+  protected function postRecuperacoes(){
+    if($this->canPostNotas()){
+      $etapa = $this->getRequest()->etapa;
+      $notas = $this->getRequest()->notas;
+
+      foreach ($notas as $turmaId => $notaTurma) {
+
+        foreach($notaTurma as $alunoId => $notaTurmaAluno){
+
+          foreach ($notaTurmaAluno as $componenteCurricularId => $notaTurmaAlunoDisciplina){
+            if($this->validateComponenteTurma($turmaId, $componenteCurricularId)){
+              $valor = $notaTurmaAlunoDisciplina['nota'];
+              $notaRecuperacao = $notaTurmaAlunoDisciplina['recuperacao'];
+              $nomeCampoRecuperacao = $this->defineCampoTipoRecuperacao($turmaId);
+
+              if($notaRecuperacao > $valor){
+                $novaNota = $notaRecuperacao;
+              }else{
+                $novaNota = $valor;
+              }
+
+              $valor = $this->truncate($valor, 4);
+              $array_nota = array(
+                    'componenteCurricular' => $componenteCurricularId,
+                    'nota'                 => $novaNota,
+                    'etapa'                => $etapa,
+                    'notaOriginal'         => $valor,
+                    $nomeCampoRecuperacao  => $notaRecuperacao);
+
+              $nota = new Avaliacao_Model_NotaComponente($array_nota);
+
+              if($this->serviceBoletim($turmaId, $alunoId)){
+                $this->serviceBoletim($turmaId, $alunoId)->addNota($nota);
+                $this->trySaveServiceBoletim($turmaId, $alunoId);
+              }
+            }
+          }
+        }
+        $this->messenger->append('Recuperacoes postadas com sucesso!', 'success');
+      }
+    }
+  }
+
   private function defineCampoTipoRecuperacao($turmaId){
     $regra = $this->getRegra($turmaId);
     $campoRecuperacao = '';
@@ -445,6 +488,8 @@ class DiarioController extends ApiCoreController
   public function Gerar() {
     if ($this->isRequestFor('post', 'notas'))
       $this->appendResponse($this->postNotas());
+    elseif ($this->isRequestFor('post', 'recuperacoes'))
+      $this->appendResponse($this->postRecuperacoes());
     elseif ($this->isRequestFor('post', 'faltas-por-componente'))
       $this->appendResponse($this->postFaltasPorComponente());
     elseif ($this->isRequestFor('post', 'faltas-geral'))
