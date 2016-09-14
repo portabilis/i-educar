@@ -3,7 +3,6 @@
 
     var $anoField   = getElementFor('ano_rota');
     var $rotasField = getElementFor('ref_cod_rota_transporte_escolar');
-
     var handleGetRotas = function(response) {
       var selectOptions = jsonResourcesToSelectOptions(response['options']);
       updateSelect($rotasField, selectOptions, "Selecione uma rota");
@@ -36,6 +35,10 @@
 
     // bind onchange event
     $anoField.change(updateRotas);
+    // carrega rotas quando o ano já estiver preenchido
+    if ($anoField.val()) {
+      updateRotas();
+    }
 
   }); // ready
 })(jQuery);
