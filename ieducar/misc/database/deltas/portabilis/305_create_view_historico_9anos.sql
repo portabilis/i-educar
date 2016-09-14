@@ -934,7 +934,37 @@ SELECT ref_ref_cod_aluno AS cod_aluno,
            WHERE he.ref_cod_instituicao = phe.ref_cod_instituicao
              AND substring(he.nm_serie,1,1) = substring(phe.nm_serie,1,1)
              AND he.ref_cod_aluno = phe.ref_cod_aluno
-             AND ativo = 1)) AS observacao_all
+             AND ativo = 1)) AS observacao_all,
+
+     (SELECT m.cod_matricula
+      FROM pmieducar.matricula m
+      WHERE m.ano =
+          (SELECT ano
+           FROM historico_escolar
+           WHERE aprovado = 4
+             AND ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
+             AND ativo = 1
+             AND extra_curricular = 0
+           ORDER BY ano DESC, sequencial DESC LIMIT 1)
+        AND
+          (SELECT sequencial
+           FROM historico_escolar
+           WHERE ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
+             AND ativo = 1
+             AND extra_curricular = 0
+           ORDER BY ano DESC, sequencial DESC LIMIT 1) =
+          (SELECT sequencial
+           FROM historico_escolar
+           WHERE aprovado = 4
+             AND ativo = 1
+             AND extra_curricular = 0
+             AND ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
+           ORDER BY ano DESC, sequencial DESC LIMIT 1)
+        AND m.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
+        AND m.ativo = 1
+        AND m.aprovado = 4
+      ORDER BY m.cod_matricula DESC LIMIT 1) AS matricula_transferido
+
 FROM pmieducar.historico_disciplinas
 INNER JOIN pmieducar.historico_escolar ON (historico_escolar.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
                                            AND historico_escolar.sequencial = historico_disciplinas.ref_sequencial)
