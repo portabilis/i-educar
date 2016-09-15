@@ -1,0 +1,18 @@
+ieducar_1204:
+  build: .
+  environment:
+    - CORE_EXT_CONFIGURATION_ENV=development
+  ports:
+    - "8001:80"
+  volumes:
+    - .:/home/portabilis/ieducar
+  links:
+    - postgres_82
+  container_name: ieducar_1204
+
+postgres_82:
+  image: ignatov/docker-postgresql-8.2
+  environment:
+    - POSTGRES_PASSWORD=postgres
+  ports:
+    - "5433:5432"
