@@ -194,21 +194,40 @@ class EscolaController extends ApiCoreController
 
   private function getEtapasTurmasAnoEscola($ano, $escola)
   {
-    $sql = 'SELECT tm.ref_cod_turma as turma_id,
-                   tm.data_inicio,
-                   tm.data_fim
+    $sql_turmas = 'SELECT DISTINCT tm.ref_cod_turma as turma_id
               FROM pmieducar.turma_modulo tm
               INNER JOIN pmieducar.turma t ON (tm.ref_cod_turma = t.cod_turma)
             WHERE t.ano = $1 and t.ref_ref_cod_escola = $2
-          ORDER BY tm.ref_cod_turma, tm.sequencial';
-    $etapas_de_turmas = array();
-    $etapas_de_turmas = $this->fetchPreparedQuery($sql, array($ano, $escola));
-    $attrs = array('turma_id', 'data_inicio', 'data_fim');
-    $etapas_de_turmas = Portabilis_Array_Utils::filterSet($etapas_de_turmas, $attrs);
+          ORDER BY tm.ref_cod_turma';
 
-    return array("etapas_de_turmas" => $etapas_de_turmas);
+    $turmas = array();
+    $turmas = $this->fetchPreparedQuery($sql_turmas, array($ano, $escola));
+    $attrs_turmas = array('turma_id');
+    $turmas = Portabilis_Array_Utils::filterSet($turmas, $attrs_turmas);
+
+    foreach ($turmas as $key => $turma) {
+      $turmas[$key] = array_merge($turmas[$key], $this->getEtapasTurma($ano, $escola, $turma['turma_id']));
+    }
+
+    return array("etapas_de_turmas" => $turmas);
   }
 
+  private function getEtapasTurma($ano, $escola, $turma)
+  {
+    $sql_etapas = 'SELECT tm.data_inicio,
+                   tm.data_fim
+              FROM pmieducar.turma_modulo tm
+              INNER JOIN pmieducar.turma t ON (tm.ref_cod_turma = t.cod_turma)
+            WHERE t.ano = $1 and t.ref_ref_cod_escola = $2 and tm.ref_cod_turma = $3
+          ORDER BY tm.ref_cod_turma';
+
+    $etapas = array();
+    $etapas = $this->fetchPreparedQuery($sql_etapas, array($ano, $escola, $turma));
+    $attrs_etapas= array('data_inicio', 'data_fim');
+    $etapas = Portabilis_Array_Utils::filterSet($etapas, $attrs_etapas);
+
+    return array("etapas" => $etapas);
+  }
 
   protected function getEscolas(){
     if ($this->canGetEscolas()){
