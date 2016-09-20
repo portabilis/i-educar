@@ -235,6 +235,57 @@ class MatriculaController extends ApiCoreController
     }
   }
 
+
+  protected function canGetMovimentacaoEnturmacao() {
+    return $this->validatesPresenceOf('ano') &&
+           $this->validatesPresenceOf('escola');
+  }
+
+  protected function getMovimentacaoEnturmacao() {
+    $ano = $this->getRequest()->ano;
+    $escola = $this->getRequest()->escola;
+
+    if ($this->canGetMovimentacaoEnturmacao()) {
+      $sql = "SELECT cod_matricula AS matricula_id,
+                     aprovado AS situacao,
+                     updated_at AS data_atualizacao
+              FROM pmieducar.matricula
+              WHERE ativo = 1
+                AND ano = $1
+                AND ref_ref_cod_escola = $2";
+
+      $params     = array($ano, $escola);
+      $matriculas = $this->fetchPreparedQuery($sql, $params, false);
+
+      if (is_array($matriculas) && count($matriculas) > 0) {
+        $attrs      = array('matricula_id', 'situacao', 'data_atualizacao');
+        $matriculas = Portabilis_Array_Utils::filterSet($matriculas, $attrs);
+
+        foreach($matriculas as $key => $matricula) {
+          $sql = "SELECT ref_cod_turma AS turma_id,
+                         sequencial AS sequencial,
+                         data_enturmacao AS data_entrada,
+                         data_exclusao AS data_saida,
+                         updated_at AS data_atualizacao
+                  FROM pmieducar.matricula_turma
+                  WHERE ativo = 1
+                    AND ref_cod_matricula = $1";
+
+          $params      = array($matriculas[$key]['matricula_id']);
+          $enturmacoes = $this->fetchPreparedQuery($sql, $params, false);
+
+          if (is_array($enturmacoes) && count($enturmacoes) > 0) {
+            $attrs      = array('turma_id', 'sequencial', 'data_entrada', 'data_saida', 'data_atualizacao');
+            $enturmacoes = Portabilis_Array_Utils::filterSet($enturmacoes, $attrs);
+
+            $matriculas[$key]['enturmacoes'] = $enturmacoes;
+          }
+        }
+        return array('matriculas' => $matriculas);
+      }
+    }
+  }
+
   protected function getFrequencia() {
     $cod_matricula = $this->getRequest()->id;
     $objBanco = new clsBanco();
@@ -422,6 +473,9 @@ class MatriculaController extends ApiCoreController
 
     elseif ($this->isRequestFor('get', 'matricula-search'))
       $this->appendResponse($this->search());
+
+    elseif ($this->isRequestFor('get', 'movimentacao-enturmacao'))
+      $this->appendResponse($this->getMovimentacaoEnturmacao());
 
     elseif ($this->isRequestFor('delete', 'abandono'))
       $this->appendResponse($this->deleteAbandono());
