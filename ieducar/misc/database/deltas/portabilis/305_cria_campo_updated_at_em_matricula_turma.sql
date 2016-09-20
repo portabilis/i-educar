@@ -5,10 +5,10 @@
 ALTER TABLE pmieducar.matricula_turma ADD COLUMN updated_at TIMESTAMP;
 
 -- adiciona trigger para atualizar a coluna updated_at
-CREATE OR REPLACE FUNCTION pmieducar.update_at_matricula_turma() RETURNS TRIGGER AS $$ BEGIN NEW.updated_at = now(); RETURN NEW; END; $$ LANGUAGE 'plpgsql';
+CREATE OR REPLACE FUNCTION pmieducar.updated_at_matricula_turma() RETURNS TRIGGER AS $$ BEGIN NEW.updated_at = now(); RETURN NEW; END; $$ LANGUAGE 'plpgsql';
 
 
-CREATE TRIGGER trigger_update_at_matricula_turma
+CREATE TRIGGER trigger_updated_at_matricula_turma
 BEFORE
 UPDATE ON pmieducar.matricula_turma
-FOR EACH ROW EXECUTE PROCEDURE pmieducar.update_at_matricula_turma();
+FOR EACH ROW EXECUTE PROCEDURE pmieducar.updated_at_matricula_turma();
