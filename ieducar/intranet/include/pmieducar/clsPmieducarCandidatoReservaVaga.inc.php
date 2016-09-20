@@ -309,7 +309,7 @@ class clsPmieducarCandidatoReservaVaga
               INNER JOIN pmieducar.aluno a ON a.cod_aluno = crv.ref_cod_aluno
               INNER JOIN cadastro.pessoa pes ON pes.idpes = a.ref_idpes
               INNER JOIN cadastro.fisica fis ON fis.idpes = pes.idpes
-              INNER JOIN cadastro.pessoa resp_pes ON fis.idpes_responsavel = resp_pes.idpes
+               LEFT JOIN cadastro.pessoa resp_pes ON fis.idpes_responsavel = resp_pes.idpes
               INNER JOIN pmieducar.serie AS ser ON ser.cod_serie = crv.ref_cod_serie ";
     $whereAnd = ' WHERE ';
 
