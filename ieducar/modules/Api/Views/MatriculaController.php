@@ -263,13 +263,12 @@ class MatriculaController extends ApiCoreController
 
         foreach($matriculas as $key => $matricula) {
           $sql = "SELECT ref_cod_turma AS turma_id,
-                         sequencial AS sequencial,
+                         sequencial_fechamento AS sequencial,
                          data_enturmacao AS data_entrada,
                          data_exclusao AS data_saida,
                          updated_at AS data_atualizacao
                   FROM pmieducar.matricula_turma
-                  WHERE ativo = 1
-                    AND ref_cod_matricula = $1";
+                  WHERE ref_cod_matricula = $1";
 
           $params      = array($matriculas[$key]['matricula_id']);
           $enturmacoes = $this->fetchPreparedQuery($sql, $params, false);
