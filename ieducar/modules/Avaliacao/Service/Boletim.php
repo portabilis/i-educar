@@ -1469,13 +1469,21 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $turmaId = $this->getOption('ref_cod_turma');
     foreach ($mediasComponentes as $id => $mediaComponente) {
 
-      if($this->getRegra()->get('tipoProgressao') == RegraAvaliacao_Model_TipoProgressao::CONTINUADA){
-         $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::APROVADO;
-         $situacaoGeral = App_Model_MatriculaSituacao::APROVADO;
-         continue;
-      }
-
       $etapa = $mediaComponente[0]->etapa;
+      $qtdComponentes++;
+      $somaMedias += $media;
+      $totalEtapas = $this->getOption('etapas');
+
+      if($this->getRegra()->get('tipoProgressao') == RegraAvaliacao_Model_TipoProgressao::CONTINUADA){
+        if ($etapa < $totalEtapas && $etapa != 'Rc'){
+          $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::EM_ANDAMENTO;
+          $situacaoGeral = App_Model_MatriculaSituacao::EM_ANDAMENTO;
+        }else{
+          $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::APROVADO;
+          $situacaoGeral = App_Model_MatriculaSituacao::APROVADO;
+        }
+        continue;
+      }
 
       if ($this->getRegra()->get('tipoNota') == RegraAvaliacao_Model_Nota_TipoValor::NUMERICA) {
         $media = $mediaComponente[0]->mediaArredondada;
@@ -1483,10 +1491,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       else {
         $media = $mediaComponente[0]->media;
       }
-
-      $qtdComponentes++;
-      $somaMedias += $media;
-      $totalEtapas = $this->getOption('etapas');
 
       if ($this->getRegra()->get('definirComponentePorEtapa') == "1") {
         $etapaEspecifica = App_Model_IedFinder::getUltimaEtapaComponente($turmaId, $id);
