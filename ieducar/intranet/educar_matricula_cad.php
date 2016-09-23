@@ -305,7 +305,9 @@ class indice extends clsCadastro
                                                                      null,
                                                                      1
                                                                      );
-    if(! $this->existeVagasDisponíveis())
+    $objEscolaSerie = new clsPmieducarEscolaSerie();
+    $dadosEscolaSerie = $objEscolaSerie->lista($this->ref_cod_escola, $this->ref_cod_serie);
+    if(! $this->existeVagasDisponíveis() && $dadosEscolaSerie[0]['bloquear_enturmacao_sem_vagas'])
       return false;
 
     if(is_array($anoLetivoEmAndamentoEscola)) {
