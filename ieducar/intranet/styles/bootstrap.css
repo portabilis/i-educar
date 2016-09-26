@@ -6840,6 +6840,7 @@ input#busca-menu-input {
 div#menu_suspenso {
     background-color: #9597a2 !important;
     border-color: #ccc !important;
+    height: 20px !important;
 }
 
 .clLevel0 {
@@ -6859,4 +6860,12 @@ a.dropdown-link{
 
 .clLevel1over, .clLevel2over{
   background: #a1a6b5;
+}
+
+table.table.table-striped a {
+    color: #222;
+}
+
+.breadcrumb{
+  margin-top: 40px;
 }

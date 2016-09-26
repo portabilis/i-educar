@@ -155,7 +155,7 @@ class clsDetalhe extends Core_Controller_Page_Abstract
     if ($this->locale){
 
       $retorno .=  "
-        <table class='tableDetalhe' $width border='0'  cellpadding='0' cellspacing='0'>";
+        <table class='breadcrumb' $width border='0'  cellpadding='0' cellspacing='0'>";
 
       $retorno .=  "<tr height='10px'>
                       <td class='fundoLocalizacao' colspan='2'>{$this->locale}</td>
@@ -166,14 +166,14 @@ class clsDetalhe extends Core_Controller_Page_Abstract
 
     $retorno .= "
       <!-- detalhe begin -->
-      <table class='tableDetalhe' $width border='0' cellpadding='2' cellspacing='2'>
+      <table class='table table-striped' $width border='0' cellpadding='2' cellspacing='2'>
         <tr>
           <td class='formdktd' colspan='2' height='24'>{$barra}</td>
         </tr>
       ";
 
     if (empty($this->detalhe)) {
-      $retorno .= "<tr><td class='tableDetalheLinhaSim' colspan='2'>N&atilde;o h&aacute; informa&ccedil;&atilde;o a ser apresentada.</td></tr>\n";
+      $retorno .= "<tr><td class='table table-stripedLinhaSim' colspan='2'>N&atilde;o h&aacute; informa&ccedil;&atilde;o a ser apresentada.</td></tr>\n";
     }
     else
     {
@@ -225,7 +225,7 @@ class clsDetalhe extends Core_Controller_Page_Abstract
       }
     }
 
-    $retorno .= "<tr><td class='tableDetalheLinhaSeparador' colspan='2'></td></tr>\n";
+    $retorno .= "<tr><td class='table table-stripedLinhaSeparador' colspan='2'></td></tr>\n";
 
     if (!empty($this->url_editar) || !empty($this->url_cancelar) || $this->array_botao) {
       $retorno .= "
@@ -238,15 +238,15 @@ class clsDetalhe extends Core_Controller_Page_Abstract
             </script>";
 
       if ($this->url_novo) {
-        $retorno .= "&nbsp;<input type='button' class='botaolistagem' onclick='javascript:go( \"$this->url_novo\" );' value=' {$this->caption_novo} '>&nbsp;\n";
+        $retorno .= "&nbsp;<input type='button' class='btn btn-success' onclick='javascript:go( \"$this->url_novo\" );' value=' {$this->caption_novo} '>&nbsp;\n";
       }
 
       if ($this->url_editar) {
-        $retorno .= "&nbsp;<input type='button' class='botaolistagem' onclick='javascript:go( \"$this->url_editar\" );' value=' Editar '>&nbsp;\n";
+        $retorno .= "&nbsp;<input type='button' class='btn btn-danger' onclick='javascript:go( \"$this->url_editar\" );' value=' Editar '>&nbsp;\n";
       }
 
       if ($this->url_cancelar) {
-        $retorno .= "&nbsp;<input type='button' class='botaolistagem' onclick='javascript:go( \"$this->url_cancelar\" );' value=' $this->nome_url_cancelar '>&nbsp;\n";
+        $retorno .= "&nbsp;<input type='button' class='btn btn-warning botaolistagem' onclick='javascript:go( \"$this->url_cancelar\" );' value=' $this->nome_url_cancelar '>&nbsp;\n";
       }
       $retorno .= "</td></tr>";
 
@@ -256,12 +256,12 @@ class clsDetalhe extends Core_Controller_Page_Abstract
 
       if ($this->array_botao_url) {
         for ($i = 0, $total = count($this->array_botao); $i < $total; $i++) {
-          $retorno .= "&nbsp;<input type='button' class='botaolistagem' onclick='javascript:go( \"".$this->array_botao_url[$i]."\" );' value='".$this->array_botao[$i]."'>&nbsp;\n";
+          $retorno .= "&nbsp;<input type='button' class='btn btn-info' onclick='javascript:go( \"".$this->array_botao_url[$i]."\" );' value='".$this->array_botao[$i]."'>&nbsp;\n";
         }
       }
       elseif ($this->array_botao_url_script) {
         for ($i = 0, $total = count($this->array_botao); $i < $total; $i++) {
-          $retorno .= "&nbsp;<input type='button' class='botaolistagem' onclick='{$this->array_botao_url_script[$i]}' value='".$this->array_botao[$i]."'>&nbsp;\n";
+          $retorno .= "&nbsp;<input type='button' class='btn btn-info' onclick='{$this->array_botao_url_script[$i]}' value='".$this->array_botao[$i]."'>&nbsp;\n";
         }
       }
 

@@ -18,7 +18,7 @@
 			<input type="hidden" value="" id="posx">
 			<input type="hidden" value="" id="posy">
 		</div>
-		<div class="col-sm-10 reset-padding" id="menu_suspenso">
+		<div class="col-sm-10" id="menu_suspenso">
 			<!-- #&PROG_ALERT&# -->
 			<!-- #&NOTIFICACOES&# -->
 			<!-- #&CORPO&# -->
