@@ -778,24 +778,24 @@ class clsPmieducarAcervo
 				$set .= "{$gruda}cutter = '{$this->cutter}'";
 				$gruda = ", ";
 			}
-			if( is_numeric( $this->volume ) )
+			if( is_numeric( $this->volume ) || $this->volume == "null" )
 			{
-				$set .= "{$gruda}volume = '{$this->volume}'";
+				$set .= "{$gruda}volume = {$this->volume}";
 				$gruda = ", ";
 			}
-			if( is_numeric( $this->num_edicao ) )
+			if( is_numeric( $this->num_edicao ) || $this->num_edicao == "null")
 			{
-				$set .= "{$gruda}num_edicao = '{$this->num_edicao}'";
+				$set .= "{$gruda}num_edicao = {$this->num_edicao}";
 				$gruda = ", ";
 			}
-			if( is_numeric( $this->ano ) )
+			if( is_numeric( $this->ano ) || $this->ano == "null")
 			{
-				$set .= "{$gruda}ano = '{$this->ano}'";
+				$set .= "{$gruda}ano = {$this->ano}";
 				$gruda = ", ";
 			}
-			if( is_numeric( $this->num_paginas ) )
+			if( is_numeric( $this->num_paginas ) || $this->num_paginas == "null" )
 			{
-				$set .= "{$gruda}num_paginas = '{$this->num_paginas}'";
+				$set .= "{$gruda}num_paginas = {$this->num_paginas}";
 				$gruda = ", ";
 			}
 			if( is_string( $this->isbn ) )

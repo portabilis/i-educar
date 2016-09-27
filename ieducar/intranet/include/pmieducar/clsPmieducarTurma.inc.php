@@ -869,6 +869,10 @@ class clsPmieducarTurma
 			{
 				$set .= "{$gruda}ref_cod_infra_predio_comodo = '{$this->ref_cod_infra_predio_comodo}'";
 				$gruda = ", ";
+			}elseif( is_null( $this->ref_cod_infra_predio_comodo ) )
+			{
+				$set .= "{$gruda}ref_cod_infra_predio_comodo = NULL";
+				$gruda = ", ";
 			}
 			if( is_string( $this->nm_turma ) )
 			{
@@ -1144,7 +1148,10 @@ class clsPmieducarTurma
 			}
 
 			if(is_numeric($this->ref_cod_disciplina_dispensada)){
-				$set  .= "{$gruda}ref_cod_disciplina_dispensada = '{$this->ref_cod_disciplina_dispensada}'";
+				$set  .= "{$gruda}ref_cod_disciplina_dispensada = {$this->ref_cod_disciplina_dispensada}";
+				$gruda = ", ";
+			}elseif(is_null($this->ref_cod_disciplina_dispensada)){
+				$set  .= "{$gruda}ref_cod_disciplina_dispensada = NULL";
 				$gruda = ", ";
 			}
 			if(is_numeric($this->nao_informar_educacenso)) {
