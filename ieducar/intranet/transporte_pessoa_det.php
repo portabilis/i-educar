@@ -107,6 +107,8 @@ class indice extends clsDetalhe
       $nm_turno = "Vespertino";
     }else if($registro['turno'] == 3){
       $nm_turno = "Noturno";
+    }else if($registro['turno'] == 4){
+      $nm_turno = "Integral";
     }else if($registro['turno'] == 0){
       $nm_turno = "";
     }
