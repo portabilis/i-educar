@@ -1135,26 +1135,30 @@ class AlunoController extends ApiCoreController
 
     $pessoaId = $this->getRequest()->pessoa_id;
 
-    if($maeId || $paiId){
+    $sql = "UPDATE cadastro.fisica set ";
 
-      $sql = "UPDATE cadastro.fisica set ";
+    $virgulaOuNada = '';
 
-      $virgulaOuNada = '';
-
-      if ($maeId){
-        $sql .= " idpes_mae = {$maeId} ";
-        $virgulaOuNada = ", ";
-      }
-
-      if ($paiId){
-        $sql .= "{$virgulaOuNada} idpes_pai = {$paiId} ";
-        $virgulaOuNada = ", ";
-      }
-
-      $sql .= " WHERE idpes = {$pessoaId}";
-
-      Portabilis_Utils_Database::fetchPreparedQuery($sql);
+    if ($maeId){
+      $sql .= " idpes_mae = {$maeId} ";
+      $virgulaOuNada = ", ";
+    }elseif ($maeId == '') {
+      $sql .= " idpes_mae = NULL ";
+      $virgulaOuNada = ", ";
     }
+
+    if ($paiId){
+      $sql .= "{$virgulaOuNada} idpes_pai = {$paiId} ";
+      $virgulaOuNada = ", ";
+    }elseif ($paiId == '') {
+      $sql .= "{$virgulaOuNada} idpes_pai = NULL ";
+      $virgulaOuNada = ", ";
+    }
+
+    $sql .= " WHERE idpes = {$pessoaId}";
+
+    Portabilis_Utils_Database::fetchPreparedQuery($sql);
+
   }
 
   protected function getOcorrenciasDisciplinares() {
