@@ -86,18 +86,22 @@ class clsPessoaTelefone
 		// Cadastro do telefone da pessoa na tabela fone_pessoa
 		if($this->idpes && $this->tipo && $this->idpes_rev)
 		{
+
 			$set = false;
 			$gruda = "";
 			if($this->ddd)
 			{
-				$set = "ddd = '$this->ddd'";
+				$set = "ddd = $this->ddd";
 				$gruda = ", ";
 			}
 			if($this->fone)
 			{
-				$set .= "$gruda fone = '$this->fone'";
+				$set .= "$gruda fone = $this->fone";
 				$gruda = ", ";
-			}	
+			}elseif ($this->fone == '') {
+				$set .= "$gruda fone = NULL";
+				$gruda = ", ";
+			}
 			if($this->idpes_rev)
 			{
 				$set .= "$gruda idpes_rev = '$this->idpes_rev'";

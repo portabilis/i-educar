@@ -1232,10 +1232,16 @@ class clsPmieducarEscola
       if (is_numeric($this->latitude)) {
         $set .= "{$gruda}latitude = '{$this->latitude}'";
         $gruda = ", ";
+      }elseif (is_null($this->latitude) || $this->latitude == '') {
+        $set .= "{$gruda}latitude = NULL";
+        $gruda = ", ";
       }
 
       if (is_numeric($this->longitude)) {
         $set .= "{$gruda}longitude = '{$this->longitude}'";
+        $gruda = ", ";
+      }elseif (is_null($this->longitude) || $this->longitude == '') {
+        $set .= "{$gruda}longitude = NULL";
         $gruda = ", ";
       }
 
@@ -1249,8 +1255,18 @@ class clsPmieducarEscola
         $gruda = ", ";
       }
 
+      // if (is_null($this->ref_idpes_gestor)){
+      //   echo "oi '" . $this->ref_idpes_gestor . "'"; die;
+      // }else{
+      //   echo "tchau '" . $this->ref_idpes_gestor . "'"; die;
+      // }
+
+
       if (is_numeric($this->ref_idpes_gestor)) {
         $set .= "{$gruda}ref_idpes_gestor = '{$this->ref_idpes_gestor}'";
+        $gruda = ", ";
+      }elseif (is_null($this->ref_idpes_gestor) || $this->ref_idpes_gestor == '') {
+        $set .= "{$gruda}ref_idpes_gestor = NULL";
         $gruda = ", ";
       }
 
@@ -1759,6 +1775,9 @@ class clsPmieducarEscola
 
       if(is_numeric($this->ref_idpes_secretario_escolar)){
         $set .= "{$gruda}ref_idpes_secretario_escolar = '{$this->ref_idpes_secretario_escolar}'";
+        $gruda = ", ";
+      }elseif(is_null($this->ref_idpes_secretario_escolar) || $this->ref_idpes_secretario_escolar == ''){
+        $set .= "{$gruda}ref_idpes_secretario_escolar = NULL";
         $gruda = ", ";
       }
 

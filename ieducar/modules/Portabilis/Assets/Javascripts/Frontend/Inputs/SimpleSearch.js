@@ -4,10 +4,17 @@ var defaultJQueryAutocompleteOptions = {
   minLength   : 1,
   autoFocus   : true,
   source      : function(request, response) { return simpleSearch.search(this.element, request, response) },
-  select      : function(event, ui) { return simpleSearch.handleSelect(event, ui) }
+  select      : function(event, ui) { return simpleSearch.handleSelect(event, ui) },
 
   // options that can be overwritten
-  // change      : function (event, ui) {},
+  change      : function (event, ui) {
+    $element = $j(event.target);
+    $hiddenField = $element.data('hidden-input-id');
+
+    if($element.val() == ""){
+      $hiddenField.val("");
+    }
+  },
   // close      : function (event, ui) {},
 };
 
