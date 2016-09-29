@@ -232,6 +232,8 @@ class indice extends clsCadastro
 
     include 'include/pmieducar/educar_campo_lista.php';
 
+    $this->campoOculto('ref_cod_escola', $this->ref_cod_escola);
+
     if ($this->ref_cod_escola) {
       $this->ref_ref_cod_escola = $this->ref_cod_escola;
     }
@@ -256,10 +258,12 @@ class indice extends clsCadastro
 	if ($bloqueia){
       $this->campoOculto('serie_param',$this->serie_param = $this->ref_ref_cod_serie);
       $this->campoOculto('escola_param',$this->escola_param = $this->ref_cod_escola);
-    }    
+    }
 
     $this->campoLista('ref_ref_cod_serie', 'Série', $opcoes_serie, $this->ref_ref_cod_serie,
       '', FALSE, '', NULL, $bloqueia);
+
+    $this->campoOculto('ref_ref_cod_serie',$this->ref_ref_cod_serie);
 
     // o campo ano somente é exibido para turmas novas  ou cadastradas após inclusão deste campo.
     if ($anoVisivel){
@@ -489,7 +493,7 @@ class indice extends clsCadastro
       $qtd_modulo = count($this->turma_modulo) == 0 ? 1 : (count($this->turma_modulo) + 1);
       echo "
         <script type=\"text/javascript\">
-          window.setTimeout(function() { 
+          window.setTimeout(function() {
             document.getElementById(\"event_incluir_dia_semana\").focus();
           }, 500);
         </script>
@@ -772,13 +776,13 @@ class indice extends clsCadastro
             foreach ($this->turma_dia_semana as $campo) {
               $obj = new clsPmieducarTurmaDiaSemana($campo["dia_semana_"],
                 $cadastrou, $campo["hora_inicial_"], $campo["hora_final_"]);
-  
+
               $cadastrou2  = $obj->cadastra();
-  
+
               if (!$cadastrou2) {
                 $this->mensagem = 'Cadastro não realizado.';
                 echo "<!--\nErro ao cadastrar clsPmieducarTurmaDiaSemana\nvalores obrigat&oacute;rios\nis_numeric( $cadastrou ) && is_numeric( {$campo["dia_semana_"]} ) && is_string( {$campo["hora_inicial_"]} ) && is_string( {$campo["hora_final_"]} )\n-->";
-  
+
                 return FALSE;
               }
             }
@@ -1837,8 +1841,8 @@ function atualizaLstEscolaCursoSerie(xml)
 document.getElementById('event_incluir_modulo').onclick = incluirModulo;
 
 function incluirModulo(){
-  document.getElementById('incluir_modulo').value = 'S'; 
-  document.getElementById('tipoacao').value = ''; 
+  document.getElementById('incluir_modulo').value = 'S';
+  document.getElementById('tipoacao').value = '';
   acao();
 }
 
