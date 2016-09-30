@@ -161,6 +161,9 @@
             <span style="color: #00A859;">Ruas</span> <span style="color: #FFCC29;">coloridas do <span style="color: #3E4095;">Brasil</span>
           </a></p>
       </div-->
+      <div id="div-outubro-rosa" style="top: -388px">
+        <a href="https://www.google.com.br/#q=outubro+rosa+2016" target="_blank"><img src="https://s3.amazonaws.com/apps-ieducar-images/outubro-rosa/outubro-rosa.png"/></a>
+      </div>
     </div> <!-- end rodape -->
 
   </body>
