@@ -197,7 +197,8 @@ class EscolaController extends ApiCoreController
     $sql_turmas = 'SELECT DISTINCT tm.ref_cod_turma as turma_id
               FROM pmieducar.turma_modulo tm
               INNER JOIN pmieducar.turma t ON (tm.ref_cod_turma = t.cod_turma)
-            WHERE t.ano = $1 and t.ref_ref_cod_escola = $2
+              INNER JOIN pmieducar.curso c on (c.cod_curso = t.ref_cod_curso)
+            WHERE t.ano = $1 and t.ref_ref_cod_escola = $2 and c.padrao_ano_escolar = 0
           ORDER BY tm.ref_cod_turma';
 
     $turmas = array();
