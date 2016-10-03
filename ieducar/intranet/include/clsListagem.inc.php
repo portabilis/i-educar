@@ -193,19 +193,17 @@ class clsListagem extends clsCampos
       /**
        * HTML do paginador.
        */
-      $strReturn = "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">
-                      <nav aria-label=\"Page navigation\">
-                        <ul class=\"pagination\">
-                          <li class=\"page-item\">";
+      $strReturn = "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\"><tr>";
 
       // Setas de início e anterior
       $imagem = ($intPaginaAtual > 1) ? "seta" :"seta_transp";
       $compl_url = ($add_iniciolimit) ? "&iniciolimit=" . (1 + $pag_modifier): "";
-      $strReturn .= "<a class=\"page-item\" href=\"{$linkFixo}$getVar=" . (1 + $pag_modifier) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a primeira pagina\"><img src=\"imagens/paginador/{$imagem}1.gif\" border=\"0\" alt=\"primeira pagina\"></a> ";
+      $strReturn .= "<td width=\"23\" align=\"center\"><a href=\"{$linkFixo}$getVar=" . (1 + $pag_modifier) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a primeira pagina\"><img src=\"imagens/paginador/{$imagem}1.gif\" border=\"0\" alt=\"primeira pagina\"></a></td> ";
       $compl_url = ($add_iniciolimit) ? "&iniciolimit=" . max(1 + $pag_modifier, $intPaginaAtual - 1) : '';
-      $strReturn .= "<a class=\"page-item\" href=\"{$linkFixo}$getVar=" . max(1 + $pag_modifier, $intPaginaAtual - 1) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a pagina anterior\"><img src=\"imagens/paginador/{$imagem}2.gif\" border=\"0\" alt=\"pagina anterior\"></a>";
+      $strReturn .= "<td width=\"23\" align=\"center\"><a href=\"{$linkFixo}$getVar=" . max(1 + $pag_modifier, $intPaginaAtual - 1) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a pagina anterior\"><img src=\"imagens/paginador/{$imagem}2.gif\" border=\"0\" alt=\"pagina anterior\"></a></td> ";
 
       // Meio
+      $strReturn .= "<td align=\"center\"><img src=\"imagens/paginador/esq.gif\" border=\"0\" alt=\"\"></td>";
       $meios = array();
 
       for ($i = 0; $i <= $intPaginasExibidas * 2 && $i + $pagStart <= $totalPaginas; $i++) {
@@ -213,17 +211,20 @@ class clsListagem extends clsCampos
 
         $imagem     = ($pagStart + $i + $pag_modifier == $intPaginaAtual) ? '2' : '1';
         $compl_url  = ($add_iniciolimit) ? "&iniciolimit=" . ($pagStart + $i + $pag_modifier) : '';
-        $strReturn .= "<a class=\"page-item\" href=\"{$linkFixo}$getVar=" . ( $pagStart + $i + $pag_modifier ) . "{$compl_url}&ordenacao={$ordenacao}\" class=\"nvp_paginador\" title=\"Ir para a p&aacute;gina " . ($pagStart + $i) . "\">" . addLeadingZero($pagStart + $i) ."</a>";
+        $strReturn .= "<td align=\"center\" style=\"padding-left:5px;padding-right:5px;background-image: url('imagens/paginador/bg{$imagem}.gif');\"><a href=\"{$linkFixo}$getVar=" . ( $pagStart + $i + $pag_modifier ) . "{$compl_url}&ordenacao={$ordenacao}\" class=\"nvp_paginador\" title=\"Ir para a p&aacute;gina " . ($pagStart + $i) . "\">" . addLeadingZero($pagStart + $i) ."</a></td>";
+        $strReturn .= "<td><img src=\"imagens/paginador/separador.gif\" border=\"0\" alt=\"\"></td>";
       }
+
+      $strReturn .= "<td align=\"center\"><img src=\"imagens/paginador/dir.gif\" border=\"0\" alt=\"\"></td>";
 
       // Setas de fim e próxima
       $imagem     = ($intPaginaAtual < $totalPaginas) ? 'seta' : 'seta_transp';
       $compl_url  = ($add_iniciolimit) ? "&iniciolimit=" . min($totalPaginas + $pag_modifier, $intPaginaAtual + 1) : '';
-      $strReturn .= "<a class=\"page-item\" href=\"{$linkFixo}$getVar=" . min($totalPaginas + $pag_modifier, $intPaginaAtual + 1) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a proxima pagina\"><img src=\"imagens/paginador/{$imagem}3.gif\" border=\"0\" alt=\"proxima pagina\"></a>";
+      $strReturn .= "<td width=\"23\" align=\"center\"><a href=\"{$linkFixo}$getVar=" . min($totalPaginas + $pag_modifier, $intPaginaAtual + 1) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a proxima pagina\"><img src=\"imagens/paginador/{$imagem}3.gif\" border=\"0\" alt=\"proxima pagina\"></a></td> ";
       $compl_url  = ( $add_iniciolimit ) ? "&iniciolimit=" . ($totalPaginas + $pag_modifier): "";
-      $strReturn .= "<a class=\"page-item\" href=\"{$linkFixo}$getVar=" . ($totalPaginas + $pag_modifier) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a ultima pagina\"><img src=\"imagens/paginador/{$imagem}4.gif\" border=\"0\" alt=\"ultima pagina\"></a>";
+      $strReturn .= "<td width=\"23\" align=\"center\"><a href=\"{$linkFixo}$getVar=" . ($totalPaginas + $pag_modifier) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a ultima pagina\"><img src=\"imagens/paginador/{$imagem}4.gif\" border=\"0\" alt=\"ultima pagina\"></a></td> ";
 
-      $strReturn .= "</li></ul></nav></table>";
+      $strReturn .= "</tr></table>";
 
       $this->paginador2 = $strReturn;
     }
@@ -288,7 +289,7 @@ class clsListagem extends clsCampos
     if ($this->locale && $this->appendInTop){
 
       $retorno .=  "
-        <table class='table table-striped' id='tableLocalizacao'width='100%' border='0'  cellpadding='0' cellspacing='0'>";
+        <table class='tablelistagem' id='tableLocalizacao'width='100%' border='0'  cellpadding='0' cellspacing='0'>";
 
       $retorno .=  "<tr height='10px'>
                       <td class='fundoLocalizacao' colspan='2'>{$this->locale}</td>
@@ -344,7 +345,7 @@ class clsListagem extends clsCampos
       if ($this->busca_janela) {
         $janela .= "<form name='{$this->__nome}' id='{$this->__nome}' method='{$this->method}'>";
         $janela .= "<input name='busca' type='hidden' value='S'>";
-        $janela .= "<table class='table table-striped' border='0' cellpadding='2' cellspacing='1'>";
+        $janela .= "<table class='tablelistagem' border='0' cellpadding='2' cellspacing='1'>";
 
         if ($this->campos) {
           reset($this->campos);
@@ -386,7 +387,7 @@ class clsListagem extends clsCampos
         $janela = str_replace("'","\'", $janela);
         $janela = str_replace("\n","", $janela);
 
-        $retorno .= "<br><table class=\"table table-striped\" width=\"90%\"  border=\"0\" cellpadding=\"3\" cellspacing=\"1\" align=\"center\"  >";
+        $retorno .= "<br><table class=\"tablelistagem\" width=\"90%\"  border=\"0\" cellpadding=\"3\" cellspacing=\"1\" align=\"center\"  >";
         $retorno .=  "<td align=\"center\" class='formdktd' colspan='2' height='24' valign='middle'><input type=\"button\" class=\"botaolistagem\" onclick=\"javascript:showExpansivel(0,0, '$janela');\" value=\"Pesquisar\">&nbsp;";
         $retorno .=  "</td></tr>";
         $retorno .=  "</table>";
@@ -409,7 +410,7 @@ class clsListagem extends clsCampos
         if ($this->locale && !$this->appendInTop){
 
           $retorno .=  "
-            <table class='breadcrumb' $width border='0'  cellpadding='0' cellspacing='0'>";
+            <table class='tablelistagem' $width border='0'  cellpadding='0' cellspacing='0'>";
 
           $retorno .=  "<tr height='10px'>
                           <td class='fundoLocalizacao' colspan='2'>{$this->locale}</td>
@@ -419,7 +420,7 @@ class clsListagem extends clsCampos
         }
 
         $retorno .=  "
-          <table class='table table-striped' $width border='0' cellpadding='2' cellspacing='1'>";
+          <table class='tablelistagem' $width border='0' cellpadding='2' cellspacing='1'>";
 
 
 
@@ -458,10 +459,10 @@ class clsListagem extends clsCampos
 
         if ($this->exibirBotaoSubmit) {
           if ($this->botao_submit) {
-            $retorno .=  "&nbsp;<input type='submit' class='btn btn-success' value='Buscar' id='botao_busca'>&nbsp;";
+            $retorno .=  "&nbsp;<input type='submit' class='botaolistagem' value='busca' id='botao_busca'>&nbsp;";
           }
           else {
-            $retorno .=  "&nbsp;<input type='button' class='btn btn-success' onclick='javascript:acao{$this->funcAcaoNome}();' value='Buscar' id='botao_busca'>&nbsp;";
+            $retorno .=  "&nbsp;<input type='button' class='botaolistagem' onclick='javascript:acao{$this->funcAcaoNome}();' value='busca' id='botao_busca'>&nbsp;";
           }
         }
 
@@ -488,19 +489,19 @@ class clsListagem extends clsCampos
     if ($this->locale && !$this->campos && !$this->appendInTop){
 
       $retorno .=  "
-        <table class='table table-striped' $width border='0'  cellpadding='0' cellspacing='0'>";
+        <table class='tablelistagem' $width border='0'  cellpadding='0' cellspacing='0'>";
 
       $retorno .=  "<tr height='10px'>
                       <td class='fundoLocalizacao linkpreto' style='background-color: white;' colspan='2'>{$this->locale}</td>
                     </tr>";
 
       $retorno .= "</table>";
-    }
+    }   
 
     $retorno .=  "
         <form name=\"form_resultado\" id=\"form_resultado\" method=\"POST\" action=\"\">
         <!-- listagem begin -->
-          <table class='table table-striped' $width border='0' cellpadding='4' cellspacing='1'>
+          <table class='tablelistagem' $width border='0' cellpadding='4' cellspacing='1'>
             <tr>
               <td colspan='$ncols'>{$this->__titulo}</td>
             </tr>";
@@ -732,7 +733,7 @@ class clsListagem extends clsCampos
     if ($this->acao && $this->show_botao_novo) {
       $retorno .=  "
             <tr>
-              <td colspan=\"$ncols\" align=\"center\"><input type='button' class='btn btn-success' onclick='javascript: $this->acao' value=' $this->nome_acao '>$botao</td>
+              <td colspan=\"$ncols\" align=\"center\"><input type='button' class='botaolistagem' onclick='javascript: $this->acao' value=' $this->nome_acao '>$botao</td>
             </tr>";
     }
     elseif ($this->acao_imprimir) {

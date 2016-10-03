@@ -290,7 +290,7 @@ class clsCadastro extends clsCampos
     if ($this->locale){
 
       $retorno .=  "
-        <table class='breadcrumb' $width border='0'  cellpadding='0' cellspacing='0'>";
+        <table class='tableDetalhe' $width border='0'  cellpadding='0' cellspacing='0'>";
 
       $retorno .=  "<tr height='10px'>
                       <td class='fundoLocalizacao' colspan='2'>{$this->locale}</td>
@@ -299,7 +299,7 @@ class clsCadastro extends clsCampos
       $retorno .= "</table>";
     }
 
-    $retorno .= "<center>\n<table class='table table-striped tablecadastro' $width border='0' cellpadding='2' cellspacing='0'>\n";
+    $retorno .= "<center>\n<table class='tablecadastro' $width border='0' cellpadding='2' cellspacing='0'>\n";
     $titulo = $this->titulo ? $this->titulo : "<b>{$this->tipoacao} {$this->titulo_aplication}</b>";
 
     /**
@@ -635,35 +635,35 @@ class clsCadastro extends clsCampos
     $retorno .=  "</script>\n";
 
     if ($this->acao_enviar && $this->botao_enviar) {
-      $retorno .=  "&nbsp;<input type='button' id='btn_enviar' class='btn btn-success' onclick='{$this->acao_enviar};' value='{$this->nome_url_sucesso}'>&nbsp;";
+      $retorno .=  "&nbsp;<input type='button' id='btn_enviar' class='botaolistagem' onclick='{$this->acao_enviar};' value='{$this->nome_url_sucesso}'>&nbsp;";
     }
 
     if ($this->fexcluir) {
-      $retorno .=  "&nbsp;<input type='button' class='btn btn-danger' onclick='javascript:{$this->script_excluir}' value=' Excluir '>&nbsp;";
+      $retorno .=  "&nbsp;<input type='button' class='botaolistagem' onclick='javascript:{$this->script_excluir}' value=' Excluir '>&nbsp;";
     }
     if ($this->bot_alt) {
-      $retorno .=  "&nbsp;<input type='button' class='btn btn-info' onclick='javascript: go( \"$this->url_alt\" );' value=' $this->nome_url_alt '>&nbsp;";
+      $retorno .=  "&nbsp;<input type='button' class='botaolistagem' onclick='javascript: go( \"$this->url_alt\" );' value=' $this->nome_url_alt '>&nbsp;";
     }
     if ($this->excluir_Img) {
-      $retorno .=  "&nbsp;<input type='button' class='btn btn-danger' onclick='javascript:ExcluirImg();' value=' $this->nome_excluirImg '>&nbsp;";
+      $retorno .=  "&nbsp;<input type='button' class='botaolistagem' onclick='javascript:ExcluirImg();' value=' $this->nome_excluirImg '>&nbsp;";
     }
     if ($this->acao) {
-      $retorno .=  "&nbsp;<input type='button' class='btn btn-info' onclick='javascript: $this->acao' value=' $this->nome_acao '>&nbsp;";
+      $retorno .=  "&nbsp;<input type='button' class='botaolistagem' onclick='javascript: $this->acao' value=' $this->nome_acao '>&nbsp;";
     }
     if ($this->url_cancelar || $this->script_cancelar) {
-      $retorno .=  "&nbsp;<input type='button' class='btn btn-warning' onclick='javascript: $this->script_cancelar go( \"$this->url_cancelar\" );' value=' $this->nome_url_cancelar '>&nbsp;";
+      $retorno .=  "&nbsp;<input type='button' class='botaolistagem' onclick='javascript: $this->script_cancelar go( \"$this->url_cancelar\" );' value=' $this->nome_url_cancelar '>&nbsp;";
     }
     if ($this->url_copiar_enturmacoes) {
-      $retorno .=  "&nbsp;<input type='button' class='btn btn-info' onclick='javascript: go( \"$this->url_copiar_enturmacoes\" );' value=' $this->nome_url_copiar_enturmacoes '>&nbsp;";
+      $retorno .=  "&nbsp;<input type='button' class='botaolistagem' onclick='javascript: go( \"$this->url_copiar_enturmacoes\" );' value=' $this->nome_url_copiar_enturmacoes '>&nbsp;";
     }
 
     if ($this->array_botao_url) {
       for ($i = 0; $i < count($this->array_botao); $i++) {
         if($this->array_botao_id[$i]) {
-          $retorno .=  "&nbsp;<input type='button' class='btn btn-info' onclick='javascript:go( \"".$this->array_botao_url[$i]."\" );' value='".$this->array_botao[$i]."' id=\"{$this->array_botao_id[$i]}\">&nbsp;";
+          $retorno .=  "&nbsp;<input type='button' class='botaolistagem' onclick='javascript:go( \"".$this->array_botao_url[$i]."\" );' value='".$this->array_botao[$i]."' id=\"{$this->array_botao_id[$i]}\">&nbsp;";
         }
         else {
-          $retorno .=  "&nbsp;<input type='button' class='btn btn-info' onclick='javascript:go( \"".$this->array_botao_url[$i]."\" );' value='".$this->array_botao[$i]."' id=\"arr_bot_{$this->array_botao[$i]}\">&nbsp;";
+          $retorno .=  "&nbsp;<input type='button' class='botaolistagem' onclick='javascript:go( \"".$this->array_botao_url[$i]."\" );' value='".$this->array_botao[$i]."' id=\"arr_bot_{$this->array_botao[$i]}\">&nbsp;";
         }
       }
     }
@@ -671,11 +671,11 @@ class clsCadastro extends clsCampos
       for ($i = 0; $i < count($this->array_botao); $i++) {
         if ($this->array_botao_id[$i]) {
           $id = $this->array_botao_id[$i];
-          $retorno .= "&nbsp;<input type='button' class='btn btn-info' onclick=\"".$this->array_botao_url_script[$i]."\" value=\"".$this->array_botao[$i]."\" id=\"{$id}\">&nbsp;\n";
+          $retorno .= "&nbsp;<input type='button' class='botaolistagem' onclick=\"".$this->array_botao_url_script[$i]."\" value=\"".$this->array_botao[$i]."\" id=\"{$id}\">&nbsp;\n";
         }
         else {
           $id = $this->array_botao[$i];
-          $retorno .= "&nbsp;<input type='button' class='btn btn-info' onclick=\"".$this->array_botao_url_script[$i]."\" value=\"".$this->array_botao[$i]."\" id=\"arr_bot_{$id}\">&nbsp;\n";
+          $retorno .= "&nbsp;<input type='button' class='botaolistagem' onclick=\"".$this->array_botao_url_script[$i]."\" value=\"".$this->array_botao[$i]."\" id=\"arr_bot_{$id}\">&nbsp;\n";
         }
       }
     }

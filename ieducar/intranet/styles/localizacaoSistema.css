@@ -13,7 +13,7 @@
 
 #localizacao a{
   
-  font-size: 13px;
+  font-size: 11px;
   font-style: normal;
   font-variant: normal;
   font-weight: bold;
@@ -36,7 +36,7 @@
 }
 
 .fundoLocalizacao {
-   background-color: #FFF; 
+   background-color: #E4E9ED; 
    height: 10px; 
 }
 .flechinha {

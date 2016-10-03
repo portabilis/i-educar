@@ -10,8 +10,8 @@
 
   <title><!-- #&TITULO&# --></title>
 
-  <!-- <link rel=stylesheet type='text/css' href='styles/main.css' /> -->
-  <!-- <link rel=stylesheet type='text/css' href='styles/styles.css' /> -->
+  <link rel=stylesheet type='text/css' href='styles/main.css' />
+  <link rel=stylesheet type='text/css' href='styles/styles.css' />
   <link rel=stylesheet type='text/css' href='styles/novo.css' />
   <link rel=stylesheet type='text/css' href='styles/menu.css' />
   <!-- <link rel=stylesheet type='text/css' href='styles/reset.css' /> -->
