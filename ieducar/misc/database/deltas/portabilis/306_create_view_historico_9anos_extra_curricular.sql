@@ -6,7 +6,7 @@ DROP VIEW relatorio.view_historico_9anos_extra_curricular;
 
 CREATE OR REPLACE VIEW relatorio.view_historico_9anos_extra_curricular AS
 SELECT ref_ref_cod_aluno AS cod_aluno,
-       nm_disciplina AS disciplina,
+       fcn_upper(nm_disciplina) AS disciplina,
 
   (SELECT CASE
               WHEN ((substring(trim(hd.nota),1,1) <> 0)
@@ -27,7 +27,7 @@ SELECT ref_ref_cod_aluno AS cod_aluno,
    INNER JOIN pmieducar.historico_escolar ON (historico_escolar.ref_cod_aluno = hd.ref_ref_cod_aluno
                                               AND historico_escolar.sequencial = hd.ref_sequencial)
    WHERE hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
-     AND hd.nm_disciplina = historico_disciplinas.nm_disciplina
+     AND fcn_upper(hd.nm_disciplina) = fcn_upper(nm_disciplina)
      AND historico_escolar.ativo = 1
      AND historico_escolar.extra_curricular = 1
      AND historico_escolar.ano =
@@ -63,7 +63,7 @@ SELECT ref_ref_cod_aluno AS cod_aluno,
    INNER JOIN pmieducar.historico_escolar ON (historico_escolar.ref_cod_aluno = hd.ref_ref_cod_aluno
                                               AND historico_escolar.sequencial = hd.ref_sequencial)
    WHERE hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
-     AND hd.nm_disciplina = historico_disciplinas.nm_disciplina
+     AND fcn_upper(hd.nm_disciplina) = fcn_upper(nm_disciplina)
      AND historico_escolar.ativo = 1
      AND historico_escolar.extra_curricular = 1
      AND historico_escolar.ano =
@@ -99,7 +99,7 @@ SELECT ref_ref_cod_aluno AS cod_aluno,
    INNER JOIN pmieducar.historico_escolar ON (historico_escolar.ref_cod_aluno = hd.ref_ref_cod_aluno
                                               AND historico_escolar.sequencial = hd.ref_sequencial)
    WHERE hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
-     AND hd.nm_disciplina = historico_disciplinas.nm_disciplina
+     AND fcn_upper(hd.nm_disciplina) = fcn_upper(nm_disciplina)
      AND historico_escolar.ativo = 1
      AND historico_escolar.extra_curricular = 1
      AND historico_escolar.ano =
@@ -135,7 +135,7 @@ SELECT ref_ref_cod_aluno AS cod_aluno,
    INNER JOIN pmieducar.historico_escolar ON (historico_escolar.ref_cod_aluno = hd.ref_ref_cod_aluno
                                               AND historico_escolar.sequencial = hd.ref_sequencial)
    WHERE hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
-     AND hd.nm_disciplina = historico_disciplinas.nm_disciplina
+     AND fcn_upper(hd.nm_disciplina) = fcn_upper(nm_disciplina)
      AND historico_escolar.ativo = 1
      AND historico_escolar.extra_curricular = 1
      AND historico_escolar.ano =
@@ -171,7 +171,7 @@ SELECT ref_ref_cod_aluno AS cod_aluno,
    INNER JOIN pmieducar.historico_escolar ON (historico_escolar.ref_cod_aluno = hd.ref_ref_cod_aluno
                                               AND historico_escolar.sequencial = hd.ref_sequencial)
    WHERE hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
-     AND hd.nm_disciplina = historico_disciplinas.nm_disciplina
+     AND fcn_upper(hd.nm_disciplina) = fcn_upper(nm_disciplina)
      AND historico_escolar.ativo = 1
      AND historico_escolar.extra_curricular = 1
      AND historico_escolar.ano =
@@ -207,7 +207,7 @@ SELECT ref_ref_cod_aluno AS cod_aluno,
    INNER JOIN pmieducar.historico_escolar ON (historico_escolar.ref_cod_aluno = hd.ref_ref_cod_aluno
                                               AND historico_escolar.sequencial = hd.ref_sequencial)
    WHERE hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
-     AND hd.nm_disciplina = historico_disciplinas.nm_disciplina
+     AND fcn_upper(hd.nm_disciplina) = fcn_upper(nm_disciplina)
      AND historico_escolar.ativo = 1
      AND historico_escolar.extra_curricular = 1
      AND historico_escolar.ano =
@@ -243,7 +243,7 @@ SELECT ref_ref_cod_aluno AS cod_aluno,
    INNER JOIN pmieducar.historico_escolar ON (historico_escolar.ref_cod_aluno = hd.ref_ref_cod_aluno
                                               AND historico_escolar.sequencial = hd.ref_sequencial)
    WHERE hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
-     AND hd.nm_disciplina = historico_disciplinas.nm_disciplina
+     AND fcn_upper(hd.nm_disciplina) = fcn_upper(nm_disciplina)
      AND historico_escolar.ativo = 1
      AND historico_escolar.extra_curricular = 1
      AND historico_escolar.ano =
@@ -279,7 +279,7 @@ SELECT ref_ref_cod_aluno AS cod_aluno,
    INNER JOIN pmieducar.historico_escolar ON (historico_escolar.ref_cod_aluno = hd.ref_ref_cod_aluno
                                               AND historico_escolar.sequencial = hd.ref_sequencial)
    WHERE hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
-     AND hd.nm_disciplina = historico_disciplinas.nm_disciplina
+     AND fcn_upper(hd.nm_disciplina) = fcn_upper(nm_disciplina)
      AND historico_escolar.ativo = 1
      AND historico_escolar.extra_curricular = 1
      AND historico_escolar.ano =
@@ -315,7 +315,7 @@ SELECT ref_ref_cod_aluno AS cod_aluno,
    INNER JOIN pmieducar.historico_escolar ON (historico_escolar.ref_cod_aluno = hd.ref_ref_cod_aluno
                                               AND historico_escolar.sequencial = hd.ref_sequencial)
    WHERE hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
-     AND hd.nm_disciplina = historico_disciplinas.nm_disciplina
+     AND fcn_upper(hd.nm_disciplina) = fcn_upper(nm_disciplina)
      AND historico_escolar.ativo = 1
      AND historico_escolar.extra_curricular = 1
      AND historico_escolar.ano =
@@ -795,8 +795,10 @@ INNER JOIN pmieducar.historico_escolar ON (historico_escolar.ref_cod_aluno = his
                                            AND historico_escolar.sequencial = historico_disciplinas.ref_sequencial)
 WHERE historico_escolar.extra_curricular = 1
   AND historico_escolar.ativo = 1
+  AND ref_ref_cod_aluno = 7108
 GROUP BY ref_ref_cod_aluno,
-         nm_disciplina
-ORDER BY nm_disciplina;
+         fcn_upper(nm_disciplina)
+ORDER BY fcn_upper(nm_disciplina);
+
 
 ALTER TABLE relatorio.view_historico_9anos_extra_curricular OWNER TO ieducar;
