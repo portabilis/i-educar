@@ -1347,7 +1347,7 @@ function MontaMenu()
 				{
 					// sub-menus
 
-					link = "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" height=\"100%\"><tr><td valign=\"middle\" width=\"18\"><a href='" + menu_formatado[i][8] + "'><img src='"+menu_formatado[i][7]+"' height='16' width='16' border='0'></a></td><td valign=\"middle\"><a class='dropdown-link' href='" + menu_formatado[i][8] + "'>" + menu_formatado[i][1] + "</a></td></tr></table>";
+					link = "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" height=\"100%\"><tr><td valign=\"middle\" width=\"18\"><a href='" + menu_formatado[i][8] + "'><img src='"+menu_formatado[i][7]+"' height='16' width='16' border='0'></a></td><td valign=\"middle\"><a href='" + menu_formatado[i][8] + "'>" + menu_formatado[i][1] + "</a></td></tr></table>";
 					oCMenu.makeMenu(menu_formatado[i][0]+"_",menu_formatado[i][5]+"_", link, menu_formatado[i][8],menu_formatado[i][9],menu_formatado[i][6],'','','','','','','','',menu_formatado[i][10]);
 				}
 				else

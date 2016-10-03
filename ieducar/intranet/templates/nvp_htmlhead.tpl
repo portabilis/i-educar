@@ -14,9 +14,8 @@
   <link rel=stylesheet type='text/css' href='styles/styles.css' />
   <link rel=stylesheet type='text/css' href='styles/novo.css' />
   <link rel=stylesheet type='text/css' href='styles/menu.css' />
-  <!-- <link rel=stylesheet type='text/css' href='styles/reset.css' /> -->
-  <link rel=stylesheet type='text/css' href='styles/bootstrap.css' />
-  <!--link rel=stylesheet type='text/css' href='styles/portabilis.css' /-->
+  <!--link rel=stylesheet type='text/css' href='styles/reset.css' />
+  <link rel=stylesheet type='text/css' href='styles/portabilis.css' /-->
   <link rel=stylesheet type='text/css' href='styles/min-portabilis.css?rand=3' />
   <link rel=stylesheet type='text/css' href='styles/mytdt.css' />
   <link rel=stylesheet type='text/css' href='styles/jquery.modal.css' />
@@ -25,7 +24,6 @@
   <!-- #&ESTILO&# -->
 
   <script type="text/javascript" src="scripts/padrao.js?1"></script>
-  <script type="text/javascript" src="scripts/bootstrap.min.js?1"></script>
   <script type="text/javascript" src="scripts/novo.js?1"></script>
   <script type="text/javascript" src="scripts/dom.js?2"></script>
   <script type="text/javascript" src="scripts/menu.js?1"></script>
@@ -49,7 +47,7 @@
       var src    = imagem.src.indexOf('arrow-up') ;
 
       imagem.src = (src!= -1) ?
-        'imagens/arrow-down.png' : 'imagens/arrow-up.png' ;
+        'imagens/arrow-down2.gif' : 'imagens/arrow-up2.gif' ;
 
       imagem.title = (src!= -1) ?
         imagem.title.replace('Abrir', 'Fechar') :
