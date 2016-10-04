@@ -143,7 +143,7 @@ class PessoatransporteController extends Portabilis_Controller_Page_EditControll
 
  // turno
     $options = array('label' =>Portabilis_String_Utils::toLatin1($this->_getLabel('turno')), 'required' => false);
-    $this->inputsHelper()->select('turno', array('required' => false, 'resources' => array( 0 => "Selecione", 1 => 'Matutino', 2 => 'Vespertino', 3 => 'Noturno')));
+    $this->inputsHelper()->select('turno', array('required' => false, 'resources' => array( 0 => "Selecione", 1 => 'Matutino', 2 => 'Vespertino', 3 => 'Noturno', 4 => 'Integral')));
 
 
 
