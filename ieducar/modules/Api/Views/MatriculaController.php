@@ -410,6 +410,33 @@ class MatriculaController extends ApiCoreController
     }
   }
 
+  protected function canGetMatriculasDependencia() {
+    return $this->validatesPresenceOf('ano');
+  }
+
+  protected function getMatriculasDependencia(){
+
+    if (!$this->canGetMatriculasDependencia()){
+      return false; 
+    }
+    $ano = $this->getRequest()->ano;
+    $params = $ano;
+
+    $sql = "SELECT matricula.cod_matricula AS matricula_id,
+                   disciplina_dependencia.ref_cod_disciplina AS disciplina_id
+              FROM pmieducar.matricula
+        INNER JOIN pmieducar.disciplina_dependencia ON (matricula.cod_matricula = disciplina_dependencia.ref_cod_matricula)
+             WHERE matricula.dependencia = 't'
+               AND matricula.ano = $1";
+
+    $matriculas = $this->fetchPreparedQuery($sql, $params);
+
+    $attrs = array('matricula_id', 'disciplina_id');
+    $matriculas = Portabilis_Array_Utils::filterSet($matriculas, $attrs);
+
+    return array('matriculas' => $matriculas);
+  }
+
   public function Gerar() {
     if ($this->isRequestFor('get', 'matricula'))
       $this->appendResponse($this->get());
@@ -440,6 +467,9 @@ class MatriculaController extends ApiCoreController
 
     elseif ($this->isRequestFor('post', 'situacao'))
       $this->appendResponse($this->postSituacao());
+
+    elseif ($this->isRequestFor('get', 'matriculas-dependencia'))
+      $this->appendResponse($this->getMatriculasDependencia());
 
     else
       $this->notImplementedOperationError();
