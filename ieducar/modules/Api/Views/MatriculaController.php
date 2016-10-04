@@ -237,8 +237,7 @@ class MatriculaController extends ApiCoreController
 
 
   protected function canGetMovimentacaoEnturmacao() {
-    return $this->validatesPresenceOf('ano') &&
-           $this->validatesPresenceOf('escola');
+    return $this->validatesPresenceOf('ano');
   }
 
   protected function getMovimentacaoEnturmacao() {
@@ -246,27 +245,34 @@ class MatriculaController extends ApiCoreController
     $escola = $this->getRequest()->escola;
 
     if ($this->canGetMovimentacaoEnturmacao()) {
-      $sql = "SELECT cod_matricula AS matricula_id,
+
+      if (!$this->validatesPresenceOf('escola')) {
+        $escola = 0;
+      }
+
+      $sql = "SELECT ref_cod_aluno AS aluno_id,
+                     cod_matricula AS matricula_id,
                      aprovado AS situacao,
-                     updated_at AS data_atualizacao
+                     ativo AS ativo,
+                     coalesce(updated_at::varchar, '') AS data_atualizacao
               FROM pmieducar.matricula
-              WHERE ativo = 1
-                AND ano = $1
-                AND ref_ref_cod_escola = $2";
+              WHERE ano = $1
+                AND CASE WHEN $2 = 0 THEN TRUE ELSE ref_ref_cod_escola = $2 END";
 
       $params     = array($ano, $escola);
       $matriculas = $this->fetchPreparedQuery($sql, $params, false);
 
       if (is_array($matriculas) && count($matriculas) > 0) {
-        $attrs      = array('matricula_id', 'situacao', 'data_atualizacao');
+        $attrs      = array('aluno_id', 'matricula_id', 'situacao', 'data_atualizacao', 'ativo');
         $matriculas = Portabilis_Array_Utils::filterSet($matriculas, $attrs);
 
         foreach($matriculas as $key => $matricula) {
           $sql = "SELECT ref_cod_turma AS turma_id,
-                         sequencial_fechamento AS sequencial,
-                         data_enturmacao AS data_entrada,
-                         data_exclusao AS data_saida,
-                         updated_at AS data_atualizacao
+                         sequencial AS sequencial,
+                         sequencial_fechamento AS sequencial_fechamento,
+                         coalesce(data_enturmacao::date::varchar, '') AS data_entrada,
+                         coalesce(data_exclusao::date::varchar, '') AS data_saida,
+                         coalesce(updated_at::varchar, '') AS data_atualizacao
                   FROM pmieducar.matricula_turma
                   WHERE ref_cod_matricula = $1";
 
@@ -274,7 +280,7 @@ class MatriculaController extends ApiCoreController
           $enturmacoes = $this->fetchPreparedQuery($sql, $params, false);
 
           if (is_array($enturmacoes) && count($enturmacoes) > 0) {
-            $attrs      = array('turma_id', 'sequencial', 'data_entrada', 'data_saida', 'data_atualizacao');
+            $attrs      = array('turma_id', 'sequencial', 'sequencial_fechamento', 'data_entrada', 'data_saida', 'data_atualizacao');
             $enturmacoes = Portabilis_Array_Utils::filterSet($enturmacoes, $attrs);
 
             $matriculas[$key]['enturmacoes'] = $enturmacoes;
