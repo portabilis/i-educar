@@ -227,6 +227,7 @@ $j(document).ready(function() {
 
   hideEnderecoFields();
   fixUpPlaceholderEndereco();
+  permiteEditarEndereco();
 
 }); // ready
 

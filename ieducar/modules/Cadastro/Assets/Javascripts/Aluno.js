@@ -1732,6 +1732,7 @@ function canShowParentsFields(){
 
         editar_pessoa = true;
 
+        permiteEditarEndereco();
     });
 
     $j("#cadastrar-pessoa-pai-link").click(function() {
