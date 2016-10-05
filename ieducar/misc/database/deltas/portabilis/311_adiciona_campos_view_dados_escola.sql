@@ -3,7 +3,6 @@
 -- @version  $Id$
 -- Adiciona as colunas celular_ddd, celular, tipo_logradouro
 
-
 DROP VIEW relatorio.view_dados_escola;
 
 CREATE OR REPLACE VIEW relatorio.view_dados_escola AS 
