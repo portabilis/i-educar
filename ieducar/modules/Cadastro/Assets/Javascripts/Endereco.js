@@ -2,9 +2,10 @@
 
   $j('<a>') .html('N&atilde;o sei meu CEP')
                .attr('target', '_blank')
+               .attr('id', 'span-busca-cep')
                .css('color', 'blue')
                .css('margin-left', '10px')
-               .attr('href', 'http://www.buscacep.correios.com.br/servicos/dnec/menuAction.do?Metodo=menuLogradouro')
+               .attr('href', 'http://www.buscacep.correios.com.br/sistemas/buscacep/')
                .appendTo($j('#cep_').closest('td'));
 
 function hideEnderecoFields(){
@@ -145,6 +146,42 @@ function bloqueiaBuscaBairro(){
   }
   else
     preenchaCampoCepPrimeiro();
+}
+
+function permiteEditarEndereco(){
+
+  var options = {
+    url      : getResourceUrlBuilder.buildUrl('/module/Api/endereco', 'permissao_editar'),
+    dataType : 'json',
+    data     : {},
+    success  : handleGetPermissaoEditar
+  };
+  getResource(options);
+}
+
+var handleGetPermissaoEditar = function(dataResponse) {
+  if (dataResponse.permite_editar == 0) {
+    $j('#bairro').prop('disabled','disabled');
+    $j('#zona_localizacao').attr('disabled','disabled');
+    $j('#bairro_bairro').attr('disabled','disabled');
+    $j('#logradouro_logradouro').attr('disabled','disabled');
+    $j('#idtlog').attr('disabled','disabled');
+    $j('#logradouro').attr('disabled','disabled');
+    $j('#municipio_municipio').attr('disabled','disabled');
+    $j('#distrito_distrito').attr('disabled','disabled');
+    $j('#complemento').attr('disabled','disabled');
+    $j('#numero').attr('disabled','disabled');
+    $j('#letra').attr('disabled','disabled');
+    $j('#apartamento').attr('disabled','disabled');
+    $j('#bloco').attr('disabled','disabled');
+    $j('#andar').attr('disabled','disabled');
+    $j('#cep_').attr('disabled','disabled');
+
+    $j('#lupa').hide();
+    $j('#span-busca-logradouro').hide();
+    $j('#span-busca-bairro').hide();
+    $j('#span-busca-cep').hide();
+  }
 }
 
 function bloqueiaCadastroLogradouro(){
