@@ -32,7 +32,6 @@ require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
-require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
 
 /**
  * clsIndexBase class.
@@ -75,7 +74,7 @@ class indice extends clsCadastro
   var $data_exclusao;
   var $ativo;
   var $observacao;
-
+  var $cod_dispensa;
   var $ref_cod_matricula;
   var $ref_cod_turma;
   var $ref_cod_serie;
@@ -130,6 +129,8 @@ class indice extends clsCadastro
         foreach ($registro as $campo => $val)   {
           $this->$campo = $val;
         }
+
+        $this->cod_dispensa = $registro['cod_dispensa'];
 
         $obj_permissoes = new clsPermissoes();
 
@@ -201,6 +202,7 @@ class indice extends clsCadastro
     $this->campoOculto('ref_cod_matricula', $this->ref_cod_matricula);
     $this->campoOculto('ref_cod_serie', $this->ref_cod_serie);
     $this->campoOculto('ref_cod_escola', $this->ref_cod_escola);
+    $this->campoOculto('cod_dispensa', $this->cod_dispensa);
 
     $opcoes = array('' => 'Selecione');
 
@@ -248,6 +250,8 @@ class indice extends clsCadastro
     $this->campoLista('ref_cod_tipo_dispensa', 'Tipo Dispensa', $opcoes,
       $this->ref_cod_tipo_dispensa);
 
+    $this->montaEtapas();
+
     $this->campoMemo('observacao', 'Observação', $this->observacao, 60, 10, FALSE);
   }
 
@@ -284,6 +288,11 @@ class indice extends clsCadastro
       die();
     }
 
+    foreach ($this->etapa as $e) {
+      $objDispensaEtapa = new clsPmieducarDispensaDisciplinaEtapa($max_cod_dispensa, $e);
+      $cadastra = $objDispensaEtapa->cadastra();
+    }
+
     $cadastrou = $obj->cadastra();
     if ($cadastrou) {
       $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
@@ -310,6 +319,14 @@ class indice extends clsCadastro
       $this->ref_cod_serie, $this->ref_cod_escola, $this->ref_cod_disciplina,
       $this->pessoa_logada, NULL, $this->ref_cod_tipo_dispensa, NULL, NULL, 1,
       $this->observacao);
+
+    $objDispensaEtapa    = new clsPmieducarDispensaDisciplinaEtapa();
+    $excluiDispensaEtapa = $objDispensaEtapa->excluirTodos($this->cod_dispensa);
+
+    foreach ($this->etapa as $e) {
+      $objDispensaEtapa = new clsPmieducarDispensaDisciplinaEtapa($this->cod_dispensa, $e);
+      $cadastra = $objDispensaEtapa->cadastra();
+    }
 
     $editou = $obj->edita();
     if ($editou) {
@@ -338,6 +355,9 @@ class indice extends clsCadastro
       $this->pessoa_logada, null, $this->ref_cod_tipo_dispensa, NULL, NULL, 0,
       $this->observacao);
 
+    $objDispensaEtapa    = new clsPmieducarDispensaDisciplinaEtapa();
+    $excluiDispensaEtapa = $objDispensaEtapa->excluirTodos($this->cod_dispensa);
+
     $excluiu = $obj->excluir();
 
     if ($excluiu) {
@@ -349,6 +369,64 @@ class indice extends clsCadastro
     $this->mensagem = 'Exclusão não realizada.<br />';
     echo "<!--\nErro ao excluir clsPmieducarDispensaDisciplina\nvalores obrigatorios\nif( is_numeric( $this->ref_cod_matricula ) && is_numeric( $this->ref_cod_serie ) && is_numeric( $this->ref_cod_escola ) && is_numeric( $this->ref_cod_disciplina ) && is_numeric( $this->pessoa_logada ) )\n-->";
     return FALSE;
+  }
+
+  function montaEtapas(){
+    //Pega matricula para pegar curso, escola e ano
+    $objMatricula        = new clsPmieducarMatricula();
+    $dadosMatricula      = $objMatricula->lista($this->ref_cod_matricula);
+    //Pega curso para pegar padrao ano escolar
+    $objCurso            = new clsPmieducarCurso();
+    $dadosCurso          = $objCurso->lista($dadosMatricula[0]['ref_cod_curso']);
+    $padraoAnoEscolar    = $dadosCurso[0]['padrao_ano_escolar'];
+    //Pega escola e ano para pegar as etapas em ano letivo modulo
+    $escolaId            = $dadosMatricula[0]['ref_ref_cod_escola'];
+    $ano                 = $dadosMatricula[0]['ano'];
+    //Pega dados da enturmação atual
+    $objMatriculaTurma   = new clsPmieducarMatriculaTurma();
+    $seqMatriculaTurma   = $objMatriculaTurma->getUltimaEnturmacao($this->ref_cod_matricula);
+    $dadosMatriculaTurma = $objMatriculaTurma->lista($this->ref_cod_matricula,
+                                                     NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, $seqMatriculaTurma);
+    //Pega etapas definidas na escola
+    $objAnoLetivoMod     = new clsPmieducarAnoLetivoModulo();
+    $dadosAnoLetivoMod   = $objAnoLetivoMod->lista($ano, $escolaId);
+    //Pega etapas definida na turma
+    $objTurmaModulo      = new clsPmieducarTurmaModulo();
+    $dadosTurmaModulo    = $objTurmaModulo->lista($dadosMatriculaTurma[0]['ref_cod_matricula']);
+    //Define de onde as etapas serão pegas
+    if ($padraoAnoEscolar == 1) {
+      $dadosEtapa = $dadosAnoLetivoMod;
+    }else{
+      $dadosEtapa = $dadosTurmaModulo;
+    }
+    //Pega nome do modulo
+    $objModulo           = new clsPmieducarModulo();
+    $dadosModulo         = $objModulo->lista($dadosEtapa[0]['ref_cod_modulo']);
+    $nomeModulo          = $dadosModulo[0]['nm_tipo'];
+
+    foreach ($dadosEtapa as $modulo) {
+      $checked = '';
+      $objDispensaEtapa = new clsPmieducarDispensaDisciplinaEtapa($this->cod_dispensa, $modulo['sequencial']);
+      $verificaSeExiste = $objDispensaEtapa->existe();
+      if ($verificaSeExiste) {
+        $checked = 'checked';
+      }
+      $conteudoHtml .= '<div style="margin-bottom: 10px;">';
+      $conteudoHtml .= "<label style='display: block; float: left; width: 250px'>
+                          <input type=\"checkbox\" $checked
+                              name=\"etapa[". $modulo['sequencial']  ."]\"
+                              id=\"etapa_". $modulo['sequencial']  . "\"
+                              value=\"". $modulo['sequencial'] . "\">" . $modulo['sequencial'] . "º " . $nomeModulo . "
+                        </label>";
+      $conteudoHtml .= '</div>';
+    }
+
+    $etapas  = '<table cellspacing="0" cellpadding="0" border="0">';
+    $etapas .= sprintf('<tr align="left"><td>%s</td></tr>', $conteudoHtml);
+    $etapas .= '</table>';
+
+    $this->campoRotulo('etapas_', 'Etapas',
+      "<div id='etapas'>$etapas</div>");
   }
 }
 

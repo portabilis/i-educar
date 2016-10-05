@@ -118,7 +118,7 @@ class clsPmieducarDispensaDisciplina
     $this->_schema = 'pmieducar.';
     $this->_tabela = $this->_schema . 'dispensa_disciplina';
 
-    $this->_campos_lista = $this->_todos_campos = 'ref_cod_matricula, ref_cod_serie, ref_cod_escola, ref_cod_disciplina, ref_usuario_exc, ref_usuario_cad, ref_cod_tipo_dispensa, data_cadastro, data_exclusao, ativo, observacao';
+    $this->_campos_lista = $this->_todos_campos = 'ref_cod_matricula, ref_cod_serie, ref_cod_escola, ref_cod_disciplina, ref_usuario_exc, ref_usuario_cad, ref_cod_tipo_dispensa, data_cadastro, data_exclusao, ativo, observacao, cod_dispensa';
 
     if (is_numeric($ref_usuario_exc)) {
       $usuario = new clsPmieducarUsuario($ref_usuario_exc);
