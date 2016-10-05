@@ -267,14 +267,38 @@ class MatriculaController extends ApiCoreController
         $matriculas = Portabilis_Array_Utils::filterSet($matriculas, $attrs);
 
         foreach($matriculas as $key => $matricula) {
-          $sql = "SELECT ref_cod_turma AS turma_id,
-                         sequencial AS sequencial,
-                         sequencial_fechamento AS sequencial_fechamento,
-                         coalesce(data_enturmacao::date::varchar, '') AS data_entrada,
-                         coalesce(data_exclusao::date::varchar, '') AS data_saida,
-                         coalesce(updated_at::varchar, '') AS data_atualizacao
-                  FROM pmieducar.matricula_turma
-                  WHERE ref_cod_matricula = $1";
+          $sql = "SELECT matricula_turma.ref_cod_turma AS turma_id,
+                         matricula_turma.sequencial AS sequencial,
+                         matricula_turma.sequencial_fechamento AS sequencial_fechamento,
+                         coalesce(matricula_turma.data_enturmacao::date::varchar, '') AS data_entrada,
+                         coalesce(matricula_turma.data_exclusao::date::varchar, '') AS data_saida,
+                         coalesce(matricula_turma.updated_at::varchar, '') AS data_atualizacao
+                  FROM matricula
+                  LEFT JOIN matricula_turma ON matricula_turma.ref_cod_matricula = matricula.cod_matricula
+                  WHERE CASE
+                            WHEN matricula.aprovado = 4 THEN matricula_turma.ativo = 1
+                                 OR matricula_turma.transferido
+                                 OR matricula_turma.reclassificado
+                                 OR matricula_turma.remanejado
+                                 OR matricula_turma.sequencial = (
+                                                                    (SELECT max(mt.sequencial) AS MAX
+                                                                     FROM matricula_turma mt
+                                                                     WHERE mt.ref_cod_matricula = matricula.cod_matricula))
+                            WHEN matricula.aprovado = 6 THEN matricula_turma.ativo = 1
+                                 OR matricula_turma.abandono
+                            WHEN matricula.aprovado = 5 THEN matricula_turma.ativo = 1
+                                 OR matricula_turma.reclassificado
+                            ELSE matricula_turma.ativo = 1
+                                 OR matricula_turma.transferido
+                                 OR matricula_turma.reclassificado
+                                 OR matricula_turma.abandono
+                                 OR matricula_turma.remanejado
+                                 AND matricula_turma.sequencial < (
+                                                                     (SELECT MAX(mt.sequencial) AS MAX
+                                                                      FROM matricula_turma mt
+                                                                      WHERE mt.ref_cod_matricula = matricula.cod_matricula))
+                        END
+                    AND cod_matricula = $1";
 
           $params      = array($matriculas[$key]['matricula_id']);
           $enturmacoes = $this->fetchPreparedQuery($sql, $params, false);
