@@ -87,7 +87,9 @@ class EnderecoController extends ApiCoreController
     $tipoUsuario = new clsPmieducarMenuTipoUsuario($usuario['ref_cod_tipo_usuario'], 999878);
     $tipoUsuario = $tipoUsuario->detalhe();
 
-    return array('permite_editar' => $tipoUsuario['cadastra']);
+    $permissao = ($tipoUsuario['cadastra'] == 1 ? true : false);
+
+    return array('permite_editar' => $permissao);
   }
 
   protected function deleteEndereco() {
