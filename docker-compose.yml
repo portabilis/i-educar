@@ -1,0 +1,16 @@
+ieducar:
+  build: .
+  ports:
+    - "8080:80"
+  volumes:
+    - .:/home/ieducar/ieducar
+  links:
+    - postgres
+  container_name: ieducar_comunidade
+
+postgres:
+  image: ignatov/docker-postgresql-8.2
+  environment:
+    - POSTGRES_PASSWORD=postgres
+  ports:
+    - "5430:5432"
