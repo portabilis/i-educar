@@ -445,7 +445,7 @@ class clsPmieducarDispensaDisciplina
                                      $int_ref_cod_escola = NULL,
                                      $int_etapa = NULL)
   {
-    $sql     = "SELECT {$this->_campos_lista}
+    $sql     = "SELECT {$this->_campos_lista}, etapa
                   FROM {$this->_tabela}
                  INNER JOIN pmieducar.dispensa_etapa ON (dispensa_etapa.ref_cod_dispensa = dispensa_disciplina.cod_dispensa)";
     $filtros = '';

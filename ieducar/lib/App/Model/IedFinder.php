@@ -696,6 +696,25 @@ class App_Model_IedFinder extends CoreExt_Entity
     return $disciplinasDispensa;
   }
 
+  public static function validaDispensaPorMatricula($codMatricula,
+    $codSerie, $codEscola, $disciplina)
+  {
+    $dispensas = self::addClassToStorage('clsPmieducarDispensaDisciplina',
+      NULL, 'include/pmieducar/clsPmieducarDispensaDisciplina.inc.php');
+
+    $dispensas = $dispensas->disciplinaDispensadaEtapa($codMatricula, $codSerie, $codEscola);
+
+    $etapaDispensada = array();
+
+    foreach ($dispensas as $dispensa) {
+      if ($dispensa['ref_cod_disciplina'] == $disciplina) {
+        $etapaDispensada[] = $dispensa['etapa'];
+      }
+    }
+
+    return $etapaDispensada;
+  }
+
   /**
    * Retorna array com as referências de pmieducar.disciplina_dependencia
    * a modules.componente_curricular ('ref_ref_cod_disciplina').
