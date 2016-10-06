@@ -191,9 +191,19 @@ class DiarioApiController extends ApiCoreController
   protected function validatesPreviousFaltasHasBeenSet() {
     $hasPreviousFaltas   = true;
     $etapasWithoutFaltas = array();
+    $matriculaId        = $this->serviceBoletim()->getOption('matricula');
+    $serieId            = $this->serviceBoletim()->getOption('ref_cod_serie');
+    $escolaId           = $this->serviceBoletim()->getOption('ref_cod_escola');
+    $disciplinaId       = $this->getRequest()->componente_curricular_id;
+
+    $existeEtapaDispensadaDisciplina = App_Model_IedFinder::validaDispensaPorMatricula($matriculaId, $serieId, $escolaId, $disciplinaId);
 
     for($etapa = 1; $etapa <= $this->getRequest()->etapa; $etapa++) {
       $falta = $this->getFaltaAtual($etapa);
+
+      if (is_array($existeEtapaDispensadaDisciplina) && in_array($etapa, $existeEtapaDispensadaDisciplina)){
+        continue;
+      }
 
       if($etapa != $this->getRequest()->etapa && empty($falta) && ! is_numeric($falta)) {
         $hasPreviousFaltas     = false;
