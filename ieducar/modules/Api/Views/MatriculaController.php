@@ -246,7 +246,7 @@ class MatriculaController extends ApiCoreController
 
     if ($this->canGetMovimentacaoEnturmacao()) {
 
-      if (!$this->validatesPresenceOf('escola')) {
+      if (!$escola) {
         $escola = 0;
       }
 
