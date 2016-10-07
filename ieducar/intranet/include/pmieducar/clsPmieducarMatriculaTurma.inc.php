@@ -345,7 +345,7 @@ class clsPmieducarMatriculaTurma
       if (is_string($this->data_exclusao)) {
         $set .= "{$gruda}data_exclusao = '{$this->data_exclusao}'";
         $gruda = ", ";
-      }elseif(is_null($this->data_exclusao)){
+      }elseif(is_null($this->data_exclusao) || empty($this->data_exclusao)){
         $set .= "{$gruda}data_exclusao = NULL";
         $gruda = ", ";
       }

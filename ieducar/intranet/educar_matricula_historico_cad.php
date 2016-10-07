@@ -164,7 +164,14 @@ class indice extends clsCadastro
 
     $matricula = new clsPmieducarMatricula($this->ref_cod_matricula);
     $matricula = $matricula->detalhe();
-    $dataSaidaMatricula = date("Y-m-d", strtotime($matricula['data_cancel']));
+    $dataSaidaMatricula = "";
+    if($matricula['data_cancel']){
+      $dataSaidaMatricula = date("Y-m-d", strtotime($matricula['data_cancel'])); 
+    }
+
+    //echo $enturmacao->data_exclusao . "<br>";
+    //echo $dataSaidaMatricula;
+    //die();
 
     $seqUltimaEnturmacao = $enturmacao->getUltimaEnturmacao($this->ref_cod_matricula);
 
@@ -180,7 +187,7 @@ class indice extends clsCadastro
 
     if ($dataSaidaMatricula &&
 
-        ($enturmacao->data_exclusao != $dataSaidaMatricula) &&
+        ($enturmacao->data_exclusao > $dataSaidaMatricula) &&
 
         (App_Model_MatriculaSituacao::TRANSFERIDO    == $matricula['aprovado'] ||
          App_Model_MatriculaSituacao::ABANDONO       == $matricula['aprovado'] ||
@@ -196,6 +203,15 @@ class indice extends clsCadastro
     $editou = $enturmacao->edita();
     if( $editou )
     {
+      if(is_null($dataSaidaMatricula) || empty($dataSaidaMatricula)){
+        $dataSaidaMatricula = $enturmacao->data_exclusao;
+        
+        $matricula_get = new clsPmieducarMatricula($this->ref_cod_matricula, NULL, NULL, NULL, NULL, $matricula['ref_usuario_cad'], $matricula['ref_cod_aluno'], $matricula['aprovado'],
+                                                   NULL, NULL, NULL, $matricula['ano'], $matricula['ultima_matricula'], NULL, NULL, NULL, NULL, $matricula['ref_cod_curso'], NULL, NULL,
+                                                   NULL, $dataSaidaMatricula, NULL);
+        $matricula_get->edita();
+      }
+
       $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
       header( "Location: educar_matricula_historico_lst.php?ref_cod_matricula=".$this->ref_cod_matricula);
       die();
