@@ -411,8 +411,7 @@ class indice extends clsCadastro
       
       // turma
       $cod_matricula = $cadastrou;
-      $this->enturmacaoMatricula($cod_matricula, $this->ref_cod_turma);
-      
+
       if ($cadastrou) {
 
         $obj_transferencia = new clsPmieducarTransferenciaSolicitacao();
@@ -546,6 +545,8 @@ class indice extends clsCadastro
           }
         //}
 
+        $this->enturmacaoMatricula($cod_matricula, $this->ref_cod_turma); 
+
         #TODO set in $_SESSION['flash'] 'Aluno matriculado com sucesso'
         $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
         header('Location: educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno);
@@ -579,6 +580,8 @@ class indice extends clsCadastro
                                                      $enturmacao['sequencial']);
         if ($result && ! $enturmacao->edita())
           $result = false;
+        else
+          $enturmacao->marcaAlunoTransferido($this->data_matricula);
       }
     }
 

@@ -60,6 +60,8 @@ class clsPmieducarInstituicao
   var $data_exclusao;
   var $ativo;
   var $nm_instituicao;
+  var $data_base_remanejamento;
+  var $data_base_transferencia;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -125,7 +127,7 @@ class clsPmieducarInstituicao
     $this->_schema = "pmieducar.";
     $this->_tabela = "{$this->_schema}instituicao";
 
-    $this->_campos_lista = $this->_todos_campos = "cod_instituicao, ref_usuario_exc, ref_usuario_cad, ref_idtlog, ref_sigla_uf, cep, cidade, bairro, logradouro, numero, complemento, nm_responsavel, ddd_telefone, telefone, data_cadastro, data_exclusao, ativo, nm_instituicao";
+    $this->_campos_lista = $this->_todos_campos = "cod_instituicao, ref_usuario_exc, ref_usuario_cad, ref_idtlog, ref_sigla_uf, cep, cidade, bairro, logradouro, numero, complemento, nm_responsavel, ddd_telefone, telefone, data_cadastro, data_exclusao, ativo, nm_instituicao, data_base_transferencia, data_base_remanejamento";
 
     if (is_numeric($ref_usuario_cad)) {
       if (class_exists('clsPmieducarUsuario')) {
@@ -362,6 +364,18 @@ class clsPmieducarInstituicao
         $gruda = ", ";
       }
 
+      if (is_string($this->data_base_remanejamento)) {
+        $campos .= "{$gruda}data_base_remanejamento";
+        $valores .= "{$gruda}'{$this->data_base_remanejamento}'";
+        $gruda = ", ";
+      }
+
+      if (is_string($this->data_base_transferencia)) {
+        $campos .= "{$gruda}data_base_transferencia";
+        $valores .= "{$gruda}'{$this->data_base_transferencia}'";
+        $gruda = ", ";
+      }
+
       $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
       return $db->InsertId("{$this->_tabela}_cod_instituicao_seq");
     }
@@ -459,6 +473,16 @@ class clsPmieducarInstituicao
 
       if (is_string($this->nm_instituicao)) {
         $set .= "{$gruda}nm_instituicao = '{$this->nm_instituicao}'";
+        $gruda = ", ";
+      }
+
+      if (is_string($this->data_base_transferencia)) {
+        $set .= "{$gruda}data_base_transferencia = '{$this->data_base_transferencia}'";
+        $gruda = ", ";
+      }
+
+      if (is_string($this->data_base_remanejamento)) {
+        $set .= "{$gruda}data_base_remanejamento = '{$this->data_base_remanejamento}'";
         $gruda = ", ";
       }
 

@@ -115,7 +115,7 @@ class clsPmieducarMatriculaTurma
     $this->_schema = "pmieducar.";
     $this->_tabela = "{$this->_schema}matricula_turma";
 
-    $this->_campos_lista = $this->_todos_campos = "mt.ref_cod_matricula, mt.ref_cod_turma, mt.ref_usuario_exc, mt.ref_usuario_cad, mt.data_cadastro, mt.data_exclusao, mt.ativo, mt.sequencial, mt.data_enturmacao, (SELECT pes.nome FROM cadastro.pessoa pes, pmieducar.aluno alu, pmieducar.matricula mat WHERE pes.idpes = alu.ref_idpes AND mat.ref_cod_aluno = alu.cod_aluno AND mat.cod_matricula = mt.ref_cod_matricula ) AS nome, (SELECT to_ascii(pes.nome) FROM cadastro.pessoa pes, pmieducar.aluno alu, pmieducar.matricula mat WHERE pes.idpes = alu.ref_idpes AND mat.ref_cod_aluno = alu.cod_aluno AND mat.cod_matricula = mt.ref_cod_matricula ) AS nome_ascii";
+    $this->_campos_lista = $this->_todos_campos = "mt.ref_cod_matricula, mt.remanejado, mt.transferido, mt.ref_cod_turma, mt.ref_usuario_exc, mt.ref_usuario_cad, mt.data_cadastro, mt.data_exclusao, mt.ativo, mt.sequencial, mt.data_enturmacao, (SELECT pes.nome FROM cadastro.pessoa pes, pmieducar.aluno alu, pmieducar.matricula mat WHERE pes.idpes = alu.ref_idpes AND mat.ref_cod_aluno = alu.cod_aluno AND mat.cod_matricula = mt.ref_cod_matricula ) AS nome, (SELECT to_ascii(pes.nome) FROM cadastro.pessoa pes, pmieducar.aluno alu, pmieducar.matricula mat WHERE pes.idpes = alu.ref_idpes AND mat.ref_cod_aluno = alu.cod_aluno AND mat.cod_matricula = mt.ref_cod_matricula ) AS nome_ascii";
 
     if (is_numeric($ref_usuario_exc)) {
       if (class_exists("clsPmieducarUsuario")) {
@@ -345,6 +345,10 @@ class clsPmieducarMatriculaTurma
       if (is_numeric($this->ativo)) {
         $set .= "{$gruda}ativo = '{$this->ativo}'";
         $gruda = ", ";
+        if ($this->ativo == 1){
+          $set .= "{$gruda}remanejado = null, transferido = null";
+          $gruda = ", ";
+        }
       }
 
       if (is_numeric($this->ref_cod_turma_transf)) {
@@ -460,6 +464,9 @@ class clsPmieducarMatriculaTurma
     if (is_numeric($int_ativo)) {
       if ($int_ativo == 1) {
         $filtros .= "{$whereAnd} mt.ativo = '1'";
+        $whereAnd = " AND ";
+      }elseif ($int_ativo == 2) {
+        $filtros .= "{$whereAnd} (mt.ativo = '1' OR mt.transferido OR mt.remanejado)";
         $whereAnd = " AND ";
       }
       else {
@@ -1152,6 +1159,38 @@ class clsPmieducarMatriculaTurma
     }
 
     return FALSE;
+  }
+
+  function marcaAlunoRemanejado($data = null){
+
+    if ($this->ref_cod_matricula && $this->sequencial){
+      $db = new clsBanco();
+      $cod_instituicao = $db->CampoUnico("SELECT ref_cod_instituicao from pmieducar.escola
+                                            INNER JOIN pmieducar.matricula ON (ref_ref_cod_escola = cod_escola)
+                                            WHERE cod_matricula = {$this->ref_cod_matricula}");
+      $dataBaseRemanejamento = $db->CampoUnico("SELECT data_base_remanejamento
+                                                  FROM pmieducar.instituicao WHERE cod_instituicao = {$cod_instituicao}");
+      $data = $data ? $data : date('Y-m-d');
+      if ($dataBaseRemanejamento && strtotime($dataBaseRemanejamento) < strtotime($data) ) {
+        $db->CampoUnico("UPDATE pmieducar.matricula_turma SET remanejado = TRUE WHERE ref_cod_matricula = {$this->ref_cod_matricula} AND sequencial = {$this->sequencial}");
+      }
+    }
+  }
+
+  function marcaAlunoTransferido($data = null){
+
+    if ($this->ref_cod_matricula && $this->sequencial){
+      $db = new clsBanco();
+      $cod_instituicao = $db->CampoUnico("SELECT ref_cod_instituicao from pmieducar.escola
+                                            INNER JOIN pmieducar.matricula ON (ref_ref_cod_escola = cod_escola)
+                                            WHERE cod_matricula = {$this->ref_cod_matricula}");
+      $dataBaseRemanejamento = $db->CampoUnico("SELECT data_base_transferencia
+                                                  FROM pmieducar.instituicao WHERE cod_instituicao = {$cod_instituicao}");
+      $data = $data ? $data : date('Y-m-d');
+      if ($dataBaseRemanejamento && strtotime($dataBaseRemanejamento) < strtotime($data) ) {
+        $db->CampoUnico("UPDATE pmieducar.matricula_turma SET transferido = TRUE WHERE ref_cod_matricula = {$this->ref_cod_matricula} AND sequencial = {$this->sequencial}");
+      }
+    }
   }
 
   function dadosAlunosNaoEnturmados($ref_cod_escola = NULL, $ref_cod_serie = NULL,

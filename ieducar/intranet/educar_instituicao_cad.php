@@ -29,6 +29,8 @@ require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once( "include/pmieducar/geral.inc.php" );
 require_once ("include/Geral.inc.php");
+require_once 'includes/bootstrap.php';
+require_once 'Portabilis/Date/Utils.php';
 
 class clsIndexBase extends clsBase
 {
@@ -67,6 +69,8 @@ class indice extends clsCadastro
 	var $data_exclusao;
 	var $ativo;
 	var $nm_instituicao;
+ 	var $data_base_transferencia;
+ 	var $data_base_remanejamento;
 
 	function Inicializar()
 	{
@@ -172,6 +176,11 @@ class indice extends clsCadastro
 		$this->campoTexto( "nm_responsavel", "Nome do Responsável", $this->nm_responsavel, 30, 255, true );
 		$this->campoNumero( "ddd_telefone", "DDD Telefone", $this->ddd_telefone, 2, 2 );
 		$this->campoNumero( "telefone", "Telefone", $this->telefone, 11, 11 );
+
+		if ($GLOBALS['coreExt']['Config']->app->instituicao->data_base_deslocamento) {
+       		$this->campoData('data_base_transferencia', 'Data máxima para deslocamento', Portabilis_Date_Utils::pgSQLToBr($this->data_base_transferencia), null, null, false);
+       		$this->campoData('data_base_remanejamento', 'Data máxima para troca de sala', Portabilis_Date_Utils::pgSQLToBr($this->data_base_remanejamento), null, null, false);
+     	}
 	}
 
 	function Novo()
@@ -181,6 +190,10 @@ class indice extends clsCadastro
 		@session_write_close();
 
 		$obj = new clsPmieducarInstituicao( null, $this->ref_usuario_exc, $this->pessoa_logada, $this->ref_idtlog, $this->ref_sigla_uf, str_replace( "-", "", $this->cep ), $this->cidade, $this->bairro, $this->logradouro, $this->numero, $this->complemento, $this->nm_responsavel, $this->ddd_telefone, $this->telefone, $this->data_cadastro, $this->data_exclusao, 1, $this->nm_instituicao );
+
+		$obj->data_base_remanejamento = Portabilis_Date_Utils::brToPgSQL($this->data_base_remanejamento);
+		$obj->data_base_transferencia = Portabilis_Date_Utils::brToPgSQL($this->data_base_transferencia);
+
 		$cadastrou = $obj->cadastra();
 		if( $cadastrou )
 		{
@@ -201,6 +214,10 @@ class indice extends clsCadastro
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
 		$obj = new clsPmieducarInstituicao( $this->cod_instituicao, $this->ref_usuario_exc, $this->pessoa_logada, $this->ref_idtlog, $this->ref_sigla_uf, str_replace( "-", "", $this->cep ), $this->cidade, $this->bairro, $this->logradouro, $this->numero, $this->complemento, $this->nm_responsavel, $this->ddd_telefone, $this->telefone, $this->data_cadastro, $this->data_exclusao, 1, $this->nm_instituicao );
+
+		$obj->data_base_remanejamento = Portabilis_Date_Utils::brToPgSQL($this->data_base_remanejamento);
+		$obj->data_base_transferencia = Portabilis_Date_Utils::brToPgSQL($this->data_base_transferencia);
+
 		$editou = $obj->edita();
 		if( $editou )
 		{

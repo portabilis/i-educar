@@ -542,13 +542,30 @@ function handleSearch($resultTable, dataResponse) {
                 .attr('colspan', componenteCurricularSelected ? 0 : 4)
                 .appendTo($linha);
 
-    if (componenteCurricularSelected && value.componentes_curriculares.length > 0)
-      updateComponenteCurricular($linha, value.matricula_id, value.componentes_curriculares[0]);
+    if (value.componentes_curriculares){
+      if (componenteCurricularSelected && value.componentes_curriculares.length > 0)
+        updateComponenteCurricular($linha, value.matricula_id, value.componentes_curriculares[0]);
+    }else{
+      if(value.situacao_deslocamento){
+        var $situacaoTdDeslocamento = $j('<td />').addClass('situacao-matricula-cc')
+                                  .attr('id', 'situacao-matricula-' + value.matricula_id)
+                                  .data('matricula_id', value.matricula_id)
+                                  .addClass('center')
+                                  .css('color', '#FF6600')
+                                  .html(value.situacao_deslocamento)
+                                  .appendTo($linha);
+        $j('<td />').html('-').addClass('center').appendTo($linha);
+        $j('<td />').html('-').addClass('center').appendTo($linha);
+        $j('<td />').html('-').addClass('center').appendTo($linha);
+        $j('<td />').html('-').addClass('center').appendTo($linha);
+
+      }
+    }
 
     $linha.fadeIn('slow').appendTo($resultTable);
     $linha.appendTo($resultTable);
 
-    if (! componenteCurricularSelected)
+    if (! componenteCurricularSelected && value.componentes_curriculares)
       updateComponenteCurriculares($resultTable, value.matricula_id, value.componentes_curriculares);
   });
 

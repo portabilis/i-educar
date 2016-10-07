@@ -553,7 +553,7 @@ class DiarioApiController extends ApiCoreController
         NULL,
         NULL,
         NULL,
-        1,
+        2,
         $this->getRequest()->serie_id,
         $this->getRequest()->curso_id,
         $this->getRequest()->escola_id,
@@ -587,10 +587,13 @@ class DiarioApiController extends ApiCoreController
         // seta id da matricula a ser usado pelo metodo serviceBoletim
         $this->setCurrentMatriculaId($matriculaId);
 
-        $matricula['componentes_curriculares'] = $this->loadComponentesCurricularesForMatricula($matriculaId);
+        if(! ($aluno['remanejado'] || $aluno['transferido']))
+          $matricula['componentes_curriculares'] = $this->loadComponentesCurricularesForMatricula($matriculaId);
+
         $matricula['matricula_id']             = $aluno['ref_cod_matricula'];
         $matricula['aluno_id']                 = $aluno['ref_cod_aluno'];
         $matricula['nome']                     = $this->safeString($aluno['nome_aluno']);
+        $matricula['situacao_deslocamento']    = ($aluno['remanejado'] ? 'Remanejado' : ($aluno['transferido'] ? 'Transferido' : null));
 
         $matriculas[] = $matricula;
       }
