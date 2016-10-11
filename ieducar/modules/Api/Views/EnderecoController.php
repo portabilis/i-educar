@@ -34,6 +34,8 @@ require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
 require_once 'intranet/include/clsBanco.inc.php';
 require_once 'intranet/include/funcoes.inc.php';
+require_once 'intranet/include/pmieducar/clsPmieducarUsuario.inc.php';
+require_once 'intranet/include/pmieducar/clsPmieducarMenuTipoUsuario.inc.php';
 
 class EnderecoController extends ApiCoreController
 {
@@ -75,6 +77,19 @@ class EnderecoController extends ApiCoreController
     }
 
     return $return;
+  }
+
+  protected function getPermissaoEditar() {
+
+    $usuario = new clsPmieducarUsuario($this->getSession()->id_pessoa);
+    $usuario = $usuario->detalhe();
+
+    $tipoUsuario = new clsPmieducarMenuTipoUsuario($usuario['ref_cod_tipo_usuario'], 999878);
+    $tipoUsuario = $tipoUsuario->detalhe();
+
+    $permissao = ($tipoUsuario['cadastra'] == 1 ? true : false);
+
+    return array('permite_editar' => $permissao);
   }
 
   protected function deleteEndereco() {
@@ -119,6 +134,9 @@ class EnderecoController extends ApiCoreController
 
     if ($this->isRequestFor('get', 'primeiro_endereco_cep'))
       $this->appendResponse($this->getPrimeiroEnderecoCep());
+
+    elseif ($this->isRequestFor('get', 'permissao_editar'))
+      $this->appendResponse($this->getPermissaoEditar());
 
     elseif ($this->isRequestFor('delete', 'delete_endereco'))
       $this->deleteEndereco();
