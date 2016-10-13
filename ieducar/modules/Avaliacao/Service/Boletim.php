@@ -1389,8 +1389,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
     $disciplinaDispensadaTurma = clsPmieducarTurma::getDisciplinaDispensada($this->getOption('ref_cod_turma'));
 
-    $disciplinasDispensadasMatricula = App_Model_IedFinder::getDisciplinasDispensadasPorMatricula($this->getOption('matricula'), $this->getOption('ref_cod_serie'), $this->getOption('ref_cod_escola'));
-
     // A situação é "aprovado" por padrão
     $situacaoGeral = App_Model_MatriculaSituacao::APROVADO;
 
@@ -1448,12 +1446,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     if(is_numeric($disciplinaDispensadaTurma)){
       unset($componentes[$disciplinaDispensadaTurma]);
       unset($mediasComponentes[$disciplinaDispensadaTurma]);
-    }
-    if(is_array($disciplinasDispensadasMatricula)){
-      foreach($disciplinasDispensadasMatricula as $disciplina){
-        unset($componentes[$disciplina]);
-        unset($mediasComponentes[$disciplina]);
-      }
     }
 
     // Se não tiver nenhuma média ou a quantidade for diferente dos componentes
@@ -1623,7 +1615,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $faltasComponentes                  = array();
 
     $disciplinaDispensadaTurma = clsPmieducarTurma::getDisciplinaDispensada($this->getOption('ref_cod_turma'));
-    $disciplinasDispensadasMatricula = App_Model_IedFinder::getDisciplinasDispensadasPorMatricula($this->getOption('matricula'), $this->getOption('ref_cod_serie'), $this->getOption('ref_cod_escola'));
 
     // Carrega faltas lançadas (persistidas)
     $this->_loadFalta();
@@ -1701,12 +1692,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       if(is_numeric($disciplinaDispensadaTurma)){
         unset($componentes[$disciplinaDispensadaTurma]);
         unset($faltasComponentes[$disciplinaDispensadaTurma]);
-      }
-      if(is_array($disciplinasDispensadasMatricula)){
-        foreach($disciplinasDispensadasMatricula as $disciplina){
-          unset($componentes[$disciplina]);
-          unset($faltasComponentes[$disciplina]);
-        }
       }
       if (0 == count($faltasComponentes) ||
           count($faltasComponentes) != count($componentes)) {
@@ -3103,6 +3088,10 @@ public function alterarSituacao($novaSituacao, $matriculaId){
       $this->getMediaGeralDataMapper()->save($mediaGeralEtapa);
     }else{
       $turmaId = $this->getOption('ref_cod_turma');
+      $infosMatricula = $this->getOption('matriculaData');
+      $matriculaId = $infosMatricula['cod_matricula'];
+      $serieId = $infosMatricula['ref_ref_cod_serie'];
+      $escolaId = $infosMatricula['ref_ref_cod_escola'];
 
       foreach ($this->_notasComponentes as $id => $notasComponentes) {
         //busca última nota lançada e somente atualiza a média e situação da nota do mesmo componente curricular
@@ -3116,6 +3105,12 @@ public function alterarSituacao($novaSituacao, $matriculaId){
             $qtdeEtapaEspecifica = App_Model_IedFinder::getQtdeEtapasComponente($turmaId, $id);
 
             $qtdeEtapas = ($qtdeEtapaEspecifica ? $qtdeEtapaEspecifica : $qtdeEtapas);
+          }
+
+          $verificaDispensa = App_Model_IedFinder::validaDispensaPorMatricula($matriculaId, $serieId, $escolaId, $id);
+
+          if ($verificaDispensa) {
+            $qtdeEtapas = $qtdeEtapas - count($verificaDispensa);
           }
 
           $notas = array('Se' => 0, 'Et' => $qtdeEtapas);

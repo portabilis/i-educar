@@ -631,7 +631,7 @@ class App_Model_IedFinder extends CoreExt_Entity
 
       // Dispensas do aluno
       $disciplinasDispensa = self::getDisciplinasDispensadasPorMatricula(
-        $codMatricula, $codSerie, $codEscola
+        $codMatricula, $codSerie, $codEscola, $etapa
       );
 
       if(dbBool($matricula['dependencia'])){
@@ -677,12 +677,12 @@ class App_Model_IedFinder extends CoreExt_Entity
    * @return array
    */
   public static function getDisciplinasDispensadasPorMatricula($codMatricula,
-    $codSerie, $codEscola)
+    $codSerie, $codEscola, $etapa)
   {
     $dispensas = self::addClassToStorage('clsPmieducarDispensaDisciplina',
       NULL, 'include/pmieducar/clsPmieducarDispensaDisciplina.inc.php');
 
-    $dispensas = $dispensas->lista($codMatricula, $codSerie, $codEscola);
+    $dispensas = $dispensas->disciplinaDispensadaEtapa($codMatricula, $codSerie, $codEscola, $etapa);
 
     if (FALSE === $dispensas) {
       return array();
@@ -694,6 +694,25 @@ class App_Model_IedFinder extends CoreExt_Entity
     }
 
     return $disciplinasDispensa;
+  }
+
+  public static function validaDispensaPorMatricula($codMatricula,
+    $codSerie, $codEscola, $disciplina)
+  {
+    $dispensas = self::addClassToStorage('clsPmieducarDispensaDisciplina',
+      NULL, 'include/pmieducar/clsPmieducarDispensaDisciplina.inc.php');
+
+    $dispensas = $dispensas->disciplinaDispensadaEtapa($codMatricula, $codSerie, $codEscola);
+
+    $etapaDispensada = array();
+
+    foreach ($dispensas as $dispensa) {
+      if ($dispensa['ref_cod_disciplina'] == $disciplina) {
+        $etapaDispensada[] = $dispensa['etapa'];
+      }
+    }
+
+    return $etapaDispensada;
   }
 
   /**
