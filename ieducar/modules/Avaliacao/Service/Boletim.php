@@ -1389,8 +1389,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
     $disciplinaDispensadaTurma = clsPmieducarTurma::getDisciplinaDispensada($this->getOption('ref_cod_turma'));
 
-    $disciplinasDispensadasMatricula = App_Model_IedFinder::getDisciplinasDispensadasPorMatricula($this->getOption('matricula'), $this->getOption('ref_cod_serie'), $this->getOption('ref_cod_escola'));
-
     // A situação é "aprovado" por padrão
     $situacaoGeral = App_Model_MatriculaSituacao::APROVADO;
 
@@ -1448,12 +1446,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     if(is_numeric($disciplinaDispensadaTurma)){
       unset($componentes[$disciplinaDispensadaTurma]);
       unset($mediasComponentes[$disciplinaDispensadaTurma]);
-    }
-    if(is_array($disciplinasDispensadasMatricula)){
-      foreach($disciplinasDispensadasMatricula as $disciplina){
-        unset($componentes[$disciplina]);
-        unset($mediasComponentes[$disciplina]);
-      }
     }
 
     // Se não tiver nenhuma média ou a quantidade for diferente dos componentes
@@ -1623,7 +1615,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $faltasComponentes                  = array();
 
     $disciplinaDispensadaTurma = clsPmieducarTurma::getDisciplinaDispensada($this->getOption('ref_cod_turma'));
-    $disciplinasDispensadasMatricula = App_Model_IedFinder::getDisciplinasDispensadasPorMatricula($this->getOption('matricula'), $this->getOption('ref_cod_serie'), $this->getOption('ref_cod_escola'));
 
     // Carrega faltas lançadas (persistidas)
     $this->_loadFalta();
@@ -1701,12 +1692,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       if(is_numeric($disciplinaDispensadaTurma)){
         unset($componentes[$disciplinaDispensadaTurma]);
         unset($faltasComponentes[$disciplinaDispensadaTurma]);
-      }
-      if(is_array($disciplinasDispensadasMatricula)){
-        foreach($disciplinasDispensadasMatricula as $disciplina){
-          unset($componentes[$disciplina]);
-          unset($faltasComponentes[$disciplina]);
-        }
       }
       if (0 == count($faltasComponentes) ||
           count($faltasComponentes) != count($componentes)) {
