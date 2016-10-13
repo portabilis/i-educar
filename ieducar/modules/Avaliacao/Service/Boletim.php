@@ -3103,6 +3103,10 @@ public function alterarSituacao($novaSituacao, $matriculaId){
       $this->getMediaGeralDataMapper()->save($mediaGeralEtapa);
     }else{
       $turmaId = $this->getOption('ref_cod_turma');
+      $infosMatricula = $this->getOption('matriculaData');
+      $matriculaId = $infosMatricula['cod_matricula'];
+      $serieId = $infosMatricula['ref_ref_cod_serie'];
+      $escolaId = $infosMatricula['ref_ref_cod_escola'];
 
       foreach ($this->_notasComponentes as $id => $notasComponentes) {
         //busca última nota lançada e somente atualiza a média e situação da nota do mesmo componente curricular
@@ -3116,6 +3120,12 @@ public function alterarSituacao($novaSituacao, $matriculaId){
             $qtdeEtapaEspecifica = App_Model_IedFinder::getQtdeEtapasComponente($turmaId, $id);
 
             $qtdeEtapas = ($qtdeEtapaEspecifica ? $qtdeEtapaEspecifica : $qtdeEtapas);
+          }
+
+          $verificaDispensa = App_Model_IedFinder::validaDispensaPorMatricula($matriculaId, $serieId, $escolaId, $id);
+
+          if ($verificaDispensa) {
+            $qtdeEtapas = $qtdeEtapas - count($verificaDispensa);
           }
 
           $notas = array('Se' => 0, 'Et' => $qtdeEtapas);
