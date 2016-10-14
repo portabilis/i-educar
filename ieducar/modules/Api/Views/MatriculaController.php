@@ -235,6 +235,86 @@ class MatriculaController extends ApiCoreController
     }
   }
 
+
+  protected function canGetMovimentacaoEnturmacao() {
+    return $this->validatesPresenceOf('ano');
+  }
+
+  protected function getMovimentacaoEnturmacao() {
+    $ano = $this->getRequest()->ano;
+    $escola = $this->getRequest()->escola;
+
+    if ($this->canGetMovimentacaoEnturmacao()) {
+
+      if (!$escola) {
+        $escola = 0;
+      }
+
+      $sql = "SELECT ref_cod_aluno AS aluno_id,
+                     cod_matricula AS matricula_id,
+                     aprovado AS situacao,
+                     ativo AS ativo,
+                     coalesce(updated_at::varchar, '') AS data_atualizacao
+              FROM pmieducar.matricula
+              WHERE ano = $1
+                AND CASE WHEN $2 = 0 THEN TRUE ELSE ref_ref_cod_escola = $2 END";
+
+      $params     = array($ano, $escola);
+      $matriculas = $this->fetchPreparedQuery($sql, $params, false);
+
+      if (is_array($matriculas) && count($matriculas) > 0) {
+        $attrs      = array('aluno_id', 'matricula_id', 'situacao', 'data_atualizacao', 'ativo');
+        $matriculas = Portabilis_Array_Utils::filterSet($matriculas, $attrs);
+
+        foreach($matriculas as $key => $matricula) {
+          $sql = "SELECT matricula_turma.ref_cod_turma AS turma_id,
+                         matricula_turma.sequencial AS sequencial,
+                         matricula_turma.sequencial_fechamento AS sequencial_fechamento,
+                         coalesce(matricula_turma.data_enturmacao::date::varchar, '') AS data_entrada,
+                         coalesce(matricula_turma.data_exclusao::date::varchar, '') AS data_saida,
+                         coalesce(matricula_turma.updated_at::varchar, '') AS data_atualizacao
+                  FROM matricula
+                  LEFT JOIN matricula_turma ON matricula_turma.ref_cod_matricula = matricula.cod_matricula
+                  WHERE CASE
+                            WHEN matricula.aprovado = 4 THEN matricula_turma.ativo = 1
+                                 OR matricula_turma.transferido
+                                 OR matricula_turma.reclassificado
+                                 OR matricula_turma.remanejado
+                                 OR matricula_turma.sequencial = (
+                                                                    (SELECT max(mt.sequencial) AS MAX
+                                                                     FROM matricula_turma mt
+                                                                     WHERE mt.ref_cod_matricula = matricula.cod_matricula))
+                            WHEN matricula.aprovado = 6 THEN matricula_turma.ativo = 1
+                                 OR matricula_turma.abandono
+                            WHEN matricula.aprovado = 5 THEN matricula_turma.ativo = 1
+                                 OR matricula_turma.reclassificado
+                            ELSE matricula_turma.ativo = 1
+                                 OR matricula_turma.transferido
+                                 OR matricula_turma.reclassificado
+                                 OR matricula_turma.abandono
+                                 OR matricula_turma.remanejado
+                                 AND matricula_turma.sequencial < (
+                                                                     (SELECT MAX(mt.sequencial) AS MAX
+                                                                      FROM matricula_turma mt
+                                                                      WHERE mt.ref_cod_matricula = matricula.cod_matricula))
+                        END
+                    AND cod_matricula = $1";
+
+          $params      = array($matriculas[$key]['matricula_id']);
+          $enturmacoes = $this->fetchPreparedQuery($sql, $params, false);
+
+          if (is_array($enturmacoes) && count($enturmacoes) > 0) {
+            $attrs      = array('turma_id', 'sequencial', 'sequencial_fechamento', 'data_entrada', 'data_saida', 'data_atualizacao');
+            $enturmacoes = Portabilis_Array_Utils::filterSet($enturmacoes, $attrs);
+
+            $matriculas[$key]['enturmacoes'] = $enturmacoes;
+          }
+        }
+        return array('matriculas' => $matriculas);
+      }
+    }
+  }
+
   protected function getFrequencia() {
     $cod_matricula = $this->getRequest()->id;
     $objBanco = new clsBanco();
@@ -422,6 +502,9 @@ class MatriculaController extends ApiCoreController
 
     elseif ($this->isRequestFor('get', 'matricula-search'))
       $this->appendResponse($this->search());
+
+    elseif ($this->isRequestFor('get', 'movimentacao-enturmacao'))
+      $this->appendResponse($this->getMovimentacaoEnturmacao());
 
     elseif ($this->isRequestFor('delete', 'abandono'))
       $this->appendResponse($this->deleteAbandono());
