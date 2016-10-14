@@ -288,13 +288,12 @@ class indice extends clsCadastro
       die();
     }
 
-    foreach ($this->etapa as $e) {
-      $objDispensaEtapa = new clsPmieducarDispensaDisciplinaEtapa($max_cod_dispensa, $e);
-      $cadastra = $objDispensaEtapa->cadastra();
-    }
-
     $cadastrou = $obj->cadastra();
     if ($cadastrou) {
+      foreach ($this->etapa as $e) {
+        $objDispensaEtapa = new clsPmieducarDispensaDisciplinaEtapa($max_cod_dispensa, $e);
+        $cadastra = $objDispensaEtapa->cadastra();
+      }
       $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
       header('Location: educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
       die();
