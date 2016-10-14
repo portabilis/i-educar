@@ -86,9 +86,7 @@
       <!-- #&ERROLOGIN&# -->
 
             <!-- #&PENDENCIA_ADMINISTRATIVA&# -->
-      <p style="min-height: 0px;  background-color: #48c2c3; border-color: #48c2c3; color: white;" class="flash update-browser">
-        Parab&eacute;ns, professores, voc&ecirc;s fazem a diferen&ccedil;a em nossas vidas! Nossa homenagem para o #diadoprofessor, com um depoimento emocionante sobre estes super-her&oacute;is! Confira: <a target="_blank" href="http://bit.ly/2eci8lO">http://bit.ly/2eci8lO</a>
-      </p>
+
 
     <div class="mensagens" id="mensagens"></div>
 
