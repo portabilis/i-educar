@@ -118,7 +118,7 @@ class clsPmieducarDispensaDisciplina
     $this->_schema = 'pmieducar.';
     $this->_tabela = $this->_schema . 'dispensa_disciplina';
 
-    $this->_campos_lista = $this->_todos_campos = 'ref_cod_matricula, ref_cod_serie, ref_cod_escola, ref_cod_disciplina, ref_usuario_exc, ref_usuario_cad, ref_cod_tipo_dispensa, data_cadastro, data_exclusao, ativo, observacao';
+    $this->_campos_lista = $this->_todos_campos = 'ref_cod_matricula, ref_cod_serie, ref_cod_escola, ref_cod_disciplina, ref_usuario_exc, ref_usuario_cad, ref_cod_tipo_dispensa, data_cadastro, data_exclusao, ativo, observacao, cod_dispensa';
 
     if (is_numeric($ref_usuario_exc)) {
       $usuario = new clsPmieducarUsuario($ref_usuario_exc);
@@ -438,6 +438,74 @@ class clsPmieducarDispensaDisciplina
     return FALSE;
   }
 
+
+
+  function disciplinaDispensadaEtapa($int_ref_cod_matricula = NULL,
+                                     $int_ref_cod_serie = NULL,
+                                     $int_ref_cod_escola = NULL,
+                                     $int_etapa = NULL)
+  {
+    $sql     = "SELECT {$this->_campos_lista}, etapa
+                  FROM {$this->_tabela}
+                 INNER JOIN pmieducar.dispensa_etapa ON (dispensa_etapa.ref_cod_dispensa = dispensa_disciplina.cod_dispensa)";
+    $filtros = '';
+
+    $whereAnd = ' WHERE ';
+
+    if (is_numeric($int_ref_cod_matricula)) {
+      $filtros .= "{$whereAnd} ref_cod_matricula = '{$int_ref_cod_matricula}'";
+      $whereAnd = ' AND ';
+    }
+
+    if (is_numeric($int_ref_cod_serie)) {
+      $filtros .= "{$whereAnd} ref_cod_serie = '{$int_ref_cod_serie}'";
+      $whereAnd = ' AND ';
+    }
+
+    if (is_numeric($int_ref_cod_escola)) {
+      $filtros .= "{$whereAnd} ref_cod_escola = '{$int_ref_cod_escola}'";
+      $whereAnd = ' AND ';
+    }
+
+    if (is_numeric($int_etapa)) {
+      $filtros .= "{$whereAnd} etapa = '{$int_etapa}'";
+      $whereAnd = ' AND ';
+    }
+
+    $db = new clsBanco();
+    $countCampos = count(explode(',', $this->_campos_lista));
+    $resultado   = array();
+
+    $sql .= $filtros . $this->getOrderby() . $this->getLimite();
+    // echo $sql; die;
+
+    $this->_total = $db->CampoUnico("SELECT COUNT(0)
+                                       FROM {$this->_tabela}
+                                      INNER JOIN pmieducar.dispensa_etapa ON (dispensa_etapa.ref_cod_dispensa = dispensa_disciplina.cod_dispensa)
+                                      {$filtros}");
+    $db->Consulta($sql);
+
+    if ($countCampos > 1) {
+      while ($db->ProximoRegistro()) {
+        $tupla = $db->Tupla();
+
+        $tupla["_total"] = $this->_total;
+        $resultado[] = $tupla;
+      }
+    }
+    else {
+      while ($db->ProximoRegistro()) {
+        $tupla = $db->Tupla();
+        $resultado[] = $tupla[$this->_campos_lista];
+      }
+    }
+
+    if (count($resultado)) {
+      return $resultado;
+    }
+
+    return FALSE;
+  }
   /**
    * Retorna um array com os dados de um registro.
    * @return array

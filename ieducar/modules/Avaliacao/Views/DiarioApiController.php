@@ -144,7 +144,13 @@ class DiarioApiController extends ApiCoreController
   protected function validatesPreviousNotasHasBeenSet() {
     $hasPreviousNotas   = true;
     $etapasWithoutNotas = array();
-    $regra = $this->serviceBoletim()->getRegra();
+    $regra              = $this->serviceBoletim()->getRegra();
+    $matriculaId        = $this->serviceBoletim()->getOption('matricula');
+    $serieId            = $this->serviceBoletim()->getOption('ref_cod_serie');
+    $escolaId           = $this->serviceBoletim()->getOption('ref_cod_escola');
+    $disciplinaId       = $this->getRequest()->componente_curricular_id;
+
+    $existeEtapaDispensadaDisciplina = App_Model_IedFinder::validaDispensaPorMatricula($matriculaId, $serieId, $escolaId, $disciplinaId);
 
     if($this->getRequest()->etapa == 'Rc')
       $etapaRequest = $this->serviceBoletim()->getOption('etapas');
@@ -152,7 +158,12 @@ class DiarioApiController extends ApiCoreController
       $etapaRequest = $this->getRequest()->etapa;
 
     for($etapa = 1; $etapa <= $etapaRequest; $etapa++) {
+
       $nota = $this->getNotaAtual($etapa);
+
+      if (is_array($existeEtapaDispensadaDisciplina) && in_array($etapa, $existeEtapaDispensadaDisciplina)){
+        continue;
+      }
 
       if(($etapa != $this->getRequest()->etapa || $this->getRequest()->etapa == 'Rc') &&
          empty($nota) && ! is_numeric($nota)) {
@@ -180,9 +191,19 @@ class DiarioApiController extends ApiCoreController
   protected function validatesPreviousFaltasHasBeenSet() {
     $hasPreviousFaltas   = true;
     $etapasWithoutFaltas = array();
+    $matriculaId        = $this->serviceBoletim()->getOption('matricula');
+    $serieId            = $this->serviceBoletim()->getOption('ref_cod_serie');
+    $escolaId           = $this->serviceBoletim()->getOption('ref_cod_escola');
+    $disciplinaId       = $this->getRequest()->componente_curricular_id;
+
+    $existeEtapaDispensadaDisciplina = App_Model_IedFinder::validaDispensaPorMatricula($matriculaId, $serieId, $escolaId, $disciplinaId);
 
     for($etapa = 1; $etapa <= $this->getRequest()->etapa; $etapa++) {
       $falta = $this->getFaltaAtual($etapa);
+
+      if (is_array($existeEtapaDispensadaDisciplina) && in_array($etapa, $existeEtapaDispensadaDisciplina)){
+        continue;
+      }
 
       if($etapa != $this->getRequest()->etapa && empty($falta) && ! is_numeric($falta)) {
         $hasPreviousFaltas     = false;
