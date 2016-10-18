@@ -1,5 +1,6 @@
 -- Corrige function que trás carga horária por componente
 -- Adiciona mais colunas na view de historico escolar 9 anos
+-- Altera para trazer notas do ano correto
 -- @author Caroline Salib <caroline@portabilis.com.br>
 
 DROP VIEW relatorio.view_historico_9anos;
@@ -49,7 +50,14 @@ SELECT ref_ref_cod_aluno AS cod_aluno,
      AND hd.nm_disciplina = historico_disciplinas.nm_disciplina
      AND historico_escolar.ativo = 1
      AND historico_escolar.extra_curricular = 0
-     AND substring(historico_escolar.nm_serie,1,1) = 1 LIMIT 1) AS nota_1serie,
+     AND substring(historico_escolar.nm_serie,1,1) = 1
+     AND historico_escolar.sequencial =
+       (SELECT max(hee.sequencial)
+        FROM pmieducar.historico_escolar hee
+        WHERE hee.ref_cod_aluno = historico_escolar.ref_cod_aluno
+          AND substring(historico_escolar.nm_serie,1,1) = substring(hee.nm_serie,1,1)
+          AND hee.ativo = 1
+          AND hee.extra_curricular = 0) LIMIT 1) AS nota_1serie,
 
   (SELECT CASE
               WHEN ((substring(trim(hd.nota),1,1) <> 0)
@@ -73,7 +81,14 @@ SELECT ref_ref_cod_aluno AS cod_aluno,
      AND hd.nm_disciplina = historico_disciplinas.nm_disciplina
      AND historico_escolar.ativo = 1
      AND historico_escolar.extra_curricular = 0
-     AND substring(historico_escolar.nm_serie,1,1) = 2 LIMIT 1) AS nota_2serie,
+     AND substring(historico_escolar.nm_serie,1,1) = 2
+     AND historico_escolar.sequencial =
+       (SELECT max(hee.sequencial)
+        FROM pmieducar.historico_escolar hee
+        WHERE hee.ref_cod_aluno = historico_escolar.ref_cod_aluno
+          AND substring(historico_escolar.nm_serie,1,1) = substring(hee.nm_serie,1,1)
+          AND hee.ativo = 1
+          AND hee.extra_curricular = 0) LIMIT 1) AS nota_2serie,
 
   (SELECT CASE
               WHEN ((substring(trim(hd.nota),1,1) <> 0)
@@ -97,7 +112,14 @@ SELECT ref_ref_cod_aluno AS cod_aluno,
      AND hd.nm_disciplina = historico_disciplinas.nm_disciplina
      AND historico_escolar.ativo = 1
      AND historico_escolar.extra_curricular = 0
-     AND substring(historico_escolar.nm_serie,1,1) = 3 LIMIT 1) AS nota_3serie,
+     AND substring(historico_escolar.nm_serie,1,1) = 3
+     AND historico_escolar.sequencial =
+       (SELECT max(hee.sequencial)
+        FROM pmieducar.historico_escolar hee
+        WHERE hee.ref_cod_aluno = historico_escolar.ref_cod_aluno
+          AND substring(historico_escolar.nm_serie,1,1) = substring(hee.nm_serie,1,1)
+          AND hee.ativo = 1
+          AND hee.extra_curricular = 0) LIMIT 1) AS nota_3serie,
 
   (SELECT CASE
               WHEN ((substring(trim(hd.nota),1,1) <> 0)
@@ -121,7 +143,14 @@ SELECT ref_ref_cod_aluno AS cod_aluno,
      AND hd.nm_disciplina = historico_disciplinas.nm_disciplina
      AND historico_escolar.ativo = 1
      AND historico_escolar.extra_curricular = 0
-     AND substring(historico_escolar.nm_serie,1,1) = 4 LIMIT 1) AS nota_4serie,
+     AND substring(historico_escolar.nm_serie,1,1) = 4
+     AND historico_escolar.sequencial =
+       (SELECT max(hee.sequencial)
+        FROM pmieducar.historico_escolar hee
+        WHERE hee.ref_cod_aluno = historico_escolar.ref_cod_aluno
+          AND substring(historico_escolar.nm_serie,1,1) = substring(hee.nm_serie,1,1)
+          AND hee.ativo = 1
+          AND hee.extra_curricular = 0) LIMIT 1) AS nota_4serie,
 
   (SELECT CASE
               WHEN ((substring(trim(hd.nota),1,1) <> 0)
@@ -145,7 +174,14 @@ SELECT ref_ref_cod_aluno AS cod_aluno,
      AND hd.nm_disciplina = historico_disciplinas.nm_disciplina
      AND historico_escolar.ativo = 1
      AND historico_escolar.extra_curricular = 0
-     AND substring(historico_escolar.nm_serie,1,1) = 5 LIMIT 1) AS nota_5serie,
+     AND substring(historico_escolar.nm_serie,1,1) = 5
+     AND historico_escolar.sequencial =
+       (SELECT max(hee.sequencial)
+        FROM pmieducar.historico_escolar hee
+        WHERE hee.ref_cod_aluno = historico_escolar.ref_cod_aluno
+          AND substring(historico_escolar.nm_serie,1,1) = substring(hee.nm_serie,1,1)
+          AND hee.ativo = 1
+          AND hee.extra_curricular = 0) LIMIT 1) AS nota_5serie,
 
   (SELECT CASE
               WHEN ((substring(trim(hd.nota),1,1) <> 0)
@@ -169,7 +205,14 @@ SELECT ref_ref_cod_aluno AS cod_aluno,
      AND hd.nm_disciplina = historico_disciplinas.nm_disciplina
      AND historico_escolar.ativo = 1
      AND historico_escolar.extra_curricular = 0
-     AND substring(historico_escolar.nm_serie,1,1) = 6 LIMIT 1) AS nota_6serie,
+     AND substring(historico_escolar.nm_serie,1,1) = 6
+     AND historico_escolar.sequencial =
+       (SELECT max(hee.sequencial)
+        FROM pmieducar.historico_escolar hee
+        WHERE hee.ref_cod_aluno = historico_escolar.ref_cod_aluno
+          AND substring(historico_escolar.nm_serie,1,1) = substring(hee.nm_serie,1,1)
+          AND hee.ativo = 1
+          AND hee.extra_curricular = 0) LIMIT 1) AS nota_6serie,
 
   (SELECT CASE
               WHEN ((substring(trim(hd.nota),1,1) <> 0)
@@ -193,7 +236,14 @@ SELECT ref_ref_cod_aluno AS cod_aluno,
      AND hd.nm_disciplina = historico_disciplinas.nm_disciplina
      AND historico_escolar.ativo = 1
      AND historico_escolar.extra_curricular = 0
-     AND substring(historico_escolar.nm_serie,1,1) = 7 LIMIT 1) AS nota_7serie,
+     AND substring(historico_escolar.nm_serie,1,1) = 7
+     AND historico_escolar.sequencial =
+       (SELECT max(hee.sequencial)
+        FROM pmieducar.historico_escolar hee
+        WHERE hee.ref_cod_aluno = historico_escolar.ref_cod_aluno
+          AND substring(historico_escolar.nm_serie,1,1) = substring(hee.nm_serie,1,1)
+          AND hee.ativo = 1
+          AND hee.extra_curricular = 0) LIMIT 1) AS nota_7serie,
 
   (SELECT CASE
               WHEN ((substring(trim(hd.nota),1,1) <> 0)
@@ -217,7 +267,14 @@ SELECT ref_ref_cod_aluno AS cod_aluno,
      AND hd.nm_disciplina = historico_disciplinas.nm_disciplina
      AND historico_escolar.ativo = 1
      AND historico_escolar.extra_curricular = 0
-     AND substring(historico_escolar.nm_serie,1,1) = 8 LIMIT 1) AS nota_8serie,
+     AND substring(historico_escolar.nm_serie,1,1) = 8
+     AND historico_escolar.sequencial =
+       (SELECT max(hee.sequencial)
+        FROM pmieducar.historico_escolar hee
+        WHERE hee.ref_cod_aluno = historico_escolar.ref_cod_aluno
+          AND substring(historico_escolar.nm_serie,1,1) = substring(hee.nm_serie,1,1)
+          AND hee.ativo = 1
+          AND hee.extra_curricular = 0) LIMIT 1) AS nota_8serie,
 
   (SELECT CASE
               WHEN ((substring(trim(hd.nota),1,1) <> 0)
@@ -241,7 +298,14 @@ SELECT ref_ref_cod_aluno AS cod_aluno,
      AND hd.nm_disciplina = historico_disciplinas.nm_disciplina
      AND historico_escolar.ativo = 1
      AND historico_escolar.extra_curricular = 0
-     AND substring(historico_escolar.nm_serie,1,1) = 9 LIMIT 1) AS nota_9serie,
+     AND substring(historico_escolar.nm_serie,1,1) = 9
+     AND historico_escolar.sequencial =
+       (SELECT max(hee.sequencial)
+        FROM pmieducar.historico_escolar hee
+        WHERE hee.ref_cod_aluno = historico_escolar.ref_cod_aluno
+          AND substring(historico_escolar.nm_serie,1,1) = substring(hee.nm_serie,1,1)
+          AND hee.ativo = 1
+          AND hee.extra_curricular = 0) LIMIT 1) AS nota_9serie,
 
   (SELECT ano
    FROM pmieducar.historico_escolar he
