@@ -1012,3 +1012,14 @@ $pagina->addForm($miolo);
 // Gera o código HTML
 $pagina->MakeAll();
 ?>
+
+<script>
+  $j(document).ready(function(){
+
+    $j("#ano").on('change', function(){
+      $j("#ref_cod_serie").val("");
+      $j("#ref_cod_turma").val("");
+    });
+
+  });
+</script>
