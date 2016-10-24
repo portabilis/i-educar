@@ -48,13 +48,18 @@ require_once 'lib/Portabilis/Utils/Database.php';
 
 class CleanComponentesCurriculares {
 
-  public static function destroyOldResources($anoEscolar) {
-    self::destroyOldNotas($anoEscolar);
-    self::destroyOldNotasMedias($anoEscolar);
-    self::destroyOldFaltas($anoEscolar);
+  public static function destroyOldResources($anoEscolar, $cod_matricula = NULL) {
+    self::destroyOldNotas($anoEscolar, $cod_matricula);
+    self::destroyOldNotasMedias($anoEscolar, $cod_matricula);
+    self::destroyOldFaltas($anoEscolar, $cod_matricula);
   }
 
-  protected static function destroyOldNotas($anoEscolar) {
+  protected static function destroyOldNotas($anoEscolar, $cod_matricula) {
+    $filtro = "";
+
+    if (is_Numeric($cod_matricula))
+      $filtro .= " m.cod_matricula = {$cod_matricula} AND ";
+
     $sql = "delete from modules.nota_componente_curricular where id in (
               select ncc.id from modules.nota_componente_curricular as ncc,
                      modules.nota_aluno as na,
@@ -67,6 +72,7 @@ class CleanComponentesCurriculares {
                     m.ativo = 1 and
                     mt.ativo = m.ativo and
                     m.ano = $1 and
+                    {$filtro}
                     --m.aprovado = 3 and
 
                     CASE WHEN (select 1 from modules.componente_curricular_turma
@@ -87,7 +93,12 @@ class CleanComponentesCurriculares {
     self::fetchPreparedQuery($sql, array('params' => $anoEscolar));
   }
 
-  protected static function destroyOldNotasMedias($anoEscolar) {
+  protected static function destroyOldNotasMedias($anoEscolar, $cod_matricula) {
+    $filtro = "";
+
+    if (is_Numeric($cod_matricula))
+      $filtro .= " m.cod_matricula = {$cod_matricula} AND ";
+
     $sql = "delete from modules.nota_componente_curricular_media where nota_aluno_id||componente_curricular_id in (
               select nccm.nota_aluno_id|| nccm.componente_curricular_id from modules.nota_componente_curricular_media as nccm,
                      modules.nota_aluno as na,
@@ -100,6 +111,7 @@ class CleanComponentesCurriculares {
                     m.ativo = 1 and
                     mt.ativo = m.ativo and
                     m.ano = $1 and
+                    {$filtro}
                     --m.aprovado = 3 and
 
                     CASE WHEN (select 1 from modules.componente_curricular_turma
@@ -120,7 +132,12 @@ class CleanComponentesCurriculares {
     self::fetchPreparedQuery($sql, array('params' => $anoEscolar));
   }
 
-  protected static function destroyOldFaltas($anoEscolar) {
+  protected static function destroyOldFaltas($anoEscolar, $cod_matricula) {
+    $filtro = "";
+
+    if (is_Numeric($cod_matricula))
+      $filtro .= " m.cod_matricula = {$cod_matricula} AND ";
+
     $sql = "delete from modules.falta_componente_curricular where id in (
               select fcc.id from modules.falta_componente_curricular as fcc,
                      modules.falta_aluno as fa,
@@ -133,6 +150,7 @@ class CleanComponentesCurriculares {
                     m.ativo = 1 and
                     mt.ativo = m.ativo and
                     m.ano = $1 and
+                    {$filtro}
                     --m.aprovado = 3 and
 
                     CASE WHEN (select 1 from modules.componente_curricular_turma

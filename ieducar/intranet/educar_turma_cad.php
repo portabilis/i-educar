@@ -34,6 +34,7 @@ require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'Portabilis/String/Utils.php';
 require_once 'lib/Portabilis/Date/Utils.php';
+require_once 'Avaliacao/Fixups/CleanComponentesCurriculares.php';
 
 /**
  * clsIndexBase class.
@@ -262,8 +263,6 @@ class indice extends clsCadastro
 
     $this->campoLista('ref_ref_cod_serie', 'Série', $opcoes_serie, $this->ref_ref_cod_serie,
       '', FALSE, '', NULL, $bloqueia);
-
-    $this->campoOculto('ref_ref_cod_serie',$this->ref_ref_cod_serie);
 
     // o campo ano somente é exibido para turmas novas  ou cadastradas após inclusão deste campo.
     if ($anoVisivel){
@@ -963,6 +962,13 @@ class indice extends clsCadastro
       (trim($this->serie_param)==''?$this->ref_ref_cod_serie : $this->serie_param), (trim($this->escola_param)=='' ? $this->ref_cod_escola : $this->escola_param ), $this->cod_turma,
       $this->disciplinas, $this->carga_horaria, $this->usar_componente
     );
+
+    // Caso tenham sido selecionadas discplinas, como se trata de uma edição de turma será rodado uma consulta
+    // que limpa os Componentes Curriculares antigos.
+    if($this->disciplinas != 1){
+      $anoLetivo = $this->ano ? $this->ano : date("Y");
+      CleanComponentesCurriculares::destroyOldResources($anoLetivo);
+    }
 
     if ($editou) {
       $this->mensagem .= 'Edição efetuada com sucesso.';
