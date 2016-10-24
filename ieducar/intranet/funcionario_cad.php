@@ -57,6 +57,7 @@ class indice extends clsCadastro
 	var $super;
 	var $proibido;
 	var $matricula_permanente;
+	var $matricula_interna;
 
 	//senha carregada do banco (controle de criptografia)
 	var $confere_senha;
@@ -190,6 +191,7 @@ class indice extends clsCadastro
 		$this->campoTexto("matricula", "Matr&iacute;cula", $this->matricula, 12, 12, true);
 		$this->campoSenha("_senha", "Senha", $this->_senha, true);
 		$this->campoEmail("email", "E-mail usuário", $this->email, 50, 50, false, false, false, 'Utilizado para redefinir a senha, caso o usúario esqueça<br />Este campo pode ser gravado em branco, neste caso será solicitado um e-mail ao usuário, após entrar no sistema.');
+        $this->campoTexto('matricula_interna', 'Matr&iacute;cula interna', $this->matricula_interna, 30, 30, false, false, false , 'Utilizado somente para registro, caso a institui&ccedil;&atilde;o deseje que a matr&iacute;cula interna desses funcion&aacute;rios sejam registradas no sistema.');
 
 		$obj_setor = new clsSetor();
 		$lst_setor = $obj_setor->lista(null, null, null, null, null, null, null, null, null, 1, 0);
@@ -465,7 +467,8 @@ class indice extends clsCadastro
     if (! $this->validatesPassword($this->matricula, $this->_senha))
       return false;
 
-		$obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, md5($this->_senha), $this->ativo, null, $this->ramal, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, $this->tempo_expira_conta, "NOW()", "NOW()", $this->pessoa_logada, empty($this->proibido) ? 0 : 1, $this->ref_cod_setor_new, null, empty($this->matricula_permanente)? 0 : 1, 1, $this->email);
+		$obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, md5($this->_senha), $this->ativo, null, $this->ramal, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, $this->tempo_expira_conta, "NOW()", "NOW()", $this->pessoa_logada, empty($this->proibido) ? 0 : 1, $this->ref_cod_setor_new, null, empty($this->matricula_permanente)? 0 : 1, 1, $this->email, $this->matricula_interna);
+
 		if( $obj_funcionario->cadastra() )
 		{
 			if($this->cadastrarTabelas())
@@ -512,7 +515,7 @@ class indice extends clsCadastro
 			$this->_senha = md5($this->_senha);
 		}
 
-		$obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, $this->_senha, $this->ativo, null, $this->ramal, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, $this->tempo_expira_conta, "NOW()", "NOW()", $this->pessoa_logada, empty($this->proibido) ? 0 : 1, $this->ref_cod_setor_new, null, empty($this->matricula_permanente) ? 0 : 1, null, $this->email);
+		$obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, $this->_senha, $this->ativo, null, $this->ramal, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, $this->tempo_expira_conta, "NOW()", "NOW()", $this->pessoa_logada, empty($this->proibido) ? 0 : 1, $this->ref_cod_setor_new, null, empty($this->matricula_permanente) ? 0 : 1, null, $this->email, $this->matricula_interna);
 		if( $obj_funcionario->edita() )
 		{
 			$obj_menu_funcionario = new clsPortalMenuFuncionario($this->ref_pessoa);
