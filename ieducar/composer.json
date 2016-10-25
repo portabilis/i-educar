@@ -1,5 +1,6 @@
 {
     "require": {
-        "cossou/jasperphp": "v1.2.0"
+        "cossou/jasperphp": "v1.2.0",
+        "robmorgan/phinx": "^0.6.4"
     }
 }
