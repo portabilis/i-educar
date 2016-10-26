@@ -4,16 +4,6 @@ paths:
 
 environments:
     default_migration_table: phinxlog
-    default_database: ieducar
-    production:
-        adapter: mysql
-        host: localhost
-        name: production_db
-        user: root
-        pass: ''
-        port: 3306
-        charset: utf8
-
     development:
         adapter: pgsql
         host: localhost
@@ -23,11 +13,19 @@ environments:
         port: 5433
         charset: latin1
 
-    testing:
+    production: &production
         adapter: pgsql
         host: nieducar-db
-        name: test
         user: app
         pass: Mks912SHnv623Klasj65
         port: 6432
         charset: latin1
+
+    # staging
+    test:
+        <<: *production
+        name: test
+
+    desenvolvimento:
+        <<: *production
+        name: desenvolvimento
