@@ -745,6 +745,237 @@ class clsPmieducarMatricula
     }
     return FALSE;
   }
+
+function lista_transferidos($int_cod_matricula = NULL, 
+                 $int_ref_cod_reserva_vaga = NULL,
+                 $int_ref_ref_cod_escola = NULL, 
+                 $int_ref_ref_cod_serie = NULL,
+                 $int_ref_usuario_exc = NULL, 
+                 $int_ref_usuario_cad = NULL,
+                 $ref_cod_aluno = NULL, 
+                 $int_aprovado = NULL,
+                 $date_data_cadastro_ini = NULL, 
+                 $date_data_cadastro_fim = NULL,
+                 $date_data_exclusao_ini = NULL, 
+                 $date_data_exclusao_fim = NULL,
+                 $int_ativo = NULL, 
+                 $int_ano = NULL, 
+                 $int_ref_cod_curso2 = NULL,
+                 $int_ref_cod_instituicao = NULL, 
+                 $int_ultima_matricula = NULL,
+                 $int_modulo = NULL, 
+                 $int_padrao_ano_escolar = NULL,
+                 $int_analfabeto = NULL, 
+                 $int_formando = NULL, 
+                 $str_descricao_reclassificacao = NULL,
+                 $int_matricula_reclassificacao = NULL, 
+                 $boo_com_deficiencia = NULL,
+                 $int_ref_cod_curso = NULL, 
+                 $bool_curso_sem_avaliacao = NULL,
+                 $arr_int_cod_matricula = NULL, 
+                 $int_mes_defasado = NULL, 
+                 $boo_data_nasc = NULL,
+                 $boo_matricula_transferencia = NULL, 
+                 $int_semestre = NULL, 
+                 $int_ref_cod_turma = NULL,
+                 $int_ref_cod_abandono = NULL, 
+                 $matriculas_turmas_transferidas_abandono = FALSE)
+  {
+    if ($boo_data_nasc) {
+      $this->_campos_lista .= " ,(SELECT data_nasc
+                        FROM cadastro.fisica
+                           WHERE idpes = ref_idpes
+                    ) as data_nasc";
+    }
+    if(is_numeric($int_ref_cod_turma))
+      $condicao_sequencial_fechamento = "AND ref_cod_turma = {$int_ref_cod_turma}";
+    else
+      $condicao_sequencial_fechamento = "AND ativo = 1";
+    $sql = "SELECT {$this->_campos_lista}, c.ref_cod_instituicao, p.nome, a.cod_aluno, a.ref_idpes, c.cod_curso, m.observacao, (SELECT sequencial_fechamento FROM pmieducar.matricula_turma WHERE ref_cod_matricula = cod_matricula {$condicao_sequencial_fechamento} LIMIT 1) as sequencial_fechamento FROM {$this->_tabela} m, {$this->_schema}curso c, {$this->_schema}aluno a, cadastro.pessoa p ";
+    $whereAnd = " AND ";
+    $filtros = " WHERE m.ref_cod_aluno = a.cod_aluno AND m.ref_cod_curso = c.cod_curso AND p.idpes = a.ref_idpes ";
+    if (is_numeric($int_cod_matricula)) {
+      $filtros .= "{$whereAnd} m.cod_matricula = '{$int_cod_matricula}'";
+      $whereAnd = " AND ";
+    }
+    if (is_numeric($int_ref_cod_reserva_vaga)) {
+      $filtros .= "{$whereAnd} m.ref_cod_reserva_vaga = '{$int_ref_cod_reserva_vaga}'";
+      $whereAnd = " AND ";
+    }
+    if (is_numeric($int_ref_ref_cod_escola)) {
+      $filtros .= "{$whereAnd} m.ref_ref_cod_escola = '{$int_ref_ref_cod_escola}'";
+      $whereAnd = " AND ";
+    }
+    if (is_numeric($int_ref_ref_cod_serie)) {
+      $filtros .= "{$whereAnd} m.ref_ref_cod_serie = '{$int_ref_ref_cod_serie}'";
+      $whereAnd = " AND ";
+    }
+    if (is_numeric($int_ref_usuario_exc)) {
+      $filtros .= "{$whereAnd} m.ref_usuario_exc = '{$int_ref_usuario_exc}'";
+      $whereAnd = " AND ";
+    }
+    if (is_numeric($int_ref_usuario_cad)) {
+      $filtros .= "{$whereAnd} m.ref_usuario_cad = '{$int_ref_usuario_cad}'";
+      $whereAnd = " AND ";
+    }
+    if (is_numeric($ref_cod_aluno)) {
+      $filtros .= "{$whereAnd} m.ref_cod_aluno = '{$ref_cod_aluno}'";
+      $whereAnd = " AND ";
+    }elseif (is_array($ref_cod_aluno)) {
+      $ref_cod_aluno = implode(", ", $ref_cod_aluno);
+      $filtros .= "{$whereAnd} m.ref_cod_aluno in ({$ref_cod_aluno}) ";
+      $whereAnd = " AND ";
+    }
+    if (is_numeric($int_aprovado)) {
+      $filtros .= "{$whereAnd} m.aprovado = '{$int_aprovado}'";
+      $whereAnd = " AND ";
+    }
+    elseif (is_array($int_aprovado)) {
+      $int_aprovado = implode(",",$int_aprovado);
+      $filtros .= "{$whereAnd} m.aprovado in ({$int_aprovado})";
+      $whereAnd = " AND ";
+    }
+    if (is_string($date_data_cadastro_ini)) {
+      $filtros .= "{$whereAnd} m.data_cadastro >= '{$date_data_cadastro_ini}'";
+      $whereAnd = " AND ";
+    }
+    if (is_string($date_data_cadastro_fim)) {
+      $filtros .= "{$whereAnd} m.data_cadastro <= '{$date_data_cadastro_fim}'";
+      $whereAnd = " AND ";
+    }
+    if (is_string($date_data_exclusao_ini)) {
+      $filtros .= "{$whereAnd} m.data_exclusao >= '{$date_data_exclusao_ini}'";
+      $whereAnd = " AND ";
+    }
+    if (is_string($date_data_exclusao_fim)) {
+      $filtros .= "{$whereAnd} m.data_exclusao <= '{$date_data_exclusao_fim}'";
+      $whereAnd = " AND ";
+    }
+    if ($int_ativo) {
+      $filtros .= "{$whereAnd} m.ativo = '1' AND a.ativo = '1' ";
+      $whereAnd = " AND ";
+    }
+    elseif (!is_null($int_ativo) && is_numeric($int_ativo)) {
+      $filtros .= "{$whereAnd} m.ativo = '0'";
+      $whereAnd = " AND ";
+    }
+    if (is_numeric($int_ano)) {
+      $filtros .= "{$whereAnd} m.ano = '{$int_ano}'";
+      $whereAnd = " AND ";
+    }
+    if (is_numeric($int_ref_cod_curso)) {
+      $filtros .= "{$whereAnd} m.ref_cod_curso = '{$int_ref_cod_curso}'";
+      $whereAnd = " AND ";
+    }
+    if (is_numeric($int_padrao_ano_escolar)) {
+      $filtros .= "{$whereAnd} c.padrao_ano_escolar = '{$int_padrao_ano_escolar}'";
+      $whereAnd = " AND ";
+    }
+    if (is_numeric($int_ref_cod_instituicao)) {
+      $filtros .= "{$whereAnd} c.ref_cod_instituicao = '{$int_ref_cod_instituicao}'";
+      $whereAnd = " AND ";
+    }
+    if (is_numeric($int_ultima_matricula)) {
+      $filtros .= "{$whereAnd} ultima_matricula = '{$int_ultima_matricula}'";
+      $whereAnd = " AND ";
+    }
+    if (is_numeric($int_modulo)) {
+      $filtros .= "{$whereAnd} m.modulo = '{$int_modulo}'";
+      $whereAnd = " AND ";
+    }
+    if (is_numeric($int_analfabeto)) {
+      $filtros .= "{$whereAnd} a.analfabeto = '{$int_analfabeto}'";
+      $whereAnd = " AND ";
+    }
+    if (is_numeric($int_formando)) {
+      $filtros .= "{$whereAnd} a.formando = '{$int_formando}'";
+      $whereAnd = " AND ";
+    }
+    if (is_numeric($int_matricula_reclassificacao)) {
+      $filtros .= "{$whereAnd} m.matricula_reclassificacao = '{$int_matricula_reclassificacao}'";
+      $whereAnd = " AND ";
+    }
+    if (dbBool($boo_matricula_transferencia)) {
+      $boo_matricula_transferencia = dbBool($boo_matricula_transferencia) ? 't' : 'f';
+      $filtros .= "{$whereAnd} m.matricula_transferencia = '{$boo_matricula_transferencia}'";
+      $whereAnd = " AND ";
+    }
+    if (is_string($int_matricula_reclassificacao)) {
+      $filtros .= "{$whereAnd} to_ascii(a.matricula_reclassificacao) like to_ascii('%{$int_matricula_reclassificacao}%')";
+      $whereAnd = " AND ";
+    }
+    if (is_bool($boo_com_deficiencia)) {
+      $not = $boo_com_deficiencia === true ? "" : "NOT";
+      $filtros .= "{$whereAnd} $not EXISTS (SELECT 1 FROM cadastro.fisica_deficiencia fd, pmieducar.aluno a WHERE a.cod_aluno = m.ref_cod_aluno AND fd.ref_idpes = a.ref_idpes)";
+      $whereAnd = " AND ";
+    }
+    if (is_numeric($int_semestre)) {
+      $filtros .= "{$whereAnd} m.semestre = '{$int_semestre}'";
+      $whereAnd = " AND ";
+    }
+    if (is_numeric($int_ref_cod_turma)) {
+      if ($matriculas_turmas_transferidas_abandono)
+        $filtros .= "{$whereAnd} EXISTS (SELECT 1
+                                           FROM pmieducar.matricula_turma mt
+                                          WHERE ((mt.ativo = 1) OR (NOT EXISTS
+                                                   (
+                                                     SELECT 1
+                                                     FROM pmieducar.matricula_turma sub_mt
+                                                      INNER JOIN pmieducar.matricula sub_m ON (sub_m.cod_matricula = sub_mt.ref_cod_matricula)
+                                                      WHERE sub_mt.ativo = 1
+                                                      AND sub_m.ref_cod_aluno = a.cod_aluno
+                                                      AND sub_mt.ref_cod_turma = {$int_ref_cod_turma}
+                                                   )
+                                                 )
+                                               )
+                                               AND mt.ref_cod_turma = {$int_ref_cod_turma}
+                                               AND mt.ref_cod_matricula = m.cod_matricula)";
+      else
+        $filtros .= "{$whereAnd} EXISTS (SELECT 1 FROM pmieducar.matricula_turma mt WHERE mt.ref_cod_turma = {$int_ref_cod_turma} AND mt.ref_cod_matricula = m.cod_matricula)";
+      $whereAnd = " AND ";
+    }
+    if (is_array($arr_int_cod_matricula) && count($arr_int_cod_matricula)) {
+      $filtros .= "{$whereAnd} cod_matricula IN (". implode(',', $arr_int_cod_matricula) . ")";
+      $whereAnd = " AND ";
+    }
+    if (is_numeric($int_mes_defasado)) {
+      $primeiroDiaDoMes = mktime(0, 0, 0, $int_mes_defasado, 1, $int_ano);
+      $NumeroDiasMes    = date('t', $primeiroDiaDoMes);
+      $ultimoDiaMes     = date('d/m/Y', mktime(0, 0, 0, $int_mes_defasado, $NumeroDiasMes, $int_ano));
+      $ultimoDiaMes     = dataToBanco($ultimoDiaMes, FALSE);
+      $primeiroDiaDoMes = date('d/m/Y', $primeiroDiaDoMes);
+      $primeiroDiaDoMes = dataToBanco($primeiroDiaDoMes, FALSE);
+      $filtroAux = "{$whereAnd} ((aprovado IN (1,2,3) AND m.data_cadastro <= '$ultimoDiaMes')
+                         OR  (aprovado IN (1,2,3,4) AND m.data_exclusao >= '$primeiroDiaDoMes' AND m.data_exclusao <= '$ultimoDiaMes')
+                       )";
+      $filtros .= $filtroAux;
+      $whereAnd = ' AND ';
+    }
+    $db = new clsBanco();
+    $countCampos = count(explode(',', $this->_campos_lista));
+    $resultado = array();
+    $sql .= $filtros . $this->getOrderby() . $this->getLimite();
+    $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} m, {$this->_schema}curso c, {$this->_schema}aluno a, cadastro.pessoa p {$filtros}");
+    $db->Consulta($sql);
+
+    if ($countCampos > 1) {
+      while ($db->ProximoRegistro()) {
+        $tupla = $db->Tupla();
+        $tupla["_total"] = $this->_total;
+        $resultado[] = $tupla;
+      }
+    }
+    else {
+      while ($db->ProximoRegistro()) {
+        $tupla = $db->Tupla();
+        $resultado[] = $tupla[$this->_campos_lista];
+      }
+    }
+    if (count($resultado)) {
+      return $resultado;
+    }
+    return FALSE;
+  }
   /**
    * Retorna um array com os dados de um registro.
    * @return array
