@@ -163,7 +163,7 @@
           </a></p>
       </div-->
       <div id="div-outubro-rosa" style="top: -388px">
-        <a href="https://www.google.com.br/#q=outubro+rosa+2016" target="_blank"><img src="https://s3.amazonaws.com/apps-ieducar-images/outubro-rosa/outubro-rosa.png"/></a>
+        <a href="https://www.google.com.br/#q=novembro+azul+2016" target="_blank"><img src="https://s3.amazonaws.com/apps-ieducar-images/novembro-azul/novembro-azul.jpg"/></a>
       </div>
     </div> <!-- end rodape -->
 
