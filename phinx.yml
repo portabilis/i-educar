@@ -10,6 +10,6 @@ environments:
         name: ieducar
         user: ieducar
         pass: 'ieducar'
-        port: 5433
+        port: 5430
         charset: latin1
 
