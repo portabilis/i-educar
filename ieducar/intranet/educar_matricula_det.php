@@ -353,10 +353,15 @@ class indice extends clsDetalhe
         }
       }
 
-      if($registro['aprovado'] == App_Model_MatriculaSituacao::TRANSFERIDO &&
-         $this->canCancelTransferencia($registro['cod_matricula'])) {
-        $this->array_botao[]            = 'Cancelar transferência';
+	  $ultimaMatricula = $obj_matricula->getEndMatricula($registro['ref_cod_aluno']);
+      if($registro['aprovado'] == App_Model_MatriculaSituacao::TRANSFERIDO && $this->canCancelTransferencia($registro['cod_matricula'])) {
+        $this->array_botao[] = 'Cancelar transferência';
 
+        # TODO ver se código, seta matricula como em andamento, ativa ultima matricula_turma for matricula, e desativa transferencia solicitacao
+        $this->array_botao_url_script[] = "go(\"educar_transferencia_solicitacao_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}&cancela=true&reabrir_matricula=true\")";
+      }
+      elseif($registro['aprovado'] == App_Model_MatriculaSituacao::TRANSFERIDO && $ultimaMatricula == 4) {
+      	$this->array_botao[] = 'Cancelar transferência';
 
         # TODO ver se código, seta matricula como em andamento, ativa ultima matricula_turma for matricula, e desativa transferencia solicitacao
         $this->array_botao_url_script[] = "go(\"educar_transferencia_solicitacao_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}&cancela=true&reabrir_matricula=true\")";

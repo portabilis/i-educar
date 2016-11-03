@@ -1024,13 +1024,42 @@ function lista_transferidos($int_cod_matricula = NULL,
    */
   function excluir()
   {
+    $codAluno = $_GET['ref_cod_aluno'];
+
     if (is_numeric($this->cod_matricula) && is_numeric($this->ref_usuario_exc)) {
       $this->ativo = 0;
       $this->ultima_matricula = 0;
+
+      $db = new clsBanco();
+
+      $existeTransfereciaSolicitacao = $db->Consulta("SELECT cod_transferencia_solicitacao FROM pmieducar.transferencia_solicitacao WHERE ref_cod_matricula_saida = $this->cod_matricula");
+
+      if($existeTransfereciaSolicitacao){
+
+        $getCodMatriculaTransferido = $db->CampoUnico("SELECT max(cod_matricula) FROM pmieducar.matricula WHERE aprovado = 4 AND ref_cod_aluno = $codAluno");
+
+        $db->Consulta("UPDATE pmieducar.transferencia_solicitacao 
+                          SET ativo = 1
+                        WHERE ref_cod_matricula_saida = $getCodMatriculaTransferido");
+      }
       return $this->edita();
     }
     return FALSE;
   }
+
+  function getEndMatricula($codAluno){
+    $db = new clsBanco();
+    $situacaoUltimaMatricula = $db->CampoUnico("SELECT matricula.aprovado
+                                                FROM pmieducar.matricula
+                                               WHERE matricula.ref_cod_aluno = $codAluno
+                                                 AND matricula.ativo = 1
+                                                 AND matricula.cod_matricula = (SELECT max(m.cod_matricula)
+                                                                                  FROM pmieducar.matricula AS m
+                                                                                 WHERE m.ref_cod_aluno = matricula.ref_cod_aluno
+                                                                                   AND m.ativo = 1)");
+    return $situacaoUltimaMatricula;
+  }
+
   /**
    * Define quais campos da tabela serão selecionados no método Lista().
    */
