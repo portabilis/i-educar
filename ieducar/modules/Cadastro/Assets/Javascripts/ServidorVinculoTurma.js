@@ -14,12 +14,34 @@ $j(document).ready(function() {
   getRegraAvaliacao();
 
   var handleGetComponenteCurricular = function(dataResponse) {
-    
+
     $j.each(dataResponse['componentecurricular'], function(id, value) {
-      $componentecurricular.children("[value=" + value + "]").attr('selected', '');
+
+      // Insere o componente no multipleSearch caso não exista
+      if (0 == $componentecurricular.children("[value=" + value + "]").length) {
+        addComponenteCurricular(value);
+      } else {
+        $componentecurricular.children("[value=" + value + "]").attr('selected', '');
+      }
     });
 
     $componentecurricular.trigger('chosen:updated');
+  }
+
+  var handleAddComponenteCurricular = function(dataResponse, id) {
+    $componentecurricular.append('<option value="' + id + '"> ' + dataResponse.result[id] + '</option>');
+    $componentecurricular.children("[value=" + id + "]").attr('selected', '');
+    $componentecurricular.trigger('chosen:updated');
+  }
+
+  var addComponenteCurricular = function(id) {
+
+    var searchPath = '/module/Api/ComponenteCurricular?oper=get&resource=componente_curricular-search';
+    var params     = { query : id };
+
+    $j.get(searchPath, params, function(dataResponse) {
+      handleAddComponenteCurricular(dataResponse, id);
+    });
   }
 
   var getComponenteCurricular = function() {
