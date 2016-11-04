@@ -1032,10 +1032,15 @@ function lista_transferidos($int_cod_matricula = NULL,
 
       $db = new clsBanco();
 
-      $existeTransfereciaSolicitacao = $db->Consulta("SELECT cod_transferencia_solicitacao FROM pmieducar.transferencia_solicitacao WHERE ref_cod_matricula_saida = $this->cod_matricula");
+      $existeTransfereciaSolicitacao = $db->CampoUnico("SELECT max(transferencia_solicitacao.cod_transferencia_solicitacao)
+                                                          FROM pmieducar.matricula
+                                                    INNER JOIN pmieducar.transferencia_solicitacao ON (matricula.cod_matricula = transferencia_solicitacao.ref_cod_matricula_saida)
+                                                         WHERE matricula.ativo = 1
+                                                           AND matricula.ref_cod_aluno = $codAluno
+                                                           AND matricula.cod_matricula <> $this->cod_matricula
+                                                           AND matricula.aprovado = 4");
 
-      if($existeTransfereciaSolicitacao){
-
+      if(!is_null($existeTransfereciaSolicitacao)){
         $getCodMatriculaTransferido = $db->CampoUnico("SELECT max(cod_matricula) FROM pmieducar.matricula WHERE aprovado = 4 AND ref_cod_aluno = $codAluno");
 
         $db->Consulta("UPDATE pmieducar.transferencia_solicitacao 
