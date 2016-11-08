@@ -1510,7 +1510,7 @@ class AlunoController extends ApiCoreController
                                              where matricula_turma.ref_cod_matricula = mt.ref_cod_matricula
                                                and matricula_turma.ref_cod_turma = mt.ref_cod_turma
                                                and ($3::date >= matricula_turma.data_enturmacao::date
-                                                   and $3::date < coalesce(matricula.data_cancel::date, matricula_turma.data_exclusao::date, current_date))
+                                                   and $3::date < coalesce(matricula_turma.data_exclusao::date, matricula.data_cancel::date, current_date))
                                                and matricula_turma.ativo = 0
                                                and not exists(select 1
                                                                 from pmieducar.matricula_turma mt_sub
