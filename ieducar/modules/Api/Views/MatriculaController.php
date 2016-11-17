@@ -275,7 +275,7 @@ class MatriculaController extends ApiCoreController
                          coalesce(matricula_turma.updated_at::varchar, '') AS data_atualizacao
                   FROM matricula
                   LEFT JOIN matricula_turma ON matricula_turma.ref_cod_matricula = matricula.cod_matricula
-                  WHERE cod_matricula = $1;
+                  WHERE cod_matricula = $1";
 
           $params      = array($matriculas[$key]['matricula_id']);
           $enturmacoes = $this->fetchPreparedQuery($sql, $params, false);
