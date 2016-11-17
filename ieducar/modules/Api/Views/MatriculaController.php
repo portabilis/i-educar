@@ -275,10 +275,7 @@ class MatriculaController extends ApiCoreController
                          coalesce(matricula_turma.updated_at::varchar, '') AS data_atualizacao
                   FROM matricula
                   LEFT JOIN matricula_turma ON matricula_turma.ref_cod_matricula = matricula.cod_matricula
-                  WHERE cod_matricula = $1
-                    -- Quando a matrícula está transferida e a enturmação não está, significa que foi
-                    -- transferido antes da 'Data máxima para deslocamento' e não deve aparecer na API
-                    AND (CASE WHEN matricula.aprovado = 4 THEN matricula_turma.transferido = true END)";
+                  WHERE cod_matricula = $1;
 
           $params      = array($matriculas[$key]['matricula_id']);
           $enturmacoes = $this->fetchPreparedQuery($sql, $params, false);
