@@ -6,9 +6,9 @@ class NovoMenuQuadroFinal extends AbstractMigration
 {
     public function up()
     {
-        $this->execute("insert into portal.menu_submenu values (999882, 55, 2,'Quadro situa&ccedil;&atilde;o final', 'module/Reports/QuadroSituacaoFinal', null, 3);");
+        $this->execute("insert into portal.menu_submenu values (999882, 55, 2,'Quadro situação final', 'module/Reports/QuadroSituacaoFinal', null, 3);");
         $this->execute("insert into pmicontrolesis.menu values (999882, 999882, 999301, 'Quadro situa&ccedil;&atilde;o final', 0, 'module/Reports/QuadroSituacaoFinal', '_self', 1, 15, 127);");
-        $this->execute("insert into pmieducar.menu_tipo_usuario values(1,999882,1,0,1);");
+        $this->execute("insert into pmieducar.menu_tipo_usuario values(1,999882,1,1,1);");
     }
 
     public function down()
