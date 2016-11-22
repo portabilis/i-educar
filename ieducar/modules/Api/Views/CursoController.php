@@ -127,9 +127,33 @@ class CursoController extends ApiCoreController
     }
   }
 
+  protected function getCursosMultipleSearch(){
+    $instituicaoId = $this->getRequest()->instituicao_id;
+
+    $sql = "SELECT cod_curso AS id,
+                   nm_curso  AS nome
+              FROM pmieducar.curso
+             INNER JOIN pmieducar.instituicao ON (instituicao.cod_instituicao = curso.ref_cod_instituicao)
+             WHERE curso.ativo = 1
+               AND instituicao.cod_instituicao = $instituicaoId";
+
+    $cursos = $this->fetchPreparedQuery($sql);
+
+
+    foreach($cursos as &$curso){
+      $curso['nome'] = Portabilis_String_Utils::toUtf8($curso['nome']);
+    }
+
+    $cursos = Portabilis_Array_Utils::setAsIdValue($cursos, 'id', 'nome');
+
+    return array('options' => $cursos);
+  }
+
   public function Gerar() {
     if ($this->isRequestFor('get', 'cursos'))
       $this->appendResponse($this->getCursos());
+    elseif ($this->isRequestFor('get', 'cursos-multiple-search'))
+      $this->appendResponse($this->getCursosMultipleSearch());
     else
       $this->notImplementedOperationError();
   }
