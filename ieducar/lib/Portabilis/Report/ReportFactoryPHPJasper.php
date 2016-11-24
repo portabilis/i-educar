@@ -85,6 +85,13 @@ class Portabilis_Report_ReportFactoryPHPJasper extends Portabilis_Report_ReportF
     // Generate a random file name
     $outputFile = $this->getReportsPath() . time().'-'.mt_rand();;
 
+    // Corrige parametros boleanos
+    foreach ($report->args as $key => $value) {
+      if (is_bool($value)) {
+        $report->args[$key] = ($value ? 'true' : 'false');
+      }
+    }
+
     $builder = new JasperPHP();
     $return = $builder->process(
         $this->getReportsPath() . $report->templateName() . '.jasper',
