@@ -40,6 +40,7 @@ require_once 'Avaliacao/Model/ParecerDescritivoGeralDataMapper.php';
 require_once 'RegraAvaliacao/Model/TipoPresenca.php';
 require_once 'RegraAvaliacao/Model/TipoParecerDescritivo.php';
 require_once 'include/modules/clsModulesNotaExame.inc.php';
+require_once 'App/Model/MatriculaSituacao.php';
 
 require_once 'Portabilis/String/Utils.php';
 
@@ -201,14 +202,7 @@ class DiarioController extends ApiCoreController
                 $this->serviceBoletim($turmaId, $alunoId)->addNota($nota);
                 $this->trySaveServiceBoletim($turmaId, $alunoId);
 
-                $notaExame = urldecode($this->serviceBoletim($turmaId, $alunoId)->preverNotaRecuperacao($componenteCurricularId));
-
-                if ($notaExame) {
-                  $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
-                  $obj = new clsModulesNotaExame($matriculaId, $componenteCurricularId, $notaExame);
-
-                  $obj->existe() ? $obj->edita() : $obj->cadastra();
-                }
+                $this->atualizaNotaNecessariaExame($turmaId, $alunoId, $componenteCurricularId);
               }
             }
           }
@@ -464,6 +458,28 @@ class DiarioController extends ApiCoreController
       }
 
       $this->messenger->append('Pareceres postados com sucesso!', 'success');
+    }
+  }
+
+  protected function atualizaNotaNecessariaExame($turmaId, $alunoId, $componenteCurricularId) {
+    $notaExame = urldecode($this->serviceBoletim($turmaId, $alunoId)->preverNotaRecuperacao($componenteCurricularId));
+    $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
+    $situacaoComponente = $this->serviceBoletim($turmaId, $alunoId)
+                               ->getSituacaoComponentesCurriculares()
+                               ->componentesCurriculares[$componenteCurricularId]
+                               ->situacao;
+
+    $situacaoEmExame = ($situacaoComponente == App_Model_MatriculaSituacao::EM_EXAME ||
+                        $situacaoComponente == App_Model_MatriculaSituacao::APROVADO_APOS_EXAME ||
+                        $situacaoComponente == App_Model_MatriculaSituacao::REPROVADO);
+
+    if (!empty($notaExame) && $situacaoEmExame) {
+      $obj = new clsModulesNotaExame($matriculaId, $componenteCurricularId, $notaExame);
+
+      $obj->existe() ? $obj->edita() : $obj->cadastra();
+    } else {
+      $obj = new clsModulesNotaExame($matriculaId, $componenteCurricularId);
+      $obj->excluir();
     }
   }
 
