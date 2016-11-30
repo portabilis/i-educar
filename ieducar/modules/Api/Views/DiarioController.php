@@ -39,6 +39,7 @@ require_once 'Avaliacao/Model/ParecerDescritivoComponenteDataMapper.php';
 require_once 'Avaliacao/Model/ParecerDescritivoGeralDataMapper.php';
 require_once 'RegraAvaliacao/Model/TipoPresenca.php';
 require_once 'RegraAvaliacao/Model/TipoParecerDescritivo.php';
+require_once 'include/modules/clsModulesNotaExame.inc.php';
 
 require_once 'Portabilis/String/Utils.php';
 
@@ -199,6 +200,15 @@ class DiarioController extends ApiCoreController
               if($this->serviceBoletim($turmaId, $alunoId)){
                 $this->serviceBoletim($turmaId, $alunoId)->addNota($nota);
                 $this->trySaveServiceBoletim($turmaId, $alunoId);
+
+                $notaExame = urldecode($this->serviceBoletim($turmaId, $alunoId)->preverNotaRecuperacao($componenteCurricularId));
+
+                if ($notaExame) {
+                  $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
+                  $obj = new clsModulesNotaExame($matriculaId, $componenteCurricularId, $notaExame);
+
+                  $obj->existe() ? $obj->edita() : $obj->cadastra();
+                }
               }
             }
           }
