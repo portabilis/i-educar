@@ -86,10 +86,10 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
 
       if (CORE_EXT_CONFIGURATION_ENV == "production") {
         $this->report->addArg('SUBREPORT_DIR', "/sites_media_root/services/reports/jasper/");
-      } else if ($GLOBALS['coreExt']['Config']->app->database->dbname == 'test' || $GLOBALS['coreExt']['Config']->app->database->dbname == 'desenvolvimento') {
-        $this->report->addArg('SUBREPORT_DIR', "/sites_media_root/services-test/reports/jasper/");
-      } else {
+      } else if (CORE_EXT_CONFIGURATION_ENV == "development") {
         $this->report->addArg('SUBREPORT_DIR', "modules/Reports/ReportSources/Portabilis/");
+      } else {
+        $this->report->addArg('SUBREPORT_DIR', "/sites_media_root/services-test/reports/jasper/");
       }
 
       $this->report->addArg('database', ($GLOBALS['coreExt']['Config']->app->database->dbname == 'test' ? (is_null($GLOBALS['coreExt']['Config']->report->database_teste) ? "" : $GLOBALS['coreExt']['Config']->report->database_teste)  : $GLOBALS['coreExt']['Config']->app->database->dbname ));
