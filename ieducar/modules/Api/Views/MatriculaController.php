@@ -271,17 +271,8 @@ class MatriculaController extends ApiCoreController
                          matricula_turma.sequencial AS sequencial,
                          matricula_turma.sequencial_fechamento AS sequencial_fechamento,
                          coalesce(matricula_turma.data_enturmacao::date::varchar, '') AS data_entrada,
-                         coalesce(matricula_turma.data_exclusao::date::varchar, matricula.data_cancel::date::varchar, '') AS data_saida,
-                         coalesce(matricula_turma.updated_at::varchar, '') AS data_atualizacao,
-                         (CASE WHEN matricula.aprovado = 4 THEN
-                           CASE WHEN matricula_turma.transferido = 't' THEN
-                             TRUE
-                           ELSE
-                             FALSE
-                           END
-                         ELSE
-                          TRUE
-                         END) as apresentar_fora_da_data
+                         coalesce(matricula_turma.data_exclusao::date::varchar, '') AS data_saida,
+                         coalesce(matricula_turma.updated_at::varchar, '') AS data_atualizacao
                   FROM matricula
                   LEFT JOIN matricula_turma ON matricula_turma.ref_cod_matricula = matricula.cod_matricula
                   WHERE CASE
@@ -309,12 +300,11 @@ class MatriculaController extends ApiCoreController
                         END
                     AND cod_matricula = $1";
 
-
           $params      = array($matriculas[$key]['matricula_id']);
           $enturmacoes = $this->fetchPreparedQuery($sql, $params, false);
 
           if (is_array($enturmacoes) && count($enturmacoes) > 0) {
-            $attrs      = array('turma_id', 'sequencial', 'sequencial_fechamento', 'data_entrada', 'data_saida', 'data_atualizacao', 'apresentar_fora_da_data');
+            $attrs      = array('turma_id', 'sequencial', 'sequencial_fechamento', 'data_entrada', 'data_saida', 'data_atualizacao');
             $enturmacoes = Portabilis_Array_Utils::filterSet($enturmacoes, $attrs);
 
             $matriculas[$key]['enturmacoes'] = $enturmacoes;
