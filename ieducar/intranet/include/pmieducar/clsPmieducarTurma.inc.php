@@ -1154,12 +1154,10 @@ class clsPmieducarTurma
 				$set  .= "{$gruda}ref_cod_disciplina_dispensada = NULL";
 				$gruda = ", ";
 			}
-
 			if(is_numeric($this->nao_informar_educacenso)) {
 				$set  .= "{$gruda}nao_informar_educacenso = '{$this->nao_informar_educacenso}'";
 				$gruda = ", ";
 			}
-
 			if(is_string($this->parecer_1_etapa)) {
 				$set  .= "{$gruda}parecer_1_etapa = '{$this->parecer_1_etapa}'";
 				$gruda = ", ";
