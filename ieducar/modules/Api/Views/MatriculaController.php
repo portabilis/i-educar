@@ -280,7 +280,7 @@ class MatriculaController extends ApiCoreController
                              FALSE
                            END
                          ELSE
-                          TRUE
+                          FALSE
                          END) as apresentar_fora_da_data
                   FROM matricula
                   LEFT JOIN matricula_turma ON matricula_turma.ref_cod_matricula = matricula.cod_matricula

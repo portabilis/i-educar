@@ -11,6 +11,8 @@ ieducar_1204:
   container_name: ieducar_1204
 
 postgres_82:
+  volumes:
+    - /var/lib/postgresql/data
   image: ignatov/docker-postgresql-8.2
   environment:
     - POSTGRES_PASSWORD=postgres
