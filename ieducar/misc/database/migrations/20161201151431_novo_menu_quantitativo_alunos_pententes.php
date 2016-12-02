@@ -6,8 +6,8 @@ class NovoMenuQuantitativoAlunosPententes extends AbstractMigration
 {
     public function up()
     {
-        $this->execute("insert into portal.menu_submenu values (999883, 55, 2,'Relatório quantitativo de alunos sem nota', 'module/Reports/AlunosPendentes', null, 3);");
-        $this->execute("insert into pmicontrolesis.menu values (999883, 999883, 999858, 'Relatório quantitativo de alunos sem nota', 0, 'module/Reports/AlunosPendentes', '_self', 1, 15, 192, 1);");
+        $this->execute("insert into portal.menu_submenu values (999883, 55, 2,'Relat&oacute;rio quantitativo de alunos sem nota', 'module/Reports/AlunosPendentes', null, 3);");
+        $this->execute("insert into pmicontrolesis.menu values (999883, 999883, 999858, 'Relat&oacute;rio quantitativo de alunos sem nota', 0, 'module/Reports/AlunosPendentes', '_self', 1, 15, 192, 1);");
         $this->execute("insert into pmieducar.menu_tipo_usuario values(1,999883,1,1,1);");
     }
 
