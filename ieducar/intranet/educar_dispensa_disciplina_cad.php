@@ -391,7 +391,7 @@ class indice extends clsCadastro
     $dadosAnoLetivoMod   = $objAnoLetivoMod->lista($ano, $escolaId);
     //Pega etapas definida na turma
     $objTurmaModulo      = new clsPmieducarTurmaModulo();
-    $dadosTurmaModulo    = $objTurmaModulo->lista($dadosMatriculaTurma[0]['ref_cod_matricula']);
+    $dadosTurmaModulo    = $objTurmaModulo->lista($dadosMatriculaTurma[0]['ref_cod_turma']);
     //Define de onde as etapas serão pegas
     if ($padraoAnoEscolar == 1) {
       $dadosEtapa = $dadosAnoLetivoMod;
