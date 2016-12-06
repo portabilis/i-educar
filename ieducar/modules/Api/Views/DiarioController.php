@@ -230,7 +230,7 @@ class DiarioController extends ApiCoreController
               $valor = $this->truncate($valor, 4);
               $array_nota = array(
                     'componenteCurricular' => $componenteCurricularId,
-                    'nota'                 => $valor,
+                    'nota'                 => $notaRecuperacao,
                     'etapa'                => $etapa,
                     'notaOriginal'         => $valor,
                     $nomeCampoRecuperacao  => $notaRecuperacao);
