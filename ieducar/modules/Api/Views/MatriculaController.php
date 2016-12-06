@@ -284,30 +284,7 @@ class MatriculaController extends ApiCoreController
                          END) as apresentar_fora_da_data
                   FROM matricula
                   LEFT JOIN matricula_turma ON matricula_turma.ref_cod_matricula = matricula.cod_matricula
-                  WHERE CASE
-                            WHEN matricula.aprovado = 4 THEN matricula_turma.ativo = 1
-                                 OR matricula_turma.transferido
-                                 OR matricula_turma.reclassificado
-                                 OR matricula_turma.remanejado
-                                 OR matricula_turma.sequencial = (
-                                                                    (SELECT max(mt.sequencial) AS MAX
-                                                                     FROM matricula_turma mt
-                                                                     WHERE mt.ref_cod_matricula = matricula.cod_matricula))
-                            WHEN matricula.aprovado = 6 THEN matricula_turma.ativo = 1
-                                 OR matricula_turma.abandono
-                            WHEN matricula.aprovado = 5 THEN matricula_turma.ativo = 1
-                                 OR matricula_turma.reclassificado
-                            ELSE matricula_turma.ativo = 1
-                                 OR matricula_turma.transferido
-                                 OR matricula_turma.reclassificado
-                                 OR matricula_turma.abandono
-                                 OR matricula_turma.remanejado
-                                 AND matricula_turma.sequencial < (
-                                                                     (SELECT MAX(mt.sequencial) AS MAX
-                                                                      FROM matricula_turma mt
-                                                                      WHERE mt.ref_cod_matricula = matricula.cod_matricula))
-                        END
-                    AND cod_matricula = $1";
+                  WHERE cod_matricula = $1";
 
 
           $params      = array($matriculas[$key]['matricula_id']);
