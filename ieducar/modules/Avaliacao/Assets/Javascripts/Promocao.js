@@ -83,7 +83,7 @@ function handleDelete(dataResponse){
 }
 
 function handleSearch($resultTable, dataResponse) {
-  var $text = $j('<p />').html(stringUtils.toUtf8('Quantidade de matrículas em andamento na rede: ') +
+  var $text = $j('<p />').html(stringUtils.toUtf8('Quantidade de matrículas ativas na rede: ') +
                               dataResponse.quantidade_matriculas + '<br />');
 
   $j('<input />').attr('type', 'checkbox').attr('id', 'continuar-processo').attr('name', 'continuar-processo').appendTo($text);
