@@ -77,7 +77,6 @@ class PromocaoApiController extends ApiCoreController
                    pmieducar.matricula_turma as mt
              where m.ano = $1
                and m.ativo = 1
-               and m.aprovado = 3
                and mt.ref_cod_matricula = m.cod_matricula
                and mt.ativo = 1
                and ref_cod_matricula > $2
