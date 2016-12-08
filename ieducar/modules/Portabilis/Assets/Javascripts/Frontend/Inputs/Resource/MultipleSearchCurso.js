@@ -24,12 +24,11 @@
 
         getResources(options);
     };
-
-    if ($instituicaoField.length ) {
       $instituicaoField.on('change', updateCursoMultipleSearch);
-    } else {
-      updateCursoMultipleSearch();
-    }
+
+    if ($instituicaoField.length) {
+      $instituicaoField.trigger('change');
+    } 
 
   }); // ready
 })(jQuery);
