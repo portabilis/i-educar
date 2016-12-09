@@ -1040,7 +1040,7 @@ class App_Model_IedFinder extends CoreExt_Entity
 
     $resultado = explode(",",$resultado);
 
-    return array_pop($resultado);
+    return max($resultado);
   }
 
 }
