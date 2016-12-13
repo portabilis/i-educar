@@ -1040,7 +1040,19 @@ class App_Model_IedFinder extends CoreExt_Entity
 
     $resultado = explode(",",$resultado);
 
-    return array_pop($resultado);
+    return max($resultado);
   }
 
+  public static function verificaSeExisteNotasComponenteCurricular($matricula, $componente) {
+
+    $cc_nota = "SELECT count(ncc.componente_curricular_id) AS cc
+                  FROM modules.nota_aluno AS na
+            INNER JOIN modules.nota_componente_curricular AS ncc ON (na.id = ncc.nota_aluno_id)
+                 WHERE na.matricula_id = $1
+                   AND ncc.componente_curricular_id = $2";
+
+    $resultado = Portabilis_Utils_Database::fetchPreparedQuery($cc_nota,array('params' => array($matricula, $componente)));
+
+    return $resultado;
+  }
 }
