@@ -1043,7 +1043,7 @@ class App_Model_IedFinder extends CoreExt_Entity
     return max($resultado);
   }
 
-  public static function getNotasComponenteCurricular($matricula, $componente) {
+  public static function verificaSeExisteNotasComponenteCurricular($matricula, $componente) {
 
     $cc_nota = "SELECT count(ncc.componente_curricular_id) AS cc
                   FROM modules.nota_aluno AS na
