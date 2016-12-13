@@ -34,7 +34,6 @@ require_once 'App/Model/IedFinder.php';
 require_once 'App/Model/Matricula.php';
 require_once 'App/Model/MatriculaSituacao.php';
 require_once 'include/pmieducar/clsPermissoes.inc.php';
-require_once 'include/clsBanco.inc.php';
 
 /**
  * Avaliacao_Service_Boletim class.
@@ -1477,10 +1476,13 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
           $totalEtapasComponente = $etapaEspecifica;
         }
       }
+      else{
+        $totalEtapasComponente = $totalEtapas;
+      }
 
       if($this->getRegra()->get('tipoProgressao') == RegraAvaliacao_Model_TipoProgressao::CONTINUADA){
 
-        $getCountNotaCC = App_Model_IedFinder::getNotasComponenteCurricular($matriculaId, $id);
+        $getCountNotaCC = App_Model_IedFinder::verificaSeExisteNotasComponenteCurricular($matriculaId, $id);
 
         if($getCountNotaCC[0]['cc'] == 0) $etapa = 0;
 
@@ -1504,8 +1506,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $media = $mediaComponente[0]->media;
       }
 
-      if ($etapa == $totalEtapasComponente && $media < $this->getRegra()->media &&
-          $this->hasRecuperacao()) {
+      if ($etapa == $totalEtapasComponente && $media < $this->getRegra()->media && $this->hasRecuperacao()) {
 
         // lets make some changes here >:)
         $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::EM_EXAME;
@@ -1521,14 +1522,14 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $qtdComponenteReprovado++;
         $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::REPROVADO;
       }
-      elseif ($etapa == 'Rc' && $media < $this->getRegra()->mediaRecuperacao) {
+      elseif ((string)$etapa == 'Rc' && $media < $this->getRegra()->mediaRecuperacao) {
         $qtdComponenteReprovado++;
         $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::REPROVADO;
       }
-      elseif ($etapa == 'Rc' && $media >= $this->getRegra()->mediaRecuperacao && $this->hasRecuperacao()) {
+      elseif ((string)$etapa == 'Rc' && $media >= $this->getRegra()->mediaRecuperacao && $this->hasRecuperacao()) {
         $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::APROVADO_APOS_EXAME;
       }
-      elseif ($etapa < $totalEtapasComponente && $etapa != 'Rc') {
+      elseif ($etapa < $totalEtapasComponente && (string)$etapa != 'Rc') {
         $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::EM_ANDAMENTO;
       }
       else {
