@@ -34,6 +34,7 @@ require_once 'App/Model/IedFinder.php';
 require_once 'App/Model/Matricula.php';
 require_once 'App/Model/MatriculaSituacao.php';
 require_once 'include/pmieducar/clsPermissoes.inc.php';
+require_once 'include/clsBanco.inc.php';
 
 /**
  * Avaliacao_Service_Boletim class.
@@ -1383,6 +1384,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $situacao->situacao = 0;
     $situacao->componentesCurriculares = array();
 
+    $infosMatricula = $this->getOption('matriculaData');
+    $matriculaId = $infosMatricula['cod_matricula'];
+
     // Carrega as médias pois este método pode ser chamado após a chamada a saveNotas()
     $mediasComponentes = $this->_loadMedias()
                               ->getMediasComponentes();
@@ -1466,12 +1470,28 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       $somaMedias += $media;
       $totalEtapas = $this->getOption('etapas');
 
+      if ($this->getRegra()->get('definirComponentePorEtapa') == "1") {
+        $etapaEspecifica = App_Model_IedFinder::getUltimaEtapaComponente($turmaId, $id);
+
+        if ($etapaEspecifica) {
+          $totalEtapasComponente = $etapaEspecifica;
+        }
+      }
+
       if($this->getRegra()->get('tipoProgressao') == RegraAvaliacao_Model_TipoProgressao::CONTINUADA){
-        if ($etapa < $totalEtapas && $etapa != 'Rc'){
+
+        $getCountNotaCC = App_Model_IedFinder::getNotasComponenteCurricular($matriculaId, $id);
+
+        if($getCountNotaCC[0]['cc'] == 0) $etapa = 0;
+
+        if ($etapa < $totalEtapasComponente && (string)$etapa != 'Rc'){
           $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::EM_ANDAMENTO;
-          $situacaoGeral = App_Model_MatriculaSituacao::EM_ANDAMENTO;
         }else{
           $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::APROVADO;
+        }
+        if ($etapa < $totalEtapas && (string)$etapa != 'Rc'){
+          $situacaoGeral = App_Model_MatriculaSituacao::EM_ANDAMENTO;
+        }else{
           $situacaoGeral = App_Model_MatriculaSituacao::APROVADO;
         }
         continue;
@@ -1484,15 +1504,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $media = $mediaComponente[0]->media;
       }
 
-      if ($this->getRegra()->get('definirComponentePorEtapa') == "1") {
-        $etapaEspecifica = App_Model_IedFinder::getUltimaEtapaComponente($turmaId, $id);
-
-        if ($etapaEspecifica) {
-          $totalEtapas = $etapaEspecifica;
-        }
-      }
-
-      if ($etapa == $totalEtapas && $media < $this->getRegra()->media &&
+      if ($etapa == $totalEtapasComponente && $media < $this->getRegra()->media &&
           $this->hasRecuperacao()) {
 
         // lets make some changes here >:)
@@ -1505,7 +1517,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
           }
         }
       }
-      elseif ($etapa == $totalEtapas && $media < $this->getRegra()->media) {
+      elseif ($etapa == $totalEtapasComponente && $media < $this->getRegra()->media) {
         $qtdComponenteReprovado++;
         $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::REPROVADO;
       }
@@ -1516,7 +1528,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       elseif ($etapa == 'Rc' && $media >= $this->getRegra()->mediaRecuperacao && $this->hasRecuperacao()) {
         $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::APROVADO_APOS_EXAME;
       }
-      elseif ($etapa < $totalEtapas && $etapa != 'Rc') {
+      elseif ($etapa < $totalEtapasComponente && $etapa != 'Rc') {
         $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::EM_ANDAMENTO;
       }
       else {
@@ -1718,7 +1730,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $presenca->componentesCurriculares = $faltasComponentes;
 
     // Na última etapa seta situação presença como aprovado ou reprovado.
-    if ($etapa == $this->getOption('etapas') || $etapa === 'Rc') {
+    if ($etapa == $this->getOption('etapas') || $etapa === 'Rc' || $tipoFaltaGeral) {
       $aprovado           = ($presenca->porcentagemPresenca >= $this->getRegra()->porcentagemPresenca);
       $presenca->situacao = $aprovado ? App_Model_MatriculaSituacao::APROVADO :
                                         App_Model_MatriculaSituacao::REPROVADO;
@@ -3157,6 +3169,7 @@ public function alterarSituacao($novaSituacao, $matriculaId){
           //Atualiza a situação de acordo com o que foi inserido na média anteriormente
           $notaComponenteCurricularMedia->markOld();
           $notaComponenteCurricularMedia->situacao = $this->getSituacaoComponentesCurriculares()->componentesCurriculares[$id]->situacao;
+
           $this->getNotaComponenteMediaDataMapper()->save($notaComponenteCurricularMedia);
         }
       }
