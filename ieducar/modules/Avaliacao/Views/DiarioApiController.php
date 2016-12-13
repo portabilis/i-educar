@@ -721,7 +721,7 @@ class DiarioApiController extends ApiCoreController
         $falta = $this->getFaltaGeral();
 
       $this->serviceBoletim()->addFalta($falta);
-      $this->trySaveServiceBoletim();
+      $this->trySaveServiceBoletimFaltas();
       $this->messenger->append('Falta matrícula '. $this->getRequest()->matricula_id .' alterada com sucesso.', 'success');
     }
 
@@ -844,7 +844,7 @@ class DiarioApiController extends ApiCoreController
     }
     elseif ($canDelete) {
       $this->serviceBoletim()->deleteFalta($this->getRequest()->etapa, $componenteCurricularId);
-      $this->trySaveServiceBoletim();
+      $this->trySaveServiceBoletimFaltas();
       $this->messenger->append('Falta matrícula '. $this->getRequest()->matricula_id .' removida com sucesso.', 'success');
     }
 
@@ -1046,7 +1046,14 @@ class DiarioApiController extends ApiCoreController
     }
   }
 
-
+  protected function trySaveServiceBoletimFaltas() {
+    try {
+      $this->serviceBoletim()->saveFaltas();
+      $this->serviceBoletim()->promover();
+    }
+    catch (CoreExt_Service_Exception $e) {
+    }
+  }
 
   // metodos auxiliares getFalta
 
