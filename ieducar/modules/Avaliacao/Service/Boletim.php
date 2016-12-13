@@ -34,6 +34,7 @@ require_once 'App/Model/IedFinder.php';
 require_once 'App/Model/Matricula.php';
 require_once 'App/Model/MatriculaSituacao.php';
 require_once 'include/pmieducar/clsPermissoes.inc.php';
+require_once 'include/clsBanco.inc.php';
 
 /**
  * Avaliacao_Service_Boletim class.
@@ -1383,6 +1384,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $situacao->situacao = 0;
     $situacao->componentesCurriculares = array();
 
+    $infosMatricula = $this->getOption('matriculaData');
+    $matriculaId = $infosMatricula['cod_matricula'];
+
     // Carrega as médias pois este método pode ser chamado após a chamada a saveNotas()
     $mediasComponentes = $this->_loadMedias()
                               ->getMediasComponentes();
@@ -1475,12 +1479,17 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       }
 
       if($this->getRegra()->get('tipoProgressao') == RegraAvaliacao_Model_TipoProgressao::CONTINUADA){
-        if ($etapa < $totalEtapasComponente && $etapa != 'Rc'){
+
+        $getCountNotaCC = App_Model_IedFinder::getNotasComponenteCurricular($matriculaId, $id);
+
+        if($getCountNotaCC[0]['cc'] == 0) $etapa = 0;
+
+        if ($etapa < $totalEtapasComponente && (string)$etapa != 'Rc'){
           $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::EM_ANDAMENTO;
         }else{
           $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::APROVADO;
         }
-        if ($etapa < $totalEtapas && $etapa != 'Rc'){
+        if ($etapa < $totalEtapas && (string)$etapa != 'Rc'){
           $situacaoGeral = App_Model_MatriculaSituacao::EM_ANDAMENTO;
         }else{
           $situacaoGeral = App_Model_MatriculaSituacao::APROVADO;
