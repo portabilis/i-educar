@@ -1731,7 +1731,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $presenca->componentesCurriculares = $faltasComponentes;
 
     // Na última etapa seta situação presença como aprovado ou reprovado.
-    if ($etapa == $this->getOption('etapas') || $etapa === 'Rc') {
+    if ($etapa == $this->getOption('etapas') || $etapa === 'Rc' || $tipoFaltaGeral) {
       $aprovado           = ($presenca->porcentagemPresenca >= $this->getRegra()->porcentagemPresenca);
       $presenca->situacao = $aprovado ? App_Model_MatriculaSituacao::APROVADO :
                                         App_Model_MatriculaSituacao::REPROVADO;
@@ -3170,6 +3170,7 @@ public function alterarSituacao($novaSituacao, $matriculaId){
           //Atualiza a situação de acordo com o que foi inserido na média anteriormente
           $notaComponenteCurricularMedia->markOld();
           $notaComponenteCurricularMedia->situacao = $this->getSituacaoComponentesCurriculares()->componentesCurriculares[$id]->situacao;
+
           $this->getNotaComponenteMediaDataMapper()->save($notaComponenteCurricularMedia);
         }
       }

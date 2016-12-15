@@ -128,8 +128,10 @@ class ReportController extends ApiCoreController
 
       $modelo = 1;
 
-      if($GLOBALS['coreExt']['Config']->report->mostrar_relatorios == 'saomigueldoscampos' || $GLOBALS['coreExt']['Config']->report->mostrar_relatorios == 'passodetorres'){
+      if($GLOBALS['coreExt']['Config']->report->mostrar_relatorios == 'passodetorres' || $GLOBALS['coreExt']['Config']->report->mostrar_relatorios == 'meleiro'){
         $modelo = 2;
+      } else if($GLOBALS['coreExt']['Config']->report->mostrar_relatorios == 'saomigueldoscampos') {
+        $modelo = 3;
       }
 
       $boletimProfessorReport->addArg('modelo', $modelo);

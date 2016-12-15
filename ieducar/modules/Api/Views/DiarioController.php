@@ -96,6 +96,15 @@ class DiarioController extends ApiCoreController
     }
   }
 
+  protected function trySaveServiceBoletimFaltas($turmaId, $alunoId) {
+    try {
+      $this->serviceBoletim($turmaId, $alunoId)->saveFaltas();
+      $this->serviceBoletim($turmaId, $alunoId)->promover();
+    }
+    catch (CoreExt_Service_Exception $e) {
+    }
+  }
+
   protected function findMatriculaByTurmaAndAluno($turmaId, $alunoId){
     $resultado = array();
 
@@ -103,6 +112,7 @@ class DiarioController extends ApiCoreController
               FROM pmieducar.matricula m
               INNER JOIN pmieducar.matricula_turma mt ON m.cod_matricula = mt.ref_cod_matricula
               WHERE m.ativo = 1
+              AND mt.ativo = 1
               AND  mt.ref_cod_turma = $1
               AND m.ref_cod_aluno = $2
               AND m.aprovado IN (1,2,3,13,12,14) -- PERMITIDO SOMENTE LANÇAR NOTAS PARA SITUAÇÕES APROVADO/REPROVADO/ANDAMENTO
@@ -179,30 +189,36 @@ class DiarioController extends ApiCoreController
 
         foreach($notaTurma as $alunoId => $notaTurmaAluno){
 
-          foreach ($notaTurmaAluno as $componenteCurricularId => $notaTurmaAlunoDisciplina){
-            if($this->validateComponenteTurma($turmaId, $componenteCurricularId)){
-              $valor = $notaTurmaAlunoDisciplina['nota'];
-              $notaRecuperacao = $notaTurmaAlunoDisciplina['recuperacao'];
-              $nomeCampoRecuperacao = $this->defineCampoTipoRecuperacao($turmaId);
-              $valor = $this->truncate($valor, 4);
+          $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
+        
+          if (!empty($matriculaId)){
+            foreach ($notaTurmaAluno as $componenteCurricularId => $notaTurmaAlunoDisciplina){
+              if($this->validateComponenteTurma($turmaId, $componenteCurricularId)){
+                $valor = $notaTurmaAlunoDisciplina['nota'];
+                $notaRecuperacao = $notaTurmaAlunoDisciplina['recuperacao'];
+                $nomeCampoRecuperacao = $this->defineCampoTipoRecuperacao($turmaId);
+                $valor = $this->truncate($valor, 4);
 
-              $array_nota = array(
-                    'componenteCurricular' => $componenteCurricularId,
-                    'nota'                 => $valor,
-                    'etapa'                => $etapa,
-                    'notaOriginal'         => $valor);
+                $notaAposRecuperacao = (($notaRecuperacao > $valor) ? $notaRecuperacao : $valor);
 
-              if(!empty($nomeCampoRecuperacao)){
-                $array_nota[$nomeCampoRecuperacao] = $notaRecuperacao;
-              }
+                $array_nota = array(
+                      'componenteCurricular' => $componenteCurricularId,
+                      'nota'                 => $notaAposRecuperacao,
+                      'etapa'                => $etapa,
+                      'notaOriginal'         => $valor);
 
-              $nota = new Avaliacao_Model_NotaComponente($array_nota);
+                if(!empty($nomeCampoRecuperacao)){
+                  $array_nota[$nomeCampoRecuperacao] = $notaRecuperacao;
+                }
 
-              if($this->serviceBoletim($turmaId, $alunoId)){
-                $this->serviceBoletim($turmaId, $alunoId)->addNota($nota);
-                $this->trySaveServiceBoletim($turmaId, $alunoId);
+                $nota = new Avaliacao_Model_NotaComponente($array_nota);
 
-                $this->atualizaNotaNecessariaExame($turmaId, $alunoId, $componenteCurricularId);
+                if($this->serviceBoletim($turmaId, $alunoId)){
+                  $this->serviceBoletim($turmaId, $alunoId)->addNota($nota);
+                  $this->trySaveServiceBoletim($turmaId, $alunoId);
+
+                  $this->atualizaNotaNecessariaExame($turmaId, $alunoId, $componenteCurricularId);
+                }
               }
             }
           }
@@ -227,10 +243,12 @@ class DiarioController extends ApiCoreController
               $notaRecuperacao = $notaTurmaAlunoDisciplina['recuperacao'];
               $nomeCampoRecuperacao = $this->defineCampoTipoRecuperacao($turmaId);
 
+              $notaAposRecuperacao = (($notaRecuperacao > $valor) ? $notaRecuperacao : $valor);
+
               $valor = $this->truncate($valor, 4);
               $array_nota = array(
                     'componenteCurricular' => $componenteCurricularId,
-                    'nota'                 => $valor,
+                    'nota'                 => $notaAposRecuperacao,
                     'etapa'                => $etapa,
                     'notaOriginal'         => $valor,
                     $nomeCampoRecuperacao  => $notaRecuperacao);
@@ -293,7 +311,7 @@ class DiarioController extends ApiCoreController
                   ));
 
                   $this->serviceBoletim($turmaId, $alunoId)->addFalta($falta);
-                  $this->trySaveServiceBoletim($turmaId, $alunoId);
+                  $this->trySaveServiceBoletimFaltas($turmaId, $alunoId);
                 }
               }
             }
@@ -326,7 +344,7 @@ class DiarioController extends ApiCoreController
             ));
 
             $this->serviceBoletim($turmaId, $alunoId)->addFalta($falta);
-            $this->trySaveServiceBoletim($turmaId, $alunoId);
+            $this->trySaveServiceBoletimFaltas($turmaId, $alunoId);
           }
         }
       }

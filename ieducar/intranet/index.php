@@ -154,33 +154,82 @@ class indice
           });
          </script>';
 
-     /*if($GLOBALS['coreExt']['Config']->app->database->dbname == 'rionegrinho'){
-     	echo $this->mostraModalPesquisa("Rio Negrinho", "https://docs.google.com/a/portabilis.com.br/forms/d/14AdnuR-iCdsuPQJEUDvEtFc9rrrkuFPmtZg99jJLUVE/viewform");
-     }
-     if($GLOBALS['coreExt']['Config']->app->database->dbname == 'cocaldosul'){
-     	echo $this->mostraModalPesquisa("Cocal do Sul", "https://docs.google.com/a/portabilis.com.br/forms/d/1b2Ir3cbreeOhcY7fwIc4RV4gdLKtRTVPXYMAxVX_7sA/viewform");
-     }
-     if($GLOBALS['coreExt']['Config']->app->database->dbname == 'graopara'){
-     	echo $this->mostraModalPesquisa("Grao Para", "https://docs.google.com/a/portabilis.com.br/forms/d/138TbZzpz57wsRpaYqMGY8TaXW8IVfEtktyjV4oIaaz0/viewform");
-     }
-     if($GLOBALS['coreExt']['Config']->app->database->dbname == 'jaguaruna'){
-     	echo $this->mostraModalPesquisa("Jaguaruna", "https://docs.google.com/a/portabilis.com.br/forms/d/1R3DWtjQy2nDjI2UFm8g0hOgoQWBwtzzgGIfBkLyaTWg/viewform");
-     }
-     if($GLOBALS['coreExt']['Config']->app->database->dbname == 'lebonregis'){
-     	echo $this->mostraModalPesquisa("Lebon Regis", "https://docs.google.com/a/portabilis.com.br/forms/d/1eeS7lZuljsqKuvxCVg636lDwqD-bquRcIUOCDysFUsY/viewform");
-     }
-     if($GLOBALS['coreExt']['Config']->app->database->dbname == 'mafra'){
-     	echo $this->mostraModalPesquisa("Mafra", "https://docs.google.com/a/portabilis.com.br/forms/d/14gbc0sf3Tb4cBmNbtmyNY15jOFTUpEf9xBA7I6I8tyI/viewform");
-     }
-     if($GLOBALS['coreExt']['Config']->app->database->dbname == 'novaveneza'){
-     	echo $this->mostraModalPesquisa("Nova Veneza", "https://docs.google.com/a/portabilis.com.br/forms/d/1o3mBZRO9bH8kRPFIcbEArZl0yv1COd1cuc_yLxI8Fdo/viewform");
-     }
-     if($GLOBALS['coreExt']['Config']->app->database->dbname == 'santarosadosul'){
-     	echo $this->mostraModalPesquisa("Santa Rosa do Sul", "https://docs.google.com/a/portabilis.com.br/forms/d/1nbwr77CaNt30pWoI4vunujGcrQFERPzRc_aLrKf1280/viewform");
-     }
-     if($GLOBALS['coreExt']['Config']->app->database->dbname == 'sombrio'){
-     	echo $this->mostraModalPesquisa("Sombrio", "https://docs.google.com/a/portabilis.com.br/forms/d/1lhPjDbmsddCGoN5I469gyEKwubdqc3kdErhmyyBm7sQ/viewform");
-     }*/
+      if($GLOBALS['coreExt']['Config']->app->database->dbname == 'icara'){
+        echo $this->mostraModalPesquisa("Içara", "https://docs.google.com/forms/d/e/1FAIpQLSeLxBh5s2smMYzhxWgtobBI8lTwyp3sIeYwmiPIRTqrblBNog/viewform");
+      }
+
+      if($GLOBALS['coreExt']['Config']->app->database->dbname == 'jacintomachado'){
+        echo $this->mostraModalPesquisa("Jacinto Machado", "https://docs.google.com/forms/d/e/1FAIpQLSe0E1c2S3N1vFEMbZ-01sTcJdfDZeQbDEmsioP7tpo9Imakjw/viewform");
+      }
+
+      if($GLOBALS['coreExt']['Config']->app->database->dbname == 'meleiro'){
+        echo $this->mostraModalPesquisa("Meleiro", "https://docs.google.com/forms/d/e/1FAIpQLSdzbWltJEP1xwWEn1yWoBAC6TKalKY-mRCKhplH6iLoUEVL2w/viewform");
+      }
+
+      if($GLOBALS['coreExt']['Config']->app->database->dbname == 'cocaldosul'){
+        echo $this->mostraModalPesquisa("Cocal do Sul", "https://docs.google.com/forms/d/e/1FAIpQLSdixeKvLN5eQssd9sLU5RD76qFnp3KwJtNmnlHTaKAP_oRdnQ/viewform");
+      }
+
+      if($GLOBALS['coreExt']['Config']->app->database->dbname == 'rionegrinho'){
+        echo $this->mostraModalPesquisa("Rio Negrinho", "https://docs.google.com/forms/d/e/1FAIpQLScBVFjzw03nSHV870Dj_bhi5na4fZe2qkPS_dHMscBzHuOhog/viewform");
+      }
+
+      if($GLOBALS['coreExt']['Config']->app->database->dbname == 'montealegre'){
+        echo $this->mostraModalPesquisa("Monte Alegre", "https://docs.google.com/forms/d/e/1FAIpQLSe_zNzmdbU35U7oceF1EIk7BLSjx7Ue6bPUL3JiNUNx1v5teA/viewform");
+      }
+
+      if($GLOBALS['coreExt']['Config']->app->database->dbname == 'saomigueldoscampos'){
+        echo $this->mostraModalPesquisa("São Miguel dos Campos", "https://docs.google.com/forms/d/e/1FAIpQLScQeZRxh3tN0AEU-U4lFGHpM6RSKRUQXNKFQZUJFP-1H2PNhg/viewform");
+      }
+
+      if($GLOBALS['coreExt']['Config']->app->database->dbname == 'paragominas'){
+        echo $this->mostraModalPesquisa("Paragominas", "https://docs.google.com/forms/d/e/1FAIpQLSc6b2nu4nrTIUiMz9VuInH5o8hLip7iMAwUNaIqvfI1urLLFg/viewform");
+      }
+
+      if($GLOBALS['coreExt']['Config']->app->database->dbname == 'passodetorres'){
+        echo $this->mostraModalPesquisa("Passo de torres", "https://docs.google.com/forms/d/e/1FAIpQLSek9lutkdVISzmqvlJDHQoQTKEYEJyV2CWmXV2-T4joYliDSA/viewform");
+      }
+
+      if($GLOBALS['coreExt']['Config']->app->database->dbname == 'botucatu'){
+        echo $this->mostraModalPesquisa("Botucatu", "https://docs.google.com/forms/d/e/1FAIpQLSe40vl06zOxQshUCaeosqGMBT-TVKMRrSxHWfCW1melU0s9Vw/viewform");
+      }
+
+      if($GLOBALS['coreExt']['Config']->app->database->dbname == 'navegantes'){
+        echo $this->mostraModalPesquisa("Navegantes", "https://docs.google.com/forms/d/e/1FAIpQLSfD1MOdKoIb9uSVQat9FNcKHVZMDcEsHql6pRqzLWdjgL-jcQ/viewform");
+      }
+
+      if($GLOBALS['coreExt']['Config']->app->database->dbname == 'cacador'){
+        echo $this->mostraModalPesquisa("Caçador", "https://docs.google.com/forms/d/e/1FAIpQLSd_TOeKj3Shc0I-f1T_gb24PQX72T1mLXyvfiFhxyxL6MjAYQ/viewform");
+      }
+
+      if($GLOBALS['coreExt']['Config']->app->database->dbname == 'balneariocamboriu'){
+        echo $this->mostraModalPesquisa("Balneário Camboriú", "https://docs.google.com/forms/d/e/1FAIpQLSeYegAT5dKnyRw-2BJspN0qVFXh8uZTpYWNX_GjLJYimjV_vQ/viewform");
+      }
+
+      if($GLOBALS['coreExt']['Config']->app->database->dbname == 'veracruz'){
+        echo $this->mostraModalPesquisa("Vera Cruz", "https://docs.google.com/forms/d/e/1FAIpQLSeL7K0y7syNIALlnLCihwLsM-CGXMDRaU5IDHYSl9GgsXV6iA/viewform");
+      }
+
+      if($GLOBALS['coreExt']['Config']->app->database->dbname == 'santoantonio'){
+        echo $this->mostraModalPesquisa("Santo Antônio", "https://docs.google.com/forms/d/e/1FAIpQLScGuNKRxuUImxOeO9ph9oAPmusGm5BkiOeU03DJo4CrUG5aoA/viewform");
+      }
+
+      if($GLOBALS['coreExt']['Config']->app->database->dbname == 'rondondopara'){
+        echo $this->mostraModalPesquisa("Rondon do Pará", "https://docs.google.com/forms/d/e/1FAIpQLSfCoUK8RJAIrkOSHClta2hpvBqkW87mzyzALJ5JdJVeal6deg/viewform");
+      }
+
+
+      if($GLOBALS['coreExt']['Config']->app->database->dbname == 'ararangua'){
+        echo $this->mostraModalPesquisa("Araranguá", "https://docs.google.com/forms/d/e/1FAIpQLScKrd6GJ5pInVwEc5FcJK3bmg0_UqLsFWNR9c4UjymbJuhPdQ/viewform");
+      }
+
+      if($GLOBALS['coreExt']['Config']->app->database->dbname == 'test'){
+        echo $this->mostraModalPesquisa("Município Test", "https://docs.google.com/forms/d/e/1FAIpQLScKrd6GJ5pInVwEc5FcJK3bmg0_UqLsFWNR9c4UjymbJuhPdQ/viewform");
+      }
+
+      if($GLOBALS['coreExt']['Config']->app->database->dbname == 'ieducar'){
+        echo $this->mostraModalPesquisa("Município local", "https://docs.google.com/forms/d/e/1FAIpQLScKrd6GJ5pInVwEc5FcJK3bmg0_UqLsFWNR9c4UjymbJuhPdQ/viewform");
+      }
 
       $temp .= '<table width="100%" height="400" align="center" border="0" cellspacing="4" cellpadding="0">';
       $temp .= '
