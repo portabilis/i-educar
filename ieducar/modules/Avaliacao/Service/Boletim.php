@@ -1486,12 +1486,12 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
         if($getCountNotaCC[0]['cc'] == 0) $etapa = 0;
 
-        if ($etapa < $totalEtapasComponente && (string)$etapa != 'Rc'){
+        if ($etapa < $totalEtapasComponente && $etapa != 'Rc'){
           $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::EM_ANDAMENTO;
         }else{
           $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::APROVADO;
         }
-        if ($etapa < $totalEtapas && (string)$etapa != 'Rc'){
+        if ($etapa < $totalEtapas && $etapa != 'Rc'){
           $situacaoGeral = App_Model_MatriculaSituacao::EM_ANDAMENTO;
         }else{
           $situacaoGeral = App_Model_MatriculaSituacao::APROVADO;
@@ -1522,14 +1522,14 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $qtdComponenteReprovado++;
         $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::REPROVADO;
       }
-      elseif ((string)$etapa == 'Rc' && $media < $this->getRegra()->mediaRecuperacao) {
+      elseif ($etapa == 'Rc' && $media < $this->getRegra()->mediaRecuperacao) {
         $qtdComponenteReprovado++;
         $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::REPROVADO;
       }
-      elseif ((string)$etapa == 'Rc' && $media >= $this->getRegra()->mediaRecuperacao && $this->hasRecuperacao()) {
+      elseif ($etapa == 'Rc' && $media >= $this->getRegra()->mediaRecuperacao && $this->hasRecuperacao()) {
         $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::APROVADO_APOS_EXAME;
       }
-      elseif ($etapa < $totalEtapasComponente && (string)$etapa != 'Rc') {
+      elseif ($etapa < $totalEtapasComponente && $etapa != 'Rc') {
         $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::EM_ANDAMENTO;
       }
       else {
