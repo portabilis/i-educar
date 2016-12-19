@@ -32,6 +32,7 @@ require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
+require_once 'Portabilis/Date/Utils.php';
 
 require_once 'App/Date/Utils.php';
 
@@ -154,13 +155,28 @@ class indice extends clsCadastro
       $tabela .= "<tr bgcolor=$cor><td colspan='2'><b>M&oacute;dulos do ano anterior (".($this->ref_ano - 1).")</b></td></tr><tr><td>";
       $tabela .= "<table cellpadding=\"2\" cellspacing=\"2\" border=\"0\" align=\"left\" width='300px'>";
       $tabela .= "<tr bgcolor='#A1B3BD'><th width='100px'>Etapa<a name='ano_letivo'/></th><th width='200px'>Período</th></tr>";
-      
+
+      $existeBissexto = false;
 
       foreach ($registros as $campo) {
         $cor = "#E3E8EF"; #$cor == "#FFFFFF" ? "#E3E8EF" : "#FFFFFF";
         $cont++;
         $tabela .= "<tr bgcolor='$cor'><td align='center'>{$cont}</td><td align='center'>".dataFromPgToBr($campo['data_inicio'])." à ".dataFromPgToBr($campo['data_fim'])."</td></tr>";
-        //$modulosAnoAnterior .= ++$cont."ª Etapa: De ".dataFromPgToBr($campo['data_inicio'])." à ".dataFromPgToBr($campo['data_fim']);         
+
+        $ano = date_parse_from_format("Y-m-d", $campo['data_inicio']);
+        $ano = $ano["year"];
+
+        $novaDataInicio = str_replace($ano, $this->ref_ano, $campo['data_inicio']);
+        $novaDataFim    = str_replace($ano, $this->ref_ano, $campo['data_fim']);
+
+        if (Portabilis_Date_Utils::checkDateBissexto($novaDataInicio)
+            || Portabilis_Date_Utils::checkDateBissexto($novaDataFim)) {
+          $existeBissexto = true;
+        }
+      }
+
+      if ($existeBissexto) {
+        $tabela .= "<tr bgcolor='$cor'><td align='center'>Observação:</td><td align='center'>A data 29/02/$this->ref_ano não poderá ser migrada pois $this->ref_ano não é um ano bissexto, por tanto será substituída por 28/02/$this->ref_ano.</td></tr>";
       }
 
       $tabela .="</table>";
@@ -461,6 +477,14 @@ class indice extends clsCadastro
       $moduloDestino->data_fim       = str_replace(
         $anoOrigem, $anoDestino, $moduloOrigem['data_fim']
       );
+
+      if (Portabilis_Date_Utils::checkDateBissexto($moduloDestino->data_inicio)) {
+        $moduloDestino->data_inicio = str_replace(29, 28, $moduloDestino->data_inicio);
+      }
+
+      if (Portabilis_Date_Utils::checkDateBissexto($moduloDestino->data_fim)) {
+        $moduloDestino->data_fim = str_replace(29, 28, $moduloDestino->data_fim);
+      }
 
       $moduloDestino->cadastra();
     }
