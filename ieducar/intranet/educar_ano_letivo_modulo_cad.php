@@ -176,7 +176,7 @@ class indice extends clsCadastro
       }
 
       if ($existeBissexto) {
-        $tabela .= "<tr bgcolor='$cor'><td align='center'>Observação:</td><td align='center'>A data 29/02/$this->ref_ano não poderá ser migrada pois $this->ref_ano não é um ano bissexto, por tanto será substituída por 28/02/$this->ref_ano.</td></tr>";
+        $tabela .= "<tr bgcolor='$cor'><td align='center'>Observação:</td><td align='center'>A data 29/02/$this->ref_ano não poderá ser migrada pois $this->ref_ano não é um ano bissexto, portanto será substituída por 28/02/$this->ref_ano.</td></tr>";
       }
 
       $tabela .="</table>";
