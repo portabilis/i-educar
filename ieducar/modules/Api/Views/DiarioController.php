@@ -96,6 +96,15 @@ class DiarioController extends ApiCoreController
     }
   }
 
+  protected function trySaveServiceBoletimFaltas($turmaId, $alunoId) {
+    try {
+      $this->serviceBoletim($turmaId, $alunoId)->saveFaltas();
+      $this->serviceBoletim($turmaId, $alunoId)->promover();
+    }
+    catch (CoreExt_Service_Exception $e) {
+    }
+  }
+
   protected function findMatriculaByTurmaAndAluno($turmaId, $alunoId){
     $resultado = array();
 
@@ -302,7 +311,7 @@ class DiarioController extends ApiCoreController
                   ));
 
                   $this->serviceBoletim($turmaId, $alunoId)->addFalta($falta);
-                  $this->trySaveServiceBoletim($turmaId, $alunoId);
+                  $this->trySaveServiceBoletimFaltas($turmaId, $alunoId);
                 }
               }
             }
@@ -335,7 +344,7 @@ class DiarioController extends ApiCoreController
             ));
 
             $this->serviceBoletim($turmaId, $alunoId)->addFalta($falta);
-            $this->trySaveServiceBoletim($turmaId, $alunoId);
+            $this->trySaveServiceBoletimFaltas($turmaId, $alunoId);
           }
         }
       }
