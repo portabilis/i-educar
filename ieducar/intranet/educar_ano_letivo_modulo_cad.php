@@ -152,7 +152,7 @@ class indice extends clsCadastro
     if ($registros) {
 
       $tabela = "<table border=0 style='' cellpadding=2 width='100%'>";
-      $tabela .= "<tr bgcolor=$cor><td colspan='2'><b>M&oacute;dulos do ano anterior (".($this->ref_ano - 1).")</b></td></tr><tr><td>";
+      $tabela .= "<tr bgcolor=$cor><td colspan='2'>M&oacute;dulos do ano anterior (".($this->ref_ano - 1).")</td></tr><tr><td>";
       $tabela .= "<table cellpadding=\"2\" cellspacing=\"2\" border=\"0\" align=\"left\" width='300px'>";
       $tabela .= "<tr bgcolor='#A1B3BD'><th width='100px'>Etapa<a name='ano_letivo'/></th><th width='200px'>Período</th></tr>";
 
@@ -176,7 +176,10 @@ class indice extends clsCadastro
       }
 
       if ($existeBissexto) {
-        $tabela .= "<tr bgcolor='$cor'><td align='center'>Observação:</td><td align='center'>A data 29/02/$this->ref_ano não poderá ser migrada pois $this->ref_ano não é um ano bissexto, portanto será substituída por 28/02/$this->ref_ano.</td></tr>";
+        $tabela .= "<tr bgcolor='#FCF8E3' style='color: #8A6D3B; font-weight:normal;'>
+                      <td align='center'><b>Observação:</b></td>
+                      <td align='center'>A data 29/02/$this->ref_ano não poderá ser migrada pois $this->ref_ano não é um ano bissexto, portanto será substituída por 28/02/$this->ref_ano.</td>
+                    </tr>";
       }
 
       $tabela .="</table>";
