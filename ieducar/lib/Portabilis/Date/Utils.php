@@ -119,4 +119,18 @@ class Portabilis_Date_Utils
   		return false;
   	}
   }
+
+  /**
+   * Recebe uma data no formato yyyy-mm-dd e verifica se é uma data válida considerando o ano bissexto.
+   * @param string $timestamp
+   */
+  public static function checkDateBissexto($data) {
+    $data  = date_parse_from_format("Y-m-d", $data);
+    $day   = (int)$data["day"];
+    $month = (int)$data["month"];
+    $year  = (int)$data["year"];
+
+    return ($day == 29 && !checkdate($month, $day, $year));
+  }
+
 }
