@@ -34,6 +34,7 @@ require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'include/pmieducar/clsPermissoes.inc.php';
 require_once 'lib/Portabilis/Date/Utils.php';
+require_once 'Portabilis/String/Utils.php';
 
 require_once 'App/Model/MatriculaSituacao.php';
 require_once 'Portabilis/View/Helper/Application.php';
@@ -263,8 +264,10 @@ class indice extends clsDetalhe
       $tipoAbandono = new clsPmieducarAbandonoTipo($registro['ref_cod_abandono_tipo']);
       $tipoAbandono = $tipoAbandono->detalhe();
 
+      $observacaoAbandono = Portabilis_String_Utils::toLatin1($registro['observacao']);
+
       $this->addDetalhe(array('Motivo do Abandono',$tipoAbandono['nome']));
-      $this->addDetalhe(array('Observação',$registro['observacao']));
+      $this->addDetalhe(array('Observação',$observacaoAbandono));
     }
 
     $this->addDetalhe(array('Formando', $registro['formando'] == 0 ? 'N&atilde;o' : 'Sim'));
