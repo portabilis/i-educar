@@ -268,7 +268,15 @@ class indice extends clsCadastro
 		$this->campoCheck( "aceleracao", "Aceleração", $this->aceleracao );
 		$this->campoMemo( "observacao", "Observa&ccedil;&atilde;o", $this->observacao, 60, 5, false );
 
-		$opcoes = array( "" => "Selecione", 1 => "Aprovado", 2 => "Reprovado", 3 => "Cursando", 4 => "Transferido" , 6 => 'Abandono', 12 => 'Aprovado com depend&ecirc;ncia', 13 => 'Aprovado pelo conselho');
+		$opcoes = array( "" => "Selecione",
+			              1 => "Aprovado",
+			              2 => "Reprovado",
+			              3 => "Cursando",
+			              4 => "Transferido",
+			              6 => 'Abandono',
+			              12 => 'Aprovado com depend&ecirc;ncia',
+			              13 => 'Aprovado pelo conselho',
+			              14 => 'Reprovado por faltas');
 		$this->campoLista( "aprovado", "Situa&ccedil;&atilde;o", $opcoes, $this->aprovado );
 
 		$this->campoTexto( "registro", "Registro (arquivo)", $this->registro, 30, 50, false);
