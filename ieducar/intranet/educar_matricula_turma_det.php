@@ -309,6 +309,14 @@ class indice extends clsDetalhe
       <script type="text/javascript">
 
         function enturmar(ref_cod_matricula, ref_cod_turma_destino, tipo){
+          var data = $j("#data_enturmacao").val();
+          var array_data = data.split("/");
+          var data_valida = IsDate(array_data[0], array_data[1], array_data[2]);
+          if (data_valida == false) {
+            alert("Informe a data corretamente");
+            return false;
+          }
+
           document.formcadastro.ref_cod_turma_origem.value = "";
 
           if(tipo == "transferir") {
@@ -327,6 +335,22 @@ class indice extends clsDetalhe
           document.formcadastro.ref_cod_turma_destino.value = ref_cod_turma_destino;
           document.formcadastro.data_enturmacao.value = document.getElementById("data_enturmacao").value;
           document.formcadastro.submit();
+        }
+
+        function IsDate(day, month, year) {
+          var date = new Date();
+          var blnRet = false;
+          var blnDay;
+          var blnMonth;
+          var blnYear;
+          date.setFullYear(year, month -1, day);
+          blnDay   = (date.getDate()      == day);
+          blnMonth = (date.getMonth()     == month -1);
+          blnYear  = (date.getFullYear()  == year);
+          if (blnDay && blnMonth && blnYear) {
+            blnRet = true;
+          }
+          return blnRet;
         }
 
         function removerEnturmacao(ref_cod_matricula, ref_cod_turma_destino) {
