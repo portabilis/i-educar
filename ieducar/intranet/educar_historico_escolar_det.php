@@ -230,8 +230,15 @@ class indice extends clsDetalhe
 			{
 				$registro["aprovado"] = "Transferido";
 			}
-			elseif ($registro['aprovado'] == 6)
+			elseif ($registro['aprovado'] == 6) {
 				$registro["aprovado"] = "Abandono";	
+			}
+			elseif ($registro['aprovado'] == 13) {
+				$registro["aprovado"] = "Aprovado pelo conselho";	
+			}
+			elseif ($registro['aprovado'] == 14) {
+				$registro["aprovado"] = "Reprovado por faltas";	
+			}
 			
 			$this->addDetalhe( array( "Situa&ccedil;&atilde;o", "{$registro["aprovado"]}") );
 		}
