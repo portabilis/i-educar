@@ -1320,7 +1320,7 @@ class AlunoController extends ApiCoreController
                                    'error', false, 'error');
       }
     }else{
-    	$this->messenger->append('O cadastro não pode ser removido, pois existem matrículas vinculadas. Cancele a matrícula para posteriormente efetuar a exclusão do aluno.', 'error', false, 'error');
+    	$this->messenger->append('O cadastro não pode ser removido, pois existem matrículas vinculadas.', 'error', false, 'error');
     }
     return array('id' => $id);
   }
