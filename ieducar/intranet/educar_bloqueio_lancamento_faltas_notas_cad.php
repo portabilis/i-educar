@@ -162,7 +162,7 @@ class indice extends clsCadastro
       4 => Portabilis_String_Utils::toLatin1('4ª Etapa')
     );
 
-    $options = array('label' => 'Etapa', 'resources' => $selectOptions, 'value' => '');
+    $options = array('label' => 'Etapa', 'resources' => $selectOptions, 'value' => $this->etapa);
 
     $this->inputsHelper()->select('etapa', $options);
 
