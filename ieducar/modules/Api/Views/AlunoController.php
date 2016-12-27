@@ -1304,9 +1304,9 @@ class AlunoController extends ApiCoreController
 
   protected function delete() {
     $id = $this->getRequest()->id;
-    $anoUltimaMatricula = $this->possuiMatriculaAtivaEmAndamento($id);
+    $matriculaAtiva = dbBool($this->possuiMatriculaAtiva($id));
 
-    if (!$anoUltimaMatricula){
+    if (!$matriculaAtiva){
 
       if ($this->canDelete()) {
         $aluno                  = new clsPmieducarAluno();
@@ -1320,21 +1320,13 @@ class AlunoController extends ApiCoreController
                                    'error', false, 'error');
       }
     }else{
-      $this->messenger->append('O cadastro não pode ser removido, pois existe uma matrícula no ano de '. $anoUltimaMatricula .' em andamento. '.
-                               'Cancele a matrícula para posteriormente efetuar a exclusão do aluno.',
-                               'error', false, 'error');
+    	$this->messenger->append('O cadastro não pode ser removido, pois existem matrículas vinculadas.', 'error', false, 'error');
     }
     return array('id' => $id);
   }
 
-  protected function possuiMatriculaAtivaEmAndamento($alunoId){
-    $sql = "select ano
-              from pmieducar.matricula
-             where ref_cod_aluno = $1
-               and ativo = 1
-               and aprovado = 3
-             order by ano desc
-             limit 1";
+  protected function possuiMatriculaAtiva($alunoId){
+    $sql = "select exists (select 1 from pmieducar.matricula where ref_cod_aluno = $1 and ativo = 1)";
     return (Portabilis_Utils_Database::selectField($sql, $alunoId));
   }
 
