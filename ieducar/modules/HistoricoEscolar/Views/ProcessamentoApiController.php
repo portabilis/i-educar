@@ -533,7 +533,8 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                                   $this->getRequest()->grade_curso_id,
                                   NULL,
                                   $dadosMatricula['escola_id'],
-                                  $this->getRequest()->dependencia
+                                  $this->getRequest()->dependencia,
+                                  $this->getRequest()->posicao
                                 );
 
           $historicoEscolar->cadastra();
@@ -572,7 +573,11 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                                   utf8_decode($this->getRequest()->livro),
                                   utf8_decode($this->getRequest()->folha),
                                   $dadosMatricula['nome_curso'],
-                                  $this->getRequest()->grade_curso_id
+                                  $this->getRequest()->grade_curso_id,
+                                  NULL,
+                                  $dadosMatricula['escola_id'],
+                                  $this->getRequest()->dependencia,
+                                  $this->getRequest()->posicao
                                 );
 
           $historicoEscolar->edita();
