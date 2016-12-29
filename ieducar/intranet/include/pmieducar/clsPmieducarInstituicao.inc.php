@@ -67,6 +67,7 @@ class clsPmieducarInstituicao
   var $percentagem_maxima_ocupacao_salas;
   var $quantidade_alunos_metro_quadrado;
   var $gerar_historico_transferencia;
+  var $controlar_posicao_historicos;
   var $restringir_multiplas_enturmacoes;
   var $permissao_filtro_abandono_transferencia;
   var $data_base_matricula;
@@ -139,7 +140,7 @@ class clsPmieducarInstituicao
     $this->_schema = "pmieducar.";
     $this->_tabela = "{$this->_schema}instituicao";
     $this->_campos_lista = $this->_todos_campos = "cod_instituicao, ref_usuario_exc, ref_usuario_cad, ref_idtlog, ref_sigla_uf, cep, cidade, bairro, logradouro, numero, complemento, nm_responsavel, ddd_telefone, telefone, data_cadastro, data_exclusao, ativo, nm_instituicao, data_base_transferencia, data_base_remanejamento, controlar_espaco_utilizacao_aluno, percentagem_maxima_ocupacao_salas, quantidade_alunos_metro_quadrado, exigir_vinculo_turma_professor, gerar_historico_transferencia, matricula_apenas_bairro_escola, restringir_historico_escolar, coordenador_transporte, restringir_multiplas_enturmacoes, permissao_filtro_abandono_transferencia, data_base_matricula, multiplas_reserva_vaga,
-      reserva_integral_somente_com_renda, data_expiracao_reserva_vaga, data_fechamento, componente_curricular_turma ";
+      reserva_integral_somente_com_renda, data_expiracao_reserva_vaga, data_fechamento, componente_curricular_turma, controlar_posicao_historicos ";
 
     if (is_numeric($ref_usuario_cad)) {
       if (class_exists('clsPmieducarUsuario')) {
@@ -439,6 +440,15 @@ class clsPmieducarInstituicao
         $valores .= "{$gruda} false ";
         $gruda = ", ";
       }
+      if (dbBool($this->controlar_posicao_historicos)) {
+        $campos .= "{$gruda}controlar_posicao_historicos";
+        $valores .= "{$gruda} true ";
+        $gruda = ", ";
+      }else{
+        $campos .= "{$gruda}controlar_posicao_historicos";
+        $valores .= "{$gruda} false ";
+        $gruda = ", ";
+      }
       if (dbBool($this->matricula_apenas_bairro_escola)) {
         $campos .= "{$gruda}matricula_apenas_bairro_escola";
         $valores .= "{$gruda} true ";
@@ -668,6 +678,14 @@ class clsPmieducarInstituicao
         $gruda = ", ";
       }else{
         $set .= "{$gruda}gerar_historico_transferencia = false ";
+        $gruda = ", ";
+      }
+      
+      if (dbBool($this->controlar_posicao_historicos)) {
+        $set .= "{$gruda}controlar_posicao_historicos = true ";
+        $gruda = ", ";
+      }else{
+        $set .= "{$gruda}controlar_posicao_historicos = false ";
         $gruda = ", ";
       }
 
