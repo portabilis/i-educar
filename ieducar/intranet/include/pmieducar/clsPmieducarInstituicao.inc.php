@@ -74,6 +74,7 @@ class clsPmieducarInstituicao
   var $reserva_integral_somente_com_renda;
   var $data_expiracao_reserva_vaga;
   var $componente_curricular_turma;
+  var $reprova_dependencia_ano_concluinte;
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
    * @var int
@@ -139,7 +140,7 @@ class clsPmieducarInstituicao
     $this->_schema = "pmieducar.";
     $this->_tabela = "{$this->_schema}instituicao";
     $this->_campos_lista = $this->_todos_campos = "cod_instituicao, ref_usuario_exc, ref_usuario_cad, ref_idtlog, ref_sigla_uf, cep, cidade, bairro, logradouro, numero, complemento, nm_responsavel, ddd_telefone, telefone, data_cadastro, data_exclusao, ativo, nm_instituicao, data_base_transferencia, data_base_remanejamento, controlar_espaco_utilizacao_aluno, percentagem_maxima_ocupacao_salas, quantidade_alunos_metro_quadrado, exigir_vinculo_turma_professor, gerar_historico_transferencia, matricula_apenas_bairro_escola, restringir_historico_escolar, coordenador_transporte, restringir_multiplas_enturmacoes, permissao_filtro_abandono_transferencia, data_base_matricula, multiplas_reserva_vaga,
-      reserva_integral_somente_com_renda, data_expiracao_reserva_vaga, data_fechamento, componente_curricular_turma ";
+      reserva_integral_somente_com_renda, data_expiracao_reserva_vaga, data_fechamento, componente_curricular_turma, reprova_dependencia_ano_concluinte ";
 
     if (is_numeric($ref_usuario_cad)) {
       if (class_exists('clsPmieducarUsuario')) {
@@ -507,6 +508,16 @@ class clsPmieducarInstituicao
         $gruda = ", ";
       }
 
+      if (dbBool($this->reprova_dependencia_ano_concluinte)) {
+        $campos .= "{$gruda}reprova_dependencia_ano_concluinte";
+        $valores .= "{$gruda} TRUE ";
+        $gruda = ", ";
+      }else{
+        $campos .= "{$gruda}reprova_dependencia_ano_concluinte";
+        $valores .= "{$gruda} FALSE ";
+        $gruda = ", ";
+      }
+
       if (dbBool($this->reserva_integral_somente_com_renda)) {
         $campos .= "{$gruda}reserva_integral_somente_com_renda";
         $valores .= "{$gruda} true ";
@@ -747,6 +758,14 @@ class clsPmieducarInstituicao
         $gruda = ", ";
       }else{
         $set .= "{$gruda}componente_curricular_turma = FALSE ";
+        $gruda = ", ";
+      }
+
+      if (dbBool($this->reprova_dependencia_ano_concluinte)) {
+        $set .= "{$gruda}reprova_dependencia_ano_concluinte = TRUE ";
+        $gruda = ", ";
+      }else{
+        $set .= "{$gruda}reprova_dependencia_ano_concluinte = FALSE ";
         $gruda = ", ";
       }
 
