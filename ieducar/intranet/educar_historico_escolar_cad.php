@@ -67,6 +67,7 @@ class indice extends clsCadastro
 	var $data_cadastro;
 	var $data_exclusao;
 	var $ativo;
+	var $posicao;
 
 	var $ref_cod_instituicao;
 	var $nm_serie;
@@ -259,6 +260,9 @@ class indice extends clsCadastro
 
 		$this->campoTexto( "nm_serie", $GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu' ? "Ano/S&eacute;rie" : "S&eacute;rie", $this->nm_serie, 30, 255, true );
 		$this->campoNumero( "ano", "Ano", $this->ano, 4, 4, true );
+		if (validaControlePosicaoHistorico()) {			
+			$this->campoNumero( "posicao", "Posição", $this->posicao, 1, 1, true );
+		}
 		$this->campoMonetario( "carga_horaria", "Carga Hor&aacute;ria", $this->carga_horaria, 8, 8, false);
 		$this->campoCheck( "cb_faltas_globalizadas", "Faltas Globalizadas", is_numeric($this->faltas_globalizadas) ? 'on' : '');
 		$this->campoNumero( "faltas_globalizadas", "Faltas Globalizadas", $this->faltas_globalizadas, 4, 4, false );
@@ -364,7 +368,7 @@ class indice extends clsCadastro
 
 			$this->extra_curricular = is_null($this->extra_curricular) ? 0 : 1;
 
-			$obj = new clsPmieducarHistoricoEscolar( $this->ref_cod_aluno, null, null, $this->pessoa_logada, $this->nm_serie, $this->ano, $this->carga_horaria, $this->dias_letivos, $this->escola, $this->escola_cidade, $this->escola_uf, $this->observacao, $this->aprovado, null, null, 1, $this->faltas_globalizadas, $this->ref_cod_instituicao, 1, $this->extra_curricular, null, $this->frequencia, $this->registro, $this->livro, $this->folha, $this->nm_curso, $this->historico_grade_curso_id, $this->aceleracao, $this->ref_cod_escola, !is_null($this->dependencia));
+			$obj = new clsPmieducarHistoricoEscolar( $this->ref_cod_aluno, null, null, $this->pessoa_logada, $this->nm_serie, $this->ano, $this->carga_horaria, $this->dias_letivos, $this->escola, $this->escola_cidade, $this->escola_uf, $this->observacao, $this->aprovado, null, null, 1, $this->faltas_globalizadas, $this->ref_cod_instituicao, 1, $this->extra_curricular, null, $this->frequencia, $this->registro, $this->livro, $this->folha, $this->nm_curso, $this->historico_grade_curso_id, $this->aceleracao, $this->ref_cod_escola, !is_null($this->dependencia), $this->posicao);
 			$cadastrou = $obj->cadastra();
 			if( $cadastrou )
 			{
@@ -431,7 +435,7 @@ class indice extends clsCadastro
 			$this->aceleracao = is_null($this->aceleracao) ? 0 : 1;
 			$this->extra_curricular = is_null($this->extra_curricular) ? 0 : 1;
 
-			$obj = new clsPmieducarHistoricoEscolar( $this->ref_cod_aluno, $this->sequencial, $this->pessoa_logada, null, $this->nm_serie, $this->ano, $this->carga_horaria, $this->dias_letivos, $this->escola, $this->escola_cidade, $this->escola_uf, $this->observacao, $this->aprovado, null, null, 1, $this->faltas_globalizadas, $this->ref_cod_instituicao, 1, $this->extra_curricular, null, $this->frequencia, $this->registro, $this->livro, $this->folha, $this->nm_curso, $this->historico_grade_curso_id, $this->aceleracao, $this->ref_cod_escola, !is_null($this->dependencia));
+			$obj = new clsPmieducarHistoricoEscolar( $this->ref_cod_aluno, $this->sequencial, $this->pessoa_logada, null, $this->nm_serie, $this->ano, $this->carga_horaria, $this->dias_letivos, $this->escola, $this->escola_cidade, $this->escola_uf, $this->observacao, $this->aprovado, null, null, 1, $this->faltas_globalizadas, $this->ref_cod_instituicao, 1, $this->extra_curricular, null, $this->frequencia, $this->registro, $this->livro, $this->folha, $this->nm_curso, $this->historico_grade_curso_id, $this->aceleracao, $this->ref_cod_escola, !is_null($this->dependencia), $this->posicao);
 			$editou = $obj->edita();
 
 			if( $editou )
@@ -534,6 +538,14 @@ function getOpcoesGradeCurso(){
 
 		return $opcoes;
 	}
+
+  function validaControlePosicaoHistorico(){
+    $obj = new clsPmieducarInstituicao;
+    //Busca instituicao ativa
+    $lst = $obj->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
+
+    return dbBool($lst[0]['controlar_posicao_historicos']);
+  }
 
 // cria uma extensao da classe base
 $pagina = new clsIndexBase();
