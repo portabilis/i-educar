@@ -6,7 +6,8 @@ class AlteraFuncaoCopiaNotasTransf extends AbstractMigration
 {
     public function up()
     {
-        $this->execute("CREATE OR REPLACE FUNCTION modules.copia_notas_transf(old_matricula_id integer, new_matricula_id integer)
+        $this->execute("DROP FUNCTION modules.copia_notas_transf;
+                        CREATE OR REPLACE FUNCTION modules.copia_notas_transf(old_matricula_id integer, new_matricula_id integer)
                           RETURNS void AS
                         $$
                           DECLARE
