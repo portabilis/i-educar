@@ -83,6 +83,7 @@ class indice extends clsCadastro
 	var $nm_disciplina;
 	var $nota;
 	var $faltas;
+	var $ordenamento;
 	var $excluir_disciplina;
 	var $ultimo_sequencial;
 
@@ -307,19 +308,21 @@ class indice extends clsCadastro
 					$this->historico_disciplinas[$qtd_disciplinas][] = $campo["nm_disciplina"];
 					$this->historico_disciplinas[$qtd_disciplinas][] = $campo["nota"];
 					$this->historico_disciplinas[$qtd_disciplinas][] = $campo["faltas"];
+					$this->historico_disciplinas[$qtd_disciplinas][] = $campo["ordenamento"];
 					$this->historico_disciplinas[$qtd_disciplinas][] = $campo["sequencial"];
 					$qtd_disciplinas++;
 				}
 			}
 		}
 
-		$this->campoTabelaInicio("notas","Notas",array("Disciplina","Nota","Faltas"),$this->historico_disciplinas);
+		$this->campoTabelaInicio("notas","Notas",array("Disciplina","Nota","Faltas", "Ordem"),$this->historico_disciplinas);
 
 		//$this->campoTexto( "nm_disciplina", "Disciplina", $this->nm_disciplina, 30, 255, false, false, false, '', '', 'autoCompleteComponentesCurricular(this)', 'onfocus' );
 		$this->campoTexto( "nm_disciplina", "Disciplina", $this->nm_disciplina, 30, 255, false, false, false, '', '', '', 'onfocus' );
 
 		$this->campoTexto( "nota", "Nota", $this->nota, 10, 255, false );
 		$this->campoNumero( "faltas", "Faltas", $this->faltas, 3, 3, false );
+		$this->campoNumero( "ordenamento", "ordenamento", $this->ordenamento, 3, 3, false );
 		//$this->campoOculto("sequencial","");
 
 		$this->campoTabelaFim();
@@ -378,7 +381,7 @@ class indice extends clsCadastro
 						$obj_historico = new clsPmieducarHistoricoEscolar();
 						$this->sequencial = $obj_historico->getMaxSequencial( $this->ref_cod_aluno );
 
-						$obj = new clsPmieducarHistoricoDisciplinas( $sequencial, $this->ref_cod_aluno, $this->sequencial, $disciplina, $this->nota[$key], $this->faltas[$key] );
+						$obj = new clsPmieducarHistoricoDisciplinas( $sequencial, $this->ref_cod_aluno, $this->sequencial, $disciplina, $this->nota[$key], $this->faltas[$key], $this->ordenamento[$key] );
 						$cadastrou1 = $obj->cadastra();
 						if( !$cadastrou1 )
 						{
@@ -451,7 +454,7 @@ class indice extends clsCadastro
 							//$campo['nm_disciplina_'] = urldecode($campo['nm_disciplina_']);
 
 
-							$obj = new clsPmieducarHistoricoDisciplinas( $sequencial, $this->ref_cod_aluno, $this->sequencial, $disciplina, $this->nota[$key], $this->faltas[$key] );
+							$obj = new clsPmieducarHistoricoDisciplinas( $sequencial, $this->ref_cod_aluno, $this->sequencial, $disciplina, $this->nota[$key], $this->faltas[$key], $this->ordenamento[$key] );
 							$cadastrou1 = $obj->cadastra();
 							if( !$cadastrou1 )
 							{
