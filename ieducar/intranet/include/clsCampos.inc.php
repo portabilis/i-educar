@@ -253,7 +253,8 @@ class clsCampos extends Core_Controller_Page_Abstract
       $valor,
       $desc,
       $script,
-      ($disable) ? 'disabled' : $dica
+      $dica,
+      ($disable) ? 'disabled' : ''
     );
 
     if (! $this->__adicionando_tabela) {
@@ -1900,7 +1901,8 @@ class clsCampos extends Core_Controller_Page_Abstract
               $retorno .= ' checked';
             }
 
-            $retorno .= " {$componente[6]}> {$componente[4]}";
+            $retorno .= " {$componente[7]}> {$componente[4]}";
+
             break;
 
           case 'checkDuplo':
