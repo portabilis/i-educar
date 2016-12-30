@@ -2179,12 +2179,16 @@ if($j('#transporte_rota').length > 0){
 
   function camposTransporte(){
     $tipoTransporte = $j('#tipo_transporte');
-    if ($tipoTransporte.val() == 'municipal' || $tipoTransporte.val() == 'estadual'){
+    if ($tipoTransporte.val() == 'nenhum'){
+      document.getElementById('veiculo_transporte_escolar').disabled = true;
+    }else if ($tipoTransporte.val() == 'municipal' || $tipoTransporte.val() == 'estadual'){
+      document.getElementById('veiculo_transporte_escolar').disabled = false;
       $j('#transporte_rota').closest('tr').show();
       $j('#transporte_ponto').closest('tr').show();
       $j('#pessoaj_transporte_destino').closest('tr').show();
       $j('#transporte_observacao').closest('tr').show();
     }else{
+      document.getElementById('veiculo_transporte_escolar').disabled = false;
       $j('#transporte_rota').closest('tr').hide();
       $j('#transporte_ponto').closest('tr').hide();
       $j('#pessoaj_transporte_destino').closest('tr').hide();
