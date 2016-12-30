@@ -262,7 +262,7 @@ class indice extends clsCadastro
 		$this->campoTexto( "nm_serie", $GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu' ? "Ano/S&eacute;rie" : "S&eacute;rie", $this->nm_serie, 30, 255, true );
 		$this->campoNumero( "ano", "Ano", $this->ano, 4, 4, true );
 		if (validaControlePosicaoHistorico()) {			
-			$this->campoNumero( "posicao", "Posição", $this->posicao, 1, 1, true );
+			$this->campoNumero( "posicao", "Posição", $this->posicao, 1, 1, true, 'Informe a coluna equivalente a série/ano/etapa a qual o histórico pertence. Ex.: 1º ano informe 1, 2º ano informe 2' );
 		}
 		$this->campoMonetario( "carga_horaria", "Carga Hor&aacute;ria", $this->carga_horaria, 8, 8, false);
 		$this->campoCheck( "cb_faltas_globalizadas", "Faltas Globalizadas", is_numeric($this->faltas_globalizadas) ? 'on' : '');
