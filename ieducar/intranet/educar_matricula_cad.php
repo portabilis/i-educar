@@ -724,7 +724,7 @@ class indice extends clsCadastro
     $reprovaDependenciaAnoConcluinte = $instituicao['reprova_dependencia_ano_concluinte'];
     $anoConcluinte = $serie['concluinte'] == 2;
 
-    return !($reprovaDependenciaAnoConcluinte && $anoConcluinte);
+    return !(dbBool($reprovaDependenciaAnoConcluinte) && $anoConcluinte);
   }
 
   function verificaSolicitacaoTransferencia() {
