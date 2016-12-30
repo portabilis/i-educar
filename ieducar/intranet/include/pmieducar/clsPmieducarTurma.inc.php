@@ -2097,5 +2097,17 @@ and  e.cod_escola = t.ref_ref_cod_escola
 		return "";
 	}
 
+	function checaAnoLetivoEmAndamento()
+	{
+		if( is_numeric( $this->cod_turma ) )
+		{
+
+			$db = new clsBanco();
+			$db->Consulta( "SELECT 1 FROM {$this->_tabela} WHERE cod_turma = '{$this->cod_turma}' AND turma.ano = ( SELECT ano FROM pmieducar.escola_ano_letivo enl WHERE enl.ref_cod_escola = turma.ref_ref_cod_escola AND andamento = 1)" );
+			$db->ProximoRegistro();
+			return $db->Tupla();
+		}
+		return false;
+	}
 }
 ?>

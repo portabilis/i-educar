@@ -71,6 +71,7 @@ class TurmaController extends ApiCoreController
       $escolaId      = $this->getRequest()->escola_id;
       $serieId       = $this->getRequest()->serie_id;
       $ano           = $this->getRequest()->ano;
+      $anoEmAndamento = $this->getRequest()->ano_em_andamento;
 
       $isProfessor   = Portabilis_Business_Professor::isProfessor($instituicaoId, $userId);
 
@@ -95,6 +96,17 @@ class TurmaController extends ApiCoreController
           $turma            = $turma->detalhe();
 
           if ($turma['ano'] != $ano)
+            unset($turmas[$index]);
+        }
+      }
+
+      if ($anoEmAndamento == 1) {
+        foreach ($turmas as $index => $t) {
+          $turma            = new clsPmieducarTurma();
+          $turma->cod_turma = $t['id'];
+          $turma            = $turma->checaAnoLetivoEmAndamento();
+
+          if (!$turma)
             unset($turmas[$index]);
         }
       }

@@ -9,7 +9,8 @@
     var $turmaField = getElementFor('turma');
     var $ano        = getElementFor('ano');
 
-    var $naoFiltrarAno        = getElementFor('nao_filtrar_ano') || null;
+    var $naoFiltrarAno = $j('#nao_filtrar_ano').length > 0 ? 1 : false;
+    var anoEmAndamento = $j('#ano_em_andamento').length > 0 ? 1 : false;
 
     var handleGetTurmas = function(response) {
       var selectOptions = jsonResourcesToSelectOptions(response['options']);
@@ -27,7 +28,8 @@
           escola_id      : $escolaField.val(),
           serie_id       : $serieField.val(),
           ano            : $naoFiltrarAno ? null : $ano.val(),
-          nao_filtrar_ano  :  $naoFiltrarAno ? 1 : null
+          nao_filtrar_ano  :  $naoFiltrarAno ? 1 : null,
+          ano_em_andamento :  anoEmAndamento ? 1 : null
         });
 
         var options = {
