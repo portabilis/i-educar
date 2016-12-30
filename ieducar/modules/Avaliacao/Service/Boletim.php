@@ -1544,9 +1544,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
     $matricula = $this->getOption('matriculaData');
     $serie = App_Model_IedFinder::getSerie($matricula['ref_ref_cod_serie']);
+    $instituicao = App_Model_IedFinder::getInstituicao($matricula['ref_cod_instituicao']);
 
     $anoConcluinte = ($serie['concluinte'] == 2);
-    $reprovaAnoConcluinte = $this->getRegra()->reprovacaoAutomaticaAnoConcluinte;
+    $reprovaAnoConcluinte = $instituicao['reprova_dependencia_ano_concluinte'];
 
     $aprovaDependencia = !($reprovaAnoConcluinte && $anoConcluinte);
     $aprovaDependencia = ($aprovaDependencia && !dbBool($matricula['dependencia']));

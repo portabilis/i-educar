@@ -133,10 +133,6 @@ class EditController extends Core_Controller_Page_EditController
       'label'   => 'Quantidade de disciplinas dependência',
       'help'    => 'Preencha a quantidade de disciplinas permitidas para aprovação do aluno com dependência. Preencha com 0 caso não exista.'
     ),
-    'reprovacaoAutomaticaAnoConcluinte' => array(
-      'label' => 'Não permitir dependência em séries/anos concluintes',
-      'help'  => 'Caso marcado, o aluno que reprovar em algum componente em ano concluinte será automaticamente reprovado.'
-    ),
     'recuperacaoDescricao' => array(
       'label'  => 'Descrição do exame:',
       'help'   => 'Exemplo: Recuperação semestral I'
@@ -425,9 +421,6 @@ var tabela_arredondamento = new function() {
     $this->campoNumero('qtdDisciplinasDependencia', $this->_getLabel('qtdDisciplinasDependencia'), $this->getEntity()->qtdDisciplinasDependencia,
       3, 3, TRUE, $this->_getHelp('qtdDisciplinasDependencia'));
 
-    $this->campoCheck('reprovacaoAutomaticaAnoConcluinte', $this->_getLabel('reprovacaoAutomaticaAnoConcluinte'),
-      $this->getEntity()->reprovacaoAutomaticaAnoConcluinte, '', FALSE, FALSE, FALSE, $this->_getHelp('reprovacaoAutomaticaAnoConcluinte'));
-
     $this->campoCheck('reprovacaoAutomatica', $this->_getLabel('reprovacaoAutomatica'),
         $this->getEntity()->reprovacaoAutomatica, '', FALSE, FALSE, FALSE, $this->_getHelp('reprovacaoAutomatica'));
 
@@ -541,11 +534,6 @@ var tabela_arredondamento = new function() {
     //fixup for checkbox
     if(!isset($data['definirComponentePorEtapa'])){
       $data['definirComponentePorEtapa'] = '0';
-    }
-
-    //fixup for checkbox
-    if(!isset($data['reprovacaoAutomaticaAnoConcluinte'])){
-      $data['reprovacaoAutomaticaAnoConcluinte'] = '0';
     }
 
     //fixup for checkbox
