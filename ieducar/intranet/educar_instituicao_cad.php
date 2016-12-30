@@ -80,13 +80,14 @@ class indice extends clsCadastro
 	var $matricula_apenas_bairro_escola;
 	var $restringir_historico_escolar;
 	var $restringir_multiplas_enturmacoes;
-  var $permissao_filtro_abandono_transferencia;
+  	var $permissao_filtro_abandono_transferencia;
 	var $multiplas_reserva_vaga;
-  var $reserva_integral_somente_com_renda;
-  var $data_base_matricula;
+  	var $reserva_integral_somente_com_renda;
+  	var $data_base_matricula;
 	var $data_expiracao_reserva_vaga;
 	var $data_fechamento;
 	var $componente_curricular_turma;
+	var $reprova_dependencia_ano_concluinte;
 
 	function Inicializar()
 	{
@@ -136,6 +137,7 @@ class indice extends clsCadastro
         $this->permissao_filtro_abandono_transferencia  = dbBool($this->permissao_filtro_abandono_transferencia);
         $this->multiplas_reserva_vaga = dbBool($this->multiplas_reserva_vaga);
         $this->componente_curricular_turma = dbBool($this->componente_curricular_turma);
+        $this->reprova_dependencia_ano_concluinte = dbBool($this->reprova_dependencia_ano_concluinte);
         $this->reserva_integral_somente_com_renda	= dbBool($this->reserva_integral_somente_com_renda);
 
 		return $retorno;
@@ -243,6 +245,15 @@ class indice extends clsCadastro
     			      "Permitir definir componentes curriculares diferenciados nas turmas",
     			      $this->componente_curricular_turma);
 
+    $this->campoCheck("reprova_dependencia_ano_concluinte",
+    			      "Não permitir dependência em séries/anos concluintes",
+    			      $this->reprova_dependencia_ano_concluinte,
+    			      null,
+    			      false,
+    			      false,
+    			      false,
+    			      "Caso marcado, o aluno que reprovar em algum componente em ano concluinte será automaticamente reprovado.");
+
     	$this->inputsHelper()->text('data_base', array('label' => 'Data base para matrícula (dia/mês)',
 					    								'size' => 5,
 					    								'max_length' => 5,
@@ -277,6 +288,7 @@ class indice extends clsCadastro
     $obj->permissao_filtro_abandono_transferencia  = !is_null($this->permissao_filtro_abandono_transferencia);
     $obj->multiplas_reserva_vaga  = !is_null($this->multiplas_reserva_vaga);
     	$obj->componente_curricular_turma  = !is_null($this->componente_curricular_turma);
+    	$obj->reprova_dependencia_ano_concluinte  = !is_null($this->reprova_dependencia_ano_concluinte);
 		$obj->reserva_integral_somente_com_renda  = !is_null($this->reserva_integral_somente_com_renda);
 		$obj->coordenador_transporte 			= $this->pessoa_coordenador_transporte;
 		$obj->controlar_espaco_utilizacao_aluno = is_null($this->controlar_espaco_utilizacao_aluno) ? 0 : 1;
@@ -316,7 +328,8 @@ class indice extends clsCadastro
     $obj->permissao_filtro_abandono_transferencia   = !is_null($this->permissao_filtro_abandono_transferencia);
     $obj->multiplas_reserva_vaga  = !is_null($this->multiplas_reserva_vaga);
     	$obj->componente_curricular_turma  = !is_null($this->componente_curricular_turma);
-		$obj->reserva_integral_somente_com_renda 	= !is_null($this->reserva_integral_somente_com_renda);
+    	$obj->reprova_dependencia_ano_concluinte = !is_null($this->reprova_dependencia_ano_concluinte);
+		$obj->reserva_integral_somente_com_renda = !is_null($this->reserva_integral_somente_com_renda);
 		$obj->coordenador_transporte 			= $this->pessoa_coordenador_transporte;
 		$obj->controlar_espaco_utilizacao_aluno = is_null($this->controlar_espaco_utilizacao_aluno) ? 0 : 1;
 		$obj->percentagem_maxima_ocupacao_salas = Portabilis_Currency_Utils::moedaBrToUs($this->percentagem_maxima_ocupacao_salas);

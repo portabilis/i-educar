@@ -141,6 +141,31 @@ class App_Model_IedFinder extends CoreExt_Entity
     return $cursos;
   }
 
+  /**
+   * Retorna um array com as informações da instituição a partir de seu código.
+   *
+   * @param int $codInstituicao
+   * @return array
+   * @throws App_Model_Exception
+   */
+  public static function getInstituicao($codInstituicao)
+  {
+    // Recupera clsPmieducarInstituicao do storage de classe estático
+    $instituicao = self::addClassToStorage('clsPmieducarInstituicao', NULL,
+      'include/pmieducar/clsPmieducarInstituicao.inc.php');
+
+    // Usa o atributo público para depois chamar o método detalhe()
+    $instituicao->cod_instituicao = $codInstituicao;
+    $instituicao = $instituicao->detalhe();
+
+    if (FALSE === $instituicao) {
+      throw new App_Model_Exception(
+        sprintf('Série com o código "%d" não existe.', $codInstituicao)
+      );
+    }
+
+    return $instituicao;
+  }
 
   /**
    * Retorna um array com as informações da série a partir de seu código.

@@ -263,10 +263,15 @@ class indice extends clsCadastro
       return FALSE;
     }
   }
+
   function Novo()
   {
-
     $dependencia = $this->dependencia == 'on';
+
+    if ($dependencia && !$this->permiteDependenciaAnoConcluinte()) {
+      $this->mensagem = Portabilis_String_Utils::toLatin1("Não é possível cadastrar uma matrícula de dependência no ano/série em que o aluno concluirá o curso.");
+      return false;
+    }
 
     $db = new clsBanco();
     $somente_do_bairro = $db->CampoUnico("SELECT matricula_apenas_bairro_escola FROM pmieducar.instituicao where cod_instituicao = {$this->ref_cod_instituicao}");
@@ -707,6 +712,19 @@ class indice extends clsCadastro
       $this->mensagem = Portabilis_String_Utils::toLatin1('O ano (letivo) selecionado não está em andamento na escola selecionada.<br />');
       return FALSE;
     }
+  }
+
+  function permiteDependenciaAnoConcluinte() {
+
+    $instituicao = new clsPmiEducarInstituicao($this->ref_cod_instituicao);
+    $instituicao = $instituicao->detalhe();
+    $serie = new clsPmieducarSerie($this->ref_cod_serie);
+    $serie = $serie->detalhe();
+
+    $reprovaDependenciaAnoConcluinte = $instituicao['reprova_dependencia_ano_concluinte'];
+    $anoConcluinte = $serie['concluinte'] == 2;
+
+    return !(dbBool($reprovaDependenciaAnoConcluinte) && $anoConcluinte);
   }
 
   function verificaSolicitacaoTransferencia() {
