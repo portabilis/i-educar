@@ -414,7 +414,9 @@ function postParecer($parecerFieldElement) {
   var data = {
     matricula_id             : $parecerFieldElement.data('matricula_id'),
     componente_curricular_id : $parecerFieldElement.data('componente_curricular_id'),
-    etapa : getEtapaParecer(),
+    etapa                    : getEtapaParecer(),
+    ano_escolar              : $j('#ano').val(),
+    escola_id                : $j('#ref_cod_escola').val(),
     oper: "post",
     resource: "parecer",
     att_value : $parecerFieldElement.val()

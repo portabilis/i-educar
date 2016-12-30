@@ -533,7 +533,8 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                                   $this->getRequest()->grade_curso_id,
                                   NULL,
                                   $dadosMatricula['escola_id'],
-                                  $this->getRequest()->dependencia
+                                  $this->getRequest()->dependencia,
+                                  $this->getRequest()->posicao
                                 );
 
           $historicoEscolar->cadastra();
@@ -572,7 +573,11 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                                   utf8_decode($this->getRequest()->livro),
                                   utf8_decode($this->getRequest()->folha),
                                   $dadosMatricula['nome_curso'],
-                                  $this->getRequest()->grade_curso_id
+                                  $this->getRequest()->grade_curso_id,
+                                  NULL,
+                                  $dadosMatricula['escola_id'],
+                                  $this->getRequest()->dependencia,
+                                  $this->getRequest()->posicao
                                 );
 
           $historicoEscolar->edita();
@@ -908,11 +913,12 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
       if (! is_array($alunos))
         $alunos = array();
 
-      $situacoesMatricula = array('aprovado' => App_Model_MatriculaSituacao::APROVADO,
-                         'reprovado' => App_Model_MatriculaSituacao::REPROVADO,
-                         'em-andamento' => App_Model_MatriculaSituacao::EM_ANDAMENTO,
-                         'aprovado-conselho' => App_Model_MatriculaSituacao::APROVADO_PELO_CONSELHO,
-                         'aprovado-dependencia' => App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA
+      $situacoesMatricula = array('aprovado'             => App_Model_MatriculaSituacao::APROVADO,
+                                  'reprovado'            => App_Model_MatriculaSituacao::REPROVADO,
+                                  'reprovado-faltas'     => App_Model_MatriculaSituacao::REPROVADO_POR_FALTAS,
+                                  'em-andamento'         => App_Model_MatriculaSituacao::EM_ANDAMENTO,
+                                  'aprovado-conselho'    => App_Model_MatriculaSituacao::APROVADO_PELO_CONSELHO,
+                                  'aprovado-dependencia' => App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA
                    );
 
       foreach($alunos as $aluno)

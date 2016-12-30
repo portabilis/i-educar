@@ -77,6 +77,7 @@ class indice extends clsCadastro
 	var $percentagem_maxima_ocupacao_salas;
 	var $quantidade_alunos_metro_quadrado;
 	var $gerar_historico_transferencia;
+	var $controlar_posicao_historicos;
 	var $matricula_apenas_bairro_escola;
 	var $restringir_historico_escolar;
 	var $restringir_multiplas_enturmacoes;
@@ -130,6 +131,7 @@ class indice extends clsCadastro
         $this->enviaLocalizacao($localizacao->montar());
 
         $this->gerar_historico_transferencia 	= dbBool($this->gerar_historico_transferencia);
+        $this->controlar_posicao_historicos     = dbBool($this->controlar_posicao_historicos);
         $this->matricula_apenas_bairro_escola 	= dbBool($this->matricula_apenas_bairro_escola);
         $this->restringir_historico_escolar   	= dbBool($this->restringir_historico_escolar);
         $this->restringir_multiplas_enturmacoes	= dbBool($this->restringir_multiplas_enturmacoes);
@@ -220,6 +222,8 @@ class indice extends clsCadastro
 
 	    $this->campoCheck("gerar_historico_transferencia", "Gerar histórico de transferência ao transferir matrícula?", $this->gerar_historico_transferencia);
 
+	    $this->campoCheck("controlar_posicao_historicos", "Permitir controlar posicionamento dos históricos em seu respectivo documento", $this->controlar_posicao_historicos);
+
 	    $this->campoCheck("matricula_apenas_bairro_escola", "Permitir matrícula de alunos apenas do bairro da escola?", $this->matricula_apenas_bairro_escola);
 
 		$this->campoCheck("restringir_historico_escolar", "Restringir modificações de históricos escolares?", $this->restringir_historico_escolar, NULL, false, false, false, 'Com esta opção selecionada, somente será possível cadastrar/editar históricos escolares de alunos que pertençam a mesma escola do funcionário.' );
@@ -271,6 +275,7 @@ class indice extends clsCadastro
 		$obj->data_expiracao_reserva_vaga 			= Portabilis_Date_Utils::brToPgSQL($this->data_expiracao_reserva_vaga);
 		$obj->exigir_vinculo_turma_professor	= is_null($this->exigir_vinculo_turma_professor) ? 0 : 1;
 		$obj->gerar_historico_transferencia 	= !is_null($this->gerar_historico_transferencia);
+		$obj->controlar_posicao_historicos      = !is_null($this->controlar_posicao_historicos);
 		$obj->matricula_apenas_bairro_escola 	= !is_null($this->matricula_apenas_bairro_escola);
 		$obj->restringir_historico_escolar 		= !is_null($this->restringir_historico_escolar);
 		$obj->restringir_multiplas_enturmacoes  = !is_null($this->restringir_multiplas_enturmacoes);
@@ -310,6 +315,7 @@ class indice extends clsCadastro
 		$obj->data_expiracao_reserva_vaga 			= Portabilis_Date_Utils::brToPgSQL($this->data_expiracao_reserva_vaga);
 		$obj->exigir_vinculo_turma_professor 	= is_null($this->exigir_vinculo_turma_professor) ? 0 : 1;
 		$obj->gerar_historico_transferencia 	= !is_null($this->gerar_historico_transferencia);
+		$obj->controlar_posicao_historicos      = !is_null($this->controlar_posicao_historicos);
 		$obj->matricula_apenas_bairro_escola 	= !is_null($this->matricula_apenas_bairro_escola);
 		$obj->restringir_historico_escolar 		= !is_null($this->restringir_historico_escolar);
 		$obj->restringir_multiplas_enturmacoes 	= !is_null($this->restringir_multiplas_enturmacoes);
