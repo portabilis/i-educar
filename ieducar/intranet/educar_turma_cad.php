@@ -925,7 +925,7 @@ class indice extends clsCadastro
         FALSE,
         FALSE,
         $disableDefinirComponente,
-        Portabilis_String_Utils::toLatin1('Está opção poderá ser utilizada, somente se no cadastro da instituição o parâmetro de permissão esteja habilitado'));
+        Portabilis_String_Utils::toLatin1('Está opção poderá ser utilizada, somente se no cadastro da instituição o parâmetro de permissão estiver habilitado'));
 
       $this->escola_serie_disciplina = array();
 
