@@ -1249,6 +1249,22 @@ function lista_transferidos($int_cod_matricula = NULL,
     }
     return false;
   }
+
+  function cadastraObservacaoFalecido($observacao){
+    if (is_numeric($this->cod_matricula)){
+      if (trim($observacao)=='')
+      $obs = "Não informado";
+      $db  = new clsBanco();
+      $sql = "UPDATE {$this->_tabela}
+                      SET aprovado = 15,
+                          observacao = '$observacao'
+                    WHERE cod_matricula = $this->cod_matricula";
+      $db->Consulta($sql);
+      return true;
+    }
+    return false;
+  }
+
   function aprova_matricula_andamento_curso_sem_avaliacao()
   {
     if (is_numeric($this->ref_ref_cod_escola)) {
