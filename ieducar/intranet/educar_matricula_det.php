@@ -202,41 +202,8 @@ class indice extends clsDetalhe
 
     $campoObs = false;
 
-    if ($registro['aprovado']) {
-      if ($registro['aprovado'] == 1) {
-        $aprovado = 'Aprovado';
-      }
-      elseif ($registro['aprovado'] == 2) {
-        $aprovado = 'Reprovado';
-      }
-      elseif ($registro['aprovado'] == 3) {
-        $aprovado = 'Cursando';
-      }
-      elseif ($registro['aprovado'] == 4) {
-        $aprovado = 'Transferido';
-      }
-      elseif ($registro['aprovado'] == 5) {
-        $aprovado = 'Reclassificado';
-      }
-      elseif ($registro['aprovado'] == 6) {
-        $aprovado = 'Abandono';
-        $campoObs = true;
-      }
-      elseif ($registro['aprovado'] == 7) {
-        $aprovado = 'Em Exame';
-      }
-      elseif ($registro['aprovado'] == 12) {
-        $aprovado = 'Aprovado com depend&ecirc;ncia';
-      }
-      elseif ($registro['aprovado'] == 13) {
-        $aprovado = 'Aprovado pelo conselho';
-      }
-      elseif ($registro['aprovado'] == 14) {
-        $aprovado = 'Reprovado por faltas';
-      }
-
-      $this->addDetalhe(array('Situação', $aprovado));
-    }
+    $situacao = App_Model_MatriculaSituacao::getSituacao($registro['aprovado']);
+    $this->addDetalhe(array('Situação', $situacao));
 
     if($registro[aprovado] == 4){
       $obj_transferencia = new clsPmieducarTransferenciaSolicitacao();
@@ -323,6 +290,9 @@ class indice extends clsDetalhe
 
         $this->array_botao[]            = 'Abandono';
         $this->array_botao_url_script[] = "go(\"educar_abandono_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\");";
+
+        $this->array_botao[]            = 'Falecido';
+        $this->array_botao_url_script[] = "go(\"educar_falecido_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\");";
 
         if ($registro['ref_ref_cod_serie']) {
           $this->array_botao[]            = 'Reclassificar';
