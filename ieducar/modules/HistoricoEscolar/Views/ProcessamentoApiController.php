@@ -533,7 +533,8 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                                   $this->getRequest()->grade_curso_id,
                                   NULL,
                                   $dadosMatricula['escola_id'],
-                                  $this->getRequest()->dependencia
+                                  $this->getRequest()->dependencia,
+                                  $this->getRequest()->posicao
                                 );
 
           $historicoEscolar->cadastra();
@@ -572,7 +573,11 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                                   utf8_decode($this->getRequest()->livro),
                                   utf8_decode($this->getRequest()->folha),
                                   $dadosMatricula['nome_curso'],
-                                  $this->getRequest()->grade_curso_id
+                                  $this->getRequest()->grade_curso_id,
+                                  NULL,
+                                  $dadosMatricula['escola_id'],
+                                  $this->getRequest()->dependencia,
+                                  $this->getRequest()->posicao
                                 );
 
           $historicoEscolar->edita();
@@ -601,7 +606,8 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                               $fields['historicoSequencial'],
                               $fields['nome'],
                               $fields['nota'],
-                              $fields['falta']
+                              $fields['falta'],
+                              $fields['ordenamento']
                           );
     $historicoDisciplina->cadastra();
   }
@@ -625,6 +631,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
       {
         $ccId = $componenteCurricular->get('id');
         $nome = $componenteCurricular->nome;
+        $ordenamento = $componenteCurricular->ordenamento;
         $sequencial = $this->getNextHistoricoDisciplinasSequencial($historicoSequencial, $alunoId);
         $nota = '';
         $notaConceitualNumerica = '';
@@ -657,6 +664,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
           $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['nota'] += $nota;
           $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['nota_conceitual_numerica'] += $notaConceitualNumerica;
           $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['falta'] += $this->getFalta($situacaoFaltasCc[$ccId]);
+          $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['ordenamento'] = $componenteCurricular->area_conhecimento->ordenamento;
           $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['count']++;
         }else
           $this->_createHistoricoDisciplinas(array(
@@ -665,7 +673,8 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
             "historicoSequencial" => $historicoSequencial,
             "nome" => $nome,
             "nota" => $nota,
-            "falta" => $this->getFalta($situacaoFaltasCc[$ccId])
+            "falta" => $this->getFalta($situacaoFaltasCc[$ccId]),
+            "ordenamento" => $ordenamento
           ));
       }
       if ($mediaAreaConhecimento){
@@ -686,7 +695,8 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
             "historicoSequencial" => $historicoSequencial,
             "nome" => $value['nome'],
             "nota" => $nota,
-            "falta" => round($value['falta']/$value['count'])
+            "falta" => round($value['falta']/$value['count']),
+            "ordenamento" => $value['ordenamento']
           ));
         }
       }
@@ -704,7 +714,8 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
           "historicoSequencial" => $historicoSequencial,
           "nome" => utf8_decode($disciplina['nome']),
           "nota" => utf8_decode($disciplina['nota']),
-          "falta" => $falta = $disciplina['falta']
+          "falta" => $falta = $disciplina['falta'],
+          "ordenamento" => $value['ordenamento']
         ));
       }
     }

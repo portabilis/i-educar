@@ -40,6 +40,7 @@ class clsPmieducarHistoricoDisciplinas
 	var $nm_disciplina;
 	var $nota;
 	var $faltas;
+	var $ordenamento;
 
 	// propriedades padrao
 
@@ -105,13 +106,13 @@ class clsPmieducarHistoricoDisciplinas
 	 *
 	 * @return object
 	 */
-	function clsPmieducarHistoricoDisciplinas( $sequencial = null, $ref_ref_cod_aluno = null, $ref_sequencial = null, $nm_disciplina = null, $nota = null, $faltas = null )
+	function clsPmieducarHistoricoDisciplinas( $sequencial = null, $ref_ref_cod_aluno = null, $ref_sequencial = null, $nm_disciplina = null, $nota = null, $faltas = null, $ordenamento = null )
 	{
 		$db = new clsBanco();
 		$this->_schema = "pmieducar.";
 		$this->_tabela = "{$this->_schema}historico_disciplinas";
 
-		$this->_campos_lista = $this->_todos_campos = "sequencial, ref_ref_cod_aluno, ref_sequencial, nm_disciplina, nota, faltas";
+		$this->_campos_lista = $this->_todos_campos = "sequencial, ref_ref_cod_aluno, ref_sequencial, nm_disciplina, nota, faltas, ordenamento";
 
 		if( is_numeric( $ref_ref_cod_aluno ) && is_numeric( $ref_sequencial ) )
 		{
@@ -161,6 +162,10 @@ class clsPmieducarHistoricoDisciplinas
 		if( is_numeric( $faltas ) )
 		{
 			$this->faltas = $faltas;
+		}
+		if( is_numeric( $ordenamento ) )
+		{
+			$this->ordenamento = $ordenamento;
 		}
 
 	}
@@ -216,6 +221,12 @@ class clsPmieducarHistoricoDisciplinas
 				$valores .= "{$gruda}'{$this->faltas}'";
 				$gruda = ", ";
 			}
+			if( is_numeric( $this->ordenamento ) )
+			{
+				$campos .= "{$gruda}ordenamento";
+				$valores .= "{$gruda}'{$this->ordenamento}'";
+				$gruda = ", ";
+			}
 
 			$sequencial = $db->campoUnico("SELECT COALESCE( MAX(sequencial), 0 ) + 1 FROM {$this->_tabela} WHERE ref_ref_cod_aluno = {$this->ref_ref_cod_aluno} AND ref_sequencial = {$this->ref_sequencial}" );
 
@@ -255,6 +266,11 @@ class clsPmieducarHistoricoDisciplinas
 				$set .= "{$gruda}faltas = '{$this->faltas}'";
 				$gruda = ", ";
 			}
+			if( is_numeric( $this->ordenamento ) )
+			{
+				$set .= "{$gruda}ordenamento = '{$this->ordenamento}'";
+				$gruda = ", ";
+			}
 
 
 			if( $set )
@@ -271,7 +287,7 @@ class clsPmieducarHistoricoDisciplinas
 	 *
 	 * @return array
 	 */
-	function lista( $int_sequencial = null, $int_ref_ref_cod_aluno = null, $int_ref_sequencial = null, $str_nm_disciplina = null, $str_nota = null, $int_faltas = null )
+	function lista( $int_sequencial = null, $int_ref_ref_cod_aluno = null, $int_ref_sequencial = null, $str_nm_disciplina = null, $str_nota = null, $int_faltas = null, $int_ordenamento = null )
 	{
 		$sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
 		$filtros = "";
@@ -308,7 +324,11 @@ class clsPmieducarHistoricoDisciplinas
 			$filtros .= "{$whereAnd} faltas = '{$int_faltas}'";
 			$whereAnd = " AND ";
 		}
-
+		if( is_numeric( $int_ordenamento ) )
+		{
+			$filtros .= "{$whereAnd} ordenamento = '{$int_ordenamento}'";
+			$whereAnd = " AND ";
+		}
 
 		$db = new clsBanco();
 		$countCampos = count( explode( ",", $this->_campos_lista ) );
@@ -483,7 +503,7 @@ class clsPmieducarHistoricoDisciplinas
 	}
 
 	/**
-	 * Retorna a string com o trecho da query resposavel pela Ordenacao dos registros
+	 * Retorna a string com o trecho da query resposavel pela ordenacao dos registros
 	 *
 	 * @return string
 	 */

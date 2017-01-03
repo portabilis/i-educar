@@ -67,6 +67,7 @@ class indice extends clsCadastro
 	var $data_cadastro;
 	var $data_exclusao;
 	var $ativo;
+	var $posicao;
 
 	var $ref_cod_instituicao;
 	var $nm_serie;
@@ -83,6 +84,7 @@ class indice extends clsCadastro
 	var $nm_disciplina;
 	var $nota;
 	var $faltas;
+	var $ordenamento;
 	var $excluir_disciplina;
 	var $ultimo_sequencial;
 
@@ -259,6 +261,9 @@ class indice extends clsCadastro
 
 		$this->campoTexto( "nm_serie", $GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu' ? "Ano/S&eacute;rie" : "S&eacute;rie", $this->nm_serie, 30, 255, true );
 		$this->campoNumero( "ano", "Ano", $this->ano, 4, 4, true );
+		if (validaControlePosicaoHistorico()) {			
+			$this->campoNumero( "posicao", "Posição", $this->posicao, 1, 1, true );
+		}
 		$this->campoMonetario( "carga_horaria", "Carga Hor&aacute;ria", $this->carga_horaria, 8, 8, false);
 		$this->campoCheck( "cb_faltas_globalizadas", "Faltas Globalizadas", is_numeric($this->faltas_globalizadas) ? 'on' : '');
 		$this->campoNumero( "faltas_globalizadas", "Faltas Globalizadas", $this->faltas_globalizadas, 4, 4, false );
@@ -307,19 +312,21 @@ class indice extends clsCadastro
 					$this->historico_disciplinas[$qtd_disciplinas][] = $campo["nm_disciplina"];
 					$this->historico_disciplinas[$qtd_disciplinas][] = $campo["nota"];
 					$this->historico_disciplinas[$qtd_disciplinas][] = $campo["faltas"];
+					$this->historico_disciplinas[$qtd_disciplinas][] = $campo["ordenamento"];
 					$this->historico_disciplinas[$qtd_disciplinas][] = $campo["sequencial"];
 					$qtd_disciplinas++;
 				}
 			}
 		}
 
-		$this->campoTabelaInicio("notas","Notas",array("Disciplina","Nota","Faltas"),$this->historico_disciplinas);
+		$this->campoTabelaInicio("notas","Notas",array("Disciplina","Nota","Faltas", "Ordem"),$this->historico_disciplinas);
 
 		//$this->campoTexto( "nm_disciplina", "Disciplina", $this->nm_disciplina, 30, 255, false, false, false, '', '', 'autoCompleteComponentesCurricular(this)', 'onfocus' );
 		$this->campoTexto( "nm_disciplina", "Disciplina", $this->nm_disciplina, 30, 255, false, false, false, '', '', '', 'onfocus' );
 
 		$this->campoTexto( "nota", "Nota", $this->nota, 10, 255, false );
 		$this->campoNumero( "faltas", "Faltas", $this->faltas, 3, 3, false );
+		$this->campoNumero( "ordenamento", "ordenamento", $this->ordenamento, 3, 3, false );
 		//$this->campoOculto("sequencial","");
 
 		$this->campoTabelaFim();
@@ -364,7 +371,7 @@ class indice extends clsCadastro
 
 			$this->extra_curricular = is_null($this->extra_curricular) ? 0 : 1;
 
-			$obj = new clsPmieducarHistoricoEscolar( $this->ref_cod_aluno, null, null, $this->pessoa_logada, $this->nm_serie, $this->ano, $this->carga_horaria, $this->dias_letivos, $this->escola, $this->escola_cidade, $this->escola_uf, $this->observacao, $this->aprovado, null, null, 1, $this->faltas_globalizadas, $this->ref_cod_instituicao, 1, $this->extra_curricular, null, $this->frequencia, $this->registro, $this->livro, $this->folha, $this->nm_curso, $this->historico_grade_curso_id, $this->aceleracao, $this->ref_cod_escola, !is_null($this->dependencia));
+			$obj = new clsPmieducarHistoricoEscolar( $this->ref_cod_aluno, null, null, $this->pessoa_logada, $this->nm_serie, $this->ano, $this->carga_horaria, $this->dias_letivos, $this->escola, $this->escola_cidade, $this->escola_uf, $this->observacao, $this->aprovado, null, null, 1, $this->faltas_globalizadas, $this->ref_cod_instituicao, 1, $this->extra_curricular, null, $this->frequencia, $this->registro, $this->livro, $this->folha, $this->nm_curso, $this->historico_grade_curso_id, $this->aceleracao, $this->ref_cod_escola, !is_null($this->dependencia), $this->posicao);
 			$cadastrou = $obj->cadastra();
 			if( $cadastrou )
 			{
@@ -378,7 +385,7 @@ class indice extends clsCadastro
 						$obj_historico = new clsPmieducarHistoricoEscolar();
 						$this->sequencial = $obj_historico->getMaxSequencial( $this->ref_cod_aluno );
 
-						$obj = new clsPmieducarHistoricoDisciplinas( $sequencial, $this->ref_cod_aluno, $this->sequencial, $disciplina, $this->nota[$key], $this->faltas[$key] );
+						$obj = new clsPmieducarHistoricoDisciplinas( $sequencial, $this->ref_cod_aluno, $this->sequencial, $disciplina, $this->nota[$key], $this->faltas[$key], $this->ordenamento[$key] );
 						$cadastrou1 = $obj->cadastra();
 						if( !$cadastrou1 )
 						{
@@ -431,7 +438,7 @@ class indice extends clsCadastro
 			$this->aceleracao = is_null($this->aceleracao) ? 0 : 1;
 			$this->extra_curricular = is_null($this->extra_curricular) ? 0 : 1;
 
-			$obj = new clsPmieducarHistoricoEscolar( $this->ref_cod_aluno, $this->sequencial, $this->pessoa_logada, null, $this->nm_serie, $this->ano, $this->carga_horaria, $this->dias_letivos, $this->escola, $this->escola_cidade, $this->escola_uf, $this->observacao, $this->aprovado, null, null, 1, $this->faltas_globalizadas, $this->ref_cod_instituicao, 1, $this->extra_curricular, null, $this->frequencia, $this->registro, $this->livro, $this->folha, $this->nm_curso, $this->historico_grade_curso_id, $this->aceleracao, $this->ref_cod_escola, !is_null($this->dependencia));
+			$obj = new clsPmieducarHistoricoEscolar( $this->ref_cod_aluno, $this->sequencial, $this->pessoa_logada, null, $this->nm_serie, $this->ano, $this->carga_horaria, $this->dias_letivos, $this->escola, $this->escola_cidade, $this->escola_uf, $this->observacao, $this->aprovado, null, null, 1, $this->faltas_globalizadas, $this->ref_cod_instituicao, 1, $this->extra_curricular, null, $this->frequencia, $this->registro, $this->livro, $this->folha, $this->nm_curso, $this->historico_grade_curso_id, $this->aceleracao, $this->ref_cod_escola, !is_null($this->dependencia), $this->posicao);
 			$editou = $obj->edita();
 
 			if( $editou )
@@ -451,7 +458,7 @@ class indice extends clsCadastro
 							//$campo['nm_disciplina_'] = urldecode($campo['nm_disciplina_']);
 
 
-							$obj = new clsPmieducarHistoricoDisciplinas( $sequencial, $this->ref_cod_aluno, $this->sequencial, $disciplina, $this->nota[$key], $this->faltas[$key] );
+							$obj = new clsPmieducarHistoricoDisciplinas( $sequencial, $this->ref_cod_aluno, $this->sequencial, $disciplina, $this->nota[$key], $this->faltas[$key], $this->ordenamento[$key] );
 							$cadastrou1 = $obj->cadastra();
 							if( !$cadastrou1 )
 							{
@@ -534,6 +541,14 @@ function getOpcoesGradeCurso(){
 
 		return $opcoes;
 	}
+
+  function validaControlePosicaoHistorico(){
+    $obj = new clsPmieducarInstituicao;
+    //Busca instituicao ativa
+    $lst = $obj->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
+
+    return dbBool($lst[0]['controlar_posicao_historicos']);
+  }
 
 // cria uma extensao da classe base
 $pagina = new clsIndexBase();
