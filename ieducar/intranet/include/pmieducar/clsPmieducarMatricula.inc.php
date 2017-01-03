@@ -1252,17 +1252,34 @@ function lista_transferidos($int_cod_matricula = NULL,
 
   function cadastraObservacaoFalecido($observacao){
     if (is_numeric($this->cod_matricula)){
-      if (trim($observacao)=='')
-      $obs = "Não informado";
+      if (trim($observacao)=='') $obs = "Não informado";
+
       $db  = new clsBanco();
       $sql = "UPDATE {$this->_tabela}
-                      SET aprovado = 15,
-                          observacao = '$observacao'
-                    WHERE cod_matricula = $this->cod_matricula";
+                 SET aprovado = 15,
+                     observacao = '$observacao'
+               WHERE cod_matricula = $this->cod_matricula";
       $db->Consulta($sql);
+
+      $this->setPessoaFalecido();
       return true;
     }
     return false;
+  }
+
+  function setPessoaFalecido() {
+
+    if (!is_numeric($this->cod_matricula)) return false;
+
+    $matricula = new clsPmieducarMatricula($this->cod_matricula);
+    $matricula = $this->detalhe();
+
+    $aluno = new clsPmieducarAluno($matricula['ref_cod_aluno']);
+    $aluno = $aluno->detalhe();
+
+    $pessoaFisica = new clsFisica($aluno['ref_idpes']);
+    $pessoaFisica->falecido = true;
+    $pessoaFisica->edita();
   }
 
   function aprova_matricula_andamento_curso_sem_avaliacao()

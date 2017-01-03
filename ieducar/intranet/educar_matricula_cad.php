@@ -273,6 +273,11 @@ class indice extends clsCadastro
       return false;
     }
 
+    if ($this->verificaAlunoFalecido()) {
+      $this->mensagem = Portabilis_String_Utils::toLatin1("Não é possível matricular alunos falecidos.");
+      return false;
+    }
+
     $db = new clsBanco();
     $somente_do_bairro = $db->CampoUnico("SELECT matricula_apenas_bairro_escola FROM pmieducar.instituicao where cod_instituicao = {$this->ref_cod_instituicao}");
     if ($somente_do_bairro == 't'){
@@ -725,6 +730,19 @@ class indice extends clsCadastro
     $anoConcluinte = $serie['concluinte'] == 2;
 
     return !(dbBool($reprovaDependenciaAnoConcluinte) && $anoConcluinte);
+  }
+
+  function verificaAlunoFalecido() {
+
+    $aluno = new clsPmieducarAluno($this->ref_cod_aluno);
+    $aluno = $aluno->detalhe();
+
+    $pessoa = new clsPessoaFisica($aluno["ref_idpes"]);
+    $pessoa = $pessoa->detalhe();
+
+    $falecido = dbBool($pessoa['falecido']);
+
+    return $falecido;
   }
 
   function verificaSolicitacaoTransferencia() {
