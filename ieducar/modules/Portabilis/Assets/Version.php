@@ -4,12 +4,6 @@
    usado pelo metodos loadJavascript e loadStylesheet do helper Portabilis_View_Helper_Application */
 
 class Portabilis_Assets_Version {
-<<<<<<< HEAD
-  const VERSION = '244';
-=======
-
-  const VERSION = '245';
-
->>>>>>> task1779
+  const VERSION = '246';
 }
 ?>
