@@ -226,6 +226,10 @@ class indice extends clsDetalhe
       }
     }
 
+    if ($registro['aprovado'] == App_Model_MatriculaSituacao::FALECIDO) {
+      $this->addDetalhe(array('Observação',$registro['observacao']));
+    }
+
     if ($campoObs){
 
       $tipoAbandono = new clsPmieducarAbandonoTipo($registro['ref_cod_abandono_tipo']);
