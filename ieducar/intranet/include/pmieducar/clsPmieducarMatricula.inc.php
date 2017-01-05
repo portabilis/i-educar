@@ -1250,9 +1250,9 @@ function lista_transferidos($int_cod_matricula = NULL,
     return false;
   }
 
-  function cadastraObservacaoFalecido($observacao){
+  function cadastraObservacaoFalecido($observacao = null){
     if (is_numeric($this->cod_matricula)){
-      if (trim($observacao)=='') $obs = "Não informado";
+      if (trim($observacao)=='' || is_null($observacao)) $observacao = "Não informado";
 
       $db  = new clsBanco();
       $sql = "UPDATE {$this->_tabela}
