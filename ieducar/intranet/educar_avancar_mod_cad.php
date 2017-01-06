@@ -295,10 +295,10 @@ class indice extends clsCadastro
                                             WHERE cod_serie = $nextSerieId");
 
       if ($this->escolaSerieConfigurada($escolaId, $nextSerieId)){
-      	 return $this->matricularAluno($escolaId, $nextCursoId, $nextSerieId, $this->ano_letivo, $alunoId);
+         return $this->matricularAluno($escolaId, $nextCursoId, $nextSerieId, $this->ano_letivo, $alunoId);
       }
       else{
-      	$this->mensagem = "A série de destino não está configurada na escola. Favor efetuar o cadastro em Cadastro > Série > Escola-Série";
+        $this->mensagem = "A série de destino não está configurada na escola. Favor efetuar o cadastro em Cadastro > Série > Escola-Série";
       }
     }
     else{
@@ -331,15 +331,15 @@ class indice extends clsCadastro
 
   protected function escolaSerieConfigurada($escolaId, $serieId){
 
-  	$escolaSerie = new clsPmieducarEscolaSerie($escolaId, $serieId);
+    $escolaSerie = new clsPmieducarEscolaSerie($escolaId, $serieId);
 
-  	$escolaSerie = $escolaSerie->detalhe();
-  	if(count($escolaSerie) > 0){
-  		if($escolaSerie["ativo"] == '1'){
-  			return true;
-  		}
-  	}
-  	return false;
+    $escolaSerie = $escolaSerie->detalhe();
+    if(count($escolaSerie) > 0){
+      if($escolaSerie["ativo"] == '1'){
+        return true;
+      }
+    }
+    return false;
   }
 }
 
