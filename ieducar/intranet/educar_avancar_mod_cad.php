@@ -129,7 +129,7 @@ class indice extends clsCadastro
     $nomesAlunos;
     $nomesAlunosDepPendente;
 
-    if (count($alunosSemInep) == 0) {
+    if (count($alunosSemInep) == 0){
       while ($result && $this->db->ProximoRegistro()) {
         list($matriculaId, $alunoId, $situacao, $nomeAluno) = $this->db->Tupla();
 
