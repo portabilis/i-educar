@@ -612,7 +612,7 @@ ORDER BY order_componente,
          nm_disciplina;
 
 
-ALTER TABLE relatorio.view_dados_historico OWNER TO ieducar;
+ALTER TABLE relatorio.view_dados_historico_posicionamento OWNER TO ieducar;
             ");
     }
 
