@@ -122,57 +122,61 @@ class indice extends clsCadastro
 
 
   protected function rematricularAlunos($escolaId, $cursoId, $serieId, $turmaId, $ano) {
-    $result = $this->selectMatriculas($escolaId, $cursoId, $serieId, $turmaId, $this->ano_letivo);
-    $count = 0;
+    $result           = $this->selectMatriculas($escolaId, $cursoId, $serieId, $turmaId, $this->ano_letivo);
+    $alunosSemInep    = $this->getAlunosSemInep($escolaId, $cursoId, $serieId, $turmaId, $ano);
+    $count            = 0;
     $countDepPendente = 0;
     $nomesAlunos;
     $nomesAlunosDepPendente;
 
-    while ($result && $this->db->ProximoRegistro()) {
-      list($matriculaId, $alunoId, $situacao, $nomeAluno) = $this->db->Tupla();
+    if (count($alunosSemInep) == 0) {
+      while ($result && $this->db->ProximoRegistro()) {
+        list($matriculaId, $alunoId, $situacao, $nomeAluno) = $this->db->Tupla();
 
-      $this->db2->Consulta("UPDATE pmieducar.matricula SET ultima_matricula = '0' WHERE cod_matricula = $matriculaId");
+        $this->db2->Consulta("UPDATE pmieducar.matricula
+                                 SET ultima_matricula = '0'
+                               WHERE cod_matricula = $matriculaId");
 
-      $possuiDependenciaPendente = false;
+        $possuiDependenciaPendente = false;
 
-      $resultApDep = $this->db2->Consulta("SELECT ref_ref_cod_serie
-                            FROM pmieducar.matricula
-                            WHERE aprovado = 12
-                            AND ref_cod_aluno = '{$alunoId}'
-                            AND ano < '{$ano}'
-                            AND ativo = 1
-                            AND dependencia = FALSE
-      ");
+        $resultApDep = $this->db2->Consulta("SELECT ref_ref_cod_serie
+                                               FROM pmieducar.matricula
+                                              WHERE aprovado = 12
+                                                AND ref_cod_aluno = '{$alunoId}'
+                                                AND ano < '{$ano}'
+                                                AND ativo = 1
+                                                AND dependencia = FALSE");
 
-      while($resultApDep && $this->db2->ProximoRegistro()){
-        $regApDep = $this->db2->Tupla();
-        $serieApDep = $regApDep["ref_ref_cod_serie"];
-        $ap = $this->db3->UnicoCampo("SELECT 1
-                            FROM pmieducar.matricula
-                            WHERE aprovado = 1
-                            AND ref_cod_aluno = '{$alunoId}'
-                            AND ativo = 1
-                            AND ref_ref_cod_serie = '{$serieApDep}'
-                            AND dependencia = TRUE ");
+        while($resultApDep && $this->db2->ProximoRegistro()){
+          $regApDep = $this->db2->Tupla();
+          $serieApDep = $regApDep["ref_ref_cod_serie"];
+          $ap = $this->db3->UnicoCampo("SELECT 1
+                                          FROM pmieducar.matricula
+                                         WHERE aprovado = 1
+                                           AND ref_cod_aluno = '{$alunoId}'
+                                           AND ativo = 1
+                                           AND ref_ref_cod_serie = '{$serieApDep}'
+                                           AND dependencia = TRUE ");
 
-        $possuiDependenciaPendente = $possuiDependenciaPendente || !((bool)$ap);
+          $possuiDependenciaPendente = $possuiDependenciaPendente || !((bool)$ap);
+        }
+
+        if (!$possuiDependenciaPendente){
+          if ($result && $situacao == 1 || $situacao == 12)
+            $result = $this->rematricularAlunoAprovado($escolaId, $serieId, $this->ano_letivo, $alunoId);
+          elseif ($result && $situacao == 2)
+            $result = $this->rematricularAlunoReprovado($escolaId, $cursoId, $serieId, $this->ano_letivo, $alunoId);
+
+          $nomesAlunos[] = $nomeAluno;
+          $count += 1;
+        }else{
+          $nomesAlunosDepPendente[] = $nomeAluno;
+          $countDepPendente++;
+        }
+
+        if (! $result)
+          break;
       }
-
-      if (!$possuiDependenciaPendente){
-        if ($result && $situacao == 1 || $situacao == 12)
-          $result = $this->rematricularAlunoAprovado($escolaId, $serieId, $this->ano_letivo, $alunoId);
-        elseif ($result && $situacao == 2)
-          $result = $this->rematricularAlunoReprovado($escolaId, $cursoId, $serieId, $this->ano_letivo, $alunoId);
-
-        $nomesAlunos[] = $nomeAluno;
-        $count += 1;
-      }else{
-        $nomesAlunosDepPendente[] = $nomeAluno;
-        $countDepPendente++;
-      }
-
-      if (! $result)
-        break;
     }
 
     if ($result && empty($this->mensagem)){
@@ -192,6 +196,12 @@ class indice extends clsCadastro
           }
         }
         $this->mensagem = $mensagem;
+      }elseif (count($alunosSemInep) > 0) {
+        $this->mensagem .= "<span class='error'>Os seguinte(s) ".count($alunosSemInep)." aluno(s) não possuem INEP cadastrado: </br></br>";
+        foreach ($alunosSemInep as $nome) {
+          $this->mensagem .= "{$nome} </br>";
+        }
+        $this->mensagem .= "</br> Por favor, cadastre o INEP do(s) aluno(s) em: Cadastro > Aluno > Alunos.<span>";
       }else{
         $this->mensagem = "<span class='notice'>Nenhum aluno rematriculado. Certifique-se que a turma possui alunos aprovados ou reprovados não matriculados em ".($this->ano_letivo-1).".</span>";
       }
@@ -201,36 +211,65 @@ class indice extends clsCadastro
     return $result;
   }
 
+  protected function getAlunosSemInep($escolaId, $cursoId, $serieId, $turmaId, $ano){
+    //Pega todas as matriculas
+    $objMatricula = new clsPmieducarMatriculaTurma();
+    $anoAnterior = $this->ano_letivo  - 1;
+    $lstMatricula = $objMatricula->lista4($escolaId, $cursoId, $serieId, $turmaId, $ano);
+    //Verifica o parametro na série pra exigir inep
+    $objSerie = new clsPmieducarSerie($serieId);
+    $serieDet = $objSerie->detalhe();
+    $exigeInep = $serieDet['exigir_inep'] == "t";
+    //Retorna alunos sem inep
+    $alunosSemInep = array();
+    $objAluno = new clsPmieducarAluno();
+
+    foreach ($lstMatricula as $matricula) {
+      $alunoInep = $objAluno->verificaInep($matricula['ref_cod_aluno']);
+      if (!$alunoInep && $exigeInep) {
+        $alunosSemInep[] = $matricula['nome'];
+      }
+    }
+    return $alunosSemInep;
+  }
 
   protected function selectMatriculas($escolaId, $cursoId, $serieId, $turmaId, $ano) {
     try {
       $anoAnterior = $this->ano_letivo  - 1;
 
-      $sql = "SELECT cod_matricula, ref_cod_aluno, aprovado,
-                                      (SELECT upper(nome)
-                                            FROM cadastro.pessoa, pmieducar.aluno
-                                                WHERE pessoa.idpes = aluno.ref_idpes AND
-                                                          aluno.cod_aluno = ref_cod_aluno) as nome
-                   FROM
-                     pmieducar.matricula m, pmieducar.matricula_turma
-                   WHERE aprovado in (1, 2, 12) AND m.ativo = 1 AND ref_ref_cod_escola = $escolaId AND
-                     ref_ref_cod_serie = $serieId AND ref_cod_curso = $cursoId AND
-                     cod_matricula = ref_cod_matricula AND
-                     matricula_turma.ativo = 1 AND
-                     ano  = $anoAnterior AND
-                     m.dependencia = FALSE AND
-                     NOT EXISTS(select 1 from pmieducar.matricula m2 where
-                     m2.ref_cod_aluno = m.ref_cod_aluno AND
-                     m2.ano = $this->ano_letivo AND
-                     m2.ativo = 1 AND
-                     m2.ref_ref_cod_escola = m.ref_ref_cod_escola) AND
-                     NOT EXISTS(select 1 from pmieducar.matricula m2 where
-                     m2.ref_cod_aluno = m.ref_cod_aluno AND
-                     m2.ano = $this->ano_letivo AND
-                     m2.ativo = 1 AND
-                     m2.ref_ref_cod_serie = (SELECT ref_serie_destino FROM pmieducar.sequencia_serie
-                                              WHERE ref_serie_origem = $serieId AND ativo = 1)
-                     )";
+      $sql = "SELECT cod_matricula,
+                     ref_cod_aluno,
+                     aprovado,
+                     (SELECT upper(nome)
+                        FROM cadastro.pessoa,
+                             pmieducar.aluno
+                       WHERE pessoa.idpes = aluno.ref_idpes
+                         AND aluno.cod_aluno = ref_cod_aluno) as nome
+                FROM pmieducar.matricula m, pmieducar.matricula_turma
+               WHERE aprovado in (1, 2, 12)
+                 AND m.ativo = 1
+                 AND ref_ref_cod_escola = $escolaId
+                 AND ref_ref_cod_serie = $serieId
+                 AND ref_cod_curso = $cursoId
+                 AND cod_matricula = ref_cod_matricula
+                 AND matricula_turma.ativo = 1
+                 AND ano  = $anoAnterior
+                 AND m.dependencia = FALSE
+                 AND NOT EXISTS(SELECT 1
+                                  FROM pmieducar.matricula m2
+                                 WHERE m2.ref_cod_aluno = m.ref_cod_aluno
+                                   AND m2.ano = $this->ano_letivo
+                                   AND m2.ativo = 1
+                                   AND m2.ref_ref_cod_escola = m.ref_ref_cod_escola)
+                 AND NOT EXISTS(SELECT 1
+                                  FROM pmieducar.matricula m2
+                                 WHERE m2.ref_cod_aluno = m.ref_cod_aluno
+                                   AND m2.ano = $this->ano_letivo
+                                   AND m2.ativo = 1
+                                   AND m2.ref_ref_cod_serie = (SELECT ref_serie_destino
+                                                                 FROM pmieducar.sequencia_serie
+                                                                WHERE ref_serie_origem = $serieId
+                                                                  AND ativo = 1))";
 
       if ($turmaId)
         $sql .= "AND ref_cod_turma = $turmaId";
