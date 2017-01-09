@@ -1,33 +1,33 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest√£o escolar
+ * i-Educar - Sistema de gest„o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
+ * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
- * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
- * qualquer vers√£o posterior.
+ * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
+ * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
+ * qualquer vers„o posterior.
  *
- * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
- * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
+ * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
+ * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
  * do GNU para mais detalhes.
  *
- * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
- * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
- * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
+ * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
+ * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
+ * @author      Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
  * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
  * @package     Core
  * @subpackage  pmieducar
  * @subpackage  Matricula
  * @subpackage  Rematricula
- * @since       Arquivo dispon√≠vel desde a vers√£o 1.0.0
- * @todo        Refatorar a l√≥gica de indice::Novo() para uma classe na camada de dom√≠nio
+ * @since       Arquivo disponÌvel desde a vers„o 1.0.0
+ * @todo        Refatorar a lÛgica de indice::Novo() para uma classe na camada de domÌnio
  * @version     $Id$
  */
 
@@ -81,14 +81,14 @@ class indice extends clsCadastro
     $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'curso', 'serie'));
     $this->inputsHelper()->dynamic('turma', array('label' => 'Selecione a turma do ano anterior', 'required' => FALSE));
     $this->inputsHelper()->dynamic('anoLetivo', array('label' => 'Ano destino'), $anoLetivoHelperOptions);
-    $this->inputsHelper()->date('data_matricula', array('label' => 'Data da matr√≠cula', 'placeholder' => 'dd/mm/yyyy'));
+    $this->inputsHelper()->date('data_matricula', array('label' => 'Data da matrÌcula', 'placeholder' => 'dd/mm/yyyy'));
 
     $scripts = array('/modules/Cadastro/Assets/Javascripts/RematriculaAutomatica.js');
     Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
   }
 
   /**
-   * @todo Refatorar a l√≥gica para uma classe na camada de dom√≠nio.
+   * @todo Refatorar a lÛgica para uma classe na camada de domÌnio.
    */
   function Novo()
   {
@@ -161,11 +161,13 @@ class indice extends clsCadastro
           $possuiDependenciaPendente = $possuiDependenciaPendente || !((bool)$ap);
         }
 
+<<<<<<< HEAD
       if (!$possuiDependenciaPendente){
         if ($result && $situacao == 1 || $situacao == 12 || $situacao == 13)
           $result = $this->rematricularAlunoAprovado($escolaId, $serieId, $this->ano_letivo, $alunoId);
         elseif ($result && $situacao == 2 || $situacao == 14)
           $result = $this->rematricularAlunoReprovado($escolaId, $cursoId, $serieId, $this->ano_letivo, $alunoId);
+=======
         if (!$possuiDependenciaPendente){
           if ($result && $situacao == 1 || $situacao == 12)
             $result = $this->rematricularAlunoAprovado($escolaId, $serieId, $this->ano_letivo, $alunoId);
@@ -178,6 +180,7 @@ class indice extends clsCadastro
           $nomesAlunosDepPendente[] = $nomeAluno;
           $countDepPendente++;
         }
+>>>>>>> task1250
 
         if (! $result)
           break;
@@ -192,26 +195,26 @@ class indice extends clsCadastro
           foreach ($nomesAlunos as $nome) {
             $mensagem .= "{$nome} </br>";
           }
-          $mensagem .= "</br> As enturma√ß√µes podem ser realizadas em: Movimenta√ß√£o > Enturma√ß√£o.</span>";
+          $mensagem .= "</br> As enturmaÁıes podem ser realizadas em: MovimentaÁ„o > EnturmaÁ„o.</span>";
         }
         if($countDepPendente > 0){
-          $mensagem .= "<br/><br/><span class='error'>Os seguinte(s) $countDepPendente aluno(s) n√£o foram matr√≠culados pois tem depend√™ncias pendentes:</br></br>";
+          $mensagem .= "<br/><br/><span class='error'>Os seguinte(s) $countDepPendente aluno(s) n„o foram matrÌculados pois tem dependÍncias pendentes:</br></br>";
           foreach ($nomesAlunosDepPendente as $nome) {
             $mensagem .= "{$nome} </br>";
           }
         }
         $this->mensagem = $mensagem;
       }elseif (count($alunosSemInep) > 0) {
-        $this->mensagem .= "<span class='error'>Os seguinte(s) ".count($alunosSemInep)." aluno(s) n√£o possuem INEP cadastrado: </br></br>";
+        $this->mensagem .= "<span class='error'>Os seguinte(s) ".count($alunosSemInep)." aluno(s) n„o possuem INEP cadastrado: </br></br>";
         foreach ($alunosSemInep as $nome) {
           $this->mensagem .= "{$nome} </br>";
         }
         $this->mensagem .= "</br> Por favor, cadastre o INEP do(s) aluno(s) em: Cadastro > Aluno > Alunos.<span>";
       }else{
-        $this->mensagem = "<span class='notice'>Nenhum aluno rematriculado. Certifique-se que a turma possui alunos aprovados ou reprovados n√£o matriculados em ".($this->ano_letivo-1).".</span>";
+        $this->mensagem = "<span class='notice'>Nenhum aluno rematriculado. Certifique-se que a turma possui alunos aprovados ou reprovados n„o matriculados em ".($this->ano_letivo-1).".</span>";
       }
     }elseif(empty($this->mensagem))
-      $this->mensagem = "Ocorreu algum erro inesperado durante as rematr√≠culas, por favor, tente novamente.";
+      $this->mensagem = "Ocorreu algum erro inesperado durante as rematrÌculas, por favor, tente novamente.";
 
     return $result;
   }
@@ -221,7 +224,7 @@ class indice extends clsCadastro
     $objMatricula = new clsPmieducarMatriculaTurma();
     $anoAnterior = $this->ano_letivo  - 1;
     $lstMatricula = $objMatricula->lista4($escolaId, $cursoId, $serieId, $turmaId, $ano);
-    //Verifica o parametro na s√©rie pra exigir inep
+    //Verifica o parametro na sÈrie pra exigir inep
     $objSerie = new clsPmieducarSerie($serieId);
     $serieDet = $objSerie->detalhe();
     $exigeInep = $serieDet['exigir_inep'] == "t";
@@ -242,6 +245,7 @@ class indice extends clsCadastro
     try {
       $anoAnterior = $this->ano_letivo  - 1;
 
+<<<<<<< HEAD
       $sql = "SELECT cod_matricula, ref_cod_aluno, aprovado,
                                       (SELECT upper(nome)
                                             FROM cadastro.pessoa, pmieducar.aluno
@@ -267,6 +271,7 @@ class indice extends clsCadastro
                      m2.ref_ref_cod_serie = (SELECT ref_serie_destino FROM pmieducar.sequencia_serie
                                               WHERE ref_serie_origem = $serieId AND ativo = 1)
                      )";
+=======
       $sql = "SELECT cod_matricula,
                      ref_cod_aluno,
                      aprovado,
@@ -300,6 +305,7 @@ class indice extends clsCadastro
                                                                  FROM pmieducar.sequencia_serie
                                                                 WHERE ref_serie_origem = $serieId
                                                                   AND ativo = 1))";
+>>>>>>> task1250
 
       if ($turmaId)
         $sql .= "AND ref_cod_turma = $turmaId";
@@ -307,8 +313,8 @@ class indice extends clsCadastro
       $this->db->Consulta($sql);
     }
     catch (Exception $e) {
-      $this->mensagem = "Erro ao selecionar matr√≠culas ano anterior: $anoAnterior";
-      error_log("Erro ao selecionar matr√≠culas ano anterior, no processo rematr√≠cula autom√°tica:" . $e->getMessage());
+      $this->mensagem = "Erro ao selecionar matrÌculas ano anterior: $anoAnterior";
+      error_log("Erro ao selecionar matrÌculas ano anterior, no processo rematrÌcula autom·tica:" . $e->getMessage());
       return false;
     }
 
@@ -328,11 +334,11 @@ class indice extends clsCadastro
          return $this->matricularAluno($escolaId, $nextCursoId, $nextSerieId, $this->ano_letivo, $alunoId);
       }
       else{
-        $this->mensagem = "A s√©rie de destino n√£o est√° configurada na escola. Favor efetuar o cadastro em Cadastro > S√©rie > Escola-S√©rie";
+        $this->mensagem = "A sÈrie de destino n„o est· configurada na escola. Favor efetuar o cadastro em Cadastro > SÈrie > Escola-SÈrie";
       }
     }
     else{
-      $this->mensagem = "N√£o foi poss√≠vel obter a pr√≥xima s√©rie da sequ√™ncia de enturma√ß√£o";
+      $this->mensagem = "N„o foi possÌvel obter a prÛxima sÈrie da sequÍncia de enturmaÁ„o";
     }
 
     return false;
@@ -351,8 +357,8 @@ class indice extends clsCadastro
       $escolaId, $serieId, $this->pessoa_logada, $alunoId, $this->ano_letivo, $cursoId));
     }
     catch (Exception $e) {
-      $this->mensagem = "Erro durante matr√≠cula do aluno: $alunoId";
-      error_log("Erro durante a matr√≠cula do aluno $alunoId, no processo de rematr√≠cula autom√°tica:" . $e->getMessage());
+      $this->mensagem = "Erro durante matrÌcula do aluno: $alunoId";
+      error_log("Erro durante a matrÌcula do aluno $alunoId, no processo de rematrÌcula autom·tica:" . $e->getMessage());
       return false;
     }
 
@@ -373,15 +379,15 @@ class indice extends clsCadastro
   }
 }
 
-// Instancia objeto de p√°gina
+// Instancia objeto de p·gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conte√∫do
+// Instancia objeto de conte˙do
 $miolo = new indice();
 
-// Atribui o conte√∫do √†  p√°gina
+// Atribui o conte˙do ‡  p·gina
 $pagina->addForm($miolo);
 
-// Gera o c√≥digo HTML
+// Gera o cÛdigo HTML
 $pagina->MakeAll();
 ?>
