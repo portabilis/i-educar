@@ -107,6 +107,7 @@ class indice extends clsListagem
       'Remanejado',
       'Reclassificado',
       'Abandono',
+      'Falecido',
       Portabilis_String_Utils::toLatin1('Usuário criou'),
       Portabilis_String_Utils::toLatin1('Usuário editou')
     ));
@@ -157,6 +158,7 @@ class indice extends clsListagem
         $remanejado = $registro["remanejado"] == 't' ? 'Sim' : Portabilis_String_Utils::toLatin1('Não');
         $abandono = $registro["abandono"] == 't' ? 'Sim' : Portabilis_String_Utils::toLatin1('Não');
         $reclassificado = $registro["reclassificado"] == 't' ? 'Sim' : Portabilis_String_Utils::toLatin1('Não');
+        $falecido = $registro["falecido"] == 't' ? 'Sim' : Portabilis_String_Utils::toLatin1('Não');
 
         $usuarioCriou = new clsPessoa_($registro['ref_usuario_cad']);
         $usuarioCriou = $usuarioCriou->detalhe();
@@ -175,6 +177,7 @@ class indice extends clsListagem
           "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_turma={$registro["ref_cod_turma"]}&sequencial={$registro["sequencial"]}  \">{$remanejado}</a>",
           "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_turma={$registro["ref_cod_turma"]}&sequencial={$registro["sequencial"]}  \">{$reclassificado}</a>",
           "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_turma={$registro["ref_cod_turma"]}&sequencial={$registro["sequencial"]}  \">{$abandono}</a>",
+          "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_turma={$registro["ref_cod_turma"]}&sequencial={$registro["sequencial"]}  \">{$falecido}</a>",
           "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_turma={$registro["ref_cod_turma"]}&sequencial={$registro["sequencial"]}  \">{$usuarioCriou['nome']}</a>",
           "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_turma={$registro["ref_cod_turma"]}&sequencial={$registro["sequencial"]}  \">{$usuarioEditou['nome']}</a>",
           ));
