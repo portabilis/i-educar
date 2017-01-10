@@ -94,6 +94,26 @@ class EducacensoExportController extends ApiCoreController
     return array('conteudo' => $conteudo);
   }
 
+  protected function educacensoExportFase2() {
+
+    $escola   = $this->getRequest()->escola;
+    $ano      = $this->getRequest()->ano;
+    $data_ini = $this->getRequest()->data_ini;
+    $data_fim = $this->getRequest()->data_fim;
+
+    $conteudo = $this->exportaDadosCensoPorEscolaFase2($escola,
+                  $ano,
+                  Portabilis_Date_Utils::brToPgSQL($data_ini),
+                  Portabilis_Date_Utils::brToPgSQL($data_fim));
+
+    if($this->error){
+      return array("error" => true,
+                   "mensagem" => $this->msg);
+    }
+
+    return array('conteudo' => $conteudo);
+  }
+
   protected function exportaDadosCensoPorEscola($escolaId, $ano, $data_ini, $data_fim){
 
     @session_start();
@@ -128,6 +148,20 @@ class EducacensoExportController extends ApiCoreController
         $export .= $registro60 . $registro70 . $registro80;
     }
     $export .= $this->exportaDadosRegistro99();
+    return $export;
+  }
+
+  protected function exportaDadosCensoPorEscolaFase2($escolaId, $ano, $data_ini, $data_fim) {
+    @session_start();
+    $this->pessoa_logada = $_SESSION['id_pessoa'];
+    @session_write_close();
+
+    $obj_permissoes = new clsPermissoes();
+    $obj_permissoes->permissao_cadastra(846, $this->pessoa_logada, 7,
+      'educar_index.php');
+    $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
+
+    $export = $this->exportaDadosRegistro89($escolaId);
     return $export;
   }
 
@@ -1808,6 +1842,38 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
     return "99|\n";
   }
 
+  protected function exportaDadosRegistro89($escolaId) {
+    $sql = "SELECT '89' AS r89s1,
+                   educacenso_cod_escola.cod_escola_inep AS r89s2,
+                   gestor_f.cpf AS r89s3,
+                   gestor_p.nome AS r89s4,
+                   escola.cargo_gestor AS r89s5,
+                   gestor_p.email AS r89s6
+              FROM pmieducar.escola
+              LEFT JOIN modules.educacenso_cod_escola ON (educacenso_cod_escola.cod_escola = escola.cod_escola)
+              LEFT JOIN cadastro.fisica gestor_f ON (gestor_f.idpes = escola.ref_idpes_gestor)
+              LEFT JOIN cadastro.pessoa gestor_p ON (gestor_p.idpes = escola.ref_idpes_gestor)
+             WHERE escola.cod_escola = $1";
+
+    $numeroRegistros = 6;
+    $return = '';
+
+    extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, array('return_only' => 'first-row',
+                                                                      'params' => array($escolaId))));
+
+    $r89s3 = $this->cpfToCenso($r89s3);
+    $r89s4 = $this->upperAndUnaccent($r89s4);
+    $r89s6 = $this->upperAndUnaccent($r89s6);
+
+    for ($i=1; $i <= $numeroRegistros ; $i++)
+      $return .= ${'r89s'.$i}.'|';
+
+    $return = substr_replace($return, "", -1);
+    $return .= "\n";
+
+    return $return;
+  }
+
   protected function cpfToCenso($cpf){
     $cpf = str_replace(array('.', '-'), '', int2CPF($cpf));
     return $cpf == '00000000000' ? NULL : $cpf;
@@ -1883,6 +1949,8 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
   public function Gerar() {
     if ($this->isRequestFor('get', 'educacenso-export'))
       $this->appendResponse($this->educacensoExport());
+    elseif ($this->isRequestFor('get', 'educacenso-export-fase2'))
+      $this->appendResponse($this->educacensoExportFase2());
     else
       $this->notImplementedOperationError();
   }
