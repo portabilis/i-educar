@@ -80,6 +80,16 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
 
     $this->campoCheck( "alunos_dependencia", "Processar somente hist&oacute;ricos de depend&ecirc;ncias", NULL, NULL, false, false, false, "Marque esta op&ccedil;&atilde;o para trazer somente alunos que possuem alguma depend&ecirc;ncia.");
 
+    $campoPosicao = '';
+
+    if ($this->validaControlePosicaoHistorico()) {
+      $campoPosicao = "      <tr>
+        <td><label for='posicao'>".Portabilis_String_Utils::toLatin1('Posição') ." *</label><br>
+        <sub style='vertical-align:top;'>".Portabilis_String_Utils::toLatin1("Informe a coluna equivalente a série/ano/etapa a qual o histórico pertence. Ex.: 1º ano informe 1, 2º ano informe 2")."</sub></td>
+        <td colspan='2'><input type='text' id='posicao' name='posicao' class='obrigatorio disable-on-search clear-on-change-curso validates-value-is-numeric'></input></td>
+      </tr>";
+    }
+
     $resourceOptionsTable = "<table id='resource-options' class='styled horizontal-expand hide-on-search disable-on-apply-changes'>
 
       <tr>
@@ -179,6 +189,8 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
         <td><input id='faltas-manual' name='faltas-manual' style='display:none;'></input></td>
       </tr>
 
+      " . $campoPosicao . "
+
       <tr>
         <td><label for='registro'>Registro (arquivo)</label></td>
         <td colspan='2'><input type='text' id='registro' name='registro'></input></td>
@@ -249,6 +261,14 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
 
     $select .= '</select>';
     return $select;
+  }
+
+  function validaControlePosicaoHistorico(){
+    $obj = new clsPmieducarInstituicao;
+    //Busca instituicao ativa
+    $lst = $obj->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
+
+    return dbBool($lst[0]['controlar_posicao_historicos']);
   }
 }
 ?>
