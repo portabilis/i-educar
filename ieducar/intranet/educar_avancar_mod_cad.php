@@ -197,11 +197,11 @@ class indice extends clsCadastro
         }
         $this->mensagem = $mensagem;
       }elseif (count($alunosSemInep) > 0) {
-        $this->mensagem .= "<span class='error'>Os seguinte(s) ".count($alunosSemInep)." aluno(s) não possuem INEP cadastrado: </br></br>";
+        $this->mensagem .= "<span>Não foi possível realizar a rematrícula, pois o(s) seguinte(s) aluno(s) não possuem o INEP cadastrado: </br></br>";
         foreach ($alunosSemInep as $nome) {
           $this->mensagem .= "{$nome} </br>";
         }
-        $this->mensagem .= "</br> Por favor, cadastre o INEP do(s) aluno(s) em: Cadastro > Aluno > Alunos.<span>";
+        $this->mensagem .= "</br>Por favor, cadastre o INEP do(s) aluno(s) em: Cadastros > Aluno > Alunos > Campo: Código INEP.";
       }else{
         $this->mensagem = "<span class='notice'>Nenhum aluno rematriculado. Certifique-se que a turma possui alunos aprovados ou reprovados não matriculados em ".($this->ano_letivo-1).".</span>";
       }
