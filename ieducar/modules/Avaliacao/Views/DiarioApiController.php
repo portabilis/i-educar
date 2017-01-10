@@ -949,7 +949,7 @@ class DiarioApiController extends ApiCoreController
         // seta id da matricula a ser usado pelo metodo serviceBoletim
         $this->setCurrentMatriculaId($matriculaId);
 
-        if(! (dbBool($aluno['remanejado']) || dbBool($aluno['transferido']) || dbBool($aluno['abandono']) || dbBool($aluno['reclassificado'])))
+        if(! (dbBool($aluno['remanejado']) || dbBool($aluno['transferido']) || dbBool($aluno['abandono']) || dbBool($aluno['reclassificado']) || dbBool($aluno['falecido'])))
           $matricula['componentes_curriculares'] = $this->loadComponentesCurricularesForMatricula($matriculaId, $turmaId);
 
         $matricula['matricula_id']             = $aluno['ref_cod_matricula'];
@@ -964,6 +964,8 @@ class DiarioApiController extends ApiCoreController
           $matricula['situacao_deslocamento'] = 'Abandono';
         elseif(dbBool($aluno['reclassificado']))
           $matricula['situacao_deslocamento'] = 'Reclassificado';
+        elseif(dbBool($aluno['falecido']))
+          $matricula['situacao_deslocamento'] = 'Falecido';
         else
           $matricula['situacao_deslocamento'] = null;
 

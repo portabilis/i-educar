@@ -147,19 +147,19 @@ class indice extends clsCadastro
 				  	$this->mensagem = "N&atilde;o foi poss&iacute;vel desativar as enturma&ccedil;&otilde;es da matr&iacute;cula.";
 					return false;
 				  }else
-				  	$enturmacao->marcaAlunoAbandono($this->data_cancel);
+				  	$enturmacao->marcaAlunoFalecido($this->data_cancel);
 
       			}
-				$this->mensagem .= "Abandono realizado com sucesso.<br>";
+				$this->mensagem .= "Alteração realizado com sucesso.<br>";
 				header( "Location: educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}" );
 				return true;
 			}
 
-			$this->mensagem = "Observação não pode ser salva.<br>";
+			$this->mensagem = "A alteração não pode ser salva.<br>";
 
 			return false;
 		}
-		$this->mensagem = "Abandono não pode ser realizado.<br>";
+		$this->mensagem = "A alteração não pode ser realizado.<br>";
 		return false;
 	}
 
