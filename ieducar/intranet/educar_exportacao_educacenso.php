@@ -94,10 +94,11 @@ class indice extends clsCadastro
 
   function Gerar()
   {
+    $fase2 = $_REQUEST['fase2'];
 
     $this->inputsHelper()->dynamic(array('ano', 'instituicao', 'escola'));
-    $this->inputsHelper()->date('data_ini',array( 'label' => Portabilis_String_Utils::toLatin1('Data início'), 'value' => $this->data_ini));
-    $this->inputsHelper()->date('data_fim',array( 'label' => 'Data fim', 'value' => $this->data_fim));
+    $this->inputsHelper()->date('data_ini',array( 'label' => Portabilis_String_Utils::toLatin1('Data início'), 'value' => $this->data_ini, 'dica' => ($fase2 == 1) ? 'A data informada neste campo, deverá ser a mesma informada na 1ª fase da exportação (Matrícula inicial).' : 'dd/mm/aaaa'));
+    $this->inputsHelper()->date('data_fim',array( 'label' => 'Data fim', 'value' => $this->data_fim, 'dica' => ($fase2 == 1) ? 'A data informada neste campo, deverá ser a mesma informada na 1ª fase da exportação (Matrícula inicial).' : 'dd/mm/aaaa'));
 
     Portabilis_View_Helper_Application::loadJavascript($this, '/modules/Educacenso/Assets/Javascripts/Educacenso.js');
 

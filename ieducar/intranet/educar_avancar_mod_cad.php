@@ -159,9 +159,9 @@ class indice extends clsCadastro
       }
 
       if (!$possuiDependenciaPendente){
-        if ($result && $situacao == 1 || $situacao == 12)
+        if ($result && $situacao == 1 || $situacao == 12 || $situacao == 13)
           $result = $this->rematricularAlunoAprovado($escolaId, $serieId, $this->ano_letivo, $alunoId);
-        elseif ($result && $situacao == 2)
+        elseif ($result && $situacao == 2 || $situacao == 14)
           $result = $this->rematricularAlunoReprovado($escolaId, $cursoId, $serieId, $this->ano_letivo, $alunoId);
 
         $nomesAlunos[] = $nomeAluno;
@@ -213,7 +213,7 @@ class indice extends clsCadastro
                                                           aluno.cod_aluno = ref_cod_aluno) as nome
                    FROM
                      pmieducar.matricula m, pmieducar.matricula_turma
-                   WHERE aprovado in (1, 2, 12) AND m.ativo = 1 AND ref_ref_cod_escola = $escolaId AND
+                   WHERE aprovado in (1, 2, 12, 13, 14) AND m.ativo = 1 AND ref_ref_cod_escola = $escolaId AND
                      ref_ref_cod_serie = $serieId AND ref_cod_curso = $cursoId AND
                      cod_matricula = ref_cod_matricula AND
                      matricula_turma.ativo = 1 AND
