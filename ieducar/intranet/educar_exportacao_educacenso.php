@@ -56,6 +56,7 @@ class indice extends clsCadastro
 
   var $ano;
   var $ref_cod_instituicao;
+  var $segunda_fase = false;
 
   function Inicializar()
   {
@@ -63,8 +64,12 @@ class indice extends clsCadastro
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     @session_write_close();
 
+    $this->segunda_fase = ($_REQUEST['fase2'] == 1);
+
+    $codigoMenu = ($this->segunda_fase ? 9998845 : 846);
+
     $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_cadastra(846, $this->pessoa_logada, 7,
+    $obj_permissoes->permissao_cadastra($codigoMenu, $this->pessoa_logada, 7,
       'educar_index.php');
     $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
 
