@@ -128,6 +128,7 @@ class indice extends clsCadastro
     $countDepPendente = 0;
     $nomesAlunos;
     $nomesAlunosDepPendente;
+    asort($alunosSemInep);
 
     if (count($alunosSemInep) == 0) {
       while ($result && $this->db->ProximoRegistro()) {
