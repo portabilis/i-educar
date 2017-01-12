@@ -45,7 +45,7 @@ class clsIndexBase extends clsBase
   function Formular()
   {
     $this->SetTitulo($this->_instituicao . ' i-Educar - Exporta&ccedil;&atilde;o Educacenso');
-    $this->processoAp = 846;
+    $this->processoAp = ($_REQUEST['fase2'] == 1 ? 9998845 : 846);
     $this->addEstilo('localizacaoSistema');
   }
 }
