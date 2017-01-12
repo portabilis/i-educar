@@ -93,3 +93,32 @@
   border-radius: 3px;
   border: 0;
 }
+
+.ui-dialog-titlebar-close:hover {
+	background: transparent !important;
+	border: 0 !important;
+}
+
+.ui-icon:hover{
+	background-image: url('../scripts/jquery/jquery-ui.min-1.9.2/css/custom/images/ui-icons_ffffff_256x240.png') !important;
+}
+
+
+
+.atualizacao-dados  .ui-dialog-titlebar.ui-widget-header.ui-corner-all.ui-helper-clearfix{
+	background: #47728f;
+	color: #FFF;
+	text-align: center;
+}
+
+.atualizacao-dados span.ui-button-text{
+  border-radius: 3px;
+  background-color: #0ac336;
+  color: #FFF !important;
+  border: 0 !important;
+}
+
+.atualizacao-dados .ui-dialog-content{
+	height: 58px !important;
+	font-size: 14px !important;
+}
