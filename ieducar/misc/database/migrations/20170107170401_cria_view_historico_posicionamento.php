@@ -6,17 +6,24 @@ class CriaViewHistoricoPosicionamento extends AbstractMigration
 {
     public function up()
     {
-        $this->execute("
-CREATE OR REPLACE VIEW relatorio.view_dados_historico_posicionamento AS
+        $this->execute("CREATE OR REPLACE VIEW relatorio.view_dados_historico_posicionamento AS
 SELECT he.ref_cod_aluno,
-       hd.nm_disciplina,
-
+       fcn_upper(hd.nm_disciplina) AS nm_disciplina,
   (SELECT COALESCE(MIN(ordenamento), 9999)
    FROM pmieducar.historico_escolar hee2
    INNER JOIN pmieducar.historico_disciplinas hdd2 ON (hdd2.ref_ref_cod_aluno = hee2.ref_cod_aluno
                                                        AND hdd2.ref_sequencial = hee2.sequencial)
    WHERE hee2.ref_cod_aluno = he.ref_cod_aluno
-     AND hdd2.nm_disciplina = hd.nm_disciplina) AS order_componente,
+     AND fcn_upper(hdd2.nm_disciplina) = fcn_upper(hd.nm_disciplina)) AS order_componente,    
+       he1.historico_grade_curso_id AS grade_curso1,
+       he2.historico_grade_curso_id AS grade_curso2,
+       he3.historico_grade_curso_id AS grade_curso3,
+       he4.historico_grade_curso_id AS grade_curso4,
+       he5.historico_grade_curso_id AS grade_curso5,
+       he6.historico_grade_curso_id AS grade_curso6,
+       he7.historico_grade_curso_id AS grade_curso7,
+       he8.historico_grade_curso_id AS grade_curso8,
+       he9.historico_grade_curso_id AS grade_curso9,
        he1.ano AS ano1,
        he2.ano AS ano2,
        he3.ano AS ano3,
@@ -323,8 +330,14 @@ SELECT he.ref_cod_aluno,
                      ELSE ''
                  END)
        END AS status9
-FROM pmieducar.historico_escolar he
-INNER JOIN pmieducar.historico_disciplinas hd ON (hd.ref_ref_cod_aluno = he.ref_cod_aluno
+FROM (SELECT sequencial,
+            ref_ref_cod_aluno,
+            ref_sequencial,
+            fcn_upper(nm_disciplina) AS nm_disciplina,
+            hd.nota,
+            faltas,
+            ordenamento FROM pmieducar.historico_disciplinas hd) hd
+INNER JOIN pmieducar.historico_escolar he ON (hd.ref_ref_cod_aluno = he.ref_cod_aluno
                                                   AND hd.ref_sequencial = he.sequencial)
 LEFT JOIN pmieducar.historico_escolar he1 ON (he1.ref_cod_aluno = he.ref_cod_aluno
                                               AND he1.posicao = 1
@@ -471,35 +484,45 @@ LEFT JOIN pmieducar.historico_escolar he9 ON (he9.ref_cod_aluno = he.ref_cod_alu
                                                       ELSE TRUE
                                                   END)
 LEFT JOIN pmieducar.historico_disciplinas hd1 ON (hd1.ref_ref_cod_aluno = hd.ref_ref_cod_aluno
-                                                  AND hd1.nm_disciplina = hd.nm_disciplina
+                                                  AND fcn_upper(hd1.nm_disciplina) = fcn_upper(hd.nm_disciplina)
                                                   AND hd1.ref_sequencial = he1.sequencial)
 LEFT JOIN pmieducar.historico_disciplinas hd2 ON (hd2.ref_ref_cod_aluno = hd.ref_ref_cod_aluno
-                                                  AND hd2.nm_disciplina = hd.nm_disciplina
+                                                  AND fcn_upper(hd2.nm_disciplina) = fcn_upper(hd.nm_disciplina)
                                                   AND hd2.ref_sequencial = he2.sequencial)
 LEFT JOIN pmieducar.historico_disciplinas hd3 ON (hd3.ref_ref_cod_aluno = hd.ref_ref_cod_aluno
-                                                  AND hd3.nm_disciplina = hd.nm_disciplina
+                                                  AND fcn_upper(hd3.nm_disciplina) = fcn_upper(hd.nm_disciplina)
                                                   AND hd3.ref_sequencial = he3.sequencial)
 LEFT JOIN pmieducar.historico_disciplinas hd4 ON (hd4.ref_ref_cod_aluno = hd.ref_ref_cod_aluno
-                                                  AND hd4.nm_disciplina = hd.nm_disciplina
+                                                  AND fcn_upper(hd4.nm_disciplina) = fcn_upper(hd.nm_disciplina)
                                                   AND hd4.ref_sequencial = he4.sequencial)
 LEFT JOIN pmieducar.historico_disciplinas hd5 ON (hd5.ref_ref_cod_aluno = hd.ref_ref_cod_aluno
-                                                  AND hd5.nm_disciplina = hd.nm_disciplina
+                                                  AND fcn_upper(hd5.nm_disciplina) = fcn_upper(hd.nm_disciplina)
                                                   AND hd5.ref_sequencial = he5.sequencial)
 LEFT JOIN pmieducar.historico_disciplinas hd6 ON (hd6.ref_ref_cod_aluno = hd.ref_ref_cod_aluno
-                                                  AND hd6.nm_disciplina = hd.nm_disciplina
+                                                  AND fcn_upper(hd6.nm_disciplina) = fcn_upper(hd.nm_disciplina)
                                                   AND hd6.ref_sequencial = he6.sequencial)
 LEFT JOIN pmieducar.historico_disciplinas hd7 ON (hd7.ref_ref_cod_aluno = hd.ref_ref_cod_aluno
-                                                  AND hd7.nm_disciplina = hd.nm_disciplina
+                                                  AND fcn_upper(hd7.nm_disciplina) = fcn_upper(hd.nm_disciplina)
                                                   AND hd7.ref_sequencial = he7.sequencial)
 LEFT JOIN pmieducar.historico_disciplinas hd8 ON (hd8.ref_ref_cod_aluno = hd.ref_ref_cod_aluno
-                                                  AND hd8.nm_disciplina = hd.nm_disciplina
+                                                  AND fcn_upper(hd8.nm_disciplina) = fcn_upper(hd.nm_disciplina)
                                                   AND hd8.ref_sequencial = he8.sequencial)
 LEFT JOIN pmieducar.historico_disciplinas hd9 ON (hd9.ref_ref_cod_aluno = hd.ref_ref_cod_aluno
-                                                  AND hd9.nm_disciplina = hd.nm_disciplina
+                                                  AND fcn_upper(hd9.nm_disciplina) = fcn_upper(hd.nm_disciplina)
                                                   AND hd9.ref_sequencial = he9.sequencial)
 WHERE he.ativo = 1
+      AND he.ref_cod_aluno = 4145
 GROUP BY he.ref_cod_aluno,
          hd.nm_disciplina,
+         he1.historico_grade_curso_id,
+         he2.historico_grade_curso_id,
+         he3.historico_grade_curso_id,
+         he4.historico_grade_curso_id,
+         he5.historico_grade_curso_id,
+         he6.historico_grade_curso_id,
+         he7.historico_grade_curso_id,
+         he8.historico_grade_curso_id,
+         he9.historico_grade_curso_id,
          he1.ano,
          he2.ano,
          he3.ano,
@@ -607,13 +630,9 @@ GROUP BY he.ref_cod_aluno,
          he6.aprovado,
          he7.aprovado,
          he8.aprovado,
-         he9.aprovado
-ORDER BY order_componente,
-         nm_disciplina;
+         he9.aprovado;
 
-
-ALTER TABLE relatorio.view_dados_historico_posicionamento OWNER TO ieducar;
-            ");
+ALTER TABLE relatorio.view_dados_historico_posicionamento OWNER TO ieducar;");
     }
 
     public function down()
