@@ -1,0 +1,124 @@
+/******MODAIS*****/
+
+.ui-dialog{
+  box-shadow: 0 12px 24px 0 rgba(0, 0, 0, 0.3);
+}
+
+.ui-dialog h2 {
+    color: #FFF;
+    background: #47728f;
+    margin: 0 0 25px !important;
+    padding: 18px;
+    font-size: 18px;
+    text-align: center;
+}
+
+
+.ui-dialog fieldset legend{
+  font-size: 16px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.31;
+  color: #47728f;
+}
+
+.ui-dialog input{
+
+  border-radius: 3px;
+  background-color: #ffffff;
+  border: solid 1px #cddce6;
+  font-size: 14px !important;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  color: #596066;
+  padding: 9px;
+  margin-right: 4px 10px 4px 0px;
+}
+
+.ui-dialog select{
+
+  border-radius: 3px;
+  background-color: #ffffff;
+  border: solid 1px #cddce6;
+  font-size: 14px !important;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  color: #596066;
+  padding: 9px !important;
+  margin-right: 4px 10px 4px 0px;
+}
+
+.ui-dialog label{
+  font-family: "Open Sans";
+  font-size: 14px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.5;
+  color: #47728f;
+}
+
+.ui-dialog a, .ui-dialog .decorated{
+  font-family: "Open Sans" !important;
+  font-size: 14px !important;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.5;
+  color: #188ad1 !important;
+}
+
+.ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset{
+	float: none !important;
+	text-align: center !important;
+}
+
+.ui-button span{
+  font-family: "Open Sans" !important;
+  border-radius: 3px;
+  border: solid 1px #cddce6 !important;
+  font-size: 14px !important;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  text-align: center;
+  color: #47728f !important;
+  background: #FFF;
+}
+
+.ui-widget-content {
+  border-radius: 3px;
+  border: 0;
+}
+
+.ui-dialog-titlebar-close:hover {
+	background: transparent !important;
+	border: 0 !important;
+}
+
+.ui-icon:hover{
+	background-image: url('../scripts/jquery/jquery-ui.min-1.9.2/css/custom/images/ui-icons_ffffff_256x240.png') !important;
+}
+
+
+
+.atualizacao-dados  .ui-dialog-titlebar.ui-widget-header.ui-corner-all.ui-helper-clearfix{
+	background: #47728f;
+	color: #FFF;
+	text-align: center;
+}
+
+.atualizacao-dados span.ui-button-text{
+  border-radius: 3px;
+  background-color: #0ac336;
+  color: #FFF !important;
+  border: 0 !important;
+}
+
+.atualizacao-dados .ui-dialog-content{
+	height: 58px !important;
+	font-size: 14px !important;
+}
