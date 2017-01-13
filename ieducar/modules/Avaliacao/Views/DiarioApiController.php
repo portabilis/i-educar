@@ -622,7 +622,6 @@ class DiarioApiController extends ApiCoreController
       else
       {
         $this->serviceBoletim()->updateMediaComponente(0, $this->getRequest()->componente_curricular_id, $this->getRequest()->etapa);
-        $this->trySaveServiceBoletim();
         $this->messenger->append('Média matrícula '. $this->getRequest()->matricula_id .' removida com sucesso.', 'success');
       }
     }
