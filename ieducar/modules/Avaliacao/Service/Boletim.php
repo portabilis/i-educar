@@ -961,10 +961,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             $codMatricula, $this->getRegraDataMapper()
            ))
 
-         ->_setComponentes(App_Model_IedFinder::getComponentesPorMatricula(
-            $codMatricula, $this->getComponenteDataMapper(),
-            $this->getComponenteTurmaDataMapper()
-           ));
+         ->_setComponentes(App_Model_IedFinder::getComponentesPorMatricula($codMatricula, $this->getComponenteDataMapper(),$this->getComponenteTurmaDataMapper(), null, $_GET['etapa'] ) );
 
     // Valores scalar de referência
     $matricula = App_Model_IedFinder::getMatricula($codMatricula);
@@ -1716,7 +1713,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         unset($faltasComponentes[$disciplinaDispensadaTurma]);
       }
       if (0 == count($faltasComponentes) ||
-          count($faltasComponentes) != count($componentes)) {
+        count($faltasComponentes) != count($componentes)) {
         $etapa = 1;
       }
       else {
