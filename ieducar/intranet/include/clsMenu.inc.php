@@ -254,6 +254,12 @@ class clsMenu
                 WHERE
                   sub2.nivel='2')
             )
+            AND EXISTS
+              (SELECT *
+                 FROM pmieducar.menu_tipo_usuario
+                INNER JOIN pmieducar.usuario ON (usuario.ref_cod_tipo_usuario = menu_tipo_usuario.ref_cod_tipo_usuario)
+                WHERE menu_tipo_usuario.ref_cod_menu_submenu = sub.cod_menu_submenu
+                  AND usuario.cod_usuario = $id_usuario)
             $suspenso
           ORDER BY
             UPPER(nome_menu.nm_menu), ref_menu_pai, UPPER(pai.nm_menu), sub.nm_submenu
