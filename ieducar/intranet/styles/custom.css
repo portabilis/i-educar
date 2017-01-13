@@ -119,6 +119,27 @@
 }
 
 .atualizacao-dados .ui-dialog-content{
-	height: 58px !important;
-	font-size: 14px !important;
+   height: 58px !important;
+   font-size: 14px !important;
 }
+
+#modal-title {
+  background: #47728f;
+  color: #FFF;
+  vertical-align: middle;
+  text-align: center;
+  font-family: "Open Sans";
+  font-size: 18px;
+  font-weight: bold;
+}
+
+#modal-close{
+  background: #47728f;
+  text-align: right;
+  padding-right: 10px;
+}
+
+.modal-domjs-conteudo{
+  box-shadow: 0 12px 24px 0 rgba(0, 0, 0, 0.3);
+}
+
