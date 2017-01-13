@@ -70,6 +70,7 @@ class RegraAvaliacao_Model_Regra extends CoreExt_Entity
     'notaGeralPorEtapa'         => NULL,
     'definirComponentePorEtapa' => NULL,
     'qtdDisciplinasDependencia' => NULL,
+    'qtdMatriculasDependencia'  => NULL,
     'aprovaMediaDisciplina'     => NULL,
     'reprovacaoAutomatica'      => NULL
   );
@@ -82,7 +83,8 @@ class RegraAvaliacao_Model_Regra extends CoreExt_Entity
     'notaMaximaGeral' => 'numeric',
     'notaMaximaExameFinal' => 'numeric',
     'qtdCasasDecimais' => 'numeric',
-    'qtdDisciplinasDependencia' => 'numeric'
+    'qtdDisciplinasDependencia' => 'numeric',
+    'qtdMatriculasDependencia'  => 'numeric'
   );
 
   protected $_references = array(
