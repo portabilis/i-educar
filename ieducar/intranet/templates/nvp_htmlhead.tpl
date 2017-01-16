@@ -20,6 +20,7 @@
   <link rel=stylesheet type='text/css' href='styles/mytdt.css' />
   <link rel=stylesheet type='text/css' href='styles/jquery.modal.css' />
   <script src="http://maps.google.com/maps/api/js?sensor=true" type="text/javascript" charset="utf-8"></script>
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
 
   <!-- #&ESTILO&# -->
 

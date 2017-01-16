@@ -1862,7 +1862,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
                                                                       'params' => array($escolaId))));
 
     $r89s3 = $this->cpfToCenso($r89s3);
-    $r89s4 = $this->upperAndUnaccent($r89s4);
+    $r89s4 = $this->convertStringToAlpha($r89s4);
     $r89s6 = $this->upperAndUnaccent($r89s6);
 
     for ($i=1; $i <= $numeroRegistros ; $i++)
