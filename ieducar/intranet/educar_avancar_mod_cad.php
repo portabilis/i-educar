@@ -128,7 +128,7 @@ class indice extends clsCadastro
     $countDepPendente = 0;
     $nomesAlunos;
     $nomesAlunosDepPendente;
-    asort($alunosSemInep);
+    //sort($alunosSemInep);
 
     if (count($alunosSemInep) == 0) {
       while ($result && $this->db->ProximoRegistro()) {
@@ -215,6 +215,7 @@ class indice extends clsCadastro
   protected function getAlunosSemInep($escolaId, $cursoId, $serieId, $turmaId, $ano){
     //Pega todas as matriculas
     $objMatricula = new clsPmieducarMatriculaTurma();
+    $objMatricula->setOrderby("nome");
     $anoAnterior = $this->ano_letivo  - 1;
     $lstMatricula = $objMatricula->lista4($escolaId, $cursoId, $serieId, $turmaId, $ano);
     //Verifica o parametro na série pra exigir inep
@@ -228,7 +229,7 @@ class indice extends clsCadastro
     foreach ($lstMatricula as $matricula) {
       $alunoInep = $objAluno->verificaInep($matricula['ref_cod_aluno']);
       if (!$alunoInep && $exigeInep) {
-        $alunosSemInep[] = $matricula['nome'];
+        $alunosSemInep[] = strtoupper($matricula['nome']);
       }
     }
     return $alunosSemInep;
