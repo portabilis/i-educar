@@ -434,11 +434,15 @@ class MatriculaController extends ApiCoreController
     if($this->validatesPresenceOf('matricula_id') && $this->validatesPresenceOf('nova_situacao')){
       $matriculaId = $this->getRequest()->matricula_id;
       $matricula = new clsPmieducarMatricula($matriculaId);
+      $objMatricula = $matricula->detalhe();
+      $codAluno = $objMatricula['ref_cod_aluno'];
 
       $situacaoAntiga = $matricula->aprovado;
       $situacaoNova   = $this->getRequest()->nova_situacao;
 
-      if($situacaoNova == App_Model_MatriculaSituacao::TRANSFERIDO || $situacaoNova == App_Model_MatriculaSituacao::ABANDONO){
+      if($situacaoNova == App_Model_MatriculaSituacao::TRANSFERIDO ||
+         $situacaoNova == App_Model_MatriculaSituacao::ABANDONO ||
+         $situacaoNova == App_Model_MatriculaSituacao::FALECIDO ){
         $enturmacoes = new clsPmieducarMatriculaTurma();
         $enturmacoes = $enturmacoes->lista($matriculaId, null, null, null, null, null, null, null, 1 );
 
@@ -472,9 +476,32 @@ class MatriculaController extends ApiCoreController
 
       $matricula->aprovado = $this->getRequest()->nova_situacao;
       if($matricula->edita()){
+        $this->alteraFalecimentoPessoa($codAluno);
+
         return $this->messenger->append('Situação da matrícula alterada com sucesso.', 'success');
       }
     }
+  }
+
+  protected function alteraFalecimentoPessoa($codAluno) {
+    $matriculas = new clsPmieducarMatricula();
+    $matriculas = $matriculas->lista(null, null, null, null, null, null, $codAluno,
+                                     null, null, null, null, null, 1);
+
+    $aluno = new clsPmieducarAluno($codAluno);
+    $aluno = $aluno->detalhe();
+
+    $pessoaFisica = new clsFisica($aluno['ref_idpes']);
+
+    foreach ($matriculas as $matricula) {
+      if ($matricula['aprovado'] == App_Model_MatriculaSituacao::FALECIDO) {
+        $pessoaFisica->falecido = true;
+        $pessoaFisica->edita();
+        return;
+      }
+    }
+    $pessoaFisica->falecido = false;
+    $pessoaFisica->edita();
   }
 
   protected function canGetMatriculasDependencia() {
