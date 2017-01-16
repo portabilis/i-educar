@@ -273,6 +273,10 @@ class indice extends clsCadastro
       return false;
     }
 
+    if ($dependencia && !$this->verificaQtdeDependenciasPermitida()) {
+      return false;
+    }
+
     $db = new clsBanco();
     $somente_do_bairro = $db->CampoUnico("SELECT matricula_apenas_bairro_escola FROM pmieducar.instituicao where cod_instituicao = {$this->ref_cod_instituicao}");
     if ($somente_do_bairro == 't'){
@@ -725,6 +729,31 @@ class indice extends clsCadastro
     $anoConcluinte = $serie['concluinte'] == 2;
 
     return !(dbBool($reprovaDependenciaAnoConcluinte) && $anoConcluinte);
+  }
+
+  function verificaQtdeDependenciasPermitida() {
+    $matriculasDependencia =
+      Portabilis_Utils_Database::fetchPreparedQuery("SELECT *
+                                                       FROM pmieducar.matricula
+                                                      WHERE matricula.ano = {$this->ano}
+                                                        AND matricula.ref_cod_aluno = {$this->ref_cod_aluno}
+                                                        AND matricula.dependencia = TRUE");
+
+    $matriculasDependencia = count($matriculasDependencia);
+
+    $db = new clsBanco();
+    $matriculasDependenciaPermitida =
+      $db->CampoUnico("SELECT regra_avaliacao.qtd_matriculas_dependencia
+                         FROM pmieducar.serie
+                        INNER JOIN modules.regra_avaliacao ON (regra_avaliacao.id = serie.regra_avaliacao_id)
+                        WHERE serie.cod_serie = {$this->ref_cod_serie}");
+
+    if ($matriculasDependencia >= $matriculasDependenciaPermitida) {
+      $this->mensagem = Portabilis_String_Utils::toLatin1("A regra desta série limita a quantidade de matrículas de dependência para {$matriculasDependenciaPermitida}.");
+      return false;
+    }
+
+    return true;
   }
 
   function verificaSolicitacaoTransferencia() {
