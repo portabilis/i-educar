@@ -45,7 +45,7 @@ class clsIndexBase extends clsBase
   function Formular()
   {
     $this->SetTitulo($this->_instituicao . ' i-Educar - Exporta&ccedil;&atilde;o Educacenso');
-    $this->processoAp = 846;
+    $this->processoAp = ($_REQUEST['fase2'] == 1 ? 9998845 : 846);
     $this->addEstilo('localizacaoSistema');
   }
 }
@@ -56,6 +56,7 @@ class indice extends clsCadastro
 
   var $ano;
   var $ref_cod_instituicao;
+  var $segunda_fase = false;
 
   function Inicializar()
   {
@@ -63,8 +64,12 @@ class indice extends clsCadastro
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     @session_write_close();
 
+    $this->segunda_fase = ($_REQUEST['fase2'] == 1);
+
+    $codigoMenu = ($this->segunda_fase ? 9998845 : 846);
+
     $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_cadastra(846, $this->pessoa_logada, 7,
+    $obj_permissoes->permissao_cadastra($codigoMenu, $this->pessoa_logada, 7,
       'educar_index.php');
     $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
 
@@ -94,10 +99,11 @@ class indice extends clsCadastro
 
   function Gerar()
   {
+    $fase2 = $_REQUEST['fase2'];
 
     $this->inputsHelper()->dynamic(array('ano', 'instituicao', 'escola'));
-    $this->inputsHelper()->date('data_ini',array( 'label' => Portabilis_String_Utils::toLatin1('Data início'), 'value' => $this->data_ini));
-    $this->inputsHelper()->date('data_fim',array( 'label' => 'Data fim', 'value' => $this->data_fim));
+    $this->inputsHelper()->date('data_ini',array( 'label' => Portabilis_String_Utils::toLatin1('Data início'), 'value' => $this->data_ini, 'dica' => ($fase2 == 1) ? 'A data informada neste campo, deverá ser a mesma informada na 1ª fase da exportação (Matrícula inicial).' : 'dd/mm/aaaa'));
+    $this->inputsHelper()->date('data_fim',array( 'label' => 'Data fim', 'value' => $this->data_fim, 'dica' => ($fase2 == 1) ? 'A data informada neste campo, deverá ser a mesma informada na 1ª fase da exportação (Matrícula inicial).' : 'dd/mm/aaaa'));
 
     Portabilis_View_Helper_Application::loadJavascript($this, '/modules/Educacenso/Assets/Javascripts/Educacenso.js');
 
