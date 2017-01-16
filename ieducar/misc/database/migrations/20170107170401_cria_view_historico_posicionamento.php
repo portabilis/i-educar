@@ -511,7 +511,6 @@ LEFT JOIN pmieducar.historico_disciplinas hd9 ON (hd9.ref_ref_cod_aluno = hd.ref
                                                   AND fcn_upper(hd9.nm_disciplina) = fcn_upper(hd.nm_disciplina)
                                                   AND hd9.ref_sequencial = he9.sequencial)
 WHERE he.ativo = 1
-      AND he.ref_cod_aluno = 4145
 GROUP BY he.ref_cod_aluno,
          hd.nm_disciplina,
          he1.historico_grade_curso_id,
