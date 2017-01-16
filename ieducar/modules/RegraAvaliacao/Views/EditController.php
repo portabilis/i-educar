@@ -133,6 +133,10 @@ class EditController extends Core_Controller_Page_EditController
       'label'   => 'Quantidade de disciplinas dependência',
       'help'    => 'Preencha a quantidade de disciplinas permitidas para aprovação do aluno com dependência. Preencha com 0 caso não exista.'
     ),
+    'qtdMatriculasDependencia' => array(
+      'label'   => 'Quantidade de matriculas de dependência',
+      'help'    => 'Preencha a quantidade de matrículas de dependência permitidas por aluno. Preencha com 0 caso não exista.'
+    ),
     'recuperacaoDescricao' => array(
       'label'  => 'Descrição do exame:',
       'help'   => 'Exemplo: Recuperação semestral I'
@@ -420,6 +424,9 @@ var tabela_arredondamento = new function() {
 
     $this->campoNumero('qtdDisciplinasDependencia', $this->_getLabel('qtdDisciplinasDependencia'), $this->getEntity()->qtdDisciplinasDependencia,
       3, 3, TRUE, $this->_getHelp('qtdDisciplinasDependencia'));
+
+    $this->campoNumero('qtdMatriculasDependencia', $this->_getLabel('qtdMatriculasDependencia'), $this->getEntity()->qtdMatriculasDependencia,
+      3, 3, TRUE, $this->_getHelp('qtdMatriculasDependencia'));
 
     $this->campoCheck('reprovacaoAutomatica', $this->_getLabel('reprovacaoAutomatica'),
         $this->getEntity()->reprovacaoAutomatica, '', FALSE, FALSE, FALSE, $this->_getHelp('reprovacaoAutomatica'));
