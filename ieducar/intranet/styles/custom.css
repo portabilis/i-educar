@@ -265,22 +265,27 @@ hr {
 **********TABELAS DE ADIÇÃO************
 **************************************/
 
-table#projetos {
+table#projetos,
+table#modulos_ano_letivo {
     width: 100%;
     border: 0 !important;
 }
 
-table#projetos td{
+table#projetos td,
+table#modulos_ano_letivo td {
   text-align: left;
   padding: 0px 15px !important;
   border: 0 !important;
 }
 
-table#projetos .formdktd td{
+table#projetos .formdktd td,
+table#modulos_ano_letivo .formdktd td{
   padding: 8px 15px !important;
 }
 
-table#projetos td .geral{
+table#projetos td .geral,
+table#modulos_ano_letivo td .geral,
+table#modulos_ano_letivo td .obrigatorio{
   width: 100% !important;
 }
 
