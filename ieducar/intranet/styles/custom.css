@@ -16,7 +16,9 @@ hr {
   color: #188ad1;
 }
 
-/******MODAIS*****/
+/**************************************
+****************MODAIS*****************
+**************************************/
 
 .ui-dialog{
   box-shadow: 0 12px 24px 0 rgba(0, 0, 0, 0.3);
@@ -167,6 +169,12 @@ hr {
 /**************************************
 ***************TABELAS*****************
 **************************************/
+
+table {
+    color: #47728f;
+    font-family: "Open Sans" !important;
+    font-size: 12px;
+}
 
 #formcadastro .formdktd, .tableDetalhe .formdktd {
   background-color: #ccdce6 !important;
