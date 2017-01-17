@@ -17,6 +17,30 @@ hr {
 }
 
 /**************************************
+************* BREADCRUMB **************
+**************************************/
+
+td.fundoLocalizacao {
+    background-color: #FFF;
+}
+
+#localizacao {
+    margin-top: 15px;
+}
+
+#localizacao a{
+  color: #47728f;
+  font-size: 14px;
+}
+
+#localizacao .pagina_atual,
+#localizacao .pagina_atual:hover,
+#localizacao .flechinha,
+#localizacao .flechinha:hover{
+  color: #999 !important;
+}
+
+/**************************************
 ****************MODAIS*****************
 **************************************/
 
