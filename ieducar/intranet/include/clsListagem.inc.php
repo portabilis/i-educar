@@ -476,7 +476,8 @@ class clsListagem extends clsCampos
     }
 
     $retorno .=  "<br>";
-    $ncols = 1;
+    
+    $ncols = count( $this->cabecalho );
     $width = empty($this->largura) ? '' : "width='$this->largura'";
 
     if (! $this->__titulo) {
@@ -503,7 +504,7 @@ class clsListagem extends clsCampos
         <!-- listagem begin -->
           <table class='tablelistagem' $width border='0' cellpadding='4' cellspacing='1'>
             <tr>
-              <td colspan='$ncols'>{$this->__titulo}</td>
+              <td class='titulo-tabela-listagem' colspan='$ncols'>{$this->__titulo}</td>
             </tr>";
 
     $ncols = count( $this->cabecalho );

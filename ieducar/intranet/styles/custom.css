@@ -221,7 +221,17 @@ table {
     font-size: 12px;
 }
 
-#formcadastro .formdktd, .tableDetalhe .formdktd {
+td.tableDetalheLinhaSeparador {
+    background-color: #ccdce6 !important;
+}
+
+.linhaBotoes {
+    background-color: #FFF;
+}
+
+#formcadastro .formdktd,
+.tableDetalhe .formdktd,
+.titulo-tabela-listagem {
   background-color: #ccdce6 !important;
   font-family: "Open Sans" !important;
   font-size: 18px;
@@ -250,7 +260,8 @@ table {
   color: #47728f;
 }
 
-#formcadastro .formmdtd, #formcadastro .formlttd{
+#formcadastro .formmdtd,
+#formcadastro .formlttd{
   color: #47728f;
   font-family: "Open Sans";
   font-size: 16px;
