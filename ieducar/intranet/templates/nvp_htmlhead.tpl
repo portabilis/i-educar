@@ -97,6 +97,8 @@
   <script type="text/javascript">
   <!-- #&SCRIPT_HEADER&# -->
   </script>
+  
+<link rel=stylesheet type='text/css' href='styles/custom.css' />
 </head>
 <body <!-- #&BODYSCRIPTS&# -->>
   <div id="DOM_expansivel" class="DOM_expansivel"></div>
