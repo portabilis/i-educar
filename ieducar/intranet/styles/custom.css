@@ -262,6 +262,29 @@ hr {
 }
 
 /**************************************
+**********TABELAS DE ADIÇÃO************
+**************************************/
+
+table#projetos {
+    width: 100%;
+    border: 0 !important;
+}
+
+table#projetos td{
+  text-align: left;
+  padding: 0px 15px !important;
+  border: 0 !important;
+}
+
+table#projetos .formdktd td{
+  padding: 8px 15px !important;
+}
+
+table#projetos td .geral{
+  width: 100% !important;
+}
+
+/**************************************
 ********MATRÍCULAS DET ALUNO***********
 **************************************/
 
