@@ -353,6 +353,24 @@ table#modulos_ano_letivo td .obrigatorio{
   width: 100% !important;
 }
 
+table.paginacao{
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+table.paginacao td {
+  border: 1px solid #ccdce6;
+  padding: 10px !important;
+}
+
+table.paginacao td a{
+color: #188ad1
+}
+
+table.paginacao td a.nvp_paginador {
+    font-size: 14px;
+}
+
 /**************************************
 ********MATRÍCULAS DET ALUNO***********
 **************************************/

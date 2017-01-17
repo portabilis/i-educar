@@ -193,17 +193,17 @@ class clsListagem extends clsCampos
       /**
        * HTML do paginador.
        */
-      $strReturn = "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\"><tr>";
+      $strReturn = "<table class='paginacao' border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\"><tr>";
 
       // Setas de início e anterior
       $imagem = ($intPaginaAtual > 1) ? "seta" :"seta_transp";
       $compl_url = ($add_iniciolimit) ? "&iniciolimit=" . (1 + $pag_modifier): "";
-      $strReturn .= "<td width=\"23\" align=\"center\"><a href=\"{$linkFixo}$getVar=" . (1 + $pag_modifier) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a primeira pagina\"><img src=\"imagens/paginador/{$imagem}1.gif\" border=\"0\" alt=\"primeira pagina\"></a></td> ";
+      $strReturn .= "<td width=\"23\" align=\"center\"><a href=\"{$linkFixo}$getVar=" . (1 + $pag_modifier) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a primeira pagina\"> &laquo; </a></td> ";
       $compl_url = ($add_iniciolimit) ? "&iniciolimit=" . max(1 + $pag_modifier, $intPaginaAtual - 1) : '';
-      $strReturn .= "<td width=\"23\" align=\"center\"><a href=\"{$linkFixo}$getVar=" . max(1 + $pag_modifier, $intPaginaAtual - 1) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a pagina anterior\"><img src=\"imagens/paginador/{$imagem}2.gif\" border=\"0\" alt=\"pagina anterior\"></a></td> ";
+      $strReturn .= "<td width=\"23\" align=\"center\"><a href=\"{$linkFixo}$getVar=" . max(1 + $pag_modifier, $intPaginaAtual - 1) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a pagina anterior\"> &lsaquo; </a></td> ";
 
       // Meio
-      $strReturn .= "<td align=\"center\"><img src=\"imagens/paginador/esq.gif\" border=\"0\" alt=\"\"></td>";
+      $strReturn .= "";
       $meios = array();
 
       for ($i = 0; $i <= $intPaginasExibidas * 2 && $i + $pagStart <= $totalPaginas; $i++) {
@@ -211,18 +211,15 @@ class clsListagem extends clsCampos
 
         $imagem     = ($pagStart + $i + $pag_modifier == $intPaginaAtual) ? '2' : '1';
         $compl_url  = ($add_iniciolimit) ? "&iniciolimit=" . ($pagStart + $i + $pag_modifier) : '';
-        $strReturn .= "<td align=\"center\" style=\"padding-left:5px;padding-right:5px;background-image: url('imagens/paginador/bg{$imagem}.gif');\"><a href=\"{$linkFixo}$getVar=" . ( $pagStart + $i + $pag_modifier ) . "{$compl_url}&ordenacao={$ordenacao}\" class=\"nvp_paginador\" title=\"Ir para a p&aacute;gina " . ($pagStart + $i) . "\">" . addLeadingZero($pagStart + $i) ."</a></td>";
-        $strReturn .= "<td><img src=\"imagens/paginador/separador.gif\" border=\"0\" alt=\"\"></td>";
+        $strReturn .= "<td align=\"center\" style=\"padding-left:5px;padding-right:5px;\"><a href=\"{$linkFixo}$getVar=" . ( $pagStart + $i + $pag_modifier ) . "{$compl_url}&ordenacao={$ordenacao}\" class=\"nvp_paginador\" title=\"Ir para a p&aacute;gina " . ($pagStart + $i) . "\">" . addLeadingZero($pagStart + $i) ."</a></td>";
       }
-
-      $strReturn .= "<td align=\"center\"><img src=\"imagens/paginador/dir.gif\" border=\"0\" alt=\"\"></td>";
 
       // Setas de fim e próxima
       $imagem     = ($intPaginaAtual < $totalPaginas) ? 'seta' : 'seta_transp';
       $compl_url  = ($add_iniciolimit) ? "&iniciolimit=" . min($totalPaginas + $pag_modifier, $intPaginaAtual + 1) : '';
-      $strReturn .= "<td width=\"23\" align=\"center\"><a href=\"{$linkFixo}$getVar=" . min($totalPaginas + $pag_modifier, $intPaginaAtual + 1) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a proxima pagina\"><img src=\"imagens/paginador/{$imagem}3.gif\" border=\"0\" alt=\"proxima pagina\"></a></td> ";
+      $strReturn .= "<td width=\"23\" align=\"center\"><a href=\"{$linkFixo}$getVar=" . min($totalPaginas + $pag_modifier, $intPaginaAtual + 1) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a proxima pagina\"> &rsaquo; </a></td> ";
       $compl_url  = ( $add_iniciolimit ) ? "&iniciolimit=" . ($totalPaginas + $pag_modifier): "";
-      $strReturn .= "<td width=\"23\" align=\"center\"><a href=\"{$linkFixo}$getVar=" . ($totalPaginas + $pag_modifier) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a ultima pagina\"><img src=\"imagens/paginador/{$imagem}4.gif\" border=\"0\" alt=\"ultima pagina\"></a></td> ";
+      $strReturn .= "<td width=\"23\" align=\"center\"><a href=\"{$linkFixo}$getVar=" . ($totalPaginas + $pag_modifier) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a ultima pagina\"> &raquo; </a></td> ";
 
       $strReturn .= "</tr></table>";
 
