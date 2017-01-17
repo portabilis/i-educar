@@ -8,6 +8,27 @@ hr {
     background: #47728f;
 }
 
+input, select, textarea{
+  border: solid 1px #cddce6 !important;
+  color: #47728f;
+  font-family: "Open Sans" !important;
+}
+
+input[type="button"] {
+  background-color: #FFF !important;
+  font-size: 12px !important;
+  color: #47728f !important;
+  padding: 7px 30px !important;
+  border-radius: 3px !important;
+  font-weight: normal;
+}
+
+select:not([size]):not([multiple]), select[size="0"], select[size="1"] {
+    background-color: #ccdce6;
+    color: #47728f;
+    border-color: #ccdce6;
+}
+
 .decorated {
   font-size: 14px;
   font-weight: normal;
