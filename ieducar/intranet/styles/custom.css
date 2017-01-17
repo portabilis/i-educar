@@ -242,13 +242,19 @@ td.tableDetalheLinhaSeparador {
   padding: 8px;
 }
 
-#formcadastro input, #formcadastro textarea, .chosen-choices {
+#formcadastro input, #formcadastro textarea {
   border-radius: 3px;
   background-color: #ffffff;
-  border: solid 1px #cddce6 !important;
+  border: solid 1px #cddce6;
   padding: 11px;
   font-size: 14px;
   color: #47728f;
+}
+
+.chosen-choices{
+  border-radius: 3px;
+  border: solid 1px #cddce6 !important;
+  padding: 5px !important;
 }
 
 #formcadastro select{
