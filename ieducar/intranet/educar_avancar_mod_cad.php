@@ -128,7 +128,6 @@ class indice extends clsCadastro
     $countDepPendente = 0;
     $nomesAlunos;
     $nomesAlunosDepPendente;
-    //sort($alunosSemInep);
 
     if (count($alunosSemInep) == 0) {
       while ($result && $this->db->ProximoRegistro()) {
@@ -162,11 +161,11 @@ class indice extends clsCadastro
           $possuiDependenciaPendente = $possuiDependenciaPendente || !((bool)$ap);
         }
 
-        if (!$possuiDependenciaPendente){
-          if ($result && $situacao == 1 || $situacao == 12 || $situacao == 13)
-            $result = $this->rematricularAlunoAprovado($escolaId, $serieId, $this->ano_letivo, $alunoId);
-          elseif ($result && $situacao == 2 || $situacao == 14)
-            $result = $this->rematricularAlunoReprovado($escolaId, $cursoId, $serieId, $this->ano_letivo, $alunoId);
+      if (!$possuiDependenciaPendente){
+        if ($result && $situacao == 1 || $situacao == 12 || $situacao == 13)
+          $result = $this->rematricularAlunoAprovado($escolaId, $serieId, $this->ano_letivo, $alunoId);
+        elseif ($result && $situacao == 2 || $situacao == 14)
+          $result = $this->rematricularAlunoReprovado($escolaId, $cursoId, $serieId, $this->ano_letivo, $alunoId);
 
           $nomesAlunos[] = $nomeAluno;
           $count += 1;
