@@ -125,9 +125,7 @@ class indice extends clsCadastro
     $result           = $this->selectMatriculas($escolaId, $cursoId, $serieId, $turmaId, $this->ano_letivo);
     $alunosSemInep    = $this->getAlunosSemInep($escolaId, $cursoId, $serieId, $turmaId, $ano);
     $count            = 0;
-    $countDepPendente = 0;
     $nomesAlunos;
-    $nomesAlunosDepPendente;
 
     if (count($alunosSemInep) == 0) {
       while ($result && $this->db->ProximoRegistro()) {
@@ -137,8 +135,6 @@ class indice extends clsCadastro
                                  SET ultima_matricula = '0'
                                WHERE cod_matricula = $matriculaId");
 
-        $possuiDependenciaPendente = false;
-
         $resultApDep = $this->db2->Consulta("SELECT ref_ref_cod_serie
                                                FROM pmieducar.matricula
                                               WHERE aprovado = 12
@@ -147,21 +143,6 @@ class indice extends clsCadastro
                                                 AND ativo = 1
                                                 AND dependencia = FALSE");
 
-        while($resultApDep && $this->db2->ProximoRegistro()){
-          $regApDep = $this->db2->Tupla();
-          $serieApDep = $regApDep["ref_ref_cod_serie"];
-          $ap = $this->db3->UnicoCampo("SELECT 1
-                                          FROM pmieducar.matricula
-                                         WHERE aprovado = 1
-                                           AND ref_cod_aluno = '{$alunoId}'
-                                           AND ativo = 1
-                                           AND ref_ref_cod_serie = '{$serieApDep}'
-                                           AND dependencia = TRUE ");
-
-          $possuiDependenciaPendente = $possuiDependenciaPendente || !((bool)$ap);
-        }
-
-      if (!$possuiDependenciaPendente){
         if ($result && $situacao == 1 || $situacao == 12 || $situacao == 13)
           $result = $this->rematricularAlunoAprovado($escolaId, $serieId, $this->ano_letivo, $alunoId);
         elseif ($result && $situacao == 2 || $situacao == 14)
@@ -169,10 +150,6 @@ class indice extends clsCadastro
 
           $nomesAlunos[] = $nomeAluno;
           $count += 1;
-        }else{
-          $nomesAlunosDepPendente[] = $nomeAluno;
-          $countDepPendente++;
-        }
 
         if (! $result)
           break;
@@ -180,7 +157,7 @@ class indice extends clsCadastro
     }
 
     if ($result && empty($this->mensagem)){
-      if ($count > 0 || $countDepPendente > 0){
+      if ($count > 0){
         $mensagem = "";
         if($count > 0){
           $mensagem .= "<span class='success'>Rematriculado os seguinte(s) $count aluno(s) com sucesso em $this->ano_letivo: </br></br>";
@@ -188,12 +165,6 @@ class indice extends clsCadastro
             $mensagem .= "{$nome} </br>";
           }
           $mensagem .= "</br> As enturmações podem ser realizadas em: Movimentação > Enturmação.</span>";
-        }
-        if($countDepPendente > 0){
-          $mensagem .= "<br/><br/><span class='error'>Os seguinte(s) $countDepPendente aluno(s) não foram matrículados pois tem dependências pendentes:</br></br>";
-          foreach ($nomesAlunosDepPendente as $nome) {
-            $mensagem .= "{$nome} </br>";
-          }
         }
         $this->mensagem = $mensagem;
       }elseif (count($alunosSemInep) > 0) {
