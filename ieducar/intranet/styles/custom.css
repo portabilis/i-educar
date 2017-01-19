@@ -38,6 +38,84 @@ select:not([size]):not([multiple]), select[size="0"], select[size="1"] {
 }
 
 /**************************************
+**************** MENUS ****************
+**************************************/
+
+.r3c1{
+  width: 270px;
+  background: #e9f0f8;
+  background: #e9f0f8;
+}
+
+.nvp_tabelaMenu{
+  background: #e9f0f8;
+}
+
+.nvp_tabelaMenu .title-busca-rapida a {
+    font-size: 12px !important;
+    text-transform: uppercase;
+    font-weight: bold !important;
+}
+
+
+
+.nvp_tabelaMenu .title-busca-rapida .title:hover{
+  background: transparent;
+}
+
+.nvp_tabelaMenu input#busca-menu-input{
+  width: 100% !important;
+  font-size: 12px;
+  padding: 11px;
+  margin-bottom: 10px;
+}
+
+.nvp_tabelaMenu .title {
+  background: transparent;
+  width: 270px;
+  padding: 10px 10px;
+  margin: 0 10px;
+  border-radius: 3px;
+}
+
+.nvp_tabelaMenu .title:hover{
+  background: #cddce6;
+}
+
+
+.nvp_tabelaMenu .title a{
+  color: #47728f;
+  font-size: 16px;
+  font-weight: normal;
+  text-decoration: none;
+}
+
+.title .img{
+  width: 13px;
+  height: 13px;
+}
+
+.nvp_tabelaMenu .nvp_sub {
+    padding: 3px 40px !important;
+    width: 210px;
+}
+
+.nvp_tabelaMenu .nvp_sub a{
+  color: #47728f;
+  font-size: 12px;
+  font-family: "Open Sans";
+}
+
+.nvp_tabelaMenu ul.menu{
+  width: 100%;
+}
+
+.nvp_tabelaMenu ul.menu li{
+  padding: 0 20px;
+  display: flex;
+}
+
+/**************************************
 ************* BREADCRUMB **************
 **************************************/
 
