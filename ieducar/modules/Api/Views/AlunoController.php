@@ -589,10 +589,18 @@ class AlunoController extends ApiCoreController
   }
 
   protected function loadNomeTurmaOrigem($matriculaId) {
-    $sql = "select nm_turma from pmieducar.matricula_turma mt
-            left join pmieducar.turma t on (t.cod_turma = mt.ref_cod_turma)
-            where ref_cod_matricula = $1 and mt.ativo = 0 and mt.ref_cod_turma <> COALESCE((select ref_cod_turma from pmieducar.matricula_turma
-              where ref_cod_matricula = $1 and ativo = 1 limit 1),0) order by mt.data_exclusao desc limit 1";
+    $sql = "SELECT nm_turma
+              FROM pmieducar.matricula_turma mt
+              LEFT JOIN pmieducar.turma t ON (t.cod_turma = mt.ref_cod_turma)
+             WHERE ref_cod_matricula = $1
+               AND mt.ativo = 0
+               AND mt.ref_cod_turma <> COALESCE((SELECT ref_cod_turma
+                                                   FROM pmieducar.matricula_turma
+                                                  WHERE ref_cod_matricula = $1
+                                                    AND ativo = 1
+                                                  LIMIT 1), 0)
+             ORDER BY mt.data_exclusao DESC
+             LIMIT 1";
 
     return $this->toUtf8(Portabilis_Utils_Database::selectField($sql, $matriculaId), array('transform' => true));
   }
