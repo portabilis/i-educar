@@ -44,7 +44,7 @@ select:not([size]):not([multiple]), select[size="0"], select[size="1"] {
 .r3c1{
   width: 270px;
   background: #e9f0f8;
-  background: #e9f0f8;
+  border: 0;
 }
 
 .nvp_tabelaMenu{
