@@ -72,7 +72,7 @@ select:not([size]):not([multiple]), select[size="0"], select[size="1"] {
 
 .nvp_tabelaMenu .title {
   background: transparent;
-  width: 270px;
+  width: 250px;
   padding: 10px 10px;
   margin: 0 10px;
   border-radius: 3px;
@@ -97,7 +97,7 @@ select:not([size]):not([multiple]), select[size="0"], select[size="1"] {
 
 .nvp_tabelaMenu .nvp_sub {
     padding: 3px 40px !important;
-    width: 210px;
+    width: 190px;
 }
 
 .nvp_tabelaMenu .nvp_sub a{
