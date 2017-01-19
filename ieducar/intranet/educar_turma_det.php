@@ -290,17 +290,17 @@ class indice extends clsDetalhe
         $tabela = '
           <table>
             <tr align="center">
-              <td bgcolor="#A1B3BD"><b>Nome</b></td>
-              <td bgcolor="#A1B3BD"><b>Data Início</b></td>
-              <td bgcolor="#A1B3BD"><b>Data Fim</b></td>
-              <td bgcolor="#A1B3BD"><b>Dias Letivos</b></td>
+              <td bgcolor="#f5f9fd "><b>Nome</b></td>
+              <td bgcolor="#f5f9fd "><b>Data Início</b></td>
+              <td bgcolor="#f5f9fd "><b>Data Fim</b></td>
+              <td bgcolor="#f5f9fd "><b>Dias Letivos</b></td>
             </tr>';
 
         $cont = 0;
 
         foreach ($lst as $valor) {
           if (($cont % 2) == 0) {
-            $color = ' bgcolor="#E4E9ED" ';
+            $color = ' bgcolor="#f5f9fd " ';
           }
           else {
             $color = ' bgcolor="#FFFFFF" ';
@@ -351,16 +351,16 @@ class indice extends clsDetalhe
         $tabela1 = '
           <table>
             <tr align="center">
-              <td bgcolor="#A1B3BD"><b>Nome</b></td>
-              <td bgcolor="#A1B3BD"><b>Hora Inicial</b></td>
-              <td bgcolor="#A1B3BD"><b>Hora Final</b></td>
+              <td bgcolor="#f5f9fd "><b>Nome</b></td>
+              <td bgcolor="#f5f9fd "><b>Hora Inicial</b></td>
+              <td bgcolor="#f5f9fd "><b>Hora Final</b></td>
             </tr>';
 
         $cont = 0;
 
         foreach ($lst as $valor) {
           if (($cont % 2) == 0) {
-            $color = ' bgcolor="#E4E9ED" ';
+            $color = ' bgcolor="#f5f9fd " ';
           }
           else {
             $color = ' bgcolor="#FFFFFF" ';
@@ -404,13 +404,13 @@ class indice extends clsDetalhe
     $tabela3 = '
       <table>
         <tr align="center">
-          <td bgcolor="#A1B3BD"><b>Nome</b></td>
-          <td bgcolor="#A1B3BD"><b>Carga horária</b></td>
+          <td bgcolor="#f5f9fd "><b>Nome</b></td>
+          <td bgcolor="#f5f9fd "><b>Carga horária</b></td>
         </tr>';
 
     $cont = 0;
     foreach ($componentes as $componente) {
-      $color = ($cont++ % 2 == 0) ? ' bgcolor="#E4E9ED" ' : ' bgcolor="#FFFFFF" ';
+      $color = ($cont++ % 2 == 0) ? ' bgcolor="#f5f9fd " ' : ' bgcolor="#FFFFFF" ';
 
       $tabela3 .= sprintf('
         <tr>

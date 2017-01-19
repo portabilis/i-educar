@@ -908,7 +908,7 @@ class clsCampos extends Core_Controller_Page_Abstract
     $this->num_espaco++;
   }
 
-  function campoQuebra2($cor = '#000000', $altura = 2)
+  function campoQuebra2($cor = '#47728f', $altura = 2)
   {
     $this->campos['linha_preta' . $this->num_espaco] = array(
       'linha_preta',

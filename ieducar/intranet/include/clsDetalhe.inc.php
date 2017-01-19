@@ -269,7 +269,7 @@ class clsDetalhe extends Core_Controller_Page_Abstract
         $retorno .= "</td></tr>";
       }
 
-      $retorno .= "<tr><td colspan='2' height='1' bgcolor='black' style='font-size: 0px;'>&nbsp;</td></tr>";
+      $retorno .= "<tr><td colspan='2' height='1' bgcolor='#ccdce6' style='font-size: 0px;'>&nbsp;</td></tr>";
     }
 
     $retorno .= "
