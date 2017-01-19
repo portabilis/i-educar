@@ -48,7 +48,7 @@
       var src    = imagem.src.indexOf('arrow-up') ;
 
       imagem.src = (src!= -1) ?
-        'imagens/arrow-down2.gif' : 'imagens/arrow-up2.gif' ;
+        'imagens/arrow-down2.png' : 'imagens/arrow-up2.png' ;
 
       imagem.title = (src!= -1) ?
         imagem.title.replace('Abrir', 'Fechar') :
