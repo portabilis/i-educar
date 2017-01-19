@@ -32,6 +32,7 @@ require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
+require_once 'App/Model/IedFinder.php';
 
 /**
  * clsIndexBase class.
@@ -261,6 +262,11 @@ class indice extends clsCadastro
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     @session_write_close();
 
+    if(empty($this->etapa)){
+      $this->mensagem = 'É necessário informar pelo menos uma etapa.';
+      return false;
+    }
+
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7,
       'educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
@@ -290,6 +296,59 @@ class indice extends clsCadastro
 
     $cadastrou = $obj->cadastra();
     if ($cadastrou) {
+      foreach ($this->etapa as $etapa) {
+        $get_notas_lancadas = App_Model_IedFinder::getNotasLancadasAluno($this->ref_cod_matricula, $this->ref_cod_disciplina, $etapa);
+
+        if($get_notas_lancadas[0]['matricula_id'] == ''){
+          break;
+        }
+        else{
+          $cod_matricula = $get_notas_lancadas[0]['matricula_id'];
+          $disciplina = $get_notas_lancadas[0]['componente_curricular_id'];
+          $nota = $get_notas_lancadas[0]['nota'];
+          $etapa_nota = $get_notas_lancadas[0]['etapa'];
+          if($get_notas_lancadas[0]['nota_recuperacao'] == '') $nota_recuperacao = 'NULL';
+          if($get_notas_lancadas[0]['nota_recuperacao_especifica'] == '') $nota_recuperacao_especifica = 'NULL';
+
+          $db->Consulta("INSERT INTO pmieducar.auditoria_nota_dispensa (ref_cod_matricula, ref_cod_componente_curricular, nota, etapa, nota_recuperacao, nota_recuperacao_especifica, data_cadastro)
+                         VALUES($cod_matricula, $disciplina, $nota, $etapa_nota, $nota_recuperacao, $nota_recuperacao_especifica, NOW())");
+
+          $db->Consulta("DELETE
+                           FROM modules.nota_componente_curricular AS ncc USING modules.nota_aluno AS na
+                          WHERE na.id = ncc.nota_aluno_id
+                            AND na.matricula_id = $this->ref_cod_matricula
+                            AND ncc.componente_curricular_id = $this->ref_cod_disciplina
+                            AND ncc.etapa = $etapa");
+        }
+      }
+
+      $tipo_falta = $db->CampoUnico("SELECT tipo_falta FROM modules.falta_aluno WHERE matricula_id = $this->ref_cod_matricula");
+      if($tipo_falta == 2){
+        foreach ($this->etapa as $etapa) {
+          $get_faltas_lancadas = App_Model_IedFinder::getFaltasLancadasAluno($this->ref_cod_matricula, $this->ref_cod_disciplina, $etapa);
+
+          if($get_faltas_lancadas[0]['matricula_id'] == ''){
+            break;
+          }
+          else{
+            $cod_matricula = $get_faltas_lancadas[0]['matricula_id'];
+            $disciplina = $get_faltas_lancadas[0]['componente_curricular_id'];
+            $quantidade = $get_faltas_lancadas[0]['quantidade'];
+            $etapa_falta = $get_faltas_lancadas[0]['etapa'];
+
+            $db->Consulta("INSERT INTO pmieducar.auditoria_falta_componente_dispensa (ref_cod_matricula, ref_cod_componente_curricular, quantidade, etapa, data_cadastro)
+              VALUES ($cod_matricula, $disciplina, $quantidade, $etapa_falta, NOW())");
+
+            $db->Consulta("DELETE
+                             FROM modules.falta_componente_curricular AS fcc USING modules.falta_aluno AS fa
+                            WHERE fa.id = fcc.falta_aluno_id
+                              AND fa.matricula_id = $this->ref_cod_matricula
+                              AND fcc.componente_curricular_id = $this->ref_cod_disciplina
+                              AND fcc.etapa = $etapa");
+          }
+        }
+      }
+
       foreach ($this->etapa as $e) {
         $objDispensaEtapa = new clsPmieducarDispensaDisciplinaEtapa($max_cod_dispensa, $e);
         $cadastra = $objDispensaEtapa->cadastra();

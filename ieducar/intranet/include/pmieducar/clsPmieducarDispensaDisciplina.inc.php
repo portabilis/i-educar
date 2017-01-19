@@ -551,7 +551,8 @@ class clsPmieducarDispensaDisciplina
       is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_disciplina) &&
       is_numeric($this->ref_usuario_exc)
     ) {
-      $this->ativo = 0;
+      $db = new clsBanco();
+      $db->Consulta("DELETE FROM {$this->_tabela} WHERE ref_cod_matricula = '{$this->ref_cod_matricula}' AND ref_cod_disciplina = '{$this->ref_cod_disciplina}'");
       return $this->edita();
     }
     return FALSE;
