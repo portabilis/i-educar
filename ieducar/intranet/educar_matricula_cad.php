@@ -186,7 +186,8 @@ class indice extends clsCadastro
 
     if($GLOBALS['coreExt']['Config']->app->matricula->dependencia == 1)
       $this->inputsHelper()->checkbox('dependencia',
-                                      array('label' => Portabilis_String_Utils::toLatin1('Matrícula de dependência?')));
+                                      array('label' => Portabilis_String_Utils::toLatin1('Matrícula de dependência?'),
+                                            'value' => $this->dependencia));
 
     if (is_numeric($this->ref_cod_curso)) {
       $obj_curso = new clsPmieducarCurso($this->ref_cod_curso);
@@ -735,19 +736,6 @@ class indice extends clsCadastro
     return !(dbBool($reprovaDependenciaAnoConcluinte) && $anoConcluinte);
   }
 
-  function verificaAlunoFalecido() {
-
-    $aluno = new clsPmieducarAluno($this->ref_cod_aluno);
-    $aluno = $aluno->detalhe();
-
-    $pessoa = new clsPessoaFisica($aluno["ref_idpes"]);
-    $pessoa = $pessoa->detalhe();
-
-    $falecido = dbBool($pessoa['falecido']);
-
-    return $falecido;
-  }
-
   function verificaQtdeDependenciasPermitida() {
     $matriculasDependencia =
       Portabilis_Utils_Database::fetchPreparedQuery("SELECT *
@@ -771,6 +759,19 @@ class indice extends clsCadastro
     }
 
     return true;
+  }
+
+  function verificaAlunoFalecido() {
+
+    $aluno = new clsPmieducarAluno($this->ref_cod_aluno);
+    $aluno = $aluno->detalhe();
+
+    $pessoa = new clsPessoaFisica($aluno["ref_idpes"]);
+    $pessoa = $pessoa->detalhe();
+
+    $falecido = dbBool($pessoa['falecido']);
+
+    return $falecido;
   }
 
   function verificaSolicitacaoTransferencia() {
