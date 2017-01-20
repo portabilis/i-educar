@@ -186,7 +186,8 @@ class indice extends clsCadastro
 
     if($GLOBALS['coreExt']['Config']->app->matricula->dependencia == 1)
       $this->inputsHelper()->checkbox('dependencia',
-                                      array('label' => Portabilis_String_Utils::toLatin1('Matrícula de dependência?')));
+                                      array('label' => Portabilis_String_Utils::toLatin1('Matrícula de dependência?'),
+                                            'value' => $this->dependencia));
 
     if (is_numeric($this->ref_cod_curso)) {
       $obj_curso = new clsPmieducarCurso($this->ref_cod_curso);
