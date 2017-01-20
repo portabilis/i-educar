@@ -199,11 +199,15 @@ class DiarioController extends ApiCoreController
                 $nomeCampoRecuperacao = $this->defineCampoTipoRecuperacao($turmaId);
                 $valor = $this->truncate($valor, 4);
 
+                $recuperacaoEspecifica = $nomeCampoRecuperacao == 'notaRecuperacaoEspecifica';
+
                 $notaAposRecuperacao = (($notaRecuperacao > $valor) ? $notaRecuperacao : $valor);
+
+                $valorNota = $recuperacaoEspecifica ? $valor : $notaAposRecuperacao;
 
                 $array_nota = array(
                       'componenteCurricular' => $componenteCurricularId,
-                      'nota'                 => $notaAposRecuperacao,
+                      'nota'                 => $valorNota,
                       'etapa'                => $etapa,
                       'notaOriginal'         => $valor);
 
