@@ -1863,7 +1863,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
 
     $r89s3 = $this->cpfToCenso($r89s3);
     $r89s4 = $this->convertStringToAlpha($r89s4);
-    $r89s6 = $this->upperAndUnaccent($r89s6);
+    $r89s6 = $this->convertEmailToCenso($r89s6);
 
     for ($i=1; $i <= $numeroRegistros ; $i++)
       $return .= ${'r89s'.$i}.'|';
@@ -1938,6 +1938,23 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
     $numbers = range(0,9);
     $caracteresAceitos = array(" ", "x", "X");
     $caracteresAceitos = array_merge($numbers, $caracteresAceitos);
+
+    //Aplica filtro na string eliminando caracteres indesejados
+    $regex  = sprintf('/[^%s]/u', preg_quote(join($caracteresAceitos), '/'));
+    $string = preg_replace($regex, '', $string);
+
+    return $string;
+  }
+
+  protected function convertEmailToCenso($string){
+    $string = $this->upperAndUnaccent($string);
+
+    //Aceita apenas letras e numeros e alguns caracteres especiais
+    $alphas = range('A','Z');
+    $numbers = range(0,9);
+    $caracteresAceitos = array("_", "-", "@", ".");
+    $caracteresAceitos = array_merge($numbers, $caracteresAceitos);
+    $caracteresAceitos = array_merge($alphas, $caracteresAceitos);
 
     //Aplica filtro na string eliminando caracteres indesejados
     $regex  = sprintf('/[^%s]/u', preg_quote(join($caracteresAceitos), '/'));
