@@ -583,34 +583,6 @@ class indice extends clsCadastro
         return false;
       }
 
-      $anoValidacao = $this->ano - 2;
-
-      $db->Consulta("SELECT m.ano, s.nm_serie
-                      FROM pmieducar.matricula m
-                      INNER JOIN pmieducar.serie s ON s.cod_serie = m.ref_ref_cod_serie
-                      WHERE m.ano <= {$anoValidacao}
-                      AND m.aprovado = 12
-                      AND m.ativo = 1
-                      AND m.ref_cod_aluno = {$this->ref_cod_aluno}
-                      AND m.ref_ref_cod_serie <> {$this->ref_cod_serie}
-                      AND (SELECT 1
-                            FROM pmieducar.matricula s_m
-                            WHERE s_m.ref_cod_aluno = m.ref_cod_aluno
-                            AND s_m.ativo = 1
-                            AND s_m.ano > m.ano
-                            AND s_m.dependencia = TRUE
-                            AND s_m.aprovado = 1
-                            LIMIT 1) IS NULL ");
-
-      $db->ProximoRegistro();
-      $m = $db->Tupla();
-      if (is_array($m) && count($m) && !$dependencia) {
-        $anoAprovadoComDependencia = $m['ano'];
-        $serieAprovadoComDependencia = $m['nm_serie'];
-        $this->mensagem .= "Esse aluno foi aprovado com depend&ecirc;ncia no ano de {$anoAprovadoComDependencia} no {$serieAprovadoComDependencia}, e n&atilde;o foi aprovado na depend&ecirc;ncia no ano de ".($anoAprovadoComDependencia + 1).".<br />";
-        return false;
-      }
-
       $db->Consulta("SELECT *
                       FROM pmieducar.matricula m
                       WHERE m.ano = {$this->ano}
