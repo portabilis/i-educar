@@ -107,6 +107,7 @@ class indice
 
           $j(function() {
             $j( "#dialog" ).dialog({
+              dialogClass: "atualizacao-dados",
               width: 600,
               position: { my: "center", at: "top", of: window },
               buttons: [
