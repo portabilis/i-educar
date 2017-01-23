@@ -41,6 +41,7 @@ $j(document).ready(function(){
     	var escola = $j("#ref_cod_escola").val();
     	var dataIni = $j("#data_ini").val();
     	var dataFim = $j("#data_fim").val();
+      var fase2 = ($j("#fase2").val() == "true");
 
     	if (!escola || !dataIni || !dataFim){
     		alert("Preencha os dados obrigat\u00f3rios antes de continuar.");
@@ -50,14 +51,23 @@ $j(document).ready(function(){
         return;
       }
 
-      $j("#modal_load").modal({
-        escapeClose: false,
-        clickClose: false,
-        showClose: false
-      });
-
       resetParameters();
-      analisaRegistro00();
+
+      if (fase2) {
+        $j("#modal_export").modal({
+          escapeClose: false,
+          clickClose: false,
+          showClose: false
+        });
+        educacensoExportFase2();
+      } else {
+        $j("#modal_load").modal({
+          escapeClose: false,
+          clickClose: false,
+          showClose: false
+        });
+        analisaRegistro00();
+      }
     });
 
     function isValidDate(s) {
@@ -90,11 +100,6 @@ $j(document).ready(function(){
         var newPage = window.open();
         newPage.document.write(paginaResposta);
       } else {
-        $j("#modal_export").modal({
-          escapeClose: false,
-          clickClose: false,
-          showClose: false
-        });
         educacensoExport();
       }
     }
@@ -121,6 +126,22 @@ $j(document).ready(function(){
 
     var educacensoExport = function(){
         var urlForEducacensoExport = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoExport', 'educacenso-export', {
+          escola   : $j("#ref_cod_escola").val(),
+          ano      : $j("#ano").val(),
+          data_ini : $j("#data_ini").val(),
+          data_fim : $j("#data_fim").val()
+        });
+
+        var options = {
+          url : urlForEducacensoExport,
+          dataType : 'json',
+          success  : handleEducacensoExport
+        };
+        getResources(options);
+    };
+
+    var educacensoExportFase2 = function(){
+        var urlForEducacensoExport = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoExport', 'educacenso-export-fase2', {
           escola   : $j("#ref_cod_escola").val(),
           ano      : $j("#ano").val(),
           data_ini : $j("#data_ini").val(),
