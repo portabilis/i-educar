@@ -274,7 +274,7 @@ class indice extends clsCadastro
     $opcoes = array();
     $obj_matriculas_turma = new clsPmieducarMatriculaTurma();
     $alunos = $obj_matriculas_turma->alunosNaoEnturmados($this->ref_ref_cod_escola,
-      $this->ref_ref_cod_serie, $this->ref_cod_curso, $ano_letivo);
+      $this->ref_ref_cod_serie, $this->ref_cod_curso, $this->ano);
 
     if (is_array($alunos)) {
       for ($i = 0; $i < count($alunos); $i++) {
