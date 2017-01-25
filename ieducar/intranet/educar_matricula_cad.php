@@ -714,7 +714,8 @@ class indice extends clsCadastro
                                                        FROM pmieducar.matricula
                                                       WHERE matricula.ano = {$this->ano}
                                                         AND matricula.ref_cod_aluno = {$this->ref_cod_aluno}
-                                                        AND matricula.dependencia = TRUE");
+                                                        AND matricula.dependencia = TRUE
+                                                        AND matricula.ativo = 1");
 
     $matriculasDependencia = count($matriculasDependencia);
 

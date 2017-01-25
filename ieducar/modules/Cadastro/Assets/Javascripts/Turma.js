@@ -5,13 +5,13 @@ $j('td .formdktd b').remove();
 $j('#tab1').addClass('turmaTab-active').removeClass('turmaTab');
 
 // Atribui um id a linha, para identificar até onde/a partir de onde esconder os campos
-$j('#tipo_atendimento').closest('tr').attr('id','ttipo_atendimento');
+$j('#codigo_inep_educacenso').closest('tr').attr('id','tr_codigo_inep_educacenso');
 
 // Adiciona um ID à linha que termina o formulário para parar de esconder os campos
 $j('.tableDetalheLinhaSeparador').closest('tr').attr('id','stop');
 
 // Pega o número dessa linha
-linha_inicial_tipo = $j('#ttipo_atendimento').index()-1;
+linha_inicial_tipo = $j('#tr_codigo_inep_educacenso').index()-1;
 
 // hide nos campos das outras abas (deixando só os campos da primeira aba)
 $j('.tablecadastro >tbody  > tr').each(function(index, row) {
