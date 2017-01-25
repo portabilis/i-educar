@@ -145,6 +145,7 @@ class indice extends clsCadastro
   var $etapa_educacenso;
   var $etapa_educacenso2;
   var $ref_cod_disciplina_dispensada;
+  var $codigo_inep_educacenso;
 
   var $etapas_especificas;
   var $etapas_utilizadas;
@@ -177,12 +178,12 @@ class indice extends clsCadastro
     $obj_permissoes->permissao_cadastra(586, $this->pessoa_logada, 7, 'educar_turma_lst.php');
 
     if (is_numeric($this->cod_turma)) {
-      $obj      = new clsPmieducarTurma($this->cod_turma);
-      $registro = $obj->detalhe();
-      $obj_esc  = new clsPmieducarEscola($registro['ref_ref_cod_escola']);
-      $det_esc  = $obj_esc->detalhe();
-      $obj_ser  = new clsPmieducarSerie($registro['ref_ref_cod_serie']);
-      $det_ser  = $obj_ser->detalhe();
+      $obj_turma = new clsPmieducarTurma($this->cod_turma);
+      $registro  = $obj_turma->detalhe();
+      $obj_esc   = new clsPmieducarEscola($registro['ref_ref_cod_escola']);
+      $det_esc   = $obj_esc->detalhe();
+      $obj_ser   = new clsPmieducarSerie($registro['ref_ref_cod_serie']);
+      $det_ser   = $obj_ser->detalhe();
 
       $regra_avaliacao_id = $det_ser["regra_avaliacao_id"];
       $regra_avaliacao_mapper = new RegraAvaliacao_Model_RegraDataMapper();
@@ -197,6 +198,12 @@ class indice extends clsCadastro
       $obj_curso = new clsPmieducarCurso(($this->ref_cod_curso));
       $det_curso = $obj_curso->detalhe();
       $this->padrao_ano_escolar = $det_curso['padrao_ano_escolar'];
+
+      $inep = $obj_turma->getInep();
+
+      if ($inep) {
+        $this->codigo_inep_educacenso = $inep;
+      }
 
       if ($registro) {
         foreach ($registro as $campo => $val) {
@@ -721,6 +728,11 @@ class indice extends clsCadastro
 
     $this->acao_enviar = 'valida()';
 
+    $this->inputsHelper()->integer('codigo_inep_educacenso', array('label' => 'Código inep',
+                                                                   'required' => false,
+                                                                   'max_length' => 14,
+                                                                   'value' => $this->codigo_inep_educacenso));
+
     $resources = array( -1 => 'Selecione',
                         0 => Portabilis_String_Utils::toLatin1('Não se aplica'),
                         1 => 'Classe hospitalar',
@@ -1133,6 +1145,8 @@ class indice extends clsCadastro
             $this->disciplinas, $this->carga_horaria, $this->usar_componente, $this->docente_vinculado
           );
 
+          $this->cadastraInepTurma($this->cod_turma, $this->codigo_inep_educacenso);
+
           $this->mensagem .= 'Cadastro efetuado com sucesso.';
           header('Location: educar_turma_lst.php');
           die();
@@ -1213,6 +1227,9 @@ class indice extends clsCadastro
           $this->ref_ref_cod_serie, $this->ref_cod_escola, $this->cod_turma,
           $this->disciplinas, $this->carga_horaria, $this->usar_componente, $this->docente_vinculado
         );
+
+        $this->cadastraInepTurma($this->cod_turma, $this->codigo_inep_educacenso);
+
         $this->mensagem .= 'Cadastro efetuado com sucesso.';
         header('Location: educar_turma_lst.php');
         die();
@@ -1410,6 +1427,8 @@ class indice extends clsCadastro
       $this->disciplinas, $this->carga_horaria, $this->usar_componente, $this->docente_vinculado
     );
 
+    $this->cadastraInepTurma($this->cod_turma, $this->codigo_inep_educacenso);
+
     // Caso tenham sido selecionadas discplinas, como se trata de uma edição de turma será rodado uma consulta
     // que limpa os Componentes Curriculares antigos.
     if($this->disciplinas != 1){
@@ -1480,6 +1499,11 @@ class indice extends clsCadastro
     }
 
     $mapper->bulkUpdate($codSerie, $codEscola, $codTurma, $componentesTurma);
+  }
+
+  function cadastraInepTurma($cod_turma, $codigo_inep_educacenso) {
+    $turma = new clsPmieducarTurma($cod_turma);
+    $turma->updateInep($codigo_inep_educacenso);
   }
 
   function Excluir()
