@@ -231,7 +231,7 @@ class EducacensoExportController extends ApiCoreController
 
       WHERE e.cod_escola = $1
       AND COALESCE(m.data_matricula,m.data_cadastro) BETWEEN DATE($3) AND DATE($4)
-      AND m.aprovado IN (1,2, 3, 4, 5, 6, 7)
+      AND m.aprovado IN (1, 2, 3, 4, 6, 15)
       AND m.ano = $2
       AND mt.ref_cod_turma = $5
     ';
@@ -1923,13 +1923,42 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
     extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, array('return_only' => 'first-row',
                                                                       'params' => array($escolaId, $matriculaId))));
 
-
     $turma = new clsPmieducarTurma($turmaId);
     $inep = $turma->getInep();
+
+    $turma = $turma->detalhe();
+    $serieId = $turma['ref_ref_cod_serie'];
+
+    $serie = new clsPmieducarSerie($serieId);
+    $serie = $serie->detalhe();
+
+    $anoConcluinte = $serie['concluinte'] == 2;
 
     $r90s3 = $turmaId;
     $r90s4 = ($inep ? $inep : null);
     $r90s7 = null;
+
+    // Atualiza situação para código do censo
+    switch ($r90s8) {
+      case 4:
+        $r90s8 = 1;
+        break;
+      case 6:
+        $r90s8 = 2;
+        break;
+      case 15:
+        $r90s8 = 3;
+        break;
+      case 2:
+        $r90s8 = 4;
+        break;
+      case 1:
+        $r90s8 = ($anoConcluinte ? 6 : 5);
+        break;
+      case 3:
+        $r90s8 = 7;
+        break;
+    }
 
     for ($i=1; $i <= $numeroRegistros ; $i++)
       $return .= ${'r90s'.$i}.'|';
