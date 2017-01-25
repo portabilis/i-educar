@@ -101,9 +101,21 @@ class indice extends clsCadastro
   {
     $fase2 = $_REQUEST['fase2'];
 
+    $dicaCampoData = 'dd/mm/aaaa';
+
+    if ($fase2 == 1) {
+      $dicaCampoData = 'A data informada neste campo, deverá ser a mesma informada na 1ª fase da exportação (Matrícula inicial).';
+      $this->campoOculto("fase2", "true");
+    }
+
     $this->inputsHelper()->dynamic(array('ano', 'instituicao', 'escola'));
-    $this->inputsHelper()->date('data_ini',array( 'label' => Portabilis_String_Utils::toLatin1('Data início'), 'value' => $this->data_ini, 'dica' => ($fase2 == 1) ? 'A data informada neste campo, deverá ser a mesma informada na 1ª fase da exportação (Matrícula inicial).' : 'dd/mm/aaaa'));
-    $this->inputsHelper()->date('data_fim',array( 'label' => 'Data fim', 'value' => $this->data_fim, 'dica' => ($fase2 == 1) ? 'A data informada neste campo, deverá ser a mesma informada na 1ª fase da exportação (Matrícula inicial).' : 'dd/mm/aaaa'));
+
+    $this->inputsHelper()->date('data_ini',array('label' => 'Data início',
+                                                 'value' => $this->data_ini,
+                                                 'dica' => $dicaCampoData));
+    $this->inputsHelper()->date('data_fim',array('label' => 'Data fim',
+                                                 'value' => $this->data_fim,
+                                                 'dica' => $dicaCampoData));
 
     Portabilis_View_Helper_Application::loadJavascript($this, '/modules/Educacenso/Assets/Javascripts/Educacenso.js');
 

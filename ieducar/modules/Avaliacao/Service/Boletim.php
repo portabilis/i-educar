@@ -957,19 +957,18 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   {
     $codMatricula = $this->getOption('matricula');
 
+    $etapas = App_Model_IedFinder::getQuantidadeDeModulosMatricula($codMatricula);
+    $etapa_atual = $_GET['etapa'] == 'Rc' ? $etapas : $_GET['etapa'];
+
     $this->_setRegra(App_Model_IedFinder::getRegraAvaliacaoPorMatricula(
             $codMatricula, $this->getRegraDataMapper()
            ))
 
-         ->_setComponentes(App_Model_IedFinder::getComponentesPorMatricula(
-            $codMatricula, $this->getComponenteDataMapper(),
-            $this->getComponenteTurmaDataMapper()
-           ));
+         ->_setComponentes(App_Model_IedFinder::getComponentesPorMatricula($codMatricula, $this->getComponenteDataMapper(), $this->getComponenteTurmaDataMapper(), null, $etapa_atual));
 
     // Valores scalar de referência
     $matricula = App_Model_IedFinder::getMatricula($codMatricula);
 
-    $etapas = App_Model_IedFinder::getQuantidadeDeModulosMatricula($codMatricula);
     $this->setOption('matriculaData',     $matricula);
     $this->setOption('aprovado',          $matricula['aprovado']);
     $this->setOption('cursoHoraFalta',    $matricula['curso_hora_falta']);
@@ -1716,7 +1715,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         unset($faltasComponentes[$disciplinaDispensadaTurma]);
       }
       if (0 == count($faltasComponentes) ||
-          count($faltasComponentes) != count($componentes)) {
+        count($faltasComponentes) != count($componentes)) {
         $etapa = 1;
       }
       else {

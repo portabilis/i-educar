@@ -66,7 +66,7 @@ class MatriculaController extends ApiCoreController
     // seleciona por (codigo matricula ou codigo aluno), opcionalmente por codigo escola e
     // opcionalmente por ano.
     return "select aluno.cod_aluno as aluno_id,
-            matricula.cod_matricula as id, 
+            matricula.cod_matricula as id,
             pessoa.nome as name
        from cadastro.pessoa
       inner join pmieducar.aluno on(pessoa.idpes = aluno.ref_idpes)
@@ -80,17 +80,17 @@ class MatriculaController extends ApiCoreController
              else
               (case when $5 = 1 then
                 (case when instituicao.permissao_filtro_abandono_transferencia then
-                  matricula.aprovado in (1, 2, 3, 7, 8, 9)
+                  matricula.aprovado in (1, 2, 3, 7, 8, 9, 13, 14)
                  else
-                  matricula.aprovado in (1, 2, 3, 4, 6, 7, 8, 9)
+                  matricula.aprovado in (1, 2, 3, 4, 6, 7, 8, 9, 13, 14)
                  end)
                else
-                matricula.aprovado in (1, 2, 3, 4, 6, 7, 8, 9)
+                matricula.aprovado in (1, 2, 3, 4, 6, 7, 8, 9, 13, 14)
                end)
              end)
         and (case when aprovado = 4 then not exists (select * from pmieducar.matricula m where m.ativo = 1 and m.ano = matricula.ano and m.ref_cod_aluno = aluno.cod_aluno and m.ref_ref_cod_escola = matricula.ref_ref_cod_escola and m.aprovado <> 4 ) else true end)
-        and (matricula.cod_matricula like $1||'%' or matricula.ref_cod_aluno like $1||'%') 
-        and (select case when $2 != 0 then matricula.ref_ref_cod_escola = $2 else true end) 
+        and (matricula.cod_matricula like $1||'%' or matricula.ref_cod_aluno like $1||'%')
+        and (select case when $2 != 0 then matricula.ref_ref_cod_escola = $2 else true end)
         and (select case when $3 != 0 then matricula.ano = $3 else true end) limit 15";
   }
 
@@ -98,7 +98,7 @@ class MatriculaController extends ApiCoreController
   protected function sqlsForStringSearch() {
     // seleciona por nome aluno, opcionalmente por codigo escola e opcionalmente por ano.
     return "select aluno.cod_aluno as aluno_id,
-            matricula.cod_matricula as id, 
+            matricula.cod_matricula as id,
             pessoa.nome as name
        from cadastro.pessoa
       inner join pmieducar.aluno on(pessoa.idpes = aluno.ref_idpes)
@@ -112,17 +112,17 @@ class MatriculaController extends ApiCoreController
              else
               (case when $5 = 1 then
                 (case when instituicao.permissao_filtro_abandono_transferencia then
-                  matricula.aprovado in (1, 2, 3, 7, 8, 9)
+                  matricula.aprovado in (1, 2, 3, 7, 8, 9, 13, 14)
                  else
-                  matricula.aprovado in (1, 2, 3, 4, 6, 7, 8, 9)
+                  matricula.aprovado in (1, 2, 3, 4, 6, 7, 8, 9, 13, 14)
                  end)
                else
-                matricula.aprovado in (1, 2, 3, 4, 6, 7, 8, 9)
+                matricula.aprovado in (1, 2, 3, 4, 6, 7, 8, 9, 13, 14)
                end)
              end)
         and (case when aprovado = 4 then not exists (select * from pmieducar.matricula m where m.ativo = 1 and m.ano = matricula.ano and m.ref_cod_aluno = aluno.cod_aluno and m.ref_ref_cod_escola = matricula.ref_ref_cod_escola and m.aprovado <> 4 ) else true end)
-        and lower(to_ascii(pessoa.nome)) like '%'||lower(to_ascii($1))||'%' 
-        and (select case when $2 != 0 then matricula.ref_ref_cod_escola = $2 else true end) 
+        and lower(to_ascii(pessoa.nome)) like '%'||lower(to_ascii($1))||'%'
+        and (select case when $2 != 0 then matricula.ref_ref_cod_escola = $2 else true end)
         and (select case when $3 != 0 then matricula.ano = $3 else true end) limit 15";
   }
 
@@ -434,11 +434,15 @@ class MatriculaController extends ApiCoreController
     if($this->validatesPresenceOf('matricula_id') && $this->validatesPresenceOf('nova_situacao')){
       $matriculaId = $this->getRequest()->matricula_id;
       $matricula = new clsPmieducarMatricula($matriculaId);
+      $objMatricula = $matricula->detalhe();
+      $codAluno = $objMatricula['ref_cod_aluno'];
 
       $situacaoAntiga = $matricula->aprovado;
       $situacaoNova   = $this->getRequest()->nova_situacao;
 
-      if($situacaoNova == App_Model_MatriculaSituacao::TRANSFERIDO || $situacaoNova == App_Model_MatriculaSituacao::ABANDONO){
+      if($situacaoNova == App_Model_MatriculaSituacao::TRANSFERIDO ||
+         $situacaoNova == App_Model_MatriculaSituacao::ABANDONO ||
+         $situacaoNova == App_Model_MatriculaSituacao::FALECIDO ){
         $enturmacoes = new clsPmieducarMatriculaTurma();
         $enturmacoes = $enturmacoes->lista($matriculaId, null, null, null, null, null, null, null, 1 );
 
@@ -472,9 +476,32 @@ class MatriculaController extends ApiCoreController
 
       $matricula->aprovado = $this->getRequest()->nova_situacao;
       if($matricula->edita()){
+        $this->alteraFalecimentoPessoa($codAluno);
+
         return $this->messenger->append('Situação da matrícula alterada com sucesso.', 'success');
       }
     }
+  }
+
+  protected function alteraFalecimentoPessoa($codAluno) {
+    $matriculas = new clsPmieducarMatricula();
+    $matriculas = $matriculas->lista(null, null, null, null, null, null, $codAluno,
+                                     null, null, null, null, null, 1);
+
+    $aluno = new clsPmieducarAluno($codAluno);
+    $aluno = $aluno->detalhe();
+
+    $pessoaFisica = new clsFisica($aluno['ref_idpes']);
+
+    foreach ($matriculas as $matricula) {
+      if ($matricula['aprovado'] == App_Model_MatriculaSituacao::FALECIDO) {
+        $pessoaFisica->falecido = true;
+        $pessoaFisica->edita();
+        return;
+      }
+    }
+    $pessoaFisica->falecido = false;
+    $pessoaFisica->edita();
   }
 
   protected function canGetMatriculasDependencia() {

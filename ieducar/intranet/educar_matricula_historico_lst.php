@@ -33,6 +33,7 @@ require_once 'include/clsListagem.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'lib/Portabilis/String/Utils.php';
+require_once 'App/Model/MatriculaSituacao.php';
 
 /**
  * clsIndexBase class.
@@ -87,41 +88,7 @@ class indice extends clsListagem
     $obj_matricula = new clsPmieducarMatricula($this->ref_cod_matricula);
     $det_matricula = $obj_matricula->detalhe();
 
-    switch ($det_matricula['aprovado']) {
-      case 1:
-        $situacao = 'Aprovado';
-        break;
-      case 2:
-        $situacao = 'Reprovado';
-        break;
-      case 3:
-        $situacao = 'Cursando';
-        break;
-      case 4:
-        $situacao = 'Transferido';
-        break;
-      case 5:
-        $situacao = 'Reclassificado';
-        break;
-      case 6:
-        $situacao = 'Abandono';
-        break;
-      case 7:
-        $situacao = 'Em Exame';
-        break;
-      case 12:
-        $situacao = Portabilis_String_Utils::toLatin1('Aprovado com dependência');
-        break;
-      case 13:
-        $situacao = 'Aprovado pelo conselho';
-        break;
-      case 14:
-        $situacao = 'Reprovado por faltas';
-        break;
-      default:
-        $situacao = '';
-        break;
-    }
+    $situacao = App_Model_MatriculaSituacao::getSituacao($det_matricula['aprovado']);
 
     $this->ref_cod_curso = $det_matricula['ref_cod_curso'];
 
@@ -140,6 +107,7 @@ class indice extends clsListagem
       'Remanejado',
       'Reclassificado',
       'Abandono',
+      'Falecido',
       Portabilis_String_Utils::toLatin1('Usuário criou'),
       Portabilis_String_Utils::toLatin1('Usuário editou')
     ));
@@ -190,6 +158,7 @@ class indice extends clsListagem
         $remanejado = $registro["remanejado"] == 't' ? 'Sim' : Portabilis_String_Utils::toLatin1('Não');
         $abandono = $registro["abandono"] == 't' ? 'Sim' : Portabilis_String_Utils::toLatin1('Não');
         $reclassificado = $registro["reclassificado"] == 't' ? 'Sim' : Portabilis_String_Utils::toLatin1('Não');
+        $falecido = $registro["falecido"] == 't' ? 'Sim' : Portabilis_String_Utils::toLatin1('Não');
 
         $usuarioCriou = new clsPessoa_($registro['ref_usuario_cad']);
         $usuarioCriou = $usuarioCriou->detalhe();
@@ -208,6 +177,7 @@ class indice extends clsListagem
           "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_turma={$registro["ref_cod_turma"]}&sequencial={$registro["sequencial"]}  \">{$remanejado}</a>",
           "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_turma={$registro["ref_cod_turma"]}&sequencial={$registro["sequencial"]}  \">{$reclassificado}</a>",
           "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_turma={$registro["ref_cod_turma"]}&sequencial={$registro["sequencial"]}  \">{$abandono}</a>",
+          "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_turma={$registro["ref_cod_turma"]}&sequencial={$registro["sequencial"]}  \">{$falecido}</a>",
           "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_turma={$registro["ref_cod_turma"]}&sequencial={$registro["sequencial"]}  \">{$usuarioCriou['nome']}</a>",
           "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_turma={$registro["ref_cod_turma"]}&sequencial={$registro["sequencial"]}  \">{$usuarioEditou['nome']}</a>",
           ));

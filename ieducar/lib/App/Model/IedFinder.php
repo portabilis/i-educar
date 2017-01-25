@@ -1080,4 +1080,40 @@ class App_Model_IedFinder extends CoreExt_Entity
 
     return $resultado;
   }
+
+  public static function getNotasLancadasAluno($ref_cod_matricula, $ref_cod_disciplina, $etapa) {
+
+    $notas_lancadas_aluno = "SELECT na.matricula_id,
+                                    ncc.componente_curricular_id,
+                                    ncc.nota,
+                                    ncc.nota_recuperacao,
+                                    ncc.nota_recuperacao_especifica,
+                                    ncc.etapa
+                               FROM modules.nota_aluno AS na
+                         INNER JOIN modules.nota_componente_curricular AS ncc ON (na.id = ncc.nota_aluno_id)
+                              WHERE na.matricula_id = $1
+                                AND ncc.componente_curricular_id = $2
+                                AND ncc.etapa = $3";
+
+    $resultado = Portabilis_Utils_Database::fetchPreparedQuery($notas_lancadas_aluno,array('params' => array($ref_cod_matricula, $ref_cod_disciplina, $etapa)));
+
+    return $resultado;
+  }
+
+  public static function getFaltasLancadasAluno($ref_cod_matricula, $ref_cod_disciplina, $etapa) {
+
+    $faltas_lancadas_aluno = "SELECT fa.matricula_id,
+                                     fcc.componente_curricular_id,
+                                     fcc.quantidade,
+                                     fcc.etapa
+                                FROM modules.falta_aluno AS fa
+                          INNER JOIN modules.falta_componente_curricular AS fcc ON (fa.id = fcc.falta_aluno_id)
+                               WHERE fa.matricula_id = $1
+                                 AND fcc.componente_curricular_id = $2
+                                 AND fcc.etapa = $3";
+
+    $resultado = Portabilis_Utils_Database::fetchPreparedQuery($faltas_lancadas_aluno,array('params' => array($ref_cod_matricula, $ref_cod_disciplina, $etapa)));
+
+    return $resultado;
+  }
 }

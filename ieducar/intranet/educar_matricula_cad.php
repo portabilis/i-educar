@@ -186,7 +186,8 @@ class indice extends clsCadastro
 
     if($GLOBALS['coreExt']['Config']->app->matricula->dependencia == 1)
       $this->inputsHelper()->checkbox('dependencia',
-                                      array('label' => Portabilis_String_Utils::toLatin1('Matrícula de dependência?')));
+                                      array('label' => Portabilis_String_Utils::toLatin1('Matrícula de dependência?'),
+                                            'value' => $this->dependencia));
 
     if (is_numeric($this->ref_cod_curso)) {
       $obj_curso = new clsPmieducarCurso($this->ref_cod_curso);
@@ -271,6 +272,14 @@ class indice extends clsCadastro
     if ($dependencia && !$this->permiteDependenciaAnoConcluinte()) {
       $this->mensagem = Portabilis_String_Utils::toLatin1("Não é possível cadastrar uma matrícula de dependência no ano/série em que o aluno concluirá o curso.");
       return false;
+    }
+
+    if ($dependencia && !$this->verificaQtdeDependenciasPermitida()) {
+      return false;
+    }
+
+    if ($this->verificaAlunoFalecido()) {
+      $this->mensagem = Portabilis_String_Utils::toLatin1("Não é possível matricular alunos falecidos.");
     }
 
     $db = new clsBanco();
@@ -578,34 +587,6 @@ class indice extends clsCadastro
         return false;
       }
 
-      $anoValidacao = $this->ano - 2;
-
-      $db->Consulta("SELECT m.ano, s.nm_serie
-                      FROM pmieducar.matricula m
-                      INNER JOIN pmieducar.serie s ON s.cod_serie = m.ref_ref_cod_serie
-                      WHERE m.ano <= {$anoValidacao}
-                      AND m.aprovado = 12
-                      AND m.ativo = 1
-                      AND m.ref_cod_aluno = {$this->ref_cod_aluno}
-                      AND m.ref_ref_cod_serie <> {$this->ref_cod_serie}
-                      AND (SELECT 1
-                            FROM pmieducar.matricula s_m
-                            WHERE s_m.ref_cod_aluno = m.ref_cod_aluno
-                            AND s_m.ativo = 1
-                            AND s_m.ano > m.ano
-                            AND s_m.dependencia = TRUE
-                            AND s_m.aprovado = 1
-                            LIMIT 1) IS NULL ");
-
-      $db->ProximoRegistro();
-      $m = $db->Tupla();
-      if (is_array($m) && count($m) && !$dependencia) {
-        $anoAprovadoComDependencia = $m['ano'];
-        $serieAprovadoComDependencia = $m['nm_serie'];
-        $this->mensagem .= "Esse aluno foi aprovado com depend&ecirc;ncia no ano de {$anoAprovadoComDependencia} no {$serieAprovadoComDependencia}, e n&atilde;o foi aprovado na depend&ecirc;ncia no ano de ".($anoAprovadoComDependencia + 1).".<br />";
-        return false;
-      }
-
       $db->Consulta("SELECT *
                       FROM pmieducar.matricula m
                       WHERE m.ano = {$this->ano}
@@ -725,6 +706,44 @@ class indice extends clsCadastro
     $anoConcluinte = $serie['concluinte'] == 2;
 
     return !(dbBool($reprovaDependenciaAnoConcluinte) && $anoConcluinte);
+  }
+
+  function verificaQtdeDependenciasPermitida() {
+    $matriculasDependencia =
+      Portabilis_Utils_Database::fetchPreparedQuery("SELECT *
+                                                       FROM pmieducar.matricula
+                                                      WHERE matricula.ano = {$this->ano}
+                                                        AND matricula.ref_cod_aluno = {$this->ref_cod_aluno}
+                                                        AND matricula.dependencia = TRUE");
+
+    $matriculasDependencia = count($matriculasDependencia);
+
+    $db = new clsBanco();
+    $matriculasDependenciaPermitida =
+      $db->CampoUnico("SELECT regra_avaliacao.qtd_matriculas_dependencia
+                         FROM pmieducar.serie
+                        INNER JOIN modules.regra_avaliacao ON (regra_avaliacao.id = serie.regra_avaliacao_id)
+                        WHERE serie.cod_serie = {$this->ref_cod_serie}");
+
+    if ($matriculasDependencia >= $matriculasDependenciaPermitida) {
+      $this->mensagem = Portabilis_String_Utils::toLatin1("A regra desta série limita a quantidade de matrículas de dependência para {$matriculasDependenciaPermitida}.");
+      return false;
+    }
+
+    return true;
+  }
+
+  function verificaAlunoFalecido() {
+
+    $aluno = new clsPmieducarAluno($this->ref_cod_aluno);
+    $aluno = $aluno->detalhe();
+
+    $pessoa = new clsPessoaFisica($aluno["ref_idpes"]);
+    $pessoa = $pessoa->detalhe();
+
+    $falecido = dbBool($pessoa['falecido']);
+
+    return $falecido;
   }
 
   function verificaSolicitacaoTransferencia() {
