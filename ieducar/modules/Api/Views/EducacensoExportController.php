@@ -162,6 +162,13 @@ class EducacensoExportController extends ApiCoreController
     $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
 
     $export = $this->exportaDadosRegistro89($escolaId);
+
+    foreach ($this->getTurmas($escolaId, $ano) as $turmaId => $turmaNome) {
+      foreach ($this->getMatriculasTurma($escolaId, $ano, $data_ini, $data_fim, $turmaId) as $matricula) {
+        $export .= $this->exportaDadosRegistro90($escolaId, $turmaId,  $matricula['id']);
+      }
+    }
+
     return $export;
   }
 
@@ -207,6 +214,28 @@ class EducacensoExportController extends ApiCoreController
       AND m.ano = $2
     ';
     return Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId, $ano, $data_ini, $data_fim)));
+  }
+
+  protected function getMatriculasTurma($escolaId, $ano, $data_ini, $data_fim, $turmaId){
+    $sql =
+     'SELECT
+      distinct(m.cod_matricula) as id
+
+      FROM  pmieducar.aluno a
+      INNER JOIN cadastro.fisica fis ON (fis.idpes = a.ref_idpes)
+      INNER JOIN cadastro.pessoa p ON (fis.idpes = p.idpes)
+      INNER JOIN pmieducar.matricula m ON (m.ref_cod_aluno = a.cod_aluno)
+      INNER JOIN pmieducar.matricula_turma mt ON (mt.ref_cod_matricula = m.cod_matricula)
+      INNER JOIN pmieducar.escola e ON (m.ref_ref_cod_escola = e.cod_escola)
+      INNER JOIN modules.educacenso_cod_escola ece ON (ece.cod_escola = e.cod_escola)
+
+      WHERE e.cod_escola = $1
+      AND COALESCE(m.data_matricula,m.data_cadastro) BETWEEN DATE($3) AND DATE($4)
+      AND m.aprovado IN (1, 2, 3, 4, 6, 15)
+      AND m.ano = $2
+      AND mt.ref_cod_turma = $5
+    ';
+    return Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId, $ano, $data_ini, $data_fim, $turmaId)));
   }
 
   protected function exportaDadosRegistro00($escolaId, $ano){
@@ -1867,6 +1896,72 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
 
     for ($i=1; $i <= $numeroRegistros ; $i++)
       $return .= ${'r89s'.$i}.'|';
+
+    $return = substr_replace($return, "", -1);
+    $return .= "\n";
+
+    return $return;
+  }
+
+  protected function exportaDadosRegistro90($escolaId, $turmaId, $matriculaId) {
+
+    $sql = "SELECT '90' AS r90s1,
+                   educacenso_cod_escola.cod_escola_inep AS r90s2,
+                   educacenso_cod_aluno.cod_aluno_inep AS r90s5,
+                   matricula.ref_cod_aluno AS r90s6,
+                   matricula.aprovado AS r90s8
+            FROM pmieducar.matricula
+            INNER JOIN pmieducar.escola ON (escola.cod_escola = matricula.ref_ref_cod_escola)
+            INNER JOIN modules.educacenso_cod_escola ON (escola.cod_escola = educacenso_cod_escola.cod_escola)
+             LEFT JOIN modules.educacenso_cod_aluno ON (educacenso_cod_aluno.cod_aluno = matricula.ref_cod_aluno)
+            WHERE escola.cod_escola = $1
+              AND matricula.cod_matricula = $2";
+
+    $numeroRegistros = 8;
+    $return = '';
+
+    extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, array('return_only' => 'first-row',
+                                                                      'params' => array($escolaId, $matriculaId))));
+
+    $turma = new clsPmieducarTurma($turmaId);
+    $inep = $turma->getInep();
+
+    $turma = $turma->detalhe();
+    $serieId = $turma['ref_ref_cod_serie'];
+
+    $serie = new clsPmieducarSerie($serieId);
+    $serie = $serie->detalhe();
+
+    $anoConcluinte = $serie['concluinte'] == 2;
+
+    $r90s3 = $turmaId;
+    $r90s4 = ($inep ? $inep : null);
+    $r90s7 = null;
+
+    // Atualiza situação para código do censo
+    switch ($r90s8) {
+      case 4:
+        $r90s8 = 1;
+        break;
+      case 6:
+        $r90s8 = 2;
+        break;
+      case 15:
+        $r90s8 = 3;
+        break;
+      case 2:
+        $r90s8 = 4;
+        break;
+      case 1:
+        $r90s8 = ($anoConcluinte ? 6 : 5);
+        break;
+      case 3:
+        $r90s8 = 7;
+        break;
+    }
+
+    for ($i=1; $i <= $numeroRegistros ; $i++)
+      $return .= ${'r90s'.$i}.'|';
 
     $return = substr_replace($return, "", -1);
     $return .= "\n";
