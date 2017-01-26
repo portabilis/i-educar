@@ -139,6 +139,13 @@ var simpleSearch = {
     if ($input.hasClass('obrigatorio'))
       $hiddenInput.addClass('obrigatorio required');
 
+    $input.keyup(function() {
+      $element = $j($hiddenInput.target);
+      if ($element.val() == '') {
+        $j(hiddenInputId).val('');
+      }
+    });
+
     $input.autocomplete(options.get('autocompleteOptions'));
   }
 };
