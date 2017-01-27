@@ -116,6 +116,10 @@ class indice extends clsDetalhe
       die();
     }
 
+    $verificaUltimaMatricula = $obj_matricula->ultimaMatricula($registro['ref_cod_aluno'], $registro['cod_matricula']);
+
+    $existeSaidaEscola = $obj_matricula->existeSaidaEscola($registro['cod_matricula']);
+
     // Curso
     $obj_ref_cod_curso = new clsPmieducarCurso($registro['ref_cod_curso']);
     $det_ref_cod_curso = $obj_ref_cod_curso->detalhe();
@@ -229,6 +233,12 @@ class indice extends clsDetalhe
     if ($registro['aprovado'] == App_Model_MatriculaSituacao::FALECIDO) {
       $this->addDetalhe(array('Observação',Portabilis_String_Utils::toLatin1($registro['observacao'])));
     }
+
+    if ($existeSaidaEscola) {
+      $this->addDetalhe(array('Observação',Portabilis_String_Utils::toLatin1($registro['observacao'])));
+    }
+
+
 
     if ($campoObs){
 
@@ -348,10 +358,6 @@ class indice extends clsDetalhe
         $this->array_botao[]            = "Desfazer abandono";
         $this->array_botao_url_script[] = "deleteAbandono({$registro['cod_matricula']})";
       }
-
-      $verificaUltimaMatricula = $obj_matricula->ultimaMatricula($registro['ref_cod_aluno'], $registro['cod_matricula']);
-
-      $existeSaidaEscola = $obj_matricula->existeSaidaEscola($registro['cod_matricula']);
 
       if (!$existeSaidaEscola &&
           $verificaUltimaMatricula &&
