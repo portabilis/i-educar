@@ -314,7 +314,8 @@ class MatriculaController extends ApiCoreController
     $params = $matriculaId;
 
     $sql = "UPDATE pmieducar.matricula
-               SET saida_escola = FALSE
+               SET saida_escola = FALSE,
+                   observacao = NULL
              WHERE cod_matricula = $1";
 
     $this->fetchPreparedQuery($sql, $params); 
