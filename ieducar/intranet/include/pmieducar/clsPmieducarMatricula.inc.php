@@ -1052,6 +1052,18 @@ function lista_transferidos($int_cod_matricula = NULL,
     return FALSE;
   }
 
+  function ultimaMatricula($codAluno, $codMatricula){
+    $db = new clsBanco();
+    $ultimaMatricula = $db->CampoUnico("SELECT MAX(matricula.cod_matricula)
+                                                  FROM pmieducar.matricula
+                                                 WHERE matricula.ref_cod_aluno = $codAluno");
+    if ($ultimaMatricula == $codMatricula) {
+      return true;
+    }
+
+    return false;
+  }
+
   function getEndMatricula($codAluno){
     $db = new clsBanco();
     $situacaoUltimaMatricula = $db->CampoUnico("SELECT matricula.aprovado
@@ -1280,6 +1292,38 @@ function lista_transferidos($int_cod_matricula = NULL,
     $pessoaFisica = new clsFisica($aluno['ref_idpes']);
     $pessoaFisica->falecido = true;
     $pessoaFisica->edita();
+  }
+
+
+  function existeSaidaEscola($codMatricula){
+    if (is_numeric($codMatricula)){
+
+      $db  = new clsBanco();
+      $sql = "SELECT saida_escola
+                FROM {$this->_tabela}
+               WHERE cod_matricula = $codMatricula";
+               
+      $saida = $db->CampoUnico($sql);
+
+      return dbBool($saida);
+    }
+  }
+
+  function setSaidaEscola($observacao = null){
+    if (is_numeric($this->cod_matricula)){
+      if (trim($observacao) == '' || is_null($observacao)) $observacao = "Não informado";
+
+      $db  = new clsBanco();
+      $sql = "UPDATE {$this->_tabela}
+                 SET saida_escola  = true,
+                     observacao    = '$observacao'
+               WHERE cod_matricula = $this->cod_matricula";
+
+      $db->Consulta($sql);
+
+      return true;
+    }
+    return false;
   }
 
   function aprova_matricula_andamento_curso_sem_avaliacao()
