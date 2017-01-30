@@ -51,8 +51,8 @@ class indice extends clsListagem
 		
 		$db = new clsBanco();
 		
-		$soma_lateral = $db->UnicoCampo( "SELECT SUM(prioridade) FROM portal_banner WHERE lateral=1" );
-		$soma_centro = $db->UnicoCampo( "SELECT SUM(prioridade) FROM portal_banner WHERE lateral=0" );
+		$soma_lateral = $db->UnicoCampo( "SELECT SUM(prioridade) FROM portal_banner WHERE lateral_=1" );
+		$soma_centro = $db->UnicoCampo( "SELECT SUM(prioridade) FROM portal_banner WHERE lateral_=0" );
 		
 		$db->Consulta( "SELECT cod_portal_banner, caminho, title, prioridade, link, lateral FROM portal_banner ORDER BY prioridade, title" );
 		while ($db->ProximoRegistro())
