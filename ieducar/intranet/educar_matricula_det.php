@@ -235,6 +235,8 @@ class indice extends clsDetalhe
     }
 
     if ($existeSaidaEscola) {
+      $this->addDetalhe(array('Saída da escola','Sim'));
+      $this->addDetalhe(array('Data de saída da escola',Portabilis_Date_Utils::pgSQLToBr($registro['data_saida_escola'])));
       $this->addDetalhe(array('Observação',Portabilis_String_Utils::toLatin1($registro['observacao'])));
     }
 

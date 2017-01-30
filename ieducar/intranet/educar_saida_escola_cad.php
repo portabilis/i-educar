@@ -52,6 +52,7 @@ class indice extends clsCadastro
 	var $ref_cod_matricula;
 	var $ref_cod_aluno;
 	var $escola;
+	var $data_saida_escola;
 	var $nm_aluno;
 
 	function Inicializar()
@@ -70,7 +71,7 @@ class indice extends clsCadastro
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7,  "educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}" );
 
-		$obj_matricula = new clsPmieducarMatricula( $this->cod_matricula,null,null,null,$this->pessoa_logada,null,null,6 );
+		$obj_matricula = new clsPmieducarMatricula( $this->cod_matricula,null,null,null,$this->pessoa_logada,null,null);
 
 		$det_matricula = $obj_matricula->detalhe();
 
@@ -107,6 +108,8 @@ class indice extends clsCadastro
 
 		$this->campoTexto( "nm_escola", "Escola"," $this->escola", 40, 255, false,false,false,"","","","",true );
 
+		$this->inputsHelper()->date('data_saida_escola', array('label' => 'Data de saída da escola', 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y')));
+
 		// text
 		$this->campoMemo( "observacao", "Observa&ccedil;&atilde;o", $this->observacao, 60, 5, false );
 	}
@@ -127,13 +130,12 @@ class indice extends clsCadastro
 		}
 
 		$obj_matricula = new clsPmieducarMatricula( $this->ref_cod_matricula,null,null,null,$this->pessoa_logada);
-		$obj_matricula->data_cancel = Portabilis_Date_Utils::brToPgSQL($this->data_cancel);
 
 		$det_matricula = $obj_matricula->detalhe();
 
 		if($obj_matricula->edita())
 		{
-			if( $obj_matricula->setSaidaEscola($this->observacao) )
+			if( $obj_matricula->setSaidaEscola($this->observacao, Portabilis_Date_Utils::brToPgSQL($this->data_saida_escola)) )
 			{			
 				$this->mensagem .= "Saída da escola realizada com sucesso.<br>";
 				header( "Location: educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}" );

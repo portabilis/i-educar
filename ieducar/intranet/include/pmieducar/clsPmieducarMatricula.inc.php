@@ -130,7 +130,7 @@ class clsPmieducarMatricula
     $db = new clsBanco();
     $this->_schema = 'pmieducar.';
     $this->_tabela = $this->_schema . 'matricula';
-    $this->_campos_lista = $this->_todos_campos = "m.cod_matricula, m.ref_cod_reserva_vaga, m.ref_ref_cod_escola, m.ref_ref_cod_serie, m.ref_usuario_exc, m.ref_usuario_cad, m.ref_cod_aluno, m.aprovado, m.data_cadastro, m.data_exclusao, m.ativo, m.ano, m.ultima_matricula, m.modulo,formando,descricao_reclassificacao,matricula_reclassificacao, m.ref_cod_curso,m.matricula_transferencia,m.semestre, m.data_matricula, m.data_cancel, m.ref_cod_abandono_tipo, m.turno_pre_matricula, m.dependencia ";
+    $this->_campos_lista = $this->_todos_campos = "m.cod_matricula, m.ref_cod_reserva_vaga, m.ref_ref_cod_escola, m.ref_ref_cod_serie, m.ref_usuario_exc, m.ref_usuario_cad, m.ref_cod_aluno, m.aprovado, m.data_cadastro, m.data_exclusao, m.ativo, m.ano, m.ultima_matricula, m.modulo,formando,descricao_reclassificacao,matricula_reclassificacao, m.ref_cod_curso,m.matricula_transferencia,m.semestre, m.data_matricula, m.data_cancel, m.ref_cod_abandono_tipo, m.turno_pre_matricula, m.dependencia, data_saida_escola ";
     if (is_numeric($ref_usuario_exc)) {
       if (class_exists("clsPmieducarUsuario")) {
         $tmp_obj = new clsPmieducarUsuario($ref_usuario_exc);
@@ -548,7 +548,7 @@ class clsPmieducarMatricula
     $int_ref_cod_curso = NULL, $bool_curso_sem_avaliacao = NULL,
     $arr_int_cod_matricula = NULL, $int_mes_defasado = NULL, $boo_data_nasc = NULL,
     $boo_matricula_transferencia = NULL, $int_semestre = NULL, $int_ref_cod_turma = NULL,
-    $int_ref_cod_abandono = NULL, $matriculas_turmas_transferidas_abandono = FALSE)
+    $int_ref_cod_abandono = NULL, $matriculas_turmas_transferidas_abandono = FALSE, $data_saida_escola = NULL)
   {
     if ($boo_data_nasc) {
       $this->_campos_lista .= " ,(SELECT data_nasc
@@ -1310,14 +1310,15 @@ function lista_transferidos($int_cod_matricula = NULL,
     }
   }
 
-  function setSaidaEscola($observacao = null){
+  function setSaidaEscola($observacao = null, $data = null){
     if (is_numeric($this->cod_matricula)){
       if (trim($observacao) == '' || is_null($observacao)) $observacao = "Não informado";
 
       $db  = new clsBanco();
       $sql = "UPDATE {$this->_tabela}
                  SET saida_escola  = true,
-                     observacao    = '$observacao'
+                     observacao    = '$observacao',
+                     data_saida_escola = '$data'
                WHERE cod_matricula = $this->cod_matricula";
 
       $db->Consulta($sql);
