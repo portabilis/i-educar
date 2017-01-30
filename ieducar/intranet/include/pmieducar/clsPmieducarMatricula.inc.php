@@ -1310,14 +1310,15 @@ function lista_transferidos($int_cod_matricula = NULL,
     }
   }
 
-  function setSaidaEscola($observacao = null){
+  function setSaidaEscola($observacao = null, $data = null){
     if (is_numeric($this->cod_matricula)){
       if (trim($observacao) == '' || is_null($observacao)) $observacao = "Não informado";
 
       $db  = new clsBanco();
       $sql = "UPDATE {$this->_tabela}
                  SET saida_escola  = true,
-                     observacao    = '$observacao'
+                     observacao    = '$observacao',
+                     data_saida_escola = '$data'
                WHERE cod_matricula = $this->cod_matricula";
 
       $db->Consulta($sql);
