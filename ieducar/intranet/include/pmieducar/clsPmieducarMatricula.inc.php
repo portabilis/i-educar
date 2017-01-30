@@ -1056,7 +1056,8 @@ function lista_transferidos($int_cod_matricula = NULL,
     $db = new clsBanco();
     $ultimaMatricula = $db->CampoUnico("SELECT MAX(matricula.cod_matricula)
                                                   FROM pmieducar.matricula
-                                                 WHERE matricula.ref_cod_aluno = $codAluno");
+                                                 WHERE matricula.ref_cod_aluno = $codAluno
+                                                   AND matricula.ativo = 1");
     if ($ultimaMatricula == $codMatricula) {
       return true;
     }
