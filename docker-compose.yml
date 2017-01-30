@@ -7,13 +7,13 @@ ieducar_1204:
   volumes:
     - .:/home/portabilis/ieducar
   links:
-    - postgres_82
+    - postgres_95
   container_name: ieducar_1204
 
-postgres_82:
+postgres_95:
   volumes:
     - /var/lib/postgresql/data
-  image: ignatov/docker-postgresql-8.2
+  image: postgres:9.5
   environment:
     - POSTGRES_PASSWORD=postgres
   ports:
