@@ -124,6 +124,7 @@ class indice extends clsCadastro
   protected function rematricularAlunos($escolaId, $cursoId, $serieId, $turmaId, $ano) {
     $result           = $this->selectMatriculas($escolaId, $cursoId, $serieId, $turmaId, $this->ano_letivo);
     $alunosSemInep    = $this->getAlunosSemInep($escolaId, $cursoId, $serieId, $turmaId, $ano);
+    $alunosComSaidaDaEscola = $this->getAlunosComSaidaDaEscola($escolaId, $ano);
     $count            = 0;
     $nomesAlunos;
 
@@ -165,6 +166,13 @@ class indice extends clsCadastro
             $mensagem .= "{$nome} </br>";
           }
           $mensagem .= "</br> As enturmações podem ser realizadas em: Movimentação > Enturmação.</span>";
+          if (count($alunosComSaidaDaEscola) > 0) {
+
+            $mensagem .= "</br></br><span>O(s) seguinte(s) aluno(s) não foram rematriculados, pois possuem saída na escola: </br></br>";
+            foreach ($alunosComSaidaDaEscola as $nome) {
+              $mensagem .= "{$nome} </br>";
+            }
+          }
         }
         $this->mensagem = $mensagem;
       }elseif (count($alunosSemInep) > 0) {
@@ -203,6 +211,20 @@ class indice extends clsCadastro
       }
     }
     return $alunosSemInep;
+  }
+
+  protected function getAlunosComSaidaDaEscola($escolaId, $ano){
+
+    $objMatricula = new clsPmieducarMatriculaTurma();
+    $objMatricula->setOrderby("nome");
+    $anoAnterior = $this->ano_letivo  - 1;
+    $alunosComSaidaDaEscola = $objMatricula->lista4($escolaId, NULL, NULL, NULL, $ano, TRUE);
+    $alunos = array();
+
+    foreach ($alunosComSaidaDaEscola as $a) {
+      $alunos[] = strtoupper($a['nome']);
+    }
+    return $alunos;
   }
 
   protected function selectMatriculas($escolaId, $cursoId, $serieId, $turmaId, $ano) {
