@@ -274,7 +274,8 @@ class indice extends clsCadastro
                                                                   AND ativo = 1))";
 
       if ($turmaId)
-        $sql .= "AND ref_cod_turma = $turmaId";
+        $sql .= "AND ref_cod_turma = $turmaId
+                 ORDER BY nome";
 
       $this->db->Consulta($sql);
     }
