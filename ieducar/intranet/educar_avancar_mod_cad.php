@@ -124,7 +124,7 @@ class indice extends clsCadastro
   protected function rematricularAlunos($escolaId, $cursoId, $serieId, $turmaId, $ano) {
     $result           = $this->selectMatriculas($escolaId, $cursoId, $serieId, $turmaId, $this->ano_letivo);
     $alunosSemInep    = $this->getAlunosSemInep($escolaId, $cursoId, $serieId, $turmaId, $ano);
-    $alunosComSaidaDaEscola = $this->getAlunosComSaidaDaEscola($escolaId, $ano);
+    $alunosComSaidaDaEscola = $this->getAlunosComSaidaDaEscola($escolaId, $cursoId, $serieId, $turmaId, $ano);
     $count            = 0;
     $nomesAlunos;
 
@@ -213,12 +213,12 @@ class indice extends clsCadastro
     return $alunosSemInep;
   }
 
-  protected function getAlunosComSaidaDaEscola($escolaId, $ano){
+  protected function getAlunosComSaidaDaEscola($escolaId, $cursoId, $serieId, $turmaId, $ano){
 
     $objMatricula = new clsPmieducarMatriculaTurma();
     $objMatricula->setOrderby("nome");
     $anoAnterior = $this->ano_letivo  - 1;
-    $alunosComSaidaDaEscola = $objMatricula->lista4($escolaId, NULL, NULL, NULL, $ano, TRUE);
+    $alunosComSaidaDaEscola = $objMatricula->lista4($escolaId, $cursoId, $serieId, $turmaId, $ano, TRUE);
     $alunos = array();
 
     foreach ($alunosComSaidaDaEscola as $a) {
