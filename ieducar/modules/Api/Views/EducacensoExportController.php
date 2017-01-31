@@ -178,7 +178,7 @@ class EducacensoExportController extends ApiCoreController
   }
 
   protected function getTurmas($escolaId, $ano){
-    return App_Model_IedFinder::getTurmas($escolaId, NULL, $ano);
+    return App_Model_IedFinder::getTurmasEducacenso($escolaId, $ano);
   }
 
   protected function getServidores($escolaId, $ano, $data_ini, $data_fim){
@@ -257,14 +257,13 @@ class EducacensoExportController extends ApiCoreController
       INNER JOIN modules.educacenso_cod_escola ece ON (ece.cod_escola = e.cod_escola)
       INNER JOIN pmieducar.instituicao i ON (i.cod_instituicao = e.ref_cod_instituicao)
       WHERE e.cod_escola = $1
-        AND COALESCE(m.data_matricula,m.data_cadastro) BETWEEN DATE($3) AND DATE($4)
         AND m.aprovado IN (1, 2, 3, 4, 6, 15)
         AND m.ano = $2
-        AND mt.ref_cod_turma = $5
+        AND mt.ref_cod_turma = $3
         AND mt.data_enturmacao > i.data_educacenso
         AND i.data_educacenso IS NOT NULL
     ';
-    return Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId, $ano, $data_ini, $data_fim, $turmaId)));
+    return Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId, $ano, $turmaId)));
   }
 
   protected function exportaDadosRegistro00($escolaId, $ano){
