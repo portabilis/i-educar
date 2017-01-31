@@ -272,6 +272,31 @@ class App_Model_IedFinder extends CoreExt_Entity
   }
 
   /**
+   * Retorna as turmas de uma escola e ano para exportação do educacenso.
+   * @param  int   $escolaId
+   * @param  int   $ano
+   * @return array (cod_turma => nm_turma)
+   */
+  public static function getTurmasEducacenso($escolaId, $ano = NULL)
+  {
+    $turma = self::addClassToStorage('clsPmieducarTurma', NULL,
+      'include/pmieducar/clsPmieducarTurma.inc.php');
+
+    // Carrega as turmas da escola
+    $turma->setOrderBy('nm_turma ASC');
+    $turma->listarNaoInformarEducacenso = FALSE;
+    $turmas = $turma->lista(NULL, NULL, NULL, NULL, $escolaId, NULL, NULL, NULL, NULL, NULL,NULL, NULL,
+                            NULL,NULL, NULL, NULL,NULL, NULL, NULL,NULL, NULL, NULL, NULL, NULL, NULL,NULL,
+                            NULL, NULL,NULL, NULL, NULL,NULL, NULL, NULL,NULL, NULL, $ano);
+
+    $ret = array();
+    foreach ($turmas as $turma) {
+      $ret[$turma['cod_turma']] = $turma['nm_turma'].' - '.($turma['ano'] == null ? 'Sem ano' : $turma['ano'] );
+    }
+
+    return $ret;
+  }
+  /**
    * Retorna o total de módulos do ano letivo da escola ou turma (caso o ano
    * escolar do curso não seja "padrão"). Retorna um array com o total de
    * módulos atribuídos ao ano letivo e o nome do módulo. Ex:
