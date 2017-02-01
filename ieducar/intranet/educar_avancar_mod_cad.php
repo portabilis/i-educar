@@ -253,13 +253,6 @@ class indice extends clsCadastro
                  AND NOT EXISTS(SELECT 1
                                   FROM pmieducar.matricula m2
                                  WHERE m2.ref_cod_aluno = m.ref_cod_aluno
-                                   AND m2.ano = m.ano
-                                   AND m2.ativo = 1
-                                   AND m2.saida_escola = TRUE
-                                   AND m2.ref_ref_cod_escola = m.ref_ref_cod_escola)
-                 AND NOT EXISTS(SELECT 1
-                                  FROM pmieducar.matricula m2
-                                 WHERE m2.ref_cod_aluno = m.ref_cod_aluno
                                    AND m2.ano = $this->ano_letivo
                                    AND m2.ativo = 1
                                    AND m2.ref_ref_cod_escola = m.ref_ref_cod_escola)
