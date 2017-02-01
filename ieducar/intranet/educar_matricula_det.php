@@ -116,6 +116,10 @@ class indice extends clsDetalhe
       die();
     }
 
+    $verificaMatriculaUltimoAno = $obj_matricula->verificaMatriculaUltimoAno($registro['ref_cod_aluno'], $registro['cod_matricula']);
+
+    $existeSaidaEscola = $obj_matricula->existeSaidaEscola($registro['cod_matricula']);
+
     // Curso
     $obj_ref_cod_curso = new clsPmieducarCurso($registro['ref_cod_curso']);
     $det_ref_cod_curso = $obj_ref_cod_curso->detalhe();
@@ -229,6 +233,14 @@ class indice extends clsDetalhe
     if ($registro['aprovado'] == App_Model_MatriculaSituacao::FALECIDO) {
       $this->addDetalhe(array('Observação',Portabilis_String_Utils::toLatin1($registro['observacao'])));
     }
+
+    if ($existeSaidaEscola) {
+      $this->addDetalhe(array('Saída da escola','Sim'));
+      $this->addDetalhe(array('Data de saída da escola',Portabilis_Date_Utils::pgSQLToBr($registro['data_saida_escola'])));
+      $this->addDetalhe(array('Observação',Portabilis_String_Utils::toLatin1($registro['observacao'])));
+    }
+
+
 
     if ($campoObs){
 
@@ -347,6 +359,22 @@ class indice extends clsDetalhe
       if ($registro['aprovado'] == App_Model_MatriculaSituacao::ABANDONO) {
         $this->array_botao[]            = "Desfazer abandono";
         $this->array_botao_url_script[] = "deleteAbandono({$registro['cod_matricula']})";
+      }
+
+      if (!$existeSaidaEscola &&
+          $verificaMatriculaUltimoAno &&
+          ($registro['aprovado'] == App_Model_MatriculaSituacao::APROVADO ||
+           $registro['aprovado'] == App_Model_MatriculaSituacao::REPROVADO ||
+           $registro['aprovado'] == App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA ||
+           $registro['aprovado'] == App_Model_MatriculaSituacao::APROVADO_PELO_CONSELHO ||
+           $registro['aprovado'] == App_Model_MatriculaSituacao::REPROVADO_POR_FALTAS)) {
+        $this->array_botao[]            = "Saída da escola";
+        $this->array_botao_url_script[] = "go(\"educar_saida_escola_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}&escola={$registro['ref_ref_cod_escola']}\");";
+      }
+
+      if ($existeSaidaEscola && $verificaMatriculaUltimoAno) {
+        $this->array_botao[]            = "Cancelar saída da escola";
+        $this->array_botao_url_script[] = "desfazerSaidaEscola({$registro['cod_matricula']})";
       }
 
       if ($registro['aprovado'] == App_Model_MatriculaSituacao::RECLASSIFICADO){
