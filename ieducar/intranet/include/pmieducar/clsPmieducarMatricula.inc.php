@@ -1052,13 +1052,20 @@ function lista_transferidos($int_cod_matricula = NULL,
     return FALSE;
   }
 
-  function ultimaMatricula($codAluno, $codMatricula){
+  function verificaMatriculaUltimoAno($codAluno, $codMatricula){
     $db = new clsBanco();
-    $ultimaMatricula = $db->CampoUnico("SELECT MAX(matricula.cod_matricula)
-                                                  FROM pmieducar.matricula
-                                                 WHERE matricula.ref_cod_aluno = $codAluno
-                                                   AND matricula.ativo = 1");
-    if ($ultimaMatricula == $codMatricula) {
+
+    $ultimoAnoMatricula = $db->CampoUnico("SELECT MAX(matricula.ano)
+                                             FROM pmieducar.matricula
+                                            WHERE matricula.ref_cod_aluno = $codAluno
+                                              AND matricula.ativo = 1");
+    
+    $anoMatricula = $db->CampoUnico("SELECT matricula.ano
+                                       FROM pmieducar.matricula
+                                      WHERE matricula.cod_matricula = $codMatricula
+                                        AND matricula.ativo = 1");
+
+    if ($ultimoAnoMatricula == $anoMatricula) {
       return true;
     }
 
