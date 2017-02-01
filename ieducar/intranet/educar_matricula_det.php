@@ -116,7 +116,7 @@ class indice extends clsDetalhe
       die();
     }
 
-    $verificaUltimaMatricula = $obj_matricula->ultimaMatricula($registro['ref_cod_aluno'], $registro['cod_matricula']);
+    $verificaMatriculaUltimoAno = $obj_matricula->verificaMatriculaUltimoAno($registro['ref_cod_aluno'], $registro['cod_matricula']);
 
     $existeSaidaEscola = $obj_matricula->existeSaidaEscola($registro['cod_matricula']);
 
@@ -362,7 +362,7 @@ class indice extends clsDetalhe
       }
 
       if (!$existeSaidaEscola &&
-          $verificaUltimaMatricula &&
+          $verificaMatriculaUltimoAno &&
           ($registro['aprovado'] == App_Model_MatriculaSituacao::APROVADO ||
            $registro['aprovado'] == App_Model_MatriculaSituacao::REPROVADO ||
            $registro['aprovado'] == App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA ||
@@ -372,7 +372,7 @@ class indice extends clsDetalhe
         $this->array_botao_url_script[] = "go(\"educar_saida_escola_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}&escola={$registro['ref_ref_cod_escola']}\");";
       }
 
-      if ($existeSaidaEscola && $verificaUltimaMatricula) {
+      if ($existeSaidaEscola && $verificaMatriculaUltimoAno) {
         $this->array_botao[]            = "Cancelar saída da escola";
         $this->array_botao_url_script[] = "desfazerSaidaEscola({$registro['cod_matricula']})";
       }
