@@ -98,6 +98,8 @@ class clsPmieducarTurma
   var $parecer_3_etapa;
   var $parecer_4_etapa;
   var $nao_informar_educacenso;
+
+  var $listarNaoInformarEducacenso = TRUE;
 	// propriedades padrao
 
 	/**
@@ -1758,6 +1760,11 @@ class clsPmieducarTurma
 
 		if( $somenteAnoLetivoEmAndamento ) {
 			$filtros .= "{$whereAnd}  t.ano in (SELECT ano FROM pmieducar.escola_ano_letivo WHERE andamento = 1 AND ativo = 1 AND ref_cod_escola = t.ref_ref_cod_escola)";
+			$whereAnd = " AND ";
+		}
+
+		if (!$this->listarNaoInformarEducacenso) {
+			$filtros .= "{$whereAnd} COALESCE(t.nao_informar_educacenso,0) <> 1";
 			$whereAnd = " AND ";
 		}
 
