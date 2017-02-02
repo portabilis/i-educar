@@ -124,6 +124,7 @@ class indice extends clsCadastro
   protected function rematricularAlunos($escolaId, $cursoId, $serieId, $turmaId, $ano) {
     $result           = $this->selectMatriculas($escolaId, $cursoId, $serieId, $turmaId, $this->ano_letivo);
     $alunosSemInep    = $this->getAlunosSemInep($escolaId, $cursoId, $serieId, $turmaId, $ano);
+    $alunosComSaidaDaEscola = $this->getAlunosComSaidaDaEscola($escolaId, $cursoId, $serieId, $turmaId, $ano);
     $count            = 0;
     $nomesAlunos;
 
@@ -165,6 +166,13 @@ class indice extends clsCadastro
             $mensagem .= "{$nome} </br>";
           }
           $mensagem .= "</br> As enturmações podem ser realizadas em: Movimentação > Enturmação.</span>";
+          if (count($alunosComSaidaDaEscola) > 0) {
+
+            $mensagem .= "</br></br><span>O(s) seguinte(s) aluno(s) não foram rematriculados, pois possuem saída na escola: </br></br>";
+            foreach ($alunosComSaidaDaEscola as $nome) {
+              $mensagem .= "{$nome} </br>";
+            }
+          }
         }
         $this->mensagem = $mensagem;
       }elseif (count($alunosSemInep) > 0) {
@@ -205,6 +213,20 @@ class indice extends clsCadastro
     return $alunosSemInep;
   }
 
+  protected function getAlunosComSaidaDaEscola($escolaId, $cursoId, $serieId, $turmaId, $ano){
+
+    $objMatricula = new clsPmieducarMatriculaTurma();
+    $objMatricula->setOrderby("nome");
+    $anoAnterior = $this->ano_letivo  - 1;
+    $alunosComSaidaDaEscola = $objMatricula->lista4($escolaId, $cursoId, $serieId, $turmaId, $ano, TRUE);
+    $alunos = array();
+
+    foreach ($alunosComSaidaDaEscola as $a) {
+      $alunos[] = strtoupper($a['nome']);
+    }
+    return $alunos;
+  }
+
   protected function selectMatriculas($escolaId, $cursoId, $serieId, $turmaId, $ano) {
     try {
       $anoAnterior = $this->ano_letivo  - 1;
@@ -227,6 +249,7 @@ class indice extends clsCadastro
                  AND matricula_turma.ativo = 1
                  AND ano  = $anoAnterior
                  AND m.dependencia = FALSE
+                 AND m.saida_escola = FALSE
                  AND NOT EXISTS(SELECT 1
                                   FROM pmieducar.matricula m2
                                  WHERE m2.ref_cod_aluno = m.ref_cod_aluno
@@ -244,7 +267,8 @@ class indice extends clsCadastro
                                                                   AND ativo = 1))";
 
       if ($turmaId)
-        $sql .= "AND ref_cod_turma = $turmaId";
+        $sql .= "AND ref_cod_turma = $turmaId
+                 ORDER BY nome";
 
       $this->db->Consulta($sql);
     }

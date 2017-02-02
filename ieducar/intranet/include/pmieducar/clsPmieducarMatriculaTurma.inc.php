@@ -1001,7 +1001,8 @@ class clsPmieducarMatriculaTurma
     return FALSE;
   }
 
-  function lista4($escolaId = NULL, $cursoId = NULL, $serieId = NULL, $turmaId = NULL, $ano = NULL){
+  function lista4($escolaId = NULL, $cursoId = NULL, $serieId = NULL, $turmaId = NULL, $ano = NULL, $saida_escola = FALSE){
+
     $sql = "SELECT {$this->_campos_lista}, ref_cod_aluno
               FROM {$this->_tabela} mt
              INNER JOIN {$this->_schema}matricula m ON (m.cod_matricula = mt.ref_cod_matricula)";
@@ -1031,6 +1032,11 @@ class clsPmieducarMatriculaTurma
 
     if (is_numeric($ano)) {
       $filtros .= "{$whereAnd} m.ano = '{$ano}'";
+      $whereAnd = " AND ";
+    }
+
+    if ($saida_escola == 1) {
+      $filtros .= "{$whereAnd} m.saida_escola = TRUE";
       $whereAnd = " AND ";
     }
 

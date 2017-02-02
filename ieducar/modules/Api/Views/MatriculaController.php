@@ -309,6 +309,19 @@ class MatriculaController extends ApiCoreController
     return array('frequencia' => $frequencia);
   }
 
+  protected function desfazSaidaEscola(){
+    $matriculaId = $this->getRequest()->id;
+    $params = $matriculaId;
+
+    $sql = "UPDATE pmieducar.matricula
+               SET saida_escola = FALSE,
+                   observacao = NULL
+             WHERE cod_matricula = $1";
+
+    $this->fetchPreparedQuery($sql, $params); 
+    $this->messenger->append('Saída da escola cancelada.', 'success');
+  }
+
   protected function deleteAbandono() {
     if ($this->canDeleteAbandono()) {
       $matriculaId        = $this->getRequest()->id;
@@ -552,6 +565,9 @@ class MatriculaController extends ApiCoreController
 
     elseif ($this->isRequestFor('delete', 'reclassificacao'))
       $this->appendResponse($this->deleteReclassificacao());
+
+    elseif ($this->isRequestFor('delete', 'saidaEscola'))
+      $this->appendResponse($this->desfazSaidaEscola());
 
     elseif ($this->isRequestFor('post', 'reserva-externa'))
       $this->appendResponse($this->postReservaExterna());

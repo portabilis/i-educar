@@ -9,6 +9,11 @@ var handleDeleteReclassificacao = function(dataResponse){
   location.assign("educar_aluno_det.php?cod_aluno="+dataResponse.aluno_id);
 }
 
+var handleDesfazerSaidaEscola = function(dataResponse) {
+  handleMessages(dataResponse.msgs);
+  location.reload();
+}
+
 function deleteAbandono(matriculaId) {
   if (! confirm(stringUtils.toUtf8('Deseja desfazer o abandono?')))
     return false;
@@ -36,6 +41,22 @@ function deleteReclassificacao(matriculaId) {
     id       : matriculaId
     },
     success  : handleDeleteReclassificacao
+  };
+
+    deleteResource(options)
+}
+
+function desfazerSaidaEscola(matriculaId) {
+  if (! confirm(stringUtils.toUtf8('Deseja cancelar saída da escola?')))
+    return false;
+
+  var options = {
+    url      : deleteResourceUrlBuilder.buildUrl(apiUrlBase, 'saidaEscola'),
+    dataType : 'json',
+    data     : {
+    id       : matriculaId
+    },
+    success  : handleDesfazerSaidaEscola
   };
 
     deleteResource(options)
