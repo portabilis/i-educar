@@ -168,12 +168,17 @@ class EducacensoExportController extends ApiCoreController
         $export .= $this->exportaDadosRegistro90($escolaId, $turmaId,  $matricula['id']);
       }
     }
+    foreach ($this->getTurmas($escolaId, $ano) as $turmaId => $turmaNome) {
+      foreach ($this->getMatriculasTurmaAposData($escolaId, $ano, $data_ini, $data_fim, $turmaId) as $matricula) {
+        $export .= $this->exportaDadosRegistro91($escolaId, $turmaId,  $matricula['id']);
+      }
+    }
 
     return $export;
   }
 
   protected function getTurmas($escolaId, $ano){
-    return App_Model_IedFinder::getTurmas($escolaId, NULL, $ano);
+    return App_Model_IedFinder::getTurmasEducacenso($escolaId, $ano);
   }
 
   protected function getServidores($escolaId, $ano, $data_ini, $data_fim){
@@ -236,6 +241,29 @@ class EducacensoExportController extends ApiCoreController
       AND mt.ref_cod_turma = $5
     ';
     return Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId, $ano, $data_ini, $data_fim, $turmaId)));
+  }
+
+  protected function getMatriculasTurmaAposData($escolaId, $ano, $data_ini, $data_fim, $turmaId){
+    $sql =
+     'SELECT
+      distinct(m.cod_matricula) as id
+
+      FROM  pmieducar.aluno a
+      INNER JOIN cadastro.fisica fis ON (fis.idpes = a.ref_idpes)
+      INNER JOIN cadastro.pessoa p ON (fis.idpes = p.idpes)
+      INNER JOIN pmieducar.matricula m ON (m.ref_cod_aluno = a.cod_aluno)
+      INNER JOIN pmieducar.matricula_turma mt ON (mt.ref_cod_matricula = m.cod_matricula)
+      INNER JOIN pmieducar.escola e ON (m.ref_ref_cod_escola = e.cod_escola)
+      INNER JOIN modules.educacenso_cod_escola ece ON (ece.cod_escola = e.cod_escola)
+      INNER JOIN pmieducar.instituicao i ON (i.cod_instituicao = e.ref_cod_instituicao)
+      WHERE e.cod_escola = $1
+        AND m.aprovado IN (1, 2, 3, 4, 6, 15)
+        AND m.ano = $2
+        AND mt.ref_cod_turma = $3
+        AND mt.data_enturmacao > i.data_educacenso
+        AND i.data_educacenso IS NOT NULL
+    ';
+    return Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId, $ano, $turmaId)));
   }
 
   protected function exportaDadosRegistro00($escolaId, $ano){
@@ -1962,6 +1990,77 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
 
     for ($i=1; $i <= $numeroRegistros ; $i++)
       $return .= ${'r90s'.$i}.'|';
+
+    $return = substr_replace($return, "", -1);
+    $return .= "\n";
+
+    return $return;
+  }
+
+  protected function exportaDadosRegistro91($escolaId, $turmaId, $matriculaId) {
+
+    $sql = "SELECT '91' AS r91s1,
+                   educacenso_cod_escola.cod_escola_inep AS r91s2,
+                   educacenso_cod_aluno.cod_aluno_inep AS r91s5,
+                   matricula.ref_cod_aluno AS r91s6,
+                   curso.modalidade_curso AS r91s9,
+                   matricula.aprovado AS r91s11
+            FROM pmieducar.matricula
+            INNER JOIN pmieducar.escola ON (escola.cod_escola = matricula.ref_ref_cod_escola)
+            INNER JOIN modules.educacenso_cod_escola ON (escola.cod_escola = educacenso_cod_escola.cod_escola)
+             LEFT JOIN modules.educacenso_cod_aluno ON (educacenso_cod_aluno.cod_aluno = matricula.ref_cod_aluno)
+            INNER JOIN pmieducar.curso ON (curso.cod_curso = matricula.ref_cod_curso)
+            WHERE escola.cod_escola = $1
+              AND matricula.cod_matricula = $2";
+
+    $numeroRegistros = 11;
+    $return = '';
+
+    extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, array('return_only' => 'first-row',
+                                                                      'params' => array($escolaId, $matriculaId))));
+
+    $turma = new clsPmieducarTurma($turmaId);
+    $inep = $turma->getInep();
+
+    $turma = $turma->detalhe();
+    $serieId = $turma['ref_ref_cod_serie'];
+
+    $serie = new clsPmieducarSerie($serieId);
+    $serie = $serie->detalhe();
+
+    $anoConcluinte = $serie['concluinte'] == 2;
+    $etapaEducacenso = $turma['etapa_educacenso'];
+
+    $r91s3 = $turmaId;
+    $r91s4 = ($inep ? $inep : null);
+    $r91s7 = null;
+    $r91s8 = 1;
+    $r91s10 = $etapaEducacenso;
+
+    // Atualiza situação para código do censo
+    switch ($r91s11) {
+      case 4:
+        $r91s11 = 1;
+        break;
+      case 6:
+        $r91s11 = 2;
+        break;
+      case 15:
+        $r91s11 = 3;
+        break;
+      case 2:
+        $r91s11 = 4;
+        break;
+      case 1:
+        $r91s11 = ($anoConcluinte ? 6 : 5);
+        break;
+      case 3:
+        $r91s11 = 7;
+        break;
+    }
+
+    for ($i=1; $i <= $numeroRegistros ; $i++)
+      $return .= ${'r91s'.$i}.'|';
 
     $return = substr_replace($return, "", -1);
     $return .= "\n";
