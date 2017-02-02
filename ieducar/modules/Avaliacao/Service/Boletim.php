@@ -1452,8 +1452,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
     // Se não tiver nenhuma média ou a quantidade for diferente dos componentes
     // curriculares da matrícula, ainda está em andamento
-    if (0 == count($mediasComponentes) ||
-      count($mediasComponentes) != count($componentes)) {
+    if ((0 == count($mediasComponentes) || count($mediasComponentes) != count($componentes))
+         && $this->getRegra()->get('definirComponentePorEtapa') != "1") {
       $situacaoGeral = App_Model_MatriculaSituacao::EM_ANDAMENTO;
     }
 
