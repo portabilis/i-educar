@@ -233,8 +233,6 @@ class indice extends clsCadastro
 
     include 'include/pmieducar/educar_campo_lista.php';
 
-    $this->campoOculto('ref_cod_escola', $this->ref_cod_escola);
-
     if ($this->ref_cod_escola) {
       $this->ref_ref_cod_escola = $this->ref_cod_escola;
     }
