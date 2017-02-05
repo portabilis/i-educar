@@ -35,6 +35,7 @@ require_once 'include/pmieducar/geral.inc.php';
 
 require_once 'App/Model/IedFinder.php';
 
+require_once 'Portabilis/View/Helper/Application.php';
 /**
  * clsIndexBase class.
  *
