@@ -1,4 +1,6 @@
 <?php
+#error_reporting(E_ALL);
+#ini_set("display_errors", 1);
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
 	*	@author Prefeitura Municipal de Itajaí								 *
@@ -28,6 +30,8 @@ require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once ("include/pmieducar/clsPmieducarUsuario.inc.php");
+require_once "include/pmieducar/clsPmieducarEscola.inc.php";
+require_once "include/pmieducar/clsPmieducarEscolaUsuario.inc.php";
 
 class clsIndexBase extends clsBase
 {
@@ -387,12 +391,16 @@ class indice extends clsCadastro
 		$this->campoOculto("nivel_usuario_",$nivel);
 
 		$get_biblioteca			= false;
-		$get_escola 			= true;
+		//$get_escola 			= true;
 
 		$cad_usuario = true;
 		include( "include/pmieducar/educar_campo_lista.php" );
 
-		$this->acao_enviar = "valida()";			
+		$helperOptions = array('objectName' => 'escolas');
+  	    $options       = array('label' => 'Escolas', 'size' => 50, 'required' => false, 'options' => array('value' => null));
+ 		$this->inputsHelper()->multipleSearchEscolas('', $options, $helperOptions);
+
+		$this->acao_enviar = "valida()";
 
 	}
 
@@ -428,17 +436,17 @@ class indice extends clsCadastro
 		if( $obj_funcionario->cadastra() )
 		{
 
-			if ($this->ref_cod_instituicao && $this->ref_cod_escola)
+			if ($this->ref_cod_instituicao && $this->escolas)
 			{
-				$obj = new clsPmieducarUsuario( $this->ref_pessoa, $this->ref_cod_escola, $this->ref_cod_instituicao, $this->pessoa_logada,  $this->pessoa_logada, $this->ref_cod_tipo_usuario,null,null,1 );
+				$obj = new clsPmieducarUsuario( $this->ref_pessoa, $this->ref_cod_instituicao, $this->pessoa_logada,  $this->pessoa_logada, $this->ref_cod_tipo_usuario,null,null,1 );
 			} // verifica se usuario é institucional
-			else if ($this->ref_cod_instituicao && !$this->ref_cod_escola)
+			else if ($this->ref_cod_instituicao && !$this->escolas)
 			{
-				$obj = new clsPmieducarUsuario( $this->ref_pessoa, null, $this->ref_cod_instituicao, $this->pessoa_logada,  $this->pessoa_logada, $this->ref_cod_tipo_usuario,null,null,1 );
+				$obj = new clsPmieducarUsuario( $this->ref_pessoa, $this->ref_cod_instituicao, $this->pessoa_logada,  $this->pessoa_logada, $this->ref_cod_tipo_usuario,null,null,1 );
 			} // verifica se usuario é poli-institucional
-			else if (!$this->ref_cod_instituicao && !$this->ref_cod_escola)
+			else if (!$this->ref_cod_instituicao && !$this->escolas)
 			{
-				$obj = new clsPmieducarUsuario( $this->ref_pessoa, null, null, $this->pessoa_logada,  $this->pessoa_logada, $this->ref_cod_tipo_usuario,null,null,1 );
+				$obj = new clsPmieducarUsuario( $this->ref_pessoa, null, $this->pessoa_logada,  $this->pessoa_logada, $this->ref_cod_tipo_usuario,null,null,1 );
 			}
 			if($obj->existe())
 				$cadastrou = $obj->edita();
@@ -447,6 +455,14 @@ class indice extends clsCadastro
 
 			if( $cadastrou )
 			{
+				unset($this->escolas[0]);
+				$tamanhoArray = sizeof($this->escolas);
+
+				for($i = 1; $i <= $tamanhoArray; $i++){
+					$obj_escola_usuario = new clsPmieducarEscolaUsuario(0, $this->ref_pessoa, $this->escolas[$i], 0);
+					$obj_escola_usuario->cadastra();
+				}
+
 				$this->mensagem .= "Cadastro efetuado com sucesso.<br>";
 				header( "Location: educar_usuario_lst.php" );
 				die();
@@ -496,17 +512,17 @@ class indice extends clsCadastro
 		if( $obj_funcionario->edita() )
 		{
 
-			if ($this->ref_cod_instituicao && $this->ref_cod_escola)
+			if ($this->ref_cod_instituicao && $this->escolas)
 			{
-				$obj = new clsPmieducarUsuario( $this->ref_pessoa, $this->ref_cod_escola, $this->ref_cod_instituicao, $this->pessoa_logada,  $this->pessoa_logada, $this->ref_cod_tipo_usuario,null,null,1 );
+				$obj = new clsPmieducarUsuario( $this->ref_pessoa, $this->ref_cod_instituicao, $this->pessoa_logada,  $this->pessoa_logada, $this->ref_cod_tipo_usuario,null,null,1 );
 			} // verifica se usuario é institucional
-			else if ($this->ref_cod_instituicao && !$this->ref_cod_escola)
+			else if ($this->ref_cod_instituicao && !$this->escolas)
 			{
 				$obj = new clsPmieducarUsuario( $this->ref_pessoa, null, $this->ref_cod_instituicao, $this->pessoa_logada,  $this->pessoa_logada, $this->ref_cod_tipo_usuario,null,null,1 );
 			} // verifica se usuario é poli-institucional
-			else if (!$this->ref_cod_instituicao && !$this->ref_cod_escola)
+			else if (!$this->ref_cod_instituicao && !$this->escolas)
 			{
-				$obj = new clsPmieducarUsuario( $this->ref_pessoa, null, null, $this->pessoa_logada,  $this->pessoa_logada, $this->ref_cod_tipo_usuario,null,null,1 );
+				$obj = new clsPmieducarUsuario( $this->ref_pessoa, null, $this->pessoa_logada,  $this->pessoa_logada, $this->ref_cod_tipo_usuario,null,null,1 );
 			}
 			if($obj->existe())
 				$editou = $obj->edita();
@@ -550,6 +566,21 @@ class indice extends clsCadastro
 
 			if( $editou )
 			{
+				$db = new clsBanco();
+				$countEscolaUsuario = $db->campoUnico("SELECT count(ref_cod_escola) AS escola FROM pmieducar.escola_usuario WHERE ref_cod_usuario = $this->ref_pessoa");
+
+				if($countEscolaUsuario > 0){
+					$obj_delete = new clsPmieducarEscolaUsuario(0, $this->ref_pessoa, null, 0);
+					$obj_delete->excluir();
+				}
+
+				unset($this->escolas[0]);
+				$tamanhoArray = sizeof($this->escolas);
+				for($i = 1; $i <= $tamanhoArray; $i++){
+					$obj_escola_usuario = new clsPmieducarEscolaUsuario(0, $this->ref_pessoa, $this->escolas[$i], 0);
+					$obj_escola_usuario->cadastra();
+				}
+
 				$this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
 				header( "Location: educar_usuario_lst.php" );
 				die();
@@ -621,7 +652,7 @@ $pagina->MakeAll();
 
 //var campo_tipo_usuario = document.getElementById("ref_cod_tipo_usuario");
 //var campo_instituicao = document.getElementById("ref_cod_instituicao");
-//var campo_escola = document.getElementById("ref_cod_escola");
+//var campo_escola = document.getElementById("escolas");
 //var campo_biblioteca = document.getElementById("ref_cod_biblioteca");
 //
 //campo_instituicao.disabled = true;
@@ -630,38 +661,38 @@ $pagina->MakeAll();
 
 var campo_tipo_usuario = document.getElementById("ref_cod_tipo_usuario");
 var campo_instituicao = document.getElementById("ref_cod_instituicao");
-var campo_escola = document.getElementById("ref_cod_escola");
+var campo_escola = document.getElementById("escolas");
+$j('#escolas').closest('tr').hide();
 //var campo_biblioteca = document.getElementById("ref_cod_biblioteca");
 
 if(  campo_tipo_usuario.value == "" )
 {
 	campo_instituicao.disabled = true;
-	campo_escola.disabled = true;
+	$j('#escolas_chosen').closest('tr').hide();
 	//campo_biblioteca.disabled = true;
-
 }
 else if( cod_tipo_usuario[campo_tipo_usuario.value] == 1 )
 {
 	campo_instituicao.disabled = true;
-	campo_escola.disabled = true;
+	$j('#escolas_chosen').closest('tr').hide();
 //	campo_biblioteca.disabled = true;
 }
 else if( cod_tipo_usuario[campo_tipo_usuario.value] == 2 )
 {
 	campo_instituicao.disabled = false;
-	campo_escola.disabled = true;
+	$j('#escolas_chosen').closest('tr').hide();
 //	campo_biblioteca.disabled = true;
 }
 else if( cod_tipo_usuario[campo_tipo_usuario.value] == 4 )
 {
 	campo_instituicao.disabled = false;
-	campo_escola.disabled = false;
+	$j('#escolas_chosen').closest('tr').show();
 	//campo_biblioteca.disabled = true;
 }
 else if( cod_tipo_usuario[campo_tipo_usuario.value] == 8 )
 {
 	campo_instituicao.disabled = false;
-	campo_escola.disabled = false;
+	$j('#escolas_chosen').closest('tr').show();
 	//campo_biblioteca.disabled = false;
 }
 
@@ -673,7 +704,7 @@ document.getElementById('ref_cod_tipo_usuario').onchange = function()
 //function getEscola()
 //{
 //	var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
-//	var campoEscola = document.getElementById('ref_cod_escola');
+//	var campoEscola = document.getElementById('escolas');
 //
 //	campoEscola.length = 1;
 //	for (var j = 0; j < escola.length; j++)
@@ -687,28 +718,38 @@ document.getElementById('ref_cod_tipo_usuario').onchange = function()
 
 function habilitaCampos()
 {
+	if(  campo_tipo_usuario.value == "" )
+	{
+		$j('#ref_cod_instituicao').val("");
+		campo_instituicao.disabled = true;
+		$j('#escolas').val("").trigger("chosen:updated");;
+		$j('#escolas_chosen').closest('tr').hide();
+	}
 	if( cod_tipo_usuario[campo_tipo_usuario.value] == 1 )
 	{
+		$j('#ref_cod_instituicao').val("");
 		campo_instituicao.disabled = true;
-		campo_escola.disabled = true;
+		$j('#escolas').val("").trigger("chosen:updated");
+		$j('#escolas_chosen').closest('tr').hide();
 		//campo_biblioteca.disabled = true;
 	}
 	else if( cod_tipo_usuario[campo_tipo_usuario.value] == 2 )
 	{
 		campo_instituicao.disabled = false;
-		campo_escola.disabled = true;
+		$j('#escolas').val("").trigger("chosen:updated");;
+		$j('#escolas_chosen').closest('tr').hide();
 		//campo_biblioteca.disabled = true;
 	}
 	else if( cod_tipo_usuario[campo_tipo_usuario.value] == 4 )
 	{
 		campo_instituicao.disabled = false;
-		campo_escola.disabled = false;
+		$j('#escolas_chosen').closest('tr').show();
 		//campo_biblioteca.disabled = true;
 	}
 	else if( cod_tipo_usuario[campo_tipo_usuario.value] == 8 )
 	{
 		campo_instituicao.disabled = false;
-		campo_escola.disabled = false;
+		$j('#escolas_chosen').closest('tr').show();
 		//campo_biblioteca.disabled = false;
 	}
 //	else if( campo == "ref_cod_instituicao" &&
@@ -732,7 +773,7 @@ function habilitaCampos()
 //{
 ////	var campo_tipo_usuario = document.getElementById("ref_cod_tipo_usuario");
 ////	var campo_instituicao = document.getElementById("ref_cod_instituicao");
-////	var campo_escola = document.getElementById("ref_cod_escola");
+////	var campo_escola = document.getElementById("escolas");
 ////	var campo_biblioteca = document.getElementById("ref_cod_biblioteca");
 //
 //	if(  campo_tipo_usuario == "" )
@@ -793,7 +834,7 @@ function valida()
 {
 	var campo_tipo_usuario = document.getElementById("ref_cod_tipo_usuario");
 	var campo_instituicao = document.getElementById("ref_cod_instituicao");
-	var campo_escola = document.getElementById("ref_cod_escola");
+	var campo_escola = $j("#escolas").val();
 
 	if( cod_tipo_usuario[campo_tipo_usuario.options[campo_tipo_usuario.selectedIndex].value] == 2)
 	{
@@ -812,7 +853,7 @@ function valida()
 		}
 		else if( cod_tipo_usuario[campo_instituicao.options[campo_instituicao.selectedIndex].value] != "")
 		{
-			if( campo_escola.options[campo_escola.selectedIndex].value == "" && campo_tipo_usuario.value != 6)
+			if( campo_escola.length == 1 && campo_tipo_usuario.value != 6)
 			{
 				alert("É obrigatório a escolha de uma Escola!");
 				return false;
@@ -831,5 +872,42 @@ function valida()
 		return;
 	document.forms[0].submit();
 }
+
+$j(document).ready(function(){
+
+$escolas = $j('#escolas');
+
+$escolas.trigger('chosen:updated');
+
+var handleGetEscolas = function(dataResponse) {
+  $j.each(dataResponse['escolas'], function(id, value) {
+    $escolas.children("[value=" + value + "]").attr('selected', '');
+  });
+
+  $escolas.trigger('chosen:updated');
+}
+
+var getEscolas = function() {
+  var ref_pessoa = $j('#ref_pessoa').val();
+
+  if ($j('#ref_pessoa').val()!='') {
+    var additionalVars = {
+      id : $j('#ref_pessoa').val(),
+    };
+
+    var options = {
+      url      : getResourceUrlBuilder.buildUrl('/module/Api/escolaUsuario', 'escolas', additionalVars),
+      dataType : 'json',
+      data     : {},
+      success  : handleGetEscolas,
+    };
+
+    getResource(options);
+  }
+}
+
+getEscolas();
+
+});
 
 </script>

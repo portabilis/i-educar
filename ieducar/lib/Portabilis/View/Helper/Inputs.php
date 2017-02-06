@@ -314,6 +314,10 @@ class Portabilis_View_Helper_Inputs {
     $this->multipleSearchResourceInput('multipleSearchEscola', $attrName, $inputOptions, $helperOptions);
   }
 
+  public function multipleSearchEscolas($attrName, $inputOptions = array(), $helperOptions = array()) {
+    $this->multipleSearchResourceInput('multipleSearchEscolas', $attrName, $inputOptions, $helperOptions);
+  }
+
   public function multipleSearchCurso($attrName, $inputOptions = array(), $helperOptions = array()) {
     $this->multipleSearchResourceInput('multipleSearchCurso', $attrName, $inputOptions, $helperOptions);
   }
