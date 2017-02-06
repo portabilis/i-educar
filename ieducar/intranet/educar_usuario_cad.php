@@ -662,37 +662,37 @@ $pagina->MakeAll();
 var campo_tipo_usuario = document.getElementById("ref_cod_tipo_usuario");
 var campo_instituicao = document.getElementById("ref_cod_instituicao");
 var campo_escola = document.getElementById("escolas");
+$j('#escolas').closest('tr').hide();
 //var campo_biblioteca = document.getElementById("ref_cod_biblioteca");
 
 if(  campo_tipo_usuario.value == "" )
 {
-	campo_instituicao.disabled = false;
-	campo_escola.disabled = false;
+	campo_instituicao.disabled = true;
+	$j('#escolas_chosen').closest('tr').hide();
 	//campo_biblioteca.disabled = true;
-
 }
 else if( cod_tipo_usuario[campo_tipo_usuario.value] == 1 )
 {
-	campo_instituicao.disabled = false;
-	campo_escola.disabled = false;
+	campo_instituicao.disabled = true;
+	$j('#escolas_chosen').closest('tr').hide();
 //	campo_biblioteca.disabled = true;
 }
 else if( cod_tipo_usuario[campo_tipo_usuario.value] == 2 )
 {
 	campo_instituicao.disabled = false;
-	campo_escola.disabled = false;
+	$j('#escolas_chosen').closest('tr').hide();
 //	campo_biblioteca.disabled = true;
 }
 else if( cod_tipo_usuario[campo_tipo_usuario.value] == 4 )
 {
 	campo_instituicao.disabled = false;
-	campo_escola.disabled = false;
+	$j('#escolas_chosen').closest('tr').show();
 	//campo_biblioteca.disabled = true;
 }
 else if( cod_tipo_usuario[campo_tipo_usuario.value] == 8 )
 {
 	campo_instituicao.disabled = false;
-	campo_escola.disabled = false;
+	$j('#escolas_chosen').closest('tr').show();
 	//campo_biblioteca.disabled = false;
 }
 
@@ -718,28 +718,38 @@ document.getElementById('ref_cod_tipo_usuario').onchange = function()
 
 function habilitaCampos()
 {
+	if(  campo_tipo_usuario.value == "" )
+	{
+		$j('#ref_cod_instituicao').val("");
+		campo_instituicao.disabled = true;
+		$j('#escolas').val("").trigger("chosen:updated");;
+		$j('#escolas_chosen').closest('tr').hide();
+	}
 	if( cod_tipo_usuario[campo_tipo_usuario.value] == 1 )
 	{
-		campo_instituicao.disabled = false;
-		campo_escola.disabled = false;
+		$j('#ref_cod_instituicao').val("");
+		campo_instituicao.disabled = true;
+		$j('#escolas').val("").trigger("chosen:updated");
+		$j('#escolas_chosen').closest('tr').hide();
 		//campo_biblioteca.disabled = true;
 	}
 	else if( cod_tipo_usuario[campo_tipo_usuario.value] == 2 )
 	{
 		campo_instituicao.disabled = false;
-		campo_escola.disabled = false;
+		$j('#escolas').val("").trigger("chosen:updated");;
+		$j('#escolas_chosen').closest('tr').hide();
 		//campo_biblioteca.disabled = true;
 	}
 	else if( cod_tipo_usuario[campo_tipo_usuario.value] == 4 )
 	{
 		campo_instituicao.disabled = false;
-		campo_escola.disabled = false;
+		$j('#escolas_chosen').closest('tr').show();
 		//campo_biblioteca.disabled = true;
 	}
 	else if( cod_tipo_usuario[campo_tipo_usuario.value] == 8 )
 	{
 		campo_instituicao.disabled = false;
-		campo_escola.disabled = false;
+		$j('#escolas_chosen').closest('tr').show();
 		//campo_biblioteca.disabled = false;
 	}
 //	else if( campo == "ref_cod_instituicao" &&
