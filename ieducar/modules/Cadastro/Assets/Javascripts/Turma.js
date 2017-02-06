@@ -27,11 +27,6 @@ $j('.tablecadastro >tbody  > tr').each(function(index, row) {
 
 $j(document).ready(function() {
 
-// console.log('oi2');
-//   console.log(document.getElementById('padrao_ano_escolar').value);
-// $j('#ref_cod_curso').change(function(){
-
-// });
   // on click das abas
 
   // DADOS GERAIS

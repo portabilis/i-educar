@@ -521,13 +521,15 @@ class indice extends clsCadastro
         }
       }
 
-      $this->campoTabelaInicio("turma_modulo","M&oacute;dulos da turma",array("M&oacute;dulo","Data inicial","Data final", "Dias Letivos"),$this->turma_modulo);
+      if ($this->padrao_ano_escolar != 1) {
+        $this->campoTabelaInicio("turma_modulo","M&oacute;dulos da turma",array("M&oacute;dulo","Data inicial","Data final", "Dias Letivos"),$this->turma_modulo);
 
-      $this->campoLista('ref_cod_modulo', 'Módulo', $opcoesCampoModulo, $this->ref_cod_modulo, NULL, NULL, NULL, NULL, NULL, TRUE);
+        $this->campoLista('ref_cod_modulo', 'Módulo', $opcoesCampoModulo, $this->ref_cod_modulo, NULL, NULL, NULL, NULL, NULL, FALSE);
 
-      $this->campoData('data_inicio', 'Data In&iacute;cio', $this->data_inicio, FALSE);
-      $this->campoData('data_fim', 'Data Fim', $this->data_fim, FALSE);
-      $this->campoTexto('dias_letivos', 'Dias Letivos', $this->dias_letivos_, 9);
+        $this->campoData('data_inicio', 'Data In&iacute;cio', $this->data_inicio, FALSE);
+        $this->campoData('data_fim', 'Data Fim', $this->data_fim, FALSE);
+        $this->campoTexto('dias_letivos', 'Dias Letivos', $this->dias_letivos_, 9);
+      }
       $this->campoTabelaFim();
 
     $this->campoQuebra2();
@@ -1713,8 +1715,11 @@ var evtOnLoad = function()
   setVisibility('tr_hora_final', true);
   setVisibility('tr_hora_inicio_intervalo', true);
   setVisibility('tr_hora_fim_intervalo', true);
+  if (document.getElementById('padrao_ano_escolar').value == '') {
+    setVisibility('tr_turma_modulo', false);
+  }else if (document.getElementById('padrao_ano_escolar').value == 0) {
+    setVisibility('tr_turma_modulo', true);
 
-  if (document.getElementById('padrao_ano_escolar').value == 0) {
     setVisibility('tr_dia_semana', true);
     setVisibility('tr_ds_hora_inicial', true);
     setVisibility('tr_ds_hora_final', true);
@@ -1724,7 +1729,8 @@ var evtOnLoad = function()
     for (var ct = 0;ct < hr_tag.length; ct++) {
       setVisibility(hr_tag[ct].parentNode.parentNode, true);
     }
-  } else {
+  }else {
+    setVisibility('tr_turma_modulo',false);
   }
 }
 
@@ -1971,6 +1977,8 @@ function PadraoAnoEscolar(xml)
     }
   }
 
+  setVisibility('tr_turma_modulo', false);
+
   /*setVisibility('tr_dia_semana', false);
   setVisibility('tr_ds_hora_inicial', false);
   setVisibility('tr_ds_hora_final', false);
@@ -2014,6 +2022,10 @@ function PadraoAnoEscolar(xml)
   }
 
   var campoCurso = document.getElementById('ref_cod_curso').value;
+
+  if (document.getElementById('padrao_ano_escolar').value == 0) {
+    setVisibility('tr_turma_modulo', true);
+  }
 
 
   setVisibility('tr_dia_semana', true);
@@ -2252,14 +2264,6 @@ function atualizaLstEscolaCursoSerie(xml)
   else {
     campoSerie.options[0].text = 'A escola/curso n\u00e3o possui nenhuma s\u00e9rie';
   }
-}
-
-document.getElementById('event_incluir_modulo').onclick = incluirModulo;
-
-function incluirModulo(){
-  document.getElementById('incluir_modulo').value = 'S';
-  document.getElementById('tipoacao').value = '';
-  acao();
 }
 
 document.getElementById('event_incluir_dia_semana').onclick = incluirDiaSemana;
