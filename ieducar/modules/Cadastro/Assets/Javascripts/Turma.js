@@ -2,6 +2,7 @@
 
 $j('td .formdktd').append('<div id="tabControl"><ul><li><div id="tab1" class="turmaTab"> <span class="tabText">Dados gerais</span></div></li><li><div id="tab2" class="turmaTab"> <span class="tabText">Dados adicionais</span></div></li></ul></div>');
 $j('td .formdktd b').remove();
+$j('.tablecadastro td .formdktd div').remove();
 $j('#tab1').addClass('turmaTab-active').removeClass('turmaTab');
 
 // Atribui um id a linha, para identificar até onde/a partir de onde esconder os campos
@@ -26,6 +27,11 @@ $j('.tablecadastro >tbody  > tr').each(function(index, row) {
 
 $j(document).ready(function() {
 
+// console.log('oi2');
+//   console.log(document.getElementById('padrao_ano_escolar').value);
+// $j('#ref_cod_curso').change(function(){
+
+// });
   // on click das abas
 
   // DADOS GERAIS
