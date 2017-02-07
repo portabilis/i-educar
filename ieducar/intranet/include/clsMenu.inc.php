@@ -282,7 +282,7 @@ class clsMenu
 
     foreach ($itens_menu as $item) {
       if ($item[0] != $menuPaiAtual) {
-        $estilo_linha = 'nvp_cor_sim';
+        $estilo_linha = 'nvp_sub';
 
         $this->aberto = 0;
         $menuPaiId = $item[6];
@@ -339,9 +339,6 @@ class clsMenu
       else {
         $target = '_top';
       }
-
-      $estilo_linha = $estilo_linha == 'nvp_cor_sim' ?
-        'nvp_cor_nao' : 'nvp_cor_sim';
 
       // Path do item de menu
       $path = $item[4];

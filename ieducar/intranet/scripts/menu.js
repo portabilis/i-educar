@@ -182,7 +182,7 @@ function cm_active(on,h)
 function cm_page()
 {
 	this.x=0;
-	this.x2 = (!bw.ie) ? window.innerWidth : document.body.offsetWidth-20;
+	this.x2 = (!bw.ie) ? window.innerWidth : document.body.offsetWidth-30;
 	this.y=0;
 	this.orgy=this.y2= (!bw.ie)?window.innerHeight:document.body.offsetHeight-6;
 	this.x50=this.x2/2;
@@ -984,7 +984,7 @@ makeCM.prototype.makeObjects=function(nowrite)
 			{
 				o.arr=new cm_makeObj(id+"_a",nest+"_0",m.d3);
 				o.arr.moveIt(bx+m.w-c.l[i].arrowWidth-3,by+m.h/2-(c.l[i].arrowHeight/2));
-				o.arr.css.zIndex=c.z+20;
+				o.arr.css.zIndex=c.z+30;
 			}
 			if(!no && !bw.reuse && !m.img1)
 			{
@@ -1229,15 +1229,15 @@ function MontaMenu()
 	oCMenu.barWidth="760";
 	oCMenu.barHeight="16";
 	oCMenu.barClass="clBar";
-	oCMenu.barX=20;
-	oCMenu.barY=20;
+	oCMenu.barX=30;
+	oCMenu.barY=30;
 	oCMenu.barBorderX=0;
 	oCMenu.barBorderY=0;
 	oCMenu.barBorderClass="";
 
 	oCMenu.level[0]=new cm_makeLevel();
 	oCMenu.level[0].width=80;
-	oCMenu.level[0].height=17;
+	oCMenu.level[0].height=40;
 	oCMenu.level[0].regClass="clLevel0";
 	oCMenu.level[0].overClass="clLevel0over";
 	oCMenu.level[0].borderX=0;
@@ -1253,19 +1253,19 @@ function MontaMenu()
 
 	oCMenu.level[1]=new cm_makeLevel()
 	oCMenu.level[1].width=oCMenu.level[0].width-2
-	oCMenu.level[1].height=20
+	oCMenu.level[1].height=30
 	oCMenu.level[1].regClass="clLevel1"
 	oCMenu.level[1].overClass="clLevel1over"
 	oCMenu.level[1].borderX=1
 	oCMenu.level[1].borderY=1
 	oCMenu.level[1].align="right"
-	oCMenu.level[1].offsetX=-(oCMenu.level[0].width-2)/2+20
+	oCMenu.level[1].offsetX=-(oCMenu.level[0].width-2)/2+30
 	oCMenu.level[1].offsetY=0
 	oCMenu.level[1].borderClass="clLevel1border"
 
 	oCMenu.level[2]=new cm_makeLevel()
 	//oCMenu.level[2].width=150
-	oCMenu.level[2].height=20
+	oCMenu.level[2].height=30
 	oCMenu.level[2].offsetX=0
 	oCMenu.level[2].offsetY=0
 	oCMenu.level[2].regClass="clLevel2"
@@ -1347,7 +1347,7 @@ function MontaMenu()
 				{
 					// sub-menus
 
-					link = "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" height=\"100%\"><tr><td valign=\"middle\" width=\"18\"><a href='" + menu_formatado[i][8] + "'><img src='"+menu_formatado[i][7]+"' height='16' width='16' border='0'></a></td><td valign=\"middle\"><a href='" + menu_formatado[i][8] + "'>" + menu_formatado[i][1] + "</a></td></tr></table>";
+					link = "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" height=\"100%\"><tr><td valign=\"middle\" width=\"18\"><a href='" + menu_formatado[i][8] + "'></a></td><td valign=\"middle\"><a href='" + menu_formatado[i][8] + "'>" + menu_formatado[i][1] + "</a></td></tr></table>";
 					oCMenu.makeMenu(menu_formatado[i][0]+"_",menu_formatado[i][5]+"_", link, menu_formatado[i][8],menu_formatado[i][9],menu_formatado[i][6],'','','','','','','','',menu_formatado[i][10]);
 				}
 				else
@@ -1393,8 +1393,8 @@ function replace_all(palavra, array_procura, array_substitui)
 function setXY()
 {
 
-	document.getElementById('menu_suspenso').style.height = '20px';
-	document.getElementById('menu_suspenso').style.backgroundColor = '#E4E9ED';
+	document.getElementById('menu_suspenso').style.height = '40px';
+	document.getElementById('menu_suspenso').style.backgroundColor = '#e9eff7';
 
 
 

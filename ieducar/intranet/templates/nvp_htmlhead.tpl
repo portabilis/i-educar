@@ -20,6 +20,7 @@
   <link rel=stylesheet type='text/css' href='styles/mytdt.css' />
   <link rel=stylesheet type='text/css' href='styles/jquery.modal.css' />
   <script src="http://maps.google.com/maps/api/js?sensor=true" type="text/javascript" charset="utf-8"></script>
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
 
   <!-- #&ESTILO&# -->
 
@@ -47,7 +48,7 @@
       var src    = imagem.src.indexOf('arrow-up') ;
 
       imagem.src = (src!= -1) ?
-        'imagens/arrow-down2.gif' : 'imagens/arrow-up2.gif' ;
+        'imagens/arrow-down2.png' : 'imagens/arrow-up2.png' ;
 
       imagem.title = (src!= -1) ?
         imagem.title.replace('Abrir', 'Fechar') :
@@ -96,6 +97,8 @@
   <script type="text/javascript">
   <!-- #&SCRIPT_HEADER&# -->
   </script>
+  
+<link rel=stylesheet type='text/css' href='styles/custom.css' />
 </head>
 <body <!-- #&BODYSCRIPTS&# -->>
   <div id="DOM_expansivel" class="DOM_expansivel"></div>
