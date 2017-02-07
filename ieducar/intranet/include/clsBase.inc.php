@@ -56,6 +56,7 @@ require_once 'Portabilis/String/Utils.php';
 
 require_once 'modules/Error/Mailers/NotificationMailer.php';
 require_once 'Portabilis/Assets/Version.php';
+require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
 
 /**
  * clsBase class.
@@ -600,6 +601,11 @@ class clsBase extends clsConfig
     list($nomePessoa) = $nomePessoa->queryRapida($this->currentUserId(), "nome");
     $nomePessoa       = ($nomePessoa) ? $nomePessoa : "<span style='color: #DD0000; '>Convidado</span>";
 
+    // foto do usuario
+    $objFoto = new clsCadastroFisicaFoto($this->currentUserId());
+    $detalheFoto = $objFoto->detalhe();
+    $foto = $detalheFoto['caminho'];
+
 
     // data ultimo acesso
     $ultimoAcesso     = $this->db()->UnicoCampo("SELECT data_hora FROM acesso WHERE cod_pessoa = {$this->currentUserId()} ORDER BY data_hora DESC LIMIT 1,1");
@@ -614,6 +620,7 @@ class clsBase extends clsConfig
     $saida = str_replace("<!-- #&USERLOGADO&# -->",   $nomePessoa,    $saida);
     $saida = str_replace("<!-- #&CORPO&# -->",        $corpo,         $saida);
     $saida = str_replace("<!-- #&ANUNCIO&# -->",      $menu_dinamico, $saida);
+    $saida = str_replace("<!-- #&FOTO&# -->",         $foto, $saida);
 
     // Pega o endereço IP do host, primeiro com HTTP_X_FORWARDED_FOR (para pegar o IP real
     // caso o host esteja atrás de um proxy)
