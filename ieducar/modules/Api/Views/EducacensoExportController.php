@@ -2035,6 +2035,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
     $r91s4 = ($inep ? $inep : null);
     $r91s7 = null;
     $r91s8 = 1;
+    $r91s9 = ($inep ? null : $r91s9);
     $r91s10 = $etapaEducacenso;
 
     // Atualiza situação para código do censo
