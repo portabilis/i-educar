@@ -37,6 +37,87 @@ select:not([size]):not([multiple]), select[size="0"], select[size="1"] {
 }
 
 /**************************************
+**************** TOPO *****************
+**************************************/
+
+.topo{
+  height: 50px;
+  background: #47728f;
+  color: #FFF;
+}
+
+.topo td.logo {
+  font-size: 24px;
+  font-weight: bold;
+  padding-left: 23px;
+}
+
+.topo td.perfil-user {
+  font-size: 14px;
+  padding-right: 23px;
+}
+
+.topo .dropbtn {
+  color: white;
+  padding: 6px;
+  padding-right: 20px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  background-image: url('../imagens/arrow-down.png');
+  background-repeat: no-repeat;
+  background-position: center right;
+  background-size: 12px;
+}
+
+.topo .dropbtn:hover,
+.dropdown:hover .dropbtn{
+  background-image: url('../imagens/arrow-up.png');
+  background-repeat: no-repeat;
+  background-position: center right;
+}
+
+.topo .dropdown {
+  position: relative;
+  display: inline-block;
+  margin-left: 40px;
+}
+
+.topo .dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 150px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+  right: 0;
+}
+
+.topo .dropdown-content a {
+  color: #646b71;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+
+.topo .dropdown-content a:hover {color: #188ad1}
+
+.topo .dropdown:hover .dropdown-content {
+  display: block; 
+}
+
+.topo .foto-user {
+  width: 35px;
+  height: 35px;
+  background-size: cover !important;
+  background-position: center;
+  position: absolute;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/**************************************
 **************** MENUS ****************
 **************************************/
 
