@@ -1240,6 +1240,49 @@ class EducacensoAnaliseController extends ApiCoreController
                  'title'     => "Análise exportação - Registro 80");
   }
 
+  protected function analisaEducacensoRegistro91() {
+
+    $escola   = $this->getRequest()->escola;
+    $ano      = $this->getRequest()->ano;
+
+    $sql = "SELECT DISTINCT pa.nome AS nome_aluno,
+                            pe.fantasia AS nome_escola,
+                            eca.cod_aluno_inep AS cod_inep
+              FROM pmieducar.aluno a
+              LEFT JOIN modules.educacenso_cod_aluno eca ON (eca.cod_aluno = a.cod_aluno)
+             INNER JOIN pmieducar.matricula m ON (m.ref_cod_aluno = a.cod_aluno)
+             INNER JOIN pmieducar.matricula_turma mt ON (mt.ref_cod_matricula = m.cod_matricula)
+             INNER JOIN pmieducar.escola e ON (e.cod_escola = m.ref_ref_cod_escola)
+             INNER JOIN cadastro.pessoa pa ON (pa.idpes = a.ref_idpes)
+             INNER JOIN cadastro.juridica pe ON (pe.idpes = e.ref_idpes)
+             INNER JOIN pmieducar.instituicao i ON (i.cod_instituicao = e.ref_cod_instituicao)
+             WHERE e.cod_escola = $2
+               AND m.aprovado IN (1, 2, 3, 4, 6, 15)
+               AND m.ano = $1
+               AND mt.data_enturmacao > i.data_educacenso
+               AND i.data_educacenso IS NOT NULL
+             ORDER BY nome_aluno";
+
+    $alunos = $this->fetchPreparedQuery($sql, array($ano,
+                                                    $escola));
+
+    $mensagem = array();
+
+    foreach ($alunos as $aluno) {
+      $nomeEscola = Portabilis_String_Utils::toUtf8(mb_strtoupper($aluno["nome_escola"]));
+      $nomeAluno  = Portabilis_String_Utils::toUtf8(mb_strtoupper($aluno["nome_aluno"]));
+
+      if (is_null($aluno["cod_inep"])) {
+        $mensagem[] = array("text" => "Dados para formular o registro 91 da escola {$nomeEscola} não encontrados. Verifique se o(a) aluno(a) {$nomeAluno} possui o código INEP cadastrado.",
+                            "path" => "(Cadastros > Aluno > Alunos > Editar > Campo: Código INEP)",
+                            "fail" => true);
+      }
+    }
+
+    return array('mensagens' => $mensagem,
+                 'title'     => "Análise exportação - Registro 91");
+
+  }
 
   public function Gerar() {
     if ($this->isRequestFor('get', 'registro-00'))
@@ -1262,6 +1305,8 @@ class EducacensoAnaliseController extends ApiCoreController
       $this->appendResponse($this->analisaEducacensoRegistro70());
     else if ($this->isRequestFor('get', 'registro-80'))
       $this->appendResponse($this->analisaEducacensoRegistro80());
+    else if ($this->isRequestFor('get', 'registro-91'))
+      $this->appendResponse($this->analisaEducacensoRegistro91());
     else
       $this->notImplementedOperationError();
   }

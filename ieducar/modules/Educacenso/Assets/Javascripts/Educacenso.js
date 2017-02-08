@@ -54,12 +54,12 @@ $j(document).ready(function(){
       resetParameters();
 
       if (fase2) {
-        $j("#modal_export").modal({
+        $j("#modal_load").modal({
           escapeClose: false,
           clickClose: false,
           showClose: false
         });
-        educacensoExportFase2();
+        analisaRegistro91();
       } else {
         $j("#modal_load").modal({
           escapeClose: false,
@@ -395,6 +395,25 @@ $j(document).ready(function(){
     };
 
     var handleGetAnaliseRegistro80 = function(response) {
+      montaHtmlRegistro(response);
+      finishAnalysis();
+    };
+
+    var analisaRegistro91 = function(){
+        var urlForGetAnaliseRegistro = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', 'registro-91', {
+          escola   : $j("#ref_cod_escola").val(),
+          ano      : $j("#ano").val()
+        });
+
+        var options = {
+          url : urlForGetAnaliseRegistro,
+          dataType : 'json',
+          success  : handleGetAnaliseRegistro91
+        };
+        getResources(options);
+    };
+
+    var handleGetAnaliseRegistro91 = function(response) {
       montaHtmlRegistro(response);
       finishAnalysis();
     };
