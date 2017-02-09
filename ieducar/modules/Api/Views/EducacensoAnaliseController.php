@@ -1240,6 +1240,58 @@ class EducacensoAnaliseController extends ApiCoreController
                  'title'     => "Análise exportação - Registro 80");
   }
 
+  protected function analisaEducacensoRegistro89() {
+
+    $escola   = $this->getRequest()->escola;
+    $ano      = $this->getRequest()->ano;
+
+    $sql = "SELECT DISTINCT j.fantasia AS nome_escola,
+                            ece.cod_escola_inep AS inep,
+                            gp.nome AS nome_gestor,
+                            gf.cpf AS cpf_gestor,
+                            e.cargo_gestor
+              FROM pmieducar.escola e
+             INNER JOIN cadastro.juridica j ON (j.idpes = e.ref_idpes)
+              LEFT JOIN modules.educacenso_cod_escola ece ON (ece.cod_escola = e.cod_escola)
+              LEFT JOIN cadastro.fisica gf ON (gf.idpes = e.ref_idpes_gestor)
+              LEFT JOIN cadastro.pessoa gp ON (gp.idpes = e.ref_idpes_gestor)
+             WHERE e.cod_escola = $1";
+
+    $escolas = $this->fetchPreparedQuery($sql, array($escola));
+
+    $mensagem = array();
+
+    foreach ($escolas as $escola) {
+      $nomeEscola = Portabilis_String_Utils::toUtf8(mb_strtoupper($aluno["nome_escola"]));
+
+      if (is_null($escola["inep"])){
+        $mensagem[] = array("text" => "Dados para formular o registro 89 da escola {$nomeEscola} não encontrados. Verifique se a escola possui o código INEP cadastrado.",
+                            "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dados gerais > Campo: Código INEP)",
+                            "fail" => true);
+      }
+
+      if ($escola["cpf_gestor"] <= 0){
+        $mensagem[] = array("text" => "Dados para formular o registro 89 da escola {$nomeEscola} não encontrados. Verifique se o(a) gestor(a) escolar possui o CPF cadastrado.",
+                            "path" => "(Pessoa FJ > Pessoa física > Editar > Campo: CPF)",
+                            "fail" => true);
+      }
+
+      if (is_null($escola["nome_gestor"])){
+        $mensagem[] = array("text" => "Dados para formular o registro 89 da escola {$nomeEscola} não encontrados. Verifique se o(a) gestor(a) escolar foi informado(a).",
+                            "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dados gerais > Campo: Gestor escolar)",
+                            "fail" => true);
+      }
+
+      if (is_null($escola["cargo_gestor"])){
+        $mensagem[] = array("text" => "Dados para formular o registro 89 da escola 'nome da escola' não encontrados. Verifique se o cargo do(a) gestor(a) escolar foi informado.",
+                            "path" => "(Cadastros > Escola > Cadastrar > Editar > Campo: Cargo do gestor escolar)",
+                            "fail" => true);
+      }
+
+      return array('mensagens' => $mensagem,
+                 'title'     => "Análise exportação - Registro 89");
+
+  }
 
   public function Gerar() {
     if ($this->isRequestFor('get', 'registro-00'))
@@ -1262,6 +1314,8 @@ class EducacensoAnaliseController extends ApiCoreController
       $this->appendResponse($this->analisaEducacensoRegistro70());
     else if ($this->isRequestFor('get', 'registro-80'))
       $this->appendResponse($this->analisaEducacensoRegistro80());
+    else if ($this->isRequestFor('get', 'registro-89'))
+      $this->appendResponse($this->analisaEducacensoRegistro89());
     else
       $this->notImplementedOperationError();
   }
