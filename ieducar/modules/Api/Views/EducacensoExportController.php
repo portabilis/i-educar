@@ -2031,10 +2031,12 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
     $anoConcluinte = $serie['concluinte'] == 2;
     $etapaEducacenso = $turma['etapa_educacenso'];
 
+    $tipoMediacaoDidaticoPedagogico = $turma['tipo_mediacao_didatico_pedagogico'];
+
     $r91s3 = $turmaId;
     $r91s4 = ($inep ? $inep : null);
     $r91s7 = null;
-    $r91s8 = 1;
+    $r91s8 = ($inep ? null : $tipoMediacaoDidaticoPedagogico);
     $r91s10 = $etapaEducacenso;
 
     // Atualiza situação para código do censo
