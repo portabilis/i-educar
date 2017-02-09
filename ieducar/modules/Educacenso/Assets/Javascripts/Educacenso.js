@@ -417,4 +417,45 @@ $j(document).ready(function(){
       $j("#registro_load").text("Analisando registro 90");
       analisaRegistro90();
     };
+
+    var analisaRegistro90 = function(){
+        var urlForGetAnaliseRegistro = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', 'registro-90', {
+          escola   : $j("#ref_cod_escola").val(),
+          ano      : $j("#ano").val(),
+          data_ini : $j("#data_ini").val(),
+          data_fim : $j("#data_fim").val()
+        });
+
+        var options = {
+          url : urlForGetAnaliseRegistro,
+          dataType : 'json',
+          success  : handleGetAnaliseRegistro90
+        };
+        getResources(options);
+    };
+
+    var handleGetAnaliseRegistro90 = function(response) {
+      montaHtmlRegistro(response);
+      $j("#registro_load").text("Analisando registro 91");
+      analisaRegistro91();
+    };
+
+    var analisaRegistro91 = function(){
+        var urlForGetAnaliseRegistro = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', 'registro-91', {
+          escola   : $j("#ref_cod_escola").val(),
+          ano      : $j("#ano").val()
+        });
+
+        var options = {
+          url : urlForGetAnaliseRegistro,
+          dataType : 'json',
+          success  : handleGetAnaliseRegistro91
+        };
+        getResources(options);
+    };
+
+    var handleGetAnaliseRegistro91 = function(response) {
+      montaHtmlRegistro(response);
+      finishAnalysis();
+    }
 });
