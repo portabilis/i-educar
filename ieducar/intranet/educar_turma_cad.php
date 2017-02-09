@@ -944,6 +944,7 @@ class indice extends clsCadastro
       if (is_array($lista) && count($lista)) {
         $conteudo .= '<div style="margin-bottom: 10px;">';
         $conteudo .= '  <span style="display: block; float: left; width: 250px;">Nome</span>';
+        $conteudo .= '  <span style="display: block; float: left; width: 100px;">Abreviatura</span>';
         $conteudo .= '  <span style="display: block; float: left; width: 100px;">Carga hor&aacute;ria</span>';
         $conteudo .= '  <span style="display: block; float: left;width: 100px;">Usar padr&atilde;o do componente?</span>';
         if($this->definirComponentePorEtapa){
@@ -984,6 +985,7 @@ class indice extends clsCadastro
 
           $conteudo .= '<div style="margin-bottom: 10px; float: left">';
           $conteudo .= "  <label style='display: block; float: left; width: 250px'><input type=\"checkbox\" $checked name=\"disciplinas[$registro->id]\" id=\"disciplinas[]\" value=\"{$registro->id}\">{$registro}</label>";
+          $conteudo .= "  <span style='display: block; float: left; width: 100px'>{$registro->abreviatura}</span>";
           $conteudo .= "  <label style='display: block; float: left; width: 100px;'><input type='text' name='carga_horaria[$registro->id]' value='{$cargaHoraria}' size='5' maxlength='7'></label>";
           $conteudo .= "  <label style='display: block; float: left; width: 100px;'><input type='checkbox' name='usar_componente[$registro->id]' value='1' ". ($usarComponente == TRUE ? $checked : '') .">($cargaComponente h)</label>";
           if($this->definirComponentePorEtapa){
@@ -1017,7 +1019,7 @@ class indice extends clsCadastro
     }
 
     foreach ($componentes as $componente) {
-      $help[] = sprintf('%s (%.0f h)', $componente->nome, $componente->cargaHoraria);
+      $help[] = sprintf('%s (%.0f h)', $componente->nome, $componente->abreviatura, $componente->cargaHoraria);
     }
 
     if (count($componentes)) {
@@ -1968,6 +1970,7 @@ function parseComponentesCurriculares(xml_disciplina)
   if (DOM_array.length) {
     conteudo += '<div style="margin-bottom: 10px; float: left">';
     conteudo += '  <span style="display: block; float: left; width: 250px;">Nome</span>';
+    conteudo += '  <span style="display: block; float: left; width: 250px;">Abreviatura</span>';
     conteudo += '  <label> <span style="display: block; float: left; width: 100px">Carga hor&aacute;ria </span></label>';
     conteudo += '  <label> <span style="display: block; float: left; width: 200px">Usar padr&atilde;o do componente?</span></label>';
     conteudo += '  <label> <span style="display: block; float: left">Possui docente vinculado?</span></label>';
