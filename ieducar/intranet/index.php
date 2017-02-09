@@ -158,13 +158,13 @@ class indice
       $temp .= '<table width="100%" height="400" align="center" border="0" cellspacing="4" cellpadding="0">';
       $temp .= '
         <tr>
-          <td class="fundoCalendarioTopo" style="padding:0px;"><img src="imagens/nvp_agn_dom.jpg" width="43" height="24" border="0" alt="DOM" title="Domingo"></td>
-          <td class="fundoCalendarioTopo" style="padding:0px;"><img src="imagens/nvp_agn_seg.jpg" width="43" height="24" border="0" alt="SEG" title="Segunda Feira"></td>
-          <td class="fundoCalendarioTopo" style="padding:0px;"><img src="imagens/nvp_agn_ter.jpg" width="43" height="24" border="0" alt="TER" title="Terca Feira"></td>
-          <td class="fundoCalendarioTopo" style="padding:0px;"><img src="imagens/nvp_agn_qua.jpg" width="43" height="24" border="0" alt="QUA" title="Quarta Feira"></td>
-          <td class="fundoCalendarioTopo" style="padding:0px;"><img src="imagens/nvp_agn_qui.jpg" width="43" height="24" border="0" alt="QUI" title="Quinta Feira"></td>
-          <td class="fundoCalendarioTopo" style="padding:0px;"><img src="imagens/nvp_agn_st.jpg"  width="43" height="24" border="0" alt="SEX" title="Sexta Feira"></td>
-          <td class="fundoCalendarioTopo" style="padding:0px;"><img src="imagens/nvp_agn_sab.jpg" width="43" height="24" border="0" alt="SAB" title="Sabado"></td>
+          <td class="fundoCalendarioTopo" style="padding:0px;">DOM</td>
+          <td class="fundoCalendarioTopo" style="padding:0px;">SEG</td>
+          <td class="fundoCalendarioTopo" style="padding:0px;">TER</td>
+          <td class="fundoCalendarioTopo" style="padding:0px;">QUA</td>
+          <td class="fundoCalendarioTopo" style="padding:0px;">QUI</td>
+          <td class="fundoCalendarioTopo" style="padding:0px;">SEX</td>
+          <td class="fundoCalendarioTopo" style="padding:0px;">SAB</td>
         </tr>';
 
       $mes = ($_GET['mes']) ? $_GET['mes'] : date('m');
@@ -370,7 +370,7 @@ class indice
         }
 
         $data_temp = strtotime(substr($dataAtual, 0, 19));
-        $compromisso_geral = ($compromisso_geral) ? "$compromisso_geral<a href='agenda.php?cod_agenda={$cod_agenda}&time=$data_temp' ><div align='center' class='textoAgenda'><b>Ver Todos</b></div>" : $compromisso_geral;
+        $compromisso_geral = ($compromisso_geral) ? "$compromisso_geral<a class='agenda-ver-todos' href='agenda.php?cod_agenda={$cod_agenda}&time=$data_temp' ><div align='center' class='textoAgenda'><b>Ver Todos</b></div>" : $compromisso_geral;
 
         if ($i == 1) {
           $ultimoDiaUltimoMes = date('t', mktime(0, 0, 0, $mes - 1, 1, $ano));
@@ -380,14 +380,14 @@ class indice
             $temp .= "<td class='fundoCalendarioMesDiferente' valign='top'><span class='diasMes'>$dia</span></td>";
           }
 
-          $temp .= "<td class='$classe' valign='top' background='imagens/nvp_calend_01.gif' style='background-repeat:no-repeat;'>$compromisso_geral</td>";
+          $temp .= "<td class='$classe' valign='top'><div class='dia_agenda'> " . $this->addLeadingZero($i) . " </div>$compromisso_geral</td>";
         }
         else {
           if($diaDaSemana == 0) {
-            $temp .= "</tr><tr><td class='$classe' valign='top' background='imagens/nvp_calend_" . $this->addLeadingZero($i) . ".gif' style='background-repeat:no-repeat;'>$compromisso_geral</td>";
+            $temp .= "</tr><tr><td class='$classe' valign='top'><div class='dia_agenda'> " . $this->addLeadingZero($i) . " </div>$compromisso_geral</td>";
           }
           else {
-            $temp .= "<td class='$classe' valign='top' background='imagens/nvp_calend_" . $this->addLeadingZero($i) . ".gif' style='background-repeat:no-repeat;'>$compromisso_geral</td>";
+            $temp .= "<td class='$classe' valign='top'><div class='dia_agenda'> " . $this->addLeadingZero($i) . " </div>$compromisso_geral</td>";
           }
         }
 
@@ -433,7 +433,14 @@ class indice
 
       $temp .= "</tr>
       <tr>
-        <td colspan=\"6\" align=\"center\" class=\"fundoCalendarioTopo\"><a href='index.php?mes=$anterior&ano=$ano_anterior'><img src=\"imagens/nvp_agn_anterior.jpg\" width=\"84\" height=\"20\" border=\"0\" style=\"padding-top:4px;\"></a> &nbsp;&nbsp;<a href='index.php?mes=$proximo&ano=$proximo_ano'><img src=\"imagens/nvp_agn_proximo.jpg\" width=\"84\" height=\"20\" border=\"0\" style=\"padding-top:4px;\"></a></td>
+        <td colspan=\"6\" align=\"center\" class=\"fundoCalendarioTopo\">
+          <a class=\"nav_agenda\" href='index.php?mes=$anterior&ano=$ano_anterior'>
+            &laquo; Anterior
+          </a> &nbsp;&nbsp;
+          <a class=\"nav_agenda\" href='index.php?mes=$proximo&ano=$proximo_ano'>
+            Próximo &raquo;
+          </a>
+        </td>
         <td align=center class='fundoCalendarioTopo'>$mes/$ano</td>
       </tr>
       <tr>
