@@ -59,7 +59,7 @@ $j(document).ready(function(){
           clickClose: false,
           showClose: false
         });
-        analisaRegistro91();
+        analisaRegistro89();
       } else {
         $j("#modal_load").modal({
           escapeClose: false,
@@ -399,6 +399,26 @@ $j(document).ready(function(){
       finishAnalysis();
     };
 
+    var analisaRegistro89 = function(){
+        var urlForGetAnaliseRegistro = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', 'registro-89', {
+          escola   : $j("#ref_cod_escola").val()
+        });
+
+        var options = {
+          url : urlForGetAnaliseRegistro,
+          dataType : 'json',
+
+          success  : handleGetAnaliseRegistro89
+        };
+        getResources(options);
+    };
+
+    var handleGetAnaliseRegistro89 = function(response) {
+      montaHtmlRegistro(response);
+      $j("#registro_load").text("Analisando registro 90");
+      analisaRegistro90();
+    };
+
     var analisaRegistro91 = function(){
         var urlForGetAnaliseRegistro = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', 'registro-91', {
           escola   : $j("#ref_cod_escola").val(),
@@ -408,6 +428,7 @@ $j(document).ready(function(){
         var options = {
           url : urlForGetAnaliseRegistro,
           dataType : 'json',
+
           success  : handleGetAnaliseRegistro91
         };
         getResources(options);
