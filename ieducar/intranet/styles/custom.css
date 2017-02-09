@@ -2,6 +2,18 @@ body, html{
   font-family: "Open Sans" !important;
 }
 
+a{
+  color: #188ad1;
+}
+
+a:hover{
+  color: #188ad1;
+}
+
+caption{
+  font-size: 12px;
+}
+
 hr {
     border: 0;
     height: 1px;
@@ -466,6 +478,27 @@ td.tableDetalheLinhaSeparador {
 
 .tabelanum2{
   border: 0 !important;
+}
+
+table.cellcolor th, table tr.cellcolor th, .cellcolor, tr.even{
+  background-color: #f5f9fd;
+  font-size: 12px;
+}
+
+table.styled tr td, table.styled tr th{
+  font-size: 12px;
+}
+
+table.strong th, tr.strong th, tr.strong td, table.styled th{
+  background-color: #ccdce6;
+  color: #47728f !important;
+  font-size: 12px;
+}
+
+td.area-conhecimento-destaque {
+    background-color: #47728f !important;
+    color: #FFF !important;
+    font-size: 12px;
 }
 
 .linhaBotoes {
