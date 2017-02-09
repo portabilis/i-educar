@@ -1292,6 +1292,65 @@ class EducacensoAnaliseController extends ApiCoreController
                  'title'     => "Análise exportação - Registro 89");
   }
 
+  protected function analisaEducacensoRegistro90() {
+
+    $escola   = $this->getRequest()->escola;
+    $ano      = $this->getRequest()->ano;
+    $data_ini = $this->getRequest()->data_ini;
+    $data_fim = $this->getRequest()->data_fim;
+
+    $sql = "SELECT DISTINCT j.fantasia AS nome_escola,
+                            t.nm_turma AS nome_turma,
+                            ect.cod_turma_inep AS inep_turma,
+                            p.nome AS nome_aluno,
+                            eca.cod_aluno_inep AS inep_aluno
+              FROM pmieducar.escola e
+             INNER JOIN pmieducar.turma t ON (t.ref_ref_cod_escola = e.cod_escola)
+             INNER JOIN pmieducar.matricula_turma mt ON (mt.ref_cod_turma = t.cod_turma)
+             INNER JOIN pmieducar.matricula m ON (m.cod_matricula = mt.ref_cod_matricula)
+             INNER JOIN pmieducar.aluno a ON (a.cod_aluno = m.ref_cod_aluno)
+             INNER JOIN cadastro.pessoa p ON (p.idpes = a.ref_idpes)
+             INNER JOIN cadastro.juridica j ON (j.idpes = e.ref_idpes)
+              LEFT JOIN modules.educacenso_cod_aluno eca ON (eca.cod_aluno = a.cod_aluno)
+              LEFT JOIN modules.educacenso_cod_turma ect ON (ect.cod_turma = t.cod_turma)
+             WHERE e.cod_escola = $1
+               AND COALESCE(m.data_matricula,m.data_cadastro) BETWEEN DATE($3) AND DATE($4)
+               AND m.aprovado IN (1, 2, 3, 4, 6, 15)
+               AND m.ano = $2
+             ORDER BY nome_turma";
+
+    $alunos = $this->fetchPreparedQuery($sql, array($escola,
+                                                    $ano,
+                                                    Portabilis_Date_Utils::brToPgSQL($data_ini),
+                                                    Portabilis_Date_Utils::brToPgSQL($data_fim)));
+
+    $mensagem = array();
+    $ultimaTurmaVerificada;
+
+    foreach ($alunos as $aluno) {
+      $nomeEscola = Portabilis_String_Utils::toUtf8(mb_strtoupper($aluno["nome_escola"]));
+      $nomeTurma = Portabilis_String_Utils::toUtf8(mb_strtoupper($aluno["nome_turma"]));
+      $nomeAluno  = Portabilis_String_Utils::toUtf8(mb_strtoupper($aluno["nome_aluno"]));
+
+      if (is_null($aluno["inep_turma"]) && $ultimaTurmaVerificada != $aluno["nome_turma"]) {
+        $mensagem[] = array("text" => "Dados para formular o registro 90 da escola {$nomeEscola} não encontrados. Verifique se a turma {$nomeTurma} possui o código INEP cadastrado.",
+                            "path" => "(Cadastros > Turma > Cadastrar > Editar > Aba: Dados adicionais > Campo: Código INEP)",
+                            "fail" => true);
+        $ultimaTurmaVerificada = $aluno["nome_turma"];
+      }
+
+      if (is_null($aluno["inep_aluno"])) {
+        $mensagem[] = array("text" => "Dados para formular o registro 90 da escola {$nomeEscola} não encontrados. Verifique se o(a) aluno(a) {$nomeAluno} possui o código INEP cadastrado.",
+                            "path" => "(Cadastros > Aluno > Alunos > Editar > Campo: Código INEP)",
+                            "fail" => true);
+      }
+    }
+
+    return array('mensagens' => $mensagem,
+                 'title'     => "Análise exportação - Registro 90");
+
+  }
+
   protected function analisaEducacensoRegistro91() {
 
     $escola   = $this->getRequest()->escola;
@@ -1359,6 +1418,8 @@ class EducacensoAnaliseController extends ApiCoreController
       $this->appendResponse($this->analisaEducacensoRegistro80());
     else if ($this->isRequestFor('get', 'registro-89'))
       $this->appendResponse($this->analisaEducacensoRegistro89());
+    else if ($this->isRequestFor('get', 'registro-90'))
+      $this->appendResponse($this->analisaEducacensoRegistro90());
     else if ($this->isRequestFor('get', 'registro-91'))
       $this->appendResponse($this->analisaEducacensoRegistro91());
     else
