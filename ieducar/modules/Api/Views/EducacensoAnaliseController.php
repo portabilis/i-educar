@@ -1243,7 +1243,6 @@ class EducacensoAnaliseController extends ApiCoreController
   protected function analisaEducacensoRegistro89() {
 
     $escola   = $this->getRequest()->escola;
-    $ano      = $this->getRequest()->ano;
 
     $sql = "SELECT DISTINCT j.fantasia AS nome_escola,
                             ece.cod_escola_inep AS inep,
@@ -1287,10 +1286,10 @@ class EducacensoAnaliseController extends ApiCoreController
                             "path" => "(Cadastros > Escola > Cadastrar > Editar > Campo: Cargo do gestor escolar)",
                             "fail" => true);
       }
+    }
 
-      return array('mensagens' => $mensagem,
+    return array('mensagens' => $mensagem,
                  'title'     => "Análise exportação - Registro 89");
-
   }
 
   public function Gerar() {
