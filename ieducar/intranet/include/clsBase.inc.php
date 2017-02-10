@@ -190,7 +190,7 @@ class clsBase extends clsConfig
 
   function VerificaPermicao()
   {
-    if($this->processoAp)
+    if(is_array($this->processoAp))
     {
       $permite = true;
       foreach($this->processoAp as $processo) {
