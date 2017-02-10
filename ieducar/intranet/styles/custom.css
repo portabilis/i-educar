@@ -2,6 +2,18 @@ body, html{
   font-family: "Open Sans" !important;
 }
 
+a{
+  color: #188ad1;
+}
+
+a:hover{
+  color: #188ad1;
+}
+
+caption{
+  font-size: 12px;
+}
+
 hr {
     border: 0;
     height: 1px;
@@ -301,6 +313,140 @@ td.fundoLocalizacao {
 }
 
 /**************************************
+**************CALENDÁRIO***************
+**************************************/
+
+.fundoCalendarioTopo {
+  background-color: #47728f;
+  padding: 7px !important;
+  border: 0;
+}
+
+.fundoCalendario{
+  background-color: #cddce6;
+  border: 0;
+  color: #47728f;
+}
+
+.fundoCalendarioUrgente,
+.fundoCalendarioProximo {
+  border: 0;
+  color: #47728f !important;  
+}
+
+.fundoCalendario .dia_agenda,
+.fundoCalendarioUrgente .dia_agenda,
+.fundoCalendarioProximo .dia_agenda {
+  font-family: "Open Sans";
+  position: absolute !important;
+  font-size: 30px;
+  font-weight: bold;
+  color: #FFF;
+}
+
+.fundoCalendario span,
+.fundoCalendarioUrgente span,
+.fundoCalendarioProximo span{
+  font-family: "Open Sans";
+  color: #47728f;
+  font-size: 12px;
+  font-weight: bold;
+  position: relative;
+}
+
+.fundoCalendarioMesDiferente{
+  font-family: "Open Sans";
+  background-color: #e9f0f8;
+  border: 0;
+  color: #47728f;
+}
+
+.fundoCalendarioMesDiferente span{
+  font-family: "Open Sans";
+  font-size: 30px;
+  color: #FFF;
+}
+
+.fundoCalendarioUrgente,
+.fundoCalendarioProximo{
+  padding: 5px;
+}
+
+a.agenda-ver-todos b {
+  color: #188ad1;
+  font-size: 12px;
+}
+
+a.nav_agenda{
+  color: #FFF;
+}
+
+a.nav_agenda:hover{
+  text-decoration: none;
+  opacity: .9;
+}
+
+/**************************************
+****************AGENDA*****************
+**************************************/
+
+.escuro{
+  background-color: #f5f9fd !important;
+}
+
+.titulo, .comp_tit_antigo{
+  color: #47728f !important;
+  font-family: "Open Sans";
+}
+
+td.arrow-dia a {
+  color: #47728f;
+}
+
+td.arrow-dia {
+  font-size: 25px;
+  padding: 0 5px;
+  background: #ccdce6;
+}
+
+td.data-info{
+  background: #ccdce6;
+  padding: 11px 0; 
+}
+
+td.data-info span{
+  color: #47728f;
+}
+
+.small:hover{
+  text-decoration: none;
+}
+
+.small div {
+  background: #e9f0f8;
+  border: 1px solid #cddce6;
+  color: #47728f;
+  padding: 5px 15px 5px 13px;
+  border-radius: 3px;
+  margin: 2px 0;
+  cursor: pointer;
+  text-align: center;
+  font-size: 12px;
+}
+
+.small div.important{
+  background-color: #ffdbdb;
+  border: solid 1px #ffb2b2;
+}
+
+.small div.history{
+  background-color: #fff9db;
+  border: solid 1px #fff3b3;
+}
+
+
+
+/**************************************
 ****************MODAIS*****************
 **************************************/
 
@@ -466,6 +612,27 @@ td.tableDetalheLinhaSeparador {
 
 .tabelanum2{
   border: 0 !important;
+}
+
+table.cellcolor th, table tr.cellcolor th, .cellcolor, tr.even{
+  background-color: #f5f9fd;
+  font-size: 12px;
+}
+
+table.styled tr td, table.styled tr th{
+  font-size: 12px;
+}
+
+table.strong th, tr.strong th, tr.strong td, table.styled th{
+  background-color: #ccdce6;
+  color: #47728f !important;
+  font-size: 12px;
+}
+
+td.area-conhecimento-destaque {
+    background-color: #47728f !important;
+    color: #FFF !important;
+    font-size: 12px;
 }
 
 .linhaBotoes {
