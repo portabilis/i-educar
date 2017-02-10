@@ -266,6 +266,8 @@ class indice extends clsCadastro
       }
     }
 
+    $this->ano = $this->ano_letivo;
+
     $this->campoOculto('cod_turma', $this->cod_turma);
 
     // foreign keys
@@ -952,6 +954,13 @@ class indice extends clsCadastro
     @session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     @session_write_close();
+
+    $existeModulos = (count($this->ref_cod_modulo) > 1 || $this->ref_cod_modulo[0] != '');
+
+    if (!$existeModulos) {
+      $this->mensagem = '&Eacute; necess&aacute;rio inserir os m&oacute;dulos da turma para prosseguir.';
+      return false;
+    }
 
     if(! $this->canCreateTurma($this->ref_cod_escola, $this->ref_ref_cod_serie, $this->turma_turno_id))
       return false;
