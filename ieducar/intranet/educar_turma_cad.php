@@ -959,13 +959,6 @@ class indice extends clsCadastro
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     @session_write_close();
 
-    $existeModulos = (count($this->ref_cod_modulo) > 1 || $this->ref_cod_modulo[0] != '');
-
-    if (!$existeModulos) {
-      $this->mensagem = '&Eacute; necess&aacute;rio inserir os m&oacute;dulos da turma para prosseguir.';
-      return false;
-    }
-
     if(! $this->canCreateTurma($this->ref_cod_escola, $this->ref_ref_cod_serie, $this->turma_turno_id))
       return false;
 
@@ -989,6 +982,14 @@ class indice extends clsCadastro
 
     // Não segue o padrao do curso
     if ($this->padrao_ano_escolar == 0) {
+
+      $existeModulos = (count($this->ref_cod_modulo) > 1 || $this->ref_cod_modulo[0] != '');
+
+      if (!$existeModulos) {
+        $this->mensagem = '&Eacute; necess&aacute;rio inserir os m&oacute;dulos da turma para prosseguir.';
+        return false;
+      }
+
       $this->turma_modulo = unserialize(urldecode($this->turma_modulo));
 
       if ($this->ref_cod_modulo && $this->data_inicio && $this->data_fim) {
