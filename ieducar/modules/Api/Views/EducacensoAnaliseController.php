@@ -1282,7 +1282,7 @@ class EducacensoAnaliseController extends ApiCoreController
       }
 
       if (is_null($escola["cargo_gestor"])){
-        $mensagem[] = array("text" => "Dados para formular o registro 89 da escola 'nome da escola' não encontrados. Verifique se o cargo do(a) gestor(a) escolar foi informado.",
+        $mensagem[] = array("text" => "Dados para formular o registro 89 da escola {$nomeEscola} não encontrados. Verifique se o cargo do(a) gestor(a) escolar foi informado.",
                             "path" => "(Cadastros > Escola > Cadastrar > Editar > Campo: Cargo do gestor escolar)",
                             "fail" => true);
       }
