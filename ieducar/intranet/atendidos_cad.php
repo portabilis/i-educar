@@ -354,14 +354,14 @@ class indice extends clsCadastro
 
     // orgão emissão rg
 
-    $selectOptions = array( null => 'Orgão emissor' );
+    $selectOptions = array( null => 'Órgão emissor' );
     $orgaos        = new clsOrgaoEmissorRg();
     $orgaos        = $orgaos->lista();
 
     foreach ($orgaos as $orgao)
       $selectOptions[$orgao['idorg_rg']] = $orgao['sigla'];
 
-    $selectOptions = Portabilis_Array_Utils::sortByValue($selectOptions);
+    //$selectOptions = Portabilis_Array_Utils::sortByValue($selectOptions);
 
     $options = array(
       'required'  => false,
