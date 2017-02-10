@@ -444,7 +444,7 @@ class indice
         <td align=center class='fundoCalendarioTopo'>$mes/$ano</td>
       </tr>
       <tr>
-        <td colspan=\"7\" class=\"fundoCalendario\" style=\"height:15px\"><h3 style=\"padding-top:2px;margin:0px\">Agenda do(a): <a href=\"agenda.php?cod_agenda={$cod_agenda}\">$nomeAgenda</a></h3></td>
+        <td colspan=\"7\" class=\"fundoCalendario\" style=\"height:15px; background-color: #fff;\"><h3 style=\"padding-top:2px;margin:0px\">Agenda do(a): <a href=\"agenda.php?cod_agenda={$cod_agenda}\">$nomeAgenda</a></h3></td>
       </tr>
       </table>{$endScript}";
       return $temp;
