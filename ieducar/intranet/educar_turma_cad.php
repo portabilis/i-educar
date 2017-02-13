@@ -192,10 +192,12 @@ class indice extends clsCadastro
       $det_ser   = $obj_ser->detalhe();
 
       $regra_avaliacao_id = $det_ser["regra_avaliacao_id"];
-      $regra_avaliacao_mapper = new RegraAvaliacao_Model_RegraDataMapper();
-      $regra_avaliacao = $regra_avaliacao_mapper->find($regra_avaliacao_id);
+      if ($regra_avaliacao_id) {
+        $regra_avaliacao_mapper = new RegraAvaliacao_Model_RegraDataMapper();
+        $regra_avaliacao = $regra_avaliacao_mapper->find($regra_avaliacao_id);
 
-      $this->definirComponentePorEtapa = ($regra_avaliacao->definirComponentePorEtapa == 1);
+        $this->definirComponentePorEtapa = ($regra_avaliacao->definirComponentePorEtapa == 1);
+      }
 
       $this->ref_cod_escola      = $det_esc['cod_escola'];
       $this->ref_cod_instituicao = $det_esc['ref_cod_instituicao'];
@@ -510,6 +512,8 @@ class indice extends clsCadastro
       }
     }
 
+    if ($this->padrao_ano_escolar != 1) {
+
       $qtd_registros = 0;
       if( $registros )
       {
@@ -522,17 +526,17 @@ class indice extends clsCadastro
           $qtd_registros++;
         }
       }
+    }
 
-      if ($this->padrao_ano_escolar != 1) {
-        $this->campoTabelaInicio("turma_modulo","M&oacute;dulos da turma",array("M&oacute;dulo","Data inicial","Data final", "Dias Letivos"),$this->turma_modulo);
+    $this->campoTabelaInicio("turma_modulo","M&oacute;dulos da turma",array("M&oacute;dulo","Data inicial","Data final", "Dias Letivos"),$this->turma_modulo);
 
-        $this->campoLista('ref_cod_modulo', 'Módulo', $opcoesCampoModulo, $this->ref_cod_modulo, NULL, NULL, NULL, NULL, NULL, FALSE);
+    $this->campoLista('ref_cod_modulo', 'Módulo', $opcoesCampoModulo, $this->ref_cod_modulo, NULL, NULL, NULL, NULL, NULL, FALSE);
 
-        $this->campoData('data_inicio', 'Data In&iacute;cio', $this->data_inicio, FALSE);
-        $this->campoData('data_fim', 'Data Fim', $this->data_fim, FALSE);
-        $this->campoTexto('dias_letivos', 'Dias Letivos', $this->dias_letivos_, 9);
-      }
-      $this->campoTabelaFim();
+    $this->campoData('data_inicio', 'Data In&iacute;cio', $this->data_inicio, FALSE);
+    $this->campoData('data_fim', 'Data Fim', $this->data_fim, FALSE);
+    $this->campoTexto('dias_letivos', 'Dias Letivos', $this->dias_letivos_, 9);
+
+    $this->campoTabelaFim();
 
     $this->campoQuebra2();
 
@@ -955,13 +959,6 @@ class indice extends clsCadastro
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     @session_write_close();
 
-    $existeModulos = (count($this->ref_cod_modulo) > 1 || $this->ref_cod_modulo[0] != '');
-
-    if (!$existeModulos) {
-      $this->mensagem = '&Eacute; necess&aacute;rio inserir os m&oacute;dulos da turma para prosseguir.';
-      return false;
-    }
-
     if(! $this->canCreateTurma($this->ref_cod_escola, $this->ref_ref_cod_serie, $this->turma_turno_id))
       return false;
 
@@ -985,6 +982,14 @@ class indice extends clsCadastro
 
     // Não segue o padrao do curso
     if ($this->padrao_ano_escolar == 0) {
+
+      $existeModulos = (count($this->ref_cod_modulo) > 1 || $this->ref_cod_modulo[0] != '');
+
+      if (!$existeModulos) {
+        $this->mensagem = '&Eacute; necess&aacute;rio inserir os m&oacute;dulos da turma para prosseguir.';
+        return false;
+      }
+
       $this->turma_modulo = unserialize(urldecode($this->turma_modulo));
 
       if ($this->ref_cod_modulo && $this->data_inicio && $this->data_fim) {
