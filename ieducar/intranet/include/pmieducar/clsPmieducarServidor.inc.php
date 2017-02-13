@@ -164,7 +164,10 @@ class clsPmieducarServidor
     s.situacao_curso_superior_3, s.formacao_complementacao_pedagogica_3, s.codigo_curso_superior_3, s.ano_inicio_curso_superior_3, s.ano_conclusao_curso_superior_3, s.tipo_instituicao_curso_superior_3, s.instituicao_curso_superior_3,
     s.pos_especializacao, s.pos_mestrado, s.pos_doutorado, s.pos_nenhuma, s.curso_creche, s.curso_pre_escola, s.curso_anos_iniciais, s.curso_anos_finais, s.curso_ensino_medio, s.curso_eja, s.curso_educacao_especial, s.curso_educacao_indigena,
     s.curso_educacao_campo, s.curso_educacao_ambiental, s.curso_educacao_campo, s.curso_educacao_direitos_humanos, s.curso_genero_diversidade_sexual, s.curso_direito_crianca_adolescente, s.curso_relacoes_etnicorraciais, s.curso_outros, s.curso_nenhum,
-    s.multi_seriado
+    s.multi_seriado,
+    (SELECT replace(textcat_all(matricula),' <br>',',')
+          FROM pmieducar.servidor_funcao sf
+         WHERE s.cod_servidor = sf.ref_cod_servidor) as matricula_servidor
     ";
     if (is_numeric( $ref_idesco)) {
       if (class_exists('clsCadastroEscolaridade')) {
@@ -780,13 +783,16 @@ class clsPmieducarServidor
    *
    * O array retornado contém em cada um de seus items um array associativo onde
    * as chaves correspondem aos campos da tabela indicados por
-   * $this->_campos_lista.
+   * $this->_campos_lista
+   .
    *
    * A pesquisa SELECT realizada é afetada por diversos parâmetros disponíveis.
    * Alguns dos parâmetros induzem a subqueries para a avaliação de diferentes
    * funcionalidades do sistema.
    *
-   * @see intranet/educar_pesquisa_servidor_lst.php  Listagem de busca de
+   * @see intranet/educar_pesqu
+   isa_servidor_lst
+   .php  Listagem de busca de
    *  servidores
    * @see intranet/educar_quadro_horario_horarios_cad.php  Cadastro de horário
    *  de aula para uma turma
