@@ -398,7 +398,7 @@ abstract class clsBancoSQL_
     // Alterações de padrão MySQL para PostgreSQL
     if ($reescrever) {
       // Altera o Limit
-      $this->strStringSQL = preg_replace( "/LIMIT[ ]{0,3}([0-9]+)[ ]{0,3},[ ]{0,3}([0-9])+/i", "LIMIT \\2 OFFSET \\1", $this->strStringSQL );
+      $this->strStringSQL = preg_replace( "/LIMIT[ ]{0,3}([0-9]+)[ ]{0,3},[ ]{0,3}([0-9]+)/i", "LIMIT \\2 OFFSET \\1", $this->strStringSQL );
 
       // Altera selects com YEAR( campo ) ou MONTH ou DAY
       $this->strStringSQL = preg_replace( "/(YEAR|MONTH|DAY)[(][ ]{0,3}(([a-z]|_|[0-9])+)[ ]{0,3}[)]/i", "EXTRACT( \\1 FROM \\2 )", $this->strStringSQL );
