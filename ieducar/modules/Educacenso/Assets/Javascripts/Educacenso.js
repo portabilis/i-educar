@@ -96,6 +96,12 @@ $j(document).ready(function(){
 
       $j.modal.close();
 
+      $j("#modal_export").modal({
+        escapeClose: false,
+        clickClose: false,
+        showClose: false
+      });
+
       if (falhaAnalise) {
         var newPage = window.open();
         newPage.document.write(paginaResposta);
