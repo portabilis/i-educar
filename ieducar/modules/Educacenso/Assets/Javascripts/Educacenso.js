@@ -99,6 +99,8 @@ $j(document).ready(function(){
       if (falhaAnalise) {
         var newPage = window.open();
         newPage.document.write(paginaResposta);
+      } else if (fase2) {
+        educacensoExportFase2();
       } else {
         educacensoExport();
       }
