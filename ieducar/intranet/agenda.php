@@ -413,7 +413,7 @@ class indice
 							<input type=\"hidden\" name=\"data_original_{$cod_agenda_compromisso}\" id=\"data_original_{$cod_agenda_compromisso}\" value=\"{$this->data_atual}\">
 							<input type=\"hidden\" name=\"extras_original_{$cod_agenda_compromisso}\" id=\"extras_original_{$cod_agenda_compromisso}\" value=\"{$extras}\">
 							<input type=\"hidden\" name=\"aberto_{$cod_agenda_compromisso}\" id=\"aberto_{$cod_agenda_compromisso}\" value=\"{$aberto}\">
-							<div id=\"compromisso_{$cod_agenda_compromisso}\">
+							<div id=\"compromisso_{$cod_agenda_compromisso}\" class=\"compromisso\">
 								<div id=\"titulo_{$cod_agenda_compromisso}\" {$class_titulo}>{$disp_titulo}</div>
 								<div id=\"conteudo_{$cod_agenda_compromisso}\" {$class_desc}>{$disp_conteudo}</div>
 							</div>

@@ -23,6 +23,7 @@ hr {
 input, select, textarea{
   border: solid 1px #cddce6 !important;
   color: #47728f;
+  border-radius: 3px;
 }
 
 input[type="button"] {
@@ -444,7 +445,47 @@ td.data-info span{
   border: solid 1px #fff3b3;
 }
 
+.compromisso input,
+textarea.agenda_conteudo {
+    margin: 5px !important;
+    font-family: "Open Sans";
+    font-size: 12px;
+}
 
+table.calendario{
+  border: 0;
+  background-color: #FFF;
+}
+
+table.calendario td{
+  padding: 5px;
+}
+
+table.calendario td a{
+  color: #47728f;
+}
+
+.calendario_dias_t{
+  background: #ccdce6;
+  color: #47728f;
+  border: 0;
+}
+
+.calendario_outromes{
+  background: #FFF;
+  border: 0;
+  color: #CCC !important;
+}
+
+.calendario_dias{
+  border: 0;
+  background: #e9f0f8;
+}
+
+.calendario_dia_sel{
+  background: #ccdce6;
+  border: 0;
+}
 
 /**************************************
 ****************MODAIS*****************
