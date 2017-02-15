@@ -249,13 +249,13 @@ class indice extends clsDetalhe
 		if ($lst) {
 			$tabela = "<TABLE>
 					       <TR align=center>
-					           <TD bgcolor=#A1B3BD><B>Nome</B></TD>
+					           <TD bgcolor=#ccdce6><B>Nome</B></TD>
 					       </TR>";
 			$cont = 0;
 
 			foreach ( $lst AS $valor ) {
 				if ( ($cont % 2) == 0 ) {
-					$color = " bgcolor=#E4E9ED ";
+					$color = " bgcolor=#f5f9fd ";
 				}
 				else {
 					$color = " bgcolor=#FFFFFF ";
@@ -315,7 +315,7 @@ class indice extends clsDetalhe
 		$obj = $obj->listaAssuntosPorObra($this->cod_acervo);
 		if (count($obj)){
 			foreach ($obj as $reg) {
-				$assuntos.= '<span style="background-color: #A1B3BD; padding: 2px;"><b>'.$reg['nome'].'</b></span>&nbsp; ';
+				$assuntos.= '<span style="background-color: #ccdce6; padding: 4px 20px;"><b>'.$reg['nome'].'</b></span>&nbsp; ';
 			}
 			if(!empty($assuntos))
 				$this->addDetalhe( array( "Assuntos", "{$assuntos}") );
@@ -325,7 +325,7 @@ class indice extends clsDetalhe
 		$obj_categoria = $obj_categoria->listaCategoriasPorObra($this->cod_acervo);
 		if (count($obj_categoria)){
 			foreach ($obj_categoria as $obj_cat) {
-				$categorias.= '<span style="background-color: #A1B3BD; padding: 2px;"><b>'.$obj_cat['descricao'].'</b></span>&nbsp; ';
+				$categorias.= '<span style="background-color: #ccdce6; padding: 4px 20px;"><b>'.$obj_cat['descricao'].'</b></span>&nbsp; ';
 			}
 			if(!empty($categorias))
 				$this->addDetalhe( array( "Categorias", "{$categorias}") );
