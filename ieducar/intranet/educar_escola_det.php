@@ -435,13 +435,13 @@ class indice extends clsDetalhe
 
 			$tabela = "<table>
 					       <tr align='center'>
-					           <td bgcolor='#a1b3bd'><b>nome</b></td>
+					           <td bgcolor='#ccdce6'><b>nome</b></td>
 					       </tr>";
 			$cont = 0;
 
 			foreach ( $lst as $valor ) {
 				if ( ($cont % 2) == 0 ) {
-					$color = " bgcolor='#e4e9ed' ";
+					$color = " bgcolor='#f5f9fd' ";
 				}
 				else {
 					$color = " bgcolor='#ffffff' ";
@@ -525,8 +525,8 @@ class indice extends clsDetalhe
 			$existe  = true;
 			$tabela .= "<tr bgcolor=$cor><td colspan='2'><b>Anos letivos</b></td></tr><tr><td>";
 			$tabela .= "<table cellpadding=\"2\" cellspacing=\"2\" border=\"0\" align=\"left\" width='60%'>";
-			$tabela .= "<tr bgcolor='#A1B3BD'><th width='90'>Ano<a name='ano_letivo'/></th><th width='70'>Iniciar</th><th width='70'>Finalizar</th><th width='150'>Editar</th></tr>";
-			$cor = $cor == "#FFFFFF" ? "#E4E9ED" : "#FFFFFF";
+			$tabela .= "<tr bgcolor='#ccdce6'><th width='90'>Ano<a name='ano_letivo'/></th><th width='70'>Iniciar</th><th width='70'>Finalizar</th><th width='150'>Editar</th></tr>";
+			$cor = $cor == "#FFFFFF" ? "#f5f9fd" : "#FFFFFF";
 
 			$obj_ano_letivo = new clsPmieducarEscolaAnoLetivo();
 			$existe_ano_andamento = $obj_ano_letivo->lista($this->cod_escola,null,null,null,1,null,null,null,null,1);

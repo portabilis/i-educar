@@ -188,7 +188,7 @@ class indice extends clsCadastro
 			foreach ($_SESSION["acoes"]["inserido"] as $indice=>$valor)
 			{
 				
-				$cor = $cor == "#D1DADF" ? "#E4E9ED" : "#D1DADF";
+				$cor = $cor == "#D1DADF" ? "#f5f9fd" : "#D1DADF";
 				$tabela .= "<tr bgcolor=$cor align='center'><td>{$valor[0]}</td><td><a href=acoes_foto.php?cod_acao_governo={$this->cod_acao_governo}&excluir_foto={$indice}><img border=0 title='Excluir' src='imagens/banco_imagens/excluirrr.gif'></a></td></tr>";
 			}	
 			$enviar = "document.getElementById(\"$this->__nome\").submit()";

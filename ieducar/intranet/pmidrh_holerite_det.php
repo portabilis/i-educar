@@ -150,7 +150,7 @@ class indice extends clsDetalhe
 			
 			list ($cod_evento, $descricao_evento, $valor_evento, $tipo_evento) = $dbms->Tupla();
 
-			$cor = ($cor == "#E4E9ED") ? "#FFFFFF" : "#E4E9ED";
+			$cor = ($cor == "#f5f9fd") ? "#FFFFFF" : "#f5f9fd";
 
 			if ($tipo_evento > 3)
 			{

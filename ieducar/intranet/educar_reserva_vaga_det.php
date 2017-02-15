@@ -158,8 +158,8 @@ class indice extends clsDetalhe
       $html = "
         <table width='50%' cellspacing='0' cellpadding='0' border='0'>
           <tr>
-            <td bgcolor=#A1B3BD>Nome</td>
-            <td bgcolor=#A1B3BD>N&uacute;mero Vagas</td>
+            <td bgcolor=#ccdce6>Nome</td>
+            <td bgcolor=#ccdce6>N&uacute;mero Vagas</td>
           </tr>";
 
       foreach ($lst_turmas as $turmas) {

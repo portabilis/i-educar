@@ -580,11 +580,11 @@ class indice extends clsDetalhe
     }
 
     if ($obj_beneficios_lista) {
-      $tabela = '<table border="0" width="300" cellpadding="3"><tr bgcolor="#A1B3BD" align="center"><td>Benefícios</td></tr>';
+      $tabela = '<table border="0" width="300" cellpadding="3"><tr bgcolor="#ccdce6" align="center"><td>Benefícios</td></tr>';
       $cor    = '#D1DADF';
 
       foreach ($obj_beneficios_lista as $reg) {
-        $cor = $cor == '#D1DADF' ? '#E4E9ED' : '#D1DADF';
+        $cor = $cor == '#D1DADF' ? '#f5f9fd' : '#D1DADF';
 
         $tabela .= sprintf('<tr bgcolor="%s" align="center"><td>%s</td></tr>',
           $cor, $reg['nm_beneficio']);
@@ -596,11 +596,11 @@ class indice extends clsDetalhe
     }
 
     if ($deficiencia_pessoa) {
-      $tabela = '<table border="0" width="300" cellpadding="3"><tr bgcolor="#A1B3BD" align="center"><td>Deficiências</td></tr>';
+      $tabela = '<table border="0" width="300" cellpadding="3"><tr bgcolor="#ccdce6" align="center"><td>Deficiências</td></tr>';
       $cor    = '#D1DADF';
 
       foreach ($deficiencia_pessoa as $indice => $valor) {
-        $cor = $cor == '#D1DADF' ? '#E4E9ED' : '#D1DADF';
+        $cor = $cor == '#D1DADF' ? '#f5f9fd' : '#D1DADF';
 
         $tabela .= sprintf('<tr bgcolor="%s" align="center"><td>%s</td></tr>',
           $cor, $valor);
@@ -612,12 +612,12 @@ class indice extends clsDetalhe
     }
 
     if ($registro['url_documento'] && $registro['url_documento'] != '') {
-      $tabela = '<table border="0" width="300" cellpadding="3"><tr bgcolor="#A1B3BD" align="center"><td>Documentos</td></tr>';
+      $tabela = '<table border="0" width="300" cellpadding="3"><tr bgcolor="#ccdce6" align="center"><td>Documentos</td></tr>';
       $cor    = '#D1DADF';
 
       $urlDocumento = explode(",", $registro['url_documento']);
       for ($i = 0; $i < count($urlDocumento); $i++) {
-        $cor = $cor == '#D1DADF' ? '#E4E9ED' : '#D1DADF';
+        $cor = $cor == '#D1DADF' ? '#f5f9fd' : '#D1DADF';
 
         $tabela .= "<tr bgcolor='{$cor}' align='center'><td><a href='{$urlDocumento[$i]}' target='_blank' > Visualizar documento ". (count($urlDocumento) > 1 ? ($i+1) : "")." </a></td></tr>";
       }
@@ -627,12 +627,12 @@ class indice extends clsDetalhe
     }
 
     if ($registro['url_laudo_medico'] && $registro['url_laudo_medico'] != '') {
-      $tabela = '<table border="0" width="300" cellpadding="3"><tr bgcolor="#A1B3BD" align="center"><td>Laudo médico</td></tr>';
+      $tabela = '<table border="0" width="300" cellpadding="3"><tr bgcolor="#ccdce6" align="center"><td>Laudo médico</td></tr>';
       $cor    = '#D1DADF';
 
       $urlLaudoMedico = explode(",", $registro['url_laudo_medico']);
       for ($i = 0; $i < count($urlLaudoMedico); $i++) {
-        $cor = $cor == '#D1DADF' ? '#E4E9ED' : '#D1DADF';
+        $cor = $cor == '#D1DADF' ? '#f5f9fd' : '#D1DADF';
 
         $tabela .= "<tr bgcolor='{$cor}' align='center'><td><a href='{$urlLaudoMedico[$i]}' target='_blank' > Visualizar laudo ". (count($urlLaudoMedico) > 1 ? ($i+1) : "")." </a></td></tr>";
       }
@@ -905,17 +905,17 @@ class indice extends clsDetalhe
       $tabela_projetos = '
         <table>
           <tr align="center">
-            <td bgcolor="#A1B3BD"><b>Projeto</b></td>
-            <td bgcolor="#A1B3BD"><b>Data de inclusão</b></td>
-            <td bgcolor="#A1B3BD"><b>Data de desligamento</b></td>
-            <td bgcolor="#A1B3BD"><b>Turno</b></td>
+            <td bgcolor="#ccdce6"><b>Projeto</b></td>
+            <td bgcolor="#ccdce6"><b>Data de inclusão</b></td>
+            <td bgcolor="#ccdce6"><b>Data de desligamento</b></td>
+            <td bgcolor="#ccdce6"><b>Turno</b></td>
           </tr>';
 
       $cont = 0;
 
       foreach ($reg as $projeto) {
 
-        $color = ($cont++ % 2 == 0) ? ' bgcolor="#E4E9ED" ' : ' bgcolor="#FFFFFF" ';
+        $color = ($cont++ % 2 == 0) ? ' bgcolor="#f5f9fd" ' : ' bgcolor="#FFFFFF" ';
 
         $turno = '';
 

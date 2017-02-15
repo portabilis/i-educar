@@ -123,18 +123,18 @@ class indice extends clsDetalhe
           <table>
           <tr colspan=\'5\'><td><a style=\' text-decoration: underline;\' href=\'/intranet/transporte_itinerario_cad.php?cod_rota='.$cod_rota_transporte_escolar.'\'>Editar itinerário</a></td></tr>
             <tr align="center">
-              <td bgcolor="#A1B3BD"><b>Sequencial</b></td>
-              <td bgcolor="#A1B3BD"><b>Ponto</b></td>
-              <td bgcolor="#A1B3BD"><b>Hora</b></td>
-              <td bgcolor="#A1B3BD"><b>Tipo</b></td>
-              <td bgcolor="#A1B3BD"><b>Veículo</b></td>
+              <td bgcolor="#ccdce6"><b>Sequencial</b></td>
+              <td bgcolor="#ccdce6"><b>Ponto</b></td>
+              <td bgcolor="#ccdce6"><b>Hora</b></td>
+              <td bgcolor="#ccdce6"><b>Tipo</b></td>
+              <td bgcolor="#ccdce6"><b>Veículo</b></td>
             </tr>';
 
         $cont = 0;
 
         foreach ($lst as $valor) {
           if (($cont % 2) == 0) {
-            $color = ' bgcolor="#E4E9ED" ';
+            $color = ' bgcolor="#f5f9fd" ';
           }
           else {
             $color = ' bgcolor="#FFFFFF" ';

@@ -174,15 +174,15 @@ class indice extends clsDetalhe
       $tabela = '
 <table>
   <tr align="center">
-    <td bgcolor="#A1B3BD"><b>Nome</b></td>
-    <td bgcolor="#A1B3BD"><b>Carga horária</b></td>
+    <td bgcolor="#ccdce6"><b>Nome</b></td>
+    <td bgcolor="#ccdce6"><b>Carga horária</b></td>
   </tr>';
 
       $cont = 0;
 
       foreach ($componentes as $componente) {
         if (($cont % 2) == 0) {
-          $color = ' bgcolor="#E4E9ED" ';
+          $color = ' bgcolor="#f5f9fd" ';
         }
         else {
           $color = ' bgcolor="#FFFFFF" ';

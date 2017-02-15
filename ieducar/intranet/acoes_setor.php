@@ -164,7 +164,7 @@ class indice extends clsCadastro
 			{
 				$obj_acoes_cat = new clsSetor($indice);
 				$det_acao =$obj_acoes_cat->detalhe();
-				$cor = $cor == "#D1DADF" ? "#E4E9ED" : "#D1DADF";
+				$cor = $cor == "#D1DADF" ? "#f5f9fd" : "#D1DADF";
 				$tabela .= "<tr bgcolor=$cor align='center'><td>{$det_acao["sgl_setor"]}</td><td><a href=acoes_setor.php?cod_acao_governo={$this->cod_acao_governo}&excluir_setor={$valor}><img border=0 title='Excluir' src='imagens/banco_imagens/excluirrr.gif'></a></td></tr>";
 			}	
 			$enviar = "document.getElementById(\"$this->__nome\").submit()";

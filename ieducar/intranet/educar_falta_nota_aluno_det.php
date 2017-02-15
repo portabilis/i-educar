@@ -279,14 +279,14 @@ class indice extends clsDetalhe
 			{
 				$tabela = "<table>
 						       <tr align='center'>
-						           <td rowspan='2' bgcolor='#a1b3bd'><b>Nome</b></td>";
+						           <td rowspan='2' bgcolor='#ccdce6'><b>Nome</b></td>";
 
 				for ( $i = 1; $i <= $max_qtd_nota; $i++ )
 				{
 					if ($qtd_modulos < $i)
-						$tabela .= "<td colspan='2' bgcolor='#a1b3bd'><b>Exame</b></td>";
+						$tabela .= "<td colspan='2' bgcolor='#ccdce6'><b>Exame</b></td>";
 					else
-						$tabela .= "<td colspan='2' bgcolor='#a1b3bd'><b>M&oacute;dulo {$i}</b></td>";
+						$tabela .= "<td colspan='2' bgcolor='#ccdce6'><b>M&oacute;dulo {$i}</b></td>";
 				}
 				$tabela .= "</tr>";
 
@@ -294,9 +294,9 @@ class indice extends clsDetalhe
 				for ( $i = 1; $i <= $max_qtd_nota; $i++ )
 				{
 					if ($qtd_modulos < $i)
-						$tabela .= "<td colspan='2' bgcolor='#a1b3bd'><b>Nota</b></td>";
+						$tabela .= "<td colspan='2' bgcolor='#ccdce6'><b>Nota</b></td>";
 					else
-						$tabela .= "<td bgcolor='#a1b3bd'><b>Nota</b></td><td bgcolor='#a1b3bd'><b>Faltas</b></td>";
+						$tabela .= "<td bgcolor='#ccdce6'><b>Nota</b></td><td bgcolor='#ccdce6'><b>Faltas</b></td>";
 				}
 				$tabela .= "</tr>";
 
@@ -313,7 +313,7 @@ class indice extends clsDetalhe
 					if ( !$dispensa[$valor["ref_cod_disciplina"]] )
 					{
 						if ( ($cont % 2) == 0 )
-							$color = " bgcolor='#E4E9ED' ";
+							$color = " bgcolor='#f5f9fd' ";
 						else
 							$color = " bgcolor='#FFFFFF' ";
 
@@ -433,7 +433,7 @@ class indice extends clsDetalhe
 							}
 							else
 							{
-								$tabela .= "<td align='center' colspan='2' bgcolor='#a1b3bd' align='center'><a href='educar_falta_nota_aluno_cad.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_turma={$registro["ref_cod_turma"]}&ref_sequencial_matricula_turma={$registro["sequencial"]}&modulo={$i}'>Editar</a></td>";
+								$tabela .= "<td align='center' colspan='2' bgcolor='#ccdce6' align='center'><a href='educar_falta_nota_aluno_cad.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_turma={$registro["ref_cod_turma"]}&ref_sequencial_matricula_turma={$registro["sequencial"]}&modulo={$i}'>Editar</a></td>";
 							}
 						}
 						$tabela .= "</tr>";
@@ -461,14 +461,14 @@ class indice extends clsDetalhe
 			{
 				$tabela = "<table>
 						       <tr align='center'>
-						           <td rowspan='2' bgcolor='#a1b3bd'><b>Nome</b></td>";
+						           <td rowspan='2' bgcolor='#ccdce6'><b>Nome</b></td>";
 
 				for ( $i = 1; $i <= $max_qtd_nota; $i++ )
 				{
 					if ($qtd_modulos < $i)
-						$tabela .= "<td colspan='2' bgcolor='#a1b3bd'><b>Exame</b></td>";
+						$tabela .= "<td colspan='2' bgcolor='#ccdce6'><b>Exame</b></td>";
 					else
-						$tabela .= "<td colspan='2' bgcolor='#a1b3bd'><b>M&oacute;dulo {$i}</b></td>";
+						$tabela .= "<td colspan='2' bgcolor='#ccdce6'><b>M&oacute;dulo {$i}</b></td>";
 				}
 				$tabela .= "</tr>";
 
@@ -476,9 +476,9 @@ class indice extends clsDetalhe
 				for ( $i = 1; $i <= $max_qtd_nota; $i++ )
 				{
 					if ($qtd_modulos < $i)
-						$tabela .= "<td colspan='2' bgcolor='#a1b3bd'><b>Nota</b></td>";
+						$tabela .= "<td colspan='2' bgcolor='#ccdce6'><b>Nota</b></td>";
 					else
-						$tabela .= "<td bgcolor='#a1b3bd'><b>Nota</b></td><td bgcolor='#a1b3bd'><b>Faltas</b></td>";
+						$tabela .= "<td bgcolor='#ccdce6'><b>Nota</b></td><td bgcolor='#ccdce6'><b>Faltas</b></td>";
 				}
 				$tabela .= "</tr>";
 
@@ -488,7 +488,7 @@ class indice extends clsDetalhe
 				foreach ( $lst_disciplinas AS $valor )
 				{
 					if ( ($cont % 2) == 0 )
-						$color = " bgcolor='#E4E9ED' ";
+						$color = " bgcolor='#f5f9fd' ";
 					else
 						$color = " bgcolor='#FFFFFF' ";
 
@@ -602,7 +602,7 @@ class indice extends clsDetalhe
 						}
 						else
 						{
-							$tabela .= "<td align='center' colspan='2' bgcolor='#a1b3bd' align='center'><a href='educar_falta_nota_aluno_cad.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_turma={$registro["ref_cod_turma"]}&ref_sequencial_matricula_turma={$registro["sequencial"]}&modulo={$i}'>Editar</a></td>";
+							$tabela .= "<td align='center' colspan='2' bgcolor='#ccdce6' align='center'><a href='educar_falta_nota_aluno_cad.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_turma={$registro["ref_cod_turma"]}&ref_sequencial_matricula_turma={$registro["sequencial"]}&modulo={$i}'>Editar</a></td>";
 						}
 						}
 					$tabela .= "</tr>";

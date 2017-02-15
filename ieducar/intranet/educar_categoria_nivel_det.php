@@ -105,7 +105,7 @@ class indice extends clsDetalhe
 
 			$class2 = $class2 == "formlttd" ? "formmdtd" : "formlttd" ;
 			$tab_niveis .= " <tr>
-								<td bgcolor='#A1B3BD' align='center' colspan='2'>N&iacute;veis</td>
+								<td bgcolor='#ccdce6' align='center' colspan='2'>N&iacute;veis</td>
 							</tr>";
 			foreach ($lst_nivel as $nivel)
 			{

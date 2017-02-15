@@ -139,7 +139,7 @@ class indice extends clsDetalhe
 		{
 			$tabela = "<TABLE>
 					       <TR align=center>
-					           <TD bgcolor=#A1B3BD><B>Nome</B></TD>
+					           <TD bgcolor=#ccdce6><B>Nome</B></TD>
 					       </TR>";
 			$cont = 0;
 
@@ -147,7 +147,7 @@ class indice extends clsDetalhe
 			{
 				if ( ($cont % 2) == 0 )
 				{
-					$color = " bgcolor=#E4E9ED ";
+					$color = " bgcolor=#f5f9fd ";
 				}
 				else
 				{

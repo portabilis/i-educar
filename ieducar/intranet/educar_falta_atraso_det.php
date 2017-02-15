@@ -109,12 +109,12 @@ class indice extends clsDetalhe
     else {
       $tabela = '<table>
                  <tr align=center>
-                     <td bgcolor="#a1b3bd"><b>Dia</b></td>
-                     <td bgcolor="#a1b3bd"><b>Tipo</b></td>
-                     <td bgcolor="#a1b3bd"><b>Qtd. Horas</b></td>
-                     <td bgcolor="#a1b3bd"><b>Qtd. Minutos</b></td>
-                     <td bgcolor="#a1b3bd"><b>Escola</b></td>
-                     <td bgcolor="#a1b3bd"><b>Instituição</b></td>
+                     <td bgcolor="#ccdce6"><b>Dia</b></td>
+                     <td bgcolor="#ccdce6"><b>Tipo</b></td>
+                     <td bgcolor="#ccdce6"><b>Qtd. Horas</b></td>
+                     <td bgcolor="#ccdce6"><b>Qtd. Minutos</b></td>
+                     <td bgcolor="#ccdce6"><b>Escola</b></td>
+                     <td bgcolor="#ccdce6"><b>Instituição</b></td>
                  </tr>';
 
       $cont  = 0;
@@ -122,7 +122,7 @@ class indice extends clsDetalhe
 
       foreach ($registro as $falta) {
         if (($cont % 2) == 0) {
-          $color = ' bgcolor="#E4E9ED" ';
+          $color = ' bgcolor="#f5f9fd" ';
         }
         else {
           $color = ' bgcolor="#FFFFFF" ';
