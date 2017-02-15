@@ -456,10 +456,10 @@ class clsListagem extends clsCampos
 
         if ($this->exibirBotaoSubmit) {
           if ($this->botao_submit) {
-            $retorno .=  "&nbsp;<input type='submit' class='botaolistagem' value='busca' id='botao_busca'>&nbsp;";
+            $retorno .=  "&nbsp;<input type='submit' class='botaolistagem' value='Buscar' id='botao_busca'>&nbsp;";
           }
           else {
-            $retorno .=  "&nbsp;<input type='button' class='botaolistagem' onclick='javascript:acao{$this->funcAcaoNome}();' value='busca' id='botao_busca'>&nbsp;";
+            $retorno .=  "&nbsp;<input type='button' class='botaolistagem btn-green' onclick='javascript:acao{$this->funcAcaoNome}();' value='Buscar' id='botao_busca'>&nbsp;";
           }
         }
 
@@ -731,7 +731,7 @@ class clsListagem extends clsCampos
     if ($this->acao && $this->show_botao_novo) {
       $retorno .=  "
             <tr>
-              <td colspan=\"$ncols\" align=\"center\"><input type='button' class='botaolistagem' onclick='javascript: $this->acao' value=' $this->nome_acao '>$botao</td>
+              <td colspan=\"$ncols\" align=\"center\"><input type='button' class='btn-green botaolistagem' onclick='javascript: $this->acao' value=' $this->nome_acao '>$botao</td>
             </tr>";
     }
     elseif ($this->acao_imprimir) {

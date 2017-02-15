@@ -28,11 +28,12 @@ input, select, textarea{
 
 input[type="button"] {
   background-color: #FFF !important;
-  font-size: 12px !important;
+  font-size: 14px !important;
   color: #47728f !important;
-  padding: 7px 30px !important;
+  padding: 10px 30px !important;
   border-radius: 3px !important;
   font-weight: normal;
+  margin: 15px 0px;
 }
 
 select:not([size]):not([multiple]), select[size="0"], select[size="1"] {
@@ -47,6 +48,10 @@ select:not([size]):not([multiple]), select[size="0"], select[size="1"] {
   font-style: normal;
   font-stretch: normal;
   color: #188ad1;
+}
+
+#lupa{
+  cursor: pointer;
 }
 
 /**************************************
@@ -161,6 +166,7 @@ select:not([size]):not([multiple]), select[size="0"], select[size="1"] {
   font-size: 12px;
   padding: 11px;
   margin-bottom: 10px;
+  font-family: "Open Sans";
 }
 
 .nvp_tabelaMenu .title {
@@ -303,7 +309,7 @@ td.fundoLocalizacao {
 
 #localizacao a{
   color: #47728f;
-  font-size: 14px;
+  font-size: 14px !important;
 }
 
 #localizacao .pagina_atual,
@@ -524,21 +530,21 @@ table.calendario td a{
   font-style: normal;
   font-stretch: normal;
   color: #596066;
-  padding: 9px;
-  margin-right: 4px 10px 4px 0px;
+  padding: 8px;
+  margin: 4px 10px 4px 0px !important;
 }
 
 .ui-dialog select{
 
   border-radius: 3px;
-  background-color: #ffffff;
+  background-color: #ffffff !important;
   border: solid 1px #cddce6;
   font-size: 14px !important;
   font-weight: normal;
   font-style: normal;
   font-stretch: normal;
   color: #596066;
-  padding: 9px !important;
+  padding: 8px !important;
   margin-right: 4px 10px 4px 0px;
 }
 
@@ -550,6 +556,7 @@ table.calendario td a{
   font-stretch: normal;
   line-height: 1.5;
   color: #47728f;
+  margin-right: 5px;
 }
 
 .ui-dialog a, .ui-dialog .decorated{
@@ -565,6 +572,14 @@ table.calendario td a{
 .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset{
 	float: none !important;
 	text-align: center !important;
+  border-top: 1px solid #ccdce6;
+  padding: 10px 0px;
+}
+
+.ui-state-default,
+.ui-widget-content .ui-state-default,
+.ui-widget-header .ui-state-default{
+  border: 0 !important;
 }
 
 .ui-button span{
@@ -578,6 +593,7 @@ table.calendario td a{
   text-align: center;
   color: #47728f !important;
   background: #FFF;
+  padding: 9px 35px !important;
 }
 
 .ui-widget-content {
@@ -685,7 +701,7 @@ td.area-conhecimento-destaque {
 .titulo-tabela-listagem {
   background-color: #ccdce6 !important;
   font-family: "Open Sans" !important;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
   font-style: normal;
   font-stretch: normal;
@@ -697,7 +713,7 @@ td.area-conhecimento-destaque {
   border-radius: 3px;
   background-color: #ffffff;
   border: solid 1px #cddce6;
-  padding: 11px;
+  padding: 8px;
   font-size: 14px;
   color: #47728f;
 }
@@ -712,7 +728,7 @@ td.area-conhecimento-destaque {
   border-radius: 3px;
   background-color: #ffffff;
   border: solid 1px #cddce6;
-  padding: 10px;
+  padding: 8px;
   font-size: 14px;
   color: #47728f;
 }
@@ -721,15 +737,14 @@ td.area-conhecimento-destaque {
 #formcadastro .formlttd{
   color: #47728f;
   font-family: "Open Sans";
-  font-size: 16px;
-  height: 50px;
-  padding: 0px 8px;
+  font-size: 14px;
+  padding: 4px 8px;
   vertical-align: middle;
 }
 
 .formmdtd sub, .formlttd sub{
   color: #999;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .formmdtd{
@@ -765,8 +780,7 @@ td.area-conhecimento-destaque {
   color: #47728f;
   font-family: "Open Sans";
   font-size: 12px;
-  height: 50px;
-  padding: 0px 8px;
+  padding: 8px;
   vertical-align: middle;
 }
 
@@ -785,29 +799,51 @@ td.area-conhecimento-destaque {
 /**************************************
 **********TABELAS DE ADIÇÃO************
 **************************************/
-
-table#projetos,
-table#modulos_ano_letivo {
+table.tabela-adicao {
     width: 100%;
     border: 0 !important;
 }
 
-table#projetos td,
-table#modulos_ano_letivo td {
+table.tabela-adicao td {
   text-align: left;
-  padding: 0px 15px !important;
+  padding: 8px 15px !important;
   border: 0 !important;
 }
 
-table#projetos .formdktd td,
-table#modulos_ano_letivo .formdktd td{
+table.tabela-adicao .formdktd td{
   padding: 8px 15px !important;
 }
 
-table#projetos td .geral,
-table#modulos_ano_letivo td .geral,
-table#modulos_ano_letivo td .obrigatorio{
+table.tabela-adicao .formmdtd,
+table.tabela-adicao .formlttd{
+  background-color: #f5f9fd;
+}
+
+table.tabela-adicao td .geral,
+table.tabela-adicao .obrigatorio{
   width: 100% !important;
+}
+
+tr#adicionar_linha{
+  background-color: #f5f9fd;
+}
+
+#adicionar_linha td a{
+  color: #47728f;
+}
+
+#adicionar_linha td a:hover{
+  text-decoration: none;
+}
+
+#adicionar_linha td a img{
+  float: left;
+  margin-right: 5px;
+}
+
+#adicionar_linha td a p{
+  padding: 5px;
+  margin: 0;
 }
 
 table.paginacao{
@@ -835,7 +871,7 @@ table.paginacao td a.nvp_paginador {
 p.title-table-matricula {
   background-color: #ccdce6 !important;
   font-family: "Open Sans" !important;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
   font-style: normal;
   font-stretch: normal;
@@ -864,7 +900,7 @@ p.title-table-matricula {
 .turmaTab,
 .turmaTab-active {
   width: auto !important;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: normal;
   padding: 6px 20px 12px 20px;
   border-radius: 0px !important;
@@ -875,7 +911,7 @@ p.title-table-matricula {
 .alunoTab,
 .alunoTab2,
 .turmaTab {
-  background-image: linear-gradient(to bottom, rgba(233, 239, 247, 0) 34%, rgba(71, 114, 143, 0.16)), linear-gradient(#e9eff7, #e9eff7);
+  background-image: linear-gradient(to bottom, rgba(233, 239, 247, 0) 34%,rgba(71, 114, 143, 0.16)), linear-gradient(#e9eff7, #e9eff7);
   box-shadow: inset -1px 0 0 0 #ffffff;
 }
 
@@ -885,4 +921,11 @@ p.title-table-matricula {
   width: auto !important;
   background: #FFF !important;
   box-shadow: inset 1px 1px 0 0 #cddce6, inset -1px 0 0 0 #cddce6;
+}
+
+/*******BOTÃO DESTAQUE******/
+.btn-green, input.btn-green, .ui-button span.btn-green, #btn_enviar{
+  background-color: #0ac336 !important;
+  border: 0 !important;
+  color: #FFF !important;
 }

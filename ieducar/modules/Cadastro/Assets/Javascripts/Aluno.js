@@ -1527,6 +1527,8 @@ function canShowParentsFields(){
         "Gravar" : function() {
           var bValid = true;
           allFields.removeClass( "error" );
+          // $j( this ).addClass('btn-green');
+          // console.log($j(this))
 
           bValid = bValid && checkLength( name, "nome", 3, 255 );
           bValid = bValid && checkSelect( sexo, "sexo");
@@ -1544,6 +1546,11 @@ function canShowParentsFields(){
 
             $j( this ).dialog( "close" );
         }
+      },
+      create: function () {
+        $j(this).closest(".ui-dialog")
+            .find(".ui-button-text:first")
+            .addClass("btn-green");
       },
       close: function() {
 
@@ -1603,6 +1610,11 @@ function canShowParentsFields(){
 
             $j( this ).dialog( "close" );
         }
+      },
+      create: function () {
+        $j(this).closest(".ui-dialog")
+            .find(".ui-button-text:first")
+            .addClass("btn-green");
       },
       close: function() {
 
