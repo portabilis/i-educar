@@ -361,7 +361,7 @@ class indice extends clsCadastro
     foreach ($orgaos as $orgao)
       $selectOptions[$orgao['idorg_rg']] = $orgao['sigla'];
 
-    //$selectOptions = Portabilis_Array_Utils::sortByValue($selectOptions);
+    $selectOptions = Portabilis_Array_Utils::sortByValue($selectOptions);
 
     $options = array(
       'required'  => false,
