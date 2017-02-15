@@ -1109,7 +1109,7 @@ class indice extends clsCadastro
         $tabela .= "<td>{$valor}</td>";
         $tabela .= "<td align=\"right\" style=\"padding-right: 10px;\">";
         $tabela .= "<img border=\"0\" onclick=\"excluirLinhaDeficiencia({$indice})\"
-                      style=\"cursor: pointer;\" src=\"imagens/banco_imagens/excluirrr.gif\"
+                      style=\"cursor: pointer;\" src=\"imagens/banco_imagens/excluirrr.png\"
                       title=\"Excluir\">";
         $tabela .= "</td></tr>";
         $oculto .= "<input type=\"hidden\" id=\"oc_defic[{$indice}]\" name=\"oc_defic[{$indice}]\" value=\"{$indice}\">";
@@ -2014,7 +2014,7 @@ $pagina->MakeAll();
 
         var cell2 = document.createElement('td');
 
-        var img = "<img border='0' title='Excluir' src='imagens/banco_imagens/excluirrr.gif' style='cursor:pointer' onclick='excluirLinhaDeficiencia(" + cod_deficiencia + ")'>";
+        var img = "<img border='0' title='Excluir' src='imagens/banco_imagens/excluirrr.png' style='cursor:pointer' onclick='excluirLinhaDeficiencia(" + cod_deficiencia + ")'>";
 
         var text = document.createTextNode(nm_deficiencia);
 

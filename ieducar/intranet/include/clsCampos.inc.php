@@ -1300,7 +1300,7 @@ class clsCampos extends Core_Controller_Page_Abstract
         $md     = $md ? FALSE : TRUE;
 
         $retorno .= "<tr id='tr_$nome_tabela' class='$classe'><td valign='top' align='center' colspan='2'>";
-        $retorno .= "\n<table cellspacing='0' $largura id='$nome_tabela' cellpadding='2' style='border-width:1px 1px 1px 1px;border-color:#000000;border-style:solid;margin:10px 0px 10px 0px;' >";
+        $retorno .= "\n<table cellspacing='0' $largura id='$nome_tabela' class='tabela-adicao' cellpadding='2' style='margin:10px 0px 10px 0px;' >";
 
         $total_campos = count($cabecalho);
         $span = $total_campos + 1;
@@ -1332,7 +1332,7 @@ class clsCampos extends Core_Controller_Page_Abstract
 
         $click = "$nome_add.removeRow(this);";
 
-        $img = "<img src=\"imagens/banco_imagens/excluirrr.gif\" border=\"0\" alt=\"excluir\" />";
+        $img = "<img src=\"imagens/banco_imagens/excluirrr.png\" border=\"0\" alt=\"excluir\" />";
         $md2 = FALSE;
 
         if (! count($valores)) {
@@ -1454,7 +1454,7 @@ class clsCampos extends Core_Controller_Page_Abstract
           }
 
           $retorno .= "<td align='center'><a href='javascript:void(0)' onclick='$click' id='link_remove[$key2]' style='outline: none;'>$img</a>$retorno_oculto</td>";
-          $img      = "<img src=\"imagens/banco_imagens/excluirrr.gif\" border=\"0\" alt=\"excluir\" />";
+          $img      = "<img src=\"imagens/banco_imagens/excluirrr.png\" border=\"0\" alt=\"excluir\" />";
           $id       = count($valores);
 
           $javascript .= "
@@ -1467,7 +1467,7 @@ class clsCampos extends Core_Controller_Page_Abstract
         $img      = "<img src=\"imagens/nvp_bot_novo.png\" border=\"0\" alt=\"incluir\" />";
         $retorno .= "<tr id='adicionar_linha'>";
         $tt       = $total_campos + 1;
-        $retorno .= "<td colspan='$tt' align='left' style='border-width:1px 0px 0px 0px;border-style:dotted;border-color:#000000;'><a href='javascript:void(0)' id='btn_add_$nome_add' onclick='$click' style='outline: none;'>$img</a></td>";
+        $retorno .= "<td colspan='$tt' align='left' style='padding-top: 17px !important;'><a href='javascript:void(0)' id='btn_add_$nome_add' onclick='$click' style='outline: none;'>$img <p>ADICIONAR NOVO<p></a></td>";
         $retorno .= "</tr>";
 
         $retorno .= "</table>";
@@ -1664,7 +1664,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                   $retorno .= "<img src=\"imagens/lupa.png\" alt=\"Pesquisa\" border=\"0\" onclick=\"pesquisa_valores_popless('{$componente[7]}', '{$nome}_{$inicio}')\">";
                 }
 
-                $retorno   .= " {$componente[8]}</td><td id=\"td_adicionador_{$nome}_{$inicio}\" style=\"padding-left:30px;\"><img name=\"adicionador_{$nome}_{$inicio}\" id=\"adicionador_{$nome}_{$inicio}\" onclick=\"remove_{$nome}('{$inicio}');\" src=\"imagens/banco_imagens/excluirrr.gif\" title=\"Excluir\" border=0></td></tr>";
+                $retorno   .= " {$componente[8]}</td><td id=\"td_adicionador_{$nome}_{$inicio}\" style=\"padding-left:30px;\"><img name=\"adicionador_{$nome}_{$inicio}\" id=\"adicionador_{$nome}_{$inicio}\" onclick=\"remove_{$nome}('{$inicio}');\" src=\"imagens/banco_imagens/excluirrr.png\" title=\"Excluir\" border=0></td></tr>";
                 $inclusos[] = $inicio;
 
                 $inicio++;
@@ -1752,7 +1752,7 @@ class clsCampos extends Core_Controller_Page_Abstract
     id_antecessor = id - 1;
 
     img_ant     = document.getElementById('adicionador_{$nome}_' + id_antecessor);
-    img_ant.src = 'imagens/banco_imagens/excluirrr.gif';
+    img_ant.src = 'imagens/banco_imagens/excluirrr.png';
 
     document.getElementById('adicionador_{$nome}_' + id_antecessor).onclick = function() { onclick=remove_{$nome}(this.name.substr(this.name.lastIndexOf( '_' ) + 1)); };
 

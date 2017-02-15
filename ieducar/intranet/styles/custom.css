@@ -799,29 +799,51 @@ td.area-conhecimento-destaque {
 /**************************************
 **********TABELAS DE ADIÇÃO************
 **************************************/
-
-table#projetos,
-table#modulos_ano_letivo {
+table.tabela-adicao {
     width: 100%;
     border: 0 !important;
 }
 
-table#projetos td,
-table#modulos_ano_letivo td {
+table.tabela-adicao td {
   text-align: left;
-  padding: 0px 15px !important;
+  padding: 8px 15px !important;
   border: 0 !important;
 }
 
-table#projetos .formdktd td,
-table#modulos_ano_letivo .formdktd td{
+table.tabela-adicao .formdktd td{
   padding: 8px 15px !important;
 }
 
-table#projetos td .geral,
-table#modulos_ano_letivo td .geral,
-table#modulos_ano_letivo td .obrigatorio{
+table.tabela-adicao .formmdtd,
+table.tabela-adicao .formlttd{
+  background-color: #f5f9fd;
+}
+
+table.tabela-adicao td .geral,
+table.tabela-adicao .obrigatorio{
   width: 100% !important;
+}
+
+tr#adicionar_linha{
+  background-color: #f5f9fd;
+}
+
+#adicionar_linha td a{
+  color: #47728f;
+}
+
+#adicionar_linha td a:hover{
+  text-decoration: none;
+}
+
+#adicionar_linha td a img{
+  float: left;
+  margin-right: 5px;
+}
+
+#adicionar_linha td a p{
+  padding: 5px;
+  margin: 0;
 }
 
 table.paginacao{
