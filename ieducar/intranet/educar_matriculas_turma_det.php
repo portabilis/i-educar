@@ -239,7 +239,7 @@ class indice extends clsDetalhe
 			sort($nm_alunos);
 			$tabela = "<table>
 					       <tr align=center>
-					           <td bgcolor=#a1b3bd><b>Nome</b></td>
+					           <td bgcolor=#ccdce6><b>Nome</b></td>
 					       </tr>";
 
 			reset($nm_alunos);
@@ -247,7 +247,7 @@ class indice extends clsDetalhe
 			{
 				if ( ($i % 2) == 0 )
 				{
-					$color = " bgcolor=#E4E9ED ";
+					$color = " bgcolor=#f5f9fd ";
 				}
 				else
 				{

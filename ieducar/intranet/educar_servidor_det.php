@@ -242,7 +242,7 @@ class indice extends clsDetalhe
     if ($lst_funcao) {
       $tabela .= "
         <table cellspacing='0' cellpadding='0' border='0'>
-          <tr bgcolor='#A1B3BD' align='center'>
+          <tr bgcolor='#ccdce6' align='center'>
             <td width='150'>Função</td>
           </tr>";
 
@@ -259,7 +259,7 @@ class indice extends clsDetalhe
         $class2 = $class2 == "formlttd" ? "formmdtd" : "formlttd" ;
         $tab_disc .= "
           <tr>
-            <td bgcolor='#A1B3BD' align='center'>Componentes Curriculares</td>
+            <td bgcolor='#ccdce6' align='center'>Componentes Curriculares</td>
           </tr>";
 
         $componenteMapper = new ComponenteCurricular_Model_ComponenteDataMapper();
@@ -286,7 +286,7 @@ class indice extends clsDetalhe
         $class2 = $class2 == "formlttd" ? "formmdtd" : "formlttd" ;
         $tab_curso .= "
           <tr>
-            <td bgcolor='#A1B3BD' align='center'>Cursos Ministrados</td>
+            <td bgcolor='#ccdce6' align='center'>Cursos Ministrados</td>
           </tr>";
 
         foreach ($lst_servidor_curso as $curso) {
@@ -363,7 +363,7 @@ class indice extends clsDetalhe
     if ($this->alocacao_array) {
       $tabela .= "
         <table cellspacing='0' cellpadding='0' border='0'>
-          <tr bgcolor='#A1B3BD' align='center'>
+          <tr bgcolor='#ccdce6' align='center'>
             <td width='150'>Carga Horária</td>
             <td width='80'>Período</td>
             <td width='150'>Escola</td>
@@ -408,7 +408,7 @@ class indice extends clsDetalhe
     if ($horarios) {
       $tabela = "
         <table cellspacing='0' cellpadding='0' border='0'>
-          <tr bgcolor='#A1B3BD' align='center'>
+          <tr bgcolor='#ccdce6' align='center'>
             <td width='150'>Escola</td>
             <td width='100'>Curso</td>
             <td width='70'>Série</td>

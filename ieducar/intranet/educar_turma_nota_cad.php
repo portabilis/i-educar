@@ -673,7 +673,7 @@ class indice extends clsCadastro
 					foreach ($lista_excessoes AS $excessao)
 					{
 						$this->campoQuebra2();
-						$this->campoQuebra2("#E4E9ED",20);
+						$this->campoQuebra2("#f5f9fd",20);
 
 						$objMatricula = new clsPmieducarMatricula($excessao["ref_cod_matricula"]);
 						$detalhe_matricula = $objMatricula->detalhe();
@@ -703,7 +703,7 @@ class indice extends clsCadastro
 						foreach ($lista_excessoes AS $excessao)
 						{
 							$this->campoQuebra2();
-							$this->campoQuebra2("#E4E9ED",20);
+							$this->campoQuebra2("#f5f9fd",20);
 
 							$objMatricula = new clsPmieducarMatricula($excessao["ref_cod_matricula"]);
 							$detalhe_matricula = $objMatricula->detalhe();
@@ -786,7 +786,7 @@ class indice extends clsCadastro
 						foreach ($lista_matriculas AS $matricula)
 						{
 							$this->campoQuebra2();
-							$this->campoQuebra2("#E4E9ED",20);
+							$this->campoQuebra2("#f5f9fd",20);
 
 							$this->campoRotulo("nome[{$matricula["cod_matricula"]}]","Aluno", "{$matricula["nome"]}");
 

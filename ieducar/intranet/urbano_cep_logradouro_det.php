@@ -107,15 +107,15 @@ class indice extends clsDetalhe
 		{
 			$tab_endereco = "<TABLE>
 					       <TR align=center>
-					           <TD bgcolor=#A1B3BD><B>CEP</B></TD>
-					           <TD bgcolor=#A1B3BD><B>Bairro</B></TD>
+					           <TD bgcolor=#ccdce6><B>CEP</B></TD>
+					           <TD bgcolor=#ccdce6><B>Bairro</B></TD>
 					       </TR>";
 			$cont = 0;
 			foreach ( $lst_cep_log_bairro AS $endereco )
 			{
 				if ( ($cont % 2) == 0 )
 				{
-					$color = " bgcolor=#E4E9ED ";
+					$color = " bgcolor=#f5f9fd ";
 				}
 				else
 				{

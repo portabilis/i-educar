@@ -169,7 +169,7 @@ class indice extends clsCadastro
 				$db->Consulta( "SELECT n.data_noticia, n.titulo, n.cod_not_portal FROM not_portal n where  n.cod_not_portal = {$indice} ORDER BY n.data_noticia DESC {$limit}" );			
 				$db->ProximoRegistro();
 				list ($data, $titulo, $id_noticia) = $db->Tupla();
-				$cor = $cor == "#D1DADF" ? "#E4E9ED" : "#D1DADF";
+				$cor = $cor == "#D1DADF" ? "#f5f9fd" : "#D1DADF";
 				if(strlen($titulo) >= 40)
 					$titulo = substr($titulo,0,40)."...";
 				$tabela .= "<tr bgcolor=$cor align='center'><td>{$titulo}</td><td><a href=acoes_noticia.php?cod_acao_governo={$this->cod_acao_governo}&excluir_noticia={$id_noticia}><img border=0 title='Excluir' src='imagens/banco_imagens/excluirrr.gif'></a></td></tr>";

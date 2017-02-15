@@ -172,16 +172,16 @@ class indice extends clsDetalhe
   {
     $existe  = true;
     $tabela .= "<table cellpadding=\"2\" cellspacing=\"2\" border=\"0\" align=\"left\" width='80%'>";
-    $tabela .= "<tr bgcolor='#A1B3BD'><th width='400'>Menu - submenus</th><th>Visualizar</th><th>Cadastrar</th><th width='70'>Excluir</th></tr>";
+    $tabela .= "<tr bgcolor='#ccdce6'><th width='400'>Menu - submenus</th><th>Visualizar</th><th>Cadastrar</th><th width='70'>Excluir</th></tr>";
 
     foreach ($opcoes as $key => $menu) {
       $menu_pai = array_shift($menu);
-      $cor      =  "#a1b3bd";
+      $cor      =  "#ccdce6";
       $tabela  .= "<tr bgcolor='$cor' align='center'><td colspan='4' align='left' width='400'><b>{$menu_pai}</b></td></tr>";
-      $cor      =  "#E4E9ED";
+      $cor      =  "#f5f9fd";
 
       foreach ($menu as $cod_sub =>$sub_menu) {
-        $cor = $cor == "#FFFFFF" ? "#E4E9ED" : "#FFFFFF";
+        $cor = $cor == "#FFFFFF" ? "#f5f9fd" : "#FFFFFF";
         $sub_menu['visualiza'] = $sub_menu['visualiza'] == 0 ? "N&atilde;o" : "Sim";
         $sub_menu['cadastra']  = $sub_menu['cadastra']  == 0 ? "N&atilde;o" : "Sim";
         $sub_menu['exclui']    = $sub_menu['exclui']    == 0 ? "N&atilde;o" : "Sim";

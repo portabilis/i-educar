@@ -90,17 +90,17 @@ class indice extends clsDetalhe
 					if( $lst_divida ) {
 						$tabela = "<TABLE>
 								       <TR align=center>
-								           <TD bgcolor=#A1B3BD><B>Data de Devolu&ccedil;&atilde;o</B></TD>
-								           <TD bgcolor=#A1B3BD><B>T&iacute;tulo</B></TD>
-								           <TD bgcolor=#A1B3BD><B>Biblioteca</B></TD>
-								           <TD bgcolor=#A1B3BD><B>Valor</B></TD>
+								           <TD bgcolor=#ccdce6><B>Data de Devolu&ccedil;&atilde;o</B></TD>
+								           <TD bgcolor=#ccdce6><B>T&iacute;tulo</B></TD>
+								           <TD bgcolor=#ccdce6><B>Biblioteca</B></TD>
+								           <TD bgcolor=#ccdce6><B>Valor</B></TD>
 								       </TR>";
 						$cont  = 0;
 						$total = 0;
 						foreach ( $lst_divida as $divida ) {
 							$total += $divida["valor_multa"];
 							if ( ($cont % 2) == 0 )
-								$color = " bgcolor=#E4E9ED ";
+								$color = " bgcolor=#f5f9fd ";
 							else
 								$color = " bgcolor=#FFFFFF ";
 							$obj_exemplar = new clsPmieducarExemplar( $divida["ref_cod_exemplar"] );
@@ -121,7 +121,7 @@ class indice extends clsDetalhe
 						}
 						$tabela .= $corpo;
 						if ( ($cont % 2) == 0 )
-							$color = " bgcolor=#E4E9ED ";
+							$color = " bgcolor=#f5f9fd ";
 						else
 							$color = " bgcolor=#FFFFFF ";
 						$tabela .= "<TR>
@@ -132,7 +132,7 @@ class indice extends clsDetalhe
 						$total_pago =  $obj_multa->totalPago();
 						$cont++;
 						if ( ($cont % 2) == 0 )
-							$color = " bgcolor=#E4E9ED ";
+							$color = " bgcolor=#f5f9fd ";
 						else
 							$color = " bgcolor=#FFFFFF ";
 						$tabela .= "<TR>
@@ -141,7 +141,7 @@ class indice extends clsDetalhe
 									</TR>";
 						$cont++;
 						if ( ($cont % 2) == 0 )
-							$color = " bgcolor=#E4E9ED ";
+							$color = " bgcolor=#f5f9fd ";
 						else
 							$color = " bgcolor=#FFFFFF ";
 						$obj_tot = new clsPmieducarExemplarEmprestimo();

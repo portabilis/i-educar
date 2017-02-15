@@ -174,7 +174,7 @@ class indice extends clsCadastro
 				$db->ProximoRegistro();
 				list ($titulo, $descricao, $data_foto,$caminho,$nm_credito) = $db->Tupla();
 	
-				$cor = $cor == "#D1DADF" ? "#E4E9ED" : "#D1DADF";
+				$cor = $cor == "#D1DADF" ? "#f5f9fd" : "#D1DADF";
 				$tabela .= "<tr bgcolor=$cor align='center'><td><img src=\"fotos/small/{$caminho}\" border=0></td><td>{$titulo}</td><td><a href=acoes_foto.php?cod_acao_governo={$this->cod_acao_governo}&excluir_foto={$id_foto}><img border=0 title='Excluir' src='imagens/banco_imagens/excluirrr.gif'></a></td></tr>";
 			}	
 			$enviar = "document.getElementById(\"$this->__nome\").submit()";

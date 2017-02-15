@@ -266,9 +266,9 @@ class indice extends clsDetalhe
 		{
 			$tabela = "<table>
 					       <tr align='center'>
-					           <td bgcolor=#a1b3bd><b>Nome</b></td>
-					           <td bgcolor=#a1b3bd><b>Nota</b></td>
-					           <td bgcolor=#a1b3bd><b>Faltas</b></td>
+					           <td bgcolor=#ccdce6><b>Nome</b></td>
+					           <td bgcolor=#ccdce6><b>Nota</b></td>
+					           <td bgcolor=#ccdce6><b>Faltas</b></td>
 					       </tr>";
 			$cont = 0;
 			$prim_disciplina = false;
@@ -276,7 +276,7 @@ class indice extends clsDetalhe
 			{
 				if ( ($cont % 2) == 0 )
 				{
-					$color = " bgcolor='#E4E9ED' ";
+					$color = " bgcolor='#f5f9fd' ";
 				}
 				else
 				{

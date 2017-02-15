@@ -1104,7 +1104,7 @@ class indice extends clsCadastro
     $oculto = $tabela = '';
     if ($deficiencia_aluno) {
       foreach ($deficiencia_aluno as $indice => $valor) {
-        $cor_fundo = $cor_fundo == '#D1DADF' ? '#E4E9ED' : '#D1DADF';
+        $cor_fundo = $cor_fundo == '#D1DADF' ? '#f5f9fd' : '#D1DADF';
         $tabela .= "<tr id=\"tr_{$indice}\" bgcolor=\"{$cor_fundo}\" style=\"padding-right: 10px;\">";
         $tabela .= "<td>{$valor}</td>";
         $tabela .= "<td align=\"right\" style=\"padding-right: 10px;\">";
@@ -2002,7 +2002,7 @@ $pagina->MakeAll();
       nm_deficiencia  = $('ref_cod_pessoa_deficiencia').options[$('ref_cod_pessoa_deficiencia').selectedIndex].text;
 
       if (!$('tr_'+cod_deficiencia)) {
-        cor_fundo = cor_fundo == '#D1DADF' ? '#E4E9ED' : '#D1DADF';
+        cor_fundo = cor_fundo == '#D1DADF' ? '#f5f9fd' : '#D1DADF';
         var row = document.createElement('tr');
         row.setAttribute('id', 'tr_'+cod_deficiencia);
         row.setAttribute('align', 'center');
@@ -2053,7 +2053,7 @@ $pagina->MakeAll();
 
         if(cor != '' && tabela.childNodes[i] && tabela.childNodes[i].tagName == 'TR') {
           tabela.childNodes[i].bgColor = cor;
-          cor = (cor == '#d1dadf') ? '#e4e9ed' : '#d1dadf';
+          cor = (cor == '#d1dadf') ? '#f5f9fd' : '#d1dadf';
         }
       }
     }
