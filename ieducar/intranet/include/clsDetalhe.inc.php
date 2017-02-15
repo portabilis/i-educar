@@ -238,7 +238,7 @@ class clsDetalhe extends Core_Controller_Page_Abstract
             </script>";
 
       if ($this->url_novo) {
-        $retorno .= "&nbsp;<input type='button' class='botaolistagem' onclick='javascript:go( \"$this->url_novo\" );' value=' {$this->caption_novo} '>&nbsp;\n";
+        $retorno .= "&nbsp;<input type='button' class='btn-green botaolistagem' onclick='javascript:go( \"$this->url_novo\" );' value=' {$this->caption_novo} '>&nbsp;\n";
       }
 
       if ($this->url_editar) {
