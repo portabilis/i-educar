@@ -161,6 +161,7 @@ select:not([size]):not([multiple]), select[size="0"], select[size="1"] {
   font-size: 12px;
   padding: 11px;
   margin-bottom: 10px;
+  font-family: "Open Sans";
 }
 
 .nvp_tabelaMenu .title {
@@ -303,7 +304,7 @@ td.fundoLocalizacao {
 
 #localizacao a{
   color: #47728f;
-  font-size: 14px;
+  font-size: 14px !important;
 }
 
 #localizacao .pagina_atual,
@@ -524,7 +525,7 @@ table.calendario td a{
   font-style: normal;
   font-stretch: normal;
   color: #596066;
-  padding: 9px;
+  padding: 8px;
   margin-right: 4px 10px 4px 0px;
 }
 
@@ -538,7 +539,7 @@ table.calendario td a{
   font-style: normal;
   font-stretch: normal;
   color: #596066;
-  padding: 9px !important;
+  padding: 8px !important;
   margin-right: 4px 10px 4px 0px;
 }
 
@@ -685,7 +686,7 @@ td.area-conhecimento-destaque {
 .titulo-tabela-listagem {
   background-color: #ccdce6 !important;
   font-family: "Open Sans" !important;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
   font-style: normal;
   font-stretch: normal;
@@ -697,7 +698,7 @@ td.area-conhecimento-destaque {
   border-radius: 3px;
   background-color: #ffffff;
   border: solid 1px #cddce6;
-  padding: 11px;
+  padding: 8px;
   font-size: 14px;
   color: #47728f;
 }
@@ -712,7 +713,7 @@ td.area-conhecimento-destaque {
   border-radius: 3px;
   background-color: #ffffff;
   border: solid 1px #cddce6;
-  padding: 10px;
+  padding: 8px;
   font-size: 14px;
   color: #47728f;
 }
@@ -721,15 +722,14 @@ td.area-conhecimento-destaque {
 #formcadastro .formlttd{
   color: #47728f;
   font-family: "Open Sans";
-  font-size: 16px;
-  height: 50px;
-  padding: 0px 8px;
+  font-size: 14px;
+  padding: 4px 8px;
   vertical-align: middle;
 }
 
 .formmdtd sub, .formlttd sub{
   color: #999;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .formmdtd{
@@ -765,8 +765,7 @@ td.area-conhecimento-destaque {
   color: #47728f;
   font-family: "Open Sans";
   font-size: 12px;
-  height: 50px;
-  padding: 0px 8px;
+  padding: 8px;
   vertical-align: middle;
 }
 
@@ -835,7 +834,7 @@ table.paginacao td a.nvp_paginador {
 p.title-table-matricula {
   background-color: #ccdce6 !important;
   font-family: "Open Sans" !important;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
   font-style: normal;
   font-stretch: normal;
@@ -864,7 +863,7 @@ p.title-table-matricula {
 .turmaTab,
 .turmaTab-active {
   width: auto !important;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: normal;
   padding: 6px 20px 12px 20px;
   border-radius: 0px !important;
@@ -875,7 +874,7 @@ p.title-table-matricula {
 .alunoTab,
 .alunoTab2,
 .turmaTab {
-  background-image: linear-gradient(to bottom, rgba(233, 239, 247, 0) 34%, rgba(71, 114, 143, 0.16)), linear-gradient(#e9eff7, #e9eff7);
+  background-image: linear-gradient(to bottom, rgba(233, 239, 247, 0) 34%,rgba(71, 114, 143, 0.16)), linear-gradient(#e9eff7, #e9eff7);
   box-shadow: inset -1px 0 0 0 #ffffff;
 }
 
