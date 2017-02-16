@@ -268,7 +268,7 @@ class indice extends clsCadastro
       }
     }
 
-    $this->ano = $this->ano_letivo;
+    if (is_numeric($this->ano_letivo)) $this->ano = $this->ano_letivo;
 
     $this->campoOculto('cod_turma', $this->cod_turma);
 
@@ -496,7 +496,7 @@ class indice extends clsCadastro
     }
     else {
       $opcoesCampoModulo = array('' => 'Erro na geração');
-    }  
+    }
 
     if (is_numeric($this->ano) && is_numeric($this->ref_cod_escola) && is_numeric($this->cod_turma)) {
       $objAno = new clsPmieducarAnoLetivoModulo();
@@ -507,7 +507,7 @@ class indice extends clsCadastro
 
       if (is_array($objTurma->lista($this->cod_turma))) {
         $registros = $objTurma->lista($this->cod_turma);
-      }else{ 
+      }else{
         $registros = $objAno->lista($this->ano, $this->ref_cod_escola);
       }
     }
