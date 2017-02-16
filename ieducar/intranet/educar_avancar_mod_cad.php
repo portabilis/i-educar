@@ -240,7 +240,7 @@ class indice extends clsCadastro
                        WHERE pessoa.idpes = aluno.ref_idpes
                          AND aluno.cod_aluno = ref_cod_aluno) as nome
                 FROM pmieducar.matricula m, pmieducar.matricula_turma
-               WHERE aprovado in (1, 2, 12)
+               WHERE aprovado in (1, 2, 12, 13)
                  AND m.ativo = 1
                  AND ref_ref_cod_escola = $escolaId
                  AND ref_ref_cod_serie = $serieId
