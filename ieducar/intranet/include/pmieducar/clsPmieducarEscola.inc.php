@@ -1802,7 +1802,7 @@ class clsPmieducarEscola
    * Retorna uma lista de registros filtrados de acordo com os parâmetros.
    * @return array
    */
-  public function lista($int_cod_escola = NULL, $int_ref_usuario_cad = NULL,
+  public function lista($int_cod_escola = array(), $int_ref_usuario_cad = NULL,
     $int_ref_usuario_exc = NULL, $int_ref_cod_instituicao = NULL,
     $int_ref_cod_escola_localizacao = NULL, $int_ref_cod_escola_rede_ensino = NULL,
     $int_ref_idpes = NULL, $str_sigla = NULL, $date_data_cadastro = NULL,
@@ -1827,6 +1827,20 @@ class clsPmieducarEscola
 
     if (is_numeric($int_cod_escola)) {
       $filtros .= "{$whereAnd} cod_escola = '{$int_cod_escola}'";
+      $whereAnd = " AND ";
+    }
+
+    if(is_array($int_cod_escola)){
+      $tamanhoArray = sizeof($int_cod_escola);
+      $virgula = ",";
+
+      for ($i = 0; $i < $tamanhoArray; $i++) {
+        $cod_escola .= $int_cod_escola[$i] . $virgula;
+        if(($tamanhoArray - $i) == 2){
+          $virgula = "";
+        }
+      }
+      $filtros .= "{$whereAnd} cod_escola in ($cod_escola)";
       $whereAnd = " AND ";
     }
 
