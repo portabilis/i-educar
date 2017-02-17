@@ -1150,4 +1150,25 @@ class App_Model_IedFinder extends CoreExt_Entity
 
     return $resultado;
   }
+
+  public static function verificaSeExisteEscolas($ref_cod_user){
+    $count_escolas = "SELECT count(ref_cod_escola) AS escolas 
+                        FROM pmieducar.escola_usuario
+                       WHERE ref_cod_usuario = $1";
+
+    $resultado = Portabilis_Utils_Database::fetchPreparedQuery($count_escolas,array('params' => array($ref_cod_user)));
+
+    return $resultado;
+  }
+
+  public static function getEscolaAtual($ref_cod_user){
+    $get_escola_atual = "SELECT ref_cod_escola
+                           FROM pmieducar.escola_usuario
+                          WHERE ref_cod_usuario = $1
+                            AND escola_atual = 1";
+
+    $resultado = Portabilis_Utils_Database::fetchPreparedQuery($get_escola_atual,array('params' => array($ref_cod_user)));
+
+    return $resultado;
+  }
 }
