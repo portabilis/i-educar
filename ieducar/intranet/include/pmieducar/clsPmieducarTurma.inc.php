@@ -1802,7 +1802,7 @@ class clsPmieducarTurma
 	 *
 	 * @return array
 	 */
-	function lista2( $int_cod_turma = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_ref_ref_cod_serie = null, $int_ref_ref_cod_escola = null, $int_ref_cod_infra_predio_comodo = null, $str_nm_turma = null, $str_sgl_turma = null, $int_max_aluno = null, $int_multiseriada = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_turma_tipo = null, $time_hora_inicial_ini = null, $time_hora_inicial_fim = null, $time_hora_final_ini = null, $time_hora_final_fim = null, $time_hora_inicio_intervalo_ini = null, $time_hora_inicio_intervalo_fim = null, $time_hora_fim_intervalo_ini = null, $time_hora_fim_intervalo_fim = null, $int_ref_cod_curso = null, $int_ref_cod_instituicao = null, $int_ref_cod_regente = null, $int_ref_cod_instituicao_regente = null, $int_ref_ref_cod_escola_mult = null, $int_ref_ref_cod_serie_mult = null, $int_qtd_min_alunos_matriculados = null, $visivel = null, $turma_turno_id = null, $tipo_boletim = null, $ano = null )
+	function lista2( $int_cod_turma = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_ref_ref_cod_serie = null, $int_ref_ref_cod_escola = array(), $int_ref_cod_infra_predio_comodo = null, $str_nm_turma = null, $str_sgl_turma = null, $int_max_aluno = null, $int_multiseriada = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_turma_tipo = null, $time_hora_inicial_ini = null, $time_hora_inicial_fim = null, $time_hora_final_ini = null, $time_hora_final_fim = null, $time_hora_inicio_intervalo_ini = null, $time_hora_inicio_intervalo_fim = null, $time_hora_fim_intervalo_ini = null, $time_hora_fim_intervalo_fim = null, $int_ref_cod_curso = null, $int_ref_cod_instituicao = null, $int_ref_cod_regente = null, $int_ref_cod_instituicao_regente = null, $int_ref_ref_cod_escola_mult = null, $int_ref_ref_cod_serie_mult = null, $int_qtd_min_alunos_matriculados = null, $visivel = null, $turma_turno_id = null, $tipo_boletim = null, $ano = null )
 	{
 
 		/*$nm_escola = "(
@@ -1842,10 +1842,29 @@ and  e.cod_escola = t.ref_ref_cod_escola
 			$filtros .= "{$whereAnd} t.ref_ref_cod_serie = '{$int_ref_ref_cod_serie}'";
 			$whereAnd = " AND ";
 		}
-		if( is_numeric( $int_ref_ref_cod_escola ) )
+		if(is_array($int_ref_ref_cod_escola))
 		{
-			$filtros .= "{$whereAnd} t.ref_ref_cod_escola = '{$int_ref_ref_cod_escola}'";
-			$whereAnd = " AND ";
+			$int_ref_ref_cod_escola = array_keys($int_ref_ref_cod_escola);
+			unset($int_ref_ref_cod_escola[0]);
+
+			$tamanhoArray = sizeof($int_ref_ref_cod_escola);
+      		$virgula = ",";
+
+      		for ($i = 1; $i <= $tamanhoArray; $i++) {
+        		$cod_escola .= $int_ref_ref_cod_escola[$i] . $virgula;
+        		if(($tamanhoArray - $i) == 1){
+          			$virgula = "";
+        		}
+      		}
+
+      		if($_GET['ref_cod_escola']){
+				$filtros .= "{$whereAnd} t.ref_ref_cod_escola = {$_GET['ref_cod_escola']}";
+				$whereAnd = " AND ";
+			}
+			else{
+				$filtros .= "{$whereAnd} t.ref_ref_cod_escola in ($cod_escola)";
+				$whereAnd = " AND ";
+			}
 		}
 		if( is_numeric( $int_ref_cod_infra_predio_comodo ) )
 		{
@@ -2073,7 +2092,7 @@ and  e.cod_escola = t.ref_ref_cod_escola
 	 * (Modificação da lista2, agora trazendo somente turmas do ano atual)
 	 * @return array
 	 */
-	function lista3( $int_cod_turma = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_ref_ref_cod_serie = null, $int_ref_ref_cod_escola = null, $int_ref_cod_infra_predio_comodo = null, $str_nm_turma = null, $str_sgl_turma = null, $int_max_aluno = null, $int_multiseriada = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_turma_tipo = null, $time_hora_inicial_ini = null, $time_hora_inicial_fim = null, $time_hora_final_ini = null, $time_hora_final_fim = null, $time_hora_inicio_intervalo_ini = null, $time_hora_inicio_intervalo_fim = null, $time_hora_fim_intervalo_ini = null, $time_hora_fim_intervalo_fim = null, $int_ref_cod_curso = null, $int_ref_cod_instituicao = null, $int_ref_cod_regente = null, $int_ref_cod_instituicao_regente = null, $int_ref_ref_cod_escola_mult = null, $int_ref_ref_cod_serie_mult = null, $int_qtd_min_alunos_matriculados = null, $visivel = null, $turma_turno_id = null, $tipo_boletim = null, $ano = null )
+	function lista3( $int_cod_turma = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_ref_ref_cod_serie = null, $int_ref_ref_cod_escola = array(), $int_ref_cod_infra_predio_comodo = null, $str_nm_turma = null, $str_sgl_turma = null, $int_max_aluno = null, $int_multiseriada = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_turma_tipo = null, $time_hora_inicial_ini = null, $time_hora_inicial_fim = null, $time_hora_final_ini = null, $time_hora_final_fim = null, $time_hora_inicio_intervalo_ini = null, $time_hora_inicio_intervalo_fim = null, $time_hora_fim_intervalo_ini = null, $time_hora_fim_intervalo_fim = null, $int_ref_cod_curso = null, $int_ref_cod_instituicao = null, $int_ref_cod_regente = null, $int_ref_cod_instituicao_regente = null, $int_ref_ref_cod_escola_mult = null, $int_ref_ref_cod_serie_mult = null, $int_qtd_min_alunos_matriculados = null, $visivel = null, $turma_turno_id = null, $tipo_boletim = null, $ano = null )
 	{
 
 		/*$nm_escola = "(
@@ -2113,10 +2132,29 @@ and  e.cod_escola = t.ref_ref_cod_escola
 			$filtros .= "{$whereAnd} t.ref_ref_cod_serie = '{$int_ref_ref_cod_serie}'";
 			$whereAnd = " AND ";
 		}
-		if( is_numeric( $int_ref_ref_cod_escola ) )
+		if(is_array($int_ref_ref_cod_escola))
 		{
-			$filtros .= "{$whereAnd} t.ref_ref_cod_escola = '{$int_ref_ref_cod_escola}'";
-			$whereAnd = " AND ";
+			$int_ref_ref_cod_escola = array_keys($int_ref_ref_cod_escola);
+			unset($int_ref_ref_cod_escola[0]);
+
+			$tamanhoArray = sizeof($int_ref_ref_cod_escola);
+      		$virgula = ",";
+
+      		for ($i = 1; $i <= $tamanhoArray; $i++) {
+        		$cod_escola .= $int_ref_ref_cod_escola[$i] . $virgula;
+        		if(($tamanhoArray - $i) == 1){
+          			$virgula = "";
+        		}
+      		}
+
+      		if($_GET['ref_cod_escola']){
+				$filtros .= "{$whereAnd} t.ref_ref_cod_escola = {$_GET['ref_cod_escola']}";
+				$whereAnd = " AND ";
+			}
+			else{
+				$filtros .= "{$whereAnd} t.ref_ref_cod_escola in ($cod_escola)";
+				$whereAnd = " AND ";
+			}
 		}
 		if( is_numeric( $int_ref_cod_infra_predio_comodo ) )
 		{

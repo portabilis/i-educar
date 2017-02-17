@@ -110,13 +110,30 @@ $pessoa_logada = $_SESSION['id_pessoa'];
 		//se eh institucional - admin
 		if ($nivel_usuario == 4 || $nivel_usuario == 8)
 		{
-			$obj_usuario = new clsPmieducarUsuario($pessoa_logada);
-			$det_usuario = $obj_usuario->detalhe();
-			$this->ref_cod_escola = $det_usuario["ref_cod_escola"];
-			$this->campoOculto( "ref_cod_escola", $this->ref_cod_escola );
-			if($exibe_nm_escola == true)
+			$this->ref_cod_escola = array('' => 'Selecione');
+			$obj_usuario = new clsPmieducarEscolaUsuario(0, $pessoa_logada);
+			$det_usuario = $obj_usuario->lista($pessoa_logada);
+
+			$lengthArray = sizeof($det_usuario);
+
+			for($i = 0; $i < $lengthArray; $i++){
+				$this->ref_cod_escola[$det_usuario[$i]["ref_cod_escola"]] = $det_usuario[$i]["escola"];
+			}
+
+			if($lengthArray > 1){
+				$this->campoLista("ref_cod_escola", "Escola", $this->ref_cod_escola, '', '', false, '', '', '', false);
+			}
+			else{
+				$this->campoOculto( "ref_cod_escola", $this->ref_cod_escola );
+			}
+
+			if($exibe_nm_escola == true && $lengthArray <= 1)
 			{
-				$obj_escola = new clsPmieducarEscola($this->ref_cod_escola);
+				$this->ref_cod_escola = array_keys($this->ref_cod_escola);
+				unset($this->ref_cod_escola[0]);
+				(integer)$this->ref_cod_escola = $this->ref_cod_escola[1];
+
+				$obj_escola = new clsPmieducarEscola((integer)$this->ref_cod_escola);
 				$det_escola = $obj_escola->detalhe();
 				$nm_escola = $det_escola['nome'];
 				$this->campoRotulo( "nm_escola","Escola", $nm_escola );

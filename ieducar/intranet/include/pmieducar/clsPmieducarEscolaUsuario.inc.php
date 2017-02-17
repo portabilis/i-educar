@@ -118,13 +118,47 @@ class clsPmieducarEscolaUsuario
 		return false;
 	}
 
+	function lista($ref_cod_usuario = null)
+	{
+		$sql = "SELECT {$this->_campos_lista}, relatorio.get_nome_escola(ref_cod_escola) AS escola FROM {$this->_tabela}";
+		$filtros = " WHERE ref_cod_usuario = '{$ref_cod_usuario}'";
+
+		$db = new clsBanco();
+		$countCampos = count(explode(",", $this->_campos_lista));
+		$resultado = array();
+
+		$sql .= $filtros . $this->getOrderby() . $this->getLimite();
+
+		$this->_total = $db->CampoUnico("SELECT {$this->_campos_lista} FROM {$this->_tabela} {$filtros}");
+
+		$db->Consulta($sql);
+
+		if($countCampos > 1){
+			while ($db->ProximoRegistro()){
+				$tupla = $db->Tupla();
+
+				$tupla["_total"] = $this->_total;
+				$resultado[] = $tupla;
+			}
+		}
+		else{
+			while ($db->ProximoRegistro()){
+				$tupla = $db->Tupla();
+				$resultado[] = $tupla[$this->_campos_lista];
+			}
+		}
+		if(count($resultado)){
+			return $resultado;
+		}
+		return false;
+	}
+
 	function detalhe()
 	{
 		if( is_numeric( $this->ref_cod_usuario ) )
 		{
 			$db = new clsBanco();
-			//echo "SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE ref_cod_usuario = '{$this->ref_cod_usuario}'"; die();
-			$db->Consulta( "SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE ref_cod_usuario = '{$this->ref_cod_usuario}'" );
+			$teste = $db->Consulta( "SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE ref_cod_usuario = '{$this->ref_cod_usuario}'");
 			$db->ProximoRegistro();
 			return $db->Tupla();
 		}

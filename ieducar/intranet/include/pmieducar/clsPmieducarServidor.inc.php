@@ -910,7 +910,7 @@ class clsPmieducarServidor
     $matutino                    = FALSE,
     $vespertino                  = FALSE,
     $noturno                     = FALSE,
-    $int_ref_cod_escola          = NULL,
+    $int_ref_cod_escola          = array(),
     $str_hr_mat                  = NULL,
     $str_hr_ves                  = NULL,
     $str_hr_not                  = NULL,
@@ -1042,9 +1042,33 @@ class clsPmieducarServidor
       if (is_numeric($int_ref_cod_instituicao)) {
         $filtros .= " AND a.ref_ref_cod_instituicao = '{$int_ref_cod_instituicao}'";
       }
-      if (is_numeric($int_ref_cod_escola)) {
+
+      if(is_numeric($int_ref_cod_escola)){
         $filtros .= " AND ref_cod_escola = '{$int_ref_cod_escola}' ";
       }
+
+      if (is_array($int_ref_cod_escola)) {
+        $int_ref_cod_escola = array_keys($int_ref_cod_escola);
+        unset($int_ref_cod_escola[0]);
+
+        $tamanhoArray = sizeof($int_ref_cod_escola);
+        $virgula = ",";
+
+        for ($i = 1; $i <= $tamanhoArray; $i++) {
+          $cod_escola .= $int_ref_cod_escola[$i] . $virgula;
+          if(($tamanhoArray - $i) == 1){
+            $virgula = "";
+          }
+        }
+
+        if($_GET['ref_cod_escola']){
+          $filtros .= " AND ref_cod_escola = '{$_GET['ref_cod_escola']}' ";
+        }
+        else{
+          $filtros .= " AND ref_cod_escola in ($cod_escola) ";
+        }
+      }
+
       if (is_numeric($ano_alocacao)) {
         $filtros .= " AND a.ano = '{$ano_alocacao}'";
       }
@@ -1067,6 +1091,30 @@ class clsPmieducarServidor
           $where .= " {$cond} a.ref_cod_escola = '{$int_ref_cod_escola}' ";
           $cond   = "AND";
         }
+        if (is_array($int_ref_cod_escola)) {
+          $int_ref_cod_escola = array_keys($int_ref_cod_escola);
+          unset($int_ref_cod_escola[0]);
+
+          $tamanhoArray = sizeof($int_ref_cod_escola);
+          $virgula = ",";
+
+          for ($i = 1; $i <= $tamanhoArray; $i++) {
+            $cod_escola .= $int_ref_cod_escola[$i] . $virgula;
+            if(($tamanhoArray - $i) == 1){
+              $virgula = "";
+            }
+          }
+
+          if($_GET['ref_cod_escola']){
+            $where .= " {$cond} a.ref_cod_escola = '{$_GET['ref_cod_escola']}' ";
+            $cond   = "AND";
+          }
+          else{
+            $where .= " {$cond} a.ref_cod_escola in ($cod_escola) ";
+            $cond   = "AND";
+          }
+        }
+
         $where .= " {$cond} a.ativo = '1'";
         $cond   = "AND";
         $hora_ini = explode(":", $array_horario[1]);
@@ -1081,6 +1129,30 @@ class clsPmieducarServidor
         }
         if ($matutino) {
           if (is_string($str_horario) && $str_horario == "S") {
+
+            if(is_array($int_ref_cod_escola)){
+              if($_GET['ref_cod_escola']){
+                $cod_escola = $_GET['ref_cod_escola'];
+              }
+              else{
+                $int_ref_cod_escola = array_keys($int_ref_cod_escola);
+                unset($int_ref_cod_escola[0]);
+
+                $tamanhoArray = sizeof($int_ref_cod_escola);
+                $virgula = ",";
+
+                for ($i = 1; $i <= $tamanhoArray; $i++) {
+                  $cod_escola .= $int_ref_cod_escola[$i] . $virgula;
+                  if(($tamanhoArray - $i) == 1){
+                    $virgula = "";
+                  }
+                }
+              }
+            }
+            if($_GET['ref_cod_escola']){
+              $cod_escola = $_GET['ref_cod_escola'];
+            }
+
             // A somatória retorna nulo
             $filtros .= "
     {$whereAnd} (s.cod_servidor IN (SELECT a.ref_cod_servidor
@@ -1091,7 +1163,7 @@ class clsPmieducarServidor
           (SELECT SUM(qhh.hora_final - qhh.hora_inicial)
             FROM pmieducar.quadro_horario_horarios qhh
             WHERE qhh.ref_cod_instituicao_servidor = '$int_ref_cod_instituicao'
-            AND qhh.ref_cod_escola = '$int_ref_cod_escola'
+            AND qhh.ref_cod_escola in ($cod_escola)
             AND hora_inicial >= '06:00'
             AND hora_inicial <= '12:00'
             AND qhh.ativo = '1'
@@ -1101,7 +1173,7 @@ class clsPmieducarServidor
             (SELECT SUM( qhha.hora_final - qhha.hora_inicial )
               FROM pmieducar.quadro_horario_horarios_aux qhha
               WHERE qhha.ref_cod_instituicao_servidor = '$int_ref_cod_instituicao'
-              AND qhha.ref_cod_escola = $int_ref_cod_escola
+              AND qhha.ref_cod_escola in ($cod_escola)
               AND hora_inicial >= '06:00'
               AND hora_inicial <= '12:00'
               AND qhha.ref_servidor = a.ref_cod_servidor
@@ -1118,6 +1190,30 @@ class clsPmieducarServidor
         }
         if ($vespertino) {
           if (is_string($str_horario) && $str_horario == "S") {
+
+            if(is_array($int_ref_cod_escola)){
+              if($_GET['ref_cod_escola']){
+                $cod_escola = $_GET['ref_cod_escola'];
+              }
+              else{
+                $int_ref_cod_escola = array_keys($int_ref_cod_escola);
+                unset($int_ref_cod_escola[0]);
+
+                $tamanhoArray = sizeof($int_ref_cod_escola);
+                $virgula = ",";
+
+                for ($i = 1; $i <= $tamanhoArray; $i++) {
+                  $cod_escola .= $int_ref_cod_escola[$i] . $virgula;
+                  if(($tamanhoArray - $i) == 1){
+                    $virgula = "";
+                  }
+                }
+              }
+            }
+            if($_GET['ref_cod_escola']){
+              $cod_escola = $_GET['ref_cod_escola'];
+            }
+
             $filtros .= "
       {$whereAnd} (s.cod_servidor IN
               (SELECT a.ref_cod_servidor
@@ -1128,7 +1224,7 @@ class clsPmieducarServidor
                   (SELECT SUM( qhh.hora_final - qhh.hora_inicial )
                   FROM pmieducar.quadro_horario_horarios qhh
                   WHERE qhh.ref_cod_instituicao_servidor = '$int_ref_cod_instituicao'
-                  AND qhh.ref_cod_escola = '$int_ref_cod_escola'
+                  AND qhh.ref_cod_escola in ($cod_escola)
                   AND qhh.ativo = '1'
                   AND hora_inicial >= '12:00'
                   AND hora_inicial <= '18:00'
@@ -1138,7 +1234,7 @@ class clsPmieducarServidor
                   (SELECT SUM( qhha.hora_final - qhha.hora_inicial )
                     FROM pmieducar.quadro_horario_horarios_aux qhha
                     WHERE qhha.ref_cod_instituicao_servidor = '$int_ref_cod_instituicao'
-                    AND qhha.ref_cod_escola = '$int_ref_cod_escola'
+                    AND qhha.ref_cod_escola in ($cod_escola)
                     AND qhha.ref_servidor = a.ref_cod_servidor
                     AND hora_inicial >= '12:00'
                     AND hora_inicial <= '18:00'
@@ -1155,6 +1251,30 @@ class clsPmieducarServidor
         }
         if ($noturno) {
           if (is_string($str_horario) && $str_horario == "S") {
+
+            if(is_array($int_ref_cod_escola)){
+              if($_GET['ref_cod_escola']){
+                $cod_escola = $_GET['ref_cod_escola'];
+              }
+              else{
+                $int_ref_cod_escola = array_keys($int_ref_cod_escola);
+                unset($int_ref_cod_escola[0]);
+
+                $tamanhoArray = sizeof($int_ref_cod_escola);
+                $virgula = ",";
+
+                for ($i = 1; $i <= $tamanhoArray; $i++) {
+                  $cod_escola .= $int_ref_cod_escola[$i] . $virgula;
+                  if(($tamanhoArray - $i) == 1){
+                    $virgula = "";
+                  }
+                }
+              }
+            }
+            if($_GET['ref_cod_escola']){
+              $cod_escola = $_GET['ref_cod_escola'];
+            }
+
             $filtros .= "
       {$whereAnd} (s.cod_servidor IN ( SELECT a.ref_cod_servidor
               FROM pmieducar.servidor_alocacao a
@@ -1164,7 +1284,7 @@ class clsPmieducarServidor
               (SELECT SUM(qhh.hora_final - qhh.hora_inicial)
                 FROM pmieducar.quadro_horario_horarios qhh
                 WHERE qhh.ref_cod_instituicao_servidor = '$int_ref_cod_instituicao'
-                AND qhh.ref_cod_escola = '$int_ref_cod_escola'
+                AND qhh.ref_cod_escola in ($cod_escola)
                 AND qhh.ativo = '1'
                 AND hora_inicial >= '18:00'
                 AND hora_inicial <= '23:59'
@@ -1174,7 +1294,7 @@ class clsPmieducarServidor
                   (SELECT SUM( qhha.hora_final - qhha.hora_inicial )
                   FROM pmieducar.quadro_horario_horarios_aux qhha
                   WHERE qhha.ref_cod_instituicao_servidor = '$int_ref_cod_instituicao'
-                  AND qhha.ref_cod_escola = '$int_ref_cod_escola'
+                  AND qhha.ref_cod_escola in ($cod_escola)
                   AND qhha.ref_servidor = a.ref_cod_servidor
                   AND hora_inicial >= '18:00'
                   AND hora_inicial <= '23:59'

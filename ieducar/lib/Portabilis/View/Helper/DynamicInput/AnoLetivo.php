@@ -65,11 +65,24 @@ class Portabilis_View_Helper_DynamicInput_AnoLetivo extends Portabilis_View_Help
     $resources = $options['resources'];
     $escolaId  = $this->getEscolaId($options['escolaId']);
 
+    $escolaId = array_keys($escolaId);
+    unset($escolaId[0]);
+
+    $tamanhoArray = sizeof($escolaId);
+    $virgula = ",";
+
+    for ($i = 1; $i <= $tamanhoArray; $i++) {
+      $cod_escola .= $escolaId[$i] . $virgula;
+      if(($tamanhoArray - $i) == 1){
+        $virgula = "";
+      }
+    }
+
     if ($escolaId && empty($resources)) {
-      $sql       = "select ano from pmieducar.escola_ano_letivo as al where ref_cod_escola = $1
+      $sql       = "select ano from pmieducar.escola_ano_letivo as al where ref_cod_escola in ($cod_escola)
                     and ativo = 1 {$this->filtroSituacao()} order by ano desc";
 
-      $resources = Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => $escolaId));
+      $resources = Portabilis_Utils_Database::fetchPreparedQuery($sql, $cod_escola);
       $resources = Portabilis_Array_Utils::setAsIdValue($resources, 'ano', 'ano');
     }
 
