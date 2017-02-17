@@ -146,7 +146,7 @@ class indice extends clsCadastro
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_biblioteca_index.php"                  => "i-Educar - Biblioteca",
-         ""        => "{$nomeMenu} obra"             
+         ""        => "{$nomeMenu} obra"
     ));
     $this->enviaLocalizacao($localizacao->montar());
 
@@ -309,17 +309,17 @@ class indice extends clsCadastro
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra( 598, $this->pessoa_logada, 11,  "educar_acervo_lst.php" );
 
-		
+
 
 		$obj = new clsPmieducarAcervo( null, $this->ref_cod_exemplar_tipo, $this->ref_cod_acervo, null, $this->pessoa_logada, $this->ref_cod_acervo_colecao, $this->ref_cod_acervo_idioma, $this->ref_cod_acervo_editora, $this->titulo, $this->sub_titulo, $this->cdu, $this->cutter, $this->volume, $this->num_edicao, $this->ano, $this->num_paginas, $this->isbn, null, null, 1, $this->ref_cod_biblioteca, $this->cdd, $this->estante, $this->dimencao, $this->material_ilustrativo, null ,$this->local , $this->ref_cod_tipo_autor , $this->tipo_autor );
 		$cadastrou = $obj->cadastra();
 		if( $cadastrou )
-		{			
+		{
 			#cadastra assuntos para a obra
 			$this->gravaAssuntos($cadastrou);
 			$this->gravaAutores($cadastrou);
 			$this->gravaCategorias($cadastrou);
-			
+
 			$this->mensagem .= "Cadastro efetuado com sucesso.<br>";
 			header( "Location: educar_acervo_lst.php" );
 			die();
@@ -335,11 +335,11 @@ class indice extends clsCadastro
 		@session_start();
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
-		
+
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra( 598, $this->pessoa_logada, 11,  "educar_acervo_lst.php" );
 
-		
+
 
 		$obj = new clsPmieducarAcervo($this->cod_acervo, $this->ref_cod_exemplar_tipo, $this->ref_cod_acervo, $this->pessoa_logada, null, $this->ref_cod_acervo_colecao, $this->ref_cod_acervo_idioma, $this->ref_cod_acervo_editora, $this->titulo, $this->sub_titulo, $this->cdu, $this->cutter, $this->volume, $this->num_edicao, $this->ano, $this->num_paginas, $this->isbn, null, null, 1, $this->ref_cod_biblioteca, $this->cdd, $this->estante, $this->dimencao, $this->material_ilustrativo, null, $this->local, $this->ref_cod_tipo_autor , $this->tipo_autor);
 		$editou = $obj->edita();
@@ -408,18 +408,22 @@ class indice extends clsCadastro
 				$objCategoria->cadastraCategoriaParaObra($cod_acervo, $categoriaId);
 			}
 		}
-	}		
+	}
 
 	function gravaAutores($cod_acervo){
 		$objAutor = new clsPmieducarAcervoAcervoAutor();
 		$objAutor->deletaAutoresDaObra($cod_acervo);
+
+		$principal = 0;
+
 		foreach ($this->getRequest()->autores as $autorId) {
 			if (! empty($autorId)) {
+				$principal += 1;
 				$objAutor = new clsPmieducarAcervoAcervoAutor();
-				$objAutor->cadastraAutorParaObra($cod_acervo, $autorId);
+				$objAutor->cadastraAutorParaObra($cod_acervo, $autorId, $principal);
 			}
 		}
-	}	
+	}
 }
 
 // cria uma extensao da classe base
@@ -444,7 +448,7 @@ $j('#autores').val("");
 $j('#tipo_autor').hide();
 $j('#tipo_autor').val("");
 $j('#autores').closest('tr').show();
-	
+
 }else{
 $j('#tipo_autor').hide();
 $j('#tipo_autor').val("");
@@ -468,7 +472,7 @@ $j('#autores').val("");
 $j('#tipo_autor').hide();
 $j('#tipo_autor').val("");
 $j('#autores').closest('tr').show();
-	
+
 }else{
 $j('#tipo_autor').hide();
 $j('#tipo_autor').val("");
@@ -683,16 +687,16 @@ fixupPrincipalCheckboxes();
 
 function fixupAssuntosSize(){
 
-	$j('#assuntos_chzn ul').css('width', '307px');	
-	
+	$j('#assuntos_chzn ul').css('width', '307px');
+
 }
 
 fixupAssuntosSize();
 
 function fixupAutoresSize(){
 
-	$j('#autores_chzn ul').css('width', '307px');	
-	
+	$j('#autores_chzn ul').css('width', '307px');
+
 }
 
 fixupAutoresSize();
@@ -704,7 +708,7 @@ $assuntos.trigger('chosen:updated');
 var handleGetAssuntos = function(dataResponse) {
 
   $j.each(dataResponse['assuntos'], function(id, value) {
-  	
+
     $assuntos.children("[value=" + value + "]").attr('selected', '');
   });
 
@@ -712,10 +716,10 @@ var handleGetAssuntos = function(dataResponse) {
 }
 
 var getAssuntos = function() {
-	    
+
   var $cod_acervo = $j('#cod_acervo').val();
-  
-  if ($j('#cod_acervo').val()!='') {    
+
+  if ($j('#cod_acervo').val()!='') {
 
     var additionalVars = {
       id : $j('#cod_acervo').val(),
@@ -735,7 +739,7 @@ var getAssuntos = function() {
 getAssuntos();
 
 function fixupCategoriasSize(){
-	$j('#categorias_chzn ul').css('width', '307px');	
+	$j('#categorias_chzn ul').css('width', '307px');
 }
 fixupCategoriasSize();
 
@@ -753,8 +757,8 @@ var handleGetCategorias = function(dataResponse) {
 
 var getCategorias = function() {
   var $cod_acervo = $j('#cod_acervo').val();
-  
-  if ($j('#cod_acervo').val()!='') {    
+
+  if ($j('#cod_acervo').val()!='') {
     var additionalVars = {
       id : $j('#cod_acervo').val(),
     };
@@ -763,7 +767,7 @@ var getCategorias = function() {
       url      : getResourceUrlBuilder.buildUrl('/module/Api/categoria', 'categorias', additionalVars),
       dataType : 'json',
       data     : {},
-      success  : handleGetCategorias,      
+      success  : handleGetCategorias,
     };
 
     getResource(options);
@@ -779,9 +783,9 @@ var testezin;
 
 var handleGetAutores = function(dataResponse) {
   testezin = dataResponse['autores'];
-  
+
   $j.each(dataResponse['autores'], function(id, value) {
-  	
+
     $autores.children("[value=" + value + "]").attr('selected', '');
   });
 
@@ -789,10 +793,10 @@ var handleGetAutores = function(dataResponse) {
 }
 
 var getAutores = function() {
-	    
+
   var $cod_acervo = $j('#cod_acervo').val();
-  
-  if ($j('#cod_acervo').val()!='') {    
+
+  if ($j('#cod_acervo').val()!='') {
 
     var additionalVars = {
       id : $j('#cod_acervo').val(),

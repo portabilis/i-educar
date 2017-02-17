@@ -77,7 +77,7 @@ class indice extends clsDetalhe
 		session_write_close();
 
 		$this->titulo = "Obras - Detalhe";
-		
+
 
 		$this->cod_acervo=$_GET["cod_acervo"];
 
@@ -244,7 +244,7 @@ class indice extends clsDetalhe
 		}
 
 		$obj = new clsPmieducarAcervoAcervoAutor();
-		$obj->setOrderby("principal DESC");
+		$obj->setOrderby("principal");
 		$lst = $obj->lista( null,$this->cod_acervo );
 		if ($lst) {
 			$tabela = "<TABLE>
@@ -329,7 +329,7 @@ class indice extends clsDetalhe
 			}
 			if(!empty($categorias))
 				$this->addDetalhe( array( "Categorias", "{$categorias}") );
-		}		
+		}
 
 		$obj_permissoes = new clsPermissoes();
 		if( $obj_permissoes->permissao_cadastra( 598, $this->pessoa_logada, 11 ) )
@@ -347,7 +347,7 @@ class indice extends clsDetalhe
          "educar_biblioteca_index.php"                  => "i-Educar - Biblioteca",
          ""                                  => "Detalhe da obra"
     ));
-    $this->enviaLocalizacao($localizacao->montar());		
+    $this->enviaLocalizacao($localizacao->montar());
 	}
 }
 
