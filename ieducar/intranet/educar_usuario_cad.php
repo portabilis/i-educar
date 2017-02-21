@@ -599,13 +599,8 @@ class indice extends clsCadastro
 
 				$db = new clsBanco();
 
-				$nivel_user = $db->CampoUnico("SELECT tipo_usuario.nivel
-      		                                     FROM pmieducar.usuario
-                                           INNER JOIN pmieducar.tipo_usuario ON (usuario.ref_cod_tipo_usuario = tipo_usuario.cod_tipo_usuario)
-                                                WHERE cod_usuario = $this->ref_pessoa");
-
 				if($escola_atual == null){
-					if($nivel_user == 4 || $nivel_user == 8){
+					if($this->ref_cod_tipo_usuario == 5){
 						$escola_id = $db->CampoUnico("SELECT ref_cod_escola FROM pmieducar.escola_usuario WHERE ref_cod_usuario = $this->ref_pessoa LIMIT 1");
 
 						$db->Consulta("UPDATE pmieducar.escola_usuario
@@ -615,7 +610,7 @@ class indice extends clsCadastro
 					}
 				}
 				else{
-					if($nivel_user == 4 || $nivel_user == 8){
+					if($this->ref_cod_tipo_usuario == 5){
 						$escola_atual_old = $db->CampoUnico("SELECT ref_cod_escola FROM pmieducar.escola_usuario WHERE ref_cod_usuario = $this->ref_pessoa AND ref_cod_escola = $escola_atual");
 
 						if($escola_atual_old == null){
