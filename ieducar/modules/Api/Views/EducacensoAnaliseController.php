@@ -1261,7 +1261,7 @@ class EducacensoAnaliseController extends ApiCoreController
     $mensagem = array();
 
     foreach ($escolas as $escola) {
-      $nomeEscola = Portabilis_String_Utils::toUtf8(mb_strtoupper($aluno["nome_escola"]));
+      $nomeEscola = Portabilis_String_Utils::toUtf8(mb_strtoupper($escola["nome_escola"]));
 
       if (is_null($escola["inep"])){
         $mensagem[] = array("text" => "Dados para formular o registro 89 da escola {$nomeEscola} não encontrados. Verifique se a escola possui o código INEP cadastrado.",
