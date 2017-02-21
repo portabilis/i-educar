@@ -35,6 +35,7 @@ require_once( "include/pmieducar/geral.inc.php" );
 class clsPmieducarUsuario
 {
 	var $cod_usuario;
+	var $ref_cod_escola;
 	var $ref_cod_instituicao;
 	var $ref_funcionario_cad;
 	var $ref_funcionario_exc;
@@ -107,13 +108,13 @@ class clsPmieducarUsuario
 	 *
 	 * @return object
 	 */
-	function clsPmieducarUsuario( $cod_usuario = null, $ref_cod_instituicao = null, $ref_funcionario_cad = null, $ref_funcionario_exc = null, $ref_cod_tipo_usuario = null, $data_cadastro = null, $data_exclusao = null, $ativo = null )
+	function clsPmieducarUsuario( $cod_usuario = null, $ref_cod_escola = null, $ref_cod_instituicao = null, $ref_funcionario_cad = null, $ref_funcionario_exc = null, $ref_cod_tipo_usuario = null, $data_cadastro = null, $data_exclusao = null, $ativo = null )
 	{
 		$db = new clsBanco();
 		$this->_schema = "pmieducar.";
 		$this->_tabela = "{$this->_schema}usuario";
 
-		$this->_campos_lista = $this->_todos_campos = "u.cod_usuario, u.ref_cod_instituicao, u.ref_funcionario_cad, u.ref_funcionario_exc, u.ref_cod_tipo_usuario, u.data_cadastro, u.data_exclusao, u.ativo";
+		$this->_campos_lista = $this->_todos_campos = "u.cod_usuario, u.ref_cod_escola, u.ref_cod_instituicao, u.ref_funcionario_cad, u.ref_funcionario_exc, u.ref_cod_tipo_usuario, u.data_cadastro, u.data_exclusao, u.ativo";
 
 		if( is_numeric( $ref_funcionario_exc ) )
 		{
@@ -227,7 +228,34 @@ class clsPmieducarUsuario
 				}
 			}
 		}
-
+		if( is_numeric( $ref_cod_escola ) )
+		{
+			if( class_exists( "clsPmieducarEscola" ) )
+			{
+				$tmp_obj = new clsPmieducarEscola( $ref_cod_escola );
+				if( method_exists( $tmp_obj, "existe") )
+				{
+					if( $tmp_obj->existe() )
+					{
+						$this->ref_cod_escola = $ref_cod_escola;
+					}
+				}
+				else if( method_exists( $tmp_obj, "detalhe") )
+				{
+					if( $tmp_obj->detalhe() )
+					{
+						$this->ref_cod_escola = $ref_cod_escola;
+					}
+				}
+			}
+			else
+			{
+				if( $db->CampoUnico( "SELECT 1 FROM pmieducar.escola WHERE cod_escola = '{$ref_cod_escola}'" ) )
+				{
+					$this->ref_cod_escola = $ref_cod_escola;
+				}
+			}
+		}
 		if( is_numeric( $cod_usuario ) )
 		{
 			if( class_exists( "clsFuncionario" ) )
@@ -293,6 +321,12 @@ class clsPmieducarUsuario
 				$valores .= "{$gruda}'{$this->cod_usuario}'";
 				$gruda = ", ";
 			}
+			if( is_numeric( $this->ref_cod_escola ) )
+			{
+				$campos .= "{$gruda}ref_cod_escola";
+				$valores .= "{$gruda}'{$this->ref_cod_escola}'";
+				$gruda = ", ";
+			}
 			if( is_numeric( $this->ref_cod_instituicao ) )
 			{
 				$campos .= "{$gruda}ref_cod_instituicao";
@@ -338,6 +372,16 @@ class clsPmieducarUsuario
 			$db = new clsBanco();
 			$set = "";
 
+			if( is_numeric( $this->ref_cod_escola ) )
+			{
+				$set .= "{$gruda}ref_cod_escola = '{$this->ref_cod_escola}'";
+				$gruda = ", ";
+			}
+			else
+			{
+				$set .= "{$gruda}ref_cod_escola = null";
+				$gruda = ", ";
+			}
 			if( is_numeric( $this->ref_cod_instituicao ) )
 			{
 				$set .= "{$gruda}ref_cod_instituicao = '{$this->ref_cod_instituicao}'";
@@ -378,7 +422,6 @@ class clsPmieducarUsuario
 
 			if( $set )
 			{
-				//echo "UPDATE {$this->_tabela} SET $set WHERE cod_usuario = '{$this->cod_usuario}'";die();
 				$db->Consulta( "UPDATE {$this->_tabela} SET $set WHERE cod_usuario = '{$this->cod_usuario}'" );
 				return true;
 			}
@@ -391,7 +434,7 @@ class clsPmieducarUsuario
 	 *
 	 * @return array
 	 */
-	function lista( $int_cod_usuario = null, $int_ref_cod_instituicao = null, $int_ref_funcionario_cad = null, $int_ref_funcionario_exc = null, $int_ref_cod_tipo_usuario = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_nivel = null )
+	function lista( $int_cod_usuario = null, $int_ref_cod_escola = null, $int_ref_cod_instituicao = null, $int_ref_funcionario_cad = null, $int_ref_funcionario_exc = null, $int_ref_cod_tipo_usuario = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_nivel = null )
 	{
 		$sql = "SELECT {$this->_campos_lista}, tu.nivel FROM {$this->_tabela} u, {$this->_schema}tipo_usuario tu";
 
@@ -401,6 +444,11 @@ class clsPmieducarUsuario
 		if( is_numeric( $int_cod_usuario ) )
 		{
 			$filtros .= "{$whereAnd} u.cod_usuario = '{$int_cod_usuario}'";
+			$whereAnd = " AND ";
+		}
+		if( is_numeric( $int_ref_cod_escola ) )
+		{
+			$filtros .= "{$whereAnd} u.ref_cod_escola = '{$int_ref_cod_escola}'";
 			$whereAnd = " AND ";
 		}
 		if( is_numeric( $int_ref_cod_instituicao ) )
@@ -511,7 +559,8 @@ class clsPmieducarUsuario
 		return false;
 	}
 
-	function listaExportacao($int_ref_cod_instituicao = null,
+	function listaExportacao($int_ref_cod_escola = null,
+		                     $int_ref_cod_instituicao = null,
 		                     $int_ref_cod_tipo_usuario = null,
 		                     $int_ativo = null)
 	{
@@ -524,18 +573,22 @@ class clsPmieducarUsuario
                        END AS status,
                        tu.nm_tipo,
                        i.nm_instituicao,
-                       relatorio.get_nome_escola(escola_usuario.ref_cod_escola) AS nm_escola
+                       relatorio.get_nome_escola(u.ref_cod_escola) AS nm_escola
                   FROM {$this->_tabela} u
                  INNER JOIN cadastro.pessoa p ON (p.idpes = u.cod_usuario)
                  INNER JOIN portal.funcionario f ON (f.ref_cod_pessoa_fj = p.idpes)
                  INNER JOIN pmieducar.tipo_usuario tu ON (tu.cod_tipo_usuario = u.ref_cod_tipo_usuario
                                                           AND tu.ativo = 1)
-                 INNER JOIN pmieducar.instituicao i ON (i.cod_instituicao = u.ref_cod_instituicao)
-                 INNER JOIN pmieducar.escola_usuario on (u.cod_usuario = escola_usuario.ref_cod_usuario)";
+                 INNER JOIN pmieducar.instituicao i ON (i.cod_instituicao = u.ref_cod_instituicao)";
 
 		$whereAnd = " AND ";
 		$filtros = " WHERE u.ref_cod_tipo_usuario = tu.cod_tipo_usuario ";
 
+		if( is_numeric( $int_ref_cod_escola ) )
+		{
+			$filtros .= "{$whereAnd} u.ref_cod_escola = '{$int_ref_cod_escola}'";
+			$whereAnd = " AND ";
+		}
 		if( is_numeric( $int_ref_cod_instituicao ) )
 		{
 			$filtros .= "{$whereAnd} u.ref_cod_instituicao = '{$int_ref_cod_instituicao}'";

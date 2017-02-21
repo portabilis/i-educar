@@ -1,6 +1,5 @@
 <?php
- #error_reporting(E_ERROR);
- #ini_set("display_errors", 1);
+
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -31,7 +30,6 @@
 
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'include/clsMenuFuncionario.inc.php';
-require_once "include/pmieducar/clsPmieducarEscolaUsuario.inc.php";
 
 /**
  * clsPermissoes class.
@@ -254,7 +252,7 @@ class clsPermissoes
    */
   function getEscola($int_idpes_usuario)
   {
-    $obj_usuario = new clsPmieducarEscolaUsuario(0, $int_idpes_usuario, null, 0);
+    $obj_usuario = new clsPmieducarUsuario($int_idpes_usuario);
     $detalhe_usuario = $obj_usuario->detalhe();
 
     if ($detalhe_usuario) {
@@ -274,12 +272,13 @@ class clsPermissoes
   function getInstituicaoEscola($int_idpes_usuario)
   {
     $obj_usuario = new clsPmieducarUsuario($int_idpes_usuario);
-    $obj_escola_usuario = new clsPmieducarEscolaUsuario(0, $int_idpes_usuario, null, 0);
     $detalhe_usuario = $obj_usuario->detalhe();
-    $detalhe_escola_usuario = $obj_escola_usuario->detalhe();
 
     if ($detalhe_usuario) {
-      return array("instituicao" => $detalhe_usuario['ref_cod_instituicao'], "escola" => $detalhe_escola_usuario['ref_cod_escola']);
+      return array(
+        "instituicao" => $detalhe_usuario['ref_cod_instituicao'],
+        "escola" => $detalhe_usuario['ref_cod_escola']
+      );
     }
 
     return FALSE;

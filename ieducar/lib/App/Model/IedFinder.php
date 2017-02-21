@@ -1141,13 +1141,4 @@ class App_Model_IedFinder extends CoreExt_Entity
 
     return $resultado;
   }
-
-  public static function getEscolasUser($ref_cod_user) {
-
-    $escolas_user = "SELECT ref_cod_escola, relatorio.get_nome_escola(ref_cod_escola) as nome FROM pmieducar.escola_usuario WHERE ref_cod_usuario = $1";
-
-    $resultado = Portabilis_Utils_Database::fetchPreparedQuery($escolas_user,array('params' => array($ref_cod_user)));
-
-    return $resultado;
-  }
 }

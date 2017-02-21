@@ -1981,42 +1981,6 @@ class clsPmieducarEscola
     }
   }
 
-  function lista_escolas_usuarios(){
-    $db = new clsBanco();
-    $resultado = array();
-    $db->Consulta("SELECT cod_escola as id,
-                          relatorio.get_nome_escola(cod_escola) as nome
-                     FROM pmieducar.escola
-                 ORDER BY nome");
-    if($db->ProximoRegistro()){
-      while ($db->ProximoRegistro()){
-        $tupla = $db->Tupla();
-        $resultado[] = $tupla;
-      }
-      if (count($resultado)){
-       return $resultado;
-      }
-    }
-  }
-
-  function lista_escolas_do_usuario($ref_cod_usuario){
-    $db = new clsBanco();
-    $resultado = array();
-    $db->Consulta("SELECT ref_cod_escola as id,
-                          relatorio.get_nome_escola(ref_cod_escola) as nome
-                     FROM pmieducar.usuario
-              INNER JOIN pmieducar.escola_usuario ON (usuario.cod_usuario = escola_usuario.ref_cod_usuario)
-                  WHERE cod_usuario = {$ref_cod_usuario}");
-
-    while($db->ProximoRegistro()) {
-      $resultado[] = $db->Tupla();
-    }
-    if(count($resultado)){
-      return $resultado;
-    }
-    return false;
-  }
-
   /**
    * Retorna um array com os dados de um registro.
    * @return array

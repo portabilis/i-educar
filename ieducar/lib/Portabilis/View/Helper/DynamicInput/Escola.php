@@ -31,7 +31,6 @@
 
 require_once 'lib/Portabilis/View/Helper/DynamicInput/CoreSelect.php';
 require_once 'Portabilis/Business/Professor.php';
-require_once 'include/clsBanco.inc.php';
 
 /**
  * Portabilis_View_Helper_DynamicInput_Escola class.
@@ -79,9 +78,8 @@ class Portabilis_View_Helper_DynamicInput_Escola extends Portabilis_View_Helper_
 
 
   public function stringInput($options = array()) {
-    $userId         = $this->getCurrentUserId();
-    $defaultOptions = array('options' => array());
-    $options        = $this->mergeOptions($options, $defaultOptions);
+    $defaultOptions       = array('options' => array());
+    $options              = $this->mergeOptions($options, $defaultOptions);
 
     // subescreve $options['options']['value'] com nome escola
     if (isset($options['options']['value']) && $options['options']['value'])
@@ -101,22 +99,12 @@ class Portabilis_View_Helper_DynamicInput_Escola extends Portabilis_View_Helper_
 
     $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
 
-    $escolas_usuario = array('' => 'Selecione');
-    $escolasUser = App_Model_IedFinder::getEscolasUser($userId);
-    foreach ($escolasUser as $e)
-    {
-      $escolas_usuario[$e["ref_cod_escola"]] = $e["nome"];
-    }
+    $this->viewInstance->campoOculto($inputOptions['id'], $escolaId);
 
-    $count_escolas = count($escolas_usuario);
-
-    if($count_escolas > 2){
-      $this->viewInstance->campoLista('ref_cod_escola', 'Escola', $escolas_usuario);
-    }
-    else{
-      call_user_func_array(array($this->viewInstance, 'campoRotulo'), $inputOptions);
-    }
+    $inputOptions['id'] = 'escola_nome';
+    call_user_func_array(array($this->viewInstance, 'campoRotulo'), $inputOptions);
   }
+
 
   public function escola($options = array()) {
     $isProfessor = Portabilis_Business_Professor::isProfessor($this->getInstituicaoId($options['instituicaoId']),
