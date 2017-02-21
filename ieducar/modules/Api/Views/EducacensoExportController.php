@@ -223,22 +223,21 @@ class EducacensoExportController extends ApiCoreController
 
   protected function getMatriculasTurma($escolaId, $ano, $data_ini, $data_fim, $turmaId){
     $sql =
-     'SELECT
-      distinct(m.cod_matricula) as id
-
-      FROM  pmieducar.aluno a
-      INNER JOIN cadastro.fisica fis ON (fis.idpes = a.ref_idpes)
-      INNER JOIN cadastro.pessoa p ON (fis.idpes = p.idpes)
-      INNER JOIN pmieducar.matricula m ON (m.ref_cod_aluno = a.cod_aluno)
-      INNER JOIN pmieducar.matricula_turma mt ON (mt.ref_cod_matricula = m.cod_matricula)
-      INNER JOIN pmieducar.escola e ON (m.ref_ref_cod_escola = e.cod_escola)
-      INNER JOIN modules.educacenso_cod_escola ece ON (ece.cod_escola = e.cod_escola)
-
-      WHERE e.cod_escola = $1
-      AND COALESCE(m.data_matricula,m.data_cadastro) BETWEEN DATE($3) AND DATE($4)
-      AND m.aprovado IN (1, 2, 3, 4, 6, 15)
-      AND m.ano = $2
-      AND mt.ref_cod_turma = $5
+     'SELECT DISTINCT m.cod_matricula as id
+        FROM  pmieducar.aluno a
+       INNER JOIN cadastro.fisica fis ON (fis.idpes = a.ref_idpes)
+       INNER JOIN cadastro.pessoa p ON (fis.idpes = p.idpes)
+       INNER JOIN pmieducar.matricula m ON (m.ref_cod_aluno = a.cod_aluno)
+       INNER JOIN pmieducar.matricula_turma mt ON (mt.ref_cod_matricula = m.cod_matricula)
+       INNER JOIN pmieducar.escola e ON (m.ref_ref_cod_escola = e.cod_escola)
+       INNER JOIN pmieducar.instituicao i ON (i.cod_instituicao = e.ref_cod_instituicao)
+       INNER JOIN modules.educacenso_cod_escola ece ON (ece.cod_escola = e.cod_escola)
+       WHERE e.cod_escola = $1
+         AND COALESCE(m.data_matricula,m.data_cadastro) BETWEEN DATE($3) AND DATE($4)
+         AND m.aprovado IN (1, 2, 3, 4, 6, 15)
+         AND m.ano = $2
+         AND mt.ref_cod_turma = $5
+         AND (mt.ativo = 1 OR (mt.ativo = 0 AND mt.data_exclusao > i.data_educacenso))
     ';
     return Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId, $ano, $data_ini, $data_fim, $turmaId)));
   }
