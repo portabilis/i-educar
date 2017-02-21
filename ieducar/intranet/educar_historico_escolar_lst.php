@@ -207,14 +207,8 @@ class indice extends clsListagem
 		$obj_permissoes = new clsPermissoes();
 		$this->obj_permissao = new clsPermissoes();
     	$this->nivel_usuario = $this->obj_permissao->nivel_acesso($this->pessoa_logada);
-    	$db = new clsBanco();
-
-		$school_user = $db->CampoUnico("SELECT escola_usuario.ref_cod_escola
-      									  FROM pmieducar.usuario
-                                    INNER JOIN pmieducar.escola_usuario ON (usuario.cod_usuario = escola_usuario.ref_cod_usuario)
-                                         WHERE cod_usuario = $this->pessoa_logada
-                                           AND escola_atual = 1");
-
+    	$db = new clsBanco();	
+		$school_user = $db->CampoUnico("select ref_cod_escola from pmieducar.usuario where cod_usuario =  $this->pessoa_logada");
 		$school_student = $db->CampoUnico("select ref_ref_cod_escola, ano from matricula where ref_cod_aluno = {$this->ref_cod_aluno} and ativo = 1 order by data_cadastro desc limit 1");
 		$db = new clsBanco();
 		$school_student = $school_student ? $school_student : 0;
