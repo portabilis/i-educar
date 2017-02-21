@@ -600,33 +600,29 @@ class indice extends clsCadastro
 				$db = new clsBanco();
 
 				if($escola_atual == null){
-					if($this->ref_cod_tipo_usuario == 5){
+					$escola_id = $db->CampoUnico("SELECT ref_cod_escola FROM pmieducar.escola_usuario WHERE ref_cod_usuario = $this->ref_pessoa LIMIT 1");
+
+					$db->Consulta("UPDATE pmieducar.escola_usuario
+							          SET escola_atual = 1
+							        WHERE ref_cod_usuario = $this->ref_pessoa
+							          AND ref_cod_escola = $escola_id");
+				}
+				else{
+					$escola_atual_old = $db->CampoUnico("SELECT ref_cod_escola FROM pmieducar.escola_usuario WHERE ref_cod_usuario = $this->ref_pessoa AND ref_cod_escola = $escola_atual");
+
+					if($escola_atual_old == null){
 						$escola_id = $db->CampoUnico("SELECT ref_cod_escola FROM pmieducar.escola_usuario WHERE ref_cod_usuario = $this->ref_pessoa LIMIT 1");
 
 						$db->Consulta("UPDATE pmieducar.escola_usuario
 								          SET escola_atual = 1
 								        WHERE ref_cod_usuario = $this->ref_pessoa
-								          AND ref_cod_escola = $escola_id");
+							    	      AND ref_cod_escola = $escola_id");
 					}
-				}
-				else{
-					if($this->ref_cod_tipo_usuario == 5){
-						$escola_atual_old = $db->CampoUnico("SELECT ref_cod_escola FROM pmieducar.escola_usuario WHERE ref_cod_usuario = $this->ref_pessoa AND ref_cod_escola = $escola_atual");
-
-						if($escola_atual_old == null){
-							$escola_id = $db->CampoUnico("SELECT ref_cod_escola FROM pmieducar.escola_usuario WHERE ref_cod_usuario = $this->ref_pessoa LIMIT 1");
-
-							$db->Consulta("UPDATE pmieducar.escola_usuario
-									          SET escola_atual = 1
-									        WHERE ref_cod_usuario = $this->ref_pessoa
-								    	      AND ref_cod_escola = $escola_id");
-						}
-						else{
-							$db->Consulta("UPDATE pmieducar.escola_usuario
-									          SET escola_atual = 1
-									        WHERE ref_cod_usuario = $this->ref_pessoa
-								    	      AND ref_cod_escola = $escola_atual_old");
-						}
+					else{
+						$db->Consulta("UPDATE pmieducar.escola_usuario
+								          SET escola_atual = 1
+								        WHERE ref_cod_usuario = $this->ref_pessoa
+							    	      AND ref_cod_escola = $escola_atual_old");
 					}
 				}
 
