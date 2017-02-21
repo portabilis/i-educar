@@ -32,7 +32,6 @@ require_once ("include/clsBanco.inc.php");
 require_once ("include/pmieducar/clsPmieducarUsuario.inc.php");
 require_once "include/pmieducar/clsPmieducarEscola.inc.php";
 require_once "include/pmieducar/clsPmieducarEscolaUsuario.inc.php";
-require_once 'App/Model/IedFinder.php';
 
 class clsIndexBase extends clsBase
 {
@@ -464,19 +463,6 @@ class indice extends clsCadastro
 					$obj_escola_usuario->cadastra();
 				}
 
-				$getCountEscolas = App_Model_IedFinder::verificaSeExisteEscolas($this->ref_pessoa);
-
-        		if($getCountEscolas[0]['escolas'] > 0){
-        			$db = new clsBanco();
-
-        			$escola_id = $db->CampoUnico("SELECT ref_cod_escola FROM pmieducar.escola_usuario WHERE ref_cod_usuario = $this->ref_pessoa LIMIT 1");
-
-        			$db->Consulta("UPDATE pmieducar.escola_usuario
-                                      SET escola_atual = 1
-                                    WHERE ref_cod_usuario = $this->ref_pessoa
-                                      AND ref_cod_escola = $escola_id");
-        		}
-
 				$this->mensagem .= "Cadastro efetuado com sucesso.<br>";
 				header( "Location: educar_usuario_lst.php" );
 				die();
@@ -580,10 +566,8 @@ class indice extends clsCadastro
 
 			if( $editou )
 			{
-				$getEscolaAtual = App_Model_IedFinder::getEscolaAtual($this->ref_pessoa);
-				$escola_atual = $getEscolaAtual[0]['ref_cod_escola'];
-
-				$countEscolaUsuario = App_Model_IedFinder::verificaSeExisteEscolas($this->ref_pessoa);
+				$db = new clsBanco();
+				$countEscolaUsuario = $db->campoUnico("SELECT count(ref_cod_escola) AS escola FROM pmieducar.escola_usuario WHERE ref_cod_usuario = $this->ref_pessoa");
 
 				if($countEscolaUsuario > 0){
 					$obj_delete = new clsPmieducarEscolaUsuario(0, $this->ref_pessoa, null, 0);
@@ -595,35 +579,6 @@ class indice extends clsCadastro
 				for($i = 1; $i <= $tamanhoArray; $i++){
 					$obj_escola_usuario = new clsPmieducarEscolaUsuario(0, $this->ref_pessoa, $this->escolas[$i], 0);
 					$obj_escola_usuario->cadastra();
-				}
-
-				$db = new clsBanco();
-
-				if($escola_atual == null){
-					$escola_id = $db->CampoUnico("SELECT ref_cod_escola FROM pmieducar.escola_usuario WHERE ref_cod_usuario = $this->ref_pessoa LIMIT 1");
-
-					$db->Consulta("UPDATE pmieducar.escola_usuario
-							          SET escola_atual = 1
-							        WHERE ref_cod_usuario = $this->ref_pessoa
-							          AND ref_cod_escola = $escola_id");
-				}
-				else{
-					$escola_atual_old = $db->CampoUnico("SELECT ref_cod_escola FROM pmieducar.escola_usuario WHERE ref_cod_usuario = $this->ref_pessoa AND ref_cod_escola = $escola_atual");
-
-					if($escola_atual_old == null){
-						$escola_id = $db->CampoUnico("SELECT ref_cod_escola FROM pmieducar.escola_usuario WHERE ref_cod_usuario = $this->ref_pessoa LIMIT 1");
-
-						$db->Consulta("UPDATE pmieducar.escola_usuario
-								          SET escola_atual = 1
-								        WHERE ref_cod_usuario = $this->ref_pessoa
-							    	      AND ref_cod_escola = $escola_id");
-					}
-					else{
-						$db->Consulta("UPDATE pmieducar.escola_usuario
-								          SET escola_atual = 1
-								        WHERE ref_cod_usuario = $this->ref_pessoa
-							    	      AND ref_cod_escola = $escola_atual_old");
-					}
 				}
 
 				$this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
@@ -707,6 +662,7 @@ $pagina->MakeAll();
 var campo_tipo_usuario = document.getElementById("ref_cod_tipo_usuario");
 var campo_instituicao = document.getElementById("ref_cod_instituicao");
 var campo_escola = document.getElementById("escolas");
+$j('#escolas').closest('tr').hide();
 //var campo_biblioteca = document.getElementById("ref_cod_biblioteca");
 
 if(  campo_tipo_usuario.value == "" )

@@ -429,37 +429,17 @@ class clsPmieducarEscolaSerie
 	 *
 	 * @return array
 	 */
-	function lista( $int_ref_cod_escola = array(), $int_ref_cod_serie = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $time_hora_inicial_ini = null, $time_hora_inicial_fim = null, $time_hora_final_ini = null, $time_hora_final_fim = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $time_hora_inicio_intervalo_ini = null, $time_hora_inicio_intervalo_fim = null, $time_hora_fim_intervalo_ini = null, $time_hora_fim_intervalo_fim = null, $int_ref_cod_instituicao = null, $int_ref_cod_curso = null, $bloquear_enturmacao_sem_vagas = null, $bloquear_cadastro_turma_para_serie_com_vagas = null )
+	function lista( $int_ref_cod_escola = null, $int_ref_cod_serie = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $time_hora_inicial_ini = null, $time_hora_inicial_fim = null, $time_hora_final_ini = null, $time_hora_final_fim = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $time_hora_inicio_intervalo_ini = null, $time_hora_inicio_intervalo_fim = null, $time_hora_fim_intervalo_ini = null, $time_hora_fim_intervalo_fim = null, $int_ref_cod_instituicao = null, $int_ref_cod_curso = null, $bloquear_enturmacao_sem_vagas = null, $bloquear_cadastro_turma_para_serie_com_vagas = null )
 	{
 		$sql = "SELECT {$this->_campos_lista}, c.ref_cod_instituicao, s.ref_cod_curso, s.nm_serie FROM {$this->_tabela} es, {$this->_schema}serie s, {$this->_schema}curso c";
 
 		$whereAnd = " AND ";
 		$filtros = " WHERE es.ref_cod_serie = s.cod_serie AND s.ref_cod_curso = c.cod_curso AND s.ativo = 1 ";
 
-		if( is_array( $int_ref_cod_escola ) )
+		if( is_numeric( $int_ref_cod_escola ) )
 		{
-			$int_ref_cod_escola = array_keys($int_ref_cod_escola);
-
-			unset($int_ref_cod_escola[0]);
-
-			$tamanhoArray = sizeof($int_ref_cod_escola);
-      		$virgula = ",";
-
-      		for ($i = 1; $i <= $tamanhoArray; $i++) {
-        		$cod_escola .= $int_ref_cod_escola[$i] . $virgula;
-        		if(($tamanhoArray - $i) == 1){
-          			$virgula = "";
-        		}
-      		}
-
-      		if($_GET['ref_cod_escola']){
-				$filtros .= "{$whereAnd} es.ref_cod_escola = {$_GET['ref_cod_escola']}";
-				$whereAnd = " AND ";
-			}
-			else{
-				$filtros .= "{$whereAnd} es.ref_cod_escola in ($cod_escola)";
-				$whereAnd = " AND ";
-			}
+			$filtros .= "{$whereAnd} es.ref_cod_escola = '{$int_ref_cod_escola}'";
+			$whereAnd = " AND ";
 		}
 		if( is_numeric( $int_ref_cod_serie ) )
 		{

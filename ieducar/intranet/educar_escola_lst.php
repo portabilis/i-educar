@@ -28,7 +28,6 @@ require_once ("include/clsBase.inc.php");
 require_once ("include/clsListagem.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once( "include/pmieducar/geral.inc.php" );
-require_once 'App/Model/IedFinder.php';
 
 class clsIndexBase extends clsBase
 {
@@ -139,12 +138,7 @@ class indice extends clsListagem
 		//$obj_escola->setOrderby( "nome ASC" );
 		$obj_escola->setLimite( $this->limite, ( $this->pagina_formulario - 1 ) * $this->limite );
 
-		$escolas = App_Model_IedFinder::getEscolasUser($this->pessoa_logada);
-		$tamanhoArray = sizeof($escolas);
-
-		for($i = 0; $i < $tamanhoArray; $i++){
-			$cod_escola[] = $escolas[$i]['ref_cod_escola'];
-		}
+		$cod_escola = $obj_permissoes->getEscola($this->pessoa_logada);
 
 		$lista = $obj_escola->lista(
 			$cod_escola,

@@ -144,8 +144,8 @@ class indice extends clsListagem
 			$this->ref_ref_cod_escola = $this->ref_cod_escola;
 		}
 
-    	$helperOptions = array();
-    	$this->inputsHelper()->dynamic('anoLetivo', array('required' => false), $helperOptions);
+    $helperOptions = array();
+    $this->inputsHelper()->dynamic('anoLetivo', array('required' => false), $helperOptions);
 
 		$this->campoTexto( "nm_turma", "Turma", $this->nm_turma, 30, 255, false );
 		$this->campoLista("visivel", "Situação", array("" => "Selecione", "1" => "Ativo", "2" => "Inativo"), $this->visivel, null, null, null, null, null, false);
