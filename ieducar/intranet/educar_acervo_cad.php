@@ -295,7 +295,7 @@ class indice extends clsCadastro
 		$this->campoTexto( "cutter", "Cutter", $this->cutter, 20, 15, false );
 		$this->campoNumero( "volume", "Volume", $this->volume, 20, 255, false );
 		$this->campoNumero( "num_edicao", "N&uacute;mero Edic&atilde;o", $this->num_edicao, 20, 255, false );
-		$this->campoNumero( "ano", "Ano", $this->ano, 5, 4, false );
+		$this->campotexto( "ano", "Ano", $this->ano, 25, 25, false );
 		$this->campoNumero( "num_paginas", "N&uacute;mero P&aacute;ginas", $this->num_paginas, 5, 255, false );
 		$this->campoTexto( "isbn", "ISBN", $this->isbn, 20, 13, false );
 
