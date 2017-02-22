@@ -51,3 +51,32 @@ campo_tipo_usuario.change(function(){
 });
 
 habilitaCampos();
+
+$j(document).ready(function(){
+  $escolas = $j('#escola');
+  $escolas.trigger('chosen:updated');
+
+  var handleGetEscolas = function(dataResponse) {
+    $j.each(dataResponse['escolas'], function(id, value) {
+      $escolas.children("[value=" + value + "]").attr('selected', '');
+    });
+    $escolas.trigger('chosen:updated');
+  }
+
+  var getEscolas = function() {
+    var ref_pessoa = $j('#ref_pessoa').val();
+    if ($j('#ref_pessoa').val()!='') {
+      var additionalVars = {
+        id : $j('#ref_pessoa').val(),
+      };
+      var options = {
+        url      : getResourceUrlBuilder.buildUrl('/module/Api/escola', 'escolas-usuario', additionalVars),
+        dataType : 'json',
+        data     : {},
+        success  : handleGetEscolas,
+      };
+      getResource(options);
+    }
+  }
+  getEscolas();
+});

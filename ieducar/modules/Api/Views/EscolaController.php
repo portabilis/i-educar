@@ -39,6 +39,7 @@ require_once 'include/pmieducar/geral.inc.php';
 require_once 'lib/Portabilis/Date/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
 require_once 'lib/Portabilis/Utils/Database.php';
+require_once 'include/pmieducar/clsPmieducarEscolaUsuario.inc.php';
 
 class EscolaController extends ApiCoreController
 {
@@ -437,6 +438,24 @@ protected function getEscolaAnoLetivo(){
   return $ano[0];
 }
 
+  protected function getEscolasUsuarios() {
+    $ref_cod_usuario = $this->getRequest()->id;
+
+
+    if (!$ref_cod_usuario) return null;
+
+    $escolasUsuario = new clsPmieducarEscolaUsuario();
+    $escolasUsuario = $escolasUsuario->lista($ref_cod_usuario);
+
+    $escolas = array();
+
+    foreach ($escolasUsuario as $escola) {
+      $escolas[] = $escola['ref_cod_escola'];
+    }
+
+    return array('escolas' => $escolas);
+  }
+
   public function Gerar() {
     if ($this->isRequestFor('get', 'escola'))
       $this->appendResponse($this->get());
@@ -461,6 +480,9 @@ protected function getEscolaAnoLetivo(){
 
     elseif ($this->isRequestFor('get', 'escola-ano-letivo'))
       $this->appendResponse($this->getEscolaAnoLetivo());
+
+    elseif ($this->isRequestFor('get', 'escolas-usuario'))
+      $this->appendResponse($this->getEscolasUsuarios());
 
     else
       $this->notImplementedOperationError();
