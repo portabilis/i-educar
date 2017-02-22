@@ -82,12 +82,6 @@ class Portabilis_View_Helper_DynamicInput_Escola extends Portabilis_View_Helper_
     $defaultOptions = array('options' => array());
     $options        = $this->mergeOptions($options, $defaultOptions);
 
-    // subescreve $options['options']['value'] com nome escola
-    if (isset($options['options']['value']) && $options['options']['value'])
-      $escolaId =  $options['options']['value'];
-    else
-      $escolaId = $this->getEscolaId($options['id']);
-
     $defaultInputOptions = array('id'        => 'ref_cod_escola',
                                  'label'     => 'Escola',
                                  'value'     => '',
@@ -106,12 +100,7 @@ class Portabilis_View_Helper_DynamicInput_Escola extends Portabilis_View_Helper_
 
     $count_escolas = count($escolas_usuario);
 
-    if($count_escolas > 2){
       $this->viewInstance->campoLista('ref_cod_escola', 'Escola', $escolas_usuario);
-    }
-    else{
-      call_user_func_array(array($this->viewInstance, 'campoRotulo'), $inputOptions);
-    }
   }
 
   public function escola($options = array()) {
