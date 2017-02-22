@@ -46,12 +46,12 @@
 			     ELSE ' - ' || cidade ||
 			     	  CASE WHEN bairro IS NULL OR bairro = ''
 			     	            THEN ''
-			     	       ELSE ', ' || bairro
-			     	  END ||
+			     	       ELSE ', ' || bairro||
 			     	        CASE WHEN logradouro IS NULL OR logradouro = ''
 			     	                  THEN ''
-			     	             ELSE ', ' || logradouro
+			     	             ELSE ', ' || CASE WHEN ref_idtlog IS NULL OR ref_idtlog = '' THEN '' ELSE initcap(ref_idtlog) || ' ' END ||logradouro
 			     	        END
+			     	  END
             END AS nm_editora
 		FROM
 			pmieducar.acervo_editora
