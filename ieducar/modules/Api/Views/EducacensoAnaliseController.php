@@ -61,21 +61,26 @@ class EducacensoAnaliseController extends ApiCoreController
              INNER JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
              INNER JOIN pmieducar.escola_ano_letivo ON (escola_ano_letivo.ref_cod_escola = escola.cod_escola)
              INNER JOIN pmieducar.ano_letivo_modulo modulo1 ON (modulo1.ref_ref_cod_escola = escola.cod_escola
-                          AND modulo1.ref_ano = escola_ano_letivo.ano
-                          AND modulo1.sequencial = 1)
+                                                                AND modulo1.ref_ano = escola_ano_letivo.ano
+                                                                AND modulo1.sequencial = 1)
              INNER JOIN pmieducar.ano_letivo_modulo modulo2 ON (modulo2.ref_ref_cod_escola = escola.cod_escola
-                          AND modulo2.ref_ano = escola_ano_letivo.ano
-                          AND modulo2.sequencial = (SELECT MAX(sequencial)
-                                                      FROM pmieducar.ano_letivo_modulo
-                                                     WHERE ref_ano = escola_ano_letivo.ano
-                                                       AND ref_ref_cod_escola = escola.cod_escola))
+                                                                AND modulo2.ref_ano = escola_ano_letivo.ano
+                                                                AND modulo2.sequencial = (SELECT MAX(sequencial)
+                                                                                            FROM pmieducar.ano_letivo_modulo
+                                                                                           WHERE ref_ano = escola_ano_letivo.ano
+                                                                                             AND ref_ref_cod_escola = escola.cod_escola))
               LEFT JOIN cadastro.pessoa pessoa_gestor ON (pessoa_gestor.idpes = escola.ref_idpes_gestor)
               LEFT JOIN cadastro.fisica fisica_gestor ON (fisica_gestor.idpes = escola.ref_idpes_gestor)
               LEFT JOIN modules.educacenso_cod_escola ON (educacenso_cod_escola.cod_escola = escola.cod_escola)
               LEFT JOIN cadastro.endereco_pessoa ON (endereco_pessoa.idpes = escola.ref_idpes)
-              LEFT JOIN public.bairro ON (bairro.idbai = endereco_pessoa.idbai)
+              LEFT JOIN cadastro.endereco_externo ON (endereco_externo.idpes = escola.ref_idpes)
+              LEFT JOIN public.bairro ON (bairro.idbai = COALESCE(endereco_pessoa.idbai, (SELECT b.idbai
+                                                                                            FROM public.bairro b
+                                                                                           INNER JOIN cadastro.endereco_externo ee ON (UPPER(ee.bairro) = UPPER(b.nome))
+                                                                                           WHERE ee.idpes = escola.ref_idpes
+                                                                                           LIMIT 1)))
               LEFT JOIN public.municipio ON (municipio.idmun = bairro.idmun)
-              LEFT JOIN public.uf ON (uf.sigla_uf = municipio.sigla_uf)
+              LEFT JOIN public.uf ON (uf.sigla_uf = COALESCE(municipio.sigla_uf, endereco_externo.sigla_uf))
               LEFT JOIN public.distrito ON (distrito.idmun = bairro.idmun)
              WHERE escola.cod_escola = $1
                AND escola_ano_letivo.ano = $2";
