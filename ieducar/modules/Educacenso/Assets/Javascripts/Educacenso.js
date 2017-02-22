@@ -94,8 +94,6 @@ $j(document).ready(function(){
           }
       };
 
-      $j.modal.close();
-
       $j("#modal_export").modal({
         escapeClose: false,
         clickClose: false,
@@ -105,6 +103,7 @@ $j(document).ready(function(){
       if (falhaAnalise) {
         var newPage = window.open();
         newPage.document.write(paginaResposta);
+        $j.modal.close();
       } else if (fase2) {
         educacensoExportFase2();
       } else {
