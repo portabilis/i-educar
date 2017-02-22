@@ -114,7 +114,7 @@ class clsPmieducarUsuario
 		$this->_schema = "pmieducar.";
 		$this->_tabela = "{$this->_schema}usuario";
 
-		$this->_campos_lista = $this->_todos_campos = "u.cod_usuario, u.ref_cod_escola, u.ref_cod_instituicao, u.ref_funcionario_cad, u.ref_funcionario_exc, u.ref_cod_tipo_usuario, u.data_cadastro, u.data_exclusao, u.ativo";
+		$this->_campos_lista = $this->_todos_campos = "u.cod_usuario, u.ref_cod_instituicao, u.ref_funcionario_cad, u.ref_funcionario_exc, u.ref_cod_tipo_usuario, u.data_cadastro, u.data_exclusao, u.ativo";
 
 		if( is_numeric( $ref_funcionario_exc ) )
 		{
@@ -372,16 +372,6 @@ class clsPmieducarUsuario
 			$db = new clsBanco();
 			$set = "";
 
-			if( is_numeric( $this->ref_cod_escola ) )
-			{
-				$set .= "{$gruda}ref_cod_escola = '{$this->ref_cod_escola}'";
-				$gruda = ", ";
-			}
-			else
-			{
-				$set .= "{$gruda}ref_cod_escola = null";
-				$gruda = ", ";
-			}
 			if( is_numeric( $this->ref_cod_instituicao ) )
 			{
 				$set .= "{$gruda}ref_cod_instituicao = '{$this->ref_cod_instituicao}'";
