@@ -39,8 +39,20 @@
 		$db = new clsBanco();
 		$db->Consulta( "
 		SELECT
-			cod_acervo_editora
-			, nm_editora
+			cod_acervo_editora,
+			nm_editora ||
+			CASE WHEN cidade IS NULL OR cidade = ''
+			          THEN  ''
+			     ELSE ' - ' || cidade ||
+			     	  CASE WHEN bairro IS NULL OR bairro = ''
+			     	            THEN ''
+			     	       ELSE ', ' || bairro
+			     	  END ||
+			     	        CASE WHEN logradouro IS NULL OR logradouro = ''
+			     	                  THEN ''
+			     	             ELSE ', ' || logradouro
+			     	        END
+            END AS nm_editora
 		FROM
 			pmieducar.acervo_editora
 		WHERE
