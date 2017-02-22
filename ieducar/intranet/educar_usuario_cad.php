@@ -28,6 +28,7 @@ require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once ("include/pmieducar/clsPmieducarUsuario.inc.php");
+require_once ("include/pmieducar/clsPmieducarEscolaUsuario.inc.php");
 
 class clsIndexBase extends clsBase
 {
@@ -59,6 +60,7 @@ class indice extends clsCadastro
 	var $proibido;
 	var $matricula_permanente;
 	var $matricula_interna;
+	var $escola;
 
 	//senha carregada do banco (controle de criptografia)
 	var $confere_senha;
@@ -122,14 +124,13 @@ class indice extends clsCadastro
 		$this->url_cancelar = ($retorno == "Editar") ? "educar_usuario_det.php?ref_pessoa={$this->ref_pessoa}" : "educar_usuario_lst.php";
 		$this->nome_url_cancelar = "Cancelar";
 
-    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         ""        => "{$nomeMenu} usu&aacute;rio"             
-    ));
-    $this->enviaLocalizacao($localizacao->montar());		
-
+	    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+	    $localizacao = new LocalizacaoSistema();
+	    $localizacao->entradaCaminhos( array(
+	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+	         ""        => "{$nomeMenu} usu&aacute;rio"
+	    ));
+	    $this->enviaLocalizacao($localizacao->montar());
 		return $retorno;
 	}
 
@@ -386,13 +387,11 @@ class indice extends clsCadastro
 
 		$this->campoOculto("nivel_usuario_",$nivel);
 
-		$get_biblioteca			= false;
-		$get_escola 			= true;
+		$this->inputsHelper()->dynamic(array('instituicao'));
+		$this->inputsHelper()->multipleSearchEscola(null, array('label' => 'Escola(s)',
+																'required' => false));
 
-		$cad_usuario = true;
-		include( "include/pmieducar/educar_campo_lista.php" );
-
-		$this->acao_enviar = "valida()";			
+		$this->acao_enviar = "valida()";
 
 	}
 
@@ -428,18 +427,19 @@ class indice extends clsCadastro
 		if( $obj_funcionario->cadastra() )
 		{
 
-			if ($this->ref_cod_instituicao && $this->ref_cod_escola)
-			{
-				$obj = new clsPmieducarUsuario( $this->ref_pessoa, $this->ref_cod_escola, $this->ref_cod_instituicao, $this->pessoa_logada,  $this->pessoa_logada, $this->ref_cod_tipo_usuario,null,null,1 );
-			} // verifica se usuario é institucional
-			else if ($this->ref_cod_instituicao && !$this->ref_cod_escola)
-			{
+			if ($this->ref_cod_instituicao) {
 				$obj = new clsPmieducarUsuario( $this->ref_pessoa, null, $this->ref_cod_instituicao, $this->pessoa_logada,  $this->pessoa_logada, $this->ref_cod_tipo_usuario,null,null,1 );
-			} // verifica se usuario é poli-institucional
-			else if (!$this->ref_cod_instituicao && !$this->ref_cod_escola)
-			{
+			} else {
 				$obj = new clsPmieducarUsuario( $this->ref_pessoa, null, null, $this->pessoa_logada,  $this->pessoa_logada, $this->ref_cod_tipo_usuario,null,null,1 );
 			}
+
+			if($obj->existe())
+				$cadastrou = $obj->edita();
+			else
+				$cadastrou = $obj->cadastra();
+
+			$this->insereUsuarioEscolas($this->ref_pessoa, $this->escola);
+
 			if($obj->existe())
 				$cadastrou = $obj->edita();
 			else
@@ -496,22 +496,18 @@ class indice extends clsCadastro
 		if( $obj_funcionario->edita() )
 		{
 
-			if ($this->ref_cod_instituicao && $this->ref_cod_escola)
-			{
-				$obj = new clsPmieducarUsuario( $this->ref_pessoa, $this->ref_cod_escola, $this->ref_cod_instituicao, $this->pessoa_logada,  $this->pessoa_logada, $this->ref_cod_tipo_usuario,null,null,1 );
-			} // verifica se usuario é institucional
-			else if ($this->ref_cod_instituicao && !$this->ref_cod_escola)
-			{
+			if ($this->ref_cod_instituicao) {
 				$obj = new clsPmieducarUsuario( $this->ref_pessoa, null, $this->ref_cod_instituicao, $this->pessoa_logada,  $this->pessoa_logada, $this->ref_cod_tipo_usuario,null,null,1 );
-			} // verifica se usuario é poli-institucional
-			else if (!$this->ref_cod_instituicao && !$this->ref_cod_escola)
-			{
+			} else {
 				$obj = new clsPmieducarUsuario( $this->ref_pessoa, null, null, $this->pessoa_logada,  $this->pessoa_logada, $this->ref_cod_tipo_usuario,null,null,1 );
 			}
+
 			if($obj->existe())
 				$editou = $obj->edita();
 			else
 				$editou = $obj->cadastra();
+
+			$this->insereUsuarioEscolas($this->ref_pessoa, $this->escola);
 
 			if($this->nivel_usuario_ == 8)
 			{
@@ -550,6 +546,7 @@ class indice extends clsCadastro
 
 			if( $editou )
 			{
+
 				$this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
 				header( "Location: educar_usuario_lst.php" );
 				die();
@@ -606,6 +603,21 @@ class indice extends clsCadastro
     }
     return true;
   }
+
+  function excluiTodosVinculosEscola($codUsuario) {
+  	$usuarioEscola = new clsPmieducarEscolaUsuario();
+  	$usuarioEscola->excluirTodos($codUsuario);
+  }
+
+  function insereUsuarioEscolas($codUsuario, $escolas) {
+  	$this->excluiTodosVinculosEscola($codUsuario);
+  	foreach ($escolas as $e) {
+  		$usuarioEscola = new clsPmieducarEscolaUsuario();
+  		$usuarioEscola->ref_cod_usuario = $codUsuario;
+  		$usuarioEscola->ref_cod_escola = $e;
+  		$usuarioEscola->cadastra();
+  	}
+  }
 }
 
 // cria uma extensao da classe base
@@ -619,217 +631,58 @@ $pagina->MakeAll();
 ?>
 <script>
 
-//var campo_tipo_usuario = document.getElementById("ref_cod_tipo_usuario");
-//var campo_instituicao = document.getElementById("ref_cod_instituicao");
-//var campo_escola = document.getElementById("ref_cod_escola");
-//var campo_biblioteca = document.getElementById("ref_cod_biblioteca");
-//
-//campo_instituicao.disabled = true;
-//campo_escola.disabled = true;
-//campo_biblioteca.disabled = true;
-
-var campo_tipo_usuario = document.getElementById("ref_cod_tipo_usuario");
-var campo_instituicao = document.getElementById("ref_cod_instituicao");
-var campo_escola = document.getElementById("ref_cod_escola");
-//var campo_biblioteca = document.getElementById("ref_cod_biblioteca");
-
-if(  campo_tipo_usuario.value == "" )
-{
-	campo_instituicao.disabled = true;
-	campo_escola.disabled = true;
-	//campo_biblioteca.disabled = true;
-
-}
-else if( cod_tipo_usuario[campo_tipo_usuario.value] == 1 )
-{
-	campo_instituicao.disabled = true;
-	campo_escola.disabled = true;
-//	campo_biblioteca.disabled = true;
-}
-else if( cod_tipo_usuario[campo_tipo_usuario.value] == 2 )
-{
-	campo_instituicao.disabled = false;
-	campo_escola.disabled = true;
-//	campo_biblioteca.disabled = true;
-}
-else if( cod_tipo_usuario[campo_tipo_usuario.value] == 4 )
-{
-	campo_instituicao.disabled = false;
-	campo_escola.disabled = false;
-	//campo_biblioteca.disabled = true;
-}
-else if( cod_tipo_usuario[campo_tipo_usuario.value] == 8 )
-{
-	campo_instituicao.disabled = false;
-	campo_escola.disabled = false;
-	//campo_biblioteca.disabled = false;
-}
-
-document.getElementById('ref_cod_tipo_usuario').onchange = function()
-{
-	habilitaCampos();
-}
-
-//function getEscola()
-//{
-//	var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
-//	var campoEscola = document.getElementById('ref_cod_escola');
-//
-//	campoEscola.length = 1;
-//	for (var j = 0; j < escola.length; j++)
-//	{
-//		if (escola[j][2] == campoInstituicao)
-//		{
-//			campoEscola.options[campoEscola.options.length] = new Option( escola[j][1], escola[j][0],false,false);
-//		}
-//	}
-//}
+var campo_tipo_usuario = $j("#ref_cod_tipo_usuario");
+var campo_instituicao = $j("#ref_cod_instituicao");
+var campo_escola = $j("#escola");
 
 function habilitaCampos()
 {
-	if( cod_tipo_usuario[campo_tipo_usuario.value] == 1 )
-	{
-		campo_instituicao.disabled = true;
-		campo_escola.disabled = true;
-		//campo_biblioteca.disabled = true;
-	}
-	else if( cod_tipo_usuario[campo_tipo_usuario.value] == 2 )
-	{
-		campo_instituicao.disabled = false;
-		campo_escola.disabled = true;
-		//campo_biblioteca.disabled = true;
-	}
-	else if( cod_tipo_usuario[campo_tipo_usuario.value] == 4 )
-	{
-		campo_instituicao.disabled = false;
-		campo_escola.disabled = false;
-		//campo_biblioteca.disabled = true;
-	}
-	else if( cod_tipo_usuario[campo_tipo_usuario.value] == 8 )
-	{
-		campo_instituicao.disabled = false;
-		campo_escola.disabled = false;
-		//campo_biblioteca.disabled = false;
-	}
-//	else if( campo == "ref_cod_instituicao" &&
-//			 cod_tipo_usuario[campo_tipo_usuario.options[campo_tipo_usuario.selectedIndex].value] == 4 )
-//	{
-//		campo_escola.disabled = false;
-//		campo_biblioteca.disabled = true;
-//		getEscola();
-//	}
-//	else if( campo == "ref_cod_instituicao" &&
-//			 cod_tipo_usuario[campo_tipo_usuario.options[campo_tipo_usuario.selectedIndex].value] == 8 )
-//	{
-//		campo_escola.disabled = false;
-//		campo_biblioteca.disabled = false;
-//		getEscola();
-//	}
+	var nivel = cod_tipo_usuario[campo_tipo_usuario.val()];
 
+	if( nivel == 1 )
+	{
+		campo_instituicao.prop( "disabled", false );
+		campo_escola.prop( "disabled", false );
+	}
+	else if( nivel == 2 )
+	{
+		campo_instituicao.prop( "disabled", false );
+		campo_escola.prop( "disabled", true );
+	}
+	else if( nivel == 4 )
+	{
+		campo_instituicao.prop( "disabled", false );
+		campo_escola.prop( "disabled", false );
+	}
+	else if( nivel == 8 )
+	{
+		campo_instituicao.prop( "disabled", true );
+		campo_escola.prop( "disabled", true );
+	}
+  campo_escola.trigger("chosen:updated");
 }
-
-//function habilitaCampos()
-//{
-////	var campo_tipo_usuario = document.getElementById("ref_cod_tipo_usuario");
-////	var campo_instituicao = document.getElementById("ref_cod_instituicao");
-////	var campo_escola = document.getElementById("ref_cod_escola");
-////	var campo_biblioteca = document.getElementById("ref_cod_biblioteca");
-//
-//	if(  campo_tipo_usuario == "" )
-//	{
-//		campo_instituicao.disabled = true;
-//		campo_escola.disabled = true;
-//		campo_biblioteca.disabled = true;
-//
-//	}
-//	else if( campo == "ref_cod_tipo_usuario" )
-//	{
-//		if( cod_tipo_usuario[campo_tipo_usuario.options[campo_tipo_usuario.selectedIndex].value] == 1 ||
-//			cod_tipo_usuario[campo_tipo_usuario.options[campo_tipo_usuario.selectedIndex].value] == null )
-//		{
-//			campo_instituicao.disabled = true;
-//			campo_escola.disabled = true;
-//			campo_biblioteca.disabled = true;
-//		}
-//		else if( cod_tipo_usuario[campo_tipo_usuario.options[campo_tipo_usuario.selectedIndex].value] == 2 )
-//		{
-//			campo_instituicao.disabled = false;
-//			campo_escola.disabled = true;
-//			campo_biblioteca.disabled = true;
-//		}
-//		else if( cod_tipo_usuario[campo_tipo_usuario.options[campo_tipo_usuario.selectedIndex].value] == 4  )
-//		{
-//			campo_instituicao.disabled = false;
-//			campo_escola.disabled = false;
-//			campo_biblioteca.disabled = true;
-//			getEscola();
-//		}
-//		else if( cod_tipo_usuario[campo_tipo_usuario.options[campo_tipo_usuario.selectedIndex].value] == 8 )
-//		{
-//			campo_instituicao.disabled = false;
-//			campo_escola.disabled = false;
-//			campo_biblioteca.disabled = false;
-//			getEscola();
-//		}
-//	}
-//	else if( campo == "ref_cod_instituicao" &&
-//			 cod_tipo_usuario[campo_tipo_usuario.options[campo_tipo_usuario.selectedIndex].value] == 4 )
-//	{
-//		campo_escola.disabled = false;
-//		campo_biblioteca.disabled = true;
-//		getEscola();
-//	}
-//	else if( campo == "ref_cod_instituicao" &&
-//			 cod_tipo_usuario[campo_tipo_usuario.options[campo_tipo_usuario.selectedIndex].value] == 8 )
-//	{
-//		campo_escola.disabled = false;
-//		campo_biblioteca.disabled = false;
-//		getEscola();
-//	}
-//
-//}
 
 function valida()
 {
-	var campo_tipo_usuario = document.getElementById("ref_cod_tipo_usuario");
-	var campo_instituicao = document.getElementById("ref_cod_instituicao");
-	var campo_escola = document.getElementById("ref_cod_escola");
-
-	if( cod_tipo_usuario[campo_tipo_usuario.options[campo_tipo_usuario.selectedIndex].value] == 2)
+	if( campo_instituicao.is(':enabled') && campo_instituicao.val() == "" )
 	{
-		if( campo_instituicao.options[campo_instituicao.selectedIndex].value == "" )
-		{
-			alert("É obrigatório a escolha de uma Instituição!");
-			return false;
-		}
+		alert("É obrigatório a escolha de uma Instituição!");
+		return false;
 	}
-	else if( cod_tipo_usuario[campo_tipo_usuario.options[campo_tipo_usuario.selectedIndex].value] == 4 || campo_tipo_usuario.value == 6)
+	else if( campo_escola.is(':enabled') && campo_escola.val() == null )
 	{
-		if( campo_instituicao.options[campo_instituicao.selectedIndex].value == "" )
-		{
-			alert("É obrigatório a escolha de uma Instituição!");
-			return false;
-		}
-		else if( cod_tipo_usuario[campo_instituicao.options[campo_instituicao.selectedIndex].value] != "")
-		{
-			if( campo_escola.options[campo_escola.selectedIndex].value == "" && campo_tipo_usuario.value != 6)
-			{
-				alert("É obrigatório a escolha de uma Escola!");
-				return false;
-			}
-		}
-	}
-	else if( cod_tipo_usuario[campo_tipo_usuario.options[campo_tipo_usuario.selectedIndex].value] == 8)
-	{
-		if( campo_instituicao.options[campo_instituicao.selectedIndex].value == "" )
-		{
-			alert("É obrigatório a escolha de uma Instituição! ");
-			return false;
-		}
+		alert("É obrigatório a escolha de uma Escola! ");
+		return false;
 	}
 	if(!acao())
 		return;
 	document.forms[0].submit();
 }
+
+campo_tipo_usuario.change(function(){
+	habilitaCampos();
+});
+
+habilitaCampos();
 
 </script>
