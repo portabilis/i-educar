@@ -49,13 +49,13 @@
 			     	       ELSE ', ' || bairro||
 			     	        CASE WHEN logradouro IS NULL OR logradouro = ''
 			     	                  THEN ''
-			     	             ELSE ', ' || CASE WHEN ref_idtlog IS NULL OR ref_idtlog = '' THEN '' ELSE initcap(ref_idtlog) || ' ' END ||logradouro
+			     	             ELSE ', ' || CASE WHEN ref_idtlog IS NULL OR ref_idtlog = '' THEN '' ELSE initcap(descricao) || ' ' END ||logradouro
 			     	        END
 			     	  END
             END AS nm_editora
-		FROM
-			pmieducar.acervo_editora
-		WHERE
+		FROM pmieducar.acervo_editora
+	   LEFT JOIN urbano.tipo_logradouro ON (tipo_logradouro.idtlog = acervo_editora.ref_idtlog)
+	   WHERE
 			ativo = 1
 			AND ref_cod_biblioteca = '{$_GET["bib"]}'
 		ORDER BY
