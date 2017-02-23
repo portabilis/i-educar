@@ -40,6 +40,7 @@ require_once 'lib/Portabilis/Date/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
 require_once 'lib/Portabilis/Utils/Database.php';
 require_once 'include/pmieducar/clsPmieducarEscolaUsuario.inc.php';
+require_once 'include/pmieducar/clsPermissoes.inc.php';
 
 class EscolaController extends ApiCoreController
 {
@@ -456,6 +457,33 @@ protected function getEscolaAnoLetivo(){
     return array('escolas' => $escolas);
   }
 
+  protected function getEscolasSelecao() {
+    $userId = $this->getSession()->id_pessoa;
+    $permissao = new clsPermissoes();
+    $nivel = $permissao->nivel_acesso($userId);
+
+    if ($nivel == App_Model_NivelTipoUsuario::ESCOLA ||
+        $nivel == App_Model_NivelTipoUsuario::BIBLIOTECA) {
+
+      $escolas_usuario = array('' => 'Selecione');
+      $escolasUser = App_Model_IedFinder::getEscolasUser($userId);
+      foreach ($escolasUser as $e)
+      {
+        $escolas_usuario[$e["ref_cod_escola"]] = $e["nome"];
+      }
+      return array('options' => $escolas_usuario);
+    }
+
+    $instituicao = $this->getRequest()->instituicao;
+    $escolas = App_Model_IedFinder::getEscolas($instituicao);
+
+    foreach ($escolas as $id => $nome) {
+      $escolas[$id] = strtoupper($this->toUtf8($nome));
+    }
+
+    return array('options' => $escolas);
+  }
+
   public function Gerar() {
     if ($this->isRequestFor('get', 'escola'))
       $this->appendResponse($this->get());
@@ -483,6 +511,9 @@ protected function getEscolaAnoLetivo(){
 
     elseif ($this->isRequestFor('get', 'escolas-usuario'))
       $this->appendResponse($this->getEscolasUsuarios());
+
+    elseif ($this->isRequestFor('get', 'escolas-para-selecao'))
+      $this->appendResponse($this->getEscolasSelecao());
 
     else
       $this->notImplementedOperationError();

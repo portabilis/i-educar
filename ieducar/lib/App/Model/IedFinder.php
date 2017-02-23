@@ -1142,12 +1142,18 @@ class App_Model_IedFinder extends CoreExt_Entity
     return $resultado;
   }
 
-  public static function getEscolasUser($ref_cod_user) {
+  public static function getEscolasUser($cod_usuario) {
 
-    $escolas_user = "SELECT ref_cod_escola, relatorio.get_nome_escola(ref_cod_escola) as nome FROM pmieducar.escola_usuario WHERE ref_cod_usuario = $1";
+    $escolas_user = "SELECT escola_usuario.ref_cod_escola AS ref_cod_escola,
+                            juridica.fantasia AS nome
+                       FROM pmieducar.escola_usuario
+                      INNER JOIN pmieducar.escola ON (escola.cod_escola = escola_usuario.ref_cod_escola)
+                      INNER JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
+                      WHERE escola_usuario.ref_cod_usuario = $1";
 
-    $resultado = Portabilis_Utils_Database::fetchPreparedQuery($escolas_user,array('params' => array($ref_cod_user)));
+    $resultado = Portabilis_Utils_Database::fetchPreparedQuery($escolas_user,array('params' => array($cod_usuario)));
 
     return $resultado;
+
   }
 }
