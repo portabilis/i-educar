@@ -75,8 +75,8 @@ class Portabilis_View_Helper_DynamicInput_Escola extends Portabilis_View_Helper_
         return $resources;
       }
       $resources = App_Model_IedFinder::getEscolas($instituicaoId);
-      return $this->insertOption(null, 'Selecione uma escola', $resources);
     }
+    return $this->insertOption(null, 'Selecione uma escola', $resources);
   }
 
   public function escola($options = array()) {

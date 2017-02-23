@@ -4,7 +4,6 @@
     var $escolaField = getElementFor('escola');
 
     var handleGetEscolas = function(response) {
-      console.log(response);
       var selectOptions = jsonResourcesToSelectOptions(response['options']);
       updateSelect($escolaField, selectOptions, "Selecione uma escola");
     }
