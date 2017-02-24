@@ -513,7 +513,7 @@ class indice extends clsConfig
         <tr>
           <td align="center" colspan="2">
             %s
-            <input type="button" value="Novo Calendário Letivo" onclick="window.location=\'%s\';" class="botaolistagem" />
+            <input type="button" value="Novo Calendário Letivo" onclick="window.location=\'%s\';" class="btn-green botaolistagem" />
           </td>
         </tr>', $bt_voltar, $url);
     }
