@@ -465,11 +465,11 @@ protected function getEscolaAnoLetivo(){
     if ($nivel == App_Model_NivelTipoUsuario::ESCOLA ||
         $nivel == App_Model_NivelTipoUsuario::BIBLIOTECA) {
 
-      $escolas_usuario = array('' => 'Selecione');
+      $escolas_usuario = array();
       $escolasUser = App_Model_IedFinder::getEscolasUser($userId);
       foreach ($escolasUser as $e)
       {
-        $escolas_usuario[$e["ref_cod_escola"]] = $e["nome"];
+        $escolas_usuario[$e["ref_cod_escola"]] = strtoupper($e["nome"]);
       }
       return array('options' => $escolas_usuario);
     }
