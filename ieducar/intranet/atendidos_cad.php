@@ -354,7 +354,7 @@ class indice extends clsCadastro
 
     // orgão emissão rg
 
-    $selectOptions = array( null => 'Orgão emissor' );
+    $selectOptions = array( null => 'Órgão emissor' );
     $orgaos        = new clsOrgaoEmissorRg();
     $orgaos        = $orgaos->lista();
 

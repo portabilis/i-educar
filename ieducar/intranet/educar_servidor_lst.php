@@ -80,7 +80,7 @@ class indice extends clsListagem
   var $data_exclusao;
   var $ativo;
   var $nome;
-  var $matricula;
+  var $matricula_servidor;
   var $ref_cod_escola;
   var $ref_cod_instituicao;
   var $servidor_sem_alocacao;
@@ -120,13 +120,13 @@ class indice extends clsListagem
       // $detalhe = $detalhe['idpes']->detalhe();
 
       $opcoes[$detalhe['idpes']] = $detalhe['nome'];
-     $opcoes[$detalhe['ref_cod_pessoa_fj']] = $detalhe['matricula'];
+     $opcoes[$detalhe['ref_cod_pessoa_fj']] = $detalhe['matricula_servidor'];
     }
 
     $parametros = new clsParametrosPesquisas();
     $parametros->setSubmit(0);
     $this->campoTexto("nome","Nome do servidor", $this->nome,50,255,false);
-    $this->campoTexto("matricula","Matrícula", $this->matricula,50,255,false);
+    $this->campoTexto("matricula_servidor","Matrícula", $this->matricula_servidor,50,255,false);
     $this->campoCheck("servidor_sem_alocacao","Incluir servidores sem alocação", isset($_GET['servidor_sem_alocacao']));
 
     // Paginador
@@ -172,7 +172,7 @@ class indice extends clsListagem
       NULL,
       isset($_GET['servidor_sem_alocacao']),
       $this->ano,
-      $this->matricula
+      $this->matricula_servidor
     );
     $total = $obj_servidor->_total;
 
@@ -197,7 +197,6 @@ class indice extends clsListagem
         if (class_exists('clsFuncionario')) {
           $obj_cod_servidor      = new clsFuncionario($registro['cod_servidor']);
           $det_cod_servidor      = $obj_cod_servidor->detalhe();
-          $registro['matricula'] = $det_cod_servidor['matricula'];
           // $det_cod_servidor      = $det_cod_servidor['idpes']->detalhe();
           $det_cod_servidor      = $det_cod_servidor;
          // $registro['nome']      = $det_cod_servidor['nome'];
@@ -212,10 +211,9 @@ class indice extends clsListagem
             'cod_servidor'        => $registro['cod_servidor'],
             'ref_cod_instituicao' => $det_ref_cod_instituicao['cod_instituicao'],
         ));
-
         $this->addLinhas(array(
           $url->l($registro['nome'], $path, $options),
-          $url->l($registro['matricula'], $path, $options),
+          $url->l($registro['matricula_servidor'], $path, $options),
           $url->l($registro['cpf'], $path, $options),
           $url->l($registro['ref_cod_instituicao'], $path, $options),
         ));

@@ -485,11 +485,9 @@ class clsPmieducarAcervo
 		}else{
 			$this->num_edicao = "null";
 		}
-		if( is_numeric( $ano ) )
+		if( is_string( $ano ) )
 		{
 			$this->ano = $ano;
-		}else{
-			$this->ano  = "null";
 		}
 		if( is_numeric( $num_paginas ) )
 		{
@@ -616,7 +614,7 @@ class clsPmieducarAcervo
 				$valores .= "{$gruda}'{$this->num_edicao}'";
 				$gruda = ", ";
 			}
-			if( is_numeric( $this->ano ) )
+			if( is_string( $this->ano ) )
 			{
 				$campos .= "{$gruda}ano";
 				$valores .= "{$gruda}'{$this->ano}'";
@@ -788,9 +786,9 @@ class clsPmieducarAcervo
 				$set .= "{$gruda}num_edicao = {$this->num_edicao}";
 				$gruda = ", ";
 			}
-			if( is_numeric( $this->ano ) || $this->ano == "null")
+			if( is_string( $this->ano ) || $this->ano == "null")
 			{
-				$set .= "{$gruda}ano = {$this->ano}";
+				$set .= "{$gruda}ano = '{$this->ano}'";
 				$gruda = ", ";
 			}
 			if( is_numeric( $this->num_paginas ) || $this->num_paginas == "null" )
@@ -985,9 +983,9 @@ class clsPmieducarAcervo
 			$filtros .= "{$whereAnd} a.num_edicao = '{$int_num_edicao}'";
 			$whereAnd = " AND ";
 		}
-		if( is_numeric( $int_ano ) )
+		if( is_string( $str_ano ) )
 		{
-			$filtros .= "{$whereAnd} a.ano = '{$int_ano}'";
+			$filtros .= "{$whereAnd} a.ano = '{$str_ano}'";
 			$whereAnd = " AND ";
 		}
 		if( is_numeric( $int_num_paginas ) )

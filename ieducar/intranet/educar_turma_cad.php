@@ -192,10 +192,12 @@ class indice extends clsCadastro
       $det_ser   = $obj_ser->detalhe();
 
       $regra_avaliacao_id = $det_ser["regra_avaliacao_id"];
-      $regra_avaliacao_mapper = new RegraAvaliacao_Model_RegraDataMapper();
-      $regra_avaliacao = $regra_avaliacao_mapper->find($regra_avaliacao_id);
+      if ($regra_avaliacao_id) {
+        $regra_avaliacao_mapper = new RegraAvaliacao_Model_RegraDataMapper();
+        $regra_avaliacao = $regra_avaliacao_mapper->find($regra_avaliacao_id);
 
-      $this->definirComponentePorEtapa = ($regra_avaliacao->definirComponentePorEtapa == 1);
+        $this->definirComponentePorEtapa = ($regra_avaliacao->definirComponentePorEtapa == 1);
+      }
 
       $this->ref_cod_escola      = $det_esc['cod_escola'];
       $this->ref_cod_instituicao = $det_esc['ref_cod_instituicao'];
@@ -265,6 +267,8 @@ class indice extends clsCadastro
         $this->$campo = $this->$campo ? $this->$campo : $val;
       }
     }
+
+    if (is_numeric($this->ano_letivo)) $this->ano = $this->ano_letivo;
 
     $this->campoOculto('cod_turma', $this->cod_turma);
 
@@ -492,7 +496,7 @@ class indice extends clsCadastro
     }
     else {
       $opcoesCampoModulo = array('' => 'Erro na geração');
-    }  
+    }
 
     if (is_numeric($this->ano) && is_numeric($this->ref_cod_escola) && is_numeric($this->cod_turma)) {
       $objAno = new clsPmieducarAnoLetivoModulo();
@@ -503,10 +507,12 @@ class indice extends clsCadastro
 
       if (is_array($objTurma->lista($this->cod_turma))) {
         $registros = $objTurma->lista($this->cod_turma);
-      }else{ 
+      }else{
         $registros = $objAno->lista($this->ano, $this->ref_cod_escola);
       }
     }
+
+    if ($this->padrao_ano_escolar != 1) {
 
       $qtd_registros = 0;
       if( $registros )
@@ -520,17 +526,17 @@ class indice extends clsCadastro
           $qtd_registros++;
         }
       }
+    }
 
-      if ($this->padrao_ano_escolar != 1) {
-        $this->campoTabelaInicio("turma_modulo","M&oacute;dulos da turma",array("M&oacute;dulo","Data inicial","Data final", "Dias Letivos"),$this->turma_modulo);
+    $this->campoTabelaInicio("turma_modulo","M&oacute;dulos da turma",array("M&oacute;dulo","Data inicial","Data final", "Dias Letivos"),$this->turma_modulo);
 
-        $this->campoLista('ref_cod_modulo', 'Módulo', $opcoesCampoModulo, $this->ref_cod_modulo, NULL, NULL, NULL, NULL, NULL, FALSE);
+    $this->campoLista('ref_cod_modulo', 'Módulo', $opcoesCampoModulo, $this->ref_cod_modulo, NULL, NULL, NULL, NULL, NULL, FALSE);
 
-        $this->campoData('data_inicio', 'Data In&iacute;cio', $this->data_inicio, FALSE);
-        $this->campoData('data_fim', 'Data Fim', $this->data_fim, FALSE);
-        $this->campoTexto('dias_letivos', 'Dias Letivos', $this->dias_letivos_, 9);
-      }
-      $this->campoTabelaFim();
+    $this->campoData('data_inicio', 'Data In&iacute;cio', $this->data_inicio, FALSE);
+    $this->campoData('data_fim', 'Data Fim', $this->data_fim, FALSE);
+    $this->campoTexto('dias_letivos', 'Dias Letivos', $this->dias_letivos_, 9);
+
+    $this->campoTabelaFim();
 
     $this->campoQuebra2();
 
@@ -855,6 +861,7 @@ class indice extends clsCadastro
       if (is_array($lista) && count($lista)) {
         $conteudo .= '<div style="margin-bottom: 10px;">';
         $conteudo .= '  <span style="display: block; float: left; width: 250px;">Nome</span>';
+        $conteudo .= '  <span style="display: block; float: left; width: 100px;">Nome abreviado</span>';
         $conteudo .= '  <span style="display: block; float: left; width: 100px;">Carga hor&aacute;ria</span>';
         $conteudo .= '  <span style="display: block; float: left;width: 100px;">Usar padr&atilde;o do componente?</span>';
         if($this->definirComponentePorEtapa){
@@ -895,6 +902,7 @@ class indice extends clsCadastro
 
           $conteudo .= '<div style="margin-bottom: 10px; float: left">';
           $conteudo .= "  <label style='display: block; float: left; width: 250px'><input type=\"checkbox\" $checked name=\"disciplinas[$registro->id]\" id=\"disciplinas[]\" value=\"{$registro->id}\">{$registro}</label>";
+          $conteudo .= "  <span style='display: block; float: left; width: 100px'>{$registro->abreviatura}</span>";
           $conteudo .= "  <label style='display: block; float: left; width: 100px;'><input type='text' name='carga_horaria[$registro->id]' value='{$cargaHoraria}' size='5' maxlength='7'></label>";
           $conteudo .= "  <label style='display: block; float: left; width: 100px;'><input type='checkbox' name='usar_componente[$registro->id]' value='1' ". ($usarComponente == TRUE ? $checked : '') .">($cargaComponente h)</label>";
           if($this->definirComponentePorEtapa){
@@ -928,7 +936,7 @@ class indice extends clsCadastro
     }
 
     foreach ($componentes as $componente) {
-      $help[] = sprintf('%s (%.0f h)', $componente->nome, $componente->cargaHoraria);
+      $help[] = sprintf('%s (%.0f h)', $componente->nome, $componente->abreviatura, $componente->cargaHoraria);
     }
 
     if (count($componentes)) {
@@ -976,6 +984,14 @@ class indice extends clsCadastro
 
     // Não segue o padrao do curso
     if ($this->padrao_ano_escolar == 0) {
+
+      $existeModulos = (count($this->ref_cod_modulo) > 1 || $this->ref_cod_modulo[0] != '');
+
+      if (!$existeModulos) {
+        $this->mensagem = '&Eacute; necess&aacute;rio inserir os m&oacute;dulos da turma para prosseguir.';
+        return false;
+      }
+
       $this->turma_modulo = unserialize(urldecode($this->turma_modulo));
 
       if ($this->ref_cod_modulo && $this->data_inicio && $this->data_fim) {
@@ -1896,6 +1912,7 @@ function parseComponentesCurriculares(xml_disciplina)
   if (DOM_array.length) {
     conteudo += '<div style="margin-bottom: 10px; float: left">';
     conteudo += '  <span style="display: block; float: left; width: 250px;">Nome</span>';
+    conteudo += '  <span style="display: block; float: left; width: 250px;">Abreviatura</span>';
     conteudo += '  <label> <span style="display: block; float: left; width: 100px">Carga hor&aacute;ria </span></label>';
     conteudo += '  <label> <span style="display: block; float: left; width: 200px">Usar padr&atilde;o do componente?</span></label>';
     conteudo += '  <label> <span style="display: block; float: left">Possui docente vinculado?</span></label>';

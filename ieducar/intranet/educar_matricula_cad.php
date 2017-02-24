@@ -269,11 +269,6 @@ class indice extends clsCadastro
   {
     $dependencia = $this->dependencia == 'on';
 
-    if ($dependencia && !$this->permiteDependenciaAnoConcluinte()) {
-      $this->mensagem = Portabilis_String_Utils::toLatin1("Não é possível cadastrar uma matrícula de dependência no ano/série em que o aluno concluirá o curso.");
-      return false;
-    }
-
     if ($dependencia && !$this->verificaQtdeDependenciasPermitida()) {
       return false;
     }

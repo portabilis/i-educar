@@ -161,26 +161,8 @@ function permiteEditarEndereco(){
 
 var handleGetPermissaoEditar = function(dataResponse) {
   if (dataResponse.permite_editar == 0) {
-    $j('#bairro').prop('disabled','disabled');
-    $j('#zona_localizacao').attr('disabled','disabled');
-    $j('#bairro_bairro').attr('disabled','disabled');
-    $j('#logradouro_logradouro').attr('disabled','disabled');
-    $j('#idtlog').attr('disabled','disabled');
-    $j('#logradouro').attr('disabled','disabled');
-    $j('#municipio_municipio').attr('disabled','disabled');
-    $j('#distrito_distrito').attr('disabled','disabled');
-    $j('#complemento').attr('disabled','disabled');
-    $j('#numero').attr('disabled','disabled');
-    $j('#letra').attr('disabled','disabled');
-    $j('#apartamento').attr('disabled','disabled');
-    $j('#bloco').attr('disabled','disabled');
-    $j('#andar').attr('disabled','disabled');
-    $j('#cep_').attr('disabled','disabled');
-
-    $j('#lupa').hide();
     $j('#span-busca-logradouro').hide();
     $j('#span-busca-bairro').hide();
-    $j('#span-busca-cep').hide();
   }
 }
 
