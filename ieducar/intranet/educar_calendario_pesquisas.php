@@ -219,12 +219,12 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
 
   $retorno .= '
     <tr id="tr_escola">
-      <td valign="top" class="formldtd">
+      <td valign="top" class="formlttd">
         <span class="form">Ano</span>
         <span class="campo_obrigatorio">*</span><br/>
         <sub style="vertical-align: top;"/>
       </td>';
-  $retorno .= '<td valign="top" class="formldtd"><span class="form">';
+  $retorno .= '<td valign="top" class="formlttd"><span class="form">';
   $retorno .= " <select class='geral' name='ano' id='ano'>";
 
   $lim = 5;
@@ -256,7 +256,7 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
           document.formcadastro.submit();
         }
       </script>
-      <input type='button' id='botao_busca' value='busca' onclick='javascript:acao();' class='botaolistagem'/>
+      <input type='button' id='botao_busca' value='Buscar' onclick='javascript:acao();' class='btn-green botaolistagem'/>
       </td>
     </tr>
     <tr>

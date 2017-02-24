@@ -36,10 +36,12 @@ input[type="button"] {
   margin: 15px 0px;
 }
 
-select:not([size]):not([multiple]), select[size="0"], select[size="1"] {
-    background-color: #ccdce6;
-    color: #47728f;
-    border-color: #ccdce6;
+select{
+  border-radius: 3px;
+  background-color: #ffffff;
+  border: solid 1px #cddce6;
+  padding: 8px;
+  color: #47728f;
 }
 
 .decorated {
@@ -317,6 +319,67 @@ td.fundoLocalizacao {
 #localizacao .flechinha,
 #localizacao .flechinha:hover{
   color: #999 !important;
+}
+
+/**************************************
+*********CALENDÁRIO ANO LETIVO*********
+**************************************/
+table.calendar {
+    margin-top: 20px;
+    width: 100%;
+}
+
+table.calendar .cal_dir, .cal_esq{
+  background-image: none;
+  color: #47728f;
+  text-align: left;
+  height: auto;
+  font-size: 40px;
+  padding: 0 10px;
+}
+
+table.calendar .header {
+  background: #fff;
+  color: #47728f;
+  border: 0;
+}
+
+table.calendar .header td{
+  background: #ccdce6;
+  width: 45px;
+  padding: 10px;
+}
+
+table.calendar .dayLastMonth, .day{
+  border: 0;
+  padding: 10px !important;
+  width: 45px !important;
+  color: #47728f;
+  font-family: "Open Sans";
+}
+
+table.calendar .day{
+  background-color: #e9f0f8 !;
+}
+
+table.calendar .anotacao{
+  float: right;
+  font-size: 16px;
+}
+
+table.calendar .legenda{
+  border: 0;
+  font-family: "Open Sans";
+  color: #47728f;
+  font-size: 12px;
+}
+
+table.calendar .legenda .fa{
+  font-size: 14px;
+}
+
+table.calendar .cor{
+  border: 0;
 }
 
 /**************************************
@@ -794,6 +857,13 @@ td.area-conhecimento-destaque {
   line-height: 1.14;
   color: #47728f !important;
   padding: 17px 13px;
+}
+
+
+table#matriculas select {
+    background-color: #ccdce6;
+    color: #47728f;
+    border-color: #ccdce6;
 }
 
 /**************************************

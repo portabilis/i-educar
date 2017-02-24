@@ -70,10 +70,10 @@ class clsCalendario
     'AZUL_ESCURO'    => '#93BDC9',
     2                => '#BCD39D',
     'VERDE_ESCURO'   => '#BCD39D',
-    3                => '#C7D5E0',
-    'AZUL_CLARO'     => '#C7D5E0',
-    4                => '#E5D6DD',
-    'ROSA'           => '#E5D6DD',
+    3                => '#e9f0f8',
+    'AZUL_CLARO'     => '#e9f0f8',
+    4                => '#f8e9ee',
+    'ROSA'           => '#f8e9ee',
     5                => '#E9D1AF',
     'LARANJA_ESCURO' => '#E9D1AF',
     6                => '#E9E6BB',
@@ -90,7 +90,7 @@ class clsCalendario
   var $array_icone = array(
     'A' => array(
       'nome' => 'Anotações',
-      'link' => '/intranet/imagens/i-educar/letra_a.gif'
+      'link' => ''
     ),
     ''
   );
@@ -506,21 +506,21 @@ class clsCalendario
 
     $calendario = sprintf('
       <div id="d_calendario">
-        <table class="calendar" cellspacing="0" cellpadding="0" width="%s" border="0">',
+        <table class="calendar" cellspacing="0" cellpadding="0" border="0">',
       $this->largura_externa
     );
 
     $calendario .= sprintf('
       <tr>
-        <td class="cal_esq">&nbsp;</td>
-        <td background="/intranet/imagens/i-educar/cal_bg.gif" width="100%%" class="mes">%s</td>
+        <td class="cal_esq"><i class="fa fa-calendar" aria-hidden="true"></i></td>
+        <td width="100%%" class="mes">%s</td>
         <td align="right" class="cal_dir">&nbsp;</td>
       </tr>',
       $cab
     );
 
-    $calendario .= sprintf('<tr><td colspan="3" class="bordaM">%s', $form);
-    $calendario .= '<table cellspacing="0" cellpadding="0" width="100%%" border="0" class="header"><tr>';
+    $calendario .= sprintf('<tr><td colspan="3">%s', $form);
+    $calendario .= '<table cellspacing="2" cellpadding="0" width="100%" class="header"><tr>';
 
     // Create the calendar headers
     foreach($diasDaSemana as $day) {
@@ -529,7 +529,7 @@ class clsCalendario
       }
       else {
         $calendario .= sprintf(
-          '<td style="border-right: 1px dotted #FFFFFF; width: 45px;">%s</td>', $day
+          '<td>%s</td>', $day
         );
       }
     }
@@ -538,8 +538,8 @@ class clsCalendario
     $calendario .= '</table>';
     $calendario .= '</td></tr>';
 
-    $calendario .= '<tr><td colspan="3" style="padding: 3px" valign="top" class="bordaF">';
-    $calendario .= '<table cellspacing="5" cellpadding="0" width="100%">';
+    $calendario .= '<tr><td colspan="3" valign="top">';
+    $calendario .= '<table cellspacing="2" cellpadding="0" width="100%">';
 
     // Create the rest of the calendar
     // Initiate the day counter, starting with the 1st.
@@ -602,7 +602,7 @@ class clsCalendario
 
       if (key_exists($diaCorrente, $this->array_icone_dias)) {
         $icone = sprintf(
-          '<img src="%s" border="0" align="right" alt="%s" style="padding-right: 5px;">',
+          '<i class="fa fa-pencil-square-o anotacao" aria-hidden="true"></i>',
           $this->array_icone[$this->array_icone_dias[$diaCorrente]]['link'],
           $this->array_icone[$this->array_icone_dias[$diaCorrente]]['nome']
         );
@@ -691,10 +691,7 @@ class clsCalendario
           $style = sprintf('style="background-color: %s;"', $this->array_cor[$key]);
           $icone = '';
 
-          $icone = sprintf(
-            '<img src="%s" border="0" align="left" alt="%s" style="padding-right: 5px;">',
-            $this->array_icone[$key]['link'], $this->array_icone[$key]['nome']
-          );
+          $icone = '<i class="fa fa-pencil-square-o" aria-hidden="true"></i>';
 
           $calendario .= sprintf(
             '<td %s align="left"></td><td width="100%%">%s %s</td>',
