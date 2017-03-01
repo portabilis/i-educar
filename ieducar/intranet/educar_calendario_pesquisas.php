@@ -100,89 +100,96 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
     $obj_usuario = new clsPmieducarUsuario($this->pessoa_logada);
     $det_usuario = $obj_usuario->detalhe();
     $this->ref_cod_instituicao = $det_usuario['ref_cod_instituicao'];
-
-    if ($nivel_usuario == 4 || $nivel_usuario == 8) {
-      $obj_usuario = new clsPmieducarUsuario($this->pessoa_logada);
-      $det_usuario = $obj_usuario->detalhe();
-      $this->ref_cod_escola = $det_usuario['ref_cod_escola'];
-    }
   }
 
-  if ($nivel_usuario == 1 || $nivel_usuario == 2) {
-    if ($get_escola) {
+  if ($get_escola) {
+    if (class_exists('clsPmieducarEscola')) {
+      $opcoes_escola = array('' => 'Selecione');
+
+      $todas_escolas = 'escola = new Array();' . "\n";
+      $obj_escola = new clsPmieducarEscola();
+
+      $lista = $obj_escola->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+        NULL, NULL, NULL, 1);
+
+      if (is_array($lista) && count($lista)) {
+        foreach ($lista as $registro) {
+          $todas_escolas .= sprintf(
+            'escola[escola.length] = new Array(%s, \'%s\', %s);' . "\n",
+            $registro['cod_escola'], $registro['nome'], $registro['ref_cod_instituicao']
+          );
+        }
+      }
+
+      echo sprintf('<script>%s</script>', $todas_escolas);
+    } else {
+      $opcoes_escola = array('' => 'Erro na geração');
+    }
+
+    if ($nivel_usuario == 4 || $nivel_usuario == 8) {
+      $opcoes_escola = array('' => 'Selecione');
+      $obj_escola = new clsPmieducarEscolaUsuario();
+      $lista = $obj_escola->lista($this->pessoa_logada);
+
+      if (is_array($lista) && count($lista)) {
+        foreach ($lista as $registro) {
+          $codEscola = $registro['ref_cod_escola'];
+
+          $escola = new clsPmieducarEscola($codEscola);
+          $escola = $escola->detalhe();
+
+          $opcoes_escola[$codEscola] = $escola['nome'];
+        }
+      }
+    } else if ($this->ref_cod_instituicao) {
       if (class_exists('clsPmieducarEscola')) {
         $opcoes_escola = array('' => 'Selecione');
-
-        $todas_escolas = 'escola = new Array();' . "\n";
         $obj_escola = new clsPmieducarEscola();
-
-        $lista = $obj_escola->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-          NULL, NULL, NULL, 1);
+        $lista = $obj_escola->lista(NULL, NULL, NULL, $this->ref_cod_instituicao,
+          NULL, NULL, NULL, NULL, NULL, NULL, 1);
 
         if (is_array($lista) && count($lista)) {
           foreach ($lista as $registro) {
-            $todas_escolas .= sprintf(
-              'escola[escola.length] = new Array(%s, \'%s\', %s);' . "\n",
-              $registro['cod_escola'], $registro['nome'], $registro['ref_cod_instituicao']
-            );
+            $opcoes_escola[$registro['cod_escola']] = $registro['nome'];
           }
         }
-
-        echo sprintf('<script>%s</script>', $todas_escolas);
       } else {
         $opcoes_escola = array('' => 'Erro na geração');
       }
+    }
 
-      if ($this->ref_cod_instituicao) {
-        if (class_exists('clsPmieducarEscola')) {
-          $opcoes_escola = array('' => 'Selecione');
-          $obj_escola = new clsPmieducarEscola();
-          $lista = $obj_escola->lista(NULL, NULL, NULL, $this->ref_cod_instituicao,
-            NULL, NULL, NULL, NULL, NULL, NULL, 1);
+    if ($get_escola) {
+      $retorno .= '
+        <tr id="tr_escola">
+          <td valign="top" class="formmdtd">
+            <span class="form">Escola</span>
+            <span class="campo_obrigatorio">*</span><br/>
+            <sub style="vertical-align: top;"/>
+          </td>';
 
-          if (is_array($lista) && count($lista)) {
-            foreach ($lista as $registro) {
-              $opcoes_escola[$registro['cod_escola']] = $registro['nome'];
-            }
-          }
-        } else {
-          $opcoes_escola = array('' => 'Erro na geração');
-        }
-      }
+      $retorno .= '<td valign="top" class="formmdtd"><span class="form">';
 
-      if ($get_escola) {
-        $retorno .= '
-          <tr id="tr_escola">
-            <td valign="top" class="formmdtd">
-              <span class="form">Escola</span>
-              <span class="campo_obrigatorio">*</span><br/>
-              <sub style="vertical-align: top;"/>
-            </td>';
+      $disabled = !$this->ref_cod_escola && $nivel_usuario == 1 ? 'disabled="true" ' : '';
+      $retorno .= sprintf(
+        ' <select class="geral" name="ref_cod_escola" %s id="ref_cod_escola">', $disabled
+      );
 
-        $retorno .= '<td valign="top" class="formmdtd"><span class="form">';
+      reset($opcoes_escola);
 
-        $disabled = !$this->ref_cod_escola && $nivel_usuario == 1 ? 'disabled="true" ' : '';
+      while (list($chave, $texto) = each($opcoes_escola)) {
         $retorno .= sprintf(
-          ' <select class="geral" name="ref_cod_escola" %s id="ref_cod_escola">', $disabled
+          '<option id="ref_cod_escola_%s" value="%s"', urlencode($chave), urlencode($chave)
         );
 
-        reset($opcoes_escola);
-
-        while (list($chave, $texto) = each($opcoes_escola)) {
-          $retorno .= sprintf(
-            '<option id="ref_cod_escola_%s" value="%s"', urlencode($chave), urlencode($chave)
-          );
-
-          if ($chave == $this->ref_cod_escola) {
-            $retorno .= ' selected';
-          }
-
-          $retorno .= sprintf('>%s</option>', $texto);
+        if ($chave == $this->ref_cod_escola) {
+          $retorno .= ' selected';
         }
 
-        $retorno .= '</select>';
-        $retorno .= '</span></td></tr>';
+        $retorno .= sprintf('>%s</option>', $texto);
       }
+
+      $retorno .= '</select>';
+      $retorno .= '</span></td></tr>';
     }
   }
 
