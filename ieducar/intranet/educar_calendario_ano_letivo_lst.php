@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gestï¿½o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaï¿½
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa ï¿½ software livre; vocï¿½ pode redistribuï¿½-lo e/ou modificï¿½-lo
+ * sob os termos da Licenï¿½a Pï¿½blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versï¿½o 2 da Licenï¿½a, como (a seu critï¿½rio)
+ * qualquer versï¿½o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa ï¿½ distribuï¿½ï¿½do na expectativa de que seja ï¿½til, porï¿½m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implï¿½ï¿½cita de COMERCIABILIDADE OU
+ * ADEQUAï¿½ï¿½O A UMA FINALIDADE ESPECï¿½FICA. Consulte a Licenï¿½a Pï¿½blica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Vocï¿½ deve ter recebido uma cï¿½pia da Licenï¿½a Pï¿½blica Geral do GNU junto
+ * com este programa; se nï¿½o, escreva para a Free Software Foundation, Inc., no
+ * endereï¿½o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itajaï¿½ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo disponível desde a versão 1.0.0
+ * @since     Arquivo disponï¿½vel desde a versï¿½o 1.0.0
  * @version   $Id$
  */
 
@@ -37,22 +37,23 @@ require_once 'clsCalendario.inc.php';
 require_once 'Calendario/Model/TurmaDataMapper.php';
 require_once 'App/Model/IedFinder.php';
 require_once 'include/localizacaoSistema.php';
+require_once 'include/pmieducar/clsPmieducarEscolaUsuario.inc.php';
 
 /**
  * clsIndexBase class.
  *
- * @author    Prefeitura Municipal de Itajaí
+ * @author    Prefeitura Municipal de Itajaï¿½
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe disponï¿½vel desde a versï¿½o 1.0.0
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Calendário Ano Letivo');
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Calendï¿½rio Ano Letivo');
     $this->addScript('calendario');
     $this->processoAp = 620;
     $this->addEstilo("localizacaoSistema");
@@ -62,11 +63,11 @@ class clsIndexBase extends clsBase
 /**
  * indice class.
  *
- * @author    Prefeitura Municipal de Itajaí
+ * @author    Prefeitura Municipal de Itajaï¿½
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe disponï¿½vel desde a versï¿½o 1.0.0
  * @version   @@package_version@@
  */
 class indice extends clsConfig
@@ -107,7 +108,7 @@ class indice extends clsConfig
       $retorno .= '
           <tr>
             <td colspan="2" valig="center" height="50">
-              <center class="formdktd">Usuário sem permissão para acessar esta página</center>
+              <center class="formdktd">Usuï¿½rio sem permissï¿½o para acessar esta pï¿½gina</center>
             </td>
           </tr>';
 
@@ -223,14 +224,14 @@ class indice extends clsConfig
 
     if (empty($lista)) {
       if ($nivel_usuario == 4) {
-        $retorno .= '<tr><td colspan="2" align="center" class="formdktd">Sem Calendário Letivo</td></tr>';
+        $retorno .= '<tr><td colspan="2" align="center" class="formdktd">Sem Calendï¿½rio Letivo</td></tr>';
       }
       else {
         if ($_POST) {
-          $retorno .= '<tr><td colspan="2" align="center" class="formdktd">Sem Calendário para o ano selecionado</td></tr>';
+          $retorno .= '<tr><td colspan="2" align="center" class="formdktd">Sem Calendï¿½rio para o ano selecionado</td></tr>';
         }
         else {
-          $retorno .= '<tr><td colspan="2" align="center" class="formdktd">Selecione uma escola para exibir o calendário</td></tr>';
+          $retorno .= '<tr><td colspan="2" align="center" class="formdktd">Selecione uma escola para exibir o calendï¿½rio</td></tr>';
         }
       }
     }
@@ -252,7 +253,7 @@ class indice extends clsConfig
         $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
         $registro['nm_escola'] = $det_ref_cod_escola['nome'];
 
-        // Início e término do ano letivo.
+        // Inï¿½cio e tï¿½rmino do ano letivo.
         $obj_ano_letivo_modulo = new clsPmieducarAnoLetivoModulo();
 
         $inicio_ano = $obj_ano_letivo_modulo->menorData(
@@ -303,7 +304,7 @@ class indice extends clsConfig
             $botao_editar = sprintf('
               <div style="z-index: 0;">
                 <br />
-                <input type="button" value="Anotações" onclick="window.location=\'%s\';" class="botaolistagem"/>
+                <input type="button" value="Anotaï¿½ï¿½es" onclick="window.location=\'%s\';" class="botaolistagem"/>
               </div>', $url);
 
             if ($dia['ref_cod_calendario_dia_motivo']) {
@@ -316,9 +317,9 @@ class indice extends clsConfig
                * @todo CoreExt_Enum?
                */
               $tipo = strtoupper($det_motivo['tipo']) == 'E' ?
-                'Dia Extra-Letivo' : 'Dia Não Letivo';
+                'Dia Extra-Letivo' : 'Dia Nï¿½o Letivo';
 
-              // Busca pelas turmas que estão marcadas para esse dia
+              // Busca pelas turmas que estï¿½o marcadas para esse dia
               $args = array(
                 'calendarioAnoLetivo' => $registro['cod_calendario_ano_letivo'],
                 'mes'                 => $dia['mes'],
@@ -341,7 +342,7 @@ class indice extends clsConfig
               }
 
               $descricao = sprintf(
-                '<div style="z-index: 0;">%s</div><div align="left" style="z-index: 0;">Motivo: %s<br />Descrição: %s<br />%s</div>%s',
+                '<div style="z-index: 0;">%s</div><div align="left" style="z-index: 0;">Motivo: %s<br />Descriï¿½ï¿½o: %s<br />%s</div>%s',
                 $tipo, $det_motivo['nm_motivo'], $dia['descricao'], $calendarioTurmas, $botao_editar
               );
 
@@ -352,8 +353,8 @@ class indice extends clsConfig
                 $obj_calendario->adicionarArrayDias('Extra Letivo', array($dia['dia']));
               }
               elseif (strtoupper($det_motivo['tipo']) == 'N') {
-                $obj_calendario->adicionarLegenda('Não Letivo', '#VERDE_ESCURO');
-                $obj_calendario->adicionarArrayDias('Não Letivo', array($dia['dia']));
+                $obj_calendario->adicionarLegenda('Nï¿½o Letivo', '#VERDE_ESCURO');
+                $obj_calendario->adicionarArrayDias('Nï¿½o Letivo', array($dia['dia']));
               }
 
               $obj_calendario->diaDescricao($array_dias, $array_descricao);
@@ -362,7 +363,7 @@ class indice extends clsConfig
               $array_dias[$dia['dia']] = $dia['dia'];
 
               $descricao = sprintf(
-                '<div style="z-index: 0;">Descrição: %s</div>%s',
+                '<div style="z-index: 0;">Descriï¿½ï¿½o: %s</div>%s',
                 $dia['descricao'], $botao_editar
               );
 
@@ -377,8 +378,8 @@ class indice extends clsConfig
 
         if ($this->mes <= (int) $inicio_ano[1] && $this->ano == (int) $inicio_ano[2]) {
           if ($this->mes == (int) $inicio_ano[1]) {
-            $obj_calendario->adicionarLegenda('Início Ano Letivo', 'AMARELO');
-            $obj_calendario->adicionarArrayDias('Início Ano Letivo', array($inicio_ano[0]));
+            $obj_calendario->adicionarLegenda('Inï¿½cio Ano Letivo', 'AMARELO');
+            $obj_calendario->adicionarArrayDias('Inï¿½cio Ano Letivo', array($inicio_ano[0]));
           }
 
           $dia_inicio = (int) $inicio_ano[0];
@@ -391,10 +392,10 @@ class indice extends clsConfig
               $dias[] = $d;
             }
 
-            $obj_calendario->setLegendaPadrao('Não Letivo');
+            $obj_calendario->setLegendaPadrao('Nï¿½o Letivo');
 
             if (!empty($dias)){
-              $obj_calendario->adicionarArrayDias('Não Letivo', $dias);
+              $obj_calendario->adicionarArrayDias('Nï¿½o Letivo', $dias);
             }
           }
           else {
@@ -406,8 +407,8 @@ class indice extends clsConfig
 
             $obj_calendario->setLegendaPadrao('Dias Letivos', 'AZUL_CLARO');
             if (! empty($dias)){
-              $obj_calendario->adicionarLegenda('Não Letivo', '#F7F7F7');
-              $obj_calendario->adicionarArrayDias('Não Letivo', $dias);
+              $obj_calendario->adicionarLegenda('Nï¿½o Letivo', '#F7F7F7');
+              $obj_calendario->adicionarArrayDias('Nï¿½o Letivo', $dias);
             }
           }
         }
@@ -422,10 +423,10 @@ class indice extends clsConfig
               $dias[] = $d;
             }
 
-            $obj_calendario->setLegendaPadrao('Não Letivo');
+            $obj_calendario->setLegendaPadrao('Nï¿½o Letivo');
 
             if (! empty($dias)) {
-              $obj_calendario->adicionarArrayDias('Não Letivo', $dias);
+              $obj_calendario->adicionarArrayDias('Nï¿½o Letivo', $dias);
             }
           }
           else {
@@ -438,14 +439,14 @@ class indice extends clsConfig
             $obj_calendario->setLegendaPadrao('Dias Letivos', 'AZUL_CLARO');
 
             if (! empty($dias)) {
-              $obj_calendario->adicionarLegenda('Não Letivo', '#F7F7F7');
-              $obj_calendario->adicionarArrayDias('Não Letivo', $dias);
+              $obj_calendario->adicionarLegenda('Nï¿½o Letivo', '#F7F7F7');
+              $obj_calendario->adicionarArrayDias('Nï¿½o Letivo', $dias);
             }
           }
 
           if ($this->mes == (int) $fim_ano[1]) {
-            $obj_calendario->adicionarLegenda('Término Ano Letivo', 'AMARELO');
-            $obj_calendario->adicionarArrayDias('Término Ano Letivo', array($fim_ano[0]));
+            $obj_calendario->adicionarLegenda('Tï¿½rmino Ano Letivo', 'AMARELO');
+            $obj_calendario->adicionarArrayDias('Tï¿½rmino Ano Letivo', array($fim_ano[0]));
           }
         }
         else {
@@ -475,7 +476,7 @@ class indice extends clsConfig
           $registro['cod_calendario_ano_letivo']
         );
 
-        // Gera código HTML do calendário
+        // Gera cï¿½digo HTML do calendï¿½rio
         $calendario = $obj_calendario->getCalendario(
           $this->mes, $this->ano, 'mes_corrente', $_GET,
           array('cod_calendario_ano_letivo' => $registro['cod_calendario_ano_letivo'])
@@ -513,7 +514,7 @@ class indice extends clsConfig
         <tr>
           <td align="center" colspan="2">
             %s
-            <input type="button" value="Novo Calendário Letivo" onclick="window.location=\'%s\';" class="botaolistagem" />
+            <input type="button" value="Novo Calendï¿½rio Letivo" onclick="window.location=\'%s\';" class="botaolistagem" />
           </td>
         </tr>', $bt_voltar, $url);
     }
@@ -526,14 +527,14 @@ class indice extends clsConfig
   }
 }
 
-// Instancia objeto de página
+// Instancia objeto de pï¿½gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conteúdo
+// Instancia objeto de conteï¿½do
 $miolo = new indice();
 
-// Atribui o conteúdo à  página
+// Atribui o conteï¿½do ï¿½  pï¿½gina
 $pagina->addForm($miolo);
 
-// Gera o código HTML
+// Gera o cï¿½digo HTML
 $pagina->MakeAll();
