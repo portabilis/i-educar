@@ -1,25 +1,25 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	@author Prefeitura Municipal de Itajaï¿½								 *
+	*	@author Prefeitura Municipal de Itajaí								 *
 	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Pï¿½blico Livre e Brasileiro					 *
+	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
 	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaï¿½			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  ï¿½  software livre, vocï¿½ pode redistribuï¿½-lo e/ou	 *
-	*	modificï¿½-lo sob os termos da Licenï¿½a Pï¿½blica Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versï¿½o 2 da	 *
-	*	Licenï¿½a   como  (a  seu  critï¿½rio)  qualquer  versï¿½o  mais  nova.	 *
+	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
+	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
+	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
 	*																		 *
-	*	Este programa  ï¿½ distribuï¿½do na expectativa de ser ï¿½til, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implï¿½cita de COMERCIALI-	 *
-	*	ZAï¿½ï¿½O  ou  de ADEQUAï¿½ï¿½O A QUALQUER PROPï¿½SITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licenï¿½a  Pï¿½blica  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
+	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
+	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	Vocï¿½  deve  ter  recebido uma cï¿½pia da Licenï¿½a Pï¿½blica Geral GNU	 *
-	*	junto  com  este  programa. Se nï¿½o, escreva para a Free Software	 *
+	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
+	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
@@ -147,8 +147,9 @@ class indice extends clsCadastro
 			$this->ref_cod_escola=$_GET["ref_cod_escola"];
 			$this->ref_cod_instituicao=$_GET["ref_cod_instituicao"];
 		}
-
-	    $this->inputsHelper()->dynamic(array('instituicao', 'escola'));
+		$get_escola = 1;
+		$obrigatorio = true;
+		include("include/pmieducar/educar_campo_lista.php");
 
 		$this->url_cancelar = ($retorno == "Editar") ? "educar_calendario_ano_letivo_det.php?cod_calendario_ano_letivo={$registro["cod_calendario_ano_letivo"]}" : "educar_calendario_ano_letivo_lst.php";
 
@@ -246,7 +247,7 @@ class indice extends clsCadastro
 
 		}
 
-		echo "<script> alert( 'Nï¿½o foi possï¿½vel definir as datas de inï¿½cio e fim do ano letivo.' ) </script>";
+		echo "<script> alert( 'Não foi possível definir as datas de início e fim do ano letivo.' ) </script>";
 		return false;
 
 		/*
@@ -314,7 +315,7 @@ class indice extends clsCadastro
 			return false;
 		}
 
-		echo "<script> alert( 'Nï¿½o foi possï¿½vel definir as datas de inï¿½cio e fim do ano letivo.' ) </script>";
+		echo "<script> alert( 'Não foi possível definir as datas de início e fim do ano letivo.' ) </script>";
 		return false;
 
 		/*
@@ -377,9 +378,7 @@ after_getEscola = function()
 	var campoAno = document.getElementById('ano').length = 1;
 }
 
-document.getElementById('ref_cod_escola').onchange = geraAnos();
-
-function geraAnos()
+document.getElementById('ref_cod_escola').onchange = function geraAnos()
 {
 	var campoEscola = document.getElementById('ref_cod_escola');
 
@@ -420,7 +419,7 @@ function loadFromXML(xml)
 		}
 		if(campoAno.length == 1)
 		{
-			campoAno.options[0].text = 'Escola nï¿½o possui anos letivos';
+			campoAno.options[0].text = 'Escola não possui anos letivos';
 		}
 		///if(!achou)
 			//campoAno.options[campoAno.length] = new Option( ct, ct, false, false );
@@ -440,6 +439,6 @@ function loadFromXML(xml)
 		}
 	}
 	else
-		campoAno.options[0].text = 'A escola nï¿½o possui nenhum ano letivo';
+		campoAno.options[0].text = 'A escola não possui nenhum ano letivo';
 }
 </script>
