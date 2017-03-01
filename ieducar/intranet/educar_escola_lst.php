@@ -138,10 +138,8 @@ class indice extends clsListagem
 		//$obj_escola->setOrderby( "nome ASC" );
 		$obj_escola->setLimite( $this->limite, ( $this->pagina_formulario - 1 ) * $this->limite );
 
-		$cod_escola = $obj_permissoes->getEscola($this->pessoa_logada);
-
 		$lista = $obj_escola->lista(
-			$cod_escola,
+			null,
 			null,
 			null,
 			$this->ref_cod_instituicao,
@@ -152,7 +150,9 @@ class indice extends clsListagem
 			null,
 			null,
 			1,
-			$this->nm_escola
+			$this->nm_escola,
+			null,
+			$this->pessoa_logada
 		);
 
 		$total = $obj_escola->_total;
