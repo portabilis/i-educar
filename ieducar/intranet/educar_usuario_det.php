@@ -27,7 +27,8 @@
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsDetalhe.inc.php");
 require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
+require_once ("include/pmieducar/geral.inc.php");
+require_once ("include/pmieducar/clsPmieducarEscolaUsuario.inc.php");
 
 class clsIndexBase extends clsBase
 {
@@ -196,13 +197,18 @@ class indice extends clsDetalhe
 			$registro["ref_cod_instituicao"] = "Erro na gera&ccedil;&atilde;o";
 			echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarInstituicao\n-->";
 		}
-		if( class_exists( "clsPmieducarEscola" ) )
+		if( class_exists( "clsPmieducarEscolaUsuario" ) )
 		{
-			$obj_cod_escola = new clsPmieducarEscola( $registro["ref_cod_escola"] );
-			$obj_cod_escola_det = $obj_cod_escola->detalhe();
-			$id_pessoa = $obj_cod_escola_det["nome"];
-			//$obj_cod_escola = new clsJuridica($id_pessoa);
-		 	//$registro["ref_cod_escola"] = $obj_cod_escola_det["fantasia"];
+			$escolasUsuario = new clsPmieducarEscolaUsuario();
+			$escolasUsuario = $escolasUsuario->lista($cod_pessoa);
+
+			foreach ($escolasUsuario as $escola) {
+				$escolaDetalhe = new clsPmieducarEscola($escola['ref_cod_escola']);
+				$escolaDetalhe = $escolaDetalhe->detalhe();
+				$nomesEscola[] = $escolaDetalhe['nome'];
+			}
+			$nomesEscola = implode("<br>", $nomesEscola);
+		 	$registro["ref_cod_escola"] = $nomesEscola;
 		}
 		else
 		{
@@ -220,7 +226,7 @@ class indice extends clsDetalhe
 		}
 		if( $registro["ref_cod_escola"] )
 		{
-			$this->addDetalhe( array( "Escola", "$id_pessoa") );
+			$this->addDetalhe( array( "Escola", $registro["ref_cod_escola"]) );
 		}
 
 		$objPermissao = new clsPermissoes();		 

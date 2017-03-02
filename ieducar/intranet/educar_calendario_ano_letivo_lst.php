@@ -37,6 +37,7 @@ require_once 'clsCalendario.inc.php';
 require_once 'Calendario/Model/TurmaDataMapper.php';
 require_once 'App/Model/IedFinder.php';
 require_once 'include/localizacaoSistema.php';
+require_once 'include/pmieducar/clsPmieducarEscolaUsuario.inc.php';
 
 /**
  * clsIndexBase class.

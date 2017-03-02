@@ -147,9 +147,7 @@ class indice extends clsCadastro
 			$this->ref_cod_escola=$_GET["ref_cod_escola"];
 			$this->ref_cod_instituicao=$_GET["ref_cod_instituicao"];
 		}
-		$get_escola = 1;
-		$obrigatorio = true;
-		include("include/pmieducar/educar_campo_lista.php");
+		$this->inputsHelper()->dynamic(array('instituicao', 'escola'));
 
 		$this->url_cancelar = ($retorno == "Editar") ? "educar_calendario_ano_letivo_det.php?cod_calendario_ano_letivo={$registro["cod_calendario_ano_letivo"]}" : "educar_calendario_ano_letivo_lst.php";
 
@@ -378,7 +376,9 @@ after_getEscola = function()
 	var campoAno = document.getElementById('ano').length = 1;
 }
 
-document.getElementById('ref_cod_escola').onchange = function geraAnos()
+document.getElementById('ref_cod_escola').onchange = geraAnos();
+
+function geraAnos()
 {
 	var campoEscola = document.getElementById('ref_cod_escola');
 

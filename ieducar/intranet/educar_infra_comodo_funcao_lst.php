@@ -94,24 +94,14 @@ class indice extends clsListagem
 
 
 		$lista_busca = array(
-			"Tipo de ambiente"
+			"Tipo de ambiente",
+			"Escola",
+			"Institui&ccedil;&atilde;o"
 		);
 
-		$obj_permissao = new clsPermissoes();
-		$nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
-		if ($nivel_usuario == 1)
-		{
-			$lista_busca[] = "Escola";
-			$lista_busca[] = "Institui&ccedil;&atilde;o";
-		}
-		else if ($nivel_usuario == 2)
-		{
-			$lista_busca[] = "Escola";
-		}
 		$this->addCabecalhos($lista_busca);
 
-		$get_escola = true;
-		include("include/pmieducar/educar_campo_lista.php");
+		$this->inputsHelper()->dynamic(array('instituicao', 'escola'));
 
 		// outros Filtros
 		$this->campoTexto( "nm_funcao", "Tipo", $this->nm_funcao, 30, 255, false );
@@ -174,15 +164,9 @@ class indice extends clsListagem
 					"<a href=\"educar_infra_comodo_funcao_det.php?cod_infra_comodo_funcao={$registro["cod_infra_comodo_funcao"]}\">{$registro["nm_funcao"]}</a>"
 				);
 
-				if ($nivel_usuario == 1)
-				{
-					$lista_busca[] = "<a href=\"educar_infra_comodo_funcao_det.php?cod_infra_comodo_funcao={$registro["cod_infra_comodo_funcao"]}\">{$nm_escola}</a>";
-					$lista_busca[] = "<a href=\"educar_infra_comodo_funcao_det.php?cod_infra_comodo_funcao={$registro["cod_infra_comodo_funcao"]}\">{$registro["ref_cod_instituicao"]}</a>";
-				}
-				else if ($nivel_usuario == 2)
-				{
-					$lista_busca[] = "<a href=\"educar_infra_comodo_funcao_det.php?cod_infra_comodo_funcao={$registro["cod_infra_comodo_funcao"]}\">{$nm_escola}</a>";
-				}
+				$lista_busca[] = "<a href=\"educar_infra_comodo_funcao_det.php?cod_infra_comodo_funcao={$registro["cod_infra_comodo_funcao"]}\">{$nm_escola}</a>";
+				$lista_busca[] = "<a href=\"educar_infra_comodo_funcao_det.php?cod_infra_comodo_funcao={$registro["cod_infra_comodo_funcao"]}\">{$registro["ref_cod_instituicao"]}</a>";
+
 				$this->addLinhas($lista_busca);
 			}
 		}

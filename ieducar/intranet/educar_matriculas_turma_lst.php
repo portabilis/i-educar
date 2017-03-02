@@ -95,30 +95,13 @@ class indice extends clsListagem
 			"Ano",
 			"Turma",
 			"S&eacute;rie",
-			"Curso"
+			"Curso",
+			"Escola"
 		);
 
-		$obj_permissao = new clsPermissoes();
-		$nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
-		if ($nivel_usuario == 1)
-		{
-			$lista_busca[] = "Escola";
-			$lista_busca[] = "Institui&ccedil;&atilde;o";
-		}
-		else if ($nivel_usuario == 2)
-		{
-			$lista_busca[] = "Escola";
-		}
 		$this->addCabecalhos($lista_busca);
 
-		$get_escola = true;
-		$get_curso = true;
-//		$get_escola_curso = true;
-		$get_escola_curso_serie = true;
-		$get_turma = true;
-		$get_ano = true;
-		$sem_padrao = true;
-		include("include/pmieducar/educar_campo_lista.php");
+	    $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'curso', 'serie', 'turma', 'anoLetivo'));
 
 		if ( $this->ref_cod_escola )
 		{
@@ -132,13 +115,13 @@ class indice extends clsListagem
 		$obj_turma = new clsPmieducarTurma();
 		$obj_turma->setOrderby( "nm_turma ASC" );
 		$obj_turma->setLimite( $this->limite, $this->offset );
-		if (!$this->ano)
-			$this->ano = date (Y);
+		if (!$this->ano_letivo)
+			$this->ano_letivo = date (Y);
 		$lista = $obj_turma->lista3(
 			$this->ref_cod_turma,
 			null,
 			null,
-			$this->ref_ref_cod_serie,
+			$this->ref_cod_serie,
 			$this->ref_ref_cod_escola,
 			null,
 			null,
@@ -169,7 +152,7 @@ class indice extends clsListagem
 			null,
 			null,
 			null,
-			$this->ano
+			$this->ano_letivo
 		);
 
 		$total = $obj_turma->_total;
@@ -179,50 +162,6 @@ class indice extends clsListagem
 		{
 			foreach ( $lista AS $registro )
 			{
-				/*if( class_exists( "clsPmieducarTurma" ) )
-				{
-					$obj_ref_ref_cod_turma = new clsPmieducarTurma( $registro["cod_turma"] );
-					$det_ref_ref_cod_turma = $obj_ref_ref_cod_turma->detalhe();
-					$nm_turma = $det_ref_ref_cod_turma["nm_turma"];
-				}
-				else
-				{
-					$registro["ref_cod_turma"] = "Erro na geracao";
-					echo "<!--\nErro\nClasse nao existente: clsPmieducarTurma\n-->";
-				}
-				if( class_exists( "clsPmieducarSerie" ) )
-				{
-					$obj_ref_cod_serie = new clsPmieducarSerie( $registro["ref_ref_cod_serie"] );
-					$det_ref_cod_serie = $obj_ref_cod_serie->detalhe();
-					$registro["ref_ref_cod_serie"] = $det_ref_cod_serie["nm_serie"];
-				}
-				else
-				{
-					$registro["ref_cod_serie"] = "Erro na geracao";
-					echo "<!--\nErro\nClasse nao existente: clsPmieducarSerie\n-->";
-				}
-				if( class_exists( "clsPmieducarCurso" ) )
-				{
-					$obj_ref_cod_curso = new clsPmieducarCurso( $registro["ref_cod_curso"] );
-					$det_ref_cod_curso = $obj_ref_cod_curso->detalhe();
-					$registro["ref_cod_curso"] = $det_ref_cod_curso["nm_curso"];
-				}
-				else
-				{
-					$registro["ref_cod_curso"] = "Erro na geracao";
-					echo "<!--\nErro\nClasse nao existente: clsPmieducarCurso\n-->";
-				}
-				if( class_exists( "clsPmieducarInstituicao" ) )
-				{
-					$obj_cod_instituicao = new clsPmieducarInstituicao( $registro["ref_cod_instituicao"] );
-					$obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();
-					$registro["ref_cod_instituicao"] = $obj_cod_instituicao_det["nm_instituicao"];
-				}
-				else
-				{
-					$registro["ref_cod_instituicao"] = "Erro na gera&ccedil;&atilde;o";
-					echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarInstituicao\n-->";
-				}*/
 				if( class_exists( "clsPmieducarEscola" ) )
 				{
 					$obj_ref_cod_escola = new clsPmieducarEscola( $registro["ref_ref_cod_escola"] );
@@ -247,22 +186,11 @@ class indice extends clsListagem
 
 				$lista_busca[] = "<a href=\"educar_matriculas_turma_cad.php?ref_cod_turma={$registro["cod_turma"]}\">{$registro["nm_curso"]}</a>";
 
-				if ($nivel_usuario == 1)
-				{
-					if ($registro["ref_ref_cod_escola"])
-						$lista_busca[] = "<a href=\"educar_matriculas_turma_cad.php?ref_cod_turma={$registro["cod_turma"]}\">{$registro["nm_escola"]}</a>";
-					else
-						$lista_busca[] = "<a href=\"educar_matriculas_turma_cad.php?ref_cod_turma={$registro["cod_turma"]}\">-</a>";
+				if ($registro["ref_ref_cod_escola"])
+					$lista_busca[] = "<a href=\"educar_matriculas_turma_cad.php?ref_cod_turma={$registro["cod_turma"]}\">{$registro["nm_escola"]}</a>";
+				else
+					$lista_busca[] = "<a href=\"educar_matriculas_turma_cad.php?ref_cod_turma={$registro["cod_turma"]}\">-</a>";
 
-					$lista_busca[] = "<a href=\"educar_matriculas_turma_cad.php?ref_cod_turma={$registro["cod_turma"]}\">{$registro["nm_instituicao"]}</a>";
-				}
-				else if ($nivel_usuario == 2)
-				{
-					if ($registro["ref_ref_cod_escola"])
-						$lista_busca[] = "<a href=\"educar_matriculas_turma_cad.php?ref_cod_turma={$registro["cod_turma"]}\">{$registro["nm_escola"]}</a>";
-					else
-						$lista_busca[] = "<a href=\"educar_matriculas_turma_cad.php?ref_cod_turma={$registro["cod_turma"]}\">-</a>";
-				}
 				$this->addLinhas($lista_busca);
 			}
 		}

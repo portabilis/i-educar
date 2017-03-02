@@ -263,7 +263,6 @@ class clsListagem extends clsCampos
   function RenderHTML()
   {
     $this->_preRender();
-
     $this->Gerar();
 
     $retorno = '';

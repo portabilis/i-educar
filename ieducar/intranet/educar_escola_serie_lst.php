@@ -106,22 +106,12 @@ class indice extends clsListagem
 
     $obj_permissao = new clsPermissoes();
     $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
-    if ($nivel_usuario == 1)
-    {
-      $lista_busca[] = 'Escola';
-      $lista_busca[] = 'Institui&ccedil;&atilde;o';
-    }
-    else if ($nivel_usuario == 2)
-    {
-      $lista_busca[] = 'Escola';
-    }
+    $lista_busca[] = 'Escola';
+    $lista_busca[] = 'Institui&ccedil;&atilde;o';
+    $lista_busca[] = 'Escola';
     $this->addCabecalhos($lista_busca);
 
-    $get_escola = true;
-//    $get_escola_curso = true;
-    $get_curso = true;
-    $get_escola_curso_serie = true;
-    include('include/pmieducar/educar_campo_lista.php');
+    $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'curso', 'serie'));
 
     // Paginador
     $this->limite = 20;
@@ -181,13 +171,9 @@ class indice extends clsListagem
           "<a href=\"educar_escola_serie_det.php?ref_cod_escola={$registro["ref_cod_escola"]}&ref_cod_serie={$registro["ref_cod_serie"]}\">{$registro["ref_cod_curso"]}</a>"
         );
 
-        if ($nivel_usuario == 1) {
-          $lista_busca[] = "<a href=\"educar_escola_serie_det.php?ref_cod_escola={$registro["ref_cod_escola"]}&ref_cod_serie={$registro["ref_cod_serie"]}\">{$nm_escola}</a>";
-          $lista_busca[] = "<a href=\"educar_escola_serie_det.php?ref_cod_escola={$registro["ref_cod_escola"]}&ref_cod_serie={$registro["ref_cod_serie"]}\">{$registro["ref_cod_instituicao"]}</a>";
-        }
-        elseif ($nivel_usuario == 2) {
-          $lista_busca[] = "<a href=\"educar_escola_serie_det.php?ref_cod_escola={$registro["ref_cod_escola"]}&ref_cod_serie={$registro["ref_cod_serie"]}\">{$nm_escola}</a>";
-        }
+        $lista_busca[] = "<a href=\"educar_escola_serie_det.php?ref_cod_escola={$registro["ref_cod_escola"]}&ref_cod_serie={$registro["ref_cod_serie"]}\">{$nm_escola}</a>";
+        $lista_busca[] = "<a href=\"educar_escola_serie_det.php?ref_cod_escola={$registro["ref_cod_escola"]}&ref_cod_serie={$registro["ref_cod_serie"]}\">{$registro["ref_cod_instituicao"]}</a>";
+        $lista_busca[] = "<a href=\"educar_escola_serie_det.php?ref_cod_escola={$registro["ref_cod_escola"]}&ref_cod_serie={$registro["ref_cod_serie"]}\">{$nm_escola}</a>";
 
         $this->addLinhas($lista_busca);
       }
@@ -224,14 +210,3 @@ $pagina->addForm($miolo);
 // Gera o código HTML
 $pagina->MakeAll();
 ?>
-<script type="text/javascript">
-document.getElementById('ref_cod_escola').onchange = function()
-{
-  getEscolaCurso();
-}
-
-document.getElementById('ref_cod_curso').onchange = function()
-{
-  getEscolaCursoSerie();
-}
-</script>

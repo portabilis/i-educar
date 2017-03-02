@@ -31,6 +31,7 @@
 
 require_once 'lib/Portabilis/View/Helper/DynamicInput/CoreSelect.php';
 require_once 'Portabilis/Business/Professor.php';
+require_once 'App/Model/NivelTipoUsuario.php';
 
 /**
  * Portabilis_View_Helper_DynamicInput_Escola class.
@@ -48,73 +49,38 @@ class Portabilis_View_Helper_DynamicInput_Escola extends Portabilis_View_Helper_
     return $this->getEscolaId($value);
   }
 
-
   protected function inputName() {
     return 'ref_cod_escola';
   }
-
 
   protected function inputOptions($options) {
     $resources     = $options['resources'];
     $instituicaoId = $this->getInstituicaoId($options['instituicaoId']);
     $userId        = $this->getCurrentUserId();
-    $isProfessor   = Portabilis_Business_Professor::isProfessor($instituicaoId, $userId);
 
-    if ($instituicaoId and empty($resources) and $isProfessor) {
-      $escolas   = Portabilis_Business_Professor::escolasAlocado($instituicaoId, $userId);
-      $resources = Portabilis_Array_Utils::setAsIdValue($escolas, 'id', 'nome');
-    }
-    elseif ($instituicaoId and empty($resources))
+    if ($instituicaoId and empty($resources)) {
+      $permissao = new clsPermissoes();
+      $nivel = $permissao->nivel_acesso($userId);
+
+      if ($nivel == App_Model_NivelTipoUsuario::ESCOLA ||
+          $nivel == App_Model_NivelTipoUsuario::BIBLIOTECA) {
+
+        $escolas_usuario = array();
+        $escolasUser = App_Model_IedFinder::getEscolasUser($userId);
+        foreach ($escolasUser as $e)
+        {
+          $escolas_usuario[$e["ref_cod_escola"]] = $e["nome"];
+        }
+        $resources = $escolas_usuario;
+        return $resources;
+      }
       $resources = App_Model_IedFinder::getEscolas($instituicaoId);
-
-
-    return $this->insertOption(null, "Selecione uma escola", $resources);
+    }
+    return $this->insertOption(null, 'Selecione uma escola', $resources);
   }
-
-
-  public function selectInput($options = array()) {
-    parent::select($options);
-  }
-
-
-  public function stringInput($options = array()) {
-    $defaultOptions       = array('options' => array());
-    $options              = $this->mergeOptions($options, $defaultOptions);
-
-    // subescreve $options['options']['value'] com nome escola
-    if (isset($options['options']['value']) && $options['options']['value'])
-      $escolaId =  $options['options']['value'];
-    else
-      $escolaId = $this->getEscolaId($options['id']);
-
-    $escola   = App_Model_IedFinder::getEscola($escolaId);
-    $options['options']['value'] = $escola['nome'];
-
-    $defaultInputOptions = array('id'        => 'ref_cod_escola',
-                                 'label'     => 'Escola',
-                                 'value'     => '',
-                                 'inline'    => false,
-                                 'descricao' => '',
-                                 'separador' => ':');
-
-    $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
-
-    $this->viewInstance->campoOculto($inputOptions['id'], $escolaId);
-
-    $inputOptions['id'] = 'escola_nome';
-    call_user_func_array(array($this->viewInstance, 'campoRotulo'), $inputOptions);
-  }
-
 
   public function escola($options = array()) {
-    $isProfessor = Portabilis_Business_Professor::isProfessor($this->getInstituicaoId($options['instituicaoId']),
-                                                              $this->getCurrentUserId());
-
-    if ($this->hasNivelAcesso('POLI_INSTITUCIONAL') || $this->hasNivelAcesso('INSTITUCIONAL') || $isProfessor || $options['options']['show-select'])
-      $this->selectInput($options);
-
-    elseif($this->hasNivelAcesso('SOMENTE_ESCOLA') || $this->hasNivelAcesso('SOMENTE_BIBLIOTECA'))
-      $this->stringInput($options);
+    $this->select($options);
 
     Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, '/modules/DynamicInput/Assets/Javascripts/Escola.js');
   }

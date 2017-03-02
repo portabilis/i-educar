@@ -1807,7 +1807,7 @@ class clsPmieducarEscola
     $int_ref_cod_escola_localizacao = NULL, $int_ref_cod_escola_rede_ensino = NULL,
     $int_ref_idpes = NULL, $str_sigla = NULL, $date_data_cadastro = NULL,
     $date_data_exclusao = NULL, $int_ativo = NULL, $str_nome = NULL,
-    $escola_sem_avaliacao = NULL)
+    $escola_sem_avaliacao = NULL, $cod_usuario = NULL)
   {
 
     $sql = "
@@ -1911,6 +1911,14 @@ class clsPmieducarEscola
                         AND ec.ref_cod_curso = c.cod_curso
                         AND ec.ativo = 1 AND c.ativo = 1)";
       }
+    }
+
+    if (is_numeric($cod_usuario)) {
+      $filtros .= "{$whereAnd} EXISTS (SELECT *
+                                         FROM pmieducar.escola_usuario
+                                        WHERE escola_usuario.ref_cod_escola = cod_escola
+                                          AND ref_cod_usuario = '{$cod_usuario}')";
+      $whereAnd = " AND ";
     }
 
     $db = new clsBanco();
