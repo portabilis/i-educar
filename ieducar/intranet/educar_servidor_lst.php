@@ -105,14 +105,7 @@ class indice extends clsListagem
       'Instituição'
     ));
 
-    $get_escola      = true;
-    $obrigatorio     = false;
-    $exibe_nm_escola = true;
-    $get_ano = true;
-
-    include 'include/pmieducar/educar_campo_lista.php';
-
-
+    $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'anoLetivo'));
 
     if ($this->cod_servidor) {
       $objTemp = new clsFuncionario($this->cod_servidor);
@@ -171,7 +164,7 @@ class indice extends clsListagem
       NULL,
       NULL,
       isset($_GET['servidor_sem_alocacao']),
-      $this->ano,
+      $this->ano_letivo,
       $this->matricula_servidor
     );
     $total = $obj_servidor->_total;

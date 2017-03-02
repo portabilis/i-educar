@@ -112,40 +112,21 @@ class indice extends clsListagem
 		$lista_busca = array(
 			"Ano",
 			"Turma",
-      "Turno",
+      		"Turno",
 			"S&eacute;rie",
-			"Curso"
+			"Curso",
+			"Escola",
+			"Situação"
 		);
 
-
-		$obj_permissao = new clsPermissoes();
-		$nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
-		if ($nivel_usuario == 1)
-		{
-			$lista_busca[] = "Escola";
-			//$lista_busca[] = "Institui&ccedil;&atilde;o";
-		}
-		else if ($nivel_usuario == 2)
-		{
-			$lista_busca[] = "Escola";
-		}
-		$lista_busca[] = "Situação";
 		$this->addCabecalhos($lista_busca);
-
-		$get_escola = true;
-//		$get_escola_curso = true;
-		$get_escola_curso_serie = true;
-		$sem_padrao = true;
-		$get_curso = true;
-		include("include/pmieducar/educar_campo_lista.php");
 
 		if ( $this->ref_cod_escola )
 		{
 			$this->ref_ref_cod_escola = $this->ref_cod_escola;
 		}
 
-    $helperOptions = array();
-    $this->inputsHelper()->dynamic('anoLetivo', array('required' => false), $helperOptions);
+	    $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'curso', 'serie', 'anoLetivo'));
 
 		$this->campoTexto( "nm_turma", "Turma", $this->nm_turma, 30, 255, false );
 		$this->campoLista("visivel", "Situação", array("" => "Selecione", "1" => "Ativo", "2" => "Inativo"), $this->visivel, null, null, null, null, null, false);
@@ -171,8 +152,8 @@ class indice extends clsListagem
 			null,
 			null,
 			null,
-			$this->ref_ref_cod_serie,
-			$this->ref_ref_cod_escola,
+			$this->ref_cod_serie,
+			$this->ref_cod_escola,
 			null,
 			$this->nm_turma,
 			null,
@@ -206,40 +187,6 @@ class indice extends clsListagem
 			$nm_escola = "";
 			foreach ( $lista AS $registro )
 			{
-				// pega detalhes de foreign_keys
-			/*	if( class_exists( "clsPmieducarEscolaSerie" ) )
-				{
-					$obj_ref_ref_cod_serie = new clsPmieducarEscolaSerie( $registro["ref_ref_cod_escola"], $registro["ref_ref_cod_serie"] );
-					$det_ref_ref_cod_serie = $obj_ref_ref_cod_serie->detalhe();
-					$registro["ref_ref_cod_serie"] = $det_ref_ref_cod_serie["ref_cod_serie"];
-				}
-				else
-				{
-					$registro["ref_ref_cod_serie"] = "Erro na geracao";
-					echo "<!--\nErro\nClasse nao existente: clsPmieducarEscolaSerie\n-->";
-				}*/
-				/*if( class_exists( "clsPmieducarCurso" ) )
-				{
-					$obj_ref_cod_curso = new clsPmieducarCurso( $registro["ref_cod_curso"] );
-					$det_ref_cod_curso = $obj_ref_cod_curso->detalhe();
-					$registro["ref_cod_curso"] = $det_ref_cod_curso["nm_curso"];
-				}
-				else
-				{
-					$registro["ref_cod_curso"] = "Erro na geracao";
-					echo "<!--\nErro\nClasse nao existente: clsPmieducarCurso\n-->";
-				}
-				if( class_exists( "clsPmieducarInstituicao" ) )
-				{
-					$obj_cod_instituicao = new clsPmieducarInstituicao( $registro["ref_cod_instituicao"] );
-					$obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();
-					$registro["ref_cod_instituicao"] = $obj_cod_instituicao_det["nm_instituicao"];
-				}
-				else
-				{
-					$registro["ref_cod_instituicao"] = "Erro na gera&ccedil;&atilde;o";
-					echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarInstituicao\n-->";
-				}*/
 				if( class_exists( "clsPmieducarEscola" ) && $registro["ref_ref_cod_escola"] != $ref_cod_escola)
 				{
 					$ref_cod_escola = $registro["ref_ref_cod_escola"];
@@ -249,25 +196,18 @@ class indice extends clsListagem
 					$nm_escola = $det_ref_cod_escola["nome"];
 				}
 
-
-				/*$obj_ser = new clsPmieducarSerie( $registro["ref_ref_cod_serie"], null, null, $this->ref_cod_curso );
-				$det_ser = $obj_ser->detalhe();
-				$obj_cur = new clsPmieducarCurso( $det_ser["ref_cod_curso"] );
-				$det_cur = $obj_cur->detalhe();*/
-
-
 				$lista_busca = array(
 					"<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">{$registro["ano"]}</a>",
 					"<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">{$registro["nm_turma"]}</a>"
 				);
 
-        if ($registro["turma_turno_id"]) {
-        	$options = array('params' => $registro["turma_turno_id"], 'return_only' => 'first-field');
-				  $turno   = Portabilis_Utils_Database::fetchPreparedQuery("select nome from pmieducar.turma_turno where id = $1", $options);
+		        if ($registro["turma_turno_id"]) {
+		        	$options = array('params' => $registro["turma_turno_id"], 'return_only' => 'first-field');
+						  $turno   = Portabilis_Utils_Database::fetchPreparedQuery("select nome from pmieducar.turma_turno where id = $1", $options);
 
-				  $lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">$turno</a>";
-        }
-        else
+						  $lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">$turno</a>";
+		        }
+		        else
 				  $lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\"></a>";
 
 				if ($registro["nm_serie"])
@@ -277,22 +217,11 @@ class indice extends clsListagem
 
 				$lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">{$registro["nm_curso"]}</a>";
 
-				if ($nivel_usuario == 1)
-				{
-					if ($nm_escola)
-						$lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">{$nm_escola}</a>";
-					else
-						$lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">-</a>";
+				if ($nm_escola)
+					$lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">{$nm_escola}</a>";
+				else
+					$lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">-</a>";
 
-					//$lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">{$registro["nm_instituicao"]}</a>";
-				}
-				else if ($nivel_usuario == 2)
-				{
-					if ($nm_escola)
-						$lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">{$nm_escola}</a>";
-					else
-						$lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">-</a>";
-				}
 				if (dbBool($registro["visivel"]))
 				{
 					$lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">Ativo</a>";

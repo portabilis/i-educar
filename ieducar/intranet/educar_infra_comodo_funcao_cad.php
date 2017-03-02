@@ -116,9 +116,7 @@ class indice extends clsCadastro
 		// primary keys
 		$this->campoOculto( "cod_infra_comodo_funcao", $this->cod_infra_comodo_funcao );
 
-		$obrigatorio = true;
-		$get_escola = true;
-		include("include/pmieducar/educar_campo_lista.php");
+		$this->inputsHelper()->dynamic(array('instituicao', 'escola'));
 
 		// text
 		$this->campoTexto( "nm_funcao", "Tipo", $this->nm_funcao, 30, 255, true );

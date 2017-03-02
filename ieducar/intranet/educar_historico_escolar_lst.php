@@ -27,7 +27,9 @@
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsListagem.inc.php");
 require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
+require_once ("include/pmieducar/geral.inc.php");
+require_once ("include/pmieducar/clsPmieducarEscolaUsuario.inc.php");
+require_once ("Portabilis/Date/Utils.php");
 
 class clsIndexBase extends clsBase
 {
@@ -207,13 +209,35 @@ class indice extends clsListagem
 		$obj_permissoes = new clsPermissoes();
 		$this->obj_permissao = new clsPermissoes();
     	$this->nivel_usuario = $this->obj_permissao->nivel_acesso($this->pessoa_logada);
-    	$db = new clsBanco();	
-		$school_user = $db->CampoUnico("select ref_cod_escola from pmieducar.usuario where cod_usuario =  $this->pessoa_logada");
-		$school_student = $db->CampoUnico("select ref_ref_cod_escola, ano from matricula where ref_cod_aluno = {$this->ref_cod_aluno} and ativo = 1 order by data_cadastro desc limit 1");
-		$db = new clsBanco();
-		$school_student = $school_student ? $school_student : 0;
-    	$historico_restringido = $db->CampoUnico("SELECT restringir_historico_escolar FROM pmieducar.instituicao where cod_instituicao = (select ref_cod_instituicao from pmieducar.escola where cod_escola = $school_student)");
-		if( $obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7 ) and ($historico_restringido != 't' or $this->nivel_usuario == 1 or $this->nivel_usuario == 2 or $school_user == $school_student or !$school_student))
+
+    	$db = new clsBanco();
+		$escolaAluno = $db->CampoUnico("SELECT ref_ref_cod_escola
+										  FROM pmieducar.matricula
+										 WHERE ref_cod_aluno = {$this->ref_cod_aluno}
+										   AND ativo = 1
+										 ORDER BY data_cadastro DESC
+										 LIMIT 1;");
+
+		$historicoRestringido = $db->CampoUnico("SELECT restringir_historico_escolar
+			                                       FROM pmieducar.instituicao
+			                                      WHERE cod_instituicao = (SELECT ref_cod_instituicao
+			                                                                 FROM pmieducar.escola
+			                                                                WHERE cod_escola = $escolaAluno);");
+    	$escolasUsuario = new clsPmieducarEscolaUsuario();
+    	$escolasUsuario = $escolasUsuario->lista($this->pessoa_logada);
+    	$usuarioEscolaAluno = false;
+
+    	foreach ($escolasUsuario as $escolaUsuario) {
+    		$usuarioEscolaAluno = $escolaAluno == $escolaUsuario['ref_cod_escola'];
+
+    		if ($usuarioEscolaAluno) break;
+    	}
+
+		$permissaoCadastra = $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7);
+		$historicoRestringido = Portabilis_Date_Utils::brToPgSQL($historico_restringido);
+		$nivelUsuarioSuperior = ($this->nivel_usuario == 1 || $this->nivel_usuario == 2);
+
+		if($permissaoCadastra && ($nivelUsuarioSuperior || !$historicoRestringido || $usuarioEscolaAluno))
 		{
 			$this->acao = "go(\"educar_historico_escolar_cad.php?ref_cod_aluno={$this->ref_cod_aluno}\")";
 			$this->nome_acao = "Novo";
@@ -223,13 +247,13 @@ class indice extends clsListagem
 
 		$this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
-         ""                                  => "Listagem de hist&oacute;ricos escolares"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());		
+	    $localizacao = new LocalizacaoSistema();
+	    $localizacao->entradaCaminhos( array(
+	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+	         "educar_index.php"                  => "i-Educar - Escola",
+	         ""                                  => "Listagem de hist&oacute;ricos escolares"
+	    ));
+	    $this->enviaLocalizacao($localizacao->montar());
 	}
 }
 // cria uma extensao da classe base
