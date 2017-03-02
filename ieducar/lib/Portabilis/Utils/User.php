@@ -175,9 +175,18 @@ class Portabilis_Utils_User {
 
 
   static function canAccessEscola($id) {
-    return (self::hasNivelAcesso('POLI_INSTITUCIONAL') ||
-            self::hasNivelAcesso('INSTITUCIONAL')      ||
-            self::getClsPermissoes()->getEscola(self::currentUserId()) == $id);
+
+    if (self::hasNivelAcesso('POLI_INSTITUCIONAL') ||
+            self::hasNivelAcesso('INSTITUCIONAL'))
+      return true;
+
+    $escolas = App_Model_IedFinder::getEscolasUser(self::currentUserId());
+
+    foreach ($escolas as $escola) {
+      if ($escola['ref_cod_escola'] == $id) return true;
+    }
+
+    return false;
   }
 
 
