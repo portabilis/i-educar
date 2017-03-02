@@ -38,7 +38,6 @@ require_once 'Portabilis/View/Helper/Application.php';
 require_once 'Portabilis/View/Helper/Inputs.php';
 
 require_once 'include/localizacaoSistema.php';
-require_once 'App/Model/NivelTipoUsuario.php';
 
 define('alTopLeft', 'valign=top align=left');
 define('alTopCenter', 'valign=top align=center');
@@ -105,30 +104,6 @@ class clsListagem extends clsCampos
   var $fonte;
 
   var $exibirBotaoSubmit = true;
-
-  var $ref_cod_escola;
-
-  function __construct() {
-
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
-    if ($this->ref_cod_escola) return;
-
-    $permissao = new clsPermissoes();
-    $nivel = $permissao->nivel_acesso($this->pessoa_logada);
-
-    if ($nivel == App_Model_NivelTipoUsuario::ESCOLA ||
-        $nivel == App_Model_NivelTipoUsuario::BIBLIOTECA) {
-
-      $escolas_usuario = array();
-      $escolasUser = App_Model_IedFinder::getEscolasUser($this->pessoa_logada);
-      $escola = array_shift($escolasUser);
-
-      $this->ref_cod_escola = $escola['ref_cod_escola'];
-    }
-  }
 
   function Gerar()
   {
