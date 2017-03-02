@@ -67,192 +67,167 @@
 	 	$obj_permissoes = new clsPermissoes();
 	 	$nivel_usuario = $obj_permissoes->nivel_acesso( $this->pessoa_logada );
 
-
-		// $retorno .= '<tr id="tr_status">
-		// 			 <td valign="top" class="formlttd">
-		// 			 <span class="form">Ano</span>
-		// 			 <span class="campo_obrigatorio">*</span>
-		// 			 <br/>
-		// 			 <sub style="vertical-align: top;"/>
-		// 			 </td>';
-		// $retorno .= '<td valign="top" class="formlttd"><span class="form">';
-		// $retorno .= "<input type='number' value='".date("Y")."' class='geral' name='ano' id='ano' style='width:50px;' />";
-
-		if ( $nivel_usuario == 1 )
+		if ( class_exists( "clsPmieducarInstituicao" ) )
 		{
-			if ( class_exists( "clsPmieducarInstituicao" ) )
+			$opcoes = array( "" => "Selecione" );
+			$obj_instituicao = new clsPmieducarInstituicao();
+			$obj_instituicao->setCamposLista( "cod_instituicao, nm_instituicao" );
+			$obj_instituicao->setOrderby( "nm_instituicao ASC" );
+			$lista = $obj_instituicao->lista( null, null, null, null, null, null, null, null, null, null, null, null, null, 1 );
+			if ( is_array( $lista ) && count( $lista ) )
 			{
-				$opcoes = array( "" => "Selecione" );
-				$obj_instituicao = new clsPmieducarInstituicao();
-				$obj_instituicao->setCamposLista( "cod_instituicao, nm_instituicao" );
-				$obj_instituicao->setOrderby( "nm_instituicao ASC" );
-				$lista = $obj_instituicao->lista( null, null, null, null, null, null, null, null, null, null, null, null, null, 1 );
-				if ( is_array( $lista ) && count( $lista ) )
+				foreach ( $lista as $registro )
+				{
+					$opcoes["{$registro['cod_instituicao']}"] = "{$registro['nm_instituicao']}";
+				}
+			}
+		}
+		else
+		{
+			echo "<!--\nErro\nClasse clsPmieducarInstituicao n&atilde;o encontrada\n-->";
+			$opcoes = array( "" => "Erro na gera&ccedil;&atilde;o" );
+		}
+		if ( $get_escola && $get_curso )
+		{
+			$retorno .= '<tr id="tr_status">
+						 <td valign="top" class="formlttd">
+						 <span class="form">Institui&ccedil;&atilde;o</span>
+						 <span class="campo_obrigatorio">*</span>
+						 <br/>
+						 <sub style="vertical-align: top;"/>
+						 </td>';
+			$retorno .= '<td valign="top" class="formlttd"><span class="form">';
+			$retorno .= "<select onchange=\"getEscola();\" class='geral' name='ref_cod_instituicao' id='ref_cod_instituicao'>";
+			reset( $opcoes );
+			while ( list( $chave, $texto ) = each( $opcoes ) )
+			{
+				$retorno .=  "<option id=\"ref_cod_instituicao_".urlencode( $chave )."\" value=\"".urlencode( $chave )."\"";
+
+				if ( $chave == $this->ref_cod_instituicao )
+				{
+					$retorno .= " selected";
+				}
+				$retorno .=  ">$texto</option>";
+			}
+			$retorno .= "</select>";
+			$retorno .= '</span>
+							</td>
+							</tr>';
+		}
+		else
+		{
+			$retorno .= '<tr id="tr_status">
+						 <td valign="top" class="formlttd">
+						 <span class="form">Institui&ccedil;&atilde;o</span>
+						 <span class="campo_obrigatorio">*</span>
+						 <br/>
+						 <sub style="vertical-align: top;"/>
+						 </td>';
+			$retorno .= '<td valign="top" class="formlttd"><span class="form">';
+			$retorno .= "<select class='geral' name='ref_cod_instituicao' id='ref_cod_instituicao'>";
+			reset( $opcoes );
+			while ( list( $chave, $texto ) = each( $opcoes ) )
+			{
+				$retorno .=  "<option id=\"ref_cod_instituicao_".urlencode( $chave )."\" value=\"".urlencode( $chave )."\"";
+
+				if ( $chave==$this->ref_cod_instituicao )
+				{
+					$retorno .= " selected";
+				}
+				$retorno .=  ">$texto</option>";
+			}
+			$retorno .= "</select>";
+			$retorno .= '</span>
+							</td>
+							</tr>';
+		}
+
+		if ( $get_escola )
+		{
+			if ( class_exists( "clsPmieducarEscola" ) )
+			{
+				$opcoes_escola = array( "" => "Selecione" );
+				//$todas_escolas = "escola = new Array();\n";
+				$obj_escola = new clsPmieducarEscola();
+				$lista = $obj_escola->lista( null, null, null, null, null, null, null, null, null, null, 1 );
+				/*if ( is_array( $lista ) && count( $lista ) )
 				{
 					foreach ( $lista as $registro )
 					{
-						$opcoes["{$registro['cod_instituicao']}"] = "{$registro['nm_instituicao']}";
+						$todas_escolas .= "escola[escola.length] = new Array( {$registro["cod_escola"]}, '{$registro['nome']}', {$registro["ref_cod_instituicao"]} );\n";
 					}
 				}
+				echo "<script>{$todas_escolas}</script>";*/
 			}
 			else
 			{
-				echo "<!--\nErro\nClasse clsPmieducarInstituicao n&atilde;o encontrada\n-->";
-				$opcoes = array( "" => "Erro na gera&ccedil;&atilde;o" );
+				echo "<!--\nErro\nClasse clsPmieducarEscola n&atilde;o encontrada\n-->";
+				$opcoes_escola = array( "" => "Erro na gera&ccedil;&atilde;o" );
 			}
-			if ( $get_escola && $get_curso )
-			{
-				$retorno .= '<tr id="tr_status">
-							 <td valign="top" class="formlttd">
-							 <span class="form">Institui&ccedil;&atilde;o</span>
-							 <span class="campo_obrigatorio">*</span>
-							 <br/>
-							 <sub style="vertical-align: top;"/>
-							 </td>';
-				$retorno .= '<td valign="top" class="formlttd"><span class="form">';
-				$retorno .= "<select onchange=\"getEscola();\" class='geral' name='ref_cod_instituicao' id='ref_cod_instituicao'>";
-				reset( $opcoes );
-				while ( list( $chave, $texto ) = each( $opcoes ) )
-				{
-					$retorno .=  "<option id=\"ref_cod_instituicao_".urlencode( $chave )."\" value=\"".urlencode( $chave )."\"";
+		    if ($nivel_usuario == 4 || $nivel_usuario == 8) {
+		      $opcoes_escola = array('' => 'Selecione');
+		      $obj_escola = new clsPmieducarEscolaUsuario();
+		      $lista = $obj_escola->lista($this->pessoa_logada);
 
-					if ( $chave == $this->ref_cod_instituicao )
-					{
-						$retorno .= " selected";
-					}
-					$retorno .=  ">$texto</option>";
-				}
-				$retorno .= "</select>";
-				$retorno .= '</span>
-								</td>
-								</tr>';
-			}
-			else
-			{
-				$retorno .= '<tr id="tr_status">
-							 <td valign="top" class="formlttd">
-							 <span class="form">Institui&ccedil;&atilde;o</span>
-							 <span class="campo_obrigatorio">*</span>
-							 <br/>
-							 <sub style="vertical-align: top;"/>
-							 </td>';
-				$retorno .= '<td valign="top" class="formlttd"><span class="form">';
-				$retorno .= "<select class='geral' name='ref_cod_instituicao' id='ref_cod_instituicao'>";
-				reset( $opcoes );
-				while ( list( $chave, $texto ) = each( $opcoes ) )
-				{
-					$retorno .=  "<option id=\"ref_cod_instituicao_".urlencode( $chave )."\" value=\"".urlencode( $chave )."\"";
+		      if (is_array($lista) && count($lista)) {
+		        foreach ($lista as $registro) {
+		          $codEscola = $registro['ref_cod_escola'];
 
-					if ( $chave==$this->ref_cod_instituicao )
-					{
-						$retorno .= " selected";
-					}
-					$retorno .=  ">$texto</option>";
-				}
-				$retorno .= "</select>";
-				$retorno .= '</span>
-								</td>
-								</tr>';
-			}
-		}
-		elseif ( $nivel_usuario != 1 )
-		{
-		 	$obj_usuario = new clsPmieducarUsuario( $this->pessoa_logada );
-			$det_usuario = $obj_usuario->detalhe();
-			$this->ref_cod_instituicao = $det_usuario["ref_cod_instituicao"];
-			if ( $nivel_usuario == 4 )
-			{
-				$obj_usuario = new clsPmieducarUsuario( $this->pessoa_logada );
-				$det_usuario = $obj_usuario->detalhe();
-				$this->ref_cod_escola = $det_usuario["ref_cod_escola"];
-				if ( $get_escola )
-				{
-					$retorno .= '<td valign="top" class="formmdtd"><span class="form">';
-					$retorno .= "<input name='ref_cod_escola' id='ref_cod_escola' type='hidden' value='{$this->ref_cod_escola}'>";
-					$retorno .= '</span>
-									</td>
-									</tr>';
-				}
-			}
-			$instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
-			$retorno .= "<input type='hidden' name='ref_cod_instituicao' id='ref_cod_instituicao' value='$instituicao'";
-		}
+		          $escola = new clsPmieducarEscola($codEscola);
+		          $escola = $escola->detalhe();
 
-		if ( $nivel_usuario == 1 || $nivel_usuario == 2 )
-		{
-			if ( $get_escola )
-			{
+		          $opcoes_escola[$codEscola] = $escola['nome'];
+		        }
+		      }
+		    } else if ($this->ref_cod_instituicao) {
 				if ( class_exists( "clsPmieducarEscola" ) )
 				{
 					$opcoes_escola = array( "" => "Selecione" );
-					//$todas_escolas = "escola = new Array();\n";
 					$obj_escola = new clsPmieducarEscola();
-					$lista = $obj_escola->lista( null, null, null, null, null, null, null, null, null, null, 1 );
-					/*if ( is_array( $lista ) && count( $lista ) )
+					$lista = $obj_escola->lista( null, null, null, $this->ref_cod_instituicao, null, null, null, null, null, null, 1 );
+					if ( is_array( $lista ) && count( $lista ) )
 					{
 						foreach ( $lista as $registro )
 						{
-							$todas_escolas .= "escola[escola.length] = new Array( {$registro["cod_escola"]}, '{$registro['nome']}', {$registro["ref_cod_instituicao"]} );\n";
+							$opcoes_escola["{$registro["cod_escola"]}"] = "{$registro['nome']}";
 						}
 					}
-					echo "<script>{$todas_escolas}</script>";*/
 				}
 				else
 				{
 					echo "<!--\nErro\nClasse clsPmieducarEscola n&atilde;o encontrada\n-->";
 					$opcoes_escola = array( "" => "Erro na gera&ccedil;&atilde;o" );
 				}
-				if ( $this->ref_cod_instituicao )
+			}
+			if ( $get_escola )
+			{
+				$retorno .= '<tr id="tr_escola">
+							 <td valign="top" class="formmdtd">
+							 <span class="form">Escola</span>
+							 <span class="campo_obrigatorio">*</span>
+							 <br/>
+							 <sub style="vertical-align: top;"/>
+							 </td>';
+				$retorno .= '<td valign="top" class="formmdtd"><span class="form">';
+
+				$disabled = !$this->ref_cod_escola && $nivel_usuario == 1 /*&& !$this->ref_cod_curso */?  "disabled='true' " : "" ;
+				$retorno .=  " <select onchange=\"getCurso();getAnoLetivo();\" class='geral' name='ref_cod_escola' {$disabled} id='ref_cod_escola'>";
+
+				reset( $opcoes_escola );
+				while ( list( $chave, $texto ) = each( $opcoes_escola ) )
 				{
-					if ( class_exists( "clsPmieducarEscola" ) )
+					$retorno .=  "<option id=\"ref_cod_escola_".urlencode( $chave )."\" value=\"".urlencode( $chave )."\"";
+
+					if ( $chave == $this->ref_cod_escola )
 					{
-						$opcoes_escola = array( "" => "Selecione" );
-						$obj_escola = new clsPmieducarEscola();
-						$lista = $obj_escola->lista( null, null, null, $this->ref_cod_instituicao, null, null, null, null, null, null, 1 );
-						if ( is_array( $lista ) && count( $lista ) )
-						{
-							foreach ( $lista as $registro )
-							{
-								$opcoes_escola["{$registro["cod_escola"]}"] = "{$registro['nome']}";
-							}
-						}
+						$retorno .= " selected";
 					}
-					else
-					{
-						echo "<!--\nErro\nClasse clsPmieducarEscola n&atilde;o encontrada\n-->";
-						$opcoes_escola = array( "" => "Erro na gera&ccedil;&atilde;o" );
-					}
+					$retorno .=  ">$texto</option>";
 				}
-				if ( $get_escola )
-				{
-					$retorno .= '<tr id="tr_escola">
-								 <td valign="top" class="formmdtd">
-								 <span class="form">Escola</span>
-								 <span class="campo_obrigatorio">*</span>
-								 <br/>
-								 <sub style="vertical-align: top;"/>
-								 </td>';
-					$retorno .= '<td valign="top" class="formmdtd"><span class="form">';
-
-					$disabled = !$this->ref_cod_escola && $nivel_usuario == 1 /*&& !$this->ref_cod_curso */?  "disabled='true' " : "" ;
-					$retorno .=  " <select onchange=\"getCurso();getAnoLetivo();\" class='geral' name='ref_cod_escola' {$disabled} id='ref_cod_escola'>";
-
-					reset( $opcoes_escola );
-					while ( list( $chave, $texto ) = each( $opcoes_escola ) )
-					{
-						$retorno .=  "<option id=\"ref_cod_escola_".urlencode( $chave )."\" value=\"".urlencode( $chave )."\"";
-
-						if ( $chave == $this->ref_cod_escola )
-						{
-							$retorno .= " selected";
-						}
-						$retorno .=  ">$texto</option>";
-					}
-					$retorno .=  "</select>";
-					$retorno .= '</span>
-									</td>
-									</tr>';
-				}
+				$retorno .=  "</select>";
+				$retorno .= '</span>
+								</td>
+								</tr>';
 			}
 		}
 		if ( $get_ano )
@@ -313,38 +288,6 @@
 		{
 			if( class_exists( "clsPmieducarCurso" ) )
 			{
-				/*$todos_cursos = "curso = new Array();\n";
-				$obj_curso = new clsPmieducarCurso();
-				$obj_curso->setOrderby("nm_curso ASC");
-				$lista = $obj_curso->lista(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,1);
-				if ( is_array( $lista ) && count( $lista ) )
-				{
-					foreach ( $lista as $registro )
-					{
-						$todos_cursos .= "curso[curso.length] = new Array( {$registro["cod_curso"]}, '{$registro['nm_curso']}', {$registro['qtd_etapas']}, {$registro["ref_cod_instituicao"]}, {$registro["padrao_ano_escolar"]} );\n";
-					}
-				}
-				echo "<script>{$todos_cursos}</script>";
-*/
-				/*if( class_exists( "clsPmieducarEscolaCurso" ) && class_exists( "clsPmieducarCurso" ) )
-				{
-					$todos_cursos_escola  = "escola_curso = new Array();\n";
-					$obj_escola_curso = new clsPmieducarEscolaCurso();
-	//				$obj_escola_curso->setOrderby("ref_cod_curso ASC");
-					$lst_escola_curso = $obj_escola_curso->lista( null,null,null,null,null,null,null,null,1 );
-					if ( is_array( $lst_escola_curso ) && count( $lst_escola_curso ) )
-					{
-						foreach ( $lst_escola_curso as $escola_curso )
-						{
-							//$obj_curso = new clsPmieducarCurso( $escola_curso["ref_cod_curso"] );
-						//$det_curso = $obj_curso->he();
-							if(isset($curso_padrao_ano_escolar) && $det_curso['padrao_ano_escolar'] != $curso_padrao_ano_escolar)
-								continue;
-							$todos_cursos_escola .= "escola_curso[escola_curso.length] = new Array( {$escola_curso["ref_cod_curso"]}, '{$escola_curso['nm_curso']}', {$escola_curso["ref_cod_escola"]}, {$escola_curso["padrao_ano_escolar"]} );\n";
-						}
-					}
-				}
-				echo "<script>{$todos_cursos_escola}</script>";*/
 				$opcoes_curso = array( "" => "Selecione" );
 
 				// EDITAR
@@ -356,28 +299,10 @@
 					{
 						foreach ( $lst_esc_cur as $detalhe )
 						{
-//							$obj_curso = new clsPmieducarCurso( $detalhe["ref_cod_curso"] );
-//							$det_curso = $obj_curso->detalhe();
-//							if ( is_array( $det_curso ) && count( $det_curso ) )
-//							{
-								$opcoes_curso["{$detalhe['ref_cod_curso']}"] = "{$detalhe['nm_curso']}";
-//							}
+							$opcoes_curso["{$detalhe['ref_cod_curso']}"] = "{$detalhe['nm_curso']}";
 						}
 					}
-				}/*elseif($this->ref_cod_curso)
-				{
-					$obj_curso = new clsPmieducarCurso();
-					$obj_curso->setOrderby("nm_curso ASC");
-					$lista = $obj_curso->lista(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,1,null,$this->ref_cod_instituicao);
-
-					if ( is_array( $lista ) && count( $lista ) )
-					{
-						foreach ( $lista as $registro )
-						{
-							$opcoes_curso["{$registro['cod_curso']}"] = "{$registro['nm_curso']}";
-						}
-					}
-				}*/
+				}
 			}
 			else
 			{
@@ -418,42 +343,6 @@
 			$opcoes_serie = array( "" => "Selecione" );
 			if( class_exists( "clsPmieducarSerie" ) )
 			{
-			/*	$todas_series = "serie = new Array();\n";
-				$obj_serie = new clsPmieducarSerie();
-				$obj_serie->setOrderby( "nm_serie ASC" );
-				$lst_serie = $obj_serie->lista( null,null,null,null,null,null,null,null,null,null,null,null,1 );
-
-				if ( is_array( $lst_serie ) && count( $lst_serie ) )
-				{
-					foreach ( $lst_serie as $serie )
-					{
-						if ( $get_escola_serie )
-						{
-							$obj_escola_serie = new clsPmieducarEscolaSerie();
-							$lst_escola_serie = $obj_escola_serie->lista( null,$serie["cod_serie"],null,null,null,null,null,null,null,null,null,null,1 );
-							if ( is_array( $lst_escola_serie ) && count( $lst_escola_serie ) )
-							{	$arr = "new Array(";
-								$conc = "";
-								foreach ( $lst_escola_serie as $escola_serie )
-								{
-									$arr .= "{$conc}'{$escola_serie["ref_cod_escola"]}'";
-									$conc = ",";
-								}
-								$arr .= ")";
-							}else{
-								$arr = "new Array()";
-							}
-
-							$todas_series .= "serie[serie.length] = new Array( {$serie["cod_serie"]}, '{$serie['nm_serie']}', {$serie["ref_cod_curso"]}, {$arr} );\n";
-						}
-						else
-						{
-							$todas_series .= "serie[serie.length] = new Array( {$serie["cod_serie"]}, '{$serie['nm_serie']}', {$serie["ref_cod_curso"]} );\n";
-						}
-					}
-				}
-				echo "<script>{$todas_series}</script>";
-*/
 				// EDITAR
 				if ( $this->ref_cod_curso && $this->ref_cod_escola)
 				{
@@ -572,85 +461,37 @@
 				${$get_cabecalho}[] = "Institui&ccedil;&atilde;o";
 		}
 
-		$validacao = "";
-		if ( $nivel_usuario == 1 )
-		{
-			$validacao = 'if ( !document.getElementById( "ref_cod_instituicao" ).value ) {
-					alert( "Por favor, selecione uma instituição" );
-					return false;
-					}
-					if ( !document.getElementById( "ref_cod_escola" ).value) {
-						//if( !document.getElementById( "ref_cod_curso" ).value){
-							alert( "Por favor, selecione uma escola" );
-							return false;
-						//}
-					}
-					if ( !document.getElementById( "ano" ).value ) {
-					alert( "Por favor, selecione um ano" );
-					return false;
-					}
-					if ( !document.getElementById( "ref_cod_curso" ).value ) {
-					alert( "Por favor, selecione um curso" );
-					return false;
-					}
-					if ( !document.getElementById( "ref_cod_serie" ).value) {
-						//if( document.getElementById( "ref_cod_escola" ).value){
-							alert( "Por favor, selecione uma série" );
-							return false;
-					//	}else{
-						//	alert( "Por favor, selecione uma turma" );
-					//		return false;
-					//	}
-					}
-					if ( !document.getElementById( "ref_cod_turma" ).value ) {
-					alert( "Por favor, selecione uma turma" );
-					return false;
-					} ';
-		}
-		elseif ( $nivel_usuario == 2 )
-		{
-			$validacao = '
-					if ( !document.getElementById( "ref_cod_escola" ).value /*&&  !document.getElementById( "ref_cod_curso" ).value*/) {
-					alert( "Por favor, selecione uma escola" );
-					return false;
-					}
-					if ( !document.getElementById( "ano" ).value ) {
-					alert( "Por favor, selecione um ano" );
-					return false;
-					}
-					if ( !document.getElementById( "ref_cod_curso" ).value ) {
-					alert( "Por favor, selecione um curso" );
-					return false;
-					}
-					if ( !document.getElementById( "ref_cod_serie" ).value ) {
-					alert( "Por favor, selecione uma série" );
-					return false;
-					}
-					if ( !document.getElementById( "ref_cod_turma" ).value ) {
-					alert( "Por favor, selecione uma turma" );
-					return false;
-					} ';
-		}
-		elseif ( $nivel_usuario == 4 )
-		{
-			$validacao = '
-					if ( !document.getElementById( "ano" ).value ) {
-					alert( "Por favor, selecione um ano" );
-					return false;
-					}
-					if ( !document.getElementById( "ref_cod_curso" ).value ) {
-					alert( "Por favor, selecione um curso" );
-					return false;
-					}
-					if ( !document.getElementById( "ref_cod_serie" ).value ) {
-					alert( "Por favor, selecione uma série" );
-					return false;
-					}
-					if ( !document.getElementById( "ref_cod_turma" ).value ) {
-					alert( "Por favor, selecione uma turma" );
-					return false;
-					} ';
-		}
+		$validacao = 'if ( !document.getElementById( "ref_cod_instituicao" ).value ) {
+				alert( "Por favor, selecione uma instituição" );
+				return false;
+				}
+				if ( !document.getElementById( "ref_cod_escola" ).value) {
+					//if( !document.getElementById( "ref_cod_curso" ).value){
+						alert( "Por favor, selecione uma escola" );
+						return false;
+					//}
+				}
+				if ( !document.getElementById( "ano" ).value ) {
+				alert( "Por favor, selecione um ano" );
+				return false;
+				}
+				if ( !document.getElementById( "ref_cod_curso" ).value ) {
+				alert( "Por favor, selecione um curso" );
+				return false;
+				}
+				if ( !document.getElementById( "ref_cod_serie" ).value) {
+					//if( document.getElementById( "ref_cod_escola" ).value){
+						alert( "Por favor, selecione uma série" );
+						return false;
+				//	}else{
+					//	alert( "Por favor, selecione uma turma" );
+				//		return false;
+				//	}
+				}
+				if ( !document.getElementById( "ref_cod_turma" ).value ) {
+				alert( "Por favor, selecione uma turma" );
+				return false;
+				} ';
 		$retorno .= '</form>';
 		$retorno .= "<tr>
 					 <td colspan='2' class='formdktd'/>
