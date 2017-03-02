@@ -237,7 +237,7 @@ class EducacensoExportController extends ApiCoreController
          AND m.aprovado IN (1, 2, 3, 4, 6, 15)
          AND m.ano = $2
          AND mt.ref_cod_turma = $5
-         AND (mt.ativo = 1 OR (mt.ativo = 0 AND mt.data_exclusao > i.data_educacenso))
+         AND mt.ativo = 1
     ';
     return Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId, $ano, $data_ini, $data_fim, $turmaId)));
   }
