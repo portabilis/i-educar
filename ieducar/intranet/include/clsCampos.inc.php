@@ -78,6 +78,7 @@ class clsCampos extends Core_Controller_Page_Abstract
   var $__sequencia_default = TRUE;
   var $__acao_enviar_abas  = 'acao()';
   var $ref_cod_escola;
+  var $ref_cod_instituicao;
 
   function __construct() {
 
@@ -98,6 +99,7 @@ class clsCampos extends Core_Controller_Page_Abstract
       $escola = array_shift($escolasUser);
 
       $this->ref_cod_escola = $escola['ref_cod_escola'];
+      $this->ref_cod_instituicao = $escola['instituicao'];
     }
   }
 
