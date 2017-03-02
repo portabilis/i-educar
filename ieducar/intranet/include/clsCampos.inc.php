@@ -80,7 +80,8 @@ class clsCampos extends Core_Controller_Page_Abstract
   var $ref_cod_escola;
   var $ref_cod_instituicao;
 
-  function __construct() {
+  function clsCampos() {
+    parent::__construct();
 
     @session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
