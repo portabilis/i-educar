@@ -66,7 +66,7 @@ class clsDetalhe extends Core_Controller_Page_Abstract
   var $array_botao_url_script;
 
   function addBanner($strBannerUrl = '', $strBannerLateralUrl = '',
-    $strBannerTitulo = '', $boolFechaBanner = TRUE)
+    $strBannerTitulo = '', $boolFechaBanner = FALSE)
   {
     if ($strBannerUrl != '') {
       $this->banner = $strBannerUrl;
@@ -107,7 +107,7 @@ class clsDetalhe extends Core_Controller_Page_Abstract
     $retorno = '';
     if ($this->banner) {
       $retorno .= "<table width='100%' style=\"height:100%\" border='0' cellpadding='0' cellspacing='0'><tr>";
-      $retorno .= "<td class=\"barraLateral\" width=\"21\" valign=\"top\"><a href='#'><img src=\"{$this->bannerLateral}\" align=\"right\" border=\"0\" alt=\"$this->titulo_barra\" title=\"$this->titulo_barra\"></a></td><td valign='top'>";
+      $retorno .= "<td valign='top'>";
     }
 
     $script = explode('/', $_SERVER['PHP_SELF']);
