@@ -115,9 +115,7 @@ class indice extends clsListagem
 
     $this->addCabecalhos($lista_busca);
 
-    // Filtros de Foreign Keys
-    $get_curso = true;
-    include('include/pmieducar/educar_campo_lista.php');
+    $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'curso'));
 
     // outros Filtros
     $this->campoTexto('nm_serie', 'S&eacute;rie', $this->nm_serie, 30, 255, FALSE);

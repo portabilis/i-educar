@@ -32,6 +32,7 @@
  */
 
 require_once 'include/pmieducar/geral.inc.php';
+require_once 'App/Model/NivelTipoUsuario.php';
 
 /**
  * clsPmieducarEscola class.
@@ -1914,11 +1915,17 @@ class clsPmieducarEscola
     }
 
     if (is_numeric($cod_usuario)) {
-      $filtros .= "{$whereAnd} EXISTS (SELECT *
-                                         FROM pmieducar.escola_usuario
-                                        WHERE escola_usuario.ref_cod_escola = cod_escola
-                                          AND ref_cod_usuario = '{$cod_usuario}')";
-      $whereAnd = " AND ";
+      $permissao = new clsPermissoes();
+      $nivel = $permissao->nivel_acesso($this->pessoa_logada);
+
+      if ($nivel == App_Model_NivelTipoUsuario::ESCOLA ||
+          $nivel == App_Model_NivelTipoUsuario::BIBLIOTECA) {
+        $filtros .= "{$whereAnd} EXISTS (SELECT *
+                                           FROM pmieducar.escola_usuario
+                                          WHERE escola_usuario.ref_cod_escola = cod_escola
+                                            AND ref_cod_usuario = '{$cod_usuario}')";
+        $whereAnd = " AND ";
+      }
     }
 
     $db = new clsBanco();
