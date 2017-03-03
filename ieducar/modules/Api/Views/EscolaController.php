@@ -469,16 +469,16 @@ protected function getEscolaAnoLetivo(){
       $escolasUser = App_Model_IedFinder::getEscolasUser($userId);
       foreach ($escolasUser as $e)
       {
-        $escolas_usuario[$e["ref_cod_escola"]] = strtoupper($e["nome"]);
+        $escolas_usuario['__'.$e["ref_cod_escola"]] = strtoupper($e["nome"]);
       }
       return array('options' => $escolas_usuario);
     }
 
     $instituicao = $this->getRequest()->instituicao;
-    $escolas = App_Model_IedFinder::getEscolas($instituicao);
+    $escolasInstituicao = App_Model_IedFinder::getEscolas($instituicao);
 
-    foreach ($escolas as $id => $nome) {
-      $escolas[$id] = strtoupper($this->toUtf8($nome));
+    foreach ($escolasInstituicao as $id => $nome) {
+      $escolas['__'.$id] = strtoupper($this->toUtf8($nome));
     }
 
     return array('options' => $escolas);
