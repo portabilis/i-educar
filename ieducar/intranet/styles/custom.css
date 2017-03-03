@@ -34,6 +34,7 @@ input[type="button"] {
   border-radius: 3px !important;
   font-weight: normal;
   margin: 15px 0px;
+  font-family: "Open Sans";
 }
 
 select{
