@@ -58,9 +58,7 @@ class ReservavagaController extends ApiCoreController
 
     $codigo = 0;
 
-    if($this->permiteMultiplasReservas()){
       if($nome && $anoLetivo && $dataNascimento && $escola){
-
 
         $sql = "SELECT candidato_reserva_vaga.cod_candidato_reserva_vaga AS codigo
                   FROM pmieducar.candidato_reserva_vaga
@@ -86,9 +84,7 @@ class ReservavagaController extends ApiCoreController
         if(!empty($candidato)){
           $codigo = $candidato[0]['codigo'];
         }
-      }
     }elseif ($nome && $anoLetivo && $dataNascimento){
-
       $sql = "SELECT candidato_reserva_vaga.cod_candidato_reserva_vaga AS codigo
                 FROM pmieducar.candidato_reserva_vaga
                INNER JOIN pmieducar.aluno ON (aluno.cod_aluno = candidato_reserva_vaga.ref_cod_aluno)
@@ -111,7 +107,7 @@ class ReservavagaController extends ApiCoreController
         $codigo = $candidato[0]['codigo'];
       }
     }
-    return array('codigo' => $codigo);
+    return array('codigo' => $codigo, 'escola' => $escola);
   }
 
   protected function getAlunoAndamento() {
