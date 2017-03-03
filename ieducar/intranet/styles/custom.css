@@ -993,9 +993,17 @@ p.title-table-matricula {
   box-shadow: inset 1px 1px 0 0 #cddce6, inset -1px 0 0 0 #cddce6;
 }
 
-/*******BOTÃO DESTAQUE******/
+/*******BOTÕES******/
 .btn-green, input.btn-green, .ui-button span.btn-green, #btn_enviar{
   background-color: #0ac336 !important;
   border: 0 !important;
   color: #FFF !important;
+}
+
+input.btn_small {
+    margin: 4px 0;
+    padding: 7px 7px !important;
+    color: #188ad1 !important;
+    font-family: "Open Sans";
+    font-size: 12px !important;
 }
