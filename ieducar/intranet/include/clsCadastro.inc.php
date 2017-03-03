@@ -256,7 +256,7 @@ class clsCadastro extends clsCampos
 
     if ($this->banner) {
       $retorno .= "<table width='100%' style=\"height:100%\" border='0' cellpadding='0' cellspacing='0'><tr>";
-      $retorno .= "<td class=\"barraLateral\" width=\"21\" valign=\"top\"><a href='#'><img src=\"{$this->bannerLateral}\" align=\"right\" border=\"0\" alt=\"$this->titulo_barra\" title=\"$this->titulo_barra\"></a></td><td valign='top'>";
+      $retorno .= "<td valign='top'>";
     }
 
     $this->Gerar();

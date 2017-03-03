@@ -34,6 +34,7 @@ input[type="button"] {
   border-radius: 3px !important;
   font-weight: normal;
   margin: 15px 0px;
+  font-family: "Open Sans";
 }
 
 select{
@@ -217,7 +218,7 @@ select{
 }
 
 .clLevel0border{
-  margin-top: 4px;
+  margin-top: 0;
   background: #FFF; 
   height: 40px !important;
   width: auto !important;
@@ -226,10 +227,6 @@ select{
 .clLevel1border,
 .clLevel2border{
   box-shadow: 0 2px 9px 0 rgba(0, 0, 0, 0.15);
-}
-
-#oCMenu_4__0{
-  left: 650px !important;
 }
 
 .clLevel0{
@@ -289,12 +286,10 @@ a.menu_susp_root:after {
 }
 
 .clLevel1border {
-  margin-top: 8px;
   background: #f3f3f3;
 }
 
 .clLevel2border {
-  margin-top: 8px;
   background: #f3f3f3;
 }
 /**************************************
@@ -726,6 +721,10 @@ table {
     font-size: 12px;
 }
 
+.tabelanum1{
+  border: 0 !important;
+}
+
 td.tableDetalheLinhaSeparador {
     background-color: #ccdce6 !important;
 }
@@ -968,7 +967,8 @@ p.title-table-matricula {
 .alunoTab2,
 .alunoTab-active2,
 .turmaTab,
-.turmaTab-active {
+.turmaTab-active,
+#tab1, #tab2, #tab3, #tab4, #tab5, #tab6, #tab7 {
   width: auto !important;
   font-size: 14px;
   font-weight: normal;
@@ -980,22 +980,32 @@ p.title-table-matricula {
 
 .alunoTab,
 .alunoTab2,
-.turmaTab {
+.turmaTab,
+.servidorTab {
   background-image: linear-gradient(to bottom, rgba(233, 239, 247, 0) 34%,rgba(71, 114, 143, 0.16)), linear-gradient(#e9eff7, #e9eff7);
   box-shadow: inset -1px 0 0 0 #ffffff;
 }
 
 .alunoTab-active,
 .alunoTab-active2,
-.turmaTab-active {
+.turmaTab-active,
+.servidorTab-active {
   width: auto !important;
   background: #FFF !important;
   box-shadow: inset 1px 1px 0 0 #cddce6, inset -1px 0 0 0 #cddce6;
 }
 
-/*******BOTÃO DESTAQUE******/
+/*******BOTÕES******/
 .btn-green, input.btn-green, .ui-button span.btn-green, #btn_enviar{
   background-color: #0ac336 !important;
   border: 0 !important;
   color: #FFF !important;
+}
+
+input.btn_small {
+    margin: 4px 0;
+    padding: 7px 7px !important;
+    color: #188ad1 !important;
+    font-family: "Open Sans";
+    font-size: 12px !important;
 }
