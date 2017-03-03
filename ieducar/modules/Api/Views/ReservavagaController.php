@@ -72,6 +72,7 @@ class ReservavagaController extends ApiCoreController
                  WHERE fisica.data_nasc = $3
                    AND candidato_reserva_vaga.ano_letivo = $2
                    AND candidato_reserva_vaga.ref_cod_escola = $4
+                   AND ((candidato_reserva_vaga.situacao = 'A') or candidato_reserva_vaga.situacao IS NULL)
                    AND translate(public.fcn_upper(trim(pessoa.nome)),
                        'åáàãâäéèêëíìîïóòõôöúùüûçÿýñÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ',
                        'aaaaaaeeeeiiiiooooouuuucyynAAAAAAEEEEIIIIOOOOOUUUUCYN') = translate(public.fcn_upper(trim($1)),
@@ -96,6 +97,7 @@ class ReservavagaController extends ApiCoreController
                 LEFT JOIN cadastro.pessoa pessoa_responsavel ON (pessoa_responsavel.idpes = fisica.idpes_responsavel)
                 LEFT JOIN cadastro.fisica fisica_responsavel ON (fisica_responsavel.idpes = fisica.idpes_responsavel)
                WHERE fisica.data_nasc = $3
+                 AND ((candidato_reserva_vaga.situacao = 'A') or candidato_reserva_vaga.situacao IS NULL)
                  AND candidato_reserva_vaga.ano_letivo = $2
                  AND translate(public.fcn_upper(trim(pessoa.nome)),
                      'åáàãâäéèêëíìîïóòõôöúùüûçÿýñÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ',
