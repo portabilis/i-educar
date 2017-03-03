@@ -218,7 +218,7 @@ select{
 }
 
 .clLevel0border{
-  margin-top: 4px;
+  margin-top: 0;
   background: #FFF; 
   height: 40px !important;
   width: auto !important;
@@ -227,10 +227,6 @@ select{
 .clLevel1border,
 .clLevel2border{
   box-shadow: 0 2px 9px 0 rgba(0, 0, 0, 0.15);
-}
-
-#oCMenu_4__0{
-  left: 650px !important;
 }
 
 .clLevel0{
@@ -290,12 +286,10 @@ a.menu_susp_root:after {
 }
 
 .clLevel1border {
-  margin-top: 8px;
   background: #f3f3f3;
 }
 
 .clLevel2border {
-  margin-top: 8px;
   background: #f3f3f3;
 }
 /**************************************
