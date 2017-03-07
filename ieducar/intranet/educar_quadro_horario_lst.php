@@ -188,20 +188,20 @@ class indice extends clsConfig
         if (is_array($det_quadro)) {
           $quadro_horario = "<table class='calendar' cellspacing='0' cellpadding='0' border='0'>
                             <tr>
-                              <td class='cal_esq_qh' >&nbsp;</td>
-                              <td background='imagens/i-educar/cal_bg.gif' width='100%' class='mes'>{$det_turma["nm_turma"]}</td>
+                              <td class='cal_esq_qh' width='40px'><i class='fa fa-calendar' aria-hidden='true'></i></td>
+                              <td width='100%' class='mes'>Turma: {$det_turma["nm_turma"]}</td>
                               <td align='right' class='cal_dir'>&nbsp;</td>
                               </tr>
                             <tr>
-                              <td colspan='3' class='bordaM' style='border-bottom: 1px solid #8A959B;'  align='center'>
-                                <table cellspacing='0' cellpadding='0'  border='0' >
+                              <td colspan='3'  align='center'>
+                                <table width='100%' cellspacing='2' cellpadding='0'  border='0' >
                                   <tr class='header'>
-                                    <td style='border-right: 1px dotted #FFFFFF;width: 100px;'>DOM</td>
-                                    <td style='border-right: 1px dotted #FFFFFF;width: 100px;'>SEG</td>
-                                    <td style='border-right: 1px dotted #FFFFFF;width: 100px;'>TER</td>
-                                    <td style='border-right: 1px dotted #FFFFFF;width: 100px;'>QUA</td>
-                                    <td style='border-right: 1px dotted #FFFFFF;width: 100px;'>QUI</td>
-                                    <td style='border-right: 1px dotted #FFFFFF;width: 100px;'>SEX</td>
+                                    <td style='width: 100px;'>DOM</td>
+                                    <td style='width: 100px;'>SEG</td>
+                                    <td style='width: 100px;'>TER</td>
+                                    <td style='width: 100px;'>QUA</td>
+                                    <td style='width: 100px;'>QUI</td>
+                                    <td style='width: 100px;'>SEX</td>
                                     <td style='width: 100px;'>SAB</td>
                                   </tr>";
           $texto = '<tr>';
@@ -242,12 +242,12 @@ class indice extends clsConfig
                   substr($registro['hora_inicial'], 0, 5), substr($registro['hora_final'], 0, 5),
                   $componente->abreviatura, $det_servidor['nome']);
 
-                $texto .= sprintf('<div style="text-align: center; background-color: #F6F6F6; font-size: 11px; width: 100px; margin: 3px; border: 1px solid #CCCCCC; padding:5px;">%s</div>',
+                $texto .= sprintf('<div class="horario">%s</div>',
                   $detalhes);
               }
             }
             else {
-              $texto .= "<div  style='text-align: center;background-color: #F6F6F6;font-size: 11px; width: 100px; margin: 3px; border: 1px solid #CCCCCC; padding:5px; height: 85%;'></div>";
+              $texto .= "<div  class='horario'><i class='fa fa-plus-square' aria-hidden='true'></i></div>";
             }
 
             $texto .= '</td>';
@@ -274,7 +274,7 @@ class indice extends clsConfig
       }
       else {
         if ($obj_permissoes->permissao_excluir(641, $this->pessoa_logada, 7))
-          $retorno .= "<input type=\"button\" value=\"Excluir Quadro de Hor&aacute;rios\" onclick=\"window.location='educar_quadro_horario_cad.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}&ano={$this->ano}&ref_cod_quadro_horario={$det_quadro["cod_quadro_horario"]}'\" class=\"botaolistagem\"/>";
+          $retorno .= "<input type=\"button\" value=\"Excluir Quadro de Hor&aacute;rios\" onclick=\"window.location='educar_quadro_horario_cad.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}&ano={$this->ano}&ref_cod_quadro_horario={$det_quadro["cod_quadro_horario"]}'\" class=\"botaolistagem btn-green\"/>";
       }
 
       $retorno .= "</td>

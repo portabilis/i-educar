@@ -504,7 +504,7 @@
 					 document.formcadastro.submit();
 					 }
 					 </script>
-					 <input type='button' id='botao_busca' value='busca' onclick='javascript:acao();' class='botaolistagem'/>
+					 <input type='button' class='btn-green' id='botao_busca' value='Buscar' onclick='javascript:acao();' class='botaolistagem'/>
 					 </td>
 					 </tr><tr><td>&nbsp;</td></tr>";
 ?>
