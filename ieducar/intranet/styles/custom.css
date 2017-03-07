@@ -857,6 +857,7 @@ td.area-conhecimento-destaque {
   padding: 8px;
   font-size: 14px;
   color: #47728f;
+  max-width: 450px;
 }
 
 #formcadastro .formmdtd,
