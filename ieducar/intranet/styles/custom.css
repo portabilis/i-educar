@@ -58,7 +58,7 @@ select{
 }
 
 /**************************************
-**************** TOPO *****************
+************ TOPO / RODAPÉ ************
 **************************************/
 
 .topo{
@@ -136,6 +136,18 @@ select{
   position: absolute;
   border-radius: 50%;
   display: inline-block;
+}
+
+.rodape{
+  height: 30px;
+  background-color: #47728f;
+  color: #FFF;
+  font-size: 10px;
+}
+
+.rodape a{
+  color: #FFF;
+  text-decoration: underline;
 }
 
 /**************************************
