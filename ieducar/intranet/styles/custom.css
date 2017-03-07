@@ -900,12 +900,19 @@ td.area-conhecimento-destaque {
 .tablelistagem .formmdtd,
 .tablelistagem .formlttd,
 .tablelistagem .formmdtd a,
-.tablelistagem .formlttd a,
+.tablelistagem .formlttd a{
+  color: #47728f;
+  font-family: "Open Sans";
+  font-size: 12px;
+  padding: 8px;
+  vertical-align: middle;
+}
+
 .tableDetalhe .formmdtd,
 .tableDetalhe .formlttd{
   color: #47728f;
   font-family: "Open Sans";
-  font-size: 12px;
+  font-size: 14px;
   padding: 8px;
   vertical-align: middle;
 }
