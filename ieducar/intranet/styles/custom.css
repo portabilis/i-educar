@@ -292,6 +292,58 @@ a.menu_susp_root:after {
 .clLevel2border {
   background: #f3f3f3;
 }
+
+/*Icones do menu lateral*/
+
+a#link1_25 {
+  background: url(../imagens/icon-administrativo.png) no-repeat left center;
+  padding-left: 30px;
+}
+
+a#link1_5 {
+  background: url(../imagens/icon-administrativo.png) no-repeat left center;
+  padding-left: 30px;
+}
+
+a#link1_70 {
+  background: url(../imagens/icon-educacenso.png) no-repeat left center;
+  padding-left: 30px;
+}
+
+a#link1_68 {
+  background: url(../imagens/icon-enderecamento.png) no-repeat left center;
+  padding-left: 30px;
+}
+
+a#link1_57{
+  background: url(../imagens/icon-biblioteca.png) no-repeat left center;
+  padding-left: 30px;
+}
+
+
+a#link1_55 {
+  background: url(../imagens/icon-escola.png) no-repeat left center;
+  padding-left: 30px;
+}
+
+
+a#link1_7 {
+  background: url(../imagens/icon-pessoas.png) no-repeat left center;
+  padding-left: 30px;
+}
+
+a#link1_23 {
+  background: url(../imagens/icon-administrativo.png) no-repeat left center;
+  padding-left: 30px;
+}
+
+a#link1_69 {
+  background: url(../imagens/icon-transporte-escolar.png) no-repeat left center;
+  padding-left: 30px;
+}
+
+
+
 /**************************************
 ************* BREADCRUMB **************
 **************************************/
