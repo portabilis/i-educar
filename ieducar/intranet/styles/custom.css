@@ -401,6 +401,7 @@ table.calendar .header {
   background: #fff;
   color: #47728f;
   border: 0;
+  font-family: "Open Sans";
 }
 
 table.calendar .header td{
@@ -513,6 +514,33 @@ a.nav_agenda{
 a.nav_agenda:hover{
   text-decoration: none;
   opacity: .9;
+}
+
+/**************************************
+********** QUADRO DE HORARIO **********
+**************************************/
+
+table.calendar .cal_esq_qh{
+  background: none !important;
+  color: #47728f;
+  text-align: left;
+  height: auto;
+  font-size: 40px;
+  padding: 0 10px;
+  font-family: "Open Sans";
+}
+
+table.calendar .mes{
+  color: #47728f;
+  padding: 10px;
+  font-size: 16px;
+  font-family: "Open Sans";
+}
+
+table.calendar .horario {
+    background: #e9f0f8;
+    margin-bottom: 2px;
+    padding: 10px;
 }
 
 /**************************************
