@@ -144,7 +144,7 @@ class clsPmieducarInstituicao
     $this->_tabela = "{$this->_schema}instituicao";
     $this->_campos_lista = $this->_todos_campos = "cod_instituicao, ref_usuario_exc, ref_usuario_cad, ref_idtlog, ref_sigla_uf, cep, cidade, bairro, logradouro, numero, complemento, nm_responsavel, ddd_telefone, telefone, data_cadastro, data_exclusao, ativo, nm_instituicao, data_base_transferencia, data_base_remanejamento, controlar_espaco_utilizacao_aluno, percentagem_maxima_ocupacao_salas, quantidade_alunos_metro_quadrado, exigir_vinculo_turma_professor, gerar_historico_transferencia, matricula_apenas_bairro_escola, restringir_historico_escolar, coordenador_transporte, restringir_multiplas_enturmacoes, permissao_filtro_abandono_transferencia, data_base_matricula, multiplas_reserva_vaga,
       reserva_integral_somente_com_renda, data_expiracao_reserva_vaga, data_fechamento, componente_curricular_turma,
-      controlar_posicao_historicos, reprova_dependencia_ano_concluinte, data_educacenso ";
+      controlar_posicao_historicos, reprova_dependencia_ano_concluinte, data_educacenso, bloqueia_matricula_serie_nao_seguinte ";
 
     if (is_numeric($ref_usuario_cad)) {
       if (class_exists('clsPmieducarUsuario')) {
@@ -541,6 +541,16 @@ class clsPmieducarInstituicao
         $gruda = ", ";
       }
 
+      if (dbBool($this->bloqueia_matricula_serie_nao_seguinte)) {
+        $campos .= "{$gruda}bloqueia_matricula_serie_nao_seguinte";
+        $valores .= "{$gruda} true ";
+        $gruda = ", ";
+      }else{
+        $campos .= "{$gruda}bloqueia_matricula_serie_nao_seguinte";
+        $valores .= "{$gruda} false ";
+        $gruda = ", ";
+      }
+
       if ((is_string($this->data_base_matricula)) AND !empty($this->data_base_matricula)) {
         $campos .= "{$gruda}data_base_matricula";
         $valores .= "{$gruda}'{$this->data_base_matricula}'";
@@ -700,7 +710,7 @@ class clsPmieducarInstituicao
         $set .= "{$gruda}gerar_historico_transferencia = false ";
         $gruda = ", ";
       }
-      
+
       if (dbBool($this->controlar_posicao_historicos)) {
         $set .= "{$gruda}controlar_posicao_historicos = true ";
         $gruda = ", ";
@@ -793,6 +803,14 @@ class clsPmieducarInstituicao
         $gruda = ", ";
       }else{
         $set .= "{$gruda}reprova_dependencia_ano_concluinte = FALSE ";
+        $gruda = ", ";
+      }
+
+      if (dbBool($this->bloqueia_matricula_serie_nao_seguinte)) {
+        $set .= "{$gruda}bloqueia_matricula_serie_nao_seguinte = TRUE ";
+        $gruda = ", ";
+      }else{
+        $set .= "{$gruda}bloqueia_matricula_serie_nao_seguinte = FALSE ";
         $gruda = ", ";
       }
 
