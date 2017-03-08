@@ -53,6 +53,11 @@ select{
   color: #188ad1;
 }
 
+.disabled, *[disabled]{
+  background-color: #e9f0f8 !important;
+  color: #47728f;
+}
+
 #lupa{
   cursor: pointer;
 }
@@ -383,6 +388,11 @@ td.fundoLocalizacao {
 /**************************************
 *********CALENDÁRIO ANO LETIVO*********
 **************************************/
+.input_calendario_letivo td,
+.input_calendario_letivo td select{
+  font-size: 14px !important;  
+}
+
 table.calendar {
     margin-top: 20px;
     width: 100%;
@@ -543,6 +553,10 @@ table.calendar .horario {
     padding: 10px;
 }
 
+.input_quadro_horario td,
+.input_quadro_horario td select{
+  font-size: 14px !important;  
+}
 /**************************************
 ****************AGENDA*****************
 **************************************/
@@ -793,7 +807,7 @@ table.calendario td a{
 #modal-close{
   background: #47728f;
   text-align: right;
-  padding-right: 10px;
+  padding-right: 20px;
 }
 
 .modal-domjs-conteudo{
@@ -960,7 +974,7 @@ td.area-conhecimento-destaque {
 
 
 table#matriculas select {
-    background-color: #ccdce6;
+    background-color: #e9f0f8;
     color: #47728f;
     border-color: #ccdce6;
 }

@@ -32,7 +32,7 @@
 		$retorno .= '<tr>
 					 <td height="24" colspan="2" class="formdktd">
 					 <span class="form">
-					 <b>Filtros de busca</b>
+					 <b style="font-size: 16px;">Filtros de busca</b>
 					 </span>
 					 </td>
 					 </tr>';
@@ -89,7 +89,7 @@
 		}
 		if ( $get_escola && $get_curso )
 		{
-			$retorno .= '<tr id="tr_status">
+			$retorno .= '<tr id="tr_status" class="input_quadro_horario">
 						 <td valign="top" class="formlttd">
 						 <span class="form">Institui&ccedil;&atilde;o</span>
 						 <span class="campo_obrigatorio">*</span>
@@ -116,7 +116,7 @@
 		}
 		else
 		{
-			$retorno .= '<tr id="tr_status">
+			$retorno .= '<tr id="tr_status" class="input_quadro_horario">
 						 <td valign="top" class="formlttd">
 						 <span class="form">Institui&ccedil;&atilde;o</span>
 						 <span class="campo_obrigatorio">*</span>
@@ -201,7 +201,7 @@
 			}
 			if ( $get_escola )
 			{
-				$retorno .= '<tr id="tr_escola">
+				$retorno .= '<tr id="tr_escola" class="input_quadro_horario
 							 <td valign="top" class="formmdtd">
 							 <span class="form">Escola</span>
 							 <span class="campo_obrigatorio">*</span>
@@ -255,7 +255,7 @@
 				echo "<!--\nErro\nClasse clsPmieducarEscolaAnoLetivo n&atilde;o encontrada\n-->";
 				$opcoes_ano = array( "" => "Erro na gera&ccedil;&atilde;o" );
 			}
-			$retorno .= '<tr id="tr_ano">
+			$retorno .= '<tr id="tr_ano" class="input_quadro_horario">
 						 <td valign="top" class="formlttd">
 						 <span class="form">Ano</span>
 						 <span class="campo_obrigatorio">*</span>
@@ -309,7 +309,7 @@
 				echo "<!--\nErro\nClasse clsPmieducarCurso n&atilde;o encontrada\n-->";
 				$opcoes_curso = array( "" => "Erro na gera&ccedil;&atilde;o" );
 			}
-			$retorno .= '<tr id="tr_curso">
+			$retorno .= '<tr id="tr_curso" class="input_quadro_horario">
 						 <td valign="top" class="formlttd">
 						 <span class="form">Curso</span>
 						 <span class="campo_obrigatorio">*</span>
@@ -363,7 +363,7 @@
 				echo "<!--\nErro\nClasse clsPmieducarSerie n&atilde;o encontrada\n-->";
 				$todas_series = array( "" => "Erro na gera&ccedil;&atilde;o" );
 			}
-			$retorno .= '<tr id="tr_curso">
+			$retorno .= '<tr id="tr_curso" class="input_quadro_horario">
 						 <td valign="top" class="formmdtd">
 						 <span class="form">S&eacute;rie</span>
 						 <span class="campo_obrigatorio">*</span>
@@ -417,7 +417,7 @@
 				echo "<!--\nErro\nClasse clsPmieducarTurma n&atilde;o encontrada\n-->";
 				$todas_turmas = array( "" => "Erro na gera&ccedil;&atilde;o" );
 			}
-			$retorno .= '<tr id="tr_turma">
+			$retorno .= '<tr id="tr_turma" class="input_quadro_horario">
 						 <td valign="top" class="formlttd">
 						 <span class="form">Turma</span>
 						 <span class="campo_obrigatorio">*</span>
