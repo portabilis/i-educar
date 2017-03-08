@@ -175,7 +175,9 @@ select{
     font-weight: bold !important;
 }
 
-
+.ui-autocomplete.ui-menu.ui-widget.ui-widget-content.ui-corner-all{
+  box-shadow: 0 2px 9px 0 rgba(0, 0, 0, 0.15);
+}
 
 .nvp_tabelaMenu .title-busca-rapida .title:hover{
   background: transparent;

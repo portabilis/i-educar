@@ -1,6 +1,6 @@
 <table summary="" class='tabelanum1' border='0' cellspacing='0' cellpadding='0'>
 <tr class="topo">
-	<td class="logo" align="left">i-Educar</td>
+	<td class="logo" align="left"><a style="color:#FFF; text-decoration: none;" href="/">i-Educar</a></td>
 	<td class="perfil-user" align="right">
 		<div class="foto-user" style="background: url('<!-- #&FOTO&# -->')"></div>
 		<div class="dropdown">

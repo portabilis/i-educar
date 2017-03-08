@@ -1,5 +1,6 @@
 
-	<div title="<!-- #&TITLE_ACAO&# -->">
+<a href="javascript:void(0);" onclick="toggleMenu('<!-- #&IDMENUPAI&# -->');" title="<!-- #&TITLE_ACAO&# --> - <!-- #&MENUPAI&# -->" style="outline:none; text-decoration: none;">
+<div title="<!-- #&TITLE_ACAO&# -->">
 <table width="168" class="title active-section-title" style="-moz-user-select: none;">
 <tbody style="-moz-user-select: none;">
 <tr style="-moz-user-select: none;">
@@ -10,4 +11,4 @@
 </tr>
 </tbody>
 </table>
-<div id='div_<!-- #&IDMENUPAI&# -->' <!-- #&STYLE&# --> ><ul class="menu"><!-- #&MENUS&# --></ul></div></div>
+<div id='div_<!-- #&IDMENUPAI&# -->' <!-- #&STYLE&# --> ><ul class="menu"><!-- #&MENUS&# --></ul></div></div></a>
