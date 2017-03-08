@@ -182,7 +182,7 @@ class indice extends clsCadastro
         }
         $this->mensagem .= "</br>Por favor, cadastre o INEP do(s) aluno(s) em: Cadastros > Aluno > Alunos > Campo: Código INEP.";
       }else{
-        $this->mensagem = "<span class='notice'>Nenhum aluno rematriculado. Certifique-se que a turma possui alunos aprovados ou reprovados não matriculados em ".($this->ano_letivo-1).".</span>";
+        $this->mensagem = "<span class='notice'>Nenhum aluno rematriculado. Certifique-se que a turma possui alunos aprovados ou reprovados em ".($this->ano_letivo-1).".</span>";
       }
     }elseif(empty($this->mensagem))
       $this->mensagem = "Ocorreu algum erro inesperado durante as rematrículas, por favor, tente novamente.";
