@@ -1125,3 +1125,70 @@ input.btn_small {
     font-family: "Open Sans";
     font-size: 12px !important;
 }
+
+.js .inputfile {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+.inputfile + label {
+    max-width: 80%;
+    font-size: 14px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+    display: inline-block;
+    overflow: hidden;
+    /* 10px 20px */
+}
+
+.no-js .inputfile + label {
+    display: none;
+}
+
+.inputfile + label * {
+    /* pointer-events: none; */
+    /* in case of FastClick lib use */
+}
+
+.inputfile-buttom + label {
+    color: #47728f;
+}
+
+.inputfile-buttom + label {
+    border: 1px solid #cddce6;
+    background-color: #fff;
+    padding: 0;
+    border-radius: 3px;
+}
+
+.inputfile-buttom + label span,
+.inputfile-buttom + label strong {
+    padding:8px;
+}
+
+.inputfile-buttom + label span {
+    width: 200px;
+    display: inline-block;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    vertical-align: top;
+}
+
+.inputfile-buttom + label strong {
+    height: 100%;
+    color: #FFF;
+    background-color: #0ac336;
+    display: inline-block;
+}
+
+@media screen and (max-width: 50em) {
+  .inputfile-buttom + label strong {
+    display: block;
+  }
+}
