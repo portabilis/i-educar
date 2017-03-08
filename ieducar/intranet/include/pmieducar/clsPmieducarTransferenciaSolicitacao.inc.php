@@ -594,16 +594,6 @@ class clsPmieducarTransferenciaSolicitacao
 			$filtros .= "{$whereAnd} ts.data_exclusao <= '{$date_data_exclusao_fim}'";
 			$whereAnd = " AND ";
 		}
-		if( is_null( $int_ativo ) || $int_ativo )
-		{
-			$filtros .= "{$whereAnd} ts.ativo = '1'";
-			$whereAnd = " AND ";
-		}
-		else
-		{
-			$filtros .= "{$whereAnd} ts.ativo = '0'";
-			$whereAnd = " AND ";
-		}
 		if( is_string( $date_data_transferencia_ini ) )
 		{
 			$filtros .= "{$whereAnd} ts.data_transferencia >= '{$date_data_transferencia_ini}'";
