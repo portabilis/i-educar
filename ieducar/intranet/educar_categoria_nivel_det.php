@@ -101,18 +101,19 @@ class indice extends clsDetalhe
 
 		if($lst_nivel)
 		{
-			$tab_niveis .= "<table cellspacing='0' cellpadding='0' width='200' border='0' style='border:1px dotted #000000'>";
+			$tab_niveis .= "<table cellspacing='0' cellpadding='0' width='200' border='0'>";
 
 			$class2 = $class2 == "formlttd" ? "formmdtd" : "formlttd" ;
 			$tab_niveis .= " <tr>
-								<td bgcolor='#ccdce6' align='center' colspan='2'>N&iacute;veis</td>
+								<td bgcolor='#ccdce6' align='center'>N&iacute;veis</td>
+								<td bgcolor='#ccdce6' align='center'>Subn&iacute;veis</td>
 							</tr>";
 			foreach ($lst_nivel as $nivel)
 			{
 
 				$tab_niveis .= " <tr class='$class2' align='center'>
 									<td align='left'>{$nivel['nm_nivel']}</td>
-									<td align='left' width='30'><a href='javascript:popless(\"{$nivel['cod_nivel']}\")'><img src='imagens/nvp_bot_ad_sub.gif' border='0'></a></td>
+									<td align='center'><a style='color:#0ac336;' href='javascript:popless(\"{$nivel['cod_nivel']}\")'><i class='fa fa-plus-square' aria-hidden='true'></i></a></td>
 								</tr>";
 
 				$class2 = $class2 == "formlttd" ? "formmdtd" : "formlttd" ;
