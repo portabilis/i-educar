@@ -1072,6 +1072,31 @@ function lista_transferidos($int_cod_matricula = NULL,
     return false;
   }
 
+  function getDadosUltimaMatricula($codAluno){
+    $db = new clsBanco();
+
+    $ultimaMatricula = $db->CampoUnico("SELECT MAX(matricula.cod_matricula)
+                                             FROM pmieducar.matricula
+                                            WHERE matricula.ref_cod_aluno = $codAluno
+                                              AND matricula.ativo = 1");
+
+    $sql = $ultimaMatricula == NULL ? NULL :
+           "SELECT *
+              FROM pmieducar.matricula
+             WHERE matricula.ref_cod_aluno = $codAluno
+               AND matricula.ativo = 1
+               AND matricula.cod_matricula = $ultimaMatricula";
+
+    $db->Consulta($sql);
+
+    while ($db->ProximoRegistro()) {
+      $tupla = $db->Tupla();
+      $dadosUltimaMatricula[] = $tupla;
+    }
+
+    return $dadosUltimaMatricula;
+  }
+
   function getEndMatricula($codAluno){
     $db = new clsBanco();
     $situacaoUltimaMatricula = $db->CampoUnico("SELECT matricula.aprovado

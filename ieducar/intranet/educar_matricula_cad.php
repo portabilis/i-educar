@@ -277,6 +277,11 @@ class indice extends clsCadastro
       $this->mensagem = Portabilis_String_Utils::toLatin1("Não é possível matricular alunos falecidos.");
     }
 
+    if (!$this->permiteMatriculaSerieDestino() && $this->bloqueiaMatriculaSerieNaoSeguinte()) {
+      $this->mensagem = Portabilis_String_Utils::toLatin1("Não é possível matricular alunos em séries fora da sequência de enturmação.");
+      return false;
+    }
+
     $db = new clsBanco();
     $somente_do_bairro = $db->CampoUnico("SELECT matricula_apenas_bairro_escola FROM pmieducar.instituicao where cod_instituicao = {$this->ref_cod_instituicao}");
     if ($somente_do_bairro == 't'){
@@ -762,6 +767,43 @@ class indice extends clsCadastro
         break;
       }
     }
+  }
+
+  function bloqueiaMatriculaSerieNaoSeguinte() {
+    $instituicao = new clsPmieducarInstituicao($this->ref_cod_instituicao);
+    $instituicao = $instituicao->detalhe();
+
+    $bloqueia = dbBool($instituicao['bloqueia_matricula_serie_nao_seguinte']);
+
+    return $bloqueia;
+  }
+
+  function permiteMatriculaSerieDestino() {
+    $objMatricula      = new clsPmieducarMatricula;
+    $objSequenciaSerie = new clsPmieducarSequenciaSerie;
+
+    $dadosUltimaMatricula    = $objMatricula->getDadosUltimaMatricula($this->ref_cod_aluno);
+    $situacaoUltimaMatricula = $dadosUltimaMatricula[0]['aprovado'];
+    $serieUltimaMatricula    = $dadosUltimaMatricula[0]['ref_ref_cod_serie'];
+
+    $aprovado = array(1, 12, 13);
+    $reprovado = array(2, 14);
+
+    if (!$dadosUltimaMatricula) {
+      return true;
+    }
+
+    if (in_array($situacaoUltimaMatricula, $aprovado)){
+      $serieNovaMatricula = $objSequenciaSerie->lista($serieUltimaMatricula);
+      $serieNovaMatricula = $serieNovaMatricula[0]['ref_serie_destino'];
+    }else if (in_array($situacaoUltimaMatricula, $reprovado))
+      $serieNovaMatricula = $serieUltimaMatricula;
+
+    if ($this->ref_cod_serie == $serieNovaMatricula){
+      return true;
+    }
+
+    return false;
   }
 
   function copiaNotasFaltas($matriculaAntiga, $matriculaNova) {
