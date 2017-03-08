@@ -53,6 +53,11 @@ select{
   color: #188ad1;
 }
 
+.disabled, *[disabled]{
+  background-color: #e9f0f8 !important;
+  color: #47728f;
+}
+
 #lupa{
   cursor: pointer;
 }
@@ -969,7 +974,7 @@ td.area-conhecimento-destaque {
 
 
 table#matriculas select {
-    background-color: #ccdce6;
+    background-color: #e9f0f8;
     color: #47728f;
     border-color: #ccdce6;
 }
