@@ -383,6 +383,11 @@ td.fundoLocalizacao {
 /**************************************
 *********CALENDÁRIO ANO LETIVO*********
 **************************************/
+.input_calendario_letivo td,
+.input_calendario_letivo td select{
+  font-size: 14px !important;  
+}
+
 table.calendar {
     margin-top: 20px;
     width: 100%;
@@ -543,6 +548,10 @@ table.calendar .horario {
     padding: 10px;
 }
 
+.input_quadro_horario td,
+.input_quadro_horario td select{
+  font-size: 14px !important;  
+}
 /**************************************
 ****************AGENDA*****************
 **************************************/

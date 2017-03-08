@@ -7,7 +7,7 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
   $retorno .= '
     <tr>
       <td height="24" colspan="2" class="formdktd">
-        <span class="form"><b>Filtros de busca</b></span>
+        <span class="form"><b style="font-size: 16px;">Filtros de busca</b></span>
       </td>
     </tr>';
 
@@ -57,7 +57,7 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
 
     if ($get_escola) {
       $retorno .= '
-        <tr id="tr_status">
+        <tr id="tr_status" class="input_calendario_letivo">
           <td valign="top" class="formlttd">
             <span class="form">Instituição</span>
             <span class="campo_obrigatorio">*</span><br/>
@@ -152,7 +152,7 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
 
       if ($get_escola) {
         $retorno .= '
-          <tr id="tr_escola">
+          <tr id="tr_escola" class="input_calendario_letivo">
             <td valign="top" class="formmdtd">
               <span class="form">Escola</span>
               <span class="campo_obrigatorio">*</span><br/>
@@ -218,7 +218,7 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
   }
 
   $retorno .= '
-    <tr id="tr_escola">
+    <tr id="tr_escola" class="input_calendario_letivo">
       <td valign="top" class="formlttd">
         <span class="form">Ano</span>
         <span class="campo_obrigatorio">*</span><br/>

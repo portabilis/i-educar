@@ -482,7 +482,7 @@ class indice extends clsConfig
         );
 
         $retorno .= sprintf(
-          '<tr><td colspan="2"><center><b>%s</b>%s</center></td></tr>',
+          '<tr><td colspan="2"><center><b style="font-size:16px;">%s</b>%s</center></td></tr>',
           $registro['nm_escola'], $calendario
         );
       }
