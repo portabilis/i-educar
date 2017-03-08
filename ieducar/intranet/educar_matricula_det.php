@@ -212,9 +212,7 @@ class indice extends clsDetalhe
     if($registro[aprovado] == 4){
       $obj_transferencia = new clsPmieducarTransferenciaSolicitacao();
 
-      $lst_transferencia = $obj_transferencia->lista(NULL, NULL, NULL, NULL,
-        NULL, $registro['cod_matricula'], NULL, NULL, NULL, NULL, NULL, 1,
-        NULL, NULL, $registro['ref_cod_aluno'], FALSE);
+      $lst_transferencia = $obj_transferencia->lista(NULL, NULL, NULL, NULL, NULL, $registro['cod_matricula'], NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, $registro['ref_cod_aluno'], FALSE);
 
       if (is_array($lst_transferencia)) {
         $det_transferencia = array_shift($lst_transferencia);
