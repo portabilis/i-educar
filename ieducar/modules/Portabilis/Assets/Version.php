@@ -5,7 +5,6 @@
 
 class Portabilis_Assets_Version {
 
-  const VERSION = '254';
-
+  const VERSION = '256';
 }
 ?>

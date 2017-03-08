@@ -66,7 +66,7 @@ class clsDetalhe extends Core_Controller_Page_Abstract
   var $array_botao_url_script;
 
   function addBanner($strBannerUrl = '', $strBannerLateralUrl = '',
-    $strBannerTitulo = '', $boolFechaBanner = TRUE)
+    $strBannerTitulo = '', $boolFechaBanner = FALSE)
   {
     if ($strBannerUrl != '') {
       $this->banner = $strBannerUrl;
@@ -107,7 +107,7 @@ class clsDetalhe extends Core_Controller_Page_Abstract
     $retorno = '';
     if ($this->banner) {
       $retorno .= "<table width='100%' style=\"height:100%\" border='0' cellpadding='0' cellspacing='0'><tr>";
-      $retorno .= "<td class=\"barraLateral\" width=\"21\" valign=\"top\"><a href='#'><img src=\"{$this->bannerLateral}\" align=\"right\" border=\"0\" alt=\"$this->titulo_barra\" title=\"$this->titulo_barra\"></a></td><td valign='top'>";
+      $retorno .= "<td valign='top'>";
     }
 
     $script = explode('/', $_SERVER['PHP_SELF']);
@@ -251,17 +251,17 @@ class clsDetalhe extends Core_Controller_Page_Abstract
       $retorno .= "</td></tr>";
 
       if ($this->array_botao_url || $this->array_botao_url_script) {
-        $retorno .= "<tr><td colspan=2><table width='100%' summary=''><tr><td></td><td height='1' width='90%' bgcolor='#858585' style='font-size: 0px;'>&nbsp;</td><td></td></tr></table></td></tr><tr><td colspan='2' align='center'>";
+        $retorno .= "<tr><td colspan=2><table width='100%' summary=''><tr><td></td><td height='1' width='95%'  style='font-size: 0px;'>&nbsp;</td><td></td></tr></table></td></tr><tr><td colspan='2' align='center'>";
       }
 
       if ($this->array_botao_url) {
         for ($i = 0, $total = count($this->array_botao); $i < $total; $i++) {
-          $retorno .= "&nbsp;<input type='button' class='botaolistagem' onclick='javascript:go( \"".$this->array_botao_url[$i]."\" );' value='".$this->array_botao[$i]."'>&nbsp;\n";
+          $retorno .= "&nbsp;<input type='button' class='btn_small' onclick='javascript:go( \"".$this->array_botao_url[$i]."\" );' value='".$this->array_botao[$i]."'>&nbsp;\n";
         }
       }
       elseif ($this->array_botao_url_script) {
         for ($i = 0, $total = count($this->array_botao); $i < $total; $i++) {
-          $retorno .= "&nbsp;<input type='button' class='botaolistagem' onclick='{$this->array_botao_url_script[$i]}' value='".$this->array_botao[$i]."'>&nbsp;\n";
+          $retorno .= "&nbsp;<input type='button' class='btn_small' onclick='{$this->array_botao_url_script[$i]}' value='".$this->array_botao[$i]."'>&nbsp;\n";
         }
       }
 

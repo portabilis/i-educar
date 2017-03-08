@@ -146,12 +146,6 @@ class indice extends clsCadastro
     // primary keys
     $this->campoOculto('cod_quadro_horario', $this->cod_quadro_horario);
 
-    $obrigatorio            = TRUE;
-    $get_escola             = TRUE;
-    $get_curso              = TRUE;
-    $get_escola_curso_serie = TRUE;
-    $get_turma              = TRUE;
-
     $this->inputsHelper()->dynamic(array('ano', 'instituicao', 'escola', 'curso', 'serie', 'turma'));
   }
 
@@ -235,19 +229,3 @@ $pagina->addForm($miolo);
 // Gera o código HTML
 $pagina->MakeAll();
 ?>
-<script type="text/javascript">
-document.getElementById('ref_cod_escola').onchange = function()
-{
-  getEscolaCurso();
-}
-
-document.getElementById('ref_cod_curso').onchange = function()
-{
-  getEscolaCursoSerie();
-}
-
-document.getElementById('ref_cod_serie').onchange = function()
-{
-  getTurma();
-}
-</script>

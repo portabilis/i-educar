@@ -34,12 +34,15 @@ input[type="button"] {
   border-radius: 3px !important;
   font-weight: normal;
   margin: 15px 0px;
+  font-family: "Open Sans";
 }
 
-select:not([size]):not([multiple]), select[size="0"], select[size="1"] {
-    background-color: #ccdce6;
-    color: #47728f;
-    border-color: #ccdce6;
+select{
+  border-radius: 3px;
+  background-color: #ffffff;
+  border: solid 1px #cddce6;
+  padding: 8px;
+  color: #47728f;
 }
 
 .decorated {
@@ -50,12 +53,17 @@ select:not([size]):not([multiple]), select[size="0"], select[size="1"] {
   color: #188ad1;
 }
 
+.disabled, *[disabled]{
+  background-color: #e9f0f8 !important;
+  color: #47728f;
+}
+
 #lupa{
   cursor: pointer;
 }
 
 /**************************************
-**************** TOPO *****************
+************ TOPO / RODAPÉ ************
 **************************************/
 
 .topo{
@@ -135,6 +143,18 @@ select:not([size]):not([multiple]), select[size="0"], select[size="1"] {
   display: inline-block;
 }
 
+.rodape{
+  height: 30px;
+  background-color: #47728f;
+  color: #FFF;
+  font-size: 10px;
+}
+
+.rodape a{
+  color: #FFF;
+  text-decoration: underline;
+}
+
 /**************************************
 **************** MENUS ****************
 **************************************/
@@ -155,7 +175,9 @@ select:not([size]):not([multiple]), select[size="0"], select[size="1"] {
     font-weight: bold !important;
 }
 
-
+.ui-autocomplete.ui-menu.ui-widget.ui-widget-content.ui-corner-all{
+  box-shadow: 0 2px 9px 0 rgba(0, 0, 0, 0.15);
+}
 
 .nvp_tabelaMenu .title-busca-rapida .title:hover{
   background: transparent;
@@ -215,7 +237,7 @@ select:not([size]):not([multiple]), select[size="0"], select[size="1"] {
 }
 
 .clLevel0border{
-  margin-top: 4px;
+  margin-top: 0;
   background: #FFF; 
   height: 40px !important;
   width: auto !important;
@@ -224,10 +246,6 @@ select:not([size]):not([multiple]), select[size="0"], select[size="1"] {
 .clLevel1border,
 .clLevel2border{
   box-shadow: 0 2px 9px 0 rgba(0, 0, 0, 0.15);
-}
-
-#oCMenu_4__0{
-  left: 650px !important;
 }
 
 .clLevel0{
@@ -287,14 +305,64 @@ a.menu_susp_root:after {
 }
 
 .clLevel1border {
-  margin-top: 8px;
   background: #f3f3f3;
 }
 
 .clLevel2border {
-  margin-top: 8px;
   background: #f3f3f3;
 }
+
+/*Icones do menu lateral*/
+
+a#link1_25 {
+  background: url(../imagens/icon-administrativo.png) no-repeat left center;
+  padding-left: 30px;
+}
+
+a#link1_5 {
+  background: url(../imagens/icon-administrativo.png) no-repeat left center;
+  padding-left: 30px;
+}
+
+a#link1_70 {
+  background: url(../imagens/icon-educacenso.png) no-repeat left center;
+  padding-left: 30px;
+}
+
+a#link1_68 {
+  background: url(../imagens/icon-enderecamento.png) no-repeat left center;
+  padding-left: 30px;
+}
+
+a#link1_57{
+  background: url(../imagens/icon-biblioteca.png) no-repeat left center;
+  padding-left: 30px;
+}
+
+
+a#link1_55 {
+  background: url(../imagens/icon-escola.png) no-repeat left center;
+  padding-left: 30px;
+}
+
+
+a#link1_7 {
+  background: url(../imagens/icon-pessoas.png) no-repeat left center;
+  padding-left: 30px;
+}
+
+a#link1_23 {
+  background: url(../imagens/icon-administrativo.png) no-repeat left center;
+  padding-left: 30px;
+}
+
+a#link1_69 {
+  background: url(../imagens/icon-transporte-escolar.png) no-repeat left center;
+  padding-left: 30px;
+}
+
+
+
 /**************************************
 ************* BREADCRUMB **************
 **************************************/
@@ -317,6 +385,73 @@ td.fundoLocalizacao {
 #localizacao .flechinha,
 #localizacao .flechinha:hover{
   color: #999 !important;
+}
+
+/**************************************
+*********CALENDÁRIO ANO LETIVO*********
+**************************************/
+.input_calendario_letivo td,
+.input_calendario_letivo td select{
+  font-size: 14px !important;  
+}
+
+table.calendar {
+    margin-top: 20px;
+    width: 100%;
+}
+
+table.calendar .cal_dir, .cal_esq{
+  background-image: none;
+  color: #47728f;
+  text-align: left;
+  height: auto;
+  font-size: 40px;
+  padding: 0 10px;
+}
+
+table.calendar .header {
+  background: #fff;
+  color: #47728f;
+  border: 0;
+  font-family: "Open Sans";
+}
+
+table.calendar .header td{
+  background: #ccdce6;
+  width: 45px;
+  padding: 10px;
+}
+
+table.calendar .dayLastMonth, .day{
+  border: 0;
+  padding: 10px !important;
+  width: 45px !important;
+  color: #47728f;
+  font-family: "Open Sans";
+}
+
+table.calendar .day{
+  background-color: #e9f0f8 !;
+}
+
+table.calendar .anotacao{
+  float: right;
+  font-size: 16px;
+}
+
+table.calendar .legenda{
+  border: 0;
+  font-family: "Open Sans";
+  color: #47728f;
+  font-size: 12px;
+}
+
+table.calendar .legenda .fa{
+  font-size: 14px;
+}
+
+table.calendar .cor{
+  border: 0;
 }
 
 /**************************************
@@ -393,6 +528,37 @@ a.nav_agenda:hover{
   opacity: .9;
 }
 
+/**************************************
+********** QUADRO DE HORARIO **********
+**************************************/
+
+table.calendar .cal_esq_qh{
+  background: none !important;
+  color: #47728f;
+  text-align: left;
+  height: auto;
+  font-size: 40px;
+  padding: 0 10px;
+  font-family: "Open Sans";
+}
+
+table.calendar .mes{
+  color: #47728f;
+  padding: 10px;
+  font-size: 16px;
+  font-family: "Open Sans";
+}
+
+table.calendar .horario {
+    background: #e9f0f8;
+    margin-bottom: 2px;
+    padding: 10px;
+}
+
+.input_quadro_horario td,
+.input_quadro_horario td select{
+  font-size: 14px !important;  
+}
 /**************************************
 ****************AGENDA*****************
 **************************************/
@@ -643,7 +809,7 @@ table.calendario td a{
 #modal-close{
   background: #47728f;
   text-align: right;
-  padding-right: 10px;
+  padding-right: 20px;
 }
 
 .modal-domjs-conteudo{
@@ -661,6 +827,10 @@ table {
     color: #47728f;
     font-family: "Open Sans" !important;
     font-size: 12px;
+}
+
+.tabelanum1{
+  border: 0 !important;
 }
 
 td.tableDetalheLinhaSeparador {
@@ -731,6 +901,7 @@ td.area-conhecimento-destaque {
   padding: 8px;
   font-size: 14px;
   color: #47728f;
+  max-width: 450px;
 }
 
 #formcadastro .formmdtd,
@@ -774,12 +945,19 @@ td.area-conhecimento-destaque {
 .tablelistagem .formmdtd,
 .tablelistagem .formlttd,
 .tablelistagem .formmdtd a,
-.tablelistagem .formlttd a,
+.tablelistagem .formlttd a{
+  color: #47728f;
+  font-family: "Open Sans";
+  font-size: 12px;
+  padding: 8px;
+  vertical-align: middle;
+}
+
 .tableDetalhe .formmdtd,
 .tableDetalhe .formlttd{
   color: #47728f;
   font-family: "Open Sans";
-  font-size: 12px;
+  font-size: 14px;
   padding: 8px;
   vertical-align: middle;
 }
@@ -794,6 +972,13 @@ td.area-conhecimento-destaque {
   line-height: 1.14;
   color: #47728f !important;
   padding: 17px 13px;
+}
+
+
+table#matriculas select {
+    background-color: #e9f0f8;
+    color: #47728f;
+    border-color: #ccdce6;
 }
 
 /**************************************
@@ -898,7 +1083,8 @@ p.title-table-matricula {
 .alunoTab2,
 .alunoTab-active2,
 .turmaTab,
-.turmaTab-active {
+.turmaTab-active,
+#tab1, #tab2, #tab3, #tab4, #tab5, #tab6, #tab7 {
   width: auto !important;
   font-size: 14px;
   font-weight: normal;
@@ -910,22 +1096,32 @@ p.title-table-matricula {
 
 .alunoTab,
 .alunoTab2,
-.turmaTab {
+.turmaTab,
+.servidorTab {
   background-image: linear-gradient(to bottom, rgba(233, 239, 247, 0) 34%,rgba(71, 114, 143, 0.16)), linear-gradient(#e9eff7, #e9eff7);
   box-shadow: inset -1px 0 0 0 #ffffff;
 }
 
 .alunoTab-active,
 .alunoTab-active2,
-.turmaTab-active {
+.turmaTab-active,
+.servidorTab-active {
   width: auto !important;
   background: #FFF !important;
   box-shadow: inset 1px 1px 0 0 #cddce6, inset -1px 0 0 0 #cddce6;
 }
 
-/*******BOTÃO DESTAQUE******/
+/*******BOTÕES******/
 .btn-green, input.btn-green, .ui-button span.btn-green, #btn_enviar{
   background-color: #0ac336 !important;
   border: 0 !important;
   color: #FFF !important;
+}
+
+input.btn_small {
+    margin: 4px 0;
+    padding: 7px 7px !important;
+    color: #188ad1 !important;
+    font-family: "Open Sans";
+    font-size: 12px !important;
 }

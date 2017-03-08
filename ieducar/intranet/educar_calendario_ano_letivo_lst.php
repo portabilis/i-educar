@@ -37,6 +37,7 @@ require_once 'clsCalendario.inc.php';
 require_once 'Calendario/Model/TurmaDataMapper.php';
 require_once 'App/Model/IedFinder.php';
 require_once 'include/localizacaoSistema.php';
+require_once 'include/pmieducar/clsPmieducarEscolaUsuario.inc.php';
 
 /**
  * clsIndexBase class.
@@ -482,7 +483,7 @@ class indice extends clsConfig
         );
 
         $retorno .= sprintf(
-          '<tr><td colspan="2"><center><b>%s</b>%s</center></td></tr>',
+          '<tr><td colspan="2"><center><b style="font-size:16px;">%s</b>%s</center></td></tr>',
           $registro['nm_escola'], $calendario
         );
       }
@@ -513,7 +514,7 @@ class indice extends clsConfig
         <tr>
           <td align="center" colspan="2">
             %s
-            <input type="button" value="Novo Calendário Letivo" onclick="window.location=\'%s\';" class="botaolistagem" />
+            <input type="button" value="Novo Calendário Letivo" onclick="window.location=\'%s\';" class="btn-green botaolistagem" />
           </td>
         </tr>', $bt_voltar, $url);
     }

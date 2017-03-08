@@ -131,6 +131,54 @@ class clsPmieducarEscolaUsuario
 		return false;
 	}
 
+	function lista($ref_cod_usuario = NULL, $ref_cod_escola = NULL)
+	{
+		$sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
+		$filtros = '';
+
+		$whereAnd = ' WHERE ';
+
+		if (is_numeric($ref_cod_usuario)) {
+		  $filtros .= "{$whereAnd} ref_cod_usuario = '{$ref_cod_usuario}'";
+		  $whereAnd = " AND ";
+		}
+
+		if (is_numeric($ref_cod_escola)) {
+		  $filtros .= "{$whereAnd} ref_cod_escola = '{$ref_cod_escola}'";
+		  $whereAnd = " AND ";
+		}
+
+		$db = new clsBanco();
+		$countCampos = count(explode(',', $this->_campos_lista));
+		$resultado = array();
+
+		$sql .= $filtros . $this->getOrderby() . $this->getLimite();
+
+		$this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} {$filtros}");
+
+		$db->Consulta($sql);
+		if ($countCampos > 1) {
+		  while ($db->ProximoRegistro()) {
+		    $tupla = $db->Tupla();
+
+		    $tupla["_total"] = $this->_total;
+		    $resultado[] = $tupla;
+		  }
+		}
+		else {
+		  while ($db->ProximoRegistro()) {
+		    $tupla = $db->Tupla();
+		    $resultado[] = $tupla[$this->_campos_lista];
+		  }
+		}
+
+		if (count($resultado)) {
+		  return $resultado;
+		}
+
+		return FALSE;
+	}
+
 	function excluir(){
 		if(is_numeric($this->id)){
 			$db = new clsBanco();

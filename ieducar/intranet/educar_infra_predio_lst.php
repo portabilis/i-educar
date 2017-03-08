@@ -91,159 +91,52 @@ class indice extends clsListagem
 		$obj_permissao = new clsPermissoes();
 		$nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
 
-		//busca instituicao e escola do usuario
-		$obj_usuario = new clsPmieducarUsuario($this->pessoa_logada);
-		$obj_usuario->setCamposLista("ref_cod_instituicao,ref_cod_escola");
-		$det_obj_usuario = $obj_usuario->detalhe();
-
-		$instituicao_usuario = $det_obj_usuario["ref_cod_instituicao"];
-
-		$escola_usuario = $det_obj_usuario["ref_cod_escola"];
-
 		$obj_infra_predio = new clsPmieducarInfraPredio();
 		$obj_infra_predio->setOrderby( "nm_predio ASC" );
 		$obj_infra_predio->setLimite( $this->limite, $this->offset );
 
-		$this->ref_cod_escola = $_GET["ref_cod_escola"];
-		$this->ref_cod_instituicao = $_GET["ref_cod_instituicao"];
-		$this->nm_predio = $_GET["nm_predio"];
-
-		/*filtro escola-instituicao*/
-		$obrigatorio = false;
-		include("include/pmieducar/educar_pesquisa_instituicao_escola.php");
-
-		/*		if(isset($_GET["ref_cod_instituicao"]) &&  !empty($_GET["ref_cod_instituicao"]) && is_array($opcoes_instituicao) && array_key_exists($_GET["ref_cod_instituicao"],$opcoes_instituicao) )
-				{
-					$this->ref_cod_instituicao = $_GET["ref_cod_instituicao"];
-				}
-				else
-				{
-					$this->ref_cod_instituicao = null;
-				}*/
-		switch ($nivel_usuario) {
-			case 4:
-				//busca escola do usuario
-
-
-				$this->addCabecalhos( array(
-					"Escola",
-					"Nome Predio",
-				) );
-
-
-				$this->ref_cod_escola = $escola_usuario;
-
-				$lista = $obj_infra_predio->lista(
-					$this->cod_infra_predio,
-					null,
-					null,
-					$this->ref_cod_escola,
-					$this->nm_predio,
-					null,
-					null,
-					null,
-					null,
-					null,
-					null,
-					1,
-					$escola_in
-					,null
-				);
-				break;
-
-			case 2:
-
-
-				$this->addCabecalhos( array(
-					"Institui&ccedil;&atilde;o",
-					"Escola",
-					"Nome Predio",
-				) );
-
-				$this->ref_cod_escola = $_GET["ref_cod_escola"];
-				$obj_escola = new clsPmieducarEscola($this->ref_cod_escola,null,null,$instituicao_usuario,null,null,null,null,null,null,1);
-				$obj_escola->setCamposLista("cod_escola,nm_escola");
-
-				if(!$obj_escola->detalhe())
-					$this->ref_cod_escola = null;
-
-			//	$obj_infra_predio->setOrderby("escola.nm_escola");
-				$lista = $obj_infra_predio->lista(
-					$this->cod_infra_predio,
-					null,
-					null,
-					$this->ref_cod_escola,
-					$this->nm_predio,
-					null,
-					null,
-					null,
-					null,
-					null,
-					null,
-					1,
-					$escola_in,
-					$instituicao_usuario
-				);
-				break;
-
-			case 1:
-				//poli-institucional
-
-				$this->addCabecalhos( array(
-					"Institui&ccedil;&atilde;o",
-					"Escola",
-					"Nome Predio",
-				) );
-
-
-
-				$obj_escola = new clsPmieducarEscola($this->ref_cod_escola,null,null,ref_cod_instituicao,null,null,null,null,null,null,1);
-				$obj_escola->setCamposLista("cod_escola,nm_escola");
-
-				if(!$obj_escola->detalhe() && !empty($this->ref_cod_escola) && !empty($this->ref_cod_instituicao))
-					$this->ref_cod_instituicao = $this->ref_cod_escola = null;
-
-				$lista = $obj_infra_predio->lista(
-					$this->cod_infra_predio,
-					null,
-					null,
-					$this->ref_cod_escola,
-					$this->nm_predio,
-					null,
-					null,
-					null,
-					null,
-					null,
-					null,
-					1,
-					$escola_in,
-					$this->ref_cod_instituicao
-				);
-				break;
-			default:
-				break;
-		}
-		$this->titulo = "Infra Predio - Listagem";
-
 		foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
 			$this->$var = ( $val === "" ) ? null: $val;
 
-		
+		$this->inputsHelper()->dynamic(array('instituicao', 'escola'));
 
+		$this->addCabecalhos( array(
+			"Institui&ccedil;&atilde;o",
+			"Escola",
+			"Nome Predio",
+		) );
 
+		$obj_escola = new clsPmieducarEscola($this->ref_cod_escola,null,null,ref_cod_instituicao,null,null,null,null,null,null,1);
+		$obj_escola->setCamposLista("cod_escola,nm_escola");
 
+		if(!$obj_escola->detalhe() && !empty($this->ref_cod_escola) && !empty($this->ref_cod_instituicao))
+			$this->ref_cod_instituicao = $this->ref_cod_escola = null;
 
+		$lista = $obj_infra_predio->lista(
+			$this->cod_infra_predio,
+			null,
+			null,
+			$this->ref_cod_escola,
+			$this->nm_predio,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null,
+			1,
+			$escola_in,
+			$this->ref_cod_instituicao
+		);
+
+		$this->titulo = "Infra Predio - Listagem";
 
 		// outros Filtros
 		$this->campoTexto( "nm_predio", "Nome Pr&eacute;dio", $this->nm_predio, 30, 255, false );
 
-
-
 		// Paginador
 		$this->limite = 20;
 		$this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
-
-
 
 		$total = $obj_infra_predio->_total;
 

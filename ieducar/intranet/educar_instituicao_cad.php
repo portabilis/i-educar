@@ -89,6 +89,7 @@ class indice extends clsCadastro
 	var $data_fechamento;
 	var $componente_curricular_turma;
 	var $reprova_dependencia_ano_concluinte;
+	var $bloqueia_matricula_serie_nao_seguinte;
 	var $data_educacenso;
 
 	function Inicializar()
@@ -142,6 +143,7 @@ class indice extends clsCadastro
         $this->componente_curricular_turma = dbBool($this->componente_curricular_turma);
         $this->reprova_dependencia_ano_concluinte = dbBool($this->reprova_dependencia_ano_concluinte);
         $this->reserva_integral_somente_com_renda	= dbBool($this->reserva_integral_somente_com_renda);
+        $this->bloqueia_matricula_serie_nao_seguinte	= dbBool($this->bloqueia_matricula_serie_nao_seguinte);
 
 		return $retorno;
 	}
@@ -242,6 +244,7 @@ class indice extends clsCadastro
 		$this->campoCheck("restringir_multiplas_enturmacoes", "Não permitir múltiplas enturmações para o aluno no mesmo curso e série/ano", $this->restringir_multiplas_enturmacoes);
     $this->campoCheck("permissao_filtro_abandono_transferencia", "Não permitir a apresentação de alunos com matrícula em abandono ou transferida na emissão do relatório de frequência", $this->permissao_filtro_abandono_transferencia);
 
+    $this->multiplas_reserva_vaga = isset($this->cod_instituicao) ? dbBool($this->multiplas_reserva_vaga) : true;
     $this->campoCheck("multiplas_reserva_vaga", "Permitir múltiplas reservas de vagas para o mesmo candidato em escolas diferentes", $this->multiplas_reserva_vaga);
 
 		$this->campoCheck("reserva_integral_somente_com_renda", "Permitir reserva de vaga para o turno integral somente quando a renda for informada", $this->reserva_integral_somente_com_renda);
@@ -258,6 +261,8 @@ class indice extends clsCadastro
     			      false,
     			      false,
     			      "Caso marcado, o aluno que reprovar em algum componente em ano concluinte será automaticamente reprovado.");
+
+    $this->campoCheck("bloqueia_matricula_serie_nao_seguinte", "Não permitir matrículas que não respeitem a sequência de enturmação", $this->bloqueia_matricula_serie_nao_seguinte);
 
     	$this->inputsHelper()->text('data_base', array('label' => 'Data base para matrícula (dia/mês)',
 					    								'size' => 5,
@@ -298,8 +303,9 @@ class indice extends clsCadastro
 		$obj->restringir_multiplas_enturmacoes  = !is_null($this->restringir_multiplas_enturmacoes);
     $obj->permissao_filtro_abandono_transferencia  = !is_null($this->permissao_filtro_abandono_transferencia);
     $obj->multiplas_reserva_vaga  = !is_null($this->multiplas_reserva_vaga);
-    	$obj->componente_curricular_turma  = !is_null($this->componente_curricular_turma);
-    	$obj->reprova_dependencia_ano_concluinte  = !is_null($this->reprova_dependencia_ano_concluinte);
+    $obj->componente_curricular_turma  = !is_null($this->componente_curricular_turma);
+    $obj->reprova_dependencia_ano_concluinte  = !is_null($this->reprova_dependencia_ano_concluinte);
+    $obj->bloqueia_matricula_serie_nao_seguinte  = !is_null($this->bloqueia_matricula_serie_nao_seguinte);
 		$obj->reserva_integral_somente_com_renda  = !is_null($this->reserva_integral_somente_com_renda);
 		$obj->coordenador_transporte 			= $this->pessoa_coordenador_transporte;
 		$obj->controlar_espaco_utilizacao_aluno = is_null($this->controlar_espaco_utilizacao_aluno) ? 0 : 1;
@@ -340,8 +346,9 @@ class indice extends clsCadastro
 		$obj->restringir_multiplas_enturmacoes 	= !is_null($this->restringir_multiplas_enturmacoes);
     $obj->permissao_filtro_abandono_transferencia   = !is_null($this->permissao_filtro_abandono_transferencia);
     $obj->multiplas_reserva_vaga  = !is_null($this->multiplas_reserva_vaga);
-    	$obj->componente_curricular_turma  = !is_null($this->componente_curricular_turma);
-    	$obj->reprova_dependencia_ano_concluinte = !is_null($this->reprova_dependencia_ano_concluinte);
+    $obj->componente_curricular_turma  = !is_null($this->componente_curricular_turma);
+    $obj->reprova_dependencia_ano_concluinte  = !is_null($this->reprova_dependencia_ano_concluinte);
+    $obj->bloqueia_matricula_serie_nao_seguinte  = !is_null($this->bloqueia_matricula_serie_nao_seguinte);
 		$obj->reserva_integral_somente_com_renda = !is_null($this->reserva_integral_somente_com_renda);
 		$obj->coordenador_transporte 			= $this->pessoa_coordenador_transporte;
 		$obj->controlar_espaco_utilizacao_aluno = is_null($this->controlar_espaco_utilizacao_aluno) ? 0 : 1;

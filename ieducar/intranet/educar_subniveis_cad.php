@@ -148,7 +148,7 @@ class indice extends clsCadastro
 		$this->campoRotulo("nm_categoria","Categoria",$this->nm_categoria);
 		$this->campoRotulo("nm_nivel","Nível",$this->nm_nivel);
 
-		$this->campoTabelaInicio("tab1","Subn&iacute;veis",array("Nome Subn&iacute;vel",'Sal&aacute;rio','Ordem'),$this->cod_nivel);
+		$this->campoTabelaInicio("tab01","Subn&iacute;veis",array("Nome Subn&iacute;vel",'Sal&aacute;rio','Ordem'),$this->cod_nivel);
 
 			$this->campoTexto("nm_nivel","Nome Subn&iacute;vel","",30,100,true);
 			$this->campoMonetario( "salario_base", "Salario Base", $this->salario_base, 10, 8, true );

@@ -31,6 +31,7 @@
 require_once 'include/clsCadastro.inc.php';
 require_once 'Core/Controller/Page/Validatable.php';
 require_once 'App/Model/NivelAcesso.php';
+require_once 'App/Model/NivelTipoUsuario.php';
 
 /**
  * Core_Controller_Page_EditController abstract class.
