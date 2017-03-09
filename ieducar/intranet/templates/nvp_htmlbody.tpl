@@ -46,3 +46,7 @@
 	</center></td>
 </tr>
 </table>
+
+<script src="scripts/custom-file-input.js"></script>
+<script>(function(e,t,n){var r=e.querySelectorAll("html")[0];r.className=r.className.replace(/(^|\s)no-js(\s|$)/,"$1js$2")})(document,window,0);</script>
+</head>

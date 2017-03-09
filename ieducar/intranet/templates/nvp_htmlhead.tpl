@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
   "http://www.w3.org/TR/html4/loose.dtd">
-<html lang="pt">
+<html lang="pt" class="no-js">
 <head>
   <meta http-equiv='Content-Type' content='text/html; charset=ISO-8859-1' />
   <!--meta http-equiv="Content-Type" content="text/html; charset=utf-8" /-->
@@ -14,7 +14,7 @@
   <link rel=stylesheet type='text/css' href='styles/styles.css' />
   <link rel=stylesheet type='text/css' href='styles/novo.css' />
   <link rel=stylesheet type='text/css' href='styles/menu.css' />
-  <link rel=stylesheet type='text/css' href='styles/font-awesome.css' />
+  <link rel=stylesheet type='text/css' href='/intranet/styles/font-awesome.css' />
   <!--link rel=stylesheet type='text/css' href='styles/reset.css' />
   <link rel=stylesheet type='text/css' href='styles/portabilis.css' /-->
   <link rel=stylesheet type='text/css' href='styles/min-portabilis.css?rand=3' />
@@ -100,6 +100,5 @@
   </script>
   
 <link rel=stylesheet type='text/css' href='styles/custom.css' />
-</head>
 <body <!-- #&BODYSCRIPTS&# -->>
   <div id="DOM_expansivel" class="DOM_expansivel"></div>
