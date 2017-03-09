@@ -152,7 +152,7 @@ var newSubmitForm = function(event) {
 var $loadingDocumento =  $j('<img>').attr('src', 'imagens/indicator.gif')
                                       .css('margin-top', '3px')
                                       .hide()
-                                      .insertAfter($j('#span-documento'));
+                                      .insertBefore($j('#span-documento'));
 
 var $arrayDocumento = [];
 var $arrayUrlDocumento= [];
