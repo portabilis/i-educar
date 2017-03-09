@@ -14,7 +14,7 @@
   <link rel=stylesheet type='text/css' href='styles/styles.css' />
   <link rel=stylesheet type='text/css' href='styles/novo.css' />
   <link rel=stylesheet type='text/css' href='styles/menu.css' />
-  <link rel=stylesheet type='text/css' href='styles/font-awesome.css' />
+  <link rel=stylesheet type='text/css' href='/intranet/styles/font-awesome.css' />
   <!--link rel=stylesheet type='text/css' href='styles/reset.css' />
   <link rel=stylesheet type='text/css' href='styles/portabilis.css' /-->
   <link rel=stylesheet type='text/css' href='styles/min-portabilis.css?rand=3' />
