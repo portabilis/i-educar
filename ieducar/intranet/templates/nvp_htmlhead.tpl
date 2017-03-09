@@ -24,6 +24,8 @@
   <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
 
   <!-- #&ESTILO&# -->
+  
+<script>(function(e,t,n){var r=e.querySelectorAll("html")[0];r.className=r.className.replace(/(^|\s)no-js(\s|$)/,"$1js$2")})(document,window,0);</script>
 
   <script type="text/javascript" src="scripts/padrao.js?1"></script>
   <script type="text/javascript" src="scripts/novo.js?1"></script>

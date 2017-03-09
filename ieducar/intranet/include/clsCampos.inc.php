@@ -2540,8 +2540,8 @@ class clsCampos extends Core_Controller_Page_Abstract
             break;
 
           case 'arquivo':
-            $retorno .= "<input class='inputfile inputfile-buttom' name=\"{$nome}\" id=\"file-{$nome}\" type='file' size=\"{$componente[4]}\" value=\"{$componente[3]}\">
-            <label for=\"file-{$nome}\"><span></span> <strong>Escolha um arquivo</strong></label>";
+            $retorno .= "<input class='inputfile inputfile-buttom' name=\"{$nome}\" id=\"{$nome}\" type='file' size=\"{$componente[4]}\" value=\"{$componente[3]}\">
+            <label id=\"{$nome}\" for=\"{$nome}\"><span></span> <strong>Escolha um arquivo</strong></label>";
 
             if (! empty($componente[5])) {
               $retorno.= "&nbsp;$componente[5]";

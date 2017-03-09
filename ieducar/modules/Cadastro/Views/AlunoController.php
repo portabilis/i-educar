@@ -933,11 +933,11 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     if($GLOBALS['coreExt']['Config']->app->alunos->nao_apresentar_campo_alfabetizado)
       $this->inputsHelper()->hidden('alfabetizado');
 
-    $this->campoArquivo('documento',Portabilis_String_Utils::toLatin1($this->_getLabel('documento')),$this->documento,40,Portabilis_String_Utils::toLatin1("<br/> <span style='font-style: italic; font-size= 10px;''>São aceitos arquivos nos formatos jpg, png, pdf e gif. Tamanho máximo: 250KB</span>", array('escape' => false)));
+    $this->campoArquivo('documento',Portabilis_String_Utils::toLatin1($this->_getLabel('documento')),$this->documento,40,Portabilis_String_Utils::toLatin1("<br/> <span id='span-documento' style='font-style: italic; font-size= 10px;''>São aceitos arquivos nos formatos jpg, png, pdf e gif. Tamanho máximo: 250KB</span>", array('escape' => false)));
 
     $this->inputsHelper()->hidden('url_documento');
 
-    $this->campoArquivo('laudo_medico',Portabilis_String_Utils::toLatin1($this->_getLabel('laudo_medico')),$this->laudo_medico,40,Portabilis_String_Utils::toLatin1("<br/> <span style='font-style: italic; font-size= 10px;''>São aceitos arquivos nos formatos jpg, png, pdf e gif. Tamanho máximo: 250KB</span>", array('escape' => false)));
+    $this->campoArquivo('laudo_medico',Portabilis_String_Utils::toLatin1($this->_getLabel('laudo_medico')),$this->laudo_medico,40,Portabilis_String_Utils::toLatin1("<br/> <span id='span-laudo_medico' style='font-style: italic; font-size= 10px;''>São aceitos arquivos nos formatos jpg, png, pdf e gif. Tamanho máximo: 250KB</span>", array('escape' => false)));
 
     $this->inputsHelper()->hidden('url_laudo_medico');
 
