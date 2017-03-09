@@ -62,7 +62,7 @@ var $cpfNotice    = $j('<span>').html('')
 var $loadingLaudoMedico =  $j('<img>').attr('src', 'imagens/indicator.gif')
                                       .css('margin-top', '3px')
                                       .hide()
-                                      .insertAfter($j('#laudo_medico'));
+                                      .insertBefore($j('#span-laudo_medico'));
 
 var $arrayLaudoMedico = [];
 var $arrayUrlLaudoMedico = [];
@@ -152,7 +152,7 @@ var newSubmitForm = function(event) {
 var $loadingDocumento =  $j('<img>').attr('src', 'imagens/indicator.gif')
                                       .css('margin-top', '3px')
                                       .hide()
-                                      .insertAfter($j('#documento'));
+                                      .insertAfter($j('#span-documento'));
 
 var $arrayDocumento = [];
 var $arrayUrlDocumento= [];
@@ -1148,7 +1148,6 @@ function canShowParentsFields(){
 
 (function($) {
   $(document).ready(function() {
-
     // laudo médico
     $j('#laudo_medico').on('change', prepareUpload);
 

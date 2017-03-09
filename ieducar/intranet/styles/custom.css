@@ -1181,10 +1181,10 @@ input.btn_small {
 }
 
 .inputfile-buttom + label strong {
-    height: 100%;
-    color: #FFF;
-    background-color: #0ac336;
-    display: inline-block;
+    height: 100% !important;
+    color: #FFF !important;
+    background-color: #0ac336 !important;
+    display: inline-block !important;
 }
 
 @media screen and (max-width: 50em) {
