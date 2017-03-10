@@ -1505,7 +1505,16 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $media = $mediaComponente[0]->media;
       }
 
-      if ($etapa == $totalEtapasComponente && $media < $this->getRegra()->media && $this->hasRecuperacao()) {
+      $situacaoAtualComponente = $mediaComponente[0]->situacao;
+
+      $permiteSituacaoEmExame = TRUE;
+
+      if ($situacaoAtualComponente == App_Model_MatriculaSituacao::REPROVADO ||
+          $situacaoAtualComponente == App_Model_MatriculaSituacao::APROVADO) {
+        $permiteSituacaoEmExame = FALSE;
+      }
+
+      if ($etapa == $totalEtapasComponente && $media < $this->getRegra()->media && $this->hasRecuperacao() && $permiteSituacaoEmExame) {
 
         // lets make some changes here >:)
         $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::EM_EXAME;
