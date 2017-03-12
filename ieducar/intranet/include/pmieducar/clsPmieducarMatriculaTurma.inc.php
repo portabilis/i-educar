@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gest×“o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja×
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa ×™ software livre; voc×š pode redistribu×-lo e/ou modific×‘-lo
+ * sob os termos da Licen×—a P×ªblica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers×“o 2 da Licen×—a, como (a seu crit×™rio)
+ * qualquer vers×“o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa ×™ distribu×Â­do na expectativa de que seja ×ªtil, por×™m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl×Â­cita de COMERCIABILIDADE OU
+ * ADEQUAÖ·Ö³O A UMA FINALIDADE ESPECÖ½FICA. Consulte a Licen×—a P×ªblica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc×š deve ter recebido uma c×£pia da Licen×—a P×ªblica Geral do GNU junto
+ * com este programa; se n×“o, escreva para a Free Software Foundation, Inc., no
+ * endere×—o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja× <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo disponível desde a versão 1.0.0
+ * @since     Arquivo dispon×vel desde a vers×“o 1.0.0
  * @version   $Id$
  */
 
@@ -34,11 +34,11 @@ require_once 'Avaliacao/Fixups/CleanComponentesCurriculares.php';
 /**
  * clsPmieducarMatriculaTurma class.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja× <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe dispon×vel desde a vers×“o 1.0.0
  * @version   @@package_version@@
  */
 class clsPmieducarMatriculaTurma
@@ -55,7 +55,7 @@ class clsPmieducarMatriculaTurma
   var $sequencial_fechamento;
 
   /**
-   * Armazena o total de resultados obtidos na última chamada ao método lista().
+   * Armazena o total de resultados obtidos na ×ªltima chamada ao m×™todo lista().
    * @var int
    */
   var $_total;
@@ -73,33 +73,33 @@ class clsPmieducarMatriculaTurma
   var $_tabela;
 
   /**
-   * Lista separada por vírgula, com os campos que devem ser selecionados na
-   * próxima chamado ao método lista().
+   * Lista separada por v×rgula, com os campos que devem ser selecionados na
+   * pr×£xima chamado ao m×™todo lista().
    * @var string
    */
   var $_campos_lista;
 
   /**
-   * Lista com todos os campos da tabela separados por vírgula, padrão para
-   * seleção no método lista.
+   * Lista com todos os campos da tabela separados por v×rgula, padr×“o para
+   * sele×—×“o no m×™todo lista.
    * @var string
    */
   var $_todos_campos;
 
   /**
-   * Valor que define a quantidade de registros a ser retornada pelo método lista().
+   * Valor que define a quantidade de registros a ser retornada pelo m×™todo lista().
    * @var int
    */
   var $_limite_quantidade;
 
   /**
-   * Define o valor de offset no retorno dos registros no método lista().
+   * Define o valor de offset no retorno dos registros no m×™todo lista().
    * @var int
    */
   var $_limite_offset;
 
   /**
-   * Define o campo para ser usado como padrão de ordenação no método lista().
+   * Define o campo para ser usado como padr×“o de ordena×—×“o no m×™todo lista().
    * @var string
    */
   var $_campo_order_by;
@@ -242,7 +242,7 @@ class clsPmieducarMatriculaTurma
 
     if (is_string($data_enturmacao)) {
       $this->data_enturmacao = $data_enturmacao;
-    }    
+    }
   }
 
   /**
@@ -303,8 +303,8 @@ class clsPmieducarMatriculaTurma
       if(is_numeric($this->sequencial_fechamento)){
         $campos .= "{$gruda}sequencial_fechamento";
         $valores .= "{$gruda}'{$this->sequencial_fechamento}'";
-        $gruda = ", ";        
-      }      
+        $gruda = ", ";
+      }
 
       $db->Consulta("INSERT INTO {$this->_tabela} ($campos) VALUES ($valores)");
 
@@ -362,11 +362,11 @@ class clsPmieducarMatriculaTurma
       if (is_string($this->data_enturmacao)) {
         $set .= "{$gruda}data_enturmacao = '{$this->data_enturmacao}'";
         $gruda = ", ";
-      }      
+      }
 
       if ($set) {
         $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE ref_cod_matricula = '{$this->ref_cod_matricula}' AND ref_cod_turma = '{$this->ref_cod_turma}' and sequencial = '$this->sequencial' ");
-        $this->limpaComponentesCurriculares(); 
+        $this->limpaComponentesCurriculares();
         return TRUE;
       }
     }
@@ -375,7 +375,7 @@ class clsPmieducarMatriculaTurma
   }
 
   /**
-   * Retorna uma lista de registros filtrados de acordo com os parâmetros.
+   * Retorna uma lista de registros filtrados de acordo com os par×’metros.
    * @return array
    */
   function lista($int_ref_cod_matricula = NULL, $int_ref_cod_turma = NULL,
@@ -393,7 +393,7 @@ class clsPmieducarMatriculaTurma
     $pegar_ano_em_andamento = FALSE, $parar=NULL)
   {
     if ($bool_get_nome_aluno === true) {
-      $nome = " ,pessoa.nome as nome_aluno";            
+      $nome = " ,pessoa.nome as nome_aluno";
     }
     $tab_aluno = ", {$this->_schema}aluno a";
     $where_nm_aluno = " AND a.cod_aluno = m.ref_cod_aluno AND a.ativo=1";
@@ -1014,7 +1014,7 @@ class clsPmieducarMatriculaTurma
   }
 
   /**
-   * Define quais campos da tabela serão selecionados no método Lista().
+   * Define quais campos da tabela ser×“o selecionados no m×™todo Lista().
    */
   function setCamposLista($str_campos)
   {
@@ -1022,7 +1022,7 @@ class clsPmieducarMatriculaTurma
   }
 
   /**
-   * Define que o método Lista() deverpa retornar todos os campos da tabela.
+   * Define que o m×™todo Lista() deverpa retornar todos os campos da tabela.
    */
   function resetCamposLista()
   {
@@ -1030,7 +1030,7 @@ class clsPmieducarMatriculaTurma
   }
 
   /**
-   * Define limites de retorno para o método Lista().
+   * Define limites de retorno para o m×™todo Lista().
    */
   function setLimite($intLimiteQtd, $intLimiteOffset = NULL)
   {
@@ -1039,7 +1039,7 @@ class clsPmieducarMatriculaTurma
   }
 
   /**
-   * Retorna a string com o trecho da query responsável pelo limite de
+   * Retorna a string com o trecho da query respons×‘vel pelo limite de
    * registros retornados/afetados.
    *
    * @return string
@@ -1057,7 +1057,7 @@ class clsPmieducarMatriculaTurma
   }
 
   /**
-   * Define o campo para ser utilizado como ordenação no método Lista().
+   * Define o campo para ser utilizado como ordena×—×“o no m×™todo Lista().
    */
   function setOrderby($strNomeCampo)
   {
@@ -1067,7 +1067,7 @@ class clsPmieducarMatriculaTurma
   }
 
   /**
-   * Retorna a string com o trecho da query responsável pela Ordenação dos
+   * Retorna a string com o trecho da query respons×‘vel pela Ordena×—×“o dos
    * registros.
    *
    * @return string
@@ -1084,9 +1084,9 @@ class clsPmieducarMatriculaTurma
   {
     if (is_numeric($this->ref_cod_matricula) && is_numeric($this->ref_cod_turma)) {
       $db = new clsBanco();
-      $max = $db->CampoUnico("SELECT COALESCE(MAX(sequencial),0) + 1 AS MAX FROM {$this->_tabela} WHERE ref_cod_matricula = '{$this->ref_cod_matricula}'"); 
+      $max = $db->CampoUnico("SELECT COALESCE(MAX(sequencial),0) + 1 AS MAX FROM {$this->_tabela} WHERE ref_cod_matricula = '{$this->ref_cod_matricula}'");
 
-      //removido filtro pois tornou-se possivel enturmar uma matricula em mais de uma turma       
+      //removido filtro pois tornou-se possivel enturmar uma matricula em mais de uma turma
       //AND ref_cod_turma = '{$this->ref_cod_turma}'");
 
       return $max;

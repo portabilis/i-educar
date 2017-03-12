@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo disponÌvel desde a vers„o 1.0.0
+ * @since     Arquivo dispon√≠vel desde a vers√£o 1.0.0
  * @version   $Id$
  */
 
@@ -40,18 +40,18 @@ require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
 /**
  * clsIndexBase class.
  *
- * @author    Prefeitura Municipal de ItajaÌ
+ * @author    Prefeitura Municipal de Itaja√≠
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponÌvel desde a vers„o 1.0.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Ano Letivo MÛdulo');
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Ano Letivo M√≥dulo');
     $this->processoAp = 561;
     $this->addEstilo("localizacaoSistema");
   }
@@ -60,11 +60,11 @@ class clsIndexBase extends clsBase
 /**
  * indice class.
  *
- * @author    Prefeitura Municipal de ItajaÌ
+ * @author    Prefeitura Municipal de Itaja√≠
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponÌvel desde a vers„o 1.0.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
  * @version   @@package_version@@
  */
 class indice extends clsCadastro
@@ -155,17 +155,17 @@ class indice extends clsCadastro
       $tabela = "<table border=0 style='' cellpadding=2 width='100%'>";
       $tabela .= "<tr bgcolor=$cor><td colspan='2'><b>M&oacute;dulos do ano anterior (".($this->ref_ano - 1).")</b></td></tr><tr><td>";
       $tabela .= "<table cellpadding=\"2\" cellspacing=\"2\" border=\"0\" align=\"left\" width='300px'>";
-      $tabela .= "<tr bgcolor='#A1B3BD'><th width='100px'>Etapa<a name='ano_letivo'/></th><th width='200px'>PerÌodo</th></tr>";
+      $tabela .= "<tr bgcolor='#A1B3BD'><th width='100px'>Etapa<a name='ano_letivo'/></th><th width='200px'>Per√≠odo</th></tr>";
 
      foreach ($registros as $campo) {
       $cor = "#E3E8EF"; #$cor == "#FFFFFF" ? "#E3E8EF" : "#FFFFFF";
       $cont++;
-      $tabela .= "<tr bgcolor='$cor'><td align='center'>{$cont}</td><td align='center'>".dataFromPgToBr($campo['data_inicio'])." ‡ ".dataFromPgToBr($campo['data_fim'])."</td></tr>";
-      //$modulosAnoAnterior .= ++$cont."™ Etapa: De ".dataFromPgToBr($campo['data_inicio'])." ‡ ".dataFromPgToBr($campo['data_fim']);
+      $tabela .= "<tr bgcolor='$cor'><td align='center'>{$cont}</td><td align='center'>".dataFromPgToBr($campo['data_inicio'])." √† ".dataFromPgToBr($campo['data_fim'])."</td></tr>";
+      //$modulosAnoAnterior .= ++$cont."¬™ Etapa: De ".dataFromPgToBr($campo['data_inicio'])." √† ".dataFromPgToBr($campo['data_fim']);
      }
 
      $tabela .="</table>";
-     $tabela .= "<tr><td colspan='2'><b> Adicione os mÛdulos abaixo para {$this->ref_ano} semelhante ao exemplo do ano anterior: </b></td></tr><tr><td>";
+     $tabela .= "<tr><td colspan='2'><b> Adicione os m√≥dulos abaixo para {$this->ref_ano} semelhante ao exemplo do ano anterior: </b></td></tr><tr><td>";
      $tabela .= "</table>";
     }
 
@@ -177,7 +177,7 @@ class indice extends clsCadastro
     if ($tabela)
       $this->campoRotulo('modulosAnoAnterior', '-', $tabela);
 
-    // MÛdulos do ano letivo
+    // M√≥dulos do ano letivo
     if ($_POST['ano_letivo_modulo']) {
       $this->ano_letivo_modulo = unserialize(urldecode($_POST['ano_letivo_modulo']));
     }
@@ -281,26 +281,26 @@ class indice extends clsCadastro
       }
     }
     else {
-      $opcoes = array('' => 'Erro na geraÁ„o');
+      $opcoes = array('' => 'Erro na gera√ß√£o');
     }
 
     // data
     if ($qtd_modulo > 1) {
-      $this->campoLista('ref_cod_modulo', 'MÛdulo', $opcoes,
+      $this->campoLista('ref_cod_modulo', 'M√≥dulo', $opcoes,
         $this->ref_cod_modulo, NULL, NULL, NULL, NULL, NULL, FALSE);
 
-      $this->campoData('data_inicio', 'Data InÌcio', $this->data_inicio);
+      $this->campoData('data_inicio', 'Data In√≠cio', $this->data_inicio);
 
       $this->campoData('data_fim', 'Data Fim', $this->data_fim);
     }
     else {
-      $this->campoLista('ref_cod_modulo', 'MÛdulo', $opcoes, $this->ref_cod_modulo);
-      $this->campoData('data_inicio', 'Data InÌcio', $this->data_inicio, TRUE);
+      $this->campoLista('ref_cod_modulo', 'M√≥dulo', $opcoes, $this->ref_cod_modulo);
+      $this->campoData('data_inicio', 'Data In√≠cio', $this->data_inicio, TRUE);
       $this->campoData('data_fim', 'Data Fim', $this->data_fim, TRUE);
     }
 
     $this->campoOculto('incluir_modulo', '');
-    $this->campoRotulo('bt_incluir_modulo', 'MÛdulo',
+    $this->campoRotulo('bt_incluir_modulo', 'M√≥dulo',
      '<a href="#" id="add_module"><img src="imagens/nvp_bot_adiciona.gif" title="Incluir" border="0" /></a>'
     );
 
@@ -347,7 +347,7 @@ class indice extends clsCadastro
           $cadastrou1 = $obj->cadastra();
 
           if (! $cadastrou1) {
-            $this->mensagem = 'Cadastro n„o realizado.<br />';
+            $this->mensagem = 'Cadastro n√£o realizado.<br />';
             return FALSE;
           }
         }
@@ -358,12 +358,12 @@ class indice extends clsCadastro
         die();
       }
 
-      $this->mensagem = 'Cadastro n„o realizado. <br />';
+      $this->mensagem = 'Cadastro n√£o realizado. <br />';
       return FALSE;
     }
 
-    echo '<script>alert("… necess·rio adicionar pelo menos um mÛdulo!")</script>';
-    $this->mensagem = 'Cadastro n„o realizado.<br />';
+    echo '<script>alert("√â necess√°rio adicionar pelo menos um m√≥dulo!")</script>';
+    $this->mensagem = 'Cadastro n√£o realizado.<br />';
     return FALSE;
   }
 
@@ -401,19 +401,19 @@ class indice extends clsCadastro
           $cadastrou = $obj->cadastra();
 
           if (! $cadastrou) {
-            $this->mensagem = 'EdiÁ„o n„o realizada.<br />';
+            $this->mensagem = 'Edi√ß√£o n√£o realizada.<br />';
             return FALSE;
           }
         }
 
-        $this->mensagem .= 'EdiÁ„o efetuada com sucesso.<br />';
+        $this->mensagem .= 'Edi√ß√£o efetuada com sucesso.<br />';
         header('Location: educar_escola_lst.php');
         die();
       }
     }
 
-    echo "<script>alert('… necess·rio adicionar pelo menos um mÛdulo!')</script>";
-    $this->mensagem = 'EdiÁ„o n„o realizada.<br />';
+    echo "<script>alert('√â necess√°rio adicionar pelo menos um m√≥dulo!')</script>";
+    $this->mensagem = 'Edi√ß√£o n√£o realizada.<br />';
     return FALSE;
   }
 
@@ -437,26 +437,26 @@ class indice extends clsCadastro
       $excluiu1 = $obj->excluirTodos();
 
       if ($excluiu1) {
-        $this->mensagem .= 'Exclus„o efetuada com sucesso.<br />';
+        $this->mensagem .= 'Exclus√£o efetuada com sucesso.<br />';
         header('Location: educar_escola_lst.php');
         die();
       }
 
-      $this->mensagem = 'Exclus„o n„o realizada.<br />';
+      $this->mensagem = 'Exclus√£o n√£o realizada.<br />';
       return FALSE;
     }
 
-    $this->mensagem = 'Exclus„o n„o realizada.<br />';
+    $this->mensagem = 'Exclus√£o n√£o realizada.<br />';
     return FALSE;
   }
 
   /**
-   * Verifica se ao menos uma das datas as datas de inÌcio dos mÛdulos È do
+   * Verifica se ao menos uma das datas as datas de in√≠cio dos m√≥dulos √© do
    * mesmo ano letivo da escola. Em caso de erro, configura a mensagem de
-   * erro que È retornado pelo formul·rio.
+   * erro que √© retornado pelo formul√°rio.
    *
    * @access private
-   * @param  array $modulos O array associativo recebido via POST pelo formul·rio.
+   * @param  array $modulos O array associativo recebido via POST pelo formul√°rio.
    * @return bool  FALSE caso nenhuma das datas esteja no mesmo ano letivo da escola.
    */
   function _verificaModuloDatas(array $modulos)
@@ -543,8 +543,8 @@ class indice extends clsCadastro
         'cargaHoraria'         => $componenteTurmaOrigem->get('cargaHoraria'),
         'turma'                => $turmaDestinoId,
 
-        // est· sendo mantido o mesmo ano_escolar_id, uma vez que n„o foi
-        // foi encontrado de onde o valor deste campo È obtido.
+        // est√° sendo mantido o mesmo ano_escolar_id, uma vez que n√£o foi
+        // foi encontrado de onde o valor deste campo √© obtido.
         'anoEscolar'           => $componenteTurmaOrigem->get('anoEscolar')
       );
 
@@ -594,21 +594,21 @@ class indice extends clsCadastro
   }
 }
 
-// Instancia objeto de p·gina
+// Instancia objeto de p√°gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conte˙do
+// Instancia objeto de conte√∫do
 $miolo = new indice();
 
-// Atribui o conte˙do ‡  p·gina
+// Atribui o conte√∫do √†  p√°gina
 $pagina->addForm($miolo);
 
-// Gera o cÛdigo HTML
+// Gera o c√≥digo HTML
 $pagina->MakeAll();
 ?>
 <script type="text/javascript">
 /**
- * Realiza validaÁ„o client-side do forComponenteCurricular_Model_TurmaDataMappermul·rio.
+ * Realiza valida√ß√£o client-side do forComponenteCurricular_Model_TurmaDataMappermul√°rio.
  */
 function incluir()
 {
@@ -620,13 +620,13 @@ function incluir()
   endDate   = document.getElementById('data_fim').value.split('/');
 
   if ('' === document.getElementById('ref_cod_modulo').value) {
-    alert('… necess·rio selecionar um "mÛdulo".');
+    alert('√â necess√°rio selecionar um "m√≥dulo".');
     return false;
   }
 
   if (!phpjs.checkdate(startDate[1], startDate[0], startDate[2])) {
     document.getElementById('data_inicio').className = 'formdestaque';
-    alert('Preencha o campo "Data InÌcio" corretamente!');
+    alert('Preencha o campo "Data In√≠cio" corretamente!');
     document.getElementById('data_inicio').focus();
     return false;
   }
@@ -642,7 +642,7 @@ function incluir()
   endDate   = new Date(parseInt(endDate[2], 10), parseInt(endDate[1], 10) - 1, parseInt(endDate[0], 10));
 
   if (endDate < startDate) {
-    alert('"Data InÌcio" n„o pode ser posterior a "Data Fim".');
+    alert('"Data In√≠cio" n√£o pode ser posterior a "Data Fim".');
     return false;
   }
 

@@ -1,25 +1,25 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	@author Prefeitura Municipal de ItajaÌ								 *
+	*	@author Prefeitura Municipal de Itaja√≠								 *
 	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software P˙blico Livre e Brasileiro					 *
+	*   Pacote: i-PLB Software P√∫blico Livre e Brasileiro					 *
 	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÌ			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itaja√≠			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  È  software livre, vocÍ pode redistribuÌ-lo e/ou	 *
-	*	modific·-lo sob os termos da LicenÁa P˙blica Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a vers„o 2 da	 *
-	*	LicenÁa   como  (a  seu  critÈrio)  qualquer  vers„o  mais  nova.	 *
+	*	Este  programa  √©  software livre, voc√™ pode redistribu√≠-lo e/ou	 *
+	*	modific√°-lo sob os termos da Licen√ßa P√∫blica Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a vers√£o 2 da	 *
+	*	Licen√ßa   como  (a  seu  crit√©rio)  qualquer  vers√£o  mais  nova.	 *
 	*																		 *
-	*	Este programa  È distribuÌdo na expectativa de ser ˙til, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implÌcita de COMERCIALI-	 *
-	*	ZA«√O  ou  de ADEQUA«√O A QUALQUER PROP”SITO EM PARTICULAR. Con-	 *
-	*	sulte  a  LicenÁa  P˙blica  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  √© distribu√≠do na expectativa de ser √∫til, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia impl√≠cita de COMERCIALI-	 *
+	*	ZA√á√ÉO  ou  de ADEQUA√á√ÉO A QUALQUER PROP√ìSITO EM PARTICULAR. Con-	 *
+	*	sulte  a  Licen√ßa  P√∫blica  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	VocÍ  deve  ter  recebido uma cÛpia da LicenÁa P˙blica Geral GNU	 *
-	*	junto  com  este  programa. Se n„o, escreva para a Free Software	 *
+	*	Voc√™  deve  ter  recebido uma c√≥pia da Licen√ßa P√∫blica Geral GNU	 *
+	*	junto  com  este  programa. Se n√£o, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
@@ -38,7 +38,7 @@ class clsIndex extends clsBase
 	
 	function Formular()
 	{
-		$this->SetTitulo( "{$this->_instituicao} i-Pauta - Detalhe da Reuni„o" );
+		$this->SetTitulo( "{$this->_instituicao} i-Pauta - Detalhe da Reuni√£o" );
 		$this->processoAp = "294";
 	}
 }
@@ -47,7 +47,7 @@ class indice extends clsDetalhe
 {
 	function Gerar()
 	{
-		$this->titulo = "Detalhe da Reuni„o";
+		$this->titulo = "Detalhe da Reuni√£o";
 		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet", false);
 		
 		@session_start();
@@ -65,7 +65,7 @@ class indice extends clsDetalhe
 		}
 		
 		/* 
-			Verifica se o Usu·rio atual est· cadastrado no grupo,
+			Verifica se o Usu√°rio atual est√° cadastrado no grupo,
 			caso nao esteja, redireciona para entrada
 		*/
 		$obj = new clsGrupoPessoa($id_visualiza,$cod_grupo);
@@ -95,7 +95,7 @@ class indice extends clsDetalhe
 		$obj = new clsReuniao($cod_reuniao); 
 		$detalhe = $obj->detalhe();
 		
-		$this->addDetalhe(array("DescriÁ„o", $detalhe['descricao']));
+		$this->addDetalhe(array("Descri√ß√£o", $detalhe['descricao']));
     	
 		$this->addDetalhe(array("Data Inicio", date("d/m/Y H:i", strtotime(substr($detalhe['data_inicio_marcado'],0,19)))  ));
 				
@@ -106,7 +106,7 @@ class indice extends clsDetalhe
 			$data_inicial = strtotime(substr($detalhe['data_inicio_real'],0,19));
 			$data_final = time();
 			$dif = $data_final - $data_inicial;
-			$this->addDetalhe(array("Tempo de DuraÁ„o", "<div id='tempo'></div>"  ));
+			$this->addDetalhe(array("Tempo de Dura√ß√£o", "<div id='tempo'></div>"  ));
 			
 			$db = new clsBanco();
 			$total = $db->CampoUnico( "SELECT COUNT(0) FROM pmiotopic.topicoreuniao WHERE ref_cod_reuniao = '{$cod_reuniao}'" );
@@ -123,11 +123,11 @@ class indice extends clsDetalhe
 			$data_final = strtotime(substr($detalhe['data_fim_real'],0,19));
 			$this->addDetalhe(array("Data Fim Real", date("d/m/Y H:i", strtotime(substr($detalhe['data_fim_real'],0,19)))  ));
 			
-			$this->addDetalhe(array("Tempo de DuraÁ„o", "<div id='tempo'>".difTempo($data_inicial,$data_final."</div>")  ));
+			$this->addDetalhe(array("Tempo de Dura√ß√£o", "<div id='tempo'>".difTempo($data_inicial,$data_final."</div>")  ));
 		}
-		$this->addDetalhe(array("Notificado por e-mail", ($detalhe['email_enviado']) ? "Sim" : "N„o" ));
+		$this->addDetalhe(array("Notificado por e-mail", ($detalhe['email_enviado']) ? "Sim" : "N√£o" ));
 		
-		$this->addDetalhe(array("<b><i>TÛpicos Relacionados</i></b>", "" ));
+		$this->addDetalhe(array("<b><i>T√≥picos Relacionados</i></b>", "" ));
 
 		$obj = new clsTopicoReuniao();
 		$lista  = $obj->lista(false,false,false,false,false,false,false,$cod_reuniao);
@@ -158,7 +158,7 @@ class indice extends clsDetalhe
 				}
 				
 			}
-			$this->addDetalhe(array("TÛpicos", $assunto));
+			$this->addDetalhe(array("T√≥picos", $assunto));
 		}
 		
 		$obj_moderador = new clsGrupoModerador($id_visualiza,$cod_grupo);
@@ -260,12 +260,12 @@ class indice extends clsDetalhe
 		
 		if(!$detalhe['data_inicio_real'] && $detalhe_moderador && $detalhe_moderador['ativo'] == 1 )
 		{
-			$this->array_botao = array("Iniciar Reuni„o", "Imprimir (Jato)", "Imprimir (Laser)");
-			$this->array_botao_url_script = array(" if (confirm(\"Deseja Iniciar a Reuni„o em Tempo Real?\")) { document.location=\"otopic_reuniao_tempo_real.php?cod_reuniao=$cod_reuniao&cod_grupo=$cod_grupo\"} else { document.location=\"otopic_reunioes_nao_tempo_real_cad.php?cod_reuniao=$cod_reuniao&cod_grupo=$cod_grupo\" }","javascript: go(\"$link\");", "javascript: go(\"$linkCor\")");
+			$this->array_botao = array("Iniciar Reuni√£o", "Imprimir (Jato)", "Imprimir (Laser)");
+			$this->array_botao_url_script = array(" if (confirm(\"Deseja Iniciar a Reuni√£o em Tempo Real?\")) { document.location=\"otopic_reuniao_tempo_real.php?cod_reuniao=$cod_reuniao&cod_grupo=$cod_grupo\"} else { document.location=\"otopic_reunioes_nao_tempo_real_cad.php?cod_reuniao=$cod_reuniao&cod_grupo=$cod_grupo\" }","javascript: go(\"$link\");", "javascript: go(\"$linkCor\")");
 		}
 		elseif (!$detalhe['data_fim_real'] && $detalhe_moderador && $detalhe_moderador['ativo'] == 1)	
 		{
-			$this->array_botao = array("Finalizar Reuni„o", "Imprimir (Jato)", "Imprimir (Laser)");
+			$this->array_botao = array("Finalizar Reuni√£o", "Imprimir (Jato)", "Imprimir (Laser)");
 			$this->array_botao_url = array("otopic_reuniao_finaliza.php?cod_reuniao=$cod_reuniao&cod_grupo=$cod_grupo", "$link", "$linkCor");
 		}
 		elseif($detalhe["data_inicio_real"] && $detalhe["data_fim_real"])
@@ -335,7 +335,7 @@ class cadastro extends clsCadastro
 			}
 			
 			$this->campoCheck("fin_{$topicos['ref_cod_topico']}","Finalizado",$topicos['finalizado']);
-			$this->campoCheck("del_{$topicos['ref_cod_topico']}", "Apagar esse tÛpico", "");
+			$this->campoCheck("del_{$topicos['ref_cod_topico']}", "Apagar esse t√≥pico", "");
 			
 		}
 	
@@ -345,7 +345,7 @@ class cadastro extends clsCadastro
 	{
 		foreach ($_POST as $id=>$campo)
 		{
-			//deleta os tÛpicos que est„o selecionados
+			//deleta os t√≥picos que est√£o selecionados
 			if(substr($id,0,4) == "del_")
 			{
 				$cod = substr($id,4);

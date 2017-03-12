@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo disponÌvel desde a vers„o 1.0.0
+ * @since     Arquivo dispon√≠vel desde a vers√£o 1.0.0
  * @version   $Id$
  */
 
@@ -33,11 +33,11 @@ require_once 'include/pmieducar/geral.inc.php';
 /**
  * clsPmieducarServidor class.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponÌvel desde a vers„o 1.0.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
  * @version   @@package_version@@
  */
 class clsPmieducarServidor
@@ -53,7 +53,7 @@ class clsPmieducarServidor
   var $ref_cod_subnivel;
 
     /**
-   * Armazena o total de resultados obtidos na ˙ltima chamada ao mÈtodo lista().
+   * Armazena o total de resultados obtidos na √∫ltima chamada ao m√©todo lista().
    * @var int
    */
   var $_total;
@@ -71,35 +71,35 @@ class clsPmieducarServidor
   var $_tabela;
 
   /**
-   * Lista separada por vÌrgula, com os campos que devem ser selecionados na
-   * prÛxima chamado ao mÈtodo lista().
+   * Lista separada por v√≠rgula, com os campos que devem ser selecionados na
+   * pr√≥xima chamado ao m√©todo lista().
    * @var string
    */
   var $_campos_lista;
   var $_campos_lista2;
 
   /**
-   * Lista com todos os campos da tabela separados por vÌrgula, padr„o para
-   * seleÁ„o no mÈtodo lista.
+   * Lista com todos os campos da tabela separados por v√≠rgula, padr√£o para
+   * sele√ß√£o no m√©todo lista.
    * @var string
    */
   var $_todos_campos;
   var $_todos_campos2;
 
   /**
-   * Valor que define a quantidade de registros a ser retornada pelo mÈtodo lista().
+   * Valor que define a quantidade de registros a ser retornada pelo m√©todo lista().
    * @var int
    */
   var $_limite_quantidade;
 
   /**
-   * Define o valor de offset no retorno dos registros no mÈtodo lista().
+   * Define o valor de offset no retorno dos registros no m√©todo lista().
    * @var int
    */
   var $_limite_offset;
 
   /**
-   * Define o campo para ser usado como padr„o de ordenaÁ„o no mÈtodo lista().
+   * Define o campo para ser usado como padr√£o de ordena√ß√£o no m√©todo lista().
    * @var string
    */
   var $_campo_order_by;
@@ -357,54 +357,54 @@ class clsPmieducarServidor
   /**
    * Retorna um array com resultados de uma pesquisa parametrizada
    *
-   * O array retornado contÈm em cada um de seus items um array associativo onde
+   * O array retornado cont√©m em cada um de seus items um array associativo onde
    * as chaves correspondem aos campos da tabela indicados por
    * $this->_campos_lista.
    *
-   * A pesquisa SELECT realizada È afetada por diversos par‚metros disponÌveis.
-   * Alguns dos par‚metros induzem a subqueries para a avaliaÁ„o de diferentes
+   * A pesquisa SELECT realizada √© afetada por diversos par√¢metros dispon√≠veis.
+   * Alguns dos par√¢metros induzem a subqueries para a avalia√ß√£o de diferentes
    * funcionalidades do sistema.
    *
    * @see intranet/educar_pesquisa_servidor_lst.php  Listagem de busca de
    *  servidores
-   * @see intranet/educar_quadro_horario_horarios_cad.php  Cadastro de hor·rio
+   * @see intranet/educar_quadro_horario_horarios_cad.php  Cadastro de hor√°rio
    *  de aula para uma turma
    * @see intranet/educar_turma_cad.php  Cadastro de turma
    *
-   * @param  int         $int_cod_servidor             CÛdigo do servidor
-   * @param  int         $int_ref_cod_deficiencia      CÛdigo da deficiÍncia do servidor
-   * @param  int         $int_ref_idesco               CÛdigo da escolaridade do servidor
-   * @param  int         $int_carga_horaria            Carga hor·ria do servidor
+   * @param  int         $int_cod_servidor             C√≥digo do servidor
+   * @param  int         $int_ref_cod_deficiencia      C√≥digo da defici√™ncia do servidor
+   * @param  int         $int_ref_idesco               C√≥digo da escolaridade do servidor
+   * @param  int         $int_carga_horaria            Carga hor√°ria do servidor
    * @param  string      $date_data_cadastro_ini       Data de cadastro inicial (busca por intervalo >= ao valor)
    * @param  string      $date_data_cadastro_fim       Data de cadastro final (busca por intervalo <= ao valor)
-   * @param  string      $date_data_exclusao_ini       Data da exclus„o inicial (busca por intervalo >= ao valor)
-   * @param  string      $date_data_exclusao_fim       Data da exclus„o final (busca por intervalo <= ao valor)
+   * @param  string      $date_data_exclusao_ini       Data da exclus√£o inicial (busca por intervalo >= ao valor)
+   * @param  string      $date_data_exclusao_fim       Data da exclus√£o final (busca por intervalo <= ao valor)
    * @param  int         $int_ativo                    '1' para buscar apenas por servidores ativos
-   * @param  int         $int_ref_cod_instituicao      CÛdigo da instituiÁ„o do servidor
-   * @param  string      $str_tipo                     'livre' para buscar apenas por servidores n„o alocados (subquery)
-   * @param  array       $array_horario                Busca por hor·rio de alocaÁ„o do servidor (subquery)
-   * @param  int         $str_not_in_servidor          CÛdigo de servidor a excluir
-   * @param  string      $str_nome_servidor            Busca do tipo LIKE pelo padr„o de nome do servidor (subquery)
+   * @param  int         $int_ref_cod_instituicao      C√≥digo da institui√ß√£o do servidor
+   * @param  string      $str_tipo                     'livre' para buscar apenas por servidores n√£o alocados (subquery)
+   * @param  array       $array_horario                Busca por hor√°rio de aloca√ß√£o do servidor (subquery)
+   * @param  int         $str_not_in_servidor          C√≥digo de servidor a excluir
+   * @param  string      $str_nome_servidor            Busca do tipo LIKE pelo padr√£o de nome do servidor (subquery)
    * @param  int|string  $boo_professor                Qualquer valor que avalie para TRUE para buscar por servidores professores (subquery)
-   * @param  string      $str_horario                  'S' para buscar se o servidor est· alocado em um dos hor·rios (indicados $matutino, $vespertino ou $noturno) (subquery)
-   * @param  bool        $bool_ordena_por_nome         TRUE para ordenar os resultados pelo campo nome por ordem alfabÈtica crescente
-   * @param  string      $lst_matriculas               Verifica se o servidor n„o est· na lista de matriculas (string com inteiros separados por vÌrgula: 54, 55, 60).
-   *                                                   Apenas verifica quando a buscar por hor·rio de alocaÁ„o È realizada
-   * @param  bool        $matutino                     Busca por professores com hor·rio livre no perÌodo matutino
-   * @param  bool        $vespertino                   Busca por professores com hor·rio livre no perÌodo vespertino
-   * @param  bool        $noturno                      Busca por professores com hor·rio livre no perÌodo noturno
-   * @param  int         $int_ref_cod_escola           CÛdigo da escola para verificar se o servidor est· alocado nela (usado em v·rias das subqueries)
-   * @param  string      $str_hr_mat                   DuraÁ„o da aula (formato HH:MM) para o perÌodo matutino
-   * @param  string      $str_hr_ves                   DuraÁ„o da aula (formato HH:MM) para o perÌodo vespertino
-   * @param  string      $str_hr_not                   DuraÁ„o da aula (formato HH:MM) para o perÌodo noturno
-   * @param  int         $int_dia_semana               Inteiro para o dia da semana (1 = domingo, 7 = s·bado)
-   * @param  int         $alocacao_escola_instituicao  CÛdigo da instituiÁ„o ao qual o servidor deve estar cadastrado (subquery)
+   * @param  string      $str_horario                  'S' para buscar se o servidor est√° alocado em um dos hor√°rios (indicados $matutino, $vespertino ou $noturno) (subquery)
+   * @param  bool        $bool_ordena_por_nome         TRUE para ordenar os resultados pelo campo nome por ordem alfab√©tica crescente
+   * @param  string      $lst_matriculas               Verifica se o servidor n√£o est√° na lista de matriculas (string com inteiros separados por v√≠rgula: 54, 55, 60).
+   *                                                   Apenas verifica quando a buscar por hor√°rio de aloca√ß√£o √© realizada
+   * @param  bool        $matutino                     Busca por professores com hor√°rio livre no per√≠odo matutino
+   * @param  bool        $vespertino                   Busca por professores com hor√°rio livre no per√≠odo vespertino
+   * @param  bool        $noturno                      Busca por professores com hor√°rio livre no per√≠odo noturno
+   * @param  int         $int_ref_cod_escola           C√≥digo da escola para verificar se o servidor est√° alocado nela (usado em v√°rias das subqueries)
+   * @param  string      $str_hr_mat                   Dura√ß√£o da aula (formato HH:MM) para o per√≠odo matutino
+   * @param  string      $str_hr_ves                   Dura√ß√£o da aula (formato HH:MM) para o per√≠odo vespertino
+   * @param  string      $str_hr_not                   Dura√ß√£o da aula (formato HH:MM) para o per√≠odo noturno
+   * @param  int         $int_dia_semana               Inteiro para o dia da semana (1 = domingo, 7 = s√°bado)
+   * @param  int         $alocacao_escola_instituicao  C√≥digo da institui√ß√£o ao qual o servidor deve estar cadastrado (subquery)
    * @param  int         $int_identificador            Campo identificado para busca na tabela pmieducar.quadro_horario_horarios_aux (subquery)
-   * @param  int         $int_ref_cod_curso            CÛdigo do curso que o professor deve estar cadastrado (subquery)
-   * @param  int         $int_ref_cod_disciplina       CÛdigo da disciplina que o professor deve ser habilitado (subquery).
-   *                                                   Somente verifica quando o curso passado por $int_ref_cod_curso n„o
+   * @param  int         $int_ref_cod_curso            C√≥digo do curso que o professor deve estar cadastrado (subquery)
+   * @param  int         $int_ref_cod_disciplina       C√≥digo da disciplina que o professor deve ser habilitado (subquery).
+   *                                                   Somente verifica quando o curso passado por $int_ref_cod_curso n√£o
    *                                                   possui sistema de falta globalizada
-   * @param  int         $int_ref_cod_subnivel         CÛdigo de subnÌvel que o servidor deve possuir
+   * @param  int         $int_ref_cod_subnivel         C√≥digo de subn√≠vel que o servidor deve possuir
    * @return array|bool  Array com os resultados da query SELECT ou FALSE caso
    *                     nenhum registro tenha sido encontrado
    */
@@ -442,12 +442,12 @@ class clsPmieducarServidor
     $int_ref_cod_subnivel        = NULL
     ) {
 
-    // Extrai as informaÁıes de hora inicial e hora final, para definir melhor
-    // o lookup de carga hor·ria de servidores alocados, para operaÁıes como
-    // a alocaÁ„o de docente em quadro de hor·rio. Isso È necess·rio para que
-    // n„o seja necess·rio alocar o docente em dois perÌodos diferentes apenas
-    // porque o hor·rio final de uma aula extrapola o limite de hor·rio do
-    // perÌodo.
+    // Extrai as informa√ß√µes de hora inicial e hora final, para definir melhor
+    // o lookup de carga hor√°ria de servidores alocados, para opera√ß√µes como
+    // a aloca√ß√£o de docente em quadro de hor√°rio. Isso √© necess√°rio para que
+    // n√£o seja necess√°rio alocar o docente em dois per√≠odos diferentes apenas
+    // porque o hor√°rio final de uma aula extrapola o limite de hor√°rio do
+    // per√≠odo.
     if (is_array($array_horario) && 3 >= count($array_horario)) {
       $horarioInicial = explode(':', $array_horario[1]);
       $horarioFinal   = explode(':', $array_horario[2]);
@@ -455,15 +455,15 @@ class clsPmieducarServidor
       $horarioInicial = $horarioInicial[0] * 60 + $horarioInicial[1];
       $horarioFinal   = $horarioFinal[0] * 60 + $horarioFinal[1];
 
-      // Caso o hor·rio definido inicie no perÌodo "matutino" e se encerre no
-      // perÌodo "vespertino", ir· considerar como "matutino" apenas.
+      // Caso o hor√°rio definido inicie no per√≠odo "matutino" e se encerre no
+      // per√≠odo "vespertino", ir√° considerar como "matutino" apenas.
       $matutinoLimite = 12 * 60;
       if ($horarioInicial < $matutinoLimite && $horarioFinal > $matutinoLimite) {
         $vespertino = false;
       }
 
-      // Caso o hor·rio definido inicie no perÌodo "vespertino" e se encerre
-      // no perÌodo "noturno", ir· considerar como "vespertino" apenas.
+      // Caso o hor√°rio definido inicie no per√≠odo "vespertino" e se encerre
+      // no per√≠odo "noturno", ir√° considerar como "vespertino" apenas.
       $vespertinoLimite = 18 * 60;
       if ($horarioInicial < $vespertinoLimite && $horarioFinal > $vespertinoLimite) {
         $noturno = false;
@@ -617,7 +617,7 @@ class clsPmieducarServidor
         $horas    = sprintf("%02d", (int) abs($hora_fim[0]) - abs($hora_ini[0]));
         $minutos  = sprintf("%02d", (int) abs($hora_fim[1]) - abs($hora_ini[1]));
 
-        // Remove qualquer AND que esteja no inÌcio da cl·usula SQL
+        // Remove qualquer AND que esteja no in√≠cio da cl√°usula SQL
         $wherePieces = explode(' ', trim($where));
         if ('AND' == $wherePieces[0]) {
           array_shift($wherePieces);
@@ -626,7 +626,7 @@ class clsPmieducarServidor
 
         if ($matutino) {
           if (is_string($str_horario) && $str_horario == "S") {
-            // A somatÛria retorna nulo
+            // A somat√≥ria retorna nulo
             $filtros .= "
     {$whereAnd} s.cod_servidor IN (SELECT a.ref_cod_servidor
       FROM pmieducar.servidor_alocacao a
@@ -759,13 +759,13 @@ class clsPmieducarServidor
     $obj_curso = new clsPmieducarCurso($int_ref_cod_curso);
     $det_curso = $obj_curso->detalhe();
 
-    // Seleciona apenas servidor cuja uma de suas funÁıes seja a de professor
+    // Seleciona apenas servidor cuja uma de suas fun√ß√µes seja a de professor
     // @todo Extract method
     if ($boo_professor) {
       /*
-       * Caso os cÛdigos de disciplina e de curso n„o sejam informado, mas o de
-       * servidor para n„o buscar sim, seleciona as disciplinas deste servidor
-       * com o qual o professor candidato ter· que lecionar para ser retornado
+       * Caso os c√≥digos de disciplina e de curso n√£o sejam informado, mas o de
+       * servidor para n√£o buscar sim, seleciona as disciplinas deste servidor
+       * com o qual o professor candidato ter√° que lecionar para ser retornado
        * na query.
        */
       if (!$int_ref_cod_disciplina && !$int_ref_cod_curso) {
@@ -917,7 +917,7 @@ class clsPmieducarServidor
   }
 
   /**
-   * Retorna array com as funÁıes do servidor
+   * Retorna array com as fun√ß√µes do servidor
    *
    * Exemplo de array de retorno:
    * <code>
@@ -930,9 +930,9 @@ class clsPmieducarServidor
    * );
    * <code>
    *
-   * @since   MÈtodo disponÌvel desde a vers„o 1.0.2
-   * @return  array  Array associativo com a primeira chave sendo o cÛdigo da
-   *   funÁ„o. O array interno contÈm o nome da funÁ„o e se a funÁ„o desempenha
+   * @since   M√©todo dispon√≠vel desde a vers√£o 1.0.2
+   * @return  array  Array associativo com a primeira chave sendo o c√≥digo da
+   *   fun√ß√£o. O array interno cont√©m o nome da fun√ß√£o e se a fun√ß√£o desempenha
    *   um papel de professor
    */
   function getServidorFuncoes()
@@ -962,15 +962,15 @@ class clsPmieducarServidor
 
   /**
    * Retorna um array com as disciplinas alocadas ao servidor no quadro de
-   * hor·rios
+   * hor√°rios
    *
-   * @since   MÈtodo disponÌvel desde a vers„o 1.0.2
-   * @param   int  $codServidor     CÛdigo do servidor, caso n„o seja informado,
-   *   usa o cÛdigo disponÌvel no objeto atual
-   * @param   int  $codInstituicao  CÛdigo da instituiÁ„o, caso n„o seja
-   *   informado, usa o cÛdigo disponÌvel no objeto atual
-   * @return  array|bool  Array com cÛdigos das disciplinas ordenados ou FALSE
-   *   caso o servidor n„o tenha disciplinas
+   * @since   M√©todo dispon√≠vel desde a vers√£o 1.0.2
+   * @param   int  $codServidor     C√≥digo do servidor, caso n√£o seja informado,
+   *   usa o c√≥digo dispon√≠vel no objeto atual
+   * @param   int  $codInstituicao  C√≥digo da institui√ß√£o, caso n√£o seja
+   *   informado, usa o c√≥digo dispon√≠vel no objeto atual
+   * @return  array|bool  Array com c√≥digos das disciplinas ordenados ou FALSE
+   *   caso o servidor n√£o tenha disciplinas
    */
   function getServidorDisciplinasQuadroHorarioHorarios($codServidor = NULL,
     $codInstituicao = NULL)
@@ -1004,14 +1004,14 @@ class clsPmieducarServidor
   }
 
    /**
-    * Retorna um array com os cÛdigos de servidor e instituiÁ„o, usando os
-    * valores dos par‚metros ou das propriedades da inst‚ncia atual.
+    * Retorna um array com os c√≥digos de servidor e institui√ß√£o, usando os
+    * valores dos par√¢metros ou das propriedades da inst√¢ncia atual.
     *
-    * @since   MÈtodo disponÌvel desde a vers„o 1.2.0
-    * @param   int  $codServidor     CÛdigo do servidor, caso n„o seja informado,
-    *   usa o cÛdigo disponÌvel no objeto atual
-    * @param   int  $codInstituicao  CÛdigo da instituiÁ„o, caso n„o seja
-    *   informado, usa o cÛdigo disponÌvel no objeto atual
+    * @since   M√©todo dispon√≠vel desde a vers√£o 1.2.0
+    * @param   int  $codServidor     C√≥digo do servidor, caso n√£o seja informado,
+    *   usa o c√≥digo dispon√≠vel no objeto atual
+    * @param   int  $codInstituicao  C√≥digo da institui√ß√£o, caso n√£o seja
+    *   informado, usa o c√≥digo dispon√≠vel no objeto atual
     * @return  array|bool  (codServidor => (int), codInstituicao => (int))
     */
   function _getCodServidorInstituicao($codServidor = NULL, $codInstituicao = NULL)
@@ -1019,7 +1019,7 @@ class clsPmieducarServidor
     $codServidor    = $codServidor != NULL ? $codServidor : $this->cod_servidor;
     $codInstituicao = $codInstituicao != NULL ? $codInstituicao : $this->ref_cod_instituicao;
 
-    // Se cÛdigos n„o forem fornecidos, nem pela classe nem pelo cÛdigo cliente,
+    // Se c√≥digos n√£o forem fornecidos, nem pela classe nem pelo c√≥digo cliente,
     // retorna FALSE
     if ($codServidor == NULL || $codInstituicao == NULL) {
       return FALSE;
@@ -1032,15 +1032,15 @@ class clsPmieducarServidor
   }
 
   /**
-   * Retorna um array com os cÛdigos das disciplinas do servidor
+   * Retorna um array com os c√≥digos das disciplinas do servidor
    *
-   * @since   MÈtodo disponÌvel desde a vers„o 1.0.2
-   * @param   int  $codServidor     CÛdigo do servidor, caso n„o seja informado,
-   *   usa o cÛdigo disponÌvel no objeto atual
-   * @param   int  $codInstituicao  CÛdigo da instituiÁ„o, caso n„o seja
-   *   informado, usa o cÛdigo disponÌvel no objeto atual
-   * @return  array|bool  Array com cÛdigos das disciplinas ordenados ou FALSE
-   *   caso o servidor n„o tenha disciplinas
+   * @since   M√©todo dispon√≠vel desde a vers√£o 1.0.2
+   * @param   int  $codServidor     C√≥digo do servidor, caso n√£o seja informado,
+   *   usa o c√≥digo dispon√≠vel no objeto atual
+   * @param   int  $codInstituicao  C√≥digo da institui√ß√£o, caso n√£o seja
+   *   informado, usa o c√≥digo dispon√≠vel no objeto atual
+   * @return  array|bool  Array com c√≥digos das disciplinas ordenados ou FALSE
+   *   caso o servidor n√£o tenha disciplinas
    */
   function getServidorDisciplinas($codServidor = NULL,
     $codInstituicao = NULL)
@@ -1050,7 +1050,7 @@ class clsPmieducarServidor
       return FALSE;
     }
 
-    // Se cÛdigos n„o forem fornecidos, nem pela classe nem pelo cÛdigo cliente,
+    // Se c√≥digos n√£o forem fornecidos, nem pela classe nem pelo c√≥digo cliente,
     // retorna FALSE
     if ($codServidor == NULL || $codInstituicao == NULL) {
       return FALSE;
@@ -1081,14 +1081,14 @@ class clsPmieducarServidor
   }
 
   /**
-   * Retorna os hor·rios de aula do servidor na instituiÁ„o.
+   * Retorna os hor√°rios de aula do servidor na institui√ß√£o.
    *
-   * @since   MÈtodo disponÌvel desde a vers„o 1.0.2
-   * @param   int  $codServidor     CÛdigo do servidor, caso n„o seja informado,
-   *   usa o cÛdigo disponÌvel no objeto atual
-   * @param   int  $codInstituicao  CÛdigo da instituiÁ„o, caso n„o seja
-   *   informado, usa o cÛdigo disponÌvel no objeto atual
-   * @return  array|bool  Array associativo com os Ìndices nm_escola, nm_curso,
+   * @since   M√©todo dispon√≠vel desde a vers√£o 1.0.2
+   * @param   int  $codServidor     C√≥digo do servidor, caso n√£o seja informado,
+   *   usa o c√≥digo dispon√≠vel no objeto atual
+   * @param   int  $codInstituicao  C√≥digo da institui√ß√£o, caso n√£o seja
+   *   informado, usa o c√≥digo dispon√≠vel no objeto atual
+   * @return  array|bool  Array associativo com os √≠ndices nm_escola, nm_curso,
    *   nm_serie, nm_turma, nome (componente curricular), dia_semana,
    *   hora_inicial e hora_final.
    */
@@ -1153,13 +1153,13 @@ class clsPmieducarServidor
   }
 
   /**
-   * Verifica se um servidor desempenha a funÁ„o de professor.
+   * Verifica se um servidor desempenha a fun√ß√£o de professor.
    *
-   * Primeiro, recuperamos todas as funÁıes do servidor e procuramos
-   * por um dos itens que tenha o Ìndice professor igual a 1.
+   * Primeiro, recuperamos todas as fun√ß√µes do servidor e procuramos
+   * por um dos itens que tenha o √≠ndice professor igual a 1.
    *
-   * @since   MÈtodo disponÌvel desde a vers„o 1.0.2
-   * @return  bool  TRUE caso o servidor desempenhe a funÁ„o de professor
+   * @since   M√©todo dispon√≠vel desde a vers√£o 1.0.2
+   * @return  bool  TRUE caso o servidor desempenhe a fun√ß√£o de professor
    */
   function isProfessor()
   {
@@ -1176,7 +1176,7 @@ class clsPmieducarServidor
   }
 
   /**
-   * Define quais campos da tabela ser„o selecionados no mÈtodo Lista().
+   * Define quais campos da tabela ser√£o selecionados no m√©todo Lista().
    */
   function setCamposLista($str_campos)
   {
@@ -1184,7 +1184,7 @@ class clsPmieducarServidor
   }
 
   /**
-   * Define que o mÈtodo Lista() deverpa retornar todos os campos da tabela.
+   * Define que o m√©todo Lista() deverpa retornar todos os campos da tabela.
    */
   function resetCamposLista()
   {
@@ -1192,7 +1192,7 @@ class clsPmieducarServidor
   }
 
   /**
-   * Define limites de retorno para o mÈtodo Lista().
+   * Define limites de retorno para o m√©todo Lista().
    */
   function setLimite($intLimiteQtd, $intLimiteOffset = NULL)
   {
@@ -1201,7 +1201,7 @@ class clsPmieducarServidor
   }
 
   /**
-   * Retorna a string com o trecho da query respons·vel pelo limite de
+   * Retorna a string com o trecho da query respons√°vel pelo limite de
    * registros retornados/afetados.
    *
    * @return string
@@ -1219,7 +1219,7 @@ class clsPmieducarServidor
   }
 
   /**
-   * Define o campo para ser utilizado como ordenaÁ„o no mÈtodo Lista().
+   * Define o campo para ser utilizado como ordena√ß√£o no m√©todo Lista().
    */
   function setOrderby($strNomeCampo)
   {
@@ -1229,7 +1229,7 @@ class clsPmieducarServidor
   }
 
   /**
-   * Retorna a string com o trecho da query respons·vel pela OrdenaÁ„o dos
+   * Retorna a string com o trecho da query respons√°vel pela Ordena√ß√£o dos
    * registros.
    *
    * @return string

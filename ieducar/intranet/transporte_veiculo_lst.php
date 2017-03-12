@@ -1,23 +1,23 @@
 <?php
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gestÃ£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de ItajaÃ­
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa Ã© software livre; vocÃª pode redistribuÃ­-lo e/ou modificÃ¡-lo
+ * sob os termos da LicenÃ§a PÃºblica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versÃ£o 2 da LicenÃ§a, como (a seu critÃ©rio)
+ * qualquer versÃ£o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa Ã© distribuÃ­Â­do na expectativa de que seja Ãºtil, porÃ©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implÃ­Â­cita de COMERCIABILIDADE OU
+ * ADEQUAÃ‡ÃƒO A UMA FINALIDADE ESPECÃFICA. Consulte a LicenÃ§a PÃºblica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * VocÃª deve ter recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral do GNU junto
+ * com este programa; se nÃ£o, escreva para a Free Software Foundation, Inc., no
+ * endereÃ§o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
  * @category  i-Educar
@@ -38,7 +38,7 @@ class clsIndexBase extends clsBase
 {
 	function Formular()
 	{
-		$this->SetTitulo( "{$this->_instituicao} i-Educar - Veículos" );
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - VeÃ­culos" );
 		$this->processoAp = "21237";
 		$this->addEstilo('localizacaoSistema');
 	}
@@ -89,7 +89,7 @@ class indice extends clsListagem
 		$this->__pessoa_logada = $_SESSION['id_pessoa'];
 		session_write_close();
 
-		$this->__titulo = "Veículos - Listagem";
+		$this->__titulo = "VeÃ­culos - Listagem";
 
 		foreach( $_GET AS $var => $val ) 
 			$this->$var = ( $val === "" ) ? null: $val;
@@ -97,12 +97,12 @@ class indice extends clsListagem
 		
 
 		$this->addCabecalhos( array(
-			"Código do veículo",
-			"Descrição",
+			"CÃ³digo do veÃ­culo",
+			"DescriÃ§Ã£o",
 			"Placa",
 			"Marca",
 			"Empresa",
-			"Motorista responsável"
+			"Motorista responsÃ¡vel"
 		) );
 
 		// Filtros de Foreign Keys
@@ -121,15 +121,15 @@ class indice extends clsListagem
 			$opcoes = array( "" => "Sem empresas cadastradas" );
 		}
 
-		$this->campoNumero('cod_veiculo','Código do veículo',$this->cod_veiculo,29,15);
-		$this->campoTexto( "descricao", "Descrição", $this->descricao, 29, 50, false );
+		$this->campoNumero('cod_veiculo','CÃ³digo do veÃ­culo',$this->cod_veiculo,29,15);
+		$this->campoTexto( "descricao", "DescriÃ§Ã£o", $this->descricao, 29, 50, false );
 		$this->campoTexto( "placa", "Placa", $this->placa, 29, 10, false );
 		$this->campoTexto( "renavam", "Renavam", $this->renavam, 29, 30, false );
 		$this->campoTexto( "marca", "Marca", $this->marca, 29, 50, false );
 
 		$this->campoLista( "ativo", "Ativo", array( null => 'Selecione', 'S' => 'Ativo', 'N' => 'Inativo'), $this->ativo, "", false, "", "", false, false );
 		$this->campoLista( "cod_empresa", "Empresa", $opcoes, $this->cod_empresa, "", false, "", "", false, false );
-		$this->campoTexto( "nome_motorista", "Motorista responsável", $this->nome_motorista, 29, 30, false );
+		$this->campoTexto( "nome_motorista", "Motorista responsÃ¡vel", $this->nome_motorista, 29, 30, false );
 
 
 		// Paginador

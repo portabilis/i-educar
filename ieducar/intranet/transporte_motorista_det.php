@@ -1,24 +1,24 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
  * @category  i-Educar
@@ -41,11 +41,11 @@ require_once 'Portabilis/View/Helper/Application.php';
 /**
  * clsIndexBase class.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponÌvel desde a vers„o 1.0.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
@@ -61,11 +61,11 @@ class clsIndexBase extends clsBase
 /**
  * indice class.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponÌvel desde a vers„o 1.0.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
  * @version   @@package_version@@
  */
 class indice extends clsDetalhe
@@ -78,7 +78,7 @@ class indice extends clsDetalhe
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
-    // VerificaÁ„o de permiss„o para cadastro.
+    // Verifica√ß√£o de permiss√£o para cadastro.
     $this->obj_permissao = new clsPermissoes();
 
     $this->nivel_usuario = $this->obj_permissao->nivel_acesso($this->pessoa_logada);
@@ -96,14 +96,14 @@ class indice extends clsDetalhe
       die();
     }
     
-    $this->addDetalhe( array("CÛdigo do motorista", $cod_motorista));
+    $this->addDetalhe( array("C√≥digo do motorista", $cod_motorista));
     $this->addDetalhe( array("Nome", $registro['nome_motorista'].'<br/> <a target=\'_blank\' style=\' text-decoration: underline;\' href=\'atendidos_det.php?cod_pessoa='.$registro['ref_idpes'].'\'>Visualizar pessoa</a>') );
     $this->addDetalhe( array("CNH", $registro['cnh']) );
     $this->addDetalhe( array("Categoria", $registro['tipo_cnh']) );
     if (trim($registro['dt_habilitacao'])!='')
-      $this->addDetalhe( array("Data da habilitaÁ„o", Portabilis_Date_Utils::pgSQLToBr($registro['dt_habilitacao']) ));
+      $this->addDetalhe( array("Data da habilita√ß√£o", Portabilis_Date_Utils::pgSQLToBr($registro['dt_habilitacao']) ));
     if (trim($registro['vencimento_cnh'])!='')
-      $this->addDetalhe( array("Vencimento da habilitaÁ„o", Portabilis_Date_Utils::pgSQLToBr($registro['vencimento_cnh']) ) );
+      $this->addDetalhe( array("Vencimento da habilita√ß√£o", Portabilis_Date_Utils::pgSQLToBr($registro['vencimento_cnh']) ) );
 
     $this->addDetalhe( array("Observa&ccedil;&atilde;o", $registro['observacao']));
     $this->url_novo = "../module/TransporteEscolar/Motorista";
@@ -122,13 +122,13 @@ class indice extends clsDetalhe
   }
 }
 
-// Instancia o objeto da p·gina
+// Instancia o objeto da p√°gina
 $pagina = new clsIndexBase();
 
-// Instancia o objeto de conte˙do
+// Instancia o objeto de conte√∫do
 $miolo = new indice();
 
-// Passa o conte˙do para a p·gina
+// Passa o conte√∫do para a p√°gina
 $pagina->addForm($miolo);
 
 // Gera o HTML

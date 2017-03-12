@@ -1,32 +1,32 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gestÃ£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de ItajaÃ­
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa Ã© software livre; vocÃª pode redistribuÃ­-lo e/ou modificÃ¡-lo
+ * sob os termos da LicenÃ§a PÃºblica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versÃ£o 2 da LicenÃ§a, como (a seu critÃ©rio)
+ * qualquer versÃ£o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa Ã© distribuÃ­Â­do na expectativa de que seja Ãºtil, porÃ©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implÃ­Â­cita de COMERCIABILIDADE OU
+ * ADEQUAÃ‡ÃƒO A UMA FINALIDADE ESPECÃFICA. Consulte a LicenÃ§a PÃºblica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * VocÃª deve ter recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral do GNU junto
+ * com este programa; se nÃ£o, escreva para a Free Software Foundation, Inc., no
+ * endereÃ§o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author      Prefeitura Municipal de ItajaÃ­ <ctima@itajai.sc.gov.br>
  * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
  * @package     Core
  * @subpackage  pmieducar
  * @subpackage  Administrativo
  * @subpackage  TipoUsuario
- * @since       Arquivo disponível desde a versão 1.0.0
+ * @since       Arquivo disponÃ­vel desde a versÃ£o 1.0.0
  * @version     $Id$
  */
 
@@ -39,7 +39,7 @@ class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Tipo Usuário');
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Tipo UsuÃ¡rio');
     $this->processoAp = '554';
     $this->addEstilo('localizacaoSistema');
   }
@@ -48,7 +48,7 @@ class clsIndexBase extends clsBase
 class indice extends clsDetalhe
 {
   /**
-   * Título no topo da página.
+   * TÃ­tulo no topo da pÃ¡gina.
    * @var int
    */
   var $titulo;
@@ -69,7 +69,7 @@ class indice extends clsDetalhe
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
-    $this->titulo = 'Tipo Usuário - Detalhe';
+    $this->titulo = 'Tipo UsuÃ¡rio - Detalhe';
     
 
     $this->cod_tipo_usuario = $_GET['cod_tipo_usuario'];
@@ -104,7 +104,7 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('Descri&ccedil;&atilde;o', $registro['descricao']));
     }
 
-    // Listagem de permissães
+    // Listagem de permissÃ£es
     $objTemp = new clsBanco();
     $objTemp->Consulta(sprintf('
       SELECT
@@ -148,7 +148,7 @@ class indice extends clsDetalhe
       }
     }
 
-    // Verificação de permissão para cadastro
+    // VerificaÃ§Ã£o de permissÃ£o para cadastro
     $obj_permissao = new clsPermissoes();
 
     if ($obj_permissao->permissao_cadastra(554, $this->pessoa_logada, 1, NULL, TRUE)) {
@@ -196,16 +196,16 @@ class indice extends clsDetalhe
   }
 }
 
-// Instancia objeto de página
+// Instancia objeto de pÃ¡gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conteúdo
+// Instancia objeto de conteÃºdo
 $miolo = new indice();
 
-// Atribui o conteúdo à  página
+// Atribui o conteÃºdo Ã   pÃ¡gina
 $pagina->addForm($miolo);
 
-// Gera o código HTML
+// Gera o cÃ³digo HTML
 $pagina->MakeAll();
 ?>
 

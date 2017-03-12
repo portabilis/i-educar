@@ -1,25 +1,25 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
+	*	@author Prefeitura Municipal de ItajaÃ­								 *
 	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
+	*   Pacote: i-PLB Software PÃºblico Livre e Brasileiro					 *
 	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÃ­			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
+	*	Este  programa  Ã©  software livre, vocÃª pode redistribuÃ­-lo e/ou	 *
+	*	modificÃ¡-lo sob os termos da LicenÃ§a PÃºblica Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a versÃ£o 2 da	 *
+	*	LicenÃ§a   como  (a  seu  critÃ©rio)  qualquer  versÃ£o  mais  nova.	 *
 	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  Ã© distribuÃ­do na expectativa de ser Ãºtil, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia implÃ­cita de COMERCIALI-	 *
+	*	ZAÃ‡ÃƒO  ou  de ADEQUAÃ‡ÃƒO A QUALQUER PROPÃ“SITO EM PARTICULAR. Con-	 *
+	*	sulte  a  LicenÃ§a  PÃºblica  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
+	*	VocÃª  deve  ter  recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral GNU	 *
+	*	junto  com  este  programa. Se nÃ£o, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
@@ -190,7 +190,7 @@ class indice extends clsCadastro
 
 		$this->campoTexto("matricula", "Matr&iacute;cula", $this->matricula, 12, 12, true);
 		$this->campoSenha("_senha", "Senha", $this->_senha, true);
-		$this->campoEmail("email", "E-mail usuário", $this->email, 50, 50, false, false, false, 'Utilizado para redefinir a senha, caso o usúario esqueça<br />Este campo pode ser gravado em branco, neste caso será solicitado um e-mail ao usuário, após entrar no sistema.');
+		$this->campoEmail("email", "E-mail usuÃ¡rio", $this->email, 50, 50, false, false, false, 'Utilizado para redefinir a senha, caso o usÃºario esqueÃ§a<br />Este campo pode ser gravado em branco, neste caso serÃ¡ solicitado um e-mail ao usuÃ¡rio, apÃ³s entrar no sistema.');
         $this->campoTexto('matricula_interna', 'Matr&iacute;cula interna', $this->matricula_interna, 30, 30, false, false, false , 'Utilizado somente para registro, caso a institui&ccedil;&atilde;o deseje que a matr&iacute;cula interna desses funcion&aacute;rios sejam registradas no sistema.');
 
 		$obj_setor = new clsSetor();
@@ -316,13 +316,13 @@ class indice extends clsCadastro
 
 		$this->campoTexto("ramal", "Ramal", $this->ramal, 11, 30);
 
-		$opcoes = array(null => "Não", 'S' => "Sim");
+		$opcoes = array(null => "NÃ£o", 'S' => "Sim");
 		$this->campoLista("super", "Super usu&aacute;rio", $opcoes, $this->super, '',false,'','',false,false);
 
-		$opcoes = array(null => "Não", 1 => "Sim");
+		$opcoes = array(null => "NÃ£o", 1 => "Sim");
 		$this->campoLista("proibido", "Banido", $opcoes, $this->proibido, '',false,'','',false,false);
 
-		$opcoes = array(null => "Não", 1 => "Sim");
+		$opcoes = array(null => "NÃ£o", 1 => "Sim");
 		$this->campoLista("matricula_permanente", "Matr&iacute;cula permanente", $opcoes, $this->matricula_permanente, '',false,'','',false,false);				
 
 		//-----------------------------------------------------------------------------------------------
@@ -556,7 +556,7 @@ class indice extends clsCadastro
     $db = new clsBanco();
 
 		if ($db->CampoUnico($sql) == '1') {
-      $this->mensagem = "A matrícula '$matricula' já foi usada, por favor, informe outra.";
+      $this->mensagem = "A matrÃ­cula '$matricula' jÃ¡ foi usada, por favor, informe outra.";
       return false;
     }
     return true;

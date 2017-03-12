@@ -1,25 +1,25 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
+	*	@author Prefeitura Municipal de ItajaÃ­								 *
 	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
+	*   Pacote: i-PLB Software PÃºblico Livre e Brasileiro					 *
 	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÃ­			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
+	*	Este  programa  Ã©  software livre, vocÃª pode redistribuÃ­-lo e/ou	 *
+	*	modificÃ¡-lo sob os termos da LicenÃ§a PÃºblica Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a versÃ£o 2 da	 *
+	*	LicenÃ§a   como  (a  seu  critÃ©rio)  qualquer  versÃ£o  mais  nova.	 *
 	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  Ã© distribuÃ­do na expectativa de ser Ãºtil, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia implÃ­cita de COMERCIALI-	 *
+	*	ZAÃ‡ÃƒO  ou  de ADEQUAÃ‡ÃƒO A QUALQUER PROPÃ“SITO EM PARTICULAR. Con-	 *
+	*	sulte  a  LicenÃ§a  PÃºblica  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
+	*	VocÃª  deve  ter  recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral GNU	 *
+	*	junto  com  este  programa. Se nÃ£o, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
@@ -219,7 +219,7 @@ class indice extends clsCadastro
 		// text
 		$this->campoTexto( "nm_comodo", "C&ocirc;modo", $this->nm_comodo, 43, 255, true );
 		$this->campoMonetario("area", "&Aacute;rea", $this->area, 10, 255, true );
-		$this->campoMemo( "desc_comodo", "Descrição C&ocirc;modo", $this->desc_comodo, 60, 5, false );
+		$this->campoMemo( "desc_comodo", "DescriÃ§Ã£o C&ocirc;modo", $this->desc_comodo, 60, 5, false );
 	}
 
 	function Novo()
@@ -324,7 +324,7 @@ function getInfraPredio(xml_infra_predio)
 	if(DOM_array.length)
 	{
 		campoPredio.length = 1;
-		campoPredio.options[0].text = 'Selecione um prédio';
+		campoPredio.options[0].text = 'Selecione um prÃ©dio';
 		campoPredio.disabled = false;
 
 		for( var i = 0; i < DOM_array.length; i++ )
@@ -333,7 +333,7 @@ function getInfraPredio(xml_infra_predio)
 		}
 	}
 	else
-		campoPredio.options[0].text = 'A escola não possui nenhum prédio';
+		campoPredio.options[0].text = 'A escola nÃ£o possui nenhum prÃ©dio';
 
 }
 
@@ -359,7 +359,7 @@ function getInfraPredioFuncao(xml_infra_comodo_funcao)
 	if(DOM_array.length)
 	{
 		campoFuncao.length = 1;
-		campoFuncao.options[0].text = 'Selecione uma função cômodo';
+		campoFuncao.options[0].text = 'Selecione uma funÃ§Ã£o cÃ´modo';
 		campoFuncao.disabled = false;
 
 		for( var i = 0; i < DOM_array.length; i++ )
@@ -368,7 +368,7 @@ function getInfraPredioFuncao(xml_infra_comodo_funcao)
 		}
 	}
 	else
-		campoFuncao.options[0].text = 'A escola não possui nenhuma função cômodo';
+		campoFuncao.options[0].text = 'A escola nÃ£o possui nenhuma funÃ§Ã£o cÃ´modo';
 }
 
 document.getElementById('ref_cod_escola').onchange = function()
@@ -382,12 +382,12 @@ document.getElementById('ref_cod_escola').onchange = function()
 	var campoPredio	= document.getElementById('ref_cod_infra_predio');
 	campoPredio.length = 1;
 	campoPredio.disabled = true;
-	campoPredio.options[0].text = 'Carregando prédio';
+	campoPredio.options[0].text = 'Carregando prÃ©dio';
 
 	var campoFuncao	= document.getElementById('ref_cod_infra_comodo_funcao');
 	campoFuncao.length = 1;
 	campoFuncao.disabled = true;
-	campoFuncao.options[0].text = 'Carregando função cômodo';
+	campoFuncao.options[0].text = 'Carregando funÃ§Ã£o cÃ´modo';
 
 	var xml_infra_predio = new ajax( getInfraPredio );
 	xml_infra_predio.envia( "educar_infra_predio_xml.php?esc="+campoEscola );

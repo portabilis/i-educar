@@ -1,31 +1,31 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 *																	     *
-*	@author Prefeitura Municipal de Itajaí								 *
+*	@author Prefeitura Municipal de ItajaÃ­								 *
 *	@updated 29/03/2007													 *
-*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
+*   Pacote: i-PLB Software PÃºblico Livre e Brasileiro					 *
 *																		 *
-*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
+*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÃ­			 *
 *						ctima@itajai.sc.gov.br					    	 *
 *																		 *
-*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
+*	Este  programa  Ã©  software livre, vocÃª pode redistribuÃ­-lo e/ou	 *
+*	modificÃ¡-lo sob os termos da LicenÃ§a PÃºblica Geral GNU, conforme	 *
+*	publicada pela Free  Software  Foundation,  tanto  a versÃ£o 2 da	 *
+*	LicenÃ§a   como  (a  seu  critÃ©rio)  qualquer  versÃ£o  mais  nova.	 *
 *																		 *
-*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
+*	Este programa  Ã© distribuÃ­do na expectativa de ser Ãºtil, mas SEM	 *
+*	QUALQUER GARANTIA. Sem mesmo a garantia implÃ­cita de COMERCIALI-	 *
+*	ZAÃ‡ÃƒO  ou  de ADEQUAÃ‡ÃƒO A QUALQUER PROPÃ“SITO EM PARTICULAR. Con-	 *
+*	sulte  a  LicenÃ§a  PÃºblica  Geral  GNU para obter mais detalhes.	 *
 *																		 *
-*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-*	junto  com  este  programa. Se não, escreva para a Free Software	 *
+*	VocÃª  deve  ter  recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral GNU	 *
+*	junto  com  este  programa. Se nÃ£o, escreva para a Free Software	 *
 *	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 *	02111-1307, USA.													 *
 *																		 *
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /**
-* @author Prefeitura Municipal de Itajaï¿½
+* @author Prefeitura Municipal de ItajaÃ¯Â¿Â½
 *
 * Criado em 02/08/2006 08:42 pelo gerador automatico de classes
 */
@@ -622,7 +622,7 @@ class clsPmieducarTurma
 				$campos  .= "{$gruda}data_fechamento";
 				$valores .= "{$gruda}'{$this->data_fechamento}'";
 				$gruda    = ", ";
-			}				
+			}
 
 			$db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
 			return $db->InsertId( "{$this->_tabela}_cod_turma_seq");
@@ -816,7 +816,7 @@ class clsPmieducarTurma
 			else {
 				$set  .= "{$gruda}data_fechamento = NULL";
 				$gruda = ", ";
-			}			
+			}
 
 			if( $set )
 			{
@@ -1708,7 +1708,7 @@ and  e.cod_escola = t.ref_ref_cod_escola
 
 	/**
 	 * Retorna uma lista filtrados de acordo com os parametros
-	 * (Modificação da lista2, agora trazendo somente turmas do ano atual)
+	 * (ModificaÃ§Ã£o da lista2, agora trazendo somente turmas do ano atual)
 	 * @return array
 	 */
 	function lista3( $int_cod_turma = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_ref_ref_cod_serie = null, $int_ref_ref_cod_escola = null, $int_ref_cod_infra_predio_comodo = null, $str_nm_turma = null, $str_sgl_turma = null, $int_max_aluno = null, $int_multiseriada = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_turma_tipo = null, $time_hora_inicial_ini = null, $time_hora_inicial_fim = null, $time_hora_final_ini = null, $time_hora_final_fim = null, $time_hora_inicio_intervalo_ini = null, $time_hora_inicio_intervalo_fim = null, $time_hora_fim_intervalo_ini = null, $time_hora_fim_intervalo_fim = null, $int_ref_cod_curso = null, $int_ref_cod_instituicao = null, $int_ref_cod_regente = null, $int_ref_cod_instituicao_regente = null, $int_ref_ref_cod_escola_mult = null, $int_ref_ref_cod_serie_mult = null, $int_qtd_min_alunos_matriculados = null, $visivel = null, $turma_turno_id = null, $tipo_boletim = null, $ano = null )
@@ -1956,7 +1956,7 @@ and  e.cod_escola = t.ref_ref_cod_escola
 			return $resultado;
 		}
 		return false;
-	}	
+	}
 
 	/**
 	 * Retorna um array com os dados de um registro

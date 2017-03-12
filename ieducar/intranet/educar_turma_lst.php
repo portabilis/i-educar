@@ -1,25 +1,25 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
+	*	@author Prefeitura Municipal de ItajaÃ­								 *
 	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
+	*   Pacote: i-PLB Software PÃºblico Livre e Brasileiro					 *
 	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÃ­			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
+	*	Este  programa  Ã©  software livre, vocÃª pode redistribuÃ­-lo e/ou	 *
+	*	modificÃ¡-lo sob os termos da LicenÃ§a PÃºblica Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a versÃ£o 2 da	 *
+	*	LicenÃ§a   como  (a  seu  critÃ©rio)  qualquer  versÃ£o  mais  nova.	 *
 	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  Ã© distribuÃ­do na expectativa de ser Ãºtil, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia implÃ­cita de COMERCIALI-	 *
+	*	ZAÃ‡ÃƒO  ou  de ADEQUAÃ‡ÃƒO A QUALQUER PROPÃ“SITO EM PARTICULAR. Con-	 *
+	*	sulte  a  LicenÃ§a  PÃºblica  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
+	*	VocÃª  deve  ter  recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral GNU	 *
+	*	junto  com  este  programa. Se nÃ£o, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
@@ -130,7 +130,7 @@ class indice extends clsListagem
 		{
 			$lista_busca[] = "Escola";
 		}
-		$lista_busca[] = "Situação";
+		$lista_busca[] = "SituaÃ§Ã£o";
 		$this->addCabecalhos($lista_busca);
 
 		$get_escola = true;
@@ -149,7 +149,7 @@ class indice extends clsListagem
     $this->inputsHelper()->dynamic('anoLetivo', array(), $helperOptions);
 
 		$this->campoTexto( "nm_turma", "Turma", $this->nm_turma, 30, 255, false );
-		$this->campoLista("visivel", "Situação", array("" => "Selecione", "1" => "Ativo", "2" => "Inativo"), $this->visivel);
+		$this->campoLista("visivel", "SituaÃ§Ã£o", array("" => "Selecione", "1" => "Ativo", "2" => "Inativo"), $this->visivel);
 		// Paginador
 		$this->limite = 20;
 		$this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;

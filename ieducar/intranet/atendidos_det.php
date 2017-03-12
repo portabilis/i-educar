@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
  * @package   Ied_Cadastro
- * @since     Arquivo disponÌvel desde a vers„o 1.0.0
+ * @since     Arquivo dispon√≠vel desde a vers√£o 1.0.0
  * @version   $Id$
  */
 
@@ -40,11 +40,11 @@ require_once 'App/Model/ZonaLocalizacao.php';
 /**
  * clsIndex class.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Cadastro
- * @since     Classe disponÌvel desde a vers„o 1.0.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
  * @version   @@package_version@@
  */
 class clsIndex extends clsBase
@@ -60,11 +60,11 @@ class clsIndex extends clsBase
 /**
  * indice class.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Cadastro
- * @since     Classe disponÌvel desde a vers„o 1.0.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
  * @version   @@package_version@@
  */
 class indice extends clsDetalhe
@@ -103,7 +103,7 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('Data de Nascimento', dataFromPgToBr($detalhe['data_nasc'])));
     }
 
-    // Cor/RaÁa.
+    // Cor/Ra√ßa.
     $raca = new clsCadastroFisicaRaca($cod_pessoa);
     $raca = $raca->detalhe();
     if (is_array($raca)) {
@@ -111,20 +111,20 @@ class indice extends clsDetalhe
       $raca = $raca->detalhe();
 
       if (is_array($raca)) {
-        $this->addDetalhe(array('RaÁa', $raca['nm_raca']));
+        $this->addDetalhe(array('Ra√ßa', $raca['nm_raca']));
       }
     }
 
     if ($detalhe['logradouro']) {
       if ($detalhe['numero']) {
-        $end = ' n∫ ' . $detalhe['numero'];
+        $end = ' n¬∫ ' . $detalhe['numero'];
       }
 
       if ($detalhe['apartamento']) {
         $end .= ' apto ' . $detalhe['apartamento'];
       }
 
-      $this->addDetalhe(array('EndereÁo',
+      $this->addDetalhe(array('Endere√ßo',
         strtolower($detalhe['idtlog']) . ': ' . $detalhe['logradouro'] . ' ' . $end)
       );
     }
@@ -144,7 +144,7 @@ class indice extends clsDetalhe
     $zona = App_Model_ZonaLocalizacao::getInstance();
     if ($detalhe['zona_localizacao']) {
       $this->addDetalhe(array(
-        'Zona LocalizaÁ„o', $zona->getValue($detalhe['zona_localizacao'])
+        'Zona Localiza√ß√£o', $zona->getValue($detalhe['zona_localizacao'])
       ));
     }
 
@@ -203,14 +203,14 @@ class indice extends clsDetalhe
   }
 }
 
-// Instancia objeto de p·gina
+// Instancia objeto de p√°gina
 $pagina = new clsIndex();
 
-// Instancia objeto de conte˙do
+// Instancia objeto de conte√∫do
 $miolo = new indice();
 
-// Atribui o conte˙do ‡ p·gina
+// Atribui o conte√∫do √† p√°gina
 $pagina->addForm($miolo);
 
-// Gera o cÛdigo HTML
+// Gera o c√≥digo HTML
 $pagina->MakeAll();

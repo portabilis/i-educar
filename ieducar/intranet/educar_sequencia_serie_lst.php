@@ -1,25 +1,25 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
+	*	@author Prefeitura Municipal de ItajaÃ­								 *
 	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
+	*   Pacote: i-PLB Software PÃºblico Livre e Brasileiro					 *
 	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÃ­			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
+	*	Este  programa  Ã©  software livre, vocÃª pode redistribuÃ­-lo e/ou	 *
+	*	modificÃ¡-lo sob os termos da LicenÃ§a PÃºblica Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a versÃ£o 2 da	 *
+	*	LicenÃ§a   como  (a  seu  critÃ©rio)  qualquer  versÃ£o  mais  nova.	 *
 	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  Ã© distribuÃ­do na expectativa de ser Ãºtil, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia implÃ­cita de COMERCIALI-	 *
+	*	ZAÃ‡ÃƒO  ou  de ADEQUAÃ‡ÃƒO A QUALQUER PROPÃ“SITO EM PARTICULAR. Con-	 *
+	*	sulte  a  LicenÃ§a  PÃºblica  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
+	*	VocÃª  deve  ter  recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral GNU	 *
+	*	junto  com  este  programa. Se nÃ£o, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
@@ -397,8 +397,8 @@ function getCurso(xml_curso)
 	}
 	else
 	{
-		campoCurso.options[0].text = 'A instituição não possui nenhum curso';
-		campoCurso_.options[0].text = 'A instituição não possui nenhum curso';
+		campoCurso.options[0].text = 'A instituiÃ§Ã£o nÃ£o possui nenhum curso';
+		campoCurso_.options[0].text = 'A instituiÃ§Ã£o nÃ£o possui nenhum curso';
 	}
 }
 
@@ -410,7 +410,7 @@ function getSerie(xml_serie)
 	if(DOM_array.length)
 	{
 		campoSerie.length = 1;
-		campoSerie.options[0].text = 'Selecione uma série origem';
+		campoSerie.options[0].text = 'Selecione uma sÃ©rie origem';
 		campoSerie.disabled = false;
 
 		for( var i = 0; i < DOM_array.length; i++ )
@@ -419,7 +419,7 @@ function getSerie(xml_serie)
 		}
 	}
 	else
-		campoSerie.options[0].text = 'O curso origem não possui nenhuma série';
+		campoSerie.options[0].text = 'O curso origem nÃ£o possui nenhuma sÃ©rie';
 }
 
 function getSerie_(xml_serie_)
@@ -430,7 +430,7 @@ function getSerie_(xml_serie_)
 	if(DOM_array.length)
 	{
 		campoSerie_.length = 1;
-		campoSerie_.options[0].text = 'Selecione uma série destino';
+		campoSerie_.options[0].text = 'Selecione uma sÃ©rie destino';
 		campoSerie_.disabled = false;
 
 		for( var i = 0; i < DOM_array.length; i++ )
@@ -439,7 +439,7 @@ function getSerie_(xml_serie_)
 		}
 	}
 	else
-		campoSerie_.options[0].text = 'O curso origem não possui nenhuma série';
+		campoSerie_.options[0].text = 'O curso origem nÃ£o possui nenhuma sÃ©rie';
 }
 /*
 function getSerie( tipo )
@@ -504,7 +504,7 @@ document.getElementById('ref_curso_origem').onchange = function()
 	var campoSerie = document.getElementById('ref_serie_origem');
 	campoSerie.length = 1;
 	campoSerie.disabled = true;
-	campoSerie.options[0].text = 'Carregando série origem';
+	campoSerie.options[0].text = 'Carregando sÃ©rie origem';
 
 	var xml_serie = new ajax( getSerie );
 	xml_serie.envia( "educar_serie_xml.php?cur="+campoCurso )
@@ -517,7 +517,7 @@ document.getElementById('ref_curso_destino').onchange = function()
 	var campoSerie_ = document.getElementById('ref_serie_destino');
 	campoSerie_.length = 1;
 	campoSerie_.disabled = true;
-	campoSerie_.options[0].text = 'Carregando série destino';
+	campoSerie_.options[0].text = 'Carregando sÃ©rie destino';
 
 	var xml_serie_ = new ajax( getSerie_ );
 	xml_serie_.envia( "educar_serie_xml.php?cur="+campoCurso_ )

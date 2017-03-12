@@ -1,26 +1,26 @@
 <?php
 /**
  *
- * @author  Prefeitura Municipal de ItajaÌ
+ * @author  Prefeitura Municipal de Itaja√≠
  * @version SVN: $Id$
  *
- * Pacote: i-PLB Software P˙blico Livre e Brasileiro
+ * Pacote: i-PLB Software P√∫blico Livre e Brasileiro
  *
- * Copyright (C) 2006 PMI - Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006 PMI - Prefeitura Municipal de Itaja√≠
  *            ctima@itajai.sc.gov.br
  *
- * Este  programa  È  software livre, vocÍ pode redistribuÌ-lo e/ou
- * modific·-lo sob os termos da LicenÁa P˙blica Geral GNU, conforme
- * publicada pela Free  Software  Foundation,  tanto  a vers„o 2 da
- * LicenÁa   como  (a  seu  critÈrio)  qualquer  vers„o  mais  nova.
+ * Este  programa  √©  software livre, voc√™ pode redistribu√≠-lo e/ou
+ * modific√°-lo sob os termos da Licen√ßa P√∫blica Geral GNU, conforme
+ * publicada pela Free  Software  Foundation,  tanto  a vers√£o 2 da
+ * Licen√ßa   como  (a  seu  crit√©rio)  qualquer  vers√£o  mais  nova.
  *
- * Este programa  È distribuÌdo na expectativa de ser ˙til, mas SEM
- * QUALQUER GARANTIA. Sem mesmo a garantia implÌcita de COMERCIALI-
- * ZA«√O  ou  de ADEQUA«√O A QUALQUER PROP”SITO EM PARTICULAR. Con-
- * sulte  a  LicenÁa  P˙blica  Geral  GNU para obter mais detalhes.
+ * Este programa  √© distribu√≠do na expectativa de ser √∫til, mas SEM
+ * QUALQUER GARANTIA. Sem mesmo a garantia impl√≠cita de COMERCIALI-
+ * ZA√á√ÉO  ou  de ADEQUA√á√ÉO A QUALQUER PROP√ìSITO EM PARTICULAR. Con-
+ * sulte  a  Licen√ßa  P√∫blica  Geral  GNU para obter mais detalhes.
  *
- * VocÍ  deve  ter  recebido uma cÛpia da LicenÁa P˙blica Geral GNU
- * junto  com  este  programa. Se n„o, escreva para a Free Software
+ * Voc√™  deve  ter  recebido uma c√≥pia da Licen√ßa P√∫blica Geral GNU
+ * junto  com  este  programa. Se n√£o, escreva para a Free Software
  * Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA
  * 02111-1307, USA.
  *
@@ -200,7 +200,7 @@ class indice extends clsCadastro
 			$obj_uf = new clsUf($this->escola_uf);
 			$det_uf = $obj_uf->detalhe();
 		}
-		$lista_pais_origem = array('45' => "PaÌs da escola");
+		$lista_pais_origem = array('45' => "Pa√≠s da escola");
 		$obj_pais = new clsPais();
 		$obj_pais_lista = $obj_pais->lista(null,null,null,"","","nome asc");
 		if($obj_pais_lista)
@@ -236,9 +236,9 @@ class indice extends clsCadastro
 		$this->campoCheck( "cb_faltas_globalizadas", "Faltas Globalizadas", is_numeric($this->faltas_globalizadas) ? 'on' : '');
 		$this->campoNumero( "faltas_globalizadas", "Faltas Globalizadas", $this->faltas_globalizadas, 4, 4, false );
 		$this->campoNumero( "dias_letivos", "Dias Letivos", $this->dias_letivos, 3, 3, true );
-		$this->campoMonetario( "frequencia", "FrequÍncia", $this->frequencia, 8, 6, true );
+		$this->campoMonetario( "frequencia", "Frequ√™ncia", $this->frequencia, 8, 6, true );
 		$this->campoCheck( "extra_curricular", "Extra-Curricular", $this->extra_curricular );
-		$this->campoCheck( "aceleracao", "AceleraÁ„o", $this->aceleracao );
+		$this->campoCheck( "aceleracao", "Acelera√ß√£o", $this->aceleracao );
 		$this->campoMemo( "observacao", "Observa&ccedil;&atilde;o", $this->observacao, 60, 5, false );
 
 		$opcoes = array( "" => "Selecione", 1 => "Aprovado", 2 => "Reprovado", 3 => "Em Andamento", 4 => "Transferido", 6 => 'Abandono');
@@ -292,7 +292,7 @@ class indice extends clsCadastro
 		$this->campoQuebra();
 	//---------------------FIM INCLUI DISCIPLINAS---------------------//
 
-    // carrega estilo para feedback messages, para exibir msg validaÁ„o frequencia.
+    // carrega estilo para feedback messages, para exibir msg valida√ß√£o frequencia.
 
     $style = "/modules/Portabilis/Assets/Stylesheets/Frontend.css";
     Portabilis_View_Helper_Application::loadStylesheet($this, $style);
@@ -370,7 +370,7 @@ class indice extends clsCadastro
 			echo "<!--\nErro ao cadastrar clsPmieducarHistoricoEscolar\nvalores obrigatorios\nis_numeric( $this->ref_cod_aluno ) && is_numeric( $this->pessoa_logada ) && is_string( $this->nm_serie ) && is_numeric( $this->ano ) && is_numeric( $this->carga_horaria ) && is_numeric( $this->dias_letivos ) && is_string( $this->escola ) && is_string( $this->escola_cidade ) && is_string( $this->escola_uf ) && is_numeric( $this->aprovado ) && is_numeric( $this->ref_cod_instituicao ) && is_numeric( $this->extra_curricular )\n-->";
 			return false;
 /*    }
-		echo "<script> alert('… necess·rio adicionar pelo menos 1 Disciplina!') </script>";
+		echo "<script> alert('√â necess√°rio adicionar pelo menos 1 Disciplina!') </script>";
 		$this->mensagem = "Cadastro n&atilde;o realizado.<br>";
 		return false;
 		*/
@@ -447,7 +447,7 @@ class indice extends clsCadastro
 			echo "<!--\nErro ao editar clsPmieducarHistoricoEscolar\nvalores obrigatorios\nif( is_numeric( $this->ref_cod_aluno ) && is_numeric( $this->sequencial ) && is_numeric( $this->pessoa_logada ) )\n-->";
 			return false;
 /*    }
-		echo "<script> alert('… necess·rio adicionar pelo menos 1 Disciplina!') </script>";
+		echo "<script> alert('√â necess√°rio adicionar pelo menos 1 Disciplina!') </script>";
 		$this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
 		return false;
 		*/
@@ -562,7 +562,7 @@ $pagina->MakeAll();
 
 		}
 		if ( campoEstado.length == 1 ) {
-			campoEstado.options[0] = new Option( 'PaÌs n„o possui estados', '', false, false );
+			campoEstado.options[0] = new Option( 'Pa√≠s n√£o possui estados', '', false, false );
 		}
 
 		campoEstado.disabled = false;

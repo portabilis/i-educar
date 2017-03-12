@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo disponÌvel desde a vers„o 1.0.0
+ * @since     Arquivo dispon√≠vel desde a vers√£o 1.0.0
  * @version   $Id$
  */
 
@@ -37,11 +37,11 @@ require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
 /**
  * clsIndexBase class.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponÌvel desde a vers„o 1.0.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
@@ -57,11 +57,11 @@ class clsIndexBase extends clsBase
 /**
  * indice class.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponÌvel desde a vers„o 1.0.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
  * @version   @@package_version@@
  */
 class indice extends clsCadastro
@@ -182,7 +182,7 @@ class indice extends clsCadastro
 
     $this->campoLista('etapa_curso', 'Etapa Curso', $opcoes, $this->etapa_curso);
 
-    // Regra de avaliaÁ„o
+    // Regra de avalia√ß√£o
     $mapper = new RegraAvaliacao_Model_RegraDataMapper();
     $regras = array();
     if (!is_null($this->ref_cod_instituicao)) {
@@ -192,7 +192,7 @@ class indice extends clsCadastro
       $regras = CoreExt_Entity::entityFilterAttr($regras, 'id', 'nome');
     }
 
-    $this->campoLista('regra_avaliacao_id', 'Regra AvaliaÁ„o', $regras, $this->regra_avaliacao_id);
+    $this->campoLista('regra_avaliacao_id', 'Regra Avalia√ß√£o', $regras, $this->regra_avaliacao_id);
 
     $opcoes = array('' => 'Selecione', 1 => 'n&atilde;o', 2 => 'sim');
 
@@ -207,9 +207,9 @@ class indice extends clsCadastro
     $this->campoNumero('idade_inicial', 'Faixa et&aacute;ria', $this->idade_inicial,
       2, 2, FALSE, '', '', FALSE, FALSE, TRUE);
 
-    $this->campoNumero('idade_final', '&nbsp;atÈ', $this->idade_final, 2, 2, FALSE);
+    $this->campoNumero('idade_final', '&nbsp;at√©', $this->idade_final, 2, 2, FALSE);
 
-		$this->campoMemo( "observacao_historico", "Observa&ccedil;&atilde;o histÛrico", $this->observacao_historico, 60, 5, false );
+		$this->campoMemo( "observacao_historico", "Observa&ccedil;&atilde;o hist√≥rico", $this->observacao_historico, 60, 5, false );
   }
 
   function Novo()
@@ -288,16 +288,16 @@ class indice extends clsCadastro
   }
 }
 
-// Instancia objeto de p·gina
+// Instancia objeto de p√°gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conte˙do
+// Instancia objeto de conte√∫do
 $miolo = new indice();
 
-// Atribui o conte˙do ‡† p·gina
+// Atribui o conte√∫do √†¬† p√°gina
 $pagina->addForm($miolo);
 
-// Gera o cÛdigo HTML
+// Gera o c√≥digo HTML
 $pagina->MakeAll();
 ?>
 <script type="text/javascript">
@@ -332,7 +332,7 @@ function EtapasCurso(xml_qtd_etapas)
     }
   }
   else {
-    campoEtapas.options[0].text = 'O curso n„o possui nenhuma etapa';
+    campoEtapas.options[0].text = 'O curso n√£o possui nenhuma etapa';
   }
 }
 
@@ -353,7 +353,7 @@ function RegrasInstituicao(xml_qtd_regras)
     }
   }
   else {
-	  campoRegras.options[0].text = 'A instituiÁ„o n„o possui uma Regra de AvaliaÁ„o';
+	  campoRegras.options[0].text = 'A institui√ß√£o n√£o possui uma Regra de Avalia√ß√£o';
   }
 }
 
@@ -375,10 +375,10 @@ document.getElementById('ref_cod_curso').onchange = function()
  */
 document.getElementById('ref_cod_instituicao').onchange = function()
 {
-  // Essa aÁ„o È a padr„o do item, via include
+  // Essa a√ß√£o √© a padr√£o do item, via include
   getCurso();
 
-  // RequisiÁ„o Ajax para as Regras de AvaliaÁ„o
+  // Requisi√ß√£o Ajax para as Regras de Avalia√ß√£o
   getRegra();
 }
 </script>

@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Include
- * @since     Arquivo disponÌvel desde a vers„o 1.0.0
+ * @since     Arquivo dispon√≠vel desde a vers√£o 1.0.0
  * @version   $Id$
  */
 
@@ -33,14 +33,14 @@ require_once 'Core/Controller/Page/Abstract.php';
 /**
  * clsCampos class.
  *
- * Implementa toda a lÛgica necess·ria para criar elementos de formul·rio e os
- * cÛdigos HTML e Javascript necess·rios para o funcionamento no i-Educar.
+ * Implementa toda a l√≥gica necess√°ria para criar elementos de formul√°rio e os
+ * c√≥digos HTML e Javascript necess√°rios para o funcionamento no i-Educar.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Include
- * @since     Classe disponÌvel desde a vers„o 1.0.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
  * @version   @@package_version@@
  */
 class clsCampos extends Core_Controller_Page_Abstract
@@ -186,7 +186,7 @@ class clsCampos extends Core_Controller_Page_Abstract
   }
 
   function campoBoolLista($nome, $campo, $default, $val_true = 'Sim',
-    $val_false = 'N„o', $val_undefined = NULL)
+    $val_false = 'N√£o', $val_undefined = NULL)
   {
     $valor = array();
     $valor['f'] = $val_false;
@@ -611,7 +611,7 @@ class clsCampos extends Core_Controller_Page_Abstract
       $valor,
       $tamanhovisivel,
       $tamanhomaximo,
-      $descricao ? $descricao : 'somente n˙meros',
+      $descricao ? $descricao : 'somente n√∫meros',
       $descricao2,
       $script,
       $evento,
@@ -878,13 +878,13 @@ class clsCampos extends Core_Controller_Page_Abstract
 
     $foiDuplo = $junta_linhas;
 
-    // Marca quantos valores foram passados para o prenchimento das repetiÁıes
+    // Marca quantos valores foram passados para o prenchimento das repeti√ß√µes
     $adicionador_total_valores = 5;
 
     $javascript .= "
   function tabela(name, counter)
   {
-    // Seta variavel para n„o reordenar id dos campos
+    // Seta variavel para n√£o reordenar id dos campos
     this.setReordena = function(reordenar)
     {
       this.reordenar = reordenar;
@@ -893,7 +893,7 @@ class clsCampos extends Core_Controller_Page_Abstract
     // Construtor
     this.constructor = function() {
 
-      // ContÈm uma referÍncia ao objeto
+      // Cont√©m uma refer√™ncia ao objeto
       var This = this;
 
       this.id = counter;
@@ -1407,7 +1407,7 @@ class clsCampos extends Core_Controller_Page_Abstract
       }
 
       if ($this->__adicionando && FALSE) {
-        // Adiciona o campo no bloco de repetiÁ„o
+        // Adiciona o campo no bloco de repeti√ß√£o
         $adicionador_campos_repeticao[$nome] = $componente;
         $adicionador_complemento_campo       = "[{$adicionador_indice}]";
         $campo_valor                         = $componente[3][$adicionador_indice];
@@ -1440,12 +1440,12 @@ class clsCampos extends Core_Controller_Page_Abstract
       }
       elseif ($componente[0] == 'bloco_adicionador') {
         if ($componente[1] == 'begin') {
-          // Flag de que estamos no meio de um bloco de adiÁ„
+          // Flag de que estamos no meio de um bloco de adi√ß√£
           $this->__adicionando = TRUE;
 
-          // Se for a primeira vez que cai aqui define o Ìndice como zero,
-          // nas vezes subsequentes (chamadas por recursividade) o Ìndice ser·
-          // passado na chamada da funÁ„o
+          // Se for a primeira vez que cai aqui define o √≠ndice como zero,
+          // nas vezes subsequentes (chamadas por recursividade) o √≠ndice ser√°
+          // passado na chamada da fun√ß√£o
           if (is_null($adicionador_indice)) {
             $adicionador_indice = 0;
           }
@@ -1453,17 +1453,17 @@ class clsCampos extends Core_Controller_Page_Abstract
           // Cria um array para armazenar os campos a serem repetidos
           $adicionador_campos_repeticao = array();
 
-          // Adiciona o campo begin no Ìnicio do bloco de repetiÁ„o
+          // Adiciona o campo begin no √≠nicio do bloco de repeti√ß√£o
           $adicionador_campos_repeticao[$nome] = $componente;
         }
         else {
-          // Desmarca a flag de bloco de adiÁ„
+          // Desmarca a flag de bloco de adi√ß√£
           $this->__adicionando = FALSE;
 
-          // Adiciona o campo end no fim do bloco de repetiÁ„o
+          // Adiciona o campo end no fim do bloco de repeti√ß√£o
           $adicionador_campos_repeticao[$nome] = $componente;
 
-          // Ainda n„o repetiu o bloco por tempo suficiente
+          // Ainda n√£o repetiu o bloco por tempo suficiente
           $adicionador_indice++;
           if ($adicionador_indice < $adicionador_total_valores) {
             $retorno .= $this->MakeCampos($adicionador_campos_repeticao,
@@ -1562,7 +1562,7 @@ class clsCampos extends Core_Controller_Page_Abstract
             $retorno .= "<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" id=\"anexador_{$nome}\">";
 
             if (is_array($componente[9])) {
-              // Existem itens j· incluÌdos, monta a lista com eles (com o bot„o remover ao lado)
+              // Existem itens j√° inclu√≠dos, monta a lista com eles (com o bot√£o remover ao lado)
               foreach ($componente[9] as $ja_incluido) {
                 list($cod, $label) = $ja_incluido;
 
@@ -1571,7 +1571,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                 $opcoes = $componente[3];
 
                 if ($componente[7]) {
-                  // … um adicionador, ent„o vamos inserir os j· incluÌdos na lista padr„o
+                  // √â um adicionador, ent√£o vamos inserir os j√° inclu√≠dos na lista padr√£o
                   $opcoes[$cod] = $label;
                 }
 
@@ -2830,10 +2830,10 @@ class clsCampos extends Core_Controller_Page_Abstract
   }
 
   /**
-   * TODO: Remover mÈtodo. No ˙nico caso possÌvel de ser invocado, n„o o È
-   *   (atravÈs de intranet/funcionario_cad.php). … necess·rio estudar
-   *   o mÈtodo clsCampos::MakeCampos() para entender o caso possÌvel em que
-   *   este mÈtodo seria invocado.
+   * TODO: Remover m√©todo. No √∫nico caso poss√≠vel de ser invocado, n√£o o √©
+   *   (atrav√©s de intranet/funcionario_cad.php). √â necess√°rio estudar
+   *   o m√©todo clsCampos::MakeCampos() para entender o caso poss√≠vel em que
+   *   este m√©todo seria invocado.
    *
    * @see scripts/padrao.js::pesquisa_valores_f()
    * @see clsCampos::MakeCampos()

@@ -1,25 +1,25 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	@author Prefeitura Municipal de ItajaÌ								 *
+	*	@author Prefeitura Municipal de Itaja√≠								 *
 	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software P˙blico Livre e Brasileiro					 *
+	*   Pacote: i-PLB Software P√∫blico Livre e Brasileiro					 *
 	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÌ			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itaja√≠			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  È  software livre, vocÍ pode redistribuÌ-lo e/ou	 *
-	*	modific·-lo sob os termos da LicenÁa P˙blica Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a vers„o 2 da	 *
-	*	LicenÁa   como  (a  seu  critÈrio)  qualquer  vers„o  mais  nova.	 *
+	*	Este  programa  √©  software livre, voc√™ pode redistribu√≠-lo e/ou	 *
+	*	modific√°-lo sob os termos da Licen√ßa P√∫blica Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a vers√£o 2 da	 *
+	*	Licen√ßa   como  (a  seu  crit√©rio)  qualquer  vers√£o  mais  nova.	 *
 	*																		 *
-	*	Este programa  È distribuÌdo na expectativa de ser ˙til, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implÌcita de COMERCIALI-	 *
-	*	ZA«√O  ou  de ADEQUA«√O A QUALQUER PROP”SITO EM PARTICULAR. Con-	 *
-	*	sulte  a  LicenÁa  P˙blica  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  √© distribu√≠do na expectativa de ser √∫til, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia impl√≠cita de COMERCIALI-	 *
+	*	ZA√á√ÉO  ou  de ADEQUA√á√ÉO A QUALQUER PROP√ìSITO EM PARTICULAR. Con-	 *
+	*	sulte  a  Licen√ßa  P√∫blica  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	VocÍ  deve  ter  recebido uma cÛpia da LicenÁa P˙blica Geral GNU	 *
-	*	junto  com  este  programa. Se n„o, escreva para a Free Software	 *
+	*	Voc√™  deve  ter  recebido uma c√≥pia da Licen√ßa P√∫blica Geral GNU	 *
+	*	junto  com  este  programa. Se n√£o, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
@@ -163,7 +163,7 @@ class indice extends clsCadastro
 		$this->campoCheck('media_especial','M&eacute;dia Especial',$this->media_especial);
 
 		$this->campoNumero( "idade_inicial", "Faixa et&aacute;ria", $this->idade_inicial, 2, 2, false,"","",false,false,true );
-		$this->campoNumero( "idade_final", "&nbsp;atÈ", $this->idade_final, 2, 2, false );
+		$this->campoNumero( "idade_final", "&nbsp;at√©", $this->idade_final, 2, 2, false );
 
 		//-----------------------INCLUI DISCIPLINA------------------------//
 
@@ -250,7 +250,7 @@ class indice extends clsCadastro
 				}
 				echo "<script>
 						if (parent.document.getElementById('{$elemento}').disabled)
-							parent.document.getElementById('{$elemento}').options[0] = new Option('Selecione uma sÈrie', '', false, false);
+							parent.document.getElementById('{$elemento}').options[0] = new Option('Selecione uma s√©rie', '', false, false);
 						parent.document.getElementById('{$elemento}').options[parent.document.getElementById('{$elemento}').options.length] = new Option('$this->nm_serie', '$cadastrou', false, false);
 						parent.document.getElementById('{$elemento}').value = '$cadastrou';
 						parent.document.getElementById('{$elemento}').disabled = false;
@@ -266,7 +266,7 @@ class indice extends clsCadastro
 			echo "<!--\nErro ao cadastrar clsPmieducarSerie\nvalores obrigat&oacute;rios\nis_numeric( $this->pessoa_logada ) && is_numeric( $this->ref_cod_curso ) && is_string( $this->nm_serie ) && is_numeric( $this->etapa_curso ) && is_numeric( $this->concluinte ) && is_numeric( $this->carga_horaria ) && is_numeric( $this->intervalo )\n-->";
 			return false;
 		}
-		echo "<script> alert('… necess·rio adicionar pelo menos 1 Disciplina!') </script>";
+		echo "<script> alert('√â necess√°rio adicionar pelo menos 1 Disciplina!') </script>";
 		$this->mensagem = "Cadastro n&atilde;o realizado.<br>";
 		return false;
 	}
@@ -330,7 +330,7 @@ class indice extends clsCadastro
 			echo "<!--\nErro ao editar clsPmieducarSerie\nvalores obrigat&oacute;rios\nif( is_numeric( $this->cod_serie ) && is_numeric( $this->pessoa_logada ) )\n-->";
 			return false;
 		}
-		echo "<script> alert('… necess·rio adicionar pelo menos 1 Disciplina!') </script>";
+		echo "<script> alert('√â necess√°rio adicionar pelo menos 1 Disciplina!') </script>";
 		$this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
 		return false;*/
 	}
@@ -487,7 +487,7 @@ function EtapasCurso(xml_qtd_etapas)
 		}
 	}
 	else
-		campoEtapas.options[0].text = 'O curso n„o possui nenhuma etapa';
+		campoEtapas.options[0].text = 'O curso n√£o possui nenhuma etapa';
 }
 
 function getDisciplina( xml_disciplina )
@@ -522,7 +522,7 @@ function getDisciplina( xml_disciplina )
 		}
 	}
 	else
-		campoDisciplina.options[0].text = 'O curso n„o possui nenhuma disciplina';
+		campoDisciplina.options[0].text = 'O curso n√£o possui nenhuma disciplina';
 	*/
 
 
@@ -538,7 +538,7 @@ function getDisciplina( xml_disciplina )
 		}
 	}
 	else
-		campoDisciplinas.innerHTML = 'A sÈrie n„o possui nenhuma disciplina';
+		campoDisciplinas.innerHTML = 'A s√©rie n√£o possui nenhuma disciplina';
 
 	if(conteudo)
 	{

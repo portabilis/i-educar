@@ -313,7 +313,7 @@ class clsPmieducarMatricula
 
     if (is_string($data_cancel)) {
       $this->data_cancel = $data_cancel;
-    }    
+    }
   }
 
   /**
@@ -434,13 +434,13 @@ class clsPmieducarMatricula
         $campos .= "{$gruda}data_matricula";
         $valores .= "{$gruda}'{$this->data_matricula}'";
         $gruda = ", ";
-      }      
+      }
 
       if (is_string($this->data_cancel)) {
         $campos .= "{$gruda}data_cancel";
         $valores .= "{$gruda}'{$this->data_cancel}'";
         $gruda = ", ";
-      }         
+      }
 
       $db->Consulta("INSERT INTO {$this->_tabela} ($campos) VALUES ($valores)");
       return $db->InsertId("{$this->_tabela}_cod_matricula_seq");
@@ -563,7 +563,7 @@ class clsPmieducarMatricula
       if (is_string($this->data_cancel)) {
         $set .= "{$gruda}data_cancel = '{$this->data_cancel}'";
         $gruda = ", ";
-      }      
+      }
 
       if ($set) {
         $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_matricula = '{$this->cod_matricula}'");
@@ -1060,12 +1060,12 @@ class clsPmieducarMatricula
   }
 
   /**
-  * Seta a matricula para abandono e seta a observação passada por parâmetro 
+  * Seta a matricula para abandono e seta a observação passada por parâmetro
   * @author lucassch
   * @return boolean
   */
   function cadastraObs($obs){
-      
+
     if (is_numeric($this->cod_matricula)){
       if (trim($obs)=='')
         $obs = "Não informado";

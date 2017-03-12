@@ -2,32 +2,32 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gestÃ£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de ItajaÃ­
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa Ã© software livre; vocÃª pode redistribuÃ­-lo e/ou modificÃ¡-lo
+ * sob os termos da LicenÃ§a PÃºblica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versÃ£o 2 da LicenÃ§a, como (a seu critÃ©rio)
+ * qualquer versÃ£o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa Ã© distribuÃ­Â­do na expectativa de que seja Ãºtil, porÃ©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implÃ­Â­cita de COMERCIABILIDADE OU
+ * ADEQUAÃ‡ÃƒO A UMA FINALIDADE ESPECÃFICA. Consulte a LicenÃ§a PÃºblica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * VocÃª deve ter recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral do GNU junto
+ * com este programa; se nÃ£o, escreva para a Free Software Foundation, Inc., no
+ * endereÃ§o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author      Prefeitura Municipal de ItajaÃ­ <ctima@itajai.sc.gov.br>
  * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
  * @package     Core
  * @subpackage  pmieducar
  * @subpackage  Administrativo
  * @subpackage  TipoUsuario
- * @since       Arquivo disponível desde a versão 1.0.0
+ * @since       Arquivo disponÃ­vel desde a versÃ£o 1.0.0
  * @version     $Id$
  */
 
@@ -39,7 +39,7 @@ require_once 'include/pmieducar/geral.inc.php';
 class clsIndexBase extends clsBase
 {
   function Formular() {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Tipo Usuário');
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Tipo UsuÃ¡rio');
     $this->processoAp = '554';
     $this->addEstilo('localizacaoSistema');
   }
@@ -48,7 +48,7 @@ class clsIndexBase extends clsBase
 class indice extends clsCadastro
 {
  /**
-  * Referência a usuário da sessão.
+  * ReferÃªncia a usuÃ¡rio da sessÃ£o.
   * @var int
   */
   var $pessoa_logada;
@@ -72,7 +72,7 @@ class indice extends clsCadastro
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
-    // Verifica se o usuário tem permissão para realizar o cadastro
+    // Verifica se o usuÃ¡rio tem permissÃ£o para realizar o cadastro
     $obj_permissao = new clsPermissoes();
     $obj_permissao->permissao_cadastra(554, $this->pessoa_logada, 1,
       'educar_tipo_usuario_lst.php', TRUE);
@@ -120,7 +120,7 @@ class indice extends clsCadastro
     // Primary key
     $this->campoOculto('cod_tipo_usuario', $this->cod_tipo_usuario);
 
-    $this->campoTexto('nm_tipo', 'Tipo de Usuário', $this->nm_tipo, 40, 255, TRUE);
+    $this->campoTexto('nm_tipo', 'Tipo de UsuÃ¡rio', $this->nm_tipo, 40, 255, TRUE);
 
     $array_nivel = array(
       '8' => 'Biblioteca',
@@ -210,8 +210,8 @@ class indice extends clsCadastro
 
         $this->campoOculto("permissoes[{$id}][id]", $id);
 
-        /* alterado para campos não usar inline, pois por algum motivo os dois primeiros checkboxes
-           não estavam funcionando devidamente */
+        /* alterado para campos nÃ£o usar inline, pois por algum motivo os dois primeiros checkboxes
+           nÃ£o estavam funcionando devidamente */
 
         // visualiza
 
@@ -287,15 +287,15 @@ class indice extends clsCadastro
   protected function createMenuTipoUsuario() {
     if ($this->permissoes) {
 
-      // remove todos menus vinculados ao tipo de usuário.
+      // remove todos menus vinculados ao tipo de usuÃ¡rio.
       $menuTipoUsuario = new clsPmieducarMenuTipoUsuario($this->cod_tipo_usuario);
       $menuTipoUsuario->excluirTudo();
 
-      // vinvula ao tipo de usuário, menus com alguma permissão marcada
+      // vinvula ao tipo de usuÃ¡rio, menus com alguma permissÃ£o marcada
       foreach ($this->permissoes as $menuSubmenuId => $permissao) {
         if ($permissao['cadastra'] || $permissao['visualiza'] || $permissao['exclui']) {
 
-          // recebe código falso em algum momento?
+          // recebe cÃ³digo falso em algum momento?
           if ($this->cod_tipo_usuario == FALSE)
              $this->cod_tipo_usuario = '0';
 
@@ -344,21 +344,21 @@ class indice extends clsCadastro
   }
 }
 
-// Instancia objeto de página
+// Instancia objeto de pÃ¡gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conteúdo
+// Instancia objeto de conteÃºdo
 $miolo = new indice();
 
-// Atribui o conteúdo à  página
+// Atribui o conteÃºdo Ã   pÃ¡gina
 $pagina->addForm($miolo);
 
-// Gera o código HTML
+// Gera o cÃ³digo HTML
 $pagina->MakeAll();
 ?>
 <script type="text/javascript">
 /**
- * Marca/desmarca todas as opções de submenu (operações de sistema) de um dados
+ * Marca/desmarca todas as opÃ§Ãµes de submenu (operaÃ§Ãµes de sistema) de um dados
  * menu pai.
  *
  * @param  int     menu_pai

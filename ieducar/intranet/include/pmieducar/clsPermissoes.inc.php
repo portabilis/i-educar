@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo disponÌvel desde a vers„o 1.0.0
+ * @since     Arquivo dispon√≠vel desde a vers√£o 1.0.0
  * @version   $Id$
  */
 
@@ -34,12 +34,12 @@ require_once 'include/clsMenuFuncionario.inc.php';
 /**
  * clsPermissoes class.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponÌvel desde a vers„o 1.0.0
- * @todo      Eliminar a lÛgica duplicada dos mÈtodos permissao_*
+ * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
+ * @todo      Eliminar a l√≥gica duplicada dos m√©todos permissao_*
  * @version   @@package_version@@
  */
 class clsPermissoes
@@ -49,18 +49,18 @@ class clsPermissoes
   }
 
   /**
-   * Verifica se um usu·rio tem permiss„o para cadastrar baseado em um
+   * Verifica se um usu√°rio tem permiss√£o para cadastrar baseado em um
    * identificador de processo.
    *
    * @param int $int_processo_ap Identificador de processo
-   * @param int $int_idpes_usuario Identificador do usu·rio
+   * @param int $int_idpes_usuario Identificador do usu√°rio
    * @param int $int_soma_nivel_acesso
-   * @param string $str_pagina_redirecionar Caminho para o qual a requisiÁ„o ser·
-   *   encaminhada caso o usu·rio n„o tenha privilÈgios suficientes para a
-   *   operaÁ„o de cadastro
-   * @param bool $super_usuario TRUE para verificar se o usu·rio È super usu·rio
+   * @param string $str_pagina_redirecionar Caminho para o qual a requisi√ß√£o ser√°
+   *   encaminhada caso o usu√°rio n√£o tenha privil√©gios suficientes para a
+   *   opera√ß√£o de cadastro
+   * @param bool $super_usuario TRUE para verificar se o usu√°rio √© super usu√°rio
    * @param bool $int_verifica_usuario_biblioteca TRUE para verificar se o
-   *   usu·rio possui cadastro em alguma biblioteca
+   *   usu√°rio possui cadastro em alguma biblioteca
    * @return bool|void
    */
   function permissao_cadastra($int_processo_ap, $int_idpes_usuario,
@@ -70,7 +70,7 @@ class clsPermissoes
     $obj_usuario = new clsFuncionario($int_idpes_usuario);
     $detalhe_usuario = $obj_usuario->detalhe();
 
-    // Verifica se È super usu·rio
+    // Verifica se √© super usu√°rio
     if ($super_usuario != NULL && $detalhe_usuario['ativo']) {
       $obj_menu_funcionario = new clsMenuFuncionario($int_idpes_usuario, FALSE, FALSE, 0);
       $detalhe_super_usuario = $obj_menu_funcionario->detalhe();
@@ -106,7 +106,7 @@ class clsPermissoes
 
       if (!$ok && $nivel == 8) {
         header("Location: index.php?negado=1");
-        echo("Usu·rio n„o adicionado (ao cadastro da) biblioteca. <a href='/intranet'>Inicio</a>");
+        echo("Usu√°rio n√£o adicionado (ao cadastro da) biblioteca. <a href='/intranet'>Inicio</a>");
         die();
       }
     }
@@ -125,18 +125,18 @@ class clsPermissoes
   }
 
   /**
-   * Verifica se um usu·rio tem permiss„o para cadastrar baseado em um
+   * Verifica se um usu√°rio tem permiss√£o para cadastrar baseado em um
    * identificador de processo.
    *
    * @param int $int_processo_ap Identificador de processo
-   * @param int $int_idpes_usuario Identificador do usu·rio
+   * @param int $int_idpes_usuario Identificador do usu√°rio
    * @param int $int_soma_nivel_acesso
-   * @param string $str_pagina_redirecionar Caminho para o qual a requisiÁ„o ser·
-   *   encaminhada caso o usu·rio n„o tenha privilÈgios suficientes para a
-   *   operaÁ„o de cadastro
-   * @param bool $super_usuario TRUE para verificar se o usu·rio È super usu·rio
+   * @param string $str_pagina_redirecionar Caminho para o qual a requisi√ß√£o ser√°
+   *   encaminhada caso o usu√°rio n√£o tenha privil√©gios suficientes para a
+   *   opera√ß√£o de cadastro
+   * @param bool $super_usuario TRUE para verificar se o usu√°rio √© super usu√°rio
    * @param bool $int_verifica_usuario_biblioteca TRUE para verificar se o
-   *   usu·rio possui cadastro em alguma biblioteca
+   *   usu√°rio possui cadastro em alguma biblioteca
    * @return bool|void
    */
   function permissao_excluir($int_processo_ap, $int_idpes_usuario,
@@ -146,7 +146,7 @@ class clsPermissoes
     $obj_usuario = new clsFuncionario($int_idpes_usuario);
     $detalhe_usuario = $obj_usuario->detalhe();
 
-    // Verifica se È super usu·rio
+    // Verifica se √© super usu√°rio
     if ($super_usuario != NULL && $detalhe_usuario['ativo']) {
       $obj_menu_funcionario = new clsMenuFuncionario($int_idpes_usuario, FALSE, FALSE, 0);
       $detalhe_super_usuario = $obj_menu_funcionario->detalhe();
@@ -200,7 +200,7 @@ class clsPermissoes
   }
 
   /**
-   * Retorna o nÌvel de acesso do usu·rio, podendo ser:
+   * Retorna o n√≠vel de acesso do usu√°rio, podendo ser:
    *
    * - 1: Poli-institucional
    * - 2: Institucional
@@ -208,7 +208,7 @@ class clsPermissoes
    * - 8: Biblioteca
    *
    * @param int $int_idpes_usuario
-   * @return bool|int Retorna FALSE caso o usu·rio n„o exista
+   * @return bool|int Retorna FALSE caso o usu√°rio n√£o exista
    */
   function nivel_acesso($int_idpes_usuario)
   {
@@ -225,11 +225,11 @@ class clsPermissoes
   }
 
   /**
-   * Retorna o cÛdigo identificador da instituiÁ„o ao qual o usu·rio est·
+   * Retorna o c√≥digo identificador da institui√ß√£o ao qual o usu√°rio est√°
    * vinculado.
    *
    * @param int $int_idpes_usuario
-   * @return bool|int Retorna FALSE caso o usu·rio n„o exista
+   * @return bool|int Retorna FALSE caso o usu√°rio n√£o exista
    */
   function getInstituicao($int_idpes_usuario)
   {
@@ -244,10 +244,10 @@ class clsPermissoes
   }
 
   /**
-   * Retorna o cÛdigo identificador da escola ao qual o usu·rio est· vinculado.
+   * Retorna o c√≥digo identificador da escola ao qual o usu√°rio est√° vinculado.
    *
    * @param int $int_idpes_usuario
-   * @return bool|int Retorna FALSE caso o usu·rio n„o exista
+   * @return bool|int Retorna FALSE caso o usu√°rio n√£o exista
    */
   function getEscola($int_idpes_usuario)
   {
@@ -262,11 +262,11 @@ class clsPermissoes
   }
 
   /**
-   * Retorna um array associativo com os cÛdigos identificadores da escola e
-   * da instituiÁ„o ao qual o usu·rio est· vinculado.
+   * Retorna um array associativo com os c√≥digos identificadores da escola e
+   * da institui√ß√£o ao qual o usu√°rio est√° vinculado.
    *
    * @param $int_idpes_usuario
-   * @return array|bool Retorna FALSE caso o usu·rio n„o exista
+   * @return array|bool Retorna FALSE caso o usu√°rio n√£o exista
    */
   function getInstituicaoEscola($int_idpes_usuario)
   {
@@ -284,11 +284,11 @@ class clsPermissoes
   }
 
   /**
-   * Retorna um array com os cÛdigos identificadores das bibliotecas aos quais
-   * o usu·rio est· vinculado.
+   * Retorna um array com os c√≥digos identificadores das bibliotecas aos quais
+   * o usu√°rio est√° vinculado.
    *
    * @param int $int_idpes_usuario
-   * @return array|int Retorna o inteiro "0" caso o usu·rio n„o esteja vinculado
+   * @return array|int Retorna o inteiro "0" caso o usu√°rio n√£o esteja vinculado
    *   a uma biblioteca
    */
   function getBiblioteca($int_idpes_usuario)

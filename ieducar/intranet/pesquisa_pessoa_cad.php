@@ -1,25 +1,25 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
+	*	@author Prefeitura Municipal de ItajaÃ­								 *
 	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
+	*   Pacote: i-PLB Software PÃºblico Livre e Brasileiro					 *
 	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÃ­			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
+	*	Este  programa  Ã©  software livre, vocÃª pode redistribuÃ­-lo e/ou	 *
+	*	modificÃ¡-lo sob os termos da LicenÃ§a PÃºblica Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a versÃ£o 2 da	 *
+	*	LicenÃ§a   como  (a  seu  critÃ©rio)  qualquer  versÃ£o  mais  nova.	 *
 	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  Ã© distribuÃ­do na expectativa de ser Ãºtil, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia implÃ­cita de COMERCIALI-	 *
+	*	ZAÃ‡ÃƒO  ou  de ADEQUAÃ‡ÃƒO A QUALQUER PROPÃ“SITO EM PARTICULAR. Con-	 *
+	*	sulte  a  LicenÃ§a  PÃºblica  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
+	*	VocÃª  deve  ter  recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral GNU	 *
+	*	junto  com  este  programa. Se nÃ£o, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
@@ -341,11 +341,11 @@ class indice extends clsCadastro
 			$this->vazio	  = $_POST["vazio"];
 
 		if ( $this->pessoa == "FJ" ) {
-			$this->campoRadio( "pessoa", "Tipo da pessoa:", array( "F" => "Física", "J" => "Jurídica" ), "F" );
+			$this->campoRadio( "pessoa", "Tipo da pessoa:", array( "F" => "FÃ­sica", "J" => "JurÃ­dica" ), "F" );
 			$this->campoOculto( "pessoa_cpf", $this->pessoa_cpf );
 			$this->campoOculto( "vazio", "true" );
 			$this->botao_enviar = false;
-			$this->array_botao = array( "<< Voltar", "Cancelar", "Avançar >>" );
+			$this->array_botao = array( "<< Voltar", "Cancelar", "AvanÃ§ar >>" );
 			$this->array_botao_url_script = array( "go( 'pesquisa_pessoa_lst.php' );", "window.parent.fechaExpansivel( 'div_dinamico_' + ( parent.DOM_divs.length * 1 - 1 ) );", "acao()" );
 		}
 		elseif ( $this->pessoa == "F" )
@@ -365,7 +365,7 @@ class indice extends clsCadastro
 				$this->campoOculto( "pessoa", $this->pessoa );
 				$this->campoOculto( "pessoa_cpf", $this->pessoa_cpf );
 				$this->botao_enviar = false;
-				$this->array_botao = array( "<< Voltar", "Cancelar", "Avançar >>" );
+				$this->array_botao = array( "<< Voltar", "Cancelar", "AvanÃ§ar >>" );
 				$this->array_botao_url_script = array( "go( 'pesquisa_pessoa_lst.php' );", "window.parent.fechaExpansivel( 'div_dinamico_' + ( parent.DOM_divs.length * 1 - 1 ) );", "acao()" );
 			}
 			else {
@@ -434,7 +434,7 @@ class indice extends clsCadastro
 				$lista_sexos["F"] = "Feminino";
 				$this->campoLista( "sexo", "Sexo", $lista_sexos, $this->sexo );
 
-				// Detalhes do Endereço
+				// Detalhes do EndereÃ§o
 				$objTipoLog = new clsTipoLogradouro();
 				$listaTipoLog = $objTipoLog->lista();
 				$listaTLog = array( "" => "Selecione" );
@@ -477,9 +477,9 @@ class indice extends clsCadastro
 					$this->campoLista( "sigla_uf", "Estado", $listaEstado, $this->sigla_uf, "", false, "", "", false );
 				}
 				$this->campoTexto( "complemento", "Complemento", $this->complemento, "50", "50", false );
-				$this->campoTexto( "numero", "Número", $this->numero, "10", "10", false );
+				$this->campoTexto( "numero", "NÃºmero", $this->numero, "10", "10", false );
 				$this->campoTexto( "letra", "Letra", $this->letra, "1", "1", false );
-				$this->campoTexto( "apartamento", "Número Apartamento", $this->apartamento, "6", "6", false );
+				$this->campoTexto( "apartamento", "NÃºmero Apartamento", $this->apartamento, "6", "6", false );
 				$this->campoTexto( "bloco", "Bloco", $this->bloco, "20", "20", false );
 				$this->campoTexto( "andar", "Andar", $this->andar, "2", "2", false );
 				$this->campoNumero( "ddd_telefone_1", "DDD Telefone 1",  $this->ddd_telefone_1, "3", "2", false );
@@ -505,7 +505,7 @@ class indice extends clsCadastro
 				$this->campoCnpj( "id_federal", "CNPJ", $this->id_federal, true );
 				$this->campoOculto( "pessoa", $this->pessoa );
 				$this->botao_enviar = false;
-				$this->array_botao = array( "<< Voltar", "Cancelar", "Avançar >>" );
+				$this->array_botao = array( "<< Voltar", "Cancelar", "AvanÃ§ar >>" );
 				$this->array_botao_url_script = array( "go( 'pesquisa_pessoa_lst.php' );", "window.parent.fechaExpansivel( 'div_dinamico_' + ( parent.DOM_divs.length * 1 - 1 ) );", "acao()" );
 			}
 			else {
@@ -601,7 +601,7 @@ class indice extends clsCadastro
 				}
 
 				$this->campoTexto( "complemento", "Complemento", $this->complemento, "50", "50", false );
-				$this->campoTexto( "numero", "Número", $this->numero, "10", "10", false );
+				$this->campoTexto( "numero", "NÃºmero", $this->numero, "10", "10", false );
 				$this->campoTexto( "letra", "Letra", $this->letra, "1", "1", false );
 				$this->campoNumero( "ddd_telefone_1", "DDD Telefone 1", $this->ddd_telefone_1, "3", "2", false );
 				$this->campoNumero( "telefone_1", "Telefone 1", $this->telefone_1, "10", "15", false );

@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo disponÌvel desde a vers„o 1.0.0
+ * @since     Arquivo dispon√≠vel desde a vers√£o 1.0.0
  * @version   $Id$
  */
 
@@ -39,18 +39,18 @@ require_once 'Calendario/Model/TurmaDataMapper.php';
 /**
  * clsIndexBase class.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponÌvel desde a vers„o 1.0.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Calend·rio Dia');
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Calend√°rio Dia');
     $this->processoAp = 620;
   }
 }
@@ -58,11 +58,11 @@ class clsIndexBase extends clsBase
 /**
  * indice class.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponÌvel desde a vers„o 1.0.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
  * @version   @@package_version@@
  */
 class indice extends clsCadastro
@@ -101,14 +101,14 @@ class indice extends clsCadastro
   }
 
   /**
-   * Verifica se existe uma inst‚ncia de Calendario_Model_Turma.
+   * Verifica se existe uma inst√¢ncia de Calendario_Model_Turma.
    *
    * @access protected
-   * @param  int   $codCalendarioAnoLetivo CÛdigo da chave prim·ria pmieducar.calendario_ano_letivo
+   * @param  int   $codCalendarioAnoLetivo C√≥digo da chave prim√°ria pmieducar.calendario_ano_letivo
    * @param  int   $mes
    * @param  int   $dia
    * @param  int   $ano
-   * @param  int   $codTurma CÛdigo da chave prim·ria de pmieducar.turma
+   * @param  int   $codTurma C√≥digo da chave prim√°ria de pmieducar.turma
    * @return bool
    */
   function _hasEntry($codCalendarioAnoLetivo, $mes, $dia, $ano, $codTurma)
@@ -132,11 +132,11 @@ class indice extends clsCadastro
   }
 
   /**
-   * Retorna um array de inst‚ncias de Calendario_Model_Turma para um dado
-   * calend·rio de ano letivo de escola em mÍs, dia e ano especÌficos.
+   * Retorna um array de inst√¢ncias de Calendario_Model_Turma para um dado
+   * calend√°rio de ano letivo de escola em m√™s, dia e ano espec√≠ficos.
    *
    * @access protected
-   * @param  int   $codCalendarioAnoLetivo CÛdigo de pmieducar.calendario_ano_letivo
+   * @param  int   $codCalendarioAnoLetivo C√≥digo de pmieducar.calendario_ano_letivo
    * @param  int   $mes
    * @param  int   $dia
    * @param  int   $ano
@@ -262,7 +262,7 @@ class indice extends clsCadastro
     }
 
     $this->campoLista(
-      'ref_cod_calendario_dia_motivo', 'Calend·rio Dia Motivo', $opcoes,
+      'ref_cod_calendario_dia_motivo', 'Calend√°rio Dia Motivo', $opcoes,
       $this->ref_cod_calendario_dia_motivo, '', FALSE, '', '', FALSE, FALSE
     );
 
@@ -277,7 +277,7 @@ class indice extends clsCadastro
       $this->campoCheck('turmas[' . $codTurma  . ']', '', $checked, $nomeTurma, FALSE);
     }
 
-    $this->campoMemo('descricao', 'DescriÁ„o', $this->descricao, 30, 10, TRUE);
+    $this->campoMemo('descricao', 'Descri√ß√£o', $this->descricao, 30, 10, TRUE);
   }
 
   function Novo()
@@ -319,7 +319,7 @@ class indice extends clsCadastro
       die();
     }
 
-    $this->mensagem = 'Cadastro n„o realizado. <br />';
+    $this->mensagem = 'Cadastro n√£o realizado. <br />';
     return FALSE;
   }
 
@@ -341,7 +341,7 @@ class indice extends clsCadastro
 
     $editou = $obj->edita();
 
-    // InicializaÁ„o de arrays
+    // Inicializa√ß√£o de arrays
     $insert = $delete = $entries = $intersect = array();
 
     if (isset($this->turmas)) {
@@ -357,14 +357,14 @@ class indice extends clsCadastro
       }
     }
 
-    // Inst‚ncias persistidas de Calendario_Model_Turma
+    // Inst√¢ncias persistidas de Calendario_Model_Turma
     $entries = $this->_getEntries($this->ref_cod_calendario_ano_letivo,
       $this->mes, $this->dia, $this->ano);
 
-    // Inst‚ncias para apagar
+    // Inst√¢ncias para apagar
     $delete = array_diff(array_keys($entries), array_keys($insert));
 
-    // Inst‚ncias j· persistidas
+    // Inst√¢ncias j√° persistidas
     $intersect = array_intersect(array_keys($entries), array_keys($insert));
 
     foreach ($delete as $id) {
@@ -379,7 +379,7 @@ class indice extends clsCadastro
     }
 
     if ($editou) {
-      $this->mensagem .= 'EdiÁ„o efetuada com sucesso. <br />';
+      $this->mensagem .= 'Edi√ß√£o efetuada com sucesso. <br />';
       $url = sprintf(
         'educar_calendario_anotacao_lst.php?dia=%d&mes=%d&ano=%d&ref_cod_calendario_ano_letivo=%d',
         $this->dia, $this->mes, $this->ano, $this->ref_cod_calendario_ano_letivo
@@ -388,7 +388,7 @@ class indice extends clsCadastro
       die();
     }
 
-    $this->mensagem = 'EdiÁ„o n„o realizada. <br />';
+    $this->mensagem = 'Edi√ß√£o n√£o realizada. <br />';
     return FALSE;
   }
 
@@ -419,7 +419,7 @@ class indice extends clsCadastro
     }
 
     if ($excluiu) {
-      $this->mensagem .= 'Exclus„o efetuada com sucesso. <br />';
+      $this->mensagem .= 'Exclus√£o efetuada com sucesso. <br />';
       $url = sprintf(
         'educar_calendario_anotacao_lst.php?dia=%d&mes=%d&ano=%d&ref_cod_calendario_ano_letivo=%d',
         $this->dia, $this->mes, $this->ano, $this->ref_cod_calendario_ano_letivo
@@ -428,19 +428,19 @@ class indice extends clsCadastro
       die();
     }
 
-    $this->mensagem = 'Exclus„o n„o realizada. <br />';
+    $this->mensagem = 'Exclus√£o n√£o realizada. <br />';
     return FALSE;
   }
 }
 
-// Instancia objeto de p·gina
+// Instancia objeto de p√°gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conte˙do
+// Instancia objeto de conte√∫do
 $miolo = new indice();
 
-// Atribui o conte˙do ‡  p·gina
+// Atribui o conte√∫do √†  p√°gina
 $pagina->addForm($miolo);
 
-// Gera o cÛdigo HTML
+// Gera o c√≥digo HTML
 $pagina->MakeAll();

@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo disponÌvel desde a vers„o 1.0.0
+ * @since     Arquivo dispon√≠vel desde a vers√£o 1.0.0
  * @version   $Id$
  */
 
@@ -34,11 +34,11 @@ require_once 'include/clsListagem.inc.php';
 /**
  * clsIndex class.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponÌvel desde a vers„o 1.0.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
  * @version   @@package_version@@
  */
 class clsIndex extends clsBase
@@ -55,11 +55,11 @@ class clsIndex extends clsBase
 /**
  * miolo1 class.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponÌvel desde a vers„o 1.0.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
  * @version   @@package_version@@
  */
 class miolo1 extends clsListagem
@@ -95,7 +95,7 @@ class miolo1 extends clsListagem
       $_SESSION['campo9'], $_SESSION['campo14']
     );
 
-    $this->titulo = 'EndereÁo';
+    $this->titulo = 'Endere√ßo';
 
     // Paginador
     $limite = 7;
@@ -224,7 +224,7 @@ class miolo1 extends clsListagem
           <table border="0" cellspacing="0" cellpadding="0" width="100%" align="center">
             <tr width="100%">
               <td>
-                <div align="center">[ <a href="javascript:void(0);" onclick="liberaCamposOuvidoria()">Cadastrar Novo EndereÁo</a> ]</div>
+                <div align="center">[ <a href="javascript:void(0);" onclick="liberaCamposOuvidoria()">Cadastrar Novo Endere√ßo</a> ]</div>
               </td>
             </tr>
           </table>';
@@ -234,7 +234,7 @@ class miolo1 extends clsListagem
           <table border="0" cellspacing="0" cellpadding="0" width="100%%" align="center">
             <tr width="100%%">
               <td>
-                <div align="center">[ <a href="javascript:void(0);" onclick="%s">Cadastrar Novo EndereÁo</a> ]</div>
+                <div align="center">[ <a href="javascript:void(0);" onclick="%s">Cadastrar Novo Endere√ßo</a> ]</div>
               </td>
             </tr>
           </table>',
@@ -247,16 +247,16 @@ class miolo1 extends clsListagem
   }
 }
 
-// Instancia objeto de p·gina
+// Instancia objeto de p√°gina
 $pagina = new clsIndex();
 
-// Instancia objeto de conte˙do
+// Instancia objeto de conte√∫do
 $miolo = new miolo1();
 
-// Atribui o conte˙do ‡† p·gina
+// Atribui o conte√∫do √†¬† p√°gina
 $pagina->addForm($miolo);
 
-// Gera o cÛdigo HTML
+// Gera o c√≥digo HTML
 $pagina->MakeAll();
 ?>
 <script type="text/javascript">
@@ -265,7 +265,7 @@ function setFiltro()
   alert('filtro');
 }
 
-// FunÁ„o especÌfica para ouvidoria
+// Fun√ß√£o espec√≠fica para ouvidoria
 function setaCamposOuvidoria(valor1, valor2, valor3, valor4, valor5, valor6,
   valor7, valor8, valor9, valor10, valor11, valor12)
 {
@@ -277,7 +277,7 @@ function setaCamposOuvidoria(valor1, valor2, valor3, valor4, valor5, valor6,
   obj1 = parent.document.getElementById('cep');
   obj1.value = valor1;
 
-  // Campo visÌvel cep
+  // Campo vis√≠vel cep
   obj2 = parent.document.getElementById('cep_');
   obj2.value    = valor2;
   obj2.disabled = true;
@@ -286,7 +286,7 @@ function setaCamposOuvidoria(valor1, valor2, valor3, valor4, valor5, valor6,
   obj3 = parent.document.getElementById('sigla_uf');
   obj3.value = valor3;
 
-   // Campo visÌvel sigla_uf
+   // Campo vis√≠vel sigla_uf
   obj4 = parent.document.getElementById('sigla_uf_');
   obj4.value    = valor4;
   obj4.disabled = true;
@@ -295,7 +295,7 @@ function setaCamposOuvidoria(valor1, valor2, valor3, valor4, valor5, valor6,
   obj5 = parent.document.getElementById('cidade');
   obj5.value = valor5;
 
-   // Campo visÌvel cidade
+   // Campo vis√≠vel cidade
   obj6 = parent.document.getElementById('cidade_');
   obj6.value    = valor6;
   obj6.disabled = true;
@@ -308,7 +308,7 @@ function setaCamposOuvidoria(valor1, valor2, valor3, valor4, valor5, valor6,
   obj7 = parent.document.getElementById('idbai');
   obj7.value = valor7;
 
-   // Campo visÌvel Bairro
+   // Campo vis√≠vel Bairro
   obj8 = parent.document.getElementById('bairro_');
   obj8.value    = valor8;
   obj8.disabled = true;
@@ -320,7 +320,7 @@ function setaCamposOuvidoria(valor1, valor2, valor3, valor4, valor5, valor6,
   obj9 = parent.document.getElementById('idtlog');
   obj9.value = valor9;
 
-  // Campo visÌvel idtlog_ ("tipo logradouro")
+  // Campo vis√≠vel idtlog_ ("tipo logradouro")
   obj10 = parent.document.getElementById('idtlog_');
   obj10.value    = valor10;
   obj10.disabled = true;
@@ -329,7 +329,7 @@ function setaCamposOuvidoria(valor1, valor2, valor3, valor4, valor5, valor6,
   obj11 = parent.document.getElementById('idlog');
   obj11.value = valor11;
 
-  // Campo visÌvel logradouro
+  // Campo vis√≠vel logradouro
   obj12 = parent.document.getElementById('logradouro_');
   obj12.value    = valor12;
   obj12.disabled = true;
@@ -349,7 +349,7 @@ function liberaCamposOuvidoria()
   obj1 = parent.document.getElementById('cep');
   obj1.value = null;
 
-   // Campo visÌvel cep
+   // Campo vis√≠vel cep
   obj2 = parent.document.getElementById('cep_');
   obj2.value    = null;
   obj2.disabled = false;
@@ -358,7 +358,7 @@ function liberaCamposOuvidoria()
   obj3 = parent.document.getElementById('sigla_uf');
   obj3.value = null;
 
-   // Campo visÌvel sigla_uf
+   // Campo vis√≠vel sigla_uf
   obj4 = parent.document.getElementById('sigla_uf_');
   obj4.value    = null;
   obj4.disabled = false;
@@ -367,7 +367,7 @@ function liberaCamposOuvidoria()
   obj5 = parent.document.getElementById('cidade');
   obj5.value = null;
 
-  // Campo visÌvel cidade
+  // Campo vis√≠vel cidade
   obj6 = parent.document.getElementById('cidade_');
   obj6.value    = null;
   obj6.disabled = false;
@@ -376,7 +376,7 @@ function liberaCamposOuvidoria()
   obj7 = parent.document.getElementById('idbai');
   obj7.value = null;
 
-   // Campo visÌvel bairro
+   // Campo vis√≠vel bairro
   obj8 = parent.document.getElementById('bairro_');
   obj8.value    = null;
   obj8.disabled = false;
@@ -388,7 +388,7 @@ function liberaCamposOuvidoria()
   obj9 = parent.document.getElementById('idtlog');
   obj9.value = null;
 
-  // Campo visÌvel itlog_ ("tipo logradouro")
+  // Campo vis√≠vel itlog_ ("tipo logradouro")
   obj10 = parent.document.getElementById('idtlog_');
   obj10.value    = null;
   obj10.disabled = false;
@@ -397,7 +397,7 @@ function liberaCamposOuvidoria()
   obj11 = parent.document.getElementById('idlog');
   obj11.value = null;
 
-  // Campo visÌvel logradouro_
+  // Campo vis√≠vel logradouro_
   obj12 = parent.document.getElementById('logradouro_');
   obj12.value    = null;
   obj12.disabled = false;

@@ -38,7 +38,7 @@ class relatorios
 	var $exibe_titulo_relatorio = true;
 	var $exibe_produzido_por = true;
 
-	function relatorios( $nome, $espacoEntreLinhas=80, $capa=false, $rodape=false, $tipoFolha="A4", $cabecalho="Prefeitura de Itajaí\nCentro Tecnologico de Informação e Modernização Administrativa.\nRua Alberto Werner, 100 - Vila Operária\nCEP. 88304-053 - Itajaí - SC", $cod_fundo_titulo = "#000000", $cor_texto_titulo = "#FFFFFF", $cor_fundo_cabecalho = "#D3D3D3", $cor_fundo_rodape = "#D3D3D3", $depurar = false)
+	function relatorios( $nome, $espacoEntreLinhas=80, $capa=false, $rodape=false, $tipoFolha="A4", $cabecalho="Prefeitura de ItajaÃ­\nCentro Tecnologico de InformaÃ§Ã£o e ModernizaÃ§Ã£o Administrativa.\nRua Alberto Werner, 100 - Vila OperÃ¡ria\nCEP. 88304-053 - ItajaÃ­ - SC", $cod_fundo_titulo = "#000000", $cor_texto_titulo = "#FFFFFF", $cor_fundo_cabecalho = "#D3D3D3", $cor_fundo_rodape = "#D3D3D3", $depurar = false)
 	{
 		$this->fonte_titulo = "arial";
 		$this->cor_fundo_titulo = $cod_fundo_titulo;
@@ -49,7 +49,7 @@ class relatorios
 		$this->titulo_relatorio = $nome;
 		$this->rodape = $rodape;
 		$this->espacoEntreLinhas = $espacoEntreLinhas;
-		$this->cabecalho = $cabecalho ? $cabecalho : "Prefeitura de Itajaí\nCentro Tecnologico de Informação e Modernização Administrativa.\nRua Alberto Werner, 100 - Vila Operária\nCEP. 88304-053 - Itajaí - SC";
+		$this->cabecalho = $cabecalho ? $cabecalho : "Prefeitura de ItajaÃ­\nCentro Tecnologico de InformaÃ§Ã£o e ModernizaÃ§Ã£o Administrativa.\nRua Alberto Werner, 100 - Vila OperÃ¡ria\nCEP. 88304-053 - ItajaÃ­ - SC";
 		$this->largura = $this->pdf->largura;
 		if( $capa && ! ( $capa[0] == "" && $capa[1] = "" ) )
 		{
@@ -183,7 +183,7 @@ class relatorios
 		}
 
 
-		//Verifica se é o fim da página
+		//Verifica se Ã© o fim da pÃ¡gina
 		if($this->altura +$altura > ( $this->pdf->altura * 0.85 ) )
 		{
 			$this->fillText();
@@ -228,7 +228,7 @@ class relatorios
 
 
 
-		//Verifica se é o fim da página
+		//Verifica se Ã© o fim da pÃ¡gina
 		if($this->altura +$altura > ( $this->pdf->altura * 0.85 ) )
 		{
 			$this->fillText();

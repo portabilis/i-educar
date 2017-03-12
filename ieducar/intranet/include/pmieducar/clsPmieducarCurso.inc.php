@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo disponÌvel desde a vers„o 1.0.0
+ * @since     Arquivo dispon√≠vel desde a vers√£o 1.0.0
  * @version   $Id$
  */
 
@@ -33,11 +33,11 @@ require_once 'include/pmieducar/geral.inc.php';
 /**
  * clsPmieducarSerie class.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponÌvel desde a vers„o 1.0.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
  * @version   @@package_version@@
  */
 class clsPmieducarCurso
@@ -63,7 +63,7 @@ class clsPmieducarCurso
   var $hora_falta;
 
   /**
-   * Armazena o total de resultados obtidos na ˙ltima chamada ao mÈtodo lista().
+   * Armazena o total de resultados obtidos na √∫ltima chamada ao m√©todo lista().
    * @var int
    */
   var $_total;
@@ -81,33 +81,33 @@ class clsPmieducarCurso
   var $_tabela;
 
   /**
-   * Lista separada por vÌrgula, com os campos que devem ser selecionados na
-   * prÛxima chamado ao mÈtodo lista().
+   * Lista separada por v√≠rgula, com os campos que devem ser selecionados na
+   * pr√≥xima chamado ao m√©todo lista().
    * @var string
    */
   var $_campos_lista;
 
   /**
-   * Lista com todos os campos da tabela separados por vÌrgula, padr„o para
-   * seleÁ„o no mÈtodo lista.
+   * Lista com todos os campos da tabela separados por v√≠rgula, padr√£o para
+   * sele√ß√£o no m√©todo lista.
    * @var string
    */
   var $_todos_campos;
 
   /**
-   * Valor que define a quantidade de registros a ser retornada pelo mÈtodo lista().
+   * Valor que define a quantidade de registros a ser retornada pelo m√©todo lista().
    * @var int
    */
   var $_limite_quantidade;
 
   /**
-   * Define o valor de offset no retorno dos registros no mÈtodo lista().
+   * Define o valor de offset no retorno dos registros no m√©todo lista().
    * @var int
    */
   var $_limite_offset;
 
   /**
-   * Define o campo para ser usado como padr„o de ordenaÁ„o no mÈtodo lista().
+   * Define o campo para ser usado como padr√£o de ordena√ß√£o no m√©todo lista().
    * @var string
    */
   var $_campo_order_by;
@@ -115,9 +115,9 @@ class clsPmieducarCurso
   /**
    * Construtor.
    *
-   * @todo Os par‚metros $frequencia_minima, $edicao_final,
+   * @todo Os par√¢metros $frequencia_minima, $edicao_final,
    *   $ref_cod_tipo_avaliacao, $media, $media_exame, $falta_ch_globalizada e
-   *   $avaliacao_globalizada ser„o removidos do construtor. Seus valores s„o
+   *   $avaliacao_globalizada ser√£o removidos do construtor. Seus valores s√£o
    *   ignorados.
    */
   function clsPmieducarCurso($cod_curso = NULL, $ref_usuario_cad = NULL,
@@ -558,12 +558,12 @@ class clsPmieducarCurso
   }
 
   /**
-   * Retorna uma lista de registros filtrados de acordo com os par‚metros.
+   * Retorna uma lista de registros filtrados de acordo com os par√¢metros.
    * @return array
    * @todo Os argumentos $int_ref_cod_tipo_avaliacao, $int_media,
    *   $int_media_exame, $int_falta_ch_globalizada, $int_edicao_final,
-   *   $bool_avaliacao_globalizada ser„o removidas da assinatura do mÈtodo.
-   *   Por enquanto, seus valores s„o ignorados.
+   *   $bool_avaliacao_globalizada ser√£o removidas da assinatura do m√©todo.
+   *   Por enquanto, seus valores s√£o ignorados.
    */
   function lista($int_cod_curso = NULL, $int_ref_usuario_cad = NULL,
     $int_ref_cod_tipo_regime = NULL, $int_ref_cod_nivel_ensino = NULL,
@@ -742,7 +742,7 @@ class clsPmieducarCurso
   }
 
   /**
-   * Retorna um array com os dados de um registro ou FALSE caso n„o exista.
+   * Retorna um array com os dados de um registro ou FALSE caso n√£o exista.
    * @return array|bool
    */
   function existe()
@@ -772,7 +772,7 @@ class clsPmieducarCurso
   }
 
   /**
-   * Define quais campos da tabela ser„o selecionados no mÈtodo Lista().
+   * Define quais campos da tabela ser√£o selecionados no m√©todo Lista().
    */
   function setCamposLista($str_campos)
   {
@@ -780,7 +780,7 @@ class clsPmieducarCurso
   }
 
   /**
-   * Define que o mÈtodo Lista() deverpa retornar todos os campos da tabela.
+   * Define que o m√©todo Lista() deverpa retornar todos os campos da tabela.
    */
   function resetCamposLista()
   {
@@ -788,7 +788,7 @@ class clsPmieducarCurso
   }
 
   /**
-   * Define limites de retorno para o mÈtodo Lista().
+   * Define limites de retorno para o m√©todo Lista().
    */
   function setLimite($intLimiteQtd, $intLimiteOffset = NULL)
   {
@@ -797,7 +797,7 @@ class clsPmieducarCurso
   }
 
   /**
-   * Retorna a string com o trecho da query respons·vel pelo limite de
+   * Retorna a string com o trecho da query respons√°vel pelo limite de
    * registros retornados/afetados.
    *
    * @return string
@@ -815,7 +815,7 @@ class clsPmieducarCurso
   }
 
   /**
-   * Define o campo para ser utilizado como ordenaÁ„o no mÈtodo Lista().
+   * Define o campo para ser utilizado como ordena√ß√£o no m√©todo Lista().
    */
   function setOrderby($strNomeCampo)
   {
@@ -825,7 +825,7 @@ class clsPmieducarCurso
   }
 
   /**
-   * Retorna a string com o trecho da query respons·vel pela OrdenaÁ„o dos
+   * Retorna a string com o trecho da query respons√°vel pela Ordena√ß√£o dos
    * registros.
    *
    * @return string

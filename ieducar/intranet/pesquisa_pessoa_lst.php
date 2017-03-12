@@ -1,32 +1,32 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
+	*	@author Prefeitura Municipal de ItajaÃ­								 *
 	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
+	*   Pacote: i-PLB Software PÃºblico Livre e Brasileiro					 *
 	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÃ­			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
+	*	Este  programa  Ã©  software livre, vocÃª pode redistribuÃ­-lo e/ou	 *
+	*	modificÃ¡-lo sob os termos da LicenÃ§a PÃºblica Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a versÃ£o 2 da	 *
+	*	LicenÃ§a   como  (a  seu  critÃ©rio)  qualquer  versÃ£o  mais  nova.	 *
 	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  Ã© distribuÃ­do na expectativa de ser Ãºtil, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia implÃ­cita de COMERCIALI-	 *
+	*	ZAÃ‡ÃƒO  ou  de ADEQUAÃ‡ÃƒO A QUALQUER PROPÃ“SITO EM PARTICULAR. Con-	 *
+	*	sulte  a  LicenÃ§a  PÃºblica  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
+	*	VocÃª  deve  ter  recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral GNU	 *
+	*	junto  com  este  programa. Se nÃ£o, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
 	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 /**
- * Os parâmetros passados para esta página de listagem devem estar dentro da classe clsParametrosPesquisas.inc.php
+ * Os parÃ¢metros passados para esta pÃ¡gina de listagem devem estar dentro da classe clsParametrosPesquisas.inc.php
  *
  * @author Adriano Erik Weiguert Nagasava
  *
@@ -103,7 +103,7 @@ class indice extends clsListagem
 			$this->addCabecalhos( array( "CPF", "Nome" ) );
 
 			// Filtros de Busca
-			$this->campoTexto( "campo_busca", "Pessoa", $this->campo_busca, 50, 255, false, false, false, "Código/Nome" );
+			$this->campoTexto( "campo_busca", "Pessoa", $this->campo_busca, 50, 255, false, false, false, "CÃ³digo/Nome" );
 			$this->campoCpf( "cpf", "CPF", ($this->cpf)?int2CPF(idFederal2int($this->cpf)):"" );
 
 			$chave_busca = @$_GET['campo_busca'];
@@ -179,7 +179,7 @@ class indice extends clsListagem
 				}
 			}
 			else {
-				$this->addLinhas( array( "Não existe nenhum resultado a ser apresentado." ) );
+				$this->addLinhas( array( "NÃ£o existe nenhum resultado a ser apresentado." ) );
 			}
 		}
 		elseif ( $parametros->getPessoa() == 'J' )
@@ -188,7 +188,7 @@ class indice extends clsListagem
 			$this->addCabecalhos( array( "CNPJ", "Nome" ) );
 
 			// Filtros de Busca
-			$this->campoTexto( "campo_busca", "Pessoa", $this->campo_busca, 50, 255, false, false, false, "Código/Nome" );
+			$this->campoTexto( "campo_busca", "Pessoa", $this->campo_busca, 50, 255, false, false, false, "CÃ³digo/Nome" );
 			if( $this->cnpj )
 			{
 				if( is_numeric($this->cnpj) )
@@ -270,7 +270,7 @@ class indice extends clsListagem
 				}
 			}
 			else {
-				$this->addLinhas( array( "Não existe nenhum resultado a ser apresentado." ) );
+				$this->addLinhas( array( "NÃ£o existe nenhum resultado a ser apresentado." ) );
 			}
 		}
 		elseif ( $parametros->getPessoa() == 'FJ' )
@@ -279,7 +279,7 @@ class indice extends clsListagem
 			$this->addCabecalhos( array( "CNPJ/CPF", "Nome" ) );
 
 			// Filtros de Busca
-			$this->campoTexto( "campo_busca", "Pessoa", $this->campo_busca, 50, 255, false, false, false, "Código/Nome" );
+			$this->campoTexto( "campo_busca", "Pessoa", $this->campo_busca, 50, 255, false, false, false, "CÃ³digo/Nome" );
 			$this->campoIdFederal( "id_federal", "CNPJ/CPF", ($this->id_federal)?int2IdFederal($this->id_federal):"" );
 
 			$chave_busca = @$_GET['campo_busca'];
@@ -362,7 +362,7 @@ class indice extends clsListagem
 				}
 			}
 			else {
-				$this->addLinhas( array( "Não existe nenhum resultado a ser apresentado." ) );
+				$this->addLinhas( array( "NÃ£o existe nenhum resultado a ser apresentado." ) );
 			}
 		}
 		else if( $parametros->getPessoa() == 'FUNC' )
@@ -370,7 +370,7 @@ class indice extends clsListagem
 			$this->addCabecalhos( array( "Matricula", "Nome" ) );
 
 			// Filtros de Busca
-			$this->campoTexto( "campo_busca", "Pessoa", $this->campo_busca, 50, 255, false, false, false, "Código/Nome" );
+			$this->campoTexto( "campo_busca", "Pessoa", $this->campo_busca, 50, 255, false, false, false, "CÃ³digo/Nome" );
 			$this->campoNumero( "matricula", "Matricula", $this->matricula, 15, 255 );
 //			$this->campoCpf( "cpf", "CPF", int2CPF($this->cpf) );
 
@@ -465,14 +465,14 @@ class indice extends clsListagem
 			}
 			else
 			{
-				$this->addLinhas( array( "Não existe nenhum resultado a ser apresentado." ) );
+				$this->addLinhas( array( "NÃ£o existe nenhum resultado a ser apresentado." ) );
 			}
 		}
 		
 		// Paginador
 		$this->addPaginador2( "pesquisa_pessoa_lst.php", $total, $_GET, $this->nome, $limite );
 
-		// Define Largura da Página
+		// Define Largura da PÃ¡gina
 		$this->largura = "100%";
 	}
 }

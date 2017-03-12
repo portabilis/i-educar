@@ -5,25 +5,25 @@
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	@author Prefeitura Municipal de ItajaÌ								 *
+	*	@author Prefeitura Municipal de Itaja√≠								 *
 	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software P˙blico Livre e Brasileiro					 *
+	*   Pacote: i-PLB Software P√∫blico Livre e Brasileiro					 *
 	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÌ			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itaja√≠			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  È  software livre, vocÍ pode redistribuÌ-lo e/ou	 *
-	*	modific·-lo sob os termos da LicenÁa P˙blica Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a vers„o 2 da	 *
-	*	LicenÁa   como  (a  seu  critÈrio)  qualquer  vers„o  mais  nova.	 *
+	*	Este  programa  √©  software livre, voc√™ pode redistribu√≠-lo e/ou	 *
+	*	modific√°-lo sob os termos da Licen√ßa P√∫blica Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a vers√£o 2 da	 *
+	*	Licen√ßa   como  (a  seu  crit√©rio)  qualquer  vers√£o  mais  nova.	 *
 	*																		 *
-	*	Este programa  È distribuÌdo na expectativa de ser ˙til, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implÌcita de COMERCIALI-	 *
-	*	ZA«√O  ou  de ADEQUA«√O A QUALQUER PROP”SITO EM PARTICULAR. Con-	 *
-	*	sulte  a  LicenÁa  P˙blica  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  √© distribu√≠do na expectativa de ser √∫til, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia impl√≠cita de COMERCIALI-	 *
+	*	ZA√á√ÉO  ou  de ADEQUA√á√ÉO A QUALQUER PROP√ìSITO EM PARTICULAR. Con-	 *
+	*	sulte  a  Licen√ßa  P√∫blica  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	VocÍ  deve  ter  recebido uma cÛpia da LicenÁa P˙blica Geral GNU	 *
-	*	junto  com  este  programa. Se n„o, escreva para a Free Software	 *
+	*	Voc√™  deve  ter  recebido uma c√≥pia da Licen√ßa P√∫blica Geral GNU	 *
+	*	junto  com  este  programa. Se n√£o, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
@@ -413,7 +413,7 @@ class indice extends clsCadastro
 		}
 		else
 		{
-  		$this->inputsHelper()->integer('escola_inep_id', array('label' => 'CÛdigo inep', 'required' => false, 'max_length' => 14));
+  		$this->inputsHelper()->integer('escola_inep_id', array('label' => 'C√≥digo inep', 'required' => false, 'max_length' => 14));
 
 			if( $_POST )
 			foreach( $_POST AS $campo => $val )
@@ -470,7 +470,7 @@ class indice extends clsCadastro
 					}
 					else
 					{
-						die( "UsuÔøΩrio nÔøΩo ÔøΩ do nivel poli-institucional e nÔøΩo possui uma instituiÔøΩÔøΩo" );
+						die( "Usu√Ø¬ø¬Ωrio n√Ø¬ø¬Ωo √Ø¬ø¬Ω do nivel poli-institucional e n√Ø¬ø¬Ωo possui uma institui√Ø¬ø¬Ω√Ø¬ø¬Ωo" );
 					}
 				}
 
@@ -569,7 +569,7 @@ class indice extends clsCadastro
 				$this->campoTexto( "bairro", "Bairro",  $this->bairro, "50", "20", true );
 				$this->campoTexto( "logradouro", "Logradouro",  $this->logradouro, "50", "255",true );
 				$this->campoTexto( "complemento", "Complemento",  $this->complemento, "22", "20", false );
-				$this->campoNumero( "numero", "N˙mero",  $this->numero, "6", "6", true );
+				$this->campoNumero( "numero", "N√∫mero",  $this->numero, "6", "6", true );
 
 				$this->campoTexto( "p_ddd_telefone_1", "DDD Telefone 1",  $this->p_ddd_telefone_1, "2", "2", false );
 				$this->campoTexto( "p_telefone_1", "Telefone 1",  $this->p_telefone_1, "10", "15", false );
@@ -657,7 +657,7 @@ class indice extends clsCadastro
 						}
 						else
 						{
-							die( "UsuÔøΩrio nÔøΩo ÔøΩ do nivel poli-institucional e nÔøΩo possui uma instituiÔøΩÔøΩo" );
+							die( "Usu√Ø¬ø¬Ωrio n√Ø¬ø¬Ωo √Ø¬ø¬Ω do nivel poli-institucional e n√Ø¬ø¬Ωo possui uma institui√Ø¬ø¬Ω√Ø¬ø¬Ωo" );
 						}
 					}
 
@@ -795,7 +795,7 @@ $disabled = $this->isEnderecoExterno ? false : true ;
 						$this->campoLista( "idtlog", "Tipo Logradouro", $listaTLog, $this->idtlog, false, false, false, false, true ,true);
 						$this->campoTexto( "logradouro", "Logradouro",  $this->logradouro, "50", "255", true, false, false, "", "", "", "onKeyUp", true );
 						$this->campoTexto( "complemento", "Complemento",  $this->complemento, "22", "20", false, false );
-						$this->campoNumero("numero", "N˙mero", $this->numero, "6", "6", false );
+						$this->campoNumero("numero", "N√∫mero", $this->numero, "6", "6", false );
 						$this->campoNumero("andar", "Andar", $this->andar, "2","2", false);
 					}
 					elseif($this->ref_idpes && $this->cep)
@@ -812,7 +812,7 @@ $disabled = $this->isEnderecoExterno ? false : true ;
 						$this->campoLista( "idtlog", "Tipo Logradouro", $listaTLog, $this->idtlog, "", false, "", "", false,true );
 						$this->campoTexto( "logradouro", "Logradouro",  $this->logradouro, "50", "255", true, false, false, "", "", "", "onKeyUp", false );
 						$this->campoTexto( "complemento", "Complemento",  $this->complemento, "22", "20", false, false, false, "", "", "", "onKeyUp", false );
-						$this->campoNumero( "numero", "N˙mero",  $this->numero, 6, 6, false, "", ""  );
+						$this->campoNumero( "numero", "N√∫mero",  $this->numero, 6, 6, false, "", ""  );
 						$this->campoNumero( "andar", "Andar", $this->andar, "2","2", false );
 					}
 					else
@@ -896,7 +896,7 @@ if(!$this->isEnderecoExterno){
 //
 //			}
 
-  		$this->campoCheck("bloquear_lancamento_diario_anos_letivos_encerrados", "Bloquear lanÁamento no di·rio para anos letivos encerrados", $this->bloquear_lancamento_diario_anos_letivos_encerrados);
+  		$this->campoCheck("bloquear_lancamento_diario_anos_letivos_encerrados", "Bloquear lan√ßamento no di√°rio para anos letivos encerrados", $this->bloquear_lancamento_diario_anos_letivos_encerrados);
 
 			if ( $_POST["escola_curso"] )
 				$this->escola_curso = unserialize( urldecode( $_POST["escola_curso"] ) );
@@ -1476,7 +1476,7 @@ function getRedeEnsino(xml_escola_rede_ensino)
 		}
 	}
 	else
-		campoRedeEnsino.options[0].text = 'A instituiÁ„o n„o possui nenhuma rede de ensino';
+		campoRedeEnsino.options[0].text = 'A institui√ß√£o n√£o possui nenhuma rede de ensino';
 }
 
 function getLocalizacao(xml_escola_localizacao)
@@ -1500,7 +1500,7 @@ function getLocalizacao(xml_escola_localizacao)
 	if(DOM_array.length)
 	{
 		campoLocalizacao.length = 1;
-		campoLocalizacao.options[0].text = 'Selecione uma localizaÁ„o';
+		campoLocalizacao.options[0].text = 'Selecione uma localiza√ß√£o';
 		campoLocalizacao.disabled = false;
 
 		for( var i = 0; i < DOM_array.length; i++ )
@@ -1509,7 +1509,7 @@ function getLocalizacao(xml_escola_localizacao)
 		}
 	}
 	else
-		campoLocalizacao.options[0].text = 'A instituiÁ„o n„o possui nenhuma localizaÁ„o';
+		campoLocalizacao.options[0].text = 'A institui√ß√£o n√£o possui nenhuma localiza√ß√£o';
 }
 
 function getCurso(xml_curso)
@@ -1542,7 +1542,7 @@ function getCurso(xml_curso)
 		}
 	}
 	else
-		campoCurso.options[0].text = 'A instituiÁ„o n„o possui nenhum curso';
+		campoCurso.options[0].text = 'A institui√ß√£o n√£o possui nenhum curso';
 }
 
 
@@ -1563,7 +1563,7 @@ if ( document.getElementById('ref_cod_instituicao') )
 		var campoLocalizacao = document.getElementById('ref_cod_escola_localizacao');
 		campoLocalizacao.length = 1;
 		campoLocalizacao.disabled = true;
-		campoLocalizacao.options[0].text = 'Carregando localizaÁ„o';
+		campoLocalizacao.options[0].text = 'Carregando localiza√ß√£o';
 
 		var campoCurso = document.getElementById('ref_cod_curso');
 		campoCurso.length = 1;

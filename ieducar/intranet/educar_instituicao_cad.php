@@ -1,25 +1,25 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
+	*	@author Prefeitura Municipal de ItajaÃ­								 *
 	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
+	*   Pacote: i-PLB Software PÃºblico Livre e Brasileiro					 *
 	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÃ­			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
+	*	Este  programa  Ã©  software livre, vocÃª pode redistribuÃ­-lo e/ou	 *
+	*	modificÃ¡-lo sob os termos da LicenÃ§a PÃºblica Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a versÃ£o 2 da	 *
+	*	LicenÃ§a   como  (a  seu  critÃ©rio)  qualquer  versÃ£o  mais  nova.	 *
 	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  Ã© distribuÃ­do na expectativa de ser Ãºtil, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia implÃ­cita de COMERCIALI-	 *
+	*	ZAÃ‡ÃƒO  ou  de ADEQUAÃ‡ÃƒO A QUALQUER PROPÃ“SITO EM PARTICULAR. Con-	 *
+	*	sulte  a  LicenÃ§a  PÃºblica  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
+	*	VocÃª  deve  ter  recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral GNU	 *
+	*	junto  com  este  programa. Se nÃ£o, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
@@ -122,7 +122,7 @@ class indice extends clsCadastro
 		$this->campoOculto( "cod_instituicao", $this->cod_instituicao );
 
 		// text
-		$this->campoTexto( "nm_instituicao", "Nome da Instituição", $this->nm_instituicao, 30, 255, true );
+		$this->campoTexto( "nm_instituicao", "Nome da InstituiÃ§Ã£o", $this->nm_instituicao, 30, 255, true );
 		$this->campoCep( "cep", "CEP", int2CEP( $this->cep ), true, "-", false, false );
 		$this->campoTexto( "logradouro", "Logradouro", $this->logradouro, 30, 255, true );
 		$this->campoTexto( "bairro", "Bairro", $this->bairro, 30, 40, true );
@@ -171,15 +171,15 @@ class indice extends clsCadastro
 		}
 		$this->campoLista( "ref_sigla_uf", "UF", $opcoes, $this->ref_sigla_uf, "", false, "", "", false, true );
 
-		$this->campoNumero( "numero", "Número", $this->numero, 6, 6 );
+		$this->campoNumero( "numero", "NÃºmero", $this->numero, 6, 6 );
 		$this->campoTexto( "complemento", "Complemento", $this->complemento, 30, 50, false );
-		$this->campoTexto( "nm_responsavel", "Nome do Responsável", $this->nm_responsavel, 30, 255, true );
+		$this->campoTexto( "nm_responsavel", "Nome do ResponsÃ¡vel", $this->nm_responsavel, 30, 255, true );
 		$this->campoNumero( "ddd_telefone", "DDD Telefone", $this->ddd_telefone, 2, 2 );
 		$this->campoNumero( "telefone", "Telefone", $this->telefone, 11, 11 );
 
 		if ($GLOBALS['coreExt']['Config']->app->instituicao->data_base_deslocamento) {
-       		$this->campoData('data_base_transferencia', 'Data máxima para deslocamento', Portabilis_Date_Utils::pgSQLToBr($this->data_base_transferencia), null, null, false);
-       		$this->campoData('data_base_remanejamento', 'Data máxima para troca de sala', Portabilis_Date_Utils::pgSQLToBr($this->data_base_remanejamento), null, null, false);
+       		$this->campoData('data_base_transferencia', 'Data mÃ¡xima para deslocamento', Portabilis_Date_Utils::pgSQLToBr($this->data_base_transferencia), null, null, false);
+       		$this->campoData('data_base_remanejamento', 'Data mÃ¡xima para troca de sala', Portabilis_Date_Utils::pgSQLToBr($this->data_base_remanejamento), null, null, false);
      	}
 	}
 

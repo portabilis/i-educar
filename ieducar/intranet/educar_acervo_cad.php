@@ -2,25 +2,25 @@
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	@author Prefeitura Municipal de ItajaÌ								 *
+	*	@author Prefeitura Municipal de Itaja√≠								 *
 	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software P˙blico Livre e Brasileiro					 *
+	*   Pacote: i-PLB Software P√∫blico Livre e Brasileiro					 *
 	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÌ			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itaja√≠			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  È  software livre, vocÍ pode redistribuÌ-lo e/ou	 *
-	*	modific·-lo sob os termos da LicenÁa P˙blica Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a vers„o 2 da	 *
-	*	LicenÁa   como  (a  seu  critÈrio)  qualquer  vers„o  mais  nova.	 *
+	*	Este  programa  √©  software livre, voc√™ pode redistribu√≠-lo e/ou	 *
+	*	modific√°-lo sob os termos da Licen√ßa P√∫blica Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a vers√£o 2 da	 *
+	*	Licen√ßa   como  (a  seu  crit√©rio)  qualquer  vers√£o  mais  nova.	 *
 	*																		 *
-	*	Este programa  È distribuÌdo na expectativa de ser ˙til, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implÌcita de COMERCIALI-	 *
-	*	ZA«√O  ou  de ADEQUA«√O A QUALQUER PROP”SITO EM PARTICULAR. Con-	 *
-	*	sulte  a  LicenÁa  P˙blica  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  √© distribu√≠do na expectativa de ser √∫til, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia impl√≠cita de COMERCIALI-	 *
+	*	ZA√á√ÉO  ou  de ADEQUA√á√ÉO A QUALQUER PROP√ìSITO EM PARTICULAR. Con-	 *
+	*	sulte  a  Licen√ßa  P√∫blica  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	VocÍ  deve  ter  recebido uma cÛpia da LicenÁa P˙blica Geral GNU	 *
-	*	junto  com  este  programa. Se n„o, escreva para a Free Software	 *
+	*	Voc√™  deve  ter  recebido uma c√≥pia da Licen√ßa P√∫blica Geral GNU	 *
+	*	junto  com  este  programa. Se n√£o, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
@@ -178,7 +178,7 @@ class indice extends clsCadastro
 
     $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'biblioteca', 'bibliotecaTipoExemplar'));
 
-    // Obra referÍncia
+    // Obra refer√™ncia
 		$opcoes = array( "NULL" => "Selecione" );
 
 		if( $this->ref_cod_acervo && $this->ref_cod_acervo != "NULL")
@@ -193,7 +193,7 @@ class indice extends clsCadastro
 
 		$this->campoLista("ref_cod_acervo","Obra Refer&ecirc;ncia",$opcoes,$this->ref_cod_acervo,"",false,"","<img border=\"0\" onclick=\"pesquisa();\" id=\"ref_cod_acervo_lupa\" name=\"ref_cod_acervo_lupa\" src=\"imagens/lupa.png\"\/>",false,false);
 
-    // ColeÁ„o
+    // Cole√ß√£o
 		$opcoes = array( "" => "Selecione" );
 		if( class_exists( "clsPmieducarAcervoColecao" ) )
 		{
@@ -212,7 +212,7 @@ class indice extends clsCadastro
 			echo "<!--\nErro\nClasse clsPmieducarAcervoColecao nao encontrada\n-->";
 			$opcoes = array( "" => "Erro na geracao" );
 		}
-		$this->campoLista( "ref_cod_acervo_colecao", "Cole&ccedil;&atilde;o", $opcoes, $this->ref_cod_acervo_colecao,"",false,"","<img id='img_colecao' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"showExpansivelImprimir(500, 200,'educar_acervo_colecao_cad_pop.php',[], 'ColeÁ„o')\" />",false,false );
+		$this->campoLista( "ref_cod_acervo_colecao", "Cole&ccedil;&atilde;o", $opcoes, $this->ref_cod_acervo_colecao,"",false,"","<img id='img_colecao' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"showExpansivelImprimir(500, 200,'educar_acervo_colecao_cad_pop.php',[], 'Cole√ß√£o')\" />",false,false );
 
     // Idioma
 		$opcoes = array( "" => "Selecione" );
@@ -369,7 +369,7 @@ class indice extends clsCadastro
 		{
 			$qtd_autor = count($this->acervo_autor);
 		}
-		// n„o existe um autor principal nem autor
+		// n√£o existe um autor principal nem autor
 		if ( ($this->checked != 1) && ( !$qtd_autor || ($qtd_autor == 0) ) )
 		{
 //			die("1");
@@ -377,7 +377,7 @@ class indice extends clsCadastro
 
 		 	$this->campoCheck( "principal", "&nbsp;&nbsp;<img id='img_autor' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"showExpansivelImprimir(500, 250,'educar_acervo_autor_cad_pop.php',[], 'Autor')\" />", $this->principal,"<a href='#' onclick=\"getElementById('incluir_autor').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>" );
 		}
-		// n„o existe um autor principal, mas existe um autor
+		// n√£o existe um autor principal, mas existe um autor
 		else if ( ($this->checked != 1) && ($qtd_autor > 0) )
 		{
 			$this->campoLista( "ref_cod_acervo_autor", "Autor", $opcoes, $this->ref_cod_acervo_autor,null,true,null, null,null,false);
@@ -455,7 +455,7 @@ class indice extends clsCadastro
 			echo "<!--\nErro ao cadastrar clsPmieducarAcervo\nvalores obrigatorios\nis_numeric( $this->ref_cod_exemplar_tipo ) && is_numeric( $this->ref_usuario_cad ) && is_numeric( $this->ref_cod_acervo_colecao ) && is_numeric( $this->ref_cod_acervo_idioma ) && is_numeric( $this->ref_cod_acervo_editora ) && is_string( $this->titulo ) && is_numeric( $this->volume ) && is_numeric( $this->num_edicao ) && is_numeric( $this->ano ) && is_numeric( $this->num_paginas ) && is_numeric( $this->isbn )\n-->";
 			return false;
 		}
-		echo "<script> alert('… necess·rio adicionar pelo menos 1 Autor') </script>";
+		echo "<script> alert('√â necess√°rio adicionar pelo menos 1 Autor') </script>";
 		$this->mensagem = "Cadastro n&atilde;o realizado.<br>";
 		return false;
 	}
@@ -509,7 +509,7 @@ class indice extends clsCadastro
 			echo "<!--\nErro ao editar clsPmieducarAcervo\nvalores obrigatorios\nif( is_numeric( $this->cod_acervo ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
 			return false;
 		}
-		echo "<script> alert('… necess·rio adicionar pelo menos 1 Autor') </script>";
+		echo "<script> alert('√â necess√°rio adicionar pelo menos 1 Autor') </script>";
 		$this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
 		return false;
 	}
@@ -601,7 +601,7 @@ function getColecao( xml_acervo_colecao )
 	if(DOM_array.length)
 	{
 		campoColecao.length = 1;
-		campoColecao.options[0].text = 'Selecione uma coleÁ„o';
+		campoColecao.options[0].text = 'Selecione uma cole√ß√£o';
 		campoColecao.disabled = false;
 
 		for( var i=0; i<DOM_array.length; i++)
@@ -621,7 +621,7 @@ function getColecao( xml_acervo_colecao )
 		}
 		else
 		{
-			campoColecao.options[0].text = 'A biblioteca n„o possui coleÁıes';
+			campoColecao.options[0].text = 'A biblioteca n√£o possui cole√ß√µes';
 			setVisibility(document.getElementById('img_colecao'), true);
 		}
 	}
@@ -655,7 +655,7 @@ function getEditora( xml_acervo_editora )
 		}
 		else
 		{
-			campoEditora.options[0].text = 'A biblioteca n„o possui editoras';
+			campoEditora.options[0].text = 'A biblioteca n√£o possui editoras';
 			setVisibility(document.getElementById('img_editora'), true);
 		}
 	}
@@ -689,7 +689,7 @@ function getIdioma( xml_acervo_idioma )
 		}
 		else
 		{
-			campoIdioma.options[0].text = 'A biblioteca n„o possui idiomas';
+			campoIdioma.options[0].text = 'A biblioteca n√£o possui idiomas';
 			setVisibility(document.getElementById('img_idioma'), true);
 		}
 	}
@@ -717,7 +717,7 @@ function ajaxBiblioteca(acao)
 	}
 	campoColecao.length = 1;
 	campoColecao.disabled = true;
-	campoColecao.options[0].text = 'Carregando coleÁıes';
+	campoColecao.options[0].text = 'Carregando cole√ß√µes';
 
 	var xml_colecao = new ajax( getColecao );
 	xml_colecao.envia( "educar_colecao_xml.php?bib="+campoBiblioteca );

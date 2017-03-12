@@ -1,24 +1,24 @@
 <?php
 
 /*
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gestÃ£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de ItajaÃ­
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa Ã© software livre; vocÃª pode redistribuÃ­-lo e/ou modificÃ¡-lo
+ * sob os termos da LicenÃ§a PÃºblica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versÃ£o 2 da LicenÃ§a, como (a seu critÃ©rio)
+ * qualquer versÃ£o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa Ã© distribuÃ­Â­do na expectativa de que seja Ãºtil, porÃ©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implÃ­Â­cita de COMERCIABILIDADE OU
+ * ADEQUAÃ‡ÃƒO A UMA FINALIDADE ESPECÃFICA. Consulte a LicenÃ§a PÃºblica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * VocÃª deve ter recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral do GNU junto
+ * com este programa; se nÃ£o, escreva para a Free Software Foundation, Inc., no
+ * endereÃ§o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  */
 
 require_once 'include/clsBanco.inc.php';
@@ -30,10 +30,10 @@ require_once 'Portabilis/Utils/ReCaptcha.php';
 /**
  * clsControlador class.
  *
- * @author   Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author   Prefeitura Municipal de ItajaÃ­ <ctima@itajai.sc.gov.br>
  * @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
  * @package  Core
- * @since    Classe disponível desde a versão 1.0.0
+ * @since    Classe disponÃ­vel desde a versÃ£o 1.0.0
  * @version  $Id: /ieducar/branches/1.1.0-avaliacao/ieducar/intranet/include/clsControlador.inc.php 662 2009-11-17T18:28:48.404882Z eriksen  $
  */
 class clsControlador
@@ -78,7 +78,7 @@ class clsControlador
         $_SESSION['menu_atual'] = $_GET['categoria'];
       }
       else {
-        // Está apagando variável session com o índice dado por $_GET
+        // EstÃ¡ apagando variÃ¡vel session com o Ã­ndice dado por $_GET
         unset($_SESSION['menu_opt'][$_GET['categoria']]);
         if ($_SESSION['menu_atual'] == $_GET['categoria']) {
           unset($_SESSION['menu_atual']);
@@ -99,7 +99,7 @@ class clsControlador
 
 
   /**
-   * Retorna TRUE para usuário logado
+   * Retorna TRUE para usuÃ¡rio logado
    * @return  boolean
    */
   public function Logado()
@@ -109,7 +109,7 @@ class clsControlador
 
 
   /**
-   * Executa o login do usuário.
+   * Executa o login do usuÃ¡rio.
    */
   public function obriga_Login()
   {
@@ -138,11 +138,11 @@ class clsControlador
   }
 
 
-  // valida se o usuário e senha informados, existem no banco de dados.
+  // valida se o usuÃ¡rio e senha informados, existem no banco de dados.
   protected function validateUserCredentials($username, $password) {
     if (! $this->validateHumanAccess()) {
-      $msg = "Você errou a senha muitas vezes, por favor, preencha o campo de " .
-             "confirmação visual ou <a class='light decorated' href='/module/Usuario/Rede" .
+      $msg = "VocÃª errou a senha muitas vezes, por favor, preencha o campo de " .
+             "confirmaÃ§Ã£o visual ou <a class='light decorated' href='/module/Usuario/Rede" .
              "finirSenha'>redefina sua senha</a>.";
       $this->messenger->append($msg, "error", false, "error");
     }
@@ -151,7 +151,7 @@ class clsControlador
       $user = Portabilis_Utils_User::loadUsingCredentials($username, $password);
 
       if (is_null($user)) {
-        $this->messenger->append("Usuário ou senha incorreta.", "error");
+        $this->messenger->append("UsuÃ¡rio ou senha incorreta.", "error");
         $this->incrementTentativasLogin();
       }
       else {
@@ -181,9 +181,9 @@ class clsControlador
     Portabilis_Utils_User::destroyStatusTokenFor($user['id'], 'redefinir_senha');
 
     $this->logado = true;
-    $this->messenger->append("Usuário logado com sucesso.", "success");
+    $this->messenger->append("UsuÃ¡rio logado com sucesso.", "success");
 
-    // solicita email para recuperação de senha, caso usuário ainda não tenha informado.
+    // solicita email para recuperaÃ§Ã£o de senha, caso usuÃ¡rio ainda nÃ£o tenha informado.
     if (! filter_var($user['email'], FILTER_VALIDATE_EMAIL))
       header("Location: /module/Usuario/AlterarEmail");
 
@@ -208,7 +208,7 @@ class clsControlador
   }
 
 
-  // renderiza o template de login, com as mensagens adicionadas durante validações
+  // renderiza o template de login, com as mensagens adicionadas durante validaÃ§Ãµes
   protected function renderLoginPage() {
     $this->destroyLoginSession();
 
@@ -236,19 +236,19 @@ class clsControlador
     $_SESSION = array();
     @session_destroy();
 
-    //mantem tentativas_login_falhas, até que senha senha informada corretamente
+    //mantem tentativas_login_falhas, atÃ© que senha senha informada corretamente
     @session_start();
     $_SESSION['tentativas_login_falhas'] = $tentativasLoginFalhas;
     @session_write_close();
 
     if ($addMsg)
-      $this->messenger->append("Usuário deslogado com sucesso.", "success");
+      $this->messenger->append("UsuÃ¡rio deslogado com sucesso.", "success");
   }
 
 
   protected function getClientIP() {
     if (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR'] != '') {
-      // pega o (ultimo) IP real caso o host esteja atrás de um proxy
+      // pega o (ultimo) IP real caso o host esteja atrÃ¡s de um proxy
       $ip = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
       $ip = trim(array_pop($ip));
     }
@@ -300,16 +300,16 @@ class clsControlador
 
   protected function checkForDisabledAccount($user) {
     if ($user['ativo'] != '1') {
-      $this->messenger->append("Sua conta de usuário foi desativada ou expirou, por favor, " .
-                              "entre em contato com o responsável pelo sistema do seu município.", "error", false, "error");
+      $this->messenger->append("Sua conta de usuÃ¡rio foi desativada ou expirou, por favor, " .
+                              "entre em contato com o responsÃ¡vel pelo sistema do seu municÃ­pio.", "error", false, "error");
     }
   }
 
 
   protected function checkForBannedAccount($user) {
     if ($user['proibido'] != '0') {
-      $this->messenger->append("Sua conta de usuário não pode mais acessar o sistema, " .
-                              "por favor, entre em contato com o responsável pelo sistema do seu município.",
+      $this->messenger->append("Sua conta de usuÃ¡rio nÃ£o pode mais acessar o sistema, " .
+                              "por favor, entre em contato com o responsÃ¡vel pelo sistema do seu municÃ­pio.",
                               "error", false, "error");
     }
   }
@@ -321,8 +321,8 @@ class clsControlador
       if ($user['ativo'] == 1)
         Portabilis_Utils_User::disableAccount($user['id']);
 
-      $this->messenger->append("Sua conta de usuário expirou, por favor, " .
-                              "entre em contato com o responsável pelo sistema do seu município.", "error", false, "error");
+      $this->messenger->append("Sua conta de usuÃ¡rio expirou, por favor, " .
+                              "entre em contato com o responsÃ¡vel pelo sistema do seu municÃ­pio.", "error", false, "error");
     }
   }
 
@@ -337,23 +337,23 @@ class clsControlador
 
     if ($multiploAcesso and $user['super']) {
 
-      // #TODO mover lógica email, para mailer especifico
+      // #TODO mover lÃ³gica email, para mailer especifico
 
-      $subject = "Conta do super usuário {$_SERVER['HTTP_HOST']} acessada em mais de um local";
+      $subject = "Conta do super usuÃ¡rio {$_SERVER['HTTP_HOST']} acessada em mais de um local";
 
-      $message = ("Aparentemente a conta do super usuário {$user['matricula']} foi acessada em " .
-                  "outro computador nos últimos $tempoMultiploAcesso " .
-                  "minutos, caso não tenha sido você, por favor, altere sua senha.\n\n" .
-                  "Endereço IP último acesso: {$user['ip_ultimo_acesso']}\n".
-                  "Endereço IP acesso atual: {$this->getClientIP()}");
+      $message = ("Aparentemente a conta do super usuÃ¡rio {$user['matricula']} foi acessada em " .
+                  "outro computador nos Ãºltimos $tempoMultiploAcesso " .
+                  "minutos, caso nÃ£o tenha sido vocÃª, por favor, altere sua senha.\n\n" .
+                  "EndereÃ§o IP Ãºltimo acesso: {$user['ip_ultimo_acesso']}\n".
+                  "EndereÃ§o IP acesso atual: {$this->getClientIP()}");
 
       $mailer = new Portabilis_Mailer();
       $mailer->sendMail($user['email'], $subject, $message);
     }
     elseif ($multiploAcesso) {
       $minutosEmEspera = round($tempoMultiploAcesso - $tempoEmEspera) + 1;
-      $this->messenger->append("Aparentemente sua conta foi acessada em outro computador nos últimos " .
-                              "$tempoMultiploAcesso minutos, caso não tenha sido você, " .
+      $this->messenger->append("Aparentemente sua conta foi acessada em outro computador nos Ãºltimos " .
+                              "$tempoMultiploAcesso minutos, caso nÃ£o tenha sido vocÃª, " .
                               "por favor, altere sua senha ou tente novamente em $minutosEmEspera minutos",
                               "error", false, "error");
     }

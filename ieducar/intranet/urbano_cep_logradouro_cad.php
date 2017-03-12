@@ -1,32 +1,32 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author      Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
  * @package     Core
  * @subpackage  urbano
  * @subpackage  Enderecamento
  * @subpackage  Logradouro
- * @since       Arquivo disponÌvel desde a vers„o 1.0.0
+ * @since       Arquivo dispon√≠vel desde a vers√£o 1.0.0
  * @version     $Id$
  */
 
@@ -274,7 +274,7 @@ class indice extends clsCadastro
       die();
     }
     else {
-      $this->mensagem = '… necessario adicionar pelo menos um CEP e bairro.<br>';
+      $this->mensagem = '√â necessario adicionar pelo menos um CEP e bairro.<br>';
 
       return FALSE;
     }
@@ -304,16 +304,16 @@ class indice extends clsCadastro
   }
 }
 
-// Instancia objeto de p·gina
+// Instancia objeto de p√°gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conte˙do
+// Instancia objeto de conte√∫do
 $miolo = new indice();
 
-// Atribui o conte˙do ‡† p·gina
+// Atribui o conte√∫do √†¬† p√°gina
 $pagina->addForm($miolo);
 
-// Gera o cÛdigo HTML
+// Gera o c√≥digo HTML
 $pagina->MakeAll();
 ?>
 
@@ -345,7 +345,7 @@ function getUf(xml_uf) {
     }
   }
   else {
-    campoUf.options[0].text = 'O pais n„o possui nenhum estado';
+    campoUf.options[0].text = 'O pais n√£o possui nenhum estado';
   }
 }
 
@@ -355,7 +355,7 @@ document.getElementById('sigla_uf').onchange = function() {
   var campoMunicipio= document.getElementById('idmun');
   campoMunicipio.length = 1;
   campoMunicipio.disabled = true;
-  campoMunicipio.options[0].text = 'Carregando municÌpio...';
+  campoMunicipio.options[0].text = 'Carregando munic√≠pio...';
 
   var xml_municipio = new ajax(getMunicipio);
   xml_municipio.envia('public_municipio_xml.php?uf=' + campoUf);
@@ -367,7 +367,7 @@ function getMunicipio(xml_municipio) {
 
   if (DOM_array.length) {
     campoMunicipio.length = 1;
-    campoMunicipio.options[0].text = 'Selecione um municÌpio';
+    campoMunicipio.options[0].text = 'Selecione um munic√≠pio';
     campoMunicipio.disabled = false;
 
     for (var i = 0; i < DOM_array.length; i++) {
@@ -376,7 +376,7 @@ function getMunicipio(xml_municipio) {
     }
   }
   else {
-    campoMunicipio.options[0].text = 'O estado n„o possui nenhum municÌpio';
+    campoMunicipio.options[0].text = 'O estado n√£o possui nenhum munic√≠pio';
   }
 }
 
@@ -416,7 +416,7 @@ function getLogradouro(xml_logradouro) {
     }
   }
   else {
-    campoLogradouro.options[0].text = 'O municÌpio n„o possui nenhum logradouro';
+    campoLogradouro.options[0].text = 'O munic√≠pio n√£o possui nenhum logradouro';
   }
 }
 
@@ -437,7 +437,7 @@ function getBairro(xml_bairro) {
       }
     }
     else {
-      campoBairro.options[0].text = 'O municÌpio n„o possui nenhum bairro';
+      campoBairro.options[0].text = 'O munic√≠pio n√£o possui nenhum bairro';
     }
   }
 }
@@ -475,11 +475,11 @@ function getBairroUnico(xml_bairro) {
     }
   }
   else {
-    campoBairro.options[0].text = 'O municÌpio n„o possui nenhum bairro';
+    campoBairro.options[0].text = 'O munic√≠pio n√£o possui nenhum bairro';
   }
 }
 
-// Quando seleciona um logradouro, busca por registros de CEP e bairro j·
+// Quando seleciona um logradouro, busca por registros de CEP e bairro j√°
 // existentes no banco de dados
 document.getElementById('idlog').onchange = function() {
   var campoLogradouro = document.getElementById('idlog').value;
@@ -530,7 +530,7 @@ function getBairro_(xml_bairro, DOM_array) {
       campoBairro.value = DOM_array[i].firstChild.data;
     }
     else {
-      campoBairro.options[0].text = 'O municÌpio n„o possui nenhum bairro';
+      campoBairro.options[0].text = 'O munic√≠pio n√£o possui nenhum bairro';
     }
   }
 }

@@ -9,7 +9,7 @@ class clsIndex extends clsBase
 
 	function Formular()
 	{
-		$this->SetTitulo( "Pessoas Físicas" );
+		$this->SetTitulo( "Pessoas FÃ­sicas" );
 		$this->processoAp = "43";
 		$this->addEstilo('localizacaoSistema');
 	}
@@ -19,7 +19,7 @@ class indice extends clsListagem
 {
 	function Gerar()
 	{
-		$this->titulo = "Pessoas Físicas";
+		$this->titulo = "Pessoas FÃ­sicas";
 		
 
 		$this->addCabecalhos( array( "Nome", "CPF") );

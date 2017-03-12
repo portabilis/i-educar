@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo disponÌvel desde a vers„o 1.0.0
+ * @since     Arquivo dispon√≠vel desde a vers√£o 1.0.0
  * @version   $Id$
  */
 
@@ -33,11 +33,11 @@ require_once 'include/pmieducar/geral.inc.php';
 /**
  * clsPmieducarServidorAlocacao class.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponÌvel desde a vers„o 1.0.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
  * @version   @@package_version@@
  */
 class clsPmieducarServidorAlocacao
@@ -55,13 +55,13 @@ class clsPmieducarServidorAlocacao
   var $periodo;
 
   /**
-   * Carga hor·ria m·xima para um perÌodo de alocaÁ„o (em horas).
+   * Carga hor√°ria m√°xima para um per√≠odo de aloca√ß√£o (em horas).
    * @var float
    */
   static $cargaHorariaMax = 36.0;
 
   /**
-   * Armazena o total de resultados obtidos na ˙ltima chamada ao mÈtodo lista().
+   * Armazena o total de resultados obtidos na √∫ltima chamada ao m√©todo lista().
    * @var int
    */
   var $_total;
@@ -79,39 +79,39 @@ class clsPmieducarServidorAlocacao
   var $_tabela;
 
   /**
-   * Lista separada por vÌrgula, com os campos que devem ser selecionados na
-   * prÛxima chamado ao mÈtodo lista().
+   * Lista separada por v√≠rgula, com os campos que devem ser selecionados na
+   * pr√≥xima chamado ao m√©todo lista().
    * @var string
    */
   var $_campos_lista;
 
   /**
-   * Lista com todos os campos da tabela separados por vÌrgula, padr„o para
-   * seleÁ„o no mÈtodo lista.
+   * Lista com todos os campos da tabela separados por v√≠rgula, padr√£o para
+   * sele√ß√£o no m√©todo lista.
    * @var string
    */
   var $_todos_campos;
 
   /**
-   * Valor que define a quantidade de registros a ser retornada pelo mÈtodo lista().
+   * Valor que define a quantidade de registros a ser retornada pelo m√©todo lista().
    * @var int
    */
   var $_limite_quantidade;
 
   /**
-   * Define o valor de offset no retorno dos registros no mÈtodo lista().
+   * Define o valor de offset no retorno dos registros no m√©todo lista().
    * @var int
    */
   var $_limite_offset;
 
   /**
-   * Define o campo para ser usado como padr„o de ordenaÁ„o no mÈtodo lista().
+   * Define o campo para ser usado como padr√£o de ordena√ß√£o no m√©todo lista().
    * @var string
    */
   var $_campo_order_by;
 
   /**
-   * Define o campo para ser usado como padr„o de agrupamento no mÈtodo lista().
+   * Define o campo para ser usado como padr√£o de agrupamento no m√©todo lista().
    * @var string
    */
   var $_campo_group_by;
@@ -177,7 +177,7 @@ class clsPmieducarServidorAlocacao
       $this->ativo = $ativo;
     }
 
-    // Valida a carga hor·ria
+    // Valida a carga hor√°ria
     if (is_string($carga_horaria)) {
       $datetime = explode(':', $carga_horaria);
       $minutos  = (((int) $datetime[0]) * 60) + (int) $datetime[1];
@@ -327,7 +327,7 @@ class clsPmieducarServidorAlocacao
   }
 
   /**
-   * Retorna uma lista de registros filtrados de acordo com os par‚metros.
+   * Retorna uma lista de registros filtrados de acordo com os par√¢metros.
    * @return array
    */
   function lista($int_cod_servidor_alocacao = NULL, $int_ref_ref_cod_instituicao = NULL,
@@ -528,7 +528,7 @@ class clsPmieducarServidorAlocacao
   }
 
   /**
-   * Exclui um registro baseado no perÌodo da alocaÁ„o.
+   * Exclui um registro baseado no per√≠odo da aloca√ß√£o.
    * @return bool
    */
   function excluir_horario()
@@ -545,16 +545,16 @@ class clsPmieducarServidorAlocacao
   }
 
   /**
-   * Substitui a alocaÁ„o entre servidores
+   * Substitui a aloca√ß√£o entre servidores
    *
-   * Substitui a alocaÁ„o entre servidores, atualizando a tabela
-   * pmieducar.servidor_alocacao. A ˙nica atualizaÁ„o na tabela ocorre no
+   * Substitui a aloca√ß√£o entre servidores, atualizando a tabela
+   * pmieducar.servidor_alocacao. A √∫nica atualiza√ß√£o na tabela ocorre no
    * identificador do servidor, o campo ref_cod_servidor. Para usar este
-   * mÈtodo, um objeto desta classe precisa estar instanciado com os atributos
+   * m√©todo, um objeto desta classe precisa estar instanciado com os atributos
    * do servidor a ser substituido.
    *
-   * @param  int  $int_ref_cod_servidor_substituto  CÛdigo do servidor que substituir· o atual
-   * @return bool TRUE em caso de sucesso, FALSE caso contr·rio
+   * @param  int  $int_ref_cod_servidor_substituto  C√≥digo do servidor que substituir√° o atual
+   * @return bool TRUE em caso de sucesso, FALSE caso contr√°rio
    */
   function substituir_servidor($int_ref_cod_servidor_substituto)
   {
@@ -591,7 +591,7 @@ class clsPmieducarServidorAlocacao
   }
 
   /**
-   * Define quais campos da tabela ser„o selecionados no mÈtodo Lista().
+   * Define quais campos da tabela ser√£o selecionados no m√©todo Lista().
    */
   function setCamposLista($str_campos)
   {
@@ -599,7 +599,7 @@ class clsPmieducarServidorAlocacao
   }
 
   /**
-   * Define que o mÈtodo Lista() deverpa retornar todos os campos da tabela.
+   * Define que o m√©todo Lista() deverpa retornar todos os campos da tabela.
    */
   function resetCamposLista()
   {
@@ -607,7 +607,7 @@ class clsPmieducarServidorAlocacao
   }
 
   /**
-   * Define limites de retorno para o mÈtodo Lista().
+   * Define limites de retorno para o m√©todo Lista().
    */
   function setLimite($intLimiteQtd, $intLimiteOffset = NULL)
   {
@@ -616,7 +616,7 @@ class clsPmieducarServidorAlocacao
   }
 
   /**
-   * Retorna a string com o trecho da query respons·vel pelo limite de
+   * Retorna a string com o trecho da query respons√°vel pelo limite de
    * registros retornados/afetados.
    *
    * @return string
@@ -634,7 +634,7 @@ class clsPmieducarServidorAlocacao
   }
 
   /**
-   * Define o campo para ser utilizado como ordenaÁ„o no mÈtodo Lista().
+   * Define o campo para ser utilizado como ordena√ß√£o no m√©todo Lista().
    */
   function setOrderby($strNomeCampo)
   {
@@ -644,7 +644,7 @@ class clsPmieducarServidorAlocacao
   }
 
   /**
-   * Retorna a string com o trecho da query respons·vel pela OrdenaÁ„o dos
+   * Retorna a string com o trecho da query respons√°vel pela Ordena√ß√£o dos
    * registros.
    *
    * @return string
@@ -658,7 +658,7 @@ class clsPmieducarServidorAlocacao
   }
 
   /**
-   * Define o campo para ser utilizado na agrupaÁ„o no mÈtodo Lista().
+   * Define o campo para ser utilizado na agrupa√ß√£o no m√©todo Lista().
    */
   function setGroupby($strNomeCampo)
   {
@@ -668,7 +668,7 @@ class clsPmieducarServidorAlocacao
   }
 
   /**
-   * Retorna a string com o trecho da query respons·vel pelo Agrupamento dos
+   * Retorna a string com o trecho da query respons√°vel pelo Agrupamento dos
    * registros.
    *
    * @return string

@@ -1,25 +1,25 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
+	*	@author Prefeitura Municipal de ItajaÃ­								 *
 	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
+	*   Pacote: i-PLB Software PÃºblico Livre e Brasileiro					 *
 	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÃ­			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
+	*	Este  programa  Ã©  software livre, vocÃª pode redistribuÃ­-lo e/ou	 *
+	*	modificÃ¡-lo sob os termos da LicenÃ§a PÃºblica Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a versÃ£o 2 da	 *
+	*	LicenÃ§a   como  (a  seu  critÃ©rio)  qualquer  versÃ£o  mais  nova.	 *
 	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  Ã© distribuÃ­do na expectativa de ser Ãºtil, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia implÃ­cita de COMERCIALI-	 *
+	*	ZAÃ‡ÃƒO  ou  de ADEQUAÃ‡ÃƒO A QUALQUER PROPÃ“SITO EM PARTICULAR. Con-	 *
+	*	sulte  a  LicenÃ§a  PÃºblica  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
+	*	VocÃª  deve  ter  recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral GNU	 *
+	*	junto  com  este  programa. Se nÃ£o, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
@@ -525,7 +525,7 @@
 		if ( $nivel_usuario == 1 )
 		{
 			$validacao = 'if ( !document.getElementById( "ref_cod_instituicao" ).value ) {
-					alert( "Por favor, selecione uma instituição" );
+					alert( "Por favor, selecione uma instituiÃ§Ã£o" );
 					return false;
 					}
 					if ( !document.getElementById( "ref_cod_escola" ).value) {
@@ -540,7 +540,7 @@
 					}
 					if ( !document.getElementById( "ref_cod_serie" ).value) {
 						//if( document.getElementById( "ref_cod_escola" ).value){
-							alert( "Por favor, selecione uma série" );
+							alert( "Por favor, selecione uma sÃ©rie" );
 							return false;
 					//	}else{
 						//	alert( "Por favor, selecione uma turma" );
@@ -564,7 +564,7 @@
 					return false;
 					}
 					if ( !document.getElementById( "ref_cod_serie" ).value ) {
-					alert( "Por favor, selecione uma série" );
+					alert( "Por favor, selecione uma sÃ©rie" );
 					return false;
 					}
 					if ( !document.getElementById( "ref_cod_turma" ).value ) {
@@ -580,7 +580,7 @@
 					return false;
 					}
 					if ( !document.getElementById( "ref_cod_serie" ).value ) {
-					alert( "Por favor, selecione uma série" );
+					alert( "Por favor, selecione uma sÃ©rie" );
 					return false;
 					}
 					if ( !document.getElementById( "ref_cod_turma" ).value ) {
@@ -665,7 +665,7 @@ if ( $nivel_usuario == 1 || $nivel_usuario == 2 )
 			}
 		}
 		else
-			campoEscola.options[0].text = 'A instituição não possui nenhuma escola';
+			campoEscola.options[0].text = 'A instituiÃ§Ã£o nÃ£o possui nenhuma escola';
 	}
 <?
 }
@@ -687,7 +687,7 @@ function getCurso( xml_curso )
 		}
 	}
 	else
-		campoCurso.options[0].text = 'A escola não possui nenhum curso';
+		campoCurso.options[0].text = 'A escola nÃ£o possui nenhum curso';
 }
 
 function getSerie( xml_serie )
@@ -697,7 +697,7 @@ function getSerie( xml_serie )
 	if(DOM_array.length)
 	{
 		campoSerie.length = 1;
-		campoSerie.options[0].text = 'Selecione uma série';
+		campoSerie.options[0].text = 'Selecione uma sÃ©rie';
 		campoSerie.disabled = false;
 
 		for( var i = 0; i < DOM_array.length; i++ )
@@ -706,7 +706,7 @@ function getSerie( xml_serie )
 		}
 	}
 	else
-		campoSerie.options[0].text = 'A escola/curso não possui nenhuma série';
+		campoSerie.options[0].text = 'A escola/curso nÃ£o possui nenhuma sÃ©rie';
 }
 
 function getTurma( xml_turma )
@@ -725,6 +725,6 @@ function getTurma( xml_turma )
 		}
 	}
 	else
-		campoTurma.options[0].text = 'A escola/série não possui nenhuma turma';
+		campoTurma.options[0].text = 'A escola/sÃ©rie nÃ£o possui nenhuma turma';
 }
 </script>
