@@ -624,7 +624,7 @@ class clsBase extends clsConfig
   {
     $retorno = '';
     $listaBanners = array();
-    $this->db()->Consulta("SELECT caminho, title, prioridade, link FROM portal_banner WHERE lateral=1 ORDER BY prioridade, title");
+    $this->db()->Consulta("SELECT caminho, title, prioridade, link FROM portal_banner WHERE lateral_=1 ORDER BY prioridade, title");
 
     while ($this->db()->ProximoRegistro()) {
       list($caminho, $title, $prioridade, $link) = $this->db()->Tupla();

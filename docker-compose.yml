@@ -7,14 +7,14 @@ ieducar_1204:
   volumes:
     - .:/home/ieducar/ieducar
   links:
-    - postgres
+    - postgres95
   container_name: ieducar_1204
 
-postgres:
+postgres95:
   volumes:
     - /var/lib/postgresql/data
   image: postgres:9.5
   environment:
     - POSTGRES_PASSWORD=postgres
   ports:
-    - "5433:5432"
+    - "5430:5432"
