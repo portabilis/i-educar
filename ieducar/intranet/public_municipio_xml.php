@@ -32,7 +32,7 @@
   require_once 'Portabilis/Utils/DeprecatedXmlApi.php';
   Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 
-	echo "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n<query xmlns=\"sugestoes\">\n";
+	echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<query xmlns=\"sugestoes\">\n";
 	if( is_string( $_GET["uf"] ) )
 	{
 		$db = new clsBanco();

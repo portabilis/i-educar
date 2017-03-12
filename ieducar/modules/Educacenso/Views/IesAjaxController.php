@@ -12,7 +12,7 @@ $iesUf = array_merge($iesUf, array($iesMapper->find(array('ies' => 9999999))));
 
 header('Content-type: text/xml');
 
-echo '<?xml version="1.0" encoding="ISO-8859-1"?>' . PHP_EOL;
+echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL;
 echo '<query xmlns="sugestoes">' . PHP_EOL;
 
 foreach ($iesUf as $ies) {

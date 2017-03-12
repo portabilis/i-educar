@@ -106,7 +106,7 @@
 		<script type='text/javascript' src='scripts/novo.js'></script>
 		<script type='text/javascript' src='scripts/dom.js?2'></script>
 		
-		<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'>
+		<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>
 		<meta http-equiv=\"Pragma\" content=\"no-cache\">
 		<meta http-equiv=\"Expires\" content=\"-1\">
 		<!-- #&REFRESH&# -->
@@ -363,7 +363,7 @@
 		<script type='text/javascript' src='scripts/novo.js'></script>
 		<script type='text/javascript' src='scripts/dom.js?2'></script>
 		
-		<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'>
+		<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>
 		<meta http-equiv=\"Pragma\" content=\"no-cache\">
 		<meta http-equiv=\"Expires\" content=\"-1\">
 		<!-- #&REFRESH&# -->

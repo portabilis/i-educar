@@ -37,7 +37,7 @@ class clsEmail
 	var $tipo;
 	var $compilado;
 	var $conteudoCompilado;
-	var $charset = "iso-8859-1";
+	var $charset = "UTF-8";
 	
 	function  clsEmail( $destinatarios, $assunto, $conteudo, $template=false, $remetente=false, $remetenteNome=false, $replyto=false, $tipo="html", $strFooter=false )
 	{

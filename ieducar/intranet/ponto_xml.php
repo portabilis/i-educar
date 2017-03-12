@@ -34,12 +34,12 @@ require_once 'include/modules/clsModulesItinerarioTransporteEscolar.inc.php';
 // Id do país na tabela public.pais
 $id = isset($_GET['rota']) ? $_GET['rota'] : NULL;
 
-header('Content-type: text/xml; charset=iso-8859-1');
+header('Content-type: text/xml; charset=UTF-8');
 
 require_once 'Portabilis/Utils/DeprecatedXmlApi.php';
 Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 
-print '<?xml version="1.0" encoding="iso-8859-1"?>' . PHP_EOL;
+print '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL;
 print '<query>' . PHP_EOL;
 
 if ($id == strval(intval($id))) {

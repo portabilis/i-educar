@@ -38,7 +38,7 @@ Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 
 require_once 'App/Model/MatriculaSituacao.php';
 
-print '<?xml version="1.0" encoding="ISO-8859-1"?>' . "\n";
+print '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
 print '<query xmlns="sugestoes">' . "\n";
 
 @session_start();

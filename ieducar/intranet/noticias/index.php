@@ -1,26 +1,26 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 *																	     *
-*	@author Prefeitura Municipal de Itajaí								 *
+*	@author Prefeitura Municipal de Itajaï¿½								 *
 *	@version 1.0.0b														 *
 *	@updated 26/03/2006													 *
-*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
+*   Pacote: i-PLB Software Pï¿½blico Livre e Brasileiro					 *
 *																		 *
-*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
+*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaï¿½			 *
 *						prefeitura@itajai.sc.gov.br						 *
 *																		 *
-*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
+*	Este  programa  ï¿½  software livre, vocï¿½ pode redistribuï¿½-lo e/ou	 *
+*	modificï¿½-lo sob os termos da Licenï¿½a Pï¿½blica Geral GNU, conforme	 *
+*	publicada pela Free  Software  Foundation,  tanto  a versï¿½o 2 da	 *
+*	Licenï¿½a   como  (a  seu  critï¿½rio)  qualquer  versï¿½o  mais  nova.	 *
 *																		 *
-*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
+*	Este programa  ï¿½ distribuï¿½do na expectativa de ser ï¿½til, mas SEM	 *
+*	QUALQUER GARANTIA. Sem mesmo a garantia implï¿½cita de COMERCIALI-	 *
+*	ZAï¿½ï¿½O  ou  de ADEQUAï¿½ï¿½O A QUALQUER PROPï¿½SITO EM PARTICULAR. Con-	 *
+*	sulte  a  Licenï¿½a  Pï¿½blica  Geral  GNU para obter mais detalhes.	 *
 *																		 *
-*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-*	junto  com  este  programa. Se não, escreva para a Free Software	 *
+*	Vocï¿½  deve  ter  recebido uma cï¿½pia da Licenï¿½a Pï¿½blica Geral GNU	 *
+*	junto  com  este  programa. Se nï¿½o, escreva para a Free Software	 *
 *	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 *	02111-1307, USA.													 *
 *																		 *
@@ -45,13 +45,13 @@ $db->Consulta("INSERT INTO acesso (data_hora, ip_externo, ip_interno, cod_pessoa
 $xml = new clsXML();
 $xml->criaTag( "rss", "version=\"2.0\"", "", true );
 	$xml->criaTag( "channel", "", "", true );
-		$xml->criaTag( "title", "", "Prefeitura de Itajaí - Noticias", false );
+		$xml->criaTag( "title", "", "Prefeitura de Itajaï¿½ - Noticias", false );
 		$xml->criaTag( "link", "", "{$objConfig->arrayConfig["strSiteUrl"]}", false );
-		$xml->criaTag( "description", "", "Notícias", false );
+		$xml->criaTag( "description", "", "Notï¿½cias", false );
 		$xml->criaTag( "language", "", "pt-br", false );
 		$xml->criaTag( "copyright", "", "GPL", false );
 		$xml->criaTag( "image", "", "", true );
-			$xml->criaTag( "title", "", "Prefeitura de Itajaí", false );
+			$xml->criaTag( "title", "", "Prefeitura de Itajaï¿½", false );
 			$xml->criaTag( "width", "", "203", false );
 			$xml->criaTag( "height", "", "95", false );
 			$xml->criaTag( "link", "", "{$this->arrayConfig["strSiteUrl"]}", false );
@@ -81,6 +81,6 @@ $xml->criaTag( "rss", "version=\"2.0\"", "", true );
 			$xml->voltaPai();
 		}
 
-$xml->codificacaoXML = "ISO-8859-1";
+$xml->codificacaoXML = "UTF-8";
 echo $xml->geraXml();
 ?>

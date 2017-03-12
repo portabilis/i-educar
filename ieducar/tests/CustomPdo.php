@@ -1,51 +1,51 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gestï¿½o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaï¿½
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa ï¿½ software livre; vocï¿½ pode redistribuï¿½-lo e/ou modificï¿½-lo
+ * sob os termos da Licenï¿½a Pï¿½blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versï¿½o 2 da Licenï¿½a, como (a seu critï¿½rio)
+ * qualquer versï¿½o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa ï¿½ distribuï¿½ï¿½do na expectativa de que seja ï¿½til, porï¿½m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implï¿½ï¿½cita de COMERCIABILIDADE OU
+ * ADEQUAï¿½ï¿½O A UMA FINALIDADE ESPECï¿½FICA. Consulte a Licenï¿½a Pï¿½blica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Vocï¿½ deve ter recebido uma cï¿½pia da Licenï¿½a Pï¿½blica Geral do GNU junto
+ * com este programa; se nï¿½o, escreva para a Free Software Foundation, Inc., no
+ * endereï¿½o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @author    Eriksen Costa Paixï¿½o <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   IntegrationTests
- * @since     Arquivo disponível desde a versão 1.1.0
+ * @since     Arquivo disponï¿½vel desde a versï¿½o 1.1.0
  * @version   $Id$
  */
 
 /**
  * CustomPdo class.
  *
- * Sobrescreve métodos específicos de clsBanco para permitir testes de
- * integração com o DbUnit, usando uma conexão Pdo por trás das cenas.
+ * Sobrescreve mï¿½todos especï¿½ficos de clsBanco para permitir testes de
+ * integraï¿½ï¿½o com o DbUnit, usando uma conexï¿½o Pdo por trï¿½s das cenas.
  *
- * Os métodos sobrescritos tem comportamento semelhante ao original, exceto
- * que, ao invés de usar uma conexão ext/pgsql, a ext/pdo_pgsql é utilizada.
+ * Os mï¿½todos sobrescritos tem comportamento semelhante ao original, exceto
+ * que, ao invï¿½s de usar uma conexï¿½o ext/pgsql, a ext/pdo_pgsql ï¿½ utilizada.
  *
- * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @author    Eriksen Costa Paixï¿½o <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   IntegrationTests
- * @since     Classe disponível desde a versão 1.1.0
- * @todo      Adicionar a verificação a extensão mbstring antes de fazer a
- *   conversão em _decodeUtf8 já que não é padrão no PHP (podendo ser
- *   desabilitada). Como é usada apenas para os testes, não interfere no uso
- *   da aplicação.
+ * @since     Classe disponï¿½vel desde a versï¿½o 1.1.0
+ * @todo      Adicionar a verificaï¿½ï¿½o a extensï¿½o mbstring antes de fazer a
+ *   conversï¿½o em _decodeUtf8 jï¿½ que nï¿½o ï¿½ padrï¿½o no PHP (podendo ser
+ *   desabilitada). Como ï¿½ usada apenas para os testes, nï¿½o interfere no uso
+ *   da aplicaï¿½ï¿½o.
  * @version   @@package_version@@
  */
 class CustomPdo extends clsBanco
@@ -89,7 +89,7 @@ class CustomPdo extends clsBanco
   }
 
   /**
-   * Retorna a instância PDO atual.
+   * Retorna a instï¿½ncia PDO atual.
    * @return PDO
    */
   public function getPdo()
@@ -98,12 +98,12 @@ class CustomPdo extends clsBanco
   }
 
   /**
-   * Sobrescreve o método Consulta(), usando a mesma conexão PDO utilizada
+   * Sobrescreve o mï¿½todo Consulta(), usando a mesma conexï¿½o PDO utilizada
    * pelo DbUnit.
    *
    * @param  string $sql
    * @param  bool   $reescrever
-   * @return CustomPdo Provê interface fluída
+   * @return CustomPdo Provï¿½ interface fluï¿½da
    * @see    intranet/include/clsBancoSQL_#Consulta($consulta)
    */
   public function Consulta($sql, $reescrever = TRUE)
@@ -140,13 +140,13 @@ class CustomPdo extends clsBanco
   }
 
   /**
-   * Callback para ProximoRegistro(), converte uma referência para ISO-8859-1
-   * caso esteja em UTF-8. Isso é feito pois o SQLite não permite mudar o
-   * encoding de uma conexão ativa para ISO-8859-1.
+   * Callback para ProximoRegistro(), converte uma referï¿½ncia para UTF-8
+   * caso esteja em UTF-8. Isso ï¿½ feito pois o SQLite nï¿½o permite mudar o
+   * encoding de uma conexï¿½o ativa para UTF-8.
    *
    * @link http://www.sqlite.org/pragma.html Veja PRAGMA encoding para mais
-   *   informações sobre os encodings suportados pelo SQLite
-   * @see  Docblock de CustomPdo para mais informações sobre mbstring
+   *   informaï¿½ï¿½es sobre os encodings suportados pelo SQLite
+   * @see  Docblock de CustomPdo para mais informaï¿½ï¿½es sobre mbstring
    */
   protected function _decodeUtf8(&$item, $key)
   {

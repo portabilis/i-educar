@@ -455,8 +455,8 @@ EOF;
         }
 
         $yamls = array(
-            iconv('UTF-8', 'ISO-8859-1', "foo: 'äöüß'"),
-            iconv('UTF-8', 'ISO-8859-15', "euro: '€'"),
+            iconv('UTF-8', 'UTF-8', "foo: 'äöüß'"),
+            iconv('UTF-8', 'UTF-85', "euro: '€'"),
             iconv('UTF-8', 'CP1252', "cp1252: '©ÉÇáñ'"),
         );
 

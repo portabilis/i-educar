@@ -57,7 +57,7 @@
 					<title> Gráfico </title>
 					<link rel=stylesheet type='text/css' href='styles/novo.css'>
 					</script>	
-					<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'>
+					<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>
 				</head>
 				<body>			
 			<table border=\"0\" cellpadding=\"0\" cellspacing=\"1\" align=\"center\">\n";

@@ -236,7 +236,7 @@ $port="5432";
         $this->pointer[]=array("type"=>"SetFillColor","r"=>$fillcolor[r],"g"=>$fillcolor[g],"b"=>$fillcolor[b],"hidden_type"=>"fillcolor");
         $this->pointer[]=array("type"=>"SetFont","font"=>$font,"fontstyle"=>$fontstyle,"fontsize"=>$fontsize,"hidden_type"=>"font");
         //"height"=>$data->reportElement[height]
-        // line updated to offer support to ISO-8859-1 encoding (@ Tiago de Oliveira Camargo, Portabilis Tecnologia. E-mail: tiago.camargo@portabilis.com.br)
+        // line updated to offer support to UTF-8 encoding (@ Tiago de Oliveira Camargo, Portabilis Tecnologia. E-mail: tiago.camargo@portabilis.com.br)
 		//$this->pointer[]=array("type"=>"MultiCell","width"=>$data->reportElement[width],"height"=>$height,"txt"=>$data->text,"border"=>$border,"align"=>$align,"fill"=>$fill,"hidden_type"=>"statictext","soverflow"=>$stretchoverflow,"poverflow"=>$printoverflow);
 	    $this->pointer[]=array("type"=>"MultiCell","width"=>$data->reportElement[width],"height"=>$height,"txt"=>utf8_decode($data->text),"border"=>$border,"align"=>$align,"fill"=>$fill,"hidden_type"=>"statictext","soverflow"=>$stretchoverflow,"poverflow"=>$printoverflow);
 
@@ -468,13 +468,13 @@ $port="5432";
     public function outpage($out_method="I") {
         if($this->lang=="cn") {
             if($this->arrayPageSetting[orientation]=="P") {
-                // line updated to offer support to ISO-8859-1 encoding (@ Tiago de Oliveira Camargo, Portabilis Tecnologia. E-mail: tiago.camargo@portabilis.com.br)
-				$this->pdf=new PDF_Unicode($this->arrayPageSetting[orientation],'pt',array($this->arrayPageSetting[pageWidth],$this->arrayPageSetting[pageHeight]), 'ISO-8859-1');
+                // line updated to offer support to UTF-8 encoding (@ Tiago de Oliveira Camargo, Portabilis Tecnologia. E-mail: tiago.camargo@portabilis.com.br)
+				$this->pdf=new PDF_Unicode($this->arrayPageSetting[orientation],'pt',array($this->arrayPageSetting[pageWidth],$this->arrayPageSetting[pageHeight]), 'UTF-8');
                 $this->pdf->AddUniGBhwFont("uGB");
             }
             else {
-                // line updated to offer support to ISO-8859-1 encoding (@ Tiago de Oliveira Camargo, Portabilis Tecnologia. E-mail: tiago.camargo@portabilis.com.br)
-				$this->pdf=new PDF_Unicode($this->arrayPageSetting[orientation],'pt',array($this->arrayPageSetting[pageHeight],$this->arrayPageSetting[pageWidth]), 'ISO-8859-1');
+                // line updated to offer support to UTF-8 encoding (@ Tiago de Oliveira Camargo, Portabilis Tecnologia. E-mail: tiago.camargo@portabilis.com.br)
+				$this->pdf=new PDF_Unicode($this->arrayPageSetting[orientation],'pt',array($this->arrayPageSetting[pageHeight],$this->arrayPageSetting[pageWidth]), 'UTF-8');
                 $this->pdf->AddUniGBhwFont("uGB");
             }
         }
@@ -679,7 +679,7 @@ $port="5432";
         $checkpoint=$this->arraydetail[0][y_axis];
         $tempY=$this->arraydetail[0][y_axis];
 		
-		if (is_array($this->arraysqltable) && count($this->arraysqltable) > 0){//mudei aqui para resolver o erro e tua dúvida sobre quando vier vaziu.
+		if (is_array($this->arraysqltable) && count($this->arraysqltable) > 0){//mudei aqui para resolver o erro e tua dï¿½vida sobre quando vier vaziu.
 
 			foreach($this->arraysqltable as $row) {
 
