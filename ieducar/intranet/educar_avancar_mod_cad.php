@@ -80,7 +80,7 @@ class indice extends clsCadastro
     $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'curso', 'serie'));
     $this->inputsHelper()->dynamic('turma', array('label' => 'Selecione a turma do ano anterior', 'required' => FALSE));
     $this->inputsHelper()->dynamic('anoLetivo', array('label' => 'Ano destino'), $anoLetivoHelperOptions);
-    $this->inputsHelper()->date('data_matricula', array('label' => 'Data da matr?ula', 'placeholder' => 'dd/mm/yyyy'));
+    $this->inputsHelper()->date('data_matricula', array('label' => 'Data da matricula', 'placeholder' => 'dd/mm/yyyy'));
 
     $scripts = array('/modules/Cadastro/Assets/Javascripts/RematriculaAutomatica.js');
     Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
@@ -180,7 +180,7 @@ class indice extends clsCadastro
           $this->mensagem .= "{$nome} </br>";
         }
         $this->mensagem .= "</br>Por favor, cadastre o INEP do(s) aluno(s) em: Cadastros > Aluno > Alunos > Campo: C?igo INEP.";
-      }elseif ($this->existeMatriculasAprovadasReprovadas($escolaId, $cursoId, $serieId, $this->ano_letivo)) {
+      }elseif ($this->existeMatriculasAprovadasReprovadas($escolaId, $cursoId, $serieId, $turmaId, $this->ano_letivo)) {
         $this->mensagem = "<span class='notice'>Nenhum aluno rematriculado. Certifique-se que a turma possui alunos aprovados ou reprovados em ".($this->ano_letivo-1).".</span>";
       }else{
         $this->mensagem = Portabilis_String_Utils::toLatin1("<span class='notice'>Os alunos desta série já encontram-se rematriculados, sendo assim, favor verificar se as enturmações já foram efetuadas em Movimentação > Enturmação.</span>");
@@ -286,7 +286,7 @@ class indice extends clsCadastro
     $objMatricula = new clsPmieducarMatriculaTurma();
     $objMatricula->setOrderby("nome");
     $anoAnterior = $this->ano_letivo - 1;
-    $matriculas = $objMatricula->lista4($escolaId, $cursoId, $serieId, $turmaId, $ano, FALSE);
+    $matriculas = $objMatricula->lista4($escolaId, $cursoId, $serieId, $turmaId, $anoAnterior);
     $qtdMatriculasAprovadasReprovadas = 0;
 
     foreach ($matriculas as $m) {
@@ -294,7 +294,9 @@ class indice extends clsCadastro
         $qtdMatriculasAprovadasReprovadas++;
     }
 
-    return ($qtdMatriculasAprovadasReprovadas != 0) ? true : false;
+    //var_dump(($qtdMatriculasAprovadasReprovadas != 0) ? true : false);die;
+
+    return ($qtdMatriculasAprovadasReprovadas == 0) ? true : false;
   }
 
   protected function rematricularAlunoAprovado($escolaId, $serieId, $ano, $alunoId) {
