@@ -1003,7 +1003,7 @@ class clsPmieducarMatriculaTurma
 
   function lista4($escolaId = NULL, $cursoId = NULL, $serieId = NULL, $turmaId = NULL, $ano = NULL, $saida_escola = FALSE){
 
-    $sql = "SELECT {$this->_campos_lista}, ref_cod_aluno
+    $sql = "SELECT {$this->_campos_lista}, ref_cod_aluno, m.aprovado
               FROM {$this->_tabela} mt
              INNER JOIN {$this->_schema}matricula m ON (m.cod_matricula = mt.ref_cod_matricula)";
     $filtros = " WHERE m.ativo = 1 AND mt.ativo = 1 ";
