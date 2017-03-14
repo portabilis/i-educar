@@ -619,6 +619,11 @@ class clsPmieducarTransferenciaSolicitacao
 			$filtros .= "{$whereAnd} m.ref_ref_cod_serie = '{$int_ref_cod_serie}'";
 			$whereAnd = " AND ";
 		}
+		if( is_numeric( $int_ativo ) )
+		{
+			$filtros .= "{$whereAnd} ts.ativo = '{$int_ativo}'";
+			$whereAnd = " AND ";
+		}
 		if($mes)
 		{
 			$mes = (int) $mes;
