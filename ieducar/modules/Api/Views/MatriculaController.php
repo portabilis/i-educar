@@ -273,15 +273,13 @@ class MatriculaController extends ApiCoreController
                          coalesce(matricula_turma.data_enturmacao::date::varchar, '') AS data_entrada,
                          coalesce(matricula_turma.data_exclusao::date::varchar, matricula.data_cancel::date::varchar, '') AS data_saida,
                          coalesce(matricula_turma.updated_at::varchar, '') AS data_atualizacao,
-                         (CASE WHEN matricula.aprovado = 4 THEN
-                           CASE WHEN matricula_turma.transferido = 't' THEN
-                             TRUE
-                           ELSE
-                             FALSE
-                           END
-                         ELSE
-                          FALSE
-                         END) as apresentar_fora_da_data
+                         (CASE
+                              WHEN matricula.aprovado = 4
+                                   AND matricula_turma.transferido = TRUE THEN TRUE
+                              WHEN matricula.aprovado = 3
+                                   AND matricula_turma.remanejado = TRUE THEN TRUE
+                              ELSE FALSE
+                          END) AS apresentar_fora_da_data
                   FROM matricula
                   LEFT JOIN matricula_turma ON matricula_turma.ref_cod_matricula = matricula.cod_matricula
                   WHERE cod_matricula = $1";
