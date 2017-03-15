@@ -128,6 +128,7 @@ class indice extends clsListagem
 			null,
 			null,
 			null,
+			null,
 			$this->isbn ? $this->isbn : null,
 			null,
 			null,
@@ -139,6 +140,7 @@ class indice extends clsListagem
 			null,
 			$this->ref_acervo_autor
 		);
+		
 		$total = $obj_acervo->_total;
 
 		// monta a lista
