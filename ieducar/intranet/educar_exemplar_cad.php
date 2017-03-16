@@ -182,7 +182,7 @@ class indice extends clsCadastro
 				return false;
 			}
 
-			$obj = new clsPmieducarExemplar($this->cod_exemplar, $this->ref_cod_fonte, $this->ref_cod_motivo_baixa, $this->ref_cod_acervo, $this->ref_cod_situacao, $this->pessoa_logada, $this->pessoa_logada, $this->permite_emprestimo, $this->preco, $this->data_cadastro, $this->data_exclusao, $this->ativo, $this->data_aquisicao, $this->getTombo());
+			$obj = new clsPmieducarExemplar($this->cod_exemplar, $this->ref_cod_fonte, $this->ref_cod_motivo_baixa, $this->ref_cod_acervo, $this->ref_cod_situacao, $this->pessoa_logada, $this->pessoa_logada, $this->permite_emprestimo, $this->preco, $this->data_cadastro, $this->data_exclusao, $this->ativo, $this->data_aquisicao, $this->getTombo(), $this->getSequencial());
 			$cadastrou = $obj->cadastra();
 			if (!$cadastrou)
 			{
@@ -271,6 +271,12 @@ class indice extends clsCadastro
     }
 
     return $tombo;
+  }
+
+  protected function getSequencial(){
+  	$exemplar = new clsPmieducarExemplar();
+	$sequencial = $exemplar->getProximoSequencialObra($this->ref_cod_acervo);
+	return $sequencial;
   }
 
 }
