@@ -48,6 +48,7 @@ class clsPmieducarExemplar
 	var $ativo;
 	var $data_aquisicao;
 	var $tombo;
+	var $sequencial;
 
 	// propriedades padrao
 
@@ -113,14 +114,14 @@ class clsPmieducarExemplar
 	 *
 	 * @return object
 	 */
-	function clsPmieducarExemplar( $cod_exemplar = null, $ref_cod_fonte = null, $ref_cod_motivo_baixa = null, $ref_cod_acervo = null, $ref_cod_situacao = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $permite_emprestimo = null, $preco = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $data_aquisicao = null, $tombo = null )
+	function clsPmieducarExemplar( $cod_exemplar = null, $ref_cod_fonte = null, $ref_cod_motivo_baixa = null, $ref_cod_acervo = null, $ref_cod_situacao = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $permite_emprestimo = null, $preco = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $data_aquisicao = null, $tombo = null, $sequencial = null )
 	{
 
 		$db = new clsBanco();
 		$this->_schema = "pmieducar.";
 		$this->_tabela = "{$this->_schema}exemplar";
 
-		$this->_campos_lista = $this->_todos_campos = "e.cod_exemplar, e.ref_cod_fonte, e.ref_cod_motivo_baixa, e.ref_cod_acervo, e.ref_cod_situacao, e.ref_usuario_exc, e.ref_usuario_cad, e.permite_emprestimo, e.preco, e.data_cadastro, e.data_exclusao, e.ativo, e.data_aquisicao, e.tombo";
+		$this->_campos_lista = $this->_todos_campos = "e.cod_exemplar, e.ref_cod_fonte, e.ref_cod_motivo_baixa, e.ref_cod_acervo, e.ref_cod_situacao, e.ref_usuario_exc, e.ref_usuario_cad, e.permite_emprestimo, e.preco, e.data_cadastro, e.data_exclusao, e.ativo, e.data_aquisicao, e.tombo, e.sequencial";
 
 		if( is_numeric( $ref_cod_fonte ) )
 		{
@@ -324,6 +325,10 @@ class clsPmieducarExemplar
 		{
 			$this->tombo = $tombo;
 		}
+		if (is_numeric($sequencial))
+		{
+			$this->sequencial = $sequencial;
+		}
 	}
 
 	/**
@@ -336,7 +341,7 @@ class clsPmieducarExemplar
 		if(!is_numeric( $this->preco ))
 			$this->preco = 0.00;
 		
-		if( is_numeric( $this->ref_cod_fonte ) && is_numeric( $this->ref_cod_acervo ) && is_numeric( $this->ref_cod_situacao ) && is_numeric( $this->ref_usuario_cad ) && is_numeric( $this->permite_emprestimo ) && is_numeric( $this->preco ) )
+		if( is_numeric( $this->ref_cod_fonte ) && is_numeric( $this->ref_cod_acervo ) && is_numeric( $this->ref_cod_situacao ) && is_numeric( $this->ref_usuario_cad ) && is_numeric( $this->permite_emprestimo ) )
 		{
 			$db = new clsBanco();
 
@@ -390,6 +395,12 @@ class clsPmieducarExemplar
 			{
 				$campos .= "{$gruda}tombo";
 				$valores .= "{$gruda}'{$this->tombo}'";
+				$gruda = ", ";
+			}
+			if (is_numeric($this->sequencial))
+			{
+				$campos .= "{$gruda}sequencial";
+				$valores .= "{$gruda}'{$this->sequencial}'";
 				$gruda = ", ";
 			}
 			$campos .= "{$gruda}data_cadastro";
@@ -1049,6 +1060,16 @@ class clsPmieducarExemplar
 			return " ORDER BY {$this->_campo_order_by} ";
 		}
 		return "";
+	}
+
+	function getProximoSequencialObra($codigoObra){
+		$sql = "SELECT MAX(sequencial) AS sequencial
+		          FROM pmieducar.exemplar
+		         WHERE exemplar.ref_cod_acervo = $codigoObra";
+
+		$db = new clsBanco();
+		$ultimoSequencial = $db->CampoUnico($sql);
+		return $ultimoSequencial + 1;
 	}
 
 }
