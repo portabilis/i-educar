@@ -172,6 +172,11 @@ class indice extends clsCadastro
 
 
   function removerEnturmacao($matriculaId, $turmaId, $remanejado = FALSE) {
+
+    if (!$this->data_enturmacao) {
+      $this->data_enturmacao = date('Y-m-d');
+    }
+
     $sequencialEnturmacao = $this->getSequencialEnturmacaoByTurmaId($matriculaId, $turmaId);
     $enturmacao = new clsPmieducarMatriculaTurma($matriculaId,
                                                  $turmaId,
