@@ -1505,7 +1505,16 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $media = $mediaComponente[0]->media;
       }
 
-      if ($etapa == $totalEtapasComponente && $media < $this->getRegra()->media && $this->hasRecuperacao()) {
+      $situacaoAtualComponente = $mediaComponente[0]->situacao;
+
+      $permiteSituacaoEmExame = TRUE;
+
+      if ($situacaoAtualComponente == App_Model_MatriculaSituacao::REPROVADO ||
+          $situacaoAtualComponente == App_Model_MatriculaSituacao::APROVADO) {
+        $permiteSituacaoEmExame = FALSE;
+      }
+
+      if ($etapa == $totalEtapasComponente && $media < $this->getRegra()->media && $this->hasRecuperacao() && $permiteSituacaoEmExame) {
 
         // lets make some changes here >:)
         $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::EM_EXAME;
@@ -3017,12 +3026,12 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     catch (Exception $e) {
       // Prossegue, sem problemas.
     }
+    $notaComponenteCurricularMedia->situacao = $this->getSituacaoComponentesCurriculares()->componentesCurriculares[$componente]->situacao;
 
-  // Salva a média
+    // Salva a média
     $this->getNotaComponenteMediaDataMapper()->save($notaComponenteCurricularMedia);
     //Atualiza a situação de acordo com o que foi inserido na média anteriormente
     $notaComponenteCurricularMedia->markOld();
-    $notaComponenteCurricularMedia->situacao = $this->getSituacaoComponentesCurriculares()->componentesCurriculares[$id]->situacao;
     $this->getNotaComponenteMediaDataMapper()->save($notaComponenteCurricularMedia);
   }
 
