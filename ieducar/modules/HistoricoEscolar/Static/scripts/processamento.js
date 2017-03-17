@@ -653,4 +653,13 @@
     $('#tableLocalizacao').prependTo($formFilter.parent());
 
   });
+
+  $("#alunos_dependencia").click(function(){
+    if ((this).checked) {
+      $('.tr_posicao').hide();
+    } else{
+      $('.tr_posicao').show();
+    }
+  });
+
 })(jQuery);
