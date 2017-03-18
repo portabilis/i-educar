@@ -1,25 +1,25 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 *																	     *
-*	@author Prefeitura Municipal de Itajaí								 *
+*	@author Prefeitura Municipal de ItajaÃ­								 *
 *	@updated 29/03/2007													 *
-*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
+*   Pacote: i-PLB Software PÃºblico Livre e Brasileiro					 *
 *																		 *
-*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
+*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÃ­			 *
 *						ctima@itajai.sc.gov.br					    	 *
 *																		 *
-*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
+*	Este  programa  Ã©  software livre, vocÃª pode redistribuÃ­-lo e/ou	 *
+*	modificÃ¡-lo sob os termos da LicenÃ§a PÃºblica Geral GNU, conforme	 *
+*	publicada pela Free  Software  Foundation,  tanto  a versÃ£o 2 da	 *
+*	LicenÃ§a   como  (a  seu  critÃ©rio)  qualquer  versÃ£o  mais  nova.	 *
 *																		 *
-*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
+*	Este programa  Ã© distribuÃ­do na expectativa de ser Ãºtil, mas SEM	 *
+*	QUALQUER GARANTIA. Sem mesmo a garantia implÃ­cita de COMERCIALI-	 *
+*	ZAÃ‡ÃƒO  ou  de ADEQUAÃ‡ÃƒO A QUALQUER PROPÃ“SITO EM PARTICULAR. Con-	 *
+*	sulte  a  LicenÃ§a  PÃºblica  Geral  GNU para obter mais detalhes.	 *
 *																		 *
-*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-*	junto  com  este  programa. Se não, escreva para a Free Software	 *
+*	VocÃª  deve  ter  recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral GNU	 *
+*	junto  com  este  programa. Se nÃ£o, escreva para a Free Software	 *
 *	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 *	02111-1307, USA.													 *
 *																		 *
@@ -111,7 +111,7 @@ class relatoriosPref
 		$this->pdf->Write( $this->numeroPagina, $this->pdf->largura - $this->margem_direita - 25, 125, 15, 80, 'Arial', 10, "#000000", "center" );
 		// insere o brasao da prefeitura
 		$this->pdf->InsertJpng( "gif", "imagens/brasao.gif", $this->margem_esquerda, 85, 0.35  );
-		$this->pdf->Write( "Prefeitura de Itajaí\nCentro Tecnologico de Informação e Modernização Administrativa.\nRua Alberto Werner, 100 - Vila Operária\nCEP. 88304-053 - Itajaí - SC", 120, 110, 500, 80, 'Arial', 10, "#000000", "left" );
+		$this->pdf->Write( "Prefeitura de ItajaÃ­\nCentro Tecnologico de InformaÃ§Ã£o e ModernizaÃ§Ã£o Administrativa.\nRua Alberto Werner, 100 - Vila OperÃ¡ria\nCEP. 88304-053 - ItajaÃ­ - SC", 120, 110, 500, 80, 'Arial', 10, "#000000", "left" );
 		// desenha a caixa para o titulo do relatorio
 		$this->pdf->Shape('ret', $this->margem_esquerda - 1, $this->pdf->altura-129, $this->largura - $this->margem_esquerda - $this->margem_direita + 2, 12, 1, "#000000", "#000000");
 		// escreve o titulo do relatorio
@@ -155,7 +155,7 @@ class relatoriosPref
 		
 	
 		
-		//Verifica se é o fim da página
+		//Verifica se Ã© o fim da pÃ¡gina
 		if($this->altura +$altura > ( $this->pdf->altura * 0.80 ) || $this->qtd_pagina >2 && $lembretes == false)
 		{
 			$this->fillText();

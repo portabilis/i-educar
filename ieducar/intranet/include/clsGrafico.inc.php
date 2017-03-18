@@ -1,25 +1,25 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 *																	     *
-*	@author Prefeitura Municipal de ItajaÌ								 *
+*	@author Prefeitura Municipal de Itaja√≠								 *
 *	@updated 29/03/2007													 *
-*   Pacote: i-PLB Software P˙blico Livre e Brasileiro					 *
+*   Pacote: i-PLB Software P√∫blico Livre e Brasileiro					 *
 *																		 *
-*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÌ			 *
+*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itaja√≠			 *
 *						ctima@itajai.sc.gov.br					    	 *
 *																		 *
-*	Este  programa  È  software livre, vocÍ pode redistribuÌ-lo e/ou	 *
-*	modific·-lo sob os termos da LicenÁa P˙blica Geral GNU, conforme	 *
-*	publicada pela Free  Software  Foundation,  tanto  a vers„o 2 da	 *
-*	LicenÁa   como  (a  seu  critÈrio)  qualquer  vers„o  mais  nova.	 *
+*	Este  programa  √©  software livre, voc√™ pode redistribu√≠-lo e/ou	 *
+*	modific√°-lo sob os termos da Licen√ßa P√∫blica Geral GNU, conforme	 *
+*	publicada pela Free  Software  Foundation,  tanto  a vers√£o 2 da	 *
+*	Licen√ßa   como  (a  seu  crit√©rio)  qualquer  vers√£o  mais  nova.	 *
 *																		 *
-*	Este programa  È distribuÌdo na expectativa de ser ˙til, mas SEM	 *
-*	QUALQUER GARANTIA. Sem mesmo a garantia implÌcita de COMERCIALI-	 *
-*	ZA«√O  ou  de ADEQUA«√O A QUALQUER PROP”SITO EM PARTICULAR. Con-	 *
-*	sulte  a  LicenÁa  P˙blica  Geral  GNU para obter mais detalhes.	 *
+*	Este programa  √© distribu√≠do na expectativa de ser √∫til, mas SEM	 *
+*	QUALQUER GARANTIA. Sem mesmo a garantia impl√≠cita de COMERCIALI-	 *
+*	ZA√á√ÉO  ou  de ADEQUA√á√ÉO A QUALQUER PROP√ìSITO EM PARTICULAR. Con-	 *
+*	sulte  a  Licen√ßa  P√∫blica  Geral  GNU para obter mais detalhes.	 *
 *																		 *
-*	VocÍ  deve  ter  recebido uma cÛpia da LicenÁa P˙blica Geral GNU	 *
-*	junto  com  este  programa. Se n„o, escreva para a Free Software	 *
+*	Voc√™  deve  ter  recebido uma c√≥pia da Licen√ßa P√∫blica Geral GNU	 *
+*	junto  com  este  programa. Se n√£o, escreva para a Free Software	 *
 *	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 *	02111-1307, USA.													 *
 *																		 *
@@ -32,9 +32,9 @@
 		* Enter description here...
 		*
 		* @var array $arrValores; -> array que possui um rotulo 
-		*			 e È seguido de um valor ou array de valores
+		*			 e √© seguido de um valor ou array de valores
 		* @var int $intTamGrafico; -> Define o tamanho em px da largura do grafico
-		* @var str $titulo; -> Define o tÌtulo do gr·fico
+		* @var str $titulo; -> Define o t√≠tulo do gr√°fico
 		* @var array ou str $legConteudo; -> define o conteudo  da legenda 
 		*
 		*
@@ -47,12 +47,12 @@
 		*			"Nov"=>array(350,200,300,123), "Dec"=>array(400,200,30,264)
 	  	*			  );	
 		*		    $leg = array("A","B","C","D") ;
-		*           $exemplo1 = new clsGrafico($dados,"Gr·fico Teste",500,$leg);
+		*           $exemplo1 = new clsGrafico($dados,"Gr√°fico Teste",500,$leg);
 		*           echo $exemplo1->graficoBarraHor();
 		*
 		*	        EXEMPLO 2 DE COMO USAR A FUNCAO 
 		*			$dados2 = array("Dom"=>10, "Seg"=>400,"Ter"=>150, "Qua"=>200, "Qui"=>350,"Sex"=>10,"Sab"=>150 );	
-		*           $exemplo2 = new clsGrafico($dados2,"Gr·fico Teste",500,"Legenda");
+		*           $exemplo2 = new clsGrafico($dados2,"Gr√°fico Teste",500,"Legenda");
 		*           echo $exemplo2->graficoBarraHor();
 		*			os Exemplos podem ser usados chamando grafico vertical ou horizontal
 	    *****************************************************************************************/
@@ -64,7 +64,7 @@
 		var $globalAlign;
 		
 		
-		function clsGrafico($valor, $titulo="Gr·fico", $tgrafico=600,  $legConteudo="" )
+		function clsGrafico($valor, $titulo="Gr√°fico", $tgrafico=600,  $legConteudo="" )
 		{
 			$this->arrValores = $valor;			
 			$this->intTamGrafico = $tgrafico;
@@ -85,7 +85,7 @@
 			
 		/**
 		 * Enter description here...
-		 * A funÁ„o graficoBarraHor gera graficos de barra em posiÁ„o horizontal
+		 * A fun√ß√£o graficoBarraHor gera graficos de barra em posi√ß√£o horizontal
 		 *
 		 *
 		 * @return $retorno; //$retorno possui o conteudo em HTML da pagina
@@ -111,9 +111,9 @@
 		<meta http-equiv=\"Expires\" content=\"-1\">
 		<!-- #&REFRESH&# -->
 		
-		<meta name='Author' content='Prefeitura de ItajaÌ'>
-		<meta name='Description' content='Portal da Prefeitura de ItajaÌ'>
-		<meta name='Keywords' content='portal, prefeitura, itajaÌ, serviÁo, cidad„o'>
+		<meta name='Author' content='Prefeitura de Itaja√≠'>
+		<meta name='Description' content='Portal da Prefeitura de Itaja√≠'>
+		<meta name='Keywords' content='portal, prefeitura, itaja√≠, servi√ßo, cidad√£o'>
 	</head>
 	<body>";
 			
@@ -122,7 +122,7 @@
 			$retorno .= "<table border='0' cellpadding='0' cellspacing='1' align=\"{$this->globalAlign}\"><tr><td colspan=\"4\" align=\"center\" class=\"graf_titulo\">{$titulo}</td></tr>\n";
 			//$retorno .= "<tr><td colspan=2 align=center>&nbsp;</td></tr>\n";
 			$maior = 0;						 // verifica qual o maior valor para servir como escala do grafico
-			$cont = 0;						 // conta qual o numero maximo de barras que È passado para trocar a cor de forma correta			
+			$cont = 0;						 // conta qual o numero maximo de barras que √© passado para trocar a cor de forma correta			
 			if(is_array($valor))
 			{
 				foreach ($valor as $rotulo=>$v ) 
@@ -165,7 +165,7 @@
 				foreach ($valor as $rotulo=>$v) 
 				{								
 					$retorno .= "<tr><td rowspan={$cont} class=\"grafsub_tipo\" style=\"text-align:{$this->align}; border-right: 1px solid #000000;\">{$rotulo}</td>\n";
-					// a variavel passada È um array ?????
+					// a variavel passada √© um array ?????
 					if(is_array($v)) 
 					{	
 						foreach ($v as $key => $parametro)	
@@ -242,7 +242,7 @@
 						$retorno .= "<td width=\"50\" class=\"grafsub_barra\">{$porcentagem}%</td>\n";
 					}
 				}
-				// gera um espaÁamento entre as variaveis caso exista barras de cores diferentes
+				// gera um espa√ßamento entre as variaveis caso exista barras de cores diferentes
 				//$cont == 0 ? $retorno .= "" :$retorno .= "<tr><td style=\"border-right: 1px solid #000000\">&nbsp;</td></tr>\n"; /* separacao do grafico caso exista mais de 1 parametro */
 			}			
 			$retorno .= "<tr><td colspan=\"4\" align=\"center\" class=\"graf_titulo\">&nbsp;</td></tr>\n</table>";
@@ -250,7 +250,7 @@
 			// verifica se eh um array ..
 			if(is_array($legConteudo))
 			{		
-				$cont=0;  					// conta qual o numero maximo de barras que È passado para trocar a cor de forma correta			
+				$cont=0;  					// conta qual o numero maximo de barras que √© passado para trocar a cor de forma correta			
 											// monta o inicio da tabela 
 				$retorno .= "\n<table border='0' cellpadding='0' cellspacing='0'  align=\"{$this->globalAlign}\"><tr><td colspan=2 align=center width={$tgrafico}>Legenda</td></tr>\n	";
 				$vcor =1;					// controla a cor das barras para exibir na legenda
@@ -305,7 +305,7 @@
 			
 		/**
 		 * Enter description here...
-		 *A funÁ„o graficoBarraVer gera graficos de barra em posiÁ„o vertical 
+		 *A fun√ß√£o graficoBarraVer gera graficos de barra em posi√ß√£o vertical 
 		 *
 		 *
 		 * @return $retorno; //$retorno possui o conteudo em HTML da pagina
@@ -318,8 +318,8 @@
 			$titulo = $this->titulo;
 			$legConteudo = $this->legConteudo ;			
 			$maior = 0;								 // verifica qual o maior valor para se align=\"{$this->globalAlign}\"rvir como escala do grafico
-			$cont = 0;								 // conta qual o numero maximo de barras que È passado para trocar a cor de forma correta			
-			$cont2 =0;								 // conta o n˙mero de barras
+			$cont = 0;								 // conta qual o numero maximo de barras que √© passado para trocar a cor de forma correta			
+			$cont2 =0;								 // conta o n√∫mero de barras
 			foreach ($valor as $rotulo=>$v ) 		
 			{
 				// ira servir como contador para saber a qtidade de barras
@@ -338,7 +338,7 @@
 					}	
 					if($indice > $cont)
 					{
-						// verifica a quantidade de barras que ser· necessario no grafico
+						// verifica a quantidade de barras que ser√° necessario no grafico
 						$cont = $indice;												
 					}
 				}
@@ -368,9 +368,9 @@
 		<meta http-equiv=\"Expires\" content=\"-1\">
 		<!-- #&REFRESH&# -->
 		
-		<meta name='Author' content='Prefeitura de ItajaÌ'>
-		<meta name='Description' content='Portal da Prefeitura de ItajaÌ'>
-		<meta name='Keywords' content='portal, prefeitura, itajaÌ, serviÁo, cidad„o'>
+		<meta name='Author' content='Prefeitura de Itaja√≠'>
+		<meta name='Description' content='Portal da Prefeitura de Itaja√≠'>
+		<meta name='Keywords' content='portal, prefeitura, itaja√≠, servi√ßo, cidad√£o'>
 	</head>
 	<body>";
 		
@@ -468,7 +468,7 @@
 			$retorno .= "</table>";
 			$cont-=1;
 			// insere conteudo da legenda caso ela exista 
-			// verifica se È um array 
+			// verifica se √© um array 
 			if(is_array($legConteudo))
 			{		
 				$cont=0;
@@ -508,8 +508,8 @@
 					}
 					$retorno .= "</table>\n";
 			}	
-			else // se nao È array 
-			{			// se legenda nao È vazia  
+			else // se nao √© array 
+			{			// se legenda nao √© vazia  
 					if($legConteudo!="")
 					{
 					// monta legenda	
