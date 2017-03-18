@@ -41,6 +41,7 @@ class clsPmieducarHistoricoDisciplinas
 	var $nota;
 	var $faltas;
 	var $ordenamento;
+	var $carga_horaria_disciplina;
 
 	// propriedades padrao
 
@@ -106,13 +107,13 @@ class clsPmieducarHistoricoDisciplinas
 	 *
 	 * @return object
 	 */
-	function clsPmieducarHistoricoDisciplinas( $sequencial = null, $ref_ref_cod_aluno = null, $ref_sequencial = null, $nm_disciplina = null, $nota = null, $faltas = null, $ordenamento = null )
+	function clsPmieducarHistoricoDisciplinas( $sequencial = null, $ref_ref_cod_aluno = null, $ref_sequencial = null, $nm_disciplina = null, $nota = null, $faltas = null, $ordenamento = null, $carga_horaria_disciplina = null)
 	{
 		$db = new clsBanco();
 		$this->_schema = "pmieducar.";
 		$this->_tabela = "{$this->_schema}historico_disciplinas";
 
-		$this->_campos_lista = $this->_todos_campos = "sequencial, ref_ref_cod_aluno, ref_sequencial, nm_disciplina, nota, faltas, ordenamento";
+		$this->_campos_lista = $this->_todos_campos = "sequencial, ref_ref_cod_aluno, ref_sequencial, nm_disciplina, nota, faltas, ordenamento, carga_horaria_disciplina";
 
 		if( is_numeric( $ref_ref_cod_aluno ) && is_numeric( $ref_sequencial ) )
 		{
@@ -166,6 +167,10 @@ class clsPmieducarHistoricoDisciplinas
 		if( is_numeric( $ordenamento ) )
 		{
 			$this->ordenamento = $ordenamento;
+		}
+		if( is_numeric( $carga_horaria_disciplina ) )
+		{
+			$this->carga_horaria_disciplina = $carga_horaria_disciplina;
 		}
 
 	}
@@ -227,6 +232,12 @@ class clsPmieducarHistoricoDisciplinas
 				$valores .= "{$gruda}'{$this->ordenamento}'";
 				$gruda = ", ";
 			}
+			if( is_numeric( $this->carga_horaria_disciplina ) )
+			{
+				$campos .= "{$gruda}carga_horaria_disciplina";
+				$valores .= "{$gruda}'{$this->carga_horaria_disciplina}'";
+				$gruda = ", ";
+			}
 
 			$sequencial = $db->campoUnico("SELECT COALESCE( MAX(sequencial), 0 ) + 1 FROM {$this->_tabela} WHERE ref_ref_cod_aluno = {$this->ref_ref_cod_aluno} AND ref_sequencial = {$this->ref_sequencial}" );
 
@@ -271,7 +282,11 @@ class clsPmieducarHistoricoDisciplinas
 				$set .= "{$gruda}ordenamento = '{$this->ordenamento}'";
 				$gruda = ", ";
 			}
-
+			if( is_numeric( $this->carga_horaria_disciplina ) )
+			{
+				$set .= "{$gruda}carga_horaria_disciplina = '{$this->carga_horaria_disciplina}'";
+				$gruda = ", ";
+			}
 
 			if( $set )
 			{
@@ -287,7 +302,7 @@ class clsPmieducarHistoricoDisciplinas
 	 *
 	 * @return array
 	 */
-	function lista( $int_sequencial = null, $int_ref_ref_cod_aluno = null, $int_ref_sequencial = null, $str_nm_disciplina = null, $str_nota = null, $int_faltas = null, $int_ordenamento = null )
+	function lista( $int_sequencial = null, $int_ref_ref_cod_aluno = null, $int_ref_sequencial = null, $str_nm_disciplina = null, $str_nota = null, $int_faltas = null, $int_ordenamento = null, $int_carga_horaria_disciplina = null)
 	{
 		$sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
 		$filtros = "";
@@ -327,6 +342,11 @@ class clsPmieducarHistoricoDisciplinas
 		if( is_numeric( $int_ordenamento ) )
 		{
 			$filtros .= "{$whereAnd} ordenamento = '{$int_ordenamento}'";
+			$whereAnd = " AND ";
+		}
+		if( is_numeric( $int_carga_horaria_disciplina ) )
+		{
+			$filtros .= "{$whereAnd} carga_horaria_disciplina = '{$int_carga_horaria_disciplina}'";
 			$whereAnd = " AND ";
 		}
 
