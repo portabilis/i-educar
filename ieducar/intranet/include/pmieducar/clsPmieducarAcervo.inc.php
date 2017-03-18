@@ -1,31 +1,31 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 *																	     *
-*	@author Prefeitura Municipal de Itajaí								 *
+*	@author Prefeitura Municipal de ItajaÃ­								 *
 *	@updated 29/03/2007													 *
-*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
+*   Pacote: i-PLB Software PÃºblico Livre e Brasileiro					 *
 *																		 *
-*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
+*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÃ­			 *
 *						ctima@itajai.sc.gov.br					    	 *
 *																		 *
-*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
+*	Este  programa  Ã©  software livre, vocÃª pode redistribuÃ­-lo e/ou	 *
+*	modificÃ¡-lo sob os termos da LicenÃ§a PÃºblica Geral GNU, conforme	 *
+*	publicada pela Free  Software  Foundation,  tanto  a versÃ£o 2 da	 *
+*	LicenÃ§a   como  (a  seu  critÃ©rio)  qualquer  versÃ£o  mais  nova.	 *
 *																		 *
-*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
+*	Este programa  Ã© distribuÃ­do na expectativa de ser Ãºtil, mas SEM	 *
+*	QUALQUER GARANTIA. Sem mesmo a garantia implÃ­cita de COMERCIALI-	 *
+*	ZAÃ‡ÃƒO  ou  de ADEQUAÃ‡ÃƒO A QUALQUER PROPÃ“SITO EM PARTICULAR. Con-	 *
+*	sulte  a  LicenÃ§a  PÃºblica  Geral  GNU para obter mais detalhes.	 *
 *																		 *
-*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-*	junto  com  este  programa. Se não, escreva para a Free Software	 *
+*	VocÃª  deve  ter  recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral GNU	 *
+*	junto  com  este  programa. Se nÃ£o, escreva para a Free Software	 *
 *	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 *	02111-1307, USA.													 *
 *																		 *
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /**
-* @author Prefeitura Municipal de Itajaí
+* @author Prefeitura Municipal de ItajaÃ­
 *
 * Criado em 14/07/2006 16:58 pelo gerador automatico de classes
 */
@@ -130,68 +130,68 @@ class clsPmieducarAcervo
 	 *
 	 * @return object
 	 */
-	function clsPmieducarAcervo( $cod_acervo = null, 
-		                         $ref_cod_exemplar_tipo = null, 
-		                         $ref_cod_acervo = null, 
-		                         $ref_usuario_exc = null, 
-		                         $ref_usuario_cad = null, 
-		                         $ref_cod_acervo_colecao = null, 
-		                         $ref_cod_acervo_idioma = null, 
-		                         $ref_cod_acervo_editora = null, 
-		                         $titulo = null, 
-		                         $sub_titulo = null, 
-		                         $cdu = null, 
-		                         $cutter = null, 
-		                         $volume = null, 
-		                         $num_edicao = null, 
-		                         $ano = null, 
-		                         $num_paginas = null, 
-		                         $isbn = null, 
+	function clsPmieducarAcervo( $cod_acervo = null,
+		                         $ref_cod_exemplar_tipo = null,
+		                         $ref_cod_acervo = null,
+		                         $ref_usuario_exc = null,
+		                         $ref_usuario_cad = null,
+		                         $ref_cod_acervo_colecao = null,
+		                         $ref_cod_acervo_idioma = null,
+		                         $ref_cod_acervo_editora = null,
+		                         $titulo = null,
+		                         $sub_titulo = null,
+		                         $cdu = null,
+		                         $cutter = null,
+		                         $volume = null,
+		                         $num_edicao = null,
+		                         $ano = null,
+		                         $num_paginas = null,
+		                         $isbn = null,
 		                         $data_cadastro = null,
-		                         $data_exclusao = null, 
-		                         $ativo = null, 
-		                         $ref_cod_biblioteca = null, 
-		                         $cdd = null, 
-		                         $estante = null , 
-		                         $dimencao = null , 
-		                         $material_ilustrativo = null , 
-		                         $dimencao_ilustrativo = null , 
-		                         $local = null , 
-		                         $ref_cod_tipo_autor = null , 
+		                         $data_exclusao = null,
+		                         $ativo = null,
+		                         $ref_cod_biblioteca = null,
+		                         $cdd = null,
+		                         $estante = null ,
+		                         $dimencao = null ,
+		                         $material_ilustrativo = null ,
+		                         $dimencao_ilustrativo = null ,
+		                         $local = null ,
+		                         $ref_cod_tipo_autor = null ,
 		                         $tipo_autor = null )
 	{
 		$db = new clsBanco();
 		$this->_schema = "pmieducar.";
 		$this->_tabela = "{$this->_schema}acervo";
 
-		$this->_campos_lista = $this->_todos_campos = "a.cod_acervo, 
-		                                               a.ref_cod_exemplar_tipo, 
-		                                               a.ref_cod_acervo, 
-		                                               a.ref_usuario_exc, 
-		                                               a.ref_usuario_cad, 
-		                                               a.ref_cod_acervo_colecao, 
-		                                               a.ref_cod_acervo_idioma, 
-		                                               a.ref_cod_acervo_editora, 
-		                                               a.titulo, 
-		                                               a.sub_titulo, 
-		                                               a.cdu, 
-		                                               a.cutter, 
-		                                               a.volume, 
-		                                               a.num_edicao, 
-		                                               a.ano, 
-		                                               a.num_paginas, 
-		                                               a.isbn, 
-		                                               a.data_cadastro, 
-		                                               a.data_exclusao, 
-		                                               a.ativo, 
-		                                               a.ref_cod_biblioteca, 
-		                                               a.cdd, 
-		                                               a.estante, 
-		                                               a.dimencao, 
-		                                               a.material_ilustrativo, 
-		                                               a.dimencao_ilustrativo, 
-		                                               a.local, 
-		                                               a.ref_cod_tipo_autor, 
+		$this->_campos_lista = $this->_todos_campos = "a.cod_acervo,
+		                                               a.ref_cod_exemplar_tipo,
+		                                               a.ref_cod_acervo,
+		                                               a.ref_usuario_exc,
+		                                               a.ref_usuario_cad,
+		                                               a.ref_cod_acervo_colecao,
+		                                               a.ref_cod_acervo_idioma,
+		                                               a.ref_cod_acervo_editora,
+		                                               a.titulo,
+		                                               a.sub_titulo,
+		                                               a.cdu,
+		                                               a.cutter,
+		                                               a.volume,
+		                                               a.num_edicao,
+		                                               a.ano,
+		                                               a.num_paginas,
+		                                               a.isbn,
+		                                               a.data_cadastro,
+		                                               a.data_exclusao,
+		                                               a.ativo,
+		                                               a.ref_cod_biblioteca,
+		                                               a.cdd,
+		                                               a.estante,
+		                                               a.dimencao,
+		                                               a.material_ilustrativo,
+		                                               a.dimencao_ilustrativo,
+		                                               a.local,
+		                                               a.ref_cod_tipo_autor,
 		                                               a.tipo_autor";
 		$this->_campo_group_by = "a.cod_acervo,
 						          a.ref_cod_exemplar_tipo,
@@ -529,11 +529,11 @@ class clsPmieducarAcervo
 	 */
 	function cadastra()
 	{
-		if( is_numeric( $this->ref_cod_exemplar_tipo ) && 
-			is_numeric( $this->ref_usuario_cad ) && 
-			is_numeric( $this->ref_cod_acervo_idioma ) && 
-			is_numeric( $this->ref_cod_acervo_editora ) && 
-			is_string( $this->titulo ) && 
+		if( is_numeric( $this->ref_cod_exemplar_tipo ) &&
+			is_numeric( $this->ref_usuario_cad ) &&
+			is_numeric( $this->ref_cod_acervo_idioma ) &&
+			is_numeric( $this->ref_cod_acervo_editora ) &&
+			is_string( $this->titulo ) &&
 			is_numeric( $this->ref_cod_biblioteca ) )
 		{
 			$db = new clsBanco();
@@ -875,31 +875,31 @@ class clsPmieducarAcervo
 	 *
 	 * @return array
 	 */
-	function lista( $int_cod_acervo = null, 
-		            $int_ref_cod_exemplar_tipo = null, 
-		            $int_ref_cod_acervo = null, 
-		            $int_ref_usuario_exc = null, 
-		            $int_ref_usuario_cad = null, 
-		            $int_ref_cod_acervo_colecao = null, 
-		            $int_ref_cod_acervo_idioma = null, 
-		            $int_ref_cod_acervo_editora = null, 
-		            $str_titulo = null, 
-		            $str_sub_titulo = null, 
-		            $str_cdu = null, 
-		            $str_cdd = null, 
-		            $str_cutter = null, 
-		            $str_isbn = null, 
-		            $date_data_cadastro_ini = null, 
-		            $date_data_cadastro_fim = null, 
-		            $date_data_exclusao_ini = null, 
-		            $date_data_exclusao_fim = null, 
-		            $int_ativo = null, 
-		            $int_ref_cod_biblioteca = null, 
-		            $int_ref_cod_instituicao = null, 
-		            $int_ref_cod_escola = null, 
+	function lista( $int_cod_acervo = null,
+		            $int_ref_cod_exemplar_tipo = null,
+		            $int_ref_cod_acervo = null,
+		            $int_ref_usuario_exc = null,
+		            $int_ref_usuario_cad = null,
+		            $int_ref_cod_acervo_colecao = null,
+		            $int_ref_cod_acervo_idioma = null,
+		            $int_ref_cod_acervo_editora = null,
+		            $str_titulo = null,
+		            $str_sub_titulo = null,
+		            $str_cdu = null,
+		            $str_cdd = null,
+		            $str_cutter = null,
+		            $str_isbn = null,
+		            $date_data_cadastro_ini = null,
+		            $date_data_cadastro_fim = null,
+		            $date_data_exclusao_ini = null,
+		            $date_data_exclusao_fim = null,
+		            $int_ativo = null,
+		            $int_ref_cod_biblioteca = null,
+		            $int_ref_cod_instituicao = null,
+		            $int_ref_cod_escola = null,
 		            $str_nm_autor = null )
 	{
-		$sql = "SELECT {$this->_campos_lista}, aa.cod_acervo_autor 
+		$sql = "SELECT {$this->_campos_lista}, aa.cod_acervo_autor
 		          FROM {$this->_schema}biblioteca b,
 		          	   {$this->_tabela} a
 		    LEFT JOIN  pmieducar.acervo_acervo_autor aaa on (a.cod_acervo = aaa.ref_cod_acervo)
@@ -1112,7 +1112,7 @@ class clsPmieducarAcervo
 		                           )
 	{
 		$sql = "SELECT {$this->_campos_lista},
-		               (CASE WHEN a.ref_cod_tipo_autor = 2 OR a.ref_cod_tipo_autor = 3 
+		               (CASE WHEN a.ref_cod_tipo_autor = 2 OR a.ref_cod_tipo_autor = 3
 								THEN a.tipo_autor
             				 ELSE
 								(SELECT DISTINCT '' || (replace(textcat_all(aa.nm_autor),'',', ')))
@@ -1135,10 +1135,10 @@ class clsPmieducarAcervo
 		}
 
 		if( is_numeric( $this->ref_cod_acervo_assunto ) )
-		{		
+		{
 			$filtros .= "{$whereAnd} (SELECT 1 FROM pmieducar.acervo_acervo_assunto WHERE ref_cod_acervo = cod_acervo AND ref_cod_acervo_assunto = {$this->ref_cod_acervo_assunto} ) IS NOT NULL";
 			$whereAnd = " AND ";
-		}	
+		}
 		if(is_string($str_cdd))
 		{
 			$filtros .= "{$whereAnd} cdd LIKE $$%{$str_cdd}%$$";
@@ -1198,7 +1198,7 @@ class clsPmieducarAcervo
 		$db = new clsBanco();
 		$this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} a
 			                             LEFT JOIN acervo_acervo_autor aaa ON (aaa.ref_cod_acervo = a.cod_acervo)
-			                             LEFT JOIN acervo_autor aa ON (aa.cod_acervo_autor = aaa.ref_cod_acervo_autor) 
+			                             LEFT JOIN acervo_autor aa ON (aa.cod_acervo_autor = aaa.ref_cod_acervo_autor)
 			                             {$filtros}" );
 
 		$db->Consulta( $sql );

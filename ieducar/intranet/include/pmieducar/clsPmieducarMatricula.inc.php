@@ -746,39 +746,39 @@ class clsPmieducarMatricula
     return FALSE;
   }
 
-function lista_transferidos($int_cod_matricula = NULL, 
+function lista_transferidos($int_cod_matricula = NULL,
                  $int_ref_cod_reserva_vaga = NULL,
-                 $int_ref_ref_cod_escola = NULL, 
+                 $int_ref_ref_cod_escola = NULL,
                  $int_ref_ref_cod_serie = NULL,
-                 $int_ref_usuario_exc = NULL, 
+                 $int_ref_usuario_exc = NULL,
                  $int_ref_usuario_cad = NULL,
-                 $ref_cod_aluno = NULL, 
+                 $ref_cod_aluno = NULL,
                  $int_aprovado = NULL,
-                 $date_data_cadastro_ini = NULL, 
+                 $date_data_cadastro_ini = NULL,
                  $date_data_cadastro_fim = NULL,
-                 $date_data_exclusao_ini = NULL, 
+                 $date_data_exclusao_ini = NULL,
                  $date_data_exclusao_fim = NULL,
-                 $int_ativo = NULL, 
-                 $int_ano = NULL, 
+                 $int_ativo = NULL,
+                 $int_ano = NULL,
                  $int_ref_cod_curso2 = NULL,
-                 $int_ref_cod_instituicao = NULL, 
+                 $int_ref_cod_instituicao = NULL,
                  $int_ultima_matricula = NULL,
-                 $int_modulo = NULL, 
+                 $int_modulo = NULL,
                  $int_padrao_ano_escolar = NULL,
-                 $int_analfabeto = NULL, 
-                 $int_formando = NULL, 
+                 $int_analfabeto = NULL,
+                 $int_formando = NULL,
                  $str_descricao_reclassificacao = NULL,
-                 $int_matricula_reclassificacao = NULL, 
+                 $int_matricula_reclassificacao = NULL,
                  $boo_com_deficiencia = NULL,
-                 $int_ref_cod_curso = NULL, 
+                 $int_ref_cod_curso = NULL,
                  $bool_curso_sem_avaliacao = NULL,
-                 $arr_int_cod_matricula = NULL, 
-                 $int_mes_defasado = NULL, 
+                 $arr_int_cod_matricula = NULL,
+                 $int_mes_defasado = NULL,
                  $boo_data_nasc = NULL,
-                 $boo_matricula_transferencia = NULL, 
-                 $int_semestre = NULL, 
+                 $boo_matricula_transferencia = NULL,
+                 $int_semestre = NULL,
                  $int_ref_cod_turma = NULL,
-                 $int_ref_cod_abandono = NULL, 
+                 $int_ref_cod_abandono = NULL,
                  $matriculas_turmas_transferidas_abandono = FALSE)
   {
     if ($boo_data_nasc) {
@@ -1043,7 +1043,7 @@ function lista_transferidos($int_cod_matricula = NULL,
       if(!is_null($existeTransfereciaSolicitacao)){
         $getCodMatriculaTransferido = $db->CampoUnico("SELECT max(cod_matricula) FROM pmieducar.matricula WHERE aprovado = 4 AND ref_cod_aluno = $codAluno");
 
-        $db->Consulta("UPDATE pmieducar.transferencia_solicitacao 
+        $db->Consulta("UPDATE pmieducar.transferencia_solicitacao
                           SET ativo = 1
                         WHERE ref_cod_matricula_saida = $getCodMatriculaTransferido");
       }
@@ -1059,7 +1059,7 @@ function lista_transferidos($int_cod_matricula = NULL,
                                              FROM pmieducar.matricula
                                             WHERE matricula.ref_cod_aluno = $codAluno
                                               AND matricula.ativo = 1");
-    
+
     $anoMatricula = $db->CampoUnico("SELECT matricula.ano
                                        FROM pmieducar.matricula
                                       WHERE matricula.cod_matricula = $codMatricula
@@ -1335,7 +1335,7 @@ function lista_transferidos($int_cod_matricula = NULL,
       $sql = "SELECT saida_escola
                 FROM {$this->_tabela}
                WHERE cod_matricula = $codMatricula";
-               
+
       $saida = $db->CampoUnico($sql);
 
       return dbBool($saida);
