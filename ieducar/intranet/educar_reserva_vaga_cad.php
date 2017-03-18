@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author      Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
  * @package     Core
  * @subpackage  ReservaVaga
- * @since       Arquivo disponÌvel desde a vers„o 1.0.0
+ * @since       Arquivo dispon√≠vel desde a vers√£o 1.0.0
  * @version     $Id$
  */
 
@@ -45,7 +45,7 @@ class clsIndexBase extends clsBase
 class indice extends clsCadastro
 {
   /**
-   * ReferÍncia a usu·rio da sess„o
+   * Refer√™ncia a usu√°rio da sess√£o
    * @var int
    */
   var $pessoa_logada = NULL;
@@ -98,11 +98,11 @@ class indice extends clsCadastro
       $lst_reserva_vaga = $obj_reserva_vaga->lista(NULL, NULL, NULL, NULL, NULL,
         $this->ref_cod_aluno, NULL, NULL, NULL, NULL, 1);
 
-      // Verifica se o aluno j· possui reserva alguma reserva ativa no sistema
+      // Verifica se o aluno j√° possui reserva alguma reserva ativa no sistema
       if (is_array($lst_reserva_vaga)) {
         echo "
           <script type='text/javascript'>
-            alert('Aluno j· possui reserva de vaga!\\nN„o È possivel realizar a reserva.');
+            alert('Aluno j√° possui reserva de vaga!\\nN√£o √© possivel realizar a reserva.');
             window.location = 'educar_reserva_vaga_lst.php';
           </script>";
         die();
@@ -110,7 +110,7 @@ class indice extends clsCadastro
 
       echo "
         <script type='text/javascript'>
-          alert('A reserva do aluno permanecer· ativa por apenas 2 dias!');
+          alert('A reserva do aluno permanecer√° ativa por apenas 2 dias!');
         </script>";
     }
 
@@ -167,16 +167,16 @@ class indice extends clsCadastro
   }
 }
 
-// Instancia objeto de p·gina
+// Instancia objeto de p√°gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conte˙do
+// Instancia objeto de conte√∫do
 $miolo = new indice();
 
-// Atribui o conte˙do ‡† p·gina
+// Atribui o conte√∫do √†¬† p√°gina
 $pagina->addForm($miolo);
 
-// Gera o cÛdigo HTML
+// Gera o c√≥digo HTML
 $pagina->MakeAll();
 ?>
 
@@ -207,7 +207,7 @@ function acao2() {
     }
 
     if (! (/[0-9]{3}\.[0-9]{3}\.[0-9]{3}-[0-9]{2}/.test(document.formcadastro.cpf_responsavel.value))) {
-      alert('Preencha o campo \'CPF respons·vel\' Corretamente');
+      alert('Preencha o campo \'CPF respons√°vel\' Corretamente');
       return false;
     }
     else {

@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo disponÌvel desde a vers„o 1.0.0
+ * @since     Arquivo dispon√≠vel desde a vers√£o 1.0.0
  * @version   $Id$
  */
 
@@ -82,10 +82,10 @@ function _getAnoEscolar(clsBanco $db, $sql)
 }
 
 /**
- * Retorna o ano escolar/sÈrie de uma escola.
+ * Retorna o ano escolar/s√©rie de uma escola.
  *
  * @param  clsBanco $db
- * @param  int      $codSerie  CÛdigo do ano escolar/sÈrie.
+ * @param  int      $codSerie  C√≥digo do ano escolar/s√©rie.
  * @return array    (codSerie => nome)
  */
 function _mesmoAnoEscolar(clsBanco $db, $codEscola, $codSerie)
@@ -111,11 +111,11 @@ function _mesmoAnoEscolar(clsBanco $db, $codEscola, $codSerie)
 }
 
 /**
- * Retorna os anos escolares/sÈries da sequÍncia de sÈrie de uma escola.
+ * Retorna os anos escolares/s√©ries da sequ√™ncia de s√©rie de uma escola.
  *
  * @param  clsBanco $db
- * @param  int      $codEscola  CÛdigo da escola.
- * @param  int      $codSerie   CÛdigo do ano escolar/sÈrie.
+ * @param  int      $codEscola  C√≥digo da escola.
+ * @param  int      $codSerie   C√≥digo do ano escolar/s√©rie.
  * @return array    (codSerie => nome)
  */
 function _anoEscolarSequencia(clsBanco $db, $codEscola, $codSerie)
@@ -143,11 +143,11 @@ function _anoEscolarSequencia(clsBanco $db, $codEscola, $codSerie)
 }
 
 /**
- * Retorna os anos escolares/sÈrie do curso de uma escola.
+ * Retorna os anos escolares/s√©rie do curso de uma escola.
  *
  * @param  clsBanco  $db
- * @param  int       $codEscola  CÛdigo da escola.
- * @param  int       $codCurso   CÛdigo do curso.
+ * @param  int       $codEscola  C√≥digo da escola.
+ * @param  int       $codCurso   C√≥digo do curso.
  * @return array     (codSerie => nome)
  */
 function _anoEscolarEscolaCurso(clsBanco $db, $codEscola, $codCurso)
@@ -245,27 +245,27 @@ if (is_numeric($_GET['alu']) && is_numeric($_GET['ins']) &&
 
     // Mesmo curso?
     if (in_array($codCurso, array_keys($cursos))) {
-      // MatrÌcula do curso.
+      // Matr√≠cula do curso.
       $matricula = $matriculas[$cursos[$codCurso]];
 
-      // MatrÌcula reprovada, retorna o mesmo ano escolar da matrÌcula para a escola selecionada.
+      // Matr√≠cula reprovada, retorna o mesmo ano escolar da matr√≠cula para a escola selecionada.
       if (App_Model_MatriculaSituacao::REPROVADO == $matricula['aprovado']) {
         $resultado = _mesmoAnoEscolar($db, $codEscola, $matricula['cod_serie']);
       }
 
-      // MatrÌcula aprovada, retorna os anos escolares da sequÍncia de sÈrie para a escola selecionada.
+      // Matr√≠cula aprovada, retorna os anos escolares da sequ√™ncia de s√©rie para a escola selecionada.
       elseif (App_Model_MatriculaSituacao::APROVADO == $matricula['aprovado']) {
         $resultado = _anoEscolarSequencia($db, $codEscola, $matricula['cod_serie']);
       }
 
-      // MatrÌcula em andamento
+      // Matr√≠cula em andamento
       elseif (App_Model_MatriculaSituacao::TRANSFERIDO == $matricula['aprovado']) {
-        // TransferÍncia interna, retorna o mesmo ano escolar da matrÌcula para a escola selecionada.
+        // Transfer√™ncia interna, retorna o mesmo ano escolar da matr√≠cula para a escola selecionada.
         if (1 == $matricula['transferencia_int']) {
           $resultado = _mesmoAnoEscolar($db, $codEscola, $matricula['cod_serie']);
         }
 
-        // TransferÍncia externa, retorna os anos escolares da sequÍncia de sÈrie para a escola selecionada.
+        // Transfer√™ncia externa, retorna os anos escolares da sequ√™ncia de s√©rie para a escola selecionada.
         elseif (1 == $matricula['transferencia_ext']) {
           $resultado = _anoEscolarSequencia($db, $codEscola, $matricula['cod_serie']);
         }

@@ -2,25 +2,25 @@
 /**
  *
  * @version SVN: $Id$
- * @author  Prefeitura Municipal de ItajaÌ
+ * @author  Prefeitura Municipal de Itaja√≠
  * @updated 29/03/2007
- * Pacote: i-PLB Software P˙blico Livre e Brasileiro
+ * Pacote: i-PLB Software P√∫blico Livre e Brasileiro
  *
- * Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006	PMI - Prefeitura Municipal de Itaja√≠
  *					ctima@itajai.sc.gov.br
  *
- * Este  programa  È  software livre, vocÍ pode redistribuÌ-lo e/ou
- * modific·-lo sob os termos da LicenÁa P˙blica Geral GNU, conforme
- * publicada pela Free  Software  Foundation,  tanto  a vers„o 2 da
- * LicenÁa   como  (a  seu  critÈrio)  qualquer  vers„o  mais  nova.
+ * Este  programa  √©  software livre, voc√™ pode redistribu√≠-lo e/ou
+ * modific√°-lo sob os termos da Licen√ßa P√∫blica Geral GNU, conforme
+ * publicada pela Free  Software  Foundation,  tanto  a vers√£o 2 da
+ * Licen√ßa   como  (a  seu  crit√©rio)  qualquer  vers√£o  mais  nova.
  *
- * Este programa  È distribuÌdo na expectativa de ser ˙til, mas SEM
- * QUALQUER GARANTIA. Sem mesmo a garantia implÌcita de COMERCIALI-
- * ZA«√O  ou  de ADEQUA«√O A QUALQUER PROP”SITO EM PARTICULAR. Con-
- * sulte  a  LicenÁa  P˙blica  Geral  GNU para obter mais detalhes.
+ * Este programa  √© distribu√≠do na expectativa de ser √∫til, mas SEM
+ * QUALQUER GARANTIA. Sem mesmo a garantia impl√≠cita de COMERCIALI-
+ * ZA√á√ÉO  ou  de ADEQUA√á√ÉO A QUALQUER PROP√ìSITO EM PARTICULAR. Con-
+ * sulte  a  Licen√ßa  P√∫blica  Geral  GNU para obter mais detalhes.
  *
- * VocÍ  deve  ter  recebido uma cÛpia da LicenÁa P˙blica Geral GNU
- * junto  com  este  programa. Se n„o, escreva para a Free Software
+ * Voc√™  deve  ter  recebido uma c√≥pia da Licen√ßa P√∫blica Geral GNU
+ * junto  com  este  programa. Se n√£o, escreva para a Free Software
  * Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA
  * 02111-1307, USA.
  *
@@ -62,7 +62,7 @@ if (is_numeric($_GET['bib'])) {
   $sql = sprintf($sql, $_GET['bib'], $filtroTipoExemplar);
   $db->Consulta($sql);
 
-  // Array com os cÛdigos do resultado do SELECT
+  // Array com os c√≥digos do resultado do SELECT
   $codigos = array();
 
   while ($db->ProximoRegistro())
@@ -73,14 +73,14 @@ if (is_numeric($_GET['bib'])) {
     if (! is_numeric($_GET['exemplar_tipo_id']))
       $dias_emprestimo = '';
 
-    // Se o cÛdigo j· foi utilizado, vai para o prÛximo resultado
+    // Se o c√≥digo j√° foi utilizado, vai para o pr√≥ximo resultado
     if (isset($codigos[$cod]))
       continue;
 
     $cliente_tag = '<cliente_tipo cod_cliente_tipo="%s" dias_emprestimo="%s">%s</cliente_tipo>';
     print sprintf($cliente_tag, $cod, $dias_emprestimo, $nome) . PHP_EOL;
 
-    // Evita que se imprima o mesmo cÛdigo novamente
+    // Evita que se imprima o mesmo c√≥digo novamente
     $codigos[$cod] = TRUE;
   }
 }

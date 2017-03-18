@@ -1,21 +1,21 @@
 <?php
 /**
  *
- * Copyright (C) 2006 PMI - Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006 PMI - Prefeitura Municipal de ItajaÃ­
  *            ctima@itajai.sc.gov.br
  *
- * Este  programa  é  software livre, você pode redistribuí-lo e/ou
- * modificá-lo sob os termos da Licença Pública Geral GNU, conforme
- * publicada pela Free  Software  Foundation,  tanto  a versão 2 da
- * Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.
+ * Este  programa  Ã©  software livre, vocÃª pode redistribuÃ­-lo e/ou
+ * modificÃ¡-lo sob os termos da LicenÃ§a PÃºblica Geral GNU, conforme
+ * publicada pela Free  Software  Foundation,  tanto  a versÃ£o 2 da
+ * LicenÃ§a   como  (a  seu  critÃ©rio)  qualquer  versÃ£o  mais  nova.
  *
- * Este programa  é distribuído na expectativa de ser útil, mas SEM
- * QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-
- * ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-
- * sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.
+ * Este programa  Ã© distribuÃ­do na expectativa de ser Ãºtil, mas SEM
+ * QUALQUER GARANTIA. Sem mesmo a garantia implÃ­cita de COMERCIALI-
+ * ZAÃ‡ÃƒO  ou  de ADEQUAÃ‡ÃƒO A QUALQUER PROPÃ“SITO EM PARTICULAR. Con-
+ * sulte  a  LicenÃ§a  PÃºblica  Geral  GNU para obter mais detalhes.
  *
- * Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU
- * junto  com  este  programa. Se não, escreva para a Free Software
+ * VocÃª  deve  ter  recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral GNU
+ * junto  com  este  programa. Se nÃ£o, escreva para a Free Software
  * Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA
  * 02111-1307, USA.
  *
@@ -126,7 +126,7 @@ class indice extends clsCadastro
 		$this->campoOculto( "cod_distribuicao_uniforme", $this->cod_distribuicao_uniforme );
 
 		$this->campoNumero( "ano", "Ano", $this->ano, 4, 4, true );
-		$this->inputsHelper()->date('data', array( 'label' => "Data da distribuição", 'value' => $this->data, 'placeholder' => ''));
+		$this->inputsHelper()->date('data', array( 'label' => "Data da distribuiÃ§Ã£o", 'value' => $this->data, 'placeholder' => ''));
 
 		$opcoes = array("" => "Selecione");
 		$objTemp = new clsPmieducarEscola();
@@ -136,11 +136,11 @@ class indice extends clsCadastro
 		foreach ($lista as $escola){
 			$opcoes["{$escola['cod_escola']}"] = "{$escola['nome']}";
 		}
-		$this->campoLista("ref_cod_escola", "Escola", $opcoes, $this->ref_cod_escola, '', false, '(Responsável pela distribuição do uniforme)', '', false, true);
+		$this->campoLista("ref_cod_escola", "Escola", $opcoes, $this->ref_cod_escola, '', false, '(ResponsÃ¡vel pela distribuiÃ§Ã£o do uniforme)', '', false, true);
 
 		$this->inputsHelper()->checkbox('kit_completo', array( 'label' => "Kit completo", 'value' => $this->kit_completo));		
-		// $this->campoNumero( "agasalho_qtd", "Quantidade de agasalhos (jaqueta e calça)", $this->agasalho_qtd, 2, 2, false );
-		$options = array('required' => false, 'label' => 'Quantidade de agasalhos (jaqueta e calça)', 'value' => $this->agasalho_qtd, 'max_length' => 2, 'size' => 2, 'inline'	=> true);
+		// $this->campoNumero( "agasalho_qtd", "Quantidade de agasalhos (jaqueta e calÃ§a)", $this->agasalho_qtd, 2, 2, false );
+		$options = array('required' => false, 'label' => 'Quantidade de agasalhos (jaqueta e calÃ§a)', 'value' => $this->agasalho_qtd, 'max_length' => 2, 'size' => 2, 'inline'	=> true);
 	    $this->inputsHelper()->integer('agasalho_qtd', $options);
 		$options = array('required' => false, 'label' => ' Tamanho', 'value' => $this->agasalho_tm, 'max_length'  => 10, 'size' => 10);
 	    $this->inputsHelper()->text('agasalho_tm', $options);
@@ -169,8 +169,8 @@ class indice extends clsCadastro
 	    $this->inputsHelper()->integer('bermudas_coton_qtd', $options);
 		$options = array('required' => false, 'label' => ' Tamanho', 'value' => $this->bermudas_coton_tm, 'max_length' => 10, 'size' => 10);
 	    $this->inputsHelper()->text('bermudas_coton_tm', $options);
-	    // $this->campoNumero( "tamanho", "Tênis", $this->tenis_qtd, 2, 2, false);
-		$options = array('required' => false, 'label' => 'Tênis', 'value' => $this->tenis_qtd, 'max_length' => 2, 'size' => 2, 'inline'	=> true);
+	    // $this->campoNumero( "tamanho", "TÃªnis", $this->tenis_qtd, 2, 2, false);
+		$options = array('required' => false, 'label' => 'TÃªnis', 'value' => $this->tenis_qtd, 'max_length' => 2, 'size' => 2, 'inline'	=> true);
 	    $this->inputsHelper()->integer('tenis_qtd', $options);
 		$options = array('required' => false, 'label' => ' Tamanho', 'value' => $this->tenis_tm, 'max_length'  => 10, 'size' => 10);
 	    $this->inputsHelper()->text('tenis_tm', $options);
@@ -192,7 +192,7 @@ class indice extends clsCadastro
 		$lista_tmp = $obj_tmp->lista($this->ref_cod_aluno, $this->ano);
 
 		if($lista_tmp){
-			$this->mensagem = "Já existe uma distribuição cadastrada para este ano, por favor, verifique.<br>";
+			$this->mensagem = "JÃ¡ existe uma distribuiÃ§Ã£o cadastrada para este ano, por favor, verifique.<br>";
 			return false;
 		}
 
@@ -232,7 +232,7 @@ class indice extends clsCadastro
 		if($lista_tmp){
 			foreach ($lista_tmp as $reg) {
 				if ($reg['cod_distribuicao_uniforme'] != $this->cod_distribuicao_uniforme){
-					$this->mensagem = "Já existe uma distribuição cadastrada para este ano, por favor, verifique.<br>";
+					$this->mensagem = "JÃ¡ existe uma distribuiÃ§Ã£o cadastrada para este ano, por favor, verifique.<br>";
 					return false;
 				}
 			}

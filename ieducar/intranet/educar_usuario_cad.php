@@ -1,25 +1,25 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	@author Prefeitura Municipal de ItajaÌ								 *
+	*	@author Prefeitura Municipal de Itaja√≠								 *
 	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software P˙blico Livre e Brasileiro					 *
+	*   Pacote: i-PLB Software P√∫blico Livre e Brasileiro					 *
 	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÌ			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itaja√≠			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  È  software livre, vocÍ pode redistribuÌ-lo e/ou	 *
-	*	modific·-lo sob os termos da LicenÁa P˙blica Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a vers„o 2 da	 *
-	*	LicenÁa   como  (a  seu  critÈrio)  qualquer  vers„o  mais  nova.	 *
+	*	Este  programa  √©  software livre, voc√™ pode redistribu√≠-lo e/ou	 *
+	*	modific√°-lo sob os termos da Licen√ßa P√∫blica Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a vers√£o 2 da	 *
+	*	Licen√ßa   como  (a  seu  crit√©rio)  qualquer  vers√£o  mais  nova.	 *
 	*																		 *
-	*	Este programa  È distribuÌdo na expectativa de ser ˙til, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implÌcita de COMERCIALI-	 *
-	*	ZA«√O  ou  de ADEQUA«√O A QUALQUER PROP”SITO EM PARTICULAR. Con-	 *
-	*	sulte  a  LicenÁa  P˙blica  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  √© distribu√≠do na expectativa de ser √∫til, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia impl√≠cita de COMERCIALI-	 *
+	*	ZA√á√ÉO  ou  de ADEQUA√á√ÉO A QUALQUER PROP√ìSITO EM PARTICULAR. Con-	 *
+	*	sulte  a  Licen√ßa  P√∫blica  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	VocÍ  deve  ter  recebido uma cÛpia da LicenÁa P˙blica Geral GNU	 *
-	*	junto  com  este  programa. Se n„o, escreva para a Free Software	 *
+	*	Voc√™  deve  ter  recebido uma c√≥pia da Licen√ßa P√∫blica Geral GNU	 *
+	*	junto  com  este  programa. Se n√£o, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
@@ -205,7 +205,7 @@ class indice extends clsCadastro
 
 		$this->campoTexto("matricula", "Matr&iacute;cula", $this->matricula, 12, 12, true);
 		$this->campoSenha("_senha", "Senha", $this->_senha, true);
-		$this->campoEmail("email", "E-mail usu·rio", $this->email, 50, 50, false, false, false, 'Utilizado para redefinir a senha, caso o us˙ario esqueÁa<br />Este campo pode ser gravado em branco, neste caso ser· solicitado um e-mail ao usu·rio, apÛs entrar no sistema.');
+		$this->campoEmail("email", "E-mail usu√°rio", $this->email, 50, 50, false, false, false, 'Utilizado para redefinir a senha, caso o us√∫ario esque√ßa<br />Este campo pode ser gravado em branco, neste caso ser√° solicitado um e-mail ao usu√°rio, ap√≥s entrar no sistema.');
 
 		$this->campoTexto('matricula_interna', 'Matr&iacute;cula interna', $this->matricula_interna, 30, 30, false, false, false , 'Utilizado somente para registro, caso a institui&ccedil;&atilde;o deseje que a matr&iacute;cula interna deste funcion&aacute;rio seja registrada no sistema.');
 
@@ -335,13 +335,13 @@ class indice extends clsCadastro
 
 		$this->campoTexto("ramal", "Ramal", $this->ramal, 11, 30);
 
-		$opcoes = array(null => "N„o", 'S' => "Sim");
+		$opcoes = array(null => "N√£o", 'S' => "Sim");
 		$this->campoLista("super", "Super usu&aacute;rio", $opcoes, $this->super, '',false,'','',false,false);
 
-		$opcoes = array(null => "N„o", 1 => "Sim");
+		$opcoes = array(null => "N√£o", 1 => "Sim");
 		$this->campoLista("proibido", "Banido", $opcoes, $this->proibido, '',false,'','',false,false);
 
-		$opcoes = array(null => "N„o", 1 => "Sim");
+		$opcoes = array(null => "N√£o", 1 => "Sim");
 		$this->campoLista("matricula_permanente", "Matr&iacute;cula permanente", $opcoes, $this->matricula_permanente, '',false,'','',false,false);
 
 		$opcoes = array( "" => "Selecione" );
@@ -353,7 +353,7 @@ class indice extends clsCadastro
 			$obj_libera_menu = new clsMenuFuncionario($this->pessoa_logada,false,false,0);
 			$obj_super_usuario = $obj_libera_menu->detalhe();
 
-			// verifica se pessoa logada È super-usuario
+			// verifica se pessoa logada √© super-usuario
 			if ($obj_super_usuario) {
 				$lista = $objTemp->lista(null,null,null,null,null,null,null,null,1);
 			}else{
@@ -372,7 +372,7 @@ class indice extends clsCadastro
 		else
 		{
 			echo "<!--\nErro\nClasse clsPmieducarTipoUsuario n&atilde;o encontrada\n-->";
-			$opcoes = array( "" => "Erro na geraÁ„o" );
+			$opcoes = array( "" => "Erro na gera√ß√£o" );
 		}
 		$tamanho = sizeof($opcoes_);
 		echo "<script>\nvar cod_tipo_usuario = new Array({$tamanho});\n";
@@ -403,7 +403,7 @@ class indice extends clsCadastro
 		@session_write_close();
 
 	    if ($this->email && !filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
-	      $this->mensagem = "Formato do e-mail inv·lido.";
+	      $this->mensagem = "Formato do e-mail inv√°lido.";
 	      return false;
 	    }
 
@@ -431,11 +431,11 @@ class indice extends clsCadastro
 			if ($this->ref_cod_instituicao && $this->ref_cod_escola)
 			{
 				$obj = new clsPmieducarUsuario( $this->ref_pessoa, $this->ref_cod_escola, $this->ref_cod_instituicao, $this->pessoa_logada,  $this->pessoa_logada, $this->ref_cod_tipo_usuario,null,null,1 );
-			} // verifica se usuario È institucional
+			} // verifica se usuario √© institucional
 			else if ($this->ref_cod_instituicao && !$this->ref_cod_escola)
 			{
 				$obj = new clsPmieducarUsuario( $this->ref_pessoa, null, $this->ref_cod_instituicao, $this->pessoa_logada,  $this->pessoa_logada, $this->ref_cod_tipo_usuario,null,null,1 );
-			} // verifica se usuario È poli-institucional
+			} // verifica se usuario √© poli-institucional
 			else if (!$this->ref_cod_instituicao && !$this->ref_cod_escola)
 			{
 				$obj = new clsPmieducarUsuario( $this->ref_pessoa, null, null, $this->pessoa_logada,  $this->pessoa_logada, $this->ref_cod_tipo_usuario,null,null,1 );
@@ -466,7 +466,7 @@ class indice extends clsCadastro
 		@session_write_close();
 
 	    if ($this->email && !filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
-	      $this->mensagem = "Formato do e-mail inv·lido.";
+	      $this->mensagem = "Formato do e-mail inv√°lido.";
 	      return false;
 	    }
 
@@ -499,11 +499,11 @@ class indice extends clsCadastro
 			if ($this->ref_cod_instituicao && $this->ref_cod_escola)
 			{
 				$obj = new clsPmieducarUsuario( $this->ref_pessoa, $this->ref_cod_escola, $this->ref_cod_instituicao, $this->pessoa_logada,  $this->pessoa_logada, $this->ref_cod_tipo_usuario,null,null,1 );
-			} // verifica se usuario È institucional
+			} // verifica se usuario √© institucional
 			else if ($this->ref_cod_instituicao && !$this->ref_cod_escola)
 			{
 				$obj = new clsPmieducarUsuario( $this->ref_pessoa, null, $this->ref_cod_instituicao, $this->pessoa_logada,  $this->pessoa_logada, $this->ref_cod_tipo_usuario,null,null,1 );
-			} // verifica se usuario È poli-institucional
+			} // verifica se usuario √© poli-institucional
 			else if (!$this->ref_cod_instituicao && !$this->ref_cod_escola)
 			{
 				$obj = new clsPmieducarUsuario( $this->ref_pessoa, null, null, $this->pessoa_logada,  $this->pessoa_logada, $this->ref_cod_tipo_usuario,null,null,1 );
@@ -586,7 +586,7 @@ class indice extends clsCadastro
     $db = new clsBanco();
 
 		if ($db->CampoUnico($sql) == '1') {
-      $this->mensagem = "A matrÌcula '$matricula' j· foi usada, por favor, informe outra.";
+      $this->mensagem = "A matr√≠cula '$matricula' j√° foi usada, por favor, informe outra.";
       return false;
     }
     return true;
@@ -799,7 +799,7 @@ function valida()
 	{
 		if( campo_instituicao.options[campo_instituicao.selectedIndex].value == "" )
 		{
-			alert("… obrigatÛrio a escolha de uma InstituiÁ„o!");
+			alert("√â obrigat√≥rio a escolha de uma Institui√ß√£o!");
 			return false;
 		}
 	}
@@ -807,14 +807,14 @@ function valida()
 	{
 		if( campo_instituicao.options[campo_instituicao.selectedIndex].value == "" )
 		{
-			alert("… obrigatÛrio a escolha de uma InstituiÁ„o!");
+			alert("√â obrigat√≥rio a escolha de uma Institui√ß√£o!");
 			return false;
 		}
 		else if( cod_tipo_usuario[campo_instituicao.options[campo_instituicao.selectedIndex].value] != "")
 		{
 			if( campo_escola.options[campo_escola.selectedIndex].value == "" && campo_tipo_usuario.value != 6)
 			{
-				alert("… obrigatÛrio a escolha de uma Escola!");
+				alert("√â obrigat√≥rio a escolha de uma Escola!");
 				return false;
 			}
 		}
@@ -823,7 +823,7 @@ function valida()
 	{
 		if( campo_instituicao.options[campo_instituicao.selectedIndex].value == "" )
 		{
-			alert("… obrigatÛrio a escolha de uma InstituiÁ„o! ");
+			alert("√â obrigat√≥rio a escolha de uma Institui√ß√£o! ");
 			return false;
 		}
 	}

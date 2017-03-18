@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author      Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
  * @package     Core
  * @subpackage  ReservaVaga
- * @since       Arquivo disponÌvel desde a vers„o 1.0.0
+ * @since       Arquivo dispon√≠vel desde a vers√£o 1.0.0
  * @version     $Id$
  */
 
@@ -44,25 +44,25 @@ class clsIndexBase extends clsBase {
 class indice extends clsListagem
 {
   /**
-   * ReferÍncia a usu·rio da sess„o
+   * Refer√™ncia a usu√°rio da sess√£o
    * @var int
    */
   var $pessoa_logada = NULL;
 
   /**
-   * TÌtulo no topo da p·gina
+   * T√≠tulo no topo da p√°gina
    * @var string
    */
   var $titulo = '';
 
   /**
-   * Limite de registros por p·gina
+   * Limite de registros por p√°gina
    * @var int
    */
   var $limite = 0;
 
   /**
-   * InÌcio dos registros a serem exibidos (limit)
+   * In√≠cio dos registros a serem exibidos (limit)
    * @var int
    */
   var $offset = 0;
@@ -80,7 +80,7 @@ class indice extends clsListagem
     $ativo              = NULL;
 
   /**
-   * Atributos para apresentaÁ„o
+   * Atributos para apresenta√ß√£o
    * @var mixed
    */
   var
@@ -114,7 +114,7 @@ class indice extends clsListagem
       'Curso'
     );
 
-    // Recupera nÌ≠vel de acesso do usu·rio logado
+    // Recupera n√≠¬≠vel de acesso do usu√°rio logado
     $obj_permissao = new clsPermissoes();
     $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
 
@@ -127,13 +127,13 @@ class indice extends clsListagem
     }
     $this->addCabecalhos($lista_busca);
 
-    // Lista de opÁıees para o formul·rio de pesquisa r·pida
+    // Lista de op√ß√µees para o formul√°rio de pesquisa r√°pida
     $get_escola = TRUE;
     $get_curso  = TRUE;
     $get_escola_curso_serie = TRUE;
     include 'include/pmieducar/educar_campo_lista.php';
 
-    // ReferÍncia de escola
+    // Refer√™ncia de escola
     if ($this->ref_cod_escola) {
       $this->ref_ref_cod_escola = $this->ref_cod_escola;
     }
@@ -141,7 +141,7 @@ class indice extends clsListagem
       $this->ref_ref_cod_escola = intval($_GET['ref_cod_escola']);
     }
 
-    // ReferÍncia de sÈrie
+    // Refer√™ncia de s√©rie
     if ($this->ref_cod_serie) {
       $this->ref_ref_cod_serie = $this->ref_cod_serie;
     }
@@ -149,11 +149,11 @@ class indice extends clsListagem
       $this->ref_ref_cod_serie = intval($_GET['ref_cod_serie']);
     }
 
-    // Campos do formul·rio
+    // Campos do formul√°rio
     $this->campoTexto('nm_aluno', 'Aluno', $this->nm_aluno, 30, 255, FALSE, FALSE,
       FALSE, '', '<img border="0" onclick="pesquisa_aluno();" id="ref_cod_aluno_lupa" name="ref_cod_aluno_lupa" src="imagens/lupa.png" />');
 
-    // CÛdigo do aluno (retornado de pop-up de busca da pesquisa de alunos - lupa)
+    // C√≥digo do aluno (retornado de pop-up de busca da pesquisa de alunos - lupa)
     $this->campoOculto('ref_cod_aluno', $this->ref_cod_aluno);
 
     // Paginador
@@ -162,7 +162,7 @@ class indice extends clsListagem
       ($_GET["pagina_{$this->nome}"] * $this->limite - $this->limite)
       : 0;
 
-    // Inst‚ncia objeto de mapeamento relacional com o tabela pmieducar.reserva_vaga
+    // Inst√¢ncia objeto de mapeamento relacional com o tabela pmieducar.reserva_vaga
     $obj_reserva_vaga = new clsPmieducarReservaVaga();
     $obj_reserva_vaga->setOrderby('data_cadastro ASC');
     $obj_reserva_vaga->setLimite($this->limite, $this->offset);
@@ -187,10 +187,10 @@ class indice extends clsListagem
     // Pega o total de registros encontrados
     $total = $obj_reserva_vaga->_total;
 
-    // Itera sobre resultados montando a lista de apresentaÁ„o
+    // Itera sobre resultados montando a lista de apresenta√ß√£o
     if (is_array($lista) && count($lista)) {
       foreach ($lista as $registro) {
-        // Recupera nome da sÈrie da reserva de vaga
+        // Recupera nome da s√©rie da reserva de vaga
         $obj_serie = new clsPmieducarSerie($registro['ref_ref_cod_serie']);
         $det_serie = $obj_serie->detalhe();
         $nm_serie  = $det_serie['nm_serie'];
@@ -205,14 +205,14 @@ class indice extends clsListagem
         $det_escola = $obj_escola->detalhe();
         $nm_escola = $det_escola['nome'];
 
-        // Recupera o nome da instituiÁ„o da reserva de vaga
+        // Recupera o nome da institui√ß√£o da reserva de vaga
         $obj_ref_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
         $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
         $registro['ref_cod_instituicao'] = $det_ref_cod_instituicao['nm_instituicao'];
 
         /*
          * Se for um aluno previamente cadastrado, procuramos seu nome, primeiro
-         * buscando a referÍncia de Pessoa e depois pesquisando a tabela para
+         * buscando a refer√™ncia de Pessoa e depois pesquisando a tabela para
          * carregar o nome
          */
         if ($registro['ref_cod_aluno']) {
@@ -230,14 +230,14 @@ class indice extends clsListagem
           $registro['ref_cod_aluno'] = $registro['nm_aluno'] . ' (aluno externo)';
         }
 
-        // Array de dados formatados para apresentaÁ„o
+        // Array de dados formatados para apresenta√ß√£o
         $lista_busca = array(
           "<a href=\"educar_reservada_vaga_det.php?cod_reserva_vaga={$registro["cod_reserva_vaga"]}\">{$registro["ref_cod_aluno"]}</a>",
           "<a href=\"educar_reservada_vaga_det.php?cod_reserva_vaga={$registro["cod_reserva_vaga"]}\">{$nm_serie}</a>",
           "<a href=\"educar_reservada_vaga_det.php?cod_reserva_vaga={$registro["cod_reserva_vaga"]}\">{$registro["ref_cod_curso"]}</a>"
         );
 
-        // Verifica por permissıes
+        // Verifica por permiss√µes
         if ($nivel_usuario == 1) {
           $lista_busca[] = "<a href=\"educar_reservada_vaga_det.php?cod_reserva_vaga={$registro["cod_reserva_vaga"]}\">{$nm_escola}</a>";
           $lista_busca[] = "<a href=\"educar_reservada_vaga_det.php?cod_reserva_vaga={$registro["cod_reserva_vaga"]}\">{$registro["ref_cod_instituicao"]}</a>";
@@ -265,16 +265,16 @@ class indice extends clsListagem
   }
 }
 
-// Instancia objeto de p·gina
+// Instancia objeto de p√°gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conte˙do
+// Instancia objeto de conte√∫do
 $miolo = new indice();
 
-// Atribui o conte˙do ‡† p·gina
+// Atribui o conte√∫do √†¬† p√°gina
 $pagina->addForm($miolo);
 
-// Gera o cÛdigo HTML
+// Gera o c√≥digo HTML
 $pagina->MakeAll();
 ?>
 

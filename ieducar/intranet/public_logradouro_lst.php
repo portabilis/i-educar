@@ -1,25 +1,25 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	@author Prefeitura Municipal de ItajaÌ								 *
+	*	@author Prefeitura Municipal de Itaja√≠								 *
 	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software P˙blico Livre e Brasileiro					 *
+	*   Pacote: i-PLB Software P√∫blico Livre e Brasileiro					 *
 	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÌ			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itaja√≠			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  È  software livre, vocÍ pode redistribuÌ-lo e/ou	 *
-	*	modific·-lo sob os termos da LicenÁa P˙blica Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a vers„o 2 da	 *
-	*	LicenÁa   como  (a  seu  critÈrio)  qualquer  vers„o  mais  nova.	 *
+	*	Este  programa  √©  software livre, voc√™ pode redistribu√≠-lo e/ou	 *
+	*	modific√°-lo sob os termos da Licen√ßa P√∫blica Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a vers√£o 2 da	 *
+	*	Licen√ßa   como  (a  seu  crit√©rio)  qualquer  vers√£o  mais  nova.	 *
 	*																		 *
-	*	Este programa  È distribuÌdo na expectativa de ser ˙til, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implÌcita de COMERCIALI-	 *
-	*	ZA«√O  ou  de ADEQUA«√O A QUALQUER PROP”SITO EM PARTICULAR. Con-	 *
-	*	sulte  a  LicenÁa  P˙blica  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  √© distribu√≠do na expectativa de ser √∫til, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia impl√≠cita de COMERCIALI-	 *
+	*	ZA√á√ÉO  ou  de ADEQUA√á√ÉO A QUALQUER PROP√ìSITO EM PARTICULAR. Con-	 *
+	*	sulte  a  Licen√ßa  P√∫blica  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	VocÍ  deve  ter  recebido uma cÛpia da LicenÁa P˙blica Geral GNU	 *
-	*	junto  com  este  programa. Se n„o, escreva para a Free Software	 *
+	*	Voc√™  deve  ter  recebido uma c√≥pia da Licen√ßa P√∫blica Geral GNU	 *
+	*	junto  com  este  programa. Se n√£o, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
@@ -102,12 +102,12 @@ class indice extends clsListagem
 		
 
 		$this->addCabecalhos( array(
-			"CÛdigo",	
+			"C√≥digo",	
 			"Tipo",
 			"Nome",		
 			"Munic&iacute;pio",
 			"Estado",
-			"PaÌs"
+			"Pa√≠s"
 		) );
 
 		// Filtros de Foreign Keys
@@ -129,7 +129,7 @@ class indice extends clsListagem
 			echo "<!--\nErro\nClasse clsPais nao encontrada\n-->";
 			$opcoes = array( "" => "Erro na geracao" );
 		}
-		$this->campoLista( "idpais", "PaÌs", $opcoes, $this->idpais, "", false, "", "", false, false );
+		$this->campoLista( "idpais", "Pa√≠s", $opcoes, $this->idpais, "", false, "", "", false, false );
 
 		$opcoes = array( "" => "Selecione" );
 		if( class_exists( "clsUf" ) )
@@ -322,7 +322,7 @@ function getUf( xml_uf )
 	}
 	else
 	{
-		campoUf.options[0].text = 'O paÌs n„o possui nenhum estado';
+		campoUf.options[0].text = 'O pa√≠s n√£o possui nenhum estado';
 	}
 }
 
@@ -333,7 +333,7 @@ document.getElementById('sigla_uf').onchange = function()
 	var campoMunicipio= document.getElementById('idmun');
 	campoMunicipio.length = 1;
 	campoMunicipio.disabled = true;
-	campoMunicipio.options[0].text = 'Carregando municÌpio...';
+	campoMunicipio.options[0].text = 'Carregando munic√≠pio...';
 
 	var xml_municipio = new ajax( getMunicipio );
 	xml_municipio.envia( "public_municipio_xml.php?uf="+campoUf );
@@ -347,7 +347,7 @@ function getMunicipio( xml_municipio )
 	if(DOM_array.length)
 	{
 		campoMunicipio.length = 1;
-		campoMunicipio.options[0].text = 'Selecione um municÌpio';
+		campoMunicipio.options[0].text = 'Selecione um munic√≠pio';
 		campoMunicipio.disabled = false;
 
 		for( var i = 0; i < DOM_array.length; i++ )
@@ -357,7 +357,7 @@ function getMunicipio( xml_municipio )
 	}
 	else
 	{
-		campoMunicipio.options[0].text = 'O estado n„o possui nenhum municÌpio';
+		campoMunicipio.options[0].text = 'O estado n√£o possui nenhum munic√≠pio';
 	}
 }
 
