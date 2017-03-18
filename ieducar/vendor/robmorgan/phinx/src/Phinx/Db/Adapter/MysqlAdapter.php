@@ -96,7 +96,7 @@ class MysqlAdapter extends PdoAdapter implements AdapterInterface
 
             // charset support
             if (!empty($options['charset'])) {
-                $dsn .= ';charset=' . $options['charset'];
+                $dsn .= ';charset=UTF-8' . $options['charset'];
             }
 
             $driverOptions = array(\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION);

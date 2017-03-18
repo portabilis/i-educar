@@ -170,7 +170,7 @@ class ExceptionHandler
             foreach ($exception->getHeaders() as $name => $value) {
                 header($name.': '.$value, false);
             }
-            header('Content-Type: text/html; charset='.$this->charset);
+            header('Content-Type: text/html; charset=UTF-8'.$this->charset);
         }
 
         echo $this->decorate($this->getContent($exception), $this->getStylesheet($exception));

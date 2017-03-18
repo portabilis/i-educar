@@ -2,31 +2,31 @@
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 *																	     *
-*	@author Prefeitura Municipal de Itaja�								 *
+*	@author Prefeitura Municipal de Itajaï¿½								 *
 *	@updated 29/03/2007													 *
-*   Pacote: i-PLB Software P�blico Livre e Brasileiro					 *
+*   Pacote: i-PLB Software Pï¿½blico Livre e Brasileiro					 *
 *																		 *
-*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itaja�			 *
+*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaï¿½			 *
 *						ctima@itajai.sc.gov.br					    	 *
 *																		 *
-*	Este  programa  �  software livre, voc� pode redistribu�-lo e/ou	 *
-*	modific�-lo sob os termos da Licen�a P�blica Geral GNU, conforme	 *
-*	publicada pela Free  Software  Foundation,  tanto  a vers�o 2 da	 *
-*	Licen�a   como  (a  seu  crit�rio)  qualquer  vers�o  mais  nova.	 *
+*	Este  programa  ï¿½  software livre, vocï¿½ pode redistribuï¿½-lo e/ou	 *
+*	modificï¿½-lo sob os termos da Licenï¿½a Pï¿½blica Geral GNU, conforme	 *
+*	publicada pela Free  Software  Foundation,  tanto  a versï¿½o 2 da	 *
+*	Licenï¿½a   como  (a  seu  critï¿½rio)  qualquer  versï¿½o  mais  nova.	 *
 *																		 *
-*	Este programa  � distribu�do na expectativa de ser �til, mas SEM	 *
-*	QUALQUER GARANTIA. Sem mesmo a garantia impl�cita de COMERCIALI-	 *
-*	ZA��O  ou  de ADEQUA��O A QUALQUER PROP�SITO EM PARTICULAR. Con-	 *
-*	sulte  a  Licen�a  P�blica  Geral  GNU para obter mais detalhes.	 *
+*	Este programa  ï¿½ distribuï¿½do na expectativa de ser ï¿½til, mas SEM	 *
+*	QUALQUER GARANTIA. Sem mesmo a garantia implï¿½cita de COMERCIALI-	 *
+*	ZAï¿½ï¿½O  ou  de ADEQUAï¿½ï¿½O A QUALQUER PROPï¿½SITO EM PARTICULAR. Con-	 *
+*	sulte  a  Licenï¿½a  Pï¿½blica  Geral  GNU para obter mais detalhes.	 *
 *																		 *
-*	Voc�  deve  ter  recebido uma c�pia da Licen�a P�blica Geral GNU	 *
-*	junto  com  este  programa. Se n�o, escreva para a Free Software	 *
+*	Vocï¿½  deve  ter  recebido uma cï¿½pia da Licenï¿½a Pï¿½blica Geral GNU	 *
+*	junto  com  este  programa. Se nï¿½o, escreva para a Free Software	 *
 *	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 *	02111-1307, USA.													 *
 *																		 *
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /**
-* @author Prefeitura Municipal de Itaja�
+* @author Prefeitura Municipal de Itajaï¿½
 *
 * Criado em 26/06/2006 16:19 pelo gerador automatico de classes
 */

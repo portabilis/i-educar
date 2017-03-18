@@ -1,31 +1,31 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 *																	     *
-*	@author Prefeitura Municipal de Itajaí								 *
+*	@author Prefeitura Municipal de ItajaÃ­								 *
 *	@updated 29/03/2007													 *
-*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
+*   Pacote: i-PLB Software PÃºblico Livre e Brasileiro					 *
 *																		 *
-*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
+*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÃ­			 *
 *						ctima@itajai.sc.gov.br					    	 *
 *																		 *
-*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
+*	Este  programa  Ã©  software livre, vocÃª pode redistribuÃ­-lo e/ou	 *
+*	modificÃ¡-lo sob os termos da LicenÃ§a PÃºblica Geral GNU, conforme	 *
+*	publicada pela Free  Software  Foundation,  tanto  a versÃ£o 2 da	 *
+*	LicenÃ§a   como  (a  seu  critÃ©rio)  qualquer  versÃ£o  mais  nova.	 *
 *																		 *
-*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
+*	Este programa  Ã© distribuÃ­do na expectativa de ser Ãºtil, mas SEM	 *
+*	QUALQUER GARANTIA. Sem mesmo a garantia implÃ­cita de COMERCIALI-	 *
+*	ZAÃ‡ÃƒO  ou  de ADEQUAÃ‡ÃƒO A QUALQUER PROPÃ“SITO EM PARTICULAR. Con-	 *
+*	sulte  a  LicenÃ§a  PÃºblica  Geral  GNU para obter mais detalhes.	 *
 *																		 *
-*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-*	junto  com  este  programa. Se não, escreva para a Free Software	 *
+*	VocÃª  deve  ter  recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral GNU	 *
+*	junto  com  este  programa. Se nÃ£o, escreva para a Free Software	 *
 *	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 *	02111-1307, USA.													 *
 *																		 *
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /**
-* @author Prefeitura Municipal de Itajaí
+* @author Prefeitura Municipal de ItajaÃ­
 *
 * Criado em 11/08/2006 17:43 pelo gerador automatico de classes
 */
@@ -450,7 +450,7 @@ class clsPmieducarHistoricoEscolar
 				$campos .= "{$gruda}carga_horaria";
 				$valores .= "{$gruda}'{$this->carga_horaria}'";
 				$gruda = ", ";
-			}	
+			}
 			elseif(is_null($this->carga_horaria))
 			{
 				$campos .= "{$gruda}carga_horaria";
@@ -566,7 +566,7 @@ class clsPmieducarHistoricoEscolar
       		if(is_numeric($this->ref_cod_escola)){
       			$campos .= "{$gruda}ref_cod_escola";
 				$valores .= "{$gruda}'{$this->ref_cod_escola}'";
-				$gruda = ", ";	
+				$gruda = ", ";
       		}
 
       		if (dbBool($this->dependencia)) {
@@ -582,7 +582,7 @@ class clsPmieducarHistoricoEscolar
 		    if(is_numeric($this->posicao)){
       			$campos .= "{$gruda}posicao";
 				$valores .= "{$gruda}'{$this->posicao}'";
-				$gruda = ", ";	
+				$gruda = ", ";
       		}
 			elseif(is_null($this->posicao))
 			{
@@ -778,7 +778,7 @@ class clsPmieducarHistoricoEscolar
 
 			if(is_numeric($this->ref_cod_escola)){
 				$set .= "{$gruda}ref_cod_escola = '{$this->ref_cod_escola}'";
-				$gruda = ", ";	
+				$gruda = ", ";
       		}
       		else{
       			$set .= "{$gruda}ref_cod_escola = NULL";
@@ -795,7 +795,7 @@ class clsPmieducarHistoricoEscolar
 
 		    if(is_numeric($this->posicao)){
 				$set .= "{$gruda}posicao = '{$this->posicao}'";
-				$gruda = ", ";	
+				$gruda = ", ";
       		}
 			elseif(is_null($this->posicao))
 			{
@@ -1029,7 +1029,7 @@ class clsPmieducarHistoricoEscolar
 	function getCodNomeEscola(){
 		$db = new clsBanco();
        	$db->Consulta("SELECT escola, ref_cod_escola
-  		 				 FROM pmieducar.historico_escolar 
+  		 				 FROM pmieducar.historico_escolar
  					    WHERE ref_cod_aluno = $this->ref_cod_aluno
    						  AND sequencial = $this->sequencial");
 
@@ -1155,7 +1155,7 @@ class clsPmieducarHistoricoEscolar
 
 	public static function gerarHistoricoTransferencia($ref_cod_matricula, $pessoa_logada){
 
-	
+
 		$detMatricula = self::dadosMatricula($ref_cod_matricula);
 
 		if(self::deveGerarHistorico($detMatricula['ref_cod_instituicao'])){
@@ -1194,7 +1194,7 @@ class clsPmieducarHistoricoEscolar
 	                            );
 
 	        if($historicoEscolar->cadastra()){
-	        	$sequencial = self::getMaxSequencial($detMatricula['ref_cod_aluno']);	
+	        	$sequencial = self::getMaxSequencial($detMatricula['ref_cod_aluno']);
 	        	$disciplinas = self::dadosDisciplinas($ref_cod_matricula);
 	        	foreach($disciplinas as $index => $disciplina){
 	        		$historicoDisciplina = new clsPmieducarHistoricoDisciplinas(($index+1), $detMatricula['ref_cod_aluno'], $sequencial, $disciplina, "");
@@ -1212,7 +1212,7 @@ class clsPmieducarHistoricoEscolar
 		$cod_serie = $detMatricula['cod_serie'];
 		$cod_escola = $detMatricula['ref_ref_cod_escola'];
 
-		$sql = "SELECT translate(upper(cc.nome),'áéíóúıàèìòùãõâêîôûäëïöüÿçÁÉÍÓÚİÀÈÌÒÙÃÕÂÊÎÔÛÄËÏÖÜÇ','AEIOUYAEIOUAOAEIOUAEIOUYCAEIOUYAEIOUAOAEIOUAEIOUC')
+		$sql = "SELECT translate(upper(cc.nome),'Ã¡Ã©Ã­Ã³ÃºÃ½Ã Ã¨Ã¬Ã²Ã¹Ã£ÃµÃ¢ÃªÃ®Ã´Ã»Ã¤Ã«Ã¯Ã¶Ã¼Ã¿Ã§ÃÃ‰ÃÃ“ÃšÃÃ€ÃˆÃŒÃ’Ã™ÃƒÃ•Ã‚ÃŠÃÃ”Ã›Ã„Ã‹ÃÃ–ÃœÃ‡','AEIOUYAEIOUAOAEIOUAEIOUYCAEIOUYAEIOUAOAEIOUAEIOUC')
  				  FROM pmieducar.escola_serie_disciplina esd
  				 INNER JOIN modules.componente_curricular cc ON(esd.ref_cod_disciplina = cc.id)
  				 WHERE esd.ref_ref_cod_serie = {$cod_serie}
@@ -1238,7 +1238,7 @@ class clsPmieducarHistoricoEscolar
 		$db->Consulta($sql);
 		$db->ProximoRegistro();
 		return $db->Tupla();
-	}	
+	}
 
 	protected static function dadosEscola($cod_escola, $cod_instituicao){
 	    $sql = "select
@@ -1288,7 +1288,7 @@ class clsPmieducarHistoricoEscolar
 			$mediaGeral = $db->Tupla();
 			$mediaGeral = number_format($mediaGeral[0], 1, '.', ',');
 
-			$sql = "INSERT INTO pmieducar.historico_disciplinas values ({$sequencial}, {$this->ref_cod_aluno}, {$this->sequencial}, 'Média Geral', {$mediaGeral});";
+			$sql = "INSERT INTO pmieducar.historico_disciplinas values ({$sequencial}, {$this->ref_cod_aluno}, {$this->sequencial}, 'MÃ©dia Geral', {$mediaGeral});";
 			$db->Consulta($sql);
 			return true;
 

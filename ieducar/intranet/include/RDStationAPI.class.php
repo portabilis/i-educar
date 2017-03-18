@@ -1,21 +1,21 @@
 <?php
 /**
 Authors:
-Júlio Paulillo <julio@agendor.com.br>
+JÃºlio Paulillo <julio@agendor.com.br>
 Tulio Monte Azul <tulio@agendor.com.br>
 
 DOCS
 #############
-Guia de integrações
+Guia de integraÃ§Ãµes
 http://ajuda.rdstation.com.br/hc/pt-br/articles/200310549-Guia-de-integra%C3%A7%C3%B5es-com-o-RD-Station
 
-Marcar venda e lost via formulário próprio ou sistema (API)
+Marcar venda e lost via formulÃ¡rio prÃ³prio ou sistema (API)
 http://ajuda.rdstation.com.br/hc/pt-br/articles/202640385-Marcar-venda-e-lost-via-formul%C3%A1rio-pr%C3%B3prio-ou-sistema-API-
 
 Alterar estado do Lead no funil do RD Station (API)
 http://ajuda.rdstation.com.br/hc/pt-br/articles/200310699-Alterar-estado-do-Lead-no-funil-do-RD-Station-API-
 
-Integrar formulário no site ou sistema próprio para Criação de Lead (API)
+Integrar formulÃ¡rio no site ou sistema prÃ³prio para CriaÃ§Ã£o de Lead (API)
 http://ajuda.rdstation.com.br/hc/pt-br/articles/200310589-Integrar-formul&aacute;rio-no-site-ou-sistema-pr&oacute;prio-para-Cria&ccedil;&atilde;o-de-Lead-API-
 **/
 
@@ -25,7 +25,7 @@ class RDStationAPI {
   public $privateToken;
   public $baseURL = "https://www.rdstation.com.br/api/";
   public $apiVersion = "1.3";
-  public $defaultIdentifier = "Usuário no produto i-Educar";
+  public $defaultIdentifier = "UsuÃ¡rio no produto i-Educar";
 
   public function __construct($privateToken=NULL, $token=NULL){
     if(empty($privateToken)) throw new Exception("Inform RDStationAPI.privateToken as the first argument.");
@@ -85,7 +85,7 @@ class RDStationAPI {
   $data:  (Array) Custom data array, example:
     array(
       "identificador" => "contact-form",
-      "nome" => "Júlio Paulillo",
+      "nome" => "JÃºlio Paulillo",
       "empresa" => "Agendor",
       "cargo" => "Cofounder",
       "telefone" => "(11) 3280-8090",

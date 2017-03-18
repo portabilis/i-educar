@@ -1,25 +1,25 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
+	*	@author Prefeitura Municipal de ItajaÃ­								 *
 	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
+	*   Pacote: i-PLB Software PÃºblico Livre e Brasileiro					 *
 	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÃ­			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
+	*	Este  programa  Ã©  software livre, vocÃª pode redistribuÃ­-lo e/ou	 *
+	*	modificÃ¡-lo sob os termos da LicenÃ§a PÃºblica Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a versÃ£o 2 da	 *
+	*	LicenÃ§a   como  (a  seu  critÃ©rio)  qualquer  versÃ£o  mais  nova.	 *
 	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  Ã© distribuÃ­do na expectativa de ser Ãºtil, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia implÃ­cita de COMERCIALI-	 *
+	*	ZAÃ‡ÃƒO  ou  de ADEQUAÃ‡ÃƒO A QUALQUER PROPÃ“SITO EM PARTICULAR. Con-	 *
+	*	sulte  a  LicenÃ§a  PÃºblica  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
+	*	VocÃª  deve  ter  recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral GNU	 *
+	*	junto  com  este  programa. Se nÃ£o, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
@@ -34,7 +34,7 @@ class clsIndex extends clsBase
 {
 	function Formular()
 	{
-		$this->SetTitulo( "{$this->_instituicao} Relatório de Diárias" );
+		$this->SetTitulo( "{$this->_instituicao} RelatÃ³rio de DiÃ¡rias" );
 		$this->processoAp = "332";
 	}
 }
@@ -74,19 +74,19 @@ class indice extends clsCadastro
 			$pessoas = $objPessoa->lista( false, false, false, false, $ids );
 
 			$lista = array();
-			$lista["0"]="Escolha um Funcionário...";
+			$lista["0"]="Escolha um FuncionÃ¡rio...";
 			foreach ( $pessoas AS $pessoa )
 			{
 				$lista[$pessoa["idpes"]] = $pessoa["nome"];
 			}
 
-			$this->campoLista( "funcionario", "Funcionário", $lista, $this->funcionario);
+			$this->campoLista( "funcionario", "FuncionÃ¡rio", $lista, $this->funcionario);
 			$this->campoData("data_inicial", "Data Inicial", $this->data_inicial);
 			$this->campoData("data_final", "Data Final", $this->data_final);
 		}
 		else
 		{
-			$this->campoRotulo("aviso","Aviso","Nenhuma Diária cadastrada");
+			$this->campoRotulo("aviso","Aviso","Nenhuma DiÃ¡ria cadastrada");
 		}
 	}
 
@@ -130,7 +130,7 @@ class indice extends clsCadastro
 			$nome = $db2->campoUnico("SELECT nome FROM cadastro.pessoa WHERE idpes = {$this->funcionario}");
 			$nome_funcionario = $nome;
 
-			$relatorio = new relatorios("Relatório de Diárias\nFuncionário: {$nome}", 200, false, "SEGPOG - Departamento de Logística", "A4", "Prefeitura de Itajaí\nSEGPOG - Departamento de Logística\nRua Alberto Werner, 100 - Vila Operária\nCEP. 88304-053 - Itajaí - SC");
+			$relatorio = new relatorios("RelatÃ³rio de DiÃ¡rias\nFuncionÃ¡rio: {$nome}", 200, false, "SEGPOG - Departamento de LogÃ­stica", "A4", "Prefeitura de ItajaÃ­\nSEGPOG - Departamento de LogÃ­stica\nRua Alberto Werner, 100 - Vila OperÃ¡ria\nCEP. 88304-053 - ItajaÃ­ - SC");
 
 			//tamanho do retangulo, tamanho das linhas.
 			$relatorio->novaPagina(30,28);
@@ -152,16 +152,16 @@ class indice extends clsCadastro
 				}
 				// pega o link e exibe ele ao usuario
 				$link = $relatorio->fechaPdf();
-				$this->campoRotulo("arquivo","Arquivo", "<a href='" . $link . "'>Visualizar Relatório</a>");
+				$this->campoRotulo("arquivo","Arquivo", "<a href='" . $link . "'>Visualizar RelatÃ³rio</a>");
 			}
 			else
 			{
-				$this->campoRotulo("aviso","Aviso", "Nenhum Funcionário neste relatorio.");
+				$this->campoRotulo("aviso","Aviso", "Nenhum FuncionÃ¡rio neste relatorio.");
 			}
 		}
 		else
 		{
-			$this->campoRotulo("aviso","Aviso", "Escolha um Funcionário.");
+			$this->campoRotulo("aviso","Aviso", "Escolha um FuncionÃ¡rio.");
 		}
 
 		$this->largura = "100%";

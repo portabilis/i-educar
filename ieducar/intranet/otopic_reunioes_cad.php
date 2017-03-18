@@ -1,25 +1,25 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	@author Prefeitura Municipal de ItajaÌ								 *
+	*	@author Prefeitura Municipal de Itaja√≠								 *
 	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software P˙blico Livre e Brasileiro					 *
+	*   Pacote: i-PLB Software P√∫blico Livre e Brasileiro					 *
 	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÌ			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itaja√≠			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  È  software livre, vocÍ pode redistribuÌ-lo e/ou	 *
-	*	modific·-lo sob os termos da LicenÁa P˙blica Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a vers„o 2 da	 *
-	*	LicenÁa   como  (a  seu  critÈrio)  qualquer  vers„o  mais  nova.	 *
+	*	Este  programa  √©  software livre, voc√™ pode redistribu√≠-lo e/ou	 *
+	*	modific√°-lo sob os termos da Licen√ßa P√∫blica Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a vers√£o 2 da	 *
+	*	Licen√ßa   como  (a  seu  crit√©rio)  qualquer  vers√£o  mais  nova.	 *
 	*																		 *
-	*	Este programa  È distribuÌdo na expectativa de ser ˙til, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implÌcita de COMERCIALI-	 *
-	*	ZA«√O  ou  de ADEQUA«√O A QUALQUER PROP”SITO EM PARTICULAR. Con-	 *
-	*	sulte  a  LicenÁa  P˙blica  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  √© distribu√≠do na expectativa de ser √∫til, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia impl√≠cita de COMERCIALI-	 *
+	*	ZA√á√ÉO  ou  de ADEQUA√á√ÉO A QUALQUER PROP√ìSITO EM PARTICULAR. Con-	 *
+	*	sulte  a  Licen√ßa  P√∫blica  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	VocÍ  deve  ter  recebido uma cÛpia da LicenÁa P˙blica Geral GNU	 *
-	*	junto  com  este  programa. Se n„o, escreva para a Free Software	 *
+	*	Voc√™  deve  ter  recebido uma c√≥pia da Licen√ßa P√∫blica Geral GNU	 *
+	*	junto  com  este  programa. Se n√£o, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
@@ -38,7 +38,7 @@ class clsIndex extends clsBase
 	
 	function Formular()
 	{
-		$this->SetTitulo( "{$this->_instituicao} i-Pauta - Cadastro de Reuni„o" );
+		$this->SetTitulo( "{$this->_instituicao} i-Pauta - Cadastro de Reuni√£o" );
 		$this->processoAp = "294";
 	}
 }
@@ -105,7 +105,7 @@ class indice extends clsCadastro
 		$this->campoOculto("id_pessoa",$this->id_pessoa);
 		$this->campoOculto("cod_grupo",$this->cod_grupo);
 		$this->campoOculto("cod_reuniao",$this->cod_reuniao);
-		$this->campoMemo("descricao","DescriÁ„o",$this->descricao,50,5,true);
+		$this->campoMemo("descricao","Descri√ß√£o",$this->descricao,50,5,true);
 		$obj = new clsReuniao();
 		/*  Pega lista de Reunioes Finalizadas, Verifica e mostra os Topicos Finalizados 
 			que nao foram finalizados nessa reuniao 
@@ -127,7 +127,7 @@ class indice extends clsCadastro
 				}
 			}
 		}
-		/*  Pega lista de Reunioes n„o Finalizadas, Verifica que est„o nessa reuniao e marca como 
+		/*  Pega lista de Reunioes n√£o Finalizadas, Verifica que est√£o nessa reuniao e marca como 
 			comprometido
 		*/	
 		$obj = new clsReuniao();
@@ -147,7 +147,7 @@ class indice extends clsCadastro
 		}
 		$this->campoData("data","Data Inicial",$this->data,true);
 		$this->campoData("data_final","Data Final",$this->data_final,true);
-		$this->campoHora("hora_inicial","Hora de InÌcio",$this->hora_inicial,true);		
+		$this->campoHora("hora_inicial","Hora de In√≠cio",$this->hora_inicial,true);		
 		$this->campoHora("hora_final","Hora de Fim",$this->hora_final,true);		
 		if(!$this->email_enviado)
 		{
@@ -170,7 +170,7 @@ class indice extends clsCadastro
 			{
 				$obj = new clsTopicoReuniao($topicos['cod_topico']);
 				$checked = $obj->detalhe() ? "Pendente" : "";
-				$this->campoCheck("top_{$topicos['cod_topico']}","TÛpicos",$checked,"{$topicos['assunto']}",false,"javascript: desmarcar_marcar('top_{$topicos['cod_topico']}'); ");
+				$this->campoCheck("top_{$topicos['cod_topico']}","T√≥picos",$checked,"{$topicos['assunto']}",false,"javascript: desmarcar_marcar('top_{$topicos['cod_topico']}'); ");
 				$array_marcar_todos[] = $topicos['cod_topico'];
 			}
 		}	
@@ -184,7 +184,7 @@ class indice extends clsCadastro
 				foreach ($lista as $topico_reuniao) {
 					$obj = new clsTopico($topico_reuniao['ref_cod_topico']);
 					$detalhe = $obj->detalhe();
-					$this->campoCheck("top_{$topico_reuniao['ref_cod_topico']}","TÛpicos",1,"{$detalhe['assunto']}",false,"javascript: desmarcar_marcar('top_{$topicos['cod_topico']}'); ");
+					$this->campoCheck("top_{$topico_reuniao['ref_cod_topico']}","T√≥picos",1,"{$detalhe['assunto']}",false,"javascript: desmarcar_marcar('top_{$topicos['cod_topico']}'); ");
 					$array_marcar_todos[] =$topico_reuniao['ref_cod_topico'];
 				}
 			}
@@ -259,7 +259,7 @@ class indice extends clsCadastro
 			$obj = new clsReuniao($this->cod_reuniao);
 			$detalhe_reuniao = $obj->detalhe(); 
 			
-			$corpo_email .= "<br><table summary=\"\" border=0 cellspacing=3 cellpadding=3><tr><td colspan='2'  style=\"border-bottom: 2px solid #024492\"><span class='titulo'><b>DescriÁ„o da Reuni„o</b>.</span><br>\n<br>\n";
+			$corpo_email .= "<br><table summary=\"\" border=0 cellspacing=3 cellpadding=3><tr><td colspan='2'  style=\"border-bottom: 2px solid #024492\"><span class='titulo'><b>Descri√ß√£o da Reuni√£o</b>.</span><br>\n<br>\n";
 			$corpo_email .= "<tr><td><b>{$detalhe_reuniao['descricao']}</b></td><td width=250><br><br></td></tr>"; 
 
 			if($data == $data2)
@@ -270,7 +270,7 @@ class indice extends clsCadastro
 				$corpo_email .= "<tr><td><b><br>Data de Inicio: $data $this->hora_inicial - Data de Fim: $data2 $this->hora_final</b></td><td width=250><br></td></tr>";
 			}
 			
-			$corpo_email .= "<tr><td><b><span class='titulo'><br>TÛpicos</span></b></td><td width=250></td></tr>";
+			$corpo_email .= "<tr><td><b><span class='titulo'><br>T√≥picos</span></b></td><td width=250></td></tr>";
 			foreach ($lista_topicos as $topico) {
 				$obj = new clsTopico($topico);
 				$detalhe = $obj->detalhe();
@@ -279,7 +279,7 @@ class indice extends clsCadastro
 			
 			
 			$cabecalho = "From: PMI(itajai.com.br)\nReply-To: itajai.com.br";
-			$objEmail = new clsEmail( $grupo_pessoas, "[OpenTopic] - Nova Reuni„o", $corpo_email,"email_mailling_topic" );
+			$objEmail = new clsEmail( $grupo_pessoas, "[OpenTopic] - Nova Reuni√£o", $corpo_email,"email_mailling_topic" );
 			$objEmail->envia();
 		}
 		header("Location: otopic_meus_grupos_det2.php?cod_grupo=$this->cod_grupo");
@@ -350,7 +350,7 @@ class indice extends clsCadastro
 			$obj = new clsReuniao($this->cod_reuniao);
 			$detalhe_reuniao = $obj->detalhe(); 
 			
-			$corpo_email .= "<br><table summary=\"\" border=0 cellspacing=3 cellpadding=3><tr><td colspan='2'  style=\"border-bottom: 2px solid #024492\"><span class='titulo'><b>DescriÁ„o da Reuni„o</b>.</span><br>\n<br>\n";
+			$corpo_email .= "<br><table summary=\"\" border=0 cellspacing=3 cellpadding=3><tr><td colspan='2'  style=\"border-bottom: 2px solid #024492\"><span class='titulo'><b>Descri√ß√£o da Reuni√£o</b>.</span><br>\n<br>\n";
 			$corpo_email .= "<tr><td><b>{$detalhe_reuniao['descricao']}</b></td><td width=250><br><br></td></tr>"; 
 
 			if($data == $data2)
@@ -361,7 +361,7 @@ class indice extends clsCadastro
 				$corpo_email .= "<tr><td><b><br>Data de Inicio: $data $this->hora_inicial - Data de Fim: $data2 $this->hora_final</b></td><td width=250><br></td></tr>";
 			}
 
-			$corpo_email .= "<tr><td><b><span class='titulo'><br>TÛpicos</span></b></td><td width=250></td></tr>";
+			$corpo_email .= "<tr><td><b><span class='titulo'><br>T√≥picos</span></b></td><td width=250></td></tr>";
 
 			foreach ($lista_topicos as $topico) {
 				$obj = new clsTopico($topico);
@@ -369,7 +369,7 @@ class indice extends clsCadastro
 					$corpo_email .= "<tr><td><br><br>{$detalhe['assunto']}</td></tr></table>";
 			}
 			$cabecalho = "From: PMI(itajai.com.br)\nReply-To: itajai.com.br";
-			$objEmail = new clsEmail( $grupo_pessoas, "[OpenTopic] - Nova Reuni„o", $corpo_email,"email_mailling_topic" );
+			$objEmail = new clsEmail( $grupo_pessoas, "[OpenTopic] - Nova Reuni√£o", $corpo_email,"email_mailling_topic" );
 			$objEmail->envia();
 		}
 		header("Location: otopic_meus_grupos_det2.php?cod_grupo=$this->cod_grupo");

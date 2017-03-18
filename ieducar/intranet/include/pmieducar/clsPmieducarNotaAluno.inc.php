@@ -1,31 +1,31 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 *																	     *
-*	@author Prefeitura Municipal de ItajaÌ								 *
+*	@author Prefeitura Municipal de Itaja√≠								 *
 *	@updated 29/03/2007													 *
-*   Pacote: i-PLB Software P˙blico Livre e Brasileiro					 *
+*   Pacote: i-PLB Software P√∫blico Livre e Brasileiro					 *
 *																		 *
-*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÌ			 *
+*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itaja√≠			 *
 *						ctima@itajai.sc.gov.br					    	 *
 *																		 *
-*	Este  programa  È  software livre, vocÍ pode redistribuÌ-lo e/ou	 *
-*	modific·-lo sob os termos da LicenÁa P˙blica Geral GNU, conforme	 *
-*	publicada pela Free  Software  Foundation,  tanto  a vers„o 2 da	 *
-*	LicenÁa   como  (a  seu  critÈrio)  qualquer  vers„o  mais  nova.	 *
+*	Este  programa  √©  software livre, voc√™ pode redistribu√≠-lo e/ou	 *
+*	modific√°-lo sob os termos da Licen√ßa P√∫blica Geral GNU, conforme	 *
+*	publicada pela Free  Software  Foundation,  tanto  a vers√£o 2 da	 *
+*	Licen√ßa   como  (a  seu  crit√©rio)  qualquer  vers√£o  mais  nova.	 *
 *																		 *
-*	Este programa  È distribuÌdo na expectativa de ser ˙til, mas SEM	 *
-*	QUALQUER GARANTIA. Sem mesmo a garantia implÌcita de COMERCIALI-	 *
-*	ZA«√O  ou  de ADEQUA«√O A QUALQUER PROP”SITO EM PARTICULAR. Con-	 *
-*	sulte  a  LicenÁa  P˙blica  Geral  GNU para obter mais detalhes.	 *
+*	Este programa  √© distribu√≠do na expectativa de ser √∫til, mas SEM	 *
+*	QUALQUER GARANTIA. Sem mesmo a garantia impl√≠cita de COMERCIALI-	 *
+*	ZA√á√ÉO  ou  de ADEQUA√á√ÉO A QUALQUER PROP√ìSITO EM PARTICULAR. Con-	 *
+*	sulte  a  Licen√ßa  P√∫blica  Geral  GNU para obter mais detalhes.	 *
 *																		 *
-*	VocÍ  deve  ter  recebido uma cÛpia da LicenÁa P˙blica Geral GNU	 *
-*	junto  com  este  programa. Se n„o, escreva para a Free Software	 *
+*	Voc√™  deve  ter  recebido uma c√≥pia da Licen√ßa P√∫blica Geral GNU	 *
+*	junto  com  este  programa. Se n√£o, escreva para a Free Software	 *
 *	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 *	02111-1307, USA.													 *
 *																		 *
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /**
-* @author Prefeitura Municipal de ItajaÌ
+* @author Prefeitura Municipal de Itaja√≠
 *
 * Criado em 11/08/2006 17:44 pelo gerador automatico de classes
 */
@@ -620,7 +620,7 @@ class clsPmieducarNotaAluno
 		$sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
 		$this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} {$filtros}" );
-	
+
 //		echo "<!--{$sql}-->";
 		$db->Consulta( $sql );
 
@@ -789,7 +789,7 @@ class clsPmieducarNotaAluno
 	}
 
 	/**
-	 * calcula a mÈdia do aluno $cod_matricula na disciplina $cod_disciplina
+	 * calcula a m√©dia do aluno $cod_matricula na disciplina $cod_disciplina
 	 *
 	 * @param int  $cod_matricula
 	 * @param int  $cod_disciplina
@@ -833,7 +833,7 @@ class clsPmieducarNotaAluno
 				AND tav.sequencial = na.ref_sequencial
 				AND na.modulo = '{$qtd_modulos}'
 				");
-				
+
 				/**
 				 * diminiu em um no numero de modulos
 				 * jah que a nota do exame eh multiplicada
@@ -846,7 +846,7 @@ class clsPmieducarNotaAluno
 			{
 				$qtd_modulos_sem_exame = $qtd_modulos;
 			}
-			
+
 			$soma = $db->CampoUnico("
 			SELECT SUM( tav.valor )
 			FROM pmieducar.nota_aluno na
@@ -875,7 +875,7 @@ class clsPmieducarNotaAluno
 				{
 					$media = $soma / ($qtd_modulos+1);
 				}
-				else 
+				else
 				{
 					$media = $soma / $qtd_modulos;
 				}
@@ -907,17 +907,17 @@ class clsPmieducarNotaAluno
 		}
 		return false;
 	}
-	
+
 	function getMediaAlunoExame($cod_matricula,$cod_disciplina,$cod_serie,$qtd_modulos)
 	{
 		if (is_numeric($cod_matricula) && is_numeric($cod_disciplina) && is_numeric($cod_serie) && is_numeric($qtd_modulos))
 		{
-			$sqlNotas = "SELECT 
+			$sqlNotas = "SELECT
 							SUM( tav.valor )
-						FROM 
+						FROM
 							pmieducar.nota_aluno na
 							, pmieducar.tipo_avaliacao_valores tav
-						WHERE 
+						WHERE
 							na.ref_cod_matricula = '{$cod_matricula}'
 							AND na.ref_cod_disciplina = '{$cod_disciplina}'
 							AND na.ref_cod_serie = '{$cod_serie}'
@@ -925,15 +925,15 @@ class clsPmieducarNotaAluno
 							AND tav.ref_cod_tipo_avaliacao = na.ref_ref_cod_tipo_avaliacao
 							AND tav.sequencial = na.ref_sequencial
 							AND na.modulo <= {$qtd_modulos}";
-			$sqlExame = "SELECT 
-							na.nota * 2 
-						FROM 
+			$sqlExame = "SELECT
+							na.nota * 2
+						FROM
 							pmieducar.nota_aluno na
-						WHERE 
-							na.ref_cod_matricula = '{$cod_matricula}' 
-							AND na.ref_cod_disciplina = '{$cod_disciplina}' 
-							AND na.ref_cod_serie = '{$cod_serie}' 
-							AND na.ativo = 1 
+						WHERE
+							na.ref_cod_matricula = '{$cod_matricula}'
+							AND na.ref_cod_disciplina = '{$cod_disciplina}'
+							AND na.ref_cod_serie = '{$cod_serie}'
+							AND na.ativo = 1
 							AND na.modulo = {$qtd_modulos} + 1";
 			$db = new clsBanco();
 			$somaNotas = $db->CampoUnico($sqlNotas);
@@ -954,7 +954,7 @@ class clsPmieducarNotaAluno
 	}
 
 	/**
-	 * calcula a mÈdia especial do aluno $cod_matricula na disciplina $cod_disciplina
+	 * calcula a m√©dia especial do aluno $cod_matricula na disciplina $cod_disciplina
 	 * calculo = (quantidade de disciplinas acima da media / quantidades de disciplinas) * 10 ) tem que ser maior que a media
 	 * se for maior o aluno esta aprovado
 	 * @param int  $cod_matricula
@@ -1058,8 +1058,8 @@ class clsPmieducarNotaAluno
 	}
 
 	/**
-	 * calcula as mÈdias do aluno $cod_matricula em todas as disciplinas, encontra
-	 * os que est„o abaixo da mÈdia ($media) e retorna as disciplinas
+	 * calcula as m√©dias do aluno $cod_matricula em todas as disciplinas, encontra
+	 * os que est√£o abaixo da m√©dia ($media) e retorna as disciplinas
 	 *
 	 * @param int $cod_matricula
 	 * @param int $qtd_modulos
@@ -1088,7 +1088,7 @@ class clsPmieducarNotaAluno
 	}
 
 	/**
-	 * calcula as mÈdias do aluno $cod_matricula em todas as disciplinas
+	 * calcula as m√©dias do aluno $cod_matricula em todas as disciplinas
 	 *
 	 * @param int $cod_matricula
 	 * @param int $qtd_modulos
@@ -1135,7 +1135,7 @@ class clsPmieducarNotaAluno
 						$media_valor = $valor["valor"];
 					}
 				}
-				else 
+				else
 				{
 					$media_valor = $media;
 				}
@@ -1148,8 +1148,8 @@ class clsPmieducarNotaAluno
 	}
 
 	/**
-	 * calcula as mÈdias dos alunos da turma $cod_turma em todas as disciplinas, encontra
-	 * os que est„o abaixo da mÈdia ($media) e retorna as matriculas
+	 * calcula as m√©dias dos alunos da turma $cod_turma em todas as disciplinas, encontra
+	 * os que est√£o abaixo da m√©dia ($media) e retorna as matriculas
 	 *
 	 * @param int $cod_turma
 	 * @param int $qtd_modulos
@@ -1209,8 +1209,8 @@ class clsPmieducarNotaAluno
 	}
 
 	/**
-	 * calcula as mÈdias dos alunos da turma $cod_turma em todas as disciplinas, encontra
-	 * os que est„o abaixo da mÈdia ($media) e retorna as disciplinas
+	 * calcula as m√©dias dos alunos da turma $cod_turma em todas as disciplinas, encontra
+	 * os que est√£o abaixo da m√©dia ($media) e retorna as disciplinas
 	 *
 	 * @param int $cod_turma
 	 * @param int $qtd_modulos
@@ -1267,7 +1267,7 @@ class clsPmieducarNotaAluno
 						}
 					}
 					else
-					{ 
+					{
 						if( $soma / $qtd_modulos < $media )
 						{
 							$retorno["{$cod_serie}_{$cod_disciplina}"] = array("cod_serie" => $cod_serie, "cod_disciplina" => $cod_disciplina );
@@ -1281,8 +1281,8 @@ class clsPmieducarNotaAluno
 
 
 	/**
-	 * calcula as mÈdias dos alunos da turma $cod_turma em uma disciplina especifica $cod_disciplina, encontra
-	 * os que est„o abaixo da mÈdia ($media) e retorna as matriculas
+	 * calcula as m√©dias dos alunos da turma $cod_turma em uma disciplina especifica $cod_disciplina, encontra
+	 * os que est√£o abaixo da m√©dia ($media) e retorna as matriculas
 	 *
 	 * @param int $cod_turma
 	 * @param int $cod_disciplina
@@ -1382,7 +1382,7 @@ class clsPmieducarNotaAluno
 //			  AND d.ativo  = 1
 //			  AND ds.ativo = 1
 //			  AND d.cod_disciplina = ds.ref_cod_disciplina<br><br><br>";
-			
+
 			//			AND d.apura_falta = 1
 			/**
 			 * para faltas globalizada considerar todas as disciplinas
@@ -1421,7 +1421,7 @@ class clsPmieducarNotaAluno
 			//				AND mmt.aprovado = 3
 			//AND d.apura_falta = 1
 			//retorna a qtd restante
-						
+
 			return $total - $ja_recebidas;
 		}
 		return false;
@@ -1434,7 +1434,7 @@ class clsPmieducarNotaAluno
 
 
 	/**
-	 * Retorna uma vari·vel com o resultado
+	 * Retorna uma vari√°vel com o resultado
 	 *
 	 * @return int
 	 */
@@ -1572,7 +1572,7 @@ class clsPmieducarNotaAluno
 	}
 
 	/**
-	 * Retorna uma lista com as mÈdias filtradas conforme os par‚metros
+	 * Retorna uma lista com as m√©dias filtradas conforme os par√¢metros
 	 *
 	 * @return array
 	 */
@@ -1723,7 +1723,7 @@ class clsPmieducarNotaAluno
 	}
 
 	/**
-	 * Retorna uma vari·vel com o resultado
+	 * Retorna uma vari√°vel com o resultado
 	 *
 	 * @return int
 	 */
@@ -1896,10 +1896,10 @@ class clsPmieducarNotaAluno
 		}
 		return false;
 	}
-	
+
 	/**
-	 * Funcao que retorna a ultima nota do modulo para as series que 
-	 * a ultima nota define a situacao do aluno 
+	 * Funcao que retorna a ultima nota do modulo para as series que
+	 * a ultima nota define a situacao do aluno
 	 *
 	 * @param int $cod_matricula
 	 * @param int $cod_disciplina
@@ -1927,6 +1927,6 @@ class clsPmieducarNotaAluno
 		}
 		return false;
 	}
-	
+
 }
 ?>

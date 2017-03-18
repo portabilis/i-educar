@@ -582,8 +582,8 @@ EOF;
     public function testNonUtf8Exception()
     {
         $yamls = array(
-            iconv('UTF-8', 'ISO-8859-1', "foo: 'äöüß'"),
-            iconv('UTF-8', 'ISO-8859-15', "euro: '€'"),
+            iconv('UTF-8', '', "foo: 'äöüß'"),
+            iconv('UTF-8', '5', "euro: '€'"),
             iconv('UTF-8', 'CP1252', "cp1252: '©ÉÇáñ'"),
         );
 

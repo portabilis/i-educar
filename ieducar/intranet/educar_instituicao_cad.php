@@ -1,25 +1,25 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
+	*	@author Prefeitura Municipal de ItajaÃ­								 *
 	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
+	*   Pacote: i-PLB Software PÃºblico Livre e Brasileiro					 *
 	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÃ­			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
+	*	Este  programa  Ã©  software livre, vocÃª pode redistribuÃ­-lo e/ou	 *
+	*	modificÃ¡-lo sob os termos da LicenÃ§a PÃºblica Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a versÃ£o 2 da	 *
+	*	LicenÃ§a   como  (a  seu  critÃ©rio)  qualquer  versÃ£o  mais  nova.	 *
 	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  Ã© distribuÃ­do na expectativa de ser Ãºtil, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia implÃ­cita de COMERCIALI-	 *
+	*	ZAÃ‡ÃƒO  ou  de ADEQUAÃ‡ÃƒO A QUALQUER PROPÃ“SITO EM PARTICULAR. Con-	 *
+	*	sulte  a  LicenÃ§a  PÃºblica  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
+	*	VocÃª  deve  ter  recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral GNU	 *
+	*	junto  com  este  programa. Se nÃ£o, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
@@ -154,7 +154,7 @@ class indice extends clsCadastro
 		$this->campoOculto( "cod_instituicao", $this->cod_instituicao );
 
 		// text
-		$this->campoTexto( "nm_instituicao", "Nome da Instituição", $this->nm_instituicao, 30, 255, true );
+		$this->campoTexto( "nm_instituicao", "Nome da InstituiÃ§Ã£o", $this->nm_instituicao, 30, 255, true );
 		$this->campoCep( "cep", "CEP", int2CEP( $this->cep ), true, "-", false, false );
 		$this->campoTexto( "logradouro", "Logradouro", $this->logradouro, 30, 255, true );
 		$this->campoTexto( "bairro", "Bairro", $this->bairro, 30, 40, true );
@@ -203,16 +203,16 @@ class indice extends clsCadastro
 		}
 		$this->campoLista( "ref_sigla_uf", "UF", $opcoes, $this->ref_sigla_uf, "", false, "", "", false, true );
 
-		$this->campoNumero( "numero", "Número", $this->numero, 6, 6 );
+		$this->campoNumero( "numero", "NÃºmero", $this->numero, 6, 6 );
 		$this->campoTexto( "complemento", "Complemento", $this->complemento, 30, 50, false );
-		$this->campoTexto( "nm_responsavel", "Nome do Responsável", $this->nm_responsavel, 30, 255, true );
+		$this->campoTexto( "nm_responsavel", "Nome do ResponsÃ¡vel", $this->nm_responsavel, 30, 255, true );
 		$this->campoNumero( "ddd_telefone", "DDD Telefone", $this->ddd_telefone, 2, 2 );
 		$this->campoNumero( "telefone", "Telefone", $this->telefone, 11, 11 );
 
 
-		$this->campoData('data_base_transferencia', 'Data máxima para deslocamento', Portabilis_Date_Utils::pgSQLToBr($this->data_base_transferencia), null, null, false);
+		$this->campoData('data_base_transferencia', 'Data mÃ¡xima para deslocamento', Portabilis_Date_Utils::pgSQLToBr($this->data_base_transferencia), null, null, false);
 
-        $this->campoData('data_base_remanejamento', 'Data máxima para troca de sala', Portabilis_Date_Utils::pgSQLToBr($this->data_base_remanejamento), null, null, false);
+        $this->campoData('data_base_remanejamento', 'Data mÃ¡xima para troca de sala', Portabilis_Date_Utils::pgSQLToBr($this->data_base_remanejamento), null, null, false);
 
 		///$hiddenInputOptions = array('options' => array('value' => $this->coordenador_transporte));
 		//$helperOptions      = array('objectName' => 'gestor', 'hiddenInputOptions' => $hiddenInputOptions);
@@ -223,29 +223,29 @@ class indice extends clsCadastro
 
 		$this->inputsHelper()->simpleSearchPessoa('coordenador_transporte', $options, $helperOptions);
 
-	    $this->campoCheck("exigir_vinculo_turma_professor", "Exigir vínculo com turma para lançamento de notas do professor?", $this->exigir_vinculo_turma_professor );
+	    $this->campoCheck("exigir_vinculo_turma_professor", "Exigir vÃ­nculo com turma para lanÃ§amento de notas do professor?", $this->exigir_vinculo_turma_professor );
 
-	    $this->campoCheck("gerar_historico_transferencia", "Gerar histórico de transferência ao transferir matrícula?", $this->gerar_historico_transferencia);
+	    $this->campoCheck("gerar_historico_transferencia", "Gerar histÃ³rico de transferÃªncia ao transferir matrÃ­cula?", $this->gerar_historico_transferencia);
 
-	    $this->campoCheck("controlar_posicao_historicos", "Permitir controlar posicionamento dos históricos em seu respectivo documento", $this->controlar_posicao_historicos);
+	    $this->campoCheck("controlar_posicao_historicos", "Permitir controlar posicionamento dos histÃ³ricos em seu respectivo documento", $this->controlar_posicao_historicos);
 
-	    $this->campoCheck("matricula_apenas_bairro_escola", "Permitir matrícula de alunos apenas do bairro da escola?", $this->matricula_apenas_bairro_escola);
+	    $this->campoCheck("matricula_apenas_bairro_escola", "Permitir matrÃ­cula de alunos apenas do bairro da escola?", $this->matricula_apenas_bairro_escola);
 
-		$this->campoCheck("restringir_historico_escolar", "Restringir modificações de históricos escolares?", $this->restringir_historico_escolar, NULL, false, false, false, 'Com esta opção selecionada, somente será possível cadastrar/editar históricos escolares de alunos que pertençam a mesma escola do funcionário.' );
+		$this->campoCheck("restringir_historico_escolar", "Restringir modificaÃ§Ãµes de histÃ³ricos escolares?", $this->restringir_historico_escolar, NULL, false, false, false, 'Com esta opÃ§Ã£o selecionada, somente serÃ¡ possÃ­vel cadastrar/editar histÃ³ricos escolares de alunos que pertenÃ§am a mesma escola do funcionÃ¡rio.' );
 
-	  	$this->campoCheck("controlar_espaco_utilizacao_aluno", "Controlar espaço utilizado pelo aluno?", $this->controlar_espaco_utilizacao_aluno );
-		$this->campoMonetario( "percentagem_maxima_ocupacao_salas", "Percentagem máxima de ocupação da sala",
+	  	$this->campoCheck("controlar_espaco_utilizacao_aluno", "Controlar espaÃ§o utilizado pelo aluno?", $this->controlar_espaco_utilizacao_aluno );
+		$this->campoMonetario( "percentagem_maxima_ocupacao_salas", "Percentagem mÃ¡xima de ocupaÃ§Ã£o da sala",
 															  Portabilis_Currency_Utils::moedaUsToBr($this->percentagem_maxima_ocupacao_salas),
 															  6,
 															  6,
 															  false);
-		$this->campoNumero( "quantidade_alunos_metro_quadrado", "Quantidade máxima de alunos permitidos por metro quadrado", $this->quantidade_alunos_metro_quadrado, 6, 6 );
+		$this->campoNumero( "quantidade_alunos_metro_quadrado", "Quantidade mÃ¡xima de alunos permitidos por metro quadrado", $this->quantidade_alunos_metro_quadrado, 6, 6 );
 
-		$this->campoCheck("restringir_multiplas_enturmacoes", "Não permitir múltiplas enturmações para o aluno no mesmo curso e série/ano", $this->restringir_multiplas_enturmacoes);
-    $this->campoCheck("permissao_filtro_abandono_transferencia", "Não permitir a apresentação de alunos com matrícula em abandono ou transferida na emissão do relatório de frequência", $this->permissao_filtro_abandono_transferencia);
+		$this->campoCheck("restringir_multiplas_enturmacoes", "NÃ£o permitir mÃºltiplas enturmaÃ§Ãµes para o aluno no mesmo curso e sÃ©rie/ano", $this->restringir_multiplas_enturmacoes);
+    $this->campoCheck("permissao_filtro_abandono_transferencia", "NÃ£o permitir a apresentaÃ§Ã£o de alunos com matrÃ­cula em abandono ou transferida na emissÃ£o do relatÃ³rio de frequÃªncia", $this->permissao_filtro_abandono_transferencia);
 
     $this->multiplas_reserva_vaga = isset($this->cod_instituicao) ? dbBool($this->multiplas_reserva_vaga) : true;
-    $this->campoCheck("multiplas_reserva_vaga", "Permitir múltiplas reservas de vagas para o mesmo candidato em escolas diferentes", $this->multiplas_reserva_vaga);
+    $this->campoCheck("multiplas_reserva_vaga", "Permitir mÃºltiplas reservas de vagas para o mesmo candidato em escolas diferentes", $this->multiplas_reserva_vaga);
 
 		$this->campoCheck("reserva_integral_somente_com_renda", "Permitir reserva de vaga para o turno integral somente quando a renda for informada", $this->reserva_integral_somente_com_renda);
 
@@ -254,33 +254,33 @@ class indice extends clsCadastro
     			      $this->componente_curricular_turma);
 
     $this->campoCheck("reprova_dependencia_ano_concluinte",
-    			      "Não permitir dependência em séries/anos concluintes",
+    			      "NÃ£o permitir dependÃªncia em sÃ©ries/anos concluintes",
     			      $this->reprova_dependencia_ano_concluinte,
     			      null,
     			      false,
     			      false,
     			      false,
-    			      "Caso marcado, o aluno que reprovar em algum componente em ano concluinte será automaticamente reprovado.");
+    			      "Caso marcado, o aluno que reprovar em algum componente em ano concluinte serÃ¡ automaticamente reprovado.");
 
-    $this->campoCheck("bloqueia_matricula_serie_nao_seguinte", "Não permitir matrículas que não respeitem a sequência de enturmação", $this->bloqueia_matricula_serie_nao_seguinte);
+    $this->campoCheck("bloqueia_matricula_serie_nao_seguinte", "NÃ£o permitir matrÃ­culas que nÃ£o respeitem a sequÃªncia de enturmaÃ§Ã£o", $this->bloqueia_matricula_serie_nao_seguinte);
 
-    	$this->inputsHelper()->text('data_base', array('label' => 'Data base para matrícula (dia/mês)',
+    	$this->inputsHelper()->text('data_base', array('label' => 'Data base para matrÃ­cula (dia/mÃªs)',
 					    								'size' => 5,
 					    								'max_length' => 5,
 					    								'placeholder' => 'dd/mm',
 					    								'required' => false,
 					    								'value' => Portabilis_Date_Utils::pgSQLToBr_ddmm($this->data_base_matricula)));
 
-    $this->campoData('data_expiracao_reserva_vaga', 'Data para indeferimento automático da reserva de vaga', Portabilis_Date_Utils::pgSQLToBr($this->data_expiracao_reserva_vaga), null, null, false);
+    $this->campoData('data_expiracao_reserva_vaga', 'Data para indeferimento automÃ¡tico da reserva de vaga', Portabilis_Date_Utils::pgSQLToBr($this->data_expiracao_reserva_vaga), null, null, false);
 
-    $this->inputsHelper()->text('data_fechamento', array('label' => 'Data de fechamento das turmas para matrícula',
+    $this->inputsHelper()->text('data_fechamento', array('label' => 'Data de fechamento das turmas para matrÃ­cula',
 					    							'size' => 5,
 					    							'max_length' => 5,
 					    							'placeholder' => 'dd/mm',
 					    							'required' => false,
 					    							'value' => Portabilis_Date_Utils::pgSQLToBr_ddmm($this->data_fechamento)));
 
-    $this->inputsHelper()->date('data_educacenso', array('label' => 'Data de referência do Educacenso',
+    $this->inputsHelper()->date('data_educacenso', array('label' => 'Data de referÃªncia do Educacenso',
 					    								 'required' => false,
 													     'placeholder' => 'dd/mm/yyyy',
 					    							   	 'value' => $this->data_educacenso));

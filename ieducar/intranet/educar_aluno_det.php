@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo disponÌvel desde a vers„o 1.0.0
+ * @since     Arquivo dispon√≠vel desde a vers√£o 1.0.0
  * @version   $Id$
  */
 
@@ -48,11 +48,11 @@ require_once 'lib/Portabilis/Date/Utils.php';
 /**
  * clsIndexBase class.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponÌvel desde a vers„o 1.0.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
@@ -68,11 +68,11 @@ class clsIndexBase extends clsBase
 /**
  * indice class.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponÌvel desde a vers„o 1.0.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
  * @version   @@package_version@@
  */
 class indice extends clsDetalhe
@@ -107,7 +107,7 @@ class indice extends clsDetalhe
     unset($_SESSION['reload_reserva_vaga']);
     session_write_close();
 
-    // VerificaÁ„o de permiss„o para cadastro.
+    // Verifica√ß√£o de permiss√£o para cadastro.
     $this->obj_permissao = new clsPermissoes();
 
     $this->nivel_usuario = $this->obj_permissao->nivel_acesso($this->pessoa_logada);
@@ -139,7 +139,7 @@ class indice extends clsDetalhe
       $obj_pessoa_fj = new clsPessoaFj($this->ref_idpes);
       $det_pessoa_fj = $obj_pessoa_fj->detalhe();
 
-      
+
 
       $obj_fisica = new clsFisica($this->ref_idpes);
       $det_fisica = $obj_fisica->detalhe();
@@ -371,25 +371,25 @@ class indice extends clsDetalhe
     }
 
     if ($registro['cod_aluno']) {
-      $this->addDetalhe(array($GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu' ? 'CÛdigo Aluno (i-Educar)' :'CÛdigo Aluno', $registro['cod_aluno']));
+      $this->addDetalhe(array($GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu' ? 'C√≥digo Aluno (i-Educar)' :'C√≥digo Aluno', $registro['cod_aluno']));
     }
 
-    // cÛdigo inep
+    // c√≥digo inep
 
     $alunoMapper = new Educacenso_Model_AlunoDataMapper();
     $alunoInep   = NULL;
     try {
       $alunoInep = $alunoMapper->find(array('aluno' => $this->cod_aluno));
       if(!$GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu'){
-      	$this->addDetalhe(array('CÛdigo inep', $alunoInep->alunoInep));
+      	$this->addDetalhe(array('C√≥digo inep', $alunoInep->alunoInep));
       }
     }
     catch(Exception $e) {
     }
 
-    // cÛdigo estado
+    // c√≥digo estado
 
-    $this->addDetalhe(array($GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu' ? 'CÛdigo estado (R.A.)' :'CÛdigo estado', $registro['aluno_estado_id']));
+    $this->addDetalhe(array($GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu' ? 'C√≥digo estado (R.A.)' :'C√≥digo estado', $registro['aluno_estado_id']));
 
     if ($registro['caminho_foto']) {
       $this->addDetalhe(array(
@@ -422,7 +422,7 @@ class indice extends clsDetalhe
     /**
      * Analfabeto.
      */
-    $this->addDetalhe(array('Analfabeto', $registro['analfabeto'] == 0 ? 'N„o' : 'Sim'));
+    $this->addDetalhe(array('Analfabeto', $registro['analfabeto'] == 0 ? 'N√£o' : 'Sim'));
 
     if ($registro['sexo']) {
       $this->addDetalhe(array('Sexo', $registro['sexo']));
@@ -460,7 +460,7 @@ class indice extends clsDetalhe
     }
 
     if ($registro['numero']) {
-      $this->addDetalhe(array('N˙mero', $registro['numero']));
+      $this->addDetalhe(array('N√∫mero', $registro['numero']));
     }
 
     if ($registro['letra']) {
@@ -500,13 +500,13 @@ class indice extends clsDetalhe
     }
 
     if ($registro['pais_origem']) {
-      $this->addDetalhe(array('PaÌs de Origem', $registro['pais_origem']));
+      $this->addDetalhe(array('Pa√≠s de Origem', $registro['pais_origem']));
     }
 
     $responsavel = $tmp_obj->getResponsavelAluno();
 
     if ($responsavel && is_null($registro['ref_idpes_responsavel'])) {
-      $this->addDetalhe(array('Nome do Respons·vel', $responsavel['nome_responsavel']));
+      $this->addDetalhe(array('Nome do Respons√°vel', $responsavel['nome_responsavel']));
     }
 
     if ($registro['ref_idpes_responsavel']) {
@@ -517,7 +517,7 @@ class indice extends clsDetalhe
         $registro['ref_idpes_responsavel'] = $det_pessoa_resp['nome'];
       }
 
-      $this->addDetalhe(array('Respons·vel', $registro['ref_idpes_responsavel']));
+      $this->addDetalhe(array('Respons√°vel', $registro['ref_idpes_responsavel']));
     }
 
     if ($registro['nm_pai']) {
@@ -525,7 +525,7 @@ class indice extends clsDetalhe
     }
 
     if ($registro["nm_mae"]) {
-      $this->addDetalhe(array('M„e', $registro['nm_mae']));
+      $this->addDetalhe(array('M√£e', $registro['nm_mae']));
     }
 
     if ($registro['fone_1']) {
@@ -565,22 +565,22 @@ class indice extends clsDetalhe
     }
 
     if ($registro['url']) {
-      $this->addDetalhe(array('P·gina Pessoal', $registro['url']));
+      $this->addDetalhe(array('P√°gina Pessoal', $registro['url']));
     }
 
     if ($registro['ref_cod_religiao']) {
       $obj_religiao     = new clsPmieducarReligiao($registro['ref_cod_religiao']);
       $obj_religiao_det = $obj_religiao->detalhe();
 
-      $this->addDetalhe(array('Religi„o', $obj_religiao_det['nm_religiao']));
+      $this->addDetalhe(array('Religi√£o', $obj_religiao_det['nm_religiao']));
     }
 
     if ($det_raca['nm_raca']) {
-      $this->addDetalhe(array('RaÁa', $det_raca['nm_raca']));
+      $this->addDetalhe(array('Ra√ßa', $det_raca['nm_raca']));
     }
 
     if ($obj_beneficios_lista) {
-      $tabela = '<table border="0" width="300" cellpadding="3"><tr bgcolor="#ccdce6" align="center"><td>BenefÌcios</td></tr>';
+      $tabela = '<table border="0" width="300" cellpadding="3"><tr bgcolor="#ccdce6" align="center"><td>Benef√≠cios</td></tr>';
       $cor    = '#D1DADF';
 
       foreach ($obj_beneficios_lista as $reg) {
@@ -592,11 +592,11 @@ class indice extends clsDetalhe
 
       $tabela .= '</table>';
 
-      $this->addDetalhe(array('BenefÌcios', $tabela));
+      $this->addDetalhe(array('Benef√≠cios', $tabela));
     }
 
     if ($deficiencia_pessoa) {
-      $tabela = '<table border="0" width="300" cellpadding="3"><tr bgcolor="#ccdce6" align="center"><td>DeficiÍncias</td></tr>';
+      $tabela = '<table border="0" width="300" cellpadding="3"><tr bgcolor="#ccdce6" align="center"><td>Defici√™ncias</td></tr>';
       $cor    = '#D1DADF';
 
       foreach ($deficiencia_pessoa as $indice => $valor) {
@@ -608,7 +608,7 @@ class indice extends clsDetalhe
 
       $tabela .= '</table>';
 
-      $this->addDetalhe(array('DeficiÍncias', $tabela));
+      $this->addDetalhe(array('Defici√™ncias', $tabela));
     }
 
     if ($registro['url_documento'] && $registro['url_documento'] != '') {
@@ -627,7 +627,8 @@ class indice extends clsDetalhe
     }
 
     if ($registro['url_laudo_medico'] && $registro['url_laudo_medico'] != '') {
-      $tabela = '<table border="0" width="300" cellpadding="3"><tr bgcolor="#ccdce6" align="center"><td>Laudo mÈdico</td></tr>';
+      $tabela = '<table border="0" width="300" cellpadding="3"><tr bgcolor="#ccdce6" align="center"><td>Laudo m√©dico</td></tr>';
+
       $cor    = '#D1DADF';
 
       $urlLaudoMedico = explode(",", $registro['url_laudo_medico']);
@@ -638,7 +639,7 @@ class indice extends clsDetalhe
       }
 
       $tabela .= '</table>';
-      $this->addDetalhe(array('Laudo mÈdico do aluno', $tabela));
+      $this->addDetalhe(array('Laudo m√©dico do aluno', $tabela));
     }
 
     if ($registro['rg']) {
@@ -646,11 +647,11 @@ class indice extends clsDetalhe
     }
 
     if ($registro['data_exp_rg']) {
-      $this->addDetalhe(array('Data de ExpediÁ„o RG', $registro['data_exp_rg']));
+      $this->addDetalhe(array('Data de Expedi√ß√£o RG', $registro['data_exp_rg']));
     }
 
     if ($registro['idorg_exp_rg']) {
-      $this->addDetalhe(array('”rg„o ExpediÁ„o RG', $registro['idorg_exp_rg']));
+      $this->addDetalhe(array('√ìrg√£o Expedi√ß√£o RG', $registro['idorg_exp_rg']));
     }
 
     if ($registro['sigla_uf_exp_rg']) {
@@ -661,18 +662,18 @@ class indice extends clsDetalhe
      * @todo CoreExt_Enum?
      */
     if(!$registro['tipo_cert_civil'] && $registro['certidao_nascimento']){
-      $this->addDetalhe(array('Tipo Certid„o Civil', 'Nascimento (novo formato)'));
-      $this->addDetalhe(array('N˙mero Certid„o Civil', $registro['certidao_nascimento']));
+      $this->addDetalhe(array('Tipo Certid√£o Civil', 'Nascimento (novo formato)'));
+      $this->addDetalhe(array('N√∫mero Certid√£o Civil', $registro['certidao_nascimento']));
     }else if(!$registro['tipo_cert_civil'] && $registro['certidao_casamento']){
-      $this->addDetalhe(array('Tipo Certid„o Civil', 'Casamento (novo formato)'));
-      $this->addDetalhe(array('N˙mero Certid„o Civil', $registro['certidao_casamento']));
+      $this->addDetalhe(array('Tipo Certid√£o Civil', 'Casamento (novo formato)'));
+      $this->addDetalhe(array('N√∫mero Certid√£o Civil', $registro['certidao_casamento']));
     }else{
       $lista_tipo_cert_civil       = array();
       $lista_tipo_cert_civil["0"] = 'Selecione';
       $lista_tipo_cert_civil[91]  = 'Nascimento (antigo formato)';
       $lista_tipo_cert_civil[92]  = 'Casamento (antigo formato)';
 
-      $this->addDetalhe(array('Tipo Certid„o Civil', $lista_tipo_cert_civil[$registro['tipo_cert_civil']]));
+      $this->addDetalhe(array('Tipo Certid√£o Civil', $lista_tipo_cert_civil[$registro['tipo_cert_civil']]));
 
     	if ($registro['num_termo']) {
     	  $this->addDetalhe(array('Termo', $registro['num_termo']));
@@ -688,19 +689,19 @@ class indice extends clsDetalhe
     }
 
     if ($registro['data_emissao_cert_civil']) {
-      $this->addDetalhe(array('Emiss„o Certid„o Civil', $registro['data_emissao_cert_civil']));
+      $this->addDetalhe(array('Emiss√£o Certid√£o Civil', $registro['data_emissao_cert_civil']));
     }
 
     if ($registro['sigla_uf_cert_civil']) {
-      $this->addDetalhe(array('Sigla Certid„o Civil', $registro['sigla_uf_cert_civil']));
+      $this->addDetalhe(array('Sigla Certid√£o Civil', $registro['sigla_uf_cert_civil']));
     }
 
     if ($registro['cartorio_cert_civil']) {
-      $this->addDetalhe(array('CartÛrio', $registro['cartorio_cert_civil']));
+      $this->addDetalhe(array('Cart√≥rio', $registro['cartorio_cert_civil']));
     }
 
     if ($registro['num_tit_eleitor']) {
-      $this->addDetalhe(array('TÌtulo de Eleitor', $registro['num_tit_eleitor']));
+      $this->addDetalhe(array('T√≠tulo de Eleitor', $registro['num_tit_eleitor']));
     }
 
     if ($registro['zona_tit_eleitor']) {
@@ -708,7 +709,7 @@ class indice extends clsDetalhe
     }
 
     if ($registro['secao_tit_eleitor']) {
-      $this->addDetalhe(array('SeÁ„o', $registro['secao_tit_eleitor']));
+      $this->addDetalhe(array('Se√ß√£o', $registro['secao_tit_eleitor']));
     }
 
     // Transporte escolar.
@@ -720,9 +721,9 @@ class indice extends clsDetalhe
     catch (Exception $e) {
     }
 
-    $this->addDetalhe(array('Transporte escolar', isset($transporteAluno) && $transporteAluno->responsavel!='N„o utiliza'  ? 'Sim' : 'N„o'));
-    if ($transporteAluno && $transporteAluno->responsavel!='N„o utiliza') {
-      $this->addDetalhe(array('Respons·vel transporte', $transporteAluno->responsavel));
+    $this->addDetalhe(array('Transporte escolar', isset($transporteAluno) && $transporteAluno->responsavel!='N√£o utiliza'  ? 'Sim' : 'N√£o'));
+    if ($transporteAluno && $transporteAluno->responsavel!='N√£o utiliza') {
+      $this->addDetalhe(array('Respons√°vel transporte', $transporteAluno->responsavel));
     }
 
    if ($registro['nis_pis_pasep']) {
@@ -733,7 +734,7 @@ class indice extends clsDetalhe
       $this->url_novo   = '/module/Cadastro/aluno';
       $this->url_editar = '/module/Cadastro/aluno?id=' . $registro['cod_aluno'];
 
-      $this->array_botao = array('Nova matrÌcula', 'Atualizar histÛrico', 'DistribuiÁ„o de uniforme');
+      $this->array_botao = array('Nova matr√≠cula', 'Atualizar hist√≥rico', 'Distribui√ß√£o de uniforme');
       $this->array_botao_url_script = array(
         sprintf('go("educar_matricula_cad.php?ref_cod_aluno=%d");', $registro['cod_aluno']),
         sprintf('go("educar_historico_escolar_lst.php?ref_cod_aluno=%d");', $registro['cod_aluno']),
@@ -750,47 +751,47 @@ class indice extends clsDetalhe
 
       $this->addDetalhe(array('<span id="fmedica"></span>Altura/metro', $reg['altura']));
       if (trim($reg['peso'])!='') $this->addDetalhe(array('Peso/kg', $reg['peso']));
-      if (trim($reg['grupo_sanguineo'])!='') $this->addDetalhe(array('Grupo sanguÌneo', $reg['grupo_sanguineo']));
+      if (trim($reg['grupo_sanguineo'])!='') $this->addDetalhe(array('Grupo sangu√≠neo', $reg['grupo_sanguineo']));
       if (trim($reg['fator_rh'])!='') $this->addDetalhe(array('Fator RH', $reg['fator_rh']));
-      if (trim($this->sus)!='') $this->addDetalhe(array('N˙mero do cart„o do SUS', $this->sus));
-      $this->addDetalhe(array('Possui alergia a algum medicamento', ($reg['alergia_medicamento'] == 'S' ? 'Sim': 'N„o') ));
+      if (trim($this->sus)!='') $this->addDetalhe(array('N√∫mero do cart√£o do SUS', $this->sus));
+      $this->addDetalhe(array('Possui alergia a algum medicamento', ($reg['alergia_medicamento'] == 'S' ? 'Sim': 'N√£o') ));
       if (trim($reg['desc_alergia_medicamento'])!='') $this->addDetalhe(array('Quais', $reg['desc_alergia_medicamento']));
-      $this->addDetalhe(array('Possui alergia a algum alimento', ($reg['alergia_alimento'] == 'S' ? 'Sim': 'N„o') ));
+      $this->addDetalhe(array('Possui alergia a algum alimento', ($reg['alergia_alimento'] == 'S' ? 'Sim': 'N√£o') ));
       if (trim($reg['desc_alergia_alimento'])!='') $this->addDetalhe(array('Quais', $reg['desc_alergia_alimento']));
-      $this->addDetalhe(array('Possui alguma doenca congÍnita', ($reg['doenca_congenita'] == 'S' ? 'Sim': 'N„o') ));
+      $this->addDetalhe(array('Possui alguma doenca cong√™nita', ($reg['doenca_congenita'] == 'S' ? 'Sim': 'N√£o') ));
       if (trim($reg['desc_doenca_congenita'])!='') $this->addDetalhe(array('Quais', $reg['desc_doenca_congenita']));
-      $this->addDetalhe(array('… fumante', ($reg['fumante'] == 'S' ? 'Sim': 'N„o') ));
-      $this->addDetalhe(array('J· contraiu caxumba', ($reg['doenca_caxumba'] == 'S' ? 'Sim': 'N„o') ));
-      $this->addDetalhe(array('J· contraiu sarampo', ($reg['doenca_sarampo'] == 'S' ? 'Sim': 'N„o') ));
-      $this->addDetalhe(array('J· contraiu rubeola', ($reg['doenca_rubeola'] == 'S' ? 'Sim': 'N„o') ));
-      $this->addDetalhe(array('J· contraiu catapora', ($reg['doenca_catapora'] == 'S' ? 'Sim': 'N„o') ));
-      $this->addDetalhe(array('J· contraiu escarlatina', ($reg['doenca_escarlatina'] == 'S' ? 'Sim': 'N„o') ));
-      $this->addDetalhe(array('J· contraiu coqueluche', ($reg['doenca_coqueluche'] == 'S' ? 'Sim': 'N„o') ));
-      if (trim($reg['doenca_outras'])!='') $this->addDetalhe(array('Outras doenÁas que o aluno j· contraiu', $reg['doenca_outras']));
-      $this->addDetalhe(array('EpilÈtico', ($reg['epiletico'] == 'S' ? 'Sim': 'N„o') ));
-      $this->addDetalhe(array('Est· em tratamento', ($reg['epiletico_tratamento'] == 'S' ? 'Sim': 'N„o') ));
-      $this->addDetalhe(array('HemofÌlico', ($reg['hemofilico'] == 'S' ? 'Sim': 'N„o') ));
-      $this->addDetalhe(array('Hipertenso', ($reg['hipertenso'] == 'S' ? 'Sim': 'N„o') ));
-      $this->addDetalhe(array('Asm·tico', ($reg['asmatico'] == 'S' ? 'Sim': 'N„o') ));
-      $this->addDetalhe(array('DiabÈtico', ($reg['diabetico'] == 'S' ? 'Sim': 'N„o') ));
-      $this->addDetalhe(array('Depende de insulina', ($reg['insulina'] == 'S' ? 'Sim': 'N„o') ));
-      $this->addDetalhe(array('Faz tratamento mÈdico', ($reg['tratamento_medico'] == 'S' ? 'Sim': 'N„o') ));
+      $this->addDetalhe(array('√â fumante', ($reg['fumante'] == 'S' ? 'Sim': 'N√£o') ));
+      $this->addDetalhe(array('J√° contraiu caxumba', ($reg['doenca_caxumba'] == 'S' ? 'Sim': 'N√£o') ));
+      $this->addDetalhe(array('J√° contraiu sarampo', ($reg['doenca_sarampo'] == 'S' ? 'Sim': 'N√£o') ));
+      $this->addDetalhe(array('J√° contraiu rubeola', ($reg['doenca_rubeola'] == 'S' ? 'Sim': 'N√£o') ));
+      $this->addDetalhe(array('J√° contraiu catapora', ($reg['doenca_catapora'] == 'S' ? 'Sim': 'N√£o') ));
+      $this->addDetalhe(array('J√° contraiu escarlatina', ($reg['doenca_escarlatina'] == 'S' ? 'Sim': 'N√£o') ));
+      $this->addDetalhe(array('J√° contraiu coqueluche', ($reg['doenca_coqueluche'] == 'S' ? 'Sim': 'N√£o') ));
+      if (trim($reg['doenca_outras'])!='') $this->addDetalhe(array('Outras doen√ßas que o aluno j√° contraiu', $reg['doenca_outras']));
+      $this->addDetalhe(array('Epil√©tico', ($reg['epiletico'] == 'S' ? 'Sim': 'N√£o') ));
+      $this->addDetalhe(array('Est√° em tratamento', ($reg['epiletico_tratamento'] == 'S' ? 'Sim': 'N√£o') ));
+      $this->addDetalhe(array('Hemof√≠lico', ($reg['hemofilico'] == 'S' ? 'Sim': 'N√£o') ));
+      $this->addDetalhe(array('Hipertenso', ($reg['hipertenso'] == 'S' ? 'Sim': 'N√£o') ));
+      $this->addDetalhe(array('Asm√°tico', ($reg['asmatico'] == 'S' ? 'Sim': 'N√£o') ));
+      $this->addDetalhe(array('Diab√©tico', ($reg['diabetico'] == 'S' ? 'Sim': 'N√£o') ));
+      $this->addDetalhe(array('Depende de insulina', ($reg['insulina'] == 'S' ? 'Sim': 'N√£o') ));
+      $this->addDetalhe(array('Faz tratamento m√©dico', ($reg['tratamento_medico'] == 'S' ? 'Sim': 'N√£o') ));
       if (trim($reg['desc_tratamento_medico'])!='') $this->addDetalhe(array('Qual', $reg['desc_tratamento_medico']));
-      $this->addDetalhe(array('Ingere medicaÁ„o especÌfica', ($reg['medicacao_especifica'] == 'S' ? 'Sim': 'N„o') ));
+      $this->addDetalhe(array('Ingere medica√ß√£o espec√≠fica', ($reg['medicacao_especifica'] == 'S' ? 'Sim': 'N√£o') ));
       if (trim($reg['desc_medicacao_especifica'])!='') $this->addDetalhe(array('Qual', $reg['desc_medicacao_especifica']));
-      $this->addDetalhe(array('Acompanhamento mÈdico ou psicolÛgico', ($reg['acomp_medico_psicologico'] == 'S' ? 'Sim': 'N„o') ));
+      $this->addDetalhe(array('Acompanhamento m√©dico ou psicol√≥gico', ($reg['acomp_medico_psicologico'] == 'S' ? 'Sim': 'N√£o') ));
       if (trim($reg['desc_acomp_medico_psicologico'])!='') $this->addDetalhe(array('Motivo', $reg['desc_acomp_medico_psicologico']));
-      $this->addDetalhe(array('RestriÁ„o para atividades fÌsicas', ($reg['restricao_atividade_fisica'] == 'S' ? 'Sim': 'N„o') ));
+      $this->addDetalhe(array('Restri√ß√£o para atividades f√≠sicas', ($reg['restricao_atividade_fisica'] == 'S' ? 'Sim': 'N√£o') ));
       if (trim($reg['desc_restricao_atividade_fisica'])!='') $this->addDetalhe(array('Qual', $reg['desc_restricao_atividade_fisica']));
-      $this->addDetalhe(array('Teve alguma fratura ou trauma', ($reg['fratura_trauma'] == 'S' ? 'Sim': 'N„o') ));
+      $this->addDetalhe(array('Teve alguma fratura ou trauma', ($reg['fratura_trauma'] == 'S' ? 'Sim': 'N√£o') ));
       if (trim($reg['desc_fratura_trauma'])!='') $this->addDetalhe(array('Qual', $reg['desc_fratura_trauma']));
-      $this->addDetalhe(array('Tem plano de sa˙de', ($reg['plano_saude'] == 'S' ? 'Sim': 'N„o') ));
+      $this->addDetalhe(array('Tem plano de sa√∫de', ($reg['plano_saude'] == 'S' ? 'Sim': 'N√£o') ));
       if (trim($reg['desc_plano_saude'])!='') $this->addDetalhe(array('Qual', $reg['desc_plano_saude']));
-      $this->addDetalhe(array('<span id="tr_tit_dados_hospital">Em caso de emergÍncia, levar para hospital ou clÌnica</span>'));
+      $this->addDetalhe(array('<span id="tr_tit_dados_hospital">Em caso de emerg√™ncia, levar para hospital ou cl√≠nica</span>'));
       $this->addDetalhe(array('Nome', $reg['hospital_clinica']));
-      $this->addDetalhe(array('EndereÁo', $reg['hospital_clinica_endereco']));
+      $this->addDetalhe(array('Endere√ßo', $reg['hospital_clinica_endereco']));
       $this->addDetalhe(array('Telefone', $reg['hospital_clinica_telefone']));
-      $this->addDetalhe(array('<span id="tr_tit_dados_hospital">Em caso de emergÍncia, se n„o for possÌvel contatar os respons·veis, comunicar</span>'));
+      $this->addDetalhe(array('<span id="tr_tit_dados_hospital">Em caso de emerg√™ncia, se n√£o for poss√≠vel contatar os respons√°veis, comunicar</span>'));
       $this->addDetalhe(array('Nome', $reg['responsavel_nome']));
       $this->addDetalhe(array('Parentesco', $reg['responsavel_parentesco']));
       $this->addDetalhe(array('Telefone', $reg['responsavel_parentesco_telefone']));
@@ -804,17 +805,17 @@ class indice extends clsDetalhe
     if($reg){
       if( dbBool($reg["kit_completo"]) ){
               $this->addDetalhe( array( "<span id='funiforme'></span>Recebeu kit completo", "Sim") );
-              $this->addDetalhe( array( "<span id='ffuniforme'></span>" . Portabilis_String_Utils::toLatin1('Data da distribuiÁ„o'), Portabilis_Date_Utils::pgSQLToBr($reg['data'])) );
+              $this->addDetalhe( array( "<span id='ffuniforme'></span>" . Portabilis_String_Utils::toLatin1('Data da distribui√ß√£o'), Portabilis_Date_Utils::pgSQLToBr($reg['data'])) );
       }else{
-        $this->addDetalhe( array( "<span id='funiforme'></span>Recebeu kit completo",  Portabilis_String_Utils::toLatin1("N„o")) );
-        $this->addDetalhe( array( Portabilis_String_Utils::toLatin1('Data da distribuiÁ„o'), Portabilis_Date_Utils::pgSQLToBr($reg['data'])) );
-        $this->addDetalhe( array( Portabilis_String_Utils::toLatin1("Quantidade de agasalhos (jaqueta e calÁa)"), $reg['agasalho_qtd'] ?: '0' ));
+        $this->addDetalhe( array( "<span id='funiforme'></span>Recebeu kit completo",  Portabilis_String_Utils::toLatin1("N√£o")) );
+        $this->addDetalhe( array( Portabilis_String_Utils::toLatin1('Data da distribui√ß√£o'), Portabilis_Date_Utils::pgSQLToBr($reg['data'])) );
+        $this->addDetalhe( array( Portabilis_String_Utils::toLatin1("Quantidade de agasalhos (jaqueta e cal√ßa)"), $reg['agasalho_qtd'] ?: '0' ));
         $this->addDetalhe( array( "Quantidade de camisetas (manga curta)", $reg['camiseta_curta_qtd'] ?: '0' ));
         $this->addDetalhe( array( "Quantidade de camisetas (manga longa)", $reg['camiseta_longa_qtd'] ?: '0' ));
         $this->addDetalhe( array( "Quantidade de meias", $reg['meias_qtd'] ?: '0' ));
         $this->addDetalhe( array( "Bermudas tectels (masculino)", $reg['bermudas_tectels_qtd'] ?: '0' ));
         $this->addDetalhe( array( "Bermudas coton (feminino)", $reg['bermudas_coton_qtd'] ?: '0' ));
-        $this->addDetalhe( array( "<span id='ffuniforme'></span>".Portabilis_String_Utils::toLatin1("Quantidade de tÍnis"), $reg['tenis_qtd'] ?: '0' ));
+        $this->addDetalhe( array( "<span id='ffuniforme'></span>".Portabilis_String_Utils::toLatin1("Quantidade de t√™nis"), $reg['tenis_qtd'] ?: '0' ));
       }
     }
 
@@ -846,7 +847,7 @@ class indice extends clsDetalhe
           $moradia = 'Outra: '.$reg['casa_outra'];
           break;
         default:
-          $moradia = 'N„o informado';
+          $moradia = 'N√£o informado';
       }
 
       $this->addDetalhe(array('<span id="fmoradia"></span>Moradia', $moradia ));
@@ -856,7 +857,7 @@ class indice extends clsDetalhe
           $situacao = 'Alugado';
           break;
         case 2:
-          $situacao = 'PrÛprio';
+          $situacao = 'Pr√≥prio';
           break;
         case 3:
           $situacao = 'Cedido';
@@ -868,29 +869,29 @@ class indice extends clsDetalhe
           $situacao = 'Outra';
           break;
       }
-      $this->addDetalhe(array('SituaÁ„o', $situacao));
+      $this->addDetalhe(array('Situa√ß√£o', $situacao));
       $this->addDetalhe(array('Quantidade de quartos', $reg['quartos']));
       $this->addDetalhe(array('Quantidade de salas', $reg['sala']));
       $this->addDetalhe(array('Quantidade de copas', $reg['copa']));
       $this->addDetalhe(array('Quantidade de banheiros', $reg['banheiro']));
       $this->addDetalhe(array('Quantidade de garagens', $reg['garagem']));
-      $this->addDetalhe(array('Possui empregada domÈstica', $reg['empregada_domestica']));
-      $this->addDetalhe(array('Possui automÛvel', $reg['automovel']));
+      $this->addDetalhe(array('Possui empregada dom√©stica', $reg['empregada_domestica']));
+      $this->addDetalhe(array('Possui autom√≥vel', $reg['automovel']));
       $this->addDetalhe(array('Possui motocicleta', $reg['motocicleta']));
       $this->addDetalhe(array('Possui computador', $reg['computador']));
       $this->addDetalhe(array('Possui geladeira', $reg['geladeira']));
-      $this->addDetalhe(array('Possui fog„o', $reg['fogao']));
-      $this->addDetalhe(array('Possui m·quina de lavar', $reg['maquina_lavar']));
+      $this->addDetalhe(array('Possui fog√£o', $reg['fogao']));
+      $this->addDetalhe(array('Possui m√°quina de lavar', $reg['maquina_lavar']));
       $this->addDetalhe(array('Possui microondas', $reg['microondas']));
-      $this->addDetalhe(array('Possui vÌdeo/dvd', $reg['video_dvd']));
-      $this->addDetalhe(array('Possui televis„o', $reg['televisao']));
+      $this->addDetalhe(array('Possui v√≠deo/dvd', $reg['video_dvd']));
+      $this->addDetalhe(array('Possui televis√£o', $reg['televisao']));
       $this->addDetalhe(array('Possui celular', $reg['celular']));
       $this->addDetalhe(array('Possui telefone', $reg['telefone']));
       $this->addDetalhe(array('Quantidade de pessoas', $reg['quant_pessoas']));
       $this->addDetalhe(array('Renda familiar', 'R$ '.$reg['renda']));
-      $this->addDetalhe(array('Possui ·gua encanada', $reg['agua_encanada']));
-      $this->addDetalhe(array('Possui poÁo', $reg['poco']));
-      $this->addDetalhe(array('Possui energia elÈtrica', $reg['energia']));
+      $this->addDetalhe(array('Possui √°gua encanada', $reg['agua_encanada']));
+      $this->addDetalhe(array('Possui po√ßo', $reg['poco']));
+      $this->addDetalhe(array('Possui energia el√©trica', $reg['energia']));
       $this->addDetalhe(array('Possui tratamento de esgoto', $reg['esgoto']));
       $this->addDetalhe(array('Possui fossa', $reg['fossa']));
       $this->addDetalhe(array('Possui coleta de lixo', $reg['lixo']));
@@ -906,7 +907,7 @@ class indice extends clsDetalhe
         <table>
           <tr align="center">
             <td bgcolor="#ccdce6"><b>Projeto</b></td>
-            <td bgcolor="#ccdce6"><b>Data de inclus„o</b></td>
+            <td bgcolor="#ccdce6"><b>Data de inclus√£o</b></td>
             <td bgcolor="#ccdce6"><b>Data de desligamento</b></td>
             <td bgcolor="#ccdce6"><b>Turno</b></td>
           </tr>';
@@ -981,13 +982,13 @@ class indice extends clsDetalhe
   }
 }
 
-// Instancia o objeto da p·gina
+// Instancia o objeto da p√°gina
 $pagina = new clsIndexBase();
 
-// Instancia o objeto de conte˙do
+// Instancia o objeto de conte√∫do
 $miolo = new indice();
 
-// Passa o conte˙do para a p·gina
+// Passa o conte√∫do para a p√°gina
 $pagina->addForm($miolo);
 
 // Gera o HTML
