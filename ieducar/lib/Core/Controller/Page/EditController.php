@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author    Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   Core_Controller
- * @since     Arquivo disponÌvel desde a vers„o 1.1.0
+ * @since     Arquivo dispon√≠vel desde a vers√£o 1.1.0
  * @version   $Id$
  */
 
@@ -35,17 +35,17 @@ require_once 'App/Model/NivelAcesso.php';
 /**
  * Core_Controller_Page_EditController abstract class.
  *
- * ProvÍ um page controller padr„o para p·ginas de ediÁ„o e criaÁ„o de registros.
+ * Prov√™ um page controller padr√£o para p√°ginas de edi√ß√£o e cria√ß√£o de registros.
  *
- * @author    Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author    Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   Core_Controller
- * @since     Classe disponÌvel desde a vers„o 1.1.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.1.0
  * @todo      Documentar a API
- * @todo      Definir o atributo $_formMap que È diferente do atributo
+ * @todo      Definir o atributo $_formMap que √© diferente do atributo
  *            semelhante dos outros controllers (view|list)
- * @todo      Documentar as opÁıes new_success e edit_success
+ * @todo      Documentar as op√ß√µes new_success e edit_success
  * @version   @@package_version@@
  */
 abstract class Core_Controller_Page_EditController
@@ -53,8 +53,8 @@ abstract class Core_Controller_Page_EditController
   implements Core_Controller_Page_Validatable
 {
   /**
-   * Array associativo de um elemento de formul·rio, usado para a definiÁ„o
-   * de labels, nome de campos e definiÁ„o de qual campo foi invalidado por
+   * Array associativo de um elemento de formul√°rio, usado para a defini√ß√£o
+   * de labels, nome de campos e defini√ß√£o de qual campo foi invalidado por
    * CoreExt_DataMapper::isValid().
    *
    * @var array
@@ -62,25 +62,25 @@ abstract class Core_Controller_Page_EditController
   protected $_formMap = array();
 
   /**
-   * Determina se "Cadastrar" ou "Atualizar" s„o aÁıes disponÌveis na interface.
+   * Determina se "Cadastrar" ou "Atualizar" s√£o a√ß√µes dispon√≠veis na interface.
    * @var bool
    */
   protected $_saveOption = FALSE;
 
   /**
-   * Determina se "Excluir" È uma aÁ„o disponÌvel na interface.
+   * Determina se "Excluir" √© uma a√ß√£o dispon√≠vel na interface.
    * @var bool
    */
   protected $_deleteOption = FALSE;
 
   /**
-   * Determina o nÌvel de acesso necess·rio para as aÁıes de Cadastro/Exclus„o.
+   * Determina o n√≠vel de acesso necess√°rio para as a√ß√µes de Cadastro/Exclus√£o.
    * @var int
    */
   protected $_nivelAcessoOption = App_Model_NivelAcesso::INSTITUCIONAL;
 
   /**
-   * Determina um caminho para redirecionar o usu·rio caso seus privilÈgios de
+   * Determina um caminho para redirecionar o usu√°rio caso seus privil√©gios de
    * acesso sejam insuficientes.
    * @var string
    */
@@ -98,7 +98,7 @@ abstract class Core_Controller_Page_EditController
   {
     $this->setDataMapper($this->getDataMapper());
 
-    // Adiciona novos itens de configuraÁ„o
+    // Adiciona novos itens de configura√ß√£o
     $this->_options = $this->_options + array(
       'save_action'               => $this->_saveOption,
       'delete_action'             => $this->_deleteOption,
@@ -106,7 +106,7 @@ abstract class Core_Controller_Page_EditController
       'nivel_acesso_insuficiente' => $this->_nivelAcessoInsuficiente
     );
 
-    // Configura botıes padr„o
+    // Configura bot√µes padr√£o
     if (0 < $this->getRequest()->id) {
       $this->setOptions(array(
         'url_cancelar' => array(
@@ -122,7 +122,7 @@ abstract class Core_Controller_Page_EditController
   }
 
   /**
-   * Subclasses podem sobrescrever esse mÈtodo para executar operaÁıes antes
+   * Subclasses podem sobrescrever esse m√©todo para executar opera√ß√µes antes
    * da chamada ao construtor de clsCadastro().
    */
   protected function _preConstruct()
@@ -130,7 +130,7 @@ abstract class Core_Controller_Page_EditController
   }
 
   /**
-   * Subclasses podem sobrescrever esse mÈtodo para executar operaÁıes apÛs
+   * Subclasses podem sobrescrever esse m√©todo para executar opera√ß√µes ap√≥s
    * a chamada ao construtor de clsCadastro().
    */
   protected function _postConstruct()
@@ -138,7 +138,7 @@ abstract class Core_Controller_Page_EditController
   }
 
   /**
-   * Retorna um label de um item de formul·rio.
+   * Retorna um label de um item de formul√°rio.
    * @param string $key
    * @return string
    */
@@ -148,7 +148,7 @@ abstract class Core_Controller_Page_EditController
   }
 
   /**
-   * Retorna uma string de ajuda para um item de formul·rio.
+   * Retorna uma string de ajuda para um item de formul√°rio.
    * @param string $key
    * @return string
    */
@@ -159,7 +159,7 @@ abstract class Core_Controller_Page_EditController
 
   /**
    * Retorna o atributo de CoreExt_Entity para recuperar o valor de um item
-   * de formul·rio.
+   * de formul√°rio.
    * @param string $key
    * @return mixed
    */
@@ -169,7 +169,7 @@ abstract class Core_Controller_Page_EditController
   }
 
   /**
-   * Retorna um label de um item de formul·rio atravÈs do nome de um atributo de
+   * Retorna um label de um item de formul√°rio atrav√©s do nome de um atributo de
    * CoreExt_Entity.
    * @param string $key
    * @return string
@@ -192,19 +192,19 @@ abstract class Core_Controller_Page_EditController
   }
 
   /**
-   * Sobrescreve o mÈtodo Inicializar() de clsCadastro com operaÁıes padrıes
+   * Sobrescreve o m√©todo Inicializar() de clsCadastro com opera√ß√µes padr√µes
    * para o caso de uma CoreExt_Entity que use o campo identidade id.
    *
-   * Seu comportamento pode ser alterado sobrescrevendo-se os mÈtodos _initNovo
+   * Seu comportamento pode ser alterado sobrescrevendo-se os m√©todos _initNovo
    * e _initEditar.
    *
-   * O retorno desse mÈtodo È usado em RenderHTML() que define qual mÈtodo de
-   * sua API (Novo, Editar, Excluir ou Gerar) ser· chamado.
+   * O retorno desse m√©todo √© usado em RenderHTML() que define qual m√©todo de
+   * sua API (Novo, Editar, Excluir ou Gerar) ser√° chamado.
    *
    * @return string
    * @see    clsCadastro#RenderHTML()
    * @see    clsCadastro#Inicializar()
-   * @todo   Controle de permiss„o
+   * @todo   Controle de permiss√£o
    */
   public function Inicializar()
   {
@@ -216,7 +216,7 @@ abstract class Core_Controller_Page_EditController
       $this->_hasPermissaoCadastra();
     }
 
-    // Habilita bot„o de exclus„o de registro
+    // Habilita bot√£o de exclus√£o de registro
     if ($this->getOption('delete_action')) {
       $this->fexcluir = $this->_hasPermissaoExcluir();
     }
@@ -227,8 +227,8 @@ abstract class Core_Controller_Page_EditController
   }
 
   /**
-   * Verifica se o usu·rio possui privilÈgios de cadastro para o processo.
-   * @return bool|void Redireciona caso a opÁ„o 'nivel_acesso_insuficiente' seja
+   * Verifica se o usu√°rio possui privil√©gios de cadastro para o processo.
+   * @return bool|void Redireciona caso a op√ß√£o 'nivel_acesso_insuficiente' seja
    *   diferente de NULL.
    */
   protected function _hasPermissaoCadastra()
@@ -242,7 +242,7 @@ abstract class Core_Controller_Page_EditController
   }
 
   /**
-   * Verifica se o usu·rio possui privilÈgios de cadastro para o processo.
+   * Verifica se o usu√°rio possui privil√©gios de cadastro para o processo.
    * @return bool
    */
   protected function _hasPermissaoExcluir()
@@ -257,7 +257,7 @@ abstract class Core_Controller_Page_EditController
   /**
    * Setter.
    * @param clsPemissoes $instance
-   * @return CoreExt_Controller_Page_Abstract ProvÍ interface fluÌda
+   * @return CoreExt_Controller_Page_Abstract Prov√™ interface flu√≠da
    */
   public function setClsPermissoes(clsPermissoes $instance)
   {
@@ -279,9 +279,9 @@ abstract class Core_Controller_Page_EditController
   }
 
   /**
-   * Hook de execuÁ„o para verificar se CoreExt_Entity È novo. Verifica
-   * simplesmente se o campo identidade foi passado na requisiÁ„o HTTP e, se n„o
-   * for, cria uma inst‚ncia de CoreExt_Entity vazia.
+   * Hook de execu√ß√£o para verificar se CoreExt_Entity √© novo. Verifica
+   * simplesmente se o campo identidade foi passado na requisi√ß√£o HTTP e, se n√£o
+   * for, cria uma inst√¢ncia de CoreExt_Entity vazia.
    *
    * @return bool
    */
@@ -295,8 +295,8 @@ abstract class Core_Controller_Page_EditController
   }
 
   /**
-   * Hook de execuÁ„o para verificar se CoreExt_Entity È existente atravÈs do
-   * campo identidade passado pela requisiÁ„o HTTP.
+   * Hook de execu√ß√£o para verificar se CoreExt_Entity √© existente atrav√©s do
+   * campo identidade passado pela requisi√ß√£o HTTP.
    *
    * @return bool
    */
@@ -312,8 +312,8 @@ abstract class Core_Controller_Page_EditController
   }
 
   /**
-   * Insere um novo registro no banco de dados e redireciona para a p·gina
-   * definida pela opÁ„o "new_success".
+   * Insere um novo registro no banco de dados e redireciona para a p√°gina
+   * definida pela op√ß√£o "new_success".
    * @see clsCadastro#Novo()
    */
   public function Novo()
@@ -332,11 +332,11 @@ abstract class Core_Controller_Page_EditController
   }
 
   /**
-   * Atualiza um registro no banco de dados e redireciona para a p·gina
-   * definida pela opÁ„o "edit_success".
+   * Atualiza um registro no banco de dados e redireciona para a p√°gina
+   * definida pela op√ß√£o "edit_success".
    *
    * Possibilita o uso de uma query string padronizada, usando o array
-   * armazenado na opÁ„o "edit_success_params"
+   * armazenado na op√ß√£o "edit_success_params"
    *
    * @see clsCadastro#Editar()
    */
@@ -358,8 +358,8 @@ abstract class Core_Controller_Page_EditController
   }
 
   /**
-   * Apaga um registro no banco de dados e redireciona para a p·gina indicada
-   * pela opÁ„o "delete_success".
+   * Apaga um registro no banco de dados e redireciona para a p√°gina indicada
+   * pela op√ß√£o "delete_success".
    * @see clsCadastro#Excluir()
    */
   function Excluir()
@@ -381,12 +381,12 @@ abstract class Core_Controller_Page_EditController
   }
 
   /**
-   * Implementa uma rotina de criaÁ„o ou atualizaÁ„o de registro padr„o para
-   * uma inst‚ncia de CoreExt_Entity que use um campo identidade.
+   * Implementa uma rotina de cria√ß√£o ou atualiza√ß√£o de registro padr√£o para
+   * uma inst√¢ncia de CoreExt_Entity que use um campo identidade.
    * @return bool
    * @todo Atualizar todas as Exception de CoreExt_Validate, para poder ter
    *   certeza que o erro ocorrido foi gerado de alguma camada diferente, como
-   *   a de conex„o com o banco de dados.
+   *   a de conex√£o com o banco de dados.
    */
   protected function _save()
   {
@@ -398,7 +398,7 @@ abstract class Core_Controller_Page_EditController
       }
     }
 
-    // Verifica pela existÍncia do field identity
+    // Verifica pela exist√™ncia do field identity
     if (isset($this->getRequest()->id) && 0 < $this->getRequest()->id) {
       $entity = $this->setEntity($this->getDataMapper()->find($this->getRequest()->id));
     }
@@ -416,7 +416,7 @@ abstract class Core_Controller_Page_EditController
     }
     catch (Exception $e) {
       // TODO: ver @todo do docblock
-      $this->mensagem = 'Erro no preenchimento do formul·rio. ';
+      $this->mensagem = 'Erro no preenchimento do formul√°rio. ';
       return FALSE;
     }
   }

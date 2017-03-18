@@ -59,12 +59,12 @@ $xml->criaTag( "rss", "version=\"2.0\"", "", true );
 		$xml->voltaPai();
 		$xml->criaTag( "webMaster", "", $objConfig->arrayConfig['strAdminIntraEmail'], false );
 		$xml->criaTag( "pubDate", "", date('D, d M Y G:i:s T'), false );
-		
+
 		$db->Consulta("SELECT cod_not_portal, titulo, data_noticia, descricao FROM not_portal ORDER BY data_noticia DESC LIMIT 0, 15");
 		while ($db->ProximoRegistro())
 		{
 			list ($cod_not_portal, $titulo, $data_noticia, $descricao) = $db->Tupla();
-			
+
 			$tdia =  date('d', strtotime(substr($data_noticia,0,19)));
 			$tmes =  date('m', strtotime(substr($data_noticia,0,19)));
 			$tano =  date('Y', strtotime(substr($data_noticia,0,19)));

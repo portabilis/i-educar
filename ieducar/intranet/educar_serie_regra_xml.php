@@ -33,7 +33,7 @@
  * @version   $Id$
  */
 
-header('Content-type: text/xml; charset=');
+header('Content-type: text/xml; charset=UTF-8');
 
 require_once 'include/clsBanco.inc.php';
 require_once 'RegraAvaliacao/Model/RegraDataMapper.php';

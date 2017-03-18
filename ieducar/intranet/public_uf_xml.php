@@ -35,7 +35,7 @@ require_once 'include/pessoa/clsUf.inc.php';
 // Id do país na tabela public.pais
 $id = isset($_GET['pais']) ? $_GET['pais'] : NULL;
 
-header('Content-type: text/xml; charset=');
+header('Content-type: text/xml; charset=UTF-8');
 
 require_once 'Portabilis/Utils/DeprecatedXmlApi.php';
 Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
