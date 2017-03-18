@@ -31,7 +31,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <meta http-equiv="Content-Type" content="text/html; charset=">
   <title>Sistema de gestão escolar | i-Educar</title>
 </head>
 <frameset rows="27,*" framespacing="2" border="0" frameborder="0" >

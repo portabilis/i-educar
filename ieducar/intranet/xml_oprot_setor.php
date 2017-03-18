@@ -35,7 +35,7 @@ require_once 'include/pmidrh/geral.inc.php';
 require_once 'Portabilis/Utils/DeprecatedXmlApi.php';
 Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 
-echo '<?xml version="1.0" encoding="ISO-8859-15"?>' . "\n";
+echo '<?xml version="1.0" encoding="5"?>' . "\n";
 echo '<query xmlns="sugestoes">' . "\n";
 
 if (isset($_GET['setor_pai'])) {

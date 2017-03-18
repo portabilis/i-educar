@@ -28,7 +28,7 @@
  * @version   $Id$
  */
 
-header('Content-type: text/xml; encoding=ISO-8859-1');
+header('Content-type: text/xml; encoding=');
 
 require_once 'include/clsBanco.inc.php';
 require_once 'include/funcoes.inc.php';
@@ -36,7 +36,7 @@ require_once 'include/funcoes.inc.php';
 require_once 'Portabilis/Utils/DeprecatedXmlApi.php';
 Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 
-echo "<?xml version=\"1.0\" encoding=\"ISO-8859-15\"?>\n<query xmlns=\"sugestoes\">\n";
+echo "<?xml version=\"1.0\" encoding=\"5\"?>\n<query xmlns=\"sugestoes\">\n";
 
 if (is_numeric($_GET["esc"]) && is_numeric($_GET["ser"])) {
   $db = new clsBanco();

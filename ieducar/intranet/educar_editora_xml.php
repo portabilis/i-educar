@@ -32,7 +32,7 @@
   require_once 'Portabilis/Utils/DeprecatedXmlApi.php';
   Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn('colecoes');
 
-	echo "<?xml version=\"1.0\" encoding=\"ISO-8859-15\"?>\n<query xmlns=\"colecoes\">\n";
+	echo "<?xml version=\"1.0\" encoding=\"5\"?>\n<query xmlns=\"colecoes\">\n";
 
 	if( is_numeric( $_GET["bib"] ) )
 	{
