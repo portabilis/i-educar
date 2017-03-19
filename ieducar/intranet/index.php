@@ -99,6 +99,7 @@ class indice
           <script type="text/javascript" src="scripts/jquery/jquery-1.8.3.min.js"></script>
           <link rel="stylesheet" href="scripts/jquery/jquery-ui.min-1.9.2/css/custom/jquery-ui-1.9.2.custom.min.css">
           <script src="scripts/jquery/jquery-ui.min-1.9.2/js/jquery-ui-1.9.2.custom.min.js"></script>
+          <meta http-equiv=\'Content-Type\' content=\'text/html; charset=UTF-8\' />
           <div id="dialog" title="Atualização de dados">
             Todos os dias estamos trabalhando para melhorar o i-Educar e nossos serviços especialmente para você! Para ficar por dentro destas novidades, por favor, atualize seus dados informando seu melhor e-mail.
           </div>
