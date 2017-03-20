@@ -77,7 +77,7 @@ class indice extends clsCadastro
 				FROM mailling_email e, mailling_grupo_email g
 				WHERE g.ref_cod_mailling_grupo='{$this->id_grupo}'
 				AND e.cod_mailling_email = g.ref_cod_mailling_email
-				ORDER BY to_ascii(nm_pessoa) ASC
+				ORDER BY (nm_pessoa) ASC
 			" );
 			while ($db->ProximoRegistro())
 			{
@@ -89,7 +89,7 @@ class indice extends clsCadastro
 			SELECT nm_pessoa, cod_mailling_email, email
 			FROM mailling_email
 			WHERE cod_mailling_email NOT IN ( SELECT ref_cod_mailling_email FROM mailling_grupo_email )
-			ORDER BY to_ascii(nm_pessoa) ASC
+			ORDER BY (nm_pessoa) ASC
 		" );
 		while ($db->ProximoRegistro())
 		{

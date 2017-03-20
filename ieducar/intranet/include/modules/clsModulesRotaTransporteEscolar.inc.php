@@ -318,7 +318,7 @@ class clsModulesRotaTransporteEscolar
     }
 
     if (is_string($descricao)) {
-      $filtros .= "{$whereAnd} TO_ASCII(LOWER(descricao)) LIKE TO_ASCII(LOWER('%{$descricao}%'))";
+      $filtros .= "{$whereAnd} (LOWER(descricao)) LIKE (LOWER('%{$descricao}%'))";
       $whereAnd = " AND ";
     }
 
@@ -335,7 +335,7 @@ class clsModulesRotaTransporteEscolar
             cadastro.pessoa
           WHERE
             cadastro.pessoa.idpes = ref_idpes_destino
-            AND TO_ASCII(LOWER(nome)) LIKE TO_ASCII(LOWER('%{$nome_destino}%'))
+            AND (LOWER(nome)) LIKE (LOWER('%{$nome_destino}%'))
         )";
 
       $whereAnd = ' AND ';
@@ -359,7 +359,7 @@ class clsModulesRotaTransporteEscolar
             cadastro.pessoa, modules.empresa_transporte_escolar
           WHERE
             idpes = ref_idpes and cod_empresa_transporte_escolar = ref_cod_empresa_transporte_escolar 
-            AND TO_ASCII(LOWER(nome)) LIKE TO_ASCII(LOWER('%{$nome_empresa}%'))
+            AND (LOWER(nome)) LIKE (LOWER('%{$nome_empresa}%'))
         )";
 
       $whereAnd = ' AND ';

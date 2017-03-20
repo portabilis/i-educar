@@ -70,7 +70,7 @@
 				AND a.ref_cod_aluno_beneficio IS NOT NULL
 				{$where}
 			ORDER BY
-				to_ascii(p.nome) ASC
+				(p.nome) ASC
 		");
 		if ($db->numLinhas())
 		{

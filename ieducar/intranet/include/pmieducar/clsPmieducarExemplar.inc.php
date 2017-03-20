@@ -614,7 +614,7 @@ class clsPmieducarExemplar
 
 		if( is_string( $str_titulo_livro ) )
 		{
-			$filtros_extra .= "{$whereAnd2} to_ascii(a.titulo) ilike to_ascii('%{$date_data_aquisicao_fim}%') ";
+			$filtros_extra .= "{$whereAnd2} (a.titulo) ilike ('%{$date_data_aquisicao_fim}%') ";
 			$whereAnd2 = " AND ";
 		}
 
@@ -823,7 +823,7 @@ class clsPmieducarExemplar
 		}
 		if( is_string( $str_titulo_livro ) )
 		{
-			$filtros .= "{$whereAnd} to_ascii(a.titulo) LIKE to_ascii('%{$str_titulo_livro}%')";
+			$filtros .= "{$whereAnd} (a.titulo) LIKE ('%{$str_titulo_livro}%')";
 			$whereAnd = " AND ";
 		}
 

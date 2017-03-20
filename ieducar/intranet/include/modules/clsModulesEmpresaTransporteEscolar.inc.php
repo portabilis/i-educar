@@ -253,7 +253,7 @@ class clsModulesEmpresaTransporteEscolar
             cadastro.pessoa
           WHERE
             cadastro.pessoa.idpes = ref_idpes
-            AND TO_ASCII(LOWER(nome)) LIKE TO_ASCII(LOWER('%{$nm_idpes}%'))
+            AND (LOWER(nome)) LIKE (LOWER('%{$nm_idpes}%'))
         )";
 
       $whereAnd = ' AND ';
@@ -268,7 +268,7 @@ class clsModulesEmpresaTransporteEscolar
             cadastro.pessoa
           WHERE
             cadastro.pessoa.idpes = ref_resp_idpes
-            AND TO_ASCII(LOWER(nome)) LIKE TO_ASCII(LOWER('%{$nm_resp_idpes}%'))
+            AND (LOWER(nome)) LIKE (LOWER('%{$nm_resp_idpes}%'))
         )";
 
       $whereAnd = ' AND ';

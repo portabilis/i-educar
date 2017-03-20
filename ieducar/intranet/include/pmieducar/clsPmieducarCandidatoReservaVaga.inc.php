@@ -321,12 +321,12 @@ class clsPmieducarCandidatoReservaVaga
     }
 
     if(is_string($nome)){
-      $filtros .= " {$whereAnd} TO_ASCII(LOWER(pes.nome)) LIKE TO_ASCII(LOWER('%{$nome}%')) ";
+      $filtros .= " {$whereAnd} (LOWER(pes.nome)) LIKE (LOWER('%{$nome}%')) ";
       $whereAnd = ' AND ';
     }
 
     if(is_string($nome_responsavel)){
-      $filtros .= " {$whereAnd} TO_ASCII(LOWER(resp_pes.nome)) LIKE TO_ASCII(LOWER('%{$nome_responsavel}%')) ";
+      $filtros .= " {$whereAnd} (LOWER(resp_pes.nome)) LIKE (LOWER('%{$nome_responsavel}%')) ";
       $whereAnd = ' AND ';
     }
 

@@ -57,7 +57,7 @@
 				AND mt.ativo 	= 1
 				AND m.ativo     = 1
 			ORDER BY
-				to_ascii(p.nome) ASC
+				(p.nome) ASC
 		");
 
 		if ($db->numLinhas())

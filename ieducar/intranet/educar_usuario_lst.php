@@ -142,7 +142,7 @@ class indice extends clsListagem
 		$iniciolimit = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$limite-$limite: 0;
 
 		$obj_func = new clsFuncionario();
-		$obj_func->setOrderby("to_ascii(nome) ASC");
+		$obj_func->setOrderby("(nome) ASC");
 		$obj_func->setLimite($limite, $iniciolimit);
 		$lst_func = $obj_func->listaFuncionarioUsuario(
 			$_GET["matricula"], 

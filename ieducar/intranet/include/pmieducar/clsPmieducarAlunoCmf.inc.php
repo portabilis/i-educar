@@ -96,7 +96,7 @@ class clsPmieducarAlunoCMF
 		{
 			$table_join =",cadastro.pessoa       pessoa_aluno";
 			$where_join ="AND cpf_aluno.idpes    = pessoa_aluno.idpes";
-			$where_aluno .= "AND to_ascii(lower(pessoa_aluno.nome)) like  to_ascii(lower('%{$nome_aluno}%')) ";
+			$where_aluno .= "AND (lower(pessoa_aluno.nome)) like  (lower('%{$nome_aluno}%')) ";
 		}
 		if(is_numeric($cpf_aluno))
 		{
@@ -106,7 +106,7 @@ class clsPmieducarAlunoCMF
 
 		if(is_string($nome_responsavel))
 		{
-			$where_responsavel .= "AND to_ascii(lower(pessoa_resp.nome)) like  to_ascii(lower('%{$nome_responsavel}%')) ";
+			$where_responsavel .= "AND (lower(pessoa_resp.nome)) like  (lower('%{$nome_responsavel}%')) ";
 		}
 		if(is_numeric($cpf_responsavel))
 		{
@@ -128,7 +128,7 @@ class clsPmieducarAlunoCMF
 
 		$campos_select = "SELECT pessoa_aluno.idpes as cod_aluno
 				      ,pessoa_aluno.nome as nome_aluno
-				      ,lower(trim(to_ascii(pessoa_aluno.nome))) as nome_ascii
+				      ,lower(trim((pessoa_aluno.nome))) as nome_ascii
 				      ,cpf_aluno.cpf as cpf_aluno
 				      ,cpf_aluno.idpes_responsavel as idpes_responsavel";
 
@@ -153,7 +153,7 @@ class clsPmieducarAlunoCMF
 
 /*		$sql = "SELECT pessoa_aluno.idpes as cod_aluno
 				      ,pessoa_aluno.nome as nome_aluno
-				      ,lower(trim(to_ascii(pessoa_aluno.nome))) as nome_ascii
+				      ,lower(trim((pessoa_aluno.nome))) as nome_ascii
 				      ,cpf_aluno.cpf as cpf_aluno
 				      ,fisica_aluno.idpes_responsavel as idpes_responsavel
 				 FROM cadastro.pessoa       pessoa_aluno

@@ -185,17 +185,17 @@ class clsFuncionario extends clsPessoaFisica
 		$whereAnd = " WHERE ";
 
 		if (is_string($str_matricula) && $str_matricula != '') {
-			$filtros .= "{$whereAnd} to_ascii(f.matricula) LIKE to_ascii('%{$str_matricula}%')";
+			$filtros .= "{$whereAnd} (f.matricula) LIKE ('%{$str_matricula}%')";
 			$whereAnd = " AND ";
 		}
 
 		if(is_string($matricula_interna) && $matricula_interna != '')	{
-			$filtros .= "{$whereAnd} to_ascii(f.matricula_interna) LIKE to_ascii('%{$matricula_interna}%')";
+			$filtros .= "{$whereAnd} (f.matricula_interna) LIKE ('%{$matricula_interna}%')";
 			$whereAnd = " AND ";
 		}	
     
 		if (is_string($str_nome)) {
-			$filtros .= "{$whereAnd} to_ascii(f.nome) LIKE  to_ascii('%{$str_nome}%%')";
+			$filtros .= "{$whereAnd} (f.nome) LIKE  ('%{$str_nome}%%')";
 			$whereAnd = " AND ";
 			$filtro_pessoa =true;
 		}
@@ -241,7 +241,7 @@ class clsFuncionario extends clsPessoaFisica
 		$resultado = array();
 
 		if($int_inicio_limit !== false  && $int_qtd_registros !== false) {
-			$sql .= "{$filtros}"." ORDER BY to_ascii(f.nome) ASC ".$limite;
+			$sql .= "{$filtros}"." ORDER BY (f.nome) ASC ".$limite;
 		} else {
 			$sql .= "{$filtros}".$this->getOrderby().$this->getLimite();
 		}
@@ -289,17 +289,17 @@ class clsFuncionario extends clsPessoaFisica
 		$whereAnd = " WHERE u.ativo = 1 AND ";
 
 		if (is_string($str_matricula) && $str_matricula != '') {
-			$filtros .= "{$whereAnd} to_ascii(f.matricula) LIKE to_ascii('%{$str_matricula}%')";
+			$filtros .= "{$whereAnd} (f.matricula) LIKE ('%{$str_matricula}%')";
 			$whereAnd = " AND ";
 		}
 
 		if (is_string($matricula_interna) && $matricula_interna != '') {
-			$filtros .= "{$whereAnd} to_ascii(f.matricula_interna) LIKE to_ascii('%{$matricula_interna}%')";
+			$filtros .= "{$whereAnd} (f.matricula_interna) LIKE ('%{$matricula_interna}%')";
 			$whereAnd = " AND ";
     }
 
 		if (is_string($str_nome)) {
-			$filtros .= "{$whereAnd} to_ascii(f.nome) LIKE  to_ascii('%{$str_nome}%%')";
+			$filtros .= "{$whereAnd} (f.nome) LIKE  ('%{$str_nome}%%')";
 			$whereAnd = " AND ";
 			$filtro_pessoa =true;
 		}
