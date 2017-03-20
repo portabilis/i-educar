@@ -328,13 +328,13 @@ class clsModulesPessoaTransporte
 
     if (is_string($nome_pessoa)) {
         $filtros .= "
-        {$whereAnd} TO_ASCII(LOWER((p.nome))) LIKE TO_ASCII(LOWER('%{$nome_pessoa}%')) ";
+        {$whereAnd} (LOWER((p.nome))) LIKE (LOWER('%{$nome_pessoa}%')) ";
       $whereAnd = " AND ";
     }
 
     if (is_string($nome_destino)) {
         $filtros .= "
-        {$whereAnd} (TO_ASCII(LOWER((pd.nome))) LIKE TO_ASCII(LOWER('%{$nome_destino}%')) OR TO_ASCII(LOWER((pd2.nome))) LIKE TO_ASCII(LOWER('%{$nome_destino}%'))) ";
+        {$whereAnd} ((LOWER((pd.nome))) LIKE (LOWER('%{$nome_destino}%')) OR (LOWER((pd2.nome))) LIKE (LOWER('%{$nome_destino}%'))) ";
       $whereAnd = " AND ";
     }
 

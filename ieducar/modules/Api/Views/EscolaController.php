@@ -408,7 +408,7 @@ protected function getEscolasMultipleSearch(){
   $cursoId = $this->getRequest()->curso_id;
 
   $sql = "SELECT cod_escola as id,
-                 to_ascii(juridica.fantasia) as nome
+                 (juridica.fantasia) as nome
             from pmieducar.escola
            inner join cadastro.pessoa on(escola.ref_idpes = pessoa.idpes)
            inner join cadastro.juridica on(juridica.idpes = pessoa.idpes)

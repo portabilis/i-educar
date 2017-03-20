@@ -313,7 +313,7 @@ class clsModulesMotorista
 
     if (is_string($nome_motorista)) {
       $filtros .= "
-        {$whereAnd} TO_ASCII(LOWER((SELECT nome FROM cadastro.pessoa WHERE idpes = ref_idpes))) LIKE TO_ASCII(LOWER('%{$nome_motorista}%')) ";
+        {$whereAnd} (LOWER((SELECT nome FROM cadastro.pessoa WHERE idpes = ref_idpes))) LIKE (LOWER('%{$nome_motorista}%')) ";
 
       $whereAnd = ' AND ';
     }      
