@@ -1,5 +1,5 @@
 /**
-* @author Prefeitura Municipal de ItajaÌ
+* @author Prefeitura Municipal de Itaja√≠
 *
 * Criado em #data_criacao# pelo gerador automatico de classes
 */
@@ -200,7 +200,7 @@ class #nome_classe#
 	}
 
 	/**
-	 * Retorna true se o registro existir. Caso contr·rio retorna false.
+	 * Retorna true se o registro existir. Caso contr√°rio retorna false.
 	 *
 	 * @return bool
 	 */

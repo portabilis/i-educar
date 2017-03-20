@@ -26,7 +26,7 @@ class EscolaDestinoTransporteEscolarController extends ApiCoreController{
                     OR idpes IN
                     (SELECT ref_idpes_destino
                        FROM modules.pessoa_transporte)
- 				          ORDER BY to_ascii(lower(nome)) ASC';
+ 				          ORDER BY (lower(nome)) ASC';
 
 
 

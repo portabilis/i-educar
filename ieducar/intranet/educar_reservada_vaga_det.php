@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gestÃ£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de ItajaÃ­
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa Ã© software livre; vocÃª pode redistribuÃ­-lo e/ou modificÃ¡-lo
+ * sob os termos da LicenÃ§a PÃºblica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versÃ£o 2 da LicenÃ§a, como (a seu critÃ©rio)
+ * qualquer versÃ£o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa Ã© distribuÃ­Â­do na expectativa de que seja Ãºtil, porÃ©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implÃ­Â­cita de COMERCIABILIDADE OU
+ * ADEQUAÃ‡ÃƒO A UMA FINALIDADE ESPECÃFICA. Consulte a LicenÃ§a PÃºblica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * VocÃª deve ter recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral do GNU junto
+ * com este programa; se nÃ£o, escreva para a Free Software Foundation, Inc., no
+ * endereÃ§o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author      Prefeitura Municipal de ItajaÃ­ <ctima@itajai.sc.gov.br>
  * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
  * @package     Core
  * @subpackage  ReservaVaga
- * @since       Arquivo disponível desde a versão 1.0.0
+ * @since       Arquivo disponÃ­vel desde a versÃ£o 1.0.0
  * @version     $Id$
  */
 
@@ -44,13 +44,13 @@ class clsIndexBase extends clsBase {
 class indice extends clsDetalhe
 {
   /**
-   * Referência a usuário da sessão
+   * ReferÃªncia a usuÃ¡rio da sessÃ£o
    * @var int
    */
   var $pessoa_logada = NULL;
 
   /**
-   * Título no topo da página
+   * TÃ­tulo no topo da pÃ¡gina
    * @var string
    */
   var $titulo = '';
@@ -68,25 +68,25 @@ class indice extends clsDetalhe
     $ativo;
 
   /**
-   * Identificação para pmieducar.escola.
+   * IdentificaÃ§Ã£o para pmieducar.escola.
    * @var int
    */
   var $ref_cod_escola;
 
   /**
-   * Identificação para pmieducar.curso.
+   * IdentificaÃ§Ã£o para pmieducar.curso.
    * @var int
    */
   var $ref_cod_curso;
 
   /**
-   * Identificação para pmieducar.serie.
+   * IdentificaÃ§Ã£o para pmieducar.serie.
    * @var int
    */
   var $ref_cod_serie;
 
   /**
-   * Identificação para pmieducar.instituicao.
+   * IdentificaÃ§Ã£o para pmieducar.instituicao.
    * @var int
    */
   var $ref_cod_instituicao;
@@ -118,7 +118,7 @@ class indice extends clsDetalhe
       die();
     }
 
-    // Atribui códigos a variáveis de instância
+    // Atribui cÃ³digos a variÃ¡veis de instÃ¢ncia
     $this->ref_cod_escola = $registro['ref_ref_cod_escola'];
     $this->ref_cod_curso  = $registro['ref_cod_curso'];
     $this->ref_cod_serie  = $registro['ref_ref_cod_serie'];
@@ -129,7 +129,7 @@ class indice extends clsDetalhe
       $this->_desativar();
     }
 
-    // Instituição
+    // InstituiÃ§Ã£o
     $obj_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
     $det_instituicao = $obj_instituicao->detalhe();
     $registro['ref_cod_instituicao'] = $det_instituicao['nm_instituicao'];
@@ -139,7 +139,7 @@ class indice extends clsDetalhe
     $det_escola = $obj_escola->detalhe();
     $registro['ref_ref_cod_escola'] = $det_escola['nome'];
 
-    // Série
+    // SÃ©rie
     $obj_serie = new clsPmieducarSerie($registro['ref_ref_cod_serie']);
     $det_serie = $obj_serie->detalhe();
     $registro['ref_ref_cod_serie'] = $det_serie['nm_serie'];
@@ -193,7 +193,7 @@ class indice extends clsDetalhe
     $obj_permissao = new clsPermissoes();
     if ($obj_permissao->permissao_cadastra(639, $this->pessoa_logada,7)) {
       $this->array_botao = array('Emiss&atilde;o de Documento de Reserva de Vaga', 'Desativar Reserva');
-      $this->array_botao_url_script = array("showExpansivelImprimir(400, 200,  \"educar_relatorio_solicitacao_transferencia.php?cod_reserva_vaga={$this->cod_reserva_vaga}\",[], \"Relatório de Solicitação de transferência\")","go(\"educar_reservada_vaga_det.php?cod_reserva_vaga={$this->cod_reserva_vaga}&desativa=true\")");
+      $this->array_botao_url_script = array("showExpansivelImprimir(400, 200,  \"educar_relatorio_solicitacao_transferencia.php?cod_reserva_vaga={$this->cod_reserva_vaga}\",[], \"RelatÃ³rio de SolicitaÃ§Ã£o de transferÃªncia\")","go(\"educar_reservada_vaga_det.php?cod_reserva_vaga={$this->cod_reserva_vaga}&desativa=true\")");
     }
 
     $this->url_cancelar = 'educar_reservada_vaga_lst.php?ref_cod_escola=' .
@@ -232,14 +232,14 @@ class indice extends clsDetalhe
 
 }
 
-// Instancia objeto de página
+// Instancia objeto de pÃ¡gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conteúdo
+// Instancia objeto de conteÃºdo
 $miolo = new indice();
 
-// Atribui o conteúdo à página
+// Atribui o conteÃºdo Ã  pÃ¡gina
 $pagina->addForm($miolo);
 
-// Gera o código HTML
+// Gera o cÃ³digo HTML
 $pagina->MakeAll();

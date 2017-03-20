@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gestÃ£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de ItajaÃ­
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa Ã© software livre; vocÃª pode redistribuÃ­-lo e/ou modificÃ¡-lo
+ * sob os termos da LicenÃ§a PÃºblica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versÃ£o 2 da LicenÃ§a, como (a seu critÃ©rio)
+ * qualquer versÃ£o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa Ã© distribuÃ­Â­do na expectativa de que seja Ãºtil, porÃ©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implÃ­Â­cita de COMERCIABILIDADE OU
+ * ADEQUAÃ‡ÃƒO A UMA FINALIDADE ESPECÃFICA. Consulte a LicenÃ§a PÃºblica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * VocÃª deve ter recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral do GNU junto
+ * com este programa; se nÃ£o, escreva para a Free Software Foundation, Inc., no
+ * endereÃ§o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Adriano Erik Weiguert Nagasava <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo disponível desde a versão 1.0.0
+ * @since     Arquivo disponÃ­vel desde a versÃ£o 1.0.0
  * @version   $Id$
  */
 
@@ -40,14 +40,14 @@ require_once 'include/pmieducar/geral.inc.php';
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe disponÃ­vel desde a versÃ£o 1.0.0
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor Formação');
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor FormaÃ§Ã£o');
     $this->processoAp = 635;
   }
 }
@@ -59,7 +59,7 @@ class clsIndexBase extends clsBase
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe disponÃ­vel desde a versÃ£o 1.0.0
  * @version   @@package_version@@
  */
 class indice extends clsCadastro
@@ -167,11 +167,11 @@ class indice extends clsCadastro
 
       $opcoes = array(
         'C' => 'Cursos',
-        'T' => 'Títulos',
+        'T' => 'TÃ­tulos',
         'O' => 'Concursos'
       );
 
-      $this->campoLista('tipo', 'Tipo de Formação', $opcoes, $this->tipo);
+      $this->campoLista('tipo', 'Tipo de FormaÃ§Ã£o', $opcoes, $this->tipo);
 
       $this->acao_enviar = FALSE;
 
@@ -200,7 +200,7 @@ class indice extends clsCadastro
 
         include 'include/pmieducar/educar_campo_lista.php';
 
-        $this->campoRotulo('nm_tipo', 'Tipo de Formação', ($this->tipo == 'C') ? 'Curso' : 'Error');
+        $this->campoRotulo('nm_tipo', 'Tipo de FormaÃ§Ã£o', ($this->tipo == 'C') ? 'Curso' : 'Error');
         $this->campoTexto('nm_formacao', 'Nome do Curso', $this->nm_formacao, 30, 255, TRUE );
 
         // Foreign keys
@@ -217,11 +217,11 @@ class indice extends clsCadastro
           }
         }
 
-        $this->campoMemo('descricao', 'Descricão', $this->descricao, 60, 5, FALSE);
+        $this->campoMemo('descricao', 'DescricÃ£o', $this->descricao, 60, 5, FALSE);
 
         $this->campoRotulo('nm_servidor', 'Nome do Servidor', $nm_servidor);
 
-        $this->campoData('data_conclusao', 'Data de Conclusão', $this->data_conclusao, TRUE);
+        $this->campoData('data_conclusao', 'Data de ConclusÃ£o', $this->data_conclusao, TRUE);
 
         $this->campoData('data_registro', 'Data de Registro', $this->data_registro);
 
@@ -241,8 +241,8 @@ class indice extends clsCadastro
 
         include 'include/pmieducar/educar_campo_lista.php';
 
-        $this->campoRotulo('nm_tipo', 'Tipo de Formação', ($this->tipo == 'T') ? 'Título' : 'Error');
-        $this->campoTexto('nm_formacao', 'Nome do Título', $this->nm_formacao, 30, 255, TRUE);
+        $this->campoRotulo('nm_tipo', 'Tipo de FormaÃ§Ã£o', ($this->tipo == 'T') ? 'TÃ­tulo' : 'Error');
+        $this->campoTexto('nm_formacao', 'Nome do TÃ­tulo', $this->nm_formacao, 30, 255, TRUE);
 
         // Foreign keys
         $nm_servidor = '';
@@ -258,13 +258,13 @@ class indice extends clsCadastro
           }
         }
 
-        $this->campoMemo('descricao', 'Descrição', $this->descricao, 60, 5, FALSE);
+        $this->campoMemo('descricao', 'DescriÃ§Ã£o', $this->descricao, 60, 5, FALSE);
 
         $this->campoRotulo('nm_servidor', 'Nome do Servidor', $nm_servidor);
 
-        $this->campoData('data_vigencia_homolog', 'Data de Vigência', $this->data_vigencia_homolog, TRUE);
+        $this->campoData('data_vigencia_homolog', 'Data de VigÃªncia', $this->data_vigencia_homolog, TRUE);
 
-        $this->campoData('data_publicacao', 'Data de Publicação', $this->data_publicacao, TRUE);
+        $this->campoData('data_publicacao', 'Data de PublicaÃ§Ã£o', $this->data_publicacao, TRUE);
       }
       elseif ( $this->tipo == 'O' ) {
         // Primary keys
@@ -279,7 +279,7 @@ class indice extends clsCadastro
 
         include 'include/pmieducar/educar_campo_lista.php';
 
-        $this->campoRotulo('nm_tipo', 'Tipo de Formação', ($this->tipo == 'O') ? 'Formação' : 'Error');
+        $this->campoRotulo('nm_tipo', 'Tipo de FormaÃ§Ã£o', ($this->tipo == 'O') ? 'FormaÃ§Ã£o' : 'Error');
         $this->campoTexto('nm_formacao', 'Nome do Concurso', $this->nm_formacao, 30, 255, TRUE);
 
         // Foreign keys
@@ -295,13 +295,13 @@ class indice extends clsCadastro
             $nm_servidor = $det['nome'];
           }
         }
-        $this->campoMemo('descricao', 'Descrição', $this->descricao, 60, 5, FALSE);
+        $this->campoMemo('descricao', 'DescriÃ§Ã£o', $this->descricao, 60, 5, FALSE);
 
         $this->campoRotulo('nm_servidor', 'Nome do Servidor', $nm_servidor);
 
-        $this->campoData('data_vigencia_homolog', 'Data de Homologação', $this->data_vigencia_homolog, TRUE);
+        $this->campoData('data_vigencia_homolog', 'Data de HomologaÃ§Ã£o', $this->data_vigencia_homolog, TRUE);
 
-        $this->campoData('data_publicacao', 'Data de Publicação', $this->data_publicacao, TRUE);
+        $this->campoData('data_publicacao', 'Data de PublicaÃ§Ã£o', $this->data_publicacao, TRUE);
       }
     }
   }
@@ -349,7 +349,7 @@ class indice extends clsCadastro
       }
     }
 
-    $this->mensagem = 'Cadastro não realizado.<br>';
+    $this->mensagem = 'Cadastro nÃ£o realizado.<br>';
     return FALSE;
   }
 
@@ -383,7 +383,7 @@ class indice extends clsCadastro
         $editou_cur = $obj_curso->edita();
 
         if ($editou_cur) {
-          $this->mensagem .= 'Edição efetuada com sucesso.<br>';
+          $this->mensagem .= 'EdiÃ§Ã£o efetuada com sucesso.<br>';
           header('Location: ' . $backUrl);
           die();
         }
@@ -396,14 +396,14 @@ class indice extends clsCadastro
         $editou_tit = $obj_titulo->edita();
 
         if ($editou_tit) {
-          $this->mensagem .= 'Edição efetuada com sucesso.<br>';
+          $this->mensagem .= 'EdiÃ§Ã£o efetuada com sucesso.<br>';
           header('Location: ' . $backUrl);
           die();
         }
       }
     }
 
-    $this->mensagem = "Edição não realizada.<br>";
+    $this->mensagem = "EdiÃ§Ã£o nÃ£o realizada.<br>";
     return FALSE;
   }
 
@@ -428,24 +428,24 @@ class indice extends clsCadastro
     $excluiu = $obj->excluir();
 
     if ($excluiu) {
-      $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
+      $this->mensagem .= 'ExclusÃ£o efetuada com sucesso.<br>';
       header('Location:' . $backUrl);
       die();
     }
 
-    $this->mensagem = 'Exclusão não realizada.<br>';
+    $this->mensagem = 'ExclusÃ£o nÃ£o realizada.<br>';
     return FALSE;
   }
 }
 
-// Instancia objeto de página
+// Instancia objeto de pÃ¡gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conteúdo
+// Instancia objeto de conteÃºdo
 $miolo = new indice();
 
-// Atribui o conteúdo à  página
+// Atribui o conteÃºdo Ã Â  pÃ¡gina
 $pagina->addForm($miolo);
 
-// Gera o código HTML
+// Gera o cÃ³digo HTML
 $pagina->MakeAll();

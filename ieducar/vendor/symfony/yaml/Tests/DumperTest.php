@@ -287,7 +287,7 @@ EOF;
 
     public function testNonUtf8DataIsDumpedBase64Encoded()
     {
-        // "für" (ISO-8859-1 encoded)
+        // "für" ( encoded)
         $this->assertSame('!!binary ZsM/cg==', $this->dumper->dump("f\xc3\x3fr"));
     }
 
