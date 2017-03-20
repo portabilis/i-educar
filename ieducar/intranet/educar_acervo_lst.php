@@ -117,7 +117,11 @@ class indice extends clsListagem
 		$get_escola = true;
 		$get_biblioteca = true;
 		$get_cabecalho = "lista_busca";
-		include("include/pmieducar/educar_campo_lista.php");
+
+    $this->inputsHelper()->dynamic('ano', array('required' => false));
+    $this->inputsHelper()->dynamic('instituicao', array('required' => false));
+    $this->inputsHelper()->dynamic('escola', array('required' => false));
+    $this->inputsHelper()->dynamic('biblioteca', array('required' => false));
 
 		//retira escola e instituição do cabeçalho
 		unset($lista_busca[5], $lista_busca[6]);
@@ -185,7 +189,7 @@ class indice extends clsListagem
           foreach ($lista as $registro) {
             $opcoes[$registro['cod_acervo_assunto']] = $registro['nm_assunto'];
           }
-        }		
+        }
 
         $this->campoLista('ref_cod_assunto_acervo', 'Assunto', $opcoes, $this->ref_cod_assunto_acervo, '', FALSE, '',
     	  '', FALSE, FALSE);
@@ -265,7 +269,7 @@ class indice extends clsListagem
          "educar_biblioteca_index.php"                  => "i-Educar - Biblioteca",
          ""                                  => "Listagem de obras"
     ));
-    $this->enviaLocalizacao($localizacao->montar());		
+    $this->enviaLocalizacao($localizacao->montar());
 	}
 }
 // cria uma extensao da classe base
@@ -334,7 +338,7 @@ function getAcervoEditora(xml_acervo_editora)
 		}
 	}
 	else
-		campoEditora.options[0].text = 'A biblioteca não possui nenhuma editora';	
+		campoEditora.options[0].text = 'A biblioteca não possui nenhuma editora';
 }
 
 document.getElementById('ref_cod_biblioteca').onchange = function()
