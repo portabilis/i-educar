@@ -1,26 +1,29 @@
 (function($){
   $(document).ready(function(){
-    var $escolaField     = getElementFor('escola');
-    var $bibliotecaField = getElementFor('biblioteca');
+    var $instituicaoField = getElementFor('instituicao');
+    var $escolaField      = getElementFor('escola');
+    var $bibliotecaField       = getElementFor('biblioteca');
 
-    var handleGetBibliotecas = function(resources) {
-      var selectOptions = xmlResourcesToSelectOptions(resources, 'query', 'cod_biblioteca');
-      updateSelect($bibliotecaField, selectOptions, "Selecione uma biblioteca");
+    var handleGetBiblioteca = function(response) {
+      var selectOptions = jsonResourcesToSelectOptions(response['options']);
+      updateSelect($bibliotecaField, selectOptions, "Selecione um biblioteca");
     }
 
-    var updateBibliotecas = function(){
+    var updateBiblioteca = function(){
       resetSelect($bibliotecaField);
 
-      if ($escolaField.val() && $escolaField.is(':enabled')) {
+      if ($instituicaoField.val() && $escolaField.val() && $escolaField.is(':enabled')) {
         $bibliotecaField.children().first().html('Aguarde carregando...');
 
-        var urlForGetBibliotecas = getResourceUrlBuilder.buildUrl('educar_biblioteca_xml.php', '', {
-                                                       esc : $escolaField.attr('value') });
+        var urlForGetBiblioteca = getResourceUrlBuilder.buildUrl('/module/DynamicInput/Biblioteca', 'bibliotecas', {
+          escola_id      : $escolaField.attr('value'),
+          instituicao_id : $instituicaoField.attr('value'),
+        });
 
         var options = {
-          url : urlForGetBibliotecas,
-          dataType : 'xml',
-          success  : handleGetBibliotecas
+          url : urlForGetBiblioteca,
+          dataType : 'json',
+          success  : handleGetBiblioteca
         };
 
         getResources(options);
@@ -30,7 +33,7 @@
     };
 
     // bind onchange event
-    $escolaField.change(updateBibliotecas);
+    $escolaField.change(updateBiblioteca);
 
   }); // ready
 })(jQuery);
