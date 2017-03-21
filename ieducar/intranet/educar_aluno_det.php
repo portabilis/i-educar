@@ -159,7 +159,7 @@ class indice extends clsDetalhe
       if ($detalheFoto)
         $caminhoFoto  = $detalheFoto['caminho'];
 
-      $registro['nome_aluno'] = mb_strtoupper($det_pessoa_fj['nome']);
+      $registro['nome_aluno'] = strtoupper($det_pessoa_fj['nome']);
       $registro['cpf']        = int2IdFederal($det_fisica['cpf']);
       $registro['data_nasc']  = Portabilis_Date_Utils::pgSQLToBr($det_fisica['data_nasc']);
       $registro['sexo']       = $det_fisica['sexo'] == 'F' ? 'Feminino' : 'Masculino';
