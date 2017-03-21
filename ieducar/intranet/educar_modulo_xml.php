@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest√£o escolar
+ * i-Educar - Sistema de gest„o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
+ * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
- * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
- * qualquer vers√£o posterior.
+ * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
+ * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
+ * qualquer vers„o posterior.
  *
- * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
- * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
+ * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
+ * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
  * do GNU para mais detalhes.
  *
- * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
- * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
- * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
+ * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
+ * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo dispon√≠vel desde a vers√£o 1.0.0
+ * @since     Arquivo disponÌvel desde a vers„o 1.0.0
  * @version   $Id$
  */
 
@@ -36,7 +36,7 @@ header('Content-type: text/xml');
 require_once 'Portabilis/Utils/DeprecatedXmlApi.php';
 Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 
-print '<?xml version="1.0" encoding=""?>' . "\n";
+print '<?xml version="1.0" encoding="ISO-8859-1"?>' . "\n";
 print '<query xmlns="sugestoes">' . "\n";
 
 if (is_numeric($_GET['curso'])) {
@@ -53,7 +53,7 @@ if (is_numeric($_GET['curso'])) {
     $db->Consulta(sprintf("
       SELECT
         cod_modulo,
-        sequencial || '¬∫ ' || nm_tipo || ' - de ' || to_char(data_inicio,'dd/mm/yyyy') || ' at√© ' || to_char(data_fim,'dd/mm/yyyy'),
+        sequencial || '∫ ' || nm_tipo || ' - de ' || to_char(data_inicio,'dd/mm/yyyy') || ' atÈ ' || to_char(data_fim,'dd/mm/yyyy'),
         ref_ano,
         sequencial
       FROM
@@ -85,7 +85,7 @@ if (is_numeric($_GET['curso'])) {
       $db->Consulta(sprintf("
         SELECT
           ref_cod_modulo,
-          nm_tipo || ' - de ' || to_char(data_inicio,'dd/mm/yyyy') || ' at√© ' || to_char(data_fim,'dd/mm/yyyy'),
+          nm_tipo || ' - de ' || to_char(data_inicio,'dd/mm/yyyy') || ' atÈ ' || to_char(data_fim,'dd/mm/yyyy'),
           sequencial
         FROM
           pmieducar.turma_modulo,

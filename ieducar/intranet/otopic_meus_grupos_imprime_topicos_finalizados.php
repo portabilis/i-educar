@@ -1,25 +1,25 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	@author Prefeitura Municipal de ItajaÃ­								 *
+	*	@author Prefeitura Municipal de Itajaí								 *
 	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software PÃºblico Livre e Brasileiro					 *
+	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
 	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÃ­			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  Ã©  software livre, vocÃª pode redistribuÃ­-lo e/ou	 *
-	*	modificÃ¡-lo sob os termos da LicenÃ§a PÃºblica Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versÃ£o 2 da	 *
-	*	LicenÃ§a   como  (a  seu  critÃ©rio)  qualquer  versÃ£o  mais  nova.	 *
+	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
+	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
+	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
 	*																		 *
-	*	Este programa  Ã© distribuÃ­do na expectativa de ser Ãºtil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implÃ­cita de COMERCIALI-	 *
-	*	ZAÃ‡ÃƒO  ou  de ADEQUAÃ‡ÃƒO A QUALQUER PROPÃ“SITO EM PARTICULAR. Con-	 *
-	*	sulte  a  LicenÃ§a  PÃºblica  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
+	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
+	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	VocÃª  deve  ter  recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral GNU	 *
-	*	junto  com  este  programa. Se nÃ£o, escreva para a Free Software	 *
+	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
+	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
@@ -51,7 +51,7 @@ class Listas3 extends clsListagem
 		@session_write_close();
 		$this->nome = "Form4";
 
-		$this->titulo = "TÃ³picos Finalizados";
+		$this->titulo = "Tópicos Finalizados";
 		$this->addBanner( );
 	
 		$cod_membro = $_GET['cod_membro'];
@@ -81,7 +81,7 @@ class Listas3 extends clsListagem
 				}
 			}
 		}
-		/*  Pega lista de Reunioes nÃ£o Finalizadas, Verifica que estÃ£o nessa reuniao e marca como 
+		/*  Pega lista de Reunioes não Finalizadas, Verifica que estão nessa reuniao e marca como 
 			comprometido
 		*/	
 		$obj = new clsReuniao();
@@ -119,7 +119,7 @@ class Listas3 extends clsListagem
 			if($lista)
 			{
 				//pdf
-				$objRelatorio = new relatorios("TÃ³picos Finalizados",80,false,false,"A4","Prefeitura de ItajaÃ­\nCentro Tecnologico de InformaÃ§Ã£o e ModernizaÃ§Ã£o Administrativa.\nRua Alberto Werner, 100 - Vila OperÃ¡ria\nCEP. 88304-053 - ItajaÃ­ - SC","#FFFFFF","#000000", "#FFFFFF", "#FFFFFF");
+				$objRelatorio = new relatorios("Tópicos Finalizados",80,false,false,"A4","Prefeitura de Itajaí\nCentro Tecnologico de Informação e Modernização Administrativa.\nRua Alberto Werner, 100 - Vila Operária\nCEP. 88304-053 - Itajaí - SC","#FFFFFF","#000000", "#FFFFFF", "#FFFFFF");
 				if($imprimir == "jato")
 				{
 					foreach ($lista as $topicos) 
@@ -135,13 +135,13 @@ class Listas3 extends clsListagem
 						{
 							$descricao = $topicos['assunto'];
 						}
-						// Pega o Nome do responsÃ¡vel pelo TÃ³pico
+						// Pega o Nome do responsável pelo Tópico
 						$obj = new clsPessoaFj($topicos['ref_idpes_cad']);
 						$detalhe = $obj->detalhe();
 						$nome = $detalhe['nome'];
 						//pdf
-						$objRelatorio->novalinha(array("DescriÃ§Ã£o: ".quebra_linhas_pdf($descricao, 70)), 0, 13*(count(explode("\n",quebra_linhas_pdf($descricao, 70) ))) , false, false, 109,false,"#FFFFFF");						
-						$objRelatorio->novalinha(array("ResponsÃ¡vel: ".$nome), 15, 13 , false, false, 109,false,"#FFFFFF");						
+						$objRelatorio->novalinha(array("Descrição: ".quebra_linhas_pdf($descricao, 70)), 0, 13*(count(explode("\n",quebra_linhas_pdf($descricao, 70) ))) , false, false, 109,false,"#FFFFFF");						
+						$objRelatorio->novalinha(array("Responsável: ".$nome), 15, 13 , false, false, 109,false,"#FFFFFF");						
 								
 					}
 				}
@@ -160,13 +160,13 @@ class Listas3 extends clsListagem
 						{
 							$descricao = $topicos['assunto'];
 						}
-						// Pega o Nome do responsÃ¡vel pelo TÃ³pico
+						// Pega o Nome do responsável pelo Tópico
 						$obj = new clsPessoaFj($topicos['ref_idpes_cad']);
 						$detalhe = $obj->detalhe();
 						$nome = $detalhe['nome'];
 						//pdf
-						$objRelatorio->novalinha(array("DescriÃ§Ã£o: ".quebra_linhas_pdf($descricao, 70)), 0, 13*(count(explode("\n",quebra_linhas_pdf($descricao, 70) ))) , false, false, 109);						
-						$objRelatorio->novalinha(array("ResponsÃ¡vel: ".$nome), 15, 13 , false, false, 109);
+						$objRelatorio->novalinha(array("Descrição: ".quebra_linhas_pdf($descricao, 70)), 0, 13*(count(explode("\n",quebra_linhas_pdf($descricao, 70) ))) , false, false, 109);						
+						$objRelatorio->novalinha(array("Responsável: ".$nome), 15, 13 , false, false, 109);
 								
 					}
 				}

@@ -1,25 +1,25 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	@author Prefeitura Municipal de ItajaÃ­								 *
+	*	@author Prefeitura Municipal de Itajaí								 *
 	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software PÃºblico Livre e Brasileiro					 *
+	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
 	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÃ­			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  Ã©  software livre, vocÃª pode redistribuÃ­-lo e/ou	 *
-	*	modificÃ¡-lo sob os termos da LicenÃ§a PÃºblica Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versÃ£o 2 da	 *
-	*	LicenÃ§a   como  (a  seu  critÃ©rio)  qualquer  versÃ£o  mais  nova.	 *
+	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
+	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
+	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
 	*																		 *
-	*	Este programa  Ã© distribuÃ­do na expectativa de ser Ãºtil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implÃ­cita de COMERCIALI-	 *
-	*	ZAÃ‡ÃƒO  ou  de ADEQUAÃ‡ÃƒO A QUALQUER PROPÃ“SITO EM PARTICULAR. Con-	 *
-	*	sulte  a  LicenÃ§a  PÃºblica  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
+	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
+	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	VocÃª  deve  ter  recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral GNU	 *
-	*	junto  com  este  programa. Se nÃ£o, escreva para a Free Software	 *
+	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
+	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
@@ -39,7 +39,7 @@ class clsIndex extends clsBase
 	
 	function Formular()
 	{
-		$this->SetTitulo( "{$this->_instituicao} i-Pauta - Detalhe da ReuniÃ£o" );
+		$this->SetTitulo( "{$this->_instituicao} i-Pauta - Detalhe da Reunião" );
 		$this->processoAp = "294";
 	}
 }
@@ -48,14 +48,14 @@ class indice extends clsListagem
 {
 	function Gerar()
 	{
-		$this->titulo = "Detalhe da ReuniÃ£o";
+		$this->titulo = "Detalhe da Reunião";
 		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet", false);
 		
 		@session_start();
 		$id_visualiza = $_SESSION['id_pessoa'];
 		@session_write_close();
 	
-		$this->titulo = "ReuniÃ£o";
+		$this->titulo = "Reunião";
 		$this->addBanner(false,false,false,false );
 		
 		$cod_membro = $_GET['cod_membro'];
@@ -65,18 +65,18 @@ class indice extends clsListagem
 		$this->addCabecalhos( array( "Imprimir") );
 		
 		//pdf
-		$objRelatorio = new relatorios("Pauta",80,false,false,"A4","Prefeitura de ItajaÃ­\nCentro Tecnologico de InformaÃ§Ã£o e ModernizaÃ§Ã£o Administrativa.\nRua Alberto Werner, 100 - Vila OperÃ¡ria\nCEP. 88304-053 - ItajaÃ­ - SC","#FFFFFF","#000000", "#FFFFFF", "#FFFFFF");
-		$objRelatorioCor = new relatorios("Pauta",80,false,false,"A4","Prefeitura de ItajaÃ­\nCentro Tecnologico de InformaÃ§Ã£o e ModernizaÃ§Ã£o Administrativa.\nRua Alberto Werner, 100 - Vila OperÃ¡ria\nCEP. 88304-053 - ItajaÃ­ - SC");
-		$objRelatorio->novalinha(array("InformaÃ§Ãµes Gerais:"), 0, 16, true,"arial",false,"#FFFFFF",false,"#000000");
-		$objRelatorioCor->novalinha(array("InformaÃ§Ãµes Gerais:"), 0, 16, true);
+		$objRelatorio = new relatorios("Pauta",80,false,false,"A4","Prefeitura de Itajaí\nCentro Tecnologico de Informação e Modernização Administrativa.\nRua Alberto Werner, 100 - Vila Operária\nCEP. 88304-053 - Itajaí - SC","#FFFFFF","#000000", "#FFFFFF", "#FFFFFF");
+		$objRelatorioCor = new relatorios("Pauta",80,false,false,"A4","Prefeitura de Itajaí\nCentro Tecnologico de Informação e Modernização Administrativa.\nRua Alberto Werner, 100 - Vila Operária\nCEP. 88304-053 - Itajaí - SC");
+		$objRelatorio->novalinha(array("Informações Gerais:"), 0, 16, true,"arial",false,"#FFFFFF",false,"#000000");
+		$objRelatorioCor->novalinha(array("Informações Gerais:"), 0, 16, true);
 		
 		$obj = new clsReuniao($cod_reuniao); 
 		$detalhe = $obj->detalhe();
 		
-		//$this->addDetalhe(array("DescriÃ§Ã£o", $detalhe['descricao']));
+		//$this->addDetalhe(array("Descrição", $detalhe['descricao']));
 		//pdf
-    	$objRelatorio->novalinha(array("DescriÃ§Ã£o:", quebra_linhas_pdf($detalhe['descricao'], 70) ), 0, 13*(count(explode("\n",quebra_linhas_pdf($detalhe['descricao'], 70) ))) , false, false, 107,false,"#FFFFFF");
-    	$objRelatorioCor->novalinha(array("DescriÃ§Ã£o:", quebra_linhas_pdf($detalhe['descricao'], 70) ), 0, 13*(count(explode("\n",quebra_linhas_pdf($detalhe['descricao'], 70) ))), false, false, 107);
+    	$objRelatorio->novalinha(array("Descrição:", quebra_linhas_pdf($detalhe['descricao'], 70) ), 0, 13*(count(explode("\n",quebra_linhas_pdf($detalhe['descricao'], 70) ))) , false, false, 107,false,"#FFFFFF");
+    	$objRelatorioCor->novalinha(array("Descrição:", quebra_linhas_pdf($detalhe['descricao'], 70) ), 0, 13*(count(explode("\n",quebra_linhas_pdf($detalhe['descricao'], 70) ))), false, false, 107);
     	
 		//$this->addDetalhe(array("Data Inicio", date("d/m/Y H:i", strtotime(substr($detalhe['data_inicio_marcado'],0,19)))  ));
 		//pdf
@@ -97,16 +97,16 @@ class indice extends clsListagem
 			{
 				if($detalhe['data_fim_real'])
 				{	
-					$objRelatorio->novalinha(array("Data da execuÃ§Ã£o:", date( "d/m/Y H:i:s", strtotime( substr( $detalhe['data_inicio_real'],0 ) ))." as ".date("H:i:s", strtotime(substr($detalhe['data_fim_real'],10)) ) ), 0, 13 , false, false, 109,false,"#FFFFFF");
-	        		$objRelatorioCor->novalinha(array("Data da execuÃ§Ã£o:", date( "d/m/Y H:i:s", strtotime( substr( $detalhe['data_inicio_real'],0 ) ))." as ".date("H:i:s", strtotime(substr($detalhe['data_fim_real'],10)) ) ), 0, 13 , false, false, 109);			
+					$objRelatorio->novalinha(array("Data da execução:", date( "d/m/Y H:i:s", strtotime( substr( $detalhe['data_inicio_real'],0 ) ))." as ".date("H:i:s", strtotime(substr($detalhe['data_fim_real'],10)) ) ), 0, 13 , false, false, 109,false,"#FFFFFF");
+	        		$objRelatorioCor->novalinha(array("Data da execução:", date( "d/m/Y H:i:s", strtotime( substr( $detalhe['data_inicio_real'],0 ) ))." as ".date("H:i:s", strtotime(substr($detalhe['data_fim_real'],10)) ) ), 0, 13 , false, false, 109);			
 				}
 			}
 			else 
 			{
 				if($detalhe['data_fim_real'])
 				{
-					$objRelatorio->novalinha(array("Data da execuÃ§Ã£o:", date( "d/m/Y H:i:s", strtotime( substr( $detalhe['data_inicio_real'],0 ) ))." - ".date("d/m/Y H:i", strtotime(substr($detalhe['data_fim_real'],0)) ) ), 0, 13 , false, false, 109,false,"#FFFFFF");
-		        	$objRelatorioCor->novalinha(array("Data da execuÃ§Ã£o:", date( "d/m/Y H:i:s", strtotime( substr( $detalhe['data_inicio_real'],0 ) ))." - ".date("d/m/Y H:i", strtotime(substr($detalhe['data_fim_real'],0)) ) ), 0, 13 , false, false, 109);
+					$objRelatorio->novalinha(array("Data da execução:", date( "d/m/Y H:i:s", strtotime( substr( $detalhe['data_inicio_real'],0 ) ))." - ".date("d/m/Y H:i", strtotime(substr($detalhe['data_fim_real'],0)) ) ), 0, 13 , false, false, 109,false,"#FFFFFF");
+		        	$objRelatorioCor->novalinha(array("Data da execução:", date( "d/m/Y H:i:s", strtotime( substr( $detalhe['data_inicio_real'],0 ) ))." - ".date("d/m/Y H:i", strtotime(substr($detalhe['data_fim_real'],0)) ) ), 0, 13 , false, false, 109);
 				}
 			}
 		}
@@ -116,16 +116,16 @@ class indice extends clsListagem
 		//pdf
 		if(!$detalhe["data_fim_real"])
 		{
-			$notificacaoPorEmail = ($detalhe['email_enviado']) ? "Sim" : "NÃ£o";
+			$notificacaoPorEmail = ($detalhe['email_enviado']) ? "Sim" : "Não";
 	        $objRelatorio->novalinha(array("Notificado por e-mail:", $notificacaoPorEmail), 0, 13 , false, false, 110,false,"#FFFFFF");
 	        $objRelatorioCor->novalinha(array("Notificado por e-mail:", $notificacaoPorEmail), 0, 13 , false, false, 110,false,"#FFFFFF");
 		}
 		else 
 		{
 			/*$dif = strtotime(substr($detalhe['data_fim_real'],0,19)) - strtotime(substr($detalhe['data_inicio_real'],0,19));
-			$notificacaoPorEmail = ($detalhe['email_enviado']) ? "Sim" : "NÃ£o";
-        	$objRelatorio->novalinha(array("Tempo de DuraÃ§Ã£o:", $dif."   "."Notificado por e-mail: ".$notificacaoPorEmail ), 0, 13 , false, false, 109,false,"#FFFFFF");
-        	$objRelatorioCor->novalinha(array("Tempo de DuraÃ§Ã£o:", $dif."   "."Notificado por e-mail: ".$notificacaoPorEmail ), 0, 13 , false, false, 109);*/
+			$notificacaoPorEmail = ($detalhe['email_enviado']) ? "Sim" : "Não";
+        	$objRelatorio->novalinha(array("Tempo de Duração:", $dif."   "."Notificado por e-mail: ".$notificacaoPorEmail ), 0, 13 , false, false, 109,false,"#FFFFFF");
+        	$objRelatorioCor->novalinha(array("Tempo de Duração:", $dif."   "."Notificado por e-mail: ".$notificacaoPorEmail ), 0, 13 , false, false, 109);*/
 		}
 		
 		if($detalhe['data_inicio_real'] && !$detalhe['data_fim_real'])
@@ -133,12 +133,12 @@ class indice extends clsListagem
 			$data_inicial = strtotime(substr($detalhe['data_inicio_real'],0,19));
 			$data_final = time();
 			$dif = $data_final - $data_inicial;
-			//$this->addDetalhe(array("Tempo de DuraÃ§Ã£o", "<div id='tempo'></div>"  ));
+			//$this->addDetalhe(array("Tempo de Duração", "<div id='tempo'></div>"  ));
 			//pdf
-			$notificacaoPorEmail = ($detalhe['email_enviado']) ? "Sim" : "NÃ£o";
+			$notificacaoPorEmail = ($detalhe['email_enviado']) ? "Sim" : "Não";
             $objRelatorio->novalinha(array("Notificado por e-mail:", $notificacaoPorEmail), 0, 13 , false, false, 110,false,"#FFFFFF");
-        	$objRelatorio->novalinha(array("Tempo de DuraÃ§Ã£o:", $dif."   "."Notificado por e-mail: ".$notificacaoPorEmail ), 0, 13 , false, false, 109,false,"#FFFFFF");
-        	$objRelatorioCor->novalinha(array("Tempo de DuraÃ§Ã£o:", $dif."   "."Notificado por e-mail: ".$notificacaoPorEmail ), 0, 13 , false, false, 109);
+        	$objRelatorio->novalinha(array("Tempo de Duração:", $dif."   "."Notificado por e-mail: ".$notificacaoPorEmail ), 0, 13 , false, false, 109,false,"#FFFFFF");
+        	$objRelatorioCor->novalinha(array("Tempo de Duração:", $dif."   "."Notificado por e-mail: ".$notificacaoPorEmail ), 0, 13 , false, false, 109);
 			
 			echo "<script>var tempo = $dif;  setInterval( 'trocaHora();', 1000 );</script>";
 		}
@@ -154,23 +154,23 @@ class indice extends clsListagem
 			$data_final = strtotime(substr($detalhe['data_fim_real'],0,19));
 			//$this->addDetalhe(array("Data Fim Real", date("d/m/Y H:i", strtotime(substr($detalhe['data_fim_real'],0,19)))  ));
 			//pdf
-        	//$objRelatorio->novalinha(array("Data da execuÃ§Ã£o:", date( "d/m/Y H:i", strtotime( substr( $detalhe['data_inicio_real'],0,19 ) ))." - ".date("d/m/Y H:i", strtotime(substr($detalhe['data_fim_real'],0,19)) ) ), 0, 13 , false, false, 109,false,"#FFFFFF");
-        	//$objRelatorioCor->novalinha(array("Data da execuÃ§Ã£o:", date( "d/m/Y H:i", strtotime( substr( $detalhe['data_inicio_real'],0,19 ) ))." - ".date("d/m/Y H:i", strtotime(substr($detalhe['data_fim_real'],0,19)) ) ), 0, 13 , false, false, 109);
+        	//$objRelatorio->novalinha(array("Data da execução:", date( "d/m/Y H:i", strtotime( substr( $detalhe['data_inicio_real'],0,19 ) ))." - ".date("d/m/Y H:i", strtotime(substr($detalhe['data_fim_real'],0,19)) ) ), 0, 13 , false, false, 109,false,"#FFFFFF");
+        	//$objRelatorioCor->novalinha(array("Data da execução:", date( "d/m/Y H:i", strtotime( substr( $detalhe['data_inicio_real'],0,19 ) ))." - ".date("d/m/Y H:i", strtotime(substr($detalhe['data_fim_real'],0,19)) ) ), 0, 13 , false, false, 109);
 			
-			//$this->addDetalhe(array("Tempo de DuraÃ§Ã£o", "<div id='tempo'>".difTempo($data_inicial,$data_final."</div>")  ));
+			//$this->addDetalhe(array("Tempo de Duração", "<div id='tempo'>".difTempo($data_inicial,$data_final."</div>")  ));
 			//pdf
-			$notificacaoPorEmail = ($detalhe['email_enviado']) ? "Sim" : "NÃ£o";
-        	$objRelatorio->novalinha(array("Tempo de DuraÃ§Ã£o:", difTempo($data_inicial,$data_final)."   "."Notificado por e-mail: ".$notificacaoPorEmail ), 0, 13 , false, false, 109,false,"#FFFFFF");
-        	$objRelatorioCor->novalinha(array("Tempo de DuraÃ§Ã£o:", difTempo($data_inicial,$data_final)."   "."Notificado por e-mail: ".$notificacaoPorEmail ), 0, 13 , false, false, 109);
+			$notificacaoPorEmail = ($detalhe['email_enviado']) ? "Sim" : "Não";
+        	$objRelatorio->novalinha(array("Tempo de Duração:", difTempo($data_inicial,$data_final)."   "."Notificado por e-mail: ".$notificacaoPorEmail ), 0, 13 , false, false, 109,false,"#FFFFFF");
+        	$objRelatorioCor->novalinha(array("Tempo de Duração:", difTempo($data_inicial,$data_final)."   "."Notificado por e-mail: ".$notificacaoPorEmail ), 0, 13 , false, false, 109);
 
 		}
-		//$this->addDetalhe(array("Notificado por e-mail", ($detalhe['email_enviado']) ? "Sim" : "NÃ£o" ));
+		//$this->addDetalhe(array("Notificado por e-mail", ($detalhe['email_enviado']) ? "Sim" : "Não" ));
 		$objRelatorio->novalinha(false,0,8,false,false,false,false,false,false,true);
 		
-		//$this->addDetalhe(array("<b><i>TÃ³picos Relacionados</i></b>", "" ));
+		//$this->addDetalhe(array("<b><i>Tópicos Relacionados</i></b>", "" ));
 		//pdf
-        $objRelatorio->novalinha(array("TÃ³picos Relacionados:"), 0, 13, true,"arial",false,"#FFFFFF",false,"#000000");
-        $objRelatorioCor->novalinha(array("TÃ³picos Relacionados:"), 0, 13, true);
+        $objRelatorio->novalinha(array("Tópicos Relacionados:"), 0, 13, true,"arial",false,"#FFFFFF",false,"#000000");
+        $objRelatorioCor->novalinha(array("Tópicos Relacionados:"), 0, 13, true);
 
 		$obj = new clsTopicoReuniao();
 		$lista  = $obj->lista(false,false,false,false,false,false,false,$cod_reuniao);
@@ -183,7 +183,7 @@ class indice extends clsListagem
 			$auxAssunto = $detalhe_topico['assunto'];
         	$objRelatorio->novalinha(array("Assunto:", quebra_linhas_pdf( $auxAssunto, 70 ) ), 0, 13*(count(explode("\n",quebra_linhas_pdf($auxAssunto, 70) )))  , false, false, 108,false,"#FFFFFF");
         	$objRelatorioCor->novalinha(array("Assunto:", quebra_linhas_pdf( $auxAssunto, 70 ) ), 0, 13*(count(explode("\n",quebra_linhas_pdf($auxAssunto, 70) )))  , false, false, 108);
-        	//$finalizado = ($topicos["finalizado"]) ? "Sim" : "NÃ£o";
+        	//$finalizado = ($topicos["finalizado"]) ? "Sim" : "Não";
        		//$objRelatorio->novalinha(array("Finalizado:", $finalizado), 15, 13 , false, false, 96,false,"#FFFFFF");
        		//$objRelatorioCor->novalinha(array("Finalizado:", $finalizado), 15, 13 , false, false, 96);
         	
@@ -228,7 +228,7 @@ class indice extends clsListagem
 	        	$objRelatorioCor->novalinha(array(""), 15, 13*(count(explode("\n",quebra_linhas_pdf($auxAssunto, 70) )))  , false, false, 93);
 	        	$objRelatorioCor->novalinha(array(""), 15, 13*(count(explode("\n",quebra_linhas_pdf($auxAssunto, 70) )))  , false, false, 93);
 			}
-			//$this->addDetalhe(array("TÃ³picos", $assunto));
+			//$this->addDetalhe(array("Tópicos", $assunto));
 			
 		}
 		

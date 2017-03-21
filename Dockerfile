@@ -22,10 +22,7 @@ CMD chmod 777 -R /home/portabilis/ieducar
 WORKDIR /home/portabilis/ieducar
 
 # Instala dependencia relatórios
-RUN apt-get install -y python-software-properties \
-    && add-apt-repository -y ppa:webupd8team/java \
-    && apt-get -y update \
-    && apt-get -y install openjdk-6-jdk
+RUN apt-get -y install openjdk-6-jdk
 CMD update-alternatives --config java
 
 CMD chmod 777 /home/portabilis/ieducar/modules/Reports/ReportSources/Portabilis/

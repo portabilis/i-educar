@@ -3,25 +3,25 @@
 #ini_set("display_errors", 1);
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	@author Prefeitura Municipal de ItajaÃ­								 *
+	*	@author Prefeitura Municipal de Itajaí								 *
 	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software PÃºblico Livre e Brasileiro					 *
+	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
 	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÃ­			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  Ã©  software livre, vocÃª pode redistribuÃ­-lo e/ou	 *
-	*	modificÃ¡-lo sob os termos da LicenÃ§a PÃºblica Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versÃ£o 2 da	 *
-	*	LicenÃ§a   como  (a  seu  critÃ©rio)  qualquer  versÃ£o  mais  nova.	 *
+	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
+	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
+	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
 	*																		 *
-	*	Este programa  Ã© distribuÃ­do na expectativa de ser Ãºtil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implÃ­cita de COMERCIALI-	 *
-	*	ZAÃ‡ÃƒO  ou  de ADEQUAÃ‡ÃƒO A QUALQUER PROPÃ“SITO EM PARTICULAR. Con-	 *
-	*	sulte  a  LicenÃ§a  PÃºblica  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
+	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
+	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	VocÃª  deve  ter  recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral GNU	 *
-	*	junto  com  este  programa. Se nÃ£o, escreva para a Free Software	 *
+	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
+	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
@@ -186,7 +186,7 @@ class indice extends clsCadastro
 
     $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'biblioteca', 'bibliotecaTipoExemplar'));
 
-    // Obra referÃªncia
+    // Obra referência
 		$opcoes = array( "NULL" => "Selecione" );
 
 		if( $this->ref_cod_acervo && $this->ref_cod_acervo != "NULL")
@@ -201,7 +201,7 @@ class indice extends clsCadastro
 
 		$this->campoLista("ref_cod_acervo","Obra Refer&ecirc;ncia",$opcoes,$this->ref_cod_acervo,"",false,"","<img border=\"0\" onclick=\"pesquisa();\" id=\"ref_cod_acervo_lupa\" name=\"ref_cod_acervo_lupa\" src=\"imagens/lupa.png\"\/>",false,false);
 
-    // ColeÃ§Ã£o
+    // Coleção
 		$opcoes = array( "" => "Selecione" );
 		if( class_exists( "clsPmieducarAcervoColecao" ) )
 		{
@@ -220,7 +220,7 @@ class indice extends clsCadastro
 			echo "<!--\nErro\nClasse clsPmieducarAcervoColecao nao encontrada\n-->";
 			$opcoes = array( "" => "Erro na geracao" );
 		}
-		$this->campoLista( "ref_cod_acervo_colecao", "Cole&ccedil;&atilde;o", $opcoes, $this->ref_cod_acervo_colecao,"",false,"","<img id='img_colecao' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"showExpansivelImprimir(500, 200,'educar_acervo_colecao_cad_pop.php',[], 'ColeÃ§Ã£o')\" />",false,false );
+		$this->campoLista( "ref_cod_acervo_colecao", "Cole&ccedil;&atilde;o", $opcoes, $this->ref_cod_acervo_colecao,"",false,"","<img id='img_colecao' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"showExpansivelImprimir(500, 200,'educar_acervo_colecao_cad_pop.php',[], 'Coleção')\" />",false,false );
 
     // Idioma
 		$opcoes = array( "" => "Selecione" );
@@ -266,7 +266,7 @@ class indice extends clsCadastro
 
 		//-----------------------INCLUI AUTOR------------------------//
 
-        $opcoes = array( "" => "Selecione", 1 => "Autor - Nome pessoal", 2 => "Autor - Evento", 3 => "Autor - Entidade coletiva", 4 => "Obra anÃ´nima");
+        $opcoes = array( "" => "Selecione", 1 => "Autor - Nome pessoal", 2 => "Autor - Evento", 3 => "Autor - Entidade coletiva", 4 => "Obra anônima");
 		$this->campoLista( "ref_cod_tipo_autor", "Tipo de autor", $opcoes, $this->ref_cod_tipo_autor, false, true , false , false  , false, false  );
 		$this->campoTexto( "tipo_autor", "", $this->tipo_autor, 40, 255, false);
 		$helperOptions = array('objectName' => 'autores');
@@ -277,9 +277,9 @@ class indice extends clsCadastro
 		$this->campoTexto( "titulo", "T&iacute;tulo", $this->titulo, 40, 255, true );
 		$this->campoTexto( "sub_titulo", "Subt&iacute;tulo", $this->sub_titulo, 40, 255, false );
 		$this->campoTexto( "estante", "Estante", $this->estante, 20, 15, false );
-		$this->campoTexto( "dimencao", "DimensÃ£o", $this->dimencao, 20, 255, false );
+		$this->campoTexto( "dimencao", "Dimensão", $this->dimencao, 20, 255, false );
 		$this->campoTexto( "material_ilustrativo", "Material ilustrativo", $this->material_ilustrativo, 20, 255, false );
-		//$this->campoTexto( "dimencao_ilustrativo", "DimensÃ£o da ilustraÃ§Ã£o", $this->dimencao_ilustrativo, 20, 255, false );
+		//$this->campoTexto( "dimencao_ilustrativo", "Dimensão da ilustração", $this->dimencao_ilustrativo, 20, 255, false );
 		$this->campoTexto( "local", "Local", $this->local, 20, 255, false );
 
  		$helperOptions = array('objectName' => 'assuntos');
@@ -514,7 +514,7 @@ function getColecao( xml_acervo_colecao )
 	if(DOM_array.length)
 	{
 		campoColecao.length = 1;
-		campoColecao.options[0].text = 'Selecione uma coleÃ§Ã£o';
+		campoColecao.options[0].text = 'Selecione uma coleção';
 		campoColecao.disabled = false;
 
 		for( var i=0; i<DOM_array.length; i++)
@@ -534,7 +534,7 @@ function getColecao( xml_acervo_colecao )
 		}
 		else
 		{
-			campoColecao.options[0].text = 'A biblioteca nÃ£o possui coleÃ§Ãµes';
+			campoColecao.options[0].text = 'A biblioteca não possui coleções';
 			setVisibility(document.getElementById('img_colecao'), true);
 		}
 	}
@@ -568,7 +568,7 @@ function getEditora( xml_acervo_editora )
 		}
 		else
 		{
-			campoEditora.options[0].text = 'A biblioteca nÃ£o possui editoras';
+			campoEditora.options[0].text = 'A biblioteca não possui editoras';
 			setVisibility(document.getElementById('img_editora'), true);
 		}
 	}
@@ -602,7 +602,7 @@ function getIdioma( xml_acervo_idioma )
 		}
 		else
 		{
-			campoIdioma.options[0].text = 'A biblioteca nÃ£o possui idiomas';
+			campoIdioma.options[0].text = 'A biblioteca não possui idiomas';
 			setVisibility(document.getElementById('img_idioma'), true);
 		}
 	}
@@ -626,7 +626,7 @@ function ajaxBiblioteca(acao)
 	}
 	campoColecao.length = 1;
 	campoColecao.disabled = true;
-	campoColecao.options[0].text = 'Carregando coleÃ§Ãµes';
+	campoColecao.options[0].text = 'Carregando coleções';
 
 	var xml_colecao = new ajax( getColecao );
 	xml_colecao.envia( "educar_colecao_xml.php?bib="+campoBiblioteca );
@@ -810,6 +810,6 @@ var getAutores = function() {
 }
 
 getAutores();
-// Para parecer como campo obrigatÃ³rio, jÃ¡ que o required => true nÃ£o estÃ¡ funcionando corretamente
+// Para parecer como campo obrigatório, já que o required => true não está funcionando corretamente
 
 </script>

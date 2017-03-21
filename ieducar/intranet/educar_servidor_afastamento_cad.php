@@ -1,26 +1,26 @@
 <?php
 /**
  *
- * @author  Prefeitura Municipal de ItajaÃ­
+ * @author  Prefeitura Municipal de Itajaí
  * @version $Id$
  *
- * Pacote: i-PLB Software PÃºblico Livre e Brasileiro
+ * Pacote: i-PLB Software Público Livre e Brasileiro
  *
- * Copyright (C) 2006 PMI - Prefeitura Municipal de ItajaÃ­
+ * Copyright (C) 2006 PMI - Prefeitura Municipal de Itajaí
  *            ctima@itajai.sc.gov.br
  *
- * Este  programa  Ã©  software livre, vocÃª pode redistribuÃ­-lo e/ou
- * modificÃ¡-lo sob os termos da LicenÃ§a PÃºblica Geral GNU, conforme
- * publicada pela Free  Software  Foundation,  tanto  a versÃ£o 2 da
- * LicenÃ§a   como  (a  seu  critÃ©rio)  qualquer  versÃ£o  mais  nova.
+ * Este  programa  é  software livre, você pode redistribuí-lo e/ou
+ * modificá-lo sob os termos da Licença Pública Geral GNU, conforme
+ * publicada pela Free  Software  Foundation,  tanto  a versão 2 da
+ * Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.
  *
- * Este programa  Ã© distribuÃ­do na expectativa de ser Ãºtil, mas SEM
- * QUALQUER GARANTIA. Sem mesmo a garantia implÃ­cita de COMERCIALI-
- * ZAÃ‡ÃƒO  ou  de ADEQUAÃ‡ÃƒO A QUALQUER PROPÃ“SITO EM PARTICULAR. Con-
- * sulte  a  LicenÃ§a  PÃºblica  Geral  GNU para obter mais detalhes.
+ * Este programa  é distribuído na expectativa de ser útil, mas SEM
+ * QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-
+ * ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-
+ * sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.
  *
- * VocÃª  deve  ter  recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral GNU
- * junto  com  este  programa. Se nÃ£o, escreva para a Free Software
+ * Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU
+ * junto  com  este  programa. Se não, escreva para a Free Software
  * Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA
  * 02111-1307, USA.
  *
@@ -45,7 +45,7 @@ class clsIndexBase extends clsBase {
 class indice extends clsCadastro {
 
   /**
-   * ReferÃªncia a usuÃ¡rio da sessÃ£o
+   * Referência a usuário da sessão
    * @var int
    */
   public $pessoa_logada = NULL;
@@ -87,7 +87,7 @@ class indice extends clsCadastro {
 
 
   /**
-   * ImplementaÃ§Ã£o do mÃ©todo clsCadastro::Inicializar()
+   * Implementação do método clsCadastro::Inicializar()
    * @see ieducar/intranet/include/clsCadastro#Inicializar()
    */
   public function Inicializar() {
@@ -156,7 +156,7 @@ class indice extends clsCadastro {
 
 
   /**
-   * ImplementaÃ§Ã£o do mÃ©todo clsCadastro::Gerar()
+   * Implementação do método clsCadastro::Gerar()
    * @see ieducar/intranet/include/clsCadastro#Gerar()
    */
   public function Gerar() {
@@ -192,12 +192,12 @@ class indice extends clsCadastro {
     if ($this->status == 'N') {
       $this->campoData('data_saida', 'Data de Afastamento', $this->data_saida, TRUE);
     }
-    // Se ediÃ§Ã£o, mostra a data de afastamento
+    // Se edição, mostra a data de afastamento
     elseif ($this->status == 'E') {
       $this->campoRotulo('data_saida', 'Data de Afastamento', $this->data_saida);
     }
 
-    // Se ediÃ§Ã£o, mostra campo para entrar com data de retorno
+    // Se edição, mostra campo para entrar com data de retorno
     if ($this->status == 'E') {
       $this->campoData('data_retorno', 'Data de Retorno', $this->data_retorno, FALSE);
     }
@@ -307,18 +307,18 @@ class indice extends clsCadastro {
 
 
   /**
-   * ImplementaÃ§Ã£o do mÃ©todo clsCadastro::Novo()
+   * Implementação do método clsCadastro::Novo()
    *
-   * Recebe os valores com cÃ³digos de servidor e instituiÃ§Ã£o atual, junto com
+   * Recebe os valores com códigos de servidor e instituição atual, junto com
    * a data. Casos de uso:
-   * - Servidor sem funÃ§Ã£o de professor: apenas Ã© marcado que o servidor estÃ¡
+   * - Servidor sem função de professor: apenas é marcado que o servidor está
    *   afastado
-   * - Servidor com funÃ§Ã£o de professor:
-   *   - Verifica-se quais professores estÃ£o aptos a substituir o servidor,
-   *     baseado em critÃ©rios como horÃ¡rio de aula, alocaÃ§Ã£o na escola,
-   *     disciplinas que ministra. Esse passo Ã© realizado no mÃ©todo
+   * - Servidor com função de professor:
+   *   - Verifica-se quais professores estão aptos a substituir o servidor,
+   *     baseado em critérios como horário de aula, alocação na escola,
+   *     disciplinas que ministra. Esse passo é realizado no método
    *     {@see $this->Novo()}, ao possibilitar a escolha do substituto ao
-   *     usuÃ¡rio
+   *     usuário
    *
    * @see  clsPmieducarServidorAfastamento
    * @see  ieducar/intranet/include/clsCadastro#Novo()
@@ -355,7 +355,7 @@ class indice extends clsCadastro {
     if ($cadastrou) {
       if (is_array($_POST['ref_cod_servidor_substituto'])) {
         /*
-         * Itera cada substituto e atualiza o quadro de horÃ¡rio com o cÃ³digo
+         * Itera cada substituto e atualiza o quadro de horário com o código
          * do servidor substituto, campos:
          * - ref_cod_instituicao_substituto
          * - ref_cod_servidor_substituto
@@ -385,7 +385,7 @@ class indice extends clsCadastro {
               $det_horarios['ref_cod_instituicao_servidor'], $ref_cod_servidor_substituto,
               $this->ref_cod_servidor, NULL, NULL, NULL, NULL, NULL, NULL);
 
-            // Caso a atualizaÃ§Ã£o nÃ£o tenha sucesso
+            // Caso a atualização não tenha sucesso
             if (!$obj_horario->edita()) {
               $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
 
@@ -412,10 +412,10 @@ class indice extends clsCadastro {
 
 
   /**
-   * ImplementaÃ§Ã£o do mÃ©todo clsCadastro::Editar()
+   * Implementação do método clsCadastro::Editar()
    *
-   * Esse mÃ©todo Ã© chamado quando o usuÃ¡rio "Retorna um servidor". Dessa forma,
-   * caso seja professor, precisa atualizar a sua alocaÃ§Ã£o na tabela
+   * Esse método é chamado quando o usuário "Retorna um servidor". Dessa forma,
+   * caso seja professor, precisa atualizar a sua alocação na tabela
    * pmieducar.quadro_horario_horarios, apagando os valores dos campos
    * ref_cod_instituicao_ e ref_cod_servidor_ -substituto
    *
@@ -494,7 +494,7 @@ class indice extends clsCadastro {
 
 
   /**
-   * ImplementaÃ§Ã£o do mÃ©todo clsCadastro::Excluir()
+   * Implementação do método clsCadastro::Excluir()
    * @see ieducar/intranet/include/clsCadastro#Excluir()
    */
   public function Excluir() {
@@ -529,16 +529,16 @@ class indice extends clsCadastro {
   }
 }
 
-// Instancia objeto de pÃ¡gina
+// Instancia objeto de página
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conteÃºdo
+// Instancia objeto de conteúdo
 $miolo = new indice();
 
-// Atribui o conteÃºdo Ã  pÃ¡gina
+// Atribui o conteúdo à página
 $pagina->addForm($miolo);
 
-// Gera o cÃ³digo HTML
+// Gera o código HTML
 $pagina->MakeAll();
 ?>
 
@@ -554,7 +554,7 @@ function validaFormulario() {
   do {
     if (document.getElementById('ref_cod_servidor_substituto_' + c + '_')) {
       if (document.getElementById('ref_cod_servidor_substituto_' + c + '_').value == '') {
-        alert('VocÃª deve informar um substituto para cada horÃ¡rio.');
+        alert('Você deve informar um substituto para cada horário.');
 
         return;
       }

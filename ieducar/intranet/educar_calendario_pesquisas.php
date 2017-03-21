@@ -52,14 +52,14 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
         }
       }
     } else {
-      $opcoes = array('' => 'Erro na geraÃ§Ã£o');
+      $opcoes = array('' => 'Erro na geração');
     }
 
     if ($get_escola) {
       $retorno .= '
         <tr id="tr_status">
           <td valign="top" class="formlttd">
-            <span class="form">InstituiÃ§Ã£o</span>
+            <span class="form">Instituição</span>
             <span class="campo_obrigatorio">*</span><br/>
             <sub style="vertical-align: top;"/>
           </td>';
@@ -130,7 +130,7 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
 
         echo sprintf('<script>%s</script>', $todas_escolas);
       } else {
-        $opcoes_escola = array('' => 'Erro na geraÃ§Ã£o');
+        $opcoes_escola = array('' => 'Erro na geração');
       }
 
       if ($this->ref_cod_instituicao) {
@@ -146,7 +146,7 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
             }
           }
         } else {
-          $opcoes_escola = array('' => 'Erro na geraÃ§Ã£o');
+          $opcoes_escola = array('' => 'Erro na geração');
         }
       }
 
@@ -192,7 +192,7 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
     }
 
     if ($nivel_usuario == 1) {
-      ${$get_cabecalho}[] = 'InstituiÃ§Ã£o';
+      ${$get_cabecalho}[] = 'Instituição';
     }
 
   }
@@ -295,7 +295,7 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
 
     if (campoEscola.length == 1 && campoInstituicao != '') {
       campoEscola.options[0] = new Option(
-        'A instituÃ§Ã£o nÃ£o possui nenhuma escola', '', false, false
+        'A institução não possui nenhuma escola', '', false, false
       );
     }
 

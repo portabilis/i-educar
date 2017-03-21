@@ -1,24 +1,24 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestÃ£o escolar
+ * i-Educar - Sistema de gestão escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÃ­
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa Ã© software livre; vocÃª pode redistribuÃ­-lo e/ou modificÃ¡-lo
- * sob os termos da LicenÃ§a PÃºblica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versÃ£o 2 da LicenÃ§a, como (a seu critÃ©rio)
- * qualquer versÃ£o posterior.
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+ * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
  *
- * Este programa Ã© distribuÃ­Â­do na expectativa de que seja Ãºtil, porÃ©m, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÃ­Â­cita de COMERCIABILIDADE OU
- * ADEQUAÃ‡ÃƒO A UMA FINALIDADE ESPECÃFICA. Consulte a LicenÃ§a PÃºblica Geral
+ * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
  * do GNU para mais detalhes.
  *
- * VocÃª deve ter recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral do GNU junto
- * com este programa; se nÃ£o, escreva para a Free Software Foundation, Inc., no
- * endereÃ§o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
+ * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas Schmoeller das Silva <lucas@portabilis.com.br>
  * @category  i-Educar
@@ -51,7 +51,7 @@ class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor VÃ­nculo Turma');
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor Vínculo Turma');
     $this->processoAp = 635;
   }
 }
@@ -94,7 +94,7 @@ class indice extends clsListagem
     $this->servidor_id    = $_GET['ref_cod_servidor'];
     $this->ref_cod_instituicao = $_GET['ref_cod_instituicao'];
 
-    $this->titulo = 'Servidor VÃ­nculo Turma - Listagem';
+    $this->titulo = 'Servidor Vínculo Turma - Listagem';
 
     // passa todos os valores obtidos no GET para atributos do objeto
     foreach( $_GET AS $var => $val ) {
@@ -107,10 +107,10 @@ class indice extends clsListagem
       'Ano',
       'Escola',
       'Curso',
-      'SÃ©rie',
+      'Série',
       'Turma',
-      'FunÃ§Ã£o exercida',
-      'Tipo de vÃ­nculo'
+      'Função exercida',
+      'Tipo de vínculo'
     ));
 
     $this->campoOculto('ref_cod_servidor', $this->servidor_id);
@@ -121,20 +121,20 @@ class indice extends clsListagem
                                 1    => 'Docente',
                                 2    => 'Auxiliar/Assistente educacional',
                                 3    => 'Profissional/Monitor de atividade complementar',
-                                4    => 'Tradutor IntÃ©rprete de LIBRAS',
-                                5    => 'Docente titular - coordenador de tutoria (de mÃ³dulo ou disciplina) - EAD',
-                                6    => 'Docente tutor (de mÃ³dulo ou disciplina)');
+                                4    => 'Tradutor Intérprete de LIBRAS',
+                                5    => 'Docente titular - coordenador de tutoria (de módulo ou disciplina) - EAD',
+                                6    => 'Docente tutor (de módulo ou disciplina)');
 
-    $options = array('label' => Portabilis_String_Utils::toLatin1('FunÃ§Ã£o exercida'), 'resources' => $resources_funcao, 'value' => $this->funcao_exercida);
+    $options = array('label' => Portabilis_String_Utils::toLatin1('Função exercida'), 'resources' => $resources_funcao, 'value' => $this->funcao_exercida);
     $this->inputsHelper()->select('funcao_exercida', $options);   
 
     $resources_tipo = array(  null => 'Nenhum',
-                              1    => Portabilis_String_Utils::toLatin1('Concursado/efetivo/estÃ¡vel'),
-                              2    => Portabilis_String_Utils::toLatin1('Contrato temporÃ¡rio'),
+                              1    => Portabilis_String_Utils::toLatin1('Concursado/efetivo/estável'),
+                              2    => Portabilis_String_Utils::toLatin1('Contrato temporário'),
                               3    => 'Contrato terceirizado',
                               4    => 'Contrato CLT');
 
-    $options = array('label' => Portabilis_String_Utils::toLatin1('Tipo do vÃ­nculo'), 'resources' => $resources_tipo, 'value' => $this->tipo_vinculo);
+    $options = array('label' => Portabilis_String_Utils::toLatin1('Tipo do vínculo'), 'resources' => $resources_tipo, 'value' => $this->tipo_vinculo);
     $this->inputsHelper()->select('tipo_vinculo', $options);
 
     // Paginador
@@ -210,14 +210,14 @@ class indice extends clsListagem
   }
 }
 
-// Instancia objeto de pÃ¡gina
+// Instancia objeto de página
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conteÃºdo
+// Instancia objeto de conteúdo
 $miolo = new indice();
 
-// Atribui o conteÃºdo Ã Â  pÃ¡gina
+// Atribui o conteúdo à  página
 $pagina->addForm($miolo);
 
-// Gera o cÃ³digo HTML
+// Gera o código HTML
 $pagina->MakeAll();

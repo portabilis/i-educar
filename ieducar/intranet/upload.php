@@ -23,7 +23,7 @@
       }
     }
   }else{
-    $data = array('error' => 'Arquivo invÃ¡lido.');
+    $data = array('error' => 'Arquivo inválido.');
   }
 
   echo json_encode($data);

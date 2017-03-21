@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest√£o escolar
+ * i-Educar - Sistema de gest„o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
+ * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
- * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
- * qualquer vers√£o posterior.
+ * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
+ * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
+ * qualquer vers„o posterior.
  *
- * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
- * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
+ * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
+ * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
  * do GNU para mais detalhes.
  *
- * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
- * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
- * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
+ * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
+ * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo dispon√≠vel desde a vers√£o 1.0.0
+ * @since     Arquivo disponÌvel desde a vers„o 1.0.0
  * @version   $Id$
  */
 
@@ -36,18 +36,18 @@ require_once 'include/pmieducar/geral.inc.php';
 /**
  * clsIndexBase class.
  *
- * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
+ * @since     Classe disponÌvel desde a vers„o 1.0.0
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor N√≠vel');
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor NÌvel');
     $this->processoAp         = 0;
     $this->renderBanner       = FALSE;
     $this->renderMenu         = FALSE;
@@ -58,11 +58,11 @@ class clsIndexBase extends clsBase
 /**
  * indice class.
  *
- * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
+ * @since     Classe disponÌvel desde a vers„o 1.0.0
  * @version   @@package_version@@
  */
 class indice extends clsCadastro
@@ -156,9 +156,9 @@ class indice extends clsCadastro
       }
     }
 
-    $this->campoLista('ref_cod_nivel', 'N√≠vel', $opcoes, $this->ref_cod_nivel, '', TRUE);
+    $this->campoLista('ref_cod_nivel', 'NÌvel', $opcoes, $this->ref_cod_nivel, '', TRUE);
 
-    $opcoes = array('' => 'Selecione um n√≠vel');
+    $opcoes = array('' => 'Selecione um nÌvel');
 
     if ($this->ref_cod_nivel) {
       $obj_nivel = new clsPmieducarSubnivel();
@@ -170,7 +170,7 @@ class indice extends clsCadastro
       }
     }
 
-    $this->campoLista('ref_cod_subnivel', 'Subn√≠vel', $opcoes,
+    $this->campoLista('ref_cod_subnivel', 'SubnÌvel', $opcoes,
       $this->ref_cod_subnivel, '', FALSE, '', '', FALSE, TRUE);
   }
 
@@ -198,16 +198,16 @@ class indice extends clsCadastro
   }
 }
 
-// Instancia objeto de p√°gina
+// Instancia objeto de p·gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conte√∫do
+// Instancia objeto de conte˙do
 $miolo = new indice();
 
-// Atribui o conte√∫do √†¬† p√°gina
+// Atribui o conte˙do ‡† p·gina
 $pagina->addForm($miolo);
 
-// Gera o c√≥digo HTML
+// Gera o cÛdigo HTML
 $pagina->MakeAll();
 ?>
 <script type="text/javascript">
@@ -222,14 +222,14 @@ function trocaNiveis()
 
   if (campoCategoria) {
     campoNivel.disabled        = true;
-    campoNivel.options[0].text = 'Carregando N√≠veis';
+    campoNivel.options[0].text = 'Carregando NÌveis';
     var xml = new ajax(atualizaLstNiveis);
     xml.envia('educar_niveis_servidor_xml.php?cod_cat=' + campoCategoria);
   }
   else {
     campoNivel.options[0].text    = 'Selecione uma Categoria';
     campoNivel.disabled           = false;
-    campoSubNivel.options[0].text = 'Selecione um N√≠vel';
+    campoSubNivel.options[0].text = 'Selecione um NÌvel';
     campoSubNivel.disabled        = false;
   }
 }
@@ -250,7 +250,7 @@ function atualizaLstNiveis(xml)
     }
   }
   else {
-    campoNivel.options[0].text = 'Categoria n√£o possui n√≠veis';
+    campoNivel.options[0].text = 'Categoria n„o possui nÌveis';
   }
 }
 
@@ -263,12 +263,12 @@ function trocaSubniveis()
 
   if (campoNivel) {
     campoSubNivel.disabled = true;
-    campoSubNivel.options[0].text = 'Carregando Subn√≠veis';
+    campoSubNivel.options[0].text = 'Carregando SubnÌveis';
     var xml = new ajax(atualizaLstSubiveis);
     xml.envia("educar_subniveis_servidor_xml.php?cod_nivel="+campoNivel);
   }
   else {
-    campoSubNivel.options[0].text = 'Selecione uma N√≠vel';
+    campoSubNivel.options[0].text = 'Selecione uma NÌvel';
     campoSubNivel.disabled = false;
   }
 }
@@ -278,7 +278,7 @@ function atualizaLstSubiveis(xml)
   var campoSubNivel = document.getElementById('ref_cod_subnivel');
 
   campoSubNivel.length          = 1;
-  campoSubNivel.options[0].text = 'Selecione um Subn√≠vel';
+  campoSubNivel.options[0].text = 'Selecione um SubnÌvel';
   campoSubNivel.disabled        = false;
 
   var subniveis = xml.getElementsByTagName('subnivel');
@@ -292,7 +292,7 @@ function atualizaLstSubiveis(xml)
     }
   }
   else {
-    campoNivel.options[0].text = 'N√≠vel n√£o possui subn√≠veis';
+    campoNivel.options[0].text = 'NÌvel n„o possui subnÌveis';
   }
 }
 

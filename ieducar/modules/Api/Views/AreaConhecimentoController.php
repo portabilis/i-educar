@@ -73,7 +73,7 @@ class AreaConhecimentoController extends ApiCoreController
      $serieId = $this->getRequest()->serie_id;
 
      $sql    = 'SELECT ac.id as id,
-                       (ac.nome) as nome
+                       to_ascii(ac.nome) as nome
                   from modules.area_conhecimento ac
                  where ac.id in(select area_conhecimento.id 
                                   from modules.area_conhecimento
@@ -81,7 +81,7 @@ class AreaConhecimentoController extends ApiCoreController
                      inner join pmieducar.escola_serie_disciplina esd on(esd.ref_cod_disciplina = cc.id)
                      where esd.ref_ref_cod_escola = $1
                        and ref_ref_cod_serie = $2)
-                 order by (lower(ac.nome)) ASC';
+                 order by to_ascii(lower(ac.nome)) ASC';
 
 
     $paramsSql = array($escolaId, $serieId);

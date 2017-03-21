@@ -1,31 +1,31 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	@author Prefeitura Municipal de ItajaÃ­								 *
+	*	@author Prefeitura Municipal de Itajaí								 *
 	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software PÃºblico Livre e Brasileiro					 *
+	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
 	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÃ­			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  Ã©  software livre, vocÃª pode redistribuÃ­-lo e/ou	 *
-	*	modificÃ¡-lo sob os termos da LicenÃ§a PÃºblica Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versÃ£o 2 da	 *
-	*	LicenÃ§a   como  (a  seu  critÃ©rio)  qualquer  versÃ£o  mais  nova.	 *
+	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
+	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
+	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
 	*																		 *
-	*	Este programa  Ã© distribuÃ­do na expectativa de ser Ãºtil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implÃ­cita de COMERCIALI-	 *
-	*	ZAÃ‡ÃƒO  ou  de ADEQUAÃ‡ÃƒO A QUALQUER PROPÃ“SITO EM PARTICULAR. Con-	 *
-	*	sulte  a  LicenÃ§a  PÃºblica  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
+	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
+	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	VocÃª  deve  ter  recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral GNU	 *
-	*	junto  com  este  programa. Se nÃ£o, escreva para a Free Software	 *
+	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
+	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
 	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /**
- * Os parÃ¢metros passados para esta pÃ¡gina de listagem devem estar dentro da classe clsParametrosPesquisas.inc.php
+ * Os parâmetros passados para esta página de listagem devem estar dentro da classe clsParametrosPesquisas.inc.php
  *
  * @author Adriano Erik Weiguert Nagasava
  *
@@ -76,7 +76,7 @@ class indice extends clsListagem
 		$this->addCabecalhos(array("Matr&iacute;cula", "CPF", "Funcion&aacute;rio"));
 
 		// Filtros de Busca
-		$this->campoTexto("campo_busca", "FuncionÃ¡rio", "", 50, 255, false, false, false, "MatrÃ­cula/CPF/Nome do FuncionÃ¡rio");
+		$this->campoTexto("campo_busca", "Funcionário", "", 50, 255, false, false, false, "Matrícula/CPF/Nome do Funcionário");
 		$this->campoOculto("com_matricula",$_GET['com_matricula']);
 
 		if ($_GET['campo_busca'])
@@ -109,8 +109,8 @@ class indice extends clsListagem
 
 			if (!$lst_funcionario)
 			{
-        // Obter lista de funcionÃ¡rio
-        // Mudar: Pegar por pessoa para cadastrar em vez do usuÃ¡rio
+        // Obter lista de funcionário
+        // Mudar: Pegar por pessoa para cadastrar em vez do usuário
 				$lst_funcionario = $obj_funcionario->lista($chave_busca, false, false, false, false, false, false, $iniciolimit, $limite, false, $com_matricula);
 			}
 
@@ -182,7 +182,7 @@ class indice extends clsListagem
 		// Paginador
 		$this->addPaginador2( "pesquisa_funcionario_lst.php", $total, $_GET, $this->nome, $limite );
 
-		// Define Largura da PÃ¡gina
+		// Define Largura da Página
 		$this->largura = "100%";
 	}
 }

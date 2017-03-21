@@ -1,25 +1,25 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 *																	     *
-*	@author Prefeitura Municipal de Itaja√≠								 *
+*	@author Prefeitura Municipal de ItajaÌ								 *
 *	@updated 29/03/2007													 *
-*   Pacote: i-PLB Software P√∫blico Livre e Brasileiro					 *
+*   Pacote: i-PLB Software P˙blico Livre e Brasileiro					 *
 *																		 *
-*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itaja√≠			 *
+*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÌ			 *
 *						ctima@itajai.sc.gov.br					    	 *
 *																		 *
-*	Este  programa  √©  software livre, voc√™ pode redistribu√≠-lo e/ou	 *
-*	modific√°-lo sob os termos da Licen√ßa P√∫blica Geral GNU, conforme	 *
-*	publicada pela Free  Software  Foundation,  tanto  a vers√£o 2 da	 *
-*	Licen√ßa   como  (a  seu  crit√©rio)  qualquer  vers√£o  mais  nova.	 *
+*	Este  programa  È  software livre, vocÍ pode redistribuÌ-lo e/ou	 *
+*	modific·-lo sob os termos da LicenÁa P˙blica Geral GNU, conforme	 *
+*	publicada pela Free  Software  Foundation,  tanto  a vers„o 2 da	 *
+*	LicenÁa   como  (a  seu  critÈrio)  qualquer  vers„o  mais  nova.	 *
 *																		 *
-*	Este programa  √© distribu√≠do na expectativa de ser √∫til, mas SEM	 *
-*	QUALQUER GARANTIA. Sem mesmo a garantia impl√≠cita de COMERCIALI-	 *
-*	ZA√á√ÉO  ou  de ADEQUA√á√ÉO A QUALQUER PROP√ìSITO EM PARTICULAR. Con-	 *
-*	sulte  a  Licen√ßa  P√∫blica  Geral  GNU para obter mais detalhes.	 *
+*	Este programa  È distribuÌdo na expectativa de ser ˙til, mas SEM	 *
+*	QUALQUER GARANTIA. Sem mesmo a garantia implÌcita de COMERCIALI-	 *
+*	ZA«√O  ou  de ADEQUA«√O A QUALQUER PROP”SITO EM PARTICULAR. Con-	 *
+*	sulte  a  LicenÁa  P˙blica  Geral  GNU para obter mais detalhes.	 *
 *																		 *
-*	Voc√™  deve  ter  recebido uma c√≥pia da Licen√ßa P√∫blica Geral GNU	 *
-*	junto  com  este  programa. Se n√£o, escreva para a Free Software	 *
+*	VocÍ  deve  ter  recebido uma cÛpia da LicenÁa P˙blica Geral GNU	 *
+*	junto  com  este  programa. Se n„o, escreva para a Free Software	 *
 *	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 *	02111-1307, USA.													 *
 *																		 *
@@ -98,14 +98,14 @@ class clsGrupoModerador
 	}
 	
 	/**
-	 * Fun√ß√£o que cadastra um novo registro com os valores atuais
+	 * FunÁ„o que cadastra um novo registro com os valores atuais
 	 *
 	 * @return bool
 	 */
 	function cadastra()
 	{
 		$db = new clsBanco();
-		// verifica√ß√µes de campos obrigatorios para inser√Ø¬ø¬Ω√Ø¬ø¬Ωo
+		// verificaÁıes de campos obrigatorios para inserÔøΩÔøΩo
 		if( $this->ref_ref_cod_pessoa_fj && $this->ref_cod_grupos && $this->ref_pessoa_cad)
 		{
 			$campos = "";
@@ -177,7 +177,7 @@ class clsGrupoModerador
 	}
 	
 	/**
-	 * Indica quais os campos da tabela ser√£o selecionados
+	 * Indica quais os campos da tabela ser„o selecionados
 	 *
 	 * @return Array
 	 */

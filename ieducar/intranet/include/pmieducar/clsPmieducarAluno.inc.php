@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest√£o escolar
+ * i-Educar - Sistema de gest„o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
+ * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
- * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
- * qualquer vers√£o posterior.
+ * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
+ * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
+ * qualquer vers„o posterior.
  *
- * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
- * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
+ * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
+ * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
  * do GNU para mais detalhes.
  *
- * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
- * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
- * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
+ * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
+ * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo dispon√≠vel desde a vers√£o 1.0.0
+ * @since     Arquivo disponÌvel desde a vers„o 1.0.0
  * @version   $Id$
  */
 
@@ -33,11 +33,11 @@ require_once 'include/pmieducar/geral.inc.php';
 /**
  * clsPmieducarEscola class.
  *
- * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
+ * @since     Classe disponÌvel desde a vers„o 1.0.0
  * @version   @@package_version@@
  */
 class clsPmieducarAluno
@@ -81,7 +81,7 @@ class clsPmieducarAluno
   var $autorizado_cinco;
   var $parentesco_cinco;
   /**
-   * Armazena o total de resultados obtidos na √∫ltima chamada ao m√©todo lista().
+   * Armazena o total de resultados obtidos na ˙ltima chamada ao mÈtodo lista().
    * @var int
    */
   var $_total;
@@ -99,33 +99,33 @@ class clsPmieducarAluno
   var $_tabela;
 
   /**
-   * Lista separada por v√≠rgula, com os campos que devem ser selecionados na
-   * pr√≥xima chamado ao m√©todo lista().
+   * Lista separada por vÌrgula, com os campos que devem ser selecionados na
+   * prÛxima chamado ao mÈtodo lista().
    * @var string
    */
   var $_campos_lista;
 
   /**
-   * Lista com todos os campos da tabela separados por v√≠rgula, padr√£o para
-   * sele√ß√£o no m√©todo lista.
+   * Lista com todos os campos da tabela separados por vÌrgula, padr„o para
+   * seleÁ„o no mÈtodo lista.
    * @var string
    */
   var $_todos_campos;
 
   /**
-   * Valor que define a quantidade de registros a ser retornada pelo m√©todo lista().
+   * Valor que define a quantidade de registros a ser retornada pelo mÈtodo lista().
    * @var int
    */
   var $_limite_quantidade;
 
   /**
-   * Define o valor de offset no retorno dos registros no m√©todo lista().
+   * Define o valor de offset no retorno dos registros no mÈtodo lista().
    * @var int
    */
   var $_limite_offset;
 
   /**
-   * Define o campo para ser usado como padr√£o de ordena√ß√£o no m√©todo lista().
+   * Define o campo para ser usado como padr„o de ordenaÁ„o no mÈtodo lista().
    * @var string
    */
   var $_campo_order_by;
@@ -134,20 +134,20 @@ class clsPmieducarAluno
    * Construtor.
    */
   function clsPmieducarAluno(
-    $cod_aluno = NULL,
+    $cod_aluno = NULL, 
     $ref_cod_aluno_beneficio = NULL,
-    $ref_cod_religiao = NULL,
-    $ref_usuario_exc = NULL,
+    $ref_cod_religiao = NULL, 
+    $ref_usuario_exc = NULL, 
     $ref_usuario_cad = NULL,
-    $ref_idpes = NULL,
-    $data_cadastro = NULL,
-    $data_exclusao = NULL,
+    $ref_idpes = NULL, 
+    $data_cadastro = NULL, 
+    $data_exclusao = NULL, 
     $ativo = NULL,
     $caminho_foto = NULL,
-    $analfabeto = NULL,
-    $nm_pai = NULL,
+    $analfabeto = NULL, 
+    $nm_pai = NULL, 
     $nm_mae = NULL,
-    $tipo_responsavel = NULL,
+    $tipo_responsavel = NULL, 
     $aluno_estado_id = NULL,
     $autorizado_um = NULL,
     $parentesco_um = NULL,
@@ -168,7 +168,7 @@ class clsPmieducarAluno
         a.ref_usuario_cad, a.ref_idpes, a.data_cadastro, a.data_exclusao, a.ativo, a.caminho_foto, a.analfabeto, a.nm_pai, a.nm_mae,tipo_responsavel, a.aluno_estado_id,
         a.recurso_prova_inep_aux_ledor, a.recurso_prova_inep_aux_transcricao, a.recurso_prova_inep_guia_interprete, a.recurso_prova_inep_interprete_libras, a.recurso_prova_inep_leitura_labial,
         a.recurso_prova_inep_prova_ampliada_16, a.recurso_prova_inep_prova_ampliada_20, a.recurso_prova_inep_prova_ampliada_24, a.recurso_prova_inep_prova_braille, a.recebe_escolarizacao_em_outro_espaco,
-        a.justificativa_falta_documentacao, a.url_laudo_medico, a.codigo_sistema, a.veiculo_transporte_escolar, a.parentesco_um, a.autorizado_um, a.parentesco_dois, a.autorizado_dois,
+        a.justificativa_falta_documentacao, a.url_laudo_medico, a.codigo_sistema, a.veiculo_transporte_escolar, a.parentesco_um, a.autorizado_um, a.parentesco_dois, a.autorizado_dois, 
         a.parentesco_tres, a.autorizado_tres, a.parentesco_quatro, a.autorizado_quatro, a.parentesco_cinco, a.autorizado_cinco, a.url_documento';
 
     if (is_numeric($ref_usuario_exc)) {
@@ -812,27 +812,27 @@ class clsPmieducarAluno
   }
 
   /**
-   * Retorna uma lista de registros filtrados de acordo com os par√¢metros.
+   * Retorna uma lista de registros filtrados de acordo com os par‚metros.
    * @return array
    */
   function lista(
-    $int_cod_aluno = null,
+    $int_cod_aluno = null, 
     $int_ref_cod_aluno_beneficio = null,
-    $int_ref_cod_religiao = null,
+    $int_ref_cod_religiao = null, 
     $int_ref_usuario_exc = null,
-    $int_ref_usuario_cad = null,
-    $int_ref_idpes = null,
+    $int_ref_usuario_cad = null, 
+    $int_ref_idpes = null, 
     $date_data_cadastro_ini = null,
-    $date_data_cadastro_fim = null,
+    $date_data_cadastro_fim = null, 
     $date_data_exclusao_ini = null,
-    $date_data_exclusao_fim = null,
-    $int_ativo = null,
+    $date_data_exclusao_fim = null, 
+    $int_ativo = null, 
     $str_caminho_foto = null,
     $str_nome_aluno = null,
-    $str_nome_responsavel = null,
+    $str_nome_responsavel = null, 
     $int_cpf_responsavel = null,
-    $int_analfabeto = null,
-    $str_nm_pai = null,
+    $int_analfabeto = null, 
+    $str_nm_pai = null, 
     $str_nm_mae = null,
     $int_ref_cod_escola = null,
     $str_tipo_responsavel = null,
@@ -934,7 +934,7 @@ class clsPmieducarAluno
             cadastro.pessoa
           WHERE
             cadastro.pessoa.idpes = ref_idpes
-            AND (LOWER(nome)) LIKE (LOWER('%{$str_nome_aluno}%'))
+            AND TO_ASCII(LOWER(nome)) LIKE TO_ASCII(LOWER('%{$str_nome_aluno}%'))
         )";
 
       $whereAnd = ' AND ';
@@ -944,14 +944,14 @@ class clsPmieducarAluno
       $and_resp = '';
 
       if (is_string($str_nome_responsavel)) {
-        $and_nome_pai_mae  = "OR UPPER((aluno.nm_pai)) LIKE UPPER(('%$str_nome_responsavel%')) AND (aluno.tipo_responsavel = 'p')";
+        $and_nome_pai_mae  = "OR UPPER(TO_ASCII(aluno.nm_pai)) LIKE UPPER(TO_ASCII('%$str_nome_responsavel%')) AND (aluno.tipo_responsavel = 'p')";
 
-        $and_nome_pai_mae .= "OR UPPER((aluno.nm_mae)) LIKE UPPER(('%$str_nome_responsavel%')) AND (aluno.tipo_responsavel = 'm')";
+        $and_nome_pai_mae .= "OR UPPER(TO_ASCII(aluno.nm_mae)) LIKE UPPER(TO_ASCII('%$str_nome_responsavel%')) AND (aluno.tipo_responsavel = 'm')";
 
         $and_nome_resp     = "
-          (UPPER((pai_mae.nome)) LIKE UPPER(('%$str_nome_responsavel%'))) AND (aluno.tipo_responsavel = 'm') AND pai_mae.idpes = fisica_aluno.idpes_mae
+          (UPPER(TO_ASCII(pai_mae.nome)) LIKE UPPER(TO_ASCII('%$str_nome_responsavel%'))) AND (aluno.tipo_responsavel = 'm') AND pai_mae.idpes = fisica_aluno.idpes_mae
           OR
-          (UPPER((pai_mae.nome)) LIKE UPPER(('%$str_nome_responsavel%'))) AND (aluno.tipo_responsavel = 'p') AND pai_mae.idpes = fisica_aluno.idpes_pai";
+          (UPPER(TO_ASCII(pai_mae.nome)) LIKE UPPER(TO_ASCII('%$str_nome_responsavel%'))) AND (aluno.tipo_responsavel = 'p') AND pai_mae.idpes = fisica_aluno.idpes_pai";
 
         $and_resp = ' AND ';
       }
@@ -1002,12 +1002,12 @@ class clsPmieducarAluno
     }
 
     if (is_string($str_nm_pai)) {
-      $filtros .= "{$whereAnd} (LOWER(nm_pai)) nm_pai LIKE (LOWER('%{$str_nm_pai}%'))";
+      $filtros .= "{$whereAnd} TO_ASCII(LOWER(nm_pai)) nm_pai LIKE TO_ASCII(LOWER('%{$str_nm_pai}%'))";
       $whereAnd = ' AND ';
     }
 
     if (is_string($str_nm_mae)) {
-      $filtros .= "{$whereAnd} (LOWER(nm_mae)) LIKE (LOWER('%{$str_nm_mae}%'))";
+      $filtros .= "{$whereAnd} TO_ASCII(LOWER(nm_mae)) LIKE TO_ASCII(LOWER('%{$str_nm_mae}%'))";
       $whereAnd = ' AND ';
     }
 
@@ -1056,7 +1056,7 @@ class clsPmieducarAluno
   }
 
   /**
-   * Retorna uma lista de registros filtrados de acordo com os par√¢metros.
+   * Retorna uma lista de registros filtrados de acordo com os par‚metros.
    * @return array
    */
   function lista2($int_cod_aluno = NULL, $int_ref_cod_aluno_beneficio = NULL,
@@ -1190,7 +1190,7 @@ class clsPmieducarAluno
                        cadastro.pessoa
                      WHERE
                        cadastro.pessoa.idpes = ref_idpes
-                       AND (LOWER(nome)) LIKE (LOWER('%{$str_nome_aluno}%'))
+                       AND TO_ASCII(LOWER(nome)) LIKE TO_ASCII(LOWER('%{$str_nome_aluno}%'))
                    )";
 
       $whereAnd = ' AND ';
@@ -1200,14 +1200,14 @@ class clsPmieducarAluno
       $and_resp = '';
 
       if (is_string($str_nome_responsavel)) {
-        $and_nome_pai_mae  = "OR UPPER((aluno.nm_pai)) LIKE UPPER(('%$str_nome_responsavel%')) AND (aluno.tipo_responsavel = 'p')";
+        $and_nome_pai_mae  = "OR UPPER(TO_ASCII(aluno.nm_pai)) LIKE UPPER(TO_ASCII('%$str_nome_responsavel%')) AND (aluno.tipo_responsavel = 'p')";
 
-        $and_nome_pai_mae .= "OR UPPER((aluno.nm_mae)) LIKE UPPER(('%$str_nome_responsavel%')) AND (aluno.tipo_responsavel = 'm')";
+        $and_nome_pai_mae .= "OR UPPER(TO_ASCII(aluno.nm_mae)) LIKE UPPER(TO_ASCII('%$str_nome_responsavel%')) AND (aluno.tipo_responsavel = 'm')";
 
         $and_nome_resp     = "
-          (UPPER((pai_mae.nome)) LIKE UPPER(('%$str_nome_responsavel%'))) AND (aluno.tipo_responsavel = 'm') AND pai_mae.idpes = fisica_aluno.idpes_mae
+          (UPPER(TO_ASCII(pai_mae.nome)) LIKE UPPER(TO_ASCII('%$str_nome_responsavel%'))) AND (aluno.tipo_responsavel = 'm') AND pai_mae.idpes = fisica_aluno.idpes_mae
           OR
-          (UPPER((pai_mae.nome)) LIKE UPPER(('%$str_nome_responsavel%'))) AND (aluno.tipo_responsavel = 'p') AND pai_mae.idpes = fisica_aluno.idpes_pai";
+          (UPPER(TO_ASCII(pai_mae.nome)) LIKE UPPER(TO_ASCII('%$str_nome_responsavel%'))) AND (aluno.tipo_responsavel = 'p') AND pai_mae.idpes = fisica_aluno.idpes_pai";
 
         $and_resp = 'AND';
       }
@@ -1257,12 +1257,12 @@ class clsPmieducarAluno
     }
 
     if (is_string($str_nm_pai)) {
-      $filtros .= "{$whereAnd} (LOWER(nm_pai)) nm_pai LIKE (LOWER('%{$str_nm_pai}%'))";
+      $filtros .= "{$whereAnd} TO_ASCII(LOWER(nm_pai)) nm_pai LIKE TO_ASCII(LOWER('%{$str_nm_pai}%'))";
       $whereAnd = ' AND ';
     }
 
     if (is_string($str_nm_mae)) {
-      $filtros .= "{$whereAnd} (LOWER(nm_mae)) LIKE (LOWER('%{$str_nm_mae}%'))";
+      $filtros .= "{$whereAnd} TO_ASCII(LOWER(nm_mae)) LIKE TO_ASCII(LOWER('%{$str_nm_mae}%'))";
       $whereAnd = ' AND ';
     }
 
@@ -1618,7 +1618,7 @@ class clsPmieducarAluno
   }
 
   /**
-   * Define quais campos da tabela ser√£o selecionados no m√©todo Lista().
+   * Define quais campos da tabela ser„o selecionados no mÈtodo Lista().
    */
   function setCamposLista($str_campos)
   {
@@ -1626,7 +1626,7 @@ class clsPmieducarAluno
   }
 
   /**
-   * Define que o m√©todo Lista() deverpa retornar todos os campos da tabela.
+   * Define que o mÈtodo Lista() deverpa retornar todos os campos da tabela.
    */
   function resetCamposLista()
   {
@@ -1634,7 +1634,7 @@ class clsPmieducarAluno
   }
 
   /**
-   * Define limites de retorno para o m√©todo Lista().
+   * Define limites de retorno para o mÈtodo Lista().
    */
   function setLimite($intLimiteQtd, $intLimiteOffset = NULL)
   {
@@ -1643,7 +1643,7 @@ class clsPmieducarAluno
   }
 
   /**
-   * Retorna a string com o trecho da query respons√°vel pelo limite de
+   * Retorna a string com o trecho da query respons·vel pelo limite de
    * registros retornados/afetados.
    *
    * @return string
@@ -1661,7 +1661,7 @@ class clsPmieducarAluno
   }
 
   /**
-   * Define o campo para ser utilizado como ordena√ß√£o no m√©todo Lista().
+   * Define o campo para ser utilizado como ordenaÁ„o no mÈtodo Lista().
    */
   function setOrderby($strNomeCampo)
   {
@@ -1671,7 +1671,7 @@ class clsPmieducarAluno
   }
 
   /**
-   * Retorna a string com o trecho da query respons√°vel pela Ordena√ß√£o dos
+   * Retorna a string com o trecho da query respons·vel pela OrdenaÁ„o dos
    * registros.
    *
    * @return string

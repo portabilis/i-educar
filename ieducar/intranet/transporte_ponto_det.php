@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest√£o escolar
+ * i-Educar - Sistema de gest„o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
+ * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
- * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
- * qualquer vers√£o posterior.
+ * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
+ * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
+ * qualquer vers„o posterior.
  *
- * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
- * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
+ * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
+ * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
  * do GNU para mais detalhes.
  *
- * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
- * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
- * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
+ * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
+ * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo dispon√≠vel desde a vers√£o 1.0.0
+ * @since     Arquivo disponÌvel desde a vers„o 1.0.0
  * @version   $Id$
  */
 
@@ -40,11 +40,11 @@ require_once 'Portabilis/View/Helper/Application.php';
 /**
  * clsIndexBase class.
  *
- * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
+ * @since     Classe disponÌvel desde a vers„o 1.0.0
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
@@ -60,11 +60,11 @@ class clsIndexBase extends clsBase
 /**
  * indice class.
  *
- * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.scclsModulesPontoTransporteEscolar.gov.br>
+ * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.scclsModulesPontoTransporteEscolar.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
+ * @since     Classe disponÌvel desde a vers„o 1.0.0
  * @version   @@package_version@@
  */
 class indice extends clsDetalhe
@@ -77,7 +77,7 @@ class indice extends clsDetalhe
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
-    // Verifica√ß√£o de permiss√£o para cadastro.
+    // VerificaÁ„o de permiss„o para cadastro.
     $this->obj_permissao = new clsPermissoes();
 
     $this->nivel_usuario = $this->obj_permissao->nivel_acesso($this->pessoa_logada);
@@ -93,17 +93,17 @@ class indice extends clsDetalhe
       die();
     }
 
-    $this->addDetalhe( array("C√≥digo do ponto", $cod_ponto_transporte_escolar));
-    $this->addDetalhe( array("Descri√ß√£o", $registro['descricao']) );
+    $this->addDetalhe( array("CÛdigo do ponto", $cod_ponto_transporte_escolar));
+    $this->addDetalhe( array("DescriÁ„o", $registro['descricao']) );
 
     if (is_numeric($registro['cep']) && is_numeric($registro['idlog']) && is_numeric($registro['idbai'])){
       $this->addDetalhe( array("CEP", int2CEP($registro['cep'])) );
-      $this->addDetalhe( array("Munic√≠pio - UF", $registro['municipio'] . ' - '. $registro['sigla_uf']) );
+      $this->addDetalhe( array("MunicÌpio - UF", $registro['municipio'] . ' - '. $registro['sigla_uf']) );
       $this->addDetalhe( array("Distrito", $registro['distrito']) );
       $this->addDetalhe( array("Bairro", $registro['bairro']) );
-      $this->addDetalhe( array("Zona de localiza√ß√£o", $registro['zona_localizacao'] == 1 ? 'Urbana' : 'Rural' ) );
-      $this->addDetalhe( array("Endere√ßo", $registro['idtlog'] . ' ' . $registro['logradouro']) );
-      $this->addDetalhe( array("N√∫mero", $registro['numero']) );
+      $this->addDetalhe( array("Zona de localizaÁ„o", $registro['zona_localizacao'] == 1 ? 'Urbana' : 'Rural' ) );
+      $this->addDetalhe( array("EndereÁo", $registro['idtlog'] . ' ' . $registro['logradouro']) );
+      $this->addDetalhe( array("N˙mero", $registro['numero']) );
       $this->addDetalhe( array("Complemento", $registro['complemento']) );
     }
 
@@ -129,13 +129,13 @@ class indice extends clsDetalhe
   }
 }
 
-// Instancia o objeto da p√°gina
+// Instancia o objeto da p·gina
 $pagina = new clsIndexBase();
 
-// Instancia o objeto de conte√∫do
+// Instancia o objeto de conte˙do
 $miolo = new indice();
 
-// Passa o conte√∫do para a p√°gina
+// Passa o conte˙do para a p·gina
 $pagina->addForm($miolo);
 
 // Gera o HTML

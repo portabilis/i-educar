@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest√£o escolar
+ * i-Educar - Sistema de gest„o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
+ * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
- * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
- * qualquer vers√£o posterior.
+ * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
+ * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
+ * qualquer vers„o posterior.
  *
- * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
- * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
+ * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
+ * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
  * do GNU para mais detalhes.
  *
- * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
- * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
- * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
+ * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
+ * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo dispon√≠vel desde a vers√£o 1.0.0
+ * @since     Arquivo disponÌvel desde a vers„o 1.0.0
  * @version   $Id$
  */
 
@@ -37,11 +37,11 @@ require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
 /**
  * clsIndexBase class.
  *
- * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
+ * @since     Classe disponÌvel desde a vers„o 1.0.0
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
@@ -57,11 +57,11 @@ class clsIndexBase extends clsBase
 /**
  * indice class.
  *
- * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
+ * @since     Classe disponÌvel desde a vers„o 1.0.0
  * @version   @@package_version@@
  */
 class indice extends clsCadastro
@@ -191,7 +191,7 @@ class indice extends clsCadastro
 
     $this->campoLista('etapa_curso', 'Etapa Curso', $opcoes, $this->etapa_curso);
 
-    // Regra de avalia√ß√£o
+    // Regra de avaliaÁ„o
     $mapper = new RegraAvaliacao_Model_RegraDataMapper();
     $regras = array();
     if (!is_null($this->ref_cod_instituicao)) {
@@ -203,8 +203,8 @@ class indice extends clsCadastro
 
     $regras = array('' => 'Selecione') + $regras;
 
-    $this->campoLista('regra_avaliacao_id', 'Regra de avalia√ß√£o', $regras, $this->regra_avaliacao_id);
-    $this->campoLista('regra_avaliacao_diferenciada_id', 'Regra de avalia√ß√£o diferenciada', $regras, $this->regra_avaliacao_diferenciada_id, '', FALSE, 'Ser√° utilizada quando campo <b>Utilizar regra de avalia√ß√£o diferenciada</b> estiver marcado no cadastro da escola', '', FALSE, FALSE);
+    $this->campoLista('regra_avaliacao_id', 'Regra de avaliaÁ„o', $regras, $this->regra_avaliacao_id);
+    $this->campoLista('regra_avaliacao_diferenciada_id', 'Regra de avaliaÁ„o diferenciada', $regras, $this->regra_avaliacao_diferenciada_id, '', FALSE, 'Ser· utilizada quando campo <b>Utilizar regra de avaliaÁ„o diferenciada</b> estiver marcado no cadastro da escola', '', FALSE, FALSE);
 
     $opcoes = array('' => 'Selecione', 1 => 'n&atilde;o', 2 => 'sim');
 
@@ -214,19 +214,19 @@ class indice extends clsCadastro
 
     $this->campoNumero('dias_letivos', 'Dias letivos', $this->dias_letivos, 3, 3, TRUE);
 
-    $this->campoNumero('idade_ideal', 'Idade padr√£o', $this->idade_ideal, 2, 2, false);
+    $this->campoNumero('idade_ideal', 'Idade padr„o', $this->idade_ideal, 2, 2, false);
 
     $this->campoNumero('idade_inicial', 'Faixa et&aacute;ria', $this->idade_inicial,
       2, 2, FALSE, '', '', FALSE, FALSE, TRUE);
 
-    $this->campoNumero('idade_final', '&nbsp;at√©', $this->idade_final, 2, 2, FALSE);
+    $this->campoNumero('idade_final', '&nbsp;atÈ', $this->idade_final, 2, 2, FALSE);
 
-		$this->campoMemo( "observacao_historico", "Observa&ccedil;&atilde;o hist√≥rico", $this->observacao_historico, 60, 5, false );
+		$this->campoMemo( "observacao_historico", "Observa&ccedil;&atilde;o histÛrico", $this->observacao_historico, 60, 5, false );
 
-    $this->campoCheck("alerta_faixa_etaria", "Exibir alerta ao tentar matricular alunos fora da faixa et√°ria da s√©rie/ano", $this->alerta_faixa_etaria);
-    $this->campoCheck("bloquear_matricula_faixa_etaria", "Bloquear matr√≠culas de alunos fora da faixa et√°ria da s√©rie/ano", $this->bloquear_matricula_faixa_etaria);
+    $this->campoCheck("alerta_faixa_etaria", "Exibir alerta ao tentar matricular alunos fora da faixa et·ria da sÈrie/ano", $this->alerta_faixa_etaria);
+    $this->campoCheck("bloquear_matricula_faixa_etaria", "Bloquear matrÌculas de alunos fora da faixa et·ria da sÈrie/ano", $this->bloquear_matricula_faixa_etaria);
 
-    $this->campoCheck("exigir_inep", "Exigir INEP para a matr√≠cula?", $this->exigir_inep);
+    $this->campoCheck("exigir_inep", "Exigir INEP para a matrÌcula?", $this->exigir_inep);
 
   }
 
@@ -308,16 +308,16 @@ class indice extends clsCadastro
   }
 }
 
-// Instancia objeto de p√°gina
+// Instancia objeto de p·gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conte√∫do
+// Instancia objeto de conte˙do
 $miolo = new indice();
 
-// Atribui o conte√∫do √†¬† p√°gina
+// Atribui o conte˙do ‡† p·gina
 $pagina->addForm($miolo);
 
-// Gera o c√≥digo HTML
+// Gera o cÛdigo HTML
 $pagina->MakeAll();
 ?>
 <script type="text/javascript">
@@ -357,7 +357,7 @@ function EtapasCurso(xml_qtd_etapas)
     }
   }
   else {
-    campoEtapas.options[0].text = 'O curso n√£o possui nenhuma etapa';
+    campoEtapas.options[0].text = 'O curso n„o possui nenhuma etapa';
   }
 }
 
@@ -384,8 +384,8 @@ function RegrasInstituicao(xml_qtd_regras)
     }
   }
   else {
-    campoRegras.options[0].text = 'A institui√ß√£o n√£o possui uma Regra de Avalia√ß√£o';
-	  campoRegrasDiferenciadas.options[0].text = 'A institui√ß√£o n√£o possui uma Regra de Avalia√ß√£o';
+    campoRegras.options[0].text = 'A instituiÁ„o n„o possui uma Regra de AvaliaÁ„o';
+	  campoRegrasDiferenciadas.options[0].text = 'A instituiÁ„o n„o possui uma Regra de AvaliaÁ„o';
   }
 }
 
@@ -407,10 +407,10 @@ document.getElementById('ref_cod_curso').onchange = function()
  */
 document.getElementById('ref_cod_instituicao').onchange = function()
 {
-  // Essa a√ß√£o √© a padr√£o do item, via include
+  // Essa aÁ„o È a padr„o do item, via include
   getCurso();
 
-  // Requisi√ß√£o Ajax para as Regras de Avalia√ß√£o
+  // RequisiÁ„o Ajax para as Regras de AvaliaÁ„o
   getRegra();
 }
 </script>

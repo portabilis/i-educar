@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestÃ£o escolar
+ * i-Educar - Sistema de gestão escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÃ­
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa Ã© software livre; vocÃª pode redistribuÃ­-lo e/ou modificÃ¡-lo
- * sob os termos da LicenÃ§a PÃºblica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versÃ£o 2 da LicenÃ§a, como (a seu critÃ©rio)
- * qualquer versÃ£o posterior.
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+ * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
  *
- * Este programa Ã© distribuÃ­Â­do na expectativa de que seja Ãºtil, porÃ©m, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÃ­Â­cita de COMERCIABILIDADE OU
- * ADEQUAÃ‡ÃƒO A UMA FINALIDADE ESPECÃFICA. Consulte a LicenÃ§a PÃºblica Geral
+ * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
  * do GNU para mais detalhes.
  *
- * VocÃª deve ter recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral do GNU junto
- * com este programa; se nÃ£o, escreva para a Free Software Foundation, Inc., no
- * endereÃ§o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
+ * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de ItajaÃ­ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Include
- * @since     Arquivo disponÃ­vel desde a versÃ£o 1.0.0
+ * @since     Arquivo disponível desde a versão 1.0.0
  * @version   $Id$
  */
 
@@ -89,7 +89,7 @@ function int2CNPJ($int)
 }
 
 /**
- * Formata um valor numÃ©rico em uma representaÃ§Ã£o string de CEP.
+ * Formata um valor numérico em uma representação string de CEP.
  *
  * @param  string|int  $int
  * @return string
@@ -107,10 +107,10 @@ function int2CEP($int)
 
 function limpa_acentos( $str_nome )
 {
-  $procura1   = array('Ã¡', 'Ã©', 'Ã­', 'Ã³', 'Ãº', 'Ã ', 'Ã¨', 'Ã¬', 'Ã²', 'Ã¹', 'Ã¤', 'Ã«', 'Ã¯', 'Ã¶', 'Ã¼', 'Ã§', 'Ã£', 'Ãµ', 'Ã´', 'Ãª');
+  $procura1   = array('á', 'é', 'í', 'ó', 'ú', 'à', 'è', 'ì', 'ò', 'ù', 'ä', 'ë', 'ï', 'ö', 'ü', 'ç', 'ã', 'õ', 'ô', 'ê');
   $substitui1 = array('a', 'e', 'i', 'o', 'u', 'a', 'e', 'i', 'o', 'u', 'a', 'e', 'i', 'o', 'u', 'c', 'a', 'o', 'o', 'e');
 
-  $procura2   = array('Ã', 'Ã‰', 'Ã', 'Ã“', 'Ãš', 'Ã€', 'Ãˆ', 'ÃŒ', 'Ã’', 'Ã™', 'Ã„', 'Ã‹', 'Ã', 'Ã–', 'Ãœ', 'Ã‡', 'Ãƒ', 'Ã•', 'ÃŠ', 'Ã”');
+  $procura2   = array('Á', 'É', 'Í', 'Ó', 'Ú', 'À', 'È', 'Ì', 'Ò', 'Ù', 'Ä', 'Ë', 'Ï', 'Ö', 'Ü', 'Ç', 'Ã', 'Õ', 'Ê', 'Ô');
   $substitui2 = array('A', 'E', 'I', 'O', 'U', 'A', 'E', 'I', 'O', 'U', 'A', 'E', 'I', 'O', 'U', 'C', 'A', 'O', 'E', 'O');
 
   $str_nome = str_replace($procura1, $substitui1, $str_nome);
@@ -135,8 +135,8 @@ function transforma_minusculo($str_nome)
     }
   }
 
-  $procura1   = array('Ã', 'Ã‰', 'Ã', 'Ã“', 'Ãš', 'Ã€', 'Ãˆ', 'ÃŒ', 'Ã’', 'Ã™', 'Ã„', 'Ã‹', 'Ã', 'Ã–', 'Ãœ', 'Ã‡', 'Ãƒ', 'Ã•', 'Ã‚', 'Ã”');
-  $substitui1 = array('Ã¡', 'Ã©', 'Ã­', 'Ã³', 'Ãº', 'Ã ', 'Ã¨', 'Ã¬', 'Ã²', 'Ã¹', 'Ã¤', 'Ã«', 'Ã¯', 'Ã¶', 'Ã¼', 'Ã§', 'Ã£', 'Ãµ', 'Ã¢', 'Ã´');
+  $procura1   = array('Á', 'É', 'Í', 'Ó', 'Ú', 'À', 'È', 'Ì', 'Ò', 'Ù', 'Ä', 'Ë', 'Ï', 'Ö', 'Ü', 'Ç', 'Ã', 'Õ', 'Â', 'Ô');
+  $substitui1 = array('á', 'é', 'í', 'ó', 'ú', 'à', 'è', 'ì', 'ò', 'ù', 'ä', 'ë', 'ï', 'ö', 'ü', 'ç', 'ã', 'õ', 'â', 'ô');
 
   $nome = str_replace($procura1, $substitui1, $nome);
 
@@ -169,7 +169,7 @@ function quebra_linhas_pdf($str_texto, $qtd_letras_linha = 60)
   $comp_comp = ($compromisso2) ? $compromisso2 : $comp_comp;
 
   /**
-   * @todo Realmente precisa desse \n[espaÃ§o][espaÃ§o]?
+   * @todo Realmente precisa desse \n[espaço][espaço]?
    */
   $comp_comp = str_replace("\n  ", "\n",$comp_comp);
   $comp_comp = str_replace("\n ", "\n",$comp_comp);
@@ -185,12 +185,12 @@ function fonetiza_palavra($palavra)
   $fonetizado = '';
 
   /**
-   * @todo JÃ¡ Ã© a terceira vez que esse tipo de operaÃ§Ã£o Ã© realizada. Precisa
+   * @todo Já é a terceira vez que esse tipo de operação é realizada. Precisa
    *   de refactoring. Ver funcoes.inc.php#transforma_minusculo
    */
   // limpa todas as letras acentuadas e passa para minusculas
-  $acentuadasMin = array('Ã¡', 'Ã©', 'Ã­', 'Ã³', 'Ãº', 'Ã¢', 'Ãª', 'Ã®', 'Ã´', 'Ã»', 'Ã¤', 'Ã«', 'Ã¯', 'Ã¶', 'Ã¼', 'Ã ', 'Ã¨', 'Ã¬', 'Ã²', 'Ã¹', 'Ã£', '?', 'Ãµ', '?', 'Ã½', 'Ã¿', 'Ã±', 'Ã§');
-  $acentuadasMai = array('Ã', 'Ã‰', 'Ã', 'Ã“', 'Ãš', 'Ã‚', 'ÃŠ', 'Ã', 'Ã”', 'Ã›', 'Ã„', 'Ã‹', 'Ã', 'Ã–', 'Ãœ', 'Ã€', 'Ãˆ', 'ÃŒ', 'Ã’', 'Ã™', 'Ãƒ', '?', 'Ã•', '?', 'Ã', '?', 'Ã‘', 'Ã‡');
+  $acentuadasMin = array('á', 'é', 'í', 'ó', 'ú', 'â', 'ê', 'î', 'ô', 'û', 'ä', 'ë', 'ï', 'ö', 'ü', 'à', 'è', 'ì', 'ò', 'ù', 'ã', '?', 'õ', '?', 'ı', 'ÿ', 'ñ', 'ç');
+  $acentuadasMai = array('Á', 'É', 'Í', 'Ó', 'Ú', 'Â', 'Ê', 'Î', 'Ô', 'Û', 'Ä', 'Ë', 'Ï', 'Ö', 'Ü', 'À', 'È', 'Ì', 'Ò', 'Ù', 'Ã', '?', 'Õ', '?', 'İ', '?', 'Ñ', 'Ç');
   $letras_ok     = array('a', 'e', 'i', 'o', 'u', 'a', 'e', 'i', 'o', 'u', 'a', 'e', 'i', 'o', 'u', 'a', 'e', 'i', 'o', 'u', 'a', 'i', 'o', 'u', 'y', 'y', 'n', 'c');
 
   $palavra = str_replace($acentuadasMin, $letras_ok, $palavra);
@@ -573,17 +573,17 @@ function minimiza_capitaliza($str)
   /**
    * @todo Mais um tratamento de acentos, ver funcoes.inc.php#transforma_minusculo().
    */
-  $nome = str_replace(array('Ãš','Ã”','Ã‡','Ã', 'Ã‰', 'Ã', 'Ã“', 'Ãƒ', 'ÃŠ', 'Ã', 'Ã–', 'Ãœ', 'Ã€', 'Ãˆ', 'ÃŒ', 'Ã’', 'Ã™', 'Ã•'),
-                      array('Ãº','Ã´','Ã§','Ã¡', 'Ã©', 'Ã­', 'Ã³', 'Ã£', 'Ãª', 'Ã¯', 'Ã¶', 'Ã¼', 'Ã ', 'Ã¨', 'Ã¬', 'Ã²', 'Ã¹', 'Ãµ'), $nome );
+  $nome = str_replace(array('Ú','Ô','Ç','Á', 'É', 'Í', 'Ó', 'Ã', 'Ê', 'Ï', 'Ö', 'Ü', 'À', 'È', 'Ì', 'Ò', 'Ù', 'Õ'),
+                      array('ú','ô','ç','á', 'é', 'í', 'ó', 'ã', 'ê', 'ï', 'ö', 'ü', 'à', 'è', 'ì', 'ò', 'ù', 'õ'), $nome );
   return $nome;
 }
 
 /**
  * Formata a data para o formato brasileiro
  *
- * @param string $data_original data que serÃ¡ transformada
- * @param bool $h_m determina se o a data retornada incluirÃ¡ hora e minuto
- * @param bool $h_m_s determina se o a data retornada incluirÃ¡ hora, minuto e segundo
+ * @param string $data_original data que será transformada
+ * @param bool $h_m determina se o a data retornada incluirá hora e minuto
+ * @param bool $h_m_s determina se o a data retornada incluirá hora, minuto e segundo
  *
  * @return string
  */
@@ -610,10 +610,10 @@ function dataToBrasil($data_original, $h_m = FALSE, $h_m_s = FALSE)
 /**
  * Formata a data para o formato do banco
  *
- * @param string $data_original data que serÃ¡ transformada
+ * @param string $data_original data que será transformada
  * @return string
- * @todo $data_original = NULL sempre serÃ¡ TRUE. Verificar que cÃ³digo chama
- *   esta funÃ§Ã£o. LÃ³gica falha.
+ * @todo $data_original = NULL sempre será TRUE. Verificar que código chama
+ *   esta função. Lógica falha.
  */
 function dataToBanco($data_original, $inicial = NULL)
 {
@@ -652,7 +652,7 @@ function dataToBanco($data_original, $inicial = NULL)
 /**
  * Formata uma data vinda do postgre
  *
- * @param string $data_original data que serÃ¡ transformada
+ * @param string $data_original data que será transformada
  * @return string
  */
 function dataFromPgToTime($data_original)
@@ -667,12 +667,12 @@ function dataFromPgToTime($data_original)
 /**
  * Formata uma data ISO-8601 no formato do locale pt_BR.
  *
- * O formato ISO-8601 geralmente Ã© utilizado pelos DBMS atuais nos tipos de campos datetime/timestamp.
- * O PostgreSQL utiliza este padrÃ£o.
+ * O formato ISO-8601 geralmente é utilizado pelos DBMS atuais nos tipos de campos datetime/timestamp.
+ * O PostgreSQL utiliza este padrão.
  *
- * @param string $data_original Data que serÃ¡ formatada
- * @param string $formatacao    String de formataÃ§Ã£o no padrÃ£o aceito pela funÃ§Ã£o date() do PHP
- * @link  http://www.php.net/date DocumentaÃ§Ã£o da funÃ§Ã£o PHP date()
+ * @param string $data_original Data que será formatada
+ * @param string $formatacao    String de formatação no padrão aceito pela função date() do PHP
+ * @link  http://www.php.net/date Documentação da função PHP date()
  *
  * @return string
  */
@@ -684,18 +684,18 @@ function dataFromPgToBr($data_original, $formatacao = 'd/m/Y')
 
 /**
  * Funcao que troca caracteres acentuados por caracteres extendidos de HTML (para compatibilidade de encode).
- * Ex: Ã¡ = &aacute;
+ * Ex: á = &aacute;
  * pode substituir na ordem reversa
  *
  * @param string $text
  * @param bool $reverse
  * @return string
- * @todo Onde essa funÃ§Ã£o Ã© chamada? TransformaÃ§Ã£o totalmente desnecessÃ¡ria.
+ * @todo Onde essa função é chamada? Transformação totalmente desnecessária.
  */
 function extendChars($text, $reverse = FALSE)
 {
-  $chars = array("Ãƒ", "Ã‚", "Ã", "Ã€", "Ã„", "Ã‰", "ÃŠ", "Ãˆ", "Ã‹", "Ã", "ÃŒ", "Ã", "Ã", "Ã”", "Ã•", "Ã“", "Ã’", "Ã–", "Ãš", "Ã™", "Ã›", "Ãœ", "Ã", "Ã‘", "Ã‡",
-                 "Ã£", "Ã¢", "Ã¡", "Ã ", "Ã¤", "Ã©", "Ãª", "Ã¨", "Ã«", "Ã­", "Ã¬", "Ã¯", "Ã®", "Ã´", "Ãµ", "Ã³", "Ã²", "Ã¶", "Ãº", "Ã¹", "Ã»", "Ã¼", "Ã½", "Ã±", "Ã§" );
+  $chars = array("Ã", "Â", "Á", "À", "Ä", "É", "Ê", "È", "Ë", "Í", "Ì", "Ï", "Î", "Ô", "Õ", "Ó", "Ò", "Ö", "Ú", "Ù", "Û", "Ü", "İ", "Ñ", "Ç",
+                 "ã", "â", "á", "à", "ä", "é", "ê", "è", "ë", "í", "ì", "ï", "î", "ô", "õ", "ó", "ò", "ö", "ú", "ù", "û", "ü", "ı", "ñ", "ç" );
   $extends = array("&Atilde;", "&Acirc;", "&Aacute;", "&Agrave;", "&Auml;", "&Eacute;", "&Ecirc;", "&Egrave;", "&Euml;", "&Iacute;", "&Igrave;", "&Iuml;", "&Icirc;",   "&Ocirc;", "&Otilde;", "&Oacute;", "&Ograve;", "&Ouml;", "&Uacute;", "&Ugrave;", "&Ucirc;", "&Uuml;", "&Yacute;", "&Ntilde;", "&Ccedil;",
                    "&atilde;", "&acirc;", "&aacute;", "&agrave;", "&auml;", "&eacute;", "&ecirc;", "&egrave;", "&euml;", "&iacute;", "&igrave;", "&iuml;", "&icirc;",   "&ocirc;", "&otilde;", "&oacute;", "&ograve;", "&ouml;", "&uacute;", "&ugrave;", "&ucirc;", "&uuml;", "&yacute;", "&ntilde;", "&ccedil;" );
 
@@ -708,7 +708,7 @@ function extendChars($text, $reverse = FALSE)
 }
 
 /**
- * Esta funÃ§Ã£o recebe como parÃ¢metros a string que deseja-se quebrar em linhas e o tamanho
+ * Esta função recebe como parâmetros a string que deseja-se quebrar em linhas e o tamanho
  * de caracteres que a linha vai ter, e ela retorna um array com as linhas.
  */
 function quebra_linhas($string, $tamanho)
@@ -739,7 +739,7 @@ function retorna_linha($string, $tam)
 }
 
 /**
- * @todo Casting para string ao invÃ©s de concatenaÃ§Ã£o ($str = "" . $int . "";)
+ * @todo Casting para string ao invés de concatenação ($str = "" . $int . "";)
  */
 function int2IdFederal($int) {
   $str = "" . $int . "";
@@ -816,7 +816,7 @@ function int2IdFederal($int) {
 }
 
 /**
- * Verifica se o valor Ã© booleano
+ * Verifica se o valor é booleano
  * aceita como true:
  * 'true', 't', true, 1, '1', 'yes', 'y', 'sim', 's'
  *
@@ -831,8 +831,8 @@ function dbBool($val)
 
 /**
  * Corta uma string caso ela seja maior do que $size caracteres
- * Caso $breakWords seja setado como false, quebrarÃ¡ a string no Ãºltimo espaco " "
- * encontrado antes do caracter $size (desde que o retorno atÃ© esse ponto nÃ£o ande mais caracteres do que 25% de $size)
+ * Caso $breakWords seja setado como false, quebrará a string no último espaco " "
+ * encontrado antes do caracter $size (desde que o retorno até esse ponto não ande mais caracteres do que 25% de $size)
  *
  * @param string $text
  * @param int $size
@@ -853,14 +853,14 @@ function truncate($text, $size = 100, $breakWords = FALSE)
 }
 
 /**
- * capitaliza todos os caracteres de uma string incluÃ­ndo os acentuados
- * ex: sÃ©rie => SÃ‰RIE
+ * capitaliza todos os caracteres de uma string incluíndo os acentuados
+ * ex: série => SÉRIE
  * @param string $text
  * @return string
  */
 function str2upper($text) {
-  $ASCII_SPC_MIN = 'Ã Ã¡Ã¢Ã£Ã¤Ã¥Ã¦Ã§Ã¨Ã©ÃªÃ«Ã¬Ã­Ã®Ã¯Ã°Ã±Ã²Ã³Ã´ÃµÃ¶Ã¹ÃºÃ»Ã¼Ã½Ã¿??';
-  $ASCII_SPC_MAX = 'Ã€ÃÃ‚ÃƒÃ„Ã…Ã†Ã‡ÃˆÃ‰ÃŠÃ‹ÃŒÃÃÃÃÃ‘Ã’Ã“Ã”Ã•Ã–Ã™ÃšÃ›ÃœÃ???';
+  $ASCII_SPC_MIN = 'àáâãäåæçèéêëìíîïğñòóôõöùúûüıÿ??';
+  $ASCII_SPC_MAX = 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕÖÙÚÛÜİ???';
   return strtr(strtoupper($text), $ASCII_SPC_MIN, $ASCII_SPC_MAX);
 }
 

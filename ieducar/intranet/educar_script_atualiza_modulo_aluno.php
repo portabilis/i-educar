@@ -75,7 +75,7 @@ if($lst_escola)
 									$det_matricula = $objMatricula->detalhe();
 									$max_modulo_nota = (int)$db->CampoUnico("SELECT max(modulo) FROM pmieducar.nota_aluno WHERE ref_cod_matricula = '{$matricula['cod_matricula']}' AND ativo = 1");
 									/**
-									 * so avanÃ§a o modulo
+									 * so avança o modulo
 									 * caso ele seja igual ao da maior nota
 									 * e que seja a ultima disciplina
 									 */
@@ -94,5 +94,5 @@ if($lst_escola)
 	}
 }
 
-echo 'AtualizaÃ§Ã£o realizada com sucesso';
+echo 'Atualização realizada com sucesso';
 ?>

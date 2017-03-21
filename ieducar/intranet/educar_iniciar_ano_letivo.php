@@ -1,25 +1,25 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	@author Prefeitura Municipal de ItajaÃ­								 *
+	*	@author Prefeitura Municipal de Itajaí								 *
 	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software PÃºblico Livre e Brasileiro					 *
+	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
 	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÃ­			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  Ã©  software livre, vocÃª pode redistribuÃ­-lo e/ou	 *
-	*	modificÃ¡-lo sob os termos da LicenÃ§a PÃºblica Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versÃ£o 2 da	 *
-	*	LicenÃ§a   como  (a  seu  critÃ©rio)  qualquer  versÃ£o  mais  nova.	 *
+	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
+	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
+	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
 	*																		 *
-	*	Este programa  Ã© distribuÃ­do na expectativa de ser Ãºtil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implÃ­cita de COMERCIALI-	 *
-	*	ZAÃ‡ÃƒO  ou  de ADEQUAÃ‡ÃƒO A QUALQUER PROPÃ“SITO EM PARTICULAR. Con-	 *
-	*	sulte  a  LicenÃ§a  PÃºblica  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
+	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
+	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	VocÃª  deve  ter  recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral GNU	 *
-	*	junto  com  este  programa. Se nÃ£o, escreva para a Free Software	 *
+	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
+	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
@@ -156,7 +156,7 @@ class indice extends clsCadastro
 	function finalizarAnoLetivo()
 	{
 		/**
-		 * VERIFICA se nÃ¯Â¿Â½o existem matriculas em andamento
+		 * VERIFICA se nï¿½o existem matriculas em andamento
 		 */
 
 		$obj_matriculas = new clsPmieducarMatricula();
@@ -165,7 +165,7 @@ class indice extends clsCadastro
 		if($existe_matricula_andamento_com_curso)
 		{
 			echo "<script>
-					alert('NÃ£o foi possÃ­vel finalizar o ano letivo existem matrÃ­culas em andamento!');
+					alert('Não foi possível finalizar o ano letivo existem matrículas em andamento!');
 					window.location = 'educar_escola_det.php?cod_escola={$this->ref_cod_escola}';
 				  </script>";
 		}
@@ -175,12 +175,12 @@ class indice extends clsCadastro
 		$existe_matricula_andamento = $obj_matriculas->lista(null,null,$this->ref_cod_escola,null,null,null,null,3,null,null,null,null,1,$this->ano,null,null,1,null,null,null,null,null,null,null,null,true);
 		if($existe_matricula_andamento)
 		{
-      // REVER CHAMADA DE MÃ‰TODO, NÃƒO FAZ SENTIDO, ESTÃ COLOCANDO TODOS ALUNOS COMO APROVADOS SEM NENHUM FILTRO
+      // REVER CHAMADA DE MÉTODO, NÃO FAZ SENTIDO, ESTÁ COLOCANDO TODOS ALUNOS COMO APROVADOS SEM NENHUM FILTRO
 			//$editou = $obj_matriculas->aprova_matricula_andamento_curso_sem_avaliacao();
 			if(!editou)
 			{
 				echo "<script>
-						alert('NÃ£o foi possÃ­vel finalizar o ano letivo.\\nErro ao editar matriculas de curso sem avaliaÃ§Ã£o!');
+						alert('Não foi possível finalizar o ano letivo.\\nErro ao editar matriculas de curso sem avaliação!');
 						window.location = 'educar_escola_det.php?cod_escola={$this->ref_cod_escola}';
 					  </script>";
 			}

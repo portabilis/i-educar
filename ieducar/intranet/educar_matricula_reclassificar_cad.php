@@ -3,25 +3,25 @@
 // ini_set("display_errors", 1);
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	@author Prefeitura Municipal de Itaja√≠								 *
+	*	@author Prefeitura Municipal de ItajaÌ								 *
 	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software P√∫blico Livre e Brasileiro					 *
+	*   Pacote: i-PLB Software P˙blico Livre e Brasileiro					 *
 	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itaja√≠			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÌ			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  √©  software livre, voc√™ pode redistribu√≠-lo e/ou	 *
-	*	modific√°-lo sob os termos da Licen√ßa P√∫blica Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a vers√£o 2 da	 *
-	*	Licen√ßa   como  (a  seu  crit√©rio)  qualquer  vers√£o  mais  nova.	 *
+	*	Este  programa  È  software livre, vocÍ pode redistribuÌ-lo e/ou	 *
+	*	modific·-lo sob os termos da LicenÁa P˙blica Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a vers„o 2 da	 *
+	*	LicenÁa   como  (a  seu  critÈrio)  qualquer  vers„o  mais  nova.	 *
 	*																		 *
-	*	Este programa  √© distribu√≠do na expectativa de ser √∫til, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia impl√≠cita de COMERCIALI-	 *
-	*	ZA√á√ÉO  ou  de ADEQUA√á√ÉO A QUALQUER PROP√ìSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licen√ßa  P√∫blica  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  È distribuÌdo na expectativa de ser ˙til, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia implÌcita de COMERCIALI-	 *
+	*	ZA«√O  ou  de ADEQUA«√O A QUALQUER PROP”SITO EM PARTICULAR. Con-	 *
+	*	sulte  a  LicenÁa  P˙blica  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	Voc√™  deve  ter  recebido uma c√≥pia da Licen√ßa P√∫blica Geral GNU	 *
-	*	junto  com  este  programa. Se n√£o, escreva para a Free Software	 *
+	*	VocÍ  deve  ter  recebido uma cÛpia da LicenÁa P˙blica Geral GNU	 *
+	*	junto  com  este  programa. Se n„o, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
@@ -152,11 +152,11 @@ class indice extends clsCadastro
 
 		$this->campoOculto("serie_matricula",$this->ref_ref_cod_serie);
 		$this->campoLista("ref_cod_curso","Curso",$cursos,$this->ref_cod_curso,"getSerie();");
-		$this->campoLista("ref_ref_cod_serie","S&eacute;rie",array('' => 'Selecione uma s√©rie'),'');
+		$this->campoLista("ref_ref_cod_serie","S&eacute;rie",array('' => 'Selecione uma sÈrie'),'');
 		$this->inputsHelper()->date('data_cancel', array('label' => 'Data da reclassifica&ccedil;&atilde;o', 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y')));
 		$this->campoMemo("descricao_reclassificacao","Descri&ccedil;&atilde;o",$this->descricao_reclassificacao,100,10,true);
 
-		$this->acao_enviar = 'if(confirm("Deseja reclassificar est√° matr√≠cula?"))acao();';
+		$this->acao_enviar = 'if(confirm("Deseja reclassificar est· matrÌcula?"))acao();';
 
 
 	}
@@ -181,13 +181,13 @@ class indice extends clsCadastro
 
 			if(substr($det_matricula['data_cadastro'], 0, 10) > $this->data_cancel){
 
-				$this->mensagem = "Data de abandono n√£o pode ser inferior a data da matr√≠cula.<br>";
+				$this->mensagem = "Data de abandono n„o pode ser inferior a data da matrÌcula.<br>";
 				return false;	
 				die();							
 			} 
 		}else{
 			if(substr($det_matricula['data_matricula'], 0, 10) > $this->data_cancel){
-				$this->mensagem = "Data de abandono n√£o pode ser inferior a data da matr√≠cula.<br>";
+				$this->mensagem = "Data de abandono n„o pode ser inferior a data da matrÌcula.<br>";
 				return false;
 				die();
 			}
@@ -200,8 +200,8 @@ class indice extends clsCadastro
 		$obj_matricula->data_cancel = $this->data_cancel;
 		if(!$obj_matricula->edita())
 		{
-			echo "<script>alert('Erro ao reclassificar matr√≠cula'); window.location='educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}';</script>";
-			die("Erro ao reclassificar matr√≠cula");
+			echo "<script>alert('Erro ao reclassificar matrÌcula'); window.location='educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}';</script>";
+			die("Erro ao reclassificar matrÌcula");
 		}
 		$obj_serie = new clsPmieducarSerie( $this->ref_ref_cod_serie );
 		$det_serie = $obj_serie->detalhe();
@@ -211,8 +211,8 @@ class indice extends clsCadastro
 		$cadastrou = $obj_matricula->cadastra();
 
 		if(!$cadastrou){
-			echo "<script>alert('Erro ao reclassificar matr√≠cula'); window.location='educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}';</script>";
-			die("Erro ao reclassificar matr√≠cula");
+			echo "<script>alert('Erro ao reclassificar matrÌcula'); window.location='educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}';</script>";
+			die("Erro ao reclassificar matrÌcula");
 		}else{
 			/**
 			 * desativa todas as enturmacoes da matricula anterior
@@ -220,13 +220,13 @@ class indice extends clsCadastro
 			$obj_matricula_turma = new clsPmieducarMatriculaTurma($this->cod_matricula);
 			if(!$obj_matricula_turma->reclassificacao($this->data_cancel))
 			{
-				echo "<script>alert('Erro ao desativar enturma√ß√µes da matr√≠cula: {$this->cod_matricula}\nContate o administrador do sistema informando a matr√≠cula!');</script>";
+				echo "<script>alert('Erro ao desativar enturmaÁıes da matrÌcula: {$this->cod_matricula}\nContate o administrador do sistema informando a matrÌcula!');</script>";
 			}
 			//window.location='educar_matricula_det.php?cod_matricula={$this->cod_matricula}&ref_cod_aluno={$this->ref_cod_aluno}';
-			echo "<script>alert('Reclassifica√ß√£o realizada com sucesso!\\nO C√≥digo da nova matr√≠cula √©: $cadastrou.');
+			echo "<script>alert('ReclassificaÁ„o realizada com sucesso!\\nO CÛdigo da nova matrÌcula È: $cadastrou.');
 			window.location='educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}';
 			</script>";
-			die('Reclassifica√ß√£o realizada com sucesso!');
+			die('ReclassificaÁ„o realizada com sucesso!');
 
 		}
 

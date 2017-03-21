@@ -1,25 +1,25 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
   *                                      *
-  * @author Prefeitura Municipal de ItajaÃ­                 *
+  * @author Prefeitura Municipal de Itajaí                 *
   * @updated 29/03/2007                          *
-  *   Pacote: i-PLB Software PÃºblico Livre e Brasileiro          *
+  *   Pacote: i-PLB Software Público Livre e Brasileiro          *
   *                                    *
-  * Copyright (C) 2006  PMI - Prefeitura Municipal de ItajaÃ­       *
+  * Copyright (C) 2006  PMI - Prefeitura Municipal de Itajaí       *
   *           ctima@itajai.sc.gov.br                 *
   *                                    *
-  * Este  programa  Ã©  software livre, vocÃª pode redistribuÃ­-lo e/ou   *
-  * modificÃ¡-lo sob os termos da LicenÃ§a PÃºblica Geral GNU, conforme   *
-  * publicada pela Free  Software  Foundation,  tanto  a versÃ£o 2 da   *
-  * LicenÃ§a   como  (a  seu  critÃ©rio)  qualquer  versÃ£o  mais  nova.  *
+  * Este  programa  é  software livre, você pode redistribuí-lo e/ou   *
+  * modificá-lo sob os termos da Licença Pública Geral GNU, conforme   *
+  * publicada pela Free  Software  Foundation,  tanto  a versão 2 da   *
+  * Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.  *
   *                                    *
-  * Este programa  Ã© distribuÃ­do na expectativa de ser Ãºtil, mas SEM   *
-  * QUALQUER GARANTIA. Sem mesmo a garantia implÃ­cita de COMERCIALI-   *
-  * ZAÃÃO  ou  de ADEQUAÃÃO A QUALQUER PROPÃSITO EM PARTICULAR. Con-   *
-  * sulte  a  LicenÃ§a  PÃºblica  Geral  GNU para obter mais detalhes.   *
+  * Este programa  é distribuído na expectativa de ser útil, mas SEM   *
+  * QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-   *
+  * ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-   *
+  * sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.   *
   *                                    *
-  * VocÃª  deve  ter  recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral GNU   *
-  * junto  com  este  programa. Se nÃ£o, escreva para a Free Software   *
+  * Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU   *
+  * junto  com  este  programa. Se não, escreva para a Free Software   *
   * Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA   *
   * 02111-1307, USA.                           *
   *                                    *
@@ -72,7 +72,7 @@ class indice extends clsCadastro
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_index.php"                  => "i-Educar - Escola",
-         ""                                  => Portabilis_String_Utils::toLatin1("Editar enturmaÃ§Ã£o")
+         ""                                  => Portabilis_String_Utils::toLatin1("Editar enturmação")
     ));
     $this->enviaLocalizacao($localizacao->montar());
     $this->url_cancelar = "educar_matricula_historico_lst.php?ref_cod_matricula=".$this->ref_cod_matricula;
@@ -100,7 +100,7 @@ class indice extends clsCadastro
     $escola = $escola->detalhe();
 
     $this->campoRotulo('ano', 'Ano', $matricula['ano']);
-    $this->campoRotulo('nm_instituicao', Portabilis_String_Utils::toLatin1('InstituiÃ§Ã£o'), $instituicao['nm_instituicao']);
+    $this->campoRotulo('nm_instituicao', Portabilis_String_Utils::toLatin1('Instituição'), $instituicao['nm_instituicao']);
     $this->campoRotulo('nm_escola', 'Escola', $escola['nome']);
     $this->campoRotulo('nm_pessoa', 'Nome do Aluno', $enturmacao['nome']);
     $this->campoRotulo('sequencial', 'Sequencial', $enturmacao['sequencial']);
@@ -128,7 +128,7 @@ class indice extends clsCadastro
         $situacao = 'Em Exame';
         break;
       case 12:
-        $situacao = Portabilis_String_Utils::toLatin1('Aprovado com dependÃªncia');
+        $situacao = Portabilis_String_Utils::toLatin1('Aprovado com dependência');
         break;
       case 13:
         $situacao = 'Aprovado pelo conselho';
@@ -140,10 +140,10 @@ class indice extends clsCadastro
         $situacao = '';
         break;
     }
-    $this->campoRotulo('situacao', Portabilis_String_Utils::toLatin1('SituaÃ§Ã£o'), $situacao);
+    $this->campoRotulo('situacao', Portabilis_String_Utils::toLatin1('Situação'), $situacao);
 
-    $this->inputsHelper()->date('data_enturmacao', array('label' => Portabilis_String_Utils::toLatin1('Data enturmaÃ§Ã£o'), 'value' => dataToBrasil($enturmacao['data_enturmacao']), 'placeholder' => ''));
-    $this->inputsHelper()->date('data_exclusao', array('label' => Portabilis_String_Utils::toLatin1('Data de saÃ­da'), 'value' => dataToBrasil($enturmacao['data_exclusao']), 'placeholder' => '', 'required' => false));
+    $this->inputsHelper()->date('data_enturmacao', array('label' => Portabilis_String_Utils::toLatin1('Data enturmação'), 'value' => dataToBrasil($enturmacao['data_enturmacao']), 'placeholder' => ''));
+    $this->inputsHelper()->date('data_exclusao', array('label' => Portabilis_String_Utils::toLatin1('Data de saída'), 'value' => dataToBrasil($enturmacao['data_exclusao']), 'placeholder' => '', 'required' => false));
   }
 
   function Editar()

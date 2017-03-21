@@ -48,7 +48,7 @@ class ComponenteCurricularController extends ApiCoreController
   // subescreve para pesquisar %query%, e nao query% como por padrão
   protected function sqlsForStringSearch() {
     return "select distinct id, nome as name from modules.componente_curricular
-            where lower((nome)) like '%'||lower(($1))||'%' order by nome limit 15";
+            where lower(to_ascii(nome)) like '%'||lower(to_ascii($1))||'%' order by nome limit 15";
   }
 
   // subscreve formatResourceValue para não adicionar 'id -' a frente do resultado
@@ -104,7 +104,7 @@ class ComponenteCurricularController extends ApiCoreController
       $ano           = $this->getRequest()->ano;
 
       $sql = "select cc.id, 
-                     (cc.nome) as nome
+                     to_ascii(cc.nome) as nome
                 from pmieducar.turma, 
                      modules.componente_curricular_turma as cct, 
                      modules.componente_curricular as cc, 
@@ -123,7 +123,7 @@ class ComponenteCurricularController extends ApiCoreController
 
       if(count($componentesCurriculares) < 1){
         $sql = "select cc.id, 
-                       (cc.nome) as nome
+                       to_ascii(cc.nome) as nome
                   from pmieducar.turma as t, 
                        pmieducar.escola_serie_disciplina as esd, 
                        modules.componente_curricular as cc, 

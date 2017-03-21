@@ -1,41 +1,41 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest√£o escolar
+ * i-Educar - Sistema de gest„o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
+ * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
- * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
- * qualquer vers√£o posterior.
+ * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
+ * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
+ * qualquer vers„o posterior.
  *
- * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
- * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
+ * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
+ * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
  * do GNU para mais detalhes.
  *
- * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
- * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
- * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
+ * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
+ * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pessoa
- * @since     Arquivo dispon√≠vel desde a vers√£o 1.0.0
+ * @since     Arquivo disponÌvel desde a vers„o 1.0.0
  * @version   $Id$
  */
 
 /**
  * clsCadastroDeficiencia class.
  *
- * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pessoa
- * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
+ * @since     Classe disponÌvel desde a vers„o 1.0.0
  * @version   @@package_version@@
  */
 class clsCadastroDeficiencia
@@ -45,7 +45,7 @@ class clsCadastroDeficiencia
   var $deficiencia_educacenso;
 
   /**
-   * Armazena o total de resultados obtidos na √∫ltima chamada ao m√©todo lista().
+   * Armazena o total de resultados obtidos na ˙ltima chamada ao mÈtodo lista().
    * @var int
    */
   var $_total;
@@ -63,33 +63,33 @@ class clsCadastroDeficiencia
   var $_tabela;
 
   /**
-   * Lista separada por v√≠rgula, com os campos que devem ser selecionados na
-   * pr√≥xima chamado ao m√©todo lista().
+   * Lista separada por vÌrgula, com os campos que devem ser selecionados na
+   * prÛxima chamado ao mÈtodo lista().
    * @var string
    */
   var $_campos_lista;
 
   /**
-   * Lista com todos os campos da tabela separados por v√≠rgula, padr√£o para
-   * sele√ß√£o no m√©todo lista.
+   * Lista com todos os campos da tabela separados por vÌrgula, padr„o para
+   * seleÁ„o no mÈtodo lista.
    * @var string
    */
   var $_todos_campos;
 
   /**
-   * Valor que define a quantidade de registros a ser retornada pelo m√©todo lista().
+   * Valor que define a quantidade de registros a ser retornada pelo mÈtodo lista().
    * @var int
    */
   var $_limite_quantidade;
 
   /**
-   * Define o valor de offset no retorno dos registros no m√©todo lista().
+   * Define o valor de offset no retorno dos registros no mÈtodo lista().
    * @var int
    */
   var $_limite_offset;
 
   /**
-   * Define o campo para ser usado como padr√£o de ordena√ß√£o no m√©todo lista().
+   * Define o campo para ser usado como padr„o de ordenaÁ„o no mÈtodo lista().
    * @var string
    */
   var $_campo_order_by;
@@ -185,7 +185,7 @@ class clsCadastroDeficiencia
   }
 
   /**
-   * Retorna uma lista de registros filtrados de acordo com os par√¢metros.
+   * Retorna uma lista de registros filtrados de acordo com os par‚metros.
    * @return array
    */
   function lista($int_cod_deficiencia = NULL, $str_nm_deficiencia = NULL)
@@ -274,7 +274,7 @@ class clsCadastroDeficiencia
   }
 
   /**
-   * Define quais campos da tabela ser√£o selecionados no m√©todo Lista().
+   * Define quais campos da tabela ser„o selecionados no mÈtodo Lista().
    */
   function setCamposLista($str_campos)
   {
@@ -282,7 +282,7 @@ class clsCadastroDeficiencia
   }
 
   /**
-   * Define que o m√©todo Lista() deverpa retornar todos os campos da tabela.
+   * Define que o mÈtodo Lista() deverpa retornar todos os campos da tabela.
    */
   function resetCamposLista()
   {
@@ -290,7 +290,7 @@ class clsCadastroDeficiencia
   }
 
   /**
-   * Define limites de retorno para o m√©todo Lista().
+   * Define limites de retorno para o mÈtodo Lista().
    */
   function setLimite($intLimiteQtd, $intLimiteOffset = NULL)
   {
@@ -299,7 +299,7 @@ class clsCadastroDeficiencia
   }
 
   /**
-   * Retorna a string com o trecho da query respons√°vel pelo limite de
+   * Retorna a string com o trecho da query respons·vel pelo limite de
    * registros retornados/afetados.
    *
    * @return string
@@ -317,7 +317,7 @@ class clsCadastroDeficiencia
   }
 
   /**
-   * Define o campo para ser utilizado como ordena√ß√£o no m√©todo Lista().
+   * Define o campo para ser utilizado como ordenaÁ„o no mÈtodo Lista().
    */
   function setOrderby( $strNomeCampo )
   {
@@ -327,7 +327,7 @@ class clsCadastroDeficiencia
   }
 
   /**
-   * Retorna a string com o trecho da query respons√°vel pela Ordena√ß√£o dos
+   * Retorna a string com o trecho da query respons·vel pela OrdenaÁ„o dos
    * registros.
    *
    * @return string

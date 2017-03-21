@@ -1,31 +1,31 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 *																	     *
-*	@author Prefeitura Municipal de ItajaÃ­								 *
+*	@author Prefeitura Municipal de Itajaí								 *
 *	@updated 29/03/2007													 *
-*   Pacote: i-PLB Software PÃºblico Livre e Brasileiro					 *
+*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
 *																		 *
-*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÃ­			 *
+*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
 *						ctima@itajai.sc.gov.br					    	 *
 *																		 *
-*	Este  programa  Ã©  software livre, vocÃª pode redistribuÃ­-lo e/ou	 *
-*	modificÃ¡-lo sob os termos da LicenÃ§a PÃºblica Geral GNU, conforme	 *
-*	publicada pela Free  Software  Foundation,  tanto  a versÃ£o 2 da	 *
-*	LicenÃ§a   como  (a  seu  critÃ©rio)  qualquer  versÃ£o  mais  nova.	 *
+*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
+*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
+*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
+*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
 *																		 *
-*	Este programa  Ã© distribuÃ­do na expectativa de ser Ãºtil, mas SEM	 *
-*	QUALQUER GARANTIA. Sem mesmo a garantia implÃ­cita de COMERCIALI-	 *
-*	ZAÃ‡ÃƒO  ou  de ADEQUAÃ‡ÃƒO A QUALQUER PROPÃ“SITO EM PARTICULAR. Con-	 *
-*	sulte  a  LicenÃ§a  PÃºblica  Geral  GNU para obter mais detalhes.	 *
+*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
+*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
+*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
+*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
 *																		 *
-*	VocÃª  deve  ter  recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral GNU	 *
-*	junto  com  este  programa. Se nÃ£o, escreva para a Free Software	 *
+*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
+*	junto  com  este  programa. Se não, escreva para a Free Software	 *
 *	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 *	02111-1307, USA.													 *
 *																		 *
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /**
-* @author Prefeitura Municipal de ItajaÃ­
+* @author Prefeitura Municipal de Itajaí
 *
 * Criado em 31/07/2006 16:40 pelo gerador automatico de classes
 */
@@ -252,7 +252,7 @@ class clsPmieducarAnoLetivoModulo
 			}
 			
       // ativa escolaAnoLetivo se estiver desativado
-      // (quando o escolaAnoLetivo Ã© 'excluido' o registro nÃ£o Ã© removido)
+      // (quando o escolaAnoLetivo é 'excluido' o registro não é removido)
       $escolaAnoLetivo = new clsPmieducarEscolaAnoLetivo($this->ref_ref_cod_escola, 
                                                          $this->ref_ano,
                                                          null,
@@ -595,14 +595,14 @@ class clsPmieducarAnoLetivoModulo
 	}
 
 	/**
-	 * Retorna o nome do mÃ³dulo de acordo com o ano, escola e sequencial
+	 * Retorna o nome do módulo de acordo com o ano, escola e sequencial
 	 *
 	 * @return string
 	 */
 	function getNomeModulo() {
 		if (is_numeric($this->ref_ano) && is_numeric($this->ref_ref_cod_escola) && is_numeric($this->sequencial)) {
 			$db = new clsBanco();
-			$resultado = $db->CampoUnico("SELECT sequencial || 'Âº ' || nm_tipo AS nome_modulo
+			$resultado = $db->CampoUnico("SELECT sequencial || 'º ' || nm_tipo AS nome_modulo
 										    FROM pmieducar.ano_letivo_modulo
 										   INNER JOIN pmieducar.modulo ON (modulo.cod_modulo = ano_letivo_modulo.ref_cod_modulo)
 										   WHERE ref_ano = {$this->ref_ano}
@@ -621,7 +621,7 @@ class clsPmieducarAnoLetivoModulo
 	function getEtapas() {
 		if (is_numeric($this->ref_ano) && is_numeric($this->ref_ref_cod_escola)) {
 			$db = new clsBanco();
-			$sql = "SELECT sequencial AS id, sequencial || 'Âº ' || nm_tipo AS nome
+			$sql = "SELECT sequencial AS id, sequencial || 'º ' || nm_tipo AS nome
 				      FROM pmieducar.ano_letivo_modulo
 				     INNER JOIN pmieducar.modulo ON (modulo.cod_modulo = ano_letivo_modulo.ref_cod_modulo)
 				     WHERE ref_ano = {$this->ref_ano}
