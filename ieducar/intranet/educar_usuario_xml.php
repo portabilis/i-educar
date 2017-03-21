@@ -24,7 +24,7 @@
 	*	02111-1307, USA.													 *
 	*																		 *
 	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-	header( 'Content-type: text/xml' );
+	header( 'Content-type: text/xml charset=utf-8' );
 
 	require_once( "include/clsBanco.inc.php" );
 	require_once( "include/funcoes.inc.php" );
@@ -100,8 +100,10 @@
 			pmieducar.usuario u
 			, pmieducar.tipo_usuario tu
 			, cadastro.pessoa p
+			, pmieducar.escola_usuario eu
 		WHERE
-			u.ref_cod_escola = {$_GET["esc"]}
+			eu.ref_cod_escola = {$_GET["esc"]}
+			AND eu.ref_cod_usuario = u.cod_usuario
 			AND u.cod_usuario = p.idpes
 			AND u.ref_cod_tipo_usuario = tu.cod_tipo_usuario
 			AND u.ativo = 1
@@ -125,8 +127,10 @@
 			pmieducar.usuario u
 			, pmieducar.tipo_usuario tu
 			, cadastro.pessoa p
+			, pmieducar.escola_usuario eu
 		WHERE
-			u.ref_cod_escola = {$_GET["esc"]}
+			eu.ref_cod_escola = {$_GET["esc"]}
+			AND eu.ref_cod_usuario = u.cod_usuario
 			AND u.cod_usuario = p.idpes
 			AND u.ref_cod_tipo_usuario = tu.cod_tipo_usuario
 			AND u.ativo = 1
