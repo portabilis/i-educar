@@ -1174,7 +1174,7 @@ class DiarioApiController extends ApiCoreController
       $nomeArea                            = (($area->secao != '') ? $area->secao . ' - ' : '') . $area->nome;
       $componente['ordenamento_ac']        = $area->ordenamento_ac;
       $componente['area_id']               = $area->id;
-      $componente['area_nome']             = $this->safeString(mb_strtoupper($nomeArea,''), false);
+      $componente['area_nome']             = strtoupper($nomeArea);
 
       //criando chave para ordenamento temporário
       //área de conhecimento + componente curricular
