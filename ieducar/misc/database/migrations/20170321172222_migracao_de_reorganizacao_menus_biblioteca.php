@@ -7,6 +7,7 @@ class MigracaoDeReorganizacaoMenusBiblioteca extends AbstractMigration
     public function up()
     {
         $this->execute("
+            UPDATE pmicontrolesis.menu SET tt_menu = 'Cadastros' WHERE cod_menu = 15858;
             INSERT INTO pmicontrolesis.menu VALUES (999900, 594, 15858, 'Tipos', 1, null, '_self', 1, 16);
 
                 INSERT INTO pmicontrolesis.menu VALUES (999901, 594, 999900, 'Obras', 1, null, '_self', 1, 16);
