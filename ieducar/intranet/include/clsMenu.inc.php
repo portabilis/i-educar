@@ -177,10 +177,6 @@ class clsMenu
 
       $suspenso = '';
 
-      if ($_GET['suspenso'] == 1 || $_SESSION['suspenso'] == 1 || $_SESSION['tipo_menu'] == 1) {
-        $suspenso = " AND sub.cod_menu_submenu not in (select ref_cod_menu_submenu FROM pmicontrolesis.menu WHERE suprime_menu = 1 AND ref_cod_menu_submenu IS NOT NULL)";
-      }
-
       if ($strAutorizado == '999999') {
         $sql ="
           SELECT
