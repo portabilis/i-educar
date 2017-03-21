@@ -42,7 +42,7 @@ if (isset($_GET['tipoNota'])) {
 
 header('Content-type: text/xml');
 
-echo "<?xml version=\"1.0\" encoding=\"5\"?>\n<query xmlns=\"sugestoes\">\n";
+echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<query xmlns=\"sugestoes\">\n";
 
 foreach ($tabelas as $tabela) {
   echo sprintf('<tabela id="%d">%s</tabela>', $tabela->id, $tabela->nome);
