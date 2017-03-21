@@ -88,7 +88,7 @@ class EducacensoAnaliseController extends ApiCoreController
     }
 
     $escola       = $escola[0];
-    $nomeEscola   = Portabilis_String_Utils::toUtf8(mb_strtoupper($escola["nome_escola"]));
+    $nomeEscola   = Portabilis_String_Utils::toUtf8(strtoupper($escola["nome_escola"]));
     $anoAtual     = date("Y");
     $anoAnterior  = $anoAtual-1;
     $anoPosterior = $anoAtual+1;
@@ -253,7 +253,7 @@ class EducacensoAnaliseController extends ApiCoreController
     }
 
     $escola        = $escola[0];
-    $nomeEscola    = Portabilis_String_Utils::toUtf8(mb_strtoupper($escola["nome_escola"]));
+    $nomeEscola    = Portabilis_String_Utils::toUtf8(strtoupper($escola["nome_escola"]));
     $predioEscolar = 3; //Valor fixo definido no cadastro de escola
 
     $existeAbastecimentoAgua = ($escola["agua_rede_publica"] ||
@@ -446,8 +446,8 @@ class EducacensoAnaliseController extends ApiCoreController
 
     foreach ($turmas as $turma) {
 
-      $nomeEscola = Portabilis_String_Utils::toUtf8(mb_strtoupper($turma["nome_escola"]));
-      $nomeTurma  = Portabilis_String_Utils::toUtf8(mb_strtoupper($turma["nome_turma"]));
+      $nomeEscola = Portabilis_String_Utils::toUtf8(strtoupper($turma["nome_escola"]));
+      $nomeTurma  = Portabilis_String_Utils::toUtf8(strtoupper($turma["nome_turma"]));
       $atividadeComplementar = ($turma["tipo_atendimento"] == 4); //Código 4 fixo no cadastro de turma
       $existeAtividadeComplementar = ($turma["atividade_complementar_1"] || $turma["atividade_complementar_2"] ||
                                       $turma["atividade_complementar_3"] || $turma["atividade_complementar_4"] ||
@@ -546,8 +546,8 @@ class EducacensoAnaliseController extends ApiCoreController
     $brasileiro = 1;
 
     foreach ($servidores as $servidor) {
-      $nomeEscola   = Portabilis_String_Utils::toUtf8(mb_strtoupper($servidor["nome_escola"]));
-      $nomeServidor = Portabilis_String_Utils::toUtf8(mb_strtoupper($servidor["nome_servidor"]));
+      $nomeEscola   = Portabilis_String_Utils::toUtf8(strtoupper($servidor["nome_escola"]));
+      $nomeServidor = Portabilis_String_Utils::toUtf8(strtoupper($servidor["nome_servidor"]));
 
       if (is_null($servidor["cor_raca"])) {
         $mensagem[] = array("text" => "Dados para formular o registro 30 da escola {$nomeEscola} não encontrados. Verifique se a raça do(a) servidor(a) {$nomeServidor} foi informada.",
@@ -625,8 +625,8 @@ class EducacensoAnaliseController extends ApiCoreController
     $mensagem = array();
 
     foreach ($servidores as $servidor) {
-      $nomeEscola   = Portabilis_String_Utils::toUtf8(mb_strtoupper($servidor["nome_escola"]));
-      $nomeServidor = Portabilis_String_Utils::toUtf8(mb_strtoupper($servidor["nome_servidor"]));
+      $nomeEscola   = Portabilis_String_Utils::toUtf8(strtoupper($servidor["nome_escola"]));
+      $nomeServidor = Portabilis_String_Utils::toUtf8(strtoupper($servidor["nome_servidor"]));
       $naturalidadeBrasileiro = ($servidor["nacionalidade"] == 1 || $servidor["nacionalidade"] == 2);
 
       if ($naturalidadeBrasileiro && !$servidor['cpf']) {
@@ -765,8 +765,8 @@ class EducacensoAnaliseController extends ApiCoreController
     $situacaoCursando  = 2;
 
     foreach ($servidores as $servidor) {
-      $nomeEscola   = Portabilis_String_Utils::toUtf8(mb_strtoupper($servidor["nome_escola"]));
-      $nomeServidor = Portabilis_String_Utils::toUtf8(mb_strtoupper($servidor["nome_servidor"]));
+      $nomeEscola   = Portabilis_String_Utils::toUtf8(strtoupper($servidor["nome_escola"]));
+      $nomeServidor = Portabilis_String_Utils::toUtf8(strtoupper($servidor["nome_servidor"]));
 
       $existeCursoConcluido = ($servidor["situacao_curso_superior_1"] == $situacaoConcluido ||
                                $servidor["situacao_curso_superior_2"] == $situacaoConcluido ||
@@ -924,8 +924,8 @@ class EducacensoAnaliseController extends ApiCoreController
     $docente = array(1,5,6);
 
     foreach ($servidores as $servidor) {
-      $nomeEscola   = Portabilis_String_Utils::toUtf8(mb_strtoupper($servidor["nome_escola"]));
-      $nomeServidor = Portabilis_String_Utils::toUtf8(mb_strtoupper($servidor["nome_servidor"]));
+      $nomeEscola   = Portabilis_String_Utils::toUtf8(strtoupper($servidor["nome_escola"]));
+      $nomeServidor = Portabilis_String_Utils::toUtf8(strtoupper($servidor["nome_servidor"]));
 
       $funcaoDocente = in_array($servidor["funcao_exercida"], $docente);
 
@@ -992,8 +992,8 @@ class EducacensoAnaliseController extends ApiCoreController
     $brasileiro = 1;
 
     foreach ($alunos as $aluno) {
-      $nomeEscola = Portabilis_String_Utils::toUtf8(mb_strtoupper($aluno["nome_escola"]));
-      $nomeAluno  = Portabilis_String_Utils::toUtf8(mb_strtoupper($aluno["nome_aluno"]));
+      $nomeEscola = Portabilis_String_Utils::toUtf8(strtoupper($aluno["nome_escola"]));
+      $nomeAluno  = Portabilis_String_Utils::toUtf8(strtoupper($aluno["nome_aluno"]));
 
       if (is_null($aluno["cor_raca"])) {
         $mensagem[] = array("text" => "Dados para formular o registro 60 da escola {$nomeEscola} não encontrados. Verifique se a raça do(a) aluno(a) {$nomeAluno} foi informada.",
@@ -1089,8 +1089,8 @@ class EducacensoAnaliseController extends ApiCoreController
     $estrangeiro = 3;
 
     foreach ($alunos as $aluno) {
-      $nomeEscola = Portabilis_String_Utils::toUtf8(mb_strtoupper($aluno["nome_escola"]));
-      $nomeAluno  = Portabilis_String_Utils::toUtf8(mb_strtoupper($aluno["nome_aluno"]));
+      $nomeEscola = Portabilis_String_Utils::toUtf8(strtoupper($aluno["nome_escola"]));
+      $nomeAluno  = Portabilis_String_Utils::toUtf8(strtoupper($aluno["nome_aluno"]));
 
       if ($aluno["rg"]) {
         if (!$aluno["sigla_uf_rg"]) {
@@ -1204,8 +1204,8 @@ class EducacensoAnaliseController extends ApiCoreController
     $etapasEnsinoCorrecao = array(12,13,22,23,24,72,56,64);
 
     foreach ($alunos as $aluno) {
-      $nomeEscola = Portabilis_String_Utils::toUtf8(mb_strtoupper($aluno["nome_escola"]));
-      $nomeAluno  = Portabilis_String_Utils::toUtf8(mb_strtoupper($aluno["nome_aluno"]));
+      $nomeEscola = Portabilis_String_Utils::toUtf8(strtoupper($aluno["nome_escola"]));
+      $nomeAluno  = Portabilis_String_Utils::toUtf8(strtoupper($aluno["nome_aluno"]));
 
       if (is_null($aluno["transporte_escolar"])) {
         $mensagem[] = array("text" => "Dados para formular o registro 80 da escola {$nomeEscola} não encontrados. Verifique se o transporte púlblico foi informado para o(a) aluno(a) {$nomeAluno}.",
