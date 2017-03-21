@@ -1,25 +1,25 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	@author Prefeitura Municipal de ItajaÌ								 *
+	*	@author Prefeitura Municipal de Itaja√≠								 *
 	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software P˙blico Livre e Brasileiro					 *
+	*   Pacote: i-PLB Software P√∫blico Livre e Brasileiro					 *
 	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÌ			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itaja√≠			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  È  software livre, vocÍ pode redistribuÌ-lo e/ou	 *
-	*	modific·-lo sob os termos da LicenÁa P˙blica Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a vers„o 2 da	 *
-	*	LicenÁa   como  (a  seu  critÈrio)  qualquer  vers„o  mais  nova.	 *
+	*	Este  programa  √©  software livre, voc√™ pode redistribu√≠-lo e/ou	 *
+	*	modific√°-lo sob os termos da Licen√ßa P√∫blica Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a vers√£o 2 da	 *
+	*	Licen√ßa   como  (a  seu  crit√©rio)  qualquer  vers√£o  mais  nova.	 *
 	*																		 *
-	*	Este programa  È distribuÌdo na expectativa de ser ˙til, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implÌcita de COMERCIALI-	 *
-	*	ZA«√O  ou  de ADEQUA«√O A QUALQUER PROP”SITO EM PARTICULAR. Con-	 *
-	*	sulte  a  LicenÁa  P˙blica  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  √© distribu√≠do na expectativa de ser √∫til, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia impl√≠cita de COMERCIALI-	 *
+	*	ZA√á√ÉO  ou  de ADEQUA√á√ÉO A QUALQUER PROP√ìSITO EM PARTICULAR. Con-	 *
+	*	sulte  a  Licen√ßa  P√∫blica  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	VocÍ  deve  ter  recebido uma cÛpia da LicenÁa P˙blica Geral GNU	 *
-	*	junto  com  este  programa. Se n„o, escreva para a Free Software	 *
+	*	Voc√™  deve  ter  recebido uma c√≥pia da Licen√ßa P√∫blica Geral GNU	 *
+	*	junto  com  este  programa. Se n√£o, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
@@ -33,7 +33,7 @@ class clsIndexBase extends clsBase
 {
 	function Formular()
 	{
-		$this->SetTitulo( "{$this->_instituicao} i-Educar - DocumentaÁ„o padr„o" );
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Documenta√ß√£o padr√£o" );
 		$this->processoAp = "578";
 		$this->addEstilo('localizacaoSistema');
 	}
@@ -91,7 +91,7 @@ class indice extends clsCadastro
 		    if (is_array($lst_instituicao)) {
 		        $det_instituicao      = array_shift($lst_instituicao);
 		        $this->nm_instituicao = $det_instituicao['nm_instituicao'];
-				$this->campoRotulo('nm_instituicao', 'InstituÁ„o', $this->nm_instituicao);
+				$this->campoRotulo('nm_instituicao', 'Institu√ß√£o', $this->nm_instituicao);
 		    }
 		}
 
@@ -101,7 +101,7 @@ class indice extends clsCadastro
 	    $localizacao->entradaCaminhos( array(
 	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
 	         "educar_escola_index.php"                  => "i-Educar - Escola",
-	         ""                                  => "DocumentaÁ„o padr„o"
+	         ""                                  => "Documenta√ß√£o padr√£o"
 	    ));
 	    $this->enviaLocalizacao($localizacao->montar());
 
@@ -109,7 +109,7 @@ class indice extends clsCadastro
 
 	    $opcoes_relatorio = array();
 		$opcoes_relatorio[""] = "Selecione";
-	    $this->campoLista("relatorio", "RelatÛrio", $opcoes_relatorio);
+	    $this->campoLista("relatorio", "Relat√≥rio", $opcoes_relatorio);
 	}
 }
 // cria uma extensao da classe base
@@ -174,7 +174,7 @@ function getDocumento(instituicaoId) {
     for (var i = 0; i < documentos.length; i++) {
       	var selectRelatorio = document.getElementById("relatorio");
       	var option = document.createElement("option");
-		selectRelatorio.options[0].text = 'Selecione um relatÛrio';
+		selectRelatorio.options[0].text = 'Selecione um relat√≥rio';
 		selectRelatorio.disabled = false;
       	option.text = documentos[i].titulo_documento;
 		option.value = documentos[i].url_documento;

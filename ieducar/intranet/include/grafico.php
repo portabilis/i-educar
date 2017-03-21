@@ -1,30 +1,30 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 *																	     *
-*	@author Prefeitura Municipal de Itajaí								 *
+*	@author Prefeitura Municipal de ItajaÃ­								 *
 *	@updated 29/03/2007													 *
-*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
+*   Pacote: i-PLB Software PÃºblico Livre e Brasileiro					 *
 *																		 *
-*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
+*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÃ­			 *
 *						ctima@itajai.sc.gov.br					    	 *
 *																		 *
-*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
+*	Este  programa  Ã©  software livre, vocÃª pode redistribuÃ­-lo e/ou	 *
+*	modificÃ¡-lo sob os termos da LicenÃ§a PÃºblica Geral GNU, conforme	 *
+*	publicada pela Free  Software  Foundation,  tanto  a versÃ£o 2 da	 *
+*	LicenÃ§a   como  (a  seu  critÃ©rio)  qualquer  versÃ£o  mais  nova.	 *
 *																		 *
-*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
+*	Este programa  Ã© distribuÃ­do na expectativa de ser Ãºtil, mas SEM	 *
+*	QUALQUER GARANTIA. Sem mesmo a garantia implÃ­cita de COMERCIALI-	 *
+*	ZAÃ‡ÃƒO  ou  de ADEQUAÃ‡ÃƒO A QUALQUER PROPÃ“SITO EM PARTICULAR. Con-	 *
+*	sulte  a  LicenÃ§a  PÃºblica  Geral  GNU para obter mais detalhes.	 *
 *																		 *
-*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-*	junto  com  este  programa. Se não, escreva para a Free Software	 *
+*	VocÃª  deve  ter  recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral GNU	 *
+*	junto  com  este  programa. Se nÃ£o, escreva para a Free Software	 *
 *	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 *	02111-1307, USA.													 *
 *																		 *
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */ 
-//legenda(array("OI","as","Carroçaassss","Bacalhao","Arroz","Soja","Feijao","Macarrão","Batata"));
+//legenda(array("OI","as","CarroÃ§aassss","Bacalhao","Arroz","Soja","Feijao","MacarrÃ£o","Batata"));
 @session_start();
 $grafico = $_SESSION['grafico'];
 $legenda = $_SESSION['legenda'];
@@ -70,7 +70,7 @@ function grafico_linhas ( $nm_grafico = false,$array_legendas_intervalos = false
 	$width 	= $width;
 	$height = $height;
 
-	// Distancias entre a área total da imagem e a área do gráfico
+	// Distancias entre a Ã¡rea total da imagem e a Ã¡rea do grÃ¡fico
 	
 	$deslocamento_graph_up 	  = 50;
 	$deslocamento_graph_down  = 35;
@@ -120,11 +120,11 @@ function grafico_linhas ( $nm_grafico = false,$array_legendas_intervalos = false
 		imagecolorallocate( $im,  39,  95,  35)
 	);
 
-	// Desenha Área do Gráfico
+	// Desenha Ãrea do GrÃ¡fico
 	
 	imagefilledpolygon($im,array($deslocamento_graph_right,$deslocamento_graph_up,$deslocamento_graph_right,$height-$deslocamento_graph_down,$width-$deslocamento_graph_left,$height-$deslocamento_graph_down,$width-$deslocamento_graph_left,$deslocamento_graph_up),4,$background_color_graph);
 	
-	// Nome do Gráfico
+	// Nome do GrÃ¡fico
 	$font_size_titulo = 5;
 	imagestring($im,$font_size_titulo, ($width - (strlen($nm_grafico)*$fonts[5]))/2, 15,$nm_grafico,$inner_text);
 
@@ -211,7 +211,7 @@ function grafico_linhas ( $nm_grafico = false,$array_legendas_intervalos = false
 
 	}
 	
-	// Desenha Linha do Gráfico
+	// Desenha Linha do GrÃ¡fico
 	if(count($coordenadas) > 0)
 	{
 		$max_value = $max_value * 1.05;
@@ -336,7 +336,7 @@ function legenda($array_legenda, $font_size = 3, $nome_imagem)
 
 }
 
-//grafico_linhas("Gráfico de Testes",array("JAN","FEV","MAR","ABR","MAI","JUN","JUL","AGO","SET"),10,5,800,600,array(20,2,45,4,5,15,25,27,48), array(5,6,7,12,99,47,18,36,65));
+//grafico_linhas("GrÃ¡fico de Testes",array("JAN","FEV","MAR","ABR","MAI","JUN","JUL","AGO","SET"),10,5,800,600,array(20,2,45,4,5,15,25,27,48), array(5,6,7,12,99,47,18,36,65));
 
-//legenda(array("OI","as","Carroçaassss","Bacalhao","Arroz","Soja","Feijao","Macarrão","Batata"));
+//legenda(array("OI","as","CarroÃ§aassss","Bacalhao","Arroz","Soja","Feijao","MacarrÃ£o","Batata"));
 ?>

@@ -1,31 +1,31 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 *																	     *
-*	@author Prefeitura Municipal de Itajaí								 *
+*	@author Prefeitura Municipal de ItajaÃ­								 *
 *	@updated 29/03/2007													 *
-*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
+*   Pacote: i-PLB Software PÃºblico Livre e Brasileiro					 *
 *																		 *
-*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
+*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÃ­			 *
 *						ctima@itajai.sc.gov.br					    	 *
 *																		 *
-*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
+*	Este  programa  Ã©  software livre, vocÃª pode redistribuÃ­-lo e/ou	 *
+*	modificÃ¡-lo sob os termos da LicenÃ§a PÃºblica Geral GNU, conforme	 *
+*	publicada pela Free  Software  Foundation,  tanto  a versÃ£o 2 da	 *
+*	LicenÃ§a   como  (a  seu  critÃ©rio)  qualquer  versÃ£o  mais  nova.	 *
 *																		 *
-*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
+*	Este programa  Ã© distribuÃ­do na expectativa de ser Ãºtil, mas SEM	 *
+*	QUALQUER GARANTIA. Sem mesmo a garantia implÃ­cita de COMERCIALI-	 *
+*	ZAÃ‡ÃƒO  ou  de ADEQUAÃ‡ÃƒO A QUALQUER PROPÃ“SITO EM PARTICULAR. Con-	 *
+*	sulte  a  LicenÃ§a  PÃºblica  Geral  GNU para obter mais detalhes.	 *
 *																		 *
-*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-*	junto  com  este  programa. Se não, escreva para a Free Software	 *
+*	VocÃª  deve  ter  recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral GNU	 *
+*	junto  com  este  programa. Se nÃ£o, escreva para a Free Software	 *
 *	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 *	02111-1307, USA.													 *
 *																		 *
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /**
-* @author Prefeitura Municipal de Itajaï¿½
+* @author Prefeitura Municipal de ItajaÃ¯Â¿Â½
 *
 * Criado em 17/07/2006 09:18 pelo gerador automatico de classes
 */
@@ -48,6 +48,7 @@ class clsPmieducarExemplar
 	var $ativo;
 	var $data_aquisicao;
 	var $tombo;
+	var $sequencial;
 
 	// propriedades padrao
 
@@ -113,14 +114,14 @@ class clsPmieducarExemplar
 	 *
 	 * @return object
 	 */
-	function clsPmieducarExemplar( $cod_exemplar = null, $ref_cod_fonte = null, $ref_cod_motivo_baixa = null, $ref_cod_acervo = null, $ref_cod_situacao = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $permite_emprestimo = null, $preco = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $data_aquisicao = null, $tombo = null )
+	function clsPmieducarExemplar( $cod_exemplar = null, $ref_cod_fonte = null, $ref_cod_motivo_baixa = null, $ref_cod_acervo = null, $ref_cod_situacao = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $permite_emprestimo = null, $preco = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $data_aquisicao = null, $tombo = null, $sequencial = null )
 	{
 
 		$db = new clsBanco();
 		$this->_schema = "pmieducar.";
 		$this->_tabela = "{$this->_schema}exemplar";
 
-		$this->_campos_lista = $this->_todos_campos = "e.cod_exemplar, e.ref_cod_fonte, e.ref_cod_motivo_baixa, e.ref_cod_acervo, e.ref_cod_situacao, e.ref_usuario_exc, e.ref_usuario_cad, e.permite_emprestimo, e.preco, e.data_cadastro, e.data_exclusao, e.ativo, e.data_aquisicao, e.tombo";
+		$this->_campos_lista = $this->_todos_campos = "e.cod_exemplar, e.ref_cod_fonte, e.ref_cod_motivo_baixa, e.ref_cod_acervo, e.ref_cod_situacao, e.ref_usuario_exc, e.ref_usuario_cad, e.permite_emprestimo, e.preco, e.data_cadastro, e.data_exclusao, e.ativo, e.data_aquisicao, e.tombo, e.sequencial";
 
 		if( is_numeric( $ref_cod_fonte ) )
 		{
@@ -324,6 +325,10 @@ class clsPmieducarExemplar
 		{
 			$this->tombo = $tombo;
 		}
+		if (is_numeric($sequencial))
+		{
+			$this->sequencial = $sequencial;
+		}
 	}
 
 	/**
@@ -336,7 +341,7 @@ class clsPmieducarExemplar
 		if(!is_numeric( $this->preco ))
 			$this->preco = 0.00;
 		
-		if( is_numeric( $this->ref_cod_fonte ) && is_numeric( $this->ref_cod_acervo ) && is_numeric( $this->ref_cod_situacao ) && is_numeric( $this->ref_usuario_cad ) && is_numeric( $this->permite_emprestimo ) && is_numeric( $this->preco ) )
+		if( is_numeric( $this->ref_cod_fonte ) && is_numeric( $this->ref_cod_acervo ) && is_numeric( $this->ref_cod_situacao ) && is_numeric( $this->ref_usuario_cad ) && is_numeric( $this->permite_emprestimo ) )
 		{
 			$db = new clsBanco();
 
@@ -390,6 +395,12 @@ class clsPmieducarExemplar
 			{
 				$campos .= "{$gruda}tombo";
 				$valores .= "{$gruda}'{$this->tombo}'";
+				$gruda = ", ";
+			}
+			if (is_numeric($this->sequencial))
+			{
+				$campos .= "{$gruda}sequencial";
+				$valores .= "{$gruda}'{$this->sequencial}'";
 				$gruda = ", ";
 			}
 			$campos .= "{$gruda}data_cadastro";
@@ -614,7 +625,7 @@ class clsPmieducarExemplar
 
 		if( is_string( $str_titulo_livro ) )
 		{
-			$filtros_extra .= "{$whereAnd2} to_ascii(a.titulo) ilike to_ascii('%{$date_data_aquisicao_fim}%') ";
+			$filtros_extra .= "{$whereAnd2} (a.titulo) ilike ('%{$date_data_aquisicao_fim}%') ";
 			$whereAnd2 = " AND ";
 		}
 
@@ -684,7 +695,7 @@ class clsPmieducarExemplar
 
 	function retorna_tombo_maximo($bibliotecaId, $exceptExemplarId = null) {
     if (empty($bibliotecaId))
-      throw new Exception("Deve ser enviado um argumento '\$bibliotecaId' ao método 'retorna_tombo_maximo'");
+      throw new Exception("Deve ser enviado um argumento '\$bibliotecaId' ao mÃ©todo 'retorna_tombo_maximo'");
 
     // sem esta regra ao editar o ultimo exemplar sem informar o tombo, seria pego o proprio tombo.
     if (! empty($exceptExemplarId))
@@ -699,13 +710,13 @@ class clsPmieducarExemplar
 	}
 	
 	/**
-	 * Verifica se o tombo a ser cadastrado já não foi cadastrado
+	 * Verifica se o tombo a ser cadastrado jÃ¡ nÃ£o foi cadastrado
 	 *
 	 * @return boolean
 	 */
 	function retorna_tombo_valido($bibliotecaId, $exceptExemplarId = null, $tombo=null) {
     		if (empty($bibliotecaId))
-    			  throw new Exception("Deve ser enviado um argumento '\$bibliotecaId' ao método 'retorna_tombo_maximo'");
+    			  throw new Exception("Deve ser enviado um argumento '\$bibliotecaId' ao mÃ©todo 'retorna_tombo_maximo'");
 		if (empty($tombo))
 			return true;
 		 // Sem essa regra ao editar e salvar com o mesmo tombo retornaria falso
@@ -823,7 +834,7 @@ class clsPmieducarExemplar
 		}
 		if( is_string( $str_titulo_livro ) )
 		{
-			$filtros .= "{$whereAnd} to_ascii(a.titulo) LIKE to_ascii('%{$str_titulo_livro}%')";
+			$filtros .= "{$whereAnd} (a.titulo) LIKE ('%{$str_titulo_livro}%')";
 			$whereAnd = " AND ";
 		}
 
@@ -1049,6 +1060,16 @@ class clsPmieducarExemplar
 			return " ORDER BY {$this->_campo_order_by} ";
 		}
 		return "";
+	}
+
+	function getProximoSequencialObra($codigoObra){
+		$sql = "SELECT MAX(sequencial) AS sequencial
+		          FROM pmieducar.exemplar
+		         WHERE exemplar.ref_cod_acervo = $codigoObra";
+
+		$db = new clsBanco();
+		$ultimoSequencial = $db->CampoUnico($sql);
+		return $ultimoSequencial + 1;
 	}
 
 }

@@ -1,25 +1,25 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
+	*	@author Prefeitura Municipal de ItajaÃ­								 *
 	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
+	*   Pacote: i-PLB Software PÃºblico Livre e Brasileiro					 *
 	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÃ­			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
+	*	Este  programa  Ã©  software livre, vocÃª pode redistribuÃ­-lo e/ou	 *
+	*	modificÃ¡-lo sob os termos da LicenÃ§a PÃºblica Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a versÃ£o 2 da	 *
+	*	LicenÃ§a   como  (a  seu  critÃ©rio)  qualquer  versÃ£o  mais  nova.	 *
 	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  Ã© distribuÃ­do na expectativa de ser Ãºtil, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia implÃ­cita de COMERCIALI-	 *
+	*	ZAÃ‡ÃƒO  ou  de ADEQUAÃ‡ÃƒO A QUALQUER PROPÃ“SITO EM PARTICULAR. Con-	 *
+	*	sulte  a  LicenÃ§a  PÃºblica  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
+	*	VocÃª  deve  ter  recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral GNU	 *
+	*	junto  com  este  programa. Se nÃ£o, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
@@ -56,7 +56,7 @@ class indice extends clsDetalhe
 		session_start();
 
 		/*
-		 * VERIFICA PERMISSÃO DO USUÁRIO
+		 * VERIFICA PERMISSÃƒO DO USUÃRIO
 		 */
 		if ($_SESSION['autorizado_holerite'] !== true)
 		{
@@ -106,19 +106,19 @@ class indice extends clsDetalhe
 			$data_inicial_a = str_replace(" ", "", $data_inicial_a);
 			if ($data_inicial_a < 2005)
 			{
-				$data_inicial = "13º Salário";
+				$data_inicial = "13Âº SalÃ¡rio";
 				$data_final = "";
 				$this->addDetalhe( array("Extra", $data_inicial) );
 			}
 			else
 			{
 
-				$this->addDetalhe( array("Inicio período da folha", $data_inicial) );
-				$this->addDetalhe( array("Fim período da folha", $data_final) );
+				$this->addDetalhe( array("Inicio perÃ­odo da folha", $data_inicial) );
+				$this->addDetalhe( array("Fim perÃ­odo da folha", $data_final) );
 				$data_final_compara_2 = date("Y-m-d");
 				if ($data_final_compara>$data_final_compara_2)
 				{
-					$this->addDetalhe( array("<span style='color: red;'>Aviso</span>", "<h3 style='color: red;'>Os valores poderão ser alterados até o último dia do período da folha.</h3>") );
+					$this->addDetalhe( array("<span style='color: red;'>Aviso</span>", "<h3 style='color: red;'>Os valores poderÃ£o ser alterados atÃ© o Ãºltimo dia do perÃ­odo da folha.</h3>") );
 				}
 
 			}
@@ -142,7 +142,7 @@ class indice extends clsDetalhe
 				s.codeve" );
 
 		$descricao_holerite = "<table>";
-		$descricao_holerite .= "<tr bgcolor='#96A9B7'><td>Descrição</td><td>Categoria</td><td>Valor</td></tr>";
+		$descricao_holerite .= "<tr bgcolor='#96A9B7'><td>DescriÃ§Ã£o</td><td>Categoria</td><td>Valor</td></tr>";
 		$total_proventos = 0;
 		$total_descontos = 0;
 		while ($dbms->ProximoRegistro())
@@ -176,10 +176,10 @@ class indice extends clsDetalhe
 
 		$descricao_holerite .= "<tr bgcolor='#96A9B7'><td colspan='2'>Total de proventos</td><td align='right'>{$total_proventos}</td></tr>";
 		$descricao_holerite .= "<tr bgcolor='#96A9B7'><td colspan='2'>Total de descontos</td><td align='right'>{$total_descontos}</td></tr>";
-		$descricao_holerite .= "<tr bgcolor='#96A9B7'><td colspan='2'>Líquido</td><td align='right'><b>{$total}</b></td></tr>";
+		$descricao_holerite .= "<tr bgcolor='#96A9B7'><td colspan='2'>LÃ­quido</td><td align='right'><b>{$total}</b></td></tr>";
 		$descricao_holerite .= "</table>";
 
-		$this->addDetalhe( array("Descrição", $descricao_holerite) );
+		$this->addDetalhe( array("DescriÃ§Ã£o", $descricao_holerite) );
 
 		$dbpg = new clsBanco();
 		$nova_consulta = $dbpg->UnicoCampo("SELECT max(cod_visualizacao) FROM pmidrh.log_visualizacao_olerite WHERE ref_ref_cod_pessoa_fj={$_SESSION['id_pessoa']}");

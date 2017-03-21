@@ -31,7 +31,7 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
 
     $escola_desabilitado = isset($escola_desabilitado) ?
       $escola_desabilitado : $desabilitado;
-  } 
+  }
   $obj_permissoes = new clsPermissoes();
   $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
@@ -52,14 +52,14 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
         }
       }
     } else {
-      $opcoes = array('' => 'Erro na geraÁ„o');
+      $opcoes = array('' => 'Erro na gera√ß√£o');
     }
 
     if ($get_escola) {
       $retorno .= '
         <tr id="tr_status" class="input_calendario_letivo">
           <td valign="top" class="formlttd">
-            <span class="form">InstituiÁ„o</span>
+            <span class="form">Institui√ß√£o</span>
             <span class="campo_obrigatorio">*</span><br/>
             <sub style="vertical-align: top;"/>
           </td>';
@@ -154,7 +154,7 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
           }
         }
       } else {
-        $opcoes_escola = array('' => 'Erro na geraÁ„o');
+        $opcoes_escola = array('' => 'Erro na gera√ß√£o');
       }
     }
 
@@ -199,7 +199,7 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
     }
 
     if ($nivel_usuario == 1) {
-      ${$get_cabecalho}[] = 'InstituiÁ„o';
+      ${$get_cabecalho}[] = 'Institui√ß√£o';
     }
 
   }
@@ -302,7 +302,7 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
 
     if (campoEscola.length == 1 && campoInstituicao != '') {
       campoEscola.options[0] = new Option(
-        'A instituÁ„o n„o possui nenhuma escola', '', false, false
+        'A institu√ß√£o n√£o possui nenhuma escola', '', false, false
       );
     }
 

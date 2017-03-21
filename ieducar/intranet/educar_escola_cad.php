@@ -1,3 +1,4 @@
+
 <?php
 
 // error_reporting(E_ALL);
@@ -5,25 +6,25 @@
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	@author Prefeitura Municipal de ItajaÌ								 *
+	*	@author Prefeitura Municipal de Itaja√≠								 *
 	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software P˙blico Livre e Brasileiro					 *
+	*   Pacote: i-PLB Software P√∫blico Livre e Brasileiro					 *
 	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÌ			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itaja√≠			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  È  software livre, vocÍ pode redistribuÌ-lo e/ou	 *
-	*	modific·-lo sob os termos da LicenÁa P˙blica Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a vers„o 2 da	 *
-	*	LicenÁa   como  (a  seu  critÈrio)  qualquer  vers„o  mais  nova.	 *
+	*	Este  programa  √©  software livre, voc√™ pode redistribu√≠-lo e/ou	 *
+	*	modific√°-lo sob os termos da Licen√ßa P√∫blica Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a vers√£o 2 da	 *
+	*	Licen√ßa   como  (a  seu  crit√©rio)  qualquer  vers√£o  mais  nova.	 *
 	*																		 *
-	*	Este programa  È distribuÌdo na expectativa de ser ˙til, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implÌcita de COMERCIALI-	 *
-	*	ZA«√O  ou  de ADEQUA«√O A QUALQUER PROP”SITO EM PARTICULAR. Con-	 *
-	*	sulte  a  LicenÁa  P˙blica  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  √© distribu√≠do na expectativa de ser √∫til, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia impl√≠cita de COMERCIALI-	 *
+	*	ZA√á√ÉO  ou  de ADEQUA√á√ÉO A QUALQUER PROP√ìSITO EM PARTICULAR. Con-	 *
+	*	sulte  a  Licen√ßa  P√∫blica  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	VocÍ  deve  ter  recebido uma cÛpia da LicenÁa P˙blica Geral GNU	 *
-	*	junto  com  este  programa. Se n„o, escreva para a Free Software	 *
+	*	Voc√™  deve  ter  recebido uma c√≥pia da Licen√ßa P√∫blica Geral GNU	 *
+	*	junto  com  este  programa. Se n√£o, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
@@ -530,7 +531,7 @@ class indice extends clsCadastro
 		}
 		else
 		{
-  		$this->inputsHelper()->integer('escola_inep_id', array('label' => 'CÛdigo inep', 'required' => false, 'max_length' => 14));
+  		$this->inputsHelper()->integer('escola_inep_id', array('label' => 'C√≥digo inep', 'required' => false, 'max_length' => 14));
 
 			if( $_POST )
 			foreach( $_POST AS $campo => $val )
@@ -587,7 +588,7 @@ class indice extends clsCadastro
 					}
 					else
 					{
-						die( "UsuÔøΩrio nÔøΩo ÔøΩ do nivel poli-institucional e nÔøΩo possui uma instituiÔøΩÔøΩo" );
+						die( "Usu√Ø¬ø¬Ωrio n√Ø¬ø¬Ωo √Ø¬ø¬Ω do nivel poli-institucional e n√Ø¬ø¬Ωo possui uma institui√Ø¬ø¬Ω√Ø¬ø¬Ωo" );
 					}
 				}
 
@@ -686,7 +687,7 @@ class indice extends clsCadastro
 				$this->campoTexto( "bairro", "Bairro",  $this->bairro, "50", "20", true );
 				$this->campoTexto( "logradouro", "Logradouro",  $this->logradouro, "50", "255",true );
 				$this->campoTexto( "complemento", "Complemento",  $this->complemento, "22", "20", false );
-				$this->campoNumero( "numero", "N˙mero",  $this->numero, "6", "6", true );
+				$this->campoNumero( "numero", "N√∫mero",  $this->numero, "6", "6", true );
 
 				$this->campoTexto( "p_ddd_telefone_1", "DDD Telefone 1",  $this->p_ddd_telefone_1, "2", "2", false );
 				$this->campoTexto( "p_telefone_1", "Telefone 1",  $this->p_telefone_1, "10", "15", false );
@@ -774,7 +775,7 @@ class indice extends clsCadastro
 						}
 						else
 						{
-							die( "UsuÔøΩrio nÔøΩo ÔøΩ do nivel poli-institucional e nÔøΩo possui uma instituiÔøΩÔøΩo" );
+							die( "Usu√Ø¬ø¬Ωrio n√Ø¬ø¬Ωo √Ø¬ø¬Ω do nivel poli-institucional e n√Ø¬ø¬Ωo possui uma institui√Ø¬ø¬Ω√Ø¬ø¬Ωo" );
 						}
 					}
 
@@ -912,7 +913,7 @@ class indice extends clsCadastro
 						$this->campoLista( "idtlog", "Tipo Logradouro", $listaTLog, $this->idtlog, false, false, false, false, true ,true);
 						$this->campoTexto( "logradouro", "Logradouro",  $this->logradouro, "50", "255", true, false, false, "", "", "", "onKeyUp", true );
 						$this->campoTexto( "complemento", "Complemento",  $this->complemento, "22", "20", false, false );
-						$this->campoNumero("numero", "N˙mero", $this->numero, "6", "6", false );
+						$this->campoNumero("numero", "N√∫mero", $this->numero, "6", "6", false );
 						$this->campoNumero("andar", "Andar", $this->andar, "2","2", false);
 					}
 					elseif($this->ref_idpes && $this->cep)
@@ -929,7 +930,7 @@ class indice extends clsCadastro
 						$this->campoLista( "idtlog", "Tipo Logradouro", $listaTLog, $this->idtlog, "", false, "", "", false,true );
 						$this->campoTexto( "logradouro", "Logradouro",  $this->logradouro, "50", "255", true, false, false, "", "", "", "onKeyUp", false );
 						$this->campoTexto( "complemento", "Complemento",  $this->complemento, "22", "20", false, false, false, "", "", "", "onKeyUp", false );
-						$this->campoNumero( "numero", "N˙mero",  $this->numero, 6, 6, false, "", ""  );
+						$this->campoNumero( "numero", "N√∫mero",  $this->numero, 6, 6, false, "", ""  );
 						$this->campoNumero( "andar", "Andar", $this->andar, "2","2", false );
 					}
 					else
@@ -958,7 +959,7 @@ if(!$this->isEnderecoExterno){
 							$det_mun = $obj_mun->detalhe();
 
 							if($det_mun)
-								$this->cidade = mb_strtoupper(ucfirst(strtolower($det_mun["nome"])));
+								$this->cidade = strtoupper(ucfirst(strtolower($det_mun["nome"])));
 
 							$this->sigla_uf = $this->sigla_uf_ =  $det_mun['sigla_uf']->sigla_uf;
 						}
@@ -1021,21 +1022,21 @@ if(!$this->isEnderecoExterno){
 //
 //			}
 
-			$this->inputsHelper()->text('latitude', array('max_length' => '20', 'size' => '20', 'required' => false, 'value' => $this->latitude, 'label_hint' => 'S„o aceito somente os seguintes caracteres: 0123456789 .-'));
+			$this->inputsHelper()->text('latitude', array('max_length' => '20', 'size' => '20', 'required' => false, 'value' => $this->latitude, 'label_hint' => 'S√£o aceito somente os seguintes caracteres: 0123456789 .-'));
 
-			$this->inputsHelper()->text('longitude', array('max_length' => '20', 'size' => '20', 'required' => false, 'value' => $this->longitude, 'label_hint' => 'S„o aceito somente os seguintes caracteres: 0123456789 .-'));
+			$this->inputsHelper()->text('longitude', array('max_length' => '20', 'size' => '20', 'required' => false, 'value' => $this->longitude, 'label_hint' => 'S√£o aceito somente os seguintes caracteres: 0123456789 .-'));
 
-  		$this->campoCheck("bloquear_lancamento_diario_anos_letivos_encerrados", "Bloquear lanÁamento no di·rio para anos letivos encerrados", $this->bloquear_lancamento_diario_anos_letivos_encerrados);
+  		$this->campoCheck("bloquear_lancamento_diario_anos_letivos_encerrados", "Bloquear lan√ßamento no di√°rio para anos letivos encerrados", $this->bloquear_lancamento_diario_anos_letivos_encerrados);
 
-      $this->campoCheck("utiliza_regra_diferenciada", "Utiliza regra diferenciada", dbBool($this->utiliza_regra_diferenciada), '', FALSE, FALSE, FALSE, 'Se marcado, utilizar· regra de avaliaÁ„o diferenciada informada na SÈrie');
+      $this->campoCheck("utiliza_regra_diferenciada", "Utiliza regra diferenciada", dbBool($this->utiliza_regra_diferenciada), '', FALSE, FALSE, FALSE, 'Se marcado, utilizar√° regra de avalia√ß√£o diferenciada informada na S√©rie');
 
-      $this->campoNumero( "orgao_regional", Portabilis_String_Utils::toLatin1("CÛdigo do org„o regional"),  $this->orgao_regional, "5", "5", false );
+      $this->campoNumero( "orgao_regional", Portabilis_String_Utils::toLatin1("C√≥digo do org√£o regional"),  $this->orgao_regional, "5", "5", false );
 
   		$resources = array(1 => 'Em atividade',
 	                       2 => 'Paralisada',
 	                       3 => 'Extinta');
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('SituaÁ„o de funcionamento'), 'resources' => $resources, 'value' => $this->situacao_funcionamento);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Situa√ß√£o de funcionamento'), 'resources' => $resources, 'value' => $this->situacao_funcionamento);
 	    $this->inputsHelper()->select('situacao_funcionamento', $options);
 
   		$resources = array(3 => 'Municipal',
@@ -1043,17 +1044,17 @@ if(!$this->isEnderecoExterno){
 	                       2 => 'Estadual',
 	                       4 => 'Privada');
 
-  		$options = array('label' => Portabilis_String_Utils::toLatin1('DependÍncia administrativa'), 'resources' => $resources, 'value' => $this->dependencia_administrativa);
+  		$options = array('label' => Portabilis_String_Utils::toLatin1('Depend√™ncia administrativa'), 'resources' => $resources, 'value' => $this->dependencia_administrativa);
 	    $this->inputsHelper()->select('dependencia_administrativa', $options);
 
-  		$resources = array(0 => Portabilis_String_Utils::toLatin1('N„o'),
+  		$resources = array(0 => Portabilis_String_Utils::toLatin1('N√£o'),
 		                   1 => 'Sim',
-		                   2 => Portabilis_String_Utils::toLatin1('Em tramitaÁ„o'));
+		                   2 => Portabilis_String_Utils::toLatin1('Em tramita√ß√£o'));
 
-  		$options = array('label' => Portabilis_String_Utils::toLatin1('RegulamentaÁ„o/ AutorizaÁ„o no conselho ou Ûrg„o p˙blico de educaÁ„o'), 'resources' => $resources, 'value' => $this->regulamentacao, 'size' => 70,);
+  		$options = array('label' => Portabilis_String_Utils::toLatin1('Regulamenta√ß√£o/ Autoriza√ß√£o no conselho ou √≥rg√£o p√∫blico de educa√ß√£o'), 'resources' => $resources, 'value' => $this->regulamentacao, 'size' => 70,);
 	    $this->inputsHelper()->select('regulamentacao', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('Ato de criaÁ„o'), 'value' => $this->ato_criacao, 'size' => 70, 'required' => false);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Ato de cria√ß√£o'), 'value' => $this->ato_criacao, 'size' => 70, 'required' => false);
 	    $this->inputsHelper()->text('ato_criacao', $options);
 
 	    $options = array('label' => Portabilis_String_Utils::toLatin1('Ato autorizativo'), 'value' => $this->ato_autorizativo, 'size' => 70, 'required' => false);
@@ -1072,7 +1073,7 @@ if(!$this->isEnderecoExterno){
 	    $hiddenInputOptions = array('options' => array('value' => $this->secretario_id));
 	    $helperOptions      = array('objectName' => 'secretario', 'hiddenInputOptions' => $hiddenInputOptions);
 
-	    $options            = array('label'    => 'Secret·rio escolar',
+	    $options            = array('label'    => 'Secret√°rio escolar',
 	    							'size'     => 50,
 	    							'required' => false);
 
@@ -1186,66 +1187,66 @@ if(!$this->isEnderecoExterno){
 			}
 			if ( $aux ){
 				$this->campoLista( "ref_cod_curso", "Curso", $opcoes, $this->ref_cod_curso,"",false,"","<a href='#' onclick=\"getElementById('incluir_curso').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>",false,false);
-				$this->campoTexto( "autorizacao", "AutorizaÁ„o", "", 30, 255, false );
+				$this->campoTexto( "autorizacao", "Autoriza√ß√£o", "", 30, 255, false );
 			}else{
 				$this->campoLista( "ref_cod_curso", "Curso", $opcoes, $this->ref_cod_curso,"",false,"","<a href='#' onclick=\"getElementById('incluir_curso').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>");
-				$this->campoTexto( "autorizacao", "AutorizaÁ„o", "", 30, 255, false );
+				$this->campoTexto( "autorizacao", "Autoriza√ß√£o", "", 30, 255, false );
 			}
 			$this->campoOculto( "incluir_curso", "" );
 			$this->campoQuebra();
 
 			$resources = array(0 => 'Selecione',
-				               1 => Portabilis_String_Utils::toLatin1('PrÛprio'),
+				               1 => Portabilis_String_Utils::toLatin1('Pr√≥prio'),
 			                   2 => 'Alugado',
 			                   3 => 'Cedido');
 
-  		$options = array('label' => Portabilis_String_Utils::toLatin1('CondiÁ„o'), 'resources' => $resources, 'value' => $this->condicao, 'size' => 70, 'required' => false);
+  		$options = array('label' => Portabilis_String_Utils::toLatin1('Condi√ß√£o'), 'resources' => $resources, 'value' => $this->condicao, 'size' => 70, 'required' => false);
 	    $this->inputsHelper()->select('condicao', $options);
 
 			$resources = array(0  => 'Selecione',
-			                   3  => Portabilis_String_Utils::toLatin1('PrÈdio escolar'),
+			                   3  => Portabilis_String_Utils::toLatin1('Pr√©dio escolar'),
 			                   4  => Portabilis_String_Utils::toLatin1('Templo/Igreja'),
 			                   5  => Portabilis_String_Utils::toLatin1('Sala de empresa'),
 			                   6 => Portabilis_String_Utils::toLatin1('Casa do professor'),
 			                   7 => Portabilis_String_Utils::toLatin1('Salas em outra escola'),
-			                   8 => Portabilis_String_Utils::toLatin1('Galp„o/ Rancho/ Paiol/ Barrac„o'),
-			                   9 => Portabilis_String_Utils::toLatin1('Unidade de internaÁ„o Socioeducativa'),
+			                   8 => Portabilis_String_Utils::toLatin1('Galp√£o/ Rancho/ Paiol/ Barrac√£o'),
+			                   9 => Portabilis_String_Utils::toLatin1('Unidade de interna√ß√£o Socioeducativa'),
 			                   10 => Portabilis_String_Utils::toLatin1('Unidade prisional'),
 			                   11 => 'Outros');
 
   		$options = array('label' => Portabilis_String_Utils::toLatin1('Local de funcionamento'), 'resources' => $resources, 'value' => $this->local_funcionamento, 'size' => 70, 'required' => false);
 	    $this->inputsHelper()->select('local_funcionamento', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('CÛdigo de escola que compartilha o prÈdio'),
-	    	'label_hint' => Portabilis_String_Utils::toLatin1('Caso compartilhe o prÈdio escolar com outra escola preencha com o cÛdigo INEP'),
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('C√≥digo de escola que compartilha o pr√©dio'),
+	    	'label_hint' => Portabilis_String_Utils::toLatin1('Caso compartilhe o pr√©dio escolar com outra escola preencha com o c√≥digo INEP'),
 	    	'resources' => $resources, 'value' => $this->codigo_inep_escola_compartilhada, 'required' => false,
 	    	'size' => 8, 'max_length' => 8, 'placeholder' => '');
 	    $this->inputsHelper()->integer('codigo_inep_escola_compartilhada', $options);
 
 			$resources = array( null => 'Selecione',
-			                    1    => Portabilis_String_Utils::toLatin1('DifÌcil'),
-			                    2    => 'DificÌlimo');
+			                    1    => Portabilis_String_Utils::toLatin1('Dif√≠cil'),
+			                    2    => 'Dific√≠limo');
 
-			$options = array('label' => Portabilis_String_Utils::toLatin1('Acesso ‡ escola'), 'resources' => $resources, 'value' => $this->acesso, 'required' => false, 'size' => 50,);
+			$options = array('label' => Portabilis_String_Utils::toLatin1('Acesso √† escola'), 'resources' => $resources, 'value' => $this->acesso, 'required' => false, 'size' => 50,);
 	    $this->inputsHelper()->select('acesso', $options);
 
-			$options = array('label' => Portabilis_String_Utils::toLatin1('Decreto de criaÁ„o de unidade'), 'resources' => $resources, 'value' => $this->decreto_criacao, 'required' => false, 'size' => 50,);
+			$options = array('label' => Portabilis_String_Utils::toLatin1('Decreto de cria√ß√£o de unidade'), 'resources' => $resources, 'value' => $this->decreto_criacao, 'required' => false, 'size' => 50,);
 	    $this->inputsHelper()->text('decreto_criacao', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('¡rea do terreno total'), 'resources' => $resources, 'value' => $this->area_terreno_total, 'required' => false, 'size' => 10, 'placeholder' => '');
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('√Årea do terreno total'), 'resources' => $resources, 'value' => $this->area_terreno_total, 'required' => false, 'size' => 10, 'placeholder' => '');
 	    $this->inputsHelper()->text('area_terreno_total', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('¡rea construÌda'), 'resources' => $resources, 'value' => $this->area_construida, 'required' => false, 'size' => 10, 'placeholder' => '');
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('√Årea constru√≠da'), 'resources' => $resources, 'value' => $this->area_construida, 'required' => false, 'size' => 10, 'placeholder' => '');
 	    $this->inputsHelper()->text('area_construida', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('¡rea disponÌvel'), 'resources' => $resources, 'value' => $this->area_disponivel, 'required' => false, 'size' => 10, 'placeholder' => '');
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('√Årea dispon√≠vel'), 'resources' => $resources, 'value' => $this->area_disponivel, 'required' => false, 'size' => 10, 'placeholder' => '');
 	    $this->inputsHelper()->text('area_disponivel', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('N˙mero de pavimentos'), 'resources' => $resources, 'value' => $this->num_pavimentos, 'required' => false, 'size' => 5, 'placeholder' => '');
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('N√∫mero de pavimentos'), 'resources' => $resources, 'value' => $this->num_pavimentos, 'required' => false, 'size' => 5, 'placeholder' => '');
 	    $this->inputsHelper()->integer('num_pavimentos', $options);
 
 	    $resources = array( null => 'Selecione',
-		                    1    => Portabilis_String_Utils::toLatin1('Cer‚mica'),
+		                    1    => Portabilis_String_Utils::toLatin1('Cer√¢mica'),
 		                    2    => 'Acimentado',
 		                    3    => 'Madeira',
 		                    4    => 'Outros',);
@@ -1254,167 +1255,167 @@ if(!$this->isEnderecoExterno){
 	    $this->inputsHelper()->select('tipo_piso', $options);
 
 	    $resources = array( null => 'Selecione',
-		                    1    => Portabilis_String_Utils::toLatin1('Monof·sico'),
-		                    2    => Portabilis_String_Utils::toLatin1('Bif·sico'),
-		                    3    => Portabilis_String_Utils::toLatin1('Trif·sico'),
-		                    4   => Portabilis_String_Utils::toLatin1('N„o'),);
+		                    1    => Portabilis_String_Utils::toLatin1('Monof√°sico'),
+		                    2    => Portabilis_String_Utils::toLatin1('Bif√°sico'),
+		                    3    => Portabilis_String_Utils::toLatin1('Trif√°sico'),
+		                    4   => Portabilis_String_Utils::toLatin1('N√£o'),);
 
 			$options = array('label' => 'Medidor de energia', 'resources' => $resources, 'value' => $this->medidor_energia, 'required' => false, 'size' => 70,);
 	    $this->inputsHelper()->select('medidor_energia', $options);
 
 	    $resources = array( null => 'Selecione',
-		                    1    => Portabilis_String_Utils::toLatin1('N„o filtrada'),
+		                    1    => Portabilis_String_Utils::toLatin1('N√£o filtrada'),
 		                    2    => 'Filtrada',);
 
-			$options = array('label' => Portabilis_String_Utils::toLatin1('¡gua consumida pelos alunos'), 'resources' => $resources, 'value' => $this->agua_consumida, 'required' => false, 'size' => 70,);
+			$options = array('label' => Portabilis_String_Utils::toLatin1('√Ågua consumida pelos alunos'), 'resources' => $resources, 'value' => $this->agua_consumida, 'required' => false, 'size' => 70,);
 	    $this->inputsHelper()->select('agua_consumida', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('Abastecimento de ·gua - Rede p˙blica'), 'value' => $this->agua_rede_publica);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Abastecimento de √°gua - Rede p√∫blica'), 'value' => $this->agua_rede_publica);
 	    $this->inputsHelper()->checkbox('agua_rede_publica', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('Abastecimento de ·gua - PoÁo artesiano'), 'value' => $this->agua_poco_artesiano);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Abastecimento de √°gua - Po√ßo artesiano'), 'value' => $this->agua_poco_artesiano);
 	    $this->inputsHelper()->checkbox('agua_poco_artesiano', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('Abastecimento de ·gua - Cacimba / cisterna / poÁo'), 'value' => $this->agua_cacimba_cisterna_poco);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Abastecimento de √°gua - Cacimba / cisterna / po√ßo'), 'value' => $this->agua_cacimba_cisterna_poco);
 	    $this->inputsHelper()->checkbox('agua_cacimba_cisterna_poco', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('Abastecimento de ·gua - Fonte / rio / igarapÈ / riacho / corrÈgo'), 'value' => $this->agua_fonte_rio);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Abastecimento de √°gua - Fonte / rio / igarap√© / riacho / corr√©go'), 'value' => $this->agua_fonte_rio);
 	    $this->inputsHelper()->checkbox('agua_fonte_rio', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('Abastecimento de ·gua - Inexistente'), 'value' => $this->agua_inexistente);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Abastecimento de √°gua - Inexistente'), 'value' => $this->agua_inexistente);
 	    $this->inputsHelper()->checkbox('agua_inexistente', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('Abastecimento de energia elÈtrica - Rede p˙blica'), 'value' => $this->energia_rede_publica);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Abastecimento de energia el√©trica - Rede p√∫blica'), 'value' => $this->energia_rede_publica);
 	    $this->inputsHelper()->checkbox('energia_rede_publica', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('Abastecimento de energia elÈtrica - Gerador'), 'value' => $this->energia_gerador);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Abastecimento de energia el√©trica - Gerador'), 'value' => $this->energia_gerador);
 	    $this->inputsHelper()->checkbox('energia_gerador', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('Abastecimento de energia elÈtrica - Outros'), 'value' => $this->energia_outros);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Abastecimento de energia el√©trica - Outros'), 'value' => $this->energia_outros);
 	    $this->inputsHelper()->checkbox('energia_outros', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('Abastecimento de energia elÈtrica - Inexistente'), 'value' => $this->energia_inexistente);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Abastecimento de energia el√©trica - Inexistente'), 'value' => $this->energia_inexistente);
 	    $this->inputsHelper()->checkbox('energia_inexistente', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('Esgoto sanit·rio - Rede p˙blica'), 'value' => $this->esgoto_rede_publica);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Esgoto sanit√°rio - Rede p√∫blica'), 'value' => $this->esgoto_rede_publica);
 	    $this->inputsHelper()->checkbox('esgoto_rede_publica', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('Esgoto sanit·rio - Fossa'), 'value' => $this->esgoto_fossa);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Esgoto sanit√°rio - Fossa'), 'value' => $this->esgoto_fossa);
 	    $this->inputsHelper()->checkbox('esgoto_fossa', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('Esgoto sanit·rio - Inexistente'), 'value' => $this->esgoto_inexistente);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Esgoto sanit√°rio - Inexistente'), 'value' => $this->esgoto_inexistente);
 	    $this->inputsHelper()->checkbox('esgoto_inexistente', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('DestinaÁ„o do lixo - Coleta periÛdica'), 'value' => $this->lixo_coleta_periodica);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Destina√ß√£o do lixo - Coleta peri√≥dica'), 'value' => $this->lixo_coleta_periodica);
 	    $this->inputsHelper()->checkbox('lixo_coleta_periodica', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('DestinaÁ„o do lixo - Queima'), 'value' => $this->lixo_queima);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Destina√ß√£o do lixo - Queima'), 'value' => $this->lixo_queima);
 	    $this->inputsHelper()->checkbox('lixo_queima', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('DestinaÁ„o do lixo - Joga em outra ·rea'), 'value' => $this->lixo_joga_outra_area);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Destina√ß√£o do lixo - Joga em outra √°rea'), 'value' => $this->lixo_joga_outra_area);
 	    $this->inputsHelper()->checkbox('lixo_joga_outra_area', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('DestinaÁ„o do lixo - Recicla'), 'value' => $this->lixo_recicla);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Destina√ß√£o do lixo - Recicla'), 'value' => $this->lixo_recicla);
 	    $this->inputsHelper()->checkbox('lixo_recicla', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('DestinaÁ„o do lixo - Enterra'), 'value' => $this->lixo_enterra);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Destina√ß√£o do lixo - Enterra'), 'value' => $this->lixo_enterra);
 	    $this->inputsHelper()->checkbox('lixo_enterra', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('DestinaÁ„o do lixo - Outros'), 'value' => $this->lixo_outros);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Destina√ß√£o do lixo - Outros'), 'value' => $this->lixo_outros);
 	    $this->inputsHelper()->checkbox('lixo_outros', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('DependÍncias existentes na escola ñ Sala de diretoria'), 'value' => $this->dependencia_sala_diretoria);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Depend√™ncias existentes na escola ‚Äì Sala de diretoria'), 'value' => $this->dependencia_sala_diretoria);
 	    $this->inputsHelper()->checkbox('dependencia_sala_diretoria', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('DependÍncias existentes na escola ñ Sala de diretoria'), 'value' => $this->dependencia_sala_diretoria);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Depend√™ncias existentes na escola ‚Äì Sala de diretoria'), 'value' => $this->dependencia_sala_diretoria);
 	    $this->inputsHelper()->checkbox('dependencia_sala_diretoria', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('DependÍncias existentes na escola ñ Sala de professores'), 'value' => $this->dependencia_sala_professores);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Depend√™ncias existentes na escola ‚Äì Sala de professores'), 'value' => $this->dependencia_sala_professores);
 	    $this->inputsHelper()->checkbox('dependencia_sala_professores', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('DependÍncias existentes na escola ñ Sala de secretaria'), 'value' => $this->dependencia_sala_secretaria);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Depend√™ncias existentes na escola ‚Äì Sala de secretaria'), 'value' => $this->dependencia_sala_secretaria);
 	    $this->inputsHelper()->checkbox('dependencia_sala_secretaria', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('DependÍncias existentes na escola ñ LaboratÛrio de inform·tica'), 'value' => $this->dependencia_laboratorio_informatica);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Depend√™ncias existentes na escola ‚Äì Laborat√≥rio de inform√°tica'), 'value' => $this->dependencia_laboratorio_informatica);
 	    $this->inputsHelper()->checkbox('dependencia_laboratorio_informatica', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('DependÍncias existentes na escola ñ LaboratÛrio de ciÍncias'), 'value' => $this->dependencia_laboratorio_ciencias);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Depend√™ncias existentes na escola ‚Äì Laborat√≥rio de ci√™ncias'), 'value' => $this->dependencia_laboratorio_ciencias);
 	    $this->inputsHelper()->checkbox('dependencia_laboratorio_ciencias', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('DependÍncias existentes na escola ñ Sala de recursos multifuncionais para atendimento educacional especializado - AEE'), 'value' => $this->dependencia_sala_aee);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Depend√™ncias existentes na escola ‚Äì Sala de recursos multifuncionais para atendimento educacional especializado - AEE'), 'value' => $this->dependencia_sala_aee);
 	    $this->inputsHelper()->checkbox('dependencia_sala_aee', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('DependÍncias existentes na escola ñ Quadra de esportes coberta'), 'value' => $this->dependencia_quadra_coberta);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Depend√™ncias existentes na escola ‚Äì Quadra de esportes coberta'), 'value' => $this->dependencia_quadra_coberta);
 	    $this->inputsHelper()->checkbox('dependencia_quadra_coberta', $options);
 
 	    $resources = array( null => 'Selecione',
 		                    1    => 'Pequena',
-		                    2    => Portabilis_String_Utils::toLatin1('MÈdia'),
+		                    2    => Portabilis_String_Utils::toLatin1('M√©dia'),
 		                    3    => 'Grande',);
 
 			$options = array('label' => Portabilis_String_Utils::toLatin1('Porte'), 'resources' => $resources, 'value' => $this->porte_quadra_coberta, 'required' => false, 'size' => 70,);
 	    $this->inputsHelper()->select('porte_quadra_coberta', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('DependÍncias existentes na escola ñ Quadra de esportes descoberta'), 'value' => $this->dependencia_quadra_descoberta);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Depend√™ncias existentes na escola ‚Äì Quadra de esportes descoberta'), 'value' => $this->dependencia_quadra_descoberta);
 	    $this->inputsHelper()->checkbox('dependencia_quadra_descoberta', $options);
 
 	    $resources = array( null => 'Selecione',
 		                    1    => 'Pequena',
-		                    2    => Portabilis_String_Utils::toLatin1('MÈdia'),
+		                    2    => Portabilis_String_Utils::toLatin1('M√©dia'),
 		                    3    => 'Grande',);
 
 			$options = array('label' => Portabilis_String_Utils::toLatin1('Porte'), 'resources' => $resources, 'value' => $this->porte_quadra_descoberta, 'required' => false, 'size' => 70,);
 	    $this->inputsHelper()->select('porte_quadra_descoberta', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('DependÍncias existentes na escola ñ Cozinha'), 'value' => $this->dependencia_cozinha);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Depend√™ncias existentes na escola ‚Äì Cozinha'), 'value' => $this->dependencia_cozinha);
 	    $this->inputsHelper()->checkbox('dependencia_cozinha', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('DependÍncias existentes na escola ñ Biblioteca'), 'value' => $this->dependencia_biblioteca);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Depend√™ncias existentes na escola ‚Äì Biblioteca'), 'value' => $this->dependencia_biblioteca);
 	    $this->inputsHelper()->checkbox('dependencia_biblioteca', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('DependÍncias existentes na escola ñ Sala de leitura'), 'value' => $this->dependencia_sala_leitura);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Depend√™ncias existentes na escola ‚Äì Sala de leitura'), 'value' => $this->dependencia_sala_leitura);
 	    $this->inputsHelper()->checkbox('dependencia_sala_leitura', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('DependÍncias existentes na escola ñ Parque infantil'), 'value' => $this->dependencia_parque_infantil);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Depend√™ncias existentes na escola ‚Äì Parque infantil'), 'value' => $this->dependencia_parque_infantil);
 	    $this->inputsHelper()->checkbox('dependencia_parque_infantil', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('DependÍncias existentes na escola ñ BerÁario'), 'value' => $this->dependencia_bercario);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Depend√™ncias existentes na escola ‚Äì Ber√ßario'), 'value' => $this->dependencia_bercario);
 	    $this->inputsHelper()->checkbox('dependencia_bercario', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('DependÍncias existentes na escola ñ Banheiro fora do prÈdio'), 'value' => $this->dependencia_banheiro_fora);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Depend√™ncias existentes na escola ‚Äì Banheiro fora do pr√©dio'), 'value' => $this->dependencia_banheiro_fora);
 	    $this->inputsHelper()->checkbox('dependencia_banheiro_fora', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('DependÍncias existentes na escola ñ Banheiro dentro do prÈdio'), 'value' => $this->dependencia_banheiro_dentro);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Depend√™ncias existentes na escola ‚Äì Banheiro dentro do pr√©dio'), 'value' => $this->dependencia_banheiro_dentro);
 	    $this->inputsHelper()->checkbox('dependencia_banheiro_dentro', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('DependÍncias existentes na escola ñ Banheiro adequado a EducaÁ„o Infantil'), 'value' => $this->dependencia_banheiro_infantil);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Depend√™ncias existentes na escola ‚Äì Banheiro adequado a Educa√ß√£o Infantil'), 'value' => $this->dependencia_banheiro_infantil);
 	    $this->inputsHelper()->checkbox('dependencia_banheiro_infantil', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('DependÍncias existentes na escola ñ Banheiro adequado a deficientes'), 'value' => $this->dependencia_banheiro_deficiente);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Depend√™ncias existentes na escola ‚Äì Banheiro adequado a deficientes'), 'value' => $this->dependencia_banheiro_deficiente);
 	    $this->inputsHelper()->checkbox('dependencia_banheiro_deficiente', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('DependÍncias existentes na escola ñ Banheiro com chuveiro'), 'value' => $this->dependencia_banheiro_chuveiro);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Depend√™ncias existentes na escola ‚Äì Banheiro com chuveiro'), 'value' => $this->dependencia_banheiro_chuveiro);
 	    $this->inputsHelper()->checkbox('dependencia_banheiro_chuveiro', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('DependÍncias existentes na escola ñ DependÍncias e vias adequadas a alunos com deficiÍncia'), 'value' => $this->dependencia_vias_deficiente);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Depend√™ncias existentes na escola ‚Äì Depend√™ncias e vias adequadas a alunos com defici√™ncia'), 'value' => $this->dependencia_vias_deficiente);
 	    $this->inputsHelper()->checkbox('dependencia_vias_deficiente', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('DependÍncias existentes na escola ñ RefeitÛrio'), 'value' => $this->dependencia_refeitorio);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Depend√™ncias existentes na escola ‚Äì Refeit√≥rio'), 'value' => $this->dependencia_refeitorio);
 	    $this->inputsHelper()->checkbox('dependencia_refeitorio', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('DependÍncias existentes na escola ñ Despensa'), 'value' => $this->dependencia_dispensa);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Depend√™ncias existentes na escola ‚Äì Despensa'), 'value' => $this->dependencia_dispensa);
 	    $this->inputsHelper()->checkbox('dependencia_dispensa', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('DependÍncias existentes na escola ñ Almoxarifado'), 'value' => $this->dependencia_aumoxarifado);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Depend√™ncias existentes na escola ‚Äì Almoxarifado'), 'value' => $this->dependencia_aumoxarifado);
 	    $this->inputsHelper()->checkbox('dependencia_aumoxarifado', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('DependÍncias existentes na escola ñ AuditÛrio'), 'value' => $this->dependencia_auditorio);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Depend√™ncias existentes na escola ‚Äì Audit√≥rio'), 'value' => $this->dependencia_auditorio);
 	    $this->inputsHelper()->checkbox('dependencia_auditorio', $options);
 
-      $options = array('label' => Portabilis_String_Utils::toLatin1('DependÍncias existentes na escola ñ P·tio coberto'), 'value' => $this->dependencia_patio_coberto);
+      $options = array('label' => Portabilis_String_Utils::toLatin1('Depend√™ncias existentes na escola ‚Äì P√°tio coberto'), 'value' => $this->dependencia_patio_coberto);
       $this->inputsHelper()->checkbox('dependencia_patio_coberto', $options);
 
-      $options = array('label' => Portabilis_String_Utils::toLatin1('DependÍncias existentes na escola ñ P·tio descoberto'), 'value' => $this->dependencia_patio_descoberto);
+      $options = array('label' => Portabilis_String_Utils::toLatin1('Depend√™ncias existentes na escola ‚Äì P√°tio descoberto'), 'value' => $this->dependencia_patio_descoberto);
       $this->inputsHelper()->checkbox('dependencia_patio_descoberto', $options);
 
 	    $resources = array( null => 'Selecione',
@@ -1425,42 +1426,42 @@ if(!$this->isEnderecoExterno){
 			$options = array('label' => Portabilis_String_Utils::toLatin1('Tipo da cobertura'), 'resources' => $resources, 'value' => $this->tipo_cobertura_patio, 'required' => false, 'size' => 70,);
 	    $this->inputsHelper()->select('tipo_cobertura_patio', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('DependÍncias existentes na escola ñ Alojamento do aluno'), 'value' => $this->dependencia_alojamento_aluno);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Depend√™ncias existentes na escola ‚Äì Alojamento do aluno'), 'value' => $this->dependencia_alojamento_aluno);
 	    $this->inputsHelper()->checkbox('dependencia_alojamento_aluno', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('DependÍncias existentes na escola ñ Alojamento do professor'), 'value' => $this->dependencia_alojamento_professor);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Depend√™ncias existentes na escola ‚Äì Alojamento do professor'), 'value' => $this->dependencia_alojamento_professor);
 	    $this->inputsHelper()->checkbox('dependencia_alojamento_professor', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('DependÍncias existentes na escola ñ ¡rea verde'), 'value' => $this->dependencia_area_verde);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Depend√™ncias existentes na escola ‚Äì √Årea verde'), 'value' => $this->dependencia_area_verde);
 	    $this->inputsHelper()->checkbox('dependencia_area_verde', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('DependÍncias existentes na escola ñ Lavanderia'), 'value' => $this->dependencia_lavanderia);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Depend√™ncias existentes na escola ‚Äì Lavanderia'), 'value' => $this->dependencia_lavanderia);
 	    $this->inputsHelper()->checkbox('dependencia_lavanderia', $options);
 
 	    $resources = array( null => 'Selecione',
 		                    1    => 'Sim',
-		                    2    => Portabilis_String_Utils::toLatin1('N„o'),
+		                    2    => Portabilis_String_Utils::toLatin1('N√£o'),
 		                    3    => 'Parcial',);
 
-			$options = array('label' => Portabilis_String_Utils::toLatin1('DependÍncias existentes na escola ñ Unidade climatizada'), 'resources' => $resources, 'value' => $this->dependencia_unidade_climatizada, 'required' => false, 'size' => 70,);
+			$options = array('label' => Portabilis_String_Utils::toLatin1('Depend√™ncias existentes na escola ‚Äì Unidade climatizada'), 'resources' => $resources, 'value' => $this->dependencia_unidade_climatizada, 'required' => false, 'size' => 70,);
 	    $this->inputsHelper()->select('dependencia_unidade_climatizada', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('DependÍncias existentes na escola ñ Quantidade de ambientes climatizados'), 'resources' => $resources, 'value' => $this->dependencia_quantidade_ambiente_climatizado, 'required' => false, 'size' => 5, 'placeholder' => '');
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Depend√™ncias existentes na escola ‚Äì Quantidade de ambientes climatizados'), 'resources' => $resources, 'value' => $this->dependencia_quantidade_ambiente_climatizado, 'required' => false, 'size' => 5, 'placeholder' => '');
 	    $this->inputsHelper()->integer('dependencia_quantidade_ambiente_climatizado', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('DependÍncias existentes na escola ñ Nenhuma das relacionadas'), 'value' => $this->dependencia_nenhuma_relacionada);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Depend√™ncias existentes na escola ‚Äì Nenhuma das relacionadas'), 'value' => $this->dependencia_nenhuma_relacionada);
 	    $this->inputsHelper()->checkbox('dependencia_nenhuma_relacionada', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('DependÍncias existentes na escola ñ N˙mero de salas de aula existentes na escola'), 'resources' => $resources, 'value' => $this->dependencia_numero_salas_existente, 'required' => false, 'size' => 5, 'placeholder' => '');
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Depend√™ncias existentes na escola ‚Äì N√∫mero de salas de aula existentes na escola'), 'resources' => $resources, 'value' => $this->dependencia_numero_salas_existente, 'required' => false, 'size' => 5, 'placeholder' => '');
 	    $this->inputsHelper()->integer('dependencia_numero_salas_existente', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('DependÍncias existentes na escola ñ N˙mero de salas utilizadas como sala de aula'), 'resources' => $resources, 'value' => $this->dependencia_numero_salas_utilizadas, 'required' => false, 'size' => 5, 'placeholder' => '');
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Depend√™ncias existentes na escola ‚Äì N√∫mero de salas utilizadas como sala de aula'), 'resources' => $resources, 'value' => $this->dependencia_numero_salas_utilizadas, 'required' => false, 'size' => 5, 'placeholder' => '');
 			$this->inputsHelper()->integer('dependencia_numero_salas_utilizadas', $options);
 
-			$options = array('label' => Portabilis_String_Utils::toLatin1('Total de funcion·rios da escola'), 'resources' => $resources, 'value' => $this->total_funcionario, 'required' => false, 'size' => 5, 'placeholder' => '');
+			$options = array('label' => Portabilis_String_Utils::toLatin1('Total de funcion√°rios da escola'), 'resources' => $resources, 'value' => $this->total_funcionario, 'required' => false, 'size' => 5, 'placeholder' => '');
 			$this->inputsHelper()->integer('total_funcionario', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('Quantidade de televisıes'), 'resources' => $resources, 'value' => $this->televisoes, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Quantidade de televis√µes'), 'resources' => $resources, 'value' => $this->televisoes, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
 	    $this->inputsHelper()->integer('televisoes', $options);
 
 	    $options = array('label' => Portabilis_String_Utils::toLatin1('Quantidade de videocassetes'), 'resources' => $resources, 'value' => $this->videocassetes, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
@@ -1469,7 +1470,7 @@ if(!$this->isEnderecoExterno){
 	    $options = array('label' => Portabilis_String_Utils::toLatin1('Quantidade de DVDs'), 'resources' => $resources, 'value' => $this->dvds, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
 	    $this->inputsHelper()->integer('dvds', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('Quantidade de antenas parabÛlicas'), 'resources' => $resources, 'value' => $this->antenas_parabolicas, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Quantidade de antenas parab√≥licas'), 'resources' => $resources, 'value' => $this->antenas_parabolicas, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
 	    $this->inputsHelper()->integer('antenas_parabolicas', $options);
 
 	    $options = array('label' => Portabilis_String_Utils::toLatin1('Quantidade de copiadoras'), 'resources' => $resources, 'value' => $this->copiadoras, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
@@ -1490,7 +1491,7 @@ if(!$this->isEnderecoExterno){
 	    $options = array('label' => Portabilis_String_Utils::toLatin1('Quantidade de FAXs'), 'resources' => $resources, 'value' => $this->faxs, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
 	    $this->inputsHelper()->integer('faxs', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('Quantidade de m·quinas fotogr·ficas ou filmadoras'), 'resources' => $resources, 'value' => $this->maquinas_fotograficas, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Quantidade de m√°quinas fotogr√°ficas ou filmadoras'), 'resources' => $resources, 'value' => $this->maquinas_fotograficas, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
 	    $this->inputsHelper()->integer('maquinas_fotograficas', $options);
 
 	    $options = array('label' => Portabilis_String_Utils::toLatin1('Quantidade de computadores'), 'resources' => $resources, 'value' => $this->computadores, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
@@ -1512,16 +1513,16 @@ if(!$this->isEnderecoExterno){
 	    $this->inputsHelper()->checkbox('banda_larga', $options);
 
 			$resources = array( -1 => 'Selecione',
-								0    => Portabilis_String_Utils::toLatin1('N„o oferece'),
-			                    1    => Portabilis_String_Utils::toLatin1('N„o exclusivamente'),
+								0    => Portabilis_String_Utils::toLatin1('N√£o oferece'),
+			                    1    => Portabilis_String_Utils::toLatin1('N√£o exclusivamente'),
 			                    2    => 'Exclusivamente');
 
   		$options = array('label' => Portabilis_String_Utils::toLatin1('Atendimento educacional especializado - AEE'), 'resources' => $resources, 'value' => $this->atendimento_aee, 'required' => false, 'size' => 70,);
 	    $this->inputsHelper()->select('atendimento_aee', $options);
 
 	    $resources = array( -1 => 'Selecione',
-							0    => Portabilis_String_Utils::toLatin1('N„o oferece'),
-		                    1    => Portabilis_String_Utils::toLatin1('N„o exclusivamente'),
+							0    => Portabilis_String_Utils::toLatin1('N√£o oferece'),
+		                    1    => Portabilis_String_Utils::toLatin1('N√£o exclusivamente'),
 		                    2    => 'Exclusivamente');
 
   		$options = array('label' => Portabilis_String_Utils::toLatin1('Atividade complementar'), 'resources' => $resources, 'value' => $this->atividade_complementar, 'required' => false, 'size' => 70,);
@@ -1531,33 +1532,33 @@ if(!$this->isEnderecoExterno){
 	    $this->inputsHelper()->checkbox('fundamental_ciclo', $options);
 
 	    $resources = array( 0 => 'Selecione',
-	    	                1 => Portabilis_String_Utils::toLatin1('¡rea de assentamento'),
-		                    2 => Portabilis_String_Utils::toLatin1('Terra indÌgena'),
-		                    3 => Portabilis_String_Utils::toLatin1('¡rea remanescente de quilombos'),
-		                    4 => Portabilis_String_Utils::toLatin1('Unidade de uso sustent·vel'),
-		                    5 => Portabilis_String_Utils::toLatin1('Unidade de uso sustent·vel em Terra indÌgena'),
-		                    6 => Portabilis_String_Utils::toLatin1('Unidade de uso sustent·vel em ¡rea remanescente de quilombos'),
-		                    7 => Portabilis_String_Utils::toLatin1('N„o se aplica'));
+	    	                1 => Portabilis_String_Utils::toLatin1('√Årea de assentamento'),
+		                    2 => Portabilis_String_Utils::toLatin1('Terra ind√≠gena'),
+		                    3 => Portabilis_String_Utils::toLatin1('√Årea remanescente de quilombos'),
+		                    4 => Portabilis_String_Utils::toLatin1('Unidade de uso sustent√°vel'),
+		                    5 => Portabilis_String_Utils::toLatin1('Unidade de uso sustent√°vel em Terra ind√≠gena'),
+		                    6 => Portabilis_String_Utils::toLatin1('Unidade de uso sustent√°vel em √Årea remanescente de quilombos'),
+		                    7 => Portabilis_String_Utils::toLatin1('N√£o se aplica'));
 
-  		$options = array('label' => Portabilis_String_Utils::toLatin1('LocalizaÁ„o diferenciada da escola'), 'resources' => $resources, 'value' => $this->localizacao_diferenciada, 'required' => false, 'size' => 70,);
+  		$options = array('label' => Portabilis_String_Utils::toLatin1('Localiza√ß√£o diferenciada da escola'), 'resources' => $resources, 'value' => $this->localizacao_diferenciada, 'required' => false, 'size' => 70,);
 	    $this->inputsHelper()->select('localizacao_diferenciada', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('Materiais did·ticos especÌficos para atendimento ‡ diversidade sÛcio-cultural - N„o utiliza'), 'value' => $this->didatico_nao_utiliza);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Materiais did√°ticos espec√≠ficos para atendimento √† diversidade s√≥cio-cultural - N√£o utiliza'), 'value' => $this->didatico_nao_utiliza);
 	    $this->inputsHelper()->checkbox('didatico_nao_utiliza', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('Materiais did·ticos especÌficos para atendimento ‡ diversidade sÛcio-cultural - Quilombola'), 'value' => $this->didatico_quilombola);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Materiais did√°ticos espec√≠ficos para atendimento √† diversidade s√≥cio-cultural - Quilombola'), 'value' => $this->didatico_quilombola);
 	    $this->inputsHelper()->checkbox('didatico_quilombola', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('Materiais did·ticos especÌficos para atendimento ‡ diversidade sÛcio-cultural - IndÌgena'), 'value' => $this->didatico_indigena);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Materiais did√°ticos espec√≠ficos para atendimento √† diversidade s√≥cio-cultural - Ind√≠gena'), 'value' => $this->didatico_indigena);
 	    $this->inputsHelper()->checkbox('didatico_indigena', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('EducaÁ„o indÌgena'), 'value' => $this->educacao_indigena);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Educa√ß√£o ind√≠gena'), 'value' => $this->educacao_indigena);
 	    $this->inputsHelper()->checkbox('educacao_indigena', $options);
 
-	    $resources = array( 1    => Portabilis_String_Utils::toLatin1('LÌngua Portuguesa'),
-	    					2    => Portabilis_String_Utils::toLatin1('LÌnguia IndÌgena'));
+	    $resources = array( 1    => Portabilis_String_Utils::toLatin1('L√≠ngua Portuguesa'),
+	    					2    => Portabilis_String_Utils::toLatin1('L√≠nguia Ind√≠gena'));
 
-  		$options = array('label' => Portabilis_String_Utils::toLatin1('LÌngua em que o ensino È ministrado'), 'resources' => $resources, 'value' => $this->lingua_ministrada, 'required' => false, 'size' => 70,);
+  		$options = array('label' => Portabilis_String_Utils::toLatin1('L√≠ngua em que o ensino √© ministrado'), 'resources' => $resources, 'value' => $this->lingua_ministrada, 'required' => false, 'size' => 70,);
 	    $this->inputsHelper()->select('lingua_ministrada', $options);
 
 	    $resources = array( 0 => 'Selecione');
@@ -1568,16 +1569,16 @@ if(!$this->isEnderecoExterno){
 	    	$resources[$reg['id']] = $reg['lingua'];
 	    }
 
-  		$options = array('label' => Portabilis_String_Utils::toLatin1('LÌngua em que o ensino È ministrado'), 'resources' => $resources, 'value' => $this->lingua_ministrada, 'required' => false, 'size' => 70,);
+  		$options = array('label' => Portabilis_String_Utils::toLatin1('L√≠ngua em que o ensino √© ministrado'), 'resources' => $resources, 'value' => $this->lingua_ministrada, 'required' => false, 'size' => 70,);
 	    $this->inputsHelper()->select('lingua_ministrada', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('Cede espaÁo para turmas do Brasil Aprendizado'), 'value' => $this->espaco_brasil_aprendizado);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Cede espa√ßo para turmas do Brasil Aprendizado'), 'value' => $this->espaco_brasil_aprendizado);
 	    $this->inputsHelper()->checkbox('espaco_brasil_aprendizado', $options);
 
 	    $options = array('label' => Portabilis_String_Utils::toLatin1('Abre aos finais de semana para a comunidade'), 'value' => $this->abre_final_semana);
 	    $this->inputsHelper()->checkbox('abre_final_semana', $options);
 
-	    $options = array('label' => Portabilis_String_Utils::toLatin1('Escola com proposta pedagÛgica de formaÁ„o por altern‚ncia'), 'value' => $this->proposta_pedagogica);
+	    $options = array('label' => Portabilis_String_Utils::toLatin1('Escola com proposta pedag√≥gica de forma√ß√£o por altern√¢ncia'), 'value' => $this->proposta_pedagogica);
 	    $this->inputsHelper()->checkbox('proposta_pedagogica', $options);
 		}
 	}
@@ -2505,7 +2506,7 @@ if(!$this->isEnderecoExterno){
   protected function validaLatitudeLongitude() {
 
     $caracteres = array(" ",".","-",null,'0','1','2','3','4','5','6','7','8','9');
-    $mensagemErro = "O campo: Latitude e/ou Longitude foi preenchido com valor inv·lido.";
+    $mensagemErro = "O campo: Latitude e/ou Longitude foi preenchido com valor inv√°lido.";
 
     for ($i=0; $i<=strlen($this->latitude); $i++) {
     	$char = substr($this->latitude,$i,1);
@@ -2567,7 +2568,7 @@ function getRedeEnsino(xml_escola_rede_ensino)
 		}
 	}
 	else
-		campoRedeEnsino.options[0].text = 'A instituiÁ„o n„o possui nenhuma rede de ensino';
+		campoRedeEnsino.options[0].text = 'A institui√ß√£o n√£o possui nenhuma rede de ensino';
 }
 
 function getLocalizacao(xml_escola_localizacao)
@@ -2591,7 +2592,7 @@ function getLocalizacao(xml_escola_localizacao)
 	if(DOM_array.length)
 	{
 		campoLocalizacao.length = 1;
-		campoLocalizacao.options[0].text = 'Selecione uma localizaÁ„o';
+		campoLocalizacao.options[0].text = 'Selecione uma localiza√ß√£o';
 		campoLocalizacao.disabled = false;
 
 		for( var i = 0; i < DOM_array.length; i++ )
@@ -2600,7 +2601,7 @@ function getLocalizacao(xml_escola_localizacao)
 		}
 	}
 	else
-		campoLocalizacao.options[0].text = 'A instituiÁ„o n„o possui nenhuma localizaÁ„o';
+		campoLocalizacao.options[0].text = 'A institui√ß√£o n√£o possui nenhuma localiza√ß√£o';
 }
 
 function getCurso(xml_curso)
@@ -2633,7 +2634,7 @@ function getCurso(xml_curso)
 		}
 	}
 	else
-		campoCurso.options[0].text = 'A instituiÁ„o n„o possui nenhum curso';
+		campoCurso.options[0].text = 'A institui√ß√£o n√£o possui nenhum curso';
 }
 
 
@@ -2654,7 +2655,7 @@ if ( document.getElementById('ref_cod_instituicao') )
 		var campoLocalizacao = document.getElementById('ref_cod_escola_localizacao');
 		campoLocalizacao.length = 1;
 		campoLocalizacao.disabled = true;
-		campoLocalizacao.options[0].text = 'Carregando localizaÁ„o';
+		campoLocalizacao.options[0].text = 'Carregando localiza√ß√£o';
 
 		var campoCurso = document.getElementById('ref_cod_curso');
 		campoCurso.length = 1;

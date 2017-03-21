@@ -1,33 +1,33 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gestÃ£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de ItajaÃ­
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa Ã© software livre; vocÃª pode redistribuÃ­-lo e/ou modificÃ¡-lo
+ * sob os termos da LicenÃ§a PÃºblica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versÃ£o 2 da LicenÃ§a, como (a seu critÃ©rio)
+ * qualquer versÃ£o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa Ã© distribuÃ­Â­do na expectativa de que seja Ãºtil, porÃ©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implÃ­Â­cita de COMERCIABILIDADE OU
+ * ADEQUAÃ‡ÃƒO A UMA FINALIDADE ESPECÃFICA. Consulte a LicenÃ§a PÃºblica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * VocÃª deve ter recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral do GNU junto
+ * com este programa; se nÃ£o, escreva para a Free Software Foundation, Inc., no
+ * endereÃ§o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * Cria e configura um front controller para encaminhar as requisições para
- * page controllers especializados no diretório modules/.
+ * Cria e configura um front controller para encaminhar as requisiÃ§Ãµes para
+ * page controllers especializados no diretÃ³rio modules/.
  *
- * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @author    Eriksen Costa PaixÃ£o <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   Modules
- * @since     Arquivo disponível desde a versão 1.1.0
+ * @since     Arquivo disponÃ­vel desde a versÃ£o 1.1.0
  * @version   $Id$
  */
 
@@ -43,7 +43,7 @@ require_once 'modules/Error/Mailers/NotificationMailer.php';
 
 try
 {
-  // Objeto de requisição
+  // Objeto de requisiÃ§Ã£o
   $request = new CoreExt_Controller_Request();
 
   // Helper de URL. Auxilia para criar uma URL no formato http://www.example.org/module
@@ -53,7 +53,7 @@ try
   // Configura o baseurl da request
   $request->setBaseurl(sprintf('%s/module', $url));
 
-  // Configura o DataMapper para usar uma instância de clsBanco com fetch de resultados
+  // Configura o DataMapper para usar uma instÃ¢ncia de clsBanco com fetch de resultados
   // usando o tipo FETCH_ASSOC
   CoreExt_DataMapper::setDefaultDbAdapter(new clsBanco(array('fetchMode' => clsBanco::FETCH_ASSOC)));
 
@@ -61,7 +61,7 @@ try
   $frontController = CoreExt_Controller_Front::getInstance();
   $frontController->setRequest($request);
 
-  // Configura o caminho aonde os módulos estão instalados
+  // Configura o caminho aonde os mÃ³dulos estÃ£o instalados
   $frontController->setOptions(
     array('basepath' => PROJECT_ROOT . DS . 'modules')
   );

@@ -1,26 +1,26 @@
 <?php
 /**
  *
- * @author  Prefeitura Municipal de Itajaí
+ * @author  Prefeitura Municipal de ItajaÃ­
  * @version SVN: $Id$
  *
- * Pacote: i-PLB Software Público Livre e Brasileiro
+ * Pacote: i-PLB Software PÃºblico Livre e Brasileiro
  *
- * Copyright (C) 2006 PMI - Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006 PMI - Prefeitura Municipal de ItajaÃ­
  *            ctima@itajai.sc.gov.br
  *
- * Este  programa  é  software livre, você pode redistribuí-lo e/ou
- * modificá-lo sob os termos da Licença Pública Geral GNU, conforme
- * publicada pela Free  Software  Foundation,  tanto  a versão 2 da
- * Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.
+ * Este  programa  Ã©  software livre, vocÃª pode redistribuÃ­-lo e/ou
+ * modificÃ¡-lo sob os termos da LicenÃ§a PÃºblica Geral GNU, conforme
+ * publicada pela Free  Software  Foundation,  tanto  a versÃ£o 2 da
+ * LicenÃ§a   como  (a  seu  critÃ©rio)  qualquer  versÃ£o  mais  nova.
  *
- * Este programa  é distribuído na expectativa de ser útil, mas SEM
- * QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-
- * ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-
- * sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.
+ * Este programa  Ã© distribuÃ­do na expectativa de ser Ãºtil, mas SEM
+ * QUALQUER GARANTIA. Sem mesmo a garantia implÃ­cita de COMERCIALI-
+ * ZAÃ‡ÃƒO  ou  de ADEQUAÃ‡ÃƒO A QUALQUER PROPÃ“SITO EM PARTICULAR. Con-
+ * sulte  a  LicenÃ§a  PÃºblica  Geral  GNU para obter mais detalhes.
  *
- * Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU
- * junto  com  este  programa. Se não, escreva para a Free Software
+ * VocÃª  deve  ter  recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral GNU
+ * junto  com  este  programa. Se nÃ£o, escreva para a Free Software
  * Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA
  * 02111-1307, USA.
  *
@@ -85,6 +85,7 @@ class indice extends clsCadastro
 	var $nota;
 	var $faltas;
 	var $ordenamento;
+	var $carga_horaria_disciplina;
 	var $excluir_disciplina;
 	var $ultimo_sequencial;
 
@@ -229,7 +230,7 @@ class indice extends clsCadastro
 			$det_uf = $obj_uf->detalhe();
 		}
 
-		$lista_pais_origem = array('45' => "País da escola");
+		$lista_pais_origem = array('45' => "PaÃ­s da escola");
 		$obj_pais = new clsPais();
 		$obj_pais_lista = $obj_pais->lista(null,null,null,"","","nome asc");
 		if($obj_pais_lista)
@@ -261,16 +262,16 @@ class indice extends clsCadastro
 
 		$this->campoTexto( "nm_serie", $GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu' ? "Ano/S&eacute;rie" : "S&eacute;rie", $this->nm_serie, 30, 255, true );
 		$this->campoNumero( "ano", "Ano", $this->ano, 4, 4, true );
-		if (validaControlePosicaoHistorico()) {			
-			$this->campoNumero( "posicao", "Posição", $this->posicao, 1, 1, true, 'Informe a coluna equivalente a série/ano/etapa a qual o histórico pertence. Ex.: 1º ano informe 1, 2º ano informe 2' );
+		if (validaControlePosicaoHistorico()) {
+			$this->campoNumero( "posicao", "PosiÃ§Ã£o", $this->posicao, 1, 1, true, 'Informe a coluna equivalente a sÃ©rie/ano/etapa a qual o histÃ³rico pertence. Ex.: 1Âº ano informe 1, 2Âº ano informe 2' );
 		}
 		$this->campoMonetario( "carga_horaria", "Carga Hor&aacute;ria", $this->carga_horaria, 8, 8, false);
 		$this->campoCheck( "cb_faltas_globalizadas", "Faltas Globalizadas", is_numeric($this->faltas_globalizadas) ? 'on' : '');
 		$this->campoNumero( "faltas_globalizadas", "Faltas Globalizadas", $this->faltas_globalizadas, 4, 4, false );
 		$this->campoNumero( "dias_letivos", "Dias Letivos", $this->dias_letivos, 3, 3, false);
-		$this->campoMonetario( "frequencia", "Frequência", $this->frequencia, 8, 6, false );
+		$this->campoMonetario( "frequencia", "FrequÃªncia", $this->frequencia, 8, 6, false );
 		$this->campoCheck( "extra_curricular", "Extra-Curricular", $this->extra_curricular );
-		$this->campoCheck( "aceleracao", "Aceleração", $this->aceleracao );
+		$this->campoCheck( "aceleracao", "AceleraÃ§Ã£o", $this->aceleracao );
 		$this->campoMemo( "observacao", "Observa&ccedil;&atilde;o", $this->observacao, 60, 5, false );
 
 		$opcoes = array( "" => "Selecione",
@@ -288,7 +289,7 @@ class indice extends clsCadastro
 		$this->campoTexto( "livro", "Livro", $this->livro, 30, 50, false);
 		$this->campoTexto( "folha", "Folha", $this->folha, 30, 50, false);
 
-		$this->campoCheck("dependencia", "Histórico de dependência", $this->dependencia);
+		$this->campoCheck("dependencia", "HistÃ³rico de dependÃªncia", $this->dependencia);
 
 
 	//---------------------INCLUI DISCIPLINAS---------------------//
@@ -313,13 +314,14 @@ class indice extends clsCadastro
 					$this->historico_disciplinas[$qtd_disciplinas][] = $campo["nota"];
 					$this->historico_disciplinas[$qtd_disciplinas][] = $campo["faltas"];
 					$this->historico_disciplinas[$qtd_disciplinas][] = $campo["ordenamento"];
+					$this->historico_disciplinas[$qtd_disciplinas][] = $campo["carga_horaria_disciplina"];
 					$this->historico_disciplinas[$qtd_disciplinas][] = $campo["sequencial"];
 					$qtd_disciplinas++;
 				}
 			}
 		}
 
-		$this->campoTabelaInicio("notas","Notas",array("Disciplina","Nota","Faltas", "Ordem"),$this->historico_disciplinas);
+		$this->campoTabelaInicio("notas","Notas",array("Disciplina","Nota","Faltas", "Ordem", "C.H"),$this->historico_disciplinas);
 
 		//$this->campoTexto( "nm_disciplina", "Disciplina", $this->nm_disciplina, 30, 255, false, false, false, '', '', 'autoCompleteComponentesCurricular(this)', 'onfocus' );
 		$this->campoTexto( "nm_disciplina", "Disciplina", $this->nm_disciplina, 30, 255, false, false, false, '', '', '', 'onfocus' );
@@ -327,6 +329,7 @@ class indice extends clsCadastro
 		$this->campoTexto( "nota", "Nota", $this->nota, 10, 255, false );
 		$this->campoNumero( "faltas", "Faltas", $this->faltas, 3, 3, false );
 		$this->campoNumero( "ordenamento", "ordenamento", $this->ordenamento, 3, 3, false );
+		$this->campoNumero( "carga_horaria_disciplina", "carga_horaria_disciplina", $this->carga_horaria_disciplina, 3, 3, false );
 		//$this->campoOculto("sequencial","");
 
 		$this->campoTabelaFim();
@@ -336,7 +339,7 @@ class indice extends clsCadastro
 		$this->campoQuebra();
 	//---------------------FIM INCLUI DISCIPLINAS---------------------//
 
-    // carrega estilo para feedback messages, para exibir msg validação frequencia.
+    // carrega estilo para feedback messages, para exibir msg validaÃ§Ã£o frequencia.
 
     $style = "/modules/Portabilis/Assets/Stylesheets/Frontend.css";
     Portabilis_View_Helper_Application::loadStylesheet($this, $style);
@@ -346,9 +349,9 @@ class indice extends clsCadastro
 			$this,
 			array('/modules/Portabilis/Assets/Javascripts/Utils.js',
 						'/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/SimpleSearch.js',
-						'/modules/Portabilis/Assets/Javascripts/Validator.js')
+						'/modules/Portabilis/Assets/Javascripts/Validator.js',
+						'/modules/Cadastro/Assets/Javascripts/HistoricoEscolar.js')
 		);
-
 	}
 
 	function Novo()
@@ -385,7 +388,7 @@ class indice extends clsCadastro
 						$obj_historico = new clsPmieducarHistoricoEscolar();
 						$this->sequencial = $obj_historico->getMaxSequencial( $this->ref_cod_aluno );
 
-						$obj = new clsPmieducarHistoricoDisciplinas( $sequencial, $this->ref_cod_aluno, $this->sequencial, $disciplina, $this->nota[$key], $this->faltas[$key], $this->ordenamento[$key] );
+						$obj = new clsPmieducarHistoricoDisciplinas( $sequencial, $this->ref_cod_aluno, $this->sequencial, $disciplina, $this->nota[$key], $this->faltas[$key], $this->ordenamento[$key], $this->carga_horaria_disciplina[$key] );
 						$cadastrou1 = $obj->cadastra();
 						if( !$cadastrou1 )
 						{
@@ -407,7 +410,7 @@ class indice extends clsCadastro
 			echo "<!--\nErro ao cadastrar clsPmieducarHistoricoEscolar\nvalores obrigatorios\nis_numeric( $this->ref_cod_aluno ) && is_numeric( $this->pessoa_logada ) && is_string( $this->nm_serie ) && is_numeric( $this->ano ) && is_numeric( $this->carga_horaria ) && is_numeric( $this->dias_letivos ) && is_string( $this->escola ) && is_string( $this->escola_cidade ) && is_string( $this->escola_uf ) && is_numeric( $this->aprovado ) && is_numeric( $this->ref_cod_instituicao ) && is_numeric( $this->extra_curricular )\n-->";
 			return false;
 /*    }
-		echo "<script> alert('É necessário adicionar pelo menos 1 Disciplina!') </script>";
+		echo "<script> alert('Ã‰ necessÃ¡rio adicionar pelo menos 1 Disciplina!') </script>";
 		$this->mensagem = "Cadastro n&atilde;o realizado.<br>";
 		return false;
 		*/
@@ -458,7 +461,7 @@ class indice extends clsCadastro
 							//$campo['nm_disciplina_'] = urldecode($campo['nm_disciplina_']);
 
 
-							$obj = new clsPmieducarHistoricoDisciplinas( $sequencial, $this->ref_cod_aluno, $this->sequencial, $disciplina, $this->nota[$key], $this->faltas[$key], $this->ordenamento[$key] );
+							$obj = new clsPmieducarHistoricoDisciplinas( $sequencial, $this->ref_cod_aluno, $this->sequencial, $disciplina, $this->nota[$key], $this->faltas[$key], $this->ordenamento[$key], $this->carga_horaria_disciplina[$key] );
 							$cadastrou1 = $obj->cadastra();
 							if( !$cadastrou1 )
 							{
@@ -480,7 +483,7 @@ class indice extends clsCadastro
 			echo "<!--\nErro ao editar clsPmieducarHistoricoEscolar\nvalores obrigatorios\nif( is_numeric( $this->ref_cod_aluno ) && is_numeric( $this->sequencial ) && is_numeric( $this->pessoa_logada ) )\n-->";
 			return false;
 /*    }
-		echo "<script> alert('É necessário adicionar pelo menos 1 Disciplina!') </script>";
+		echo "<script> alert('Ã‰ necessÃ¡rio adicionar pelo menos 1 Disciplina!') </script>";
 		$this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
 		return false;
 		*/
@@ -558,159 +561,4 @@ $miolo = new indice();
 $pagina->addForm( $miolo );
 // gera o html
 $pagina->MakeAll();
-
 ?>
-
-<script type="text/javascript">
-	$j(document).ready(function(){
-		var codigoEscola = document.getElementById('codigoEscola').value;
-		var nomeEscola = document.getElementById('nomeEscola').value;
-		var numeroSequencial = document.getElementById('numeroSequencial').value;
-		nomeEscola = nomeEscola.replace(/[\+\+]/g , ' ');
-		nomeEscola = unescape(nomeEscola);
-
-		//Quando for novo cadastro
-		if(codigoEscola === '' && nomeEscola === '' && numeroSequencial === ''){
-			$j('#ref_cod_escola').val("");
-			$j('#escola').closest('tr').hide();
-		}
-		//Quando for edição e for outra
-		else if(codigoEscola === '' && numeroSequencial !== ''){
-			$j('#ref_cod_escola').val('outra');
-			$j('#escola').closest('tr').show();
-			$j('#escola').val(nomeEscola);
-		}
-		//Quando for edição e não for outra
-		else{
-			$j('#ref_cod_escola').val(codigoEscola);
-			$j('#escola').val('');
-			$j('#escola').closest('tr').hide();
-		}
-	});
-
-   	$j(function (){
-		$j('#ref_cod_escola').change(function (){
-			var ref_cod_escola_destino = $j('#ref_cod_escola').val();
-			if(ref_cod_escola_destino === 'outra'){
-				$j('#escola').closest('tr').show();
-			}
-			else{
-				$j('#escola').val('');
-				$j('#escola').closest('tr').hide();
-			}
-		});	
-	});
-
-	document.getElementById('cb_faltas_globalizadas').onclick =function()
-	{
-		setVisibility('tr_faltas_globalizadas',this.checked);
-		this.setAttribute('value', this.checked ? 'on' : '');
-	}
-
-	document.getElementById('cb_faltas_globalizadas').onclick();
-
-
-
-	document.getElementById('idpais').onchange = function() {
-		var campoPais = document.getElementById( 'idpais' ).value;
-		var campoEstado = document.getElementById( 'escola_uf' );
-
-		campoEstado.length = 1;
-		campoEstado.disabled = true;
-		campoEstado.options[0] = new Option( 'Carregando estados', '', false, false );
-
-		var xml1 = new ajax(getEstado_XML);
-		strURL = "public_uf_xml.php?pais="+campoPais;
-		xml1.envia(strURL);
-	}
-
-	function getEstado_XML(xml)
-	{
-
-
-		var campoEstado = document.getElementById( 'escola_uf' );
-
-
-		var estados = xml.getElementsByTagName( "estado" );
-
-		campoEstado.length = 1;
-		campoEstado.options[0] = new Option( 'Selecione um estado', '', false, false );
-		for ( var j = 0; j < estados.length; j++ )
-		{
-
-			campoEstado.options[campoEstado.options.length] = new Option( estados[j].firstChild.nodeValue, estados[j].getAttribute('sigla_uf'), false, false );
-
-		}
-		if ( campoEstado.length == 1 ) {
-			campoEstado.options[0] = new Option( 'País não possui estados', '', false, false );
-		}
-
-		campoEstado.disabled = false;
-	}
-
-
-	// autocomplete disciplina fields
-
-  var handleSelect = function(event, ui){
-		$j(event.target).val(ui.item.label);
-		return false;
-	};
-
-	var search = function(request, response) {
-		var searchPath = '/module/Api/ComponenteCurricular?oper=get&resource=componente_curricular-search';
-		var params     = { query : request.term };
-
-		$j.get(searchPath, params, function(dataResponse) {
-			simpleSearch.handleSearch(dataResponse, response);
-		});
-	};
-
-	function setAutoComplete() {
-		$j.each($j('input[id^="nm_disciplina"]'), function(index, field) {
-
-			$j(field).autocomplete({
-				source    : search,
-				select    : handleSelect,
-				minLength : 1,
-				autoFocus : true
-			});
-
-		});
-	}
-
-	setAutoComplete();
-
-	var submitForm = function(event) {
-		var $frequenciaField  	  = $j('#frequencia');
-		var frequencia        	  = $frequenciaField.val();
-		var frequenciaObrigatoria = $frequenciaField.hasClass('obrigatorio');
-
-	if (frequencia.indexOf(',') > -1){
-		frequencia = frequencia.replace('.', '').replace(',', '.');
-	}
-
-	if((frequencia.trim() == '')&&(!frequenciaObrigatoria)){
-		formUtils.submit();
-	}else{
-		if (validatesIfNumericValueIsInRange(frequencia, $frequenciaField, 0, 100))
-	    	formUtils.submit();
-		}
-	}
-
-	// bind events
-
-	var $addDisciplinaButton = $j('#btn_add_tab_add_1');
-
-	$addDisciplinaButton.click(function(){
-		setAutoComplete();
-	});
-
-
-	// submit button
-
-	var $submitButton = $j('#btn_enviar');
-
-  $submitButton.removeAttr('onclick');
-  $submitButton.click(submitForm);
-
-</script>
