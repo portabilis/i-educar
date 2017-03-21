@@ -1145,7 +1145,7 @@ class DiarioApiController extends ApiCoreController
         continue;
 
       $componente['id']                        = $componenteId;
-      $componente['nome']                      = $this->safeString(mb_strtoupper($_componente->get('nome'), ''), false);
+      $componente['nome']                      = strtoupper($_componente->get('nome'));
       $componente['nota_atual']                = $this->getNotaAtual($etapa = null, $componente['id']);
       $componente['nota_exame']                = $this->getNotaExame($componente['id']);
       $componente['falta_atual']               = $this->getFaltaAtual($etapa = null, $componente['id']);
