@@ -196,7 +196,8 @@ class clsMenu
                 THEN 0
               ELSE
                1
-            END AS ref_menu_pai
+            END AS ref_menu_pai,
+            pai.caminho
           FROM
             menu_menu AS pai LEFT OUTER JOIN menu_menu as filho ON (filho.ref_cod_menu_pai = pai.cod_menu_menu),
             menu_submenu AS sub,
@@ -234,6 +235,7 @@ class clsMenu
               ELSE
                 1
             END AS ref_menu_pai,
+            pai.caminho,
             UPPER(nome_menu.nm_menu),
             UPPER(pai.nm_menu)
           FROM
@@ -271,10 +273,10 @@ class clsMenu
 
     while ($db->ProximoRegistro()) {
       list ($nome,$nomepai, $titlepai, $nomesub, $arquivo, $titlesub,
-        $cod_submenu, $ref_menu_pai) = $db->Tupla();
+        $cod_submenu, $ref_menu_pai, $caminho) = $db->Tupla();
 
       $itens_menu[] = array($nome, $nomepai, $titlepai, $nomesub, $arquivo,
-        $titlesub, $cod_submenu,$ref_menu_pai);
+        $titlesub, $cod_submenu,$ref_menu_pai, $caminho);
     }
 
     $saida = '';
@@ -315,6 +317,7 @@ class clsMenu
         $aux_temp = str_replace('<!-- #&NOME&# -->',       $item[0], $aux_temp);
         $aux_temp = str_replace('<!-- #&ALT&# -->',        $item[3], $aux_temp);
         $aux_temp = str_replace('<!-- #&ID&# -->',         $item[6], $aux_temp);
+        $aux_temp = str_replace('<!-- #&CAMINHO&# -->',    $item[8], $aux_temp);
         $aux_temp = str_replace('<!-- #&ACAO&# -->',       $acao, $aux_temp);
         $aux_temp = str_replace('<!-- #&SIMBOLO&# -->',    $simbolo, $aux_temp);
         $aux_temp = str_replace('<!-- #&TITLE_ACAO&# -->', $title_acao, $aux_temp);
