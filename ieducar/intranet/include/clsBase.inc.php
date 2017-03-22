@@ -295,7 +295,7 @@ class clsBase extends clsConfig
     $menu = $this->openTpl("htmlmenu");
     $menuObj = new clsMenu();
     $saida .= $this->buscaRapida();
-    $saida .= $menuObj->MakeMenu($this->openTpl("htmllinhamenu"), $this->openTpl("htmllinhamenusubtitulo"));
+    $saida .= $menuObj->MakeMenu(null, $this->openTpl("htmllinhamenusubtitulo"));
     $saida = str_replace("<!-- #&LINHAS&# -->", $saida, $menu);
     return $saida;
   }
