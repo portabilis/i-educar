@@ -116,7 +116,7 @@ class indice extends clsListagem
 			"S&eacute;rie",
 			"Curso",
 			"Escola",
-			"Situação"
+			"Situa��o"
 		);
 
 		$this->addCabecalhos($lista_busca);

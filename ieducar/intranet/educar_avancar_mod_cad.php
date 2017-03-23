@@ -183,7 +183,7 @@ class indice extends clsCadastro
       }elseif ($this->existeMatriculasAprovadasReprovadas($escolaId, $cursoId, $serieId, $turmaId, $this->ano_letivo)) {
         $this->mensagem = "<span class='notice'>Nenhum aluno rematriculado. Certifique-se que a turma possui alunos aprovados ou reprovados em ".($this->ano_letivo-1).".</span>";
       }else{
-        $this->mensagem = Portabilis_String_Utils::toLatin1("<span class='notice'>Os alunos desta série já encontram-se rematriculados, sendo assim, favor verificar se as enturmações já foram efetuadas em Movimentação > Enturmação.</span>");
+        $this->mensagem = Portabilis_String_Utils::toLatin1("<span class='notice'>Os alunos desta sÃ©rie jÃ¡ encontram-se rematriculados, sendo assim, favor verificar se as enturmaÃ§Ãµes jÃ¡ foram efetuadas em MovimentaÃ§Ã£o > EnturmaÃ§Ã£o.</span>");
       }
     }elseif(empty($this->mensagem))
       $this->mensagem = "Ocorreu algum erro inesperado durante as rematr?ulas, por favor, tente novamente.";

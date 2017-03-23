@@ -1,25 +1,25 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
+	*	@author Prefeitura Municipal de ItajaÃ­								 *
 	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
+	*   Pacote: i-PLB Software PÃºblico Livre e Brasileiro					 *
 	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÃ­			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
+	*	Este  programa  Ã©  software livre, vocÃª pode redistribuÃ­-lo e/ou	 *
+	*	modificÃ¡-lo sob os termos da LicenÃ§a PÃºblica Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a versÃ£o 2 da	 *
+	*	LicenÃ§a   como  (a  seu  critÃ©rio)  qualquer  versÃ£o  mais  nova.	 *
 	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  Ã© distribuÃ­do na expectativa de ser Ãºtil, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia implÃ­cita de COMERCIALI-	 *
+	*	ZAÃ‡ÃƒO  ou  de ADEQUAÃ‡ÃƒO A QUALQUER PROPÃ“SITO EM PARTICULAR. Con-	 *
+	*	sulte  a  LicenÃ§a  PÃºblica  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
+	*	VocÃª  deve  ter  recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral GNU	 *
+	*	junto  com  este  programa. Se nÃ£o, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
@@ -53,9 +53,9 @@ class indice extends clsDetalhe
 		$this->titulo = "Detalhe do Membro";
 		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet" ,false);
 		
-		//pdf do relatório
-		$objRelatorio = new relatorios("Relatório",80,false,false,"A4","Prefeitura de Itajaí\nCentro Tecnologico de Informação e Modernização Administrativa.\nRua Alberto Werner, 100 - Vila Operária\nCEP. 88304-053 - Itajaí - SC","#FFFFFF","#000000","#FFFFFF","#FFFFFF");
-		$objRelatorio_cor = new relatorios("Relatório",80,false,false,"A4","Prefeitura de Itajaí\nCentro Tecnologico de Informação e Modernização Administrativa.\nRua Alberto Werner, 100 - Vila Operária\nCEP. 88304-053 - Itajaí - SC");
+		//pdf do relatÃ³rio
+		$objRelatorio = new relatorios("RelatÃ³rio",80,false,false,"A4","Prefeitura de ItajaÃ­\nCentro Tecnologico de InformaÃ§Ã£o e ModernizaÃ§Ã£o Administrativa.\nRua Alberto Werner, 100 - Vila OperÃ¡ria\nCEP. 88304-053 - ItajaÃ­ - SC","#FFFFFF","#000000","#FFFFFF","#FFFFFF");
+		$objRelatorio_cor = new relatorios("RelatÃ³rio",80,false,false,"A4","Prefeitura de ItajaÃ­\nCentro Tecnologico de InformaÃ§Ã£o e ModernizaÃ§Ã£o Administrativa.\nRua Alberto Werner, 100 - Vila OperÃ¡ria\nCEP. 88304-053 - ItajaÃ­ - SC");
 		
 
 		$cod_membro = $_GET['cod_membro'];
@@ -155,10 +155,10 @@ class indice extends clsDetalhe
 				$logradouro = $detalhe['logradouro'];
 			}
 
-			$this->addDetalhe(array("Endereço", "{$detalhe['idtlog']} {$logradouro}"));
+			$this->addDetalhe(array("EndereÃ§o", "{$detalhe['idtlog']} {$logradouro}"));
 			//pdf
-			$objRelatorio->novalinha(array("Endereço", "({$detalhe['idtlog']}) {$logradouro}"), 15, 13 , false, false, 60,false,"#FFFFFF");
-			$objRelatorio_cor->novalinha(array("Endereço", "({$detalhe['idtlog']}) {$logradouro}"), 15);
+			$objRelatorio->novalinha(array("EndereÃ§o", "({$detalhe['idtlog']}) {$logradouro}"), 15, 13 , false, false, 60,false,"#FFFFFF");
+			$objRelatorio_cor->novalinha(array("EndereÃ§o", "({$detalhe['idtlog']}) {$logradouro}"), 15);
 			
 			if( $detalhe['cidade'] ) 
 			{
@@ -203,10 +203,10 @@ class indice extends clsDetalhe
 			
 			if( $detalhe['numero'] ) 
 			{
-				$this->addDetalhe(array("Número", $detalhe['numero']));
+				$this->addDetalhe(array("NÃºmero", $detalhe['numero']));
 				//pdf
-				$objRelatorio->novalinha(array("Número", $detalhe['numero']), 15, 13 , false, false, 60,false,"#FFFFFF");
-				$objRelatorio_cor->novalinha(array("Número", $detalhe['numero']), 15);
+				$objRelatorio->novalinha(array("NÃºmero", $detalhe['numero']), 15, 13 , false, false, 60,false,"#FFFFFF");
+				$objRelatorio_cor->novalinha(array("NÃºmero", $detalhe['numero']), 15);
 			}
 			
 		  	if( $detalhe['complemento'] ) 

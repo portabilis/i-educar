@@ -1,25 +1,25 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	@author Prefeitura Municipal de ItajaÌ								 *
+	*	@author Prefeitura Municipal de Itaja√≠								 *
 	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software P˙blico Livre e Brasileiro					 *
+	*   Pacote: i-PLB Software P√∫blico Livre e Brasileiro					 *
 	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÌ			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itaja√≠			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  È  software livre, vocÍ pode redistribuÌ-lo e/ou	 *
-	*	modific·-lo sob os termos da LicenÁa P˙blica Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a vers„o 2 da	 *
-	*	LicenÁa   como  (a  seu  critÈrio)  qualquer  vers„o  mais  nova.	 *
+	*	Este  programa  √©  software livre, voc√™ pode redistribu√≠-lo e/ou	 *
+	*	modific√°-lo sob os termos da Licen√ßa P√∫blica Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a vers√£o 2 da	 *
+	*	Licen√ßa   como  (a  seu  crit√©rio)  qualquer  vers√£o  mais  nova.	 *
 	*																		 *
-	*	Este programa  È distribuÌdo na expectativa de ser ˙til, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implÌcita de COMERCIALI-	 *
-	*	ZA«√O  ou  de ADEQUA«√O A QUALQUER PROP”SITO EM PARTICULAR. Con-	 *
-	*	sulte  a  LicenÁa  P˙blica  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  √© distribu√≠do na expectativa de ser √∫til, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia impl√≠cita de COMERCIALI-	 *
+	*	ZA√á√ÉO  ou  de ADEQUA√á√ÉO A QUALQUER PROP√ìSITO EM PARTICULAR. Con-	 *
+	*	sulte  a  Licen√ßa  P√∫blica  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	VocÍ  deve  ter  recebido uma cÛpia da LicenÁa P˙blica Geral GNU	 *
-	*	junto  com  este  programa. Se n„o, escreva para a Free Software	 *
+	*	Voc√™  deve  ter  recebido uma c√≥pia da Licen√ßa P√∫blica Geral GNU	 *
+	*	junto  com  este  programa. Se n√£o, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
@@ -94,19 +94,19 @@ class indice extends clsCadastro
 					{
 						if(!$obj_permissao->permissao_excluir(563,$this->pessoa_logada))
 						{
-							echo "<script>alert('Usu·rio sem permiss„o para ativar material!'); document.location='educar_material_tipo_lst.php?ativo=excluido';</script>";
+							echo "<script>alert('Usu√°rio sem permiss√£o para ativar material!'); document.location='educar_material_tipo_lst.php?ativo=excluido';</script>";
 							die;
 						}
 
 						$obj->ativo = 1;
 						$obj->ref_usuario_exc =  $this->pessoa_logada;
 						if($obj->edita())
-							echo "<script>alert('AtivaÁ„o realizada com sucesso'); document.location='educar_material_tipo_lst.php?ativo=excluido';</script>";
+							echo "<script>alert('Ativa√ß√£o realizada com sucesso'); document.location='educar_material_tipo_lst.php?ativo=excluido';</script>";
 						else
-							echo "<script>alert('Erro ao ativar material did·tico!'); document.location='educar_material_tipo_lst.php?ativo=excluido';</script>";
+							echo "<script>alert('Erro ao ativar material did√°tico!'); document.location='educar_material_tipo_lst.php?ativo=excluido';</script>";
 					}
 					else{
-						echo "<script>alert('Tipo de material j· se encontra ativo!'); document.location='educar_material_tipo_lst.php';</script>";
+						echo "<script>alert('Tipo de material j√° se encontra ativo!'); document.location='educar_material_tipo_lst.php';</script>";
 					}
 				}
 				*/
@@ -143,8 +143,8 @@ class indice extends clsCadastro
 			$this->campoOculto("ref_cod_instituicao", $this->ref_cod_instituicao);
 		}
 		// text
-		$this->campoTexto( "nm_tipo", "Material Did·tico", $this->nm_tipo, 40, 255, true );
-		$this->campoMemo( "desc_tipo", "DescriÁ„o", $this->desc_tipo, 38, 5, false );
+		$this->campoTexto( "nm_tipo", "Material Did√°tico", $this->nm_tipo, 40, 255, true );
+		$this->campoMemo( "desc_tipo", "Descri√ß√£o", $this->desc_tipo, 38, 5, false );
 
 		// data
 

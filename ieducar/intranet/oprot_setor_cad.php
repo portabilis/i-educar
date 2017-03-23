@@ -1,25 +1,25 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	@author Prefeitura Municipal de ItajaÌ								 *
+	*	@author Prefeitura Municipal de Itaja√≠								 *
 	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software P˙blico Livre e Brasileiro					 *
+	*   Pacote: i-PLB Software P√∫blico Livre e Brasileiro					 *
 	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÌ			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itaja√≠			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  È  software livre, vocÍ pode redistribuÌ-lo e/ou	 *
-	*	modific·-lo sob os termos da LicenÁa P˙blica Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a vers„o 2 da	 *
-	*	LicenÁa   como  (a  seu  critÈrio)  qualquer  vers„o  mais  nova.	 *
+	*	Este  programa  √©  software livre, voc√™ pode redistribu√≠-lo e/ou	 *
+	*	modific√°-lo sob os termos da Licen√ßa P√∫blica Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a vers√£o 2 da	 *
+	*	Licen√ßa   como  (a  seu  crit√©rio)  qualquer  vers√£o  mais  nova.	 *
 	*																		 *
-	*	Este programa  È distribuÌdo na expectativa de ser ˙til, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implÌcita de COMERCIALI-	 *
-	*	ZA«√O  ou  de ADEQUA«√O A QUALQUER PROP”SITO EM PARTICULAR. Con-	 *
-	*	sulte  a  LicenÁa  P˙blica  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  √© distribu√≠do na expectativa de ser √∫til, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia impl√≠cita de COMERCIALI-	 *
+	*	ZA√á√ÉO  ou  de ADEQUA√á√ÉO A QUALQUER PROP√ìSITO EM PARTICULAR. Con-	 *
+	*	sulte  a  Licen√ßa  P√∫blica  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	VocÍ  deve  ter  recebido uma cÛpia da LicenÁa P˙blica Geral GNU	 *
-	*	junto  com  este  programa. Se n„o, escreva para a Free Software	 *
+	*	Voc√™  deve  ter  recebido uma c√≥pia da Licen√ßa P√∫blica Geral GNU	 *
+	*	junto  com  este  programa. Se n√£o, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
@@ -134,14 +134,14 @@ class indice extends clsCadastro
 			{
 				if( $nivelAtual < 4 )
 				{
-					$this->campoRotulo( "adicionar", "Selecionar", "<a href=\"oprot_setor_cad.php?cod_setor=$this->cod_setor&{$strSetorAtual}selecionar=1\">Selecionar um setor j· cadastrado</a>");
+					$this->campoRotulo( "adicionar", "Selecionar", "<a href=\"oprot_setor_cad.php?cod_setor=$this->cod_setor&{$strSetorAtual}selecionar=1\">Selecionar um setor j√° cadastrado</a>");
 				}
 				$this->campoTexto( "nm_setor", "Nome do Setor", $this->nm_setor, 30, 255, true );
 				$this->campoTexto( "sgl_setor", "Sigla do Setor", $this->sgl_setor, 15, 15, true );
-				$this->campoCheck("no_paco", "No PaÁo", 0);
-				$this->campoMemo("end", "EndereÁo", "", 55, 5);
+				$this->campoCheck("no_paco", "No Pa√ßo", 0);
+				$this->campoMemo("end", "Endere√ßo", "", 55, 5);
 				$lista = array();
-				$lista = array(0=>"Selecione", "s"=>"Secretaria", "a"=>"Altarquia", "f"=>"FundaÁ„o");
+				$lista = array(0=>"Selecione", "s"=>"Secretaria", "a"=>"Altarquia", "f"=>"Funda√ß√£o");
 				$this->campoLista("tipo", "Tipo", $lista, $this->tipo);
 				$lista = array();
 				$lista[0] = "Selecione";
@@ -158,12 +158,12 @@ class indice extends clsCadastro
 					$sec = array( "Para procurar, clique na lupa ao lado", $this->secretario => $detalhe_pessoa['nome'] );
 				}
 				
-				$this->campoListaPesq( "secretario", "Secret·rio", $sec, $this->secretario, "pesquisa_funcionario_lst.php", "", false, "", "", null, null, "", false, $parametros->serializaCampos() );
+				$this->campoListaPesq( "secretario", "Secret√°rio", $sec, $this->secretario, "pesquisa_funcionario_lst.php", "", false, "", "", null, null, "", false, $parametros->serializaCampos() );
 		
 	
 			
 				
-				//$this->campoListaPesq("secretario", "Secretario Respons·vel", $lista, $this->secretario, "pesquisa_pessoa.php");
+				//$this->campoListaPesq("secretario", "Secretario Respons√°vel", $lista, $this->secretario, "pesquisa_pessoa.php");
 				
 				if($this->cod_setor)
 				{				

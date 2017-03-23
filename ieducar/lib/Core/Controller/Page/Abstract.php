@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author    Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   Core_Controller
- * @since     Arquivo disponÌvel desde a vers„o 1.1.0
+ * @since     Arquivo dispon√≠vel desde a vers√£o 1.1.0
  * @version   $Id$
  */
 
@@ -37,17 +37,17 @@ require_once 'CoreExt/Exception/InvalidArgumentException.php';
 /**
  * Core_Controller_Page_Abstract abstract class.
  *
- * ProvÍ uma implementaÁ„o b·sica de um
+ * Prov√™ uma implementa√ß√£o b√°sica de um
  * {@link http://martinfowler.com/eaaCatalog/pageController.html page controller}.
  *
- * Sua funcionalidade est· integrada com o uso dos componentes
+ * Sua funcionalidade est√° integrada com o uso dos componentes
  * CoreExt_Entity e CoreExt_DataMapper.
  *
- * @author    Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author    Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   Core_Controller
- * @since     Classe disponÌvel desde a vers„o 1.1.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.1.0
  * @version   @@package_version@@
  */
 abstract class Core_Controller_Page_Abstract
@@ -55,7 +55,7 @@ abstract class Core_Controller_Page_Abstract
   implements Core_Controller_Page_Interface
 {
   /**
-   * OpÁıes de configuraÁ„o geral da classe.
+   * Op√ß√µes de configura√ß√£o geral da classe.
    * @var array
    */
   protected $_options = array(
@@ -70,46 +70,46 @@ abstract class Core_Controller_Page_Abstract
   );
 
   /**
-   * ColeÁ„o de mensagens de erros retornados pelos validadores de
+   * Cole√ß√£o de mensagens de erros retornados pelos validadores de
    * CoreExt_Entity.
    * @var array
    */
   protected $_errors = array();
 
   /**
-   * Inst‚ncia de Core_View
+   * Inst√¢ncia de Core_View
    * @var Core_View
    */
   protected $_view = NULL;
 
   /**
-   * Inst‚ncia de CoreExt_DataMapper
+   * Inst√¢ncia de CoreExt_DataMapper
    * @var CoreExt_DataMapper
    */
   protected $_dataMapper = NULL;
 
   /**
-   * Inst‚ncia de CoreExt_Entity
+   * Inst√¢ncia de CoreExt_Entity
    * @var CoreExt_Entity
    */
   protected $_entity = NULL;
 
   /**
-   * Identificador do n˙mero de processo para verificaÁ„o de autorizaÁ„o.
+   * Identificador do n√∫mero de processo para verifica√ß√£o de autoriza√ß√£o.
    * @see clsBase#verificaPermissao()
    * @var int
    */
   protected $_processoAp = NULL;
 
   /**
-   * TÌtulo a ser utilizado na barra de tÌtulo.
+   * T√≠tulo a ser utilizado na barra de t√≠tulo.
    * @see clsBase#MakeHeadHtml()
    * @var string
    */
   protected $_titulo = NULL;
 
   /**
-   * Array com labels para botıes, inseridos no HTML via RenderHTML(). Marcado
+   * Array com labels para bot√µes, inseridos no HTML via RenderHTML(). Marcado
    * como public para manter compatibilidade com as classes cls(Cadastro|Detalhe|
    * Listagem) que acessam o array diretamente.
    * @var array|NULL
@@ -117,7 +117,7 @@ abstract class Core_Controller_Page_Abstract
   public $array_botao = NULL;
 
   /**
-   * Array com labels para botıes, inseridos no HTML via RenderHTML(). Marcado
+   * Array com labels para bot√µes, inseridos no HTML via RenderHTML(). Marcado
    * como public para manter compatibilidade com as classes cls(Cadastro|Detalhe|
    * Listagem) que acessam o array diretamente.
    * @var array|NULL
@@ -169,7 +169,7 @@ abstract class Core_Controller_Page_Abstract
 
     if (0 < count(array_diff($passedOptions, $defaultOptions))) {
       throw new CoreExt_Exception_InvalidArgumentException(
-        sprintf('A classe %s n„o suporta as opÁıes: %s.', get_class($this), implode(', ', $passedOptions))
+        sprintf('A classe %s n√£o suporta as op√ß√µes: %s.', get_class($this), implode(', ', $passedOptions))
       );
     }
 
@@ -188,7 +188,7 @@ abstract class Core_Controller_Page_Abstract
   /**
    * Setter.
    * @param CoreExt_Controller|string $dataMapper
-   * @return Core_Controller_Page_Interface ProvÍ interface fluÌda
+   * @return Core_Controller_Page_Interface Prov√™ interface flu√≠da
    * @throws Core_Controller_Page_Exception|CoreExt_Exception_InvalidArgumentException
    */
   public function setDataMapper($dataMapper)
@@ -198,14 +198,14 @@ abstract class Core_Controller_Page_Abstract
         $this->_dataMapper = new $dataMapper();
       }
       else {
-        throw new Core_Controller_Page_Exception('A classe "'. $dataMapper .'" n„o existe.');
+        throw new Core_Controller_Page_Exception('A classe "'. $dataMapper .'" n√£o existe.');
       }
     }
     elseif ($dataMapper instanceof CoreExt_DataMapper) {
       $this->_dataMapper = $dataMapper;
     }
     else {
-      throw new CoreExt_Exception_InvalidArgumentException('Argumento inv·lido. S„o aceitos apenas argumentos do tipo string e CoreExt_DataMapper');
+      throw new CoreExt_Exception_InvalidArgumentException('Argumento inv√°lido. S√£o aceitos apenas argumentos do tipo string e CoreExt_DataMapper');
     }
     return $this;
   }
@@ -213,8 +213,8 @@ abstract class Core_Controller_Page_Abstract
   /**
    * Getter.
    *
-   * Facilita a subclassificaÁ„o ao permitir heranÁa tanto via configuraÁ„o do
-   * atributo $_dataMapper ou da sobrescriÁ„o de setDataMapper().
+   * Facilita a subclassifica√ß√£o ao permitir heran√ßa tanto via configura√ß√£o do
+   * atributo $_dataMapper ou da sobrescri√ß√£o de setDataMapper().
    *
    * @see Core_Controller_Page_Interface#getDataMapper()
    */
@@ -224,7 +224,7 @@ abstract class Core_Controller_Page_Abstract
       $this->setDataMapper($this->_dataMapper);
     }
     elseif (is_null($this->_dataMapper)) {
-      throw new Core_Controller_Page_Exception('… necess·rio especificar um nome de classe para a propriedade "$_dataMapper" ou sobrescrever o mÈtodo "getDataMapper()".');
+      throw new Core_Controller_Page_Exception('√â necess√°rio especificar um nome de classe para a propriedade "$_dataMapper" ou sobrescrever o m√©todo "getDataMapper()".');
     }
     return $this->_dataMapper;
   }
@@ -232,7 +232,7 @@ abstract class Core_Controller_Page_Abstract
   /**
    * Setter.
    * @param CoreExt_Entity $entity
-   * @return CoreExt_Controller_Page_Abstract ProvÍ interface fluÌda
+   * @return CoreExt_Controller_Page_Abstract Prov√™ interface flu√≠da
    */
   public function setEntity(CoreExt_Entity $entity)
   {
@@ -243,7 +243,7 @@ abstract class Core_Controller_Page_Abstract
   /**
    * Getter.
    *
-   * Se nenhuma inst‚ncia CoreExt_Entity existir, tenta instanciar uma atravÈs
+   * Se nenhuma inst√¢ncia CoreExt_Entity existir, tenta instanciar uma atrav√©s
    * de CoreExt_DataMapper.
    *
    * @return CoreExt_Entity|NULL
@@ -302,8 +302,8 @@ abstract class Core_Controller_Page_Abstract
   /**
    * Getter.
    *
-   * Facilita a subclassificaÁ„o ao permitir heranÁa tanto via configuraÁ„o do
-   * atributo $_processoAp ou da sobrescriÁ„o de setBaseProcessoAp().
+   * Facilita a subclassifica√ß√£o ao permitir heran√ßa tanto via configura√ß√£o do
+   * atributo $_processoAp ou da sobrescri√ß√£o de setBaseProcessoAp().
    *
    * @return int
    * @see Core_Controller_Page_Interface#getBaseProcessoAp()
@@ -311,7 +311,7 @@ abstract class Core_Controller_Page_Abstract
   public function getBaseProcessoAp()
   {
     if (is_null($this->_processoAp)) {
-      throw new Core_Controller_Page_Exception('… necess·rio especificar um valor numÈrico para a propriedade "$_processoAp" ou sobrescrever o mÈtodo "getBaseProcessoAp()".');
+      throw new Core_Controller_Page_Exception('√â necess√°rio especificar um valor num√©rico para a propriedade "$_processoAp" ou sobrescrever o m√©todo "getBaseProcessoAp()".');
     }
     return $this->_processoAp;
   }
@@ -329,8 +329,8 @@ abstract class Core_Controller_Page_Abstract
   /**
    * Getter.
    *
-   * Facilita a subclassificaÁ„o ao permitir heranÁa tanto via configuraÁ„o do
-   * atributo $_titulo ou da sobrescriÁ„o de setBaseTitulo().
+   * Facilita a subclassifica√ß√£o ao permitir heran√ßa tanto via configura√ß√£o do
+   * atributo $_titulo ou da sobrescri√ß√£o de setBaseTitulo().
    *
    * @return string
    * @see Core_Controller_Page_Interface#getBaseTitulo()
@@ -338,18 +338,18 @@ abstract class Core_Controller_Page_Abstract
   public function getBaseTitulo()
   {
     if (is_null($this->_titulo)) {
-      throw new Core_Controller_Page_Exception('… necess·rio especificar uma string para a propriedade "$_titulo" ou sobrescrever o mÈtodo "getBaseTitulo()".');
+      throw new Core_Controller_Page_Exception('√â necess√°rio especificar uma string para a propriedade "$_titulo" ou sobrescrever o m√©todo "getBaseTitulo()".');
     }
     return $this->_titulo;
   }
 
   /**
-   * Adiciona uma entrada nos arrays de botıes (renderizado por RenderHTML(),
+   * Adiciona uma entrada nos arrays de bot√µes (renderizado por RenderHTML(),
    * nas classes cls(Cadastro|Detalhe|Listagem)).
    *
    * @param string $label
    * @param string $url
-   * @return Core_Controller_Page_Abstract ProvÍ interface fluÌda
+   * @return Core_Controller_Page_Abstract Prov√™ interface flu√≠da
    */
   public function addBotao($label, $url)
   {
@@ -359,12 +359,12 @@ abstract class Core_Controller_Page_Abstract
   }
 
   /**
-   * Configura botıes padr„o de clsCadastro
-   * @return Core_Controller_Page_Abstract ProvÍ interface fluÌda
+   * Configura bot√µes padr√£o de clsCadastro
+   * @return Core_Controller_Page_Abstract Prov√™ interface flu√≠da
    */
   public function configurarBotoes()
   {
-    // Bot„o Cancelar (clsDetalhe e clsCadastro)
+    // Bot√£o Cancelar (clsDetalhe e clsCadastro)
     if ($this->_hasOption('url_cancelar')) {
       $config = $this->getOption('url_cancelar');
       if (is_string($config)) {
@@ -380,8 +380,8 @@ abstract class Core_Controller_Page_Abstract
   }
 
   /**
-   * Hook de prÈ-execuÁ„o do mÈtodo RenderHTML().
-   * @return Core_Controller_Page_Abstract ProvÍ interface fluÌda
+   * Hook de pr√©-execu√ß√£o do m√©todo RenderHTML().
+   * @return Core_Controller_Page_Abstract Prov√™ interface flu√≠da
    */
   protected function _preRender()
   {
@@ -389,11 +389,11 @@ abstract class Core_Controller_Page_Abstract
   }
 
   /**
-   * Adiciona conte˙do HTML apÛs o conte˙do gerado por um
+   * Adiciona conte√∫do HTML ap√≥s o conte√∫do gerado por um
    * Core_Controller_Page_Abstract.
    *
-   * @param string $data A string HTML a ser adiciona apÛs o conte˙do.
-   * @return Core_Controller_Page_Abstract ProvÍ interface fluÌda
+   * @param string $data A string HTML a ser adiciona ap√≥s o conte√∫do.
+   * @return Core_Controller_Page_Abstract Prov√™ interface flu√≠da
    */
   public function appendOutput($data)
   {
@@ -404,8 +404,8 @@ abstract class Core_Controller_Page_Abstract
   }
 
   /**
-   * Retorna todo o conte˙do acrescentado como uma string.
-   * @return string O conte˙do a ser acrescentado separado com uma quebra de linha.
+   * Retorna todo o conte√∫do acrescentado como uma string.
+   * @return string O conte√∫do a ser acrescentado separado com uma quebra de linha.
    * @see clsBase#MakeBody()
    */
   public function getAppendedOutput()
@@ -414,11 +414,11 @@ abstract class Core_Controller_Page_Abstract
   }
 
   /**
-   * Adiciona conte˙do HTML antes do conte˙do HTML gerado por um
+   * Adiciona conte√∫do HTML antes do conte√∫do HTML gerado por um
    * Core_Controller_Page_Abstract.
    *
-   * @param string $data A string HTML a ser adiciona apÛs o conte˙do.
-   * @return Core_Controller_Page_Abstract ProvÍ interface fluÌda
+   * @param string $data A string HTML a ser adiciona ap√≥s o conte√∫do.
+   * @return Core_Controller_Page_Abstract Prov√™ interface flu√≠da
    */
   public function prependOutput($data)
   {
@@ -429,8 +429,8 @@ abstract class Core_Controller_Page_Abstract
   }
 
   /**
-   * Retorna todo o conte˙do prefixado como uma string.
-   * @return string O conte˙do a ser prefixado separado com uma quebra de linha.
+   * Retorna todo o conte√∫do prefixado como uma string.
+   * @return string O conte√∫do a ser prefixado separado com uma quebra de linha.
    * @see clsBase#MakeBody()
    */
   public function getPrependedOutput()
@@ -439,10 +439,10 @@ abstract class Core_Controller_Page_Abstract
   }
 
   /**
-   * Retorna o conte˙do a ser adicionado a saÌda de acordo com a regi„o.
-   * @param string $pos Regi„o para retornar o conte˙do a ser adicionado na saÌda.
-   * @return string|NULL Conte˙do da regi„o separado por uma quebra de linha ou
-   *   NULL caso a regi„o n„o exista.
+   * Retorna o conte√∫do a ser adicionado a sa√≠da de acordo com a regi√£o.
+   * @param string $pos Regi√£o para retornar o conte√∫do a ser adicionado na sa√≠da.
+   * @return string|NULL Conte√∫do da regi√£o separado por uma quebra de linha ou
+   *   NULL caso a regi√£o n√£o exista.
    */
   private function _getOutput($pos = 'prepend')
   {

@@ -148,7 +148,7 @@ class EmpresaController extends ApiCoreController
 
     $sqls[] = "select distinct cod_empresa_transporte_escolar as id, nome as name from
                  modules.empresa_transporte_escolar, cadastro.pessoa where idpes = ref_idpes
-                 and lower(to_ascii(nome)) like '%'||lower(to_ascii($1))||'%'";
+                 and lower((nome)) like '%'||lower(($1))||'%'";
 
     return $sqls;
   }

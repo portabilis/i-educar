@@ -1,6 +1,6 @@
 <?php
 /**
-* @author Prefeitura Municipal de Itajaí
+* @author Prefeitura Municipal de ItajaÃ­
 *
 * Criado em 04/05/2007 17:22 pelo gerador automatico de classes
 */
@@ -549,7 +549,7 @@ class clsPmieducarQuadroHorarioHorariosAux
 	}
 
 	/**
-	 * Retorna true se o registro existir. Caso contrário retorna false.
+	 * Retorna true se o registro existir. Caso contrÃ¡rio retorna false.
 	 *
 	 * @return bool
 	 */

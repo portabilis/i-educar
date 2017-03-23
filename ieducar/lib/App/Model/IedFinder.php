@@ -974,7 +974,7 @@ class App_Model_IedFinder extends CoreExt_Entity
                    area_conhecimento.nome AS nome
               FROM modules.area_conhecimento
              WHERE instituicao_id = $1
-             ORDER BY to_ascii(lower(nome)) ASC';
+             ORDER BY (lower(nome)) ASC';
 
     $resultado = Portabilis_Utils_Database::fetchPreparedQuery($sql,array('params' => $instituicaoId));
 
@@ -990,7 +990,7 @@ class App_Model_IedFinder extends CoreExt_Entity
     $sql = 'SELECT id, nome
               FROM pmieducar.turma_turno
               WHERE ativo = 1
-             ORDER BY to_ascii(lower(nome)) ASC';
+             ORDER BY (lower(nome)) ASC';
 
 
     return Portabilis_Array_Utils::setAsIdValue(Portabilis_Utils_Database::fetchPreparedQuery($sql), 'id', 'nome');
