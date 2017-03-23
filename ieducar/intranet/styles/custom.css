@@ -1,5 +1,6 @@
 body, html{
   font-family: "Open Sans" !important;
+  height: 100% !important;
 }
 
 a{
@@ -160,7 +161,7 @@ select{
 **************************************/
 
 .r3c1{
-  width: 270px;
+  width: 210px;
   background: #e9f0f8;
   border: 0;
 }
@@ -193,7 +194,7 @@ select{
 
 .nvp_tabelaMenu .title {
   background: transparent;
-  width: 250px;
+  width: 210px;
   padding: 10px 10px;
   margin: 0 10px;
   border-radius: 3px;
@@ -312,53 +313,13 @@ a.menu_susp_root:after {
   background: #f3f3f3;
 }
 
-/*Icones do menu lateral*/
-
-a#link1_25 {
-  background: url(../imagens/icon-administrativo.png) no-repeat left center;
-  padding-left: 30px;
-}
-
-a#link1_5 {
-  background: url(../imagens/icon-administrativo.png) no-repeat left center;
-  padding-left: 30px;
-}
-
-a#link1_70 {
-  background: url(../imagens/icon-educacenso.png) no-repeat left center;
-  padding-left: 30px;
-}
-
-a#link1_68 {
-  background: url(../imagens/icon-enderecamento.png) no-repeat left center;
-  padding-left: 30px;
-}
-
-a#link1_57{
-  background: url(../imagens/icon-biblioteca.png) no-repeat left center;
-  padding-left: 30px;
-}
-
-
-a#link1_55 {
-  background: url(../imagens/icon-escola.png) no-repeat left center;
-  padding-left: 30px;
-}
-
-
-a#link1_7 {
-  background: url(../imagens/icon-pessoas.png) no-repeat left center;
-  padding-left: 30px;
-}
-
-a#link1_23 {
-  background: url(../imagens/icon-administrativo.png) no-repeat left center;
-  padding-left: 30px;
-}
-
-a#link1_69 {
-  background: url(../imagens/icon-transporte-escolar.png) no-repeat left center;
-  padding-left: 30px;
+div#fa-icons {
+    float: left;
+    padding: 1px 0px;
+    width: 30px;
+    text-align: center;
+    color: #98b0c3;
+    font-size: 20px;
 }
 
 
