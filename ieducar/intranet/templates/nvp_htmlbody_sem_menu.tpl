@@ -7,7 +7,7 @@
  	 		<div class="dropbtn"><!-- #&USERLOGADO&# --></div>
   			<div class="dropdown-content">
     			<a href="agenda.php">Agenda</a>
-    			<a href="index.php">Calend·rio</a>
+    			<a href="index.php">Calend√°rio</a>
     			<a href="meusdados.php">Meus dados</a>
     			<a href="logof.php">Sair</a>
 			 </div>

@@ -1,6 +1,6 @@
 <?php
 /**
-* @author Prefeitura Municipal de ItajaÃ­
+* @author Prefeitura Municipal de Itajaí
 *
 * Criado em 25/05/2007 11:08 pelo gerador automatico de classes
 */
@@ -514,7 +514,7 @@ class clsPmieducarSubnivel
 	}
 
 	/**
-	 * Retorna true se o registro existir. Caso contrÃ¡rio retorna false.
+	 * Retorna true se o registro existir. Caso contrário retorna false.
 	 *
 	 * @return bool
 	 */

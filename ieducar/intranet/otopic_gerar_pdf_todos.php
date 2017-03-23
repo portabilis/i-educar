@@ -1,25 +1,25 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	@author Prefeitura Municipal de ItajaÃ­								 *
+	*	@author Prefeitura Municipal de Itajaí								 *
 	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software PÃºblico Livre e Brasileiro					 *
+	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
 	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÃ­			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  Ã©  software livre, vocÃª pode redistribuÃ­-lo e/ou	 *
-	*	modificÃ¡-lo sob os termos da LicenÃ§a PÃºblica Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versÃ£o 2 da	 *
-	*	LicenÃ§a   como  (a  seu  critÃ©rio)  qualquer  versÃ£o  mais  nova.	 *
+	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
+	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
+	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
 	*																		 *
-	*	Este programa  Ã© distribuÃ­do na expectativa de ser Ãºtil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implÃ­cita de COMERCIALI-	 *
-	*	ZAÃ‡ÃƒO  ou  de ADEQUAÃ‡ÃƒO A QUALQUER PROPÃ“SITO EM PARTICULAR. Con-	 *
-	*	sulte  a  LicenÃ§a  PÃºblica  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
+	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
+	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	VocÃª  deve  ter  recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral GNU	 *
-	*	junto  com  este  programa. Se nÃ£o, escreva para a Free Software	 *
+	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
+	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
@@ -60,7 +60,7 @@ class indice extends clsCadastro
 			
 			if($_GET["tipo"] == "end")
 			{
-				$obj_relatorios = new relatorios("Todas as ocorrÃªncias");
+				$obj_relatorios = new relatorios("Todas as ocorrências");
 				
 				foreach ($_SESSION["arr_pessoas"] as $indice=>$valor)
 				{
@@ -85,13 +85,13 @@ class indice extends clsCadastro
 									{
 										if($detalhe['numero'])
 										{
-											$end = " nÂº {$detalhe['numero']}";
+											$end = " nº {$detalhe['numero']}";
 										}
 										if($detalhe['apartamento'])
 										{
 											$end .= " apto {$detalhe['apartamento']}";
 										}
-										$obj_relatorios->novalinha(array("EndereÃ§o", strtolower($detalhe['idtlog']).": {$detalhe['logradouro']} $end") );
+										$obj_relatorios->novalinha(array("Endereço", strtolower($detalhe['idtlog']).": {$detalhe['logradouro']} $end") );
 										
 									}
 									
@@ -122,7 +122,7 @@ class indice extends clsCadastro
 								
 								$obj_relatorios->novalinha( array("CEP", $cep) );
 		
-								$obj_relatorios->novalinha( array("EndereÃ§o", $endereco) );
+								$obj_relatorios->novalinha( array("Endereço", $endereco) );
 								
 								if($nm_bairro)
 								{
@@ -146,7 +146,7 @@ class indice extends clsCadastro
 						{
 							$obj_relatorios->novalinha(array("Nome:", $valor[1]));
 							$obj_relatorios->novalinha(array("CEP:", $det_pessoa_auxiliar["cep"]));
-							$obj_relatorios->novalinha(array("EndereÃ§o:", "{$det_pessoa_auxiliar["logradouro"]} {$det_pessoa_auxiliar["numero"]}"));
+							$obj_relatorios->novalinha(array("Endereço:", "{$det_pessoa_auxiliar["logradouro"]} {$det_pessoa_auxiliar["numero"]}"));
 							
 							if($det_pessoa_auxiliar["numero_ap"])
 							{
@@ -186,7 +186,7 @@ class indice extends clsCadastro
 			}
 			elseif ($_GET["tipo"] == "det")
 			{
-				$obj_relatorios = new relatorios("Todas as ocorrÃªncias");
+				$obj_relatorios = new relatorios("Todas as ocorrências");
 				
 				foreach ($_SESSION["arr_pessoas"] as $indice=>$valor)
 				{
@@ -340,7 +340,7 @@ class indice extends clsCadastro
 		}
 		else 
 		{
-			$this->campoRotulo("erro","AtenÃ§Ã£o", "Sem dados para impressÃ£o");
+			$this->campoRotulo("erro","Atenção", "Sem dados para impressão");
 		}
 	}
 

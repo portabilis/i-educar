@@ -127,7 +127,7 @@ class indice extends clsDetalhe
               <td bgcolor="#ccdce6"><b>Ponto</b></td>
               <td bgcolor="#ccdce6"><b>Hora</b></td>
               <td bgcolor="#ccdce6"><b>Tipo</b></td>
-              <td bgcolor="#ccdce6"><b>Veículo</b></td>
+              <td bgcolor="#ccdce6"><b>Veí­culo</b></td>
             </tr>';
 
         $cont = 0;

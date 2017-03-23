@@ -49,7 +49,7 @@ class CursoAlunoController extends ApiCoreController
 
       $alunoId = $this->getRequest()->aluno_id;
 
-      $sql = "SELECT  '''' || (nm_curso ) || '''' AS id, (nm_curso ) AS nome FROM pmieducar.historico_escolar WHERE ref_cod_aluno = $1";
+      $sql = "SELECT  '''' || to_ascii(nm_curso ) || '''' AS id, to_ascii(nm_curso ) AS nome FROM pmieducar.historico_escolar WHERE ref_cod_aluno = $1";
 
       $cursos = $this->fetchPreparedQuery($sql, array($alunoId));
 

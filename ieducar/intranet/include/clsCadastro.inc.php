@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestï¿½o escolar
+ * i-Educar - Sistema de gest�o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaï¿½
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja�
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa ï¿½ software livre; vocï¿½ pode redistribuï¿½-lo e/ou modificï¿½-lo
- * sob os termos da Licenï¿½a Pï¿½blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versï¿½o 2 da Licenï¿½a, como (a seu critï¿½rio)
- * qualquer versï¿½o posterior.
+ * Este programa � software livre; voc� pode redistribu�-lo e/ou modific�-lo
+ * sob os termos da Licen�a P�blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers�o 2 da Licen�a, como (a seu crit�rio)
+ * qualquer vers�o posterior.
  *
- * Este programa ï¿½ distribuï¿½ï¿½do na expectativa de que seja ï¿½til, porï¿½m, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implï¿½ï¿½cita de COMERCIABILIDADE OU
- * ADEQUAï¿½ï¿½O A UMA FINALIDADE ESPECï¿½FICA. Consulte a Licenï¿½a Pï¿½blica Geral
+ * Este programa � distribu��do na expectativa de que seja �til, por�m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl��cita de COMERCIABILIDADE OU
+ * ADEQUA��O A UMA FINALIDADE ESPEC�FICA. Consulte a Licen�a P�blica Geral
  * do GNU para mais detalhes.
  *
- * Vocï¿½ deve ter recebido uma cï¿½pia da Licenï¿½a Pï¿½blica Geral do GNU junto
- * com este programa; se nï¿½o, escreva para a Free Software Foundation, Inc., no
- * endereï¿½o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc� deve ter recebido uma c�pia da Licen�a P�blica Geral do GNU junto
+ * com este programa; se n�o, escreva para a Free Software Foundation, Inc., no
+ * endere�o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de Itajaï¿½ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja� <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Include
- * @since     Arquivo disponï¿½vel desde a versï¿½o 1.0.0
+ * @since     Arquivo dispon�vel desde a vers�o 1.0.0
  * @version   $Id$
  */
 
@@ -43,11 +43,11 @@ require_once 'include/localizacaoSistema.php';
 /**
  * clsCadastro class.
  *
- * @author    Prefeitura Municipal de Itajaï¿½ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja� <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Include
- * @since     Classe disponï¿½vel desde a versï¿½o 1.0.0
+ * @since     Classe dispon�vel desde a vers�o 1.0.0
  * @version   @@package_version@@
  */
 class clsCadastro extends clsCampos
@@ -321,7 +321,7 @@ class clsCadastro extends clsCampos
     }
     $barra = $titulo;
 
-    // @todo Remover cï¿½digo, funcionalidade nï¿½o existente.
+    // @todo Remover c�digo, funcionalidade n�o existente.
     if (class_exists('clsPmiajudaPagina')) {
       $ajudaPagina = new clsPmiajudaPagina();
       $lista = $ajudaPagina->lista(null,null,$url);
@@ -330,9 +330,9 @@ class clsCadastro extends clsCampos
         <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">
           <tr>
           <script type=\"text/javascript\">document.help_page_index = 0;</script>
-          <td width=\"20\"><a href=\"javascript:showExpansivelIframe(700,500,'ajuda_mostra.php?cod_topico={$lista[0]["ref_cod_topico"]}&tipo={$tipo}');\"><img src=\"imagens/banco_imagens/interrogacao.gif\" border=\"0\" alt=\"Botï¿½o de Ajuda\" title=\"Clique aqui para obter ajuda sobre esta pï¿½gina\"></a></td>
+          <td width=\"20\"><a href=\"javascript:showExpansivelIframe(700,500,'ajuda_mostra.php?cod_topico={$lista[0]["ref_cod_topico"]}&tipo={$tipo}');\"><img src=\"imagens/banco_imagens/interrogacao.gif\" border=\"0\" alt=\"Bot�o de Ajuda\" title=\"Clique aqui para obter ajuda sobre esta p�gina\"></a></td>
           <td>{$titulo}</td>
-          <td align=\"right\"><a href=\"javascript:showExpansivelIframe(700,500,'ajuda_mostra.php?cod_topico={$lista[0]["ref_cod_topico"]}&tipo={$tipo}');\"><img src=\"imagens/banco_imagens/interrogacao.gif\" border=\"0\" alt=\"Botï¿½o de Ajuda\" title=\"Clique aqui para obter ajuda sobre esta pï¿½gina\"></a></td>
+          <td align=\"right\"><a href=\"javascript:showExpansivelIframe(700,500,'ajuda_mostra.php?cod_topico={$lista[0]["ref_cod_topico"]}&tipo={$tipo}');\"><img src=\"imagens/banco_imagens/interrogacao.gif\" border=\"0\" alt=\"Bot�o de Ajuda\" title=\"Clique aqui para obter ajuda sobre esta p�gina\"></a></td>
           </tr>
         </table>";
       }
@@ -551,7 +551,7 @@ class clsCadastro extends clsCampos
             $retorno .=  " return false; } ";
           }
           else {
-            //substituito referencia a elementos por padrï¿½o W3C document.getElementById()
+            //substituito referencia a elementos por padr�o W3C document.getElementById()
             //quando se referenciava um nome de elemento como um array ex: cadastro[aluno]
             //nao funcionava na referencia por nome
             //16-08-2006
@@ -722,8 +722,8 @@ class clsCadastro extends clsCampos
   }
 
   /**
-   * Retorna uma lista formatada de erros que possam ter sido lanï¿½adas pela
-   * integraï¿½ï¿½o CoreExt_Controller_Page_Interface com CoreExt_DataMapper e
+   * Retorna uma lista formatada de erros que possam ter sido lan�adas pela
+   * integra��o CoreExt_Controller_Page_Interface com CoreExt_DataMapper e
    * CoreExt_Entity.
    *
    * @return string|NULL
@@ -741,7 +741,7 @@ class clsCadastro extends clsCampos
     if ($hasErrors) {
       $htmlError = '
         <div class="form error">
-          <p>Por favor, verifique a lista de erros e corrija as informaï¿½ï¿½es necessï¿½rias no formulï¿½rio.</p>
+          <p>Por favor, verifique a lista de erros e corrija as informa��es necess�rias no formul�rio.</p>
           <ul>%s</ul>
         </div>
         ';

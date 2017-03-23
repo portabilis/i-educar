@@ -26,7 +26,7 @@ class AreaConhecimentoController extends ApiCoreController{
                        ac.nome AS nome 
                   FROM modules.area_conhecimento ac
                  WHERE instituicao_id = $1
-              ORDER BY (lower(nome)) ASC';
+              ORDER BY to_ascii(lower(nome)) ASC';
 
 
     $paramsSql = array('params' => $instituicaoId);

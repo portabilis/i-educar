@@ -1,41 +1,41 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest√£o escolar
+ * i-Educar - Sistema de gest„o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
+ * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
- * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
- * qualquer vers√£o posterior.
+ * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
+ * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
+ * qualquer vers„o posterior.
  *
- * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
- * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
+ * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
+ * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
  * do GNU para mais detalhes.
  *
- * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
- * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
- * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
+ * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
+ * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Portal
- * @since     Arquivo dispon√≠vel desde a vers√£o 1.0.0
+ * @since     Arquivo disponÌvel desde a vers„o 1.0.0
  * @version   $Id$
  */
 
 /**
  * clsPortalSmsProntuario class.
  *
- * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Portal
- * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
+ * @since     Classe disponÌvel desde a vers„o 1.0.0
  * @version   @@package_version@@
  */
 class clsPortalSmsProntuario
@@ -51,7 +51,7 @@ class clsPortalSmsProntuario
   var $ativo;
 
   /**
-   * Armazena o total de resultados obtidos na √∫ltima chamada ao m√©todo lista().
+   * Armazena o total de resultados obtidos na ˙ltima chamada ao mÈtodo lista().
    * @var int
    */
   var $_total;
@@ -69,33 +69,33 @@ class clsPortalSmsProntuario
   var $_tabela;
 
   /**
-   * Lista separada por v√≠rgula, com os campos que devem ser selecionados na
-   * pr√≥xima chamado ao m√©todo lista().
+   * Lista separada por vÌrgula, com os campos que devem ser selecionados na
+   * prÛxima chamado ao mÈtodo lista().
    * @var string
    */
   var $_campos_lista;
 
   /**
-   * Lista com todos os campos da tabela separados por v√≠rgula, padr√£o para
-   * sele√ß√£o no m√©todo lista.
+   * Lista com todos os campos da tabela separados por vÌrgula, padr„o para
+   * seleÁ„o no mÈtodo lista.
    * @var string
    */
   var $_todos_campos;
 
   /**
-   * Valor que define a quantidade de registros a ser retornada pelo m√©todo lista().
+   * Valor que define a quantidade de registros a ser retornada pelo mÈtodo lista().
    * @var int
    */
   var $_limite_quantidade;
 
   /**
-   * Define o valor de offset no retorno dos registros no m√©todo lista().
+   * Define o valor de offset no retorno dos registros no mÈtodo lista().
    * @var int
    */
   var $_limite_offset;
 
   /**
-   * Define o campo para ser usado como padr√£o de ordena√ß√£o no m√©todo lista().
+   * Define o campo para ser usado como padr„o de ordenaÁ„o no mÈtodo lista().
    * @var string
    */
   var $_campo_order_by;
@@ -270,7 +270,7 @@ class clsPortalSmsProntuario
   }
 
   /**
-   * Retorna uma lista de registros filtrados de acordo com os par√¢metros.
+   * Retorna uma lista de registros filtrados de acordo com os par‚metros.
    * @return array
    */
   function lista($int_cod_prontuario = NULL, $int_ref_pessoa_exc = NULL,
@@ -311,7 +311,7 @@ class clsPortalSmsProntuario
     }
 
     if (is_string($str_nm_paciente)) {
-      $filtros .= "{$whereAnd} (nm_paciente) ILIKE  ('%{$str_nm_paciente}%')";
+      $filtros .= "{$whereAnd} to_ascii(nm_paciente) ILIKE  to_ascii('%{$str_nm_paciente}%')";
       $whereAnd = " AND ";
     }
 
@@ -404,7 +404,7 @@ class clsPortalSmsProntuario
   }
 
   /**
-   * Define quais campos da tabela ser√£o selecionados no m√©todo Lista().
+   * Define quais campos da tabela ser„o selecionados no mÈtodo Lista().
    */
   function setCamposLista($str_campos)
   {
@@ -412,7 +412,7 @@ class clsPortalSmsProntuario
   }
 
   /**
-   * Define que o m√©todo Lista() deverpa retornar todos os campos da tabela.
+   * Define que o mÈtodo Lista() deverpa retornar todos os campos da tabela.
    */
   function resetCamposLista()
   {
@@ -420,7 +420,7 @@ class clsPortalSmsProntuario
   }
 
   /**
-   * Define limites de retorno para o m√©todo Lista().
+   * Define limites de retorno para o mÈtodo Lista().
    */
   function setLimite($intLimiteQtd, $intLimiteOffset = NULL)
   {
@@ -429,7 +429,7 @@ class clsPortalSmsProntuario
   }
 
   /**
-   * Retorna a string com o trecho da query respons√°vel pelo limite de
+   * Retorna a string com o trecho da query respons·vel pelo limite de
    * registros retornados/afetados.
    *
    * @return string
@@ -447,7 +447,7 @@ class clsPortalSmsProntuario
   }
 
   /**
-   * Define o campo para ser utilizado como ordena√ß√£o no m√©todo Lista().
+   * Define o campo para ser utilizado como ordenaÁ„o no mÈtodo Lista().
    */
   function setOrderby($strNomeCampo)
   {
@@ -457,7 +457,7 @@ class clsPortalSmsProntuario
   }
 
   /**
-   * Retorna a string com o trecho da query respons√°vel pela Ordena√ß√£o dos
+   * Retorna a string com o trecho da query respons·vel pela OrdenaÁ„o dos
    * registros.
    *
    * @return string

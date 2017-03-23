@@ -55,7 +55,7 @@ class Portabilis_Utils_DeprecatedXmlApi {
   }
 
   public static function returnEmptyQuery($xmlns = 'sugestoes', $rootNodeName = 'query', $comment = ''){
-    $emptyQuery = "<?xml version='1.0' encoding='5'?>" .
+    $emptyQuery = "<?xml version='1.0' encoding='ISO-8859-15'?>" .
                   "<!-- $comment -->" .
                   "<$rootNodeName xmlns='$xmlns'></$rootNodeName>";
 

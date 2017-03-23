@@ -117,7 +117,7 @@ class clsPmieducarMatriculaTurma
     $this->_schema = "pmieducar.";
     $this->_tabela = "{$this->_schema}matricula_turma";
 
-    $this->_campos_lista = $this->_todos_campos = "mt.ref_cod_matricula, mt.abandono, mt.reclassificado, mt.remanejado, mt.transferido, mt.falecido, mt.ref_cod_turma, mt.ref_usuario_exc, mt.ref_usuario_cad, mt.data_cadastro, mt.data_exclusao, mt.ativo, mt.sequencial, mt.data_enturmacao, (SELECT pes.nome FROM cadastro.pessoa pes, pmieducar.aluno alu, pmieducar.matricula mat WHERE pes.idpes = alu.ref_idpes AND mat.ref_cod_aluno = alu.cod_aluno AND mat.cod_matricula = mt.ref_cod_matricula ) AS nome, (SELECT (pes.nome) FROM cadastro.pessoa pes, pmieducar.aluno alu, pmieducar.matricula mat WHERE pes.idpes = alu.ref_idpes AND mat.ref_cod_aluno = alu.cod_aluno AND mat.cod_matricula = mt.ref_cod_matricula ) AS nome_ascii";
+    $this->_campos_lista = $this->_todos_campos = "mt.ref_cod_matricula, mt.abandono, mt.reclassificado, mt.remanejado, mt.transferido, mt.falecido, mt.ref_cod_turma, mt.ref_usuario_exc, mt.ref_usuario_cad, mt.data_cadastro, mt.data_exclusao, mt.ativo, mt.sequencial, mt.data_enturmacao, (SELECT pes.nome FROM cadastro.pessoa pes, pmieducar.aluno alu, pmieducar.matricula mat WHERE pes.idpes = alu.ref_idpes AND mat.ref_cod_aluno = alu.cod_aluno AND mat.cod_matricula = mt.ref_cod_matricula ) AS nome, (SELECT to_ascii(pes.nome) FROM cadastro.pessoa pes, pmieducar.aluno alu, pmieducar.matricula mat WHERE pes.idpes = alu.ref_idpes AND mat.ref_cod_aluno = alu.cod_aluno AND mat.cod_matricula = mt.ref_cod_matricula ) AS nome_ascii";
 
     if (is_numeric($ref_usuario_exc)) {
       if (class_exists("clsPmieducarUsuario")) {
@@ -243,7 +243,7 @@ class clsPmieducarMatriculaTurma
 
     if (is_string($data_enturmacao)) {
       $this->data_enturmacao = $data_enturmacao;
-    }
+    }    
   }
 
   /**
@@ -297,14 +297,14 @@ class clsPmieducarMatriculaTurma
         $campos .= "{$gruda}data_enturmacao";
         $valores .= "{$gruda}'{$this->data_enturmacao}'";
         $gruda = ", ";
-      }
+      }      
 
       $this->sequencial_fechamento = $this->getSequencialFechamento($this->ref_cod_matricula, $this->ref_cod_turma, $this->data_enturmacao);
 
       if(is_numeric($this->sequencial_fechamento)){
         $campos .= "{$gruda}sequencial_fechamento";
         $valores .= "{$gruda}'{$this->sequencial_fechamento}'";
-        $gruda = ", ";
+        $gruda = ", ";        
       }
 
       $db->Consulta("INSERT INTO {$this->_tabela} ($campos) VALUES ($valores)");
@@ -367,11 +367,11 @@ class clsPmieducarMatriculaTurma
       if (is_string($this->data_enturmacao)) {
         $set .= "{$gruda}data_enturmacao = '{$this->data_enturmacao}'";
         $gruda = ", ";
-      }
+      }      
 
       if ($set) {
         $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE ref_cod_matricula = '{$this->ref_cod_matricula}' AND ref_cod_turma = '{$this->ref_cod_turma}' and sequencial = '$this->sequencial' ");
-        $this->limpaComponentesCurriculares();
+        $this->limpaComponentesCurriculares();      
         return TRUE;
       }
     }
@@ -395,7 +395,7 @@ class clsPmieducarMatriculaTurma
     $bool_matricula_ativo = NULL, $bool_escola_andamento = FALSE,
     $mes_matricula_inicial = FALSE, $get_serie_mult = FALSE,
     $int_ref_cod_serie_mult = NULL, $int_semestre = NULL,
-    $pegar_ano_em_andamento = FALSE, $parar=NULL, $diario = FALSE,
+    $pegar_ano_em_andamento = FALSE, $parar=NULL, $diario = FALSE, 
     $int_turma_turno_id = FALSE, $int_ano_turma = FALSE, $dependencia = NULL)
   {
     if ($bool_get_nome_aluno === true) {
@@ -480,17 +480,17 @@ class clsPmieducarMatriculaTurma
         $filtros .= "{$whereAnd} mt.ativo = '1'";
         $whereAnd = " AND ";
       }elseif ($int_ativo == 2) {
-        $filtros .= "{$whereAnd} (mt.ativo = '1' OR (mt.transferido OR
-                                                     mt.remanejado OR
-                                                     mt.reclassificado OR
+        $filtros .= "{$whereAnd} (mt.ativo = '1' OR (mt.transferido OR 
+                                                     mt.remanejado OR 
+                                                     mt.reclassificado OR 
                                                      mt.abandono OR
                                                      mt.falecido) AND
-                                                     (NOT EXISTS(SELECT 1
+                                                     (NOT EXISTS(SELECT 1 
                                                                    FROM pmieducar.matricula_turma
                                                                   WHERE matricula_turma.ativo = 1 AND
                                                                         matricula_turma.ref_cod_matricula = mt.ref_cod_matricula AND
                                                                         matricula_turma.ref_cod_turma = mt.ref_cod_turma)))";
-        $whereAnd = " AND ";
+        $whereAnd = " AND ";        
       }
       else {
         $filtros .= "{$whereAnd} mt.ativo = '0'";
@@ -669,7 +669,7 @@ class clsPmieducarMatriculaTurma
       return $resultado;
     }
 
-    return FALSE;
+    return FALSE; 
   }
 
   function lista2($int_ref_cod_matricula = NULL, $int_ref_cod_turma = NULL,
@@ -1197,9 +1197,9 @@ class clsPmieducarMatriculaTurma
   {
     if (is_numeric($this->ref_cod_matricula) && is_numeric($this->ref_cod_turma)) {
       $db = new clsBanco();
-      $max = $db->CampoUnico("SELECT COALESCE(MAX(sequencial),0) + 1 AS MAX FROM {$this->_tabela} WHERE ref_cod_matricula = '{$this->ref_cod_matricula}'");
+      $max = $db->CampoUnico("SELECT COALESCE(MAX(sequencial),0) + 1 AS MAX FROM {$this->_tabela} WHERE ref_cod_matricula = '{$this->ref_cod_matricula}'"); 
 
-      //removido filtro pois tornou-se possivel enturmar uma matricula em mais de uma turma
+      //removido filtro pois tornou-se possivel enturmar uma matricula em mais de uma turma       
       //AND ref_cod_turma = '{$this->ref_cod_turma}'");
 
       return $max;
@@ -1327,30 +1327,30 @@ class clsPmieducarMatriculaTurma
   function getDataBaseTransferencia(){
     if ($this->ref_cod_matricula){
       $cod_instituicao = $this->getInstituicao();
-      $db = new clsBanco();
-      return $db->CampoUnico("SELECT data_base_transferencia
+      $db = new clsBanco();      
+      return $db->CampoUnico("SELECT data_base_transferencia 
                                                   FROM pmieducar.instituicao WHERE cod_instituicao = {$cod_instituicao}");
     }
     return false;
-  }
+  }  
 
   function marcaAlunoRemanejado($data = null){
-
+    
     if ($this->ref_cod_matricula && $this->sequencial){
-
+      
       $dataBaseRemanejamento = $this->getDataBaseRemanejamento();
       $data = $data ? $data : date('Y-m-d');
       if ($dataBaseRemanejamento && strtotime($dataBaseRemanejamento) < strtotime($data) ) {
-        $db = new clsBanco();
+        $db = new clsBanco();  
         $db->CampoUnico("UPDATE pmieducar.matricula_turma SET transferido = false, remanejado = true, abandono = false, reclassificado = false WHERE ref_cod_matricula = {$this->ref_cod_matricula} AND sequencial = {$this->sequencial}");
       }
     }
-  }
+  }  
 
   function marcaAlunoTransferido($data = null){
-
+    
     if ($this->ref_cod_matricula && $this->sequencial){
-
+      
       $dataBaseTransferencia = $this->getDataBaseTransferencia();
 
       $data = $data ? $data : date('Y-m-d');
@@ -1359,7 +1359,7 @@ class clsPmieducarMatriculaTurma
         $db->CampoUnico("UPDATE pmieducar.matricula_turma SET transferido = true, remanejado = false, abandono = false, reclassificado = false, falecido = false, data_exclusao = '$data' WHERE ref_cod_matricula = {$this->ref_cod_matricula} AND sequencial = {$this->sequencial}");
       }
     }
-  }
+  }   
 
   function marcaAlunoReclassificado($data = null){
     $data = $data ? $data : date('Y-m-d');
@@ -1504,7 +1504,7 @@ class clsPmieducarMatriculaTurma
       $db = new clsBanco();
       $consulta = "UPDATE {$this->_tabela} SET ativo = 0 WHERE ref_cod_matricula = '{$this->ref_cod_matricula}'";
       $db->Consulta($consulta);
-
+      
       return TRUE;
     }
 
@@ -1518,7 +1518,7 @@ class clsPmieducarMatriculaTurma
       $cod_aluno = $db->CampoUnico("SELECT ref_cod_aluno FROM pmieducar.matricula WHERE cod_matricula = {$this->ref_cod_matricula}");
       $ano = $this->getAnoMatricula();
       if($cod_aluno)
-        return $db->CampoUnico("SELECT 1 FROM pmieducar.matricula WHERE ref_cod_aluno = {$cod_aluno} AND ano = {$ano} AND
+        return $db->CampoUnico("SELECT 1 FROM pmieducar.matricula WHERE ref_cod_aluno = {$cod_aluno} AND ano = {$ano} AND 
           aprovado = 4") == 1 ? TRUE : FALSE;
     }
   }
@@ -1559,7 +1559,7 @@ class clsPmieducarMatriculaTurma
 
     if($dataBaseRemanejamento){
       if (strtotime($dataBaseRemanejamento) < strtotime($dataEnturmacao))
-        $getSequencial = true;
+        $getSequencial = true; 
     }
 
 
@@ -1569,7 +1569,7 @@ class clsPmieducarMatriculaTurma
       return 0;
   }
 
-  function limpaComponentesCurriculares(){
+  function limpaComponentesCurriculares(){    
     $ano = $this->getAnoMatricula();
     CleanComponentesCurriculares::destroyOldResources($ano, $this->ref_cod_matricula);
   }

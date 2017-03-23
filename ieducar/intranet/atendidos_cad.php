@@ -4,30 +4,30 @@
 #ini_set("display_errors", 1);
 
 /**
- * i-Educar - Sistema de gest√£o escolar
+ * i-Educar - Sistema de gest„o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
+ * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
- * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
- * qualquer vers√£o posterior.
+ * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
+ * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
+ * qualquer vers„o posterior.
  *
- * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
- * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
+ * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
+ * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
  * do GNU para mais detalhes.
  *
- * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
- * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
- * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
+ * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
+ * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
  * @package   Ied_Cadastro
- * @since     Arquivo dispon√≠vel desde a vers√£o 1.0.0
+ * @since     Arquivo disponÌvel desde a vers„o 1.0.0
  * @version   $Id$
  */
 
@@ -54,18 +54,18 @@ require_once 'Portabilis/Date/Utils.php';
 /**
  * clsIndex class.
  *
- * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Cadastro
- * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
+ * @since     Classe disponÌvel desde a vers„o 1.0.0
  * @version   @@package_version@@
  */
 class clsIndex extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' Pessoas F√≠sicas - Cadastro');
+    $this->SetTitulo($this->_instituicao . ' Pessoas FÌsicas - Cadastro');
     $this->processoAp = 43;
     $this->addEstilo('localizacaoSistema');
   }
@@ -74,11 +74,11 @@ class clsIndex extends clsBase
 /**
  * indice class.
  *
- * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Cadastro
- * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
+ * @since     Classe disponÌvel desde a vers„o 1.0.0
  * @version   @@package_version@@
  */
 class indice extends clsCadastro
@@ -125,7 +125,7 @@ class indice extends clsCadastro
   var $renda_mensal;
   var $data_admissao;
 
-  // Vari√°veis para controle da foto
+  // Vari·veis para controle da foto
   var $objPhoto;
   var $arquivoFoto;
   var $file_delete;
@@ -220,15 +220,15 @@ class indice extends clsCadastro
       $this->cod_pessoa_fj, 'idpes', 'complemento','nome', 'cpf', 'data_nasc',
       'logradouro', 'idtlog', 'numero', 'apartamento','cidade','sigla_uf',
       'cep', 'ddd_1', 'fone_1', 'ddd_2', 'fone_2', 'ddd_mov', 'fone_mov',
-      'ddd_fax', 'fone_fax', 'email', 'url', 'tipo', 'sexo', 'zona_localizacao',
+      'ddd_fax', 'fone_fax', 'email', 'url', 'tipo', 'sexo', 'zona_localizacao', 
       'ativo', 'data_exclusao'
     );
 
     if(isset($this->cod_pessoa_fj) && !$detalhe['ativo'] == 1 && $this->retorno == 'Editar'){
       $getNomeUsuario = $objPessoa->getNomeUsuario();
       $detalhe['data_exclusao'] = date_format(new DateTime($detalhe['data_exclusao']), 'd/m/Y');
-      $this->mensagem = "Este cadastro foi desativado em <strong>" . $detalhe['data_exclusao'] .  "</strong>,
-                         pelo usu√°rio <strong>" . $getNomeUsuario . "</strong>. <a href='javascript:ativarPessoa($this->cod_pessoa_fj);'>Reativar cadastro</a>";
+      $this->mensagem = "Este cadastro foi desativado em <strong>" . $detalhe['data_exclusao'] .  "</strong>, 
+                         pelo usu·rio <strong>" . $getNomeUsuario . "</strong>. <a href='javascript:ativarPessoa($this->cod_pessoa_fj);'>Reativar cadastro</a>";
     }
 
     $this->campoCpf('id_federal', 'CPF', $this->id_federal, FALSE);
@@ -248,15 +248,15 @@ class indice extends clsCadastro
     if ($foto){
       $this->campoRotulo('fotoAtual_','Foto atual','<img height="117" src="'.$foto.'"/>');
       $this->inputsHelper()->checkbox('file_delete', array('label' => 'Excluir a foto'));
-      $this->campoArquivo('file','Trocar foto',$this->arquivoFoto,40,'<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho m√°ximo: 150KB</span>');
+      $this->campoArquivo('file','Trocar foto',$this->arquivoFoto,40,'<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho m·ximo: 150KB</span>');
     }else
-      $this->campoArquivo('file','Foto',$this->arquivoFoto,40,'<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho m√°ximo: 150KB</span>');
+      $this->campoArquivo('file','Foto',$this->arquivoFoto,40,'<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho m·ximo: 150KB</span>');
 
 
-    // ao cadastrar pessoa do pai ou m√£e apartir do cadastro de outra pessoa,
-    // √© enviado o tipo de cadastro (pai ou mae).
+    // ao cadastrar pessoa do pai ou m„e apartir do cadastro de outra pessoa,
+    // È enviado o tipo de cadastro (pai ou mae).
     $parentType = isset($_REQUEST['parent_type']) ? $_REQUEST['parent_type'] : '';
-    // Se a pessoa for pai ou m√£e, n√£o tera naturalidade obrigatoria
+    // Se a pessoa for pai ou m„e, n„o tera naturalidade obrigatoria
 
 
     $naturalidadeObrigatoria = ($parentType == '' ? true : false);
@@ -265,7 +265,7 @@ class indice extends clsCadastro
 
     $sexo = $this->sexo;
 
-    // sugere sexo quando cadastrando o pai ou m√£e
+    // sugere sexo quando cadastrando o pai ou m„e
 
     if (! $sexo && $parentType == 'pai')
       $sexo = 'M';
@@ -304,7 +304,7 @@ class indice extends clsCadastro
     $this->inputsHelper()->date('data_nasc', $options);
 
 
-    // pai, m√£e
+    // pai, m„e
 
     $this->inputPai();
     $this->inputMae();
@@ -318,7 +318,7 @@ class indice extends clsCadastro
 
     // rg
 
-    // o rg √© obrigatorio ao cadastrar pai ou m√£e, exceto se configurado como opcional.
+    // o rg È obrigatorio ao cadastrar pai ou m„e, exceto se configurado como opcional.
 
     $required = (! empty($parentType));
 
@@ -328,7 +328,7 @@ class indice extends clsCadastro
 
     $options = array(
       'required'    => $required,
-      'label'       => 'RG / Data emiss√£o',
+      'label'       => 'RG / Data emiss„o',
       'placeholder' => 'Documento identidade',
       'value'       => $documentos['rg'],
       'max_length'  => 25,
@@ -339,12 +339,12 @@ class indice extends clsCadastro
     $this->inputsHelper()->text('rg', $options);
 
 
-    // data emiss√£o rg
+    // data emiss„o rg
 
     $options = array(
       'required'    => false,
       'label'       => '',
-      'placeholder' => 'Data emiss√£o',
+      'placeholder' => 'Data emiss„o',
       'value'       => $documentos['data_exp_rg'],
       'size'        => 19
     );
@@ -352,9 +352,9 @@ class indice extends clsCadastro
     $this->inputsHelper()->date('data_emissao_rg', $options);
 
 
-    // org√£o emiss√£o rg
+    // org„o emiss„o rg
 
-    $selectOptions = array( null => '√ìrg√£o emissor' );
+    $selectOptions = array( null => '”rg„o emissor' );
     $orgaos        = new clsOrgaoEmissorRg();
     $orgaos        = $orgaos->lista();
 
@@ -374,7 +374,7 @@ class indice extends clsCadastro
     $this->inputsHelper()->select('orgao_emissao_rg', $options);
 
 
-    // uf emiss√£o rg
+    // uf emiss„o rg
 
     $options = array(
       'required' => false,
@@ -388,7 +388,7 @@ class indice extends clsCadastro
 
     $this->inputsHelper()->uf($options, $helperOptions);
 
-    // C√≥digo NIS (PIS/PASEP)
+    // CÛdigo NIS (PIS/PASEP)
 
     $options = array(
       'required'    => false,
@@ -405,7 +405,7 @@ class indice extends clsCadastro
 
     $options = array(
       'required'    => false,
-      'label'       => 'N√∫mero da carteira do SUS',
+      'label'       => 'N˙mero da carteira do SUS',
       'placeholder' => '',
       'value'       => $this->sus,
       'max_length'  => 20,
@@ -417,7 +417,7 @@ class indice extends clsCadastro
     // tipo de certidao civil
 
     $selectOptions = array(
-      null                               => 'Tipo certid√£o civil',
+      null                               => 'Tipo certid„o civil',
       'certidao_nascimento_novo_formato' => 'Nascimento (novo formato)',
       91                                 => 'Nascimento (antigo formato)',
       'certidao_casamento_novo_formato'  => 'Casamento (novo formato)',
@@ -426,7 +426,7 @@ class indice extends clsCadastro
 
 
     // caso certidao nascimento novo formato tenha sido informado,
-    // considera este o tipo da certid√£o
+    // considera este o tipo da certid„o
     if (! empty($documentos['certidao_nascimento']))
       $tipoCertidaoCivil = 'certidao_nascimento_novo_formato';
     else if (! empty($documentos['certidao_casamento']))
@@ -436,7 +436,7 @@ class indice extends clsCadastro
 
     $options = array(
       'required'  => false,
-      'label'     => 'Tipo certid√£o civil',
+      'label'     => 'Tipo certid„o civil',
       'value'     => $tipoCertidaoCivil,
       'resources' => $selectOptions,
       'inline'    => true
@@ -488,12 +488,12 @@ class indice extends clsCadastro
     $this->inputsHelper()->integer('folha_certidao_civil', $options);
 
 
-    // certidao nascimento (novo padr√£o)
+    // certidao nascimento (novo padr„o)
 
     $options = array(
       'required'    => false,
       'label'       => '',
-      'placeholder' => 'Certid√£o nascimento',
+      'placeholder' => 'Certid„o nascimento',
       'value'       => $documentos['certidao_nascimento'],
       'max_length'  => 32,
       'size'        => 32,
@@ -502,12 +502,12 @@ class indice extends clsCadastro
 
     $this->inputsHelper()->text('certidao_nascimento', $options);
 
-    // certidao casamento (novo padr√£o)
+    // certidao casamento (novo padr„o)
 
     $options = array(
       'required'    => false,
       'label'       => '',
-      'placeholder' => 'Certid√£o casamento',
+      'placeholder' => 'Certid„o casamento',
       'value'       => $documentos['certidao_casamento'],
       'max_length'  => 32,
       'size'        => 32
@@ -516,11 +516,11 @@ class indice extends clsCadastro
     $this->inputsHelper()->text('certidao_casamento', $options);
 
 
-    // uf emiss√£o certid√£o civil
+    // uf emiss„o certid„o civil
 
     $options = array(
       'required' => false,
-      'label'    => 'Estado emiss√£o / Data emiss√£o',
+      'label'    => 'Estado emiss„o / Data emiss„o',
       'value'    => $documentos['sigla_uf_cert_civil'],
       'inline'   => true
     );
@@ -532,12 +532,12 @@ class indice extends clsCadastro
     $this->inputsHelper()->uf($options, $helperOptions);
 
 
-    // data emiss√£o certid√£o civil
+    // data emiss„o certid„o civil
 
     $options = array(
       'required'    => false,
       'label'       => '',
-      'placeholder' => 'Data emiss√£o',
+      'placeholder' => 'Data emiss„o',
       'value'       => $documentos['data_emissao_cert_civil'],
       'inline'   => true
     );
@@ -549,18 +549,18 @@ class indice extends clsCadastro
       'label'       => '',
       'size'        => '18',
       'max_length'  => '7',
-      'placeholder' => 'C√≥digo cart√≥rio INEP',
+      'placeholder' => 'CÛdigo cartÛrio INEP',
       'value'       => $documentos['cartorio_cert_civil_inep']
     );
 
-    $this->inputsHelper()->integer('cartorio_cert_civil_inep', $options);
+    $this->inputsHelper()->integer('cartorio_cert_civil_inep', $options); 
 
 
-    // cart√≥rio emiss√£o certid√£o civil
+    // cartÛrio emiss„o certid„o civil
 
     $options = array(
       'required'    => false,
-      'label'       => 'Cart√≥rio emiss√£o',
+      'label'       => 'CartÛrio emiss„o',
       'value'       => $documentos['cartorio_cert_civil'],
       'cols'        => 45,
       'max_length'  => 150
@@ -583,7 +583,7 @@ class indice extends clsCadastro
 
     $options = array(
       'required'    => false,
-      'label'       => 'Carteira de trabalho / S√©rie',
+      'label'       => 'Carteira de trabalho / SÈrie',
       'placeholder' => 'Carteira de trabalho',
       'value'       => $documentos['num_cart_trabalho'],
       'max_length'  => 7,
@@ -598,7 +598,7 @@ class indice extends clsCadastro
     $options = array(
       'required'    => false,
       'label'       => '',
-      'placeholder' => 'S√©rie',
+      'placeholder' => 'SÈrie',
       'value'       => $documentos['serie_cart_trabalho'],
       'max_length'  => 5
     );
@@ -606,11 +606,11 @@ class indice extends clsCadastro
     $this->inputsHelper()->integer('serie_carteira_trabalho', $options);
 
 
-    // uf emiss√£o carteira de trabalho
+    // uf emiss„o carteira de trabalho
 
     $options = array(
       'required' => false,
-      'label'    => 'Estado emiss√£o / Data emiss√£o',
+      'label'    => 'Estado emiss„o / Data emiss„o',
       'value'    => $documentos['sigla_uf_cart_trabalho'],
       'inline'   => true
     );
@@ -622,12 +622,12 @@ class indice extends clsCadastro
     $this->inputsHelper()->uf($options, $helperOptions);
 
 
-    // data emiss√£o carteira de trabalho
+    // data emiss„o carteira de trabalho
 
     $options = array(
       'required'    => false,
       'label'       => '',
-      'placeholder' => 'Data emiss√£o',
+      'placeholder' => 'Data emiss„o',
       'value'       => $documentos['data_emissao_cart_trabalho']
     );
 
@@ -638,7 +638,7 @@ class indice extends clsCadastro
 
     $options = array(
       'required'    => false,
-      'label'       => 'Titulo eleitor / Zona / Se√ß√£o',
+      'label'       => 'Titulo eleitor / Zona / SeÁ„o',
       'placeholder' => 'Titulo eleitor',
       'value'       => $documentos['num_tit_eleitor'],
       'max_length'  => 13,
@@ -662,12 +662,12 @@ class indice extends clsCadastro
     $this->inputsHelper()->integer('zona_titulo_eleitor', $options);
 
 
-    // se√ß√£o titulo eleitor
+    // seÁ„o titulo eleitor
 
     $options = array(
       'required'    => false,
       'label'       => '',
-      'placeholder' => 'Se√ß√£o',
+      'placeholder' => 'SeÁ„o',
       'value'       => $documentos['secao_tit_eleitor'],
       'max_length'  => 4
     );
@@ -675,7 +675,7 @@ class indice extends clsCadastro
     $this->inputsHelper()->integer('secao_titulo_eleitor', $options);
 
 
-    // Cor/ra√ßa.
+    // Cor/raÁa.
 
     $racas         = new clsCadastroRaca();
     $racas         = $racas->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL, TRUE);
@@ -686,7 +686,7 @@ class indice extends clsCadastro
 
     $selectOptions = Portabilis_Array_Utils::sortByValue($selectOptions);
 
-    $this->campoLista('cor_raca', 'Ra√ßa', $selectOptions, $this->cod_raca, '', FALSE, '', '', '', FALSE);
+    $this->campoLista('cor_raca', 'RaÁa', $selectOptions, $this->cod_raca, '', FALSE, '', '', '', FALSE);
 
 
     // nacionalidade
@@ -741,10 +741,10 @@ class indice extends clsCadastro
     $this->inputsHelper()->simpleSearchMunicipio('nome', $options, $helperOptions);
 
 
-    // Religi√£o
+    // Religi„o
     $this->inputsHelper()->religiao(array('required' => false));
 
-    // Detalhes do Endere√ßo
+    // Detalhes do EndereÁo
     if ($this->idlog && $this->idbai){
 
       $objLogradouro = new clsLogradouro($this->idlog);
@@ -759,7 +759,7 @@ class indice extends clsCadastro
       $this->distrito_id = Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
 
 
-    // Caso seja um endere√ßo externo, tentamos ent√£o recuperar a cidade pelo cep
+    // Caso seja um endereÁo externo, tentamos ent„o recuperar a cidade pelo cep
     }elseif($this->cep){
 
       $numCep = idFederal2int($this->cep);
@@ -805,19 +805,19 @@ class indice extends clsCadastro
     $this->campoOculto('id_cidade', $this->cidade);
 
 
-    // o endere√ßamento √© opcional
+    // o endereÁamento È opcional
     $enderecamentoObrigatorio = false;
 
 
-    // considera como endere√ßo localizado por CEP quando alguma das variaveis de instancia
-    // idbai (bairro) ou idlog (logradouro) est√£o definidas, neste caso desabilita a edi√ß√£o
+    // considera como endereÁo localizado por CEP quando alguma das variaveis de instancia
+    // idbai (bairro) ou idlog (logradouro) est„o definidas, neste caso desabilita a ediÁ„o
     // dos campos definidos via CEP.
     //$desativarCamposDefinidosViaCep = ($this->idbai || $this->idlog);
 
-    // Caso o cep j√° esteja definido, os campos j√° vem desbloqueados inicialmente
+    // Caso o cep j· esteja definido, os campos j· vem desbloqueados inicialmente
     $desativarCamposDefinidosViaCep = empty($this->cep);
 
-    $this->campoRotulo('enderecamento','<b> Endere√ßamento</b>', '', '', 'Digite um CEP ou clique na lupa para<br/> busca avan√ßada para come√ßar');
+    $this->campoRotulo('enderecamento','<b> EndereÁamento</b>', '', '', 'Digite um CEP ou clique na lupa para<br/> busca avanÁada para comeÁar');
 
     $this->campoCep(
       'cep_',
@@ -829,7 +829,7 @@ class indice extends clsCadastro
       false
     );
 
-    $options       = array('label' => Portabilis_String_Utils::toLatin1('Munic√≠pio'), 'required'   => $enderecamentoObrigatorio, 'disabled' => $desativarCamposDefinidosViaCep);
+    $options       = array('label' => Portabilis_String_Utils::toLatin1('MunicÌpio'), 'required'   => $enderecamentoObrigatorio, 'disabled' => $desativarCamposDefinidosViaCep);
 
     $helperOptions = array('objectName'         => 'municipio',
                            'hiddenInputOptions' => array('options' => array('value' => $this->municipio_id)));
@@ -845,13 +845,13 @@ class indice extends clsCadastro
 
     $helperOptions = array('hiddenInputOptions' => array('options' => array('value' => $this->bairro_id)));
 
-    $options       = array( 'label' => Portabilis_String_Utils::toLatin1('Bairro / Zona de Localiza√ß√£o - <b>Buscar</b>'), 'required'   => $enderecamentoObrigatorio, 'disabled' => $desativarCamposDefinidosViaCep);
+    $options       = array( 'label' => Portabilis_String_Utils::toLatin1('Bairro / Zona de LocalizaÁ„o - <b>Buscar</b>'), 'required'   => $enderecamentoObrigatorio, 'disabled' => $desativarCamposDefinidosViaCep);
 
 
     $this->inputsHelper()->simpleSearchBairro('bairro', $options, $helperOptions);
 
     $options = array(
-      'label'       => 'Bairro / Zona de Localiza√ß√£o - <b>Cadastrar</b>',
+      'label'       => 'Bairro / Zona de LocalizaÁ„o - <b>Cadastrar</b>',
       'placeholder' => 'Bairro',
       'value'       => $this->bairro,
       'max_length'  => 40,
@@ -862,15 +862,15 @@ class indice extends clsCadastro
 
     $this->inputsHelper()->text('bairro', $options);
 
-    // zona localiza√ß√£o
+    // zona localizaÁ„o
 
     $zonas = App_Model_ZonaLocalizacao::getInstance();
     $zonas = $zonas->getEnums();
-    $zonas = Portabilis_Array_Utils::insertIn(null, 'Zona localiza√ß√£o', $zonas);
+    $zonas = Portabilis_Array_Utils::insertIn(null, 'Zona localizaÁ„o', $zonas);
 
     $options = array(
       'label'       => '',
-      'placeholder' => 'Zona localiza√ß√£o',
+      'placeholder' => 'Zona localizaÁ„o',
       'value'       => $this->zona_localizacao,
       'disabled'    => $desativarCamposDefinidosViaCep,
       'resources'   => $zonas,
@@ -931,8 +931,8 @@ class indice extends clsCadastro
 
     $options = array(
       'required'    => false,
-      'label'       => 'N√∫mero / Letra',
-      'placeholder' => 'N√∫mero',
+      'label'       => 'N˙mero / Letra',
+      'placeholder' => 'N˙mero',
       'value'       => $this->numero,
       'max_length'  => 6,
       'inline'      => true
@@ -959,8 +959,8 @@ class indice extends clsCadastro
 
     $options = array(
       'required'    => false,
-      'label'       => 'N¬∫ apartamento / Bloco / Andar',
-      'placeholder' => 'N¬∫ apartamento',
+      'label'       => 'N∫ apartamento / Bloco / Andar',
+      'placeholder' => 'N∫ apartamento',
       'value'       => $this->apartamento,
       'max_length'  => 6,
       'inline'      => true
@@ -998,7 +998,7 @@ class indice extends clsCadastro
 
 
     // contato
-    $this->campoRotulo('contato','<b>Contato</b>', '', '', 'Informa√ß√µes de contato da pessoa');
+    $this->campoRotulo('contato','<b>Contato</b>', '', '', 'InformaÁıes de contato da pessoa');
     $this->inputTelefone('1', 'Telefone residencial');
     $this->inputTelefone('mov', 'Celular');
     $this->inputTelefone('2', 'Telefone adicional');
@@ -1006,10 +1006,10 @@ class indice extends clsCadastro
     $this->campoTexto('email', 'E-mail', $this->email, '50', '255', FALSE);
 
     // renda
-    $this->campoRotulo('renda','<b>Trabalho e renda</b>', '', '', 'Informa√ß√µes de trabalho e renda da pessoa');
-    $this->campoTexto('ocupacao', 'Ocupa√ß√£o', $this->ocupacao, '50', '255', FALSE);
+    $this->campoRotulo('renda','<b>Trabalho e renda</b>', '', '', 'InformaÁıes de trabalho e renda da pessoa');
+    $this->campoTexto('ocupacao', 'OcupaÁ„o', $this->ocupacao, '50', '255', FALSE);
     $this->campoMonetario('renda_mensal', 'Renda mensal (R$)', $this->renda_mensal, '9', '10');
-    $this->campoData('data_admissao', 'Data de admiss√£o', $this->data_admissao);
+    $this->campoData('data_admissao', 'Data de admiss„o', $this->data_admissao);
     $this->campoTexto('empresa', 'Empresa', $this->empresa, '50', '255', FALSE);
     $this->inputTelefone('empresa', 'Telefone da empresa');
     $this->campoTexto('pessoa_contato', 'Pessoa de contato na empresa', $this->pessoa_contato, '50', '255', FALSE);
@@ -1059,8 +1059,8 @@ class indice extends clsCadastro
     $aluno = $aluno->lista(null, null, null, null, null, $idPes, null, null, null, null, 1);
 
     if ($aluno) {
-      $this->mensagem = 'Exclus√£o n√£o realizada.';
-      $this->mensagem .= '<br />Esta pessoa possu√≠ v√≠nculo com aluno.';
+      $this->mensagem = 'Exclus„o n„o realizada.';
+      $this->mensagem .= '<br />Esta pessoa possuÌ vÌnculo com aluno.';
 
       return FALSE;
     }
@@ -1072,8 +1072,8 @@ class indice extends clsCadastro
     $funcionario = $funcionario->lista(null, null, 1);
 
     if ($funcionario && $usuario) {
-      $this->mensagem = 'Exclus√£o n√£o realizada.';
-      $this->mensagem .= '<br />Esta pessoa possu√≠ v√≠nculo com usu√°rio do sistema.';
+      $this->mensagem = 'Exclus„o n„o realizada.';
+      $this->mensagem .= '<br />Esta pessoa possuÌ vÌnculo com usu·rio do sistema.';
 
       return FALSE;
     }
@@ -1082,8 +1082,8 @@ class indice extends clsCadastro
     $servidor = $servidor->lista($idPes, null, null, null, null, null, null, null, 1);
 
     if ($servidor) {
-      $this->mensagem = 'Exclus√£o n√£o realizada.';
-      $this->mensagem .= '<br />Esta pessoa possu√≠ v√≠nculo com servidor.';
+      $this->mensagem = 'Exclus„o n„o realizada.';
+      $this->mensagem .= '<br />Esta pessoa possuÌ vÌnculo com servidor.';
 
       return FALSE;
     }
@@ -1092,8 +1092,8 @@ class indice extends clsCadastro
     $cliente = $cliente->lista(null, null, null, $idPes, null, null, null, null, null, null, 1);
 
     if ($cliente) {
-      $this->mensagem = 'Exclus√£o n√£o realizada.';
-      $this->mensagem .= '<br />Esta pessoa possu√≠ v√≠nculo com cliente.';
+      $this->mensagem = 'Exclus„o n„o realizada.';
+      $this->mensagem .= '<br />Esta pessoa possuÌ vÌnculo com cliente.';
 
       return FALSE;
     }
@@ -1102,8 +1102,8 @@ class indice extends clsCadastro
     $usuarioTransporte = $usuarioTransporte->lista(null, $idPes);
 
     if ($usuarioTransporte) {
-      $this->mensagem = 'Exclus√£o n√£o realizada.';
-      $this->mensagem .= '<br />Esta pessoa possu√≠ v√≠nculo com usu√°rio de transporte.';
+      $this->mensagem = 'Exclus„o n„o realizada.';
+      $this->mensagem .= '<br />Esta pessoa possuÌ vÌnculo com usu·rio de transporte.';
 
       return FALSE;
     }
@@ -1112,8 +1112,8 @@ class indice extends clsCadastro
     $motorista = $motorista->lista(null, null, null, null, null, $idPes);
 
     if ($motorista) {
-      $this->mensagem = 'Exclus√£o n√£o realizada.';
-      $this->mensagem .= '<br />Esta pessoa possu√≠ v√≠nculo com motorista.';
+      $this->mensagem = 'Exclus„o n„o realizada.';
+      $this->mensagem .= '<br />Esta pessoa possuÌ vÌnculo com motorista.';
 
       return FALSE;
     }
@@ -1155,7 +1155,7 @@ class indice extends clsCadastro
   }
 
   protected function inputMae() {
-    $this->addParentsInput('mae', 'm√£e');
+    $this->addParentsInput('mae', 'm„e');
   }
 
   protected function addParentsInput($parentType, $parentTypeLabel = '') {
@@ -1177,7 +1177,7 @@ class indice extends clsCadastro
 
       $inputHint = '<br /><b>Dica:</b> Foi informado o nome "' . $nome .
                    '" no cadastro de aluno,<br />tente pesquisar esta pessoa ' .
-                   'pelo CPF ou RG, caso n√£o encontre, cadastre uma nova pessoa.';
+                   'pelo CPF ou RG, caso n„o encontre, cadastre uma nova pessoa.';
     }
 
 
@@ -1196,7 +1196,7 @@ class indice extends clsCadastro
     $isValid = true;
 
     if ($cpf && ! Portabilis_Utils_Validation::validatesCpf($cpf)) {
-      $this->erros['id_federal'] = 'CPF inv√°lido.';
+      $this->erros['id_federal'] = 'CPF inv·lido.';
       $isValid = false;
     }
     elseif($cpf) {
@@ -1208,7 +1208,7 @@ class indice extends clsCadastro
         $link = "<a class='decorated' target='__blank' href='/intranet/atendidos_cad.php?cod_pessoa_fj=" .
                 "{$fisica['idpes']}'>{$fisica['idpes']}</a>";
 
-        $this->erros['id_federal'] = "CPF j√° utilizado pela pessoa $link.";
+        $this->erros['id_federal'] = "CPF j· utilizado pela pessoa $link.";
         $isValid = false;
       }
     }
@@ -1255,7 +1255,7 @@ class indice extends clsCadastro
 
         return true;
       } else{
-        echo '<script>alert(\'Foto n√£o salva.\')</script>';
+        echo '<script>alert(\'Foto n„o salva.\')</script>';
         return false;
       }
     }elseif($this->file_delete == 'on'){
@@ -1264,7 +1264,7 @@ class indice extends clsCadastro
     }
   }
 
-  // Retorna true caso a foto seja v√°lida
+  // Retorna true caso a foto seja v·lida
   protected function validatePhoto(){
 
     $this->arquivoFoto = $_FILES["file"];
@@ -1290,10 +1290,10 @@ class indice extends clsCadastro
     $certidaoCasamento = ($_REQUEST['tipo_certidao_civil'] == 'certidao_casamento_novo_formato');
 
     if ($certidaoNascimento && strlen($this->certidao_nascimento) < 32) {
-      $this->mensagem = 'O campo referente a certid√£o de nascimento deve conter exatos 32 d√≠gitos.';
+      $this->mensagem = 'O campo referente a certid„o de nascimento deve conter exatos 32 dÌgitos.';
       return false;
     } else if ($certidaoCasamento && strlen($this->certidao_casamento) < 32) {
-      $this->mensagem = 'O campo referente a certid√£o de casamento deve conter exatos 32 d√≠gitos.';
+      $this->mensagem = 'O campo referente a certid„o de casamento deve conter exatos 32 dÌgitos.';
       return false;
     }
 
@@ -1362,8 +1362,8 @@ class indice extends clsCadastro
   function createOrUpdateRaca($pessoaId, $corRaca) {
     $pessoaId = (int) $pessoaId;
     $corRaca  = (int) $corRaca;
-
-    if ($corRaca == 0) return false; //Quando n√£o tiver cor/ra√ßa selecionado n√£o faz update
+        
+    if ($corRaca == 0) return false; //Quando n„o tiver cor/raÁa selecionado n„o faz update
 
     $raca = new clsCadastroFisicaRaca($pessoaId, $corRaca);
 
@@ -1390,27 +1390,27 @@ class indice extends clsCadastro
     $documentos->sigla_uf_exp_rg            = $_REQUEST['uf_emissao_rg'];
 
 
-    // certid√£o civil
+    // certid„o civil
 
 
-    // o tipo certid√£o novo padr√£o √© apenas para exibi√ß√£o ao usu√°rio,
-    // n√£o precisa ser gravado no banco
+    // o tipo certid„o novo padr„o È apenas para exibiÁ„o ao usu·rio,
+    // n„o precisa ser gravado no banco
     //
     // quando selecionado um tipo diferente do novo formato,
-    // √© removido o valor de certidao_nascimento.
+    // È removido o valor de certidao_nascimento.
     //
     if ($_REQUEST['tipo_certidao_civil'] == 'certidao_nascimento_novo_formato') {
       $documentos->tipo_cert_civil     = null;
-      $documentos->certidao_casamento  = '';
+      $documentos->certidao_casamento  = ''; 
       $documentos->certidao_nascimento = $_REQUEST['certidao_nascimento'];
     }else if ($_REQUEST['tipo_certidao_civil'] == 'certidao_casamento_novo_formato') {
       $documentos->tipo_cert_civil     = null;
-      $documentos->certidao_nascimento = '';
+      $documentos->certidao_nascimento = '';      
       $documentos->certidao_casamento = $_REQUEST['certidao_casamento'];
     }else{
       $documentos->tipo_cert_civil     = $_REQUEST['tipo_certidao_civil'];
       $documentos->certidao_nascimento = '';
-      $documentos->certidao_casamento  = '';
+      $documentos->certidao_casamento  = '';      
     }
 
     $documentos->num_termo                  = $_REQUEST['termo_certidao_civil'];
@@ -1446,10 +1446,10 @@ class indice extends clsCadastro
     $documentos->secao_tit_eleitor          = $_REQUEST['secao_titulo_eleitor'];
 
 
-    // Altera√ß√£o de documentos compativel com a vers√£o anterior do cadastro,
-    // onde era possivel criar uma pessoa, n√£o informando os documentos,
-    // o que n√£o criaria o registro do documento, sendo assim, ao editar uma pessoa,
-    // o registro do documento ser√° criado, caso n√£o exista.
+    // AlteraÁ„o de documentos compativel com a vers„o anterior do cadastro,
+    // onde era possivel criar uma pessoa, n„o informando os documentos,
+    // o que n„o criaria o registro do documento, sendo assim, ao editar uma pessoa,
+    // o registro do documento ser· criado, caso n„o exista.
 
     $sql = "select 1 from cadastro.documento WHERE idpes = $1 limit 1";
 
@@ -1492,8 +1492,8 @@ class indice extends clsCadastro
       $this->andar
     );
 
-    // for√ßado exclus√£o, assim ao cadastrar endereco_pessoa novamente,
-    // ser√° excluido endereco_externo (por meio da trigger fcn_aft_ins_endereco_pessoa).
+    // forÁado exclus„o, assim ao cadastrar endereco_pessoa novamente,
+    // ser· excluido endereco_externo (por meio da trigger fcn_aft_ins_endereco_pessoa).
     $endereco->exclui();
     $endereco->cadastra();
   }
@@ -1520,8 +1520,8 @@ class indice extends clsCadastro
       $this->zona_localizacao
     );
 
-    // for√ßado exclus√£o, assim ao cadastrar endereco_externo novamente,
-    // ser√° excluido endereco_pessoa (por meio da trigger fcn_aft_ins_endereco_externo).
+    // forÁado exclus„o, assim ao cadastrar endereco_externo novamente,
+    // ser· excluido endereco_pessoa (por meio da trigger fcn_aft_ins_endereco_externo).
     $endereco->exclui();
     $endereco->cadastra();
   }
@@ -1554,7 +1554,7 @@ class indice extends clsCadastro
     }
 
 
-    /* *** IMPLEMENTA√á√ÉO ANTIGA ***
+    /* *** IMPLEMENTA«√O ANTIGA ***
 
     $enderecoExterno = ! empty($this->cep_);
 
@@ -1600,8 +1600,8 @@ class indice extends clsCadastro
   }
 
   // inputs usados em Gerar,
-  // implementado estes metodos para n√£o duplicar c√≥digo
-  // uma vez que estes campos s√£o usados v√°rias vezes em Gerar.
+  // implementado estes metodos para n„o duplicar cÛdigo
+  // uma vez que estes campos s„o usados v·rias vezes em Gerar.
 
   protected function inputTelefone($type, $typeLabel = '') {
     if (! $typeLabel)
@@ -1636,14 +1636,14 @@ class indice extends clsCadastro
   }
 }
 
-// Instancia objeto de p√°gina
+// Instancia objeto de p·gina
 $pagina = new clsIndex();
 
-// Instancia objeto de conte√∫do
+// Instancia objeto de conte˙do
 $miolo = new indice();
 
-// Atribui o conte√∫do √† p√°gina
+// Atribui o conte˙do ‡ p·gina
 $pagina->addForm($miolo);
 
-// Gera o c√≥digo HTML
+// Gera o cÛdigo HTML
 $pagina->MakeAll();

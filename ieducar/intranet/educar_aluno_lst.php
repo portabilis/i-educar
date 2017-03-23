@@ -1,25 +1,25 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	@author Prefeitura Municipal de ItajaÃ­								 *
+	*	@author Prefeitura Municipal de Itajaí								 *
 	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software PÃºblico Livre e Brasileiro					 *
+	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
 	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÃ­			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  Ã©  software livre, vocÃª pode redistribuÃ­-lo e/ou	 *
-	*	modificÃ¡-lo sob os termos da LicenÃ§a PÃºblica Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versÃ£o 2 da	 *
-	*	LicenÃ§a   como  (a  seu  critÃ©rio)  qualquer  versÃ£o  mais  nova.	 *
+	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
+	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
+	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
 	*																		 *
-	*	Este programa  Ã© distribuÃ­do na expectativa de ser Ãºtil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implÃ­cita de COMERCIALI-	 *
-	*	ZAÃ‡ÃƒO  ou  de ADEQUAÃ‡ÃƒO A QUALQUER PROPÃ“SITO EM PARTICULAR. Con-	 *
-	*	sulte  a  LicenÃ§a  PÃºblica  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
+	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
+	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	VocÃª  deve  ter  recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral GNU	 *
-	*	junto  com  este  programa. Se nÃ£o, escreva para a Free Software	 *
+	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
+	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
@@ -118,12 +118,12 @@ class indice extends clsListagem
 			$this->campoNumero("cod_inep","C&oacute;digo INEP",$this->cod_inep,20,255,false);
 		}
 		//$this->campoNumero("aluno_estado_id",($GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu' ? "C&oacute;digo estadual do aluno(R.A.)" : "C&oacute;digo estadual do aluno" ), $this->aluno_estado_id,20,255,false);
-		$this->campoRA('aluno_estado_id', Portabilis_String_Utils::toLatin1("CÃ³digo rede estadual do aluno (RA)"), $this->aluno_estado_id, FALSE);
+		$this->campoRA('aluno_estado_id', Portabilis_String_Utils::toLatin1("Código rede estadual do aluno (RA)"), $this->aluno_estado_id, FALSE);
 		$this->campoTexto("nome_aluno","Nome do aluno", $this->nome_aluno,50,255,false);
 		$this->campoData("data_nascimento", "Data de Nascimento", $this->data_nascimento);
 		$this->campoTexto("nome_pai", "Nome do Pai", $this->nome_pai, 50, 255);
-		$this->campoTexto("nome_mae", "Nome da MÃ£e", $this->nome_mae, 50, 255);
-		$this->campoTexto("nome_responsavel", "Nome do ResponsÃ¡vel", $this->nome_responsavel, 50, 255);
+		$this->campoTexto("nome_mae", "Nome da Mãe", $this->nome_mae, 50, 255);
+		$this->campoTexto("nome_responsavel", "Nome do Responsável", $this->nome_responsavel, 50, 255);
 
 		$opcoes = array('' => 'Selecione');
     if (class_exists('clsPublicSetorBai')) {
@@ -145,7 +145,7 @@ class indice extends clsListagem
     $this->campoLista('idsetorbai', 'Setor', $opcoes, $this->idsetorbai, NULL, NULL, NULL, NULL, NULL, FALSE);
 
 
-		$this->campoRotulo('filtros_matricula', '<b>Filtros de matrÃ­culas em andamento</b>');
+		$this->campoRotulo('filtros_matricula', '<b>Filtros de matrículas em andamento</b>');
 
 		$this->inputsHelper()->integer('ano', array('required' => false, 'value' => $this->ano, 'max_length' => 4));
 		$this->inputsHelper()->dynamic('instituicao',  array('required' =>  false, 'show-select' => true, 'value' => $this->ref_cod_instituicao));
@@ -174,14 +174,14 @@ class indice extends clsListagem
 		if($GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu'){
 			$cabecalhos = array("C&oacute;digo Aluno",
 								"Nome do Aluno",
-								"Nome da MÃ£e",
+								"Nome da Mãe",
 								"Nome do Respons&aacute;vel",
 								"CPF Respons&aacute;vel",);
 		}else{
 			$cabecalhos = array("C&oacute;digo Aluno",
-      							"CÃ³digo INEP",
+      							"Código INEP",
 								"Nome do Aluno",
-								"Nome da MÃ£e",
+								"Nome da Mãe",
 								"Nome do Respons&aacute;vel",
 								"CPF Respons&aacute;vel",);
 		}
@@ -273,7 +273,7 @@ class indice extends clsListagem
 			$this->nome_acao = "Novo";
 
 			/*$this->array_botao = array("Ficha do Aluno (em branco)");
-			$this->array_botao_script = array( "showExpansivelImprimir(400, 200,  \"educar_relatorio_aluno_dados.php\",\"\", \"RelatÃ³rio i-Educar\" )" );*/
+			$this->array_botao_script = array( "showExpansivelImprimir(400, 200,  \"educar_relatorio_aluno_dados.php\",\"\", \"Relatório i-Educar\" )" );*/
 		}
 		//**
 		$this->largura = "100%";

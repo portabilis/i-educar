@@ -53,7 +53,7 @@ class DistritoController extends ApiCoreController
   protected function sqlsForStringSearch() {
 
     $sqls[] = "select iddis as id, nome as name from
-                 public.distrito where lower((nome)) like '%'||lower(($1))||'%' and idmun = $2 ";
+                 public.distrito where lower(to_ascii(nome)) like '%'||lower(to_ascii($1))||'%' and idmun = $2 ";
 
     return $sqls;
   }

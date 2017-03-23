@@ -1,33 +1,33 @@
 <?php
 
 /*
- * i-Educar - Sistema de gestÃ£o escolar
+ * i-Educar - Sistema de gestão escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÃ­
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa Ã© software livre; vocÃª pode redistribuÃ­-lo e/ou modificÃ¡-lo
- * sob os termos da LicenÃ§a PÃºblica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versÃ£o 2 da LicenÃ§a, como (a seu critÃ©rio)
- * qualquer versÃ£o posterior.
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+ * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
  *
- * Este programa Ã© distribuÃ­Â­do na expectativa de que seja Ãºtil, porÃ©m, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÃ­Â­cita de COMERCIABILIDADE OU
- * ADEQUAÃ‡ÃƒO A UMA FINALIDADE ESPECÃFICA. Consulte a LicenÃ§a PÃºblica Geral
+ * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
  * do GNU para mais detalhes.
  *
- * VocÃª deve ter recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral do GNU junto
- * com este programa; se nÃ£o, escreva para a Free Software Foundation, Inc., no
- * endereÃ§o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
+ * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  */
 
 /**
  * Meus dados.
  *
- * @author   Prefeitura Municipal de ItajaÃ­ <ctima@itajai.sc.gov.br>
+ * @author   Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
  * @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
  * @package  Core
- * @since    Arquivo disponÃ­vel desde a versÃ£o 1.0.0
+ * @since    Arquivo disponível desde a versão 1.0.0
  * @version  $Id$
  */
 
@@ -114,7 +114,7 @@ class indice extends clsCadastro
     $this->campoOculto('matricula_old', $this->matricula_old);
 
     $this->campoTexto("nome", "Nome", $this->nome, 50, 150, true);
-    $this->campoTexto("matricula", "MatrÃ­cula", $this->matricula, 25, 12, true);
+    $this->campoTexto("matricula", "Matrícula", $this->matricula, 25, 12, true);
 
     $options = array(
       'required'    => false,
@@ -163,7 +163,7 @@ class indice extends clsCadastro
     $this->campoTexto("email", "E-mail", $this->email, 50, 100, true);
 
     $this->campoSenha('senha', "Senha", $this->senha, TRUE);
-    $this->campoSenha('senha_confirma', "ConfirmaÃ§Ã£o de senha", $this->senha_confirma, TRUE);
+    $this->campoSenha('senha_confirma', "Confirmação de senha", $this->senha_confirma, TRUE);
 
     $lista_sexos = array('' => 'Selecione',
                         'M' => 'Masculino',
@@ -189,13 +189,13 @@ class indice extends clsCadastro
     @session_write_close();
 
     if (!filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
-      $this->mensagem = "Formato do e-mail invÃ¡lido.";
+      $this->mensagem = "Formato do e-mail inválido.";
       return false;
     }
 
-    // ValidaÃ§Ã£o de senha
+    // Validação de senha
     if ($this->senha != $this->senha_confirma) {
-      $this->mensagem = "As senhas que vocÃª digitou nÃ£o conferem.";
+      $this->mensagem = "As senhas que você digitou não conferem.";
       return false;
     } elseif (strlen($this->senha) < 8) {
       $this->mensagem = "Por favor informe uma senha mais segura, com pelo menos 8 caracteres.";
@@ -224,7 +224,7 @@ class indice extends clsCadastro
     if ($this->matricula != $this->matricula_old) {
       $existeMatricula = $funcionario->lista($this->matricula);
       if ($existeMatricula) {
-        $this->mensagem = "A matrÃ­cula informada jÃ¡ perdence a outro usuÃ¡rio.";
+        $this->mensagem = "A matrícula informada já perdence a outro usuário.";
         return false;
       }
       $funcionario->matricula = $this->matricula;
@@ -259,7 +259,7 @@ class indice extends clsCadastro
 
     $permiteRelacionamentoPosvendas =
       ($configuracoes['permite_relacionamento_posvendas'] ?
-        "Sim" : Portabilis_String_Utils::toUtf8("NÃ£o"));
+        "Sim" : Portabilis_String_Utils::toUtf8("Não"));
 
     $dados = array(
       "nome" => Portabilis_String_Utils::toUtf8($this->nome),
@@ -268,7 +268,7 @@ class indice extends clsCadastro
       "telefone" => ($this->telefone ? "$this->ddd_telefone $this->telefone" : null),
       "celular" => ($this->celular ? "$this->ddd_celular $this->celular" : null),
       "Assuntos de interesse" => ($this->receber_novidades ? "Todos os assuntos relacionados ao i-Educar" : "Nenhum"),
-      Portabilis_String_Utils::toUtf8("Permite relacionamento direto no pÃ³s-venda?") => $permiteRelacionamentoPosvendas
+      Portabilis_String_Utils::toUtf8("Permite relacionamento direto no pós-venda?") => $permiteRelacionamentoPosvendas
     );
 
     // echo "<pre>";print_r($dados);die;
@@ -278,21 +278,21 @@ class indice extends clsCadastro
     $rdAPI->sendNewLead($this->email, $dados);
     $rdAPI->updateLeadStage($this->email, 2);
 
-    $this->mensagem .= "EdiÃ§Ã£oo efetuada com sucesso.<br>";
+    $this->mensagem .= "Ediçãoo efetuada com sucesso.<br>";
     header( "Location: index.php" );
     die();
   }
 
 }
 
-// Instancia objeto de pÃ¡gina
+// Instancia objeto de página
 $pagina = new clsIndex();
 
-// Instancia objeto de conteÃºdo
+// Instancia objeto de conteúdo
 $miolo = new indice();
 
-// Atribui o conteÃºdo Ã  pÃ¡gina
+// Atribui o conteúdo à página
 $pagina->addForm($miolo);
 
-// Gera o cÃ³digo HTML
+// Gera o código HTML
 $pagina->MakeAll();

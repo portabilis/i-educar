@@ -2,30 +2,30 @@
 //error_reporting(E_ALL);
 //ini_set("display_errors", 1);
 /**
- * i-Educar - Sistema de gestÃ£o escolar
+ * i-Educar - Sistema de gestão escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÃ­
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa Ã© software livre; vocÃª pode redistribuÃ­-lo e/ou modificÃ¡-lo
- * sob os termos da LicenÃ§a PÃºblica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versÃ£o 2 da LicenÃ§a, como (a seu critÃ©rio)
- * qualquer versÃ£o posterior.
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+ * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
  *
- * Este programa Ã© distribuÃ­Â­do na expectativa de que seja Ãºtil, porÃ©m, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÃ­Â­cita de COMERCIABILIDADE OU
- * ADEQUAÃ‡ÃƒO A UMA FINALIDADE ESPECÃFICA. Consulte a LicenÃ§a PÃºblica Geral
+ * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
  * do GNU para mais detalhes.
  *
- * VocÃª deve ter recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral do GNU junto
- * com este programa; se nÃ£o, escreva para a Free Software Foundation, Inc., no
- * endereÃ§o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
+ * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de ItajaÃ­ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo disponÃ­vel desde a versÃ£o 1.0.0
+ * @since     Arquivo disponível desde a versão 1.0.0
  * @version   $Id$
  */
 
@@ -94,7 +94,7 @@ class indice extends clsCadastro
       die();
     }
 
-    return 'Nova exportaÃ§Ã£o';
+    return 'Nova exportação';
   }
 
   function Gerar()
@@ -104,13 +104,13 @@ class indice extends clsCadastro
     $dicaCampoData = 'dd/mm/aaaa';
 
     if ($fase2 == 1) {
-      $dicaCampoData = 'A data informada neste campo, deverÃ¡ ser a mesma informada na 1Âª fase da exportaÃ§Ã£o (MatrÃ­cula inicial).';
+      $dicaCampoData = 'A data informada neste campo, deverá ser a mesma informada na 1ª fase da exportação (Matrícula inicial).';
       $this->campoOculto("fase2", "true");
     }
 
     $this->inputsHelper()->dynamic(array('ano', 'instituicao', 'escola'));
 
-    $this->inputsHelper()->date('data_ini',array('label' => 'Data inÃ­cio',
+    $this->inputsHelper()->date('data_ini',array('label' => 'Data início',
                                                  'value' => $this->data_ini,
                                                  'dica' => $dicaCampoData));
     $this->inputsHelper()->date('data_fim',array('label' => 'Data fim',
@@ -124,16 +124,16 @@ class indice extends clsCadastro
   }
 
 }
-// Instancia objeto de pÃ¡gina
+// Instancia objeto de página
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conteÃºdo
+// Instancia objeto de conteúdo
 $miolo = new indice();
 
-// Atribui o conteÃºdo Ã Â  pÃ¡gina
+// Atribui o conteúdo à  página
 $pagina->addForm($miolo);
 
-// Gera o cÃ³digo HTML
+// Gera o código HTML
 $pagina->MakeAll();
 ?>
 <script type="text/javascript">

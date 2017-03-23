@@ -66,7 +66,7 @@ class BairroController extends ApiCoreController
     $sqls[] = "SELECT b.idbai as id, b.nome as name, zona_localizacao, m.nome as municipio from
                  public.bairro b
                  INNER JOIN public.municipio m ON m.idmun = b.idmun
-                 where lower((b.nome)) like '%'||lower(($1))||'%' and (b.iddis = $2 or $2 = 0) ";
+                 where lower(to_ascii(b.nome)) like '%'||lower(to_ascii($1))||'%' and (b.iddis = $2 or $2 = 0) ";
 
     return $sqls;
   }

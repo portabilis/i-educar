@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestÃ£o escolar
+ * i-Educar - Sistema de gestão escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÃ­
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa Ã© software livre; vocÃª pode redistribuÃ­-lo e/ou modificÃ¡-lo
- * sob os termos da LicenÃ§a PÃºblica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versÃ£o 2 da LicenÃ§a, como (a seu critÃ©rio)
- * qualquer versÃ£o posterior.
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+ * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
  *
- * Este programa Ã© distribuÃ­Â­do na expectativa de que seja Ãºtil, porÃ©m, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÃ­Â­cita de COMERCIABILIDADE OU
- * ADEQUAÃ‡ÃƒO A UMA FINALIDADE ESPECÃFICA. Consulte a LicenÃ§a PÃºblica Geral
+ * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
  * do GNU para mais detalhes.
  *
- * VocÃª deve ter recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral do GNU junto
- * com este programa; se nÃ£o, escreva para a Free Software Foundation, Inc., no
- * endereÃ§o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
+ * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas Schmoeller das Silva <lucas@portabilis.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo disponÃ­vel desde a versÃ£o 1.0.0
+ * @since     Arquivo disponível desde a versão 1.0.0
  * @version   $Id$
  */
 
@@ -41,14 +41,14 @@ require_once 'include/modules/clsModulesProfessorTurma.inc.php';
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponÃ­vel desde a versÃ£o 1.0.0
+ * @since     Classe disponível desde a versão 1.0.0
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor FormaÃ§Ã£o');
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor Formação');
     $this->processoAp = 635;
   }
 }
@@ -60,7 +60,7 @@ class clsIndexBase extends clsBase
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponÃ­vel desde a versÃ£o 1.0.0
+ * @since     Classe disponível desde a versão 1.0.0
  * @version   @@package_version@@
  */
 class indice extends clsDetalhe
@@ -85,7 +85,7 @@ class indice extends clsDetalhe
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
-    $this->titulo = 'Servidor VÃ­nculo Turma - Detalhe';
+    $this->titulo = 'Servidor Vínculo Turma - Detalhe';
     
 
     $this->id = $_GET['id'];
@@ -102,13 +102,13 @@ class indice extends clsDetalhe
                                 1    => 'Docente',
                                 2    => 'Auxiliar/Assistente educacional',
                                 3    => 'Profissional/Monitor de atividade complementar',
-                                4    => 'Tradutor IntÃ©rprete de LIBRAS',
-                                5    => 'Docente titular - coordenador de tutoria (de mÃ³dulo ou disciplina) - EAD',
-                                6    => 'Docente tutor (de mÃ³dulo ou disciplina)');
+                                4    => 'Tradutor Intérprete de LIBRAS',
+                                5    => 'Docente titular - coordenador de tutoria (de módulo ou disciplina) - EAD',
+                                6    => 'Docente tutor (de módulo ou disciplina)');
 
     $resources_tipo = array(  null => 'Selecione',
-                              1    => 'Concursado/efetivo/estÃ¡vel',
-                              2    => 'Contrato temporÃ¡rio',
+                              1    => 'Concursado/efetivo/estável',
+                              2    => 'Contrato temporário',
                               3    => 'Contrato terceirizado',
                               4    => 'Contrato CLT');    
 
@@ -121,7 +121,7 @@ class indice extends clsDetalhe
     }
 
     if ($registro['nm_serie']) {
-      $this->addDetalhe(array('SÃ©rie', $registro['nm_serie']));
+      $this->addDetalhe(array('Série', $registro['nm_serie']));
     }
 
     if ($registro['nm_turma']) {
@@ -129,11 +129,11 @@ class indice extends clsDetalhe
     }
 
     if ($registro['funcao_exercida']) {
-      $this->addDetalhe(array('FunÃ§Ã£o exercida', $resources_funcao[$registro['funcao_exercida']]));
+      $this->addDetalhe(array('Função exercida', $resources_funcao[$registro['funcao_exercida']]));
     }
 
     if ($registro['tipo_vinculo']) {
-      $this->addDetalhe(array('Tipo de vÃ­nculo', $resources_tipo[$registro['tipo_vinculo']]));
+      $this->addDetalhe(array('Tipo de vínculo', $resources_tipo[$registro['tipo_vinculo']]));
     }
 
     $sql = 'SELECT nome 
@@ -167,7 +167,7 @@ class indice extends clsDetalhe
         $registro['id'], $registro['instituicao_id'], $registro['servidor_id']
       );
 
-      $this->array_botao[] = 'Copiar vÃ­nculo';
+      $this->array_botao[] = 'Copiar vínculo';
       $this->array_botao_url_script[] = sprintf(
         'go("educar_servidor_vinculo_turma_cad.php?id=%d&ref_cod_instituicao=%d&ref_cod_servidor=%d&copia");',
         $registro['id'], $registro['instituicao_id'], $registro['servidor_id']
@@ -185,14 +185,14 @@ class indice extends clsDetalhe
   }
 }
 
-// Instancia objeto de pÃ¡gina
+// Instancia objeto de página
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conteÃºdo
+// Instancia objeto de conteúdo
 $miolo = new indice();
 
-// Atribui o conteÃºdo Ã Â  pÃ¡gina
+// Atribui o conteúdo à  página
 $pagina->addForm($miolo);
 
-// Gera o cÃ³digo HTML
+// Gera o código HTML
 $pagina->MakeAll();

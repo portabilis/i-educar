@@ -2,30 +2,30 @@
 // error_reporting(E_ALL);
 // ini_set("display_errors", 1);
 /**
- * i-Educar - Sistema de gest√£o escolar
+ * i-Educar - Sistema de gest„o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
+ * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
- * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
- * qualquer vers√£o posterior.
+ * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
+ * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
+ * qualquer vers„o posterior.
  *
- * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
- * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
+ * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
+ * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
  * do GNU para mais detalhes.
  *
- * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
- * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
- * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
+ * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
+ * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo dispon√≠vel desde a vers√£o 1.0.0
+ * @since     Arquivo disponÌvel desde a vers„o 1.0.0
  * @version   $Id$
  */
 
@@ -40,17 +40,17 @@ require_once 'Educacenso/Model/DocenteDataMapper.php';
 /**
  * clsIndexBase class.
  *
- * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
+ * @since     Classe disponÌvel desde a vers„o 1.0.0
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor aloca√ß√£o');
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor alocaÁ„o');
     $this->processoAp = 635;
     $this->addEstilo('localizacaoSistema');
   }
@@ -59,11 +59,11 @@ class clsIndexBase extends clsBase {
 /**
  * indice class.
  *
- * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
+ * @since     Classe disponÌvel desde a vers„o 1.0.0
  * @version   @@package_version@@
  */
 class indice extends clsDetalhe
@@ -80,7 +80,7 @@ class indice extends clsDetalhe
   var $ref_cod_funcionario_vinculo = null;
   var $ano = null;
   /**
-   * Implementa√ß√£o do m√©todo Gerar()
+   * ImplementaÁ„o do mÈtodo Gerar()
    */
   function Gerar()
   {
@@ -88,7 +88,7 @@ class indice extends clsDetalhe
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
-    $this->titulo = 'Servidor aloca√ß√£o - Detalhe';
+    $this->titulo = 'Servidor alocaÁ„o - Detalhe';
     $this->addBanner('imagens/nvp_top_intranet.jpg', 'imagens/nvp_vert_intranet.jpg', 'Intranet');
 
     $this->cod_servidor_alocacao = $_GET['cod_servidor_alocacao'];
@@ -132,10 +132,10 @@ class indice extends clsDetalhe
 
     $this->addDetalhe(array("Periodo", "{$periodo[$registro['periodo']]}"));
 
-    //Carga hor√°ria
-    $this->addDetalhe(array("Carga hor√°ria", "{$registro['carga_horaria']}"));
+    //Carga hor·ria
+    $this->addDetalhe(array("Carga hor·ria", "{$registro['carga_horaria']}"));
 
-    //Fun√ß√£o
+    //FunÁ„o
     if ($this->ref_cod_servidor_funcao) {
       $funcaoServidor = new clsPmieducarServidorFuncao(null, null, null, null, $this->ref_cod_servidor_funcao);
       $funcaoServidor = $funcaoServidor->detalhe();
@@ -143,7 +143,7 @@ class indice extends clsDetalhe
       $funcao = new clsPmieducarFuncao($funcaoServidor['ref_cod_funcao']);
       $funcao = $funcao->detalhe();
 
-      $this->addDetalhe(array("Fun√ß√£o", "{$funcao['nm_funcao']}"));
+      $this->addDetalhe(array("FunÁ„o", "{$funcao['nm_funcao']}"));
     }
 
     //Vinculo
@@ -168,20 +168,20 @@ class indice extends clsDetalhe
     $localizacao->entradaCaminhos(array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_index.php" => "i-Educar - Escola",
-         "" => "Detalhe da aloca√ß√£o"
+         "" => "Detalhe da alocaÁ„o"
     ));
 
     $this->enviaLocalizacao($localizacao->montar());
   }
 }
 
-// Instancia o objeto da p√°gina
+// Instancia o objeto da p·gina
 $pagina = new clsIndexBase();
 
-// Instancia o objeto de conte√∫do
+// Instancia o objeto de conte˙do
 $miolo = new indice();
 
-// Passa o conte√∫do para a p√°gina
+// Passa o conte˙do para a p·gina
 $pagina->addForm($miolo);
 
 // Gera o HTML
