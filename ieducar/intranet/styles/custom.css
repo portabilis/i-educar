@@ -317,9 +317,10 @@ div#fa-icons {
     float: left;
     padding: 1px 0px;
     width: 30px;
-    text-align: center;
+    text-align: left;
     color: #98b0c3;
     font-size: 20px;
+    margin-right: 8px;
 }
 
 
