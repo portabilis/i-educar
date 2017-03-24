@@ -8,11 +8,11 @@ class MigracaoDeReorganizacaoMenusServidores extends AbstractMigration
     {
         $this->execute("
 
-            INSERT INTO menu_menu VALUES (71, 'Servidores', '', NULL, '/intranet/educar_servidores_index.php', 6, true, 'fa-users');
+            INSERT INTO portal.menu_menu VALUES (71, 'Servidores', '', NULL, '/intranet/educar_servidores_index.php', 6, true, 'fa-users');
 
             INSERT INTO pmicontrolesis.tutormenu VALUES (19,'Servidores');
 
-            UPDATE menu_submenu SET ref_cod_menu_menu = 71 WHERE cod_menu_submenu IN (634, 632, 633, 829, 641, 635, 999110, 999107, 999820, 999860, 999874, 999239, 999887);
+            UPDATE portal.menu_submenu SET ref_cod_menu_menu = 71 WHERE cod_menu_submenu IN (634, 632, 633, 829, 641, 635, 999110, 999107, 999820, 999860, 999874, 999239, 999887);
 
             INSERT INTO pmicontrolesis.menu VALUES (999911, NULL, NULL, 'Cadastros', 1, null, '_self', 1, 19);
 
