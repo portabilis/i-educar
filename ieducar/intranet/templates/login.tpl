@@ -90,21 +90,21 @@
         <img width="150px" height="150px" src="https://s3.amazonaws.com/apps-ieducar-images/treinamento/brasao-republica.png"/>
       </div>
 
-      <h2>Secretaria Municipal de Educa&ccedil;&atilde;o</h2>
+      <h2>Secretaria Municipal de Educação</h2>
 
       <!-- #&ERROLOGIN&# -->
 
       <div id="login-form" class="box shadow">
         <h1>Acesse sua conta</h1>
         <form action="" method="post">
-          <label class="" for="login">Matr&iacute;cula:</label>
+          <label class="" for="login">Matrícula:</label>
           <input type="text" name="login" id="login">
 
           <label class="" for="senha">Senha:</label>
           <input type="password" name="senha" id="senha">
 
           <!-- #&RECAPTCHA&# -->
-          
+
           <input type="submit" class="submit" src="imagens/nvp_bot_entra_webmail.jpg" value="Entrar">
           <p class="forget-password"><a class="light small" href="/module/Usuario/RedefinirSenha">Esqueceu sua senha?</a></p>
             </p>
@@ -122,12 +122,12 @@
 
       <div class="rodape-social">
         <p>
-          Conhe&ccedil;a mais sobre o i-Educar e a Portabilis, acesse nosso <a href="http://blog.portabilis.com.br">blog</a> &nbsp; &nbsp; &nbsp; Siga-nos nas redes sociais
+          Conheça mais sobre o i-Educar e a Portabilis, acesse nosso <a href="http://blog.portabilis.com.br">blog</a> &nbsp; &nbsp; &nbsp; Siga-nos nas redes sociais
         </p>
         <div class="social-icons">
-          <a href="#"><img src="/intranet/imagens/icon-social-facebook.png"></a>       
-          <a href="#"><img src="/intranet/imagens/icon-social-linkedin.png"></a>    
-          <a href="#"><img src="/intranet/imagens/icon-social-twitter.png"></a>        
+          <a href="#"><img src="/intranet/imagens/icon-social-facebook.png"></a>
+          <a href="#"><img src="/intranet/imagens/icon-social-linkedin.png"></a>
+          <a href="#"><img src="/intranet/imagens/icon-social-twitter.png"></a>
         </div>
       </div>
     </div> <!-- end rodape -->

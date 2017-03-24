@@ -7,7 +7,7 @@
  	 		<div class="dropbtn"><!-- #&USERLOGADO&# --></div>
   			<div class="dropdown-content">
     			<a href="agenda.php">Agenda</a>
-    			<a href="index.php">Calendário</a>
+    			<a href="index.php">CalendÃ¡rio</a>
     			<a href="meusdados.php">Meus dados</a>
     			<a href="logof.php">Sair</a>
 			 </div>
@@ -42,7 +42,7 @@
 <tr class="rodape">
 	<td colspan="3">
 	<center>
-		Conheça mais sobre o i-Educar e a Portabilis, <a href="http://blog.portabilis.com.br" target="_blank">acesse nosso blog</a> &nbsp;&nbsp;&nbsp; © Portabilis - Todos os direitos reservados
+		ConheÃ§a mais sobre o i-Educar e a Portabilis, <a href="http://blog.portabilis.com.br" target="_blank">acesse nosso blog</a> &nbsp;&nbsp;&nbsp; Â© Portabilis - Todos os direitos reservados
 	</center></td>
 </tr>
 </table>
