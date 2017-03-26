@@ -69,6 +69,8 @@ class MigracaoDeReorganizacaoMenusEscola extends AbstractMigration
 
                 UPDATE pmicontrolesis.menu SET tt_menu = 'Escolas', ref_cod_menu_pai = 999917, ord_menu = 5 WHERE cod_menu = 21161;
 
+                UPDATE pmicontrolesis.menu SET ref_cod_menu_pai = 21161 WHERE cod_menu = 21159;
+
                     UPDATE pmicontrolesis.menu SET tt_menu = 'Tipos de localização' WHERE cod_menu = 21211;
                     UPDATE pmicontrolesis.menu SET tt_menu = 'Tipos de rede de ensino' WHERE cod_menu = 21218;
                     UPDATE pmicontrolesis.menu SET tt_menu = 'Tipos de módulos' WHERE cod_menu = 21159;
@@ -131,6 +133,8 @@ class MigracaoDeReorganizacaoMenusEscola extends AbstractMigration
 
 
             INSERT INTO pmicontrolesis.menu VALUES (999920, NULL, NULL, 'Lançamentos', 3, null, '_self', 1, 15);
+
+            UPDATE pmicontrolesis.menu SET ref_cod_menu_pai = 999920, ord_menu = 0 WHERE cod_menu IN (21152, 21145);
 
                 UPDATE pmicontrolesis.menu SET tt_menu = 'Faltas e notas' WHERE cod_menu = 21152;
                 UPDATE pmicontrolesis.menu SET tt_menu = 'Ocorrências disciplinares' WHERE cod_menu = 21145;
@@ -355,6 +359,19 @@ class MigracaoDeReorganizacaoMenusEscola extends AbstractMigration
                     UPDATE portal.menu_submenu SET nm_submenu = 'Registro de frequência - Ed. Infantil' WHERE cod_menu_submenu = 999236;
                     UPDATE portal.menu_submenu SET nm_submenu = 'Registros do conselho de classe' WHERE cod_menu_submenu = 999846;
 
+            INSERT INTO pmicontrolesis.menu VALUES (999926, NULL, NULL, 'Ferramentas', 7, null, '_self', 1, 15);
+
+                INSERT INTO pmicontrolesis.menu VALUES (999927, NULL, 999926, 'Unificações', 1, null, '_self', 1, 15);
+
+                    UPDATE pmicontrolesis.menu SET ref_cod_menu_pai = 999927 WHERE cod_menu = 999847;
+
+                INSERT INTO pmicontrolesis.menu VALUES (999928, NULL, 999926, 'Paramentros', 2, null, '_self', 1, 15);
+
+                    UPDATE pmicontrolesis.menu SET ref_cod_menu_pai = 999928 WHERE cod_menu IN (999848, 21251);
+
+                    UPDATE pmicontrolesis.menu SET tt_menu = 'Bloqueio de lançamento de notas e faltas', ord_menu = 0 WHERE cod_menu = 999848;
+
+                    UPDATE portal.menu_submenu SET nm_submenu = 'Bloqueio de lançamento de notas e faltas' WHERE cod_menu_submenu = 999848;
         ");
     }
 }
