@@ -96,7 +96,7 @@ class indice extends clsListagem
 		foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
 			$this->$var = ( $val === "" ) ? null: $val;
 
-		
+
 
 		$cabecalhos = array("Escola");
 		$nivel = $obj_permissoes->nivel_acesso($this->pessoa_logada);
@@ -136,8 +136,10 @@ class indice extends clsListagem
 		$this->limite = 10;
 		$obj_escola = new clsPmieducarEscola();
 		//$obj_escola->setOrderby( "nome ASC" );
-		$obj_escola->setLimite( $this->limite, ( $this->pagina_formulario - 1 ) * $this->limite );
 
+		if ($this->pagina_formulario){
+			$obj_escola->setLimite( $this->limite, ( $this->pagina_formulario - 1 ) * $this->limite );
+		}
 		$lista = $obj_escola->lista(
 			null,
 			null,
@@ -187,9 +189,9 @@ class indice extends clsListagem
 	    $localizacao->entradaCaminhos( array(
 	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
 	         "educar_index.php"                  => "i-Educar - Escola",
-	         ""        => "Listagem de escolas"             
+	         ""        => "Listagem de escolas"
 	    ));
-	    $this->enviaLocalizacao($localizacao->montar());		
+	    $this->enviaLocalizacao($localizacao->montar());
 
 	}
 }
