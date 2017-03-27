@@ -135,10 +135,11 @@ class indice extends clsListagem
 		// Filtros de Foreign Keys
 		$this->limite = 10;
 		$obj_escola = new clsPmieducarEscola();
-		//$obj_escola->setOrderby( "nome ASC" );
 
 		if ($this->pagina_formulario){
 			$obj_escola->setLimite( $this->limite, ( $this->pagina_formulario - 1 ) * $this->limite );
+		} else {
+			$obj_escola->setLimite( $this->limite );
 		}
 		$lista = $obj_escola->lista(
 			null,
