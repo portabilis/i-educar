@@ -63,7 +63,7 @@ class ServidorController extends ApiCoreController
                 LEFT JOIN pmieducar.servidor_alocacao sa ON (s.cod_servidor = sa.ref_cod_servidor)
 
                 WHERE p.idpes LIKE '%'||$1||'%'
-                AND (CASE WHEN $2 = NULL OR $2 = 0 THEN
+                AND (CASE WHEN $2 = 0 THEN
                       1 = 1
                     ELSE
                       sa.ref_cod_escola = $2
@@ -83,7 +83,7 @@ class ServidorController extends ApiCoreController
                 LEFT JOIN pmieducar.servidor_alocacao sa ON (s.cod_servidor = sa.ref_cod_servidor)
 
                 WHERE p.nome ILIKE '%'||$1||'%'
-                AND (CASE WHEN $2 = NULL OR $2 = 0 THEN
+                AND (CASE WHEN $2 = 0 THEN
                       1 = 1
                     ELSE
                       sa.ref_cod_escola = $2
