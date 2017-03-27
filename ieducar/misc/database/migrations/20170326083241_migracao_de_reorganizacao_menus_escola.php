@@ -365,9 +365,9 @@ class MigracaoDeReorganizacaoMenusEscola extends AbstractMigration
 
                     UPDATE pmicontrolesis.menu SET ref_cod_menu_pai = 999927 WHERE cod_menu = 999847;
 
-                INSERT INTO pmicontrolesis.menu VALUES (999928, NULL, 999926, 'Paramentros', 2, null, '_self', 1, 15);
+                INSERT INTO pmicontrolesis.menu VALUES (999928, NULL, 999926, 'Parâmentros', 2, null, '_self', 1, 15);
 
-                    UPDATE pmicontrolesis.menu SET ref_cod_menu_pai = 999928 WHERE cod_menu IN (999848, 21251);
+                    UPDATE pmicontrolesis.menu SET ref_cod_menu_pai = 999928 WHERE cod_menu IN (999848, 21251, 21253);
 
                     UPDATE pmicontrolesis.menu SET tt_menu = 'Bloqueio de lançamento de notas e faltas', ord_menu = 0 WHERE cod_menu = 999848;
 
