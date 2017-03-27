@@ -100,7 +100,7 @@ class indice extends clsCadastro
     $escola = $escola->detalhe();
 
     $this->campoRotulo('ano', 'Ano', $matricula['ano']);
-    $this->campoRotulo('nm_instituicao', Portabilis_String_Utils::toLatin1('InstituiÃ§Ã£o'), $instituicao['nm_instituicao']);
+    $this->campoRotulo('nm_instituicao', 'Instituição', $instituicao['nm_instituicao']);
     $this->campoRotulo('nm_escola', 'Escola', $escola['nome']);
     $this->campoRotulo('nm_pessoa', 'Nome do Aluno', $enturmacao['nome']);
     $this->campoRotulo('sequencial', 'Sequencial', $enturmacao['sequencial']);
@@ -128,7 +128,7 @@ class indice extends clsCadastro
         $situacao = 'Em Exame';
         break;
       case 12:
-        $situacao = Portabilis_String_Utils::toLatin1('Aprovado com dependÃªncia');
+        $situacao = 'Aprovado com dependência';
         break;
       case 13:
         $situacao = 'Aprovado pelo conselho';
@@ -140,10 +140,10 @@ class indice extends clsCadastro
         $situacao = '';
         break;
     }
-    $this->campoRotulo('situacao', Portabilis_String_Utils::toLatin1('SituaÃ§Ã£o'), $situacao);
+    $this->campoRotulo('situacao', 'Situação', $situacao);
 
-    $this->inputsHelper()->date('data_enturmacao', array('label' => Portabilis_String_Utils::toLatin1('Data enturmaÃ§Ã£o'), 'value' => dataToBrasil($enturmacao['data_enturmacao']), 'placeholder' => ''));
-    $this->inputsHelper()->date('data_exclusao', array('label' => Portabilis_String_Utils::toLatin1('Data de saÃ­da'), 'value' => dataToBrasil($enturmacao['data_exclusao']), 'placeholder' => '', 'required' => false));
+    $this->inputsHelper()->date('data_enturmacao', array('label' => 'Data enturmação', 'value' => dataToBrasil($enturmacao['data_enturmacao']), 'placeholder' => ''));
+    $this->inputsHelper()->date('data_exclusao', array('label' => 'Data de saí­da', 'value' => dataToBrasil($enturmacao['data_exclusao']), 'placeholder' => '', 'required' => false));
   }
 
   function Editar()
@@ -166,7 +166,7 @@ class indice extends clsCadastro
     $matricula = $matricula->detalhe();
     $dataSaidaMatricula = "";
     if($matricula['data_cancel']){
-      $dataSaidaMatricula = date("Y-m-d", strtotime($matricula['data_cancel'])); 
+      $dataSaidaMatricula = date("Y-m-d", strtotime($matricula['data_cancel']));
     }
 
     //echo $enturmacao->data_exclusao . "<br>";
@@ -205,7 +205,7 @@ class indice extends clsCadastro
     {
       if(is_null($dataSaidaMatricula) || empty($dataSaidaMatricula)){
         $dataSaidaMatricula = $enturmacao->data_exclusao;
-        
+
         $matricula_get = new clsPmieducarMatricula($this->ref_cod_matricula, NULL, NULL, NULL, NULL, $matricula['ref_usuario_cad'], $matricula['ref_cod_aluno'], $matricula['aprovado'],
                                                    NULL, NULL, NULL, $matricula['ano'], $matricula['ultima_matricula'], NULL, NULL, NULL, NULL, $matricula['ref_cod_curso'], NULL, NULL,
                                                    NULL, $dataSaidaMatricula, NULL);

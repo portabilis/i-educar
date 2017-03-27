@@ -76,7 +76,7 @@ class indice extends clsListagem
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
-    $this->titulo = Portabilis_String_Utils::toLatin1('Lista de enturmaÃ§Ãµes da matrÃ­cula');
+    $this->titulo = 'Lista de enturmações da matrí­cula';
 
     $this->ref_cod_matricula = $_GET['ref_cod_matricula'];
 
@@ -101,15 +101,15 @@ class indice extends clsListagem
       'Sequencial',
       'Turma',
       'Ativo',
-      Portabilis_String_Utils::toLatin1('Data de enturmaÃ§Ã£o'),
-      Portabilis_String_Utils::toLatin1('Data de saÃ­da'),
+      'Data de enturmação',
+      'Data de saída',
       'Transferido',
       'Remanejado',
       'Reclassificado',
       'Abandono',
       'Falecido',
-      Portabilis_String_Utils::toLatin1('UsuÃ¡rio criou'),
-      Portabilis_String_Utils::toLatin1('UsuÃ¡rio editou')
+      'Usuário criou',
+      'Usuário editou'
     ));
 
     // Busca dados da matricula
@@ -129,9 +129,9 @@ class indice extends clsListagem
     }
 
     $this->campoRotulo('nm_pessoa', 'Nome do Aluno', $det_aluno['nome_aluno']);
-    $this->campoRotulo('matricula', Portabilis_String_Utils::toLatin1('MatrÃ­cula'), $this->ref_cod_matricula);
-    $this->campoRotulo('situacao', Portabilis_String_Utils::toLatin1('SituaÃ§Ã£o'), $situacao);
-    $this->campoRotulo('data_saida', Portabilis_String_Utils::toLatin1('Data saÃ­da'), dataToBrasil($detalhe_matricula['data_cancel']));
+    $this->campoRotulo('matricula', 'Matrícula', $this->ref_cod_matricula);
+    $this->campoRotulo('situacao', 'Situação', $situacao);
+    $this->campoRotulo('data_saida', 'Data saída', dataToBrasil($detalhe_matricula['data_cancel']));
 
     //Paginador
     $this->limite = 20;
@@ -150,15 +150,15 @@ class indice extends clsListagem
     {
       foreach ( $lista AS $registro )
       {
-        $ativo = $registro["ativo"] ? 'Sim' : Portabilis_String_Utils::toLatin1('NÃ£o');
+        $ativo = $registro["ativo"] ? 'Sim' : Portabilis_String_Utils::toLatin1('Não');
         $dataEnturmacao = dataToBrasil($registro["data_enturmacao"]);
         $dataSaida = dataToBrasil($registro["data_exclusao"]);
         $dataSaidaMatricula = dataToBrasil($detalhe_matricula["data_cancel"]);
-        $transferido = $registro["transferido"] == 't' ? 'Sim' : Portabilis_String_Utils::toLatin1('NÃ£o');
-        $remanejado = $registro["remanejado"] == 't' ? 'Sim' : Portabilis_String_Utils::toLatin1('NÃ£o');
-        $abandono = $registro["abandono"] == 't' ? 'Sim' : Portabilis_String_Utils::toLatin1('NÃ£o');
-        $reclassificado = $registro["reclassificado"] == 't' ? 'Sim' : Portabilis_String_Utils::toLatin1('NÃ£o');
-        $falecido = $registro["falecido"] == 't' ? 'Sim' : Portabilis_String_Utils::toLatin1('NÃ£o');
+        $transferido = $registro["transferido"] == 't' ? 'Sim' : Portabilis_String_Utils::toLatin1('Não');
+        $remanejado = $registro["remanejado"] == 't' ? 'Sim' : Portabilis_String_Utils::toLatin1('Não');
+        $abandono = $registro["abandono"] == 't' ? 'Sim' : Portabilis_String_Utils::toLatin1('Não');
+        $reclassificado = $registro["reclassificado"] == 't' ? 'Sim' : Portabilis_String_Utils::toLatin1('Não');
+        $falecido = $registro["falecido"] == 't' ? 'Sim' : Portabilis_String_Utils::toLatin1('Não');
 
         $usuarioCriou = new clsPessoa_($registro['ref_usuario_cad']);
         $usuarioCriou = $usuarioCriou->detalhe();
@@ -192,9 +192,9 @@ class indice extends clsListagem
 
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         $_SERVER['SERVER_NAME']."/intranet" => "Início",
          "educar_index.php"                  => "i-Educar - Escola",
-         ""                                  => "Listagem de enturma&ccedil;&otilde;es da matr&iacute;cula"
+         ""                                  => "Listagem de enturmações da matrícula"
     ));
     $this->enviaLocalizacao($localizacao->montar());
   }

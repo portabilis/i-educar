@@ -1,31 +1,31 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     FormulaMedia
  * @subpackage  Modules
- * @since       Arquivo disponÌvel desde a vers„o 1.1.0
+ * @since       Arquivo dispon√≠vel desde a vers√£o 1.1.0
  * @version     $Id$
  */
 
@@ -35,23 +35,23 @@ require_once 'FormulaMedia/Model/FormulaDataMapper.php';
 /**
  * ViewController class.
  *
- * @author      Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     FormulaMedia
  * @subpackage  Modules
- * @since       Classe disponÌvel desde a vers„o 1.1.0
+ * @since       Classe dispon√≠vel desde a vers√£o 1.1.0
  * @version     @@package_version@@
  */
 class ViewController extends Core_Controller_Page_ViewController
 {
   protected $_dataMapper = 'FormulaMedia_Model_FormulaDataMapper';
-  protected $_titulo     = 'Detalhes da fÛrmula de c·lculo de mÈdia';
+  protected $_titulo     = 'Detalhes da f√≥rmula de c√°lculo de m√©dia';
   protected $_processoAp = 948;
   protected $_tableMap   = array(
     'Nome' => 'nome',
-    'FÛrmula de c·lculo' => 'formulaMedia',
-    'Tipo de fÛrmula' => 'tipoFormula'
+    'F√≥rmula de c√°lculo' => 'formulaMedia',
+    'Tipo de f√≥rmula' => 'tipoFormula'
   );
 
   protected function _preRender(){
@@ -65,8 +65,8 @@ class ViewController extends Core_Controller_Page_ViewController
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_index.php"                  => "i-Educar - Escola",
-         ""                                  => "Detalhe da f&oacute;rmula de m&eacute;dia"             
+         ""                                  => "Detalhe da f&oacute;rmula de m&eacute;dia"
     ));
-    $this->enviaLocalizacao($localizacao->montar());     
-  }    
+    $this->enviaLocalizacao($localizacao->montar());
+  }
 }
