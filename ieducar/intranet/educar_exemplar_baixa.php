@@ -123,7 +123,7 @@ class indice extends clsCadastro
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_biblioteca_index.php"                  => "i-Educar - Biblioteca",
-         ""                                  => "Cadastrar baixa para o exemplar"
+         ""                                  => "Baixa do exemplar"
     ));
     $this->enviaLocalizacao($localizacao->montar());
 
@@ -160,7 +160,7 @@ class indice extends clsCadastro
 		}
 		$this->campoLista( "ref_cod_motivo_baixa", "Motivo Baixa", $opcoes, $this->ref_cod_motivo_baixa );
 
-		$this->nome_url_sucesso = "Efetuar Baixa";
+		$this->nome_url_sucesso = "Efetuar baixa";
 		$this->acao_enviar = "if(confirm(\"Deseja baixar este exemplar?\"))acao();";
 
 	}
