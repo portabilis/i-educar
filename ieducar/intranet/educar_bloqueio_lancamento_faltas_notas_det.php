@@ -92,10 +92,10 @@ class indice extends clsDetalhe
 
     //Nome da etapa
     $etapas = array(
-      1 => Portabilis_String_Utils::toLatin1('1Âª Etapa'),
-      2 => Portabilis_String_Utils::toLatin1('2Âª Etapa'),
-      3 => Portabilis_String_Utils::toLatin1('3Âª Etapa'),
-      4 => Portabilis_String_Utils::toLatin1('4Âª Etapa')
+      1 => '1ª Etapa',
+      2 => '2ª Etapa',
+      3 => '3ª Etapa',
+      4 => '4ª Etapa'
     );
     $registro['etapa'] = $etapas[$registro['etapa']];
 
