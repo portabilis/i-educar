@@ -1,31 +1,31 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     FormulaMedia
  * @subpackage  Modules
- * @since       Arquivo disponÌvel desde a vers„o 1.1.0
+ * @since       Arquivo dispon√≠vel desde a vers√£o 1.1.0
  * @version     $Id$
  */
 
@@ -36,18 +36,18 @@ require_once 'FormulaMedia/Validate/Formula.php';
 /**
  * EditController class.
  *
- * @author      Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     FormulaMedia
  * @subpackage  Modules
- * @since       Classe disponÌvel desde a vers„o 1.1.0
+ * @since       Classe dispon√≠vel desde a vers√£o 1.1.0
  * @version     @@package_version@@
  */
 class EditController extends Core_Controller_Page_EditController
 {
   protected $_dataMapper        = 'FormulaMedia_Model_FormulaDataMapper';
-  protected $_titulo            = 'Cadastro de fÛrmula de c·lculo de mÈdia';
+  protected $_titulo            = 'Cadastro de f√≥rmula de c√°lculo de m√©dia';
   protected $_processoAp        = 948;
   protected $_nivelAcessoOption = App_Model_NivelAcesso::INSTITUCIONAL;
   protected $_saveOption        = TRUE;
@@ -55,7 +55,7 @@ class EditController extends Core_Controller_Page_EditController
 
   protected $_formMap = array(
     'instituicao' => array(
-      'label'  => 'InstituiÁ„o',
+      'label'  => 'Institui√ß√£o',
       'help'   => ''
     ),
     'nome' => array(
@@ -63,24 +63,24 @@ class EditController extends Core_Controller_Page_EditController
       'help'   => ''
     ),
     'formulaMedia' => array(
-      'label'  => 'FÛrmula de mÈdia final',
-      'help'   => 'A fÛrmula de c·lculo.<br />
-                   Vari·veis disponÌveis:<br />
+      'label'  => 'F√≥rmula de m√©dia final',
+      'help'   => 'A f√≥rmula de c√°lculo.<br />
+                   Vari√°veis dispon√≠veis:<br />
                    &middot; En - Etapa n (de 1 a 10)<br />
                    &middot; Et - Total de etapas<br />
                    &middot; Se - Soma das notas das etapas<br />
-                   &middot; Rc - Nota da recuperaÁ„o<br />
-                   &middot; RSPN - RecuperaÁ„o especÌfica n (de 1 a 10)<br />
-                   &middot; RSPSN - Soma das etapas ou RecuperaÁ„o especÌfica (Pega maior) n (de 1 a 10)<br />
-                   &middot; RSPMN - MÈdia das etapas ou MÈdia das etapas com RecuperaÁ„o especÌfica (Pega maior) n (de 1 a 10)<br />
-                   SÌmbolos disponÌveis:<br />
+                   &middot; Rc - Nota da recupera√ß√£o<br />
+                   &middot; RSPN - Recupera√ß√£o espec√≠fica n (de 1 a 10)<br />
+                   &middot; RSPSN - Soma das etapas ou Recupera√ß√£o espec√≠fica (Pega maior) n (de 1 a 10)<br />
+                   &middot; RSPMN - M√©dia das etapas ou M√©dia das etapas com Recupera√ß√£o espec√≠fica (Pega maior) n (de 1 a 10)<br />
+                   S√≠mbolos dispon√≠veis:<br />
                    &middot; (), +, /, *, x<br />
                    &middot; < > ? :
-                   A vari·vel "Rc" est· disponÌvel apenas<br />
-                   quando Tipo de fÛrmula for "RecuperaÁ„o".'
+                   A vari√°vel "Rc" est√° dispon√≠vel apenas<br />
+                   quando Tipo de f√≥rmula for "Recupera√ß√£o".'
     ),
     'tipoFormula' => array(
-      'label'  => 'Tipo de fÛrmula',
+      'label'  => 'Tipo de f√≥rmula',
       'help'   => ''
     )
   );
@@ -105,7 +105,7 @@ class EditController extends Core_Controller_Page_EditController
   {
     $this->campoOculto('id', $this->getEntity()->id);
 
-    // InstituiÁ„o
+    // Institui√ß√£o
     $instituicoes = App_Model_IedFinder::getInstituicoes();
     $this->campoLista('instituicao', $this->_getLabel('instituicao'),
       $instituicoes, $this->getEntity()->instituicao);
@@ -114,17 +114,17 @@ class EditController extends Core_Controller_Page_EditController
     $this->campoTexto('nome', $this->_getLabel('nome'), $this->getEntity()->nome,
       40, 50, TRUE, FALSE, FALSE, $this->_getHelp('nome'));
 
-    // FÛrmula de mÈdia
+    // F√≥rmula de m√©dia
     $this->campoTexto('formulaMedia', $this->_getLabel('formulaMedia'),
       $this->getEntity()->formulaMedia, 40, 200, TRUE, FALSE, FALSE,
       $this->_getHelp('formulaMedia'));
 
-    // FÛrmula de recuperaÁ„o
+    // F√≥rmula de recupera√ß√£o
     /*$this->campoTexto('formulaRecuperacao', $this->_getLabel('formulaRecuperacao'),
       $this->getEntity()->formulaRecuperacao, 40, 50, TRUE, FALSE, FALSE,
       $this->_getHelp('formulaRecuperacao'));*/
 
-    // Tipo de fÛrmula
+    // Tipo de f√≥rmula
     $tipoFormula = FormulaMedia_Model_TipoFormula::getInstance();
     $this->campoRadio('tipoFormula', $this->_getLabel('tipoFormula'),
       $tipoFormula->getEnums(), $this->getEntity()->get('tipoFormula'));

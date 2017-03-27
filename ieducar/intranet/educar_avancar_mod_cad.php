@@ -1,32 +1,33 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest? escolar
+ * i-Educar - Sistema de gestão escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itaja? *                     <ctima@itajai.sc.gov.br>
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa ?software livre; voc?pode redistribu?lo e/ou modific?lo
- * sob os termos da Licen? P?blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers? 2 da Licen?, como (a seu crit?io)
- * qualquer vers? posterior.
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+ * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
  *
- * Este programa ?distribu?do na expectativa de que seja ?til, por?, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia impl?cita de COMERCIABILIDADE OU
- * ADEQUA?O A UMA FINALIDADE ESPEC?ICA. Consulte a Licen? P?blica Geral
+ * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
  * do GNU para mais detalhes.
  *
- * Voc?deve ter recebido uma c?ia da Licen? P?blica Geral do GNU junto
- * com este programa; se n?, escreva para a Free Software Foundation, Inc., no
- * endere? 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
+ * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Prefeitura Municipal de Itaja?<ctima@itajai.sc.gov.br>
+ * @author      Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
  * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
  * @package     Core
  * @subpackage  pmieducar
  * @subpackage  Matricula
  * @subpackage  Rematricula
- * @since       Arquivo dispon?el desde a vers? 1.0.0
- * @todo        Refatorar a l?ica de indice::Novo() para uma classe na camada de dom?io
+ * @since       Arquivo disponível desde a versão 1.0.0
+ * @todo        Refatorar a lógica de indice::Novo() para uma classe na camada de domínio
  * @version     $Id$
  */
 
@@ -164,10 +165,10 @@ class indice extends clsCadastro
           foreach ($nomesAlunos as $nome) {
             $mensagem .= "{$nome} </br>";
           }
-          $mensagem .= "</br> As enturma?es podem ser realizadas em: Movimenta?o > Enturma?o.</span>";
+          $mensagem .= "</br> As enturmações podem ser realizadas em: Movimentação > Enturmação.</span>";
           if (count($alunosComSaidaDaEscola) > 0) {
 
-            $mensagem .= "</br></br><span>O(s) seguinte(s) aluno(s) n? foram rematriculados, pois possuem sa?a na escola: </br></br>";
+            $mensagem .= "</br></br><span>O(s) seguinte(s) aluno(s) não foram rematriculados, pois possuem saída na escola: </br></br>";
             foreach ($alunosComSaidaDaEscola as $nome) {
               $mensagem .= "{$nome} </br>";
             }
@@ -175,18 +176,18 @@ class indice extends clsCadastro
         }
         $this->mensagem = $mensagem;
       }elseif (count($alunosSemInep) > 0) {
-        $this->mensagem .= "<span>N? foi poss?el realizar a rematr?ula, pois o(s) seguinte(s) aluno(s) n? possuem o INEP cadastrado: </br></br>";
+        $this->mensagem .= "<span>Não foi possível realizar a rematrícula, pois o(s) seguinte(s) aluno(s) não possuem o INEP cadastrado: </br></br>";
         foreach ($alunosSemInep as $nome) {
           $this->mensagem .= "{$nome} </br>";
         }
-        $this->mensagem .= "</br>Por favor, cadastre o INEP do(s) aluno(s) em: Cadastros > Aluno > Alunos > Campo: C?igo INEP.";
+        $this->mensagem .= "</br>Por favor, cadastre o INEP do(s) aluno(s) em: Cadastros > Aluno > Alunos > Campo: Código INEP.";
       }elseif ($this->existeMatriculasAprovadasReprovadas($escolaId, $cursoId, $serieId, $turmaId, $this->ano_letivo)) {
         $this->mensagem = "<span class='notice'>Nenhum aluno rematriculado. Certifique-se que a turma possui alunos aprovados ou reprovados em ".($this->ano_letivo-1).".</span>";
       }else{
-        $this->mensagem = Portabilis_String_Utils::toLatin1("<span class='notice'>Os alunos desta sÃ©rie jÃ¡ encontram-se rematriculados, sendo assim, favor verificar se as enturmaÃ§Ãµes jÃ¡ foram efetuadas em MovimentaÃ§Ã£o > EnturmaÃ§Ã£o.</span>");
+        $this->mensagem = Portabilis_String_Utils::toLatin1("<span class='notice'>Os alunos desta série já encontram-se rematriculados, sendo assim, favor verificar se as enturmações já foram efetuadas em Movimentação > Enturmação.</span>");
       }
     }elseif(empty($this->mensagem))
-      $this->mensagem = "Ocorreu algum erro inesperado durante as rematr?ulas, por favor, tente novamente.";
+      $this->mensagem = "Ocorreu algum erro inesperado durante as rematrículas, por favor, tente novamente.";
 
     return $result;
   }
@@ -197,7 +198,7 @@ class indice extends clsCadastro
     $objMatricula->setOrderby("nome");
     $anoAnterior = $this->ano_letivo  - 1;
     $lstMatricula = $objMatricula->lista4($escolaId, $cursoId, $serieId, $turmaId, $ano);
-    //Verifica o parametro na s?ie pra exigir inep
+    //Verifica o parametro na série pra exigir inep
     $objSerie = new clsPmieducarSerie($serieId);
     $serieDet = $objSerie->detalhe();
     $exigeInep = $serieDet['exigir_inep'] == "t";
@@ -274,8 +275,8 @@ class indice extends clsCadastro
       $this->db->Consulta($sql);
     }
     catch (Exception $e) {
-      $this->mensagem = "Erro ao selecionar matr?ulas ano anterior: $anoAnterior";
-      error_log("Erro ao selecionar matr?ulas ano anterior, no processo rematr?ula autom?ica:" . $e->getMessage());
+      $this->mensagem = "Erro ao selecionar matrículas ano anterior: $anoAnterior";
+      error_log("Erro ao selecionar matrículas ano anterior, no processo rematrícula automática:" . $e->getMessage());
       return false;
     }
 
@@ -311,11 +312,11 @@ class indice extends clsCadastro
       	 return $this->matricularAluno($escolaId, $nextCursoId, $nextSerieId, $this->ano_letivo, $alunoId);
       }
       else{
-      	$this->mensagem = "A s?ie de destino n? est?configurada na escola. Favor efetuar o cadastro em Cadastro > S?ie > Escola-S?ie";
+      	$this->mensagem = "A série de destino não está configurada na escola. Favor efetuar o cadastro em Cadastro > Série > Escola-Série";
       }
     }
     else{
-      $this->mensagem = "N? foi poss?el obter a pr?ima s?ie da sequ?cia de enturma?o";
+      $this->mensagem = "Não foi possível obter a próxima série da sequência de enturmação";
     }
 
     return false;
@@ -334,8 +335,8 @@ class indice extends clsCadastro
       $escolaId, $serieId, $this->pessoa_logada, $alunoId, $this->ano_letivo, $cursoId));
     }
     catch (Exception $e) {
-      $this->mensagem = "Erro durante matr?ula do aluno: $alunoId";
-      error_log("Erro durante a matr?ula do aluno $alunoId, no processo de rematr?ula autom?ica:" . $e->getMessage());
+      $this->mensagem = "Erro durante matrícula do aluno: $alunoId";
+      error_log("Erro durante a matrícula do aluno $alunoId, no processo de rematrícula automática:" . $e->getMessage());
       return false;
     }
 
@@ -356,15 +357,15 @@ class indice extends clsCadastro
   }
 }
 
-// Instancia objeto de p?ina
+// Instancia objeto de página
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conte?do
+// Instancia objeto de conteúddo
 $miolo = new indice();
 
-// Atribui o conte?do ? p?ina
+// Atribui o conteúdo dá página
 $pagina->addForm($miolo);
 
-// Gera o c?igo HTML
+// Gera o código HTML
 $pagina->MakeAll();
 ?>

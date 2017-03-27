@@ -137,10 +137,10 @@ class indice extends clsListagem
         $nm_escola = $det_ref_cod_escola['nome'];
 
         $etapas = array(
-          1 => Portabilis_String_Utils::toLatin1('1Âª Etapa'),
-          2 => Portabilis_String_Utils::toLatin1('2Âª Etapa'),
-          3 => Portabilis_String_Utils::toLatin1('3Âª Etapa'),
-          4 => Portabilis_String_Utils::toLatin1('4Âª Etapa')
+          1 => '1ª Etapa',
+          2 => '2ª Etapa',
+          3 => '3ª Etapa',
+          4 => '4ª Etapa'
         );
         $nm_etapa = $etapas[$registro['etapa']];
 

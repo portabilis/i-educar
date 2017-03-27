@@ -1,30 +1,30 @@
 <?php
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     RegraAvaliacao
  * @subpackage  Modules
- * @since       Arquivo disponÌvel desde a vers„o 1.1.0
+ * @since       Arquivo dispon√≠vel desde a vers√£o 1.1.0
  * @version     $Id$
  */
 
@@ -35,18 +35,18 @@ require_once 'RegraAvaliacao/Model/RegraRecuperacaoDataMapper.php';
 /**
  * EditController class.
  *
- * @author      Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     RegraAvaliacao
  * @subpackage  Modules
- * @since       Classe disponÌvel desde a vers„o 1.1.0
+ * @since       Classe dispon√≠vel desde a vers√£o 1.1.0
  * @version     @@package_version@@
  */
 class EditController extends Core_Controller_Page_EditController
 {
   protected $_dataMapper        = 'RegraAvaliacao_Model_RegraDataMapper';
-  protected $_titulo            = 'Cadastro de regra de avaliaÁ„o';
+  protected $_titulo            = 'Cadastro de regra de avalia√ß√£o';
   protected $_processoAp        = 947;
   protected $_nivelAcessoOption = App_Model_NivelAcesso::INSTITUCIONAL;
   protected $_saveOption        = TRUE;
@@ -54,7 +54,7 @@ class EditController extends Core_Controller_Page_EditController
 
   protected $_formMap = array(
     'instituicao' => array(
-      'label'  => 'InstituiÁ„o',
+      'label'  => 'Institui√ß√£o',
       'help'   => '',
     ),
     'nome' => array(
@@ -66,39 +66,39 @@ class EditController extends Core_Controller_Page_EditController
       'help'   => ''
     ),
     'tipoProgressao' => array(
-      'label'  => 'Progress„o',
-      'help'   => 'Selecione o mÈtodo de progress„o para a regra.'
+      'label'  => 'Progress√£o',
+      'help'   => 'Selecione o m√©todo de progress√£o para a regra.'
     ),
     'tabelaArredondamento' => array(
       'label'  => 'Tabela de arredondamento de nota',
       'help'   => ''
     ),
     'media' => array(
-      'label'  => 'MÈdia final para promoÁ„o',
-      'help'   => 'Informe a mÈdia necess·ria para promoÁ„o<br />
-                   do aluno, aceita atÈ 3 casas decimais. Exemplos: 5,00; 6,725, 6.<br >
-                   Se o tipo de progress„o for <b>"Progressiva"</b>, esse<br />
-                   valor n„o ser· considerado.'
+      'label'  => 'M√©dia final para promo√ß√£o',
+      'help'   => 'Informe a m√©dia necess√°ria para promo√ß√£o<br />
+                   do aluno, aceita at√© 3 casas decimais. Exemplos: 5,00; 6,725, 6.<br >
+                   Se o tipo de progress√£o for <b>"Progressiva"</b>, esse<br />
+                   valor n√£o ser√° considerado.'
     ),
     'mediaRecuperacao' => array(
-      'label'  => 'MÈdia exame final para promoÁ„o',
-      'help'   => 'Informe a mÈdia necess·ria para promoÁ„o<br />
-                   do aluno, aceita atÈ 3 casas decimais. Exemplos: 5,00; 6,725, 6.<br >
+      'label'  => 'M√©dia exame final para promo√ß√£o',
+      'help'   => 'Informe a m√©dia necess√°ria para promo√ß√£o<br />
+                   do aluno, aceita at√© 3 casas decimais. Exemplos: 5,00; 6,725, 6.<br >
                    Desconsidere esse campo caso selecione o tipo de nota "conceitual"'
     ),
     'formulaMedia' => array(
-      'label'  => 'FÛrmula de c·lculo da mÈdia',
+      'label'  => 'F√≥rmula de c√°lculo da m√©dia',
       'help'   => '',
     ),
     'formulaRecuperacao' => array(
-      'label'  => 'FÛrmula de c·lculo da mÈdia de recuperaÁ„o',
+      'label'  => 'F√≥rmula de c√°lculo da m√©dia de recupera√ß√£o',
       'help'   => '',
     ),
     'porcentagemPresenca' => array(
-      'label'  => 'Porcentagem de presenÁa',
-      'help'   => 'A porcentagem de presenÁa necess·ria para o aluno ser aprovado.<br />
-                   Esse valor È desconsiderado caso o campo "Progress„o" esteja como<br />
-                   "N„o progressiva autom·tica - Somente mÈdia".<br />
+      'label'  => 'Porcentagem de presen√ßa',
+      'help'   => 'A porcentagem de presen√ßa necess√°ria para o aluno ser aprovado.<br />
+                   Esse valor √© desconsiderado caso o campo "Progress√£o" esteja como<br />
+                   "N√£o progressiva autom√°tica - Somente m√©dia".<br />
                    Em porcentagem, exemplo: <b>75</b> ou <b>80,750</b>'
     ),
     'parecerDescritivo' => array(
@@ -106,56 +106,56 @@ class EditController extends Core_Controller_Page_EditController
       'help'   => '',
     ),
     'tipoPresenca' => array(
-      'label'  => 'ApuraÁ„o de presenÁa',
+      'label'  => 'Apura√ß√£o de presen√ßa',
       'help'   => ''
     ),
     'tipoRecuperacaoParalela' => array(
-      'label'   => 'Permitir recuperaÁ„o paralela',
+      'label'   => 'Permitir recupera√ß√£o paralela',
       'help'    => ''
     ),
     'mediaRecuperacaoParalela' => array(
-      'label'   => 'MÈdia da recuperaÁ„o paralela',
+      'label'   => 'M√©dia da recupera√ß√£o paralela',
       'help'    => ''
     ),
     'notaMaximaGeral' => array(
-      'label'   => 'Nota m·xima geral',
-      'help'    => 'Informe o valor m·ximo para notas no geral'
+      'label'   => 'Nota m√°xima geral',
+      'help'    => 'Informe o valor m√°ximo para notas no geral'
     ),
     'notaMaximaExameFinal' => array(
-      'label'   => 'Nota m·xima exame final',
-      'help'    => 'Informe o valor m·ximo para nota do exame final'
+      'label'   => 'Nota m√°xima exame final',
+      'help'    => 'Informe o valor m√°ximo para nota do exame final'
     ),
     'qtdCasasDecimais' => array(
-      'label'   => 'Quantidade m·xima de casas decimais',
-      'help'    => 'Informe o n˙mero m·ximo de casas decimais'
+      'label'   => 'Quantidade m√°xima de casas decimais',
+      'help'    => 'Informe o n√∫mero m√°ximo de casas decimais'
     ),
     'qtdDisciplinasDependencia' => array(
-      'label'   => 'Quantidade de disciplinas dependÍncia',
-      'help'    => 'Preencha a quantidade de disciplinas permitidas para aprovaÁ„o do aluno com dependÍncia. Preencha com 0 caso n„o exista.'
+      'label'   => 'Quantidade de disciplinas depend√™ncia',
+      'help'    => 'Preencha a quantidade de disciplinas permitidas para aprova√ß√£o do aluno com depend√™ncia. Preencha com 0 caso n√£o exista.'
     ),
     'qtdMatriculasDependencia' => array(
-      'label'   => 'Quantidade de matriculas de dependÍncia',
-      'help'    => 'Preencha a quantidade de matrÌculas de dependÍncia permitidas por aluno. Preencha com 0 caso n„o exista.'
+      'label'   => 'Quantidade de matriculas de depend√™ncia',
+      'help'    => 'Preencha a quantidade de matr√≠culas de depend√™ncia permitidas por aluno. Preencha com 0 caso n√£o exista.'
     ),
     'recuperacaoDescricao' => array(
-      'label'  => 'DescriÁ„o do exame:',
-      'help'   => 'Exemplo: RecuperaÁ„o semestral I'
+      'label'  => 'Descri√ß√£o do exame:',
+      'help'   => 'Exemplo: Recupera√ß√£o semestral I'
     ),
     'recuperacaoEtapasRecuperadas' => array(
       'label'  => '<span style="padding-left: 10px"></span>Etapas:',
-      'help'   => 'Separe as etapas com ponto e vÌrgula. Exemplo: 1;2.'
+      'help'   => 'Separe as etapas com ponto e v√≠rgula. Exemplo: 1;2.'
     ),
     'recuperacaoSubstituiMenorNota' => array(
-      'label'  => '<span style="padding-left: 10px"></span>SubstituÌ menor nota:',
-      'help'   => 'Caso marcado ir· substituir menor nota.'
+      'label'  => '<span style="padding-left: 10px"></span>Substitu√≠ menor nota:',
+      'help'   => 'Caso marcado ir√° substituir menor nota.'
     ),
     'recuperacaoMedia' => array(
-      'label'  => '<span style="padding-left: 10px"></span>MÈdia:',
-      'help'   => 'Abaixo de qual mÈdia habilitar campo.'
+      'label'  => '<span style="padding-left: 10px"></span>M√©dia:',
+      'help'   => 'Abaixo de qual m√©dia habilitar campo.'
     ),
     'recuperacaoNotaMaxima' => array(
-      'label'  => '<span style="padding-left: 10px"></span>Nota m·x:',
-      'help'   => 'Nota m·xima permitida para lanÁamento.'
+      'label'  => '<span style="padding-left: 10px"></span>Nota m√°x:',
+      'help'   => 'Nota m√°xima permitida para lan√ßamento.'
     ),
     'recuperacaoExcluir' => array(
       'label'  => '<span style="padding-left: 10px"></span>Excluir:'
@@ -164,15 +164,15 @@ class EditController extends Core_Controller_Page_EditController
       'label' => 'Utilizar uma nota geral por etapa'
     ),
     'definirComponentePorEtapa' => array(
-      'label' => 'Permitir definir componentes em etapas especÌficas'
+      'label' => 'Permitir definir componentes em etapas espec√≠ficas'
     ),
     'reprovacaoAutomatica' => array(
-      'label' => 'ReprovaÁ„o autom·tica',
-      'help' => 'Marcando esse campo o sistema n„o apresentar· campo de nota de exame para os alunos que n„o poder„o alcanÁar a mÈdia necess·ria'
+      'label' => 'Reprova√ß√£o autom√°tica',
+      'help' => 'Marcando esse campo o sistema n√£o apresentar√° campo de nota de exame para os alunos que n√£o poder√£o alcan√ßar a m√©dia necess√°ria'
     ),
     'aprovaMediaDisciplina' => array(
-      'label' => 'Aprovar alunos pela mÈdia das disciplinas',
-      'help'  => 'Alunos reprovados podem ser aprovados se a mÈdia das mÈdias das disciplinas for superior a nota de aprovaÁ„o de exame final'
+      'label' => 'Aprovar alunos pela m√©dia das disciplinas',
+      'help'  => 'Alunos reprovados podem ser aprovados se a m√©dia das m√©dias das disciplinas for superior a nota de aprova√ß√£o de exame final'
     )
   );
 
@@ -233,7 +233,7 @@ var tabela_arredondamento = new function() {
 
     if (tabelas.length == 0) {
       docObj.options[0] = new Option(
-        \'O tipo de nota n„o possui tabela de arredondamento.\', \'\', false, false
+        \'O tipo de nota n√£o possui tabela de arredondamento.\', \'\', false, false
       );
     }
   }
@@ -241,7 +241,7 @@ var tabela_arredondamento = new function() {
 ';
 
   /**
-   * Array de inst‚ncias RegraAvaliacao_Model_RegraRecuperacao.
+   * Array de inst√¢ncias RegraAvaliacao_Model_RegraRecuperacao.
    * @var array
    */
   protected $_recuperacoes = array();
@@ -249,7 +249,7 @@ var tabela_arredondamento = new function() {
   /**
    * Setter.
    * @param array $recuperacoes
-   * @return Core_Controller_Page_Abstract ProvÍ interface fluÌda
+   * @return Core_Controller_Page_Abstract Prov√™ interface flu√≠da
    */
   protected function _setRecuperacoes(array $recuperacoes = array())
   {
@@ -280,7 +280,7 @@ var tabela_arredondamento = new function() {
 
   /**
    * @see Core_Controller_Page_EditController#_preConstruct()
-   * @todo InteraÁ„o com a API est· errada. Isso j· È feito em _initNovo()
+   * @todo Intera√ß√£o com a API est√° errada. Isso j√° √© feito em _initNovo()
    *   na superclasse. VER.
    */
   protected function _preConstruct()
@@ -295,7 +295,7 @@ var tabela_arredondamento = new function() {
   {
     parent::_preRender();
 
-    // Adiciona o cÛdigo Javascript de controle do formul·rio.
+    // Adiciona o c√≥digo Javascript de controle do formul√°rio.
     $js = sprintf('
       <script type="text/javascript">
         %s
@@ -342,7 +342,7 @@ var tabela_arredondamento = new function() {
   {
     $this->campoOculto('id', $this->getEntity()->id);
 
-    // InstituiÁ„o
+    // Institui√ß√£o
     $instituicoes = App_Model_IedFinder::getInstituicoes();
     $this->campoLista('instituicao', $this->_getLabel('instituicao'), $instituicoes,
       $this->getEntity()->instituicao);
@@ -361,42 +361,42 @@ var tabela_arredondamento = new function() {
     $tabelaArredondamento = CoreExt_Entity::entityFilterAttr($tabelaArredondamento, 'id', 'nome');
 
     if (empty($tabelaArredondamento)) {
-      $tabelaArredondamento = array(0 => 'O tipo de nota n„o possui tabela de arredondamento.');
+      $tabelaArredondamento = array(0 => 'O tipo de nota n√£o possui tabela de arredondamento.');
     }
 
     $this->campoLista('tabelaArredondamento', $this->_getLabel('tabelaArredondamento'),
       $tabelaArredondamento, $this->getEntity()->get('tabelaArredondamento'), '',
       FALSE, $this->_getHelp('tabelaArredondamento'), '', FALSE, FALSE);
 
-    // Tipo progress„o
+    // Tipo progress√£o
     $tipoProgressao = RegraAvaliacao_Model_TipoProgressao::getInstance();
     $this->campoRadio('tipoProgressao', $this->_getLabel('tipoProgressao'),
       $tipoProgressao->getEnums(), $this->getEntity()->get('tipoProgressao'), '',
       $this->_getHelp('tipoProgressao'));
 
-    // MÈdia
+    // M√©dia
     $this->campoTexto('media', $this->_getLabel('media'), $this->getEntity()->media,
       5, 50, FALSE, FALSE, FALSE, $this->_getHelp('media'));
 
     $this->campoTexto('mediaRecuperacao', $this->_getLabel('mediaRecuperacao'), $this->getEntity()->mediaRecuperacao, 5, 50, FALSE, FALSE, FALSE, $this->_getHelp('mediaRecuperacao'));
 
-    // C·lculo mÈdia
+    // C√°lculo m√©dia
     $formulas = $this->getDataMapper()->findFormulaMediaFinal();
     $formulas = CoreExt_Entity::entityFilterAttr($formulas, 'id', 'nome');
     $this->campoLista('formulaMedia', $this->_getLabel('formulaMedia'),
       $formulas, $this->getEntity()->get('formulaMedia'), '', FALSE,
       $this->_getHelp('formulaMedia'), '', FALSE, FALSE);
 
-    // C·lculo mÈdia recuperaÁ„o
+    // C√°lculo m√©dia recupera√ß√£o
     $formulas = $this->getDataMapper()->findFormulaMediaRecuperacao();
-    $formulasArray = array(0 => 'N„o usar recuperaÁ„o');
+    $formulasArray = array(0 => 'N√£o usar recupera√ß√£o');
     $formulasArray = $formulasArray + CoreExt_Entity::entityFilterAttr($formulas, 'id', 'nome');
 
     $this->campoLista('formulaRecuperacao', $this->_getLabel('formulaRecuperacao'),
       $formulasArray, $this->getEntity()->get('formulaRecuperacao'), '', FALSE,
       $this->_getHelp('formulaRecuperacao'), '', FALSE, FALSE);
 
-    // Porcentagem presenÁa
+    // Porcentagem presen√ßa
     $this->campoTexto('porcentagemPresenca', $this->_getLabel('porcentagemPresenca'),
       $this->getEntity()->porcentagemPresenca, 5, 50, TRUE, FALSE, FALSE,
       $this->_getHelp('porcentagemPresenca'));
@@ -407,7 +407,7 @@ var tabela_arredondamento = new function() {
       $parecerDescritivo->getEnums(), $this->getEntity()->get('parecerDescritivo'), '',
       $this->_getHelp('parecerDescritivo'));
 
-    // PresenÁa
+    // Presen√ßa
     $tipoPresenca = RegraAvaliacao_Model_TipoPresenca::getInstance();
     $this->campoRadio('tipoPresenca', $this->_getLabel('tipoPresenca'),
       $tipoPresenca->getEnums(), $this->getEntity()->get('tipoPresenca'), '',
@@ -458,12 +458,12 @@ var tabela_arredondamento = new function() {
       $this->campoQuebra();
 
       // Ajuda
-      $help = 'Caso seja necess·rio adicionar mais etapas, '
-            . 'salve o formul·rio. Automaticamente 3 campos '
-            . 'novos ficar„o disponÌveis.<br /> '
-            . 'As etapas devem ser separadas por ponto e vÌrgula(;). <br /><br />';
+      $help = 'Caso seja necess√°rio adicionar mais etapas, '
+            . 'salve o formul√°rio. Automaticamente 3 campos '
+            . 'novos ficar√£o dispon√≠veis.<br /> '
+            . 'As etapas devem ser separadas por ponto e v√≠rgula(;). <br /><br />';
 
-      $this->campoRotulo('__help1', '<strong>RecuperaÁıes especÌficas</strong><br />', $help, FALSE, '', '');
+      $this->campoRotulo('__help1', '<strong>Recupera√ß√µes espec√≠ficas</strong><br />', $help, FALSE, '', '');
 
       // Cria campos para a postagem de notas
       $recuperacoes = $this->getDataMapper()->findRegraRecuperacao($this->getEntity());
@@ -480,7 +480,7 @@ var tabela_arredondamento = new function() {
         $recuperacaoNotaMaxima = sprintf("recuperacao[nota_maxima][%d]", $i);
         $recuperacaoExcluir = sprintf("recuperacao[excluir][%d]", $i);
 
-        $this->campoRotulo($recuperacaoLabel, 'RecuperaÁ„o ' . ($i + 1),
+        $this->campoRotulo($recuperacaoLabel, 'Recupera√ß√£o ' . ($i + 1),
           $this->_getLabel(''), TRUE);
 
         // Id
@@ -494,20 +494,20 @@ var tabela_arredondamento = new function() {
         $this->campoTexto($recuperacaoEtapasRecuperadas, $this->_getLabel('recuperacaoEtapasRecuperadas'),
         $recuperacao->etapasRecuperadas, 5, 25, FALSE, FALSE, TRUE, $this->_getHelp('recuperacaoEtapasRecuperadas'));
 
-        // SubstituÌ menor nota
+        // Substitu√≠ menor nota
         $this->campoCheck($recuperacaoSubstituiMenorNota, $this->_getLabel('recuperacaoSubstituiMenorNota'),
         $recuperacao->substituiMenorNota, '', TRUE, FALSE, FALSE, $this->_getHelp('recuperacaoSubstituiMenorNota'));
 
-        // MÈdia
+        // M√©dia
         $this->campoTexto($recuperacaoMedia, $this->_getLabel('recuperacaoMedia'),
           $recuperacao->media, 4, 4, FALSE, FALSE, TRUE, $this->_getHelp('recuperacaoMedia'));
 
-        // Nota m·xima
+        // Nota m√°xima
         $this->campoTexto($recuperacaoNotaMaxima, $this->_getLabel('recuperacaoNotaMaxima'),
           $recuperacao->notaMaxima, 4, 4, FALSE, FALSE, TRUE,
           $this->_getHelp('recuperacaoNotaMaxima'));
 
-        // Exclus„o
+        // Exclus√£o
         $this->campoCheck($recuperacaoExcluir, $this->_getLabel('recuperacaoExcluir'),
         FALSE, '', FALSE, FALSE, FALSE);
       }
@@ -528,7 +528,7 @@ var tabela_arredondamento = new function() {
       }
     }
 
-    // Verifica pela existÍncia do field identity
+    // Verifica pela exist√™ncia do field identity
     if (isset($this->getRequest()->id) && 0 < $this->getRequest()->id) {
       $this->setEntity($this->getDataMapper()->find($this->getRequest()->id));
       $entity = $this->getEntity();
@@ -560,10 +560,10 @@ var tabela_arredondamento = new function() {
       $this->setEntity($this->getDataMapper()->createNewEntityInstance($data));
     }
 
-    // Processa os dados da requisiÁ„o, apenas os valores para a tabela de valores.
+    // Processa os dados da requisi√ß√£o, apenas os valores para a tabela de valores.
     $recuperacoes = $this->getRequest()->recuperacao;
 
-    // A contagem usa um dos Ìndices do formul·rio, sen„o ia contar sempre 4.
+    // A contagem usa um dos √≠ndices do formul√°rio, sen√£o ia contar sempre 4.
     $loop    = count($recuperacoes['id']);
 
     // Array de objetos a persistir
@@ -573,8 +573,8 @@ var tabela_arredondamento = new function() {
     for ($i = 0; $i < $loop; $i++) {
       $id = $recuperacoes['id'][$i];
 
-      // N„o atribui a inst‚ncia de $entity sen„o n„o teria sucesso em verificar
-      // se a inst‚ncia È isNull().
+      // N√£o atribui a inst√¢ncia de $entity sen√£o n√£o teria sucesso em verificar
+      // se a inst√¢ncia √© isNull().
       $data = array(
         'id' => $id,
         'descricao' => $recuperacoes['descricao'][$i],
@@ -584,7 +584,7 @@ var tabela_arredondamento = new function() {
         'notaMaxima' => $recuperacoes['nota_maxima'][$i]
       );
 
-      // Se a inst‚ncia j· existir, use-a para garantir UPDATE
+      // Se a inst√¢ncia j√° existir, use-a para garantir UPDATE
       if (NULL != ($instance = $this->_getRecuperacao($id))) {
           $insert[$id] = $instance->setOptions($data);
       }
@@ -602,14 +602,14 @@ var tabela_arredondamento = new function() {
 
     // Persiste
     foreach ($insert as $regraRecuperacao) {
-      // Atribui uma tabela de arredondamento a inst‚ncia de tabela valor
+      // Atribui uma tabela de arredondamento a inst√¢ncia de tabela valor
       $regraRecuperacao->regraAvaliacao = $entity;
 
       if ($regraRecuperacao->isValid()) {
         $this->getDataMapper()->getRegraRecuperacaoDataMapper()->save($regraRecuperacao);
       }
       else {
-        $this->mensagem .= 'Erro no formul·rio';
+        $this->mensagem .= 'Erro no formul√°rio';
         return FALSE;
       }
     }
@@ -619,7 +619,7 @@ var tabela_arredondamento = new function() {
     }
     catch (Exception $e) {
       // TODO: ver @todo do docblock
-      $this->mensagem .= 'Erro no preenchimento do formul·rio. ';
+      $this->mensagem .= 'Erro no preenchimento do formul√°rio. ';
       return FALSE;
     }
 
