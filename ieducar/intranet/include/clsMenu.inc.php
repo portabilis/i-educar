@@ -131,7 +131,7 @@ class clsMenu
             AND sub.cod_sistema = '2'
             AND pai.cod_menu_menu = sub.ref_cod_menu_menu
           ORDER BY
-            upper(nome_menu.nm_menu), ref_menu_pai, UPPER(pai.nm_menu), sub.nm_submenu";
+            pai.ord_menu, upper(nome_menu.nm_menu), ref_menu_pai, UPPER(pai.nm_menu), sub.nm_submenu";
       }
       else {
         $sql ="
