@@ -28,7 +28,7 @@ abstract class NumericNodeDefinition extends ScalarNodeDefinition
      *
      * @param mixed $max
      *
-     * @return $this
+     * @return NumericNodeDefinition
      *
      * @throws \InvalidArgumentException when the constraint is inconsistent
      */
@@ -47,7 +47,7 @@ abstract class NumericNodeDefinition extends ScalarNodeDefinition
      *
      * @param mixed $min
      *
-     * @return $this
+     * @return NumericNodeDefinition
      *
      * @throws \InvalidArgumentException when the constraint is inconsistent
      */

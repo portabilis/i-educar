@@ -31,7 +31,7 @@ class DirectoryResource implements SelfCheckingResourceInterface, \Serializable
      */
     public function __construct($resource, $pattern = null)
     {
-        $this->resource = realpath($resource) ?: (file_exists($resource) ? $resource : false);
+        $this->resource = realpath($resource);
         $this->pattern = $pattern;
 
         if (false === $this->resource || !is_dir($this->resource)) {
@@ -74,10 +74,7 @@ class DirectoryResource implements SelfCheckingResourceInterface, \Serializable
             return false;
         }
 
-        if ($timestamp < filemtime($this->resource)) {
-            return false;
-        }
-
+        $newestMTime = filemtime($this->resource);
         foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($this->resource), \RecursiveIteratorIterator::SELF_FIRST) as $file) {
             // if regex filtering is enabled only check matching files
             if ($this->pattern && $file->isFile() && !preg_match($this->pattern, $file->getBasename())) {
@@ -90,20 +87,10 @@ class DirectoryResource implements SelfCheckingResourceInterface, \Serializable
                 continue;
             }
 
-            // for broken links
-            try {
-                $fileMTime = $file->getMTime();
-            } catch (\RuntimeException $e) {
-                continue;
-            }
-
-            // early return if a file's mtime exceeds the passed timestamp
-            if ($timestamp < $fileMTime) {
-                return false;
-            }
+            $newestMTime = max($file->getMTime(), $newestMTime);
         }
 
-        return true;
+        return $newestMTime < $timestamp;
     }
 
     public function serialize()

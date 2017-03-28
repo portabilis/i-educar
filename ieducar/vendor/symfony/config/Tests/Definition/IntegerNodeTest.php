@@ -11,10 +11,9 @@
 
 namespace Symfony\Component\Config\Tests\Definition;
 
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Definition\IntegerNode;
 
-class IntegerNodeTest extends TestCase
+class IntegerNodeTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @dataProvider getValidValues

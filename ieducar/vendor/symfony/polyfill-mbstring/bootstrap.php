@@ -31,7 +31,7 @@ if (!function_exists('mb_strlen')) {
     function mb_strlen($s, $enc = null) { return p\Mbstring::mb_strlen($s, $enc); }
     function mb_strpos($s, $needle, $offset = 0, $enc = null) { return p\Mbstring::mb_strpos($s, $needle, $offset, $enc); }
     function mb_strtolower($s, $enc = null) { return p\Mbstring::mb_strtolower($s, $enc); }
-    function mb_strtoupper($s, $enc = null) { return p\Mbstring::mb_strtoupper($s, $enc); }
+    function strtoupper($s, $enc = null) { return p\Mbstring::strtoupper($s, $enc); }
     function mb_substitute_character($char = null) { return p\Mbstring::mb_substitute_character($char); }
     function mb_substr($s, $start, $length = 2147483647, $enc = null) { return p\Mbstring::mb_substr($s, $start, $length, $enc); }
     function mb_stripos($s, $needle, $offset = 0, $enc = null) { return p\Mbstring::mb_stripos($s, $needle, $offset, $enc); }
@@ -47,10 +47,5 @@ if (!function_exists('mb_strlen')) {
     function mb_substr_count($haystack, $needle, $enc = null) { return p\Mbstring::mb_substr_count($haystack, $needle, $enc); }
     function mb_output_handler($contents, $status) { return p\Mbstring::mb_output_handler($contents, $status); }
     function mb_http_input($type = '') { return p\Mbstring::mb_http_input($type); }
-    function mb_convert_variables($toEncoding, $fromEncoding, &$a = null, &$b = null, &$c = null, &$d = null, &$e = null, &$f = null) { return p\Mbstring::mb_convert_variables($toEncoding, $fromEncoding, $a, $b, $c, $d, $e, $f); }
-}
-if (!function_exists('mb_chr')) {
-    function mb_ord($s, $enc = null) { return p\Mbstring::mb_ord($s, $enc); }
-    function mb_chr($code, $enc = null) { return p\Mbstring::mb_chr($code, $enc); }
-    function mb_scrub($s, $enc = null) { $enc = null === $enc ? mb_internal_encoding() : $enc; return mb_convert_encoding($s, $enc, $enc); }
+    function mb_convert_variables($toEncoding, $fromEncoding, &$a = null, &$b = null, &$c = null, &$d = null, &$e = null, &$f = null) { return p\Mbstring::mb_convert_variables($toEncoding, $fromEncoding, $v0, $a, $b, $c, $d, $e, $f); }
 }

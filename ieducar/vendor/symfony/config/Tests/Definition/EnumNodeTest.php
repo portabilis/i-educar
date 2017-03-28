@@ -11,10 +11,9 @@
 
 namespace Symfony\Component\Config\Tests\Definition;
 
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Definition\EnumNode;
 
-class EnumNodeTest extends TestCase
+class EnumNodeTest extends \PHPUnit_Framework_TestCase
 {
     public function testFinalizeValue()
     {

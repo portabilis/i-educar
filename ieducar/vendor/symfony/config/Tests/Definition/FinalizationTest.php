@@ -11,12 +11,11 @@
 
 namespace Symfony\Component\Config\Tests\Definition;
 
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Config\Definition\NodeInterface;
 
-class FinalizationTest extends TestCase
+class FinalizationTest extends \PHPUnit_Framework_TestCase
 {
     public function testUnsetKeyWithDeepHierarchy()
     {

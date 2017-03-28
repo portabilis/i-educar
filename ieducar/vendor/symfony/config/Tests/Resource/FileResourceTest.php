@@ -11,10 +11,9 @@
 
 namespace Symfony\Component\Config\Tests\Resource;
 
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Resource\FileResource;
 
-class FileResourceTest extends TestCase
+class FileResourceTest extends \PHPUnit_Framework_TestCase
 {
     protected $resource;
     protected $file;

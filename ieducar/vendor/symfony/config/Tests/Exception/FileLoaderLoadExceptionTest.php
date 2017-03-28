@@ -11,10 +11,9 @@
 
 namespace Symfony\Component\Config\Tests\Exception;
 
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Exception\FileLoaderLoadException;
 
-class FileLoaderLoadExceptionTest extends TestCase
+class FileLoaderLoadExceptionTest extends \PHPUnit_Framework_TestCase
 {
     public function testMessageCannotLoadResource()
     {

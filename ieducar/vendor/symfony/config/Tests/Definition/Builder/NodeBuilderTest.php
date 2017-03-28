@@ -11,11 +11,10 @@
 
 namespace Symfony\Component\Config\Tests\Definition\Builder;
 
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Definition\Builder\NodeBuilder as BaseNodeBuilder;
 use Symfony\Component\Config\Definition\Builder\VariableNodeDefinition as BaseVariableNodeDefinition;
 
-class NodeBuilderTest extends TestCase
+class NodeBuilderTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @expectedException \RuntimeException

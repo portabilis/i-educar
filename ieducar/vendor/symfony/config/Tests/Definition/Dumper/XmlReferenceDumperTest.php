@@ -11,11 +11,10 @@
 
 namespace Symfony\Component\Config\Tests\Definition\Dumper;
 
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Definition\Dumper\XmlReferenceDumper;
 use Symfony\Component\Config\Tests\Fixtures\Configuration\ExampleConfiguration;
 
-class XmlReferenceDumperTest extends TestCase
+class XmlReferenceDumperTest extends \PHPUnit_Framework_TestCase
 {
     public function testDumper()
     {
@@ -35,7 +34,7 @@ class XmlReferenceDumperTest extends TestCase
 
     private function getConfigurationAsString()
     {
-        return str_replace("\n", PHP_EOL, <<<'EOL'
+        return str_replace("\n", PHP_EOL, <<<EOL
 <!-- Namespace: http://example.org/schema/dic/acme_root -->
 <!-- scalar-required: Required -->
 <!-- enum-with-default: One of "this"; "that" -->
@@ -50,7 +49,6 @@ class XmlReferenceDumperTest extends TestCase
     scalar-array-empty=""
     scalar-array-defaults="elem1,elem2"
     scalar-required=""
-    node-with-a-looong-name=""
     enum-with-default="this"
     enum=""
 >
@@ -68,9 +66,6 @@ class XmlReferenceDumperTest extends TestCase
         child3=""
     />
 
-    <!-- prototype -->
-    <scalar-prototyped>scalar value</scalar-prototyped>
-
     <!-- prototype: Parameter name -->
     <parameter name="parameter name">scalar value</parameter>
 
@@ -79,28 +74,6 @@ class XmlReferenceDumperTest extends TestCase
         user=""
         pass=""
     />
-
-    <!-- prototype -->
-    <cms-page page="cms page page">
-
-        <!-- prototype -->
-        <!-- title: Required -->
-        <!-- path: Required -->
-        <page
-            locale="page locale"
-            title=""
-            path=""
-        />
-
-    </cms-page>
-
-    <!-- prototype -->
-    <pipou name="pipou name">
-
-        <!-- prototype -->
-        <name didou="" />
-
-    </pipou>
 
 </config>
 

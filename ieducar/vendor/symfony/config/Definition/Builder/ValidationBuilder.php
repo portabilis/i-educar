@@ -36,7 +36,7 @@ class ValidationBuilder
      *
      * @param \Closure $closure
      *
-     * @return ExprBuilder|$this
+     * @return ExprBuilder|ValidationBuilder
      */
     public function rule(\Closure $closure = null)
     {

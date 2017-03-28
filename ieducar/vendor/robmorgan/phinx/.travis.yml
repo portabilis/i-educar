@@ -1,0 +1,37 @@
+sudo: false
+
+language: php
+
+addons:
+  postgresql: "9.2"
+
+php:
+  - 5.4
+  - 5.5
+  - 5.6
+  - 7
+  - hhvm
+
+env:
+  - COMPOSER_FLAGS=--prefer-lowest
+
+matrix:
+  exclude:
+    - php: hhvm
+      env: COMPOSER_FLAGS=--prefer-lowest
+  include:
+    - php: hhvm
+      env: COMPOSER_FLAGS=
+
+before_script:
+    - travis_retry composer self-update
+    - travis_retry composer update --no-interaction --prefer-source --prefer-stable ${COMPOSER_FLAGS}
+    - mysql -e 'create database phinx_testing;'
+    - psql -c 'create database phinx_testing;' -U postgres
+
+script:
+    - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover
+
+after_script:
+    - wget https://scrutinizer-ci.com/ocular.phar
+    - php ocular.phar code-coverage:upload --format=php-clover coverage.clover
