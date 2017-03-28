@@ -588,7 +588,7 @@ class clsBase extends clsConfig
 
     // nome completo usuario
     $nomePessoa       = new clsPessoaFisica();
-    list($nomePessoa, $email) = $nomePessoa->queryRapida($this->currentUserId(), "nome", "email");
+    list($nomePessoa) = $nomePessoa->queryRapida($this->currentUserId(), "nome");
     $nomePessoa       = ($nomePessoa) ? $nomePessoa : "<span style='color: #DD0000; '>Convidado</span>";
 
     // foto do usuario
@@ -628,17 +628,6 @@ class clsBase extends clsConfig
 
     $sql = "UPDATE funcionario SET ip_logado = '$ip_maquina' , data_login = NOW() WHERE ref_cod_pessoa_fj = {$this->currentUserId()}";
     $this->db()->Consulta($sql);
-
-    $saida .= '<script type="text/javascript" src="https://api.conpass.io/conpass.js"></script>';
-    $saida .= '<script type="text/javascript">
-
-      window.onload = function(e) {
-          Conpass.close();
-          Conpass.startProject( \'AHA Moment Portabilis\', \'dGlhZ29AcG9ydGFiaWxpcy5jb20uYnI6cG9ydGFiaWxpczA5MQ==\' );
-          Conpass.identifyUser( { name: \''.$nomePessoa.'\' , email: \''.$email.'\' }, \'dGlhZ29AcG9ydGFiaWxpcy5jb20uYnI6cG9ydGFiaWxpczA5MQ==\' );
-      }
-
-    </script>';
 
     return $saida;
   }
