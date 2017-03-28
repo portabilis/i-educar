@@ -116,14 +116,18 @@ class clsMenu
                 THEN 0
               ELSE
                 1
-            END AS ref_menu_pai
+            END AS ref_menu_pai,
+            pai.caminho,
+            pai.icon_class,
+            pai.ord_menu
           FROM
             menu_menu AS pai LEFT OUTER JOIN
               menu_menu AS filho ON (filho.ref_cod_menu_pai = pai.cod_menu_menu AND pai.ref_cod_menu_pai = NULL),
             menu_submenu AS sub,
             menu_menu as nome_menu
           WHERE
-            nome_menu.cod_menu_menu = COALESCE(pai.ref_cod_menu_pai,pai.cod_menu_menu)
+            pai.ativo = TRUE
+            AND nome_menu.cod_menu_menu = COALESCE(pai.ref_cod_menu_pai,pai.cod_menu_menu)
             AND sub.cod_sistema = '2'
             AND pai.cod_menu_menu = sub.ref_cod_menu_menu
             AND sub.cod_menu_submenu NOT IN (
@@ -154,18 +158,22 @@ class clsMenu
               ELSE
                 1
             END AS ref_menu_pai,
-            UPPER(nome_menu.nm_menu), UPPER(pai.nm_menu), sub.nm_submenu
+            pai.caminho,
+            pai.icon_class,
+            pai.ord_menu,
+            pai.ord_menu, UPPER(nome_menu.nm_menu), UPPER(pai.nm_menu), sub.nm_submenu
           FROM
             menu_menu AS pai LEFT OUTER JOIN
               menu_menu AS filho ON (filho.ref_cod_menu_pai = pai.cod_menu_menu),
             menu_submenu AS sub,
             menu_menu AS nome_menu
           WHERE
-            nome_menu.cod_menu_menu = COALESCE(pai.ref_cod_menu_pai, pai.cod_menu_menu)
+            pai.ativo = TRUE
+            AND nome_menu.cod_menu_menu = COALESCE(pai.ref_cod_menu_pai, pai.cod_menu_menu)
             AND sub.cod_sistema = '2'
             AND pai.cod_menu_menu = sub.ref_cod_menu_menu
           ORDER BY
-            UPPER(nome_menu.nm_menu), ref_menu_pai, UPPER(pai.nm_menu), sub.nm_submenu";
+            pai.ord_menu, UPPER(nome_menu.nm_menu), ref_menu_pai, UPPER(pai.nm_menu), sub.nm_submenu";
       }
     }
     else {
