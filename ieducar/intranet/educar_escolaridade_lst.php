@@ -37,7 +37,7 @@ require_once 'include/pmieducar/geral.inc.php';
 class clsIndexBase extends clsBase
 {
   function Formular() {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Escolaridade');
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Escolaridade do servidor');
     $this->processoAp = '632';
     $this->addEstilo("localizacaoSistema");
   }
@@ -126,9 +126,9 @@ class indice extends clsListagem
 
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""                                  => "Listagem de escolaridades"
+         $_SERVER['SERVER_NAME']."/intranet" => "Início",
+         "educar_index.php"                  => "Servidores",
+         ""                                  => "Escolaridade do servidor"
     ));
     $this->enviaLocalizacao($localizacao->montar());    
 

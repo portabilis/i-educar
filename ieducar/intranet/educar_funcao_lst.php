@@ -33,7 +33,7 @@ class clsIndexBase extends clsBase
 {
 	function Formular()
 	{
-		$this->SetTitulo( "{$this->_instituicao} i-Educar - Fun&ccedil;&atilde;o Servidor" );
+		$this->SetTitulo( "{$this->_instituicao} Servidores - Funções do servidor" );
 		$this->processoAp = "634";
 		$this->addEstilo("localizacaoSistema");
 	}
@@ -199,11 +199,11 @@ class indice extends clsListagem
 
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""                                  => "Listagem das fun&ccedil;&otilde;es"
+         $_SERVER['SERVER_NAME']."/intranet" => "Início",
+         "educar_index.php"                  => "Servidores",
+         ""                                  => "Funções do servidor"
     ));
-    $this->enviaLocalizacao($localizacao->montar());   		
+    $this->enviaLocalizacao($localizacao->montar());
 	}
 }
 // cria uma extensao da classe base

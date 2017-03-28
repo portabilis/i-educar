@@ -201,7 +201,7 @@
 			}
 			if ( $get_escola )
 			{
-				$retorno .= '<tr id="tr_escola" class="input_quadro_horario
+				$retorno .= '<tr id="tr_escola" class="input_quadro_horario">
 							 <td valign="top" class="formmdtd">
 							 <span class="form">Escola</span>
 							 <span class="campo_obrigatorio">*</span>
