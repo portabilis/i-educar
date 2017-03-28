@@ -77,7 +77,7 @@ class clsMenu
       SELECT
         mtu.ref_cod_menu_submenu
       FROM
-      pmieducar.menu_tipo_usuario mtu   
+      pmieducar.menu_tipo_usuario mtu
       INNER JOIN pmieducar.tipo_usuario tu ON mtu.ref_cod_tipo_usuario = tu.cod_tipo_usuario
       INNER JOIN pmieducar.usuario u ON tu.cod_tipo_usuario = u.ref_cod_tipo_usuario
       WHERE  u.cod_usuario = ' . $id_usuario);
@@ -130,15 +130,6 @@ class clsMenu
             AND nome_menu.cod_menu_menu = COALESCE(pai.ref_cod_menu_pai,pai.cod_menu_menu)
             AND sub.cod_sistema = '2'
             AND pai.cod_menu_menu = sub.ref_cod_menu_menu
-            AND sub.cod_menu_submenu NOT IN (
-              SELECT
-                ref_cod_menu_submenu
-              FROM
-                pmicontrolesis.menu
-              WHERE
-                suprime_menu = 1
-                AND ref_cod_menu_submenu IS NOT NULL
-            )
           ORDER BY
             upper(nome_menu.nm_menu), ref_menu_pai, UPPER(pai.nm_menu), sub.nm_submenu";
       }
