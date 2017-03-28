@@ -329,7 +329,7 @@ var tabela_arredondamento = new function() {
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
+         "educar_index.php"                  => "Escola",
          ""        => "$nomeMenu regra de avalia&ccedil;&atilde;o"
     ));
     $this->enviaLocalizacao($localizacao->montar());

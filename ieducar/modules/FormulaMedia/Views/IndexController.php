@@ -64,7 +64,7 @@ class IndexController extends Core_Controller_Page_ListController
 
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
+         "educar_index.php"                  => "Escola",
          ""                                  => "Listagem de f&oacute;rmulas de m&eacute;dia"
     ));
     $this->enviaLocalizacao($localizacao->montar());

@@ -51,6 +51,14 @@ class PromocaoController extends Portabilis_Controller_Page_ListController
     $this->inputsHelper()->dynamic('escola', array('required' => false));
 
     $this->loadResourceAssets($this->getDispatcher());
+
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "Configurações",
+         ""                                  => "Atualização de matrículas"
+    ));
+    $this->enviaLocalizacao($localizacao->montar());
   }
 }
 ?>

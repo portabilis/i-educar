@@ -193,7 +193,7 @@ class indice extends clsListagem
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "Início",
-         "educar_index.php"                  => "i-Educar - Escola",
+         "educar_index.php"                  => "Escola",
          ""                                  => "Listagem de enturmações da matrícula"
     ));
     $this->enviaLocalizacao($localizacao->montar());

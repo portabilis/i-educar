@@ -259,8 +259,8 @@ class indice extends clsListagem
 	    $localizacao = new LocalizacaoSistema();
 	    $localizacao->entradaCaminhos( array(
 	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-	         "educar_index.php"                  => "i-Educar - Escola",
-	         ""                                  => "Listagem de ocorr&ecirc;ncias disciplinares da matr&iacute;cula"
+	         "educar_index.php"                  => "Escola",
+	         ""                                  => "Ocorrências disciplinares da matrícula"
 	    ));
 	    $this->enviaLocalizacao($localizacao->montar());		
 	}
