@@ -258,9 +258,9 @@ WHERE
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_index.php"                  => "Escola",
-         ""                                  => "Listagem de enturma&ccedil;&otilde;es da matr&iacute;cula"
+         ""                                  => "Enturmações de matrícula"
     ));
-    $this->enviaLocalizacao($localizacao->montar());    
+    $this->enviaLocalizacao($localizacao->montar());
   }
 }
 

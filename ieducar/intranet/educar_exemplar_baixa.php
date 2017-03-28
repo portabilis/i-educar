@@ -65,7 +65,7 @@ class indice extends clsCadastro
 	var $ref_cod_escola;
 	var $ref_cod_biblioteca;
 	var $ref_cod_acervo;
-	
+
 	var $nm_biblioteca;
 
 	function Inicializar()
@@ -122,8 +122,8 @@ class indice extends clsCadastro
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"                  => "i-Educar - Biblioteca",
-         ""                                  => "Baixa do exemplar"
+         "educar_biblioteca_index.php"       => "Biblioteca",
+         ""                                  => "Motivo de baixa do exemplar"
     ));
     $this->enviaLocalizacao($localizacao->montar());
 

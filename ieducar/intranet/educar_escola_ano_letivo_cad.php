@@ -99,7 +99,7 @@ class indice extends clsCadastro
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_index.php"                  => "Escola",
-         ""        => "{$nomeMenu} ano letivo"             
+         ""                                  => "Definição do ano letivo"
     ));
     $this->enviaLocalizacao($localizacao->montar());
 

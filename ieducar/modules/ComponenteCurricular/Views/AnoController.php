@@ -187,10 +187,10 @@ class AnoController extends Core_Controller_Page_EditController
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_index.php"                  => "Escola",
-         ""                                  => "Editando anos escolares"             
+         ""                                  => "Carga horária dos anos escolares"
     ));
-    $this->enviaLocalizacao($localizacao->montar());     
-  }  
+    $this->enviaLocalizacao($localizacao->montar());
+  }
 
   /**
    * @see clsCadastro#Gerar()

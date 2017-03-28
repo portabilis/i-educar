@@ -104,7 +104,7 @@ class indice extends clsCadastro
         $localizacao->entradaCaminhos( array(
              $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
              "educar_index.php"                  => "Escola",
-             ""        => "{$nomeMenu} transfer&ecirc;ncia de matr&iacute;cula"
+             ""        => "Registro da solicitação de transferência da matrícula"
         ));
         $this->enviaLocalizacao($localizacao->montar());
         Portabilis_View_Helper_Application::loadJavascript($this, array('/modules/Cadastro/Assets/Javascripts/TransferenciaSolicitacao.js'));

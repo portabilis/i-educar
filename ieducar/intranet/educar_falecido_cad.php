@@ -72,7 +72,7 @@ class indice extends clsCadastro
         $localizacao->entradaCaminhos( array(
              $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
              "educar_index.php"                  => "Escola",
-             ""       							 => "Cadastrar falecimento"
+             ""       							 => "Registro do falecimento do aluno"
         ));
         $this->enviaLocalizacao($localizacao->montar());
 
