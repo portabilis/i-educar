@@ -1,6 +1,7 @@
 {
     "require": {
         "cossou/jasperphp": "v1.2.0",
-        "robmorgan/phinx": "^0.6.4"
+        "robmorgan/phinx": "^0.6.4",
+        "gilbitron/php-simplecache": "~1.4"
     }
 }

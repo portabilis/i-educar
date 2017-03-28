@@ -42,7 +42,7 @@
 <tr class="rodape">
 	<td colspan="3">
 	<center>
-		Conheça mais sobre o i-Educar e a Portabilis, <a href="http://blog.portabilis.com.br" target="_blank">acesse nosso blog</a> &nbsp;&nbsp;&nbsp; © Portabilis - Todos os direitos reservados
+    <!-- #&RODAPE_INTERNO&# -->
 	</center></td>
 </tr>
 </table>

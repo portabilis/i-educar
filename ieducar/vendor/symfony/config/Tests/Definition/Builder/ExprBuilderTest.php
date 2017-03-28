@@ -11,9 +11,10 @@
 
 namespace Symfony\Component\Config\Tests\Definition\Builder;
 
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 
-class ExprBuilderTest extends \PHPUnit_Framework_TestCase
+class ExprBuilderTest extends TestCase
 {
     public function testAlwaysExpression()
     {
@@ -70,6 +71,21 @@ class ExprBuilderTest extends \PHPUnit_Framework_TestCase
 
         $test = $this->getTestBuilder()
             ->ifNull()
+            ->then($this->returnClosure('new_value'))
+        ->end();
+        $this->assertFinalizedValueIs('value', $test);
+    }
+
+    public function testIfEmptyExpression()
+    {
+        $test = $this->getTestBuilder()
+            ->ifEmpty()
+            ->then($this->returnClosure('new_value'))
+        ->end();
+        $this->assertFinalizedValueIs('new_value', $test, array('key' => array()));
+
+        $test = $this->getTestBuilder()
+            ->ifEmpty()
             ->then($this->returnClosure('new_value'))
         ->end();
         $this->assertFinalizedValueIs('value', $test);
