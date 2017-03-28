@@ -126,7 +126,7 @@ class indice extends clsConfig
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
+         "educar_index.php"                  => "Escola",
          ""                                  => "Calend&aacute;rio do ano letivo"
     ));
     $this->locale = $localizacao->montar();
