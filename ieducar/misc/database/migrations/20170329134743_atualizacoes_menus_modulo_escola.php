@@ -61,6 +61,8 @@ class AtualizacoesMenusModuloEscola extends AbstractMigration
 
             UPDATE portal.menu_submenu SET ref_cod_menu_menu = 7 WHERE cod_menu_submenu IN (631, 678, 579);
 
+            UPDATE portal.menu_submenu SET nm_submenu = 'Carteira de transporte (Módulo Escola)' WHERE cod_menu_submenu = 999601;
+
         ");
     }
 }
