@@ -1,11 +1,6 @@
 CHANGELOG
 =========
 
-3.2.0
------
-
- * added `readlink()` as a platform independent method to read links
-
 3.0.0
 -----
 

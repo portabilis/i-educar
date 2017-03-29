@@ -11,8 +11,6 @@
 
 namespace Symfony\Component\Config;
 
-use Symfony\Component\Config\Exception\FileLocatorFileNotFoundException;
-
 /**
  * FileLocator uses an array of pre-defined paths to find files.
  *
@@ -43,7 +41,7 @@ class FileLocator implements FileLocatorInterface
 
         if ($this->isAbsolutePath($name)) {
             if (!file_exists($name)) {
-                throw new FileLocatorFileNotFoundException(sprintf('The file "%s" does not exist.', $name));
+                throw new \InvalidArgumentException(sprintf('The file "%s" does not exist.', $name));
             }
 
             return $name;
@@ -68,7 +66,7 @@ class FileLocator implements FileLocatorInterface
         }
 
         if (!$filepaths) {
-            throw new FileLocatorFileNotFoundException(sprintf('The file "%s" does not exist (in: %s).', $name, implode(', ', $paths)));
+            throw new \InvalidArgumentException(sprintf('The file "%s" does not exist (in: %s).', $name, implode(', ', $paths)));
         }
 
         return $filepaths;

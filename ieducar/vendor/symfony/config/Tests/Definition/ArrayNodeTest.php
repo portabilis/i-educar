@@ -11,12 +11,11 @@
 
 namespace Symfony\Component\Config\Tests\Definition;
 
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Definition\ArrayNode;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Definition\ScalarNode;
 
-class ArrayNodeTest extends TestCase
+class ArrayNodeTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidTypeException
@@ -55,12 +54,7 @@ class ArrayNodeTest extends TestCase
     public function testIgnoreAndRemoveBehaviors($ignore, $remove, $expected, $message = '')
     {
         if ($expected instanceof \Exception) {
-            if (method_exists($this, 'expectException')) {
-                $this->expectException(get_class($expected));
-                $this->expectExceptionMessage($expected->getMessage());
-            } else {
-                $this->setExpectedException(get_class($expected), $expected->getMessage());
-            }
+            $this->setExpectedException(get_class($expected), $expected->getMessage());
         }
         $node = new ArrayNode('root');
         $node->setIgnoreExtraKeys($ignore, $remove);

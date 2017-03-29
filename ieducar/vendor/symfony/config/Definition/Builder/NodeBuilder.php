@@ -42,7 +42,7 @@ class NodeBuilder implements NodeParentInterface
      *
      * @param ParentNodeDefinitionInterface $parent The parent node
      *
-     * @return $this
+     * @return NodeBuilder This node builder
      */
     public function setParent(ParentNodeDefinitionInterface $parent = null)
     {
@@ -182,7 +182,7 @@ class NodeBuilder implements NodeParentInterface
      *
      * @param NodeDefinition $node
      *
-     * @return $this
+     * @return NodeBuilder This node builder
      */
     public function append(NodeDefinition $node)
     {
@@ -207,7 +207,7 @@ class NodeBuilder implements NodeParentInterface
      * @param string $type  The name of the type
      * @param string $class The fully qualified name the node definition class
      *
-     * @return $this
+     * @return NodeBuilder This node builder
      */
     public function setNodeClass($type, $class)
     {

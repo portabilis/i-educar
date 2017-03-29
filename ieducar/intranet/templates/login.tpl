@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
   <head>
     <title>Intranet</title>
@@ -10,7 +10,10 @@
     <link rel=stylesheet type='text/css' href='styles/login.css?rand=7' />
     <link rel=stylesheet type='text/css' href='styles/font-awesome.css' />
     <script type='text/javascript' src='scripts/jquery/jquery-1.8.3.min.js'></script>
+    <script type="text/javascript" src="scripts/mensagens.js"></script>
     <script type='text/javascript' src='scripts/jquery/jquery-1.8.3.min.js'></script>
+    <script type="text/javascript" src="http://assets.freshdesk.com/widget/freshwidget.js"></script>
+    <script type="text/javascript" src="scripts/suporte_freshdesk.js?1"></script>
 
   <script type="text/javascript">
 
@@ -85,10 +88,10 @@
 
     <div id="corpo">
       <div>
-        <!-- #&BRASAO&# -->
+        <img width="150px" height="150px" src="https://s3.amazonaws.com/apps-ieducar-images/treinamento/brasao-republica.png"/>
       </div>
 
-      <h2><!-- #&NOME_ENTIDADE&# --></h2>
+      <h2>Secretaria Municipal de Educação</h2>
 
       <!-- #&ERROLOGIN&# -->
 
@@ -114,13 +117,18 @@
 
     <div id="rodape" class="texto-normal">
       <p>
-        <!-- #&RODAPE_LOGIN&# -->
+        Portabilis Tecnologia - suporte@portabilis.com.br -
+        <a target="_blank" class="light" href="http://suporte.portabilis.com.br"> Obter Suporte </a>
       </p>
 
       <div class="rodape-social">
-        <!-- #&RODAPE_EXTERNO&# -->
+        <p>
+          Conheça mais sobre o i-Educar e a Portabilis, acesse nosso <a href="http://blog.portabilis.com.br">blog</a> &nbsp; &nbsp; &nbsp; Siga-nos nas redes sociais
+        </p>
         <div class="social-icons">
-          <!-- #&LINKS_SOCIAL&# -->
+          <a href="#"><img src="/intranet/imagens/icon-social-facebook.png"></a>
+          <a href="#"><img src="/intranet/imagens/icon-social-linkedin.png"></a>
+          <a href="#"><img src="/intranet/imagens/icon-social-twitter.png"></a>
         </div>
       </div>
     </div> <!-- end rodape -->

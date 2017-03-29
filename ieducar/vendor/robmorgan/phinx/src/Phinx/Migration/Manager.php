@@ -489,7 +489,6 @@ class Manager
         // create an environment instance and cache it
         $environment = new Environment($name, $this->getConfig()->getEnvironment($name));
         $this->environments[$name] = $environment;
-        $environment->setInput($this->getInput());
         $environment->setOutput($this->getOutput());
 
         return $environment;
@@ -644,7 +643,7 @@ class Manager
     {
         if (null === $this->seeds) {
             $config = $this->getConfig();
-            $phpFiles = glob($config->getSeedPath() . DIRECTORY_SEPARATOR . '*.php', defined('GLOB_BRACE') ? GLOB_BRACE : 0);
+            $phpFiles = glob($config->getSeedPath() . DIRECTORY_SEPARATOR . '*.php');
 
             // filter the files to only get the ones that match our naming scheme
             $fileNames = array();

@@ -11,14 +11,13 @@
 
 namespace Symfony\Component\Filesystem\Tests;
 
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 
 /**
  * Test class for Filesystem.
  */
-class ExceptionTest extends TestCase
+class ExceptionTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetPath()
     {

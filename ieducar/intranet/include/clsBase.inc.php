@@ -53,7 +53,6 @@ require_once 'include/funcoes.inc.php';
 require_once 'Portabilis/Utils/Database.php';
 require_once 'Portabilis/Utils/User.php';
 require_once 'Portabilis/String/Utils.php';
-require_once 'Portabilis/AdministrativeInfoFetcher.php';
 
 require_once 'modules/Error/Mailers/NotificationMailer.php';
 require_once 'Portabilis/Assets/Version.php';
@@ -115,7 +114,6 @@ class clsBase extends clsConfig
 
   function MakeHeadHtml()
   {
-
     $saida = $this->OpenTpl('htmlhead');
     $saida = str_replace("<!-- #&TITULO&# -->", $this->titulo, $saida);
 
@@ -611,9 +609,6 @@ class clsBase extends clsConfig
     $saida = str_replace("<!-- #&CORPO&# -->",        $corpo,         $saida);
     $saida = str_replace("<!-- #&ANUNCIO&# -->",      $menu_dinamico, $saida);
     $saida = str_replace("<!-- #&FOTO&# -->",         $foto, $saida);
-
-    $administrativeInfoFetcher = new Portabilis_AdministrativeInfoFetcher();
-    $saida = str_replace("<!-- #&RODAPE_INTERNO&# -->", $administrativeInfoFetcher->getInternalFooter(), $saida);
 
     // Pega o endereço IP do host, primeiro com HTTP_X_FORWARDED_FOR (para pegar o IP real
     // caso o host esteja atrás de um proxy)

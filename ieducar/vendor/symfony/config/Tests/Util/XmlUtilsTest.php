@@ -11,10 +11,9 @@
 
 namespace Symfony\Component\Config\Tests\Util;
 
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Util\XmlUtils;
 
-class XmlUtilsTest extends TestCase
+class XmlUtilsTest extends \PHPUnit_Framework_TestCase
 {
     public function testLoadFile()
     {
@@ -48,7 +47,7 @@ class XmlUtilsTest extends TestCase
             $this->assertContains('XSD file or callable', $e->getMessage());
         }
 
-        $mock = $this->getMockBuilder(__NAMESPACE__.'\Validator')->getMock();
+        $mock = $this->getMock(__NAMESPACE__.'\Validator');
         $mock->expects($this->exactly(2))->method('validate')->will($this->onConsecutiveCalls(false, true));
 
         try {
@@ -151,14 +150,7 @@ class XmlUtilsTest extends TestCase
     public function testLoadEmptyXmlFile()
     {
         $file = __DIR__.'/../Fixtures/foo.xml';
-
-        if (method_exists($this, 'expectException')) {
-            $this->expectException('InvalidArgumentException');
-            $this->expectExceptionMessage(sprintf('File %s does not contain valid XML, it is empty.', $file));
-        } else {
-            $this->setExpectedException('InvalidArgumentException', sprintf('File %s does not contain valid XML, it is empty.', $file));
-        }
-
+        $this->setExpectedException('InvalidArgumentException', sprintf('File %s does not contain valid XML, it is empty.', $file));
         XmlUtils::loadFile($file);
     }
 

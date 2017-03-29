@@ -11,12 +11,11 @@
 
 namespace Symfony\Component\Config\Tests\Definition\Builder;
 
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Definition\Builder\IntegerNodeDefinition as NumericNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\IntegerNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\FloatNodeDefinition;
 
-class NumericNodeDefinitionTest extends TestCase
+class NumericNodeDefinitionTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @expectedException \InvalidArgumentException
