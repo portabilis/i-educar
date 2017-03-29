@@ -91,7 +91,7 @@ class indice extends clsCadastro
           $this->$campo = $val;
         }
 
-        $this->fexcluir = $obj_permissao->permissao_excluir(554,$this->pessoa_logada,7,null,true);        
+        $this->fexcluir = $obj_permissao->permissao_excluir(554,$this->pessoa_logada,7,null,true);
 
         $retorno = "Editar";
       }
@@ -108,9 +108,9 @@ class indice extends clsCadastro
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_index.php"                  => "Escola",
-         ""        => "{$nomeMenu} tipo de usu&aacute;rio"             
+         ""        => "{$nomeMenu} tipo de usu&aacute;rio"
     ));
-    $this->enviaLocalizacao($localizacao->montar());    
+    $this->enviaLocalizacao($localizacao->montar());
 
     return $retorno;
   }
@@ -150,14 +150,15 @@ class indice extends clsCadastro
         AND ((m.cod_menu_menu = 55 OR m.ref_cod_menu_pai = 55) OR
             (m.cod_menu_menu = 69 OR m.ref_cod_menu_pai = 69) OR
             (m.cod_menu_menu = 68 OR m.ref_cod_menu_pai = 68) OR
-            (m.cod_menu_menu = 7 OR m.ref_cod_menu_pai = 7) OR   
-            (m.cod_menu_menu = 23 OR m.ref_cod_menu_pai = 23) OR  
-            (m.cod_menu_menu = 5 OR m.ref_cod_menu_pai = 5) OR                                                
-            (m.cod_menu_menu = 25 OR m.ref_cod_menu_pai = 25) OR                                                
-            (m.cod_menu_menu = 38 OR m.ref_cod_menu_pai = 38) OR                                                
+            (m.cod_menu_menu = 7 OR m.ref_cod_menu_pai = 7) OR
+            (m.cod_menu_menu = 23 OR m.ref_cod_menu_pai = 23) OR
+            (m.cod_menu_menu = 5 OR m.ref_cod_menu_pai = 5) OR
+            (m.cod_menu_menu = 25 OR m.ref_cod_menu_pai = 25) OR
+            (m.cod_menu_menu = 38 OR m.ref_cod_menu_pai = 38) OR
             (m.cod_menu_menu = 57 OR m.ref_cod_menu_pai = 57) OR
             (m.cod_menu_menu = 56 OR m.ref_cod_menu_pai = 56) OR
-            (m.cod_menu_menu = 70 OR m.ref_cod_menu_pai = 70))
+            (m.cod_menu_menu = 70 OR m.ref_cod_menu_pai = 70) OR
+            (m.cod_menu_menu = 71 OR m.ref_cod_menu_pai = 71))
       ORDER BY
         cod_menu_menu, upper(sub.nm_submenu)
     ');
@@ -396,8 +397,8 @@ function selAction(menu_pai, tipo, acao)
   }
 
   for (var ct=0; ct < menu[menu_pai].length; ct++){
-    document.getElementsByName('permissoes[' + menu[menu_pai][ct]  + '][' + tipo + ']')[0].checked = state;    
-    document.getElementsByName('permissoes[' + menu[menu_pai][ct]  + '][' + tipo + ']')[0].value = ( state ? 'on' : '');    
+    document.getElementsByName('permissoes[' + menu[menu_pai][ct]  + '][' + tipo + ']')[0].checked = state;
+    document.getElementsByName('permissoes[' + menu[menu_pai][ct]  + '][' + tipo + ']')[0].value = ( state ? 'on' : '');
   }
 }
 </script>
