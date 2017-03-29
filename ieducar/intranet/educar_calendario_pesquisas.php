@@ -160,7 +160,7 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
 
     if ($get_escola) {
       $retorno .= '
-        <tr id="tr_escola">
+        <tr id="tr_escola" class="input_calendario_letivo">
           <td valign="top" class="formmdtd">
             <span class="form">Escola</span>
             <span class="campo_obrigatorio">*</span><br/>

@@ -216,9 +216,9 @@ class indice extends clsListagem
 
 	    $localizacao = new LocalizacaoSistema();
 	    $localizacao->entradaCaminhos( array(
-	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+	         $_SERVER['SERVER_NAME']."/intranet" => "Início",
 	         "educar_index.php"                  => "Escola",
-	         ""                                  => "Listagem de motivos de dias do calend&aacute;rio"
+	         ""                                  => "Tipos de evento do calendário"
 	    ));
 	    $this->enviaLocalizacao($localizacao->montar());		
 	}

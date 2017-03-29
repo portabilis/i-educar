@@ -47,7 +47,7 @@ class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Escola S&eacute;rie');
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Séries da escola');
     $this->processoAp = '585';
     $this->addEstilo("localizacaoSistema");
   }
@@ -192,7 +192,7 @@ class indice extends clsListagem
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_index.php"                  => "Escola",
-         ""        => "Listagem de v&iacute;nculos entre escolas e s&eacute;ries"             
+         ""        => "Séries da escola"             
     ));
     $this->enviaLocalizacao($localizacao->montar());    
   }
