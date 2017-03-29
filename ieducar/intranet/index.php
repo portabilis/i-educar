@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gestĂŁo escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de ItajaĂ­
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa ĂŠ software livre; vocĂŞ pode redistribuĂ­-lo e/ou modificĂĄ-lo
+ * sob os termos da LicenĂ§a PĂşblica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versĂŁo 2 da LicenĂ§a, como (a seu critĂŠrio)
+ * qualquer versĂŁo posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa ĂŠ distribuĂ­Â­do na expectativa de que seja Ăştil, porĂŠm, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implĂ­Â­cita de COMERCIABILIDADE OU
+ * ADEQUAĂĂO A UMA FINALIDADE ESPECĂFICA. Consulte a LicenĂ§a PĂşblica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * VocĂŞ deve ter recebido uma cĂłpia da LicenĂ§a PĂşblica Geral do GNU junto
+ * com este programa; se nĂŁo, escreva para a Free Software Foundation, Inc., no
+ * endereĂ§o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de ItajaĂ­ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo disponível desde a versão 1.0.0
+ * @since     Arquivo disponĂ­vel desde a versĂŁo 1.0.0
  * @version   $Id$
  */
 
@@ -34,11 +34,11 @@ require_once 'include/clsAgenda.inc.php';
 /**
  * clsIndex class.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de ItajaĂ­ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe disponĂ­vel desde a versĂŁo 1.0.0
  * @version   @@package_version@@
  */
 class clsIndex extends clsBase
@@ -52,11 +52,11 @@ class clsIndex extends clsBase
 /**
  * indice class.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de ItajaĂ­ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe disponĂ­vel desde a versĂŁo 1.0.0
  * @version   @@package_version@@
  */
 class indice
@@ -101,7 +101,7 @@ class indice
           <script src="scripts/jquery/jquery-ui.min-1.9.2/js/jquery-ui-1.9.2.custom.min.js"></script>
           <meta http-equiv=\'Content-Type\' content=\'text/html; charset=UTF-8\' />
           <div id="dialog" title="Atualização de dados">
-            Todos os dias estamos trabalhando para melhorar o i-Educar e nossos serviços especialmente para você! Para ficar por dentro destas novidades, por favor, atualize seus dados informando seu melhor e-mail.
+            Todos os dias estamos trabalhando para melhorar o i-Educar e nossos servisos especialmente para você! Para ficar por dentro destas novidades, por favor, atualize seus dados informando seu melhor e-mail.
           </div>
           <script>
           var $j = jQuery.noConflict();
@@ -199,7 +199,7 @@ class indice
         }
       }
 
-      // Faz loop da quantidade de dias do MÃªs
+      // Faz loop da quantidade de dias do MĂÂŞs
       $max_comp_dia = 5;
       for ($i=1; $i <= date('t', mktime(0, 0, 0, $mes, 1, $ano)); $i++) {
         $qtd = 0;
@@ -242,7 +242,7 @@ class indice
                   }
 
                   $qtd++;
-                  $compromisso_geral .= "<a href='juris_processo_det.php?cod_processo={$encaminha['ref_cod_juris_processo']}&versao_processo={$encaminha['ref_versao_processo']}' ><span class='textoAgenda' $id>- Pasta nÂº {$encaminha['ref_cod_juris_processo']}</span></a><br>";
+                  $compromisso_geral .= "<a href='juris_processo_det.php?cod_processo={$encaminha['ref_cod_juris_processo']}&versao_processo={$encaminha['ref_versao_processo']}' ><span class='textoAgenda' $id>- Pasta nĂÂş {$encaminha['ref_cod_juris_processo']}</span></a><br>";
                 }
               }
               else {
@@ -260,7 +260,7 @@ class indice
                   }
 
                   $qtd++;
-                  $compromisso_geral .= "<a href='juris_tramite_det.php?cod_tramite={$encaminha['ref_cod_juris_tramite']}&versao_tramite={$encaminha['ref_versao_tramite']}' ><span class='textoAgenda' $id>- Processo nÂº {$encaminha['ref_cod_juris_tramite']}</span></a><br>";
+                  $compromisso_geral .= "<a href='juris_tramite_det.php?cod_tramite={$encaminha['ref_cod_juris_tramite']}&versao_tramite={$encaminha['ref_versao_tramite']}' ><span class='textoAgenda' $id>- Processo nĂÂş {$encaminha['ref_cod_juris_tramite']}</span></a><br>";
                 }
               }
             }
@@ -439,7 +439,7 @@ class indice
             &laquo; Anterior
           </a> &nbsp;&nbsp;
           <a class=\"nav_agenda\" href='index.php?mes=$proximo&ano=$proximo_ano'>
-            Pr�ximo &raquo;
+            Próximo &raquo;
           </a>
         </td>
         <td align=center class='fundoCalendarioTopo'>$mes/$ano</td>
@@ -494,14 +494,14 @@ class indice
   }
 }
 
-// Instancia objeto de página
+// Instancia objeto de pĂĄgina
 $pagina = new clsIndex();
 
-// Instancia objeto de conteúdo
+// Instancia objeto de conteĂşdo
 $miolo = new indice();
 
-// Atribui o conteúdo à  página
+// Atribui o conteĂşdo Ă   pĂĄgina
 $pagina->addForm($miolo);
 
-// Gera o código HTML
+// Gera o cĂłdigo HTML
 $pagina->MakeAll();
