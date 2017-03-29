@@ -4,31 +4,31 @@
 // ini_set("display_errors", 1);
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     ComponenteCurricular
  * @subpackage  Modules
- * @since       Arquivo disponÌvel desde a vers„o 1.1.0
+ * @since       Arquivo dispon√≠vel desde a vers√£o 1.1.0
  * @version     $Id$
  */
 
@@ -40,12 +40,12 @@ require_once 'ComponenteCurricular/Model/CodigoEducacenso.php';
 /**
  * EditController class.
  *
- * @author      Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     ComponenteCurricular
  * @subpackage  Modules
- * @since       Classe disponÌvel desde a vers„o 1.1.0
+ * @since       Classe dispon√≠vel desde a vers√£o 1.1.0
  * @version     @@package_version@@
  */
 class EditController extends Core_Controller_Page_EditController
@@ -59,7 +59,7 @@ class EditController extends Core_Controller_Page_EditController
 
   protected $_formMap = array(
     'instituicao' => array(
-      'label'  => 'InstituiÁ„o',
+      'label'  => 'Institui√ß√£o',
       'help'   => '',
     ),
     'nome' => array(
@@ -77,7 +77,7 @@ class EditController extends Core_Controller_Page_EditController
       'entity' => 'tipo_base'
     ),
     'area_conhecimento' => array(
-      'label'  => '¡rea conhecimento',
+      'label'  => '√Årea conhecimento',
       'help'   => '',
       'entity' => 'area_conhecimento'
     ),
@@ -88,8 +88,8 @@ class EditController extends Core_Controller_Page_EditController
       'entity' => 'codigo_educacenso'
     ),
     'ordenamento' => array(
-      'label'  => 'Ordem de apresentaÁ„o',
-      'help'   => 'Ordem respeitada no lanÁamento de notas/faltas.',
+      'label'  => 'Ordem de apresenta√ß√£o',
+      'help'   => 'Ordem respeitada no lan√ßamento de notas/faltas.',
       'entity' => 'ordenamento'
     ),
   );
@@ -117,7 +117,7 @@ class EditController extends Core_Controller_Page_EditController
   {
     $this->campoOculto('id', $this->getEntity()->id);
 
-    // InstituiÁ„o
+    // Institui√ß√£o
     $instituicoes = App_Model_IedFinder::getInstituicoes();
     $this->campoLista('instituicao', $this->_getLabel('instituicao'),
       $instituicoes, $this->getEntity()->instituicao);
@@ -136,13 +136,13 @@ class EditController extends Core_Controller_Page_EditController
     $this->campoRadio('tipo_base', $this->_getLabel('tipo_base'),
       $tipoBase->getEnums(), $this->getEntity()->get('tipo_base'));
 
-    // ¡rea de conhecimento
+    // √Årea de conhecimento
     $areas = $this->getDataMapper()->findAreaConhecimento();
     $areas = CoreExt_Entity::entityFilterAttr($areas, 'id', 'nome');
     $this->campoLista('area_conhecimento', $this->_getLabel('area_conhecimento'),
       $areas, $this->getEntity()->get('area_conhecimento'));
 
-    // CÛdigo educacenso
+    // C√≥digo educacenso
     $codigos = ComponenteCurricular_Model_CodigoEducacenso::getInstance();
     $this->campoLista('codigo_educacenso', $this->_getLabel('codigo_educacenso'),
       $codigos->getEnums(), $this->getEntity()->get('codigo_educacenso'));
@@ -159,8 +159,8 @@ class EditController extends Core_Controller_Page_EditController
 
   /**
    * OVERRIDE
-   * Insere um novo registro no banco de dados e redireciona para a p·gina
-   * definida pela opÁ„o "new_success".
+   * Insere um novo registro no banco de dados e redireciona para a p√°gina
+   * definida pela op√ß√£o "new_success".
    * @see clsCadastro#Novo()
    */
   public function Novo()
@@ -190,7 +190,7 @@ class EditController extends Core_Controller_Page_EditController
     }
 
 
-    // Verifica pela existÍncia do field identity
+    // Verifica pela exist√™ncia do field identity
     if (isset($this->getRequest()->id) && 0 < $this->getRequest()->id) {
       $entity = $this->setEntity($this->getDataMapper()->find($this->getRequest()->id));
     }
@@ -208,7 +208,7 @@ class EditController extends Core_Controller_Page_EditController
     }
     catch (Exception $e) {
       // TODO: ver @todo do docblock
-      $this->mensagem = 'Erro no preenchimento do formul·rio. ';
+      $this->mensagem = 'Erro no preenchimento do formul√°rio. ';
       return FALSE;
     }
   }
