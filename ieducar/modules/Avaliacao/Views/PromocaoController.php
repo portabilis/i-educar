@@ -55,7 +55,7 @@ class PromocaoController extends Portabilis_Controller_Page_ListController
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Configurações",
+         "educar_configuracoes_index.php"                  => "Configurações",
          ""                                  => "Atualização de matrículas"
     ));
     $this->enviaLocalizacao($localizacao->montar());

@@ -134,11 +134,14 @@ class indice extends clsCadastro
 		$this->nome_url_cancelar = "Cancelar";
 
     $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+    if(isset($_GET['copia'])){
+    	$nomeMenu = "Cópia";
+    }
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_index.php"                  => "Escola",
-         ""        => "{$nomeMenu} hist&oacute;rico escolar"
+         ""        => "{$nomeMenu} de histórico escolar"
     ));
     $this->enviaLocalizacao($localizacao->montar());
     $this->dependencia  = dbBool($this->dependencia);

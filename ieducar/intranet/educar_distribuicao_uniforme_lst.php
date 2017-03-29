@@ -111,9 +111,8 @@ class indice extends clsListagem
 		if( $nm_aluno )
 			$this->campoRotulo("nm_aluno","Aluno", "{$nm_aluno}");
 
-		
 		$this->campoNumero( "ano", "Ano", $this->ano, 4, 4, false );
-		
+
 		// Paginador
 		$this->limite = 20;
 		$this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
@@ -161,9 +160,9 @@ class indice extends clsListagem
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_index.php"                  => "Escola",
-         ""                                  => "Listagem de distribu&ccedil;&otilde;es de uniforme escolar"
+         ""                                  => "Distribuições de uniforme escolar"
     ));
-    $this->enviaLocalizacao($localizacao->montar());		
+    $this->enviaLocalizacao($localizacao->montar());
 	}
 }
 // cria uma extensao da classe base

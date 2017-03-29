@@ -94,12 +94,12 @@ class indice extends clsCadastro
         $localizacao->entradaCaminhos( array(
              $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
              "educar_index.php"                  => "Escola",
-             ""        => "{$nomeMenu} abandono de matr&iacute;cula"             
+             ""        => "Registro do abandono de matrícula"
         ));
         $this->enviaLocalizacao($localizacao->montar());
 
 		$this->nome_url_cancelar = "Cancelar";
-		
+
 		return $retorno;
 	}
 

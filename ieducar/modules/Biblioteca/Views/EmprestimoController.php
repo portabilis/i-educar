@@ -57,7 +57,7 @@ class EmprestimoController extends Portabilis_Controller_Page_ListController
 
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"                  => "i-Educar - Biblioteca",
+         "educar_biblioteca_index.php"                  => "Biblioteca",
          ""                                  => "Empr&eacute;stimo de exemplares"             
     ));
     $this->enviaLocalizacao($localizacao->montar(), true);     
