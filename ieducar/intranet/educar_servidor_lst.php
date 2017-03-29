@@ -2,30 +2,30 @@
 // error_reporting(E_ERROR);
 // ini_set("display_errors", 1);
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo disponÌvel desde a vers„o 1.0.0
+ * @since     Arquivo dispon√≠vel desde a vers√£o 1.0.0
  * @version   $Id$
  */
 
@@ -39,11 +39,11 @@ require_once 'CoreExt/View/Helper/UrlHelper.php';
 /**
  * clsIndexBase class.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponÌvel desde a vers„o 1.0.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
@@ -59,11 +59,11 @@ class clsIndexBase extends clsBase
 /**
  * indice class.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponÌvel desde a vers„o 1.0.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
  * @version   @@package_version@@
  */
 class indice extends clsListagem
@@ -100,19 +100,12 @@ class indice extends clsListagem
 
     $this->addCabecalhos( array(
       'Nome do Servidor',
-      'MatrÌcula',
+      'Matr√≠cula',
       'CPF',
-      'InstituiÁ„o'
+      'Institui√ß√£o'
     ));
 
-    $get_escola      = true;
-    $obrigatorio     = false;
-    $exibe_nm_escola = true;
-    $get_ano = true;
-
-    include 'include/pmieducar/educar_campo_lista.php';
-
-
+    $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'anoLetivo'));
 
     if ($this->cod_servidor) {
       $objTemp = new clsFuncionario($this->cod_servidor);
@@ -126,8 +119,8 @@ class indice extends clsListagem
     $parametros = new clsParametrosPesquisas();
     $parametros->setSubmit(0);
     $this->campoTexto("nome","Nome do servidor", $this->nome,50,255,false);
-    $this->campoTexto("matricula_servidor","MatrÌcula", $this->matricula_servidor,50,255,false);
-    $this->campoCheck("servidor_sem_alocacao","Incluir servidores sem alocaÁ„o", isset($_GET['servidor_sem_alocacao']));
+    $this->campoTexto("matricula_servidor","Matr√≠cula", $this->matricula_servidor,50,255,false);
+    $this->campoCheck("servidor_sem_alocacao","Incluir servidores sem aloca√ß√£o", isset($_GET['servidor_sem_alocacao']));
 
     // Paginador
     $this->limite = 20;
@@ -171,7 +164,7 @@ class indice extends clsListagem
       NULL,
       NULL,
       isset($_GET['servidor_sem_alocacao']),
-      $this->ano,
+      $this->ano_letivo,
       $this->matricula_servidor
     );
     $total = $obj_servidor->_total;
@@ -191,7 +184,7 @@ class indice extends clsListagem
           $registro['ref_cod_instituicao'] = $det_ref_cod_instituicao['nm_instituicao'];
         }
         else {
-          $registro['ref_cod_instituicao'] = 'Erro na geraÁ„o';
+          $registro['ref_cod_instituicao'] = 'Erro na gera√ß√£o';
         }
 
         if (class_exists('clsFuncionario')) {
@@ -232,22 +225,22 @@ class indice extends clsListagem
 
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
-         ""                                  => "Listagem de servidores"
+         $_SERVER['SERVER_NAME']."/intranet" => "In√≠cio",
+         "educar_servidores_index.php"       => "Servidores",
+         ""                                  => "Servidores"
     ));
     $this->enviaLocalizacao($localizacao->montar());
   }
 }
 
-// Instancia objeto de p·gina
+// Instancia objeto de p√°gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conte˙do
+// Instancia objeto de conte√∫do
 $miolo = new indice();
 
-// Atribui o conte˙do ‡† p·gina
+// Atribui o conte√∫do √†¬† p√°gina
 $pagina->addForm($miolo);
 
-// Gera o cÛdigo HTML
+// Gera o c√≥digo HTML
 $pagina->MakeAll();

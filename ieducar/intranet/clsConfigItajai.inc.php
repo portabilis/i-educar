@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd
- * @since     Arquivo disponÌvel desde a vers„o 1.0.0
+ * @since     Arquivo dispon√≠vel desde a vers√£o 1.0.0
  * @version   $Id$
  */
 
@@ -33,11 +33,11 @@ require_once 'include/constants.inc.php';
 /**
  * clsConfig class.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd
- * @since     Classe disponÌvel desde a vers„o 1.0.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
  * @version   @@package_version@@
  */
 class clsConfig
@@ -49,17 +49,17 @@ class clsConfig
   const CLS_CONFIG_SQL_TEMPO    = 3;
 
   /**
-   * Tempo em segundos para relatar um carregamento de p·gina.
+   * Tempo em segundos para relatar um carregamento de p√°gina.
    */
   const CLS_CONFIG_PAGINA_TEMPO = 5;
 
   /**
-   * Array com os par‚metros de configuraÁ„o
+   * Array com os par√¢metros de configura√ß√£o
    */
   public $arrayConfig = array();
 
   /**
-   * Switch para habilitar depuraÁ„o.
+   * Switch para habilitar depura√ß√£o.
    * @var  int
    */
   public $depurar = 0;
@@ -68,7 +68,7 @@ class clsConfig
   /**
    * Construtor.
    *
-   * Atribui os valores padrıes das diretivas de configuraÁ„o.
+   * Atribui os valores padr√µes das diretivas de configura√ß√£o.
    */
   public function __construct() {
     $this->setArrayConfig();
@@ -84,14 +84,14 @@ class clsConfig
 
     $config = $coreExt['Config']->app;
 
-    // Nome da instituiÁ„o
+    // Nome da institui√ß√£o
     $this->_instituicao = $config->template->vars->instituicao . ' - ';
 
-    // E-mails dos administradores para envio de relatÛrios de performance
+    // E-mails dos administradores para envio de relat√≥rios de performance
     $emails = $config->admin->reports->emails->toArray();
     $this->arrayConfig['ArrStrEmailsAdministradores'] = $emails;
 
-    // DiretÛrio dos templates de e-mail
+    // Diret√≥rio dos templates de e-mail
     $this->arrayConfig['strDirTemplates'] = "templates/";
 
     // Quantidade de segundos para relatar uma query SQL
@@ -102,7 +102,7 @@ class clsConfig
 
     $this->arrayConfig['intSegundosQuerySQL'] = $segundosSQL;
 
-    // Quantidade de segundos para relatar o tempo de carregamento de p·gina
+    // Quantidade de segundos para relatar o tempo de carregamento de p√°gina
     $segundosPagina = $config->get($config->admin->reports->pagina_tempo,
       self::CLS_CONFIG_PAGINA_TEMPO);
     $segundosPagina = $segundosPagina > 0 ?
@@ -113,7 +113,7 @@ class clsConfig
 
 
   /**
-   * Reliza um var_dump da vari·vel passada.
+   * Reliza um var_dump da vari√°vel passada.
    * @see  http://php.net/var_dump
    * @param  mixed  $msg
    */

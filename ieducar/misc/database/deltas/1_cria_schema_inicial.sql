@@ -137,7 +137,7 @@ SET search_path = alimentos, pg_catalog;
 CREATE FUNCTION fcn_calcular_qtde_cardapio(character varying, integer, integer, numeric) RETURNS character varying
     AS $_$
 DECLARE
-  -- Parâmetro recebidos
+  -- Parï¿½metro recebidos
   v_id_cli ALIAS for $1;
   v_id_car ALIAS for $2;
   v_id_pro ALIAS for $3;
@@ -180,7 +180,7 @@ END;$_$
 CREATE FUNCTION fcn_calcular_qtde_percapita(character varying, integer, integer, integer, integer) RETURNS numeric
     AS $_$
 DECLARE
-  -- Parâmetro recebidos
+  -- Parï¿½metro recebidos
   v_id_cli ALIAS for $1;
   v_id_uni ALIAS for $2;
   v_id_pro ALIAS for $3;
@@ -205,7 +205,7 @@ BEGIN
   v_existe_unidade := 0;
   FOR v_reg_qtde_produto IN EXECUTE v_sql_qtde_produto LOOP
     --
-    -- Verifica se o cardápio atende a unidade em questão
+    -- Verifica se o cardï¿½pio atende a unidade em questï¿½o
     --
     SELECT INTO v_existe_unidade distinct uni.iduni
     FROM alimentos.cardapio car
@@ -233,7 +233,7 @@ END;$_$
 CREATE FUNCTION fcn_calcular_qtde_unidade(character varying, integer, integer, numeric, integer, integer) RETURNS numeric
     AS $_$
 DECLARE
-  -- Parâmetro recebidos
+  -- Parï¿½metro recebidos
   v_id_cli ALIAS for $1;
   v_id_uni ALIAS for $2;
   v_id_pro ALIAS for $3;
@@ -259,7 +259,7 @@ BEGIN
   AND unp.idcli = v_id_cli
   AND     pro.idpro = v_id_pro;
   --
-  -- Obtém inscritos e matriculados para a unidade
+  -- Obtï¿½m inscritos e matriculados para a unidade
   --
   v_num_inscritos:=0;
   v_num_matriculados:=0;
@@ -281,7 +281,7 @@ BEGIN
     v_num_matriculados:=v_num_matriculados + v_reg_faixa.num_matriculados;
   END LOOP;
   --
-  -- Calcula a qtde percapita necessária do produto para o período
+  -- Calcula a qtde percapita necessï¿½ria do produto para o perï¿½odo
   --
   select INTO v_qtde_produto_periodo
   alimentos.fcn_calcular_qtde_percapita (v_id_cli,v_id_uni,v_id_pro,v_data_inicial,v_data_final);
@@ -301,7 +301,7 @@ END;$_$
 
 CREATE FUNCTION fcn_gerar_guia_remessa(text, text, integer, integer, character varying, character varying, character varying, integer) RETURNS text
     AS $_$DECLARE
-   -- Parâmetro recebidos
+   -- Parï¿½metro recebidos
    v_array_fornecedor ALIAS for $1;
    v_array_unidade ALIAS for $2;
    v_data_inicial ALIAS for $3;
@@ -324,14 +324,14 @@ CREATE FUNCTION fcn_gerar_guia_remessa(text, text, integer, integer, character v
    v_qtde_necessaria_saldo numeric;   -- saldo do produto a fornecer
    v_qtde_nec_saldo_ant numeric;      -- saldo anterior do produto
    v_qtde_guia_produto numeric;       -- qtde do produto com guia de remessa gerada
-   v_qtde_disponivel numeric;         -- qtde total disponível no(s) fornecedor(res)
+   v_qtde_disponivel numeric;         -- qtde total disponï¿½vel no(s) fornecedor(res)
    v_qtde_total_contrato numeric;     -- qtde total contratada com o fornecedor
    v_percentual_forn numeric;         -- percentual que pode ser fornecido pelo forn
    -- quantidade fornecida para o produto pelo fornecedor na guia
    v_qtde_forn numeric;
    v_qtde_guia integer:=0;
-   v_qtde_produto_periodo numeric:=0; -- qtde de produto necessária para o período
-              --(somatória da qtde percapita da receita)
+   v_qtde_produto_periodo numeric:=0; -- qtde de produto necessï¿½ria para o perï¿½odo
+              --(somatï¿½ria da qtde percapita da receita)
                                       
    v_id_guia integer:=0;
    v_id_guia_produto integer:=0;
@@ -351,7 +351,7 @@ CREATE FUNCTION fcn_gerar_guia_remessa(text, text, integer, integer, character v
    
 BEGIN
    --
-   -- Converte data numérica invertida para o formato DD/MM/YYYY
+   -- Converte data numï¿½rica invertida para o formato DD/MM/YYYY
    --
    v_dt_cardapio_ini := TO_DATE(substr(TRIM(TO_CHAR(v_data_inicial,'99999999')),7,2)|| '/' || substr(TRIM(TO_CHAR(v_data_inicial,'99999999')),5,2)|| '/' || substr(TRIM(TO_CHAR(v_data_inicial,'99999999')),1,4),'DD/MM/YYYY');
    v_dt_cardapio_ini_x := v_dt_cardapio_ini;
@@ -381,9 +381,9 @@ BEGIN
     ,v_array_fornecedor
     ,v_classe
     ,CURRENT_TIMESTAMP
-    ,'*** INÍCIO ***');
+    ,'*** INï¿½CIO ***');
    --
-   -- Obtém indicação de inscritos ou matriculados para o cliente
+   -- Obtï¿½m indicaï¿½ï¿½o de inscritos ou matriculados para o cliente
    --
    SELECT INTO v_inscritos inscritos
    FROM alimentos.cliente
@@ -394,8 +394,8 @@ BEGIN
    --
    UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || ' \n Inscritos: ' || v_inscritos WHERE idlogguia = v_id_log;
    --
-   -- Obtém o número de tipos de refeições que serão atendidas
-   -- (total café da manhã, total almoço, etc)
+   -- Obtï¿½m o nï¿½mero de tipos de refeiï¿½ï¿½es que serï¿½o atendidas
+   -- (total cafï¿½ da manhï¿½, total almoï¿½o, etc)
    --
    SELECT INTO v_num_refeicao COUNT(distinct idtre)
    FROM alimentos.cardapio car
@@ -404,12 +404,12 @@ BEGIN
    AND TO_NUMBER(TO_CHAR(car.dt_cardapio,'YYYYMMDD'),'99999999') BETWEEN v_data_inicial AND v_data_final;
    WHILE v_dt_cardapio_ini_x <= v_dt_cardapio_fim LOOP
    
-      RAISE NOTICE '---------------->>1º Loop Data(%)',v_dt_cardapio_ini_x;
+      RAISE NOTICE '---------------->>1ï¿½ Loop Data(%)',v_dt_cardapio_ini_x;
       
       --
       -- GRAVA LOG
       --
-      UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || ' \n      ----- 1º Loop Data ' || TO_CHAR(v_dt_cardapio_ini_x,'DD/MM/YYYY') || ' -----' WHERE idlogguia = v_id_log;
+      UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || ' \n      ----- 1ï¿½ Loop Data ' || TO_CHAR(v_dt_cardapio_ini_x,'DD/MM/YYYY') || ' -----' WHERE idlogguia = v_id_log;
       --
       -- Prepara SELECT para obter as unidades que atendem aos filtros informados
       --
@@ -437,17 +437,17 @@ BEGIN
       FOR v_reg_unidade IN EXECUTE v_sql_unidade LOOP
       
          RAISE NOTICE '                                          ';
-         RAISE NOTICE '2º Loop Unidade(%)',v_reg_unidade.nome;
+         RAISE NOTICE '2ï¿½ Loop Unidade(%)',v_reg_unidade.nome;
          
          --
          -- GRAVA LOG
          --
-         UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || ' \n      ----- 2º Loop Unidade ' || TRIM(TO_CHAR(v_reg_unidade.iduni, '9999999999')) || '-' || v_reg_unidade.nome || ' -----' WHERE idlogguia = v_id_log;
+         UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || ' \n      ----- 2ï¿½ Loop Unidade ' || TRIM(TO_CHAR(v_reg_unidade.iduni, '9999999999')) || '-' || v_reg_unidade.nome || ' -----' WHERE idlogguia = v_id_log;
          v_num_inscritos:=0;
    v_num_matriculados:=0;
          
          --
-         -- Obtém inscritos e matriculados para a unidade
+         -- Obtï¿½m inscritos e matriculados para a unidade
          --
          
          FOR v_reg_faixa IN SELECT distinct ufa.idfae as idfae
@@ -475,10 +475,10 @@ BEGIN
          --
          -- GRAVA LOG
          --
-         UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || ' \n      Nº Inscritos: ' || TRIM(TO_CHAR(v_num_inscritos, '9999999999')) WHERE idlogguia = v_id_log;
-   UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || ' \n      Nº Matriculados: ' || TRIM(TO_CHAR(v_num_matriculados, '9999999999')) WHERE idlogguia = v_id_log;
+         UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || ' \n      Nï¿½ Inscritos: ' || TRIM(TO_CHAR(v_num_inscritos, '9999999999')) WHERE idlogguia = v_id_log;
+   UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || ' \n      Nï¿½ Matriculados: ' || TRIM(TO_CHAR(v_num_matriculados, '9999999999')) WHERE idlogguia = v_id_log;
    --
-   -- Prepara SELECT para carregar produtos existentes no cardápio
+   -- Prepara SELECT para carregar produtos existentes no cardï¿½pio
    --
          v_sql_produto := 'SELECT distinct cap.idpro as idpro
         ,cap.quantidade as qtde
@@ -505,7 +505,7 @@ BEGIN
          END IF;
          
          --
-   -- Seleciona somente os produtos do cardápio que o fornecedor
+   -- Seleciona somente os produtos do cardï¿½pio que o fornecedor
          -- pode fornecedor
    --
          IF v_array_fornecedor <> '0' THEN
@@ -530,23 +530,23 @@ BEGIN
             ORDER BY TRIM(pro.nome_compra)';
             
          --
-         -- Obtém os produtos do cardápio utilizados pela unidade
+         -- Obtï¿½m os produtos do cardï¿½pio utilizados pela unidade
          --
          
          FOR v_reg_produto IN EXECUTE v_sql_produto LOOP
          
             RAISE NOTICE '                                          ';
-            RAISE NOTICE '3º Loop Produto(%)',v_reg_produto.nome_compra;
+            RAISE NOTICE '3ï¿½ Loop Produto(%)',v_reg_produto.nome_compra;
             
             --
             -- GRAVA LOG
             --
-            UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || ' \n \n      3º Loop Produto ' || TRIM(TO_CHAR(v_reg_produto.idpro, '9999999999')) || '-' || v_reg_produto.nome_compra WHERE idlogguia = v_id_log;
+            UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || ' \n \n      3ï¿½ Loop Produto ' || TRIM(TO_CHAR(v_reg_produto.idpro, '9999999999')) || '-' || v_reg_produto.nome_compra WHERE idlogguia = v_id_log;
             
             v_existe_produto := v_existe_produto + 1;
             
             --
-            -- Calcula a qtde percapita necessária do produto para o período
+            -- Calcula a qtde percapita necessï¿½ria do produto para o perï¿½odo
             --
             
             v_dt_cardapio_ini_y := TO_NUMBER(TO_CHAR(v_dt_cardapio_ini_x, 'YYYYMMDD'),'99999999');
@@ -555,7 +555,7 @@ BEGIN
             
             --
             --
-            -- Calcula a qtde necessária para o produto e para a unidade considerando
+            -- Calcula a qtde necessï¿½ria para o produto e para a unidade considerando
             -- os inscritos/matriculados
             --
             if v_inscritos = 'S' THEN
@@ -570,7 +570,7 @@ BEGIN
             v_qtde_necessaria := ROUND(v_qtde_necessaria / v_reg_produto.peso);
             
             --
-            -- Obtém qtde do produto já gerado em outras guias
+            -- Obtï¿½m qtde do produto jï¿½ gerado em outras guias
             --
             v_qtde_guia_produto := 0;
             
@@ -588,21 +588,21 @@ BEGIN
             --
             UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || ' \n      Qtde per capita: ' || TRIM(TO_CHAR(v_qtde_produto_periodo, '9999999999.99')) WHERE idlogguia = v_id_log;
             
-            UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || ' \n      Fator correção: ' || TRIM(TO_CHAR(v_reg_produto.fator_correcao, '9999999999.99')) WHERE idlogguia = v_id_log;
+            UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || ' \n      Fator correï¿½ï¿½o: ' || TRIM(TO_CHAR(v_reg_produto.fator_correcao, '9999999999.99')) WHERE idlogguia = v_id_log;
             
-            UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || ' \n      Fator cocção: ' || TRIM(TO_CHAR(v_reg_produto.fator_coccao, '9999999999.99')) WHERE idlogguia = v_id_log;
+            UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || ' \n      Fator cocï¿½ï¿½o: ' || TRIM(TO_CHAR(v_reg_produto.fator_coccao, '9999999999.99')) WHERE idlogguia = v_id_log;
             
             UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || ' \n      Peso: ' || TRIM(TO_CHAR(v_reg_produto.peso, '9999999999.99')) WHERE idlogguia = v_id_log;
-            UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || ' \n      Qtde necessária: ' || TRIM(TO_CHAR(v_qtde_necessaria, '9999999999.99')) WHERE idlogguia = v_id_log;
+            UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || ' \n      Qtde necessï¿½ria: ' || TRIM(TO_CHAR(v_qtde_necessaria, '9999999999.99')) WHERE idlogguia = v_id_log;
             
             RAISE NOTICE 'Qtde per capita(%)',v_qtde_produto_periodo;
-            RAISE NOTICE 'Fator correção(%)',v_reg_produto.fator_correcao;
-            RAISE NOTICE 'Fator cocção(%)',v_reg_produto.fator_coccao;
+            RAISE NOTICE 'Fator correï¿½ï¿½o(%)',v_reg_produto.fator_correcao;
+            RAISE NOTICE 'Fator cocï¿½ï¿½o(%)',v_reg_produto.fator_coccao;
             RAISE NOTICE 'Peso(%)',v_reg_produto.peso;
-            RAISE NOTICE 'Qtde Necessária(%)',v_qtde_necessaria;
+            RAISE NOTICE 'Qtde Necessï¿½ria(%)',v_qtde_necessaria;
             
             --
-            -- Obtém qtde do produto em contrato, incluindo
+            -- Obtï¿½m qtde do produto em contrato, incluindo
             -- todos os fornecedores autorizados a fornecer para a unidade
             -- e que tenham produtos a fornecer (qtde remessa < qtde contrato)
             -- ou qtde remessa = qtde_contrato (estoque zerado) e contrato vigente porque
@@ -645,7 +645,7 @@ BEGIN
             UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || ' \n      Qtde total contrato: ' || TRIM(TO_CHAR(v_qtde_total_contrato, '9999999999.99')) WHERE idlogguia = v_id_log;
             
             --
-            -- Testa se fornecedor tem contrato e autorização para fornecer para a
+            -- Testa se fornecedor tem contrato e autorizaï¿½ï¿½o para fornecer para a
             -- unidade
             --
             IF v_existe_forn = 0 THEN
@@ -655,12 +655,12 @@ BEGIN
                --
                UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || ' \n      *** existe forn: N ***' WHERE idlogguia = v_id_log;
                
-               RETURN '-1 Produto: ' || v_reg_produto.nome_compra || ' não tem contrato ou o fornecedor contratado não está autorizado a fornecer para a unidade ' || v_reg_unidade.nome || '.';
+               RETURN '-1 Produto: ' || v_reg_produto.nome_compra || ' nï¿½o tem contrato ou o fornecedor contratado nï¿½o estï¿½ autorizado a fornecer para a unidade ' || v_reg_unidade.nome || '.';
                
             END IF;
             
             --
-            -- Qtde necessária deve ser > 0
+            -- Qtde necessï¿½ria deve ser > 0
             --
             IF v_qtde_necessaria > 0 THEN
             
@@ -703,12 +703,12 @@ BEGIN
                FOR v_reg_fornecedor IN EXECUTE v_sql_fornecedor LOOP
                
                   RAISE NOTICE '                                          ';
-                  RAISE NOTICE '4º Loop Fornecedor(%)',v_reg_fornecedor.nome;
+                  RAISE NOTICE '4ï¿½ Loop Fornecedor(%)',v_reg_fornecedor.nome;
                   
                   --
                   -- GRAVA LOG
                   --
-                  UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || ' \n \n           4º Loop Fornecedor ' || TRIM(TO_CHAR(v_reg_fornecedor.idfor, '9999999999')) || '-' || v_reg_fornecedor.nome || ' Contrato: ' || v_reg_fornecedor.codigo  WHERE idlogguia = v_id_log;
+                  UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || ' \n \n           4ï¿½ Loop Fornecedor ' || TRIM(TO_CHAR(v_reg_fornecedor.idfor, '9999999999')) || '-' || v_reg_fornecedor.nome || ' Contrato: ' || v_reg_fornecedor.codigo  WHERE idlogguia = v_id_log;
                   
                   v_existe_estoque := 1;
                   
@@ -719,21 +719,21 @@ BEGIN
                   v_qtde_forn:=ROUND((v_qtde_necessaria * v_percentual_forn) / 100 );
                   
                   --
-                  -- Verifica quantidade de saldo a ser fornecida é < 0
-                  -- Deve ser verificado por questões de arredondamento,
-                  -- evitando enviar uma qtde maior que a necessária
+                  -- Verifica quantidade de saldo a ser fornecida ï¿½ < 0
+                  -- Deve ser verificado por questï¿½es de arredondamento,
+                  -- evitando enviar uma qtde maior que a necessï¿½ria
                   
                   v_qtde_nec_saldo_ant := v_qtde_necessaria_saldo;
                   v_qtde_necessaria_saldo:=v_qtde_necessaria_saldo - v_qtde_forn;
                   
-                  RAISE NOTICE 'Qtde disponível(%)',v_qtde_disponivel;
+                  RAISE NOTICE 'Qtde disponï¿½vel(%)',v_qtde_disponivel;
                   RAISE NOTICE 'Percentual(%)',v_percentual_forn;
                   RAISE NOTICE 'Qtde a fornecer(%)',v_qtde_forn;
                   
                   --
                   -- GRAVA LOG
                   --
-                  UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || '  \n           Qtde disponível: ' || TRIM(TO_CHAR(v_qtde_disponivel, '9999999999.99')) WHERE idlogguia = v_id_log;
+                  UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || '  \n           Qtde disponï¿½vel: ' || TRIM(TO_CHAR(v_qtde_disponivel, '9999999999.99')) WHERE idlogguia = v_id_log;
                   
                   UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || '  \n           Percentual: ' || TRIM(TO_CHAR(v_percentual_forn, '9999999999.9999999999')) WHERE idlogguia = v_id_log;
                   
@@ -753,7 +753,7 @@ BEGIN
                   
                   --
                   -- Qtde a ser fornecida do produto deve ser maior que zero
-                  -- Qtde disponível > qtde a ser fornecida
+                  -- Qtde disponï¿½vel > qtde a ser fornecida
                   
                   IF v_qtde_forn > 0 AND v_qtde_disponivel >= v_qtde_forn THEN
                   
@@ -775,7 +775,7 @@ BEGIN
                      
                      IF v_id_guia IS NULL THEN
                      
-                        -- Obtém ID próxima guia
+                        -- Obtï¿½m ID prï¿½xima guia
                         v_id_guia := nextval( 'alimentos.guia_remessa_idgui_seq'::text);
                         
                         IF v_inscritos = 'S' THEN
@@ -789,7 +789,7 @@ BEGIN
                            v_classe_aux := 'PN';
                         END IF;
                         
-                        -- Obtém o próximo sequencial anual para guia
+                        -- Obtï¿½m o prï¿½ximo sequencial anual para guia
                         SELECT INTO v_sequencial
                            COALESCE(MAX(sequencial),0) + 1
                            FROM alimentos.guia_remessa gui
@@ -838,7 +838,7 @@ BEGIN
                      END IF;
                      
                      v_id_guia_produto:=0;
-                     -- Verifica se produto já existe na guia
+                     -- Verifica se produto jï¿½ existe na guia
                      SELECT INTO v_id_guia_produto gup.idgup
                         FROM alimentos.guia_remessa_produto gup
                             ,alimentos.guia_remessa gui
@@ -932,7 +932,7 @@ BEGIN
                         --
                         UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || ' \n \n           *** Estoque insuficiente ***' WHERE idlogguia = v_id_log;
                         
-                        RETURN '-1 Fornecedor: ' ||  v_reg_fornecedor.nome || ' está com estoque insuficiente para o produto: ' || v_reg_produto.nome_compra || '.';
+                        RETURN '-1 Fornecedor: ' ||  v_reg_fornecedor.nome || ' estï¿½ com estoque insuficiente para o produto: ' || v_reg_produto.nome_compra || '.';
                         
                      END IF;
                      
@@ -941,8 +941,8 @@ BEGIN
                END LOOP;
                
                --
-               -- Identifica que existe contrato com fornecedor, porém
-               -- contrato está com estoque zerado.
+               -- Identifica que existe contrato com fornecedor, porï¿½m
+               -- contrato estï¿½ com estoque zerado.
                IF v_existe_estoque = 0 THEN
                
                   --
@@ -950,7 +950,7 @@ BEGIN
                   --
                   UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || ' \n \n      *** Estoque zerado ***' WHERE idlogguia = v_id_log;
                   
-                  RETURN '-1 Produto: ' ||  v_reg_produto.nome_compra || ' está com estoque zerado.';
+                  RETURN '-1 Produto: ' ||  v_reg_produto.nome_compra || ' estï¿½ com estoque zerado.';
                                     
                END IF;
                         
@@ -969,9 +969,9 @@ BEGIN
       --
       -- GRAVA LOG
       --
-      UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || ' \n \n     *** Fornecedor não possui produtos para fornecer no período. ***' WHERE idlogguia = v_id_log;
+      UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || ' \n \n     *** Fornecedor nï¿½o possui produtos para fornecer no perï¿½odo. ***' WHERE idlogguia = v_id_log;
       
-      RETURN '-1 Fornecedor não possui produtos para fornecer no período. Verifique os contratos elaborados com o fornecedor.';
+      RETURN '-1 Fornecedor nï¿½o possui produtos para fornecer no perï¿½odo. Verifique os contratos elaborados com o fornecedor.';
       
    ELSIF v_qtde_guia > 0 THEN
    
@@ -987,9 +987,9 @@ BEGIN
       --
       -- GRAVA LOG
       --
-      UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || ' \n \n     *** Não existem dados para gerar guias de acordo com os filtros informados. ***' WHERE idlogguia = v_id_log;
+      UPDATE alimentos.log_guia_remessa SET mensagem = mensagem || ' \n \n     *** Nï¿½o existem dados para gerar guias de acordo com os filtros informados. ***' WHERE idlogguia = v_id_log;
       
-      RETURN 'Não existem dados para gerar guias de acordo com os filtros informados.';
+      RETURN 'Nï¿½o existem dados para gerar guias de acordo com os filtros informados.';
       
    END IF;
    
@@ -1037,14 +1037,14 @@ DECLARE
     
     v_verificacao_provisorio:= 0;
     
-    -- verificar se a situação do cadastro da pessoa é provisório
+    -- verificar se a situaï¿½ï¿½o do cadastro da pessoa ï¿½ provisï¿½rio
     FOR v_registro IN SELECT situacao FROM cadastro.pessoa WHERE idpes=v_idpes LOOP
       IF v_registro.situacao = 'P' THEN
         v_verificacao_provisorio := 1;
       END IF;
     END LOOP;
     
-    -- Verificação para atualizar ou não a situação do cadastro da pessoa para Ativo
+    -- Verificaï¿½ï¿½o para atualizar ou nï¿½o a situaï¿½ï¿½o do cadastro da pessoa para Ativo
     IF LENGTH(v_uf_expedicao) > 0 AND v_rg > 0 AND v_verificacao_provisorio = 1 THEN
       EXECUTE 'UPDATE cadastro.pessoa SET situacao='||quote_literal('A')||'WHERE idpes='||quote_literal(v_idpes)||';';
     END IF;
@@ -1115,7 +1115,7 @@ DECLARE
     v_existe_aviso_conjuge    := 0;
     v_existe_aviso_responsavel  := 0;
     
-    -- obter os avisos já existentes para a pessoa
+    -- obter os avisos jï¿½ existentes para a pessoa
     FOR v_registro IN SELECT aviso FROM cadastro.aviso_nome WHERE idpes=v_idpes LOOP
       IF v_registro.aviso = 1 THEN
         v_existe_aviso_mae := 1;
@@ -1215,14 +1215,14 @@ DECLARE
     
     v_verificacao_provisorio:= 0;
     
-    -- verificar se a situação do cadastro da pessoa é provisório
+    -- verificar se a situaï¿½ï¿½o do cadastro da pessoa ï¿½ provisï¿½rio
     FOR v_registro IN SELECT situacao FROM cadastro.pessoa WHERE idpes=v_idpes LOOP
       IF v_registro.situacao = 'P' THEN
         v_verificacao_provisorio := 1;
       END IF;
     END LOOP;
     
-    -- Verificação para atualizar ou não a situação do cadastro da pessoa para Ativo
+    -- Verificaï¿½ï¿½o para atualizar ou nï¿½o a situaï¿½ï¿½o do cadastro da pessoa para Ativo
     IF v_cpf > 0 AND v_verificacao_provisorio = 1 THEN
       EXECUTE 'UPDATE cadastro.pessoa SET situacao='||quote_literal('A')||'WHERE idpes='||quote_literal(v_idpes)||';';
     END IF;
@@ -1255,14 +1255,14 @@ DECLARE
     
     v_verificacao_provisorio:= 0;
     
-    -- verificar se a situação do cadastro da pessoa é provisório
+    -- verificar se a situaï¿½ï¿½o do cadastro da pessoa ï¿½ provisï¿½rio
     FOR v_registro IN SELECT situacao FROM cadastro.pessoa WHERE idpes=v_idpes LOOP
       IF v_registro.situacao = 'P' THEN
         v_verificacao_provisorio := 1;
       END IF;
     END LOOP;
     
-    -- Verificação para atualizar ou não a situação do cadastro da pessoa para Ativo
+    -- Verificaï¿½ï¿½o para atualizar ou nï¿½o a situaï¿½ï¿½o do cadastro da pessoa para Ativo
     IF v_data_nascimento <> '' AND (LENGTH(v_nome_mae) > 0 OR v_idpes_mae > 0) AND v_verificacao_provisorio = 1 THEN
       EXECUTE 'UPDATE cadastro.pessoa SET situacao='||quote_literal('A')||'WHERE idpes='||quote_literal(v_idpes)||';';
     END IF;
@@ -1423,8 +1423,8 @@ DECLARE
   v_idcam_numero_secao_titulo_eleitor numeric;
   
   /*
-  consistenciacao.historico_campo.credibilidade: 1 = Máxima, 2 = Alta, 3 = Média, 4 = Baixa, 5 = Sem credibilidade
-  cadastro.pessoa.origem_gravacao: M = Migração, U = Usuário, C = Rotina de confrontação, O = Oscar
+  consistenciacao.historico_campo.credibilidade: 1 = Mï¿½xima, 2 = Alta, 3 = Mï¿½dia, 4 = Baixa, 5 = Sem credibilidade
+  cadastro.pessoa.origem_gravacao: M = Migraï¿½ï¿½o, U = Usuï¿½rio, C = Rotina de confrontaï¿½ï¿½o, O = Oscar
   */
   BEGIN
     v_idpes         := NEW.idpes;
@@ -1517,9 +1517,9 @@ DECLARE
       v_origem_gravacao := v_registro.origem_gravacao;
     END LOOP;
     
-    IF v_origem_gravacao = 'U' OR v_origem_gravacao = 'O' THEN -- os dados foram editados pelo usuário ou pelo usuário do Oscar
+    IF v_origem_gravacao = 'U' OR v_origem_gravacao = 'O' THEN -- os dados foram editados pelo usuï¿½rio ou pelo usuï¿½rio do Oscar
       v_nova_credibilidade := v_credibilidade_maxima;
-    ELSIF v_origem_gravacao = 'M' THEN -- os dados foram originados por migração
+    ELSIF v_origem_gravacao = 'M' THEN -- os dados foram originados por migraï¿½ï¿½o
       v_nova_credibilidade := v_credibilidade_alta;
     END IF;
     
@@ -1533,7 +1533,7 @@ DECLARE
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_data_expedicao_rg||','||v_nova_credibilidade||');';
       END IF;
     
-      -- DATA DE EMISSÃO CERTIDÃO CIVIL
+      -- DATA DE EMISSï¿½O CERTIDï¿½O CIVIL
       v_aux_data_nova := COALESCE(TO_CHAR (v_data_emissao_cert_civil_nova, 'DD/MM/YYYY'), '');
       v_aux_data_antiga := COALESCE(TO_CHAR (v_data_emissao_cert_civil_antiga, 'DD/MM/YYYY'), '');
       
@@ -1541,7 +1541,7 @@ DECLARE
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_data_emissao_certidao_civil||','||v_nova_credibilidade||');';
       END IF;
     
-      -- DATA DE EMISSÃO CARTEIRA DE TRABALHO
+      -- DATA DE EMISSï¿½O CARTEIRA DE TRABALHO
       v_aux_data_nova := COALESCE(TO_CHAR (v_data_emissao_cart_trabalho_nova, 'DD/MM/YYYY'), '');
       v_aux_data_antiga := COALESCE(TO_CHAR (v_data_emissao_cart_trabalho_antiga, 'DD/MM/YYYY'), '');
       
@@ -1549,7 +1549,7 @@ DECLARE
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_data_emissao_carteira_trabalho||','||v_nova_credibilidade||');';
       END IF;
       
-      -- ORGÃO EXPEDIDOR DO RG
+      -- ORGï¿½O EXPEDIDOR DO RG
       IF v_orgao_expedicao_rg_novo <> v_orgao_expedicao_rg_antigo THEN
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_orgao_expedidor_rg||','||v_nova_credibilidade||');';
       END IF;
@@ -1589,37 +1589,37 @@ DECLARE
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_tipo_certidao_civil||','||v_nova_credibilidade||');';
       END IF;
       
-      -- NÚMERO TERMO CERTIDAO CIVIL
+      -- Nï¿½MERO TERMO CERTIDAO CIVIL
       IF v_numero_termo_certidao_civil_novo <> v_numero_termo_certidao_civil_antigo THEN
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_numero_termo_certidao_civil||','||v_nova_credibilidade||');';
       END IF;
       
-      -- NÚMERO LIVRO CERTIDAO CIVIL
+      -- Nï¿½MERO LIVRO CERTIDAO CIVIL
       IF v_numero_livro_certidao_civil_novo <> v_numero_livro_certidao_civil_antigo THEN
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_numero_livro_certidao_civil||','||v_nova_credibilidade||');';
       END IF;
       
-      -- NÚMERO FOLHA CERTIDAO CIVIL
+      -- Nï¿½MERO FOLHA CERTIDAO CIVIL
       IF v_numero_folha_certidao_civil_novo <> v_numero_folha_certidao_civil_antigo THEN
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_numero_folha_certidao_civil||','||v_nova_credibilidade||');';
       END IF;
     
-      -- CARTÓRIO CERTIDÃO CIVIL
+      -- CARTï¿½RIO CERTIDï¿½O CIVIL
       IF v_cartorio_certidao_civil_novo <> v_cartorio_certidao_civil_antigo THEN
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_cartorio_certidao_civil||','||v_nova_credibilidade||');';
       END IF;
     
-      -- UF EXPEDIÇÃO RG
+      -- UF EXPEDIï¿½ï¿½O RG
       IF v_uf_expedicao_rg_novo <> v_uf_expedicao_rg_antigo THEN
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_uf_expedicao_rg||','||v_nova_credibilidade||');';
       END IF;
     
-      -- UF EMISSÃO CERTIDAO CIVIL
+      -- UF EMISSï¿½O CERTIDAO CIVIL
       IF v_uf_emissao_certidao_civil_novo <> v_uf_emissao_certidao_civil_antigo THEN
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_uf_emissao_certidao_civil||','||v_nova_credibilidade||');';
       END IF;
     
-      -- UF EMISSÃO CARTEIRA DE TRABALHO
+      -- UF EMISSï¿½O CARTEIRA DE TRABALHO
       IF v_uf_emissao_carteira_trabalho_novo <> v_uf_emissao_carteira_trabalho_antigo THEN
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_uf_emissao_carteira_trabalho||','||v_nova_credibilidade||');';
       END IF;
@@ -1630,15 +1630,15 @@ DECLARE
     IF TRIM(v_data_expedicao_rg_nova)='' OR v_data_expedicao_rg_nova IS NULL THEN
       EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_data_expedicao_rg||','||v_sem_credibilidade||');';
     END IF;
-    -- DATA DE EMISSÃO CERTIDÃO CIVIL
+    -- DATA DE EMISSï¿½O CERTIDï¿½O CIVIL
     IF TRIM(v_data_emissao_cert_civil_nova)='' OR v_data_emissao_cert_civil_nova IS NULL THEN
       EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_data_emissao_certidao_civil||','||v_sem_credibilidade||');';
     END IF;
-    -- DATA DE EMISSÃO CARTEIRA DE TRABALHO
+    -- DATA DE EMISSï¿½O CARTEIRA DE TRABALHO
     IF TRIM(v_data_emissao_cart_trabalho_nova)='' OR v_data_emissao_cart_trabalho_nova IS NULL THEN
       EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_data_emissao_carteira_trabalho||','||v_sem_credibilidade||');';
     END IF;
-    -- ORGÃO EXPEDIDOR DO RG
+    -- ORGï¿½O EXPEDIDOR DO RG
     IF v_orgao_expedicao_rg_novo <= 0 OR v_orgao_expedicao_rg_novo IS NULL THEN
       EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_orgao_expedidor_rg||','||v_sem_credibilidade||');';
     END IF;
@@ -1670,31 +1670,31 @@ DECLARE
     IF v_tipo_certidao_civil_novo <= 0 OR v_tipo_certidao_civil_novo IS NULL THEN
       EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_tipo_certidao_civil||','||v_sem_credibilidade||');';
     END IF;
-    -- NÚMERO TERMO CERTIDAO CIVIL
+    -- Nï¿½MERO TERMO CERTIDAO CIVIL
     IF v_numero_termo_certidao_civil_novo <= 0 OR v_numero_termo_certidao_civil_novo IS NULL THEN
       EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_numero_termo_certidao_civil||','||v_sem_credibilidade||');';
     END IF;
-    -- NÚMERO LIVRO CERTIDAO CIVIL
+    -- Nï¿½MERO LIVRO CERTIDAO CIVIL
     IF v_numero_livro_certidao_civil_novo <= 0 OR v_numero_livro_certidao_civil_novo IS NULL THEN
       EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_numero_livro_certidao_civil||','||v_sem_credibilidade||');';
     END IF;
-    -- NÚMERO FOLHA CERTIDAO CIVIL
+    -- Nï¿½MERO FOLHA CERTIDAO CIVIL
     IF v_numero_folha_certidao_civil_novo <= 0 OR v_numero_folha_certidao_civil_novo IS NULL THEN
       EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_numero_folha_certidao_civil||','||v_sem_credibilidade||');';
     END IF;
-    -- CARTÓRIO CERTIDÃO CIVIL
+    -- CARTï¿½RIO CERTIDï¿½O CIVIL
     IF TRIM(v_cartorio_certidao_civil_novo)='' OR v_cartorio_certidao_civil_novo IS NULL THEN
       EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_cartorio_certidao_civil||','||v_sem_credibilidade||');';
     END IF;
-    -- UF EXPEDIÇÃO RG
+    -- UF EXPEDIï¿½ï¿½O RG
     IF TRIM(v_uf_expedicao_rg_novo)='' OR v_uf_expedicao_rg_novo IS NULL THEN
       EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_uf_expedicao_rg||','||v_sem_credibilidade||');';
     END IF;
-    -- UF EMISSÃO CERTIDAO CIVIL
+    -- UF EMISSï¿½O CERTIDAO CIVIL
     IF TRIM(v_uf_emissao_certidao_civil_novo)='' OR v_uf_emissao_certidao_civil_novo IS NULL THEN
       EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_uf_emissao_certidao_civil||','||v_sem_credibilidade||');';
     END IF;
-    -- UF EMISSÃO CARTEIRA DE TRABALHO
+    -- UF EMISSï¿½O CARTEIRA DE TRABALHO
     IF TRIM(v_uf_emissao_carteira_trabalho_novo)='' OR v_uf_emissao_carteira_trabalho_novo IS NULL THEN
       EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_uf_emissao_carteira_trabalho||','||v_sem_credibilidade||');';
     END IF;
@@ -1787,8 +1787,8 @@ DECLARE
   v_idcam_cidade      numeric;
   
   /*
-  consistenciacao.historico_campo.credibilidade: 1 = Máxima, 2 = Alta, 3 = Média, 4 = Baixa, 5 = Sem credibilidade
-  cadastro.pessoa.origem_gravacao: M = Migração, U = Usuário, C = Rotina de confrontação, O = Oscar
+  consistenciacao.historico_campo.credibilidade: 1 = Mï¿½xima, 2 = Alta, 3 = Mï¿½dia, 4 = Baixa, 5 = Sem credibilidade
+  cadastro.pessoa.origem_gravacao: M = Migraï¿½ï¿½o, U = Usuï¿½rio, C = Rotina de confrontaï¿½ï¿½o, O = Oscar
   */
   BEGIN
     v_idpes       := NEW.idpes;
@@ -1864,9 +1864,9 @@ DECLARE
       v_origem_gravacao := v_registro.origem_gravacao;
     END LOOP;
     
-    IF v_origem_gravacao = 'U' OR v_origem_gravacao = 'O' THEN -- os dados foram editados pelo usuário ou usuário do Oscar
+    IF v_origem_gravacao = 'U' OR v_origem_gravacao = 'O' THEN -- os dados foram editados pelo usuï¿½rio ou usuï¿½rio do Oscar
       v_nova_credibilidade := v_credibilidade_maxima;
-    ELSIF v_origem_gravacao = 'M' THEN -- os dados foram originados por migração
+    ELSIF v_origem_gravacao = 'M' THEN -- os dados foram originados por migraï¿½ï¿½o
       v_nova_credibilidade := v_credibilidade_alta;
     END IF;
     
@@ -2060,8 +2060,8 @@ DECLARE
   v_idcam_complemento   numeric;
   
   /*
-  consistenciacao.historico_campo.credibilidade: 1 = Máxima, 2 = Alta, 3 = Média, 4 = Baixa, 5 = Sem credibilidade
-  cadastro.pessoa.origem_gravacao: M = Migração, U = Usuário, C = Rotina de confrontação, O = Oscar
+  consistenciacao.historico_campo.credibilidade: 1 = Mï¿½xima, 2 = Alta, 3 = Mï¿½dia, 4 = Baixa, 5 = Sem credibilidade
+  cadastro.pessoa.origem_gravacao: M = Migraï¿½ï¿½o, U = Usuï¿½rio, C = Rotina de confrontaï¿½ï¿½o, O = Oscar
   */
   BEGIN
     v_idpes       := NEW.idpes;
@@ -2118,9 +2118,9 @@ DECLARE
     FOR v_registro IN EXECUTE v_comando LOOP
       v_origem_gravacao := v_registro.origem_gravacao;
     END LOOP;
-    IF v_origem_gravacao = 'U' OR v_origem_gravacao = 'O' THEN -- os dados foram editados pelo usuário ou pelo usuário do Oscar
+    IF v_origem_gravacao = 'U' OR v_origem_gravacao = 'O' THEN -- os dados foram editados pelo usuï¿½rio ou pelo usuï¿½rio do Oscar
       v_nova_credibilidade := v_credibilidade_maxima;
-    ELSIF v_origem_gravacao = 'M' THEN -- os dados foram originados por migração
+    ELSIF v_origem_gravacao = 'M' THEN -- os dados foram originados por migraï¿½ï¿½o
       v_nova_credibilidade := v_credibilidade_alta;
     END IF;
     IF v_tipo_endereco = 1 THEN
@@ -2278,8 +2278,8 @@ DECLARE
   v_idcam_data_uniao    numeric;
   
   /*
-  consistenciacao.historico_campo.credibilidade: 1 = Máxima, 2 = Alta, 3 = Média, 4 = Baixa, 5 = Sem credibilidade
-  cadastro.pessoa.origem_gravacao: M = Migração, U = Usuário, C = Rotina de confrontação, O = Oscar
+  consistenciacao.historico_campo.credibilidade: 1 = Mï¿½xima, 2 = Alta, 3 = Mï¿½dia, 4 = Baixa, 5 = Sem credibilidade
+  cadastro.pessoa.origem_gravacao: M = Migraï¿½ï¿½o, U = Usuï¿½rio, C = Rotina de confrontaï¿½ï¿½o, O = Oscar
   */
   BEGIN
     v_idpes       := NEW.idpes;
@@ -2355,9 +2355,9 @@ DECLARE
       v_origem_gravacao := v_registro.origem_gravacao;
     END LOOP;
     
-    IF v_origem_gravacao = 'U' OR v_origem_gravacao = 'O' THEN -- os dados foram editados pelo usuário ou pelo usuário do Oscar
+    IF v_origem_gravacao = 'U' OR v_origem_gravacao = 'O' THEN -- os dados foram editados pelo usuï¿½rio ou pelo usuï¿½rio do Oscar
       v_nova_credibilidade := v_credibilidade_maxima;
-    ELSIF v_origem_gravacao = 'M' THEN -- os dados foram originados por migração
+    ELSIF v_origem_gravacao = 'M' THEN -- os dados foram originados por migraï¿½ï¿½o
       v_nova_credibilidade := v_credibilidade_alta;
     END IF;
     
@@ -2371,7 +2371,7 @@ DECLARE
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_data_nasc||','||v_nova_credibilidade||');';
       END IF;
     
-      -- DATA DE UNIÃO
+      -- DATA DE UNIï¿½O
       v_aux_data_nova := COALESCE(TO_CHAR (v_data_uniao_nova, 'DD/MM/YYYY'), '');
       v_aux_data_antiga := COALESCE(TO_CHAR (v_data_uniao_antiga, 'DD/MM/YYYY'), '');
       
@@ -2379,7 +2379,7 @@ DECLARE
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_data_uniao||','||v_nova_credibilidade||');';
       END IF;
     
-      -- DATA DE ÓBITO
+      -- DATA DE ï¿½BITO
       v_aux_data_nova := COALESCE(TO_CHAR (v_data_obito_nova, 'DD/MM/YYYY'), '');
       v_aux_data_antiga := COALESCE(TO_CHAR (v_data_obito_antiga, 'DD/MM/YYYY'), '');
       
@@ -2395,7 +2395,7 @@ DECLARE
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_data_chegada_brasil||','||v_nova_credibilidade||');';
       END IF;
       
-      -- NOME DA MÃE
+      -- NOME DA Mï¿½E
       IF v_nome_mae_novo <> v_nome_mae_antigo THEN
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_nome_mae||','||v_nova_credibilidade||');';
       END IF;
@@ -2415,7 +2415,7 @@ DECLARE
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_nome_responsavel||','||v_nova_credibilidade||');';
       END IF;
       
-      -- NOME ÚLTIMA EMPRESA
+      -- NOME ï¿½LTIMA EMPRESA
       IF v_nome_ultima_empresa_novo <> v_nome_ultima_empresa_antigo THEN
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_nome_ultima_empresa||','||v_nova_credibilidade||');';
       END IF;
@@ -2425,7 +2425,7 @@ DECLARE
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_sexo||','||v_nova_credibilidade||');';
       END IF;
       
-      -- ID OCUPAÇÃO PROFISSIONAL
+      -- ID OCUPAï¿½ï¿½O PROFISSIONAL
       IF v_id_ocupacao_novo <> v_id_ocupacao_antigo THEN
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_ocupacao||','||v_nova_credibilidade||');';
       END IF;
@@ -2452,11 +2452,11 @@ DECLARE
     IF TRIM(v_data_nasc_nova)='' OR v_data_nasc_nova IS NULL THEN
       EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_data_nasc||','||v_sem_credibilidade||');';
     END IF;
-    -- DATA DE UNIÃO
+    -- DATA DE UNIï¿½O
     IF TRIM(v_data_uniao_nova)='' OR v_data_uniao_nova IS NULL THEN
       EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_data_uniao||','||v_sem_credibilidade||');';
     END IF;
-    -- DATA DE ÓBITO
+    -- DATA DE ï¿½BITO
     IF TRIM(v_data_obito_nova)='' OR v_data_obito_nova IS NULL THEN
       EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_data_obito||','||v_sem_credibilidade||');';
     END IF;
@@ -2464,7 +2464,7 @@ DECLARE
     IF TRIM(v_data_chegada_brasil_nova)='' OR v_data_chegada_brasil_nova IS NULL THEN
       EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_data_chegada_brasil||','||v_sem_credibilidade||');';
     END IF;
-    -- NOME DA MÃE
+    -- NOME DA Mï¿½E
     IF TRIM(v_nome_mae_novo)='' OR v_nome_mae_novo IS NULL THEN
       EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_nome_mae||','||v_sem_credibilidade||');';
     END IF;
@@ -2480,7 +2480,7 @@ DECLARE
     IF TRIM(v_nome_responsavel_novo)='' OR v_nome_responsavel_novo IS NULL THEN
       EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_nome_responsavel||','||v_sem_credibilidade||');';
     END IF;
-    -- NOME ÚLTIMA EMPRESA
+    -- NOME ï¿½LTIMA EMPRESA
     IF TRIM(v_nome_ultima_empresa_novo)='' OR v_nome_ultima_empresa_novo IS NULL THEN
       EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_nome_ultima_empresa||','||v_sem_credibilidade||');';
     END IF;
@@ -2488,7 +2488,7 @@ DECLARE
     IF TRIM(v_sexo_novo)='' OR v_sexo_novo IS NULL THEN
       EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_sexo||','||v_sem_credibilidade||');';
     END IF;
-    -- ID OCUPAÇÃO PROFISSIONAL
+    -- ID OCUPAï¿½ï¿½O PROFISSIONAL
     IF v_id_ocupacao_novo <= 0 OR v_id_ocupacao_novo IS NULL THEN
       EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_ocupacao||','||v_sem_credibilidade||');';
     END IF;
@@ -2549,8 +2549,8 @@ DECLARE
   v_idcam_fone      numeric;
   
   /*
-  consistenciacao.historico_campo.credibilidade: 1 = Máxima, 2 = Alta, 3 = Média, 4 = Baixa, 5 = Sem credibilidade
-  cadastro.pessoa.origem_gravacao: M = Migração, U = Usuário, C = Rotina de confrontação, O = Oscar
+  consistenciacao.historico_campo.credibilidade: 1 = Mï¿½xima, 2 = Alta, 3 = Mï¿½dia, 4 = Baixa, 5 = Sem credibilidade
+  cadastro.pessoa.origem_gravacao: M = Migraï¿½ï¿½o, U = Usuï¿½rio, C = Rotina de confrontaï¿½ï¿½o, O = Oscar
   */
   BEGIN
     v_idpes   := NEW.idpes;
@@ -2585,9 +2585,9 @@ DECLARE
       v_origem_gravacao := v_registro.origem_gravacao;
     END LOOP;
     
-    IF v_origem_gravacao = 'U' OR v_origem_gravacao = 'O' THEN -- os dados foram editados pelo usuário ou usuário do Oscar
+    IF v_origem_gravacao = 'U' OR v_origem_gravacao = 'O' THEN -- os dados foram editados pelo usuï¿½rio ou usuï¿½rio do Oscar
       v_nova_credibilidade := v_credibilidade_maxima;
-    ELSIF v_origem_gravacao = 'M' THEN -- os dados foram originados por migração
+    ELSIF v_origem_gravacao = 'M' THEN -- os dados foram originados por migraï¿½ï¿½o
       v_nova_credibilidade := v_credibilidade_alta;
     END IF;
     
@@ -2644,7 +2644,7 @@ DECLARE
   v_registro    record;
   
   BEGIN
-    -- verificar se já existe histórico para o campo
+    -- verificar se jï¿½ existe histï¿½rico para o campo
     v_comando := 'SELECT idcam FROM consistenciacao.historico_campo WHERE idpes='||quote_literal(v_idpes)||' AND idcam='||quote_literal(v_idcam)||';';
     FOR v_registro IN EXECUTE v_comando LOOP
       v_existe_historico := v_registro.idcam;
@@ -2691,8 +2691,8 @@ DECLARE
   v_idcam_inscricao_estadual  numeric;
   
   /*
-  consistenciacao.historico_campo.credibilidade: 1 = Máxima, 2 = Alta, 3 = Média, 4 = Baixa, 5 = Sem credibilidade
-  cadastro.pessoa.origem_gravacao: M = Migração, U = Usuário, C = Rotina de confrontação, O = Oscar
+  consistenciacao.historico_campo.credibilidade: 1 = Mï¿½xima, 2 = Alta, 3 = Mï¿½dia, 4 = Baixa, 5 = Sem credibilidade
+  cadastro.pessoa.origem_gravacao: M = Migraï¿½ï¿½o, U = Usuï¿½rio, C = Rotina de confrontaï¿½ï¿½o, O = Oscar
   */
   BEGIN
     v_idpes       := NEW.idpes;
@@ -2724,9 +2724,9 @@ DECLARE
       v_origem_gravacao := v_registro.origem_gravacao;
     END LOOP;
     
-    IF v_origem_gravacao = 'U' OR v_origem_gravacao = 'O' THEN -- os dados foram editados pelo usuário ou pelo usuário do Oscar
+    IF v_origem_gravacao = 'U' OR v_origem_gravacao = 'O' THEN -- os dados foram editados pelo usuï¿½rio ou pelo usuï¿½rio do Oscar
       v_nova_credibilidade := v_credibilidade_maxima;
-    ELSIF v_origem_gravacao = 'M' THEN -- os dados foram originados por migração
+    ELSIF v_origem_gravacao = 'M' THEN -- os dados foram originados por migraï¿½ï¿½o
       v_nova_credibilidade := v_credibilidade_alta;
     END IF;
     
@@ -2742,7 +2742,7 @@ DECLARE
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_fantasia||','||v_nova_credibilidade||');';
       END IF;
       
-      -- INSCRIÇÃO ESTADUAL
+      -- INSCRIï¿½ï¿½O ESTADUAL
       IF v_inscricao_estadual_novo <> v_inscricao_estadual_antigo THEN
         EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_inscricao_estadual||','||v_nova_credibilidade||');';
       END IF;
@@ -2758,7 +2758,7 @@ DECLARE
       EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_fantasia||','||v_sem_credibilidade||');';
     END IF;
     
-    -- INSCRIÇÃO ESTADUAL
+    -- INSCRIï¿½ï¿½O ESTADUAL
     IF v_inscricao_estadual_novo <= 0 OR v_inscricao_estadual_novo IS NULL THEN
       EXECUTE 'SELECT consistenciacao.fcn_gravar_historico_campo('||v_idpes||','||v_idcam_inscricao_estadual||','||v_sem_credibilidade||');';
     END IF;
@@ -2799,8 +2799,8 @@ DECLARE
   v_idcam_url     numeric;
   
   /*
-  consistenciacao.historico_campo.credibilidade: 1 = Máxima, 2 = Alta, 3 = Média, 4 = Baixa, 5 = Sem credibilidade
-  cadastro.pessoa.origem_gravacao: M = Migração, U = Usuário, C = Rotina de confrontação, O = Oscar
+  consistenciacao.historico_campo.credibilidade: 1 = Mï¿½xima, 2 = Alta, 3 = Mï¿½dia, 4 = Baixa, 5 = Sem credibilidade
+  cadastro.pessoa.origem_gravacao: M = Migraï¿½ï¿½o, U = Usuï¿½rio, C = Rotina de confrontaï¿½ï¿½o, O = Oscar
   */
   BEGIN
     v_idpes   := NEW.idpes;
@@ -2832,9 +2832,9 @@ DECLARE
       v_origem_gravacao := v_registro.origem_gravacao;
     END LOOP;
     
-    IF v_origem_gravacao = 'U' OR v_origem_gravacao = 'O' THEN -- os dados foram editados pelo usuário ou pelo usuário do Oscar
+    IF v_origem_gravacao = 'U' OR v_origem_gravacao = 'O' THEN -- os dados foram editados pelo usuï¿½rio ou pelo usuï¿½rio do Oscar
       v_nova_credibilidade := v_credibilidade_maxima;
-    ELSIF v_origem_gravacao = 'M' THEN -- os dados foram originados por migração
+    ELSIF v_origem_gravacao = 'M' THEN -- os dados foram originados por migraï¿½ï¿½o
       v_nova_credibilidade := v_credibilidade_alta;
     END IF;
     
@@ -2941,7 +2941,7 @@ BEGIN
     FOR v_reg IN SELECT cpf FROM fisica_cpf WHERE idpes = v_idpesNovo LOOP
       v_cpfIdpesNovo := v_reg.cpf;
     END LOOP;
-    --Verificando se o idpess já possuí um CPF--
+    --Verificando se o idpess jï¿½ possuï¿½ um CPF--
     IF v_cpfIdpesNovo IS NULL THEN
       INSERT INTO fisica_cpf (idpes, cpf) VALUES (v_idpesNovo,v_cpfAux);
     END IF;
@@ -3162,7 +3162,7 @@ DECLARE
   v_idpesNovo  ALIAS for $2;
   v_reg      record;
 BEGIN
-  --Unificando registros das tabelas do SGSP (Sistema de Gererenciamento de Serviços Públicos)--
+  --Unificando registros das tabelas do SGSP (Sistema de Gererenciamento de Serviï¿½os Pï¿½blicos)--
   SET search_path = servicos, pg_catalog;
   --FUNCIONARIO_AUTORIZADO--
   FOR v_reg IN SELECT *
@@ -3226,7 +3226,7 @@ BEGIN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
         
-      -- GRAVA HISTÓRICO PARA TABELA BAIRRO
+      -- GRAVA HISTï¿½RICO PARA TABELA BAIRRO
       INSERT INTO historico.bairro
       (idbai, idmun, nome, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
       (v_idbai, v_idmun, v_nome, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, 'E');
@@ -3272,7 +3272,7 @@ BEGIN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
         
-      -- GRAVA HISTÓRICO PARA TABELA CEP_LOGRADOURO
+      -- GRAVA HISTï¿½RICO PARA TABELA CEP_LOGRADOURO
       INSERT INTO historico.cep_logradouro
       (cep, idlog, nroini, nrofin, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
       (v_cep, v_idlog, v_nroini, v_nrofin, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, 'E');
@@ -3317,7 +3317,7 @@ BEGIN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
         
-      -- GRAVA HISTÓRICO PARA TABELA CEP_LOGRADOURO_BAIRRO
+      -- GRAVA HISTï¿½RICO PARA TABELA CEP_LOGRADOURO_BAIRRO
       INSERT INTO historico.cep_logradouro_bairro
       (idbai, idlog, cep, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
       (v_idbai, v_idlog, v_cep, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, 'E');
@@ -3393,7 +3393,7 @@ BEGIN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
         
-      -- GRAVA HISTÓRICO PARA TABELA DOCUMENTO
+      -- GRAVA HISTï¿½RICO PARA TABELA DOCUMENTO
       INSERT INTO historico.documento
       (idpes, sigla_uf_exp_rg, rg, data_exp_rg, tipo_cert_civil, num_termo, num_livro, num_folha, data_emissao_cert_civil, sigla_uf_cert_civil, sigla_uf_cart_trabalho, cartorio_cert_civil, num_cart_trabalho, serie_cart_trabalho, data_emissao_cart_trabalho, num_tit_eleitor, zona_tit_eleitor, secao_tit_eleitor, idorg_exp_rg, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
       (v_idpes, v_sigla_uf_exp_rg, v_rg, v_data_exp_rg, v_tipo_cert_civil, v_num_termo, v_num_livro, v_num_folha, v_data_emissao_cert_civil, v_sigla_uf_cert_civil, v_sigla_uf_cart_trabalho, v_cartorio_cert_civil, v_num_cart_trabalho, v_serie_cart_trabalho, v_data_emissao_cart_trabalho, v_num_tit_eleitor, v_zona_tit_eleitor, v_secao_tit_eleitor, v_idorg_exp_rg, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, 'E');
@@ -3455,7 +3455,7 @@ BEGIN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
         
-      -- GRAVA HISTÓRICO PARA TABELA ENDERECO_EXTERNO
+      -- GRAVA HISTï¿½RICO PARA TABELA ENDERECO_EXTERNO
       INSERT INTO historico.endereco_externo
       (idpes, tipo, sigla_uf, idtlog, logradouro, numero, letra, complemento, bairro, cep, cidade, reside_desde, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
       (v_idpes, v_tipo, v_sigla_uf, v_idtlog, v_logradouro, v_numero, v_letra, v_complemento, v_bairro, v_cep, v_cidade, v_reside_desde, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, 'E');
@@ -3511,7 +3511,7 @@ BEGIN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
         
-      -- GRAVA HISTÓRICO PARA TABELA ENDERECO_PESSOA
+      -- GRAVA HISTï¿½RICO PARA TABELA ENDERECO_PESSOA
       INSERT INTO historico.endereco_pessoa
       (idpes, tipo, cep, idlog, idbai, numero, letra, complemento, reside_desde, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
       (v_idpes, v_tipo, v_cep, v_idlog, v_idbai, v_numero, v_letra, v_complemento, v_reside_desde, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, 'E');
@@ -3593,7 +3593,7 @@ BEGIN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
         
-      -- GRAVA HISTÓRICO PARA TABELA FISICA
+      -- GRAVA HISTï¿½RICO PARA TABELA FISICA
       INSERT INTO historico.fisica
       (idpes, data_nasc, sexo, idpes_mae, idpes_pai, idpes_responsavel, idesco, ideciv, idpes_con, data_uniao, data_obito, nacionalidade, idpais_estrangeiro, data_chegada_brasil, idmun_nascimento, ultima_empresa, idocup, nome_mae, nome_pai, nome_conjuge, nome_responsavel, justificativa_provisorio, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
       (v_idpes, v_data_nasc, v_sexo, v_idpes_mae, v_idpes_pai, v_idpes_responsavel, v_idesco, v_ideciv, v_idpes_con, v_data_uniao, v_data_obito, v_nacionalidade, v_idpais_estrangeiro, v_data_chegada_brasil, v_idmun_nascimento, v_ultima_empresa, v_idocup, v_nome_mae, v_nome_pai, v_nome_conjuge, v_nome_responsavel, v_justificativa_provisorio, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, 'E');
@@ -3635,7 +3635,7 @@ BEGIN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
         
-      -- GRAVA HISTÓRICO PARA TABELA FISICA_CPF
+      -- GRAVA HISTï¿½RICO PARA TABELA FISICA_CPF
       INSERT INTO historico.fisica_cpf
       (idpes, cpf, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
       (v_idpes, v_cpf, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, 'E');
@@ -3681,7 +3681,7 @@ BEGIN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
         
-      -- GRAVA HISTÓRICO PARA TABELA FONE_PESSOA
+      -- GRAVA HISTï¿½RICO PARA TABELA FONE_PESSOA
       INSERT INTO historico.fone_pessoa
       (idpes, tipo, ddd, fone, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
       (v_idpes, v_tipo, v_ddd, v_fone, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, 'E');
@@ -3729,7 +3729,7 @@ BEGIN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
         
-      -- GRAVA HISTÓRICO PARA TABELA FUNCIONARIO
+      -- GRAVA HISTï¿½RICO PARA TABELA FUNCIONARIO
       INSERT INTO historico.funcionario
       (matricula, idins, idset, idpes, situacao, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
       (v_matricula, v_idins, v_idset, v_idpes, v_situacao, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, 'E');
@@ -3775,7 +3775,7 @@ BEGIN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
         
-      -- GRAVA HISTÓRICO PARA TABELA JURIDICA
+      -- GRAVA HISTï¿½RICO PARA TABELA JURIDICA
       INSERT INTO historico.juridica
       (idpes, cnpj, fantasia, insc_estadual, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
       (v_idpes, v_cnpj, v_fantasia, v_insc_estadual, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, 'E');
@@ -3823,7 +3823,7 @@ BEGIN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
         
-      -- GRAVA HISTÓRICO PARA TABELA LOGRADOURO
+      -- GRAVA HISTï¿½RICO PARA TABELA LOGRADOURO
       INSERT INTO historico.logradouro
       (idlog, idtlog, nome, idmun, ident_oficial, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
       (v_idlog, v_idtlog, v_nome, v_idmun, v_ident_oficial, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, 'E');
@@ -3881,7 +3881,7 @@ BEGIN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
         
-      -- GRAVA HISTÓRICO PARA TABELA MUNICIPIO
+      -- GRAVA HISTï¿½RICO PARA TABELA MUNICIPIO
       INSERT INTO historico.municipio
       (idmun, sigla_uf, nome, area_km2, idmreg, idasmun, cod_ibge, geom, tipo, idmun_pai, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
       (v_idmun, v_sigla_uf, v_nome, v_area_km2, v_idmreg, v_idasmun, v_cod_ibge, v_geom, v_tipo, v_idmun_pai, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, 'E');
@@ -3931,7 +3931,7 @@ BEGIN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
         
-      -- GRAVA HISTÓRICO PARA TABELA PESSOA
+      -- GRAVA HISTï¿½RICO PARA TABELA PESSOA
       INSERT INTO historico.pessoa
       (idpes, nome, idpes_cad, data_cad, url, tipo, idpes_rev, data_rev, email, situacao, origem_gravacao, idsis_rev, idsis_cad, operacao) VALUES 
       (v_idpes, v_nome, v_idpes_cad, v_data_cad, v_url, v_tipo, v_idpes_rev, v_data_rev, v_email, v_situacao, v_origem_gravacao, v_idsis_rev, v_idsis_cad, 'E');
@@ -3973,7 +3973,7 @@ BEGIN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
         
-      -- GRAVA HISTÓRICO PARA TABELA SOCIO
+      -- GRAVA HISTï¿½RICO PARA TABELA SOCIO
       INSERT INTO historico.socio
       (idpes_juridica, idpes_fisica, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
       (v_idpes_juridica, v_idpes_fisica, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, 'E');
@@ -4019,7 +4019,7 @@ BEGIN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
         
-      -- GRAVA HISTÓRICO PARA TABELA BAIRRO
+      -- GRAVA HISTï¿½RICO PARA TABELA BAIRRO
       INSERT INTO historico.bairro
       (idbai, idmun, nome, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
       (v_idbai, v_idmun, v_nome, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, v_operacao);
@@ -4067,7 +4067,7 @@ BEGIN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
         
-      -- GRAVA HISTÓRICO PARA TABELA CEP_LOGRADOURO
+      -- GRAVA HISTï¿½RICO PARA TABELA CEP_LOGRADOURO
       INSERT INTO historico.cep_logradouro
       (cep, idlog, nroini, nrofin, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
       (v_cep, v_idlog, v_nroini, v_nrofin, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, v_operacao);
@@ -4113,7 +4113,7 @@ BEGIN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
         
-      -- GRAVA HISTÓRICO PARA TABELA CEP_LOGRADOURO_BAIRRO
+      -- GRAVA HISTï¿½RICO PARA TABELA CEP_LOGRADOURO_BAIRRO
       INSERT INTO historico.cep_logradouro_bairro
       (idbai, idlog, cep, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
       (v_idbai, v_idlog, v_cep, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, v_operacao);
@@ -4191,7 +4191,7 @@ BEGIN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
         
-      -- GRAVA HISTÓRICO PARA TABELA DOCUMENTO
+      -- GRAVA HISTï¿½RICO PARA TABELA DOCUMENTO
       INSERT INTO historico.documento
       (idpes, sigla_uf_exp_rg, rg, data_exp_rg, tipo_cert_civil, num_termo, num_livro, num_folha, data_emissao_cert_civil, sigla_uf_cert_civil, sigla_uf_cart_trabalho, cartorio_cert_civil, num_cart_trabalho, serie_cart_trabalho, data_emissao_cart_trabalho, num_tit_eleitor, zona_tit_eleitor, secao_tit_eleitor, idorg_exp_rg, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
       (v_idpes, v_sigla_uf_exp_rg, v_rg, v_data_exp_rg, v_tipo_cert_civil, v_num_termo, v_num_livro, v_num_folha, v_data_emissao_cert_civil, v_sigla_uf_cert_civil, v_sigla_uf_cart_trabalho, v_cartorio_cert_civil, v_num_cart_trabalho, v_serie_cart_trabalho, v_data_emissao_cart_trabalho, v_num_tit_eleitor, v_zona_tit_eleitor, v_secao_tit_eleitor, v_idorg_exp_rg, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, v_operacao);
@@ -4255,7 +4255,7 @@ BEGIN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
         
-      -- GRAVA HISTÓRICO PARA TABELA ENDERECO_EXTERNO
+      -- GRAVA HISTï¿½RICO PARA TABELA ENDERECO_EXTERNO
       INSERT INTO historico.endereco_externo
       (idpes, tipo, sigla_uf, idtlog, logradouro, numero, letra, complemento, bairro, cep, cidade, reside_desde, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
       (v_idpes, v_tipo, v_sigla_uf, v_idtlog, v_logradouro, v_numero, v_letra, v_complemento, v_bairro, v_cep, v_cidade, v_reside_desde, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, v_operacao);
@@ -4313,7 +4313,7 @@ BEGIN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
         
-      -- GRAVA HISTÓRICO PARA TABELA ENDERECO_PESSOA
+      -- GRAVA HISTï¿½RICO PARA TABELA ENDERECO_PESSOA
       INSERT INTO historico.endereco_pessoa
       (idpes, tipo, cep, idlog, idbai, numero, letra, complemento, reside_desde, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
       (v_idpes, v_tipo, v_cep, v_idlog, v_idbai, v_numero, v_letra, v_complemento, v_reside_desde, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, v_operacao);
@@ -4397,7 +4397,7 @@ BEGIN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
         
-      -- GRAVA HISTÓRICO PARA TABELA FISICA
+      -- GRAVA HISTï¿½RICO PARA TABELA FISICA
       INSERT INTO historico.fisica
       (idpes, data_nasc, sexo, idpes_mae, idpes_pai, idpes_responsavel, idesco, ideciv, idpes_con, data_uniao, data_obito, nacionalidade, idpais_estrangeiro, data_chegada_brasil, idmun_nascimento, ultima_empresa, idocup, nome_mae, nome_pai, nome_conjuge, nome_responsavel, justificativa_provisorio, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
       (v_idpes, v_data_nasc, v_sexo, v_idpes_mae, v_idpes_pai, v_idpes_responsavel, v_idesco, v_ideciv, v_idpes_con, v_data_uniao, v_data_obito, v_nacionalidade, v_idpais_estrangeiro, v_data_chegada_brasil, v_idmun_nascimento, v_ultima_empresa, v_idocup, v_nome_mae, v_nome_pai, v_nome_conjuge, v_nome_responsavel, v_justificativa_provisorio, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, v_operacao);
@@ -4441,7 +4441,7 @@ BEGIN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
         
-      -- GRAVA HISTÓRICO PARA TABELA FISICA_CPF
+      -- GRAVA HISTï¿½RICO PARA TABELA FISICA_CPF
       INSERT INTO historico.fisica_cpf
       (idpes, cpf, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
       (v_idpes, v_cpf, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, v_operacao);
@@ -4489,7 +4489,7 @@ BEGIN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
         
-      -- GRAVA HISTÓRICO PARA TABELA FONE_PESSOA
+      -- GRAVA HISTï¿½RICO PARA TABELA FONE_PESSOA
       INSERT INTO historico.fone_pessoa
       (idpes, tipo, ddd, fone, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
       (v_idpes, v_tipo, v_ddd, v_fone, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, v_operacao);
@@ -4539,7 +4539,7 @@ BEGIN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
         
-      -- GRAVA HISTÓRICO PARA TABELA FUNCIONARIO
+      -- GRAVA HISTï¿½RICO PARA TABELA FUNCIONARIO
       INSERT INTO historico.funcionario
       (matricula, idins, idset, idpes, situacao, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
       (v_matricula, v_idins, v_idset, v_idpes, v_situacao, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, v_operacao);
@@ -4587,7 +4587,7 @@ BEGIN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
         
-      -- GRAVA HISTÓRICO PARA TABELA JURIDICA
+      -- GRAVA HISTï¿½RICO PARA TABELA JURIDICA
       INSERT INTO historico.juridica
       (idpes, cnpj, fantasia, insc_estadual, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
       (v_idpes, v_cnpj, v_fantasia, v_insc_estadual, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, v_operacao);
@@ -4637,7 +4637,7 @@ BEGIN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
         
-      -- GRAVA HISTÓRICO PARA TABELA LOGRADOURO
+      -- GRAVA HISTï¿½RICO PARA TABELA LOGRADOURO
       INSERT INTO historico.logradouro
       (idlog, idtlog, nome, idmun, ident_oficial, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
       (v_idlog, v_idtlog, v_nome, v_idmun, v_ident_oficial, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, v_operacao);
@@ -4697,7 +4697,7 @@ BEGIN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
         
-      -- GRAVA HISTÓRICO PARA TABELA MUNICIPIO
+      -- GRAVA HISTï¿½RICO PARA TABELA MUNICIPIO
       INSERT INTO historico.municipio
       (idmun, sigla_uf, nome, area_km2, idmreg, idasmun, cod_ibge, geom, tipo, idmun_pai, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
       (v_idmun, v_sigla_uf, v_nome, v_area_km2, v_idmreg, v_idasmun, v_cod_ibge, v_geom, v_tipo, v_idmun_pai, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, v_operacao);
@@ -4749,7 +4749,7 @@ BEGIN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
         
-      -- GRAVA HISTÓRICO PARA TABELA PESSOA
+      -- GRAVA HISTï¿½RICO PARA TABELA PESSOA
       INSERT INTO historico.pessoa
       (idpes, nome, idpes_cad, data_cad, url, tipo, idpes_rev, data_rev, email, situacao, origem_gravacao, idsis_rev, idsis_cad, operacao) VALUES 
       (v_idpes, v_nome, v_idpes_cad, v_data_cad, v_url, v_tipo, v_idpes_rev, v_data_rev, v_email, v_situacao, v_origem_gravacao, v_idsis_rev, v_idsis_cad, v_operacao);
@@ -4793,7 +4793,7 @@ BEGIN
           v_data_rev := CURRENT_TIMESTAMP;
         END IF;
         
-      -- GRAVA HISTÓRICO PARA TABELA SOCIO
+      -- GRAVA HISTï¿½RICO PARA TABELA SOCIO
       INSERT INTO historico.socio
       (idpes_juridica, idpes_fisica, idpes_rev, data_rev, origem_gravacao, idsis_rev, idpes_cad, data_cad, idsis_cad, operacao) VALUES 
       (v_idpes_juridica, v_idpes_fisica, v_idpes_rev, v_data_rev, v_origem_gravacao, v_idsis_rev, v_idpes_cad, v_data_cad, v_idsis_cad, v_operacao);
@@ -4924,7 +4924,7 @@ CREATE FUNCTION fcn_bef_ins_fisica() RETURNS "trigger"
    BEGIN
     SELECT INTO v_contador count(idpes) from cadastro.juridica where idpes = NEW.idpes;
     IF v_contador = 1 THEN
-     RAISE EXCEPTION 'O Identificador % já está cadastrado como Pessoa Jurídica', NEW.idpes;
+     RAISE EXCEPTION 'O Identificador % jï¿½ estï¿½ cadastrado como Pessoa Jurï¿½dica', NEW.idpes;
     END IF;
     RETURN NEW;
    END;
@@ -4944,7 +4944,7 @@ CREATE FUNCTION fcn_bef_ins_juridica() RETURNS "trigger"
    BEGIN
     SELECT INTO v_contador count(idpes) from cadastro.fisica where idpes = NEW.idpes;
     IF v_contador = 1 THEN
-     RAISE EXCEPTION 'O Identificador % já está cadastrado como Pessoa Física', NEW.idpes;
+     RAISE EXCEPTION 'O Identificador % jï¿½ estï¿½ cadastrado como Pessoa Fï¿½sica', NEW.idpes;
     END IF;
     RETURN NEW;
    END;
@@ -5018,7 +5018,7 @@ DECLARE
   v_nome_primeiro_ultimo_pessoa_2 := '';
   v_cont := 0;
   
-  -- primeiro e último nome da pessoa com fonética
+  -- primeiro e ï¿½ltimo nome da pessoa com fonï¿½tica
   FOR v_registro IN SELECT * FROM public.fcn_fonetiza(public.fcn_obter_primeiro_ultimo_nome(v_nome_pessoa_1)) LOOP
     v_cont := v_cont + 1;
     v_fonema := v_registro.fcn_fonetiza;
@@ -5129,7 +5129,7 @@ CREATE FUNCTION fcn_consulta_fonetica(text) RETURNS SETOF typ_idpes
 CREATE FUNCTION fcn_delete_endereco_externo(integer, integer) RETURNS integer
     AS $_$
 DECLARE
-  -- Parâmetro recebidos
+  -- Parï¿½metro recebidos
   v_idpes ALIAS for $1;
   v_tipo ALIAS for $2;
   
@@ -5148,7 +5148,7 @@ END;$_$
 CREATE FUNCTION fcn_delete_endereco_pessoa(integer, integer) RETURNS integer
     AS $_$
 DECLARE
-  -- Parâmetro recebidos
+  -- Parï¿½metro recebidos
   v_idpes ALIAS for $1;
   v_tipo ALIAS for $2;
   
@@ -5167,7 +5167,7 @@ END;$_$
 CREATE FUNCTION fcn_delete_fone_pessoa(integer) RETURNS integer
     AS $_$
 DECLARE
-  -- Parâmetro recebidos
+  -- Parï¿½metro recebidos
   v_id_pes ALIAS for $1;
   
 BEGIN
@@ -5185,12 +5185,12 @@ END;$_$
 CREATE FUNCTION fcn_delete_funcionario(integer, integer) RETURNS integer
     AS $_$
 DECLARE
-  -- Parâmetro recebidos
+  -- Parï¿½metro recebidos
   v_matricula ALIAS for $1;
   v_id_ins ALIAS for $2;
   
 BEGIN
-  -- Deleta dados da tabela funcionário
+  -- Deleta dados da tabela funcionï¿½rio
   DELETE FROM cadastro.funcionario WHERE matricula = v_matricula AND idins = v_id_ins;
   RETURN 0;
 END;$_$
@@ -5204,7 +5204,7 @@ END;$_$
 CREATE FUNCTION fcn_dia_util(date, date) RETURNS integer
     AS $_$
 DECLARE
-  -- Parâmetro recebidos
+  -- Parï¿½metro recebidos
   v_dt_ini ALIAS for $1;
   v_dt_fim ALIAS for $2;
   v_dt_ini_x date;
@@ -5819,7 +5819,7 @@ DECLARE
   BEGIN
   v_nome_primeiro_ultimo_pessoa := '';
   v_cont := 0;
-  -- primeiro e último nome da pessoa com fonética
+  -- primeiro e ï¿½ltimo nome da pessoa com fonï¿½tica
   FOR v_registro IN SELECT * FROM public.fcn_fonetiza(public.fcn_obter_primeiro_ultimo_nome(v_nome_parametro)) LOOP
     v_cont := v_cont + 1;
     v_fonema := v_registro.fcn_fonetiza;
@@ -5841,7 +5841,7 @@ DECLARE
 CREATE FUNCTION fcn_insert_documento(integer, character varying, character varying, character varying, character varying, integer, integer, integer, integer, character varying, character varying, character varying, character varying, integer, integer, character varying, character varying, integer, integer, character, integer, integer) RETURNS integer
     AS $_$
 DECLARE
-  -- Parâmetro recebidos
+  -- Parï¿½metro recebidos
   v_id_pes ALIAS for $1;
   v_rg ALIAS for $2;  
   v_orgao_exp_rg ALIAS for $3;
@@ -5865,7 +5865,7 @@ DECLARE
   v_idpes_cad ALIAS for $21;
   v_idsis_cad ALIAS for $22;
     
-    -- Outras variáveis
+    -- Outras variï¿½veis
       v_rg_aux varchar(10);
       v_orgao_exp_rg_aux varchar(10);
       v_sigla_uf_exp_rg_aux varchar(2);
@@ -5958,7 +5958,7 @@ BEGIN
         v_secao_tit_eleitor_aux := v_secao_tit_eleitor;
     END IF;
  
-  -- Insere dados na tabela funcionário
+  -- Insere dados na tabela funcionï¿½rio
     INSERT INTO cadastro.documento (idpes, rg, idorg_exp_rg, 
                                 data_exp_rg, sigla_uf_exp_rg,
                                 tipo_cert_civil, num_termo,
@@ -5988,7 +5988,7 @@ END;$_$
 CREATE FUNCTION fcn_insert_endereco_externo(integer, integer, character varying, character varying, character varying, integer, character varying, character varying, character varying, integer, character varying, character varying, character, integer, integer) RETURNS integer
     AS $_$
 DECLARE
-  -- Parâmetro recebidos
+  -- Parï¿½metro recebidos
   v_id_pes ALIAS for $1;
   v_tipo ALIAS for $2; 
   v_sigla_uf ALIAS for $3;
@@ -6022,7 +6022,7 @@ END;$_$
 CREATE FUNCTION fcn_insert_endereco_pessoa(integer, integer, integer, integer, integer, integer, character varying, character varying, character varying, character, integer, integer) RETURNS integer
     AS $_$
 DECLARE
-  -- Parâmetro recebidos
+  -- Parï¿½metro recebidos
   v_id_pes ALIAS for $1;
   v_tipo ALIAS for $2;
   v_cep ALIAS for $3;
@@ -6051,7 +6051,7 @@ END;$_$
 CREATE FUNCTION fcn_insert_fisica(integer, character varying, character varying, integer, integer, integer, integer, integer, integer, character varying, character varying, integer, integer, character varying, integer, character varying, integer, character varying, character varying, character varying, character varying, character varying, character, integer, integer) RETURNS integer
     AS $_$
 DECLARE
-  -- Parâmetro recebidos
+  -- Parï¿½metro recebidos
   v_id_pes ALIAS for $1;
   v_data_nasc ALIAS for $2;
   v_sexo ALIAS for $3;
@@ -6077,7 +6077,7 @@ DECLARE
   v_origem_gravacao ALIAS for $23;
       v_idpes_cad ALIAS for $24;
       v_idsis_cad ALIAS for $25;
-      -- Outras variáveis
+      -- Outras variï¿½veis
       v_id_pes_mae_aux integer;
       v_id_pes_pai_aux integer;
       v_id_pes_responsavel_aux integer;
@@ -6145,7 +6145,7 @@ BEGIN
     ELSE
         v_sexo_aux := public.fcn_upper(v_sexo);
     END IF;
-  -- Insere dados na tabela funcionário
+  -- Insere dados na tabela funcionï¿½rio
     INSERT INTO cadastro.fisica (idpes, data_nasc, sexo, 
                                 idpes_mae,idpes_pai, idpes_responsavel, 
                                 idesco, ideciv, idpes_con, 
@@ -6174,7 +6174,7 @@ END;$_$
 CREATE FUNCTION fcn_insert_fisica_cpf(integer, text, character, integer, integer) RETURNS integer
     AS $_$
 DECLARE
-  -- Parâmetro recebidos
+  -- Parï¿½metro recebidos
   v_id_pes ALIAS for $1;
   v_cpf ALIAS for $2;
   v_origem_gravacao ALIAS for $3;
@@ -6194,7 +6194,7 @@ END;$_$
 CREATE FUNCTION fcn_insert_fone_pessoa(integer, integer, integer, integer, character, integer, integer) RETURNS integer
     AS $_$
 DECLARE
-  -- Parâmetro recebidos
+  -- Parï¿½metro recebidos
   v_id_pes ALIAS for $1;
   v_tipo ALIAS for $2;
   v_ddd ALIAS for $3;
@@ -6218,7 +6218,7 @@ END;$_$
 CREATE FUNCTION fcn_insert_funcionario(integer, integer, integer, integer, character varying, character, integer, integer) RETURNS integer
     AS $_$
 DECLARE
-  -- Parâmetro recebidos
+  -- Parï¿½metro recebidos
   v_matricula ALIAS for $1;
   v_id_ins ALIAS for $2;
   v_id_set ALIAS for $3;
@@ -6227,7 +6227,7 @@ DECLARE
   v_origem_gravacao ALIAS for $6;
       v_idpes_cad ALIAS for $7;
       v_idsis_cad ALIAS for $8;
-    -- Outras variáveis
+    -- Outras variï¿½veis
     v_id_set_aux integer;
 BEGIN
     IF v_id_set = 0 THEN
@@ -6235,7 +6235,7 @@ BEGIN
     ELSE
         v_id_set_aux := v_id_set;
     END IF;
-  -- Insere dados na tabela funcionário
+  -- Insere dados na tabela funcionï¿½rio
     INSERT INTO cadastro.funcionario (matricula,idins,idset,idpes,situacao, origem_gravacao, idpes_cad, idsis_cad, data_cad, operacao)
     VALUES(v_matricula,v_id_ins,v_id_set_aux,v_id_pes,public.fcn_upper(v_situacao), v_origem_gravacao, v_idpes_cad, v_idsis_cad, CURRENT_TIMESTAMP, 'I');
   RETURN 0;
@@ -6250,7 +6250,7 @@ END;$_$
 CREATE FUNCTION fcn_insert_juridica(integer, character varying, character varying, character varying, character, integer, integer) RETURNS integer
     AS $_$
 DECLARE
-  -- Parâmetro recebidos
+  -- Parï¿½metro recebidos
   v_id_pes ALIAS for $1;
   v_cnpj ALIAS for $2;
   v_fantasia ALIAS for $3;
@@ -6275,7 +6275,7 @@ END;$_$
 CREATE FUNCTION fcn_insert_pessoa(integer, character varying, character varying, character varying, character varying, integer, character varying, character varying, integer, integer) RETURNS integer
     AS $_$
 DECLARE
-  -- Parâmetro recebidos
+  -- Parï¿½metro recebidos
   v_id_pes ALIAS for $1;
   v_razao_social ALIAS for $2;
   v_url ALIAS for $3;
@@ -6327,13 +6327,13 @@ DECLARE
   v_ultimo_nome := '';
   v_nome := TRIM(v_nome_parametro);
   v_total_caracteres := LENGTH(v_nome);
-  -- obter somente o primeiro e o último nome das pessoas
+  -- obter somente o primeiro e o ï¿½ltimo nome das pessoas
   IF v_total_caracteres > 0 THEN
-    -- retirar os espaços duplicados
+    -- retirar os espaï¿½os duplicados
     WHILE POSITION('  ' IN v_nome) > 0 LOOP
       v_nome := REPLACE(UPPER(v_nome),'  ', ' ');
     END LOOP;
-    -- retirar ocorrências que devem ser ignoradas no nome
+    -- retirar ocorrï¿½ncias que devem ser ignoradas no nome
     v_nome := TRIM(REPLACE(UPPER(v_nome),' E OUTROS', ''));
     v_nome := TRIM(REPLACE(UPPER(v_nome),' E OUTRAS', ''));
     v_nome := TRIM(REPLACE(UPPER(v_nome),' E OUTRO', ''));
@@ -6375,18 +6375,18 @@ DECLARE
       v_nome := TRIM(REPLACE(UPPER(v_nome),' SM', ''));
     END IF;
     v_nome := TRIM(v_nome);
-    -- posição do espaço em branco para obter o primeiro nome
+    -- posiï¿½ï¿½o do espaï¿½o em branco para obter o primeiro nome
     v_posicao_espaco_primeiro_nome := POSITION(' ' IN v_nome);
     IF v_posicao_espaco_primeiro_nome > 0 THEN
       v_primeiro_nome := SUBSTR(v_nome, 1, (v_posicao_espaco_primeiro_nome - 1));
     ELSE
       v_primeiro_nome := v_nome;
     END IF;
-    -- obter o último nome
+    -- obter o ï¿½ltimo nome
     v_posicao_espaco_ultimo_nome := 0;
     IF v_posicao_espaco_primeiro_nome > 0 THEN
       v_cont := v_posicao_espaco_ultimo_nome + 1;
-      -- obter posição do espaço em branco anterior ao último nome
+      -- obter posiï¿½ï¿½o do espaï¿½o em branco anterior ao ï¿½ltimo nome
       WHILE v_cont < LENGTH(v_nome) LOOP
         IF SUBSTR(v_nome, v_cont, 1) = ' ' THEN
           v_posicao_espaco_ultimo_nome = v_cont;
@@ -6394,11 +6394,11 @@ DECLARE
         v_cont := v_cont + 1;
       END LOOP;
       v_ultimo_nome := SUBSTR(v_nome, (v_posicao_espaco_ultimo_nome + 1));
-      -- fonema do último nome
+      -- fonema do ï¿½ltimo nome
       FOR v_reg IN SELECT * FROM public.fcn_fonetiza(v_ultimo_nome) LOOP
         v_fonema_ultimo_nome := v_reg.fcn_fonetiza;
       END LOOP;
-      -- verificar se o último nome termina com Junior, Sobrinho ou Filho e outros
+      -- verificar se o ï¿½ltimo nome termina com Junior, Sobrinho ou Filho e outros
       FOR v_reg IN SELECT * FROM public.fcn_fonetiza('junior') LOOP
         v_fonema_junior := v_reg.fcn_fonetiza;
       END LOOP;
@@ -6434,7 +6434,7 @@ DECLARE
           v_posicao_espaco_ultimo_nome := 0;
           v_cont := 1;
           
-          -- obter posição do espaço em branco anterior ao último nome
+          -- obter posiï¿½ï¿½o do espaï¿½o em branco anterior ao ï¿½ltimo nome
           WHILE v_cont < LENGTH(v_nome) LOOP
           IF SUBSTR(v_nome, v_cont, 1) = ' ' THEN
             v_posicao_espaco_ultimo_nome = v_cont;
@@ -6476,11 +6476,11 @@ DECLARE
   v_total_caracteres := LENGTH(v_nome);
   -- obter somente o primeiro e o ultimo nome das pessoas
   IF v_total_caracteres > 0 THEN
-    -- retirar os espaços duplicados
+    -- retirar os espaï¿½os duplicados
     WHILE POSITION('  ' IN v_nome) > 0 LOOP
       v_nome := REPLACE(UPPER(v_nome),'  ', ' ');
     END LOOP;
-    -- retirar ocorrências que devem ser ignoradas no nome
+    -- retirar ocorrï¿½ncias que devem ser ignoradas no nome
     v_nome := TRIM(REPLACE(UPPER(v_nome),'&', ' '));
     v_nome := TRIM(REPLACE(UPPER(v_nome),' E CIA LTDA ME', ''));
     v_nome := TRIM(REPLACE(UPPER(v_nome),' E CIA LTDA', ''));
@@ -6544,7 +6544,7 @@ DECLARE
       v_nome := TRIM(REPLACE(UPPER(v_nome),' S A', ''));
     END IF;
     v_nome := TRIM(v_nome);
-    -- posição do espaco em branco para obter o primeiro nome
+    -- posiï¿½ï¿½o do espaco em branco para obter o primeiro nome
     v_posicao_espaco_primeiro_nome := POSITION(' ' IN v_nome);
     IF v_posicao_espaco_primeiro_nome > 0 THEN
       v_primeiro_nome := SUBSTR(v_nome, 1, (v_posicao_espaco_primeiro_nome - 1));
@@ -6586,7 +6586,7 @@ DECLARE
 CREATE FUNCTION fcn_update_documento(integer, character varying, character varying, character varying, character varying, integer, integer, integer, integer, character varying, character varying, character varying, character varying, integer, integer, character varying, character varying, integer, integer, character, integer, integer) RETURNS integer
     AS $_$
 DECLARE
-  -- Parâmetro recebidos
+  -- Parï¿½metro recebidos
   v_id_pes ALIAS for $1;
   v_rg ALIAS for $2;  
   v_orgao_exp_rg ALIAS for $3;    
@@ -6610,7 +6610,7 @@ DECLARE
   v_idpes_rev ALIAS for $21;
   v_idsis_rev ALIAS for $22;
     
-    -- Outras variáveis
+    -- Outras variï¿½veis
     v_rg_aux varchar(10);
     v_orgao_exp_rg_aux varchar(10);
     v_sigla_uf_exp_rg_aux varchar(2);
@@ -6703,7 +6703,7 @@ BEGIN
         v_secao_tit_eleitor_aux := v_secao_tit_eleitor;
     END IF;
  
-  -- Insere dados na tabela funcionário
+  -- Insere dados na tabela funcionï¿½rio
     UPDATE cadastro.documento
     SET rg = to_number(v_rg_aux,9999999999),
         idorg_exp_rg = to_number(v_orgao_exp_rg_aux,9999999999),
@@ -6742,7 +6742,7 @@ END;$_$
 CREATE FUNCTION fcn_update_endereco_externo(integer, integer, character varying, character varying, character varying, integer, character varying, character varying, character varying, integer, character varying, character varying, character, integer, integer) RETURNS integer
     AS $_$
 DECLARE
-  -- Parâmetro recebidos
+  -- Parï¿½metro recebidos
   v_id_pes ALIAS for $1;
   v_tipo ALIAS for $2; 
   v_sigla_uf ALIAS for $3;
@@ -6791,7 +6791,7 @@ END;$_$
 CREATE FUNCTION fcn_update_endereco_pessoa(integer, integer, integer, integer, integer, integer, character varying, character varying, character varying, character, integer, integer) RETURNS integer
     AS $_$
 DECLARE
-    -- Parâmetro recebidos
+    -- Parï¿½metro recebidos
     v_id_pes ALIAS for $1;
     v_tipo ALIAS for $2;
     v_cep ALIAS for $3;
@@ -6834,7 +6834,7 @@ END;$_$
 CREATE FUNCTION fcn_update_fisica(integer, character varying, character varying, integer, integer, integer, integer, integer, integer, character varying, character varying, integer, integer, character varying, integer, character varying, integer, character varying, character varying, character varying, character varying, character varying, character, integer, integer) RETURNS integer
     AS $_$
 DECLARE
-  -- Parâmetro recebidos
+  -- Parï¿½metro recebidos
   v_id_pes ALIAS for $1;
   v_data_nasc ALIAS for $2;
   v_sexo ALIAS for $3;
@@ -6861,7 +6861,7 @@ DECLARE
       v_idpes_rev ALIAS for $24;
       v_idsis_rev ALIAS for $25;
     
-      -- Outras variáveis
+      -- Outras variï¿½veis
       v_id_pes_mae_aux integer;
       v_id_pes_pai_aux integer;
       v_id_pes_responsavel_aux integer;
@@ -6929,7 +6929,7 @@ BEGIN
     ELSE
         v_sexo_aux := public.fcn_upper(v_sexo);
     END IF;
-  -- Insere dados na tabela funcionário
+  -- Insere dados na tabela funcionï¿½rio
     UPDATE cadastro.fisica 
     SET data_nasc = to_date(v_data_nasc,'DD/MM/YYYY'),
         sexo = v_sexo_aux, 
@@ -6971,7 +6971,7 @@ END;$_$
 CREATE FUNCTION fcn_update_fisica_cpf(integer, text, character, integer, integer) RETURNS integer
     AS $_$
 DECLARE
-  -- Parâmetro recebidos
+  -- Parï¿½metro recebidos
   v_id_pes ALIAS for $1;
   v_cpf ALIAS for $2;
   v_origem_gravacao ALIAS for $3;
@@ -7000,7 +7000,7 @@ END;$_$
 CREATE FUNCTION fcn_update_fone_pessoa(integer, integer, integer, integer, character, integer, integer) RETURNS integer
     AS $_$
 DECLARE
-  -- Parâmetro recebidos
+  -- Parï¿½metro recebidos
   v_id_pes ALIAS for $1;
   v_tipo ALIAS for $2;
   v_ddd ALIAS for $3;
@@ -7033,7 +7033,7 @@ END;$_$
 CREATE FUNCTION fcn_update_funcionario(numeric, integer, integer, character varying, character, integer, integer) RETURNS integer
     AS $_$
 DECLARE
-  -- Parâmetro recebidos
+  -- Parï¿½metro recebidos
   v_matricula ALIAS for $1;
   v_id_ins ALIAS for $2;
   v_id_set ALIAS for $3;
@@ -7041,7 +7041,7 @@ DECLARE
       v_origem_gravacao ALIAS for $5;
       v_idpes_rev ALIAS for $6;
       v_idsis_rev ALIAS for $7;
-  -- Outras variáveis
+  -- Outras variï¿½veis
   v_id_set_aux integer;
   v_matricula_aux numeric;
   v_id_ins_aux integer;
@@ -7057,7 +7057,7 @@ BEGIN
   END IF;
     
   IF v_id_set_aux IS NULL AND v_id_set = -1 THEN
-    -- Sql utilizado para ativar e desativar o registro na tabela funcionário
+    -- Sql utilizado para ativar e desativar o registro na tabela funcionï¿½rio
      UPDATE cadastro.funcionario 
       SET situacao=v_situacao_aux,
       origem_gravacao = v_origem_gravacao,
@@ -7094,7 +7094,7 @@ END;$_$
 CREATE FUNCTION fcn_update_juridica(integer, character varying, character varying, character varying, character, integer, integer) RETURNS integer
     AS $_$
 DECLARE
-  -- Parâmetro recebidos
+  -- Parï¿½metro recebidos
   v_id_pes ALIAS for $1;
   v_cnpj ALIAS for $2;
   v_fantasia ALIAS for $3;
@@ -7127,7 +7127,7 @@ END;$_$
 CREATE FUNCTION fcn_update_pessoa(integer, text, character varying, character varying, character varying, integer, character varying, integer, integer) RETURNS integer
     AS $_$
 DECLARE
-  -- Parâmetro recebidos
+  -- Parï¿½metro recebidos
   v_id_pes ALIAS for $1;
   v_razao_social ALIAS for $2;
   v_url ALIAS for $3;
@@ -7184,7 +7184,7 @@ CREATE FUNCTION fcn_upper(text) RETURNS text
     v_retorno   text := '';
    BEGIN
     IF v_texto IS NOT NULL THEN
-     SELECT translate(upper(v_texto),'áéíóúýàèìòùãõâêîôûäëïöüç','ÁÉÍÓÚÝÀÈÌÒÙÃÕÂÊÎÔÛÄËÏÖÜÇ') INTO v_retorno;
+     SELECT translate(upper(v_texto),'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½','ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½') INTO v_retorno;
     END IF;
     RETURN v_retorno;
    END;
@@ -7203,7 +7203,7 @@ CREATE FUNCTION fcn_upper_nrm(text) RETURNS text
     v_retorno   text := '';
    BEGIN
     IF v_texto IS NOT NULL THEN
-     SELECT translate(upper(v_texto),'áéíóúýàèìòùãõâêîôûäëïöüÿçÁÉÍÓÚÝÀÈÌÒÙÃÕÂÊÎÔÛÄËÏÖÜÇ','AEIOUYAEIOUAOAEIOUAEIOUYCAEIOUYAEIOUAOAEIOUAEIOUC') INTO v_retorno;
+     SELECT translate(upper(v_texto),'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½','AEIOUYAEIOUAOAEIOUAEIOUYCAEIOUYAEIOUAOAEIOUAEIOUC') INTO v_retorno;
     END IF;
     RETURN v_retorno;
    END;
@@ -17492,7 +17492,7 @@ CREATE INDEX i_aluno_beneficio_nm_beneficio ON aluno_beneficio USING btree (nm_b
 -- Name: i_aluno_beneficio_nm_beneficio_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
 --
 
-CREATE INDEX i_aluno_beneficio_nm_beneficio_asc ON aluno_beneficio USING btree (to_ascii((nm_beneficio)::text));
+CREATE INDEX i_aluno_beneficio_nm_beneficio_asc ON aluno_beneficio USING btree (((nm_beneficio)::text));
 
 
 --
@@ -17611,7 +17611,7 @@ CREATE INDEX i_calendario_dia_motivo_sigla ON calendario_dia_motivo USING btree 
 -- Name: i_calendario_dia_motivo_sigla_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
 --
 
-CREATE INDEX i_calendario_dia_motivo_sigla_asc ON calendario_dia_motivo USING btree (to_ascii((sigla)::text));
+CREATE INDEX i_calendario_dia_motivo_sigla_asc ON calendario_dia_motivo USING btree (((sigla)::text));
 
 
 --
@@ -17660,7 +17660,7 @@ CREATE INDEX i_coffebreak_tipo_nm_tipo ON coffebreak_tipo USING btree (nm_tipo);
 -- Name: i_coffebreak_tipo_nm_tipo_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
 --
 
-CREATE INDEX i_coffebreak_tipo_nm_tipo_asc ON coffebreak_tipo USING btree (to_ascii((nm_tipo)::text));
+CREATE INDEX i_coffebreak_tipo_nm_tipo_asc ON coffebreak_tipo USING btree (((nm_tipo)::text));
 
 
 --
@@ -17716,7 +17716,7 @@ CREATE INDEX i_curso_nm_curso ON curso USING btree (nm_curso);
 -- Name: i_curso_nm_curso_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
 --
 
-CREATE INDEX i_curso_nm_curso_asc ON curso USING btree (to_ascii((nm_curso)::text));
+CREATE INDEX i_curso_nm_curso_asc ON curso USING btree (((nm_curso)::text));
 
 
 --
@@ -17730,7 +17730,7 @@ CREATE INDEX i_curso_objetivo_curso ON curso USING btree (objetivo_curso);
 -- Name: i_curso_objetivo_curso_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
 --
 
-CREATE INDEX i_curso_objetivo_curso_asc ON curso USING btree (to_ascii(objetivo_curso));
+CREATE INDEX i_curso_objetivo_curso_asc ON curso USING btree ((objetivo_curso));
 
 
 --
@@ -17786,7 +17786,7 @@ CREATE INDEX i_curso_sgl_curso ON curso USING btree (sgl_curso);
 -- Name: i_curso_sgl_curso_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
 --
 
-CREATE INDEX i_curso_sgl_curso_asc ON curso USING btree (to_ascii((sgl_curso)::text));
+CREATE INDEX i_curso_sgl_curso_asc ON curso USING btree (((sgl_curso)::text));
 
 
 --
@@ -17800,7 +17800,7 @@ CREATE INDEX i_disciplina_abreviatura ON disciplina USING btree (abreviatura);
 -- Name: i_disciplina_abreviatura_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
 --
 
-CREATE INDEX i_disciplina_abreviatura_asc ON disciplina USING btree (to_ascii((abreviatura)::text));
+CREATE INDEX i_disciplina_abreviatura_asc ON disciplina USING btree (((abreviatura)::text));
 
 
 --
@@ -17835,7 +17835,7 @@ CREATE INDEX i_disciplina_nm_disciplina ON disciplina USING btree (nm_disciplina
 -- Name: i_disciplina_nm_disciplina_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
 --
 
-CREATE INDEX i_disciplina_nm_disciplina_asc ON disciplina USING btree (to_ascii((nm_disciplina)::text));
+CREATE INDEX i_disciplina_nm_disciplina_asc ON disciplina USING btree (((nm_disciplina)::text));
 
 
 --
@@ -17863,7 +17863,7 @@ CREATE INDEX i_disciplina_topico_nm_topico ON disciplina_topico USING btree (nm_
 -- Name: i_disciplina_topico_nm_topico_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
 --
 
-CREATE INDEX i_disciplina_topico_nm_topico_asc ON disciplina_topico USING btree (to_ascii((nm_topico)::text));
+CREATE INDEX i_disciplina_topico_nm_topico_asc ON disciplina_topico USING btree (((nm_topico)::text));
 
 
 --
@@ -17905,7 +17905,7 @@ CREATE INDEX i_escola_complemento_bairro ON escola_complemento USING btree (bair
 -- Name: i_escola_complemento_bairro_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
 --
 
-CREATE INDEX i_escola_complemento_bairro_asc ON escola_complemento USING btree (to_ascii((bairro)::text));
+CREATE INDEX i_escola_complemento_bairro_asc ON escola_complemento USING btree (((bairro)::text));
 
 
 --
@@ -17919,7 +17919,7 @@ CREATE INDEX i_escola_complemento_cep ON escola_complemento USING btree (cep);
 -- Name: i_escola_complemento_cep_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
 --
 
-CREATE INDEX i_escola_complemento_cep_asc ON escola_complemento USING btree (to_ascii((cep)::text));
+CREATE INDEX i_escola_complemento_cep_asc ON escola_complemento USING btree (((cep)::text));
 
 
 --
@@ -17933,7 +17933,7 @@ CREATE INDEX i_escola_complemento_complemento ON escola_complemento USING btree 
 -- Name: i_escola_complemento_complemento_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
 --
 
-CREATE INDEX i_escola_complemento_complemento_asc ON escola_complemento USING btree (to_ascii((complemento)::text));
+CREATE INDEX i_escola_complemento_complemento_asc ON escola_complemento USING btree (((complemento)::text));
 
 
 --
@@ -17947,7 +17947,7 @@ CREATE INDEX i_escola_complemento_email ON escola_complemento USING btree (email
 -- Name: i_escola_complemento_email_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
 --
 
-CREATE INDEX i_escola_complemento_email_asc ON escola_complemento USING btree (to_ascii((email)::text));
+CREATE INDEX i_escola_complemento_email_asc ON escola_complemento USING btree (((email)::text));
 
 
 --
@@ -17961,7 +17961,7 @@ CREATE INDEX i_escola_complemento_logradouro ON escola_complemento USING btree (
 -- Name: i_escola_complemento_logradouro_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
 --
 
-CREATE INDEX i_escola_complemento_logradouro_asc ON escola_complemento USING btree (to_ascii((bairro)::text));
+CREATE INDEX i_escola_complemento_logradouro_asc ON escola_complemento USING btree (((bairro)::text));
 
 
 --
@@ -17975,7 +17975,7 @@ CREATE INDEX i_escola_complemento_municipio ON escola_complemento USING btree (m
 -- Name: i_escola_complemento_municipio_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
 --
 
-CREATE INDEX i_escola_complemento_municipio_asc ON escola_complemento USING btree (to_ascii((municipio)::text));
+CREATE INDEX i_escola_complemento_municipio_asc ON escola_complemento USING btree (((municipio)::text));
 
 
 --
@@ -17989,7 +17989,7 @@ CREATE INDEX i_escola_complemento_nm_escola ON escola_complemento USING btree (n
 -- Name: i_escola_complemento_nm_escola_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
 --
 
-CREATE INDEX i_escola_complemento_nm_escola_asc ON escola_complemento USING btree (to_ascii((nm_escola)::text));
+CREATE INDEX i_escola_complemento_nm_escola_asc ON escola_complemento USING btree (((nm_escola)::text));
 
 
 --
@@ -18038,7 +18038,7 @@ CREATE INDEX i_escola_localizacao_nm_localizacao ON escola_localizacao USING btr
 -- Name: i_escola_localizacao_nm_localizacao_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
 --
 
-CREATE INDEX i_escola_localizacao_nm_localizacao_asc ON escola_localizacao USING btree (to_ascii((nm_localizacao)::text));
+CREATE INDEX i_escola_localizacao_nm_localizacao_asc ON escola_localizacao USING btree (((nm_localizacao)::text));
 
 
 --
@@ -18066,7 +18066,7 @@ CREATE INDEX i_escola_rede_ensino_nm_rede ON escola_rede_ensino USING btree (nm_
 -- Name: i_escola_rede_ensino_nm_rede_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
 --
 
-CREATE INDEX i_escola_rede_ensino_nm_rede_asc ON escola_rede_ensino USING btree (to_ascii((nm_rede)::text));
+CREATE INDEX i_escola_rede_ensino_nm_rede_asc ON escola_rede_ensino USING btree (((nm_rede)::text));
 
 
 --
@@ -18150,7 +18150,7 @@ CREATE INDEX i_escola_sigla ON escola USING btree (sigla);
 -- Name: i_escola_sigla_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
 --
 
-CREATE INDEX i_escola_sigla_asc ON escola USING btree (to_ascii((sigla)::text));
+CREATE INDEX i_escola_sigla_asc ON escola USING btree (((sigla)::text));
 
 
 --
@@ -18164,7 +18164,7 @@ CREATE INDEX i_funcao_abreviatura ON funcao USING btree (abreviatura);
 -- Name: i_funcao_abreviatura_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
 --
 
-CREATE INDEX i_funcao_abreviatura_asc ON funcao USING btree (to_ascii((abreviatura)::text));
+CREATE INDEX i_funcao_abreviatura_asc ON funcao USING btree (((abreviatura)::text));
 
 
 --
@@ -18185,7 +18185,7 @@ CREATE INDEX i_funcao_nm_funcao ON funcao USING btree (nm_funcao);
 -- Name: i_funcao_nm_funcao_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
 --
 
-CREATE INDEX i_funcao_nm_funcao_asc ON funcao USING btree (to_ascii((nm_funcao)::text));
+CREATE INDEX i_funcao_nm_funcao_asc ON funcao USING btree (((nm_funcao)::text));
 
 
 --
@@ -18227,7 +18227,7 @@ CREATE INDEX i_habilitacao_ref_usuario_cad ON habilitacao USING btree (ref_usuar
 -- Name: i_habilitacaoo_nm_tipo_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
 --
 
-CREATE INDEX i_habilitacaoo_nm_tipo_asc ON habilitacao USING btree (to_ascii((nm_tipo)::text));
+CREATE INDEX i_habilitacaoo_nm_tipo_asc ON habilitacao USING btree (((nm_tipo)::text));
 
 
 --

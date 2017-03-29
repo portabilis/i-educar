@@ -121,7 +121,7 @@ class MatriculaController extends ApiCoreController
                end)
              end)
         and (case when aprovado = 4 then not exists (select * from pmieducar.matricula m where m.ativo = 1 and m.ano = matricula.ano and m.ref_cod_aluno = aluno.cod_aluno and m.ref_ref_cod_escola = matricula.ref_ref_cod_escola and m.aprovado <> 4 ) else true end)
-        and lower(to_ascii(pessoa.nome)) like '%'||lower(to_ascii($1))||'%'
+        and lower((pessoa.nome)) like '%'||lower(($1))||'%'
         and (select case when $2 != 0 then matricula.ref_ref_cod_escola = $2 else true end)
         and (select case when $3 != 0 then matricula.ano = $3 else true end) limit 15";
   }
@@ -326,14 +326,29 @@ class MatriculaController extends ApiCoreController
       $tipoSemAbandono    = null;
       $situacaoAndamento  = App_Model_MatriculaSituacao::EM_ANDAMENTO;
 
-      $sql = 'update pmieducar.matricula set aprovado = $1, ref_cod_abandono_tipo = $2 where cod_matricula = $3';
+      $sql = 'UPDATE pmieducar.matricula
+              SET aprovado = $1,
+                  ref_cod_abandono_tipo = $2,
+                  data_exclusao = NULL
+              WHERE cod_matricula = $3';
       $this->fetchPreparedQuery($sql, array($situacaoAndamento, $tipoSemAbandono, $matriculaId));
 
       $params = array($matriculaId, 0);
-      $sql = 'SELECT max(sequencial) as codigo FROM pmieducar.matricula_turma where ref_cod_matricula = $1 and ativo = $2';
+      $sql = 'SELECT max(sequencial) AS codigo
+                FROM pmieducar.matricula_turma
+               WHERE ref_cod_matricula = $1
+                 AND ativo = $2';
       $sequencial = $this->fetchPreparedQuery($sql, $params, false, 'first-field');
 
-      $sql = 'UPDATE pmieducar.matricula_turma set ativo = 1, transferido = false, remanejado = false, abandono = false, reclassificado = false where sequencial = $1 and ref_cod_matricula = $2';
+      $sql = 'UPDATE pmieducar.matricula_turma
+                 SET ativo = 1,
+                     transferido = FALSE,
+                     remanejado = FALSE,
+                     abandono = FALSE,
+                     reclassificado = FALSE,
+                     data_exclusao = NULL
+               WHERE sequencial = $1
+                 AND ref_cod_matricula = $2';
 
       $params = array($sequencial, $matriculaId);
       $this->fetchPreparedQuery($sql, $params);

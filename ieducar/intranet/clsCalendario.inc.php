@@ -1,41 +1,41 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Include
- * @since     Arquivo disponÌvel desde a vers„o 1.0.0
+ * @since     Arquivo dispon√≠vel desde a vers√£o 1.0.0
  * @version   $Id$
  */
 
 /**
  * clsCalendario class.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Include
- * @since     Classe disponÌvel desde a vers„o 1.0.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
  * @version   @@package_version@@
  */
 class clsCalendario
@@ -70,10 +70,10 @@ class clsCalendario
     'AZUL_ESCURO'    => '#93BDC9',
     2                => '#BCD39D',
     'VERDE_ESCURO'   => '#BCD39D',
-    3                => '#C7D5E0',
-    'AZUL_CLARO'     => '#C7D5E0',
-    4                => '#E5D6DD',
-    'ROSA'           => '#E5D6DD',
+    3                => '#e9f0f8',
+    'AZUL_CLARO'     => '#e9f0f8',
+    4                => '#f8e9ee',
+    'ROSA'           => '#f8e9ee',
     5                => '#E9D1AF',
     'LARANJA_ESCURO' => '#E9D1AF',
     6                => '#E9E6BB',
@@ -89,8 +89,8 @@ class clsCalendario
    */
   var $array_icone = array(
     'A' => array(
-      'nome' => 'AnotaÁıes',
-      'link' => '/intranet/imagens/i-educar/letra_a.gif'
+      'nome' => 'Anota√ß√µes',
+      'link' => ''
     ),
     ''
   );
@@ -110,7 +110,7 @@ class clsCalendario
    * Legendas.
    * @var array
    */
-  var $array_legenda = array('Padr„o');
+  var $array_legenda = array('Padr√£o');
 
   /**
    * Cor para os dias da semana.
@@ -119,7 +119,7 @@ class clsCalendario
   var $array_cor_dia_padrao = array();
 
   /**
-   * Dias do mÍs.
+   * Dias do m√™s.
    * @var array
    */
   var $array_dias = array();
@@ -153,7 +153,7 @@ class clsCalendario
     $this->array_onclick_dias       = array();
     $this->array_dias               = array();
     $this->array_cor_dia_padrao     = array();
-    $this->array_legenda            = array('Padr„o');
+    $this->array_legenda            = array('Padr√£o');
     $this->array_cor                = array('#F7F7F7');
     $this->largura_externa          = 400;
     $this->largura_interna          = 250;
@@ -264,7 +264,7 @@ class clsCalendario
   }
 
   /**
-   * Adiciona os dias do mÍs com a sua legenda.
+   * Adiciona os dias do m√™s com a sua legenda.
    * @param string $str_cod_legenda
    * @param int    $dias
    */
@@ -281,21 +281,21 @@ class clsCalendario
   }
 
   /**
-   * Retorna o cÛdigo HTML do calend·rio.
+   * Retorna o c√≥digo HTML do calend√°rio.
    *
-   * Parte do cÛdigo foi baseada em um tutorial antigo disponÌvel
-   * no site da Zend. A URL original n„o existe mais mas, parte do
-   * cÛdigo foi preservado por um blogueiro no endereÁo <http://miud.in/7NM>.
-   * N„o existe informaÁ„o de licenciamento relevante.
+   * Parte do c√≥digo foi baseada em um tutorial antigo dispon√≠vel
+   * no site da Zend. A URL original n√£o existe mais mas, parte do
+   * c√≥digo foi preservado por um blogueiro no endere√ßo <http://miud.in/7NM>.
+   * N√£o existe informa√ß√£o de licenciamento relevante.
    *
-   * @link   http://miud.in/7NM CÛdigo fonte da geraÁ„o de calend·rio
+   * @link   http://miud.in/7NM C√≥digo fonte da gera√ß√£o de calend√°rio
    * @param  int    $mes
    * @param  int    $ano
    * @param  string $nome
    * @param  mixed  mixVariaveisMantidas
    * @return string
-   * @todo   Substituir cÛdigo de geraÁ„o de calend·rio por uma biblioteca
-   *         com licenÁa compatÌvel com GPL2
+   * @todo   Substituir c√≥digo de gera√ß√£o de calend√°rio por uma biblioteca
+   *         com licen√ßa compat√≠vel com GPL2
    */
   function getCalendario($mes, $ano, $nome, $mixVariaveisMantidas,
     array $formValues = array())
@@ -324,7 +324,7 @@ class clsCalendario
     $mesesDoAno = array(
       '1'  => 'JANEIRO',
       '2'  => 'FEVEREIRO',
-      '3'  => 'MAR«O',
+      '3'  => 'MAR√áO',
       '4'  => 'ABRIL',
       '5'  => 'MAIO',
       '6'  => 'JUNHO',
@@ -457,27 +457,27 @@ class clsCalendario
       $cab = array();
       $cab[] = sprintf('
         <a href="#" onclick="acaoCalendario(\'%s\', \'\', \'%s\', \'%s\')">
-          <img src="/intranet/imagens/i-educar/seta_esq.gif" border="0" style="margin-right: 5px;" alt="MÍs Anterior">
+          <img src="/intranet/imagens/i-educar/seta_esq.gif" border="0" style="margin-right: 5px;" alt="M√™s Anterior">
         </a>
         %s',
         $nome, $mes_anterior_mes, $ano_anterior_mes, $select);
 
       $cab[] = sprintf('
         <a href="#" onclick="acaoCalendario(\'%s\', \'\', \'%s\', \'%s\')">
-          <img src="/intranet/imagens/i-educar/seta_dir.gif" border="0" style="margin-left: 5px;" alt="MÍs Posterior">
+          <img src="/intranet/imagens/i-educar/seta_dir.gif" border="0" style="margin-left: 5px;" alt="M√™s Posterior">
         </a>',
         $nome, $mes_posterior_mes, $ano_posterior_mes);
 
       $cab[] = sprintf('
         <a href="#" onclick="acaoCalendario(\'%s\', \'\', \'%s\', \'%s\')">
-          <img src="/intranet/imagens/i-educar/seta_esq.gif" border="0" style="margin-right: 5px;" alt="MÍs Anterior">
+          <img src="/intranet/imagens/i-educar/seta_esq.gif" border="0" style="margin-right: 5px;" alt="M√™s Anterior">
         </a>
         %s',
         $nome, $mes_ano, $ano_anterior_ano, $ano);
 
       $cab[] = sprintf('
         <a href="#" onclick="acaoCalendario(\'%s\', \'\', \'%s\', \'%s\')">
-          <img src="/intranet/imagens/i-educar/seta_dir.gif" border="0" style="margin-left: 5px;" alt="MÍs Posterior">
+          <img src="/intranet/imagens/i-educar/seta_dir.gif" border="0" style="margin-left: 5px;" alt="M√™s Posterior">
         </a>',
         $nome, $mes_ano, $ano_posterior_ano);
 
@@ -488,7 +488,7 @@ class clsCalendario
 
       $cab[] = sprintf('
         <a href="javascript:void(1);" onclick="acaoCalendario(\'%s\',\'\',\'%s\',\'%s\')">
-          <img src="/intranet/imagens/i-educar/seta_esq.gif" border="0" style="margin-right: 5px;" alt="MÍs Anterior">
+          <img src="/intranet/imagens/i-educar/seta_esq.gif" border="0" style="margin-right: 5px;" alt="M√™s Anterior">
         </a>
         %s&nbsp;
         %s',
@@ -497,7 +497,7 @@ class clsCalendario
 
       $cab[] = sprintf('
         <a href="#" onclick="acaoCalendario(\'%s\', \'\', \'%s\', \'%s\')">
-          <img src="/intranet/imagens/i-educar/seta_dir.gif" border="0" style="margin-left: 5px;" alt="MÍs Posterior">
+          <img src="/intranet/imagens/i-educar/seta_dir.gif" border="0" style="margin-left: 5px;" alt="M√™s Posterior">
         </a>',
         $nome, $mes_posterior_mes, $ano_anterior_mes);
 
@@ -506,21 +506,21 @@ class clsCalendario
 
     $calendario = sprintf('
       <div id="d_calendario">
-        <table class="calendar" cellspacing="0" cellpadding="0" width="%s" border="0">',
+        <table class="calendar" cellspacing="0" cellpadding="0" border="0">',
       $this->largura_externa
     );
 
     $calendario .= sprintf('
       <tr>
-        <td class="cal_esq">&nbsp;</td>
-        <td background="/intranet/imagens/i-educar/cal_bg.gif" width="100%%" class="mes">%s</td>
+        <td class="cal_esq"><i class="fa fa-calendar" aria-hidden="true"></i></td>
+        <td width="100%%" class="mes">%s</td>
         <td align="right" class="cal_dir">&nbsp;</td>
       </tr>',
       $cab
     );
 
-    $calendario .= sprintf('<tr><td colspan="3" class="bordaM">%s', $form);
-    $calendario .= '<table cellspacing="0" cellpadding="0" width="100%%" border="0" class="header"><tr>';
+    $calendario .= sprintf('<tr><td colspan="3">%s', $form);
+    $calendario .= '<table cellspacing="2" cellpadding="0" width="100%" class="header"><tr>';
 
     // Create the calendar headers
     foreach($diasDaSemana as $day) {
@@ -529,7 +529,7 @@ class clsCalendario
       }
       else {
         $calendario .= sprintf(
-          '<td style="border-right: 1px dotted #FFFFFF; width: 45px;">%s</td>', $day
+          '<td>%s</td>', $day
         );
       }
     }
@@ -538,8 +538,8 @@ class clsCalendario
     $calendario .= '</table>';
     $calendario .= '</td></tr>';
 
-    $calendario .= '<tr><td colspan="3" style="padding: 3px" valign="top" class="bordaF">';
-    $calendario .= '<table cellspacing="5" cellpadding="0" width="100%">';
+    $calendario .= '<tr><td colspan="3" valign="top">';
+    $calendario .= '<table cellspacing="2" cellpadding="0" width="100%">';
 
     // Create the rest of the calendar
     // Initiate the day counter, starting with the 1st.
@@ -602,7 +602,7 @@ class clsCalendario
 
       if (key_exists($diaCorrente, $this->array_icone_dias)) {
         $icone = sprintf(
-          '<img src="%s" border="0" align="right" alt="%s" style="padding-right: 5px;">',
+          '<i class="fa fa-pencil-square-o anotacao" aria-hidden="true"></i>',
           $this->array_icone[$this->array_icone_dias[$diaCorrente]]['link'],
           $this->array_icone[$this->array_icone_dias[$diaCorrente]]['nome']
         );
@@ -691,10 +691,7 @@ class clsCalendario
           $style = sprintf('style="background-color: %s;"', $this->array_cor[$key]);
           $icone = '';
 
-          $icone = sprintf(
-            '<img src="%s" border="0" align="left" alt="%s" style="padding-right: 5px;">',
-            $this->array_icone[$key]['link'], $this->array_icone[$key]['nome']
-          );
+          $icone = '<i class="fa fa-pencil-square-o" aria-hidden="true"></i>';
 
           $calendario .= sprintf(
             '<td %s align="left"></td><td width="100%%">%s %s</td>',
@@ -726,7 +723,7 @@ class clsCalendario
   }
 
   /**
-   * Gera campos hidden para o formul·rio do calend·rio.
+   * Gera campos hidden para o formul√°rio do calend√°rio.
    *
    * Exemplo de uso:
    *
@@ -742,11 +739,11 @@ class clsCalendario
    * @access protected
    * @param  array   $formValues     Array associativo onde a chave torna-se o
    *   o valor dos atributos id e name do campo hidden.
-   * @param  array   $invalidNames   Array com nomes inv·lidos para campos. ⁄til
+   * @param  array   $invalidNames   Array com nomes inv√°lidos para campos. √ötil
    *   para evitar que sejam criados campos duplicados.
    * @return string  String com o HTML dos campos hidden gerados.
-   * @since  MÈtodo disponÌvel desde a vers„o 1.2.0
-   * @todo   Refatorar cÛdigo de geraÁ„o de html para uma classe externa.
+   * @since  M√©todo dispon√≠vel desde a vers√£o 1.2.0
+   * @todo   Refatorar c√≥digo de gera√ß√£o de html para uma classe externa.
    */
   function _generateFormValues($formValues = array(), $invalidNames = array())
   {

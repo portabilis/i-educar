@@ -62,7 +62,7 @@ class LocalizacaoSistema {
             if( $i === $localizacao_count )
                 $this->html .= "<a href=\"$linkVazio\" class='pagina_atual'>$inner</a>";
             elseif($i == 1)
-                $this->html .= "<a href=\"$href\" title=\"Ir para o $inner\"><i class='glyphicon glyphicon-home'> </i><span> $inner</span></a> <a class='flechinha' href=\"$linkVazio\"> / </a> {$this->separador} ";
+                $this->html .= "<a href=\"$href\" title=\"Ir para o $inner\"><i class='fa fa-home' aria-hidden='true'></i><span> $inner</span></a> <a class='flechinha' href=\"$linkVazio\"> / </a> {$this->separador} ";
             else
                 $this->html .= "<a href=\"$href\" title=\"Ir para o $inner\">$inner</a> <a class='flechinha' href=\"$linkVazio\"> / </a> {$this->separador} ";
 

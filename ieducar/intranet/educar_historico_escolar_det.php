@@ -1,25 +1,25 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	@author Prefeitura Municipal de ItajaÌ								 *
+	*	@author Prefeitura Municipal de Itaja√≠								 *
 	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software P˙blico Livre e Brasileiro					 *
+	*   Pacote: i-PLB Software P√∫blico Livre e Brasileiro					 *
 	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÌ			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itaja√≠			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  È  software livre, vocÍ pode redistribuÌ-lo e/ou	 *
-	*	modific·-lo sob os termos da LicenÁa P˙blica Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a vers„o 2 da	 *
-	*	LicenÁa   como  (a  seu  critÈrio)  qualquer  vers„o  mais  nova.	 *
+	*	Este  programa  √©  software livre, voc√™ pode redistribu√≠-lo e/ou	 *
+	*	modific√°-lo sob os termos da Licen√ßa P√∫blica Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a vers√£o 2 da	 *
+	*	Licen√ßa   como  (a  seu  crit√©rio)  qualquer  vers√£o  mais  nova.	 *
 	*																		 *
-	*	Este programa  È distribuÌdo na expectativa de ser ˙til, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implÌcita de COMERCIALI-	 *
-	*	ZA«√O  ou  de ADEQUA«√O A QUALQUER PROP”SITO EM PARTICULAR. Con-	 *
-	*	sulte  a  LicenÁa  P˙blica  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  √© distribu√≠do na expectativa de ser √∫til, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia impl√≠cita de COMERCIALI-	 *
+	*	ZA√á√ÉO  ou  de ADEQUA√á√ÉO A QUALQUER PROP√ìSITO EM PARTICULAR. Con-	 *
+	*	sulte  a  Licen√ßa  P√∫blica  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	VocÍ  deve  ter  recebido uma cÛpia da LicenÁa P˙blica Geral GNU	 *
-	*	junto  com  este  programa. Se n„o, escreva para a Free Software	 *
+	*	Voc√™  deve  ter  recebido uma c√≥pia da Licen√ßa P√∫blica Geral GNU	 *
+	*	junto  com  este  programa. Se n√£o, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
@@ -134,7 +134,7 @@ class indice extends clsDetalhe
 			}
 			if( $registro["nm_serie"] )
 			{
-				$this->addDetalhe( array( "SÈrie", "{$registro["nm_serie"]}") );
+				$this->addDetalhe( array( "S√©rie", "{$registro["nm_serie"]}") );
 			}
 		}
 		else
@@ -173,7 +173,7 @@ class indice extends clsDetalhe
 			$this->addDetalhe( array( "Carga Hor&aacute;ria", "{$registro["carga_horaria"]}") );
 		}
 
-		$this->addDetalhe( array( "Faltas globalizadas", is_numeric($registro["faltas_globalizadas"]) ? 'Sim' : 'N„o'));
+		$this->addDetalhe( array( "Faltas globalizadas", is_numeric($registro["faltas_globalizadas"]) ? 'Sim' : 'N√£o'));
 
 		if( $registro["dias_letivos"] )
 		{
@@ -181,7 +181,7 @@ class indice extends clsDetalhe
 		}
 		if( $registro["frequencia"] )
 		{
-			$this->addDetalhe( array( "FrequÍncia", "{$registro["frequencia"]}") );
+			$this->addDetalhe( array( "Frequ√™ncia", "{$registro["frequencia"]}") );
 		}
 		if( $registro["extra_curricular"] )
 		{
@@ -194,11 +194,11 @@ class indice extends clsDetalhe
 
     if( $registro["aceleracao"] )
 		{
-			$this->addDetalhe( array( "AceleraÁ„o", "Sim") );
+			$this->addDetalhe( array( "Acelera√ß√£o", "Sim") );
 		}
 		else
 		{
-			$this->addDetalhe( array( "AceleraÁ„o", "N&atilde;o") );
+			$this->addDetalhe( array( "Acelera√ß√£o", "N&atilde;o") );
 		}
 		if( $registro["origem"] )
 		{
@@ -266,9 +266,9 @@ class indice extends clsDetalhe
 		{
 			$tabela = "<table>
 					       <tr align='center'>
-					           <td bgcolor=#a1b3bd><b>Nome</b></td>
-					           <td bgcolor=#a1b3bd><b>Nota</b></td>
-					           <td bgcolor=#a1b3bd><b>Faltas</b></td>
+					           <td bgcolor=#ccdce6><b>Nome</b></td>
+					           <td bgcolor=#ccdce6><b>Nota</b></td>
+					           <td bgcolor=#ccdce6><b>Faltas</b></td>
 					       </tr>";
 			$cont = 0;
 			$prim_disciplina = false;
@@ -276,7 +276,7 @@ class indice extends clsDetalhe
 			{
 				if ( ($cont % 2) == 0 )
 				{
-					$color = " bgcolor='#E4E9ED' ";
+					$color = " bgcolor='#f5f9fd' ";
 				}
 				else
 				{
@@ -324,7 +324,7 @@ class indice extends clsDetalhe
     		                                 FROM pmieducar.historico_escolar 
     		                                WHERE ref_cod_aluno = $this->ref_cod_aluno 
     		                                  AND sequencial = $this->sequencial");
-    		//Verifica se a escola foi digitada manualmente no histÛrico
+    		//Verifica se a escola foi digitada manualmente no hist√≥rico
 	    	if($ref_cod_escola == ''){
     			$escola_usuario = $db->CampoUnico("SELECT ref_cod_escola
   													 FROM pmieducar.usuario
@@ -362,12 +362,12 @@ class indice extends clsDetalhe
 		   																						  FROM pmieducar.usuario 
 		  																 						 WHERE usuario.cod_usuario = $this->pessoa_logada)");
 	    		if($escola_usuario_historico != '' || $this->nivel_usuario == 1 || $this->nivel_usuario == 2){
-    				$this->addBotao('Copiar HistÛrico',"educar_historico_escolar_cad.php?ref_cod_aluno={$registro["ref_cod_aluno"]}&sequencial={$registro["sequencial"]}&copia=true");
+    				$this->addBotao('Copiar Hist√≥rico',"educar_historico_escolar_cad.php?ref_cod_aluno={$registro["ref_cod_aluno"]}&sequencial={$registro["sequencial"]}&copia=true");
     			}
     		}
     	}
     	else{
-    		$this->addBotao('Copiar HistÛrico',"educar_historico_escolar_cad.php?ref_cod_aluno={$registro["ref_cod_aluno"]}&sequencial={$registro["sequencial"]}&copia=true");
+    		$this->addBotao('Copiar Hist√≥rico',"educar_historico_escolar_cad.php?ref_cod_aluno={$registro["ref_cod_aluno"]}&sequencial={$registro["sequencial"]}&copia=true");
     		if ($registro['origem']) $this->url_editar = "educar_historico_escolar_cad.php?ref_cod_aluno={$registro["ref_cod_aluno"]}&sequencial={$registro["sequencial"]}";
     	}
 
@@ -377,7 +377,7 @@ class indice extends clsDetalhe
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
+         "educar_index.php"                  => "Escola",
          ""                                  => "Detalhe do hist&oacute;rico escolar"
     ));
     $this->enviaLocalizacao($localizacao->montar());				

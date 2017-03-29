@@ -1,6 +1,6 @@
 <?php
 /**
-* @author Prefeitura Municipal de Itajaí
+* @author Prefeitura Municipal de ItajaÃ­
 *
 * Criado em 20/04/2007 14:51 pelo gerador automatico de classes
 */
@@ -289,7 +289,7 @@ class clsPortalFiaAgenda
 	}
 
 	/**
-	 * Retorna true se o registro existir. Caso contrário retorna false.
+	 * Retorna true se o registro existir. Caso contrÃ¡rio retorna false.
 	 *
 	 * @return bool
 	 */

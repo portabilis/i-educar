@@ -628,8 +628,8 @@ class PessoaController extends ApiCoreController
     // $selectFields                    = join(', ', $searchOptions['selectFields']);
 
      return "select distinct pessoa.idpes as id, pessoa.nome as name from cadastro.pessoa inner join cadastro.fisica ON (fisica.idpes = pessoa.idpes)
-            where fisica.ativo = 1 and lower(to_ascii(pessoa.nome)) like '%'||lower(to_ascii($1))||'%' order by id, name limit 15";
+            where fisica.ativo = 1 and lower((pessoa.nome)) like '%'||lower(($1))||'%' order by id, name limit 15";
     // return "select distinct $selectFields from $namespace.$table
-    //         where lower(to_ascii($labelAttr)) like '%'||lower(to_ascii($1))||'%' order by $labelAttr limit 15";
+    //         where lower(($labelAttr)) like '%'||lower(($1))||'%' order by $labelAttr limit 15";
   }
 }

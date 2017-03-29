@@ -78,7 +78,7 @@ var handlePost = function(dataResponse){
 
 
 function setTableSearchDetails($tableSearchDetails, dataDetails){
-  $j('<caption />').html('<strong>Emprestimo exemplares</strong>').appendTo($tableSearchDetails);
+  $j('<caption />').html('<strong>Empréstimo de exemplares</strong>').appendTo($tableSearchDetails);
 
   //set headers table
   var $linha = $j('<tr />');

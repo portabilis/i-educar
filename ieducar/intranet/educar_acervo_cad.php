@@ -3,25 +3,25 @@
 #ini_set("display_errors", 1);
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	@author Prefeitura Municipal de ItajaÌ								 *
+	*	@author Prefeitura Municipal de Itaja√≠								 *
 	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software P˙blico Livre e Brasileiro					 *
+	*   Pacote: i-PLB Software P√∫blico Livre e Brasileiro					 *
 	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÌ			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itaja√≠			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  È  software livre, vocÍ pode redistribuÌ-lo e/ou	 *
-	*	modific·-lo sob os termos da LicenÁa P˙blica Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a vers„o 2 da	 *
-	*	LicenÁa   como  (a  seu  critÈrio)  qualquer  vers„o  mais  nova.	 *
+	*	Este  programa  √©  software livre, voc√™ pode redistribu√≠-lo e/ou	 *
+	*	modific√°-lo sob os termos da Licen√ßa P√∫blica Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a vers√£o 2 da	 *
+	*	Licen√ßa   como  (a  seu  crit√©rio)  qualquer  vers√£o  mais  nova.	 *
 	*																		 *
-	*	Este programa  È distribuÌdo na expectativa de ser ˙til, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implÌcita de COMERCIALI-	 *
-	*	ZA«√O  ou  de ADEQUA«√O A QUALQUER PROP”SITO EM PARTICULAR. Con-	 *
-	*	sulte  a  LicenÁa  P˙blica  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  √© distribu√≠do na expectativa de ser √∫til, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia impl√≠cita de COMERCIALI-	 *
+	*	ZA√á√ÉO  ou  de ADEQUA√á√ÉO A QUALQUER PROP√ìSITO EM PARTICULAR. Con-	 *
+	*	sulte  a  Licen√ßa  P√∫blica  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	VocÍ  deve  ter  recebido uma cÛpia da LicenÁa P˙blica Geral GNU	 *
-	*	junto  com  este  programa. Se n„o, escreva para a Free Software	 *
+	*	Voc√™  deve  ter  recebido uma c√≥pia da Licen√ßa P√∫blica Geral GNU	 *
+	*	junto  com  este  programa. Se n√£o, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
@@ -145,8 +145,8 @@ class indice extends clsCadastro
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"                  => "i-Educar - Biblioteca",
-         ""        => "{$nomeMenu} obra"             
+         "educar_biblioteca_index.php"                  => "Biblioteca",
+         ""        => "{$nomeMenu} obra"
     ));
     $this->enviaLocalizacao($localizacao->montar());
 
@@ -186,7 +186,7 @@ class indice extends clsCadastro
 
     $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'biblioteca', 'bibliotecaTipoExemplar'));
 
-    // Obra referÍncia
+    // Obra refer√™ncia
 		$opcoes = array( "NULL" => "Selecione" );
 
 		if( $this->ref_cod_acervo && $this->ref_cod_acervo != "NULL")
@@ -201,7 +201,7 @@ class indice extends clsCadastro
 
 		$this->campoLista("ref_cod_acervo","Obra Refer&ecirc;ncia",$opcoes,$this->ref_cod_acervo,"",false,"","<img border=\"0\" onclick=\"pesquisa();\" id=\"ref_cod_acervo_lupa\" name=\"ref_cod_acervo_lupa\" src=\"imagens/lupa.png\"\/>",false,false);
 
-    // ColeÁ„o
+    // Cole√ß√£o
 		$opcoes = array( "" => "Selecione" );
 		if( class_exists( "clsPmieducarAcervoColecao" ) )
 		{
@@ -220,7 +220,7 @@ class indice extends clsCadastro
 			echo "<!--\nErro\nClasse clsPmieducarAcervoColecao nao encontrada\n-->";
 			$opcoes = array( "" => "Erro na geracao" );
 		}
-		$this->campoLista( "ref_cod_acervo_colecao", "Cole&ccedil;&atilde;o", $opcoes, $this->ref_cod_acervo_colecao,"",false,"","<img id='img_colecao' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"showExpansivelImprimir(500, 200,'educar_acervo_colecao_cad_pop.php',[], 'ColeÁ„o')\" />",false,false );
+		$this->campoLista( "ref_cod_acervo_colecao", "Cole&ccedil;&atilde;o", $opcoes, $this->ref_cod_acervo_colecao,"",false,"","<img id='img_colecao' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"showExpansivelImprimir(500, 200,'educar_acervo_colecao_cad_pop.php',[], 'Cole√ß√£o')\" />",false,false );
 
     // Idioma
 		$opcoes = array( "" => "Selecione" );
@@ -266,7 +266,7 @@ class indice extends clsCadastro
 
 		//-----------------------INCLUI AUTOR------------------------//
 
-        $opcoes = array( "" => "Selecione", 1 => "Autor - Nome pessoal", 2 => "Autor - Evento", 3 => "Autor - Entidade coletiva", 4 => "Obra anÙnima");
+        $opcoes = array( "" => "Selecione", 1 => "Autor - Nome pessoal", 2 => "Autor - Evento", 3 => "Autor - Entidade coletiva", 4 => "Obra an√¥nima");
 		$this->campoLista( "ref_cod_tipo_autor", "Tipo de autor", $opcoes, $this->ref_cod_tipo_autor, false, true , false , false  , false, false  );
 		$this->campoTexto( "tipo_autor", "", $this->tipo_autor, 40, 255, false);
 		$helperOptions = array('objectName' => 'autores');
@@ -277,9 +277,9 @@ class indice extends clsCadastro
 		$this->campoTexto( "titulo", "T&iacute;tulo", $this->titulo, 40, 255, true );
 		$this->campoTexto( "sub_titulo", "Subt&iacute;tulo", $this->sub_titulo, 40, 255, false );
 		$this->campoTexto( "estante", "Estante", $this->estante, 20, 15, false );
-		$this->campoTexto( "dimencao", "Dimens„o", $this->dimencao, 20, 255, false );
+		$this->campoTexto( "dimencao", "Dimens√£o", $this->dimencao, 20, 255, false );
 		$this->campoTexto( "material_ilustrativo", "Material ilustrativo", $this->material_ilustrativo, 20, 255, false );
-		//$this->campoTexto( "dimencao_ilustrativo", "Dimens„o da ilustraÁ„o", $this->dimencao_ilustrativo, 20, 255, false );
+		//$this->campoTexto( "dimencao_ilustrativo", "Dimens√£o da ilustra√ß√£o", $this->dimencao_ilustrativo, 20, 255, false );
 		$this->campoTexto( "local", "Local", $this->local, 20, 255, false );
 
  		$helperOptions = array('objectName' => 'assuntos');
@@ -309,17 +309,17 @@ class indice extends clsCadastro
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra( 598, $this->pessoa_logada, 11,  "educar_acervo_lst.php" );
 
-		
+
 
 		$obj = new clsPmieducarAcervo( null, $this->ref_cod_exemplar_tipo, $this->ref_cod_acervo, null, $this->pessoa_logada, $this->ref_cod_acervo_colecao, $this->ref_cod_acervo_idioma, $this->ref_cod_acervo_editora, $this->titulo, $this->sub_titulo, $this->cdu, $this->cutter, $this->volume, $this->num_edicao, $this->ano, $this->num_paginas, $this->isbn, null, null, 1, $this->ref_cod_biblioteca, $this->cdd, $this->estante, $this->dimencao, $this->material_ilustrativo, null ,$this->local , $this->ref_cod_tipo_autor , $this->tipo_autor );
 		$cadastrou = $obj->cadastra();
 		if( $cadastrou )
-		{			
+		{
 			#cadastra assuntos para a obra
 			$this->gravaAssuntos($cadastrou);
 			$this->gravaAutores($cadastrou);
 			$this->gravaCategorias($cadastrou);
-			
+
 			$this->mensagem .= "Cadastro efetuado com sucesso.<br>";
 			header( "Location: educar_acervo_lst.php" );
 			die();
@@ -335,11 +335,11 @@ class indice extends clsCadastro
 		@session_start();
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
-		
+
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra( 598, $this->pessoa_logada, 11,  "educar_acervo_lst.php" );
 
-		
+
 
 		$obj = new clsPmieducarAcervo($this->cod_acervo, $this->ref_cod_exemplar_tipo, $this->ref_cod_acervo, $this->pessoa_logada, null, $this->ref_cod_acervo_colecao, $this->ref_cod_acervo_idioma, $this->ref_cod_acervo_editora, $this->titulo, $this->sub_titulo, $this->cdu, $this->cutter, $this->volume, $this->num_edicao, $this->ano, $this->num_paginas, $this->isbn, null, null, 1, $this->ref_cod_biblioteca, $this->cdd, $this->estante, $this->dimencao, $this->material_ilustrativo, null, $this->local, $this->ref_cod_tipo_autor , $this->tipo_autor);
 		$editou = $obj->edita();
@@ -408,18 +408,22 @@ class indice extends clsCadastro
 				$objCategoria->cadastraCategoriaParaObra($cod_acervo, $categoriaId);
 			}
 		}
-	}		
+	}
 
 	function gravaAutores($cod_acervo){
 		$objAutor = new clsPmieducarAcervoAcervoAutor();
 		$objAutor->deletaAutoresDaObra($cod_acervo);
+
+		$principal = 0;
+
 		foreach ($this->getRequest()->autores as $autorId) {
 			if (! empty($autorId)) {
+				$principal += 1;
 				$objAutor = new clsPmieducarAcervoAcervoAutor();
-				$objAutor->cadastraAutorParaObra($cod_acervo, $autorId);
+				$objAutor->cadastraAutorParaObra($cod_acervo, $autorId, $principal);
 			}
 		}
-	}	
+	}
 }
 
 // cria uma extensao da classe base
@@ -444,7 +448,7 @@ $j('#autores').val("");
 $j('#tipo_autor').hide();
 $j('#tipo_autor').val("");
 $j('#autores').closest('tr').show();
-	
+
 }else{
 $j('#tipo_autor').hide();
 $j('#tipo_autor').val("");
@@ -468,7 +472,7 @@ $j('#autores').val("");
 $j('#tipo_autor').hide();
 $j('#tipo_autor').val("");
 $j('#autores').closest('tr').show();
-	
+
 }else{
 $j('#tipo_autor').hide();
 $j('#tipo_autor').val("");
@@ -514,7 +518,7 @@ function getColecao( xml_acervo_colecao )
 	if(DOM_array.length)
 	{
 		campoColecao.length = 1;
-		campoColecao.options[0].text = 'Selecione uma coleÁ„o';
+		campoColecao.options[0].text = 'Selecione uma cole√ß√£o';
 		campoColecao.disabled = false;
 
 		for( var i=0; i<DOM_array.length; i++)
@@ -534,7 +538,7 @@ function getColecao( xml_acervo_colecao )
 		}
 		else
 		{
-			campoColecao.options[0].text = 'A biblioteca n„o possui coleÁıes';
+			campoColecao.options[0].text = 'A biblioteca n√£o possui cole√ß√µes';
 			setVisibility(document.getElementById('img_colecao'), true);
 		}
 	}
@@ -568,7 +572,7 @@ function getEditora( xml_acervo_editora )
 		}
 		else
 		{
-			campoEditora.options[0].text = 'A biblioteca n„o possui editoras';
+			campoEditora.options[0].text = 'A biblioteca n√£o possui editoras';
 			setVisibility(document.getElementById('img_editora'), true);
 		}
 	}
@@ -602,7 +606,7 @@ function getIdioma( xml_acervo_idioma )
 		}
 		else
 		{
-			campoIdioma.options[0].text = 'A biblioteca n„o possui idiomas';
+			campoIdioma.options[0].text = 'A biblioteca n√£o possui idiomas';
 			setVisibility(document.getElementById('img_idioma'), true);
 		}
 	}
@@ -626,7 +630,7 @@ function ajaxBiblioteca(acao)
 	}
 	campoColecao.length = 1;
 	campoColecao.disabled = true;
-	campoColecao.options[0].text = 'Carregando coleÁıes';
+	campoColecao.options[0].text = 'Carregando cole√ß√µes';
 
 	var xml_colecao = new ajax( getColecao );
 	xml_colecao.envia( "educar_colecao_xml.php?bib="+campoBiblioteca );
@@ -683,16 +687,16 @@ fixupPrincipalCheckboxes();
 
 function fixupAssuntosSize(){
 
-	$j('#assuntos_chzn ul').css('width', '307px');	
-	
+	$j('#assuntos_chzn ul').css('width', '307px');
+
 }
 
 fixupAssuntosSize();
 
 function fixupAutoresSize(){
 
-	$j('#autores_chzn ul').css('width', '307px');	
-	
+	$j('#autores_chzn ul').css('width', '307px');
+
 }
 
 fixupAutoresSize();
@@ -704,7 +708,7 @@ $assuntos.trigger('chosen:updated');
 var handleGetAssuntos = function(dataResponse) {
 
   $j.each(dataResponse['assuntos'], function(id, value) {
-  	
+
     $assuntos.children("[value=" + value + "]").attr('selected', '');
   });
 
@@ -712,10 +716,10 @@ var handleGetAssuntos = function(dataResponse) {
 }
 
 var getAssuntos = function() {
-	    
+
   var $cod_acervo = $j('#cod_acervo').val();
-  
-  if ($j('#cod_acervo').val()!='') {    
+
+  if ($j('#cod_acervo').val()!='') {
 
     var additionalVars = {
       id : $j('#cod_acervo').val(),
@@ -735,7 +739,7 @@ var getAssuntos = function() {
 getAssuntos();
 
 function fixupCategoriasSize(){
-	$j('#categorias_chzn ul').css('width', '307px');	
+	$j('#categorias_chzn ul').css('width', '307px');
 }
 fixupCategoriasSize();
 
@@ -753,8 +757,8 @@ var handleGetCategorias = function(dataResponse) {
 
 var getCategorias = function() {
   var $cod_acervo = $j('#cod_acervo').val();
-  
-  if ($j('#cod_acervo').val()!='') {    
+
+  if ($j('#cod_acervo').val()!='') {
     var additionalVars = {
       id : $j('#cod_acervo').val(),
     };
@@ -763,7 +767,7 @@ var getCategorias = function() {
       url      : getResourceUrlBuilder.buildUrl('/module/Api/categoria', 'categorias', additionalVars),
       dataType : 'json',
       data     : {},
-      success  : handleGetCategorias,      
+      success  : handleGetCategorias,
     };
 
     getResource(options);
@@ -779,9 +783,9 @@ var testezin;
 
 var handleGetAutores = function(dataResponse) {
   testezin = dataResponse['autores'];
-  
+
   $j.each(dataResponse['autores'], function(id, value) {
-  	
+
     $autores.children("[value=" + value + "]").attr('selected', '');
   });
 
@@ -789,10 +793,10 @@ var handleGetAutores = function(dataResponse) {
 }
 
 var getAutores = function() {
-	    
+
   var $cod_acervo = $j('#cod_acervo').val();
-  
-  if ($j('#cod_acervo').val()!='') {    
+
+  if ($j('#cod_acervo').val()!='') {
 
     var additionalVars = {
       id : $j('#cod_acervo').val(),
@@ -810,6 +814,6 @@ var getAutores = function() {
 }
 
 getAutores();
-// Para parecer como campo obrigatÛrio, j· que o required => true n„o est· funcionando corretamente
+// Para parecer como campo obrigat√≥rio, j√° que o required => true n√£o est√° funcionando corretamente
 
 </script>

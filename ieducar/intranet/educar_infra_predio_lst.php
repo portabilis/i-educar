@@ -1,25 +1,25 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
+	*	@author Prefeitura Municipal de ItajaÃ­								 *
 	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
+	*   Pacote: i-PLB Software PÃºblico Livre e Brasileiro					 *
 	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÃ­			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
+	*	Este  programa  Ã©  software livre, vocÃª pode redistribuÃ­-lo e/ou	 *
+	*	modificÃ¡-lo sob os termos da LicenÃ§a PÃºblica Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a versÃ£o 2 da	 *
+	*	LicenÃ§a   como  (a  seu  critÃ©rio)  qualquer  versÃ£o  mais  nova.	 *
 	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  Ã© distribuÃ­do na expectativa de ser Ãºtil, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia implÃ­cita de COMERCIALI-	 *
+	*	ZAÃ‡ÃƒO  ou  de ADEQUAÃ‡ÃƒO A QUALQUER PROPÃ“SITO EM PARTICULAR. Con-	 *
+	*	sulte  a  LicenÃ§a  PÃºblica  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
+	*	VocÃª  deve  ter  recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral GNU	 *
+	*	junto  com  este  programa. Se nÃ£o, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
@@ -91,159 +91,52 @@ class indice extends clsListagem
 		$obj_permissao = new clsPermissoes();
 		$nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
 
-		//busca instituicao e escola do usuario
-		$obj_usuario = new clsPmieducarUsuario($this->pessoa_logada);
-		$obj_usuario->setCamposLista("ref_cod_instituicao,ref_cod_escola");
-		$det_obj_usuario = $obj_usuario->detalhe();
-
-		$instituicao_usuario = $det_obj_usuario["ref_cod_instituicao"];
-
-		$escola_usuario = $det_obj_usuario["ref_cod_escola"];
-
 		$obj_infra_predio = new clsPmieducarInfraPredio();
 		$obj_infra_predio->setOrderby( "nm_predio ASC" );
 		$obj_infra_predio->setLimite( $this->limite, $this->offset );
 
-		$this->ref_cod_escola = $_GET["ref_cod_escola"];
-		$this->ref_cod_instituicao = $_GET["ref_cod_instituicao"];
-		$this->nm_predio = $_GET["nm_predio"];
-
-		/*filtro escola-instituicao*/
-		$obrigatorio = false;
-		include("include/pmieducar/educar_pesquisa_instituicao_escola.php");
-
-		/*		if(isset($_GET["ref_cod_instituicao"]) &&  !empty($_GET["ref_cod_instituicao"]) && is_array($opcoes_instituicao) && array_key_exists($_GET["ref_cod_instituicao"],$opcoes_instituicao) )
-				{
-					$this->ref_cod_instituicao = $_GET["ref_cod_instituicao"];
-				}
-				else
-				{
-					$this->ref_cod_instituicao = null;
-				}*/
-		switch ($nivel_usuario) {
-			case 4:
-				//busca escola do usuario
-
-
-				$this->addCabecalhos( array(
-					"Escola",
-					"Nome Predio",
-				) );
-
-
-				$this->ref_cod_escola = $escola_usuario;
-
-				$lista = $obj_infra_predio->lista(
-					$this->cod_infra_predio,
-					null,
-					null,
-					$this->ref_cod_escola,
-					$this->nm_predio,
-					null,
-					null,
-					null,
-					null,
-					null,
-					null,
-					1,
-					$escola_in
-					,null
-				);
-				break;
-
-			case 2:
-
-
-				$this->addCabecalhos( array(
-					"Institui&ccedil;&atilde;o",
-					"Escola",
-					"Nome Predio",
-				) );
-
-				$this->ref_cod_escola = $_GET["ref_cod_escola"];
-				$obj_escola = new clsPmieducarEscola($this->ref_cod_escola,null,null,$instituicao_usuario,null,null,null,null,null,null,1);
-				$obj_escola->setCamposLista("cod_escola,nm_escola");
-
-				if(!$obj_escola->detalhe())
-					$this->ref_cod_escola = null;
-
-			//	$obj_infra_predio->setOrderby("escola.nm_escola");
-				$lista = $obj_infra_predio->lista(
-					$this->cod_infra_predio,
-					null,
-					null,
-					$this->ref_cod_escola,
-					$this->nm_predio,
-					null,
-					null,
-					null,
-					null,
-					null,
-					null,
-					1,
-					$escola_in,
-					$instituicao_usuario
-				);
-				break;
-
-			case 1:
-				//poli-institucional
-
-				$this->addCabecalhos( array(
-					"Institui&ccedil;&atilde;o",
-					"Escola",
-					"Nome Predio",
-				) );
-
-
-
-				$obj_escola = new clsPmieducarEscola($this->ref_cod_escola,null,null,ref_cod_instituicao,null,null,null,null,null,null,1);
-				$obj_escola->setCamposLista("cod_escola,nm_escola");
-
-				if(!$obj_escola->detalhe() && !empty($this->ref_cod_escola) && !empty($this->ref_cod_instituicao))
-					$this->ref_cod_instituicao = $this->ref_cod_escola = null;
-
-				$lista = $obj_infra_predio->lista(
-					$this->cod_infra_predio,
-					null,
-					null,
-					$this->ref_cod_escola,
-					$this->nm_predio,
-					null,
-					null,
-					null,
-					null,
-					null,
-					null,
-					1,
-					$escola_in,
-					$this->ref_cod_instituicao
-				);
-				break;
-			default:
-				break;
-		}
-		$this->titulo = "Infra Predio - Listagem";
-
 		foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
 			$this->$var = ( $val === "" ) ? null: $val;
 
-		
+		$this->inputsHelper()->dynamic(array('instituicao', 'escola'));
 
+		$this->addCabecalhos( array(
+			"Institui&ccedil;&atilde;o",
+			"Escola",
+			"Nome Predio",
+		) );
 
+		$obj_escola = new clsPmieducarEscola($this->ref_cod_escola,null,null,ref_cod_instituicao,null,null,null,null,null,null,1);
+		$obj_escola->setCamposLista("cod_escola,nm_escola");
 
+		if(!$obj_escola->detalhe() && !empty($this->ref_cod_escola) && !empty($this->ref_cod_instituicao))
+			$this->ref_cod_instituicao = $this->ref_cod_escola = null;
 
+		$lista = $obj_infra_predio->lista(
+			$this->cod_infra_predio,
+			null,
+			null,
+			$this->ref_cod_escola,
+			$this->nm_predio,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null,
+			1,
+			$escola_in,
+			$this->ref_cod_instituicao
+		);
+
+		$this->titulo = "Infra Predio - Listagem";
 
 		// outros Filtros
 		$this->campoTexto( "nm_predio", "Nome Pr&eacute;dio", $this->nm_predio, 30, 255, false );
 
-
-
 		// Paginador
 		$this->limite = 20;
 		$this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
-
-
 
 		$total = $obj_infra_predio->_total;
 
@@ -327,7 +220,7 @@ class indice extends clsListagem
 	    $localizacao = new LocalizacaoSistema();
 	    $localizacao->entradaCaminhos( array(
 	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-	         "educar_index.php"                  => "i-Educar - Escola",
+	         "educar_index.php"                  => "Escola",
 	         ""        => "Listagem de pr&eacute;dios"             
 	    ));
 	    $this->enviaLocalizacao($localizacao->montar());	

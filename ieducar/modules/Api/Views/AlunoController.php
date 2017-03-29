@@ -589,10 +589,18 @@ class AlunoController extends ApiCoreController
   }
 
   protected function loadNomeTurmaOrigem($matriculaId) {
-    $sql = "select nm_turma from pmieducar.matricula_turma mt
-            left join pmieducar.turma t on (t.cod_turma = mt.ref_cod_turma)
-            where ref_cod_matricula = $1 and mt.ativo = 0 and mt.ref_cod_turma <> COALESCE((select ref_cod_turma from pmieducar.matricula_turma
-              where ref_cod_matricula = $1 and ativo = 1 limit 1),0) order by mt.data_exclusao desc limit 1";
+    $sql = "SELECT nm_turma
+              FROM pmieducar.matricula_turma mt
+              LEFT JOIN pmieducar.turma t ON (t.cod_turma = mt.ref_cod_turma)
+             WHERE ref_cod_matricula = $1
+               AND mt.ativo = 0
+               AND mt.ref_cod_turma <> COALESCE((SELECT ref_cod_turma
+                                                   FROM pmieducar.matricula_turma
+                                                  WHERE ref_cod_matricula = $1
+                                                    AND ativo = 1
+                                                  LIMIT 1), 0)
+             ORDER BY mt.data_exclusao DESC
+             LIMIT 1";
 
     return $this->toUtf8(Portabilis_Utils_Database::selectField($sql, $matriculaId), array('transform' => true));
   }
@@ -760,7 +768,7 @@ class AlunoController extends ApiCoreController
      $sqls[] = "select distinct aluno.cod_aluno as id,
                 pessoa.nome as name from pmieducar.aluno, cadastro.pessoa where
                 pessoa.idpes = aluno.ref_idpes and aluno.ativo = 1 and
-                lower(to_ascii(pessoa.nome)) like '%'||lower(to_ascii($1))||'%' and $2 = $2
+                lower((pessoa.nome)) like '%'||lower(($1))||'%' and $2 = $2
                 order by nome limit 15";
     }
 
@@ -772,7 +780,7 @@ class AlunoController extends ApiCoreController
             pessoa.idpes = aluno.ref_idpes and aluno.ativo = matricula.ativo and
             matricula.ativo = 1 and (select case when $2 != 0 then matricula.ref_ref_cod_escola = $2
             else 1=1 end) and
-            lower(to_ascii(pessoa.nome)) like '%'||lower(to_ascii($1))||'%' and matricula.aprovado in
+            lower((pessoa.nome)) like '%'||lower(($1))||'%' and matricula.aprovado in
             (1, 2, 3, 4, 7, 8, 9) limit 15) as alunos order by name";
 
     return $sqls;
@@ -1540,7 +1548,7 @@ class AlunoController extends ApiCoreController
         $sql .= 'AND t.cod_turma = $'.count($params).' ';
       }
 
-      $sql .= " ORDER BY to_ascii(upper(p.nome))";
+      $sql .= " ORDER BY (upper(p.nome))";
 
       $alunos = $this->fetchPreparedQuery($sql, $params);
 

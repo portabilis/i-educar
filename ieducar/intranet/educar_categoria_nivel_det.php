@@ -1,33 +1,33 @@
 <?php
 
 /*
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  */
 
 /**
- * Detalhes de um nÌvel de categoria.
+ * Detalhes de um n√≠vel de categoria.
  *
- * @author   Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author   Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
  * @package  Core
- * @since    Arquivo disponÌvel desde a vers„o 1.0.0
+ * @since    Arquivo dispon√≠vel desde a vers√£o 1.0.0
  * @version  $Id$
  */
 
@@ -101,18 +101,19 @@ class indice extends clsDetalhe
 
 		if($lst_nivel)
 		{
-			$tab_niveis .= "<table cellspacing='0' cellpadding='0' width='200' border='0' style='border:1px dotted #000000'>";
+			$tab_niveis .= "<table cellspacing='0' cellpadding='0' width='200' border='0'>";
 
 			$class2 = $class2 == "formlttd" ? "formmdtd" : "formlttd" ;
 			$tab_niveis .= " <tr>
-								<td bgcolor='#A1B3BD' align='center' colspan='2'>N&iacute;veis</td>
+								<td bgcolor='#ccdce6' align='center'>N&iacute;veis</td>
+								<td bgcolor='#ccdce6' align='center'>Subn&iacute;veis</td>
 							</tr>";
 			foreach ($lst_nivel as $nivel)
 			{
 
 				$tab_niveis .= " <tr class='$class2' align='center'>
 									<td align='left'>{$nivel['nm_nivel']}</td>
-									<td align='left' width='30'><a href='javascript:popless(\"{$nivel['cod_nivel']}\")'><img src='imagens/nvp_bot_ad_sub.gif' border='0'></a></td>
+									<td align='center'><a style='color:#0ac336;' href='javascript:popless(\"{$nivel['cod_nivel']}\")'><i class='fa fa-plus-square' aria-hidden='true'></i></a></td>
 								</tr>";
 
 				$class2 = $class2 == "formlttd" ? "formmdtd" : "formlttd" ;
@@ -129,7 +130,7 @@ class indice extends clsDetalhe
 		{
 			$this->url_novo = "educar_categoria_nivel_cad.php";
 			$this->url_editar = "educar_categoria_nivel_cad.php?cod_categoria_nivel={$registro["cod_categoria_nivel"]}";
-			$this->array_botao[] = 'Adicionar NÌveis';
+			$this->array_botao[] = 'Adicionar N√≠veis';
 			$this->array_botao_url[] = "educar_nivel_cad.php?cod_categoria={$registro["cod_categoria_nivel"]}";
 		}
 
@@ -139,7 +140,7 @@ class indice extends clsDetalhe
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
+         "educar_index.php"                  => "Escola",
          ""                                  => "Detalhe da categoria/n&iacute;vel"
     ));
     $this->enviaLocalizacao($localizacao->montar());		

@@ -146,6 +146,7 @@ class indice extends clsCadastro
   var $etapa_educacenso2;
   var $ref_cod_disciplina_dispensada;
   var $codigo_inep_educacenso;
+  var $tipo_mediacao_didatico_pedagogico;
 
   var $sequencial;
   var $ref_cod_modulo;
@@ -239,7 +240,7 @@ class indice extends clsCadastro
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
+         "educar_index.php"                  => "Escola",
          ""        => "{$nomeMenu} turma"
     ));
     $this->enviaLocalizacao($localizacao->montar());
@@ -797,6 +798,14 @@ class indice extends clsCadastro
     $options = array('label' => 'Etapa da turma', 'resources' => $etapas_educacenso, 'value' => $this->etapa_educacenso2, 'required' => false, 'size' => 70,);
     $this->inputsHelper()->select('etapa_educacenso2', $options);
 
+    $resources = array(
+      1    => 'Presencial',
+      2    => 'Semipresencial',
+      3    => Portabilis_String_Utils::toLatin1('Educação a distância'),
+    );
+    $options = array('label' => 'Tipo de mediação didático pedagógico', 'resources' => $resources, 'value' => $this->tipo_mediacao_didatico_pedagogico, 'required' => false, 'size' => 70,);
+    $this->inputsHelper()->select('tipo_mediacao_didatico_pedagogico', $options);
+
     $options = array('label' => Portabilis_String_Utils::toLatin1('Não informar esta turma no Censo escolar'),
                      'value' => $this->nao_informar_educacenso,
                      'label_hint' => Portabilis_String_Utils::toLatin1('Caso este campo seja selecionado, esta turma e todas as matrículas vinculadas a mesma, não serão informadas no arquivo de exportação do Censo escolar'));
@@ -1031,6 +1040,7 @@ class indice extends clsCadastro
         $obj->ref_ref_cod_serie_mult = $this->ref_ref_cod_serie_mult == "" ? NULL : $this->ref_ref_cod_serie_mult;
         $obj->ref_cod_disciplina_dispensada = $this->ref_cod_disciplina_dispensada == "" ? NULL : $this->ref_cod_disciplina_dispensada;
         $obj->nao_informar_educacenso = $this->nao_informar_educacenso == 'on' ? 1 : 0;
+        $obj->tipo_mediacao_didatico_pedagogico = $this->tipo_mediacao_didatico_pedagogico;
 
         $this->cod_turma = $cadastrou = $obj->cadastra();
 
@@ -1143,6 +1153,7 @@ class indice extends clsCadastro
       $obj->ref_ref_cod_serie_mult = $this->ref_ref_cod_serie_mult == "" ? NULL : $this->ref_ref_cod_serie_mult;
       $obj->ref_cod_disciplina_dispensada = $this->ref_cod_disciplina_dispensada == "" ? NULL : $this->ref_cod_disciplina_dispensada;
       $obj->nao_informar_educacenso = $this->nao_informar_educacenso == 'on' ? 1 : 0;
+      $obj->tipo_mediacao_didatico_pedagogico = $this->tipo_mediacao_didatico_pedagogico;
 
       $this->cod_turma = $cadastrou = $obj->cadastra();
 
@@ -1259,6 +1270,7 @@ class indice extends clsCadastro
         $obj->ref_ref_cod_serie_mult = $this->ref_ref_cod_serie_mult == "" ? NULL : $this->ref_ref_cod_serie_mult;
         $obj->ref_cod_disciplina_dispensada = $this->ref_cod_disciplina_dispensada == "" ? NULL : $this->ref_cod_disciplina_dispensada;
         $obj->nao_informar_educacenso = $this->nao_informar_educacenso == 'on' ? 1 : 0;
+        $obj->tipo_mediacao_didatico_pedagogico = $this->tipo_mediacao_didatico_pedagogico;
 
         $editou = $obj->edita();
 
@@ -1371,6 +1383,7 @@ class indice extends clsCadastro
       $obj->ref_ref_cod_serie_mult = $this->ref_ref_cod_serie_mult == "" ? NULL : $this->ref_ref_cod_serie_mult;
       $obj->ref_cod_disciplina_dispensada = $this->ref_cod_disciplina_dispensada == "" ? NULL : $this->ref_cod_disciplina_dispensada;
       $obj->nao_informar_educacenso = $this->nao_informar_educacenso == 'on' ? 1 : 0;
+      $obj->tipo_mediacao_didatico_pedagogico = $this->tipo_mediacao_didatico_pedagogico;
 
       $editou = $obj->edita();
     }

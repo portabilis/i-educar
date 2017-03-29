@@ -90,7 +90,7 @@ function jsonResourcesToSelectOptions(resources, captalizeFirstCaracter) {
     if (captalizeFirstCaracter)
       opt.html(safeCapitalizeFirstCaracter(newValue));
     else
-      opt.html(safeCapitalize(newValue));
+      opt.html(newValue);
 
     options.push(opt);    
   });

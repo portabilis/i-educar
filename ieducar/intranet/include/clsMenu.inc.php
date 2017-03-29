@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Include
- * @since     Arquivo disponÌvel desde a vers„o 1.0.0
+ * @since     Arquivo dispon√≠vel desde a vers√£o 1.0.0
  * @version   $Id$
  */
 
@@ -33,11 +33,11 @@ require_once 'include/clsBanco.inc.php';
 /**
  * clsMenu class.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Include
- * @since     Classe disponÌvel desde a vers„o 1.0.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
  * @version   @@package_version@@
  */
 class clsMenu
@@ -46,7 +46,7 @@ class clsMenu
 
   function MakeMenu($linhaTemplate, $categoriaTemplate)
   {
-    // Usa helper de Url para pegar o path da requisiÁ„o
+    // Usa helper de Url para pegar o path da requisi√ß√£o
     require_once 'CoreExt/View/Helper/UrlHelper.php';
 
     $uri = explode('/', CoreExt_View_Helper_UrlHelper::url($_SERVER['REQUEST_URI'],
@@ -77,7 +77,7 @@ class clsMenu
       SELECT
         mtu.ref_cod_menu_submenu
       FROM
-      pmieducar.menu_tipo_usuario mtu   
+      pmieducar.menu_tipo_usuario mtu
       INNER JOIN pmieducar.tipo_usuario tu ON mtu.ref_cod_tipo_usuario = tu.cod_tipo_usuario
       INNER JOIN pmieducar.usuario u ON tu.cod_tipo_usuario = u.ref_cod_tipo_usuario
       WHERE  u.cod_usuario = ' . $id_usuario);
@@ -116,27 +116,22 @@ class clsMenu
                 THEN 0
               ELSE
                 1
-            END AS ref_menu_pai
+            END AS ref_menu_pai,
+            pai.caminho,
+            pai.icon_class,
+            pai.ord_menu
           FROM
             menu_menu AS pai LEFT OUTER JOIN
               menu_menu AS filho ON (filho.ref_cod_menu_pai = pai.cod_menu_menu AND pai.ref_cod_menu_pai = NULL),
             menu_submenu AS sub,
             menu_menu as nome_menu
           WHERE
-            nome_menu.cod_menu_menu = COALESCE(pai.ref_cod_menu_pai,pai.cod_menu_menu)
+            pai.ativo = TRUE
+            AND nome_menu.cod_menu_menu = COALESCE(pai.ref_cod_menu_pai,pai.cod_menu_menu)
             AND sub.cod_sistema = '2'
             AND pai.cod_menu_menu = sub.ref_cod_menu_menu
-            AND sub.cod_menu_submenu NOT IN (
-              SELECT
-                ref_cod_menu_submenu
-              FROM
-                pmicontrolesis.menu
-              WHERE
-                suprime_menu = 1
-                AND ref_cod_menu_submenu IS NOT NULL
-            )
           ORDER BY
-            upper(nome_menu.nm_menu), ref_menu_pai, UPPER(pai.nm_menu), sub.nm_submenu";
+            pai.ord_menu, upper(nome_menu.nm_menu), ref_menu_pai, UPPER(pai.nm_menu), sub.nm_submenu";
       }
       else {
         $sql ="
@@ -154,18 +149,22 @@ class clsMenu
               ELSE
                 1
             END AS ref_menu_pai,
-            UPPER(nome_menu.nm_menu), UPPER(pai.nm_menu), sub.nm_submenu
+            pai.caminho,
+            pai.icon_class,
+            pai.ord_menu,
+            pai.ord_menu, UPPER(nome_menu.nm_menu), UPPER(pai.nm_menu), sub.nm_submenu
           FROM
             menu_menu AS pai LEFT OUTER JOIN
               menu_menu AS filho ON (filho.ref_cod_menu_pai = pai.cod_menu_menu),
             menu_submenu AS sub,
             menu_menu AS nome_menu
           WHERE
-            nome_menu.cod_menu_menu = COALESCE(pai.ref_cod_menu_pai, pai.cod_menu_menu)
+            pai.ativo = TRUE
+            AND nome_menu.cod_menu_menu = COALESCE(pai.ref_cod_menu_pai, pai.cod_menu_menu)
             AND sub.cod_sistema = '2'
             AND pai.cod_menu_menu = sub.ref_cod_menu_menu
           ORDER BY
-            UPPER(nome_menu.nm_menu), ref_menu_pai, UPPER(pai.nm_menu), sub.nm_submenu";
+            pai.ord_menu, UPPER(nome_menu.nm_menu), ref_menu_pai, UPPER(pai.nm_menu), sub.nm_submenu";
       }
     }
     else {
@@ -176,10 +175,6 @@ class clsMenu
       }
 
       $suspenso = '';
-
-      if ($_GET['suspenso'] == 1 || $_SESSION['suspenso'] == 1 || $_SESSION['tipo_menu'] == 1) {
-        $suspenso = " AND sub.cod_menu_submenu not in (select ref_cod_menu_submenu FROM pmicontrolesis.menu WHERE suprime_menu = 1 AND ref_cod_menu_submenu IS NOT NULL)";
-      }
 
       if ($strAutorizado == '999999') {
         $sql ="
@@ -196,13 +191,17 @@ class clsMenu
                 THEN 0
               ELSE
                1
-            END AS ref_menu_pai
+            END AS ref_menu_pai,
+            pai.caminho,
+            pai.icon_class,
+            pai.ord_menu
           FROM
             menu_menu AS pai LEFT OUTER JOIN menu_menu as filho ON (filho.ref_cod_menu_pai = pai.cod_menu_menu),
             menu_submenu AS sub,
             menu_menu AS nome_menu
           WHERE
-            nome_menu.cod_menu_menu = COALESCE(pai.ref_cod_menu_pai, pai.cod_menu_menu)
+            pai.ativo = TRUE
+            AND nome_menu.cod_menu_menu = COALESCE(pai.ref_cod_menu_pai, pai.cod_menu_menu)
             AND sub.cod_sistema = '2'
             AND pai.cod_menu_menu = sub.ref_cod_menu_menu
             AND ($query_lista
@@ -216,7 +215,7 @@ class clsMenu
               )
             )
           ORDER BY
-            UPPER(nome_menu.nm_menu), ref_menu_pai, UPPER(pai.nm_menu), sub.nm_submenu";
+            pai.ord_menu, UPPER(nome_menu.nm_menu), ref_menu_pai, UPPER(pai.nm_menu), sub.nm_submenu";
       }
       else {
         $sql ="
@@ -234,15 +233,19 @@ class clsMenu
               ELSE
                 1
             END AS ref_menu_pai,
+            pai.caminho,
+            pai.icon_class,
             UPPER(nome_menu.nm_menu),
-            UPPER(pai.nm_menu)
+            UPPER(pai.nm_menu),
+            pai.ord_menu
           FROM
             menu_menu AS pai
             LEFT OUTER JOIN menu_menu AS filho ON (filho.ref_cod_menu_pai = pai.cod_menu_menu),
             menu_submenu AS sub,
             menu_menu AS nome_menu
           WHERE
-            nome_menu.cod_menu_menu = COALESCE(pai.ref_cod_menu_pai, pai.cod_menu_menu)
+            pai.ativo = TRUE
+            AND nome_menu.cod_menu_menu = COALESCE(pai.ref_cod_menu_pai, pai.cod_menu_menu)
             AND sub.cod_sistema = '2'
             AND pai.cod_menu_menu = sub.ref_cod_menu_menu
             AND ($query_lista
@@ -262,7 +265,7 @@ class clsMenu
                   AND usuario.cod_usuario = $id_usuario)
             $suspenso
           ORDER BY
-            UPPER(nome_menu.nm_menu), ref_menu_pai, UPPER(pai.nm_menu), sub.nm_submenu
+            pai.ord_menu, UPPER(nome_menu.nm_menu), ref_menu_pai, UPPER(pai.nm_menu), sub.nm_submenu
         ";
       }
     }
@@ -271,10 +274,10 @@ class clsMenu
 
     while ($db->ProximoRegistro()) {
       list ($nome,$nomepai, $titlepai, $nomesub, $arquivo, $titlesub,
-        $cod_submenu, $ref_menu_pai) = $db->Tupla();
+        $cod_submenu, $ref_menu_pai, $caminho, $icon) = $db->Tupla();
 
       $itens_menu[] = array($nome, $nomepai, $titlepai, $nomesub, $arquivo,
-        $titlesub, $cod_submenu,$ref_menu_pai);
+        $titlesub, $cod_submenu,$ref_menu_pai, $caminho, $icon);
     }
 
     $saida = '';
@@ -282,7 +285,7 @@ class clsMenu
 
     foreach ($itens_menu as $item) {
       if ($item[0] != $menuPaiAtual) {
-        $estilo_linha = 'nvp_cor_sim';
+        $estilo_linha = 'nvp_sub';
 
         $this->aberto = 0;
         $menuPaiId = $item[6];
@@ -293,7 +296,7 @@ class clsMenu
           }
         }
 
-        // Define a aÁ„o para ser contr·ria ao status atual
+        // Define a a√ß√£o para ser contr√°ria ao status atual
         if ($this->aberto) {
           $imagem     = 'up2';
           $acao       = 0;
@@ -310,11 +313,15 @@ class clsMenu
         $saida    = str_replace('<!-- #&MENUS&# -->', $submenus, $saida);
         $submenus = '';
 
+        $faIcon = empty($item[9]) ? '' : '<i class="fa '. $item[9] .'" aria-hidden="true"></i>';
+
         // Adiciona um menu pai
         $aux_temp = $linha_nova_subtitulo;
         $aux_temp = str_replace('<!-- #&NOME&# -->',       $item[0], $aux_temp);
         $aux_temp = str_replace('<!-- #&ALT&# -->',        $item[3], $aux_temp);
         $aux_temp = str_replace('<!-- #&ID&# -->',         $item[6], $aux_temp);
+        $aux_temp = str_replace('<!-- #&CAMINHO&# -->',    $item[8], $aux_temp);
+        $aux_temp = str_replace('<!-- #&FAICON&# -->',     $faIcon, $aux_temp);
         $aux_temp = str_replace('<!-- #&ACAO&# -->',       $acao, $aux_temp);
         $aux_temp = str_replace('<!-- #&SIMBOLO&# -->',    $simbolo, $aux_temp);
         $aux_temp = str_replace('<!-- #&TITLE_ACAO&# -->', $title_acao, $aux_temp);
@@ -328,7 +335,7 @@ class clsMenu
 
         $saida .= $aux_temp;
 
-        // Define que este È o menu pai atual
+        // Define que este √© o menu pai atual
         $menuPaiAtual = $item[0];
       }
 
@@ -340,14 +347,11 @@ class clsMenu
         $target = '_top';
       }
 
-      $estilo_linha = $estilo_linha == 'nvp_cor_sim' ?
-        'nvp_cor_nao' : 'nvp_cor_sim';
-
       // Path do item de menu
       $path = $item[4];
 
-      // Corrige o path usando caminhos relativos para permitir a inclus„o
-      // de itens no menu que apontem para um mÛdulo
+      // Corrige o path usando caminhos relativos para permitir a inclus√£o
+      // de itens no menu que apontem para um m√≥dulo
       if ($uri[1] == 'module') {
         if (0 === strpos($path, 'module')) {
           $path = '../../' . $path;

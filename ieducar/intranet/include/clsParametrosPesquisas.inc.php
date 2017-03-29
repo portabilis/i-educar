@@ -1,25 +1,25 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 *																	     *
-*	@author Prefeitura Municipal de Itajaí								 *
+*	@author Prefeitura Municipal de ItajaÃ­								 *
 *	@updated 29/03/2007													 *
-*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
+*   Pacote: i-PLB Software PÃºblico Livre e Brasileiro					 *
 *																		 *
-*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
+*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÃ­			 *
 *						ctima@itajai.sc.gov.br					    	 *
 *																		 *
-*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
+*	Este  programa  Ã©  software livre, vocÃª pode redistribuÃ­-lo e/ou	 *
+*	modificÃ¡-lo sob os termos da LicenÃ§a PÃºblica Geral GNU, conforme	 *
+*	publicada pela Free  Software  Foundation,  tanto  a versÃ£o 2 da	 *
+*	LicenÃ§a   como  (a  seu  critÃ©rio)  qualquer  versÃ£o  mais  nova.	 *
 *																		 *
-*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
+*	Este programa  Ã© distribuÃ­do na expectativa de ser Ãºtil, mas SEM	 *
+*	QUALQUER GARANTIA. Sem mesmo a garantia implÃ­cita de COMERCIALI-	 *
+*	ZAÃ‡ÃƒO  ou  de ADEQUAÃ‡ÃƒO A QUALQUER PROPÃ“SITO EM PARTICULAR. Con-	 *
+*	sulte  a  LicenÃ§a  PÃºblica  Geral  GNU para obter mais detalhes.	 *
 *																		 *
-*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-*	junto  com  este  programa. Se não, escreva para a Free Software	 *
+*	VocÃª  deve  ter  recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral GNU	 *
+*	junto  com  este  programa. Se nÃ£o, escreva para a Free Software	 *
 *	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 *	02111-1307, USA.													 *
 *																		 *
@@ -28,14 +28,14 @@
 require_once( "include/Geral.inc.php" );
 
 /**
- * Classe de parametrização dos dados a serem informados para as listagens genéricas.
+ * Classe de parametrizaÃ§Ã£o dos dados a serem informados para as listagens genÃ©ricas.
  *
  * @author Adriano Erik Weiguert Nagasava
  */
 class clsParametrosPesquisas
 {
 	/**
-	 * Deve ser utilizado para informar se haverá submit (1) ou não na página (0).
+	 * Deve ser utilizado para informar se haverÃ¡ submit (1) ou nÃ£o na pÃ¡gina (0).
 	 *
 	 * @var int
 	 */
@@ -70,49 +70,49 @@ class clsParametrosPesquisas
 	var $campo_valor;
 
 	/**
-	 * Deve ser utilizado para informar se será uma pesquisa de pessoa física (F), pessoa jurídica (J) ou pessoa física e jurídica (FJ).
+	 * Deve ser utilizado para informar se serÃ¡ uma pesquisa de pessoa fÃ­sica (F), pessoa jurÃ­dica (J) ou pessoa fÃ­sica e jurÃ­dica (FJ).
 	 *
 	 * @var char
 	 */
 	var $pessoa;
 
 	/**
-	 * Deve ser usado para indicar se deseja que apareça o botão de novo (S) ou não (N) na pesquisa de pessoa.
+	 * Deve ser usado para indicar se deseja que apareÃ§a o botÃ£o de novo (S) ou nÃ£o (N) na pesquisa de pessoa.
 	 *
 	 * @var char
 	 */
 	var $pessoa_novo;
 
 	/**
-	 * Deve ser usado para indicar se deseja que a tela seja aberta num iframe ("frame") ou para abrir na própria janela ("window").
+	 * Deve ser usado para indicar se deseja que a tela seja aberta num iframe ("frame") ou para abrir na prÃ³pria janela ("window").
 	 *
 	 * @var string
 	 */
 	var $pessoa_tela;
 
 	/**
-	 * Deve ser usado para informar o nome do campo para onde será retornado o valor "0", indicando que deve ser feito um novo cadastro de pessoa.
+	 * Deve ser usado para informar o nome do campo para onde serÃ¡ retornado o valor "0", indicando que deve ser feito um novo cadastro de pessoa.
 	 *
 	 * @var string
 	 */
 	var $pessoa_campo;
 
 	/**
-	 * Deve ser usado para indicar se deseja que após o usuário selecionar uma pessoa, ela seja redirecionada pra uma tela de cadastro com as informações da pessoa selecionada (S) ou não (N).
+	 * Deve ser usado para indicar se deseja que apÃ³s o usuÃ¡rio selecionar uma pessoa, ela seja redirecionada pra uma tela de cadastro com as informaÃ§Ãµes da pessoa selecionada (S) ou nÃ£o (N).
 	 *
 	 * @var char
 	 */
 	var $pessoa_editar;
 
 	/**
-	 * Deve ser usado para indicar em qual sistema a pessoa física está/será cadastrada.
+	 * Deve ser usado para indicar em qual sistema a pessoa fÃ­sica estÃ¡/serÃ¡ cadastrada.
 	 *
 	 * @var int
 	 */
 	var $ref_cod_sistema;
 
 	/**
-	 * Deve ser usado para indicar se na inclusão o CPF da pessoa é obrigatório ("S") ou não ("N").
+	 * Deve ser usado para indicar se na inclusÃ£o o CPF da pessoa Ã© obrigatÃ³rio ("S") ou nÃ£o ("N").
 	 *
 	 * @var int
 	 */
@@ -217,7 +217,7 @@ class clsParametrosPesquisas
 	}
 
 	/**
-	 * Adiciona um novo campo do tipo texto a ser buscado na pesquisa e setado após ela.
+	 * Adiciona um novo campo do tipo texto a ser buscado na pesquisa e setado apÃ³s ela.
 	 *
 	 * @param string $campo_nome
 	 * @param string $campo_valor
@@ -230,7 +230,7 @@ class clsParametrosPesquisas
 	}
 
 	/**
-	 * Adiciona um novo campo do tipo select a ser buscado na pesquisa e setado após ela.
+	 * Adiciona um novo campo do tipo select a ser buscado na pesquisa e setado apÃ³s ela.
 	 *
 	 * @param string $campo_nome
 	 * @param string $campo_indice
@@ -244,7 +244,7 @@ class clsParametrosPesquisas
 	}
 
 	/**
-	 * Seta o nome do campo especificado na posição indicada.
+	 * Seta o nome do campo especificado na posiÃ§Ã£o indicada.
 	 *
 	 * @param int $posicao
 	 * @param string $valor
@@ -254,7 +254,7 @@ class clsParametrosPesquisas
 	}
 
 	/**
-	 * Caso seja passada a posição do campo por parâmetro, retorna o nome do campo especificado, senão, retorna um array com os nomes de todos os campos.
+	 * Caso seja passada a posiÃ§Ã£o do campo por parÃ¢metro, retorna o nome do campo especificado, senÃ£o, retorna um array com os nomes de todos os campos.
 	 *
 	 * @param int $posicao
 	 * @return string or array
@@ -268,7 +268,7 @@ class clsParametrosPesquisas
 	}
 
 	/**
-	 * Seta o tipo do campo especificado na posição indicada como "text".
+	 * Seta o tipo do campo especificado na posiÃ§Ã£o indicada como "text".
 	 *
 	 * @param int $posicao
 	 */
@@ -277,7 +277,7 @@ class clsParametrosPesquisas
 	}
 
 	/**
-	 * Seta o tipo do campo especificado na posição indicada como "select".
+	 * Seta o tipo do campo especificado na posiÃ§Ã£o indicada como "select".
 	 *
 	 * @param int $posicao
 	 */
@@ -286,7 +286,7 @@ class clsParametrosPesquisas
 	}
 
 	/**
-	 * Caso seja passada a posição do campo por parâmetro, retorna o tipo do campo especificado, senão, retorna um array com os tipos de todos os campos.
+	 * Caso seja passada a posiÃ§Ã£o do campo por parÃ¢metro, retorna o tipo do campo especificado, senÃ£o, retorna um array com os tipos de todos os campos.
 	 *
 	 * @param int $posicao
 	 * @return string or array
@@ -300,7 +300,7 @@ class clsParametrosPesquisas
 	}
 
 	/**
-	 * Seta o indice do campo especificado na posição indicada.
+	 * Seta o indice do campo especificado na posiÃ§Ã£o indicada.
 	 *
 	 * @param int $posicao
 	 * @param string $valor
@@ -310,7 +310,7 @@ class clsParametrosPesquisas
 	}
 
 	/**
-	 * Caso seja passada a posição do campo por parâmetro, retorna o indice do campo especificado, senão, retorna um array com os indices de todos os campos.
+	 * Caso seja passada a posiÃ§Ã£o do campo por parÃ¢metro, retorna o indice do campo especificado, senÃ£o, retorna um array com os indices de todos os campos.
 	 *
 	 * @param int $posicao
 	 * @return int or array
@@ -323,7 +323,7 @@ class clsParametrosPesquisas
 	}
 
 	/**
-	 * Seta o nome do campo que será buscado na tabela na posição indicada.
+	 * Seta o nome do campo que serÃ¡ buscado na tabela na posiÃ§Ã£o indicada.
 	 *
 	 * @param int $posicao
 	 * @param string $valor
@@ -333,7 +333,7 @@ class clsParametrosPesquisas
 	}
 
 	/**
-	 * Caso seja passada a posição do campo por parâmetro, retorna o nome do campo que será buscado na tabela, senão, retorna um array com todos os nomes dos campos que irão ser buscados na tabela.
+	 * Caso seja passada a posiÃ§Ã£o do campo por parÃ¢metro, retorna o nome do campo que serÃ¡ buscado na tabela, senÃ£o, retorna um array com todos os nomes dos campos que irÃ£o ser buscados na tabela.
 	 *
 	 * @param int $posicao
 	 * @return string or array
@@ -346,7 +346,7 @@ class clsParametrosPesquisas
 	}
 
 	/**
-	 * Deve ser passado o valor 1 caso a página tenha "auto-submit" ou o valor 0 caso não tenha.
+	 * Deve ser passado o valor 1 caso a pÃ¡gina tenha "auto-submit" ou o valor 0 caso nÃ£o tenha.
 	 *
 	 * @param int $submit
 	 */
@@ -355,7 +355,7 @@ class clsParametrosPesquisas
 	}
 
 	/**
-	 * Retorna 1 caso a página tenha "auto-submit" ou o 0 caso não tenha.
+	 * Retorna 1 caso a pÃ¡gina tenha "auto-submit" ou o 0 caso nÃ£o tenha.
 	 *
 	 * @return int
 	 */
@@ -364,7 +364,7 @@ class clsParametrosPesquisas
 	}
 
 	/**
-	 * Deve ser passado 'F' se for pesquisar uma pessoa física, 'J' se for pesquisar uma pessoa jurídica e 'FJ' se não importar o tipo da pessoa que irá ser pesquisada.
+	 * Deve ser passado 'F' se for pesquisar uma pessoa fÃ­sica, 'J' se for pesquisar uma pessoa jurÃ­dica e 'FJ' se nÃ£o importar o tipo da pessoa que irÃ¡ ser pesquisada.
 	 * opcoes: ('F' || 'J' || "FJ" || "FUNC")
 	 *
 	 * @param string $pessoa
@@ -374,7 +374,7 @@ class clsParametrosPesquisas
 	}
 
 	/**
-	 * Retorna 'F' se for pesquisar uma pessoa física, 'J' se for pesquisar uma pessoa jurídica e 'FJ' se não importar o tipo da pessoa que irá ser pesquisada.
+	 * Retorna 'F' se for pesquisar uma pessoa fÃ­sica, 'J' se for pesquisar uma pessoa jurÃ­dica e 'FJ' se nÃ£o importar o tipo da pessoa que irÃ¡ ser pesquisada.
 	 *
 	 * @return string
 	 */
@@ -383,7 +383,7 @@ class clsParametrosPesquisas
 	}
 
 	/**
-	 * Deve ser passado 'S' se deseja que apareça o botão de novo na pesquisa de pessoa ou 'N' caso não deseje.
+	 * Deve ser passado 'S' se deseja que apareÃ§a o botÃ£o de novo na pesquisa de pessoa ou 'N' caso nÃ£o deseje.
 	 *
 	 * @param char $pessoa_novo
 	 */
@@ -392,7 +392,7 @@ class clsParametrosPesquisas
 	}
 
 	/**
-	 * Retorna 'S' se deseja que apareça o botão de novo na pesquisa de pessoa ou 'N' caso não deseje.
+	 * Retorna 'S' se deseja que apareÃ§a o botÃ£o de novo na pesquisa de pessoa ou 'N' caso nÃ£o deseje.
 	 *
 	 * @return char
 	 */
@@ -401,7 +401,7 @@ class clsParametrosPesquisas
 	}
 
 	/**
-	 * Deve ser passado "frame" para indicar se deseja que a tela seja aberta num iframe ou "window" para abrir na própria janela.
+	 * Deve ser passado "frame" para indicar se deseja que a tela seja aberta num iframe ou "window" para abrir na prÃ³pria janela.
 	 *
 	 * @param string $pessoa_tela
 	 */
@@ -410,7 +410,7 @@ class clsParametrosPesquisas
 	}
 
 	/**
-	 * Retorna "frame" para indicar se deseja que a tela seja aberta num iframe ou "window" para abrir na própria janela.
+	 * Retorna "frame" para indicar se deseja que a tela seja aberta num iframe ou "window" para abrir na prÃ³pria janela.
 	 *
 	 * @return string
 	 */
@@ -419,7 +419,7 @@ class clsParametrosPesquisas
 	}
 
 	/**
-	 * Deve ser passado o nome do campo para onde será retornado o valor "0", indicando que deve ser feito um novo cadastro de pessoa.
+	 * Deve ser passado o nome do campo para onde serÃ¡ retornado o valor "0", indicando que deve ser feito um novo cadastro de pessoa.
 	 *
 	 * @param string $pessoa_campo
 	 */
@@ -428,7 +428,7 @@ class clsParametrosPesquisas
 	}
 
 	/**
-	 * Retorna o nome do campo para onde será retornado o valor "0", indicando que deve ser feito um novo cadastro de pessoa.
+	 * Retorna o nome do campo para onde serÃ¡ retornado o valor "0", indicando que deve ser feito um novo cadastro de pessoa.
 	 *
 	 * @return string
 	 */
@@ -437,7 +437,7 @@ class clsParametrosPesquisas
 	}
 
 	/**
-	 * Deve ser passado 'S' para indicar se deseja que após o usuário selecionar uma pessoa, ela seja redirecionada pra uma tela de cadastro com as informações da pessoa selecionada ou 'N' caso não deseje.
+	 * Deve ser passado 'S' para indicar se deseja que apÃ³s o usuÃ¡rio selecionar uma pessoa, ela seja redirecionada pra uma tela de cadastro com as informaÃ§Ãµes da pessoa selecionada ou 'N' caso nÃ£o deseje.
 	 *
 	 * @param char $pessoa_editar
 	 */
@@ -446,7 +446,7 @@ class clsParametrosPesquisas
 	}
 
 	/**
-	 * Retorna 'S' para indicar se deseja que após o usuário selecionar uma pessoa, ela seja redirecionada pra uma tela de cadastro com as informações da pessoa selecionada ou 'N' caso não deseje.
+	 * Retorna 'S' para indicar se deseja que apÃ³s o usuÃ¡rio selecionar uma pessoa, ela seja redirecionada pra uma tela de cadastro com as informaÃ§Ãµes da pessoa selecionada ou 'N' caso nÃ£o deseje.
 	 *
 	 * @return char
 	 */
@@ -455,7 +455,7 @@ class clsParametrosPesquisas
 	}
 
 	/**
-	 * Deve ser usado para passar o código do sistema em que a pessoa física está/será cadastrada.
+	 * Deve ser usado para passar o cÃ³digo do sistema em que a pessoa fÃ­sica estÃ¡/serÃ¡ cadastrada.
 	 *
 	 * @param int $ref_cod_sistema
 	 */
@@ -464,7 +464,7 @@ class clsParametrosPesquisas
 	}
 
 	/**
-	 * Retorna o código do sistema em que a pessoa física está/será cadastrada.
+	 * Retorna o cÃ³digo do sistema em que a pessoa fÃ­sica estÃ¡/serÃ¡ cadastrada.
 	 *
 	 * @return int
 	 */
@@ -473,8 +473,8 @@ class clsParametrosPesquisas
 	}
 
 	/**
-	 * Deve ser usado para passar o "S" caso o CPF seja obrigatório na inclusão de uma pessoa ou "N"
-	 * caso contrário.
+	 * Deve ser usado para passar o "S" caso o CPF seja obrigatÃ³rio na inclusÃ£o de uma pessoa ou "N"
+	 * caso contrÃ¡rio.
 	 *
 	 * @param int $pessoa_cpf
 	 */
@@ -483,7 +483,7 @@ class clsParametrosPesquisas
 	}
 
 	/**
-	 * Retorna o "S" se o CPF for obrigatório na inclusão de uma pessoa ou "N" caso não seja.
+	 * Retorna o "S" se o CPF for obrigatÃ³rio na inclusÃ£o de uma pessoa ou "N" caso nÃ£o seja.
 	 *
 	 * @return char
 	 */

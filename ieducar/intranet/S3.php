@@ -621,7 +621,7 @@ class S3 {
 		($finfo = finfo_open(FILEINFO_MIME, $_ENV['MAGIC'])) !== false) {
 			if (($type = finfo_file($finfo, $file)) !== false) {
 				// Remove the charset and grab the last content-type
-				$type = explode(' ', str_replace('; charset=', ';charset=', $type));
+				$type = explode(' ', str_replace('; charset=UTF-8', ';charset=UTF-8', $type));
 				$type = array_pop($type);
 				$type = explode(';', $type);
 				$type = array_shift($type);

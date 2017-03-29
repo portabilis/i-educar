@@ -1,25 +1,25 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
+	*	@author Prefeitura Municipal de ItajaÃ­								 *
 	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
+	*   Pacote: i-PLB Software PÃºblico Livre e Brasileiro					 *
 	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÃ­			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
+	*	Este  programa  Ã©  software livre, vocÃª pode redistribuÃ­-lo e/ou	 *
+	*	modificÃ¡-lo sob os termos da LicenÃ§a PÃºblica Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a versÃ£o 2 da	 *
+	*	LicenÃ§a   como  (a  seu  critÃ©rio)  qualquer  versÃ£o  mais  nova.	 *
 	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  Ã© distribuÃ­do na expectativa de ser Ãºtil, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia implÃ­cita de COMERCIALI-	 *
+	*	ZAÃ‡ÃƒO  ou  de ADEQUAÃ‡ÃƒO A QUALQUER PROPÃ“SITO EM PARTICULAR. Con-	 *
+	*	sulte  a  LicenÃ§a  PÃºblica  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
+	*	VocÃª  deve  ter  recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral GNU	 *
+	*	junto  com  este  programa. Se nÃ£o, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
@@ -96,7 +96,7 @@ class indice extends clsListagem
 		foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
 			$this->$var = ( $val === "" ) ? null: $val;
 
-		
+
 
 		$cabecalhos = array("Escola");
 		$nivel = $obj_permissoes->nivel_acesso($this->pessoa_logada);
@@ -125,7 +125,7 @@ class indice extends clsListagem
 			}
 			else
 			{
-				die( "Erro: Usuário não é do nivel poli-institucional e não possui uma instituição" );
+				die( "Erro: UsuÃ¡rio nÃ£o Ã© do nivel poli-institucional e nÃ£o possui uma instituiÃ§Ã£o" );
 			}
 		}
 		$this->addCabecalhos( $cabecalhos );
@@ -135,13 +135,14 @@ class indice extends clsListagem
 		// Filtros de Foreign Keys
 		$this->limite = 10;
 		$obj_escola = new clsPmieducarEscola();
-		//$obj_escola->setOrderby( "nome ASC" );
-		$obj_escola->setLimite( $this->limite, ( $this->pagina_formulario - 1 ) * $this->limite );
 
-		$cod_escola = $obj_permissoes->getEscola($this->pessoa_logada);
-
+		if ($this->pagina_formulario){
+			$obj_escola->setLimite( $this->limite, ( $this->pagina_formulario - 1 ) * $this->limite );
+		} else {
+			$obj_escola->setLimite( $this->limite );
+		}
 		$lista = $obj_escola->lista(
-			$cod_escola,
+			null,
 			null,
 			null,
 			$this->ref_cod_instituicao,
@@ -152,7 +153,9 @@ class indice extends clsListagem
 			null,
 			null,
 			1,
-			$this->nm_escola
+			$this->nm_escola,
+			null,
+			$this->pessoa_logada
 		);
 
 		$total = $obj_escola->_total;
@@ -186,10 +189,10 @@ class indice extends clsListagem
 	    $localizacao = new LocalizacaoSistema();
 	    $localizacao->entradaCaminhos( array(
 	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-	         "educar_index.php"                  => "i-Educar - Escola",
-	         ""        => "Listagem de escolas"             
+	         "educar_index.php"                  => "Escola",
+	         ""        => "Listagem de escolas"
 	    ));
-	    $this->enviaLocalizacao($localizacao->montar());		
+	    $this->enviaLocalizacao($localizacao->montar());
 
 	}
 }

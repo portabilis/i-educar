@@ -1,5 +1,5 @@
 /**
-* @author Prefeitura Municipal de Itajaí
+* @author Prefeitura Municipal de ItajaÃ­
 *
 * Criado em #data_criacao#
 */

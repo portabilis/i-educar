@@ -1,25 +1,25 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
+	*	@author Prefeitura Municipal de ItajaÃ­								 *
 	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
+	*   Pacote: i-PLB Software PÃºblico Livre e Brasileiro					 *
 	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÃ­			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
+	*	Este  programa  Ã©  software livre, vocÃª pode redistribuÃ­-lo e/ou	 *
+	*	modificÃ¡-lo sob os termos da LicenÃ§a PÃºblica Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a versÃ£o 2 da	 *
+	*	LicenÃ§a   como  (a  seu  critÃ©rio)  qualquer  versÃ£o  mais  nova.	 *
 	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  Ã© distribuÃ­do na expectativa de ser Ãºtil, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia implÃ­cita de COMERCIALI-	 *
+	*	ZAÃ‡ÃƒO  ou  de ADEQUAÃ‡ÃƒO A QUALQUER PROPÃ“SITO EM PARTICULAR. Con-	 *
+	*	sulte  a  LicenÃ§a  PÃºblica  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
+	*	VocÃª  deve  ter  recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral GNU	 *
+	*	junto  com  este  programa. Se nÃ£o, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
@@ -34,7 +34,7 @@ class clsIndexBase extends clsBase
 {
 	function Formular()
 	{
-		$this->SetTitulo( "{$this->_instituicao} i-Educar - Saída da escola" );
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - SaÃ­da da escola" );
 		$this->processoAp = "578";
 		$this->addEstilo("localizacaoSistema");
 	}
@@ -81,8 +81,8 @@ class indice extends clsCadastro
         $localizacao = new LocalizacaoSistema();
         $localizacao->entradaCaminhos( array(
              $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "i-Educar - Escola",
-             ""        => "{$nomeMenu} saída da escola"             
+             "educar_index.php"                  => "Escola",
+             ""        => "{$nomeMenu} saÃ­da da escola"             
         ));
         $this->enviaLocalizacao($localizacao->montar());
 
@@ -108,7 +108,7 @@ class indice extends clsCadastro
 
 		$this->campoTexto( "nm_escola", "Escola"," $this->escola", 40, 255, false,false,false,"","","","",true );
 
-		$this->inputsHelper()->date('data_saida_escola', array('label' => 'Data de saída da escola', 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y')));
+		$this->inputsHelper()->date('data_saida_escola', array('label' => 'Data de saÃ­da da escola', 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y')));
 
 		// text
 		$this->campoMemo( "observacao", "Observa&ccedil;&atilde;o", $this->observacao, 60, 5, false );
@@ -125,7 +125,7 @@ class indice extends clsCadastro
 
 		$tamanhoObs = strlen($this->observacao);
 		if($tamanhoObs > 300){
-			$this->mensagem = "O campo observação deve conter no máximo 300 caracteres.<br>";
+			$this->mensagem = "O campo observaÃ§Ã£o deve conter no mÃ¡ximo 300 caracteres.<br>";
 			return FALSE;
 		}
 
@@ -137,16 +137,16 @@ class indice extends clsCadastro
 		{
 			if( $obj_matricula->setSaidaEscola($this->observacao, Portabilis_Date_Utils::brToPgSQL($this->data_saida_escola)) )
 			{			
-				$this->mensagem .= "Saída da escola realizada com sucesso.<br>";
+				$this->mensagem .= "SaÃ­da da escola realizada com sucesso.<br>";
 				header( "Location: educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}" );
 				return true;
 			}
 
-			$this->mensagem = "Observação não pode ser salva.<br>";
+			$this->mensagem = "ObservaÃ§Ã£o nÃ£o pode ser salva.<br>";
 			
 			return false;
 		}
-		$this->mensagem = "Saída da escola não pode ser realizada.<br>";
+		$this->mensagem = "SaÃ­da da escola nÃ£o pode ser realizada.<br>";
 		return false;
 
 	}

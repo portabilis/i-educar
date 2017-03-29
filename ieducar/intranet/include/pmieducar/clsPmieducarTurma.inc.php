@@ -4,31 +4,31 @@
 // ini_set("display_errors", 1);
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 *																	     *
-*	@author Prefeitura Municipal de Itajaí								 *
+*	@author Prefeitura Municipal de ItajaÃ­								 *
 *	@updated 29/03/2007													 *
-*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
+*   Pacote: i-PLB Software PÃºblico Livre e Brasileiro					 *
 *																		 *
-*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
+*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÃ­			 *
 *						ctima@itajai.sc.gov.br					    	 *
 *																		 *
-*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
+*	Este  programa  Ã©  software livre, vocÃª pode redistribuÃ­-lo e/ou	 *
+*	modificÃ¡-lo sob os termos da LicenÃ§a PÃºblica Geral GNU, conforme	 *
+*	publicada pela Free  Software  Foundation,  tanto  a versÃ£o 2 da	 *
+*	LicenÃ§a   como  (a  seu  critÃ©rio)  qualquer  versÃ£o  mais  nova.	 *
 *																		 *
-*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
+*	Este programa  Ã© distribuÃ­do na expectativa de ser Ãºtil, mas SEM	 *
+*	QUALQUER GARANTIA. Sem mesmo a garantia implÃ­cita de COMERCIALI-	 *
+*	ZAÃ‡ÃƒO  ou  de ADEQUAÃ‡ÃƒO A QUALQUER PROPÃ“SITO EM PARTICULAR. Con-	 *
+*	sulte  a  LicenÃ§a  PÃºblica  Geral  GNU para obter mais detalhes.	 *
 *																		 *
-*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-*	junto  com  este  programa. Se não, escreva para a Free Software	 *
+*	VocÃª  deve  ter  recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral GNU	 *
+*	junto  com  este  programa. Se nÃ£o, escreva para a Free Software	 *
 *	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 *	02111-1307, USA.													 *
 *																		 *
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /**
-* @author Prefeitura Municipal de Itajaï¿½
+* @author Prefeitura Municipal de ItajaÃ¯Â¿Â½
 *
 * Criado em 02/08/2006 08:42 pelo gerador automatico de classes
 */
@@ -98,6 +98,7 @@ class clsPmieducarTurma
   var $parecer_3_etapa;
   var $parecer_4_etapa;
   var $nao_informar_educacenso;
+  var $tipo_mediacao_didatico_pedagogico;
 
   var $listarNaoInformarEducacenso = TRUE;
 	// propriedades padrao
@@ -172,7 +173,7 @@ class clsPmieducarTurma
 
 		$this->_campos_lista = $this->_todos_campos = "t.cod_turma, t.ref_usuario_exc, t.ref_usuario_cad, t.ref_ref_cod_serie, t.ref_ref_cod_escola, t.ref_cod_infra_predio_comodo, t.nm_turma, t.sgl_turma, t.max_aluno, t.multiseriada, t.data_cadastro, t.data_exclusao, t.ativo, t.ref_cod_turma_tipo, t.hora_inicial, t.hora_final, t.hora_inicio_intervalo, t.hora_fim_intervalo, t.ref_cod_regente, t.ref_cod_instituicao_regente,t.ref_cod_instituicao, t.ref_cod_curso, t.ref_ref_cod_serie_mult, t.ref_ref_cod_escola_mult, t.visivel, t.turma_turno_id, t.tipo_boletim, t.ano,
 		t.tipo_atendimento, t.turma_mais_educacao, t.atividade_complementar_1, t.atividade_complementar_2, t.atividade_complementar_3, t.atividade_complementar_4, t.atividade_complementar_5, t.atividade_complementar_6, t.aee_braille, t.aee_recurso_optico, t.aee_estrategia_desenvolvimento, t.aee_tecnica_mobilidade, t.aee_libras, t.aee_caa, t.aee_curricular, t.aee_soroban, t.aee_informatica, t.aee_lingua_escrita, t.aee_autonomia, t.cod_curso_profissional, t.turma_sem_professor, t.turma_unificada, t.etapa_educacenso, t.etapa_educacenso2, t.ref_cod_disciplina_dispensada, t.parecer_1_etapa, t.parecer_2_etapa,
-        t.parecer_3_etapa, t.parecer_4_etapa, t.nao_informar_educacenso ";
+        t.parecer_3_etapa, t.parecer_4_etapa, t.nao_informar_educacenso, t.tipo_mediacao_didatico_pedagogico";
 
 		if( is_numeric( $ref_cod_turma_tipo ) )
 		{
@@ -828,6 +829,12 @@ class clsPmieducarTurma
 				$gruda    = ", ";
 			}
 
+			if(is_numeric($this->tipo_mediacao_didatico_pedagogico)){
+				$campos  .= "{$gruda}tipo_mediacao_didatico_pedagogico";
+				$valores .= "{$gruda}'{$this->tipo_mediacao_didatico_pedagogico}'";
+				$gruda    = ", ";
+			}
+
 			$db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
 			return $db->InsertId( "{$this->_tabela}_cod_turma_seq");
 		}
@@ -1174,6 +1181,11 @@ class clsPmieducarTurma
 			}
 			if(is_string($this->parecer_4_etapa)) {
 				$set  .= "{$gruda}parecer_4_etapa = '{$this->parecer_4_etapa}'";
+				$gruda = ", ";
+			}
+
+			if(is_numeric($this->tipo_mediacao_didatico_pedagogico)){
+				$set  .= "{$gruda}tipo_mediacao_didatico_pedagogico = '{$this->tipo_mediacao_didatico_pedagogico}'";
 				$gruda = ", ";
 			}
 
@@ -2077,7 +2089,7 @@ and  e.cod_escola = t.ref_ref_cod_escola
 
 /**
 	 * Retorna uma lista filtrados de acordo com os parametros
-	 * (Modificação da lista2, agora trazendo somente turmas do ano atual)
+	 * (ModificaÃ§Ã£o da lista2, agora trazendo somente turmas do ano atual)
 	 * @return array
 	 */
 	function lista3( $int_cod_turma = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_ref_ref_cod_serie = null, $int_ref_ref_cod_escola = null, $int_ref_cod_infra_predio_comodo = null, $str_nm_turma = null, $str_sgl_turma = null, $int_max_aluno = null, $int_multiseriada = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_turma_tipo = null, $time_hora_inicial_ini = null, $time_hora_inicial_fim = null, $time_hora_final_ini = null, $time_hora_final_fim = null, $time_hora_inicio_intervalo_ini = null, $time_hora_inicio_intervalo_fim = null, $time_hora_fim_intervalo_ini = null, $time_hora_fim_intervalo_fim = null, $int_ref_cod_curso = null, $int_ref_cod_instituicao = null, $int_ref_cod_regente = null, $int_ref_cod_instituicao_regente = null, $int_ref_ref_cod_escola_mult = null, $int_ref_ref_cod_serie_mult = null, $int_qtd_min_alunos_matriculados = null, $visivel = null, $turma_turno_id = null, $tipo_boletim = null, $ano = null )
@@ -2506,7 +2518,7 @@ and  e.cod_escola = t.ref_ref_cod_escola
 	  $objInstituicao = new clsPmiEducarInstituicao($detTurma['ref_cod_instituicao']);
       $detInstituicao = $objInstituicao->detalhe();
       $controlaEspacoUtilizacaoAluno = $detInstituicao["controlar_espaco_utilizacao_aluno"];
-      //se o parametro de controle de utilização de espaço estiver setado como verdadeiro
+      //se o parametro de controle de utilizaÃ§Ã£o de espaÃ§o estiver setado como verdadeiro
       if($controlaEspacoUtilizacaoAluno){
         $percentagemMaximaUtilizacaoSala  = $detInstituicao["percentagem_maxima_ocupacao_salas"];
         $quantidadeAlunosPorMetroQuadrado = $detInstituicao["quantidade_alunos_metro_quadrado"];

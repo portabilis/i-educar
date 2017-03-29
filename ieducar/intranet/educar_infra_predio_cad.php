@@ -1,25 +1,25 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
+	*	@author Prefeitura Municipal de ItajaÃ­								 *
 	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
+	*   Pacote: i-PLB Software PÃºblico Livre e Brasileiro					 *
 	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÃ­			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
+	*	Este  programa  Ã©  software livre, vocÃª pode redistribuÃ­-lo e/ou	 *
+	*	modificÃ¡-lo sob os termos da LicenÃ§a PÃºblica Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a versÃ£o 2 da	 *
+	*	LicenÃ§a   como  (a  seu  critÃ©rio)  qualquer  versÃ£o  mais  nova.	 *
 	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  Ã© distribuÃ­do na expectativa de ser Ãºtil, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia implÃ­cita de COMERCIALI-	 *
+	*	ZAÃ‡ÃƒO  ou  de ADEQUAÃ‡ÃƒO A QUALQUER PROPÃ“SITO EM PARTICULAR. Con-	 *
+	*	sulte  a  LicenÃ§a  PÃºblica  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
+	*	VocÃª  deve  ter  recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral GNU	 *
+	*	junto  com  este  programa. Se nÃ£o, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
@@ -94,16 +94,16 @@ class indice extends clsCadastro
 			}
 		}
 		$this->url_cancelar = ($retorno == "Editar") ? "educar_infra_predio_det.php?cod_infra_predio={$registro["cod_infra_predio"]}" : "educar_infra_predio_lst.php";
-		
+
 	    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
 	    $localizacao = new LocalizacaoSistema();
 	    $localizacao->entradaCaminhos( array(
 	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-	         "educar_index.php"                  => "i-Educar - Escola",
-	         ""        => "{$nomeMenu} pr&eacute;dio"             
+	         "educar_index.php"                  => "Escola",
+	         ""        => "{$nomeMenu} pr&eacute;dio"
 	    ));
 	    $this->enviaLocalizacao($localizacao->montar());
-	    
+
 
 		$this->nome_url_cancelar = "Cancelar";
 		return $retorno;
@@ -117,60 +117,12 @@ class indice extends clsCadastro
 		// primary keys
 		$this->campoOculto( "cod_infra_predio", $this->cod_infra_predio );
 
-
-		//** 2 - Escola 1 - institucional 0 - poli-institucional
-//		$obj_permissao = new clsPermissoes();
-//		$nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
-//
-//		//busca instituicao e escola do usuario
-//		$obj_usuario = new clsPmieducarUsuario($this->pessoa_logada);
-//		$obj_usuario->setCamposLista("ref_cod_instituicao,ref_cod_escola");
-//		$det_obj_usuario = $obj_usuario->detalhe();
-//
-//
-//		$instituicao_usuario = $det_obj_usuario["ref_cod_instituicao"];
-//		$escola_usuario = $det_obj_usuario["ref_cod_escola"];
-//
-//		if( class_exists( "clsPmieducarEscola" ) )
-//		{
-//			$objTemp = new clsPmieducarEscola($escola_usuario);
-//			$objTemp->setCamposLista("nm_escola");
-//			$det_objTemp = $objTemp->detalhe();
-//			$nome_escola = $det_objTemp["nm_escola"];
-//
-//		}
-//		else
-//		{
-//			echo "<!--\nErro\nClasse clsPmieducarEscola nao encontrada\n-->";
-//			$nome_escola =  "Erro na geracao";
-//		}
-//
-//		// listagem escola - instituicao
-//		if(!$this->ref_cod_escola)
-//		{
-//			$obrigatorio = true;
-//			include("include/pmieducar/educar_pesquisa_instituicao_escola.php");
-//			if($nivel_usuario == 2)
-//				$this->campoRotulo("ref_cod_escola_","Escola",ucfirst($nome_escola));
-//		}else{
-//
-//				$this->campoRotulo("ref_cod_escola_","Escola",ucfirst($nome_escola));
-//				$this->campoOculto("ref_cod_escola",$escola_usuario);
-//				//$this->campoOculto("ref_cod_instituicao",$escola_usuario);
-//		}
-
-		$obrigatorio = true;
-		$get_escola	 = true;
-		include("include/pmieducar/educar_campo_lista.php");
+		$this->inputsHelper()->dynamic(array('instituicao', 'escola'));
 
 		// text
-		$this->campoTexto( "nm_predio", "Nome Prédio", $this->nm_predio, 30, 255, true );
-		$this->campoMemo( "desc_predio", "Descrição Prédio", $this->desc_predio, 60, 10, false );
-		$this->campoMemo( "endereco", "Endereço", $this->endereco, 60, 2, true );
-
-
-
-
+		$this->campoTexto( "nm_predio", "Nome PrÃ©dio", $this->nm_predio, 30, 255, true );
+		$this->campoMemo( "desc_predio", "DescriÃ§Ã£o PrÃ©dio", $this->desc_predio, 60, 10, false );
+		$this->campoMemo( "endereco", "EndereÃ§o", $this->endereco, 60, 2, true );
 	}
 
 	function Novo()

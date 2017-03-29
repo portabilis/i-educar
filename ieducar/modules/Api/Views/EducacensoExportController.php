@@ -223,22 +223,21 @@ class EducacensoExportController extends ApiCoreController
 
   protected function getMatriculasTurma($escolaId, $ano, $data_ini, $data_fim, $turmaId){
     $sql =
-     'SELECT
-      distinct(m.cod_matricula) as id
-
-      FROM  pmieducar.aluno a
-      INNER JOIN cadastro.fisica fis ON (fis.idpes = a.ref_idpes)
-      INNER JOIN cadastro.pessoa p ON (fis.idpes = p.idpes)
-      INNER JOIN pmieducar.matricula m ON (m.ref_cod_aluno = a.cod_aluno)
-      INNER JOIN pmieducar.matricula_turma mt ON (mt.ref_cod_matricula = m.cod_matricula)
-      INNER JOIN pmieducar.escola e ON (m.ref_ref_cod_escola = e.cod_escola)
-      INNER JOIN modules.educacenso_cod_escola ece ON (ece.cod_escola = e.cod_escola)
-
-      WHERE e.cod_escola = $1
-      AND COALESCE(m.data_matricula,m.data_cadastro) BETWEEN DATE($3) AND DATE($4)
-      AND m.aprovado IN (1, 2, 3, 4, 6, 15)
-      AND m.ano = $2
-      AND mt.ref_cod_turma = $5
+     'SELECT DISTINCT m.cod_matricula as id
+        FROM  pmieducar.aluno a
+       INNER JOIN cadastro.fisica fis ON (fis.idpes = a.ref_idpes)
+       INNER JOIN cadastro.pessoa p ON (fis.idpes = p.idpes)
+       INNER JOIN pmieducar.matricula m ON (m.ref_cod_aluno = a.cod_aluno)
+       INNER JOIN pmieducar.matricula_turma mt ON (mt.ref_cod_matricula = m.cod_matricula)
+       INNER JOIN pmieducar.escola e ON (m.ref_ref_cod_escola = e.cod_escola)
+       INNER JOIN pmieducar.instituicao i ON (i.cod_instituicao = e.ref_cod_instituicao)
+       INNER JOIN modules.educacenso_cod_escola ece ON (ece.cod_escola = e.cod_escola)
+       WHERE e.cod_escola = $1
+         AND COALESCE(m.data_matricula,m.data_cadastro) BETWEEN DATE($3) AND DATE($4)
+         AND m.aprovado IN (1, 2, 3, 4, 6, 15)
+         AND m.ano = $2
+         AND mt.ref_cod_turma = $5
+         AND m.ativo = 1
     ';
     return Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId, $ano, $data_ini, $data_fim, $turmaId)));
   }
@@ -262,6 +261,7 @@ class EducacensoExportController extends ApiCoreController
         AND mt.ref_cod_turma = $3
         AND mt.data_enturmacao > i.data_educacenso
         AND i.data_educacenso IS NOT NULL
+        AND m.ativo = 1
     ';
     return Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId, $ano, $turmaId)));
   }
@@ -2031,11 +2031,16 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
     $anoConcluinte = $serie['concluinte'] == 2;
     $etapaEducacenso = $turma['etapa_educacenso'];
 
+    $etapasValidasEducacenso = array(3, 12, 13, 22, 23, 24, 56, 64, 72);
+
+    $tipoMediacaoDidaticoPedagogico = $turma['tipo_mediacao_didatico_pedagogico'];
+
     $r91s3 = $turmaId;
     $r91s4 = ($inep ? $inep : null);
     $r91s7 = null;
-    $r91s8 = 1;
-    $r91s10 = $etapaEducacenso;
+    $r91s8 = ($inep ? null : $tipoMediacaoDidaticoPedagogico);
+    $r91s9 = ($inep ? null : $r91s9);
+    $r91s10 = (in_array($etapaEducacenso, $etapasValidasEducacenso) ? $etapaEducacenso : null);
 
     // Atualiza situação para código do censo
     switch ($r91s11) {

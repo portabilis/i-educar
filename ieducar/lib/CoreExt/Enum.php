@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author    Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   CoreExt_Enum
- * @since     Arquivo disponÌvel desde a vers„o 1.1.0
+ * @since     Arquivo dispon√≠vel desde a vers√£o 1.1.0
  * @version   $Id$
  */
 
@@ -33,20 +33,20 @@ require_once 'CoreExt/Singleton.php';
 /**
  * CoreExt_Enum abstract class.
  *
- * ProvÍ uma interface simples de criaÁ„o de inst‚ncias semelhantes a um
+ * Prov√™ uma interface simples de cria√ß√£o de inst√¢ncias semelhantes a um
  * Enum do Java.
  *
- * As semelhanÁas s„o poucas mas a intenÁ„o È a de dar uma forma direta de
+ * As semelhan√ßas s√£o poucas mas a inten√ß√£o √© a de dar uma forma direta de
  * criar tipos enumerados. Para isso, basta subclassificar essa classe e prover
  * valores para o array $_data. Adicionalmente, prover constantes que ajudaram
- * ao usuario da classe a facilmente acessar os valores dos enumerados È uma
- * sugest„o.
+ * ao usuario da classe a facilmente acessar os valores dos enumerados √© uma
+ * sugest√£o.
  *
- * O stub de teste CoreExt_Enum1Stub È um exemplo de como criar tipos
+ * O stub de teste CoreExt_Enum1Stub √© um exemplo de como criar tipos
  * enumerados.
  *
- * Essa classe implementa tambÈm a interface ArrayAccess de SPL, provendo acesso
- * f·cil aos valores do enumerado em uma forma de array:
+ * Essa classe implementa tamb√©m a interface ArrayAccess de SPL, provendo acesso
+ * f√°cil aos valores do enumerado em uma forma de array:
  *
  * <code>
  * <?php
@@ -54,13 +54,13 @@ require_once 'CoreExt/Singleton.php';
  * print $enum[Enum::ONE];
  * </code>
  *
- * @author    Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author    Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @link      http://br2.php.net/manual/en/class.arrayaccess.php ArrayAccess interface
  * @package   CoreExt_Singleton
- * @since     Classe disponÌvel desde a vers„o 1.1.0
- * @todo      Verificar se È substituÌvel pela implementaÁ„o de Enum disponÌvel
+ * @since     Classe dispon√≠vel desde a vers√£o 1.1.0
+ * @todo      Verificar se √© substitu√≠vel pela implementa√ß√£o de Enum dispon√≠vel
  *            em spl_types do Pecl {@link http://www.php.net/manual/en/splenum.construct.php SplEnum}.
  * @version   @@package_version@@
  */
@@ -73,7 +73,7 @@ abstract class CoreExt_Enum extends CoreExt_Singleton implements ArrayAccess
   protected $_data = array();
 
   /**
-   * Retorna o valor para um dado Ìndice de CoreExt_Enum.
+   * Retorna o valor para um dado √≠ndice de CoreExt_Enum.
    * @param  string|int $key
    * @return mixed
    */
@@ -92,7 +92,7 @@ abstract class CoreExt_Enum extends CoreExt_Singleton implements ArrayAccess
   }
 
   /**
-   * Retorna o valor da Ìndice para um determinado valor.
+   * Retorna o valor da √≠ndice para um determinado valor.
    * @param  mixed $value
    * @return int|string
    */
@@ -102,7 +102,7 @@ abstract class CoreExt_Enum extends CoreExt_Singleton implements ArrayAccess
   }
 
   /**
-   * Retorna todos os Ìndices de CoreExt_Enum.
+   * Retorna todos os √≠ndices de CoreExt_Enum.
    * @return array
    */
   public function getKeys()
@@ -138,13 +138,13 @@ abstract class CoreExt_Enum extends CoreExt_Singleton implements ArrayAccess
   public function offsetUnset($offset)
   {
     require_once 'CoreExt/Exception.php';
-    throw new CoreExt_Exception('Um "' . get_class($this) . '" È um objeto read-only.');
+    throw new CoreExt_Exception('Um "' . get_class($this) . '" √© um objeto read-only.');
   }
 
   /**
    * Implementa offsetSet da interface ArrayAccess.
    *
-   * Uma objeto CoreExt_Enum È apenas leitura.
+   * Uma objeto CoreExt_Enum √© apenas leitura.
    *
    * @link   http://br2.php.net/manual/en/arrayaccess.offsetset.php
    * @param  string|int $offset
@@ -154,7 +154,7 @@ abstract class CoreExt_Enum extends CoreExt_Singleton implements ArrayAccess
   public function offsetSet($offset, $value)
   {
     require_once 'CoreExt/Exception.php';
-    throw new CoreExt_Exception('Um "' . get_class($this) . '" È um objeto read-only.');
+    throw new CoreExt_Exception('Um "' . get_class($this) . '" √© um objeto read-only.');
   }
 
   /**

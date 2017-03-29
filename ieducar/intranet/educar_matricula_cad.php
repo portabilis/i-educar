@@ -133,12 +133,12 @@ class indice extends clsCadastro
 
     $this->url_cancelar = $url;
 
-    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+    $nomeMenu = $retorno == "Editar" ? $retorno : "Nova";
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
-         ""        => "{$nomeMenu} matr&iacute;cula"
+         "educar_index.php"                  => "Escola",
+         ""        => "{$nomeMenu} matrícula"
     ));
     $this->enviaLocalizacao($localizacao->montar());
 

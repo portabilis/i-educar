@@ -27,7 +27,7 @@
                       FROM pmieducar.transferencia_tipo tt 
                       INNER JOIN pmieducar.escola ON (tt.ref_cod_escola = escola.cod_escola)) LOOP
 
-      v_cod_tt := (SELECT cod_transferencia_tipo FROM transferencia_tipo WHERE to_ascii(nm_tipo) ilike to_ascii(cur_tipo.nm_tipo) 
+      v_cod_tt := (SELECT cod_transferencia_tipo FROM transferencia_tipo WHERE (nm_tipo) ilike (cur_tipo.nm_tipo) 
                       AND cod_transferencia_tipo <= cur_tipo.id ORDER BY cod_transferencia_tipo LIMIT 1 );
 
       IF (v_cod_tt = cur_tipo.id) THEN

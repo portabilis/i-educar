@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author      Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
  * @package     Core
  * @subpackage  ReservaVaga
- * @since       Arquivo disponÌvel desde a vers„o 1.0.0
+ * @since       Arquivo dispon√≠vel desde a vers√£o 1.0.0
  * @version     $Id$
  */
 
@@ -44,13 +44,13 @@ class clsIndexBase extends clsBase {
 class indice extends clsDetalhe
 {
   /**
-   * ReferÍncia a usu·rio da sess„o
+   * Refer√™ncia a usu√°rio da sess√£o
    * @var int
    */
   var $pessoa_logada = NULL;
 
   /**
-   * TÌtulo no topo da p·gina
+   * T√≠tulo no topo da p√°gina
    * @var string
    */
   var $titulo = '';
@@ -86,7 +86,7 @@ class indice extends clsDetalhe
       die();
     }
 
-    // InstituiÁ„o
+    // Institui√ß√£o
     $obj_ref_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
     $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
     $registro['ref_cod_instituicao'] = $det_ref_cod_instituicao['nm_instituicao'];
@@ -96,7 +96,7 @@ class indice extends clsDetalhe
     $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
     $nm_escola = $det_ref_cod_escola['nome'];
 
-    // SÈrie
+    // S√©rie
     $obj_ref_cod_serie = new clsPmieducarSerie($registro['ref_cod_serie']);
     $det_ref_cod_serie = $obj_ref_cod_serie->detalhe();
     $nm_serie = $det_ref_cod_serie['nm_serie'];
@@ -106,7 +106,7 @@ class indice extends clsDetalhe
     $det_curso = $obj_curso->detalhe();
     $registro['ref_cod_curso'] = $det_curso['nm_curso'];
 
-    // MatrÌcula
+    // Matr√≠cula
     $obj_matricula = new clsPmieducarMatricula();
     $lst_matricula = $obj_matricula->lista(NULL, NULL, $registro['ref_cod_escola'],
       $registro['ref_cod_serie'], NULL, NULL, NULL, 3, NULL, NULL, NULL, NULL, 1);
@@ -124,7 +124,7 @@ class indice extends clsDetalhe
       $reservados = count($lst_reserva_vaga);
     }
 
-    // Permissıes
+    // Permiss√µes
     $obj_permissao = new clsPermissoes();
     $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
 
@@ -158,8 +158,8 @@ class indice extends clsDetalhe
       $html = "
         <table width='50%' cellspacing='0' cellpadding='0' border='0'>
           <tr>
-            <td bgcolor=#A1B3BD>Nome</td>
-            <td bgcolor=#A1B3BD>N&uacute;mero Vagas</td>
+            <td bgcolor=#ccdce6>Nome</td>
+            <td bgcolor=#ccdce6>N&uacute;mero Vagas</td>
           </tr>";
 
       foreach ($lst_turmas as $turmas) {
@@ -211,21 +211,21 @@ class indice extends clsDetalhe
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
+         "educar_index.php"                  => "Escola",
          ""                                  => "Detalhe da reserva de vaga"
     ));
     $this->enviaLocalizacao($localizacao->montar());    
   }
 }
 
-// Instancia objeto de p·gina
+// Instancia objeto de p√°gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conte˙do
+// Instancia objeto de conte√∫do
 $miolo = new indice();
 
-// Atribui o conte˙do ‡ p·gina
+// Atribui o conte√∫do √† p√°gina
 $pagina->addForm($miolo);
 
-// Gera o cÛdigo HTML
+// Gera o c√≥digo HTML
 $pagina->MakeAll();

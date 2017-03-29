@@ -1,25 +1,25 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
+	*	@author Prefeitura Municipal de ItajaÃ­								 *
 	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
+	*   Pacote: i-PLB Software PÃºblico Livre e Brasileiro					 *
 	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÃ­			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
+	*	Este  programa  Ã©  software livre, vocÃª pode redistribuÃ­-lo e/ou	 *
+	*	modificÃ¡-lo sob os termos da LicenÃ§a PÃºblica Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a versÃ£o 2 da	 *
+	*	LicenÃ§a   como  (a  seu  critÃ©rio)  qualquer  versÃ£o  mais  nova.	 *
 	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  Ã© distribuÃ­do na expectativa de ser Ãºtil, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia implÃ­cita de COMERCIALI-	 *
+	*	ZAÃ‡ÃƒO  ou  de ADEQUAÃ‡ÃƒO A QUALQUER PROPÃ“SITO EM PARTICULAR. Con-	 *
+	*	sulte  a  LicenÃ§a  PÃºblica  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
+	*	VocÃª  deve  ter  recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral GNU	 *
+	*	junto  com  este  programa. Se nÃ£o, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
@@ -55,23 +55,23 @@ class indice extends clsDetalhe
 		list($idpes, $rg, $data_exp_rg, $sigla_uf_exp_rg, $tipo_cert_civil, $num_termo, $num_livro, $num_folha, $data_emissao_cert_civil, $sigla_uf_cert_civil, $cartorio_cert_civil, $num_cart_trabalho, $serie_cart_trabalho, $data_emissao_cart_trabalho, $sigla_uf_cart_trabalho, $num_tit_eleitor, $zona_tit_eleitor, $secao_tit_eleitor, $idorg_exp_rg) = $objDocumento->detalhe();
 		
 		$this->addDetalhe( array("RG", $detalheDocumento['rg'] ) );
-		$this->addDetalhe( array("Data Expedição", date('d/m/Y',strtotime(substr($data_exp_rg,0,19)) ) ) );
-		$this->addDetalhe( array("Órgão Expedição", $sigla_uf_exp_rg ) );
+		$this->addDetalhe( array("Data ExpediÃ§Ã£o", date('d/m/Y',strtotime(substr($data_exp_rg,0,19)) ) ) );
+		$this->addDetalhe( array("Ã“rgÃ£o ExpediÃ§Ã£o", $sigla_uf_exp_rg ) );
 		$this->addDetalhe( array("Certificado Civil", $tipo_cert_civil ) );		
 		$this->addDetalhe( array("Termo", $num_termo ) );
 		$this->addDetalhe( array("Livro", $num_livro ) );
 		$this->addDetalhe( array("Folha", $num_folha ) );
-		$this->addDetalhe( array("Emissão Certificado Civil", $data_emissao_cert_civil) );
+		$this->addDetalhe( array("EmissÃ£o Certificado Civil", $data_emissao_cert_civil) );
 		$this->addDetalhe( array("Sigla Certificado Civil", $sigla_uf_cert_civil ) );
-		$this->addDetalhe( array("Cartório", $cartorio_cert_civil ) );
+		$this->addDetalhe( array("CartÃ³rio", $cartorio_cert_civil ) );
 		$this->addDetalhe( array("Carteira trabalho", $num_cart_trabalho ) );
-		$this->addDetalhe( array("série Carteira Trabalho", $serie_cart_trabalho ) );
-		$this->addDetalhe( array("Emissão Carteira Trabalho", $data_emissao_cart_trabalho ) );
+		$this->addDetalhe( array("sÃ©rie Carteira Trabalho", $serie_cart_trabalho ) );
+		$this->addDetalhe( array("EmissÃ£o Carteira Trabalho", $data_emissao_cart_trabalho ) );
 		$this->addDetalhe( array("Sigla Carteira de Trabalho", $sigla_uf_cart_trabalho ) );
-		$this->addDetalhe( array("Título Eleitor", $num_tit_eleitor ) );
+		$this->addDetalhe( array("TÃ­tulo Eleitor", $num_tit_eleitor ) );
 		$this->addDetalhe( array("Zona", $zona_tit_eleitor ) );
-		$this->addDetalhe( array("Seção", $secao_tit_eleitor ) );
-		$this->addDetalhe( array("Órgão Expedição", $idorg_exp_rg) );
+		$this->addDetalhe( array("SeÃ§Ã£o", $secao_tit_eleitor ) );
+		$this->addDetalhe( array("Ã“rgÃ£o ExpediÃ§Ã£o", $idorg_exp_rg) );
 		
 		$this->url_novo = "adicionar_documentos_cad.php";
 		$this->url_editar = "adicionar_documentos_cad.php?idpes={$idpes}";

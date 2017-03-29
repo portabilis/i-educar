@@ -1,32 +1,32 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author      Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
  * @package     Core
  * @subpackage  pmieducar
  * @subpackage  Administrativo
  * @subpackage  TipoUsuario
- * @since       Arquivo disponÌvel desde a vers„o 1.0.0
+ * @since       Arquivo dispon√≠vel desde a vers√£o 1.0.0
  * @version     $Id$
  */
 
@@ -39,7 +39,7 @@ class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Tipo Usu·rio');
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Tipo Usu√°rio');
     $this->processoAp = '554';
     $this->addEstilo('localizacaoSistema');
   }
@@ -48,7 +48,7 @@ class clsIndexBase extends clsBase
 class indice extends clsDetalhe
 {
   /**
-   * TÌtulo no topo da p·gina.
+   * T√≠tulo no topo da p√°gina.
    * @var int
    */
   var $titulo;
@@ -69,7 +69,7 @@ class indice extends clsDetalhe
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
-    $this->titulo = 'Tipo Usu·rio - Detalhe';
+    $this->titulo = 'Tipo Usu√°rio - Detalhe';
     
 
     $this->cod_tipo_usuario = $_GET['cod_tipo_usuario'];
@@ -104,7 +104,7 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('Descri&ccedil;&atilde;o', $registro['descricao']));
     }
 
-    // Listagem de permiss„es
+    // Listagem de permiss√£es
     $objTemp = new clsBanco();
     $objTemp->Consulta(sprintf('
       SELECT
@@ -148,7 +148,7 @@ class indice extends clsDetalhe
       }
     }
 
-    // VerificaÁ„o de permiss„o para cadastro
+    // Verifica√ß√£o de permiss√£o para cadastro
     $obj_permissao = new clsPermissoes();
 
     if ($obj_permissao->permissao_cadastra(554, $this->pessoa_logada, 7, NULL, TRUE)) {
@@ -162,7 +162,7 @@ class indice extends clsDetalhe
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
+         "educar_index.php"                  => "Escola",
          ""                                  => "Detalhe do tipo de usu&aacute;rio"
     ));
     $this->enviaLocalizacao($localizacao->montar());    
@@ -172,16 +172,16 @@ class indice extends clsDetalhe
   {
     $existe  = true;
     $tabela .= "<table cellpadding=\"2\" cellspacing=\"2\" border=\"0\" align=\"left\" width='80%'>";
-    $tabela .= "<tr bgcolor='#A1B3BD'><th width='400'>Menu - submenus</th><th>Visualizar</th><th>Cadastrar</th><th width='70'>Excluir</th></tr>";
+    $tabela .= "<tr bgcolor='#ccdce6'><th width='400'>Menu - submenus</th><th>Visualizar</th><th>Cadastrar</th><th width='70'>Excluir</th></tr>";
 
     foreach ($opcoes as $key => $menu) {
       $menu_pai = array_shift($menu);
-      $cor      =  "#a1b3bd";
+      $cor      =  "#ccdce6";
       $tabela  .= "<tr bgcolor='$cor' align='center'><td colspan='4' align='left' width='400'><b>{$menu_pai}</b></td></tr>";
-      $cor      =  "#E4E9ED";
+      $cor      =  "#f5f9fd";
 
       foreach ($menu as $cod_sub =>$sub_menu) {
-        $cor = $cor == "#FFFFFF" ? "#E4E9ED" : "#FFFFFF";
+        $cor = $cor == "#FFFFFF" ? "#f5f9fd" : "#FFFFFF";
         $sub_menu['visualiza'] = $sub_menu['visualiza'] == 0 ? "N&atilde;o" : "Sim";
         $sub_menu['cadastra']  = $sub_menu['cadastra']  == 0 ? "N&atilde;o" : "Sim";
         $sub_menu['exclui']    = $sub_menu['exclui']    == 0 ? "N&atilde;o" : "Sim";
@@ -196,16 +196,16 @@ class indice extends clsDetalhe
   }
 }
 
-// Instancia objeto de p·gina
+// Instancia objeto de p√°gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conte˙do
+// Instancia objeto de conte√∫do
 $miolo = new indice();
 
-// Atribui o conte˙do ‡  p·gina
+// Atribui o conte√∫do √†  p√°gina
 $pagina->addForm($miolo);
 
-// Gera o cÛdigo HTML
+// Gera o c√≥digo HTML
 $pagina->MakeAll();
 ?>
 

@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Adriano Erik Weiguert Nagasava <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo disponÌvel desde a vers„o 1.0.0
+ * @since     Arquivo dispon√≠vel desde a vers√£o 1.0.0
  * @version   $Id$
  */
 
@@ -34,6 +34,7 @@ require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
 require_once 'include/localizacaoSistema.php';
+require_once 'include/pmieducar/clsPmieducarEscolaUsuario.inc.php';
 
 /**
  * clsIndexBase class.
@@ -42,14 +43,14 @@ require_once 'include/localizacaoSistema.php';
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponÌvel desde a vers„o 1.0.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Quadro de Hor·rio');
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Quadro de Hor√°rio');
     $this->processoAp = "641";
     $this->addEstilo('localizacaoSistema');
   }
@@ -62,7 +63,7 @@ class clsIndexBase extends clsBase
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponÌvel desde a vers„o 1.0.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
  * @version   @@package_version@@
  */
 class indice extends clsConfig
@@ -101,7 +102,7 @@ class indice extends clsConfig
           <tbody>
             <tr>
               <td colspan="2" valig="center" height="50">
-                <center class="formdktd">Usu·rio sem permiss„o para acessar esta p·gina</center>
+                <center class="formdktd">Usu√°rio sem permiss√£o para acessar esta p√°gina</center>
               </td>
             </tr>
           </tbody>
@@ -112,11 +113,11 @@ class indice extends clsConfig
 
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
-         ""                                  => "Listagem de quadro de hor&aacute;rios"
+         $_SERVER['SERVER_NAME']."/intranet" => "In√≠cio",
+         "educar_servidores_index.php"       => "Servidores",
+         ""                                  => "Quadros de hor√°rios"
     ));
-    $this->locale = $localizacao->montar();    
+    $this->locale = $localizacao->montar();
 
 
     if ($this->locale){
@@ -187,20 +188,20 @@ class indice extends clsConfig
         if (is_array($det_quadro)) {
           $quadro_horario = "<table class='calendar' cellspacing='0' cellpadding='0' border='0'>
                             <tr>
-                              <td class='cal_esq_qh' >&nbsp;</td>
-                              <td background='imagens/i-educar/cal_bg.gif' width='100%' class='mes'>{$det_turma["nm_turma"]}</td>
+                              <td class='cal_esq_qh' width='40px'><i class='fa fa-calendar' aria-hidden='true'></i></td>
+                              <td width='100%' class='mes'>Turma: {$det_turma["nm_turma"]}</td>
                               <td align='right' class='cal_dir'>&nbsp;</td>
                               </tr>
                             <tr>
-                              <td colspan='3' class='bordaM' style='border-bottom: 1px solid #8A959B;'  align='center'>
-                                <table cellspacing='0' cellpadding='0'  border='0' >
+                              <td colspan='3'  align='center'>
+                                <table width='100%' cellspacing='2' cellpadding='0'  border='0' >
                                   <tr class='header'>
-                                    <td style='border-right: 1px dotted #FFFFFF;width: 100px;'>DOM</td>
-                                    <td style='border-right: 1px dotted #FFFFFF;width: 100px;'>SEG</td>
-                                    <td style='border-right: 1px dotted #FFFFFF;width: 100px;'>TER</td>
-                                    <td style='border-right: 1px dotted #FFFFFF;width: 100px;'>QUA</td>
-                                    <td style='border-right: 1px dotted #FFFFFF;width: 100px;'>QUI</td>
-                                    <td style='border-right: 1px dotted #FFFFFF;width: 100px;'>SEX</td>
+                                    <td style='width: 100px;'>DOM</td>
+                                    <td style='width: 100px;'>SEG</td>
+                                    <td style='width: 100px;'>TER</td>
+                                    <td style='width: 100px;'>QUA</td>
+                                    <td style='width: 100px;'>QUI</td>
+                                    <td style='width: 100px;'>SEX</td>
                                     <td style='width: 100px;'>SAB</td>
                                   </tr>";
           $texto = '<tr>';
@@ -216,7 +217,7 @@ class indice extends clsConfig
               $resultado = $this->organizarHorariosIguais($resultado);
               foreach ($resultado as $registro) {
                 if($registro['ref_cod_disciplina'] == 0){
-                  $componente->abreviatura = 'EDUCA«√O INFANTIL';
+                  $componente->abreviatura = 'EDUCA√á√ÉO INFANTIL';
                 }else{
                   $componente = $componenteMapper->find($registro['ref_cod_disciplina']); 
                 }
@@ -227,11 +228,11 @@ class indice extends clsConfig
                 if ($registro['ref_servidor_substituto']) {
                   $det_servidor = array_shift($obj_servidor->lista(
                     $registro['ref_servidor_substituto'], NULL, NULL, NULL, NULL, NULL, NULL,
-                    NULL, NULL, NULL, NULL,†NULL, NULL, NULL, NULL, NULL, TRUE));
+                    NULL, NULL, NULL, NULL,¬†NULL, NULL, NULL, NULL, NULL, TRUE));
                 } else {
                   $det_servidor = array_shift($obj_servidor->lista(
                     $registro['ref_servidor'], NULL, NULL, NULL, NULL, NULL, NULL,
-                    NULL, NULL, NULL, NULL,†NULL, NULL, NULL, NULL, NULL, TRUE));
+                    NULL, NULL, NULL, NULL,¬†NULL, NULL, NULL, NULL, NULL, TRUE));
                 }
 
                 $det_servidor['nome'] = array_shift(explode(' ',$det_servidor['nome']));
@@ -241,12 +242,12 @@ class indice extends clsConfig
                   substr($registro['hora_inicial'], 0, 5), substr($registro['hora_final'], 0, 5),
                   $componente->abreviatura, $det_servidor['nome']);
 
-                $texto .= sprintf('<div style="text-align: center; background-color: #F6F6F6; font-size: 11px; width: 100px; margin: 3px; border: 1px solid #CCCCCC; padding:5px;">%s</div>',
+                $texto .= sprintf('<div class="horario">%s</div>',
                   $detalhes);
               }
             }
             else {
-              $texto .= "<div  style='text-align: center;background-color: #F6F6F6;font-size: 11px; width: 100px; margin: 3px; border: 1px solid #CCCCCC; padding:5px; height: 85%;'></div>";
+              $texto .= "<div  class='horario'><i class='fa fa-plus-square' aria-hidden='true'></i></div>";
             }
 
             $texto .= '</td>';
@@ -273,7 +274,7 @@ class indice extends clsConfig
       }
       else {
         if ($obj_permissoes->permissao_excluir(641, $this->pessoa_logada, 7))
-          $retorno .= "<input type=\"button\" value=\"Excluir Quadro de Hor&aacute;rios\" onclick=\"window.location='educar_quadro_horario_cad.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}&ano={$this->ano}&ref_cod_quadro_horario={$det_quadro["cod_quadro_horario"]}'\" class=\"botaolistagem\"/>";
+          $retorno .= "<input type=\"button\" value=\"Excluir Quadro de Hor&aacute;rios\" onclick=\"window.location='educar_quadro_horario_cad.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}&ano={$this->ano}&ref_cod_quadro_horario={$det_quadro["cod_quadro_horario"]}'\" class=\"botaolistagem btn-green\"/>";
       }
 
       $retorno .= "</td>
@@ -302,16 +303,16 @@ class indice extends clsConfig
   }
 }
 
-// Instancia objeto de p·gina
+// Instancia objeto de p√°gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conte˙do
+// Instancia objeto de conte√∫do
 $miolo = new indice();
 
-// Atribui o conte˙do ‡† p·gina
+// Atribui o conte√∫do √†¬† p√°gina
 $pagina->addForm($miolo);
 
-// Gera o cÛdigo HTML
+// Gera o c√≥digo HTML
 $pagina->MakeAll();
 ?>
 <script type="text/javascript">
@@ -340,7 +341,7 @@ campoInstituicao.onchange = function()
 
   campoTurma.length = 1;
   campoTurma.disabled = true;
-  campoTurma.options[0].text = 'Selecione uma SÈrie antes';
+  campoTurma.options[0].text = 'Selecione uma S√©rie antes';
 
   var xml_escola = new ajax(getEscola);
   xml_escola.envia('educar_escola_xml2.php?ins=' + campoInstituicao_);
@@ -364,7 +365,7 @@ campoEscola.onchange = function()
 
   campoTurma.length = 1;
   campoTurma.disabled = true;
-  campoTurma.options[0].text = 'Selecione uma sÈrie antes';
+  campoTurma.options[0].text = 'Selecione uma s√©rie antes';
 
   var xml_curso = new ajax(getCurso);
   xml_curso.envia('educar_curso_xml.php?esc=' + campoEscola_);
@@ -380,11 +381,11 @@ campoCurso.onchange = function()
 
   campoSerie.length = 1;
   campoSerie.disabled = true;
-  campoSerie.options[0].text = 'Carregando sÈrie';
+  campoSerie.options[0].text = 'Carregando s√©rie';
 
   campoTurma.length = 1;
   campoTurma.disabled = true;
-  campoTurma.options[0].text = 'Selecione uma SÈrie antes';
+  campoTurma.options[0].text = 'Selecione uma S√©rie antes';
 
   var xml_serie = ajax(getSerie);
   xml_serie.envia('educar_escola_curso_serie_xml.php?esc=' + campoEscola_ + '&cur=' + campoCurso_);
@@ -397,11 +398,11 @@ campoAno.onchange = function()
 
   campoSerie.length = 1;
   campoSerie.disabled = true;
-  campoSerie.options[0].text = 'Carregando sÈrie';
+  campoSerie.options[0].text = 'Carregando s√©rie';
 
   campoTurma.length = 1;
   campoTurma.disabled = true;
-  campoTurma.options[0].text = 'Selecione uma SÈrie antes';
+  campoTurma.options[0].text = 'Selecione uma S√©rie antes';
 
   var xml_serie = ajax(getSerie);
   xml_serie.envia('educar_escola_curso_serie_xml.php?esc=' + campoEscola_ + '&cur=' + campoCurso_);

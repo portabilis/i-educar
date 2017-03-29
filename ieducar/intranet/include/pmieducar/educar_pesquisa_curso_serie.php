@@ -1,33 +1,33 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 *																	     *
-*	@author Prefeitura Municipal de Itajaí								 *
+*	@author Prefeitura Municipal de ItajaÃ­								 *
 *	@updated 29/03/2007													 *
-*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
+*   Pacote: i-PLB Software PÃºblico Livre e Brasileiro					 *
 *																		 *
-*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
+*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÃ­			 *
 *						ctima@itajai.sc.gov.br					    	 *
 *																		 *
-*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
+*	Este  programa  Ã©  software livre, vocÃª pode redistribuÃ­-lo e/ou	 *
+*	modificÃ¡-lo sob os termos da LicenÃ§a PÃºblica Geral GNU, conforme	 *
+*	publicada pela Free  Software  Foundation,  tanto  a versÃ£o 2 da	 *
+*	LicenÃ§a   como  (a  seu  critÃ©rio)  qualquer  versÃ£o  mais  nova.	 *
 *																		 *
-*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
+*	Este programa  Ã© distribuÃ­do na expectativa de ser Ãºtil, mas SEM	 *
+*	QUALQUER GARANTIA. Sem mesmo a garantia implÃ­cita de COMERCIALI-	 *
+*	ZAÃ‡ÃƒO  ou  de ADEQUAÃ‡ÃƒO A QUALQUER PROPÃ“SITO EM PARTICULAR. Con-	 *
+*	sulte  a  LicenÃ§a  PÃºblica  Geral  GNU para obter mais detalhes.	 *
 *																		 *
-*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-*	junto  com  este  programa. Se não, escreva para a Free Software	 *
+*	VocÃª  deve  ter  recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral GNU	 *
+*	junto  com  este  programa. Se nÃ£o, escreva para a Free Software	 *
 *	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 *	02111-1307, USA.													 *
 *																		 *
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /**
- * Ao incluir este arquivo, adicionar a variável $obrigatorio = true ou $obrigatorio = false para
- * definir se os campos são obrigatórios ou não. Adicionar também a variável editar para informar
- * se está sendo editados os itens ou não.
+ * Ao incluir este arquivo, adicionar a variÃ¡vel $obrigatorio = true ou $obrigatorio = false para
+ * definir se os campos sÃ£o obrigatÃ³rios ou nÃ£o. Adicionar tambÃ©m a variÃ¡vel editar para informar
+ * se estÃ¡ sendo editados os itens ou nÃ£o.
  *
  * Ex.:
  * $obrigatorio = true;
@@ -126,7 +126,7 @@ if ( $privilegio == 4 ) {
 						if ( $editar )
 							$opcoes["{$serie['cod_serie']}"] = "{$serie['nm_serie']}";
 						else
-							$opcoes[""] = "Selecione uma série";
+							$opcoes[""] = "Selecione uma sÃ©rie";
 					}
 				}
 			}
@@ -137,7 +137,7 @@ if ( $privilegio == 4 ) {
 		echo "<!--\nErro\nClasse clsPmieducarEscolaSerie nao encontrada\n-->";
 		$opcoes = array( "" => "Erro na geracao" );
 	}
-	$this->campoLista( "ref_ref_cod_serie", "Série", $opcoes, $this->ref_ref_cod_serie, "", false, "", "", false, $obrigatorio );
+	$this->campoLista( "ref_ref_cod_serie", "SÃ©rie", $opcoes, $this->ref_ref_cod_serie, "", false, "", "", false, $obrigatorio );
 
 	/*$opcoes = array( "" => "Selecione" );
 	if ( class_exists( "clsPmieducarEscolaCurso" ) ) {
@@ -200,7 +200,7 @@ if ( $privilegio == 4 ) {
 						if ( $editar )
 							$opcoes["{$serie['cod_serie']}"] = "{$serie['nm_serie']}";
 						else
-							$opcoes[""] = "Selecione uma série";
+							$opcoes[""] = "Selecione uma sÃ©rie";
 					}
 				}
 			}
@@ -211,7 +211,7 @@ if ( $privilegio == 4 ) {
 		echo "<!--\nErro\nClasse clsPmieducarEscolaSerie nao encontrada\n-->";
 		$opcoes = array( "" => "Erro na geracao" );
 	}
-	$this->campoLista( "ref_ref_cod_serie", "Série", $opcoes, $this->ref_ref_cod_serie, "", false, "", "", false, $obrigatorio );*/
+	$this->campoLista( "ref_ref_cod_serie", "SÃ©rie", $opcoes, $this->ref_ref_cod_serie, "", false, "", "", false, $obrigatorio );*/
 }
 elseif ( $privilegio == 2 ) {
 
@@ -293,7 +293,7 @@ elseif ( $privilegio == 2 ) {
 						if ( $editar )
 							$opcoes["{$serie['cod_serie']}"] = "{$serie['nm_serie']}";
 						else
-							$opcoes[""] = "Selecione uma série";
+							$opcoes[""] = "Selecione uma sÃ©rie";
 					}
 				}
 			}
@@ -304,7 +304,7 @@ elseif ( $privilegio == 2 ) {
 		echo "<!--\nErro\nClasse clsPmieducarEscolaSerie nao encontrada\n-->";
 		$opcoes = array( "" => "Erro na geracao" );
 	}
-	$this->campoLista( "ref_ref_cod_serie", "Série", $opcoes, $this->ref_ref_cod_serie, "", false, "", "", false, $obrigatorio );
+	$this->campoLista( "ref_ref_cod_serie", "SÃ©rie", $opcoes, $this->ref_ref_cod_serie, "", false, "", "", false, $obrigatorio );
 }
 elseif ( $privilegio == 1 ) {
 
@@ -386,7 +386,7 @@ elseif ( $privilegio == 1 ) {
 						if ( $editar )
 							$opcoes["{$serie['cod_serie']}"] = "{$serie['nm_serie']}";
 						else
-							$opcoes[""] = "Selecione uma série";
+							$opcoes[""] = "Selecione uma sÃ©rie";
 					}
 				}
 			}
@@ -397,7 +397,7 @@ elseif ( $privilegio == 1 ) {
 		echo "<!--\nErro\nClasse clsPmieducarEscolaSerie nao encontrada\n-->";
 		$opcoes = array( "" => "Erro na geracao" );
 	}
-	$this->campoLista( "ref_ref_cod_serie", "Série", $opcoes, $this->ref_ref_cod_serie, "", false, "", "", false, $obrigatorio );
+	$this->campoLista( "ref_ref_cod_serie", "SÃ©rie", $opcoes, $this->ref_ref_cod_serie, "", false, "", "", false, $obrigatorio );
 }
 
 ?>
@@ -445,7 +445,7 @@ function CursoSerie()
 
 	campoSerie.length = 1;
 	if ( !codCurso ) {
-		campoSerie.options[0].text = \"Selecione uma série\";
+		campoSerie.options[0].text = \"Selecione uma sÃ©rie\";
 		return;
 	}
 
@@ -457,7 +457,7 @@ function CursoSerie()
 			campoSerie.options[ct + 1] = new Option( eval(\"curso['_\" + codCurso + \"'][\" + ct + \"][1]\" ), eval( \"curso['_\" + codCurso + \"'][\" + ct + \"][0]\" ), false, false );
 		}
 		if ( tamanho == 0 ) {
-			campoSerie.options[0].text = \"Curso sem série\";
+			campoSerie.options[0].text = \"Curso sem sÃ©rie\";
 		}
 		else {
 			campoSerie.options[0].text = \"Selecione uma serie\";

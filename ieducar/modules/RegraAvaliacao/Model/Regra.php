@@ -1,31 +1,31 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     RegraAvaliacao
  * @subpackage  Modules
- * @since       Arquivo disponÌvel desde a vers„o 1.1.0
+ * @since       Arquivo dispon√≠vel desde a vers√£o 1.1.0
  * @version     $Id$
  */
 
@@ -39,12 +39,12 @@ require_once 'RegraAvaliacao/Model/TipoRecuperacaoParalela.php';
 /**
  * RegraAvaliacao_Model_Regra class.
  *
- * @author      Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     RegraAvaliacao
  * @subpackage  Modules
- * @since       Classe disponÌvel desde a vers„o 1.1.0
+ * @since       Classe dispon√≠vel desde a vers√£o 1.1.0
  * @version     @@package_version@@
  */
 class RegraAvaliacao_Model_Regra extends CoreExt_Entity
@@ -164,11 +164,11 @@ class RegraAvaliacao_Model_Regra extends CoreExt_Entity
     $tipoPresenca            = RegraAvaliacao_Model_TipoPresenca::getInstance();
     $tipoRecuperacaoParalela = RegraAvaliacao_Model_TipoRecuperacaoParalela::getInstance();
 
-    // ids de fÛrmulas de mÈdia
+    // ids de f√≥rmulas de m√©dia
     $formulaMedia = $this->getDataMapper()->findFormulaMediaFinal();
     $formulaMedia = CoreExt_Entity::entityFilterAttr($formulaMedia, 'id');
 
-    // ids de fÛrmulas de recuperaÁ„o
+    // ids de f√≥rmulas de recupera√ß√£o
     $formulaRecuperacao = $this->getDataMapper()->findFormulaMediaRecuperacao();
     $formulaRecuperacao = CoreExt_Entity::entityFilterAttr($formulaRecuperacao, 'id');
     $formulaRecuperacao[0] = NULL;
@@ -177,20 +177,20 @@ class RegraAvaliacao_Model_Regra extends CoreExt_Entity
     $tabelas = $this->getDataMapper()->findTabelaArredondamento($this);
     $tabelas = CoreExt_Entity::entityFilterAttr($tabelas, 'id');
 
-    // InstituiÁıes
+    // Institui√ß√µes
     $instituicoes = array_keys(App_Model_IedFinder::getInstituicoes());
 
-    // FÛrmula de mÈdia È obrigatÛria?
+    // F√≥rmula de m√©dia √© obrigat√≥ria?
     $isFormulaMediaRequired = TRUE;
 
-    // MÈdia È obrigatÛria?
+    // M√©dia √© obrigat√≥ria?
     $isMediaRequired = TRUE;
 
     if ($this->get('tipoNota') == RegraAvaliacao_Model_Nota_TipoValor::NENHUM) {
       $isFormulaMediaRequired = FALSE;
       $isMediaRequired = FALSE;
 
-      // Aceita somente o valor NULL quando o tipo de nota È Nenhum.
+      // Aceita somente o valor NULL quando o tipo de nota √© Nenhum.
       $formulaMedia = $formulaMedia + array(NULL);
     }
 
@@ -217,7 +217,7 @@ class RegraAvaliacao_Model_Regra extends CoreExt_Entity
       )),
       'tabelaArredondamento' => new CoreExt_Validate_Choice(array(
         'choices' => $tabelas,
-        'choice_error' => 'A tabela de arredondamento selecionada n„o '
+        'choice_error' => 'A tabela de arredondamento selecionada n√£o '
                         . 'corresponde ao sistema de nota escolhido.'
       )),
       'parecerDescritivo' => new CoreExt_Validate_Choice(array(
@@ -251,8 +251,8 @@ class RegraAvaliacao_Model_Regra extends CoreExt_Entity
   }
 
   /**
-   * MÈtodo finder para RegraAvaliacao_Model_RegraRecuperacao. Wrapper simples
-   * para o mesmo mÈtodo de RegraAvaliacao_Model_TabelaDataMapper.
+   * M√©todo finder para RegraAvaliacao_Model_RegraRecuperacao. Wrapper simples
+   * para o mesmo m√©todo de RegraAvaliacao_Model_TabelaDataMapper.
    *
    * @return array
    */

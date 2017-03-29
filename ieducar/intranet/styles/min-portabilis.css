@@ -64,7 +64,7 @@ table.styled td, table.styled th {
 }
 
 table.styled th {
-  background-color: #A1B3BD;
+  background-color: #ccdce6;
   color: #3C3C3D;
   font-weight: bold;
 }
@@ -90,11 +90,11 @@ table.nocellcolor th, .nocellcolor {
 }
 
 table.cellcolor th, table tr.cellcolor th, .cellcolor, tr.even {
-  background-color: #E4E9ED;
+  background-color: #f5f9fd;
 }
 
 table.strong th , tr.strong th, tr.strong td{
-  background-color: #A1B3BD;
+  background-color: #ccdce6;
 }
 
 .hidden {

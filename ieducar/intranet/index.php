@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest�o escolar
+ * i-Educar - Sistema de gestĂŁo escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itaja�
+ * Copyright (C) 2006  Prefeitura Municipal de ItajaĂ­
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa � software livre; voc� pode redistribu�-lo e/ou modific�-lo
- * sob os termos da Licen�a P�blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers�o 2 da Licen�a, como (a seu crit�rio)
- * qualquer vers�o posterior.
+ * Este programa ĂŠ software livre; vocĂŞ pode redistribuĂ­-lo e/ou modificĂĄ-lo
+ * sob os termos da LicenĂ§a PĂşblica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versĂŁo 2 da LicenĂ§a, como (a seu critĂŠrio)
+ * qualquer versĂŁo posterior.
  *
- * Este programa � distribu��do na expectativa de que seja �til, por�m, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia impl��cita de COMERCIABILIDADE OU
- * ADEQUA��O A UMA FINALIDADE ESPEC�FICA. Consulte a Licen�a P�blica Geral
+ * Este programa ĂŠ distribuĂ­Â­do na expectativa de que seja Ăştil, porĂŠm, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implĂ­Â­cita de COMERCIABILIDADE OU
+ * ADEQUAĂĂO A UMA FINALIDADE ESPECĂFICA. Consulte a LicenĂ§a PĂşblica Geral
  * do GNU para mais detalhes.
  *
- * Voc� deve ter recebido uma c�pia da Licen�a P�blica Geral do GNU junto
- * com este programa; se n�o, escreva para a Free Software Foundation, Inc., no
- * endere�o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * VocĂŞ deve ter recebido uma cĂłpia da LicenĂ§a PĂşblica Geral do GNU junto
+ * com este programa; se nĂŁo, escreva para a Free Software Foundation, Inc., no
+ * endereĂ§o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de Itaja� <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de ItajaĂ­ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo dispon�vel desde a vers�o 1.0.0
+ * @since     Arquivo disponĂ­vel desde a versĂŁo 1.0.0
  * @version   $Id$
  */
 
@@ -34,11 +34,11 @@ require_once 'include/clsAgenda.inc.php';
 /**
  * clsIndex class.
  *
- * @author    Prefeitura Municipal de Itaja� <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de ItajaĂ­ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe dispon�vel desde a vers�o 1.0.0
+ * @since     Classe disponĂ­vel desde a versĂŁo 1.0.0
  * @version   @@package_version@@
  */
 class clsIndex extends clsBase
@@ -52,11 +52,11 @@ class clsIndex extends clsBase
 /**
  * indice class.
  *
- * @author    Prefeitura Municipal de Itaja� <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de ItajaĂ­ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe dispon�vel desde a vers�o 1.0.0
+ * @since     Classe disponĂ­vel desde a versĂŁo 1.0.0
  * @version   @@package_version@@
  */
 class indice
@@ -99,14 +99,16 @@ class indice
           <script type="text/javascript" src="scripts/jquery/jquery-1.8.3.min.js"></script>
           <link rel="stylesheet" href="scripts/jquery/jquery-ui.min-1.9.2/css/custom/jquery-ui-1.9.2.custom.min.css">
           <script src="scripts/jquery/jquery-ui.min-1.9.2/js/jquery-ui-1.9.2.custom.min.js"></script>
-          <div id="dialog" title="Atualiza��o de dados">
-            Todos os dias estamos trabalhando para melhorar o i-Educar e nossos servi�os especialmente para voc�! Para ficar por dentro destas novidades, por favor, atualize seus dados informando seu melhor e-mail.
+          <meta http-equiv=\'Content-Type\' content=\'text/html; charset=UTF-8\' />
+          <div id="dialog" title="Atualização de dados">
+            Todos os dias estamos trabalhando para melhorar o i-Educar e nossos servisos especialmente para você! Para ficar por dentro destas novidades, por favor, atualize seus dados informando seu melhor e-mail.
           </div>
           <script>
           var $j = jQuery.noConflict();
 
           $j(function() {
             $j( "#dialog" ).dialog({
+              dialogClass: "atualizacao-dados",
               width: 600,
               position: { my: "center", at: "top", of: window },
               buttons: [
@@ -157,13 +159,13 @@ class indice
       $temp .= '<table width="100%" height="400" align="center" border="0" cellspacing="4" cellpadding="0">';
       $temp .= '
         <tr>
-          <td class="fundoCalendarioTopo" style="padding:0px;"><img src="imagens/nvp_agn_dom.jpg" width="43" height="24" border="0" alt="DOM" title="Domingo"></td>
-          <td class="fundoCalendarioTopo" style="padding:0px;"><img src="imagens/nvp_agn_seg.jpg" width="43" height="24" border="0" alt="SEG" title="Segunda Feira"></td>
-          <td class="fundoCalendarioTopo" style="padding:0px;"><img src="imagens/nvp_agn_ter.jpg" width="43" height="24" border="0" alt="TER" title="Terca Feira"></td>
-          <td class="fundoCalendarioTopo" style="padding:0px;"><img src="imagens/nvp_agn_qua.jpg" width="43" height="24" border="0" alt="QUA" title="Quarta Feira"></td>
-          <td class="fundoCalendarioTopo" style="padding:0px;"><img src="imagens/nvp_agn_qui.jpg" width="43" height="24" border="0" alt="QUI" title="Quinta Feira"></td>
-          <td class="fundoCalendarioTopo" style="padding:0px;"><img src="imagens/nvp_agn_st.jpg"  width="43" height="24" border="0" alt="SEX" title="Sexta Feira"></td>
-          <td class="fundoCalendarioTopo" style="padding:0px;"><img src="imagens/nvp_agn_sab.jpg" width="43" height="24" border="0" alt="SAB" title="Sabado"></td>
+          <td class="fundoCalendarioTopo" style="padding:0px;">DOM</td>
+          <td class="fundoCalendarioTopo" style="padding:0px;">SEG</td>
+          <td class="fundoCalendarioTopo" style="padding:0px;">TER</td>
+          <td class="fundoCalendarioTopo" style="padding:0px;">QUA</td>
+          <td class="fundoCalendarioTopo" style="padding:0px;">QUI</td>
+          <td class="fundoCalendarioTopo" style="padding:0px;">SEX</td>
+          <td class="fundoCalendarioTopo" style="padding:0px;">SAB</td>
         </tr>';
 
       $mes = ($_GET['mes']) ? $_GET['mes'] : date('m');
@@ -197,7 +199,7 @@ class indice
         }
       }
 
-      // Faz loop da quantidade de dias do Mês
+      // Faz loop da quantidade de dias do MĂÂŞs
       $max_comp_dia = 5;
       for ($i=1; $i <= date('t', mktime(0, 0, 0, $mes, 1, $ano)); $i++) {
         $qtd = 0;
@@ -240,7 +242,7 @@ class indice
                   }
 
                   $qtd++;
-                  $compromisso_geral .= "<a href='juris_processo_det.php?cod_processo={$encaminha['ref_cod_juris_processo']}&versao_processo={$encaminha['ref_versao_processo']}' ><span class='textoAgenda' $id>- Pasta nº {$encaminha['ref_cod_juris_processo']}</span></a><br>";
+                  $compromisso_geral .= "<a href='juris_processo_det.php?cod_processo={$encaminha['ref_cod_juris_processo']}&versao_processo={$encaminha['ref_versao_processo']}' ><span class='textoAgenda' $id>- Pasta nĂÂş {$encaminha['ref_cod_juris_processo']}</span></a><br>";
                 }
               }
               else {
@@ -258,7 +260,7 @@ class indice
                   }
 
                   $qtd++;
-                  $compromisso_geral .= "<a href='juris_tramite_det.php?cod_tramite={$encaminha['ref_cod_juris_tramite']}&versao_tramite={$encaminha['ref_versao_tramite']}' ><span class='textoAgenda' $id>- Processo nº {$encaminha['ref_cod_juris_tramite']}</span></a><br>";
+                  $compromisso_geral .= "<a href='juris_tramite_det.php?cod_tramite={$encaminha['ref_cod_juris_tramite']}&versao_tramite={$encaminha['ref_versao_tramite']}' ><span class='textoAgenda' $id>- Processo nĂÂş {$encaminha['ref_cod_juris_tramite']}</span></a><br>";
                 }
               }
             }
@@ -369,7 +371,7 @@ class indice
         }
 
         $data_temp = strtotime(substr($dataAtual, 0, 19));
-        $compromisso_geral = ($compromisso_geral) ? "$compromisso_geral<a href='agenda.php?cod_agenda={$cod_agenda}&time=$data_temp' ><div align='center' class='textoAgenda'><b>Ver Todos</b></div>" : $compromisso_geral;
+        $compromisso_geral = ($compromisso_geral) ? "$compromisso_geral<a class='agenda-ver-todos' href='agenda.php?cod_agenda={$cod_agenda}&time=$data_temp' ><div align='center' class='textoAgenda'><b>Ver Todos</b></div>" : $compromisso_geral;
 
         if ($i == 1) {
           $ultimoDiaUltimoMes = date('t', mktime(0, 0, 0, $mes - 1, 1, $ano));
@@ -379,14 +381,14 @@ class indice
             $temp .= "<td class='fundoCalendarioMesDiferente' valign='top'><span class='diasMes'>$dia</span></td>";
           }
 
-          $temp .= "<td class='$classe' valign='top' background='imagens/nvp_calend_01.gif' style='background-repeat:no-repeat;'>$compromisso_geral</td>";
+          $temp .= "<td class='$classe' valign='top'><div class='dia_agenda'> " . $this->addLeadingZero($i) . " </div>$compromisso_geral</td>";
         }
         else {
           if($diaDaSemana == 0) {
-            $temp .= "</tr><tr><td class='$classe' valign='top' background='imagens/nvp_calend_" . $this->addLeadingZero($i) . ".gif' style='background-repeat:no-repeat;'>$compromisso_geral</td>";
+            $temp .= "</tr><tr><td class='$classe' valign='top'><div class='dia_agenda'> " . $this->addLeadingZero($i) . " </div>$compromisso_geral</td>";
           }
           else {
-            $temp .= "<td class='$classe' valign='top' background='imagens/nvp_calend_" . $this->addLeadingZero($i) . ".gif' style='background-repeat:no-repeat;'>$compromisso_geral</td>";
+            $temp .= "<td class='$classe' valign='top'><div class='dia_agenda'> " . $this->addLeadingZero($i) . " </div>$compromisso_geral</td>";
           }
         }
 
@@ -432,11 +434,18 @@ class indice
 
       $temp .= "</tr>
       <tr>
-        <td colspan=\"6\" align=\"center\" class=\"fundoCalendarioTopo\"><a href='index.php?mes=$anterior&ano=$ano_anterior'><img src=\"imagens/nvp_agn_anterior.jpg\" width=\"84\" height=\"20\" border=\"0\" style=\"padding-top:4px;\"></a> &nbsp;&nbsp;<a href='index.php?mes=$proximo&ano=$proximo_ano'><img src=\"imagens/nvp_agn_proximo.jpg\" width=\"84\" height=\"20\" border=\"0\" style=\"padding-top:4px;\"></a></td>
+        <td colspan=\"6\" align=\"center\" class=\"fundoCalendarioTopo\">
+          <a class=\"nav_agenda\" href='index.php?mes=$anterior&ano=$ano_anterior'>
+            &laquo; Anterior
+          </a> &nbsp;&nbsp;
+          <a class=\"nav_agenda\" href='index.php?mes=$proximo&ano=$proximo_ano'>
+            Próximo &raquo;
+          </a>
+        </td>
         <td align=center class='fundoCalendarioTopo'>$mes/$ano</td>
       </tr>
       <tr>
-        <td colspan=\"7\" class=\"fundoCalendario\" style=\"height:15px\"><h3 style=\"padding-top:2px;margin:0px\">Agenda do(a): <a href=\"agenda.php?cod_agenda={$cod_agenda}\">$nomeAgenda</a></h3></td>
+        <td colspan=\"7\" class=\"fundoCalendario\" style=\"height:15px; background-color: #fff;\"><h3 style=\"padding-top:2px;margin:0px\">Agenda do(a): <a href=\"agenda.php?cod_agenda={$cod_agenda}\">$nomeAgenda</a></h3></td>
       </tr>
       </table>{$endScript}";
       return $temp;
@@ -485,14 +494,14 @@ class indice
   }
 }
 
-// Instancia objeto de p�gina
+// Instancia objeto de pĂĄgina
 $pagina = new clsIndex();
 
-// Instancia objeto de conte�do
+// Instancia objeto de conteĂşdo
 $miolo = new indice();
 
-// Atribui o conte�do �  p�gina
+// Atribui o conteĂşdo Ă   pĂĄgina
 $pagina->addForm($miolo);
 
-// Gera o c�digo HTML
+// Gera o cĂłdigo HTML
 $pagina->MakeAll();

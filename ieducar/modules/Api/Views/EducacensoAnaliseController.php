@@ -61,21 +61,26 @@ class EducacensoAnaliseController extends ApiCoreController
              INNER JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
              INNER JOIN pmieducar.escola_ano_letivo ON (escola_ano_letivo.ref_cod_escola = escola.cod_escola)
              INNER JOIN pmieducar.ano_letivo_modulo modulo1 ON (modulo1.ref_ref_cod_escola = escola.cod_escola
-                          AND modulo1.ref_ano = escola_ano_letivo.ano
-                          AND modulo1.sequencial = 1)
+                                                                AND modulo1.ref_ano = escola_ano_letivo.ano
+                                                                AND modulo1.sequencial = 1)
              INNER JOIN pmieducar.ano_letivo_modulo modulo2 ON (modulo2.ref_ref_cod_escola = escola.cod_escola
-                          AND modulo2.ref_ano = escola_ano_letivo.ano
-                          AND modulo2.sequencial = (SELECT MAX(sequencial)
-                                                      FROM pmieducar.ano_letivo_modulo
-                                                     WHERE ref_ano = escola_ano_letivo.ano
-                                                       AND ref_ref_cod_escola = escola.cod_escola))
+                                                                AND modulo2.ref_ano = escola_ano_letivo.ano
+                                                                AND modulo2.sequencial = (SELECT MAX(sequencial)
+                                                                                            FROM pmieducar.ano_letivo_modulo
+                                                                                           WHERE ref_ano = escola_ano_letivo.ano
+                                                                                             AND ref_ref_cod_escola = escola.cod_escola))
               LEFT JOIN cadastro.pessoa pessoa_gestor ON (pessoa_gestor.idpes = escola.ref_idpes_gestor)
               LEFT JOIN cadastro.fisica fisica_gestor ON (fisica_gestor.idpes = escola.ref_idpes_gestor)
               LEFT JOIN modules.educacenso_cod_escola ON (educacenso_cod_escola.cod_escola = escola.cod_escola)
               LEFT JOIN cadastro.endereco_pessoa ON (endereco_pessoa.idpes = escola.ref_idpes)
-              LEFT JOIN public.bairro ON (bairro.idbai = endereco_pessoa.idbai)
+              LEFT JOIN cadastro.endereco_externo ON (endereco_externo.idpes = escola.ref_idpes)
+              LEFT JOIN public.bairro ON (bairro.idbai = COALESCE(endereco_pessoa.idbai, (SELECT b.idbai
+                                                                                            FROM public.bairro b
+                                                                                           INNER JOIN cadastro.endereco_externo ee ON (UPPER(ee.bairro) = UPPER(b.nome))
+                                                                                           WHERE ee.idpes = escola.ref_idpes
+                                                                                           LIMIT 1)))
               LEFT JOIN public.municipio ON (municipio.idmun = bairro.idmun)
-              LEFT JOIN public.uf ON (uf.sigla_uf = municipio.sigla_uf)
+              LEFT JOIN public.uf ON (uf.sigla_uf = COALESCE(municipio.sigla_uf, endereco_externo.sigla_uf))
               LEFT JOIN public.distrito ON (distrito.idmun = bairro.idmun)
              WHERE escola.cod_escola = $1
                AND escola_ano_letivo.ano = $2";
@@ -88,7 +93,7 @@ class EducacensoAnaliseController extends ApiCoreController
     }
 
     $escola       = $escola[0];
-    $nomeEscola   = Portabilis_String_Utils::toUtf8(mb_strtoupper($escola["nome_escola"]));
+    $nomeEscola   = Portabilis_String_Utils::toUtf8(strtoupper($escola["nome_escola"]));
     $anoAtual     = date("Y");
     $anoAnterior  = $anoAtual-1;
     $anoPosterior = $anoAtual+1;
@@ -253,7 +258,7 @@ class EducacensoAnaliseController extends ApiCoreController
     }
 
     $escola        = $escola[0];
-    $nomeEscola    = Portabilis_String_Utils::toUtf8(mb_strtoupper($escola["nome_escola"]));
+    $nomeEscola    = Portabilis_String_Utils::toUtf8(strtoupper($escola["nome_escola"]));
     $predioEscolar = 3; //Valor fixo definido no cadastro de escola
 
     $existeAbastecimentoAgua = ($escola["agua_rede_publica"] ||
@@ -446,8 +451,8 @@ class EducacensoAnaliseController extends ApiCoreController
 
     foreach ($turmas as $turma) {
 
-      $nomeEscola = Portabilis_String_Utils::toUtf8(mb_strtoupper($turma["nome_escola"]));
-      $nomeTurma  = Portabilis_String_Utils::toUtf8(mb_strtoupper($turma["nome_turma"]));
+      $nomeEscola = Portabilis_String_Utils::toUtf8(strtoupper($turma["nome_escola"]));
+      $nomeTurma  = Portabilis_String_Utils::toUtf8(strtoupper($turma["nome_turma"]));
       $atividadeComplementar = ($turma["tipo_atendimento"] == 4); //Código 4 fixo no cadastro de turma
       $existeAtividadeComplementar = ($turma["atividade_complementar_1"] || $turma["atividade_complementar_2"] ||
                                       $turma["atividade_complementar_3"] || $turma["atividade_complementar_4"] ||
@@ -546,8 +551,8 @@ class EducacensoAnaliseController extends ApiCoreController
     $brasileiro = 1;
 
     foreach ($servidores as $servidor) {
-      $nomeEscola   = Portabilis_String_Utils::toUtf8(mb_strtoupper($servidor["nome_escola"]));
-      $nomeServidor = Portabilis_String_Utils::toUtf8(mb_strtoupper($servidor["nome_servidor"]));
+      $nomeEscola   = Portabilis_String_Utils::toUtf8(strtoupper($servidor["nome_escola"]));
+      $nomeServidor = Portabilis_String_Utils::toUtf8(strtoupper($servidor["nome_servidor"]));
 
       if (is_null($servidor["cor_raca"])) {
         $mensagem[] = array("text" => "Dados para formular o registro 30 da escola {$nomeEscola} não encontrados. Verifique se a raça do(a) servidor(a) {$nomeServidor} foi informada.",
@@ -625,8 +630,8 @@ class EducacensoAnaliseController extends ApiCoreController
     $mensagem = array();
 
     foreach ($servidores as $servidor) {
-      $nomeEscola   = Portabilis_String_Utils::toUtf8(mb_strtoupper($servidor["nome_escola"]));
-      $nomeServidor = Portabilis_String_Utils::toUtf8(mb_strtoupper($servidor["nome_servidor"]));
+      $nomeEscola   = Portabilis_String_Utils::toUtf8(strtoupper($servidor["nome_escola"]));
+      $nomeServidor = Portabilis_String_Utils::toUtf8(strtoupper($servidor["nome_servidor"]));
       $naturalidadeBrasileiro = ($servidor["nacionalidade"] == 1 || $servidor["nacionalidade"] == 2);
 
       if ($naturalidadeBrasileiro && !$servidor['cpf']) {
@@ -765,8 +770,8 @@ class EducacensoAnaliseController extends ApiCoreController
     $situacaoCursando  = 2;
 
     foreach ($servidores as $servidor) {
-      $nomeEscola   = Portabilis_String_Utils::toUtf8(mb_strtoupper($servidor["nome_escola"]));
-      $nomeServidor = Portabilis_String_Utils::toUtf8(mb_strtoupper($servidor["nome_servidor"]));
+      $nomeEscola   = Portabilis_String_Utils::toUtf8(strtoupper($servidor["nome_escola"]));
+      $nomeServidor = Portabilis_String_Utils::toUtf8(strtoupper($servidor["nome_servidor"]));
 
       $existeCursoConcluido = ($servidor["situacao_curso_superior_1"] == $situacaoConcluido ||
                                $servidor["situacao_curso_superior_2"] == $situacaoConcluido ||
@@ -924,8 +929,8 @@ class EducacensoAnaliseController extends ApiCoreController
     $docente = array(1,5,6);
 
     foreach ($servidores as $servidor) {
-      $nomeEscola   = Portabilis_String_Utils::toUtf8(mb_strtoupper($servidor["nome_escola"]));
-      $nomeServidor = Portabilis_String_Utils::toUtf8(mb_strtoupper($servidor["nome_servidor"]));
+      $nomeEscola   = Portabilis_String_Utils::toUtf8(strtoupper($servidor["nome_escola"]));
+      $nomeServidor = Portabilis_String_Utils::toUtf8(strtoupper($servidor["nome_servidor"]));
 
       $funcaoDocente = in_array($servidor["funcao_exercida"], $docente);
 
@@ -992,8 +997,8 @@ class EducacensoAnaliseController extends ApiCoreController
     $brasileiro = 1;
 
     foreach ($alunos as $aluno) {
-      $nomeEscola = Portabilis_String_Utils::toUtf8(mb_strtoupper($aluno["nome_escola"]));
-      $nomeAluno  = Portabilis_String_Utils::toUtf8(mb_strtoupper($aluno["nome_aluno"]));
+      $nomeEscola = Portabilis_String_Utils::toUtf8(strtoupper($aluno["nome_escola"]));
+      $nomeAluno  = Portabilis_String_Utils::toUtf8(strtoupper($aluno["nome_aluno"]));
 
       if (is_null($aluno["cor_raca"])) {
         $mensagem[] = array("text" => "Dados para formular o registro 60 da escola {$nomeEscola} não encontrados. Verifique se a raça do(a) aluno(a) {$nomeAluno} foi informada.",
@@ -1089,8 +1094,8 @@ class EducacensoAnaliseController extends ApiCoreController
     $estrangeiro = 3;
 
     foreach ($alunos as $aluno) {
-      $nomeEscola = Portabilis_String_Utils::toUtf8(mb_strtoupper($aluno["nome_escola"]));
-      $nomeAluno  = Portabilis_String_Utils::toUtf8(mb_strtoupper($aluno["nome_aluno"]));
+      $nomeEscola = Portabilis_String_Utils::toUtf8(strtoupper($aluno["nome_escola"]));
+      $nomeAluno  = Portabilis_String_Utils::toUtf8(strtoupper($aluno["nome_aluno"]));
 
       if ($aluno["rg"]) {
         if (!$aluno["sigla_uf_rg"]) {
@@ -1204,8 +1209,8 @@ class EducacensoAnaliseController extends ApiCoreController
     $etapasEnsinoCorrecao = array(12,13,22,23,24,72,56,64);
 
     foreach ($alunos as $aluno) {
-      $nomeEscola = Portabilis_String_Utils::toUtf8(mb_strtoupper($aluno["nome_escola"]));
-      $nomeAluno  = Portabilis_String_Utils::toUtf8(mb_strtoupper($aluno["nome_aluno"]));
+      $nomeEscola = Portabilis_String_Utils::toUtf8(strtoupper($aluno["nome_escola"]));
+      $nomeAluno  = Portabilis_String_Utils::toUtf8(strtoupper($aluno["nome_aluno"]));
 
       if (is_null($aluno["transporte_escolar"])) {
         $mensagem[] = array("text" => "Dados para formular o registro 80 da escola {$nomeEscola} não encontrados. Verifique se o transporte púlblico foi informado para o(a) aluno(a) {$nomeAluno}.",
@@ -1240,6 +1245,160 @@ class EducacensoAnaliseController extends ApiCoreController
                  'title'     => "Análise exportação - Registro 80");
   }
 
+  protected function analisaEducacensoRegistro89() {
+
+    $escola   = $this->getRequest()->escola;
+
+    $sql = "SELECT DISTINCT j.fantasia AS nome_escola,
+                            ece.cod_escola_inep AS inep,
+                            gp.nome AS nome_gestor,
+                            gf.cpf AS cpf_gestor,
+                            e.cargo_gestor
+              FROM pmieducar.escola e
+             INNER JOIN cadastro.juridica j ON (j.idpes = e.ref_idpes)
+              LEFT JOIN modules.educacenso_cod_escola ece ON (ece.cod_escola = e.cod_escola)
+              LEFT JOIN cadastro.fisica gf ON (gf.idpes = e.ref_idpes_gestor)
+              LEFT JOIN cadastro.pessoa gp ON (gp.idpes = e.ref_idpes_gestor)
+             WHERE e.cod_escola = $1";
+
+    $escolas = $this->fetchPreparedQuery($sql, array($escola));
+
+    $mensagem = array();
+
+    foreach ($escolas as $escola) {
+      $nomeEscola = Portabilis_String_Utils::toUtf8(mb_strtoupper($escola["nome_escola"]));
+
+      if (is_null($escola["inep"])){
+        $mensagem[] = array("text" => "Dados para formular o registro 89 da escola {$nomeEscola} não encontrados. Verifique se a escola possui o código INEP cadastrado.",
+                            "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dados gerais > Campo: Código INEP)",
+                            "fail" => true);
+      }
+
+      if ($escola["cpf_gestor"] <= 0){
+        $mensagem[] = array("text" => "Dados para formular o registro 89 da escola {$nomeEscola} não encontrados. Verifique se o(a) gestor(a) escolar possui o CPF cadastrado.",
+                            "path" => "(Pessoa FJ > Pessoa física > Editar > Campo: CPF)",
+                            "fail" => true);
+      }
+
+      if (is_null($escola["nome_gestor"])){
+        $mensagem[] = array("text" => "Dados para formular o registro 89 da escola {$nomeEscola} não encontrados. Verifique se o(a) gestor(a) escolar foi informado(a).",
+                            "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dados gerais > Campo: Gestor escolar)",
+                            "fail" => true);
+      }
+
+      if (is_null($escola["cargo_gestor"])){
+        $mensagem[] = array("text" => "Dados para formular o registro 89 da escola {$nomeEscola} não encontrados. Verifique se o cargo do(a) gestor(a) escolar foi informado.",
+                            "path" => "(Cadastros > Escola > Cadastrar > Editar > Campo: Cargo do gestor escolar)",
+                            "fail" => true);
+      }
+    }
+
+    return array('mensagens' => $mensagem,
+                 'title'     => "Análise exportação - Registro 89");
+  }
+
+  protected function analisaEducacensoRegistro90() {
+
+    $escola   = $this->getRequest()->escola;
+    $ano      = $this->getRequest()->ano;
+    $data_ini = $this->getRequest()->data_ini;
+    $data_fim = $this->getRequest()->data_fim;
+
+    $sql = "SELECT DISTINCT j.fantasia AS nome_escola,
+                            t.nm_turma AS nome_turma,
+                            ect.cod_turma_inep AS inep_turma,
+                            p.nome AS nome_aluno,
+                            eca.cod_aluno_inep AS inep_aluno
+              FROM pmieducar.escola e
+             INNER JOIN pmieducar.turma t ON (t.ref_ref_cod_escola = e.cod_escola)
+             INNER JOIN pmieducar.matricula_turma mt ON (mt.ref_cod_turma = t.cod_turma)
+             INNER JOIN pmieducar.matricula m ON (m.cod_matricula = mt.ref_cod_matricula)
+             INNER JOIN pmieducar.aluno a ON (a.cod_aluno = m.ref_cod_aluno)
+             INNER JOIN cadastro.pessoa p ON (p.idpes = a.ref_idpes)
+             INNER JOIN cadastro.juridica j ON (j.idpes = e.ref_idpes)
+              LEFT JOIN modules.educacenso_cod_aluno eca ON (eca.cod_aluno = a.cod_aluno)
+              LEFT JOIN modules.educacenso_cod_turma ect ON (ect.cod_turma = t.cod_turma)
+             WHERE e.cod_escola = $1
+               AND COALESCE(m.data_matricula,m.data_cadastro) BETWEEN DATE($3) AND DATE($4)
+               AND m.aprovado IN (1, 2, 3, 4, 6, 15)
+               AND m.ano = $2
+             ORDER BY nome_turma";
+
+    $alunos = $this->fetchPreparedQuery($sql, array($escola,
+                                                    $ano,
+                                                    Portabilis_Date_Utils::brToPgSQL($data_ini),
+                                                    Portabilis_Date_Utils::brToPgSQL($data_fim)));
+
+    $mensagem = array();
+    $ultimaTurmaVerificada;
+
+    foreach ($alunos as $aluno) {
+      $nomeEscola = Portabilis_String_Utils::toUtf8(mb_strtoupper($aluno["nome_escola"]));
+      $nomeTurma = Portabilis_String_Utils::toUtf8(mb_strtoupper($aluno["nome_turma"]));
+      $nomeAluno  = Portabilis_String_Utils::toUtf8(mb_strtoupper($aluno["nome_aluno"]));
+
+      if (is_null($aluno["inep_turma"]) && $ultimaTurmaVerificada != $aluno["nome_turma"]) {
+        $mensagem[] = array("text" => "Dados para formular o registro 90 da escola {$nomeEscola} não encontrados. Verifique se a turma {$nomeTurma} possui o código INEP cadastrado.",
+                            "path" => "(Cadastros > Turma > Cadastrar > Editar > Aba: Dados adicionais > Campo: Código INEP)",
+                            "fail" => true);
+        $ultimaTurmaVerificada = $aluno["nome_turma"];
+      }
+
+      if (is_null($aluno["inep_aluno"])) {
+        $mensagem[] = array("text" => "Dados para formular o registro 90 da escola {$nomeEscola} não encontrados. Verifique se o(a) aluno(a) {$nomeAluno} possui o código INEP cadastrado.",
+                            "path" => "(Cadastros > Aluno > Alunos > Editar > Campo: Código INEP)",
+                            "fail" => true);
+      }
+    }
+
+    return array('mensagens' => $mensagem,
+                 'title'     => "Análise exportação - Registro 90");
+
+  }
+
+  protected function analisaEducacensoRegistro91() {
+
+    $escola   = $this->getRequest()->escola;
+    $ano      = $this->getRequest()->ano;
+
+    $sql = "SELECT DISTINCT pa.nome AS nome_aluno,
+                            pe.fantasia AS nome_escola,
+                            eca.cod_aluno_inep AS cod_inep
+              FROM pmieducar.aluno a
+              LEFT JOIN modules.educacenso_cod_aluno eca ON (eca.cod_aluno = a.cod_aluno)
+             INNER JOIN pmieducar.matricula m ON (m.ref_cod_aluno = a.cod_aluno)
+             INNER JOIN pmieducar.matricula_turma mt ON (mt.ref_cod_matricula = m.cod_matricula)
+             INNER JOIN pmieducar.escola e ON (e.cod_escola = m.ref_ref_cod_escola)
+             INNER JOIN cadastro.pessoa pa ON (pa.idpes = a.ref_idpes)
+             INNER JOIN cadastro.juridica pe ON (pe.idpes = e.ref_idpes)
+             INNER JOIN pmieducar.instituicao i ON (i.cod_instituicao = e.ref_cod_instituicao)
+             WHERE e.cod_escola = $2
+               AND m.aprovado IN (1, 2, 3, 4, 6, 15)
+               AND m.ano = $1
+               AND mt.data_enturmacao > i.data_educacenso
+               AND i.data_educacenso IS NOT NULL
+             ORDER BY nome_aluno";
+
+    $alunos = $this->fetchPreparedQuery($sql, array($ano,
+                                                    $escola));
+
+    $mensagem = array();
+
+    foreach ($alunos as $aluno) {
+      $nomeEscola = Portabilis_String_Utils::toUtf8(mb_strtoupper($aluno["nome_escola"]));
+      $nomeAluno  = Portabilis_String_Utils::toUtf8(mb_strtoupper($aluno["nome_aluno"]));
+
+      if (is_null($aluno["cod_inep"])) {
+        $mensagem[] = array("text" => "Dados para formular o registro 91 da escola {$nomeEscola} não encontrados. Verifique se o(a) aluno(a) {$nomeAluno} possui o código INEP cadastrado.",
+                            "path" => "(Cadastros > Aluno > Alunos > Editar > Campo: Código INEP)",
+                            "fail" => true);
+      }
+    }
+
+    return array('mensagens' => $mensagem,
+                 'title'     => "Análise exportação - Registro 91");
+
+  }
 
   public function Gerar() {
     if ($this->isRequestFor('get', 'registro-00'))
@@ -1262,6 +1421,12 @@ class EducacensoAnaliseController extends ApiCoreController
       $this->appendResponse($this->analisaEducacensoRegistro70());
     else if ($this->isRequestFor('get', 'registro-80'))
       $this->appendResponse($this->analisaEducacensoRegistro80());
+    else if ($this->isRequestFor('get', 'registro-89'))
+      $this->appendResponse($this->analisaEducacensoRegistro89());
+    else if ($this->isRequestFor('get', 'registro-90'))
+      $this->appendResponse($this->analisaEducacensoRegistro90());
+    else if ($this->isRequestFor('get', 'registro-91'))
+      $this->appendResponse($this->analisaEducacensoRegistro91());
     else
       $this->notImplementedOperationError();
   }

@@ -1,25 +1,25 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	@author Prefeitura Municipal de ItajaÌ								 *
+	*	@author Prefeitura Municipal de Itaja√≠								 *
 	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software P˙blico Livre e Brasileiro					 *
+	*   Pacote: i-PLB Software P√∫blico Livre e Brasileiro					 *
 	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÌ			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itaja√≠			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  È  software livre, vocÍ pode redistribuÌ-lo e/ou	 *
-	*	modific·-lo sob os termos da LicenÁa P˙blica Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a vers„o 2 da	 *
-	*	LicenÁa   como  (a  seu  critÈrio)  qualquer  vers„o  mais  nova.	 *
+	*	Este  programa  √©  software livre, voc√™ pode redistribu√≠-lo e/ou	 *
+	*	modific√°-lo sob os termos da Licen√ßa P√∫blica Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a vers√£o 2 da	 *
+	*	Licen√ßa   como  (a  seu  crit√©rio)  qualquer  vers√£o  mais  nova.	 *
 	*																		 *
-	*	Este programa  È distribuÌdo na expectativa de ser ˙til, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implÌcita de COMERCIALI-	 *
-	*	ZA«√O  ou  de ADEQUA«√O A QUALQUER PROP”SITO EM PARTICULAR. Con-	 *
-	*	sulte  a  LicenÁa  P˙blica  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  √© distribu√≠do na expectativa de ser √∫til, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia impl√≠cita de COMERCIALI-	 *
+	*	ZA√á√ÉO  ou  de ADEQUA√á√ÉO A QUALQUER PROP√ìSITO EM PARTICULAR. Con-	 *
+	*	sulte  a  Licen√ßa  P√∫blica  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	VocÍ  deve  ter  recebido uma cÛpia da LicenÁa P˙blica Geral GNU	 *
-	*	junto  com  este  programa. Se n„o, escreva para a Free Software	 *
+	*	Voc√™  deve  ter  recebido uma c√≥pia da Licen√ßa P√∫blica Geral GNU	 *
+	*	junto  com  este  programa. Se n√£o, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
@@ -110,7 +110,7 @@ class indice extends clsCadastro
 //		echo "<pre>";print_r($lst_cliente_suspenso);
 		if ( is_array($lst_cliente_suspenso) )
 		{
-			echo "<script> alert('Cliente atualmente suspenso!\\nN„o È possivel realizar o emprÈstimo.'); window.location = 'educar_exemplar_emprestimo_lst.php';</script>";
+			echo "<script> alert('Cliente atualmente suspenso!\\nN√£o √© possivel realizar o empr√©stimo.'); window.location = 'educar_exemplar_emprestimo_lst.php';</script>";
 			die();
 		}
 
@@ -119,7 +119,7 @@ class indice extends clsCadastro
 
 		if ( count($lst_exemplar_emprestimo) >= $max_emprestimo )
 		{
-			echo "<script> alert('Excedido o n˙mero m·ximo de emprÈstimos do cliente!\\nN„o È possivel realizar o emprÈstimo.'); window.location = 'educar_exemplar_emprestimo_lst.php';</script>";
+			echo "<script> alert('Excedido o n√∫mero m√°ximo de empr√©stimos do cliente!\\nN√£o √© possivel realizar o empr√©stimo.'); window.location = 'educar_exemplar_emprestimo_lst.php';</script>";
 			die();
 		}
 
@@ -161,7 +161,7 @@ class indice extends clsCadastro
 		// verifica se o valor da divida ultrapassou o valor maximo permitido da multa pela biblioteca
 		if ( ($valor_maximo_multa <= $valor_total_divida) && ($this->confirmado != true) )
 		{
-			echo "<script> if(!confirm('Excedido o valor total das multas do cliente! \\n Valor total das multas: R$$valor_total_divida \\n Valor total das multas nessa biblioteca: R$$valor_divida \\n Valor m·ximo da multa permitido nessa biblioteca: R$$valor_maximo_multa \\n Deseja mesmo assim realizar o emprÈstimo?')) window.location = 'educar_exemplar_emprestimo_lst.php';</script>";
+			echo "<script> if(!confirm('Excedido o valor total das multas do cliente! \\n Valor total das multas: R$$valor_total_divida \\n Valor total das multas nessa biblioteca: R$$valor_divida \\n Valor m√°ximo da multa permitido nessa biblioteca: R$$valor_maximo_multa \\n Deseja mesmo assim realizar o empr√©stimo?')) window.location = 'educar_exemplar_emprestimo_lst.php';</script>";
 			$this->confirmado = true;
 			$this->campoOculto( "confirmado", $this->confirmado );
 		}
@@ -217,7 +217,7 @@ class indice extends clsCadastro
 //							$lst_exemplar = $obj_exemplar->lista($exemplar,null,null,null,null,null,null,2,null,null,null,null,null,1,null,null,null,null,$this->ref_cod_biblioteca);
 							$lst_exemplar = $obj_exemplar->lista(null,null,null,null,null,null,null,2,null,null,null,null,null,1,null,null,null,null,$this->ref_cod_biblioteca, null, null,null, $exemplar);
 
-							//verifica se o exemplar È disponibilizado para emprÈstimo
+							//verifica se o exemplar √© disponibilizado para empr√©stimo
 							if( is_array( $lst_exemplar ) && count( $lst_exemplar ) )
 							{
 								$det_exemplar = array_shift($lst_exemplar);
@@ -228,7 +228,7 @@ class indice extends clsCadastro
 								$situacao_padrao = $det_situacao["situacao_padrao"];
 								$permite_emprestimo = $det_situacao["permite_emprestimo"];
 //							echo "<pre>"; print_r($det_situacao); die();
-								// verifica se a situacao do exemplar È padrao (disponivel)
+								// verifica se a situacao do exemplar √© padrao (disponivel)
 								if ($situacao_padrao == 1 && $permite_emprestimo == 2)
 								{
 									$obj_reservas = new clsPmieducarReservas();
@@ -243,7 +243,7 @@ class indice extends clsCadastro
 										$editou = $obj->edita();
 										if( $editou )
 										{
-											// adiciona exemplar para emprÈstimo
+											// adiciona exemplar para empr√©stimo
 											$obj_exemplar = new clsPmieducarExemplar($exemplar);
 											$det_exemplar = $obj_exemplar->detalhe();
 											$acervo = $det_exemplar["ref_cod_acervo"];
@@ -256,7 +256,7 @@ class indice extends clsCadastro
 										}
 										else
 										{
-											echo "<script> alert('ERRO !!!\\nN„o foi possÌvel registrar a retirada do exemplar.'); </script>";
+											echo "<script> alert('ERRO !!!\\nN√£o foi poss√≠vel registrar a retirada do exemplar.'); </script>";
 										}
 									}
 									else
@@ -312,7 +312,7 @@ class indice extends clsCadastro
 													}
 												}
 
-												// devido a comparacao das datas, È necessario mudar o formato da data
+												// devido a comparacao das datas, √© necessario mudar o formato da data
 												$data_disponivel = dataFromPgToBr($data_disponivel, "D Y-m-d");
 
 												// verifica se a data cai em algum dia que a biblioteca n funciona
@@ -338,7 +338,7 @@ class indice extends clsCadastro
 														$excluiu = $obj->excluir();
 														if( $excluiu )
 														{
-															// adiciona exemplar para emprÈstimo
+															// adiciona exemplar para empr√©stimo
 															$obj_exemplar = new clsPmieducarExemplar($exemplar);
 															$det_exemplar = $obj_exemplar->detalhe();
 															$acervo = $det_exemplar["ref_cod_acervo"];
@@ -351,20 +351,20 @@ class indice extends clsCadastro
 														}
 														else
 														{
-															echo "<script> alert('ERRO - N„o foi possÌvel desativar reserva desatualizada!'); </script>";
+															echo "<script> alert('ERRO - N√£o foi poss√≠vel desativar reserva desatualizada!'); </script>";
 														}
 													}
 													else
 													{
-														echo "<script> alert('ERRO - N„o foi possÌvel encontrar a reserva!'); </script>";
+														echo "<script> alert('ERRO - N√£o foi poss√≠vel encontrar a reserva!'); </script>";
 													}
 												}
 												else
 												{
-													echo "<script> alert('Exemplar reservado!\\nNo momento, n„o disponÌvel para emprÈstimo.'); </script>";
+													echo "<script> alert('Exemplar reservado!\\nNo momento, n√£o dispon√≠vel para empr√©stimo.'); </script>";
 												}
 											}
-										}// adiciona exemplar para emprÈstimo
+										}// adiciona exemplar para empr√©stimo
 										else
 										{
 											$obj_exemplar = new clsPmieducarExemplar($exemplar);
@@ -381,12 +381,12 @@ class indice extends clsCadastro
 								}
 								else
 								{
-									echo "<script> alert('SituaÁ„o atual do exemplar n„o permite emprÈstimo!'); </script>";
+									echo "<script> alert('Situa√ß√£o atual do exemplar n√£o permite empr√©stimo!'); </script>";
 								}
 							}
 							else
 							{
-								echo "<script> alert('Exemplar n„o disponÌvel para emprÈstimo!'); </script>";
+								echo "<script> alert('Exemplar n√£o dispon√≠vel para empr√©stimo!'); </script>";
 							}
 						}
 					}
@@ -447,7 +447,7 @@ class indice extends clsCadastro
 					}
 					else
 					{
-						echo "<script> alert('ERRO - N„o foi possÌvel encontrar a situaÁ„o EMPRESTADO da biblioteca utilizada!'); </script>";
+						echo "<script> alert('ERRO - N√£o foi poss√≠vel encontrar a situa√ß√£o EMPRESTADO da biblioteca utilizada!'); </script>";
 					}
 				}
 				else 
@@ -462,7 +462,7 @@ class indice extends clsCadastro
 			die();
 			return true;
 		}
-		echo "<script> alert('… necess·rio adicionar pelo menos 1 Tombo!') </script>";
+		echo "<script> alert('√â necess√°rio adicionar pelo menos 1 Tombo!') </script>";
 		$this->mensagem = "Cadastro n&atilde;o realizado.<br>";
 		return false;
 	}

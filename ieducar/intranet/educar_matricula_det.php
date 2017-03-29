@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo disponÌvel desde a vers„o 1.0.0
+ * @since     Arquivo dispon√≠vel desde a vers√£o 1.0.0
  * @version   $Id$
  */
 
@@ -41,18 +41,18 @@ require_once 'Portabilis/View/Helper/Application.php';
 /**
  * clsIndexBase class.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponÌvel desde a vers„o 1.0.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - MatrÌcula');
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Matr√≠cula');
     $this->processoAp = 578;
     $this->addEstilo("localizacaoSistema");
   }
@@ -63,11 +63,11 @@ class clsIndexBase extends clsBase
 /**
  * indice class.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponÌvel desde a vers„o 1.0.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
  * @version   @@package_version@@
  */
 class indice extends clsDetalhe
@@ -99,7 +99,7 @@ class indice extends clsDetalhe
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
-    $this->titulo = "MatrÌcula - Detalhe";
+    $this->titulo = "Matr√≠cula - Detalhe";
     $this->addBanner("imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet");
 
     $this->ref_cod_matricula = $_GET["cod_matricula"];
@@ -125,12 +125,12 @@ class indice extends clsDetalhe
     $det_ref_cod_curso = $obj_ref_cod_curso->detalhe();
     $registro['ref_cod_curso'] = $det_ref_cod_curso['nm_curso'];
 
-    // SÈrie
+    // S√©rie
     $obj_serie = new clsPmieducarSerie($registro['ref_ref_cod_serie']);
     $det_serie = $obj_serie->detalhe();
     $registro['ref_ref_cod_serie'] = $det_serie['nm_serie'];
 
-    // Nome da instituiÁ„o
+    // Nome da institui√ß√£o
     $obj_cod_instituicao = new clsPmieducarInstituicao( $registro['ref_cod_instituicao'] );
     $obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();
     $registro['ref_cod_instituicao'] = $obj_cod_instituicao_det['nm_instituicao'];
@@ -151,7 +151,7 @@ class indice extends clsDetalhe
     }
 
     if ($registro['cod_matricula']) {
-      $this->addDetalhe(array('N˙mero MatrÌcula', $registro['cod_matricula']));
+      $this->addDetalhe(array('N√∫mero Matr√≠cula', $registro['cod_matricula']));
     }
 
     if ($nm_aluno) {
@@ -159,7 +159,7 @@ class indice extends clsDetalhe
     }
 
     if ($registro['ref_cod_instituicao']) {
-      $this->addDetalhe(array('InstituiÁ„o', $registro['ref_cod_instituicao']));
+      $this->addDetalhe(array('Institui√ß√£o', $registro['ref_cod_instituicao']));
     }
 
     if ($registro['ref_ref_cod_escola']) {
@@ -171,7 +171,7 @@ class indice extends clsDetalhe
     }
 
     if ($registro['ref_ref_cod_serie']) {
-      $this->addDetalhe(array('SÈrie', $registro['ref_ref_cod_serie']));
+      $this->addDetalhe(array('S√©rie', $registro['ref_ref_cod_serie']));
     }
 
     // Nome da turma
@@ -193,21 +193,21 @@ class indice extends clsDetalhe
 
     if ($nomesTurmas){
       $this->addDetalhe(array('Turma', $nomesTurmas));
-      $this->addDetalhe(array('Data EnturmaÁ„o', $datasEnturmacoes));
+      $this->addDetalhe(array('Data Enturma√ß√£o', $datasEnturmacoes));
       $existeTurma = true;
     }else {
       $this->addDetalhe(array('Turma', ''));
-      $this->addDetalhe(array('Data EnturmaÁ„o', ''));
+      $this->addDetalhe(array('Data Enturma√ß√£o', ''));
     }
 
     if ($registro['ref_cod_reserva_vaga']) {
-      $this->addDetalhe(array('N˙mero Reserva Vaga', $registro['ref_cod_reserva_vaga']));
+      $this->addDetalhe(array('N√∫mero Reserva Vaga', $registro['ref_cod_reserva_vaga']));
     }
 
     $campoObs = false;
 
     $situacao = App_Model_MatriculaSituacao::getSituacao($registro['aprovado']);
-    $this->addDetalhe(array('SituaÁ„o', $situacao));
+    $this->addDetalhe(array('Situa√ß√£o', $situacao));
 
     if($registro[aprovado] == 4){
       $obj_transferencia = new clsPmieducarTransferenciaSolicitacao();
@@ -224,18 +224,18 @@ class indice extends clsDetalhe
       }else{
         $this->addDetalhe(array("Escola destino", $det_transferencia["escola_destino_externa"]));
         $this->addDetalhe(array("Estado escola destino", $det_transferencia["estado_escola_destino_externa"]));
-        $this->addDetalhe(array("MunicÌpio escola destino", $det_transferencia["municipio_escola_destino_externa"]));
+        $this->addDetalhe(array("Munic√≠pio escola destino", $det_transferencia["municipio_escola_destino_externa"]));
       }
     }
 
     if ($registro['aprovado'] == App_Model_MatriculaSituacao::FALECIDO) {
-      $this->addDetalhe(array('ObservaÁ„o',Portabilis_String_Utils::toLatin1($registro['observacao'])));
+      $this->addDetalhe(array('Observa√ß√£o',Portabilis_String_Utils::toLatin1($registro['observacao'])));
     }
 
     if ($existeSaidaEscola) {
-      $this->addDetalhe(array('SaÌda da escola','Sim'));
-      $this->addDetalhe(array('Data de saÌda da escola',Portabilis_Date_Utils::pgSQLToBr($registro['data_saida_escola'])));
-      $this->addDetalhe(array('ObservaÁ„o',Portabilis_String_Utils::toLatin1($registro['observacao'])));
+      $this->addDetalhe(array('Sa√≠da da escola','Sim'));
+      $this->addDetalhe(array('Data de sa√≠da da escola',Portabilis_Date_Utils::pgSQLToBr($registro['data_saida_escola'])));
+      $this->addDetalhe(array('Observa√ß√£o',Portabilis_String_Utils::toLatin1($registro['observacao'])));
     }
 
 
@@ -248,7 +248,7 @@ class indice extends clsDetalhe
       $observacaoAbandono = Portabilis_String_Utils::toLatin1($registro['observacao']);
 
       $this->addDetalhe(array('Motivo do Abandono',$tipoAbandono['nome']));
-      $this->addDetalhe(array('ObservaÁ„o',$observacaoAbandono));
+      $this->addDetalhe(array('Observa√ß√£o',$observacaoAbandono));
     }
 
     $this->addDetalhe(array('Formando', $registro['formando'] == 0 ? 'N&atilde;o' : 'Sim'));
@@ -278,11 +278,11 @@ class indice extends clsDetalhe
         // Verificar se tem permissao para executar cancelamento de matricula
         if($this->permissao_cancelar()){
 
-          $this->array_botao[]            = 'Cancelar matrÌcula';
-          $this->array_botao_url_script[] = "if(confirm(\"Deseja realmente cancelar esta matrÌcula?\"))go(\"educar_matricula_cad.php?cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\")";
+          $this->array_botao[]            = 'Cancelar matr√≠cula';
+          $this->array_botao_url_script[] = "if(confirm(\"Deseja realmente cancelar esta matr√≠cula?\"))go(\"educar_matricula_cad.php?cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\")";
         }
 
-        $this->array_botao[]            = 'OcorrÍncias disciplinares';
+        $this->array_botao[]            = 'Ocorr√™ncias disciplinares';
         $this->array_botao_url_script[] = "go(\"educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$registro['cod_matricula']}\")";
 
         // Apenas libera a dispensa de disciplina quando o aluno estiver enturmado
@@ -316,12 +316,12 @@ class indice extends clsDetalhe
 
       if ($registro['aprovado'] != 4 && $registro['aprovado'] != 6) {
         if (is_array($lst_transferencia) && !isset($data_transferencia)) {
-          $this->array_botao[]            = 'Cancelar solicitaÁ„o transferÍncia (escola do sistema)';
+          $this->array_botao[]            = 'Cancelar solicita√ß√£o transfer√™ncia (escola do sistema)';
           $this->array_botao_url_script[] = "go(\"educar_transferencia_solicitacao_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}&cancela=true\")";
         }
         elseif ($registro['aprovado'] == App_Model_MatriculaSituacao::EM_ANDAMENTO) {
           if ($registro['ref_ref_cod_serie']) {
-            $this->array_botao[]            = ( $GLOBALS['coreExt']['Config']->app->database->dbname == 'botucatu' ? 'Deslocamento / TransferÍncia' : 'Solicitar transferÍncia' );
+            $this->array_botao[]            = ( $GLOBALS['coreExt']['Config']->app->database->dbname == 'botucatu' ? 'Deslocamento / Transfer√™ncia' : 'Solicitar transfer√™ncia' );
             $this->array_botao_url_script[] = "go(\"educar_transferencia_solicitacao_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\")";
           }
         }
@@ -331,26 +331,26 @@ class indice extends clsDetalhe
         ) {
           if ($registro['formando'] == 0) {
             $this->array_botao[]            = 'Formando';
-            $this->array_botao_url_script[] = "if(confirm(\"Deseja marcar a matrÌcula como formando?\"))go(\"educar_matricula_formando_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}&formando=1\")";
+            $this->array_botao_url_script[] = "if(confirm(\"Deseja marcar a matr√≠cula como formando?\"))go(\"educar_matricula_formando_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}&formando=1\")";
           }
           else {
             $this->array_botao[]            = "Desmarcar como formando";
-            $this->array_botao_url_script[] = "if(confirm(\"Deseja desmarcar a matrÌcula como formando?\"))go(\"educar_matricula_formando_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}&formando=0\")";
+            $this->array_botao_url_script[] = "if(confirm(\"Deseja desmarcar a matr√≠cula como formando?\"))go(\"educar_matricula_formando_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}&formando=0\")";
           }
         }
       }
 
 	  $ultimaMatricula = $obj_matricula->getEndMatricula($registro['ref_cod_aluno']);
       if($registro['aprovado'] == App_Model_MatriculaSituacao::TRANSFERIDO && $this->canCancelTransferencia($registro['cod_matricula'])) {
-        $this->array_botao[] = 'Cancelar transferÍncia';
+        $this->array_botao[] = 'Cancelar transfer√™ncia';
 
-        # TODO ver se cÛdigo, seta matricula como em andamento, ativa ultima matricula_turma for matricula, e desativa transferencia solicitacao
+        # TODO ver se c√≥digo, seta matricula como em andamento, ativa ultima matricula_turma for matricula, e desativa transferencia solicitacao
         $this->array_botao_url_script[] = "go(\"educar_transferencia_solicitacao_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}&cancela=true&reabrir_matricula=true\")";
       }
       elseif($registro['aprovado'] == App_Model_MatriculaSituacao::TRANSFERIDO && $ultimaMatricula == 4) {
-      	$this->array_botao[] = 'Cancelar transferÍncia';
+      	$this->array_botao[] = 'Cancelar transfer√™ncia';
 
-        # TODO ver se cÛdigo, seta matricula como em andamento, ativa ultima matricula_turma for matricula, e desativa transferencia solicitacao
+        # TODO ver se c√≥digo, seta matricula como em andamento, ativa ultima matricula_turma for matricula, e desativa transferencia solicitacao
         $this->array_botao_url_script[] = "go(\"educar_transferencia_solicitacao_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}&cancela=true&reabrir_matricula=true\")";
       }
 
@@ -366,17 +366,17 @@ class indice extends clsDetalhe
            $registro['aprovado'] == App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA ||
            $registro['aprovado'] == App_Model_MatriculaSituacao::APROVADO_PELO_CONSELHO ||
            $registro['aprovado'] == App_Model_MatriculaSituacao::REPROVADO_POR_FALTAS)) {
-        $this->array_botao[]            = "SaÌda da escola";
+        $this->array_botao[]            = "Sa√≠da da escola";
         $this->array_botao_url_script[] = "go(\"educar_saida_escola_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}&escola={$registro['ref_ref_cod_escola']}\");";
       }
 
       if ($existeSaidaEscola && $verificaMatriculaUltimoAno) {
-        $this->array_botao[]            = "Cancelar saÌda da escola";
+        $this->array_botao[]            = "Cancelar sa√≠da da escola";
         $this->array_botao_url_script[] = "desfazerSaidaEscola({$registro['cod_matricula']})";
       }
 
       if ($registro['aprovado'] == App_Model_MatriculaSituacao::RECLASSIFICADO){
-        $this->array_botao[]            = 'Desfazer reclassificaÁ„o';
+        $this->array_botao[]            = 'Desfazer reclassifica√ß√£o';
         $this->array_botao_url_script[] = "deleteReclassificacao({$registro['cod_matricula']})";
       }
     }
@@ -386,7 +386,7 @@ class indice extends clsDetalhe
     $administrador = 1;
 
     if ($nivelUsuario == $administrador) {
-      $this->array_botao[]            = 'HistÛrico de enturmaÁıes';
+      $this->array_botao[]            = 'Hist√≥rico de enturma√ß√µes';
       $this->array_botao_url_script[] = "go(\"educar_matricula_historico_lst.php?ref_cod_matricula={$registro['cod_matricula']}\")";
     }
 
@@ -396,8 +396,8 @@ class indice extends clsDetalhe
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
-         ""                                  => "Detalhe da matr&iacute;cula"
+         "educar_index.php"                  => "Escola",
+         ""                                  => "Matr√≠cula"
     ));
     $this->enviaLocalizacao($localizacao->montar());
 
@@ -422,11 +422,11 @@ class indice extends clsDetalhe
 
     /**
      * @param Processo
-     * @param Usu·rio logado
-     * @param NÌvel de acesso
-     * @param Redirecionar p·gina
-     * @param Super Usu·rio
-     * @param Verifica usu·rio biblioteca
+     * @param Usu√°rio logado
+     * @param N√≠vel de acesso
+     * @param Redirecionar p√°gina
+     * @param Super Usu√°rio
+     * @param Verifica usu√°rio biblioteca
      */
     return $acesso->permissao_excluir(627, $this->pessoa_logada, 7, null, true);
   }
@@ -443,14 +443,14 @@ class indice extends clsDetalhe
   }
 }
 
-// Instancia objeto de p·gina
+// Instancia objeto de p√°gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conte˙do
+// Instancia objeto de conte√∫do
 $miolo = new indice();
 
-// Atribui o conte˙do ‡  p·gina
+// Atribui o conte√∫do √†  p√°gina
 $pagina->addForm($miolo);
 
-// Gera o cÛdigo HTML
+// Gera o c√≥digo HTML
 $pagina->MakeAll();

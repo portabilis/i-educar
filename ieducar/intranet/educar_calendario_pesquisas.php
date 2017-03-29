@@ -7,7 +7,7 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
   $retorno .= '
     <tr>
       <td height="24" colspan="2" class="formdktd">
-        <span class="form"><b>Filtros de busca</b></span>
+        <span class="form"><b style="font-size: 16px;">Filtros de busca</b></span>
       </td>
     </tr>';
 
@@ -31,7 +31,7 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
 
     $escola_desabilitado = isset($escola_desabilitado) ?
       $escola_desabilitado : $desabilitado;
-  } 
+  }
   $obj_permissoes = new clsPermissoes();
   $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
@@ -52,14 +52,14 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
         }
       }
     } else {
-      $opcoes = array('' => 'Erro na geração');
+      $opcoes = array('' => 'Erro na geraÃ§Ã£o');
     }
 
     if ($get_escola) {
       $retorno .= '
-        <tr id="tr_status">
+        <tr id="tr_status" class="input_calendario_letivo">
           <td valign="top" class="formlttd">
-            <span class="form">Instituição</span>
+            <span class="form">InstituiÃ§Ã£o</span>
             <span class="campo_obrigatorio">*</span><br/>
             <sub style="vertical-align: top;"/>
           </td>';
@@ -100,89 +100,96 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
     $obj_usuario = new clsPmieducarUsuario($this->pessoa_logada);
     $det_usuario = $obj_usuario->detalhe();
     $this->ref_cod_instituicao = $det_usuario['ref_cod_instituicao'];
-
-    if ($nivel_usuario == 4 || $nivel_usuario == 8) {
-      $obj_usuario = new clsPmieducarUsuario($this->pessoa_logada);
-      $det_usuario = $obj_usuario->detalhe();
-      $this->ref_cod_escola = $det_usuario['ref_cod_escola'];
-    }
   }
 
-  if ($nivel_usuario == 1 || $nivel_usuario == 2) {
-    if ($get_escola) {
+  if ($get_escola) {
+    if (class_exists('clsPmieducarEscola')) {
+      $opcoes_escola = array('' => 'Selecione');
+
+      $todas_escolas = 'escola = new Array();' . "\n";
+      $obj_escola = new clsPmieducarEscola();
+
+      $lista = $obj_escola->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+        NULL, NULL, NULL, 1);
+
+      if (is_array($lista) && count($lista)) {
+        foreach ($lista as $registro) {
+          $todas_escolas .= sprintf(
+            'escola[escola.length] = new Array(%s, \'%s\', %s);' . "\n",
+            $registro['cod_escola'], $registro['nome'], $registro['ref_cod_instituicao']
+          );
+        }
+      }
+
+      echo sprintf('<script>%s</script>', $todas_escolas);
+    } else {
+      $opcoes_escola = array('' => 'Erro na geração');
+    }
+
+    if ($nivel_usuario == 4 || $nivel_usuario == 8) {
+      $opcoes_escola = array('' => 'Selecione');
+      $obj_escola = new clsPmieducarEscolaUsuario();
+      $lista = $obj_escola->lista($this->pessoa_logada);
+
+      if (is_array($lista) && count($lista)) {
+        foreach ($lista as $registro) {
+          $codEscola = $registro['ref_cod_escola'];
+
+          $escola = new clsPmieducarEscola($codEscola);
+          $escola = $escola->detalhe();
+
+          $opcoes_escola[$codEscola] = $escola['nome'];
+        }
+      }
+    } else if ($this->ref_cod_instituicao) {
       if (class_exists('clsPmieducarEscola')) {
         $opcoes_escola = array('' => 'Selecione');
-
-        $todas_escolas = 'escola = new Array();' . "\n";
         $obj_escola = new clsPmieducarEscola();
-
-        $lista = $obj_escola->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-          NULL, NULL, NULL, 1);
+        $lista = $obj_escola->lista(NULL, NULL, NULL, $this->ref_cod_instituicao,
+          NULL, NULL, NULL, NULL, NULL, NULL, 1);
 
         if (is_array($lista) && count($lista)) {
           foreach ($lista as $registro) {
-            $todas_escolas .= sprintf(
-              'escola[escola.length] = new Array(%s, \'%s\', %s);' . "\n",
-              $registro['cod_escola'], $registro['nome'], $registro['ref_cod_instituicao']
-            );
+            $opcoes_escola[$registro['cod_escola']] = $registro['nome'];
           }
         }
-
-        echo sprintf('<script>%s</script>', $todas_escolas);
       } else {
-        $opcoes_escola = array('' => 'Erro na geração');
+        $opcoes_escola = array('' => 'Erro na geraÃ§Ã£o');
       }
+    }
 
-      if ($this->ref_cod_instituicao) {
-        if (class_exists('clsPmieducarEscola')) {
-          $opcoes_escola = array('' => 'Selecione');
-          $obj_escola = new clsPmieducarEscola();
-          $lista = $obj_escola->lista(NULL, NULL, NULL, $this->ref_cod_instituicao,
-            NULL, NULL, NULL, NULL, NULL, NULL, 1);
+    if ($get_escola) {
+      $retorno .= '
+        <tr id="tr_escola" class="input_calendario_letivo">
+          <td valign="top" class="formmdtd">
+            <span class="form">Escola</span>
+            <span class="campo_obrigatorio">*</span><br/>
+            <sub style="vertical-align: top;"/>
+          </td>';
 
-          if (is_array($lista) && count($lista)) {
-            foreach ($lista as $registro) {
-              $opcoes_escola[$registro['cod_escola']] = $registro['nome'];
-            }
-          }
-        } else {
-          $opcoes_escola = array('' => 'Erro na geração');
-        }
-      }
+      $retorno .= '<td valign="top" class="formmdtd"><span class="form">';
 
-      if ($get_escola) {
-        $retorno .= '
-          <tr id="tr_escola">
-            <td valign="top" class="formmdtd">
-              <span class="form">Escola</span>
-              <span class="campo_obrigatorio">*</span><br/>
-              <sub style="vertical-align: top;"/>
-            </td>';
+      $disabled = !$this->ref_cod_escola && $nivel_usuario == 1 ? 'disabled="true" ' : '';
+      $retorno .= sprintf(
+        ' <select class="geral" name="ref_cod_escola" %s id="ref_cod_escola">', $disabled
+      );
 
-        $retorno .= '<td valign="top" class="formmdtd"><span class="form">';
+      reset($opcoes_escola);
 
-        $disabled = !$this->ref_cod_escola && $nivel_usuario == 1 ? 'disabled="true" ' : '';
+      while (list($chave, $texto) = each($opcoes_escola)) {
         $retorno .= sprintf(
-          ' <select class="geral" name="ref_cod_escola" %s id="ref_cod_escola">', $disabled
+          '<option id="ref_cod_escola_%s" value="%s"', urlencode($chave), urlencode($chave)
         );
 
-        reset($opcoes_escola);
-
-        while (list($chave, $texto) = each($opcoes_escola)) {
-          $retorno .= sprintf(
-            '<option id="ref_cod_escola_%s" value="%s"', urlencode($chave), urlencode($chave)
-          );
-
-          if ($chave == $this->ref_cod_escola) {
-            $retorno .= ' selected';
-          }
-
-          $retorno .= sprintf('>%s</option>', $texto);
+        if ($chave == $this->ref_cod_escola) {
+          $retorno .= ' selected';
         }
 
-        $retorno .= '</select>';
-        $retorno .= '</span></td></tr>';
+        $retorno .= sprintf('>%s</option>', $texto);
       }
+
+      $retorno .= '</select>';
+      $retorno .= '</span></td></tr>';
     }
   }
 
@@ -192,7 +199,7 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
     }
 
     if ($nivel_usuario == 1) {
-      ${$get_cabecalho}[] = 'Instituição';
+      ${$get_cabecalho}[] = 'InstituiÃ§Ã£o';
     }
 
   }
@@ -218,13 +225,13 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
   }
 
   $retorno .= '
-    <tr id="tr_escola">
-      <td valign="top" class="formldtd">
+    <tr id="tr_escola" class="input_calendario_letivo">
+      <td valign="top" class="formlttd">
         <span class="form">Ano</span>
         <span class="campo_obrigatorio">*</span><br/>
         <sub style="vertical-align: top;"/>
       </td>';
-  $retorno .= '<td valign="top" class="formldtd"><span class="form">';
+  $retorno .= '<td valign="top" class="formlttd"><span class="form">';
   $retorno .= " <select class='geral' name='ano' id='ano'>";
 
   $lim = 5;
@@ -256,7 +263,7 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
           document.formcadastro.submit();
         }
       </script>
-      <input type='button' id='botao_busca' value='busca' onclick='javascript:acao();' class='botaolistagem'/>
+      <input type='button' id='botao_busca' value='Buscar' onclick='javascript:acao();' class='btn-green botaolistagem'/>
       </td>
     </tr>
     <tr>
@@ -295,7 +302,7 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
 
     if (campoEscola.length == 1 && campoInstituicao != '') {
       campoEscola.options[0] = new Option(
-        'A institução não possui nenhuma escola', '', false, false
+        'A instituÃ§Ã£o nÃ£o possui nenhuma escola', '', false, false
       );
     }
 

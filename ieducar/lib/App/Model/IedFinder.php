@@ -974,7 +974,7 @@ class App_Model_IedFinder extends CoreExt_Entity
                    area_conhecimento.nome AS nome
               FROM modules.area_conhecimento
              WHERE instituicao_id = $1
-             ORDER BY to_ascii(lower(nome)) ASC';
+             ORDER BY (lower(nome)) ASC';
 
     $resultado = Portabilis_Utils_Database::fetchPreparedQuery($sql,array('params' => $instituicaoId));
 
@@ -990,7 +990,7 @@ class App_Model_IedFinder extends CoreExt_Entity
     $sql = 'SELECT id, nome
               FROM pmieducar.turma_turno
               WHERE ativo = 1
-             ORDER BY to_ascii(lower(nome)) ASC';
+             ORDER BY (lower(nome)) ASC';
 
 
     return Portabilis_Array_Utils::setAsIdValue(Portabilis_Utils_Database::fetchPreparedQuery($sql), 'id', 'nome');
@@ -1140,5 +1140,21 @@ class App_Model_IedFinder extends CoreExt_Entity
     $resultado = Portabilis_Utils_Database::fetchPreparedQuery($faltas_lancadas_aluno,array('params' => array($ref_cod_matricula, $ref_cod_disciplina, $etapa)));
 
     return $resultado;
+  }
+
+  public static function getEscolasUser($cod_usuario) {
+
+    $escolas_user = "SELECT escola_usuario.ref_cod_escola AS ref_cod_escola,
+                            juridica.fantasia AS nome,
+                            escola.ref_cod_instituicao AS instituicao
+                       FROM pmieducar.escola_usuario
+                      INNER JOIN pmieducar.escola ON (escola.cod_escola = escola_usuario.ref_cod_escola)
+                      INNER JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
+                      WHERE escola_usuario.ref_cod_usuario = $1";
+
+    $resultado = Portabilis_Utils_Database::fetchPreparedQuery($escolas_user,array('params' => array($cod_usuario)));
+
+    return $resultado;
+
   }
 }

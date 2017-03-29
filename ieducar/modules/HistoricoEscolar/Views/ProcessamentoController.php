@@ -57,7 +57,7 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
 
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
+         "educar_index.php"                  => "Escola",
          ""                                  => "Processamento de hist&oacute;rico escolar"
     ));
     $this->enviaLocalizacao($localizacao->montar(), true);
