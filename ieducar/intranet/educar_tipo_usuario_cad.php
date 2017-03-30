@@ -107,8 +107,8 @@ class indice extends clsCadastro
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""        => "{$nomeMenu} tipo de usu&aacute;rio"
+           "educar_configuracoes_index.php"  => "Configurações",
+         ""                                  => "{$nomeMenu} tipo de usu&aacute;rio"
     ));
     $this->enviaLocalizacao($localizacao->montar());
 
