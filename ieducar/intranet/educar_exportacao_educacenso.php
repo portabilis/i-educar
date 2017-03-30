@@ -73,11 +73,13 @@ class indice extends clsCadastro
       'educar_index.php');
     $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
 
+    $nomeTela = $this->segunda_fase ? '2ª fase - Situação final' : '1ª fase - Matrícula inicial';
+
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Educacenso",
-         ""                                  => "Exporta&ccedil;&atilde;o para o Educacenso"
+         "educar_educacenso_index.php"       => "Educacenso",
+         ""                                  => $nomeTela
     ));
     $this->enviaLocalizacao($localizacao->montar());
 
