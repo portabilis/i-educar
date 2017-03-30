@@ -54,6 +54,10 @@ class Portabilis_View_Helper_DynamicInput_Setor extends Portabilis_View_Helper_D
     return $this->insertOption(null, "Selecione um setor", $resources);
   }
 
+  protected function defaultOptions(){
+    return array('options' => array('label' => 'Setor'));
+  }
+
   public function setor($options = array()) {
     parent::select($options);
   }

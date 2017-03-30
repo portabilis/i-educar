@@ -77,7 +77,7 @@ class indice extends clsCadastro
 
 		$obj_permissoes = new clsPermissoes();
 
-		$obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7,  "educar_matricula_lst.php" );
+    $obj_permissoes->permissao_cadastra( 21145, $this->pessoa_logada, 7,  "educar_matricula_lst.php" );
 
 		$data = getdate();
 
