@@ -91,7 +91,7 @@ class indice extends clsCadastro
           $this->$campo = $val;
         }
 
-        $this->fexcluir = $obj_permissao->permissao_excluir(554,$this->pessoa_logada,7,null,true);        
+        $this->fexcluir = $obj_permissao->permissao_excluir(554,$this->pessoa_logada,7,null,true);
 
         $retorno = "Editar";
       }
@@ -107,10 +107,10 @@ class indice extends clsCadastro
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""        => "{$nomeMenu} tipo de usu&aacute;rio"             
+           "educar_configuracoes_index.php"  => "Configurações",
+         ""                                  => "{$nomeMenu} tipo de usu&aacute;rio"
     ));
-    $this->enviaLocalizacao($localizacao->montar());    
+    $this->enviaLocalizacao($localizacao->montar());
 
     return $retorno;
   }
