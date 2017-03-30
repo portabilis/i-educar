@@ -50,7 +50,7 @@ require_once 'Educacenso/Model/DocenteDataMapper.php';
 class clsIndexBase extends clsBase {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor');
+    $this->SetTitulo($this->_instituicao . ' Servidores - Servidor');
     $this->processoAp = 635;
     $this->addEstilo('localizacaoSistema');
   }
@@ -254,7 +254,7 @@ class indice extends clsDetalhe
       $lst_disciplina_servidor = $obj_disciplina_servidor->lista(null, $this->ref_cod_instituicao, $this->cod_servidor);
 
       if ($lst_disciplina_servidor) {
-        $tab_disc .= "<table cellspacing='0' cellpadding='0' width='200' border='0' style='border:1px dotted #000000'>";
+        $tab_disc .= "<table cellspacing='0' cellpadding='0' width='200' border='0'";
 
         $class2 = $class2 == "formlttd" ? "formmdtd" : "formlttd" ;
         $tab_disc .= "
@@ -281,7 +281,7 @@ class indice extends clsDetalhe
       $lst_servidor_curso = $obj_servidor_curso->lista(null, $this->ref_cod_instituicao, $this->cod_servidor);
 
       if ($lst_servidor_curso) {
-        $tab_curso .= "<table cellspacing='0' cellpadding='0' width='200' border='0' style='border:1px dotted #000000'>";
+        $tab_curso .= "<table cellspacing='0' cellpadding='0' width='200' border='0'";
 
         $class2 = $class2 == "formlttd" ? "formmdtd" : "formlttd" ;
         $tab_curso .= "
@@ -532,7 +532,7 @@ class indice extends clsDetalhe
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos(array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php" => "Escola",
+         "educar_servidores_index.php"       => "Servidores",
          "" => "Detalhe do servidor"
     ));
 

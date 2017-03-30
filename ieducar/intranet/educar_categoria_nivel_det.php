@@ -40,8 +40,8 @@ require_once 'include/pmieducar/geral.inc.php';
 class clsIndexBase extends clsBase
 {
   public function Formular() {
-    $this->SetTitulo($this->_instituicao . 'Detalhe Categoria N&iacute;vel');
-    $this->processoAp = "829";
+    $this->SetTitulo($this->_instituicao . 'Servidores - Detalhe Categoria Nível');
+    $this->processoAp = "829"; 
 		$this->addEstilo('localizacaoSistema');    
   }
 }
@@ -140,7 +140,7 @@ class indice extends clsDetalhe
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
+         "educar_servidores_index.php"       => "Servidores",
          ""                                  => "Detalhe da categoria/n&iacute;vel"
     ));
     $this->enviaLocalizacao($localizacao->montar());		

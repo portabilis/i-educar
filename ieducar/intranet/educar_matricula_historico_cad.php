@@ -72,7 +72,7 @@ class indice extends clsCadastro
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_index.php"                  => "Escola",
-         ""                                  => Portabilis_String_Utils::toLatin1("Editar enturmação")
+         ""                                  => "Histórico de enturmações da matrícula"
     ));
     $this->enviaLocalizacao($localizacao->montar());
     $this->url_cancelar = "educar_matricula_historico_lst.php?ref_cod_matricula=".$this->ref_cod_matricula;

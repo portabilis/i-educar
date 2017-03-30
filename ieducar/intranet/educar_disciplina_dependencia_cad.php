@@ -143,14 +143,13 @@ class indice extends clsCadastro
 
     $this->nome_url_cancelar = 'Cancelar';
 
-    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""        => "{$nomeMenu} disciplina de depend&ecirc;ncia"
-        ));
-        $this->enviaLocalizacao($localizacao->montar());
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "Escola",
+         ""                                  => "Disciplinas de dependência"
+    ));
+    $this->enviaLocalizacao($localizacao->montar());
 
     return $retorno;
   }
