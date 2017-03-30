@@ -28,17 +28,14 @@ class MigracaoDeReorganizacaoMenusEscola extends AbstractMigration
                     UPDATE portal.menu_submenu SET nm_submenu = 'Tipos de religião' WHERE cod_menu_submenu = 579;
                     UPDATE portal.menu_submenu SET nm_submenu = 'Tipos de projeto' WHERE cod_menu_submenu = 21250;
 
-                    UPDATE pmicontrolesis.menu SET tt_menu = 'Tipos de transferência' WHERE cod_menu = 21174;
-                    UPDATE pmicontrolesis.menu SET tt_menu = 'Tipos de abandono' WHERE cod_menu = 21245;
-                    UPDATE pmicontrolesis.menu SET tt_menu = 'Tipos de ocorrência disciplinar' WHERE cod_menu = 21173;
 
                 INSERT INTO pmicontrolesis.menu VALUES (999918, NULL, 999917, 'Matrículas', 2, null, '_self', 1, 15);
 
                     UPDATE pmicontrolesis.menu SET ref_cod_menu_pai = 999918 WHERE cod_menu IN (21174, 21245, 21173);
 
-                    UPDATE portal.menu_submenu SET nm_submenu = 'Tipos de transferência' WHERE cod_menu_submenu = 21174;
-                    UPDATE portal.menu_submenu SET nm_submenu = 'Tipos de abandono' WHERE cod_menu_submenu = 21245;
-                    UPDATE portal.menu_submenu SET nm_submenu = 'Tipos de ocorrência disciplinar' WHERE cod_menu_submenu = 21173;
+                    UPDATE pmicontrolesis.menu SET tt_menu = 'Tipos de transferência' WHERE cod_menu = 21174;
+                    UPDATE pmicontrolesis.menu SET tt_menu = 'Tipos de abandono' WHERE cod_menu = 21245;
+                    UPDATE pmicontrolesis.menu SET tt_menu = 'Tipos de ocorrência disciplinar' WHERE cod_menu = 21173;
 
                     UPDATE portal.menu_submenu SET nm_submenu = 'Tipos de transferência' WHERE cod_menu_submenu = 575;
                     UPDATE portal.menu_submenu SET nm_submenu = 'Tipos de abandono' WHERE cod_menu_submenu = 950;

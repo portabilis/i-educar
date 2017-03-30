@@ -40,7 +40,7 @@ require_once 'include/pmieducar/geral.inc.php';
 class clsIndexBase extends clsBase
 {
   public function Formular() {
-    $this->SetTitulo($this->_instituicao . 'Listagem Categoria N&iacute;vel');
+    $this->SetTitulo($this->_instituicao . 'Categorias ou níveis do servidor');
     $this->processoAp = '829';
     $this->addEstilo('localizacaoSistema');    
   }
@@ -171,9 +171,9 @@ class indice extends clsListagem {
 
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""                                  => "Listagem de categorias/n&iacute;veis"
+         $_SERVER['SERVER_NAME']."/intranet" => "Início",
+         "educar_servidores_index.php"       => "Servidores",
+         ""                                  => "Categorias ou níveis do servidor"
     ));
     $this->enviaLocalizacao($localizacao->montar());
   }

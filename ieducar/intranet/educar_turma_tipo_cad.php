@@ -91,12 +91,12 @@ class indice extends clsCadastro
 		}
 		$this->url_cancelar = ($retorno == "Editar") ? "educar_turma_tipo_det.php?cod_turma_tipo={$registro["cod_turma_tipo"]}" : "educar_turma_tipo_lst.php";
 		
-		$nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+		$nomeMenu = $retorno == "Editar" ? $retorno : "Novo";
         $localizacao = new LocalizacaoSistema();
         $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+             $_SERVER['SERVER_NAME']."/intranet" => "Início",
              "educar_index.php"                  => "Escola",
-             ""        => "{$nomeMenu} de turma"             
+             ""        => "{$nomeMenu} tipo de turma"
         ));
         $this->enviaLocalizacao($localizacao->montar());
 

@@ -113,11 +113,11 @@ class indice extends clsConfig
 
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""                                  => "Listagem de quadro de hor&aacute;rios"
+         $_SERVER['SERVER_NAME']."/intranet" => "Início",
+         "educar_servidores_index.php"       => "Servidores",
+         ""                                  => "Quadros de horários"
     ));
-    $this->locale = $localizacao->montar();    
+    $this->locale = $localizacao->montar();
 
 
     if ($this->locale){

@@ -275,7 +275,7 @@ class indice extends clsListagem
 	    $localizacao->entradaCaminhos( array(
 	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
 	         "educar_index.php"                  => "Escola",
-	         ""        => "Listagem de ambientes"
+	         ""        => "Infraestrutura da escola"
 	    ));
 	    $this->enviaLocalizacao($localizacao->montar());
 	}
