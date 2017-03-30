@@ -220,7 +220,7 @@ class indice extends clsListagem
 	    $localizacao = new LocalizacaoSistema();
 	    $localizacao->entradaCaminhos( array(
 	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-	         "educar_index.php"                  => "Escola",
+	         "educar_pessoas_index.php"          => "Pessoas",
 	         ""                                  => "Listagem de ra&ccedil;as"
 	    ));
 	    $this->enviaLocalizacao($localizacao->montar());
