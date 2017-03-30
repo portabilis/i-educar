@@ -56,7 +56,6 @@ class indice extends clsDetalhe
 		session_write_close();
 
 		$this->titulo = "Hist&oacute;rico Escolar - Detalhe";
-		
 
 		$this->cod_distribuicao_uniforme=$_GET["cod_distribuicao_uniforme"];
 		$this->ref_cod_aluno=$_GET["ref_cod_aluno"];
@@ -108,7 +107,6 @@ class indice extends clsDetalhe
 		if( dbBool($registro["kit_completo"]) )
 			$this->addDetalhe( array( "Recebeu kit completo", "Sim") );
 		else{
-			
 			$this->addDetalhe( array( "Recebeu kit completo", Portabilis_String_Utils::toLatin1("NÃ£o")) );
 
 			$this->addDetalhe( array( Portabilis_String_Utils::toLatin1("Quantidade de agasalhos (jaqueta e calÃ§a)"), $registro['agasalho_qtd'] ?: '0' ));
@@ -119,7 +117,7 @@ class indice extends clsDetalhe
 			$this->addDetalhe( array( "Bermudas coton (feminino)", $registro['bermudas_coton_qtd'] ?: '0' ));
 			$this->addDetalhe( array( Portabilis_String_Utils::toLatin1("Quantidade de tÃªnis"), $registro['tenis_qtd'] ?: '0' ));
 		}
-		
+
 		$obj_permissoes = new clsPermissoes();
 		if( $obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7 ) )
 		{
@@ -134,9 +132,9 @@ class indice extends clsDetalhe
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_index.php"                  => "Escola",
-         ""                                  => "Detalhe da distribui&ccedil;&atilde;o de uniforme"
+         ""                                  => "Distribuições de uniforme escolar"
     ));
-    $this->enviaLocalizacao($localizacao->montar());				
+    $this->enviaLocalizacao($localizacao->montar());
 	}
 }
 

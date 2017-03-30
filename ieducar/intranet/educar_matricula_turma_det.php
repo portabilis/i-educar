@@ -92,7 +92,6 @@ class indice extends clsDetalhe
     session_write_close();
 
     $this->titulo = 'Matricula Turma - Detalhe';
-    
 
     foreach ($_POST as $key =>$value) {
       $this->$key = $value;
@@ -401,9 +400,9 @@ class indice extends clsDetalhe
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_index.php"                  => "Escola",
-         ""                                  => "Detalhe da enturma&ccedil;&atilde;o da matr&iacute;cula"
+         ""                                  => "Enturmações da matrícula"
     ));
-    $this->enviaLocalizacao($localizacao->montar());        
+    $this->enviaLocalizacao($localizacao->montar());
   }
 
   protected function getEscolaSerie($escolaId, $serieId) {
