@@ -48,7 +48,7 @@ class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor Formação');
+    $this->SetTitulo($this->_instituicao . ' Servidores - Servidor Formação');
     $this->processoAp = 635;
   }
 }
@@ -182,6 +182,14 @@ class indice extends clsDetalhe
     );
 
     $this->largura = '100%';
+
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "Início",
+         "educar_servidores_index.php"       => "Servidores",
+         ""                                  => "Detalhe do vínculo"
+    ));
+    $this->enviaLocalizacao($localizacao->montar());   
   }
 }
 
