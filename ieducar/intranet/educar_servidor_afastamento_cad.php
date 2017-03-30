@@ -34,7 +34,7 @@ require_once 'include/pmieducar/geral.inc.php';
 
 class clsIndexBase extends clsBase {
   public function Formular() {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor Afastamento');
+    $this->SetTitulo($this->_instituicao . ' Servidores - Servidor Afastamento');
     $this->processoAp = '635';
     $this->addEstilo('localizacaoSistema');
   }
@@ -145,7 +145,7 @@ class indice extends clsCadastro {
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
+         "educar_servidores_index.php"       => "Servidores",
          ""        => "Afastar servidor"             
     ));
     $this->enviaLocalizacao($localizacao->montar());    

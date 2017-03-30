@@ -48,7 +48,7 @@ class clsIndexBase extends clsBase
 {
   public function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Falta Atraso');
+    $this->SetTitulo($this->_instituicao . ' Servidores - Falta Atraso');
     $this->processoAp = 635;
     $this->addEstilo("localizacaoSistema");    
   }
@@ -227,7 +227,7 @@ class indice extends clsListagem
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
+         "educar_servidores_index.php"       => "Servidores",
          ""                                  => "Listagem de faltas/atrasos do servidor"
     ));
     $this->enviaLocalizacao($localizacao->montar());    

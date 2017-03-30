@@ -47,7 +47,7 @@ class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor Nível');
+    $this->SetTitulo($this->_instituicao . ' Servidores - Servidor Nível');
     $this->processoAp         = 0;
     $this->renderBanner       = FALSE;
     $this->renderMenu         = FALSE;
@@ -171,7 +171,7 @@ class indice extends clsCadastro
     }
 
     $this->campoLista('ref_cod_subnivel', 'Subnível', $opcoes,
-      $this->ref_cod_subnivel, '', FALSE, '', '', FALSE, TRUE);
+      $this->ref_cod_subnivel, '', FALSE);
   }
 
   function Novo()

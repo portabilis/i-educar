@@ -50,7 +50,7 @@ class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor vínculo turma');
+    $this->SetTitulo($this->_instituicao . ' Servidores - Servidor vínculo turma');
     $this->processoAp = 635;
   }
 }
@@ -129,6 +129,15 @@ class indice extends clsCadastro
       $backUrl;
 
     $this->nome_url_cancelar = 'Cancelar';
+
+    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_servidores_index.php"       => "Servidores",
+         ""        => "{$nomeMenu} vínculo do servidor à turma"             
+    ));
+    $this->enviaLocalizacao($localizacao->montar());
 
     return $retorno;
   }
