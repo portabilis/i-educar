@@ -5,7 +5,9 @@
 		<a href="#" onclick="Conpass.startProject('AHA Moment Portabilis', 'dGlhZ29AcG9ydGFiaWxpcy5jb20uYnI6cG9ydGFiaWxpczA5MQ==', {showModal: true} );">
 			<img id="help" src="imagens/icon-help.png">
 		</a>
-		<div id="foto-user" class="foto-user" style="background: url('<!-- #&FOTO&# -->')"></div>
+		<a href="meusdados.php">
+			<div id="foto-user" class="foto-user" style="background: url('<!-- #&FOTO&# -->')"></div>
+		</a>
 		<div class="dropdown">
  	 		<div class="dropbtn"><!-- #&USERLOGADO&# --></div>
   			<div class="dropdown-content">
