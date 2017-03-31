@@ -51,7 +51,7 @@ class indice extends clsCadastro
   var $pessoa_logada;
 
   var $tabela_logradouros = array();
-  var $logradouro_duplicado;  
+  var $logradouro_duplicado;
 
   function Inicializar()
   {
@@ -63,13 +63,13 @@ class indice extends clsCadastro
 
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(762, $this->pessoa_logada, 7,
-       'index.php'); 
+       'index.php');
 
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",         
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_enderecamento_index.php"    => "Endereçamento",
-         ""        => "Unifica&ccedil;&atilde;o de logradouros"             
+         ""        => "Unifica&ccedil;&atilde;o de logradouros"
     ));
     $this->enviaLocalizacao($localizacao->montar());
 
@@ -105,15 +105,15 @@ class indice extends clsCadastro
 
     // Loop entre logradouros das tabelas
     foreach ( $this->logradouro_duplicado AS $key => $logradouro_duplicado ){
-      
-      $idlog = $this->retornaCodigo($logradouro_duplicado);      
+
+      $idlog = $this->retornaCodigo($logradouro_duplicado);
 
       // Verifica se o logradouro é válido e não é igual ao logradouro principal
-      if(is_numeric($idlog) && $idlog != $logradouro_principal){        
+      if(is_numeric($idlog) && $idlog != $logradouro_principal){
         $obj_logradouro = new clsPubliclogradouro($logradouro_principal);
         $obj_logradouro_det = $obj_logradouro->detalhe();
         if($obj_logradouro_det){
-          // Verifica se o município é o mesmo que o logradouro principal          
+          // Verifica se o município é o mesmo que o logradouro principal
           if($obj_logradouro_det['idmun'] == $municipio_principal)
             $logradouros_duplicados[] = $idlog;
           else{
@@ -122,20 +122,20 @@ class indice extends clsCadastro
           }
         }
       }
-    }    
+    }
     // Unifica o array de logradouros a serem unificados
     $logradouros_duplicados = array_keys(array_flip($logradouros_duplicados));
-    $db = new clsBanco();    
+    $db = new clsBanco();
     foreach ($logradouros_duplicados as $key => $value) {
       $db->consulta("SELECT public.unifica_logradouro({$value}, {$logradouro_principal});");
-    }    
+    }
 
-    $this->mensagem = "<span class='success'>Logradouros unificados com sucesso.</span>";
+    $this->mensagem = "<span>Logradouros unificados com sucesso.</span>";
     return TRUE;
   }
 
   protected function retornaCodigo($palavra){
-    
+
     return substr($palavra, 0, strpos($palavra, " -"));
   }
 }
@@ -181,7 +181,7 @@ $pagina->MakeAll();
     });
   }
 
-  setAutoComplete();  
+  setAutoComplete();
 
   // bind events
 
