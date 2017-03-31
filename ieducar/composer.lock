@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ca78e5bb197e641746a0da679bfc3b41",
-    "content-hash": "df5a66b54fb109fd8b0d6c230da840cf",
+    "hash": "ae454bc2f3f899b0074361c356758102",
+    "content-hash": "992662272f5c30e74a9dc103d05d4e61",
     "packages": [
         {
             "name": "cossou/jasperphp",
@@ -47,6 +47,48 @@
                 "reports"
             ],
             "time": "2015-04-28 10:10:36"
+        },
+        {
+            "name": "gilbitron/php-simplecache",
+            "version": "1.4.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/gilbitron/PHP-SimpleCache.git",
+                "reference": "92da2b34d818c2c272d76521402163b53b3bb31f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/gilbitron/PHP-SimpleCache/zipball/92da2b34d818c2c272d76521402163b53b3bb31f",
+                "reference": "92da2b34d818c2c272d76521402163b53b3bb31f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Gilbitron\\Util\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Gilbert Pellegrom",
+                    "email": "gilbert@pellegrom.me",
+                    "homepage": "http://gilbert.pellegrom.me"
+                }
+            ],
+            "description": "A simple script for caching 3rd party API calls in PHP.",
+            "homepage": "https://github.com/gilbitron/PHP-SimpleCache",
+            "keywords": [
+                "cache",
+                "simplecache"
+            ],
+            "time": "2017-01-17 12:53:32"
         },
         {
             "name": "psr/log",
