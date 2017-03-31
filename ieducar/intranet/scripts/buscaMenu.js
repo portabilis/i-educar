@@ -6,8 +6,7 @@
   doc = document;
   loc = doc.location;
   host = loc.hostname;
-
-  window.onload = function(){
+  $j("#busca-menu-input").ready(function(){
 
     var $element_nome_menu = $j("#busca-menu-input");
 
@@ -67,6 +66,5 @@
         setAutoComplete();
       }
     });
-
-}
+  });
 }());

@@ -890,7 +890,7 @@ class clsBase extends clsConfig
   	$campoBusca .= "<li id='busca-menu'>";
 	$campoBusca .= "<input class='geral ui-autocomplete-input' type='text' name='menu' id='busca-menu-input' size=50 maxlength=50 placeholder='Informe o nome do menu' autocomplete=off>";
   	$campoBusca .= "</li>";
-  	$campoBusca .= "</ul>";
+    $campoBusca .= "</ul>";
 
 
   	return $css . $js . $titulo . $campoBusca;
