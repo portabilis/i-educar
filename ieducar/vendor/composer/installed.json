@@ -498,5 +498,49 @@
             "migrations",
             "phinx"
         ]
+    },
+    {
+        "name": "gilbitron/php-simplecache",
+        "version": "1.4.2",
+        "version_normalized": "1.4.2.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/gilbitron/PHP-SimpleCache.git",
+            "reference": "92da2b34d818c2c272d76521402163b53b3bb31f"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/gilbitron/PHP-SimpleCache/zipball/92da2b34d818c2c272d76521402163b53b3bb31f",
+            "reference": "92da2b34d818c2c272d76521402163b53b3bb31f",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.0"
+        },
+        "time": "2017-01-17 12:53:32",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Gilbitron\\Util\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Gilbert Pellegrom",
+                "email": "gilbert@pellegrom.me",
+                "homepage": "http://gilbert.pellegrom.me"
+            }
+        ],
+        "description": "A simple script for caching 3rd party API calls in PHP.",
+        "homepage": "https://github.com/gilbitron/PHP-SimpleCache",
+        "keywords": [
+            "cache",
+            "simplecache"
+        ]
     }
 ]

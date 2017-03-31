@@ -27,7 +27,7 @@
 require_once ("include/clsBanco.inc.php");
 require_once ("include/Geral.inc.php");
 
-class clsFuncionario extends clsPessoaFisica 
+class clsFuncionario extends clsPessoaFisica
 {
 	var $idpes;
 	var $matricula;
@@ -192,8 +192,8 @@ class clsFuncionario extends clsPessoaFisica
 		if(is_string($matricula_interna) && $matricula_interna != '')	{
 			$filtros .= "{$whereAnd} (f.matricula_interna) LIKE ('%{$matricula_interna}%')";
 			$whereAnd = " AND ";
-		}	
-    
+		}
+
 		if (is_string($str_nome)) {
 			$filtros .= "{$whereAnd} (f.nome) LIKE  ('%{$str_nome}%%')";
 			$whereAnd = " AND ";
@@ -280,9 +280,10 @@ class clsFuncionario extends clsPessoaFisica
     $int_ativo = null)
 	{
 		$sql = " SELECT f.ref_cod_pessoa_fj, f.nome, f.matricula, f.matricula_interna, f.ativo, tu.nm_tipo, tu.nivel
-							FROM {$this->schema_portal}.v_funcionario f 
-							LEFT JOIN pmieducar.usuario u ON (u.cod_usuario = f.ref_cod_pessoa_fj) 
-							LEFT JOIN pmieducar.tipo_usuario tu ON (u.ref_cod_tipo_usuario = tu.cod_tipo_usuario)  ";
+							FROM {$this->schema_portal}.v_funcionario f
+							LEFT JOIN pmieducar.usuario u ON (u.cod_usuario = f.ref_cod_pessoa_fj)
+							LEFT JOIN pmieducar.tipo_usuario tu ON (u.ref_cod_tipo_usuario = tu.cod_tipo_usuario)
+							LEFT JOIN pmieducar.escola_usuario eu ON (eu.ref_cod_usuario = u.cod_usuario)  ";
 		$filtros = "";
 		$filtro_pessoa = false;
 
@@ -305,7 +306,7 @@ class clsFuncionario extends clsPessoaFisica
 		}
 
 		if (is_numeric($int_ref_cod_escola)) {
-			$filtros .= "{$whereAnd} u.ref_cod_escola = '{$int_ref_cod_escola}'";
+			$filtros .= "{$whereAnd} eu.ref_cod_escola = '{$int_ref_cod_escola}'";
 			$whereAnd = " AND ";
     }
 
@@ -335,10 +336,11 @@ class clsFuncionario extends clsPessoaFisica
 
 		$sql .= "{$filtros}".$this->getOrderby().$this->getLimite();
 
-		$this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->schema_portal}.v_funcionario f 
-																				LEFT JOIN pmieducar.usuario u ON (u.cod_usuario = f.ref_cod_pessoa_fj) 
-																				LEFT JOIN pmieducar.tipo_usuario tu ON (u.ref_cod_tipo_usuario = tu.cod_tipo_usuario) {$filtros}" );
-		
+		$this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->schema_portal}.v_funcionario f
+																				LEFT JOIN pmieducar.usuario u ON (u.cod_usuario = f.ref_cod_pessoa_fj)
+																				LEFT JOIN pmieducar.tipo_usuario tu ON (u.ref_cod_tipo_usuario = tu.cod_tipo_usuario)
+																				LEFT JOIN pmieducar.escola_usuario eu ON (eu.ref_cod_usuario = u.cod_usuario) {$filtros}" );
+
 		$db->Consulta( $sql );
 
 		if( $countCampos > 1 )
@@ -363,7 +365,7 @@ class clsFuncionario extends clsPessoaFisica
 			return $resultado;
 		}
 		return false;
-	}	
+	}
 
 
 	function detalhe()
