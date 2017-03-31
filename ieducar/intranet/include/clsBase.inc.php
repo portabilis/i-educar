@@ -32,14 +32,6 @@
 // Inclui arquivo de bootstrapping
 require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/bootstrap.php';
 
-// redireciona requisições, caso configurado
-if ($GLOBALS['coreExt']['Config']->app->routes &&
-    $GLOBALS['coreExt']['Config']->app->routes->redirect_to) {
-
-  header('HTTP/1.1 503 Service Temporarily Unavailable');
-  header("Location: {$GLOBALS['coreExt']['Config']->app->routes->redirect_to}");
-}
-
 require_once 'include/clsCronometro.inc.php';
 require_once 'clsConfigItajai.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -58,6 +50,15 @@ require_once 'Portabilis/AdministrativeInfoFetcher.php';
 require_once 'modules/Error/Mailers/NotificationMailer.php';
 require_once 'Portabilis/Assets/Version.php';
 require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
+
+$administrativeInfoFetcher = new Portabilis_AdministrativeInfoFetcher();
+$suspensionInfo = $administrativeInfoFetcher->getSuspensionInfo();
+
+if(!$suspensionInfo['active']){
+  header('HTTP/1.1 503 Service Temporarily Unavailable');
+  header("Location: suspenso.php");
+}
+
 
 /**
  * clsBase class.
@@ -612,7 +613,6 @@ class clsBase extends clsConfig
     $saida = str_replace("<!-- #&ANUNCIO&# -->",      $menu_dinamico, $saida);
     $saida = str_replace("<!-- #&FOTO&# -->",         $foto, $saida);
 
-    $administrativeInfoFetcher = new Portabilis_AdministrativeInfoFetcher();
     $saida = str_replace("<!-- #&RODAPE_INTERNO&# -->", $administrativeInfoFetcher->getInternalFooter(), $saida);
 
     // Pega o endereço IP do host, primeiro com HTTP_X_FORWARDED_FOR (para pegar o IP real
