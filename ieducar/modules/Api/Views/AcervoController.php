@@ -59,7 +59,7 @@ class AcervoController extends ApiCoreController
               INNER JOIN pmieducar.exemplar ON (exemplar.ref_cod_acervo = acervo.cod_acervo)
               INNER JOIN pmieducar.biblioteca ON (biblioteca.cod_biblioteca = acervo.ref_cod_biblioteca)
               WHERE (case when $2 = 0 then true else biblioteca.cod_biblioteca = $2 end)
-                AND (acervo.cod_acervo ILIKE '%'||$1||'%' OR acervo.titulo ILIKE '%'||$1||'%')";
+                AND (acervo.cod_acervo::varchar ILIKE '%'||$1||'%' OR acervo.titulo ILIKE '%'||$1||'%')";
   }
 
   protected function sqlsForStringSearch() {

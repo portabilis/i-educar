@@ -30,6 +30,13 @@
  * @since    Arquivo disponível desde a versão 1.0.1
  * @version  $Id$
  */
+
+require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/bootstrap.php';
+require_once 'Portabilis/AdministrativeInfoFetcher.php';
+
+$administrativeInfoFetcher = new Portabilis_AdministrativeInfoFetcher();
+$suspensionInfo = $administrativeInfoFetcher->getSuspensionInfo();
+$reason = $suspensionInfo['reason'];
 ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="pt-br" xml:lang="pt-br">
@@ -79,7 +86,14 @@
     <div id="error">
       <div class="content">
         <h1>Acesso suspenso</h1>
-        <p class="explanation">Desculpe, o sistema está temporariamente indisponível. Contate o responsável pelo sistema em seu município. Obrigado pela compreensão.</strong>
+        <p class="explanation">
+          <?PHP
+            if(!empty($reason)){
+              echo $reason;
+            }else{
+              echo "Desculpe, o sistema está temporariamente indisponível. Contate o responsável pelo sistema em seu município. Obrigado pela compreensão.";
+            }
+          ?>
         </p>
       </div>
     </div>
