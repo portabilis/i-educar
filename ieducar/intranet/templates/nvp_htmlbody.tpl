@@ -2,7 +2,7 @@
 <tr id="topo" class="topo">
 	<td class="logo" align="left"><a style="color:#FFF; text-decoration: none;" href="/">i-Educar</a></td>
 	<td class="perfil-user" align="right">
-		<div class="foto-user" style="background: url('<!-- #&FOTO&# -->')"></div>
+		<div id="foto-user" class="foto-user" style="background: url('<!-- #&FOTO&# -->')"></div>
 		<div class="dropdown">
  	 		<div class="dropbtn"><!-- #&USERLOGADO&# --></div>
   			<div class="dropdown-content">
