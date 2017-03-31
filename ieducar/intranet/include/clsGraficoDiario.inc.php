@@ -165,7 +165,7 @@
 			$retorno = "";
 			if( ! $insideTemplate )
 			{
-				$retorno.= "<html><head><title>Grafico Diario</title><link rel=stylesheet type='text/css' href='styles/styles.css'><link rel=stylesheet type='text/css' href='styles/novo.css'></head><body>";
+				$retorno.= "<html><head><title>Grafico Diario</title><link rel=stylesheet type='text/css' href='styles/styles.css?5'><link rel=stylesheet type='text/css' href='styles/novo.css?5'></head><body>";
 			}
 			if( $this->titulo )
 			{

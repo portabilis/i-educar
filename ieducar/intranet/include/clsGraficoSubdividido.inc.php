@@ -55,7 +55,7 @@
 			<html>
 				<head>
 					<title> Gráfico </title>
-					<link rel=stylesheet type='text/css' href='styles/novo.css'>
+					<link rel=stylesheet type='text/css' href='styles/novo.css?5'>
 					</script>	
 					<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>
 				</head>

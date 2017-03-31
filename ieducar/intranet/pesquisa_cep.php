@@ -236,8 +236,8 @@ if ($tipo != 3)
 }
 
 ?>
-<script type='text/javascript' src='scripts/padrao.js'></script>
-<script type='text/javascript' src='scripts/novo.js'></script>
+<script type='text/javascript' src='scripts/padrao.js?5'></script>
+<script type='text/javascript' src='scripts/novo.js?5'></script>
 <script>
 /*function enviar( campo, cep, idbai, idlog, cidade, bairro, logradouro, estado, idtlog )
 {

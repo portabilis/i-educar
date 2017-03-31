@@ -10,16 +10,16 @@
 
   <title><!-- #&TITULO&# --></title>
 
-  <link rel=stylesheet type='text/css' href='styles/main.css' />
-  <link rel=stylesheet type='text/css' href='styles/styles.css' />
-  <link rel=stylesheet type='text/css' href='styles/novo.css' />
-  <link rel=stylesheet type='text/css' href='styles/menu.css' />
-  <link rel=stylesheet type='text/css' href='/intranet/styles/font-awesome.css' />
-  <!--link rel=stylesheet type='text/css' href='styles/reset.css' />
-  <link rel=stylesheet type='text/css' href='styles/portabilis.css' /-->
-  <link rel=stylesheet type='text/css' href='styles/min-portabilis.css?rand=3' />
-  <link rel=stylesheet type='text/css' href='styles/mytdt.css' />
-  <link rel=stylesheet type='text/css' href='styles/jquery.modal.css' />
+  <link rel=stylesheet type='text/css' href='styles/main.css?5' />
+  <link rel=stylesheet type='text/css' href='styles/styles.css?5' />
+  <link rel=stylesheet type='text/css' href='styles/novo.css?5' />
+  <link rel=stylesheet type='text/css' href='styles/menu.css?5' />
+  <link rel=stylesheet type='text/css' href='/intranet/styles/font-awesome.css?5' />
+  <!--link rel=stylesheet type='text/css' href='styles/reset.css?5' />
+  <link rel=stylesheet type='text/css' href='styles/portabilis.css?5' /-->
+  <link rel=stylesheet type='text/css' href='styles/min-portabilis.css?5?rand=3' />
+  <link rel=stylesheet type='text/css' href='styles/mytdt.css?5' />
+  <link rel=stylesheet type='text/css' href='styles/jquery.modal.css?5' />
   <script src="http://maps.google.com/maps/api/js?sensor=true" type="text/javascript" charset="utf-8"></script>
   <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
 
@@ -27,19 +27,19 @@
   
 <script>(function(e,t,n){var r=e.querySelectorAll("html")[0];r.className=r.className.replace(/(^|\s)no-js(\s|$)/,"$1js$2")})(document,window,0);</script>
 
-  <script type="text/javascript" src="scripts/padrao.js?1"></script>
-  <script type="text/javascript" src="scripts/novo.js?1"></script>
-  <script type="text/javascript" src="scripts/dom.js?2"></script>
-  <script type="text/javascript" src="scripts/menu.js?1"></script>
-  <script type="text/javascript" src="scripts/ied/forms.js?1"></script>
-  <script type="text/javascript" src="scripts/ied/phpjs.js?1"></script>
+  <script type="text/javascript" src="scripts/padrao.js?5"></script>
+  <script type="text/javascript" src="scripts/novo.js?5"></script>
+  <script type="text/javascript" src="scripts/dom.js?5"></script>
+  <script type="text/javascript" src="scripts/menu.js?5"></script>
+  <script type="text/javascript" src="scripts/ied/forms.js?5"></script>
+  <script type="text/javascript" src="scripts/ied/phpjs.js?5"></script>
   <!-- #&FRESHDESK&# -->
 
-  <script type="text/javascript" src="scripts/jquery/jquery-1.8.3.min.js"></script>
-  <script type="text/javascript" src="scripts/jquery/jquery.modal.min.js"></script>
-  <script type="text/javascript" src="scripts/prototype/prototype-1.7.1.0.js"></script>
-  <script type="text/javascript" src="scripts/scriptaculous/effects.js"></script>
-  <script type="text/javascript" src="scripts/jquery.mask.min.js"></script>
+  <script type="text/javascript" src="scripts/jquery/jquery-1.8.3.min.js?5"></script>
+  <script type="text/javascript" src="scripts/jquery/jquery.modal.min.js?5"></script>
+  <script type="text/javascript" src="scripts/prototype/prototype-1.7.1.0.js?5"></script>
+  <script type="text/javascript" src="scripts/scriptaculous/effects.js?5"></script>
+  <script type="text/javascript" src="scripts/jquery.mask.min.js?5"></script>
   <script type="text/javascript">
     var running = false;
     var altura  = null;
@@ -101,6 +101,6 @@
   <!-- #&SCRIPT_HEADER&# -->
   </script>
   
-<link rel=stylesheet type='text/css' href='styles/custom.css' />
+<link rel=stylesheet type='text/css' href='styles/custom.css?5' />
 <body <!-- #&BODYSCRIPTS&# -->>
   <div id="DOM_expansivel" class="DOM_expansivel"></div>

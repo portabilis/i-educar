@@ -7,12 +7,12 @@
     <meta http-equiv="Expires" content="-1" />
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
 
-    <link rel=stylesheet type='text/css' href='styles/login.css?rand=7' />
-    <link rel=stylesheet type='text/css' href='styles/font-awesome.css' />
-    <script type='text/javascript' src='scripts/jquery/jquery-1.8.3.min.js'></script>
-    <script type='text/javascript' src='scripts/jquery/jquery-1.8.3.min.js'></script>
-    <script type="text/javascript" src="http://assets.freshdesk.com/widget/freshwidget.js"></script>
-    <script type="text/javascript" src="scripts/suporte_freshdesk.js?1"></script>
+    <link rel=stylesheet type='text/css' href='styles/login.css?5' />
+    <link rel=stylesheet type='text/css' href='styles/font-awesome.css?5' />
+    <script type='text/javascript' src='scripts/jquery/jquery-1.8.3.min.js?5'></script>
+    <script type='text/javascript' src='scripts/jquery/jquery-1.8.3.min.js?5'></script>
+    <script type="text/javascript" src="http://assets.freshdesk.com/widget/freshwidget.js?5"></script>
+    <script type="text/javascript" src="scripts/suporte_freshdesk.js?5?1"></script>
 
   <script type="text/javascript">
 
@@ -68,7 +68,7 @@
 
       (function() {
         var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js?5';
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
       })();
     }

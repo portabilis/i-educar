@@ -99,12 +99,12 @@
 			$retorno .= "<html lang=\"pt\">
 	<head>
 	   	<title> <!-- #&TITULO&# --> </title>
-		<link rel=stylesheet type='text/css' href='styles/styles.css'>
-		<link rel=stylesheet type='text/css' href='styles/novo.css'>
+		<link rel=stylesheet type='text/css' href='styles/styles.css?5'>
+		<link rel=stylesheet type='text/css' href='styles/novo.css?5'>
 		
-		<script type='text/javascript' src='scripts/padrao.js'></script>
-		<script type='text/javascript' src='scripts/novo.js'></script>
-		<script type='text/javascript' src='scripts/dom.js?2'></script>
+		<script type='text/javascript' src='scripts/padrao.js?5'></script>
+		<script type='text/javascript' src='scripts/novo.js?5'></script>
+		<script type='text/javascript' src='scripts/dom.js?5'></script>
 		
 		<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>
 		<meta http-equiv=\"Pragma\" content=\"no-cache\">
@@ -356,12 +356,12 @@
 		$retorno .="	<html lang=\"pt\">
 	<head>
 	   	<title> <!-- #&TITULO&# --> </title>
-		<link rel=stylesheet type='text/css' href='styles/styles.css'>
-		<link rel=stylesheet type='text/css' href='styles/novo.css'>
+		<link rel=stylesheet type='text/css' href='styles/styles.css?5'>
+		<link rel=stylesheet type='text/css' href='styles/novo.css?5'>
 		
-		<script type='text/javascript' src='scripts/padrao.js'></script>
-		<script type='text/javascript' src='scripts/novo.js'></script>
-		<script type='text/javascript' src='scripts/dom.js?2'></script>
+		<script type='text/javascript' src='scripts/padrao.js?5'></script>
+		<script type='text/javascript' src='scripts/novo.js?5'></script>
+		<script type='text/javascript' src='scripts/dom.js?5'></script>
 		
 		<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>
 		<meta http-equiv=\"Pragma\" content=\"no-cache\">
