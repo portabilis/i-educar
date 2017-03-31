@@ -6,7 +6,7 @@ class AjustaMenusModuloTransporte extends AbstractMigration
 {
     public function change()
     {
-      $this->execute("UPDATE pmicontrolesis.menu SET tt_menu = 'MovimentaÃ§Ãµes' WHERE cod_menu = 20711;
+      $this->execute("UPDATE pmicontrolesis.menu SET tt_menu = 'Movimentações' WHERE cod_menu = 20711;
                       INSERT INTO pmicontrolesis.menu (cod_menu, tt_menu, ord_menu, alvo, suprime_menu, ref_cod_tutormenu, ref_cod_ico)
                       VALUES (9998846, 'Documentos', 4, '_self', 1, 17, 1);
                       UPDATE pmicontrolesis.menu SET ref_cod_menu_pai = 9998846 WHERE cod_menu = 21241;
