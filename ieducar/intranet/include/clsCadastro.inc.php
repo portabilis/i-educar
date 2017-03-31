@@ -96,6 +96,7 @@ class clsCadastro extends clsCampos
   var $controle;
   var $acao_enviar ='acao()';
   var $botao_enviar = TRUE;
+  var $sucesso;
 
   var $onSubmit = 'acao()';
 
@@ -155,46 +156,46 @@ class clsCadastro extends clsCampos
 
       // Realiza cadastro
       $this->PreCadastrar();
-      $sucesso = FALSE;
+      $this->sucesso = FALSE;
 
       if ($this->tipoacao == 'Novo') {
-          $sucesso = $this->Novo();
-          if ($sucesso && !empty($this->script_sucesso)) {
+          $this->sucesso = $this->Novo();
+          if ($this->sucesso && !empty($this->script_sucesso)) {
             $this->script = "<script type=\"text/javascript\">
               window.opener.AdicionaItem($this->chave, '$this->item_campo_pai', '$this->nome_pai', $this->submete );
               window.close();
             </script>";
           }
 
-          if (!$sucesso && empty($this->erros) && empty($this->mensagem)) {
+          if (!$this->sucesso && empty($this->erros) && empty($this->mensagem)) {
             $this->mensagem = "N&atilde;o foi poss&iacute;vel inserir a informa&ccedil;&atilde;o. [CAD01]";
           }
       }
       elseif ($this->tipoacao == 'Editar') {
-          $sucesso = $this->Editar();
-          if (!$sucesso && empty($this->erros) && empty($this->mensagem)) {
+          $this->sucesso = $this->Editar();
+          if (!$this->sucesso && empty($this->erros) && empty($this->mensagem)) {
             $this->mensagem = "N&atilde;o foi poss&iacute;vel editar a informa&ccedil;&atilde;o. [CAD02]";
           }
       }
       elseif ($this->tipoacao == 'Excluir') {
-        $sucesso = $this->Excluir();
-        if (!$sucesso && empty($this->erros) && empty($this->mensagem)) {
+        $this->sucesso = $this->Excluir();
+        if (!$this->sucesso && empty($this->erros) && empty($this->mensagem)) {
           $this->mensagem = "N&atilde;o foi poss&iacute;vel excluir a informa&ccedil;&atilde;o. [CAD03]";
         }
       }
       elseif ($this->tipoacao == 'ExcluirImg') {
-        $sucesso = $this->ExcluirImg();
-        if (!$sucesso && empty( $this->erros ) && empty( $this->mensagem )) {
+        $this->sucesso = $this->ExcluirImg();
+        if (!$this->sucesso && empty( $this->erros ) && empty( $this->mensagem )) {
           $this->mensagem = "N&atilde;o foi poss&iacute;vel excluir a informa&ccedil;&atilde;o. [CAD04]";
         }
       }
       elseif ($this->tipoacao == 'Enturmar') {
-        $sucesso = $this->Enturmar();
-        if (!$sucesso && empty( $this->erros ) && empty( $this->mensagem )) {
+        $this->sucesso = $this->Enturmar();
+        if (!$this->sucesso && empty( $this->erros ) && empty( $this->mensagem )) {
           $this->mensagem = "N&atilde;o foi poss&iacute;vel copiar as entruma&ccedil;&otilde;es. [CAD05]";
         }
       }
-      if (empty($script) && $sucesso && !empty($this->url_sucesso)) {
+      if (empty($script) && $this->sucesso && !empty($this->url_sucesso)) {
         redirecionar( $this->url_sucesso );
       }
       else {
@@ -239,6 +240,10 @@ class clsCadastro extends clsCampos
   protected function flashMessage() {
     if (empty($this->mensagem) && isset($_GET['mensagem']) && $_GET['mensagem'] == 'sucesso') {
       $this->mensagem = 'Registro incluido com sucesso!';
+    }
+
+    if ($this->sucesso) {
+      return "<p class='success'>$this->mensagem</p>";
     }
 
     return empty($this->mensagem) ? "" : "<p class='form_erro error'>$this->mensagem</p>";

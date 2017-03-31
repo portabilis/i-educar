@@ -52,7 +52,7 @@ class indice extends clsCadastro
   var $pessoa_logada;
 
   var $tabela_bairros = array();
-  var $bairro_duplicado;  
+  var $bairro_duplicado;
 
   function Inicializar()
   {
@@ -64,13 +64,13 @@ class indice extends clsCadastro
 
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(761, $this->pessoa_logada, 7,
-      'index.php'); 
+      'index.php');
 
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",         
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_enderecamento_index.php"    => "Endereçamento",
-         ""        => "Unifica&ccedil;&atilde;o de bairros"             
+         ""        => "Unifica&ccedil;&atilde;o de bairros"
     ));
     $this->enviaLocalizacao($localizacao->montar());
 
@@ -106,15 +106,15 @@ class indice extends clsCadastro
 
     // Loop entre bairros das tabelas
     foreach ( $this->bairro_duplicado AS $key => $bairro_duplicado ){
-      
-      $idbai = $this->retornaCodigo($bairro_duplicado);      
+
+      $idbai = $this->retornaCodigo($bairro_duplicado);
 
       // Verifica se o bairro é válido e não é igual ao bairro principal
-      if(is_numeric($idbai) && $idbai != $bairro_principal){        
+      if(is_numeric($idbai) && $idbai != $bairro_principal){
         $obj_bairro = new clsPublicBairro(NULL, NULL, $bairro_principal);
         $obj_bairro_det = $obj_bairro->detalhe();
         if($obj_bairro_det){
-          // Verifica se o município é o mesmo que o bairro principal          
+          // Verifica se o município é o mesmo que o bairro principal
           if($obj_bairro_det['idmun'] == $municipio_principal)
             $bairros_duplicados[] = $idbai;
           else{
@@ -123,20 +123,20 @@ class indice extends clsCadastro
           }
         }
       }
-    }    
+    }
     // Unifica o array de bairros a serem unificados
     $bairros_duplicados = array_keys(array_flip($bairros_duplicados));
-    $db = new clsBanco();    
+    $db = new clsBanco();
     foreach ($bairros_duplicados as $key => $value) {
       $db->consulta("SELECT public.unifica_bairro({$value}, {$bairro_principal});");
-    }    
+    }
 
-    $this->mensagem = "<span class='success'>Bairros unificados com sucesso.</span>";
+    $this->mensagem = "<span>Bairros unificados com sucesso.</span>";
     return TRUE;
   }
 
   protected function retornaCodigo($palavra){
-    
+
     return substr($palavra, 0, strpos($palavra, " -"));
   }
 }
@@ -182,7 +182,7 @@ $pagina->MakeAll();
     });
   }
 
-  setAutoComplete();  
+  setAutoComplete();
 
   // bind events
 
