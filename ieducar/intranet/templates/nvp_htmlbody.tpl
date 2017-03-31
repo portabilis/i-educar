@@ -1,12 +1,12 @@
 <table summary="" class='tabelanum1' id="tablenum1"  border='0' cellspacing='0' cellpadding='0'>
-<tr class="topo">
+<tr id="topo" class="topo">
 	<td class="logo" align="left"><a style="color:#FFF; text-decoration: none;" href="/">i-Educar</a></td>
 	<td class="perfil-user" align="right">
 		<div class="foto-user" style="background: url('<!-- #&FOTO&# -->')"></div>
 		<div class="dropdown">
  	 		<div class="dropbtn"><!-- #&USERLOGADO&# --></div>
   			<div class="dropdown-content">
-    			<a href="agenda.php">Agenda</a>
+    			<a href="intranet/agenda.php">Agenda</a>
     			<a href="index.php">Calendário</a>
     			<a href="meusdados.php">Meus dados</a>
     			<a href="logof.php">Sair</a>
@@ -17,7 +17,7 @@
 	<td colspan="3">
 	<table summary="" class='tabelanum2' border='0' cellspacing='0' cellpadding='0'>
 	<tr>
-		<td class="r3c1" width='170'><!-- #&MENU&# --></td>
+		<td id="menu_lateral" class="r3c1" width='170'><!-- #&MENU&# --></td>
 		<td valign=top>
 			<table summary="" class='tabelanum2' border='0' cellspacing='0' cellpadding='0'>
 			<tr>
