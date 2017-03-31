@@ -4,7 +4,7 @@ MAINTAINER Caroline Salib <caroline@portabilis.com.br>
 
 RUN apt-get -y update \
     && apt-get -y upgrade \
-    && apt-get install -y apache2 php5 libapache2-mod-php5 php5-pgsql php-pear rpl wget \
+    && apt-get install -y apache2 php5 libapache2-mod-php5 php5-pgsql php-pear php5-curl rpl wget \
     && a2enmod rewrite \
     && apt-get clean
 
