@@ -134,6 +134,24 @@ select{
   display: block; 
 }
 
+img#help {
+    position: relative;
+    top: 7px;
+    margin-right: 15px;
+    width: 20px;
+}
+
+img#notificacao {
+    position: relative;
+    top: 7px;
+    margin-right: 15px;
+    width: 20px;
+}
+
+a.icons-top{
+  text-decoration: none !important;
+}
+
 .topo .foto-user {
   width: 35px;
   height: 35px;
@@ -190,6 +208,12 @@ select{
   padding: 11px;
   margin-bottom: 10px;
   font-family: "Open Sans";
+}
+
+@-moz-document url-prefix() { 
+  .nvp_tabelaMenu input#busca-menu-input{
+    width: 88% !important;
+  }
 }
 
 .nvp_tabelaMenu .title {
@@ -303,6 +327,12 @@ a.menu_susp_root:after {
     margin-top: -14px;
     background-image: url('../imagens/arrow-down2.png');
     background-size: 100%;
+}
+
+@-moz-document url-prefix() { 
+  a.menu_susp_root:after {
+    margin-top: 8px;
+  }
 }
 
 .clLevel1border {
