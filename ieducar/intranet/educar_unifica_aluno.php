@@ -56,7 +56,7 @@ class indice extends clsCadastro
   var $pessoa_logada;
 
   var $tabela_alunos = array();
-  var $aluno_duplicado; 
+  var $aluno_duplicado;
 
   function Inicializar()
   {
@@ -68,13 +68,13 @@ class indice extends clsCadastro
 
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(999847, $this->pessoa_logada, 7,
-      'index.php'); 
+      'index.php');
 
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_index.php"                  => "Escola",
-         ""        => "Unifica&ccedil;&atilde;o de alunos"             
+         ""        => "Unifica&ccedil;&atilde;o de alunos"
     ));
     $this->enviaLocalizacao($localizacao->montar());
 
@@ -139,7 +139,7 @@ class indice extends clsCadastro
     $db->consulta("UPDATE pmieducar.matricula SET ref_cod_aluno = {$cod_aluno_principal} where ref_cod_aluno in ({$cod_alunos})");
     $db->consulta("UPDATE pmieducar.aluno SET ativo = 0, data_exclusao = now(), ref_usuario_exc = {$this->pessoa_logada} where cod_aluno in ({$cod_alunos})");
 
-    $this->mensagem = "<span class='success'>Alunos unificados com sucesso.</span>";
+    $this->mensagem = "<span>Alunos unificados com sucesso.</span>";
     return true;
   }
 }
@@ -188,7 +188,7 @@ $pagina->MakeAll();
     });
   }
 
-  setAutoComplete();  
+  setAutoComplete();
 
   // bind events
 
