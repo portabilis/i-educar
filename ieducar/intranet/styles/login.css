@@ -1,5 +1,30 @@
 body {
   background-color: white;
+  font-family: "Open Sans";
+  color: #646b71;
+  font-size: 14px;
+}
+
+#corpo{
+  text-align: center;
+}
+
+h1{
+  font-size: 24px;
+  color: #596066;
+  font-weight: normal;
+  margin-top: 0;
+}
+
+h2{
+  font-size: 16px;
+  color: #646b71;
+  font-weight: normal;
+}
+
+a{
+  color: #188ad1;
+  text-decoration: none;
 }
 
 #flash-container {
@@ -9,20 +34,18 @@ body {
 #flash-container, #menu, #corpo, #rodape {
 
   /* login-form.widght + 42px */
-  width: 706px;
+  width: 100% !important;
 }
 
 #login-form {
-  float: left;
-  background-color: #fcfcfc;
-  padding: 20px 40px;
-  width: 255px;
-
-  -moz-box-shadow: 0px 0px 5px #d9d9d9;
-  -webkit-box-shadow: 0px 0px 5px #d9d9d9;
-  box-shadow: 0px 0px 5px #d9d9d9;
-
-  border: 1px solid #ccc;
+  width: 460px;
+  border-radius: 3px;
+  background-color: #ffffff;
+  border: solid 1px #dddddd;
+  margin: 0 auto;
+  padding: 50px;
+  box-sizing: border-box;
+  text-align: left;
 }
 
 #login-form, #login-form form {
@@ -34,16 +57,29 @@ body {
 }
 
 .forget-password {
-  margin-top: 9px;
+  margin-top: 10px;
+  padding: 12px 0;
+  text-align: right;
 }
 
 input#senha, input#login {
-  width: 241px;
+  color: #646b71;
+  margin: 5px 0 10px;
+  padding: 11px;
+  border-radius: 3px;
+  border: solid 1px #dddddd;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-input.submit, input#senha, input#login {
-  margin: 0px;
-  margin-bottom: 9px;
+input.submit{
+  background-color: #0ac336 !important;
+  border: 0 !important;
+  color: #FFF !important;
+  padding: 12px 20px;
+  margin-top: 10px;
+  border-radius: 3px;
+  float: left;
 }
 
 #recaptcha_widget_div {
@@ -88,6 +124,25 @@ ul.unstyled, ol.unstyled {
 #rodape .contact {
   font-weight: bold;
 }
+
+.rodape-social {
+  margin-top: 40px;
+  font-size: 12px;
+  width: 610px;
+  margin: 30px auto 0px;
+  display: inline-block;
+}
+
+.rodape-social p{
+  float: left;
+  margin: 0;
+  padding: 4px 0;
+}
+
+.social-icons {
+  float: right
+}
+
 #div-outubro-rosa {
   position: relative;
   padding-top: 66px;
@@ -101,7 +156,7 @@ ul.unstyled, ol.unstyled {
   width: 100px;
 }
 
-#div-copa-no-brasil img{  
+#div-copa-no-brasil img{
   height: 180px;
 }
 
@@ -112,11 +167,11 @@ ul.unstyled, ol.unstyled {
   width: 158px;
 }
 
-#div-copa-no-brasil p{  
+#div-copa-no-brasil p{
   margin-left: 15px;
 }
 
-#div-outubro-rosa img{  
+#div-outubro-rosa img{
   height: 180px;
 }
 
@@ -249,4 +304,76 @@ ul.unstyled, ol.unstyled {
 .btn-success:active,
 .btn-success.active {
   background-color: #408140 \9;
+}
+
+.error{
+  width: 460px;
+  border-radius: 3px;
+  background-color: #ffdbdb;
+  border: solid 1px #ffb2b2;
+  margin: 0 auto;
+  padding: 10px 50px;
+  box-sizing: border-box;
+  text-align: left;
+  color: #d46262;
+  margin-bottom: 20px;
+}
+
+.error a{
+  color: #d46262;
+  font-weight: bold;
+}
+
+#mensagens {
+  margin: 0 auto;
+  width: 815px;
+  text-align: left;
+  font-family: Open Sans;
+}
+
+#mensagens .titulo {
+  font-size: 16px;
+  font-weight: bold;
+  display: inline;
+}
+
+#mensagens .mensagem {
+  font-size: 14px;
+}
+
+#mensagens .icone {
+  float: left;
+  padding-right: 15px;
+}
+
+#mensagens .icone img {
+  display: block;
+}
+
+#mensagens .message{
+  padding: 15px 15px 15px 15px;
+}
+
+#mensagens .message-success {
+  background-color: #e6ffec;
+  color: #5fc97a;
+  border: solid 1px #92e8a8 ;
+}
+
+#mensagens .message-warning {
+  background-color: #fff9db;
+  color: #ba9d0b;
+  border: solid 1px #fff3b3 ;
+}
+
+#mensagens .message-info {
+  background-color: #dbeeff;
+  color: #629bd4;
+  border: solid 1px #b2d9ff ;
+}
+
+#mensagens .message-danger {
+background-color: #ffdbdb;
+  color: #d46262;
+  border: solid 1px #ffb2b2 ;
 }

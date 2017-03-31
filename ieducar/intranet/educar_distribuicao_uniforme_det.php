@@ -1,21 +1,21 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÃ­			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
+	*	Este  programa  Ã©  software livre, vocÃª pode redistribuÃ­-lo e/ou	 *
+	*	modificÃ¡-lo sob os termos da LicenÃ§a PÃºblica Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a versÃ£o 2 da	 *
+	*	LicenÃ§a   como  (a  seu  critÃ©rio)  qualquer  versÃ£o  mais  nova.	 *
 	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  Ã© distribuÃ­do na expectativa de ser Ãºtil, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia implÃ­cita de COMERCIALI-	 *
+	*	ZAÃÃO  ou  de ADEQUAÃÃO A QUALQUER PROPÃSITO EM PARTICULAR. Con-	 *
+	*	sulte  a  LicenÃ§a  PÃºblica  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
+	*	VocÃª  deve  ter  recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral GNU	 *
+	*	junto  com  este  programa. Se nÃ£o, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
@@ -56,7 +56,6 @@ class indice extends clsDetalhe
 		session_write_close();
 
 		$this->titulo = "Hist&oacute;rico Escolar - Detalhe";
-		
 
 		$this->cod_distribuicao_uniforme=$_GET["cod_distribuicao_uniforme"];
 		$this->ref_cod_aluno=$_GET["ref_cod_aluno"];
@@ -91,7 +90,7 @@ class indice extends clsDetalhe
 
 		if( $registro["data"] )
 		{
-			$this->addDetalhe( array( Portabilis_String_Utils::toLatin1("Data da distribuição"), Portabilis_Date_Utils::pgSQLToBr($registro["data"]) ) );
+			$this->addDetalhe( array( Portabilis_String_Utils::toLatin1("Data da distribuiÃ§Ã£o"), Portabilis_Date_Utils::pgSQLToBr($registro["data"]) ) );
 		}
 
 		if ( $registro["ref_cod_escola"]){
@@ -108,18 +107,17 @@ class indice extends clsDetalhe
 		if( dbBool($registro["kit_completo"]) )
 			$this->addDetalhe( array( "Recebeu kit completo", "Sim") );
 		else{
-			
-			$this->addDetalhe( array( "Recebeu kit completo", Portabilis_String_Utils::toLatin1("Não")) );
+			$this->addDetalhe( array( "Recebeu kit completo", Portabilis_String_Utils::toLatin1("NÃ£o")) );
 
-			$this->addDetalhe( array( Portabilis_String_Utils::toLatin1("Quantidade de agasalhos (jaqueta e calça)"), $registro['agasalho_qtd'] ?: '0' ));
+			$this->addDetalhe( array( Portabilis_String_Utils::toLatin1("Quantidade de agasalhos (jaqueta e calÃ§a)"), $registro['agasalho_qtd'] ?: '0' ));
 			$this->addDetalhe( array( "Quantidade de camisetas (manga curta)", $registro['camiseta_curta_qtd'] ?: '0' ));
 			$this->addDetalhe( array( "Quantidade de camisetas (manga longa)", $registro['camiseta_longa_qtd'] ?: '0' ));
 			$this->addDetalhe( array( "Quantidade de meias", $registro['meias_qtd'] ?: '0' ));
 			$this->addDetalhe( array( "Bermudas tectels (masculino)", $registro['bermudas_tectels_qtd'] ?: '0' ));
 			$this->addDetalhe( array( "Bermudas coton (feminino)", $registro['bermudas_coton_qtd'] ?: '0' ));
-			$this->addDetalhe( array( Portabilis_String_Utils::toLatin1("Quantidade de tênis"), $registro['tenis_qtd'] ?: '0' ));
+			$this->addDetalhe( array( Portabilis_String_Utils::toLatin1("Quantidade de tÃªnis"), $registro['tenis_qtd'] ?: '0' ));
 		}
-		
+
 		$obj_permissoes = new clsPermissoes();
 		if( $obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7 ) )
 		{
@@ -133,10 +131,10 @@ class indice extends clsDetalhe
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
-         ""                                  => "Detalhe da distribui&ccedil;&atilde;o de uniforme"
+         "educar_index.php"                  => "Escola",
+         ""                                  => "Distribuições de uniforme escolar"
     ));
-    $this->enviaLocalizacao($localizacao->montar());				
+    $this->enviaLocalizacao($localizacao->montar());
 	}
 }
 

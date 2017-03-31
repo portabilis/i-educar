@@ -1,41 +1,41 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author   Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author   Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
  * @package  Core
- * @since    Arquivo disponÌvel desde a vers„o 1.0.0
+ * @since    Arquivo dispon√≠vel desde a vers√£o 1.0.0
  * @version  $Id$
  */
 
 /**
  * clsPDF class.
  *
- * @author   Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author   Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
  * @package  Core
- * @since    Classe disponÌvel desde a vers„o 1.0.0
- * @todo     Verificar o mÈtodo PagAgenda() pois este insere a imagem 'imagens/brasao.gif',
- *           inutilizando a customizaÁ„o do arquivo ieducar.ini
+ * @since    Classe dispon√≠vel desde a vers√£o 1.0.0
+ * @todo     Verificar o m√©todo PagAgenda() pois este insere a imagem 'imagens/brasao.gif',
+ *           inutilizando a customiza√ß√£o do arquivo ieducar.ini
  * @version  $Id$
  */
 class clsPDF
@@ -67,7 +67,7 @@ class clsPDF
     $listagem,
     $detalhe;
 
-  var $owner = "PMI - Prefeitura Municipal de ItajaÌ";
+  var $owner = "PMI - Prefeitura Municipal de Itaja√≠";
 
   function clsPDF($nome, $titulo, $tamanhoFolha, $palavrasChaves,
     $depurar = FALSE, $reder = TRUE)
@@ -142,7 +142,7 @@ class clsPDF
   function OpenPage()
   {
     if ($this->numeroPagina > -1) {
-      // ConstruÁ„o de p·gina normal
+      // Constru√ß√£o de p√°gina normal
       $this->ClosePage();
       $this->numeroPagina++;
       PDF_begin_page($this->pdf, $this->largura, $this->altura);
@@ -232,7 +232,7 @@ class clsPDF
     }
 
     if ($this->depurar) {
-      echo "<b>PDF:</b> Tamanho da pagina equivalente ‡ -> {$tamanhoFolha}<br>";
+      echo "<b>PDF:</b> Tamanho da pagina equivalente √† -> {$tamanhoFolha}<br>";
     }
   }
 
@@ -362,27 +362,27 @@ class clsPDF
 
 
   /**
-   * Adiciona uma imagem no documento PDF escalonando-a atÈ a largura desejada.
+   * Adiciona uma imagem no documento PDF escalonando-a at√© a largura desejada.
    *
    * @param   string     $tipo      Tipo de imagem a ser incorporada
    * @param   string     $image     Caminho para o arquivo da imagem
-   * @param   int|float  $x         PosiÁ„o x (eixo horizontal)
-   * @param   int|float  $y         PosiÁ„o y (eixo vertical)
-   * @param   int|float  $maxWidth  Largura m·xima da imagem (usado para o c·lculo de reduÁ„o proporcional)
+   * @param   int|float  $x         Posi√ß√£o x (eixo horizontal)
+   * @param   int|float  $y         Posi√ß√£o y (eixo vertical)
+   * @param   int|float  $maxWidth  Largura m√°xima da imagem (usado para o c√°lculo de redu√ß√£o proporcional)
    */
   public function insertImageScaled($tipo, $image, $x, $y, $maxWidth)
   {
     $image = realpath($image);
     if (! is_readable($image)) {
-      throw new Exception('Caminho para arquivo de imagem inv·lido: "' . $image . '"');
+      throw new Exception('Caminho para arquivo de imagem inv√°lido: "' . $image . '"');
     }
 
     $y = $this->altura - $y;
     $im = pdf_open_image_file($this->pdf, $tipo, $image, '', 0);
 
     /**
-     * Reduz em dois pixels. Algum bug da funÁ„o da PDFLib necessita essa
-     * compensaÁ„o no c·lculo para reduÁ„o proporcional.
+     * Reduz em dois pixels. Algum bug da fun√ß√£o da PDFLib necessita essa
+     * compensa√ß√£o no c√°lculo para redu√ß√£o proporcional.
      */
     $maxWidth -= 2;
 
@@ -441,7 +441,7 @@ class clsPDF
   /**
    * Funcao que desenha um quadrado (de cima para baixo, da esqueda para direita)
    * recebe todas as variaveis de posicao (X,Y) em valores absolutos
-   * x,y = 0,0 È o topo esquerdo da pagina
+   * x,y = 0,0 √© o topo esquerdo da pagina
    *
    * @param int $x_topleft
    * @param int $y_topleft
@@ -464,7 +464,7 @@ class clsPDF
    * Funcao que desenha um quadrado (de cima para baixo, da esqueda para direita)
    * recebe todas as variaveis de posicao (X,Y) para o inicio da caixa
    * recebe ainda os parametros altura e largura, relativos.
-   * 0,0 È o topo esquerdo da pagina
+   * 0,0 √© o topo esquerdo da pagina
    *
    * @param int $x_topleft
    * @param int $y_topleft
@@ -505,7 +505,7 @@ class clsPDF
   /**
    * Funcao que desenha uma linha (de cima para baixo, da esqueda para direita)
    * recebe todas as variaveis de posicao (X,Y) em valores absolutos
-   * x,y = 0,0 È o topo esquerdo da pagina
+   * x,y = 0,0 √© o topo esquerdo da pagina
    *
    * @param int $x_topleft
    * @param int $y_topleft
@@ -526,7 +526,7 @@ class clsPDF
    * Funcao que desenha uma linha (de cima para baixo, da esqueda para direita)
    * recebe todas as variaveis de posicao (X,Y) para o inicio da linha
    * recebe ainda os parametros altura e largura, relativos.
-   * 0,0 È o topo esquerdo da pagina
+   * 0,0 √© o topo esquerdo da pagina
    *
    * @param int $x_topleft
    * @param int $y_topleft
@@ -589,7 +589,7 @@ class clsPDF
    * Funcao que escreve um texto na pagina (de cima para baixo, da esqueda para direita)
    * recebe as variaveis de posicao (X,Y) para o inicio do texto em valores absolutos
    * recebe ainda os parametros largura e altura, relativos
-   * x,y = 0,0 È o topo esquerdo da pagina
+   * x,y = 0,0 √© o topo esquerdo da pagina
    *
    * @param string $texto
    * @param int $x_topleft
@@ -619,7 +619,7 @@ class clsPDF
   /**
    * Funcao que escreve um texto na pagina (de cima para baixo, da esqueda para direita)
    * recebe todas as variaveis de posicao (X,Y) em valores absolutos
-   * x,y = 0,0 È o topo esquerdo da pagina
+   * x,y = 0,0 √© o topo esquerdo da pagina
    *
    * @param string $texto
    * @param int $x_topleft

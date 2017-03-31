@@ -1,24 +1,24 @@
 <?php
 
 /*
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  */
 
 /**
@@ -27,7 +27,7 @@
  * @author   Adriano Erik Weiguert Nagasava <ctima@itajai.sc.gov.br>
  * @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
  * @package  Core
- * @since    Arquivo disponÌvel desde a vers„o 1.0.0
+ * @since    Arquivo dispon√≠vel desde a vers√£o 1.0.0
  * @version  $Id$
  */
 
@@ -114,7 +114,7 @@ class indice extends clsCadastro
 			$lst_matricula_turma = $obj_matricula_turma->lista( null, $this->ref_cod_turma, null, null, null, null, null, null, 1 );
 			if ( is_array( $lst_matricula_turma ) )
 			{
-//				Carrega todas as matrÌculas da turma
+//				Carrega todas as matr√≠culas da turma
 				$this->lst_matricula_turma = $lst_matricula_turma;
 
 				foreach ( $lst_matricula_turma as $matricula_turma )
@@ -122,14 +122,14 @@ class indice extends clsCadastro
 					$obj_matricula = new clsPmieducarMatricula( $matricula_turma["ref_cod_matricula"] );
 					$det_matricula = $obj_matricula->detalhe();
 
-//					Verifica se a matrÌcula n„o est· aprovada nem reprovada
+//					Verifica se a matr√≠cula n√£o est√° aprovada nem reprovada
 					if ( $det_matricula["aprovado"] != 1 && $det_matricula["aprovado"] != 2 )
 					{
 						$existe_matricula = "S";
 					}
 				}
 
-//				Verifica se existe alguma matrÌcula em exame ou em andamento
+//				Verifica se existe alguma matr√≠cula em exame ou em andamento
 				if ( !( $existe_matricula == "S" ) )
 				{
 					header( "Location: educar_turma_mvto_det.php?cod_turma={$this->ref_cod_turma}" );
@@ -138,7 +138,7 @@ class indice extends clsCadastro
 			}
 			else
 			{
-				$this->mensagem = "N&atilde;o existe nenhuma matrÌcula cadastrada nesta turma.<br>";
+				$this->mensagem = "N&atilde;o existe nenhuma matr√≠cula cadastrada nesta turma.<br>";
 			}
 		}
 		else
@@ -156,7 +156,7 @@ class indice extends clsCadastro
 		$obj_curso = new clsPmieducarCurso( $this->ref_cod_curso );
 		$det_curso = $obj_curso->detalhe();
 
-//		 Carrega as informaÁıes necess·rias do curso
+//		 Carrega as informa√ß√µes necess√°rias do curso
 		if ( $det_curso )
 		{
 			$this->ref_cod_tipo_avaliacao = $det_curso["ref_cod_tipo_avaliacao"];
@@ -169,7 +169,7 @@ class indice extends clsCadastro
 			$this->hora_falta			  = $det_curso["hora_falta"];
 		}
 
-//		Verifica se vai seguir o padr„o do ano escolar da escola
+//		Verifica se vai seguir o padr√£o do ano escolar da escola
 		if ( $this->padrao_ano_escolar == 1 )
 		{
 			$obj_escola_ano_letivo = new clsPmieducarEscolaAnoLetivo( $this->ref_ref_cod_escola, null, null, null, 1, null, null, 1 );
@@ -199,17 +199,17 @@ class indice extends clsCadastro
 				{
 					foreach ( $lst_turma_disciplina as $disciplina )
 					{
-//						Carrega o cÛdigo das disciplinas da turma
+//						Carrega o c√≥digo das disciplinas da turma
 						$this->cod_disciplinas[] = $disciplina["ref_cod_disciplina"];
 					}
 
-//					Carrega a quantidade de mÛdulos do ano letivo
+//					Carrega a quantidade de m√≥dulos do ano letivo
 					$this->qtd_modulos = count( $lst_ano_letivo_modulo );
 					$cont = 1;
 
 					if ( is_array( $lst_ano_letivo_modulo ) )
 					{
-//						Busca em qual mÛdulo a turma est·
+//						Busca em qual m√≥dulo a turma est√°
 						//$resultado = $obj_turma_modulo->numModulo( $cont, $this->ref_ref_cod_serie, $this->ref_ref_cod_escola, $this->cod_disciplinas, $this->ref_cod_turma, $this->ref_cod_turma );
 						$obj_matriculas = new clsPmieducarMatriculaTurma();
 						$lst_matriculas = $obj_matriculas->lista( null, $this->ref_cod_turma, null, null, null, null, null, null, 1, $this->ref_ref_cod_serie, $this->ref_cod_curso, $this->ref_ref_cod_escola );
@@ -239,19 +239,19 @@ class indice extends clsCadastro
 
 						foreach ( $lst_ano_letivo_modulo as $registro )
 						{
-//							Verifica se a turma est· num mÛdulo da turma
+//							Verifica se a turma est√° num m√≥dulo da turma
 							if ( ( $resultado ) == $registro["sequencial"] )
 							{
 								$obj_modulo 	  = new clsPmieducarModulo( $registro["ref_cod_modulo"] );
 								$det_modulo 	  = $obj_modulo->detalhe();
 
-//								Carrega o nome do mÛdulo no qual a turma se encontra
+//								Carrega o nome do m√≥dulo no qual a turma se encontra
 								$this->modulo 	  = $det_modulo["nm_tipo"];
 
 								$obj_turma_disciplina = new clsPmieducarTurmaDisciplina();
 								$obj_turma_disciplina->setOrderby( "ref_cod_disciplina" );
 
-//								Carrega o cÛdigo das disciplinas da turma
+//								Carrega o c√≥digo das disciplinas da turma
 								$lst_turma_disciplina = $obj_turma_disciplina->lista( $this->ref_cod_turma );
 
 								if ( is_array( $lst_turma_disciplina ) )
@@ -265,7 +265,7 @@ class indice extends clsCadastro
 
 										if ( $det_disciplina )
 										{
-//											Carrega a informaÁ„o se a disciplina apura falta ou n„o
+//											Carrega a informa√ß√£o se a disciplina apura falta ou n√£o
 											$this->lst_apura_falta["{$det_disciplina["cod_disciplina"]}"] = $det_disciplina["apura_falta"];
 
 											$obj_notas = new clsPmieducarNotaAluno();
@@ -295,19 +295,19 @@ class indice extends clsCadastro
 									}*/
 								}
 
-//								Carrega o n˙mero do mÛdulo em que a turma est·
+//								Carrega o n√∫mero do m√≥dulo em que a turma est√°
 
 //								$this->num_modulo = ( $resultado + 1 );
 								break;
 							}
 
-//							Verifica se a turma est· no mÛdulo de exame
+//							Verifica se a turma est√° no m√≥dulo de exame
 							else if ( ( $resultado ) > $this->qtd_modulos )
 							{
-//								Carrega o nome do mÛdulo no qual a turma se encontra como "Exame"
+//								Carrega o nome do m√≥dulo no qual a turma se encontra como "Exame"
 								$this->modulo 	  = "Exame";
 
-//								Carrega o n˙mero do mÛdulo igual a quantidade de mÛdulos da turma mais 1
+//								Carrega o n√∫mero do m√≥dulo igual a quantidade de m√≥dulos da turma mais 1
 								$this->num_modulo = ( $resultado + 1 );
 								break;
 							}
@@ -318,7 +318,7 @@ class indice extends clsCadastro
 			}
 		}
 
-//		Escopo de instruÁıes a serem executadas, caso a turma n„o siga o padr„o ano letivo
+//		Escopo de instru√ß√µes a serem executadas, caso a turma n√£o siga o padr√£o ano letivo
 		else
 		{
 			$obj_turma_modulo = new clsPmieducarTurmaModulo();
@@ -363,7 +363,7 @@ class indice extends clsCadastro
 				{
 					foreach ( $lst_turma_disciplina as $disciplina )
 					{
-//						Carrega o cÛdigo das disciplinas da turma
+//						Carrega o c√≥digo das disciplinas da turma
 						$this->cod_disciplinas[] = $disciplina["ref_cod_disciplina"];
 
 						$obj_notas = new clsPmieducarNotaAluno();
@@ -381,7 +381,7 @@ class indice extends clsCadastro
 						}
 					}
 
-//					Carrega a quantidade de mÛdulos da turma
+//					Carrega a quantidade de m√≥dulos da turma
 					$this->qtd_modulos = count( $lst_turma_modulo );
 					$cont = 1;
 
@@ -389,30 +389,30 @@ class indice extends clsCadastro
 					{
 						$obj_turma_modulo = new clsPmieducarTurmaModulo();
 
-//						Busca em qual mÛdulo a turma est·
+//						Busca em qual m√≥dulo a turma est√°
 //						$resultado = $obj_turma_modulo->numModulo( $cont, $this->ref_ref_cod_serie, $this->ref_ref_cod_escola, $this->cod_disciplinas, $this->ref_cod_turma, $this->ref_cod_turma );
 
-//						Verifica se a turma est· num mÛdulo da turma
+//						Verifica se a turma est√° num m√≥dulo da turma
 						if ( ( $resultado ) == $cont )
 						{
 							$obj_modulo 	  = new clsPmieducarModulo( $registro["ref_cod_modulo"] );
 							$det_modulo 	  = $obj_modulo->detalhe();
 
-//							Carrega o nome do mÛdulo no qual a turma se encontra
+//							Carrega o nome do m√≥dulo no qual a turma se encontra
 							$this->modulo 	  = $det_modulo["nm_tipo"];
 
-//							Carrega o n˙mero do mÛdulo no qual a turma se encontra
+//							Carrega o n√∫mero do m√≥dulo no qual a turma se encontra
 							$this->num_modulo = ( $resultado );
 							break;
 						}
 
-//						Verifica se a turma est· no mÛdulo de exame
+//						Verifica se a turma est√° no m√≥dulo de exame
 						else if ( ( $resultado ) > $this->qtd_modulos )
 						{
-//							Carrega o nome do mÛdulo no qual a turma se encontra como "Exame"
+//							Carrega o nome do m√≥dulo no qual a turma se encontra como "Exame"
 							$this->modulo 	  = "Exame";
 
-//							Carrega o n˙mero do mÛdulo no qual a turma se encontra igual ao n˙mero de mÛdulos da turma mais 1
+//							Carrega o n√∫mero do m√≥dulo no qual a turma se encontra igual ao n√∫mero de m√≥dulos da turma mais 1
 							$this->num_modulo = ( $resultado + 1 );
 							break;
 						}
@@ -438,11 +438,11 @@ class indice extends clsCadastro
 		$obj_tipo_avaliacao = new clsPmieducarTipoAvaliacao( $this->ref_cod_tipo_avaliacao );
 		$det_tipo_avaliacao = $obj_tipo_avaliacao->detalhe();
 
-// 		Carrega o tipo de avaliaÁ„o
+// 		Carrega o tipo de avalia√ß√£o
 		if ( $det_tipo_avaliacao )
 			$this->conceitual = $det_tipo_avaliacao["conceitual"];
 
-//		Carrega todos os valores do tipo de avaliaÁ„o do curso
+//		Carrega todos os valores do tipo de avalia√ß√£o do curso
 		$obj_avaliacao_valores = new clsPmieducarTipoAvaliacaoValores();
 		$obj_avaliacao_valores->setOrderby( "valor ASC" );
 		$lst_avaliacao_valores = $obj_avaliacao_valores->lista( $this->ref_cod_tipo_avaliacao );
@@ -458,7 +458,7 @@ class indice extends clsCadastro
 		$obj_turma_disciplina = new clsPmieducarTurmaDisciplina();
 		$obj_turma_disciplina->setOrderby( "ref_cod_disciplina" );
 
-//		Carrega o cÛdigo das disciplinas da turma
+//		Carrega o c√≥digo das disciplinas da turma
 		$lst_turma_disciplina = $obj_turma_disciplina->lista( $this->ref_cod_turma );
 
 //echo "<pre>";
@@ -476,7 +476,7 @@ class indice extends clsCadastro
 
 				if ( $det_disciplina )
 				{
-//					Carrega a informaÁ„o se a disciplina apura falta ou n„o
+//					Carrega a informa√ß√£o se a disciplina apura falta ou n√£o
 					$this->lst_apura_falta["{$det_disciplina["cod_disciplina"]}"] = $det_disciplina["apura_falta"];
 
 					//$obj_notas = new clsPmieducarNotaAluno();
@@ -484,7 +484,7 @@ class indice extends clsCadastro
 //					Carrega a quantidade de notas por aluno de uma turma numa determinada disciplina
 					//$lst_notas = $obj_notas->retornaDiscMod( $this->ref_ref_cod_serie, $this->ref_ref_cod_escola, $det_disciplina["cod_disciplina"], $this->ref_cod_turma, $this->ref_cod_turma, null, true );
 
-//					Verifica se a quantidade de notas por aluno È diferente do n˙mero do mÛdulo em que a turma se encontra
+//					Verifica se a quantidade de notas por aluno √© diferente do n√∫mero do m√≥dulo em que a turma se encontra
 //echo "{$lst_notas} != {$this->num_modulo}<br>";
 					//if ( $lst_notas != $this->num_modulo )
 					//{
@@ -496,15 +496,15 @@ class indice extends clsCadastro
 		//echo "<pre>";
 		//print_r( $opcoes_disciplinas );
 
-//		Verifica se deve ser exibida a p·gina para classificar os alunos
+//		Verifica se deve ser exibida a p√°gina para classificar os alunos
 		if ( $this->classifica == "S" )
 		{
-//			Verifica se a turma terminou o ˙ltimo mÛdulo ou se est· no ˙ltimo mÛdulo
+//			Verifica se a turma terminou o √∫ltimo m√≥dulo ou se est√° no √∫ltimo m√≥dulo
 			if ( $this->num_modulo >= $this->qtd_modulos )
 			{
 				$obj_nota_aluno = new clsPmieducarNotaAluno();
 
-//				Carrega as mÈdias de cada disciplina de cada aluno
+//				Carrega as m√©dias de cada disciplina de cada aluno
 				$lst_exame		= $obj_nota_aluno->listaMedias( $this->ref_ref_cod_serie, $this->ref_ref_cod_escola, $this->ref_cod_turma, $this->ref_cod_turma, $this->qtd_modulos, $this->ref_cod_curso, true, true, true );
 
 				if ( is_array( $lst_exame ) )
@@ -512,7 +512,7 @@ class indice extends clsCadastro
 					$lst_disciplina_aprovacao = array( "" => "Selecione" );
 					foreach ( $lst_exame as $exame )
 					{
-//						Verifica se o aluno possui freq¸Íncia abaixo da freq¸Íncia mÌnima
+//						Verifica se o aluno possui freq√º√™ncia abaixo da freq√º√™ncia m√≠nima
 						if ( ( 100 - $exame["faltas"] ) < $this->frequencia_minima )
 						{
 							$obj_disciplina = new clsPmieducarDisciplina( $exame["disc_ref_ref_cod_disciplina"] );
@@ -520,10 +520,10 @@ class indice extends clsCadastro
 
 							if ( $det_disciplina )
 							{
-//								Carrega a disciplina que possui alunos com freq¸Íncia abaixo da freq¸Íncia mÌnima
+//								Carrega a disciplina que possui alunos com freq√º√™ncia abaixo da freq√º√™ncia m√≠nima
 								$lst_disciplina_aprovacao["{$exame["disc_ref_ref_cod_disciplina"]}"] = $det_disciplina["nm_disciplina"];
 
-//								Carrega as informaÁıes referentes a disciplina e ao aluno que possui freq¸Íncia abaixo da freq¸Íncia mÌnima
+//								Carrega as informa√ß√µes referentes a disciplina e ao aluno que possui freq√º√™ncia abaixo da freq√º√™ncia m√≠nima
 								$lst_aprovacao[] 													 = $exame;
 							}
 						}
@@ -574,7 +574,7 @@ class indice extends clsCadastro
 					$opcoes_disciplinas = array_unique( $lst_disciplina_aprovacao );
 				}
 
-//				Verifica se existem alunos com a freq¸Íncia abaixo da freq¸Íncia mÌnima
+//				Verifica se existem alunos com a freq√º√™ncia abaixo da freq√º√™ncia m√≠nima
 				if ( is_array( $lst_aprovacao ) )
 				{
 					foreach ( $lst_classificacao as $registro )
@@ -600,19 +600,19 @@ class indice extends clsCadastro
 									$obj_tipo_avaliacao = new clsPmieducarTipoAvaliacao( $this->ref_cod_tipo_avaliacao, null, null, null, null, null, 1, null, $this->ref_cod_instituicao );
 									$det_tipo_avaliacao = $obj_tipo_avaliacao->detalhe();
 
-//									Verifica se o tipo de avaliaÁ„o n„o È conceitual
+//									Verifica se o tipo de avalia√ß√£o n√£o √© conceitual
 									if ( $det_tipo_avaliacao["conceitual"] == 0 )
 									{
 										$this->campoOculto( "nm_aluno_{$det_pessoa["idpes"]}", $det_pessoa["nome"] );
 										$this->campoTextoInv( "nm_aluno_{$det_pessoa["idpes"]}_", "Aluno", $det_pessoa["nome"], 30, 255, false, false, true );
 										$this->lst_matriculas[] = array( "{$det_matricula["ref_cod_aluno"]}", "{$det_pessoa["idpes"]}", "{$det_matricula["cod_matricula"]}" );
 
-//										Verifica se a falta n„o È globalizada e se n„o est· na ˙ltima disciplina
+//										Verifica se a falta n√£o √© globalizada e se n√£o est√° na √∫ltima disciplina
 										if ( !( $this->falta_ch_globalizada == 1 && $this->qtd_disciplinas > 1 ) )
 										{
 											//$this->campoTextoInv( "faltas_{$det_pessoa["idpes"]}_", "Faltas", $registro["faltas"], 5, 5, false, false, true );
 
-//											Verifica se a mÈdia È maior ou igual a mÈdia mÌnima
+//											Verifica se a m√©dia √© maior ou igual a m√©dia m√≠nima
 											if ( $registro["exibe"] == "N" )
 											{
 												$this->campoCheck( "aprovacao_{$det_pessoa["idpes"]}_", " ", 0, "Aprovado" );
@@ -640,12 +640,12 @@ class indice extends clsCadastro
 		}
 		else
 		{
-//			Verifica se a turma terminou o ˙ltimo mÛdulo
+//			Verifica se a turma terminou o √∫ltimo m√≥dulo
 			if ( $this->num_modulo > $this->qtd_modulos )
 			{
 				$obj_nota_aluno = new clsPmieducarNotaAluno();
 
-//				Carrega as mÈdias de cada disciplina de cada aluno
+//				Carrega as m√©dias de cada disciplina de cada aluno
 				$lst_exame		= $obj_nota_aluno->listaMedias( $this->ref_ref_cod_serie, $this->ref_ref_cod_escola, $this->ref_cod_turma, $this->ref_cod_turma, $this->qtd_modulos, $this->ref_cod_curso, true, true, false, true );
 
 				if ( is_array( $lst_exame ) )
@@ -661,7 +661,7 @@ class indice extends clsCadastro
 						$obj_dispensa = new clsPmieducarDispensaDisciplina( $this->ref_cod_turma, $exame["ref_ref_cod_matricula"], $this->ref_cod_turma, $this->ref_ref_cod_serie, $this->ref_ref_cod_escola, $exame["disc_ref_ref_cod_disciplina"], null, null, null, null, null, 1 );
 						$det_dispensa = $obj_dispensa->detalhe();
 
-//						Verifica se a quantiade de notas da disciplina È diferente da quantidade de mÛdulos, se n„o foi dispensado da disciplina e se a mÈdia È menor que a mÈdia mÌnima
+//						Verifica se a quantiade de notas da disciplina √© diferente da quantidade de m√≥dulos, se n√£o foi dispensado da disciplina e se a m√©dia √© menor que a m√©dia m√≠nima
 						if ( $lst_notas != $this->num_modulo && !is_array( $det_dispensa ) && $exame["media"] < $this->media )
 						{
 							$obj_disciplina = new clsPmieducarDisciplina( $exame["disc_ref_ref_cod_disciplina"] );
@@ -669,7 +669,7 @@ class indice extends clsCadastro
 
 							if ( $det_disciplina )
 							{
-//								Carrega a disciplina que possui alunos com mÈdia abaixo da mÈdia mÌnima
+//								Carrega a disciplina que possui alunos com m√©dia abaixo da m√©dia m√≠nima
 								$lst_disciplina_aprovacao["{$exame["disc_ref_ref_cod_disciplina"]}"] = $det_disciplina["nm_disciplina"];
 							}
 						}
@@ -677,21 +677,21 @@ class indice extends clsCadastro
 					$opcoes_disciplinas = array_unique( $lst_disciplina_aprovacao );
 				}
 			}
-			$this->campoRotulo( "tipo_modulo", "MÛdulo", $this->modulo );
-			$this->campoRotulo( "numero_modulo", "N˙mero do MÛdulo", $this->num_modulo );
-//			$this->campoTexto( "tipo_modulo", "MÛdulo", $this->modulo, 30, 255, false, false, false, "", "", "", "onKeyUp", true );
+			$this->campoRotulo( "tipo_modulo", "M√≥dulo", $this->modulo );
+			$this->campoRotulo( "numero_modulo", "N√∫mero do M√≥dulo", $this->num_modulo );
+//			$this->campoTexto( "tipo_modulo", "M√≥dulo", $this->modulo, 30, 255, false, false, false, "", "", "", "onKeyUp", true );
 			$this->campoLista( "ref_cod_disciplina", "Disciplina", $opcoes_disciplinas, $this->ref_cod_disciplina );
 
 			if ( is_numeric( $this->ref_cod_disciplina ) )
 			{
 				$this->tipoacao = "Novo";
 
-//				Verifica se a turma terminou o ˙ltimo mÛdulo
+//				Verifica se a turma terminou o √∫ltimo m√≥dulo
 				if ( $this->qtd_modulos < $this->num_modulo )
 				{
 					$obj_nota_aluno = new clsPmieducarNotaAluno();
 
-//					Carrega as mÈdias dos alunos por disciplina
+//					Carrega as m√©dias dos alunos por disciplina
 					$lst_exame		= $obj_nota_aluno->listaMedias( $this->ref_ref_cod_serie, $this->ref_ref_cod_escola, $this->ref_cod_turma, $this->ref_cod_turma, $this->qtd_modulos, $this->ref_cod_curso, true, true, false, true );
 
 					if ( is_array( $lst_exame ) )
@@ -703,7 +703,7 @@ class indice extends clsCadastro
 
 							if ( $registro["disc_ref_ref_cod_disciplina"] == $this->ref_cod_disciplina )
 							{
-//								Verifica se a mÈdia do aluno em uma disciplina est· abaixo da mÈdia mÌnima
+//								Verifica se a m√©dia do aluno em uma disciplina est√° abaixo da m√©dia m√≠nima
 								if ( $registro["media"] < $this->media )
 								{
 									if ( $det_matricula )
@@ -719,7 +719,7 @@ class indice extends clsCadastro
 											$obj_dispensa = new clsPmieducarDispensaDisciplina( $this->ref_cod_turma, $det_matricula["cod_matricula"], $this->ref_cod_turma, $this->ref_ref_cod_serie, $this->ref_ref_cod_escola, $this->ref_cod_disciplina, null, null, null, null, null, 1 );
 											$det_dispensa = $obj_dispensa->detalhe();
 
-//											Verifica se o aluno n„o foi dispensado da disciplina
+//											Verifica se o aluno n√£o foi dispensado da disciplina
 											if ( !$det_dispensa )
 											{
 												if ( is_numeric( $this->ref_cod_tipo_avaliacao ) )
@@ -727,7 +727,7 @@ class indice extends clsCadastro
 													$obj_tipo_avaliacao = new clsPmieducarTipoAvaliacao( $this->ref_cod_tipo_avaliacao, null, null, null, null, null, 1, null, $this->ref_cod_instituicao );
 													$det_tipo_avaliacao = $obj_tipo_avaliacao->detalhe();
 
-//													Verifica se o tipo de avaliaÁ„o n„o È conceitual
+//													Verifica se o tipo de avalia√ß√£o n√£o √© conceitual
 													if ( $det_tipo_avaliacao["conceitual"] == 0 )
 													{
 														$this->campoOculto( "nm_aluno_{$det_pessoa["idpes"]}", $det_pessoa["nome"] );
@@ -736,13 +736,13 @@ class indice extends clsCadastro
 														$this->campoLista( "nota_{$det_pessoa["idpes"]}", " Nota", $opcoes_valores, "", "", true );
 														$this->exame = "S";
 
-//														Verifica se a falta n„o È globalizada e se n„o est· na ˙ltima disciplina
+//														Verifica se a falta n√£o √© globalizada e se n√£o est√° na √∫ltima disciplina
 														if ( !( $this->falta_ch_globalizada == 1 && $this->qtd_disciplinas > 1 ) )
 														{
 //															Verifica se a disciplina apura faltas
 															if ( $this->lst_apura_falta[$this->ref_cod_disciplina] == 1 )
 															{
-//																Verifica se o ano letivo ainda est· em andamento
+//																Verifica se o ano letivo ainda est√° em andamento
 																if ( !( $this->num_modulo > $this->qtd_modulos ) )
 																{
 																	$this->campoNumero( "faltas_{$det_pessoa["idpes"]}", " Faltas", "", 3, 3, true );
@@ -778,7 +778,7 @@ class indice extends clsCadastro
 					{
 					}
 				}
-//				Executa o bloco de instruÁıes abaixo, caso o ano letivo n„o tenha encerrado
+//				Executa o bloco de instru√ß√µes abaixo, caso o ano letivo n√£o tenha encerrado
 				else
 				{
 					if ( is_array( $this->lst_matricula_turma ) )
@@ -816,7 +816,7 @@ class indice extends clsCadastro
 											$det_dispensa = $obj_dispensa->lista( $this->ref_cod_turma, $det_matricula["cod_matricula"], $this->ref_cod_turma, $this->ref_ref_cod_serie, $this->ref_ref_cod_escola, $this->ref_cod_disciplina, null, null, null, null, null, null, null, 1 );
 											$det_disciplina = $det_disciplina[0];
 
-	//										Verifica se o aluno n„o foi dispensado da disciplina
+	//										Verifica se o aluno n√£o foi dispensado da disciplina
 											if ( !$det_dispensa )
 											{
 												if ( is_numeric( $this->ref_cod_tipo_avaliacao ) )
@@ -842,13 +842,13 @@ class indice extends clsCadastro
 														$this->campoLista( "nota_{$det_pessoa["idpes"]}", " Nota", $opcoes_valores, "", "", false );
 													}
 
-	//												Verifica se a falta n„o È globalizada e se n„o est· na ˙ltima disciplina
+	//												Verifica se a falta n√£o √© globalizada e se n√£o est√° na √∫ltima disciplina
 													if ( !( $this->falta_ch_globalizada == 1 && $this->qtd_disciplinas > 1 ) )
 													{
 	//													Verifica se a disciplina apura faltas
 														if ( $this->lst_apura_falta[$this->ref_cod_disciplina] == 1 )
 														{
-	//														Verifica se o ano letivo ainda est· em andamento
+	//														Verifica se o ano letivo ainda est√° em andamento
 															if ( !( $this->num_modulo > $this->qtd_modulos ) )
 															{
 																$this->campoNumero( "faltas_{$det_pessoa["idpes"]}", " Faltas", "", 3, 3, true );
@@ -865,7 +865,7 @@ class indice extends clsCadastro
 													}
 													else if ( $this->falta_ch_globalizada == 1 && $disc_nota == ( $qtd_disc - 1 ) )
 													{
-	//													Verifica se o ano letivo ainda est· em andamento
+	//													Verifica se o ano letivo ainda est√° em andamento
 														if ( !( $this->num_modulo > $this->qtd_modulos ) )
 														{
 															if ( $this->num_modulo == $this->qtd_modulos )
@@ -963,19 +963,19 @@ class indice extends clsCadastro
 
 						if ( isset( $this->$campo_aluno ) )
 						{
-//							Verifica se a mÈdia È maior ou igual a mÈdia mÌnima e se foi aprovado pelo professor
+//							Verifica se a m√©dia √© maior ou igual a m√©dia m√≠nima e se foi aprovado pelo professor
 							if ( $exame["media"] >= $this->media && $this->$campo_aprovacao == "on" )
 							{
-//								Verifica se o aluno n„o foi reprovado ou deixado em exame
+//								Verifica se o aluno n√£o foi reprovado ou deixado em exame
 								if ( $aprovado[$exame["ref_ref_cod_matricula"]] != "N" && $aprovado[$exame["ref_ref_cod_matricula"]] != "R" )
 								{
 									$aprovado[$exame["ref_ref_cod_matricula"]] = "S";
 								}
 							}
-//							Verifica se a mÈdia È menor que a mÈdia mÌnima e se foi colocado em recuperaÁ„o pelo professor
+//							Verifica se a m√©dia √© menor que a m√©dia m√≠nima e se foi colocado em recupera√ß√£o pelo professor
 							else if ( $exame["media"] < $this->media && $this->$campo_aprovacao == "on" )
 							{
-//								Verifica se o aluno n„o foi reprovado
+//								Verifica se o aluno n√£o foi reprovado
 								if ( $aprovado[$exame["ref_ref_cod_matricula"]] != "N" )
 								{
 									$aprovado[$exame["ref_ref_cod_matricula"]] = "R";
@@ -998,7 +998,7 @@ class indice extends clsCadastro
 								$obj_matricula = new clsPmieducarMatricula( $matricula );
 								$det_matricula = $obj_matricula->detalhe();
 
-//								Verifica se a matrÌcula aida est· em andamento
+//								Verifica se a matr√≠cula aida est√° em andamento
 								if ( $det_matricula["aprovado"] == 3 )
 								{
 									$obj_historico = new clsPmieducarHistoricoEscolar();
@@ -1028,7 +1028,7 @@ class indice extends clsCadastro
 										}
 									}
 
-//									Verifica se o aluno foi deixado em recuperaÁ„o
+//									Verifica se o aluno foi deixado em recupera√ß√£o
 									else if ( $verificador == "R" )
 									{
 										$obj_matricula = new clsPmieducarMatricula( $det_matricula["cod_matricula"], null, null, null, $this->pessoa_logada, null, null, 7 );
@@ -1041,13 +1041,13 @@ class indice extends clsCadastro
 								}
 							}
 
-//							Executa o bloco de instruÁıes abaixo, caso o aluno tenha sido reprovado
+//							Executa o bloco de instru√ß√µes abaixo, caso o aluno tenha sido reprovado
 							else
 							{
 								$obj_matricula = new clsPmieducarMatricula( $matricula );
 								$det_matricula = $obj_matricula->detalhe();
 
-//								Verifica se a matricula ainda est· em andamento
+//								Verifica se a matricula ainda est√° em andamento
 								if ( $det_matricula["aprovado"] == 3 )
 								{
 									$obj_historico = new clsPmieducarHistoricoEscolar();
@@ -1071,12 +1071,12 @@ class indice extends clsCadastro
 											$obj_matricula = new clsPmieducarMatricula( $det_matricula["cod_matricula"], null, null, null, $this->pessoa_logada, null, null, 2 );
 											if ( !( $obj_matricula->edita() ) )
 											{
-												$this->mensagem = "Falha ao alterar a matrÌcula!<br>";
+												$this->mensagem = "Falha ao alterar a matr√≠cula!<br>";
 											}
 										}
 										else
 										{
-											$this->mensagem = "Falha ao cadastrar o histÛrico!<br>";
+											$this->mensagem = "Falha ao cadastrar o hist√≥rico!<br>";
 										}
 									}
 								}
@@ -1087,13 +1087,13 @@ class indice extends clsCadastro
 				header( "location: educar_turma_mvto_det.php?cod_turma={$this->ref_cod_turma}" );
 				die();
 			}
-//			Executa o bloco de instruÁ„o abaixo, caso o servidor n„o tenha classificado nenhum aluno
+//			Executa o bloco de instru√ß√£o abaixo, caso o servidor n√£o tenha classificado nenhum aluno
 			else
 			{
 				foreach ( $this->lst_matriculas as $matriculas )
 				{
 
-//					Verifica se o ano letivo ainda est· em andamento
+//					Verifica se o ano letivo ainda est√° em andamento
 					if ( $this->num_modulo <= $this->qtd_modulos )
 					{
 //						Verifica se a disciplina apura falta
@@ -1140,7 +1140,7 @@ class indice extends clsCadastro
 							$this->mensagem = "Erro no cadastro de nota!<br>";
 						}
 
-//						Verifica se a falta n„o È globalizada
+//						Verifica se a falta n√£o √© globalizada
 						if ( $this->falta_ch_globalizada == 0 )
 						{
 //							Verifica se a disciplina apura falta
@@ -1159,7 +1159,7 @@ class indice extends clsCadastro
 							}
 						}
 
-//						Verifica se a falta È globalizada
+//						Verifica se a falta √© globalizada
 						else if ( $this->falta_ch_globalizada == 1 )
 						{
 //							Verifica se o aluno possui alguma falta
@@ -1178,7 +1178,7 @@ class indice extends clsCadastro
 					}
 				}
 
-//				Verifica se a turma est· no ˙ltimo mÛdulo
+//				Verifica se a turma est√° no √∫ltimo m√≥dulo
 				if ( $this->qtd_modulos == $this->num_modulo )
 				{
 					$obj_matricula_turma = new clsPmieducarMatriculaTurma();
@@ -1190,15 +1190,15 @@ class indice extends clsCadastro
 						{
 							$obj_nota_aluno = new clsPmieducarNotaAluno();
 
-//							Busca se todas as notas j· foram dadas para o aluno
+//							Busca se todas as notas j√° foram dadas para o aluno
 							$todas_notas	= $obj_nota_aluno->todasNotas( $this->ref_ref_cod_serie, $this->ref_ref_cod_escola, $this->ref_cod_turma, $this->ref_cod_turma, $this->num_modulo, $matricula["ref_cod_matricula"] );
 
-//							Verifica se todas as notas j· foram dadas para o aluno
+//							Verifica se todas as notas j√° foram dadas para o aluno
 							if ( $todas_notas == 'S' )
 							{
 								if ( $this->conceitual == 0 )
 								{
-//									Carrega as mÈdias de cada disciplina do aluno
+//									Carrega as m√©dias de cada disciplina do aluno
 									$lst_exame = $obj_nota_aluno->listaMedias( $this->ref_ref_cod_serie, $this->ref_ref_cod_escola, $this->ref_cod_turma, $this->ref_cod_turma, $this->qtd_modulos, $this->ref_cod_curso, true, true );
 
 									if ( $lst_exame )
@@ -1207,20 +1207,20 @@ class indice extends clsCadastro
 										{
 											if ( $exame["ref_ref_cod_matricula"] == $matricula["ref_cod_matricula"] )
 											{
-//												Verifica se a mÈdia do aluno È igual ou superior a mÈdia mÌnima e se a freq¸Íncia do aluno È igual ou maior que a freq¸Íncia mÌnima
+//												Verifica se a m√©dia do aluno √© igual ou superior a m√©dia m√≠nima e se a freq√º√™ncia do aluno √© igual ou maior que a freq√º√™ncia m√≠nima
 												if ( $exame["media"] >= $this->media && ( 100 - $exame["faltas"] ) >= $this->frequencia_minima )
 												{
-//													Verifica se o aluno n„o foi reprovado ou deixado de recuperaÁ„o
+//													Verifica se o aluno n√£o foi reprovado ou deixado de recupera√ß√£o
 													if ( $aprovado[$exame["ref_ref_cod_matricula"]] != "N" && $aprovado[$exame["ref_ref_cod_matricula"]] != "R" )
 													{
 														$aprovado[$exame["ref_ref_cod_matricula"]] = "S";
 													}
 												}
 
-//												Verifica se a mÈdia do aluno È inferior a mÈdia mÌnima e se a freq¸Íncia do aluno È maior ou igual a freq¸Íncia mÌnima
+//												Verifica se a m√©dia do aluno √© inferior a m√©dia m√≠nima e se a freq√º√™ncia do aluno √© maior ou igual a freq√º√™ncia m√≠nima
 												else if ( $exame["media"] < $this->media && ( 100 - $exame["faltas"] ) >= $this->frequencia_minima )
 												{
-//													Verifica se o aluno n„o foi reprovado
+//													Verifica se o aluno n√£o foi reprovado
 													if ( $aprovado[$exame["ref_ref_cod_matricula"]] != "N" )
 													{
 														$aprovado[$exame["ref_ref_cod_matricula"]] = "R";
@@ -1263,7 +1263,7 @@ class indice extends clsCadastro
 								$obj_matricula = new clsPmieducarMatricula( $matricula );
 								$det_matricula = $obj_matricula->detalhe();
 
-//								Verifica se a matrÌcula est· em andamento
+//								Verifica se a matr√≠cula est√° em andamento
 								if ( $det_matricula["aprovado"] == 3 )
 								{
 									$obj_historico = new clsPmieducarHistoricoEscolar();
@@ -1294,12 +1294,12 @@ class indice extends clsCadastro
 											$obj_matricula = new clsPmieducarMatricula( $det_matricula["cod_matricula"], null, null, null, $this->pessoa_logada, null, null, 1 );
 											if ( $obj_matricula->edita() )
 											{
-												$this->mensagem = "Falha ao editar a matrÌcula!<br>";
+												$this->mensagem = "Falha ao editar a matr√≠cula!<br>";
 											}
 										}
 										else
 										{
-											$this->mensagem = "Falha ao cadastrar o histÛrico!<br>";
+											$this->mensagem = "Falha ao cadastrar o hist√≥rico!<br>";
 										}
 									}
 
@@ -1310,7 +1310,7 @@ class indice extends clsCadastro
 
 										if ( !$obj_matricula->edita() )
 										{
-											$this->mensagem = "Falha ao editar a matrÌcula!<br>";
+											$this->mensagem = "Falha ao editar a matr√≠cula!<br>";
 										}
 									}
 								}
@@ -1347,12 +1347,12 @@ class indice extends clsCadastro
 										$obj_matricula = new clsPmieducarMatricula( $det_matricula["cod_matricula"], null, null, null, $this->pessoa_logada, null, null, 2 );
 										if ( $obj_matricula->edita() )
 										{
-											$this->mensagem = "Falha ao editar a matrÌcula!<br>";
+											$this->mensagem = "Falha ao editar a matr√≠cula!<br>";
 										}
 									}
 									else
 									{
-										$this->mensagem = "Falha ao cadastrar o histÛrico!<br>";
+										$this->mensagem = "Falha ao cadastrar o hist√≥rico!<br>";
 									}
 								}
 							}
@@ -1380,7 +1380,7 @@ class indice extends clsCadastro
 				{
 					foreach ( $this->lst_matriculas as $matriculas )
 					{
-//						Verifica se todos os mÛdulos j· terminaram
+//						Verifica se todos os m√≥dulos j√° terminaram
 						if ( $this->num_modulo > $this->qtd_modulos )
 						{
 							$campo_nota		= "nota_{$matriculas[1]}";
@@ -1409,7 +1409,7 @@ class indice extends clsCadastro
 
 							$obj_turma_disciplina = new clsPmieducarTurmaDisciplina();
 
-//							Carrega o cÛdigo das disciplinas da turma
+//							Carrega o c√≥digo das disciplinas da turma
 							$lst_turma_disciplina = $obj_turma_disciplina->lista( $this->ref_cod_turma );
 
 							if ( is_array( $lst_turma_disciplina ) )
@@ -1427,7 +1427,7 @@ class indice extends clsCadastro
 										$obj_dispensa = new clsPmieducarDispensaDisciplina();
 										$det_dispensa = $obj_dispensa->lista( $this->ref_cod_turma, $matriculas[2], $this->ref_cod_turma, $this->ref_ref_cod_serie, $this->ref_ref_cod_escola, $det_disciplina["cod_disciplina"], null, null, null, null, null, null, null, 1 );
 
-//										Verifica se o aluno n„o foi dispensado da disciplina
+//										Verifica se o aluno n√£o foi dispensado da disciplina
 										if ( !is_array( $det_dispensa ) )
 										{
 											$obj_notas = new clsPmieducarNotaAluno();
@@ -1435,7 +1435,7 @@ class indice extends clsCadastro
 //											Carrega a quantidade de notas por aluno de uma turma numa determinada disciplina
 											$lst_notas = $obj_notas->retornaDiscMod( $this->ref_ref_cod_serie, $this->ref_ref_cod_escola, $det_disciplina["cod_disciplina"], $this->ref_cod_turma, $this->ref_cod_turma, $matriculas[2] );
 
-//											Carrega a mÈdia da disciplina
+//											Carrega a m√©dia da disciplina
 											if ( $lst_exame )
 											{
 												foreach ( $lst_exame as $exame )
@@ -1467,7 +1467,7 @@ class indice extends clsCadastro
 											{
 												if ( !is_array( $det_dispensa ) )
 												{
-//													Verifica se a quantidade de notas por aluno È diferente do n˙mero do mÛdulo em que a turma se encontra
+//													Verifica se a quantidade de notas por aluno √© diferente do n√∫mero do m√≥dulo em que a turma se encontra
 													if ( $lst_notas == ( $this->qtd_modulos + 1 ) )
 													{
 														if ( $salva_historico != "N" )
@@ -1497,10 +1497,10 @@ class indice extends clsCadastro
 									{
 										if ( $exame["ref_ref_cod_matricula"] == $matriculas[2] && $lst_disc_exame[$exame["disc_ref_ref_cod_disciplina"]] == "S" )
 										{
-//											Verifica se a mÈdia do aluno È igual ou superior a mÈdia mÌnima
+//											Verifica se a m√©dia do aluno √© igual ou superior a m√©dia m√≠nima
 											if ( $exame["media"] >= $this->media_exame )
 											{
-//												Verifica se o aluno n„o foi reprovado
+//												Verifica se o aluno n√£o foi reprovado
 												if ( $aprovado[$exame["ref_ref_cod_matricula"]] != "N" )
 												{
 													$aprovado[$exame["ref_ref_cod_matricula"]] = "S";
@@ -1524,7 +1524,7 @@ class indice extends clsCadastro
 										$obj_matricula = new clsPmieducarMatricula( $matricula );
 										$det_matricula = $obj_matricula->detalhe();
 
-//										Verifica se a matrÌcula est· em exame
+//										Verifica se a matr√≠cula est√° em exame
 										if ( $det_matricula["aprovado"] == 7 )
 										{
 											$obj_historico = new clsPmieducarHistoricoEscolar();
@@ -1555,12 +1555,12 @@ class indice extends clsCadastro
 													$obj_matricula = new clsPmieducarMatricula( $det_matricula["cod_matricula"], null, null, null, $this->pessoa_logada, null, null, 1 );
 													if ( $obj_matricula->edita() )
 													{
-														$this->mensagem = "Falha ao editar a matrÌcula!<br>";
+														$this->mensagem = "Falha ao editar a matr√≠cula!<br>";
 													}
 												}
 												else
 												{
-													$this->mensagem = "Falha ao cadastrar o histÛrico!<br>";
+													$this->mensagem = "Falha ao cadastrar o hist√≥rico!<br>";
 												}
 											}
 										}
@@ -1593,12 +1593,12 @@ class indice extends clsCadastro
 											$obj_matricula = new clsPmieducarMatricula( $matricula, null, null, null, $this->pessoa_logada, null, null, 2 );
 											if ( !( $obj_matricula->edita() ) )
 											{
-												$this->mensagem = "Falha ao alterar a matrÌcula!<br>";
+												$this->mensagem = "Falha ao alterar a matr√≠cula!<br>";
 											}
 										}
 										else
 										{
-											$this->mensagem = "Falha ao cadastrar o histÛrico!<br>";
+											$this->mensagem = "Falha ao cadastrar o hist√≥rico!<br>";
 										}
 									}
 								}

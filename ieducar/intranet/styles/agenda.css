@@ -11,7 +11,7 @@ TD.claro
 }
 TD.escuro
 {
-	background-color: #e4e9ed;
+	background-color: #f5f9fd;
 	padding: 5px;
 }
 .titulo
@@ -26,21 +26,21 @@ TD.escuro
 	font-family: arial, heveltica, sans, verdana;
 	font-size: 22px;
 	font-weight: bold;
-	color: #e4e9ed;
+	color: #f5f9fd;
 }
 .data2
 {
 	font-family: arial, heveltica, sans, verdana;
 	font-size: 16px;
 	font-weight: bold;
-	color: #e4e9ed;
+	color: #f5f9fd;
 }
 .data3
 {
 	font-family: arial, heveltica, sans, verdana;
 	font-size: 13px;
 	font-weight: bold;
-	color: #e4e9ed;
+	color: #f5f9fd;
 }
 .comp_tit
 {
@@ -71,7 +71,7 @@ INPUT.notas
 	font-family: arial, heveltica, sans, verdana;
 	font-size: 9px;
 	color: #000000;
-	background-color: #e4e9ed;
+	background-color: #f5f9fd;
 }
 INPUT.agenda_hora
 {

@@ -2,43 +2,35 @@
 #error_reporting(E_ALL);
 #ini_set("display_errors", 1);
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Include
- * @since     Arquivo disponÌvel desde a vers„o 1.0.0
+ * @since     Arquivo dispon√≠vel desde a vers√£o 1.0.0
  * @version   $Id: clsBase.inc.php 773 2010-12-19 20:46:49Z eriksencosta@gmail.com $
  */
 
 // Inclui arquivo de bootstrapping
 require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/bootstrap.php';
-
-// redireciona requisiÁıes, caso configurado
-if ($GLOBALS['coreExt']['Config']->app->routes &&
-    $GLOBALS['coreExt']['Config']->app->routes->redirect_to) {
-
-  header('HTTP/1.1 503 Service Temporarily Unavailable');
-  header("Location: {$GLOBALS['coreExt']['Config']->app->routes->redirect_to}");
-}
 
 require_once 'include/clsCronometro.inc.php';
 require_once 'clsConfigItajai.inc.php';
@@ -53,20 +45,31 @@ require_once 'include/funcoes.inc.php';
 require_once 'Portabilis/Utils/Database.php';
 require_once 'Portabilis/Utils/User.php';
 require_once 'Portabilis/String/Utils.php';
+require_once 'Portabilis/AdministrativeInfoFetcher.php';
 
 require_once 'modules/Error/Mailers/NotificationMailer.php';
 require_once 'Portabilis/Assets/Version.php';
+require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
+
+$administrativeInfoFetcher = new Portabilis_AdministrativeInfoFetcher();
+$suspensionInfo = $administrativeInfoFetcher->getSuspensionInfo();
+
+if(!$suspensionInfo['active']){
+  header('HTTP/1.1 503 Service Temporarily Unavailable');
+  header("Location: suspenso.php");
+}
+
 
 /**
  * clsBase class.
  *
- * ProvÍ uma API para criaÁ„o de p·ginas HTML programaticamente.
+ * Prov√™ uma API para cria√ß√£o de p√°ginas HTML programaticamente.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Include
- * @since     Classe disponÌvel desde a vers„o 1.0.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
  * @version   @@package_version@@
  */
 class clsBase extends clsConfig
@@ -90,6 +93,10 @@ class clsBase extends clsConfig
 
   function OpenTpl($template)
   {
+
+    if ($_SERVER["REMOTE_ADDR"] != '201.86.28.179' && $_SERVER["REMOTE_ADDR"] != '172.17.0.1'){
+    	header('Location: http://www.portabilis.com.br/manutencao.html');
+    }
     $prefix = 'nvp_';
     $file   = $this->arrayConfig['strDirTemplates'] . $prefix . $template . '.tpl';
 
@@ -113,6 +120,7 @@ class clsBase extends clsConfig
 
   function MakeHeadHtml()
   {
+
     $saida = $this->OpenTpl('htmlhead');
     $saida = str_replace("<!-- #&TITULO&# -->", $this->titulo, $saida);
 
@@ -228,7 +236,7 @@ class clsBase extends clsConfig
       }
 
       if ($processo_ap != 0) {
-        $this->db()->Consulta("SELECT 1 FROM pmieducar.menu_tipo_usuario mtu 
+        $this->db()->Consulta("SELECT 1 FROM pmieducar.menu_tipo_usuario mtu
                                 INNER JOIN pmieducar.tipo_usuario tu ON mtu.ref_cod_tipo_usuario = tu.cod_tipo_usuario
                                 INNER JOIN pmieducar.usuario u ON tu.cod_tipo_usuario = u.ref_cod_tipo_usuario
                                 WHERE mtu.ref_cod_menu_submenu = 0 AND u.cod_usuario = {$this->currentUserId()}");
@@ -238,10 +246,10 @@ class clsBase extends clsConfig
         }
 
         // @todo A primeira consulta OK, verifica de forma simples de tem
-        //       permiss„o de acesso ao processo. J· a segunda, n„o existe
-        //       sentido para nivel = 2 j· que processoAp pode ser de nÌveis
+        //       permiss√£o de acesso ao processo. J√° a segunda, n√£o existe
+        //       sentido para nivel = 2 j√° que processoAp pode ser de n√≠veis
         //       maiores que 2.
-        $this->db()->Consulta("SELECT 1 FROM pmieducar.menu_tipo_usuario mtu 
+        $this->db()->Consulta("SELECT 1 FROM pmieducar.menu_tipo_usuario mtu
                                 INNER JOIN pmieducar.tipo_usuario tu ON mtu.ref_cod_tipo_usuario = tu.cod_tipo_usuario
                                 INNER JOIN pmieducar.usuario u ON tu.cod_tipo_usuario = u.ref_cod_tipo_usuario
                                 WHERE (mtu.ref_cod_menu_submenu = {$processo_ap} AND u.cod_usuario = {$this->currentUserId()})
@@ -294,7 +302,7 @@ class clsBase extends clsConfig
     $menu = $this->openTpl("htmlmenu");
     $menuObj = new clsMenu();
     $saida .= $this->buscaRapida();
-    $saida .= $menuObj->MakeMenu($this->openTpl("htmllinhamenu"), $this->openTpl("htmllinhamenusubtitulo"));
+    $saida .= $menuObj->MakeMenu(null, $this->openTpl("htmllinhamenusubtitulo"));
     $saida = str_replace("<!-- #&LINHAS&# -->", $saida, $menu);
     return $saida;
   }
@@ -302,12 +310,12 @@ class clsBase extends clsConfig
   /**
    * Cria o menu suspenso dos subsistemas Escola e Biblioteca.
    *
-   * @todo Refatorar lÛgica do primeiro par if/else, duplicaÁ„o
+   * @todo Refatorar l√≥gica do primeiro par if/else, duplica√ß√£o
    * @return bool|string Retorna FALSE em caso de erro
    */
   function makeMenuSuspenso()
   {
-    // Usa helper de Url para pegar o path da requisiÁ„o
+    // Usa helper de Url para pegar o path da requisi√ß√£o
     require_once 'CoreExt/View/Helper/UrlHelper.php';
 
     $uri = explode('/', CoreExt_View_Helper_UrlHelper::url($_SERVER['REQUEST_URI'],
@@ -337,7 +345,7 @@ class clsBase extends clsConfig
         $menu_tutor = $this->db()->UnicoCampo("SELECT ref_cod_tutormenu FROM pmicontrolesis.menu WHERE $where LIMIT 1 OFFSET 0");
       }
       else {
-        $this->prog_alert .= "O menu pai do processo AP {$this->processoAp} est· voltando vazio (cod_menu inexistente?).<br>";
+        $this->prog_alert .= "O menu pai do processo AP {$this->processoAp} est√° voltando vazio (cod_menu inexistente?).<br>";
       }
     }
     elseif ($_SESSION['menu_atual']) {
@@ -390,8 +398,8 @@ class clsBase extends clsConfig
 
           $alvo = $menu_suspenso['alvo'] ? $menu_suspenso['alvo'] : '_self';
 
-          // Corrige o path usando caminhos relativos para permitir a inclus„o
-          // de itens no menu que apontem para um mÛdulo
+          // Corrige o path usando caminhos relativos para permitir a inclus√£o
+          // de itens no menu que apontem para um m√≥dulo
           if ($uri[1] == 'module') {
             if (0 === strpos($menu_suspenso['caminho'], 'module')) {
               $menu_suspenso['caminho'] = '../../' . $menu_suspenso['caminho'];
@@ -403,18 +411,6 @@ class clsBase extends clsConfig
           elseif (0 === strpos($menu_suspenso['caminho'], 'module')) {
               $menu_suspenso['caminho'] = '../../' . $menu_suspenso['caminho'];
           }
-         switch ($menu_suspenso[tipo_menu]) {
-         	case 1:
-         		$tipo_menu = '(Admin)';
-         		break;
-         	case 2:
-         		$tipo_menu = '(Geral)';
-         		break;
-
-         	default:
-         		$tipo_menu = '';
-         		break;
-         }
 
           $saida .= "array_menu[array_menu.length] = new Array(\"{$menu_suspenso['tt_menu']} {$tipo_menu} \",{$menu_suspenso['cod_menu']},'{$menu_suspenso['ref_cod_menu_pai']}','', '$ico_menu', '{$menu_suspenso['caminho']}', '{$alvo}');";
           if (!$menu_suspenso['ref_cod_menu_pai']) {
@@ -545,8 +541,8 @@ class clsBase extends clsConfig
         $saida = $this->OpenTpl("htmlbody");
       }
       /**
-       * @todo Essa segunda condiÁ„o n„o se torna verdadeira nunca, j· que n„o
-       *   existe uma condiÁ„o bin·ria entre $renderBanner e $renderMenu que
+       * @todo Essa segunda condi√ß√£o n√£o se torna verdadeira nunca, j√° que n√£o
+       *   existe uma condi√ß√£o bin√°ria entre $renderBanner e $renderMenu que
        *   a execute. Ver:
        *   <code>
        *     $ egrep -rn "renderBanner\s?=\s?true" intranet/
@@ -554,10 +550,10 @@ class clsBase extends clsConfig
        *     $  egrep -rn "renderMenu\s?=\s?false" intranet/
        *   </code>
        *
-       *   Para acontecer, seria necess·rio renderBanner = true (default,
-       *     heranÁa) com renderMenu = false.
+       *   Para acontecer, seria necess√°rio renderBanner = true (default,
+       *     heran√ßa) com renderMenu = false.
        *
-       *   Caso n„o ocorra, remover a condicional e apagar o arquivo _sem_menu.
+       *   Caso n√£o ocorra, remover a condicional e apagar o arquivo _sem_menu.
        */
       else {
         $saida = $this->OpenTpl("htmlbody_sem_menu");
@@ -597,8 +593,13 @@ class clsBase extends clsConfig
 
     // nome completo usuario
     $nomePessoa       = new clsPessoaFisica();
-    list($nomePessoa) = $nomePessoa->queryRapida($this->currentUserId(), "nome");
+    list($nomePessoa, $email) = $nomePessoa->queryRapida($this->currentUserId(), "nome", "email");
     $nomePessoa       = ($nomePessoa) ? $nomePessoa : "<span style='color: #DD0000; '>Convidado</span>";
+
+    // foto do usuario
+    $objFoto = new clsCadastroFisicaFoto($this->currentUserId());
+    $detalheFoto = $objFoto->detalhe();
+    $foto = $detalheFoto['caminho'] ? $detalheFoto['caminho'] : '/intranet/imagens/user-perfil.png';
 
 
     // data ultimo acesso
@@ -614,11 +615,15 @@ class clsBase extends clsConfig
     $saida = str_replace("<!-- #&USERLOGADO&# -->",   $nomePessoa,    $saida);
     $saida = str_replace("<!-- #&CORPO&# -->",        $corpo,         $saida);
     $saida = str_replace("<!-- #&ANUNCIO&# -->",      $menu_dinamico, $saida);
+    $saida = str_replace("<!-- #&FOTO&# -->",         $foto, $saida);
 
-    // Pega o endereÁo IP do host, primeiro com HTTP_X_FORWARDED_FOR (para pegar o IP real
-    // caso o host esteja atr·s de um proxy)
+    $administrativeInfoFetcher = new Portabilis_AdministrativeInfoFetcher();
+    $saida = str_replace("<!-- #&RODAPE_INTERNO&# -->", $administrativeInfoFetcher->getInternalFooter(), $saida);
+
+    // Pega o endere√ßo IP do host, primeiro com HTTP_X_FORWARDED_FOR (para pegar o IP real
+    // caso o host esteja atr√°s de um proxy)
     if (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR'] != '') {
-      // No caso de m˙ltiplos IPs, pega o ˙ltimo da lista
+      // No caso de m√∫ltiplos IPs, pega o √∫ltimo da lista
       $ip = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
       $ip_maquina = trim(array_pop($ip));
     }
@@ -628,6 +633,17 @@ class clsBase extends clsConfig
 
     $sql = "UPDATE funcionario SET ip_logado = '$ip_maquina' , data_login = NOW() WHERE ref_cod_pessoa_fj = {$this->currentUserId()}";
     $this->db()->Consulta($sql);
+
+    $saida .= '<script type="text/javascript" src="https://api.conpass.io/conpass.js"></script>';
+    $saida .= '<script type="text/javascript">
+
+      window.onload = function(e) {
+          Conpass.close();
+          Conpass.startProject( \'AHA Moment Portabilis\', \'dGlhZ29AcG9ydGFiaWxpcy5jb20uYnI6cG9ydGFiaWxpczA5MQ==\' );
+          Conpass.identifyUser( { name: \''.$nomePessoa.'\' , email: \''.$email.'\' }, \'dGlhZ29AcG9ydGFiaWxpcy5jb20uYnI6cG9ydGFiaWxpczA5MQ==\' );
+      }
+
+    </script>';
 
     return $saida;
   }
@@ -651,7 +667,7 @@ class clsBase extends clsConfig
   {
     $retorno = '';
     $listaBanners = array();
-    $this->db()->Consulta("SELECT caminho, title, prioridade, link FROM portal_banner WHERE lateral=1 ORDER BY prioridade, title");
+    $this->db()->Consulta("SELECT caminho, title, prioridade, link FROM portal_banner WHERE lateral_=1 ORDER BY prioridade, title");
 
     while ($this->db()->ProximoRegistro()) {
       list($caminho, $title, $prioridade, $link) = $this->db()->Tupla();
@@ -868,24 +884,24 @@ class clsBase extends clsConfig
   	$js .= "<script type='text/javascript' src='scripts/buscaMenu.js?assets_version= " . Portabilis_Assets_Version::VERSION . "'></script>";
   	$js .= "<script type='text/javascript' src='scripts/jquery/jquery-ui.min-1.9.2/js/jquery-ui-1.9.2.custom.min.js?assets_version= " . Portabilis_Assets_Version::VERSION . "'></script>";
 
-  	$titulo .= "<div title='Busca r·pida'>";
+  	$titulo .= "<div title='Busca r√°pida' class='title-busca-rapida'>";
   	$titulo .= "<table width='168' class='title active-section-title' style='-moz-user-select: none;'>";
   	$titulo .= "<tbody style='-moz-user-select: none;'>";
   	$titulo .= "<tr style='-moz-user-select: none;'>";
   	$titulo .= "<td style='-moz-user-select: none;'>";
-  	$titulo .= "<a style='outline:none;text-decoration:none;'>Busca r·pida</a>";
+  	$titulo .= "<a style='outline:none;text-decoration:none;'>Busca r√°pida</a>";
   	$titulo .= "</td>";
   	$titulo .= "</tr>";
   	$titulo .= "</tbody>";
   	$titulo .= "</table>";
   	$titulo .= "</div>";
-  	
+
   	$campoBusca .= "<ul class='menu'>";
-  	$campoBusca .= "<li id='busca-menu' class='nvp_cor_nao'>";
+  	$campoBusca .= "<li id='busca-menu'>";
 	$campoBusca .= "<input class='geral ui-autocomplete-input' type='text' name='menu' id='busca-menu-input' size=50 maxlength=50 placeholder='Informe o nome do menu' autocomplete=off>";
   	$campoBusca .= "</li>";
-  	$campoBusca .= "</ul>";
-  	
+    $campoBusca .= "</ul>";
+
 
   	return $css . $js . $titulo . $campoBusca;
   }

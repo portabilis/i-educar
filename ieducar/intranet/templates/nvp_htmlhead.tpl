@@ -1,8 +1,8 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
   "http://www.w3.org/TR/html4/loose.dtd">
-<html lang="pt">
+<html lang="pt" class="no-js">
 <head>
-  <meta http-equiv='Content-Type' content='text/html; charset=ISO-8859-1' />
+  <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
   <!--meta http-equiv="Content-Type" content="text/html; charset=utf-8" /-->
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="-1" />
@@ -14,14 +14,18 @@
   <link rel=stylesheet type='text/css' href='styles/styles.css' />
   <link rel=stylesheet type='text/css' href='styles/novo.css' />
   <link rel=stylesheet type='text/css' href='styles/menu.css' />
+  <link rel=stylesheet type='text/css' href='/intranet/styles/font-awesome.css' />
   <!--link rel=stylesheet type='text/css' href='styles/reset.css' />
   <link rel=stylesheet type='text/css' href='styles/portabilis.css' /-->
   <link rel=stylesheet type='text/css' href='styles/min-portabilis.css?rand=3' />
   <link rel=stylesheet type='text/css' href='styles/mytdt.css' />
   <link rel=stylesheet type='text/css' href='styles/jquery.modal.css' />
   <script src="http://maps.google.com/maps/api/js?sensor=true" type="text/javascript" charset="utf-8"></script>
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
 
   <!-- #&ESTILO&# -->
+  
+<script>(function(e,t,n){var r=e.querySelectorAll("html")[0];r.className=r.className.replace(/(^|\s)no-js(\s|$)/,"$1js$2")})(document,window,0);</script>
 
   <script type="text/javascript" src="scripts/padrao.js?1"></script>
   <script type="text/javascript" src="scripts/novo.js?1"></script>
@@ -47,7 +51,7 @@
       var src    = imagem.src.indexOf('arrow-up') ;
 
       imagem.src = (src!= -1) ?
-        'imagens/arrow-down2.gif' : 'imagens/arrow-up2.gif' ;
+        'imagens/arrow-down2.png' : 'imagens/arrow-up2.png' ;
 
       imagem.title = (src!= -1) ?
         imagem.title.replace('Abrir', 'Fechar') :
@@ -96,6 +100,7 @@
   <script type="text/javascript">
   <!-- #&SCRIPT_HEADER&# -->
   </script>
-</head>
+  
+<link rel=stylesheet type='text/css' href='styles/custom.css' />
 <body <!-- #&BODYSCRIPTS&# -->>
   <div id="DOM_expansivel" class="DOM_expansivel"></div>

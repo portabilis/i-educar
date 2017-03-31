@@ -2,30 +2,30 @@
 // error_reporting(E_ALL);
 // ini_set("display_errors", 1);
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo disponÌvel desde a vers„o 1.0.0
+ * @since     Arquivo dispon√≠vel desde a vers√£o 1.0.0
  * @version   $Id$
  */
 
@@ -42,18 +42,18 @@ require_once 'Educacenso/Model/DocenteDataMapper.php';
 /**
  * clsIndexBase class.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponÌvel desde a vers„o 1.0.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor');
+    $this->SetTitulo($this->_instituicao . ' Servidores - Servidor');
     $this->processoAp = 635;
     $this->addEstilo("localizacaoSistema");
   }
@@ -62,11 +62,11 @@ class clsIndexBase extends clsBase
 /**
  * indice class.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponÌvel desde a vers„o 1.0.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
  * @version   @@package_version@@
  */
 class indice extends clsCadastro
@@ -94,17 +94,17 @@ class indice extends clsCadastro
   var $ano_inicio_curso_superior_2;
   var $ano_conclusao_curso_superior_2;
   var $tipo_instituicao_curso_superior_2;
-  var $instituicao_curso_superior_2;  
+  var $instituicao_curso_superior_2;
   var $situacao_curso_superior_3;
   var $formacao_complementacao_pedagogica_3;
   var $codigo_curso_superior_3;
   var $ano_inicio_curso_superior_3;
   var $ano_conclusao_curso_superior_3;
   var $tipo_instituicao_curso_superior_3;
-  var $instituicao_curso_superior_3;    
-  var $pos_especializacao;  
-  var $pos_mestrado;  
-  var $pos_doutorado;  
+  var $instituicao_curso_superior_3;
+  var $pos_especializacao;
+  var $pos_mestrado;
+  var $pos_doutorado;
   var $pos_nenhuma;
   var $curso_creche;
   var $curso_pre_escola;
@@ -129,7 +129,7 @@ class indice extends clsCadastro
 
   var $cod_docente_inep;
 
-  // Determina se o servidor È um docente para buscar cÛdigo Educacenso/Inep.
+  // Determina se o servidor √© um docente para buscar c√≥digo Educacenso/Inep.
   var $docente = false;
 
   function Inicializar()
@@ -149,20 +149,20 @@ class indice extends clsCadastro
 
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(
-      635, 
-      $this->pessoa_logada, 
+      635,
+      $this->pessoa_logada,
       7,
       'educar_servidor_lst.php'
     );
     if (is_numeric($this->cod_servidor) && is_numeric($this->ref_cod_instituicao)) {
       $obj = new clsPmieducarServidor(
-        $this->cod_servidor, 
-        null, 
-        null, 
+        $this->cod_servidor,
         null,
-        null, 
-        null, 
-        null, 
+        null,
+        null,
+        null,
+        null,
+        null,
         $this->ref_cod_instituicao
       );
 
@@ -183,7 +183,7 @@ class indice extends clsCadastro
 
         $db = new clsBanco();
 
-        // Carga hor·ria alocada no ultimo ano de alocaÁ„o
+        // Carga hor√°ria alocada no ultimo ano de aloca√ß√£o
         $sql = sprintf("SELECT
             carga_horaria
           FROM
@@ -205,7 +205,7 @@ class indice extends clsCadastro
         }
 
         $this->total_horas_alocadas = sprintf('%02d:%02d', $carga / 60, $carga % 60);
-        // FunÁıes
+        // Fun√ß√µes
         $obj_funcoes = new clsPmieducarServidorFuncao();
         $lst_funcoes = $obj_funcoes->lista($this->ref_cod_instituicao, $this->cod_servidor);
 
@@ -258,16 +258,16 @@ class indice extends clsCadastro
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos(array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php" => "i-Educar - Escola",
-         "" => "{$nomeMenu} servidor"             
+         "educar_servidores_index.php"       => "Servidores",
+         "" => "{$nomeMenu} servidor"
     ));
-    $this->enviaLocalizacao($localizacao->montar());    
+    $this->enviaLocalizacao($localizacao->montar());
 
     return $retorno;
   }
 
   /**
-   * Gerar formul·rio
+   * Gerar formul√°rio
    */
   function Gerar()
   {
@@ -277,8 +277,8 @@ class indice extends clsCadastro
     include 'include/pmieducar/educar_campo_lista.php';
 
     /**
-     * Selecionar funcion·rio,
-     * Escolher a pessoa (n„o o usu·rio)
+     * Selecionar funcion√°rio,
+     * Escolher a pessoa (n√£o o usu√°rio)
      */
     $opcoes = array('' => 'Para procurar, clique na lupa ao lado.');
     if ($this->cod_servidor) {
@@ -289,7 +289,7 @@ class indice extends clsCadastro
       $this->campoRotulo('nm_servidor', 'Pessoa', $servidor->nome);
       $this->campoOculto('cod_servidor', $this->cod_servidor);
       $this->campoOculto(
-          'ref_cod_instituicao_original', 
+          'ref_cod_instituicao_original',
           $this->ref_cod_instituicao_original
       );
 
@@ -298,51 +298,51 @@ class indice extends clsCadastro
       $parametros = new clsParametrosPesquisas();
       $parametros->setSubmit(0);
       $parametros->adicionaCampoSelect(
-          'cod_servidor', 
-          'idpes', 
+          'cod_servidor',
+          'idpes',
           'nome'
       );
 
-      // ConfiguraÁıes do campo de pesquisa
+      // Configura√ß√µes do campo de pesquisa
       $this->campoListaPesq(
-        'cod_servidor', 
-        'Pessoa', 
+        'cod_servidor',
+        'Pessoa',
         $opcoes,
-        $this->cod_servidor, 
-        'pesquisa_pessoa_lst.php', 
-        '', 
-        false, 
-        '', 
+        $this->cod_servidor,
+        'pesquisa_pessoa_lst.php',
         '',
-        null, 
-        null, 
-        '', 
-        false, 
-        $parametros->serializaCampos(), 
+        false,
+        '',
+        '',
+        null,
+        null,
+        '',
+        false,
+        $parametros->serializaCampos(),
         true
       );
     }
-    
+
     // ----
     $this->inputsHelper()->integer(
-        'cod_docente_inep', 
+        'cod_docente_inep',
         array(
-            'label' => 'CÛdigo INEP', 
+            'label' => 'C√≥digo INEP',
             'required' => false
         )
     );
 
     $helperOptions = array('objectName' => 'deficiencias');
     $options = array(
-      'label' => 'DeficiÍncias', 
-      'size' => 50, 
+      'label' => 'Defici√™ncias',
+      'size' => 50,
       'required' => false,
       'options' => array('value' => null)
     );
 
     $this->inputsHelper()->multipleSearchDeficiencias(
-        '', 
-        $options, 
+        '',
+        $options,
         $helperOptions
     );
 
@@ -366,19 +366,19 @@ class indice extends clsCadastro
     }
 
     $this->campoTabelaInicio(
-      'funcao', 
-      'FunÁıes Servidor',
+      'funcao',
+      'Fun√ß√µes Servidor',
       array(
-        "FunÁ„o", 
-        "Componentes Curriculares", 
-        "Cursos", 
-        "MatrÌcula"), 
+        "Fun√ß√£o",
+        "Componentes Curriculares",
+        "Cursos",
+        "Matr√≠cula"),
       ($this->ref_cod_funcao)
     );
 
     $funcao = 'popless()';
 
-    $this->campoLista('ref_cod_funcao', 'FunÁ„o', $opcoes, $this->ref_cod_funcao, 'funcaoChange(this)', '', '', '');
+    $this->campoLista('ref_cod_funcao', 'Fun√ß√£o', $opcoes, $this->ref_cod_funcao, 'funcaoChange(this)', '', '', '');
 
     $this->campoRotulo('disciplina', 'Componentes Curriculares',
       "<img src='imagens/lupa_antiga.png' border='0' style='cursor:pointer;' alt='Buscar Componente Curricular' title='Buscar Componente Curricular' onclick=\"$funcao\">");
@@ -394,10 +394,10 @@ class indice extends clsCadastro
 
     if (strtoupper($this->tipoacao) == 'EDITAR') {
       $this->campoTextoInv(
-        'total_horas_alocadas_', 
+        'total_horas_alocadas_',
         'Total de Horas Alocadadas',
-        $this->total_horas_alocadas, 
-        9, 
+        $this->total_horas_alocadas,
+        9,
         20
       );
 
@@ -414,11 +414,11 @@ class indice extends clsCadastro
     }
 
     $this->campoHora(
-      'carga_horaria', 
-      'Carga Hor·ria', 
-      $hora_formatada, 
+      'carga_horaria',
+      'Carga Hor√°ria',
+      $hora_formatada,
       true,
-      'N˙mero de horas deve ser maior que horas alocadas',
+      'N√∫mero de horas deve ser maior que horas alocadas',
       '',
       false
     );
@@ -433,7 +433,7 @@ class indice extends clsCadastro
       try {
         $docenteInep = $docenteMapper->find(array('docente' => $this->cod_servidor));
       } catch (Exception $e) {
-        
+
       }
     }
 
@@ -450,43 +450,43 @@ class indice extends clsCadastro
     } else {
       echo "<!--\nErro\nClasse clsCadastroEscolaridade nao encontrada\n-->";
       $opcoes = array('' => 'Erro na geracao');
-    }   
+    }
 
     $obj_permissoes = new clsPermissoes();
     if ($obj_permissoes->permissao_cadastra( 632, $this->pessoa_logada, 4)){
       $script = "javascript:showExpansivelIframe(350, 135, 'educar_escolaridade_cad_pop.php');";
-      $script = "<img id='img_deficiencia' style='display: \'\'' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";  
+      $script = "<img id='img_deficiencia' style='display: \'\'' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
     } else {
-      $script = null;    
+      $script = null;
     }
 
-    $this->campoLista('ref_idesco', 'Escolaridade', $opcoes, $this->ref_idesco, '', FALSE, '', $script, FALSE, FALSE);    
+    $this->campoLista('ref_idesco', 'Escolaridade', $opcoes, $this->ref_idesco, '', FALSE, '', $script, FALSE, FALSE);
 
     $resources = array(
       null => 'Selecione',
-      1 => Portabilis_String_Utils::toLatin1('ConcluÌdo'),
+      1 => Portabilis_String_Utils::toLatin1('Conclu√≠do'),
       2 => 'Cursando'
     );
 
     $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('SituaÁ„o do curso superior 1'), 
-      'resources' => $resources, 
-      'value' => $this->situacao_curso_superior_1, 
+      'label' => Portabilis_String_Utils::toLatin1('Situa√ß√£o do curso superior 1'),
+      'resources' => $resources,
+      'value' => $this->situacao_curso_superior_1,
       'required' => false
     );
 
-    $this->inputsHelper()->select('situacao_curso_superior_1', $options);   
+    $this->inputsHelper()->select('situacao_curso_superior_1', $options);
 
     $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Possui formaÁ„o/complementaÁ„o pedagÛgica 1'), 
+      'label' => Portabilis_String_Utils::toLatin1('Possui forma√ß√£o/complementa√ß√£o pedag√≥gica 1'),
       'value' => $this->formacao_complementacao_pedagogica_1
     );
 
-    $this->inputsHelper()->checkbox('formacao_complementacao_pedagogica_1', $options); 
+    $this->inputsHelper()->checkbox('formacao_complementacao_pedagogica_1', $options);
 
-    $options = array('label' => Portabilis_String_Utils::toLatin1('Curso superior 1'), 'required'   => false);  
+    $options = array('label' => Portabilis_String_Utils::toLatin1('Curso superior 1'), 'required'   => false);
     $helperOptions = array(
-      'objectName' => 'codigo_curso_superior_1', 
+      'objectName' => 'codigo_curso_superior_1',
       'hiddenInputOptions' => array(
         'options' => array('value' => $this->codigo_curso_superior_1)
       )
@@ -494,77 +494,77 @@ class indice extends clsCadastro
     $this->inputsHelper()->simpleSearchCursoSuperior(null, $options, $helperOptions);
 
     $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Ano de inÌcio do curso superior 1'), 
+      'label' => Portabilis_String_Utils::toLatin1('Ano de in√≠cio do curso superior 1'),
       'placeholder' => '',
-      'value' => $this->ano_inicio_curso_superior_1, 
-      'max_length' => 4, 
-      'size' => 5, 
+      'value' => $this->ano_inicio_curso_superior_1,
+      'max_length' => 4,
+      'size' => 5,
       'required' => false
     );
     $this->inputsHelper()->integer('ano_inicio_curso_superior_1', $options);
 
     $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Ano de conclus„o do curso superior 1'), 
+      'label' => Portabilis_String_Utils::toLatin1('Ano de conclus√£o do curso superior 1'),
       'placeholder' => '',
-      'value' => $this->ano_conclusao_curso_superior_1, 
-      'max_length' => 4, 
-      'size' => 5, 
+      'value' => $this->ano_conclusao_curso_superior_1,
+      'max_length' => 4,
+      'size' => 5,
       'required' => false
     );
-    $this->inputsHelper()->integer('ano_conclusao_curso_superior_1', $options);    
+    $this->inputsHelper()->integer('ano_conclusao_curso_superior_1', $options);
 
     $resources = array(
       null => 'Selecione',
-      1 => Portabilis_String_Utils::toLatin1('P˙blica'),
+      1 => Portabilis_String_Utils::toLatin1('P√∫blica'),
       2 => 'Privada'
     );
 
     $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Tipo de instituiÁ„o do curso superior 1'), 
-      'resources' => $resources, 
-      'value' => $this->tipo_instituicao_curso_superior_1, 
+      'label' => Portabilis_String_Utils::toLatin1('Tipo de institui√ß√£o do curso superior 1'),
+      'resources' => $resources,
+      'value' => $this->tipo_instituicao_curso_superior_1,
       'required' => false
     );
-    $this->inputsHelper()->select('tipo_instituicao_curso_superior_1', $options);       
+    $this->inputsHelper()->select('tipo_instituicao_curso_superior_1', $options);
 
     $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('InstituiÁ„o do curso superior 1'), 
+      'label' => Portabilis_String_Utils::toLatin1('Institui√ß√£o do curso superior 1'),
       'required'   => false
-    );  
+    );
     $helperOptions = array(
       'objectName' => 'instituicao_curso_superior_1',
       'hiddenInputOptions' => array(
         'options' => array('value' => $this->instituicao_curso_superior_1)
       )
     );
-    $this->inputsHelper()->simpleSearchIes(null, $options, $helperOptions);   
+    $this->inputsHelper()->simpleSearchIes(null, $options, $helperOptions);
 
     $this->campoQuebra();
 
     $resources = array(
       null => 'Selecione',
-      1 => Portabilis_String_Utils::toLatin1('ConcluÌdo'),
+      1 => Portabilis_String_Utils::toLatin1('Conclu√≠do'),
       2 => 'Cursando'
     );
 
     $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('SituaÁ„o do curso superior 2'), 
-      'resources' => $resources, 
-      'value' => $this->situacao_curso_superior_2, 
+      'label' => Portabilis_String_Utils::toLatin1('Situa√ß√£o do curso superior 2'),
+      'resources' => $resources,
+      'value' => $this->situacao_curso_superior_2,
       'required' => false
     );
-    $this->inputsHelper()->select('situacao_curso_superior_2', $options);   
+    $this->inputsHelper()->select('situacao_curso_superior_2', $options);
 
     $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Possui formaÁ„o/complementaÁ„o pedagÛgica 2'), 
+      'label' => Portabilis_String_Utils::toLatin1('Possui forma√ß√£o/complementa√ß√£o pedag√≥gica 2'),
       'value' => $this->formacao_complementacao_pedagogica_2
     );
-    $this->inputsHelper()->checkbox('formacao_complementacao_pedagogica_2', $options); 
+    $this->inputsHelper()->checkbox('formacao_complementacao_pedagogica_2', $options);
 
     $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Curso superior 2'), 
+      'label' => Portabilis_String_Utils::toLatin1('Curso superior 2'),
       'required' => false
-    );  
+    );
     $helperOptions = array(
       'objectName' => 'codigo_curso_superior_2',
       'hiddenInputOptions' => array(
@@ -574,77 +574,77 @@ class indice extends clsCadastro
     $this->inputsHelper()->simpleSearchCursoSuperior(null, $options, $helperOptions);
 
     $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Ano de inÌcio do curso superior 2'), 
+      'label' => Portabilis_String_Utils::toLatin1('Ano de in√≠cio do curso superior 2'),
       'placeholder' => '',
-      'value' => $this->ano_inicio_curso_superior_2, 
-      'max_length' => 4, 
-      'size' => 5, 
+      'value' => $this->ano_inicio_curso_superior_2,
+      'max_length' => 4,
+      'size' => 5,
       'required' => false
     );
     $this->inputsHelper()->integer('ano_inicio_curso_superior_2', $options);
 
     $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Ano de conclus„o do curso superior 2'), 
+      'label' => Portabilis_String_Utils::toLatin1('Ano de conclus√£o do curso superior 2'),
       'placeholder' => '',
-      'value' => $this->ano_conclusao_curso_superior_2, 
-      'max_length' => 4, 
-      'size' => 5, 
+      'value' => $this->ano_conclusao_curso_superior_2,
+      'max_length' => 4,
+      'size' => 5,
       'required' => false
     );
-    $this->inputsHelper()->integer('ano_conclusao_curso_superior_2', $options);    
+    $this->inputsHelper()->integer('ano_conclusao_curso_superior_2', $options);
 
     $resources = array(
       null => 'Selecione',
-      1 => Portabilis_String_Utils::toLatin1('P˙blica'),
+      1 => Portabilis_String_Utils::toLatin1('P√∫blica'),
       2 => 'Privada'
     );
 
     $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Tipo de instituiÁ„o do curso superior 2'), 
-      'resources' => $resources, 
-      'value' => $this->tipo_instituicao_curso_superior_2, 
+      'label' => Portabilis_String_Utils::toLatin1('Tipo de institui√ß√£o do curso superior 2'),
+      'resources' => $resources,
+      'value' => $this->tipo_instituicao_curso_superior_2,
       'required' => false
     );
-    $this->inputsHelper()->select('tipo_instituicao_curso_superior_2', $options);       
+    $this->inputsHelper()->select('tipo_instituicao_curso_superior_2', $options);
 
     $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('InstituiÁ„o do curso superior 2'), 
+      'label' => Portabilis_String_Utils::toLatin1('Institui√ß√£o do curso superior 2'),
       'required' => false
-    );  
+    );
     $helperOptions = array(
       'objectName' => 'instituicao_curso_superior_2',
       'hiddenInputOptions' => array(
         'options' => array('value' => $this->instituicao_curso_superior_2)
       )
     );
-    $this->inputsHelper()->simpleSearchIes(null, $options, $helperOptions);     
+    $this->inputsHelper()->simpleSearchIes(null, $options, $helperOptions);
 
     $this->campoQuebra();
 
     $resources = array(
       null => 'Selecione',
-      1 => Portabilis_String_Utils::toLatin1('ConcluÌdo'),
+      1 => Portabilis_String_Utils::toLatin1('Conclu√≠do'),
       2 => 'Cursando'
     );
 
     $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('SituaÁ„o do curso superior 3'), 
-      'resources' => $resources, 
-      'value' => $this->situacao_curso_superior_3, 
+      'label' => Portabilis_String_Utils::toLatin1('Situa√ß√£o do curso superior 3'),
+      'resources' => $resources,
+      'value' => $this->situacao_curso_superior_3,
       'required' => false
     );
-    $this->inputsHelper()->select('situacao_curso_superior_3', $options);   
+    $this->inputsHelper()->select('situacao_curso_superior_3', $options);
 
     $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Possui formaÁ„o/complementaÁ„o pedagÛgica 3'), 
+      'label' => Portabilis_String_Utils::toLatin1('Possui forma√ß√£o/complementa√ß√£o pedag√≥gica 3'),
       'value' => $this->formacao_complementacao_pedagogica_3
     );
-    $this->inputsHelper()->checkbox('formacao_complementacao_pedagogica_3', $options); 
+    $this->inputsHelper()->checkbox('formacao_complementacao_pedagogica_3', $options);
 
     $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Curso superior 3'), 
+      'label' => Portabilis_String_Utils::toLatin1('Curso superior 3'),
       'required' => false
-    );  
+    );
     $helperOptions = array(
       'objectName' => 'codigo_curso_superior_3',
       'hiddenInputOptions' => array(
@@ -654,162 +654,162 @@ class indice extends clsCadastro
     $this->inputsHelper()->simpleSearchCursoSuperior(null, $options, $helperOptions);
 
     $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Ano de inÌcio do curso superior 3'), 
+      'label' => Portabilis_String_Utils::toLatin1('Ano de in√≠cio do curso superior 3'),
       'placeholder' => '',
-      'value' => $this->ano_inicio_curso_superior_3, 
-      'max_length' => 4, 
-      'size' => 5, 
+      'value' => $this->ano_inicio_curso_superior_3,
+      'max_length' => 4,
+      'size' => 5,
       'required' => false
     );
     $this->inputsHelper()->integer('ano_inicio_curso_superior_3', $options);
 
     $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Ano de conclus„o do curso superior 3'), 
+      'label' => Portabilis_String_Utils::toLatin1('Ano de conclus√£o do curso superior 3'),
       'placeholder' => '',
-      'value' => $this->ano_conclusao_curso_superior_3, 
-      'max_length' => 4, 
-      'size' => 5, 
+      'value' => $this->ano_conclusao_curso_superior_3,
+      'max_length' => 4,
+      'size' => 5,
       'required' => false
     );
-    $this->inputsHelper()->integer('ano_conclusao_curso_superior_3', $options);    
+    $this->inputsHelper()->integer('ano_conclusao_curso_superior_3', $options);
 
     $resources = array(
       null => 'Selecione',
-      1 => Portabilis_String_Utils::toLatin1('P˙blica'),
+      1 => Portabilis_String_Utils::toLatin1('P√∫blica'),
       2 => 'Privada'
     );
 
     $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Tipo de instituiÁ„o do curso superior 3'), 
-      'resources' => $resources, 
-      'value' => $this->tipo_instituicao_curso_superior_3, 
+      'label' => Portabilis_String_Utils::toLatin1('Tipo de institui√ß√£o do curso superior 3'),
+      'resources' => $resources,
+      'value' => $this->tipo_instituicao_curso_superior_3,
       'required' => false
     );
-    $this->inputsHelper()->select('tipo_instituicao_curso_superior_3', $options);       
+    $this->inputsHelper()->select('tipo_instituicao_curso_superior_3', $options);
 
     $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('InstituiÁ„o do curso superior 3'), 
+      'label' => Portabilis_String_Utils::toLatin1('Institui√ß√£o do curso superior 3'),
       'required' => false
-    );  
+    );
     $helperOptions = array(
       'objectName' => 'instituicao_curso_superior_3',
       'hiddenInputOptions' => array(
         'options' => array('value' => $this->instituicao_curso_superior_3)
       )
     );
-    $this->inputsHelper()->simpleSearchIes(null, $options, $helperOptions);   
+    $this->inputsHelper()->simpleSearchIes(null, $options, $helperOptions);
 
     $this->campoQuebra();
 
     $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('PÛs-GraduaÁ„o - EspecializaÁ„o'), 
+      'label' => Portabilis_String_Utils::toLatin1('P√≥s-Gradua√ß√£o - Especializa√ß√£o'),
       'value' => $this->pos_especializacao
     );
-    $this->inputsHelper()->checkbox('pos_especializacao', $options); 
+    $this->inputsHelper()->checkbox('pos_especializacao', $options);
 
     $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('PÛs-GraduaÁ„o - Mestrado'), 
+      'label' => Portabilis_String_Utils::toLatin1('P√≥s-Gradua√ß√£o - Mestrado'),
       'value' => $this->pos_mestrado
     );
-    $this->inputsHelper()->checkbox('pos_mestrado', $options); 
+    $this->inputsHelper()->checkbox('pos_mestrado', $options);
 
     $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('PÛs-GraduaÁ„o - Doutorado'), 
+      'label' => Portabilis_String_Utils::toLatin1('P√≥s-Gradua√ß√£o - Doutorado'),
       'value' => $this->pos_doutorado
     );
-    $this->inputsHelper()->checkbox('pos_doutorado', $options); 
+    $this->inputsHelper()->checkbox('pos_doutorado', $options);
 
     $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('PÛs-GraduaÁ„o - Nenhuma'), 
+      'label' => Portabilis_String_Utils::toLatin1('P√≥s-Gradua√ß√£o - Nenhuma'),
       'value' => $this->pos_nenhuma
     );
-    $this->inputsHelper()->checkbox('pos_nenhuma', $options); 
+    $this->inputsHelper()->checkbox('pos_nenhuma', $options);
 
     $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Curso de FormaÁ„o Continuada(min. 80hrs) - EspecÌfico para Creche (0 a 3 anos)'), 
+      'label' => Portabilis_String_Utils::toLatin1('Curso de Forma√ß√£o Continuada(min. 80hrs) - Espec√≠fico para Creche (0 a 3 anos)'),
       'value' => $this->curso_creche
     );
     $this->inputsHelper()->checkbox('curso_creche', $options);
 
     $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Curso de FormaÁ„o Continuada(min. 80hrs) - EspecÌfico para PrÈ-Escola (4 e 5 anos)'), 
+      'label' => Portabilis_String_Utils::toLatin1('Curso de Forma√ß√£o Continuada(min. 80hrs) - Espec√≠fico para Pr√©-Escola (4 e 5 anos)'),
       'value' => $this->curso_pre_escola
     );
     $this->inputsHelper()->checkbox('curso_pre_escola', $options);
 
     $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Curso de FormaÁ„o Continuada(min. 80hrs) - EspecÌfico para anos iniciais do ensino fundamental'), 
+      'label' => Portabilis_String_Utils::toLatin1('Curso de Forma√ß√£o Continuada(min. 80hrs) - Espec√≠fico para anos iniciais do ensino fundamental'),
       'value' => $this->curso_anos_iniciais
     );
     $this->inputsHelper()->checkbox('curso_anos_iniciais', $options);
 
     $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Curso de FormaÁ„o Continuada(min. 80hrs) - EspecÌfico para anos finais do ensino fundamental'), 
+      'label' => Portabilis_String_Utils::toLatin1('Curso de Forma√ß√£o Continuada(min. 80hrs) - Espec√≠fico para anos finais do ensino fundamental'),
       'value' => $this->curso_anos_finais
     );
     $this->inputsHelper()->checkbox('curso_anos_finais', $options);
 
     $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Curso de FormaÁ„o Continuada(min. 80hrs) - EspecÌfico para ensino mÈdio'), 
+      'label' => Portabilis_String_Utils::toLatin1('Curso de Forma√ß√£o Continuada(min. 80hrs) - Espec√≠fico para ensino m√©dio'),
       'value' => $this->curso_ensino_medio
     );
     $this->inputsHelper()->checkbox('curso_ensino_medio', $options);
 
     $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Curso de FormaÁ„o Continuada(min. 80hrs) - EspecÌfico para educaÁ„o de jovens e adultos'), 
+      'label' => Portabilis_String_Utils::toLatin1('Curso de Forma√ß√£o Continuada(min. 80hrs) - Espec√≠fico para educa√ß√£o de jovens e adultos'),
       'value' => $this->curso_eja
     );
     $this->inputsHelper()->checkbox('curso_eja', $options);
 
     $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Curso de FormaÁ„o Continuada(min. 80hrs) - EspecÌfico para educaÁ„o especial'), 
+      'label' => Portabilis_String_Utils::toLatin1('Curso de Forma√ß√£o Continuada(min. 80hrs) - Espec√≠fico para educa√ß√£o especial'),
       'value' => $this->curso_educacao_especial
     );
     $this->inputsHelper()->checkbox('curso_educacao_especial', $options);
 
     $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Curso de FormaÁ„o Continuada(min. 80hrs) - EspecÌfico para educa„o indÌgena'), 
+      'label' => Portabilis_String_Utils::toLatin1('Curso de Forma√ß√£o Continuada(min. 80hrs) - Espec√≠fico para educa√£o ind√≠gena'),
       'value' => $this->curso_educacao_indigena
     );
     $this->inputsHelper()->checkbox('curso_educacao_indigena', $options);
 
     $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Curso de FormaÁ„o Continuada(min. 80hrs) - EspecÌfico para educaÁ„o do campo'), 
+      'label' => Portabilis_String_Utils::toLatin1('Curso de Forma√ß√£o Continuada(min. 80hrs) - Espec√≠fico para educa√ß√£o do campo'),
       'value' => $this->curso_educacao_campo
     );
     $this->inputsHelper()->checkbox('curso_educacao_campo', $options);
 
     $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Curso de FormaÁ„o Continuada(min. 80hrs) - EspecÌfico para educaÁ„o ambiental'), 
+      'label' => Portabilis_String_Utils::toLatin1('Curso de Forma√ß√£o Continuada(min. 80hrs) - Espec√≠fico para educa√ß√£o ambiental'),
       'value' => $this->curso_educacao_ambiental
     );
     $this->inputsHelper()->checkbox('curso_educacao_ambiental', $options);
 
     $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Curso de FormaÁ„o Continuada(min. 80hrs) - EspecÌfico para educaÁ„o em direitos humanos'), 
+      'label' => Portabilis_String_Utils::toLatin1('Curso de Forma√ß√£o Continuada(min. 80hrs) - Espec√≠fico para educa√ß√£o em direitos humanos'),
       'value' => $this->curso_educacao_direitos_humanos
     );
     $this->inputsHelper()->checkbox('curso_educacao_direitos_humanos', $options);
 
     $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Curso de FormaÁ„o Continuada(min. 80hrs) - GÍnero e diversidade sexual'), 
+      'label' => Portabilis_String_Utils::toLatin1('Curso de Forma√ß√£o Continuada(min. 80hrs) - G√™nero e diversidade sexual'),
       'value' => $this->curso_genero_diversidade_sexual
     );
     $this->inputsHelper()->checkbox('curso_genero_diversidade_sexual', $options);
 
     $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Curso de FormaÁ„o Continuada(min. 80hrs) - Direito das crianÁas e adolescentes'), 
+      'label' => Portabilis_String_Utils::toLatin1('Curso de Forma√ß√£o Continuada(min. 80hrs) - Direito das crian√ßas e adolescentes'),
       'value' => $this->curso_direito_crianca_adolescente
     );
     $this->inputsHelper()->checkbox('curso_direito_crianca_adolescente', $options);
 
-    $options = array('label' => Portabilis_String_Utils::toLatin1('Curso de FormaÁ„o Continuada(min. 80hrs) - EducaÁ„o para as relaÁıes etnicorraciais e HistÛria e cultura Afro-Brasileira e Africana'), 'value' => $this->curso_relacoes_etnicorraciais);
+    $options = array('label' => Portabilis_String_Utils::toLatin1('Curso de Forma√ß√£o Continuada(min. 80hrs) - Educa√ß√£o para as rela√ß√µes etnicorraciais e Hist√≥ria e cultura Afro-Brasileira e Africana'), 'value' => $this->curso_relacoes_etnicorraciais);
     $this->inputsHelper()->checkbox('curso_relacoes_etnicorraciais', $options);
 
-    $options = array('label' => Portabilis_String_Utils::toLatin1('Curso de FormaÁ„o Continuada(min. 80hrs) - Outros'), 'value' => $this->curso_outros);
+    $options = array('label' => Portabilis_String_Utils::toLatin1('Curso de Forma√ß√£o Continuada(min. 80hrs) - Outros'), 'value' => $this->curso_outros);
     $this->inputsHelper()->checkbox('curso_outros', $options);
 
-    $options = array('label' => Portabilis_String_Utils::toLatin1('Curso de FormaÁ„o Continuada(min. 80hrs) - Nenhum'), 'value' => $this->curso_nenhum);
+    $options = array('label' => Portabilis_String_Utils::toLatin1('Curso de Forma√ß√£o Continuada(min. 80hrs) - Nenhum'), 'value' => $this->curso_nenhum);
     $this->inputsHelper()->checkbox('curso_nenhum', $options);
 
     $scripts = array('/modules/Cadastro/Assets/Javascripts/Servidor.js');
@@ -826,7 +826,7 @@ class indice extends clsCadastro
   function Novo()
   {
     $this->cod_servidor = (int) $this->cod_servidor;
-    $this->ref_cod_instituicao = (int) $this->ref_cod_instituicao; 
+    $this->ref_cod_instituicao = (int) $this->ref_cod_instituicao;
 
     $timesep = explode(':', $this->carga_horaria);
     $hour    = $timesep[0] + ((int) ($timesep[1] / 60));
@@ -873,9 +873,9 @@ class indice extends clsCadastro
       $obj_2 = $this->addCamposCenso($obj_2);
       $obj_2->multi_seriado = !is_null($this->multi_seriado);
       $obj_2->cod_servidor = $this->cod_servidor;
-      
+
       $cadastrou = $obj_2->cadastra();
-      
+
       if ($cadastrou) {
 
         $this->cadastraFuncoes();
@@ -890,7 +890,7 @@ class indice extends clsCadastro
         die();
       }
     }
-    $this->mensagem = 'Cadastro n„o realizado.<br>';
+    $this->mensagem = 'Cadastro n√£o realizado.<br>';
 
     return false;
   }
@@ -925,7 +925,7 @@ class indice extends clsCadastro
 
         include 'educar_limpa_sessao_curso_disciplina_servidor.php';
 
-        $this->mensagem .= 'EdiÁ„o efetuada com sucesso.<br>';
+        $this->mensagem .= 'Edi√ß√£o efetuada com sucesso.<br>';
         header("Location: educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
 
         die();
@@ -937,7 +937,7 @@ class indice extends clsCadastro
         NULL, NULL, 1, $this->ref_cod_instituicao);
 
       if ($obj_quadro_horario->detalhe()) {
-        $this->mensagem = "EdiÁ„o n„o realizada. O servidor est· vinculado a um quadro de hor·rios.<br>";
+        $this->mensagem = "Edi√ß√£o n√£o realizada. O servidor est√° vinculado a um quadro de hor√°rios.<br>";
 
         return false;
       } else {
@@ -946,7 +946,7 @@ class indice extends clsCadastro
           NULL, NULL, 1, NULL, $this->ref_cod_instituicao);
 
         if ($obj_quadro_horario->detalhe()) {
-          $this->mensagem = "EdiÁ„o n„o realizada. O servidor est· vinculado a um quadro de hor·rios.<br>";
+          $this->mensagem = "Edi√ß√£o n√£o realizada. O servidor est√° vinculado a um quadro de hor√°rios.<br>";
 
           return false;
         }
@@ -979,7 +979,7 @@ class indice extends clsCadastro
 
               include 'educar_limpa_sessao_curso_disciplina_servidor.php';
 
-              $this->mensagem .= "EdiÁ„o efetuada com sucesso.<br>";
+              $this->mensagem .= "Edi√ß√£o efetuada com sucesso.<br>";
               header("Location: educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
 
               die();
@@ -988,7 +988,7 @@ class indice extends clsCadastro
         }
       }
     }
-    $this->mensagem = "EdiÁ„o n„o realizada.<br>";
+    $this->mensagem = "Edi√ß√£o n√£o realizada.<br>";
 
     return false;
   }
@@ -1007,7 +1007,7 @@ class indice extends clsCadastro
       NULL, 1, $this->ref_cod_instituicao);
 
     if ($obj_quadro_horario->detalhe()) {
-      $this->mensagem = "Exclus„o n„o realizada. O servidor est· vinculado a um quadro de hor·rios.<br>";
+      $this->mensagem = "Exclus√£o n√£o realizada. O servidor est√° vinculado a um quadro de hor√°rios.<br>";
       return FALSE;
     } else {
       $obj_quadro_horario = new clsPmieducarQuadroHorarioHorarios(NULL, NULL,
@@ -1015,7 +1015,7 @@ class indice extends clsCadastro
         NULL, NULL, 1, NULL, $this->ref_cod_instituicao);
 
       if ($obj_quadro_horario->detalhe()) {
-        $this->mensagem = "Exclus„o n„o realizada. O servidor est· vinculado a um quadro de hor·rios.<br>";
+        $this->mensagem = "Exclus√£o n√£o realizada. O servidor est√° vinculado a um quadro de hor√°rios.<br>";
         return FALSE;
       } else {
         $obj = new clsPmieducarServidor($this->cod_servidor,
@@ -1026,13 +1026,13 @@ class indice extends clsCadastro
 
         if ($excluiu) {
           $this->excluiFuncoes();
-          $this->mensagem .= "Exclus„o efetuada com sucesso.<br>";
+          $this->mensagem .= "Exclus√£o efetuada com sucesso.<br>";
           header("Location: educar_servidor_lst.php");
           die();
         }
       }
     }
-    $this->mensagem = 'Exclus„o n„o realizada.<br>';
+    $this->mensagem = 'Exclus√£o n√£o realizada.<br>';
 
     return false;
   }
@@ -1080,7 +1080,7 @@ class indice extends clsCadastro
     $obj->curso_relacoes_etnicorraciais = $this->curso_relacoes_etnicorraciais == 'on' ? 1 : 0;
     $obj->curso_outros = $this->curso_outros == 'on' ? 1 : 0;
     $obj->curso_nenhum = $this->curso_nenhum == 'on' ? 1 : 0;
-    return $obj; 
+    return $obj;
   }
 
   function cadastraFuncoes()
@@ -1175,8 +1175,8 @@ class indice extends clsCadastro
 
   protected function createOrUpdateInep(){
     Portabilis_Utils_Database::fetchPreparedQuery("DELETE FROM modules.educacenso_cod_docente WHERE cod_servidor = $1",array('params' => array($this->cod_servidor)), false );
-    if ($this->cod_docente_inep){      
-      $sql = "INSERT INTO modules.educacenso_cod_docente (cod_servidor,cod_docente_inep, fonte, created_at) 
+    if ($this->cod_docente_inep){
+      $sql = "INSERT INTO modules.educacenso_cod_docente (cod_servidor,cod_docente_inep, fonte, created_at)
                                                   VALUES ($1, $2,'U', 'NOW()')";
       Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($this->cod_servidor, $this->cod_docente_inep)));
     }
@@ -1184,21 +1184,21 @@ class indice extends clsCadastro
 
 }
 
-// Instancia objeto de p·gina
+// Instancia objeto de p√°gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conte˙do
+// Instancia objeto de conte√∫do
 $miolo = new indice();
 
-// Atribui o conte˙do ‡† p·gina
+// Atribui o conte√∫do √†¬† p√°gina
 $pagina->addForm($miolo);
 
-// Gera o cÛdigo HTML
+// Gera o c√≥digo HTML
 $pagina->MakeAll();
 ?>
 <script type="text/javascript">
 /**
- * Carrega as opÁıes de um campo select de funÁıes via Ajax
+ * Carrega as op√ß√µes de um campo select de fun√ß√µes via Ajax
  */
 function getFuncao(id_campo)
 {
@@ -1208,7 +1208,7 @@ function getFuncao(id_campo)
 
   if (campoFuncao) {
     campoFuncao.disabled = true;
-    campoFuncao.options[0].text = 'Carregando funÁıes';
+    campoFuncao.options[0].text = 'Carregando fun√ß√µes';
 
     var xml = new ajax(atualizaLstFuncao,id_campo);
     xml.envia("educar_funcao_xml.php?ins="+campoInstituicao+"&professor=true");
@@ -1227,7 +1227,7 @@ function atualizaLstFuncao(xml)
   var campoFuncao = document.getElementById(arguments[1]);
 
   campoFuncao.length = 1;
-  campoFuncao.options[0].text = 'Selecione uma funÁ„o';
+  campoFuncao.options[0].text = 'Selecione uma fun√ß√£o';
   campoFuncao.disabled = false;
 
   funcaoChange(campoFuncao);
@@ -1240,18 +1240,18 @@ function atualizaLstFuncao(xml)
     }
   }
   else {
-    campoFuncao.options[0].text = 'A instituiÁ„o n„o possui funÁıes de servidores';
+    campoFuncao.options[0].text = 'A institui√ß√£o n√£o possui fun√ß√µes de servidores';
   }
 }
 
 
 /**
- * Altera a visibilidade de opÁıes extras
+ * Altera a visibilidade de op√ß√µes extras
  *
- * Quando a funÁ„o escolhida para o servidor for do tipo professor, torna as
- * opÁıes de escolha de disciplina e cursos visÌveis
+ * Quando a fun√ß√£o escolhida para o servidor for do tipo professor, torna as
+ * op√ß√µes de escolha de disciplina e cursos vis√≠veis
  *
- * … um toggle on/off
+ * √â um toggle on/off
  */
 function funcaoChange(campo)
 {
@@ -1275,12 +1275,12 @@ function funcaoChange(campo)
 
 
 /**
- * Chama as funÁıes getFuncao e funcaoChange para todas as linhas da tabela
- * de funÁ„o de servidor
+ * Chama as fun√ß√µes getFuncao e funcaoChange para todas as linhas da tabela
+ * de fun√ß√£o de servidor
  */
 function trocaTodasfuncoes() {
   for (var ct = 0; ct < tab_add_1.id; ct++) {
-    // N„o executa durante onload sen„o, funÁıes atuais s„o substituÌdas
+    // N√£o executa durante onload sen√£o, fun√ß√µes atuais s√£o substitu√≠das
     if (onloadCallOnce == false) {
       getFuncao('ref_cod_funcao[' + ct + ']');
     }
@@ -1290,13 +1290,13 @@ function trocaTodasfuncoes() {
 
 
 /**
- * Verifica se ref_cod_instituicao existe via DOM e d· um bind no evento
- * onchange do elemento para executar a funÁ„o trocaTodasfuncoes()
+ * Verifica se ref_cod_instituicao existe via DOM e d√° um bind no evento
+ * onchange do elemento para executar a fun√ß√£o trocaTodasfuncoes()
  */
 if (document.getElementById('ref_cod_instituicao')) {
   var ref_cod_instituicao = document.getElementById('ref_cod_instituicao');
 
-  // FunÁ„o anÙnima para evento onchance do select de instituiÁ„o
+  // Fun√ß√£o an√¥nima para evento onchance do select de institui√ß√£o
   ref_cod_instituicao.onchange = function() {
     trocaTodasfuncoes();
     var xml = new ajax(function(){});
@@ -1306,7 +1306,7 @@ if (document.getElementById('ref_cod_instituicao')) {
 
 
 /**
- * Chama as funÁıes funcaoChange e getFuncao apÛs a execuÁ„o da funÁ„o addRow
+ * Chama as fun√ß√µes funcaoChange e getFuncao ap√≥s a execu√ß√£o da fun√ß√£o addRow
  */
 tab_add_1.afterAddRow = function () {
   funcaoChange(document.getElementById('ref_cod_funcao['+(tab_add_1.id - 1)+']'));
@@ -1315,8 +1315,8 @@ tab_add_1.afterAddRow = function () {
 
 
 /**
- * Vari·vel de estado, deve ser checada por funÁıes que queiram executar ou
- * n„o um trecho de cÛdigo apenas durante o onload
+ * Vari√°vel de estado, deve ser checada por fun√ß√µes que queiram executar ou
+ * n√£o um trecho de c√≥digo apenas durante o onload
  */
 var onloadCallOnce = true;
 window.onload = function() {
@@ -1343,7 +1343,7 @@ function acao2()
   var carga_horaria = (document.getElementById('carga_horaria').value).replace(',', '.');
 
   if (parseFloat(total_horas_alocadas) > parseFloat(carga_horaria)) {
-    alert('AtenÁ„o, carga hor·ria deve ser maior que horas alocadas!');
+    alert('Aten√ß√£o, carga hor√°ria deve ser maior que horas alocadas!');
 
     return false;
   }
@@ -1395,7 +1395,7 @@ var handleGetInformacoesServidor = function(dataResponse){
     $deficiencias.children("[value=" + id + "]").attr('selected', '');
   });
 
-  $deficiencias.trigger('chosen:updated');  
+  $deficiencias.trigger('chosen:updated');
 };
 
 function atualizaInformacoesServidor(){
@@ -1421,11 +1421,11 @@ function atualizaInformacoesServidor(){
   }
 }
 $j(document).ready(function() {
-  
+
   atualizaInformacoesServidor();
 
   // fixup multipleSearchDeficiencias size:
-  $j('#deficiencias_chzn ul').css('width', '307px');  
+  $j('#deficiencias_chzn ul').css('width', '307px');
   $j('#deficiencias_chzn input').css('height', '25px');
 
   $j('#cod_servidor').attr('onchange', 'atualizaInformacoesServidor();');

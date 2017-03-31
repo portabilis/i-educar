@@ -78,7 +78,7 @@ var handlePost = function(dataResponse){
 
 
 function setTableSearchDetails($tableSearchDetails, dataDetails){
-  $j('<caption />').html('<strong>Emprestimo exemplares</strong>').appendTo($tableSearchDetails);
+  $j('<caption />').html('<strong>Empréstimo de exemplares</strong>').appendTo($tableSearchDetails);
 
   //set headers table
   var $linha = $j('<tr />');
@@ -111,10 +111,10 @@ function handleSearch($resultTable, dataResponse) {
   var $linha = $j('<tr />');
   $j('<th />').html('Selecionar').addClass('center').appendTo($linha);
   $j('<th />').html('Id').addClass('center').appendTo($linha);
-  $j('<th />').html('Situa&#231;&#227;o').addClass('center').appendTo($linha);
+  $j('<th />').html('Situação').addClass('center').appendTo($linha);
   $j('<th />').html('Cliente').appendTo($linha);
-  $j('<th />').html('Data emprestimo').addClass('center').appendTo($linha);
-  $j('<th />').html('Data prevista devolu&#231;&#227;o').addClass('center').appendTo($linha);
+  $j('<th />').html('Data empréstimo').addClass('center').appendTo($linha);
+  $j('<th />').html('Data prevista devolução').addClass('center').appendTo($linha);
   //$j('<th />').html('A&#231;&#227;o').addClass('center').appendTo($linha);
   $linha.appendTo($resultTable);
 

@@ -50,7 +50,7 @@ class PessoajController extends ApiCoreController
   protected function sqlsForStringSearch() {
 
     $sqls[] = "select distinct idpes as id, nome as name from
-                 cadastro.pessoa where tipo='J' and lower(to_ascii(nome)) like '%'||lower(to_ascii($1))||'%'";
+                 cadastro.pessoa where tipo='J' and lower((nome)) like '%'||lower(($1))||'%'";
 
     return $sqls;
   }  

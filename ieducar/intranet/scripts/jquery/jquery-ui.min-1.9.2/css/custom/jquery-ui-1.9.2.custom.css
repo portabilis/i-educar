@@ -231,9 +231,9 @@ body .ui-tooltip { border-width: 2px; }
 .ui-widget { font-family: Lucida Grande,Lucida Sans,Arial,sans-serif; font-size: 1.1em; }
 .ui-widget .ui-widget { font-size: 1em; }
 .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button { font-family: Lucida Grande,Lucida Sans,Arial,sans-serif; font-size: 1em; }
-.ui-widget-content { border: 1px solid #3c505b; background: #e4e9ed url("images/ui-bg_inset-soft_10_e4e9ed_1x100.png") 50% bottom repeat-x; color: #000000; }
+.ui-widget-content { border: 1px solid #3c505b; background: #f5f9fd url("images/ui-bg_inset-soft_10_e4e9ed_1x100.png") 50% bottom repeat-x; color: #000000; }
 .ui-widget-content a { color: #000000; }
-.ui-widget-header { border: 1px solid #a1b3bd; background: #beccd6 url("images/ui-bg_highlight-soft_33_beccd6_1x100.png") 50% 50% repeat-x; color: #3c505b; font-weight: bold; }
+.ui-widget-header { border: 1px solid #ccdce6; background: #beccd6 url("images/ui-bg_highlight-soft_33_beccd6_1x100.png") 50% 50% repeat-x; color: #3c505b; font-weight: bold; }
 .ui-widget-header a { color: #3c505b; }
 
 /* Interaction states
@@ -247,9 +247,9 @@ body .ui-tooltip { border-width: 2px; }
 
 /* Interaction Cues
 ----------------------------------*/
-.ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight  {border: 1px solid #e4e9ed; background: #e4e9ed url("images/ui-bg_glass_55_e4e9ed_1x400.png") 50% 50% repeat-x; color: #363636; }
+.ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight  {border: 1px solid #f5f9fd; background: #f5f9fd url("images/ui-bg_glass_55_e4e9ed_1x400.png") 50% 50% repeat-x; color: #363636; }
 .ui-state-highlight a, .ui-widget-content .ui-state-highlight a,.ui-widget-header .ui-state-highlight a { color: #363636; }
-.ui-state-error, .ui-widget-content .ui-state-error, .ui-widget-header .ui-state-error {border: 1px solid #e4e9ed; background: #e4e9ed url("images/ui-bg_diagonals-thick_95_e4e9ed_40x40.png") 50% 50% repeat; color: #000000; }
+.ui-state-error, .ui-widget-content .ui-state-error, .ui-widget-header .ui-state-error {border: 1px solid #f5f9fd; background: #f5f9fd url("images/ui-bg_diagonals-thick_95_e4e9ed_40x40.png") 50% 50% repeat; color: #000000; }
 .ui-state-error a, .ui-widget-content .ui-state-error a, .ui-widget-header .ui-state-error a { color: #000000; }
 .ui-state-error-text, .ui-widget-content .ui-state-error-text, .ui-widget-header .ui-state-error-text { color: #000000; }
 .ui-priority-primary, .ui-widget-content .ui-priority-primary, .ui-widget-header .ui-priority-primary { font-weight: bold; }

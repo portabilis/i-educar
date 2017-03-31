@@ -1,26 +1,26 @@
 <?php
 /**
  *
- * @author  Prefeitura Municipal de ItajaÌ
+ * @author  Prefeitura Municipal de Itaja√≠
  * @version SVN: $Id$
  *
- * Pacote: i-PLB Software P˙blico Livre e Brasileiro
+ * Pacote: i-PLB Software P√∫blico Livre e Brasileiro
  *
- * Copyright (C) 2006 PMI - Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006 PMI - Prefeitura Municipal de Itaja√≠
  *            ctima@itajai.sc.gov.br
  *
- * Este  programa  È  software livre, vocÍ pode redistribuÌ-lo e/ou
- * modific·-lo sob os termos da LicenÁa P˙blica Geral GNU, conforme
- * publicada pela Free  Software  Foundation,  tanto  a vers„o 2 da
- * LicenÁa   como  (a  seu  critÈrio)  qualquer  vers„o  mais  nova.
+ * Este  programa  √©  software livre, voc√™ pode redistribu√≠-lo e/ou
+ * modific√°-lo sob os termos da Licen√ßa P√∫blica Geral GNU, conforme
+ * publicada pela Free  Software  Foundation,  tanto  a vers√£o 2 da
+ * Licen√ßa   como  (a  seu  crit√©rio)  qualquer  vers√£o  mais  nova.
  *
- * Este programa  È distribuÌdo na expectativa de ser ˙til, mas SEM
- * QUALQUER GARANTIA. Sem mesmo a garantia implÌcita de COMERCIALI-
- * ZA«√O  ou  de ADEQUA«√O A QUALQUER PROP”SITO EM PARTICULAR. Con-
- * sulte  a  LicenÁa  P˙blica  Geral  GNU para obter mais detalhes.
+ * Este programa  √© distribu√≠do na expectativa de ser √∫til, mas SEM
+ * QUALQUER GARANTIA. Sem mesmo a garantia impl√≠cita de COMERCIALI-
+ * ZA√á√ÉO  ou  de ADEQUA√á√ÉO A QUALQUER PROP√ìSITO EM PARTICULAR. Con-
+ * sulte  a  Licen√ßa  P√∫blica  Geral  GNU para obter mais detalhes.
  *
- * VocÍ  deve  ter  recebido uma cÛpia da LicenÁa P˙blica Geral GNU
- * junto  com  este  programa. Se n„o, escreva para a Free Software
+ * Voc√™  deve  ter  recebido uma c√≥pia da Licen√ßa P√∫blica Geral GNU
+ * junto  com  este  programa. Se n√£o, escreva para a Free Software
  * Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA
  * 02111-1307, USA.
  *
@@ -85,6 +85,7 @@ class indice extends clsCadastro
 	var $nota;
 	var $faltas;
 	var $ordenamento;
+	var $carga_horaria_disciplina;
 	var $excluir_disciplina;
 	var $ultimo_sequencial;
 
@@ -132,12 +133,11 @@ class indice extends clsCadastro
 		$this->url_cancelar = ($retorno == "Editar") ? "educar_historico_escolar_det.php?ref_cod_aluno={$registro["ref_cod_aluno"]}&sequencial={$registro["sequencial"]}" : "educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}";
 		$this->nome_url_cancelar = "Cancelar";
 
-    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
-         ""        => "{$nomeMenu} hist&oacute;rico escolar"
+         "educar_index.php"                  => "Escola",
+         ""                                  => "Atualiza√ß√£o de hist√≥ricos escolares"
     ));
     $this->enviaLocalizacao($localizacao->montar());
     $this->dependencia  = dbBool($this->dependencia);
@@ -229,7 +229,7 @@ class indice extends clsCadastro
 			$det_uf = $obj_uf->detalhe();
 		}
 
-		$lista_pais_origem = array('45' => "PaÌs da escola");
+		$lista_pais_origem = array('45' => "Pa√≠s da escola");
 		$obj_pais = new clsPais();
 		$obj_pais_lista = $obj_pais->lista(null,null,null,"","","nome asc");
 		if($obj_pais_lista)
@@ -261,16 +261,16 @@ class indice extends clsCadastro
 
 		$this->campoTexto( "nm_serie", $GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu' ? "Ano/S&eacute;rie" : "S&eacute;rie", $this->nm_serie, 30, 255, true );
 		$this->campoNumero( "ano", "Ano", $this->ano, 4, 4, true );
-		if (validaControlePosicaoHistorico()) {			
-			$this->campoNumero( "posicao", "PosiÁ„o", $this->posicao, 1, 1, true );
+		if (validaControlePosicaoHistorico()) {
+			$this->campoNumero( "posicao", "Posi√ß√£o", $this->posicao, 1, 1, true, 'Informe a coluna equivalente a s√©rie/ano/etapa a qual o hist√≥rico pertence. Ex.: 1¬∫ ano informe 1, 2¬∫ ano informe 2' );
 		}
 		$this->campoMonetario( "carga_horaria", "Carga Hor&aacute;ria", $this->carga_horaria, 8, 8, false);
 		$this->campoCheck( "cb_faltas_globalizadas", "Faltas Globalizadas", is_numeric($this->faltas_globalizadas) ? 'on' : '');
 		$this->campoNumero( "faltas_globalizadas", "Faltas Globalizadas", $this->faltas_globalizadas, 4, 4, false );
 		$this->campoNumero( "dias_letivos", "Dias Letivos", $this->dias_letivos, 3, 3, false);
-		$this->campoMonetario( "frequencia", "FrequÍncia", $this->frequencia, 8, 6, false );
+		$this->campoMonetario( "frequencia", "Frequ√™ncia", $this->frequencia, 8, 6, false );
 		$this->campoCheck( "extra_curricular", "Extra-Curricular", $this->extra_curricular );
-		$this->campoCheck( "aceleracao", "AceleraÁ„o", $this->aceleracao );
+		$this->campoCheck( "aceleracao", "Acelera√ß√£o", $this->aceleracao );
 		$this->campoMemo( "observacao", "Observa&ccedil;&atilde;o", $this->observacao, 60, 5, false );
 
 		$opcoes = array( "" => "Selecione",
@@ -288,7 +288,7 @@ class indice extends clsCadastro
 		$this->campoTexto( "livro", "Livro", $this->livro, 30, 50, false);
 		$this->campoTexto( "folha", "Folha", $this->folha, 30, 50, false);
 
-		$this->campoCheck("dependencia", "HistÛrico de dependÍncia", $this->dependencia);
+		$this->campoCheck("dependencia", "Hist√≥rico de depend√™ncia", $this->dependencia);
 
 
 	//---------------------INCLUI DISCIPLINAS---------------------//
@@ -313,13 +313,14 @@ class indice extends clsCadastro
 					$this->historico_disciplinas[$qtd_disciplinas][] = $campo["nota"];
 					$this->historico_disciplinas[$qtd_disciplinas][] = $campo["faltas"];
 					$this->historico_disciplinas[$qtd_disciplinas][] = $campo["ordenamento"];
+					$this->historico_disciplinas[$qtd_disciplinas][] = $campo["carga_horaria_disciplina"];
 					$this->historico_disciplinas[$qtd_disciplinas][] = $campo["sequencial"];
 					$qtd_disciplinas++;
 				}
 			}
 		}
 
-		$this->campoTabelaInicio("notas","Notas",array("Disciplina","Nota","Faltas", "Ordem"),$this->historico_disciplinas);
+		$this->campoTabelaInicio("notas","Notas",array("Disciplina","Nota","Faltas", "Ordem", "C.H"),$this->historico_disciplinas);
 
 		//$this->campoTexto( "nm_disciplina", "Disciplina", $this->nm_disciplina, 30, 255, false, false, false, '', '', 'autoCompleteComponentesCurricular(this)', 'onfocus' );
 		$this->campoTexto( "nm_disciplina", "Disciplina", $this->nm_disciplina, 30, 255, false, false, false, '', '', '', 'onfocus' );
@@ -327,6 +328,7 @@ class indice extends clsCadastro
 		$this->campoTexto( "nota", "Nota", $this->nota, 10, 255, false );
 		$this->campoNumero( "faltas", "Faltas", $this->faltas, 3, 3, false );
 		$this->campoNumero( "ordenamento", "ordenamento", $this->ordenamento, 3, 3, false );
+		$this->campoNumero( "carga_horaria_disciplina", "carga_horaria_disciplina", $this->carga_horaria_disciplina, 3, 3, false );
 		//$this->campoOculto("sequencial","");
 
 		$this->campoTabelaFim();
@@ -336,7 +338,7 @@ class indice extends clsCadastro
 		$this->campoQuebra();
 	//---------------------FIM INCLUI DISCIPLINAS---------------------//
 
-    // carrega estilo para feedback messages, para exibir msg validaÁ„o frequencia.
+    // carrega estilo para feedback messages, para exibir msg valida√ß√£o frequencia.
 
     $style = "/modules/Portabilis/Assets/Stylesheets/Frontend.css";
     Portabilis_View_Helper_Application::loadStylesheet($this, $style);
@@ -385,7 +387,7 @@ class indice extends clsCadastro
 						$obj_historico = new clsPmieducarHistoricoEscolar();
 						$this->sequencial = $obj_historico->getMaxSequencial( $this->ref_cod_aluno );
 
-						$obj = new clsPmieducarHistoricoDisciplinas( $sequencial, $this->ref_cod_aluno, $this->sequencial, $disciplina, $this->nota[$key], $this->faltas[$key], $this->ordenamento[$key] );
+						$obj = new clsPmieducarHistoricoDisciplinas( $sequencial, $this->ref_cod_aluno, $this->sequencial, $disciplina, $this->nota[$key], $this->faltas[$key], $this->ordenamento[$key], $this->carga_horaria_disciplina[$key] );
 						$cadastrou1 = $obj->cadastra();
 						if( !$cadastrou1 )
 						{
@@ -407,7 +409,7 @@ class indice extends clsCadastro
 			echo "<!--\nErro ao cadastrar clsPmieducarHistoricoEscolar\nvalores obrigatorios\nis_numeric( $this->ref_cod_aluno ) && is_numeric( $this->pessoa_logada ) && is_string( $this->nm_serie ) && is_numeric( $this->ano ) && is_numeric( $this->carga_horaria ) && is_numeric( $this->dias_letivos ) && is_string( $this->escola ) && is_string( $this->escola_cidade ) && is_string( $this->escola_uf ) && is_numeric( $this->aprovado ) && is_numeric( $this->ref_cod_instituicao ) && is_numeric( $this->extra_curricular )\n-->";
 			return false;
 /*    }
-		echo "<script> alert('… necess·rio adicionar pelo menos 1 Disciplina!') </script>";
+		echo "<script> alert('√â necess√°rio adicionar pelo menos 1 Disciplina!') </script>";
 		$this->mensagem = "Cadastro n&atilde;o realizado.<br>";
 		return false;
 		*/
@@ -458,7 +460,7 @@ class indice extends clsCadastro
 							//$campo['nm_disciplina_'] = urldecode($campo['nm_disciplina_']);
 
 
-							$obj = new clsPmieducarHistoricoDisciplinas( $sequencial, $this->ref_cod_aluno, $this->sequencial, $disciplina, $this->nota[$key], $this->faltas[$key], $this->ordenamento[$key] );
+							$obj = new clsPmieducarHistoricoDisciplinas( $sequencial, $this->ref_cod_aluno, $this->sequencial, $disciplina, $this->nota[$key], $this->faltas[$key], $this->ordenamento[$key], $this->carga_horaria_disciplina[$key] );
 							$cadastrou1 = $obj->cadastra();
 							if( !$cadastrou1 )
 							{
@@ -480,7 +482,7 @@ class indice extends clsCadastro
 			echo "<!--\nErro ao editar clsPmieducarHistoricoEscolar\nvalores obrigatorios\nif( is_numeric( $this->ref_cod_aluno ) && is_numeric( $this->sequencial ) && is_numeric( $this->pessoa_logada ) )\n-->";
 			return false;
 /*    }
-		echo "<script> alert('… necess·rio adicionar pelo menos 1 Disciplina!') </script>";
+		echo "<script> alert('√â necess√°rio adicionar pelo menos 1 Disciplina!') </script>";
 		$this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
 		return false;
 		*/
@@ -558,5 +560,4 @@ $miolo = new indice();
 $pagina->addForm( $miolo );
 // gera o html
 $pagina->MakeAll();
-
 ?>

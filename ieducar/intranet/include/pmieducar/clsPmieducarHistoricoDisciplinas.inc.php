@@ -1,31 +1,31 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 *																	     *
-*	@author Prefeitura Municipal de Itajaí								 *
+*	@author Prefeitura Municipal de ItajaÃ­								 *
 *	@updated 29/03/2007													 *
-*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
+*   Pacote: i-PLB Software PÃºblico Livre e Brasileiro					 *
 *																		 *
-*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
+*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÃ­			 *
 *						ctima@itajai.sc.gov.br					    	 *
 *																		 *
-*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
+*	Este  programa  Ã©  software livre, vocÃª pode redistribuÃ­-lo e/ou	 *
+*	modificÃ¡-lo sob os termos da LicenÃ§a PÃºblica Geral GNU, conforme	 *
+*	publicada pela Free  Software  Foundation,  tanto  a versÃ£o 2 da	 *
+*	LicenÃ§a   como  (a  seu  critÃ©rio)  qualquer  versÃ£o  mais  nova.	 *
 *																		 *
-*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
+*	Este programa  Ã© distribuÃ­do na expectativa de ser Ãºtil, mas SEM	 *
+*	QUALQUER GARANTIA. Sem mesmo a garantia implÃ­cita de COMERCIALI-	 *
+*	ZAÃ‡ÃƒO  ou  de ADEQUAÃ‡ÃƒO A QUALQUER PROPÃ“SITO EM PARTICULAR. Con-	 *
+*	sulte  a  LicenÃ§a  PÃºblica  Geral  GNU para obter mais detalhes.	 *
 *																		 *
-*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-*	junto  com  este  programa. Se não, escreva para a Free Software	 *
+*	VocÃª  deve  ter  recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral GNU	 *
+*	junto  com  este  programa. Se nÃ£o, escreva para a Free Software	 *
 *	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 *	02111-1307, USA.													 *
 *																		 *
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /**
-* @author Prefeitura Municipal de Itajaí
+* @author Prefeitura Municipal de ItajaÃ­
 *
 * Criado em 11/08/2006 17:43 pelo gerador automatico de classes
 */
@@ -41,6 +41,7 @@ class clsPmieducarHistoricoDisciplinas
 	var $nota;
 	var $faltas;
 	var $ordenamento;
+	var $carga_horaria_disciplina;
 
 	// propriedades padrao
 
@@ -106,13 +107,13 @@ class clsPmieducarHistoricoDisciplinas
 	 *
 	 * @return object
 	 */
-	function clsPmieducarHistoricoDisciplinas( $sequencial = null, $ref_ref_cod_aluno = null, $ref_sequencial = null, $nm_disciplina = null, $nota = null, $faltas = null, $ordenamento = null )
+	function clsPmieducarHistoricoDisciplinas( $sequencial = null, $ref_ref_cod_aluno = null, $ref_sequencial = null, $nm_disciplina = null, $nota = null, $faltas = null, $ordenamento = null, $carga_horaria_disciplina = null)
 	{
 		$db = new clsBanco();
 		$this->_schema = "pmieducar.";
 		$this->_tabela = "{$this->_schema}historico_disciplinas";
 
-		$this->_campos_lista = $this->_todos_campos = "sequencial, ref_ref_cod_aluno, ref_sequencial, nm_disciplina, nota, faltas, ordenamento";
+		$this->_campos_lista = $this->_todos_campos = "sequencial, ref_ref_cod_aluno, ref_sequencial, nm_disciplina, nota, faltas, ordenamento, carga_horaria_disciplina";
 
 		if( is_numeric( $ref_ref_cod_aluno ) && is_numeric( $ref_sequencial ) )
 		{
@@ -166,6 +167,10 @@ class clsPmieducarHistoricoDisciplinas
 		if( is_numeric( $ordenamento ) )
 		{
 			$this->ordenamento = $ordenamento;
+		}
+		if( is_numeric( $carga_horaria_disciplina ) )
+		{
+			$this->carga_horaria_disciplina = $carga_horaria_disciplina;
 		}
 
 	}
@@ -227,6 +232,12 @@ class clsPmieducarHistoricoDisciplinas
 				$valores .= "{$gruda}'{$this->ordenamento}'";
 				$gruda = ", ";
 			}
+			if( is_numeric( $this->carga_horaria_disciplina ) )
+			{
+				$campos .= "{$gruda}carga_horaria_disciplina";
+				$valores .= "{$gruda}'{$this->carga_horaria_disciplina}'";
+				$gruda = ", ";
+			}
 
 			$sequencial = $db->campoUnico("SELECT COALESCE( MAX(sequencial), 0 ) + 1 FROM {$this->_tabela} WHERE ref_ref_cod_aluno = {$this->ref_ref_cod_aluno} AND ref_sequencial = {$this->ref_sequencial}" );
 
@@ -271,7 +282,11 @@ class clsPmieducarHistoricoDisciplinas
 				$set .= "{$gruda}ordenamento = '{$this->ordenamento}'";
 				$gruda = ", ";
 			}
-
+			if( is_numeric( $this->carga_horaria_disciplina ) )
+			{
+				$set .= "{$gruda}carga_horaria_disciplina = '{$this->carga_horaria_disciplina}'";
+				$gruda = ", ";
+			}
 
 			if( $set )
 			{
@@ -287,7 +302,7 @@ class clsPmieducarHistoricoDisciplinas
 	 *
 	 * @return array
 	 */
-	function lista( $int_sequencial = null, $int_ref_ref_cod_aluno = null, $int_ref_sequencial = null, $str_nm_disciplina = null, $str_nota = null, $int_faltas = null, $int_ordenamento = null )
+	function lista( $int_sequencial = null, $int_ref_ref_cod_aluno = null, $int_ref_sequencial = null, $str_nm_disciplina = null, $str_nota = null, $int_faltas = null, $int_ordenamento = null, $int_carga_horaria_disciplina = null)
 	{
 		$sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
 		$filtros = "";
@@ -327,6 +342,11 @@ class clsPmieducarHistoricoDisciplinas
 		if( is_numeric( $int_ordenamento ) )
 		{
 			$filtros .= "{$whereAnd} ordenamento = '{$int_ordenamento}'";
+			$whereAnd = " AND ";
+		}
+		if( is_numeric( $int_carga_horaria_disciplina ) )
+		{
+			$filtros .= "{$whereAnd} carga_horaria_disciplina = '{$int_carga_horaria_disciplina}'";
 			$whereAnd = " AND ";
 		}
 

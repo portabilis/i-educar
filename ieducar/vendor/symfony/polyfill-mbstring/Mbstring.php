@@ -30,7 +30,7 @@ namespace Symfony\Polyfill\Mbstring;
  * - mb_strpos               - Find position of first occurrence of string in a string
  * - mb_strrpos              - Find position of last occurrence of a string in a string
  * - mb_strtolower           - Make a string lowercase
- * - mb_strtoupper           - Make a string uppercase
+ * - strtoupper           - Make a string uppercase
  * - mb_substitute_character - Set/Get substitution character
  * - mb_substr               - Get part of string
  * - mb_stripos              - Finds position of first occurrence of a string within another, case insensitive
@@ -376,7 +376,7 @@ final class Mbstring
         return self::mb_convert_case($s, MB_CASE_LOWER, $encoding);
     }
 
-    public static function mb_strtoupper($s, $encoding = null)
+    public static function strtoupper($s, $encoding = null)
     {
         return self::mb_convert_case($s, MB_CASE_UPPER, $encoding);
     }

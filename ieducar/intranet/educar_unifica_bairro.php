@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo disponÌvel desde a vers„o 1.0.0
+ * @since     Arquivo dispon√≠vel desde a vers√£o 1.0.0
  * @version   $Id$
  */
 
@@ -52,7 +52,7 @@ class indice extends clsCadastro
   var $pessoa_logada;
 
   var $tabela_bairros = array();
-  var $bairro_duplicado;  
+  var $bairro_duplicado;
 
   function Inicializar()
   {
@@ -64,12 +64,13 @@ class indice extends clsCadastro
 
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(761, $this->pessoa_logada, 7,
-      'index.php'); 
+      'index.php');
 
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         ""        => "Unifica&ccedil;&atilde;o de bairros"             
+         "educar_enderecamento_index.php"    => "Endere√ßamento",
+         ""        => "Unifica&ccedil;&atilde;o de bairros"
     ));
     $this->enviaLocalizacao($localizacao->montar());
 
@@ -105,15 +106,15 @@ class indice extends clsCadastro
 
     // Loop entre bairros das tabelas
     foreach ( $this->bairro_duplicado AS $key => $bairro_duplicado ){
-      
-      $idbai = $this->retornaCodigo($bairro_duplicado);      
 
-      // Verifica se o bairro È v·lido e n„o È igual ao bairro principal
-      if(is_numeric($idbai) && $idbai != $bairro_principal){        
+      $idbai = $this->retornaCodigo($bairro_duplicado);
+
+      // Verifica se o bairro √© v√°lido e n√£o √© igual ao bairro principal
+      if(is_numeric($idbai) && $idbai != $bairro_principal){
         $obj_bairro = new clsPublicBairro(NULL, NULL, $bairro_principal);
         $obj_bairro_det = $obj_bairro->detalhe();
         if($obj_bairro_det){
-          // Verifica se o municÌpio È o mesmo que o bairro principal          
+          // Verifica se o munic√≠pio √© o mesmo que o bairro principal
           if($obj_bairro_det['idmun'] == $municipio_principal)
             $bairros_duplicados[] = $idbai;
           else{
@@ -122,34 +123,34 @@ class indice extends clsCadastro
           }
         }
       }
-    }    
+    }
     // Unifica o array de bairros a serem unificados
     $bairros_duplicados = array_keys(array_flip($bairros_duplicados));
-    $db = new clsBanco();    
+    $db = new clsBanco();
     foreach ($bairros_duplicados as $key => $value) {
       $db->consulta("SELECT public.unifica_bairro({$value}, {$bairro_principal});");
-    }    
+    }
 
-    $this->mensagem = "<span class='success'>Bairros unificados com sucesso.</span>";
+    $this->mensagem = "<span>Bairros unificados com sucesso.</span>";
     return TRUE;
   }
 
   protected function retornaCodigo($palavra){
-    
+
     return substr($palavra, 0, strpos($palavra, " -"));
   }
 }
 
-// Instancia objeto de p·gina
+// Instancia objeto de p√°gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conte˙do
+// Instancia objeto de conte√∫do
 $miolo = new indice();
 
-// Atribui o conte˙do ‡  p·gina
+// Atribui o conte√∫do √†  p√°gina
 $pagina->addForm($miolo);
 
-// Gera o cÛdigo HTML
+// Gera o c√≥digo HTML
 $pagina->MakeAll();
 ?>
 <script type="text/javascript">
@@ -181,7 +182,7 @@ $pagina->MakeAll();
     });
   }
 
-  setAutoComplete();  
+  setAutoComplete();
 
   // bind events
 

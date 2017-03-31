@@ -39,6 +39,8 @@ require_once 'include/pmieducar/geral.inc.php';
 require_once 'lib/Portabilis/Date/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
 require_once 'lib/Portabilis/Utils/Database.php';
+require_once 'include/pmieducar/clsPmieducarEscolaUsuario.inc.php';
+require_once 'include/pmieducar/clsPermissoes.inc.php';
 
 class EscolaController extends ApiCoreController
 {
@@ -406,7 +408,7 @@ protected function getEscolasMultipleSearch(){
   $cursoId = $this->getRequest()->curso_id;
 
   $sql = "SELECT cod_escola as id,
-                 to_ascii(juridica.fantasia) as nome
+                 (juridica.fantasia) as nome
             from pmieducar.escola
            inner join cadastro.pessoa on(escola.ref_idpes = pessoa.idpes)
            inner join cadastro.juridica on(juridica.idpes = pessoa.idpes)
@@ -437,6 +439,51 @@ protected function getEscolaAnoLetivo(){
   return $ano[0];
 }
 
+  protected function getEscolasUsuarios() {
+    $ref_cod_usuario = $this->getRequest()->id;
+
+
+    if (!$ref_cod_usuario) return null;
+
+    $escolasUsuario = new clsPmieducarEscolaUsuario();
+    $escolasUsuario = $escolasUsuario->lista($ref_cod_usuario);
+
+    $escolas = array();
+
+    foreach ($escolasUsuario as $escola) {
+      $escolas[] = $escola['ref_cod_escola'];
+    }
+
+    return array('escolas' => $escolas);
+  }
+
+  protected function getEscolasSelecao() {
+    $userId = $this->getSession()->id_pessoa;
+    $permissao = new clsPermissoes();
+    $nivel = $permissao->nivel_acesso($userId);
+
+    if ($nivel == App_Model_NivelTipoUsuario::ESCOLA ||
+        $nivel == App_Model_NivelTipoUsuario::BIBLIOTECA) {
+
+      $escolas_usuario = array();
+      $escolasUser = App_Model_IedFinder::getEscolasUser($userId);
+      foreach ($escolasUser as $e)
+      {
+        $escolas_usuario['__'.$e["ref_cod_escola"]] = strtoupper($e["nome"]);
+      }
+      return array('options' => $escolas_usuario);
+    }
+
+    $instituicao = $this->getRequest()->instituicao;
+    $escolasInstituicao = App_Model_IedFinder::getEscolas($instituicao);
+
+    foreach ($escolasInstituicao as $id => $nome) {
+      $escolas['__'.$id] = strtoupper($this->toUtf8($nome));
+    }
+
+    return array('options' => $escolas);
+  }
+
   public function Gerar() {
     if ($this->isRequestFor('get', 'escola'))
       $this->appendResponse($this->get());
@@ -461,6 +508,12 @@ protected function getEscolaAnoLetivo(){
 
     elseif ($this->isRequestFor('get', 'escola-ano-letivo'))
       $this->appendResponse($this->getEscolaAnoLetivo());
+
+    elseif ($this->isRequestFor('get', 'escolas-usuario'))
+      $this->appendResponse($this->getEscolasUsuarios());
+
+    elseif ($this->isRequestFor('get', 'escolas-para-selecao'))
+      $this->appendResponse($this->getEscolasSelecao());
 
     else
       $this->notImplementedOperationError();

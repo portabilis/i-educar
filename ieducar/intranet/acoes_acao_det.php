@@ -1,25 +1,25 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
+	*	@author Prefeitura Municipal de ItajaÃ­								 *
 	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
+	*   Pacote: i-PLB Software PÃºblico Livre e Brasileiro					 *
 	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÃ­			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
+	*	Este  programa  Ã©  software livre, vocÃª pode redistribuÃ­-lo e/ou	 *
+	*	modificÃ¡-lo sob os termos da LicenÃ§a PÃºblica Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a versÃ£o 2 da	 *
+	*	LicenÃ§a   como  (a  seu  critÃ©rio)  qualquer  versÃ£o  mais  nova.	 *
 	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  Ã© distribuÃ­do na expectativa de ser Ãºtil, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia implÃ­cita de COMERCIALI-	 *
+	*	ZAÃ‡ÃƒO  ou  de ADEQUAÃ‡ÃƒO A QUALQUER PROPÃ“SITO EM PARTICULAR. Con-	 *
+	*	sulte  a  LicenÃ§a  PÃºblica  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
+	*	VocÃª  deve  ter  recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral GNU	 *
+	*	junto  com  este  programa. Se nÃ£o, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
@@ -53,7 +53,7 @@ class indice extends clsDetalhe
 		@session_write_close();
 
 		$this->titulo = "Detalhe de a&ccedil;&otilde;es do Governo";
-		
+
 
 		if(!(int)$cod_acao_governo)
 			header("Location: acoes_acao_lst.php");
@@ -126,7 +126,7 @@ class indice extends clsDetalhe
 			if($obj_secretaria_responsavel_det != false && $status == 0)
 			{
 				$ativar_nome = "Incluir A&ccedil;&atilde;o";
-				$ativar_link = "if(confirm(\"Deseja incluir a ação?\"))window.location=\"acoes_acao_incluir_cad.php?cod_acao_governo={$cod_acao_governo}&status=1\"";
+				$ativar_link = "if(confirm(\"Deseja incluir a aÃ§Ã£o?\"))window.location=\"acoes_acao_incluir_cad.php?cod_acao_governo={$cod_acao_governo}&status=1\"";
 
 				$this->array_botao[] = $ativar_nome;
 				$this->array_botao_url_script[] = $ativar_link;
@@ -134,7 +134,7 @@ class indice extends clsDetalhe
 			elseif($obj_secretaria_responsavel_det != false && $status == 1)
 			{
 				$ativar_nome = "Remarcar como pendente";
-				$ativar_link = "if(confirm(\"Deseja marcar a ação como pendente?\"))window.location=\"acoes_acao_incluir_cad.php?cod_acao_governo={$cod_acao_governo}&status=0\"";
+				$ativar_link = "if(confirm(\"Deseja marcar a aÃ§Ã£o como pendente?\"))window.location=\"acoes_acao_incluir_cad.php?cod_acao_governo={$cod_acao_governo}&status=0\"";
 
 				$this->array_botao[] = $ativar_nome;
 				$this->array_botao_url_script[] = $ativar_link;
@@ -186,8 +186,8 @@ class indice extends clsDetalhe
 			$existe  = true;
 			$tabela .= "<tr bgcolor=$cor><td colspan='2'><b>Categorias</b></td></tr><tr><td>";
 			$tabela .= "<table cellpadding=\"2\" cellspacing=\"2\" border=\"0\" align=\"left\" width='50%'>";
-			$tabela .= "<tr bgcolor='#A1B3BD'><th>Categoria</th><th width='70'>Excluir</th></tr>";
-			$cor = $cor == "#FFFFFF" ? "#E4E9ED" : "#FFFFFF";
+			$tabela .= "<tr bgcolor='#ccdce6'><th>Categoria</th><th width='70'>Excluir</th></tr>";
+			$cor = $cor == "#FFFFFF" ? "#f5f9fd" : "#FFFFFF";
 			foreach ($lista_categoria as $categoria){
 				$obj_nm_categoria = new clsPmiacoesCategoria($categoria);
 				$det_categoria = $obj_nm_categoria->detalhe();
@@ -203,11 +203,11 @@ class indice extends clsDetalhe
 		if($lista_setores)
 		{
 			$existe  = true;
-			$cor = $cor == "#FFFFFF" ? "#E4E9ED" : "#FFFFFF";
+			$cor = $cor == "#FFFFFF" ? "#f5f9fd" : "#FFFFFF";
 			$tabela .= "<tr bgcolor=$cor><td colspan='2'><b>Setores</b></td></tr><tr><td>";
 			$tabela .= "<table cellpadding=\"2\" cellspacing=\"2\" border=\"0\" align=\"left\" width='50%'>";
-			$tabela .= "<tr bgcolor='#A1B3BD'><th>Setor</th><th width='70'>Excluir</th></tr>";
-			$cor = $cor == "#FFFFFF" ? "#E4E9ED" : "#FFFFFF";
+			$tabela .= "<tr bgcolor='#ccdce6'><th>Setor</th><th width='70'>Excluir</th></tr>";
+			$cor = $cor == "#FFFFFF" ? "#f5f9fd" : "#FFFFFF";
 			foreach ($lista_setores as $setores){
 				$obj_nm_setor = new clsSetor($setores);
 				$det_setor = $obj_nm_setor->detalhe();
@@ -216,7 +216,7 @@ class indice extends clsDetalhe
 
 			$tabela .= "</table></td></tr>";
 		}
-	
+
 
 	//fotos
 		$obj_fotos = new clsPmiacoesAcaoGovernoFoto();
@@ -226,13 +226,12 @@ class indice extends clsDetalhe
 		{
 
 			$existe  = true;
-			$cor = $cor == "#FFFFFF" ? "#E4E9ED" : "#FFFFFF";
+			$cor = $cor == "#FFFFFF" ? "#f5f9fd" : "#FFFFFF";
 			$tabela .= "<tr bgcolor=$cor><td colspan='2'><b>Fotos</b></td></tr><tr><td>";
 			$tabela .= "<table cellpadding=\"2\" cellspacing=\"2\" border=\"0\" align=\"left\" width='100%'>";
-			$tabela .= "<tr bgcolor='#A1B3BD'><th>Foto</th><th>Data</th><th width='100%'>Tï¿½tulo</th><th width='70'>Excluir</th></tr>";
+			$tabela .= "<tr bgcolor='#A1B3BD'><th>Foto</th><th>Data</th><th width='100%'>TÃ­tulo</th><th width='70'>Excluir</th></tr>";
 
-
-			$cor = $cor == "#FFFFFF" ? "#E4E9ED" : "#FFFFFF";
+			$cor = $cor == "#FFFFFF" ? "#f5f9fd" : "#FFFFFF";
 			foreach ($lista_fotos as $foto)
 			{
 				$data= $foto["data_foto"];
@@ -250,12 +249,12 @@ class indice extends clsDetalhe
 		{
 
 			$existe  = true;
-			$cor = $cor == "#FFFFFF" ? "#E4E9ED" : "#FFFFFF";
+			$cor = $cor == "#FFFFFF" ? "#f5f9fd" : "#FFFFFF";
 			$tabela .= "<tr bgcolor=$cor><td colspan='2'><b>Arquivos</b></td></tr><tr><td>";
 			$tabela .= "<table cellpadding=\"2\" cellspacing=\"2\" border=\"0\" align=\"left\" width='50%'>";
-			$tabela .= "<tr bgcolor='#A1B3BD'><th width='60%'>Nome</th><th>Arquivo</th><th width='70'>Excluir</th></tr>";
+			$tabela .= "<tr bgcolor='#ccdce6'><th width='60%'>Nome</th><th>Arquivo</th><th width='70'>Excluir</th></tr>";
 
-			$cor = $cor == "#FFFFFF" ? "#E4E9ED" : "#FFFFFF";
+			$cor = $cor == "#FFFFFF" ? "#f5f9fd" : "#FFFFFF";
 			foreach ($lista_fotos as $foto)
 			{
 
@@ -273,16 +272,16 @@ class indice extends clsDetalhe
 			if($lista_noticias)
 			{
 				$existe  = true;
-				$cor = $cor == "#FFFFFF" ? "#E4E9ED" : "#FFFFFF";
+				$cor = $cor == "#FFFFFF" ? "#f5f9fd" : "#FFFFFF";
 				$tabela .= "<tr bgcolor=$cor><td colspan='2'><b>Noticias Portal</b></td></tr>";
-				$cor = $cor == "#FFFFFF" ? "#E4E9ED" : "#FFFFFF";
+				$cor = $cor == "#FFFFFF" ? "#f5f9fd" : "#FFFFFF";
 				$noticias_in = implode(",",$lista_noticias);
 
 				$db = new clsBanco();
 
 				$db->Consulta( "SELECT n.data_noticia, n.titulo, n.cod_not_portal FROM not_portal n where  n.cod_not_portal in($noticias_in) ORDER BY n.data_noticia DESC {$limit}" );
 				$tabela .= "<tr><td colspan='2'><table border=0 cellpadding=2 width='100%'>";
-				$tabela .= "<tr bgcolor='#A1B3BD' align='center'><td style='padding-left:20px'> <b>Data</b> </td><td><b>Titulo</b></td><td width='70'><b>Excluir</b></td></tr>";
+				$tabela .= "<tr bgcolor='#ccdce6' align='center'><td style='padding-left:20px'> <b>Data</b> </td><td><b>Titulo</b></td><td width='70'><b>Excluir</b></td></tr>";
 				while ($db->ProximoRegistro())
 				{
 					list ($data, $titulo, $id_noticia) = $db->Tupla();
@@ -303,16 +302,16 @@ class indice extends clsDetalhe
 			{
 
 				$existe  = true;
-				$cor = $cor == "#FFFFFF" ? "#E4E9ED" : "#FFFFFF";
+				$cor = $cor == "#FFFFFF" ? "#f5f9fd" : "#FFFFFF";
 				$tabela .= "<tr bgcolor=$cor><td colspan='2'><b>Fotos Portal</b></td></tr><tr><td>";
 				$tabela .= "<table cellpadding=\"2\" cellspacing=\"2\" border=\"0\" align=\"left\" width='100%'>";
-				$tabela .= "<tr bgcolor='#A1B3BD'><th>Foto</th><th>Data</th><th width='60%'>Tï¿½tulo</th><th width='70'>Excluir</th></tr>";
+				$tabela .= "<tr bgcolor='#A1B3BD'><th>Foto</th><th>Data</th><th width='60%'>TÃ­tulo</th><th width='70'>Excluir</th></tr>";
 
 				$fotos_in = implode(",",$lista_fotos);
 
 				$db = new clsBanco();
 				$db->Consulta( "SELECT f.cod_foto_portal,f.titulo, f.descricao, f.data_foto, f.caminho, f.nm_credito, f.altura, f.largura FROM foto_portal f WHERE cod_foto_portal in($fotos_in)" );
-				$cor = $cor == "#FFFFFF" ? "#E4E9ED" : "#FFFFFF";
+				$cor = $cor == "#FFFFFF" ? "#f5f9fd" : "#FFFFFF";
 				while ($db->ProximoRegistro())
 				{
 

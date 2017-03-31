@@ -1,25 +1,25 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
+	*	@author Prefeitura Municipal de ItajaÃ­								 *
 	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
+	*   Pacote: i-PLB Software PÃºblico Livre e Brasileiro					 *
 	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÃ­			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
+	*	Este  programa  Ã©  software livre, vocÃª pode redistribuÃ­-lo e/ou	 *
+	*	modificÃ¡-lo sob os termos da LicenÃ§a PÃºblica Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a versÃ£o 2 da	 *
+	*	LicenÃ§a   como  (a  seu  critÃ©rio)  qualquer  versÃ£o  mais  nova.	 *
 	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  Ã© distribuÃ­do na expectativa de ser Ãºtil, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia implÃ­cita de COMERCIALI-	 *
+	*	ZAÃ‡ÃƒO  ou  de ADEQUAÃ‡ÃƒO A QUALQUER PROPÃ“SITO EM PARTICULAR. Con-	 *
+	*	sulte  a  LicenÃ§a  PÃºblica  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
+	*	VocÃª  deve  ter  recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral GNU	 *
+	*	junto  com  este  programa. Se nÃ£o, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
@@ -192,7 +192,9 @@ class indice
 		*/
 		if( $this->editor == $this->dono )
 		{
-			$preferencias = "<a href=\"agenda_preferencias.php\"><img src=\"imagens/nvp_agenda_preferencias.gif\" border=\"0\" title=\"Preferencias\" alt=\"Preferencias\"></a> &nbsp;<br>";
+			$preferencias = "<a class=\"small\" href=\"agenda_preferencias.php\">
+							 	<div><i class=\"fa fa-gear\" aria-hidden=\"true\"></i> Preferências</div>
+			                 </a> &nbsp;<br>";
 		}
 
 		$conteudo .= "
@@ -203,15 +205,30 @@ class indice
 						<td width=\"80%\" style=\"padding-left:5px;\">
 							<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" height=\"80\">
 								<tr>
-									<td rowspan=\"2\" valign=\"top\"><a href=\"{$this->scriptNome}?cod_agenda={$this->agenda}&time={$this->time_ontem}\"><img src=\"imagens/agenda_data_prev_dia.gif\" border=\"0\" title=\"Dia anterior: {$ontemArr[0]} de {$mesesArr[$ontemArr[1]]} de {$ontemArr[2]}\" alt=\"Dia anterior\"></a></td>
-									<td background=\"imagens/agenda_data_bg.gif\" title=\"Dia: {$this->arr_data_atual[0]} de {$mesesArr[$this->arr_data_atual[1]]} de {$this->arr_data_atual[2]}\" align=\"center\"><span class=\"data1\">{$this->arr_data_atual[0]}<br></span><span class=\"data2\">" . strtoupper( substr( $mesesArr[$this->arr_data_atual[1]], 0, 3 ) ) . "<br><span class=\"data3\">{$this->arr_data_atual[2]}</span></td>
-									<td rowspan=\"2\" valign=\"top\"><a href=\"{$this->scriptNome}?cod_agenda={$this->agenda}&time={$this->time_amanha}\"><img src=\"imagens/agenda_data_prox_dia.gif\" border=\"0\" title=\"Pr&oacute;ximo dia: {$amanhaArr[0]} de {$mesesArr[$amanhaArr[1]]} de {$amanhaArr[2]}\" alt=\"Pr&oacute;ximo dia\"></a></td>
-									<td rowspan=\"2\" valign=\"top\" style=\"padding:5px;\"><span class=\"titulo\">{$diasArr[$this->arr_data_atual[3]]}</span></td>
+									<td class=\"arrow-dia\" rowspan=\"2\" valign=\"middle\">
+										<a href=\"{$this->scriptNome}?cod_agenda={$this->agenda}&time={$this->time_ontem}\">
+											&laquo;
+										</a>
+									</td>
+									<td class=\"data-info\" title=\"Dia: {$this->arr_data_atual[0]} de {$mesesArr[$this->arr_data_atual[1]]} de {$this->arr_data_atual[2]}\" align=\"center\">
+										<span class=\"data1\">{$this->arr_data_atual[0]}<br></span>
+										<span class=\"data2\">" . strtoupper( substr( $mesesArr[$this->arr_data_atual[1]], 0, 3 ) ) . "<br>
+										<span class=\"data3\">{$this->arr_data_atual[2]}</span></td>
+									<td class=\"arrow-dia\" rowspan=\"2\" valign=\"middle\">
+										<a href=\"{$this->scriptNome}?cod_agenda={$this->agenda}&time={$this->time_amanha}\">
+											&raquo;
+										</a>
+									</td>
+									<td rowspan=\"2\" valign=\"middle\" style=\"padding:5px;\"><span class=\"titulo\">{$diasArr[$this->arr_data_atual[3]]}</span></td>
 								</tr>
-								<tr><td valign=\"top\"><img src=\"imagens/agenda_data_fundo.gif\" border=\"0\" title=\"Dia: {$this->arr_data_atual[0]} de {$mesesArr[$this->arr_data_atual[1]]} de {$this->arr_data_atual[2]}\" alt=\"{$this->arr_data_atual[0]} de {$mesesArr[$this->arr_data_atual[1]]} de {$this->arr_data_atual[2]}\"><td></tr>
 							</table>
 						</td>
-						<td width=\"20%\" valign=\"bottom\" align=\"right\">{$preferencias}<a href=\"agenda_imprimir.php?cod_agenda={$this->agenda}\"><img src=\"imagens/btn_imprimir.gif\" border=\"0\" title=\"Imprimir compromissos deste dia\" alt=\"Imprimir compromissos\"></a> &nbsp; </td>
+						<td width=\"20%\" valign=\"bottom\" align=\"right\">{$preferencias}
+							<a class=\"small\" href=\"agenda_imprimir.php?cod_agenda={$this->agenda}\">
+								<div>
+									<i class=\"fa fa-print\" aria-hidden=\"true\"></i> Imprimir
+								</div>
+							</a> &nbsp; </td>
 					</tr>
 				</table>
 			</td>
@@ -221,7 +238,7 @@ class indice
 						<td valign=\"top\" height=\"40\" align=\"center\">{$nm_agenda}</td>
 					</tr>
 					<tr>
-						<td valign=\"bottom\" height=\"40\"><span class=\"titulo\">Calendário</span></td>
+						<td valign=\"bottom\" height=\"40\"><span class=\"titulo\">CalendÃ¡rio</span></td>
 					</tr>
 				</table>
 			</td>
@@ -335,7 +352,9 @@ class indice
 					if( $importante )
 					{
 						// imagem de impotante
-						$img_importante = "<br><img src=\"imagens/nvp_agenda_importante.gif\" border=\"0\" alt=\"Importante\" title=\"Compromisso IMPORTANTE!!\">";
+						$img_importante = "<br><div class=\"important\">
+												  <i class=\"fa fa-check\" aria-hidden=\"true\"></i> Importante
+											   </div>";
 						// coloca o titulo dentro de um span com classe de alerta (somente se o compromisso ainda nao aconteceu)
 						if( strtotime( $data_inicio ) >= $this->time_real_atual )
 						{
@@ -348,7 +367,11 @@ class indice
 					$max_versao = $objAgenda->getCompromissoVersao( $cod_agenda_compromisso );
 					if( $max_versao > 1 )
 					{
-						$img_versao = "<br><a href=\"{$this->scriptNome}?cod_agenda={$this->agenda}&time={$this->time_atual}&versoes={$cod_agenda_compromisso}\"><img src=\"imagens/nvp_agenda_historico.gif\" border=\"0\" alt=\"Historico\" title=\"Clique para ver antigas vers&otilde;es deste compromisso\"></a>";
+						$img_versao = "<br><a class=\"small\" href=\"{$this->scriptNome}?cod_agenda={$this->agenda}&time={$this->time_atual}&versoes={$cod_agenda_compromisso}\">
+									<div class=\"history\">
+										<i class=\"fa fa-history\" aria-hidden=\"true\"></i> Histórico
+									</div>
+								</a>";
 					}
 
 					// se a hora atual for maior ele fica mais apagado porque eh antigo
@@ -369,7 +392,14 @@ class indice
 
 					if( $cod_agenda_compromisso )
 					{
-						$img_padrao = "<a href=\"javascript: text2form( {$cod_agenda_compromisso} );\"><img src=\"imagens/nvp_agenda_editar.gif\" border=\"0\" alt=\"Editar\" title=\"Editar este compromisso\"></a><a href=\"javascript: excluir( {$cod_agenda_compromisso} );\"><img src=\"imagens/nvp_agenda_excluir.gif\" border=\"0\" alt=\"Excluir\" title=\"Excluir este compromisso\"></a>";
+						$img_padrao = "<a class=\"small\" href=\"javascript: text2form( {$cod_agenda_compromisso} );\">
+									<div>
+										<i class=\"fa fa-pencil\" aria-hidden=\"true\"></i> Editar
+									</div></a>
+								<a class=\"small\" href=\"javascript: excluir( {$cod_agenda_compromisso} );\">
+								<div>
+										<i class=\"fa fa-close\" aria-hidden=\"true\"></i> Excluir
+								</div></a>";
 					}
 
 					$conteudo .= "<tr>
@@ -383,12 +413,12 @@ class indice
 							<input type=\"hidden\" name=\"data_original_{$cod_agenda_compromisso}\" id=\"data_original_{$cod_agenda_compromisso}\" value=\"{$this->data_atual}\">
 							<input type=\"hidden\" name=\"extras_original_{$cod_agenda_compromisso}\" id=\"extras_original_{$cod_agenda_compromisso}\" value=\"{$extras}\">
 							<input type=\"hidden\" name=\"aberto_{$cod_agenda_compromisso}\" id=\"aberto_{$cod_agenda_compromisso}\" value=\"{$aberto}\">
-							<div id=\"compromisso_{$cod_agenda_compromisso}\">
+							<div id=\"compromisso_{$cod_agenda_compromisso}\" class=\"compromisso\">
 								<div id=\"titulo_{$cod_agenda_compromisso}\" {$class_titulo}>{$disp_titulo}</div>
 								<div id=\"conteudo_{$cod_agenda_compromisso}\" {$class_desc}>{$disp_conteudo}</div>
 							</div>
 						</td>
-						<td class=\"{$classe}\" width=\"75\" valign=\"top\"><div id=\"botoes_{$cod_agenda_compromisso}\">{$img_padrao}{$img_importante}{$img_versao}</div></td>
+						<td class=\"{$classe}\" align=\"right\" width=\"115\" valign=\"top\"><div id=\"botoes_{$cod_agenda_compromisso}\" class=\"small\">{$img_padrao}{$img_importante}{$img_versao}</div></td>
 					</tr>";
 				}
 			}

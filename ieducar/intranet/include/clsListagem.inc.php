@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Include
- * @since     Arquivo disponÌvel desde a vers„o 1.0.0
+ * @since     Arquivo dispon√≠vel desde a vers√£o 1.0.0
  * @version   $Id$
  */
 
@@ -54,11 +54,11 @@ define('alBottomRight', 'valign=bottom align=right');
 /**
  * clsListagem class.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Include
- * @since     Classe disponÌvel desde a vers„o 1.0.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
  * @version   @@package_version@@
  */
 class clsListagem extends clsCampos
@@ -193,17 +193,17 @@ class clsListagem extends clsCampos
       /**
        * HTML do paginador.
        */
-      $strReturn = "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\"><tr>";
+      $strReturn = "<table class='paginacao' border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\"><tr>";
 
-      // Setas de inÌcio e anterior
+      // Setas de in√≠cio e anterior
       $imagem = ($intPaginaAtual > 1) ? "seta" :"seta_transp";
       $compl_url = ($add_iniciolimit) ? "&iniciolimit=" . (1 + $pag_modifier): "";
-      $strReturn .= "<td width=\"23\" align=\"center\"><a href=\"{$linkFixo}$getVar=" . (1 + $pag_modifier) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a primeira pagina\"><img src=\"imagens/paginador/{$imagem}1.gif\" border=\"0\" alt=\"primeira pagina\"></a></td> ";
+      $strReturn .= "<td width=\"23\" align=\"center\"><a href=\"{$linkFixo}$getVar=" . (1 + $pag_modifier) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a primeira pagina\"> &laquo; </a></td> ";
       $compl_url = ($add_iniciolimit) ? "&iniciolimit=" . max(1 + $pag_modifier, $intPaginaAtual - 1) : '';
-      $strReturn .= "<td width=\"23\" align=\"center\"><a href=\"{$linkFixo}$getVar=" . max(1 + $pag_modifier, $intPaginaAtual - 1) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a pagina anterior\"><img src=\"imagens/paginador/{$imagem}2.gif\" border=\"0\" alt=\"pagina anterior\"></a></td> ";
+      $strReturn .= "<td width=\"23\" align=\"center\"><a href=\"{$linkFixo}$getVar=" . max(1 + $pag_modifier, $intPaginaAtual - 1) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a pagina anterior\"> &lsaquo; </a></td> ";
 
       // Meio
-      $strReturn .= "<td align=\"center\"><img src=\"imagens/paginador/esq.gif\" border=\"0\" alt=\"\"></td>";
+      $strReturn .= "";
       $meios = array();
 
       for ($i = 0; $i <= $intPaginasExibidas * 2 && $i + $pagStart <= $totalPaginas; $i++) {
@@ -211,18 +211,15 @@ class clsListagem extends clsCampos
 
         $imagem     = ($pagStart + $i + $pag_modifier == $intPaginaAtual) ? '2' : '1';
         $compl_url  = ($add_iniciolimit) ? "&iniciolimit=" . ($pagStart + $i + $pag_modifier) : '';
-        $strReturn .= "<td align=\"center\" style=\"padding-left:5px;padding-right:5px;background-image: url('imagens/paginador/bg{$imagem}.gif');\"><a href=\"{$linkFixo}$getVar=" . ( $pagStart + $i + $pag_modifier ) . "{$compl_url}&ordenacao={$ordenacao}\" class=\"nvp_paginador\" title=\"Ir para a p&aacute;gina " . ($pagStart + $i) . "\">" . addLeadingZero($pagStart + $i) ."</a></td>";
-        $strReturn .= "<td><img src=\"imagens/paginador/separador.gif\" border=\"0\" alt=\"\"></td>";
+        $strReturn .= "<td align=\"center\" style=\"padding-left:5px;padding-right:5px;\"><a href=\"{$linkFixo}$getVar=" . ( $pagStart + $i + $pag_modifier ) . "{$compl_url}&ordenacao={$ordenacao}\" class=\"nvp_paginador\" title=\"Ir para a p&aacute;gina " . ($pagStart + $i) . "\">" . addLeadingZero($pagStart + $i) ."</a></td>";
       }
 
-      $strReturn .= "<td align=\"center\"><img src=\"imagens/paginador/dir.gif\" border=\"0\" alt=\"\"></td>";
-
-      // Setas de fim e prÛxima
+      // Setas de fim e pr√≥xima
       $imagem     = ($intPaginaAtual < $totalPaginas) ? 'seta' : 'seta_transp';
       $compl_url  = ($add_iniciolimit) ? "&iniciolimit=" . min($totalPaginas + $pag_modifier, $intPaginaAtual + 1) : '';
-      $strReturn .= "<td width=\"23\" align=\"center\"><a href=\"{$linkFixo}$getVar=" . min($totalPaginas + $pag_modifier, $intPaginaAtual + 1) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a proxima pagina\"><img src=\"imagens/paginador/{$imagem}3.gif\" border=\"0\" alt=\"proxima pagina\"></a></td> ";
+      $strReturn .= "<td width=\"23\" align=\"center\"><a href=\"{$linkFixo}$getVar=" . min($totalPaginas + $pag_modifier, $intPaginaAtual + 1) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a proxima pagina\"> &rsaquo; </a></td> ";
       $compl_url  = ( $add_iniciolimit ) ? "&iniciolimit=" . ($totalPaginas + $pag_modifier): "";
-      $strReturn .= "<td width=\"23\" align=\"center\"><a href=\"{$linkFixo}$getVar=" . ($totalPaginas + $pag_modifier) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a ultima pagina\"><img src=\"imagens/paginador/{$imagem}4.gif\" border=\"0\" alt=\"ultima pagina\"></a></td> ";
+      $strReturn .= "<td width=\"23\" align=\"center\"><a href=\"{$linkFixo}$getVar=" . ($totalPaginas + $pag_modifier) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a ultima pagina\"> &raquo; </a></td> ";
 
       $strReturn .= "</tr></table>";
 
@@ -247,7 +244,7 @@ class clsListagem extends clsCampos
   }
 
   /**
-   * Cria o cÛdigo HTML.
+   * Cria o c√≥digo HTML.
    *
    * @param string $caminho
    * @param int $qdt_registros
@@ -266,14 +263,13 @@ class clsListagem extends clsCampos
   function RenderHTML()
   {
     $this->_preRender();
-
     $this->Gerar();
 
     $retorno = '';
 
     if ($this->banner) {
       $retorno .= "<table width='100%' style=\"height:100%\" border='0' cellpadding='0' cellspacing='0'><tr>";
-      $retorno .= "<td class=\"barraLateral\" width=\"21\" valign=\"top\"><a href='#'><img src=\"{$this->bannerLateral}\" align=\"right\" border=\"0\" alt=\"$this->titulo_barra\" title=\"$this->titulo_barra\"></a></td><td valign='top'>";
+      $retorno .= "<td valign='top'>";
     }
 
     $retorno .= "
@@ -296,13 +292,13 @@ class clsListagem extends clsCampos
                     </tr>";
 
       $retorno .= "</table>";
-    }    
+    }
 
     if ($this->campos) {
       $width = empty($this->largura) ? '' : "width='$this->largura'";
 
       /**
-       * Adiciona o help da p·gina.
+       * Adiciona o help da p√°gina.
        */
       $url = parse_url($_SERVER['REQUEST_URI']);
       $url = ereg_replace( '^/', '', $url['path']);
@@ -322,9 +318,9 @@ class clsListagem extends clsCampos
 
       $server = $_SERVER['SERVER_NAME'];
       $endereco = $_SERVER ['REQUEST_URI'];
-      $enderecoPagina = $_SERVER['PHP_SELF'];            
-      
-      $barra = '<b>Filtros de busca</b>';  
+      $enderecoPagina = $_SERVER['PHP_SELF'];
+
+      $barra = '<b>Filtros de busca</b>';
 
       if (class_exists('clsPmiajudaPagina')) {
         $ajudaPagina = new clsPmiajudaPagina();
@@ -334,9 +330,9 @@ class clsListagem extends clsCampos
           <table border=\"0\" cellpading=\"0\" cellspacing=\"0\" width=\"100%\">
             <tr>
             <script type=\"text/javascript\">document.help_page_index = 0;</script>
-            <td width=\"20\"><a href=\"javascript:showExpansivelIframe(700,500,'ajuda_mostra.php?cod_topico={$lista[0]["ref_cod_topico"]}&tipo={$tipo}');\"><img src=\"imagens/banco_imagens/interrogacao.gif\" border=\"0\" alt=\"BotÔøΩo de Ajuda\" title=\"Clique aqui para obter ajuda sobre esta pÔøΩgina\"></a></td>
+            <td width=\"20\"><a href=\"javascript:showExpansivelIframe(700,500,'ajuda_mostra.php?cod_topico={$lista[0]["ref_cod_topico"]}&tipo={$tipo}');\"><img src=\"imagens/banco_imagens/interrogacao.gif\" border=\"0\" alt=\"Bot√Ø¬ø¬Ωo de Ajuda\" title=\"Clique aqui para obter ajuda sobre esta p√Ø¬ø¬Ωgina\"></a></td>
             <td><b>Filtros de busca</b></td>
-            <td align=\"right\"><a href=\"javascript:showExpansivelIframe(700,500,'ajuda_mostra.php?cod_topico={$lista[0]["ref_cod_topico"]}&tipo={$tipo}');\"><img src=\"imagens/banco_imagens/interrogacao.gif\" border=\"0\" alt=\"BotÔøΩo de Ajuda\" title=\"Clique aqui para obter ajuda sobre esta pÔøΩgina\"></a></td>
+            <td align=\"right\"><a href=\"javascript:showExpansivelIframe(700,500,'ajuda_mostra.php?cod_topico={$lista[0]["ref_cod_topico"]}&tipo={$tipo}');\"><img src=\"imagens/banco_imagens/interrogacao.gif\" border=\"0\" alt=\"Bot√Ø¬ø¬Ωo de Ajuda\" title=\"Clique aqui para obter ajuda sobre esta p√Ø¬ø¬Ωgina\"></a></td>
             </tr>
           </table>";
         }
@@ -459,10 +455,10 @@ class clsListagem extends clsCampos
 
         if ($this->exibirBotaoSubmit) {
           if ($this->botao_submit) {
-            $retorno .=  "&nbsp;<input type='submit' class='botaolistagem' value='busca' id='botao_busca'>&nbsp;";
+            $retorno .=  "&nbsp;<input type='submit' class='botaolistagem' value='Buscar' id='botao_busca'>&nbsp;";
           }
           else {
-            $retorno .=  "&nbsp;<input type='button' class='botaolistagem' onclick='javascript:acao{$this->funcAcaoNome}();' value='busca' id='botao_busca'>&nbsp;";
+            $retorno .=  "&nbsp;<input type='button' class='botaolistagem btn-green' onclick='javascript:acao{$this->funcAcaoNome}();' value='Buscar' id='botao_busca'>&nbsp;";
           }
         }
 
@@ -476,7 +472,8 @@ class clsListagem extends clsCampos
     }
 
     $retorno .=  "<br>";
-    $ncols = 1;
+
+    $ncols = count( $this->cabecalho );
     $width = empty($this->largura) ? '' : "width='$this->largura'";
 
     if (! $this->__titulo) {
@@ -496,19 +493,19 @@ class clsListagem extends clsCampos
                     </tr>";
 
       $retorno .= "</table>";
-    }   
+    }
 
     $retorno .=  "
         <form name=\"form_resultado\" id=\"form_resultado\" method=\"POST\" action=\"\">
         <!-- listagem begin -->
           <table class='tablelistagem' $width border='0' cellpadding='4' cellspacing='1'>
             <tr>
-              <td colspan='$ncols'>{$this->__titulo}</td>
+              <td class='titulo-tabela-listagem' colspan='$ncols'>{$this->__titulo}</td>
             </tr>";
 
     $ncols = count( $this->cabecalho );
 
-    // CabeÁalho
+    // Cabe√ßalho
     if (!empty($this->cabecalho)) {
       reset($this->cabecalho);
 
@@ -733,7 +730,7 @@ class clsListagem extends clsCampos
     if ($this->acao && $this->show_botao_novo) {
       $retorno .=  "
             <tr>
-              <td colspan=\"$ncols\" align=\"center\"><input type='button' class='botaolistagem' onclick='javascript: $this->acao' value=' $this->nome_acao '>$botao</td>
+              <td colspan=\"$ncols\" align=\"center\"><input type='button' class='btn-green botaolistagem' onclick='javascript: $this->acao' value=' $this->nome_acao '>$botao</td>
             </tr>";
     }
     elseif ($this->acao_imprimir) {
@@ -791,7 +788,7 @@ class clsListagem extends clsCampos
   /**
    * Exibe mensagem de DIE formatada;
    * @param String $msg
-   * @param String $url Redirecionar apÛs 1 segundo
+   * @param String $url Redirecionar ap√≥s 1 segundo
    */
   function erro($msg, $redir = 'index.php')
   {

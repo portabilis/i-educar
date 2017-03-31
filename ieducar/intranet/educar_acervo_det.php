@@ -1,25 +1,25 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
+	*	@author Prefeitura Municipal de ItajaÃ­								 *
 	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
+	*   Pacote: i-PLB Software PÃºblico Livre e Brasileiro					 *
 	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÃ­			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
+	*	Este  programa  Ã©  software livre, vocÃª pode redistribuÃ­-lo e/ou	 *
+	*	modificÃ¡-lo sob os termos da LicenÃ§a PÃºblica Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a versÃ£o 2 da	 *
+	*	LicenÃ§a   como  (a  seu  critÃ©rio)  qualquer  versÃ£o  mais  nova.	 *
 	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  Ã© distribuÃ­do na expectativa de ser Ãºtil, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia implÃ­cita de COMERCIALI-	 *
+	*	ZAÃ‡ÃƒO  ou  de ADEQUAÃ‡ÃƒO A QUALQUER PROPÃ“SITO EM PARTICULAR. Con-	 *
+	*	sulte  a  LicenÃ§a  PÃºblica  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
+	*	VocÃª  deve  ter  recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral GNU	 *
+	*	junto  com  este  programa. Se nÃ£o, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
@@ -77,7 +77,7 @@ class indice extends clsDetalhe
 		session_write_close();
 
 		$this->titulo = "Obras - Detalhe";
-		
+
 
 		$this->cod_acervo=$_GET["cod_acervo"];
 
@@ -244,18 +244,18 @@ class indice extends clsDetalhe
 		}
 
 		$obj = new clsPmieducarAcervoAcervoAutor();
-		$obj->setOrderby("principal DESC");
+		$obj->setOrderby("principal");
 		$lst = $obj->lista( null,$this->cod_acervo );
 		if ($lst) {
 			$tabela = "<TABLE>
 					       <TR align=center>
-					           <TD bgcolor=#A1B3BD><B>Nome</B></TD>
+					           <TD bgcolor=#ccdce6><B>Nome</B></TD>
 					       </TR>";
 			$cont = 0;
 
 			foreach ( $lst AS $valor ) {
 				if ( ($cont % 2) == 0 ) {
-					$color = " bgcolor=#E4E9ED ";
+					$color = " bgcolor=#f5f9fd ";
 				}
 				else {
 					$color = " bgcolor=#FFFFFF ";
@@ -315,7 +315,7 @@ class indice extends clsDetalhe
 		$obj = $obj->listaAssuntosPorObra($this->cod_acervo);
 		if (count($obj)){
 			foreach ($obj as $reg) {
-				$assuntos.= '<span style="background-color: #A1B3BD; padding: 2px;"><b>'.$reg['nome'].'</b></span>&nbsp; ';
+				$assuntos.= '<span style="background-color: #ccdce6; padding: 4px 20px;"><b>'.$reg['nome'].'</b></span>&nbsp; ';
 			}
 			if(!empty($assuntos))
 				$this->addDetalhe( array( "Assuntos", "{$assuntos}") );
@@ -325,11 +325,11 @@ class indice extends clsDetalhe
 		$obj_categoria = $obj_categoria->listaCategoriasPorObra($this->cod_acervo);
 		if (count($obj_categoria)){
 			foreach ($obj_categoria as $obj_cat) {
-				$categorias.= '<span style="background-color: #A1B3BD; padding: 2px;"><b>'.$obj_cat['descricao'].'</b></span>&nbsp; ';
+				$categorias.= '<span style="background-color: #ccdce6; padding: 4px 20px;"><b>'.$obj_cat['descricao'].'</b></span>&nbsp; ';
 			}
 			if(!empty($categorias))
 				$this->addDetalhe( array( "Categorias", "{$categorias}") );
-		}		
+		}
 
 		$obj_permissoes = new clsPermissoes();
 		if( $obj_permissoes->permissao_cadastra( 598, $this->pessoa_logada, 11 ) )
@@ -344,10 +344,10 @@ class indice extends clsDetalhe
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"                  => "i-Educar - Biblioteca",
+         "educar_biblioteca_index.php"                  => "Biblioteca",
          ""                                  => "Detalhe da obra"
     ));
-    $this->enviaLocalizacao($localizacao->montar());		
+    $this->enviaLocalizacao($localizacao->montar());
 	}
 }
 

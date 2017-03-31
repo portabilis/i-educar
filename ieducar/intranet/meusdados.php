@@ -1,33 +1,33 @@
 <?php
 
 /*
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  */
 
 /**
  * Meus dados.
  *
- * @author   Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author   Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
  * @package  Core
- * @since    Arquivo disponÌvel desde a vers„o 1.0.0
+ * @since    Arquivo dispon√≠vel desde a vers√£o 1.0.0
  * @version  $Id$
  */
 
@@ -37,11 +37,12 @@ require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/RDStationAPI.class.php';
 require_once 'lib/Portabilis/String/Utils.php';
+require_once 'image_check.php';
 
 class clsIndex extends clsBase
 {
   public function Formular() {
-    $this->SetTitulo($this->_instituicao . 'Usu&aacute;rios');
+    $this->SetTitulo($this->_instituicao . 'Configura√ß√µes  - Meus dados');
     $this->processoAp = '0';
   }
 }
@@ -64,6 +65,14 @@ class indice extends clsCadastro
   var $matricula_old;
 
   var $receber_novidades;
+
+  // Vari√°veis para controle da foto
+  var $objPhoto;
+  var $arquivoFoto;
+  var $file_delete;
+
+  var $caminho_det;
+  var $caminho_lst;
 
   public function Inicializar() {
     @session_start();
@@ -106,6 +115,14 @@ class indice extends clsCadastro
     $this->url_cancelar      = 'index.php';
     $this->nome_url_cancelar = 'Cancelar';
 
+
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         ""                                  => "Meus dados"             
+    ));
+    $this->enviaLocalizacao($localizacao->montar());
+
     return $retorno;
   }
 
@@ -113,13 +130,29 @@ class indice extends clsCadastro
     $this->campoOculto('senha_old', $this->senha_old);
     $this->campoOculto('matricula_old', $this->matricula_old);
 
+    $foto = false;
+    if (is_numeric($this->pessoa_logada)){
+        $objFoto = new ClsCadastroFisicaFoto($this->pessoa_logada);
+        $detalheFoto = $objFoto->detalhe();
+        if(count($detalheFoto))
+          $foto = $detalheFoto['caminho'];
+    } else
+      $foto=false;
+
+    if ($foto){
+      $this->campoRotulo('fotoAtual_','Foto atual','<img height="117" src="'.$foto.'"/>');
+      $this->inputsHelper()->checkbox('file_delete', array('label' => 'Excluir a foto'));
+      $this->campoArquivo('file','Trocar foto',$this->arquivoFoto,40,'<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho m&aacute;ximo: 150KB</span>');
+    }else
+      $this->campoArquivo('file','Foto',$this->arquivoFoto,40,'<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho m&aacute;ximo: 150KB</span>');
+
     $this->campoTexto("nome", "Nome", $this->nome, 50, 150, true);
-    $this->campoTexto("matricula", "MatrÌcula", $this->matricula, 25, 12, true);
+    $this->campoTexto("matricula", "Matr√≠cula", $this->matricula, 25, 12, true);
 
     $options = array(
       'required'    => false,
-      'label'       => "(ddd) / Telefone",
-      'placeholder' => 'ddd',
+      'label'       => "(DDD) Telefone",
+      'placeholder' => 'DDD',
       'value'       => $this->ddd_telefone,
       'max_length'  => 3,
       'size'        => 3,
@@ -140,8 +173,8 @@ class indice extends clsCadastro
 
     $options = array(
       'required'    => false,
-      'label'       => "(ddd) / Celular",
-      'placeholder' => 'ddd',
+      'label'       => "(DDD) Celular",
+      'placeholder' => 'DDD',
       'value'       => $this->ddd_celular,
       'max_length'  => 3,
       'size'        => 3,
@@ -163,7 +196,7 @@ class indice extends clsCadastro
     $this->campoTexto("email", "E-mail", $this->email, 50, 100, true);
 
     $this->campoSenha('senha', "Senha", $this->senha, TRUE);
-    $this->campoSenha('senha_confirma', "ConfirmaÁ„o de senha", $this->senha_confirma, TRUE);
+    $this->campoSenha('senha_confirma', "Confirma√ß√£o de senha", $this->senha_confirma, TRUE);
 
     $lista_sexos = array('' => 'Selecione',
                         'M' => 'Masculino',
@@ -189,13 +222,12 @@ class indice extends clsCadastro
     @session_write_close();
 
     if (!filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
-      $this->mensagem = "Formato do e-mail inv·lido.";
+      $this->mensagem = "Formato do e-mail inv√°lido.";
       return false;
     }
-
-    // ValidaÁ„o de senha
+    // Valida√ß√£o de senha
     if ($this->senha != $this->senha_confirma) {
-      $this->mensagem = "As senhas que vocÍ digitou n„o conferem.";
+      $this->mensagem = "As senhas que voc√™ digitou n√£o conferem.";
       return false;
     } elseif (strlen($this->senha) < 8) {
       $this->mensagem = "Por favor informe uma senha mais segura, com pelo menos 8 caracteres.";
@@ -204,6 +236,11 @@ class indice extends clsCadastro
       $this->mensagem = "A senha informada &eacute; similar a sua matricula, informe outra senha.";
       return false;
     }
+
+    if (!$this->validatePhoto())
+      return false;
+
+    $this->savePhoto($this->pessoa_logada);
 
     $telefone = new clsPessoaTelefone($this->pessoa_logada, 1, str_replace("-", "", $this->telefone), $this->ddd_telefone);
     $telefone->cadastra();
@@ -224,7 +261,7 @@ class indice extends clsCadastro
     if ($this->matricula != $this->matricula_old) {
       $existeMatricula = $funcionario->lista($this->matricula);
       if ($existeMatricula) {
-        $this->mensagem = "A matrÌcula informada j· perdence a outro usu·rio.";
+        $this->mensagem = "A matr√≠cula informada j√° perdence a outro usu√°rio.";
         return false;
       }
       $funcionario->matricula = $this->matricula;
@@ -259,7 +296,7 @@ class indice extends clsCadastro
 
     $permiteRelacionamentoPosvendas =
       ($configuracoes['permite_relacionamento_posvendas'] ?
-        "Sim" : Portabilis_String_Utils::toUtf8("N„o"));
+        "Sim" : Portabilis_String_Utils::toUtf8("N√£o"));
 
     $dados = array(
       "nome" => Portabilis_String_Utils::toUtf8($this->nome),
@@ -268,31 +305,72 @@ class indice extends clsCadastro
       "telefone" => ($this->telefone ? "$this->ddd_telefone $this->telefone" : null),
       "celular" => ($this->celular ? "$this->ddd_celular $this->celular" : null),
       "Assuntos de interesse" => ($this->receber_novidades ? "Todos os assuntos relacionados ao i-Educar" : "Nenhum"),
-      Portabilis_String_Utils::toUtf8("Permite relacionamento direto no pÛs-venda?") => $permiteRelacionamentoPosvendas
+      Portabilis_String_Utils::toUtf8("Permite relacionamento direto no p√≥s-venda?") => $permiteRelacionamentoPosvendas
     );
-
-    // echo "<pre>";print_r($dados);die;
 
     $rdAPI = new RDStationAPI("***REMOVED***","***REMOVED***");
 
     $rdAPI->sendNewLead($this->email, $dados);
     $rdAPI->updateLeadStage($this->email, 2);
 
-    $this->mensagem .= "EdiÁ„oo efetuada com sucesso.<br>";
-    header( "Location: index.php" );
+    $this->mensagem .= "Edi√ß√£oo efetuada com sucesso.<br>";
+    header( "Location: meusdados.php" );
     die();
   }
 
+  // Retorna true caso a foto seja v√°lida
+  public function validatePhoto(){
+    $this->arquivoFoto = $_FILES["file"];
+    if (!empty($this->arquivoFoto["name"])){
+      $this->arquivoFoto["name"] = mb_strtolower($this->arquivoFoto["name"], 'UTF-8');
+      $this->objPhoto = new PictureController($this->arquivoFoto);
+      if ($this->objPhoto->validatePicture()){
+        return TRUE;
+      } else {
+        $this->mensagem = $this->objPhoto->getErrorMessage();
+        return false;
+      }
+      return false;
+    }else{
+      $this->objPhoto = null;
+      return true;
+    }
+  }
+
+    //envia foto e salva caminha no banco
+    public function savePhoto($id){
+    if ($this->objPhoto!=null){
+      $caminhoFoto = $this->objPhoto->sendPicture($id);
+      if ($caminhoFoto!=''){
+        $obj = new clsCadastroFisicaFoto($id,$caminhoFoto);
+        $detalheFoto = $obj->detalhe();
+        if (is_array($detalheFoto) && count($detalheFoto)>0){
+         $obj->edita();
+        }
+        else{
+         $obj->cadastra();
+        }
+
+        return true;
+      } else{
+        echo '<script>alert(\'Foto n√£o salva.\')</script>';
+        return false;
+      }
+    }elseif($this->file_delete == 'on'){
+      $obj = new clsCadastroFisicaFoto($id);
+      $obj->excluir();
+    }
+  }
 }
 
-// Instancia objeto de p·gina
+// Instancia objeto de p√°gina
 $pagina = new clsIndex();
 
-// Instancia objeto de conte˙do
+// Instancia objeto de conte√∫do
 $miolo = new indice();
 
-// Atribui o conte˙do ‡ p·gina
+// Atribui o conte√∫do √† p√°gina
 $pagina->addForm($miolo);
 
-// Gera o cÛdigo HTML
+// Gera o c√≥digo HTML
 $pagina->MakeAll();

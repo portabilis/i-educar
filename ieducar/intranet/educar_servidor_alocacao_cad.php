@@ -1,31 +1,31 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Adriano Erik Weiguert Nagasava <ctima@itajai.sc.gov.br>
  * @author    Haissam Yebahi <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo disponÌvel desde a vers„o 1.0.0
+ * @since     Arquivo dispon√≠vel desde a vers√£o 1.0.0
  * @version   $Id$
  */
 
@@ -43,14 +43,14 @@ require_once "lib/Portabilis/String/Utils.php";
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponÌvel desde a vers„o 1.0.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor AlocaÁ„o');
+    $this->SetTitulo($this->_instituicao . ' Servidores - Servidor Aloca√ß√£o');
     $this->processoAp = 635;
     $this->addEstilo('localizacaoSistema');
   }
@@ -64,7 +64,7 @@ class clsIndexBase extends clsBase
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponÌvel desde a vers„o 1.0.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
  * @version   @@package_version@@
  */
 class indice extends clsCadastro
@@ -142,7 +142,7 @@ class indice extends clsCadastro
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
+         "educar_servidores_index.php"       => "Servidores",
          ""                                  => "Alocar servidor"
     ));
     $this->enviaLocalizacao($localizacao->montar());
@@ -156,7 +156,7 @@ class indice extends clsCadastro
     $obj_inst = new clsPmieducarInstituicao($this->ref_ref_cod_instituicao);
     $inst_det = $obj_inst->detalhe();
 
-    $this->campoRotulo('nm_instituicao', 'InstituiÁ„o', $inst_det['nm_instituicao']);
+    $this->campoRotulo('nm_instituicao', 'Institui√ß√£o', $inst_det['nm_instituicao']);
     $this->campoOculto("ref_ref_cod_instituicao", $this->ref_ref_cod_instituicao);
     $this->campoOculto("cod_servidor_alocacao", $this->cod_servidor_alocacao);
 
@@ -180,9 +180,9 @@ class indice extends clsCadastro
 
     $this->campoOculto('ref_cod_servidor', $this->ref_cod_servidor);
 
-    // Carga hor·ria
+    // Carga hor√°ria
     $carga = $this->carga_horaria_disponivel;
-    $this->campoRotulo('carga_horaria_disponivel', 'Carga hor·ria do servidor', $carga . ':00');
+    $this->campoRotulo('carga_horaria_disponivel', 'Carga hor√°ria do servidor', $carga . ':00');
 
     $this->inputsHelper()->integer('ano', array('value' => $this->ano, 'max_length' => 4));
 
@@ -201,7 +201,7 @@ class indice extends clsCadastro
 
     $this->campoLista('ref_cod_escola', 'Escola', $opcoes, $this->ref_cod_escola, '', FALSE, '', '', FALSE, TRUE);
 
-    // PerÌodos
+    // Per√≠odos
     $periodo = array(
       1  => 'Matutino',
       2  => 'Vespertino',
@@ -209,12 +209,12 @@ class indice extends clsCadastro
     );
     self::$periodos = $periodo;
 
-    $this->campoLista('periodo', 'PerÌodo', $periodo, $this->periodo, NULL, FALSE, '', '', FALSE, TRUE);
+    $this->campoLista('periodo', 'Per√≠odo', $periodo, $this->periodo, NULL, FALSE, '', '', FALSE, TRUE);
 
-    // Carga hor·ria
-    $this->campoHoraServidor('carga_horaria_alocada', 'Carga hor·ria', $this->carga_horaria_alocada, TRUE);
+    // Carga hor√°ria
+    $this->campoHoraServidor('carga_horaria_alocada', 'Carga hor√°ria', $this->carga_horaria_alocada, TRUE);
 
-    // FunÁıes
+    // Fun√ß√µes
     $obj_funcoes = new clsPmieducarServidorFuncao();
 
     $lista_funcoes = $obj_funcoes->funcoesDoServidor($this->ref_ref_cod_instituicao, $this->ref_cod_servidor);
@@ -227,9 +227,9 @@ class indice extends clsCadastro
       }
     }
 
-    $this->campoLista('cod_servidor_funcao', 'FunÁ„o', $opcoes, $this->cod_servidor_funcao, '', FALSE, '', '', FALSE, FALSE);
+    $this->campoLista('cod_servidor_funcao', 'Fun√ß√£o', $opcoes, $this->cod_servidor_funcao, '', FALSE, '', '', FALSE, FALSE);
 
-    // VÌnculos
+    // V√≠nculos
     $opcoes = array("" => "Selecione", 5 => "Comissionado", 4 => "Contratado", 3 => "Efetivo", 6 => "Estagi&aacute;rio");
 
     $this->campoLista("ref_cod_funcionario_vinculo", "V&iacute;nculo", $opcoes, $this->ref_cod_funcionario_vinculo, NULL, FALSE, '', '', FALSE, FALSE);
@@ -282,30 +282,30 @@ class indice extends clsCadastro
                                                  $this->ano);
 
       if ($obj_novo->periodoAlocado()) {
-        $this->mensagem = 'PerÌodo informado j· foi alocado. Por favor, selecione outro.<br />';
+        $this->mensagem = 'Per√≠odo informado j√° foi alocado. Por favor, selecione outro.<br />';
         return FALSE;
       }
 
       $cadastrou = $obj_novo->cadastra();
 
       if (!$cadastrou) {
-        $this->mensagem = 'Cadastro n„o realizado.<br />';
+        $this->mensagem = 'Cadastro n√£o realizado.<br />';
         echo "<!--\nErro ao cadastrar clsPmieducarServidorAlocacao\nvalores obrigatorios\nis_numeric($this->ref_ref_cod_instituicao) &&
               is_numeric($this->ref_usuario_cad) && is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_servidor) &&
               is_numeric($this->periodo) && ($this->carga_horaria_alocada)\n-->";
         return FALSE;
       }
 
-      // ExcluÌ alocaÁ„o existente
+      // Exclu√≠ aloca√ß√£o existente
       if ($this->cod_servidor_alocacao) {
         $obj_tmp = new clsPmieducarServidorAlocacao($this->cod_servidor_alocacao, null, $this->pessoa_logada);
         $obj_tmp->excluir();
       }
 
-      // Atualiza cÛdigo da alocaÁ„o
+      // Atualiza c√≥digo da aloca√ß√£o
       $this->cod_servidor_alocacao = $cadastrou;
     }else{
-      $this->mensagem = 'N„o È possÌvel alocar quantidade superior de horas do que o disponÌvel.<br />';
+      $this->mensagem = 'N√£o √© poss√≠vel alocar quantidade superior de horas do que o dispon√≠vel.<br />';
       $this->alocacao_array = null;
 
       return false;
@@ -333,7 +333,7 @@ class indice extends clsCadastro
       $excluiu = $obj_tmp->excluir();
 
       if ($excluiu) {
-        $this->mensagem = "Exclus„o efetuada com sucesso.<br>";
+        $this->mensagem = "Exclus√£o efetuada com sucesso.<br>";
         header("Location: ". sprintf(
               'educar_servidor_alocacao_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',
               $this->ref_cod_servidor, $this->ref_ref_cod_instituicao));
@@ -341,7 +341,7 @@ class indice extends clsCadastro
       }
     }
 
-    $this->mensagem = 'Exclus„o n„o realizada.<br>';
+    $this->mensagem = 'Exclus√£o n√£o realizada.<br>';
     return false;
   }
 
@@ -359,15 +359,15 @@ class indice extends clsCadastro
   }
 }
 
-// Instancia objeto de p·gina
+// Instancia objeto de p√°gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conte˙do
+// Instancia objeto de conte√∫do
 $miolo = new indice();
 
-// Atribui o conte˙do ‡  p·gina
+// Atribui o conte√∫do √†  p√°gina
 $pagina->addForm($miolo);
 
-// Gera o cÛdigo HTML
+// Gera o c√≥digo HTML
 $pagina->MakeAll();
 ?>

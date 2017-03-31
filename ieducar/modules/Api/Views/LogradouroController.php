@@ -58,8 +58,8 @@ class LogradouroController extends ApiCoreController
     $sqls[] = "SELECT distinct l.idlog as id, l.nome as name, tl.descricao as tipo_logradouro, m.nome as municipio FROM
                  public.logradouro l left join urbano.tipo_logradouro tl on (l.idtlog = tl.idtlog) 
                  INNER JOIN public.municipio m ON m.idmun = l.idmun
-                 where (lower(to_ascii(l.nome)) like '%'||lower(to_ascii($1))||'%' 
-                 OR lower(to_ascii(tl.descricao))|| ' ' ||lower(to_ascii(l.nome)) like '%'||lower(to_ascii($1))||'%') 
+                 where (lower((l.nome)) like '%'||lower(($1))||'%' 
+                 OR lower((tl.descricao))|| ' ' ||lower((l.nome)) like '%'||lower(($1))||'%') 
                  and (m.idmun = $2 OR $2 = 0)";
 
     return $sqls;

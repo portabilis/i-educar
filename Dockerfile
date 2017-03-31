@@ -4,7 +4,7 @@ MAINTAINER Caroline Salib <caroline@portabilis.com.br>
 
 RUN apt-get -y update \
     && apt-get -y upgrade \
-    && apt-get install -y apache2 php5 libapache2-mod-php5 php5-pgsql php-pear rpl wget \
+    && apt-get install -y apache2 php5 libapache2-mod-php5 php5-pgsql php-pear php5-curl rpl wget \
     && a2enmod rewrite \
     && apt-get clean
 
@@ -22,7 +22,10 @@ CMD chmod 777 -R /home/portabilis/ieducar
 WORKDIR /home/portabilis/ieducar
 
 # Instala dependencia relatórios
-RUN apt-get -y install openjdk-6-jdk
+RUN apt-get install -y python-software-properties \
+    && add-apt-repository -y ppa:webupd8team/java \
+    && apt-get -y update \
+    && apt-get -y install openjdk-6-jdk
 CMD update-alternatives --config java
 
 CMD chmod 777 /home/portabilis/ieducar/modules/Reports/ReportSources/Portabilis/

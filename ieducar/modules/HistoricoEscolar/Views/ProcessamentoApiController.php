@@ -512,8 +512,8 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                                   $ano,
                                   $this->getService()->getOption('serieCargaHoraria'),
                                   $this->getRequest()->dias_letivos,
-                                  mb_strtoupper($dadosEscola['nome']),
-                                  mb_strtoupper($dadosEscola['cidade']),
+                                  strtoupper($dadosEscola['nome']),
+                                  strtoupper($dadosEscola['cidade']),
                                   $dadosEscola['uf'],
                                   utf8_decode($this->getRequest()->observacao),
                                   $this->getSituacaoMatricula(),
@@ -555,8 +555,8 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                                   $ano,
                                   $this->getService()->getOption('serieCargaHoraria'),
                                   $this->getRequest()->dias_letivos,
-                                  mb_strtoupper($dadosEscola['nome']),
-                                  mb_strtoupper($dadosEscola['cidade']),
+                                  strtoupper($dadosEscola['nome']),
+                                  strtoupper($dadosEscola['cidade']),
                                   $dadosEscola['uf'],
                                   utf8_decode($this->getRequest()->observacao),
                                   $this->getSituacaoMatricula(),
@@ -607,7 +607,8 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                               $fields['nome'],
                               $fields['nota'],
                               $fields['falta'],
-                              $fields['ordenamento']
+                              $fields['ordenamento'],
+                              $fields['carga_horaria_disciplina']
                           );
     $historicoDisciplina->cadastra();
   }
@@ -632,6 +633,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         $ccId = $componenteCurricular->get('id');
         $nome = $componenteCurricular->nome;
         $ordenamento = $componenteCurricular->ordenamento;
+        $carga_horaria_disciplina = $componenteCurricular->carga_horaria_disciplina;
         $sequencial = $this->getNextHistoricoDisciplinasSequencial($historicoSequencial, $alunoId);
         $nota = '';
         $notaConceitualNumerica = '';
@@ -665,6 +667,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
           $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['nota_conceitual_numerica'] += $notaConceitualNumerica;
           $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['falta'] += $this->getFalta($situacaoFaltasCc[$ccId]);
           $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['ordenamento'] = $componenteCurricular->area_conhecimento->ordenamento;
+          $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['carga_horaria_disciplina'] = $componenteCurricular->area_conhecimento->carga_horaria_disciplina;
           $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['count']++;
         }else
           $this->_createHistoricoDisciplinas(array(
@@ -674,7 +677,8 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
             "nome" => $nome,
             "nota" => $nota,
             "falta" => $this->getFalta($situacaoFaltasCc[$ccId]),
-            "ordenamento" => $ordenamento
+            "ordenamento" => $ordenamento,
+            "carga_horaria_disciplina" => $carga_horaria_disciplina
           ));
       }
       if ($mediaAreaConhecimento){
@@ -696,7 +700,8 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
             "nome" => $value['nome'],
             "nota" => $nota,
             "falta" => round($value['falta']/$value['count']),
-            "ordenamento" => $value['ordenamento']
+            "ordenamento" => $value['ordenamento'],
+            "carga_horaria_disciplina" => $value['carga_horaria_disciplina']
           ));
         }
       }
@@ -715,7 +720,8 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
           "nome" => utf8_decode($disciplina['nome']),
           "nota" => utf8_decode($disciplina['nota']),
           "falta" => $falta = $disciplina['falta'],
-          "ordenamento" => $value['ordenamento']
+          "ordenamento" => $value['ordenamento'],
+          "carga_horaria_disciplina" => $value['carga_horaria_disciplina']
         ));
       }
     }

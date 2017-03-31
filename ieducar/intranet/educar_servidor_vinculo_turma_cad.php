@@ -1,24 +1,24 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gestÃ£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de ItajaÃ­
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa Ã© software livre; vocÃª pode redistribuÃ­-lo e/ou modificÃ¡-lo
+ * sob os termos da LicenÃ§a PÃºblica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versÃ£o 2 da LicenÃ§a, como (a seu critÃ©rio)
+ * qualquer versÃ£o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa Ã© distribuÃ­Â­do na expectativa de que seja Ãºtil, porÃ©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implÃ­Â­cita de COMERCIABILIDADE OU
+ * ADEQUAÃ‡ÃƒO A UMA FINALIDADE ESPECÃFICA. Consulte a LicenÃ§a PÃºblica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * VocÃª deve ter recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral do GNU junto
+ * com este programa; se nÃ£o, escreva para a Free Software Foundation, Inc., no
+ * endereÃ§o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas Schmoeller das Silva <lucas@portabilis.com.br>
  * @category  i-Educar
@@ -50,7 +50,7 @@ class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor vínculo turma');
+    $this->SetTitulo($this->_instituicao . ' Servidores - Servidor vÃ­nculo turma');
     $this->processoAp = 635;
   }
 }
@@ -130,6 +130,15 @@ class indice extends clsCadastro
 
     $this->nome_url_cancelar = 'Cancelar';
 
+    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_servidores_index.php"       => "Servidores",
+         ""        => "{$nomeMenu} vÃ­nculo do servidor Ã  turma"             
+    ));
+    $this->enviaLocalizacao($localizacao->montar());
+
     return $retorno;
   }
 
@@ -154,25 +163,25 @@ class indice extends clsCadastro
                         1     => 'Docente',
                         2     => 'Auxiliar/Assistente educacional',
                         3     => 'Profissional/Monitor de atividade complementar',
-                        4     => 'Tradutor Intérprete de LIBRAS',
-                        5     => 'Docente titular - coordenador de tutoria (de módulo ou disciplina) - EAD',
-                        6     => 'Docente tutor (de módulo ou disciplina)');
+                        4     => 'Tradutor IntÃ©rprete de LIBRAS',
+                        5     => 'Docente titular - coordenador de tutoria (de mÃ³dulo ou disciplina) - EAD',
+                        6     => 'Docente tutor (de mÃ³dulo ou disciplina)');
 
-    $options = array('label' => Portabilis_String_Utils::toLatin1('Função exercida'), 'resources' => $resources, 'value' => $this->funcao_exercida);
+    $options = array('label' => Portabilis_String_Utils::toLatin1('FunÃ§Ã£o exercida'), 'resources' => $resources, 'value' => $this->funcao_exercida);
     $this->inputsHelper()->select('funcao_exercida', $options);
 
         $resources = array( null => 'Nenhum',
-                            1    => Portabilis_String_Utils::toLatin1('Concursado/efetivo/estável'),
-                            2    => Portabilis_String_Utils::toLatin1('Contrato temporário'),
+                            1    => Portabilis_String_Utils::toLatin1('Concursado/efetivo/estÃ¡vel'),
+                            2    => Portabilis_String_Utils::toLatin1('Contrato temporÃ¡rio'),
                             3    => 'Contrato terceirizado',
                             4    => 'Contrato CLT');
 
-    $options = array('label' => Portabilis_String_Utils::toLatin1('Tipo do vínculo'), 'resources' => $resources, 'value' => $this->tipo_vinculo, 'required' => false);
+    $options = array('label' => Portabilis_String_Utils::toLatin1('Tipo do vÃ­nculo'), 'resources' => $resources, 'value' => $this->tipo_vinculo, 'required' => false);
     $this->inputsHelper()->select('tipo_vinculo', $options);
     $this->inputsHelper()->checkbox('permite_lancar_faltas_componente',
-                                    array('label' => Portabilis_String_Utils::toLatin1('Professor de área específica?'), 
+                                    array('label' => Portabilis_String_Utils::toLatin1('Professor de Ã¡rea especÃ­fica?'), 
                                           'value' => $this->permite_lancar_faltas_componente,
-                                          'help'  =>  Portabilis_String_Utils::toLatin1('Marque esta opção somente se o professor leciona uma disciplina específica na turma selecionada.')));
+                                          'help'  =>  Portabilis_String_Utils::toLatin1('Marque esta opÃ§Ã£o somente se o professor leciona uma disciplina especÃ­fica na turma selecionada.')));
 
     $this->inputsHelper()->checkbox('selecionar_todos', array('label' => 'Selecionar/remover todos'));
     $this->inputsHelper()->multipleSearchComponenteCurricular(null, array('label' => 'Componentes lecionados', 'required' => false));
@@ -202,7 +211,7 @@ class indice extends clsCadastro
     if ($this->ref_cod_turma){
       $obj = new clsModulesProfessorTurma(NULL, $this->ano, $this->ref_cod_instituicao, $this->servidor_id, $this->ref_cod_turma, $this->funcao_exercida, $this->tipo_vinculo, $this->permite_lancar_faltas_componente);
       if ($obj->existe2()){
-        $this->mensagem .= 'Não é possível cadastrar pois já existe um vínculo com essa turma.<br>';
+        $this->mensagem .= 'NÃ£o Ã© possÃ­vel cadastrar pois jÃ¡ existe um vÃ­nculo com essa turma.<br>';
         return FALSE;
       }else
         $this->gravaComponentes($obj->cadastra());
@@ -238,13 +247,13 @@ class indice extends clsCadastro
     $obj = new clsModulesProfessorTurma($this->id, $this->ano, $this->ref_cod_instituicao, $this->servidor_id, $this->ref_cod_turma, $this->funcao_exercida, $this->tipo_vinculo, $this->permite_lancar_faltas_componente);
 
     if ($obj->existe2()){
-      $this->mensagem .= 'Não é possível cadastrar pois já existe um vínculo com essa turma.<br>';
+      $this->mensagem .= 'NÃ£o Ã© possÃ­vel cadastrar pois jÃ¡ existe um vÃ­nculo com essa turma.<br>';
       return FALSE;
     }
     $obj->edita();
     $this->gravaComponentes($this->id);
 
-    $this->mensagem .= 'Edição efetuada com sucesso.<br>';
+    $this->mensagem .= 'EdiÃ§Ã£o efetuada com sucesso.<br>';
     header('Location: ' . $backUrl);
     die();
 
@@ -268,7 +277,7 @@ class indice extends clsCadastro
     $obj = new clsModulesProfessorTurma($this->id);
     $obj->excluir();
 
-    $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
+    $this->mensagem .= 'ExclusÃ£o efetuada com sucesso.<br>';
     header('Location:' . $backUrl);
     die();
 
@@ -288,16 +297,16 @@ class indice extends clsCadastro
   }
 }
 
-// Instancia objeto de página
+// Instancia objeto de pÃ¡gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conteúdo
+// Instancia objeto de conteÃºdo
 $miolo = new indice();
 
-// Atribui o conteúdo à  página
+// Atribui o conteÃºdo Ã Â  pÃ¡gina
 $pagina->addForm($miolo);
 
-// Gera o código HTML
+// Gera o cÃ³digo HTML
 $pagina->MakeAll();
 
 ?>

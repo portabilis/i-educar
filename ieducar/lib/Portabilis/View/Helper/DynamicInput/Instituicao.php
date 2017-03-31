@@ -71,23 +71,7 @@ class Portabilis_View_Helper_DynamicInput_Instituicao extends Portabilis_View_He
     parent::select($options);
   }
 
-
-  public function hiddenInput($options = array()) {
-    $defaultOptions       = array('id' => null, 'options' => array());
-    $options              = $this->mergeOptions($options, $defaultOptions);
-
-    $defaultInputOptions = array('id'    => 'ref_cod_instituicao',
-                                 'value' => $this->getInstituicaoId($options['id']));
-
-    $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
-    call_user_func_array(array($this->viewInstance, 'campoOculto'), $inputOptions);
-  }
-
-
   public function instituicao($options = array()) {
-    if ($this->hasNivelAcesso('POLI_INSTITUCIONAL') || $options['options']['show-select'])
-      $this->selectInput($options);
-    else
-      $this->hiddenInput($options);
+    $this->selectInput($options);
   }
 }

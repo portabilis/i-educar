@@ -1,25 +1,25 @@
 	<?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	@author Prefeitura Municipal de ItajaÌ								 *
+	*	@author Prefeitura Municipal de Itaja√≠								 *
 	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software P˙blico Livre e Brasileiro					 *
+	*   Pacote: i-PLB Software P√∫blico Livre e Brasileiro					 *
 	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÌ			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itaja√≠			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  È  software livre, vocÍ pode redistribuÌ-lo e/ou	 *
-	*	modific·-lo sob os termos da LicenÁa P˙blica Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a vers„o 2 da	 *
-	*	LicenÁa   como  (a  seu  critÈrio)  qualquer  vers„o  mais  nova.	 *
+	*	Este  programa  √©  software livre, voc√™ pode redistribu√≠-lo e/ou	 *
+	*	modific√°-lo sob os termos da Licen√ßa P√∫blica Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a vers√£o 2 da	 *
+	*	Licen√ßa   como  (a  seu  crit√©rio)  qualquer  vers√£o  mais  nova.	 *
 	*																		 *
-	*	Este programa  È distribuÌdo na expectativa de ser ˙til, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implÌcita de COMERCIALI-	 *
-	*	ZA«√O  ou  de ADEQUA«√O A QUALQUER PROP”SITO EM PARTICULAR. Con-	 *
-	*	sulte  a  LicenÁa  P˙blica  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  √© distribu√≠do na expectativa de ser √∫til, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia impl√≠cita de COMERCIALI-	 *
+	*	ZA√á√ÉO  ou  de ADEQUA√á√ÉO A QUALQUER PROP√ìSITO EM PARTICULAR. Con-	 *
+	*	sulte  a  Licen√ßa  P√∫blica  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	VocÍ  deve  ter  recebido uma cÛpia da LicenÁa P˙blica Geral GNU	 *
-	*	junto  com  este  programa. Se n„o, escreva para a Free Software	 *
+	*	Voc√™  deve  ter  recebido uma c√≥pia da Licen√ßa P√∫blica Geral GNU	 *
+	*	junto  com  este  programa. Se n√£o, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
@@ -279,14 +279,14 @@ class indice extends clsDetalhe
 			{
 				$tabela = "<table>
 						       <tr align='center'>
-						           <td rowspan='2' bgcolor='#a1b3bd'><b>Nome</b></td>";
+						           <td rowspan='2' bgcolor='#ccdce6'><b>Nome</b></td>";
 
 				for ( $i = 1; $i <= $max_qtd_nota; $i++ )
 				{
 					if ($qtd_modulos < $i)
-						$tabela .= "<td colspan='2' bgcolor='#a1b3bd'><b>Exame</b></td>";
+						$tabela .= "<td colspan='2' bgcolor='#ccdce6'><b>Exame</b></td>";
 					else
-						$tabela .= "<td colspan='2' bgcolor='#a1b3bd'><b>M&oacute;dulo {$i}</b></td>";
+						$tabela .= "<td colspan='2' bgcolor='#ccdce6'><b>M&oacute;dulo {$i}</b></td>";
 				}
 				$tabela .= "</tr>";
 
@@ -294,9 +294,9 @@ class indice extends clsDetalhe
 				for ( $i = 1; $i <= $max_qtd_nota; $i++ )
 				{
 					if ($qtd_modulos < $i)
-						$tabela .= "<td colspan='2' bgcolor='#a1b3bd'><b>Nota</b></td>";
+						$tabela .= "<td colspan='2' bgcolor='#ccdce6'><b>Nota</b></td>";
 					else
-						$tabela .= "<td bgcolor='#a1b3bd'><b>Nota</b></td><td bgcolor='#a1b3bd'><b>Faltas</b></td>";
+						$tabela .= "<td bgcolor='#ccdce6'><b>Nota</b></td><td bgcolor='#ccdce6'><b>Faltas</b></td>";
 				}
 				$tabela .= "</tr>";
 
@@ -307,13 +307,13 @@ class indice extends clsDetalhe
 				{
 //					echo "<pre>"; print_r($lst_disciplinas); die();
 					$parar=false;
-					if (!strcmp($valor["nm_disciplina"], "Matem·tica")) {
+					if (!strcmp($valor["nm_disciplina"], "Matem√°tica")) {
 						$parar = true;
 					}
 					if ( !$dispensa[$valor["ref_cod_disciplina"]] )
 					{
 						if ( ($cont % 2) == 0 )
-							$color = " bgcolor='#E4E9ED' ";
+							$color = " bgcolor='#f5f9fd' ";
 						else
 							$color = " bgcolor='#FFFFFF' ";
 
@@ -433,7 +433,7 @@ class indice extends clsDetalhe
 							}
 							else
 							{
-								$tabela .= "<td align='center' colspan='2' bgcolor='#a1b3bd' align='center'><a href='educar_falta_nota_aluno_cad.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_turma={$registro["ref_cod_turma"]}&ref_sequencial_matricula_turma={$registro["sequencial"]}&modulo={$i}'>Editar</a></td>";
+								$tabela .= "<td align='center' colspan='2' bgcolor='#ccdce6' align='center'><a href='educar_falta_nota_aluno_cad.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_turma={$registro["ref_cod_turma"]}&ref_sequencial_matricula_turma={$registro["sequencial"]}&modulo={$i}'>Editar</a></td>";
 							}
 						}
 						$tabela .= "</tr>";
@@ -461,14 +461,14 @@ class indice extends clsDetalhe
 			{
 				$tabela = "<table>
 						       <tr align='center'>
-						           <td rowspan='2' bgcolor='#a1b3bd'><b>Nome</b></td>";
+						           <td rowspan='2' bgcolor='#ccdce6'><b>Nome</b></td>";
 
 				for ( $i = 1; $i <= $max_qtd_nota; $i++ )
 				{
 					if ($qtd_modulos < $i)
-						$tabela .= "<td colspan='2' bgcolor='#a1b3bd'><b>Exame</b></td>";
+						$tabela .= "<td colspan='2' bgcolor='#ccdce6'><b>Exame</b></td>";
 					else
-						$tabela .= "<td colspan='2' bgcolor='#a1b3bd'><b>M&oacute;dulo {$i}</b></td>";
+						$tabela .= "<td colspan='2' bgcolor='#ccdce6'><b>M&oacute;dulo {$i}</b></td>";
 				}
 				$tabela .= "</tr>";
 
@@ -476,9 +476,9 @@ class indice extends clsDetalhe
 				for ( $i = 1; $i <= $max_qtd_nota; $i++ )
 				{
 					if ($qtd_modulos < $i)
-						$tabela .= "<td colspan='2' bgcolor='#a1b3bd'><b>Nota</b></td>";
+						$tabela .= "<td colspan='2' bgcolor='#ccdce6'><b>Nota</b></td>";
 					else
-						$tabela .= "<td bgcolor='#a1b3bd'><b>Nota</b></td><td bgcolor='#a1b3bd'><b>Faltas</b></td>";
+						$tabela .= "<td bgcolor='#ccdce6'><b>Nota</b></td><td bgcolor='#ccdce6'><b>Faltas</b></td>";
 				}
 				$tabela .= "</tr>";
 
@@ -488,7 +488,7 @@ class indice extends clsDetalhe
 				foreach ( $lst_disciplinas AS $valor )
 				{
 					if ( ($cont % 2) == 0 )
-						$color = " bgcolor='#E4E9ED' ";
+						$color = " bgcolor='#f5f9fd' ";
 					else
 						$color = " bgcolor='#FFFFFF' ";
 
@@ -602,7 +602,7 @@ class indice extends clsDetalhe
 						}
 						else
 						{
-							$tabela .= "<td align='center' colspan='2' bgcolor='#a1b3bd' align='center'><a href='educar_falta_nota_aluno_cad.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_turma={$registro["ref_cod_turma"]}&ref_sequencial_matricula_turma={$registro["sequencial"]}&modulo={$i}'>Editar</a></td>";
+							$tabela .= "<td align='center' colspan='2' bgcolor='#ccdce6' align='center'><a href='educar_falta_nota_aluno_cad.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_turma={$registro["ref_cod_turma"]}&ref_sequencial_matricula_turma={$registro["sequencial"]}&modulo={$i}'>Editar</a></td>";
 						}
 						}
 					$tabela .= "</tr>";

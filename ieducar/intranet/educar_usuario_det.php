@@ -1,25 +1,25 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
+	*	@author Prefeitura Municipal de ItajaÃ­								 *
 	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
+	*   Pacote: i-PLB Software PÃºblico Livre e Brasileiro					 *
 	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÃ­			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
+	*	Este  programa  Ã©  software livre, vocÃª pode redistribuÃ­-lo e/ou	 *
+	*	modificÃ¡-lo sob os termos da LicenÃ§a PÃºblica Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a versÃ£o 2 da	 *
+	*	LicenÃ§a   como  (a  seu  critÃ©rio)  qualquer  versÃ£o  mais  nova.	 *
 	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  Ã© distribuÃ­do na expectativa de ser Ãºtil, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia implÃ­cita de COMERCIALI-	 *
+	*	ZAÃ‡ÃƒO  ou  de ADEQUAÃ‡ÃƒO A QUALQUER PROPÃ“SITO EM PARTICULAR. Con-	 *
+	*	sulte  a  LicenÃ§a  PÃºblica  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
+	*	VocÃª  deve  ter  recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral GNU	 *
+	*	junto  com  este  programa. Se nÃ£o, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
@@ -27,7 +27,8 @@
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsDetalhe.inc.php");
 require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
+require_once ("include/pmieducar/geral.inc.php");
+require_once ("include/pmieducar/clsPmieducarEscolaUsuario.inc.php");
 
 class clsIndexBase extends clsBase
 {
@@ -155,7 +156,7 @@ class indice extends clsDetalhe
 
 		$this->addDetalhe( array("Site", $det_pessoa["url"]) );
 		//$this->addDetalhe( array("E-mail", $det_pessoa["email"]) );
-		$this->addDetalhe( array("E-mail usuário", $det_funcionario["email"]) );
+		$this->addDetalhe( array("E-mail usuÃ¡rio", $det_funcionario["email"]) );
 
 		if (!empty($det_funcionario['matricula_interna']))
 			$this->addDetalhe( array('Matr&iacute;cula interna', $det_funcionario['matricula_interna']));
@@ -166,7 +167,7 @@ class indice extends clsDetalhe
 		$sexo = ($det_fisica["sexo"] == "M") ? "Masculino" : "Feminino";
 		$this->addDetalhe( array("Sexo", $sexo) );
 
-		$this->addDetalhe( array("Matrícula", $det_funcionario["matricula"]) );
+		$this->addDetalhe( array("MatrÃ­cula", $det_funcionario["matricula"]) );
 		$this->addDetalhe( array("Sequencial", $det_funcionario["sequencial"]) );
 		$ativo_f = ($det_funcionario["ativo"] == '1') ? "Ativo" : "Inativo";
 		$this->addDetalhe( array("Status", $ativo_f) );		
@@ -196,13 +197,18 @@ class indice extends clsDetalhe
 			$registro["ref_cod_instituicao"] = "Erro na gera&ccedil;&atilde;o";
 			echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarInstituicao\n-->";
 		}
-		if( class_exists( "clsPmieducarEscola" ) )
+		if( class_exists( "clsPmieducarEscolaUsuario" ) )
 		{
-			$obj_cod_escola = new clsPmieducarEscola( $registro["ref_cod_escola"] );
-			$obj_cod_escola_det = $obj_cod_escola->detalhe();
-			$id_pessoa = $obj_cod_escola_det["nome"];
-			//$obj_cod_escola = new clsJuridica($id_pessoa);
-		 	//$registro["ref_cod_escola"] = $obj_cod_escola_det["fantasia"];
+			$escolasUsuario = new clsPmieducarEscolaUsuario();
+			$escolasUsuario = $escolasUsuario->lista($cod_pessoa);
+
+			foreach ($escolasUsuario as $escola) {
+				$escolaDetalhe = new clsPmieducarEscola($escola['ref_cod_escola']);
+				$escolaDetalhe = $escolaDetalhe->detalhe();
+				$nomesEscola[] = $escolaDetalhe['nome'];
+			}
+			$nomesEscola = implode("<br>", $nomesEscola);
+		 	$registro["ref_cod_escola"] = $nomesEscola;
 		}
 		else
 		{
@@ -220,7 +226,7 @@ class indice extends clsDetalhe
 		}
 		if( $registro["ref_cod_escola"] )
 		{
-			$this->addDetalhe( array( "Escola", "$id_pessoa") );
+			$this->addDetalhe( array( "Escola", $registro["ref_cod_escola"]) );
 		}
 
 		$objPermissao = new clsPermissoes();		 
@@ -235,7 +241,7 @@ class indice extends clsDetalhe
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
+	         "educar_configuracoes_index.php"  => "ConfiguraÃ§Ãµes",
          ""                                  => "Detalhe do usu&aacute;rio"
     ));
     $this->enviaLocalizacao($localizacao->montar());

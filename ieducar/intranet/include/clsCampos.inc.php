@@ -1,45 +1,47 @@
 <?php
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Include
- * @since     Arquivo disponÌvel desde a vers„o 1.0.0
+ * @since     Arquivo dispon√≠vel desde a vers√£o 1.0.0
  * @version   $Id$
  */
 
 require_once 'Core/Controller/Page/Abstract.php';
+require_once 'App/Model/NivelTipoUsuario.php';
+require_once 'include/pmieducar/clsPermissoes.inc.php';
 
 /**
  * clsCampos class.
  *
- * Implementa toda a lÛgica necess·ria para criar elementos de formul·rio e os
- * cÛdigos HTML e Javascript necess·rios para o funcionamento no i-Educar.
+ * Implementa toda a l√≥gica necess√°ria para criar elementos de formul√°rio e os
+ * c√≥digos HTML e Javascript necess√°rios para o funcionamento no i-Educar.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Include
- * @since     Classe disponÌvel desde a vers„o 1.0.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
  * @version   @@package_version@@
  */
 class clsCampos extends Core_Controller_Page_Abstract
@@ -75,6 +77,32 @@ class clsCampos extends Core_Controller_Page_Abstract
   var $__sequencia_fluxo   = FALSE;
   var $__sequencia_default = TRUE;
   var $__acao_enviar_abas  = 'acao()';
+  var $ref_cod_escola;
+  var $ref_cod_instituicao;
+
+  function clsCampos() {
+    parent::__construct();
+
+    @session_start();
+    $this->pessoa_logada = $_SESSION['id_pessoa'];
+    session_write_close();
+
+    if ($this->ref_cod_escola) return;
+
+    $permissao = new clsPermissoes();
+    $nivel = $permissao->nivel_acesso($this->pessoa_logada);
+
+    if ($nivel == App_Model_NivelTipoUsuario::ESCOLA ||
+        $nivel == App_Model_NivelTipoUsuario::BIBLIOTECA) {
+
+      $escolas_usuario = array();
+      $escolasUser = App_Model_IedFinder::getEscolasUser($this->pessoa_logada);
+      $escola = array_shift($escolasUser);
+
+      $this->ref_cod_escola = $escola['ref_cod_escola'];
+      $this->ref_cod_instituicao = $escola['instituicao'];
+    }
+  }
 
   function campoTabInicio($nome ,$largura = '', $segue_fluxo = FALSE, $array_sequencia = NULL)
   {
@@ -184,7 +212,7 @@ class clsCampos extends Core_Controller_Page_Abstract
   }
 
   function campoBoolLista($nome, $campo, $default, $val_true = 'Sim',
-    $val_false = 'N„o', $val_undefined = NULL)
+    $val_false = 'N√£o', $val_undefined = NULL)
   {
     $valor = array();
     $valor['f'] = $val_false;
@@ -612,10 +640,10 @@ class clsCampos extends Core_Controller_Page_Abstract
   }
 
   /**
-   * [Obsoleta] Ver funÁ„o setOptionsListaPesquisa
+   * [Obsoleta] Ver fun√ß√£o setOptionsListaPesquisa
    *
-   * TODO: converter todos que utilizam essa fuÁ„o para a
-   * funÁ„o setOptionsListaPesquisa
+   * TODO: converter todos que utilizam essa fu√ß√£o para a
+   * fun√ß√£o setOptionsListaPesquisa
    */
   function campoListaPesq(
     $nome,
@@ -683,7 +711,7 @@ class clsCampos extends Core_Controller_Page_Abstract
       $valor,
       $tamanhovisivel,
       $tamanhomaximo,
-      $descricao ? $descricao : 'somente n˙meros',
+      $descricao ? $descricao : 'somente n√∫meros',
       $descricao2,
       $script,
       $evento,
@@ -908,7 +936,7 @@ class clsCampos extends Core_Controller_Page_Abstract
     $this->num_espaco++;
   }
 
-  function campoQuebra2($cor = '#000000', $altura = 2)
+  function campoQuebra2($cor = '#47728f', $altura = 2)
   {
     $this->campos['linha_preta' . $this->num_espaco] = array(
       'linha_preta',
@@ -949,13 +977,13 @@ class clsCampos extends Core_Controller_Page_Abstract
 
     $foiDuplo = $junta_linhas;
 
-    // Marca quantos valores foram passados para o prenchimento das repetiÁıes
+    // Marca quantos valores foram passados para o prenchimento das repeti√ß√µes
     $adicionador_total_valores = 5;
 
     $javascript .= "
   function tabela(name, counter)
   {
-    // Seta variavel para n„o reordenar id dos campos
+    // Seta variavel para n√£o reordenar id dos campos
     this.setReordena = function(reordenar)
     {
       this.reordenar = reordenar;
@@ -964,7 +992,7 @@ class clsCampos extends Core_Controller_Page_Abstract
     // Construtor
     this.constructor = function() {
 
-      // ContÈm uma referÍncia ao objeto
+      // Cont√©m uma refer√™ncia ao objeto
       var This = this;
 
       this.id = counter;
@@ -1122,7 +1150,7 @@ class clsCampos extends Core_Controller_Page_Abstract
       }
 
       // if (This.id == 0)
-      //   This.addRow();   // Foi comentado para permitir excluir todas as alocaÁıes do servidor publico.
+      //   This.addRow();   // Foi comentado para permitir excluir todas as aloca√ß√µes do servidor publico.
 
       this.afterRemoveRow();
     }
@@ -1300,7 +1328,7 @@ class clsCampos extends Core_Controller_Page_Abstract
         $md     = $md ? FALSE : TRUE;
 
         $retorno .= "<tr id='tr_$nome_tabela' class='$classe'><td valign='top' align='center' colspan='2'>";
-        $retorno .= "\n<table cellspacing='0' $largura id='$nome_tabela' cellpadding='2' style='border-width:1px 1px 1px 1px;border-color:#000000;border-style:solid;margin:10px 0px 10px 0px;' >";
+        $retorno .= "\n<table cellspacing='0' $largura id='$nome_tabela' class='tabela-adicao' cellpadding='2' style='margin:10px 0px 10px 0px;' >";
 
         $total_campos = count($cabecalho);
         $span = $total_campos + 1;
@@ -1332,7 +1360,7 @@ class clsCampos extends Core_Controller_Page_Abstract
 
         $click = "$nome_add.removeRow(this);";
 
-        $img = "<img src=\"imagens/banco_imagens/excluirrr.gif\" border=\"0\" alt=\"excluir\" />";
+        $img = "<img src=\"imagens/banco_imagens/excluirrr.png\" border=\"0\" alt=\"excluir\" />";
         $md2 = FALSE;
 
         if (! count($valores)) {
@@ -1454,7 +1482,7 @@ class clsCampos extends Core_Controller_Page_Abstract
           }
 
           $retorno .= "<td align='center'><a href='javascript:void(0)' onclick='$click' id='link_remove[$key2]' style='outline: none;'>$img</a>$retorno_oculto</td>";
-          $img      = "<img src=\"imagens/banco_imagens/excluirrr.gif\" border=\"0\" alt=\"excluir\" />";
+          $img      = "<img src=\"imagens/banco_imagens/excluirrr.png\" border=\"0\" alt=\"excluir\" />";
           $id       = count($valores);
 
           $javascript .= "
@@ -1467,7 +1495,7 @@ class clsCampos extends Core_Controller_Page_Abstract
         $img      = "<img src=\"imagens/nvp_bot_novo.png\" border=\"0\" alt=\"incluir\" />";
         $retorno .= "<tr id='adicionar_linha'>";
         $tt       = $total_campos + 1;
-        $retorno .= "<td colspan='$tt' align='left' style='border-width:1px 0px 0px 0px;border-style:dotted;border-color:#000000;'><a href='javascript:void(0)' id='btn_add_$nome_add' onclick='$click' style='outline: none;'>$img</a></td>";
+        $retorno .= "<td colspan='$tt' align='left' style='padding-top: 17px !important;'><a href='javascript:void(0)' id='btn_add_$nome_add' onclick='$click' style='outline: none;'>$img <p>ADICIONAR NOVO<p></a></td>";
         $retorno .= "</tr>";
 
         $retorno .= "</table>";
@@ -1478,7 +1506,7 @@ class clsCampos extends Core_Controller_Page_Abstract
       }
 
       if ($this->__adicionando && FALSE) {
-        // Adiciona o campo no bloco de repetiÁ„o
+        // Adiciona o campo no bloco de repeti√ß√£o
         $adicionador_campos_repeticao[$nome] = $componente;
         $adicionador_complemento_campo       = "[{$adicionador_indice}]";
         $campo_valor                         = $componente[3][$adicionador_indice];
@@ -1511,12 +1539,12 @@ class clsCampos extends Core_Controller_Page_Abstract
       }
       elseif ($componente[0] == 'bloco_adicionador') {
         if ($componente[1] == 'begin') {
-          // Flag de que estamos no meio de um bloco de adiÁ„
+          // Flag de que estamos no meio de um bloco de adi√ß√£
           $this->__adicionando = TRUE;
 
-          // Se for a primeira vez que cai aqui define o Ìndice como zero,
-          // nas vezes subsequentes (chamadas por recursividade) o Ìndice ser·
-          // passado na chamada da funÁ„o
+          // Se for a primeira vez que cai aqui define o √≠ndice como zero,
+          // nas vezes subsequentes (chamadas por recursividade) o √≠ndice ser√°
+          // passado na chamada da fun√ß√£o
           if (is_null($adicionador_indice)) {
             $adicionador_indice = 0;
           }
@@ -1524,17 +1552,17 @@ class clsCampos extends Core_Controller_Page_Abstract
           // Cria um array para armazenar os campos a serem repetidos
           $adicionador_campos_repeticao = array();
 
-          // Adiciona o campo begin no Ìnicio do bloco de repetiÁ„o
+          // Adiciona o campo begin no √≠nicio do bloco de repeti√ß√£o
           $adicionador_campos_repeticao[$nome] = $componente;
         }
         else {
-          // Desmarca a flag de bloco de adiÁ„
+          // Desmarca a flag de bloco de adi√ß√£
           $this->__adicionando = FALSE;
 
-          // Adiciona o campo end no fim do bloco de repetiÁ„o
+          // Adiciona o campo end no fim do bloco de repeti√ß√£o
           $adicionador_campos_repeticao[$nome] = $componente;
 
-          // Ainda n„o repetiu o bloco por tempo suficiente
+          // Ainda n√£o repetiu o bloco por tempo suficiente
           $adicionador_indice++;
           if ($adicionador_indice < $adicionador_total_valores) {
             $retorno .= $this->MakeCampos($adicionador_campos_repeticao,
@@ -1633,7 +1661,7 @@ class clsCampos extends Core_Controller_Page_Abstract
             $retorno .= "<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" id=\"anexador_{$nome}\">";
 
             if (is_array($componente[9])) {
-              // Existem itens j· incluÌdos, monta a lista com eles (com o bot„o remover ao lado)
+              // Existem itens j√° inclu√≠dos, monta a lista com eles (com o bot√£o remover ao lado)
               foreach ($componente[9] as $ja_incluido) {
                 list($cod, $label) = $ja_incluido;
 
@@ -1642,7 +1670,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                 $opcoes = $componente[3];
 
                 if ($componente[7]) {
-                  // … um adicionador, ent„o vamos inserir os j· incluÌdos na lista padr„o
+                  // √â um adicionador, ent√£o vamos inserir os j√° inclu√≠dos na lista padr√£o
                   $opcoes[$cod] = $label;
                 }
 
@@ -1664,7 +1692,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                   $retorno .= "<img src=\"imagens/lupa.png\" alt=\"Pesquisa\" border=\"0\" onclick=\"pesquisa_valores_popless('{$componente[7]}', '{$nome}_{$inicio}')\">";
                 }
 
-                $retorno   .= " {$componente[8]}</td><td id=\"td_adicionador_{$nome}_{$inicio}\" style=\"padding-left:30px;\"><img name=\"adicionador_{$nome}_{$inicio}\" id=\"adicionador_{$nome}_{$inicio}\" onclick=\"remove_{$nome}('{$inicio}');\" src=\"imagens/banco_imagens/excluirrr.gif\" title=\"Excluir\" border=0></td></tr>";
+                $retorno   .= " {$componente[8]}</td><td id=\"td_adicionador_{$nome}_{$inicio}\" style=\"padding-left:30px;\"><img name=\"adicionador_{$nome}_{$inicio}\" id=\"adicionador_{$nome}_{$inicio}\" onclick=\"remove_{$nome}('{$inicio}');\" src=\"imagens/banco_imagens/excluirrr.png\" title=\"Excluir\" border=0></td></tr>";
                 $inclusos[] = $inicio;
 
                 $inicio++;
@@ -1752,7 +1780,7 @@ class clsCampos extends Core_Controller_Page_Abstract
     id_antecessor = id - 1;
 
     img_ant     = document.getElementById('adicionador_{$nome}_' + id_antecessor);
-    img_ant.src = 'imagens/banco_imagens/excluirrr.gif';
+    img_ant.src = 'imagens/banco_imagens/excluirrr.png';
 
     document.getElementById('adicionador_{$nome}_' + id_antecessor).onclick = function() { onclick=remove_{$nome}(this.name.substr(this.name.lastIndexOf( '_' ) + 1)); };
 
@@ -2512,7 +2540,8 @@ class clsCampos extends Core_Controller_Page_Abstract
             break;
 
           case 'arquivo':
-            $retorno .= "<input class='{$class}' name=\"{$nome}\" id=\"{$nome}\" type='file' size=\"{$componente[4]}\" value=\"{$componente[3]}\">";
+            $retorno .= "<input class='inputfile inputfile-buttom' name=\"{$nome}\" id=\"{$nome}\" type='file' size=\"{$componente[4]}\" value=\"{$componente[3]}\">
+            <label id=\"{$nome}\" for=\"{$nome}\"><span></span> <strong>Escolha um arquivo</strong></label>";
 
             if (! empty($componente[5])) {
               $retorno.= "&nbsp;$componente[5]";
@@ -2898,10 +2927,10 @@ class clsCampos extends Core_Controller_Page_Abstract
   }
 
   /**
-   * TODO: Remover mÈtodo. No ˙nico caso possÌvel de ser invocado, n„o o È
-   *   (atravÈs de intranet/funcionario_cad.php). … necess·rio estudar
-   *   o mÈtodo clsCampos::MakeCampos() para entender o caso possÌvel em que
-   *   este mÈtodo seria invocado.
+   * TODO: Remover m√©todo. No √∫nico caso poss√≠vel de ser invocado, n√£o o √©
+   *   (atrav√©s de intranet/funcionario_cad.php). √â necess√°rio estudar
+   *   o m√©todo clsCampos::MakeCampos() para entender o caso poss√≠vel em que
+   *   este m√©todo seria invocado.
    *
    * @see scripts/padrao.js::pesquisa_valores_f()
    * @see clsCampos::MakeCampos()

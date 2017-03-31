@@ -4,7 +4,7 @@ function fixupTabelaMatriculas() {
   var $parentTd = $j('.botaolistagem[value=" Voltar "]').closest('tr').next().children().first();
       $parentTd.empty().removeAttr('bgcolor').removeAttr('style');
 
-  $j('<p>').html(stringUtils.toUtf8('<strong>Matrículas:</strong>')).appendTo($parentTd);
+  $j('<p>').addClass('title-table-matricula').html(stringUtils.toUtf8('<strong>Matrículas:</strong>')).appendTo($parentTd);
 
   var $table = $j('<table>').attr('id', 'matriculas').addClass('styled horizontal-expand').hide();
   var $tr    = $j('<tr>');

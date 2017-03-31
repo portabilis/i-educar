@@ -1,25 +1,25 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 *																	     *
-*	@author Prefeitura Municipal de Itaja�								 *
+*	@author Prefeitura Municipal de Itajaï¿½								 *
 *	@updated 29/03/2007													 *
-*   Pacote: i-PLB Software P�blico Livre e Brasileiro					 *
+*   Pacote: i-PLB Software Pï¿½blico Livre e Brasileiro					 *
 *																		 *
-*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itaja�			 *
+*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaï¿½			 *
 *						ctima@itajai.sc.gov.br					    	 *
 *																		 *
-*	Este  programa  �  software livre, voc� pode redistribu�-lo e/ou	 *
-*	modific�-lo sob os termos da Licen�a P�blica Geral GNU, conforme	 *
-*	publicada pela Free  Software  Foundation,  tanto  a vers�o 2 da	 *
-*	Licen�a   como  (a  seu  crit�rio)  qualquer  vers�o  mais  nova.	 *
+*	Este  programa  ï¿½  software livre, vocï¿½ pode redistribuï¿½-lo e/ou	 *
+*	modificï¿½-lo sob os termos da Licenï¿½a Pï¿½blica Geral GNU, conforme	 *
+*	publicada pela Free  Software  Foundation,  tanto  a versï¿½o 2 da	 *
+*	Licenï¿½a   como  (a  seu  critï¿½rio)  qualquer  versï¿½o  mais  nova.	 *
 *																		 *
-*	Este programa  � distribu�do na expectativa de ser �til, mas SEM	 *
-*	QUALQUER GARANTIA. Sem mesmo a garantia impl�cita de COMERCIALI-	 *
-*	ZA��O  ou  de ADEQUA��O A QUALQUER PROP�SITO EM PARTICULAR. Con-	 *
-*	sulte  a  Licen�a  P�blica  Geral  GNU para obter mais detalhes.	 *
+*	Este programa  ï¿½ distribuï¿½do na expectativa de ser ï¿½til, mas SEM	 *
+*	QUALQUER GARANTIA. Sem mesmo a garantia implï¿½cita de COMERCIALI-	 *
+*	ZAï¿½ï¿½O  ou  de ADEQUAï¿½ï¿½O A QUALQUER PROPï¿½SITO EM PARTICULAR. Con-	 *
+*	sulte  a  Licenï¿½a  Pï¿½blica  Geral  GNU para obter mais detalhes.	 *
 *																		 *
-*	Voc�  deve  ter  recebido uma c�pia da Licen�a P�blica Geral GNU	 *
-*	junto  com  este  programa. Se n�o, escreva para a Free Software	 *
+*	Vocï¿½  deve  ter  recebido uma cï¿½pia da Licenï¿½a Pï¿½blica Geral GNU	 *
+*	junto  com  este  programa. Se nï¿½o, escreva para a Free Software	 *
 *	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 *	02111-1307, USA.													 *
 *																		 *
@@ -27,7 +27,7 @@
 require_once ("include/clsBanco.inc.php");
 require_once ("include/Geral.inc.php");
 
-class clsFuncionario extends clsPessoaFisica 
+class clsFuncionario extends clsPessoaFisica
 {
 	var $idpes;
 	var $matricula;
@@ -185,17 +185,17 @@ class clsFuncionario extends clsPessoaFisica
 		$whereAnd = " WHERE ";
 
 		if (is_string($str_matricula) && $str_matricula != '') {
-			$filtros .= "{$whereAnd} to_ascii(f.matricula) LIKE to_ascii('%{$str_matricula}%')";
+			$filtros .= "{$whereAnd} (f.matricula) LIKE ('%{$str_matricula}%')";
 			$whereAnd = " AND ";
 		}
 
 		if(is_string($matricula_interna) && $matricula_interna != '')	{
-			$filtros .= "{$whereAnd} to_ascii(f.matricula_interna) LIKE to_ascii('%{$matricula_interna}%')";
+			$filtros .= "{$whereAnd} (f.matricula_interna) LIKE ('%{$matricula_interna}%')";
 			$whereAnd = " AND ";
-		}	
-    
+		}
+
 		if (is_string($str_nome)) {
-			$filtros .= "{$whereAnd} to_ascii(f.nome) LIKE  to_ascii('%{$str_nome}%%')";
+			$filtros .= "{$whereAnd} (f.nome) LIKE  ('%{$str_nome}%%')";
 			$whereAnd = " AND ";
 			$filtro_pessoa =true;
 		}
@@ -241,7 +241,7 @@ class clsFuncionario extends clsPessoaFisica
 		$resultado = array();
 
 		if($int_inicio_limit !== false  && $int_qtd_registros !== false) {
-			$sql .= "{$filtros}"." ORDER BY to_ascii(f.nome) ASC ".$limite;
+			$sql .= "{$filtros}"." ORDER BY (f.nome) ASC ".$limite;
 		} else {
 			$sql .= "{$filtros}".$this->getOrderby().$this->getLimite();
 		}
@@ -280,32 +280,33 @@ class clsFuncionario extends clsPessoaFisica
     $int_ativo = null)
 	{
 		$sql = " SELECT f.ref_cod_pessoa_fj, f.nome, f.matricula, f.matricula_interna, f.ativo, tu.nm_tipo, tu.nivel
-							FROM {$this->schema_portal}.v_funcionario f 
-							LEFT JOIN pmieducar.usuario u ON (u.cod_usuario = f.ref_cod_pessoa_fj) 
-							LEFT JOIN pmieducar.tipo_usuario tu ON (u.ref_cod_tipo_usuario = tu.cod_tipo_usuario)  ";
+							FROM {$this->schema_portal}.v_funcionario f
+							LEFT JOIN pmieducar.usuario u ON (u.cod_usuario = f.ref_cod_pessoa_fj)
+							LEFT JOIN pmieducar.tipo_usuario tu ON (u.ref_cod_tipo_usuario = tu.cod_tipo_usuario)
+							LEFT JOIN pmieducar.escola_usuario eu ON (eu.ref_cod_usuario = u.cod_usuario)  ";
 		$filtros = "";
 		$filtro_pessoa = false;
 
 		$whereAnd = " WHERE u.ativo = 1 AND ";
 
 		if (is_string($str_matricula) && $str_matricula != '') {
-			$filtros .= "{$whereAnd} to_ascii(f.matricula) LIKE to_ascii('%{$str_matricula}%')";
+			$filtros .= "{$whereAnd} (f.matricula) LIKE ('%{$str_matricula}%')";
 			$whereAnd = " AND ";
 		}
 
 		if (is_string($matricula_interna) && $matricula_interna != '') {
-			$filtros .= "{$whereAnd} to_ascii(f.matricula_interna) LIKE to_ascii('%{$matricula_interna}%')";
+			$filtros .= "{$whereAnd} (f.matricula_interna) LIKE ('%{$matricula_interna}%')";
 			$whereAnd = " AND ";
     }
 
 		if (is_string($str_nome)) {
-			$filtros .= "{$whereAnd} to_ascii(f.nome) LIKE  to_ascii('%{$str_nome}%%')";
+			$filtros .= "{$whereAnd} (f.nome) LIKE  ('%{$str_nome}%%')";
 			$whereAnd = " AND ";
 			$filtro_pessoa =true;
 		}
 
 		if (is_numeric($int_ref_cod_escola)) {
-			$filtros .= "{$whereAnd} u.ref_cod_escola = '{$int_ref_cod_escola}'";
+			$filtros .= "{$whereAnd} eu.ref_cod_escola = '{$int_ref_cod_escola}'";
 			$whereAnd = " AND ";
     }
 
@@ -335,10 +336,11 @@ class clsFuncionario extends clsPessoaFisica
 
 		$sql .= "{$filtros}".$this->getOrderby().$this->getLimite();
 
-		$this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->schema_portal}.v_funcionario f 
-																				LEFT JOIN pmieducar.usuario u ON (u.cod_usuario = f.ref_cod_pessoa_fj) 
-																				LEFT JOIN pmieducar.tipo_usuario tu ON (u.ref_cod_tipo_usuario = tu.cod_tipo_usuario) {$filtros}" );
-		
+		$this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->schema_portal}.v_funcionario f
+																				LEFT JOIN pmieducar.usuario u ON (u.cod_usuario = f.ref_cod_pessoa_fj)
+																				LEFT JOIN pmieducar.tipo_usuario tu ON (u.ref_cod_tipo_usuario = tu.cod_tipo_usuario)
+																				LEFT JOIN pmieducar.escola_usuario eu ON (eu.ref_cod_usuario = u.cod_usuario) {$filtros}" );
+
 		$db->Consulta( $sql );
 
 		if( $countCampos > 1 )
@@ -363,7 +365,7 @@ class clsFuncionario extends clsPessoaFisica
 			return $resultado;
 		}
 		return false;
-	}	
+	}
 
 
 	function detalhe()

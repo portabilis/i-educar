@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Adriano Erik Weiguert Nagasava <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo disponÌvel desde a vers„o 1.0.0
+ * @since     Arquivo dispon√≠vel desde a vers√£o 1.0.0
  * @version   $Id$
  */
 
@@ -40,14 +40,14 @@ require_once 'include/pmieducar/geral.inc.php';
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponÌvel desde a vers„o 1.0.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo( "{$this->_instituicao} i-Educar - Quadro de Hor&aacute;rios" );
+    $this->SetTitulo( "{$this->_instituicao} Servidores - Quadro de Hor&aacute;rios" );
     $this->processoAp = "641";
     $this->addEstilo('localizacaoSistema');
   }
@@ -60,7 +60,7 @@ class clsIndexBase extends clsBase
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponÌvel desde a vers„o 1.0.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.0.0
  * @version   @@package_version@@
  */
 class indice extends clsCadastro
@@ -129,7 +129,7 @@ class indice extends clsCadastro
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
+         "educar_servidores_index.php"       => "Servidores",
          ""        => "{$nomeMenu} quadro de hor&aacute;rios"
     ));
     $this->enviaLocalizacao($localizacao->montar());
@@ -145,12 +145,6 @@ class indice extends clsCadastro
 
     // primary keys
     $this->campoOculto('cod_quadro_horario', $this->cod_quadro_horario);
-
-    $obrigatorio            = TRUE;
-    $get_escola             = TRUE;
-    $get_curso              = TRUE;
-    $get_escola_curso_serie = TRUE;
-    $get_turma              = TRUE;
 
     $this->inputsHelper()->dynamic(array('ano', 'instituicao', 'escola', 'curso', 'serie', 'turma'));
   }
@@ -168,7 +162,7 @@ class indice extends clsCadastro
     $obj = new clsPmieducarQuadroHorario();
     $lista = $obj->lista( NULL, NULL, $this->pessoa_logada, $this->ref_cod_turma, NULL, NULL, NULL, NULL, 1, $this->ano );
     if ($lista) {
-      echo "<script>alert('Quadro de Hor·rio j· cadastrado para esta turma');</script>";
+      echo "<script>alert('Quadro de Hor√°rio j√° cadastrado para esta turma');</script>";
       return FALSE;
     }
 
@@ -183,7 +177,7 @@ class indice extends clsCadastro
       die();
     }
 
-    $this->mensagem = 'Cadastro n„o realizado.<br>';
+    $this->mensagem = 'Cadastro n√£o realizado.<br>';
     return FALSE;
   }
 
@@ -223,31 +217,15 @@ class indice extends clsCadastro
   }
 }
 
-// Instancia objeto de p·gina
+// Instancia objeto de p√°gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conte˙do
+// Instancia objeto de conte√∫do
 $miolo = new indice();
 
-// Atribui o conte˙do ‡† p·gina
+// Atribui o conte√∫do √†¬† p√°gina
 $pagina->addForm($miolo);
 
-// Gera o cÛdigo HTML
+// Gera o c√≥digo HTML
 $pagina->MakeAll();
 ?>
-<script type="text/javascript">
-document.getElementById('ref_cod_escola').onchange = function()
-{
-  getEscolaCurso();
-}
-
-document.getElementById('ref_cod_curso').onchange = function()
-{
-  getEscolaCursoSerie();
-}
-
-document.getElementById('ref_cod_serie').onchange = function()
-{
-  getTurma();
-}
-</script>

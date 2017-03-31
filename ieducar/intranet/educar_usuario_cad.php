@@ -1,25 +1,25 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
+	*	@author Prefeitura Municipal de ItajaÃ­								 *
 	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
+	*   Pacote: i-PLB Software PÃºblico Livre e Brasileiro					 *
 	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÃ­			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
+	*	Este  programa  Ã©  software livre, vocÃª pode redistribuÃ­-lo e/ou	 *
+	*	modificÃ¡-lo sob os termos da LicenÃ§a PÃºblica Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a versÃ£o 2 da	 *
+	*	LicenÃ§a   como  (a  seu  critÃ©rio)  qualquer  versÃ£o  mais  nova.	 *
 	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  Ã© distribuÃ­do na expectativa de ser Ãºtil, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia implÃ­cita de COMERCIALI-	 *
+	*	ZAÃ‡ÃƒO  ou  de ADEQUAÃ‡ÃƒO A QUALQUER PROPÃ“SITO EM PARTICULAR. Con-	 *
+	*	sulte  a  LicenÃ§a  PÃºblica  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
+	*	VocÃª  deve  ter  recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral GNU	 *
+	*	junto  com  este  programa. Se nÃ£o, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
@@ -28,6 +28,7 @@ require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once ("include/pmieducar/clsPmieducarUsuario.inc.php");
+require_once ("include/pmieducar/clsPmieducarEscolaUsuario.inc.php");
 
 class clsIndexBase extends clsBase
 {
@@ -59,6 +60,7 @@ class indice extends clsCadastro
 	var $proibido;
 	var $matricula_permanente;
 	var $matricula_interna;
+	var $escola;
 
 	//senha carregada do banco (controle de criptografia)
 	var $confere_senha;
@@ -122,14 +124,14 @@ class indice extends clsCadastro
 		$this->url_cancelar = ($retorno == "Editar") ? "educar_usuario_det.php?ref_pessoa={$this->ref_pessoa}" : "educar_usuario_lst.php";
 		$this->nome_url_cancelar = "Cancelar";
 
-    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         ""        => "{$nomeMenu} usu&aacute;rio"             
-    ));
-    $this->enviaLocalizacao($localizacao->montar());		
-
+	    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+	    $localizacao = new LocalizacaoSistema();
+	    $localizacao->entradaCaminhos( array(
+	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+	         "educar_configuracoes_index.php"    => "ConfiguraÃ§Ãµes",
+	         ""                                  => "{$nomeMenu} usu&aacute;rio"
+	    ));
+	    $this->enviaLocalizacao($localizacao->montar());
 		return $retorno;
 	}
 
@@ -205,7 +207,7 @@ class indice extends clsCadastro
 
 		$this->campoTexto("matricula", "Matr&iacute;cula", $this->matricula, 12, 12, true);
 		$this->campoSenha("_senha", "Senha", $this->_senha, true);
-		$this->campoEmail("email", "E-mail usuário", $this->email, 50, 50, false, false, false, 'Utilizado para redefinir a senha, caso o usúario esqueça<br />Este campo pode ser gravado em branco, neste caso será solicitado um e-mail ao usuário, após entrar no sistema.');
+		$this->campoEmail("email", "E-mail usuÃ¡rio", $this->email, 50, 50, false, false, false, 'Utilizado para redefinir a senha, caso o usÃºario esqueÃ§a<br />Este campo pode ser gravado em branco, neste caso serÃ¡ solicitado um e-mail ao usuÃ¡rio, apÃ³s entrar no sistema.');
 
 		$this->campoTexto('matricula_interna', 'Matr&iacute;cula interna', $this->matricula_interna, 30, 30, false, false, false , 'Utilizado somente para registro, caso a institui&ccedil;&atilde;o deseje que a matr&iacute;cula interna deste funcion&aacute;rio seja registrada no sistema.');
 
@@ -335,13 +337,13 @@ class indice extends clsCadastro
 
 		$this->campoTexto("ramal", "Ramal", $this->ramal, 11, 30);
 
-		$opcoes = array(null => "Não", 'S' => "Sim");
+		$opcoes = array(null => "NÃ£o", 'S' => "Sim");
 		$this->campoLista("super", "Super usu&aacute;rio", $opcoes, $this->super, '',false,'','',false,false);
 
-		$opcoes = array(null => "Não", 1 => "Sim");
+		$opcoes = array(null => "NÃ£o", 1 => "Sim");
 		$this->campoLista("proibido", "Banido", $opcoes, $this->proibido, '',false,'','',false,false);
 
-		$opcoes = array(null => "Não", 1 => "Sim");
+		$opcoes = array(null => "NÃ£o", 1 => "Sim");
 		$this->campoLista("matricula_permanente", "Matr&iacute;cula permanente", $opcoes, $this->matricula_permanente, '',false,'','',false,false);
 
 		$opcoes = array( "" => "Selecione" );
@@ -353,7 +355,7 @@ class indice extends clsCadastro
 			$obj_libera_menu = new clsMenuFuncionario($this->pessoa_logada,false,false,0);
 			$obj_super_usuario = $obj_libera_menu->detalhe();
 
-			// verifica se pessoa logada é super-usuario
+			// verifica se pessoa logada Ã© super-usuario
 			if ($obj_super_usuario) {
 				$lista = $objTemp->lista(null,null,null,null,null,null,null,null,1);
 			}else{
@@ -372,7 +374,7 @@ class indice extends clsCadastro
 		else
 		{
 			echo "<!--\nErro\nClasse clsPmieducarTipoUsuario n&atilde;o encontrada\n-->";
-			$opcoes = array( "" => "Erro na geração" );
+			$opcoes = array( "" => "Erro na geraÃ§Ã£o" );
 		}
 		$tamanho = sizeof($opcoes_);
 		echo "<script>\nvar cod_tipo_usuario = new Array({$tamanho});\n";
@@ -386,13 +388,15 @@ class indice extends clsCadastro
 
 		$this->campoOculto("nivel_usuario_",$nivel);
 
-		$get_biblioteca			= false;
-		$get_escola 			= true;
+		$this->inputsHelper()->dynamic(array('instituicao'));
+		$this->inputsHelper()->multipleSearchEscola(null, array('label' => 'Escola(s)',
+																'required' => false));
 
-		$cad_usuario = true;
-		include( "include/pmieducar/educar_campo_lista.php" );
+	    $scripts = array('/modules/Cadastro/Assets/Javascripts/Usuario.js');
 
-		$this->acao_enviar = "valida()";			
+	    Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
+
+		$this->acao_enviar = "valida()";
 
 	}
 
@@ -403,7 +407,7 @@ class indice extends clsCadastro
 		@session_write_close();
 
 	    if ($this->email && !filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
-	      $this->mensagem = "Formato do e-mail inválido.";
+	      $this->mensagem = "Formato do e-mail invÃ¡lido.";
 	      return false;
 	    }
 
@@ -428,22 +432,23 @@ class indice extends clsCadastro
 		if( $obj_funcionario->cadastra() )
 		{
 
-			if ($this->ref_cod_instituicao && $this->ref_cod_escola)
-			{
-				$obj = new clsPmieducarUsuario( $this->ref_pessoa, $this->ref_cod_escola, $this->ref_cod_instituicao, $this->pessoa_logada,  $this->pessoa_logada, $this->ref_cod_tipo_usuario,null,null,1 );
-			} // verifica se usuario é institucional
-			else if ($this->ref_cod_instituicao && !$this->ref_cod_escola)
-			{
+			if ($this->ref_cod_instituicao) {
 				$obj = new clsPmieducarUsuario( $this->ref_pessoa, null, $this->ref_cod_instituicao, $this->pessoa_logada,  $this->pessoa_logada, $this->ref_cod_tipo_usuario,null,null,1 );
-			} // verifica se usuario é poli-institucional
-			else if (!$this->ref_cod_instituicao && !$this->ref_cod_escola)
-			{
+			} else {
 				$obj = new clsPmieducarUsuario( $this->ref_pessoa, null, null, $this->pessoa_logada,  $this->pessoa_logada, $this->ref_cod_tipo_usuario,null,null,1 );
 			}
+
 			if($obj->existe())
 				$cadastrou = $obj->edita();
 			else
-				$cadastrou = $obj->cadastra();	
+				$cadastrou = $obj->cadastra();
+
+			$this->insereUsuarioEscolas($this->ref_pessoa, $this->escola);
+
+			if($obj->existe())
+				$cadastrou = $obj->edita();
+			else
+				$cadastrou = $obj->cadastra();
 
 			if( $cadastrou )
 			{
@@ -466,7 +471,7 @@ class indice extends clsCadastro
 		@session_write_close();
 
 	    if ($this->email && !filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
-	      $this->mensagem = "Formato do e-mail inválido.";
+	      $this->mensagem = "Formato do e-mail invÃ¡lido.";
 	      return false;
 	    }
 
@@ -496,22 +501,18 @@ class indice extends clsCadastro
 		if( $obj_funcionario->edita() )
 		{
 
-			if ($this->ref_cod_instituicao && $this->ref_cod_escola)
-			{
-				$obj = new clsPmieducarUsuario( $this->ref_pessoa, $this->ref_cod_escola, $this->ref_cod_instituicao, $this->pessoa_logada,  $this->pessoa_logada, $this->ref_cod_tipo_usuario,null,null,1 );
-			} // verifica se usuario é institucional
-			else if ($this->ref_cod_instituicao && !$this->ref_cod_escola)
-			{
+			if ($this->ref_cod_instituicao) {
 				$obj = new clsPmieducarUsuario( $this->ref_pessoa, null, $this->ref_cod_instituicao, $this->pessoa_logada,  $this->pessoa_logada, $this->ref_cod_tipo_usuario,null,null,1 );
-			} // verifica se usuario é poli-institucional
-			else if (!$this->ref_cod_instituicao && !$this->ref_cod_escola)
-			{
+			} else {
 				$obj = new clsPmieducarUsuario( $this->ref_pessoa, null, null, $this->pessoa_logada,  $this->pessoa_logada, $this->ref_cod_tipo_usuario,null,null,1 );
 			}
+
 			if($obj->existe())
 				$editou = $obj->edita();
 			else
 				$editou = $obj->cadastra();
+
+			$this->insereUsuarioEscolas($this->ref_pessoa, $this->escola);
 
 			if($this->nivel_usuario_ == 8)
 			{
@@ -550,6 +551,7 @@ class indice extends clsCadastro
 
 			if( $editou )
 			{
+
 				$this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
 				header( "Location: educar_usuario_lst.php" );
 				die();
@@ -586,7 +588,7 @@ class indice extends clsCadastro
     $db = new clsBanco();
 
 		if ($db->CampoUnico($sql) == '1') {
-      $this->mensagem = "A matrícula '$matricula' já foi usada, por favor, informe outra.";
+      $this->mensagem = "A matrÃ­cula '$matricula' jÃ¡ foi usada, por favor, informe outra.";
       return false;
     }
     return true;
@@ -606,6 +608,21 @@ class indice extends clsCadastro
     }
     return true;
   }
+
+  function excluiTodosVinculosEscola($codUsuario) {
+  	$usuarioEscola = new clsPmieducarEscolaUsuario();
+  	$usuarioEscola->excluirTodos($codUsuario);
+  }
+
+  function insereUsuarioEscolas($codUsuario, $escolas) {
+  	$this->excluiTodosVinculosEscola($codUsuario);
+  	foreach ($escolas as $e) {
+  		$usuarioEscola = new clsPmieducarEscolaUsuario();
+  		$usuarioEscola->ref_cod_usuario = $codUsuario;
+  		$usuarioEscola->ref_cod_escola = $e;
+  		$usuarioEscola->cadastra();
+  	}
+  }
 }
 
 // cria uma extensao da classe base
@@ -617,219 +634,3 @@ $pagina->addForm( $miolo );
 // gera o html
 $pagina->MakeAll();
 ?>
-<script>
-
-//var campo_tipo_usuario = document.getElementById("ref_cod_tipo_usuario");
-//var campo_instituicao = document.getElementById("ref_cod_instituicao");
-//var campo_escola = document.getElementById("ref_cod_escola");
-//var campo_biblioteca = document.getElementById("ref_cod_biblioteca");
-//
-//campo_instituicao.disabled = true;
-//campo_escola.disabled = true;
-//campo_biblioteca.disabled = true;
-
-var campo_tipo_usuario = document.getElementById("ref_cod_tipo_usuario");
-var campo_instituicao = document.getElementById("ref_cod_instituicao");
-var campo_escola = document.getElementById("ref_cod_escola");
-//var campo_biblioteca = document.getElementById("ref_cod_biblioteca");
-
-if(  campo_tipo_usuario.value == "" )
-{
-	campo_instituicao.disabled = true;
-	campo_escola.disabled = true;
-	//campo_biblioteca.disabled = true;
-
-}
-else if( cod_tipo_usuario[campo_tipo_usuario.value] == 1 )
-{
-	campo_instituicao.disabled = true;
-	campo_escola.disabled = true;
-//	campo_biblioteca.disabled = true;
-}
-else if( cod_tipo_usuario[campo_tipo_usuario.value] == 2 )
-{
-	campo_instituicao.disabled = false;
-	campo_escola.disabled = true;
-//	campo_biblioteca.disabled = true;
-}
-else if( cod_tipo_usuario[campo_tipo_usuario.value] == 4 )
-{
-	campo_instituicao.disabled = false;
-	campo_escola.disabled = false;
-	//campo_biblioteca.disabled = true;
-}
-else if( cod_tipo_usuario[campo_tipo_usuario.value] == 8 )
-{
-	campo_instituicao.disabled = false;
-	campo_escola.disabled = false;
-	//campo_biblioteca.disabled = false;
-}
-
-document.getElementById('ref_cod_tipo_usuario').onchange = function()
-{
-	habilitaCampos();
-}
-
-//function getEscola()
-//{
-//	var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
-//	var campoEscola = document.getElementById('ref_cod_escola');
-//
-//	campoEscola.length = 1;
-//	for (var j = 0; j < escola.length; j++)
-//	{
-//		if (escola[j][2] == campoInstituicao)
-//		{
-//			campoEscola.options[campoEscola.options.length] = new Option( escola[j][1], escola[j][0],false,false);
-//		}
-//	}
-//}
-
-function habilitaCampos()
-{
-	if( cod_tipo_usuario[campo_tipo_usuario.value] == 1 )
-	{
-		campo_instituicao.disabled = true;
-		campo_escola.disabled = true;
-		//campo_biblioteca.disabled = true;
-	}
-	else if( cod_tipo_usuario[campo_tipo_usuario.value] == 2 )
-	{
-		campo_instituicao.disabled = false;
-		campo_escola.disabled = true;
-		//campo_biblioteca.disabled = true;
-	}
-	else if( cod_tipo_usuario[campo_tipo_usuario.value] == 4 )
-	{
-		campo_instituicao.disabled = false;
-		campo_escola.disabled = false;
-		//campo_biblioteca.disabled = true;
-	}
-	else if( cod_tipo_usuario[campo_tipo_usuario.value] == 8 )
-	{
-		campo_instituicao.disabled = false;
-		campo_escola.disabled = false;
-		//campo_biblioteca.disabled = false;
-	}
-//	else if( campo == "ref_cod_instituicao" &&
-//			 cod_tipo_usuario[campo_tipo_usuario.options[campo_tipo_usuario.selectedIndex].value] == 4 )
-//	{
-//		campo_escola.disabled = false;
-//		campo_biblioteca.disabled = true;
-//		getEscola();
-//	}
-//	else if( campo == "ref_cod_instituicao" &&
-//			 cod_tipo_usuario[campo_tipo_usuario.options[campo_tipo_usuario.selectedIndex].value] == 8 )
-//	{
-//		campo_escola.disabled = false;
-//		campo_biblioteca.disabled = false;
-//		getEscola();
-//	}
-
-}
-
-//function habilitaCampos()
-//{
-////	var campo_tipo_usuario = document.getElementById("ref_cod_tipo_usuario");
-////	var campo_instituicao = document.getElementById("ref_cod_instituicao");
-////	var campo_escola = document.getElementById("ref_cod_escola");
-////	var campo_biblioteca = document.getElementById("ref_cod_biblioteca");
-//
-//	if(  campo_tipo_usuario == "" )
-//	{
-//		campo_instituicao.disabled = true;
-//		campo_escola.disabled = true;
-//		campo_biblioteca.disabled = true;
-//
-//	}
-//	else if( campo == "ref_cod_tipo_usuario" )
-//	{
-//		if( cod_tipo_usuario[campo_tipo_usuario.options[campo_tipo_usuario.selectedIndex].value] == 1 ||
-//			cod_tipo_usuario[campo_tipo_usuario.options[campo_tipo_usuario.selectedIndex].value] == null )
-//		{
-//			campo_instituicao.disabled = true;
-//			campo_escola.disabled = true;
-//			campo_biblioteca.disabled = true;
-//		}
-//		else if( cod_tipo_usuario[campo_tipo_usuario.options[campo_tipo_usuario.selectedIndex].value] == 2 )
-//		{
-//			campo_instituicao.disabled = false;
-//			campo_escola.disabled = true;
-//			campo_biblioteca.disabled = true;
-//		}
-//		else if( cod_tipo_usuario[campo_tipo_usuario.options[campo_tipo_usuario.selectedIndex].value] == 4  )
-//		{
-//			campo_instituicao.disabled = false;
-//			campo_escola.disabled = false;
-//			campo_biblioteca.disabled = true;
-//			getEscola();
-//		}
-//		else if( cod_tipo_usuario[campo_tipo_usuario.options[campo_tipo_usuario.selectedIndex].value] == 8 )
-//		{
-//			campo_instituicao.disabled = false;
-//			campo_escola.disabled = false;
-//			campo_biblioteca.disabled = false;
-//			getEscola();
-//		}
-//	}
-//	else if( campo == "ref_cod_instituicao" &&
-//			 cod_tipo_usuario[campo_tipo_usuario.options[campo_tipo_usuario.selectedIndex].value] == 4 )
-//	{
-//		campo_escola.disabled = false;
-//		campo_biblioteca.disabled = true;
-//		getEscola();
-//	}
-//	else if( campo == "ref_cod_instituicao" &&
-//			 cod_tipo_usuario[campo_tipo_usuario.options[campo_tipo_usuario.selectedIndex].value] == 8 )
-//	{
-//		campo_escola.disabled = false;
-//		campo_biblioteca.disabled = false;
-//		getEscola();
-//	}
-//
-//}
-
-function valida()
-{
-	var campo_tipo_usuario = document.getElementById("ref_cod_tipo_usuario");
-	var campo_instituicao = document.getElementById("ref_cod_instituicao");
-	var campo_escola = document.getElementById("ref_cod_escola");
-
-	if( cod_tipo_usuario[campo_tipo_usuario.options[campo_tipo_usuario.selectedIndex].value] == 2)
-	{
-		if( campo_instituicao.options[campo_instituicao.selectedIndex].value == "" )
-		{
-			alert("É obrigatório a escolha de uma Instituição!");
-			return false;
-		}
-	}
-	else if( cod_tipo_usuario[campo_tipo_usuario.options[campo_tipo_usuario.selectedIndex].value] == 4 || campo_tipo_usuario.value == 6)
-	{
-		if( campo_instituicao.options[campo_instituicao.selectedIndex].value == "" )
-		{
-			alert("É obrigatório a escolha de uma Instituição!");
-			return false;
-		}
-		else if( cod_tipo_usuario[campo_instituicao.options[campo_instituicao.selectedIndex].value] != "")
-		{
-			if( campo_escola.options[campo_escola.selectedIndex].value == "" && campo_tipo_usuario.value != 6)
-			{
-				alert("É obrigatório a escolha de uma Escola!");
-				return false;
-			}
-		}
-	}
-	else if( cod_tipo_usuario[campo_tipo_usuario.options[campo_tipo_usuario.selectedIndex].value] == 8)
-	{
-		if( campo_instituicao.options[campo_instituicao.selectedIndex].value == "" )
-		{
-			alert("É obrigatório a escolha de uma Instituição! ");
-			return false;
-		}
-	}
-	if(!acao())
-		return;
-	document.forms[0].submit();
-}
-
-</script>

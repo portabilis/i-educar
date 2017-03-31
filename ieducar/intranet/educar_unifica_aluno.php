@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Alan Felipe Farias <alan@portabilis.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo disponÌvel desde a vers„o 1.0.0
+ * @since     Arquivo dispon√≠vel desde a vers√£o 1.0.0
  * @version   $Id$
  */
 
@@ -56,7 +56,7 @@ class indice extends clsCadastro
   var $pessoa_logada;
 
   var $tabela_alunos = array();
-  var $aluno_duplicado; 
+  var $aluno_duplicado;
 
   function Inicializar()
   {
@@ -68,12 +68,13 @@ class indice extends clsCadastro
 
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(999847, $this->pessoa_logada, 7,
-      'index.php'); 
+      'index.php');
 
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         ""        => "Unifica&ccedil;&atilde;o de alunos"             
+         "educar_index.php"                  => "Escola",
+         ""        => "Unifica&ccedil;&atilde;o de alunos"
     ));
     $this->enviaLocalizacao($localizacao->montar());
 
@@ -107,7 +108,7 @@ class indice extends clsCadastro
 
     if (!$cod_aluno_principal) return;
 
-    //Monta um array com o cÛdigo dos alunos selecionados na tabela
+    //Monta um array com o c√≥digo dos alunos selecionados na tabela
     foreach ($this->aluno_duplicado as $key => $value) {
       $explode = explode(" ", $value);
 
@@ -138,7 +139,7 @@ class indice extends clsCadastro
     $db->consulta("UPDATE pmieducar.matricula SET ref_cod_aluno = {$cod_aluno_principal} where ref_cod_aluno in ({$cod_alunos})");
     $db->consulta("UPDATE pmieducar.aluno SET ativo = 0, data_exclusao = now(), ref_usuario_exc = {$this->pessoa_logada} where cod_aluno in ({$cod_alunos})");
 
-    $this->mensagem = "<span class='success'>Alunos unificados com sucesso.</span>";
+    $this->mensagem = "<span>Alunos unificados com sucesso.</span>";
     return true;
   }
 }
@@ -146,16 +147,16 @@ class indice extends clsCadastro
 
 
 
-// Instancia objeto de p·gina
+// Instancia objeto de p√°gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conte˙do
+// Instancia objeto de conte√∫do
 $miolo = new indice();
 
-// Atribui o conte˙do ‡  p·gina
+// Atribui o conte√∫do √†  p√°gina
 $pagina->addForm($miolo);
 
-// Gera o cÛdigo HTML
+// Gera o c√≥digo HTML
 $pagina->MakeAll();
 ?>
 <script type="text/javascript">
@@ -187,7 +188,7 @@ $pagina->MakeAll();
     });
   }
 
-  setAutoComplete();  
+  setAutoComplete();
 
   // bind events
 

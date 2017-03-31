@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gestÃ£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de ItajaÃ­
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa Ã© software livre; vocÃª pode redistribuÃ­-lo e/ou modificÃ¡-lo
+ * sob os termos da LicenÃ§a PÃºblica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versÃ£o 2 da LicenÃ§a, como (a seu critÃ©rio)
+ * qualquer versÃ£o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa Ã© distribuÃ­Â­do na expectativa de que seja Ãºtil, porÃ©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implÃ­Â­cita de COMERCIABILIDADE OU
+ * ADEQUAÃÃO A UMA FINALIDADE ESPECÃFICA. Consulte a LicenÃ§a PÃºblica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * VocÃª deve ter recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral do GNU junto
+ * com este programa; se nÃ£o, escreva para a Free Software Foundation, Inc., no
+ * endereÃ§o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de ItajaÃ­ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo disponível desde a versão 1.0.0
+ * @since     Arquivo disponÃ­vel desde a versÃ£o 1.0.0
  * @version   $Id$
  */
 
@@ -38,11 +38,11 @@ require_once 'App/Model/MatriculaSituacao.php';
 /**
  * clsIndexBase class.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de ItajaÃ­ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe disponÃ­vel desde a versÃ£o 1.0.0
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
@@ -58,11 +58,11 @@ class clsIndexBase extends clsBase
 /**
  * indice class.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de ItajaÃ­ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe disponÃ­vel desde a versÃ£o 1.0.0
  * @version   @@package_version@@
  */
 class indice extends clsListagem
@@ -76,7 +76,7 @@ class indice extends clsListagem
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
-    $this->titulo = Portabilis_String_Utils::toLatin1('Lista de enturmações da matrícula');
+    $this->titulo = 'Lista de enturmações da matrí­cula';
 
     $this->ref_cod_matricula = $_GET['ref_cod_matricula'];
 
@@ -101,15 +101,15 @@ class indice extends clsListagem
       'Sequencial',
       'Turma',
       'Ativo',
-      Portabilis_String_Utils::toLatin1('Data de enturmação'),
-      Portabilis_String_Utils::toLatin1('Data de saída'),
+      'Data de enturmação',
+      'Data de saída',
       'Transferido',
       'Remanejado',
       'Reclassificado',
       'Abandono',
       'Falecido',
-      Portabilis_String_Utils::toLatin1('Usuário criou'),
-      Portabilis_String_Utils::toLatin1('Usuário editou')
+      'Usuário criou',
+      'Usuário editou'
     ));
 
     // Busca dados da matricula
@@ -129,9 +129,9 @@ class indice extends clsListagem
     }
 
     $this->campoRotulo('nm_pessoa', 'Nome do Aluno', $det_aluno['nome_aluno']);
-    $this->campoRotulo('matricula', Portabilis_String_Utils::toLatin1('Matrícula'), $this->ref_cod_matricula);
-    $this->campoRotulo('situacao', Portabilis_String_Utils::toLatin1('Situação'), $situacao);
-    $this->campoRotulo('data_saida', Portabilis_String_Utils::toLatin1('Data saída'), dataToBrasil($detalhe_matricula['data_cancel']));
+    $this->campoRotulo('matricula', 'Matrícula', $this->ref_cod_matricula);
+    $this->campoRotulo('situacao', 'Situação', $situacao);
+    $this->campoRotulo('data_saida', 'Data saída', dataToBrasil($detalhe_matricula['data_cancel']));
 
     //Paginador
     $this->limite = 20;
@@ -192,24 +192,24 @@ class indice extends clsListagem
 
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
-         ""                                  => "Listagem de enturma&ccedil;&otilde;es da matr&iacute;cula"
+         $_SERVER['SERVER_NAME']."/intranet" => "Início",
+         "educar_index.php"                  => "Escola",
+         ""                                  => "Histórico de enturmações da matrí­cula"
     ));
     $this->enviaLocalizacao($localizacao->montar());
   }
 }
 
-// Instancia objeto de página
+// Instancia objeto de pÃ¡gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conteúdo
+// Instancia objeto de conteÃºdo
 $miolo = new indice();
 
-// Atribui o conteúdo à  página
+// Atribui o conteÃºdo Ã   pÃ¡gina
 $pagina->addForm($miolo);
 
-// Gera o código HTML
+// Gera o cÃ³digo HTML
 $pagina->MakeAll();
 ?>
 <script type="text/javascript">

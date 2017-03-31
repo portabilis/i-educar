@@ -9,7 +9,7 @@ class clsIndex extends clsBase
 
 	function Formular()
 	{
-		$this->SetTitulo( "Pessoas Físicas" );
+		$this->SetTitulo( "Pessoas FÃ­sicas" );
 		$this->processoAp = "43";
 		$this->addEstilo('localizacaoSistema');
 	}
@@ -23,7 +23,7 @@ class indice extends clsListagem
 		$this->pessoa_logada = $_SESSION['id_pessoa'];
 		session_write_close();
 				
-		$this->titulo = "Pessoas Físicas";
+		$this->titulo = "Pessoas FÃ­sicas";
 		
 
 		$this->addCabecalhos( array( "Nome", "CPF") );
@@ -77,6 +77,7 @@ class indice extends clsListagem
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+	     "educar_pessoas_index.php"          => "Pessoas",
          ""                                  => "Listagem de pessoas f&iacute;sicas"
     ));
     $this->enviaLocalizacao($localizacao->montar());		

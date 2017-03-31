@@ -1,6 +1,6 @@
 <?php
 /**
-* @author Prefeitura Municipal de Itajaí
+* @author Prefeitura Municipal de ItajaÃ­
 *
 * Criado em 25/05/2007 16:59 pelo gerador automatico de classes
 */
@@ -302,7 +302,7 @@ class clsPmieducarServidorCursoMinistra
 	}
 
 	/**
-	 * Retorna true se o registro existir. Caso contrário retorna false.
+	 * Retorna true se o registro existir. Caso contrÃ¡rio retorna false.
 	 *
 	 * @return bool
 	 */

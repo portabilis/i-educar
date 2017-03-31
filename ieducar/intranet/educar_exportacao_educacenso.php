@@ -2,30 +2,30 @@
 //error_reporting(E_ALL);
 //ini_set("display_errors", 1);
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gestÃ£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de ItajaÃ­
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa Ã© software livre; vocÃª pode redistribuÃ­-lo e/ou modificÃ¡-lo
+ * sob os termos da LicenÃ§a PÃºblica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versÃ£o 2 da LicenÃ§a, como (a seu critÃ©rio)
+ * qualquer versÃ£o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa Ã© distribuÃ­Â­do na expectativa de que seja Ãºtil, porÃ©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implÃ­Â­cita de COMERCIABILIDADE OU
+ * ADEQUAÃ‡ÃƒO A UMA FINALIDADE ESPECÃFICA. Consulte a LicenÃ§a PÃºblica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * VocÃª deve ter recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral do GNU junto
+ * com este programa; se nÃ£o, escreva para a Free Software Foundation, Inc., no
+ * endereÃ§o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de ItajaÃ­ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo disponível desde a versão 1.0.0
+ * @since     Arquivo disponÃ­vel desde a versÃ£o 1.0.0
  * @version   $Id$
  */
 
@@ -73,11 +73,13 @@ class indice extends clsCadastro
       'educar_index.php');
     $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
 
+    $nomeTela = $this->segunda_fase ? '2Âª fase - SituaÃ§Ã£o final' : '1Âª fase - MatrÃ­cula inicial';
+
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Educacenso",
-         ""                                  => "Exporta&ccedil;&atilde;o para o Educacenso"
+         "educar_educacenso_index.php"       => "Educacenso",
+         ""                                  => $nomeTela
     ));
     $this->enviaLocalizacao($localizacao->montar());
 
@@ -94,7 +96,7 @@ class indice extends clsCadastro
       die();
     }
 
-    return 'Nova exportação';
+    return 'Nova exportaÃ§Ã£o';
   }
 
   function Gerar()
@@ -104,13 +106,13 @@ class indice extends clsCadastro
     $dicaCampoData = 'dd/mm/aaaa';
 
     if ($fase2 == 1) {
-      $dicaCampoData = 'A data informada neste campo, deverá ser a mesma informada na 1ª fase da exportação (Matrícula inicial).';
+      $dicaCampoData = 'A data informada neste campo, deverÃ¡ ser a mesma informada na 1Âª fase da exportaÃ§Ã£o (MatrÃ­cula inicial).';
       $this->campoOculto("fase2", "true");
     }
 
     $this->inputsHelper()->dynamic(array('ano', 'instituicao', 'escola'));
 
-    $this->inputsHelper()->date('data_ini',array('label' => 'Data início',
+    $this->inputsHelper()->date('data_ini',array('label' => 'Data inÃ­cio',
                                                  'value' => $this->data_ini,
                                                  'dica' => $dicaCampoData));
     $this->inputsHelper()->date('data_fim',array('label' => 'Data fim',
@@ -124,16 +126,16 @@ class indice extends clsCadastro
   }
 
 }
-// Instancia objeto de página
+// Instancia objeto de pÃ¡gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conteúdo
+// Instancia objeto de conteÃºdo
 $miolo = new indice();
 
-// Atribui o conteúdo à  página
+// Atribui o conteÃºdo Ã Â  pÃ¡gina
 $pagina->addForm($miolo);
 
-// Gera o código HTML
+// Gera o cÃ³digo HTML
 $pagina->MakeAll();
 ?>
 <script type="text/javascript">
