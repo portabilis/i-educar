@@ -6,7 +6,7 @@
 		<div class="dropdown">
  	 		<div class="dropbtn"><!-- #&USERLOGADO&# --></div>
   			<div class="dropdown-content">
-    			<a href="intranet/agenda.php">Agenda</a>
+    			<a href="/intranet/agenda.php">Agenda</a>
     			<a href="index.php">Calendário</a>
     			<a href="meusdados.php">Meus dados</a>
     			<a href="logof.php">Sair</a>
