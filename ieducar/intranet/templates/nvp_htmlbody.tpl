@@ -2,6 +2,9 @@
 <tr id="topo" class="topo">
 	<td class="logo" align="left"><a style="color:#FFF; text-decoration: none;" href="/">i-Educar</a></td>
 	<td id="perfil-user-id" class="perfil-user" align="right">
+		<a href="#" onclick="Conpass.startProject('AHA Moment Portabilis', 'dGlhZ29AcG9ydGFiaWxpcy5jb20uYnI6cG9ydGFiaWxpczA5MQ==', {showModal: true} );">
+			<img id="help" src="imagens/icon-help.png">
+		</a>
 		<div id="foto-user" class="foto-user" style="background: url('<!-- #&FOTO&# -->')"></div>
 		<div class="dropdown">
  	 		<div class="dropbtn"><!-- #&USERLOGADO&# --></div>

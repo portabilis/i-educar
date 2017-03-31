@@ -134,6 +134,13 @@ select{
   display: block; 
 }
 
+img#help {
+    position: relative;
+    top: 7px;
+    margin-right: 4px;
+    width: 20px;
+}
+
 .topo .foto-user {
   width: 35px;
   height: 35px;
