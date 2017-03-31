@@ -613,6 +613,7 @@ class clsBase extends clsConfig
     $saida = str_replace("<!-- #&ANUNCIO&# -->",      $menu_dinamico, $saida);
     $saida = str_replace("<!-- #&FOTO&# -->",         $foto, $saida);
 
+    $administrativeInfoFetcher = new Portabilis_AdministrativeInfoFetcher();
     $saida = str_replace("<!-- #&RODAPE_INTERNO&# -->", $administrativeInfoFetcher->getInternalFooter(), $saida);
 
     // Pega o endereço IP do host, primeiro com HTTP_X_FORWARDED_FOR (para pegar o IP real
