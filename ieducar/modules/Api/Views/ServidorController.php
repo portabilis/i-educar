@@ -62,7 +62,7 @@ class ServidorController extends ApiCoreController
                 INNER JOIN pmieducar.servidor s ON (s.cod_servidor = p.idpes)
                 LEFT JOIN pmieducar.servidor_alocacao sa ON (s.cod_servidor = sa.ref_cod_servidor)
 
-                WHERE p.idpes LIKE '%'||$1||'%'
+                WHERE p.idpes::varchar LIKE '%'||$1||'%'
                 AND (CASE WHEN $2 = 0 THEN
                       1 = 1
                     ELSE
