@@ -156,7 +156,7 @@ ul.unstyled, ol.unstyled {
   width: 100px;
 }
 
-#div-copa-no-brasil img{  
+#div-copa-no-brasil img{
   height: 180px;
 }
 
@@ -167,11 +167,11 @@ ul.unstyled, ol.unstyled {
   width: 158px;
 }
 
-#div-copa-no-brasil p{  
+#div-copa-no-brasil p{
   margin-left: 15px;
 }
 
-#div-outubro-rosa img{  
+#div-outubro-rosa img{
   height: 180px;
 }
 
@@ -322,4 +322,58 @@ ul.unstyled, ol.unstyled {
 .error a{
   color: #d46262;
   font-weight: bold;
+}
+
+#mensagens {
+  margin: 0 auto;
+  width: 815px;
+  text-align: left;
+  font-family: Open Sans;
+}
+
+#mensagens .titulo {
+  font-size: 16px;
+  font-weight: bold;
+  display: inline;
+}
+
+#mensagens .mensagem {
+  font-size: 14px;
+}
+
+#mensagens .icone {
+  float: left;
+  padding-right: 15px;
+}
+
+#mensagens .icone img {
+  display: block;
+}
+
+#mensagens .message{
+  padding: 15px 15px 15px 15px;
+}
+
+#mensagens .message-success {
+  background-color: #e6ffec;
+  color: #5fc97a;
+  border: solid 1px #92e8a8 ;
+}
+
+#mensagens .message-warning {
+  background-color: #fff9db;
+  color: #ba9d0b;
+  border: solid 1px #fff3b3 ;
+}
+
+#mensagens .message-info {
+  background-color: #dbeeff;
+  color: #629bd4;
+  border: solid 1px #b2d9ff ;
+}
+
+#mensagens .message-danger {
+background-color: #ffdbdb;
+  color: #d46262;
+  border: solid 1px #ffb2b2 ;
 }

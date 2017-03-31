@@ -80,12 +80,13 @@
 
       <!-- #&PENDENCIA_ADMINISTRATIVA&# -->
 
-
-    <div class="mensagens" id="mensagens"></div>
-
     </div>
 
     <div id="corpo">
+      <div class="box" id="mensagens" style="">
+        <!-- #&MENSAGENS&# -->
+      </div>
+
       <div>
         <!-- #&BRASAO&# -->
       </div>
