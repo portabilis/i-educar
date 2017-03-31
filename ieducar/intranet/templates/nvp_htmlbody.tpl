@@ -1,7 +1,7 @@
 <table summary="" class='tabelanum1' id="tablenum1"  border='0' cellspacing='0' cellpadding='0'>
 <tr id="topo" class="topo">
 	<td class="logo" align="left"><a style="color:#FFF; text-decoration: none;" href="/">i-Educar</a></td>
-	<td class="perfil-user" align="right">
+	<td id="perfil-user-id" class="perfil-user" align="right">
 		<div id="foto-user" class="foto-user" style="background: url('<!-- #&FOTO&# -->')"></div>
 		<div class="dropdown">
  	 		<div class="dropbtn"><!-- #&USERLOGADO&# --></div>
