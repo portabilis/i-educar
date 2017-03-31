@@ -210,6 +210,12 @@ a.icons-top{
   font-family: "Open Sans";
 }
 
+@-moz-document url-prefix() { 
+  .nvp_tabelaMenu input#busca-menu-input{
+    width: 88% !important;
+  }
+}
+
 .nvp_tabelaMenu .title {
   background: transparent;
   width: 210px;
@@ -321,6 +327,12 @@ a.menu_susp_root:after {
     margin-top: -14px;
     background-image: url('../imagens/arrow-down2.png');
     background-size: 100%;
+}
+
+@-moz-document url-prefix() { 
+  a.menu_susp_root:after {
+    margin-top: 8px;
+  }
 }
 
 .clLevel1border {
