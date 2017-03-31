@@ -37,11 +37,12 @@ require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/RDStationAPI.class.php';
 require_once 'lib/Portabilis/String/Utils.php';
+require_once 'image_check.php';
 
 class clsIndex extends clsBase
 {
   public function Formular() {
-    $this->SetTitulo($this->_instituicao . 'Usu&aacute;rios');
+    $this->SetTitulo($this->_instituicao . 'Configurações  - Meus dados');
     $this->processoAp = '0';
   }
 }
@@ -64,6 +65,14 @@ class indice extends clsCadastro
   var $matricula_old;
 
   var $receber_novidades;
+
+  // Variáveis para controle da foto
+  var $objPhoto;
+  var $arquivoFoto;
+  var $file_delete;
+
+  var $caminho_det;
+  var $caminho_lst;
 
   public function Inicializar() {
     @session_start();
@@ -106,6 +115,14 @@ class indice extends clsCadastro
     $this->url_cancelar      = 'index.php';
     $this->nome_url_cancelar = 'Cancelar';
 
+
+    $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         ""                                  => "Meus dados"             
+    ));
+    $this->enviaLocalizacao($localizacao->montar());
+
     return $retorno;
   }
 
@@ -113,13 +130,29 @@ class indice extends clsCadastro
     $this->campoOculto('senha_old', $this->senha_old);
     $this->campoOculto('matricula_old', $this->matricula_old);
 
+    $foto = false;
+    if (is_numeric($this->pessoa_logada)){
+        $objFoto = new ClsCadastroFisicaFoto($this->pessoa_logada);
+        $detalheFoto = $objFoto->detalhe();
+        if(count($detalheFoto))
+          $foto = $detalheFoto['caminho'];
+    } else
+      $foto=false;
+
+    if ($foto){
+      $this->campoRotulo('fotoAtual_','Foto atual','<img height="117" src="'.$foto.'"/>');
+      $this->inputsHelper()->checkbox('file_delete', array('label' => 'Excluir a foto'));
+      $this->campoArquivo('file','Trocar foto',$this->arquivoFoto,40,'<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho m&aacute;ximo: 150KB</span>');
+    }else
+      $this->campoArquivo('file','Foto',$this->arquivoFoto,40,'<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho m&aacute;ximo: 150KB</span>');
+
     $this->campoTexto("nome", "Nome", $this->nome, 50, 150, true);
     $this->campoTexto("matricula", "Matrícula", $this->matricula, 25, 12, true);
 
     $options = array(
       'required'    => false,
-      'label'       => "(ddd) / Telefone",
-      'placeholder' => 'ddd',
+      'label'       => "(DDD) Telefone",
+      'placeholder' => 'DDD',
       'value'       => $this->ddd_telefone,
       'max_length'  => 3,
       'size'        => 3,
@@ -140,8 +173,8 @@ class indice extends clsCadastro
 
     $options = array(
       'required'    => false,
-      'label'       => "(ddd) / Celular",
-      'placeholder' => 'ddd',
+      'label'       => "(DDD) Celular",
+      'placeholder' => 'DDD',
       'value'       => $this->ddd_celular,
       'max_length'  => 3,
       'size'        => 3,
@@ -192,7 +225,6 @@ class indice extends clsCadastro
       $this->mensagem = "Formato do e-mail inválido.";
       return false;
     }
-
     // Validação de senha
     if ($this->senha != $this->senha_confirma) {
       $this->mensagem = "As senhas que você digitou não conferem.";
@@ -204,6 +236,11 @@ class indice extends clsCadastro
       $this->mensagem = "A senha informada &eacute; similar a sua matricula, informe outra senha.";
       return false;
     }
+
+    if (!$this->validatePhoto())
+      return false;
+
+    $this->savePhoto($this->pessoa_logada);
 
     $telefone = new clsPessoaTelefone($this->pessoa_logada, 1, str_replace("-", "", $this->telefone), $this->ddd_telefone);
     $telefone->cadastra();
@@ -271,18 +308,59 @@ class indice extends clsCadastro
       Portabilis_String_Utils::toUtf8("Permite relacionamento direto no pós-venda?") => $permiteRelacionamentoPosvendas
     );
 
-    // echo "<pre>";print_r($dados);die;
-
     $rdAPI = new RDStationAPI("***REMOVED***","***REMOVED***");
 
     $rdAPI->sendNewLead($this->email, $dados);
     $rdAPI->updateLeadStage($this->email, 2);
 
     $this->mensagem .= "Ediçãoo efetuada com sucesso.<br>";
-    header( "Location: index.php" );
+    header( "Location: meusdados.php" );
     die();
   }
 
+  // Retorna true caso a foto seja válida
+  public function validatePhoto(){
+    $this->arquivoFoto = $_FILES["file"];
+    if (!empty($this->arquivoFoto["name"])){
+      $this->arquivoFoto["name"] = mb_strtolower($this->arquivoFoto["name"], 'UTF-8');
+      $this->objPhoto = new PictureController($this->arquivoFoto);
+      if ($this->objPhoto->validatePicture()){
+        return TRUE;
+      } else {
+        $this->mensagem = $this->objPhoto->getErrorMessage();
+        return false;
+      }
+      return false;
+    }else{
+      $this->objPhoto = null;
+      return true;
+    }
+  }
+
+    //envia foto e salva caminha no banco
+    public function savePhoto($id){
+    if ($this->objPhoto!=null){
+      $caminhoFoto = $this->objPhoto->sendPicture($id);
+      if ($caminhoFoto!=''){
+        $obj = new clsCadastroFisicaFoto($id,$caminhoFoto);
+        $detalheFoto = $obj->detalhe();
+        if (is_array($detalheFoto) && count($detalheFoto)>0){
+         $obj->edita();
+        }
+        else{
+         $obj->cadastra();
+        }
+
+        return true;
+      } else{
+        echo '<script>alert(\'Foto não salva.\')</script>';
+        return false;
+      }
+    }elseif($this->file_delete == 'on'){
+      $obj = new clsCadastroFisicaFoto($id);
+      $obj->excluir();
+    }
+  }
 }
 
 // Instancia objeto de página
