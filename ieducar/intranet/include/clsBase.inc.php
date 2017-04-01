@@ -94,7 +94,7 @@ class clsBase extends clsConfig
   function OpenTpl($template)
   {
 
-    if ($_SERVER["REMOTE_ADDR"] != '201.86.28.179' && $_SERVER["REMOTE_ADDR"] != '172.17.0.1' && $_SERVER["REMOTE_ADDR"] != '177.19.6.94'){
+    if ($_SERVER["REMOTE_ADDR"] != '201.86.28.179' && $_SERVER["REMOTE_ADDR"] != '172.17.0.1' && $_SERVER["REMOTE_ADDR"] != '177.19.6.94' && $_SERVER["REMOTE_ADDR"] != '191.187.89.113'){
     	header('Location: http://www.portabilis.com.br/manutencao.html');
     }
     $prefix = 'nvp_';
