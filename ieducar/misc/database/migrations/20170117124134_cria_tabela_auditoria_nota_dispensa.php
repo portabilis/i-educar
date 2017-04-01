@@ -15,7 +15,8 @@ class CriaTabelaAuditoriaNotaDispensa extends AbstractMigration
                                 nota_recuperacao varchar(10),
                                 nota_recuperacao_especifica varchar(10),
                                 data_cadastro timestamp without time zone not null,
-                                foreign key (ref_cod_matricula) references pmieducar.matricula (cod_matricula),
+                                foreign key (ref_cod_matricula) references pmieducar.matricula (cod_matricula) MATCH SIMPLE
+                                ON UPDATE RESTRICT ON DELETE RESTRICT,
                                 foreign key (ref_cod_componente_curricular) references modules.componente_curricular (id));");
     }
 }
