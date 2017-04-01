@@ -1179,8 +1179,8 @@ class DiarioApiController extends ApiCoreController
       //criando chave para ordenamento temporário
       //área de conhecimento + componente curricular
 
-      $componente['ordem_nome_area_conhecimento'] = strtr(strtoupper($nomeArea, "áàãâéêíóôõúüçÁÀÃÂÉÊÍÓÔÕÚÜÇ", "aaaaeeiooouucAAAAEEIOOOUUC"));
-      $componente['ordem_componente_curricular']  = strtr((strtoupper($_componente->get('nome')),"áàãâéêíóôõúüçÁÀÃÂÉÊÍÓÔÕÚÜÇ", "aaaaeeiooouucAAAAEEIOOOUUC"));
+      $componente['ordem_nome_area_conhecimento'] = strtr($nomeArea, "áàãâéêíóôõúüçÁÀÃÂÉÊÍÓÔÕÚÜÇ", "aaaaeeiooouucAAAAEEIOOOUUC");
+      $componente['ordem_componente_curricular']  = strtr(($_componente->get('nome')),"áàãâéêíóôõúüçÁÀÃÂÉÊÍÓÔÕÚÜÇ", "aaaaeeiooouucAAAAEEIOOOUUC");
       $componentesCurriculares[]           = $componente;
     }
 
