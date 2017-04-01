@@ -6,8 +6,7 @@ class CriaFunctionGetSituacaoComponenteCurricular extends AbstractMigration
 {
     public function up()
     {
-        $sql = utf8_decode("
-                CREATE OR REPLACE FUNCTION relatorio.get_situacao_componente(cod_situacao numeric)
+        $sql = "CREATE OR REPLACE FUNCTION relatorio.get_situacao_componente(cod_situacao numeric)
                 RETURNS VARCHAR AS $$
                 DECLARE
                   texto_situacao varchar := '';
@@ -29,7 +28,7 @@ class CriaFunctionGetSituacaoComponenteCurricular extends AbstractMigration
                     ELSE '' END);
                   RETURN texto_situacao;
                 END;
-                $$ LANGUAGE plpgsql;");
+                $$ LANGUAGE plpgsql;";
 
         $this->execute($sql);
     }
