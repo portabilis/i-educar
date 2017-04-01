@@ -155,8 +155,21 @@ class indice
 
           });
          </script>';
-
-      $temp .= '<table width="100%" height="400" align="center" border="0" cellspacing="4" cellpadding="0">';
+      $temp .= "<table class='tablelistagem' id='tableLocalizacao'width='100%' border='0'  cellpadding='0' cellspacing='0'>
+                  <tr height='10px'>
+                    <td class='fundoLocalizacao' colspan='2'>
+                      <div id='localizacao'>
+                        <a href='/intranet' title='Ir para o início'>
+                          <i class='fa fa-home' aria-hidden='true'></i>
+                          <span> Início</span>
+                        </a>
+                        <a class='flechinha' href='#'> / </a> 
+                        <a href='#' class='pagina_atual'>Calendário</a>
+                      </div>
+                    </td>
+                  </tr>
+                </table>";
+      $temp .= '<table width="100%" height="400" align="center" border="0" cellspacing="4" cellpadding="0" style="padding:0 20px">';
       $temp .= '
         <tr>
           <td class="fundoCalendarioTopo" style="padding:0px;">DOM</td>
