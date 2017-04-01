@@ -123,7 +123,7 @@ class AjustaFunctionCargaHorariaComponenteHistorico extends AbstractMigration
                                                   ELSE replace(substring(btrim(hd.nota::text), 1, 4), '.'::text, ','::text)
                                               END AS replace
                                          FROM pmieducar.historico_disciplinas hd
-                                           JOIN historico_escolar historico_escolar_1 ON historico_escolar_1.ref_cod_aluno = hd.ref_ref_cod_aluno AND historico_escolar_1.sequencial = hd.ref_sequencial
+                                           JOIN pmieducar.historico_escolar historico_escolar_1 ON historico_escolar_1.ref_cod_aluno = hd.ref_ref_cod_aluno AND historico_escolar_1.sequencial = hd.ref_sequencial
                                         WHERE hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND fcn_upper(hd.nm_disciplina::text) = fcn_upper(historico_disciplinas.nm_disciplina) AND historico_escolar_1.ativo = 1 AND historico_escolar_1.extra_curricular = 0 AND substring(historico_escolar_1.nm_serie::text, 1, 1) = 1::text AND historico_escolar_1.sequencial = (( SELECT max(hee.sequencial) AS max
                                                  FROM historico_escolar hee
                                                 WHERE hee.ref_cod_aluno = historico_escolar_1.ref_cod_aluno AND substring(historico_escolar_1.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1) AND hee.ativo = 1 AND hee.extra_curricular = 0))
@@ -135,7 +135,7 @@ class AjustaFunctionCargaHorariaComponenteHistorico extends AbstractMigration
                                                   ELSE replace(substring(btrim(hd.nota::text), 1, 4), '.'::text, ','::text)
                                               END AS replace
                                          FROM pmieducar.historico_disciplinas hd
-                                           JOIN historico_escolar historico_escolar_1 ON historico_escolar_1.ref_cod_aluno = hd.ref_ref_cod_aluno AND historico_escolar_1.sequencial = hd.ref_sequencial
+                                           JOIN pmieducar.historico_escolar historico_escolar_1 ON historico_escolar_1.ref_cod_aluno = hd.ref_ref_cod_aluno AND historico_escolar_1.sequencial = hd.ref_sequencial
                                         WHERE hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND fcn_upper(hd.nm_disciplina::text) = fcn_upper(historico_disciplinas.nm_disciplina) AND historico_escolar_1.ativo = 1 AND historico_escolar_1.extra_curricular = 0 AND substring(historico_escolar_1.nm_serie::text, 1, 1) = 2::text AND historico_escolar_1.sequencial = (( SELECT max(hee.sequencial) AS max
                                                  FROM historico_escolar hee
                                                 WHERE hee.ref_cod_aluno = historico_escolar_1.ref_cod_aluno AND substring(historico_escolar_1.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1) AND hee.ativo = 1 AND hee.extra_curricular = 0))
@@ -147,7 +147,7 @@ class AjustaFunctionCargaHorariaComponenteHistorico extends AbstractMigration
                                                   ELSE replace(substring(btrim(hd.nota::text), 1, 4), '.'::text, ','::text)
                                               END AS replace
                                          FROM pmieducar.historico_disciplinas hd
-                                           JOIN historico_escolar historico_escolar_1 ON historico_escolar_1.ref_cod_aluno = hd.ref_ref_cod_aluno AND historico_escolar_1.sequencial = hd.ref_sequencial
+                                           JOIN pmieducar.historico_escolar historico_escolar_1 ON historico_escolar_1.ref_cod_aluno = hd.ref_ref_cod_aluno AND historico_escolar_1.sequencial = hd.ref_sequencial
                                         WHERE hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND fcn_upper(hd.nm_disciplina::text) = fcn_upper(historico_disciplinas.nm_disciplina) AND historico_escolar_1.ativo = 1 AND historico_escolar_1.extra_curricular = 0 AND substring(historico_escolar_1.nm_serie::text, 1, 1) = 3::text AND historico_escolar_1.sequencial = (( SELECT max(hee.sequencial) AS max
                                                  FROM historico_escolar hee
                                                 WHERE hee.ref_cod_aluno = historico_escolar_1.ref_cod_aluno AND substring(historico_escolar_1.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1) AND hee.ativo = 1 AND hee.extra_curricular = 0))
@@ -159,7 +159,7 @@ class AjustaFunctionCargaHorariaComponenteHistorico extends AbstractMigration
                                                   ELSE replace(substring(btrim(hd.nota::text), 1, 4), '.'::text, ','::text)
                                               END AS replace
                                          FROM pmieducar.historico_disciplinas hd
-                                           JOIN historico_escolar historico_escolar_1 ON historico_escolar_1.ref_cod_aluno = hd.ref_ref_cod_aluno AND historico_escolar_1.sequencial = hd.ref_sequencial
+                                           JOIN pmieducar.historico_escolar historico_escolar_1 ON historico_escolar_1.ref_cod_aluno = hd.ref_ref_cod_aluno AND historico_escolar_1.sequencial = hd.ref_sequencial
                                         WHERE hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND fcn_upper(hd.nm_disciplina::text) = fcn_upper(historico_disciplinas.nm_disciplina) AND historico_escolar_1.ativo = 1 AND historico_escolar_1.extra_curricular = 0 AND substring(historico_escolar_1.nm_serie::text, 1, 1) = 4::text AND historico_escolar_1.sequencial = (( SELECT max(hee.sequencial) AS max
                                                  FROM historico_escolar hee
                                                 WHERE hee.ref_cod_aluno = historico_escolar_1.ref_cod_aluno AND substring(historico_escolar_1.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1) AND hee.ativo = 1 AND hee.extra_curricular = 0))
@@ -171,7 +171,7 @@ class AjustaFunctionCargaHorariaComponenteHistorico extends AbstractMigration
                                                   ELSE replace(substring(btrim(hd.nota::text), 1, 4), '.'::text, ','::text)
                                               END AS replace
                                          FROM pmieducar.historico_disciplinas hd
-                                           JOIN historico_escolar historico_escolar_1 ON historico_escolar_1.ref_cod_aluno = hd.ref_ref_cod_aluno AND historico_escolar_1.sequencial = hd.ref_sequencial
+                                           JOIN pmieducar.historico_escolar historico_escolar_1 ON historico_escolar_1.ref_cod_aluno = hd.ref_ref_cod_aluno AND historico_escolar_1.sequencial = hd.ref_sequencial
                                         WHERE hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND fcn_upper(hd.nm_disciplina::text) = fcn_upper(historico_disciplinas.nm_disciplina) AND historico_escolar_1.ativo = 1 AND historico_escolar_1.extra_curricular = 0 AND substring(historico_escolar_1.nm_serie::text, 1, 1) = 5::text AND historico_escolar_1.sequencial = (( SELECT max(hee.sequencial) AS max
                                                  FROM historico_escolar hee
                                                 WHERE hee.ref_cod_aluno = historico_escolar_1.ref_cod_aluno AND substring(historico_escolar_1.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1) AND hee.ativo = 1 AND hee.extra_curricular = 0))
@@ -183,7 +183,7 @@ class AjustaFunctionCargaHorariaComponenteHistorico extends AbstractMigration
                                                   ELSE replace(substring(btrim(hd.nota::text), 1, 4), '.'::text, ','::text)
                                               END AS replace
                                          FROM pmieducar.historico_disciplinas hd
-                                           JOIN historico_escolar historico_escolar_1 ON historico_escolar_1.ref_cod_aluno = hd.ref_ref_cod_aluno AND historico_escolar_1.sequencial = hd.ref_sequencial
+                                           JOIN pmieducar.historico_escolar historico_escolar_1 ON historico_escolar_1.ref_cod_aluno = hd.ref_ref_cod_aluno AND historico_escolar_1.sequencial = hd.ref_sequencial
                                         WHERE hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND fcn_upper(hd.nm_disciplina::text) = fcn_upper(historico_disciplinas.nm_disciplina) AND historico_escolar_1.ativo = 1 AND historico_escolar_1.extra_curricular = 0 AND substring(historico_escolar_1.nm_serie::text, 1, 1) = 6::text AND historico_escolar_1.sequencial = (( SELECT max(hee.sequencial) AS max
                                                  FROM historico_escolar hee
                                                 WHERE hee.ref_cod_aluno = historico_escolar_1.ref_cod_aluno AND substring(historico_escolar_1.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1) AND hee.ativo = 1 AND hee.extra_curricular = 0))
@@ -195,7 +195,7 @@ class AjustaFunctionCargaHorariaComponenteHistorico extends AbstractMigration
                                                   ELSE replace(substring(btrim(hd.nota::text), 1, 4), '.'::text, ','::text)
                                               END AS replace
                                          FROM pmieducar.historico_disciplinas hd
-                                           JOIN historico_escolar historico_escolar_1 ON historico_escolar_1.ref_cod_aluno = hd.ref_ref_cod_aluno AND historico_escolar_1.sequencial = hd.ref_sequencial
+                                           JOIN pmieducar.historico_escolar historico_escolar_1 ON historico_escolar_1.ref_cod_aluno = hd.ref_ref_cod_aluno AND historico_escolar_1.sequencial = hd.ref_sequencial
                                         WHERE hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND fcn_upper(hd.nm_disciplina::text) = fcn_upper(historico_disciplinas.nm_disciplina) AND historico_escolar_1.ativo = 1 AND historico_escolar_1.extra_curricular = 0 AND substring(historico_escolar_1.nm_serie::text, 1, 1) = 7::text AND historico_escolar_1.sequencial = (( SELECT max(hee.sequencial) AS max
                                                  FROM historico_escolar hee
                                                 WHERE hee.ref_cod_aluno = historico_escolar_1.ref_cod_aluno AND substring(historico_escolar_1.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1) AND hee.ativo = 1 AND hee.extra_curricular = 0))
@@ -207,7 +207,7 @@ class AjustaFunctionCargaHorariaComponenteHistorico extends AbstractMigration
                                                   ELSE replace(substring(btrim(hd.nota::text), 1, 4), '.'::text, ','::text)
                                               END AS replace
                                          FROM pmieducar.historico_disciplinas hd
-                                           JOIN historico_escolar historico_escolar_1 ON historico_escolar_1.ref_cod_aluno = hd.ref_ref_cod_aluno AND historico_escolar_1.sequencial = hd.ref_sequencial
+                                           JOIN pmieducar.historico_escolar historico_escolar_1 ON historico_escolar_1.ref_cod_aluno = hd.ref_ref_cod_aluno AND historico_escolar_1.sequencial = hd.ref_sequencial
                                         WHERE hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND fcn_upper(hd.nm_disciplina::text) = fcn_upper(historico_disciplinas.nm_disciplina) AND historico_escolar_1.ativo = 1 AND historico_escolar_1.extra_curricular = 0 AND substring(historico_escolar_1.nm_serie::text, 1, 1) = 8::text AND historico_escolar_1.sequencial = (( SELECT max(hee.sequencial) AS max
                                                  FROM historico_escolar hee
                                                 WHERE hee.ref_cod_aluno = historico_escolar_1.ref_cod_aluno AND substring(historico_escolar_1.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1) AND hee.ativo = 1 AND hee.extra_curricular = 0))
@@ -219,7 +219,7 @@ class AjustaFunctionCargaHorariaComponenteHistorico extends AbstractMigration
                                                   ELSE replace(substring(btrim(hd.nota::text), 1, 4), '.'::text, ','::text)
                                               END AS replace
                                          FROM pmieducar.historico_disciplinas hd
-                                           JOIN historico_escolar historico_escolar_1 ON historico_escolar_1.ref_cod_aluno = hd.ref_ref_cod_aluno AND historico_escolar_1.sequencial = hd.ref_sequencial
+                                           JOIN pmieducar.historico_escolar historico_escolar_1 ON historico_escolar_1.ref_cod_aluno = hd.ref_ref_cod_aluno AND historico_escolar_1.sequencial = hd.ref_sequencial
                                         WHERE hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND fcn_upper(hd.nm_disciplina::text) = fcn_upper(historico_disciplinas.nm_disciplina) AND historico_escolar_1.ativo = 1 AND historico_escolar_1.extra_curricular = 0 AND substring(historico_escolar_1.nm_serie::text, 1, 1) = 9::text AND historico_escolar_1.sequencial = (( SELECT max(hee.sequencial) AS max
                                                  FROM historico_escolar hee
                                                 WHERE hee.ref_cod_aluno = historico_escolar_1.ref_cod_aluno AND substring(historico_escolar_1.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1) AND hee.ativo = 1 AND hee.extra_curricular = 0))
@@ -695,7 +695,7 @@ class AjustaFunctionCargaHorariaComponenteHistorico extends AbstractMigration
                                           historico_disciplinas_1.faltas,
                                           historico_disciplinas_1.import
                                          FROM pmieducar.historico_disciplinas historico_disciplinas_1) historico_disciplinas
-                                   JOIN historico_escolar ON historico_escolar.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND historico_escolar.sequencial = historico_disciplinas.ref_sequencial
+                                   JOIN pmieducar.historico_escolar ON historico_escolar.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND historico_escolar.sequencial = historico_disciplinas.ref_sequencial
                                 WHERE historico_escolar.extra_curricular = 0 AND historico_escolar.ativo = 1
                                 GROUP BY historico_disciplinas.nm_disciplina, historico_disciplinas.ref_ref_cod_aluno
                                 ORDER BY historico_disciplinas.nm_disciplina) historico
