@@ -694,7 +694,7 @@ class AjustaFunctionCargaHorariaComponenteHistorico extends AbstractMigration
                                           historico_disciplinas_1.nota,
                                           historico_disciplinas_1.faltas,
                                           historico_disciplinas_1.import
-                                         FROM historico_disciplinas historico_disciplinas_1) historico_disciplinas
+                                         FROM pmieducar.historico_disciplinas historico_disciplinas_1) historico_disciplinas
                                    JOIN historico_escolar ON historico_escolar.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND historico_escolar.sequencial = historico_disciplinas.ref_sequencial
                                 WHERE historico_escolar.extra_curricular = 0 AND historico_escolar.ativo = 1
                                 GROUP BY historico_disciplinas.nm_disciplina, historico_disciplinas.ref_ref_cod_aluno
