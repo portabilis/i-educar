@@ -156,7 +156,7 @@ class indice extends clsCadastro
       }
     }
 
-    $this->campoLista('ref_cod_nivel', 'Nível', $opcoes, $this->ref_cod_nivel, '', TRUE);
+    $this->campoLista('ref_cod_nivel', 'Nível', $opcoes, $this->ref_cod_nivel, '', FALSE);
 
     $opcoes = array('' => 'Selecione um nível');
 
