@@ -563,7 +563,7 @@ class AjustaFunctionCargaHorariaComponenteHistorico extends AbstractMigration
                                                  FROM pmieducar.historico_escolar he
                                                 WHERE he.ref_cod_instituicao = phe.ref_cod_instituicao AND substring(he.nm_serie::text, 1, 1) = substring(phe.nm_serie::text, 1, 1) AND he.ref_cod_aluno = phe.ref_cod_aluno AND he.ativo = 1))) AS observacao_all,
                                   ( SELECT m.cod_matricula
-                                         FROM matricula m
+                                         FROM pmieducar.matricula m
                                         WHERE m.ano = (( SELECT historico_escolar_1.ano
                                                  FROM pmieducar.historico_escolar historico_escolar_1
                                                 WHERE historico_escolar_1.aprovado = 4 AND historico_escolar_1.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND historico_escolar_1.ativo = 1 AND historico_escolar_1.extra_curricular = 0
