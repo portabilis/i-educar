@@ -955,7 +955,7 @@ class indice extends clsCadastro
       $help = '';
     }
 
-    $label = 'Componentes curriculares definidos em s&eacute;ries da sscola';
+    $label = 'Componentes curriculares definidos em s&eacute;ries da escola';
 
     $label = sprintf($label, $help);
 
