@@ -97,6 +97,7 @@ class clsBase extends clsConfig
     if ($_SERVER["REMOTE_ADDR"] != '201.86.28.179' &&
         $_SERVER["REMOTE_ADDR"] != '172.17.0.1' &&
         $_SERVER["REMOTE_ADDR"] != '177.19.6.94' &&
+        $_SERVER["REMOTE_ADDR"] != '177.124.96.237' &&
         $_SERVER["REMOTE_ADDR"] != '179.216.24.182' && /*Tiago*/
         $_SERVER["REMOTE_ADDR"] != '177.156.76.215' && /*Ricardo*/
         $_SERVER["REMOTE_ADDR"] != '138.97.55.222' && /*Kellyn*/
