@@ -167,7 +167,7 @@ class clsPessoaFisica extends clsPessoaFj
     if (is_string($numeric_cpf)) {
       $numeric_cpf = addslashes($numeric_cpf);
 
-      $where   .= "{$whereAnd} cpf ILIKE E'%{$numeric_cpf}%' ";
+      $where   .= "{$whereAnd} cpf::varchar ILIKE E'%{$numeric_cpf}%' ";
       $whereAnd = ' AND ';
     }
 
