@@ -227,14 +227,14 @@ class indice extends clsCadastro
 		$this->campoMemo( "observacao", "Observac&atilde;o", $this->observacao, 60, 10, true );
 
 		$this->campoCheck("visivel_pais",
-						  Portabilis_String_Utils::toLatin1("VisÃ­vel aos pais"),
+						  Portabilis_String_Utils::toLatin1("Visí­vel aos pais"),
 						  $this->visivel_pais,
-						  Portabilis_String_Utils::toLatin1("Marque este campo, caso deseje que os pais do aluno possam visualizar tal ocorrÃªncia disciplinar."));
+						  Portabilis_String_Utils::toLatin1("Marque este campo, caso deseje que os pais do aluno possam visualizar tal ocorrência disciplinar."));
 
 	}
 
 	function Novo()
-	{	
+	{
 		@session_start();
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
@@ -345,7 +345,7 @@ class indice extends clsCadastro
   	$cod_aluno = $det_tmp["ref_cod_aluno"];
 
   	$cod_escola = $det_tmp["ref_ref_cod_escola"];
-  	
+
   	$obj_tmp = new clsPmieducarTipoOcorrenciaDisciplinar($this->ref_cod_tipo_ocorrencia_disciplinar);
   	$det_tmp = $obj_tmp->detalhe();
 
@@ -364,7 +364,7 @@ class indice extends clsCadastro
   												   'tipoRequisicao' => ApiExternaController::REQUISICAO_POST,
   												   'params'			=> $params));
 
-  	
+
 	return $requisicao->executaRequisicao();
   }
 
