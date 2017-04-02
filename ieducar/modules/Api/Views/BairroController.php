@@ -39,7 +39,7 @@ class BairroController extends ApiCoreController
   protected function searchOptions() {
     $distritoId = $this->getRequest()->distrito_id ? $this->getRequest()->distrito_id : 0;
     return array('sqlParams'    => array($distritoId), 'selectFields' => array('zona_localizacao'));
-    
+
   }
 
   protected function formatResourceValue($resource) {
@@ -52,11 +52,11 @@ class BairroController extends ApiCoreController
   }
 
   protected function sqlsForNumericSearch() {
-    
+
     $sqls[] = "SELECT b.idbai as id, b.nome as name, zona_localizacao, m.nome as municipio from
                  public.bairro b
-                 INNER JOIN public.municipio m ON m.idmun = b.idmun 
-                 where idbai like $1||'%' and (iddis = $2 or $2 = 0 )";
+                 INNER JOIN public.municipio m ON m.idmun = b.idmun
+                 where idbai::varchar like $1||'%' and (iddis = $2 or $2 = 0 )";
 
     return $sqls;
   }

@@ -39,15 +39,15 @@ class LogradouroController extends ApiCoreController
   protected function searchOptions() {
     $municipioId = $this->getRequest()->municipio_id ? $this->getRequest()->municipio_id : 0;
     return array('sqlParams'    => array($municipioId), 'selectFields' => array('tipo_logradouro'));
-    
+
   }
 
   protected function sqlsForNumericSearch() {
 
     $sqls[] = "SELECT distinct l.idlog as id, l.nome as name, tl.descricao as tipo_logradouro, m.nome as municipio from
-                 public.logradouro l left join urbano.tipo_logradouro tl on (l.idtlog = tl.idtlog) 
+                 public.logradouro l left join urbano.tipo_logradouro tl on (l.idtlog = tl.idtlog)
                  INNER JOIN public.municipio m ON m.idmun = l.idmun
-                 where l.idlog like $1||'%' and (m.idmun = $2 OR $2 = 0)";
+                 where l.idlog::varchar like $1||'%' and (m.idmun = $2 OR $2 = 0)";
 
     return $sqls;
   }
@@ -56,14 +56,14 @@ class LogradouroController extends ApiCoreController
   protected function sqlsForStringSearch() {
 
     $sqls[] = "SELECT distinct l.idlog as id, l.nome as name, tl.descricao as tipo_logradouro, m.nome as municipio FROM
-                 public.logradouro l left join urbano.tipo_logradouro tl on (l.idtlog = tl.idtlog) 
+                 public.logradouro l left join urbano.tipo_logradouro tl on (l.idtlog = tl.idtlog)
                  INNER JOIN public.municipio m ON m.idmun = l.idmun
-                 where (lower((l.nome)) like '%'||lower(($1))||'%' 
-                 OR lower((tl.descricao))|| ' ' ||lower((l.nome)) like '%'||lower(($1))||'%') 
+                 where (lower((l.nome)) like '%'||lower(($1))||'%'
+                 OR lower((tl.descricao))|| ' ' ||lower((l.nome)) like '%'||lower(($1))||'%')
                  and (m.idmun = $2 OR $2 = 0)";
 
     return $sqls;
-  }  
+  }
 
   protected function formatResourceValue($resource) {
     $id = $resource['id'];
