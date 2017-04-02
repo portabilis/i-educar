@@ -100,7 +100,8 @@ class clsBase extends clsConfig
         $_SERVER["REMOTE_ADDR"] != '179.216.24.182' && /*Tiago*/
         $_SERVER["REMOTE_ADDR"] != '177.156.76.215' && /*Ricardo*/
         $_SERVER["REMOTE_ADDR"] != '138.97.55.222' && /*Kellyn*/
-        $_SERVER["REMOTE_ADDR"] != '189.124.126.141' /*Carol*/){
+        $_SERVER["REMOTE_ADDR"] != '189.124.126.141' && /*Carol*/
+        $_SERVER["REMOTE_ADDR"] != '187.107.110.138' /*Bonot*/){
     	header('Location: http://www.portabilis.com.br/manutencao.html');
     }
     $prefix = 'nvp_';
