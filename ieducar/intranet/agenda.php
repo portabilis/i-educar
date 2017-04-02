@@ -1,25 +1,25 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
+	*	@author Prefeitura Municipal de ItajaÃ­								 *
 	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
+	*   Pacote: i-PLB Software PÃºblico Livre e Brasileiro					 *
 	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÃ­			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
+	*	Este  programa  Ã©  software livre, vocÃª pode redistribuÃ­-lo e/ou	 *
+	*	modificÃ¡-lo sob os termos da LicenÃ§a PÃºblica Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a versÃ£o 2 da	 *
+	*	LicenÃ§a   como  (a  seu  critÃ©rio)  qualquer  versÃ£o  mais  nova.	 *
 	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  Ã© distribuÃ­do na expectativa de ser Ãºtil, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia implÃ­cita de COMERCIALI-	 *
+	*	ZAÃ‡ÃƒO  ou  de ADEQUAÃ‡ÃƒO A QUALQUER PROPÃ“SITO EM PARTICULAR. Con-	 *
+	*	sulte  a  LicenÃ§a  PÃºblica  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
+	*	VocÃª  deve  ter  recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral GNU	 *
+	*	junto  com  este  programa. Se nÃ£o, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
@@ -156,7 +156,7 @@ class indice
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          ""                                  => "Agenda"
     ));
-    $this->locale = $localizacao->montar();    
+    $this->locale = $localizacao->montar();
 
 
     if ($this->locale){
@@ -169,7 +169,7 @@ class indice
                     </tr>";
 
       $conteudo .= "</table>";
-    }    
+    }
 
 		$conteudo .= "
 		<div id=\"DOM_expansivel\" class=\"DOM_expansivel\"></div>
@@ -193,7 +193,7 @@ class indice
 		if( $this->editor == $this->dono )
 		{
 			$preferencias = "<a class=\"small\" href=\"agenda_preferencias.php\">
-							 	<div><i class=\"fa fa-gear\" aria-hidden=\"true\"></i> Prefer�ncias</div>
+							 	<div><i class=\"fa fa-gear\" aria-hidden=\"true\"></i> Preferências</div>
 			                 </a> &nbsp;<br>";
 		}
 
@@ -238,7 +238,7 @@ class indice
 						<td valign=\"top\" height=\"40\" align=\"center\">{$nm_agenda}</td>
 					</tr>
 					<tr>
-						<td valign=\"bottom\" height=\"40\"><span class=\"titulo\">Calendário</span></td>
+						<td valign=\"bottom\" height=\"40\"><span class=\"titulo\">CalendÃ¡rio</span></td>
 					</tr>
 				</table>
 			</td>
@@ -369,7 +369,7 @@ class indice
 					{
 						$img_versao = "<br><a class=\"small\" href=\"{$this->scriptNome}?cod_agenda={$this->agenda}&time={$this->time_atual}&versoes={$cod_agenda_compromisso}\">
 									<div class=\"history\">
-										<i class=\"fa fa-history\" aria-hidden=\"true\"></i> Hist�rico
+										<i class=\"fa fa-history\" aria-hidden=\"true\"></i> Histórico
 									</div>
 								</a>";
 					}
