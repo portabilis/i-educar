@@ -1184,3 +1184,9 @@ input.btn_small {
     display: block;
   }
 }
+
+
+/****WIDGET SUPORTE****/
+.freshwidget-button{
+  left: 30px !important;
+}
