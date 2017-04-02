@@ -133,8 +133,8 @@ class miolo1 extends clsListagem
     $pre_select = '
       SELECT
         c.idlog, c.cep, c.idbai, u.sigla_uf, m.nome, t.idtlog, m.idmun, b.zona_localizacao ';
-        
-    $select = '    
+
+    $select = '
       FROM
         urbano.cep_logradouro_bairro c, public.bairro b, public.logradouro l,
         public.municipio m, public.uf u, urbano.tipo_logradouro t
@@ -166,7 +166,7 @@ class miolo1 extends clsListagem
     $paramCount = 1;
 
     foreach ($params as $name => $value) {
-      $select .= " AND $name ILIKE '%'||\$$paramCount||'%'";
+      $select .= " AND $name::varchar ILIKE '%'||\$$paramCount||'%'";
       $paramCount++;
     }
 
@@ -175,7 +175,7 @@ class miolo1 extends clsListagem
     $select .= sprintf(' LIMIT %s OFFSET %s', $limite, $iniciolimit);
 
     $result = Portabilis_Utils_Database::fetchPreparedQuery($pre_select.$select, array('params' => array_values($params)));
-    
+
 
     foreach ($result as $record) {
       list($idlog, $cep, $idbai, $uf, $cidade, $tipoLogradouroId, $id_mun, $zona) = $record;
@@ -218,7 +218,7 @@ class miolo1 extends clsListagem
     $this->largura = '100%';
     $this->addPaginador2('educar_pesquisa_cep_log_bairro.php', $total, $_GET,
       $this->nome, $limite);
-    
+
 /*
     if ($_GET['param']) {
       $this->rodape = '

@@ -107,15 +107,15 @@ class indice extends clsCadastro
 		}
 
 		$this->url_cancelar = ($retorno == "Editar") ? "educar_calendario_ano_letivo_det.php?cod_calendario_ano_letivo={$registro["cod_calendario_ano_letivo"]}" : "educar_calendario_ano_letivo_lst.php";
-		
+
 		$nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
         $localizacao = new LocalizacaoSistema();
         $localizacao->entradaCaminhos( array(
              $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
              "educar_index.php"                  => "Escola",
-             ""        => "{$nomeMenu} calend&aacute;rio do ano letivo"             
+             ""        => "{$nomeMenu} calend&aacute;rio do ano letivo"
         ));
-        $this->enviaLocalizacao($localizacao->montar());		
+        $this->enviaLocalizacao($localizacao->montar());
 
 		$this->nome_url_cancelar = "Cancelar";
 		return $retorno;
@@ -376,7 +376,7 @@ after_getEscola = function()
 	var campoAno = document.getElementById('ano').length = 1;
 }
 
-document.getElementById('ref_cod_escola').onchange = geraAnos();
+document.getElementById('ref_cod_escola').onchange = (function(){geraAnos();});
 
 function geraAnos()
 {
