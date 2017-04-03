@@ -54,9 +54,10 @@ class Portabilis_View_Helper_DynamicInput_Escola extends Portabilis_View_Helper_
   }
 
   protected function inputOptions($options) {
-    $resources     = $options['resources'];
-    $instituicaoId = $this->getInstituicaoId($options['instituicaoId']);
-    $userId        = $this->getCurrentUserId();
+    $resources            = $options['resources'];
+    $instituicaoId        = $this->getInstituicaoId($options['instituicaoId']);
+    $userId               = $this->getCurrentUserId();
+    $mostraOpcaoSelecione = $options['options']['mostra-opcao-selecione'];
 
     if ($instituicaoId and empty($resources)) {
       $permissao = new clsPermissoes();
@@ -71,8 +72,11 @@ class Portabilis_View_Helper_DynamicInput_Escola extends Portabilis_View_Helper_
         {
           $escolas_usuario[$e["ref_cod_escola"]] = $e["nome"];
         }
-        $resources = $escolas_usuario;
-        return $resources;
+        if ($mostraOpcaoSelecione) {
+          return $this->insertOption(null, 'Selecione uma escola', $escolas_usuario);
+        } else {
+          return $escolas_usuario;
+        }
       }
       $resources = App_Model_IedFinder::getEscolas($instituicaoId);
     }

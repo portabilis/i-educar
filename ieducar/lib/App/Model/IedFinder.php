@@ -95,6 +95,8 @@ class App_Model_IedFinder extends CoreExt_Entity
     $_escolas = self::addClassToStorage('clsPmieducarEscola', NULL,
       'include/pmieducar/clsPmieducarEscola.inc.php');
 
+    $_escolas->setOrderby('nome');
+
     $escolas = array();
     foreach ($_escolas->lista(NULL, NULL, NULL,  $instituicaoId) as $escola) {
       $escolas[$escola['cod_escola']] = $escola['nome'];

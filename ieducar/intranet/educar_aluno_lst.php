@@ -111,8 +111,6 @@ class indice extends clsListagem
 		foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
 			$this->$var = ( $val === "" ) ? null: $val;
 
-
-
 		$this->campoNumero("cod_aluno",$GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu' ? "C&oacute;digo Aluno (i-Educar)" : "C&oacute;digo Aluno",$this->cod_aluno,20,9,false);
 		if(!$GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu'){
 			$this->campoNumero("cod_inep","C&oacute;digo INEP",$this->cod_inep,20,255,false);
@@ -144,12 +142,15 @@ class indice extends clsListagem
 
     $this->campoLista('idsetorbai', 'Setor', $opcoes, $this->idsetorbai, NULL, NULL, NULL, NULL, NULL, FALSE);
 
-
 		$this->campoRotulo('filtros_matricula', '<b>Filtros de matrículas em andamento</b>');
 
 		$this->inputsHelper()->integer('ano', array('required' => false, 'value' => $this->ano, 'max_length' => 4));
 		$this->inputsHelper()->dynamic('instituicao',  array('required' =>  false, 'show-select' => true, 'value' => $this->ref_cod_instituicao));
-		$this->inputsHelper()->dynamic('escola',  array('required' =>  false, 'show-select' => true, 'value' => $this->ref_cod_escola));
+		$this->inputsHelper()->dynamic('escola',
+		 																array('required' =>  false,
+																					'show-select' => true,
+																					'value' => $this->ref_cod_escola,
+																				  'mostra-opcao-selecione' => true));
 		$this->inputsHelper()->dynamic(array('curso', 'serie'), array('required' =>  false));
 
 		//$this->inputsHelper()->select('periodo', array('required' => false, 'value' => $this->periodo, 'resources' => array(null => 'Selecione', 1 => 'Matutino', 2 => 'Vespertino', 3 => 'Noturno', 4 => 'Integral' )));
