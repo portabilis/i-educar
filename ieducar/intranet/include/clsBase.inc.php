@@ -94,18 +94,6 @@ class clsBase extends clsConfig
   function OpenTpl($template)
   {
 
-    if ($_SERVER["REMOTE_ADDR"] != '201.86.28.179' &&
-        $_SERVER["REMOTE_ADDR"] != '172.17.0.1' &&
-        $_SERVER["REMOTE_ADDR"] != '177.19.6.94' &&
-        $_SERVER["REMOTE_ADDR"] != '177.124.96.237' &&
-        $_SERVER["REMOTE_ADDR"] != '179.216.24.182' && /*Tiago*/
-        $_SERVER["REMOTE_ADDR"] != '177.156.76.215' && /*Ricardo*/
-        $_SERVER["REMOTE_ADDR"] != '138.97.55.222' && /*Kellyn*/
-        $_SERVER["REMOTE_ADDR"] != '189.124.126.141' && /*Carol*/
-        $_SERVER["REMOTE_ADDR"] != '187.107.110.138' && /*Bonot*/
-        $_SERVER["REMOTE_ADDR"] != '187.107.110.138' /*Matheus*/){
-    	header('Location: http://www.portabilis.com.br/manutencao.html');
-    }
     $prefix = 'nvp_';
     $file   = $this->arrayConfig['strDirTemplates'] . $prefix . $template . '.tpl';
 
