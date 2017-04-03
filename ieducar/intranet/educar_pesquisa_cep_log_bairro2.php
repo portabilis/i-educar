@@ -167,7 +167,7 @@ class miolo1 extends clsListagem
     $paramCount = 1;
 
     foreach ($params as $name => $value) {
-      $select .= " AND $name ILIKE '%'||\$$paramCount||'%'";
+      $select .= " AND $name::varchar ILIKE '%'||\$$paramCount||'%'";
       $paramCount++;
     }
 

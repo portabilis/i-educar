@@ -1,24 +1,24 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gestÃ£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de ItajaÃ­
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa Ã© software livre; vocÃª pode redistribuÃ­-lo e/ou modificÃ¡-lo
+ * sob os termos da LicenÃ§a PÃºblica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versÃ£o 2 da LicenÃ§a, como (a seu critÃ©rio)
+ * qualquer versÃ£o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa Ã© distribuÃ­Â­do na expectativa de que seja Ãºtil, porÃ©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implÃ­Â­cita de COMERCIABILIDADE OU
+ * ADEQUAÃ‡ÃƒO A UMA FINALIDADE ESPECÃFICA. Consulte a LicenÃ§a PÃºblica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * VocÃª deve ter recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral do GNU junto
+ * com este programa; se nÃ£o, escreva para a Free Software Foundation, Inc., no
+ * endereÃ§o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Lucas Schmoeller da Silva <lucas@portabilis.com.br>
  * @category    i-Educar
@@ -47,32 +47,32 @@ class ComponenteCurricular_Model_CodigoEducacenso extends CoreExt_Enum
 
   protected $_data = array(
     null => 'Selecione',
-    1    => 'Química',
-    2    => 'Física',
-    3    => 'Matemática',
+    1    => 'QuÃ­mica',
+    2    => 'FÃ­sica',
+    3    => 'MatemÃ¡tica',
     4    => 'Biologia',
-    5    => 'Ciências',
-    6    => 'Língua/Literatura portuguesa',
-    7    => 'Língua/Literatura extrangeira - Inglês',
-    8    => 'Língua/Literatura extrangeira - Espanhol',
-    30   => 'Língua/Literatura extrangeira - Francês',
-    9    => 'Língua/Literatura extrangeira - Outra',
-    10   => 'Artes (educação artística, teatro, dança, música, artes plásticas e outras)',
-    11   => 'Educação física',
-    12   => 'História',
+    5    => 'CiÃªncias',
+    6    => 'LÃ­ngua/Literatura portuguesa',
+    7    => 'LÃ­ngua/Literatura extrangeira - InglÃªs',
+    8    => 'LÃ­ngua/Literatura extrangeira - Espanhol',
+    30   => 'LÃ­ngua/Literatura extrangeira - FrancÃªs',
+    9    => 'LÃ­ngua/Literatura extrangeira - Outra',
+    10   => 'Artes (educaÃ§Ã£o artÃ­stica, teatro, danÃ§a, mÃºsica, artes plÃ¡sticas e outras)',
+    11   => 'EducaÃ§Ã£o fÃ­sica',
+    12   => 'HistÃ³ria',
     13   => 'Geografia',
     14   => 'Filosofia',
     28   => 'Estudos sociais',
     29   => 'Sociologia',
-    16   => 'Informática/Computação',
+    16   => 'InformÃ¡tica/ComputaÃ§Ã£o',
     17   => 'Discilpinas profissionalizantes',
-    20   => 'Disciplinas voltadas ao atendimento às necessidades educacionais especificas dos alunos que são alvo da educação 
-           especial e às praticas educacionais inclusivas',
-    21   => 'Disciplinas voltadas à diversidade sociocultural',
+    20   => 'Disciplinas voltadas ao atendimento Ã s necessidades educacionais especificas dos alunos que sÃ£o alvo da educaÃ§Ã£o
+           especial e Ã s praticas educacionais inclusivas',
+    21   => 'Disciplinas voltadas Ã  diversidade sociocultural',
     23   => 'LIBRAS',
-    25   => 'Disciplinas pedagógicas',
+    25   => 'Disciplinas pedagÃ³gicas',
     26   => 'Ensino religioso',
-    27   => 'Língua indígena',
+    27   => 'LÃ­ngua indÃ­gena',
     99   => 'Outras disciplinas'
   );
 

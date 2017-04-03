@@ -130,7 +130,7 @@ class indice extends clsCadastro
 
       if ($retorno == 'Editar' and $existe_entrumacao){
         $this->url_copiar_enturmacoes = sprintf('educar_matricula_cad.php?ref_cod_turma_copiar_enturmacoes=%d', $this->ref_cod_turma);
-        $this->nome_url_copiar_enturmacoes = Portabilis_String_Utils::toLatin1('Copiar enturmaÃ§Ãµes');
+        $this->nome_url_copiar_enturmacoes = 'Copiar enturmações';
       }
 
       $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
@@ -138,9 +138,9 @@ class indice extends clsCadastro
       $localizacao->entradaCaminhos( array(
            $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
            "educar_index.php"                  => "Escola",
-           ""        => "{$nomeMenu} matr&iacute;culas da turma"             
+           ""        => "{$nomeMenu} matr&iacute;culas da turma"
       ));
-      $this->enviaLocalizacao($localizacao->montar());      
+      $this->enviaLocalizacao($localizacao->montar());
       return $retorno;
     }
 
@@ -382,10 +382,10 @@ class indice extends clsCadastro
     $sequencialEnturmacao = $this->getSequencialEnturmacaoByTurmaId($matriculaId, $turmaId);
     $enturmacao = new clsPmieducarMatriculaTurma($matriculaId,
                                                  $turmaId,
-                                                 $this->pessoa_logada, 
-                                                 NULL, 
+                                                 $this->pessoa_logada,
                                                  NULL,
-                                                 NULL, 
+                                                 NULL,
+                                                 NULL,
                                                  0,
                                                  NULL,
                                                  $sequencialEnturmacao);
@@ -407,7 +407,7 @@ class indice extends clsCadastro
       return $sequencial[0];
     }
     return 1;
-  }  
+  }
 }
 
 // Instancia objeto de pÃ¡gina
