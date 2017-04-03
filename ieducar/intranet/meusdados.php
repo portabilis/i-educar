@@ -314,7 +314,7 @@ class indice extends clsCadastro
     $rdAPI->updateLeadStage($this->email, 2);
 
     $this->mensagem .= "Ediçãoo efetuada com sucesso.<br>";
-    header( "Location: meusdados.php" );
+    header( "Location: index.php" );
     die();
   }
 
