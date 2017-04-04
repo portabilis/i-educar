@@ -692,7 +692,11 @@ class clsPmieducarSerie
     }
 
     if (is_numeric($int_ref_cod_escola)) {
-      $filtros .= "{$whereAnd} EXISTS ( SELECT 1 FROM pmieducar.escola_serie es WHERE s.cod_serie = es.ref_cod_serie AND es.ref_cod_escola = '{$int_ref_cod_escola}') ";
+      $filtros .= "{$whereAnd} EXISTS (SELECT 1
+                                         FROM pmieducar.escola_serie es
+                                        WHERE s.cod_serie = es.ref_cod_serie
+                                          AND es.ativo = 1
+                                          AND es.ref_cod_escola = '{$int_ref_cod_escola}') ";
       $whereAnd = " AND ";
     }
 
