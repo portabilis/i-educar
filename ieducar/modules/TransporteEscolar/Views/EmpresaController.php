@@ -73,7 +73,7 @@ class EmpresaController extends Portabilis_Controller_Page_EditController
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "transporte_index.php"                  => "M&oacute;dulo Transporte Escolar",
+         "transporte_index.php"                  => "Transporte Escolar",
          ""        => "$nomeMenu empresa"             
     ));
     $this->enviaLocalizacao($localizacao->montar());    

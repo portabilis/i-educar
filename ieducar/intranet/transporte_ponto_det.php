@@ -122,7 +122,7 @@ class indice extends clsDetalhe
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Módulo Transporte Escolar",
+         "educar_index.php"                  => "Transporte Escolar",
          ""                                  => "Detalhe do ponto"
     ));
     $this->enviaLocalizacao($localizacao->montar());
