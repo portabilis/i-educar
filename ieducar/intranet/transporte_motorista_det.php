@@ -84,7 +84,7 @@ class indice extends clsDetalhe
     $this->nivel_usuario = $this->obj_permissao->nivel_acesso($this->pessoa_logada);
 
     $this->titulo = 'Motorista - Detalhe';
-    
+
 
     $cod_motorista = $_GET['cod_motorista'];
 
@@ -95,7 +95,7 @@ class indice extends clsDetalhe
       header('Location: transporte_motorista_lst.php');
       die();
     }
-    
+
     $this->addDetalhe( array("Código do motorista", $cod_motorista));
     $this->addDetalhe( array("Nome", $registro['nome_motorista'].'<br/> <a target=\'_blank\' style=\' text-decoration: underline;\' href=\'atendidos_det.php?cod_pessoa='.$registro['ref_idpes'].'\'>Visualizar pessoa</a>') );
     $this->addDetalhe( array("CNH", $registro['cnh']) );
@@ -105,7 +105,7 @@ class indice extends clsDetalhe
     if (trim($registro['vencimento_cnh'])!='')
       $this->addDetalhe( array("Vencimento da habilitação", Portabilis_Date_Utils::pgSQLToBr($registro['vencimento_cnh']) ) );
 
-    $this->addDetalhe( array("Observa&ccedil;&atilde;o", $registro['observacao']));    
+    $this->addDetalhe( array("Observa&ccedil;&atilde;o", $registro['observacao']));
     $this->url_cancelar = "transporte_motorista_lst.php";
 
     $obj_permissao = new clsPermissoes();
@@ -121,10 +121,10 @@ class indice extends clsDetalhe
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
+         "educar_index.php"                  => "Módulo Transporte Escolar",
          ""                                  => "Detalhe do motorista"
     ));
-    $this->enviaLocalizacao($localizacao->montar());    
+    $this->enviaLocalizacao($localizacao->montar());
   }
 }
 

@@ -44,7 +44,7 @@ class clsIndexBase extends clsBase
 
 class indice extends clsListagem
 {
-	
+
 	/**
 	 * Referencia pega da session para o idpes do usuario atual
 	 *
@@ -89,7 +89,7 @@ class indice extends clsListagem
 		foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
 			$this->$var = ( $val === "" ) ? null: $val;
 
-		
+
 
 		$this->campoNumero("cod_empresa","C&oacute;digo da empresa",$this->cod_empresa,20,255,false);
 		$this->campoTexto("nome_empresa","Nome fantasia", $this->nome_empresa,50,255,false);
@@ -110,7 +110,7 @@ class indice extends clsListagem
 		$this->limite = 20;
 		$this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
-		
+
 		$obj_empresa = new clsModulesEmpresaTransporteEscolar();
 		$obj_empresa->setLimite($this->limite,$this->offset);
 
@@ -143,10 +143,10 @@ class indice extends clsListagem
 	    $localizacao = new LocalizacaoSistema();
 	    $localizacao->entradaCaminhos( array(
 	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-	         "educar_index.php"                  => "Escola",
+	         "educar_index.php"                  => "Módulo Transporte Escolar",
 	         ""                                  => "Listagem de empresas de transporte"
 	    ));
-	    $this->enviaLocalizacao($localizacao->montar());		
+	    $this->enviaLocalizacao($localizacao->montar());
 	}
 }
 // cria uma extensao da classe base

@@ -83,7 +83,7 @@ class indice extends clsDetalhe
     $this->nivel_usuario = $this->obj_permissao->nivel_acesso($this->pessoa_logada);
 
     $this->titulo = 'Usuário de transporte - Detalhe';
-    
+
 
     $cod_pt = $_GET['cod_pt'];
 
@@ -94,7 +94,7 @@ class indice extends clsDetalhe
       header('Location: transporte_empresa_lst.php');
       die();
     }
-    
+
     $this->addDetalhe( array("Código", $cod_pt));
     $this->addDetalhe( array("Pessoa", $registro['nome_pessoa']) );
     $this->addDetalhe( array("Rota", $registro['nome_rota']) );
@@ -120,7 +120,7 @@ class indice extends clsDetalhe
       $this->url_novo = "../module/TransporteEscolar/Pessoatransporte";
       $this->url_editar = "../module/TransporteEscolar/Pessoatransporte?id={$cod_pt}";
     }
-        
+
     $this->url_cancelar = "transporte_pessoa_lst.php";
 
     $this->largura = "100%";
@@ -128,10 +128,10 @@ class indice extends clsDetalhe
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
+         "educar_index.php"                  => "Módulo Transporte Escolar",
          ""                                  => "Detalhe do usu&aacute;rio de transporte"
     ));
-    $this->enviaLocalizacao($localizacao->montar());    
+    $this->enviaLocalizacao($localizacao->montar());
   }
 }
 

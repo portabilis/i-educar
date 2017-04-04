@@ -45,7 +45,7 @@ class clsIndexBase extends clsBase
 
 class indice extends clsListagem
 {
-	
+
 	/**
 	 * Referencia pega da session para o idpes do usuario atual
 	 *
@@ -149,10 +149,10 @@ class indice extends clsListagem
 	    $localizacao = new LocalizacaoSistema();
 	    $localizacao->entradaCaminhos( array(
 	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-	         "educar_index.php"                  => "Escola",
+	         "educar_index.php"                  => "Módulo Transporte Escolar",
 	         ""                                  => "Listagem de usu&aacute;rios de tranposrte"
 	    ));
-	    $this->enviaLocalizacao($localizacao->montar());		
+	    $this->enviaLocalizacao($localizacao->montar());
 	}
 }
 // cria uma extensao da classe base

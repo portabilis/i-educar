@@ -91,10 +91,10 @@ class indice extends clsListagem
 
 		$this->titulo = "Veículos - Listagem";
 
-		foreach( $_GET AS $var => $val ) 
+		foreach( $_GET AS $var => $val )
 			$this->$var = ( $val === "" ) ? null: $val;
 
-		
+
 
 		$this->addCabecalhos( array(
 			"Código do veículo",
@@ -107,7 +107,7 @@ class indice extends clsListagem
 
 		// Filtros de Foreign Keys
 		$opcoes = array( "" => "Selecione" );
-		
+
 		$objTemp = new clsModulesEmpresaTransporteEscolar();
 		$objTemp->setOrderby(' nome_empresa ASC');
 		$lista = $objTemp->lista();
@@ -169,8 +169,8 @@ class indice extends clsListagem
 				) );
 			}
 		}
-		
-		$this->addPaginador2( "transporte_veiculo_lst.php", $total, $_GET, $this->nome, $this->limite );		
+
+		$this->addPaginador2( "transporte_veiculo_lst.php", $total, $_GET, $this->nome, $this->limite );
 
 		$this->largura = "100%";
 
@@ -180,15 +180,15 @@ class indice extends clsListagem
 	    {
 	        $this->acao = "go(\"/module/TransporteEscolar/Veiculo\")";
 			$this->nome_acao = "Novo";
-	    }	
+	    }
 
 	    $localizacao = new LocalizacaoSistema();
 	    $localizacao->entradaCaminhos( array(
 	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-	         "educar_index.php"                  => "Escola",
+	         "educar_index.php"                  => "Módulo Transporte Escolar",
 	         ""                                  => "Listagem de ve&iacute;culos"
 	    ));
-	    $this->enviaLocalizacao($localizacao->montar());		
+	    $this->enviaLocalizacao($localizacao->montar());
 	}
 }
 // cria uma extensao da classe base

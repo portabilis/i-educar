@@ -114,7 +114,7 @@ class indice extends clsDetalhe
       $this->url_novo = "../module/TransporteEscolar/Ponto";
       $this->url_editar = "../module/TransporteEscolar/Ponto?id={$cod_ponto_transporte_escolar}";
     }
-    
+
     $this->url_cancelar = "transporte_ponto_lst.php";
 
     $this->largura = "100%";
@@ -122,7 +122,7 @@ class indice extends clsDetalhe
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
+         "educar_index.php"                  => "Módulo Transporte Escolar",
          ""                                  => "Detalhe do ponto"
     ));
     $this->enviaLocalizacao($localizacao->montar());

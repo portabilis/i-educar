@@ -84,7 +84,7 @@ class indice extends clsDetalhe
     $this->nivel_usuario = $this->obj_permissao->nivel_acesso($this->pessoa_logada);
 
     $this->titulo = 'Veiculo - Detalhe';
-    
+
 
     $cod_veiculo = $_GET['cod_veiculo'];
 
@@ -95,7 +95,7 @@ class indice extends clsDetalhe
       header('Location: transporte_veiculo_lst.php');
       die();
     }
-    
+
     $this->addDetalhe( array("Código do veículo", $cod_veiculo));
     $this->addDetalhe( array("Descrição", $registro['descricao']) );
     $this->addDetalhe( array("Placa", $registro['placa']) );
@@ -142,10 +142,10 @@ class indice extends clsDetalhe
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
+         "educar_index.php"                  => "Módulo Transporte Escolar",
          ""                                  => "Detalhe do ve&iacute;culo"
     ));
-    $this->enviaLocalizacao($localizacao->montar());    
+    $this->enviaLocalizacao($localizacao->montar());
   }
 }
 
