@@ -92,10 +92,10 @@ class indice extends clsListagem
 
 		$this->titulo = "Rotas - Listagem";
 
-		foreach( $_GET AS $var => $val ) 
+		foreach( $_GET AS $var => $val )
 			$this->$var = ( $val === "" ) ? null: $val;
 
-		
+
 
 		$this->addCabecalhos( array(
 			"Ano",
@@ -108,7 +108,7 @@ class indice extends clsListagem
 
 		// Filtros de Foreign Keys
 		$opcoes = array( "" => "Selecione" );
-		
+
 		$objTemp = new clsModulesEmpresaTransporteEscolar();
 		$objTemp->setOrderby(' nome_empresa ASC');
 		$lista = $objTemp->lista();
@@ -162,7 +162,7 @@ class indice extends clsListagem
 				) );
 			}
 		}
-		
+
 		$this->addPaginador2( "transporte_rota_lst.php", $total, $_GET, $this->nome, $this->limite );
 
 		$obj_permissao = new clsPermissoes();
@@ -178,10 +178,10 @@ class indice extends clsListagem
 	    $localizacao = new LocalizacaoSistema();
 	    $localizacao->entradaCaminhos( array(
 	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-	         "educar_index.php"                  => "Escola",
+	         "educar_index.php"                  => "Transporte Escolar",
 	         ""                                  => "Listagem de rotas"
 	    ));
-	    $this->enviaLocalizacao($localizacao->montar());		
+	    $this->enviaLocalizacao($localizacao->montar());
 	}
 }
 // cria uma extensao da classe base
