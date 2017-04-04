@@ -88,10 +88,10 @@ class indice extends clsListagem
 
 		$this->titulo = "Motoristas - Listagem";
 
-		foreach( $_GET AS $var => $val ) 
+		foreach( $_GET AS $var => $val )
 			$this->$var = ( $val === "" ) ? null: $val;
 
-		
+
 
 		$this->addCabecalhos( array(
 			"Código motorista",
@@ -103,7 +103,7 @@ class indice extends clsListagem
 
 		// Filtros de Foreign Keys
 		$opcoes = array( "" => "Selecione" );
-		
+
 		$objTemp = new clsModulesEmpresaTransporteEscolar();
 		$objTemp->setOrderby(' nome_empresa ASC');
 		$lista = $objTemp->lista();
@@ -156,7 +156,7 @@ class indice extends clsListagem
 				) );
 			}
 		}
-		
+
 		$this->addPaginador2( "transporte_motorista_lst.php", $total, $_GET, $this->nome, $this->limite );
 
 		$obj_permissao = new clsPermissoes();
@@ -165,17 +165,17 @@ class indice extends clsListagem
 	    {
 	        $this->acao = "go(\"/module/TransporteEscolar/Motorista\")";
 			$this->nome_acao = "Novo";
-	    }		
+	    }
 
 		$this->largura = "100%";
 
 	    $localizacao = new LocalizacaoSistema();
 	    $localizacao->entradaCaminhos( array(
 	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-	         "educar_index.php"                  => "Escola",
+	         "educar_index.php"                  => "Transporte Escolar",
 	         ""                                  => "Listagem de motoristas"
 	    ));
-	    $this->enviaLocalizacao($localizacao->montar());		
+	    $this->enviaLocalizacao($localizacao->montar());
 	}
 }
 // cria uma extensao da classe base

@@ -49,7 +49,7 @@ class indice extends clsCadastro {
     	$localizacao = new LocalizacaoSistema();
 		$localizacao->entradaCaminhos( array(
 	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-	         "educar_index.php"                  => "M&oacute;dulo Transporte Escolar",
+	         "educar_index.php"                  => "Transporte Escolar",
 	         ""                                  => "C&oacute;pia de rotas"
 		));
     	$this->enviaLocalizacao($localizacao->montar());
