@@ -345,16 +345,14 @@ class indice extends clsCadastro
     $opcoes = array('' => 'Selecione');
 
     // Editar
-    if ($this->ref_cod_instituicao) {
-      $objTemp = new clsPmieducarTurmaTipo();
-      $objTemp->setOrderby('nm_tipo ASC');
-      $lista = $objTemp->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-        NULL, 1, $this->ref_cod_instituicao);
+    $objTemp = new clsPmieducarTurmaTipo();
+    $objTemp->setOrderby('nm_tipo ASC');
+    $lista = $objTemp->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+      NULL, 1, $this->ref_cod_instituicao);
 
-      if (is_array($lista) && count($lista)) {
-        foreach ($lista as $registro) {
-          $opcoes[$registro['cod_turma_tipo']] = $registro['nm_tipo'];
-        }
+    if (is_array($lista) && count($lista)) {
+      foreach ($lista as $registro) {
+        $opcoes[$registro['cod_turma_tipo']] = $registro['nm_tipo'];
       }
     }
 
