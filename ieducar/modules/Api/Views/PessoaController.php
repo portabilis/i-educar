@@ -347,12 +347,12 @@ class PessoaController extends ApiCoreController
 
     // search by idpes or cpf
     $sqls[] = "select distinct pessoa.idpes as id, pessoa.nome as name from cadastro.pessoa,
-               cadastro.fisica where fisica.idpes = pessoa.idpes and fisica.ativo = 1 and (pessoa.idpes like $1||'%' or
-               trim(leading '0' from fisica.cpf) like trim(leading '0' from $1)||'%' or
-               fisica.cpf like $1||'%') order by id limit 15";
+               cadastro.fisica where fisica.idpes = pessoa.idpes and fisica.ativo = 1 and (pessoa.idpes::varchar like $1||'%' or
+               trim(leading '0' from fisica.cpf::varchar) like trim(leading '0' from $1)||'%' or
+               fisica.cpf::varchar like $1||'%') order by id limit 15";
 
     // search by rg
-    $sqls[] = "select distinct pessoa.idpes as id, pessoa.nome as name from cadastro.pessoa, cadastro.documento, 
+    $sqls[] = "select distinct pessoa.idpes as id, pessoa.nome as name from cadastro.pessoa, cadastro.documento,
                cadastro.fisica where fisica.idpes = pessoa.idpes and fisica.ativo = 1 and
                pessoa.idpes = documento.idpes and ((documento.rg like $1||'%') or
                trim(leading '0' from documento.rg) like trim(leading '0' from $1)||'%') order by id limit 15";
