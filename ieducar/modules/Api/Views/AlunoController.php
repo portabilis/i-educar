@@ -780,7 +780,7 @@ class AlunoController extends ApiCoreController
             pessoa.idpes = aluno.ref_idpes and aluno.ativo = matricula.ativo and
             matricula.ativo = 1 and (select case when $2 != 0 then matricula.ref_ref_cod_escola = $2
             else 1=1 end) and
-            lower((pessoa.nome)) like '%'||lower(($1))||'%' and matricula.aprovado in
+            translate(upper(nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') like translate(upper('%'|| $1 ||'%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') and matricula.aprovado in
             (1, 2, 3, 4, 7, 8, 9) limit 15) as alunos order by name";
 
     return $sqls;
