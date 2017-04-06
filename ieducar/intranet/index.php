@@ -169,7 +169,7 @@ class indice
                     </td>
                   </tr>
                 </table>";
-      $temp .= '<table width="100%" height="400" align="center" border="0" cellspacing="4" cellpadding="0" style="padding:0 20px">';
+      $temp .= '<table width="100%" height="400" align="center" border="0" cellspacing="4" cellpadding="0">';
       $temp .= '
         <tr>
           <td class="fundoCalendarioTopo" style="padding:0px;">DOM</td>
