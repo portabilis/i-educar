@@ -72,7 +72,7 @@ class indice extends clsListagem
 	var $offset;
 
 	var $ref_cod_aluno;
-	var $ano;	
+	var $ano;
 
 	function Gerar()
 	{
@@ -93,7 +93,7 @@ class indice extends clsListagem
 			die();
 		}
 
-		
+
 
 		$lista_busca = array(
 			"Ano",
@@ -208,9 +208,9 @@ class indice extends clsListagem
 		$this->addPaginador2( "educar_historico_escolar_lst.php", $total, $_GET, $this->nome, $this->limite );
 		$obj_permissoes = new clsPermissoes();
 		$this->obj_permissao = new clsPermissoes();
-    	$this->nivel_usuario = $this->obj_permissao->nivel_acesso($this->pessoa_logada);
+  	$this->nivel_usuario = $this->obj_permissao->nivel_acesso($this->pessoa_logada);
 
-    	$db = new clsBanco();
+  	$db = new clsBanco();
 		$escolaAluno = $db->CampoUnico("SELECT ref_ref_cod_escola
 										  FROM pmieducar.matricula
 										 WHERE ref_cod_aluno = {$this->ref_cod_aluno}
@@ -218,20 +218,23 @@ class indice extends clsListagem
 										 ORDER BY data_cadastro DESC
 										 LIMIT 1;");
 
-		$historicoRestringido = $db->CampoUnico("SELECT restringir_historico_escolar
-			                                       FROM pmieducar.instituicao
-			                                      WHERE cod_instituicao = (SELECT ref_cod_instituicao
-			                                                                 FROM pmieducar.escola
-			                                                                WHERE cod_escola = $escolaAluno);");
-    	$escolasUsuario = new clsPmieducarEscolaUsuario();
-    	$escolasUsuario = $escolasUsuario->lista($this->pessoa_logada);
-    	$usuarioEscolaAluno = false;
+		if ($escolaAluno) {
+			$historicoRestringido = $db->CampoUnico("SELECT restringir_historico_escolar
+				                                       FROM pmieducar.instituicao
+				                                      WHERE cod_instituicao = (SELECT ref_cod_instituicao
+				                                                                 FROM pmieducar.escola
+				                                                                WHERE cod_escola = $escolaAluno);");
+		}
 
-    	foreach ($escolasUsuario as $escolaUsuario) {
-    		$usuarioEscolaAluno = $escolaAluno == $escolaUsuario['ref_cod_escola'];
+  	$escolasUsuario = new clsPmieducarEscolaUsuario();
+  	$escolasUsuario = $escolasUsuario->lista($this->pessoa_logada);
+  	$usuarioEscolaAluno = false;
 
-    		if ($usuarioEscolaAluno) break;
-    	}
+  	foreach ($escolasUsuario as $escolaUsuario) {
+  		$usuarioEscolaAluno = $escolaAluno == $escolaUsuario['ref_cod_escola'];
+
+  		if ($usuarioEscolaAluno) break;
+  	}
 
 		$permissaoCadastra = $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7);
 		$historicoRestringido = Portabilis_Date_Utils::brToPgSQL($historico_restringido);
