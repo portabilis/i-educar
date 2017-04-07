@@ -62,15 +62,6 @@ class AjustaViewAdicionaCamposCargaHorariaDisciplinaPorSerie extends AbstractMig
        historico.transferido7,
        historico.transferido8,
        historico.transferido9,
-       historico.carga_horaria_disciplina1,
-       historico.carga_horaria_disciplina2,
-       historico.carga_horaria_disciplina3,
-       historico.carga_horaria_disciplina4,
-       historico.carga_horaria_disciplina5,
-       historico.carga_horaria_disciplina6,
-       historico.carga_horaria_disciplina7,
-       historico.carga_horaria_disciplina8,
-       historico.carga_horaria_disciplina9,
        historico.carga_horaria1,
        historico.carga_horaria2,
        historico.carga_horaria3,
@@ -82,6 +73,15 @@ class AjustaViewAdicionaCamposCargaHorariaDisciplinaPorSerie extends AbstractMig
        historico.carga_horaria9,
        historico.observacao_all,
        historico.matricula_transferido,
+       historico.carga_horaria_disciplina1,
+       historico.carga_horaria_disciplina2,
+       historico.carga_horaria_disciplina3,
+       historico.carga_horaria_disciplina4,
+       historico.carga_horaria_disciplina5,
+       historico.carga_horaria_disciplina6,
+       historico.carga_horaria_disciplina7,
+       historico.carga_horaria_disciplina8,
+       historico.carga_horaria_disciplina9,
        historico.ch_componente_1,
        historico.ch_componente_2,
        historico.ch_componente_3,
@@ -102,1407 +102,894 @@ class AjustaViewAdicionaCamposCargaHorariaDisciplinaPorSerie extends AbstractMig
        historico.frequencia9
 FROM
   (SELECT historico_disciplinas.ref_ref_cod_aluno AS cod_aluno,
-          fcn_upper(historico_disciplinas.nm_disciplina) AS disciplina,
+          relatorio.get_texto_sem_caracter_especial(historico_disciplinas.nm_disciplina) AS disciplina,
 
-     (SELECT CASE WHEN substring(btrim(hd.nota::text),
-                                   1,
-                                   1) <> 0::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 1::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 2::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 3::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 4::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 5::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 6::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 7::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 8::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 9::text THEN replace(hd.nota::text, '.'::text, ','::text) WHEN to_number(btrim(hd.nota::text), '999'::text) > 10::numeric
+     (SELECT CASE WHEN substring(btrim(hd.nota::text), 1, 1) <> 0::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 1::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 2::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 3::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 4::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 5::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 6::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 7::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 8::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 9::text THEN replace(hd.nota::text, '.'::text, ','::text) WHEN to_number(btrim(hd.nota::text), '999'::text) > 10::numeric
       AND to_number(btrim(hd.nota::text), '999'::text) <= 20::numeric THEN replace(btrim(hd.nota::text), '.'::text, ','::text) ELSE replace(substring(btrim(hd.nota::text), 1, 4), '.'::text, ','::text) END AS REPLACE
-      FROM historico_disciplinas hd
-      JOIN historico_escolar historico_escolar_1 ON historico_escolar_1.ref_cod_aluno = hd.ref_ref_cod_aluno
+      FROM pmieducar.historico_disciplinas hd
+      JOIN pmieducar.historico_escolar historico_escolar_1 ON historico_escolar_1.ref_cod_aluno = hd.ref_ref_cod_aluno
       AND historico_escolar_1.sequencial = hd.ref_sequencial
       WHERE hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
-        AND fcn_upper(hd.nm_disciplina::text) = fcn_upper(historico_disciplinas.nm_disciplina)
+        AND relatorio.get_texto_sem_caracter_especial(hd.nm_disciplina::text) = relatorio.get_texto_sem_caracter_especial(historico_disciplinas.nm_disciplina)
         AND historico_escolar_1.ativo = 1
         AND historico_escolar_1.extra_curricular = 0
-        AND substring(historico_escolar_1.nm_serie::text,
-                        1,
-                        1) = 1::text
+        AND substring(historico_escolar_1.nm_serie::text, 1, 1) = 1::text
         AND historico_escolar_1.sequencial = (
                                                 (SELECT max(hee.sequencial) AS MAX
-                                                 FROM historico_escolar hee
+                                                 FROM pmieducar.historico_escolar hee
                                                  WHERE hee.ref_cod_aluno = historico_escolar_1.ref_cod_aluno
-                                                   AND substring(historico_escolar_1.nm_serie::text,
-                                                                   1,
-                                                                   1) = substring(hee.nm_serie::text,
-                                                                                    1,
-                                                                                    1)
+                                                   AND substring(historico_escolar_1.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                                    AND hee.ativo = 1
                                                    AND hee.extra_curricular = 0)) LIMIT 1) AS nota_1serie,
 
-     (SELECT CASE WHEN substring(btrim(hd.nota::text),
-                                   1,
-                                   1) <> 0::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 1::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 2::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 3::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 4::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 5::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 6::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 7::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 8::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 9::text THEN REPLACE(hd.nota::text,
-                                                 '.'::text,
-                                                 ','::text) WHEN to_number(btrim(hd.nota::text), '999'::text) > 10::numeric
+     (SELECT CASE WHEN substring(btrim(hd.nota::text), 1, 1) <> 0::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 1::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 2::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 3::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 4::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 5::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 6::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 7::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 8::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 9::text THEN REPLACE(hd.nota::text,
+                                                                        '.'::text,
+                                                                        ','::text) WHEN to_number(btrim(hd.nota::text), '999'::text) > 10::numeric
       AND to_number(btrim(hd.nota::text), '999'::text) <= 20::numeric THEN REPLACE(btrim(hd.nota::text),
                                                                                    '.'::text,
-                                                                                   ','::text) ELSE REPLACE(substring(btrim(hd.nota::text),
-                                                                                                                       1,
-                                                                                                                       4), '.'::text,
-                                                                                                                           ','::text) END AS REPLACE
-      FROM historico_disciplinas hd
-      JOIN historico_escolar historico_escolar_1 ON historico_escolar_1.ref_cod_aluno = hd.ref_ref_cod_aluno
+                                                                                   ','::text) ELSE REPLACE(substring(btrim(hd.nota::text), 1, 4),
+                                                                                                           '.'::text,
+                                                                                                           ','::text) END AS REPLACE
+      FROM pmieducar.historico_disciplinas hd
+      JOIN pmieducar.historico_escolar historico_escolar_1 ON historico_escolar_1.ref_cod_aluno = hd.ref_ref_cod_aluno
       AND historico_escolar_1.sequencial = hd.ref_sequencial
       WHERE hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
-        AND fcn_upper(hd.nm_disciplina::text) = fcn_upper(historico_disciplinas.nm_disciplina)
+        AND relatorio.get_texto_sem_caracter_especial(hd.nm_disciplina::text) = relatorio.get_texto_sem_caracter_especial(historico_disciplinas.nm_disciplina)
         AND historico_escolar_1.ativo = 1
         AND historico_escolar_1.extra_curricular = 0
-        AND substring(historico_escolar_1.nm_serie::text,
-                        1,
-                        1) = 2::text
+        AND substring(historico_escolar_1.nm_serie::text, 1, 1) = 2::text
         AND historico_escolar_1.sequencial = (
                                                 (SELECT MAX(hee.sequencial) AS MAX
-                                                 FROM historico_escolar hee
+                                                 FROM pmieducar.historico_escolar hee
                                                  WHERE hee.ref_cod_aluno = historico_escolar_1.ref_cod_aluno
-                                                   AND substring(historico_escolar_1.nm_serie::text,
-                                                                   1,
-                                                                   1) = substring(hee.nm_serie::text,
-                                                                                    1,
-                                                                                    1)
+                                                   AND substring(historico_escolar_1.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                                    AND hee.ativo = 1
                                                    AND hee.extra_curricular = 0)) LIMIT 1) AS nota_2serie,
 
-     (SELECT CASE WHEN substring(btrim(hd.nota::text),
-                                   1,
-                                   1) <> 0::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 1::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 2::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 3::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 4::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 5::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 6::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 7::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 8::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 9::text THEN REPLACE(hd.nota::text,
-                                                 '.'::text,
-                                                 ','::text) WHEN to_number(btrim(hd.nota::text), '999'::text) > 10::numeric
+     (SELECT CASE WHEN substring(btrim(hd.nota::text), 1, 1) <> 0::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 1::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 2::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 3::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 4::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 5::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 6::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 7::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 8::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 9::text THEN REPLACE(hd.nota::text,
+                                                                        '.'::text,
+                                                                        ','::text) WHEN to_number(btrim(hd.nota::text), '999'::text) > 10::numeric
       AND to_number(btrim(hd.nota::text), '999'::text) <= 20::numeric THEN REPLACE(btrim(hd.nota::text),
                                                                                    '.'::text,
-                                                                                   ','::text) ELSE REPLACE(substring(btrim(hd.nota::text),
-                                                                                                                       1,
-                                                                                                                       4), '.'::text,
-                                                                                                                           ','::text) END AS REPLACE
-      FROM historico_disciplinas hd
-      JOIN historico_escolar historico_escolar_1 ON historico_escolar_1.ref_cod_aluno = hd.ref_ref_cod_aluno
+                                                                                   ','::text) ELSE REPLACE(substring(btrim(hd.nota::text), 1, 4),
+                                                                                                           '.'::text,
+                                                                                                           ','::text) END AS REPLACE
+      FROM pmieducar.historico_disciplinas hd
+      JOIN pmieducar.historico_escolar historico_escolar_1 ON historico_escolar_1.ref_cod_aluno = hd.ref_ref_cod_aluno
       AND historico_escolar_1.sequencial = hd.ref_sequencial
       WHERE hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
-        AND fcn_upper(hd.nm_disciplina::text) = fcn_upper(historico_disciplinas.nm_disciplina)
+        AND relatorio.get_texto_sem_caracter_especial(hd.nm_disciplina::text) = relatorio.get_texto_sem_caracter_especial(historico_disciplinas.nm_disciplina)
         AND historico_escolar_1.ativo = 1
         AND historico_escolar_1.extra_curricular = 0
-        AND substring(historico_escolar_1.nm_serie::text,
-                        1,
-                        1) = 3::text
+        AND substring(historico_escolar_1.nm_serie::text, 1, 1) = 3::text
         AND historico_escolar_1.sequencial = (
                                                 (SELECT MAX(hee.sequencial) AS MAX
-                                                 FROM historico_escolar hee
+                                                 FROM pmieducar.historico_escolar hee
                                                  WHERE hee.ref_cod_aluno = historico_escolar_1.ref_cod_aluno
-                                                   AND substring(historico_escolar_1.nm_serie::text,
-                                                                   1,
-                                                                   1) = substring(hee.nm_serie::text,
-                                                                                    1,
-                                                                                    1)
+                                                   AND substring(historico_escolar_1.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                                    AND hee.ativo = 1
                                                    AND hee.extra_curricular = 0)) LIMIT 1) AS nota_3serie,
 
-     (SELECT CASE WHEN substring(btrim(hd.nota::text),
-                                   1,
-                                   1) <> 0::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 1::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 2::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 3::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 4::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 5::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 6::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 7::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 8::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 9::text THEN REPLACE(hd.nota::text,
-                                                 '.'::text,
-                                                 ','::text) WHEN to_number(btrim(hd.nota::text), '999'::text) > 10::numeric
+     (SELECT CASE WHEN substring(btrim(hd.nota::text), 1, 1) <> 0::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 1::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 2::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 3::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 4::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 5::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 6::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 7::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 8::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 9::text THEN REPLACE(hd.nota::text,
+                                                                        '.'::text,
+                                                                        ','::text) WHEN to_number(btrim(hd.nota::text), '999'::text) > 10::numeric
       AND to_number(btrim(hd.nota::text), '999'::text) <= 20::numeric THEN REPLACE(btrim(hd.nota::text),
                                                                                    '.'::text,
-                                                                                   ','::text) ELSE REPLACE(substring(btrim(hd.nota::text),
-                                                                                                                       1,
-                                                                                                                       4), '.'::text,
-                                                                                                                           ','::text) END AS REPLACE
-      FROM historico_disciplinas hd
-      JOIN historico_escolar historico_escolar_1 ON historico_escolar_1.ref_cod_aluno = hd.ref_ref_cod_aluno
+                                                                                   ','::text) ELSE REPLACE(substring(btrim(hd.nota::text), 1, 4),
+                                                                                                           '.'::text,
+                                                                                                           ','::text) END AS REPLACE
+      FROM pmieducar.historico_disciplinas hd
+      JOIN pmieducar.historico_escolar historico_escolar_1 ON historico_escolar_1.ref_cod_aluno = hd.ref_ref_cod_aluno
       AND historico_escolar_1.sequencial = hd.ref_sequencial
       WHERE hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
-        AND fcn_upper(hd.nm_disciplina::text) = fcn_upper(historico_disciplinas.nm_disciplina)
+        AND relatorio.get_texto_sem_caracter_especial(hd.nm_disciplina::text) = relatorio.get_texto_sem_caracter_especial(historico_disciplinas.nm_disciplina)
         AND historico_escolar_1.ativo = 1
         AND historico_escolar_1.extra_curricular = 0
-        AND substring(historico_escolar_1.nm_serie::text,
-                        1,
-                        1) = 4::text
+        AND substring(historico_escolar_1.nm_serie::text, 1, 1) = 4::text
         AND historico_escolar_1.sequencial = (
                                                 (SELECT MAX(hee.sequencial) AS MAX
-                                                 FROM historico_escolar hee
+                                                 FROM pmieducar.historico_escolar hee
                                                  WHERE hee.ref_cod_aluno = historico_escolar_1.ref_cod_aluno
-                                                   AND substring(historico_escolar_1.nm_serie::text,
-                                                                   1,
-                                                                   1) = substring(hee.nm_serie::text,
-                                                                                    1,
-                                                                                    1)
+                                                   AND substring(historico_escolar_1.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                                    AND hee.ativo = 1
                                                    AND hee.extra_curricular = 0)) LIMIT 1) AS nota_4serie,
 
-     (SELECT CASE WHEN substring(btrim(hd.nota::text),
-                                   1,
-                                   1) <> 0::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 1::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 2::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 3::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 4::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 5::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 6::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 7::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 8::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 9::text THEN REPLACE(hd.nota::text,
-                                                 '.'::text,
-                                                 ','::text) WHEN to_number(btrim(hd.nota::text), '999'::text) > 10::numeric
+     (SELECT CASE WHEN substring(btrim(hd.nota::text), 1, 1) <> 0::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 1::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 2::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 3::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 4::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 5::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 6::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 7::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 8::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 9::text THEN REPLACE(hd.nota::text,
+                                                                        '.'::text,
+                                                                        ','::text) WHEN to_number(btrim(hd.nota::text), '999'::text) > 10::numeric
       AND to_number(btrim(hd.nota::text), '999'::text) <= 20::numeric THEN REPLACE(btrim(hd.nota::text),
                                                                                    '.'::text,
-                                                                                   ','::text) ELSE REPLACE(substring(btrim(hd.nota::text),
-                                                                                                                       1,
-                                                                                                                       4), '.'::text,
-                                                                                                                           ','::text) END AS REPLACE
-      FROM historico_disciplinas hd
-      JOIN historico_escolar historico_escolar_1 ON historico_escolar_1.ref_cod_aluno = hd.ref_ref_cod_aluno
+                                                                                   ','::text) ELSE REPLACE(substring(btrim(hd.nota::text), 1, 4),
+                                                                                                           '.'::text,
+                                                                                                           ','::text) END AS REPLACE
+      FROM pmieducar.historico_disciplinas hd
+      JOIN pmieducar.historico_escolar historico_escolar_1 ON historico_escolar_1.ref_cod_aluno = hd.ref_ref_cod_aluno
       AND historico_escolar_1.sequencial = hd.ref_sequencial
       WHERE hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
-        AND fcn_upper(hd.nm_disciplina::text) = fcn_upper(historico_disciplinas.nm_disciplina)
+        AND relatorio.get_texto_sem_caracter_especial(hd.nm_disciplina::text) = relatorio.get_texto_sem_caracter_especial(historico_disciplinas.nm_disciplina)
         AND historico_escolar_1.ativo = 1
         AND historico_escolar_1.extra_curricular = 0
-        AND substring(historico_escolar_1.nm_serie::text,
-                        1,
-                        1) = 5::text
+        AND substring(historico_escolar_1.nm_serie::text, 1, 1) = 5::text
         AND historico_escolar_1.sequencial = (
                                                 (SELECT MAX(hee.sequencial) AS MAX
-                                                 FROM historico_escolar hee
+                                                 FROM pmieducar.historico_escolar hee
                                                  WHERE hee.ref_cod_aluno = historico_escolar_1.ref_cod_aluno
-                                                   AND substring(historico_escolar_1.nm_serie::text,
-                                                                   1,
-                                                                   1) = substring(hee.nm_serie::text,
-                                                                                    1,
-                                                                                    1)
+                                                   AND substring(historico_escolar_1.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                                    AND hee.ativo = 1
                                                    AND hee.extra_curricular = 0)) LIMIT 1) AS nota_5serie,
 
-     (SELECT CASE WHEN substring(btrim(hd.nota::text),
-                                   1,
-                                   1) <> 0::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 1::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 2::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 3::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 4::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 5::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 6::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 7::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 8::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 9::text THEN REPLACE(hd.nota::text,
-                                                 '.'::text,
-                                                 ','::text) WHEN to_number(btrim(hd.nota::text), '999'::text) > 10::numeric
+     (SELECT CASE WHEN substring(btrim(hd.nota::text), 1, 1) <> 0::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 1::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 2::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 3::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 4::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 5::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 6::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 7::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 8::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 9::text THEN REPLACE(hd.nota::text,
+                                                                        '.'::text,
+                                                                        ','::text) WHEN to_number(btrim(hd.nota::text), '999'::text) > 10::numeric
       AND to_number(btrim(hd.nota::text), '999'::text) <= 20::numeric THEN REPLACE(btrim(hd.nota::text),
                                                                                    '.'::text,
-                                                                                   ','::text) ELSE REPLACE(substring(btrim(hd.nota::text),
-                                                                                                                       1,
-                                                                                                                       4), '.'::text,
-                                                                                                                           ','::text) END AS REPLACE
-      FROM historico_disciplinas hd
-      JOIN historico_escolar historico_escolar_1 ON historico_escolar_1.ref_cod_aluno = hd.ref_ref_cod_aluno
+                                                                                   ','::text) ELSE REPLACE(substring(btrim(hd.nota::text), 1, 4),
+                                                                                                           '.'::text,
+                                                                                                           ','::text) END AS REPLACE
+      FROM pmieducar.historico_disciplinas hd
+      JOIN pmieducar.historico_escolar historico_escolar_1 ON historico_escolar_1.ref_cod_aluno = hd.ref_ref_cod_aluno
       AND historico_escolar_1.sequencial = hd.ref_sequencial
       WHERE hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
-        AND fcn_upper(hd.nm_disciplina::text) = fcn_upper(historico_disciplinas.nm_disciplina)
+        AND relatorio.get_texto_sem_caracter_especial(hd.nm_disciplina::text) = relatorio.get_texto_sem_caracter_especial(historico_disciplinas.nm_disciplina)
         AND historico_escolar_1.ativo = 1
         AND historico_escolar_1.extra_curricular = 0
-        AND substring(historico_escolar_1.nm_serie::text,
-                        1,
-                        1) = 6::text
+        AND substring(historico_escolar_1.nm_serie::text, 1, 1) = 6::text
         AND historico_escolar_1.sequencial = (
                                                 (SELECT MAX(hee.sequencial) AS MAX
-                                                 FROM historico_escolar hee
+                                                 FROM pmieducar.historico_escolar hee
                                                  WHERE hee.ref_cod_aluno = historico_escolar_1.ref_cod_aluno
-                                                   AND substring(historico_escolar_1.nm_serie::text,
-                                                                   1,
-                                                                   1) = substring(hee.nm_serie::text,
-                                                                                    1,
-                                                                                    1)
+                                                   AND substring(historico_escolar_1.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                                    AND hee.ativo = 1
                                                    AND hee.extra_curricular = 0)) LIMIT 1) AS nota_6serie,
 
-     (SELECT CASE WHEN substring(btrim(hd.nota::text),
-                                   1,
-                                   1) <> 0::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 1::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 2::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 3::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 4::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 5::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 6::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 7::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 8::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 9::text THEN REPLACE(hd.nota::text,
-                                                 '.'::text,
-                                                 ','::text) WHEN to_number(btrim(hd.nota::text), '999'::text) > 10::numeric
+     (SELECT CASE WHEN substring(btrim(hd.nota::text), 1, 1) <> 0::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 1::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 2::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 3::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 4::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 5::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 6::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 7::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 8::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 9::text THEN REPLACE(hd.nota::text,
+                                                                        '.'::text,
+                                                                        ','::text) WHEN to_number(btrim(hd.nota::text), '999'::text) > 10::numeric
       AND to_number(btrim(hd.nota::text), '999'::text) <= 20::numeric THEN REPLACE(btrim(hd.nota::text),
                                                                                    '.'::text,
-                                                                                   ','::text) ELSE REPLACE(substring(btrim(hd.nota::text),
-                                                                                                                       1,
-                                                                                                                       4), '.'::text,
-                                                                                                                           ','::text) END AS REPLACE
-      FROM historico_disciplinas hd
-      JOIN historico_escolar historico_escolar_1 ON historico_escolar_1.ref_cod_aluno = hd.ref_ref_cod_aluno
+                                                                                   ','::text) ELSE REPLACE(substring(btrim(hd.nota::text), 1, 4),
+                                                                                                           '.'::text,
+                                                                                                           ','::text) END AS REPLACE
+      FROM pmieducar.historico_disciplinas hd
+      JOIN pmieducar.historico_escolar historico_escolar_1 ON historico_escolar_1.ref_cod_aluno = hd.ref_ref_cod_aluno
       AND historico_escolar_1.sequencial = hd.ref_sequencial
       WHERE hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
-        AND fcn_upper(hd.nm_disciplina::text) = fcn_upper(historico_disciplinas.nm_disciplina)
+        AND relatorio.get_texto_sem_caracter_especial(hd.nm_disciplina::text) = relatorio.get_texto_sem_caracter_especial(historico_disciplinas.nm_disciplina)
         AND historico_escolar_1.ativo = 1
         AND historico_escolar_1.extra_curricular = 0
-        AND substring(historico_escolar_1.nm_serie::text,
-                        1,
-                        1) = 7::text
+        AND substring(historico_escolar_1.nm_serie::text, 1, 1) = 7::text
         AND historico_escolar_1.sequencial = (
                                                 (SELECT MAX(hee.sequencial) AS MAX
-                                                 FROM historico_escolar hee
+                                                 FROM pmieducar.historico_escolar hee
                                                  WHERE hee.ref_cod_aluno = historico_escolar_1.ref_cod_aluno
-                                                   AND substring(historico_escolar_1.nm_serie::text,
-                                                                   1,
-                                                                   1) = substring(hee.nm_serie::text,
-                                                                                    1,
-                                                                                    1)
+                                                   AND substring(historico_escolar_1.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                                    AND hee.ativo = 1
                                                    AND hee.extra_curricular = 0)) LIMIT 1) AS nota_7serie,
 
-     (SELECT CASE WHEN substring(btrim(hd.nota::text),
-                                   1,
-                                   1) <> 0::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 1::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 2::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 3::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 4::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 5::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 6::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 7::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 8::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 9::text THEN REPLACE(hd.nota::text,
-                                                 '.'::text,
-                                                 ','::text) WHEN to_number(btrim(hd.nota::text), '999'::text) > 10::numeric
+     (SELECT CASE WHEN substring(btrim(hd.nota::text), 1, 1) <> 0::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 1::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 2::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 3::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 4::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 5::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 6::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 7::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 8::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 9::text THEN REPLACE(hd.nota::text,
+                                                                        '.'::text,
+                                                                        ','::text) WHEN to_number(btrim(hd.nota::text), '999'::text) > 10::numeric
       AND to_number(btrim(hd.nota::text), '999'::text) <= 20::numeric THEN REPLACE(btrim(hd.nota::text),
                                                                                    '.'::text,
-                                                                                   ','::text) ELSE REPLACE(substring(btrim(hd.nota::text),
-                                                                                                                       1,
-                                                                                                                       4), '.'::text,
-                                                                                                                           ','::text) END AS REPLACE
-      FROM historico_disciplinas hd
-      JOIN historico_escolar historico_escolar_1 ON historico_escolar_1.ref_cod_aluno = hd.ref_ref_cod_aluno
+                                                                                   ','::text) ELSE REPLACE(substring(btrim(hd.nota::text), 1, 4),
+                                                                                                           '.'::text,
+                                                                                                           ','::text) END AS REPLACE
+      FROM pmieducar.historico_disciplinas hd
+      JOIN pmieducar.historico_escolar historico_escolar_1 ON historico_escolar_1.ref_cod_aluno = hd.ref_ref_cod_aluno
       AND historico_escolar_1.sequencial = hd.ref_sequencial
       WHERE hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
-        AND fcn_upper(hd.nm_disciplina::text) = fcn_upper(historico_disciplinas.nm_disciplina)
+        AND relatorio.get_texto_sem_caracter_especial(hd.nm_disciplina::text) = relatorio.get_texto_sem_caracter_especial(historico_disciplinas.nm_disciplina)
         AND historico_escolar_1.ativo = 1
         AND historico_escolar_1.extra_curricular = 0
-        AND substring(historico_escolar_1.nm_serie::text,
-                        1,
-                        1) = 8::text
+        AND substring(historico_escolar_1.nm_serie::text, 1, 1) = 8::text
         AND historico_escolar_1.sequencial = (
                                                 (SELECT MAX(hee.sequencial) AS MAX
-                                                 FROM historico_escolar hee
+                                                 FROM pmieducar.historico_escolar hee
                                                  WHERE hee.ref_cod_aluno = historico_escolar_1.ref_cod_aluno
-                                                   AND substring(historico_escolar_1.nm_serie::text,
-                                                                   1,
-                                                                   1) = substring(hee.nm_serie::text,
-                                                                                    1,
-                                                                                    1)
+                                                   AND substring(historico_escolar_1.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                                    AND hee.ativo = 1
                                                    AND hee.extra_curricular = 0)) LIMIT 1) AS nota_8serie,
 
-     (SELECT CASE WHEN substring(btrim(hd.nota::text),
-                                   1,
-                                   1) <> 0::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 1::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 2::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 3::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 4::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 5::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 6::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 7::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 8::text
-      AND substring(btrim(hd.nota::text),
-                      1,
-                      1) <> 9::text THEN REPLACE(hd.nota::text,
-                                                 '.'::text,
-                                                 ','::text) WHEN to_number(btrim(hd.nota::text), '999'::text) > 10::numeric
+     (SELECT CASE WHEN substring(btrim(hd.nota::text), 1, 1) <> 0::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 1::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 2::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 3::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 4::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 5::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 6::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 7::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 8::text
+      AND substring(btrim(hd.nota::text), 1, 1) <> 9::text THEN REPLACE(hd.nota::text,
+                                                                        '.'::text,
+                                                                        ','::text) WHEN to_number(btrim(hd.nota::text), '999'::text) > 10::numeric
       AND to_number(btrim(hd.nota::text), '999'::text) <= 20::numeric THEN REPLACE(btrim(hd.nota::text),
                                                                                    '.'::text,
-                                                                                   ','::text) ELSE REPLACE(substring(btrim(hd.nota::text),
-                                                                                                                       1,
-                                                                                                                       4), '.'::text,
-                                                                                                                           ','::text) END AS REPLACE
-      FROM historico_disciplinas hd
-      JOIN historico_escolar historico_escolar_1 ON historico_escolar_1.ref_cod_aluno = hd.ref_ref_cod_aluno
+                                                                                   ','::text) ELSE REPLACE(substring(btrim(hd.nota::text), 1, 4),
+                                                                                                           '.'::text,
+                                                                                                           ','::text) END AS REPLACE
+      FROM pmieducar.historico_disciplinas hd
+      JOIN pmieducar.historico_escolar historico_escolar_1 ON historico_escolar_1.ref_cod_aluno = hd.ref_ref_cod_aluno
       AND historico_escolar_1.sequencial = hd.ref_sequencial
       WHERE hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
-        AND fcn_upper(hd.nm_disciplina::text) = fcn_upper(historico_disciplinas.nm_disciplina)
+        AND relatorio.get_texto_sem_caracter_especial(hd.nm_disciplina::text) = relatorio.get_texto_sem_caracter_especial(historico_disciplinas.nm_disciplina)
         AND historico_escolar_1.ativo = 1
         AND historico_escolar_1.extra_curricular = 0
-        AND substring(historico_escolar_1.nm_serie::text,
-                        1,
-                        1) = 9::text
+        AND substring(historico_escolar_1.nm_serie::text, 1, 1) = 9::text
         AND historico_escolar_1.sequencial = (
                                                 (SELECT MAX(hee.sequencial) AS MAX
-                                                 FROM historico_escolar hee
+                                                 FROM pmieducar.historico_escolar hee
                                                  WHERE hee.ref_cod_aluno = historico_escolar_1.ref_cod_aluno
-                                                   AND substring(historico_escolar_1.nm_serie::text,
-                                                                   1,
-                                                                   1) = substring(hee.nm_serie::text,
-                                                                                    1,
-                                                                                    1)
+                                                   AND substring(historico_escolar_1.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                                    AND hee.ativo = 1
                                                    AND hee.extra_curricular = 0)) LIMIT 1) AS nota_9serie,
 
      (SELECT he.ano
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 1::text LIMIT 1) AS ano_1serie,
+        AND substring(he.nm_serie::text, 1, 1) = 1::text LIMIT 1) AS ano_1serie,
 
      (SELECT he.escola
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 1::text LIMIT 1) AS escola_1serie,
+        AND substring(he.nm_serie::text, 1, 1) = 1::text LIMIT 1) AS escola_1serie,
 
      (SELECT he.escola_cidade
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 1::text LIMIT 1) AS escola_cidade_1serie,
+        AND substring(he.nm_serie::text, 1, 1) = 1::text LIMIT 1) AS escola_cidade_1serie,
 
      (SELECT he.escola_uf
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 1::text LIMIT 1) AS escola_uf_1serie,
+        AND substring(he.nm_serie::text, 1, 1) = 1::text LIMIT 1) AS escola_uf_1serie,
 
      (SELECT he.ano
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 2::text LIMIT 1) AS ano_2serie,
+        AND substring(he.nm_serie::text, 1, 1) = 2::text LIMIT 1) AS ano_2serie,
 
      (SELECT he.escola
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 2::text LIMIT 1) AS escola_2serie,
+        AND substring(he.nm_serie::text, 1, 1) = 2::text LIMIT 1) AS escola_2serie,
 
      (SELECT he.escola_cidade
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 2::text LIMIT 1) AS escola_cidade_2serie,
+        AND substring(he.nm_serie::text, 1, 1) = 2::text LIMIT 1) AS escola_cidade_2serie,
 
      (SELECT he.escola_uf
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 2::text LIMIT 1) AS escola_uf_2serie,
+        AND substring(he.nm_serie::text, 1, 1) = 2::text LIMIT 1) AS escola_uf_2serie,
 
      (SELECT he.ano
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 3::text LIMIT 1) AS ano_3serie,
+        AND substring(he.nm_serie::text, 1, 1) = 3::text LIMIT 1) AS ano_3serie,
 
      (SELECT he.escola
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 3::text LIMIT 1) AS escola_3serie,
+        AND substring(he.nm_serie::text, 1, 1) = 3::text LIMIT 1) AS escola_3serie,
 
      (SELECT he.escola_cidade
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 3::text LIMIT 1) AS escola_cidade_3serie,
+        AND substring(he.nm_serie::text, 1, 1) = 3::text LIMIT 1) AS escola_cidade_3serie,
 
      (SELECT he.escola_uf
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 3::text LIMIT 1) AS escola_uf_3serie,
+        AND substring(he.nm_serie::text, 1, 1) = 3::text LIMIT 1) AS escola_uf_3serie,
 
      (SELECT he.ano
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 4::text LIMIT 1) AS ano_4serie,
+        AND substring(he.nm_serie::text, 1, 1) = 4::text LIMIT 1) AS ano_4serie,
 
      (SELECT he.escola
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 4::text LIMIT 1) AS escola_4serie,
+        AND substring(he.nm_serie::text, 1, 1) = 4::text LIMIT 1) AS escola_4serie,
 
      (SELECT he.escola_cidade
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 4::text LIMIT 1) AS escola_cidade_4serie,
+        AND substring(he.nm_serie::text, 1, 1) = 4::text LIMIT 1) AS escola_cidade_4serie,
 
      (SELECT he.escola_uf
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 4::text LIMIT 1) AS escola_uf_4serie,
+        AND substring(he.nm_serie::text, 1, 1) = 4::text LIMIT 1) AS escola_uf_4serie,
 
      (SELECT he.ano
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 5::text LIMIT 1) AS ano_5serie,
+        AND substring(he.nm_serie::text, 1, 1) = 5::text LIMIT 1) AS ano_5serie,
 
      (SELECT he.escola
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 5::text LIMIT 1) AS escola_5serie,
+        AND substring(he.nm_serie::text, 1, 1) = 5::text LIMIT 1) AS escola_5serie,
 
      (SELECT he.escola_cidade
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 5::text LIMIT 1) AS escola_cidade_5serie,
+        AND substring(he.nm_serie::text, 1, 1) = 5::text LIMIT 1) AS escola_cidade_5serie,
 
      (SELECT he.escola_uf
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 5::text LIMIT 1) AS escola_uf_5serie,
+        AND substring(he.nm_serie::text, 1, 1) = 5::text LIMIT 1) AS escola_uf_5serie,
 
      (SELECT he.ano
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 6::text LIMIT 1) AS ano_6serie,
+        AND substring(he.nm_serie::text, 1, 1) = 6::text LIMIT 1) AS ano_6serie,
 
      (SELECT he.escola
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 6::text LIMIT 1) AS escola_6serie,
+        AND substring(he.nm_serie::text, 1, 1) = 6::text LIMIT 1) AS escola_6serie,
 
      (SELECT he.escola_cidade
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 6::text LIMIT 1) AS escola_cidade_6serie,
+        AND substring(he.nm_serie::text, 1, 1) = 6::text LIMIT 1) AS escola_cidade_6serie,
 
      (SELECT he.escola_uf
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 6::text LIMIT 1) AS escola_uf_6serie,
+        AND substring(he.nm_serie::text, 1, 1) = 6::text LIMIT 1) AS escola_uf_6serie,
 
      (SELECT he.ano
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 7::text LIMIT 1) AS ano_7serie,
+        AND substring(he.nm_serie::text, 1, 1) = 7::text LIMIT 1) AS ano_7serie,
 
      (SELECT he.escola
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 7::text LIMIT 1) AS escola_7serie,
+        AND substring(he.nm_serie::text, 1, 1) = 7::text LIMIT 1) AS escola_7serie,
 
      (SELECT he.escola_cidade
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 7::text LIMIT 1) AS escola_cidade_7serie,
+        AND substring(he.nm_serie::text, 1, 1) = 7::text LIMIT 1) AS escola_cidade_7serie,
 
      (SELECT he.escola_uf
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 7::text LIMIT 1) AS escola_uf_7serie,
+        AND substring(he.nm_serie::text, 1, 1) = 7::text LIMIT 1) AS escola_uf_7serie,
 
      (SELECT he.ano
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 8::text LIMIT 1) AS ano_8serie,
+        AND substring(he.nm_serie::text, 1, 1) = 8::text LIMIT 1) AS ano_8serie,
 
      (SELECT he.escola
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 8::text LIMIT 1) AS escola_8serie,
+        AND substring(he.nm_serie::text, 1, 1) = 8::text LIMIT 1) AS escola_8serie,
 
      (SELECT he.escola_cidade
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 8::text LIMIT 1) AS escola_cidade_8serie,
+        AND substring(he.nm_serie::text, 1, 1) = 8::text LIMIT 1) AS escola_cidade_8serie,
 
      (SELECT he.escola_uf
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 8::text LIMIT 1) AS escola_uf_8serie,
+        AND substring(he.nm_serie::text, 1, 1) = 8::text LIMIT 1) AS escola_uf_8serie,
 
      (SELECT he.ano
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 9::text LIMIT 1) AS ano_9serie,
+        AND substring(he.nm_serie::text, 1, 1) = 9::text LIMIT 1) AS ano_9serie,
 
      (SELECT he.escola
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 9::text LIMIT 1) AS escola_9serie,
+        AND substring(he.nm_serie::text, 1, 1) = 9::text LIMIT 1) AS escola_9serie,
 
      (SELECT he.escola_cidade
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 9::text LIMIT 1) AS escola_cidade_9serie,
+        AND substring(he.nm_serie::text, 1, 1) = 9::text LIMIT 1) AS escola_cidade_9serie,
 
      (SELECT he.escola_uf
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 9::text LIMIT 1) AS escola_uf_9serie,
+        AND substring(he.nm_serie::text, 1, 1) = 9::text LIMIT 1) AS escola_uf_9serie,
 
      (SELECT DISTINCT he.aprovado = 4
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 1::text
+        AND substring(he.nm_serie::text, 1, 1) = 1::text
       ORDER BY (he.aprovado = 4) LIMIT 1) AS transferido1,
 
      (SELECT DISTINCT he.aprovado = 4
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 2::text
+        AND substring(he.nm_serie::text, 1, 1) = 2::text
       ORDER BY (he.aprovado = 4) LIMIT 1) AS transferido2,
 
      (SELECT DISTINCT he.aprovado = 4
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 3::text
+        AND substring(he.nm_serie::text, 1, 1) = 3::text
       ORDER BY (he.aprovado = 4) LIMIT 1) AS transferido3,
 
      (SELECT DISTINCT he.aprovado = 4
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 4::text
+        AND substring(he.nm_serie::text, 1, 1) = 4::text
       ORDER BY (he.aprovado = 4) LIMIT 1) AS transferido4,
 
      (SELECT DISTINCT he.aprovado = 4
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 5::text
+        AND substring(he.nm_serie::text, 1, 1) = 5::text
       ORDER BY (he.aprovado = 4) LIMIT 1) AS transferido5,
 
      (SELECT DISTINCT he.aprovado = 4
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 6::text
+        AND substring(he.nm_serie::text, 1, 1) = 6::text
       ORDER BY (he.aprovado = 4) LIMIT 1) AS transferido6,
 
      (SELECT DISTINCT he.aprovado = 4
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 11
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 7::text
+        AND substring(he.nm_serie::text, 1, 1) = 7::text
       ORDER BY (he.aprovado = 4) LIMIT 1) AS transferido7,
 
      (SELECT DISTINCT he.aprovado = 4
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 8::text
+        AND substring(he.nm_serie::text, 1, 1) = 8::text
       ORDER BY (he.aprovado = 4) LIMIT 1) AS transferido8,
 
      (SELECT DISTINCT he.aprovado = 4
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 9::text
+        AND substring(he.nm_serie::text, 1, 1) = 9::text
       ORDER BY (he.aprovado = 4) LIMIT 1) AS transferido9,
 
-
-  (SELECT hd.carga_horaria_disciplina
+     (SELECT hd.carga_horaria_disciplina
    FROM historico_disciplinas hd
    WHERE hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
      AND hd.ref_sequencial = (
@@ -1618,198 +1105,140 @@ FROM
                                                    1) = 9::text))LIMIT 1) AS carga_horaria_disciplina9,
 
      (SELECT he.carga_horaria
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 1::text LIMIT 1) AS carga_horaria1,
+        AND substring(he.nm_serie::text, 1, 1) = 1::text LIMIT 1) AS carga_horaria1,
 
      (SELECT he.carga_horaria
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 2::text LIMIT 1) AS carga_horaria2,
+        AND substring(he.nm_serie::text, 1, 1) = 2::text LIMIT 1) AS carga_horaria2,
 
      (SELECT he.carga_horaria
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 3::text LIMIT 1) AS carga_horaria3,
+        AND substring(he.nm_serie::text, 1, 1) = 3::text LIMIT 1) AS carga_horaria3,
 
      (SELECT he.carga_horaria
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 4::text LIMIT 1) AS carga_horaria4,
+        AND substring(he.nm_serie::text, 1, 1) = 4::text LIMIT 1) AS carga_horaria4,
 
      (SELECT he.carga_horaria
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 5::text LIMIT 1) AS carga_horaria5,
+        AND substring(he.nm_serie::text, 1, 1) = 5::text LIMIT 1) AS carga_horaria5,
 
      (SELECT he.carga_horaria
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 6::text LIMIT 1) AS carga_horaria6,
+        AND substring(he.nm_serie::text, 1, 1) = 6::text LIMIT 1) AS carga_horaria6,
 
      (SELECT he.carga_horaria
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 7::text LIMIT 1) AS carga_horaria7,
+        AND substring(he.nm_serie::text, 1, 1) = 7::text LIMIT 1) AS carga_horaria7,
 
      (SELECT he.carga_horaria
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 8::text LIMIT 1) AS carga_horaria8,
+        AND substring(he.nm_serie::text, 1, 1) = 8::text LIMIT 1) AS carga_horaria8,
 
      (SELECT he.carga_horaria
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 9::text LIMIT 1) AS carga_horaria9,
+        AND substring(he.nm_serie::text, 1, 1) = 9::text LIMIT 1) AS carga_horaria9,
 
      (SELECT textcat_all(phe.observacao) AS textcat_all
-      FROM historico_escolar phe
+      FROM pmieducar.historico_escolar phe
       WHERE phe.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND phe.ativo = 1
         AND phe.extra_curricular = 0
         AND phe.sequencial = (
                                 (SELECT MAX(he.sequencial) AS MAX
-                                 FROM historico_escolar he
+                                 FROM pmieducar.historico_escolar he
                                  WHERE he.ref_cod_instituicao = phe.ref_cod_instituicao
-                                   AND substring(he.nm_serie::text,
-                                                   1,
-                                                   1) = substring(phe.nm_serie::text,
-                                                                    1,
-                                                                    1)
+                                   AND substring(he.nm_serie::text, 1, 1) = substring(phe.nm_serie::text, 1, 1)
                                    AND he.ref_cod_aluno = phe.ref_cod_aluno
                                    AND he.ativo = 1))) AS observacao_all,
 
      (SELECT m.cod_matricula
-      FROM matricula m
+      FROM pmieducar.matricula m
       WHERE m.ano = (
                        (SELECT historico_escolar_1.ano
-                        FROM historico_escolar historico_escolar_1
+                        FROM pmieducar.historico_escolar historico_escolar_1
                         WHERE historico_escolar_1.aprovado = 4
                           AND historico_escolar_1.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
                           AND historico_escolar_1.ativo = 1
@@ -1817,13 +1246,13 @@ FROM
                         ORDER BY historico_escolar_1.ano DESC, historico_escolar_1.sequencial DESC LIMIT 1))
         AND (
                (SELECT historico_escolar_1.sequencial
-                FROM historico_escolar historico_escolar_1
+                FROM pmieducar.historico_escolar historico_escolar_1
                 WHERE historico_escolar_1.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
                   AND historico_escolar_1.ativo = 1
                   AND historico_escolar_1.extra_curricular = 0
                 ORDER BY historico_escolar_1.ano DESC, historico_escolar_1.sequencial DESC LIMIT 1)) = (
                                                                                                           (SELECT historico_escolar_1.sequencial
-                                                                                                           FROM historico_escolar historico_escolar_1
+                                                                                                           FROM pmieducar.historico_escolar historico_escolar_1
                                                                                                            WHERE historico_escolar_1.aprovado = 4
                                                                                                              AND historico_escolar_1.ativo = 1
                                                                                                              AND historico_escolar_1.extra_curricular = 0
@@ -1835,356 +1264,248 @@ FROM
       ORDER BY m.cod_matricula DESC LIMIT 1) AS matricula_transferido,
 
      (SELECT relatorio.historico_carga_horaria_componente(historico_disciplinas.nm_disciplina::character varying, he.nm_serie, he.ref_cod_escola) AS historico_carga_horaria_componente
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 1::text LIMIT 1) AS ch_componente_1,
+        AND substring(he.nm_serie::text, 1, 1) = 1::text LIMIT 1) AS ch_componente_1,
 
      (SELECT relatorio.historico_carga_horaria_componente(historico_disciplinas.nm_disciplina::character varying, he.nm_serie, he.ref_cod_escola) AS historico_carga_horaria_componente
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 2::text LIMIT 1) AS ch_componente_2,
+        AND substring(he.nm_serie::text, 1, 1) = 2::text LIMIT 1) AS ch_componente_2,
 
      (SELECT relatorio.historico_carga_horaria_componente(historico_disciplinas.nm_disciplina::character varying, he.nm_serie, he.ref_cod_escola) AS historico_carga_horaria_componente
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 3::text LIMIT 1) AS ch_componente_3,
+        AND substring(he.nm_serie::text, 1, 1) = 3::text LIMIT 1) AS ch_componente_3,
 
      (SELECT relatorio.historico_carga_horaria_componente(historico_disciplinas.nm_disciplina::character varying, he.nm_serie, he.ref_cod_escola) AS historico_carga_horaria_componente
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 4::text LIMIT 1) AS ch_componente_4,
+        AND substring(he.nm_serie::text, 1, 1) = 4::text LIMIT 1) AS ch_componente_4,
 
      (SELECT relatorio.historico_carga_horaria_componente(historico_disciplinas.nm_disciplina::character varying, he.nm_serie, he.ref_cod_escola) AS historico_carga_horaria_componente
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 5::text LIMIT 1) AS ch_componente_5,
+        AND substring(he.nm_serie::text, 1, 1) = 5::text LIMIT 1) AS ch_componente_5,
 
      (SELECT relatorio.historico_carga_horaria_componente(historico_disciplinas.nm_disciplina::character varying, he.nm_serie, he.ref_cod_escola) AS historico_carga_horaria_componente
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 6::text LIMIT 1) AS ch_componente_6,
+        AND substring(he.nm_serie::text, 1, 1) = 6::text LIMIT 1) AS ch_componente_6,
 
      (SELECT relatorio.historico_carga_horaria_componente(historico_disciplinas.nm_disciplina::character varying, he.nm_serie, he.ref_cod_escola) AS historico_carga_horaria_componente
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 7::text LIMIT 1) AS ch_componente_7,
+        AND substring(he.nm_serie::text, 1, 1) = 7::text LIMIT 1) AS ch_componente_7,
 
      (SELECT relatorio.historico_carga_horaria_componente(historico_disciplinas.nm_disciplina::character varying, he.nm_serie, he.ref_cod_escola) AS historico_carga_horaria_componente
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 8::text LIMIT 1) AS ch_componente_8,
+        AND substring(he.nm_serie::text, 1, 1) = 8::text LIMIT 1) AS ch_componente_8,
 
      (SELECT relatorio.historico_carga_horaria_componente(historico_disciplinas.nm_disciplina::character varying, he.nm_serie, he.ref_cod_escola) AS historico_carga_horaria_componente
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 9::text LIMIT 1) AS ch_componente_9,
+        AND substring(he.nm_serie::text, 1, 1) = 9::text LIMIT 1) AS ch_componente_9,
 
      (SELECT he.frequencia
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 1::text LIMIT 1) AS frequencia1,
+        AND substring(he.nm_serie::text, 1, 1) = 1::text LIMIT 1) AS frequencia1,
 
      (SELECT he.frequencia
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 2::text LIMIT 1) AS frequencia2,
+        AND substring(he.nm_serie::text, 1, 1) = 2::text LIMIT 1) AS frequencia2,
 
      (SELECT he.frequencia
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 3::text LIMIT 1) AS frequencia3,
+        AND substring(he.nm_serie::text, 1, 1) = 3::text LIMIT 1) AS frequencia3,
 
      (SELECT he.frequencia
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 4::text LIMIT 1) AS frequencia4,
+        AND substring(he.nm_serie::text, 1, 1) = 4::text LIMIT 1) AS frequencia4,
 
      (SELECT he.frequencia
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 5::text LIMIT 1) AS frequencia5,
+        AND substring(he.nm_serie::text, 1, 1) = 5::text LIMIT 1) AS frequencia5,
 
      (SELECT he.frequencia
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 6::text LIMIT 1) AS frequencia6,
+        AND substring(he.nm_serie::text, 1, 1) = 6::text LIMIT 1) AS frequencia6,
 
      (SELECT he.frequencia
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 7::text LIMIT 1) AS frequencia7,
+        AND substring(he.nm_serie::text, 1, 1) = 7::text LIMIT 1) AS frequencia7,
 
      (SELECT he.frequencia
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 8::text LIMIT 1) AS frequencia8,
+        AND substring(he.nm_serie::text, 1, 1) = 8::text LIMIT 1) AS frequencia8,
 
      (SELECT he.frequencia
-      FROM historico_escolar he
+      FROM pmieducar.historico_escolar he
       WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
         AND he.ativo = 1
         AND he.sequencial = (
                                (SELECT MAX(hee.sequencial) AS MAX
-                                FROM historico_escolar hee
+                                FROM pmieducar.historico_escolar hee
                                 WHERE hee.ref_cod_aluno = he.ref_cod_aluno
-                                  AND substring(he.nm_serie::text,
-                                                  1,
-                                                  1) = substring(hee.nm_serie::text,
-                                                                   1,
-                                                                   1)
+                                  AND substring(he.nm_serie::text, 1, 1) = substring(hee.nm_serie::text, 1, 1)
                                   AND hee.ativo = 1
                                   AND hee.extra_curricular = 0))
-        AND substring(he.nm_serie::text,
-                        1,
-                        1) = 9::text LIMIT 1) AS frequencia9
+        AND substring(he.nm_serie::text, 1, 1) = 9::text LIMIT 1) AS frequencia9
    FROM
      (SELECT historico_disciplinas_1.sequencial,
              historico_disciplinas_1.ref_ref_cod_aluno,
              historico_disciplinas_1.ref_sequencial,
-             fcn_upper(historico_disciplinas_1.nm_disciplina::text) AS nm_disciplina,
+             relatorio.get_texto_sem_caracter_especial(historico_disciplinas_1.nm_disciplina::text) AS nm_disciplina,
              historico_disciplinas_1.nota,
              historico_disciplinas_1.faltas,
              historico_disciplinas_1.import
-      FROM historico_disciplinas historico_disciplinas_1) historico_disciplinas
-   JOIN historico_escolar ON historico_escolar.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
+      FROM pmieducar.historico_disciplinas historico_disciplinas_1) historico_disciplinas
+   JOIN pmieducar.historico_escolar ON historico_escolar.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
    AND historico_escolar.sequencial = historico_disciplinas.ref_sequencial
    WHERE historico_escolar.extra_curricular = 0
      AND historico_escolar.ativo = 1
