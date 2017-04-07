@@ -85,7 +85,7 @@ class PessoatransporteController extends Portabilis_Controller_Page_EditControll
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "transporte_index.php"                  => "Transporte Escolar",
+         "transporte_index.php"                  => "Transporte escolar",
          ""        => "$nomeMenu usu&aacute;rio de transporte"             
     ));
     $this->enviaLocalizacao($localizacao->montar());    

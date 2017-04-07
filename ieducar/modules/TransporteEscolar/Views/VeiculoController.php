@@ -155,7 +155,7 @@ class VeiculoController extends Portabilis_Controller_Page_EditController
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "transporte_index.php"                  => "Transporte Escolar",
+         "transporte_index.php"                  => "Transporte escolar",
          ""        => "$nomeMenu ve&iacute;culo"             
     ));
     $this->enviaLocalizacao($localizacao->montar());
