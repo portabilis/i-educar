@@ -53,7 +53,7 @@ class ComponenteCurricularController extends ApiCoreController
 
   // subscreve formatResourceValue para não adicionar 'id -' a frente do resultado
   protected function formatResourceValue($resource) {
-    return $this->toUtf8(strtoupper($resource['name']));
+    return mb_strtoupper($resource['name'], 'UTF-8');
   }
 
   function getComponentesCurricularesSearch(){

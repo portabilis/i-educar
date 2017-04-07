@@ -20,7 +20,7 @@ function updateSelect($targetElement, options, emptyOptionHtml) {
   });
   if (optgroup != null) {
     optgroup.appendTo($targetElement);
-  }  
+  }
 
   if (options.length > 0) {
     $targetElement.removeAttr('disabled');
@@ -49,9 +49,9 @@ function xmlResourcesToSelectOptions(resources, parentNodeName, nodeIdAttrName, 
     $option.attr('value', $value.attr(nodeIdAttrName));
 
     if (typeof nodeValueAttrName != 'undefined')
-      text = safeCapitalize($value.attr(nodeValueAttrName));
+      text = ($value.attr(nodeValueAttrName));
     else
-      text = safeCapitalize($value.text());
+      text = ($value.text());
 
     $option.html(text);
     options.push($option);
@@ -75,7 +75,7 @@ function jsonResourcesToSelectOptions(resources, captalizeFirstCaracter) {
       id = id.substr(2);
 
     var opt = $j('<option />').attr('value', id);
-    
+
     var newValue = value;
     if (typeof(value) == 'object') {
       $j.each(value, function(optId, optValue) {
@@ -88,11 +88,11 @@ function jsonResourcesToSelectOptions(resources, captalizeFirstCaracter) {
     }
 
     if (captalizeFirstCaracter)
-      opt.html(safeCapitalizeFirstCaracter(newValue));
+      opt.html((newValue));
     else
       opt.html(newValue);
 
-    options.push(opt);    
+    options.push(opt);
   });
 
   return options;
