@@ -7,7 +7,7 @@
     var $etapaField                = getElementFor('etapa');
 
     var handleGetComponentesCurriculares = function(response) {
-      var selectOptions = jsonResourcesToSelectOptions(response['options'], true);
+      var selectOptions = jsonResourcesToSelectOptions(response['options'], false);
       updateSelect($componenteCurricularField, selectOptions, "Selecione um componente curricular");
     }
 
