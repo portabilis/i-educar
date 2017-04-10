@@ -914,10 +914,10 @@ var handleGetPersonDetails = function(dataResponse) {
   $j('#livro_certidao_civil').val(dataResponse.num_livro);
   $j('#folha_certidao_civil').val(dataResponse.num_folha);
 
-  if (dataResponse.certidao_nascimento.trim()){
+  if (dataResponse.certidao_nascimento != null && dataResponse.certidao_nascimento.trim()){
     $j('#tipo_certidao_civil').val('certidao_nascimento_novo_formato').change();
   }
-  else if (dataResponse.certidao_casamento.trim()){
+  else if (dataResponse.certidao_casamento != null && dataResponse.certidao_casamento.trim()){
     $j('#tipo_certidao_civil').val('certidao_casamento_novo_formato').change();
   }
   else{
