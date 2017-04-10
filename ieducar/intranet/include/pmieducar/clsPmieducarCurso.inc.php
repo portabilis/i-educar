@@ -627,7 +627,7 @@ class clsPmieducarCurso
     }
 
     if (is_string($str_nm_curso)) {
-      $filtros .= "{$whereAnd} nm_curso LIKE '%{$str_nm_curso}%'";
+      $filtros .= "{$whereAnd} translate(upper(nm_curso),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nm_curso}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
       $whereAnd = " AND ";
     }
 

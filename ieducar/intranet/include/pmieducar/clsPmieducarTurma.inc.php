@@ -1584,7 +1584,7 @@ class clsPmieducarTurma
 		}
 		if( is_string( $str_nm_turma ) )
 		{
-			$filtros .= "{$whereAnd} t.nm_turma LIKE '%{$str_nm_turma}%'";
+			$filtros .= "{$whereAnd} translate(upper(t.nm_turma),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nm_turma}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
 			$whereAnd = " AND ";
 		}
 		if( is_string( $str_sgl_turma ) )
@@ -1873,7 +1873,7 @@ and  e.cod_escola = t.ref_ref_cod_escola
 		}
 		if( is_string( $str_nm_turma ) )
 		{
-			$filtros .= "{$whereAnd} t.nm_turma LIKE '%{$str_nm_turma}%'";
+			$filtros .= "{$whereAnd} translate(upper(t.nm_turma),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nm_turma}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
 			$whereAnd = " AND ";
 		}
 		if( is_string( $str_sgl_turma ) )
@@ -2144,7 +2144,7 @@ and  e.cod_escola = t.ref_ref_cod_escola
 		}
 		if( is_string( $str_nm_turma ) )
 		{
-			$filtros .= "{$whereAnd} t.nm_turma LIKE '%{$str_nm_turma}%'";
+			$filtros .= "{$whereAnd} translate(upper(t.nm_turma),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nm_turma}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
 			$whereAnd = " AND ";
 		}
 		if( is_string( $str_sgl_turma ) )

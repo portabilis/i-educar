@@ -1895,7 +1895,7 @@ class clsPmieducarEscola
     }
 
     if (is_string( $str_nome)) {
-      $filtros .= "{$whereAnd} nome LIKE '%{$str_nome}%'";
+      $filtros .= "{$whereAnd} translate(upper(nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nome}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
       $whereAnd = " AND ";
     }
 
