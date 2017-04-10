@@ -337,7 +337,7 @@ class indice extends clsCadastro
       'inline'      => true
     );
 
-    $this->inputsHelper()->text('rg', $options);
+    $this->inputsHelper()->numeric('rg', $options);
 
 
     // data emissão rg
