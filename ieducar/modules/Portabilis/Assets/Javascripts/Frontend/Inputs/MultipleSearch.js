@@ -4,8 +4,8 @@ var defaultChosenOptions = {
   no_results_text: "Sem resultados para ",
   width: '231px',
   disable_search: true,
-  placeholder_text_multiple: stringUtils.toUtf8("Selecione as opções"),
-  placeholder_text_single: stringUtils.toUtf8("Selecione uma opção")
+  placeholder_text_multiple: "Selecione as opções",
+  placeholder_text_single: "Selecione uma opção"
 };
 
 var defaultMultipleSearchOptions = {
