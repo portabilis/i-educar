@@ -77,22 +77,22 @@ function excluirLaudoMedico(event){
 
 function laudoMedicoObrigatorio(){
   $j('#laudo_medico').addClass('error');
-  messageUtils.error(stringUtils.toUtf8('Deve ser anexado um laudo médico para alunos com deficiências'));
+  messageUtils.error('Deve ser anexado um laudo médico para alunos com deficiências');
 }
 
 function addLaudoMedico(url){
   $index = $arrayLaudoMedico.length + 1;
   //$j('#url_laudo_medico').val(url);
   $arrayUrlLaudoMedico[$index] = url;
-  $arrayLaudoMedico[$arrayLaudoMedico.length] = $j('<div>').append($j('<span>').html(stringUtils.toUtf8('Laudo '+$index+':'))
+  $arrayLaudoMedico[$arrayLaudoMedico.length] = $j('<div>').append($j('<span>').html('Laudo '+$index+':')
                                                                           .attr('id', 'laudo'+$index)
-                                                                          .append($j('<a>').html(stringUtils.toUtf8('Excluir'))
+                                                                          .append($j('<a>').html('Excluir')
                                                                                            .addClass('decorated')
                                                                                            .attr('id','link_excluir_laudo_medico_'+$index)
                                                                                            .css('cursor','pointer')
                                                                                            .css('margin-left','10px')
                                                                                            .click({i: $index}, excluirLaudoMedico))
-                                                                          .append($j('<a>').html(stringUtils.toUtf8('Visualizar'))
+                                                                          .append($j('<a>').html('Visualizar')
                                                                                            .addClass('decorated')
                                                                                            .attr('id','link_visualizar_laudo_medico_'+$index)
                                                                                            .attr('target','_blank')
@@ -121,13 +121,13 @@ function montaUrlLaudoMedico(){
 
 function certidaoNascimentoInvalida(){
   $j('#certidao_nascimento').addClass('error');
-  messageUtils.error(stringUtils.toUtf8('O campo referente a certidão de nascimento deve conter exatos 32 dígitos.'));
+  messageUtils.error('O campo referente a certidão de nascimento deve conter exatos 32 dígitos.');
 }
 
 
 function certidaoCasamentoInvalida(){
   $j('#certidao_casamento').addClass('error');
-  messageUtils.error(stringUtils.toUtf8('O campo referente a certidão de casamento deve conter exatos 32 dígitos.'));
+  messageUtils.error('O campo referente a certidão de casamento deve conter exatos 32 dígitos.');
 }
 
 var newSubmitForm = function(event) {
@@ -169,15 +169,15 @@ function addDocumento(url){
   $index = $arrayDocumento.length + 1;
   //$j('#url_documento').val(url);
   $arrayUrlDocumento[$index] = url;
-  $arrayDocumento[$arrayDocumento.length] = $j('<div>').append($j('<span>').html(stringUtils.toUtf8('Documento '+$index+':'))
+  $arrayDocumento[$arrayDocumento.length] = $j('<div>').append($j('<span>').html('Documento '+$index+':')
                                                                           .attr('id', 'documento'+$index)
-                                                                          .append($j('<a>').html(stringUtils.toUtf8('Excluir'))
+                                                                          .append($j('<a>').html('Excluir')
                                                                                            .addClass('decorated')
                                                                                            .attr('id','link_excluir_documento_'+$index)
                                                                                            .css('cursor','pointer')
                                                                                            .css('margin-left','10px')
                                                                                            .click({i: $index}, excluirDocumento))
-                                                                          .append($j('<a>').html(stringUtils.toUtf8('Visualizar'))
+                                                                          .append($j('<a>').html('Visualizar')
                                                                                            .addClass('decorated')
                                                                                            .attr('id','link_visualizar_documento_'+$index)
                                                                                            .attr('target','_blank')
@@ -320,7 +320,7 @@ resourceOptions.handleGet = function(dataResponse) {
     var msg = "Este cadastro foi desativado em <b>"+ dataResponse.destroyed_at +
               " </b><br/>pelo usuário <b>" + dataResponse.destroyed_by + "</b>, ";
 
-    $resourceNotice.html(stringUtils.toUtf8(msg)).slideDown('fast');
+    $resourceNotice.html(msg).slideDown('fast');
 
     $j('<a>').addClass('decorated')
              .attr('href', '#')
@@ -789,7 +789,7 @@ var handleGetPersonDetails = function(dataResponse) {
   if (alunoId && alunoId != resource.id()) {
     $submitButton.attr('disabled', 'disabled').hide();
 
-    $pessoaNotice.html(stringUtils.toUtf8('Esta pessoa já possui o aluno código '+ alunoId +' cadastrado, ' ))
+    $pessoaNotice.html('Esta pessoa já possui o aluno código '+ alunoId +' cadastrado, ' )
                  .slideDown('fast');
 
     $j('<a>').addClass('decorated')
@@ -939,17 +939,17 @@ var handleGetPersonDetails = function(dataResponse) {
 
   if ($j.inArray(tipoCertidaoCivil, ['91', '92']) > -1) {
     $certidaoCivilFields.show();
-    $j('#tr_tipo_certidao_civil td:first span').html(stringUtils.toUtf8('Tipo certidão civil'));
+    $j('#tr_tipo_certidao_civil td:first span').html('Tipo certidão civil');
   }
 
   else if (tipoCertidaoCivil == 'certidao_nascimento_novo_formato') {
     $certidaoNascimentoField.show();
-    $j('#tr_tipo_certidao_civil td:first span').html(stringUtils.toUtf8('Tipo certidão civil'));
+    $j('#tr_tipo_certidao_civil td:first span').html('Tipo certidão civil');
   }
 
     else if (tipoCertidaoCivil == 'certidao_casamento_novo_formato') {
     $certidaoCasamentoField.show();
-    $j('#tr_tipo_certidao_civil td:first span').html(stringUtils.toUtf8('Tipo certidão civil'));
+    $j('#tr_tipo_certidao_civil td:first span').html('Tipo certidão civil');
   }
 
 
@@ -1964,7 +1964,7 @@ function canShowParentsFields(){
       var pessoaId = dataResponse.id;
 
       if (pessoaId && pessoaId != $j('#pessoa_id').val()) {
-        $cpfNotice.html(stringUtils.toUtf8('CPF já utilizado pela pessoa código ' + pessoaId + ', ')).slideDown('fast');
+        $cpfNotice.html('CPF já utilizado pela pessoa código ' + pessoaId + ', ').slideDown('fast');
 
         $j('<a>').addClass('decorated')
                  .attr('href', '/intranet/atendidos_cad.php?cod_pessoa_fj=' + pessoaId)
@@ -2002,7 +2002,7 @@ function canShowParentsFields(){
       $cpfNotice.hide();
 
       if (cpf && ! validationUtils.validatesCpf(cpf)) {
-        $cpfNotice.html(stringUtils.toUtf8('O CPF informado é inválido')).slideDown('fast');
+        $cpfNotice.html('O CPF informado é inválido').slideDown('fast');
 
         //Esconde botão Gravar
         $submitButton.attr('disabled', 'disabled').hide();
