@@ -83,7 +83,7 @@ class indice extends clsDetalhe
     $this->nivel_usuario = $this->obj_permissao->nivel_acesso($this->pessoa_logada);
 
     $this->titulo = 'Empresa transporte escolar - Detalhe';
-    
+
 
     $cod_empresa_transporte_escolar = $_GET['cod_empresa'];
 
@@ -96,8 +96,8 @@ class indice extends clsDetalhe
     }
 
     $objPessoaJuridica = new clsPessoaJuridica();
-    list ($id_federal, $endereco, $cep, $nm_bairro, $cidade, $ddd_telefone_1, $telefone_1, $ddd_telefone_2, $telefone_2, $ddd_telefone_mov, $telefone_mov, $ddd_telefone_fax, $telefone_fax, $email, $ins_est) = $objPessoaJuridica->queryRapida($registro['ref_idpes'], "cnpj","logradouro","cep","bairro","cidade", "ddd_1","fone_1","ddd_2","fone_2","ddd_mov","fone_mov","ddd_fax","fone_fax", "email","insc_estadual");    
-    
+    list ($id_federal, $endereco, $cep, $nm_bairro, $cidade, $ddd_telefone_1, $telefone_1, $ddd_telefone_2, $telefone_2, $ddd_telefone_mov, $telefone_mov, $ddd_telefone_fax, $telefone_fax, $email, $ins_est) = $objPessoaJuridica->queryRapida($registro['ref_idpes'], "cnpj","logradouro","cep","bairro","cidade", "ddd_1","fone_1","ddd_2","fone_2","ddd_mov","fone_mov","ddd_fax","fone_fax", "email","insc_estadual");
+
     $this->addDetalhe( array("Código da empresa", $cod_empresa_transporte_escolar));
     $this->addDetalhe( array("Nome fantasia", $registro['nome_empresa']) );
     $this->addDetalhe( array("Nome do responsável", $registro['nome_responsavel']) );
@@ -114,12 +114,12 @@ class indice extends clsDetalhe
       $this->addDetalhe( array("Celular", "({$ddd_telefone_mov}) {$telefone_mov}") );
     if (trim($telefone_fax)!='')
       $this->addDetalhe( array("Fax", "({$ddd_telefone_fax}) {$telefone_fax}") );
-    
+
     $this->addDetalhe( array("E-mail", $email) );
 
     if( ! $ins_est ) $ins_est = "isento";
       $this->addDetalhe( array("Inscri&ccedil;&atilde;o estadual", $ins_est) );
-    $this->addDetalhe( array("Observa&ccedil;&atilde;o", $registro['observacao']));   
+    $this->addDetalhe( array("Observa&ccedil;&atilde;o", $registro['observacao']));
     $this->url_cancelar = "transporte_empresa_lst.php";
 
     $obj_permissao = new clsPermissoes();
@@ -135,10 +135,10 @@ class indice extends clsDetalhe
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
+         "educar_transporte_escolar_index.php"                  => "Transporte escolar",
          ""                                  => "Detalhe da empresa de transporte"
     ));
-    $this->enviaLocalizacao($localizacao->montar());    
+    $this->enviaLocalizacao($localizacao->montar());
   }
 }
 

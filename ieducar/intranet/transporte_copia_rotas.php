@@ -1,6 +1,6 @@
 <?php
 /*
--- 
+--
 -- @author   Isac Borgert <isac@portabilis.com.br>
 -- @license  @@license@@
 -- @version  $Id$
@@ -45,11 +45,11 @@ class indice extends clsCadastro {
 
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra( 950, $this->pessoa_logada, 7);
-		
+
     	$localizacao = new LocalizacaoSistema();
 		$localizacao->entradaCaminhos( array(
 	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-	         "educar_index.php"                  => "M&oacute;dulo Transporte Escolar",
+	         "educar_transporte_escolar_index.php"                  => "Transporte escolar",
 	         ""                                  => "C&oacute;pia de rotas"
 		));
     	$this->enviaLocalizacao($localizacao->montar());
@@ -100,7 +100,7 @@ class indice extends clsCadastro {
 		@session_start();
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
-		
+
 		if (!$this->ano_orig or !$this->ref_cod_empresa_transporte_escolar or !$this->ano_dest){
 			$this->mensagem = "Preencha os dados corretamente.<br>";
 			return false;
@@ -144,7 +144,7 @@ class indice extends clsCadastro {
 		      			$campos .= "{$gruda}ref_idpes_destino";
 		      			$valores .= "{$gruda}'{$registro['ref_idpes_destino']}'";
 		      			$gruda = ", ";
-		      		}    
+		      		}
 		    		if (is_string($registro['descricao'])) {
 		      			$campos .= "{$gruda}descricao";
 		      			$valores .= "{$gruda}'{$registro['descricao']}'";
@@ -159,7 +159,7 @@ class indice extends clsCadastro {
 		      			$campos .= "{$gruda}tipo_rota";
 		      			$valores .= "{$gruda}'{$registro['tipo_rota']}'";
 		      			$gruda = ", ";
-		    		}    
+		    		}
 		    		if (is_numeric($registro['km_pav'])) {
 		      			$campos .= "{$gruda}km_pav";
 		      			$valores .= "{$gruda}'{$registro['km_pav']}'";
@@ -169,12 +169,12 @@ class indice extends clsCadastro {
 		      			$campos .= "{$gruda}km_npav";
 		      			$valores .= "{$gruda}'{$registro['km_npav']}'";
 		      			$gruda = ", ";
-		    		}    
+		    		}
 		    		if (is_numeric($this->ref_cod_empresa_transporte_escolar)) {
 		      			$campos .= "{$gruda}ref_cod_empresa_transporte_escolar";
 		      			$valores .= "{$gruda}'{$this->ref_cod_empresa_transporte_escolar}'";
 		      			$gruda = ", ";
-		    		}    
+		    		}
 		    		if (is_string($registro['tercerizado'])) {
 		      			$campos .= "{$gruda}tercerizado";
 		      			$valores .= "{$gruda}'{$registro['tercerizado']}'";
@@ -194,12 +194,12 @@ class indice extends clsCadastro {
 					$this->ano_dest,
 					$this->ref_cod_empresa_transporte_escolar
 				);//pega as rotas novas.
-				
+
 
 				$num = 0;
 				foreach ($lista as $registro) {
 					$cod_rota_nova = $lista_new_rota[$num]['cod_rota_transporte_escolar'];
-					$obj = new clsModulesItinerarioTransporteEscolar();		        	
+					$obj = new clsModulesItinerarioTransporteEscolar();
 		     		$intinerario_old = $obj->lista(NULL, $registro['cod_rota_transporte_escolar']);  //pega os intinerÃ¡rios antigos
 		     		$num2 = 0;
 		     		foreach($intinerario_old as $intinerario){
@@ -207,11 +207,11 @@ class indice extends clsCadastro {
 		     			$num2++;
 		     		}
 					foreach ( $intinerario_old as $registro ){
-			     			$obj = new clsModulesItinerarioTransporteEscolar(null, 
-				     				$registro['ref_cod_rota_transporte_escolar'], 
-				     				$registro['seq'], 
-				     				$registro['ref_cod_ponto_transporte_escolar'], 
-				     				$registro['ref_cod_veiculo'], 
+			     			$obj = new clsModulesItinerarioTransporteEscolar(null,
+				     				$registro['ref_cod_rota_transporte_escolar'],
+				     				$registro['seq'],
+				     				$registro['ref_cod_ponto_transporte_escolar'],
+				     				$registro['ref_cod_veiculo'],
 				     				$registro['hora'],
 				     				$registro['tipo']);
 			     			$obj->cadastra(); //grava os nÃ³vos intinerÃ¡rios no banco
