@@ -87,7 +87,7 @@ class EtapaController extends ApiCoreController
 
       $options = array();
       foreach ($etapas as $etapa)
-        $options['__' . $etapa['etapa']] = $etapa['etapa'] . 'º ' . $this->toUtf8($etapa['nome']);
+        $options['__' . $etapa['etapa']] = $etapa['etapa'] . 'º ' . mb_strtoupper($etapa['nome'], 'UTF-8');
 
       return array('options' => $options);
     }
@@ -105,9 +105,9 @@ class EtapaController extends ApiCoreController
                 and padrao.ref_cod_modulo = modulo.cod_modulo and modulo.ativo = 1 order by padrao.sequencial";
 
         $etapas = $this->fetchPreparedQuery($sql, array($ano, $escolaId));
-      
 
-      
+
+
 
       $options = array();
       foreach ($etapas as $etapa)
@@ -121,7 +121,7 @@ class EtapaController extends ApiCoreController
     if ($this->isRequestFor('get', 'etapas'))
       $this->appendResponse($this->getEtapas());
     else if ($this->isRequestFor('get', 'etapasEscola'))
-      $this->appendResponse($this->getEtapasEscola()); 
+      $this->appendResponse($this->getEtapasEscola());
     else
       $this->notImplementedOperationError();
   }

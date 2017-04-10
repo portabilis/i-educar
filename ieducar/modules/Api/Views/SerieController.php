@@ -67,13 +67,13 @@ class SerieController extends ApiCoreController
                 AND c.ref_cod_instituicao = $1
                 AND c.cod_curso IN ({$cursoId})
                 ORDER BY s.nm_serie ASC ";
-      
+
       $params     = array($this->getRequest()->instituicao_id);
 
       $series = $this->fetchPreparedQuery($sql, $params);
 
       foreach ($series as &$serie) {
-        $serie['nm_serie'] = Portabilis_String_Utils::toUtf8($serie['nm_serie']);
+        $serie['nm_serie'] = mb_strtoupper($serie['nm_serie'], 'UTF-8');
       }
 
       $attrs = array(

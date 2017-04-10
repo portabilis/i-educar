@@ -96,7 +96,7 @@ class MatriculaController extends ApiCoreController
       $options = array();
 
       foreach ($matriculas as $matricula)
-        $options['__' . $matricula['cod_matricula']] = $this->toUtf8($matricula['nome']);
+        $options['__' . $matricula['cod_matricula']] = mb_strtoupper($matricula['nome'], 'UTF-8');
 
       return array('options' => $options);
     }

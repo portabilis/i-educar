@@ -92,7 +92,7 @@ $sql    = "select cod_turma as id, nm_turma || ' - ' || COALESCE(ano::varchar,'S
 
         $turmas = $this->fetchPreparedQuery($sql, array($escolaId, $serieId));
         }
-  
+
       }
       // echo "<pre>";print_r($ano);die();
       // caso no ano letivo esteja definido para filtrar turmas por ano,
@@ -118,11 +118,11 @@ $sql    = "select cod_turma as id, nm_turma || ' - ' || COALESCE(ano::varchar,'S
           if (!$turma)
             unset($turmas[$index]);
         }
-      }      
+      }
 
       $options = array();
       foreach ($turmas as $turma)
-        $options['__' . $turma['id']] = $this->toUtf8($turma['nome']);
+        $options['__' . $turma['id']] = mb_strtoupper($turma['nome'], 'UTF-8');
 
       return array('options' => $options);
     }
