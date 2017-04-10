@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gestÃ£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de ItajaÃ­
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa Ã© software livre; vocÃª pode redistribuÃ­-lo e/ou modificÃ¡-lo
+ * sob os termos da LicenÃ§a PÃºblica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versÃ£o 2 da LicenÃ§a, como (a seu critÃ©rio)
+ * qualquer versÃ£o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa Ã© distribuÃ­Â­do na expectativa de que seja Ãºtil, porÃ©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implÃ­Â­cita de COMERCIABILIDADE OU
+ * ADEQUAÃ‡ÃƒO A UMA FINALIDADE ESPECÃFICA. Consulte a LicenÃ§a PÃºblica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * VocÃª deve ter recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral do GNU junto
+ * com este programa; se nÃ£o, escreva para a Free Software Foundation, Inc., no
+ * endereÃ§o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @author    Eriksen Costa PaixÃ£o <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   CoreExt_Configurable
- * @since     Arquivo disponível desde a versão 1.1.0
+ * @since     Arquivo disponÃ­vel desde a versÃ£o 1.1.0
  * @version   $Id$
  */
 
@@ -32,12 +32,12 @@
  * CoreExt_Configurable interface.
  *
  * Essa interface tem como objetivo prover uma API uniforme para classes que
- * definem parâmetros de configuração. Basicamente provê apenas o método
- * público setOptions, que recebe um array de parâmetros. Como o PHP não
- * permite herança múltipla, essa API apenas reforça a idéia de se criar uma
- * uniformidade entre as diferentes classes configuráveis do i-Educar.
+ * definem parÃ¢metros de configuraÃ§Ã£o. Basicamente provÃª apenas o mÃ©todo
+ * pÃºblico setOptions, que recebe um array de parÃ¢metros. Como o PHP nÃ£o
+ * permite heranÃ§a mÃºltipla, essa API apenas reforÃ§a a idÃ©ia de se criar uma
+ * uniformidade entre as diferentes classes configurÃ¡veis do i-Educar.
  *
- * Uma sugestão de implementação do método setOptions é dada pelo exemplo a
+ * Uma sugestÃ£o de implementaÃ§Ã£o do mÃ©todo setOptions Ã© dada pelo exemplo a
  * seguir:
  * <code>
  * <?php
@@ -53,7 +53,7 @@
  *
  *   if (0 < count(array_diff($passedOptions, $defaultOptions))) {
  *     throw new InvalidArgumentException(
- *       sprintf('A classe %s não suporta as opções: %s.', get_class($this), implode(', ', $passedOptions))
+ *       sprintf('A classe %s nÃ£o suporta as opÃ§Ãµes: %s.', get_class($this), implode(', ', $passedOptions))
  *     );
  *   }
  *
@@ -67,11 +67,11 @@
  * }
  * </code>
  *
- * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @author    Eriksen Costa PaixÃ£o <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   CoreExt_Configurable
- * @since     Interface disponível desde a versão 1.1.0
+ * @since     Interface disponÃ­vel desde a versÃ£o 1.1.0
  * @version   @@package_version@@
  */
 interface CoreExt_Configurable
@@ -79,7 +79,7 @@ interface CoreExt_Configurable
   /**
    * Setter.
    * @param  array $options
-   * @return CoreExt_Configurable Provê interface fluída
+   * @return CoreExt_Configurable ProvÃª interface fluÃ­da
    */
   public function setOptions(array $options = array());
 

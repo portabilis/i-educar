@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author    Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   CoreExt_Controller
- * @since     Arquivo disponÌvel desde a vers„o 1.1.0
+ * @since     Arquivo dispon√≠vel desde a vers√£o 1.1.0
  * @version   $Id$
  */
 
@@ -34,24 +34,24 @@ require_once 'CoreExt/Configurable.php';
 /**
  * CoreExt_Controller_Dispatcher_Abstract abstract class.
  *
- * @author    Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author    Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   CoreExt_Controller
- * @since     Classe disponÌvel desde a vers„o 1.1.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.1.0
  * @version   @@package_version@@
  */
 abstract class CoreExt_Controller_Dispatcher_Abstract
   implements CoreExt_Controller_Dispatcher_Interface, CoreExt_Configurable
 {
   /**
-   * Inst‚ncia de CoreExt_Controller_Request_Interface
+   * Inst√¢ncia de CoreExt_Controller_Request_Interface
    * @var CoreExt_Controller_Request_Interface
    */
   protected $_request = NULL;
 
   /**
-   * OpÁıes de configuraÁ„o geral da classe.
+   * Op√ß√µes de configura√ß√£o geral da classe.
    * @var array
    */
   protected $_options = array(
@@ -69,7 +69,7 @@ abstract class CoreExt_Controller_Dispatcher_Abstract
 
     if (0 < count(array_diff($passedOptions, $defaultOptions))) {
       throw new InvalidArgumentException(
-        sprintf('A classe %s n„o suporta as opÁıes: %s.', get_class($this), implode(', ', $passedOptions))
+        sprintf('A classe %s n√£o suporta as op√ß√µes: %s.', get_class($this), implode(', ', $passedOptions))
       );
     }
 
@@ -86,7 +86,7 @@ abstract class CoreExt_Controller_Dispatcher_Abstract
   }
 
   /**
-   * Retorna um valor de opÁ„o de configuraÁ„o ou NULL caso a opÁ„o n„o esteja
+   * Retorna um valor de op√ß√£o de configura√ß√£o ou NULL caso a op√ß√£o n√£o esteja
    * setada.
    *
    * @param string $key
@@ -98,7 +98,7 @@ abstract class CoreExt_Controller_Dispatcher_Abstract
   }
 
   /**
-   * Verifica se uma opÁ„o est· setada.
+   * Verifica se uma op√ß√£o est√° setada.
    *
    * @param string $key
    * @return bool
@@ -167,7 +167,7 @@ abstract class CoreExt_Controller_Dispatcher_Abstract
     $items = count($path);
 
     if ($items >= 1) {
-      // Combina os elementos em um array cujo o Ìndice comeÁa do '0'
+      // Combina os elementos em um array cujo o √≠ndice come√ßa do '0'
       $path = array_combine(range(0, $items - 1), $path);
 
       // Caso o primeiro elemento seja o nome do script, remove-o
