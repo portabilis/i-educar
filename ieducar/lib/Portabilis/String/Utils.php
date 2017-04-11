@@ -90,20 +90,20 @@ class Portabilis_String_Utils {
      this method is useful to return latin1 strings (with accents) stored in db, in json api's.
   */
   public static function toUtf8($str, $options = array()) {
-    $defaultOptions = array('transform' => false, 'escape' => false, 'convert_html_special_chars' => false);
-    $options        = self::mergeOptions($options, $defaultOptions);
-
-    if ($options['escape'])
-      $str = self::escape($str);
-
-    if ($options['transform'])
-      $str = ucwords(mb_strtolower($str));
-
-
-    $str = utf8_encode($str);
-
-    if ($options['convert_html_special_chars'])
-      $str = htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
+    // $defaultOptions = array('transform' => false, 'escape' => false, 'convert_html_special_chars' => false);
+    // $options        = self::mergeOptions($options, $defaultOptions);
+    //
+    // if ($options['escape'])
+    //   $str = self::escape($str);
+    //
+    // if ($options['transform'])
+    //   $str = ucwords(mb_strtolower($str));
+    //
+    //
+    // $str = utf8_encode($str);
+    //
+    // if ($options['convert_html_special_chars'])
+    //   $str = htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
 
     return $str;
   }
@@ -113,24 +113,24 @@ class Portabilis_String_Utils {
      this method is useful to store utf-8 string (with accents) get from json api's, in latin1 db's.
   */
   public static function toLatin1($str, $options = array()) {
-    $defaultOptions = array('transform' => false, 'escape' => true, 'convert_html_special_chars' => false);
-    $options        = self::mergeOptions($options, $defaultOptions);
-
-    if ($options['escape'])
-      $str = self::escape($str);
-
-    if ($options['transform'])
-      $str = ucwords(mb_strtolower($str));
-
-
-    // apenas converte para latin1, strings utf-8
-    // impedindo assim, converter para latin1 strings que já sejam latin1
-
-    if (Portabilis_String_Utils::encoding($str) == 'UTF-8')
-      $str = utf8_decode($str);
-
-    if ($options['convert_html_special_chars'])
-      $str = htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
+    // $defaultOptions = array('transform' => false, 'escape' => true, 'convert_html_special_chars' => false);
+    // $options        = self::mergeOptions($options, $defaultOptions);
+    //
+    // if ($options['escape'])
+    //   $str = self::escape($str);
+    //
+    // if ($options['transform'])
+    //   $str = ucwords(mb_strtolower($str));
+    //
+    //
+    // // apenas converte para latin1, strings utf-8
+    // // impedindo assim, converter para latin1 strings que já sejam latin1
+    //
+    // if (Portabilis_String_Utils::encoding($str) == 'UTF-8')
+    //   $str = utf8_decode($str);
+    //
+    // if ($options['convert_html_special_chars'])
+    //   $str = htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
 
     return $str;
   }
