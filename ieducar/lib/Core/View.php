@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author    Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   Core_View
- * @since     Arquivo disponÌvel desde a vers„o 1.1.0
+ * @since     Arquivo dispon√≠vel desde a vers√£o 1.1.0
  * @version   $Id$
  */
 
@@ -33,20 +33,20 @@ require_once 'include/clsBase.inc.php';
 /**
  * Core_View class.
  *
- * ProvÍ mÈtodos getters/setters e alguns mÈtodos sobrescritos para facilitar
- * a geraÁ„o de p·ginas usando CoreExt_Controller_Page_Interface.
+ * Prov√™ m√©todos getters/setters e alguns m√©todos sobrescritos para facilitar
+ * a gera√ß√£o de p√°ginas usando CoreExt_Controller_Page_Interface.
  *
- * @author    Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author    Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   Core_View
- * @since     Classe disponÌvel desde a vers„o 1.1.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.1.0
  * @version   @@package_version@@
  */
 class Core_View extends clsBase
 {
   /**
-   * Uma inst‚ncia de CoreExt_Controller_Page_Interface.
+   * Uma inst√¢ncia de CoreExt_Controller_Page_Interface.
    * @var CoreExt_Controller_Page_Interface
    */
   protected $_pageController = NULL;
@@ -64,7 +64,7 @@ class Core_View extends clsBase
   /**
    * Setter.
    * @param Core_Controller_Page_Interface $instance
-   * @return Core_View ProvÍ interface fluÌda
+   * @return Core_View Prov√™ interface flu√≠da
    */
   protected function _setPageController(Core_Controller_Page_Interface $instance)
   {
@@ -84,7 +84,7 @@ class Core_View extends clsBase
   /**
    * Setter
    * @param string $titulo
-   * @return Core_View ProvÍ interface fluÌda
+   * @return Core_View Prov√™ interface flu√≠da
    */
   public function setTitulo($titulo)
   {
@@ -104,7 +104,7 @@ class Core_View extends clsBase
   /**
    * Setter.
    * @param int $processo
-   * @return Core_View ProvÍ interface fluÌda
+   * @return Core_View Prov√™ interface flu√≠da
    */
   public function setProcessoAp($processo)
   {
@@ -122,7 +122,7 @@ class Core_View extends clsBase
   }
 
   /**
-   * Configura algumas vari·veis de inst‚ncia usando o container global
+   * Configura algumas vari√°veis de inst√¢ncia usando o container global
    * $coreExt.
    *
    * @global $coreExt
@@ -138,7 +138,7 @@ class Core_View extends clsBase
   }
 
   /**
-   * Executa o mÈtodo de geraÁ„o de HTML para a classe.
+   * Executa o m√©todo de gera√ß√£o de HTML para a classe.
    * @param Core_View $instance
    */
   public static function generate($instance)

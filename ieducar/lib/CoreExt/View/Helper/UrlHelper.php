@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author    Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   CoreExt_View
- * @since     Arquivo disponÌvel desde a vers„o 1.1.0
+ * @since     Arquivo dispon√≠vel desde a vers√£o 1.1.0
  * @version   $Id$
  */
 
@@ -33,17 +33,17 @@ require_once 'CoreExt/View/Helper/Abstract.php';
 /**
  * CoreExt_View_Helper_UrlHelper class.
  *
- * @author    Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author    Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   CoreExt_View
- * @since     Classe disponÌvel desde a vers„o 1.1.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.1.0
  * @version   @@package_version@@
  */
 class CoreExt_View_Helper_UrlHelper extends CoreExt_View_Helper_Abstract
 {
   /**
-   * Constantes para definir que parte da URL deve ser gerada no mÈtodo
+   * Constantes para definir que parte da URL deve ser gerada no m√©todo
    * url().
    */
   const URL_SCHEME = 1;
@@ -70,13 +70,13 @@ class CoreExt_View_Helper_UrlHelper extends CoreExt_View_Helper_Abstract
   );
 
   /**
-   * URL base para a geraÁ„o de url absoluta.
+   * URL base para a gera√ß√£o de url absoluta.
    * @var string
    */
   protected $_baseUrl = '';
 
   /**
-   * Schema padr„o para a geraÁ„o de url absoluta.
+   * Schema padr√£o para a gera√ß√£o de url absoluta.
    * @var string
    */
   protected $_schemeUrl = 'http://';
@@ -89,7 +89,7 @@ class CoreExt_View_Helper_UrlHelper extends CoreExt_View_Helper_Abstract
   }
 
   /**
-   * Retorna uma inst‚ncia singleton.
+   * Retorna uma inst√¢ncia singleton.
    * @return CoreExt_View_Helper_Abstract
    */
   public static function getInstance()
@@ -110,17 +110,17 @@ class CoreExt_View_Helper_UrlHelper extends CoreExt_View_Helper_Abstract
   /**
    * Retorna uma URL formatada. Interface externa.
    *
-   * A geraÁ„o da URL È bastante din‚mica e simples, j· que aceita tanto
+   * A gera√ß√£o da URL √© bastante din√¢mica e simples, j√° que aceita tanto
    * caminhos absolutos ou relativos.
    *
-   * As opÁıes para o array $options s„o:
+   * As op√ß√µes para o array $options s√£o:
    * - absolute: gera uma URL absoluta
    * - query: array associativo para criar uma query string (ver ex.)
    * - fragment: adiciona um fragmento ao final da URL
-   * - components: um valor numÈrico que define atÈ que componente dever· ser
+   * - components: um valor num√©rico que define at√© que componente dever√° ser
    * retornado na URL parseada. Uma valor de URL_HOST, por exemplo, retornaria
    * os componentes URL_FRAGMENT e URL_HOST. Veja valores das constantes URL_*
-   * para saber qual o nÌvel de detalhe desejado
+   * para saber qual o n√≠vel de detalhe desejado
    *
    * Exemplo:
    * <code>
@@ -144,7 +144,7 @@ class CoreExt_View_Helper_UrlHelper extends CoreExt_View_Helper_Abstract
    * </code>
    *
    * @param  string  $path     O caminho relativo ou absoluto da URL
-   * @param  array   $options  OpÁıes para geraÁ„o da URL
+   * @param  array   $options  Op√ß√µes para gera√ß√£o da URL
    * @return string
    */
   public static function url($path, array $options = array())
@@ -154,7 +154,7 @@ class CoreExt_View_Helper_UrlHelper extends CoreExt_View_Helper_Abstract
   }
 
   /**
-   * Retorna uma URL formatada. Veja a documentaÁ„o de url().
+   * Retorna uma URL formatada. Veja a documenta√ß√£o de url().
    *
    * @param  string  $path
    * @param  array   $options
@@ -175,12 +175,12 @@ class CoreExt_View_Helper_UrlHelper extends CoreExt_View_Helper_Abstract
     $parsedUrl = parse_url($path);
     $url = array_merge($url, $parsedUrl);
 
-    // Adiciona "://" caso o scheme seja parseado (caso das URLs absolutas implÌcitas)
+    // Adiciona "://" caso o scheme seja parseado (caso das URLs absolutas impl√≠citas)
     if ('' != $url['scheme']) {
       $url['scheme'] = $url['scheme'] . '://';
     }
 
-    // OpÁıes do mÈtodo
+    // Op√ß√µes do m√©todo
     if (isset($options['absolute'])) {
       $url['scheme'] = $url['scheme'] != '' ? $url['scheme'] : $this->_schemeUrl;
       $url['host']   = $url['host'] != '' ? $url['host'] : $this->_baseUrl . '/';
@@ -211,7 +211,7 @@ class CoreExt_View_Helper_UrlHelper extends CoreExt_View_Helper_Abstract
    *
    * @param  string  $text     O texto a ser apresentado como link HTML
    * @param  string  $path     O caminho relativo ou absoluto da URL do link
-   * @param  array   $options  OpÁıes para gerar a URL do link
+   * @param  array   $options  Op√ß√µes para gerar a URL do link
    * @return string
    */
   public static function l($text, $path, array $options = array())
@@ -225,7 +225,7 @@ class CoreExt_View_Helper_UrlHelper extends CoreExt_View_Helper_Abstract
    *
    * @param  string  $text     O texto a ser apresentado como link HTML
    * @param  string  $path     O caminho relativo ou absoluto da URL do link
-   * @param  array   $options  OpÁıes para gerar a URL do link
+   * @param  array   $options  Op√ß√µes para gerar a URL do link
    * @return string
    */
   protected function _link($text, $path, array $options = array())
