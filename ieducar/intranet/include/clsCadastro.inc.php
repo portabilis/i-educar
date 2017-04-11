@@ -297,7 +297,7 @@ class clsCadastro extends clsCampos
      * Adiciona os botoes de help para a pagina atual
      */
     $url = parse_url($_SERVER['REQUEST_URI']);
-    $url = ereg_replace('^/', '', $url['path']);
+    $url = preg_match('^/', '', $url['path']);
     if (strpos($url, '_det.php') !== FALSE) {
       $tipo = 'det';
     }
@@ -386,7 +386,7 @@ class clsCadastro extends clsCampos
       $nomeCampo = $componente[0];
       $validador = $componente[2];
 
-      if (empty($validador) && $nomeCampo == 'cpf' && ereg("^(tab_add_[0-9])", $nome) !== 1) {
+      if (empty($validador) && $nomeCampo == 'cpf' && preg_match("^(tab_add_[0-9])", $nome) !== 1) {
         $retorno .=
         "if( document.getElementById('$nome').value != \"\")
         {
@@ -405,7 +405,7 @@ class clsCadastro extends clsCampos
       /**
        * Campo tabela
        */
-      if (ereg("^(tab_add_[0-9])", $nome) === 1) {
+      if (preg_match("^(tab_add_[0-9])", $nome) === 1) {
         $nome_campos = $componente['cabecalho'];
         $componente = array_shift($componente);
 

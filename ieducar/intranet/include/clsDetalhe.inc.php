@@ -119,7 +119,7 @@ class clsDetalhe extends Core_Controller_Page_Abstract
      * adiciona os botoes de help para a pagina atual
      */
     $url = parse_url($_SERVER['REQUEST_URI']);
-    $url = ereg_replace( "^/", "", $url["path"] );
+    $url = preg_match( "^/", "", $url["path"] );
 
     if (strpos($url, '_det.php') !== FALSE) {
       $tipo = "det";

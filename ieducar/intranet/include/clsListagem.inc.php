@@ -263,7 +263,7 @@ class clsListagem extends clsCampos
       'pos_atual', -1, TRUE);
 
     return NULL;
-  } 
+  }
 
   function RenderHTML()
   {
@@ -298,7 +298,7 @@ class clsListagem extends clsCampos
                     </tr>";
 
       $retorno .= "</table>";
-    }    
+    }
 
     if ($this->campos) {
       $width = empty($this->largura) ? '' : "width='$this->largura'";
@@ -307,7 +307,7 @@ class clsListagem extends clsCampos
        * Adiciona o help da página.
        */
       $url = parse_url($_SERVER['REQUEST_URI']);
-      $url = ereg_replace( '^/', '', $url['path']);
+      $url = preg_match( '^/', '', $url['path']);
 
       if (strpos($url, '_det.php') !== FALSE) {
         $tipo = 'det';
@@ -321,7 +321,7 @@ class clsListagem extends clsCampos
       else {
         $tipo = 'cad';
       }
-      
+
       $server = $_SERVER['SERVER_NAME'];
       $endereco = $_SERVER ['REQUEST_URI'];
       $enderecoPagina = $_SERVER['PHP_SELF'];
@@ -500,7 +500,7 @@ class clsListagem extends clsCampos
                     </tr>";
 
       $retorno .= "</table>";
-    }   
+    }
 
     $retorno .=  "
         <form name=\"form_resultado\" id=\"form_resultado\" method=\"POST\" action=\"\">
