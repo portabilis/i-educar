@@ -118,7 +118,7 @@ class Portabilis_Report_ReportFactoryPHPJasper extends Portabilis_Report_ReportF
   function showPDF($file){
     $filename = 'relatorio.pdf';
 
-    header('Content-type: application/pdf');
+    header('Content-type: application/pdf; charset=utf-8');
     header('Content-Disposition: inline; filename="' . $filename . '"');
     header('Content-Transfer-Encoding: binary');
     header('Content-Length: ' . filesize($file));

@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author    Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   CoreExt_Controller
- * @since     Arquivo disponÌvel desde a vers„o 1.1.0
+ * @since     Arquivo dispon√≠vel desde a vers√£o 1.1.0
  * @version   $Id$
  */
 
@@ -33,62 +33,62 @@ require_once 'CoreExt/Controller/Abstract.php';
 /**
  * CoreExt_Controller_Front class.
  *
- * Essa È uma implementaÁ„o simples do design pattern {@link http://martinfowler.com/eaaCatalog/frontController.html front controller},
- * que tem como objetivo manusear e encaminhar a requisiÁ„o para uma classe
+ * Essa √© uma implementa√ß√£o simples do design pattern {@link http://martinfowler.com/eaaCatalog/frontController.html front controller},
+ * que tem como objetivo manusear e encaminhar a requisi√ß√£o para uma classe
  * que se responsabilize pelo processamento do recurso solicitado.
  *
  * Apesar de ser um front controller, o encaminhamento para uma classe
- * {@link http://en.wikipedia.org/wiki/Command_pattern command} n„o est·
+ * {@link http://en.wikipedia.org/wiki/Command_pattern command} n√£o est√°
  * implementado.
  *
- * Entretanto, est· disponÌvel o encaminhamento para uma classe que implemente
+ * Entretanto, est√° dispon√≠vel o encaminhamento para uma classe que implemente
  * o pattern {@link http://martinfowler.com/eaaCatalog/pageController.html page controller},
  * ou seja, qualquer classe que implemente a interface
  * CoreExt_Controller_Page_Interface.
  *
- * O processo de encaminhamento (dispatching), È definido por uma classe
+ * O processo de encaminhamento (dispatching), √© definido por uma classe
  * {@link http://en.wikipedia.org/wiki/Strategy_pattern strategy}.
  *
- * Algumas opÁıes afetam o comportamento dessa classe. As opÁıes disponÌveis
- * para configurar uma inst‚ncia da classe s„o:
- * - basepath: diretÛrio em que os implementadores de command e page controller
- *   ser„o procurados
- * - controller_dir: determina o nome do diretÛrio em que os controllers dever„o
+ * Algumas op√ß√µes afetam o comportamento dessa classe. As op√ß√µes dispon√≠veis
+ * para configurar uma inst√¢ncia da classe s√£o:
+ * - basepath: diret√≥rio em que os implementadores de command e page controller
+ *   ser√£o procurados
+ * - controller_dir: determina o nome do diret√≥rio em que os controllers dever√£o
  *   estar salvos
- * - controller_type: tipo de controller a ser instanciado. Uma inst‚ncia de
+ * - controller_type: tipo de controller a ser instanciado. Uma inst√¢ncia de
  *   CoreExt_Controller_Front pode usar apenas um tipo por processo de
- *   dispatch() e o valor dessa opÁ„o determina qual strategy de dispatch ser·
+ *   dispatch() e o valor dessa op√ß√£o determina qual strategy de dispatch ser√°
  *   utilizada (CoreExt_Controller_Strategy).
  *
- * Por padr„o, os valores de controller_dir e controller_type s„o definidos para
- * 'Views' e 2, respectivamente. Isso significa que a estratÈgia de page
- * controller ser· utilizada durante a chamada ao mÈtodo dispatch().
+ * Por padr√£o, os valores de controller_dir e controller_type s√£o definidos para
+ * 'Views' e 2, respectivamente. Isso significa que a estrat√©gia de page
+ * controller ser√° utilizada durante a chamada ao m√©todo dispatch().
  *
- * @author    Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author    Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   CoreExt_Controller
- * @since     Classe disponÌvel desde a vers„o 1.1.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.1.0
  * @version   @@package_version@@
  */
 class CoreExt_Controller_Front extends CoreExt_Controller_Abstract
 {
   /**
-   * OpÁıes para definiÁ„o de qual tipo de controller utilizar durante a
-   * execuÁ„o de dispatch().
+   * Op√ß√µes para defini√ß√£o de qual tipo de controller utilizar durante a
+   * execu√ß√£o de dispatch().
    * @var int
    */
   const CONTROLLER_FRONT = 1;
   const CONTROLLER_PAGE  = 2;
 
   /**
-   * A inst‚ncia singleton de CoreExt_Controller_Interface.
+   * A inst√¢ncia singleton de CoreExt_Controller_Interface.
    * @var CoreExt_Controller_Interface|NULL
    */
   protected static $_instance = NULL;
 
   /**
-   * OpÁıes de configuraÁ„o geral da classe.
+   * Op√ß√µes de configura√ß√£o geral da classe.
    * @var array
    */
   protected $_options = array(
@@ -98,13 +98,13 @@ class CoreExt_Controller_Front extends CoreExt_Controller_Abstract
   );
 
   /**
-   * ContÈm os valores padr„o da configuraÁ„o.
+   * Cont√©m os valores padr√£o da configura√ß√£o.
    * @var array
    */
   protected $_defaultOptions = array();
 
   /**
-   * Uma inst‚ncia de CoreExt_View_Abstract
+   * Uma inst√¢ncia de CoreExt_View_Abstract
    * @var CoreExt_View_Abstract
    */
   protected $_view = NULL;
@@ -118,7 +118,7 @@ class CoreExt_Controller_Front extends CoreExt_Controller_Abstract
   }
 
   /**
-   * Retorna a inst‚ncia singleton.
+   * Retorna a inst√¢ncia singleton.
    * @return CoreExt_Controller_Front
    */
   public static function getInstance()
@@ -130,8 +130,8 @@ class CoreExt_Controller_Front extends CoreExt_Controller_Abstract
   }
 
   /**
-   * Recupera os valores de configuraÁ„o original da inst‚ncia.
-   * @return CoreExt_Configurable ProvÍ interface fluÌda
+   * Recupera os valores de configura√ß√£o original da inst√¢ncia.
+   * @return CoreExt_Configurable Prov√™ interface flu√≠da
    */
   public function resetOptions()
   {
@@ -140,8 +140,8 @@ class CoreExt_Controller_Front extends CoreExt_Controller_Abstract
   }
 
   /**
-   * Encaminha a execuÁ„o para o objeto CoreExt_Dispatcher_Interface apropriado.
-   * @return CoreExt_Controller_Interface ProvÍ interface fluÌda
+   * Encaminha a execu√ß√£o para o objeto CoreExt_Dispatcher_Interface apropriado.
+   * @return CoreExt_Controller_Interface Prov√™ interface flu√≠da
    * @see CoreExt_Controller_Interface#dispatch()
    */
   public function dispatch()
@@ -151,7 +151,7 @@ class CoreExt_Controller_Front extends CoreExt_Controller_Abstract
   }
 
   /**
-   * Retorna o conte˙do gerado pelo controller.
+   * Retorna o conte√∫do gerado pelo controller.
    * @return string
    */
   public function getViewContents()
@@ -162,7 +162,7 @@ class CoreExt_Controller_Front extends CoreExt_Controller_Abstract
   /**
    * Setter.
    * @param CoreExt_View_Abstract $view
-   * @return CoreExt_Controller_Interface ProvÍ interface fluÌda
+   * @return CoreExt_Controller_Interface Prov√™ interface flu√≠da
    */
   public function setView(CoreExt_View_Abstract $view)
   {
@@ -171,10 +171,10 @@ class CoreExt_Controller_Front extends CoreExt_Controller_Abstract
   }
 
   /**
-   * Getter para uma inst‚ncia de CoreExt_View_Abstract.
+   * Getter para uma inst√¢ncia de CoreExt_View_Abstract.
    *
-   * Inst‚ncia via lazy initialization uma inst‚ncia de CoreExt_View caso
-   * nenhuma seja explicitamente atribuÌda a inst‚ncia atual.
+   * Inst√¢ncia via lazy initialization uma inst√¢ncia de CoreExt_View caso
+   * nenhuma seja explicitamente atribu√≠da a inst√¢ncia atual.
    *
    * @return CoreExt_View_Abstract
    */
@@ -188,11 +188,11 @@ class CoreExt_Controller_Front extends CoreExt_Controller_Abstract
   }
 
   /**
-   * Getter para uma inst‚ncia de CoreExt_Controller_Dispatcher_Interface.
+   * Getter para uma inst√¢ncia de CoreExt_Controller_Dispatcher_Interface.
    *
-   * Inst‚ncia via lazy initialization uma inst‚ncia de
+   * Inst√¢ncia via lazy initialization uma inst√¢ncia de
    * CoreExt_Controller_Dispatcher caso nenhuma seja explicitamente
-   * atribuÌda a inst‚ncia atual.
+   * atribu√≠da a inst√¢ncia atual.
    *
    * @return CoreExt_Controller_Dispatcher_Interface
    */
@@ -205,7 +205,7 @@ class CoreExt_Controller_Front extends CoreExt_Controller_Abstract
   }
 
   /**
-   * Getter para a estratÈgia de controller, definida em runtime.
+   * Getter para a estrat√©gia de controller, definida em runtime.
    * @return CoreExt_Controller_Strategy
    */
   protected function _getControllerStrategy()

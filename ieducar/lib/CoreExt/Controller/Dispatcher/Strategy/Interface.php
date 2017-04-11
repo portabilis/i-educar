@@ -1,41 +1,41 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author    Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   CoreExt_Controller
- * @since     Arquivo disponÌvel desde a vers„o 1.1.0
+ * @since     Arquivo dispon√≠vel desde a vers√£o 1.1.0
  * @version   $Id$
  */
 
 /**
  * CoreExt_Controller_Dispatcher_Strategy_Interface interface.
  *
- * @author    Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author    Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   CoreExt_Controller
- * @since     Interface disponÌvel desde a vers„o 1.1.0
+ * @since     Interface dispon√≠vel desde a vers√£o 1.1.0
  * @version   @@package_version@@
  */
 interface CoreExt_Controller_Dispatcher_Strategy_Interface
@@ -47,9 +47,9 @@ interface CoreExt_Controller_Dispatcher_Strategy_Interface
   public function __construct(CoreExt_Controller_Interface $controller);
 
   /**
-   * Setter para a inst‚ncia de CoreExt_Controller_Interface.
+   * Setter para a inst√¢ncia de CoreExt_Controller_Interface.
    * @param CoreExt_Controller_Interface $controller
-   * @return CoreExt_Controller_Strategy_Interface ProvÍ interface fluÌda
+   * @return CoreExt_Controller_Strategy_Interface Prov√™ interface flu√≠da
    */
   public function setController(CoreExt_Controller_Interface $controller);
 
@@ -60,7 +60,7 @@ interface CoreExt_Controller_Dispatcher_Strategy_Interface
   public function getController();
 
   /**
-   * Realiza o dispatch da requisiÁ„o, encaminhando o controle da execuÁ„o ao
+   * Realiza o dispatch da requisi√ß√£o, encaminhando o controle da execu√ß√£o ao
    * controller adequado.
    *
    * @return bool
