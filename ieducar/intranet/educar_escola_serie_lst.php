@@ -123,6 +123,10 @@ class indice extends clsListagem
     $obj_escola_serie->setOrderby('nm_serie ASC');
     $obj_escola_serie->setLimite($this->limite, $this->offset);
 
+		if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar($this->pessoa_logada)) {
+			$obj_escola_serie->codUsuario = $this->pessoa_logada;
+		}
+
     $lista = $obj_escola_serie->lista(
       $this->ref_cod_escola,
       $this->ref_ref_cod_serie,
@@ -192,9 +196,9 @@ class indice extends clsListagem
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_index.php"                  => "Escola",
-         ""        => "Séries da escola"             
+         ""        => "Séries da escola"
     ));
-    $this->enviaLocalizacao($localizacao->montar());    
+    $this->enviaLocalizacao($localizacao->montar());
   }
 }
 
