@@ -248,6 +248,10 @@ class indice extends clsCadastro
 
 		$this->ref_cod_matricula = is_numeric($this->ref_cod_matricula) ? $this->ref_cod_matricula : $this->getRequest()->matricula_id;
 
+    $obj_ref_cod_matricula = new clsPmieducarMatricula($this->ref_cod_matricula);
+    $detalhe_mat = $obj_ref_cod_matricula->detalhe();
+    $this->ref_cod_instituicao = $detalhe_mat['ref_cod_instituicao'];
+
 		$obj = new clsPmieducarMatriculaOcorrenciaDisciplinar( $this->ref_cod_matricula, $this->ref_cod_tipo_ocorrencia_disciplinar, null, $this->pessoa_logada, $this->pessoa_logada, $this->observacao, $this->getDataHoraCadastro(), $this->data_exclusao, $this->ativo, $this->visivel_pais);
 		$cod_ocorrencia_disciplinar = $obj->cadastra();
 		if( $cod_ocorrencia_disciplinar )
@@ -340,6 +344,9 @@ class indice extends clsCadastro
   }
   protected function enviaOcorrenciaNovoEducacao($cod_ocorrencia_disciplinar){
 
+    $tmp_obj = new clsPmieducarInstituicao( $this->ref_cod_instituicao );
+    $instituicao = $tmp_obj->detalhe();
+
   	$obj_tmp   = new clsPmieducarMatricula($this->ref_cod_matricula);
   	$det_tmp   = $obj_tmp->detalhe();
   	$cod_aluno = $det_tmp["ref_cod_aluno"];
@@ -358,8 +365,7 @@ class indice extends clsCadastro
   			   		  'occurred_at'  => $this->data_cadastro,
   			   		  'unity_code' 	 => $cod_escola,
   			   		  'kind'		 => $tipo_ocorrencia);
-  	$requisicao = new ApiExternaController(	array( 'url' 			=> $GLOBALS['coreExt']['Config']->app->novoeducacao->url,
-  												   'caminhoAPI'		=> $GLOBALS['coreExt']['Config']->app->novoeducacao->caminho_api,
+  	$requisicao = new ApiExternaController(	array( 'url' 			=> $instituicao['url_novo_educacao'],
   												   'recurso'		=> 'ocorrencias-disciplinares',
   												   'tipoRequisicao' => ApiExternaController::REQUISICAO_POST,
   												   'params'			=> $params));
@@ -369,8 +375,9 @@ class indice extends clsCadastro
   }
 
   protected function possuiConfiguracaoNovoEducacao(){
-  	 return (strlen($GLOBALS['coreExt']['Config']->app->novoeducacao->url) > 0 &&
-  	 		 strlen($GLOBALS['coreExt']['Config']->app->novoeducacao->caminho_api) > 0);
+    $tmp_obj = new clsPmieducarInstituicao( $this->ref_cod_instituicao );
+    $instituicao = $tmp_obj->detalhe();
+	  return strlen($instituicao['url_novo_educacao']) > 0;
   }
 
 }

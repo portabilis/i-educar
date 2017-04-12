@@ -90,7 +90,8 @@ class indice extends clsCadastro
 	var $componente_curricular_turma;
 	var $reprova_dependencia_ano_concluinte;
 	var $bloqueia_matricula_serie_nao_seguinte;
-	var $data_educacenso;
+  var $data_educacenso;
+	var $url_novo_educacao;
 
 	function Inicializar()
 	{
@@ -281,9 +282,16 @@ class indice extends clsCadastro
 					    							'value' => Portabilis_Date_Utils::pgSQLToBr_ddmm($this->data_fechamento)));
 
     $this->inputsHelper()->date('data_educacenso', array('label' => 'Data de referência do Educacenso',
+                               'required' => false,
+                               'placeholder' => 'dd/mm/yyyy',
+                                 'value' => $this->data_educacenso));
+
+    $this->inputsHelper()->text('url_novo_educacao', array('label' => 'URL API Novo Educação',
+                               'size' => 100,
+                               'max_length' => 100,
 					    								 'required' => false,
-													     'placeholder' => 'dd/mm/yyyy',
-					    							   	 'value' => $this->data_educacenso));
+													     'placeholder' => 'Ex: http://clientetest.portabilis.com.br/api/v1/',
+				    							   	 'value' => $this->url_novo_educacao));
 	}
 
 	function Novo()
@@ -313,7 +321,8 @@ class indice extends clsCadastro
 		$obj->data_base_matricula               = Portabilis_Date_Utils::brToPgSQL_ddmm($this->data_base);
 		$obj->data_fechamento               = Portabilis_Date_Utils::brToPgSQL_ddmm($this->data_fechamento);
 		$obj->auditar_notas = !is_null($this->auditar_notas);
-		$obj->data_educacenso = $this->data_educacenso;
+    $obj->data_educacenso = $this->data_educacenso;
+		$obj->url_novo_educacao = $this->url_novo_educacao;
 		$cadastrou = $obj->cadastra();
 		if( $cadastrou )
 		{
@@ -355,7 +364,8 @@ class indice extends clsCadastro
 		$obj->percentagem_maxima_ocupacao_salas = Portabilis_Currency_Utils::moedaBrToUs($this->percentagem_maxima_ocupacao_salas);
 		$obj->data_base_matricula               = Portabilis_Date_Utils::brToPgSQL_ddmm($this->data_base);
 		$obj->data_fechamento               	= Portabilis_Date_Utils::brToPgSQL_ddmm($this->data_fechamento);
-		$obj->data_educacenso 					= $this->data_educacenso;
+    $obj->data_educacenso           = $this->data_educacenso;
+		$obj->url_novo_educacao 					= $this->url_novo_educacao;
 
 		$editou = $obj->edita();
 		if( $editou )

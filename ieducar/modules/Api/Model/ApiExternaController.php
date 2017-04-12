@@ -6,19 +6,17 @@ class ApiExternaController{
 	private $params;
 	private $tipoRequisicao;
 	private $recurso;
-	private $caminhoAPI;
 
 	const REQUISICAO_GET  = 1;
 	const REQUISICAO_POST = 2;
 
 	public function __construct($options){
-		
+
 		$this->url 		  	  = $options['url'];
-		$this->caminhoAPI 	  = $options['caminhoAPI'];
 		$this->recurso 	  	  = $options['recurso'];
 		$this->tipoRequisicao = $options['tipoRequisicao'];
 		$this->params 		  = $options['params'];
-		
+
 		$this->curl = curl_init();
 	}
 
@@ -34,7 +32,7 @@ class ApiExternaController{
 		$this->url = $url;
 	}
 	private function getUrl(){
-		return $this->url . $this->caminhoAPI . $this->recurso;
+		return $this->url . $this->recurso;
 	}
 
 	public function setRequisicaoTipo($tipoRequisicao){
