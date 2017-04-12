@@ -821,6 +821,10 @@ table {
     font-size: 12px;
 }
 
+td#corpo{
+  padding: 0 20px;
+}
+
 .tabelanum1{
   border: 0 !important;
 }
@@ -919,7 +923,7 @@ td.area-conhecimento-destaque {
 }
 
 .tablelistagem, .tablecadastro, .tableDetalhe{
-  padding: 10px 20px;
+  padding: 10px 0;
 }
 
 .tablelistagem .formdktd{

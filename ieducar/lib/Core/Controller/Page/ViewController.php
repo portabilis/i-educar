@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author    Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   Core_Controller
- * @since     Arquivo disponÌvel desde a vers„o 1.1.0
+ * @since     Arquivo dispon√≠vel desde a vers√£o 1.1.0
  * @version   $Id$
  */
 
@@ -36,22 +36,22 @@ require_once 'Portabilis/View/Helper/Application.php';
 /**
  * Core_Controller_Page_ViewController abstract class.
  *
- * ProvÍ um controller padr„o para a visualizaÁ„o de um registro.
+ * Prov√™ um controller padr√£o para a visualiza√ß√£o de um registro.
  *
- * @author    Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author    Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   Core_Controller
- * @since     Classe disponÌvel desde a vers„o 1.1.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.1.0
  * @version   @@package_version@@
  */
 class Core_Controller_Page_ViewController extends clsDetalhe implements Core_View_Tabulable
 {
   /**
    * Mapeia um nome descritivo a um atributo de CoreExt_Entity retornado pela
-   * inst‚ncia CoreExt_DataMapper retornada por getDataMapper().
+   * inst√¢ncia CoreExt_DataMapper retornada por getDataMapper().
    *
-   * Para uma inst‚ncia de CoreExt_Entity que tenha os seguintes atributos:
+   * Para uma inst√¢ncia de CoreExt_Entity que tenha os seguintes atributos:
    * <code>
    * <?php
    * $_data = array(
@@ -70,8 +70,8 @@ class Core_Controller_Page_ViewController extends clsDetalhe implements Core_Vie
    * );
    * </code>
    *
-   * Se um atributo n„o for mapeado, ele n„o ser· exibido por padr„o durante
-   * a geraÁ„o de HTML na execuÁ„o do mÈtodo Gerar().
+   * Se um atributo n√£o for mapeado, ele n√£o ser√° exibido por padr√£o durante
+   * a gera√ß√£o de HTML na execu√ß√£o do m√©todo Gerar().
    *
    * @var array
    */
@@ -97,12 +97,12 @@ class Core_Controller_Page_ViewController extends clsDetalhe implements Core_Vie
   }
 
   /**
-   * Configura a URL padr„o para a aÁ„o de EdiÁ„o de um registro.
+   * Configura a URL padr√£o para a a√ß√£o de Edi√ß√£o de um registro.
    *
-   * Por padr„o, cria uma URL "edit/id", onde id È o valor do atributo "id"
-   * de uma inst‚ncia CoreExt_Entity.
+   * Por padr√£o, cria uma URL "edit/id", onde id √© o valor do atributo "id"
+   * de uma inst√¢ncia CoreExt_Entity.
    *
-   * @param CoreExt_Entity $entry A inst‚ncia atual recuperada
+   * @param CoreExt_Entity $entry A inst√¢ncia atual recuperada
    *   ViewController::Gerar().
    */
   public function setUrlEditar(CoreExt_Entity $entry)
@@ -114,12 +114,12 @@ class Core_Controller_Page_ViewController extends clsDetalhe implements Core_Vie
   }
 
   /**
-   * Configura a URL padr„o para a aÁ„o Cancelar da tela de EdiÁ„o de um
+   * Configura a URL padr√£o para a a√ß√£o Cancelar da tela de Edi√ß√£o de um
    * registro.
    *
-   * Por padr„o, cria uma URL "index".
+   * Por padr√£o, cria uma URL "index".
    *
-   * @param CoreExt_Entity $entry A inst‚ncia atual recuperada
+   * @param CoreExt_Entity $entry A inst√¢ncia atual recuperada
    *   ViewController::Gerar().
    */
   public function setUrlCancelar(CoreExt_Entity $entry)
@@ -128,8 +128,8 @@ class Core_Controller_Page_ViewController extends clsDetalhe implements Core_Vie
   }
 
   /**
-   * ImplementaÁ„o padr„o para as subclasses que estenderem essa classe. Cria
-   * uma tela de apresentaÁ„o de dados simples utilizando o mapeamento de
+   * Implementa√ß√£o padr√£o para as subclasses que estenderem essa classe. Cria
+   * uma tela de apresenta√ß√£o de dados simples utilizando o mapeamento de
    * $_tableMap.
    *
    * @see Core_Controller_Page_ViewController#$_tableMap
@@ -147,8 +147,8 @@ class Core_Controller_Page_ViewController extends clsDetalhe implements Core_Vie
   }
 
   /**
-   * Verifica se o usu·rio possui privilÈgios de cadastro para o processo.
-   * @return bool|void Redireciona caso a opÁ„o 'nivel_acesso_insuficiente' seja
+   * Verifica se o usu√°rio possui privil√©gios de cadastro para o processo.
+   * @return bool|void Redireciona caso a op√ß√£o 'nivel_acesso_insuficiente' seja
    *   diferente de NULL.
    */
   protected function _hasPermissaoCadastra()

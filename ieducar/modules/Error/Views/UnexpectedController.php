@@ -66,6 +66,7 @@ class UnexpectedController extends Portabilis_Controller_ErrorCoreController
 
     echo "
       <div id='error' class='small'>
+        <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">
         <div class='content'>
          <h1>Erro inesperado</h1>
 

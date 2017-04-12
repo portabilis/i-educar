@@ -136,7 +136,7 @@
                               .attr('id', 'search-details')
                               .addClass('styled')
                               .addClass('horizontal-expand')
-                              .addClass('center')
+                              .addClass('left')
                               .hide()
                               .prependTo($formFilter.parent()).hide();
 
@@ -346,14 +346,14 @@
         {
            $('<td />')
             .html('As matriculas n&#227;o poderam ser recuperadas, verifique as mensagens de erro ou tente <a alt="Recarregar página" href="/" style="text-decoration:underline">recarregar</a>.')
-            .addClass('center')
+            .addClass('left')
             .appendTo($('<tr />').appendTo($resultTable));
         }
         else if (dataResponse.matriculas.length < 1)
         {
            $('<td />')
             .html('Sem matriculas em andamento nesta turma.')
-            .addClass('center')
+            .addClass('left')
             .appendTo($('<tr />').appendTo($resultTable));
         }
         else
@@ -382,16 +382,16 @@
                             .data('matricula_id', value.matricula_id);
 
             var $linha = $('<tr />');
-            $('<td />').html($checkbox).addClass('center').appendTo($linha);
-            $('<td />').html(value.nome_curso).addClass('center').appendTo($linha);
-            $('<td />').html(safeUtf8Decode(value.nome_serie)).addClass('center').appendTo($linha);
-            $('<td />').html(safeUtf8Decode(value.nome_turma)).addClass('center').appendTo($linha);
-            $('<td />').html(value.matricula_id).addClass('center').appendTo($linha);
+            $('<td />').html($checkbox).addClass('left').appendTo($linha);
+            $('<td />').html(value.nome_curso).addClass('left').appendTo($linha);
+            $('<td />').html(safeUtf8Decode(value.nome_serie)).addClass('left').appendTo($linha);
+            $('<td />').html(safeUtf8Decode(value.nome_turma)).addClass('left').appendTo($linha);
+            $('<td />').html(value.matricula_id).addClass('left').appendTo($linha);
             $('<td />').html(value.aluno_id + " - " + safeToUpperCase(value.nome)).appendTo($linha);
 
             var situacaoHistorico = safeUtf8Decode(value.situacao_historico);
             var $htmlSituacao = getLinkToHistorico(value.link_to_historico, situacaoHistorico);
-            $('<td />').html($htmlSituacao).data('situacao_historico', situacaoHistorico).attr('id', 'situacao-matricula-' + value.matricula_id).addClass('situacao').addClass('center').appendTo($linha);
+            $('<td />').html($htmlSituacao).data('situacao_historico', situacaoHistorico).attr('id', 'situacao-matricula-' + value.matricula_id).addClass('situacao').addClass('left').appendTo($linha);
 
             $linha.fadeIn('slow').appendTo($resultTable);
           });//fim each matriculas

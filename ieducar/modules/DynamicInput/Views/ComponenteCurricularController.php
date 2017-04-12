@@ -60,8 +60,8 @@ class ComponenteCurricularController extends ApiCoreController
   	foreach ($componentesCurriculares as $componenteCurricular) {
     	$areaConhecimento = (($componenteCurricular['secao_area_conhecimento'] != '') ? $componenteCurricular['secao_area_conhecimento'] . ' - ' : '') . $componenteCurricular['area_conhecimento'];
     	$options['__' . $componenteCurricular['id']] = array(
-      			 'value' => $this->toUtf8($componenteCurricular['nome']),
-      			 'group' => $this->toUtf8($areaConhecimento)
+      			 'value' => mb_strtoupper($componenteCurricular['nome'], 'UTF-8'),
+      			 'group' => mb_strtoupper($areaConhecimento, 'UTF-8')
     	);
   	}
 
@@ -79,29 +79,29 @@ class ComponenteCurricularController extends ApiCoreController
 
     if($etapa == ""){
       $etapa = "0";
-    } 	
+    }
 
       $isProfessor   = Portabilis_Business_Professor::isProfessor($instituicaoId, $userId);
 
       if ($isProfessor) {
         $componentesCurriculares = Portabilis_Business_Professor::componentesCurricularesAlocado($instituicaoId, $turmaId, $ano, $userId);
-      } 
+      }
       else{
-        $sql = "select cc.id, 
-        			   cc.nome, 
-        			   ac.nome as area_conhecimento, 
-        			   ac.secao as area_conhecimento_secao, 
+        $sql = "select cc.id,
+        			   cc.nome,
+        			   ac.nome as area_conhecimento,
+        			   ac.secao as area_conhecimento_secao,
         			   cc.ordenamento
-                  from pmieducar.turma, 
-                  	   modules.componente_curricular_turma as cct, 
-                  	   modules.componente_curricular as cc, 
+                  from pmieducar.turma,
+                  	   modules.componente_curricular_turma as cct,
+                  	   modules.componente_curricular as cc,
                   	   modules.area_conhecimento as ac,
-                	   pmieducar.escola_ano_letivo as al 
-               	 where turma.cod_turma = $1 and 
+                	   pmieducar.escola_ano_letivo as al
+               	 where turma.cod_turma = $1 and
                	 	   cct.turma_id = turma.cod_turma and
-                	   cct.escola_id = turma.ref_ref_cod_escola and 
-                	   cct.componente_curricular_id = cc.id and al.ano = $2 and 
-                	   cct.escola_id = al.ref_cod_escola and 
+                	   cct.escola_id = turma.ref_ref_cod_escola and
+                	   cct.componente_curricular_id = cc.id and al.ano = $2 and
+                	   cct.escola_id = al.ref_cod_escola and
                 	   cc.area_conhecimento_id = ac.id and
                 	   (turma.ref_cod_disciplina_dispensada <> cc.id OR turma.ref_cod_disciplina_dispensada is null) and
                      (case when cct.etapas_especificas = 1 then $3 = ANY (string_to_array(cct.etapas_utilizadas,',')::int[]) else true end)
@@ -153,47 +153,47 @@ class ComponenteCurricularController extends ApiCoreController
 
       if ($isProfessor) {
         $componentesCurriculares = Portabilis_Business_Professor::componentesCurricularesAlocado($instituicaoId, $turmaId, $ano, $userId);
-      } 
+      }
       else{
-        $sql = "select cc.id, 
-        			   cc.nome, 
-        			   ac.nome as area_conhecimento, 
-        			   ac.secao as area_conhecimento_secao, 
+        $sql = "select cc.id,
+        			   cc.nome,
+        			   ac.nome as area_conhecimento,
+        			   ac.secao as area_conhecimento_secao,
         			   cc.ordenamento
-                  from pmieducar.turma, 
-                  	   modules.componente_curricular_turma as cct, 
-                  	   modules.componente_curricular as cc, 
+                  from pmieducar.turma,
+                  	   modules.componente_curricular_turma as cct,
+                  	   modules.componente_curricular as cc,
                   	   modules.area_conhecimento as ac,
-                	   pmieducar.escola_ano_letivo as al 
-               	 where turma.cod_turma = $1 and 
+                	   pmieducar.escola_ano_letivo as al
+               	 where turma.cod_turma = $1 and
                	 	   cct.turma_id = turma.cod_turma and
-                	   cct.escola_id = turma.ref_ref_cod_escola and 
-                	   cct.componente_curricular_id = cc.id and al.ano = $2 and 
-                	   cct.escola_id = al.ref_cod_escola and 
+                	   cct.escola_id = turma.ref_ref_cod_escola and
+                	   cct.componente_curricular_id = cc.id and al.ano = $2 and
+                	   cct.escola_id = al.ref_cod_escola and
                 	   cc.area_conhecimento_id = ac.id
                  order by ac.secao, ac.nome, cc.ordenamento, cc.nome";
-        
+
 
         $componentesCurriculares = $this->fetchPreparedQuery($sql, array($turmaId, $ano));
 
         if (count($ComponentesCurriculares) < 1) {
-          $sql = "select cc.id, 
-          		  		 cc.nome, 
-          		  		 ac.nome as area_conhecimento, 
-          		  		 ac.secao as secao_area_conhecimento, 
+          $sql = "select cc.id,
+          		  		 cc.nome,
+          		  		 ac.nome as area_conhecimento,
+          		  		 ac.secao as secao_area_conhecimento,
           		  		 cc.ordenamento
-                  	from pmieducar.turma as t, 
-                  		 pmieducar.escola_serie_disciplina as esd, 
-                  		 modules.componente_curricular as cc, 
-                  		 modules.area_conhecimento as ac, 
-                  		 pmieducar.escola_ano_letivo as al 
-                   where t.cod_turma = $1 and 
-                   		 esd.ref_ref_cod_escola = t.ref_ref_cod_escola and 
-                   		 esd.ref_ref_cod_serie = t.ref_ref_cod_serie and 
-                   		 esd.ref_cod_disciplina = cc.id and al.ano = $2 and 
-                   		 esd.ref_ref_cod_escola = al.ref_cod_escola and t.ativo = 1 and                  
-                  		 esd.ativo = 1 and 
-                  		 al.ativo = 1 and 
+                  	from pmieducar.turma as t,
+                  		 pmieducar.escola_serie_disciplina as esd,
+                  		 modules.componente_curricular as cc,
+                  		 modules.area_conhecimento as ac,
+                  		 pmieducar.escola_ano_letivo as al
+                   where t.cod_turma = $1 and
+                   		 esd.ref_ref_cod_escola = t.ref_ref_cod_escola and
+                   		 esd.ref_ref_cod_serie = t.ref_ref_cod_serie and
+                   		 esd.ref_cod_disciplina = cc.id and al.ano = $2 and
+                   		 esd.ref_ref_cod_escola = al.ref_cod_escola and t.ativo = 1 and
+                  		 esd.ativo = 1 and
+                  		 al.ativo = 1 and
                   		 cc.area_conhecimento_id = ac.id
                   order by ac.secao, ac.nome, cc.ordenamento, cc.nome";
 

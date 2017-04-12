@@ -91,7 +91,7 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
       </tr>";
     }
 
-    $resourceOptionsTable = "<table id='resource-options' class='styled horizontal-expand hide-on-search disable-on-apply-changes'>
+    $resourceOptionsTable = "<table id='resource-options' style='padding: 20px 0;' class='styled horizontal-expand hide-on-search disable-on-apply-changes'>
 
       <tr>
         <td><label for='dias-letivos'>Quantidade dias letivos *</label></td>

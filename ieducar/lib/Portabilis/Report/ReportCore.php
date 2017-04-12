@@ -59,7 +59,7 @@ class Portabilis_Report_ReportCore
 
   function addArg($name, $value) {
     if (is_string($value))
-      $value = utf8_encode($value);
+      $value = $value;
 
     $this->args[$name] = $value;
   }

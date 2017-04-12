@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gest×“o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja×
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa ×™ software livre; voc×š pode redistribu×-lo e/ou modific×‘-lo
+ * sob os termos da Licen×—a P×ªblica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers×“o 2 da Licen×—a, como (a seu crit×™rio)
+ * qualquer vers×“o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa ×™ distribu×Â­do na expectativa de que seja ×ªtil, por×™m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl×Â­cita de COMERCIABILIDADE OU
+ * ADEQUAÖ·Ö³O A UMA FINALIDADE ESPECÖ½FICA. Consulte a Licen×—a P×ªblica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc×š deve ter recebido uma c×£pia da Licen×—a P×ªblica Geral do GNU junto
+ * com este programa; se n×“o, escreva para a Free Software Foundation, Inc., no
+ * endere×—o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @author    Eriksen Costa Paix×“o <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   Core_Controller
- * @since     Arquivo disponível desde a versão 1.1.0
+ * @since     Arquivo dispon×vel desde a vers×“o 1.1.0
  * @version   $Id$
  */
 
@@ -35,22 +35,22 @@ require_once 'CoreExt/View/Helper/UrlHelper.php';
 /**
  * Core_Controller_Page_ListController abstract class.
  *
- * Provê um controller padrão para listagem de registros.
+ * Prov×š um controller padr×“o para listagem de registros.
  *
- * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @author    Eriksen Costa Paix×“o <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   Core_Controller
- * @since     Classe disponível desde a versão 1.1.0
+ * @since     Classe dispon×vel desde a vers×“o 1.1.0
  * @version   @@package_version@@
  */
 class Core_Controller_Page_ListController extends clsListagem implements Core_View_Tabulable
 {
   /**
    * Mapeia um nome descritivo a um atributo de CoreExt_Entity retornado pela
-   * instância CoreExt_DataMapper retornada por getDataMapper().
+   * inst×’ncia CoreExt_DataMapper retornada por getDataMapper().
    *
-   * Para uma instância de CoreExt_Entity que tenha os seguintes atributos:
+   * Para uma inst×’ncia de CoreExt_Entity que tenha os seguintes atributos:
    * <code>
    * <?php
    * $_data = array(
@@ -69,8 +69,8 @@ class Core_Controller_Page_ListController extends clsListagem implements Core_Vi
    * );
    * </code>
    *
-   * Se um atributo não for mapeado, ele não será exibido por padrão durante
-   * a geração de HTML na execução do método Gerar().
+   * Se um atributo n×“o for mapeado, ele n×“o ser×‘ exibido por padr×“o durante
+   * a gera×—×“o de HTML na execu×—×“o do m×™todo Gerar().
    *
    * @var array
    */
@@ -88,8 +88,8 @@ class Core_Controller_Page_ListController extends clsListagem implements Core_Vi
   /**
    * Retorna os registros a serem exibidos na listagem.
    *
-   * Subclasses devem sobrescrever este método quando os parâmetros para
-   * CoreExt_DataMapper::findAll forem mais específicos.
+   * Subclasses devem sobrescrever este m×™todo quando os par×’metros para
+   * CoreExt_DataMapper::findAll forem mais espec×ficos.
    *
    * @return array (int => CoreExt_Entity)
    */
@@ -100,17 +100,17 @@ class Core_Controller_Page_ListController extends clsListagem implements Core_Vi
   }
 
   /**
-   * Configura o botão de ação padrão para a criação de novo registro.
+   * Configura o bot×“o de a×—×“o padr×“o para a cria×—×“o de novo registro.
    */
   public function setAcao()
-  {   
+  {
     $obj_permissao = new clsPermissoes();
 
     if($obj_permissao->permissao_cadastra($this->_processoAp, $this->getPessoaLogada(),7,null,true))
     {
       $this->acao = 'go("edit")';
       $this->nome_acao = 'Novo';
-    }    
+    }
   }
 
   protected function getPessoaLogada(){
@@ -118,8 +118,8 @@ class Core_Controller_Page_ListController extends clsListagem implements Core_Vi
   }
 
   /**
-   * Implementação padrão para as subclasses que estenderem essa classe. Cria
-   * uma lista de apresentação de dados simples utilizando o mapeamento de
+   * Implementa×—×“o padr×“o para as subclasses que estenderem essa classe. Cria
+   * uma lista de apresenta×—×“o de dados simples utilizando o mapeamento de
    * $_tableMap.
    *
    * @see Core_Controller_Page_ListController#$_tableMap
@@ -129,7 +129,7 @@ class Core_Controller_Page_ListController extends clsListagem implements Core_Vi
   {
     $headers = $this->getTableMap();
 
-    // Configura o cabeçalho da listagem.
+    // Configura o cabe×—alho da listagem.
     $this->addCabecalhos(array_keys($headers));
 
     // Recupera os registros para a listagem.
@@ -157,7 +157,7 @@ class Core_Controller_Page_ListController extends clsListagem implements Core_Vi
 
     $this->addPaginador2('', count($entries), $_GET, $this->nome, $this->limite);
 
-    // Configura o botão padrão de ação para a criação de novo registro.
+    // Configura o bot×“o padr×“o de a×—×“o para a cria×—×“o de novo registro.
     $this->setAcao();
 
     // Largura da tabela HTML onde se encontra a listagem.

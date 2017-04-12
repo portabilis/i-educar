@@ -337,7 +337,7 @@ class indice extends clsCadastro
       'inline'      => true
     );
 
-    $this->inputsHelper()->text('rg', $options);
+    $this->inputsHelper()->numeric('rg', $options);
 
 
     // data emissão rg
@@ -1001,8 +1001,8 @@ class indice extends clsCadastro
     // contato
     $this->campoRotulo('contato','<b>Contato</b>', '', '', 'Informações de contato da pessoa');
     $this->inputTelefone('1', 'Telefone residencial');
-    $this->inputTelefone('mov', 'Celular');
-    $this->inputTelefone('2', 'Telefone adicional');
+    $this->inputTelefone('2', 'Celular');
+    $this->inputTelefone('mov', 'Telefone adicional');
     $this->inputTelefone('fax', 'Fax');
     $this->campoTexto('email', 'E-mail', $this->email, '50', '255', FALSE);
 

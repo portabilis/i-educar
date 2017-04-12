@@ -58,7 +58,7 @@ class indice extends clsCadastro
 	var $cod_rota;
 	var $descricao;
 
-// INCLUI NOVO 
+// INCLUI NOVO
 	var $pontos;
 	var $ref_cod_ponto_transporte_escolar;
 	var $hora;
@@ -98,7 +98,7 @@ class indice extends clsCadastro
 		}else
 			$volta = true;
 
-		
+
 		if ($volta){
 			header('Location: transporte_rota_lst.php');
 			die();
@@ -109,10 +109,10 @@ class indice extends clsCadastro
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""                                  => "Editar itiner&aacute;rio"
+         "educar_transporte_escolar_index.php" => "Transporte escolar",
+         "" => "Editar itinerário"
     ));
-    $this->enviaLocalizacao($localizacao->montar());		
+    $this->enviaLocalizacao($localizacao->montar());
 
 		return $retorno;
 	}
@@ -127,7 +127,7 @@ class indice extends clsCadastro
 		$this->campoRotulo("cod_rota","Código da rota" ,$this->cod_rota);
 		$this->campoRotulo("descricao","Rota", $this->descricao );
 
-		
+
 
 	//---------------------INCLUI DISCIPLINAS---------------------//
 		$this->campoQuebra();
@@ -198,7 +198,7 @@ class indice extends clsCadastro
 
 		if ($this->ref_cod_ponto_transporte_escolar)
 		{
-			
+
 			$obj  = new clsModulesItinerarioTransporteEscolar();
 			$excluiu = $obj->excluirTodos( $this->cod_rota );
 			if ( $excluiu )
@@ -206,7 +206,7 @@ class indice extends clsCadastro
 				$sequencial = 1;
 				foreach ( $this->ref_cod_ponto_transporte_escolar AS $key => $ponto )
 				{
-				
+
 					$obj = new clsModulesItinerarioTransporteEscolar(NULL, $this->cod_rota, $sequencial, $this->retornaCodigo($ponto), $this->retornaCodigo($this->ref_cod_veiculo[$key]),
      				$this->hora[$key], $this->tipo[$key]);
 					$cadastrou1 = $obj->cadastra();
@@ -232,9 +232,9 @@ class indice extends clsCadastro
 	{
 		 return true;
 	}
-	
+
 	protected function retornaCodigo($palavra){
-		
+
 		return substr($palavra, 0, strpos($palavra, " -"));
 	}
 
@@ -306,7 +306,7 @@ $pagina->MakeAll();
 				autoFocus : true
 			});
 
-		});		
+		});
 	}
 
 	setAutoComplete();
@@ -314,7 +314,7 @@ $pagina->MakeAll();
 	document.onclick = function(event) {
 	    var targetElement = event.target;
 	    if ( targetElement.value == " Cancelar " ) {
-        
+
 	       	var cod_rota = $j('#cod_rota').val();
 	       	location.href="transporte_rota_det.php?cod_rota="+cod_rota;
 	    } else if(targetElement.value == "Excluir todos"){
@@ -326,7 +326,7 @@ $pagina->MakeAll();
 	};
 
 	var submitForm = function(event) {
-		// Esse formUtils.submit() chama o Editar(); 
+		// Esse formUtils.submit() chama o Editar();
 		// Mais à frente bolar uma validação aqui
 	/*	var $frequenciaField = $j('#frequencia');
 		var frequencia       = $frequenciaField.val();

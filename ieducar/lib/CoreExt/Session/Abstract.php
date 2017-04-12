@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author    Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   CoreExt_Session
- * @since     Arquivo disponÌvel desde a vers„o 1.1.0
+ * @since     Arquivo dispon√≠vel desde a vers√£o 1.1.0
  * @version   $Id$
  */
 
@@ -35,17 +35,17 @@ require_once 'CoreExt/Configurable.php';
  *
  * Componente de gerenciamento de session PHP. Implementa as interfaces
  * ArrayAccess, Countable e Iterator do Standard PHP Library (SPL), tornando
- * possÌvel o acesso simples aos dados da sess„o atravÈs da interface array
+ * poss√≠vel o acesso simples aos dados da sess√£o atrav√©s da interface array
  * ou orientada a objeto.
  *
- * A persistÍncia da session È implementada por uma classe adapter, uma
+ * A persist√™ncia da session √© implementada por uma classe adapter, uma
  * subclasse de CoreExt_Session_Storage_Interface. Isso torna simples a
- * reposiÁ„o do storage de session: basta criar um novo adapter e passar como
+ * reposi√ß√£o do storage de session: basta criar um novo adapter e passar como
  * argumento ao construtor dessa classe.
  *
- * As opÁıes de configuraÁ„o da classe s„o:
- * - sessionStorage: inst‚ncia de CoreExt_Session_Storage_Interface
- * - session_auto_start: bool, se È para iniciar automaticamente a session
+ * As op√ß√µes de configura√ß√£o da classe s√£o:
+ * - sessionStorage: inst√¢ncia de CoreExt_Session_Storage_Interface
+ * - session_auto_start: bool, se √© para iniciar automaticamente a session
  *
  * Como mencionado, esta classe possui diversas formas de acesso aos dados
  * persistidos na session:
@@ -62,7 +62,7 @@ require_once 'CoreExt/Configurable.php';
  * $session->foo2 = 'bar2';
  * $session->bar2 = 'foo2';
  *
- * // … possÌvel iterar o objeto CoreExt_Session
+ * // √â poss√≠vel iterar o objeto CoreExt_Session
  * foreach ($session as $key => $value) {
  *   print $key . ': ' . $value . PHP_EOL;
  * }
@@ -74,13 +74,13 @@ require_once 'CoreExt/Configurable.php';
  * // bar2: foo2
  * </code>
  *
- * A classe se encarrega de fechar a sess„o no final da execuÁ„o do PHP.
+ * A classe se encarrega de fechar a sess√£o no final da execu√ß√£o do PHP.
  *
- * @author    Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author    Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   CoreExt_Session
- * @since     Classe disponÌvel desde a vers„o 1.1.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.1.0
  * @todo      Implementar chamada a regenerateId de CoreExt_Session_Storage_Interface
  * @todo      Implementar funcionalidade "remeber me"
  * @version   @@package_version@@
@@ -89,7 +89,7 @@ abstract class CoreExt_Session_Abstract
   implements CoreExt_Configurable, ArrayAccess, Countable, Iterator
 {
   /**
-   * OpÁıes de configuraÁ„o geral da classe.
+   * Op√ß√µes de configura√ß√£o geral da classe.
    * @var array
    */
   protected $_options = array(
@@ -129,7 +129,7 @@ abstract class CoreExt_Session_Abstract
     if (0 < count(array_diff($passedOptions, $defaultOptions))) {
       require_once 'CoreExt/Exception/InvalidArgumentException.php';
       throw new CoreExt_Exception_InvalidArgumentException(
-        sprintf('A classe %s n„o suporta as opÁıes: %s.', get_class($this), implode(', ', $passedOptions))
+        sprintf('A classe %s n√£o suporta as op√ß√µes: %s.', get_class($this), implode(', ', $passedOptions))
       );
     }
 
@@ -150,7 +150,7 @@ abstract class CoreExt_Session_Abstract
   }
 
   /**
-   * Verifica se uma opÁ„o est· setada.
+   * Verifica se uma op√ß√£o est√° setada.
    *
    * @param string $key
    * @return bool
@@ -161,7 +161,7 @@ abstract class CoreExt_Session_Abstract
   }
 
   /**
-   * Retorna um valor de opÁ„o de configuraÁ„o ou NULL caso a opÁ„o n„o esteja
+   * Retorna um valor de op√ß√£o de configura√ß√£o ou NULL caso a op√ß√£o n√£o esteja
    * setada.
    *
    * @param string $key
@@ -250,7 +250,7 @@ abstract class CoreExt_Session_Abstract
   }
 
   /**
-   * Implementa o mÈtodo m·gico __set().
+   * Implementa o m√©todo m√°gico __set().
    * @link  http://php.net/manual/en/language.oop5.overloading.php
    * @param string|int $key
    * @param mixed $val
@@ -261,7 +261,7 @@ abstract class CoreExt_Session_Abstract
   }
 
   /**
-   * Implementa o mÈtodo m·gico __get().
+   * Implementa o m√©todo m√°gico __get().
    * @link  http://php.net/manual/en/language.oop5.overloading.php
    * @param string|int $key
    * @return mixed
@@ -272,7 +272,7 @@ abstract class CoreExt_Session_Abstract
   }
 
   /**
-   * Implementa o mÈtodo m·gico __isset().
+   * Implementa o m√©todo m√°gico __isset().
    * @link  http://php.net/manual/en/language.oop5.overloading.php
    * @param string|int $key
    * @return bool
@@ -283,7 +283,7 @@ abstract class CoreExt_Session_Abstract
   }
 
   /**
-   * Implementa o mÈtodo m·gico __unset().
+   * Implementa o m√©todo m√°gico __unset().
    * @link  http://php.net/manual/en/language.oop5.overloading.php
    * @param string|int $key
    */
@@ -302,8 +302,8 @@ abstract class CoreExt_Session_Abstract
   }
 
   /**
-   * Implementa o mÈtodo Iterator::current(). Chama mÈtodo getSessionData()
-   * para atualizar o atributo $_sessionData, permitindo a aÁ„o da funÁ„o
+   * Implementa o m√©todo Iterator::current(). Chama m√©todo getSessionData()
+   * para atualizar o atributo $_sessionData, permitindo a a√ß√£o da fun√ß√£o
    * {@link http://br.php.net/current current()}.
    *
    * @link http://br.php.net/manual/en/iterator.current.php

@@ -70,6 +70,8 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
     $this->acao_executa_submit = false;
     $this->acao_enviar         = 'printReport()';
 
+    header('Content-Type: text/html; charset=utf-8');
+
     parent::__construct();
   }
 
@@ -108,7 +110,7 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
 
 
   function headers($result) {
-    header('Content-type: application/pdf');
+    header('Content-type: application/pdf; charset=utf-8');
     header('Content-Length: ' . strlen($result));
     header('Content-Disposition: inline; filename=report.pdf');
   }

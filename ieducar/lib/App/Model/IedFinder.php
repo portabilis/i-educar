@@ -58,7 +58,7 @@ class App_Model_IedFinder extends CoreExt_Entity
 
     $instituicoes = array();
     foreach ($instituicao->lista() as $instituicao) {
-      $instituicoes[$instituicao['cod_instituicao']] = $instituicao['nm_instituicao'];
+      $instituicoes[$instituicao['cod_instituicao']] = mb_strtoupper($instituicao['nm_instituicao'], 'UTF-8');
     }
     return $instituicoes;
   }
@@ -216,7 +216,7 @@ class App_Model_IedFinder extends CoreExt_Entity
 
     foreach ($series as $serie) {
       //$series[$val['cod_serie']] = $val;
-      $_series[$serie['cod_serie']] = $serie['nm_serie'];
+      $_series[$serie['cod_serie']] = mb_strtoupper($serie['nm_serie'], 'UTF-8');
     }
 
     return $_series;

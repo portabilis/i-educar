@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author    Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   CoreExt_Controller
- * @since     Arquivo disponÌvel desde a vers„o 1.1.0
+ * @since     Arquivo dispon√≠vel desde a vers√£o 1.1.0
  * @version   $Id$
  */
 
@@ -33,19 +33,19 @@ require_once 'CoreExt/Controller/Request/Interface.php';
 /**
  * CoreExt_Controller_Request class.
  *
- * Classe de gerenciamento de dados de uma requisiÁ„o HTTP.
+ * Classe de gerenciamento de dados de uma requisi√ß√£o HTTP.
  *
- * @author    Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author    Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   CoreExt_Controller
- * @since     Classe disponÌvel desde a vers„o 1.1.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.1.0
  * @version   @@package_version@@
  */
 class CoreExt_Controller_Request implements CoreExt_Controller_Request_Interface
 {
   /**
-   * OpÁıes de configuraÁ„o geral da classe.
+   * Op√ß√µes de configura√ß√£o geral da classe.
    * @var array
    */
   protected $_options = array(
@@ -71,7 +71,7 @@ class CoreExt_Controller_Request implements CoreExt_Controller_Request_Interface
 
     if (0 < count(array_diff($passedOptions, $defaultOptions))) {
       throw new InvalidArgumentException(
-        sprintf('A classe %s n„o suporta as opÁıes: %s.', get_class($this), implode(', ', $passedOptions))
+        sprintf('A classe %s n√£o suporta as op√ß√µes: %s.', get_class($this), implode(', ', $passedOptions))
       );
     }
 
@@ -88,7 +88,7 @@ class CoreExt_Controller_Request implements CoreExt_Controller_Request_Interface
   }
 
   /**
-   * Verifica se uma opÁ„o est· setada.
+   * Verifica se uma op√ß√£o est√° setada.
    *
    * @param string $key
    * @return bool
@@ -99,7 +99,7 @@ class CoreExt_Controller_Request implements CoreExt_Controller_Request_Interface
   }
 
   /**
-   * Retorna um valor de opÁ„o de configuraÁ„o ou NULL caso a opÁ„o n„o esteja
+   * Retorna um valor de op√ß√£o de configura√ß√£o ou NULL caso a op√ß√£o n√£o esteja
    * setada.
    *
    * @param string $key
@@ -111,7 +111,7 @@ class CoreExt_Controller_Request implements CoreExt_Controller_Request_Interface
   }
 
   /**
-   * ImplementaÁ„o do mÈtodo m·gico __get().
+   * Implementa√ß√£o do m√©todo m√°gico __get().
    *
    * @param  string $key
    * @return mixed
@@ -134,7 +134,7 @@ class CoreExt_Controller_Request implements CoreExt_Controller_Request_Interface
   }
 
   /**
-   * Getter para as vari·veis de requisiÁ„o.
+   * Getter para as vari√°veis de requisi√ß√£o.
    * @param string $key
    * @return mixed
    */
@@ -144,7 +144,7 @@ class CoreExt_Controller_Request implements CoreExt_Controller_Request_Interface
   }
 
   /**
-   * ImplementaÁ„o do mÈtodo m·gico __isset().
+   * Implementa√ß√£o do m√©todo m√°gico __isset().
    *
    * @link   http://php.net/manual/en/language.oop5.overloading.php
    * @param  string $key
@@ -157,9 +157,9 @@ class CoreExt_Controller_Request implements CoreExt_Controller_Request_Interface
   }
 
   /**
-   * Setter para a opÁ„o de configuraÁ„o baseurl.
+   * Setter para a op√ß√£o de configura√ß√£o baseurl.
    * @param string $url
-   * @return CoreExt_Controller_Request_Interface ProvÍ interface fluÌda
+   * @return CoreExt_Controller_Request_Interface Prov√™ interface flu√≠da
    */
   public function setBaseurl($url)
   {
@@ -168,12 +168,12 @@ class CoreExt_Controller_Request implements CoreExt_Controller_Request_Interface
   }
 
   /**
-   * Getter para a opÁ„o de configuraÁ„o baseurl.
+   * Getter para a op√ß√£o de configura√ß√£o baseurl.
    *
-   * Caso a opÁ„o n„o esteja configurada, determina um valor baseado na
-   * vari·vel $_SERVER['REQUEST_URI'] da requisiÁ„o, usando apenas os
+   * Caso a op√ß√£o n√£o esteja configurada, determina um valor baseado na
+   * vari√°vel $_SERVER['REQUEST_URI'] da requisi√ß√£o, usando apenas os
    * componentes scheme e path da URL. Veja {@link http://php.net/parse_url}
-   * para mais informaÁıes sobre os componentes de uma URL.
+   * para mais informa√ß√µes sobre os componentes de uma URL.
    *
    * @return string
    */
