@@ -354,10 +354,10 @@ class indice extends clsCadastro
   	$params   = array('token' 	  	 => $GLOBALS['coreExt']['Config']->apis->access_key,
   			   		  'api_code' 	 => $cod_ocorrencia_disciplinar,
   			   		  'student_code' => $cod_aluno,
-  			   		  'description'  => utf8_encode($this->observacao),
+  			   		  'description'  => $this->observacao,
   			   		  'occurred_at'  => $this->data_cadastro,
   			   		  'unity_code' 	 => $cod_escola,
-  			   		  'kind'		 => utf8_encode($tipo_ocorrencia));
+  			   		  'kind'		 => $tipo_ocorrencia);
   	$requisicao = new ApiExternaController(	array( 'url' 			=> $GLOBALS['coreExt']['Config']->app->novoeducacao->url,
   												   'caminhoAPI'		=> $GLOBALS['coreExt']['Config']->app->novoeducacao->caminho_api,
   												   'recurso'		=> 'ocorrencias-disciplinares',
