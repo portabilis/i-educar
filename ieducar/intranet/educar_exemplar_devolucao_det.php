@@ -65,7 +65,7 @@ class indice extends clsDetalhe
 		session_write_close();
 
 		$this->titulo = "Exemplar Devolu&ccedil;&atilde;o - Detalhe";
-		
+
 
 		$this->cod_emprestimo=$_GET["cod_emprestimo"];
 
@@ -203,8 +203,13 @@ class indice extends clsDetalhe
 
 		if( $obj_permissoes->permissao_cadastra( 628, $this->pessoa_logada, 11 ) )
 		{
-			$this->caption_novo = "Devolu&ccedil;&atilde;o";
-			$this->url_novo = "educar_exemplar_devolucao_cad.php?cod_emprestimo={$registro["cod_emprestimo"]}";
+      $this->array_botao = array();
+      $this->array_botao_url_script = array();
+
+      $this->array_botao[] = 'Devolução';
+      $this->array_botao_url_script[] = 'go(\"educar_exemplar_devolucao_cad.php?cod_emprestimo={$registro["cod_emprestimo"]}");';
+      $this->array_botao[] = 'Renovação';
+      $this->array_botao_url_script[] = 'go(\"educar_exemplar_renovacao_cad.php?cod_emprestimo={$registro["cod_emprestimo"]}");';
 		}
 
 		$this->url_cancelar = "educar_exemplar_devolucao_lst.php";
@@ -216,7 +221,7 @@ class indice extends clsDetalhe
          "educar_biblioteca_index.php"                  => "Biblioteca",
          ""                                  => "Detalhe do exemplar para devolu&ccedil;&atilde;o"
     ));
-    $this->enviaLocalizacao($localizacao->montar());		
+    $this->enviaLocalizacao($localizacao->montar());
 	}
 }
 
