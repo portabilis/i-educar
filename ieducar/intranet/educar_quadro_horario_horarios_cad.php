@@ -216,14 +216,13 @@ class indice extends clsCadastro
       }
     }
 
-    $obrigatorio            = TRUE;
-    $desabilitado           = TRUE;
-    $get_escola             = TRUE;
-    $get_curso              = TRUE;
-    $get_escola_curso_serie = TRUE;
-    $get_turma              = TRUE;
+    $desabilitado = 'disabled';
 
-    include 'include/pmieducar/educar_campo_lista.php';
+    $this->inputsHelper()->dynamic('instituicao', array('value' => $this->ref_cod_instituicao, 'disabled' => $desabilitado));
+    $this->inputsHelper()->dynamic('escola', array('value' => $this->ref_cod_escola, 'disabled' => $desabilitado));
+    $this->inputsHelper()->dynamic('curso', array('value' => $this->ref_cod_curso, 'disabled' => $desabilitado));
+    $this->inputsHelper()->dynamic('serie', array('value' => $this->ref_ref_cod_serie, 'disabled' => $desabilitado));
+    $this->inputsHelper()->dynamic('anoLetivo', array('value' => $this->ano_alocacao, 'disabled' => $desabilitado));
 
     $this->campoQuebra();
 
@@ -784,7 +783,7 @@ document.getElementById('ref_cod_curso').onchange = function() {
   getEscolaCursoSerie();
 }
 
-document.getElementById('ref_ref_cod_serie').onchange = function() {
+document.getElementById('ref_cod_serie').onchange = function() {
   getTurma();
 }
 
