@@ -223,7 +223,7 @@ class clsPmieducarBloqueioAnoLetivo
 			$filtros .= "{$whereAnd} ref_cod_instituicao = '{$ref_cod_instituicao}'";
 			$whereAnd = " AND ";
 		}
-		if( is_numeric( $ref_cod_instituicao ) )
+		if( is_numeric( $ref_ano ) )
 		{
 			$filtros .= "{$whereAnd} ref_ano = '{$ref_ano}'";
 			$whereAnd = " AND ";
