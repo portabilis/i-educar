@@ -53,7 +53,7 @@ class indice extends clsCadastro {
 	         ""                                  => "C&oacute;pia de rotas"
 		));
     	$this->enviaLocalizacao($localizacao->montar());
-    		
+
 		return $retorno;
 	}
 
@@ -200,7 +200,7 @@ class indice extends clsCadastro {
 				foreach ($lista as $registro) {
 					$cod_rota_nova = $lista_new_rota[$num]['cod_rota_transporte_escolar'];
 					$obj = new clsModulesItinerarioTransporteEscolar();
-		     		$intinerario_old = $obj->lista(NULL, $registro['cod_rota_transporte_escolar']);  //pega os intinerÃ¡rios antigos
+		     		$intinerario_old = $obj->lista(NULL, $registro['cod_rota_transporte_escolar']);  //pega os intinerários antigos
 		     		$num2 = 0;
 		     		foreach($intinerario_old as $intinerario){
 		     			$intinerario_old[$num2]['ref_cod_rota_transporte_escolar'] = $cod_rota_nova; //substitui o cod das rotas antigas pelos novos
@@ -214,19 +214,19 @@ class indice extends clsCadastro {
 				     				$registro['ref_cod_veiculo'],
 				     				$registro['hora'],
 				     				$registro['tipo']);
-			     			$obj->cadastra(); //grava os nÃ³vos intinerÃ¡rios no banco
+			     			$obj->cadastra(); //grava os novos intinerários no banco
 		     		}
 		     		$num++;
 				}
-			$this->mensagem = Portabilis_String_Utils::toLatin1("CÃ³pia efetuada com sucesso");
+			$this->mensagem = Portabilis_String_Utils::toLatin1("Cópia efetuada com sucesso");
 			return true;
 
       		}else{
-      			$this->mensagem = Portabilis_String_Utils::toLatin1("A empresa jÃ¡ possuÃ­ rotas em {$this->ano_dest}");
+      			$this->mensagem = Portabilis_String_Utils::toLatin1("A empresa já possuí­ rotas em {$this->ano_dest}");
 		 		return false;
       		}
       	}else{
-		 	$this->mensagem = Portabilis_String_Utils::toLatin1("NÃ£o existe rotas em $this->ano_orig para essa empresa");
+		 	$this->mensagem = Portabilis_String_Utils::toLatin1("Não existe rotas em $this->ano_orig para essa empresa");
 		 	return false;
 		}
 	}
