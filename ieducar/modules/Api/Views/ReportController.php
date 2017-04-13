@@ -91,6 +91,7 @@ class ReportController extends ApiCoreController
       $boletimReport->addArg('curso',       (int)$dadosMatricula['curso_id']);
       $boletimReport->addArg('serie',       (int)$dadosMatricula['serie_id']);
       $boletimReport->addArg('turma',       (int)$dadosMatricula['turma_id']);
+      $boletimReport->addArg('situacao',    10);
 
       if (CORE_EXT_CONFIGURATION_ENV == "production") {
         $boletimReport->addArg('SUBREPORT_DIR', "/sites_media_root/services/reports/jasper/");
