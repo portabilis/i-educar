@@ -112,8 +112,70 @@ class indice extends clsCadastro
     return true;
   }
 
-  function ImportaRegistro00() {
+  function ImportaRegistro00($dadosRegistro) {
     $this->mensagem .= "Importação do registro 00";
+
+    $inep = $dadosRegistro[2];
+    $cpfGestor = $dadosRegistro[3];
+    $nomeGestor = $dadosRegistro[4];
+    $cargoGestor = $dadosRegistro[5];
+    $emailGestor = $dadosRegistro[6];
+    $situacao = $dadosRegistro[7];
+    $dataInicioAnoLetivo = $dadosRegistro[8];
+    $dataFimAnoLetivo = $dadosRegistro[9];
+    $nomeEscola = $dadosRegistro[10];
+    $latitude = $dadosRegistro[11];
+    $longitude = $dadosRegistro[12];
+    $cep = $dadosRegistro[13];
+    $endereco = $dadosRegistro[14];
+    $enderecoNumero = $dadosRegistro[15];
+    $complemento = $dadosRegistro[16];
+    $bairro = $dadosRegistro[17];
+    $uf = $dadosRegistro[18];
+    $municipio = $dadosRegistro[19];
+    $distrito = $dadosRegistro[20];
+    $ddd = $dadosRegistro[21];
+    $telefone = $dadosRegistro[22];
+    $telefonePublico = $dadosRegistro[23];
+    $telefoneContato = $dadosRegistro[24];
+    $telefoneFAX = $dadosRegistro[25];
+    $email = $dadosRegistro[26];
+    $codigoOrgaoRegional = $dadosRegistro[27];
+    $dependenciaAdministrativa = $dadosRegistro[28];
+    $localizacao = $dadosRegistro[29];
+    $categoriaEscolaPrivada = $dadosRegistro[30];
+    $convenioPoderPublico = $dadosRegistro[31];
+    $mantenedorEmpresa = $dadosRegistro[32];
+    $mantenedorSindicato = $dadosRegistro[33];
+    $mantenedorOrganizacao = $dadosRegistro[34];
+    $mantenedorInstituicao = $dadosRegistro[35];
+    $mantenedorSistema = $dadosRegistro[36];
+    $cnpjMantenedoraPrincipal = $dadosRegistro[37];
+    $cnpj = $dadosRegistro[38];
+    $regulamentacao = $dadosRegistro[39];
+    $unidadeVinculada = $dadosRegistro[40];
+    $dadosRegistro[41];
+
+    echo "<pre>";print_r($cnpjMantenedoraPrincipal);die;
+
+    $escola = new clsPmieducarEscola();
+
+    if ($this->existeEscola($inep)) {
+      $escola->edita();
+    } else {
+      $escola->cadastra();
+    }
+  }
+
+  function existeEscola($inep) {
+    $sql = "SELECT cod_escola
+              FROM modules.educacenso_cod_escola
+             WHERE cod_escola_inep = {$inep}";
+
+    $db = new clsBanco();
+    $db->Consulta($sql);
+    $db->ProximoRegistro();
+    return $db->Tupla();
   }
 }
 // Instancia objeto de página
