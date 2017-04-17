@@ -39,11 +39,11 @@ header('Content-type: text/xml; charset=UTF-8');
 require_once 'Portabilis/Utils/DeprecatedXmlApi.php';
 Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 
-print '<?xml version="1.0" encoding=""?>' . PHP_EOL;
+print '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL;
 print '<query>' . PHP_EOL;
 
 if ($id == strval(intval($id))) {
-	
+
   $obj = new clsModulesItinerarioTransporteEscolar();
   $obj->setOrderBy(' seq asc ');
   $pontos = $obj->listaPontos($id);
