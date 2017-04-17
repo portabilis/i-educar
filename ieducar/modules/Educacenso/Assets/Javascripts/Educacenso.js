@@ -23,15 +23,16 @@ $j(document).ready(function(){
             '</div>'+
             '</div>';
 
-    var headerPaginaResposta = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>'+stringUtils.toUtf8('Análise exportação')+'</title>'+
+    var headerPaginaResposta = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>'+'Análise exportação'+'</title>'+
             '<link rel="stylesheet" href="../modules/Educacenso/Assets/Stylesheets/educacensoPdf.css"></head><body>'+
 						'<div id="content">'+
-						'  <h1 class="title">'+stringUtils.toUtf8("Análise de exportação")+'</h1>'+
+						'  <h1 class="title">'+"Análise de exportação"+'</h1>'+
 						'</div>'+
 						'<div id="editor"></div>';
 
     var paginaResposta = "";
     var falhaAnalise;
+    var fase2;
 
     $j("body").append(modalLoad);
     $j("body").append(modalExport);
@@ -41,7 +42,7 @@ $j(document).ready(function(){
     	var escola = $j("#ref_cod_escola").val();
     	var dataIni = $j("#data_ini").val();
     	var dataFim = $j("#data_fim").val();
-      var fase2 = ($j("#fase2").val() == "true");
+      fase2 = ($j("#fase2").val() == "true");
 
     	if (!escola || !dataIni || !dataFim){
     		alert("Preencha os dados obrigat\u00f3rios antes de continuar.");
