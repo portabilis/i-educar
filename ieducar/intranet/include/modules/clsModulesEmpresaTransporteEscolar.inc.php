@@ -253,7 +253,7 @@ class clsModulesEmpresaTransporteEscolar
             cadastro.pessoa
           WHERE
             cadastro.pessoa.idpes = ref_idpes
-            AND (LOWER(nome)) LIKE (LOWER('%{$nm_idpes}%'))
+            AND translate(upper(nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$nm_idpes}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')
         )";
 
       $whereAnd = ' AND ';
@@ -268,7 +268,7 @@ class clsModulesEmpresaTransporteEscolar
             cadastro.pessoa
           WHERE
             cadastro.pessoa.idpes = ref_resp_idpes
-            AND (LOWER(nome)) LIKE (LOWER('%{$nm_resp_idpes}%'))
+            AND translate(upper(nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$nm_resp_idpes}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')
         )";
 
       $whereAnd = ' AND ';

@@ -328,13 +328,13 @@ class clsModulesPessoaTransporte
 
     if (is_string($nome_pessoa)) {
         $filtros .= "
-        {$whereAnd} (LOWER((p.nome))) LIKE (LOWER('%{$nome_pessoa}%')) ";
+        {$whereAnd} translate(upper(p.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$nome_pessoa}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
       $whereAnd = " AND ";
     }
 
     if (is_string($nome_destino)) {
         $filtros .= "
-        {$whereAnd} ((LOWER((pd.nome))) LIKE (LOWER('%{$nome_destino}%')) OR (LOWER((pd2.nome))) LIKE (LOWER('%{$nome_destino}%'))) ";
+        {$whereAnd} (translate(upper(pd.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$nome_destino}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')) OR (translate(upper(pd2.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$nome_destino}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')) ";
       $whereAnd = " AND ";
     }
 

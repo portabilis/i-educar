@@ -134,7 +134,7 @@ class clsModulesComponenteCurricular
 		}
     if( is_string( $nome ) )
     {
-      $filtros .= "{$whereAnd} cc.nome LIKE '%{$nome}%'";
+      $filtros .= "{$whereAnd} translate(upper(cc.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$nome}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
       $whereAnd = " AND ";
     }
     if( is_string( $abreviatura ) )
@@ -144,7 +144,7 @@ class clsModulesComponenteCurricular
     }
 		if( is_string( $nome ) )
 		{
-			$filtros .= "{$whereAnd} cc.nome LIKE '%{$nome}%'";
+			$filtros .= "{$whereAnd} translate(upper(cc.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$nome}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
 			$whereAnd = " AND ";
 		}
 		if( is_string( $tipo_base ) )
