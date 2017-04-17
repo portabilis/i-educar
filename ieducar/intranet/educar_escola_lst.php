@@ -97,7 +97,7 @@ class indice extends clsListagem
 		foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
 			$this->$var = ( $val === "" ) ? null: $val;
 
-		
+
 
 		$cabecalhos = array("Escola");
 		$nivel = $obj_permissoes->nivel_acesso($this->pessoa_logada);
@@ -136,8 +136,12 @@ class indice extends clsListagem
 		// Filtros de Foreign Keys
 		$this->limite = 10;
 		$obj_escola = new clsPmieducarEscola();
-		//$obj_escola->setOrderby( "nome ASC" );
-		$obj_escola->setLimite( $this->limite, ( $this->pagina_formulario - 1 ) * $this->limite );
+
+		if ($this->pagina_formulario){
+			$obj_escola->setLimite( $this->limite, ( $this->pagina_formulario - 1 ) * $this->limite );
+		} else {
+			$obj_escola->setLimite( $this->limite );
+		}
 
 		$cod_escola = $obj_permissoes->getEscola($this->pessoa_logada);
 
