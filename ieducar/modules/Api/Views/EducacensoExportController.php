@@ -621,10 +621,10 @@ class EducacensoExportController extends ApiCoreController
         t.cod_turma as r20s4,
         t.nm_turma as r20s5,
         1 as r20s6,
-        substring(t.hora_inicial,1,2) as r20s7,
-        substring(t.hora_inicial,4,2) as r20s8,
-        substring(t.hora_final,1,2) as r20s9,
-        substring(t.hora_final,4,2) as r20s10,
+        substring(t.hora_inicial::varchar,1,2) as r20s7,
+        substring(t.hora_inicial::varchar,4,2) as r20s8,
+        substring(t.hora_final::varchar,1,2) as r20s9,
+        substring(t.hora_final::varchar,4,2) as r20s10,
         (SELECT 1
           FROM turma_dia_semana
           WHERE ref_cod_turma = t.cod_turma
