@@ -515,7 +515,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                                   strtoupper($dadosEscola['nome']),
                                   strtoupper($dadosEscola['cidade']),
                                   $dadosEscola['uf'],
-                                  utf8_decode($this->getRequest()->observacao),
+                                  $this->getRequest()->observacao,
                                   $this->getSituacaoMatricula(),
                                   $data_cadastro = date('Y-m-d'),
                                   $data_exclusao = NULL,
@@ -526,9 +526,9 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                                   $this->getRequest()->extra_curricular,
                                   $matriculaId,
                                   $this->getPercentualFrequencia(),
-                                  utf8_decode($this->getRequest()->registro),
-                                  utf8_decode($this->getRequest()->livro),
-                                  utf8_decode($this->getRequest()->folha),
+                                  $this->getRequest()->registro,
+                                  $this->getRequest()->livro,
+                                  $this->getRequest()->folha,
                                   $dadosMatricula['nome_curso'],
                                   $this->getRequest()->grade_curso_id,
                                   NULL,
@@ -558,7 +558,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                                   strtoupper($dadosEscola['nome']),
                                   strtoupper($dadosEscola['cidade']),
                                   $dadosEscola['uf'],
-                                  utf8_decode($this->getRequest()->observacao),
+                                  $this->getRequest()->observacao,
                                   $this->getSituacaoMatricula(),
                                   $data_cadastro = NULL,
                                   $data_exclusao = NULL,
@@ -569,9 +569,9 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                                   $this->getRequest()->extra_curricular,
                                   $matriculaId,
                                   $this->getPercentualFrequencia(),
-                                  utf8_decode($this->getRequest()->registro),
-                                  utf8_decode($this->getRequest()->livro),
-                                  utf8_decode($this->getRequest()->folha),
+                                  $this->getRequest()->registro,
+                                  $this->getRequest()->livro,
+                                  $this->getRequest()->folha,
                                   $dadosMatricula['nome_curso'],
                                   $this->getRequest()->grade_curso_id,
                                   NULL,
@@ -651,7 +651,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
           }
         }
         else
-          $nota = utf8_decode($this->getRequest()->notas);
+          $nota = $this->getRequest()->notas;
 
         if(is_numeric($nota))
           $nota = sprintf("%.1f", $nota);
@@ -717,8 +717,8 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
           "sequencial" => $sequencial,
           "alunoId" => $alunoId,
           "historicoSequencial" => $historicoSequencial,
-          "nome" => utf8_decode($disciplina['nome']),
-          "nota" => utf8_decode($disciplina['nota']),
+          "nome" => $disciplina['nome'],
+          "nota" => $disciplina['nota'],
           "falta" => $falta = $disciplina['falta'],
           "ordenamento" => $value['ordenamento'],
           "carga_horaria_disciplina" => $value['carga_horaria_disciplina']
