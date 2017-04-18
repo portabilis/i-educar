@@ -596,7 +596,7 @@ class clsBase extends clsConfig
     // foto do usuario
     $objFoto = new clsCadastroFisicaFoto($this->currentUserId());
     $detalheFoto = $objFoto->detalhe();
-    $foto = $detalheFoto['caminho'] ? $detalheFoto['caminho'] : '/intranet/imagens/user-perfil.png';
+    $foto = $detalheFoto['caminho'] ? str_replace("http://", "https://", $detalheFoto['caminho']) : '/intranet/imagens/user-perfil.png';
 
 
     // data ultimo acesso
