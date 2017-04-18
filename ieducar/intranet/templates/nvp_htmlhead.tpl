@@ -20,11 +20,11 @@
   <link rel=stylesheet type='text/css' href='styles/min-portabilis.css?5?rand=3' />
   <link rel=stylesheet type='text/css' href='styles/mytdt.css?5' />
   <link rel=stylesheet type='text/css' href='styles/jquery.modal.css?5' />
-  <script src="http://maps.google.com/maps/api/js?sensor=true" type="text/javascript" charset="utf-8"></script>
+  <script src="https://maps.google.com/maps/api/js?sensor=true" type="text/javascript" charset="utf-8"></script>
   <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
 
   <!-- #&ESTILO&# -->
-  
+
 <script>(function(e,t,n){var r=e.querySelectorAll("html")[0];r.className=r.className.replace(/(^|\s)no-js(\s|$)/,"$1js$2")})(document,window,0);</script>
 
   <script type="text/javascript" src="scripts/padrao.js?5"></script>
@@ -100,7 +100,7 @@
   <script type="text/javascript">
   <!-- #&SCRIPT_HEADER&# -->
   </script>
-  
+
 <link rel=stylesheet type='text/css' href='styles/custom.css?5' />
 <body <!-- #&BODYSCRIPTS&# -->>
   <div id="DOM_expansivel" class="DOM_expansivel"></div>
