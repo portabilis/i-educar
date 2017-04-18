@@ -1593,6 +1593,14 @@ if(!$this->isEnderecoExterno){
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra( 561, $this->pessoa_logada, 3, "educar_escola_lst.php" );
 
+		$objJuridica = new clsPessoaJuridica( false, idFederal2int( $this->cnpj ) );
+		$det = $objJuridica->detalhe();
+
+		if (!$det){
+			$this->mensagem = "Não foi possível encontrar uma pessoa jurídica com este CNPJ.";
+			return false;
+		}
+
 		if (!$this->validaLatitudeLongitude()) return false;
 
     $this->bloquear_lancamento_diario_anos_letivos_encerrados = is_null($this->bloquear_lancamento_diario_anos_letivos_encerrados) ? 0 : 1;
