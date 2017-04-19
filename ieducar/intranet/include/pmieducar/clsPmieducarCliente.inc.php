@@ -452,7 +452,7 @@ class clsPmieducarCliente
 		}
 		if( is_string( $str_nm_cliente ) )
 		{
-			$filtros .= "{$whereAnd} p.nome LIKE '%{$str_nm_cliente}%'";
+			$filtros .= "{$whereAnd} translate(upper(p.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nm_cliente}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
 			$whereAnd = " AND ";
 		}
 		if(is_array($int_ref_cod_biblioteca))
@@ -582,7 +582,7 @@ class clsPmieducarCliente
     }
 
     if (is_string($str_nm_cliente)) {
-      $filtros .= "{$whereAnd} p.nome LIKE '%{$str_nm_cliente}%'";
+      $filtros .= "{$whereAnd} translate(upper(p.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nm_cliente}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
       $whereAnd = " AND ";
     }
 

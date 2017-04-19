@@ -134,7 +134,7 @@ class clsRegiao
 		$whereAnd = "WHERE ";
 		if( is_string( $str_nm_regiao ) )
 		{
-			$where .= "{$whereAnd}nm_regiao LIKE '%$str_nm_regiao%'";
+			$where .= "{$whereAnd} translate(upper(nm_regiao),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nm_regiao}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
 			$whereAnd = " AND ";
 		}
 		if($str_orderBy)

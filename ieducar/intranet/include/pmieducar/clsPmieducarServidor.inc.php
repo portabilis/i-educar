@@ -861,7 +861,7 @@ class clsPmieducarServidor
                                        AND s.ref_cod_instituicao = sd.ref_ref_cod_instituicao)";
 
     if ($str_nome_servidor != "") {
-      $filtros .= " AND p.nome like '%$str_nome_servidor%' ";
+      $filtros .= " AND translate(upper(p.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nome_servidor}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
     }
 
     $sql = "SELECT {$this->_campos_lista} FROM {$this->_schema}servidor s {$tabela_compl} {$filtros} GROUP BY {$this->_campos_lista}" . $this->getOrderby();
@@ -1017,7 +1017,7 @@ class clsPmieducarServidor
       $filtros .= "{$whereAnd} EXISTS (SELECT 1
   FROM cadastro.pessoa p
   WHERE cod_servidor = p.idpes
-  AND public.fcn_upper((p.nome)) LIKE public.fcn_upper(($$%$str_nome_servidor%$$))) ";
+  AND translate(upper(p.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nome_servidor}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN'))";
       $whereAnd = " AND ";
     }
     // Seleciona apenas servidores que tenham a carga atual maior ou igual ao
