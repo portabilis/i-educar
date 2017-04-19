@@ -588,7 +588,7 @@ class indice extends clsCadastro
 					}
 					else
 					{
-						die( "Usuário não ã do nivel poli-institucional e não possui uma instituição" );
+						die( "Usuário não é do nivel poli-institucional e não possui uma instituição" );
 					}
 				}
 
