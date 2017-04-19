@@ -38,11 +38,11 @@ require_once 'lib/Portabilis/String/Utils.php';
 
 class PessoajController extends ApiCoreController
 {
-  
+
   protected function sqlsForNumericSearch() {
-    
+
     $sqls[] = "select distinct idpes as id, nome as name from
-                 cadastro.pessoa where tipo='J' and idpes like $1||'%'";
+                 cadastro.pessoa where tipo='J' and idpes::varchar like $1||'%'";
 
     return $sqls;
   }
@@ -53,7 +53,7 @@ class PessoajController extends ApiCoreController
                  cadastro.pessoa where tipo='J' and lower((nome)) like '%'||lower(($1))||'%'";
 
     return $sqls;
-  }  
+  }
 
   public function Gerar() {
     if ($this->isRequestFor('get', 'pessoaj-search'))
