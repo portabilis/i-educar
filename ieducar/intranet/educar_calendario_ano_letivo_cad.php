@@ -441,4 +441,6 @@ function loadFromXML(xml)
 	else
 		campoAno.options[0].text = 'A escola não possui nenhum ano letivo';
 }
+
+geraAnos();
 </script>
