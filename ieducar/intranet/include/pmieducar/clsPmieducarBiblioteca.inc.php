@@ -47,6 +47,7 @@ class clsPmieducarBiblioteca
 	var $ativo;
 	var $dias_espera;
 	var $tombo_automatico;
+	var $bloqueia_emprestimo_em_atraso;
 
 	// propriedades padrao
 
@@ -112,13 +113,39 @@ class clsPmieducarBiblioteca
 	 *
 	 * @return object
 	 */
-	function clsPmieducarBiblioteca( $cod_biblioteca = null, $ref_cod_instituicao = null, $ref_cod_escola = null, $nm_biblioteca = null, $valor_multa = null, $max_emprestimo = null, $valor_maximo_multa = null, $data_cadastro = null, $data_exclusao = null, $requisita_senha = null, $ativo = null, $dias_espera = null, $tombo_automatico = null )
+	function clsPmieducarBiblioteca($cod_biblioteca = null,
+																	$ref_cod_instituicao = null,
+																	$ref_cod_escola = null,
+																	$nm_biblioteca = null,
+																	$valor_multa = null,
+																	$max_emprestimo = null,
+																	$valor_maximo_multa = null,
+																	$data_cadastro = null,
+																	$data_exclusao = null,
+																	$requisita_senha = null,
+																	$ativo = null,
+																	$dias_espera = null,
+																	$tombo_automatico = null,
+																	$bloqueia_emprestimo_em_atraso = null)
 	{
 		$db = new clsBanco();
 		$this->_schema = "pmieducar.";
 		$this->_tabela = "{$this->_schema}biblioteca";
 
-		$this->_campos_lista = $this->_todos_campos = "cod_biblioteca, ref_cod_instituicao, ref_cod_escola, nm_biblioteca, valor_multa, max_emprestimo, valor_maximo_multa, data_cadastro, data_exclusao, requisita_senha, ativo, dias_espera, tombo_automatico";
+		$this->_campos_lista = $this->_todos_campos = "cod_biblioteca,
+		                                               ref_cod_instituicao,
+																									 ref_cod_escola,
+																									 nm_biblioteca,
+																									 valor_multa,
+																									 max_emprestimo,
+																									 valor_maximo_multa,
+																									 data_cadastro,
+																									 data_exclusao,
+																									 requisita_senha,
+																									 ativo,
+																									 dias_espera,
+																									 tombo_automatico,
+																									 bloqueia_emprestimo_em_atraso";
 
 		if( is_numeric( $ref_cod_instituicao ) )
 		{
@@ -222,6 +249,10 @@ class clsPmieducarBiblioteca
 		{
 			$this->tombo_automatico = $tombo_automatico;
 		}
+		if (is_bool($bloqueia_emprestimo_em_atraso))
+		{
+			$this->bloqueia_emprestimo_em_atraso = $bloqueia_emprestimo_em_atraso;
+		}
 	}
 
 	/**
@@ -297,6 +328,13 @@ class clsPmieducarBiblioteca
 			{
 				$campos .= "{$gruda}tombo_automatico";// = {$this->tombo_automatico}";
 				$aux = dbBool($this->tombo_automatico) ? "TRUE" : "FALSE";
+				$valores .= "{$gruda}{$aux}";
+				$gruda = ", ";
+			}
+			if (is_bool($this->bloqueia_emprestimo_em_atraso))
+			{
+				$campos .= "{$gruda}bloqueia_emprestimo_em_atraso";
+				$aux = dbBool($this->bloqueia_emprestimo_em_atraso) ? "TRUE" : "FALSE";
 				$valores .= "{$gruda}{$aux}";
 				$gruda = ", ";
 			}
@@ -401,6 +439,12 @@ class clsPmieducarBiblioteca
 			{
 				$aux = dbBool($this->tombo_automatico) ? "TRUE" : "FALSE";
 				$set .= "{$gruda}tombo_automatico = {$aux}";
+				$gruda = ", ";
+			}
+			if (is_bool($this->bloqueia_emprestimo_em_atraso))
+			{
+				$aux = dbBool($this->bloqueia_emprestimo_em_atraso) ? "TRUE" : "FALSE";
+				$set .= "{$gruda}bloqueia_emprestimo_em_atraso = {$aux}";
 				$gruda = ", ";
 			}
 			if( $set )

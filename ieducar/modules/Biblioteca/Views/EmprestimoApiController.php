@@ -657,6 +657,14 @@ class EmprestimoApiController extends ApiCoreController
 
   protected function postEmprestimo() {
     if ($this->canPostEmprestimo()) {
+      $emprestimo = new clsPmieducarExemplarEmprestimo();
+      if ($this->verificaEmprestimoEmAtraso($emprestimo)){
+        $this->messenger->append("Operação não realizada, pois o cliente possui empréstimos em atraso de entrega.", 'error');
+        return;
+      }
+      $emprestimo->ref_usuario_cad  = $this->getSession()->id_pessoa;
+      $emprestimo->ref_cod_cliente  = $this->getRequest()->cliente_id;
+      $emprestimo->ref_cod_exemplar = $this->getRequest()->exemplar_id;
       // altera situacao exemplar para emprestado
       $situacaoEmprestimo = $this->loadSituacaoExemplar($permiteEmprestimo = false, $padrao = null, $emprestada = true);
 
@@ -667,11 +675,6 @@ class EmprestimoApiController extends ApiCoreController
 
       // grava emprestimo
       if(! $this->messenger->hasMsgWithType('error')) {
-        $emprestimo                   = new clsPmieducarExemplarEmprestimo();
-        $emprestimo->ref_usuario_cad  = $this->getSession()->id_pessoa;
-        $emprestimo->ref_cod_cliente  = $this->getRequest()->cliente_id;
-        $emprestimo->ref_cod_exemplar = $this->getRequest()->exemplar_id;
-
         if ($emprestimo->cadastra())
           $this->messenger->append("Emprestimo realizado com sucesso.", 'success');
         else
@@ -680,6 +683,17 @@ class EmprestimoApiController extends ApiCoreController
     }
 
     $this->appendResponse('exemplar', $this->loadExemplar($reload = true));
+  }
+
+  protected function verificaEmprestimoEmAtraso($emprestimo){
+    $emprestimo->em_atraso = true;
+    $emprestimosEmAtraso = $emprestimo->lista(null, null, null, $this->getRequest()->cliente_id);
+    foreach ($emprestimosEmAtraso as $emprestimo){
+      if (dbBool($emprestimo['bloqueia_emprestimo_em_atraso'])){
+        return $emprestimo;
+      }
+    }
+    return;
   }
 
 
