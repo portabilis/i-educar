@@ -90,8 +90,13 @@ class VeiculoController extends ApiCoreController
 
   protected function sqlsForNumericSearch() {
 
-    $sqls[] = "select distinct cod_veiculo as id, (descricao || ', Placa: ' || placa) as name from
-                 modules.veiculo where (cod_veiculo::varchar like $1||'%') OR (lower((placa)) like '%'||lower(($1))||'%')";
+    $sqls[] = "SELECT DISTINCT cod_veiculo AS id,
+                      (descricao || ', Placa: ' || placa || ', Motorista: ' || pessoa.nome) AS name
+                 FROM modules.veiculo
+                 LEFT JOIN modules.motorista ON (motorista.cod_motorista = veiculo.ref_cod_motorista)
+                 LEFT JOIN cadastro.pessoa ON (pessoa.idpes = motorista.ref_idpes)
+                WHERE (cod_veiculo::varchar LIKE $1||'%')
+                   OR (lower((placa)) LIKE '%'||lower(($1))||'%')";
 
     return $sqls;
   }
@@ -99,8 +104,13 @@ class VeiculoController extends ApiCoreController
 
   protected function sqlsForStringSearch() {
 
-    $sqls[] = "select distinct cod_veiculo as id, (descricao || ', Placa: ' || placa ) as name from
-                 modules.veiculo where (lower((descricao)) like '%'||lower(($1))||'%') OR (lower((placa)) like '%'||lower(($1))||'%')";
+    $sqls[] = "SELECT DISTINCT cod_veiculo AS id,
+                      (descricao || ', Placa: ' || placa || ', Motorista: ' || pessoa.nome) AS name
+                 FROM modules.veiculo
+                 LEFT JOIN modules.motorista ON (motorista.cod_motorista = veiculo.ref_cod_motorista)
+                 LEFT JOIN cadastro.pessoa ON (pessoa.idpes = motorista.ref_idpes)
+                WHERE (lower((descricao)) LIKE '%'||lower(($1))||'%')
+                   OR (lower((placa)) LIKE '%'||lower(($1))||'%')";
 
     return $sqls;
   }
