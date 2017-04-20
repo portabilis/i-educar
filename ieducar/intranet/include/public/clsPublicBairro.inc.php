@@ -553,7 +553,7 @@ class clsPublicBairro
     }
 
     if (is_string($str_nome)) {
-      $filtros .= "{$whereAnd} b.nome LIKE E'%" . addslashes($str_nome) . "%'";
+      $filtros .= "{$whereAnd} translate(upper(b.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nome}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
       $whereAnd = ' AND ';
     }
 

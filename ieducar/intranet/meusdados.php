@@ -96,8 +96,6 @@ class indice extends clsCadastro
         $this->sexo = $pessoaFisica['sexo'];
       }
 
-      $this->email = $pessoaFisica['email'];
-
       $funcionario = new clsPortalFuncionario($this->pessoa_logada);
       $funcionario = $funcionario->detalhe();
 
@@ -105,6 +103,7 @@ class indice extends clsCadastro
         $this->senha = $funcionario["senha"];
         $this->senha_confirma = $funcionario["senha"];
         $this->matricula = $funcionario["matricula"];
+        $this->email = $funcionario['email'];
 
         $this->senha_old = $funcionario["senha"];
         $this->matricula_old = $funcionario["matricula"];
@@ -119,7 +118,7 @@ class indice extends clsCadastro
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         ""                                  => "Meus dados"             
+         ""                                  => "Meus dados"
     ));
     $this->enviaLocalizacao($localizacao->montar());
 
@@ -250,7 +249,6 @@ class indice extends clsCadastro
 
     $pessoa = new clsPessoa_($this->pessoa_logada);
     $pessoa->nome = $this->nome;
-    $pessoa->email = $this->email;
     $pessoa->edita();
 
     $pessoaFisica = new clsFisica($this->pessoa_logada, FALSE, $this->sexo);
@@ -269,6 +267,7 @@ class indice extends clsCadastro
     $funcionario->ref_cod_pessoa_fj = $this->pessoa_logada;
     $funcionario->receber_novidades = ($this->receber_novidades ? 1 : 0);
     $funcionario->atualizou_cadastro = 1;
+    $funcionario->email = $this->email;
 
     if ($this->senha_old != $this->senha) {
       $funcionario->senha = md5($this->senha);

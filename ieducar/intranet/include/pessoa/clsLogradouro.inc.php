@@ -177,7 +177,7 @@ class clsLogradouro
 		if( is_string( $str_nome ) )
 		{
 			$str_nome = limpa_acentos( $str_nome );
-			$where .= "{$whereAnd}fcn_upper_nrm( nome ) ILIKE '%$str_nome%'";
+			$where .= "{$whereAnd} translate(upper(nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nome}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
 			$whereAnd = " AND ";
 		}
 		if( is_numeric( $int_idmun ) )
@@ -245,7 +245,7 @@ class clsLogradouro
 		}
 		if( is_string( $str_nome ) )
 		{
-			$where .= "{$whereAnd}nome LIKE '%$str_nome%'";
+			$where .= "{$whereAnd} translate(upper(nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nome}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
 			$whereAnd = " AND ";
 		}
 		if( is_numeric( $int_idmun ) )

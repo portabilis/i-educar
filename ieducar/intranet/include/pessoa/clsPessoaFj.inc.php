@@ -140,7 +140,7 @@ class clsPessoaFj
     $filtro_cnpj    = FALSE;
 
     if (is_string($nome) && $nome != '') {
-      $filtros       .= "{$whereAnd} (nome ILIKE '%{$nome}%')";
+      $filtros       .= "{$whereAnd} translate(upper(nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$nome}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
       $whereAnd       = ' AND ';
       $outros_filtros = TRUE;
     }

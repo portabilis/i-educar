@@ -472,7 +472,7 @@ class clsModulesVeiculo
 
     if (is_string($descricao)) {
       $filtros .= "
-        {$whereAnd} (LOWER(descricao)) LIKE (LOWER('%{$descricao}%')) ";
+        {$whereAnd} translate(upper(descricao),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$descricao}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
 
       $whereAnd = ' AND ';
     }      
@@ -489,12 +489,7 @@ class clsModulesVeiculo
 
     if (is_string($nome_motorista)) {
       $whereNomes .= "
-        {$whereAnd} (LOWER((SELECT
-            nome
-          FROM
-            modules.motorista m,cadastro.pessoa p
-          WHERE
-            ref_cod_motorista = cod_motorista AND p.idpes = m.ref_idpes))) LIKE (LOWER('%{$nome_motorista}%')) ";
+        {$whereAnd} translate(upper((SELECT nome FROM modules.motorista m,cadastro.pessoa p WHERE ref_cod_motorista = cod_motorista AND p.idpes = m.ref_idpes)),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$nome_motorista}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
 
       $whereAnd = ' AND ';
     }
@@ -516,7 +511,7 @@ class clsModulesVeiculo
 
     if (is_string($marca)) {
         $filtros .= "
-        {$whereAnd} (LOWER(marca)) LIKE (LOWER('%{$marca}%')) ";
+        {$whereAnd} translate(upper(marca),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$marca}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
       $whereAnd = " AND ";
     }       
 
