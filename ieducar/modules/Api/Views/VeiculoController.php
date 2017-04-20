@@ -51,17 +51,17 @@ class VeiculoController extends ApiCoreController
     $nome = $this->fetchPreparedQuery($sql, $id, false, 'first-field');
 
     return $this->toUtf8($nome, array('transform' => true));
-  }  
+  }
 
   protected function loadNomeMotorista($id) {
     $sql  = "select nome from cadastro.pessoa, modules.motorista where idpes = ref_idpes and cod_motorista = $1";
     $nome = $this->fetchPreparedQuery($sql, $id, false, 'first-field');
 
     return $this->toUtf8($nome, array('transform' => true));
-  }    
+  }
 
   protected function createOrUpdateVeiculo($id = null){
-    
+
 
     $veiculo                                     = new clsModulesVeiculo();
     $veiculo->cod_veiculo = $id;
@@ -72,17 +72,17 @@ class VeiculoController extends ApiCoreController
     $veiculo->renavam                            = $this->getRequest()->renavam;
     $veiculo->chassi                             = $this->getRequest()->chassi;
     $veiculo->marca                              = Portabilis_String_Utils::toLatin1($this->getRequest()->marca);
-    $veiculo->passageiros                        = $this->getRequest()->passageiros; 
+    $veiculo->passageiros                        = $this->getRequest()->passageiros;
     $veiculo->ano_fabricacao                     = $this->getRequest()->ano_fabricacao;
-    $veiculo->ano_modelo                         = $this->getRequest()->ano_modelo; 
-    $veiculo->malha                              = $this->getRequest()->malha; 
-    $veiculo->ref_cod_tipo_veiculo               = $this->getRequest()->tipo; 
-    $veiculo->exclusivo_transporte_escolar       = ($this->getRequest()->exclusivo_transporte_escolar == 'on' ? 'S' : 'N'); 
-    $veiculo->adaptado_necessidades_especiais    = ($this->getRequest()->adaptado_necessidades_especiais == 'on' ? 'S' : 'N'); 
-    $veiculo->ativo                              = ($this->getRequest()->ativo == 'on' ? 'S' : 'N');   
+    $veiculo->ano_modelo                         = $this->getRequest()->ano_modelo;
+    $veiculo->malha                              = $this->getRequest()->malha;
+    $veiculo->ref_cod_tipo_veiculo               = $this->getRequest()->tipo;
+    $veiculo->exclusivo_transporte_escolar       = ($this->getRequest()->exclusivo_transporte_escolar == 'on' ? 'S' : 'N');
+    $veiculo->adaptado_necessidades_especiais    = ($this->getRequest()->adaptado_necessidades_especiais == 'on' ? 'S' : 'N');
+    $veiculo->ativo                              = ($this->getRequest()->ativo == 'on' ? 'S' : 'N');
     $veiculo->descricao_inativo                  = Portabilis_String_Utils::toLatin1($this->getRequest()->descricao_inativo);
-    $veiculo->ref_cod_empresa_transporte_escolar = $this->getRequest()->empresa_id; 
-    $veiculo->ref_cod_motorista                  = $this->getRequest()->motorista_id; 
+    $veiculo->ref_cod_empresa_transporte_escolar = $this->getRequest()->empresa_id;
+    $veiculo->ref_cod_motorista                  = $this->getRequest()->motorista_id;
     $veiculo->observacao                         = Portabilis_String_Utils::toLatin1($this->getRequest()->observacao);
 
     return (is_null($id) ? $veiculo->cadastra() : $veiculo->edita());
@@ -91,7 +91,7 @@ class VeiculoController extends ApiCoreController
   protected function sqlsForNumericSearch() {
 
     $sqls[] = "select distinct cod_veiculo as id, (descricao || ', Placa: ' || placa) as name from
-                 modules.veiculo where (cod_veiculo like $1||'%') OR (lower((placa)) like '%'||lower(($1))||'%')";
+                 modules.veiculo where (cod_veiculo::varchar like $1||'%') OR (lower((placa)) like '%'||lower(($1))||'%')";
 
     return $sqls;
   }
@@ -123,7 +123,7 @@ class VeiculoController extends ApiCoreController
       return false;
     }
 
-  }      
+  }
 
   protected function validateIfVeiculoIsNotInUse(){
 
@@ -136,10 +136,10 @@ class VeiculoController extends ApiCoreController
       }else{
         return true;
       }
-  }  
+  }
 
   protected function get() {
-    
+
       $id                                      = $this->getRequest()->id;
       $veiculo                                 = new clsModulesVeiculo();
       $veiculo->cod_veiculo                    = $id;
@@ -177,7 +177,7 @@ class VeiculoController extends ApiCoreController
       $veiculo['chassi']                        = Portabilis_String_Utils::toUtf8($veiculo['chassi']);
       $veiculo['descricao_inativo']             = Portabilis_String_Utils::toUtf8($veiculo['descricao_inativo']);
       $veiculo['observacao']                    = Portabilis_String_Utils::toUtf8($veiculo['observacao']);
-    
+
       return $veiculo;
 
   }
@@ -193,7 +193,7 @@ class VeiculoController extends ApiCoreController
       }
       else
         $this->messenger->append('Aparentemente o veículo não pode ser cadastrado, por favor, verifique.');
-    }   
+    }
 
     return array('id' => $id);
   }
@@ -210,7 +210,7 @@ class VeiculoController extends ApiCoreController
      else
       $this->messenger->append('Aparentemente o cadastro não pode ser alterado, por favor, verifique.');
   }
-   
+
 
     return array('id' => $id);
   }
@@ -221,7 +221,7 @@ class VeiculoController extends ApiCoreController
 
     $veiculo                      = new clsModulesVeiculo();
     $veiculo->cod_veiculo       = $id;
-      
+
     if($veiculo->excluir()){
       $this->messenger->append('Cadastro removido com sucesso', 'success', false, 'error');
     }else
@@ -232,12 +232,12 @@ class VeiculoController extends ApiCoreController
 
 
   public function Gerar() {
-    
+
     if ($this->isRequestFor('get', 'veiculo'))
       $this->appendResponse($this->get());
 
     elseif ($this->isRequestFor('get', 'veiculo-search'))
-      $this->appendResponse($this->search());  
+      $this->appendResponse($this->search());
 
     // create
     elseif ($this->isRequestFor('post', 'veiculo'))
