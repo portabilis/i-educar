@@ -490,7 +490,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
     $selectFields                    = join(', ', $searchOptions['selectFields']);
 
     return "select distinct $selectFields from $namespace.$table
-            where $idAttr like $1||'%' order by $idAttr limit 15";
+            where $idAttr::varchar like $1||'%' order by $idAttr limit 15";
   }
 
 
@@ -506,7 +506,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
     $selectFields                    = join(', ', $searchOptions['selectFields']);
 
     return "select distinct $selectFields from $namespace.$table
-            where lower(to_ascii($labelAttr)) like lower(to_ascii($1))||'%' order by $labelAttr limit 15";
+            where lower($labelAttr) like lower($1)||'%' order by $labelAttr limit 15";
   }
 
   protected function sqlParams($query) {
