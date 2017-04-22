@@ -1,31 +1,31 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     Avaliacao
  * @subpackage  Modules
- * @since       Arquivo disponÌvel desde a vers„o 1.1.0
+ * @since       Arquivo dispon√≠vel desde a vers√£o 1.1.0
  * @version     $Id$
  */
 
@@ -47,18 +47,18 @@ require_once 'include/pmieducar/clsPmieducarTurma.inc.php';
 /**
  * BoletimController class.
  *
- * @author      Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     Avaliacao
  * @subpackage  Modules
- * @since       Classe disponÌvel desde a vers„o 1.1.0
+ * @since       Classe dispon√≠vel desde a vers√£o 1.1.0
  * @version     @@package_version@@
  */
 class BoletimController extends Core_Controller_Page_ViewController
 {
   protected $_dataMapper = 'Avaliacao_Model_NotaAlunoDataMapper';
-  protected $_titulo     = 'AvaliaÁ„o do aluno';
+  protected $_titulo     = 'Avalia√ß√£o do aluno';
   protected $_processoAp = 642;
 
   /**
@@ -76,7 +76,7 @@ class BoletimController extends Core_Controller_Page_ViewController
    */
   public function __construct()
   {
-    // Id do usu·rio na session
+    // Id do usu√°rio na session
     $usuario = $this->getSession()->id_pessoa;
 
     $this->_service = new Avaliacao_Service_Boletim(array(
@@ -86,19 +86,19 @@ class BoletimController extends Core_Controller_Page_ViewController
 
     $this->_situacao = $this->_service->getSituacaoAluno();
 
-    // Se o par‚metro for passado, chama mÈtodo para promover o aluno
+    // Se o par√¢metro for passado, chama m√©todo para promover o aluno
     if (!is_null($this->getRequest()->promove)) {
       try {
         $this->_service->promover((bool) $this->getRequest()->promove);
 
-        // Instancia o boletim para carregar service com as alteraÁıes efetuadas
+        // Instancia o boletim para carregar service com as altera√ß√µes efetuadas
         $this->_service = new Avaliacao_Service_Boletim(array(
           'matricula' => $this->getRequest()->matricula,
           'usuario' => $usuario
         ));
       }
       catch (CoreExt_Service_Exception $e) {
-        // Ok, situaÁ„o do aluno pode estar em andamento ou matrÌcula j· foi promovida
+        // Ok, situa√ß√£o do aluno pode estar em andamento ou matr√≠cula j√° foi promovida
       }
     }
 
@@ -106,7 +106,7 @@ class BoletimController extends Core_Controller_Page_ViewController
   }
 
   /**
-   * Verifica um array de situaÁıes de componentes curriculares e retorna TRUE
+   * Verifica um array de situa√ß√µes de componentes curriculares e retorna TRUE
    * quando ao menos um dos componentes estiver encerrado (aprovado ou reprovado).
    *
    * @param array $componentes
@@ -134,7 +134,7 @@ class BoletimController extends Core_Controller_Page_ViewController
    */
   public function Gerar()
   {
-    // Dados da matrÌcula
+    // Dados da matr√≠cula
     $matricula = $this->_service->getOption('matriculaData');
 
     // Nome do aluno
@@ -148,44 +148,44 @@ class BoletimController extends Core_Controller_Page_ViewController
     // Nome do curso
     $curso = $matricula['curso_nome'];
 
-    // Nome da sÈrie
+    // Nome da s√©rie
     $serie = $matricula['serie_nome'];
 
     // Nome da turma
     $turma = $matricula['turma_nome'];
 
-    // SituaÁ„o da matrÌcula
+    // Situa√ß√£o da matr√≠cula
     $situacao = App_Model_MatriculaSituacao::getInstance();
     $situacao = $situacao->getValue($matricula['aprovado']);
 
-    // Dados da matrÌcula
+    // Dados da matr√≠cula
     $this->addDetalhe(array('Aluno', $nome));
     $this->addDetalhe(array('Escola', $escola));
     $this->addDetalhe(array('Curso', $curso));
-    $this->addDetalhe(array('SÈrie/Turma', $serie . ' / ' . $turma));
-    $this->addDetalhe(array('SituaÁ„o', $situacao));
+    $this->addDetalhe(array('S√©rie/Turma', $serie . ' / ' . $turma));
+    $this->addDetalhe(array('Situa√ß√£o', $situacao));
 
-    // Booleano para saber se o tipo de nota È nenhum.
+    // Booleano para saber se o tipo de nota √© nenhum.
     $nenhumaNota = ($this->_service->getRegra()->get('tipoNota') ==
       RegraAvaliacao_Model_Nota_TipoValor::NENHUM);
 
-    // Booleano para saber o tipo de presenÁa em que ocorre apuraÁ„o
+    // Booleano para saber o tipo de presen√ßa em que ocorre apura√ß√£o
     $porComponente = ($this->_service->getRegra()->get('tipoPresenca') ==
       RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE);
 
-    // Dados da regra de avaliaÁ„o
-    $this->addDetalhe(array('Regra avaliaÁ„o', $this->_service->getRegra()));
-    $this->addDetalhe(array('ApuraÁ„o de falta', $this->_service->getRegra()->tipoPresenca));
+    // Dados da regra de avalia√ß√£o
+    $this->addDetalhe(array('Regra avalia√ß√£o', $this->_service->getRegra()));
+    $this->addDetalhe(array('Apura√ß√£o de falta', $this->_service->getRegra()->tipoPresenca));
     $this->addDetalhe(array('Parecer descritivo', $this->_service->getRegra()->parecerDescritivo));
-    $this->addDetalhe(array('Progress„o', $this->_service->getRegra()->tipoProgressao));
+    $this->addDetalhe(array('Progress√£o', $this->_service->getRegra()->tipoProgressao));
 
     if ($nenhumaNota) {
-      $media = 'N„o usa nota';
+      $media = 'N√£o usa nota';
     }
     else {
       $media = $this->_service->getRegra()->media;
     }
-    $this->addDetalhe(array('MÈdia', $media));
+    $this->addDetalhe(array('M√©dia', $media));
 
     // Cria um array com a quantidade de etapas de 1 a n
     $etapas = $this->getEtapas();
@@ -207,13 +207,13 @@ class BoletimController extends Core_Controller_Page_ViewController
     // Usa helper de tabela para criar a tabela de notas/faltas
     $table = CoreExt_View_Helper_TableHelper::getInstance();
 
-    // Enum para situaÁ„o de matrÌcula
+    // Enum para situa√ß√£o de matr√≠cula
     $situacao = App_Model_MatriculaSituacao::getInstance();
 
-    // SituaÁ„o do boletim do aluno
+    // Situa√ß√£o do boletim do aluno
     $sit = $this->_situacao;
 
-    // TÌtulos da tabela
+    // T√≠tulos da tabela
     $labels = array();
     $labels[] = array('data' => 'Disciplinas', 'attributes' => $attributes);
 
@@ -232,8 +232,8 @@ class BoletimController extends Core_Controller_Page_ViewController
       $labels[] = $data;
     }
 
-    // Flag para auxiliar na composiÁ„o da tabela em casos onde o parecer
-    // descritivo È lanÁado anualmente e por componente
+    // Flag para auxiliar na composi√ß√£o da tabela em casos onde o parecer
+    // descritivo √© lan√ßado anualmente e por componente
     $parecerComponenteAnual = FALSE;
     $colspan = 0;
 
@@ -251,10 +251,10 @@ class BoletimController extends Core_Controller_Page_ViewController
     }
 
     if (! $nenhumaNota) {
-      $labels[] = array('data' => $porComponente ? '' : 'MÈdia', 'attributes' => $attributes, 'colspan' => $porComponente ? $colspan : 1);
+      $labels[] = array('data' => $porComponente ? '' : 'M√©dia', 'attributes' => $attributes, 'colspan' => $porComponente ? $colspan : 1);
     }
 
-    // Inclui coluna para % de presenÁa geral.
+    // Inclui coluna para % de presen√ßa geral.
     if (!$porComponente) {
       if ($this->alunoPossuiNotaRec()) {
         $labels[] = array('data' => 'Exame', 'attributes' => $attributes);
@@ -264,13 +264,13 @@ class BoletimController extends Core_Controller_Page_ViewController
         $labels[] = array('data' => 'Parecer', 'attributes' => $attributes);
       }
 
-      $labels[] = array('data' => 'PresenÁa', 'attributes' => $attributes);
-      $labels[] = array('data' => 'SituaÁ„o', 'attributes' => $attributes);
+      $labels[] = array('data' => 'Presen√ßa', 'attributes' => $attributes);
+      $labels[] = array('data' => 'Situa√ß√£o', 'attributes' => $attributes);
     }
 
     $table->addHeaderRow($labels);
 
-    // Cria sub-header caso tenha faltas lanÁadas por componentes
+    // Cria sub-header caso tenha faltas lan√ßadas por componentes
     if ($porComponente) {
       $subLabels = array();
       $subLabels[] = array('attributes' => $attributes);
@@ -282,7 +282,7 @@ class BoletimController extends Core_Controller_Page_ViewController
       }
 
       if (! $nenhumaNota) {
-        $subLabels[] = array('data' => 'MÈdia', 'attributes' => $attributes);
+        $subLabels[] = array('data' => 'M√©dia', 'attributes' => $attributes);
       }
 
       if ($this->alunoPossuiNotaRec()) {
@@ -294,8 +294,8 @@ class BoletimController extends Core_Controller_Page_ViewController
           $subLabels[] = array('data' => 'Parecer', 'attributes' => $attributes);
         }
 
-        $subLabels[] = array('data' => 'PresenÁa', 'attributes' => $attributes);
-        $subLabels[] = array('data' => 'SituaÁ„o', 'attributes' => $attributes);
+        $subLabels[] = array('data' => 'Presen√ßa', 'attributes' => $attributes);
+        $subLabels[] = array('data' => 'Situa√ß√£o', 'attributes' => $attributes);
       }
 
       $table->addHeaderRow($subLabels);
@@ -311,7 +311,7 @@ class BoletimController extends Core_Controller_Page_ViewController
     $mediasComponentes = $this->_service->getMediasComponentes();
     $faltasComponentes = $this->_service->getFaltasComponentes();
 
-    // Calcula as porcentagens de presenÁa
+    // Calcula as porcentagens de presen√ßa
     $faltasStats = $this->_service->getSituacaoFaltas();
 
     // Texto do link
@@ -324,9 +324,9 @@ class BoletimController extends Core_Controller_Page_ViewController
       $linkPath = 'nota';
     }
 
-    // Par‚metros para o link de nota/falta nova
+    // Par√¢metros para o link de nota/falta nova
     $newLink = array(
-      'text'  => 'LanÁar ' . $linkText,
+      'text'  => 'Lan√ßar ' . $linkText,
       'path'  => $linkPath,
       'query' => array(
         'matricula' => $matricula['cod_matricula'],
@@ -348,14 +348,14 @@ class BoletimController extends Core_Controller_Page_ViewController
       $faltaStats    = $faltasStats->componentesCurriculares[$id];
       $parecer       = NULL;
 
-      // Caso os pareceres sejam por componente e anuais, recupera a inst‚ncia
+      // Caso os pareceres sejam por componente e anuais, recupera a inst√¢ncia
       if ($parecerComponenteAnual) {
         $parecer = $this->_service->getPareceresComponentes();
         $parecer = $parecer[$id];
       }
 
       if ($porComponente == TRUE) {
-        $new = $url->l('LanÁar nota', 'nota',
+        $new = $url->l('Lan√ßar nota', 'nota',
           array('query' =>
             array('matricula' => $matricula['cod_matricula'], 'componenteCurricular' => $id)
           )
@@ -387,7 +387,7 @@ class BoletimController extends Core_Controller_Page_ViewController
         }
 
         /*
-         * ExibiÁ„o muito din‚mica. Em resumo, os casos s„o:
+         * Exibi√ß√£o muito din√¢mica. Em resumo, os casos s√£o:
          *
          * 1. nota & falta componente
          * 2. nota
@@ -435,7 +435,7 @@ class BoletimController extends Core_Controller_Page_ViewController
         }
       }
 
-      // MÈdia no componente curricular
+      // M√©dia no componente curricular
       if (! $nenhumaNota) {
         $media = $medias[0]->mediaArredondada . ($medias[0]->etapa == 'Rc' ? ' (Rc)' : '');
         $data[] = array('data' => $media, 'attributes' => $attributes);
@@ -471,7 +471,7 @@ class BoletimController extends Core_Controller_Page_ViewController
         );
 
         if (0 == count($parecer)) {
-          $text = 'LanÁar';
+          $text = 'Lan√ßar';
         }
         else {
           $text = 'Editar';
@@ -492,7 +492,7 @@ class BoletimController extends Core_Controller_Page_ViewController
         }
       }
 
-      // InformaÁıes extras como porcentagem de presenÁa e situaÁ„o do aluno
+      // Informa√ß√µes extras como porcentagem de presen√ßa e situa√ß√£o do aluno
       if ($porComponente) {
         $data[] = array('data' => sprintf('%.2f%%', $faltaStats->porcentagemPresenca), 'attributes' => $attributes);
       }
@@ -509,12 +509,12 @@ class BoletimController extends Core_Controller_Page_ViewController
     }
 
     $newLink = array(
-      'text'  => 'LanÁar falta',
+      'text'  => 'Lan√ßar falta',
       'path'  => 'falta',
       'query' => array('matricula' => $matricula['cod_matricula'])
     );
 
-    // SituaÁ„o geral das faltas
+    // Situa√ß√£o geral das faltas
     $data = array(0 => array('data' => 'Faltas', 'attributes' => array('style' => 'padding: 5px; text-align: left')));
     $faltas = $this->_service->getFaltasGerais();
     $new = $url->l($newLink['text'], $newLink['path'], array('query' => $newLink['query']));
@@ -554,16 +554,16 @@ class BoletimController extends Core_Controller_Page_ViewController
       $data[] = array('data' => '', 'attributes' => $attributes);
     }
 
-    // Porcentagem presenÁa
+    // Porcentagem presen√ßa
     $data[] = array('data' => sprintf('%.2f%%', $faltasStats->porcentagemPresenca), 'attributes' => $attributes);
     $data[] = array('data' => $situacao->getValue($sit->falta->situacao), 'attributes' => $attributes);
 
     $table->addFooterRow($data, $zebra[$class ^ 1]);
 
-    // Adiciona linha com links para lanÁamento de parecer descritivo geral por etapa
+    // Adiciona linha com links para lan√ßamento de parecer descritivo geral por etapa
     if ($this->_service->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL) {
       $newLink = array(
-        'text'  => 'LanÁar parecer',
+        'text'  => 'Lan√ßar parecer',
         'path'  => 'parecer',
         'query' => array('matricula' => $matricula['cod_matricula'])
       );
@@ -600,16 +600,16 @@ class BoletimController extends Core_Controller_Page_ViewController
       $table->addFooterRow($data);
     }
 
-    // Adiciona tabela na p·gina
+    // Adiciona tabela na p√°gina
     $this->addDetalhe(array('Disciplinas', '<div id="disciplinas">' . $table . '</div>'));
 
-    // Adiciona link para lanÁamento de parecer descritivo anual geral
+    // Adiciona link para lan√ßamento de parecer descritivo anual geral
     if (
       FALSE == $sit->andamento &&
       $this->_service->getRegra()->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL
     ) {
       if (0 == count($this->_service->getPareceresGerais())) {
-        $label = 'LanÁar';
+        $label = 'Lan√ßar';
       }
       else {
         $label = 'Editar';
@@ -623,9 +623,9 @@ class BoletimController extends Core_Controller_Page_ViewController
       $this->addDetalhe(array('Parecer descritivo anual', $url->l($link['text'], $link['path'], array('query' => $link['query']))));
     }
 
-    // Caso o tipo de progress„o seja manual, a situaÁ„o das notas/faltas n„o
-    // esteja mais em "andamento" e a matrÌcula esteja em andamento, exibe
-    // botıes de aÁ„o
+    // Caso o tipo de progress√£o seja manual, a situa√ß√£o das notas/faltas n√£o
+    // esteja mais em "andamento" e a matr√≠cula esteja em andamento, exibe
+    // bot√µes de a√ß√£o
     if (
       $this->_service->getRegra()->get('tipoProgressao') ==
         RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MANUAL &&
@@ -644,7 +644,7 @@ class BoletimController extends Core_Controller_Page_ViewController
         $url->l($link['text'], $link['path'], array('query' => $link['query']))
         . '</span>';
 
-      $link['text'] = 'n„o (retÈm o aluno)';
+      $link['text'] = 'n√£o (ret√©m o aluno)';
       $link['query']['promove'] = 0;
 
       $nao = '<span class="confirm no">' .
@@ -683,7 +683,7 @@ class BoletimController extends Core_Controller_Page_ViewController
 
 
   /**
-  * caso algum componente curricular e alguma etapa possua nota exame lanÁada, ent„o o aluno possui nota exame
+  * caso algum componente curricular e alguma etapa possua nota exame lan√ßada, ent√£o o aluno possui nota exame
   */
   protected function alunoPossuiNotaRec(){
 
