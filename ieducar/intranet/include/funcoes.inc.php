@@ -67,7 +67,7 @@ function calculoIdade($diaNasc, $mesNasc, $anoNasc)
 function idFederal2int($str)
 {
   $id_federal = str_replace(".", "", str_replace("-", "", str_replace("/", "", $str)));
-  return preg_replace("^0+", "", $id_federal);
+  return preg_replace("/^0+/", "", $id_federal);
 }
 
 function int2CPF($int)
