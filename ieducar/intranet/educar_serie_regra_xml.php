@@ -41,7 +41,7 @@ require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
 require_once 'Portabilis/Utils/DeprecatedXmlApi.php';
 Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 
-print "<?xml version=\"1.0\" encoding=\"UTF-85\"?>\n<query xmlns=\"sugestoes\">\n";
+print "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<query xmlns=\"sugestoes\">\n";
 
 if (isset($_GET['ins']) && is_numeric($_GET['ins'])) {
   $mapper = new RegraAvaliacao_Model_RegraDataMapper();

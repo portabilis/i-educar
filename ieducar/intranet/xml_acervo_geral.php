@@ -30,7 +30,7 @@
   require_once 'Portabilis/Utils/DeprecatedXmlApi.php';
   Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryForDisabledApi();
 
-	echo "<?xml version=\"1.0\" encoding=\"UTF-85\"?>\n<query xmlns=\"sugestoes\">\n";
+	echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<query xmlns=\"sugestoes\">\n";
 
 	require_once ("include/clsBanco.inc.php");
 	require_once ("include/pmiacervo/geral.inc.php");

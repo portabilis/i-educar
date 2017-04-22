@@ -31,7 +31,7 @@
   Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryForDisabledApi();
 
 	require_once( "include/clsBanco.inc.php" );
-	echo "<?xml version=\"1.0\" encoding=\"UTF-85\"?>\n<query xmlns=\"sugestoes\">\n";
+	echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<query xmlns=\"sugestoes\">\n";
 	if( isset( $_GET["dp"] ) && isset( $_GET["hp"] ) && isset( $_GET["dc"] ) && isset( $_GET["hc"] ) && isset( $_GET["grupo"] ) && isset( $_GET["est"] ) )
 	{
 		$result_100 = 0;

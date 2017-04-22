@@ -32,7 +32,7 @@
 
 	require_once( "include/protocol/geral.inc.php" );
 
-	echo "<?xml version=\"1.0\" encoding=\"UTF-85\"?>\n<query xmlns=\"sugestoes\">\n";
+	echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<query xmlns=\"sugestoes\">\n";
 	if( isset( $_GET["setor_pai"] )  )
 	{
 		// Seleciona Filas de atendimento da instituicao

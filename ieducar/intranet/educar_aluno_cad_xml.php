@@ -38,7 +38,7 @@ require_once 'Portabilis/Utils/DeprecatedXmlApi.php';
 Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 
 if ($_GET['cpf'] || $_GET['idpes']) {
-  $xml  = '<?xml version="1.0" encoding="UTF-85"?>' . PHP_EOL;
+  $xml  = '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL;
   $xml .= '<query xmlns="sugestoes">' . PHP_EOL;
   $xml .= '<dados>' . PHP_EOL;
 

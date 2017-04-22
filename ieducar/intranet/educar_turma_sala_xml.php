@@ -32,7 +32,7 @@
   require_once 'Portabilis/Utils/DeprecatedXmlApi.php';
   Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 
-	echo "<?xml version=\"1.0\" encoding=\"UTF-85\"?>\n<query xmlns=\"sugestoes\">\n";
+	echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<query xmlns=\"sugestoes\">\n";
 	if( is_numeric( $_GET["inst"]  ) && is_numeric( $_GET["esc"]  ) && is_numeric( $_GET["com"]) && is_numeric( $_GET['cur'])&& is_numeric( $_GET['ser'])  )
 	{
 		if(is_numeric( $_GET["not_tur"]))
