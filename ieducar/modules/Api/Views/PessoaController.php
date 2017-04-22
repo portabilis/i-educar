@@ -134,7 +134,7 @@ class PessoaController extends ApiCoreController
              (SELECT zona_localizacao FROM cadastro.endereco_externo WHERE idpes = $2))) as zona_localizacao,
 
              (SELECT COALESCE((SELECT l.idmun FROM public.logradouro l, cadastro.endereco_pessoa ep WHERE l.idlog = ep.idlog and ep.idpes = $2),
-             (SELECT idmun FROM public.logradouro l, urbano.cep_logradouro cl, cadastro.endereco_externo ee 
+             (SELECT idmun FROM public.logradouro l, urbano.cep_logradouro cl, cadastro.endereco_externo ee
               WHERE cl.idlog = l.idlog AND cl.cep = ee.cep and ee.idpes = $2 order by 1 desc limit 1))) as idmun,
 
               idmun_nascimento,
@@ -166,7 +166,7 @@ class PessoaController extends ApiCoreController
     $details = $this->fetchPreparedQuery($sql, array($alunoId, $pessoaId), false, 'first-row');
 
     $attrs   = array('cpf', 'rg', 'data_nascimento', 'pai_id', 'mae_id', 'responsavel_id', 'nome_pai', 'nome_mae',
-                       'nome_responsavel','sexo','estadocivil', 'cep', 'logradouro', 'idtlog', 'bairro', 
+                       'nome_responsavel','sexo','estadocivil', 'cep', 'logradouro', 'idtlog', 'bairro',
                        'zona_localizacao', 'idbai', 'idlog', 'idmun', 'idmun_nascimento', 'complemento',
                        'apartamento', 'andar', 'bloco', 'numero' , 'letra');
     $details = Portabilis_Array_Utils::filter($details, $attrs);
@@ -244,7 +244,7 @@ class PessoaController extends ApiCoreController
 
       $_sql = " SELECT (select nome from cadastro.pessoa where pessoa.idpes = fisica.idpes) as nome ,ideciv as estadocivil, sexo FROM cadastro.fisica WHERE idpes = $1; ";
 
-      $details = $this->fetchPreparedQuery($_sql, $this->getRequest()->id, false, 'first-row');      
+      $details = $this->fetchPreparedQuery($_sql, $this->getRequest()->id, false, 'first-row');
 
       $details['nome'] = Portabilis_String_Utils::toUtf8($details['nome']);
 
@@ -304,14 +304,14 @@ class PessoaController extends ApiCoreController
 
     // search by idpes or cpf
     $sqls[] = "select distinct pessoa.idpes as id, pessoa.nome as name from cadastro.pessoa,
-               cadastro.fisica where fisica.idpes = pessoa.idpes and (pessoa.idpes like $1||'%' or
-               trim(leading '0' from fisica.cpf) like trim(leading '0' from $1)||'%' or
-               fisica.cpf like $1||'%') order by id limit 15";
+               cadastro.fisica where fisica.idpes = pessoa.idpes and (pessoa.idpes::varchar like $1||'%' or
+               trim(leading '0' from fisica.cpf::varchar) like trim(leading '0' from $1::varchar)||'%' or
+               fisica.cpf::varchar like $1||'%') order by id limit 15";
 
     // search by rg
     $sqls[] = "select distinct pessoa.idpes as id, pessoa.nome as name from cadastro.pessoa, cadastro.documento
-               where pessoa.idpes = documento.idpes and ((documento.rg like $1||'%') or
-               trim(leading '0' from documento.rg) like trim(leading '0' from $1)||'%') order by id limit 15";
+               where pessoa.idpes = documento.idpes and ((documento.rg::varchar like $1||'%') or
+               trim(leading '0' from documento.rg::varchar) like trim(leading '0' from $1::varchar)||'%') order by id limit 15";
 
     return $sqls;
   }
