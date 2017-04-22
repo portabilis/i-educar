@@ -207,7 +207,7 @@ class clsJuridica
 			{
 				$int_cnpj = substr($int_cnpj,$i);
 			}
-			$where .= "{$whereAnd} cnpj ILIKE  '%$int_cnpj%' ";
+			$where .= "{$whereAnd} cnpj::varchar ILIKE  '%$int_cnpj%' ";
 			$whereAnd = " AND ";
 		}
 
