@@ -388,9 +388,25 @@ class clsPmieducarExemplarEmprestimo
 	 *
 	 * @return array
 	 */
-	function lista( $int_cod_emprestimo = null, $int_ref_usuario_devolucao = null, $int_ref_usuario_cad = null, $int_ref_cod_cliente = null, $int_ref_cod_exemplar = null, $date_data_retirada_ini = null, $date_data_retirada_fim = null, $date_data_devolucao_ini = null, $date_data_devolucao_fim = null, $int_valor_multa = null, $devolvido = false, $int_ref_cod_biblioteca = null, $multa = false, $int_ref_cod_instituicao = null, $int_ref_cod_escola = null, $str_titulo_exemplar = null, $tombo = null)
+	function lista($int_cod_emprestimo        = null,
+	               $int_ref_usuario_devolucao = null,
+								 $int_ref_usuario_cad       = null,
+								 $int_ref_cod_cliente       = null,
+								 $int_ref_cod_exemplar      = null,
+								 $date_data_retirada_ini    = null,
+								 $date_data_retirada_fim    = null,
+								 $date_data_devolucao_ini   = null,
+								 $date_data_devolucao_fim   = null,
+								 $int_valor_multa           = null,
+								 $devolvido                 = false,
+								 $int_ref_cod_biblioteca    = null,
+								 $multa                     = false,
+								 $int_ref_cod_instituicao   = null,
+								 $int_ref_cod_escola        = null,
+								 $str_titulo_exemplar       = null,
+								 $tombo                     = null)
 	{
-		$sql = "SELECT {$this->_campos_lista}, a.ref_cod_biblioteca, b.ref_cod_instituicao, b.ref_cod_escola
+		$sql = "SELECT {$this->_campos_lista}, a.ref_cod_biblioteca, b.ref_cod_instituicao, b.ref_cod_escola, b.bloqueia_emprestimo_em_atraso
 		          FROM {$this->_tabela} ee,
 							     {$this->_schema}exemplar e,
 									 {$this->_schema}acervo a,
