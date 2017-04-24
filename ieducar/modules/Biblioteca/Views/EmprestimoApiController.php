@@ -659,7 +659,7 @@ class EmprestimoApiController extends ApiCoreController
     if ($this->canPostEmprestimo()) {
       $emprestimo = new clsPmieducarExemplarEmprestimo();
       if ($this->verificaEmprestimoEmAtraso($emprestimo)){
-        $this->messenger->append("Operação não realizada, pois o cliente possui empréstimos em atraso de entrega.", 'error');
+        $this->messenger->append("Operação não realizada, pois o cliente possui empréstimos em atraso de devolução.", 'error');
         return;
       }
       $emprestimo->ref_usuario_cad  = $this->getSession()->id_pessoa;

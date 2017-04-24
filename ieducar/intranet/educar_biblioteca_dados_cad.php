@@ -160,7 +160,7 @@ class indice extends clsCadastro
 //		$this->campoLista( "requisita_senha", "Requisita Senha", $opcoes, $this->requisita_senha );
 		$this->campoCheck( "requisita_senha", "Requisita Senha", $this->requisita_senha );
 
-		$options = array('label' => 'Bloquear novos empréstimos em caso de atrasos de entrega', 'value' => dbBool($this->bloqueia_emprestimo_em_atraso));
+		$options = array('label' => 'Bloquear novos empréstimos em caso de atrasos de devolução', 'value' => dbBool($this->bloqueia_emprestimo_em_atraso));
 	  $this->inputsHelper()->checkbox('bloqueia_emprestimo_em_atraso', $options);
 
 		//$this->campoCheck( "bloqueia_emprestimo_em_atraso", "Bloquear novos empréstimos em caso de atrasos de entrega", dbBool($this->bloqueia_emprestimo_em_atraso) );
