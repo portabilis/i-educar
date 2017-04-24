@@ -109,14 +109,16 @@ class clsModulesAuditoriaNota {
 		$separador = ", ";
 
 		if(is_string($this->stringNotaAntiga)){
+			$this->stringNotaAntiga = str_replace($this->stringNotaAntiga, "'", "\'");
 			$campos .= "{$separador}valor_antigo";
-			$valores .= "{$separador}'{$this->stringNotaAntiga}'";
+			$valores .= "{$separador}E'{$this->stringNotaAntiga}'";
 			$separador = ", ";
 		}
 
 		if(is_string($this->stringNotaNova)){
+			$this->stringNotaNova = str_replace($this->stringNotaNova, "'", "\'");
 			$campos .= "{$separador}valor_novo";
-			$valores .= "{$separador}'{$this->stringNotaNova}'";
+			$valores .= "{$separador}E'{$this->stringNotaNova}'";
 			$separador = ", ";
 		}
 
