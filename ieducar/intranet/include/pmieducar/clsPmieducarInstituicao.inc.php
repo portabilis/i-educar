@@ -77,7 +77,6 @@ class clsPmieducarInstituicao
   var $componente_curricular_turma;
   var $reprova_dependencia_ano_concluinte;
   var $data_educacenso;
-  var $url_novo_educacao;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -145,7 +144,7 @@ class clsPmieducarInstituicao
     $this->_tabela = "{$this->_schema}instituicao";
     $this->_campos_lista = $this->_todos_campos = "cod_instituicao, ref_usuario_exc, ref_usuario_cad, ref_idtlog, ref_sigla_uf, cep, cidade, bairro, logradouro, numero, complemento, nm_responsavel, ddd_telefone, telefone, data_cadastro, data_exclusao, ativo, nm_instituicao, data_base_transferencia, data_base_remanejamento, controlar_espaco_utilizacao_aluno, percentagem_maxima_ocupacao_salas, quantidade_alunos_metro_quadrado, exigir_vinculo_turma_professor, gerar_historico_transferencia, matricula_apenas_bairro_escola, restringir_historico_escolar, coordenador_transporte, restringir_multiplas_enturmacoes, permissao_filtro_abandono_transferencia, data_base_matricula, multiplas_reserva_vaga,
       reserva_integral_somente_com_renda, data_expiracao_reserva_vaga, data_fechamento, componente_curricular_turma,
-      controlar_posicao_historicos, reprova_dependencia_ano_concluinte, data_educacenso, bloqueia_matricula_serie_nao_seguinte, url_novo_educacao ";
+      controlar_posicao_historicos, reprova_dependencia_ano_concluinte, data_educacenso, bloqueia_matricula_serie_nao_seguinte ";
 
     if (is_numeric($ref_usuario_cad)) {
       if (class_exists('clsPmieducarUsuario')) {
@@ -570,12 +569,6 @@ class clsPmieducarInstituicao
         $gruda = ", ";
       }
 
-      if (is_string($this->url_novo_educacao)) {
-        $campos .= "{$gruda}url_novo_educacao";
-        $valores .= "{$gruda}'{$this->url_novo_educacao}'";
-        $gruda = ", ";
-      }
-
       $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
       return $db->InsertId("{$this->_tabela}_cod_instituicao_seq");
     }
@@ -843,11 +836,6 @@ class clsPmieducarInstituicao
         $gruda = ", ";
       }else{
         $set .= "{$gruda}data_educacenso = NULL ";
-        $gruda = ", ";
-      }
-
-      if (is_string($this->url_novo_educacao)) {
-        $set .= "{$gruda}url_novo_educacao = '{$this->url_novo_educacao}'";
         $gruda = ", ";
       }
 

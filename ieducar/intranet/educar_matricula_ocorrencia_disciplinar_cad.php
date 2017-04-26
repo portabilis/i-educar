@@ -344,7 +344,7 @@ class indice extends clsCadastro
   }
   protected function enviaOcorrenciaNovoEducacao($cod_ocorrencia_disciplinar){
 
-    $tmp_obj = new clsPmieducarInstituicao( $this->ref_cod_instituicao );
+    $tmp_obj = new clsPmieducarConfiguracoesGerais( $this->ref_cod_instituicao );
     $instituicao = $tmp_obj->detalhe();
 
   	$obj_tmp   = new clsPmieducarMatricula($this->ref_cod_matricula);
@@ -375,8 +375,9 @@ class indice extends clsCadastro
   }
 
   protected function possuiConfiguracaoNovoEducacao(){
-    $tmp_obj = new clsPmieducarInstituicao( $this->ref_cod_instituicao );
+    $tmp_obj = new clsPmieducarConfiguracoesGerais( $this->ref_cod_instituicao );
     $instituicao = $tmp_obj->detalhe();
+
 	  return strlen($instituicao['url_novo_educacao']) > 0;
   }
 

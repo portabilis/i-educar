@@ -31,7 +31,7 @@ if (!function_exists('mb_strlen')) {
     function mb_strlen($s, $enc = null) { return p\Mbstring::mb_strlen($s, $enc); }
     function mb_strpos($s, $needle, $offset = 0, $enc = null) { return p\Mbstring::mb_strpos($s, $needle, $offset, $enc); }
     function mb_strtolower($s, $enc = null) { return p\Mbstring::mb_strtolower($s, $enc); }
-    function strtoupper($s, $enc = null) { return p\Mbstring::strtoupper($s, $enc); }
+#    function strtoupper($s, $enc = null) { return p\Mbstring::strtoupper($s, $enc); }
     function mb_substitute_character($char = null) { return p\Mbstring::mb_substitute_character($char); }
     function mb_substr($s, $start, $length = 2147483647, $enc = null) { return p\Mbstring::mb_substr($s, $start, $length, $enc); }
     function mb_stripos($s, $needle, $offset = 0, $enc = null) { return p\Mbstring::mb_stripos($s, $needle, $offset, $enc); }
