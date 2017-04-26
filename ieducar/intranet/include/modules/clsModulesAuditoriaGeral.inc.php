@@ -46,10 +46,21 @@ class clsModulesAuditoriaGeral
   const OPERACAO_ALTERACAO = 2;
   const OPERACAO_EXCLUSAO = 3;
 
+  var $_campos_lista;
+  var $_tabela;
+
   var $usuario_id;
   var $rotina;
 
   function clsModulesAuditoriaGeral($rotina, $usuario_id){
+    $this->_campos_lista = 'usuario_id,
+                            operacao,
+                            rotina,
+                            valor_novo,
+                            valor_antigo,
+                            data_hora';
+    $this->_tabela = 'modules.auditoria_geral';
+
     $this->rotina = $rotina;
     $this->usuario_id = $usuario_id;
   }
@@ -159,10 +170,56 @@ class clsModulesAuditoriaGeral
 
   public function alteracao($valorAntigo, $valorNovo) {
     $this->insereAuditoria(self::OPERACAO_ALTERACAO, $valorAntigo, $valorNovo);
-
   }
 
   public function exclusao($dados) {
     $this->insereAuditoria(self::OPERACAO_EXCLUSAO, $dados, NULL);
+  }
+
+  function lista() {
+    $filtros = "";
+
+    $whereAnd = " WHERE ";
+
+    if( is_numeric( $instituicao_id ) )
+    {
+      $filtros .= "{$whereAnd} cc.instituicao_id = '{$instituicao_id}'";
+      $whereAnd = " AND ";
+    }
+
+    $db = new clsBanco();
+    $countCampos = count( explode( ",", $this->_campos_lista ) );
+    $resultado = array();
+
+    $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela} ";
+    $sql .= $filtros;
+
+    $this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} cc {$filtros}" );
+
+    $db->Consulta( $sql );
+
+    if( $countCampos > 1 )
+    {
+      while ( $db->ProximoRegistro() )
+      {
+        $tupla = $db->Tupla();
+
+        $tupla["_total"] = $this->_total;
+        $resultado[] = $tupla;
+      }
+    }
+    else
+    {
+      while ( $db->ProximoRegistro() )
+      {
+        $tupla = $db->Tupla();
+        $resultado[] = $tupla[$this->_campos_lista];
+      }
+    }
+    if( count( $resultado ) )
+    {
+      return $resultado;
+    }
+    return false;
   }
 }
