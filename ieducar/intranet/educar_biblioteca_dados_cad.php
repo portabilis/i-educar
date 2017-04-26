@@ -58,6 +58,7 @@ class indice extends clsCadastro
 	var $data_cadastro;
 	var $data_exclusao;
 	var $requisita_senha;
+	var $bloqueia_emprestimo_em_atraso;
 	var $ativo;
 	var $dias_espera;
 
@@ -158,6 +159,11 @@ class indice extends clsCadastro
 //		$opcoes = array( "" => "Selecione", 1 => "n&atilde;o", 2 => "sim" );
 //		$this->campoLista( "requisita_senha", "Requisita Senha", $opcoes, $this->requisita_senha );
 		$this->campoCheck( "requisita_senha", "Requisita Senha", $this->requisita_senha );
+
+		$options = array('label' => 'Bloquear novos empréstimos em caso de atrasos de devolução', 'value' => dbBool($this->bloqueia_emprestimo_em_atraso));
+	  $this->inputsHelper()->checkbox('bloqueia_emprestimo_em_atraso', $options);
+
+		//$this->campoCheck( "bloqueia_emprestimo_em_atraso", "Bloquear novos empréstimos em caso de atrasos de entrega", dbBool($this->bloqueia_emprestimo_em_atraso) );
 		$this->campoNumero( "dias_espera", "Dias Espera", $this->dias_espera, 2, 2, true );
 
 		/*if ($this->tombo_automatico)
@@ -279,7 +285,20 @@ class indice extends clsCadastro
 
     $this->requisita_senha = is_null($this->requisita_senha) ? 0 : 1;
 
-		$obj = new clsPmieducarBiblioteca( $this->cod_biblioteca, null, null, null, $this->valor_multa, $this->max_emprestimo, $this->valor_maximo_multa, null, null, $this->requisita_senha, 1, $this->dias_espera, $this->tombo_automatico );
+		$obj = new clsPmieducarBiblioteca($this->cod_biblioteca,
+																			null,
+																			null,
+																			null,
+																			$this->valor_multa,
+																			$this->max_emprestimo,
+																			$this->valor_maximo_multa,
+																			null,
+																			null,
+																			$this->requisita_senha,
+																			1,
+																			$this->dias_espera,
+																			$this->tombo_automatico,
+																			$this->bloqueia_emprestimo_em_atraso == "on");
 		$editou = $obj->edita();
 		if( $editou )
 		{
