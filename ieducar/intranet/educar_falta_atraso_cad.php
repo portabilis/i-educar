@@ -147,11 +147,8 @@ class indice extends clsCadastro
     $this->campoOculto('cod_falta_atraso', $this->cod_falta_atraso);
     $this->campoOculto('ref_cod_servidor', $this->ref_cod_servidor);
 
-    // Foreign keys
-    $obrigatorio     = TRUE;
-    $get_instituicao = TRUE;
-    $get_escola      = TRUE;
-    include 'include/pmieducar/educar_campo_lista.php';
+    $this->inputsHelper()->dynamic('instituicao', array('value' => $this->ref_cod_instituicao, 'disabled' => $desabilitado));
+    $this->inputsHelper()->dynamic('escola', array('value' => $this->ref_cod_escola, 'disabled' => $desabilitado));
 
     // Text
     // @todo CoreExt_Enum
