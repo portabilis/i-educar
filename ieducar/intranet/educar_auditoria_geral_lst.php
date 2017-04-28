@@ -58,8 +58,8 @@ class indice extends clsListagem
 		foreach( $_GET AS $var => $val )
 			$this->$var = ( $val === "" ) ? null: $val;
 
-		$this->campoTexto( "rotina", "Rotina", $this->rotina, 35, 50);
 		$this->campoTexto( "usuario", "Matrícula usuário", $this->usuario, 35, 50);
+		$this->campoTexto( "rotina", "Rotina", $this->rotina, 35, 50);
     $this->inputsHelper()->dynamic(array('dataInicial','dataFinal'));
 
 		$obj_usuario = new clsPmieducarUsuario($this->pessoa_logada);
