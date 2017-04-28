@@ -186,14 +186,31 @@ class clsModulesAuditoriaGeral
     $this->insereAuditoria(self::OPERACAO_EXCLUSAO, $dados, NULL);
   }
 
-  function lista() {
+  function lista($rotina, $usuario, $dataInicial, $dataFinal) {
     $filtros = "";
 
     $whereAnd = " WHERE ";
 
-    if( is_numeric( $instituicao_id ) )
-    {
-      $filtros .= "{$whereAnd} cc.instituicao_id = '{$instituicao_id}'";
+    if(is_string($rotina)) {
+      $filtros .= "{$whereAnd} rotina LIKE '%{$rotina}%'";
+      $whereAnd = " AND ";
+    }
+
+    if(is_string($usuario)) {
+      $filtros .= "{$whereAnd} EXISTS (SELECT 1
+                                         FROM portal.funcionario
+                                        WHERE funcionario.ref_cod_pessoa_fj = auditoria_geral.usuario_id
+                                          AND funcionario.matricula = '{$usuario}')";
+      $whereAnd = " AND ";
+    }
+
+    if(is_string($dataInicial)) {
+      $filtros .= "{$whereAnd} data_hora::date >= '{$dataInicial}'";
+      $whereAnd = " AND ";
+    }
+
+    if(is_string($dataFinal)) {
+      $filtros .= "{$whereAnd} data_hora::date <= '{$dataFinal}'";
       $whereAnd = " AND ";
     }
 
@@ -204,7 +221,7 @@ class clsModulesAuditoriaGeral
     $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela} ";
     $sql .= $filtros;
 
-    $this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} cc {$filtros}" );
+    $this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} {$filtros}" );
 
     $db->Consulta( $sql );
 

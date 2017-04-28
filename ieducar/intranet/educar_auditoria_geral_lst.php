@@ -29,6 +29,7 @@ require_once "include/clsListagem.inc.php";
 require_once "include/clsBanco.inc.php";
 require_once "include/pmieducar/geral.inc.php";
 require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
+require_once 'Portabilis/Date/Utils.php';
 
 class clsIndex extends clsBase
 {
@@ -43,6 +44,9 @@ class clsIndex extends clsBase
 
 class indice extends clsListagem
 {
+
+	var $rotina;
+
 	function Gerar() {
 
 		@session_start();
@@ -54,8 +58,9 @@ class indice extends clsListagem
 		foreach( $_GET AS $var => $val )
 			$this->$var = ( $val === "" ) ? null: $val;
 
+		$this->campoTexto( "rotina", "Rotina", $this->rotina, 35, 50);
+		$this->campoTexto( "usuario", "Matrícula usuário", $this->usuario, 35, 50);
     $this->inputsHelper()->dynamic(array('dataInicial','dataFinal'));
-    $this->campoTexto( "usuario", "Matrícula usuário", $this->usuario, 35, 50);
 
 		$obj_usuario = new clsPmieducarUsuario($this->pessoa_logada);
 		$detalhe = $obj_usuario->detalhe();
@@ -64,33 +69,37 @@ class indice extends clsListagem
 		$limite = 10;
 		$iniciolimit = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$limite-$limite: 0;
 
-		$this->addCabecalhos( array( "Usuário","Operação", "Rotina" ,"Valor antigo", "Valor novo", "Data") );
+		$this->addCabecalhos( array( "Matrícula", "Rotina", "Operação", "Valor antigo", "Valor novo", "Data") );
 
 		$auditoria = new clsModulesAuditoriaGeral();
-		$auditoria = $auditoria->lista();
+		$auditoria = $auditoria->lista($this->rotina,
+																	 $this->usuario,
+																   Portabilis_Date_Utils::brToPgSQL($this->data_inicial),
+																   Portabilis_Date_Utils::brToPgSQL($this->data_final));
 
 		foreach ($auditoria as $a) {
 
 			$valorAntigo = $this->transformaJsonEmTabela($a["valor_antigo"]);
 			$valorNovo = $this->transformaJsonEmTabela($a["valor_novo"]);
 
+			$usuario = new clsFuncionario($a["usuario_id"]);
+			$usuario = $usuario->detalhe();
+
+			$operacao = $this->getNomeOperacao($a["operacao"]);
+
+			$dataAuditoria = Portabilis_Date_Utils::pgSQLToBr($a["data_hora"]);
+
 			$this->addLinhas(array(
-				$a["usuario_id"],
-				$a["operacao"],
-				$a["rotina"],
+				$usuario["matricula"],
+				ucwords($a["rotina"]),
+				$operacao,
 				$valorAntigo,
 				$valorNovo,
-				$a["data_hora"]
+				$dataAuditoria
 			));
 		}
 
 		$this->addPaginador2( "educar_auditoria_geral_lst.php", $total, $_GET, $this->nome, $limite );
-
-		$obj_permissao = new clsPermissoes();
-		if($obj_permissao->permissao_cadastra(9998851, $this->pessoa_logada,7,null,true)){
-			$this->acao = "go(\"educar_usuario_cad.php\")";
-			$this->nome_acao = "Novo";
-		}
 
 		$this->largura = "100%";
 
@@ -122,6 +131,21 @@ class indice extends clsListagem
 
 
 		return $tabela;
+	}
+
+	function getNomeOperacao($operacap) {
+		switch ($operacap) {
+			case 1:
+				$operacao = 'Novo';
+				break;
+			case 2:
+				$operacao = 'Edição';
+				break;
+			case 3:
+				$operacao = 'Exclusão';
+				break;
+		}
+		return $operacao;
 	}
 }
 
