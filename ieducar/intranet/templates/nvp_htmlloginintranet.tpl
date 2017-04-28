@@ -149,7 +149,7 @@
       <p>
         Portabilis Tecnologia - suporte@portabilis.com.br -
 
-        <a target="_blank" class="light" href="https://suporte.portabilis.com.br"> Obter Suporte </a>
+        <a target="_blank" class="light" href="http://suporte.portabilis.com.br"> Obter Suporte </a>
       </p>
 
       <!-- <div id="div-novembro-azul" style="top: -385px">
