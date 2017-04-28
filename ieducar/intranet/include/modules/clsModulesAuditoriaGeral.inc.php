@@ -98,7 +98,6 @@ class clsModulesAuditoriaGeral
 
   function converteArrayDadosParaJson($dados) {
     $dados = $this->removeKeyNaoNumerica($dados);
-    $dados = $this->removeRegistrosNulos($dados);
     $dados = $this->removeKeysDesnecessarias($dados);
     $dados = json_encode($dados);
     return $dados;
@@ -106,16 +105,25 @@ class clsModulesAuditoriaGeral
 
   function removeKeysDiferentes($dados, $keysEmComum) {
     foreach ($dados as $key => $value) {
-      if (!$keysEmComum[$key]) {
+      if (!array_key_exists($key, $keysEmComum)) {
         unset($dados[$key]);
       }
     }
     return $dados;
   }
 
-  function removeValuesIguais($array1, $array2) {
+  function removeKeysIguais($dados, $keysEmComum) {
+    foreach ($dados as $key => $value) {
+      if (array_key_exists($key, $keysEmComum)) {
+        unset($dados[$key]);
+      }
+    }
+    return $dados;
+  }
+
+  function keysComValuesIguais($array1, $array2) {
     foreach ($array1 as $key => $value) {
-      if ($array1[$key] == $array2[$key]) {
+      if ($array1[$key] != $array2[$key]) {
         unset($array1[$key]);
       }
     }
@@ -124,13 +132,15 @@ class clsModulesAuditoriaGeral
 
   function insereAuditoria($operacao, $valorAntigo, $valorNovo) {
     if ($operacao == self::OPERACAO_ALTERACAO) {
-      $valorAntigo = $this->removeValuesIguais($valorAntigo, $valorNovo);
-      $valorNovo = $this->removeValuesIguais($valorNovo, $valorAntigo);
-
       $keysEmComum = array_intersect_key($valorAntigo, $valorNovo);
 
       $valorAntigo = $this->removeKeysDiferentes($valorAntigo, $keysEmComum);
       $valorNovo = $this->removeKeysDiferentes($valorNovo, $keysEmComum);
+
+      $keysMesmoValor = $this->keysComValuesIguais($valorAntigo, $valorNovo);
+
+      $valorAntigo = $this->removeKeysIguais($valorAntigo, $keysMesmoValor);
+      $valorNovo = $this->removeKeysIguais($valorNovo, $keysMesmoValor);
     }
 
     if (!$valorAntigo && !$valorNovo) return;
