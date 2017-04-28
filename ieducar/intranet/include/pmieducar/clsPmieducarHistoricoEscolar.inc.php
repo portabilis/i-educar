@@ -682,7 +682,7 @@ class clsPmieducarHistoricoEscolar
 			$this->escola = addslashes ($this->escola);
 			if( is_string( $this->escola ) )
 			{
-				$set .= "{$gruda}escola = '{$this->escola}'";
+				$set .= "{$gruda}escola = E'{$this->escola}'";
 				$gruda = ", ";
 			}
 			$this->escola_cidade = addslashes($this->escola_cidade);
