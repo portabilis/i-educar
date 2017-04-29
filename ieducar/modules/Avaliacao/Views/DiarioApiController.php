@@ -770,14 +770,14 @@ class DiarioApiController extends ApiCoreController
       if (!empty($componente['nota_necessaria_exame']))
         $this->createOrUpdateNotaExame($matriculaId, $componente['id'], $componente['nota_necessaria_exame']);
       else
-        $this->deleteNotaExame($matriculaId, $componente['id']);      
-      
+        $this->deleteNotaExame($matriculaId, $componente['id']);
+
       //buscando pela área do conhecimento
       $area                                = $this->getAreaConhecimento($componente['id']);
       $nomeArea                            = (($area->secao != '') ? $area->secao . ' - ' : '') . $area->nome;
       $componente['area_id']               = $area->id;
       $componente['area_nome']             = $this->safeString(strtoupper($nomeArea), false);
-      
+
       //criando chave para ordenamento temporário
       //área de conhecimento + componente curricular
       $componente['my_order']              = Portabilis_String_Utils::unaccent(strtoupper($nomeArea)) . Portabilis_String_Utils::unaccent(strtoupper($_componente->get('nome')));
@@ -787,7 +787,7 @@ class DiarioApiController extends ApiCoreController
 
     //ordenando pela chave temporária criada
     $componentesCurriculares = Portabilis_Array_Utils::sortByKey('my_order', $componentesCurriculares);
-    
+
     //removendo chave temporária
     $len = count($componentesCurriculares);
     for ($i = 0; $i < $len; $i++) {
@@ -795,7 +795,7 @@ class DiarioApiController extends ApiCoreController
     }
     return $componentesCurriculares;
   }
-  
+
   protected function getAreaConhecimento($componenteCurricularId = null) {
   	if (is_null($componenteCurricularId))
   		$componenteCurricularId = $this->getRequest()->componente_curricular_id;
@@ -803,28 +803,28 @@ class DiarioApiController extends ApiCoreController
   	if (! is_numeric($componenteCurricularId)) {
   		throw new Exception('Não foi possível obter a área de conhecimento pois não foi recebido o id do componente curricular.');
   	}
-  	
+
   	require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
   	$mapper = new ComponenteCurricular_Model_ComponenteDataMapper();
-  	
+
     $where = array('id' => $componenteCurricularId);
-    
+
     $area = $mapper->findAll(array('area_conhecimento'), $where);
-    
+
     $areaConhecimento        = new stdClass();
     $areaConhecimento->id    = $area[0]->area_conhecimento->id;
     $areaConhecimento->nome  = $area[0]->area_conhecimento->nome;
     $areaConhecimento->secao = $area[0]->area_conhecimento->secao;
-    
+
     return $areaConhecimento;
   }
 
   protected function createOrUpdateNotaExame($matriculaId, $componenteCurricularId, $notaExame) {
-    
+
     $obj = new clsModulesNotaExame($matriculaId, $componenteCurricularId, $notaExame);
 
     return ($obj->existe() ? $obj->edita() : $obj->cadastra());
-  }     
+  }
 
   protected function deleteNotaExame($matriculaId, $componenteCurricularId){
     $obj = new clsModulesNotaExame($matriculaId, $componenteCurricularId);
