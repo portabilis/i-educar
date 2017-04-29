@@ -364,13 +364,13 @@ class clsPmieducarInstituicao
         $gruda = ", ";
       }
 
-      if (is_string($this->data_base_remanejamento)) {
+      if (is_string($this->data_base_remanejamento) && $this->data_base_remanejamento != '') {
         $campos .= "{$gruda}data_base_remanejamento";
         $valores .= "{$gruda}'{$this->data_base_remanejamento}'";
         $gruda = ", ";
       }
 
-      if (is_string($this->data_base_transferencia)) {
+      if (is_string($this->data_base_transferencia) && $this->data_base_transferencia != '') {
         $campos .= "{$gruda}data_base_transferencia";
         $valores .= "{$gruda}'{$this->data_base_transferencia}'";
         $gruda = ", ";
@@ -476,12 +476,12 @@ class clsPmieducarInstituicao
         $gruda = ", ";
       }
 
-      if (is_string($this->data_base_transferencia)) {
+      if (is_string($this->data_base_transferencia) && $this->data_base_transferencia != '') {
         $set .= "{$gruda}data_base_transferencia = '{$this->data_base_transferencia}'";
         $gruda = ", ";
       }
 
-      if (is_string($this->data_base_remanejamento)) {
+      if (is_string($this->data_base_remanejamento) && $this->data_base_remanejamento != '') {
         $set .= "{$gruda}data_base_remanejamento = '{$this->data_base_remanejamento}'";
         $gruda = ", ";
       }
