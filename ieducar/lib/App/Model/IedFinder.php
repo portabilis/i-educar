@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author    Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   App_Model
- * @since     Arquivo disponÌvel desde a vers„o 1.1.0
+ * @since     Arquivo dispon√≠vel desde a vers√£o 1.1.0
  * @version   $Id$
  */
 
@@ -34,20 +34,20 @@ require_once 'App/Model/Exception.php';
 /**
  * App_Model_IedFinder class.
  *
- * Disponibiliza finders est·ticos para registros mantidos pelas classes
+ * Disponibiliza finders est√°ticos para registros mantidos pelas classes
  * cls* do namespace Ied_*.
  *
- * @author    Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author    Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   App_Model
- * @since     Classe disponÌvel desde a vers„o 1.1.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.1.0
  * @version   @@package_version@@
  */
 class App_Model_IedFinder extends CoreExt_Entity
 {
   /**
-   * Retorna todas as instituiÁıes cadastradas em pmieducar.instituicao.
+   * Retorna todas as institui√ß√µes cadastradas em pmieducar.instituicao.
    * @return array
    */
   public static function getInstituicoes()
@@ -63,7 +63,7 @@ class App_Model_IedFinder extends CoreExt_Entity
   }
 
   /**
-   * Retorna um array com as informaÁıes de escola a partir de seu cÛdigo.
+   * Retorna um array com as informa√ß√µes de escola a partir de seu c√≥digo.
    * @param  int $id
    * @return array
    */
@@ -76,7 +76,7 @@ class App_Model_IedFinder extends CoreExt_Entity
 
     if (FALSE === $escola) {
       throw new App_Model_Exception(
-        sprintf('Escola com o cÛdigo "%d" n„o existe.', $id)
+        sprintf('Escola com o c√≥digo "%d" n√£o existe.', $id)
       );
     }
 
@@ -85,7 +85,7 @@ class App_Model_IedFinder extends CoreExt_Entity
 
   /**
    * Retorna todas as escolas cadastradas na tabela pmieducar.escola, selecionando
-   * opcionalmente pelo cÛdigo da instituiÁ„o.
+   * opcionalmente pelo c√≥digo da institui√ß√£o.
    * @param int $instituicaoId
    * @return array
    */
@@ -103,7 +103,7 @@ class App_Model_IedFinder extends CoreExt_Entity
   }
 
   /**
-   * Retorna um nome de curso, procurando pelo seu cÛdigo.
+   * Retorna um nome de curso, procurando pelo seu c√≥digo.
    * @param  int $id
    * @return string|FALSE
    */
@@ -118,7 +118,7 @@ class App_Model_IedFinder extends CoreExt_Entity
 
   /**
    * Retorna todos os cursos cadastradas na tabela pmieducar.escola_curso, selecionando
-   * opcionalmente pelo cÛdigo da escola.
+   * opcionalmente pelo c√≥digo da escola.
    * @param int $escolaId
    * @return array
    */
@@ -142,7 +142,7 @@ class App_Model_IedFinder extends CoreExt_Entity
 
 
   /**
-   * Retorna um array com as informaÁıes da sÈrie a partir de seu cÛdigo.
+   * Retorna um array com as informa√ß√µes da s√©rie a partir de seu c√≥digo.
    *
    * @param int $codSerie
    * @return array
@@ -150,17 +150,17 @@ class App_Model_IedFinder extends CoreExt_Entity
    */
   public static function getSerie($codSerie)
   {
-    // Recupera clsPmieducarSerie do storage de classe est·tico
+    // Recupera clsPmieducarSerie do storage de classe est√°tico
     $serie = self::addClassToStorage('clsPmieducarSerie', NULL,
       'include/pmieducar/clsPmieducarSerie.inc.php');
 
-    // Usa o atributo p˙blico para depois chamar o mÈtodo detalhe()
+    // Usa o atributo p√∫blico para depois chamar o m√©todo detalhe()
     $serie->cod_serie = $codSerie;
     $serie = $serie->detalhe();
 
     if (FALSE === $serie) {
       throw new App_Model_Exception(
-        sprintf('SÈrie com o cÛdigo "%d" n„o existe.', $codSerie)
+        sprintf('S√©rie com o c√≥digo "%d" n√£o existe.', $codSerie)
       );
     }
 
@@ -168,8 +168,8 @@ class App_Model_IedFinder extends CoreExt_Entity
   }
 
   /**
-   * Retorna todas as sÈries cadastradas na tabela pmieducar.serie, selecionando
-   * opcionalmente pelo cÛdigo da instituiÁ„o, da escola ou do curso.
+   * Retorna todas as s√©ries cadastradas na tabela pmieducar.serie, selecionando
+   * opcionalmente pelo c√≥digo da institui√ß√£o, da escola ou do curso.
    * @param int $instituicaoId
    * @param int $escolaId
    * @param int $cursoId
@@ -195,7 +195,7 @@ class App_Model_IedFinder extends CoreExt_Entity
   }
 
   /**
-   * Retorna um array com as informaÁıes da turma a partir de seu cÛdigo.
+   * Retorna um array com as informa√ß√µes da turma a partir de seu c√≥digo.
    *
    * @param int $codTurma
    * @return array
@@ -203,17 +203,17 @@ class App_Model_IedFinder extends CoreExt_Entity
    */
   public static function getTurma($codTurma)
   {
-    // Recupera clsPmieducarTurma do storage de classe est·tico
+    // Recupera clsPmieducarTurma do storage de classe est√°tico
     $turma = self::addClassToStorage('clsPmieducarTurma', NULL,
       'include/pmieducar/clsPmieducarTurma.inc.php');
 
-    // Usa o atributo p˙blico para depois chamar o mÈtodo detalhe()
+    // Usa o atributo p√∫blico para depois chamar o m√©todo detalhe()
     $turma->cod_turma = $codTurma;
     $turma = $turma->detalhe();
 
     if (FALSE === $turma) {
       throw new App_Model_Exception(
-        sprintf('Turma com o cÛdigo "%d" n„o existe.', $codTurma)
+        sprintf('Turma com o c√≥digo "%d" n√£o existe.', $codTurma)
       );
     }
 
@@ -221,7 +221,7 @@ class App_Model_IedFinder extends CoreExt_Entity
   }
 
   /**
-   * Retorna as turmas de uma escola, selecionando opcionalmente pelo cÛdigo da sÈrie.
+   * Retorna as turmas de uma escola, selecionando opcionalmente pelo c√≥digo da s√©rie.
    * @param  int   $escolaId
    * @param  int   $serieId
    * @return array (cod_turma => nm_turma)
@@ -244,9 +244,9 @@ class App_Model_IedFinder extends CoreExt_Entity
   }
 
   /**
-   * Retorna o total de mÛdulos do ano letivo da escola ou turma (caso o ano
-   * escolar do curso n„o seja "padr„o"). Retorna um array com o total de
-   * mÛdulos atribuÌdos ao ano letivo e o nome do mÛdulo. Ex:
+   * Retorna o total de m√≥dulos do ano letivo da escola ou turma (caso o ano
+   * escolar do curso n√£o seja "padr√£o"). Retorna um array com o total de
+   * m√≥dulos atribu√≠dos ao ano letivo e o nome do m√≥dulo. Ex:
    *
    * <code>
    * <?php
@@ -275,7 +275,7 @@ class App_Model_IedFinder extends CoreExt_Entity
 
     $padraoAnoEscolar = $curso['padrao_ano_escolar'] == 1 ? TRUE : FALSE;
 
-    // Segue o padr„o
+    // Segue o padr√£o
     if (TRUE == $padraoAnoEscolar) {
       $escolaAnoLetivo = self::addClassToStorage('clsPmieducarEscolaAnoLetivo',
         NULL, 'include/pmieducar/clsPmieducarEscolaAnoLetivo.inc.php');
@@ -283,10 +283,10 @@ class App_Model_IedFinder extends CoreExt_Entity
       $anosEmAndamento = $escolaAnoLetivo->lista($codEscola, $ano, NULL, NULL,
         1, NULL, NULL, NULL, NULL, 1);
 
-      // Pela restriÁ„o na criaÁ„o de anos letivos, eu posso confiar no primeiro
-      // e ˙nico resultado que deve ter retornado
+      // Pela restri√ß√£o na cria√ß√£o de anos letivos, eu posso confiar no primeiro
+      // e √∫nico resultado que deve ter retornado
       if (FALSE == $anosEmAndamento || count($anosEmAndamento) < 1)
-        throw new App_Model_Exception('N„o foi encontrado um ano escolar em andamento.');
+        throw new App_Model_Exception('N√£o foi encontrado um ano escolar em andamento.');
 
       elseif (count($anosEmAndamento) > 1)
         throw new App_Model_Exception('Existe mais de um ano escolar em andamento.');
@@ -310,10 +310,10 @@ class App_Model_IedFinder extends CoreExt_Entity
       return 0;
     }
 
-    // Total de mÛdulos
+    // Total de m√≥dulos
     $total = count($modulos);
 
-    // CÛdigo do tipo de mÛdulo
+    // C√≥digo do tipo de m√≥dulo
     $modulo    = array_shift($modulos);
     $codModulo = $modulo['ref_cod_modulo'];
 
@@ -332,30 +332,30 @@ class App_Model_IedFinder extends CoreExt_Entity
   }
 
   /**
-   * Retorna array com as referÍncias de pmieducar.escola_serie_disciplina
+   * Retorna array com as refer√™ncias de pmieducar.escola_serie_disciplina
    * a modules.componente_curricular ('ref_ref_cod_disciplina').
    *
-   * @param  int $serieId O cÛdigo do ano escolar/sÈrie.
-   * @param  int $escola  O cÛdigo da escola.
+   * @param  int $serieId O c√≥digo do ano escolar/s√©rie.
+   * @param  int $escola  O c√≥digo da escola.
    * @param  ComponenteCurricular_Model_ComponenteDataMapper $mapper (Opcional)
-   *   Inst‚ncia do mapper para recuperar todas as inst‚ncias persistidas de
-   *   ComponenteCurricular_Model_Componente atribuÌdas no ano escolar/sÈrie da
+   *   Inst√¢ncia do mapper para recuperar todas as inst√¢ncias persistidas de
+   *   ComponenteCurricular_Model_Componente atribu√≠das no ano escolar/s√©rie da
    *   escola.
    * @return array
-   * @throws App_Model_Exception caso n„o existam componentes curriculares
-   *   atribuÌdos ao ano escolar/sÈrie da escola.
+   * @throws App_Model_Exception caso n√£o existam componentes curriculares
+   *   atribu√≠dos ao ano escolar/s√©rie da escola.
    */
   public static function getEscolaSerieDisciplina($serieId, $escolaId,
     ComponenteCurricular_Model_ComponenteDataMapper $mapper = NULL,
     $disciplinaId = null)
   {
     if (is_null($serieId))
-      throw new App_Model_Exception('O parametro serieId n„o pode ser nulo');
+      throw new App_Model_Exception('O parametro serieId n√£o pode ser nulo');
 
     if (is_null($escolaId))
-      throw new App_Model_Exception('O parametro escolaId n„o pode ser nulo');
+      throw new App_Model_Exception('O parametro escolaId n√£o pode ser nulo');
 
-    // Disciplinas na sÈrie na escola
+    // Disciplinas na s√©rie na escola
     $escolaSerieDisciplina = self::addClassToStorage('clsPmieducarEscolaSerieDisciplina',
       NULL, 'include/pmieducar/clsPmieducarEscolaSerieDisciplina.inc.php');
 
@@ -363,7 +363,7 @@ class App_Model_IedFinder extends CoreExt_Entity
 
     if (FALSE === $disciplinas) {
       throw new App_Model_Exception(sprintf(
-          'Nenhuma disciplina para a sÈrie (%d) e a escola (%d) informados',
+          'Nenhuma disciplina para a s√©rie (%d) e a escola (%d) informados',
           $serieId, $escolaId
       ));
     }
@@ -382,16 +382,16 @@ class App_Model_IedFinder extends CoreExt_Entity
   }
 
   /**
-   * Retorna as inst‚ncias de ComponenteCurricular_Model_Componente de uma turma.
+   * Retorna as inst√¢ncias de ComponenteCurricular_Model_Componente de uma turma.
    *
-   * @param int $serieId O cÛdigo do ano escolar/sÈrie da turma.
-   * @param int $escola  O cÛdigo da escola da turma.
-   * @param int $turma   O cÛdigo da turma.
-   * @param ComponenteCurricular_Model_TurmaDataMapper $mapper (Opcional) Inst‚ncia
-   *   do mapper para selecionar todas as referÍncias de
+   * @param int $serieId O c√≥digo do ano escolar/s√©rie da turma.
+   * @param int $escola  O c√≥digo da escola da turma.
+   * @param int $turma   O c√≥digo da turma.
+   * @param ComponenteCurricular_Model_TurmaDataMapper $mapper (Opcional) Inst√¢ncia
+   *   do mapper para selecionar todas as refer√™ncias de
    *   ComponenteCurricular_Model_Componente persistidas para a turma.
    * @param ComponenteCurricular_Model_ComponenteDataMapper $componenteMapper (Opcional)
-   *   Inst‚ncia do mapper para recuperar as inst‚ncias de
+   *   Inst√¢ncia do mapper para recuperar as inst√¢ncias de
    *   ComponenteCurricular_Model_Componente recuperadas por $mapper.
    * @return array
    */
@@ -412,7 +412,7 @@ class App_Model_IedFinder extends CoreExt_Entity
 
     $componentesTurma = $mapper->findAll(array(), $where);
 
-    // N„o existem componentes especÌficos para a turma
+    // N√£o existem componentes espec√≠ficos para a turma
     if (0 == count($componentesTurma)) {
       return self::getEscolaSerieDisciplina($serieId, $escola, $componenteMapper, $componenteCurricularId);
     }
@@ -431,15 +431,15 @@ class App_Model_IedFinder extends CoreExt_Entity
   }
 
   /**
-   * Recupera inst‚ncias persistidas de ComponenteCurricular_Model_Componente,
-   * retornando-as com a carga hor·ria padr„o caso o componente identificado
-   * em $componentes possua uma carga hor·ria (atributo cargaHoraria) nula.
+   * Recupera inst√¢ncias persistidas de ComponenteCurricular_Model_Componente,
+   * retornando-as com a carga hor√°ria padr√£o caso o componente identificado
+   * em $componentes possua uma carga hor√°ria (atributo cargaHoraria) nula.
    *
    * @param  array  $componentes  (array(stdClass->id, stdClass->cargaHoraria))
-   * @param  int    $anoEscolar   O ano escolar/sÈrie para recuperar a carga
-   *   hor·ria padr„o do componente curricular.
+   * @param  int    $anoEscolar   O ano escolar/s√©rie para recuperar a carga
+   *   hor√°ria padr√£o do componente curricular.
    * @param  ComponenteCurricular_Model_ComponenteDataMapper $mapper (Opcional)
-   *   O mapper para recuperar a inst‚ncia persistida com a carga hor·ria padr„o.
+   *   O mapper para recuperar a inst√¢ncia persistida com a carga hor√°ria padr√£o.
    * @return array
    */
   protected static function _hydrateComponentes(array $componentes, $anoEscolar,
@@ -477,7 +477,7 @@ class App_Model_IedFinder extends CoreExt_Entity
    */
   public static function getMatricula($codMatricula)
   {
-    // Recupera clsPmieducarMatricula do storage de classe est·tico
+    // Recupera clsPmieducarMatricula do storage de classe est√°tico
     $matricula = self::addClassToStorage('clsPmieducarMatricula', NULL,
       'include/pmieducar/clsPmieducarMatricula.inc.php');
 
@@ -490,17 +490,17 @@ class App_Model_IedFinder extends CoreExt_Entity
     $serie = self::addClassToStorage('clsPmieducarSerie', NULL,
       'include/pmieducar/clsPmieducarSerie.inc.php');
 
-    // Usa o atributo p˙blico para depois chamar o mÈtodo detalhe()
+    // Usa o atributo p√∫blico para depois chamar o m√©todo detalhe()
     $matricula->cod_matricula = $codMatricula;
     $matricula = $matricula->detalhe();
 
     if (FALSE === $matricula) {
       throw new App_Model_Exception(
-        sprintf('MatrÌcula de cÛdigo "%d" n„o existe.', $codMatricula)
+        sprintf('Matr√≠cula de c√≥digo "%d" n√£o existe.', $codMatricula)
       );
     }
 
-    // Atribui dados extra a matrÌcula
+    // Atribui dados extra a matr√≠cula
     $turmas = $turma->lista($codMatricula, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
     if (0 < count($turmas)) {
       $turma = array_shift($turmas);
@@ -509,7 +509,7 @@ class App_Model_IedFinder extends CoreExt_Entity
       $matricula['turma_nome']    = isset($turma['nm_turma']) ? $turma['nm_turma'] : NULL;
     }
     else {
-      throw new App_Model_Exception('Aluno n„o enturmado.');
+      throw new App_Model_Exception('Aluno n√£o enturmado.');
     }
 
     $curso->cod_curso = $matricula['ref_cod_curso'];
@@ -531,8 +531,8 @@ class App_Model_IedFinder extends CoreExt_Entity
   }
 
   /**
-   * Retorna uma inst‚ncia de RegraAvaliacao_Model_Regra a partir dos dados
-   * da matrÌcula.
+   * Retorna uma inst√¢ncia de RegraAvaliacao_Model_Regra a partir dos dados
+   * da matr√≠cula.
    *
    * @param int $codMatricula
    * @param RegraAvaliacao_Model_RegraDataMapper $mapper
@@ -554,10 +554,10 @@ class App_Model_IedFinder extends CoreExt_Entity
   }
 
   /**
-   * Retorna um array de inst‚ncias ComponenteCurricular_Model_Componente ao
-   * qual um aluno cursa atravÈs de sua matrÌcula.
+   * Retorna um array de inst√¢ncias ComponenteCurricular_Model_Componente ao
+   * qual um aluno cursa atrav√©s de sua matr√≠cula.
    *
-   * Exclui todas os componentes curriculares ao qual o aluno est· dispensado
+   * Exclui todas os componentes curriculares ao qual o aluno est√° dispensado
    * de cursar.
    *
    * @param  int $codMatricula
@@ -579,7 +579,7 @@ class App_Model_IedFinder extends CoreExt_Entity
 
     $serie = self::getSerie($codSerie);
 
-    // Disciplinas da escola na sÈrie em que o aluno est· matriculado
+    // Disciplinas da escola na s√©rie em que o aluno est√° matriculado
     $componentes = self::getComponentesTurma(
       $codSerie, $codEscola, $turma, $turmaMapper, $componenteMapper, $componenteCurricularId
     );
@@ -602,7 +602,7 @@ class App_Model_IedFinder extends CoreExt_Entity
   }
 
   /**
-   * Retorna array com as referÍncias de pmieducar.dispensa_disciplina
+   * Retorna array com as refer√™ncias de pmieducar.dispensa_disciplina
    * a modules.componente_curricular ('ref_ref_cod_disciplina').
    *
    * @param int $codMatricula
@@ -631,7 +631,7 @@ class App_Model_IedFinder extends CoreExt_Entity
   }
 
   /**
-   * Retorna a quantidade de mÛdulos do ano letivo por uma dada matrÌcula.
+   * Retorna a quantidade de m√≥dulos do ano letivo por uma dada matr√≠cula.
    *
    * @param  int $codMatricula
    * @return int
@@ -652,7 +652,7 @@ class App_Model_IedFinder extends CoreExt_Entity
   }
 
   /**
-   * Retorna um array com as informaÁıes de biblioteca a partir de seu cÛdigo.
+   * Retorna um array com as informa√ß√µes de biblioteca a partir de seu c√≥digo.
    * @param  int $id
    * @return array
    */
@@ -665,7 +665,7 @@ class App_Model_IedFinder extends CoreExt_Entity
 
     if (FALSE === $biblioteca) {
       throw new App_Model_Exception(
-        sprintf('Biblioteca com o cÛdigo "%d" n„o existe.', $id)
+        sprintf('Biblioteca com o c√≥digo "%d" n√£o existe.', $id)
       );
     }
 
@@ -674,7 +674,7 @@ class App_Model_IedFinder extends CoreExt_Entity
 
   /**
    * Retorna todas as bibliotecas cadastradas na tabela pmieducar.biblioteca, selecionando
-   * opcionalmente pelo cÛdigo da instituiÁ„o e/ ou escola.
+   * opcionalmente pelo c√≥digo da institui√ß√£o e/ ou escola.
    * @param int $instituicaoId
    * @return array
    */
@@ -692,8 +692,8 @@ class App_Model_IedFinder extends CoreExt_Entity
   }
 
   /**
-   * Retorna todas as situaÁıes cadastradas para as bibliotecas na tabela pmieducar.situacao, selecionando
-   * opcionalmente pelo cÛdigo da biblioteca.
+   * Retorna todas as situa√ß√µes cadastradas para as bibliotecas na tabela pmieducar.situacao, selecionando
+   * opcionalmente pelo c√≥digo da biblioteca.
    * @param int $bibliotecaId
    * @return array
    */
@@ -712,7 +712,7 @@ class App_Model_IedFinder extends CoreExt_Entity
 
   /**
    * Retorna todas as fontes cadastradas para as bibliotecas na tabela pmieducar.fonte, selecionando
-   * opcionalmente pelo cÛdigo da biblioteca.
+   * opcionalmente pelo c√≥digo da biblioteca.
    * @param int $bibliotecaId
    * @return array
    */
@@ -731,7 +731,7 @@ class App_Model_IedFinder extends CoreExt_Entity
 
   /**
    * Retorna uma obra cadastrada para uma biblioteca na tabela pmieducar.acervo, selecionando
-   * obrigatÛriamente pelo cÛdigo da biblioteca e opcionalmente pelo cÛdigo da obra.
+   * obrigat√≥riamente pelo c√≥digo da biblioteca e opcionalmente pelo c√≥digo da obra.
    * @param int $bibliotecaId
    * @return array
    */
@@ -746,7 +746,7 @@ class App_Model_IedFinder extends CoreExt_Entity
 
     if (FALSE === $obra) {
       throw new App_Model_Exception(
-        sprintf('Obra com o cÛdigo "%d" n„o existe.', $id)
+        sprintf('Obra com o c√≥digo "%d" n√£o existe.', $id)
       );
     }
 
@@ -755,7 +755,7 @@ class App_Model_IedFinder extends CoreExt_Entity
 
   /**
    * Retorna um aluno cadastrado para uma escola na tabela pmieducar.aluno, selecionando
-   * obrigatÛriamente pelo cÛdigo da escola e opcionalmente pelo cÛdigo do aluno.
+   * obrigat√≥riamente pelo c√≥digo da escola e opcionalmente pelo c√≥digo do aluno.
    * @param int $id
    * @return array
    */
@@ -770,7 +770,7 @@ class App_Model_IedFinder extends CoreExt_Entity
 
     if (FALSE === $aluno) {
       throw new App_Model_Exception(
-        sprintf('Aluno com o cÛdigo "%d" n„o existe.', $id)
+        sprintf('Aluno com o c√≥digo "%d" n√£o existe.', $id)
       );
     }
 
@@ -779,7 +779,7 @@ class App_Model_IedFinder extends CoreExt_Entity
 
   /**
    * Retorna todos os tipos de cliente cadastrados para determinada biblioteca na tabela
-   * pmieducar.cliente_tipo, selecionando obrigatoriamente pelo cÛdigo da biblioteca.
+   * pmieducar.cliente_tipo, selecionando obrigatoriamente pelo c√≥digo da biblioteca.
    * @param int $bibliotecaId
    * @return array
    */
