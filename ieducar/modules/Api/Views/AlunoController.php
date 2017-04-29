@@ -278,7 +278,7 @@ class AlunoController extends ApiCoreController
   }
 
   protected function createOrUpdateFichaMedica($id) {
-    
+
     $obj                    = new clsModulesFichaMedicaAluno();
 
     $obj->ref_cod_aluno                         = $id;
@@ -289,7 +289,7 @@ class AlunoController extends ApiCoreController
     $obj->alergia_medicamento                   = ($this->getRequest()->alergia_medicamento == 'on' ? 'S' : 'N');
     $obj->desc_alergia_medicamento              = Portabilis_String_Utils::toLatin1($this->getRequest()->desc_alergia_medicamento);
     $obj->alergia_alimento                      = ($this->getRequest()->alergia_alimento == 'on' ? 'S' : 'N');
-    $obj->desc_alergia_alimento                 = Portabilis_String_Utils::toLatin1($this->getRequest()->desc_alergia_alimento);    
+    $obj->desc_alergia_alimento                 = Portabilis_String_Utils::toLatin1($this->getRequest()->desc_alergia_alimento);
     $obj->doenca_congenita                      = ($this->getRequest()->doenca_congenita == 'on' ? 'S' : 'N');
     $obj->desc_doenca_congenita                 = Portabilis_String_Utils::toLatin1($this->getRequest()->desc_doenca_congenita);
     $obj->fumante                               = ($this->getRequest()->fumante == 'on' ? 'S' : 'N');
@@ -330,15 +330,15 @@ class AlunoController extends ApiCoreController
     $obj->responsavel_parentesco_celular        = Portabilis_String_Utils::toLatin1($this->getRequest()->responsavel_parentesco_celular);
 
     return ($obj->existe() ? $obj->edita() : $obj->cadastra());
-  }  
+  }
 
 protected function createOrUpdateUniforme($id) {
-    
+
     $obj                                        = new clsModulesUniformeAluno();
 
     $obj->ref_cod_aluno                         = $id;
     $obj->recebeu_uniforme                      = ($this->getRequest()->recebeu_uniforme == 'on' ? 'S' : 'N');
-    
+
     $obj->quantidade_camiseta                   = $this->getRequest()->quantidade_camiseta;
     $obj->tamanho_camiseta                      = Portabilis_String_Utils::toLatin1($this->getRequest()->tamanho_camiseta);
 
@@ -358,17 +358,17 @@ protected function createOrUpdateUniforme($id) {
     $obj->tamanho_calcado                       = Portabilis_String_Utils::toLatin1($this->getRequest()->tamanho_calcado);
 
     $obj->quantidade_blusa_jaqueta              = $this->getRequest()->quantidade_blusa_jaqueta;
-    $obj->tamanho_blusa_jaqueta                 = Portabilis_String_Utils::toLatin1($this->getRequest()->tamanho_blusa_jaqueta);    
+    $obj->tamanho_blusa_jaqueta                 = Portabilis_String_Utils::toLatin1($this->getRequest()->tamanho_blusa_jaqueta);
 
     return ($obj->existe() ? $obj->edita() : $obj->cadastra());
-  }  
+  }
 
   protected function createOrUpdateMoradia($id) {
-    
+
     $obj                                        = new clsModulesMoradiaAluno();
 
     $obj->ref_cod_aluno                         = $id;
-    
+
     $obj->moradia                               = $this->getRequest()->moradia;
     $obj->material                              = $this->getRequest()->material;
     $obj->casa_outra                            = Portabilis_String_Utils::toLatin1($this->getRequest()->casa_outra);
@@ -400,7 +400,7 @@ protected function createOrUpdateUniforme($id) {
     $obj->lixo                                  = ($this->getRequest()->lixo == 'on' ? 'S' : 'N');
 
     return ($obj->existe() ? $obj->edita() : $obj->cadastra());
-  }    
+  }
 
   protected function loadAlunoInepId($alunoId) {
     $dataMapper = $this->getDataMapperFor('educacenso', 'aluno');
@@ -542,8 +542,8 @@ protected function createOrUpdateUniforme($id) {
   }
 
   protected function loadNomeTurmaOrigem($matriculaId) {
-    $sql = "select nm_turma from pmieducar.matricula_turma mt 
-            left join pmieducar.turma t on (t.cod_turma = mt.ref_cod_turma) 
+    $sql = "select nm_turma from pmieducar.matricula_turma mt
+            left join pmieducar.turma t on (t.cod_turma = mt.ref_cod_turma)
             where ref_cod_matricula = $1 and mt.ativo = 0 and mt.ref_cod_turma <> COALESCE((select ref_cod_turma from pmieducar.matricula_turma
               where ref_cod_matricula = $1 and ativo = 1 limit 1),0) order by mt.data_exclusao desc limit 1";
 
@@ -649,7 +649,7 @@ protected function createOrUpdateUniforme($id) {
     if (! $this->getRequest()->escola_id) {
       $sqls[] = "select distinct aluno.cod_aluno as id, pessoa.nome as name from
                  pmieducar.aluno, cadastro.pessoa where pessoa.idpes = aluno.ref_idpes
-                 and aluno.ativo = 1 and aluno.cod_aluno like $1||'%' and $2 = $2
+                 and aluno.ativo = 1 and aluno.cod_aluno::varchar like $1||'%' and $2 = $2
                  order by cod_aluno limit 15";
     }
 
@@ -661,7 +661,7 @@ protected function createOrUpdateUniforme($id) {
                pessoa.idpes = aluno.ref_idpes and aluno.ativo = matricula.ativo and
                matricula.ativo = 1 and
                (select case when $2 != 0 then matricula.ref_ref_cod_escola = $2 else 1=1 end) and
-               (matricula.cod_matricula like $1||'%' or matricula.ref_cod_aluno like $1||'%') and
+               (matricula.cod_matricula::varchar like $1||'%' or matricula.ref_cod_aluno::varchar like $1||'%') and
                matricula.aprovado in (1, 2, 3, 4, 7, 8, 9) limit 15) as alunos order by id";
 
     return $sqls;
@@ -677,7 +677,7 @@ protected function createOrUpdateUniforme($id) {
      $sqls[] = "select distinct aluno.cod_aluno as id,
                 pessoa.nome as name from pmieducar.aluno, cadastro.pessoa where
                 pessoa.idpes = aluno.ref_idpes and aluno.ativo = 1 and
-                lower(to_ascii(pessoa.nome)) like lower(to_ascii($1))||'%' and $2 = $2
+                lower(pessoa.nome) like lower($1)||'%' and $2 = $2
                 order by nome limit 15";
     }
 
@@ -689,7 +689,7 @@ protected function createOrUpdateUniforme($id) {
             pessoa.idpes = aluno.ref_idpes and aluno.ativo = matricula.ativo and
             matricula.ativo = 1 and (select case when $2 != 0 then matricula.ref_ref_cod_escola = $2
             else 1=1 end) and
-            lower(to_ascii(pessoa.nome)) like lower(to_ascii($1))||'%' and matricula.aprovado in
+            lower(pessoa.nome) like lower($1)||'%' and matricula.aprovado in
             (1, 2, 3, 4, 7, 8, 9) limit 15) as alunos order by name";
 
     return $sqls;
