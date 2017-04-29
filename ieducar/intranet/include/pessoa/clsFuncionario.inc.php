@@ -27,7 +27,7 @@
 require_once ("include/clsBanco.inc.php");
 require_once ("include/Geral.inc.php");
 
-class clsFuncionario extends clsPessoaFisica 
+class clsFuncionario extends clsPessoaFisica
 {
 	var $idpes;
 	var $matricula;
@@ -223,7 +223,7 @@ class clsFuncionario extends clsPessoaFisica
 
 		if($int_inicio_limit !== false  && $int_qtd_registros !== false)
 		{
-			$sql .= "{$filtros}"." ORDER BY to_ascii(f.nome) ASC ".$limite;
+			$sql .= "{$filtros}"." ORDER BY f.nome ASC ".$limite;
 		}
 		else
 		{
@@ -231,7 +231,7 @@ class clsFuncionario extends clsPessoaFisica
 		}
 
 		$this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->schema_portal}.v_funcionario f {$filtros}" );
-		
+
 		$db->Consulta( $sql );
 
 		if( $countCampos > 1 )
