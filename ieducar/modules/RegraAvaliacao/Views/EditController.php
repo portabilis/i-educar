@@ -272,7 +272,7 @@ var tabela_arredondamento = new function() {
 
     // Cבlculo mיdia recuperaחדo
     $formulas = $this->getDataMapper()->findFormulaMediaRecuperacao();
-    $formulasArray = array(0 => 'Nדo usar recuperaחדo');
+    $formulasArray = array(0 => 'Não usar recuperação');
     $formulasArray = $formulasArray + CoreExt_Entity::entityFilterAttr($formulas, 'id', 'nome');
 
     $this->campoLista('formulaRecuperacao', $this->_getLabel('formulaRecuperacao'),

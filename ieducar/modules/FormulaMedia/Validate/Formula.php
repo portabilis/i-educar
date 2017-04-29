@@ -99,7 +99,7 @@ class FormulaMedia_Validate_Formula extends CoreExt_Validate_Abstract
     }
 
     if (0 < count($missingTokens)) {
-      throw new Exception('As variבveis ou sםmbolos nדo sדo permitidos: ' . implode(', ', $missingTokens));
+      throw new Exception('As variáveis ou símbolos não são permitidos: ' . implode(', ', $missingTokens));
     }
 
     // Verifica se a fףrmula י parseada corretamente pelo PHP
@@ -112,9 +112,9 @@ class FormulaMedia_Validate_Formula extends CoreExt_Validate_Abstract
     $evaled = @eval('?><?php $result = ' . $formula . '; ?>');
     if (!is_null($evaled)) {
       require_once 'FormulaMedia/Validate/Exception.php';
-      throw new FormulaMedia_Validate_Exception('A fףrmula apresenta erros.'
-                . ' Verifique algum parךntese faltante ou um sinal de operaחדo'
-                . ' matemבtica sem um operando.');
+      throw new FormulaMedia_Validate_Exception('A fórmula apresenta erros.'
+                . ' Verifique algum parêntese faltante ou um sinal de operação'
+                . ' matemática sem um operando.');
     }
 
     return TRUE;

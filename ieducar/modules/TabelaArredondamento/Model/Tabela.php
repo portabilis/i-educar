@@ -1,31 +1,31 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     TabelaArredondamento
  * @subpackage  Modules
- * @since       Arquivo disponÌvel desde a vers„o 1.1.0
+ * @since       Arquivo dispon√≠vel desde a vers√£o 1.1.0
  * @version     $Id$
  */
 
@@ -36,12 +36,12 @@ require_once 'lib/Portabilis/Utils/Float.php';
 /**
  * TabelaArredondamento_Model_Tabela class.
  *
- * @author      Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     TabelaArredondamento
  * @subpackage  Modules
- * @since       Classe disponÌvel desde a vers„o 1.1.0
+ * @since       Classe dispon√≠vel desde a vers√£o 1.1.0
  * @version     @@package_version@@
  */
 class TabelaArredondamento_Model_Tabela extends CoreExt_Entity
@@ -61,7 +61,7 @@ class TabelaArredondamento_Model_Tabela extends CoreExt_Entity
   );
 
   /**
-   * Precis„o decimal do valor da nota.
+   * Precis√£o decimal do valor da nota.
    * @var int
    */
   protected $_precision = 3;
@@ -94,7 +94,7 @@ class TabelaArredondamento_Model_Tabela extends CoreExt_Entity
     $tipoNota = RegraAvaliacao_Model_Nota_TipoValor::getInstance();
     $tipoNotas = $tipoNota->getKeys();
 
-    // Remove "nenhum" das opÁıes.
+    // Remove "nenhum" das op√ß√µes.
     unset($tipoNotas[RegraAvaliacao_Model_Nota_TipoValor::NENHUM]);
 
     return array(
@@ -105,7 +105,7 @@ class TabelaArredondamento_Model_Tabela extends CoreExt_Entity
   }
 
   /**
-   * Arredonda a nota de acordo com a tabela de valores da inst‚ncia atual.
+   * Arredonda a nota de acordo com a tabela de valores da inst√¢ncia atual.
    *
    * @param $value
    * @return mixed
@@ -119,20 +119,20 @@ class TabelaArredondamento_Model_Tabela extends CoreExt_Entity
     }*/
 
     /* Inicializa o retorno com o valor recebido (limitando a para uma casa decimal),
-       o qual ser· retornado caso n„o tenha sido definido opcoes na tabela de arredondamento,
-       do contr·rio ser· arredondado a nota conforme opÁıes da tabela de arredondamento. */
+       o qual ser√° retornado caso n√£o tenha sido definido opcoes na tabela de arredondamento,
+       do contr√°rio ser√° arredondado a nota conforme op√ß√µes da tabela de arredondamento. */
     $return = Portabilis_Utils_Float::limitDecimal($value, array('limit' => 1));
 
-    // carrega tabela de arredondamento, caso ainda n„o tenha sido carregada.
+    // carrega tabela de arredondamento, caso ainda n√£o tenha sido carregada.
     if (0 == count($this->_tabelaValores))
       $this->_tabelaValores = $this->getDataMapper()->findTabelaValor($this);
 
-    // somente ser· arredondado a nota, caso tenha sido definido opÁıes de arredondamento, na respectiva tabela.
+    // somente ser√° arredondado a nota, caso tenha sido definido op√ß√µes de arredondamento, na respectiva tabela.
     if (count($this->_tabelaValores) > 0) {
-      // Multiplicador para transformar os n˙meros em uma escala inteira.
+      // Multiplicador para transformar os n√∫meros em uma escala inteira.
       $scale = pow(10, $this->_precision);
 
-      // Escala o valor para se tornar compar·vel
+      // Escala o valor para se tornar compar√°vel
       $value = $this->getFloat($value) * $scale;
 
       $return = 0;
@@ -150,16 +150,16 @@ class TabelaArredondamento_Model_Tabela extends CoreExt_Entity
   }
 
   /**
-   * PrevÍ em qual range de arredondamento de acordo com um valor esperado. A
-   * definiÁ„o do valor a retornar È dada por uma inst‚ncia de
-   * FormulaMedia_Model_Formula e um array com valores para as tokens da fÛrmula
-   * e o valor da vari·vel a prever. Exemplo:
+   * Prev√™ em qual range de arredondamento de acordo com um valor esperado. A
+   * defini√ß√£o do valor a retornar √© dada por uma inst√¢ncia de
+   * FormulaMedia_Model_Formula e um array com valores para as tokens da f√≥rmula
+   * e o valor da vari√°vel a prever. Exemplo:
    *
    * <code>
    * <?php
-   * // Passa valores para as tokens disponÌveis de FormulaMedia_Model_Formula
-   * // e espera que o resultado do c·lculo dÍ 6, usando como referÍncia a
-   * // vari·vel "Rc"
+   * // Passa valores para as tokens dispon√≠veis de FormulaMedia_Model_Formula
+   * // e espera que o resultado do c√°lculo d√™ 6, usando como refer√™ncia a
+   * // vari√°vel "Rc"
    * $data = array(
    *   'formulaValues' => array(
    *     'Se' => 16,
@@ -180,13 +180,13 @@ class TabelaArredondamento_Model_Tabela extends CoreExt_Entity
    * @param  FormulaMedia_Model_Formula $formula
    * @param  array $data
    * @return TabelaArredondamento_Model_TabelaValor|NULL Retorna NULL caso
-   *   nenhuma inst‚ncia de TabelaArredondamento_Model_TabelaValor corresponda
+   *   nenhuma inst√¢ncia de TabelaArredondamento_Model_TabelaValor corresponda
    *   ao valor esperado
-   * @todo Considerar o atributo valorMaximo da inst‚ncia para o c·lculo da
-   *   fÛrmula. Pode ser ˙til para os casos de notas conceituais (Exemplo: uma
-   *   nota "EP" que tem o range 5.25 a 7, sendo 6 a mÈdia de aprovaÁ„o. Nesse
-   *   caso somente o prÛximo range (se houvesse) daria o valor esperado para
-   *   alcanÁar a mÈdia 6).
+   * @todo Considerar o atributo valorMaximo da inst√¢ncia para o c√°lculo da
+   *   f√≥rmula. Pode ser √∫til para os casos de notas conceituais (Exemplo: uma
+   *   nota "EP" que tem o range 5.25 a 7, sendo 6 a m√©dia de aprova√ß√£o. Nesse
+   *   caso somente o pr√≥ximo range (se houvesse) daria o valor esperado para
+   *   alcan√ßar a m√©dia 6).
    */
   public function predictValue(FormulaMedia_Model_Formula $formula, array $data)
   {
@@ -206,7 +206,7 @@ class TabelaArredondamento_Model_Tabela extends CoreExt_Entity
       $values[$data['expected']['var']] = $tabelaValor->valorMinimo;
       $process[] = $values;
 
-      // Se for o ˙ltimo item, verifica se a nota m·xima tambÈm
+      // Se for o √∫ltimo item, verifica se a nota m√°xima tamb√©m
       if (++$i == $total) {
         $values[$data['expected']['var']] = $tabelaValor->valorMaximo;
         $process[] = $values;
@@ -250,8 +250,8 @@ class TabelaArredondamento_Model_Tabela extends CoreExt_Entity
   }
 
   /**
-   * MÈtodo finder para TabelaArredondamento_Model_TabelaValor. Wrapper simples
-   * para o mesmo mÈtodo de TabelaArredondamento_Model_TabelaDataMapper.
+   * M√©todo finder para TabelaArredondamento_Model_TabelaValor. Wrapper simples
+   * para o mesmo m√©todo de TabelaArredondamento_Model_TabelaDataMapper.
    *
    * @return array
    */
