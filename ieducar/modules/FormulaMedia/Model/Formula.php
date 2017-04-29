@@ -1,31 +1,31 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     FormulaMedia
  * @subpackage  Modules
- * @since       Arquivo disponÌvel desde a vers„o 1.1.0
+ * @since       Arquivo dispon√≠vel desde a vers√£o 1.1.0
  * @version     $Id$
  */
 
@@ -37,27 +37,27 @@ require_once 'FormulaMedia/Validate/Formula.php';
 /**
  * FormulaMedia_Model_Formula class.
  *
- * @author      Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     FormulaMedia
  * @subpackage  Modules
- * @since       Classe disponÌvel desde a vers„o 1.1.0
+ * @since       Classe dispon√≠vel desde a vers√£o 1.1.0
  * @version     @@package_version@@
  */
 class FormulaMedia_Model_Formula extends CoreExt_Entity
 {
   /**
-   * Tokens v·lidos para uma fÛrmula.
+   * Tokens v√°lidos para uma f√≥rmula.
    *
    * - Se: soma das notas de todas as etapas
    * - Et: total de etapas
    * - E1 a E10: nota na etapa En (fica limitado a 10 etapas)
-   * - /: divis„o
-   * - *: multiplicaÁ„o
+   * - /: divis√£o
+   * - *: multiplica√ß√£o
    * - x: alias para *
-   * - (: abre parÍntese
-   * - ): fecha parÍntese
+   * - (: abre par√™ntese
+   * - ): fecha par√™ntese
    *
    * @var array
    */
@@ -69,7 +69,7 @@ class FormulaMedia_Model_Formula extends CoreExt_Entity
   );
 
   /**
-   * Tokens que pode ser substituÌdas por valores numÈricos.
+   * Tokens que pode ser substitu√≠das por valores num√©ricos.
    * @var array
    */
   protected $_tokenNumerics = array(
@@ -89,7 +89,7 @@ class FormulaMedia_Model_Formula extends CoreExt_Entity
   );
 
   /**
-   * ReferÍncias.
+   * Refer√™ncias.
    * @var array
    */
   protected $_references = array(
@@ -101,7 +101,7 @@ class FormulaMedia_Model_Formula extends CoreExt_Entity
   );
 
   /**
-   * Retorna as tokens permitidas para uma fÛrmula.
+   * Retorna as tokens permitidas para uma f√≥rmula.
    * @return array
    */
   public function getTokens()
@@ -110,7 +110,7 @@ class FormulaMedia_Model_Formula extends CoreExt_Entity
   }
 
   /**
-   * Verifica se uma token pode receber um valor numÈrico.
+   * Verifica se uma token pode receber um valor num√©rico.
    *
    * @param string $token
    * @return bool
@@ -121,7 +121,7 @@ class FormulaMedia_Model_Formula extends CoreExt_Entity
   }
 
   /**
-   * Substitui as tokens numÈricas de uma fÛrmula, atravÈs de um array
+   * Substitui as tokens num√©ricas de uma f√≥rmula, atrav√©s de um array
    * associativo.
    *
    * <code>
@@ -150,7 +150,7 @@ class FormulaMedia_Model_Formula extends CoreExt_Entity
     $patterns = array();
     foreach ($values as $key => $value) {
       if ($this->isNumericToken($key)) {
-        // Usa @ como delimitador para evitar problemas com o sinal de divis„o
+        // Usa @ como delimitador para evitar problemas com o sinal de divis√£o
         $patterns[$key] = '@' . $key . '@';
       }
     }
@@ -168,7 +168,7 @@ class FormulaMedia_Model_Formula extends CoreExt_Entity
   }
 
   /**
-   * Troca os tokens de alias pelos usados durante a execuÁ„o da fÛrmula.
+   * Troca os tokens de alias pelos usados durante a execu√ß√£o da f√≥rmula.
    * @param string $formula
    * @return string
    */
@@ -189,7 +189,7 @@ class FormulaMedia_Model_Formula extends CoreExt_Entity
   }
 
   /**
-   * Executa um cÛdigo de fÛrmula com eval.
+   * Executa um c√≥digo de f√≥rmula com eval.
    * @param string $code
    * @return NULL|numeric
    */
@@ -208,7 +208,7 @@ class FormulaMedia_Model_Formula extends CoreExt_Entity
     $instituicoes = array_keys(App_Model_IedFinder::getInstituicoes());
     $tipoFormula  = FormulaMedia_Model_TipoFormula::getInstance();
 
-    // Se for de recuperaÁ„o, inclui a token "Rc" como permitida.
+    // Se for de recupera√ß√£o, inclui a token "Rc" como permitida.
     $formulaValidatorOptions = array();
     if (FormulaMedia_Model_TipoFormula::MEDIA_RECUPERACAO == $this->get('tipoFormula')) {
       $formulaValidatorOptions = array('excludeToken' => NULL);

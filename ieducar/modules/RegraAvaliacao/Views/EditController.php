@@ -54,7 +54,7 @@ class EditController extends Core_Controller_Page_EditController
 
   protected $_formMap = array(
     'instituicao' => array(
-      'label'  => 'Instituiחדo',
+      'label'  => 'Instituição',
       'help'   => '',
     ),
     'nome' => array(
@@ -66,39 +66,39 @@ class EditController extends Core_Controller_Page_EditController
       'help'   => ''
     ),
     'tipoProgressao' => array(
-      'label'  => 'Progressדo',
-      'help'   => 'Selecione o mיtodo de progressדo para a regra.'
+      'label'  => 'Progressão',
+      'help'   => 'Selecione o método de progressão para a regra.'
     ),
     'tabelaArredondamento' => array(
       'label'  => 'Tabela de arredondamento de nota',
       'help'   => ''
     ),
     'media' => array(
-      'label'  => 'Mיdia final para promoחדo',
-      'help'   => 'Informe a mיdia necessבria para promoחדo<br />
-                   do aluno, aceita atי 3 casas decimais. Exemplos: 5,00; 6,725, 6.<br >
-                   Se o tipo de progressדo for <b>"Progressiva"</b>, esse<br />
-                   valor nדo serב considerado.'
+      'label'  => 'Média final para promossão',
+      'help'   => 'Informe a média necessária para promossão<br />
+                   do aluno, aceita até 3 casas decimais. Exemplos: 5,00; 6,725, 6.<br >
+                   Se o tipo de progressão for <b>"Progressiva"</b>, esse<br />
+                   valor não será considerado.'
     ),
     'mediaRecuperacao' => array(
-      'label'  => 'Mיdia exame final para promoחדo',
-      'help'   => 'Informe a mיdia necessבria para promoחדo<br />
-                   do aluno, aceita atי 3 casas decimais. Exemplos: 5,00; 6,725, 6.<br >
+      'label'  => 'Média exame final para promossão',
+      'help'   => 'Informe a média necessária para promossão<br />
+                   do aluno, aceita até casas decimais. Exemplos: 5,00; 6,725, 6.<br >
                    Desconsidere esse campo caso selecione o tipo de nota "conceitual"'
     ),
     'formulaMedia' => array(
-      'label'  => 'Fףrmula de cבlculo da mיdia',
+      'label'  => 'Fórmula de cálculo da média',
       'help'   => '',
     ),
     'formulaRecuperacao' => array(
-      'label'  => 'Fףrmula de cבlculo da mיdia de recuperaחדo',
+      'label'  => 'Fórmula de cálculo da média de recuperação',
       'help'   => '',
     ),
     'porcentagemPresenca' => array(
-      'label'  => 'Porcentagem de presenחa',
-      'help'   => 'A porcentagem de presenחa necessבria para o aluno ser aprovado.<br />
-                   Esse valor י desconsiderado caso o campo "Progressדo" esteja como<br />
-                   "Nדo progressiva automבtica - Somente mיdia".<br />
+      'label'  => 'Porcentagem de presença',
+      'help'   => 'A porcentagem de presença necessária para o aluno ser aprovado.<br />
+                   Esse valor é desconsiderado caso o campo "Progressão" esteja como<br />
+                   "Não progressiva automática - Somente média".<br />
                    Em porcentagem, exemplo: <b>75</b> ou <b>80,750</b>'
     ),
     'parecerDescritivo' => array(
@@ -106,7 +106,7 @@ class EditController extends Core_Controller_Page_EditController
       'help'   => '',
     ),
     'tipoPresenca' => array(
-      'label'  => 'Apuraחדo de presenחa',
+      'label'  => 'Apuração de presença',
       'help'   => ''
     )
   );
