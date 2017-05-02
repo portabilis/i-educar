@@ -50,10 +50,12 @@ class clsModulesAuditoriaGeral
   var $_tabela;
 
   var $usuario_id;
+  var $codigo;
   var $rotina;
 
-  function clsModulesAuditoriaGeral($rotina, $usuario_id){
-    $this->_campos_lista = 'usuario_id,
+  function clsModulesAuditoriaGeral($rotina, $usuario_id, $codigo){
+    $this->_campos_lista = 'codigo,
+                            usuario_id,
                             operacao,
                             rotina,
                             valor_novo,
@@ -63,6 +65,7 @@ class clsModulesAuditoriaGeral
 
     $this->rotina = $rotina;
     $this->usuario_id = $usuario_id;
+    $this->codigo = $codigo;
   }
 
   function removeKeyNaoNumerica($dados) {
@@ -157,13 +160,15 @@ class clsModulesAuditoriaGeral
       $valorNovo = 'NULL';
     }
 
-    $sql = "INSERT INTO modules.auditoria_geral (usuario_id,
+    $sql = "INSERT INTO modules.auditoria_geral (codigo,
+                                                 usuario_id,
                                                  operacao,
                                                  rotina,
                                                  valor_antigo,
                                                  valor_novo,
                                                  data_hora)
-                 VALUES ({$this->usuario_id},
+                 VALUES ({$this->codigo},
+                         {$this->usuario_id},
                          {$operacao},
                          '{$this->rotina}',
                          {$valorAntigo},

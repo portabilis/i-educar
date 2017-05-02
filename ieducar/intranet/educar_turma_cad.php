@@ -1047,7 +1047,7 @@ class indice extends clsCadastro
           $turma = new clsPmieducarTurma($this->cod_turma);
           $turma = $turma->detalhe();
 
-          $auditoria = new clsModulesAuditoriaGeral("turma", $this->pessoa_logada);
+          $auditoria = new clsModulesAuditoriaGeral("turma", $this->pessoa_logada, $this->cod_turma);
           $auditoria->inclusao($turma);
 
           $this->mensagem .= 'Cadastro efetuado com sucesso.';
@@ -1137,7 +1137,7 @@ class indice extends clsCadastro
         $turma = new clsPmieducarTurma($this->cod_turma);
         $turma = $turma->detalhe();
 
-        $auditoria = new clsModulesAuditoriaGeral("turma", $this->pessoa_logada);
+        $auditoria = new clsModulesAuditoriaGeral("turma", $this->pessoa_logada, $this->cod_turma);
         $auditoria->inclusao($turma);
 
         $this->mensagem .= 'Cadastro efetuado com sucesso.';
@@ -1235,7 +1235,7 @@ class indice extends clsCadastro
         $editou = $obj->edita();
 
         if ($editou) {
-            $auditoria = new clsModulesAuditoriaGeral("turma", $this->pessoa_logada);
+            $auditoria = new clsModulesAuditoriaGeral("turma", $this->pessoa_logada, $this->cod_turma);
             $auditoria->alteracao($turmaDetalhe, (array)$this);
 
             $qtd_registros = count($this->ref_cod_modulo);
@@ -1358,7 +1358,7 @@ class indice extends clsCadastro
 
     $this->cadastraInepTurma($this->cod_turma, $this->codigo_inep_educacenso);
 
-    $auditoria = new clsModulesAuditoriaGeral("turma", $this->pessoa_logada);
+    $auditoria = new clsModulesAuditoriaGeral("turma", $this->pessoa_logada, $this->cod_turma);
     $auditoria->alteracao($turmaDetalhe, (array)$this);
 
     // Caso tenham sido selecionadas discplinas, como se trata de uma edição de turma será rodado uma consulta
@@ -1461,7 +1461,7 @@ class indice extends clsCadastro
 
         if ($excluiu2) {
 
-          $auditoria = new clsModulesAuditoriaGeral("turma", $this->pessoa_logada);
+          $auditoria = new clsModulesAuditoriaGeral("turma", $this->pessoa_logada, $this->cod_turma);
           $auditoria->exclusao($turma);
 
           $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.';
