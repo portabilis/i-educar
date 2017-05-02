@@ -27,7 +27,7 @@
  * @since     Arquivo disponível desde a versão 1.1.0
  * @version   $Id$
  */
-
+require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 /**
  * CoreExt_DataMapper abstract class.
  *
@@ -621,15 +621,33 @@ abstract class CoreExt_DataMapper
       }
     }
 
-    // Reseta o locale para o default (en_US)
-    $this->getLocale()->resetLocale();
+    @session_start();
+    $pessoa_logada = $_SESSION['id_pessoa'];
+    @session_write_close();
 
     if ($instance->isNew()) {
-      return $this->_getDbAdapter()->Consulta($this->_getSaveStatment($instance));
+      $return = $this->_getDbAdapter()->Consulta($this->_getSaveStatment($instance). ' RETURNING id;');
+      $result = pg_fetch_row($return);
+      $id = $result[0];
+      $tmpEntry = $this->find($id);
+      $info = $tmpEntry->toDataArray();
+      $auditoria = new clsModulesAuditoriaGeral($this->_tableName, $pessoa_logada, $id);
+      $auditoria->inclusao($info);
     }
     else {
-      return $this->_getDbAdapter()->Consulta($this->_getUpdateStatment($instance));
+      $tmpEntry = $this->find($instance->id);
+      $oldInfo = $tmpEntry->toDataArray();
+
+      $return = $this->_getDbAdapter()->Consulta($this->_getUpdateStatment($instance));
+
+      $tmpEntry = $this->find($instance->id);
+      $newInfo = $tmpEntry->toDataArray();
+
+      $auditoria = new clsModulesAuditoriaGeral($this->_tableName, $pessoa_logada, $instance->id);
+      $auditoria->alteracao($oldInfo, $newInfo);
     }
+
+    return $return;
 
     // Retorna o locale para o usado no restante da aplicação
     $this->getLocale()->setLocale();
@@ -661,7 +679,20 @@ abstract class CoreExt_DataMapper
    */
   public function delete($instance)
   {
-      return $this->_getDbAdapter()->Consulta($this->_getDeleteStatment($instance));
+      $tmpEntry = $this->find($instance->id);
+      $info = $tmpEntry->toDataArray();
+
+      $return = $this->_getDbAdapter()->Consulta($this->_getDeleteStatment($instance));
+
+
+      @session_start();
+      $pessoa_logada = $_SESSION['id_pessoa'];
+      @session_write_close();
+
+      $auditoria = new clsModulesAuditoriaGeral($this->_tableName, $pessoa_logada, $instance->id);
+      $auditoria->exclusao($info);
+
+      return $return;
   }
 
   /**
