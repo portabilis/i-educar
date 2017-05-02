@@ -35,6 +35,7 @@ require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
+require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsIndexBase extends clsBase
 {
@@ -264,8 +265,14 @@ class indice extends clsCadastro
                                                $this->nm_tipo, $this->descricao, $this->nivel, NULL, NULL, 1);
     $this->cod_tipo_usuario = $tipoUsuario->cadastra();
 
-    if ($this->cod_tipo_usuario)
+    if ($this->cod_tipo_usuario){
+      $tipo_usuario = new clsPmieducarTipoUsuario($this->cod_tipo_usuario);
+      $tipo_usuario = $tipo_usuario->detalhe();
+      $auditoria = new clsModulesAuditoriaGeral("tipo_usuario", $this->pessoa_logada, $this->cod_tipo_usuario);
+      $auditoria->inclusao($tipo_usuario);
+
       $this->createMenuTipoUsuario();
+    }
 
     $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
     return FALSE;
@@ -279,8 +286,13 @@ class indice extends clsCadastro
     $tipoUsuario = new clsPmieducarTipoUsuario($this->cod_tipo_usuario, NULL, $this->pessoa_logada,
                                                $this->nm_tipo, $this->descricao, $this->nivel, NULL, NULL, 1);
 
-    if ($tipoUsuario->edita())
+    $detalheAntigo = $tipoUsuario->detalhe();
+    if ($tipoUsuario->edita()){
+      $detalheAtual = $tipoUsuario->detalhe();
+      $auditoria = new clsModulesAuditoriaGeral("tipo_usuario", $this->pessoa_logada, $this->cod_tipo_usuario);
+      $auditoria->alteracao($detalheAntigo, $detalheAtual);
       $this->createMenuTipoUsuario();
+    }
 
     $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
     return FALSE;
@@ -330,8 +342,11 @@ class indice extends clsCadastro
     session_write_close();
 
     $tipoUsuario = new clsPmieducarTipoUsuario($this->cod_tipo_usuario, NULL, $this->pessoa_logada);
+    $detalhe = $tipoUsuario->detalhe();
 
     if ($tipoUsuario->excluir()) {
+      $auditoria = new clsModulesAuditoriaGeral("tipo_usuario", $this->pessoa_logada, $this->cod_tipo_usuario);
+      $auditoria->exclusao($detalhe);
       $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
 
       $menuTipoUsuario = new clsPmieducarMenuTipoUsuario($this->cod_tipo_usuario);
