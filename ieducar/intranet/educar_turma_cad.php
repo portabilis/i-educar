@@ -1236,7 +1236,7 @@ class indice extends clsCadastro
 
         if ($editou) {
             $auditoria = new clsModulesAuditoriaGeral("turma", $this->pessoa_logada, $this->cod_turma);
-            $auditoria->alteracao($turmaDetalhe, (array)$this);
+            $auditoria->alteracao($turmaDetalhe, $obj->detalhe());
 
             $qtd_registros = count($this->ref_cod_modulo);
 
@@ -1359,7 +1359,7 @@ class indice extends clsCadastro
     $this->cadastraInepTurma($this->cod_turma, $this->codigo_inep_educacenso);
 
     $auditoria = new clsModulesAuditoriaGeral("turma", $this->pessoa_logada, $this->cod_turma);
-    $auditoria->alteracao($turmaDetalhe, (array)$this);
+    $auditoria->alteracao($turmaDetalhe, $obj->detalhe());
 
     // Caso tenham sido selecionadas discplinas, como se trata de uma edição de turma será rodado uma consulta
     // que limpa os Componentes Curriculares antigos.

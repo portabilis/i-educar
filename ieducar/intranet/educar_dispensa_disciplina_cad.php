@@ -33,6 +33,7 @@ require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'App/Model/IedFinder.php';
+require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 /**
  * clsIndexBase class.
@@ -295,6 +296,11 @@ class indice extends clsCadastro
 
     $cadastrou = $obj->cadastra();
     if ($cadastrou) {
+
+      $detalhe = $obj->detalhe();
+      $auditoria = new clsModulesAuditoriaGeral("dispensa_disciplina", $this->pessoa_logada, $max_cod_dispensa);
+      $auditoria->inclusao($detalhe);
+
       foreach ($this->etapa as $etapa) {
         $get_notas_lancadas = App_Model_IedFinder::getNotasLancadasAluno($this->ref_cod_matricula, $this->ref_cod_disciplina, $etapa);
 
@@ -385,8 +391,12 @@ class indice extends clsCadastro
       $cadastra = $objDispensaEtapa->cadastra();
     }
 
+    $detalheAntigo = $obj->detalhe();
     $editou = $obj->edita();
     if ($editou) {
+
+      $auditoria = new clsModulesAuditoriaGeral("dispensa_disciplina", $this->pessoa_logada, $this->cod_dispensa);
+      $auditoria->alteracao($detalheAntigo, $obj->detalhe());
       $this->mensagem .= 'Edição efetuada com sucesso.<br />';
       header('Location: educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
       die();
@@ -415,9 +425,12 @@ class indice extends clsCadastro
     $objDispensaEtapa    = new clsPmieducarDispensaDisciplinaEtapa();
     $excluiDispensaEtapa = $objDispensaEtapa->excluirTodos($this->cod_dispensa);
 
+    $detalhe = $obj->detalhe();
     $excluiu = $obj->excluir();
 
     if ($excluiu) {
+      $auditoria = new clsModulesAuditoriaGeral("dispensa_disciplina", $this->pessoa_logada, $this->cod_dispensa);
+      $auditoria->exclusao($detalhe);
       $this->mensagem .= 'Exclusão efetuada com sucesso.<br />';
       header('Location: educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
       die();

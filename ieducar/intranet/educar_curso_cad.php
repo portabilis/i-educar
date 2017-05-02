@@ -37,6 +37,7 @@ require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'lib/Portabilis/Utils/Database.php';
 require_once 'Portabilis/View/Helper/Application.php';
+require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 /**
  * clsIndexBase class.
@@ -138,7 +139,7 @@ class indice extends clsCadastro
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_index.php"                  => "Escola",
-         ""        => "{$nomeMenu} curso"             
+         ""        => "{$nomeMenu} curso"
     ));
     $this->enviaLocalizacao($localizacao->montar());
 
@@ -369,7 +370,7 @@ class indice extends clsCadastro
     $this->campoMemo('publico_alvo', 'P&uacute;blico Alvo', $this->publico_alvo,
       60, 5, FALSE);
 
-    $resources = array(null => 'Selecione', 
+    $resources = array(null => 'Selecione',
                        1 => Portabilis_String_Utils::toLatin1('Ensino Regular'),
                        2 => Portabilis_String_Utils::toLatin1('Educação Especial'),
                        3 => Portabilis_String_Utils::toLatin1('Educação Jovens e Adultos'),
@@ -381,7 +382,7 @@ class indice extends clsCadastro
     $helperOptions = array('objectName' => 'etapacurso');
     $options       = array('label' => 'Etapas que o curso contêm', 'size' => 50, 'required' => false,
                            'options' => array('value' => null));
- 
+
     $this->inputsHelper()->multipleSearchEtapacurso('', $options, $helperOptions);
   }
 
@@ -409,8 +410,13 @@ class indice extends clsCadastro
         $this->padrao_ano_escolar, $this->hora_falta, NULL, $this->multi_seriado);
       $obj->modalidade_curso = $this->modalidade_curso;
 
-      $cadastrou = $obj->cadastra();
+      $this->cod_curso = $cadastrou = $obj->cadastra();
       if ($cadastrou) {
+        $curso = new clsPmieducarCurso($this->cod_curso);
+        $curso = $curso->detalhe();
+
+        $auditoria = new clsModulesAuditoriaGeral("curso", $this->pessoa_logada, $this->cod_curso);
+        $auditoria->inclusao($curso);
 
         $this->gravaEtapacurso($cadastrou);
         $this->habilitacao_curso = unserialize(urldecode($this->habilitacao_curso));
@@ -467,8 +473,14 @@ class indice extends clsCadastro
         $this->padrao_ano_escolar, $this->hora_falta, NULL, $this->multi_seriado);
       $obj->modalidade_curso = $this->modalidade_curso;
 
+      $detalheAntigo = $obj->detalhe();
       $editou = $obj->edita();
       if ($editou) {
+
+        $detalheAtual = $obj->detalhe();
+        $auditoria = new clsModulesAuditoriaGeral("curso", $this->pessoa_logada, $this->cod_curso);
+        $auditoria->alteracao($detalheAntigo, $detalheAtual);
+
         $this->gravaEtapacurso($this->cod_curso);
         $this->habilitacao_curso = unserialize(urldecode($this->habilitacao_curso));
         $obj  = new clsPmieducarHabilitacaoCurso(NULL, $this->cod_curso);
@@ -515,8 +527,12 @@ class indice extends clsCadastro
       NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
       NULL, NULL, 0, $this->pessoa_logada);
 
+    $curso = $obj->detalhe();
     $excluiu = $obj->excluir();
     if ($excluiu) {
+
+      $auditoria = new clsModulesAuditoriaGeral("curso", $this->pessoa_logada, $this->cod_curso);
+      $auditoria->exclusao($curso);
       $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
       header("Location: educar_curso_lst.php");
       die();
@@ -528,8 +544,7 @@ class indice extends clsCadastro
   }
 
   function gravaEtapacurso($cod_curso){
-
-    Portabilis_Utils_Database::fetchPreparedQuery('DELETE FROM etapas_curso_educacenso WHERE curso_id = $1', array('params' => $cod_curso));
+    Portabilis_Utils_Database::fetchPreparedQuery('DELETE FROM etapas_curso_educacenso WHERE curso_id = $1', array('params' => array($cod_curso)));
     foreach ($this->getRequest()->etapacurso as $etapaId) {
       if (! empty($etapaId)) {
         Portabilis_Utils_Database::fetchPreparedQuery('INSERT INTO etapas_curso_educacenso VALUES ($1 , $2)', array('params' => array($etapaId, $cod_curso) ));
@@ -689,7 +704,7 @@ document.getElementById('ref_cod_instituicao').onchange = function()
 }
 
 function fixupEtapacursoSize(){
-  $j('.search-field input').css('height', '30px')  
+  $j('.search-field input').css('height', '30px')
 }
 
   $etapacurso = $j('#etapacurso');
@@ -699,9 +714,9 @@ function fixupEtapacursoSize(){
 
 var handleGetEtapacurso = function(dataResponse) {
   testezin = dataResponse['etapacurso'];
-  
+
   $j.each(dataResponse['etapacurso'], function(id, value) {
-    
+
     $etapacurso.children("[value=" + value + "]").attr('selected', '');
   });
 
@@ -709,8 +724,8 @@ var handleGetEtapacurso = function(dataResponse) {
 }
 
 var getEtapacurso = function() {
-      
-  if ($j('#cod_curso').val()!='') {    
+
+  if ($j('#cod_curso').val()!='') {
 
     var additionalVars = {
       curso_id : $j('#cod_curso').val(),
