@@ -314,7 +314,7 @@ class clsPmieducarDistribuicaoUniforme
       }
 
       $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
-      return TRUE;
+      return $db->insertId("{$this->_tabela}_seq");
     }
 
     return FALSE;
