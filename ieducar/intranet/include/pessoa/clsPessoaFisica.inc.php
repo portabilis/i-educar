@@ -33,6 +33,7 @@
 
 require_once 'include/clsBanco.inc.php';
 require_once 'include/Geral.inc.php';
+require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 /**
  * clsPessoaFisica class.
@@ -583,10 +584,14 @@ class clsPessoaFisica extends clsPessoaFj
     if ($this->idpes) {
       $this->pessoa_logada = $_SESSION['id_pessoa'];
       $db  = new clsBanco();
+      $detalheAntigo = $this->detalheSimples();
       $excluir = $db->Consulta('UPDATE cadastro.fisica SET ativo = 0 WHERE idpes = ' . $this->idpes);
 
       if($excluir){
         $db->Consulta("UPDATE cadastro.fisica SET ref_usuario_exc = $this->pessoa_logada, data_exclusao = NOW() WHERE idpes = $this->idpes");
+
+        $auditoria = new clsModulesAuditoriaGeral("fisica", $this->pessoa_logada, $this->idpes);
+        $auditoria->exclusao($detalheAntigo, $this->detalheSimples());
       }
     }
   }
@@ -613,5 +618,18 @@ class clsPessoaFisica extends clsPessoaFj
         return $tupla['matricula'];
       }
     }
+  }
+
+	function detalheSimples()
+  {
+    if (is_numeric($this->idpes)) {
+      $sql = "SELECT * FROM cadastro.fisica WHERE idpes = '{$this->idpes}' AND ativo = 1;";
+
+      $db = new clsBanco();
+      $db->Consulta($sql);
+      $db->ProximoRegistro();
+      return $db->Tupla();
+    }
+    return FALSE;
   }
 }

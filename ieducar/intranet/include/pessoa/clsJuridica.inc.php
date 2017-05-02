@@ -26,6 +26,7 @@
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 require_once ("include/clsBanco.inc.php");
 require_once ("include/Geral.inc.php");
+require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsJuridica
 {
@@ -47,6 +48,9 @@ class clsJuridica
 	 */
 	function clsJuridica( $idpes = false, $cnpj = false, $fantasia = false, $insc_estadual = false, $capital_social = false, $idpes_cad =false, $idpes_rev =false )
 	{
+		@session_start();
+		$this->pessoa_logada = $_SESSION['id_pessoa'];
+		session_write_close();
 		$objPessoa = new clsPessoa_($idpes);
 		if($objPessoa->detalhe())
 		{
@@ -96,6 +100,13 @@ class clsJuridica
 			}
 
 			$db->Consulta( "INSERT INTO {$this->schema}.{$this->tabela} (idpes, cnpj, origem_gravacao, idsis_cad, data_cad, operacao, idpes_cad $campos) VALUES ($this->idpes, '$this->cnpj', 'M', 17, NOW(), 'I', '$this->idpes_cad' $valores)" );
+
+			if($this->idpes){
+        $detalhe = $this->detalhe();
+        $auditoria = new clsModulesAuditoriaGeral("juridica", $this->pessoa_logada, $this->idpes);
+        $auditoria->inclusao($detalhe);
+      }
+
 			return true;
 
 		}
@@ -147,7 +158,11 @@ class clsJuridica
 			if($set)
 			{
 				$db = new clsBanco();
+				$detalheAntigo = $this->detalhe();
 				$db->Consulta( "UPDATE {$this->schema}.{$this->tabela} SET $set WHERE idpes = '$this->idpes' " );
+
+        $auditoria = new clsModulesAuditoriaGeral("juridica", $this->pessoa_logada, $this->idpes);
+        $auditoria->alteracao($detalheAntigo, $this->detalhe());
 				return true;
 			}
 		}
@@ -164,7 +179,10 @@ class clsJuridica
 		if( is_numeric($this->idpes))
 		{
 			$db = new clsBanco();
+			$detalheAntigo = $this->detalhe();
 			$db->Consulta("DELETE FROM {$this->schema}.{$this->tabela} WHERE idpes = {$this->idpes}");
+      $auditoria = new clsModulesAuditoriaGeral("juridica", $this->pessoa_logada, $this->idpes);
+      $auditoria->exclusao($detalheAntigo, $this->detalhe());
 			return true;
 		}
 		return false;
