@@ -118,7 +118,7 @@ class indice extends clsCadastro
 			$enderecamento = new clsPublicPais($cadastrou);
 			$enderecamento->cadastrou = $cadastrou;
 			$enderecamento = $enderecamento->detalhe();
-			$auditoria = new clsModulesAuditoriaGeral("pais_enderecamento", $this->pessoa_logada, $cadastrou);
+			$auditoria = new clsModulesAuditoriaGeral("Endereçamento de País", $this->pessoa_logada, $cadastrou);
 			$auditoria->inclusao($enderecamento);
 
 			$this->mensagem .= "Cadastro efetuado com sucesso.<br>";
@@ -147,7 +147,7 @@ class indice extends clsCadastro
 		if( $editou )
 		{
 			$enderecamentoDetalheDepois = $enderecamentoDetalhe->detalhe();
-			$auditoria = new clsModulesAuditoriaGeral("pais_enderecamento", $this->pessoa_logada, $editou);
+			$auditoria = new clsModulesAuditoriaGeral("Endereçamento de País", $this->pessoa_logada, $this->idpais);
 			$auditoria->alteracao($enderecamentoDetalheAntes, $enderecamentoDetalheDepois);
 
 			$this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
@@ -175,7 +175,7 @@ class indice extends clsCadastro
 		$excluiu = $obj->excluir();
 		if( $excluiu )
 		{
-			$auditoria = new clsModulesAuditoriaGeral("pais_enderecamento", $this->pessoa_logada, $this->cadastrou);
+			$auditoria = new clsModulesAuditoriaGeral("Endereçamento de País", $this->pessoa_logada, $this->cadastrou);
 			$auditoria->exclusao($enderecamento);
 
 			$this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
