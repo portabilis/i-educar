@@ -28,6 +28,7 @@ require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once( "include/pmieducar/geral.inc.php" );
+require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsIndexBase extends clsBase
 {
@@ -96,7 +97,7 @@ class indice extends clsCadastro
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_biblioteca_index.php"                  => "Biblioteca",
-         ""        => "{$nomeMenu} motivo de baixa"             
+         ""        => "{$nomeMenu} motivo de baixa"
     ));
     $this->enviaLocalizacao($localizacao->montar());
 
@@ -127,9 +128,13 @@ class indice extends clsCadastro
 
 
 		$obj = new clsPmieducarMotivoBaixa( null, null, $this->pessoa_logada, $this->nm_motivo_baixa, $this->descricao, null, null, 1, $this->ref_cod_biblioteca );
-		$cadastrou = $obj->cadastra();
+		$this->cod_motivo_baixa = $cadastrou = $obj->cadastra();
 		if( $cadastrou )
 		{
+      $obj->cod_motivo_baixa = $this->cod_motivo_baixa;
+      $motivo_baixa = $obj->detalhe();
+      $auditoria = new clsModulesAuditoriaGeral("motivo_baixa", $this->pessoa_logada, $this->cod_motivo_baixa);
+      $auditoria->inclusao($motivo_baixa);
 			$this->mensagem .= "Cadastro efetuado com sucesso.<br>";
 			header( "Location: educar_motivo_baixa_lst.php" );
 			die();
@@ -152,9 +157,13 @@ class indice extends clsCadastro
 
 
 		$obj = new clsPmieducarMotivoBaixa($this->cod_motivo_baixa, $this->pessoa_logada, null, $this->nm_motivo_baixa, $this->descricao, null, null, 1, $this->ref_cod_biblioteca);
+    $detalheAntigo = $obj->detalhe();
 		$editou = $obj->edita();
 		if( $editou )
 		{
+      $detalheAtual = $obj->detalhe();
+      $auditoria = new clsModulesAuditoriaGeral("motivo_baixa", $this->pessoa_logada, $this->cod_motivo_baixa);
+      $auditoria->alteracao($detalheAntigo, $detalheAtual);
 			$this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
 			header( "Location: educar_motivo_baixa_lst.php" );
 			die();
@@ -180,6 +189,9 @@ class indice extends clsCadastro
 		$excluiu = $obj->excluir();
 		if( $excluiu )
 		{
+      $detalhe = $obj->detalhe();
+      $auditoria = new clsModulesAuditoriaGeral("motivo_baixa", $this->pessoa_logada, $this->cod_motivo_baixa);
+      $auditoria->exclusao($detalhe);
 			$this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
 			header( "Location: educar_motivo_baixa_lst.php" );
 			die();

@@ -31,6 +31,7 @@
 */
 
 require_once( "include/pmieducar/geral.inc.php" );
+require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsPmieducarExemplar
 {
@@ -49,6 +50,7 @@ class clsPmieducarExemplar
 	var $data_aquisicao;
 	var $tombo;
 	var $sequencial;
+  var $pessoa_logada;
 
 	// propriedades padrao
 
@@ -120,6 +122,10 @@ class clsPmieducarExemplar
 		$db = new clsBanco();
 		$this->_schema = "pmieducar.";
 		$this->_tabela = "{$this->_schema}exemplar";
+
+    @session_start();
+    $this->pessoa_logada = $_SESSION['id_pessoa'];
+    session_write_close();
 
 		$this->_campos_lista = $this->_todos_campos = "e.cod_exemplar, e.ref_cod_fonte, e.ref_cod_motivo_baixa, e.ref_cod_acervo, e.ref_cod_situacao, e.ref_usuario_exc, e.ref_usuario_cad, e.permite_emprestimo, e.preco, e.data_cadastro, e.data_exclusao, e.ativo, e.data_aquisicao, e.tombo, e.sequencial";
 
@@ -340,7 +346,7 @@ class clsPmieducarExemplar
 	{
 		if(!is_numeric( $this->preco ))
 			$this->preco = 0.00;
-		
+
 		if( is_numeric( $this->ref_cod_fonte ) && is_numeric( $this->ref_cod_acervo ) && is_numeric( $this->ref_cod_situacao ) && is_numeric( $this->ref_usuario_cad ) && is_numeric( $this->permite_emprestimo ) )
 		{
 			$db = new clsBanco();
@@ -418,7 +424,13 @@ class clsPmieducarExemplar
 
 
 			$db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
-			return $db->InsertId( "{$this->_tabela}_cod_exemplar_seq");
+			$this->cod_exemplar = $db->InsertId( "{$this->_tabela}_cod_exemplar_seq");
+      if($this->cod_exemplar){
+        $detalhe = $this->detalhe();
+        $auditoria = new clsModulesAuditoriaGeral("exemplar", $this->pessoa_logada, $this->cod_exemplar);
+        $auditoria->inclusao($detalhe);
+      }
+      return $this->cod_exemplar;
 		}
 		return false;
 	}
@@ -502,7 +514,11 @@ class clsPmieducarExemplar
 
 			if( $set )
 			{
+        $detalheAntigo = $this->detalhe();
 				$db->Consulta( "UPDATE {$this->_tabela} SET $set WHERE cod_exemplar = '{$this->cod_exemplar}'" );
+        $detalheAtual = $this->detalhe();
+        $auditoria = new clsModulesAuditoriaGeral("exemplar", $this->pessoa_logada, $this->cod_exemplar);
+        $auditoria->alteracao($detalheAntigo, $detalheAtual);
 				return true;
 			}
 		}
@@ -708,7 +724,7 @@ class clsPmieducarExemplar
 		$db = new clsBanco();
 		return $db->CampoUnico($sql);
 	}
-	
+
 	/**
 	 * Verifica se o tombo a ser cadastrado já não foi cadastrado
 	 *
@@ -734,7 +750,7 @@ class clsPmieducarExemplar
 		} else {
 			return true;
 		}
-	}	
+	}
 
 	/**
 	 * Retorna uma lista filtrados de acordo com os parametros

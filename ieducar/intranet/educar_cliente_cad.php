@@ -30,6 +30,7 @@ require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
+require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsIndexBase extends clsBase
 {
@@ -114,9 +115,9 @@ class indice extends clsCadastro
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_biblioteca_index.php"                  => "Biblioteca",
-         ""        => "{$nomeMenu} cliente"             
+         ""        => "{$nomeMenu} cliente"
     ));
-    $this->enviaLocalizacao($localizacao->montar());		
+    $this->enviaLocalizacao($localizacao->montar());
 
     return $retorno;
 	}
@@ -234,8 +235,13 @@ class indice extends clsCadastro
         $obj = new clsPmieducarCliente($this->cod_cliente, NULL, $this->pessoa_logada,
 				  $this->ref_idpes, $this->login, $senha, $this->data_cadastro, $this->data_exclusao, 1, $this->observacoes);
 
-        $cadastrou = $obj->cadastra();
+        $this->cod_cliente = $cadastrou = $obj->cadastra();
         if ($cadastrou) {
+          $obj->cod_cliente = $this->cod_cliente;
+          $cliente = $obj->detalhe();
+          $auditoria = new clsModulesAuditoriaGeral("cliente", $this->pessoa_logada, $this->cod_cliente);
+          $auditoria->inclusao($cliente);
+
           $this->cod_cliente = $cadastrou;
           $obj_cliente_tipo = new clsPmieducarClienteTipoCliente($this->ref_cod_cliente_tipo,
             $this->cod_cliente, NULL, NULL, $this->pessoa_logada, $this->pessoa_logada, 1);
@@ -324,9 +330,13 @@ class indice extends clsCadastro
     $obj = new clsPmieducarCliente($this->cod_cliente, $this->pessoa_logada, $this->pessoa_logada,
       $this->ref_idpes, $this->login, $senha, $this->data_cadastro, $this->data_exclusao, $this->ativo, $this->observacoes);
 
+    $detalheAntigo = $obj->detalhe();
     $editou = $obj->edita();
 
     if ($editou) {
+      $detalheAtual = $obj->detalhe();
+      $auditoria = new clsModulesAuditoriaGeral("cliente", $this->pessoa_logada, $this->cod_cliente);
+      $auditoria->alteracao($detalheAntigo, $detalheAtual);
       // Cria objeto clsPemieducarClienteTipoCliente configurando atributos usados nas queries
       $obj_cliente_tipo = new clsPmieducarClienteTipoCliente(
         $this->ref_cod_cliente_tipo, $this->cod_cliente, NULL, NULL,
@@ -370,9 +380,13 @@ class indice extends clsCadastro
 		$obj_permissoes->permissao_excluir( 603, $this->pessoa_logada, 11,  "educar_cliente_lst.php" );
 
 		$obj = new clsPmieducarCliente( $this->cod_cliente, $this->pessoa_logada, null, $this->ref_idpes, null, null, null, null, 0 );
-		$excluiu = $obj->excluir();
+		$detalhe = $obj->detalhe();
+    $excluiu = $obj->excluir();
 		if( $excluiu )
 		{
+
+      $auditoria = new clsModulesAuditoriaGeral("cliente", $this->pessoa_logada, $this->cod_cliente);
+      $auditoria->exclusao($detalhe);
 			$this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
 			header( "Location: educar_cliente_lst.php" );
 			die();
