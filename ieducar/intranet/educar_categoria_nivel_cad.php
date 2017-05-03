@@ -174,7 +174,7 @@ class indice extends clsCadastro
 		{
 
 			$categoriaNivelDepois = $categoriaNivel->detalhe();
-			$auditoria = new clsModulesAuditoriaGeral("categoriaNivel", $this->pessoa_logada);
+			$auditoria = new clsModulesAuditoriaGeral("categoriaNivel", $this->pessoa_logada, $this->cod_categoria_nivel);
 			$auditoria->alteracao($categoriaNivelAntes, $categoriaNivelDepois);
 
 			$this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";

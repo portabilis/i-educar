@@ -186,7 +186,7 @@ class indice extends clsCadastro
 		if( $editou )
 		{
 			$funcaoDepois = $funcao->detalhe();
-			$auditoria = new clsModulesAuditoriaGeral("servidor_funcao", $this->pessoa_logada);
+			$auditoria = new clsModulesAuditoriaGeral("servidor_funcao", $this->pessoa_logada, $this->cod_funcao);
 			$auditoria->alteracao($funcaoAntes, $funcaoDepois);
 
 			$this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
