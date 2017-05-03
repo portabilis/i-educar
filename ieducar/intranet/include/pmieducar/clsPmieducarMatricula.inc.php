@@ -29,6 +29,7 @@
  * @version   $Id$
  */
 require_once 'include/pmieducar/geral.inc.php';
+require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 /**
  * clsPmieducarMatricula class.
  *
@@ -65,6 +66,7 @@ class clsPmieducarMatricula
   var $data_cancel;
   var $turno_pre_matricula;
   var $dependencia;
+  var $pessoa_logada;
   /**
    * caso seja a primeira matricula do aluno
    * marcar como true este atributo
@@ -130,6 +132,9 @@ class clsPmieducarMatricula
     $db = new clsBanco();
     $this->_schema = 'pmieducar.';
     $this->_tabela = $this->_schema . 'matricula';
+    @session_start();
+    $this->pessoa_logada = $_SESSION['id_pessoa'];
+    session_write_close();
     $this->_campos_lista = $this->_todos_campos = "m.cod_matricula, m.ref_cod_reserva_vaga, m.ref_ref_cod_escola, m.ref_ref_cod_serie, m.ref_usuario_exc, m.ref_usuario_cad, m.ref_cod_aluno, m.aprovado, m.data_cadastro, m.data_exclusao, m.ativo, m.ano, m.ultima_matricula, m.modulo,formando,descricao_reclassificacao,matricula_reclassificacao, m.ref_cod_curso,m.matricula_transferencia,m.semestre, m.data_matricula, m.data_cancel, m.ref_cod_abandono_tipo, m.turno_pre_matricula, m.dependencia, data_saida_escola ";
     if (is_numeric($ref_usuario_exc)) {
       if (class_exists("clsPmieducarUsuario")) {
@@ -406,7 +411,14 @@ class clsPmieducarMatricula
         $gruda = ", ";
       }
       $db->Consulta("INSERT INTO {$this->_tabela} ($campos) VALUES ($valores)");
-      return $db->InsertId("{$this->_tabela}_cod_matricula_seq");
+      $this->cod_matricula = $db->InsertId("{$this->_tabela}_cod_matricula_seq");
+      if($this->cod_matricula){
+        $detalhe = $this->detalhe();
+        $auditoria = new clsModulesAuditoriaGeral("matricula", $this->pessoa_logada, $this->cod_matricula);
+        $auditoria->inclusao($detalhe);
+      }
+
+      return $this->cod_matricula;
     }
     return FALSE;
   }
@@ -524,7 +536,10 @@ class clsPmieducarMatricula
         $gruda = ", ";
       }
       if ($set) {
+        $detalheAntigo = $this->detalhe();
         $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_matricula = '{$this->cod_matricula}'");
+        $auditoria = new clsModulesAuditoriaGeral("matricula", $this->pessoa_logada, $this->cod_matricula);
+        $auditoria->alteracao($detalheAntigo, $this->detalhe());
         return TRUE;
       }
     }

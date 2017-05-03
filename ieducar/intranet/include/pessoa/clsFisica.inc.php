@@ -26,6 +26,7 @@
 
 require_once 'include/clsBanco.inc.php';
 require_once 'include/Geral.inc.php';
+require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 /**
  * clsFisica class.
@@ -127,6 +128,9 @@ class clsFisica
 		                $data_admissao = false,
 		                $falecido = false)
 	{
+		@session_start();
+		$this->pessoa_logada = $_SESSION['id_pessoa'];
+		session_write_close();
 		$objPessoa = new clsPessoa_($idpes);
 		if ($objPessoa->detalhe())
 		{
@@ -447,6 +451,13 @@ class clsFisica
 			}
 
 			$db->Consulta( "INSERT INTO {$this->schema}.{$this->tabela} (idpes, origem_gravacao, idsis_cad, data_cad, operacao, idpes_cad $campos) VALUES ( '{$this->idpes}', 'M', 17, NOW(), 'I', '$this->idpes_cad' $valores )" );
+
+			if($this->idpes){
+        $detalhe = $this->detalheSimples();
+        $auditoria = new clsModulesAuditoriaGeral("fisica", $this->pessoa_logada, $this->idpes);
+        $auditoria->inclusao($detalhe);
+      }
+
 			return true;
 
 		}
@@ -680,7 +691,12 @@ class clsFisica
 				$set = "SET {$set}";
 				$db = new clsBanco();
 				//echo "UPDATE {$this->schema}.{$this->tabela} $set WHERE idpes = '$this->idpes'";die;
+				$detalheAntigo = $this->detalheSimples();
+
 				$db->Consulta( "UPDATE {$this->schema}.{$this->tabela} $set WHERE idpes = '$this->idpes'" );
+
+        $auditoria = new clsModulesAuditoriaGeral("fisica", $this->pessoa_logada, $this->idpes);
+        $auditoria->alteracao($detalheAntigo, $this->detalheSimples());
 				return true;
 			}
 		}
@@ -696,8 +712,14 @@ class clsFisica
 	{
 		if( is_numeric($this->idpes) )
 		{
+			$detalheAntigo = $this->detalheSimples();
+
 			$db = new clsBanco();
 			$db->Consulta("DELETE FROM {$this->schema}.{$this->tabela} WHERE idpes = {$this->idpes}");
+
+			$auditoria = new clsModulesAuditoriaGeral("fisica", $this->pessoa_logada, $this->idpes);
+			$auditoria->exclusao($detalheAntigo, $this->detalheSimples());
+
 			return true;
 		}
 		return false;
@@ -1026,6 +1048,19 @@ class clsFisica
 		}
 		return false;
 	}
+
+	function detalheSimples()
+  {
+    if (is_numeric($this->idpes)) {
+      $sql = "SELECT * FROM {$this->schema}.{$this->tabela} WHERE idpes = '{$this->idpes}' AND ativo = 1;";
+
+      $db = new clsBanco();
+      $db->Consulta($sql);
+      $db->ProximoRegistro();
+      return $db->Tupla();
+    }
+    return FALSE;
+  }
 
 	function getIdade( $data_nasc )
 	{

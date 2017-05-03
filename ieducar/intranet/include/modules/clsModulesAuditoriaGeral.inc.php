@@ -53,7 +53,7 @@ class clsModulesAuditoriaGeral
   var $codigo;
   var $rotina;
 
-  function clsModulesAuditoriaGeral($rotina, $usuario_id, $codigo){
+  function clsModulesAuditoriaGeral($rotina, $usuario_id, $codigo = 'null'){
     $this->_campos_lista = 'codigo,
                             usuario_id,
                             operacao,

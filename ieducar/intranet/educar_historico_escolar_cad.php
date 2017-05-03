@@ -31,6 +31,7 @@ require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'lib/Portabilis/View/Helper/Application.php';
+require_once ("include/modules/clsModulesAuditoriaGeral.inc.php");
 
 class clsIndexBase extends clsBase
 {
@@ -389,6 +390,13 @@ class indice extends clsCadastro
 			$cadastrou = $obj->cadastra();
 			if( $cadastrou )
 			{
+
+				$historicoEscolar = new clsPmieducarHistoricoEscolar($this->ref_cod_aluno, $cadastrou);
+				$historicoEscolar = $historicoEscolar->detalhe();
+
+				$auditoria = new clsModulesAuditoriaGeral("historico_escolar", $this->pessoa_logada, $this->ref_cod_aluno);
+				$auditoria->inclusao($historicoEscolar);
+
 			//--------------CADASTRA DISCIPLINAS--------------//
 				if ($this->nm_disciplina)
 				{
@@ -436,6 +444,9 @@ class indice extends clsCadastro
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7,  "educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}" );
 
+		$historicoEscolar = new clsPmieducarHistoricoEscolar($this->ref_cod_aluno, $this->sequencial);
+		$historicoEscolarDetalheAntes = $historicoEscolar->detalhe();
+
 /*    $this->historico_disciplinas = unserialize( urldecode( $this->historico_disciplinas ) );
 		if ($this->historico_disciplinas)
 		{
@@ -457,6 +468,12 @@ class indice extends clsCadastro
 
 			if( $editou )
 			{
+
+				$historicoEscolarDetalheDepois = $historicoEscolar->detalhe();
+
+				$auditoria = new clsModulesAuditoriaGeral("historico_escolar", $this->pessoa_logada, $this->ref_cod_aluno);
+				$auditoria->alteracao($historicoEscolarDetalheAntes, $historicoEscolarDetalheDepois);
+
 			//--------------EDITA DISCIPLINAS--------------//
 				if ($this->nm_disciplina)
 				{
@@ -511,9 +528,13 @@ class indice extends clsCadastro
 
 
 		$obj = new clsPmieducarHistoricoEscolar( $this->ref_cod_aluno, $this->sequencial, $this->pessoa_logada,null,null,null,null,null,null,null,null,null,null,null,null,0 );
+		$historicoEscolar = $obj->detalhe();
 		$excluiu = $obj->excluir();
 		if( $excluiu )
 		{
+			$auditoria = new clsModulesAuditoriaGeral("historico_escolar", $this->pessoa_logada, $this->ref_cod_aluno);
+			$auditoria->exclusao($historicoEscolar);
+
 			$obj  = new clsPmieducarHistoricoDisciplinas();
 			$excluiu = $obj->excluirTodos( $this->ref_cod_aluno,$this->sequencial );
 			if ( $excluiu )

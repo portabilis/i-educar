@@ -27,7 +27,8 @@
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
+require_once ("include/pmieducar/geral.inc.php");
+require_once ("include/modules/clsModulesAuditoriaGeral.inc.php");
 
 class clsIndexBase extends clsBase
 {
@@ -137,6 +138,12 @@ class indice extends clsCadastro
 		$cadastrou = $obj->cadastra();
 		if( $cadastrou )
 		{
+			$tipoEnsino = new clsPmieducarTipoEnsino($cadastrou);
+			$tipoEnsino = $tipoEnsino->detalhe();
+
+			$auditoria = new clsModulesAuditoriaGeral("tipo_ensino", $this->pessoa_logada, $cadastrou);
+			$auditoria->inclusao($tipoEnsino);
+
 			$this->mensagem .= "Cadastro efetuado com sucesso.<br>";
 			header( "Location: educar_tipo_ensino_lst.php" );
 			die();
@@ -154,10 +161,17 @@ class indice extends clsCadastro
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
 
+		$tipoEnsinoDetalhe = new clsPmieducarTipoEnsino($this->cod_tipo_ensino);
+		$tipoEnsinoDetalheAntes = $tipoEnsinoDetalhe->detalhe();
+
 		$obj = new clsPmieducarTipoEnsino($this->cod_tipo_ensino, $this->pessoa_logada, null, $this->nm_tipo, null, null, 1, $this->ref_cod_instituicao);
 		$editou = $obj->edita();
 		if( $editou )
 		{
+			$tipoEnsinoDetalheDepois = $tipoEnsinoDetalhe->detalhe();
+			$auditoria = new clsModulesAuditoriaGeral("tipo_ensino", $this->pessoa_logada, $this->cod_tipo_ensino);
+			$auditoria->alteracao($tipoEnsinoDetalheAntes, $tipoEnsinoDetalheDepois);
+
 			$this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
 			header( "Location: educar_tipo_ensino_lst.php" );
 			die();
@@ -176,9 +190,13 @@ class indice extends clsCadastro
 		@session_write_close();
 
 		$obj = new clsPmieducarTipoEnsino($this->cod_tipo_ensino, $this->pessoa_logada, null, $this->nm_tipo, null, null, 0);
+		$tipoEnsino = $obj->detalhe();
 		$excluiu = $obj->excluir();
 		if( $excluiu )
 		{
+			$auditoria = new clsModulesAuditoriaGeral("tipo_ensino", $this->pessoa_logada, $this->cod_tipo_ensino);
+			$auditoria->exclusao($tipoEnsino);
+
 			$this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
 			header( "Location: educar_tipo_ensino_lst.php" );
 			die();

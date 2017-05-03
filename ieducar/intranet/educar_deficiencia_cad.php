@@ -30,6 +30,7 @@ require_once ("include/clsBanco.inc.php");
 require_once( "include/Geral.inc.php" );
 require_once( "include/pmieducar/geral.inc.php" );
 require_once "lib/Portabilis/String/Utils.php";
+require_once "include/modules/clsModulesAuditoriaGeral.inc.php";
 
 class clsIndexBase extends clsBase
 {
@@ -85,15 +86,15 @@ class indice extends clsCadastro
 		}
 
 		$this->url_cancelar = ($retorno == "Editar") ? "educar_deficiencia_det.php?cod_deficiencia={$registro["cod_deficiencia"]}" : "educar_deficiencia_lst.php";
-		
+
 		$nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
         $localizacao = new LocalizacaoSistema();
         $localizacao->entradaCaminhos( array(
              $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
 	         "educar_pessoas_index.php"          => "Pessoas",
-             ""        => "{$nomeMenu} defici&ecirc;ncia"             
+             ""        => "{$nomeMenu} defici&ecirc;ncia"
         ));
-        $this->enviaLocalizacao($localizacao->montar());		
+        $this->enviaLocalizacao($localizacao->montar());
 
 		$this->nome_url_cancelar = "Cancelar";
 		return $retorno;
@@ -134,12 +135,16 @@ class indice extends clsCadastro
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
 
-
-
 		$obj = new clsCadastroDeficiencia( $this->cod_deficiencia, $this->nm_deficiencia, $this->deficiencia_educacenso );
 		$cadastrou = $obj->cadastra();
 		if( $cadastrou )
 		{
+			$deficiencia = new clsCadastroDeficiencia($cadastrou);
+			$deficiencia = $deficiencia->detalhe();
+
+			$auditoria = new clsModulesAuditoriaGeral("deficiencia", $this->pessoa_logada, $cadastrou);
+			$auditoria->inclusao($deficiencia);
+
 			$this->mensagem .= "Cadastro efetuado com sucesso.<br>";
 			header( "Location: educar_deficiencia_lst.php" );
 			die();
@@ -157,12 +162,18 @@ class indice extends clsCadastro
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
 
-
+		$deficienciaDetalhe = new clsCadastroDeficiencia($this->cod_deficiencia);
+		$deficienciaDetalheAntes = $deficienciaDetalhe->detalhe();
 
 		$obj = new clsCadastroDeficiencia($this->cod_deficiencia, $this->nm_deficiencia, $this->deficiencia_educacenso);
 		$editou = $obj->edita();
 		if( $editou )
 		{
+			$deficienciaDetalheDepois = $deficienciaDetalhe->detalhe();
+
+			$auditoria = new clsModulesAuditoriaGeral("deficiencia", $this->pessoa_logada, $this->cod_deficiencia);
+			$auditoria->alteracao($deficienciaDetalheAntes, $deficienciaDetalheDepois);
+
 			$this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
 			header( "Location: educar_deficiencia_lst.php" );
 			die();
@@ -180,12 +191,14 @@ class indice extends clsCadastro
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
 
-
-
 		$obj = new clsCadastroDeficiencia($this->cod_deficiencia, $this->nm_deficiencia);
+		$detalhe = $obj->detalhe();
 		$excluiu = $obj->excluir();
 		if( $excluiu )
 		{
+			$auditoria = new clsModulesAuditoriaGeral("deficiencia", $this->pessoa_logada, $this->cod_deficiencia);
+			$auditoria->exclusao($detalhe);
+
 			$this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
 			header( "Location: educar_deficiencia_lst.php" );
 			die();
@@ -208,7 +221,7 @@ $pagina->addForm( $miolo );
 $pagina->MakeAll();
 ?>
 <script type="text/javascript">
-	// Reescrita da função para exibir mensagem interativa 
+	// Reescrita da função para exibir mensagem interativa
 	function excluir()
     {
       document.formcadastro.reset();

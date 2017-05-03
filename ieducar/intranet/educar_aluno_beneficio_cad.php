@@ -131,7 +131,7 @@ class indice extends clsCadastro
 			$beneficio = new clsPmieducarAlunoBeneficio($cadastrou);
 			$beneficio = $beneficio->detalhe();
 
-			$auditoria = new clsModulesAuditoriaGeral("aluno_beneficio", $this->pessoa_logada);
+			$auditoria = new clsModulesAuditoriaGeral("aluno_beneficio", $this->pessoa_logada, $cadastrou);
 			$auditoria->inclusao($beneficio);
 
 			$this->mensagem .= "Cadastro efetuado com sucesso.<br>";
@@ -160,7 +160,7 @@ class indice extends clsCadastro
 		if( $editou )
 		{
 			$beneficioDetalheDepois = $beneficioDetalhe->detalhe();
-			$auditoria = new clsModulesAuditoriaGeral("aluno_beneficio", $this->pessoa_logada);
+			$auditoria = new clsModulesAuditoriaGeral("aluno_beneficio", $this->pessoa_logada, $this->cod_aluno_beneficio);
 			$auditoria->alteracao($beneficioDetalheAntes, $beneficioDetalheDepois);
 
 			$this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
@@ -187,7 +187,7 @@ class indice extends clsCadastro
 		$excluiu = $obj->excluir();
 		if( $excluiu )
 		{
-			$auditoria = new clsModulesAuditoriaGeral("aluno_beneficio", $this->pessoa_logada);
+			$auditoria = new clsModulesAuditoriaGeral("aluno_beneficio", $this->pessoa_logada, $this->cod_aluno_beneficio);
 			$auditoria->exclusao($beneficio);
 
 			$this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";

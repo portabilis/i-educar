@@ -27,6 +27,7 @@ require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'lib/Portabilis/View/Helper/Application.php';
 require_once 'lib/Portabilis/Date/Utils.php';
+require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsIndexBase extends clsBase
 {
@@ -137,7 +138,7 @@ class indice extends clsCadastro
 		}
 		$this->campoLista("ref_cod_escola", "Escola", $opcoes, $this->ref_cod_escola, '', false, '(Responsável pela distribuição do uniforme)', '', false, true);
 
-		$this->inputsHelper()->checkbox('kit_completo', array( 'label' => "Kit completo", 'value' => $this->kit_completo));		
+		$this->inputsHelper()->checkbox('kit_completo', array( 'label' => "Kit completo", 'value' => $this->kit_completo));
 		// $this->campoNumero( "agasalho_qtd", "Quantidade de agasalhos (jaqueta e calça)", $this->agasalho_qtd, 2, 2, false );
 		$options = array('required' => false, 'label' => 'Quantidade de agasalhos (jaqueta e calça)', 'value' => $this->agasalho_qtd, 'max_length' => 2, 'size' => 2, 'inline'	=> true);
 	    $this->inputsHelper()->integer('agasalho_qtd', $options);
@@ -186,7 +187,7 @@ class indice extends clsCadastro
 
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7,  "educar_distribuicao_uniforme_lst.php?ref_cod_aluno={$this->ref_cod_aluno}" );
-		
+
 		$obj_tmp = $obj = new clsPmieducarDistribuicaoUniforme();
 		$lista_tmp = $obj_tmp->lista($this->ref_cod_aluno, $this->ano);
 
@@ -195,15 +196,19 @@ class indice extends clsCadastro
 			return false;
 		}
 
-		$obj = new clsPmieducarDistribuicaoUniforme( null, $this->ref_cod_aluno, $this->ano, !is_null($this->kit_completo), $this->agasalho_qtd, 
-																								$this->camiseta_curta_qtd, $this->camiseta_longa_qtd, $this->meias_qtd, $this->bermudas_tectels_qtd, 
+		$obj = new clsPmieducarDistribuicaoUniforme( null, $this->ref_cod_aluno, $this->ano, !is_null($this->kit_completo), $this->agasalho_qtd,
+																								$this->camiseta_curta_qtd, $this->camiseta_longa_qtd, $this->meias_qtd, $this->bermudas_tectels_qtd,
 																								$this->bermudas_coton_qtd, $this->tenis_qtd, $this->data,
-																								$this->agasalho_tm, $this->camiseta_curta_tm, $this->camiseta_longa_tm, $this->meias_tm, 
+																								$this->agasalho_tm, $this->camiseta_curta_tm, $this->camiseta_longa_tm, $this->meias_tm,
 																								$this->bermudas_tectels_tm, $this->bermudas_coton_tm, $this->tenis_tm, $this->ref_cod_escola);
-		$cadastrou = $obj->cadastra();
+		$this->cod_distribuicao_uniforme = $cadastrou = $obj->cadastra();
 		if( $cadastrou )
 		{
-		
+      $distribuicao = new clsPmieducarDistribuicaoUniforme($this->cod_distribuicao_uniforme);
+      $distribuicao = $distribuicao->detalhe();
+      $auditoria = new clsModulesAuditoriaGeral("distribuicao_uniforme", $this->pessoa_logada, $this->cod_distribuicao_uniforme);
+      $auditoria->inclusao($distribuicao);
+
 				$this->mensagem .= "Cadastro efetuado com sucesso.<br>";
 				header( "Location: educar_distribuicao_uniforme_lst.php?ref_cod_aluno={$this->ref_cod_aluno}" );
 				die();
@@ -224,7 +229,7 @@ class indice extends clsCadastro
 
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7,  "educar_distribuicao_uniforme_lst.php?ref_cod_aluno={$this->ref_cod_aluno}" );
-		
+
 		$obj_tmp = $obj = new clsPmieducarDistribuicaoUniforme();
 		$lista_tmp = $obj_tmp->lista($this->ref_cod_aluno, $this->ano);
 
@@ -237,19 +242,22 @@ class indice extends clsCadastro
 			}
 		}
 
-		$obj = new clsPmieducarDistribuicaoUniforme( $this->cod_distribuicao_uniforme, $this->ref_cod_aluno, $this->ano, !is_null($this->kit_completo), 
-																									$this->agasalho_qtd, $this->camiseta_curta_qtd, $this->camiseta_longa_qtd, $this->meias_qtd, 
+		$obj = new clsPmieducarDistribuicaoUniforme( $this->cod_distribuicao_uniforme, $this->ref_cod_aluno, $this->ano, !is_null($this->kit_completo),
+																									$this->agasalho_qtd, $this->camiseta_curta_qtd, $this->camiseta_longa_qtd, $this->meias_qtd,
 																									$this->bermudas_tectels_qtd, $this->bermudas_coton_qtd, $this->tenis_qtd, $this->data,
-																									$this->agasalho_tm, $this->camiseta_curta_tm, $this->camiseta_longa_tm, $this->meias_tm, 
+																									$this->agasalho_tm, $this->camiseta_curta_tm, $this->camiseta_longa_tm, $this->meias_tm,
 																									$this->bermudas_tectels_tm, $this->bermudas_coton_tm, $this->tenis_tm, $this->ref_cod_escola);
+    $detalheAntigo = $obj->detalhe();
 		$editou = $obj->edita();
 		if( $editou )
 		{
-		
-				$this->mensagem .= "Ed&ccedil;&atilde;o efetuada com sucesso.<br>";
-				header( "Location: educar_distribuicao_uniforme_lst.php?ref_cod_aluno={$this->ref_cod_aluno}" );
-				die();
-				return true;
+      $auditoria = new clsModulesAuditoriaGeral("distribuicao_uniforme", $this->pessoa_logada, $this->cod_distribuicao_uniforme);
+      $auditoria->alteracao($detalheAntigo, $obj->detalhe());
+
+			$this->mensagem .= "Ed&ccedil;&atilde;o efetuada com sucesso.<br>";
+			header( "Location: educar_distribuicao_uniforme_lst.php?ref_cod_aluno={$this->ref_cod_aluno}" );
+			die();
+			return true;
 		}
 
 		$this->mensagem = "Ed&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -267,13 +275,16 @@ class indice extends clsCadastro
 
 
 		$obj = new clsPmieducarDistribuicaoUniforme( $this->cod_distribuicao_uniforme);
+    $detalhe = $obj->detalhe();
 		$excluiu = $obj->excluir();
 		if( $excluiu )
 		{
+      $auditoria = new clsModulesAuditoriaGeral("distribuicao_uniforme", $this->pessoa_logada, $this->cod_distribuicao_uniforme);
+      $auditoria->exclusao($detalhe);
 			$this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
 			header( "Location: educar_distribuicao_uniforme_lst.php?ref_cod_aluno={$this->ref_cod_aluno}" );
 			die();
-			return true;			
+			return true;
 		}
 
 		$this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
@@ -299,7 +310,7 @@ $pagina->MakeAll();
 		$j('#camiseta_longa_qtd').val('').attr('disabled', 'disabled');
 		$j('#meias_qtd').val('').attr('disabled', 'disabled');
 		$j('#bermudas_tectels_qtd').val('').attr('disabled', 'disabled');
-		$j('#bermudas_coton_qtd').val('').attr('disabled', 'disabled');		
+		$j('#bermudas_coton_qtd').val('').attr('disabled', 'disabled');
 		$j('#tenis_qtd').val('').attr('disabled', 'disabled');
 		return true;
 	}
@@ -310,7 +321,7 @@ $pagina->MakeAll();
 		$j('#camiseta_longa_qtd').removeAttr('disabled');
 		$j('#meias_qtd').removeAttr('disabled');
 		$j('#bermudas_tectels_qtd').removeAttr('disabled');
-		$j('#bermudas_coton_qtd').removeAttr('disabled');		
+		$j('#bermudas_coton_qtd').removeAttr('disabled');
 		$j('#tenis_qtd').removeAttr('disabled');
 	}
 

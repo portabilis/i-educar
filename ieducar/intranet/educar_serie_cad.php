@@ -33,6 +33,7 @@ require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
+require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 /**
  * clsIndexBase class.
@@ -245,9 +246,15 @@ class indice extends clsCadastro
       $this->regra_avaliacao_id, $this->observacao_historico, $this->dias_letivos,
       $this->regra_avaliacao_diferenciada_id, !is_null($this->alerta_faixa_etaria), !is_null($this->bloquear_matricula_faixa_etaria), $this->idade_ideal, !is_null($this->exigir_inep));
 
-    $cadastrou = $obj->cadastra();
+    $this->cod_serie = $cadastrou = $obj->cadastra();
 
     if ($cadastrou) {
+      $serie = new clsPmieducarSerie($this->cod_serie);
+      $serie = $serie->detalhe();
+
+      $auditoria = new clsModulesAuditoriaGeral("serie", $this->pessoa_logada, $this->cod_serie);
+      $auditoria->inclusao($serie);
+
       $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
       header("Location: educar_serie_lst.php");
       die();
@@ -273,8 +280,13 @@ class indice extends clsCadastro
       $this->idade_final, $this->regra_avaliacao_id, $this->observacao_historico, $this->dias_letivos,
       $this->regra_avaliacao_diferenciada_id, !is_null($this->alerta_faixa_etaria), !is_null($this->bloquear_matricula_faixa_etaria),$this->idade_ideal, !is_null($this->exigir_inep));
 
+    $detalheAntigo = $obj->detalhe();
     $editou = $obj->edita();
     if ($editou) {
+      $detalheAtual = $obj->detalhe();
+      $auditoria = new clsModulesAuditoriaGeral("serie", $this->pessoa_logada, $this->cod_serie);
+      $auditoria->alteracao($detalheAntigo, $detalheAtual);
+
       $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
       header("Location: educar_serie_lst.php");
       die();
@@ -294,9 +306,13 @@ class indice extends clsCadastro
     $obj = new clsPmieducarSerie($this->cod_serie, $this->pessoa_logada, NULL,
       NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0);
 
+    $serie = $obj->detalhe();
     $excluiu = $obj->excluir();
 
     if ($excluiu) {
+      $auditoria = new clsModulesAuditoriaGeral("serie", $this->pessoa_logada, $this->cod_serie);
+      $auditoria->exclusao($serie);
+
       $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
       header( "Location: educar_serie_lst.php" );
       die();

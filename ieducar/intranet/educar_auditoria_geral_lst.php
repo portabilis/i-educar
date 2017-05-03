@@ -114,7 +114,7 @@ class indice extends clsListagem
 
 	function transformaJsonEmTabela($json) {
 		$dataJson = json_decode($json);
-		$tabela = "<table class='tablelistagem' width='100%' border='0' cellpadding='4' cellspacing='1'>
+		$tabela = "<table class='tablelistagem auditoria-tab' width='100%' border='0' cellpadding='4' cellspacing='1'>
 								<tr>
 							    <td class='formdktd' valign='top' align='left' style='font-weight:bold;'>Campo</td>
 							    <td class='formdktd' valign='top' align='left' style='font-weight:bold;'>Valor</td>

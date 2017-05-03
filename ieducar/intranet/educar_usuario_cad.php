@@ -1,4 +1,6 @@
 <?php
+error_reporting(E_ERROR);
+ini_set("display_errors", 1);
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
 	*	@author Prefeitura Municipal de Itajaí								 *
@@ -29,6 +31,7 @@ require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once ("include/pmieducar/clsPmieducarUsuario.inc.php");
 require_once ("include/pmieducar/clsPmieducarEscolaUsuario.inc.php");
+require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsIndexBase extends clsBase
 {
@@ -432,23 +435,32 @@ class indice extends clsCadastro
 		if( $obj_funcionario->cadastra() )
 		{
 
+      $funcionario = $obj_funcionario->detalhe();
+      $auditoria = new clsModulesAuditoriaGeral("funcionario", $this->pessoa_logada, $this->ref_pessoa);
+      $auditoria->inclusao($funcionario);
+
 			if ($this->ref_cod_instituicao) {
 				$obj = new clsPmieducarUsuario( $this->ref_pessoa, null, $this->ref_cod_instituicao, $this->pessoa_logada,  $this->pessoa_logada, $this->ref_cod_tipo_usuario,null,null,1 );
 			} else {
 				$obj = new clsPmieducarUsuario( $this->ref_pessoa, null, null, $this->pessoa_logada,  $this->pessoa_logada, $this->ref_cod_tipo_usuario,null,null,1 );
 			}
 
-			if($obj->existe())
-				$cadastrou = $obj->edita();
-			else
+			if($obj->existe()){
+        $detalheAntigo = $obj->detalhe();
+				$cadastrou     = $obj->edita();
+        $detalheNovo   = $obj->detalhe();
+        $auditoria     = new clsModulesAuditoriaGeral("usuario", $this->pessoa_logada, $cadastrou);
+        $auditoria->alteracao($detalheAntigo, $detalheNovo);
+      }
+			else{
 				$cadastrou = $obj->cadastra();
+        $usuario = new clsPmieducarUsuario($cadastrou);
+        $usuario = $usuario->detalhe();
+        $auditoria = new clsModulesAuditoriaGeral("usuario", $this->pessoa_logada, $cadastrou);
+        $auditoria->inclusao($usuario);
+      }
 
 			$this->insereUsuarioEscolas($this->ref_pessoa, $this->escola);
-
-			if($obj->existe())
-				$cadastrou = $obj->edita();
-			else
-				$cadastrou = $obj->cadastra();
 
 			if( $cadastrou )
 			{
@@ -498,8 +510,13 @@ class indice extends clsCadastro
 		}
 
 		$obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, $this->_senha, $this->ativo, null, $this->ramal, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, $this->tempo_expira_conta, "NOW()", "NOW()", $this->pessoa_logada, empty($this->proibido) ? 0 : 1, $this->ref_cod_setor_new, null, empty($this->matricula_permanente) ? 0 : 1, null, $this->email, $this->matricula_interna);
+    $detalheAntigo = $obj_funcionario->detalhe();
 		if( $obj_funcionario->edita() )
 		{
+
+      $detalheNovo = $obj_funcionario->detalhe();
+      $auditoria = new clsModulesAuditoriaGeral("funcionario", $this->pessoa_logada, $this->ref_pessoa);
+      $auditoria->alteracao($detalheAntigo, $detalheNovo);
 
 			if ($this->ref_cod_instituicao) {
 				$obj = new clsPmieducarUsuario( $this->ref_pessoa, null, $this->ref_cod_instituicao, $this->pessoa_logada,  $this->pessoa_logada, $this->ref_cod_tipo_usuario,null,null,1 );
@@ -507,10 +524,20 @@ class indice extends clsCadastro
 				$obj = new clsPmieducarUsuario( $this->ref_pessoa, null, null, $this->pessoa_logada,  $this->pessoa_logada, $this->ref_cod_tipo_usuario,null,null,1 );
 			}
 
-			if($obj->existe())
-				$editou = $obj->edita();
-			else
-				$editou = $obj->cadastra();
+      if($obj->existe()){
+        $detalheAntigo = $obj->detalhe();
+        $editou     = $obj->edita();
+        $detalheNovo   = $obj->detalhe();
+        $auditoria     = new clsModulesAuditoriaGeral("usuario", $this->pessoa_logada, $editou);
+        $auditoria->alteracao($detalheAntigo, $detalheNovo);
+      }
+      else{
+        $editou = $obj->cadastra();
+        $usuario = new clsPmieducarUsuario($editou);
+        $usuario = $usuario->detalhe();
+        $auditoria = new clsModulesAuditoriaGeral("usuario", $this->pessoa_logada, $editou);
+        $auditoria->inclusao($usuario);
+      }
 
 			$this->insereUsuarioEscolas($this->ref_pessoa, $this->escola);
 
@@ -570,9 +597,12 @@ class indice extends clsCadastro
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
 
-		$obj_funcionario = new clsPortalFuncionario($this->ref_pessoa);
+    $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa);
+		$detalhe = $obj_funcionario->detalhe();
 		if($obj_funcionario->excluir())
 		{
+      $auditoria = new clsModulesAuditoriaGeral("funcionario", $this->pessoa_logada, $this->ref_pessoa);
+      $auditoria->exclusao($detalhe);
 			$this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
 			header( "Location: educar_usuario_lst.php" );
 			return true;

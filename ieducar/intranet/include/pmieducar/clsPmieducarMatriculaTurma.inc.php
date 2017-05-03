@@ -30,6 +30,7 @@
 
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'Avaliacao/Fixups/CleanComponentesCurriculares.php';
+require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 /**
  * clsPmieducarMatriculaTurma class.
@@ -116,6 +117,10 @@ class clsPmieducarMatriculaTurma
     $db = new clsBanco();
     $this->_schema = "pmieducar.";
     $this->_tabela = "{$this->_schema}matricula_turma";
+
+    @session_start();
+    $this->pessoa_logada = $_SESSION['id_pessoa'];
+    session_write_close();
 
     $this->_campos_lista = $this->_todos_campos = "mt.ref_cod_matricula, mt.abandono, mt.reclassificado, mt.remanejado, mt.transferido, mt.falecido, mt.ref_cod_turma, mt.ref_usuario_exc, mt.ref_usuario_cad, mt.data_cadastro, mt.data_exclusao, mt.ativo, mt.sequencial, mt.data_enturmacao, (SELECT pes.nome FROM cadastro.pessoa pes, pmieducar.aluno alu, pmieducar.matricula mat WHERE pes.idpes = alu.ref_idpes AND mat.ref_cod_aluno = alu.cod_aluno AND mat.cod_matricula = mt.ref_cod_matricula ) AS nome, (SELECT (pes.nome) FROM cadastro.pessoa pes, pmieducar.aluno alu, pmieducar.matricula mat WHERE pes.idpes = alu.ref_idpes AND mat.ref_cod_aluno = alu.cod_aluno AND mat.cod_matricula = mt.ref_cod_matricula ) AS nome_ascii";
 
@@ -309,6 +314,10 @@ class clsPmieducarMatriculaTurma
 
       $db->Consulta("INSERT INTO {$this->_tabela} ($campos) VALUES ($valores)");
 
+      $detalhe = $this->detalhe();
+      $auditoria = new clsModulesAuditoriaGeral("matricula_turma", $this->pessoa_logada);
+      $auditoria->inclusao($detalhe);
+
       $this->limpaComponentesCurriculares();
 
       return TRUE;
@@ -370,7 +379,11 @@ class clsPmieducarMatriculaTurma
       }
 
       if ($set) {
+        $detalheAntigo = $this->detalhe();
         $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE ref_cod_matricula = '{$this->ref_cod_matricula}' AND ref_cod_turma = '{$this->ref_cod_turma}' and sequencial = '$this->sequencial' ");
+
+        $auditoria = new clsModulesAuditoriaGeral("matricula_turma", $this->pessoa_logada);
+        $auditoria->alteracao($detalheAntigo, $this->detalhe());
         $this->limpaComponentesCurriculares();
         return TRUE;
       }
