@@ -139,7 +139,7 @@ class indice extends clsCadastro
 		@session_write_close();
 
 		$enderecamentoDetalhe = new clsPublicPais($this->idpais);
-		$enderecamentoDetalhe->cadastrou = $this->cadastrou;
+		$enderecamentoDetalhe->cadastrou = $this->idpais;
 		$enderecamentoDetalheAntes = $enderecamentoDetalhe->detalhe();
 //echo "<pre>";print_r($enderecamentoDetalheAntes); die;
 		$obj = new clsPublicPais( $this->idpais, $this->nome, $this->geom, $this->cod_ibge );
