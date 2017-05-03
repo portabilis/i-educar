@@ -27,7 +27,8 @@
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
+require_once ("include/pmieducar/geral.inc.php");
+require_once ("include/modules/clsModulesAuditoriaGeral.inc.php");
 
 class clsIndexBase extends clsBase
 {
@@ -136,6 +137,12 @@ class indice extends clsCadastro
 		$cadastrou = $obj->cadastra();
 		if( $cadastrou )
 		{
+			$infraComodoFuncao = new clsPmieducarInfraComodoFuncao($cadastrou);
+			$infraComodoFuncao = $infraComodoFuncao->detalhe();
+
+			$auditoria = new clsModulesAuditoriaGeral("infra_comodo_funcao", $this->pessoa_logada, $cadastrou);
+			$auditoria->inclusao($infraComodoFuncao);
+
 			$this->mensagem .= "Cadastro efetuado com sucesso.<br>";
 			header( "Location: educar_infra_comodo_funcao_lst.php" );
 			die();
@@ -153,10 +160,17 @@ class indice extends clsCadastro
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
 
+		$infraComodoFuncaoDetalhe = new clsPmieducarInfraComodoFuncao($this->cod_infra_comodo_funcao);
+		$infraComodoFuncaoDetalheAntes = $infraComodoFuncaoDetalhe->detalhe();
+
 		$obj = new clsPmieducarInfraComodoFuncao($this->cod_infra_comodo_funcao, $this->pessoa_logada, null, $this->nm_funcao, $this->desc_funcao, null, null, 1, $this->ref_cod_escola );
 		$editou = $obj->edita();
 		if( $editou )
 		{
+			$infraComodoFuncaoDetalheDepois = $infraComodoFuncaoDetalhe->detalhe();
+			$auditoria = new clsModulesAuditoriaGeral("infra_comodo_funcao", $this->pessoa_logada, $this->cod_infra_comodo_funcao);
+			$auditoria->alteracao($infraComodoFuncaoDetalheAntes, $infraComodoFuncaoDetalheDepois);
+
 			$this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
 			header( "Location: educar_infra_comodo_funcao_lst.php" );
 			die();
@@ -175,9 +189,13 @@ class indice extends clsCadastro
 		@session_write_close();
 
 		$obj = new clsPmieducarInfraComodoFuncao($this->cod_infra_comodo_funcao, $this->pessoa_logada, null,null,null,null,null, 0);
+		$infraComodoFuncao = $obj->detalhe();
 		$excluiu = $obj->excluir();
 		if( $excluiu )
 		{
+			$auditoria = new clsModulesAuditoriaGeral("infra_comodo_funcao", $this->pessoa_logada, $this->cod_infra_comodo_funcao);
+			$auditoria->exclusao($infraComodoFuncao);
+
 			$this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
 			header( "Location: educar_infra_comodo_funcao_lst.php" );
 			die();

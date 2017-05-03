@@ -27,7 +27,8 @@
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
+require_once ("include/pmieducar/geral.inc.php");
+require_once ("include/modules/clsModulesAuditoriaGeral.inc.php");
 
 class clsIndexBase extends clsBase
 {
@@ -145,6 +146,12 @@ class indice extends clsCadastro
 		$cadastrou = $obj->cadastra();
 		if( $cadastrou )
 		{
+			$calendarioDiaMotivo = new clsPmieducarCalendarioDiaMotivo($cadastrou);
+			$calendarioDiaMotivo = $calendarioDiaMotivo->detalhe();
+
+			$auditoria = new clsModulesAuditoriaGeral("calendario_dia_motivo", $this->pessoa_logada, $cadastrou);
+			$auditoria->inclusao($calendarioDiaMotivo);
+
 			$this->mensagem .= "Cadastro efetuado com sucesso.<br>";
 			header( "Location: educar_calendario_dia_motivo_lst.php" );
 			die();
@@ -162,10 +169,17 @@ class indice extends clsCadastro
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
 
+		$calendarioDiaMotivoDetalhe = new clsPmieducarCalendarioDiaMotivo($this->cod_calendario_dia_motivo);
+		$calendarioDiaMotivoDetalheAntes = $calendarioDiaMotivoDetalhe->detalhe();
+
 		$obj = new clsPmieducarCalendarioDiaMotivo($this->cod_calendario_dia_motivo, $this->ref_cod_escola, $this->pessoa_logada, null, $this->sigla, $this->descricao, $this->tipo, null, null, 1, $this->nm_motivo );
 		$editou = $obj->edita();
 		if( $editou )
 		{
+			$calendarioDiaMotivoDetalheDepois = $calendarioDiaMotivoDetalhe->detalhe();
+			$auditoria = new clsModulesAuditoriaGeral("calendario_dia_motivo", $this->pessoa_logada, $this->cod_calendario_dia_motivo);
+			$auditoria->alteracao($calendarioDiaMotivoDetalheAntes, $calendarioDiaMotivoDetalheDepois);
+
 			$this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
 			header( "Location: educar_calendario_dia_motivo_lst.php" );
 			die();
@@ -184,9 +198,13 @@ class indice extends clsCadastro
 		@session_write_close();
 
 		$obj = new clsPmieducarCalendarioDiaMotivo($this->cod_calendario_dia_motivo, null, $this->pessoa_logada, null, null, null, null, null, null, 0);
+		$calendarioDiaMotivo = $obj->detalhe();
 		$excluiu = $obj->excluir();
 		if( $excluiu )
 		{
+			$auditoria = new clsModulesAuditoriaGeral("calendario_dia_motivo", $this->pessoa_logada, $this->cod_calendario_dia_motivo);
+			$auditoria->exclusao($calendarioDiaMotivo);
+
 			$this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
 			header( "Location: educar_calendario_dia_motivo_lst.php" );
 			die();
