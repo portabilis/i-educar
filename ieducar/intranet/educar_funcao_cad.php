@@ -145,6 +145,13 @@ class indice extends clsCadastro
 		$cadastrou = $obj->cadastra();
 		if( $cadastrou )
 		{
+
+			$funcao = new clsPmieducarFuncao($cadastrou);
+			$funcao = $funcao->detalhe();
+
+			$auditoria = new clsModulesAuditoriaGeral("servidor_funcao", $this->pessoa_logada, $cadastrou);
+			$auditoria->inclusao($funcao);
+
 			$this->mensagem .= "Cadastro efetuado com sucesso.<br>";
 			header( "Location: educar_funcao_lst.php" );
 			die();
@@ -162,6 +169,9 @@ class indice extends clsCadastro
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
 
+		$funcao = new clsPmieducarFuncao($this->cod_funcao);
+		$funcaoAntes = $funcao->detalhe();
+
 		if($this->professor == 'N')
 			$this->professor =  "0";
 		elseif($this->professor == 'S')
@@ -175,6 +185,10 @@ class indice extends clsCadastro
 		$editou = $obj->edita();
 		if( $editou )
 		{
+			$funcaoDepois = $funcao->detalhe();
+			$auditoria = new clsModulesAuditoriaGeral("servidor_funcao", $this->pessoa_logada);
+			$auditoria->alteracao($funcaoAntes, $funcaoDepois);
+
 			$this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
 			header( "Location: educar_funcao_lst.php" );
 			die();
@@ -197,9 +211,14 @@ class indice extends clsCadastro
 
 
 		$obj = new clsPmieducarFuncao( $this->cod_funcao, $this->pessoa_logada, null,null,null,null,null,null,0,$this->ref_cod_instituicao );
+		$funcao = $obj->detalhe();
+
 		$excluiu = $obj->excluir();
 		if( $excluiu )
 		{
+			$auditoria = new clsModulesAuditoriaGeral("servidor_funcao", $this->pessoa_logada, $this->cod_funcao);
+			$auditoria->exclusao($funcao);
+
 			$this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
 			header( "Location: educar_funcao_lst.php" );
 			die();
