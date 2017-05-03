@@ -138,6 +138,13 @@ class indice extends clsCadastro
 		$cadastrou = $obj->cadastra();
 		if( $cadastrou )
 		{
+
+			$categoriaNivel = new clsPmieducarCategoriaNivel($cadastrou);
+			$categoriaNivel = $categoriaNivel->detalhe();
+
+			$auditoria = new clsModulesAuditoriaGeral("categoria_nivel", $this->pessoa_logada, $cadastrou);
+			$auditoria->inclusao($categoriaNivel);
+
 			$this->mensagem .= "Cadastro efetuado com sucesso.<br>";
 			header( "Location: educar_categoria_nivel_lst.php" );
 			die();
@@ -158,11 +165,18 @@ class indice extends clsCadastro
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra( 829, $this->pessoa_logada, 3,  "educar_categoria_nivel_lst.php", true );
 
+		$categoriaNivel = new clsPmieducarCategoriaNivel($this->cod_categoria_nivel);
+		$categoriaNivelAntes = $categoriaNivel->detalhe();
 
 		$obj = new clsPmieducarCategoriaNivel($this->cod_categoria_nivel, $this->pessoa_logada, $this->pessoa_logada, $this->nm_categoria_nivel, $this->data_cadastro, $this->data_exclusao, $this->ativo);
 		$editou = $obj->edita();
 		if( $editou )
 		{
+
+			$categoriaNivelDepois = $categoriaNivel->detalhe();
+			$auditoria = new clsModulesAuditoriaGeral("categoriaNivel", $this->pessoa_logada);
+			$auditoria->alteracao($categoriaNivelAntes, $categoriaNivelDepois);
+
 			$this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
 			header( "Location: educar_categoria_nivel_lst.php" );
 			die();
@@ -185,9 +199,15 @@ class indice extends clsCadastro
 
 
 		$obj = new clsPmieducarCategoriaNivel($this->cod_categoria_nivel, $this->pessoa_logada, $this->pessoa_logada, $this->nm_categoria_nivel, $this->data_cadastro, $this->data_exclusao, 0);
+		
+		$categoriaNivel = $obj->detalhe();
+
 		$excluiu = $obj->excluir();
 		if( $excluiu )
 		{
+			$auditoria = new clsModulesAuditoriaGeral("aluno_beneficio", $this->pessoa_logada, $this->cod_categoria_nivel);
+			$auditoria->exclusao($categoriaNivel);
+
 			$this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
 			header( "Location: educar_categoria_nivel_lst.php" );
 			die();
