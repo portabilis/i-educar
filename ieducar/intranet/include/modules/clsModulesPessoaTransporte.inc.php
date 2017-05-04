@@ -28,6 +28,7 @@
  */
 
 require_once 'include/pmieducar/geral.inc.php';
+require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 /**
  * clsModulesPessoaTransporte class.
@@ -48,6 +49,7 @@ class clsModulesPessoaTransporte
   var $ref_idpes_destino;
   var $observacao;
   var $turno;
+  var $pessoa_logada;
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
    * @var int
@@ -108,6 +110,7 @@ class clsModulesPessoaTransporte
     $db = new clsBanco();
     $this->_schema = "modules.";
     $this->_tabela = "{$this->_schema}pessoa_transporte";
+    $this->pessoa_logada = $_SESSION['id_pessoa'];
 
     $this->_campos_lista = $this->_todos_campos = "cod_pessoa_transporte, ref_cod_rota_transporte_escolar,
                                                   ref_idpes, ref_cod_ponto_transporte_escolar, ref_idpes_destino, observacao, turno"; 
@@ -200,7 +203,15 @@ class clsModulesPessoaTransporte
     }
 
     $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
-    return $db->InsertId("{$this->_tabela}_seq");
+
+    $this->cod_pessoa_transporte = $db->InsertId("{$this->_tabela}_seq");
+
+    if($this->cod_pessoa_transporte){
+      $detalhe = $this->detalhe();
+      $auditoria = new clsModulesAuditoriaGeral("pessoa_transporte", $this->pessoa_logada, $this->cod_pessoa_transporte);
+      $auditoria->inclusao($detalhe);
+    }
+    return $this->cod_pessoa_transporte;
     }
 
     return FALSE;
@@ -255,7 +266,10 @@ class clsModulesPessoaTransporte
     }
 
      if ($set) {
+        $detalheAntigo = $this->detalhe();
         $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_pessoa_transporte = '{$this->cod_pessoa_transporte}'");
+        $auditoria = new clsModulesAuditoriaGeral("pessoa_transporte", $this->pessoa_logada,$this->cod_pessoa_transporte);
+        $auditoria->alteracao($detalheAntigo, $this->detalhe());
         return TRUE;
       }
     }
@@ -462,9 +476,16 @@ class clsModulesPessoaTransporte
   function excluir()
   {    
     if (is_numeric($this->cod_pessoa_transporte)) {
+
+      $detalhe = $this->detalhe();
+
       $sql = "DELETE FROM {$this->_tabela} WHERE cod_pessoa_transporte = '{$this->cod_pessoa_transporte}'";
       $db = new clsBanco();
       $db->Consulta($sql);
+
+      $auditoria = new clsModulesAuditoriaGeral("pessoa_transporte", $this->pessoa_logada, $this->cod_pessoa_transporte);
+      $auditoria->exclusao($detalhe);
+
       return true;
     }
     return FALSE;
