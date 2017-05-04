@@ -30,6 +30,8 @@
 * Criado em 13/02/2007 14:26 pelo gerador automatico de classes
 */
 require_once( "include/urbano/geral.inc.php" );
+require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
+
 class clsUrbanoCepLogradouro
 {
 	var $cep;
@@ -44,6 +46,8 @@ class clsUrbanoCepLogradouro
 	var $operacao;
 	var $idsis_rev;
 	var $idsis_cad;
+    var $pessoa_logada;
+
 	// propriedades padrao
 	/**
 	 * Armazena o total de resultados obtidos na ultima chamada ao metodo lista
@@ -116,6 +120,7 @@ class clsUrbanoCepLogradouro
 		$db = new clsBanco();
 		$this->_schema = "urbano.";
 		$this->_tabela = "{$this->_schema}cep_logradouro";
+		$this->pessoa_logada = $_SESSION['id_pessoa'];
 		$this->_campos_lista = $this->_todos_campos = "cl.cep, cl.idlog, cl.nroini, cl.nrofin, cl.idpes_rev, cl.data_rev, cl.origem_gravacao, cl.idpes_cad, cl.data_cad, cl.operacao, cl.idsis_rev, cl.idsis_cad";
 		if( is_numeric( $idsis_rev ) )
 		{
@@ -369,6 +374,10 @@ class clsUrbanoCepLogradouro
 				$gruda = ", ";
 			}
 			$db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
+
+         $detalhe = $this->detalhe();
+         $auditoria = new clsModulesAuditoriaGeral("Endereçamento de CEP", $this->pessoa_logada, $this->cep);
+         $auditoria->inclusao($detalhe);
 			return true;
 		}
 		return false;
