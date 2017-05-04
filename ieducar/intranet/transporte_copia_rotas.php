@@ -180,7 +180,17 @@ class indice extends clsCadastro {
 		      			$valores .= "{$gruda}'{$registro['tercerizado']}'";
 		      			$gruda = ", ";
 		    		}
+
 	      			$db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
+
+	      			$this->cod_rota_transporte_escolar = $db->InsertId("{$this->_tabela}_seq");
+
+				    if($this->cod_rota_transporte_escolar){
+				    	$objRota = new clsModulesRotaTransporteEscolar($this->cod_rota_transporte_escolar);
+				        $detalhe = $objRota->detalhe();
+				        $auditoria = new clsModulesAuditoriaGeral("rota_transporte_escolar", $this->pessoa_logada, $this->cod_rota_transporte_escolar);
+				        $auditoria->inclusao($detalhe);
+				    }
 	      			// return $db->InsertId("{$this->_tabela}_seq");
 	      		}
       			$obj_rota = new clsModulesRotaTransporteEscolar();
