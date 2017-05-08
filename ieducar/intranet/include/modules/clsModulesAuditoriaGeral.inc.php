@@ -167,7 +167,7 @@ class clsModulesAuditoriaGeral
                                                  valor_antigo,
                                                  valor_novo,
                                                  data_hora)
-                 VALUES ({$this->codigo},
+                 VALUES ('{$this->codigo}',
                          {$this->usuario_id},
                          {$operacao},
                          '{$this->rotina}',
