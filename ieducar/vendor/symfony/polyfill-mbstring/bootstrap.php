@@ -12,9 +12,9 @@
 use Symfony\Polyfill\Mbstring as p;
 
 if (!function_exists('mb_strlen')) {
-    define('MB_CASE_UPPER', 0);
-    define('MB_CASE_LOWER', 1);
-    define('MB_CASE_TITLE', 2);
+	define('MB_CASE_UPPER', 0);
+	define('MB_CASE_LOWER', 1);
+	define('MB_CASE_TITLE', 2);
 
     function mb_convert_encoding($s, $to, $from = null) { return p\Mbstring::mb_convert_encoding($s, $to, $from); }
     function mb_decode_mimeheader($s) { return p\Mbstring::mb_decode_mimeheader($s); }
@@ -48,4 +48,5 @@ if (!function_exists('mb_strlen')) {
     function mb_output_handler($contents, $status) { return p\Mbstring::mb_output_handler($contents, $status); }
     function mb_http_input($type = '') { return p\Mbstring::mb_http_input($type); }
     function mb_convert_variables($toEncoding, $fromEncoding, &$a = null, &$b = null, &$c = null, &$d = null, &$e = null, &$f = null) { return p\Mbstring::mb_convert_variables($toEncoding, $fromEncoding, $v0, $a, $b, $c, $d, $e, $f); }
+
 }
