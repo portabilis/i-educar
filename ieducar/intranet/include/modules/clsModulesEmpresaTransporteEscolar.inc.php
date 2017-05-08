@@ -139,7 +139,6 @@ class clsModulesEmpresaTransporteEscolar
    */
   function cadastra()
   {
-    echo "oi"; die;
     if (is_numeric($this->ref_idpes) && is_numeric($this->ref_resp_idpes))
     {
       $db = new clsBanco();
