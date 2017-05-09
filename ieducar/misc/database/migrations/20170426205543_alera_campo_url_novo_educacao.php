@@ -12,7 +12,7 @@ class AleraCampoUrlNovoEducacao extends AbstractMigration
         $this->execute("UPDATE pmieducar.configuracoes_gerais
                           set url_novo_educacao = (SELECT url_novo_educacao
                               FROM pmieducar.instituicao
-                              where cod_instituicao = ref_cod_instituicao )
+                              where cod_instituicao = ref_cod_instituicao limit 1)
                           ");
 
         $this->execute("ALTER TABLE pmieducar.instituicao
