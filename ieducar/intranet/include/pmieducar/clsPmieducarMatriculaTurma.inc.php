@@ -315,7 +315,7 @@ class clsPmieducarMatriculaTurma
       $db->Consulta("INSERT INTO {$this->_tabela} ($campos) VALUES ($valores)");
 
       $detalhe = $this->detalhe();
-      $auditoria = new clsModulesAuditoriaGeral("matricula_turma", $this->pessoa_logada);
+      $auditoria = new clsModulesAuditoriaGeral("matricula_turma", $this->pessoa_logada, $this->ref_cod_matricula);
       $auditoria->inclusao($detalhe);
 
       $this->limpaComponentesCurriculares();
@@ -382,7 +382,7 @@ class clsPmieducarMatriculaTurma
         $detalheAntigo = $this->detalhe();
         $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE ref_cod_matricula = '{$this->ref_cod_matricula}' AND ref_cod_turma = '{$this->ref_cod_turma}' and sequencial = '$this->sequencial' ");
 
-        $auditoria = new clsModulesAuditoriaGeral("matricula_turma", $this->pessoa_logada);
+        $auditoria = new clsModulesAuditoriaGeral("matricula_turma", $this->pessoa_logada, $this->ref_cod_matricula);
         $auditoria->alteracao($detalheAntigo, $this->detalhe());
         $this->limpaComponentesCurriculares();
         return TRUE;
