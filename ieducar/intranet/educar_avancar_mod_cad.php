@@ -36,6 +36,7 @@ require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'lib/Portabilis/Date/Utils.php';
+require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsIndexBase extends clsBase
 {
@@ -339,7 +340,24 @@ class indice extends clsCadastro
       error_log("Erro durante a matrícula do aluno $alunoId, no processo de rematrícula automática:" . $e->getMessage());
       return false;
     }
+    
+    $this->auditarMatriculas($escolaId, $cursoId, $serieId, $ano, $alunoId);
 
+    return true;
+  }
+
+  protected function auditarMatriculas($escolaId, $cursoId, $serieId, $ano, $alunoId) {
+    $objMatricula = new clsPmieducarMatricula();
+    $matricula    = $objMatricula->lista(null, null, $escolaId, $serieId, null, null, $alunoId, null, null, null, null, null, 1, $ano, null, null, null, null, null, null, null, null, null, null, $cursoId);
+
+    $matriculaId = $matricula[0]['cod_matricula'];
+    $objMatricula->cod_matricula =  $matriculaId;
+
+    $detalhe = $objMatricula->detalhe();
+
+    $auditoria = new clsModulesAuditoriaGeral("matricula", $this->pessoa_logada, $matriculaId);
+    $auditoria->inclusao($detalhe);
+    
     return true;
   }
 
