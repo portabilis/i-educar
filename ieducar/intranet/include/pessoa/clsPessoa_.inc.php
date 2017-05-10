@@ -54,6 +54,10 @@ class clsPessoa_
 		@session_start();
 		$this->pessoa_logada = $_SESSION['id_pessoa'];
 		session_write_close();
+
+		// Usuário admin quando não houver usuário pois pode ser via API/Novo educação
+		if (!$this->pessoa_logada) $this->pessoa_logada = 1;
+
 		$this->idpes = $int_idpes;
 		$this->nome = $str_nome;
 		$this->idpes_cad = $int_idpes_cad ? $int_idpes_cad  : $_SESSION['id_pessoa'];
