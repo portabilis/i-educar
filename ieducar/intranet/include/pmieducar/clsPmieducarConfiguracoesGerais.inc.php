@@ -44,6 +44,7 @@ class clsPmieducarConfiguracoesGerais
 {
   var $ref_cod_instituicao;
   var $permite_relacionamento_posvendas;
+  var $url_novo_educacao;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -104,18 +105,21 @@ class clsPmieducarConfiguracoesGerais
   /**
    * Construtor.
    */
-  function clsPmieducarConfiguracoesGerais($ref_cod_instituicao, $permite_relacionamento_posvendas)
+  function clsPmieducarConfiguracoesGerais($ref_cod_instituicao, $permite_relacionamento_posvendas, $url_novo_educacao)
   {
     $this->_schema = 'pmieducar.';
     $this->_tabela = $this->_schema . 'configuracoes_gerais';
 
-    $this->_campos_lista = $this->_todos_campos = 'ref_cod_instituicao, permite_relacionamento_posvendas ';
+    $this->_campos_lista = $this->_todos_campos = 'ref_cod_instituicao, permite_relacionamento_posvendas, url_novo_educacao ';
 
     if (is_numeric($ref_cod_instituicao)) {
       $this->ref_cod_instituicao = $ref_cod_instituicao;
     }
     if (is_numeric($permite_relacionamento_posvendas)) {
       $this->permite_relacionamento_posvendas = $permite_relacionamento_posvendas;
+    }
+    if (!empty($url_novo_educacao)) {
+      $this->url_novo_educacao = $url_novo_educacao;
     }
   }
 
@@ -136,6 +140,11 @@ class clsPmieducarConfiguracoesGerais
       $ref_cod_instituicao = $this->ref_cod_instituicao;
     } else {
       $ref_cod_instituicao = $this->getUltimaInstituicaoAtiva();
+    }
+
+    if (!empty($this->url_novo_educacao)) {
+      $set .= "{$gruda}url_novo_educacao = '{$this->url_novo_educacao}'";
+      $gruda = ', ';
     }
 
     if ($set) {

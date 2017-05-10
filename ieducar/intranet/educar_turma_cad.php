@@ -1352,7 +1352,7 @@ class indice extends clsCadastro
     }
 
     $this->atualizaComponentesCurriculares(
-      $this->ref_cod_serie_, $this->ref_cod_escola_, $this->cod_turma,
+      $turma['ref_ref_cod_serie'], $turma['ref_ref_cod_serie'], $this->cod_turma,
       $this->disciplinas, $this->carga_horaria, $this->usar_componente, $this->docente_vinculado
     );
 
