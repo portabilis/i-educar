@@ -200,6 +200,22 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('Data Enturmação', ''));
     }
 
+    switch ($registro['turno_id']) {
+      case 1:
+        $nm_turno = 'Matutino';
+        break;
+      case 2:
+        $nm_turno = 'Vespertino';
+        break;
+      case 3:
+        $nm_turno = 'Integral';
+        break;
+    }
+
+    if ($registro['turno_id']) {
+      $this->addDetalhe(array('Turno da matrícula', $nm_turno));
+    }
+
     if ($registro['ref_cod_reserva_vaga']) {
       $this->addDetalhe(array('Número Reserva Vaga', $registro['ref_cod_reserva_vaga']));
     }
@@ -237,8 +253,6 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('Data de saída da escola',Portabilis_Date_Utils::pgSQLToBr($registro['data_saida_escola'])));
       $this->addDetalhe(array('Observação',Portabilis_String_Utils::toLatin1($registro['observacao'])));
     }
-
-
 
     if ($campoObs){
 
@@ -301,6 +315,9 @@ class indice extends clsDetalhe
 
         $this->array_botao[]            = ( $GLOBALS['coreExt']['Config']->app->database->dbname == 'botucatu' ? 'Troca de sala / Remanejamento' :'Enturmar' );
         $this->array_botao_url_script[] = "go(\"educar_matricula_turma_lst.php?ref_cod_matricula={$registro['cod_matricula']}&ano_letivo={$registro['ano']}\")";
+
+        $this->array_botao[]            = 'Turno';
+        $this->array_botao_url_script[] = "go(\"educar_matricula_turno_cad.php?cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\");";
 
         $this->array_botao[]            = 'Abandono';
         $this->array_botao_url_script[] = "go(\"educar_abandono_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\");";
