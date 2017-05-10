@@ -626,7 +626,8 @@ abstract class CoreExt_DataMapper
     @session_write_close();
 
     if ($instance->isNew()) {
-      $return = $this->_getDbAdapter()->Consulta($this->_getSaveStatment($instance). ' RETURNING id;');
+      $returning = count($this->_primaryKey) == 1 && $this->_primaryKey[0] == 'id' ? ' RETURNING id;' : ' RETURNING NULL;';
+      $return = $this->_getDbAdapter()->Consulta($this->_getSaveStatment($instance). $returning);
       $result = pg_fetch_row($return);
       $id = $result[0];
       $tmpEntry = $this->find($id);
@@ -679,7 +680,7 @@ abstract class CoreExt_DataMapper
    */
   public function delete($instance)
   {
-      $tmpEntry = $this->find($instance->id);
+      $tmpEntry = $this->find(is_object($instance) ? $instance->id : $instance);
       $info = $tmpEntry->toDataArray();
 
       $return = $this->_getDbAdapter()->Consulta($this->_getDeleteStatment($instance));
