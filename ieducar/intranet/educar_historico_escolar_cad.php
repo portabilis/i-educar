@@ -312,23 +312,24 @@ class indice extends clsCadastro
 					$this->historico_disciplinas[$qtd_disciplinas][] = $campo["nm_disciplina"];
 					$this->historico_disciplinas[$qtd_disciplinas][] = $campo["nota"];
 					$this->historico_disciplinas[$qtd_disciplinas][] = $campo["faltas"];
-					$this->historico_disciplinas[$qtd_disciplinas][] = $campo["ordenamento"];
 					$this->historico_disciplinas[$qtd_disciplinas][] = $campo["carga_horaria_disciplina"];
+					$this->historico_disciplinas[$qtd_disciplinas][] = $campo["ordenamento"];
 					$this->historico_disciplinas[$qtd_disciplinas][] = $campo["sequencial"];
 					$qtd_disciplinas++;
 				}
 			}
 		}
 
-		$this->campoTabelaInicio("notas","Notas",array("Disciplina","Nota","Faltas", "Ordem", "C.H"),$this->historico_disciplinas);
+		$this->campoTabelaInicio("notas","Notas",array("Disciplina","Nota","Faltas", "C.H", "Ordem"),$this->historico_disciplinas);
 
 		//$this->campoTexto( "nm_disciplina", "Disciplina", $this->nm_disciplina, 30, 255, false, false, false, '', '', 'autoCompleteComponentesCurricular(this)', 'onfocus' );
 		$this->campoTexto( "nm_disciplina", "Disciplina", $this->nm_disciplina, 30, 255, false, false, false, '', '', '', 'onfocus' );
 
 		$this->campoTexto( "nota", "Nota", $this->nota, 10, 255, false );
 		$this->campoNumero( "faltas", "Faltas", $this->faltas, 3, 3, false );
-		$this->campoNumero( "ordenamento", "ordenamento", $this->ordenamento, 3, 3, false );
 		$this->campoNumero( "carga_horaria_disciplina", "carga_horaria_disciplina", $this->carga_horaria_disciplina, 3, 3, false );
+		$this->campoNumero( "ordenamento", "ordenamento", $this->ordenamento, 3, 3, false );
+
 		//$this->campoOculto("sequencial","");
 
 		$this->campoTabelaFim();
