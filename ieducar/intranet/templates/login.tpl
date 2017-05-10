@@ -11,8 +11,6 @@
     <link rel=stylesheet type='text/css' href='styles/font-awesome.css?5' />
     <script type='text/javascript' src='scripts/jquery/jquery-1.8.3.min.js?5'></script>
     <script type='text/javascript' src='scripts/jquery/jquery-1.8.3.min.js?5'></script>
-    <script type="text/javascript" src="https://assets.freshdesk.com/widget/freshwidget.js"></script>
-    <script type="text/javascript" src="scripts/suporte_freshdesk.js?v=2"></script>
 
   <script type="text/javascript">
 
