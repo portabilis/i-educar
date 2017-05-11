@@ -453,10 +453,13 @@ class clsFisica
 			$db->Consulta( "INSERT INTO {$this->schema}.{$this->tabela} (idpes, origem_gravacao, idsis_cad, data_cad, operacao, idpes_cad $campos) VALUES ( '{$this->idpes}', 'M', 17, NOW(), 'I', '$this->idpes_cad' $valores )" );
 
 			if($this->idpes){
-        $detalhe = $this->detalheSimples();
-        $auditoria = new clsModulesAuditoriaGeral("fisica", $this->pessoa_logada, $this->idpes);
-        $auditoria->inclusao($detalhe);
-      }
+
+				$detalhe = $this->detalheSimples();
+				// salvar cpf como string;
+				$detalhe["cpf"] = str_pad((string)$detalhe["cpf"], 11, '0', STR_PAD_LEFT); 
+				$auditoria = new clsModulesAuditoriaGeral("fisica", $this->pessoa_logada, $this->idpes);
+				$auditoria->inclusao($detalhe);
+			}
 
 			return true;
 
@@ -687,16 +690,21 @@ class clsFisica
 			}
 
 			if ($set)
-			{//echo "UPDATE {$this->schema}.{$this->tabela} $set WHERE idpes = '$this->idpes'" ;die;
+			{
 				$set = "SET {$set}";
 				$db = new clsBanco();
-				//echo "UPDATE {$this->schema}.{$this->tabela} $set WHERE idpes = '$this->idpes'";die;
 				$detalheAntigo = $this->detalheSimples();
+
+				$detalheAntigo["cpf"] = str_pad((string)$detalheAntigo["cpf"], 11, '0', STR_PAD_LEFT); 
 
 				$db->Consulta( "UPDATE {$this->schema}.{$this->tabela} $set WHERE idpes = '$this->idpes'" );
 
-        $auditoria = new clsModulesAuditoriaGeral("fisica", $this->pessoa_logada, $this->idpes);
-        $auditoria->alteracao($detalheAntigo, $this->detalheSimples());
+				$detalheAtual = $this->detalheSimples();
+				$detalheAtual["cpf"] = str_pad((string)$detalheAtual["cpf"], 11, '0', STR_PAD_LEFT); 
+
+       			$auditoria = new clsModulesAuditoriaGeral("fisica", $this->pessoa_logada, $this->idpes);
+       			$auditoria->alteracao($detalheAntigo, $detalheAtual);
+
 				return true;
 			}
 		}
