@@ -715,6 +715,7 @@ class indice extends clsCadastro
                                                       WHERE matricula.ano = {$this->ano}
                                                         AND matricula.ref_cod_aluno = {$this->ref_cod_aluno}
                                                         AND matricula.dependencia = TRUE
+                                                        AND matricula.aprovado = 3
                                                         AND matricula.ativo = 1");
 
     $matriculasDependencia = count($matriculasDependencia);
