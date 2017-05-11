@@ -1071,7 +1071,7 @@ function afterChangePessoa(targetWindow, parentType, parentId, parentName) {
       targetWindow.close();
       if (parentType == null){
         dominio = pegaDominio();
-        url = $j('#id').val() ? 'http://'+dominio+'/module/Cadastro/aluno?id='+$j('#id').val() : 'http://'+dominio+'/module/Cadastro/aluno?person='+parentId;
+        url = $j('#id').val() ? 'https://'+dominio+'/module/Cadastro/aluno?id='+$j('#id').val() : 'https://'+dominio+'/module/Cadastro/aluno?person='+parentId;
         setTimeout("document.location = url",5);
       }
     }
