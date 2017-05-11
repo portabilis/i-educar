@@ -60,7 +60,7 @@ class indice extends clsListagem
 
 		$this->campoTexto( "usuario", "Matrícula usuário", $this->usuario, 35, 50);
 		$this->campoTexto( "rotina", "Rotina", $this->rotina, 35, 50);
-    $this->inputsHelper()->dynamic(array('dataInicial','dataFinal'));
+    	$this->inputsHelper()->dynamic(array('dataInicial','dataFinal'));
 
 		$obj_usuario = new clsPmieducarUsuario($this->pessoa_logada);
 		$detalhe = $obj_usuario->detalhe();
@@ -72,6 +72,7 @@ class indice extends clsListagem
 		$this->addCabecalhos( array( "Matrícula", "Rotina", "Operação", "Valor antigo", "Valor novo", "Data") );
 
 		$auditoria = new clsModulesAuditoriaGeral();
+		$auditoria->setOrderby( "data_hora DESC" );
 		$auditoria = $auditoria->lista($this->rotina,
 																	 $this->usuario,
 																   Portabilis_Date_Utils::brToPgSQL($this->data_inicial),

@@ -53,6 +53,8 @@ class clsModulesAuditoriaGeral
   var $codigo;
   var $rotina;
 
+  var $_campo_order_by;
+
   function clsModulesAuditoriaGeral($rotina, $usuario_id, $codigo = 'null'){
     $this->_campos_lista = 'codigo,
                             usuario_id,
@@ -224,7 +226,7 @@ class clsModulesAuditoriaGeral
     $resultado = array();
 
     $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela} ";
-    $sql .= $filtros;
+    $sql .= $filtros . $this->getOrderby();
 
     $this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} {$filtros}" );
 
@@ -253,5 +255,20 @@ class clsModulesAuditoriaGeral
       return $resultado;
     }
     return false;
+  }
+
+  function setOrderby($strNomeCampo)
+  {
+    if (is_string($strNomeCampo) && $strNomeCampo ) {
+      $this->_campo_order_by = $strNomeCampo;
+    }
+  }
+
+  function getOrderby()
+  {
+    if (is_string($this->_campo_order_by)) {
+      return " ORDER BY {$this->_campo_order_by} ";
+    }
+    return '';
   }
 }
