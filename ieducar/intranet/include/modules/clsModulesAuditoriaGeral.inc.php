@@ -68,6 +68,9 @@ class clsModulesAuditoriaGeral
     $this->rotina = $rotina;
     $this->usuario_id = $usuario_id;
     $this->codigo = $codigo;
+
+    // Seta usuário admin quando não houver usuário pois pode ser API/Novo educação
+    if (!$this->usuario_id) $this->usuario_id = 1;
   }
 
   function removeKeyNaoNumerica($dados) {
