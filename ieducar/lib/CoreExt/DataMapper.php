@@ -630,12 +630,14 @@ abstract class CoreExt_DataMapper
       $return = $this->_getDbAdapter()->Consulta($this->_getSaveStatment($instance). $returning);
       $result = pg_fetch_row($return);
       $id = $result[0];
-      $tmpEntry = $this->find($id);
-      $info = $tmpEntry->toDataArray();
-      $auditoria = new clsModulesAuditoriaGeral($this->_tableName, $pessoa_logada, $id);
-      $auditoria->inclusao($info);
+      if ($id) {
+        $tmpEntry = $this->find($id);
+        $info = $tmpEntry->toDataArray();
+        $auditoria = new clsModulesAuditoriaGeral($this->_tableName, $pessoa_logada, $id);
+        $auditoria->inclusao($info);
+      }
     }
-    else {
+    elseif ($instance->id) {
       $tmpEntry = $this->find($instance->id);
       $oldInfo = $tmpEntry->toDataArray();
 
@@ -646,6 +648,8 @@ abstract class CoreExt_DataMapper
 
       $auditoria = new clsModulesAuditoriaGeral($this->_tableName, $pessoa_logada, $instance->id);
       $auditoria->alteracao($oldInfo, $newInfo);
+    } else {
+      $return = $this->_getDbAdapter()->Consulta($this->_getUpdateStatment($instance));
     }
 
     return $return;
