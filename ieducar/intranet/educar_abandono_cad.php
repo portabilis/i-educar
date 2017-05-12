@@ -127,7 +127,7 @@ class indice extends clsCadastro
 	      $selectOptions[$tipoAbandono['cod_abandono_tipo']] = $tipoAbandono['nome'];
 
 		$selectOptions = Portabilis_Array_Utils::sortByValue($selectOptions);
-		
+
     	$options = array('label' => 'Motivo do abandono', 'resources' => $selectOptions, 'value' => '');
 
     	$this->inputsHelper()->select('abandono_tipo', $options);
@@ -162,8 +162,8 @@ class indice extends clsCadastro
 			if(substr($det_matricula['data_cadastro'], 0, 10) > $obj_matricula->data_cancel){
 
 				$this->mensagem = "Data de abandono não pode ser inferior a data da matrícula.<br>";
-				return false;								
-			} 
+				return false;
+			}
 		}else{
 			if(substr($det_matricula['data_matricula'], 0, 10) > $obj_matricula->data_cancel){
 				$this->mensagem = "Data de abandono não pode ser inferior a data da matrícula.<br>";
@@ -175,7 +175,7 @@ class indice extends clsCadastro
 		{
 
 			if( $obj_matricula->cadastraObs($this->observacao, $this->abandono_tipo) )
-			{		
+			{
 				$enturmacoes = new clsPmieducarMatriculaTurma();
 				$enturmacoes = $enturmacoes->lista($this->ref_cod_matricula, null, null, null, null, null, null, null, 1 );
 
@@ -188,15 +188,15 @@ class indice extends clsCadastro
 					return false;
 				  }else
 				  	$enturmacao->marcaAlunoAbandono($this->data_cancel);
-				  
-      			}		
+
+      			}
 				$this->mensagem .= "Abandono realizado com sucesso.<br>";
 				header( "Location: educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}" );
 				return true;
 			}
 
 			$this->mensagem = "Observação não pode ser salva.<br>";
-			
+
 			return false;
 		}
 		$this->mensagem = "Abandono não pode ser realizado.<br>";
@@ -209,7 +209,7 @@ class indice extends clsCadastro
      @session_start();
        $this->pessoa_logada = $_SESSION['id_pessoa'];
      @session_write_close();
- 
+
      $obj_permissoes = new clsPermissoes();
      $obj_permissoes->permissao_excluir( 578, $this->pessoa_logada, 7,  "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}" );
    }

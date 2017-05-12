@@ -34,6 +34,8 @@ require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/public/geral.inc.php';
+require_once ("include/pmieducar/geral.inc.php");
+require_once ("include/modules/clsModulesAuditoriaGeral.inc.php");
 
 class clsIndexBase extends clsBase
 {
@@ -175,6 +177,13 @@ class indice extends clsCadastro
 
     $cadastrou = $obj->cadastra();
     if ($cadastrou) {
+
+      $enderecamento = new clsPublicMunicipio($cadastrou);
+      $enderecamento->cadastrou = $cadastrou;
+      $enderecamento = $enderecamento->detalhe();
+      $auditoria = new clsModulesAuditoriaGeral("Endereçamento de Municipio", $this->pessoa_logada, $cadastrou);
+      $auditoria->inclusao($enderecamento);
+
       $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
       header('Location: public_municipio_lst.php');
       die();
@@ -191,6 +200,10 @@ class indice extends clsCadastro
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
+    $enderecamentoDetalhe = new clsPublicMunicipio($this->idmun);
+    $enderecamentoDetalhe->cadastrou = $this->idmun;
+    $enderecamentoDetalheAntes = $enderecamentoDetalhe->detalhe();
+
     $obj = new clsPublicMunicipio($this->idmun, $this->nome, $this->sigla_uf,
       NULL, NULL, NULL, $this->cod_ibge, NULL, 'M', NULL, $this->pessoa_logada, NULL, NULL,
       NULL, 'U', 'I', NULL, 9 );
@@ -198,6 +211,11 @@ class indice extends clsCadastro
     $editou = $obj->edita();
 
     if ($editou) {
+
+      $enderecamentoDetalheDepois = $enderecamentoDetalhe->detalhe();
+      $auditoria = new clsModulesAuditoriaGeral("Endereçamento de Municipio", $this->pessoa_logada, $this->idmun);
+      $auditoria->alteracao($enderecamentoDetalheAntes, $enderecamentoDetalheDepois);
+
       $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
       header('Location: public_municipio_lst.php');
       die();
@@ -217,6 +235,10 @@ class indice extends clsCadastro
 
     $obj = new clsPublicMunicipio($this->idmun, NULL, NULL, NULL, NULL, NULL,
       NULL, NULL, NULL, NULL, $this->pessoa_logada);
+
+    $enderecamento = $obj->detalhe();
+    $enderecamentoDetalhe->cadastrou = $this->idmun;
+
     $excluiu = $obj->excluir();
 
     if ($excluiu) {

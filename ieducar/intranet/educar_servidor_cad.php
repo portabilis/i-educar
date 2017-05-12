@@ -844,6 +844,8 @@ class indice extends clsCadastro
 
     $obj   = new clsPmieducarServidor($this->cod_servidor, NULL, NULL, NULL, NULL, NULL, NULL, $this->ref_cod_instituicao);
 
+    $servidorAntes = $obj->detalhe();
+    
     if ($obj->detalhe()) {
       $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
       $obj = new clsPmieducarServidor($this->cod_servidor, NULL, $this->ref_idesco, $this->carga_horaria, NULL, NULL, 1, $this->ref_cod_instituicao);
@@ -853,6 +855,12 @@ class indice extends clsCadastro
       $editou = $obj->edita();
 
       if ($editou) {
+
+        $servidorDepois = $obj->detalhe();
+
+        $auditoria = new clsModulesAuditoriaGeral("servidor", $this->pessoa_logada, $this->cod_servidor);
+        $auditoria->alteracao($servidorAntes, $servidorDepois);
+
         $this->cadastraFuncoes();
         $this->createOrUpdateInep();
         $this->createOrUpdateDeficiencias();
@@ -877,6 +885,12 @@ class indice extends clsCadastro
       $cadastrou = $obj_2->cadastra();
 
       if ($cadastrou) {
+
+        $servidor = new clsPmieducarServidor($cadastrou, NULL, NULL, NULL, NULL, NULL, NULL, $this->ref_cod_instituicao);
+        $servidor = $servidor->detalhe();
+
+        $auditoria = new clsModulesAuditoriaGeral("servidor", $this->pessoa_logada, $cadastrou);
+        $auditoria->inclusao($servidor);
 
         $this->cadastraFuncoes();
         $this->createOrUpdateInep();
@@ -907,6 +921,9 @@ class indice extends clsCadastro
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     @session_write_close();
 
+    $servidor = new clsPmieducarServidor($this->cod_servidor, NULL, NULL, NULL, NULL, NULL, NULL, $this->ref_cod_instituicao);
+    $servidorAntes = $servidor->detalhe();
+
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7, 'educar_servidor_lst.php');
 
@@ -919,6 +936,12 @@ class indice extends clsCadastro
       $editou = $obj->edita();
 
       if ($editou) {
+
+        $servidorDepois = $servidor->detalhe();
+
+        $auditoria = new clsModulesAuditoriaGeral("servidor", $this->pessoa_logada, $this->cod_servidor);
+        $auditoria->alteracao($servidorAntes, $servidorDepois);
+
         $this->cadastraFuncoes();
         $this->createOrUpdateInep();
         $this->createOrUpdateDeficiencias();
@@ -1021,10 +1044,15 @@ class indice extends clsCadastro
         $obj = new clsPmieducarServidor($this->cod_servidor,
           NULL, $this->ref_idesco, $this->carga_horaria,
           NULL, NULL, 0, $this->ref_cod_instituicao_original);
+        
+        $servidor = $obj->detalhe();
 
         $excluiu = $obj->excluir();
 
         if ($excluiu) {
+          $auditoria = new clsModulesAuditoriaGeral("servidor", $this->pessoa_logada, $this->cod_servidor);
+          $auditoria->exclusao($servidor);
+
           $this->excluiFuncoes();
           $this->mensagem .= "Exclusão efetuada com sucesso.<br>";
           header("Location: educar_servidor_lst.php");

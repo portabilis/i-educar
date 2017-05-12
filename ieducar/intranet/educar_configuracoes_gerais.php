@@ -31,6 +31,7 @@
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
+require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 /**
  * @author    Caroline Salib <caroline@portabilis.com.br>
@@ -116,11 +117,16 @@ class indice extends clsCadastro
 
     $permiteRelacionamentoPosvendas = ($this->permite_relacionamento_posvendas == 'on' ? 1 : 0);
 
+
     $configuracoes = new clsPmieducarConfiguracoesGerais($ref_cod_instituicao, $permiteRelacionamentoPosvendas, $this->url_novo_educacao);
+    $detalheAntigo = $configuracoes->detalhe();
     $editou = $configuracoes->edita();
 
     if( $editou )
     {
+      $detalheAtual = $configuracoes->detalhe();
+      $auditoria = new clsModulesAuditoriaGeral("configuracoes_gerais", $this->pessoa_logada, $ref_cod_instituicao ? $ref_cod_instituicao : 'null');
+      $auditoria->alteracao($detalheAntigo, $detalheAtual);
       $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
       header( "Location: index.php" );
       die();

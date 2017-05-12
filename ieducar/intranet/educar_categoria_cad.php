@@ -29,6 +29,7 @@ require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once( "include/pmieducar/geral.inc.php" );
 require_once("include/pmieducar/clsPmieducarCategoriaObra.inc.php");
+require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsIndexBase extends clsBase
 {
@@ -109,8 +110,13 @@ class indice extends clsCadastro
 		$obj_permissoes->permissao_cadastra( 592, $this->pessoa_logada, 11,  "educar_categoria_lst.php" );
 
 		$obj = new clsPmieducarCategoriaObra(0, $this->descricao, $this->observacoes);
-		$cadastrou = $obj->cadastra();
+		$this->id = $cadastrou = $obj->cadastra();
 		if($cadastrou){
+      $obj->id = $this->id;
+      $detalhe = $obj->detalhe();
+      $auditoria = new clsModulesAuditoriaGeral("categoria_obra", $this->pessoa_logada, $this->id);
+      $auditoria->inclusao($detalhe);
+
 			$this->mensagem .= "Cadastro efetuado com sucesso.<br>";
 			header( "Location: educar_categoria_lst.php" );
 			die();
@@ -131,8 +137,12 @@ class indice extends clsCadastro
 		$obj_permissoes->permissao_cadastra(592, $this->pessoa_logada, 11, "educar_categoria_lst.php");
 
 		$obj = new clsPmieducarCategoriaObra($this->id, $this->descricao, $this->observacoes);
+    $detalheAntigo = $obj->detalhe();
 		$editou = $obj->edita();
 		if( $editou ){
+      $detalheAtual = $obj->detalhe();
+      $auditoria = new clsModulesAuditoriaGeral("categoria_obra", $this->pessoa_logada, $this->id);
+      $auditoria->alteracao($detalheAntigo, $detalheAtual);
 			$this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
 			header( "Location: educar_categoria_lst.php" );
 			die();
@@ -153,8 +163,12 @@ class indice extends clsCadastro
 		$obj_permissoes->permissao_excluir(592, $this->pessoa_logada, 11,  "educar_categoria_lst.php");
 
 		$obj = new clsPmieducarCategoriaObra($this->id);
+    $detalhe = $obj->detalhe();
 		$excluiu = $obj->excluir();
 		if($excluiu){
+
+      $auditoria = new clsModulesAuditoriaGeral("categoria_obra", $this->pessoa_logada, $this->id);
+      $auditoria->exclusao($detalhe);
 			$this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
 			header( "Location: educar_categoria_lst.php" );
 			die();

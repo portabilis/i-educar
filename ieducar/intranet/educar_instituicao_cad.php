@@ -32,6 +32,7 @@ require_once ("include/Geral.inc.php");
 require_once 'includes/bootstrap.php';
 require_once 'Portabilis/Date/Utils.php';
 require_once 'Portabilis/Currency/Utils.php';
+require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsIndexBase extends clsBase
 {
@@ -313,10 +314,17 @@ class indice extends clsCadastro
 		$obj->data_base_matricula               = Portabilis_Date_Utils::brToPgSQL_ddmm($this->data_base);
 		$obj->data_fechamento               = Portabilis_Date_Utils::brToPgSQL_ddmm($this->data_fechamento);
 		$obj->auditar_notas = !is_null($this->auditar_notas);
-    $obj->data_educacenso = $this->data_educacenso;
-		$cadastrou = $obj->cadastra();
+
+		$obj->data_educacenso = $this->data_educacenso;
+		$cod_instituicao = $cadastrou = $obj->cadastra();
+
 		if( $cadastrou )
 		{
+
+      $instituicao = new clsPmieducarInstituicao($cod_instituicao);
+      $instituicao = $instituicao->detalhe();
+      $auditoria = new clsModulesAuditoriaGeral("instituicao", $this->pessoa_logada, $cod_instituicao);
+      $auditoria->inclusao($instituicao);
 			$this->mensagem .= "Cadastro efetuado com sucesso.<br>";
 			header( "Location: educar_instituicao_lst.php" );
 			die();
@@ -355,11 +363,16 @@ class indice extends clsCadastro
 		$obj->percentagem_maxima_ocupacao_salas = Portabilis_Currency_Utils::moedaBrToUs($this->percentagem_maxima_ocupacao_salas);
 		$obj->data_base_matricula               = Portabilis_Date_Utils::brToPgSQL_ddmm($this->data_base);
 		$obj->data_fechamento               	= Portabilis_Date_Utils::brToPgSQL_ddmm($this->data_fechamento);
-    $obj->data_educacenso           = $this->data_educacenso;
+
+		$obj->data_educacenso 					= $this->data_educacenso;
+    $detalheAntigo = $obj->detalhe();
 
 		$editou = $obj->edita();
 		if( $editou )
 		{
+      $detalheAtual = $obj->detalhe();
+      $auditoria = new clsModulesAuditoriaGeral("instituicao", $this->pessoa_logada, $this->cod_instituicao);
+      $auditoria->alteracao($detalheAntigo, $detalheAtual);
 			$this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
 			header( "Location: educar_instituicao_lst.php" );
 			die();
@@ -384,9 +397,12 @@ class indice extends clsCadastro
 			return false;
 		}else{
 			$obj = new clsPmieducarInstituicao($this->cod_instituicao, $this->pessoa_logada, $this->ref_usuario_cad, $this->ref_idtlog, $this->ref_sigla_uf, $this->cep, $this->cidade, $this->bairro, $this->logradouro, $this->numero, $this->complemento, $this->nm_responsavel, $this->ddd_telefone, $this->telefone, $this->data_cadastro, $this->data_exclusao, $this->ativo);
+      $instituicao = $obj->detalhe();
 			$excluiu = $obj->excluir();
 			if( $excluiu )
 			{
+        $auditoria = new clsModulesAuditoriaGeral("instituicao", $this->pessoa_logada, $this->cod_instituicao);
+        $auditoria->exclusao($instituicao);
 				$this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
 				header( "Location: educar_instituicao_lst.php" );
 				die();

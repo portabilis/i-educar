@@ -29,6 +29,7 @@
  */
 
 require_once 'include/pmieducar/geral.inc.php';
+require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 /**
  * clsModulesEmpresaTransporteEscolar class.
@@ -46,6 +47,7 @@ class clsModulesEmpresaTransporteEscolar
   var $ref_idpes;
   var $ref_resp_idpes;
   var $observacao;
+  var $pessoa_logada;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -107,6 +109,7 @@ class clsModulesEmpresaTransporteEscolar
     $db = new clsBanco();
     $this->_schema = "modules.";
     $this->_tabela = "{$this->_schema}empresa_transporte_escolar";
+    $this->pessoa_logada = $_SESSION['id_pessoa'];
 
     $this->_campos_lista = $this->_todos_campos = " cod_empresa_transporte_escolar, ref_idpes, ref_resp_idpes, observacao ";
 
@@ -163,7 +166,15 @@ class clsModulesEmpresaTransporteEscolar
       }
 
       $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
-      return $db->InsertId("{$this->_tabela}_seq");
+
+      $this->cod_empresa_transporte_escolar = $db->InsertId("{$this->_tabela}_seq");
+
+      if($this->cod_empresa_transporte_escolar){
+        $detalhe = $this->detalhe();
+        $auditoria = new clsModulesAuditoriaGeral("empresa_transporte_escolar", $this->pessoa_logada, $this->cod_empresa_transporte_escolar);
+        $auditoria->inclusao($detalhe);
+      }
+      return $this->cod_empresa_transporte_escolar;
     }
 
     return FALSE;
@@ -194,7 +205,10 @@ class clsModulesEmpresaTransporteEscolar
         $gruda = ", ";
       }
       if ($set) {
+        $detalheAntigo = $this->detalhe();
         $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_empresa_transporte_escolar = '{$this->cod_empresa_transporte_escolar}'");
+        $auditoria = new clsModulesAuditoriaGeral("empresa_transporte_escolar", $this->pessoa_logada,$this->cod_empresa_transporte_escolar);
+        $auditoria->alteracao($detalheAntigo, $this->detalhe());
         return TRUE;
       }
     }
@@ -350,9 +364,15 @@ class clsModulesEmpresaTransporteEscolar
   function excluir()
   {
     if (is_numeric($this->cod_empresa_transporte_escolar)) {
+      $detalhe = $this->detalhe();
+
       $sql = "DELETE FROM {$this->_tabela} WHERE cod_empresa_transporte_escolar = '{$this->cod_empresa_transporte_escolar}'";
       $db = new clsBanco();
       $db->Consulta($sql);
+
+      $auditoria = new clsModulesAuditoriaGeral("empresa_transporte_escolar", $this->pessoa_logada, $this->cod_empresa_transporte_escolar);
+      $auditoria->exclusao($detalhe);
+
       return true;
     }
 

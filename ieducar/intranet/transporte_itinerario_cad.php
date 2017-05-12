@@ -200,9 +200,19 @@ class indice extends clsCadastro
 		{
 
 			$obj  = new clsModulesItinerarioTransporteEscolar();
+			$codRotaInt = (int)$this->cod_rota;
+			$itinerario = $obj->lista(null, $codRotaInt);
+
 			$excluiu = $obj->excluirTodos( $this->cod_rota );
+
 			if ( $excluiu )
 			{
+
+			foreach ($itinerario as $key => $campo) {
+				$auditoria = new clsModulesAuditoriaGeral("itinerario_transporte_escolar", $this->pessoa_logada, $campo['cod_itinerario_transporte_escolar']);
+      			$auditoria->exclusao($campo);
+			}
+
 				$sequencial = 1;
 				foreach ( $this->ref_cod_ponto_transporte_escolar AS $key => $ponto )
 				{
@@ -216,6 +226,12 @@ class indice extends clsCadastro
 						return false;
 					}
 					$sequencial++;
+
+					$itinerario = new clsModulesItinerarioTransporteEscolar($cadastrou1);
+					$itinerario = $itinerario->detalhe();
+
+					$auditoria = new clsModulesAuditoriaGeral("itinerario_transporte_escolar", $this->pessoa_logada, $cadastrou1);
+					$auditoria->inclusao($itinerario);
 
 				}
 			}

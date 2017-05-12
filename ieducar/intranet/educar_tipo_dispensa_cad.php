@@ -27,7 +27,8 @@
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
+require_once ("include/pmieducar/geral.inc.php");
+require_once ("include/modules/clsModulesAuditoriaGeral.inc.php");
 
 class clsIndexBase extends clsBase
 {
@@ -126,6 +127,12 @@ class indice extends clsCadastro
 		$cadastrou = $obj->cadastra();
 		if( $cadastrou )
 		{
+			$tipoDispensa = new clsPmieducarTipoDispensa($cadastrou);
+			$tipoDispensa = $tipoDispensa->detalhe();
+
+			$auditoria = new clsModulesAuditoriaGeral("tipo_dispensa", $this->pessoa_logada, $cadastrou);
+			$auditoria->inclusao($tipoDispensa);
+
 			$this->mensagem .= "Cadastro efetuado com sucesso.<br>";
 			header( "Location: educar_tipo_dispensa_lst.php" );
 			die();
@@ -143,10 +150,17 @@ class indice extends clsCadastro
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
 
+		$tipoDispensaDetalhe = new clsPmieducarTipoDispensa($this->cod_tipo_dispensa);
+		$tipoDispensaDetalheAntes = $tipoDispensaDetalhe->detalhe();
+
 		$obj = new clsPmieducarTipoDispensa( $this->cod_tipo_dispensa, $this->pessoa_logada, null, $this->nm_tipo, $this->descricao, null, null, 1, $this->ref_cod_instituicao );
 		$editou = $obj->edita();
 		if( $editou )
 		{
+			$tipoDispensaDetalheDepois = $tipoDispensaDetalhe->detalhe();
+			$auditoria = new clsModulesAuditoriaGeral("tipo_dispensa", $this->pessoa_logada, $this->cod_tipo_dispensa);
+			$auditoria->alteracao($tipoDispensaDetalheAntes, $tipoDispensaDetalheDepois);
+
 			$this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
 			header( "Location: educar_tipo_dispensa_lst.php" );
 			die();
@@ -165,9 +179,13 @@ class indice extends clsCadastro
 		@session_write_close();
 
 		$obj = new clsPmieducarTipoDispensa( $this->cod_tipo_dispensa, $this->pessoa_logada, null, null, null, null, null, 0 );
+		$tipoDispensa = $obj->detalhe();
 		$excluiu = $obj->excluir();
 		if( $excluiu )
 		{
+			$auditoria = new clsModulesAuditoriaGeral("tipo_dispensa", $this->pessoa_logada, $this->cod_tipo_dispensa);
+			$auditoria->exclusao($tipoDispensa);
+
 			$this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
 			header( "Location: educar_tipo_dispensa_lst.php" );
 			die();

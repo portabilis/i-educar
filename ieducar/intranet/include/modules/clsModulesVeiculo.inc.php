@@ -29,6 +29,7 @@
  */
 
 require_once 'include/pmieducar/geral.inc.php';
+require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 /**
  * clsModulesVeiculo class.
@@ -60,6 +61,7 @@ class clsModulesVeiculo
   var $ref_cod_empresa_transporte_escolar;
   var $ref_cod_motorista;
   var $observacao;
+  var $pessoa_logada;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -124,6 +126,7 @@ class clsModulesVeiculo
     $db = new clsBanco();
     $this->_schema = "modules.";
     $this->_tabela = "{$this->_schema}veiculo";
+    $this->pessoa_logada = $_SESSION['id_pessoa'];
 
     $this->_campos_lista = $this->_todos_campos = " cod_veiculo, descricao, placa, renavam, chassi, marca, ano_fabricacao, 
        ano_modelo, passageiros, malha, ref_cod_tipo_veiculo, exclusivo_transporte_escolar, 
@@ -331,7 +334,14 @@ class clsModulesVeiculo
     }
 
     $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
-    return $db->InsertId("{$this->_tabela}_seq");
+    $this->cod_veiculo = $db->InsertId("{$this->_tabela}_seq");
+
+      if($this->cod_veiculo){
+        $detalhe = $this->detalhe();
+        $auditoria = new clsModulesAuditoriaGeral("veiculo", $this->pessoa_logada, $this->cod_veiculo);
+        $auditoria->inclusao($detalhe);
+      }
+      return $this->cod_veiculo;
     }
 
     return FALSE;
@@ -437,7 +447,10 @@ class clsModulesVeiculo
         $gruda = ", ";
     }
       if ($set) {
+        $detalheAntigo = $this->detalhe();
         $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_veiculo = '{$this->cod_veiculo}'");
+        $auditoria = new clsModulesAuditoriaGeral("veiculo", $this->pessoa_logada,$this->cod_veiculo);
+        $auditoria->alteracao($detalheAntigo, $this->detalhe());
         return TRUE;
       }
     }
@@ -598,9 +611,15 @@ class clsModulesVeiculo
   function excluir()
   {
     if (is_numeric($this->cod_veiculo)) {
+      $detalhe = $this->detalhe();
+
       $sql = "DELETE FROM {$this->_tabela} WHERE cod_veiculo = '{$this->cod_veiculo}'";
       $db = new clsBanco();
       $db->Consulta($sql);
+
+      $auditoria = new clsModulesAuditoriaGeral("veiculo", $this->pessoa_logada, $this->cod_veiculo);
+      $auditoria->exclusao($detalhe);
+
       return true;
     }
 

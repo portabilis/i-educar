@@ -28,6 +28,7 @@ require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once( "include/pmieducar/geral.inc.php" );
+require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsIndexBase extends clsBase
 {
@@ -105,7 +106,7 @@ class indice extends clsCadastro
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_biblioteca_index.php"                  => "Biblioteca",
-         ""        => "{$nomeMenu} tipo de cliente"             
+         ""        => "{$nomeMenu} tipo de cliente"
     ));
     $this->enviaLocalizacao($localizacao->montar());
 
@@ -217,9 +218,13 @@ class indice extends clsCadastro
 		}
 
 		$obj = new clsPmieducarClienteTipo( null, $this->ref_cod_biblioteca, null, $this->pessoa_logada, $this->nm_tipo, $this->descricao, null, null, 1 );
-		$cadastrou = $obj->cadastra();
+		$this->cod_cliente_tipo = $cadastrou = $obj->cadastra();
 		if( $cadastrou )
 		{
+      $obj->cod_cliente_tipo = $this->cod_cliente_tipo;
+      $cliente_tipo = $obj->detalhe();
+      $auditoria = new clsModulesAuditoriaGeral("cliente_tipo", $this->pessoa_logada, $this->cod_cliente_tipo);
+      $auditoria->inclusao($cliente_tipo);
 
 		//-----------------------CADASTRA EXEMPLAR TIPO------------------------//
 			if ($array_tipos)
@@ -268,9 +273,13 @@ class indice extends clsCadastro
 		}
 
 		$obj = new clsPmieducarClienteTipo($this->cod_cliente_tipo, $this->ref_cod_biblioteca, $this->pessoa_logada, null, $this->nm_tipo, $this->descricao, null, null, 1);
+    $detalheAntigo = $obj->detalhe();
 		$editou = $obj->edita();
 		if( $editou )
 		{
+      $detalheAtual = $obj->detalhe();
+      $auditoria = new clsModulesAuditoriaGeral("cliente_tipo", $this->pessoa_logada, $this->cod_cliente_tipo);
+      $auditoria->alteracao($detalheAntigo, $detalheAtual);
 
 		//-----------------------EDITA EXEMPLAR TIPO------------------------//
 			if ($array_tipos)
@@ -316,9 +325,13 @@ class indice extends clsCadastro
 
 
 		$obj = new clsPmieducarClienteTipo($this->cod_cliente_tipo, null, $this->pessoa_logada, null, null, null, null, null, 0);
+    $detalhe = $obj->detalhe();
 		$excluiu = $obj->excluir();
 		if( $excluiu )
 		{
+
+      $auditoria = new clsModulesAuditoriaGeral("cliente_tipo", $this->pessoa_logada, $this->cod_cliente_tipo);
+      $auditoria->exclusao($detalhe);
 			$this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
 			header( "Location: educar_cliente_tipo_lst.php" );
 			die();

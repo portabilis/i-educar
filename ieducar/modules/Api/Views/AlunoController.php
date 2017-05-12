@@ -47,6 +47,7 @@ require_once 'Portabilis/String/Utils.php';
 require_once 'Portabilis/Array/Utils.php';
 require_once 'Portabilis/Date/Utils.php';
 require_once 'include/modules/clsModulesPessoaTransporte.inc.php';
+require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 require_once 'Transporte/Model/Responsavel.php';
 
@@ -540,7 +541,19 @@ class AlunoController extends ApiCoreController
     $aluno->url_laudo_medico         = Portabilis_String_Utils::toLatin1($this->getRequest()->url_laudo_medico);
 
 
-    return (is_null($id) ? $aluno->cadastra() : $aluno->edita());
+    if(is_null($id)){
+      $id = $aluno->cadastra();
+      $aluno->cod_aluno = $id;
+      $auditoria = new clsModulesAuditoriaGeral("aluno", $this->getSession()->id_pessoa, $id);
+      $auditoria->inclusao($aluno->detalhe());
+    }else{
+      $detalheAntigo = $aluno->detalhe();
+      $id = $aluno->edita();
+      $auditoria = new clsModulesAuditoriaGeral("aluno", $this->getSession()->id_pessoa, $id);
+      $auditoria->alteracao($detalheAntigo, $aluno->detalhe());
+    }
+
+    return $id;
   }
 
   protected function loadTurmaByMatriculaId($matriculaId) {
@@ -1321,8 +1334,13 @@ class AlunoController extends ApiCoreController
         $aluno->cod_aluno       = $id;
         $aluno->ref_usuario_exc = $this->getSession()->id_pessoa;
 
-        if($aluno->excluir())
+        $detalheAluno = $aluno->detalhe();
+
+        if($aluno->excluir()){
+          $auditoria = new clsModulesAuditoriaGeral("aluno", $this->getSession()->id_pessoa, $id);
+          $auditoria->exclusao($detalheAluno);
           $this->messenger->append('Cadastro removido com sucesso', 'success', false, 'error');
+        }
         else
           $this->messenger->append('Aparentemente o cadastro não pode ser removido, por favor, verifique.',
                                    'error', false, 'error');

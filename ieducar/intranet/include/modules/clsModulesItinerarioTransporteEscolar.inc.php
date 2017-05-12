@@ -197,7 +197,9 @@ class clsModulesItinerarioTransporteEscolar
     }
 
       $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
-      return $db->InsertId("{$this->_tabela}_seq");
+      $this->cod_itinerario_transporte_escolar = $db->InsertId("{$this->_tabela}_seq");
+
+      return (int) $this->cod_itinerario_transporte_escolar;
     }
 
     return FALSE;
@@ -391,23 +393,11 @@ class clsModulesItinerarioTransporteEscolar
    */
   function detalhe()
   {
-    if (is_numeric($this->cod_rota_transporte_escolar)) {
+    if (is_numeric($this->cod_itinerario_transporte_escolar)) {
       $db = new clsBanco();
-      $db->Consulta("SELECT {$this->_todos_campos}, (
-          SELECT
-            nome
-          FROM
-            cadastro.pessoa
-          WHERE
-            idpes = ref_idpes_destino
-         ) AS nome_destino , (
-          SELECT
-            nome
-          FROM
-            cadastro.pessoa, modules.empresa_transporte_escolar
-          WHERE
-            idpes = ref_idpes and cod_empresa_transporte_escolar = ref_cod_empresa_transporte_escolar
-         ) AS nome_empresa FROM {$this->_tabela} WHERE cod_rota_transporte_escolar = '{$this->cod_rota_transporte_escolar}'");
+      $db->Consulta("SELECT {$this->_todos_campos}
+                       FROM {$this->_tabela}
+                      WHERE cod_itinerario_transporte_escolar = '{$this->cod_itinerario_transporte_escolar}'");
       $db->ProximoRegistro();
       return $db->Tupla();
     }

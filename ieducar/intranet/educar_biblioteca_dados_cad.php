@@ -28,6 +28,7 @@ require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once( "include/pmieducar/geral.inc.php" );
+require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsIndexBase extends clsBase
 {
@@ -132,7 +133,7 @@ class indice extends clsCadastro
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_biblioteca_index.php"                  => "Biblioteca",
-         ""        => "{$nomeMenu} dados da biblioteaca"             
+         ""        => "{$nomeMenu} dados da biblioteaca"
     ));
     $this->enviaLocalizacao($localizacao->montar());
 
@@ -299,10 +300,14 @@ class indice extends clsCadastro
 																			$this->dias_espera,
 																			$this->tombo_automatico,
 																			$this->bloqueia_emprestimo_em_atraso == "on");
-		$editou = $obj->edita();
+		$detalheAntigo = $obj->detalhe();
+    $editou = $obj->edita();
 		if( $editou )
 		{
-		//-----------------------EDITA DIA SEMANA------------------------//
+      $detalheAtual = $obj->detalhe();
+      $auditoria = new clsModulesAuditoriaGeral("biblioteca", $this->pessoa_logada, $this->cod_biblioteca);
+      $auditoria->alteracao($detalheAntigo, $detalheAtual);
+    	//-----------------------EDITA DIA SEMANA------------------------//
 
 			if ($this->dia_semana) {
 		      $obj  = new clsPmieducarBibliotecaDia( $this->cod_biblioteca );

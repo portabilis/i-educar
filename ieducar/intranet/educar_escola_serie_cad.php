@@ -36,6 +36,7 @@ require_once 'ComponenteCurricular/Model/AnoEscolarDataMapper.php';
 require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
 require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
 require_once 'Avaliacao/Fixups/CleanComponentesCurriculares.php';
+require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 /**
  * clsIndexBase class.
@@ -378,10 +379,16 @@ class indice extends clsCadastro
       $this->hora_fim_intervalo, $this->bloquear_enturmacao_sem_vagas, $this->bloquear_cadastro_turma_para_serie_com_vagas);
 
     if ($obj->existe()) {
+      $detalheAntigo = $obj->detalhe();
       $cadastrou = $obj->edita();
+      $auditoria = new clsModulesAuditoriaGeral("escola_serie", $this->pessoa_logada);
+      $auditoria->alteracao($detalheAntigo, $obj->detalhe());
     }
     else {
       $cadastrou = $obj->cadastra();
+
+      $auditoria = new clsModulesAuditoriaGeral("escola_serie", $this->pessoa_logada);
+      $auditoria->inclusao($obj->detalhe());
     }
 
     if ($cadastrou) {
@@ -453,7 +460,12 @@ class indice extends clsCadastro
       $this->pessoa_logada, NULL, $this->hora_inicial, $this->hora_final,
       NULL, NULL, 1, $this->hora_inicio_intervalo, $this->hora_fim_intervalo, $this->bloquear_enturmacao_sem_vagas, $this->bloquear_cadastro_turma_para_serie_com_vagas);
 
+    $detalheAntigo = $obj->detalhe();
     $editou = $obj->edita();
+
+    $auditoria = new clsModulesAuditoriaGeral("escola_serie", $this->pessoa_logada);
+    $auditoria->alteracao($detalheAntigo, $obj->detalhe());
+
     $obj = new clsPmieducarEscolaSerieDisciplina($this->ref_cod_serie,
       $this->ref_cod_escola, $campo, 1);
 
@@ -522,7 +534,11 @@ class indice extends clsCadastro
     $obj = new clsPmieducarEscolaSerie($this->ref_cod_escola_, $this->ref_cod_serie_,
       $this->pessoa_logada,  NULL, NULL, NULL, NULL, NULL, 0);
 
+    $detalhe = $obj->detalhe();
     $excluiu = $obj->excluir();
+    $auditoria = new clsModulesAuditoriaGeral("escola_serie", $this->pessoa_logada);
+    $auditoria->exclusao($detalhe);
+
     if ($excluiu) {
       $obj = new clsPmieducarEscolaSerieDisciplina($this->ref_cod_serie_,
         $this->ref_cod_escola_, NULL, 0);

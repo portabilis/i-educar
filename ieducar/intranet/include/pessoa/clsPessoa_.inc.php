@@ -25,6 +25,7 @@
 *																		 *
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 require_once ("include/clsBanco.inc.php");
+require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsPessoa_
 {
@@ -39,7 +40,7 @@ class clsPessoa_
 	var $situacao;
 	var $origem_gravacao;
 	var $email;
-
+  var $pessoa_logada;
 
 	var $banco = 'gestao_homolog';
 	var $schema_cadastro = "cadastro";
@@ -50,6 +51,10 @@ class clsPessoa_
 
 	function  clsPessoa_($int_idpes = false, $str_nome = false, $int_idpes_cad =false, $str_url = false, $int_tipo = false, $int_idpes_rev =false, $str_data_rev = false, $str_email = false )
 	{
+		@session_start();
+		$this->pessoa_logada = $_SESSION['id_pessoa'];
+		session_write_close();
+
 		$this->idpes = $int_idpes;
 		$this->nome = $str_nome;
 		$this->idpes_cad = $int_idpes_cad ? $int_idpes_cad  : $_SESSION['id_pessoa'];
@@ -88,7 +93,11 @@ class clsPessoa_
 
 			$db->Consulta("INSERT INTO {$this->schema_cadastro}.{$this->tabela_pessoa} (nome, data_cad,tipo,situacao,origem_gravacao,  idsis_cad, operacao $campos) VALUES ('$this->nome', NOW(), '$this->tipo', 'P', 'U', 17, 'I' $valores)");
 			$this->idpes = $db->InsertId("{$this->schema_cadastro}.seq_pessoa");
-
+      if($this->idpes){
+        $detalhe = $this->detalhe();
+        $auditoria = new clsModulesAuditoriaGeral("pessoa", $this->pessoa_logada, $this->idpes);
+        $auditoria->inclusao($detalhe);
+      }
 			return $this->idpes;
 		}
 	}
@@ -124,7 +133,10 @@ class clsPessoa_
 			if($set)
 			{
 				$db = new clsBanco();
+	      $detalheAntigo = $this->detalhe();
 				$db->Consulta("UPDATE {$this->schema_cadastro}.{$this->tabela_pessoa} SET $set, data_rev = 'NOW()' WHERE idpes = $this->idpes");
+	      $auditoria = new clsModulesAuditoriaGeral("pessoa", $this->pessoa_logada, $this->idpes);
+	      $auditoria->alteracao($detalheAntigo, $this->detalhe());
 				return true;
 			}
 		}

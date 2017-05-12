@@ -33,6 +33,7 @@ require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
+require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 require_once 'lib/Portabilis/Date/Utils.php';
 require_once 'Avaliacao/Fixups/CleanComponentesCurriculares.php';
 require_once 'Portabilis/View/Helper/Application.php';
@@ -1043,6 +1044,11 @@ class indice extends clsCadastro
           );
 
           $this->cadastraInepTurma($this->cod_turma, $this->codigo_inep_educacenso);
+          $turma = new clsPmieducarTurma($this->cod_turma);
+          $turma = $turma->detalhe();
+
+          $auditoria = new clsModulesAuditoriaGeral("turma", $this->pessoa_logada, $this->cod_turma);
+          $auditoria->inclusao($turma);
 
           $this->mensagem .= 'Cadastro efetuado com sucesso.';
           header('Location: educar_turma_lst.php');
@@ -1128,6 +1134,12 @@ class indice extends clsCadastro
 
         $this->cadastraInepTurma($this->cod_turma, $this->codigo_inep_educacenso);
 
+        $turma = new clsPmieducarTurma($this->cod_turma);
+        $turma = $turma->detalhe();
+
+        $auditoria = new clsModulesAuditoriaGeral("turma", $this->pessoa_logada, $this->cod_turma);
+        $auditoria->inclusao($turma);
+
         $this->mensagem .= 'Cadastro efetuado com sucesso.';
         header('Location: educar_turma_lst.php');
         die();
@@ -1147,12 +1159,13 @@ class indice extends clsCadastro
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     @session_write_close();
 
-    if (is_null($this->ref_cod_instituicao)) {
-      $turma = new clsPmieducarTurma($this->cod_turma);
-      $turma = $turma->detalhe();
+    $turmaDetalhe = new clsPmieducarTurma($this->cod_turma);
+    $turmaDetalhe = $turmaDetalhe->detalhe();
 
-      $this->ref_cod_instituicao = $turma["ref_cod_instituicao"];
-      $this->ref_cod_instituicao_regente = $turma["ref_cod_instituicao"];
+    if (is_null($this->ref_cod_instituicao)) {
+
+      $this->ref_cod_instituicao = $turmaDetalhe["ref_cod_instituicao"];
+      $this->ref_cod_instituicao_regente = $turmaDetalhe["ref_cod_instituicao"];
     }
     else{
       $this->ref_cod_instituicao_regente = $this->ref_cod_instituicao;
@@ -1222,6 +1235,9 @@ class indice extends clsCadastro
         $editou = $obj->edita();
 
         if ($editou) {
+            $auditoria = new clsModulesAuditoriaGeral("turma", $this->pessoa_logada, $this->cod_turma);
+            $auditoria->alteracao($turmaDetalhe, $obj->detalhe());
+
             $qtd_registros = count($this->ref_cod_modulo);
 
             for ($i=0; $i < $qtd_registros; $i++) {
@@ -1336,11 +1352,14 @@ class indice extends clsCadastro
     }
 
     $this->atualizaComponentesCurriculares(
-      $turma['ref_ref_cod_serie'], $turma['ref_ref_cod_serie'], $this->cod_turma,
+      $turmaDetalhe['ref_ref_cod_serie'], $turmaDetalhe['ref_ref_cod_serie'], $this->cod_turma,
       $this->disciplinas, $this->carga_horaria, $this->usar_componente, $this->docente_vinculado
     );
 
     $this->cadastraInepTurma($this->cod_turma, $this->codigo_inep_educacenso);
+
+    $auditoria = new clsModulesAuditoriaGeral("turma", $this->pessoa_logada, $this->cod_turma);
+    $auditoria->alteracao($turmaDetalhe, $obj->detalhe());
 
     // Caso tenham sido selecionadas discplinas, como se trata de uma edição de turma será rodado uma consulta
     // que limpa os Componentes Curriculares antigos.
@@ -1428,6 +1447,8 @@ class indice extends clsCadastro
     $obj = new clsPmieducarTurma($this->cod_turma, $this->pessoa_logada, null,
       null, null, null, null, null, null, null, null, null, 0);
 
+    $turma = $obj->detalhe();
+
     $excluiu = $obj->excluir();
 
     if ($excluiu) {
@@ -1439,6 +1460,10 @@ class indice extends clsCadastro
         $excluiu2 = $obj->excluirTodos();
 
         if ($excluiu2) {
+
+          $auditoria = new clsModulesAuditoriaGeral("turma", $this->pessoa_logada, $this->cod_turma);
+          $auditoria->exclusao($turma);
+
           $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.';
           header('Location: educar_turma_lst.php');
           die();

@@ -27,7 +27,7 @@
  * @since     Arquivo disponível desde a versão 1.1.0
  * @version   $Id$
  */
-
+require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 /**
  * CoreExt_DataMapper abstract class.
  *
@@ -621,15 +621,38 @@ abstract class CoreExt_DataMapper
       }
     }
 
-    // Reseta o locale para o default (en_US)
-    $this->getLocale()->resetLocale();
+    @session_start();
+    $pessoa_logada = $_SESSION['id_pessoa'];
+    @session_write_close();
 
     if ($instance->isNew()) {
-      return $this->_getDbAdapter()->Consulta($this->_getSaveStatment($instance));
+      $returning = count($this->_primaryKey) == 1 && $this->_primaryKey[0] == 'id' ? ' RETURNING id;' : ' RETURNING NULL;';
+      $return = $this->_getDbAdapter()->Consulta($this->_getSaveStatment($instance). $returning);
+      $result = pg_fetch_row($return);
+      $id = $result[0];
+      if ($id) {
+        $tmpEntry = $this->find($id);
+        $info = $tmpEntry->toDataArray();
+        $auditoria = new clsModulesAuditoriaGeral($this->_tableName, $pessoa_logada, $id);
+        $auditoria->inclusao($info);
+      }
     }
-    else {
-      return $this->_getDbAdapter()->Consulta($this->_getUpdateStatment($instance));
+    elseif ($instance->id) {
+      $tmpEntry = $this->find($instance->id);
+      $oldInfo = $tmpEntry->toDataArray();
+
+      $return = $this->_getDbAdapter()->Consulta($this->_getUpdateStatment($instance));
+
+      $tmpEntry = $this->find($instance->id);
+      $newInfo = $tmpEntry->toDataArray();
+
+      $auditoria = new clsModulesAuditoriaGeral($this->_tableName, $pessoa_logada, $instance->id);
+      $auditoria->alteracao($oldInfo, $newInfo);
+    } else {
+      $return = $this->_getDbAdapter()->Consulta($this->_getUpdateStatment($instance));
     }
+
+    return $return;
 
     // Retorna o locale para o usado no restante da aplicação
     $this->getLocale()->setLocale();
@@ -661,7 +684,20 @@ abstract class CoreExt_DataMapper
    */
   public function delete($instance)
   {
-      return $this->_getDbAdapter()->Consulta($this->_getDeleteStatment($instance));
+      $tmpEntry = $this->find(is_object($instance) ? $instance->id : $instance);
+      $info = $tmpEntry->toDataArray();
+
+      $return = $this->_getDbAdapter()->Consulta($this->_getDeleteStatment($instance));
+
+
+      @session_start();
+      $pessoa_logada = $_SESSION['id_pessoa'];
+      @session_write_close();
+
+      $auditoria = new clsModulesAuditoriaGeral($this->_tableName, $pessoa_logada, $instance->id);
+      $auditoria->exclusao($info);
+
+      return $return;
   }
 
   /**

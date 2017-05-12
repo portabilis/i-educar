@@ -28,6 +28,7 @@ require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once( "include/pmieducar/geral.inc.php" );
+require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsIndexBase extends clsBase
 {
@@ -100,9 +101,9 @@ class indice extends clsCadastro
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_biblioteca_index.php"                  => "Biblioteca",
-         ""        => "{$nomeMenu} biblioteca"             
+         ""        => "{$nomeMenu} biblioteca"
     ));
-    $this->enviaLocalizacao($localizacao->montar());		
+    $this->enviaLocalizacao($localizacao->montar());
 		return $retorno;
 	}
 
@@ -124,7 +125,7 @@ class indice extends clsCadastro
 		$this->campoTexto( "nm_biblioteca", "Biblioteca", $this->nm_biblioteca, 30, 255, true );
 		/*if ($this->tombo_automatico)
 			$this->campoBoolLista("tombo_automatico", "Biblioteca possui tombo automático", $this->tombo_automatico);
-		else 
+		else
 			$this->campoBoolLista("tombo_automatico", "Biblioteca possui tombo automático", "t");*/
 //		$this->campoCheck("tombo_automatico", "Biblioteca possui tombo automático", dbBool($this->tombo_automatico));
 
@@ -271,10 +272,14 @@ class indice extends clsCadastro
 		else
 			$this->tombo_automatico = "FALSE";*/
 		$obj = new clsPmieducarBiblioteca( null, $this->ref_cod_instituicao, $this->ref_cod_escola, $this->nm_biblioteca, null, null, null, null, null, null, 1, null);
-		$cadastrou = $obj->cadastra();
+		$this->cod_biblioteca = $cadastrou = $obj->cadastra();
 		if( $cadastrou )
 		{
-		//-----------------------CADASTRA USUARIOS------------------------//
+      $obj->cod_biblioteca = $this->cod_biblioteca;
+      $biblioteca = $obj->detalhe();
+      $auditoria = new clsModulesAuditoriaGeral("biblioteca", $this->pessoa_logada, $this->cod_biblioteca);
+      $auditoria->inclusao($biblioteca);
+		  //-----------------------CADASTRA USUARIOS------------------------//
 			$this->biblioteca_usuario = unserialize( urldecode( $this->biblioteca_usuario ) );
 			if ($this->biblioteca_usuario)
 			{
@@ -315,9 +320,13 @@ class indice extends clsCadastro
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra( 591, $this->pessoa_logada, 3,  "educar_biblioteca_lst.php" );
 		$obj = new clsPmieducarBiblioteca($this->cod_biblioteca, $this->ref_cod_instituicao, $this->ref_cod_escola, $this->nm_biblioteca, null, null, null, null, null, null, 1, null);
+    $detalheAntigo = $obj->detalhe();
 		$editou = $obj->edita();
 		if( $editou )
 		{
+      $detalheAtual = $obj->detalhe();
+      $auditoria = new clsModulesAuditoriaGeral("biblioteca", $this->pessoa_logada, $this->cod_biblioteca);
+      $auditoria->alteracao($detalheAntigo, $detalheAtual);
 
 		//-----------------------EDITA USUARIOS------------------------//
 			$this->biblioteca_usuario = unserialize( urldecode( $this->biblioteca_usuario ) );
@@ -367,9 +376,12 @@ class indice extends clsCadastro
 
 
 		$obj = new clsPmieducarBiblioteca($this->cod_biblioteca, null,null,null,null,null,null,null,null,null, 0);
-		$excluiu = $obj->excluir();
+		$detalhe = $obj->detalhe();
+    $excluiu = $obj->excluir();
 		if( $excluiu )
 		{
+      $auditoria = new clsModulesAuditoriaGeral("biblioteca", $this->pessoa_logada, $this->cod_biblioteca);
+      $auditoria->exclusao($detalhe);
 			$this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
 			header( "Location: educar_biblioteca_lst.php" );
 			die();

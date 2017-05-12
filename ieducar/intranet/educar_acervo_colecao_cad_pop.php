@@ -28,6 +28,7 @@ require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once( "include/pmieducar/geral.inc.php" );
+require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsIndexBase extends clsBase
 {
@@ -78,7 +79,7 @@ class indice extends clsCadastro
 	{
 		echo "<script>window.onload=function(){parent.EscondeDiv('LoadImprimir')}</script>";
 		$this->campoOculto("ref_cod_biblioteca", $this->ref_cod_biblioteca);
-		
+
 		$this->campoTexto( "nm_colecao", "Cole&ccedil;&atilde;o", $this->nm_colecao, 30, 255, true );
 		$this->campoMemo( "descricao", "Descri&ccedil;&atilde;o", $this->descricao, 60, 5, false );
 
@@ -95,10 +96,14 @@ class indice extends clsCadastro
 
 
 		$obj = new clsPmieducarAcervoColecao( $this->cod_acervo_colecao, $this->pessoa_logada, $this->pessoa_logada, $this->nm_colecao, $this->descricao, $this->data_cadastro, $this->data_exclusao, $this->ativo, $this->ref_cod_biblioteca );
-		$cadastrou = $obj->cadastra();
+		$this->cod_acervo_colecao = $cadastrou = $obj->cadastra();
 		//$cadastrou = 5;
 		if( $cadastrou )
 		{
+      $obj->cod_acervo_colecao = $this->cod_acervo_colecao;
+      $acervo_colecao = $obj->detalhe();
+      $auditoria = new clsModulesAuditoriaGeral("acervo_colecao", $this->pessoa_logada, $this->cod_acervo_colecao);
+      $auditoria->inclusao($acervo_colecao);
 			$this->mensagem .= "Cadastro efetuado com sucesso.<br>";
 			//header( "Location: educar_acervo_colecao_lst.php" );
 			echo "<script>

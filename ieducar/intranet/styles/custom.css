@@ -946,7 +946,7 @@ td.area-conhecimento-destaque {
   font-family: "Open Sans";
   font-size: 12px;
   padding: 8px;
-  vertical-align: middle;
+  vertical-align: top;
 }
 
 .tableDetalhe .formmdtd,
@@ -976,6 +976,23 @@ table#matriculas select {
     color: #47728f;
     border-color: #ccdce6;
 }
+
+
+table.tablelistagem.auditoria-tab .formdktd {
+    background-color: #ccdce6 !important;
+    font-size: 14px;
+    padding: 5px;
+}
+
+table.tablelistagem.auditoria-tab tr td.formlttd {
+    padding: 4px;
+    font-size: 12px;
+}
+
+table.tablelistagem.auditoria-tab tr:nth-child(2n+1) td.formlttd{
+  background-color: rgb(233, 239, 247) !important;
+}
+
 
 /**************************************
 **********TABELAS DE ADIÇÃO************
