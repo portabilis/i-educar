@@ -205,7 +205,7 @@ class indice extends clsCadastro
 		$excluiu = $obj->excluir();
 		if( $excluiu )
 		{
-			$auditoria = new clsModulesAuditoriaGeral("aluno_beneficio", $this->pessoa_logada, $this->cod_categoria_nivel);
+			$auditoria = new clsModulesAuditoriaGeral("categoria_nivel", $this->pessoa_logada, $this->cod_categoria_nivel);
 			$auditoria->exclusao($categoriaNivel);
 
 			$this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
