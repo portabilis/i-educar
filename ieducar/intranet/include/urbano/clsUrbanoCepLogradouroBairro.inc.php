@@ -393,6 +393,8 @@ class clsUrbanoCepLogradouroBairro
 	{
 		if( is_numeric( $this->idbai ) && is_numeric( $this->idlog ) && is_numeric( $this->cep ) )
 		{
+			$this->cep == '' ? 0 : $this->cep;
+			var_dump($this->cep);die;
 			$db = new clsBanco();
 			$set = "";
 			if( is_numeric( $this->idpes_rev ) )
@@ -444,6 +446,7 @@ class clsUrbanoCepLogradouroBairro
 		return false;
 	}
 	function editaCepBairro($cep, $idBairro){
+		$cep == '' ? $cep = 0 : $cep = $cep;
 		$db = new clsBanco();
 		$db->Consulta("UPDATE {$this->_tabela} SET idbai = '{$this->idbai}', cep = '{$this->cep}' WHERE idbai = $idBairro AND idlog = '{$this->idlog}' AND cep = '$cep'");
 		return true;
