@@ -44,6 +44,34 @@ class clsIndex extends clsBase
 
 class indice extends clsListagem
 {
+	/**
+	 * Referencia pega da session para o idpes do usuario atual
+	 *
+	 * @var int
+	 */
+	var $pessoa_logada;
+
+	/**
+	 * Titulo no topo da pagina
+	 *
+	 * @var int
+	 */
+	var $titulo;
+
+	/**
+	 * Quantidade de registros a ser apresentada em cada pagina
+	 *
+	 * @var int
+	 */
+	var $limite;
+
+	/**
+	 * Inicio dos registros a serem exibidos (limit)
+	 *
+	 * @var int
+	 */
+	var $offset;
+
 
 	var $rotina;
 
@@ -66,19 +94,21 @@ class indice extends clsListagem
 		$detalhe = $obj_usuario->detalhe();
 
 		// Paginador
-		$limite = 10;
-		$iniciolimit = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$limite-$limite: 0;
+		$this->limite = 10;
+		$this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
 		$this->addCabecalhos( array( "Matrícula", "Rotina", "Operação", "Valor antigo", "Valor novo", "Data") );
 
 		$auditoria = new clsModulesAuditoriaGeral();
 		$auditoria->setOrderby( "data_hora DESC" );
-		$auditoria = $auditoria->lista($this->rotina,
-																	 $this->usuario,
-																   Portabilis_Date_Utils::brToPgSQL($this->data_inicial),
-																   Portabilis_Date_Utils::brToPgSQL($this->data_final));
+		$auditoria->setLimite( $this->limite, $this->offset );
+		$auditoriaLst = $auditoria->lista($this->rotina,
+									   $this->usuario,
+									   Portabilis_Date_Utils::brToPgSQL($this->data_inicial),
+									   Portabilis_Date_Utils::brToPgSQL($this->data_final));
+		$total = $auditoria->_total;
 
-		foreach ($auditoria as $a) {
+		foreach ($auditoriaLst as $a) {
 
 			$valorAntigo = $this->transformaJsonEmTabela($a["valor_antigo"]);
 			$valorNovo = $this->transformaJsonEmTabela($a["valor_novo"]);
@@ -100,7 +130,7 @@ class indice extends clsListagem
 			));
 		}
 
-		$this->addPaginador2( "educar_auditoria_geral_lst.php", $total, $_GET, $this->nome, $limite );
+		$this->addPaginador2( "educar_auditoria_geral_lst.php", $total, $_GET, $this->nome, $this->limite );
 
 		$this->largura = "100%";
 

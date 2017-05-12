@@ -46,6 +46,7 @@ class clsModulesAuditoriaGeral
   const OPERACAO_ALTERACAO = 2;
   const OPERACAO_EXCLUSAO = 3;
 
+  var $_total;
   var $_campos_lista;
   var $_tabela;
 
@@ -229,7 +230,7 @@ class clsModulesAuditoriaGeral
     $resultado = array();
 
     $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela} ";
-    $sql .= $filtros . $this->getOrderby();
+    $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
     $this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} {$filtros}" );
 
@@ -258,6 +259,26 @@ class clsModulesAuditoriaGeral
       return $resultado;
     }
     return false;
+  }
+
+  function setLimite( $intLimiteQtd, $intLimiteOffset = null )
+  {
+    $this->_limite_quantidade = $intLimiteQtd;
+    $this->_limite_offset = $intLimiteOffset;
+  }
+
+  function getLimite()
+  {
+    if( is_numeric( $this->_limite_quantidade ) )
+    {
+      $retorno = " LIMIT {$this->_limite_quantidade}";
+      if( is_numeric( $this->_limite_offset ) )
+      {
+        $retorno .= " OFFSET {$this->_limite_offset} ";
+      }
+      return $retorno;
+    }
+    return "";
   }
 
   function setOrderby($strNomeCampo)
