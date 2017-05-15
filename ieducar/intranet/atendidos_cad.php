@@ -1304,7 +1304,7 @@ class indice extends clsCadastro
   protected function createOrUpdatePessoa($pessoaId = null) {
     $pessoa        = new clsPessoa_();
     $pessoa->idpes = $pessoaId;
-    $pessoa->nome  = addslashes($this->nm_pessoa);
+    $pessoa->nome  = $this->nm_pessoa;
     $pessoa->email = addslashes($this->email);
 
     $sql = "select 1 from cadastro.pessoa WHERE idpes = $1 limit 1";

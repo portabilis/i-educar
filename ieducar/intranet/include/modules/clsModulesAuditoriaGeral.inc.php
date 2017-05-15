@@ -109,6 +109,7 @@ class clsModulesAuditoriaGeral
     $dados = $this->removeKeyNaoNumerica($dados);
     $dados = $this->removeKeysDesnecessarias($dados);
     $dados = json_encode($dados);
+    $dados = str_replace("'", "''", $dados);
     return $dados;
   }
 
