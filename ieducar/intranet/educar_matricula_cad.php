@@ -758,7 +758,9 @@ class indice extends clsCadastro
       $det_matricula = $obj_matricula->detalhe();
 
       // Caso a solicitação em aberto seja para a mesma série selecionada
-      if ($det_matricula['ref_ref_cod_serie'] == $this->ref_cod_serie) {
+      if ($det_matricula['ref_ref_cod_serie'] == $this->ref_cod_serie &&
+          $det_matricula['ano'] == $this->ano) {
+
         $cod_transferencia = $transferencia['cod_transferencia_solicitacao'];
         $cod_matricula_transferencia = $det_matricula['cod_matricula'];
 
