@@ -89,7 +89,7 @@ class MatriculaController extends ApiCoreController
                end)
              end)
         and (case when aprovado = 4 then not exists (select * from pmieducar.matricula m where m.ativo = 1 and m.ano = matricula.ano and m.ref_cod_aluno = aluno.cod_aluno and m.ref_ref_cod_escola = matricula.ref_ref_cod_escola and m.aprovado <> 4 ) else true end)
-        and (matricula.cod_matricula like $1||'%' or matricula.ref_cod_aluno like $1||'%')
+        and (matricula.cod_matricula::varchar like $1||'%' or matricula.ref_cod_aluno::varchar like $1||'%')
         and (select case when $2 != 0 then matricula.ref_ref_cod_escola = $2 else true end)
         and (select case when $3 != 0 then matricula.ano = $3 else true end) limit 15";
   }
@@ -316,7 +316,7 @@ class MatriculaController extends ApiCoreController
                    observacao = NULL
              WHERE cod_matricula = $1";
 
-    $this->fetchPreparedQuery($sql, $params); 
+    $this->fetchPreparedQuery($sql, $params);
     $this->messenger->append('Saída da escola cancelada.', 'success');
   }
 
@@ -537,7 +537,7 @@ class MatriculaController extends ApiCoreController
   protected function getMatriculasDependencia(){
 
     if (!$this->canGetMatriculasDependencia()){
-      return false; 
+      return false;
     }
     $ano = $this->getRequest()->ano;
     $params = $ano;

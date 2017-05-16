@@ -86,6 +86,10 @@ class indice extends clsListagem
 	var $ref_cod_instituicao;
 	var $ref_cod_escola;
 	var $cod_biblioteca;
+	var $situacao;
+
+	const TODOS = 0;
+	const EM_ATRASO = 1;
 
 	function Gerar()
 	{
@@ -97,8 +101,6 @@ class indice extends clsListagem
 
 		foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
 			$this->$var = ( $val === "" ) ? null: $val;
-
-
 
 		$lista_busca = array(
 			"Cliente",
@@ -122,6 +124,11 @@ class indice extends clsListagem
 
 		$this->campoTexto("nm_obra","Obra", $this->nm_obra, 30, 255, false, false, false, "", "<img border=\"0\" onclick=\"pesquisa_obra();\" id=\"ref_cod_exemplar_lupa\" name=\"ref_cod_exemplar_lupa\" src=\"imagens/lupa.png\"\/>");
 		$this->campoOculto("ref_cod_acervo", $this->ref_cod_acervo);
+
+		$situacoes = array(TODOS => 'Todos',
+											 EM_ATRASO => 'Em atraso');
+
+		$this->campoLista("situacao", "Situação", $situacoes, $this->situacao);
 
 		$this->campoNumero("ref_cod_exemplar","Código exemplar", $this->ref_cod_exemplar, 15, 10);
 		$this->campoNumero("tombo","Tombo", $this->tombo, 15, 10);
@@ -147,6 +154,10 @@ class indice extends clsListagem
 		$obj_exemplar_emprestimo = new clsPmieducarExemplarEmprestimo();
 		$obj_exemplar_emprestimo->setOrderby( "data_retirada ASC" );
 		$obj_exemplar_emprestimo->setLimite( $this->limite, $this->offset );
+
+		if ($this->situacao == EM_ATRASO) {
+			$obj_exemplar_emprestimo->em_atraso = true;
+		}
 
 		$lista = $obj_exemplar_emprestimo->lista(
 			null,

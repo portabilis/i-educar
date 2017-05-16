@@ -322,9 +322,9 @@ class clsPmieducarMatriculaOcorrenciaDisciplinar
 			$valores .= "{$gruda}'1'";
 			$gruda = ", ";
 
-			$this->cod_ocorrencia_disciplinar = $db->CampoUnico("SELECT nextval('ocorrencia_disciplinar_seq')");
+			// $this->cod_ocorrencia_disciplinar = $db->CampoUnico("SELECT nextval('ocorrencia_disciplinar_seq')");
 			$db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
-			return $this->cod_ocorrencia_disciplinar;
+			return $db->InsertId( "pmieducar.ocorrencia_disciplinar_seq");
 		}
 		return false;
 	}
@@ -513,7 +513,14 @@ class clsPmieducarMatriculaOcorrenciaDisciplinar
 	 */
 	function detalhe()
 	{
-		if( is_numeric( $this->ref_cod_matricula ) && is_numeric( $this->ref_cod_tipo_ocorrencia_disciplinar ) && is_numeric( $this->sequencial ) )
+		if (is_numeric($this->cod_ocorrencia_disciplinar)) {
+
+			$db = new clsBanco();
+			$db->Consulta( "SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE cod_ocorrencia_disciplinar = '{$this->cod_ocorrencia_disciplinar}' AND ativo=1" );
+			$db->ProximoRegistro();
+			return $db->Tupla();
+
+		}else if( is_numeric( $this->ref_cod_matricula ) && is_numeric( $this->ref_cod_tipo_ocorrencia_disciplinar ) && is_numeric( $this->sequencial ) )
 		{
 
 		$db = new clsBanco();

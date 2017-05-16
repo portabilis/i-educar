@@ -171,7 +171,7 @@ class indice extends clsCadastro
 		$this->preco = str_replace(".","",$this->preco);
 		$this->preco = str_replace(",",".",$this->preco);
 		$this->data_aquisicao = dataToBanco($this->data_aquisicao);
-    
+
 
 		for ($i = 0; $i < $this->qtd_livros; $i++)
 		{
@@ -210,7 +210,7 @@ class indice extends clsCadastro
 
 		$this->preco = str_replace(".","",$this->preco);
 		$this->preco = str_replace(",",".",$this->preco);
-		
+
 		$obj_temp = new clsPmieducarExemplar();
 			$tombo_valido = $obj_temp->retorna_tombo_valido($this->ref_cod_biblioteca,$this->cod_exemplar,$this->tombo);
 			if (!$tombo_valido){

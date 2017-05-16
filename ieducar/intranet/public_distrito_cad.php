@@ -33,6 +33,8 @@ require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/public/geral.inc.php';
 require_once 'include/public/clsPublicDistrito.inc.php';
+require_once ("include/pmieducar/geral.inc.php");
+require_once ("include/modules/clsModulesAuditoriaGeral.inc.php");
 
 /**
  * clsIndexBase class.
@@ -216,6 +218,13 @@ class indice extends clsCadastro
 
     $cadastrou = $obj->cadastra();
     if ($cadastrou) {
+
+      $enderecamento = new clsPublicDistrito();
+      $enderecamento->iddis = $cadastrou;
+      $enderecamento = $enderecamento->detalhe();
+      $auditoria = new clsModulesAuditoriaGeral("Endereçamento de Distrito", $this->pessoa_logada, $cadastrou);
+      $auditoria->inclusao($enderecamento);
+
       $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
       header('Location: public_distrito_lst.php');
       die();
@@ -233,12 +242,21 @@ class indice extends clsCadastro
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
+    $enderecamentoDetalhe = new clsPublicDistrito(null, null, $this->iddis);
+    $enderecamentoDetalhe->cadastrou = $this->iddis;
+    $enderecamentoDetalheAntes = $enderecamentoDetalhe->detalhe();
+
     $obj = new clsPublicDistrito($this->idmun, NULL, $this->iddis, $this->nome,
       $this->pessoa_logada, NULL, 'U', NULL, NULL, 'I', NULL, 9,
       $this->cod_ibge);
 
     $editou = $obj->edita();
     if ($editou) {
+
+      $enderecamentoDetalheDepois = $enderecamentoDetalhe->detalhe();
+      $auditoria = new clsModulesAuditoriaGeral("Endereçamento de Distrito", $this->pessoa_logada, $this->iddis);
+      $auditoria->alteracao($enderecamentoDetalheAntes, $enderecamentoDetalheDepois);
+
       $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
       header('Location: public_distrito_lst.php');
       die();

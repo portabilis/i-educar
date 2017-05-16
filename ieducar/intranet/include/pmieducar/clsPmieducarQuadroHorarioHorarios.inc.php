@@ -459,16 +459,27 @@ class clsPmieducarQuadroHorarioHorarios
    * Retorna uma lista de registros filtrados de acordo com os parâmetros.
    * @return array
    */
-  function lista($int_ref_cod_quadro_horario = NULL,
-    $int_ref_ref_cod_serie = NULL, $int_ref_ref_cod_escola = NULL,
-    $int_ref_ref_cod_disciplina = NULL, $int_ref_ref_cod_turma = NULL,
-    $int_sequencial = NULL, $int_ref_cod_instituicao_substituto = NULL,
-    $int_ref_cod_instituicao_servidor = NULL, $int_ref_servidor_substituto = NULL,
-    $int_ref_servidor = NULL, $time_hora_inicial_ini = NULL,
-    $time_hora_inicial_fim = NULL, $time_hora_final_ini = NULL,
-    $time_hora_final_fim = NULL, $date_data_cadastro_ini = NULL,
-    $date_data_cadastro_fim = NULL, $date_data_exclusao_ini = NULL,
-    $date_data_exclusao_fim = NULL, $int_ativo = NULL, $int_dia_semana = NULL, $bool_filtrar_ano = false)
+  function lista($int_ref_cod_quadro_horario         = NULL,
+                 $int_ref_ref_cod_serie              = NULL,
+                 $int_ref_ref_cod_escola             = NULL,
+                 $int_ref_ref_cod_disciplina         = NULL,
+                 $int_ref_ref_cod_turma              = NULL,
+                 $int_sequencial                     = NULL,
+                 $int_ref_cod_instituicao_substituto = NULL,
+                 $int_ref_cod_instituicao_servidor   = NULL,
+                 $int_ref_servidor_substituto        = NULL,
+                 $int_ref_servidor                   = NULL,
+                 $time_hora_inicial_ini              = NULL,
+                 $time_hora_inicial_fim              = NULL,
+                 $time_hora_final_ini                = NULL,
+                 $time_hora_final_fim                = NULL,
+                 $date_data_cadastro_ini             = NULL,
+                 $date_data_cadastro_fim             = NULL,
+                 $date_data_exclusao_ini             = NULL,
+                 $date_data_exclusao_fim             = NULL,
+                 $int_ativo                          = NULL,
+                 $int_dia_semana                     = NULL,
+                 $bool_filtrar_ano                   = false)
   {
     $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela} qhh";
     $filtros = '';
@@ -576,8 +587,12 @@ class clsPmieducarQuadroHorarioHorarios
 
     //Só trás horários do ultimo quadro de horários
     if ($bool_filtrar_ano) {
-      $filtros .= "{$whereAnd} EXISTS (SELECT qh.ano FROM pmieducar.quadro_horario qh WHERE qh.cod_quadro_horario = qhh.ref_cod_quadro_horario AND qh.ano =
-                                        (SELECT max(ano) FROM quadro_horario WHERE quadro_horario.cod_quadro_horario = qh.cod_quadro_horario))";
+      $filtros .= "{$whereAnd} EXISTS (SELECT qh.ano
+                                         FROM pmieducar.quadro_horario qh
+                                        WHERE qh.cod_quadro_horario = qhh.ref_cod_quadro_horario
+                                          AND qh.ano = (SELECT max(ano)
+                                                          FROM pmieducar.escola_ano_letivo eal
+                                                         WHERE eal.ref_cod_escola = qhh.ref_cod_escola))";
       $whereAnd = ' AND ';
     }
 

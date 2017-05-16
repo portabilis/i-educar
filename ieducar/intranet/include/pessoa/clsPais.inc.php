@@ -144,7 +144,7 @@ class clsPais
 		$whereAnd = "WHERE ";
 		if( is_string( $str_nome ) )
 		{
-			$where .= "{$whereAnd}nome LIKE '%$nome%'";
+			$where .= "{$whereAnd} translate(upper(nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$nome}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
 			$whereAnd = " AND ";
 		}
 		if( is_numeric( $int_idpais ) )

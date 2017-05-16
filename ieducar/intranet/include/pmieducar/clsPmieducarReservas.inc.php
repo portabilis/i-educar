@@ -31,6 +31,7 @@
 */
 
 require_once( "include/pmieducar/geral.inc.php" );
+require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsPmieducarReservas
 {
@@ -43,6 +44,7 @@ class clsPmieducarReservas
 	var $data_retirada;
 	var $ref_cod_exemplar;
 	var $ativo;
+  var $pessoa_logada;
 
 	// propriedades padrao
 
@@ -113,6 +115,10 @@ class clsPmieducarReservas
 		$db = new clsBanco();
 		$this->_schema = "pmieducar.";
 		$this->_tabela = "{$this->_schema}reservas";
+
+    @session_start();
+    $this->pessoa_logada = $_SESSION['id_pessoa'];
+    session_write_close();
 
 		$this->_campos_lista = $this->_todos_campos = "r.cod_reserva, r.ref_usuario_libera, r.ref_usuario_cad, r.ref_cod_cliente, r.data_reserva, r.data_prevista_disponivel, r.data_retirada, r.ref_cod_exemplar, r.ativo";
 
@@ -316,7 +322,13 @@ class clsPmieducarReservas
 
 
 			$db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
-			return $db->InsertId( "{$this->_tabela}_cod_reserva_seq");
+			$this->cod_reserva = $db->InsertId( "{$this->_tabela}_cod_reserva_seq");
+      if($this->cod_reserva){
+        $detalhe = $this->detalhe();
+        $auditoria = new clsModulesAuditoriaGeral("reservas", $this->pessoa_logada, $this->cod_reserva);
+        $auditoria->inclusao($detalhe);
+      }
+      return $this->cod_reserva;
 		}
 		return false;
 	}
@@ -378,7 +390,10 @@ class clsPmieducarReservas
 
 			if( $set )
 			{
+        $detalheAntigo = $this->detalhe();
 				$db->Consulta( "UPDATE {$this->_tabela} SET $set WHERE cod_reserva = '{$this->cod_reserva}'" );
+        $auditoria = new clsModulesAuditoriaGeral("reservas", $this->pessoa_logada, $this->cod_reserva);
+        $auditoria->alteracao($detalheAntigo, $this->detalhe());
 				return true;
 			}
 		}

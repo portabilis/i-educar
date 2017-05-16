@@ -1,4 +1,6 @@
 <?php
+error_reporting(E_ERROR);
+ini_set("display_errors", 1);
 /**
  *
  *	@author Prefeitura Municipal de Itajaí
@@ -24,7 +26,7 @@
  *	02111-1307, USA.
  *
  */
- 
+
 /**
  * @author Adriano Erik Weiguert Nagasava
  */
@@ -32,6 +34,7 @@ require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once( "include/pmieducar/geral.inc.php" );
+require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsIndexBase extends clsBase
 {
@@ -118,7 +121,7 @@ class indice extends clsCadastro
 
 			$this->campoOculto("cod_cliente", $this->cod_cliente);
 			$this->campoOculto("ref_cod_biblioteca", $this->ref_cod_biblioteca);
-			
+
 			if ( $this->ref_idpes ) {
 
 				$objTemp = new clsPessoaFisica( $this->ref_idpes );
@@ -133,7 +136,7 @@ class indice extends clsCadastro
 				$todos_motivos = "";
 				$obj_motivo_suspensao = new clsPmieducarMotivoSuspensao();
 				$lst_motivo_suspensao = $obj_motivo_suspensao->listaClienteBiblioteca( $this->cod_cliente );
-				if ( $lst_motivo_suspensao ) 
+				if ( $lst_motivo_suspensao )
 				{
 					foreach ( $lst_motivo_suspensao as $motivo_suspensao ) {
 						$todos_motivos .= "descricao[descricao.length] = new Array( {$motivo_suspensao["cod_motivo_suspensao"]}, '{$motivo_suspensao["descricao"]}' );\n";
@@ -171,7 +174,7 @@ class indice extends clsCadastro
 							}
 						 </script>";
 				}
-				else 
+				else
 				{
 					$this->campoLista( "cod_motivo_suspensao", "Motivo da Suspensão", array("" => "Não há motivo cadastrado"), "", "", false, "", "", true, true );
 				}
@@ -196,16 +199,21 @@ class indice extends clsCadastro
 		$obj_permissoes->permissao_cadastra( 603, $this->pessoa_logada, 11,  "educar_cliente_lst.php" );
 
 		$obj = new clsPmieducarClienteSuspensao( null, $this->cod_cliente, $this->cod_motivo_suspensao, null, $this->pessoa_logada, $this->dias, null, null );
-		
+
 		// Caso suspensão tenha sido efetuada, envia para página de detalhes
-		if ($obj->cadastra()) 
+		if ($sequencial = $obj->cadastra())
 		{
+      $obj->sequencial = $sequencial;
+      $clienteSuspensao = $obj->detalhe();
+      $auditoria = new clsModulesAuditoriaGeral("cliente_suspensao", $this->pessoa_logada);
+      $auditoria->inclusao($clienteSuspensao);
+
 			$this->mensagem .= "Suspens&atilde;o efetuada com sucesso.<br>";
 			header("Location: educar_cliente_det.php?cod_cliente={$this->cod_cliente}&ref_cod_biblioteca={$this->ref_cod_biblioteca}");
 			die();
 			return true;
 		}
-		
+
 		$this->mensagem = "Suspens&atilde;o n&atilde;o realizada.<br>";
 		echo "<!--\nErro ao cadastrar clsPmieducarClienteSuspensao\nvalores obrigatorios\nis_numeric( $this->ref_cod_cliente_tipo ) && is_numeric( $this->ref_usuario_cad ) && is_numeric( $this->ref_idpes ) && is_numeric( $this->login )\n-->";
 		return false;
@@ -220,7 +228,11 @@ class indice extends clsCadastro
 		$obj_permissoes->permissao_cadastra( 603, $this->pessoa_logada, 11,  "educar_cliente_lst.php" );
 
 		$obj_suspensao = new clsPmieducarClienteSuspensao( $this->sequencial, $this->cod_cliente, null, $this->pessoa_logada, null, null, null, null );
-		if ( $obj_suspensao->edita() ) {
+		$detalheAntigo = $obj_suspensao->detalhe();
+    if ( $obj_suspensao->edita() ) {
+      $detalheAtual = $obj_suspensao->detalhe();
+      $auditoria = new clsModulesAuditoriaGeral("cliente_suspensao", $this->pessoa_logada);
+      $auditoria->alteracao($detalheAntigo, $detalheAtual);
 			$this->mensagem .= "Libera&ccedil;&atilde;o efetuada com sucesso.<br>";
 			header( "Location: educar_cliente_lst.php" );
 			die();
@@ -244,9 +256,12 @@ class indice extends clsCadastro
 
 
 		$obj = new clsPmieducarCliente($this->cod_cliente, $this->ref_cod_cliente_tipo, $this->pessoa_logada, $this->pessoa_logada, $this->ref_idpes, $this->login, $this->senha, $this->data_cadastro, $this->data_exclusao, 0);
+    $detalhe = $obj->detalhe();
 		$excluiu = $obj->excluir();
 		if( $excluiu )
 		{
+      $auditoria = new clsModulesAuditoriaGeral("cliente", $this->pessoa_logada, $this->cod_cliente);
+      $auditoria->exclusao($detalhe);
 			$this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
 			header( "Location: educar_cliente_lst.php?cod_cliente={$this->cod_cliente}" );
 			die();

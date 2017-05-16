@@ -311,7 +311,7 @@ class clsPmieducarClienteSuspensao
 			}
 
 			$db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
-			return true;
+			return $sequencial;
 		}
 		return false;
 	}

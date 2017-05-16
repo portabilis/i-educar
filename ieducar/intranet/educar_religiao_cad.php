@@ -28,6 +28,7 @@ require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once( "include/pmieducar/geral.inc.php" );
+require_once "include/modules/clsModulesAuditoriaGeral.inc.php";
 
 class clsIndexBase extends clsBase
 {
@@ -89,15 +90,15 @@ class indice extends clsCadastro
 			}
 		}
 		$this->url_cancelar = ($retorno == "Editar") ? "educar_religiao_det.php?cod_religiao={$registro["cod_religiao"]}" : "educar_religiao_lst.php";
-		
+
 		$nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
         $localizacao = new LocalizacaoSistema();
         $localizacao->entradaCaminhos( array(
              $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
 	         "educar_pessoas_index.php"          => "Pessoas",
-             ""        => "{$nomeMenu} religi&atilde;o"             
+             ""        => "{$nomeMenu} religi&atilde;o"
         ));
-        $this->enviaLocalizacao($localizacao->montar());		
+        $this->enviaLocalizacao($localizacao->montar());
 
 		$this->nome_url_cancelar = "Cancelar";
 		return $retorno;
@@ -127,6 +128,12 @@ class indice extends clsCadastro
 		$cadastrou = $obj->cadastra();
 		if( $cadastrou )
 		{
+			$religiao = new clsPmieducarReligiao($cadastrou);
+			$religiao = $religiao->detalhe();
+
+			$auditoria = new clsModulesAuditoriaGeral("religiao", $this->pessoa_logada, $cadastrou);
+			$auditoria->inclusao($religiao);
+
 			$this->mensagem .= "Cadastro efetuado com sucesso.<br>";
 			header( "Location: educar_religiao_lst.php" );
 			die();
@@ -144,10 +151,18 @@ class indice extends clsCadastro
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
 
+		$religiaoDetalhe = new clsPmieducarReligiao($this->cod_religiao);
+		$religiaoDetalheAntes = $religiaoDetalhe->detalhe();
+
 		$obj = new clsPmieducarReligiao($this->cod_religiao, $this->pessoa_logada, $this->pessoa_logada, $this->nm_religiao, $this->data_cadastro, $this->data_exclusao, $this->ativo);
 		$editou = $obj->edita();
 		if( $editou )
 		{
+			$religiaoDetalheDepois = $religiaoDetalhe->detalhe();
+
+			$auditoria = new clsModulesAuditoriaGeral("religiao", $this->pessoa_logada, $this->cod_religiao);
+			$auditoria->alteracao($religiaoDetalheAntes, $religiaoDetalheDepois);
+
 			$this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
 			header( "Location: educar_religiao_lst.php" );
 			die();
@@ -166,9 +181,13 @@ class indice extends clsCadastro
 		@session_write_close();
 
 		$obj = new clsPmieducarReligiao($this->cod_religiao, $this->pessoa_logada, $this->pessoa_logada, $this->nm_religiao, $this->data_cadastro, $this->data_exclusao, 0);
+		$detalhe = $obj->detalhe();
 		$excluiu = $obj->excluir();
 		if( $excluiu )
 		{
+			$auditoria = new clsModulesAuditoriaGeral("religiao", $this->pessoa_logada, $this->cod_religiao);
+			$auditoria->exclusao($detalhe);
+
 			$this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
 			header( "Location: educar_religiao_lst.php" );
 			die();

@@ -35,6 +35,7 @@ require_once ("include/clsBanco.inc.php");
 require_once( "include/pmieducar/geral.inc.php" );
 require_once 'Portabilis/View/Helper/Application.php';
 require_once 'Portabilis/Utils/Database.php';
+require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsIndexBase extends clsBase
 {
@@ -588,7 +589,7 @@ class indice extends clsCadastro
 					}
 					else
 					{
-						die( "Usuï¿½rio nï¿½o ï¿½ do nivel poli-institucional e nï¿½o possui uma instituiï¿½ï¿½o" );
+						die( "Usuário não é do nivel poli-institucional e não possui uma instituição" );
 					}
 				}
 
@@ -775,7 +776,7 @@ class indice extends clsCadastro
 						}
 						else
 						{
-							die( "Usuï¿½rio nï¿½o ï¿½ do nivel poli-institucional e nï¿½o possui uma instituiï¿½ï¿½o" );
+							die( "Usuário não é do nivel poli-institucional e não possui uma instituição" );
 						}
 					}
 
@@ -1720,10 +1721,16 @@ if(!$this->isEnderecoExterno){
 					$obj->ato_criacao = $this->ato_criacao;
 					$obj->ato_autorizativo = $this->ato_autorizativo;
 					$obj->ref_idpes_secretario_escolar = $this->secretario_id;
-					$cadastrou1 = $obj->cadastra();
+					$cod_escola = $cadastrou1 = $obj->cadastra();
 
 					if( $cadastrou1 )
 					{
+
+            $escola = new clsPmieducarEscola($cod_escola);
+            $escola = $escola->detalhe();
+            $auditoria = new clsModulesAuditoriaGeral("escola", $this->pessoa_logada, $cod_escola);
+            $auditoria->inclusao($escola);
+
 						$objTelefone = new clsPessoaTelefone( $this->ref_idpes);
 						$objTelefone->excluiTodos();
 						$objTelefone = new clsPessoaTelefone( $this->ref_idpes, 1, str_replace( "-", "", $this->p_telefone_1 ), $this->p_ddd_telefone_1 );
@@ -1927,10 +1934,15 @@ if(!$this->isEnderecoExterno){
 			$obj->ato_criacao = $this->ato_criacao;
 			$obj->ato_autorizativo = $this->ato_autorizativo;
 			$obj->ref_idpes_secretario_escolar = $this->secretario_id;
-			$cadastrou = $obj->cadastra();
+			$cod_escola = $cadastrou = $obj->cadastra();
 
 			if ($cadastrou)
 			{
+        $escola = new clsPmieducarEscola($cod_escola);
+        $escola = $escola->detalhe();
+        $auditoria = new clsModulesAuditoriaGeral("escola", $this->pessoa_logada, $cod_escola);
+        $auditoria->inclusao($escola);
+
 				$obj2 = new clsPmieducarEscolaComplemento( $cadastrou, null, $this->pessoa_logada, idFederal2int( $this->cep ),$this->numero,$this->complemento,$this->p_email,$this->fantasia,$this->cidade,$this->bairro,$this->logradouro,$this->p_ddd_telefone_1, $this->p_telefone_1,$this->p_ddd_telefone_fax, $this->p_telefone_fax,null,null,1);
 				$cadastrou2 = $obj2->cadastra();
 				if ($cadastrou2)
@@ -1989,6 +2001,9 @@ if(!$this->isEnderecoExterno){
 
     $this->bloquear_lancamento_diario_anos_letivos_encerrados = is_null($this->bloquear_lancamento_diario_anos_letivos_encerrados) ? 0 : 1;
     $this->utiliza_regra_diferenciada = !is_null($this->utiliza_regra_diferenciada);
+
+    $obj = new clsPmieducarEscola($this->cod_escola);
+    $escolaDetAntigo = $obj->detalhe();
 
 //
 //		echo "<br>cep: ".$this->cep;
@@ -2111,6 +2126,12 @@ if(!$this->isEnderecoExterno){
 			$obj->ref_idpes_secretario_escolar = $this->secretario_id;
 			$editou = $obj->edita();
 
+      if($editou){
+        $escolaDetAtual = $obj->detalhe();
+        $auditoria = new clsModulesAuditoriaGeral("escola", $this->pessoa_logada, $this->cod_escola);
+        $auditoria->alteracao($escolaDetAntigo, $escolaDetAtual);
+      }
+
 		}
 		else
 		{
@@ -2224,9 +2245,14 @@ if(!$this->isEnderecoExterno){
 			$obj->ato_criacao = $this->ato_criacao;
 			$obj->ato_autorizativo = $this->ato_autorizativo;
 			$obj->ref_idpes_secretario_escolar = $this->secretario_id;
-			$editou = $obj->cadastra();
-			$this->cod_escola = $editou;
+			$this->cod_escola = $editou = $obj->cadastra();
 
+      if($this->cod_escola){
+        $obj = new clsPmieducarEscola($this->cod_escola);
+        $escolaDetAtual = $obj->detalhe();
+        $auditoria = new clsModulesAuditoriaGeral("escola", $this->pessoa_logada, $this->cod_escola);
+        $auditoria->inclusao($escolaDetAtual);
+      }
 		}
 		if( $editou )
 		{
@@ -2458,9 +2484,12 @@ if(!$this->isEnderecoExterno){
 		$obj_permissoes->permissao_cadastra( 561, $this->pessoa_logada, 3, "educar_escola_lst.php" );
 
 		$obj = new clsPmieducarEscola( $this->cod_escola,null,$this->pessoa_logada,null,null,null,null,null,null,null,0 );
+    $escola = $obj->detalhe();
 		$excluiu = $obj->excluir();
 		if( $excluiu )
 		{
+      $auditoria = new clsModulesAuditoriaGeral("escola", $this->pessoa_logada, $this->cod_escola);
+      $auditoria->exclusao($escola);
 			$this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
 			header( "Location: educar_escola_lst.php" );
 			die();
@@ -2537,6 +2566,8 @@ $pagina->addForm( $miolo );
 $pagina->MakeAll();
 ?>
 <script>
+
+document.getElementById('cnpj').readOnly = true;
 
 function getRedeEnsino(xml_escola_rede_ensino)
 {

@@ -36,6 +36,7 @@ require_once 'include/modules/clsModulesRotaTransporteEscolar.inc.php';
 require_once 'include/modules/clsModulesItinerarioTransporteEscolar.inc.php';
 require_once 'include/modules/clsModulesPontoTransporteEscolar.inc.php';
 require_once 'include/modules/clsModulesVeiculo.inc.php';
+require_once 'include/modules/clsModulesMotorista.inc.php';
 
 require_once 'Portabilis/Date/Utils.php';
 require_once 'Portabilis/View/Helper/Application.php';
@@ -142,7 +143,11 @@ class indice extends clsDetalhe
 
           $obj_veiculo = new clsModulesVeiculo($valor['ref_cod_veiculo']);
           $obj_veiculo = $obj_veiculo->detalhe();
-          $valor_veiculo = $obj_veiculo['descricao']==''?'':$obj_veiculo['descricao'].' - Placa: '.$obj_veiculo['placa'];
+
+          $motorista = new clsModulesMotorista($obj_veiculo['ref_cod_motorista']);
+          $motorista = $motorista->detalhe();
+
+          $valor_veiculo = $obj_veiculo['descricao']==''?'':$obj_veiculo['descricao'].' - Placa: '.$obj_veiculo['placa'] . ' - Motorista: ' . $motorista['nome_motorista'];
 
           $obj_ponto = new clsModulesPontoTransporteEscolar($valor['ref_cod_ponto_transporte_escolar']);
           $obj_ponto = $obj_ponto->detalhe();

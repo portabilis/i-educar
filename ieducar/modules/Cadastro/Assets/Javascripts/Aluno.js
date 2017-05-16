@@ -1063,7 +1063,7 @@ function pegaDominio() {
       var url = location.href; //pega endereço que esta no navegador
       url = url.split("/"); //quebra o endereço de acordo com a / (barra)
       return (url[2]); // retorna a parte www.endereco.com.br
-  }
+}
 
 function afterChangePessoa(targetWindow, parentType, parentId, parentName) {
 
@@ -1071,7 +1071,7 @@ function afterChangePessoa(targetWindow, parentType, parentId, parentName) {
       targetWindow.close();
       if (parentType == null){
         dominio = pegaDominio();
-        url = $j('#id').val() ? 'http://'+dominio+'/module/Cadastro/aluno?id='+$j('#id').val() : 'http://'+dominio+'/module/Cadastro/aluno?person='+parentId;
+        url = $j('#id').val() ? location.origin+'/module/Cadastro/aluno?id='+$j('#id').val() : location.origin+'/module/Cadastro/aluno?person='+parentId;
         setTimeout("document.location = url",5);
       }
     }

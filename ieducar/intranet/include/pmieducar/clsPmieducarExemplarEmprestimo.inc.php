@@ -43,6 +43,7 @@ class clsPmieducarExemplarEmprestimo
 	var $data_devolucao;
 	var $valor_multa;
 	var $ref_cod_biblioteca;
+	var $em_atraso;
 
 	// propriedades padrao
 
@@ -387,13 +388,42 @@ class clsPmieducarExemplarEmprestimo
 	 *
 	 * @return array
 	 */
-	function lista( $int_cod_emprestimo = null, $int_ref_usuario_devolucao = null, $int_ref_usuario_cad = null, $int_ref_cod_cliente = null, $int_ref_cod_exemplar = null, $date_data_retirada_ini = null, $date_data_retirada_fim = null, $date_data_devolucao_ini = null, $date_data_devolucao_fim = null, $int_valor_multa = null, $devolvido = false, $int_ref_cod_biblioteca = null, $multa = false, $int_ref_cod_instituicao = null, $int_ref_cod_escola = null, $str_titulo_exemplar = null, $tombo = null)
+	function lista($int_cod_emprestimo        = null,
+	               $int_ref_usuario_devolucao = null,
+								 $int_ref_usuario_cad       = null,
+								 $int_ref_cod_cliente       = null,
+								 $int_ref_cod_exemplar      = null,
+								 $date_data_retirada_ini    = null,
+								 $date_data_retirada_fim    = null,
+								 $date_data_devolucao_ini   = null,
+								 $date_data_devolucao_fim   = null,
+								 $int_valor_multa           = null,
+								 $devolvido                 = false,
+								 $int_ref_cod_biblioteca    = null,
+								 $multa                     = false,
+								 $int_ref_cod_instituicao   = null,
+								 $int_ref_cod_escola        = null,
+								 $str_titulo_exemplar       = null,
+								 $tombo                     = null)
 	{
-		$sql = "SELECT {$this->_campos_lista}, a.ref_cod_biblioteca, b.ref_cod_instituicao, b.ref_cod_escola FROM {$this->_tabela} ee, {$this->_schema}exemplar e, {$this->_schema}acervo a, {$this->_schema}biblioteca b";
+		$sql = "SELECT {$this->_campos_lista}, a.ref_cod_biblioteca, b.ref_cod_instituicao, b.ref_cod_escola, b.bloqueia_emprestimo_em_atraso
+		          FROM {$this->_tabela} ee,
+							     {$this->_schema}exemplar e,
+									 {$this->_schema}acervo a,
+									 {$this->_schema}biblioteca b,
+							     {$this->_schema}cliente c,
+							     {$this->_schema}cliente_tipo_cliente ctc,
+							     {$this->_schema}cliente_tipo_exemplar_tipo ctet";
 
 		$whereAnd = " AND ";
 
-		$filtros = " WHERE ee.ref_cod_exemplar = e.cod_exemplar AND e.ref_cod_acervo = a.cod_acervo AND a.ref_cod_biblioteca = b.cod_biblioteca ";
+		$filtros = " WHERE ee.ref_cod_exemplar = e.cod_exemplar
+		               AND e.ref_cod_acervo = a.cod_acervo
+									 AND a.ref_cod_biblioteca = b.cod_biblioteca
+							     AND c.cod_cliente = ee.ref_cod_cliente
+							     AND ctc.ref_cod_cliente = c.cod_cliente
+							     AND ctet.ref_cod_cliente_tipo = ctc.ref_cod_cliente_tipo
+							     AND ctet.ref_cod_exemplar_tipo = a.ref_cod_exemplar_tipo";
 
 		if( is_numeric( $int_cod_emprestimo ) )
 		{
@@ -489,13 +519,26 @@ class clsPmieducarExemplarEmprestimo
 			$whereAnd = " AND ";
 		}
 
+		if ($this->em_atraso) {
+			$filtros .= "{$whereAnd} CURRENT_DATE > (ee.data_retirada::date + ctet.dias_emprestimo::integer)";
+			$whereAnd = " AND ";
+		}
+
 		$db = new clsBanco();
 		$countCampos = count( explode( ",", $this->_campos_lista ) );
 		$resultado = array();
 
+
 		$sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
-		$this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} ee, {$this->_schema}exemplar e, {$this->_schema}acervo a, {$this->_schema}biblioteca b {$filtros}" );
+		$this->_total = $db->CampoUnico( "SELECT COUNT(0)
+		                                    FROM {$this->_tabela} ee,
+																						 {$this->_schema}exemplar e,
+																						 {$this->_schema}acervo a,
+																						 {$this->_schema}biblioteca b,
+																						 {$this->_schema}cliente c,
+																						 {$this->_schema}cliente_tipo_cliente ctc,
+																						 {$this->_schema}cliente_tipo_exemplar_tipo ctet {$filtros}");
 
 		$db->Consulta( $sql );
 

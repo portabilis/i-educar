@@ -141,6 +141,13 @@ class indice extends clsCadastro
     $cadastrou = $obj->cadastra();
 
     if ($cadastrou) {
+
+      $escolaridade = new clsCadastroEscolaridade($cadastrou);
+      $escolaridade = $escolaridade->detalhe();
+
+      $auditoria = new clsModulesAuditoriaGeral("escolaridade", $this->pessoa_logada, $cadastrou);
+      $auditoria->inclusao($escolaridade);
+
       $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
       header('Location: educar_escolaridade_lst.php');
       die();
@@ -156,9 +163,18 @@ class indice extends clsCadastro
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
+    $escolaridade = new clsCadastroEscolaridade($this->idesco);
+    $escolaridadeAntes = $escolaridade->detalhe();
+
     $obj = new clsCadastroEscolaridade($this->idesco, $this->descricao, $this->escolaridade);
     $editou = $obj->edita();
     if ($editou) {
+
+      $escolaridadeDepois = $escolaridade->detalhe();
+
+      $auditoria = new clsModulesAuditoriaGeral("escolaridade", $this->pessoa_logada, $this->idesco);
+      $auditoria->alteracao($escolaridadeAntes, $escolaridadeDepois);
+
       $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
       header("Location: educar_escolaridade_lst.php");
       die();
@@ -175,8 +191,13 @@ class indice extends clsCadastro
     session_write_close();
 
     $obj = new clsCadastroEscolaridade($this->idesco, $this->descricao);
+    $escolaridade = $obj->detalhe();
     $excluiu = $obj->excluir();
     if ($excluiu) {
+
+      $auditoria = new clsModulesAuditoriaGeral("escolaridade", $this->pessoa_logada, $this->idesco);
+      $auditoria->exclusao($escolaridade);
+
       $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
       header('Location: educar_escolaridade_lst.php');
       die();

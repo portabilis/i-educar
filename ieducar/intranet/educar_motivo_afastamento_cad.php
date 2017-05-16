@@ -142,6 +142,12 @@ class indice extends clsCadastro
 		$cadastrou = $obj->cadastra();
 		if( $cadastrou )
 		{
+			$motivoAfastamento = new clsPmieducarMotivoAfastamento($cadastrou);
+			$motivoAfastamento = $motivoAfastamento->detalhe();
+
+			$auditoria = new clsModulesAuditoriaGeral("motivo_afastamento", $this->pessoa_logada, $cadastrou);
+			$auditoria->inclusao($motivoAfastamento);
+
 			$this->mensagem .= "Cadastro efetuado com sucesso.<br>";
 			header( "Location: educar_motivo_afastamento_lst.php" );
 			die();
@@ -164,15 +170,23 @@ class indice extends clsCadastro
     $obj_permissoes->permissao_cadastra(633, $this->pessoa_logada, 7,
       'educar_motivo_afastamento_lst.php');
 
+    $motivoAfastamento = new clsPmieducarMotivoAfastamento($this->cod_motivo_afastamento);
+	$motivoAfastamentoAntes = $motivoAfastamento->detalhe();
+
     $obj = new clsPmieducarMotivoAfastamento($this->cod_motivo_afastamento,
       $this->pessoa_logada, NULL, $this->nm_motivo, $this->descricao, NULL,
       NULL, 1, $this->ref_cod_instituicao);
 
     $editou = $obj->edita();
     if ($editou) {
-      $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
-      header('Location: educar_motivo_afastamento_lst.php');
-      die();
+
+      	$motivoAfastamentoDepois = $motivoAfastamento->detalhe();
+	  	$auditoria = new clsModulesAuditoriaGeral("motivo_afastamento", $this->pessoa_logada, $this->cod_motivo_afastamento);
+	 	$auditoria->alteracao($motivoAfastamentoAntes, $motivoAfastamentoDepois);
+
+     	$this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+      	header('Location: educar_motivo_afastamento_lst.php');
+      	die();
     }
 
     $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
@@ -194,9 +208,15 @@ class indice extends clsCadastro
 		$obj = new clsPmieducarMotivoAfastamento($this->cod_motivo_afastamento,
 		  $this->pessoa_logada, NULL, $this->nm_motivo, $this->descricao, NULL,
 		  NULL, 0, $this->ref_cod_instituicao);
+
+		$motivoAfastamento = $obj->detalhe();
+
 		$excluiu = $obj->excluir();
 		if( $excluiu )
 		{
+			$auditoria = new clsModulesAuditoriaGeral("motivo_afastamento", $this->pessoa_logada, $this->cod_motivo_afastamento);
+			$auditoria->exclusao($motivoAfastamento);
+
 			$this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
 			header( "Location: educar_motivo_afastamento_lst.php" );
 			die();

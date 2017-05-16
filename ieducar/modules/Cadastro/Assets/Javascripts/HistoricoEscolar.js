@@ -1,9 +1,7 @@
 $j(document).ready(function(){
 	var codigoEscola = document.getElementById('codigoEscola').value;
-	var nomeEscola = document.getElementById('nomeEscola').value;
+	var nomeEscola = document.getElementById('escola').value;
 	var numeroSequencial = document.getElementById('numeroSequencial').value;
-	nomeEscola = nomeEscola.replace(/[\+\+]/g , ' ');
-	nomeEscola = unescape(nomeEscola);
 
 	//Quando for novo cadastro
 	if(codigoEscola === '' && nomeEscola === '' && numeroSequencial === ''){

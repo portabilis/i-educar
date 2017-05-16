@@ -1,25 +1,23 @@
 <?php
-// error_reporting(E_ERROR);
-// ini_set("display_errors", 1);
 /**
- * i-Educar - Sistema de gestÃ£o escolar
+ * i-Educar - Sistema de gestão escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÃ­
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa Ã© software livre; vocÃª pode redistribuÃ­-lo e/ou modificÃ¡-lo
- * sob os termos da LicenÃ§a PÃºblica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versÃ£o 2 da LicenÃ§a, como (a seu critÃ©rio)
- * qualquer versÃ£o posterior.
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+ * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
  *
- * Este programa Ã© distribuÃ­Â­do na expectativa de que seja Ãºtil, porÃ©m, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÃ­Â­cita de COMERCIABILIDADE OU
- * ADEQUAÃÃO A UMA FINALIDADE ESPECÃFICA. Consulte a LicenÃ§a PÃºblica Geral
+ * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
  * do GNU para mais detalhes.
  *
- * VocÃª deve ter recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral do GNU junto
- * com este programa; se nÃ£o, escreva para a Free Software Foundation, Inc., no
- * endereÃ§o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
+ * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Gabriel Matos de Souza <gabriel@portabilis.com.br>
  * @category  i-Educar
@@ -59,7 +57,7 @@ class clsModulesAuditoriaNota {
 
 	function clsModulesAuditoriaNota($notaAntiga, $notaNova, $turmaId){
 
-		//Foi necessÃ¡rio enviar turma pois nÃ£o Ã© possÃ­vel saber a turma atual somente atravÃ©s da matrÃ­cula
+		//Foi necessário enviar turma pois não á possí­vel saber a turma atual somente através da matrí­cula
 		$this->turma = $turmaId;
 
 		$this->usuario = $this->getUsuarioAtual();
@@ -111,14 +109,16 @@ class clsModulesAuditoriaNota {
 		$separador = ", ";
 
 		if(is_string($this->stringNotaAntiga)){
+			$this->stringNotaAntiga = str_replace( "'", "\'", $this->stringNotaAntiga);
 			$campos .= "{$separador}valor_antigo";
-			$valores .= "{$separador}'{$this->stringNotaAntiga}'";
+			$valores .= "{$separador}E'{$this->stringNotaAntiga}'";
 			$separador = ", ";
 		}
 
 		if(is_string($this->stringNotaNova)){
+			$this->stringNotaNova = str_replace("'", "\'", $this->stringNotaNova);
 			$campos .= "{$separador}valor_novo";
-			$valores .= "{$separador}'{$this->stringNotaNova}'";
+			$valores .= "{$separador}E'{$this->stringNotaNova}'";
 			$separador = ", ";
 		}
 
@@ -149,7 +149,7 @@ class clsModulesAuditoriaNota {
 			$stringDados .= $separadorDados;
 		}
 
-		//remove o Ãºltimo valor, qual seria uma vÃ­rgula
+		//remove o último valor, qual seria uma vírgula
 		$stringDados = substr($stringDados, 0, -1);
 
 		$stringDados .= $fimString;

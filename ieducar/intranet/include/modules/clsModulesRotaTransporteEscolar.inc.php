@@ -29,6 +29,7 @@
  */
 
 require_once 'include/pmieducar/geral.inc.php';
+require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 /**
  * clsModulesRotaTransporteEscolar class.
@@ -51,6 +52,7 @@ class clsModulesRotaTransporteEscolar
   var $km_npav;
   var $ref_cod_empresa_transporte_escolar;
   var $tercerizado;
+  var $pessoa_logada;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -111,6 +113,7 @@ class clsModulesRotaTransporteEscolar
     $db = new clsBanco();
     $this->_schema = "modules.";
     $this->_tabela = "{$this->_schema}rota_transporte_escolar";
+    $this->pessoa_logada = $_SESSION['id_pessoa'];
 
     $this->_campos_lista = $this->_todos_campos = " cod_rota_transporte_escolar, ref_idpes_destino, descricao, ano, tipo_rota, km_pav, km_npav, ref_cod_empresa_transporte_escolar, tercerizado"; 
 
@@ -218,7 +221,15 @@ class clsModulesRotaTransporteEscolar
 
 
       $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
-      return $db->InsertId("{$this->_tabela}_seq");
+
+      $this->cod_rota_transporte_escolar = $db->InsertId("{$this->_tabela}_seq");
+
+      if($this->cod_rota_transporte_escolar){
+        $detalhe = $this->detalhe();
+        $auditoria = new clsModulesAuditoriaGeral("rota_transporte_escolar", $this->pessoa_logada, $this->cod_rota_transporte_escolar);
+        $auditoria->inclusao($detalhe);
+      }
+      return $this->cod_rota_transporte_escolar;
     }
 
     return FALSE;
@@ -277,7 +288,10 @@ class clsModulesRotaTransporteEscolar
     }   
 
       if ($set) {
+        $detalheAntigo = $this->detalhe();
         $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_rota_transporte_escolar = '{$this->cod_rota_transporte_escolar}'");
+        $auditoria = new clsModulesAuditoriaGeral("rota_transporte_escolar", $this->pessoa_logada,$this->cod_rota_transporte_escolar);
+        $auditoria->alteracao($detalheAntigo, $this->detalhe());
         return TRUE;
       }
     }
@@ -318,7 +332,7 @@ class clsModulesRotaTransporteEscolar
     }
 
     if (is_string($descricao)) {
-      $filtros .= "{$whereAnd} (LOWER(descricao)) LIKE (LOWER('%{$descricao}%'))";
+      $filtros .= "{$whereAnd} translate(upper(descricao),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$descricao}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
       $whereAnd = " AND ";
     }
 
@@ -335,7 +349,7 @@ class clsModulesRotaTransporteEscolar
             cadastro.pessoa
           WHERE
             cadastro.pessoa.idpes = ref_idpes_destino
-            AND (LOWER(nome)) LIKE (LOWER('%{$nome_destino}%'))
+            AND translate(upper(nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$nome_destino}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')
         )";
 
       $whereAnd = ' AND ';
@@ -452,9 +466,16 @@ class clsModulesRotaTransporteEscolar
   function excluir()
   {
     if (is_numeric($this->cod_rota_transporte_escolar)) {
+
+      $detalhe = $this->detalhe();
+      
       $sql = "DELETE FROM {$this->_tabela} WHERE cod_rota_transporte_escolar = '{$this->cod_rota_transporte_escolar}'";
       $db = new clsBanco();
       $db->Consulta($sql);
+
+      $auditoria = new clsModulesAuditoriaGeral("rota_transporte_escolar", $this->pessoa_logada, $this->cod_rota_transporte_escolar);
+      $auditoria->exclusao($detalhe);
+
       return true;
     }
 

@@ -28,6 +28,7 @@ require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once( "include/pmieducar/geral.inc.php" );
+require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsIndexBase extends clsBase
 {
@@ -230,9 +231,13 @@ class indice extends clsCadastro
 		$this->area = str_replace(".","",$this->area);
 		$this->area = str_replace(",",".",$this->area);
 		$obj = new clsPmieducarInfraPredioComodo( null, null, $this->pessoa_logada, $this->ref_cod_infra_comodo_funcao, $this->ref_cod_infra_predio, $this->nm_comodo, $this->desc_comodo, $this->area, null, null, 1 );
-		$cadastrou = $obj->cadastra();
+		$cod_infra_predio_comodo = $cadastrou = $obj->cadastra();
 		if( $cadastrou )
 		{
+      $infra_predio_comodo = new clsPmieducarInfraPredioComodo($cod_infra_predio_comodo);
+      $infra_predio_comodo = $infra_predio_comodo->detalhe();
+      $auditoria = new clsModulesAuditoriaGeral("infra_predio_comodo", $this->pessoa_logada, $cod_infra_predio_comodo);
+      $auditoria->inclusao($infra_predio_comodo);
 			$this->mensagem .= "Cadastro efetuado com sucesso.<br>";
 			header( "Location: educar_infra_predio_comodo_lst.php" );
 			die();
@@ -254,9 +259,13 @@ class indice extends clsCadastro
 		$this->area = str_replace(",",".",$this->area);
 
 		$obj = new clsPmieducarInfraPredioComodo( $this->cod_infra_predio_comodo, $this->pessoa_logada, null, $this->ref_cod_infra_comodo_funcao, $this->ref_cod_infra_predio, $this->nm_comodo, $this->desc_comodo, $this->area, null, null, 1 );
+    $detalheAntigo = $obj->detalhe();
 		$editou = $obj->edita();
 		if( $editou )
 		{
+      $detalheAtual = $obj->detalhe();
+      $auditoria = new clsModulesAuditoriaGeral("infra_predio_comodo", $this->pessoa_logada, $this->cod_infra_predio_comodo);
+      $auditoria->alteracao($detalheAntigo, $detalheAtual);
 			$this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
 			header( "Location: educar_infra_predio_comodo_lst.php" );
 			die();
@@ -275,9 +284,12 @@ class indice extends clsCadastro
 		@session_write_close();
 
 		$obj = new clsPmieducarInfraPredioComodo( $this->cod_infra_predio_comodo, $this->pessoa_logada, null,null,null,null,null,null,null,null, 0);
+    $detalhe = $obj->detalhe();
 		$excluiu = $obj->excluir();
 		if( $excluiu )
 		{
+      $auditoria = new clsModulesAuditoriaGeral("infra_predio_comodo", $this->pessoa_logada, $this->cod_infra_predio_comodo);
+      $auditoria->exclusao($detalhe);
 			$this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
 			header( "Location: educar_infra_predio_comodo_lst.php" );
 			die();

@@ -32,6 +32,7 @@ require_once "include/clsBanco.inc.php";
 require_once "include/pmieducar/geral.inc.php";
 require_once "include/pmieducar/clsPmieducarCategoriaObra.inc.php";
 require_once "include/pmieducar/clsPmieducarCategoriaAcervo.inc.php";
+require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsIndexBase extends clsBase
 {
@@ -312,9 +313,13 @@ class indice extends clsCadastro
 
 
 		$obj = new clsPmieducarAcervo( null, $this->ref_cod_exemplar_tipo, $this->ref_cod_acervo, null, $this->pessoa_logada, $this->ref_cod_acervo_colecao, $this->ref_cod_acervo_idioma, $this->ref_cod_acervo_editora, $this->titulo, $this->sub_titulo, $this->cdu, $this->cutter, $this->volume, $this->num_edicao, $this->ano, $this->num_paginas, $this->isbn, null, null, 1, $this->ref_cod_biblioteca, $this->cdd, $this->estante, $this->dimencao, $this->material_ilustrativo, null ,$this->local , $this->ref_cod_tipo_autor , $this->tipo_autor );
-		$cadastrou = $obj->cadastra();
+		$this->cod_acervo = $cadastrou = $obj->cadastra();
 		if( $cadastrou )
 		{
+      $obj->cod_acervo = $this->cod_acervo;
+      $acervo = $obj->detalhe();
+      $auditoria = new clsModulesAuditoriaGeral("acervo", $this->pessoa_logada, $this->cod_acervo);
+      $auditoria->inclusao($acervo);
 			#cadastra assuntos para a obra
 			$this->gravaAssuntos($cadastrou);
 			$this->gravaAutores($cadastrou);
@@ -342,9 +347,13 @@ class indice extends clsCadastro
 
 
 		$obj = new clsPmieducarAcervo($this->cod_acervo, $this->ref_cod_exemplar_tipo, $this->ref_cod_acervo, $this->pessoa_logada, null, $this->ref_cod_acervo_colecao, $this->ref_cod_acervo_idioma, $this->ref_cod_acervo_editora, $this->titulo, $this->sub_titulo, $this->cdu, $this->cutter, $this->volume, $this->num_edicao, $this->ano, $this->num_paginas, $this->isbn, null, null, 1, $this->ref_cod_biblioteca, $this->cdd, $this->estante, $this->dimencao, $this->material_ilustrativo, null, $this->local, $this->ref_cod_tipo_autor , $this->tipo_autor);
+    $detalheAntigo = $obj->detalhe();
 		$editou = $obj->edita();
 		if( $editou )
 		{
+      $detalheAtual = $obj->detalhe();
+      $auditoria = new clsModulesAuditoriaGeral("acervo", $this->pessoa_logada, $this->cod_acervo);
+      $auditoria->alteracao($detalheAntigo, $detalheAtual);
 
 			#cadastra assuntos para a obra
 			$this->gravaAssuntos($this->cod_acervo);
@@ -372,9 +381,14 @@ class indice extends clsCadastro
 
 
 		$obj = new clsPmieducarAcervo($this->cod_acervo, null, null, $this->pessoa_logada, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 0, $this->ref_cod_biblioteca);
-		$excluiu = $obj->excluir();
+		$detalheAntigo = $obj->detalhe();
+    $excluiu = $obj->excluir();
 		if( $excluiu )
 		{
+      $detalheAtual = $obj->detalhe();
+      $auditoria = new clsModulesAuditoriaGeral("acervo", $this->pessoa_logada, $this->cod_acervo);
+      $auditoria->alteracao($detalheAntigo, $detalheAtual);
+
 			$objCategoria = new clsPmieducarCategoriaAcervo();
 			$objCategoria->deletaCategoriaDaObra($this->cod_acervo);
 			$this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";

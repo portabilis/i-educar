@@ -112,7 +112,7 @@ class clsModulesItinerarioTransporteEscolar
     $this->_schema = "modules.";
     $this->_tabela = "{$this->_schema}itinerario_transporte_escolar";
 
-    $this->_campos_lista = $this->_todos_campos = " cod_itinerario_transporte_escolar, ref_cod_rota_transporte_escolar, ref_cod_ponto_transporte_escolar, ref_cod_veiculo, seq, hora, tipo"; 
+    $this->_campos_lista = $this->_todos_campos = " cod_itinerario_transporte_escolar, ref_cod_rota_transporte_escolar, ref_cod_ponto_transporte_escolar, ref_cod_veiculo, seq, hora, tipo";
 
     if (is_numeric($cod_itinerario_transporte_escolar)) {
       $this->cod_itinerario_transporte_escolar = $cod_itinerario_transporte_escolar;
@@ -120,7 +120,7 @@ class clsModulesItinerarioTransporteEscolar
 
     if (is_numeric($ref_cod_rota_transporte_escolar)) {
       $this->ref_cod_rota_transporte_escolar = $ref_cod_rota_transporte_escolar;
-    }    
+    }
 
     if (is_numeric($seq)) {
       $this->seq = $seq;
@@ -128,19 +128,19 @@ class clsModulesItinerarioTransporteEscolar
 
     if (is_numeric($ref_cod_ponto_transporte_escolar)) {
       $this->ref_cod_ponto_transporte_escolar = $ref_cod_ponto_transporte_escolar;
-    }   
+    }
 
     if (is_numeric($ref_cod_veiculo)) {
       $this->ref_cod_veiculo = $ref_cod_veiculo;
-    }   
+    }
 
     if (is_string($hora)) {
       $this->hora = $hora;
-    }  
+    }
 
     if (is_string($tipo)) {
       $this->tipo = $tipo;
-    }   
+    }
   }
 
   /**
@@ -149,9 +149,9 @@ class clsModulesItinerarioTransporteEscolar
    */
   function cadastra()
   {
-    
+
     if ( is_numeric($this->ref_cod_rota_transporte_escolar)
-     && is_numeric($this->seq) && is_numeric($this->ref_cod_ponto_transporte_escolar) 
+     && is_numeric($this->seq) && is_numeric($this->ref_cod_ponto_transporte_escolar)
       && is_string($this->tipo))
     {
       $db = new clsBanco();
@@ -164,7 +164,7 @@ class clsModulesItinerarioTransporteEscolar
       $campos .= "{$gruda}ref_cod_rota_transporte_escolar";
       $valores .= "{$gruda}'{$this->ref_cod_rota_transporte_escolar}'";
       $gruda = ", ";
-    }    
+    }
 
     if (is_numeric($this->seq)) {
       $campos .= "{$gruda}seq";
@@ -176,28 +176,30 @@ class clsModulesItinerarioTransporteEscolar
       $campos .= "{$gruda}ref_cod_ponto_transporte_escolar";
       $valores .= "{$gruda}'{$this->ref_cod_ponto_transporte_escolar}'";
       $gruda = ", ";
-    }   
+    }
 
     if (is_numeric($this->ref_cod_veiculo)) {
       $campos .= "{$gruda}ref_cod_veiculo";
       $valores .= "{$gruda}'{$this->ref_cod_veiculo}'";
       $gruda = ", ";
-    }   
+    }
 
     if ($this->checktime($this->hora)) {
       $campos .= "{$gruda}hora";
       $valores .= "{$gruda}'{$this->hora}'";
       $gruda = ", ";
-    } 
+    }
 
     if (is_string($this->tipo)) {
       $campos .= "{$gruda}tipo";
       $valores .= "{$gruda}'{$this->tipo}'";
       $gruda = ", ";
-    } 
+    }
 
       $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
-      return $db->InsertId("{$this->_tabela}_seq");
+      $this->cod_itinerario_transporte_escolar = $db->InsertId("{$this->_tabela}_seq");
+
+      return (int) $this->cod_itinerario_transporte_escolar;
     }
 
     return FALSE;
@@ -214,7 +216,7 @@ class clsModulesItinerarioTransporteEscolar
       $db  = new clsBanco();
       $set = '';
       $gruda = '';
- 
+
     if (is_numeric($this->cod_itinerario_transporte_escolar)) {
         $set .= "{$gruda}cod_itinerario_transporte_escolar = '{$this->cod_itinerario_transporte_escolar}'";
         $gruda = ", ";
@@ -223,7 +225,7 @@ class clsModulesItinerarioTransporteEscolar
     if (is_numeric($this->ref_cod_rota_transporte_escolar)) {
         $set .= "{$gruda}ref_cod_rota_transporte_escolar = '{$this->ref_cod_rota_transporte_escolar}'";
         $gruda = ", ";
-    }    
+    }
 
     if (is_numeric($this->seq)) {
         $set .= "{$gruda}seq = '{$this->seq}'";
@@ -233,22 +235,22 @@ class clsModulesItinerarioTransporteEscolar
     if (is_numeric($this->ref_cod_ponto_transporte_escolar)) {
         $set .= "{$gruda}ref_cod_ponto_transporte_escolar = '{$this->ref_cod_ponto_transporte_escolar}'";
         $gruda = ", ";
-    }   
+    }
 
     if (is_numeric($this->ref_cod_veiculo)) {
         $set .= "{$gruda}ref_cod_veiculo = '{$this->ref_cod_veiculo}'";
         $gruda = ", ";
-    }   
+    }
 
     if (is_string($this->hora)) {
         $set .= "{$gruda}hora = '{$this->hora}'";
         $gruda = ", ";
-    }  
+    }
 
     if (is_string($this->tipo)) {
         $set .= "{$gruda}tipo = '{$this->tipo}'";
         $gruda = ", ";
-    } 
+    }
       if ($set) {
         $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_itinerario_transporte_escolar = '{$this->cod_itinerario_transporte_escolar}'");
         return TRUE;
@@ -268,8 +270,10 @@ class clsModulesItinerarioTransporteEscolar
      (SELECT descricao
        FROM modules.ponto_transporte_escolar
        WHERE ref_cod_ponto_transporte_escolar = cod_ponto_transporte_escolar) as descricao,
-     (SELECT descricao || ', Placa: ' || placa
+     (SELECT descricao || ', Placa: ' || placa || ', Motorista: ' || pessoa.nome
        FROM modules.veiculo
+       LEFT JOIN modules.motorista ON (motorista.cod_motorista = veiculo.ref_cod_motorista)
+       LEFT JOIN cadastro.pessoa ON (pessoa.idpes = motorista.ref_idpes)
        WHERE ref_cod_veiculo = cod_veiculo) as nome_onibus FROM {$this->_tabela}";
     $filtros = "";
 
@@ -283,7 +287,7 @@ class clsModulesItinerarioTransporteEscolar
     if (is_numeric($ref_cod_rota_transporte_escolar)) {
       $filtros .= "{$whereAnd} ref_cod_rota_transporte_escolar = '{$ref_cod_rota_transporte_escolar}'";
       $whereAnd = " AND ";
-    }  
+    }
 
     if (is_numeric($seq)) {
       $filtros .= "{$whereAnd} seq = '{$seq}'";
@@ -302,7 +306,7 @@ class clsModulesItinerarioTransporteEscolar
     if (is_numeric($ref_cod_ponto_transporte_escolar)){
       $filtros .= "{$whereAnd} ref_cod_ponto_transporte_escolar = '{$ref_cod_ponto_transporte_escolar}'";
       $whereAnd = " AND ";
-    }    
+    }
 
     $db = new clsBanco();
     $countCampos = count(explode(',', $this->_campos_lista))+2;
@@ -351,7 +355,7 @@ class clsModulesItinerarioTransporteEscolar
     if (is_numeric($ref_cod_rota_transporte_escolar)) {
       $filtros .= "{$whereAnd} ref_cod_rota_transporte_escolar = '{$ref_cod_rota_transporte_escolar}'";
       $whereAnd = " AND ";
-    }  
+    }
 
     $db = new clsBanco();
     $countCampos = count(explode(',', $this->_campos_lista))+2;
@@ -389,23 +393,11 @@ class clsModulesItinerarioTransporteEscolar
    */
   function detalhe()
   {
-    if (is_numeric($this->cod_rota_transporte_escolar)) {
+    if (is_numeric($this->cod_itinerario_transporte_escolar)) {
       $db = new clsBanco();
-      $db->Consulta("SELECT {$this->_todos_campos}, (
-          SELECT
-            nome
-          FROM
-            cadastro.pessoa
-          WHERE
-            idpes = ref_idpes_destino
-         ) AS nome_destino , (
-          SELECT
-            nome
-          FROM
-            cadastro.pessoa, modules.empresa_transporte_escolar
-          WHERE
-            idpes = ref_idpes and cod_empresa_transporte_escolar = ref_cod_empresa_transporte_escolar
-         ) AS nome_empresa FROM {$this->_tabela} WHERE cod_rota_transporte_escolar = '{$this->cod_rota_transporte_escolar}'");
+      $db->Consulta("SELECT {$this->_todos_campos}
+                       FROM {$this->_tabela}
+                      WHERE cod_itinerario_transporte_escolar = '{$this->cod_itinerario_transporte_escolar}'");
       $db->ProximoRegistro();
       return $db->Tupla();
     }
@@ -458,18 +450,18 @@ class clsModulesItinerarioTransporteEscolar
     }
 
     return FALSE;
-  } 
+  }
 
   function checktime($time)
-  { 
+  {
     list($hour,$minute) = explode(':',$time);
- 
+
     if ($hour > -1 && $hour < 24 && $minute > -1 && $minute < 60 && is_numeric($hour) && is_numeric($minute))
     {
       return true;
-    } else 
+    } else
         return false;
-  } 
+  }
 
   /**
    * Define quais campos da tabela serão selecionados no método Lista().

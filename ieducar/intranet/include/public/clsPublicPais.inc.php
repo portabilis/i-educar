@@ -239,7 +239,7 @@ class clsPublicPais
 		}
 		if( is_string( $str_nome ) )
 		{
-			$filtros .= "{$whereAnd} nome LIKE E'%" . addslashes($str_nome) . "%'";
+			$filtros .= "{$whereAnd} translate(upper(nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nome}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
 			$whereAnd = " AND ";
 		}
 		if( is_string( $str_geom ) )

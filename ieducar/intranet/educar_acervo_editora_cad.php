@@ -28,6 +28,7 @@ require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once( "include/pmieducar/geral.inc.php" );
+require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsIndexBase extends clsBase
 {
@@ -104,9 +105,9 @@ class indice extends clsCadastro
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_biblioteca_index.php"                  => "Biblioteca",
-         ""        => "{$nomeMenu} editora"             
+         ""        => "{$nomeMenu} editora"
     ));
-    $this->enviaLocalizacao($localizacao->montar());		
+    $this->enviaLocalizacao($localizacao->montar());
 		return $retorno;
 	}
 
@@ -195,9 +196,13 @@ class indice extends clsCadastro
 		$this->cep = idFederal2int($this->cep);
 
 		$obj = new clsPmieducarAcervoEditora( null, $this->pessoa_logada, null, $this->ref_idtlog, $this->ref_sigla_uf, $this->nm_editora, $this->cep, $this->cidade, $this->bairro, $this->logradouro, $this->numero, $this->telefone, $this->ddd_telefone, null, null, 1, $this->ref_cod_biblioteca );
-		$cadastrou = $obj->cadastra();
+		$this->cod_acervo_editora = $cadastrou = $obj->cadastra();
 		if( $cadastrou )
 		{
+      $obj->cod_acervo_editora = $this->cod_acervo_editora;
+      $acervo_editora = $obj->detalhe();
+      $auditoria = new clsModulesAuditoriaGeral("acervo_editora", $this->pessoa_logada, $this->cod_acervo_editora);
+      $auditoria->inclusao($acervo_editora);
 			$this->mensagem .= "Cadastro efetuado com sucesso.<br>";
 			header( "Location: educar_acervo_editora_lst.php" );
 			die();
@@ -221,9 +226,13 @@ class indice extends clsCadastro
 		$this->cep = idFederal2int($this->cep);
 
 		$obj = new clsPmieducarAcervoEditora($this->cod_acervo_editora, null, $this->pessoa_logada, $this->ref_idtlog, $this->ref_sigla_uf, $this->nm_editora, $this->cep, $this->cidade, $this->bairro, $this->logradouro, $this->numero, $this->telefone, $this->ddd_telefone, null, null, 1, $this->ref_cod_biblioteca);
+    $detalheAntigo = $obj->detalhe();
 		$editou = $obj->edita();
 		if( $editou )
 		{
+      $detalheAtual = $obj->detalhe();
+      $auditoria = new clsModulesAuditoriaGeral("acervo_editora", $this->pessoa_logada, $this->cod_acervo_editora);
+      $auditoria->alteracao($detalheAntigo, $detalheAtual);
 			$this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
 			header( "Location: educar_acervo_editora_lst.php" );
 			die();
@@ -246,9 +255,13 @@ class indice extends clsCadastro
 
 
 		$obj = new clsPmieducarAcervoEditora($this->cod_acervo_editora, null, $this->pessoa_logada, null,null,null,null,null,null,null,null,null,null,null,null, 0);
+    $detalhe = $obj->detalhe();
 		$excluiu = $obj->excluir();
 		if( $excluiu )
 		{
+
+      $auditoria = new clsModulesAuditoriaGeral("acervo_editora", $this->pessoa_logada, $this->cod_acervo_editora);
+      $auditoria->exclusao($detalhe);
 			$this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
 			header( "Location: educar_acervo_editora_lst.php" );
 			die();

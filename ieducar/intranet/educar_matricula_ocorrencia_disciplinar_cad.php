@@ -30,6 +30,7 @@ require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'Portabilis/Date/Utils.php';
 require_once 'modules/Api/Model/ApiExternaController.php';
+require_once ("include/modules/clsModulesAuditoriaGeral.inc.php");
 
 class clsIndexBase extends clsBase
 {
@@ -77,7 +78,7 @@ class indice extends clsCadastro
 
 		$obj_permissoes = new clsPermissoes();
 
-    $obj_permissoes->permissao_cadastra( 21145, $this->pessoa_logada, 7,  "educar_matricula_lst.php" );
+    	$obj_permissoes->permissao_cadastra( 21145, $this->pessoa_logada, 7,  "educar_matricula_lst.php" );
 
 		$data = getdate();
 
@@ -248,10 +249,23 @@ class indice extends clsCadastro
 
 		$this->ref_cod_matricula = is_numeric($this->ref_cod_matricula) ? $this->ref_cod_matricula : $this->getRequest()->matricula_id;
 
+    $obj_ref_cod_matricula = new clsPmieducarMatricula($this->ref_cod_matricula);
+    $detalhe_mat = $obj_ref_cod_matricula->detalhe();
+    $this->ref_cod_instituicao = $detalhe_mat['ref_cod_instituicao'];
+
 		$obj = new clsPmieducarMatriculaOcorrenciaDisciplinar( $this->ref_cod_matricula, $this->ref_cod_tipo_ocorrencia_disciplinar, null, $this->pessoa_logada, $this->pessoa_logada, $this->observacao, $this->getDataHoraCadastro(), $this->data_exclusao, $this->ativo, $this->visivel_pais);
 		$cod_ocorrencia_disciplinar = $obj->cadastra();
 		if( $cod_ocorrencia_disciplinar )
 		{
+
+			$ocorrenciaDisciplinar = new clsPmieducarMatriculaOcorrenciaDisciplinar();
+			$ocorrenciaDisciplinar->cod_ocorrencia_disciplinar = $cod_ocorrencia_disciplinar;
+
+ 			$ocorrenciaDisciplinar = $ocorrenciaDisciplinar->detalhe();
+ 
+ 			$auditoria = new clsModulesAuditoriaGeral("matricula_ocorrencia_disciplinar", $this->pessoa_logada, $cod_ocorrencia_disciplinar);
+ 			$auditoria->inclusao($ocorrenciaDisciplinar);
+
 			if(($this->visivel_pais) && ($this->possuiConfiguracaoNovoEducacao())){
 				$resposta = json_decode($this->enviaOcorrenciaNovoEducacao($cod_ocorrencia_disciplinar));
 
@@ -285,6 +299,10 @@ class indice extends clsCadastro
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7,  "educar_matricula_ocorrencia_disciplinar_lst.php" );
 
+		$ocorrenciaDisciplinar = new clsPmieducarMatriculaOcorrenciaDisciplinar();
+		$ocorrenciaDisciplinar->cod_ocorrencia_disciplinar = $this->cod_ocorrencia_disciplinar;
+		$ocorrenciaDisciplinarDetalheAntes = $ocorrenciaDisciplinar->detalhe();
+
 		$this->visivel_pais = is_null($this->visivel_pais) ? 0 : 1;
 
 		$voltaListagem = is_numeric($this->ref_cod_matricula);
@@ -296,6 +314,10 @@ class indice extends clsCadastro
 		$editou = $obj->edita();
 		if( $editou )
 		{
+			$ocorrenciaDisciplinarDetalheDepois = $ocorrenciaDisciplinar->detalhe();
+ 			$auditoria = new clsModulesAuditoriaGeral("matricula_ocorrencia_disciplinar", $this->pessoa_logada, $this->cod_ocorrencia_disciplinar);
+ 			$auditoria->alteracao($ocorrenciaDisciplinarDetalheAntes, $ocorrenciaDisciplinarDetalheDepois);
+
 			$this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
 			if ($voltaListagem)
 				header( "Location: educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$this->ref_cod_matricula}" );
@@ -319,11 +341,18 @@ class indice extends clsCadastro
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_excluir( 578, $this->pessoa_logada, 7,  "educar_matricula_ocorrencia_disciplinar_lst.php" );
 
+		$ocorrenciaDisciplinar = new clsPmieducarMatriculaOcorrenciaDisciplinar();
+		$ocorrenciaDisciplinar->cod_ocorrencia_disciplinar = $this->cod_ocorrencia_disciplinar;
+		$ocorrenciaDisciplinar = $ocorrenciaDisciplinar->detalhe();
+
 		$this->data_cadastro = Portabilis_Date_Utils::brToPgSQL($this->data_cadastro);
 		$obj = new clsPmieducarMatriculaOcorrenciaDisciplinar($this->ref_cod_matricula, $this->ref_cod_tipo_ocorrencia_disciplinar, $this->sequencial, $this->pessoa_logada, $this->pessoa_logada, $this->observacao, $this->data_cadastro, $this->data_exclusao, 0);
 		$excluiu = $obj->excluir();
 		if( $excluiu )
 		{
+			$auditoria = new clsModulesAuditoriaGeral("matricula_ocorrencia_disciplinar", $this->pessoa_logada, $this->cod_ocorrencia_disciplinar);
+ 			$auditoria->exclusao($ocorrenciaDisciplinar);
+
 			$this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
 			header( "Location: educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$this->ref_cod_matricula}" );
 			die();
@@ -339,6 +368,9 @@ class indice extends clsCadastro
     return $this->data_cadastro = dataToBanco($this->data_cadastro) . " " . $this->hora_cadastro;
   }
   protected function enviaOcorrenciaNovoEducacao($cod_ocorrencia_disciplinar){
+
+    $tmp_obj = new clsPmieducarConfiguracoesGerais( $this->ref_cod_instituicao );
+    $instituicao = $tmp_obj->detalhe();
 
   	$obj_tmp   = new clsPmieducarMatricula($this->ref_cod_matricula);
   	$det_tmp   = $obj_tmp->detalhe();
@@ -358,8 +390,7 @@ class indice extends clsCadastro
   			   		  'occurred_at'  => $this->data_cadastro,
   			   		  'unity_code' 	 => $cod_escola,
   			   		  'kind'		 => $tipo_ocorrencia);
-  	$requisicao = new ApiExternaController(	array( 'url' 			=> $GLOBALS['coreExt']['Config']->app->novoeducacao->url,
-  												   'caminhoAPI'		=> $GLOBALS['coreExt']['Config']->app->novoeducacao->caminho_api,
+  	$requisicao = new ApiExternaController(	array( 'url' 			=> $instituicao['url_novo_educacao'],
   												   'recurso'		=> 'ocorrencias-disciplinares',
   												   'tipoRequisicao' => ApiExternaController::REQUISICAO_POST,
   												   'params'			=> $params));
@@ -369,8 +400,10 @@ class indice extends clsCadastro
   }
 
   protected function possuiConfiguracaoNovoEducacao(){
-  	 return (strlen($GLOBALS['coreExt']['Config']->app->novoeducacao->url) > 0 &&
-  	 		 strlen($GLOBALS['coreExt']['Config']->app->novoeducacao->caminho_api) > 0);
+    $tmp_obj = new clsPmieducarConfiguracoesGerais( $this->ref_cod_instituicao );
+    $instituicao = $tmp_obj->detalhe();
+
+	  return strlen($instituicao['url_novo_educacao']) > 0;
   }
 
 }

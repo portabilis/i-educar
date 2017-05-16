@@ -216,7 +216,13 @@ class indice extends clsCadastro
 		$opcoes['outra'] = 'OUTRA';
 
 		$this->campoLista("ref_cod_escola", "Escola", $opcoes, null, '', false, '', '', false, true);
-		$this->campoTexto( "escola", "Nome da escola ", $this->escola, 30, 255, true );
+
+    $escola_options = array(
+      'required'    => false,
+      'label'       => 'Nome da escola',
+      'value'       => $this->escola
+    );
+    $this->inputsHelper()->text('escola', $escola_options);
 
 		// text
 		$this->campoTexto( "escola_cidade", "Cidade da Escola", $this->escola_cidade, 30, 255, true );
@@ -271,7 +277,13 @@ class indice extends clsCadastro
 		$this->campoMonetario( "frequencia", "Frequência", $this->frequencia, 8, 6, false );
 		$this->campoCheck( "extra_curricular", "Extra-Curricular", $this->extra_curricular );
 		$this->campoCheck( "aceleracao", "Aceleração", $this->aceleracao );
-		$this->campoMemo( "observacao", "Observa&ccedil;&atilde;o", $this->observacao, 60, 5, false );
+
+    $obs_options = array(
+      'required'    => false,
+      'label'       => 'Observação',
+      'value'       => $this->observacao
+    );
+    $this->inputsHelper()->textArea( 'observacao', $obs_options);
 
 		$opcoes = array( "" => "Selecione",
 			              1 => "Aprovado",
@@ -377,6 +389,7 @@ class indice extends clsCadastro
 			$cadastrou = $obj->cadastra();
 			if( $cadastrou )
 			{
+
 			//--------------CADASTRA DISCIPLINAS--------------//
 				if ($this->nm_disciplina)
 				{
@@ -424,6 +437,9 @@ class indice extends clsCadastro
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7,  "educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}" );
 
+		$historicoEscolar = new clsPmieducarHistoricoEscolar($this->ref_cod_aluno, $this->sequencial);
+		$historicoEscolarDetalheAntes = $historicoEscolar->detalhe();
+
 /*    $this->historico_disciplinas = unserialize( urldecode( $this->historico_disciplinas ) );
 		if ($this->historico_disciplinas)
 		{
@@ -445,6 +461,7 @@ class indice extends clsCadastro
 
 			if( $editou )
 			{
+
 			//--------------EDITA DISCIPLINAS--------------//
 				if ($this->nm_disciplina)
 				{
@@ -499,6 +516,7 @@ class indice extends clsCadastro
 
 
 		$obj = new clsPmieducarHistoricoEscolar( $this->ref_cod_aluno, $this->sequencial, $this->pessoa_logada,null,null,null,null,null,null,null,null,null,null,null,null,0 );
+		$historicoEscolar = $obj->detalhe();
 		$excluiu = $obj->excluir();
 		if( $excluiu )
 		{

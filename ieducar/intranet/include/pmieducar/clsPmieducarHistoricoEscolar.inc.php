@@ -31,6 +31,7 @@
 */
 
 require_once( "include/pmieducar/geral.inc.php" );
+require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsPmieducarHistoricoEscolar
 {
@@ -60,6 +61,7 @@ class clsPmieducarHistoricoEscolar
 	var $origem;
 	var $extra_curricular;
 	var $ref_cod_matricula;
+  	var $pessoa_logada;
 
 	// propriedades padrao
 
@@ -130,6 +132,10 @@ class clsPmieducarHistoricoEscolar
 		$db = new clsBanco();
 		$this->_schema = "pmieducar.";
 		$this->_tabela = "{$this->_schema}historico_escolar";
+
+		@session_start();
+    	$this->pessoa_logada = $_SESSION['id_pessoa'];
+    	session_write_close();
 
 		$this->_campos_lista = $this->_todos_campos = "ref_cod_aluno, sequencial, ref_usuario_exc, ref_usuario_cad, ano, carga_horaria, dias_letivos, escola, escola_cidade, escola_uf, observacao, aprovado, data_cadastro, data_exclusao, ativo, faltas_globalizadas, ref_cod_instituicao, nm_serie, origem, extra_curricular, ref_cod_matricula, frequencia, registro, livro, folha, nm_curso, historico_grade_curso_id, aceleracao, ref_cod_escola, dependencia, posicao";
 
@@ -598,11 +604,16 @@ class clsPmieducarHistoricoEscolar
 			$valores .= "{$gruda}'1'";
 			$gruda = ", ";
 
-			$sequencial = $db->campoUnico("SELECT COALESCE( MAX(sequencial), 0 ) + 1 FROM {$this->_tabela} WHERE ref_cod_aluno = {$this->ref_cod_aluno}" );
+			$this->sequencial = $db->campoUnico("SELECT COALESCE( MAX(sequencial), 0 ) + 1 FROM {$this->_tabela} WHERE ref_cod_aluno = {$this->ref_cod_aluno}" );
 
-			$db->Consulta( "INSERT INTO {$this->_tabela} ( sequencial, $campos ) VALUES( $sequencial, $valores )" );
-//			$db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
-			return $sequencial;
+			$db->Consulta( "INSERT INTO {$this->_tabela} ( sequencial, $campos ) VALUES( $this->sequencial, $valores )" );
+
+			if($this->ref_cod_aluno){
+		        $detalhe = $this->detalhe();
+		        $auditoria = new clsModulesAuditoriaGeral("historico_escolar", $this->pessoa_logada, $this->ref_cod_aluno);
+		        $auditoria->inclusao($detalhe);
+		      }
+			return $this->sequencial;
 		}
 		return false;
 	}
@@ -682,7 +693,7 @@ class clsPmieducarHistoricoEscolar
 			$this->escola = addslashes ($this->escola);
 			if( is_string( $this->escola ) )
 			{
-				$set .= "{$gruda}escola = '{$this->escola}'";
+				$set .= "{$gruda}escola = E'{$this->escola}'";
 				$gruda = ", ";
 			}
 			$this->escola_cidade = addslashes($this->escola_cidade);
@@ -805,7 +816,10 @@ class clsPmieducarHistoricoEscolar
 
 			if( $set )
 			{
+				$detalheAntigo = $this->detalhe();
 				$db->Consulta( "UPDATE {$this->_tabela} SET $set WHERE ref_cod_aluno = '{$this->ref_cod_aluno}' AND sequencial = '{$this->sequencial}'" );
+		        $auditoria = new clsModulesAuditoriaGeral("historico_escolar", $this->pessoa_logada, $this->ref_cod_aluno);
+		        $auditoria->alteracao($detalheAntigo, $this->detalhe());
 				return true;
 			}
 		}

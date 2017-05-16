@@ -93,7 +93,7 @@ class indice extends clsListagem
 		foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
 			$this->$var = ( $val === "" ) ? null: $val;
 
-		
+
 
 		$lista_busca = array(
 			"Tipo Exemplar"
@@ -200,7 +200,7 @@ class indice extends clsListagem
          "educar_biblioteca_index.php"                  => "Biblioteca",
          ""                                  => "Listagem de tipos de exemplares"
     ));
-    $this->enviaLocalizacao($localizacao->montar());		
+    $this->enviaLocalizacao($localizacao->montar());
 	}
 }
 // cria uma extensao da classe base

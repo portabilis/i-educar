@@ -87,7 +87,8 @@ class clsPermissoes
       Alterado, pois super_usuário sempre deve ter acesso a tudo
       Antes era: if (($super_usuario && $detalhe_super_usuario) || $nivel & $int_soma_nivel_acesso) {
     */
-    if (($detalhe_super_usuario) || $nivel & $int_soma_nivel_acesso) {
+
+    if (($detalhe_super_usuario) || $nivel && $int_soma_nivel_acesso) {
       $ok = TRUE;
     }
 
