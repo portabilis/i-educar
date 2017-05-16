@@ -272,7 +272,8 @@ class indice extends clsCadastro
 		$this->campoTexto( "tipo_autor", "", $this->tipo_autor, 40, 255, false);
 		$helperOptions = array('objectName' => 'autores');
     	$options       = array('label' => 'Autores', 'size' => 50, 'required' => false, 'options' => array('value' => null));
-		$this->inputsHelper()->multipleSearchAutores('', $options, $helperOptions);
+    $this->inputsHelper()->select('autores', $options);
+		//$this->inputsHelper()->multipleSearchAutores('', $options, $helperOptions);
 
 		// text
 		$this->campoTexto( "titulo", "T&iacute;tulo", $this->titulo, 40, 255, true );
@@ -829,5 +830,31 @@ var getAutores = function() {
 
 getAutores();
 // Para parecer como campo obrigatório, já que o required => true não está funcionando corretamente
+
+$j("#autores").select2({
+  ajax: {
+    url: "/module/Api/Autor",
+    dataType: 'json',
+    delay: 300,
+    data: function (params) {
+      var query = {
+        query: params.term,
+        page: params.page,
+        oper: 'get',
+        resource: 'autor-search'
+      }
+      return query;
+    },
+    processResults: function (data) {
+      return {
+          results: $j.map(data.result, function(value, key){
+            return { id: key, text: value  };
+          })
+      }
+    }
+  },
+  multiple: true,
+  minimumInputLength: 2
+});
 
 </script>

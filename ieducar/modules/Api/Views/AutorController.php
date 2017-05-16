@@ -42,7 +42,7 @@ class AutorController extends ApiCoreController
   // search options
 
   protected function searchOptions() {
-    return array('namespace' => 'pmieducar', 'labelAttr' => 'nm_autor', 'idAttr' => 'cod_acervo_autor');
+    return array('namespace' => 'pmieducar', 'table' => 'acervo_autor', 'labelAttr' => 'nm_autor', 'idAttr' => 'cod_acervo_autor');
   }
 
   protected function formatResourceValue($resource) {
@@ -50,15 +50,15 @@ class AutorController extends ApiCoreController
   }
 
   protected function getAutor() {
-    
+
     $obj = new clsPmieducarAcervoAcervoAutor();
     $arrayAutores;
-    
+
     foreach ($obj->listaAutoresPorObra($this->getRequest()->id) as $reg) {
       $arrayAutores[] = $reg['id'];
-    }    
+    }
 
-    
+
     return array('autores' => $arrayAutores);
   }
 
