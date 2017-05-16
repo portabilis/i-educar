@@ -765,7 +765,6 @@ class DiarioApiController extends ApiCoreController
       {
         $_notaAntiga = $this->serviceBoletim()->getNotaComponente($this->getRequest()->componente_curricular_id, $this->getRequest()->etapa);
         $this->serviceBoletim()->deleteNota($this->getRequest()->etapa, $this->getRequest()->componente_curricular_id);
-        $this->trySaveServiceBoletim();
         $this->inserirAuditoriaNotas($_notaAntiga, $nota);
         $this->messenger->append('Nota matrícula '. $this->getRequest()->matricula_id .' removida com sucesso.', 'success');
       }

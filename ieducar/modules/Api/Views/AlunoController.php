@@ -992,26 +992,24 @@ class AlunoController extends ApiCoreController
   protected function getTodosAlunos(){
     if($this->canGetTodosAlunos()){
 
-      $sql = "SELECT cod_aluno AS aluno_id,
-             (SELECT
-                nome
-              FROM
-                cadastro.pessoa
-              WHERE
-                idpes = ref_idpes
-             ) AS nome_aluno
-              FROM pmieducar.aluno
-              WHERE ativo = 1
+      $sql = "SELECT a.cod_aluno AS aluno_id,
+                    p.nome as nome_aluno,
+                    f.data_nasc as data_nascimento,
+                    ff.caminho as foto_aluno
+              FROM pmieducar.aluno a
+              INNER JOIN cadastro.pessoa p
+                ON p.idpes = a.ref_idpes
+                    INNER JOIN cadastro.fisica f
+                ON f.idpes = p.idpes
+              LEFT JOIN cadastro.fisica_foto ff
+                ON p.idpes = ff.idpes
+              WHERE a.ativo = 1
               ORDER BY nome_aluno ASC";
 
       $alunos = $this->fetchPreparedQuery($sql);
 
-      $attrs = array('aluno_id', 'nome_aluno');
+      $attrs = array('aluno_id', 'nome_aluno', 'foto_aluno', 'data_nascimento');
       $alunos = Portabilis_Array_Utils::filterSet($alunos, $attrs);
-
-      foreach ($alunos as &$aluno) {
-        $aluno['nome_aluno'] = Portabilis_String_Utils::toUtf8($aluno['nome_aluno']);
-      }
 
       return array('alunos' => $alunos);
     }
