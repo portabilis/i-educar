@@ -77,7 +77,31 @@ class TurmaController extends ApiCoreController
 
     $codTurma = $this->getRequest()->id;
 
-    $sql = "UPDATE pmieducar.matricula_turma SET sequencial_fechamento = 0 WHERE ref_cod_turma = $1";
+    $sql = "UPDATE pmieducar.matricula_turma
+   SET sequencial_fechamento = table_order.valor_linha
+FROM (SELECT row_number() over (partition BY ref_cod_turma
+                          ORDER BY split_part(nome,' ',1), split_part(nome,' ',2), split_part(nome,' ',3)) AS valor_linha,
+       mt.sequencial,
+       mt.ref_cod_matricula,
+       mt.ref_cod_turma,
+       mt.sequencial_fechamento
+FROM pmieducar.matricula_turma mt,
+     pmieducar.turma t,
+     pmieducar.matricula m,
+     pmieducar.aluno a,
+     cadastro.pessoa p
+WHERE mt.ref_cod_turma = $1
+AND t.cod_turma = mt.ref_cod_turma
+AND m.cod_matricula = mt.ref_cod_matricula
+AND a.cod_aluno = m.ref_cod_aluno
+AND p.idpes = a.ref_idpes) AS table_order
+
+WHERE matricula_turma.sequencial = table_order.sequencial
+  AND matricula_turma.ref_cod_matricula = table_order.ref_cod_matricula
+  AND matricula_turma.ref_cod_turma = table_order.ref_cod_turma
+  AND matricula_turma.ref_cod_turma = $1";
+
+
     $this->fetchPreparedQuery($sql, $codTurma);
 
     return true;
