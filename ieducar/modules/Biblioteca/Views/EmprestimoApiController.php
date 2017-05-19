@@ -84,6 +84,35 @@ class EmprestimoApiController extends ApiCoreController
     return true;
   }
 
+  protected function validateLimiteEmprestimoCliente() {
+
+    $objExemplar = new clsPmieducarExemplarEmprestimo();
+    $exemplaresEmprestadosDoCliente = $objExemplar->lista(null,
+                                                          null,
+                                                          null,
+                                                          $this->getRequest()->cliente_id,
+                                                          null,
+                                                          null,
+                                                          null,
+                                                          null,
+                                                          null,
+                                                          null,
+                                                          false,
+                                                          $this->getRequest()->biblioteca_id);
+    $qtdExemplaresEmprestadosDoCliente = count($exemplaresEmprestadosDoCliente);
+
+    $objBiblioteca = new clsPmieducarBiblioteca($this->getRequest()->biblioteca_id);
+    $detBiblioteca = $objBiblioteca->detalhe();
+    $limiteEmprestimoBiblioteca = $detBiblioteca['max_emprestimo'];
+
+    if ($qtdExemplaresEmprestadosDoCliente >= $limiteEmprestimoBiblioteca) {
+        $this->messenger->append("Empréstimo não realizado, cliente já atingiu o máximo de empréstimos disponíveis.", 'error');
+        return false;
+    }
+
+    return true;
+  }
+
 
   protected function validatesSituacaoExemplarIsIn($expectedSituacoes) {
     if (! is_array($expectedSituacoes))
@@ -116,7 +145,8 @@ class EmprestimoApiController extends ApiCoreController
     return $this->validatesPresenceOf(array('exemplar_id'))
            && $this->validatesExistenceOfExemplar()
            && $this->validatesClienteIsNotSuspenso()
-           && $this->validatesSituacaoExemplarIsIn('disponivel');
+           && $this->validatesSituacaoExemplarIsIn('disponivel')
+           && $this->validateLimiteEmprestimoCliente();
 
            /*
             #TODO validar:
