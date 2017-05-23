@@ -857,8 +857,8 @@ class indice extends clsCadastro
             $docenteVinculado = TRUE;
           }
 
-          $conteudo .= '<div style="margin-bottom: 10px; float: left">';
-          $conteudo .= "  <label style='display: block; float: left; width: 250px'><input type=\"checkbox\" $checked name=\"disciplinas[$registro->id]\" id=\"disciplinas[]\" value=\"{$registro->id}\">{$registro}</label>";
+          $conteudo .= '<div style="margin-bottom: 10px; float: left" class="linha-disciplina" >';
+          $conteudo .= "  <label style='display: block; float: left; width: 250px'><input type=\"checkbox\" $checked name=\"disciplinas[$registro->id]\" class='check-disciplina' id=\"disciplinas[]\" value=\"{$registro->id}\">{$registro}</label>";
           $conteudo .= "  <span style='display: block; float: left; width: 100px'>{$registro->abreviatura}</span>";
           $conteudo .= "  <label style='display: block; float: left; width: 100px;'><input type='text' name='carga_horaria[$registro->id]' value='{$cargaHoraria}' size='5' maxlength='7'></label>";
           $conteudo .= "  <label style='display: block; float: left; width: 100px;'><input type='checkbox' name='usar_componente[$registro->id]' value='1' ". ($usarComponente == TRUE ? $checked : '') .">($cargaComponente h)</label>";
@@ -1870,8 +1870,8 @@ function parseComponentesCurriculares(xml_disciplina)
     for (var i = 0; i < DOM_array.length; i++) {
       id = DOM_array[i].getAttribute("cod_disciplina");
 
-      conteudo += '<div style="margin-bottom: 10px; float: left">';
-      conteudo += '  <label style="display: block; float: left; width: 250px;"><input type="checkbox" name="disciplinas['+ id +']" id="disciplinas[]" value="'+ id +'">'+ DOM_array[i].firstChild.data +'</label>';
+      conteudo += '<div style="margin-bottom: 10px; float: left" class="linha-disciplina">';
+      conteudo += '  <label style="display: block; float: left; width: 250px;"><input type="checkbox" name="disciplinas['+ id +']" class="check-disciplina" id="disciplinas[]" value="'+ id +'">'+ DOM_array[i].firstChild.data +'</label>';
       conteudo += '  <label style="display: block; float: left; width: 100px;"><input type="text" name="carga_horaria['+ id +']" value="" size="5" maxlength="7"></label>';
       conteudo += '  <label style="display: block; float: left;width: 200px;"><input type="checkbox" name="usar_componente['+ id +']" value="1">('+ DOM_array[i].getAttribute("carga_horaria") +' h)</label>';
       conteudo += '  <label style="display: block; float: left;"><input type="checkbox" name="docente_vinculado['+ id +']" value="1"></label>';
@@ -2249,9 +2249,18 @@ $j("#definir_componentes_diferenciados").on("click", function(){
   disableInputsDisciplinas();
 });
 
+$j('.check-disciplina').on('change', function(){
+  console.log("clicked");
+  var enabled = $j(this).prop('checked');
+  $j(this).closest('.linha-disciplina').find('input:not(.check-disciplina)').attr("disabled", !enabled);
+});
+
 function disableInputsDisciplinas() {
   var disable = $j('#definir_componentes_diferenciados').prop('checked');
 
   $j("#disciplinas").find("input").attr("disabled", !disable);
+  $j("#disciplinas").find('.check-disciplina').each(function(){
+    $j(this).trigger("change");
+  })
 }
 </script>
