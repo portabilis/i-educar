@@ -55,7 +55,10 @@ class AutorController extends ApiCoreController
     $arrayAutores;
 
     foreach ($obj->listaAutoresPorObra($this->getRequest()->id) as $reg) {
-      $arrayAutores[] = $reg['id'];
+      $arrayAutores[] = array(
+        'id' => $reg['id'],
+        'text' => $reg['nome'],
+      );
     }
 
 
