@@ -122,7 +122,7 @@ class ReservavagaController extends ApiCoreController
                INNER JOIN cadastro.fisica ON (fisica.idpes = aluno.ref_idpes)
                INNER JOIN cadastro.pessoa ON (pessoa.idpes = aluno.ref_idpes)
                 LEFT JOIN cadastro.fisica responsavel ON (fisica.idpes_responsavel = responsavel.idpes)
-                LEFT JOIN pmieducar.matricula ON (matricula.ref_cod_aluno = aluno.cod_aluno)
+                LEFT JOIN pmieducar.matricula ON (matricula.ref_cod_aluno = aluno.cod_aluno AND matricula.ativo = 1)
                 WHERE fisica.data_nasc = $3
                   AND responsavel.cpf = $2
                   AND matricula.aprovado = 3

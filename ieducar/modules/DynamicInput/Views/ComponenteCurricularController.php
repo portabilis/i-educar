@@ -99,9 +99,8 @@ class ComponenteCurricularController extends ApiCoreController
                 	   pmieducar.escola_ano_letivo as al
                	 where turma.cod_turma = $1 and
                	 	   cct.turma_id = turma.cod_turma and
-                	   cct.escola_id = turma.ref_ref_cod_escola and
                 	   cct.componente_curricular_id = cc.id and al.ano = $2 and
-                	   cct.escola_id = al.ref_cod_escola and
+                	   turma.ref_ref_cod_escola = al.ref_cod_escola and
                 	   cc.area_conhecimento_id = ac.id and
                 	   (turma.ref_cod_disciplina_dispensada <> cc.id OR turma.ref_cod_disciplina_dispensada is null) and
                      (case when cct.etapas_especificas = 1 then $3 = ANY (string_to_array(cct.etapas_utilizadas,',')::int[]) else true end)
