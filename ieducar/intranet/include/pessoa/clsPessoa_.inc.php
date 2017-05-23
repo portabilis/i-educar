@@ -71,6 +71,7 @@ class clsPessoa_
 
 		if($this->nome && $this->tipo)
 		{
+			$this->nome = str_replace("'", "''", $this->nome);
 			$campos = "";
 			$valores = "";
 			if($this->url)
@@ -122,6 +123,7 @@ class clsPessoa_
 			}
 			if($this->nome || $this->nome==="")
 			{
+				$this->nome = str_replace("'", "''", $this->nome);
 				$set .= "$gruda nome = '$this->nome' ";
 				$gruda = ", ";
 			}
