@@ -72,6 +72,7 @@ class clsPmieducarInstituicao
   var $permissao_filtro_abandono_transferencia;
   var $data_base_matricula;
   var $multiplas_reserva_vaga;
+  var $permitir_carga_horaria;
   var $reserva_integral_somente_com_renda;
   var $data_expiracao_reserva_vaga;
   var $componente_curricular_turma;
@@ -144,7 +145,7 @@ class clsPmieducarInstituicao
     $this->_tabela = "{$this->_schema}instituicao";
     $this->_campos_lista = $this->_todos_campos = "cod_instituicao, ref_usuario_exc, ref_usuario_cad, ref_idtlog, ref_sigla_uf, cep, cidade, bairro, logradouro, numero, complemento, nm_responsavel, ddd_telefone, telefone, data_cadastro, data_exclusao, ativo, nm_instituicao, data_base_transferencia, data_base_remanejamento, controlar_espaco_utilizacao_aluno, percentagem_maxima_ocupacao_salas, quantidade_alunos_metro_quadrado, exigir_vinculo_turma_professor, gerar_historico_transferencia, matricula_apenas_bairro_escola, restringir_historico_escolar, coordenador_transporte, restringir_multiplas_enturmacoes, permissao_filtro_abandono_transferencia, data_base_matricula, multiplas_reserva_vaga,
       reserva_integral_somente_com_renda, data_expiracao_reserva_vaga, data_fechamento, componente_curricular_turma,
-      controlar_posicao_historicos, reprova_dependencia_ano_concluinte, data_educacenso, bloqueia_matricula_serie_nao_seguinte ";
+      controlar_posicao_historicos, reprova_dependencia_ano_concluinte, data_educacenso, bloqueia_matricula_serie_nao_seguinte, permitir_carga_horaria ";
 
     if (is_numeric($ref_usuario_cad)) {
       if (class_exists('clsPmieducarUsuario')) {
@@ -511,6 +512,16 @@ class clsPmieducarInstituicao
         $gruda = ", ";
       }
 
+      if (dbBool($this->permitir_carga_horaria)) {
+        $campos .= "{$gruda}permitir_carga_horaria";
+        $valores .= "{$gruda} true ";
+        $gruda = ", ";
+      }else{
+        $campos .= "{$gruda}permitir_carga_horaria";
+        $valores .= "{$gruda} false ";
+        $gruda = ", ";
+      }
+
       if (dbBool($this->componente_curricular_turma)) {
         $campos .= "{$gruda}componente_curricular_turma";
         $valores .= "{$gruda} TRUE ";
@@ -779,6 +790,14 @@ class clsPmieducarInstituicao
         $gruda = ", ";
       }else{
         $set .= "{$gruda}multiplas_reserva_vaga = false ";
+        $gruda = ", ";
+      }
+
+      if (dbBool($this->permitir_carga_horaria)) {
+        $set .= "{$gruda}permitir_carga_horaria = true ";
+        $gruda = ", ";
+      }else{
+        $set .= "{$gruda}permitir_carga_horaria = false ";
         $gruda = ", ";
       }
 
