@@ -1,14 +1,14 @@
-ieducar_1204:
+ieducar_1604:
   build: .
   environment:
     - CORE_EXT_CONFIGURATION_ENV=development
   ports:
-    - "8001:80"
+    - "8080:80"
   volumes:
-    - .:/home/ieducar/ieducar
+    - .:/var/www/html/i-educar/
   links:
     - postgres95
-  container_name: ieducar_1204
+  container_name: ieducar_1604
 
 postgres95:
   volumes:
