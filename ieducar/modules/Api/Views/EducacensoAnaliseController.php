@@ -1049,7 +1049,7 @@ class EducacensoAnaliseController extends ApiCoreController
                    uf_rg.cod_ibge AS uf_inep_rg,
                    fisica.nacionalidade AS nacionalidade,
                    endereco_pessoa.cep AS cep,
-                   bairro.zona_localizacao AS zona_localizacao
+                   fisica.zona_localizacao_censo AS zona_localizacao
               FROM pmieducar.aluno
              INNER JOIN pmieducar.matricula ON (matricula.ref_cod_aluno = aluno.cod_aluno)
              INNER JOIN pmieducar.matricula_turma ON (matricula_turma.ref_cod_matricula = matricula.cod_matricula)
@@ -1149,7 +1149,7 @@ class EducacensoAnaliseController extends ApiCoreController
       }
       if (!$aluno["zona_localizacao"]) {
         $mensagem[] = array("text" => "Dados para formular o registro 70 da escola {$nomeEscola} não encontrados. Verifique se a zona/localização do (a) aluno(a) $nomeAluno foi informada.",
-                            "path" => "(Endereçamento > Bairro > Campo: Zona Localização)",
+                            "path" => "(Pessoas > Cadastros > Pessoas físicas > Campo: Zona Localização)",
                             "fail" => true);}
     }
 
