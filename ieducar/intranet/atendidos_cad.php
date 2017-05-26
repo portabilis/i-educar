@@ -124,6 +124,7 @@ class indice extends clsCadastro
   var $pessoa_contato;
   var $renda_mensal;
   var $data_admissao;
+  var $zona_localizacao_censo;
 
   // Variáveis para controle da foto
   var $objPhoto;
@@ -160,7 +161,7 @@ class indice extends clsCadastro
         $this->bloco, $this->apartamento, $this->andar, $this->zona_localizacao, $this->estado_civil,
         $this->pai_id, $this->mae_id, $this->tipo_nacionalidade, $this->pais_origem, $this->naturalidade,
         $this->letra, $this->sus, $this->nis_pis_pasep, $this->ocupacao, $this->empresa, $this->ddd_telefone_empresa,
-        $this->telefone_empresa, $this->pessoa_contato, $this->renda_mensal, $this->data_admissao, $this->falecido, $this->religiao_id
+        $this->telefone_empresa, $this->pessoa_contato, $this->renda_mensal, $this->data_admissao, $this->falecido, $this->religiao_id, $this->zona_localizacao_censo
       ) =
 
        $objPessoa->queryRapida(
@@ -170,13 +171,14 @@ class indice extends clsCadastro
         'idbai', 'idtlog', 'sigla_uf', 'complemento', 'numero', 'bloco', 'apartamento',
         'andar', 'zona_localizacao', 'ideciv', 'idpes_pai', 'idpes_mae', 'nacionalidade',
         'idpais_estrangeiro', 'idmun_nascimento', 'letra', 'sus', 'nis_pis_pasep', 'ocupacao',
-        'empresa', 'ddd_telefone_empresa', 'telefone_empresa', 'pessoa_contato', 'renda_mensal', 'data_admissao', 'falecido', 'ref_cod_religiao'
+        'empresa', 'ddd_telefone_empresa', 'telefone_empresa', 'pessoa_contato', 'renda_mensal', 'data_admissao', 'falecido', 'ref_cod_religiao', 'zona_localizacao_censo'
       );
 
+       // var_dump($objPessoa); die;
       $this->id_federal      = is_numeric($this->id_federal)   ? int2CPF($this->id_federal) : '';
       $this->cep             = is_numeric($this->cep)          ? int2Cep($this->cep) : '';
       $this->renda_mensal    = number_format($this->renda_mensal, 2, ',', '.');
-      $this->data_nasc       = $this->data_nasc                ? dataFromPgToBr($this->data_nasc) : '';
+      // $this->data_nasc       = $this->data_nasc                ? dataFromPgToBr($this->data_nasc) : '';
       $this->data_admissao   = $this->data_admissao            ? dataFromPgToBr($this->data_admissao) : '';
 
 
@@ -916,6 +918,20 @@ class indice extends clsCadastro
 
     $this->inputsHelper()->text('logradouro', $options);
 
+    // zona localização
+
+    $zonas = App_Model_ZonaLocalizacao::getInstance();
+    $zonas = $zonas->getEnums();
+    $zonas = Portabilis_Array_Utils::insertIn(null, 'Selecione', $zonas);
+
+    $options = array(
+      'label'       => 'Zona Localização',
+      'value'       => $this->zona_localizacao_censo,
+      'resources'   => $zonas,
+      'required'    => false
+    );
+
+    $this->inputsHelper()->select('zona_localizacao_censo', $options);
 
     // complemento
 
@@ -1324,31 +1340,32 @@ class indice extends clsCadastro
   }
 
   protected function createOrUpdatePessoaFisica($pessoaId) {
-    $fisica                       = new clsFisica();
-    $fisica->idpes                = $pessoaId;
-    $fisica->data_nasc            = Portabilis_Date_Utils::brToPgSQL($this->data_nasc);
-    $fisica->sexo                 = $this->sexo;
-    $fisica->ref_cod_sistema      = 'NULL';
-    $fisica->cpf                  = $this->id_federal ? idFederal2int($this->id_federal) : 'NULL';
-    $fisica->ideciv               = $this->estado_civil_id;
-    $fisica->idpes_pai            = $this->pai_id ? $this->pai_id : "NULL";
-    $fisica->idpes_mae            = $this->mae_id ? $this->mae_id : "NULL";
-    $fisica->nacionalidade        = $_REQUEST['tipo_nacionalidade'];
-    $fisica->idpais_estrangeiro   = $_REQUEST['pais_origem_id'];
-    $fisica->idmun_nascimento     = $_REQUEST['naturalidade_id'];
-    $fisica->sus                  = $this->sus;
-    $fisica->nis_pis_pasep        = $this->nis_pis_pasep ? $this->nis_pis_pasep : "NULL";
-    $fisica->ocupacao             = $this->ocupacao;
-    $fisica->empresa              = $this->empresa;
-    $fisica->ddd_telefone_empresa = $this->ddd_telefone_empresa;
-    $fisica->telefone_empresa     = $this->telefone_empresa;
-    $fisica->pessoa_contato       = $this->pessoa_contato;
-    $this->renda_mensal           = str_replace('.', '', $this->renda_mensal);
-    $this->renda_mensal           = str_replace(',', '.', $this->renda_mensal);
-    $fisica->renda_mensal         = $this->renda_mensal;
-    $fisica->data_admissao        = $this->data_admissao ? Portabilis_Date_Utils::brToPgSQL($this->data_admissao) : null;
-    $fisica->falecido             = $this->falecido;
-    $fisica->ref_cod_religiao     = $this->religiao_id;
+    $fisica                         = new clsFisica();
+    $fisica->idpes                  = $pessoaId;
+    $fisica->data_nasc              = Portabilis_Date_Utils::brToPgSQL($this->data_nasc);
+    $fisica->sexo                   = $this->sexo;
+    $fisica->ref_cod_sistema        = 'NULL';
+    $fisica->cpf                    = $this->id_federal ? idFederal2int($this->id_federal) : 'NULL';
+    $fisica->ideciv                 = $this->estado_civil_id;
+    $fisica->idpes_pai              = $this->pai_id ? $this->pai_id : "NULL";
+    $fisica->idpes_mae              = $this->mae_id ? $this->mae_id : "NULL";
+    $fisica->nacionalidade          = $_REQUEST['tipo_nacionalidade'];
+    $fisica->idpais_estrangeiro     = $_REQUEST['pais_origem_id'];
+    $fisica->idmun_nascimento       = $_REQUEST['naturalidade_id'];
+    $fisica->sus                    = $this->sus;
+    $fisica->nis_pis_pasep          = $this->nis_pis_pasep ? $this->nis_pis_pasep : "NULL";
+    $fisica->ocupacao               = $this->ocupacao;
+    $fisica->empresa                = $this->empresa;
+    $fisica->ddd_telefone_empresa   = $this->ddd_telefone_empresa;
+    $fisica->telefone_empresa       = $this->telefone_empresa;
+    $fisica->pessoa_contato         = $this->pessoa_contato;
+    $this->renda_mensal             = str_replace('.', '', $this->renda_mensal);
+    $this->renda_mensal             = str_replace(',', '.', $this->renda_mensal);
+    $fisica->renda_mensal           = $this->renda_mensal;
+    $fisica->data_admissao          = $this->data_admissao ? Portabilis_Date_Utils::brToPgSQL($this->data_admissao) : null;
+    $fisica->falecido               = $this->falecido;
+    $fisica->ref_cod_religiao       = $this->religiao_id;
+    $fisica->zona_localizacao_censo = $this->zona_localizacao_censo;
 
     $sql = "select 1 from cadastro.fisica WHERE idpes = $1 limit 1";
 
