@@ -182,11 +182,10 @@ class indice extends clsCadastro
                                                  0,
                                                  NULL,
                                                  $sequencialEnturmacao);
-
     if ($enturmacao->edita()){
       $enturmacao->marcaAlunoRemanejado($this->data_enturmacao);
       return true;
-    }else
+    } else {
       return false;
     }
   }
