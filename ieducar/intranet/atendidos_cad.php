@@ -920,9 +920,9 @@ class indice extends clsCadastro
 
     // zona localização
 
-    $zonas = App_Model_ZonaLocalizacao::getInstance();
-    $zonas = $zonas->getEnums();
-    $zonas = Portabilis_Array_Utils::insertIn(null, 'Selecione', $zonas);
+    $zonas = array('' => 'Selecione',
+                   1  => 'Urbana',
+                   2  => 'Rural');
 
     $options = array(
       'label'       => 'Zona Localização',
