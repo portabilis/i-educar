@@ -87,12 +87,12 @@ class indice extends clsCadastro
 
     if ($exportacao) {
       $decoded_a = urldecode($exportacao);
-      $converted_to_latin = Portabilis_String_Utils::toLatin1($exportacao);
+      $converted_to_iso88591 = utf8_decode($exportacao);
 
       header('Content-type: text/plain');
-      header('Content-Length: ' . strlen($converted_to_latin));
+      header('Content-Length: ' . strlen($converted_to_iso88591));
       header('Content-Disposition: attachment; filename=exportacao.txt');
-      echo $converted_to_latin;
+      echo $converted_to_iso88591;
       die();
     }
 
