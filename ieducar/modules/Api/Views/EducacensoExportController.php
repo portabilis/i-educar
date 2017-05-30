@@ -1624,6 +1624,12 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
       if($r70s21 == 0){ $r70s21 = null; }
       if($r70s5 == 0){ $r70s5 = null; }
 
+      if(!$r70s5){
+        $r70s6 = null;
+        $r70s7 = null;
+        $r70s8 = null;
+      }
+
       // Validações referentes a certidões (Modelo antigo e novo, nascimento e casamento)
       $r70s9 = $r70s10 = NULL;
       if (is_null($tipo_cert_civil) && !empty($r70s18)){
