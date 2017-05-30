@@ -82,11 +82,19 @@ class EditController extends Core_Controller_Page_EditController
     'tipoFormula' => array(
       'label'  => 'Tipo de fórmula',
       'help'   => ''
+    ),
+    'substituiMenorNotaRc' => array(
+      'label'  => 'Substitui menor nota por recuperação ',
+      'help'   => 'Substitui menor nota (En) por nota de recuperação (Rc) em ordem descrescente.<br/>
+                   Somente substitui quando Rc é maior que En.
+                   Ex: E1 = 2, E2 = 3, E3 = 2, Rc = 5.
+                   Na fórmula será considerado: E1 = 2, E2 = 3, E3 = 5, Rc = 5.'
     )
   );
 
   function _preRender(){
     Portabilis_View_Helper_Application::loadStylesheet($this, 'intranet/styles/localizacaoSistema.css');
+    Portabilis_View_Helper_Application::loadJavascript($this, '/modules/FormulaMedia/Assets/Javascripts/FormulaMedia.js');
 
     $nomeMenu = $this->getRequest()->id == null ? "Cadastrar" : "Editar";
     $localizacao = new LocalizacaoSistema();
@@ -119,6 +127,11 @@ class EditController extends Core_Controller_Page_EditController
       $this->getEntity()->formulaMedia, 40, 200, TRUE, FALSE, FALSE,
       $this->_getHelp('formulaMedia'));
 
+    // Substitui menor nota
+    $this->campoCheck('substituiMenorNotaRc', $this->_getLabel('substituiMenorNotaRc'),
+      $this->getEntity()->substituiMenorNotaRc, '', FALSE, FALSE, FALSE,
+      $this->_getHelp('substituiMenorNotaRc'));
+
     // Fórmula de recuperação
     /*$this->campoTexto('formulaRecuperacao', $this->_getLabel('formulaRecuperacao'),
       $this->getEntity()->formulaRecuperacao, 40, 50, TRUE, FALSE, FALSE,
@@ -128,5 +141,52 @@ class EditController extends Core_Controller_Page_EditController
     $tipoFormula = FormulaMedia_Model_TipoFormula::getInstance();
     $this->campoRadio('tipoFormula', $this->_getLabel('tipoFormula'),
       $tipoFormula->getEnums(), $this->getEntity()->get('tipoFormula'));
+  }
+
+
+  /**
+   * Implementa uma rotina de criação ou atualização de registro padrão para
+   * uma instância de CoreExt_Entity que use um campo identidade.
+   * @return bool
+   * @todo Atualizar todas as Exception de CoreExt_Validate, para poder ter
+   *   certeza que o erro ocorrido foi gerado de alguma camada diferente, como
+   *   a de conexão com o banco de dados.
+   */
+  protected function _save()
+  {
+    $data = array();
+
+    foreach ($_POST as $key => $val) {
+      if (array_key_exists($key, $this->_formMap)) {
+        $data[$key] = $val;
+      }
+    }
+
+    //fixup for checkbox nota geral
+    if(!isset($data['substituiMenorNotaRc'])){
+      $data['substituiMenorNotaRc'] = '0';
+    }
+
+    // Verifica pela existência do field identity
+    if (isset($this->getRequest()->id) && 0 < $this->getRequest()->id) {
+      $entity = $this->setEntity($this->getDataMapper()->find($this->getRequest()->id));
+    }
+
+    if (isset($entity)) {
+      $this->getEntity()->setOptions($data);
+    }
+    else {
+      $this->setEntity($this->getDataMapper()->createNewEntityInstance($data));
+    }
+
+    try {
+      $this->getDataMapper()->save($this->getEntity());
+      return TRUE;
+    }
+    catch (Exception $e) {
+      // TODO: ver @todo do docblock
+      $this->mensagem = 'Erro no preenchimento do formulário. ';
+      return FALSE;
+    }
   }
 }

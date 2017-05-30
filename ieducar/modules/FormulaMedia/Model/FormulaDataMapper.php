@@ -52,6 +52,7 @@ class FormulaMedia_Model_FormulaDataMapper extends CoreExt_DataMapper
   protected $_attributeMap = array(
     'instituicao'  => 'instituicao_id',
     'formulaMedia' => 'formula_media',
-    'tipoFormula'  => 'tipo_formula'
+    'tipoFormula'  => 'tipo_formula',
+    'substituiMenorNotaRc'  => 'substitui_menor_nota_rc',
   );
 }
