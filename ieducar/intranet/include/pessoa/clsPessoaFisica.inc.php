@@ -74,6 +74,7 @@ class clsPessoaFisica extends clsPessoaFj
   var $tipo_endereco;
   var $ativo;
   var $data_exclusao;
+  var $zona_localizacao_censo;
 
   var $banco           = 'pmi';
   var $schema_cadastro = 'cadastro';
@@ -318,6 +319,7 @@ class clsPessoaFisica extends clsPessoaFj
         $this->falecido                 = $detalhe_fisica['falecido'];
         $this->ativo                    = $detalhe_fisica['ativo'];
         $this->data_exclusao            = $detalhe_fisica['data_exclusao'];
+        $this->zona_localizacao_censo   = $detalhe_fisica['zona_localizacao_censo'];
 
         $tupla['idpes'] = $this->idpes;
         $tupla[]        = & $tupla['idpes'];
@@ -392,13 +394,16 @@ class clsPessoaFisica extends clsPessoaFj
         $tupla[]                           = & $tupla['justificativa_provisorio'];
 
         $tupla['falecido'] = $this->falecido;
-        $tupla[]                           = & $tupla['falecido'];
+        $tupla[]           = & $tupla['falecido'];
 
         $tupla['ativo'] = $this->ativo;
         $tupla[] = & $tupla['ativo'];
 
         $tupla['data_exclusao'] = $this->data_exclusao;
         $tupla[] = & $tupla['data_exclusao'];
+
+        $tupla['zona_localizacao_censo'] = $this->zona_localizacao_censo;
+        $tupla[]                         = & $tupla['zona_localizacao_censo'];
 
         return $tupla;
       }
@@ -449,6 +454,7 @@ class clsPessoaFisica extends clsPessoaFj
           $this->data_admissao            = $detalhe_fisica['data_admissao'];
           $this->ativo                    = $detalhe_fisica['ativo'];
           $this->data_exclusao            = $detalhe_fisica['data_exclusao'];
+          $this->zona_localizacao_censo   = $detalhe_fisica['zona_localizacao_censo'];
 
           $tupla['idpes'] = $this->idpes;
           $tupla[]        = & $tupla['idpes'];
@@ -524,6 +530,9 @@ class clsPessoaFisica extends clsPessoaFj
 
           $tupla['data_exclusao'] = $this->data_exclusao;
           $tupla[] = & $tupla['data_exclusao'];
+
+          $tupla['zona_localizacao_censo'] = $this->zona_localizacao_censo;
+          $tupla[] = & $tupla['zona_localizacao_censo'];
 
           return $tupla;
         }

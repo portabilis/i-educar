@@ -1144,7 +1144,7 @@ class DiarioApiController extends ApiCoreController
         continue;
 
       $componente['id']                        = $componenteId;
-      $componente['nome']                      = strtoupper($_componente->get('nome'));
+      $componente['nome']                      = mb_strtoupper($_componente->get('nome'), 'UTF-8');
       $componente['nota_atual']                = $this->getNotaAtual($etapa = null, $componente['id']);
       $componente['nota_exame']                = $this->getNotaExame($componente['id']);
       $componente['falta_atual']               = $this->getFaltaAtual($etapa = null, $componente['id']);
@@ -1173,7 +1173,7 @@ class DiarioApiController extends ApiCoreController
       $nomeArea                            = (($area->secao != '') ? $area->secao . ' - ' : '') . $area->nome;
       $componente['ordenamento_ac']        = $area->ordenamento_ac;
       $componente['area_id']               = $area->id;
-      $componente['area_nome']             = strtoupper($nomeArea);
+      $componente['area_nome']             = mb_strtoupper($nomeArea, 'UTF-8');
 
       //criando chave para ordenamento temporário
       //área de conhecimento + componente curricular

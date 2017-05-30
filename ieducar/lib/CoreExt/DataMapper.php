@@ -684,18 +684,22 @@ abstract class CoreExt_DataMapper
    */
   public function delete($instance)
   {
-      $tmpEntry = $this->find(is_object($instance) ? $instance->id : $instance);
-      $info = $tmpEntry->toDataArray();
+      $info = array();
+      if((is_object($instance) && $instance->id) || (!is_object($instance) && $instance)){
+        $tmpEntry = $this->find(is_object($instance) ? $instance->id : $instance);
+        $info = $tmpEntry->toDataArray();
+      }
 
       $return = $this->_getDbAdapter()->Consulta($this->_getDeleteStatment($instance));
 
+      if(count($info)){
+        @session_start();
+        $pessoa_logada = $_SESSION['id_pessoa'];
+        @session_write_close();
 
-      @session_start();
-      $pessoa_logada = $_SESSION['id_pessoa'];
-      @session_write_close();
-
-      $auditoria = new clsModulesAuditoriaGeral($this->_tableName, $pessoa_logada, $instance->id);
-      $auditoria->exclusao($info);
+        $auditoria = new clsModulesAuditoriaGeral($this->_tableName, $pessoa_logada, $instance->id);
+        $auditoria->exclusao($info);
+      }
 
       return $return;
   }
