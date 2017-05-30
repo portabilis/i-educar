@@ -21,15 +21,20 @@ hr {
     background: #47728f;
 }
 
-input, select, textarea{
-  border: solid 1px #cddce6;
+input, select, textarea, span.select2.select2-container.select2-container--default{
+  border: solid 1px #cddce6 !important;
   color: #47728f;
   border-radius: 3px;
 }
 
 input.select2-search__field,
-#formcadastro input.select2-search__field{
-  border: none;
+#formcadastro input.select2-search__field,
+span.select2-selection.select2-selection--multiple{
+  border: none !important;
+}
+
+.select2-dropdown{
+  border-color: #cddce6 !important;
 }
 
 input[type="button"] {
