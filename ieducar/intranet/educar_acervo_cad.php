@@ -792,7 +792,6 @@ var makeSelect2Autores = function(){
     ajax: {
       url: "/module/Api/Autor",
       dataType: 'json',
-      width: "400px",
       delay: 300,
       data: function (params) {
         var query = {
@@ -814,7 +813,7 @@ var makeSelect2Autores = function(){
     },
     language: "pt-BR",
     multiple: true,
-    width: "400px",
+    width: "379px",
     minimumInputLength: 2
   });
 }

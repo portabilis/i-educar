@@ -27,6 +27,12 @@ input, select, textarea, span.select2.select2-container.select2-container--defau
   border-radius: 3px;
 }
 
+.select2-container{
+  font-size: 13px;
+  line-height: 15px;
+  font-family: "Opens Sans";
+}
+
 input.select2-search__field,
 #formcadastro input.select2-search__field,
 span.select2-selection.select2-selection--multiple{
