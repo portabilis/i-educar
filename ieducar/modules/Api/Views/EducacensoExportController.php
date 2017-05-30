@@ -1312,7 +1312,8 @@ class EducacensoExportController extends ApiCoreController
 				LIMIT 1
 			) as r51s21,
       t.tipo_atendimento AS tipo_atendimento,
-      t.etapa_educacenso AS etapa_ensino
+      t.etapa_educacenso AS etapa_ensino,
+      e.dependencia_administrativa as dependencia_administrativa
 
 
 			FROM 	pmieducar.servidor s
@@ -1361,7 +1362,7 @@ class EducacensoExportController extends ApiCoreController
     	extract($reg);
 	    for ($i=1; $i <= $numeroRegistros ; $i++) {
 
-        $funcaoDocente = ($r51s7 == $docente || $r51s7 == $docenteTutor || $r51s7 == $docenteTitular);
+        $funcaoDocente = (($r51s7 == $docente || $r51s7 == $docenteTutor || $r51s7 == $docenteTitular) && $dependencia_administrativa != 4);
 
         if (!$funcaoDocente) $r51s8 = '';
 
