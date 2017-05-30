@@ -28,9 +28,19 @@ input, select, textarea, span.select2.select2-container.select2-container--defau
 }
 
 .select2-container{
-  font-size: 13px;
+  font-size: 14px;
   line-height: 15px;
   font-family: "Opens Sans";
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__rendered li {
+    font-family: "Open Sans";
+    font-size: 14px;
+    padding: 4px;
+}
+.select2-results__option {
+    font-family: "Open Sans";
+    color: #47728f;
 }
 
 input.select2-search__field,
