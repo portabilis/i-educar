@@ -631,6 +631,10 @@ class clsBase extends clsConfig
     $sql = "UPDATE funcionario SET ip_logado = '$ip_maquina' , data_login = NOW() WHERE ref_cod_pessoa_fj = {$this->currentUserId()}";
     $this->db()->Consulta($sql);
 
+    $saida .= '<script type="text/javascript" src="scripts/select2/select2.full.min.js"></script>';
+    $saida .= '<script type="text/javascript" src="scripts/select2/pt-BR.js"></script>';
+    $saida .= "<link rel=stylesheet type='text/css' href='scripts/select2/select2.min.css' />";
+
     $saida .= '<script type="text/javascript" src="https://api.conpass.io/conpass.js"></script>';
     $saida .= '<script type="text/javascript">
 

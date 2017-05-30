@@ -270,9 +270,11 @@ class indice extends clsCadastro
         $opcoes = array( "" => "Selecione", 1 => "Autor - Nome pessoal", 2 => "Autor - Evento", 3 => "Autor - Entidade coletiva", 4 => "Obra anônima");
 		$this->campoLista( "ref_cod_tipo_autor", "Tipo de autor", $opcoes, $this->ref_cod_tipo_autor, false, true , false , false  , false, false  );
 		$this->campoTexto( "tipo_autor", "", $this->tipo_autor, 40, 255, false);
-		$helperOptions = array('objectName' => 'autores');
-    	$options       = array('label' => 'Autores', 'size' => 50, 'required' => false, 'options' => array('value' => null));
-		$this->inputsHelper()->multipleSearchAutores('', $options, $helperOptions);
+
+   	$options       = array('label' => 'Autores', 'multiple' => true, 'required' => false, 'options' => array('value' => null));
+
+    $this->inputsHelper()->select('autores[]', $options);
+		//$this->inputsHelper()->multipleSearchAutores('', $options, $helperOptions);
 
 		// text
 		$this->campoTexto( "titulo", "T&iacute;tulo", $this->titulo, 40, 255, true );
@@ -451,23 +453,26 @@ $pagina->MakeAll();
 ?>
 
 <script>
+
+var $autores = $j(document.getElementById('autores[]'));
+console.log($autores);
 if($j('#ref_cod_tipo_autor').val() == 2 || $j('#ref_cod_tipo_autor').val() == 3){
 
 $j('#tipo_autor').show();
-$j('#autores').closest('tr').hide();
-$j('#autores').val("");
+$autores.closest('tr').hide();
+$autores.val("");
 
 }else if($j('#ref_cod_tipo_autor').val() == 1){
 
 $j('#tipo_autor').hide();
 $j('#tipo_autor').val("");
-$j('#autores').closest('tr').show();
+$autores.closest('tr').show();
 
 }else{
 $j('#tipo_autor').hide();
 $j('#tipo_autor').val("");
-$j('#autores').closest('tr').hide();
-$j('#autores').val("");
+$autores.closest('tr').hide();
+$autores.val("");
 }
 $j('#ref_cod_tipo_autor').click(abriCampo);
 
@@ -478,20 +483,20 @@ function abriCampo(){
 if($j('#ref_cod_tipo_autor').val() == 2 || $j('#ref_cod_tipo_autor').val() == 3){
 
 $j('#tipo_autor').show();
-$j('#autores').closest('tr').hide();
-$j('#autores').val("");
+$autores.closest('tr').hide();
+$autores.val("");
 
 }else if($j('#ref_cod_tipo_autor').val() == 1){
 
 $j('#tipo_autor').hide();
 $j('#tipo_autor').val("");
-$j('#autores').closest('tr').show();
+$autores.closest('tr').show();
 
 }else{
 $j('#tipo_autor').hide();
 $j('#tipo_autor').val("");
-$j('#autores').closest('tr').hide();
-$j('#autores').val("");
+$autores.closest('tr').hide();
+$autores.val("");
 }
 }
 
@@ -707,14 +712,6 @@ function fixupAssuntosSize(){
 
 fixupAssuntosSize();
 
-function fixupAutoresSize(){
-
-	$j('#autores_chzn ul').css('width', '307px');
-
-}
-
-fixupAutoresSize();
-
 $assuntos = $j('#assuntos');
 
 $assuntos.trigger('chosen:updated');
@@ -762,7 +759,7 @@ $categorias = $j('#categorias');
 $categorias.trigger('chosen:updated');
 
 var handleGetCategorias = function(dataResponse) {
-  $j.each(dataResponse['categorias'], function(id, value) {
+  $j.each(dataResponse['categorias'] || [], function(id, value) {
     $categorias.children("[value=" + value + "]").attr('selected', '');
   });
 
@@ -790,20 +787,46 @@ var getCategorias = function() {
 
 getCategorias();
 
-$autores = $j('#autores');
+var makeSelect2Autores = function(){
+  $autores.select2({
+    ajax: {
+      url: "/module/Api/Autor",
+      dataType: 'json',
+      delay: 300,
+      data: function (params) {
+        var query = {
+          query: params.term,
+          page: params.page,
+          oper: 'get',
+          resource: 'autor-search'
+        }
+        return query;
+      },
+      processResults: function (data) {
+        return {
+            results: $j.map(data.result, function(value, key){
+              return { id: key, text: value  };
+            })
+        }
+      },
 
-$autores.trigger('chosen:updated');
-var testezin;
+    },
+    language: "pt-BR",
+    multiple: true,
+    width: "379px",
+    minimumInputLength: 2
+  });
+}
 
 var handleGetAutores = function(dataResponse) {
-  testezin = dataResponse['autores'];
+  var autores = dataResponse['autores'] || [];
 
-  $j.each(dataResponse['autores'], function(id, value) {
+  $autores.attr('multiple', 'true');
 
-    $autores.children("[value=" + value + "]").attr('selected', '');
+  $j.each(autores, function(){
+    $autores.append($j("<option/>", { value: this.id, text: this.text, selected: true }));
   });
-
-  $autores.trigger('chosen:updated');
+  makeSelect2Autores();
 }
 
 var getAutores = function() {
@@ -828,6 +851,6 @@ var getAutores = function() {
 }
 
 getAutores();
-// Para parecer como campo obrigatório, já que o required => true não está funcionando corretamente
+makeSelect2Autores();
 
 </script>
