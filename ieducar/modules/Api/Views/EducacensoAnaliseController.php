@@ -48,6 +48,7 @@ class EducacensoAnaliseController extends ApiCoreController
                    fisica_gestor.cpf AS cpf_gestor_escolar,
                    pessoa_gestor.nome AS nome_gestor_escolar,
                    escola.cargo_gestor AS cargo_gestor_escolar,
+                   pessoa_gestor.email AS email_gestor_escolar,
                    EXTRACT(YEAR FROM modulo1.data_inicio) AS data_inicio,
                    EXTRACT(YEAR FROM modulo2.data_fim) AS data_fim,
                    escola.latitude AS latitude,
@@ -113,6 +114,11 @@ class EducacensoAnaliseController extends ApiCoreController
     if (!$escola["nome_gestor_escolar"]) {
       $mensagem[] = array("text" => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verifique se o(a) gestor(a) escolar foi informado(a).",
                           "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dados gerais > Campo: Gestor escolar)",
+                          "fail" => true);
+    }
+    if (!$escola["email_gestor_escolar"] || empty($escola["email_gestor_escolar"])) {
+      $mensagem[] = array("text" => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verifique se o e-mail do(a) gestor(a) escolar foi informado.",
+                          "path" => "(Pessoas > Cadastros > Pessoas físicas > Campo: E-mail.)",
                           "fail" => true);
     }
     if (!$escola["cargo_gestor_escolar"]) {
