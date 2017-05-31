@@ -118,7 +118,7 @@ class EducacensoAnaliseController extends ApiCoreController
     }
     if (!$escola["email_gestor_escolar"] || empty($escola["email_gestor_escolar"])) {
       $mensagem[] = array("text" => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verifique se o e-mail do(a) gestor(a) escolar foi informado.",
-                          "path" => "(Pessoas > Cadastros > Pessoas físicas > Campo: E-mail.)",
+                          "path" => "(Pessoas > Cadastros > Pessoas físicas > Campo: E-mail)",
                           "fail" => true);
     }
     if (!$escola["cargo_gestor_escolar"]) {
