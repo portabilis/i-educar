@@ -199,9 +199,19 @@ $j(document).ready(function() {
         }else
           return false;
       });
-    });
 
-  
+      if($j('#dependencia_administrativa').val() == 4){
+            $j('#categoria_escola_privada').closest('tr').show();
+            $j('#conveniada_com_poder_publico').closest('tr').show();
+            $j('#mantenedora_escola_privada').closest('tr').show();
+            $j('#cnpj_mantenedora_principal').closest('tr').show();
+        }else{
+            $j('#categoria_escola_privada').closest('tr').hide();
+            $j('#conveniada_com_poder_publico').closest('tr').hide();
+            $j('#mantenedora_escola_privada').closest('tr').hide();
+            $j('#cnpj_mantenedora_principal').closest('tr').hide();
+        }
+      });
 
   // fix checkboxs
   $j('input:checked').val('on');
