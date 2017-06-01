@@ -168,6 +168,10 @@ class clsPmieducarEscola
   var $ref_idpes_secretario_escolar;
   var $utiliza_regra_diferenciada;
   var $orgao_regional;
+  var $categoria_escola_privada;
+  var $conveniada_com_poder_publico;
+  var $mantenedora_escola_privada;
+  var $cnpj_mantenedora_principal;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -250,7 +254,7 @@ class clsPmieducarEscola
           e.dependencia_quantidade_ambiente_climatizado, e.dependencia_nenhuma_relacionada, e.dependencia_numero_salas_existente, dependencia_numero_salas_utilizadas, e.porte_quadra_descoberta, e.porte_quadra_coberta, e.tipo_cobertura_patio,
           e.total_funcionario, e.atendimento_aee, e.fundamental_ciclo, e.localizacao_diferenciada, e.didatico_nao_utiliza, e.didatico_quilombola, e.didatico_indigena, e.educacao_indigena, e.lingua_ministrada, e.espaco_brasil_aprendizado,
           e.abre_final_semana, e.codigo_lingua_indigena, e.atividade_complementar, e.proposta_pedagogica, e.local_funcionamento, e.codigo_inep_escola_compartilhada, e.televisoes, e.videocassetes, e.dvds, e.antenas_parabolicas, e.copiadoras,
-          e.retroprojetores, e.impressoras, e.aparelhos_de_som, e.projetores_digitais, e.faxs, e.maquinas_fotograficas, e.computadores, e.computadores_administrativo, e.computadores_alunos, e.impressoras_multifuncionais, e.acesso_internet, e.banda_larga, e.ato_criacao, e.ato_autorizativo, e.ref_idpes_secretario_escolar, e.utiliza_regra_diferenciada, e.orgao_regional
+          e.retroprojetores, e.impressoras, e.aparelhos_de_som, e.projetores_digitais, e.faxs, e.maquinas_fotograficas, e.computadores, e.computadores_administrativo, e.computadores_alunos, e.impressoras_multifuncionais, e.acesso_internet, e.banda_larga, e.ato_criacao, e.ato_autorizativo, e.ref_idpes_secretario_escolar, e.utiliza_regra_diferenciada, e.orgao_regional, e.categoria_escola_privada, e.conveniada_com_poder_publico, e.mantenedora_escola_privada, e.cnpj_mantenedora_principal
           ';
 
     if (is_numeric($ref_usuario_cad)) {
@@ -1131,6 +1135,30 @@ class clsPmieducarEscola
         $gruda = ", ";
       }
 
+      if (is_numeric($this->categoria_escola_privada)) {
+        $campos .= "{$gruda}categoria_escola_privada";
+        $valores .= "{$gruda}'{$this->categoria_escola_privada}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->conveniada_com_poder_publico)) {
+        $campos .= "{$gruda}conveniada_com_poder_publico";
+        $valores .= "{$gruda}'{$this->conveniada_com_poder_publico}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->mantenedora_escola_privada)) {
+        $campos .= "{$gruda}mantenedora_escola_privada";
+        $valores .= "{$gruda}'{$this->mantenedora_escola_privada}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->cnpj_mantenedora_principal)) {
+        $campos .= "{$gruda}cnpj_mantenedora_principal";
+        $valores .= "{$gruda}'{$this->cnpj_mantenedora_principal}'";
+        $gruda = ", ";
+      }
+
       $campos .= "{$gruda}data_cadastro";
       $valores .= "{$gruda}NOW()";
       $gruda = ", ";
@@ -1787,6 +1815,38 @@ class clsPmieducarEscola
         $gruda = ", ";
       }else{
         $set .= "{$gruda}orgao_regional = NULL ";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->categoria_escola_privada)) {
+        $set .= "{$gruda}categoria_escola_privada = '{$this->categoria_escola_privada}'";
+        $gruda = ", ";
+      }else{
+        $set .= "{$gruda}categoria_escola_privada = NULL ";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->conveniada_com_poder_publico)) {
+        $set .= "{$gruda}conveniada_com_poder_publico = '{$this->conveniada_com_poder_publico}'";
+        $gruda = ", ";
+      }else{
+        $set .= "{$gruda}conveniada_com_poder_publico = NULL ";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->mantenedora_escola_privada)) {
+        $set .= "{$gruda}mantenedora_escola_privada = '{$this->mantenedora_escola_privada}'";
+        $gruda = ", ";
+      }else{
+        $set .= "{$gruda}mantenedora_escola_privada = NULL ";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->cnpj_mantenedora_principal)) {
+        $set .= "{$gruda}cnpj_mantenedora_principal = '{$this->cnpj_mantenedora_principal}'";
+        $gruda = ", ";
+      }else{
+        $set .= "{$gruda}cnpj_mantenedora_principal = NULL ";
         $gruda = ", ";
       }
 
