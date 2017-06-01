@@ -28,6 +28,7 @@ require_once ("include/clsBase.inc.php");
 require_once ("include/clsDetalhe.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once( "include/pmieducar/geral.inc.php" );
+require_once ("include/pmieducar/clsPmieducarEscolaUsuario.inc.php");
 
 class clsIndexBase extends clsBase
 {
@@ -326,9 +327,13 @@ class indice extends clsDetalhe
     		                                  AND sequencial = $this->sequencial");
     		//Verifica se a escola foi digitada manualmente no histórico
 	    	if($ref_cod_escola == ''){
-    			$escola_usuario = $db->CampoUnico("SELECT ref_cod_escola
-  													 FROM pmieducar.usuario
- 													WHERE cod_usuario = $this->pessoa_logada;");
+
+    			$escolasUsuario = new clsPmieducarEscolaUsuario();
+				$escolasUsuario = $escolasUsuario->lista($this->pessoa_logada);
+
+				foreach ($escolasUsuario as $escola) {
+					$idEscolasUsuario[] = $escola['ref_cod_escola'];
+				}
 
 	    		$escola_ultima_matricula = $db->CampoUnico("SELECT ref_ref_cod_escola
     														  FROM pmieducar.matricula
@@ -336,7 +341,9 @@ class indice extends clsDetalhe
 														  ORDER BY cod_matricula DESC
    															 LIMIT 1");
 
-	    		if(($escola_usuario == $escola_ultima_matricula) || $this->nivel_usuario == 1 || $this->nivel_usuario == 2){
+	    		$possuiVinculoComEscolaUltimaMatricula = in_array($escola_ultima_matricula, $idEscolasUsuario);
+
+	    		if(($possuiVinculoComEscolaUltimaMatricula) || $this->nivel_usuario == 1 || $this->nivel_usuario == 2){
 					if ($registro['origem']) $this->url_editar = "educar_historico_escolar_cad.php?ref_cod_aluno={$registro["ref_cod_aluno"]}&sequencial={$registro["sequencial"]}";
     			}
 	    	}
@@ -345,7 +352,7 @@ class indice extends clsDetalhe
 											  															   FROM pmieducar.historico_escolar
 											   														    WHERE historico_escolar.ref_cod_aluno = $this->ref_cod_aluno
 											   														      AND historico_escolar.sequencial = $this->sequencial
-											   														    	AND historico_escolar.escola = (SELECT relatorio.get_nome_escola(escola_usuario.ref_cod_escola) AS escola_usuario
+											   														    	AND historico_escolar.escola IN (SELECT relatorio.get_nome_escola(escola_usuario.ref_cod_escola) AS escola_usuario
 																						   																						  FROM pmieducar.usuario
 																																													 INNER JOIN pmieducar.escola_usuario ON (escola_usuario.ref_cod_usuario = usuario.cod_usuario)
 																						  																 						 WHERE usuario.cod_usuario = $this->pessoa_logada)");
@@ -359,7 +366,7 @@ class indice extends clsDetalhe
 											  															   FROM pmieducar.historico_escolar
 											   														    WHERE historico_escolar.ref_cod_aluno = $this->ref_cod_aluno
 											   														      AND historico_escolar.sequencial = $this->sequencial
-											   														    	AND historico_escolar.escola = (SELECT relatorio.get_nome_escola(escola_usuario.ref_cod_escola) AS escola_usuario
+											   														    	AND historico_escolar.escola IN (SELECT relatorio.get_nome_escola(escola_usuario.ref_cod_escola) AS escola_usuario
 																						   																						  FROM pmieducar.usuario
 																																													 INNER JOIN pmieducar.escola_usuario ON (escola_usuario.ref_cod_usuario = usuario.cod_usuario)
 																						  																 						 WHERE usuario.cod_usuario = $this->pessoa_logada)");
