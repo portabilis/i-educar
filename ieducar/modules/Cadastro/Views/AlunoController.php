@@ -1275,10 +1275,9 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('recurso_prova_inep_prova_braille')), 'required' => false, 'placeholder' => '');
     $this->inputsHelper()->checkbox('recurso_prova_inep_prova_braille',$options);
 
-    $selectOptions = array(0 => 'Selecione',
+    $selectOptions = array(3 => 'Não recebe',
                            1 => 'Em hospital',
-                           2 => Portabilis_String_Utils::toLatin1('Em domicílio'),
-                           3 => Portabilis_String_Utils::toLatin1('Não recebe'));
+                           2 => 'Em domicílio');
 
     $options = array(
       'required'  => false,
