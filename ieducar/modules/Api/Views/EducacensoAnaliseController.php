@@ -49,6 +49,12 @@ class EducacensoAnaliseController extends ApiCoreController
                    pessoa_gestor.nome AS nome_gestor_escolar,
                    escola.cargo_gestor AS cargo_gestor_escolar,
                    pessoa_gestor.email AS email_gestor_escolar,
+                   escola.dependencia_administrativa,
+                   escola.situacao_funcionamento,
+                   escola.categoria_escola_privada,
+                   escola.conveniada_com_poder_publico,
+                   escola.mantenedora_escola_privada,
+                   escola.cnpj_mantenedora_principal,
                    EXTRACT(YEAR FROM modulo1.data_inicio) AS data_inicio,
                    EXTRACT(YEAR FROM modulo2.data_fim) AS data_fim,
                    escola.latitude AS latitude,
@@ -165,6 +171,30 @@ class EducacensoAnaliseController extends ApiCoreController
       $mensagem[] = array("text" => "Aviso: Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que o código do órgão regional de ensino não foi preenchido, caso seu estado possua uma subdivisão e a escola {$nomeEscola} não for federal vinculada a Setec, o código deve ser inserido conforme a 'Tabela de Órgãos Regionais'.",
                           "path" => "(Cadastros > Escola > Cadastrar > Editar > Aba: Dados gerais > Campo: Código do órgão regional)",
                           "fail" => false);
+    }
+
+    if ($escola['dependencia_administrativa'] == 4 && $escola['situacao_funcionamento'] == 1) {
+
+      if (!$escola["categoria_escola_privada"]) {
+          $mensagem[] = array("text" => "Aviso: Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que a dependência administrativa da escola é privada, portanto é necessário informar qual a categoria desta unidade escolar.",
+                              "path" => "(Escola > Cadastros > Escolas > Aba: Dados do ensino > Campo: Categoria da escola privada)",
+                              "fail" => true);
+      }
+      if (!$escola["conveniada_com_poder_publico"]) {
+          $mensagem[] = array("text" => "Aviso: Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que a dependência administrativa da escola é privada, portanto é necessário informar qual o tipo de convênio desta unidade escolar.",
+                              "path" => "(Escola > Cadastros > Escolas > Aba: Dados do ensino > Campo: Conveniada com o poder público)",
+                              "fail" => true);
+      }
+      if (!$escola["mantenedora_escola_privada"]) {
+          $mensagem[] = array("text" => "Aviso: Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que a dependência administrativa da escola é privada, portanto é necessário informar qual o tipo de mantenedora desta unidade escolar.",
+                              "path" => "(Escola > Cadastros > Escolas > Aba: Dados do ensino > Campo: Mantenedora da escola privada)",
+                              "fail" => true);
+      }
+      if (!$escola["cnpj_mantenedora_principal"]) {
+          $mensagem[] = array("text" => "Aviso: Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que a dependência administrativa da escola é privada, portanto é necessário informar o CNPJ da mantenedora principal desta unidade escolar.",
+                              "path" => "(Escola > Cadastros > Escolas > Aba: Dados do ensino > Campo: CNPJ da mantenedora principal da escola privada)",
+                              "fail" => true);
+      }
     }
 
     return array('mensagens' => $mensagem,
