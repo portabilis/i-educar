@@ -134,7 +134,7 @@ class TurmaController extends ApiCoreController
   protected function ordenaSequencialAlunosTurma(){
     $objInstituicao    = new clsPmieducarInstituicao();
     $lstInstituicao    = $objInstituicao->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
-    $dtBaseInstituicao = $lstInstituicao[0]['data_base_transferencia'];
+    $dtBaseInstituicao = $lstInstituicao[0]['data_base_remanejamento'];
 
     if (!empty($dtBaseInstituicao)){
       $this->ordenaAlunosDaTurmaPelaDataBase($dtBaseInstituicao);
