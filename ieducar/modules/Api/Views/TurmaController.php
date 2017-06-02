@@ -73,38 +73,74 @@ class TurmaController extends ApiCoreController
 
   // api
 
-  protected function ordenaTurmaAlfabetica(){
+  protected function ordenaAlunosDaTurmaAlfabetica(){
+    $codTurma           = $this->getRequest()->id;
+    $objMatriculaTurma = new clsPmieducarMatriculaTurma();
+    $lstMatriculaTurma  = $objMatriculaTurma->lista(null, $codTurma);
 
-    $codTurma = $this->getRequest()->id;
+    foreach ($lstMatriculaTurma as $matricula) {
+      $lstNomes[] = array('nome'          => $matricula['nome'],
+                          'ref_cod_matricula' => $matricula['ref_cod_matricula'],
+                          'sequencial'    => $matricula['sequencial']
+                        );
+    }
+    sort($lstNomes);
+    $quantidadeAlunos   = count($lstNomes);
 
-    $sql = "UPDATE pmieducar.matricula_turma
-   SET sequencial_fechamento = table_order.valor_linha
-FROM (SELECT row_number() over (partition BY ref_cod_turma
-                          ORDER BY split_part(nome,' ',1), split_part(nome,' ',2), split_part(nome,' ',3)) AS valor_linha,
-       mt.sequencial,
-       mt.ref_cod_matricula,
-       mt.ref_cod_turma,
-       mt.sequencial_fechamento
-FROM pmieducar.matricula_turma mt,
-     pmieducar.turma t,
-     pmieducar.matricula m,
-     pmieducar.aluno a,
-     cadastro.pessoa p
-WHERE mt.ref_cod_turma = $1
-AND t.cod_turma = mt.ref_cod_turma
-AND m.cod_matricula = mt.ref_cod_matricula
-AND a.cod_aluno = m.ref_cod_aluno
-AND p.idpes = a.ref_idpes) AS table_order
+    for ($i=0; $i < $quantidadeAlunos; $i++) {
+      $sql ="UPDATE pmieducar.matricula_turma
+                SET sequencial_fechamento =".$i."
+              WHERE matricula_turma.ref_cod_turma = ". $codTurma ."
+                AND matricula_turma.ref_cod_matricula = ". $lstNomes[$i]['ref_cod_matricula'] ."
+                AND ativo = 1";
+      $this->fetchPreparedQuery($sql);
+    }
+  }
 
-WHERE matricula_turma.sequencial = table_order.sequencial
-  AND matricula_turma.ref_cod_matricula = table_order.ref_cod_matricula
-  AND matricula_turma.ref_cod_turma = table_order.ref_cod_turma
-  AND matricula_turma.ref_cod_turma = $1";
+  protected function ordenaAlunosDaTurmaPelaDataBase($dataBase = NULL){
+    $codTurma          = $this->getRequest()->id;
+    $objMatriculaTurma = new clsPmieducarMatriculaTurma();
+    $lstMatriculaTurma = $objMatriculaTurma->lista(null, $codTurma);
 
+    foreach ($lstMatriculaTurma as $matricula) {
+    if (strtotime($matricula['data_enturmacao']) <= strtotime($dataBase)){
+        $lstNomes[] = array('nome'              => $matricula['nome'],
+                            'ref_cod_matricula' => $matricula['ref_cod_matricula'],
+                            'sequencial'        => $matricula['sequencial']
+                          );
+      } else {
+        $lstNomesPosDataBase[] = array('nome'              => $matricula['nome'],
+                                       'ref_cod_matricula' => $matricula['ref_cod_matricula'],
+                                       'sequencial'        => $matricula['sequencial']
+                                      );
+      }
+    }
+    sort($lstNomes);
+    sort($lstNomesPosDataBase);
+    $listaNomesFinal = array_merge($lstNomes,$lstNomesPosDataBase);
+    $quantidadeAlunos  = count($listaNomesFinal);
 
-    $this->fetchPreparedQuery($sql, $codTurma);
+    for ($i=0; $i < $quantidadeAlunos; $i++) {
+      $sql ="UPDATE pmieducar.matricula_turma
+                SET sequencial_fechamento =".$i."
+              WHERE matricula_turma.ref_cod_turma = ". $codTurma ."
+                AND matricula_turma.ref_cod_matricula = ". $listaNomesFinal[$i]['ref_cod_matricula'] ."
+                AND ativo = 1";
 
-    return true;
+      $this->fetchPreparedQuery($sql);
+    }die;
+  }
+
+  protected function ordenaSequencialAlunosTurma(){
+    $objInstituicao    = new clsPmieducarInstituicao();
+    $lstInstituicao    = $objInstituicao->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
+    $dtBaseInstituicao = $lstInstituicao[0]['data_base_transferencia'];
+
+    if (!empty($dtBaseInstituicao)){
+      $this->ordenaAlunosDaTurmaPelaDataBase($dtBaseInstituicao);
+    } else {
+      $this->ordenaAlunosDaTurmaAlfabetica();
+    }
   }
 
   protected function getTipoBoletim() {
@@ -321,7 +357,7 @@ WHERE matricula_turma.sequencial = table_order.sequencial
     if ($this->isRequestFor('get', 'tipo-boletim'))
       $this->appendResponse($this->getTipoBoletim());
     else if($this->isRequestFor('get', 'ordena-turma-alfabetica'))
-      $this->appendResponse($this->ordenaTurmaAlfabetica());
+      $this->appendResponse($this->ordenaSequencialAlunosTurma());
     else if($this->isRequestFor('get', 'turmas-por-escola'))
       $this->appendResponse($this->getTurmasPorEscola());
     else if($this->isRequestFor('get', 'alunos-matriculados-turma'))
