@@ -1687,6 +1687,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
         t.etapa_educacenso2 as r80s9,
         a.recebe_escolarizacao_em_outro_espaco as r80s10,
         ta.responsavel as transporte_escolar,
+        t.etapa_educacenso,
         (
           SELECT COUNT(1)
           FROM modules.veiculo v
@@ -1824,6 +1825,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
     $numeroRegistros = 24;
     $atividadeComplementar = 4;
     $atendimentoEducEspecializado = 5;
+    $educacaoInfantilUnificada = 3;
 
     foreach (Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId, $ano, $data_ini, $data_fim, $alunoId))) as $reg) {
       extract($reg);
@@ -1832,31 +1834,14 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
         $r80s10 = '';
       }
 
+      if ($etapa_educacenso != $educacaoInfantilUnificada) {
+        $r80s8 = '';
+      }
+
       $r80s10 = ($r80s10 == 0 ? NULL : $r80s10);
 
       for ($i=13; $i <= 23 ; $i++)
           ${'r80s'.$i} = 0;
-
-      // validações transporte escolar
-
-      // if ($transporte_escolar){
-      //   $veiculo = false;
-      //   for ($i=13; $i <= 23 ; $i++) {
-      //     if (${'r80s'.$i} == 1)
-      //       $veiculo = true;
-      //   }
-      //   if ($veiculo)
-      //     $r80s11 = 1;
-      //   elseif($veiculo_transporte_escolar){
-      //     $r80s11 = 1;
-      //     ${'r80s'.($veiculo_transporte_escolar + 12)} = 1;
-      //   }
-      //   $r80s12 = $transporte_escolar;
-      // }else{
-      //   for ($i=13; $i <= 23 ; $i++) {
-      //     ${'r80s'.$i} = NULL;
-      //   }
-      // }
 
       if(is_null($transporte_escolar)){
         $r80s11 = NULL;
