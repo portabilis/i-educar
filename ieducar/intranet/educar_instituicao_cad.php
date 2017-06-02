@@ -250,7 +250,7 @@ class indice extends clsCadastro
     $this->campoCheck("multiplas_reserva_vaga", "Permitir múltiplas reservas de vagas para o mesmo candidato em escolas diferentes", $this->multiplas_reserva_vaga);
 
     $this->permitir_carga_horaria = isset($this->cod_instituicao) ? dbBool($this->permitir_carga_horaria) : true;
-    $this->campoCheck("permitir_carga_horaria", "Não permitir definir C.H. por componente no histórico escolar", $this->permitir_carga_horaria, NULL, false, false, false, 'Caso a opção estiver habilitda, não será possivel adicionar carga horária, na tabela de disciplinas do histórico do aluno.');
+    $this->campoCheck("permitir_carga_horaria", "Não permitir definir C.H. por componente no histórico escolar", $this->permitir_carga_horaria, NULL, false, false, false, 'Caso a opção estiver habilitda, não será possivel adicionar carga horária na tabela de disciplinas do histórico do aluno.');
 
 
 		$this->campoCheck("reserva_integral_somente_com_renda", "Permitir reserva de vaga para o turno integral somente quando a renda for informada", $this->reserva_integral_somente_com_renda);
