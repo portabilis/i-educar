@@ -1362,9 +1362,11 @@ class EducacensoExportController extends ApiCoreController
     	extract($reg);
 	    for ($i=1; $i <= $numeroRegistros ; $i++) {
 
-        $funcaoDocente = (($r51s7 == $docente || $r51s7 == $docenteTutor || $r51s7 == $docenteTitular) && $dependencia_administrativa != 4);
+        $escolaPrivada = $dependencia_administrativa == 4;
 
-        if (!$funcaoDocente) $r51s8 = '';
+        $funcaoDocente = ($r51s7 == $docente || $r51s7 == $docenteTutor || $r51s7 == $docenteTitular);
+
+        if (!$funcaoDocente || $escolaPrivada) $r51s8 = '';
 
         //Validação das disciplinas
         if ($i > 8) {
