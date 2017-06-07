@@ -1108,6 +1108,15 @@ class EducacensoExportController extends ApiCoreController
         $r50s19 = NULL;
       }
 
+      if ($r50s6 != 2) { $r50s9 = NULL;}
+      if ($r50s6 != 1) { $r50s10 = NULL;}
+
+      if ($r50s12 != 2) { $r50s15 = NULL;}
+      if ($r50s12 != 1) { $r50s16 = NULL;}
+
+      if ($r50s18 != 2) { $r50s21 = NULL;}
+      if ($r50s18 != 1) { $r50s22 = NULL;}
+
       if($r50s6 != 1){ $r50s7 = NULL;}
       if($r50s12 != 1){ $r50s13 = NULL;}
       if($r50s18 != 1){ $r50s19 = NULL;}
