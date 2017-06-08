@@ -128,6 +128,9 @@ class indice extends clsCadastro
         case '10':
           $this->importaRegistro10($dadosRegistro);
           break;
+        case '20':
+          $this->importaRegistro20($dadosRegistro);
+          break;
         case '30':
           $this->importaRegistro30($dadosRegistro);
           break;
@@ -145,13 +148,13 @@ class indice extends clsCadastro
 
     $inep = $dadosRegistro[1];
     $cpfGestor = (int) $dadosRegistro[2];
-    $nomeGestor = $dadosRegistro[3];
+    $nomeGestor = utf8_encode($dadosRegistro[3]);
     $cargoGestor = $dadosRegistro[4];
     $emailGestor = $dadosRegistro[5];
     $situacao = $dadosRegistro[6];
     $dataInicioAnoLetivo = $dadosRegistro[7];
     $dataFimAnoLetivo = $dadosRegistro[8];
-    $nomeEscola = $dadosRegistro[9];
+    $nomeEscola = utf8_encode($dadosRegistro[9]);
     $latitude = $dadosRegistro[10];
     $longitude = $dadosRegistro[11];
     $cep = $dadosRegistro[12]; // ep.cep
@@ -377,10 +380,28 @@ class indice extends clsCadastro
     $inepEscola = $dadosRegistro[2-1];
     $inepTurma = $dadosRegistro[3-1];
 
-    $nomeTurma = $dadosRegistro[5-1];
+    $nomeTurma = utf8_encode($dadosRegistro[5-1]);
 
     $horaInicial = sprintf("%02d:%02d:00", intval($dadosRegistro[7-1]), intval($dadosRegistro[8-1]));
     $horaFinal = sprintf("%02d:%02d:00", intval($dadosRegistro[9-1]), intval($dadosRegistro[10-1]));
+
+    $diasSemana = array(
+      'domingo' => $dadosRegistro[11-1],
+      'segunda-feira' => $dadosRegistro[12-1],
+      'terça-feira' => $dadosRegistro[13-1],
+      'quarta-feira' => $dadosRegistro[14-1],
+      'quinta-feira' => $dadosRegistro[15-1],
+      'sexta-feira' => $dadosRegistro[16-1],
+      'sabado' => $dadosRegistro[17-1],
+    );
+
+    $diasSemana = array();
+
+    for ($i=1; $i <= 7; $i++) {
+      if($dadosRegistro[10+$i-1] == 1){
+        $diasSemana[] = $i;
+      }
+    }
 
     $camposTurma = array(
       'tipo_atendimento' => $dadosRegistro[18-1],
@@ -407,13 +428,15 @@ class indice extends clsCadastro
     );
 
 
-
     $etapaEnsinoCenso = $dadosRegistro[37-1];
-
     $codEscola = $this->existeEscola($inepEscola);
-    if($codEscola){
 
-      $codTurma = $this->existeTurma($inep);
+    if($codEscola){
+      $codTurma = null;
+      if(!empty($inepTurma)){
+        $codTurma = $this->existeTurma($inepTurma);
+      }
+
 
       if(!$codTurma){
 
@@ -422,8 +445,7 @@ class indice extends clsCadastro
         $codSerie = $this->getOrCreateSerie($etapaEnsinoCenso, $codEscola, $codCurso);
 
         $turma = new clsPmieducarTurma();
-        $turma->ref_cod_instituicao = $this->instituicao_id;
-        $turma->ref_cod_instituicao_regente = $this->instituicao_id;
+        $turma->ref_cod_instituicao = $this->ref_cod_instituicao;
         $turma->ref_usuario_cad = $this->pessoa_logada;
         $turma->ref_ref_cod_escola = $codEscola;
         $turma->ref_cod_curso = $codCurso;
@@ -432,6 +454,7 @@ class indice extends clsCadastro
         $turma->sgl_turma = '';
         $turma->max_aluno = 99;
         $turma->ativo = 1;
+        $turma->multiseriada = 0;
         $turma->visivel = 1;
         $turma->ref_cod_turma_tipo = $codTurmaTipo;
         $turma->hora_inicial = $horaInicial;
@@ -444,10 +467,19 @@ class indice extends clsCadastro
         }
         $codTurma = $turma->cadastra();
         $turma->cod_turma = $codTurma;
-        $turma->updateInep($inepTurma);
+
+        if(!empty($inepTurma)){
+          $turma->updateInep($inepTurma);
+        }
+
+        foreach ($diasSemana as $key => $diaSemana) {
+          $obj = new clsPmieducarTurmaDiaSemana($diaSemana,
+              $codTurma, $horaInicial, $horaFinal);
+
+          $obj->cadastra();
+        }
       }
 
-      // TODO: dias da semana
       // TODO: componentes
     }
   }
