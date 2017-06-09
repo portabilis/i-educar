@@ -97,50 +97,8 @@ class TurmaController extends ApiCoreController
     }
   }
 
-  protected function ordenaAlunosDaTurmaPelaDataBase($dataBase = NULL){
-    $codTurma          = $this->getRequest()->id;
-    $objMatriculaTurma = new clsPmieducarMatriculaTurma();
-    $lstMatriculaTurma = $objMatriculaTurma->lista(null, $codTurma);
-
-    foreach ($lstMatriculaTurma as $matricula) {
-    if (strtotime($matricula['data_enturmacao']) <= strtotime($dataBase)){
-        $lstNomes[] = array('nome'              => $matricula['nome'],
-                            'ref_cod_matricula' => $matricula['ref_cod_matricula'],
-                            'sequencial'        => $matricula['sequencial']
-                          );
-      } else {
-        $lstNomesPosDataBase[] = array('nome'              => $matricula['nome'],
-                                       'ref_cod_matricula' => $matricula['ref_cod_matricula'],
-                                       'sequencial'        => $matricula['sequencial']
-                                      );
-      }
-    }
-    sort($lstNomes);
-    sort($lstNomesPosDataBase);
-    $listaNomesFinal = array_merge($lstNomes,$lstNomesPosDataBase);
-    $quantidadeAlunos  = count($listaNomesFinal);
-
-    for ($i=0; $i < $quantidadeAlunos; $i++) {
-      $sql ="UPDATE pmieducar.matricula_turma
-                SET sequencial_fechamento =".$i."
-              WHERE matricula_turma.ref_cod_turma = ". $codTurma ."
-                AND matricula_turma.ref_cod_matricula = ". $listaNomesFinal[$i]['ref_cod_matricula'] ."
-                AND ativo = 1";
-
-      $this->fetchPreparedQuery($sql);
-    }die;
-  }
-
   protected function ordenaSequencialAlunosTurma(){
-    $objInstituicao    = new clsPmieducarInstituicao();
-    $lstInstituicao    = $objInstituicao->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
-    $dtBaseInstituicao = $lstInstituicao[0]['data_base_remanejamento'];
-
-    if (!empty($dtBaseInstituicao)){
-      $this->ordenaAlunosDaTurmaPelaDataBase($dtBaseInstituicao);
-    } else {
       $this->ordenaAlunosDaTurmaAlfabetica();
-    }
   }
 
   protected function getTipoBoletim() {
