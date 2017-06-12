@@ -91,8 +91,7 @@ class TurmaController extends ApiCoreController
       $sql ="UPDATE pmieducar.matricula_turma
                 SET sequencial_fechamento =".$i."
               WHERE matricula_turma.ref_cod_turma = ". $codTurma ."
-                AND matricula_turma.ref_cod_matricula = ". $lstNomes[$i]['ref_cod_matricula'] ."
-                AND ativo = 1";
+                AND matricula_turma.ref_cod_matricula = ". $lstNomes[$i]['ref_cod_matricula'];
       $this->fetchPreparedQuery($sql);
     }
   }
