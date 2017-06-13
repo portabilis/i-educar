@@ -21,10 +21,36 @@ hr {
     background: #47728f;
 }
 
-input, select, textarea{
+input, select, textarea, span.select2.select2-container.select2-container--default{
   border: solid 1px #cddce6 !important;
   color: #47728f;
   border-radius: 3px;
+}
+
+.select2-container{
+  font-size: 14px;
+  line-height: 15px;
+  font-family: "Opens Sans";
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__rendered li {
+    font-family: "Open Sans";
+    font-size: 14px;
+    padding: 4px;
+}
+.select2-results__option {
+    font-family: "Open Sans";
+    color: #47728f;
+}
+
+input.select2-search__field,
+#formcadastro input.select2-search__field,
+span.select2-selection.select2-selection--multiple{
+  border: none !important;
+}
+
+.select2-dropdown{
+  border-color: #cddce6 !important;
 }
 
 input[type="button"] {
@@ -131,7 +157,7 @@ select{
 .topo .dropdown-content a:hover {color: #188ad1}
 
 .topo .dropdown:hover .dropdown-content {
-  display: block; 
+  display: block;
 }
 
 img#help {
@@ -210,7 +236,7 @@ a.icons-top{
   font-family: "Open Sans";
 }
 
-@-moz-document url-prefix() { 
+@-moz-document url-prefix() {
   .nvp_tabelaMenu input#busca-menu-input{
     width: 88% !important;
   }
@@ -263,7 +289,7 @@ a.icons-top{
 
 .clLevel0border{
   margin-top: 0;
-  background: #FFF; 
+  background: #FFF;
   height: 40px !important;
   width: auto !important;
   clip: auto !important;
@@ -329,7 +355,7 @@ a.menu_susp_root:after {
     background-size: 100%;
 }
 
-@-moz-document url-prefix() { 
+@-moz-document url-prefix() {
   a.menu_susp_root:after {
     margin-top: 8px;
   }
@@ -384,7 +410,7 @@ td.fundoLocalizacao {
 **************************************/
 .input_calendario_letivo td,
 .input_calendario_letivo td select{
-  font-size: 14px !important;  
+  font-size: 14px !important;
 }
 
 table.calendar {
@@ -465,7 +491,7 @@ table.calendar .cor{
 .fundoCalendarioUrgente,
 .fundoCalendarioProximo {
   border: 0;
-  color: #47728f !important;  
+  color: #47728f !important;
 }
 
 .fundoCalendario .dia_agenda,
@@ -549,7 +575,7 @@ table.calendar .horario {
 
 .input_quadro_horario td,
 .input_quadro_horario td select{
-  font-size: 14px !important;  
+  font-size: 14px !important;
 }
 /**************************************
 ****************AGENDA*****************
@@ -576,7 +602,7 @@ td.arrow-dia {
 
 td.data-info{
   background: #ccdce6;
-  padding: 11px 0; 
+  padding: 11px 0;
 }
 
 td.data-info span{

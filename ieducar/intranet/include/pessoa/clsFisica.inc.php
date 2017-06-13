@@ -84,6 +84,7 @@ class clsFisica
 	var $data_admissao;
 	var $falecido;
 	var $ativo;
+	var $zona_localizacao_censo;
 
 	var $tabela;
 	var $schema;
@@ -126,7 +127,8 @@ class clsFisica
 		                $telefone_empresa = false,
 		                $renda_mensal = false,
 		                $data_admissao = false,
-		                $falecido = false)
+		                $falecido = false,
+		                $zona_localizacao_censo = false)
 	{
 		@session_start();
 		$this->pessoa_logada = $_SESSION['id_pessoa'];
@@ -201,26 +203,27 @@ class clsFisica
 			$this->idocup = $idocup;
 		}
 
-		$this->data_nasc            = $data_nasc;
-		$this->sexo                 = $sexo;
-		$this->data_uniao           = $data_uniao;
-		$this->data_obito           = $data_obito;
-		$this->nacionalidade        = $nacionalidade;
-		$this->data_chegada_brasil  = $data_chegada_brasil;
-		$this->ultima_empresa       = $ultima_empresa;
-		$this->nome_mae             = $nome_mae;
-		$this->nome_pai             = $nome_pai;
-		$this->nome_conjuge         = $nome_conjuge;
-		$this->nome_responsavel     = $nome_responsavel;
-		$this->ref_cod_sistema      = $ref_cod_sistema;
-		$this->ref_cod_religiao     = $ref_cod_religiao;
-		$this->ocupacao 		    = $ocupacao;
-		$this->empresa 		   	    = $empresa;
-		$this->ddd_telefone_empresa = $ddd_telefone_empresa;
-		$this->telefone_empresa     = $telefone_empresa;
-		$this->pessoa_contato		= $pessoa_contato;
-		$this->renda_mensal			= $renda_mensal;
-		$this->data_admissao		= $data_admissao;
+		$this->data_nasc              = $data_nasc;
+		$this->sexo                   = $sexo;
+		$this->data_uniao             = $data_uniao;
+		$this->data_obito             = $data_obito;
+		$this->nacionalidade          = $nacionalidade;
+		$this->data_chegada_brasil    = $data_chegada_brasil;
+		$this->ultima_empresa         = $ultima_empresa;
+		$this->nome_mae               = $nome_mae;
+		$this->nome_pai               = $nome_pai;
+		$this->nome_conjuge           = $nome_conjuge;
+		$this->nome_responsavel       = $nome_responsavel;
+		$this->ref_cod_sistema        = $ref_cod_sistema;
+		$this->ref_cod_religiao       = $ref_cod_religiao;
+		$this->ocupacao 		      = $ocupacao;
+		$this->empresa 		   	      = $empresa;
+		$this->ddd_telefone_empresa   = $ddd_telefone_empresa;
+		$this->telefone_empresa       = $telefone_empresa;
+		$this->pessoa_contato		  = $pessoa_contato;
+		$this->renda_mensal			  = $renda_mensal;
+		$this->data_admissao		  = $data_admissao;
+		$this->zona_localizacao_censo =  $zona_localizacao_censo;
 
 		$cpf = idFederal2int($cpf);
 
@@ -448,6 +451,12 @@ class clsFisica
 			}else{
 				$campos .=  ", falecido";
 				$valores .= ", 'f'";
+			}
+
+			if(is_numeric($this->zona_localizacao_censo))
+			{
+				$campos  .= ", zona_localizacao_censo";
+				$valores .= ", $this->zona_localizacao_censo";
 			}
 
 			$db->Consulta( "INSERT INTO {$this->schema}.{$this->tabela} (idpes, origem_gravacao, idsis_cad, data_cad, operacao, idpes_cad $campos) VALUES ( '{$this->idpes}', 'M', 17, NOW(), 'I', '$this->idpes_cad' $valores )" );
@@ -686,6 +695,16 @@ class clsFisica
 				$gruda = ", ";
 			}else{
 				$set .= "$gruda falecido = 'f'";
+				$gruda = ", ";
+			}
+
+			if(is_numeric($this->zona_localizacao_censo))
+			{
+			   $set .= "$gruda zona_localizacao_censo = {$this->zona_localizacao_censo}";
+			   $gruda = ", ";
+			}elseif ($this->zona_localizacao_censo == "NULL")
+			{
+				$set .= "$gruda zona_localizacao_censo = NULL";
 				$gruda = ", ";
 			}
 
@@ -1008,7 +1027,7 @@ class clsFisica
 		if($this->idpes)
 		{
 			$db = new clsBanco();
-			$db->Consulta("SELECT idpes, data_nasc, sexo, idpes_mae, idpes_pai, idpes_responsavel, idesco, ideciv, idpes_con, data_uniao, data_obito, nacionalidade, idpais_estrangeiro, data_chegada_brasil, idmun_nascimento, ultima_empresa, idocup, nome_mae, nome_pai, nome_conjuge, nome_responsavel, justificativa_provisorio, cpf , ref_cod_religiao, sus, nis_pis_pasep, ocupacao, empresa, ddd_telefone_empresa, telefone_empresa, pessoa_contato, data_admissao, renda_mensal, falecido, ativo, data_exclusao FROM {$this->schema}.{$this->tabela} WHERE idpes = {$this->idpes}");
+			$db->Consulta("SELECT idpes, data_nasc, sexo, idpes_mae, idpes_pai, idpes_responsavel, idesco, ideciv, idpes_con, data_uniao, data_obito, nacionalidade, idpais_estrangeiro, data_chegada_brasil, idmun_nascimento, ultima_empresa, idocup, nome_mae, nome_pai, nome_conjuge, nome_responsavel, justificativa_provisorio, cpf , ref_cod_religiao, sus, nis_pis_pasep, ocupacao, empresa, ddd_telefone_empresa, telefone_empresa, pessoa_contato, data_admissao, renda_mensal, falecido, ativo, data_exclusao, zona_localizacao_censo FROM {$this->schema}.{$this->tabela} WHERE idpes = {$this->idpes}");
 			if( $db->ProximoRegistro() )
 			{
 				$tupla = $db->Tupla();
@@ -1025,7 +1044,7 @@ class clsFisica
 		}elseif($this->cpf)
 		{
 			$db = new clsBanco();
-			$db->Consulta("SELECT idpes, data_nasc, sexo, idpes_mae, idpes_pai, idpes_responsavel, idesco, ideciv, idpes_con, data_uniao, data_obito, nacionalidade, idpais_estrangeiro, data_chegada_brasil, idmun_nascimento, ultima_empresa, idocup, nome_mae, nome_pai, nome_conjuge, nome_responsavel, justificativa_provisorio,cpf, ref_cod_religiao, ocupacao, empresa, ddd_telefone_empresa, telefone_empresa, pessoa_contato, data_admissao, renda_mensal, ativo, data_exclusao FROM {$this->schema}.{$this->tabela} WHERE cpf = '{$this->cpf}'");
+			$db->Consulta("SELECT idpes, data_nasc, sexo, idpes_mae, idpes_pai, idpes_responsavel, idesco, ideciv, idpes_con, data_uniao, data_obito, nacionalidade, idpais_estrangeiro, data_chegada_brasil, idmun_nascimento, ultima_empresa, idocup, nome_mae, nome_pai, nome_conjuge, nome_responsavel, justificativa_provisorio,cpf, ref_cod_religiao, ocupacao, empresa, ddd_telefone_empresa, telefone_empresa, pessoa_contato, data_admissao, renda_mensal, ativo, data_exclusao, zona_localizacao_censo FROM {$this->schema}.{$this->tabela} WHERE cpf = '{$this->cpf}'");
 			if( $db->ProximoRegistro() )
 			{
 				$tupla = $db->Tupla();

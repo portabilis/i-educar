@@ -1229,7 +1229,12 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
     return FALSE;
   }
+  
+  public function getQtdComponentes(){
+    $codMatricula = $this->getOption('matricula');
 
+    return count(App_Model_IedFinder::getComponentesPorMatricula($codMatricula, $this->getComponenteDataMapper(), $this->getComponenteTurmaDataMapper()));
+  }
 
   function getSituacaoNotaFalta($flagSituacaoNota, $flagSituacaoFalta)
   {
@@ -1454,6 +1459,13 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     // curriculares da matrícula, ainda está em andamento
     if ((0 == count($mediasComponentes) || count($mediasComponentes) != count($componentes))
          && $this->getRegra()->get('definirComponentePorEtapa') != "1") {
+      $situacaoGeral = App_Model_MatriculaSituacao::EM_ANDAMENTO;
+    }
+
+    $totalComponentes = $this->getQtdComponentes();
+
+    if ((0 == count($mediasComponentes) || count($mediasComponentes) < $totalComponentes)
+         && $this->getRegra()->get('definirComponentePorEtapa') == "1"){
       $situacaoGeral = App_Model_MatriculaSituacao::EM_ANDAMENTO;
     }
 

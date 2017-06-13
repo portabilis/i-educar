@@ -290,11 +290,11 @@ class EducacensoExportController extends ApiCoreController
         p.nome as r00s10,
         e.latitude as r00s11,
         e.longitude as r00s12,
-        ep.cep as r00s13,
-        l.idtlog || l.nome as r00s14,
-        ep.numero as r00s15,
-        ep.complemento as r00s16,
-        b.nome as r00s17,
+        COALESCE(ep.cep, ee.cep) as r00s13,
+        COALESCE(l.idtlog || l.nome, ee.idtlog || ee.logradouro) as r00s14,
+        COALESCE(ep.numero, ee.numero) as r00s15,
+        COALESCE(ep.complemento, ee.complemento) as r00s16,
+        COALESCE(b.nome, ee.bairro) as r00s17,
         uf.cod_ibge as r00s18,
         m.cod_ibge as r00s19,
         d.cod_ibge as r00s20,
@@ -336,7 +336,7 @@ class EducacensoExportController extends ApiCoreController
 
         e.orgao_regional as r00s27,
         e.dependencia_administrativa as r00s28,
-        b.zona_localizacao as r00s29,
+        COALESCE(b.zona_localizacao, ee.zona_localizacao) as r00s29,
         0 as r00s32,
         0 as r00s33,
         0 as r00s34,
@@ -352,15 +352,16 @@ class EducacensoExportController extends ApiCoreController
         INNER JOIN cadastro.juridica j ON (j.idpes = p.idpes)
         INNER JOIN cadastro.pessoa gestor_p ON (gestor_p.idpes = e.ref_idpes_gestor)
         INNER JOIN cadastro.fisica gestor_f ON (gestor_f.idpes = gestor_p.idpes)
-        INNER JOIN cadastro.endereco_pessoa ep ON (ep.idpes = p.idpes)
-        INNER JOIN urbano.cep_logradouro_bairro clb ON (clb.idbai = ep.idbai AND clb.idlog = ep.idlog AND clb.cep = ep.cep)
-        INNER JOIN public.bairro b ON (clb.idbai = b.idbai)
-        INNER JOIN urbano.cep_logradouro cl ON (cl.idlog = clb.idlog AND clb.cep = cl.cep)
-        INNER JOIN public.distrito d ON (d.iddis = b.iddis)
-        INNER JOIN public.municipio m ON (d.idmun = m.idmun)
-        INNER JOIN public.uf ON (uf.sigla_uf = m.sigla_uf)
-        INNER JOIN public.pais ON (pais.idpais = uf.idpais)
-        INNER JOIN public.logradouro l ON (l.idlog = cl.idlog)
+         LEFT JOIN cadastro.endereco_externo ee ON (ee.idpes = p.idpes)
+         LEFT JOIN cadastro.endereco_pessoa ep ON (ep.idpes = p.idpes)
+         LEFT JOIN urbano.cep_logradouro_bairro clb ON (clb.idbai = ep.idbai AND clb.idlog = ep.idlog AND clb.cep = ep.cep)
+         LEFT JOIN public.bairro b ON (clb.idbai = b.idbai)
+         LEFT JOIN urbano.cep_logradouro cl ON (cl.idlog = clb.idlog AND clb.cep = cl.cep)
+         LEFT JOIN public.distrito d ON (d.iddis = b.iddis)
+         LEFT JOIN public.municipio m ON (d.idmun = m.idmun)
+         LEFT JOIN public.uf ON (uf.sigla_uf = m.sigla_uf)
+         LEFT JOIN public.pais ON (pais.idpais = uf.idpais)
+         LEFT JOIN public.logradouro l ON (l.idlog = cl.idlog)
         WHERE e.cod_escola = $1
     ';
     // Transforma todos resultados em variáveis
@@ -1107,6 +1108,15 @@ class EducacensoExportController extends ApiCoreController
         $r50s19 = NULL;
       }
 
+      if ($r50s6 != 2) { $r50s9 = NULL;}
+      if ($r50s6 != 1) { $r50s10 = NULL;}
+
+      if ($r50s12 != 2) { $r50s15 = NULL;}
+      if ($r50s12 != 1) { $r50s16 = NULL;}
+
+      if ($r50s18 != 2) { $r50s21 = NULL;}
+      if ($r50s18 != 1) { $r50s22 = NULL;}
+
       if($r50s6 != 1){ $r50s7 = NULL;}
       if($r50s12 != 1){ $r50s13 = NULL;}
       if($r50s18 != 1){ $r50s19 = NULL;}
@@ -1312,7 +1322,8 @@ class EducacensoExportController extends ApiCoreController
 				LIMIT 1
 			) as r51s21,
       t.tipo_atendimento AS tipo_atendimento,
-      t.etapa_educacenso AS etapa_ensino
+      t.etapa_educacenso AS etapa_ensino,
+      e.dependencia_administrativa as dependencia_administrativa
 
 
 			FROM 	pmieducar.servidor s
@@ -1361,9 +1372,11 @@ class EducacensoExportController extends ApiCoreController
     	extract($reg);
 	    for ($i=1; $i <= $numeroRegistros ; $i++) {
 
+        $escolaPrivada = $dependencia_administrativa == 4;
+
         $funcaoDocente = ($r51s7 == $docente || $r51s7 == $docenteTutor || $r51s7 == $docenteTitular);
 
-        if (!$funcaoDocente) $r51s8 = '';
+        if (!$funcaoDocente || $escolaPrivada) $r51s8 = '';
 
         //Validação das disciplinas
         if ($i > 8) {
@@ -1563,7 +1576,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
         fis.cpf as r70s19,
         fd.passaporte as r70s20,
         fis.nis_pis_pasep as r70s21,
-        b.zona_localizacao as r70s22,
+        fis.zona_localizacao_censo as r70s22,
         ep.cep as r70s23,
         l.idtlog || l.nome as r70s24,
         ep.numero as r70s25,
@@ -1624,6 +1637,12 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
       if($r70s21 == 0){ $r70s21 = null; }
       if($r70s5 == 0){ $r70s5 = null; }
 
+      if(!$r70s5){
+        $r70s6 = null;
+        $r70s7 = null;
+        $r70s8 = null;
+      }
+
       // Validações referentes a certidões (Modelo antigo e novo, nascimento e casamento)
       $r70s9 = $r70s10 = NULL;
       if (is_null($tipo_cert_civil) && !empty($r70s18)){
@@ -1680,6 +1699,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
         t.etapa_educacenso2 as r80s9,
         a.recebe_escolarizacao_em_outro_espaco as r80s10,
         ta.responsavel as transporte_escolar,
+        t.etapa_educacenso,
         (
           SELECT COUNT(1)
           FROM modules.veiculo v
@@ -1817,6 +1837,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
     $numeroRegistros = 24;
     $atividadeComplementar = 4;
     $atendimentoEducEspecializado = 5;
+    $educacaoInfantilUnificada = 3;
 
     foreach (Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId, $ano, $data_ini, $data_fim, $alunoId))) as $reg) {
       extract($reg);
@@ -1825,31 +1846,14 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
         $r80s10 = '';
       }
 
+      if ($etapa_educacenso != $educacaoInfantilUnificada) {
+        $r80s8 = '';
+      }
+
       $r80s10 = ($r80s10 == 0 ? NULL : $r80s10);
 
       for ($i=13; $i <= 23 ; $i++)
           ${'r80s'.$i} = 0;
-
-      // validações transporte escolar
-
-      // if ($transporte_escolar){
-      //   $veiculo = false;
-      //   for ($i=13; $i <= 23 ; $i++) {
-      //     if (${'r80s'.$i} == 1)
-      //       $veiculo = true;
-      //   }
-      //   if ($veiculo)
-      //     $r80s11 = 1;
-      //   elseif($veiculo_transporte_escolar){
-      //     $r80s11 = 1;
-      //     ${'r80s'.($veiculo_transporte_escolar + 12)} = 1;
-      //   }
-      //   $r80s12 = $transporte_escolar;
-      // }else{
-      //   for ($i=13; $i <= 23 ; $i++) {
-      //     ${'r80s'.$i} = NULL;
-      //   }
-      // }
 
       if(is_null($transporte_escolar)){
         $r80s11 = NULL;

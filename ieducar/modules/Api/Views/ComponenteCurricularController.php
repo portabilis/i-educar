@@ -114,7 +114,7 @@ class ComponenteCurricularController extends ApiCoreController
                      cct.turma_id = turma.cod_turma and
                      cct.escola_id = turma.ref_ref_cod_escola and
                      cct.componente_curricular_id = cc.id and al.ano = $2 and
-                     cct.escola_id = al.ref_cod_escola and
+                     turma.ref_ref_cod_escola = al.ref_cod_escola and
                      cc.area_conhecimento_id = ac.id
                order by ac.secao, ac.nome, cc.ordenamento, cc.nome";
 

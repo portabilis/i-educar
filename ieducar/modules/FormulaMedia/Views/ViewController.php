@@ -51,7 +51,7 @@ class ViewController extends Core_Controller_Page_ViewController
   protected $_tableMap   = array(
     'Nome' => 'nome',
     'Fórmula de cálculo' => 'formulaMedia',
-    'Tipo de fórmula' => 'tipoFormula'
+    'Tipo de fórmula' => 'tipoFormula',
   );
 
   protected function _preRender(){

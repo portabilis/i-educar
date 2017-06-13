@@ -462,10 +462,13 @@ class clsPmieducarAcervoAcervoAutor
 
 	function listaAutoresPorObra($acervoId){
 		$db = new clsBanco();
-		$db->Consulta( "SELECT ref_cod_acervo_autor as id
+		$db->Consulta( "SELECT acervo_acervo_autor.ref_cod_acervo_autor as id,
+                            acervo_autor.nm_autor as nome
 						 FROM pmieducar.acervo_acervo_autor
-						 WHERE ref_cod_acervo IN ($acervoId)
-						 ORDER BY principal" );
+             INNER JOIN pmieducar.acervo_autor
+              ON acervo_acervo_autor.ref_cod_acervo_autor = acervo_autor.cod_acervo_autor
+						 WHERE acervo_acervo_autor.ref_cod_acervo IN ($acervoId)
+						 ORDER BY acervo_acervo_autor.principal" );
 
 		while ( $db->ProximoRegistro() )
 		{

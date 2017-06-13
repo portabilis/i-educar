@@ -84,6 +84,7 @@ class indice extends clsCadastro
 	var $restringir_multiplas_enturmacoes;
   	var $permissao_filtro_abandono_transferencia;
 	var $multiplas_reserva_vaga;
+	var $permitir_carga_horaria;
   	var $reserva_integral_somente_com_renda;
   	var $data_base_matricula;
 	var $data_expiracao_reserva_vaga;
@@ -141,6 +142,7 @@ class indice extends clsCadastro
         $this->restringir_multiplas_enturmacoes	= dbBool($this->restringir_multiplas_enturmacoes);
         $this->permissao_filtro_abandono_transferencia  = dbBool($this->permissao_filtro_abandono_transferencia);
         $this->multiplas_reserva_vaga = dbBool($this->multiplas_reserva_vaga);
+        $this->permitir_carga_horaria = dbBool($this->permitir_carga_horaria);
         $this->componente_curricular_turma = dbBool($this->componente_curricular_turma);
         $this->reprova_dependencia_ano_concluinte = dbBool($this->reprova_dependencia_ano_concluinte);
         $this->reserva_integral_somente_com_renda	= dbBool($this->reserva_integral_somente_com_renda);
@@ -248,6 +250,10 @@ class indice extends clsCadastro
     $this->multiplas_reserva_vaga = isset($this->cod_instituicao) ? dbBool($this->multiplas_reserva_vaga) : true;
     $this->campoCheck("multiplas_reserva_vaga", "Permitir múltiplas reservas de vagas para o mesmo candidato em escolas diferentes", $this->multiplas_reserva_vaga);
 
+    $this->permitir_carga_horaria = isset($this->cod_instituicao) ? dbBool($this->permitir_carga_horaria) : true;
+    $this->campoCheck("permitir_carga_horaria", "Não permitir definir C.H. por componente no histórico escolar", $this->permitir_carga_horaria, NULL, false, false, false, 'Caso a opção estiver habilitda, não será possivel adicionar carga horária na tabela de disciplinas do histórico do aluno.');
+
+
 		$this->campoCheck("reserva_integral_somente_com_renda", "Permitir reserva de vaga para o turno integral somente quando a renda for informada", $this->reserva_integral_somente_com_renda);
 
     $this->campoCheck("componente_curricular_turma",
@@ -304,6 +310,7 @@ class indice extends clsCadastro
 		$obj->restringir_multiplas_enturmacoes  = !is_null($this->restringir_multiplas_enturmacoes);
     $obj->permissao_filtro_abandono_transferencia  = !is_null($this->permissao_filtro_abandono_transferencia);
     $obj->multiplas_reserva_vaga  = !is_null($this->multiplas_reserva_vaga);
+    $obj->permitir_carga_horaria  = !is_null($this->permitir_carga_horaria);
     $obj->componente_curricular_turma  = !is_null($this->componente_curricular_turma);
     $obj->reprova_dependencia_ano_concluinte  = !is_null($this->reprova_dependencia_ano_concluinte);
     $obj->bloqueia_matricula_serie_nao_seguinte  = !is_null($this->bloqueia_matricula_serie_nao_seguinte);
@@ -354,6 +361,7 @@ class indice extends clsCadastro
 		$obj->restringir_multiplas_enturmacoes 	= !is_null($this->restringir_multiplas_enturmacoes);
     $obj->permissao_filtro_abandono_transferencia   = !is_null($this->permissao_filtro_abandono_transferencia);
     $obj->multiplas_reserva_vaga  = !is_null($this->multiplas_reserva_vaga);
+    $obj->permitir_carga_horaria  = !is_null($this->permitir_carga_horaria);
     $obj->componente_curricular_turma  = !is_null($this->componente_curricular_turma);
     $obj->reprova_dependencia_ano_concluinte  = !is_null($this->reprova_dependencia_ano_concluinte);
     $obj->bloqueia_matricula_serie_nao_seguinte  = !is_null($this->bloqueia_matricula_serie_nao_seguinte);
