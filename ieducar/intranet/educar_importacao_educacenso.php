@@ -385,16 +385,6 @@ class indice extends clsCadastro
     $horaInicial = sprintf("%02d:%02d:00", intval($dadosRegistro[7-1]), intval($dadosRegistro[8-1]));
     $horaFinal = sprintf("%02d:%02d:00", intval($dadosRegistro[9-1]), intval($dadosRegistro[10-1]));
 
-    $diasSemana = array(
-      'domingo' => $dadosRegistro[11-1],
-      'segunda-feira' => $dadosRegistro[12-1],
-      'terça-feira' => $dadosRegistro[13-1],
-      'quarta-feira' => $dadosRegistro[14-1],
-      'quinta-feira' => $dadosRegistro[15-1],
-      'sexta-feira' => $dadosRegistro[16-1],
-      'sabado' => $dadosRegistro[17-1],
-    );
-
     $diasSemana = array();
 
     for ($i=1; $i <= 7; $i++) {
@@ -402,6 +392,34 @@ class indice extends clsCadastro
         $diasSemana[] = $i;
       }
     }
+
+    $disciplinas = array();
+    $disciplinas[1] = $dadosRegistro[40-1];
+    $disciplinas[2] = $dadosRegistro[41-1];
+    $disciplinas[3] = $dadosRegistro[42-1];
+    $disciplinas[4] = $dadosRegistro[43-1];
+    $disciplinas[5] = $dadosRegistro[44-1];
+    $disciplinas[6] = $dadosRegistro[45-1];
+    $disciplinas[7] = $dadosRegistro[46-1];
+    $disciplinas[8] = $dadosRegistro[47-1];
+    $disciplinas[30] = $dadosRegistro[48-1];
+    $disciplinas[9] = $dadosRegistro[49-1];
+    $disciplinas[10] = $dadosRegistro[50-1];
+    $disciplinas[11] = $dadosRegistro[51-1];
+    $disciplinas[12] = $dadosRegistro[52-1];
+    $disciplinas[13] = $dadosRegistro[53-1];
+    $disciplinas[14] = $dadosRegistro[54-1];
+    $disciplinas[28] = $dadosRegistro[55-1];
+    $disciplinas[29] = $dadosRegistro[56-1];
+    $disciplinas[16] = $dadosRegistro[57-1];
+    $disciplinas[17] = $dadosRegistro[58-1];
+    $disciplinas[20] = $dadosRegistro[59-1];
+    $disciplinas[21] = $dadosRegistro[60-1];
+    $disciplinas[23] = $dadosRegistro[61-1];
+    $disciplinas[25] = $dadosRegistro[62-1];
+    $disciplinas[26] = $dadosRegistro[63-1];
+    $disciplinas[27] = $dadosRegistro[64-1];
+    $disciplinas[99] = $dadosRegistro[65-1];
 
     $camposTurma = array(
       'tipo_atendimento' => $dadosRegistro[18-1],
@@ -478,10 +496,98 @@ class indice extends clsCadastro
 
           $obj->cadastra();
         }
-      }
 
-      // TODO: componentes
+        foreach ($disciplinas as $disciplinaEducacenso => $usaDisciplina) {
+          if($usaDisciplina == 1){
+            $this->vinculaDisciplinaTurma($codEscola, $codSerie, $codTurma, $disciplinaEducacenso);
+          }
+        }
+      }
     }
+  }
+
+  function vinculaDisciplinaTurma($codEscola, $codSerie, $codTurma, $disciplinaEducacenso){
+    $codDisciplina = $this->getOrCreateDisciplina($disciplinaEducacenso);
+    $this->vinculaDisciplinaSerie($codDisciplina, $codSerie);
+    $this->vinculaDisciplinaEscolaSerie($codDisciplina, $codEscola, $codSerie);
+  }
+
+  function vinculaDisciplinaEscolaSerie($codDisciplina, $codEscola, $codSerie){
+    $obj = new clsPmieducarEscolaSerieDisciplina(
+            $codSerie,
+            $codEscola,
+            $codDisciplina,
+            1);
+
+    if(!$obj->existe()){
+      print_r(array($codDisciplina, $codEscola, $codSerie));
+      $obj->cadastra();
+    }
+
+  }
+
+  function vinculaDisciplinaSerie($codDisciplina, $codSerie){
+    $dataMapper = Portabilis_DataMapper_Utils::getDataMapperFor('componenteCurricular', 'anoEscolar');
+    $where = array('componente_curricular_id'=>$codDisciplina, 'ano_escolar_id' => $codSerie);
+    $componenteAno = $dataMapper->findAll(array(), $where);
+
+    if(count($componenteAno) == 0){
+      $data = array();
+
+      $data['componenteCurricular'] = $codDisciplina;
+      $data['anoEscolar'] = $codSerie;
+
+      $entity = $dataMapper->createNewEntityInstance();
+      $entity->setOptions($data);
+
+      $dataMapper->save($entity);
+    }
+  }
+
+  function getOrCreateAreaConhecimento(){
+    $dataMapper = Portabilis_DataMapper_Utils::getDataMapperFor('areaConhecimento', 'area');
+    $areas = $dataMapper->findAll(array());
+
+    $codArea = null;
+    if( count($areas)){
+      $codArea = $areas[0]->id;
+    }else{
+
+      $sql = "INSERT INTO modules.area_conhecimento (instituicao_id, nome)
+                VALUES ($1,$2) returning id ";
+      $codArea = Portabilis_Utils_Database::selectField($sql, array($this->ref_cod_instituicao, "Migração"));
+    }
+
+    return $codArea;
+  }
+
+  function getOrCreateDisciplina($disciplinaEducacenso){
+
+    $codArea = $this->getOrCreateAreaConhecimento();
+
+    $dataMapper = Portabilis_DataMapper_Utils::getDataMapperFor('componenteCurricular', 'componente');
+    $where = array('codigo_educacenso' => $disciplinaEducacenso);
+
+    $disciplinas = $dataMapper->findAll(array(), $where);
+    $codDisciplina = null;
+    // Não existem componentes específicos para a turma
+    if (count($disciplinas)) {
+      $codDisciplina = $disciplinas[0]->id;
+    }else{
+
+      $codigoEducacenso = ComponenteCurricular_Model_CodigoEducacenso::getInstance();
+      $codigos = $codigoEducacenso->getValues();
+
+      $nome = $codigos[$disciplinaEducacenso];
+
+      $sql = 'INSERT INTO modules.componente_curricular (instituicao_id, area_conhecimento_id, nome, codigo_educacenso, abreviatura, tipo_base)
+                VALUES ($1,$2,$3,$4,$5,$6) returning id ';
+
+      $codDisciplina = Portabilis_Utils_Database::selectField($sql, array($this->ref_cod_instituicao, $codArea, $nome, $disciplinaEducacenso, substr($nome, 0, 3), 1));
+
+    }
+
+    return $codDisciplina;
   }
 
   function getOrCreateTurmaTipo(){
@@ -549,7 +655,7 @@ class indice extends clsCadastro
     $codCurso = null;
 
 
-    $codNivelEnsino = $this->getOrCreateNivelEnsino($nivel);
+    $codNivelEnsino = $this->getOrCreateNivelEnsino();
     $codTipoEnsino = $this->getOrCreateTipoEnsino();
 
     $cursos = new clsPmieducarCurso();
@@ -560,7 +666,7 @@ class indice extends clsCadastro
             $codNivelEnsino,
             $codTipoEnsino,
             null,
-            $dadosCurso['nome'],
+            $dadosCurso['curso'],
             null, null, # $str_sgl_curso = NULL, $int_qtd_etapas = NULL,
             null, null, null, # $int_frequencia_minima = NULL, $int_media = NULL, $int_media_exame = NULL,
             null, null, # $int_falta_ch_globalizada = NULL, $int_carga_horaria = NULL,
@@ -630,7 +736,7 @@ class indice extends clsCadastro
     return Portabilis_Utils_Database::selectField($sql);
   }
 
-  function getOrCreateNivelEnsino($nivel){
+  function getOrCreateNivelEnsino($nivel = "Ano"){
     $codNivelEnsino = $this->getNivelEnsino($nivel);
 
     if(!$codNivelEnsino){
