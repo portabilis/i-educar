@@ -145,6 +145,10 @@ class indice extends clsDetalhe
 		{
 			$this->addDetalhe( array( "Motivo Baixa", "{$registro["ref_cod_motivo_baixa"]}") );
 		}
+		if( $registro["data_baixa_exemplar"] )
+		{
+			$this->addDetalhe( array( "Data Baixa", dataFromPgToBr($registro["data_baixa_exemplar"])) );
+		}
 
 		if( $registro["ref_cod_situacao"] )
 		{
