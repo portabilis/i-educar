@@ -264,13 +264,13 @@ class indice extends clsDetalhe
 		$lst = $obj->lista( null,$this->ref_cod_aluno,$this->sequencial );
 		$qtd_disciplinas = count($lst);
 		if ($lst)
-		{ //echo "<pre>";print_r($lst); die;
+		{ 
 			$tabela = "<table>
 					       <tr align='center'>
 					           <td bgcolor=#ccdce6><b>Nome</b></td>
 					           <td bgcolor=#ccdce6><b>Nota</b></td>
 					           <td bgcolor=#ccdce6><b>Faltas</b></td>
-					           <td bgcolor=#ccdce6 title='teste1'><b>C.H</b></td>
+					           <td bgcolor=#ccdce6><b>C.H</b></td>
 					       </tr>";
 			$cont = 0;
 			$prim_disciplina = false;
