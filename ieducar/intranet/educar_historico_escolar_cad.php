@@ -31,6 +31,8 @@ require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'lib/Portabilis/View/Helper/Application.php';
+require_once 'App/Model/NivelTipoUsuario.php';
+
 
 class clsIndexBase extends clsBase
 {
@@ -132,7 +134,6 @@ class indice extends clsCadastro
 		}
 		$this->url_cancelar = ($retorno == "Editar") ? "educar_historico_escolar_det.php?ref_cod_aluno={$registro["ref_cod_aluno"]}&sequencial={$registro["sequencial"]}" : "educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}";
 		$this->nome_url_cancelar = "Cancelar";
-
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
@@ -166,7 +167,6 @@ class indice extends clsCadastro
 		$this->campoOculto("codigoEscola", $codigoEscola);
 		$this->campoOculto("nomeEscola", $nomeEscola);
 		$this->campoOculto("numeroSequencial", $_GET["sequencial"]);
-
 		$obj_aluno = new clsPmieducarAluno();
 		$lst_aluno = $obj_aluno->lista( $this->ref_cod_aluno,null,null,null,null,null,null,null,null,null,1 );
 		if ( is_array($lst_aluno) )
@@ -175,8 +175,16 @@ class indice extends clsCadastro
 			$this->nm_aluno = $det_aluno["nome_aluno"];
 			$this->campoRotulo( "nm_aluno", "Aluno", $this->nm_aluno );
 		}
-		//$obj_permissoes = new clsPermissoes();
-		//$this->ref_cod_instituicao = $obj_permissoes->getInstituicao( $this->pessoa_logada );
+
+		$obj_nivelUser = new clsPermissoes();
+		$user_nivel = $obj_nivelUser->nivel_acesso($this->pessoa_logada);
+		if ($user_nivel != App_Model_NivelTipoUsuario::POLI_INSTITUCIONAL)
+		{
+			$obj_permissoes = new clsPermissoes();
+			$this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada );
+			$habilitaCargaHoraria = $this->habilitaCargaHoraria($this->ref_cod_instituicao);
+		}
+
 		//$this->campoOculto( 'ref_cod_instituicao', $this->ref_cod_instituicao );
 
 		$obj_nivel = new clsPmieducarUsuario($this->pessoa_logada);
@@ -324,23 +332,25 @@ class indice extends clsCadastro
 					$this->historico_disciplinas[$qtd_disciplinas][] = $campo["nm_disciplina"];
 					$this->historico_disciplinas[$qtd_disciplinas][] = $campo["nota"];
 					$this->historico_disciplinas[$qtd_disciplinas][] = $campo["faltas"];
-					$this->historico_disciplinas[$qtd_disciplinas][] = $campo["ordenamento"];
 					$this->historico_disciplinas[$qtd_disciplinas][] = $campo["carga_horaria_disciplina"];
+					$this->historico_disciplinas[$qtd_disciplinas][] = $campo["ordenamento"];
 					$this->historico_disciplinas[$qtd_disciplinas][] = $campo["sequencial"];
 					$qtd_disciplinas++;
 				}
 			}
 		}
 
-		$this->campoTabelaInicio("notas","Notas",array("Disciplina","Nota","Faltas", "Ordem", "C.H"),$this->historico_disciplinas);
+
+		$this->campoTabelaInicio("notas","Notas",array("Disciplina","Nota","Faltas", '<p title="Informe a carga horária somente se a disciplina não pertencer a grade curricular do município.">C.H (?)</p>', "Ordem"),$this->historico_disciplinas);
 
 		//$this->campoTexto( "nm_disciplina", "Disciplina", $this->nm_disciplina, 30, 255, false, false, false, '', '', 'autoCompleteComponentesCurricular(this)', 'onfocus' );
 		$this->campoTexto( "nm_disciplina", "Disciplina", $this->nm_disciplina, 30, 255, false, false, false, '', '', '', 'onfocus' );
 
 		$this->campoTexto( "nota", "Nota", $this->nota, 10, 255, false );
 		$this->campoNumero( "faltas", "Faltas", $this->faltas, 3, 3, false );
+		$this->campoNumero( "carga_horaria_disciplina", "carga_horaria_disciplina", $this->carga_horaria_disciplina, 3, 3, false, NULL, NULL, NULL, NULL, NULL, $habilitaCargaHoraria );
 		$this->campoNumero( "ordenamento", "ordenamento", $this->ordenamento, 3, 3, false );
-		$this->campoNumero( "carga_horaria_disciplina", "carga_horaria_disciplina", $this->carga_horaria_disciplina, 3, 3, false );
+
 		//$this->campoOculto("sequencial","");
 
 		$this->campoTabelaFim();
@@ -544,6 +554,14 @@ class indice extends clsCadastro
 
 		return $frequencia;
 	}
+	function habilitaCargaHoraria($instituicao)
+  	{
+  		$obj_instituicao = new clsPmieducarInstituicao($instituicao);
+		$detalhe_instituicao = $obj_instituicao->detalhe();
+		$valorPermitirCargaHoraria = dbBool($detalhe_instituicao['permitir_carga_horaria']);
+
+		return $valorPermitirCargaHoraria;
+  	}
 }
 
 
@@ -569,6 +587,7 @@ function getOpcoesGradeCurso(){
 
     return dbBool($lst[0]['controlar_posicao_historicos']);
   }
+
 
 // cria uma extensao da classe base
 $pagina = new clsIndexBase();
