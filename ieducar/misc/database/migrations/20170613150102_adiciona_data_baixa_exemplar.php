@@ -11,6 +11,6 @@ class AdicionaDataBaixaExemplar extends AbstractMigration
 
     public function down()
     {
-        $this->execute("ALTER TABLE pmieducar.exemplar DRO COLUMN data_baixa_exemplar;");
+        $this->execute("ALTER TABLE pmieducar.exemplar DROP COLUMN data_baixa_exemplar;");
     }
 }
