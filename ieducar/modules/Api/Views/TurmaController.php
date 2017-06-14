@@ -85,9 +85,10 @@ class TurmaController extends ApiCoreController
                         );
     }
     sort($lstNomes);
+    array_unshift($lstNomes, "indice zero");
     $quantidadeAlunos   = count($lstNomes);
 
-    for ($i=0; $i < $quantidadeAlunos; $i++) {
+    for ($i=1; $i < $quantidadeAlunos; $i++) {
       $sql ="UPDATE pmieducar.matricula_turma
                 SET sequencial_fechamento =".$i."
               WHERE matricula_turma.ref_cod_turma = ". $codTurma ."
