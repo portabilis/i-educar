@@ -385,7 +385,7 @@ class indice extends clsCadastro
                                                  $this->pessoa_logada,
                                                  NULL,
                                                  NULL,
-                                                 NULL,
+                                                 date('Y-m-d'),
                                                  0,
                                                  NULL,
                                                  $sequencialEnturmacao);
