@@ -73,14 +73,32 @@ class TurmaController extends ApiCoreController
 
   // api
 
-  protected function ordenaTurmaAlfabetica(){
+  protected function ordenaAlunosDaTurmaAlfabetica(){
+    $codTurma           = $this->getRequest()->id;
+    $objMatriculaTurma = new clsPmieducarMatriculaTurma();
+    $lstMatriculaTurma  = $objMatriculaTurma->lista(null, $codTurma);
 
-    $codTurma = $this->getRequest()->id;
+    foreach ($lstMatriculaTurma as $matricula) {
+      $lstNomes[] = array('nome'          => $matricula['nome'],
+                          'ref_cod_matricula' => $matricula['ref_cod_matricula'],
+                          'sequencial'    => $matricula['sequencial']
+                        );
+    }
+    sort($lstNomes);
+    array_unshift($lstNomes, "indice zero");
+    $quantidadeAlunos   = count($lstNomes);
 
-    $sql = "UPDATE pmieducar.matricula_turma SET sequencial_fechamento = 0 WHERE ref_cod_turma = $1";
-    $this->fetchPreparedQuery($sql, $codTurma);
+    for ($i=1; $i < $quantidadeAlunos; $i++) {
+      $sql ="UPDATE pmieducar.matricula_turma
+                SET sequencial_fechamento =".$i."
+              WHERE matricula_turma.ref_cod_turma = ". $codTurma ."
+                AND matricula_turma.ref_cod_matricula = ". $lstNomes[$i]['ref_cod_matricula'];
+      $this->fetchPreparedQuery($sql);
+    }
+  }
 
-    return true;
+  protected function ordenaSequencialAlunosTurma(){
+      $this->ordenaAlunosDaTurmaAlfabetica();
   }
 
   protected function getTipoBoletim() {
@@ -297,7 +315,7 @@ class TurmaController extends ApiCoreController
     if ($this->isRequestFor('get', 'tipo-boletim'))
       $this->appendResponse($this->getTipoBoletim());
     else if($this->isRequestFor('get', 'ordena-turma-alfabetica'))
-      $this->appendResponse($this->ordenaTurmaAlfabetica());
+      $this->appendResponse($this->ordenaSequencialAlunosTurma());
     else if($this->isRequestFor('get', 'turmas-por-escola'))
       $this->appendResponse($this->getTurmasPorEscola());
     else if($this->isRequestFor('get', 'alunos-matriculados-turma'))
