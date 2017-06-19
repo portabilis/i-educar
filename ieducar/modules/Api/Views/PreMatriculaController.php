@@ -661,13 +661,17 @@ class PreMatriculaController extends ApiCoreController
 
       $pessoaId = Portabilis_Utils_Database::selectField('SELECT ref_idpes FROM pmieducar.aluno WHERE cod_aluno = $1', array($alunoId));
       if(is_numeric($pessoaId)){
-      	$pessoaMaeId = Portabilis_Utils_Database::selectField('SELECT idpes_mae FROM cadastro.fisica WHERE idpes = $1', array($pessoaId));
-      	$pessoaRespId = Portabilis_Utils_Database::selectField('SELECT idpes_responsavel FROM cadastro.fisica WHERE idpes = $1', array($pessoaId));
-  	  }
-      if(is_numeric($alunoId))
+        $pessoaMaeId = Portabilis_Utils_Database::selectField('SELECT idpes_mae FROM cadastro.fisica WHERE idpes = $1', array($pessoaId));
+        $pessoaRespId = Portabilis_Utils_Database::selectField('SELECT idpes_responsavel FROM cadastro.fisica WHERE idpes = $1', array($pessoaId));
+      }
+      if(is_numeric($alunoId)){
+        $this->fetchPreparedQuery('DELETE FROM pmieducar.matricula WHERE ref_cod_aluno = $1', array($alunoId));
+        $this->fetchPreparedQuery('DELETE FROM pmieducar.matricula_turma WHERE ref_cod_matricula in(SELECT cod_matricula from pmieducar.matricula WHERE ref_cod_aluno = $1)', array($alunoId));
         $this->fetchPreparedQuery('DELETE FROM pmieducar.aluno WHERE cod_aluno = $1', $alunoId);
+      }
 
       if(is_numeric($pessoaId)){
+        $this->fetchPreparedQuery('DELETE FROM cadastro.fisica_deficiencia WHERE ref_idpes = $1', $pessoaId);
         $this->fetchPreparedQuery('DELETE FROM cadastro.fisica WHERE idpes = $1', $pessoaId);
         $this->fetchPreparedQuery('DELETE FROM cadastro.pessoa WHERE idpes = $1', $pessoaId);
       }
@@ -683,8 +687,6 @@ class PreMatriculaController extends ApiCoreController
 
   }
   public function Gerar() {
-    // if ($this->isRequestFor('post', 'matricular-candidato'))
-      // $this->appendResponse($this->matricularCandidato());
     if ($this->isRequestFor('post', 'registrar-pre-matricula'))
       $this->appendResponse($this->registrarPreMatricula());
   	elseif ($this->isRequestFor('post', 'homologar-pre-matricula'))
