@@ -86,9 +86,9 @@ function DvCnpjOk(e) {
             dv = true;
      }
      if ( ! dv && tam > 0) {
-         mensagem = "           Erro de digitação:\n";
+         mensagem = "           Erro de digitaÃ§Ã£o:\n";
          mensagem+= "          ===============\n\n";
-         mensagem+= " O CNPJ: " + e.value + " não existe!!\n";
+         mensagem+= " O CNPJ: " + e.value + " nÃ£o existe!!\n";
          alert(mensagem);
      }
      return dv;
@@ -115,9 +115,9 @@ function DvCpfOk(e) {
             dv = true;
     }
      if ( ! dv && tam > 0) {
-         mensagem = "           Erro de digitação:\n";
+         mensagem = "           Erro de digitaÃ§Ã£o:\n";
          mensagem+= "          ===============\n\n";
-         mensagem+= " O CPF: " + e.value + " não existe!!\n";
+         mensagem+= " O CPF: " + e.value + " nÃ£o existe!!\n";
          alert(mensagem);
          e.value = "";
      }
@@ -155,7 +155,7 @@ function verificaTamanhoEmail(campo, e)
 		{
 			if(document.getElementById(campo).value.length>16)
 			{
-				alert("Excedido número maximo de caracteres, por favor use no máximo e 16 caracteres!");
+				alert("Excedido nÑŠmero maximo de caracteres, por favor use no mÐ±ximo e 16 caracteres!");
 			}
 		}
 		
@@ -166,7 +166,7 @@ function verificaTamanhoEmail(campo, e)
 		{
 			if(document.getElementById(campo).value.length>16)
 			{
-				alert("Excedido número maximo de caracteres, por favor use no máximo e 16 caracteres!");
+				alert("Excedido nÑŠmero maximo de caracteres, por favor use no mÐ±ximo e 16 caracteres!");
 			}
 		}
 	}
