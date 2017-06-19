@@ -1,5 +1,0 @@
-{
-    "require": {
-        "robmorgan/phinx": "^0.4.5"
-    }
-}
