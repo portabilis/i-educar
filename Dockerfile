@@ -21,5 +21,13 @@ CMD mkdir /var/www/html/i-educar
 CMD chmod 777 -R /var/www/html/i-educar
 WORKDIR /var/www/html/i-educar
 
+# Instala dependencia relatórios
+RUN apt-get install -y software-properties-common python-software-properties \
+    && add-apt-repository -y ppa:openjdk-r/ppa \
+    && apt-get -y update \
+    && apt-get -y install openjdk-7-jdk
+
+CMD chmod 777 /home/portabilis/ieducar/modules/Reports/ReportSources/Portabilis/
+
 CMD /usr/sbin/apache2ctl -D FOREGROUND
 
