@@ -507,7 +507,10 @@ class indice extends clsCadastro
 	    Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
 
 		$obj_permissoes = new clsPermissoes();
-//		echo "<pre>";print_r($_POST);die;
+
+		if (!empty($this->orgao_regional)) {
+			$this->orgao_regional = str_pad($this->orgao_regional, 5, "0", STR_PAD_LEFT);
+		}
 
 		if( !$this->sem_cnpj && !$this->com_cnpj)
 		{
