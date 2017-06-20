@@ -1,6 +1,6 @@
 <?php
-//error_reporting(E_ALL);
-//ini_set("display_errors", 1);
+// error_reporting(E_ALL);
+// ini_set("display_errors", 1);
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -86,8 +86,7 @@ class indice extends clsCadastro
     $exportacao = $_POST["exportacao"];
 
     if ($exportacao) {
-      $decoded_a = urldecode($exportacao);
-      $converted_to_iso88591 = utf8_decode($exportacao);
+      $converted_to_iso88591 = mb_convert_encoding($exportacao,'ISO-8859-1');
 
       header('Content-type: text/plain');
       header('Content-Length: ' . strlen($converted_to_iso88591));
