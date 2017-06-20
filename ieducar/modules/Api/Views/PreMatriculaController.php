@@ -101,7 +101,11 @@ class PreMatriculaController extends ApiCoreController
 	    return array("cod_matricula" => 0);
 	   }
 
+     $obj_a = null;
+     $aluno_id = null;
+
 	   if($alunoIdParametro){
+       $aluno_id = $alunoIdParametro;
 	   	 $obj_a = new clsPmieducarAluno($alunoIdParametro);
 	   	 if($obj_a->detalhe()){
 
@@ -115,12 +119,12 @@ class PreMatriculaController extends ApiCoreController
         if($alunoIdParametro != $alunoIdMatricula){
 	  		 $this->excluirInformacoesAluno($alunoIdMatricula);
         }
-
-	  		return array("cod_matricula" => $this->enturmaPreMatricula($alunoIdParametro, $turmaId, $matriculaId, false));
 	 	  }
-	   }
-
+    }else {
+      $aluno_id = $alunoIdMatricula;
       $obj_a = new clsPmieducarAluno($alunoIdMatricula);
+    }
+
       $det_a = $obj_a->detalhe();
       $pessoaAlunoId = $det_a['ref_idpes'];
 
@@ -176,12 +180,12 @@ class PreMatriculaController extends ApiCoreController
 
       $this->updateDeficiencias($pessoaAlunoId, $deficiencias);
 
-	  $this->createOrUpdateEndereco($pessoaAlunoId, $cep, $rua, $numero, $complemento, $bairro, $cidade, $estado, $pais);
+	    $this->createOrUpdateEndereco($pessoaAlunoId, $cep, $rua, $numero, $complemento, $bairro, $cidade, $estado, $pais);
 
   	  // $this->messenger->append("escola:" . $escolaId . " serie:" . $serieId . " anoletivo:" . $anoLetivo .
   	  		                    // " curso: " . $cursoId . " aluno:" . $alunoId . " turma: " . $turmaId . "matricula: " . $matriculaId);
 
-      return array("cod_matricula" => $this->enturmaPreMatricula($alunoIdMatricula, $turmaId, $matriculaId, $maeIsResponsavel));
+      return array("cod_matricula" => $this->enturmaPreMatricula($aluno_id, $turmaId, $matriculaId, $maeIsResponsavel));
 
 	}
 }
