@@ -1631,7 +1631,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
 
       $r70s24 = $this->convertStringToCenso($r70s24);
       $r70s25 = $this->convertStringToCenso($r70s25);
-      $r70s26 = $this->convertStringToCenso($r70s26);
+      $r70s26 = $this->convertStringToCenso(substr($r70s26, 0, 20));
       $r70s27 = $this->convertStringToCenso($r70s27);
 
       if($r70s21 == 0){ $r70s21 = null; }
