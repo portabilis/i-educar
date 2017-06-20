@@ -508,7 +508,7 @@ class indice extends clsCadastro
 
 		$obj_permissoes = new clsPermissoes();
 
-		if (!empty($this->orgao_regional)) {
+		if (!empty($this->orgao_regional) && !$this->mensagem) {
 			$this->orgao_regional = str_pad($this->orgao_regional, 5, "0", STR_PAD_LEFT);
 		}
 
