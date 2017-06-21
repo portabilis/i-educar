@@ -336,14 +336,19 @@ class EducacensoExportController extends ApiCoreController
 
         e.orgao_regional as r00s27,
         e.dependencia_administrativa as r00s28,
-        COALESCE(b.zona_localizacao, ee.zona_localizacao) as r00s29,
-        0 as r00s32,
-        0 as r00s33,
-        0 as r00s34,
-        0 as r00s35,
-        0 as r00s36,
+        b.zona_localizacao as r00s29,
+        e.categoria_escola_privada as r00s30,
+        e.conveniada_com_poder_publico r00s31,
+        CASE WHEN e.mantenedora_escola_privada = 1 THEN 1 ELSE 0 END as r00s32,
+        CASE WHEN e.mantenedora_escola_privada = 2 THEN 1 ELSE 0 END as r00s33,
+        CASE WHEN e.mantenedora_escola_privada = 3 THEN 1 ELSE 0 END as r00s34,
+        CASE WHEN e.mantenedora_escola_privada = 4 THEN 1 ELSE 0 END as r00s35,
+        CASE WHEN e.mantenedora_escola_privada = 5 THEN 1 ELSE 0 END as r00s36,
+        e.cnpj_mantenedora_principal as r00s37,
+        j.cnpj AS r00s38,
         e.regulamentacao as r00s39,
-        0 as r00s40
+        0 as r00s40,
+        e.situacao_funcionamento
 
 
         FROM pmieducar.escola e
@@ -386,8 +391,8 @@ class EducacensoExportController extends ApiCoreController
       $r00s26 = strtoupper($r00s26);
       $r00s27 = ($r00s27 ? str_pad($r00s27, 5, "0", STR_PAD_LEFT) : NULL);
 
-      if($r00s28 <> 4)
-        $r00s32 = $r00s33 = $r00s34 = $r00s35 = $r00s36 = '';
+      if($r00s28 != 4 && $situacao_funcionamento != 1)
+        $r00s30 = $r00s31 = $r00s32 = $r00s33 = $r00s34 = $r00s35 = $r00s36 = $r00s37 = $r00s38 = '';
 
       for ($i=1; $i <= 42 ; $i++)
         $return .= ${'r00s'.$i}.$d;
