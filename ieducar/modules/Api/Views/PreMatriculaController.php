@@ -232,12 +232,12 @@ class PreMatriculaController extends ApiCoreController
       $pessoaResponsavelId = null;
 
       if(is_numeric($cpfMae)){
-        $pessoaMaeId = $this->createOrUpdatePessoaResponsavel($cpfMae, $nomeMae);
+        $pessoaMaeId = $this->createOrGetPessoaResponsavel($cpfMae, $nomeMae);
         $this->createOrUpdatePessoaFisicaResponsavel($pessoaMaeId, $cpfMae);
       }
 
       if(is_numeric($cpfResponsavel)){
-        $pessoaResponsavelId = $this->createOrUpdatePessoaResponsavel($cpfResponsavel, $nomeResponsavel);
+        $pessoaResponsavelId = $this->createOrGetPessoaResponsavel($cpfResponsavel, $nomeResponsavel);
         $this->createOrUpdatePessoaFisicaResponsavel($pessoaResponsavelId, $cpfResponsavel);
       }
 
@@ -458,6 +458,23 @@ class PreMatriculaController extends ApiCoreController
       $pessoa->idpes = $pessoaId;
       $pessoa->data_rev  = date('Y-m-d H:i:s', time());
       $pessoa->edita();
+    }
+
+    return $pessoaId;
+  }
+
+  protected function createOrGetPessoaResponsavel($cpf, $nome) {
+    $pessoa        = new clsPessoa_();
+    $pessoa->nome  = addslashes($nome);
+    $pessoa->idpes_cad = 1;
+    $pessoa->idpes_rev = 1;
+
+    $sql = "select idpes from cadastro.fisica WHERE cpf = $1 limit 1";
+    $pessoaId = Portabilis_Utils_Database::selectField($sql, $cpf);
+
+    if (! $pessoaId || !$pessoaId > 0) {
+      $pessoa->tipo      = 'F';
+      $pessoaId          = $pessoa->cadastra();
     }
 
     return $pessoaId;
