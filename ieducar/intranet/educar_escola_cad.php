@@ -516,7 +516,10 @@ class indice extends clsCadastro
 	    Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
 
 		$obj_permissoes = new clsPermissoes();
-//		echo "<pre>";print_r($_POST);die;
+
+		if (!empty($this->orgao_regional) && !$this->mensagem) {
+			$this->orgao_regional = str_pad($this->orgao_regional, 5, "0", STR_PAD_LEFT);
+		}
 
 		if( !$this->sem_cnpj && !$this->com_cnpj)
 		{
@@ -1645,6 +1648,11 @@ if(!$this->isEnderecoExterno){
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra( 561, $this->pessoa_logada, 3, "educar_escola_lst.php" );
 
+		if (!empty($this->orgao_regional) && strlen($this->orgao_regional) != 5) {
+    		$this->mensagem = 'O código do orgão regional deve conter 5 dígitos.';
+	  		return false;
+    	}
+
 		if (!$this->validaLatitudeLongitude()) return false;
 
     $this->bloquear_lancamento_diario_anos_letivos_encerrados = is_null($this->bloquear_lancamento_diario_anos_letivos_encerrados) ? 0 : 1;
@@ -2057,6 +2065,11 @@ if(!$this->isEnderecoExterno){
 
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra( 561, $this->pessoa_logada, 7, "educar_escola_lst.php" );
+
+ 		if (!empty($this->orgao_regional) && strlen($this->orgao_regional) != 5) {
+    		$this->mensagem = 'O código do orgão regional deve conter 5 dígitos.';
+	  		return false;
+    	}
 
 		if (!$this->validaLatitudeLongitude()) return false;
 
