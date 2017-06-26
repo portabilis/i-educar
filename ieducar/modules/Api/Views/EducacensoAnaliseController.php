@@ -516,7 +516,7 @@ class EducacensoAnaliseController extends ApiCoreController
                             "path" => "(Cadastros > Turma > Cadastrar > Editar > Aba: Dados adicionais > Campo: Código do tipo de atividade complementar)",
                           "fail" => true);
       }
-      if ($atendimentoAee && !$existeAee) {
+      if (!$atividadeComplementar && !$atendimentoAee) {
         $mensagem[] = array("text" => "Dados para formular o registro 20 da escola {$nomeEscola} não encontrados. Verificamos que o tipo de atendimento da turma {$nomeTurma} é de educação especializada - AEE, portanto obrigatoriamente é necessário informar ao menos uma atividade realizada. ",
                             "path" => "(Cadastros > Turma > Cadastrar > Editar > Aba: Dados adicionais > Campos: De Ensino do sistema braille à Estratégias para autonomia no ambiente escolar)",
                           "fail" => true);
