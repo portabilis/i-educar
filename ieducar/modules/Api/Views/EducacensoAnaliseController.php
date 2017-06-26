@@ -506,8 +506,9 @@ class EducacensoAnaliseController extends ApiCoreController
         $mensagem[] = array("text" => "Dados para formular o registro 20 da escola {$nomeEscola} não encontrados. Verifique se o tipo de atendimento da turma {$nomeTurma} foi cadastrado.",
                             "path" => "(Cadastros > Turma > Cadastrar > Editar > Aba: Dados adicionais > Campo: Tipo de atendimento)",
                           "fail" => true);
-      }elseif ($turma["tipo_atendimento"] && $turma["tipo_atendimento"] != 4 && $turma["tipo_atendimento"] != 5) {
-        $mensagem[] = array("text" => "Dados para formular o registro 20 da escola {$nomeEscola} não encontrados. Verificamos que o tipo de atendimento da turma {$nomeTurma} é {$nomeAtendimento}, portanto é necessário informar qual a etapa de ensino.",
+      }
+      if(!$atendimentoAee && !$atividadeComplementar) {
+        $mensagem[] = array("text" => "Dados para formular o registro 20 da escola {$nomeEscola} não encontrados. Verificamos que o tipo de atendimento da turma {$nomeTurma} é '{$nomeAtendimento}', portanto é necessário informar qual a etapa de ensino.",
                             "path" => "(Escola > Cadastros > Turmas > Aba: Dados adicionais > Campo: Etapa de ensino)",
                             "fail" => true);
       }
@@ -516,7 +517,7 @@ class EducacensoAnaliseController extends ApiCoreController
                             "path" => "(Cadastros > Turma > Cadastrar > Editar > Aba: Dados adicionais > Campo: Código do tipo de atividade complementar)",
                           "fail" => true);
       }
-      if (!$atividadeComplementar && !$atendimentoAee) {
+      if ($atendimentoAee && !$existeAee) {
         $mensagem[] = array("text" => "Dados para formular o registro 20 da escola {$nomeEscola} não encontrados. Verificamos que o tipo de atendimento da turma {$nomeTurma} é de educação especializada - AEE, portanto obrigatoriamente é necessário informar ao menos uma atividade realizada. ",
                             "path" => "(Cadastros > Turma > Cadastrar > Editar > Aba: Dados adicionais > Campos: De Ensino do sistema braille à Estratégias para autonomia no ambiente escolar)",
                           "fail" => true);
