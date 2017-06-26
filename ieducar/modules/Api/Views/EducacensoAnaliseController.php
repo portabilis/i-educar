@@ -507,7 +507,7 @@ class EducacensoAnaliseController extends ApiCoreController
                             "path" => "(Cadastros > Turma > Cadastrar > Editar > Aba: Dados adicionais > Campo: Tipo de atendimento)",
                           "fail" => true);
       }
-      if(!$atendimentoAee && !$atividadeComplementar) {
+      if(!$atendimentoAee && !$atividadeComplementar && !$turma['etapa_educacenso']) {
         $mensagem[] = array("text" => "Dados para formular o registro 20 da escola {$nomeEscola} não encontrados. Verificamos que o tipo de atendimento da turma {$nomeTurma} é '{$nomeAtendimento}', portanto é necessário informar qual a etapa de ensino.",
                             "path" => "(Escola > Cadastros > Turmas > Aba: Dados adicionais > Campo: Etapa de ensino)",
                             "fail" => true);
