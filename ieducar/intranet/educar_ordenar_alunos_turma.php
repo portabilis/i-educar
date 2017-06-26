@@ -76,8 +76,6 @@ class indice extends clsCadastro{
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     @session_write_close();
 
-    Portabilis_View_Helper_Application::loadJavascript($this, array('/modules/Cadastro/Assets/Javascripts/OrdenarAlunosTurma.js'));
-
     $this->cod_turma=$_GET['cod_turma'];
 
     if (is_numeric($this->cod_turma)) {

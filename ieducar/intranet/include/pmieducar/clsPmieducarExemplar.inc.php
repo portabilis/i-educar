@@ -50,6 +50,7 @@ class clsPmieducarExemplar
 	var $data_aquisicao;
 	var $tombo;
 	var $sequencial;
+	var $data_baixa_exemplar;
   var $pessoa_logada;
 
 	// propriedades padrao
@@ -116,7 +117,7 @@ class clsPmieducarExemplar
 	 *
 	 * @return object
 	 */
-	function clsPmieducarExemplar( $cod_exemplar = null, $ref_cod_fonte = null, $ref_cod_motivo_baixa = null, $ref_cod_acervo = null, $ref_cod_situacao = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $permite_emprestimo = null, $preco = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $data_aquisicao = null, $tombo = null, $sequencial = null )
+	function clsPmieducarExemplar( $cod_exemplar = null, $ref_cod_fonte = null, $ref_cod_motivo_baixa = null, $ref_cod_acervo = null, $ref_cod_situacao = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $permite_emprestimo = null, $preco = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $data_aquisicao = null, $tombo = null, $sequencial = null, $data_baixa_exemplar = null)
 	{
 
 		$db = new clsBanco();
@@ -127,7 +128,7 @@ class clsPmieducarExemplar
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
-		$this->_campos_lista = $this->_todos_campos = "e.cod_exemplar, e.ref_cod_fonte, e.ref_cod_motivo_baixa, e.ref_cod_acervo, e.ref_cod_situacao, e.ref_usuario_exc, e.ref_usuario_cad, e.permite_emprestimo, e.preco, e.data_cadastro, e.data_exclusao, e.ativo, e.data_aquisicao, e.tombo, e.sequencial";
+		$this->_campos_lista = $this->_todos_campos = "e.cod_exemplar, e.ref_cod_fonte, e.ref_cod_motivo_baixa, e.ref_cod_acervo, e.ref_cod_situacao, e.ref_usuario_exc, e.ref_usuario_cad, e.permite_emprestimo, e.preco, e.data_cadastro, e.data_exclusao, e.ativo, e.data_aquisicao, e.tombo, e.sequencial, e.data_baixa_exemplar";
 
 		if( is_numeric( $ref_cod_fonte ) )
 		{
@@ -335,6 +336,10 @@ class clsPmieducarExemplar
 		{
 			$this->sequencial = $sequencial;
 		}
+		if(is_string($data_baixa_exemplar))
+		{
+			$this->data_baixa_exemplar = $data_baixa_exemplar;
+		}
 	}
 
 	/**
@@ -409,6 +414,13 @@ class clsPmieducarExemplar
 				$valores .= "{$gruda}'{$this->sequencial}'";
 				$gruda = ", ";
 			}
+			if(is_string($this->data_baixa_exemplar))
+			{
+				$campos .= "{$gruda}data_baixa_exemplar";
+				$valores .= "{$gruda}'{$this->data_baixa_exemplar}'";
+				$gruda = ", ";
+			}
+
 			$campos .= "{$gruda}data_cadastro";
 			$valores .= "{$gruda}NOW()";
 			$gruda = ", ";
@@ -509,6 +521,11 @@ class clsPmieducarExemplar
 			if(is_numeric($this->tombo))
 			{
 				$set .= "{$gruda}tombo = '{$this->tombo}'";
+				$gruda = ", ";
+			}
+			if(is_string( $this->data_baixa_exemplar))
+			{
+				$set .= "{$gruda}data_baixa_exemplar = '{$this->data_baixa_exemplar}'";
 				$gruda = ", ";
 			}
 
