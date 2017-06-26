@@ -1619,19 +1619,20 @@ if(!$this->isEnderecoExterno){
 	    	             'size'      => 70,);
 	    $this->inputsHelper()->select('conveniada_com_poder_publico', $options);
 
-	    $resources = array('' => 'Selecione',
-						   1  => 'Empresa, grupos empresariais do setor privado ou pessoa física',
-					 	   2  => 'Sindicatos de trabalhadores ou patronais, associações ou cooperativas',
-						   3  => 'Organização não governamental (ONG) internacional ou nacional/Oscip',
-						   4  => 'Instituições sem fins lucrativos',
-						   5  => 'Sistema S (Sesi, Senai, Sesc, outros)');
+	    $values = explode(',',str_replace(array('{', "}"), '', $this->mantenedora_escola_privada));
 
-	    $options = array('label'     => 'Mantenedora da escola privada',
-	    	             'resources' => $resources,
-	    	             'value'     => $this->mantenedora_escola_privada,
-	    	             'required'  => false,
-	    	             'size'      => 70,);
-	    $this->inputsHelper()->select('mantenedora_escola_privada', $options);
+ 		$helperOptions = array('objectName'  => 'mantenedora_escola_privada');
+  	    $options       = array('label' => 'Mantenedora escola privada',
+  	    		               'size' => 50,
+  	    		               'required' => false,
+  	    		               'options' => array('values' => $values,
+  	    		               	                  'all_values' => array(1  => 'Empresa, grupos empresariais do setor privado ou pessoa física',
+																 	    2  => 'Sindicatos de trabalhadores ou patronais, associações ou cooperativas',
+																	    3  => 'Organização não governamental (ONG) internacional ou nacional/Oscip',
+																	    4  => 'Instituições sem fins lucrativos',
+																	    5  => 'Sistema S (Sesi, Senai, Sesc, outros)')));
+
+ 		$this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
 	    $this->campoCnpj( "cnpj_mantenedora_principal", "CNPJ da mantenedora principal da escola privada",  $this->cnpj_mantenedora_principal);
 
@@ -1647,6 +1648,9 @@ if(!$this->isEnderecoExterno){
 
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra( 561, $this->pessoa_logada, 3, "educar_escola_lst.php" );
+
+		unset($this->mantenedora_escola_privada[0]);
+		$mantenedora_escola_privada = implode(',', $this->mantenedora_escola_privada);
 
 		if (!empty($this->orgao_regional) && strlen($this->orgao_regional) != 5) {
     		$this->mensagem = 'O código do orgão regional deve conter 5 dígitos.';
@@ -1782,7 +1786,7 @@ if(!$this->isEnderecoExterno){
 					$obj->ref_idpes_secretario_escolar = $this->secretario_id;
 					$obj->categoria_escola_privada = $this->categoria_escola_privada;
 					$obj->conveniada_com_poder_publico = $this->conveniada_com_poder_publico;
-					$obj->mantenedora_escola_privada = $this->mantenedora_escola_privada;
+					$obj->mantenedora_escola_privada = $mantenedora_escola_privada;
 					$obj->cnpj_mantenedora_principal = idFederal2int($this->cnpj_mantenedora_principal);
 
 					$cod_escola = $cadastrou1 = $obj->cadastra();
@@ -2000,7 +2004,7 @@ if(!$this->isEnderecoExterno){
 			$obj->ref_idpes_secretario_escolar = $this->secretario_id;
 			$obj->categoria_escola_privada = $this->categoria_escola_privada;
 			$obj->conveniada_com_poder_publico = $this->conveniada_com_poder_publico;
-			$obj->mantenedora_escola_privada = $this->mantenedora_escola_privada;
+			$obj->mantenedora_escola_privada = $mantenedora_escola_privada;
 			$obj->cnpj_mantenedora_principal = idFederal2int($this->cnpj_mantenedora_principal);
 
 			$cod_escola = $cadastrou = $obj->cadastra();
@@ -2072,6 +2076,9 @@ if(!$this->isEnderecoExterno){
     	}
 
 		if (!$this->validaLatitudeLongitude()) return false;
+
+	unset($this->mantenedora_escola_privada[0]);
+	$mantenedora_escola_privada = implode(',', $this->mantenedora_escola_privada);
 
     $this->bloquear_lancamento_diario_anos_letivos_encerrados = is_null($this->bloquear_lancamento_diario_anos_letivos_encerrados) ? 0 : 1;
     $this->utiliza_regra_diferenciada = !is_null($this->utiliza_regra_diferenciada);
@@ -2197,7 +2204,7 @@ if(!$this->isEnderecoExterno){
 			$obj->ref_idpes_secretario_escolar = $this->secretario_id;
 			$obj->categoria_escola_privada = $this->categoria_escola_privada;
 			$obj->conveniada_com_poder_publico = $this->conveniada_com_poder_publico;
-			$obj->mantenedora_escola_privada = $this->mantenedora_escola_privada;
+			$obj->mantenedora_escola_privada = $mantenedora_escola_privada;
 			$obj->cnpj_mantenedora_principal = idFederal2int($this->cnpj_mantenedora_principal);
 			$editou = $obj->edita();
 
@@ -2322,7 +2329,7 @@ if(!$this->isEnderecoExterno){
 			$obj->ref_idpes_secretario_escolar = $this->secretario_id;
 			$obj->categoria_escola_privada = $this->categoria_escola_privada;
 			$obj->conveniada_com_poder_publico = $this->conveniada_com_poder_publico;
-			$obj->mantenedora_escola_privada = $this->mantenedora_escola_privada;
+			$obj->mantenedora_escola_privada = $mantenedora_escola_privada;
 			$obj->cnpj_mantenedora_principal = idFederal2int($this->cnpj_mantenedora_principal);
 			$this->cod_escola = $editou = $obj->cadastra();
 

@@ -1147,9 +1147,9 @@ class clsPmieducarEscola
         $gruda = ", ";
       }
 
-      if (is_numeric($this->mantenedora_escola_privada)) {
+      if (is_string($this->mantenedora_escola_privada)) {
         $campos .= "{$gruda}mantenedora_escola_privada";
-        $valores .= "{$gruda}'{$this->mantenedora_escola_privada}'";
+        $valores .= "{$gruda}'{". $this->mantenedora_escola_privada . "}'";
         $gruda = ", ";
       }
 
@@ -1834,8 +1834,8 @@ class clsPmieducarEscola
         $gruda = ", ";
       }
 
-      if (is_numeric($this->mantenedora_escola_privada)) {
-        $set .= "{$gruda}mantenedora_escola_privada = '{$this->mantenedora_escola_privada}'";
+      if (is_string($this->mantenedora_escola_privada)) {
+        $set .= "{$gruda}mantenedora_escola_privada = '{". $this->mantenedora_escola_privada . "}'";
         $gruda = ", ";
       }else{
         $set .= "{$gruda}mantenedora_escola_privada = NULL ";
