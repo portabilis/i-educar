@@ -31,7 +31,7 @@ require_once 'include/pmieducar/geral.inc.php';
 
 /**
  * clsModulesProfessorTurma class.
- * 
+ *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
  * @category  i-Educar
  * @license   @@license@@
@@ -108,7 +108,7 @@ class clsModulesProfessorTurma
     $this->_schema = "modules.";
     $this->_tabela = "{$this->_schema}professor_turma";
 
-    $this->_campos_lista = $this->_todos_campos = " pt.id, pt.ano, pt.instituicao_id, pt.servidor_id, pt.turma_id, pt.funcao_exercida, pt.tipo_vinculo, pt.permite_lancar_faltas_componente"; 
+    $this->_campos_lista = $this->_todos_campos = " pt.id, pt.ano, pt.instituicao_id, pt.servidor_id, pt.turma_id, pt.funcao_exercida, pt.tipo_vinculo, pt.permite_lancar_faltas_componente";
 
     if (is_numeric($id)) {
       $this->id = $id;
@@ -184,7 +184,7 @@ class clsModulesProfessorTurma
         $campos .= "{$gruda}turma_id";
         $valores .= "{$gruda}'{$this->turma_id}'";
         $gruda = ", ";
-    }            
+    }
 
     if (is_numeric($this->funcao_exercida)) {
         $campos .= "{$gruda}funcao_exercida";
@@ -223,7 +223,7 @@ class clsModulesProfessorTurma
 
     $db  = new clsBanco();
     $set = '';
-    
+
     if (is_numeric($this->ano)) {
         $set .= "{$gruda}ano = '{$this->ano}'";
         $gruda = ", ";
@@ -279,15 +279,15 @@ class clsModulesProfessorTurma
   function lista($servidor_id = NULL, $instituicao_id = NULL, $ano = NULL, $ref_cod_escola = NULL, $ref_cod_curso = NULL,
                  $ref_cod_serie = NULL, $ref_cod_turma = NULL, $funcao_exercida = NULL, $tipo_vinculo = NULL)
   {
-    
-    $sql = "SELECT {$this->_campos_lista}, t.nm_turma, t.cod_turma as ref_cod_turma, t.ref_ref_cod_serie as ref_cod_serie, 
+
+    $sql = "SELECT {$this->_campos_lista}, t.nm_turma, t.cod_turma as ref_cod_turma, t.ref_ref_cod_serie as ref_cod_serie,
             s.nm_serie, t.ref_cod_curso, c.nm_curso, t.ref_ref_cod_escola as ref_cod_escola, p.nome as nm_escola
             FROM {$this->_tabela} pt";
-    $filtros = " , pmieducar.turma t, pmieducar.serie s, pmieducar.curso c, pmieducar.escola e, cadastro.pessoa p WHERE pt.turma_id = t.cod_turma AND t.ref_ref_cod_serie = s.cod_serie AND s.ref_cod_curso = c.cod_curso 
+    $filtros = " , pmieducar.turma t, pmieducar.serie s, pmieducar.curso c, pmieducar.escola e, cadastro.pessoa p WHERE pt.turma_id = t.cod_turma AND t.ref_ref_cod_serie = s.cod_serie AND s.ref_cod_curso = c.cod_curso
                   AND t.ref_ref_cod_escola = e.cod_escola AND e.ref_idpes = p.idpes ";
 
     $whereAnd = " AND ";
-    
+
     if (is_numeric($servidor_id)) {
       $filtros .= "{$whereAnd} pt.servidor_id = '{$servidor_id}'";
       $whereAnd = " AND ";
@@ -301,7 +301,7 @@ class clsModulesProfessorTurma
     if (is_numeric($ano)) {
       $filtros .= "{$whereAnd} pt.ano = '{$ano}'";
       $whereAnd = " AND ";
-    }        
+    }
 
     if (is_numeric($ref_cod_escola)) {
       $filtros .= "{$whereAnd} t.ref_ref_cod_escola = '{$ref_cod_escola}'";
@@ -311,7 +311,7 @@ class clsModulesProfessorTurma
     if (is_numeric($ref_cod_curso)) {
       $filtros .= "{$whereAnd} t.ref_cod_curso = '{$ref_cod_curso}'";
       $whereAnd = " AND ";
-    } 
+    }
 
     if (is_numeric($ref_cod_serie)) {
       $filtros .= "{$whereAnd} t.ref_ref_cod_serie = '{$ref_cod_serie}'";
@@ -331,7 +331,7 @@ class clsModulesProfessorTurma
     if (is_numeric($tipo_vinculo)) {
       $filtros .= "{$whereAnd} pt.tipo_vinculo = '{$tipo_vinculo}'";
       $whereAnd = " AND ";
-    }                        
+    }
 
     $db = new clsBanco();
     $countCampos = count(explode(',', $this->_campos_lista))+8;
@@ -369,13 +369,13 @@ class clsModulesProfessorTurma
    */
   function detalhe()
   {
-    
+
     if (is_numeric($this->id)) {
       $db = new clsBanco();
       $db->Consulta("SELECT {$this->_campos_lista}, t.nm_turma, s.nm_serie, c.nm_curso, p.nome as nm_escola
-                     FROM {$this->_tabela} pt, pmieducar.turma t, pmieducar.serie s, pmieducar.curso c, 
-                     pmieducar.escola e, cadastro.pessoa p 
-                     WHERE pt.turma_id = t.cod_turma AND t.ref_ref_cod_serie = s.cod_serie AND s.ref_cod_curso = c.cod_curso 
+                     FROM {$this->_tabela} pt, pmieducar.turma t, pmieducar.serie s, pmieducar.curso c,
+                     pmieducar.escola e, cadastro.pessoa p
+                     WHERE pt.turma_id = t.cod_turma AND t.ref_ref_cod_serie = s.cod_serie AND s.ref_cod_curso = c.cod_curso
                      AND t.ref_ref_cod_escola = e.cod_escola AND e.ref_idpes = p.idpes AND id = '{$this->id}'");
       $db->ProximoRegistro();
       return $db->Tupla();
@@ -401,21 +401,19 @@ class clsModulesProfessorTurma
 
   function existe2()
   {
-    if (is_numeric($this->ano) && is_numeric($this->instituicao_id) && is_numeric($this->servidor_id) 
+    if (is_numeric($this->ano) && is_numeric($this->instituicao_id) && is_numeric($this->servidor_id)
         && is_numeric($this->turma_id)) {
-      $db = new clsBanco();      
-      $sql = "SELECT 1 FROM {$this->_tabela} pt WHERE ano = '{$this->ano}' AND turma_id = '{$this->turma_id}'
+      $db = new clsBanco();
+      $sql = "SELECT id FROM {$this->_tabela} pt WHERE ano = '{$this->ano}' AND turma_id = '{$this->turma_id}'
                AND instituicao_id = '{$this->instituicao_id}' AND servidor_id = '{$this->servidor_id}' ";
-               
-      if (is_numeric($this->id))                    
+
+      if (is_numeric($this->id))
         $sql .= " AND id <> {$this->id}";
 
-      $db->Consulta($sql);
-      $db->ProximoRegistro();
-      return $db->Tupla();
+      return $db->UnicoCampo($sql);
     }
     return FALSE;
-  }  
+  }
 
   /**
    * Exclui um registro.
@@ -423,7 +421,7 @@ class clsModulesProfessorTurma
    */
   function excluir()
   {
-    
+
     if (is_numeric($this->id)) {
       $sql = "DELETE FROM {$this->_tabela} pt WHERE id = '{$this->id}'";
       $db = new clsBanco();

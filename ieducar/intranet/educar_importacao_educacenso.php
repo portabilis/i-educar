@@ -1,6 +1,6 @@
 <?php
-//error_reporting(E_ALL);
-//ini_set("display_errors", 1);
+error_reporting(E_ALL);
+ini_set("display_errors", 1);
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -134,6 +134,15 @@ class indice extends clsCadastro
         case '30':
           $this->importaRegistro30($dadosRegistro);
           break;
+        case '40':
+          $this->importaRegistro40($dadosRegistro);
+          break;
+        case '50':
+          $this->importaRegistro40($dadosRegistro);
+          break;
+        case '51':
+          $this->importaRegistro40($dadosRegistro);
+          break;
       }
     }
     return true;
@@ -238,7 +247,12 @@ class indice extends clsCadastro
 
     $this->atualizaCamposEscolaRegistro00($codEscola, $cargoGestor, $situacao, $latitude, $longitude, $codigoOrgaoRegional, $dependenciaAdministrativa, $regulamentacao);
 
-    $this->cadastraEnderecoEscola($codEscola, $cep, $logradouro, $enderecoNumero, $complemento, $nomeBairro, $ufIbge, $municipioIbge, $distritoIbge, $localizacao);
+    $escola = new clsPmieducarEscola($codEscola);
+    $detEscola = $escola->detalhe();
+
+    $idpesEscola = $detEscola['ref_idpes'];
+
+    $this->cadastraEndereco($idpesEscola, $cep, $logradouro, $enderecoNumero, $complemento, $nomeBairro, $ufIbge, $municipioIbge, $distritoIbge, $localizacao);
 
     // TODO cadastrar telefones
   }
@@ -578,12 +592,12 @@ class indice extends clsCadastro
       $codigoEducacenso = ComponenteCurricular_Model_CodigoEducacenso::getInstance();
       $codigos = $codigoEducacenso->getValues();
 
-      $nome = $codigos[$disciplinaEducacenso];
+      $nome = $codigos[$disciplinaEducacenso] ? $codigos[$disciplinaEducacenso] : "Migração";
+      $sigla = substr($nome, 0, 3);
+      $sql = "INSERT INTO modules.componente_curricular (instituicao_id, area_conhecimento_id, nome, codigo_educacenso, abreviatura, tipo_base)
+                VALUES ('{$this->ref_cod_instituicao}','{$codArea}','{$nome}','{$disciplinaEducacenso}','{$sigla}',1) returning id ";
 
-      $sql = 'INSERT INTO modules.componente_curricular (instituicao_id, area_conhecimento_id, nome, codigo_educacenso, abreviatura, tipo_base)
-                VALUES ($1,$2,$3,$4,$5,$6) returning id ';
-
-      $codDisciplina = Portabilis_Utils_Database::selectField($sql, array($this->ref_cod_instituicao, $codArea, $nome, $disciplinaEducacenso, substr($nome, 0, 3), 1));
+      $codDisciplina = Portabilis_Utils_Database::selectField($sql);
 
     }
 
@@ -763,8 +777,6 @@ class indice extends clsCadastro
     return Portabilis_Utils_Database::selectField($sql);
   }
 
-
-
   function importaRegistro30($dadosRegistro){
 
     $inepEscola = $dadosRegistro[2-1];
@@ -777,6 +789,9 @@ class indice extends clsCadastro
     $racaEducacenso = $dadosRegistro[10-1];
     $nomeMae = $dadosRegistro[12-1];
     $nomePai = $dadosRegistro[13-1];
+    $codIbgeMun = $dadosRegistro[17-1];
+
+    $idmun = $codIbgeMun ? $this->getMunicipioByCodIbge($codIbgeMun) : null;
 
     if(!is_numeric($inepServidor)){
       return false;
@@ -784,9 +799,9 @@ class indice extends clsCadastro
     $codServidor = $this->existeServidor($inepServidor);
 
     if(!$codServidor){
-      $idpesPai = $this->cadastraPessoaFisica($nomePai, null, "M");
-      $idpesMae = $this->cadastraPessoaFisica($nomeMae, null, "F");
-      $idpesServidor = $this->cadastraPessoaFisica($nome, $dataNascimento, $sexo);
+      $idpesPai = $nomePai ? $this->cadastraPessoaFisica($nomePai, null, "M") : null;
+      $idpesMae = $nomeMae ? $this->cadastraPessoaFisica($nomeMae, null, "F") : null;
+      $idpesServidor = $this->cadastraPessoaFisica($nome, $dataNascimento, $sexo, $idmun, $idpesMae, $idpesPai);
 
       $codServidor = $this->createServidor($idpesServidor);
 
@@ -796,6 +811,300 @@ class indice extends clsCadastro
 
       $this->createServidorEducacenso($codServidor, $inepServidor);
     }
+  }
+
+  function importaRegistro40($dadosRegistro){
+
+    $inepEscola = $dadosRegistro[2-1];
+    $inepServidor = $dadosRegistro[3-1];
+    //$codServidor = $dadosRegistro[4-1];
+    $cpf = $dadosRegistro[5-1];
+    $localizacao = $dadosRegistro[6-1];
+    $cep = $dadosRegistro[7-1];
+    $endereco = $dadosRegistro[8-1];
+    $numero = $dadosRegistro[9-1];
+    $complemento = $dadosRegistro[10-1];
+    $bairro = $dadosRegistro[11-1];
+    $ufIbge = $dadosRegistro[12-1];
+    $municipioIbge = $dadosRegistro[13-1];
+
+    if(!is_numeric($inepServidor)){
+      return false;
+    }
+    $codServidor = $this->existeServidor($inepServidor);
+
+    if($codServidor && !empty($cep)){
+      $this->cadastraEndereco($codServidor, $cep, $endereco, $numero, $complemento, $bairro, $ufIbge, $municipioIbge, null, $localizacao);
+    }
+  }
+
+  function importaRegistro50($dadosRegistro){
+
+    $inepEscola = $dadosRegistro[2-1];
+    $inepServidor = $dadosRegistro[3-1];
+    //$codServidor = $dadosRegistro[4-1];
+
+    $codigoCursoSuperior1 = $dadosRegistro[8-1];
+    $instituicaoEnsinoSuperior1 = $dadosRegistro[11-1];
+    $codigoCursoSuperior2 = $dadosRegistro[14-1];
+    $instituicaoEnsinoSuperior2 = $dadosRegistro[17-1];
+    $codigoCursoSuperior3 = $dadosRegistro[20-1];
+    $instituicaoEnsinoSuperior3 = $dadosRegistro[23-1];
+
+    $cursosServidor = array(
+      'escolaridade' => $dadosRegistro[5-1],
+      'situacaoCursoSuperior1' => $dadosRegistro[6-1],
+      'formacaoComplementacaoPedagogica1' => $dadosRegistro[7-1],
+      'anoInicioCursoSuperior1' => $dadosRegistro[9-1],
+      'anoConclusaoCursoSuperior1' => $dadosRegistro[10-1],
+      'situacaoCursoSuperior2' => $dadosRegistro[12-1],
+      'formacaoComplementacaoPedagogica2' => $dadosRegistro[13-1],
+      'anoInicioCursoSuperior2' => $dadosRegistro[15-1],
+      'anoConclusaoCursoSuperior2' => $dadosRegistro[16-1],
+      'situacaoCursoSuperior3' => $dadosRegistro[18-1],
+      'formacaoComplementacaoPedagogica3' => $dadosRegistro[19-1],
+      'anoInicioCursoSuperior3' => $dadosRegistro[21-1],
+      'anoConclusaoCursoSuperior3' => $dadosRegistro[22-1],
+      'pos_especializacao' => $dadosRegistro[24-1],
+      'pos_mestrado' => $dadosRegistro[25-1],
+      'pos_doutorado' => $dadosRegistro[26-1],
+      'pos_nenhuma' => $dadosRegistro[27-1],
+      'curso_creche' => $dadosRegistro[28-1],
+      'curso_pre_escola' => $dadosRegistro[29-1],
+      'curso_anos_iniciais' => $dadosRegistro[30-1],
+      'curso_anos_finais' => $dadosRegistro[31-1],
+      'curso_ensino_medio' => $dadosRegistro[32-1],
+      'curso_eja' => $dadosRegistro[33-1],
+      'curso_educacao_especial' => $dadosRegistro[34-1],
+      'curso_educacao_indigena' => $dadosRegistro[35-1],
+      'curso_educacao_campo' => $dadosRegistro[36-1],
+      'curso_educacao_ambiental' => $dadosRegistro[37-1],
+      'curso_educacao_direitos_humanos' => $dadosRegistro[38-1],
+      'curso_genero_diversidade_sexual' => $dadosRegistro[39-1],
+      'curso_direito_crianca_adolescente' => $dadosRegistro[40-1],
+      'curso_relacoes_etnicorraciais' => $dadosRegistro[41-1],
+      'curso_outros' => $dadosRegistro[42-1],
+      'curso_nenhum' => $dadosRegistro[43-1],
+    );
+
+    if(!is_numeric($inepServidor)){
+      return false;
+    }
+    $codServidor = $this->existeServidor($inepServidor);
+
+    if($codServidor){
+      $servidor = new clsPmieducarServidor();
+      $servidor->cod_servidor = $codServidor;
+      $servidor->ref_cod_instituicao = $this->ref_cod_instituicao;
+
+      if($codigoCursoSuperior1){
+        $idCurso = getIdCursoSuperiorEducacenso($codigo);
+        if($idCurso){
+          $cursosServidor['codigo_curso_superior_1'] = $idCurso;
+        }
+      }
+      if($codigoCursoSuperior2){
+        $idCurso = getIdCursoSuperiorEducacenso($codigo);
+        if($idCurso){
+          $cursosServidor['codigo_curso_superior_2'] = $idCurso;
+        }
+      }
+      if($codigoCursoSuperior3){
+        $idCurso = getIdCursoSuperiorEducacenso($codigo);
+        if($idCurso){
+          $cursosServidor['codigo_curso_superior_3'] = $idCurso;
+        }
+      }
+
+      if($instituicaoEnsinoSuperior1){
+        $idCurso = getIdInstituicaoEducacenso($codigo);
+        if($idCurso){
+          $cursosServidor['instituicao_curso_superior_1'] = $idCurso;
+        }
+      }
+      if($instituicaoEnsinoSuperior2){
+        $idCurso = getIdInstituicaoEducacenso($codigo);
+        if($idCurso){
+          $cursosServidor['instituicao_curso_superior_2'] = $idCurso;
+        }
+      }
+      if($instituicaoEnsinoSuperior3){
+        $idCurso = getIdInstituicaoEducacenso($codigo);
+        if($idCurso){
+          $cursosServidor['instituicao_curso_superior_3'] = $idCurso;
+        }
+      }
+
+      foreach ($cursosServidor as $key => $value) {
+        $servidor->{$key} = $value;
+      }
+      $servidor->edita();
+    }
+  }
+
+
+  function importaRegistro51($dadosRegistro){
+
+    $inepEscola = $dadosRegistro[2-1];
+    $inepServidor = $dadosRegistro[3-1];
+    $inepTurma = $dadosRegistro[5-1];
+
+    $funcao = $dadosRegistro[7-1];
+    $tipoVinculo = $dadosRegistro[8-1];
+
+    $disciplinas = array();
+    for ($i=9-1; $i < 21-1; $i++) {
+      if(!empty($dadosRegistro[$i])){
+        $disciplinas[] = $dadosRegistro[$i];
+      }
+    }
+
+    if(!is_numeric($inepServidor)){
+      return false;
+    }
+
+    $codServidor = $this->existeServidor($inepServidor);
+    $codTurma = $this->existeTurma($inepTurma);
+
+    if(!$codServidor || !$codTurma){
+      return false;
+    }
+
+    $obj = new clsModulesProfessorTurma(NULL, $this->ano, $this->ref_cod_instituicao, $codServidor, $codTurma, $funcao, $tipoVinculo);
+    $id = $obj->existe2();
+    if (!$id){
+      $id = $obj->cadastra();
+    }
+    Portabilis_Utils_Database::fetchPreparedQuery('DELETE FROM modules.professor_turma_disciplina WHERE professor_turma_id = $1', array( 'params' => array($id)));
+    foreach ($disciplinas as $disciplina) {
+      $codDisciplina = $this->getOrCreateDisciplina($disciplina);
+
+      Portabilis_Utils_Database::fetchPreparedQuery('INSERT INTO modules.professor_turma_disciplina VALUES ($1,$2)',array( 'params' =>  array($id, $codDisciplina) ));
+    }
+
+  }
+
+  function importaRegistro60($dadosRegistro){
+    $inepEscola = $dadosRegistro[2-1];
+    $inepAluno = $dadosRegistro[3-1];
+    $nomeCompleto = $dadosRegistro[5-1];
+    $dataNascimento = Portabilis_Date_Utils::brToPgSQL($dadosRegistro[6-1]);
+    $sexo = $dadosRegistro[7-1] == "1" ? "M" : "F";
+    $corRacaEducacenso = $dadosRegistro[8-1];
+    $nomeMae = $dadosRegistro[10-1];
+    $nomePai = $dadosRegistro[11-1];
+    $municipioIbge = $dadosRegistro[15-1];
+
+    $deficiencias = array();
+    for ($i=17-1; $i < 29-1; $i++) {
+      if($dadosRegistro[$i] == "1"){
+        $deficiencias[] = $i-15;
+      }
+    }
+
+    $recursosProva = array(
+      'recurso_prova_inep_aux_ledor' => $dadosRegistro[30-1],
+      'recurso_prova_inep_aux_transcricao' => $dadosRegistro[31-1],
+      'recurso_prova_inep_guia_interprete' => $dadosRegistro[32-1],
+      'recurso_prova_inep_interprete_libras' => $dadosRegistro[33-1],
+      'recurso_prova_inep_leitura_labial' => $dadosRegistro[34-1],
+      'recurso_prova_inep_prova_ampliada_16' => $dadosRegistro[35-1],
+      'recurso_prova_inep_prova_ampliada_20' => $dadosRegistro[36-1],
+      'recurso_prova_inep_prova_ampliada_24' => $dadosRegistro[37-1],
+      'recurso_prova_inep_prova_braille' => $dadosRegistro[38-1],
+    );
+
+    $codAluno = $this->existeAluno($inepAluno);
+
+    if(!$codAluno){
+      $idmun = $municipioIbge ? $this->getMunicipioByCodIbge($municipioIbge) : null;
+      $idpesPai =  $nomePai ? $this->cadastraPessoaFisica($nomePai, null, "M") : null;
+      $idpesMae = $nomeMae ? $this->cadastraPessoaFisica($nomeMae, null, "F") : null;
+      $idpesAluno = $this->cadastraPessoaFisica($nomeCompleto, $dataNascimento, $sexo, $idmun, $idpesMae, $idpesPai);
+      $aluno = new clsPmieducarAluno(null, null, null, null, $this->pessoa_logada, $idpesAluno, null, null, 1);
+      foreach ($recursosProva as $key => $value) {
+        $aluno->{$key} = $value;
+      }
+      $aluno->cadastra();
+      foreach ($deficiencias as $key => $deficienciaEducacenso) {
+        $codDeficiencia = $this->getOrCreateDeficiencia($deficienciaEducacenso);
+        $deficiencia = new clsCadastroFisicaDeficiencia($idpesAluno, $codDeficiencia);
+        $deficiencia->cadastra();
+      }
+    }
+  }
+
+  function importaRegistro70($dadosRegistro){
+    $inepEscola = $dadosRegistro[2-1];
+    $inepAluno = $dadosRegistro[3-1];
+    $identidade = $dadosRegistro[5-1];
+    $orgaoEmissorRgCenso = $dadosRegistro[6-1];
+    $ufIdentidade = $dadosRegistro[7-1];
+    $dataExpedicaoRg = $dadosRegistro[8-1];
+    $modeloCertidaoCivil = $dadosRegistro[9-1];
+    $tipoCertidaoCivil = $dadosRegistro[10-1];
+    $termoCertidaoCivil = $dadosRegistro[11-1];
+    $folhaCertidaoCivil = $dadosRegistro[12-1];
+    $livroCertidaoCivil = $dadosRegistro[13-1];
+    $dataEmissaoCertidao = $dadosRegistro[14-1];
+    $ufCartorio = $dadosRegistro[15-1];
+    $municipioCartorio = $dadosRegistro[16-1];
+    $codigoCartorio = $dadosRegistro[17-1];
+    $numeroMatriculaCertidaoNova = $dadosRegistro[18-1];
+    $cpf = (int) $dadosRegistro[19-1];
+    $passaporte = $dadosRegistro[20-1];
+    $nis = $dadosRegistro[21-1];
+
+    $localizacao = $dadosRegistro[22-1];
+    $cep = $dadosRegistro[23-1];
+    $endereco = $dadosRegistro[24-1];
+    $numero = $dadosRegistro[25-1];
+    $complemento = $dadosRegistro[26-1];
+    $bairro = $dadosRegistro[27-1];
+    $ufIbge = $dadosRegistro[28-1];
+    $municipioIbge = $dadosRegistro[29-1];
+
+    $codAluno = $this->existeAluno($inepAluno);
+
+    if(!$codAluno){
+      return false;
+    }
+
+    // fisica - nis_pis_pasep
+    // fisica - cpf
+
+    $aluno = new clsPmieducarAluno($codAluno);
+    $detAluno = $aluno->detalhe();
+    $idpesAluno = $detAluno['ref_idpes'];
+
+    $fisica = new clsFisica($idpesAluno);
+    $fisica->cpf = $cpf;
+    $fisica->nis_pis_pasep = $nis;
+
+    $documento = new clsDocumento($idpesAluno);
+
+    if(!$documento->existe()){
+      $documento->idpes_cad = $this->pessoa_logada;
+      $documento->cadastra();
+    }else{
+      $documento->idpes_rev = $this->pessoa_logada;
+      $documento->edita();
+    }
+
+    $this->cadastraEndereco($idpesAluno, $cep, $endereco, $numero, $complemento, $bairro, $ufIbge, $municipioIbge, null, $localizacao);
+
+  }
+
+  function getIdCursoSuperiorEducacenso($codigo){
+    $sql = "SELECT id FROM modules.educacenso_curso_superior WHERE curso_id = '{$codigo}' ";
+
+    return Portabilis_Utils_Database::selectField($sql);
+  }
+
+  function getIdInstituicaoEducacenso($codigo){
+    $sql = "SELECT id FROM modules.educacenso_ies WHERE ies_id = '{$codigo}' ";
+
+    return Portabilis_Utils_Database::selectField($sql);
   }
 
   function createServidorEducacenso($codServidor, $inepServidor){
@@ -813,6 +1122,15 @@ class indice extends clsCadastro
     return $servidor->cadastra();
   }
 
+  function existeAluno($inep){
+    $sql = "SELECT cod_aluno
+            FROM modules.educacenso_cod_aluno
+            WHERE cod_aluno_inep = {$inep}
+    ";
+
+    return Portabilis_Utils_Database::selectField($sql);
+  }
+
   function existeServidor($inep){
     $sql = "SELECT cod_servidor
             FROM modules.educacenso_cod_docente
@@ -822,7 +1140,7 @@ class indice extends clsCadastro
     return Portabilis_Utils_Database::selectField($sql);
   }
 
-  function cadastraPessoaFisica($nome, $dataNascimento = null, $sexo = null){
+  function cadastraPessoaFisica($nome, $dataNascimento = null, $sexo = null, $idmun = null, $idpesMae = null, $idpesPai = null){
     $idpes = null;
     if(!empty($nome)){
       $pessoa = new clsPessoa_(
@@ -834,38 +1152,46 @@ class indice extends clsCadastro
       $fisica = new clsFisica(
         $idpes,$dataNascimento, $sexo
       );
+      if($idmun){
+        $fisica->idmun_nascimento = $idmun;
+      }
+      if($idpesMae){
+        $fisica->idpes_mae;
+      }
+      if($idpesPai){
+        $fisica->idpes_pai;
+      }
       $fisica->idpes_cad = $this->pessoa_logada;
       $fisica->cadastra();
     }
     return $idpes;
   }
 
-  function cadastraEnderecoEscola($codEscola, $cep, $logradouro, $enderecoNumero, $complemento, $nomeBairro, $ufIbge, $municipioIbge, $distritoIbge, $localizacao){
+  function cadastraEndereco($idpes, $cep, $logradouro, $enderecoNumero, $complemento, $nomeBairro, $ufIbge, $municipioIbge, $distritoIbge, $localizacao){
 
     // TODO (Notificar quando endereço não for criado?)
 
-    $escola = new clsPmieducarEscola($codEscola);
-    $detEscola = $escola->detalhe();
-
-    $idpesEscola = $detEscola['ref_idpes'];
-
-    if($this->checkEnderecoPessoa($idpesEscola)){
+    if($this->checkEnderecoPessoa($idpes)){
       return false;
     }
 
-    $idmun = $this->getMunicipioByCodIbge($municipioIbge);
+    $idmun = $municipioIbge ? $this->getMunicipioByCodIbge($municipioIbge) : null;
 
     if(!$idmun){
       return false;
     }
 
-    $iddis = $this->getDistritoByCodIbge($distritoIbge);
+    $iddis = $distritoIbge ? $this->getDistritoByCodIbge($distritoIbge) : null;
+
+    if(!$iddis){
+      $iddis = $this->getDistritoByMunicipio($idmun);
+    }
 
     if(!$iddis){
       return false;
     }
 
-    $idbai = $this->getOrCreateBairro($idmun, $iddis, $nomeBairro);
+    $idbai = $this->getOrCreateBairro($idmun, $iddis, $nomeBairro, $localizacao);
 
     $idlog = $this->getOrCreateLogradouro($logradouro, $idmun);
 
@@ -882,7 +1208,7 @@ class indice extends clsCadastro
       $obj->cadastra();
     }
 
-    $objEndereco = new clsPessoaEndereco($idpesEscola, $cep, $idlog, $idbai, $enderecoNumero, $complemento);
+    $objEndereco = new clsPessoaEndereco($idpes, $cep, $idlog, $idbai, $enderecoNumero, $complemento);
     $objEndereco->idpes_cad = $this->pessoa_logada;
     $objEndereco->cadastra();
   }
@@ -925,7 +1251,41 @@ class indice extends clsCadastro
     return Portabilis_Utils_Database::selectField($sql);
   }
 
-  function getOrCreateBairro($idmun, $iddis, $nomeBairro){
+  function getOrCreateDeficiencia($deficienciaEducacenso){
+    $codDeficiencia = $this->getDeficiencia($deficienciaEducacenso);
+
+    $nomesDeficiencias = array (
+                 1 => "Cegueira",
+                 2 => "Baixa visão",
+                 3 => "Surdez",
+                 4 => "Deficiência auditiva",
+                 5 => "Surdocegueira",
+                 6 => "Deficiência física",
+                 7 => "Deficiência Intelectual",
+                 9 => "Autismo Infantil",
+                10 => "Síndrome de Asperger",
+                11 => "Síndrome de Rett",
+                12 => "Transtorno desintegrativo da infância",
+                13 => "Altas habilidades/Superdotação",);
+
+    if(!$codDeficiencia){
+      $deficiencia = new clsCadastroDeficiencia(null, $nomesDeficiencias[$deficienciaEducacenso], $deficienciaEducacenso);
+      $codDeficiencia = $deficiencia->cadastra();
+    }
+
+    return $codDeficiencia;
+  }
+
+  function getDeficiencia($deficienciaEducacenso){
+    $sql = "SELECT cod_deficiencia
+              FROM cadastro.deficiencia
+              WHERE iddis = {$deficienciaEducacenso}
+
+    ";
+    return Portabilis_Utils_Database::selectField($sql);
+  }
+
+  function getOrCreateBairro($idmun, $iddis, $nomeBairro, $localizacao){
     $idbai = $this->getBairro($idmun, $iddis, $nomeBairro);
 
     if(!$idbai){
@@ -933,6 +1293,7 @@ class indice extends clsCadastro
       $bairro->idmun = $idmun;
       $bairro->iddis = $iddis;
       $bairro->nome = $nomeBairro;
+      $bairro->zona_localizacao = $localizacao;
       $idbai = $bairro->cadastra();
     }
 
@@ -946,6 +1307,15 @@ class indice extends clsCadastro
               AND iddis = {$iddis}
               AND nome ILIKE '{$nomeBairro}%'
     ";
+    return Portabilis_Utils_Database::selectField($sql);
+  }
+
+  function getDistritoByMunicipio($idmun){
+    $sql = "SELECT iddis
+              from public.distrito
+              where idmun = {$idmun}
+              limit 1 ";
+
     return Portabilis_Utils_Database::selectField($sql);
   }
 
