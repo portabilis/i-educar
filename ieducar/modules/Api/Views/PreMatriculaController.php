@@ -101,7 +101,11 @@ class PreMatriculaController extends ApiCoreController
 	    return array("cod_matricula" => 0);
 	   }
 
+     $obj_a = null;
+     $aluno_id = null;
+
 	   if($alunoIdParametro){
+       $aluno_id = $alunoIdParametro;
 	   	 $obj_a = new clsPmieducarAluno($alunoIdParametro);
 	   	 if($obj_a->detalhe()){
 
@@ -115,12 +119,12 @@ class PreMatriculaController extends ApiCoreController
         if($alunoIdParametro != $alunoIdMatricula){
 	  		 $this->excluirInformacoesAluno($alunoIdMatricula);
         }
-
-	  		return array("cod_matricula" => $this->enturmaPreMatricula($alunoIdParametro, $turmaId, $matriculaId, false));
 	 	  }
-	   }
-
+    }else {
+      $aluno_id = $alunoIdMatricula;
       $obj_a = new clsPmieducarAluno($alunoIdMatricula);
+    }
+
       $det_a = $obj_a->detalhe();
       $pessoaAlunoId = $det_a['ref_idpes'];
 
@@ -176,12 +180,12 @@ class PreMatriculaController extends ApiCoreController
 
       $this->updateDeficiencias($pessoaAlunoId, $deficiencias);
 
-	  $this->createOrUpdateEndereco($pessoaAlunoId, $cep, $rua, $numero, $complemento, $bairro, $cidade, $estado, $pais);
+	    $this->createOrUpdateEndereco($pessoaAlunoId, $cep, $rua, $numero, $complemento, $bairro, $cidade, $estado, $pais);
 
   	  // $this->messenger->append("escola:" . $escolaId . " serie:" . $serieId . " anoletivo:" . $anoLetivo .
   	  		                    // " curso: " . $cursoId . " aluno:" . $alunoId . " turma: " . $turmaId . "matricula: " . $matriculaId);
 
-      return array("cod_matricula" => $this->enturmaPreMatricula($alunoIdMatricula, $turmaId, $matriculaId, $maeIsResponsavel));
+      return array("cod_matricula" => $this->enturmaPreMatricula($aluno_id, $turmaId, $matriculaId, $maeIsResponsavel));
 
 	}
 }
@@ -228,12 +232,12 @@ class PreMatriculaController extends ApiCoreController
       $pessoaResponsavelId = null;
 
       if(is_numeric($cpfMae)){
-        $pessoaMaeId = $this->createOrUpdatePessoaResponsavel($cpfMae, $nomeMae);
+        $pessoaMaeId = $this->createOrGetPessoaResponsavel($cpfMae, $nomeMae);
         $this->createOrUpdatePessoaFisicaResponsavel($pessoaMaeId, $cpfMae);
       }
 
       if(is_numeric($cpfResponsavel)){
-        $pessoaResponsavelId = $this->createOrUpdatePessoaResponsavel($cpfResponsavel, $nomeResponsavel);
+        $pessoaResponsavelId = $this->createOrGetPessoaResponsavel($cpfResponsavel, $nomeResponsavel);
         $this->createOrUpdatePessoaFisicaResponsavel($pessoaResponsavelId, $cpfResponsavel);
       }
 
@@ -459,6 +463,23 @@ class PreMatriculaController extends ApiCoreController
     return $pessoaId;
   }
 
+  protected function createOrGetPessoaResponsavel($cpf, $nome) {
+    $pessoa        = new clsPessoa_();
+    $pessoa->nome  = addslashes($nome);
+    $pessoa->idpes_cad = 1;
+    $pessoa->idpes_rev = 1;
+
+    $sql = "select idpes from cadastro.fisica WHERE cpf = $1 limit 1";
+    $pessoaId = Portabilis_Utils_Database::selectField($sql, $cpf);
+
+    if (! $pessoaId || !$pessoaId > 0) {
+      $pessoa->tipo      = 'F';
+      $pessoaId          = $pessoa->cadastra();
+    }
+
+    return $pessoaId;
+  }
+
   protected function createOrUpdatePessoaFisica($pessoaId, $pessoaResponsavelId, $pessoaMaeId, $dataNascimento, $sexo) {
     $fisica                       = new clsFisica();
     $fisica->idpes                = $pessoaId;
@@ -661,13 +682,17 @@ class PreMatriculaController extends ApiCoreController
 
       $pessoaId = Portabilis_Utils_Database::selectField('SELECT ref_idpes FROM pmieducar.aluno WHERE cod_aluno = $1', array($alunoId));
       if(is_numeric($pessoaId)){
-      	$pessoaMaeId = Portabilis_Utils_Database::selectField('SELECT idpes_mae FROM cadastro.fisica WHERE idpes = $1', array($pessoaId));
-      	$pessoaRespId = Portabilis_Utils_Database::selectField('SELECT idpes_responsavel FROM cadastro.fisica WHERE idpes = $1', array($pessoaId));
-  	  }
-      if(is_numeric($alunoId))
+        $pessoaMaeId = Portabilis_Utils_Database::selectField('SELECT idpes_mae FROM cadastro.fisica WHERE idpes = $1', array($pessoaId));
+        $pessoaRespId = Portabilis_Utils_Database::selectField('SELECT idpes_responsavel FROM cadastro.fisica WHERE idpes = $1', array($pessoaId));
+      }
+      if(is_numeric($alunoId)){
+        $this->fetchPreparedQuery('DELETE FROM pmieducar.matricula WHERE ref_cod_aluno = $1', array($alunoId));
+        $this->fetchPreparedQuery('DELETE FROM pmieducar.matricula_turma WHERE ref_cod_matricula in(SELECT cod_matricula from pmieducar.matricula WHERE ref_cod_aluno = $1)', array($alunoId));
         $this->fetchPreparedQuery('DELETE FROM pmieducar.aluno WHERE cod_aluno = $1', $alunoId);
+      }
 
       if(is_numeric($pessoaId)){
+        $this->fetchPreparedQuery('DELETE FROM cadastro.fisica_deficiencia WHERE ref_idpes = $1', $pessoaId);
         $this->fetchPreparedQuery('DELETE FROM cadastro.fisica WHERE idpes = $1', $pessoaId);
         $this->fetchPreparedQuery('DELETE FROM cadastro.pessoa WHERE idpes = $1', $pessoaId);
       }
@@ -683,8 +708,6 @@ class PreMatriculaController extends ApiCoreController
 
   }
   public function Gerar() {
-    // if ($this->isRequestFor('post', 'matricular-candidato'))
-      // $this->appendResponse($this->matricularCandidato());
     if ($this->isRequestFor('post', 'registrar-pre-matricula'))
       $this->appendResponse($this->registrarPreMatricula());
   	elseif ($this->isRequestFor('post', 'homologar-pre-matricula'))
