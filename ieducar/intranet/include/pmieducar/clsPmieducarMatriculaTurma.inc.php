@@ -1365,9 +1365,13 @@ class clsPmieducarMatriculaTurma
     if ($this->ref_cod_matricula && $this->sequencial){
 
       $dataBaseTransferencia = $this->getDataBaseTransferencia();
-
       $data = $data ? $data : date('Y-m-d');
-      if (($dataBaseTransferencia && strtotime($dataBaseTransferencia) < strtotime($data))) {
+      if (! empty($dataBaseTransferencia)) {
+        if (($dataBaseTransferencia && strtotime($dataBaseTransferencia) < strtotime($data))) {
+          $db = new clsBanco();
+          $db->CampoUnico("UPDATE pmieducar.matricula_turma SET transferido = true, remanejado = false, abandono = false, reclassificado = false, falecido = false, data_exclusao = '$data' WHERE ref_cod_matricula = {$this->ref_cod_matricula} AND sequencial = {$this->sequencial}");
+        }
+      }else {
         $db = new clsBanco();
         $db->CampoUnico("UPDATE pmieducar.matricula_turma SET transferido = true, remanejado = false, abandono = false, reclassificado = false, falecido = false, data_exclusao = '$data' WHERE ref_cod_matricula = {$this->ref_cod_matricula} AND sequencial = {$this->sequencial}");
       }
