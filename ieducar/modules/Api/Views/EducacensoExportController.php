@@ -1427,15 +1427,15 @@ class EducacensoExportController extends ApiCoreController
       (SELECT cod_ibge FROM public.pais WHERE pais.idpais = fis.idpais_estrangeiro) as r60s13,
       uf.cod_ibge as r60s14,
       mun.cod_ibge as r60s15,
-      recurso_prova_inep_aux_ledor as rs60s30,
-      recurso_prova_inep_aux_transcricao as rs60s31,
-      recurso_prova_inep_guia_interprete as rs60s32,
-      recurso_prova_inep_interprete_libras as rs60s33,
-      recurso_prova_inep_leitura_labial as rs60s34,
-      recurso_prova_inep_prova_ampliada_16 as rs60s35,
-      recurso_prova_inep_prova_ampliada_20 as rs60s36,
-      recurso_prova_inep_prova_ampliada_24 as rs60s37,
-      recurso_prova_inep_prova_braille as rs60s38,
+      recurso_prova_inep_aux_ledor as r60s30,
+      recurso_prova_inep_aux_transcricao as r60s31,
+      recurso_prova_inep_guia_interprete as r60s32,
+      recurso_prova_inep_interprete_libras as r60s33,
+      recurso_prova_inep_leitura_labial as r60s34,
+      recurso_prova_inep_prova_ampliada_16 as r60s35,
+      recurso_prova_inep_prova_ampliada_20 as r60s36,
+      recurso_prova_inep_prova_ampliada_24 as r60s37,
+      recurso_prova_inep_prova_braille as r60s38,
       fis.nacionalidade AS nacionalidade
 
       FROM  pmieducar.aluno a
@@ -1533,14 +1533,11 @@ class EducacensoExportController extends ApiCoreController
         $r60s17 = $r60s18 = $r60s19 = $r60s20 = $r60s21 = $r60s22 = $r60s23 = $r60s24 =
                   $r60s25 = $r60s26 = $r60s27 = $r60s28 = $r60s29 = NULL;
 
-      if($r60s16 == 0){
+      if(!$this->transtornoGlobalDesenvolvimento($deficiencias)) {
         for($i=30; $i <= 39; $i++){
           ${'r60s'.$i} = NULL;
         }
       }else{
-        for($i=30; $i <= 38; $i++){
-          ${'r60s'.$i} = 0;
-        }
         $r60s39 = 1;
       }
 
@@ -1555,6 +1552,33 @@ class EducacensoExportController extends ApiCoreController
     }
 
     return $return;
+  }
+
+  protected function transtornoGlobalDesenvolvimento($deficiencias) {
+    $deficienciasLayout = array(1 => '17',
+                                2 => '18',
+                                3 => '19',
+                                4 => '20',
+                                5 => '21',
+                                6 => '22',
+                                7 => '23',
+                                8 => '24',
+                                9 => '25',
+                               10 => '26',
+                               11 => '27',
+                               12 => '28');
+
+    $existeDeficienciaTranstornoGlobal = FALSE;
+
+    if (count($deficiencias)>0){
+      foreach ($deficiencias as $deficiencia) {
+        $deficiencia = $deficiencia['id'];
+        if (array_key_exists($deficiencia, $deficienciasLayout)){
+          $existeDeficienciaTranstornoGlobal = TRUE;
+        }
+      }
+    }
+    return $existeDeficienciaTranstornoGlobal;
   }
 
 protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim, $alunoId){
