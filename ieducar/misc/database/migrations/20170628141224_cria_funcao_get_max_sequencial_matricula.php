@@ -19,7 +19,7 @@ class CriaFuncaoGetMaxSequencialMatricula extends AbstractMigration
                         $$
                       LANGUAGE sql VOLATILE
                           COST 100;
-                ALTER FUNCTION relatorio.get_max_sequencial_aluno(integer)
+                ALTER FUNCTION relatorio.get_max_sequencial_matricula(integer)
               OWNER TO ieducar;");
     }
 }
