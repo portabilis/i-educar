@@ -2147,6 +2147,10 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
     $regex  = sprintf('/[^%s]/u', preg_quote(join($caracteresAceitos), '/'));
     $string = preg_replace($regex, '', $string);
 
+    //Elimina espaços indesejados
+    $string = trim($string);
+    $string = preg_replace('/( )+/', ' ', $string);
+
     return $string;
   }
 
@@ -2163,6 +2167,10 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
     //Aplica filtro na string eliminando caracteres indesejados
     $regex  = sprintf('/[^%s]/u', preg_quote(join($caracteresAceitos), '/'));
     $string = preg_replace($regex, '', $string);
+
+    //Elimina espaços indesejados
+    $string = trim($string);
+    $string = preg_replace('/( )+/', ' ', $string);
 
     return $string;
   }
