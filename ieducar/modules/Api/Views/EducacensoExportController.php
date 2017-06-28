@@ -391,8 +391,8 @@ class EducacensoExportController extends ApiCoreController
       $r00s26 = strtoupper($r00s26);
       $r00s27 = ($r00s27 ? str_pad($r00s27, 5, "0", STR_PAD_LEFT) : NULL);
 
-      if($r00s28 != 4 && $situacao_funcionamento != 1)
-        $r00s30 = $r00s31 = $r00s32 = $r00s33 = $r00s34 = $r00s35 = $r00s36 = $r00s37 = $r00s38 = '';
+      if($r00s28 != 4)
+        $r00s30 = $r00s31 = $r00s32 = $r00s33 = $r00s34 = $r00s35 = $r00s36 = $r00s37 = $r00s38 = NULL;
 
       for ($i=1; $i <= 42 ; $i++)
         $return .= ${'r00s'.$i}.$d;
