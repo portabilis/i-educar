@@ -581,6 +581,10 @@ class EducacensoExportController extends ApiCoreController
         }
       }
 
+      if (!$r10s82) {
+        $r10s86 = $r10s87 = NULL;
+      }
+
       if ($r10s96) {
         $r10s96 = ($etapa_ensino_fundamental ? 1 : 0);
       } else
