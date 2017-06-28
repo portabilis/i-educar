@@ -504,7 +504,7 @@ class EducacensoAnaliseController extends ApiCoreController
 
       switch ($turma['tipo_atendimento']) {
         case 0:
-          $nomeAtendimento = 'Não sei aplica';
+          $nomeAtendimento = 'Não se aplica';
           break;
         case 1:
           $nomeAtendimento = 'Classe hospitalar';
