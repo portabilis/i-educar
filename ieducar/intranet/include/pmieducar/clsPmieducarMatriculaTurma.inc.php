@@ -31,6 +31,7 @@
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'Avaliacao/Fixups/CleanComponentesCurriculares.php';
 require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
+require_once 'include/services/matricula/SequencialEnturmacao.php';
 
 /**
  * clsPmieducarMatriculaTurma class.
@@ -304,7 +305,8 @@ class clsPmieducarMatriculaTurma
         $gruda = ", ";
       }
 
-      $this->sequencial_fechamento = $this->getSequencialFechamento($this->ref_cod_matricula, $this->ref_cod_turma, $this->data_enturmacao);
+      $sequencialEnturmacao = new SequencialEnturmacao($this->ref_cod_matricula, $this->ref_cod_turma, $this->data_enturmacao);
+      $this->sequencial_fechamento = $sequencialEnturmacao->reordenaSequencial();
 
       if(is_numeric($this->sequencial_fechamento)){
         $campos .= "{$gruda}sequencial_fechamento";
@@ -1522,64 +1524,6 @@ class clsPmieducarMatriculaTurma
     }
 
     return FALSE;
-  }
-
-  function existeMatriculaTransferidaAno(){
-    if(is_numeric($this->ref_cod_matricula)){
-      $db = new clsBanco();
-
-      $cod_aluno = $db->CampoUnico("SELECT ref_cod_aluno FROM pmieducar.matricula WHERE cod_matricula = {$this->ref_cod_matricula}");
-      $ano = $this->getAnoMatricula();
-      if($cod_aluno)
-        return $db->CampoUnico("SELECT 1 FROM pmieducar.matricula WHERE ref_cod_aluno = {$cod_aluno} AND ano = {$ano} AND
-          aprovado = 4") == 1 ? TRUE : FALSE;
-    }
-  }
-
-  function getSequencialFechamento($matriculaId, $turmaId, $dataEnturmacao){
-
-    $getSequencial = FALSE;
-    $db = new clsBanco();
-    $objTurma = new clsPmieducarTurma($turmaId);
-    $detTurma = $objTurma->detalhe();
-    $objInstituicao = new clsPmieducarInstituicao($detTurma["ref_cod_instituicao"]);
-    $detInstituicao = $objInstituicao->detalhe();
-    $dataFechamento = $detInstituicao["data_fechamento"];
-
-    $possuiDataFechamento = is_string($dataFechamento);
-
-    if($possuiDataFechamento){
-      $objMatricula = new clsPmieducarMatricula($this->ref_cod_matricula);
-      $detMatricula = $objMatricula->detalhe();
-      $ano = $detMatricula["ano"];
-
-      $dataFechamento = explode("-", $dataFechamento);
-
-      $dataFechamento = $ano . "-" . $dataFechamento[1] . "-" . $dataFechamento[2];
-
-      if (strtotime($dataFechamento) < strtotime($dataEnturmacao))
-        $getSequencial = true;
-    }
-
-    $dataBaseTransferencia = $this->getDataBaseTransferencia();
-
-    if ($dataBaseTransferencia && $this->existeMatriculaTransferidaAno()){
-      if (strtotime($dataBaseTransferencia) < strtotime($dataEnturmacao))
-        $getSequencial = true;
-    }
-
-    $dataBaseRemanejamento = $this->getDataBaseRemanejamento();
-
-    if($dataBaseRemanejamento){
-      if (strtotime($dataBaseRemanejamento) < strtotime($dataEnturmacao))
-        $getSequencial = true;
-    }
-
-
-    if ($getSequencial)
-      return $db->CampoUnico("SELECT MAX(sequencial_fechamento)+1 FROM {$this->_tabela} where ref_cod_turma = {$turmaId}");
-    else
-      return 0;
   }
 
   function limpaComponentesCurriculares(){
