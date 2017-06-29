@@ -207,7 +207,7 @@ class indice extends clsListagem
 
     $this->array_botao = array();
     $this->array_botao_url = array();
-    if( $obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7 ) )
+    if( $obj_permissoes->permissao_cadastra( 635, $this->pessoa_logada, 7 ) )
     {
       $this->array_botao_url[]= "educar_servidor_alocacao_cad.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}";
       $this->array_botao[]= "Novo";
