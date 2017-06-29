@@ -1365,7 +1365,7 @@ class indice extends clsCadastro
     $fisica->data_admissao          = $this->data_admissao ? Portabilis_Date_Utils::brToPgSQL($this->data_admissao) : null;
     $fisica->falecido               = $this->falecido;
     $fisica->ref_cod_religiao       = $this->religiao_id;
-    $fisica->zona_localizacao_censo = $this->zona_localizacao_censo;
+    $fisica->zona_localizacao_censo = empty($this->zona_localizacao_censo) ? NULL : $this->zona_localizacao_censo;
 
     $sql = "select 1 from cadastro.fisica WHERE idpes = $1 limit 1";
 
