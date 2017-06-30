@@ -17,16 +17,18 @@ class SequencialEnturmacao {
   public function ordenaSequencialNovaMatricula() {
     if ($this->enturmarPorUltimo()) {
       $db = new clsBanco();
-      return $db->CampoUnico("SELECT MAX(sequencial_fechamento)+1
+      $novoSequencial = $db->CampoUnico("SELECT MAX(sequencial_fechamento)+1
                                 FROM pmieducar.matricula_turma
-                               WHERE ref_cod_turma = {$this->refCodTurma}");
+                               WHERE ativo = 1
+                                 AND ref_cod_turma = {$this->refCodTurma}");
+      return $novoSequencial ? $novoSequencial : 1;
     }
 
     $sequencialNovoAluno = $this->sequencialAlunoOrdemAlfabetica();
 
     $this->somaSequencialPosterior($sequencialNovoAluno);
 
-    return $sequencial;
+    return $sequencialNovoAluno;
   }
 
   private function sequencialAlunoOrdemAlfabetica() {
