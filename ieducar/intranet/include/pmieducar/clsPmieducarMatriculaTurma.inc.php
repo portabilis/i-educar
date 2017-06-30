@@ -306,7 +306,7 @@ class clsPmieducarMatriculaTurma
       }
 
       $sequencialEnturmacao = new SequencialEnturmacao($this->ref_cod_matricula, $this->ref_cod_turma, $this->data_enturmacao);
-      $this->sequencial_fechamento = $sequencialEnturmacao->reordenaSequencial();
+      $this->sequencial_fechamento = $sequencialEnturmacao->ordenaSequencialNovaMatricula();
 
       if(is_numeric($this->sequencial_fechamento)){
         $campos .= "{$gruda}sequencial_fechamento";

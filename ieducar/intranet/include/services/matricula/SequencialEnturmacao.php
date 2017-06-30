@@ -14,7 +14,7 @@ class SequencialEnturmacao {
     $this->dataEnturmacao = $dataEnturmacao;
   }
 
-  public function reordenaSequencial() {
+  public function ordenaSequencialNovaMatricula() {
     if ($this->enturmarPorUltimo()) {
       $db = new clsBanco();
       return $db->CampoUnico("SELECT MAX(sequencial_fechamento)+1
@@ -22,15 +22,63 @@ class SequencialEnturmacao {
                                WHERE ref_cod_turma = {$this->refCodTurma}");
     }
 
-    $sequencial =  $this->sequencialOrdemAlfabetica();
+    $sequencialNovoAluno = $this->sequencialAlunoOrdemAlfabetica();
 
-    // $this->somaSequencialAlunos($sequencial);
+    $this->somaSequencialPosterior($sequencialNovoAluno);
 
     return $sequencial;
   }
 
-  private function sequencialOrdemAlfabetica() {
-    
+  private function sequencialAlunoOrdemAlfabetica() {
+    $db = new clsBanco();
+    $sql =
+    "SELECT sequencial_fechamento, pessoa.nome
+       FROM pmieducar.matricula_turma
+      INNER JOIN pmieducar.matricula ON (matricula.cod_matricula = matricula_turma.ref_cod_matricula)
+      INNER JOIN pmieducar.aluno ON (aluno.cod_aluno = matricula.ref_cod_aluno)
+      INNER JOIN cadastro.pessoa ON (pessoa.idpes = aluno.ref_idpes)
+      WHERE matricula_turma.ativo = 1
+        AND matricula_turma.ref_cod_turma = $this->refCodTurma
+        AND matricula_turma.data_enturmacao <= '$this->dataEnturmacao'::date
+      ORDER BY sequencial_fechamento";
+
+    $db->Consulta($sql);
+
+    $alunos = array();
+    while ($db->ProximoRegistro()) {
+      $aluno = $db->Tupla();
+      $sequencial = $aluno['sequencial_fechamento'];
+      $alunos[$sequencial] = strtoupper($aluno['nome']);
+    }
+
+    $matricula = new clsPmieducarMatricula($this->refCodMatricula);
+    $matricula = $matricula->detalhe();
+
+    $alunos['novo-aluno'] = $matricula['nome'];
+
+    asort($alunos);
+
+    $novoSequencial = 0;
+    foreach ($alunos as $sequencial => $nome) {
+      if ($sequencial == 'novo-aluno') {
+        $novoSequencial++;
+        break;
+      }
+      $novoSequencial++;
+    }
+    return $novoSequencial;
+  }
+
+  private function somaSequencialPosterior($sequencial) {
+    $sql =
+    "UPDATE pmieducar.matricula_turma
+        SET sequencial_fechamento = sequencial_fechamento + 1
+      WHERE ativo = 1
+        AND ref_cod_turma = $this->refCodTurma
+        AND sequencial_fechamento >= $sequencial";
+
+    $db = new clsBanco();
+    $db->Consulta($sql);
   }
 
   private function enturmarPorUltimo() {
