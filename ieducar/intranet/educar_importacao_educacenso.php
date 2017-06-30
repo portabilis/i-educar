@@ -125,7 +125,7 @@ class indice extends clsCadastro
       $dadosRegistro = explode("|", $registro);
       $numeroRegistro = $dadosRegistro[0];
 
-      $time_start = microtime(true);
+      //$time_start = microtime(true);
 
       switch ($numeroRegistro) {
         case '00':
@@ -159,7 +159,7 @@ class indice extends clsCadastro
           $this->importaRegistro80($dadosRegistro);
           break;
       }
-      echo 'Tempo para importar registro '.$numeroRegistro.': ' . (microtime(true) - $time_start) . '<br/>';
+      //echo 'Tempo para importar registro '.$numeroRegistro.': ' . (microtime(true) - $time_start) . '<br/>';
     }
     $this->mensagem = "Arquivo importado!";
     return true;
