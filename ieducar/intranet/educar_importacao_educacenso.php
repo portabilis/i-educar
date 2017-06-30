@@ -1,6 +1,8 @@
 <?php
-error_reporting(E_ALL);
-ini_set("display_errors", 1);
+//error_reporting(E_ALL);
+//ini_set("display_errors", 1);
+
+ini_set("max_execution_time", 30000);
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -34,6 +36,8 @@ require_once 'include/clsCadastro.inc.php';
 require_once 'lib/Portabilis/Utils/Database.php';
 require_once 'lib/Portabilis/Date/Utils.php';
 require_once 'lib/Portabilis/DataMapper/Utils.php';
+require_once 'include/pmieducar/geral.inc.php';
+require_once 'include/modules/clsModulesProfessorTurma.inc.php';
 
 /**
  * @author    Caroline Salib Canto <caroline@portabilis.com.br>
@@ -113,13 +117,15 @@ class indice extends clsCadastro
     }
 
     $arquivo = file_get_contents($this->arquivo['tmp_name']);
+    //$arquivo = iconv('Windows-1252', 'UTF-8', $arquivo);
 
     $registros = explode("\n", $arquivo);
-    usort($registros, 'comparar_registros');
 
     foreach ($registros as $registro) {
       $dadosRegistro = explode("|", $registro);
       $numeroRegistro = $dadosRegistro[0];
+
+      $time_start = microtime(true);
 
       switch ($numeroRegistro) {
         case '00':
@@ -138,22 +144,28 @@ class indice extends clsCadastro
           $this->importaRegistro40($dadosRegistro);
           break;
         case '50':
-          $this->importaRegistro40($dadosRegistro);
+          $this->importaRegistro50($dadosRegistro);
           break;
         case '51':
-          $this->importaRegistro40($dadosRegistro);
+          $this->importaRegistro51($dadosRegistro);
+          break;
+        case '60':
+          $this->importaRegistro60($dadosRegistro);
+          break;
+        case '70':
+          $this->importaRegistro70($dadosRegistro);
+          break;
+        case '80':
+          $this->importaRegistro80($dadosRegistro);
           break;
       }
+      echo 'Tempo para importar registro '.$numeroRegistro.': ' . (microtime(true) - $time_start) . '<br/>';
     }
+    $this->mensagem = "Arquivo importado!";
     return true;
   }
 
-  function comparar_registros($a, $b){
-    return strnatcmp($a[0], $b[0]);
-  }
-
   function importaRegistro00($dadosRegistro) {
-    $this->mensagem = "Importação do registro 00";
 
     $inep = $dadosRegistro[1];
     $cpfGestor = (int) $dadosRegistro[2];
@@ -534,7 +546,6 @@ class indice extends clsCadastro
             1);
 
     if(!$obj->existe()){
-      print_r(array($codDisciplina, $codEscola, $codSerie));
       $obj->cadastra();
     }
 
@@ -593,7 +604,7 @@ class indice extends clsCadastro
       $codigos = $codigoEducacenso->getValues();
 
       $nome = $codigos[$disciplinaEducacenso] ? $codigos[$disciplinaEducacenso] : "Migração";
-      $sigla = substr($nome, 0, 3);
+      $sigla = mb_substr($nome, 0, 3, 'UTF-8');
       $sql = "INSERT INTO modules.componente_curricular (instituicao_id, area_conhecimento_id, nome, codigo_educacenso, abreviatura, tipo_base)
                 VALUES ('{$this->ref_cod_instituicao}','{$codArea}','{$nome}','{$disciplinaEducacenso}','{$sigla}',1) returning id ";
 
@@ -615,7 +626,7 @@ class indice extends clsCadastro
     } else {
       $turmaTipo->ref_usuario_cad = $this->pessoa_logada;
       $turmaTipo->nm_tipo = "Regular";
-      $turmaTipo->sgl_turma = "Reg";
+      $turmaTipo->sgl_tipo = "Reg";
       $turmaTipo->ref_cod_instituicao = $this->ref_cod_instituicao;
       $codTurmaTipo = $turmaTipo->cadastra();
     }
@@ -696,7 +707,7 @@ class indice extends clsCadastro
     } else {
         $curso = new clsPmieducarCurso();
         $curso->nm_curso = $dadosCurso['curso'];
-        $curso->sgl_curso = substr($dadosCurso['curso'], 0, 15);
+        $curso->sgl_curso = mb_substr($dadosCurso['curso'], 0, 15, 'UTF-8');
         $curso->qtd_etapas = $dadosCurso['etapas'];
         $curso->carga_horaria = 800 * $dadosCurso['etapas'];
         $curso->ativo = 1;
@@ -898,38 +909,38 @@ class indice extends clsCadastro
       $servidor->ref_cod_instituicao = $this->ref_cod_instituicao;
 
       if($codigoCursoSuperior1){
-        $idCurso = getIdCursoSuperiorEducacenso($codigo);
+        $idCurso = $this->getIdCursoSuperiorEducacenso($codigoCursoSuperior1);
         if($idCurso){
           $cursosServidor['codigo_curso_superior_1'] = $idCurso;
         }
       }
       if($codigoCursoSuperior2){
-        $idCurso = getIdCursoSuperiorEducacenso($codigo);
+        $idCurso = $this->getIdCursoSuperiorEducacenso($codigoCursoSuperior2);
         if($idCurso){
           $cursosServidor['codigo_curso_superior_2'] = $idCurso;
         }
       }
       if($codigoCursoSuperior3){
-        $idCurso = getIdCursoSuperiorEducacenso($codigo);
+        $idCurso = $this->getIdCursoSuperiorEducacenso($codigoCursoSuperior3);
         if($idCurso){
           $cursosServidor['codigo_curso_superior_3'] = $idCurso;
         }
       }
 
       if($instituicaoEnsinoSuperior1){
-        $idCurso = getIdInstituicaoEducacenso($codigo);
+        $idCurso = $this->getIdInstituicaoEducacenso($instituicaoEnsinoSuperior1);
         if($idCurso){
           $cursosServidor['instituicao_curso_superior_1'] = $idCurso;
         }
       }
       if($instituicaoEnsinoSuperior2){
-        $idCurso = getIdInstituicaoEducacenso($codigo);
+        $idCurso = $this->getIdInstituicaoEducacenso($instituicaoEnsinoSuperior2);
         if($idCurso){
           $cursosServidor['instituicao_curso_superior_2'] = $idCurso;
         }
       }
       if($instituicaoEnsinoSuperior3){
-        $idCurso = getIdInstituicaoEducacenso($codigo);
+        $idCurso = $this->getIdInstituicaoEducacenso($instituicaoEnsinoSuperior3);
         if($idCurso){
           $cursosServidor['instituicao_curso_superior_3'] = $idCurso;
         }
@@ -1025,7 +1036,8 @@ class indice extends clsCadastro
       foreach ($recursosProva as $key => $value) {
         $aluno->{$key} = $value;
       }
-      $aluno->cadastra();
+      $codAluno = $aluno->cadastra();
+      $this->createAlunoEducacenso($codAluno, $inepAluno);
       foreach ($deficiencias as $key => $deficienciaEducacenso) {
         $codDeficiencia = $this->getOrCreateDeficiencia($deficienciaEducacenso);
         $deficiencia = new clsCadastroFisicaDeficiencia($idpesAluno, $codDeficiencia);
@@ -1039,7 +1051,7 @@ class indice extends clsCadastro
     $inepAluno = $dadosRegistro[3-1];
     $identidade = $dadosRegistro[5-1];
     $orgaoEmissorRgCenso = $dadosRegistro[6-1];
-    $ufIdentidade = $dadosRegistro[7-1];
+    $ufIdentidadeCenso = $dadosRegistro[7-1];
     $dataExpedicaoRg = $dadosRegistro[8-1];
     $modeloCertidaoCivil = $dadosRegistro[9-1];
     $tipoCertidaoCivil = $dadosRegistro[10-1];
@@ -1070,9 +1082,6 @@ class indice extends clsCadastro
       return false;
     }
 
-    // fisica - nis_pis_pasep
-    // fisica - cpf
-
     $aluno = new clsPmieducarAluno($codAluno);
     $detAluno = $aluno->detalhe();
     $idpesAluno = $detAluno['ref_idpes'];
@@ -1082,6 +1091,43 @@ class indice extends clsCadastro
     $fisica->nis_pis_pasep = $nis;
 
     $documento = new clsDocumento($idpesAluno);
+
+    if(!empty($passaporte)){
+      $documento->passaporte = $passaporte;
+    }
+    if(!empty($identidade)){
+      $documento->rg = $identidade;
+    }
+    if(!empty($orgaoEmissorRgCenso)){
+      $orgaoEmissorRg = $this->getOrgaoEmissorRgByCodCenso($orgaoEmissorRgCenso);
+      $documento->idorg_exp_rg = $orgaoEmissorRg;
+    }
+    if(!empty($ufIdentidadeCenso)){
+      $ufIdentidade = $this->getUfByCodIbge($ufIdentidadeCenso);
+      $documento->sigla_uf_exp_rg = $ufIdentidade;
+    }
+    if(!empty($dataExpedicaoRg)){
+      $documento->data_exp_rg = Portabilis_Date_Utils::brToPgSQL($dataExpedicaoRg);
+    }
+    if($modeloCertidaoCivil == 2 && !empty($numeroMatriculaCertidaoNova)){
+      $documento->certidao_nascimento = $numeroMatriculaCertidaoNova;
+    }elseif($modeloCertidaoCivil == 1){
+      if($tipoCertidaoCivil == 1){
+        $documento->tipo_cert_civil = 91;
+      }else{
+        $documento->tipo_cert_civil = 92;
+      }
+
+      $documento->num_termo = $termoCertidaoCivil;
+      $documento->num_folha = $folhaCertidaoCivil;
+      $documento->num_livro = $livroCertidaoCivil;
+
+      $documento->data_emissao_cert_civil  = Portabilis_Date_Utils::brToPgSQL($dataEmissaoCertidao);
+      if(!empty($ufCartorio)){
+        $documento->sigla_uf_cert_civil      = $this->getUfByCodIbge($ufCartorio);
+      }
+      $documento->cartorio_cert_civil_inep = $codigoCartorio;
+    }
 
     if(!$documento->existe()){
       $documento->idpes_cad = $this->pessoa_logada;
@@ -1093,6 +1139,67 @@ class indice extends clsCadastro
 
     $this->cadastraEndereco($idpesAluno, $cep, $endereco, $numero, $complemento, $bairro, $ufIbge, $municipioIbge, null, $localizacao);
 
+  }
+
+  function importaRegistro80($dadosRegistro){
+    $inepEscola = $dadosRegistro[2-1];
+    $inepAluno = $dadosRegistro[3-1];
+    $inepTurma = $dadosRegistro[5-1];
+
+    $codAluno = $this->existeAluno($inepAluno);
+    $codTurma = $this->existeTurma($inepTurma);
+
+    if(!$codAluno || !$codTurma){
+      return false;
+    }
+
+    $turma = new clsPmieducarTurma($codTurma);
+    $detalheTurma = $turma->detalhe();
+
+
+    $codMatricula = $this->existeMatricula($detalheTurma['ref_ref_cod_serie'], $codAluno, $this->ano);
+
+    if(!$codMatricula){
+
+      $obj = new clsPmieducarMatricula(NULL, NULL,
+          $detalheTurma['ref_ref_cod_escola'], $detalheTurma['ref_ref_cod_serie'], NULL,
+          $this->pessoa_logada, $codAluno, 3, NULL, NULL, 1, $this->ano,
+          1, NULL, NULL, NULL, NULL, $detalheTurma['ref_cod_curso'],
+          NULL, NULL, date('Y-m-d'));
+
+      $codMatricula = $obj->cadastra();
+    }
+
+    if (! $this->existeEnturmacao($codTurma, $codMatricula)) {
+      $enturmacao = new clsPmieducarMatriculaTurma($codMatricula,
+                                                   $codTurma,
+                                                  $this->pessoa_logada,
+                                                   $this->pessoa_logada,
+                                                   NULL,
+                                                   NULL,
+                                                   1);
+      $enturmacao->data_enturmacao = date('Y-m-d');
+      $enturmacao->cadastra();
+    }
+
+  }
+
+  function removerFlagUltimaMatricula($alunoId){
+    $matriculas = new clsPmieducarMatricula();
+    $matriculas = $matriculas->lista(NULL, NULL, NULL, NULL, NULL, NULL, $alunoId,
+                                     NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, 1);
+
+
+    foreach ($matriculas as $matricula) {
+      if (!$matricula['aprovado']==3){
+        $matricula = new clsPmieducarMatricula($matricula['cod_matricula'], NULL, NULL, NULL,
+                                               $this->pessoa_logada, NULL, $alunoId, NULL, NULL,
+                                               NULL, 1, NULL, 0);
+        $matricula->edita();
+      }
+    }
+
+    return true;
   }
 
   function getIdCursoSuperiorEducacenso($codigo){
@@ -1120,6 +1227,30 @@ class indice extends clsCadastro
     $servidor->carga_horaria = 0;
 
     return $servidor->cadastra();
+  }
+
+  function existeEnturmacao($codTurma, $codMatricula){
+    $sql = "SELECT 1
+              FROM pmieducar.matricula_turma
+              WHERE ref_cod_turma = {$codTurma}
+              AND ref_cod_matricula = {$codMatricula}
+              AND ativo = 1
+    ";
+
+    return Portabilis_Utils_Database::selectField($sql);
+  }
+
+  function existeMatricula($serie, $aluno, $ano){
+    $sql = "SELECT cod_matricula
+              FROM pmieducar.matricula
+              WHERE ano = {$ano}
+              AND ativo = 1
+              AND ref_ref_cod_serie = {$serie}
+              AND aprovado = 3
+              AND ref_cod_aluno = {$aluno}
+    ";
+
+    return Portabilis_Utils_Database::selectField($sql);
   }
 
   function existeAluno($inep){
@@ -1168,7 +1299,7 @@ class indice extends clsCadastro
   }
 
   function cadastraEndereco($idpes, $cep, $logradouro, $enderecoNumero, $complemento, $nomeBairro, $ufIbge, $municipioIbge, $distritoIbge, $localizacao){
-
+    $enderecoNumero = (int) $enderecoNumero;
     // TODO (Notificar quando endereço não for criado?)
 
     if($this->checkEnderecoPessoa($idpes)){
@@ -1279,7 +1410,7 @@ class indice extends clsCadastro
   function getDeficiencia($deficienciaEducacenso){
     $sql = "SELECT cod_deficiencia
               FROM cadastro.deficiencia
-              WHERE iddis = {$deficienciaEducacenso}
+              WHERE deficiencia_educacenso = {$deficienciaEducacenso}
 
     ";
     return Portabilis_Utils_Database::selectField($sql);
@@ -1337,6 +1468,24 @@ class indice extends clsCadastro
     return Portabilis_Utils_Database::selectField($sql);
   }
 
+  function getUfByCodIbge($ufIbge){
+    $sql = "SELECT sigla_uf
+              from public.uf
+              where cod_ibge = '{$ufIbge}'
+              limit 1 ";
+
+    return Portabilis_Utils_Database::selectField($sql);
+  }
+
+  function getOrgaoEmissorRgByCodCenso($orgaoEmissorRgCenso){
+    $sql = "SELECT idorg_rg
+              from cadastro.orgao_emissor_rg
+              where codigo_educacenso = '{$orgaoEmissorRgCenso}'
+              limit 1 ";
+
+    return Portabilis_Utils_Database::selectField($sql);
+  }
+
   function checkEnderecoPessoa($idpes){
     $sql = "SELECT idpes from cadastro.endereco_pessoa where idpes = {$idpes} limit 1 ";
 
@@ -1385,6 +1534,23 @@ class indice extends clsCadastro
     $escola->edita();
   }
 
+  function createAlunoEducacenso($codAluno, $inep){
+    $dataMapper = Portabilis_DataMapper_Utils::getDataMapperFor('educacenso', 'aluno');
+
+    $data = array(
+      'aluno'      => $codAluno,
+      'alunoInep'  => $inep,
+      'fonte'      => 'importador',
+      'nomeInep'   => '-',
+      'created_at' => 'NOW()',
+    );
+
+    $entity = $dataMapper->createNewEntityInstance();
+    $entity->setOptions($data);
+
+    $dataMapper->save($entity);
+  }
+
   function createEscolaEducacenso($codEscola, $inep){
     $dataMapper = Portabilis_DataMapper_Utils::getDataMapperFor('educacenso', 'escola');
 
@@ -1410,7 +1576,7 @@ class indice extends clsCadastro
     $escola->ref_cod_escola_localizacao = $codEscolaLocalizacao;
     $escola->ref_cod_escola_rede_ensino = $codEscolaRedeEnsino;
     $escola->ref_idpes = $idpesEscola;
-    $escola->sigla = substr($nomeEscola, 0, 5);
+    $escola->sigla = mb_substr($nomeEscola, 0, 5, 'UTF-8');
     $escola->ativo = 1;
 
     return $escola->cadastra();
