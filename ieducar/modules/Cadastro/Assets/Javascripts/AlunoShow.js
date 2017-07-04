@@ -122,11 +122,6 @@ var handleGetMatriculas = function(dataResponse) {
         $j('<td>').html('').appendTo($tr);
       }
 
-      if (matricula.transferencia_em_aberto) {
-        transferenciaEmAberto = true;
-        $tr.addClass('notice');
-      }
-
       if($j('#can_show_dependencia').val() == 1){
         var dependencia = matricula.dependencia == 't' ? 'Sim' : stringUtils.toUtf8('Não');
         $j('<td>').html(dependencia).appendTo($tr);
@@ -138,17 +133,6 @@ var handleGetMatriculas = function(dataResponse) {
 
     if(dataResponse.matriculas.length < 1) {
       var $p = $j('<p>').html(stringUtils.toUtf8('Aluno sem matrículas, ')).addClass('notice simple-block');
-
-      $j('<a>').attr('href', 'educar_matricula_cad.php?ref_cod_aluno=' + $j('#aluno_id').val())
-               .html('matricular aluno.')
-               .addClass('decorated')
-               .appendTo($p);
-
-      $p.appendTo($matriculasTable.parent());
-    }
-    else if (transferenciaEmAberto) {
-      var $p = $j('<p>').html(stringUtils.toUtf8('* Matrícula com solicitação de transferência interna em aberto, '))
-                        .addClass('notice simple-block');
 
       $j('<a>').attr('href', 'educar_matricula_cad.php?ref_cod_aluno=' + $j('#aluno_id').val())
                .html('matricular aluno.')
