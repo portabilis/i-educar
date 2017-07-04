@@ -1541,8 +1541,13 @@ class EducacensoExportController extends ApiCoreController
         for($i=30; $i <= 39; $i++){
           ${'r60s'.$i} = NULL;
         }
-      }else{
-        $r60s39 = 1;
+      }
+
+      $r60s39 = 1;
+
+      for($i=30; $i <= 38; $i++){
+        if(${'r60s'.$i} == 1)
+          $r60s39 = 0;
       }
 
       //O campo 39 deve ser diferente de com 1 quando o campo 17 ou 21 for igual a 1.
