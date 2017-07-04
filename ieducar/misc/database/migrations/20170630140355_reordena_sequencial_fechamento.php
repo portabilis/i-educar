@@ -12,6 +12,7 @@ class ReordenaSequencialFechamento extends AbstractMigration
                         SELECT nome,
                             ROW_NUMBER () OVER (ORDER BY (CASE WHEN data_base_remanejamento IS NULL THEN 0
                                 WHEN data_enturmacao > data_base_remanejamento THEN 1
+	                            WHEN matricula.dependencia THEN 2
                                 ELSE 0 END), nome) novo_sequencial,
                             matricula_turma.sequencial_fechamento,
                             data_base_remanejamento,
@@ -26,7 +27,6 @@ class ReordenaSequencialFechamento extends AbstractMigration
                         INNER JOIN pmieducar.escola ON (escola.cod_escola = matricula.ref_ref_cod_escola)
                         INNER JOIN pmieducar.instituicao ON (instituicao.cod_instituicao = escola.ref_cod_instituicao)
                         WHERE matricula.ativo = 1
-                        AND matricula_turma.ref_cod_turma = 14122
                         AND (matricula_turma.ativo = 1 OR matricula_turma.transferido)
                         AND matricula_turma.sequencial = (SELECT MAX(sequencial)
                                             FROM pmieducar.matricula_turma mt
