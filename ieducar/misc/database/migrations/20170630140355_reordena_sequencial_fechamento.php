@@ -7,49 +7,45 @@ class ReordenaSequencialFechamento extends AbstractMigration
     public function change()
     {
         $this->execute("UPDATE pmieducar.matricula_turma
-                        SET sequencial_fechamento = new.valor_linha
-                        FROM (SELECT ROW_NUMBER()
-                                    OVER (PARTITION BY ref_cod_turma
-                                                ORDER BY (CASE
-                                                            WHEN data_base_remanejamento IS NULL THEN 0
-                                                            WHEN data_enturmacao <= data_base_remanejamento THEN 1
-                                                            ELSE 2
-                                                        END),
-                                                        split_part(nome,' ',1),
-                                                        split_part(nome,' ',2),
-                                                        split_part(nome,' ',3)) AS valor_linha,
-                                                        mt.sequencial,
-                                                        mt.ref_cod_matricula,
-                                                        mt.ref_cod_turma,
-                                                        mt.sequencial_fechamento
-                                FROM pmieducar.matricula_turma mt,
-                                    pmieducar.turma t,
-                                    pmieducar.instituicao i,
-                                    pmieducar.matricula m,
-                                    pmieducar.aluno a,
-                                    cadastro.pessoa p
-                            WHERE mt.ref_cod_turma IN (SELECT cod_turma
-                                                            FROM pmieducar.turma
-                                                        WHERE (SELECT count(1)
-                                                                    FROM pmieducar.matricula_turma
-                                                                WHERE ref_cod_turma = cod_turma
-                                                                    AND sequencial_fechamento = 0) > 1
-                                                                    AND ano = 2017)
-                                AND t.cod_turma = mt.ref_cod_turma
-                                AND i.cod_instituicao = t.ref_cod_instituicao
-                                AND m.cod_matricula = mt.ref_cod_matricula
-                                AND a.cod_aluno = m.ref_cod_aluno
-                                AND p.idpes = a.ref_idpes
-                                AND mt.ativo = 1) AS NEW
-                        WHERE matricula_turma.sequencial = NEW.sequencial
-                        AND matricula_turma.ref_cod_matricula = NEW.ref_cod_matricula
-                        AND matricula_turma.ref_cod_turma = NEW.ref_cod_turma
-                        AND matricula_turma.ref_cod_turma IN (SELECT cod_turma
-                                                                FROM pmieducar.turma
-                                                                WHERE (SELECT count(1)
-                                                                        FROM pmieducar.matricula_turma
-                                                                        WHERE ref_cod_turma = cod_turma
-                                                                            AND sequencial_fechamento = 0) > 1
-                                                                            AND ano =2017);");
+                        SET sequencial_fechamento = tabela_reordenada.novo_sequencial
+                        FROM (
+                        SELECT nome,
+                            ROW_NUMBER () OVER (ORDER BY (CASE WHEN data_base_remanejamento IS NULL THEN 0
+                                WHEN data_enturmacao > data_base_remanejamento THEN 1
+                                ELSE 0 END), nome) novo_sequencial,
+                            matricula_turma.sequencial_fechamento,
+                            data_base_remanejamento,
+                            data_enturmacao,
+                            sequencial,
+                            ref_cod_matricula,
+                            ref_cod_turma
+                        FROM cadastro.pessoa
+                        INNER JOIN pmieducar.aluno ON (aluno.ref_idpes = pessoa.idpes)
+                        INNER JOIN pmieducar.matricula ON (matricula.ref_cod_aluno = aluno.cod_aluno)
+                        INNER JOIN pmieducar.matricula_turma ON (matricula_turma.ref_cod_matricula = matricula.cod_matricula)
+                        INNER JOIN pmieducar.escola ON (escola.cod_escola = matricula.ref_ref_cod_escola)
+                        INNER JOIN pmieducar.instituicao ON (instituicao.cod_instituicao = escola.ref_cod_instituicao)
+                        WHERE matricula.ativo = 1
+                        AND matricula_turma.ref_cod_turma = 14122
+                        AND (matricula_turma.ativo = 1 OR matricula_turma.transferido)
+                        AND matricula_turma.sequencial = (SELECT MAX(sequencial)
+                                            FROM pmieducar.matricula_turma mt
+                                            WHERE mt.ref_cod_matricula = matricula_turma.ref_cod_matricula
+                                            AND mt.ref_cod_turma = matricula_turma.ref_cod_turma)
+                        ORDER BY novo_sequencial, nome ) AS tabela_reordenada
+
+                        WHERE matricula_turma.sequencial = tabela_reordenada.sequencial
+                                                AND matricula_turma.ref_cod_matricula = tabela_reordenada.ref_cod_matricula
+                                                AND matricula_turma.ref_cod_turma = tabela_reordenada.ref_cod_turma
+                                                AND matricula_turma.ref_cod_matricula IN (SELECT cod_matricula
+                                                        FROM pmieducar.matricula
+                                                        WHERE matricula.ativo = 1
+                                                        AND matricula.ano = 2017
+                                                        AND matricula_turma.ref_cod_turma = 14122
+                                                        AND (matricula_turma.ativo = 1 OR matricula_turma.transferido)
+                                                        AND matricula_turma.sequencial = (SELECT MAX(sequencial)
+                                                                            FROM pmieducar.matricula_turma mt
+                                                                            WHERE mt.ref_cod_matricula = matricula_turma.ref_cod_matricula
+                                                                            AND mt.ref_cod_turma = matricula_turma.ref_cod_turma));");
     }
 }
