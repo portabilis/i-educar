@@ -702,8 +702,7 @@ class clsFisica
 			{
 			   $set .= "$gruda zona_localizacao_censo = {$this->zona_localizacao_censo}";
 			   $gruda = ", ";
-			}elseif ($this->zona_localizacao_censo == "NULL")
-			{
+			}elseif (is_null($this->zona_localizacao_censo)) {
 				$set .= "$gruda zona_localizacao_censo = NULL";
 				$gruda = ", ";
 			}

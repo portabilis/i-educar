@@ -581,6 +581,10 @@ class EducacensoExportController extends ApiCoreController
         }
       }
 
+      if (!$r10s82) {
+        $r10s86 = $r10s87 = NULL;
+      }
+
       if ($r10s96) {
         $r10s96 = ($etapa_ensino_fundamental ? 1 : 0);
       } else
@@ -2143,6 +2147,10 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
     $regex  = sprintf('/[^%s]/u', preg_quote(join($caracteresAceitos), '/'));
     $string = preg_replace($regex, '', $string);
 
+    //Elimina espaços indesejados
+    $string = trim($string);
+    $string = preg_replace('/( )+/', ' ', $string);
+
     return $string;
   }
 
@@ -2159,6 +2167,10 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
     //Aplica filtro na string eliminando caracteres indesejados
     $regex  = sprintf('/[^%s]/u', preg_quote(join($caracteresAceitos), '/'));
     $string = preg_replace($regex, '', $string);
+
+    //Elimina espaços indesejados
+    $string = trim($string);
+    $string = preg_replace('/( )+/', ' ', $string);
 
     return $string;
   }
