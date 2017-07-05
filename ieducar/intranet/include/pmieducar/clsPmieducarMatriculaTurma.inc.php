@@ -1091,6 +1091,40 @@ class clsPmieducarMatriculaTurma
     return false;
   }
 
+  function listaPorSequencial($codTurma) {
+      $db = new clsBanco();
+      $sql ="SELECT nome,
+                    sequencial_fechamento,
+                    ref_cod_matricula
+                FROM cadastro.pessoa
+              INNER JOIN pmieducar.aluno ON (aluno.ref_idpes = pessoa.idpes)
+              INNER JOIN pmieducar.matricula ON (matricula.ref_cod_aluno = aluno.cod_aluno)
+              INNER JOIN pmieducar.matricula_turma ON (matricula_turma.ref_cod_matricula = matricula.cod_matricula)
+              WHERE matricula.ativo = 1
+                AND (CASE WHEN matricula_turma.ativo = 1 THEN TRUE
+                    WHEN matricula_turma.transferido THEN TRUE
+                    WHEN matricula_turma.remanejado THEN TRUE
+                    WHEN matricula.dependencia THEN TRUE
+                    ELSE FALSE END)
+                AND ref_cod_turma = {$codTurma}
+                ORDER BY sequencial_fechamento, nome";
+
+    $db->Consulta($sql);
+
+    while ($db->ProximoRegistro()) {
+      $tupla = $db->Tupla();
+
+      $tupla["_total"] = $this->_total;
+      $resultado[] = $tupla;
+    }
+
+    if (count($resultado)) {
+      return $resultado;
+    }
+
+    return FALSE;
+  }
+
   /**
    * Retorna um array com os dados de um registro.
    * @return array
