@@ -16,12 +16,12 @@ class SequencialEnturmacao {
 
   public function ordenaSequencialNovaMatricula() {
     if ($this->enturmarPorUltimo()) {
-      $db = new clsBanco();
-      $novoSequencial = $db->CampoUnico("SELECT MAX(sequencial_fechamento)+1
-                                FROM pmieducar.matricula_turma
-                               WHERE ativo = 1
-                                 AND ref_cod_turma = {$this->refCodTurma}");
-      return $novoSequencial ? $novoSequencial : 1;
+
+      $novoSequencial = $this->sequencialAlunoAposData();
+
+      $this->somaSequencialPosterior($novoSequencial);
+
+      return $novoSequencial;
     }
 
     $sequencialNovoAluno = $this->sequencialAlunoOrdemAlfabetica();
@@ -29,6 +29,26 @@ class SequencialEnturmacao {
     $this->somaSequencialPosterior($sequencialNovoAluno);
 
     return $sequencialNovoAluno;
+  }
+
+  private function sequencialAlunoAposData() {
+      $db = new clsBanco();
+      $sql = "SELECT MAX(sequencial_fechamento)+1
+                                FROM pmieducar.matricula_turma
+                               INNER JOIN pmieducar.matricula ON (matricula.cod_matricula = matricula_turma.ref_cod_matricula)
+                               WHERE matricula_turma.ativo = 1
+                                 AND matricula.ativo = 1
+                                 AND ref_cod_turma = {$this->refCodTurma}";
+
+      if (!$this->matriculaDependencia()) {
+        $sql .= " AND matricula.dependencia = FALSE";
+      }
+
+      $novoSequencial = $db->CampoUnico($sql);
+
+      $novoSequencial = $novoSequencial ? $novoSequencial : 1;
+
+      return $novoSequencial;
   }
 
   private function sequencialAlunoOrdemAlfabetica() {
@@ -142,5 +162,13 @@ class SequencialEnturmacao {
       $db = new clsBanco();
       return $db->CampoUnico("SELECT ano FROM pmieducar.matricula WHERE cod_matricula = {$this->refCodMatricula}");
     }
+  }
+
+  function matriculaDependencia() {
+    $db = new clsBanco();
+    $dependencia = $db->CampoUnico("SELECT dependencia
+                                      FROM pmieducar.matricula
+                                     WHERE matricula.cod_matricula = {$this->refCodMatricula}");
+    return dbBool($dependencia);
   }
 }
