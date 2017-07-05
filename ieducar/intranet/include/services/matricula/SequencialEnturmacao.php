@@ -76,7 +76,7 @@ class SequencialEnturmacao {
     $matricula = new clsPmieducarMatricula($this->refCodMatricula);
     $matricula = $matricula->detalhe();
 
-    $alunos['novo-aluno'] = $matricula['nome'];
+    $alunos['novo-aluno'] = strtoupper($matricula['nome']);
 
     asort($alunos);
 
