@@ -1541,9 +1541,9 @@ class EducacensoExportController extends ApiCoreController
         for($i=30; $i <= 39; $i++){
           ${'r60s'.$i} = NULL;
         }
+      }else{
+        $r60s39 = 1;
       }
-
-      $r60s39 = 1;
 
       //O campo 39 recebe 0 quando algum campo de 30 à 38 for igual a 1
       for($i=30; $i <= 38; $i++){
