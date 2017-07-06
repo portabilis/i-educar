@@ -1151,7 +1151,7 @@ class DiarioApiController extends ApiCoreController
       $componente['parecer_atual']             = $this->getParecerAtual($componente['id']);
       $componente['situacao']                  = $this->getSituacaoComponente($componente['id']);
 
-      $gravaNotaExame = ($componente['situacao'] == 'Em Exame' || $componente['situacao'] == 'Aprovado Após Exame' || $componente['situacao'] == 'Retido');
+      $gravaNotaExame = ($componente['situacao'] == 'Em exame' || $componente['situacao'] == 'Aprovado após exame' || $componente['situacao'] == 'Retido');
 
       $componente['nota_necessaria_exame']     = ($gravaNotaExame ? $this->getNotaNecessariaExame($componente['id']) : null );
       $componente['ordenamento']               = $_componente->get('ordenamento');
