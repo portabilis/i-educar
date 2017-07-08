@@ -31,7 +31,6 @@
 
 require_once 'lib/Portabilis/Report/ReportFactory.php';
 require_once 'vendor/autoload.php';
-
 use JasperPHP\JasperPHP;
 
 /**
@@ -55,7 +54,7 @@ class Portabilis_Report_ReportFactoryPHPJasper extends Portabilis_Report_ReportF
 
   function getReportsPath() {
     $rootPath   = dirname(dirname(dirname(dirname(__FILE__))));
-    $reportsPath = $rootPath . "/modules/Reports/ReportSources/Portabilis/";
+    $reportsPath = $rootPath . "/modules/Reports/ReportSources/";
 
     return $reportsPath;
   }

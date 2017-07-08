@@ -27,7 +27,9 @@ RUN apt-get install -y software-properties-common python-software-properties \
     && apt-get -y update \
     && apt-get -y install openjdk-7-jdk
 
-CMD chmod 777 /home/portabilis/ieducar/modules/Reports/ReportSources/Portabilis/
+CMD update-alternatives --config java
+
+CMD chmod 777 /home/portabilis/ieducar/modules/Reports/ReportSources/
 
 CMD /usr/sbin/apache2ctl -D FOREGROUND
 

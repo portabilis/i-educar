@@ -1,7 +1,7 @@
 <?php
 
-error_reporting(E_ALL);
-ini_set("display_errors", 1);
+#error_reporting(E_ALL);
+#ini_set("display_errors", 1);
 
 /**
  * i-Educar - Sistema de gestão escolar
@@ -70,6 +70,8 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
     $this->acao_executa_submit = false;
     $this->acao_enviar         = 'printReport()';
 
+    header('Content-Type: text/html; charset=utf-8');
+
     parent::__construct();
   }
 
@@ -83,6 +85,11 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
       $this->report = $this->report();
 
       $this->beforeValidation();
+
+      $this->report->addArg('SUBREPORT_DIR', "modules/Reports/ReportSources/");
+
+      $this->report->addArg('database', $GLOBALS['coreExt']['Config']->app->database->dbname);
+
       $this->validatesPresenseOfRequiredArgsInReport();
       $this->aftervalidation();
 
@@ -96,7 +103,7 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
 
 
   function headers($result) {
-    header('Content-type: application/pdf');
+    header('Content-type: application/pdf; charset=utf-8');
     header('Content-Length: ' . strlen($result));
     header('Content-Disposition: inline; filename=report.pdf');
   }
@@ -172,14 +179,14 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
 
 
   function onValidationError() {
-    $msg = Portabilis_String_Utils::toLatin1('O relatório não pode ser emitido, dica(s):\n\n');
+    $msg = Portabilis_String_Utils::toLatin1('O relatório não pode ser emitido, dica(s):').'\n\n';
 
     foreach ($this->validationErrors as $e) {
-      $error = Portabilis_String_Utils::escape($e['message']);
+      $error = $e['message'];
       $msg .= '- ' . $error . '\n';
     }
 
-    $msg .= '\nPor favor, verifique esta(s) situação(s) e tente novamente.';
+    $msg .= '\n'.Portabilis_String_Utils::toLatin1('Por favor, verifique esta(s) situação(s) e tente novamente.');
 
     $msg = Portabilis_String_Utils::toLatin1($msg, array('escape' => false));
     echo "<script type='text/javascript'>alert('$msg'); close();</script> ";

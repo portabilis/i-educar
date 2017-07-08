@@ -31,7 +31,7 @@ class JasperPHP
             throw new \Exception("No input file", 1);
 
         $command = __DIR__ . $this->executable;
-        
+
         $command .= " cp ";
 
         $command .= $input_file;
@@ -46,14 +46,14 @@ class JasperPHP
         return $this;
     }
 
-    public function process($input_file, $output_file = false, $format = array("pdf"), $parameters = array(), $db_connection = array(), $background = true, $redirect_output = true)
+    public function process($input_file, $output_file = false, $format = array("pdf"), $parameters = array(), $db_connection = array(), $background = true, $redirect_output = true, $filter_params = true)
     {
         if(is_null($input_file) || empty($input_file))
             throw new \Exception("No input file", 1);
 
         if( is_array($format) )
         {
-            foreach ($format as $key) 
+            foreach ($format as $key)
             {
                 if( !in_array($key, $this->formats))
                     throw new \Exception("Invalid format!", 1);
@@ -61,10 +61,20 @@ class JasperPHP
         } else {
             if( !in_array($format, $this->formats))
                     throw new \Exception("Invalid format!", 1);
-        }        
-    
-        $command = __DIR__ . $this->executable;
-        
+        }
+
+        $params_command = $command = __DIR__ . $this->executable;
+
+        $params_command .= " params " . $input_file . " 2>&1 ";
+
+        if($filter_params){
+          exec($params_command, $params_output);
+          foreach ($params_output as $key => &$param) {
+            $exploded = explode(" ", $param);
+            $param = $exploded[1];
+          }
+        }
+
         $command .= " pr ";
 
         $command .= $input_file;
@@ -83,29 +93,33 @@ class JasperPHP
         if( count($parameters) > 0 )
         {
             $command .= " -P";
-            foreach ($parameters as $key => $value) 
+            foreach ($parameters as $key => $value)
             {
-                $command .= " " . $key . "=" . $value;
+              if(!$filter_params || in_array($key, $params_output))
+                $command .= " " . $key . "=\"" . $value."\"";
             }
-        }    
+        }
 
         if( count($db_connection) > 0 )
         {
             $command .= " -t " . $db_connection['driver'];
             $command .= " -u " . $db_connection['username'];
-    
+
             if( isset($db_connection['password']) && !empty($db_connection['password']) )
                 $command .= " -p " . $db_connection['password'];
 
             if( isset($db_connection['host']) && !empty($db_connection['host']) )
                 $command .= " -H " . $db_connection['host'];
-            
+
             if( isset($db_connection['database']) && !empty($db_connection['database']) )
                 $command .= " -n " . $db_connection['database'];
-            
+
+            if( isset($db_connection['port']) && !empty($db_connection['port']) )
+                $command .= " --db-port " . $db_connection['port'];
+
             if( isset($db_connection['jdbc_driver']) && !empty($db_connection['jdbc_driver']) )
                 $command .= " --db-driver " . $db_connection['jdbc_driver'];
-            
+
             if( isset($db_connection['jdbc_url']) && !empty($db_connection['jdbc_url']) )
                 $command .= " --db-url " . $db_connection['jdbc_url'];
         }
@@ -125,8 +139,8 @@ class JasperPHP
     public function execute($run_as_user = false)
     {
         if( $this->redirect_output && !$this->windows)
-            $this->the_command .= " > /dev/null 2>&1";
-    
+            $this->the_command .= " 2>&1";
+
         if( $this->background && !$this->windows )
             $this->the_command .= " &";
 
@@ -138,8 +152,8 @@ class JasperPHP
 
         exec($this->the_command, $output, $return_var);
 
-        if($return_var != 0) 
-            throw new \Exception("There was and error executing the report! Time to check the logs!", 1);
+        if($return_var != 0)
+            throw new \Exception("Erro ao executar o relatorio! Detalhes: " . join($output, " "), 1);
 
         return $output;
     }

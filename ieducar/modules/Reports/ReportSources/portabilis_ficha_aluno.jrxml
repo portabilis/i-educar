@@ -14,6 +14,9 @@
 	</parameter>
 	<parameter name="logo" class="java.lang.String"/>
 	<parameter name="foto" class="java.lang.String"/>
+	<parameter name="database" class="java.lang.String"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String"/>
+	<parameter name="data_emissao" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT public.fcn_upper(nm_instituicao) AS nome_instituicao,
        public.fcn_upper(nm_responsavel) AS nome_secretaria,
