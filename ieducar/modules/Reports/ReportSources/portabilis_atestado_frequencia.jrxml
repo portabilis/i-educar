@@ -16,6 +16,8 @@
 		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
 	</parameter>
 	<parameter name="logo" class="java.lang.String"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String"/>
+	<parameter name="database" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT fcn_upper(instituicao.nm_instituicao) AS nm_instituicao,
        fcn_upper(instituicao.nm_responsavel) AS nm_responsavel,

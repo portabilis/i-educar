@@ -11,6 +11,8 @@
 	</parameter>
 	<parameter name="logo" class="java.lang.String"/>
 	<parameter name="ordem" class="java.lang.String"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String"/>
+	<parameter name="database" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT public.fcn_upper(instituicao.nm_instituicao) as nm_instituicao,
        cod_acervo_autor,

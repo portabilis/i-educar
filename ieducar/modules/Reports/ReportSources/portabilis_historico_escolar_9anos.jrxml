@@ -21,6 +21,7 @@
 	<parameter name="logo" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
+	<parameter name="database" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[select nm_disciplina,
 	MAX(nota) AS NOTA,
@@ -267,7 +268,7 @@ SELECT nm_disciplina,
          where  hd.sequencial = historico_disciplinas.sequencial AND
                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
-               substring(nm_serie,1,1) = 1) as nota_1serie,
+               substring(nm_serie,1,1) = '1') as nota_1serie,
 
        (select CASE WHEN replace(substring(trim(hd.nota),1,3),'.',',') = '10,' THEN
                       '10,0'
@@ -278,7 +279,7 @@ SELECT nm_disciplina,
          where  hd.sequencial = historico_disciplinas.sequencial AND
                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
-               substring(nm_serie,1,1) = 2) as nota_2serie,
+               substring(nm_serie,1,1) = '2') as nota_2serie,
 
        (select CASE WHEN replace(substring(trim(hd.nota),1,3),'.',',') = '10,' THEN
                       '10,0'
@@ -289,7 +290,7 @@ SELECT nm_disciplina,
          where  hd.sequencial = historico_disciplinas.sequencial AND
                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
-               substring(nm_serie,1,1) = 3) as nota_3serie,
+               substring(nm_serie,1,1) = '3') as nota_3serie,
 
        (select CASE WHEN replace(substring(trim(hd.nota),1,3),'.',',') = '10,' THEN
                       '10,0'
@@ -300,7 +301,7 @@ SELECT nm_disciplina,
          where  hd.sequencial = historico_disciplinas.sequencial AND
                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
-               substring(nm_serie,1,1) = 4) as nota_4serie,
+               substring(nm_serie,1,1) = '4') as nota_4serie,
 
        (select CASE WHEN replace(substring(trim(hd.nota),1,3),'.',',') = '10,' THEN
                       '10,0'
@@ -311,7 +312,7 @@ SELECT nm_disciplina,
          where  hd.sequencial = historico_disciplinas.sequencial AND
                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
-               substring(nm_serie,1,1) = 5) as nota_5serie,
+               substring(nm_serie,1,1) = '5') as nota_5serie,
 
        (select CASE WHEN replace(substring(trim(hd.nota),1,3),'.',',') = '10,' THEN
                       '10,0'
@@ -322,7 +323,7 @@ SELECT nm_disciplina,
          where  hd.sequencial = historico_disciplinas.sequencial AND
                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
-               substring(nm_serie,1,1) = 6) as nota_6serie,
+               substring(nm_serie,1,1) = '6') as nota_6serie,
 
        (select CASE WHEN replace(substring(trim(hd.nota),1,3),'.',',') = '10,' THEN
                       '10,0'
@@ -333,7 +334,7 @@ SELECT nm_disciplina,
          where  hd.sequencial = historico_disciplinas.sequencial AND
                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
-               substring(nm_serie,1,1) = 7) as nota_7serie,
+               substring(nm_serie,1,1) = '7') as nota_7serie,
 
        (select CASE WHEN replace(substring(trim(hd.nota),1,3),'.',',') = '10,' THEN
                       '10,0'
@@ -344,7 +345,7 @@ SELECT nm_disciplina,
          where  hd.sequencial = historico_disciplinas.sequencial AND
                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
-               substring(nm_serie,1,1) = 8) as nota_8serie,
+               substring(nm_serie,1,1) = '8') as nota_8serie,
 
        (select CASE WHEN replace(substring(trim(hd.nota),1,3),'.',',') = '10,' THEN
                       '10,0'
@@ -355,7 +356,7 @@ SELECT nm_disciplina,
          where  hd.sequencial = historico_disciplinas.sequencial AND
                hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND
                hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
-               substring(nm_serie,1,1) = 9) as nota_9serie,
+               substring(nm_serie,1,1) = '9') as nota_9serie,
 
         (select ano
           from  pmieducar.historico_escolar he,
@@ -365,7 +366,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 1) as ano_1serie,
+                substring(nm_serie,1,1) = '1') as ano_1serie,
 
         (select escola
           from  pmieducar.historico_escolar he,
@@ -375,7 +376,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 1) as escola_1serie,
+                substring(nm_serie,1,1) = '1') as escola_1serie,
 
         (select escola_cidade
           from  pmieducar.historico_escolar he,
@@ -385,7 +386,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 1) as escola_cidade_1serie,
+                substring(nm_serie,1,1) = '1') as escola_cidade_1serie,
 
 
         (select escola_uf
@@ -396,7 +397,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 1) as escola_uf_1serie,
+                substring(nm_serie,1,1) = '1') as escola_uf_1serie,
 
         (select ano
           from  pmieducar.historico_escolar he,
@@ -406,7 +407,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 2) as ano_2serie,
+                substring(nm_serie,1,1) = '2') as ano_2serie,
 
         (select escola
           from  pmieducar.historico_escolar he,
@@ -416,7 +417,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 2) as escola_2serie,
+                substring(nm_serie,1,1) = '2') as escola_2serie,
 
         (select escola_cidade
           from  pmieducar.historico_escolar he,
@@ -426,7 +427,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 2) as escola_cidade_2serie,
+                substring(nm_serie,1,1) = '2') as escola_cidade_2serie,
 
 
         (select escola_uf
@@ -437,7 +438,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 2) as escola_uf_2serie,
+                substring(nm_serie,1,1) = '2') as escola_uf_2serie,
 
         (select ano
           from  pmieducar.historico_escolar he,
@@ -447,7 +448,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 3) as ano_3serie,
+                substring(nm_serie,1,1) = '3') as ano_3serie,
 
         (select escola
           from  pmieducar.historico_escolar he,
@@ -457,7 +458,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 3) as escola_3serie,
+                substring(nm_serie,1,1) = '3') as escola_3serie,
 
         (select escola_cidade
           from  pmieducar.historico_escolar he,
@@ -467,7 +468,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 3) as escola_cidade_3serie,
+                substring(nm_serie,1,1) = '3') as escola_cidade_3serie,
 
 
         (select escola_uf
@@ -478,7 +479,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 3) as escola_uf_3serie,
+                substring(nm_serie,1,1) = '3') as escola_uf_3serie,
 
 		(select ano
           from  pmieducar.historico_escolar he,
@@ -488,7 +489,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 4) as ano_4serie,
+                substring(nm_serie,1,1) = '4') as ano_4serie,
 
         (select escola
           from  pmieducar.historico_escolar he,
@@ -498,7 +499,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 4) as escola_4serie,
+                substring(nm_serie,1,1) = '4') as escola_4serie,
 
         (select escola_cidade
           from  pmieducar.historico_escolar he,
@@ -508,7 +509,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 4) as escola_cidade_4serie,
+                substring(nm_serie,1,1) = '4') as escola_cidade_4serie,
 
 
         (select escola_uf
@@ -519,7 +520,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 4) as escola_uf_4serie,
+                substring(nm_serie,1,1) = '4') as escola_uf_4serie,
 
         (select ano
           from  pmieducar.historico_escolar he,
@@ -529,7 +530,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 5) as ano_5serie,
+                substring(nm_serie,1,1) = '5') as ano_5serie,
 
         (select escola
           from  pmieducar.historico_escolar he,
@@ -539,7 +540,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 5) as escola_5serie,
+                substring(nm_serie,1,1) = '5') as escola_5serie,
 
         (select escola_cidade
           from  pmieducar.historico_escolar he,
@@ -549,7 +550,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 5) as escola_cidade_5serie,
+                substring(nm_serie,1,1) = '5') as escola_cidade_5serie,
 
 
         (select escola_uf
@@ -560,7 +561,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 5) as escola_uf_5serie,
+                substring(nm_serie,1,1) = '5') as escola_uf_5serie,
 
 		(select ano
           from  pmieducar.historico_escolar he,
@@ -570,7 +571,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 6) as ano_6serie,
+                substring(nm_serie,1,1) = '6') as ano_6serie,
 
         (select escola
           from  pmieducar.historico_escolar he,
@@ -580,7 +581,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 6) as escola_6serie,
+                substring(nm_serie,1,1) = '6') as escola_6serie,
 
         (select escola_cidade
           from  pmieducar.historico_escolar he,
@@ -590,7 +591,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 6) as escola_cidade_6serie,
+                substring(nm_serie,1,1) = '6') as escola_cidade_6serie,
 
 
         (select escola_uf
@@ -601,7 +602,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 6) as escola_uf_6serie,
+                substring(nm_serie,1,1) = '6') as escola_uf_6serie,
 
 		(select ano
           from  pmieducar.historico_escolar he,
@@ -611,7 +612,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 7) as ano_7serie,
+                substring(nm_serie,1,1) = '7') as ano_7serie,
 
         (select escola
           from  pmieducar.historico_escolar he,
@@ -621,7 +622,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 7) as escola_7serie,
+                substring(nm_serie,1,1) = '7') as escola_7serie,
 
         (select escola_cidade
           from  pmieducar.historico_escolar he,
@@ -631,7 +632,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 7) as escola_cidade_7serie,
+                substring(nm_serie,1,1) = '7') as escola_cidade_7serie,
 
 
         (select escola_uf
@@ -642,7 +643,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 7) as escola_uf_7serie,
+                substring(nm_serie,1,1) = '7') as escola_uf_7serie,
 
         (select ano
           from  pmieducar.historico_escolar he,
@@ -652,7 +653,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 8) as ano_8serie,
+                substring(nm_serie,1,1) = '8') as ano_8serie,
 
         (select escola
           from  pmieducar.historico_escolar he,
@@ -662,7 +663,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 8) as escola_8serie,
+                substring(nm_serie,1,1) = '8') as escola_8serie,
 
         (select escola_cidade
           from  pmieducar.historico_escolar he,
@@ -672,7 +673,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 8) as escola_cidade_8serie,
+                substring(nm_serie,1,1) = '8') as escola_cidade_8serie,
 
 
         (select escola_uf
@@ -683,7 +684,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 8) as escola_uf_8serie,
+                substring(nm_serie,1,1) = '8') as escola_uf_8serie,
 
         (select ano
           from  pmieducar.historico_escolar he,
@@ -693,7 +694,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 9) as ano_9serie,
+                substring(nm_serie,1,1) = '9') as ano_9serie,
 
         (select escola
           from  pmieducar.historico_escolar he,
@@ -703,7 +704,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 9) as escola_9serie,
+                substring(nm_serie,1,1) = '9') as escola_9serie,
 
         (select escola_cidade
           from  pmieducar.historico_escolar he,
@@ -713,7 +714,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 9) as escola_cidade_9serie,
+                substring(nm_serie,1,1) = '9') as escola_cidade_9serie,
 
 
         (select escola_uf
@@ -724,7 +725,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 9) as escola_uf_9serie,
+                substring(nm_serie,1,1) = '9') as escola_uf_9serie,
 
         to_char(CURRENT_DATE,'dd/mm/yyyy') as data_atual,
 
@@ -746,7 +747,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 1) as obs1,
+                substring(nm_serie,1,1) = '1') as obs1,
 
         (select he.observacao
           from  pmieducar.historico_escolar he,
@@ -756,7 +757,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 2) as obs2,
+                substring(nm_serie,1,1) = '2') as obs2,
 
         (select he.observacao
           from  pmieducar.historico_escolar he,
@@ -766,7 +767,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 3) as obs3,
+                substring(nm_serie,1,1) = '3') as obs3,
 
         (select he.observacao
           from  pmieducar.historico_escolar he,
@@ -776,7 +777,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 4) as obs4,
+                substring(nm_serie,1,1) = '4') as obs4,
 
         (select he.observacao
           from  pmieducar.historico_escolar he,
@@ -786,7 +787,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 5) as obs5,
+                substring(nm_serie,1,1) = '5') as obs5,
 
         (select he.observacao
           from  pmieducar.historico_escolar he,
@@ -796,7 +797,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 6) as obs6,
+                substring(nm_serie,1,1) = '6') as obs6,
 
         (select he.observacao
           from  pmieducar.historico_escolar he,
@@ -806,7 +807,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 7) as obs7,
+                substring(nm_serie,1,1) = '7') as obs7,
 
         (select he.observacao
           from  pmieducar.historico_escolar he,
@@ -816,7 +817,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 8) as obs8,
+                substring(nm_serie,1,1) = '8') as obs8,
 
         (select he.observacao
           from  pmieducar.historico_escolar he,
@@ -826,7 +827,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 9) as obs9,
+                substring(nm_serie,1,1) = '9') as obs9,
 
         (select he.frequencia
           from  pmieducar.historico_escolar he,
@@ -836,7 +837,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 1) as freq1,
+                substring(nm_serie,1,1) = '1') as freq1,
 
         (select he.frequencia
           from  pmieducar.historico_escolar he,
@@ -846,7 +847,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 2) as freq2,
+                substring(nm_serie,1,1) = '2') as freq2,
 
         (select he.frequencia
           from  pmieducar.historico_escolar he,
@@ -856,7 +857,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 3) as freq3,
+                substring(nm_serie,1,1) = '3') as freq3,
 
         (select he.frequencia
           from  pmieducar.historico_escolar he,
@@ -866,7 +867,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 4) as freq4,
+                substring(nm_serie,1,1) = '4') as freq4,
 
         (select he.frequencia
           from  pmieducar.historico_escolar he,
@@ -876,7 +877,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 5) as freq5,
+                substring(nm_serie,1,1) = '5') as freq5,
 
         (select he.frequencia
           from  pmieducar.historico_escolar he,
@@ -886,7 +887,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 6) as freq6,
+                substring(nm_serie,1,1) = '6') as freq6,
 
         (select he.frequencia
           from  pmieducar.historico_escolar he,
@@ -896,7 +897,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 7) as freq7,
+                substring(nm_serie,1,1) = '7') as freq7,
 
         (select he.frequencia
           from  pmieducar.historico_escolar he,
@@ -906,7 +907,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 8) as freq8,
+                substring(nm_serie,1,1) = '8') as freq8,
 
         (select he.frequencia
           from  pmieducar.historico_escolar he,
@@ -916,7 +917,7 @@ SELECT nm_disciplina,
                 hd.ref_sequencial = historico_disciplinas.ref_sequencial AND
                 hd.ref_ref_cod_aluno = he.ref_cod_aluno AND
                 hd.ref_sequencial = he.sequencial AND
-                substring(nm_serie,1,1) = 9) as freq9,
+                substring(nm_serie,1,1) = '9') as freq9,
 
        (SELECT distinct
          (CASE WHEN he.aceleracao = 1 THEN
@@ -930,7 +931,7 @@ SELECT nm_disciplina,
             he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
 				    he.ativo = 1 AND
             he.ano = historico_escolar.ano AND
-            substring(nm_serie,1,1) = 1 AND
+            substring(nm_serie,1,1) = '1' AND
             he.sequencial = historico_escolar.sequencial) as status_serie1,
 
 
@@ -945,7 +946,7 @@ SELECT nm_disciplina,
             he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
 				    he.ativo = 1 AND
             he.ano = historico_escolar.ano AND
-            substring(nm_serie,1,1) = 2 AND
+            substring(nm_serie,1,1) = '2' AND
             he.sequencial = historico_escolar.sequencial) as status_serie2,
 
 
@@ -960,7 +961,7 @@ SELECT nm_disciplina,
             he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
 				    he.ativo = 1 AND
             he.ano = historico_escolar.ano AND
-            substring(nm_serie,1,1) = 3 AND
+            substring(nm_serie,1,1) = '3' AND
             he.sequencial = historico_escolar.sequencial) as status_serie3,
 
 
@@ -975,7 +976,7 @@ SELECT nm_disciplina,
             he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
 				    he.ativo = 1 AND
             he.ano = historico_escolar.ano AND
-            substring(nm_serie,1,1) = 4 AND
+            substring(nm_serie,1,1) = '4' AND
             he.sequencial = historico_escolar.sequencial) as status_serie4,
 
 
@@ -990,7 +991,7 @@ SELECT nm_disciplina,
             he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
 				    he.ativo = 1 AND
             he.ano = historico_escolar.ano AND
-            substring(nm_serie,1,1) = 5 AND
+            substring(nm_serie,1,1) = '5' AND
             he.sequencial = historico_escolar.sequencial) as status_serie5,
 
 
@@ -1005,7 +1006,7 @@ SELECT nm_disciplina,
             he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
 				    he.ativo = 1 AND
             he.ano = historico_escolar.ano AND
-            substring(nm_serie,1,1) = 6 AND
+            substring(nm_serie,1,1) = '6' AND
             he.sequencial = historico_escolar.sequencial) as status_serie6,
 
 
@@ -1020,7 +1021,7 @@ SELECT nm_disciplina,
             he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
 				    he.ativo = 1 AND
             he.ano = historico_escolar.ano AND
-            substring(nm_serie,1,1) = 7 AND
+            substring(nm_serie,1,1) = '7' AND
             he.sequencial = historico_escolar.sequencial) as status_serie7,
 
 
@@ -1035,7 +1036,7 @@ SELECT nm_disciplina,
             he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
 				    he.ativo = 1 AND
             he.ano = historico_escolar.ano AND
-            substring(nm_serie,1,1) = 8 AND
+            substring(nm_serie,1,1) = '8' AND
             he.sequencial = historico_escolar.sequencial) as status_serie8,
 
 
@@ -1050,7 +1051,7 @@ SELECT nm_disciplina,
             he.ref_cod_aluno = historico_escolar.ref_cod_aluno AND
 				    he.ativo = 1 AND
             he.ano = historico_escolar.ano AND
-            substring(nm_serie,1,1) = 9 AND
+            substring(nm_serie,1,1) = '9' AND
             he.sequencial = historico_escolar.sequencial) as status_serie9,
 
 
@@ -1077,7 +1078,7 @@ SELECT nm_disciplina,
                                             FROM pmieducar.historico_escolar he
                                            WHERE he.ref_cod_aluno = $P{aluno})) AS num_folha,
 
-( select CASE WHEN ((substring(nm_serie,1,1) = 8) or (substring(nm_serie,1,1) = 9)) THEN
+( select CASE WHEN ((substring(nm_serie,1,1) = '8') or (substring(nm_serie,1,1) = '9')) THEN
                  'concluiu o ENSINO FUNDAMENTAL (8 ANOS)'
              ELSE
                  'concluiu o ' || substring(nm_serie,1,1) || ' ano'
