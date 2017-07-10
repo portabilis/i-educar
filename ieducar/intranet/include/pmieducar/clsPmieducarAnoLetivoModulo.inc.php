@@ -250,10 +250,10 @@ class clsPmieducarAnoLetivoModulo
 				$valores .= "{$gruda}'{$this->dias_letivos}'";
 				$gruda = ", ";
 			}
-			
+
       // ativa escolaAnoLetivo se estiver desativado
       // (quando o escolaAnoLetivo é 'excluido' o registro não é removido)
-      $escolaAnoLetivo = new clsPmieducarEscolaAnoLetivo($this->ref_ref_cod_escola, 
+      $escolaAnoLetivo = new clsPmieducarEscolaAnoLetivo($this->ref_ref_cod_escola,
                                                          $this->ref_ano,
                                                          null,
                                                          $_SESSION['id_pessoa'],

@@ -193,7 +193,7 @@ class clsCadastroEscolaridade
    * Retorna uma lista de registros filtrados de acordo com os parâmetros.
    * @return array
    */
-  function lista($int_idesco = NULL, $str_descricao = NULL) {
+  function lista($int_idesco = NULL, $str_descricao = NULL, $escolaridade = NULL) {
     $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
     $filtros = "";
 
@@ -201,6 +201,10 @@ class clsCadastroEscolaridade
 
     if (is_numeric($int_idesco)) {
       $filtros .= "{$whereAnd} idesco = '{$int_idesco}'";
+      $whereAnd = " AND ";
+    }
+    if (is_numeric($escolaridade)) {
+      $filtros .= "{$whereAnd} escolaridade = {$escolaridade} ";
       $whereAnd = " AND ";
     }
     if (is_string($str_descricao)) {

@@ -87,8 +87,9 @@ class indice extends clsCadastro
 
   function Gerar()
   {
-    $this->campoArquivo('arquivo', 'Arquivo', $this->arquivo);
     $this->inputsHelper()->dynamic('ano', array('value' => $this->ano));
+    $this->campoArquivo('arquivo', 'Arquivo', $this->arquivo,40,'<br/> <span style="font-style: italic; font-size= 10px;">* Somente arquivos com formato txt serão aceitos</span>');
+
     $this->nome_url_sucesso = "Importar";
   }
 
@@ -173,8 +174,8 @@ class indice extends clsCadastro
     $cargoGestor = $dadosRegistro[4];
     $emailGestor = $dadosRegistro[5];
     $situacao = $dadosRegistro[6];
-    $dataInicioAnoLetivo = $dadosRegistro[7];
-    $dataFimAnoLetivo = $dadosRegistro[8];
+    $dataInicioAnoLetivo = Portabilis_Date_Utils::brToPgSQL($dadosRegistro[7]);
+    $dataFimAnoLetivo = Portabilis_Date_Utils::brToPgSQL($dadosRegistro[8]);
     $nomeEscola = utf8_encode($dadosRegistro[9]);
     $latitude = $dadosRegistro[10];
     $longitude = $dadosRegistro[11];
@@ -248,13 +249,35 @@ class indice extends clsCadastro
 
       $codEscolaLocalizacao = $this->getOrCreateLocalizacaoEscola($localizacao);
 
-      $codEscola = $this->createEscola($codEscolaLocalizacao, $codEscolaRedeEnsino, $idpesEscola, $nomeEscola);
+      $codEscola = $this->createEscola($codEscolaLocalizacao, $codEscolaRedeEnsino, $idpesEscola, $nomeEscola, $idpesGestor, $cargoGestor);
+
+      $this->createEscolaAnoLetivo($codEscola, $dataInicioAnoLetivo, $dataFimAnoLetivo);
 
       if(!$codEscola){
         return false;
       }
 
       $this->createEscolaEducacenso($codEscola, $inep);
+
+      if($ddd && $telefone){
+        $objTelefone = new clsPessoaTelefone( $idpesEscola, 1, str_replace( "-", "", $telefone ), $ddd );
+        $objTelefone->cadastra();
+      }
+
+      if($ddd && $telefonePublico){
+        $objTelefone = new clsPessoaTelefone( $idpesEscola, 2, str_replace( "-", "", $telefonePublico ), $ddd );
+        $objTelefone->cadastra();
+      }
+
+      if($ddd && $telefoneContato){
+        $objTelefone = new clsPessoaTelefone( $idpesEscola, 3, str_replace( "-", "", $telefoneContato ), $ddd );
+        $objTelefone->cadastra();
+      }
+
+      if($ddd && $telefoneFAX){
+        $objTelefone = new clsPessoaTelefone( $idpesEscola, 4, str_replace( "-", "", $telefoneFAX ), $ddd );
+        $objTelefone->cadastra();
+      }
     }
 
     $this->atualizaCamposEscolaRegistro00($codEscola, $cargoGestor, $situacao, $latitude, $longitude, $codigoOrgaoRegional, $dependenciaAdministrativa, $regulamentacao);
@@ -265,8 +288,6 @@ class indice extends clsCadastro
     $idpesEscola = $detEscola['ref_idpes'];
 
     $this->cadastraEndereco($idpesEscola, $cep, $logradouro, $enderecoNumero, $complemento, $nomeBairro, $ufIbge, $municipioIbge, $distritoIbge, $localizacao);
-
-    // TODO cadastrar telefones
   }
 
   function importaRegistro10($dadosRegistro){
@@ -472,7 +493,8 @@ class indice extends clsCadastro
     );
 
 
-    $etapaEnsinoCenso = $dadosRegistro[37-1];
+    $modalidadeEnsinoCenso = $dadosRegistro[37-1];
+    $etapaEnsinoCenso = $dadosRegistro[38-1];
     $codEscola = $this->existeEscola($inepEscola);
 
     if($codEscola){
@@ -485,7 +507,7 @@ class indice extends clsCadastro
       if(!$codTurma){
 
         $codTurmaTipo = $this->getOrCreateTurmaTipo();
-        $codCurso = $this->getOrCreateCurso($etapaEnsinoCenso, $codEscola);
+        $codCurso = $this->getOrCreateCurso($etapaEnsinoCenso, $codEscola, $modalidadeEnsinoCenso);
         $codSerie = $this->getOrCreateSerie($etapaEnsinoCenso, $codEscola, $codCurso);
 
         $turma = new clsPmieducarTurma();
@@ -524,7 +546,7 @@ class indice extends clsCadastro
         }
 
         foreach ($disciplinas as $disciplinaEducacenso => $usaDisciplina) {
-          if($usaDisciplina == 1){
+          if($usaDisciplina >= 1){
             $this->vinculaDisciplinaTurma($codEscola, $codSerie, $codTurma, $disciplinaEducacenso);
           }
         }
@@ -536,6 +558,7 @@ class indice extends clsCadastro
     $codDisciplina = $this->getOrCreateDisciplina($disciplinaEducacenso);
     $this->vinculaDisciplinaSerie($codDisciplina, $codSerie);
     $this->vinculaDisciplinaEscolaSerie($codDisciplina, $codEscola, $codSerie);
+    $this->getOrCreateComponenteCurricularTurma($codEscola, $codSerie, $codTurma, $codDisciplina);
   }
 
   function vinculaDisciplinaEscolaSerie($codDisciplina, $codEscola, $codSerie){
@@ -561,6 +584,26 @@ class indice extends clsCadastro
 
       $data['componenteCurricular'] = $codDisciplina;
       $data['anoEscolar'] = $codSerie;
+
+      $entity = $dataMapper->createNewEntityInstance();
+      $entity->setOptions($data);
+
+      $dataMapper->save($entity);
+    }
+  }
+
+  function getOrCreateComponenteCurricularTurma($codEscola, $codSerie, $codTurma, $codDisciplina){
+    $dataMapper = Portabilis_DataMapper_Utils::getDataMapperFor('componenteCurricular', 'turma');
+    $where = array('componente_curricular_id'=>$codDisciplina, 'turma_id' => $codTurma);
+    $turmas = $dataMapper->findAll(array());
+
+    if(count($turmas) == 0){
+      $data = array();
+
+      $data['componenteCurricular'] = $codDisciplina;
+      $data['turma'] = $codTurma;
+      $data['anoEscolar'] = $codSerie;
+      $data['escola'] = $codEscola;
 
       $entity = $dataMapper->createNewEntityInstance();
       $entity->setOptions($data);
@@ -675,7 +718,7 @@ class indice extends clsCadastro
     return $codSerie;
   }
 
-  function getOrCreateCurso($etapaEnsinoCenso, $codEscola){
+  function getOrCreateCurso($etapaEnsinoCenso, $codEscola, $modalidade){
     $dadosCurso = $this->etapasCenso[$etapaEnsinoCenso];
     $codCurso = null;
 
@@ -717,6 +760,7 @@ class indice extends clsCadastro
         $curso->ref_usuario_cad = $this->pessoa_logada;
         $curso->padrao_ano_escolar = 1;
         $curso->multi_seriado = 1;
+        $curso->modalidade_curso = $modalidade;
         $codCurso = $curso->cadastra();
     }
 
@@ -813,6 +857,9 @@ class indice extends clsCadastro
       $idpesPai = $nomePai ? $this->cadastraPessoaFisica($nomePai, null, "M") : null;
       $idpesMae = $nomeMae ? $this->cadastraPessoaFisica($nomeMae, null, "F") : null;
       $idpesServidor = $this->cadastraPessoaFisica($nome, $dataNascimento, $sexo, $idmun, $idpesMae, $idpesPai);
+      if($racaEducacenso > 0){
+        $this->createOrUpdateRaca($idpesServidor, $racaEducacenso);
+      }
 
       $codServidor = $this->createServidor($idpesServidor);
 
@@ -820,8 +867,28 @@ class indice extends clsCadastro
         return false;
       }
 
+      $this->createServidorFuncao($codServidor);
       $this->createServidorEducacenso($codServidor, $inepServidor);
     }
+  }
+
+  function getOrCreateFuncaoProfessor(){
+    $objFuncao = new clsPmieducarFuncao();
+    $funcoes = $objFuncao->lista(null, null, null, null, null, 1);
+    $codFuncao = null;
+
+    if(is_array($funcoes) && count($funcoes) > 0){
+      $codFuncao = $funcoes[0]['cod_funcao'];
+    }else{
+      $objFuncao->ref_usuario_cad = $this->pessoa_logada;
+      $objFuncao->nm_funcao = "Professor";
+      $objFuncao->abreviatura = "Prof";
+      $objFuncao->professor = 1;
+      $objFuncao->ref_cod_instituicao = $this->ref_cod_instituicao;
+      $codFuncao = $objFuncao->cadastra();
+    }
+
+    return $codFuncao;
   }
 
   function importaRegistro40($dadosRegistro){
@@ -829,7 +896,7 @@ class indice extends clsCadastro
     $inepEscola = $dadosRegistro[2-1];
     $inepServidor = $dadosRegistro[3-1];
     //$codServidor = $dadosRegistro[4-1];
-    $cpf = $dadosRegistro[5-1];
+    $cpf = (int) $dadosRegistro[5-1];
     $localizacao = $dadosRegistro[6-1];
     $cep = $dadosRegistro[7-1];
     $endereco = $dadosRegistro[8-1];
@@ -844,8 +911,15 @@ class indice extends clsCadastro
     }
     $codServidor = $this->existeServidor($inepServidor);
 
-    if($codServidor && !empty($cep)){
-      $this->cadastraEndereco($codServidor, $cep, $endereco, $numero, $complemento, $bairro, $ufIbge, $municipioIbge, null, $localizacao);
+    if($codServidor){
+
+      $objFisica = new clsFisica($codServidor);
+      $objFisica->cpf = $cpf;
+      $objFisica->idpes_rev = $this->pessoa_logada;
+      $objFisica->edita();
+      if(!empty($cep)){
+        $this->cadastraEndereco($codServidor, $cep, $endereco, $numero, $complemento, $bairro, $ufIbge, $municipioIbge, null, $localizacao);
+      }
     }
   }
 
@@ -855,6 +929,8 @@ class indice extends clsCadastro
     $inepServidor = $dadosRegistro[3-1];
     //$codServidor = $dadosRegistro[4-1];
 
+    $escolaridade = $dadosRegistro[5-1];
+
     $codigoCursoSuperior1 = $dadosRegistro[8-1];
     $instituicaoEnsinoSuperior1 = $dadosRegistro[11-1];
     $codigoCursoSuperior2 = $dadosRegistro[14-1];
@@ -863,19 +939,18 @@ class indice extends clsCadastro
     $instituicaoEnsinoSuperior3 = $dadosRegistro[23-1];
 
     $cursosServidor = array(
-      'escolaridade' => $dadosRegistro[5-1],
-      'situacaoCursoSuperior1' => $dadosRegistro[6-1],
-      'formacaoComplementacaoPedagogica1' => $dadosRegistro[7-1],
-      'anoInicioCursoSuperior1' => $dadosRegistro[9-1],
-      'anoConclusaoCursoSuperior1' => $dadosRegistro[10-1],
-      'situacaoCursoSuperior2' => $dadosRegistro[12-1],
-      'formacaoComplementacaoPedagogica2' => $dadosRegistro[13-1],
-      'anoInicioCursoSuperior2' => $dadosRegistro[15-1],
-      'anoConclusaoCursoSuperior2' => $dadosRegistro[16-1],
-      'situacaoCursoSuperior3' => $dadosRegistro[18-1],
-      'formacaoComplementacaoPedagogica3' => $dadosRegistro[19-1],
-      'anoInicioCursoSuperior3' => $dadosRegistro[21-1],
-      'anoConclusaoCursoSuperior3' => $dadosRegistro[22-1],
+      'situacao_curso_superior_1' => $dadosRegistro[6-1],
+      'formacao_complementacao_pedagogica_1' => $dadosRegistro[7-1],
+      'ano_inicio_curso_superior_1' => $dadosRegistro[9-1],
+      'ano_conclusao_curso_superior_1' => $dadosRegistro[10-1],
+      'situacao_curso_superior_2' => $dadosRegistro[12-1],
+      'formacao_complementacao_pedagogica_2' => $dadosRegistro[13-1],
+      'ano_inicio_curso_superior_2' => $dadosRegistro[15-1],
+      'ano_conclusao_curso_superior_2' => $dadosRegistro[16-1],
+      'situacao_curso_superior_3' => $dadosRegistro[18-1],
+      'formacao_complementacao_pedagogica_3' => $dadosRegistro[19-1],
+      'ano_inicio_curso_superior_3' => $dadosRegistro[21-1],
+      'ano_conclusao_curso_superior_3' => $dadosRegistro[22-1],
       'pos_especializacao' => $dadosRegistro[24-1],
       'pos_mestrado' => $dadosRegistro[25-1],
       'pos_doutorado' => $dadosRegistro[26-1],
@@ -907,6 +982,10 @@ class indice extends clsCadastro
       $servidor = new clsPmieducarServidor();
       $servidor->cod_servidor = $codServidor;
       $servidor->ref_cod_instituicao = $this->ref_cod_instituicao;
+
+      if($escolaridade){
+        $cursosServidor['ref_idesco'] = $this->getOrCreateEscolaridade($escolaridade);
+      }
 
       if($codigoCursoSuperior1){
         $idCurso = $this->getIdCursoSuperiorEducacenso($codigoCursoSuperior1);
@@ -951,6 +1030,26 @@ class indice extends clsCadastro
       }
       $servidor->edita();
     }
+  }
+
+  function getOrCreateEscolaridade($escolaridade){
+    $obj = new clsCadastroEscolaridade();
+    $escolaridades = $obj->lista(null, null, $escolaridade);
+    $codEscolaridade = null;
+    if(is_array($escolaridades) && count($escolaridades) > 0){
+      $codEscolaridade = $escolaridades[0]['idesco'];
+    }else{
+      $escolaridadeToString = array(1 => 'Fundamental incompleto',
+                     2 => 'Fundamental completo',
+                     3 => 'Ensino médio - Normal/Magistério',
+                     4 => 'Ensino médio - Normal/Magistério Indígena',
+                     5 => 'Ensino médio',
+                     6 => 'Superior');
+      $obj->escolaridade = $escolaridade;
+      $obj->descricao = $escolaridadeToString[$escolaridade];
+      $codEscolaridade = $obj->cadastra();
+    }
+    return $codEscolaridade;
   }
 
 
@@ -1032,6 +1131,9 @@ class indice extends clsCadastro
       $idpesPai =  $nomePai ? $this->cadastraPessoaFisica($nomePai, null, "M") : null;
       $idpesMae = $nomeMae ? $this->cadastraPessoaFisica($nomeMae, null, "F") : null;
       $idpesAluno = $this->cadastraPessoaFisica($nomeCompleto, $dataNascimento, $sexo, $idmun, $idpesMae, $idpesPai);
+      if($racaEducacenso > 0){
+        $this->createOrUpdateRaca($idpesAluno, $corRacaEducacenso);
+      }
       $aluno = new clsPmieducarAluno(null, null, null, null, $this->pessoa_logada, $idpesAluno, null, null, 1);
       foreach ($recursosProva as $key => $value) {
         $aluno->{$key} = $value;
@@ -1087,8 +1189,10 @@ class indice extends clsCadastro
     $idpesAluno = $detAluno['ref_idpes'];
 
     $fisica = new clsFisica($idpesAluno);
+    $fisica->idpes_rev = $this->pessoa_logada;
     $fisica->cpf = $cpf;
     $fisica->nis_pis_pasep = $nis;
+    $fisica->edita();
 
     $documento = new clsDocumento($idpesAluno);
 
@@ -1113,9 +1217,9 @@ class indice extends clsCadastro
       $documento->certidao_nascimento = $numeroMatriculaCertidaoNova;
     }elseif($modeloCertidaoCivil == 1){
       if($tipoCertidaoCivil == 1){
-        $documento->tipo_cert_civil = 91;
+        $documento->tipo_cert_civil = "91";
       }else{
-        $documento->tipo_cert_civil = 92;
+        $documento->tipo_cert_civil = "92";
       }
 
       $documento->num_termo = $termoCertidaoCivil;
@@ -1146,12 +1250,24 @@ class indice extends clsCadastro
     $inepAluno = $dadosRegistro[3-1];
     $inepTurma = $dadosRegistro[5-1];
 
+    $recebeEscolarizacaoOutroEspaco = $dadosRegistro[10-1];
+    $utilizaTransporte = $dadosRegistro[11-1];
+    $poderPublicoTransporte = $dadosRegistro[12-1];
+
     $codAluno = $this->existeAluno($inepAluno);
     $codTurma = $this->existeTurma($inepTurma);
 
     if(!$codAluno || !$codTurma){
       return false;
     }
+
+    if($recebeEscolarizacaoOutroEspaco){
+      $obj = new clsPmieducarAluno($codAluno);
+      $obj->recebe_escolarizacao_em_outro_espaco = $recebeEscolarizacaoOutroEspaco;
+      $obj->edita();
+    }
+
+    $this->createOrUpdateAlunoTransporte($codAluno, $utilizaTransporte, $poderPublicoTransporte);
 
     $turma = new clsPmieducarTurma($codTurma);
     $detalheTurma = $turma->detalhe();
@@ -1184,6 +1300,32 @@ class indice extends clsCadastro
 
   }
 
+  function createOrUpdateAlunoTransporte($codAluno, $utilizaTransporte, $poderPublicoTransporte){
+    $transporte = 0;
+    if($utilizaTransporte && $poderPublicoTransporte){
+      $transporte = $poderPublicoTransporte;
+    }
+
+    $data = array(
+      'aluno'       => $codAluno,
+      'responsavel' => $transporte,
+      'user'        => $this->pessoa_logada,
+      'created_at'  => 'NOW()',
+    );
+
+    $dataMapper = Portabilis_DataMapper_Utils::getDataMapperFor('transporte', 'aluno');
+
+    try {
+      $entity = $dataMapper->find($codAluno);
+    }
+    catch(Exception $e) {
+      $entity      = $dataMapper->createNewEntityInstance();
+    }
+    $entity->setOptions($data);
+
+    $dataMapper->save($entity);
+  }
+
   function removerFlagUltimaMatricula($alunoId){
     $matriculas = new clsPmieducarMatricula();
     $matriculas = $matriculas->lista(NULL, NULL, NULL, NULL, NULL, NULL, $alunoId,
@@ -1212,6 +1354,12 @@ class indice extends clsCadastro
     $sql = "SELECT id FROM modules.educacenso_ies WHERE ies_id = '{$codigo}' ";
 
     return Portabilis_Utils_Database::selectField($sql);
+  }
+
+  function createServidorFuncao($codServidor){
+    $codFuncao = $this->getOrCreateFuncaoProfessor();
+    $obj = new clsPmieducarServidorFuncao($this->ref_cod_instituicao, $codServidor, $codFuncao);
+    $obj->cadastra();
   }
 
   function createServidorEducacenso($codServidor, $inepServidor){
@@ -1271,6 +1419,41 @@ class indice extends clsCadastro
     return Portabilis_Utils_Database::selectField($sql);
   }
 
+  function getOrCreateRaca($racaEducacenso){
+    $obj = new clsCadastroRaca();
+    $racas = $obj->lista(null, null, null, null, null, null, null, null, $racaEducacenso);
+    $codRaca = null;
+    if ($racas) {
+      $codRaca = $racas[0]['cod_raca'];
+    }else{
+      $educacensoToString = array(
+        1 => 'Branca',
+        2 => 'Preta',
+        3 => 'Parda',
+        4 => 'Amarela',
+        5 => 'Indígena',
+      );
+      $obj->idpes_cad = $this->pessoa_logada;
+      $obj->nm_raca = $educacensoToString[$racaEducacenso];
+      $obj->raca_educacenso = $racaEducacenso;
+      $codRaca = $obj->cadastra();
+    }
+
+    return $codRaca;
+  }
+
+  function createOrUpdateRaca($idpes, $racaEducacenso){
+    $codRaca = $this->getOrCreateRaca($racaEducacenso);
+
+    $raca = new clsCadastroFisicaRaca($idpes, $codRaca);
+
+    if ($raca->existe()){
+      $raca->edita();
+    }else{
+      $raca->cadastra();
+    }
+  }
+
   function cadastraPessoaFisica($nome, $dataNascimento = null, $sexo = null, $idmun = null, $idpesMae = null, $idpesPai = null){
     $idpes = null;
     if(!empty($nome)){
@@ -1287,10 +1470,10 @@ class indice extends clsCadastro
         $fisica->idmun_nascimento = $idmun;
       }
       if($idpesMae){
-        $fisica->idpes_mae;
+        $fisica->idpes_mae = $idpesMae;
       }
       if($idpesPai){
-        $fisica->idpes_pai;
+        $fisica->idpes_pai = $idpesPai;
       }
       $fisica->idpes_cad = $this->pessoa_logada;
       $fisica->cadastra();
@@ -1345,6 +1528,7 @@ class indice extends clsCadastro
   }
 
   function getOrCreateLogradouro($logradouro, $idmun){
+    $logradouro = utf8_encode($logradouro);
     $idlog = $this->getLogradouro($logradouro, $idmun);
 
     if(!$idlog){
@@ -1568,7 +1752,34 @@ class indice extends clsCadastro
     $dataMapper->save($entity);
   }
 
-  function createEscola($codEscolaLocalizacao, $codEscolaRedeEnsino, $idpesEscola, $nomeEscola){
+  function createEscolaAnoLetivo($codEscola, $dataInicioAnoLetivo, $dataFimAnoLetivo){
+    $obj = new clsPmieducarEscolaAnoLetivo($codEscola, $this->ano, $this->pessoa_logada, null, 1, date('Y-m-d'), null, 1);
+    $obj->cadastra();
+    $codModulo = $this->getOrCreateModulo();
+    $obj = new clsPmieducarAnoLetivoModulo($this->ano, $codEscola, 1, $codModulo, $dataInicioAnoLetivo, $dataFimAnoLetivo, 200);
+    $obj->cadastra();
+  }
+
+  function getOrCreateModulo(){
+    $obj = new clsPmieducarModulo();
+    $modulos = $obj->lista();
+    $codModulo = null;
+
+    if(is_array($modulos) && count($modulos) > 0){
+      $codModulo = $modulos[0]['cod_modulo'];
+    }else{
+      $obj->ref_usuario_cad = $this->pessoa_logada;
+      $obj->nm_tipo = "Módulo Importação";
+      $obj->num_meses = 1;
+      $obj->num_semanas = 1;
+      $obj->ref_cod_instituicao = $this->ref_cod_instituicao;
+      $codModulo = $obj->cadastra();
+    }
+
+    return $codModulo;
+  }
+
+  function createEscola($codEscolaLocalizacao, $codEscolaRedeEnsino, $idpesEscola, $nomeEscola, $idpesGestor, $cargoGestor){
     $escola = new clsPmieducarEscola();
 
     $escola->ref_usuario_cad = $this->pessoa_logada;
@@ -1576,6 +1787,8 @@ class indice extends clsCadastro
     $escola->ref_cod_escola_localizacao = $codEscolaLocalizacao;
     $escola->ref_cod_escola_rede_ensino = $codEscolaRedeEnsino;
     $escola->ref_idpes = $idpesEscola;
+    $escola->ref_idpes_gestor = $idpesGestor;
+    $escola->cargo_gestor = $cargoGestor;
     $escola->sigla = mb_substr($nomeEscola, 0, 5, 'UTF-8');
     $escola->ativo = 1;
 
@@ -1807,6 +2020,13 @@ class indice extends clsCadastro
         'etapas' => 1,
         'nivel' => 'Fundamental'
       ),
+      41 => array(
+        'curso' => "Ensino Fundamental de 9 anos",
+        'serie' => "9º Ano",
+        'etapa' => 9,
+        'etapas' => 9,
+        'nivel' => 'Fundamental'
+      ),
       23 => array(
         'curso' => "Ensino Fundamental de 9 anos - Correção de Fluxo",
         'serie' => "Correção de Fluxo",
@@ -1817,6 +2037,13 @@ class indice extends clsCadastro
       24 => array(
         'curso' => "Ensino Fundamental de 8 e 9 anos",
         'serie' => "Multi 8 e 9 anos",
+        'etapa' => 1,
+        'etapas' => 1,
+        'nivel' => 'Fundamental'
+      ),
+      56 => array(
+        'curso' => "Educação Infantil e Ensino Fundamental (8 e 9 anos)",
+        'serie' => "Multietapa",
         'etapa' => 1,
         'etapas' => 1,
         'nivel' => 'Fundamental'
@@ -1884,8 +2111,14 @@ class indice extends clsCadastro
         'etapas' => 4,
         'nivel' => 'Médio'
       ),
-34 => array('curso' => "Ensino Médio Integrado Não-Seriado",
+      34 => array('curso' => "Ensino Médio Integrado Não-Seriado",
         'serie' => "Integrado Não Seriada",
+        'etapa' => 1,
+        'etapas' => 1,
+        'nivel' => 'Médio'
+      ),
+      74 => array('curso' => "Ensino Médio Integrado Não-Seriado",
+        'serie' => "EJA",
         'etapa' => 1,
         'etapas' => 1,
         'nivel' => 'Médio'
@@ -1932,26 +2165,68 @@ class indice extends clsCadastro
         'etapas' => 1,
         'nivel' => 'Médio'
       ),
-      41 => array(
-        'curso' => "Ensino Fundamental de 9 anos",
-        'serie' => "9º Ano",
-        'etapa' => 9,
-        'etapas' => 9,
-        'nivel' => 'Fundamental'
+      64 => array(
+        'curso' => "Educação Profissional (Subseqüente)",
+        'serie' => "Curso técnico misto",
+        'etapa' => 1,
+        'etapas' => 1,
+        'nivel' => 'Médio'
       ),
-      43 => array(
-        'curso' => "EJA Presencial",
+      69 => array(
+        'curso' => "EJA - Ensino fundamental",
         'serie' => "Anos iniciais",
         'etapa' => 1,
-        'etapas' => 2,
-        'nivel' => 'Médio'
+        'etapas' => 1,
+        'nivel' => 'EJA'
       ),
-      44 => array(
-        'curso' => "EJA Presencial",
+      70 => array(
+        'curso' => "EJA - Ensino fundamental",
         'serie' => "Anos finais",
-        'etapa' => 2,
-        'etapas' => 2,
-        'nivel' => 'Médio'
+        'etapa' => 1,
+        'etapas' => 1,
+        'nivel' => 'EJA'
+      ),
+      72 => array(
+        'curso' => "EJA - Ensino fundamental",
+        'serie' => "Anos iniciais e anos finais",
+        'etapa' => 1,
+        'etapas' => 1,
+        'nivel' => 'EJA'
+      ),
+      65 => array(
+        'curso' => "EJA - Ensino fundamental",
+        'serie' => "Projovem Urbano",
+        'etapa' => 1,
+        'etapas' => 1,
+        'nivel' => 'EJA'
+      ),
+      71 => array(
+        'curso' => "EJA - Ensino médio",
+        'serie' => "Ensino médio",
+        'etapa' => 1,
+        'etapas' => 1,
+        'nivel' => 'EJA'
+      ),
+      67 => array(
+        'curso' => "EJA - Ensino médio",
+        'serie' => "Ensino médio",
+        'etapa' => 1,
+        'etapas' => 1,
+        'nivel' => 'FIC'
+      ),
+      73 => array(
+        'curso' => "EJA - Ensino médio",
+        'serie' => "Ensino médio",
+        'etapa' => 1,
+        'etapas' => 1,
+        'nivel' => 'FIC'
+      ),
+      68 => array(
+        'curso' => "EJA - Ensino médio",
+        'serie' => "Ensino médio",
+        'etapa' => 1,
+        'etapas' => 1,
+        'nivel' => 'FIC'
       )
     );
 }
