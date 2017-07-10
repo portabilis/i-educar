@@ -1107,6 +1107,10 @@ class clsPmieducarMatriculaTurma
                     WHEN matricula.dependencia THEN TRUE
                     ELSE FALSE END)
                 AND ref_cod_turma = {$codTurma}
+                AND matricula_turma.sequencial = (SELECT MAX(sequencial)
+                                    FROM pmieducar.matricula_turma mt
+                                    WHERE mt.ref_cod_matricula = matricula_turma.ref_cod_matricula
+                                    AND mt.ref_cod_turma = matricula_turma.ref_cod_turma)
                 ORDER BY sequencial_fechamento, nome";
 
     $db->Consulta($sql);

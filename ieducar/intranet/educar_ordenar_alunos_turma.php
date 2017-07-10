@@ -80,7 +80,6 @@ class indice extends clsCadastro{
 
     if (is_numeric($this->cod_turma)) {
       $matriculasTurma = new clsPmieducarMatriculaTurma();
-      $matriculasTurma->setOrderby('sequencial_fechamento, nome_ascii');
       $matriculasTurma = $matriculasTurma->listaPorSequencial($this->cod_turma);
 
       if ($matriculasTurma) {
