@@ -66,7 +66,7 @@ class indice extends clsDetalhe
 		@session_write_close();
 
 		$this->titulo = "Usu&aacute;rio - Detalhe";
-		
+
 		$cod_pessoa = $this->cod_usuario = $_GET["ref_pessoa"];
 
 		$obj_pessoa = new clsPessoa_($cod_pessoa);
@@ -170,7 +170,7 @@ class indice extends clsDetalhe
 		$this->addDetalhe( array("Matrícula", $det_funcionario["matricula"]) );
 		$this->addDetalhe( array("Sequencial", $det_funcionario["sequencial"]) );
 		$ativo_f = ($det_funcionario["ativo"] == '1') ? "Ativo" : "Inativo";
-		$this->addDetalhe( array("Status", $ativo_f) );		
+		$this->addDetalhe( array("Status", $ativo_f) );
 
 		$tmp_obj = new clsPmieducarUsuario( $this->cod_usuario );
 		$registro = $tmp_obj->detalhe();
@@ -226,10 +226,10 @@ class indice extends clsDetalhe
 		}
 		if( $registro["ref_cod_escola"] )
 		{
-			$this->addDetalhe( array( "Escola", $registro["ref_cod_escola"]) );
+			$this->addDetalhe( array( "Escolas", $registro["ref_cod_escola"]) );
 		}
 
-		$objPermissao = new clsPermissoes();		 
+		$objPermissao = new clsPermissoes();
 		if( $objPermissao->permissao_cadastra( 555, $this->pessoa_logada,7) )
 		{
 			$this->url_novo = "educar_usuario_cad.php";
