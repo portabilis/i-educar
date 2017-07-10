@@ -49,10 +49,10 @@ class CriaFunctionParaTrazerFrequenciaPorEtapa extends AbstractMigration
                                                                    AND ref_ano = ano_matricula
                                                                    AND ref_ref_cod_escola = escola_matricula);
                               IF (var_dias_letivos_turma_etapa IS NOT NULL AND var_dias_letivos_turma_etapa <> 0) THEN
-                                RETURN 100 - ((faltas_geral_matricula * 100) / var_dias_letivos_turma_etapa);
+                                RETURN ((var_dias_letivos_turma_etapa - faltas_geral_matricula) * 100) / var_dias_letivos_turma_etapa;
                               ELSE
                                 IF (dias_letivos_escola_etapa IS NOT NULL AND dias_letivos_escola_etapa <> 0) THEN
-                                  RETURN 100 - ((faltas_geral_matricula * 100) / dias_letivos_escola_etapa);
+                                  RETURN ((var_dias_letivos_turma_etapa - faltas_geral_matricula) * 100) / var_dias_letivos_turma_etapa;
                                 END IF;
                               END IF;
                             END;
