@@ -13,7 +13,7 @@ class ReordenaSequencialFechamento extends AbstractMigration
                             ROW_NUMBER () OVER (PARTITION BY ref_cod_turma ORDER BY (CASE WHEN data_base_remanejamento IS NULL THEN 0
                                 WHEN data_enturmacao > data_base_remanejamento THEN 1
 	                            WHEN matricula.dependencia THEN 2
-                                ELSE 0 END), nome) novo_sequencial,
+                                ELSE 0 END), (CASE WHEN data_enturmacao > data_base_remanejamento THEN data_enturmacao ELSE NULL END), nome) novo_sequencial,
                             matricula_turma.sequencial_fechamento,
                             data_base_remanejamento,
                             data_enturmacao,
@@ -37,7 +37,7 @@ class ReordenaSequencialFechamento extends AbstractMigration
                                             FROM pmieducar.matricula_turma mt
                                             WHERE mt.ref_cod_matricula = matricula_turma.ref_cod_matricula
                                             AND mt.ref_cod_turma = matricula_turma.ref_cod_turma)
-                        ORDER BY novo_sequencial, nome ) AS tabela_reordenada
+                        ORDER BY novo_sequencial, (CASE WHEN data_enturmacao > data_base_remanejamento THEN data_enturmacao ELSE NULL END), nome ) AS tabela_reordenada
 
                         WHERE matricula_turma.sequencial = tabela_reordenada.sequencial
                                                 AND matricula_turma.ref_cod_matricula = tabela_reordenada.ref_cod_matricula
