@@ -37,6 +37,7 @@ class clsJuridica
 	var $fantasia;
 	var $insc_estadual;
 	var $capital_social;
+	var $codUsuario;
 
 	var $tabela;
 	var $schema;
@@ -211,6 +212,14 @@ class clsJuridica
 		if(is_numeric($int_idpes))
 		{
 			$where .= "{$whereAnd}idpes = '$int_idpes'";
+			$whereAnd = " AND ";
+		}
+		if ($this->codUsuario) {
+			$where .= "{$whereAnd}idpes IN (SELECT ref_idpes
+                                              FROM pmieducar.escola
+					                         INNER JOIN pmieducar.escola_usuario ON (escola_usuario.ref_cod_escola = escola.cod_escola)
+					                         WHERE ref_cod_usuario = $this->codUsuario
+					                           AND escola.ativo = 1)";
 			$whereAnd = " AND ";
 		}
 
