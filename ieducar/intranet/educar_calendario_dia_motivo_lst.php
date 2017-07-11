@@ -123,6 +123,11 @@ class indice extends clsListagem
 		$this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
 		$obj_calendario_dia_motivo = new clsPmieducarCalendarioDiaMotivo();
+
+		if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar($this->pessoa_logada)) {
+			$obj_calendario_dia_motivo->codUsuario = $this->pessoa_logada;
+		}
+
 		$obj_calendario_dia_motivo->setOrderby( "nm_motivo ASC" );
 		$obj_calendario_dia_motivo->setLimite( $this->limite, $this->offset );
 
