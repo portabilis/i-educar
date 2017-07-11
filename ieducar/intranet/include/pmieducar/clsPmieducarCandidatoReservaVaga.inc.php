@@ -55,6 +55,7 @@ class clsPmieducarCandidatoReservaVaga
   var $situacao;
   var $data_situacao;
   var $quantidade_membros;
+  var $codUsuario;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -333,6 +334,12 @@ class clsPmieducarCandidatoReservaVaga
     if(is_numeric($ref_cod_escola)){
       $filtros .= " {$whereAnd} ref_cod_escola = {$ref_cod_escola} ";
       $whereAnd = ' AND ';
+    }elseif ($this->codUsuario) {
+      $filtros .= "{$whereAnd} EXISTS (SELECT 1
+                                         FROM pmieducar.escola_usuario
+                                        WHERE escola_usuario.ref_cod_escola = crv.ref_cod_escola
+                                          AND escola_usuario.ref_cod_usuario = '{$this->codUsuario}')";
+      $whereAnd = " AND ";
     }
 
     if(is_numeric($ref_cod_serie)){
