@@ -114,6 +114,11 @@ class indice extends clsListagem
 		$this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
 		$obj_biblioteca = new clsPmieducarBiblioteca();
+
+		if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar($this->pessoa_logada)) {
+			$obj_biblioteca->codUsuario = $this->pessoa_logada;
+		}
+
 		$obj_biblioteca->setOrderby( "nm_biblioteca ASC" );
 		$obj_biblioteca->setLimite( $this->limite, $this->offset );
 

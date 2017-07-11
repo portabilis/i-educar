@@ -119,7 +119,8 @@ class indice extends clsCadastro
 		// foreign keys
 		$instituicao_obrigatorio = true;
 		$get_escola = true;
-		include("include/pmieducar/educar_campo_lista.php");
+		
+		$this->inputsHelper()->dynamic(array('instituicao', 'escola'));
 
 		// text
 		$this->campoTexto( "nm_biblioteca", "Biblioteca", $this->nm_biblioteca, 30, 255, true );
