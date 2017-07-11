@@ -10,10 +10,13 @@ class ReordenaSequencialFechamento extends AbstractMigration
                         SET sequencial_fechamento = tabela_reordenada.novo_sequencial
                         FROM (
                         SELECT nome,
-                            ROW_NUMBER () OVER (PARTITION BY ref_cod_turma ORDER BY (CASE WHEN data_base_remanejamento IS NULL THEN 0
-                                WHEN data_enturmacao > data_base_remanejamento THEN 1
-	                            WHEN matricula.dependencia THEN 2
-                                ELSE 0 END), (CASE WHEN data_enturmacao > data_base_remanejamento THEN data_enturmacao ELSE NULL END), nome) novo_sequencial,
+                            ROW_NUMBER () OVER (PARTITION BY ref_cod_turma
+                                                ORDER BY (CASE WHEN data_base_remanejamento IS NULL THEN 0
+                                                               WHEN (data_enturmacao > data_base_remanejamento) AND dependencia = FALSE THEN 1
+                                                               WHEN matricula.dependencia THEN 2
+                                                               ELSE 0 END),
+                                                        (CASE WHEN data_enturmacao > data_base_remanejamento
+                                                              THEN data_enturmacao ELSE NULL END), nome) novo_sequencial,
                             matricula_turma.sequencial_fechamento,
                             data_base_remanejamento,
                             data_enturmacao,
@@ -31,6 +34,7 @@ class ReordenaSequencialFechamento extends AbstractMigration
 			AND (CASE WHEN matricula_turma.ativo = 1 THEN TRUE
 				  WHEN matricula_turma.transferido THEN TRUE
 				  WHEN matricula_turma.remanejado THEN TRUE
+				  WHEN matricula_turma.abandono  THEN TRUE
 				  WHEN matricula.dependencia THEN TRUE
 				  ELSE FALSE END)
                         AND matricula_turma.sequencial = (SELECT MAX(sequencial)
@@ -49,6 +53,7 @@ class ReordenaSequencialFechamento extends AbstractMigration
                                                         AND (CASE WHEN matricula_turma.ativo = 1 THEN TRUE
 								  WHEN matricula_turma.transferido THEN TRUE
 								  WHEN matricula_turma.remanejado THEN TRUE
+								  WHEN matricula_turma.abandono THEN TRUE
 								  WHEN matricula.dependencia THEN TRUE
 								  ELSE FALSE END)
                                                         AND matricula_turma.sequencial = (SELECT MAX(sequencial)
