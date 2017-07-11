@@ -104,7 +104,7 @@ class indice extends clsListagem
     ));
 
 
-    $this->inputsHelper()->dynamic(array('ano'), array('required' => FALSE));
+    $this->inputsHelper()->dynamic(array('ano', 'instituicao', 'escola', 'curso', 'serie'), array('required' => FALSE));
 
     $obj_permissao = new clsPermissoes();
     $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
@@ -114,7 +114,6 @@ class indice extends clsListagem
     $get_escola_curso_serie = true;
     $sem_padrao = true;
     $get_curso = true;
-    include("include/pmieducar/educar_campo_lista.php");
 
     if ( $this->ref_cod_escola )
     {
@@ -142,6 +141,11 @@ class indice extends clsListagem
       $_GET['pagina_' . $this->nome] * $this->limite - $this->limite : 0;
 
     $obj_serie_vaga = new clsPmieducarSerieVaga();
+
+    if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar($this->pessoa_logada)) {
+      $obj_serie_vaga->codUsuario = $this->pessoa_logada;
+    }
+
     $obj_serie_vaga->setLimite($this->limite, $this->offset);
 
     $lista = $obj_serie_vaga->lista(
