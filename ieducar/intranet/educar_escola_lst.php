@@ -136,6 +136,10 @@ class indice extends clsListagem
 		$this->limite = 10;
 		$obj_escola = new clsPmieducarEscola();
 
+		if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar($this->pessoa_logada)) {
+			$obj_escola->codUsuario = $this->pessoa_logada;
+		}
+
 		if ($this->pagina_formulario){
 			$obj_escola->setLimite( $this->limite, ( $this->pagina_formulario - 1 ) * $this->limite );
 		} else {

@@ -172,6 +172,7 @@ class clsPmieducarEscola
   var $conveniada_com_poder_publico;
   var $mantenedora_escola_privada;
   var $cnpj_mantenedora_principal;
+  var $codUsuario;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -1888,6 +1889,12 @@ class clsPmieducarEscola
 
     if (is_numeric($int_cod_escola)) {
       $filtros .= "{$whereAnd} cod_escola = '{$int_cod_escola}'";
+      $whereAnd = " AND ";
+    }elseif ($this->codUsuario) {
+      $filtros .= "{$whereAnd} EXISTS (SELECT 1
+                                         FROM pmieducar.escola_usuario
+                                        WHERE escola_usuario.ref_cod_escola = cod_escola
+                                          AND escola_usuario.ref_cod_usuario = '{$this->codUsuario}')";
       $whereAnd = " AND ";
     }
 
