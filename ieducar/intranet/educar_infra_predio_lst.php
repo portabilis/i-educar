@@ -92,6 +92,11 @@ class indice extends clsListagem
 		$nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
 
 		$obj_infra_predio = new clsPmieducarInfraPredio();
+
+		if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar($this->pessoa_logada)) {
+			$obj_infra_predio->codUsuario = $this->pessoa_logada;
+		}
+
 		$obj_infra_predio->setOrderby( "nm_predio ASC" );
 		$obj_infra_predio->setLimite( $this->limite, $this->offset );
 

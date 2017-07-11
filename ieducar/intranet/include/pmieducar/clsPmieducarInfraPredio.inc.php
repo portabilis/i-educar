@@ -44,6 +44,7 @@ class clsPmieducarInfraPredio
 	var $data_cadastro;
 	var $data_exclusao;
 	var $ativo;
+	var $codUsuario;
 
 	// propriedades padrao
 
@@ -454,6 +455,12 @@ class clsPmieducarInfraPredio
 		if( is_string( $str_escola_in ) )
 		{
 			$filtros .= "{$whereAnd} predio.ref_cod_escola in ($str_escola_in)";
+			$whereAnd = " AND ";
+		}elseif ($this->codUsuario) {
+			$filtros .= "{$whereAnd} EXISTS (SELECT 1
+			                                   FROM pmieducar.escola_usuario
+											  WHERE escola_usuario.ref_cod_escola = predio.ref_cod_escola
+											    AND escola_usuario.ref_cod_usuario = '{$this->codUsuario}')";
 			$whereAnd = " AND ";
 		}
 
