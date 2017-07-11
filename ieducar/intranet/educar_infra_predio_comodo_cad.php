@@ -120,23 +120,11 @@ class indice extends clsCadastro
 
 		$obrigatorio = true;
 		$get_escola	 = true;
-		include("include/pmieducar/educar_campo_lista.php");
+		$this->inputsHelper()->dynamic(array('instituicao','escola'));
 
 		$opcoes_predio = array( "" => "Selecione" );
 		if( class_exists( "clsPmieducarInfraPredio" ) )
 		{
-			/*$todos_predios  = "predio = new Array();\n";
-			$objTemp = new clsPmieducarInfraPredio();
-			$lista = $objTemp->lista( null,null,null,null,null,null,null,null,null,null,null,1 );
-			if ( is_array( $lista ) && count( $lista ) )
-			{
-				foreach ( $lista as $registro )
-				{
-					$todos_predios .= "predio[predio.length] = new Array( {$registro["cod_infra_predio"]}, '{$registro['nm_predio']}', {$registro["ref_cod_escola"]} );\n";
-				}
-			}
-			echo "<script>{$todos_predios}</script>";*/
-
 			// EDITAR
 			if ($this->ref_cod_escola)
 			{
@@ -172,18 +160,6 @@ class indice extends clsCadastro
 		$opcoes_funcao = array( "" => "Selecione" );
 		if( class_exists( "clsPmieducarInfraComodoFuncao" ) )
 		{
-			/*$todas_funcoes  = "funcao = new Array();\n";
-			$objTemp = new clsPmieducarInfraComodoFuncao();
-			$lista = $objTemp->lista( null,null,null,null,null,null,null,null,null,1 );
-			if ( is_array( $lista ) && count( $lista ) )
-			{
-				foreach ( $lista as $registro )
-				{
-					$todas_funcoes .= "funcao[funcao.length] = new Array( {$registro["cod_infra_comodo_funcao"]}, '{$registro['nm_funcao']}', {$registro["ref_cod_escola"]} );\n";
-				}
-			}
-			echo "<script>{$todas_funcoes}</script>";*/
-
 			// EDITAR
 			if ($this->ref_cod_escola)
 			{

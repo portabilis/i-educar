@@ -132,19 +132,13 @@ class indice extends clsDetalhe
 
 		$obj_permissao = new clsPermissoes();
 		$nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
-		if ($nivel_usuario == 1)
+		if( $registro["ref_cod_instituicao"] )
 		{
-			if( $registro["ref_cod_instituicao"] )
-			{
-				$this->addDetalhe( array( "Institui&ccedil;&atilde;o", "{$registro["ref_cod_instituicao"]}") );
-			}
+			$this->addDetalhe( array( "Institui&ccedil;&atilde;o", "{$registro["ref_cod_instituicao"]}") );
 		}
-		if ($nivel_usuario == 1 || $nivel_usuario == 2)
+		if( $nm_escola )
 		{
-			if( $nm_escola )
-			{
-				$this->addDetalhe( array( "Escola", "{$nm_escola}") );
-			}
+			$this->addDetalhe( array( "Escola", "{$nm_escola}") );
 		}
 		if( $registro["ref_cod_infra_predio"] )
 		{
