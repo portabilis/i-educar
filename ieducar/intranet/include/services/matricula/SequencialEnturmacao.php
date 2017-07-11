@@ -80,13 +80,14 @@ class SequencialEnturmacao {
 
     asort($alunos);
 
+
     $novoSequencial = 0;
     foreach ($alunos as $sequencial => $nome) {
       if ($sequencial == 'novo-aluno') {
         $novoSequencial++;
         break;
       }
-      $novoSequencial++;
+      $novoSequencial = $sequencial++;
     }
     return $novoSequencial;
   }
