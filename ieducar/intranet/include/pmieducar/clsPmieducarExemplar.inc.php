@@ -51,7 +51,8 @@ class clsPmieducarExemplar
 	var $tombo;
 	var $sequencial;
 	var $data_baixa_exemplar;
-  var $pessoa_logada;
+ 	var $pessoa_logada;
+ 	var $codUsuario;
 
 	// propriedades padrao
 
@@ -901,6 +902,12 @@ class clsPmieducarExemplar
 		if( is_numeric( $int_ref_cod_escola ) )
 		{
 			$filtros_extra .= "{$whereAnd} b.ref_cod_escola = $int_ref_cod_escola";
+			$whereAnd = " AND ";
+		}elseif ($this->codUsuario) {
+			$filtros .= "{$whereAnd} EXISTS (SELECT 1
+			                                   FROM pmieducar.escola_usuario
+											  WHERE escola_usuario.ref_cod_escola = b.ref_cod_escola
+										        AND escola_usuario.ref_cod_usuario = '{$this->codUsuario}')";
 			$whereAnd = " AND ";
 		}
 		if (is_numeric($int_ref_cod_acervo_colecao))
