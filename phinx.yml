@@ -10,5 +10,5 @@ environments:
         name: ieducar
         user: postgres
         pass: postgres
-        port: 5430
+        port: 5432
         charset: utf8
