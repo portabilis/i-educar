@@ -283,7 +283,7 @@ class clsFuncionario extends clsPessoaFisica
 							FROM {$this->schema_portal}.v_funcionario f
 							LEFT JOIN pmieducar.usuario u ON (u.cod_usuario = f.ref_cod_pessoa_fj)
 							LEFT JOIN pmieducar.tipo_usuario tu ON (u.ref_cod_tipo_usuario = tu.cod_tipo_usuario)
-						   INNER JOIN pmieducar.escola_usuario eu ON (eu.ref_cod_usuario = u.cod_usuario)  ";
+						    LEFT JOIN pmieducar.escola_usuario eu ON (eu.ref_cod_usuario = u.cod_usuario)  ";
 		$filtros = "";
 		$filtro_pessoa = false;
 
