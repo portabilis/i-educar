@@ -98,24 +98,20 @@ class indice extends clsListagem
 
 		$lista_busca = array(
 			"Motivo",
-			"Tipo"
+			"Tipo",
+			"Escola",
+			"Instituição"
 		);
 
 		$obj_permissao = new clsPermissoes();
 		$nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
-		if ($nivel_usuario == 1) {
-			$lista_busca[] = "Escola";
-			$lista_busca[] = "Institui&ccedil;&atilde;o";
-		}else if ($nivel_usuario == 2) {
-			$lista_busca[] = "Escola";
-		}
 		$this->addCabecalhos($lista_busca);
 
 		// Filtros de Foreign Keys
 		$get_escola = true;
-		include("include/pmieducar/educar_campo_lista.php");
 
 		// outros Filtros
+		$this->inputsHelper()->dynamic(array('instituicao', 'escola'), array('required' => FALSE));
 		$this->campoTexto( "nm_motivo", "Motivo", $this->tipo, 30, 255, false );
 
 		// Paginador
@@ -130,11 +126,6 @@ class indice extends clsListagem
 
 		$obj_calendario_dia_motivo->setOrderby( "nm_motivo ASC" );
 		$obj_calendario_dia_motivo->setLimite( $this->limite, $this->offset );
-
-		$obj_usuario = new clsPmieducarUsuario($this->pessoa_logada);
-		$obj_usuario_det = $obj_usuario->detalhe();
-		$this->ref_cod_escola = $obj_usuario_det["ref_cod_escola"];
-		$this->ref_cod_instituicao = $obj_usuario_det["ref_cod_instituicao"];
 
 		$lista = $obj_calendario_dia_motivo->lista(
 			null,
@@ -195,18 +186,10 @@ class indice extends clsListagem
 				}
 				$lista_busca = array(
 					"<a href=\"educar_calendario_dia_motivo_det.php?cod_calendario_dia_motivo={$registro["cod_calendario_dia_motivo"]}\">{$registro["nm_motivo"]}</a>",
-					"<a href=\"educar_calendario_dia_motivo_det.php?cod_calendario_dia_motivo={$registro["cod_calendario_dia_motivo"]}\">{$registro["tipo"]}</a>"
+					"<a href=\"educar_calendario_dia_motivo_det.php?cod_calendario_dia_motivo={$registro["cod_calendario_dia_motivo"]}\">{$registro["tipo"]}</a>",
+					"<a href=\"educar_calendario_dia_motivo_det.php?cod_calendario_dia_motivo={$registro["cod_calendario_dia_motivo"]}\">{$registro["ref_cod_escola"]}</a>",
+					"<a href=\"educar_calendario_dia_motivo_det.php?cod_calendario_dia_motivo={$registro["cod_calendario_dia_motivo"]}\">{$registro["ref_cod_instituicao"]}</a>"
 				);
-
-				if ($nivel_usuario == 1)
-				{
-					$lista_busca[] = "<a href=\"educar_calendario_dia_motivo_det.php?cod_calendario_dia_motivo={$registro["cod_calendario_dia_motivo"]}\">{$registro["ref_cod_escola"]}</a>";
-					$lista_busca[] = "<a href=\"educar_calendario_dia_motivo_det.php?cod_calendario_dia_motivo={$registro["cod_calendario_dia_motivo"]}\">{$registro["ref_cod_instituicao"]}</a>";
-				}
-				else if ($nivel_usuario == 2)
-				{
-					$lista_busca[] = "<a href=\"educar_calendario_dia_motivo_det.php?cod_calendario_dia_motivo={$registro["cod_calendario_dia_motivo"]}\">{$registro["ref_cod_escola"]}</a>";
-				}
 				$this->addLinhas($lista_busca);
 			}
 		}
