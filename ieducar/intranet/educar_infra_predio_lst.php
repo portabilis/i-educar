@@ -182,31 +182,11 @@ class indice extends clsListagem
 
 
 
-				switch ($nivel_usuario) {
-					case 4:
-						$this->addLinhas( array(
-							"<a href=\"educar_infra_predio_det.php?cod_infra_predio={$registro["cod_infra_predio"]}\">{$registro["ref_cod_escola"]}</a>",
-							"<a href=\"educar_infra_predio_det.php?cod_infra_predio={$registro["cod_infra_predio"]}\">{$registro["nm_predio"]}</a>"
-							) );
-						break;
-					case 2:
-					$this->addLinhas( array(
-						"<a href=\"educar_infra_predio_det.php?cod_infra_predio={$registro["cod_infra_predio"]}\">{$registro["ref_cod_instituicao"]}</a>",
-						"<a href=\"educar_infra_predio_det.php?cod_infra_predio={$registro["cod_infra_predio"]}\">{$registro["ref_cod_escola"]}</a>",
-						"<a href=\"educar_infra_predio_det.php?cod_infra_predio={$registro["cod_infra_predio"]}\">{$registro["nm_predio"]}</a>"
-						) );
-						break;
-					case 1:
-						$this->addLinhas( array(
-						"<a href=\"educar_infra_predio_det.php?cod_infra_predio={$registro["cod_infra_predio"]}\">{$registro["ref_cod_instituicao"]}</a>",
-						"<a href=\"educar_infra_predio_det.php?cod_infra_predio={$registro["cod_infra_predio"]}\">{$registro["ref_cod_escola"]}</a>",
-						"<a href=\"educar_infra_predio_det.php?cod_infra_predio={$registro["cod_infra_predio"]}\">{$registro["nm_predio"]}</a>"
-						) );
-						break;
-					default:
-						break;
-				}
-
+				$this->addLinhas( array(
+					"<a href=\"educar_infra_predio_det.php?cod_infra_predio={$registro["cod_infra_predio"]}\">{$registro["ref_cod_instituicao"]}</a>",
+					"<a href=\"educar_infra_predio_det.php?cod_infra_predio={$registro["cod_infra_predio"]}\">{$registro["ref_cod_escola"]}</a>",
+					"<a href=\"educar_infra_predio_det.php?cod_infra_predio={$registro["cod_infra_predio"]}\">{$registro["nm_predio"]}</a>"
+					) );
 			}
 		}
 		$this->addPaginador2( "educar_infra_predio_lst.php", $total, $_GET, $this->nome, $this->limite );
