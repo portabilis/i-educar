@@ -126,8 +126,8 @@ class indice extends clsCadastro
 		// foreign keys
 
 		// text
+		$this->inputsHelper()->dynamic(array('instituicao','escola'));
 		$this->campoTexto( "nm_motivo", "Motivo", $this->nm_motivo, 30, 255, true );
-		$this->inputsHelper()->dynamic(array('escola'));
 		$this->campoTexto( "sigla", "Sigla", $this->sigla, 15, 15, true );
 		$this->campoMemo( "descricao", "Descric&atilde;o", $this->descricao, 60, 5, false );
 
