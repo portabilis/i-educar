@@ -82,6 +82,8 @@ class indice extends clsCadastro
     ));
     $this->enviaLocalizacao($localizacao->montar());
 
+    $this->titulo = "Nova importação";
+
     return 'Editar';
   }
 
@@ -644,7 +646,7 @@ class indice extends clsCadastro
     }else{
 
       $codigoEducacenso = ComponenteCurricular_Model_CodigoEducacenso::getInstance();
-      $codigos = $codigoEducacenso->getValues();
+      $codigos = $codigoEducacenso->getData();
 
       $nome = $codigos[$disciplinaEducacenso] ? $codigos[$disciplinaEducacenso] : "Migração";
       $sigla = mb_substr($nome, 0, 3, 'UTF-8');
@@ -839,11 +841,14 @@ class indice extends clsCadastro
     //$codServidor = $dadosRegistro[4-1];
     $nome = $dadosRegistro[5-1];
     $email = $dadosRegistro[6-1];
+    $nis = $dadosRegistro[7-1];
     $dataNascimento =Portabilis_Date_Utils::brToPgSQL($dadosRegistro[8-1]);
     $sexo = $dadosRegistro[9-1] == "1" ? "M" : "F";
     $racaEducacenso = $dadosRegistro[10-1];
     $nomeMae = $dadosRegistro[12-1];
     $nomePai = $dadosRegistro[13-1];
+    $tipoNacionalidade = $dadosRegistro[14-1];
+    $paisNacionalidadeCenso = $dadosRegistro[15-1];
     $codIbgeMun = $dadosRegistro[17-1];
 
     $idmun = $codIbgeMun ? $this->getMunicipioByCodIbge($codIbgeMun) : null;
@@ -856,8 +861,8 @@ class indice extends clsCadastro
     if(!$codServidor){
       $idpesPai = $nomePai ? $this->cadastraPessoaFisica($nomePai, null, "M") : null;
       $idpesMae = $nomeMae ? $this->cadastraPessoaFisica($nomeMae, null, "F") : null;
-      $idpesServidor = $this->cadastraPessoaFisica($nome, $dataNascimento, $sexo, $idmun, $idpesMae, $idpesPai);
-      if($racaEducacenso > 0){
+      $idpesServidor = $this->cadastraPessoaFisica($nome, $dataNascimento, $sexo, $idmun, $idpesMae, $idpesPai, $nis, $tipoNacionalidade, $paisNacionalidadeCenso);
+      if(is_numeric($racaEducacenso)){
         $this->createOrUpdateRaca($idpesServidor, $racaEducacenso);
       }
 
@@ -1103,6 +1108,8 @@ class indice extends clsCadastro
     $corRacaEducacenso = $dadosRegistro[8-1];
     $nomeMae = $dadosRegistro[10-1];
     $nomePai = $dadosRegistro[11-1];
+    $tipoNacionalidade = $dadosRegistro[12-1];
+    $paisNacionalidadeCenso = $dadosRegistro[13-1];
     $municipioIbge = $dadosRegistro[15-1];
 
     $deficiencias = array();
@@ -1130,8 +1137,8 @@ class indice extends clsCadastro
       $idmun = $municipioIbge ? $this->getMunicipioByCodIbge($municipioIbge) : null;
       $idpesPai =  $nomePai ? $this->cadastraPessoaFisica($nomePai, null, "M") : null;
       $idpesMae = $nomeMae ? $this->cadastraPessoaFisica($nomeMae, null, "F") : null;
-      $idpesAluno = $this->cadastraPessoaFisica($nomeCompleto, $dataNascimento, $sexo, $idmun, $idpesMae, $idpesPai);
-      if($racaEducacenso > 0){
+      $idpesAluno = $this->cadastraPessoaFisica($nomeCompleto, $dataNascimento, $sexo, $idmun, $idpesMae, $idpesPai, null, $tipoNacionalidade, $paisNacionalidadeCenso);
+      if(is_numeric($corRacaEducacenso)){
         $this->createOrUpdateRaca($idpesAluno, $corRacaEducacenso);
       }
       $aluno = new clsPmieducarAluno(null, null, null, null, $this->pessoa_logada, $idpesAluno, null, null, 1);
@@ -1427,6 +1434,7 @@ class indice extends clsCadastro
       $codRaca = $racas[0]['cod_raca'];
     }else{
       $educacensoToString = array(
+        0 => 'Não declarada',
         1 => 'Branca',
         2 => 'Preta',
         3 => 'Parda',
@@ -1454,7 +1462,7 @@ class indice extends clsCadastro
     }
   }
 
-  function cadastraPessoaFisica($nome, $dataNascimento = null, $sexo = null, $idmun = null, $idpesMae = null, $idpesPai = null){
+  function cadastraPessoaFisica($nome, $dataNascimento = null, $sexo = null, $idmun = null, $idpesMae = null, $idpesPai = null, $nis = null, $tipoNacionalidade = null, $paisNacionalidadeCenso = null){
     $idpes = null;
     if(!empty($nome)){
       $pessoa = new clsPessoa_(
@@ -1474,6 +1482,18 @@ class indice extends clsCadastro
       }
       if($idpesPai){
         $fisica->idpes_pai = $idpesPai;
+      }
+      if($nis){
+        $fisica->nis_pis_pasep = $nis;
+      }
+      if($tipoNacionalidade){
+        $fisica->nacionalidade = $tipoNacionalidade;
+      }
+      if($paisNacionalidadeCenso){
+        $codPais = $this->getPaisByCodIbge($paisNacionalidadeCenso);
+        if($codPais){
+          $fisica->idpais_estrangeiro = $codPais;
+        }
       }
       $fisica->idpes_cad = $this->pessoa_logada;
       $fisica->cadastra();
@@ -1656,6 +1676,15 @@ class indice extends clsCadastro
     $sql = "SELECT sigla_uf
               from public.uf
               where cod_ibge = '{$ufIbge}'
+              limit 1 ";
+
+    return Portabilis_Utils_Database::selectField($sql);
+  }
+
+  function getPaisByCodIbge($paisIbge){
+    $sql = "SELECT idpais
+              from public.pais
+              where cod_ibge = '{$paisIbge}'
               limit 1 ";
 
     return Portabilis_Utils_Database::selectField($sql);
