@@ -121,6 +121,10 @@ class EditController extends Core_Controller_Page_EditController
       'label'   => 'Nota máxima geral',
       'help'    => 'Informe o valor máximo para notas no geral'
     ),
+    'notaMinimaGeral' => array(
+      'label'   => 'Nota mínima geral',
+      'help'    => 'Informe o valor mínimo para notas no geral'
+    ),
     'notaMaximaExameFinal' => array(
       'label'   => 'Nota máxima exame final',
       'help'    => 'Informe o valor máximo para nota do exame final'
@@ -415,6 +419,9 @@ var tabela_arredondamento = new function() {
 
     $this->campoNumero('notaMaximaGeral', $this->_getLabel('notaMaximaGeral'), $this->getEntity()->notaMaximaGeral,
       3, 3, TRUE, $this->_getHelp('notaMaximaGeral'));
+
+    $this->campoNumero('notaMinimaGeral', $this->_getLabel('notaMinimaGeral'), $this->getEntity()->notaMinimaGeral,
+      3, 3, TRUE, $this->_getHelp('notaMinimaGeral'));
 
     $this->campoNumero('notaMaximaExameFinal', $this->_getLabel('notaMaximaExameFinal'), $this->getEntity()->notaMaximaExameFinal,
       3, 3, TRUE, $this->_getHelp('notaMaximaExameFinal'));

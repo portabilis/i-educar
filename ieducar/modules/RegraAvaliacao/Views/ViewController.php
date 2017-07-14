@@ -62,6 +62,7 @@ class ViewController extends Core_Controller_Page_ViewController
     'Tipo de presença' => 'tipoPresenca',
     'Recuperação paralela' => 'tipoRecuperacaoParalela',
     'Nota máxima' => 'notaMaximaGeral',
+    'Nota mínima' => 'notaMinimaGeral',
     'Nota máxima para exame final' => 'notaMaximaExameFinal',
     'Número máximo de casas decimais' => 'qtdCasasDecimais'
   );
