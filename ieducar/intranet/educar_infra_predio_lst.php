@@ -103,7 +103,7 @@ class indice extends clsListagem
 		foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
 			$this->$var = ( $val === "" ) ? null: $val;
 
-		$this->inputsHelper()->dynamic(array('instituicao', 'escola'));
+		$this->inputsHelper()->dynamic(array('instituicao', 'escola'), array("required" => FALSE));
 
 		$this->addCabecalhos( array(
 			"Institui&ccedil;&atilde;o",
