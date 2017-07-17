@@ -49,6 +49,7 @@ class clsModulesProfessorTurma
   var $funcao_exercida;
   var $tipo_vinculo;
   var $permite_lancar_faltas_componente;
+  var $codUsuario;
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
    * @var int
@@ -305,6 +306,12 @@ class clsModulesProfessorTurma
 
     if (is_numeric($ref_cod_escola)) {
       $filtros .= "{$whereAnd} t.ref_ref_cod_escola = '{$ref_cod_escola}'";
+      $whereAnd = " AND ";
+    }elseif ($this->codUsuario) {
+      $filtros .= "{$whereAnd} EXISTS (SELECT 1
+                                         FROM pmieducar.escola_usuario
+                                        WHERE escola_usuario.ref_cod_escola = t.ref_ref_cod_escola
+                                          AND escola_usuario.ref_cod_usuario = '{$this->codUsuario}')";
       $whereAnd = " AND ";
     }
 

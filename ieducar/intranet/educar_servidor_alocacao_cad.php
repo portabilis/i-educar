@@ -186,20 +186,7 @@ class indice extends clsCadastro
 
     $this->inputsHelper()->integer('ano', array('value' => $this->ano, 'max_length' => 4));
 
-    // Escolas
-    $obj_escola = new clsPmieducarEscola();
-
-    $lista_escola = $obj_escola->lista(NULL, NULL, NULL, $this->ref_ref_cod_instituicao, NULL, NULL, NULL, NULL, NULL, NULL, 1);
-
-    $opcoes = array('' => 'Selecione');
-
-    if ($lista_escola) {
-      foreach ($lista_escola as $escola) {
-        $opcoes[$escola['cod_escola']] = $escola['nome'];
-      }
-    }
-
-    $this->campoLista('ref_cod_escola', 'Escola', $opcoes, $this->ref_cod_escola, '', FALSE, '', '', FALSE, TRUE);
+    $this->inputsHelper()->dynamic('escola');
 
     // Períodos
     $periodo = array(

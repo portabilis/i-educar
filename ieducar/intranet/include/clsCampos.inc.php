@@ -82,26 +82,6 @@ class clsCampos extends Core_Controller_Page_Abstract
 
   function clsCampos() {
     parent::__construct();
-
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
-    if ($this->ref_cod_escola) return;
-
-    $permissao = new clsPermissoes();
-    $nivel = $permissao->nivel_acesso($this->pessoa_logada);
-
-    if ($nivel == App_Model_NivelTipoUsuario::ESCOLA ||
-        $nivel == App_Model_NivelTipoUsuario::BIBLIOTECA) {
-
-      $escolas_usuario = array();
-      $escolasUser = App_Model_IedFinder::getEscolasUser($this->pessoa_logada);
-      $escola = array_shift($escolasUser);
-
-      $this->ref_cod_escola = $escola['ref_cod_escola'];
-      $this->ref_cod_instituicao = $escola['instituicao'];
-    }
   }
 
   function campoTabInicio($nome ,$largura = '', $segue_fluxo = FALSE, $array_sequencia = NULL)

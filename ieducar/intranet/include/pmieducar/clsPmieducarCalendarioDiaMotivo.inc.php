@@ -45,6 +45,7 @@ class clsPmieducarCalendarioDiaMotivo
 	var $data_exclusao;
 	var $ativo;
 	var $nm_motivo;
+	var $codUsuario;
 
 	// propriedades padrao
 
@@ -395,6 +396,12 @@ class clsPmieducarCalendarioDiaMotivo
 		if( is_numeric( $int_ref_cod_escola ) )
 		{
 			$filtros .= "{$whereAnd} cdm.ref_cod_escola = '{$int_ref_cod_escola}'";
+			$whereAnd = " AND ";
+		}elseif ($this->codUsuario) {
+			$filtros .= "{$whereAnd} EXISTS (SELECT 1
+			                                   FROM pmieducar.escola_usuario
+											  WHERE escola_usuario.ref_cod_escola = cdm.ref_cod_escola
+											    AND escola_usuario.ref_cod_usuario = '{$this->codUsuario}')";
 			$whereAnd = " AND ";
 		}
 		if( is_numeric( $int_ref_usuario_exc ) )

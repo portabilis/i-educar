@@ -89,7 +89,7 @@ class indice extends clsListagem
 		foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
 			$this->$var = ( $val === "" ) ? null: $val;
 
-		
+
 
 		$lista_busca = array(
 			"Ano",
@@ -117,6 +117,11 @@ class indice extends clsListagem
 		$obj_turma->setLimite( $this->limite, $this->offset );
 		if (!$this->ano_letivo)
 			$this->ano_letivo = date (Y);
+
+		if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar($this->pessoa_logada)) {
+			$obj_turma->codUsuario = $this->pessoa_logada;
+		}
+
 		$lista = $obj_turma->lista3(
 			$this->ref_cod_turma,
 			null,
@@ -203,7 +208,7 @@ class indice extends clsListagem
          "educar_index.php"                  => "Escola",
          ""                                  => "Listagem de turmas para enturma&ccedil;&otilde;es"
     ));
-    $this->enviaLocalizacao($localizacao->montar());		
+    $this->enviaLocalizacao($localizacao->montar());
 	}
 }
 // cria uma extensao da classe base

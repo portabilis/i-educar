@@ -111,13 +111,6 @@ class indice extends clsListagem
 		foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
 			$this->$var = ( $val === "" ) ? null: $val;
 
-		$busca = ($_GET['busca'] == 'S');
-
-		if (!$busca) {
-			$this->ref_cod_instituicao = null;
-			$this->ref_cod_escola = null;
-		}
-
 		$this->campoNumero("cod_aluno",$GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu' ? "C&oacute;digo Aluno (i-Educar)" : "C&oacute;digo Aluno",$this->cod_aluno,20,9,false);
 		if(!$GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu'){
 			$this->campoNumero("cod_inep","C&oacute;digo INEP",$this->cod_inep,20,255,false);
@@ -156,8 +149,7 @@ class indice extends clsListagem
 		$this->inputsHelper()->dynamic('escola',
 		 																array('required' =>  false,
 																					'show-select' => true,
-																					'value' => $this->ref_cod_escola,
-																				  'mostra-opcao-selecione' => true));
+																					'value' => $this->ref_cod_escola));
 		$this->inputsHelper()->dynamic(array('curso', 'serie'), array('required' =>  false));
 
 		//$this->inputsHelper()->select('periodo', array('required' => false, 'value' => $this->periodo, 'resources' => array(null => 'Selecione', 1 => 'Matutino', 2 => 'Vespertino', 3 => 'Noturno', 4 => 'Integral' )));

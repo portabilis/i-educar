@@ -86,6 +86,11 @@ class indice extends clsListagem
 		}
 		
 		$objPessoa = new clsPessoaJuridica();
+
+		if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar($this->pessoa_logada)) {
+			$objPessoa->codUsuario = $this->pessoa_logada;
+		}
+		
 		$empresas = $objPessoa->lista( $par_cnpj, $par_fantasia, false, $iniciolimit, $limite, "fantasia asc",$opcoes );
 		if($empresas)
 		{

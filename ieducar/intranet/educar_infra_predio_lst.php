@@ -92,13 +92,18 @@ class indice extends clsListagem
 		$nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
 
 		$obj_infra_predio = new clsPmieducarInfraPredio();
+
+		if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar($this->pessoa_logada)) {
+			$obj_infra_predio->codUsuario = $this->pessoa_logada;
+		}
+
 		$obj_infra_predio->setOrderby( "nm_predio ASC" );
 		$obj_infra_predio->setLimite( $this->limite, $this->offset );
 
 		foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
 			$this->$var = ( $val === "" ) ? null: $val;
 
-		$this->inputsHelper()->dynamic(array('instituicao', 'escola'));
+		$this->inputsHelper()->dynamic(array('instituicao', 'escola'), array("required" => FALSE));
 
 		$this->addCabecalhos( array(
 			"Institui&ccedil;&atilde;o",
@@ -177,31 +182,11 @@ class indice extends clsListagem
 
 
 
-				switch ($nivel_usuario) {
-					case 4:
-						$this->addLinhas( array(
-							"<a href=\"educar_infra_predio_det.php?cod_infra_predio={$registro["cod_infra_predio"]}\">{$registro["ref_cod_escola"]}</a>",
-							"<a href=\"educar_infra_predio_det.php?cod_infra_predio={$registro["cod_infra_predio"]}\">{$registro["nm_predio"]}</a>"
-							) );
-						break;
-					case 2:
-					$this->addLinhas( array(
-						"<a href=\"educar_infra_predio_det.php?cod_infra_predio={$registro["cod_infra_predio"]}\">{$registro["ref_cod_instituicao"]}</a>",
-						"<a href=\"educar_infra_predio_det.php?cod_infra_predio={$registro["cod_infra_predio"]}\">{$registro["ref_cod_escola"]}</a>",
-						"<a href=\"educar_infra_predio_det.php?cod_infra_predio={$registro["cod_infra_predio"]}\">{$registro["nm_predio"]}</a>"
-						) );
-						break;
-					case 1:
-						$this->addLinhas( array(
-						"<a href=\"educar_infra_predio_det.php?cod_infra_predio={$registro["cod_infra_predio"]}\">{$registro["ref_cod_instituicao"]}</a>",
-						"<a href=\"educar_infra_predio_det.php?cod_infra_predio={$registro["cod_infra_predio"]}\">{$registro["ref_cod_escola"]}</a>",
-						"<a href=\"educar_infra_predio_det.php?cod_infra_predio={$registro["cod_infra_predio"]}\">{$registro["nm_predio"]}</a>"
-						) );
-						break;
-					default:
-						break;
-				}
-
+				$this->addLinhas( array(
+					"<a href=\"educar_infra_predio_det.php?cod_infra_predio={$registro["cod_infra_predio"]}\">{$registro["ref_cod_instituicao"]}</a>",
+					"<a href=\"educar_infra_predio_det.php?cod_infra_predio={$registro["cod_infra_predio"]}\">{$registro["ref_cod_escola"]}</a>",
+					"<a href=\"educar_infra_predio_det.php?cod_infra_predio={$registro["cod_infra_predio"]}\">{$registro["nm_predio"]}</a>"
+					) );
 			}
 		}
 		$this->addPaginador2( "educar_infra_predio_lst.php", $total, $_GET, $this->nome, $this->limite );

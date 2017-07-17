@@ -56,6 +56,7 @@ class clsPmieducarServidorAlocacao
   var $periodo;
   var $ref_cod_funcionario_vinculo;
   var $ano;
+  var $codUsuario;
   /**
    * Carga horária máxima para um período de alocação (em horas).
    * @var float
@@ -423,6 +424,12 @@ class clsPmieducarServidorAlocacao
     if (is_numeric($int_ref_cod_escola)) {
       $filtros .= "{$whereAnd} sa.ref_cod_escola = '{$int_ref_cod_escola}'";
       $whereAnd = ' AND ';
+    }elseif ($this->codUsuario) {
+      $filtros .= "{$whereAnd} EXISTS (SELECT 1
+                                         FROM pmieducar.escola_usuario
+                                        WHERE escola_usuario.ref_cod_escola = sa.ref_cod_escola
+                                          AND escola_usuario.ref_cod_usuario = '{$this->codUsuario}')";
+      $whereAnd = " AND ";
     }
 
     if (is_numeric($int_ref_cod_servidor)) {

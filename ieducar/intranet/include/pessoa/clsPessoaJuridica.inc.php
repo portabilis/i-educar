@@ -36,6 +36,7 @@ class clsPessoaJuridica extends clsPessoaFj
 	var $capital_social;
 	var $banco = 'gestao_homolog';
 	var $schema_cadastro = "cadastro";
+	var $codUsuario;
 
 	function  clsPessoaJuridica($int_idpes = false, $numeric_cnpj = false, $str_fantasia = false, $numeric_insc_estadual=false, $numeric_capital_social = false )
 	{
@@ -51,6 +52,7 @@ class clsPessoaJuridica extends clsPessoaFj
 	{
 
 		$objJuridica = new clsJuridica();
+		$objJuridica->codUsuario = $this->codUsuario;
 		$lista = $objJuridica->lista( $str_fantasia,false,$numeric_cnpj,$str_ordenacao,$inicio_limit,$fim_limite, $arrayint_idisin,$arrayint_idnotin, $int_idpes );
 		if($lista)
 		{

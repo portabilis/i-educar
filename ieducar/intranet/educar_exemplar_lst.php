@@ -121,25 +121,6 @@ class indice extends clsListagem
 
 
 		$opcoes = array( "" => "Selecione" );
-		/*if( class_exists( "clsPmieducarExemplarTipo" ) )
-		{
-			$objTemp = new clsPmieducarExemplarTipo();
-			$lista = $objTemp->lista(null,null);
-			if ( is_array( $lista ) && count( $lista ) )
-			{
-				$tipos = "tipos = new Array();\n";
-				foreach ( $lista as $registro )
-				{
-					$tipos .= "tipos[tipos.length] = new Array( {$registro["cod_exemplar_tipo"]}, '{$registro['nm_tipo']}', {$registro['ref_cod_biblioteca']});\n";
-
-				}
-					echo "<script>{$tipos}</script>";
-			}
-		}
-		else
-		{
-			echo "<!--\nErro\nClasse clsPmieducarExemplarTipo nao encontrada\n-->";
-		}*/
 		$opcoes_colecao = array();
 		$opcoes_colecao[""] = "Selecione";
 		$opcoes_editora = array();
@@ -225,6 +206,11 @@ class indice extends clsListagem
 		$this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
 		$obj_exemplar = new clsPmieducarExemplar();
+
+		if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar($this->pessoa_logada)) {
+			$obj_exemplar->codUsuario = $this->pessoa_logada;
+		}
+		
 		$obj_exemplar->setOrderby( "tombo ASC" );
 		$obj_exemplar->setLimite( $this->limite, $this->offset );
 

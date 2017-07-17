@@ -112,6 +112,11 @@ class indice extends clsListagem
 		$this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
 		$obj_infra_comodo_funcao = new clsPmieducarInfraComodoFuncao();
+
+		if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar($this->pessoa_logada)) {
+			$obj_infra_comodo_funcao->codUsuario = $this->pessoa_logada;
+		}
+
 		$obj_infra_comodo_funcao->setOrderby( "nm_funcao ASC" );
 		$obj_infra_comodo_funcao->setLimite( $this->limite, $this->offset );
 

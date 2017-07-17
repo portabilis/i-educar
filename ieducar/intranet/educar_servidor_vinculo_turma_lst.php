@@ -143,6 +143,11 @@ class indice extends clsListagem
       $_GET['pagina_' . $this->nome] * $this->limite - $this->limite : 0;
 
     $obj_vinculo = new clsModulesProfessorTurma();
+
+    if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar($this->pessoa_logada)) {
+      $obj_vinculo->codUsuario = $this->pessoa_logada;
+    }
+
     $obj_vinculo->setOrderby(' nm_escola, nm_curso, nm_serie, nm_turma ASC');
     $obj_vinculo->setLimite($this->limite, $this->offset);
 
