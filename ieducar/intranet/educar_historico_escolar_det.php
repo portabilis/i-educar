@@ -234,6 +234,9 @@ class indice extends clsDetalhe
 			elseif ($registro['aprovado'] == 6) {
 				$registro["aprovado"] = "Abandono";
 			}
+			elseif ($registro['aprovado'] == 12) {
+				$registro["aprovado"] = "Aprovado com dependência";
+			}
 			elseif ($registro['aprovado'] == 13) {
 				$registro["aprovado"] = "Aprovado pelo conselho";
 			}

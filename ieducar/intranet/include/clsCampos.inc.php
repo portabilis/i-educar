@@ -1403,7 +1403,7 @@ class clsCampos extends Core_Controller_Page_Abstract
             $center   = (strtolower($campo_[0]) == 'rotulo' || strtolower($campo_[0]) == 'check' || $largura) ?
               'align="center"' : '';
 
-            $retorno .= "<td class='$classe2' $center id='td_{$nome}[{$key2}]' valign='top'>\n";
+            $retorno .= "<td class='$classe2 {$nome}' $center id='td_{$nome}[{$key2}]' valign='top'>\n";
 
             switch (strtolower($campo_[0])) {
               case 'texto':
