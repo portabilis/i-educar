@@ -163,7 +163,7 @@ class indice extends clsListagem
 			null,
 			null,
 			$this->ref_cod_cliente,
-			$this->data_reserva,
+			Portabilis_Date_Utils::brToPgSQL($this->data_reserva),
 			null,
 			null,
 			null,
