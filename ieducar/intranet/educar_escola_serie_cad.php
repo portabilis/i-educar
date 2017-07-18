@@ -186,7 +186,7 @@ class indice extends clsCadastro
     $get_serie        = FALSE;
     $get_escola_serie = TRUE;
 
-    $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'curso'));
+    include 'include/pmieducar/educar_campo_lista.php';
 
     if ($this->ref_cod_escola_) {
       $this->ref_cod_escola = $this->ref_cod_escola_;
