@@ -46,7 +46,9 @@ class ApiExternaController{
 		$options = array( CURLOPT_URL  		 	 => $this->getUrl(),
 						  CURLOPT_POST 		 	 => ($this->tipoRequisicao == self::REQUISICAO_POST),
 						  CURLOPT_POSTFIELDS 	 => $this->params,
-						  CURLOPT_RETURNTRANSFER => true);
+						  CURLOPT_RETURNTRANSFER => true,
+						  CURLOPT_SSL_VERIFYHOST => false,
+						  CURLOPT_SSL_VERIFYPEER => false);
 		curl_setopt_array($this->curl, $options);
 
 		return curl_exec($this->curl);
