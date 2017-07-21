@@ -540,7 +540,6 @@ class DiarioApiController extends ApiCoreController
 
   protected function postNota() {
     if ($this->canPostNota()) {
-
       $array_nota = array(
                   'componenteCurricular' => $this->getRequest()->componente_curricular_id,
                   'nota'                 => urldecode($this->getRequest()->att_value),
@@ -1648,6 +1647,7 @@ class DiarioApiController extends ApiCoreController
     if ($this->canGetRegraAvaliacao()) {
       $regra              = $this->serviceBoletim()->getRegra();
       $notaLimits['nota_maxima_geral'] = $regra->get('notaMaximaGeral');
+      $notaLimits['nota_minima_geral'] = $regra->get('notaMinimaGeral');
       $notaLimits['nota_maxima_exame_final'] = $regra->get('notaMaximaExameFinal');
       $notaLimits['qtd_casas_decimais'] = $regra->get('qtdCasasDecimais');
     }

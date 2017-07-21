@@ -65,6 +65,7 @@ class RegraAvaliacao_Model_Regra extends CoreExt_Entity
     'tipoRecuperacaoParalela'   => NULL,
     'mediaRecuperacaoParalela'  => NULL,
     'notaMaximaGeral'           => NULL,
+    'notaMinimaGeral'           => NULL,
     'notaMaximaExameFinal'      => NULL,
     'qtdCasasDecimais'          => NULL,
     'notaGeralPorEtapa'         => NULL,
@@ -81,10 +82,11 @@ class RegraAvaliacao_Model_Regra extends CoreExt_Entity
     'mediaRecuperacao' => 'numeric',
     'tipoRecuperacaoParalela' => 'numeric',
     'notaMaximaGeral' => 'numeric',
+    'notaMinimaGeral' => 'numeric',
     'notaMaximaExameFinal' => 'numeric',
     'qtdCasasDecimais' => 'numeric',
     'qtdDisciplinasDependencia' => 'numeric',
-    'qtdMatriculasDependencia'  => 'numeric'
+    'qtdMatriculasDependencia'  => 'numeric',
   );
 
   protected $_references = array(
