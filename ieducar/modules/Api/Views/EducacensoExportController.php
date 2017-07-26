@@ -712,7 +712,7 @@ class EducacensoExportController extends ApiCoreController
               FROM pmieducar.matricula_turma mt
              INNER JOIN pmieducar.matricula m ON(mt.ref_cod_matricula = m.cod_matricula)
               WHERE mt.ref_cod_turma = t.cod_turma
-              AND (mt.ativo = 1 OR mt.data_exclusao >= DATE($2))
+              AND (mt.ativo = 1 OR mt.data_exclusao > DATE($3))
               AND COALESCE(m.data_matricula,m.data_cadastro) BETWEEN DATE($2) AND DATE($3)
               LIMIT 1) IS NOT NULL';
 
@@ -772,7 +772,7 @@ class EducacensoExportController extends ApiCoreController
                       FROM pmieducar.matricula_turma mt
                      INNER JOIN pmieducar.matricula m ON(mt.ref_cod_matricula = m.cod_matricula)
                      WHERE mt.ref_cod_turma = professor_turma.turma_id
-                       AND mt.ativo = 1
+                       AND (mt.ativo = 1  OR mt.data_exclusao > DATE($4))
                        AND COALESCE(m.data_matricula,m.data_cadastro) BETWEEN DATE($3) AND DATE($4)
                      LIMIT 1) IS NOT NULL
                ',
