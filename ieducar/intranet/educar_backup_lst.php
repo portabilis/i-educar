@@ -80,7 +80,7 @@ class indice extends clsListagem
 		$this->pessoa_logada = $_SESSION['id_pessoa'];
 		session_write_close();
 
-		$this->__titulo = "Backups - Listagem";
+		$this->__titulo = "Backups";
 
 		foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
 			$this->$var = ( $val === "" ) ? null: $val;
@@ -134,8 +134,8 @@ class indice extends clsListagem
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_enderecamento_index.php"    => "Endereçamento",
-         ""                                  => "Listagem de pa&iacute;ses"
+         "educar_configuracoes_index.php"    => "Configurações",
+         ""                                  => "Backups"
     ));
     $this->enviaLocalizacao($localizacao->montar());		
 	}
