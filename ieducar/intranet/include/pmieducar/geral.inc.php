@@ -171,6 +171,7 @@ require_once 'include/pmieducar/clsPmieducarBibliotecaDia.inc.php';
 require_once 'include/pmieducar/clsPmieducarBibliotecaFeriados.inc.php';
 require_once 'include/pmieducar/clsPmieducarProjeto.inc.php';
 require_once 'include/pmieducar/clsPmieducarBloqueioAnoLetivo.inc.php';
+require_once 'include/pmieducar/clsPmieducarBackup.inc.php';
 
 require_once 'include/pmieducar/clsPmieducarAlunoCmf.inc.php';
 require_once 'include/pessoa/clsCadastroRaca.inc.php';
