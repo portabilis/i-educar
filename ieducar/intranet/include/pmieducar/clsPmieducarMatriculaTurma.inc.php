@@ -380,6 +380,15 @@ class clsPmieducarMatriculaTurma
         $gruda = ", ";
       }
 
+      $sequencialEnturmacao = new SequencialEnturmacao($this->ref_cod_matricula, $this->ref_cod_turma, $this->data_enturmacao);
+      $this->sequencial_fechamento = $sequencialEnturmacao->ordenaSequencialExcluiMatricula();
+
+      if(is_numeric($this->sequencial_fechamento)){
+        $campos .= "{$gruda}sequencial_fechamento";
+        $valores .= "{$gruda}'{$this->sequencial_fechamento}'";
+        $gruda = ", ";
+      }
+
       if ($set) {
         $detalheAntigo = $this->detalhe();
         $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE ref_cod_matricula = '{$this->ref_cod_matricula}' AND ref_cod_turma = '{$this->ref_cod_turma}' and sequencial = '$this->sequencial' ");
@@ -1395,7 +1404,7 @@ class clsPmieducarMatriculaTurma
       $data = $data ? $data : date('Y-m-d');
         if ($dataBaseRemanejamento && strtotime($dataBaseRemanejamento) < strtotime($data) ) {
           $db = new clsBanco();
-          $db->CampoUnico("UPDATE pmieducar.matricula_turma SET transferido = false, remanejado = true, abandono = false, reclassificado = false WHERE ref_cod_matricula = {$this->ref_cod_matricula} AND sequencial = {$this->sequencial}");
+          $db->CampoUnico("UPDATE pmieducar.matricula_turma SET transferido = false, remanejado = true, abandono = false, reclassificado = false, data_exclusao = '$data' WHERE ref_cod_matricula = {$this->ref_cod_matricula} AND sequencial = {$this->sequencial}");
         }
     }
   }

@@ -24,11 +24,19 @@ class SequencialEnturmacao {
       return $novoSequencial;
     }
 
-    $sequencialNovoAluno = $this->sequencialAlunoOrdemAlfabetica();
+    $sequencialNovoAluno = $this->sequencialAlunoOrdemAlfabetica(); //echo $sequencialNovoAluno;die;
 
     $this->somaSequencialPosterior($sequencialNovoAluno);
 
     return $sequencialNovoAluno;
+  }
+
+  public function ordenaSequencialExcluiMatricula() {
+    $sequencialExcluiAluno = $this->sequencialAlunoOrdemAlfabetica();
+
+    $this->subtriSequencialPosterior($sequencialExcluiAluno);
+
+    return $sequencialExcluiAluno;
   }
 
   private function sequencialAlunoAposData() {
@@ -96,7 +104,19 @@ class SequencialEnturmacao {
     $sql =
     "UPDATE pmieducar.matricula_turma
         SET sequencial_fechamento = sequencial_fechamento + 1
-      WHERE ativo = 1
+      WHERE sequencial = relatorio.get_max_sequencial_matricula(ref_cod_matricula)
+        AND ref_cod_turma = $this->refCodTurma
+        AND sequencial_fechamento >= $sequencial";
+
+    $db = new clsBanco();
+    $db->Consulta($sql);
+  }
+
+  private function subtriSequencialPosterior($sequencial) {
+    $sql =
+    "UPDATE pmieducar.matricula_turma
+        SET sequencial_fechamento = sequencial_fechamento - 1
+      WHERE sequencial = relatorio.get_max_sequencial_matricula(ref_cod_matricula)
         AND ref_cod_turma = $this->refCodTurma
         AND sequencial_fechamento >= $sequencial";
 
