@@ -103,8 +103,7 @@ class ServidorController extends ApiCoreController
                      p.nome as name,
                      pt.turma_id,
                      pt.permite_lancar_faltas_componente as permite_lancar_faltas_componente,
-                     ptd.componente_curricular_id as disciplina_id,
-                     pt.updated_at as data_atualizacao
+                     ptd.componente_curricular_id as disciplina_id
               FROM pmieducar.servidor s
               INNER JOIN cadastro.pessoa p ON s.cod_servidor = p.idpes
               INNER JOIN modules.professor_turma pt ON s.cod_servidor = pt.servidor_id AND s.ref_cod_instituicao = pt.instituicao_id
@@ -115,7 +114,7 @@ class ServidorController extends ApiCoreController
 
       $_servidores = $this->fetchPreparedQuery($sql, array($instituicaoId, $ano));
 
-      $attrs = array('id', 'servidor_id', 'name', 'turma_id', 'permite_lancar_faltas_componente', 'disciplina_id', 'data_atualizacao');
+      $attrs = array('id', 'servidor_id', 'name', 'turma_id', 'permite_lancar_faltas_componente', 'disciplina_id');
       $_servidores = Portabilis_Array_Utils::filterSet($_servidores, $attrs);
       $servidores = array();
       $__servidores = array();
