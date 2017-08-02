@@ -110,7 +110,7 @@ class ServidorController extends ApiCoreController
               INNER JOIN modules.professor_turma_disciplina ptd ON pt.id = ptd.professor_turma_id
               WHERE s.ref_cod_instituicao = $1
               AND pt.ano = $2
-              GROUP BY pt.id, s.cod_servidor, p.nome, pt.turma_id, pt.permite_lancar_faltas_componente, ptd.componente_curricular_id, pt.updated_at";
+              GROUP BY pt.id, s.cod_servidor, p.nome, pt.turma_id, pt.permite_lancar_faltas_componente, ptd.componente_curricular_id";
 
       $_servidores = $this->fetchPreparedQuery($sql, array($instituicaoId, $ano));
 
