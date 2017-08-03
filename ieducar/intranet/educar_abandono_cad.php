@@ -181,6 +181,10 @@ class indice extends clsCadastro
 
 				foreach ($enturmacoes as $enturmacao) {
 				  $enturmacao = new clsPmieducarMatriculaTurma( $this->ref_cod_matricula, $enturmacao['ref_cod_turma'], $this->pessoa_logada, null, null, null, 0, null, $enturmacao['sequencial']);
+				  $enturmacao->removerSequencial = TRUE;
+				  $detEnturmacao = $enturmacao->detalhe();
+				  $detEnturmacao = $detEnturmacao['data_enturmacao'];
+				  $enturmacao->data_enturmacao = $detEnturmacao;
 
 				  if(! $enturmacao->edita())
 				  {

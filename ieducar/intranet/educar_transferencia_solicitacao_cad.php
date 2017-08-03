@@ -130,6 +130,9 @@ class indice extends clsCadastro
 
     if($ultimaEnturmacao) {
       $enturmacao = new clsPmieducarMatriculaTurma($matriculaId, $ultimaEnturmacao['ref_cod_turma'], $this->pessoa_logada, NULL, NULL, NULL, 1, null, $ultimaEnturmacao['sequencial']);
+      $detEnturmacao = $enturmacao->detalhe();
+	  $detEnturmacao = $detEnturmacao['data_enturmacao'];
+	  $enturmacao->data_enturmacao = $detEnturmacao;
       $enturmacao->edita();
     }
   }
@@ -266,8 +269,19 @@ class indice extends clsCadastro
         			// foreach necessário pois metodo edita e exclui da classe clsPmieducarMatriculaTurma, necessitam do
         			// código da turma e do sequencial
 					foreach ($enturmacoes as $enturmacao) {
-					  $enturmacao = new clsPmieducarMatriculaTurma( $this->ref_cod_matricula, $enturmacao['ref_cod_turma'], $this->pessoa_logada, null, null, null, 0, null, $enturmacao['sequencial']);
-
+					  $enturmacao = new clsPmieducarMatriculaTurma( $this->ref_cod_matricula,
+					  											    $enturmacao['ref_cod_turma'],
+					  											    $this->pessoa_logada,
+					  											    null,
+					  											    null,
+					  											    null,
+					  											    0,
+					  											    null,
+					  											    $enturmacao['sequencial'],
+					  											    $this->data_enturmacao);
+					  $detEnturmacao = $enturmacao->detalhe();
+					  $detEnturmacao = $detEnturmacao['data_enturmacao'];
+					  $enturmacao->data_enturmacao = $detEnturmacao;
 					  if(! $enturmacao->edita())
 					  {
 	  				  $this->mensagem = "N&atilde;o foi poss&iacute;vel desativar as enturma&ccedil;&otilde;es da matr&iacute;cula.";

@@ -56,6 +56,7 @@ class clsPmieducarMatriculaTurma
   var $sequencial;
   var $data_enturmacao;
   var $sequencial_fechamento;
+  var $removerSequencial;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -113,7 +114,8 @@ class clsPmieducarMatriculaTurma
   function clsPmieducarMatriculaTurma($ref_cod_matricula = NULL,
     $ref_cod_turma = NULL, $ref_usuario_exc = NULL, $ref_usuario_cad = NULL,
     $data_cadastro = NULL, $data_exclusao = NULL, $ativo = NULL,
-    $ref_cod_turma_transf = NULL,$sequencial = NULL, $data_enturmacao = NULL
+    $ref_cod_turma_transf = NULL,$sequencial = NULL, $data_enturmacao = NULL,
+    $removerSequencial = FALSE
   ) {
     $db = new clsBanco();
     $this->_schema = "pmieducar.";
@@ -379,9 +381,10 @@ class clsPmieducarMatriculaTurma
         $set .= "{$gruda}data_enturmacao = '{$this->data_enturmacao}'";
         $gruda = ", ";
       }
-
-      $sequencialEnturmacao = new SequencialEnturmacao($this->ref_cod_matricula, $this->ref_cod_turma, $this->data_enturmacao);
-      $this->sequencial_fechamento = $sequencialEnturmacao->ordenaSequencialExcluiMatricula();
+      if ($this->removerSequencial){
+        $sequencialEnturmacao = new SequencialEnturmacao($this->ref_cod_matricula, $this->ref_cod_turma, $this->data_enturmacao, $this->sequencial);
+        $this->sequencial_fechamento = $sequencialEnturmacao->ordenaSequencialExcluiMatricula();
+      }
 
       if(is_numeric($this->sequencial_fechamento)){
         $campos .= "{$gruda}sequencial_fechamento";

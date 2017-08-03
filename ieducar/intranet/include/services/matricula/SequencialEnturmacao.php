@@ -7,11 +7,13 @@ class SequencialEnturmacao {
   var $refCodMatricula;
   var $refCodTurma;
   var $dataEnturmacao;
+  var $sequencial;
 
-  public function __construct($refCodMatricula, $refCodTurma, $dataEnturmacao) {
+  public function __construct($refCodMatricula, $refCodTurma, $dataEnturmacao, $sequencial) {
     $this->refCodMatricula = $refCodMatricula;
     $this->refCodTurma = $refCodTurma;
     $this->dataEnturmacao = $dataEnturmacao;
+    $this->sequencial = $sequencial;
   }
 
   public function ordenaSequencialNovaMatricula() {
@@ -24,7 +26,7 @@ class SequencialEnturmacao {
       return $novoSequencial;
     }
 
-    $sequencialNovoAluno = $this->sequencialAlunoOrdemAlfabetica(); //echo $sequencialNovoAluno;die;
+    $sequencialNovoAluno = $this->sequencialAlunoOrdemAlfabetica();
 
     $this->somaSequencialPosterior($sequencialNovoAluno);
 
@@ -34,7 +36,7 @@ class SequencialEnturmacao {
   public function ordenaSequencialExcluiMatricula() {
     $sequencialExcluiAluno = $this->sequencialAlunoOrdemAlfabetica();
 
-    $this->subtriSequencialPosterior($sequencialExcluiAluno);
+    $this->subtraiSequencialPosterior($sequencialExcluiAluno);
 
     return $sequencialExcluiAluno;
   }
@@ -44,8 +46,7 @@ class SequencialEnturmacao {
       $sql = "SELECT MAX(sequencial_fechamento)+1
                                 FROM pmieducar.matricula_turma
                                INNER JOIN pmieducar.matricula ON (matricula.cod_matricula = matricula_turma.ref_cod_matricula)
-                               WHERE matricula_turma.ativo = 1
-                                 AND matricula.ativo = 1
+                               WHERE matricula.ativo = 1
                                  AND ref_cod_turma = {$this->refCodTurma}";
 
       if (!$this->matriculaDependencia()) {
@@ -67,9 +68,8 @@ class SequencialEnturmacao {
       INNER JOIN pmieducar.matricula ON (matricula.cod_matricula = matricula_turma.ref_cod_matricula)
       INNER JOIN pmieducar.aluno ON (aluno.cod_aluno = matricula.ref_cod_aluno)
       INNER JOIN cadastro.pessoa ON (pessoa.idpes = aluno.ref_idpes)
-      WHERE matricula_turma.ativo = 1
+      WHERE matricula.ativo = 1
         AND matricula_turma.ref_cod_turma = $this->refCodTurma
-        AND matricula_turma.data_enturmacao <= '$this->dataEnturmacao'::date
       ORDER BY sequencial_fechamento";
 
     $db->Consulta($sql);
@@ -104,19 +104,18 @@ class SequencialEnturmacao {
     $sql =
     "UPDATE pmieducar.matricula_turma
         SET sequencial_fechamento = sequencial_fechamento + 1
-      WHERE sequencial = relatorio.get_max_sequencial_matricula(ref_cod_matricula)
-        AND ref_cod_turma = $this->refCodTurma
+      WHERE ref_cod_turma = $this->refCodTurma
         AND sequencial_fechamento >= $sequencial";
 
     $db = new clsBanco();
     $db->Consulta($sql);
   }
 
-  private function subtriSequencialPosterior($sequencial) {
+  private function subtraiSequencialPosterior($sequencial) {
     $sql =
     "UPDATE pmieducar.matricula_turma
         SET sequencial_fechamento = sequencial_fechamento - 1
-      WHERE sequencial = relatorio.get_max_sequencial_matricula(ref_cod_matricula)
+      WHERE sequencial = $this->sequencial
         AND ref_cod_turma = $this->refCodTurma
         AND sequencial_fechamento >= $sequencial";
 
