@@ -1228,7 +1228,7 @@ class indice extends clsCadastro
         $obj->turma_unificada = $this->turma_unificada == "" ? NULL : $this->turma_unificada;
         $obj->etapa_educacenso = $this->etapa_educacenso == "" ? NULL : $this->etapa_educacenso;
         $obj->etapa_educacenso2 = $this->etapa_educacenso2 == "" ? NULL : $this->etapa_educacenso2;
-        $obj->ref_cod_serie_mult = $this->ref_cod_serie_mult == "" ? NULL : $this->ref_cod_serie_mult;
+        $obj->ref_ref_cod_serie_mult = $this->ref_cod_serie_mult == "" ? NULL : $this->ref_cod_serie_mult;
         $obj->ref_cod_disciplina_dispensada = $this->ref_cod_disciplina_dispensada == "" ? NULL : $this->ref_cod_disciplina_dispensada;
         $obj->nao_informar_educacenso = $this->nao_informar_educacenso == 'on' ? 1 : 0;
         $obj->tipo_mediacao_didatico_pedagogico = $this->tipo_mediacao_didatico_pedagogico;
