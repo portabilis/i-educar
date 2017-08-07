@@ -187,6 +187,7 @@ class indice extends clsCadastro
                                                  0,
                                                  NULL,
                                                  $sequencialEnturmacao);
+    $enturmacao->removerSequencial = TRUE;
     $detEnturmacao = $enturmacao->detalhe();
     $detEnturmacao = $detEnturmacao['data_enturmacao'];
     $enturmacao->data_enturmacao = $detEnturmacao;

@@ -57,6 +57,7 @@ class clsPmieducarMatriculaTurma
   var $data_enturmacao;
   var $sequencial_fechamento;
   var $removerSequencial;
+  var $reabrirMatricula;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -115,7 +116,7 @@ class clsPmieducarMatriculaTurma
     $ref_cod_turma = NULL, $ref_usuario_exc = NULL, $ref_usuario_cad = NULL,
     $data_cadastro = NULL, $data_exclusao = NULL, $ativo = NULL,
     $ref_cod_turma_transf = NULL,$sequencial = NULL, $data_enturmacao = NULL,
-    $removerSequencial = FALSE
+    $removerSequencial = FALSE, $reabrirMatricula = FALSE
   ) {
     $db = new clsBanco();
     $this->_schema = "pmieducar.";
@@ -307,7 +308,7 @@ class clsPmieducarMatriculaTurma
         $gruda = ", ";
       }
 
-      $sequencialEnturmacao = new SequencialEnturmacao($this->ref_cod_matricula, $this->ref_cod_turma, $this->data_enturmacao);
+      $sequencialEnturmacao = new SequencialEnturmacao($this->ref_cod_matricula, $this->ref_cod_turma, $this->data_enturmacao, $this->sequencial);
       $this->sequencial_fechamento = $sequencialEnturmacao->ordenaSequencialNovaMatricula();
 
       if(is_numeric($this->sequencial_fechamento)){
@@ -381,6 +382,13 @@ class clsPmieducarMatriculaTurma
         $set .= "{$gruda}data_enturmacao = '{$this->data_enturmacao}'";
         $gruda = ", ";
       }
+
+      if ($this->reabrirMatricula){
+        $det = $this->detalhe();
+        $this->ref_usuario_cad = $det['ref_usuario_cad'];
+        return $this->cadastra();
+      }
+
       if ($this->removerSequencial){
         $sequencialEnturmacao = new SequencialEnturmacao($this->ref_cod_matricula, $this->ref_cod_turma, $this->data_enturmacao, $this->sequencial);
         $this->sequencial_fechamento = $sequencialEnturmacao->ordenaSequencialExcluiMatricula();
@@ -1117,6 +1125,7 @@ class clsPmieducarMatriculaTurma
                     WHEN matricula_turma.transferido THEN TRUE
                     WHEN matricula_turma.remanejado THEN TRUE
                     WHEN matricula.dependencia THEN TRUE
+                    WHEN matricula_turma.abandono THEN TRUE
                     ELSE FALSE END)
                 AND ref_cod_turma = {$codTurma}
                 AND matricula_turma.sequencial = (SELECT MAX(sequencial)
@@ -1418,11 +1427,9 @@ class clsPmieducarMatriculaTurma
 
       $dataBaseTransferencia = $this->getDataBaseTransferencia();
       $data = $data ? $data : date('Y-m-d');
-      if (! empty($dataBaseTransferencia)) {
-        if (($dataBaseTransferencia && strtotime($dataBaseTransferencia) < strtotime($data))) {
-          $db = new clsBanco();
-          $db->CampoUnico("UPDATE pmieducar.matricula_turma SET transferido = true, remanejado = false, abandono = false, reclassificado = false, falecido = false, data_exclusao = '$data' WHERE ref_cod_matricula = {$this->ref_cod_matricula} AND sequencial = {$this->sequencial}");
-        }
+      if (is_null($dataBaseTransferencia) || strtotime($dataBaseTransferencia) < strtotime($data)) {
+        $db = new clsBanco();
+        $db->CampoUnico("UPDATE pmieducar.matricula_turma SET transferido = true, remanejado = false, abandono = false, reclassificado = false, falecido = false, data_exclusao = '$data' WHERE ref_cod_matricula = {$this->ref_cod_matricula} AND sequencial = {$this->sequencial}");
       }else {
         $db = new clsBanco();
         $db->CampoUnico("UPDATE pmieducar.matricula_turma SET transferido = true, remanejado = false, abandono = false, reclassificado = false, falecido = false, data_exclusao = '$data' WHERE ref_cod_matricula = {$this->ref_cod_matricula} AND sequencial = {$this->sequencial}");

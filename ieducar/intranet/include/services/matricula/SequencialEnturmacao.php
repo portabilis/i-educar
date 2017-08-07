@@ -17,6 +17,13 @@ class SequencialEnturmacao {
   }
 
   public function ordenaSequencialNovaMatricula() {
+
+    $sequencialFechamento = $this->existeMatriculaTurma();
+
+    if ($sequencialFechamento) {
+      $this->subtraiSequencialPosterior($sequencialFechamento);
+    }
+
     if ($this->enturmarPorUltimo()) {
 
       $novoSequencial = $this->sequencialAlunoAposData();
@@ -27,18 +34,18 @@ class SequencialEnturmacao {
     }
 
     $sequencialNovoAluno = $this->sequencialAlunoOrdemAlfabetica();
-
     $this->somaSequencialPosterior($sequencialNovoAluno);
 
     return $sequencialNovoAluno;
   }
 
   public function ordenaSequencialExcluiMatricula() {
-    $sequencialExcluiAluno = $this->sequencialAlunoOrdemAlfabetica();
 
-    $this->subtraiSequencialPosterior($sequencialExcluiAluno);
+    $sequencialFechamento = $this->existeMatriculaTurma();
 
-    return $sequencialExcluiAluno;
+     $this->subtraiSequencialPosterior($sequencialFechamento);
+
+     return $sequencialExcluiAluno;
   }
 
   private function sequencialAlunoAposData() {
@@ -115,9 +122,8 @@ class SequencialEnturmacao {
     $sql =
     "UPDATE pmieducar.matricula_turma
         SET sequencial_fechamento = sequencial_fechamento - 1
-      WHERE sequencial = $this->sequencial
-        AND ref_cod_turma = $this->refCodTurma
-        AND sequencial_fechamento >= $sequencial";
+      WHERE ref_cod_turma = $this->refCodTurma
+        AND sequencial_fechamento > $sequencial";
 
     $db = new clsBanco();
     $db->Consulta($sql);
@@ -190,5 +196,24 @@ class SequencialEnturmacao {
                                       FROM pmieducar.matricula
                                      WHERE matricula.cod_matricula = {$this->refCodMatricula}");
     return dbBool($dependencia);
+  }
+
+  function existeMatriculaTurma(){
+    if(is_numeric($this->refCodMatricula)){
+      $db = new clsBanco();
+
+      return $db->CampoUnico("SELECT sequencial_fechamento
+                                FROM pmieducar.matricula_turma
+                               INNER JOIN pmieducar.matricula ON matricula.cod_matricula = matricula_turma.ref_cod_turma
+                               WHERE matricula.ativo = 1
+                                 AND ref_cod_matricula = {$this->refCodMatricula}
+                                 AND ref_cod_turma = {$this->refCodTurma}
+                                 AND (CASE WHEN matricula_turma.ativo = 1 THEN TRUE
+                                           WHEN matricula_turma.transferido THEN TRUE
+                                           WHEN matricula_turma.remanejado THEN TRUE
+                                           WHEN matricula.dependencia THEN TRUE
+                                           ELSE FALSE
+                                      END)");
+    }
   }
 }
