@@ -480,14 +480,14 @@ class clsPmieducarHistoricoEscolar
 			if( is_string( $this->escola ) )
 			{
 				$campos .= "{$gruda}escola";
-				$valores .= "{$gruda}'{$this->escola}'";
+				$valores .= "{$gruda}E'{$this->escola}'";
 				$gruda = ", ";
 			}
 			$this->escola_cidade = addslashes($this->escola_cidade);
 			if( is_string( $this->escola_cidade ) )
 			{
 				$campos .= "{$gruda}escola_cidade";
-				$valores .= "{$gruda}'{$this->escola_cidade}'";
+				$valores .= "{$gruda}E'{$this->escola_cidade}'";
 				$gruda = ", ";
 			}
 			if( is_string($this->escola_uf) )
@@ -500,7 +500,7 @@ class clsPmieducarHistoricoEscolar
 			if( is_string( $this->observacao ) )
 			{
 				$campos .= "{$gruda}observacao";
-				$valores .= "{$gruda}'{$this->observacao}'";
+				$valores .= "{$gruda}E'{$this->observacao}'";
 				$gruda = ", ";
 			}
 			if( is_numeric( $this->aprovado ) )
@@ -531,28 +531,28 @@ class clsPmieducarHistoricoEscolar
 			if( is_string( $this->registro ))
 			{
 				$campos .= "{$gruda}registro";
-				$valores .= "{$gruda}'{$this->registro}'";
+				$valores .= "{$gruda}E'{$this->registro}'";
 				$gruda = ", ";
 			}
 			$this->livro = addslashes($this->livro);
 			if( is_string( $this->livro ))
 			{
 				$campos .= "{$gruda}livro";
-				$valores .= "{$gruda}'{$this->livro}'";
+				$valores .= "{$gruda}E'{$this->livro}'";
 				$gruda = ", ";
 			}
 			$this->folha = addslashes($this->folha);
 			if( is_string( $this->folha ))
 			{
 				$campos .= "{$gruda}folha";
-				$valores .= "{$gruda}'{$this->folha}'";
+				$valores .= "{$gruda}E'{$this->folha}'";
 				$gruda = ", ";
 			}
 			$this->nm_curso = addslashes($this->nm_curso);
 			if( is_string( $this->nm_curso ))
 			{
 				$campos .= "{$gruda}nm_curso";
-				$valores .= "{$gruda}'{$this->nm_curso}'";
+				$valores .= "{$gruda}E'{$this->nm_curso}'";
 				$gruda = ", ";
 			}
 
@@ -699,7 +699,7 @@ class clsPmieducarHistoricoEscolar
 			$this->escola_cidade = addslashes($this->escola_cidade);
 			if( is_string( $this->escola_cidade ) )
 			{
-				$set .= "{$gruda}escola_cidade = '{$this->escola_cidade}'";
+				$set .= "{$gruda}escola_cidade = E'{$this->escola_cidade}'";
 				$gruda = ", ";
 			}
 			if( is_string( $this->escola_uf ) )
@@ -710,7 +710,7 @@ class clsPmieducarHistoricoEscolar
 			$this->observacao = addslashes($this->observacao);
 			if( is_string( $this->observacao ) )
 			{
-				$set .= "{$gruda}observacao = '{$this->observacao}'";
+				$set .= "{$gruda}observacao = E'{$this->observacao}'";
 				$gruda = ", ";
 			}
 			if( is_numeric( $this->aprovado ) )
@@ -753,25 +753,25 @@ class clsPmieducarHistoricoEscolar
 			$this->registro = addslashes($this->registro);
 			if( is_string( $this->registro))
 			{
-				$set .= "{$gruda}registro = '{$this->registro}'";
+				$set .= "{$gruda}registro = E'{$this->registro}'";
 				$gruda = ", ";
 			}
 			$this->livro = addslashes($this->livro);
 			if( is_string( $this->livro))
 			{
-				$set .= "{$gruda}livro = '{$this->livro}'";
+				$set .= "{$gruda}livro = E'{$this->livro}'";
 				$gruda = ", ";
 			}
 			$this->folha = addslashes($this->folha);
 			if( is_string( $this->folha))
 			{
-				$set .= "{$gruda}folha = '{$this->folha}'";
+				$set .= "{$gruda}folha = E'{$this->folha}'";
 				$gruda = ", ";
 			}
 			$this->nm_curso = addslashes($this->nm_curso);
 			if( is_string( $this->nm_curso))
 			{
-				$set .= "{$gruda}nm_curso = '{$this->nm_curso}'";
+				$set .= "{$gruda}nm_curso = E'{$this->nm_curso}'";
 				$gruda = ", ";
 			}
 
