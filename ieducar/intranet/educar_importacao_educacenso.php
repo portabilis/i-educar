@@ -171,7 +171,7 @@ class indice extends clsCadastro
   function importaRegistro00($dadosRegistro) {
 
     $inep = $dadosRegistro[1];
-    $cpfGestor = (int) $dadosRegistro[2];
+    $cpfGestor = idFederal2int($dadosRegistro[2]);
     $nomeGestor = utf8_encode($dadosRegistro[3]);
     $cargoGestor = $dadosRegistro[4];
     $emailGestor = $dadosRegistro[5];
@@ -206,7 +206,7 @@ class indice extends clsCadastro
     $mantenedorInstituicao = $dadosRegistro[34];
     $mantenedorSistema = $dadosRegistro[35];
     $cnpjMantenedoraPrincipal = $dadosRegistro[36];
-    $cnpj = (int)$dadosRegistro[37];
+    $cnpj = idFederal2int($dadosRegistro[37]);
     $regulamentacao = $dadosRegistro[38];
     $unidadeVinculada = $dadosRegistro[39];
 
@@ -912,7 +912,7 @@ class indice extends clsCadastro
     $inepEscola = $dadosRegistro[2-1];
     $inepServidor = $dadosRegistro[3-1];
     //$codServidor = $dadosRegistro[4-1];
-    $cpf = (int) $dadosRegistro[5-1];
+    $cpf = idFederal2int($dadosRegistro[5-1]);
     $localizacao = $dadosRegistro[6-1];
     $cep = $dadosRegistro[7-1];
     $endereco = $dadosRegistro[8-1];
@@ -1183,7 +1183,7 @@ class indice extends clsCadastro
     $municipioCartorio = $dadosRegistro[16-1];
     $codigoCartorio = $dadosRegistro[17-1];
     $numeroMatriculaCertidaoNova = $dadosRegistro[18-1];
-    $cpf = (int) $dadosRegistro[19-1];
+    $cpf = idFederal2int($dadosRegistro[19-1]);
     $passaporte = $dadosRegistro[20-1];
     $nis = $dadosRegistro[21-1];
 
@@ -1783,7 +1783,7 @@ class indice extends clsCadastro
     }
 
     if($cnpjMantenedoraPrincipal){
-      $escola->cnpj_mantenedora_principal = (int)$cnpjMantenedoraPrincipal;
+      $escola->cnpj_mantenedora_principal = idFederal2int($cnpjMantenedoraPrincipal);
     }
 
     $escola->edita();
