@@ -34,6 +34,8 @@
 
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 
+require_once 'include/pmieducar/clsPmieducarEscola.inc.php';
+
 class EscolaController extends ApiCoreController
 {
   protected $_processoAp        = 561;
@@ -105,6 +107,13 @@ class EscolaController extends ApiCoreController
     return array('id' => $id);
   }
 
+  protected function getEscolas() {
+    $escolas = new clsPmieducarEscola();
+    $escolas = $escolas->lista();
+
+    return array('escolas' => $escolas);
+  }
+
   public function Gerar() {
     if ($this->isRequestFor('get', 'escola'))
       $this->appendResponse($this->get());
@@ -112,6 +121,8 @@ class EscolaController extends ApiCoreController
     elseif ($this->isRequestFor('put', 'escola'))
       $this->appendResponse($this->put());
 
+    elseif ($this->isRequestFor('get', 'escolas'))
+      $this->appendResponse($this->getEscolas());
     else
       $this->notImplementedOperationError();
   }
