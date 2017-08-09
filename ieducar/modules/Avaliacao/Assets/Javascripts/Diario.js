@@ -224,7 +224,7 @@ function postNota($notaFieldElement) {
   $notaFieldElement.val($notaFieldElement.val().replace(',', '.'));
 
   if (validatesIfValueIsNumeric($notaFieldElement.val(), $notaFieldElement.attr('id')) &&
-      validatesIfNumericValueIsInRange($notaFieldElement.val(), $notaFieldElement.attr('id'), 0, window.notaLimits.nota_maxima_geral) &&
+      validatesIfNumericValueIsInRange($notaFieldElement.val(), $notaFieldElement.attr('id'), window.notaLimits.nota_minima_geral, window.notaLimits.nota_maxima_geral) &&
       validatesIfDecimalPlacesInRange($notaFieldElement.val(), $notaFieldElement.attr('id'), 0, window.notaLimits.qtd_casas_decimais) /* &&
       validatesIfValueIsInSet($notaFieldElement.val(), $notaFieldElement.attr('id'), $tableSearchDetails.data('details').opcoes_notas)*/) {
 
@@ -310,7 +310,7 @@ function postNotaRecuperacaoParalela($notaRecuperacaoParalelaElement) {
   $notaRecuperacaoParalelaElement.val($notaRecuperacaoParalelaElement.val().replace(',', '.'));
 
   if (validatesIfValueIsNumeric($notaRecuperacaoParalelaElement.val(), $notaRecuperacaoParalelaElement.attr('id')) &&
-      validatesIfNumericValueIsInRange($notaRecuperacaoParalelaElement.val(), $notaRecuperacaoParalelaElement.attr('id'), 0, window.notaLimits.nota_maxima_geral) &&
+      validatesIfNumericValueIsInRange($notaRecuperacaoParalelaElement.val(), $notaRecuperacaoParalelaElement.attr('id'), window.notaLimits.nota_minima_geral, window.notaLimits.nota_maxima_geral) &&
       validatesIfDecimalPlacesInRange($notaRecuperacaoParalelaElement.val(), $notaRecuperacaoParalelaElement.attr('id'), 0, window.notaLimits.qtd_casas_decimais)/* &&
       validatesIfValueIsInSet($notaRecuperacaoParalelaElement.val(), $notaRecuperacaoParalelaElement.attr('id'), $tableSearchDetails.data('details').opcoes_notas)*/) {
 
@@ -1124,6 +1124,10 @@ function mediaField(matriculaId, componenteCurricularId, value, maxLength){
 function getNotaGeralMaxLength(){
   return window.notaLimits.nota_maxima_geral.toString().length + window.notaLimits.qtd_casas_decimais + 1;
 }
+
+// function getNotaGeralMinLength(){
+//   return window.notaLimits.nota_minima_geral.toString().length + window.notaLimits.qtd_casas_decimais + 1;
+// }
 
 function getNotaExameFinalMaxLength(){
   return window.notaLimits.nota_maxima_exame_final.toString().length + window.notaLimits.qtd_casas_decimais + 1;

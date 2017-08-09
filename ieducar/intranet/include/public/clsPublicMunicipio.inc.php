@@ -407,7 +407,7 @@ class clsPublicMunicipio
 			if( is_string( $this->nome ) )
 			{
 				$campos .= "{$gruda}nome";
-				$valores .= "{$gruda}'" . addslashes($this->nome) . "'";
+				$valores .= "{$gruda}E'" . addslashes($this->nome) . "'";
 				$gruda = ", ";
 			}
 			if( is_string( $this->sigla_uf ) )
@@ -526,7 +526,7 @@ class clsPublicMunicipio
 
 			if( is_string( $this->nome ) )
 			{
-				$set .= "{$gruda}nome = '" . addslashes($this->nome) . "'";
+				$set .= "{$gruda}nome = E'" . addslashes($this->nome) . "'";
 				$gruda = ", ";
 			}
 			if( is_string( $this->sigla_uf ) )

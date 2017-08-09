@@ -80,11 +80,11 @@ class indice extends clsCadastro{
 
     if (is_numeric($this->cod_turma)) {
       $matriculasTurma = new clsPmieducarMatriculaTurma();
-      $matriculasTurma->setOrderby('sequencial_fechamento, nome_ascii');
-      $matriculasTurma = $matriculasTurma->lista(null, $this->cod_turma, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, true);//echo "<pre>";print_r($matriculasTurma);die;
+      $matriculasTurma = $matriculasTurma->listaPorSequencial($this->cod_turma);
+
       if ($matriculasTurma) {
         foreach ($matriculasTurma as $campo => $val) {
-          $this->campoTexto('nome_aluno_' . $val['ref_cod_matricula'], '', $val['nome_ascii'], 60, false, false, false, true, '', '', '', '', true);
+          $this->campoTexto('nome_aluno_' . $val['ref_cod_matricula'], '', $val['nome'], 60, false, false, false, true, '', '', '', '', true);
           $matricula = $val['ref_cod_matricula'];
           $this->campoTexto("sequencia[$matricula]", '', ($val['sequencial_fechamento']), 5, null, false, false, false);
         }

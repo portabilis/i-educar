@@ -465,6 +465,7 @@ class EducacensoAnaliseController extends ApiCoreController
                    turma.aee_informatica AS aee_informatica,
                    turma.aee_lingua_escrita AS aee_lingua_escrita,
                    turma.aee_autonomia AS aee_autonomia,
+                   turma.etapa_educacenso AS etapa_educacenso,
                    juridica.fantasia AS nome_escola
               FROM pmieducar.escola
              INNER JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
@@ -501,6 +502,21 @@ class EducacensoAnaliseController extends ApiCoreController
                     $turma["aee_informatica"] || $turma["aee_lingua_escrita"] ||
                     $turma["aee_autonomia"]);
 
+      switch ($turma['tipo_atendimento']) {
+        case 0:
+          $nomeAtendimento = 'Não se aplica';
+          break;
+        case 1:
+          $nomeAtendimento = 'Classe hospitalar';
+          break;
+        case 2:
+          $nomeAtendimento = 'Unidade de internação socioeducativa';
+          break;
+        case 3:
+          $nomeAtendimento = 'Unidade prisional';
+          break;
+      }
+
       if (!$turma["hora_inicial"]) {
         $mensagem[] = array("text" => "Dados para formular o registro 20 da escola {$nomeEscola} não encontrados. Verifique se o horário inicial da turma {$nomeTurma} foi cadastrado.",
                             "path" => "(Cadastros > Turma > Cadastrar > Editar > Aba: Dados gerais > Campo: Hora inicial)",
@@ -520,6 +536,11 @@ class EducacensoAnaliseController extends ApiCoreController
         $mensagem[] = array("text" => "Dados para formular o registro 20 da escola {$nomeEscola} não encontrados. Verifique se o tipo de atendimento da turma {$nomeTurma} foi cadastrado.",
                             "path" => "(Cadastros > Turma > Cadastrar > Editar > Aba: Dados adicionais > Campo: Tipo de atendimento)",
                           "fail" => true);
+      }
+      if(!$atendimentoAee && !$atividadeComplementar && !$turma['etapa_educacenso']) {
+        $mensagem[] = array("text" => "Dados para formular o registro 20 da escola {$nomeEscola} não encontrados. Verificamos que o tipo de atendimento da turma {$nomeTurma} é '{$nomeAtendimento}', portanto é necessário informar qual a etapa de ensino.",
+                            "path" => "(Escola > Cadastros > Turmas > Aba: Dados adicionais > Campo: Etapa de ensino)",
+                            "fail" => true);
       }
       if ($atividadeComplementar && !$existeAtividadeComplementar) {
         $mensagem[] = array("text" => "Dados para formular o registro 20 da escola {$nomeEscola} não encontrados. Verificamos que o tipo de atendimento da turma {$nomeTurma} é de atividade complementar, portanto obrigatoriamente é necessário informar o código de ao menos uma atividade conforme a 'Tabela de Tipo de Atividade Complementar'.",

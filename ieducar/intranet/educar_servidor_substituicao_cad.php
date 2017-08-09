@@ -149,9 +149,9 @@ class indice extends clsCadastro
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_servidores_index.php"       => "Servidores",
-         ""        => "Substituir servidor"             
+         ""        => "Substituir servidor"
     ));
-    $this->enviaLocalizacao($localizacao->montar());     
+    $this->enviaLocalizacao($localizacao->montar());
 
     return $retorno;
   }
@@ -175,10 +175,9 @@ class indice extends clsCadastro
       }
 
       if ($this->ref_cod_servidor) {
-        $objTemp = new clsFuncionario($this->ref_cod_servidor);
-        $detalhe = $objTemp->detalhe();
-        $detalhe = $detalhe['idpes']->detalhe();
-        $nm_servidor = $detalhe['nome'];
+        $objPessoa     = new clsPessoa_($this->ref_cod_servidor);
+        $detalhePessoa = $objPessoa->detalhe();
+        $nm_servidor = $detalhePessoa['nome'];
       }
     }
 

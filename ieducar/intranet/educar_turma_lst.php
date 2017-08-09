@@ -148,6 +148,10 @@ class indice extends clsListagem
 			$visivel = array("true", "false");
 		}
 
+		if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar($this->pessoa_logada)) {
+			$obj_turma->codUsuario = $this->pessoa_logada;
+		}
+
 		$lista = $obj_turma->lista2(
 			null,
 			null,

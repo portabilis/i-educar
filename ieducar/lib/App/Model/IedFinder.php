@@ -1159,4 +1159,16 @@ class App_Model_IedFinder extends CoreExt_Entity
     return $resultado;
 
   }
+
+  public static function usuarioNivelBibliotecaEscolar($codUsuario) {
+    $permissao = new clsPermissoes();
+    $nivel = $permissao->nivel_acesso($codUsuario);
+
+    if ($nivel == App_Model_NivelTipoUsuario::ESCOLA ||
+        $nivel == App_Model_NivelTipoUsuario::BIBLIOTECA) {
+      return true;
+    }
+
+    return false;
+  }
 }

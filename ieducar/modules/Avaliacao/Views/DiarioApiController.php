@@ -540,7 +540,6 @@ class DiarioApiController extends ApiCoreController
 
   protected function postNota() {
     if ($this->canPostNota()) {
-
       $array_nota = array(
                   'componenteCurricular' => $this->getRequest()->componente_curricular_id,
                   'nota'                 => urldecode($this->getRequest()->att_value),
@@ -570,7 +569,7 @@ class DiarioApiController extends ApiCoreController
     $this->appendResponse('media', $this->getMediaAtual($this->getRequest()->componente_curricular_id));
     $this->appendResponse('media_arredondada', $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id));
 
-    if (!empty($notaNecessariaExame) && in_array($this->getSituacaoComponente(), array('Em Exame', 'Aprovado Após Exame', 'Retido')))
+    if (!empty($notaNecessariaExame) && in_array($this->getSituacaoComponente(), array('Em exame', 'Aprovado após exame', 'Retido')))
       $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $notaNecessariaExame);
     else
       $this->deleteNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id);
@@ -666,7 +665,7 @@ class DiarioApiController extends ApiCoreController
     $this->appendResponse('media', $this->getMediaAtual($this->getRequest()->componente_curricular_id));
     $this->appendResponse('media_arredondada', $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id));
 
-    if (!empty($notaNecessariaExame) && in_array($this->getSituacaoComponente(), array('Em Exame', 'Aprovado Após Exame', 'Retido')))
+    if (!empty($notaNecessariaExame) && in_array($this->getSituacaoComponente(), array('Em exame', 'Aprovado após exame', 'Retido')))
       $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $notaNecessariaExame);
     else
       $this->deleteNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id);
@@ -700,7 +699,7 @@ class DiarioApiController extends ApiCoreController
     $this->appendResponse('media', $this->getMediaAtual($this->getRequest()->componente_curricular_id));
     $this->appendResponse('media_arredondada', $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id));
 
-    if (!empty($notaNecessariaExame) && in_array($this->getSituacaoComponente(), array('Em Exame', 'Aprovado Após Exame', 'Retido')))
+    if (!empty($notaNecessariaExame) && in_array($this->getSituacaoComponente(), array('Em exame', 'Aprovado após exame', 'Retido')))
       $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $notaNecessariaExame);
     else
       $this->deleteNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id);
@@ -1151,7 +1150,7 @@ class DiarioApiController extends ApiCoreController
       $componente['parecer_atual']             = $this->getParecerAtual($componente['id']);
       $componente['situacao']                  = $this->getSituacaoComponente($componente['id']);
 
-      $gravaNotaExame = ($componente['situacao'] == 'Em Exame' || $componente['situacao'] == 'Aprovado Após Exame' || $componente['situacao'] == 'Retido');
+      $gravaNotaExame = ($componente['situacao'] == 'Em exame' || $componente['situacao'] == 'Aprovado após exame' || $componente['situacao'] == 'Retido');
 
       $componente['nota_necessaria_exame']     = ($gravaNotaExame ? $this->getNotaNecessariaExame($componente['id']) : null );
       $componente['ordenamento']               = $_componente->get('ordenamento');
@@ -1648,6 +1647,7 @@ class DiarioApiController extends ApiCoreController
     if ($this->canGetRegraAvaliacao()) {
       $regra              = $this->serviceBoletim()->getRegra();
       $notaLimits['nota_maxima_geral'] = $regra->get('notaMaximaGeral');
+      $notaLimits['nota_minima_geral'] = $regra->get('notaMinimaGeral');
       $notaLimits['nota_maxima_exame_final'] = $regra->get('notaMaximaExameFinal');
       $notaLimits['qtd_casas_decimais'] = $regra->get('qtdCasasDecimais');
     }

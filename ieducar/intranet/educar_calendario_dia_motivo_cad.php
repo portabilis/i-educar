@@ -124,9 +124,9 @@ class indice extends clsCadastro
 		$obrigatorio = true;
 		$get_escola = true;
 		// foreign keys
-		include("include/pmieducar/educar_campo_lista.php");
 
 		// text
+		$this->inputsHelper()->dynamic(array('instituicao','escola'));
 		$this->campoTexto( "nm_motivo", "Motivo", $this->nm_motivo, 30, 255, true );
 		$this->campoTexto( "sigla", "Sigla", $this->sigla, 15, 15, true );
 		$this->campoMemo( "descricao", "Descric&atilde;o", $this->descricao, 60, 5, false );

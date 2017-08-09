@@ -86,7 +86,7 @@ class indice extends clsCadastro
     $exportacao = $_POST["exportacao"];
 
     if ($exportacao) {
-      $converted_to_iso88591 = mb_convert_encoding($exportacao,'ISO-8859-1');
+      $converted_to_iso88591 = utf8_decode($exportacao);
 
       header('Content-type: text/plain');
       header('Content-Length: ' . strlen($converted_to_iso88591));

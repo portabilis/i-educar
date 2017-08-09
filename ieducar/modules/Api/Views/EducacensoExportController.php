@@ -194,7 +194,7 @@ class EducacensoExportController extends ApiCoreController
                       FROM pmieducar.matricula_turma mt
                      INNER JOIN pmieducar.matricula m ON(mt.ref_cod_matricula = m.cod_matricula)
                       WHERE mt.ref_cod_turma = turma.cod_turma
-                      AND mt.ativo = 1
+                      AND (mt.ativo = 1 OR mt.data_exclusao > DATE($4))
                       AND COALESCE(m.data_matricula,m.data_cadastro) BETWEEN DATE($3) AND DATE($4)
                       LIMIT 1) IS NOT NULL';
 
@@ -391,8 +391,11 @@ class EducacensoExportController extends ApiCoreController
       $r00s26 = strtoupper($r00s26);
       $r00s27 = ($r00s27 ? str_pad($r00s27, 5, "0", STR_PAD_LEFT) : NULL);
 
-      if($r00s28 != 4 && $situacao_funcionamento != 1)
-        $r00s30 = $r00s31 = $r00s32 = $r00s33 = $r00s34 = $r00s35 = $r00s36 = $r00s37 = $r00s38 = '';
+      $r00s37 = $this->cnpjToCenso($r00s37);
+      $r00s38 = $this->cnpjToCenso($r00s38);
+
+      if($r00s28 != 4)
+        $r00s30 = $r00s31 = $r00s32 = $r00s33 = $r00s34 = $r00s35 = $r00s36 = $r00s37 = $r00s38 = NULL;
 
       for ($i=1; $i <= 42 ; $i++)
         $return .= ${'r00s'.$i}.$d;
@@ -581,10 +584,11 @@ class EducacensoExportController extends ApiCoreController
         }
       }
 
-      if ($r10s96) {
-        $r10s96 = ($etapa_ensino_fundamental ? 1 : 0);
-      } else
-        $r10s96 = NULL;
+      if (!$r10s82) {
+        $r10s86 = $r10s87 = NULL;
+      }
+
+      $r10s96 = $etapa_ensino_fundamental ? $r10s96 : NULL;
 
       if ($r10s90 == $exclusivamente || $r10s91 == $exclusivamente) {
         $r10s92 = $r10s93 = $r10s94 = $r10s95 = '';
@@ -711,7 +715,7 @@ class EducacensoExportController extends ApiCoreController
               FROM pmieducar.matricula_turma mt
              INNER JOIN pmieducar.matricula m ON(mt.ref_cod_matricula = m.cod_matricula)
               WHERE mt.ref_cod_turma = t.cod_turma
-              AND mt.ativo = 1
+              AND (mt.ativo = 1 OR mt.data_exclusao > DATE($3))
               AND COALESCE(m.data_matricula,m.data_cadastro) BETWEEN DATE($2) AND DATE($3)
               LIMIT 1) IS NOT NULL';
 
@@ -771,7 +775,7 @@ class EducacensoExportController extends ApiCoreController
                       FROM pmieducar.matricula_turma mt
                      INNER JOIN pmieducar.matricula m ON(mt.ref_cod_matricula = m.cod_matricula)
                      WHERE mt.ref_cod_turma = professor_turma.turma_id
-                       AND mt.ativo = 1
+                       AND (mt.ativo = 1  OR mt.data_exclusao > DATE($4))
                        AND COALESCE(m.data_matricula,m.data_cadastro) BETWEEN DATE($3) AND DATE($4)
                      LIMIT 1) IS NOT NULL
                ',
@@ -1350,7 +1354,7 @@ class EducacensoExportController extends ApiCoreController
              FROM pmieducar.matricula_turma mt
             INNER JOIN pmieducar.matricula m ON(mt.ref_cod_matricula = m.cod_matricula)
             WHERE mt.ref_cod_turma = t.cod_turma
-              AND mt.ativo = 1
+              AND (mt.ativo = 1 OR mt.data_exclusao > DATE($3))
               AND COALESCE(m.data_matricula,m.data_cadastro) BETWEEN DATE($3) AND DATE($4)
             LIMIT 1) IS NOT NULL
   	';
@@ -1427,15 +1431,15 @@ class EducacensoExportController extends ApiCoreController
       (SELECT cod_ibge FROM public.pais WHERE pais.idpais = fis.idpais_estrangeiro) as r60s13,
       uf.cod_ibge as r60s14,
       mun.cod_ibge as r60s15,
-      recurso_prova_inep_aux_ledor as rs60s30,
-      recurso_prova_inep_aux_transcricao as rs60s31,
-      recurso_prova_inep_guia_interprete as rs60s32,
-      recurso_prova_inep_interprete_libras as rs60s33,
-      recurso_prova_inep_leitura_labial as rs60s34,
-      recurso_prova_inep_prova_ampliada_16 as rs60s35,
-      recurso_prova_inep_prova_ampliada_20 as rs60s36,
-      recurso_prova_inep_prova_ampliada_24 as rs60s37,
-      recurso_prova_inep_prova_braille as rs60s38,
+      recurso_prova_inep_aux_ledor as r60s30,
+      recurso_prova_inep_aux_transcricao as r60s31,
+      recurso_prova_inep_guia_interprete as r60s32,
+      recurso_prova_inep_interprete_libras as r60s33,
+      recurso_prova_inep_leitura_labial as r60s34,
+      recurso_prova_inep_prova_ampliada_16 as r60s35,
+      recurso_prova_inep_prova_ampliada_20 as r60s36,
+      recurso_prova_inep_prova_ampliada_24 as r60s37,
+      recurso_prova_inep_prova_braille as r60s38,
       fis.nacionalidade AS nacionalidade
 
       FROM  pmieducar.aluno a
@@ -1533,15 +1537,18 @@ class EducacensoExportController extends ApiCoreController
         $r60s17 = $r60s18 = $r60s19 = $r60s20 = $r60s21 = $r60s22 = $r60s23 = $r60s24 =
                   $r60s25 = $r60s26 = $r60s27 = $r60s28 = $r60s29 = NULL;
 
-      if($r60s16 == 0){
+      if(!$this->transtornoGlobalDesenvolvimento($deficiencias)) {
         for($i=30; $i <= 39; $i++){
           ${'r60s'.$i} = NULL;
         }
       }else{
-        for($i=30; $i <= 38; $i++){
-          ${'r60s'.$i} = 0;
-        }
         $r60s39 = 1;
+      }
+
+      //O campo 39 recebe 0 quando algum campo de 30 à 38 for igual a 1
+      for($i=30; $i <= 38; $i++){
+        if(${'r60s'.$i} == 1)
+          $r60s39 = 0;
       }
 
       //O campo 39 deve ser diferente de com 1 quando o campo 17 ou 21 for igual a 1.
@@ -1555,6 +1562,33 @@ class EducacensoExportController extends ApiCoreController
     }
 
     return $return;
+  }
+
+  protected function transtornoGlobalDesenvolvimento($deficiencias) {
+    $deficienciasLayout = array(1 => '17',
+                                2 => '18',
+                                3 => '19',
+                                4 => '20',
+                                5 => '21',
+                                6 => '22',
+                                7 => '23',
+                                8 => '24',
+                                9 => '25',
+                               10 => '26',
+                               11 => '27',
+                               12 => '28');
+
+    $existeDeficienciaTranstornoGlobal = FALSE;
+
+    if (count($deficiencias)>0){
+      foreach ($deficiencias as $deficiencia) {
+        $deficiencia = $deficiencia['id'];
+        if (array_key_exists($deficiencia, $deficienciasLayout)){
+          $existeDeficienciaTranstornoGlobal = TRUE;
+        }
+      }
+    }
+    return $existeDeficienciaTranstornoGlobal;
   }
 
 protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim, $alunoId){
@@ -2087,6 +2121,11 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
     return $cpf == '00000000000' ? NULL : $cpf;
   }
 
+protected function cnpjToCenso($cnpj){
+    $cnpj = str_replace(array('.', '-', '/'), '', int2CNPJ($cnpj));
+    return $cnpj == '00000000000000' ? NULL : $cnpj;
+}
+
   protected function upperAndUnaccent($string){
     $string = Portabilis_String_Utils::toUtf8($string);
     $string = preg_replace(array("/(á|à|ã|â|ä)/",
@@ -2119,6 +2158,10 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
     $regex  = sprintf('/[^%s]/u', preg_quote(join($caracteresAceitos), '/'));
     $string = preg_replace($regex, '', $string);
 
+    //Elimina espaços indesejados
+    $string = trim($string);
+    $string = preg_replace('/( )+/', ' ', $string);
+
     return $string;
   }
 
@@ -2135,6 +2178,10 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
     //Aplica filtro na string eliminando caracteres indesejados
     $regex  = sprintf('/[^%s]/u', preg_quote(join($caracteresAceitos), '/'));
     $string = preg_replace($regex, '', $string);
+
+    //Elimina espaços indesejados
+    $string = trim($string);
+    $string = preg_replace('/( )+/', ' ', $string);
 
     return $string;
   }

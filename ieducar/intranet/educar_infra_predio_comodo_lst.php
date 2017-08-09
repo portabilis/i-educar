@@ -101,40 +101,23 @@ class indice extends clsListagem
 		$lista_busca = array(
 					"Ambiente",
 					"Tipo de ambiente",
-					"Pr&eacute;dio"
+					"Pr&eacute;dio",
+					"Escola",
+					"Instituição"
 		);
 
 		$obj_permissao = new clsPermissoes();
 		$nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
-		if ($nivel_usuario == 1)
-		{
-			$lista_busca[] = "Escola";
-			$lista_busca[] = "Institui&ccedil;&atilde;o";
-		}
-		else if ($nivel_usuario == 2)
-		{
-			$lista_busca[] = "Escola";
-		}
+
 		$this->addCabecalhos($lista_busca);
 
 		$get_escola = true;
-		include("include/pmieducar/educar_campo_lista.php");
+		$this->inputsHelper()->dynamic(array('instituicao','escola'),array('required' => false));
 
 		// Filtros de Foreign Keys
 		$opcoes = array( "" => "Selecione" );
 		if( class_exists( "clsPmieducarInfraComodoFuncao" ) )
 		{
-			/*$todas_funcoes  = "funcao = new Array();\n";
-			$objTemp = new clsPmieducarInfraComodoFuncao();
-			$lista = $objTemp->lista( null,null,null,null,null,null,null,null,null,1 );
-			if ( is_array( $lista ) && count( $lista ) )
-			{
-				foreach ( $lista as $registro )
-				{
-					$todas_funcoes .= "funcao[funcao.length] = new Array( {$registro["cod_infra_comodo_funcao"]}, '{$registro['nm_funcao']}', {$registro["ref_cod_escola"]} );\n";
-				}
-			}
-			echo "<script>{$todas_funcoes}</script>";*/
 
 			// EDITAR
 			if ($this->ref_cod_escola)
@@ -166,6 +149,11 @@ class indice extends clsListagem
 
 
 		$obj_infra_predio_comodo = new clsPmieducarInfraPredioComodo();
+
+		if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar($this->pessoa_logada)) {
+			$obj_infra_predio_comodo->codUsuario = $this->pessoa_logada;
+		}
+
 		$obj_infra_predio_comodo->setOrderby( "nm_comodo ASC" );
 		$obj_infra_predio_comodo->setLimite( $this->limite, $this->offset );
 		$lista = $obj_infra_predio_comodo->lista(
@@ -243,18 +231,12 @@ class indice extends clsListagem
 				$lista_busca = array(
 					"<a href=\"educar_infra_predio_comodo_det.php?cod_infra_predio_comodo={$registro["cod_infra_predio_comodo"]}\">{$registro["nm_comodo"]}</a>",
 					"<a href=\"educar_infra_predio_comodo_det.php?cod_infra_predio_comodo={$registro["cod_infra_predio_comodo"]}\">{$registro["ref_cod_infra_comodo_funcao"]}</a>",
-					"<a href=\"educar_infra_predio_comodo_det.php?cod_infra_predio_comodo={$registro["cod_infra_predio_comodo"]}\">{$registro["ref_cod_infra_predio"]}</a>"
+					"<a href=\"educar_infra_predio_comodo_det.php?cod_infra_predio_comodo={$registro["cod_infra_predio_comodo"]}\">{$registro["ref_cod_infra_predio"]}</a>",
+
+					"<a href=\"educar_infra_predio_comodo_det.php?cod_infra_predio_comodo={$registro["cod_infra_predio_comodo"]}\">{$nm_escola}</a>",
+					"<a href=\"educar_infra_predio_comodo_det.php?cod_infra_predio_comodo={$registro["cod_infra_predio_comodo"]}\">{$registro["ref_cod_instituicao"]}</a>"
 				);
 
-				if ($nivel_usuario == 1)
-				{
-					$lista_busca[] = "<a href=\"educar_infra_predio_comodo_det.php?cod_infra_predio_comodo={$registro["cod_infra_predio_comodo"]}\">{$nm_escola}</a>";
-					$lista_busca[] = "<a href=\"educar_infra_predio_comodo_det.php?cod_infra_predio_comodo={$registro["cod_infra_predio_comodo"]}\">{$registro["ref_cod_instituicao"]}</a>";
-				}
-				else if ($nivel_usuario == 2)
-				{
-					$lista_busca[] = "<a href=\"educar_infra_predio_comodo_det.php?cod_infra_predio_comodo={$registro["cod_infra_predio_comodo"]}\">{$nm_escola}</a>";
-				}
 				$this->addLinhas($lista_busca);
 			}
 		}

@@ -55,6 +55,7 @@ class clsPmieducarCandidatoReservaVaga
   var $situacao;
   var $data_situacao;
   var $quantidade_membros;
+  var $codUsuario;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -333,6 +334,12 @@ class clsPmieducarCandidatoReservaVaga
     if(is_numeric($ref_cod_escola)){
       $filtros .= " {$whereAnd} ref_cod_escola = {$ref_cod_escola} ";
       $whereAnd = ' AND ';
+    }elseif ($this->codUsuario) {
+      $filtros .= "{$whereAnd} EXISTS (SELECT 1
+                                         FROM pmieducar.escola_usuario
+                                        WHERE escola_usuario.ref_cod_escola = crv.ref_cod_escola
+                                          AND escola_usuario.ref_cod_usuario = '{$this->codUsuario}')";
+      $whereAnd = " AND ";
     }
 
     if(is_numeric($ref_cod_serie)){
@@ -407,7 +414,7 @@ class clsPmieducarCandidatoReservaVaga
                       INNER JOIN pmieducar.aluno a ON a.cod_aluno = crv.ref_cod_aluno
                       INNER JOIN cadastro.pessoa pes ON pes.idpes = a.ref_idpes
                       INNER JOIN cadastro.fisica fis ON fis.idpes = pes.idpes
-                      INNER JOIN cadastro.pessoa resp_pes ON fis.idpes_responsavel = resp_pes.idpes
+                       LEFT JOIN cadastro.pessoa resp_pes ON fis.idpes_responsavel = resp_pes.idpes
                       WHERE cod_candidato_reserva_vaga = '{$this->cod_candidato_reserva_vaga}'");
       $db->ProximoRegistro();
       return $db->Tupla();

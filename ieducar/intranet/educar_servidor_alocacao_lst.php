@@ -118,7 +118,6 @@ class indice extends clsListagem
     $this->campoOculto('ref_cod_servidor', $this->ref_cod_servidor);
     $this->campoRotulo('nm_servidor', 'Servidor', $fisica['nome']);
 
-    //include 'include/pmieducar/educar_campo_lista.php';
     $this->inputsHelper()->dynamic('instituicao', array('required' => false, 'show-select' => true, 'value' => $this->ref_cod_instituicao));
     $this->inputsHelper()->dynamic('escola', array('required' => false, 'show-select' => true, 'value' => $this->ref_cod_escola));
     $this->inputsHelper()->dynamic('anoLetivo', array('required' => false, 'show-select' => true, 'value' => $this->ano_letivo));
@@ -132,6 +131,11 @@ class indice extends clsListagem
       $_GET['pagina_' . $this->nome] * $this->limite - $this->limite : 0;
 
     $obj_servidor_alocacao = new clsPmieducarServidorAlocacao();
+
+    if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar($this->pessoa_logada)) {
+      $obj_servidor_alocacao->codUsuario = $this->pessoa_logada;
+    }
+    
     $obj_servidor_alocacao->setOrderby('ano ASC');
     $obj_servidor_alocacao->setLimite($this->limite, $this->offset);
 
@@ -207,7 +211,7 @@ class indice extends clsListagem
 
     $this->array_botao = array();
     $this->array_botao_url = array();
-    if( $obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7 ) )
+    if( $obj_permissoes->permissao_cadastra( 635, $this->pessoa_logada, 7 ) )
     {
       $this->array_botao_url[]= "educar_servidor_alocacao_cad.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}";
       $this->array_botao[]= "Novo";

@@ -98,7 +98,8 @@ class ServidorController extends ApiCoreController
       $instituicaoId = $this->getRequest()->instituicao_id;
       $ano = $this->getRequest()->ano;
 
-      $sql = "SELECT s.cod_servidor as id,
+      $sql = "SELECT pt.id as id,
+                     s.cod_servidor as servidor_id,
                      p.nome as name,
                      pt.turma_id,
                      pt.permite_lancar_faltas_componente as permite_lancar_faltas_componente,
@@ -109,17 +110,18 @@ class ServidorController extends ApiCoreController
               INNER JOIN modules.professor_turma_disciplina ptd ON pt.id = ptd.professor_turma_id
               WHERE s.ref_cod_instituicao = $1
               AND pt.ano = $2
-              GROUP BY s.cod_servidor, p.nome, pt.turma_id, pt.permite_lancar_faltas_componente, ptd.componente_curricular_id ";
+              GROUP BY pt.id, s.cod_servidor, p.nome, pt.turma_id, pt.permite_lancar_faltas_componente, ptd.componente_curricular_id";
 
       $_servidores = $this->fetchPreparedQuery($sql, array($instituicaoId, $ano));
 
-      $attrs = array('id', 'name', 'turma_id', 'permite_lancar_faltas_componente', 'disciplina_id');
+      $attrs = array('id', 'servidor_id', 'name', 'turma_id', 'permite_lancar_faltas_componente', 'disciplina_id');
       $_servidores = Portabilis_Array_Utils::filterSet($_servidores, $attrs);
       $servidores = array();
       $__servidores = array();
 
       foreach ($_servidores as $servidor) {
         $__servidores[$servidor['id']]['id'] = $servidor['id'];
+        $__servidores[$servidor['id']]['servidor_id'] = $servidor['servidor_id'];
         $__servidores[$servidor['id']]['name'] = Portabilis_String_Utils::toUtf8($servidor['name']);
         $__servidores[$servidor['id']]['disciplinas_turmas'][] = array(
           'turma_id' => $servidor['turma_id'],

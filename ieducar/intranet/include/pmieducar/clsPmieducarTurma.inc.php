@@ -102,6 +102,7 @@ class clsPmieducarTurma
   var $tipo_mediacao_didatico_pedagogico;
 
   var $listarNaoInformarEducacenso = TRUE;
+	var $codUsuario;
 	// propriedades padrao
 
 	/**
@@ -1867,6 +1868,13 @@ and  e.cod_escola = t.ref_ref_cod_escola
 			$filtros .= "{$whereAnd} t.ref_ref_cod_escola = '{$int_ref_ref_cod_escola}'";
 			$whereAnd = " AND ";
 		}
+		elseif ($this->codUsuario) {
+			$filtros .= "{$whereAnd} EXISTS (SELECT 1
+			                                   FROM pmieducar.escola_usuario
+																				WHERE escola_usuario.ref_cod_escola = t.ref_ref_cod_escola
+																				  AND escola_usuario.ref_cod_usuario = '{$this->codUsuario}')";
+			$whereAnd = " AND ";
+		}
 		if( is_numeric( $int_ref_cod_infra_predio_comodo ) )
 		{
 			$filtros .= "{$whereAnd} t.ref_cod_infra_predio_comodo = '{$int_ref_cod_infra_predio_comodo}'";
@@ -2136,6 +2144,13 @@ and  e.cod_escola = t.ref_ref_cod_escola
 		if( is_numeric( $int_ref_ref_cod_escola ) )
 		{
 			$filtros .= "{$whereAnd} t.ref_ref_cod_escola = '{$int_ref_ref_cod_escola}'";
+			$whereAnd = " AND ";
+		}
+		elseif ($this->codUsuario) {
+			$filtros .= "{$whereAnd} EXISTS (SELECT 1
+			                                   FROM pmieducar.escola_usuario
+																				WHERE escola_usuario.ref_cod_escola = t.ref_ref_cod_escola
+																				  AND escola_usuario.ref_cod_usuario = '{$this->codUsuario}')";
 			$whereAnd = " AND ";
 		}
 		if( is_numeric( $int_ref_cod_infra_predio_comodo ) )
