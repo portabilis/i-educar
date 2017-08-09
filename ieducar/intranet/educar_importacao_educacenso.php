@@ -206,7 +206,7 @@ class indice extends clsCadastro
     $mantenedorInstituicao = $dadosRegistro[34];
     $mantenedorSistema = $dadosRegistro[35];
     $cnpjMantenedoraPrincipal = $dadosRegistro[36];
-    $cnpj = $dadosRegistro[37];
+    $cnpj = (int)$dadosRegistro[37];
     $regulamentacao = $dadosRegistro[38];
     $unidadeVinculada = $dadosRegistro[39];
 
@@ -239,10 +239,13 @@ class indice extends clsCadastro
         'J', null, null, $email
       );
       $idpesEscola = $pessoa->cadastra();
+      if(!$cnpj){
+        $cnpj = sprintf("%02d.%03d.%03d/%04d-%02d", rand(1, 99), rand(1, 999), rand(1, 999), rand(1, 9999), rand(1, 99));
+        $cnpj = idFederal2int($cnpj);
+      }
 
-      $cnpj = sprintf("%02d.%03d.%03d/%04d-%02d", rand(1, 99), rand(1, 999), rand(1, 999), rand(1, 9999), rand(1, 99));
       $juridica = new clsJuridica(
-        $idpesEscola,idFederal2int($cnpj), $nomeEscola,
+        $idpesEscola,$cnpj, $nomeEscola,
         null, null, $this->pessoa_logada, null
       );
       $juridica->cadastra();
@@ -282,7 +285,15 @@ class indice extends clsCadastro
       }
     }
 
-    $this->atualizaCamposEscolaRegistro00($codEscola, $cargoGestor, $situacao, $latitude, $longitude, $codigoOrgaoRegional, $dependenciaAdministrativa, $regulamentacao);
+    $this->atualizaCamposEscolaRegistro00(
+        $codEscola, $cargoGestor, $situacao,
+        $latitude, $longitude, $codigoOrgaoRegional,
+        $dependenciaAdministrativa, $regulamentacao,
+        $categoriaEscolaPrivada, $convenioPoderPublico,
+        $mantenedorEmpresa, $mantenedorSindicato,
+        $mantenedorOrganizacao, $mantenedorInstituicao,
+        $mantenedorSistema, $cnpjMantenedoraPrincipal
+    );
 
     $escola = new clsPmieducarEscola($codEscola);
     $detEscola = $escola->detalhe();
@@ -1708,7 +1719,9 @@ class indice extends clsCadastro
   function atualizaCamposEscolaRegistro00(
     $codEscola, $cargoGestor, $situacao, $latitude,
     $longitude, $codigoOrgaoRegional, $dependenciaAdministrativa,
-    $regulamentacao
+    $regulamentacao, $categoriaEscolaPrivada, $convenioPoderPublico,
+    $mantenedorEmpresa, $mantenedorSindicato, $mantenedorOrganizacao,
+    $mantenedorInstituicao, $mantenedorSistema, $cnpjMantenedoraPrincipal
     ){
 
     $escola = new clsPmieducarEscola($codEscola);
@@ -1742,6 +1755,35 @@ class indice extends clsCadastro
     }
     if($regulamentacao){
       $escola->regulamentacao = $regulamentacao;
+    }
+    if($categoriaEscolaPrivada){
+      $escola->categoria_escola_privada = $categoriaEscolaPrivada;
+    }
+    if($convenioPoderPublico){
+      $escola->conveniada_com_poder_publico = $convenioPoderPublico;
+    }
+    $mantenedora_escola_privada = array();
+    if($mantenedorEmpresa){
+      $mantenedora_escola_privada[] = 1;
+    }
+    if($mantenedorSindicato){
+      $mantenedora_escola_privada[] = 2;
+    }
+    if($mantenedorOrganizacao){
+      $mantenedora_escola_privada[] = 3;
+    }
+    if($mantenedorInstituicao){
+      $mantenedora_escola_privada[] = 4;
+    }
+    if($mantenedorSistema){
+      $mantenedora_escola_privada[] = 5;
+    }
+    if(count($mantenedora_escola_privada)){
+      $escola->mantenedora_escola_privada = implode(',', $mantenedora_escola_privada);
+    }
+
+    if($cnpjMantenedoraPrincipal){
+      $escola->cnpj_mantenedora_principal = (int)$cnpjMantenedoraPrincipal;
     }
 
     $escola->edita();
