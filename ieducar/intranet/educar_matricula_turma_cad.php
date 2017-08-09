@@ -187,10 +187,18 @@ class indice extends clsCadastro
                                                  0,
                                                  NULL,
                                                  $sequencialEnturmacao);
-    $enturmacao->removerSequencial = TRUE;
     $detEnturmacao = $enturmacao->detalhe();
     $detEnturmacao = $detEnturmacao['data_enturmacao'];
     $enturmacao->data_enturmacao = $detEnturmacao;
+
+    $instituicao = $enturmacao->getInstituicao($matriculaId);
+    $instituicao = new clsPmieducarInstituicao($instituicao);
+    $det_instituicao = $instituicao->detalhe();
+    $data_base_remanejamento = $det_instituicao['data_base_remanejamento'];
+    if (($data_base_remanejamento > $detEnturmacao) || ($data_base_remanejamento = NULL)){
+      $enturmacao->removerSequencial = TRUE;
+    }
+
     if ($enturmacao->edita()){
       if ($remanejado) {
         $enturmacao->marcaAlunoRemanejado($this->data_enturmacao);
