@@ -164,6 +164,7 @@ class indice extends clsCadastro
       }
       //echo 'Tempo para importar registro '.$numeroRegistro.': ' . (microtime(true) - $time_start) . '<br/>';
     }
+    header_remove('Set-Cookie');
     $this->mensagem = "Arquivo importado!";
     return true;
   }
