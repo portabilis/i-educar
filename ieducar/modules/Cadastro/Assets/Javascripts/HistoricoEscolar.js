@@ -2,6 +2,16 @@ $j(document).ready(function(){
 	var codigoEscola = document.getElementById('codigoEscola').value;
 	var nomeEscola = document.getElementById('escola').value;
 	var numeroSequencial = document.getElementById('numeroSequencial').value;
+	var aprovadoDependencia = $j('#aprovado').val() == 12;
+	
+	if(!aprovadoDependencia){
+		$j('.disciplinaDependencia').hide();
+		$j('#td_Dependência').hide();
+	}
+	else{
+		$j('.disciplinaDependencia').show();
+		$j('#td_Dependência').show();
+	}
 
 	//Quando for novo cadastro
 	if(codigoEscola === '' && nomeEscola === '' && numeroSequencial === ''){
@@ -46,6 +56,18 @@ $j(document).ready(function(){
 		else{
 			$j('#escola').val('');
 			$j('#escola').closest('tr').hide();
+		}
+	});
+
+	$j('#aprovado').change(function (){
+		var aprovadoDependencia = $j('#aprovado').val() == 12;
+		if(!aprovadoDependencia){
+			$j('.disciplinaDependencia').hide();
+			$j('#td_Dependência').hide();
+		}
+		else{
+			$j('.disciplinaDependencia').show();
+			$j('#td_Dependência').show();
 		}
 	});	
 });

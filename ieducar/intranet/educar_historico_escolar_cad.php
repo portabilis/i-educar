@@ -88,6 +88,7 @@ class indice extends clsCadastro
 	var $faltas;
 	var $ordenamento;
 	var $carga_horaria_disciplina;
+	var $disciplinaDependencia;
 	var $excluir_disciplina;
 	var $ultimo_sequencial;
 
@@ -334,6 +335,7 @@ class indice extends clsCadastro
 					$this->historico_disciplinas[$qtd_disciplinas][] = $campo["faltas"];
 					$this->historico_disciplinas[$qtd_disciplinas][] = $campo["carga_horaria_disciplina"];
 					$this->historico_disciplinas[$qtd_disciplinas][] = $campo["ordenamento"];
+					$this->historico_disciplinas[$qtd_disciplinas][] = dbBool($campo["dependencia"]) ? 1 : 0;
 					$this->historico_disciplinas[$qtd_disciplinas][] = $campo["sequencial"];
 					$qtd_disciplinas++;
 				}
@@ -341,7 +343,7 @@ class indice extends clsCadastro
 		}
 
 
-		$this->campoTabelaInicio("notas","Notas",array("Disciplina","Nota","Faltas", '<p title="Informe a carga horária somente se a disciplina não pertencer a grade curricular do município.">C.H (?)</p>', "Ordem"),$this->historico_disciplinas);
+		$this->campoTabelaInicio("notas","Notas",array("Disciplina","Nota","Faltas", '<p title="Informe a carga horária somente se a disciplina não pertencer à grade curricular do município.">C.H (?)</p>', "Ordem", "Dependência"),$this->historico_disciplinas);
 
 		//$this->campoTexto( "nm_disciplina", "Disciplina", $this->nm_disciplina, 30, 255, false, false, false, '', '', 'autoCompleteComponentesCurricular(this)', 'onfocus' );
 		$this->campoTexto( "nm_disciplina", "Disciplina", $this->nm_disciplina, 30, 255, false, false, false, '', '', '', 'onfocus' );
@@ -350,6 +352,8 @@ class indice extends clsCadastro
 		$this->campoNumero( "faltas", "Faltas", $this->faltas, 3, 3, false );
 		$this->campoNumero( "carga_horaria_disciplina", "carga_horaria_disciplina", $this->carga_horaria_disciplina, 3, 3, false, NULL, NULL, NULL, NULL, NULL, $habilitaCargaHoraria );
 		$this->campoNumero( "ordenamento", "ordenamento", $this->ordenamento, 3, 3, false );
+		$options = array('label' => 'Dependência', 'value' => $this->disciplinaDependencia);
+		$this->inputsHelper()->checkbox('disciplinaDependencia', $options);
 
 		//$this->campoOculto("sequencial","");
 
@@ -410,7 +414,7 @@ class indice extends clsCadastro
 						$obj_historico = new clsPmieducarHistoricoEscolar();
 						$this->sequencial = $obj_historico->getMaxSequencial( $this->ref_cod_aluno );
 
-						$obj = new clsPmieducarHistoricoDisciplinas( $sequencial, $this->ref_cod_aluno, $this->sequencial, $disciplina, $this->nota[$key], $this->faltas[$key], $this->ordenamento[$key], $this->carga_horaria_disciplina[$key] );
+						$obj = new clsPmieducarHistoricoDisciplinas( $sequencial, $this->ref_cod_aluno, $this->sequencial, $disciplina, $this->nota[$key], $this->faltas[$key], $this->ordenamento[$key], $this->carga_horaria_disciplina[$key], $this->disciplinaDependencia[$key] == 'on' ? true : false);
 						$cadastrou1 = $obj->cadastra();
 						if( !$cadastrou1 )
 						{
@@ -487,7 +491,7 @@ class indice extends clsCadastro
 							//$campo['nm_disciplina_'] = urldecode($campo['nm_disciplina_']);
 
 
-							$obj = new clsPmieducarHistoricoDisciplinas( $sequencial, $this->ref_cod_aluno, $this->sequencial, $disciplina, $this->nota[$key], $this->faltas[$key], $this->ordenamento[$key], $this->carga_horaria_disciplina[$key] );
+							$obj = new clsPmieducarHistoricoDisciplinas( $sequencial, $this->ref_cod_aluno, $this->sequencial, $disciplina, $this->nota[$key], $this->faltas[$key], $this->ordenamento[$key], $this->carga_horaria_disciplina[$key], $this->disciplinaDependencia[$key] == 'on' ? true : false );
 							$cadastrou1 = $obj->cadastra();
 							if( !$cadastrou1 )
 							{

@@ -608,7 +608,8 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                               $fields['nota'],
                               $fields['falta'],
                               $fields['ordenamento'],
-                              $fields['carga_horaria_disciplina']
+                              $fields['carga_horaria_disciplina'],
+                              $fields['dependencia']
                           );
     $historicoDisciplina->cadastra();
   }
@@ -628,9 +629,13 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
       $mediaAreaConhecimento = $this->getRequest()->media_area_conhecimento;
       $processarMediaGeral = $this->getRequest()->processar_media_geral;
 
+      $aprovadoDependencia = $this->getSituacaoMatricula($aluno['ref_cod_matricula']) == 12;
+
       foreach ($this->getService()->getComponentes() as $componenteCurricular)
       {
         $ccId = $componenteCurricular->get('id');
+        $reprovado = $mediasCc[$ccId][0]->situacao == 2;
+        $disciplinaDependencia = ($aprovadoDependencia && $reprovado);
         $nome = $componenteCurricular->nome;
         $ordenamento = $componenteCurricular->ordenamento;
         $carga_horaria_disciplina = $componenteCurricular->carga_horaria_disciplina;
@@ -668,6 +673,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
           $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['falta'] += $this->getFalta($situacaoFaltasCc[$ccId]);
           $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['ordenamento'] = $componenteCurricular->area_conhecimento->ordenamento;
           $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['carga_horaria_disciplina'] = $componenteCurricular->area_conhecimento->carga_horaria_disciplina;
+          $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['dependencia'] = $disciplinaDependencia;
           $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['count']++;
         }else
           $this->_createHistoricoDisciplinas(array(
@@ -678,7 +684,8 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
             "nota" => $nota,
             "falta" => $this->getFalta($situacaoFaltasCc[$ccId]),
             "ordenamento" => $ordenamento,
-            "carga_horaria_disciplina" => $carga_horaria_disciplina
+            "carga_horaria_disciplina" => $carga_horaria_disciplina,
+            "dependencia" => $disciplinaDependencia
           ));
       }
       if ($mediaAreaConhecimento){
@@ -701,7 +708,8 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
             "nota" => $nota,
             "falta" => round($value['falta']/$value['count']),
             "ordenamento" => $value['ordenamento'],
-            "carga_horaria_disciplina" => $value['carga_horaria_disciplina']
+            "carga_horaria_disciplina" => $value['carga_horaria_disciplina'],
+            "dependencia" => $value['dependencia']
           ));
         }
       }
@@ -721,7 +729,8 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
           "nota" => $disciplina['nota'],
           "falta" => $falta = $disciplina['falta'],
           "ordenamento" => $value['ordenamento'],
-          "carga_horaria_disciplina" => $value['carga_horaria_disciplina']
+          "carga_horaria_disciplina" => $value['carga_horaria_disciplina'],
+          "dependencia" => $value['dependencia']
         ));
       }
     }
