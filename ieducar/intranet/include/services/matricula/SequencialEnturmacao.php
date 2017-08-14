@@ -16,7 +16,7 @@ class SequencialEnturmacao {
     $this->sequencial = $sequencial;
   }
 
-  public function ordenaSequencialNovaMatricula() {//echo "po";die;
+  public function ordenaSequencialNovaMatricula() {
 
     $instituicao = $this->existeDataBaseRemanejamento();
     $sequencialFechamento = $this->existeMatriculaTurma();
@@ -65,19 +65,23 @@ class SequencialEnturmacao {
 
   private function sequencialAlunoAposData() {
       $db = new clsBanco();
-      $sql = "SELECT MAX(sequencial_fechamento)+1
-                                FROM pmieducar.matricula_turma
-                               INNER JOIN pmieducar.matricula ON (matricula.cod_matricula = matricula_turma.ref_cod_matricula)
-                               INNER JOIN pmieducar.aluno ON (aluno.cod_aluno = matricula.ref_cod_aluno)
-                               INNER JOIN cadastro.pessoa ON (pessoa.idpes = aluno.ref_idpes)
-                               WHERE matricula.ativo = 1
-                                 AND ref_cod_turma = {$this->refCodTurma}
-                                 AND pessoa.nome < (SELECT pessoa.nome
-                                                      FROM pmieducar.matricula
-                                                     INNER JOIN pmieducar.aluno ON (aluno.cod_aluno = matricula.ref_cod_aluno)
-                                                     INNER JOIN cadastro.pessoa ON (pessoa.idpes = aluno.ref_idpes)
-                                                     WHERE matricula.cod_matricula = {$this->refCodMatricula})";
-
+      $sql = "  SELECT MAX(sequencial_fechamento)+1
+                  FROM pmieducar.matricula_turma
+                 INNER JOIN pmieducar.matricula ON (matricula.cod_matricula = matricula_turma.ref_cod_matricula)
+                 INNER JOIN pmieducar.aluno ON (aluno.cod_aluno = matricula.ref_cod_aluno)
+                 INNER JOIN cadastro.pessoa ON (pessoa.idpes = aluno.ref_idpes)
+                 WHERE matricula.ativo = 1
+                   AND ref_cod_turma = {$this->refCodTurma}
+                   AND matricula.dependencia = FALSE
+                   AND matricula_turma.data_enturmacao <= '{$this->dataEnturmacao}'
+                   AND (CASE WHEN matricula_turma.data_enturmacao = '{$this->dataEnturmacao}'
+                             THEN pessoa.nome <= (SELECT pessoa.nome
+                                                    FROM pmieducar.matricula
+                                                   INNER JOIN pmieducar.aluno ON (aluno.cod_aluno = matricula.ref_cod_aluno)
+                                                   INNER JOIN cadastro.pessoa ON (pessoa.idpes = aluno.ref_idpes)
+                                                   WHERE matricula.cod_mablztricula = {$this->refCodMatricula})
+                            ELSE TRUE
+                        END)";
       if (!$this->matriculaDependencia()) {
         $sql .= " AND matricula.dependencia = FALSE";
       }
