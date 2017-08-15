@@ -195,7 +195,7 @@ class indice extends clsCadastro
     $instituicao = new clsPmieducarInstituicao($instituicao);
     $det_instituicao = $instituicao->detalhe();
     $data_base_remanejamento = $det_instituicao['data_base_remanejamento'];
-    if (($data_base_remanejamento > $this->data_enturmacao) || ($data_base_remanejamento = NULL)){
+    if (($data_base_remanejamento > $this->data_enturmacao) || (! $data_base_remanejamento)){
       $enturmacao->removerSequencial = TRUE;
     }
 

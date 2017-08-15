@@ -34,7 +34,7 @@ class SequencialEnturmacao {
       return $novoSequencial;
     }
 
-    if (($instituicao) || ($instituicao > $this->dataEnturmacao)){
+    if (($instituicao) && ($instituicao > $this->dataEnturmacao)){
 
       $novoSequencial = $this->sequencialAlunoAntesData();
 
@@ -48,7 +48,7 @@ class SequencialEnturmacao {
 
       $this->somaSequencialPosterior($sequencialNovoAluno);
 
-      return $novoSequencial;
+      return $sequencialNovoAluno;
     }
 
     return $sequencialNovoAluno;
@@ -130,6 +130,12 @@ class SequencialEnturmacao {
       INNER JOIN pmieducar.aluno ON (aluno.cod_aluno = matricula.ref_cod_aluno)
       INNER JOIN cadastro.pessoa ON (pessoa.idpes = aluno.ref_idpes)
       WHERE matricula.ativo = 1
+        AND (CASE WHEN matricula_turma.ativo = 1 THEN TRUE
+                  WHEN matricula_turma.transferido THEN TRUE
+                  WHEN matricula_turma.remanejado THEN TRUE
+                  WHEN matricula.dependencia THEN TRUE
+                  WHEN matricula_turma.abandono THEN TRUE
+                  ELSE FALSE END)
         AND matricula_turma.ref_cod_turma = $this->refCodTurma
       ORDER BY sequencial_fechamento";
 
