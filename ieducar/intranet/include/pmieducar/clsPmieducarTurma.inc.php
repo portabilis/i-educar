@@ -55,7 +55,8 @@ class clsPmieducarTurma
 	var $hora_inicial;
 	var $hora_final;
 	var $hora_inicio_intervalo;
-	var $hora_fim_intervalo;
+  var $hora_fim_intervalo;
+	var $ano;
 
 	var $ref_cod_regente;
 	var $ref_cod_instituicao_regente;

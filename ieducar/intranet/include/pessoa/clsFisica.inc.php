@@ -465,7 +465,7 @@ class clsFisica
 
 				$detalhe = $this->detalheSimples();
 				// salvar cpf como string;
-				$detalhe["cpf"] = str_pad((string)$detalhe["cpf"], 11, '0', STR_PAD_LEFT); 
+				$detalhe["cpf"] = str_pad((string)$detalhe["cpf"], 11, '0', STR_PAD_LEFT);
 				$auditoria = new clsModulesAuditoriaGeral("fisica", $this->pessoa_logada, $this->idpes);
 				$auditoria->inclusao($detalhe);
 			}
@@ -713,12 +713,12 @@ class clsFisica
 				$db = new clsBanco();
 				$detalheAntigo = $this->detalheSimples();
 
-				$detalheAntigo["cpf"] = str_pad((string)$detalheAntigo["cpf"], 11, '0', STR_PAD_LEFT); 
+				$detalheAntigo["cpf"] = str_pad((string)$detalheAntigo["cpf"], 11, '0', STR_PAD_LEFT);
 
 				$db->Consulta( "UPDATE {$this->schema}.{$this->tabela} $set WHERE idpes = '$this->idpes'" );
 
 				$detalheAtual = $this->detalheSimples();
-				$detalheAtual["cpf"] = str_pad((string)$detalheAtual["cpf"], 11, '0', STR_PAD_LEFT); 
+				$detalheAtual["cpf"] = str_pad((string)$detalheAtual["cpf"], 11, '0', STR_PAD_LEFT);
 
        			$auditoria = new clsModulesAuditoriaGeral("fisica", $this->pessoa_logada, $this->idpes);
        			$auditoria->alteracao($detalheAntigo, $detalheAtual);
@@ -834,7 +834,7 @@ class clsFisica
 		}
 		if(is_numeric($int_idpais_estrangeiro))
 		{
-			$where .= "{$whereAnd}idpais_strangeiro =  '$int_idpais_strangeiro'";
+			$where .= "{$whereAnd}idpais_estrangeiro =  '$int_idpais_estrangeiro'";
 			$whereAnd = " AND ";
 		}
 		if(is_string($data_data_chegada_brasil))

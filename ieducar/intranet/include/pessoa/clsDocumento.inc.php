@@ -57,7 +57,7 @@ class clsDocumento
 	var $secao_tit_eleitor;
 	var $idorg_exp_rg;
 	var $certidao_nascimento;
-	var $certidao_casamento;	
+	var $certidao_casamento;
 	var $cartorio_cert_civil_inep;
 	var $passaporte;
 
@@ -157,7 +157,7 @@ class clsDocumento
 				$campos .= ", tipo_cert_civil";
 				$values .= ", '{$this->tipo_cert_civil}'";
 			}
-			if( is_numeric( $this->num_termo ) and (!empty($this->num_termo))) 
+			if( is_numeric( $this->num_termo ) and (!empty($this->num_termo)))
 			{
 				$campos .= ", num_termo";
 				$values .= ", '{$this->num_termo}'";
@@ -167,7 +167,7 @@ class clsDocumento
 				$campos .= ", num_livro";
 				$values .= ", '{$this->num_livro}'";
 			}
-			if( is_numeric( $this->num_folha ) and (!empty($this->num_folha))) 
+			if( is_numeric( $this->num_folha ) and (!empty($this->num_folha)))
 			{
 				$campos .= ", num_folha";
 				$values .= ", '{$this->num_folha}'";
@@ -191,7 +191,7 @@ class clsDocumento
 			{
 				$campos .= ", num_cart_trabalho";
 				$values .= ", '{$this->num_cart_trabalho}'";
-			}			
+			}
 			if( is_numeric( $this->cartorio_cert_civil_inep ) and (!empty($this->cartorio_cert_civil_inep)))
 			{
 				$campos .= ", cartorio_cert_civil_inep";
@@ -309,7 +309,7 @@ class clsDocumento
 			$gruda = ", ";
 		}
 
-		if( is_numeric( $this->num_termo ) and (!empty($this->num_termo))) 
+		if( is_numeric( $this->num_termo ) and (!empty($this->num_termo)))
 		{
 			$set .= $gruda."num_termo = '{$this->num_termo}'";
 			$gruda = ", ";
@@ -318,7 +318,7 @@ class clsDocumento
     	{
       		$set .= $gruda."num_termo = NULL";
       		$gruda = ", ";
-    	} 		
+    	}
 
 		if( is_string( $this->num_livro ) and (!empty($this->num_livro)))
 		{
@@ -331,7 +331,7 @@ class clsDocumento
 			$gruda = ", ";
 		}
 
-		if( is_numeric( $this->num_folha ) and (!empty($this->num_folha))) 
+		if( is_numeric( $this->num_folha ) and (!empty($this->num_folha)))
 		{
 			$set .= $gruda."num_folha = '{$this->num_folha}'";
 			$gruda = ", ";
@@ -340,9 +340,9 @@ class clsDocumento
 	    {
 		    $set .= $gruda."num_folha = NULL";
 		    $gruda = ", ";
-	    } 		
+	    }
 
-		if( is_numeric( $this->cartorio_cert_civil_inep ) and (!empty($this->cartorio_cert_civil_inep))) 
+		if( is_numeric( $this->cartorio_cert_civil_inep ) and (!empty($this->cartorio_cert_civil_inep)))
 		{
 			$set .= $gruda."cartorio_cert_civil_inep = '{$this->cartorio_cert_civil_inep}'";
 			$gruda = ", ";
@@ -351,7 +351,7 @@ class clsDocumento
 	    {
 		    $set .= $gruda."cartorio_cert_civil_inep = NULL";
 		    $gruda = ", ";
-	    } 		
+	    }
 
 		if( is_string( $this->data_emissao_cert_civil ) and (!empty($this->data_emissao_cert_civil)))
 		{
@@ -537,7 +537,7 @@ class clsDocumento
 			$gruda = ", ";
 		}
 
-		if( is_numeric( $this->num_termo ) and (!empty($this->num_termo))) 
+		if( is_numeric( $this->num_termo ) and (!empty($this->num_termo)))
 		{
 			$set .= $gruda."num_termo = '{$this->num_termo}'";
 			$gruda = ", ";
@@ -546,7 +546,7 @@ class clsDocumento
     	{
       		$set .= $gruda."num_termo = NULL";
       		$gruda = ", ";
-    	} 		
+    	}
 
 		if( is_string( $this->num_livro ) and (!empty($this->num_livro)))
 		{
@@ -559,7 +559,7 @@ class clsDocumento
 			$gruda = ", ";
 		}
 
-		if( is_numeric( $this->num_folha ) and (!empty($this->num_folha))) 
+		if( is_numeric( $this->num_folha ) and (!empty($this->num_folha)))
 		{
 			$set .= $gruda."num_folha = '{$this->num_folha}'";
 			$gruda = ", ";
@@ -568,9 +568,9 @@ class clsDocumento
 	    {
 		    $set .= $gruda."num_folha = NULL";
 		    $gruda = ", ";
-	    } 		
+	    }
 
-		if( is_numeric( $this->cartorio_cert_civil_inep ) and (!empty($this->cartorio_cert_civil_inep))) 
+		if( is_numeric( $this->cartorio_cert_civil_inep ) and (!empty($this->cartorio_cert_civil_inep)))
 		{
 			$set .= $gruda."cartorio_cert_civil_inep = '{$this->cartorio_cert_civil_inep}'";
 			$gruda = ", ";
@@ -579,7 +579,7 @@ class clsDocumento
 	    {
 		    $set .= $gruda."cartorio_cert_civil_inep = NULL";
 		    $gruda = ", ";
-	    } 		
+	    }
 
 		if( is_string( $this->data_emissao_cert_civil ) and (!empty($this->data_emissao_cert_civil)))
 		{
@@ -655,6 +655,23 @@ class clsDocumento
 		}
 		return false;
 	}
+
+
+  /**
+   * Retorna um array com os dados de um registro.
+   * @return array
+   */
+  function existe()
+  {
+    if (is_numeric($this->idpes)) {
+      $db = new clsBanco();
+      $db->Consulta("SELECT 1 FROM {$this->schema}.{$this->tabela} WHERE idpes = '{$this->idpes}'");
+      $db->ProximoRegistro();
+      return $db->Tupla();
+    }
+
+    return FALSE;
+  }
 
 	/**
 	 * Exibe uma lista baseada nos parametros de filtragem passados

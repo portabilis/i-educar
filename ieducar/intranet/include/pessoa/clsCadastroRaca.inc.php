@@ -104,7 +104,7 @@ class clsCadastroRaca
 
 	/**
 	 * Construtor (PHP 4)
-	 * 
+	 *
 	 * @param integer cod_raca
 	 * @param integer idpes_exc
 	 * @param integer idpes_cad
@@ -316,7 +316,7 @@ class clsCadastroRaca
 
 	/**
 	 * Retorna uma lista filtrados de acordo com os parametros
-	 * 
+	 *
 	 * @param integer int_idpes_exc
 	 * @param integer int_idpes_cad
 	 * @param string str_nm_raca
@@ -328,7 +328,7 @@ class clsCadastroRaca
 	 *
 	 * @return array
 	 */
-	function lista( $int_idpes_exc = null, $int_idpes_cad = null, $str_nm_raca = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $bool_ativo = null )
+	function lista( $int_idpes_exc = null, $int_idpes_cad = null, $str_nm_raca = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $bool_ativo = null, $racaEducacenso = null )
 	{
 		$sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
 		$filtros = "";
@@ -375,6 +375,10 @@ class clsCadastroRaca
 			$filtros .= "{$whereAnd} data_exclusao <= '{$date_data_exclusao_fim}'";
 			$whereAnd = " AND ";
 		}
+    if(is_numeric($racaEducacenso)){
+      $filtros .= "{$whereAnd} raca_educacenso = {$racaEducacenso} ";
+      $whereAnd = " AND ";
+    }
 		if( ! is_null( $bool_ativo ) )
 		{
 			if( dbBool( $bool_ativo ) )
@@ -548,7 +552,7 @@ class clsCadastroRaca
 			$this->_campo_order_by = $strNomeCampo;
 		}
 	}
-	
+
 
 	/**
 	 * Retorna a string com o trecho da query resposavel pela Ordenacao dos registros

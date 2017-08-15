@@ -76,6 +76,10 @@ class ComponenteCurricular_Model_CodigoEducacenso extends CoreExt_Enum
     99   => 'Outras disciplinas'
   );
 
+  public function getData(){
+    return $this->_data;
+  }
+
   public static function getInstance()
   {
     return self::_getInstance(__CLASS__);
