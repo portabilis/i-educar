@@ -734,48 +734,26 @@ class indice extends clsCadastro
 
   function getOrCreateCurso($etapaEnsinoCenso, $codEscola, $modalidade){
     $dadosCurso = $this->etapasCenso[$etapaEnsinoCenso];
-    $codCurso = null;
 
+    $codCurso = $this->getCurso($dadosCurso['curso']);
 
-    $codNivelEnsino = $this->getOrCreateNivelEnsino();
-    $codTipoEnsino = $this->getOrCreateTipoEnsino();
-
-    $cursos = new clsPmieducarCurso();
-    $cursos = $cursos->lista(
-            null,
-            null,
-            null,
-            $codNivelEnsino,
-            $codTipoEnsino,
-            null,
-            $dadosCurso['curso'],
-            null, null, # $str_sgl_curso = NULL, $int_qtd_etapas = NULL,
-            null, null, null, # $int_frequencia_minima = NULL, $int_media = NULL, $int_media_exame = NULL,
-            null, null, # $int_falta_ch_globalizada = NULL, $int_carga_horaria = NULL,
-            null, null, # $str_ato_poder_publico = NULL, $int_edicao_final = NULL,
-            null, null, # $str_objetivo_curso = NULL, $str_publico_alvo = NULL,
-            null, null, # $date_data_cadastro_ini = NULL, $date_data_cadastro_fim = NULL,
-            null, null, # $date_data_exclusao_ini = NULL, $date_data_exclusao_fim = NULL,
-            1, null, # $int_ativo = NULL, $int_ref_usuario_exc = NULL,
-            $this->ref_cod_instituicao, null # $int_ref_cod_instituicao = NULL, $int_padrao_ano_escolar = NULL,
-      );
-    if ($cursos) {
-        $codCurso = intval($cursos[0]['cod_curso']);
-    } else {
-        $curso = new clsPmieducarCurso();
-        $curso->nm_curso = $dadosCurso['curso'];
-        $curso->sgl_curso = mb_substr($dadosCurso['curso'], 0, 15, 'UTF-8');
-        $curso->qtd_etapas = $dadosCurso['etapas'];
-        $curso->carga_horaria = 800 * $dadosCurso['etapas'];
-        $curso->ativo = 1;
-        $curso->ref_cod_nivel_ensino = $codNivelEnsino;
-        $curso->ref_cod_tipo_ensino = $codTipoEnsino;
-        $curso->ref_cod_instituicao = $this->ref_cod_instituicao;
-        $curso->ref_usuario_cad = $this->pessoa_logada;
-        $curso->padrao_ano_escolar = 1;
-        $curso->multi_seriado = 1;
-        $curso->modalidade_curso = $modalidade;
-        $codCurso = $curso->cadastra();
+    if (!$codCurso) {
+      $codNivelEnsino = $this->getOrCreateNivelEnsino();
+      $codTipoEnsino = $this->getOrCreateTipoEnsino();
+      $curso = new clsPmieducarCurso();
+      $curso->nm_curso = $dadosCurso['curso'];
+      $curso->sgl_curso = mb_substr($dadosCurso['curso'], 0, 15, 'UTF-8');
+      $curso->qtd_etapas = $dadosCurso['etapas'];
+      $curso->carga_horaria = 800 * $dadosCurso['etapas'];
+      $curso->ativo = 1;
+      $curso->ref_cod_nivel_ensino = $codNivelEnsino;
+      $curso->ref_cod_tipo_ensino = $codTipoEnsino;
+      $curso->ref_cod_instituicao = $this->ref_cod_instituicao;
+      $curso->ref_usuario_cad = $this->pessoa_logada;
+      $curso->padrao_ano_escolar = 1;
+      $curso->multi_seriado = 1;
+      $curso->modalidade_curso = $modalidade;
+      $codCurso = $curso->cadastra();
     }
 
     if ($codEscola) {
@@ -1627,6 +1605,16 @@ class indice extends clsCadastro
     $sql = "SELECT cod_deficiencia
               FROM cadastro.deficiencia
               WHERE deficiencia_educacenso = {$deficienciaEducacenso}
+
+    ";
+    return Portabilis_Utils_Database::selectField($sql);
+  }
+
+  function getCurso($nomeCurso){
+    $sql = "SELECT cod_curso
+              FROM pmieducar.curso
+              WHERE translate(upper(nm_curso),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') = translate(upper('{$nomeCurso}'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')
+              AND ref_cod_instituicao = {$this->ref_cod_instituicao}
 
     ";
     return Portabilis_Utils_Database::selectField($sql);
