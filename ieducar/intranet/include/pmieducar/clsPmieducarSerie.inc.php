@@ -732,6 +732,80 @@ class clsPmieducarSerie
     return FALSE;
   }
 
+  function listaSeriesComComponentesVinculados($int_cod_serie = NULL,
+                                               $int_ref_cod_curso = NULL,
+                                               $str_nm_serie = NULL,
+                                               $int_ref_cod_instituicao = NULL,
+                                               $int_ativo = NULL)
+  {
+    $sql = "SELECT {$this->_campos_lista},
+                   c.ref_cod_instituicao FROM {$this->_tabela} s,
+                   {$this->_schema}curso c";
+
+    $whereAnd = " AND ";
+    $filtros = " WHERE s.ref_cod_curso = c.cod_curso";
+
+    if (is_numeric($int_cod_serie)) {
+      $filtros .= "{$whereAnd} s.cod_serie = '{$int_cod_serie}'";
+      $whereAnd = " AND ";
+    }
+
+    if (is_numeric($int_ref_cod_curso)) {
+      $filtros .= "{$whereAnd} s.ref_cod_curso = '{$int_ref_cod_curso}'";
+      $whereAnd = " AND ";
+    }
+
+    if (is_string($str_nm_serie)) {
+      $filtros .= "{$whereAnd} translate(upper(s.nm_serie),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nm_serie}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
+      $whereAnd = " AND ";
+    }
+
+    if (is_numeric($int_ref_cod_instituicao)) {
+      $filtros .= "{$whereAnd} c.ref_cod_instituicao = '$int_ref_cod_instituicao'";
+      $whereAnd = " AND ";
+    }
+
+    if (is_null($int_ativo) || $int_ativo) {
+      $filtros .= "{$whereAnd} s.ativo = '1'";
+      $whereAnd = " AND ";
+    }
+
+    $filtros .= "{$whereAnd} s.cod_serie IN (SELECT DISTINCT ano_escolar_id
+                                               FROM modules.componente_curricular_ano_escolar)";
+    $whereAnd = " AND ";
+
+    $db = new clsBanco();
+    $countCampos = count(explode(',', $this->_campos_lista));
+    $resultado = array();
+
+    $sql .= $filtros . $this->getOrderby() . $this->getLimite();
+
+    $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} s, "
+                        . "{$this->_schema}curso c {$filtros}");
+
+    $db->Consulta($sql);
+
+    if ($countCampos > 1) {
+      while ($db->ProximoRegistro()) {
+        $tupla = $db->Tupla();
+
+        $tupla["_total"] = $this->_total;
+        $resultado[] = $tupla;
+      }
+    }
+    else {
+      while ($db->ProximoRegistro()) {
+        $tupla = $db->Tupla();
+        $resultado[] = $tupla[$this->_campos_lista];
+      }
+    }
+    if (count($resultado)) {
+      return $resultado;
+    }
+
+    return FALSE;
+  }
+
   /**
    * Retorna um array com os dados de um registro.
    * @return array
