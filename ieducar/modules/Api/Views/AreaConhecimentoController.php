@@ -49,14 +49,14 @@ class AreaConhecimentoController extends ApiCoreController
 
       $instituicaoId = $this->getRequest()->instituicao_id;
 
-      $sql = 'SELECT id, nome
+      $sql = 'SELECT id, nome, ordenamento_ac
                 FROM modules.area_conhecimento
                 WHERE instituicao_id = $1
                 ORDER BY nome ';
 
       $areas = $this->fetchPreparedQuery($sql, array($instituicaoId));
 
-      $attrs = array('id', 'nome');
+      $attrs = array('id', 'nome', 'ordenamento_ac');
       $areas = Portabilis_Array_Utils::filterSet($areas, $attrs);
 
       foreach ($areas as &$disciplina) {
