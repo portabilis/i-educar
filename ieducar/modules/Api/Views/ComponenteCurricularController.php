@@ -103,41 +103,42 @@ class ComponenteCurricularController extends ApiCoreController
       $turmaId       = $this->getRequest()->turma_id;
       $ano           = $this->getRequest()->ano;
 
-      $sql = "select cc.id,
-                     (cc.nome) as nome
-                from pmieducar.turma,
-                     modules.componente_curricular_turma as cct,
-                     modules.componente_curricular as cc,
-                     modules.area_conhecimento as ac,
-                     pmieducar.escola_ano_letivo as al
-               where turma.cod_turma = $1 and
-                     cct.turma_id = turma.cod_turma and
-                     cct.escola_id = turma.ref_ref_cod_escola and
-                     cct.componente_curricular_id = cc.id and al.ano = $2 and
-                     turma.ref_ref_cod_escola = al.ref_cod_escola and
-                     cc.area_conhecimento_id = ac.id
-               order by ac.secao, ac.nome, cc.ordenamento, cc.nome";
+      $sql = "SELECT cc.id,
+                       cc.nome
+                  FROM pmieducar.turma
+                 INNER JOIN modules.componente_curricular_turma cct ON (cct.turma_id = turma.cod_turma
+                                                                    AND cct.escola_id = turma.ref_ref_cod_escola)
+                 INNER JOIN modules.componente_curricular cc ON (cc.id = cct.componente_curricular_id)
+                 INNER JOIN modules.area_conhecimento ac ON (ac.id = cc.area_conhecimento_id)
+                 INNER JOIN pmieducar.escola_ano_letivo al ON (al.ref_cod_escola = turma.ref_ref_cod_escola)
+                 WHERE turma.cod_turma = $1
+                   AND al.ano = $2
+                 ORDER BY ac.secao,
+                          ac.nome,
+                          cc.ordenamento,
+                          cc.nome";
 
 
       $componentesCurriculares = $this->fetchPreparedQuery($sql, array($turmaId, $ano));
 
       if(count($componentesCurriculares) < 1){
-        $sql = "select cc.id,
-                       (cc.nome) as nome
-                  from pmieducar.turma as t,
-                       pmieducar.escola_serie_disciplina as esd,
-                       modules.componente_curricular as cc,
-                       modules.area_conhecimento as ac,
-                       pmieducar.escola_ano_letivo as al
-                 where t.cod_turma = $1 and
-                       esd.ref_ref_cod_escola = t.ref_ref_cod_escola and
-                       esd.ref_ref_cod_serie = t.ref_ref_cod_serie and
-                       esd.ref_cod_disciplina = cc.id and al.ano = $2 and
-                       esd.ref_ref_cod_escola = al.ref_cod_escola and t.ativo = 1 and
-                       esd.ativo = 1 and
-                       al.ativo = 1 and
-                       cc.area_conhecimento_id = ac.id
-                 order by ac.secao, ac.nome, cc.ordenamento, cc.nome";
+        $sql = "SELECT cc.id,
+                       cc.nome
+                  FROM pmieducar.turma AS t
+                INNER JOIN pmieducar.escola_serie_disciplina esd ON (esd.ref_ref_cod_escola = t.ref_ref_cod_escola
+                                                                 AND esd.ref_ref_cod_serie = t.ref_ref_cod_serie
+                                                                 AND esd.ativo = 1)
+                INNER JOIN modules.componente_curricular cc ON (cc.id = esd.ref_cod_disciplina)
+                INNER JOIN modules.area_conhecimento ac ON (ac.id = cc.area_conhecimento_id)
+                INNER JOIN pmieducar.escola_ano_letivo al ON (al.ref_cod_escola = esd.ref_ref_cod_escola
+                                                          AND al.ativo = 1)
+                WHERE t.cod_turma = $1
+                  AND al.ano = $2
+                  AND t.ativo = 1
+                ORDER BY ac.secao,
+                         ac.nome,
+                         cc.ordenamento,
+                         cc.nome";
 
         $componentesCurriculares = $this->fetchPreparedQuery($sql, array($turmaId, $ano));
       }
