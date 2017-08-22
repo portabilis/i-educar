@@ -352,7 +352,7 @@ class indice extends clsDetalhe
           return blnRet;
         }
 
-        function removerEnturmacao(ref_cod_matricula, ref_cod_turma_destino) {
+        function removerEnturmacao(ref_cod_matricula, ref_cod_turma_destino, data_enturmacao) {
 
           if (! confirm("Confirma remoção da enturmação?"))
             return false;
@@ -369,10 +369,11 @@ class indice extends clsDetalhe
 
     $canCreate = new clsPermissoes();
     $canCreate = $canCreate->permissao_cadastra(578, $this->pessoa_logada, 7);
+    $this->data_enturmacao = $enturmacoes[0]['data_enturmacao'];
 
     if ($this->possuiEnturmacaoTurmaDestino && $canCreate){
       $this->array_botao            = array('Remover (enturmação) da turma selecionada');
-      $this->array_botao_url_script = array("removerEnturmacao({$this->ref_cod_matricula}, {$this->ref_cod_turma})");
+      $this->array_botao_url_script = array("removerEnturmacao({$this->ref_cod_matricula}, {$this->ref_cod_turma}, {$this->data_enturmacao})");
     }
 
     if (! $this->turmaOrigemMesmaDestino && $canCreate) {

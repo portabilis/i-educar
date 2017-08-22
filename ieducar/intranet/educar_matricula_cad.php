@@ -833,6 +833,10 @@ class indice extends clsCadastro
                                                      $this->pessoa_logada, null,
                                                      null, null, 0, null,
                                                      $enturmacao['sequencial']);
+        $enturmacao->removerSequencial = TRUE;
+        $detEnturmacao = $enturmacao->detalhe();
+        $detEnturmacao = $detEnturmacao['data_enturmacao'];
+        $enturmacao->data_enturmacao = $detEnturmacao;
         if ($result && ! $enturmacao->edita())
           $result = false;
         else
