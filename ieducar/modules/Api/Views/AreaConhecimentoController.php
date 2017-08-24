@@ -67,6 +67,29 @@ class AreaConhecimentoController extends ApiCoreController
     }
   }
 
+  protected function getAreasDeConhecimentoForSerie() {
+
+         $serieId = $this->getRequest()->serie_id;
+    
+         $sql    = 'SELECT ac.id as id,
+                           (ac.nome) as nome
+                      from modules.area_conhecimento ac
+                     where ac.id in(select area_conhecimento.id 
+                                      from modules.area_conhecimento
+                                     inner join modules.componente_curricular cc on(cc.area_conhecimento_id = ac.id)
+                                     inner join modules.componente_curricular_ano_escolar ccae on (ccae.componente_curricular_id = cc.id
+                                                                                                   and ccae.ano_escolar_id = $1))
+                     order by (lower(ac.nome)) ASC';
+
+        $paramsSql = array($serieId);
+        $areasConhecimento = $this->fetchPreparedQuery($sql, $paramsSql);
+        $options = array();
+        $options = Portabilis_Array_Utils::setAsIdValue($areasConhecimento, 'id', 'nome');
+    
+        return array('options' => $options);
+    
+      }
+
   protected function getAreasDeConhecimentoForEscolaSerie() {
 
      $escolaId = $this->getRequest()->escola_id;
@@ -96,8 +119,10 @@ class AreaConhecimentoController extends ApiCoreController
   public function Gerar() {
     if ($this->isRequestFor('get', 'areas-de-conhecimento'))
       $this->appendResponse($this->getAreasDeConhecimento());
-    elseif($this->isRequestFor('get', 'areaconhecimento-escolaserie'))
-      $this->appendResponse($this->getAreasDeConhecimentoForEscolaSerie());
+      elseif($this->isRequestFor('get', 'areaconhecimento-serie'))
+        $this->appendResponse($this->getAreasDeConhecimentoForSerie());
+      elseif($this->isRequestFor('get', 'areaconhecimento-escolaserie'))
+        $this->appendResponse($this->getAreasDeConhecimentoForEscolaSerie());
     else
       $this->notImplementedOperationError();
   }
