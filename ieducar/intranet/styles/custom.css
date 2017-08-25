@@ -1019,6 +1019,17 @@ table.tablelistagem.auditoria-tab tr:nth-child(2n+1) td.formlttd{
   background-color: rgb(233, 239, 247) !important;
 }
 
+.area_conhecimento_title td {
+    padding: 13px 0;
+}
+
+.area_conhecimento_title {
+    font-size: 14px;
+    margin: 10px;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
 
 /**************************************
 **********TABELAS DE ADIÇÃO************
