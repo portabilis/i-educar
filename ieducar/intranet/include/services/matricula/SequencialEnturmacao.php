@@ -274,7 +274,7 @@ class SequencialEnturmacao {
 
       return $db->CampoUnico("SELECT sequencial_fechamento
                                 FROM pmieducar.matricula_turma
-                               INNER JOIN pmieducar.matricula ON matricula.cod_matricula = matricula_turma.ref_cod_turma
+                               INNER JOIN pmieducar.matricula ON matricula.cod_matricula = matricula_turma.ref_cod_matricula
                                WHERE matricula.ativo = 1
                                  AND ref_cod_matricula = {$this->refCodMatricula}
                                  AND ref_cod_turma = {$this->refCodTurma}
