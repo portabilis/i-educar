@@ -132,9 +132,6 @@ function montaElementosEdicao(){
                                         </tr>`);
             getComponentesCurriculares(id);
         });
-
-        $j("#ref_cod_area_conhecimento").chosen().trigger("chosen:updated");
-
     });
 }
 
@@ -210,6 +207,7 @@ function updateAreaConhecimento(){
 }
 
 function handleGetAreaConhecimentoSerie(response) {
+    $j('#ref_cod_area_conhecimento').val('').trigger('liszt:updated');
     $j.each(response['options'], function(id,nome) {
         $j("#ref_cod_area_conhecimento").children("[value=" + id + "]").attr('selected', '');
         $j("#ref_cod_area_conhecimento").chosen().trigger("chosen:updated");
