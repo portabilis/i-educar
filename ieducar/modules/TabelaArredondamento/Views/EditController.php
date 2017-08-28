@@ -210,54 +210,48 @@ class EditController extends Core_Controller_Page_EditController
   }
 
   private function carregaCamposNotasConceituais(){
-    // Ajuda
-    $help = 'Caso seja necessário adicionar mais notas, '
-          . 'salve o formulário. Automaticamente 3 campos '
-          . 'novos ficarão disponíveis.<br /><br />';
-
-    $this->campoRotulo('__help1', '<strong>Notas para arredondamento</strong><br />', $help, FALSE, '', '');
-
-    // Cria campos para a postagem de notas
+      // Cria campos para a postagem de notas
     $valores = $this->getDataMapper()->findTabelaValor($this->getEntity());
 
-    for ($i = 0, $loop = count($valores); $i < ($loop == 0 ? 5 : $loop + 3); $i++) {
+    for ($i = 0, $loop = count($valores); $i < $loop; $i++) {
       $valorNota = $valores[$i];
+      $this->tabela_arredondamento_valor[$i][] = $valorNota->id;
+      $this->tabela_arredondamento_valor[$i][] = $valorNota->nome;
+      $this->tabela_arredondamento_valor[$i][] = $valorNota->descricao;
+      $this->tabela_arredondamento_valor[$i][] = $valorNota->valorMinimo;
+      $this->tabela_arredondamento_valor[$i][] = $valorNota->valorMaximo;
+    }
 
-      $valor_label            = sprintf("valor[label][%d]", $i);
-      $valor_id               = sprintf("valor[id][%d]", $i);
-      $valor_nome             = sprintf("valor[nome][%d]", $i);
-      $valor_descricao        = sprintf("valor[descricao][%d]", $i);
-      $valor_valor_minimo     = sprintf("valor[valor_minimo][%d]", $i);
-      $valor_valor_maximo     = sprintf("valor[valor_maximo][%d]", $i);
-      $valor_tipo_recuperacao = sprintf("valor[acao][%d]", $i);
-
-      $this->campoRotulo($valor_label, 'Arredondamento ' . ($i + 1),
-        $this->_getLabel(''), TRUE);
+      // Inicio da tabela
+      $this->campoTabelaInicio("tabela_arredondamento", "Notas para arredondamento", array("ID","Rótulo da nota", "Descrição", "Valor mínimo", "Valor máximo"), $this->tabela_arredondamento_valor);
 
       // Id
-      $this->campoOculto($valor_id, $valorNota->id);
+      $this->campoTexto('valor_id', 'id',
+        $valorNota->id, 5, 5, FALSE, FALSE, FALSE);
 
       // Nome
-      $this->campoTexto($valor_nome, $this->_getLabel('valor_nome'),
-        $valorNota->nome, 5, 5, FALSE, FALSE, TRUE, $this->_getHelp('valor_nome'));
+      $this->campoTexto('valor_nome', 'valor_nome',
+        $valorNota->nome, 5, 5, TRUE, FALSE, FALSE, $this->_getHelp('valor_nome'));
 
       // Descrição (se conceitual)
-      $this->campoTexto($valor_descricao, $this->_getLabel('valor_descricao'),
-        $valorNota->descricao, 15, 25, FALSE, FALSE, TRUE,
+      $this->campoTexto('valor_descricao', 'valor_descricao',
+        $valorNota->descricao, 15, 25, TRUE, FALSE, FALSE,
         $this->_getHelp('valor_descricao'));
 
       // Valor mínimo
-      $this->campoTexto($valor_valor_minimo, $this->_getLabel('valor_valor_minimo'),
-        $valorNota->valorMinimo, 6, 6, FALSE, FALSE, TRUE,
+      $this->campoTexto('valor_minimo', 'valor_valor_minimo',
+        $valorNota->valorMinimo, 6, 6, TRUE, FALSE, FALSE,
         $this->_getHelp('valor_valor_minimo'));
 
       // Valor máximo
-      $this->campoTexto($valor_valor_maximo, $this->_getLabel('valor_valor_maximo'),
-        $valorNota->valorMaximo, 6, 6, FALSE, FALSE, FALSE,
+      $this->campoTexto('valor_maximo', 'valor_valor_maximo',
+        $valorNota->valorMaximo, 6, 6, TRUE, FALSE, FALSE,
         $this->_getHelp('valor_valor_maximo'));
 
-    }
+      // Fim da tabela
+      $this->campoTabelaFim();
   }
+
   private function carregaCamposNotasNumericas(){
     // Ajuda
     // $help = 'Caso seja necessário adicionar mais notas, '
@@ -313,6 +307,7 @@ class EditController extends Core_Controller_Page_EditController
 
     }
   }
+
   protected function _save()
   {
     // Verifica pela existência do field identity
@@ -329,29 +324,36 @@ class EditController extends Core_Controller_Page_EditController
     //Exclui todos os valores para inserir corretamente
     $entity->deleteAllValues();
 
-    // Processa os dados da requisição, apenas os valores para a tabela de valores.
-    $valores = $this->getRequest()->valor;
-
     // A contagem usa um dos índices do formulário, senão ia contar sempre 4.
-    $loop    = count($valores['id']);
+    $loop    = count($this->valor_id);
+
+    // Processa os dados da requisição, apenas os valores para a tabela de valores.
+    // Mescla arrays
+    for ($i = 0; $i < $loop; $i++) {
+      $valores[] = array('id'           => $this->valor_id[$i],
+                         'nome'         => $this->valor_nome[$i],
+                         'descricao'    => $this->valor_descricao[$i],
+                         'valor_minimo' => $this->valor_minimo[$i],
+                         'valor_maximo' => $this->valor_maximo[$i]);
+    }
 
     // Array de objetos a persistir
     $insert  = array();
 
     // Cria um array de objetos a persistir
     for ($i = 0; $i < $loop; $i++) {
-      $id = $valores['id'][$i];
+      $id = $valores[$i]['id'];
 
       // Não atribui a instância de $entity senão não teria sucesso em verificar
       // se a instância é isNull().
       $data = array(
         // 'id'               => $id,
-        'nome'             => $valores['nome'][$i],
-        'descricao'        => $valores['descricao'][$i],
-        'valorMinimo'      => str_replace(",", ".", $valores['valor_minimo'][$i]),
-        'valorMaximo'      => str_replace(",", ".", $valores['valor_maximo'][$i]),
-        'acao'             => $valores['acao'][$i],
-        'casaDecimalExata' => $valores['casaDecimalExata'][$i]
+        'nome'             => $valores[$i]['nome'],
+        'descricao'        => $valores[$i]['descricao'],
+        'valorMinimo'      => str_replace(",", ".", $valores[$i]['valor_minimo']),
+        'valorMaximo'      => str_replace(",", ".", $valores[$i]['valor_maximo']),
+        'acao'             => $valores[$i]['acao'],
+        'casaDecimalExata' => $valores[$i]['casaDecimalExata']
       );
 
       $instance = new TabelaArredondamento_Model_TabelaValor($data);

@@ -1033,7 +1033,7 @@ class clsCampos extends Core_Controller_Page_Abstract
     {
       var This = this;
 
-      This.classe    = (This.id % 2 == 0 )? 'formmdtd' : 'formlttd';
+      This.classe    = (This.id % 2 == 0 )? 'formmdtd tr_' + This.nome : 'formlttd tr_' + This.nome;
       var numColumns = This.campos.length
 
       var row = document.getElementById(This.nome).insertRow(document.getElementById(This.nome).rows.length-2);
@@ -1111,7 +1111,7 @@ class clsCampos extends Core_Controller_Page_Abstract
       }
 
       trs = document.getElementsByName('tr_'+This.nome + '[]');
-      var classe = 'formmdtd';
+      var classe = 'formmdtd tr_' + This.nome;
 
       for (var ct = 0; ct < trs.length; ct++) {
         if (trs[ct] && trs[ct].id != 'adicionar_linha') {
@@ -1120,7 +1120,7 @@ class clsCampos extends Core_Controller_Page_Abstract
           for (var c = 0; c < trs[ct].cells.length; c++)
             trs[ct].cells[c].className = classe;
 
-          classe = (classe == 'formmdtd')? 'formlttd' : 'formmdtd';
+          classe = (classe == 'formmdtd')? 'formlttd tr_' + This.nome : 'formmdtd tr_' + This.nome;
         }
       }
 
@@ -1348,10 +1348,10 @@ class clsCampos extends Core_Controller_Page_Abstract
         }
 
         foreach ($valores as $key2 => $valor) {
-          $classe2 = $md2 ? 'formlttd' : 'formmdtd';
+          $classe2 = $md2 ? 'formlttd dd' : 'formmdtd dd';
           $md2     = $md2 ? FALSE : TRUE;
 
-          $retorno .= "<tr id='tr_{$nome_tabela}[$key2]' name='tr_{$nome_tabela}[]'  $style class='$classe2'>";
+          $retorno .= "<tr id='tr_{$nome_tabela}[$key2]' name='tr_{$nome_tabela}[]'  $style class='$classe2 tr_{$nome_tabela}'>";
           $array_valores_lista = $valores_lista_tabela[$key2];
 
           foreach ($componente as $key => $campo_) {

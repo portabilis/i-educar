@@ -923,7 +923,7 @@ td.area-conhecimento-destaque {
   padding: 8px;
   font-size: 14px;
   color: #47728f;
-  max-width: 450px;
+  max-width: 100%;
 }
 
 #formcadastro .formmdtd,
@@ -1086,6 +1086,14 @@ color: #188ad1
 
 table.paginacao td a.nvp_paginador {
     font-size: 14px;
+}
+
+#tabela_arredondamento_numerica tr:last-child {
+    display: none;
+}
+
+#tabela_arredondamento tr.tr_tabela_arredondamento td:first-child, #td_ID {
+    display: none;
 }
 
 /**************************************
