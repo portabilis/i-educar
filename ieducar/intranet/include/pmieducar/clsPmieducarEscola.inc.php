@@ -2051,8 +2051,10 @@ class clsPmieducarEscola
                                       FROM pmieducar.escola_complemento
                                     WHERE ref_cod_escola = escola.cod_escola)) as nome, escola.cod_escola
                      FROM pmieducar.escola
-                 ORDER BY nome");
-    if($db->ProximoRegistro()){
+                    WHERE ativo = 1
+                    ORDER BY nome
+                 ");
+
       while ($db->ProximoRegistro()){
         $tupla = $db->Tupla();
         $resultado[] = $tupla;
@@ -2060,7 +2062,6 @@ class clsPmieducarEscola
       if (count($resultado)){
        return $resultado;
       }
-    }
   }
 
   /**
