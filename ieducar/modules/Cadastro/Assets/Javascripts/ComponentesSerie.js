@@ -163,6 +163,18 @@ function getComponentesCurriculares(area_conhecimento_id){
                     </td>
                 </tr>`).insertAfter('#area_conhecimento_' + componentes[i].area_conhecimento_id);
         }
+
+        $j.each(areas, function(id, area) {
+            $j(`<tr class="area_conhecimento_` + id + `">
+                    <td>
+                        <b>Nome</b>
+                    </td>
+                    <td>
+                        <b>Carga horária</b>
+                    </td>
+                </tr>`).insertAfter('#area_conhecimento_' + id);
+        });
+
         if(serie_id != ''){
             getComponentesCurricularesSerie();
         }
