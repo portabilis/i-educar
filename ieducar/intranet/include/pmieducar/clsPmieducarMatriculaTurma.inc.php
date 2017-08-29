@@ -1117,6 +1117,7 @@ class clsPmieducarMatriculaTurma
                     WHEN matricula_turma.transferido THEN TRUE
                     WHEN matricula_turma.remanejado THEN TRUE
                     WHEN matricula.dependencia THEN TRUE
+                    WHEN matricula_turma.abandono THEN TRUE
                     $reclassificado
                     ELSE FALSE END)
                 AND ref_cod_turma = {$codTurma}
