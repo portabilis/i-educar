@@ -253,59 +253,64 @@ class EditController extends Core_Controller_Page_EditController
   }
 
   private function carregaCamposNotasNumericas(){
-    // Ajuda
-    // $help = 'Caso seja necessário adicionar mais notas, '
-    //       . 'salve o formulário. Automaticamente 3 campos '
-    //       . 'novos ficarão disponíveis.<br /><br />';
-
-    $this->campoRotulo('__help1', '<strong>Notas para arredondamento de médias</strong><br />', $help, FALSE, '', '');
-
     // Cria campos para a postagem de notas
     $valores = $this->getDataMapper()->findTabelaValor($this->getEntity());
 
     for ($i = 0; $i <= 9; $i++) {
       $valorNota = $valores[$i];
+      $acao = 0;
 
-      $valor_label              = sprintf("valor[label][%d]", $i);
-      $valor_id                 = sprintf("valor[id][%d]", $i);
-      $valor_nome               = sprintf("valor[nome][%d]", $i);
-      $valor_nome_fake          = sprintf("valor[nome_fake][%d]", $i);
-      $valor_tipo_recuperacao   = sprintf("valor[acao][%d]", $i);
-      $valor_casa_decimal_exata = sprintf("valor[casaDecimalExata][%d]", $i);
-      $valor_valor_minimo       = sprintf("valor[valor_minimo][%d]", $i);
-      $valor_valor_maximo       = sprintf("valor[valor_maximo][%d]", $i);
+      switch ($valorNota->acao) {
+        case 'Arredondar para o n&uacute;mero inteiro imediatamente inferior':
+           $acao = 1;
+          break;
+        case 'Arredondar para o n&uacute;mero inteiro imediatamente superior':
+          $acao = 2;
+          break;
+        case 'Arredondar para a casa decimal espec&iacute;fica':
+          $acao = 3;
+          break;
+        default:
+           $acao = 0;
+          break;
+      }
 
-      $this->campoRotulo($valor_label, 'Arredondamento ' . ($i + 1),
-        $this->_getLabel(''), TRUE);
+      $this->tabela_arredondamento_valor[$i][] = $valorNota->id;
+      $this->tabela_arredondamento_valor[$i][] = $valorNota->nome;
+      $this->tabela_arredondamento_valor[$i][] = $valorNota->nome;
+      $this->tabela_arredondamento_valor[$i][] = $acao;
+      $this->tabela_arredondamento_valor[$i][] = $valorNota->casaDecimalExata;
+
+    };
+
+      // Inicio da tabela
+      $this->campoTabelaInicio("tabela_arredondamento_numerica", "Notas para arredondamento", array("ID","Nome", "Casa decimal Fake", "Ação", "Casa decimal exata"), $this->tabela_arredondamento_valor);
 
       // Id
-      $this->campoOculto($valor_id, $valorNota->id);
+      $this->campoTexto('valor_id', 'id',
+        $valorNota->id, 5, 5, FALSE, FALSE, FALSE);
 
 
       // Foi feito um campo oculto com a informação a ser gravada pois o framework não grava informações de campos desabilitados
-      $this->campoOculto($valor_nome, $i);
+        $this->campoTexto('valor_nome', 'casa_decimal',
+        $valorNota->nome, 1, 1, FALSE, FALSE, FALSE, '', '', '', 'onKeyUp', FALSE);
 
       // Este campo serve apenas para ser exibido ao usuário, ele não grava a informação no banco, pois o framework não grava campos desabilitados
-      $this->campoTexto($valor_nome_fake, $this->_getLabel('casa_decimal'),
-        $i, 1, 1, FALSE, FALSE, TRUE, '', '', '', 'onKeyUp', TRUE);
-
-      if($valorNota){
-        $tipoArredondamento = $valorNota->get('acao');
-      }else{
-        $tipoArredondamento = 0;
-      }
+      $this->campoTexto('valor_nome_fake', 'casa_decimal_fake',
+        $valorNota->nome, 1, 1, FALSE, FALSE, FALSE, '', '', '', 'onKeyUp', TRUE);
 
       // Tipo de arredondamento de média (ou ação)
       $tipoArredondamentoMedia = TabelaArredondamento_Model_TipoArredondamentoMedia::getInstance();
-      $this->campoLista($valor_tipo_recuperacao, $this->_getLabel('acao'),
-        $tipoArredondamentoMedia->getEnums(), $tipoArredondamento, '', TRUE,
-        $this->_getHelp('tipoRecuperacaoParalela'), '', FALSE, FALSE);
+      $this->campoLista('valor_acao', 'acao', $tipoArredondamentoMedia->getEnums(),
+       $valorNota->acao, '', FALSE, $this->_getHelp('tipoRecuperacaoParalela'), '', FALSE, FALSE);
 
       // Casa decimal exata para o caso de arredondamento deste tipo
-      $this->campoTexto($valor_casa_decimal_exata, $this->_getLabel('casa_decimal_exata'),
+      $this->campoTexto('valor_casa_decimal_exata', 'valor_casa_decimal_exata',
         $valorNota->casaDecimalExata, 1, 1, FALSE, FALSE, FALSE, '', '', '', 'onKeyUp', FALSE);
 
-    }
+      // Fim da tabela
+      $this->campoTabelaFim();
+
   }
 
   protected function _save()
@@ -316,6 +321,11 @@ class EditController extends Core_Controller_Page_EditController
       $entity = $this->getEntity();
     }
 
+    // Verifica se existe valor acima de 100
+    if (($this->valor_maximo >= 100) || ($this->valor_minimo >= 100)){
+      $this->mensagem = 'Erro no formulário';
+      return FALSE;
+    }
     // Se existir, chama _save() do parent
     if (!isset($entity)) {
       return parent::_save();
@@ -334,7 +344,9 @@ class EditController extends Core_Controller_Page_EditController
                          'nome'         => $this->valor_nome[$i],
                          'descricao'    => $this->valor_descricao[$i],
                          'valor_minimo' => $this->valor_minimo[$i],
-                         'valor_maximo' => $this->valor_maximo[$i]);
+                         'valor_maximo' => $this->valor_maximo[$i],
+                         'valor_acao'   => $this->valor_acao[$i],
+                         'valor_casa_decimal_exata' => $this->valor_casa_decimal_exata[$i]);
     }
 
     // Array de objetos a persistir
@@ -352,8 +364,8 @@ class EditController extends Core_Controller_Page_EditController
         'descricao'        => $valores[$i]['descricao'],
         'valorMinimo'      => str_replace(",", ".", $valores[$i]['valor_minimo']),
         'valorMaximo'      => str_replace(",", ".", $valores[$i]['valor_maximo']),
-        'acao'             => $valores[$i]['acao'],
-        'casaDecimalExata' => $valores[$i]['casaDecimalExata']
+        'acao'             => $valores[$i]['valor_acao'],
+        'casaDecimalExata' => $valores[$i]['valor_casa_decimal_exata']
       );
 
       $instance = new TabelaArredondamento_Model_TabelaValor($data);

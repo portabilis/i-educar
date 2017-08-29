@@ -1331,8 +1331,9 @@ class clsCampos extends Core_Controller_Page_Abstract
           else {
             $obrigatorio = '';
           }
+          $cabId = str_replace(' ', '_', strtolower($cab));
 
-          $retorno.= "<td class='formmdtd' id='td_$cab' align='center'><span class='form'>$cab</span>{$obrigatorio}</td>";
+          $retorno.= "<td class='formmdtd' id='td_$cabId' align='center'><span class='form'>$cab</span>{$obrigatorio}</td>";
         }
 
         $retorno.= "<td class='formmdtd' id='td_acao' align='center'><span class='form'>A&ccedil;&atilde;o</span></td>";

@@ -1088,11 +1088,19 @@ table.paginacao td a.nvp_paginador {
     font-size: 14px;
 }
 
-#tabela_arredondamento_numerica tr:last-child {
-    display: none;
+#tabela_arredondamento_numerica tr:last-child,
+#tabela_arredondamento_numerica tr.tr_tabela_arredondamento_numerica td:last-child,
+#tabela_arredondamento_numerica tr#tr_tabela_arredondamento_numerica_cab td:last-child {
+    display: none !important;
 }
 
-#tabela_arredondamento tr.tr_tabela_arredondamento td:first-child, #td_ID {
+#tabela_arredondamento tr.tr_tabela_arredondamento td:first-child,
+#tabela_arredondamento #td_id,
+#tabela_arredondamento_numerica tr.tr_tabela_arredondamento_numerica td:first-child,
+#tabela_arredondamento_numerica #td_id,
+#tabela_arredondamento_numerica .valor_nome,
+#tabela_arredondamento_numerica #td_nome
+ {
     display: none;
 }
 
