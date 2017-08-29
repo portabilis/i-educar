@@ -125,6 +125,7 @@ class indice extends clsCadastro
     $registros = explode("\n", $arquivo);
 
     foreach ($registros as $registro) {
+      header_remove('Set-Cookie');
       $dadosRegistro = explode("|", $registro);
       $numeroRegistro = $dadosRegistro[0];
 
@@ -516,7 +517,6 @@ class indice extends clsCadastro
       if(!empty($inepTurma)){
         $codTurma = $this->existeTurma($inepTurma);
       }
-
 
       if(!$codTurma){
 
@@ -1926,6 +1926,13 @@ class indice extends clsCadastro
   }
 
   private $etapasCenso = array(
+      0 => array(
+        'curso' => "Atividade complementar",
+        'serie' => "Atividade complementar",
+        'etapa' => 1,
+        'etapas' => 1,
+        'nivel' => 'Outros'
+      ),
       1 => array(
         'curso' => "Educação Infantil",
         'serie' => "Creche (0 a 3 anos)",
