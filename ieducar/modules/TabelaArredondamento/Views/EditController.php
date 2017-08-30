@@ -276,15 +276,15 @@ class EditController extends Core_Controller_Page_EditController
       }
 
       $this->tabela_arredondamento_valor[$i][] = $valorNota->id;
-      $this->tabela_arredondamento_valor[$i][] = $valorNota->nome;
-      $this->tabela_arredondamento_valor[$i][] = $valorNota->nome;
+      $this->tabela_arredondamento_valor[$i][] = $i;
+      $this->tabela_arredondamento_valor[$i][] = $i;
       $this->tabela_arredondamento_valor[$i][] = $acao;
       $this->tabela_arredondamento_valor[$i][] = $valorNota->casaDecimalExata;
 
     };
 
       // Inicio da tabela
-      $this->campoTabelaInicio("tabela_arredondamento_numerica", "Notas para arredondamento", array("ID","Nome", "Casa decimal Fake", "Ação", "Casa decimal exata"), $this->tabela_arredondamento_valor);
+      $this->campoTabelaInicio("tabela_arredondamento_numerica", "Notas para arredondamento", array("ID","Nome", "Casa decimal", "Ação", "Casa decimal exata"), $this->tabela_arredondamento_valor);
 
       // Id
       $this->campoTexto('valor_id', 'id',
