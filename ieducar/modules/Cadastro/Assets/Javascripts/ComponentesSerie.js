@@ -149,14 +149,27 @@ function getComponentesCurriculares(area_conhecimento_id){
         }, {});
 
         $j.each(areas, function(id, area) {
-            $j('#area_conhecimento_' + id).append(`<td colspan"2">` + area + `</td>`);
+            $j('#area_conhecimento_' + id).append(`<td>` + area + `</td>
+                                                   <td class="td_check_all">
+                                                   </td>
+                                                   <td style="text-align: right;">
+                                                        <div id="expandClose_`+id+`"
+                                                             onClick="expandClose(`+id+`)"
+                                                             style="background-image: url(/intranet/imagens/arrow-up2.png);
+                                                                    width: 15px;
+                                                                    height: 15px;
+                                                                    background-size: cover;
+                                                                    float: right;
+                                                                    cursor: pointer;"/>
+                                                        </div>
+                                                   </td>`);
         });
 
         for (var i = 0; i <= componentes.length - 1; i++) {
             
             $j(`<tr class="area_conhecimento_` + componentes[i].area_conhecimento_id + `">
-                    <td>
-                        <label><input type="checkbox" name="componentes[` + componentes[i].area_conhecimento_id + i + `][id]" class="check-componente" id="componente_` + componentes[i].id + `" value="` + componentes[i].id + `">` + componentes[i].nome + `</label>
+                    <td colspan="2">
+                        <label><input type="checkbox" name="componentes[` + componentes[i].area_conhecimento_id + i + `][id]" class="check_componente_area_`+ componentes[i].area_conhecimento_id +`" id="componente_` + componentes[i].id + `" value="` + componentes[i].id + `">` + componentes[i].nome + `</label>
                     </td>
                     <td>
                         <input type="text" size="5" maxlength="5" name="componentes[` + componentes[i].area_conhecimento_id + i + `][carga_horaria]" class="check-carga-horaria" id="carga_horaria_` + componentes[i].id + `" value="">
@@ -166,8 +179,11 @@ function getComponentesCurriculares(area_conhecimento_id){
 
         $j.each(areas, function(id, area) {
             $j(`<tr class="area_conhecimento_` + id + `">
-                    <td>
-                        <b>Nome</b>
+                    <td colspan="2">
+                        <label>
+                            <input onClick="checkAll(`+id+`)" id="check-all-`+id+`" type="checkbox"/>
+                            <b>Nome</b>
+                        </label>
                     </td>
                     <td>
                         <b>Carga horária</b>
@@ -274,3 +290,19 @@ $j("#ref_cod_area_conhecimento").change(function() {
     }
     chosenOldArray = chosenArray;
 } );
+
+function checkAll(id){
+    var isChecked = $j('#check-all-'+id).is(':checked');
+    $j( '.check_componente_area_' + id).prop( "checked", isChecked );
+}
+
+function expandClose(id){
+    var expand = $j('.area_conhecimento_'+id).is(':visible');
+    $j('.area_conhecimento_'+id).toggle('fast');
+    if(expand){
+        $j('#expandClose_'+id).css('background-image','url(/intranet/imagens/arrow-down2.png)');
+    }else{
+        $j('#expandClose_'+id).css('background-image','url(/intranet/imagens/arrow-up2.png)');
+    }
+
+}
