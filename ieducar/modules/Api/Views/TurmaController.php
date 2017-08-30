@@ -37,6 +37,7 @@ require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
 require_once 'Portabilis/Model/Report/TipoBoletim.php';
 require_once "App/Model/IedFinder.php";
+require_once 'include/pmieducar/clsPmieducarTurma.inc.php';
 
 class TurmaController extends ApiCoreController
 {
@@ -75,9 +76,18 @@ class TurmaController extends ApiCoreController
     return array('tipo-boletim' => $tipos[$tipo]);
   }
 
+  protected function getTurmas() {
+    $turmas = new clsPmieducarTurma();
+    $turmas = $turmas->lista();
+
+    return array('turmas' => $turmas);
+  }
+
   public function Gerar() {
     if ($this->isRequestFor('get', 'tipo-boletim'))
       $this->appendResponse($this->getTipoBoletim());
+    elseif ($this->isRequestFor('get', 'turmas'))
+      $this->appendResponse($this->getTurmas());
     else
       $this->notImplementedOperationError();
   }
