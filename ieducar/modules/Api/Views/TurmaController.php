@@ -96,6 +96,7 @@ class TurmaController extends ApiCoreController
                     FROM componente_curricular_turma cct
                     WHERE cct.turma_id = turma.cod_turma)) = 0
               JOIN area_conhecimento ON area_conhecimento.id = componente_curricular.area_conhecimento_id
+            WHERE turma.ativo = 1
             ORDER BY area_conhecimento.nome, componente_curricular.nome)
           UNION ALL
           ( SELECT componente_curricular_turma.componente_curricular_id AS id,
@@ -110,7 +111,7 @@ class TurmaController extends ApiCoreController
             ORDER BY area_conhecimento.nome, componente_curricular.nome);";
 
     $turmasDisciplinas = $this->fetchPreparedQuery($sql);
-    return $this->toUtf8($turmasDisciplinas, array('transform' => true));
+    return array('turmas-disciplinas' => $turmasDisciplinas);
   }
 
   public function Gerar() {
