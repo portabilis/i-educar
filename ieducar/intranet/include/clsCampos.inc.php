@@ -1473,10 +1473,10 @@ class clsCampos extends Core_Controller_Page_Abstract
         $retorno .= '</tr>';
 
         $click    = "$nome_add.addRow();";
-        $img      = "<img src=\"imagens/nvp_bot_novo.png\" border=\"0\" alt=\"incluir\" />";
-        $retorno .= "<tr id='adicionar_linha'>";
+        $img      = "<img src=\"imagens/nvp_bot_novo.png\" border=\"0\" alt=\"incluir\" style=\"float:left; margin:5px;\" />";
+        $retorno .= "<tr id='adicionar_linha' style=\"background-color:#f5f9fd;\">";
         $tt       = $total_campos + 1;
-        $retorno .= "<td colspan='$tt' align='left' style='padding-top: 17px !important;'><a href='javascript:void(0)' id='btn_add_$nome_add' onclick='$click' style='outline: none;'>$img <p>ADICIONAR NOVO<p></a></td>";
+        $retorno .= "<td colspan='$tt' align='left' style='padding-top: 17px !important;'><a style=\"color: #47728f; text-decoration:none;\" href='javascript:void(0)' id='btn_add_$nome_add' onclick='$click' style='outline: none;'>$img <p style=\"padding:9px; margin:0;\">ADICIONAR NOVO<p></a></td>";
         $retorno .= "</tr>";
 
         $retorno .= "</table>";
