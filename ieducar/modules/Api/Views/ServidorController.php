@@ -87,7 +87,7 @@ class ServidorController extends ApiCoreController
                   AND servidor_alocacao.ativo = 1";
 
       $servidores = $this->fetchPreparedQuery($sql, $this->getRequest()->servidor_id);
-      return array('servidores-disciplinas' => $servidores);
+      return array('servidores-escolas' => $servidores);
     }
   }
 
