@@ -50,14 +50,52 @@ class ServidorController extends ApiCoreController
              WHERE servidor.ativo = 1
                AND funcao.professor = 1";
 
-
     $servidores = $this->fetchPreparedQuery($sql);
     return array('servidores' => $servidores);
+  }
+
+  protected function canGetServidoresDisciplinas() {
+    return $this->validatesId('servidor');
+  }
+
+  protected function getServidoresDisciplinas() {
+    if ($this->canGetServidoresDisciplinas()) {
+      $sql = "SELECT ref_cod_disciplina,
+                    nome
+                FROM pmieducar.servidor_disciplina
+              INNER JOIN modules.componente_curricular ON (componente_curricular.id = ref_cod_disciplina)
+              WHERE ref_cod_servidor = $1";
+
+      $servidores = $this->fetchPreparedQuery($sql, $this->getRequest()->servidor_id);
+      return array('servidores-disciplinas' => $servidores);
+    }
+  }
+
+  protected function canGetServidoresEscolas() {
+    return $this->validatesId('servidor');
+  }
+
+  protected function getServidoresEscolas() {
+    if ($this->canGetServidoresEscolas()) {
+      $sql = " SELECT ref_cod_escola,
+                      carga_horaria,
+                      periodo
+                 FROM pmieducar.servidor_alocacao
+                WHERE ref_cod_servidor = $1
+                  AND servidor_alocacao.ativo = 1";
+
+      $servidores = $this->fetchPreparedQuery($sql, $this->getRequest()->servidor_id);
+      return array('servidores-disciplinas' => $servidores);
+    }
   }
 
   public function Gerar() {
     if ($this->isRequestFor('get', 'servidores'))
       $this->appendResponse($this->getServidores());
+    elseif ($this->isRequestFor('get', 'servidores-disciplinas'))
+      $this->appendResponse($this->getServidoresDisciplinas());
+      elseif ($this->isRequestFor('get', 'servidores-escolas'))
+        $this->appendResponse($this->getServidoresEscolas());
     else
       $this->notImplementedOperationError();
   }
