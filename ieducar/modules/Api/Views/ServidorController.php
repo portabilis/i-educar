@@ -40,10 +40,18 @@ class ServidorController extends ApiCoreController
 {
 
   protected function getServidores() {
-    $servidores = new clsPmieducarServidor();
-    $servidores->ativo = 1;
-    $servidores = $servidores->lista();
+    $sql = "SELECT cod_servidor,
+                   carga_horaria,
+                   nome
+              FROM pmieducar.servidor
+             INNER JOIN cadastro.pessoa ON (pessoa.idpes = servidor.cod_servidor)
+             INNER JOIN pmieducar.servidor_funcao ON (servidor_funcao.ref_cod_servidor = servidor.cod_servidor)
+             INNER JOIN pmieducar.funcao ON (funcao.cod_funcao = servidor_funcao.ref_cod_funcao)
+             WHERE servidor.ativo = 1
+               AND funcao.professor = 1";
 
+
+    $servidores = $this->fetchPreparedQuery($sql);
     return array('servidores' => $servidores);
   }
 
