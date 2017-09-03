@@ -78,6 +78,7 @@ class TurmaController extends ApiCoreController
 
   protected function getTurmas() {
     $turmas = new clsPmieducarTurma();
+    $turmas->ativo = 1;
     $turmas = $turmas->lista();
 
     return array('turmas' => $turmas);

@@ -1251,7 +1251,7 @@ class clsPmieducarTurma
 			$filtros .= "{$whereAnd} t.data_exclusao <= '{$date_data_exclusao_fim}'";
 			$whereAnd = " AND ";
 		}
-		if( is_null( $int_ativo ) || $int_ativo )
+		if( is_null( $int_ativo ) || $int_ativo || $this->ativo == 1)
 		{
 			$filtros .= "{$whereAnd} t.ativo = '1'";
 			$whereAnd = " AND ";
