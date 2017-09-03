@@ -528,7 +528,7 @@ class clsPmieducarServidor
       $whereAnd = " AND ";
     }
 
-    if (is_null($int_ativo) || $int_ativo) {
+    if (is_null($int_ativo) || $int_ativo || $this->ativo == 1) {
       $filtros .= "{$whereAnd} s.ativo = '1'";
       $whereAnd = " AND ";
     }

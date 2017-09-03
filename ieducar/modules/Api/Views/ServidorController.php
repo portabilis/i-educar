@@ -41,13 +41,14 @@ class ServidorController extends ApiCoreController
 
   protected function getServidores() {
     $servidores = new clsPmieducarServidor();
+    $servidores->ativo = 1;
     $servidores = $servidores->lista();
 
     return array('servidores' => $servidores);
   }
 
   public function Gerar() {
-    if ($this->isRequestFor('get', 'get-servidores'))
+    if ($this->isRequestFor('get', 'servidores'))
       $this->appendResponse($this->getServidores());
     else
       $this->notImplementedOperationError();
