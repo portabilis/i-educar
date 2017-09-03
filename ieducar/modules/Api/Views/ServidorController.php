@@ -61,10 +61,11 @@ class ServidorController extends ApiCoreController
   protected function getServidoresDisciplinas() {
     if ($this->canGetServidoresDisciplinas()) {
       $sql = "SELECT ref_cod_disciplina,
-                    nome
+                     ref_cod_servidor,
+                     nome
                 FROM pmieducar.servidor_disciplina
-              INNER JOIN modules.componente_curricular ON (componente_curricular.id = ref_cod_disciplina)
-              WHERE ref_cod_servidor = $1";
+               INNER JOIN modules.componente_curricular ON (componente_curricular.id = ref_cod_disciplina)
+               WHERE ref_cod_servidor = $1";
 
       $servidores = $this->fetchPreparedQuery($sql, $this->getRequest()->servidor_id);
       return array('servidores-disciplinas' => $servidores);
@@ -78,6 +79,7 @@ class ServidorController extends ApiCoreController
   protected function getServidoresEscolas() {
     if ($this->canGetServidoresEscolas()) {
       $sql = " SELECT ref_cod_escola,
+                      ref_cod_servidor,
                       carga_horaria,
                       periodo
                  FROM pmieducar.servidor_alocacao
