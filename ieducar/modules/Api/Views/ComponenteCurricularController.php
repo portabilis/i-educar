@@ -79,20 +79,46 @@ class ComponenteCurricularController extends ApiCoreController
     if($this->canGetComponentesCurriculares()){
 
       $instituicaoId = $this->getRequest()->instituicao_id;
+      $areaConhecimentoId = $this->getRequest()->area_conhecimento_id;
 
-      $sql = 'SELECT id, nome, area_conhecimento_id
+      $areaConhecimentoId ? $where = 'AND area_conhecimento_id = '. $areaConhecimentoId : '';
+      
+      $sql = 'SELECT componente_curricular.id, componente_curricular.nome, area_conhecimento_id, area_conhecimento.nome AS nome_area
                 FROM modules.componente_curricular
-                WHERE instituicao_id = $1
+               INNER JOIN modules.area_conhecimento ON (area_conhecimento.id = componente_curricular.area_conhecimento_id)
+                WHERE componente_curricular.instituicao_id = $1
+                ' . $where . '
                 ORDER BY nome ';
-
       $disciplinas = $this->fetchPreparedQuery($sql, array($instituicaoId));
 
-      $attrs = array('id', 'nome', 'area_conhecimento_id');
+      $attrs = array('id', 'nome', 'area_conhecimento_id', 'nome_area');
       $disciplinas = Portabilis_Array_Utils::filterSet($disciplinas, $attrs);
 
       foreach ($disciplinas as &$disciplina){
         $disciplina['nome'] = Portabilis_String_Utils::toUtf8($disciplina['nome']);
       }
+
+      return array('disciplinas' => $disciplinas);
+    }
+  }
+
+function getComponentesCurricularesPorSerie(){
+    if($this->canGetComponentesCurriculares()){
+
+      $instituicaoId = $this->getRequest()->instituicao_id;
+      $serieId       = $this->getRequest()->serie_id;
+      
+      $sql = 'SELECT componente_curricular.id, componente_curricular.nome, carga_horaria::int, area_conhecimento_id, area_conhecimento.nome AS nome_area
+                FROM modules.componente_curricular
+               INNER JOIN modules.componente_curricular_ano_escolar ON (componente_curricular_ano_escolar.componente_curricular_id = componente_curricular.id)
+               INNER JOIN modules.area_conhecimento ON (area_conhecimento.id = componente_curricular.area_conhecimento_id)
+                WHERE componente_curricular.instituicao_id = $1
+                  AND ano_escolar_id = ' . $serieId . '
+                ORDER BY nome ';
+      $disciplinas = $this->fetchPreparedQuery($sql, array($instituicaoId));
+
+      $attrs = array('id', 'nome', 'carga_horaria', 'area_conhecimento_id', 'nome_area');
+      $disciplinas = Portabilis_Array_Utils::filterSet($disciplinas, $attrs);
 
       return array('disciplinas' => $disciplinas);
     }
@@ -156,6 +182,8 @@ class ComponenteCurricularController extends ApiCoreController
       $this->appendResponse($this->getComponentesCurricularesSearch());
     elseif ($this->isRequestFor('get', 'componentes-curriculares'))
       $this->appendResponse($this->getComponentesCurriculares());
+    elseif ($this->isRequestFor('get', 'componentes-curriculares-serie'))
+      $this->appendResponse($this->getComponentesCurricularesPorSerie());
     elseif($this->isRequestFor('get', 'componentes-curriculares-for-multiple-search'))
       $this->appendResponse($this->getComponentesCurricularesForMultipleSearch());
     else
