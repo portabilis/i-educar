@@ -103,7 +103,8 @@ class ServidorController extends ApiCoreController
                      p.nome as name,
                      pt.turma_id,
                      pt.permite_lancar_faltas_componente as permite_lancar_faltas_componente,
-                     ptd.componente_curricular_id as disciplina_id
+                     ptd.componente_curricular_id as disciplina_id,
+                     pt.updated_at as updated_at
               FROM pmieducar.servidor s
               INNER JOIN cadastro.pessoa p ON s.cod_servidor = p.idpes
               INNER JOIN modules.professor_turma pt ON s.cod_servidor = pt.servidor_id AND s.ref_cod_instituicao = pt.instituicao_id
@@ -114,7 +115,7 @@ class ServidorController extends ApiCoreController
 
       $_servidores = $this->fetchPreparedQuery($sql, array($instituicaoId, $ano));
 
-      $attrs = array('id', 'servidor_id', 'name', 'turma_id', 'permite_lancar_faltas_componente', 'disciplina_id');
+      $attrs = array('id', 'servidor_id', 'name', 'turma_id', 'permite_lancar_faltas_componente', 'disciplina_id', 'updated_at');
       $_servidores = Portabilis_Array_Utils::filterSet($_servidores, $attrs);
       $servidores = array();
       $__servidores = array();
@@ -123,6 +124,7 @@ class ServidorController extends ApiCoreController
         $__servidores[$servidor['id']]['id'] = $servidor['id'];
         $__servidores[$servidor['id']]['servidor_id'] = $servidor['servidor_id'];
         $__servidores[$servidor['id']]['name'] = Portabilis_String_Utils::toUtf8($servidor['name']);
+        $__servidores[$servidor['id']]['updated_at'] = $servidor['updated_at'];
         $__servidores[$servidor['id']]['disciplinas_turmas'][] = array(
           'turma_id' => $servidor['turma_id'],
           'disciplina_id' => $servidor['disciplina_id'],
