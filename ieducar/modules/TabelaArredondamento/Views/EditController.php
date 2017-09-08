@@ -321,10 +321,15 @@ class EditController extends Core_Controller_Page_EditController
       $entity = $this->getEntity();
     }
 
+    // A contagem usa um dos índices do formulário, senão ia contar sempre 4.
+    $loop    = count($this->valor_id);
+
     // Verifica se existe valor acima de 100
-    if (($this->valor_maximo >= 100) || ($this->valor_minimo >= 100)){
-      $this->mensagem = 'Erro no formulário';
-      return FALSE;
+    for ($i = 0; $i < $loop; $i++) {
+      if (($this->valor_maximo[$i] >= 100) || ($this->valor_minimo[$i] >= 100)){
+        $this->mensagem = 'Erro no formulário';
+        return FALSE;
+      }
     }
     // Se existir, chama _save() do parent
     if (!isset($entity)) {
@@ -333,9 +338,6 @@ class EditController extends Core_Controller_Page_EditController
 
     //Exclui todos os valores para inserir corretamente
     $entity->deleteAllValues();
-
-    // A contagem usa um dos índices do formulário, senão ia contar sempre 4.
-    $loop    = count($this->valor_id);
 
     // Processa os dados da requisição, apenas os valores para a tabela de valores.
     // Mescla arrays
