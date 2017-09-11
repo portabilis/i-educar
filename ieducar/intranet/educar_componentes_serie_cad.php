@@ -190,18 +190,10 @@ class indice extends clsCadastro
     @session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     @session_write_close();
-
-    $obj = new clsModulesComponenteCurricularAnoEscolar(NULL, intval($this->serie_id));
-
-    if ($obj->exclui()) {
-      $this->mensagem .= "Exclusão efetuada com sucesso.<br>";
-      header( "Location: educar_componentes_serie_lst.php" );
-      die();
-    }
-
-    $this->mensagem = "Exclusão não realizada.<br>";
-    echo "<!--\nErro ao excluir clsModulesComponenteCurricularAnoEscolar\nvalores obrigatórios\nif( is_numeric( $this->serie_id ) && is_numeric( $this->pessoa_logada ) )\n-->";
-    return FALSE;
+    // Todas as ações estão sendo realizadas em ComponentesSerieAcao.js
+    $this->mensagem .= "Exclusão efetuada com sucesso.<br>";
+    header( "Location: educar_componentes_serie_lst.php" );
+    die();
   }
 }
 

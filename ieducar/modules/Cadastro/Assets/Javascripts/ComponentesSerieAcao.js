@@ -21,7 +21,6 @@ submitButton.click(function(){
 
 function atualizaComponentesSerie(componentes){
         serieId = serieId != '' ? serieId : $j('#ref_cod_serie').val();
-        console.log(serieId)
         var urlForAtualizaComponentesSerie = postResourceUrlBuilder.buildUrl('/module/Api/ComponentesSerie', 'atualiza-componentes-serie', {});
 
         var options = {
@@ -60,7 +59,7 @@ function handleAtualizaComponentesSerie(response) {
     
     function handleErroAtualizaComponentesSerie(response){
         handleMessages([{type : 'error', msg : 'Erro ao alterar componentes da série: ' + response.statusText}], '');
-        // safeLog(response);
+        safeLog(response);
     }
 
 function adicionaComponentesNasEscolas(componentes){
@@ -97,3 +96,42 @@ function handleErroReplicaComponentesEscola(response){
 var postResource = function(options, errorCallback){
     $j.ajax(options).error();
 };
+
+var deleteButton = $j('#btn_excluir');
+deleteButton.removeAttr('onclick');
+
+deleteButton.click(function(){
+    if (confirm('Deseja excluir os componentes da série? Isso também excluirá de todas as escolas e turmas do ano atual.')) {
+        excluiComponentesDaSerie();
+        window.location.href = "/intranet/educar_componentes_serie_lst.php";
+    }
+});
+
+function excluiComponentesDaSerie(){
+    var url = postResourceUrlBuilder.buildUrl('/module/Api/ComponentesSerie', 'exclui-componentes-serie', {});
+
+    var options = {
+    //   type     : 'POST',
+      url      : url,
+      dataType : 'json',
+      data     : {
+        serie_id    : serieId
+      },
+      success  : handleExcluiComponentesDaSerie,
+      error    : handleErroExcluiComponentesDaSerie
+    };
+
+    postResource(options);
+}
+
+function handleExcluiComponentesDaSerie(response){
+    if(response.any_error_msg){
+        return messageUtils.error('Erro ao excluir componentes da série.');
+    }
+    messageUtils.success('Componentes excluídos com sucesso.');
+}
+
+function handleErroExcluiComponentesDaSerie(response){
+    handleMessages([{type : 'error', msg : 'Erro ao aplicar alterações para todas as escolas: ' + response.statusText}], '');
+    safeLog(response);
+}

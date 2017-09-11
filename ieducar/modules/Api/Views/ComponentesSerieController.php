@@ -164,11 +164,48 @@ class ComponentesSerieController extends ApiCoreController
         }
     }
 
+    function excluiComponentesSerie(){
+        $serieId = $this->getRequest()->serie_id;
+        $obj     = new clsModulesComponenteCurricularAnoEscolar(NULL, $serieId);
+        if ($obj->exclui()) {
+            $this->excluiTodosComponenteDaTurma($serieId);
+            $this->excluiTodasDisciplinasEscolaSerie($serieId);
+        }
+    }
+
+    function excluiTodasDisciplinasEscolaSerie($serieId){
+        $escolas = $this->getEscolasDaSerie($serieId);
+        if($escolas){
+            foreach ($escolas as $escola) {
+                $objEscolaSerieDisciplina = new clsPmieducarEscolaSerieDisciplina($serieId, $escola['ref_cod_escola']);
+                $objEscolaSerieDisciplina->excluirTodos();
+            }
+        }
+    }
+
+    function excluiTodosComponenteDaTurma($serieId){
+        $turmas  = $this->getTurmasDaSerieNoAnoLetivoAtual($serieId);
+        $mapper  = new ComponenteCurricular_Model_TurmaDataMapper();
+        if($turmas){
+            foreach ($turmas as $turma) {
+                $where = array('turma_id' => $turma['cod_turma']);
+                $componentes = $mapper->findAll(array('componente_curricular_id', 'turma_id'), $where, array(), false);
+            }
+        }
+        if($componentes){
+            foreach ($componentes as $componente) {
+                $mapper->delete($componente);
+            }
+        }
+    }
+
   public function Gerar() {
     if ($this->isRequestFor('post', 'atualiza-componentes-serie'))
       $this->appendResponse($this->atualizaComponentesDaSerie());
     elseif($this->isRequestFor('post', 'replica-componentes-adicionados-escolas'))
       $this->appendResponse($this->atualizaEscolasSerieDisciplina());
+    elseif($this->isRequestFor('post', 'exclui-componentes-serie'))
+        $this->appendResponse($this->excluiComponentesSerie());
     else
       $this->notImplementedOperationError();
   }
