@@ -251,7 +251,7 @@ class DiarioController extends ApiCoreController
 
               $notaAposRecuperacao = (($notaRecuperacao > $valor) ? $notaRecuperacao : $valor);
 
-              $valorNota = $recuperacaoEspecifica ? $valor : $notaAposRecuperacao;
+              $valorNota = is_null($recuperacaoEspecifica) ? $valor : $notaAposRecuperacao;
 
               $valor = $this->truncate($valor, 4);
               $array_nota = array(
