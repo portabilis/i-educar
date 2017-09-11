@@ -74,6 +74,7 @@ class indice extends clsCadastro
   var $serie_id;
   var $componente_id;
   var $carga_horaria;
+  var $retorno;
 
   function Inicializar()
   {
@@ -117,7 +118,7 @@ class indice extends clsCadastro
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "Início",
          "educar_index.php"                  => "Escola",
-         ""        => "{$nomeMenu} componentes da série"
+         ""        => "Componentes da série"
     ));
     $this->enviaLocalizacao($localizacao->montar());
 
@@ -126,7 +127,9 @@ class indice extends clsCadastro
     $this->alerta_faixa_etaria  = dbBool($this->alerta_faixa_etaria);
     $this->bloquear_matricula_faixa_etaria  = dbBool($this->bloquear_matricula_faixa_etaria);
     $this->exigir_inep  = dbBool($this->exigir_inep);
-
+    
+    $this->retorno = $retorno;
+    
     return $retorno;
   }
 
@@ -144,6 +147,7 @@ class indice extends clsCadastro
     $this->campoOculto('curso_id', $this->curso_id);
     $this->campoOculto('serie_id', $this->serie_id);
     $this->campoOculto('serie_id', $this->serie_id);
+    $this->campoOculto('retorno', $this->retorno);
 
     $this->inputsHelper()->dynamic('instituicao', array('value' => $this->instituicao_id));
 
