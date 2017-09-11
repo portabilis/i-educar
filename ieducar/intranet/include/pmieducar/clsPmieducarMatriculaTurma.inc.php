@@ -1093,17 +1093,6 @@ class clsPmieducarMatriculaTurma
 
   function listaPorSequencial($codTurma) {
 
-      $obj_turma = new clsPmieducarTurma($codTurma);
-      $obj_turma = $obj_turma->detalhe();
-      $cod_instituicao = $obj_turma['ref_cod_instituicao'];
-      $obj_instituicao = new clsPmieducarInstituicao($cod_instituicao);
-      $obj_instituicao = $obj_instituicao->detalhe();
-      $data_base = $obj_instituicao['data_base_transferencia'];
-
-      if ($data_base){
-        $reclassificado = "WHEN matricula_turma.reclassificado THEN TRUE";
-      }
-
       $db = new clsBanco();
       $sql ="SELECT nome,
                     sequencial_fechamento,
@@ -1118,7 +1107,7 @@ class clsPmieducarMatriculaTurma
                     WHEN matricula_turma.remanejado THEN TRUE
                     WHEN matricula.dependencia THEN TRUE
                     WHEN matricula_turma.abandono THEN TRUE
-                    $reclassificado
+                    WHEN matricula_turma.reclassificado THEN TRUE
                     ELSE FALSE END)
                 AND ref_cod_turma = {$codTurma}
                 AND matricula_turma.sequencial = (SELECT MAX(sequencial)
