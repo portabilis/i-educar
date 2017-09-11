@@ -32,7 +32,7 @@ $j("#ref_cod_instituicao").change(function() {
 $j("#ref_cod_curso").change(function() {
     curso_id = $j('#ref_cod_curso').val();
     if (curso_id != '') {
-        getSeries();
+        getSeriesSemComponentesViculados();
     }else{
         comboSerie.empty();
         comboSerie.append('<option value="">Selecione uma série</option>');
@@ -127,10 +127,28 @@ function getSeries(){
     getResources(options);
 }
 
+function getSeriesSemComponentesViculados(){
+    var url = getResourceUrlBuilder.buildUrl('/module/Api/Serie',
+                                             'series-curso-sem-componentes',
+                                             { curso_id : curso_id }
+    );
+    var options = {
+        url      : url,
+        dataType : 'json',
+        success  : handleGetSeries
+    };
+    getResources(options);
+}
+
 function handleGetSeries(response){
     var series   = response.series;
     var selected = '';
-
+    comboSerie.empty();
+    if(series.length == 0){
+        comboSerie.append('<option value="">Sem opções</option>');
+    }else{
+        comboSerie.append('<option value="">Selecione uma série</option>');
+    }
     for (var i = 0; i <= series.length - 1; i++) {
         if (series[i].id == serie_id) {
             selected = 'selected';
