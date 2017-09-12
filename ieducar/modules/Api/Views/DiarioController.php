@@ -243,22 +243,30 @@ class DiarioController extends ApiCoreController
 
           foreach ($notaTurmaAluno as $componenteCurricularId => $notaTurmaAlunoDisciplina){
             if($this->validateComponenteTurma($turmaId, $componenteCurricularId)){
-              $valor = $notaTurmaAlunoDisciplina['nota'];
+              $notaOriginal = $notaTurmaAlunoDisciplina['nota'];
+
+              if(is_null($notaOriginal)){
+                $notaOriginalPersistida = $this->serviceBoletim($turmaId, $alunoId)->getNotaComponente($componenteCurricularId, $etapa)->notaOriginal;
+                if(is_null($notaOriginalPersistida)){
+                  $notaOriginal = 0.0;
+                }else{
+                  $notaOriginal = $notaOriginalPersistida;
+                }
+              }
+
               $notaRecuperacao = $notaTurmaAlunoDisciplina['recuperacao'];
               $nomeCampoRecuperacao = $this->defineCampoTipoRecuperacao($turmaId);
 
               $recuperacaoEspecifica = $nomeCampoRecuperacao == 'notaRecuperacaoEspecifica';
+              $notaAposRecuperacao = (($notaRecuperacao > $notaOriginal) ? $notaRecuperacao : $notaOriginal);
+              $valorNota = is_null($recuperacaoEspecifica) ? $notaOriginal : $notaAposRecuperacao;
 
-              $notaAposRecuperacao = (($notaRecuperacao > $valor) ? $notaRecuperacao : $valor);
-
-              $valorNota = is_null($recuperacaoEspecifica) ? $valor : $notaAposRecuperacao;
-
-              $valor = $this->truncate($valor, 4);
+              $notaOriginal = $this->truncate($notaOriginal, 4);
               $array_nota = array(
                     'componenteCurricular' => $componenteCurricularId,
                     'nota'                 => $valorNota,
                     'etapa'                => $etapa,
-                    'notaOriginal'         => $valor,
+                    'notaOriginal'         => $notaOriginal,
                     $nomeCampoRecuperacao  => $notaRecuperacao);
 
               $nota = new Avaliacao_Model_NotaComponente($array_nota);
