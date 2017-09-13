@@ -431,7 +431,7 @@ class clsPmieducarEscolaSerieDisciplina
   {
     if (is_numeric($this->ref_ref_cod_serie) && is_numeric($this->ref_ref_cod_escola)) {
       $db = new clsBanco();
-      $db->Consulta("UPDATE {$this->_tabela} SET ativo = '0', etapas_especificas = '0' WHERE ref_ref_cod_serie = '{$this->ref_ref_cod_serie}' AND ref_ref_cod_escola = '{$this->ref_ref_cod_escola}'");
+      $db->Consulta("DELETE FROM {$this->_tabela} WHERE ref_ref_cod_serie = '{$this->ref_ref_cod_serie}' AND ref_ref_cod_escola = '{$this->ref_ref_cod_escola}'");
       return TRUE;
     }
 
