@@ -470,6 +470,19 @@ class clsPmieducarEscolaAnoLetivo
 		return false;
 	}
 
+	function getUltimoAnoLetivoAberto(){
+		$sql = "SELECT MAX(ano)
+					FROM {$this->_tabela}";
+		$db = new clsBanco();
+		$ultimoAnoLetivo = $db->CampoUnico($sql);
+
+		if ($ultimoAnoLetivo) {
+			return $ultimoAnoLetivo;
+		}
+
+		return false;
+	}
+
 	/**
 	 * Retorna um array com os dados de um registro
 	 *
