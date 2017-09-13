@@ -6,14 +6,15 @@ submitButton.click(function(){
     var componentesInput = $j('[name*=carga_horaria]');
     var arrayComponentes = [];
     componentesInput.each(function(i) {
-        nome  = this.name;
-        key   = nome.split('componentes[').pop().split('][').shift();
-        check = $j('[name="componentes['+key+'][id]"]').is(':checked');
-        id    = $j('[name="componentes['+key+'][id]"]').val();
-        carga = $j('[name="componentes['+key+'][carga_horaria]"]').val();
+        nome      = this.name;
+        key       = nome.split('componentes[').pop().split('][').shift();
+        check     = $j('[name="componentes['+key+'][id]"]').is(':checked');
+        id        = $j('[name="componentes['+key+'][id]"]').val();
+        carga     = $j('[name="componentes['+key+'][carga_horaria]"]').val();
+        tipo_nota = $j('[name="componentes['+key+'][tipo_nota]"]').val();
 
         if(check){
-            arrayComponentes.push({id : id, carga_horaria : carga});
+            arrayComponentes.push({id : id, carga_horaria : carga, tipo_nota : tipo_nota});
         }
     });
     atualizaComponentesSerie(arrayComponentes);
