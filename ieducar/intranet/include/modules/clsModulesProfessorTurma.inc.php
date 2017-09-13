@@ -205,6 +205,10 @@ class clsModulesProfessorTurma
       $gruda = ", ";
     }
 
+    $campos .= "{$gruda}updated_at";
+    $valores .= "{$gruda} CURRENT_TIMESTAMP";
+    $gruda = ", ";
+
     $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
     return $db->InsertId("{$this->_tabela}_id_seq");
     }
@@ -263,6 +267,9 @@ class clsModulesProfessorTurma
       $set .= "{$gruda}permite_lancar_faltas_componente = '{$this->permite_lancar_faltas_componente}'";
       $gruda = ", ";
     }
+
+    $set .= "{$gruda}updated_at = CURRENT_TIMESTAMP";
+    $gruda = ", ";
 
     if ($set) {
         $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE id = '{$this->id}'");
