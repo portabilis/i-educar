@@ -389,7 +389,7 @@ var tabela_arredondamento = new function() {
       FALSE, $this->_getHelp('tabelaArredondamento'), '', FALSE, FALSE);
 
     $this->campoLista('tabelaArredondamentoNumero', $this->_getLabel('tabelaArredondamentoNumerico'),
-      $tabelaArredondamento, $this->getEntity()->get('tabelaArredondamento'), '',
+      $tabelaArredondamentoNumerico, $this->getEntity()->get('tabelaArredondamento'), '',
       FALSE, $this->_getHelp('tabelaArredondamento'), '', FALSE, FALSE);
       
     $this->campoLista('tabelaArredondamentoConceitual', $this->_getLabel('tabelaArredondamentoConceitual'),
