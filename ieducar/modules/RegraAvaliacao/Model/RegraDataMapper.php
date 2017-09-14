@@ -51,28 +51,29 @@ class RegraAvaliacao_Model_RegraDataMapper extends CoreExt_DataMapper
   protected $_tableSchema = 'modules';
 
   protected $_attributeMap = array(
-    'instituicao'                 => 'instituicao_id',
-    'tipoNota'                    => 'tipo_nota',
-    'tipoProgressao'              => 'tipo_progressao',
-    'tabelaArredondamento'        => 'tabela_arredondamento_id',
-    'formulaMedia'                => 'formula_media_id',
-    'formulaRecuperacao'          => 'formula_recuperacao_id',
-    'porcentagemPresenca'         => 'porcentagem_presenca',
-    'parecerDescritivo'           => 'parecer_descritivo',
-    'tipoPresenca'                => 'tipo_presenca',
-    'mediaRecuperacao'            => 'media_recuperacao',
-    'tipoRecuperacaoParalela'     => 'tipo_recuperacao_paralela',
-    'mediaRecuperacaoParalela'    => 'media_recuperacao_paralela',
-    'notaMaximaGeral'             => 'nota_maxima_geral',
-    'notaMinimaGeral'             => 'nota_minima_geral',
-    'notaMaximaExameFinal'        => 'nota_maxima_exame_final',
-    'qtdCasasDecimais'            => 'qtd_casas_decimais',
-    'notaGeralPorEtapa'           => 'nota_geral_por_etapa',
-    'definirComponentePorEtapa'   => 'definir_componente_etapa',
-    'qtdDisciplinasDependencia'   => 'qtd_disciplinas_dependencia',
-    'qtdMatriculasDependencia'    => 'qtd_matriculas_dependencia',
-    'aprovaMediaDisciplina'       => 'aprova_media_disciplina',
-    'reprovacaoAutomatica'        => 'reprovacao_automatica',
+    'instituicao'                    => 'instituicao_id',
+    'tipoNota'                       => 'tipo_nota',
+    'tipoProgressao'                 => 'tipo_progressao',
+    'tabelaArredondamento'           => 'tabela_arredondamento_id',
+    'tabelaArredondamentoConceitual' => 'tabela_arredondamento_id_conceitual',
+    'formulaMedia'                   => 'formula_media_id',
+    'formulaRecuperacao'             => 'formula_recuperacao_id',
+    'porcentagemPresenca'            => 'porcentagem_presenca',
+    'parecerDescritivo'              => 'parecer_descritivo',
+    'tipoPresenca'                   => 'tipo_presenca',
+    'mediaRecuperacao'               => 'media_recuperacao',
+    'tipoRecuperacaoParalela'        => 'tipo_recuperacao_paralela',
+    'mediaRecuperacaoParalela'       => 'media_recuperacao_paralela',
+    'notaMaximaGeral'                => 'nota_maxima_geral',
+    'notaMinimaGeral'                => 'nota_minima_geral',
+    'notaMaximaExameFinal'           => 'nota_maxima_exame_final',
+    'qtdCasasDecimais'               => 'qtd_casas_decimais',
+    'notaGeralPorEtapa'              => 'nota_geral_por_etapa',
+    'definirComponentePorEtapa'      => 'definir_componente_etapa',
+    'qtdDisciplinasDependencia'      => 'qtd_disciplinas_dependencia',
+    'qtdMatriculasDependencia'       => 'qtd_matriculas_dependencia',
+    'aprovaMediaDisciplina'          => 'aprova_media_disciplina',
+    'reprovacaoAutomatica'           => 'reprovacao_automatica',
   );
 
   /**
@@ -172,9 +173,8 @@ class RegraAvaliacao_Model_RegraDataMapper extends CoreExt_DataMapper
    * @param RegraAvaliacao_Model_Regra $instance
    * @return array
    */
-  public function findTabelaArredondamento(RegraAvaliacao_Model_Regra $instance)
+  public function findTabelaArredondamento(RegraAvaliacao_Model_Regra $instance, array $where = array())
   {
-    $where = array();
 
     if (isset($instance->instituicao)) {
       $where['instituicao'] = $instance->instituicao;
