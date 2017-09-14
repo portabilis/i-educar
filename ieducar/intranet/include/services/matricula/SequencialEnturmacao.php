@@ -135,6 +135,7 @@ class SequencialEnturmacao {
                   WHEN matricula_turma.remanejado THEN TRUE
                   WHEN matricula.dependencia THEN TRUE
                   WHEN matricula_turma.abandono THEN TRUE
+                  WHEN matricula_turma.reclassificado THEN TRUE
                   ELSE FALSE END)
         AND matricula_turma.ref_cod_turma = $this->refCodTurma
       ORDER BY sequencial_fechamento";
@@ -283,8 +284,29 @@ class SequencialEnturmacao {
                                            WHEN matricula_turma.remanejado THEN TRUE
                                            WHEN matricula.dependencia THEN TRUE
                                            WHEN matricula_turma.abandono THEN TRUE
+                                           WHEN matricula_turma.reclassificado THEN TRUE
                                            ELSE FALSE
                                       END)");
+    }
+  }
+
+  function excluirSequencial(){
+    if ($this->excluirSequencial){
+      $sequencial = $this->sequencial;
+      $matricula = $this->refCodMatricula;
+
+      $sqlDelete = "DELETE FROM pmieducar.matricula_turma
+                      WHERE ref_cod_matricula = {$this->refCodMatricula}
+                        AND sequencial = {$this->sequencial}";
+
+      $sqlUpdate = "UPDATE pmieducar.matricula_turma
+                       SET sequencial = sequencial - 1
+                     WHERE ref_cod_matricula = {$this->refCodMatricula}
+                       AND sequencial > {$this->sequencial}";
+
+      $db = new clsBanco();
+      $db->Consulta($sqlDelete);
+      $db->Consulta($sqlUpdate);
     }
   }
 }
