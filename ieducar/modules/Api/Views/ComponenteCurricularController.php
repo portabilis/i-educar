@@ -108,7 +108,7 @@ function getComponentesCurricularesPorSerie(){
       $instituicaoId = $this->getRequest()->instituicao_id;
       $serieId       = $this->getRequest()->serie_id;
       
-      $sql = 'SELECT componente_curricular.id, componente_curricular.nome, carga_horaria::int, area_conhecimento_id, area_conhecimento.nome AS nome_area
+      $sql = 'SELECT componente_curricular.id, componente_curricular.nome, carga_horaria::int, tipo_nota, area_conhecimento_id, area_conhecimento.nome AS nome_area
                 FROM modules.componente_curricular
                INNER JOIN modules.componente_curricular_ano_escolar ON (componente_curricular_ano_escolar.componente_curricular_id = componente_curricular.id)
                INNER JOIN modules.area_conhecimento ON (area_conhecimento.id = componente_curricular.area_conhecimento_id)
@@ -117,7 +117,7 @@ function getComponentesCurricularesPorSerie(){
                 ORDER BY nome ';
       $disciplinas = $this->fetchPreparedQuery($sql, array($instituicaoId));
 
-      $attrs = array('id', 'nome', 'carga_horaria', 'area_conhecimento_id', 'nome_area');
+      $attrs = array('id', 'nome', 'carga_horaria', 'tipo_nota', 'area_conhecimento_id', 'nome_area');
       $disciplinas = Portabilis_Array_Utils::filterSet($disciplinas, $attrs);
 
       return array('disciplinas' => $disciplinas);

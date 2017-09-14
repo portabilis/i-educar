@@ -175,10 +175,11 @@ function carregaDadosComponentesSerie(){
 
 function handleCarregaDadosComponentesSerie(response){
     componentes = response.disciplinas;
-    
+    console.log(response.disciplinas);
     componentes.forEach(function(componente) {
         $j( '#componente_' + componente.id).prop( "checked", true );
         $j( '#carga_horaria_' + componente.id ).val(componente.carga_horaria);
+        $j( '#tipo_nota_' + componente.id ).val(componente.tipo_nota);
     }, this);
 }
 
@@ -276,7 +277,7 @@ function getAreaConhecimentoSerie(){
 function htmlCabecalhoAreaConhecimento(id, nome){
     return `<tr id="area_conhecimento_` + id + `"
                 class="area_conhecimento_title">
-                <td>` + nome + `</td>
+                <td colspan="2">` + nome + `</td>
                 <td class="td_check_all">
                 </td>
                 <td style="text-align: right;">
@@ -304,6 +305,9 @@ function htmlSubCabecalhoAreaConhecimento(id){
                 <td>
                     <b>Carga horária</b>
                 </td>
+                <td>
+                    <b>Tipo de nota</b>
+                </td>
             </tr>`;
 }
 
@@ -326,6 +330,14 @@ function htmlComponentesAreaConhecimento(id, componente_id, componente_nome){
                            name="componentes[` + id + componente_id + `][carga_horaria]"
                            class="carga_horaria"
                            id="carga_horaria_` + componente_id + `" value="">
+                </td>
+                <td>
+                    <select name="componentes[` + id + componente_id + `][tipo_nota]"
+                            class="tipo_nota"
+                            id="tipo_nota_` + componente_id + `">
+                        <option value="1">Conceitual</option>
+                        <option value="2">Numérica</option>
+                    </select>
                 </td>
             </tr>`;
 }
