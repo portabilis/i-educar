@@ -665,7 +665,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
           $nota = '-';
         }
 
-        if($mediaAreaConhecimento){
+        if ($mediaAreaConhecimento) {
           $nota = str_replace(',', '.', $nota);
           $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['nome'] = $componenteCurricular->area_conhecimento->nome;
           $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['nota'] += $nota;
@@ -675,7 +675,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
           $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['carga_horaria_disciplina'] = $componenteCurricular->area_conhecimento->carga_horaria_disciplina;
           $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['dependencia'] = $disciplinaDependencia;
           $arrayAreaConhecimento[$componenteCurricular->area_conhecimento->id]['count']++;
-        }else
+        } else {
           $this->_createHistoricoDisciplinas(array(
             "sequencial" => $sequencial,
             "alunoId" => $alunoId,
@@ -687,7 +687,9 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
             "carga_horaria_disciplina" => $carga_horaria_disciplina,
             "dependencia" => $disciplinaDependencia
           ));
+        }
       }
+
       if ($mediaAreaConhecimento){
         foreach ($arrayAreaConhecimento as $key => $value) {
 
