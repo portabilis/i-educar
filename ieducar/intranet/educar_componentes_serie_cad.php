@@ -33,6 +33,7 @@ require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'include/modules/clsModulesComponenteCurricularAnoEscolar.inc.php';
+require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
 
 /**
  * clsIndexBase class.
@@ -73,6 +74,7 @@ class indice extends clsCadastro
   var $serie_id;
   var $componente_id;
   var $carga_horaria;
+  var $retorno;
 
   function Inicializar()
   {
@@ -116,7 +118,7 @@ class indice extends clsCadastro
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "Início",
          "educar_index.php"                  => "Escola",
-         ""        => "{$nomeMenu} componentes da série"
+         ""        => "Componentes da série"
     ));
     $this->enviaLocalizacao($localizacao->montar());
 
@@ -125,7 +127,9 @@ class indice extends clsCadastro
     $this->alerta_faixa_etaria  = dbBool($this->alerta_faixa_etaria);
     $this->bloquear_matricula_faixa_etaria  = dbBool($this->bloquear_matricula_faixa_etaria);
     $this->exigir_inep  = dbBool($this->exigir_inep);
-
+    
+    $this->retorno = $retorno;
+    
     return $retorno;
   }
 
@@ -143,6 +147,7 @@ class indice extends clsCadastro
     $this->campoOculto('curso_id', $this->curso_id);
     $this->campoOculto('serie_id', $this->serie_id);
     $this->campoOculto('serie_id', $this->serie_id);
+    $this->campoOculto('retorno', $this->retorno);
 
     $this->inputsHelper()->dynamic('instituicao', array('value' => $this->instituicao_id));
 
@@ -158,7 +163,8 @@ class indice extends clsCadastro
 
     $this->campoRotulo('componentes_', 'Componentes da série',"<table id='componentes'></table>");
 
-    $scripts = array('/modules/Cadastro/Assets/Javascripts/ComponentesSerie.js');
+    $scripts = array('/modules/Cadastro/Assets/Javascripts/ComponentesSerie.js',
+                     '/modules/Cadastro/Assets/Javascripts/ComponentesSerieAcao.js');
     Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
   }
 
@@ -167,24 +173,7 @@ class indice extends clsCadastro
     @session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     @session_write_close();
-
-    // Elimina do array de componentes cargas horárias de componentes não selecionados
-    foreach ($this->componentes as $key => $componente) {
-      if (count($componente) < 2) {
-        unset($this->componentes[$key]);
-      }
-    }
-
-    foreach ($this->componentes as $key => $componente) {
-      $obj = new clsModulesComponenteCurricularAnoEscolar(intval($componente['id']), intval($this->ref_cod_serie), intval($componente['carga_horaria']));
-      if (!$obj->cadastra()) {
-            $this->mensagem .= "Cadastro não realizado.<br>";
-            echo "<!--\nErro ao cadastrar clsModulesComponenteCurricularAnoEscolar\nvalores obrigatórios\nis_numeric( $this->pessoa_logada ) && is_numeric( $this->ref_cod_serie )\n-->";
-            return FALSE;
-          }
-    }
-
-    $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
+    // Todas as ações estão sendo realizadas em ComponentesSerieAcao.js
     header("Location: educar_componentes_serie_lst.php");
     die();
     
@@ -192,29 +181,12 @@ class indice extends clsCadastro
 
   function Editar()
   {
-
     @session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     @session_write_close();
-   
-    // Elimina do array de componentes cargas horárias de componentes não selecionados
-    foreach ($this->componentes as $key => $componente) {
-      if (count($componente) < 2) {
-        unset($this->componentes[$key]);
-      }
-    }
-
-    $obj = new clsModulesComponenteCurricularAnoEscolar(NULL, $this->serie_id, NULL, $this->componentes); 
-
-    if ($obj->atualizaComponentesDaSerie()) {
-      $this->mensagem .= "Edição efetuada com sucesso.<br>";
-      header("Location: educar_componentes_serie_lst.php");
-      die();
-    }
-
-    $this->mensagem = "Edição não realizada.<br>";
-    echo "<!--\nErro ao editar clsModulesComponenteCurricularAnoEscolar\nvalores obrigatórios\nif( is_numeric( $this->serie_id ) && is_numeric( $this->pessoa_logada ) )\n-->";
-    return FALSE;
+    // Todas as ações estão sendo realizadas em ComponentesSerieAcao.js
+    header("Location: educar_componentes_serie_lst.php");
+    die();
   }
 
   function Excluir()
@@ -222,18 +194,10 @@ class indice extends clsCadastro
     @session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     @session_write_close();
-
-    $obj = new clsModulesComponenteCurricularAnoEscolar(NULL, intval($this->serie_id));
-
-    if ($obj->exclui()) {
-      $this->mensagem .= "Exclusão efetuada com sucesso.<br>";
-      header( "Location: educar_componentes_serie_lst.php" );
-      die();
-    }
-
-    $this->mensagem = "Exclusão não realizada.<br>";
-    echo "<!--\nErro ao excluir clsModulesComponenteCurricularAnoEscolar\nvalores obrigatórios\nif( is_numeric( $this->serie_id ) && is_numeric( $this->pessoa_logada ) )\n-->";
-    return FALSE;
+    // Todas as ações estão sendo realizadas em ComponentesSerieAcao.js
+    $this->mensagem .= "Exclusão efetuada com sucesso.<br>";
+    header( "Location: educar_componentes_serie_lst.php" );
+    die();
   }
 }
 

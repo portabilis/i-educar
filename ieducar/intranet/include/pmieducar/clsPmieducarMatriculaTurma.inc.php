@@ -1112,6 +1112,7 @@ class clsPmieducarMatriculaTurma
   }
 
   function listaPorSequencial($codTurma) {
+
       $db = new clsBanco();
       $sql ="SELECT nome,
                     sequencial_fechamento,
@@ -1126,6 +1127,7 @@ class clsPmieducarMatriculaTurma
                     WHEN matricula_turma.remanejado THEN TRUE
                     WHEN matricula.dependencia THEN TRUE
                     WHEN matricula_turma.abandono THEN TRUE
+                    WHEN matricula_turma.reclassificado THEN TRUE
                     ELSE FALSE END)
                 AND ref_cod_turma = {$codTurma}
                 AND matricula_turma.sequencial = (SELECT MAX(sequencial)

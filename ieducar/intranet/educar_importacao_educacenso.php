@@ -1622,7 +1622,7 @@ class indice extends clsCadastro
 
   function getOrCreateBairro($idmun, $iddis, $nomeBairro, $localizacao){
     $idbai = $this->getBairro($idmun, $iddis, $nomeBairro);
-
+    $nomeBairro = utf8_decode($nomeBairro);
     if(!$idbai){
       $bairro = new clsBairro();
       $bairro->idmun = $idmun;
@@ -1636,6 +1636,7 @@ class indice extends clsCadastro
   }
 
   function getBairro($idmun, $iddis, $nomeBairro){
+    $nomeBairro = utf8_encode($nomeBairro);
     $sql = "SELECT idbai
               FROM public.bairro
               WHERE idmun = {$idmun}

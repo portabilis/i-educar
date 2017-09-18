@@ -83,7 +83,7 @@ class ComponenteCurricularController extends ApiCoreController
 
       $areaConhecimentoId ? $where = 'AND area_conhecimento_id = '. $areaConhecimentoId : '';
       
-      $sql = 'SELECT componente_curricular.id, componente_curricular.nome, area_conhecimento_id, area_conhecimento.nome AS nome_area
+      $sql = 'SELECT componente_curricular.id, componente_curricular.nome, area_conhecimento_id, area_conhecimento.nome AS nome_area, ordenamento
                 FROM modules.componente_curricular
                INNER JOIN modules.area_conhecimento ON (area_conhecimento.id = componente_curricular.area_conhecimento_id)
                 WHERE componente_curricular.instituicao_id = $1
@@ -91,7 +91,7 @@ class ComponenteCurricularController extends ApiCoreController
                 ORDER BY nome ';
       $disciplinas = $this->fetchPreparedQuery($sql, array($instituicaoId));
 
-      $attrs = array('id', 'nome', 'area_conhecimento_id', 'nome_area');
+      $attrs = array('id', 'nome', 'area_conhecimento_id', 'nome_area', 'ordenamento');
       $disciplinas = Portabilis_Array_Utils::filterSet($disciplinas, $attrs);
 
       foreach ($disciplinas as &$disciplina){
