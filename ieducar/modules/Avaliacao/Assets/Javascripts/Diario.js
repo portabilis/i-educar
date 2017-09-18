@@ -931,10 +931,13 @@ function handleSearch($resultTable, dataResponse) {
 
 }
 
-function _notaField(matriculaId, componenteCurricularId, klass, id, value, areaConhecimentoId, maxLength) {
-  if($tableSearchDetails.data('details').tipo_nota == 'conceitual') {
-    var opcoesNotas = $tableSearchDetails.data('details').opcoes_notas;
+function _notaField(matriculaId, componenteCurricularId, klass, id, value, areaConhecimentoId, maxLength, tipoNota) {
+  var detalhes = $tableSearchDetails.data('details');
+  var notaConceitual = detalhes.tipo_nota == 'numericaconceitual' && tipoNota == 1;
+  var notaNumerica   = detalhes.tipo_nota == 'numericaconceitual' && tipoNota == 2;
+  var opcoesNotas    = notaConceitual ? detalhes.opcoes_notas_conceituais : detalhes.opcoes_notas;
 
+  if(detalhes.tipo_nota == 'conceitual' || notaConceitual) {
     var $notaField = $j('<select />')
                      .addClass(klass)
                      .addClass(areaConhecimentoId)
@@ -969,10 +972,13 @@ function _notaField(matriculaId, componenteCurricularId, klass, id, value, areaC
   return $j('<td />').html($notaField).addClass('center');
 }
 
-function _mediaField(matriculaId, componenteCurricularId, klass, id, value, areaConhecimentoId, maxLength) {
-  if($tableSearchDetails.data('details').tipo_nota == 'conceitual') {
-    var opcoesNotas = $tableSearchDetails.data('details').opcoes_notas;
+function _mediaField(matriculaId, componenteCurricularId, klass, id, value, areaConhecimentoId, maxLength, tipoNota) {
+  var detalhes = $tableSearchDetails.data('details');
+  var notaConceitual = detalhes.tipo_nota == 'numericaconceitual' && tipoNota == 1;
+  var notaNumerica   = detalhes.tipo_nota == 'numericaconceitual' && tipoNota == 2;
+  var opcoesNotas    = notaConceitual ? detalhes.opcoes_notas_conceituais : detalhes.opcoes_notas;
 
+  if(detalhes.tipo_nota == 'conceitual' || notaConceitual) {
     var $notaField = $j('<select />')
                      .addClass(klass)
                      .addClass(areaConhecimentoId)
@@ -1013,25 +1019,27 @@ function _mediaField(matriculaId, componenteCurricularId, klass, id, value, area
   return $j('<td />').html($notaField).addClass('center');
 }
 
-function notaField(matriculaId, componenteCurricularId, value, areaConhecimentoId, maxLength) {
+function notaField(matriculaId, componenteCurricularId, value, areaConhecimentoId, maxLength, tipoNota) {
   return _notaField(matriculaId,
                     componenteCurricularId,
                     'nota-matricula-cc',
                     'nota-matricula-' + matriculaId + '-cc-' + componenteCurricularId,
                     value,
                     'area-id-' + areaConhecimentoId,
-                    maxLength);
+                    maxLength,
+                    tipoNota);
 }
 
 
-function notaExameField(matriculaId, componenteCurricularId, value, maxLength) {
+function notaExameField(matriculaId, componenteCurricularId, value, maxLength, tipoNota) {
   return _notaField(matriculaId,
                     componenteCurricularId,
                     'nota-exame-matricula-cc',
                     'nota-exame-matricula-' + matriculaId + '-cc-' + componenteCurricularId,
                     value,
                     null,
-                    maxLength);
+                    maxLength,
+                    tipoNota);
 }
 
 function notaGeralEtapaField(matriculaId, componenteCurricularId, value, maxLength){
@@ -1101,24 +1109,26 @@ function notaRecuperacaoParalelaField(matriculaId, componenteCurricularId, value
                     maxLength);
 }
 
-function notaRecuperacaoEspecificaField(matriculaId, componenteCurricularId, value, areaConhecimentoId, maxLength) {
+function notaRecuperacaoEspecificaField(matriculaId, componenteCurricularId, value, areaConhecimentoId, maxLength, tipoNota) {
   return _notaField(matriculaId,
                     componenteCurricularId,
                     'nota-recuperacao-especifica-matricula-cc',
                     'nota-recuperacao-especifica-matricula-' + matriculaId + '-cc-' + componenteCurricularId,
                     value,
                     'area-id-' + areaConhecimentoId,
-                    maxLength);
+                    maxLength,
+                    tipoNota);
 }
 
-function mediaField(matriculaId, componenteCurricularId, value, maxLength){
+function mediaField(matriculaId, componenteCurricularId, value, maxLength, tipoNota){
   return _mediaField(matriculaId,
                     componenteCurricularId,
                     'media-cc',
                     'media-matricula-' + matriculaId + '-cc-' + componenteCurricularId,
                     value,
                     0,
-                    maxLength);
+                    maxLength,
+                    tipoNota);
 }
 
 function getNotaGeralMaxLength(){
@@ -1155,7 +1165,7 @@ function updateComponenteCurricular($targetElement, matriculaId, cc) {
   if(useNota) {
 
     if(usaRecuperacaoParalelaPorEtapa || window.habilita_campo_etapa_especifica){
-      notaField(matriculaId, cc.id, cc.nota_original, cc.area_id, getNotaGeralMaxLength()).appendTo($targetElement);
+      notaField(matriculaId, cc.id, cc.nota_original, cc.area_id, getNotaGeralMaxLength(), cc.tipo_nota).appendTo($targetElement);
 
       if(usaRecuperacaoParalelaPorEtapa){
         hasNotaRecuperacaoParalela = (cc.nota_recuperacao_paralela != '');
@@ -1176,7 +1186,7 @@ function updateComponenteCurricular($targetElement, matriculaId, cc) {
       }
 
       if(window.habilita_campo_etapa_especifica){
-        $notaRecuperacaoEspecificaField = notaRecuperacaoEspecificaField(matriculaId, cc.id, cc.nota_recuperacao_especifica, cc.area_id, getNotaRecuperacaoEspecificaMaxLength());
+        $notaRecuperacaoEspecificaField = notaRecuperacaoEspecificaField(matriculaId, cc.id, cc.nota_recuperacao_especifica, cc.area_id, getNotaRecuperacaoEspecificaMaxLength(), cc.tipo_nota);
         $notaRecuperacaoEspecificaField.appendTo($targetElement);
 
         var shouldShowNotaRecuperacaoEspecifica = cc.should_show_recuperacao_especifica;
@@ -1186,12 +1196,12 @@ function updateComponenteCurricular($targetElement, matriculaId, cc) {
         }
       }
     }else{
-      notaField(matriculaId, cc.id, cc.nota_atual, cc.area_id, getNotaGeralMaxLength()).appendTo($targetElement);
+      notaField(matriculaId, cc.id, cc.nota_atual, cc.area_id, getNotaGeralMaxLength(), cc.tipo_nota).appendTo($targetElement);
     }
 
     // mostra nota exame, média final e situação do aluno caso estiver selecionado a ultima etapa
     if ($tableSearchDetails.data('details').quantidade_etapas == $j('#etapa').val()) {
-      var $fieldNotaExame = notaExameField(matriculaId, cc.id, cc.nota_exame, getNotaExameFinalMaxLength());
+      var $fieldNotaExame = notaExameField(matriculaId, cc.id, cc.nota_exame, getNotaExameFinalMaxLength(), cc.tipo_nota);
 
       var $fieldNN = notaNecessariaField(matriculaId, cc.id, cc.nota_necessaria_exame);
 
@@ -1208,9 +1218,9 @@ function updateComponenteCurricular($targetElement, matriculaId, cc) {
 
       if(progressaoManual){
         if($tableSearchDetails.data('details').tipo_nota == 'numerica'){
-          var $fieldMedia = mediaField(matriculaId, cc.id, cc.media_arredondada, getNotaGeralMaxLength());
+          var $fieldMedia = mediaField(matriculaId, cc.id, cc.media_arredondada, getNotaGeralMaxLength(), cc.tipo_nota);
         }else{
-          var $fieldMedia = mediaField(matriculaId, cc.id, cc.media, getNotaGeralMaxLength());
+          var $fieldMedia = mediaField(matriculaId, cc.id, cc.media, getNotaGeralMaxLength(), cc.tipo_nota);
         }
 
         $fieldMedia.appendTo($targetElement);
