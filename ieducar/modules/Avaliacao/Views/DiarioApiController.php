@@ -1648,7 +1648,9 @@ class DiarioApiController extends ApiCoreController
 
       // opcoes notas
       $itensRegra['opcoes_notas'] = $this->getOpcoesNotas();
-      $itensRegra['opcoes_notas_conceituais'] = $this->getOpcoesNotasConceituais();
+      if ($tpNota == $cnsNota::NUMERICACONCEITUAL){
+        $itensRegra['opcoes_notas_conceituais'] = $this->getOpcoesNotasConceituais();
+      }
 
       // etapas
       $itensRegra['quantidade_etapas'] = $this->serviceBoletim()->getOption('etapas');
