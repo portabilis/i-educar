@@ -74,6 +74,12 @@ function checkAll(id){
     $j( '.check_componente_area_' + id).prop( "checked", isChecked );
 }
 
+function habilitaCampos(componente_id){
+    var isChecked = !$j( '#componente_' + componente_id).is(':checked');
+    $j( '#carga_horaria_' + componente_id ).prop("disabled", isChecked);
+    $j( '#tipo_nota_' + componente_id ).prop("disabled", isChecked);
+}
+
 function expandClose(id){
     var expand = $j('.area_conhecimento_'+id).is(':visible');
     $j('.area_conhecimento_'+id).toggle('fast');
@@ -175,11 +181,10 @@ function carregaDadosComponentesSerie(){
 
 function handleCarregaDadosComponentesSerie(response){
     componentes = response.disciplinas;
-    console.log(response.disciplinas);
     componentes.forEach(function(componente) {
         $j( '#componente_' + componente.id).prop( "checked", true );
-        $j( '#carga_horaria_' + componente.id ).val(componente.carga_horaria);
-        $j( '#tipo_nota_' + componente.id ).val(componente.tipo_nota);
+        $j( '#carga_horaria_' + componente.id ).val(componente.carga_horaria).prop("disabled", false);
+        $j( '#tipo_nota_' + componente.id ).val(componente.tipo_nota).prop("disabled", false);
     }, this);
 }
 
@@ -319,7 +324,8 @@ function htmlComponentesAreaConhecimento(id, componente_id, componente_nome){
                                name="componentes[` + id + componente_id + `][id]"
                                class="check_componente_area_`+ id +`"
                                id="componente_` + componente_id + `"
-                               value="` + componente_id + `">` +
+                               value="` + componente_id + `"
+                               onclick="habilitaCampos(` + componente_id + `)">` +
                         componente_nome +
                     `</label>
                 </td>
@@ -329,12 +335,15 @@ function htmlComponentesAreaConhecimento(id, componente_id, componente_nome){
                            maxlength="5"
                            name="componentes[` + id + componente_id + `][carga_horaria]"
                            class="carga_horaria"
-                           id="carga_horaria_` + componente_id + `" value="">
+                           id="carga_horaria_` + componente_id + `"
+                           value=""
+                           disabled>
                 </td>
                 <td>
                     <select name="componentes[` + id + componente_id + `][tipo_nota]"
                             class="tipo_nota"
-                            id="tipo_nota_` + componente_id + `">
+                            id="tipo_nota_` + componente_id + `"
+                            disabled>
                         <option value="1">Conceitual</option>
                         <option value="2">Numérica</option>
                     </select>
