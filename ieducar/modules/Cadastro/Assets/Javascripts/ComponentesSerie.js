@@ -80,6 +80,18 @@ function habilitaCampos(componente_id){
     $j( '#tipo_nota_' + componente_id ).prop("disabled", isChecked);
 }
 
+function cloneValues(area_id, componente_id, classe){
+    var valor = $j('#' + classe + '_' + componente_id).val();
+    var classeClone = '.area_conhecimento_' + area_id + ' .' + classe;
+
+    console.log(classeClone);
+    
+    $j(classeClone).each(function(componente) {
+        if(!$j(this).prop('disabled'))
+            $j(this).val(valor);
+    }, this);
+}
+
 function expandClose(id){
     var expand = $j('.area_conhecimento_'+id).is(':visible');
     $j('.area_conhecimento_'+id).toggle('fast');
@@ -208,7 +220,8 @@ function handleCarregaComponentesDaArea(response){
     var area_conhecimento_id = urlRequisicao.get('area_conhecimento_id');
 
     for (var i = componentes.length - 1; i >= 0 ; i--) {
-        $j(htmlComponentesAreaConhecimento(componentes[i].area_conhecimento_id, componentes[i].id, componentes[i].nome)).insertAfter('#area_conhecimento_' + componentes[i].area_conhecimento_id);
+        var firstLine = i == 0;
+        $j(htmlComponentesAreaConhecimento(componentes[i].area_conhecimento_id, componentes[i].id, componentes[i].nome, firstLine)).insertAfter('#area_conhecimento_' + componentes[i].area_conhecimento_id);
     }
 
     $j(htmlSubCabecalhoAreaConhecimento(area_conhecimento_id)).insertAfter('#area_conhecimento_' + area_conhecimento_id);
@@ -316,7 +329,22 @@ function htmlSubCabecalhoAreaConhecimento(id){
             </tr>`;
 }
 
-function htmlComponentesAreaConhecimento(id, componente_id, componente_nome){
+function htmlComponentesAreaConhecimento(id, componente_id, componente_nome, firstLine){
+
+    var iconCloneCargaHoraria = '';
+    var iconCloneTipoNota = '';
+
+    if(firstLine){
+        iconCloneCargaHoraria = `<a class="clone-values"
+                                    onclick="cloneValues(` + id + `,` + componente_id + `, 'carga_horaria')">
+                                    <i class="fa fa-clone" aria-hidden="true"></i>
+                                 </a>`;
+        iconCloneTipoNota = `<a class="clone-values"
+                                onclick="cloneValues(` + id + `,` + componente_id + `, 'tipo_nota')">
+                                <i class="fa fa-clone" aria-hidden="true"></i>
+                             </a>`;    
+    }
+
     return `<tr class="area_conhecimento_` + id + `">
                 <td colspan="2">
                     <label>
@@ -338,15 +366,18 @@ function htmlComponentesAreaConhecimento(id, componente_id, componente_nome){
                            id="carga_horaria_` + componente_id + `"
                            value=""
                            disabled>
+                           ` + iconCloneCargaHoraria + `
                 </td>
                 <td>
                     <select name="componentes[` + id + componente_id + `][tipo_nota]"
                             class="tipo_nota"
                             id="tipo_nota_` + componente_id + `"
                             disabled>
+                        <option value="">Selecione</option>
                         <option value="1">Conceitual</option>
                         <option value="2">Numérica</option>
                     </select>
+                    ` + iconCloneTipoNota + `
                 </td>
             </tr>`;
 }
