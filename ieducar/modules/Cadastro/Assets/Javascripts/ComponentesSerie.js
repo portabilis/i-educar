@@ -72,6 +72,8 @@ $j("#ref_cod_area_conhecimento").change(function() {
 function checkAll(id){
     var isChecked = $j('#check-all-'+id).is(':checked');
     $j( '.check_componente_area_' + id).prop( "checked", isChecked );
+    $j( '.area_conhecimento_' + id + ' .carga_horaria').prop("disabled", !isChecked);
+    $j( '.area_conhecimento_' + id + ' .tipo_nota').prop("disabled", !isChecked);
 }
 
 function habilitaCampos(componente_id){
