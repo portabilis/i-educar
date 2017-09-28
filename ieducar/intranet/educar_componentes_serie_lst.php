@@ -167,7 +167,7 @@ class indice extends clsListagem
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_index.php"                  => "Escola",
-         ""        => "Componentes das séries"             
+         ""        => "Componentes da série"             
     ));
     $this->enviaLocalizacao($localizacao->montar());  
     $scripts = array('/modules/Cadastro/Assets/Javascripts/ComponentesSerie.js');
