@@ -106,7 +106,7 @@ class indice extends clsListagem
 
     $this->addCabecalhos($lista_busca);
 
-    $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'curso'));
+    $this->inputsHelper()->dynamic(array('instituicao', 'curso'));
 
     // outros Filtros
     $this->campoTexto('nm_serie', 'Série', $this->nm_serie, 30, 255, FALSE);
@@ -170,7 +170,8 @@ class indice extends clsListagem
          ""        => "Componentes das séries"             
     ));
     $this->enviaLocalizacao($localizacao->montar());  
-
+    $scripts = array('/modules/Cadastro/Assets/Javascripts/ComponentesSerie.js');
+    Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
   }
 }
 
