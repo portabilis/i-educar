@@ -74,12 +74,16 @@ function checkAll(id){
     $j( '.check_componente_area_' + id).prop( "checked", isChecked );
     $j( '.area_conhecimento_' + id + ' .carga_horaria').prop("disabled", !isChecked);
     $j( '.area_conhecimento_' + id + ' .tipo_nota').prop("disabled", !isChecked);
+    if(!isChecked){
+        $j( '.area_conhecimento_' + id + ' .carga_horaria').val('');
+        $j( '.area_conhecimento_' + id + ' .tipo_nota').val('');
+    }
 }
 
 function habilitaCampos(componente_id){
     var isChecked = !$j( '#componente_' + componente_id).is(':checked');
-    $j( '#carga_horaria_' + componente_id ).prop("disabled", isChecked);
-    $j( '#tipo_nota_' + componente_id ).prop("disabled", isChecked);
+    $j( '#carga_horaria_' + componente_id ).prop("disabled", isChecked).val('');
+    $j( '#tipo_nota_' + componente_id ).prop("disabled", isChecked).val('');
 }
 
 function cloneValues(area_id, componente_id, classe){
