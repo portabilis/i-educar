@@ -184,7 +184,7 @@ class indice extends clsCadastro
                                           'help'  =>  Portabilis_String_Utils::toLatin1('Marque esta opção somente se o professor leciona uma disciplina específica na turma selecionada.')));
 
     $this->inputsHelper()->checkbox('selecionar_todos', array('label' => 'Selecionar/remover todos'));
-    $this->inputsHelper()->multipleSearchComponenteCurricular(null, array('label' => 'Componentes lecionados', 'required' => false));
+    $this->inputsHelper()->multipleSearchComponenteCurricular(null, array('label' => 'Componentes lecionados', 'required' => TRUE));
 
     $scripts = array(
       '/modules/Cadastro/Assets/Javascripts/ServidorVinculoTurma.js'
