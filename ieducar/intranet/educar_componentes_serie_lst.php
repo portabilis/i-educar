@@ -106,10 +106,7 @@ class indice extends clsListagem
 
     $this->addCabecalhos($lista_busca);
 
-    $this->inputsHelper()->dynamic(array('instituicao', 'curso'));
-
-    // outros Filtros
-    $this->campoTexto('nm_serie', 'Série', $this->nm_serie, 30, 255, FALSE);
+    $this->inputsHelper()->dynamic(array('instituicao', 'curso', 'serie'), array('required' => false));
 
     // Paginador
     $this->limite = 10;
@@ -120,9 +117,8 @@ class indice extends clsListagem
     $obj_serie->setOrderby("nm_serie ASC");
     $obj_serie->setLimite($this->limite, $this->offset);
 
-    $lista = $obj_serie->listaSeriesComComponentesVinculados(NULL,
+    $lista = $obj_serie->listaSeriesComComponentesVinculados($this->ref_cod_serie,
                                                              $this->ref_cod_curso,
-                                                             $this->nm_serie,
                                                              $this->ref_cod_instituicao,
                                                              1);
 
@@ -170,7 +166,7 @@ class indice extends clsListagem
          ""        => "Componentes da série"             
     ));
     $this->enviaLocalizacao($localizacao->montar());  
-    $scripts = array('/modules/Cadastro/Assets/Javascripts/ComponentesSerie.js');
+    $scripts = array('/modules/Cadastro/Assets/Javascripts/ComponentesSerieFiltros.js');
     Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
   }
 }
