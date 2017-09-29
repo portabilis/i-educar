@@ -85,6 +85,15 @@ SELECT historico.cod_aluno,
        historico.carga_horaria_disciplina7,
        historico.carga_horaria_disciplina8,
        historico.carga_horaria_disciplina9,
+       historico.disciplina_dependencia1,
+       historico.disciplina_dependencia2,
+       historico.disciplina_dependencia3,
+       historico.disciplina_dependencia4,
+       historico.disciplina_dependencia5,
+       historico.disciplina_dependencia6,
+       historico.disciplina_dependencia7,
+       historico.disciplina_dependencia8,
+       historico.disciplina_dependencia9,
        historico.ch_componente_1,
        historico.ch_componente_2,
        historico.ch_componente_3,
@@ -1513,142 +1522,7 @@ FROM
                         1,
                         1) = 9::text
       ORDER BY (he.aprovado = 4) LIMIT 1) AS transferido9,
-      
 
-                   (SELECT hd.carga_horaria_disciplina
-                    FROM historico_disciplinas hd
-                    WHERE hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
-                      AND hd.ref_sequencial = (
-                                                 (SELECT MAX(hee.sequencial) AS MAX
-                                                  FROM historico_escolar hee
-                                                  WHERE hee.ref_cod_aluno = hd.ref_ref_cod_aluno
-                                                    AND relatorio.get_texto_sem_caracter_especial(hd.nm_disciplina::text) = relatorio.get_texto_sem_caracter_especial(historico_disciplinas.nm_disciplina::text)
-                                                    AND substring(hee.nm_serie::text,
-                                                                    1,
-                                                                    1) = 1::text
-                                                    AND hee.ativo = 1
-                                                    AND hee.extra_curricular = 0
-                                                    AND COALESCE(hee.dependencia, FALSE) = FALSE)) LIMIT 1) AS carga_horaria_disciplina1,
-
-                   (SELECT hd.carga_horaria_disciplina
-                    FROM historico_disciplinas hd
-                    WHERE hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
-                      AND hd.ref_sequencial = (
-                                                 (SELECT MAX(hee.sequencial) AS MAX
-                                                  FROM historico_escolar hee
-                                                  WHERE hee.ref_cod_aluno = hd.ref_ref_cod_aluno
-                                                    AND relatorio.get_texto_sem_caracter_especial(hd.nm_disciplina::text) = relatorio.get_texto_sem_caracter_especial(historico_disciplinas.nm_disciplina::text)
-                                                    AND substring(hee.nm_serie::text,
-                                                                    1,
-                                                                    1) = 2::text
-                                                    AND hee.ativo = 1
-                                                    AND hee.extra_curricular = 0
-                                                    AND COALESCE(hee.dependencia, FALSE) = FALSE)) LIMIT 1) AS carga_horaria_disciplina2,
-
-                   (SELECT hd.carga_horaria_disciplina
-                    FROM historico_disciplinas hd
-                    WHERE hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
-                      AND hd.ref_sequencial = (
-                                                 (SELECT MAX(hee.sequencial) AS MAX
-                                                  FROM historico_escolar hee
-                                                  WHERE hee.ref_cod_aluno = hd.ref_ref_cod_aluno
-                                                    AND relatorio.get_texto_sem_caracter_especial(hd.nm_disciplina::text) = relatorio.get_texto_sem_caracter_especial(historico_disciplinas.nm_disciplina::text)
-                                                    AND substring(hee.nm_serie::text,
-                                                                    1,
-                                                                    1) = 3::text
-                                                    AND hee.ativo = 1
-                                                    AND hee.extra_curricular = 0
-                                                    AND COALESCE(hee.dependencia, FALSE) = FALSE)) LIMIT 1) AS carga_horaria_disciplina3,
-
-                   (SELECT hd.carga_horaria_disciplina
-                    FROM historico_disciplinas hd
-                    WHERE hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
-                      AND hd.ref_sequencial = (
-                                                 (SELECT MAX(hee.sequencial) AS MAX
-                                                  FROM historico_escolar hee
-                                                  WHERE hee.ref_cod_aluno = hd.ref_ref_cod_aluno
-                                                    AND relatorio.get_texto_sem_caracter_especial(hd.nm_disciplina::text) = relatorio.get_texto_sem_caracter_especial(historico_disciplinas.nm_disciplina::text)
-                                                    AND substring(hee.nm_serie::text,
-                                                                    1,
-                                                                    1) = 4::text
-                                                    AND hee.ativo = 1
-                                                    AND hee.extra_curricular = 0
-                                                    AND COALESCE(hee.dependencia, FALSE) = FALSE)) LIMIT 1) AS carga_horaria_disciplina4,
-
-                   (SELECT hd.carga_horaria_disciplina
-                    FROM historico_disciplinas hd
-                    WHERE hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
-                      AND hd.ref_sequencial = (
-                                                 (SELECT MAX(hee.sequencial) AS MAX
-                                                  FROM historico_escolar hee
-                                                  WHERE hee.ref_cod_aluno = hd.ref_ref_cod_aluno
-                                                    AND relatorio.get_texto_sem_caracter_especial(hd.nm_disciplina::text) = relatorio.get_texto_sem_caracter_especial(historico_disciplinas.nm_disciplina::text)
-                                                    AND substring(hee.nm_serie::text,
-                                                                    1,
-                                                                    1) = 5::text
-                                                    AND hee.ativo = 1
-                                                    AND hee.extra_curricular = 0
-                                                    AND COALESCE(hee.dependencia, FALSE) = FALSE)) LIMIT 1) AS carga_horaria_disciplina5,
-
-                   (SELECT hd.carga_horaria_disciplina
-                    FROM historico_disciplinas hd
-                    WHERE hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
-                      AND hd.ref_sequencial = (
-                                                 (SELECT MAX(hee.sequencial) AS MAX
-                                                  FROM historico_escolar hee
-                                                  WHERE hee.ref_cod_aluno = hd.ref_ref_cod_aluno
-                                                    AND relatorio.get_texto_sem_caracter_especial(hd.nm_disciplina::text) = relatorio.get_texto_sem_caracter_especial(historico_disciplinas.nm_disciplina::text)
-                                                    AND substring(hee.nm_serie::text,
-                                                                    1,
-                                                                    1) = 6::text
-                                                    AND hee.ativo = 1
-                                                    AND hee.extra_curricular = 0
-                                                    AND COALESCE(hee.dependencia, FALSE) = FALSE)) LIMIT 1) AS carga_horaria_disciplina6,
-
-                   (SELECT hd.carga_horaria_disciplina
-                    FROM historico_disciplinas hd
-                    WHERE hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
-                      AND hd.ref_sequencial = (
-                                                 (SELECT MAX(hee.sequencial) AS MAX
-                                                  FROM historico_escolar hee
-                                                  WHERE hee.ref_cod_aluno = hd.ref_ref_cod_aluno
-                                                    AND relatorio.get_texto_sem_caracter_especial(hd.nm_disciplina::text) = relatorio.get_texto_sem_caracter_especial(historico_disciplinas.nm_disciplina::text)
-                                                    AND substring(hee.nm_serie::text,
-                                                                    1,
-                                                                    1) = 7::text
-                                                    AND hee.ativo = 1
-                                                    AND hee.extra_curricular = 0
-                                                    AND COALESCE(hee.dependencia, FALSE) = FALSE)) LIMIT 1) AS carga_horaria_disciplina7,
-
-                   (SELECT hd.carga_horaria_disciplina
-                    FROM historico_disciplinas hd
-                    WHERE hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
-                      AND hd.ref_sequencial = (
-                                                 (SELECT MAX(hee.sequencial) AS MAX
-                                                  FROM historico_escolar hee
-                                                  WHERE hee.ref_cod_aluno = hd.ref_ref_cod_aluno
-                                                    AND relatorio.get_texto_sem_caracter_especial(hd.nm_disciplina::text) = relatorio.get_texto_sem_caracter_especial(historico_disciplinas.nm_disciplina::text)
-                                                    AND substring(hee.nm_serie::text,
-                                                                    1,
-                                                                    1) = 8::text
-                                                    AND hee.ativo = 1
-                                                    AND hee.extra_curricular = 0
-                                                    AND COALESCE(hee.dependencia, FALSE) = FALSE)) LIMIT 1) AS carga_horaria_disciplina8,
-
-                   (SELECT hd.carga_horaria_disciplina
-                    FROM historico_disciplinas hd
-                    WHERE hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
-                      AND hd.ref_sequencial = (
-                                                 (SELECT MAX(hee.sequencial) AS MAX
-                                                  FROM historico_escolar hee
-                                                  WHERE hee.ref_cod_aluno = hd.ref_ref_cod_aluno
-                                                    AND relatorio.get_texto_sem_caracter_especial(hd.nm_disciplina::text) = relatorio.get_texto_sem_caracter_especial(historico_disciplinas.nm_disciplina::text)
-                                                    AND substring(hee.nm_serie::text,
-                                                                    1,
-                                                                    1) = 9::text
-                                                    AND hee.ativo = 1
-                                                    AND hee.extra_curricular = 0
-                                                    AND COALESCE(hee.dependencia, FALSE) = FALSE)) LIMIT 1) AS carga_horaria_disciplina9,
                    (SELECT hd.dependencia
                     FROM historico_disciplinas hd
                     WHERE hd.ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
@@ -2890,6 +2764,15 @@ GROUP BY historico.disciplina,
          historico.carga_horaria7,
          historico.carga_horaria8,
          historico.carga_horaria9,
+         historico.disciplina_dependencia1,
+         historico.disciplina_dependencia2,
+         historico.disciplina_dependencia3,
+         historico.disciplina_dependencia4,
+         historico.disciplina_dependencia5,
+         historico.disciplina_dependencia6,
+         historico.disciplina_dependencia7,
+         historico.disciplina_dependencia8,
+         historico.disciplina_dependencia9,
          historico.ch_componente_1,
          historico.ch_componente_2,
          historico.ch_componente_3,
