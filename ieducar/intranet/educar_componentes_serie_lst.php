@@ -48,7 +48,7 @@ class clsIndexBase extends clsBase
   function Formular()
   {
     $this->SetTitulo($this->_instituicao . ' i-Educar - Componentes da série');
-    $this->processoAp = '583';
+    $this->processoAp = '9998859';
     $this->addEstilo("localizacaoSistema");
   }
 }
@@ -152,7 +152,7 @@ class indice extends clsListagem
 
     $this->addPaginador2("educar_componentes_serie_lst.php", $total, $_GET, $this->nome, $this->limite);
 
-    if ($obj_permissoes->permissao_cadastra(583, $this->pessoa_logada, 3)) {
+    if ($obj_permissoes->permissao_cadastra(9998859, $this->pessoa_logada, 3)) {
       $this->acao = "go(\"educar_componentes_serie_cad.php\")";
       $this->nome_acao = "Novo";
     }
