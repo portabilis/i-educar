@@ -3,7 +3,8 @@
 
 
 
-
+$j('input[id^="historico_altura"]').mask('0.00', {reverse: true});
+$j('input[id^="historico_peso"]').mask('000.00', {reverse: true});
 
 $j('#autorizado_um').change(abriCampoDois);
 $j('#autorizado_dois').change(abriCampoTres);
