@@ -1263,7 +1263,7 @@ class AlunoController extends ApiCoreController
       $obj->peso           = $peso;
 
       if (!$obj->cadastra()) {
-        $this->messenger->append('sim.');
+        $this->messenger->append('Erro ao cadastrar histórico de altura e peso.');
       }
     }
   }
