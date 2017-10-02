@@ -35,6 +35,7 @@ require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
 require_once 'image_check.php';
 require_once 'include/pmieducar/clsPmieducarAluno.inc.php';
 require_once 'include/pmieducar/clsPmieducarProjeto.inc.php';
+require_once 'include/pmieducar/clsPmieducarAlunoHistoricoAlturaPeso.inc.php';
 require_once 'include/modules/clsModulesFichaMedicaAluno.inc.php';
 require_once 'include/modules/clsModulesMoradiaAluno.inc.php';
 require_once 'include/pmieducar/clsPermissoes.inc.php';
@@ -869,6 +870,27 @@ class AlunoController extends ApiCoreController
     return $_projetos;
   }
 
+  protected function loadHistoricoAlturaPeso($alunoId) {
+    $sql = "SELECT to_char(data_historico, 'dd/mm/yyyy') AS data_historico,
+                   altura,
+                   peso
+              FROM  pmieducar.aluno_historico_altura_peso
+              WHERE ref_cod_aluno = $1";
+
+    $historicoAlturaPeso = $this->fetchPreparedQuery($sql, $alunoId, false);
+
+    // transforma array de arrays em array chave valor
+    $_historicoAlturaPeso = array();
+
+    foreach ($historicoAlturaPeso as $alturaPeso) {
+      $_historicoAlturaPeso[] = array('data_historico' => $alturaPeso['data_historico'],
+                                      'altura'         => $alturaPeso['altura'],
+                                      'peso'           => $alturaPeso['peso']);
+    }
+
+    return $_historicoAlturaPeso;
+  }
+
   protected function get() {
     if ($this->canGet()) {
       $id               = $this->getRequest()->id;
@@ -984,6 +1006,7 @@ class AlunoController extends ApiCoreController
       $aluno['beneficios'] = $this->loadBeneficios($id);
 
       $aluno['projetos'] = $this->loadProjetos($id);
+      $aluno['historico_altura_peso'] = $this->loadHistoricoAlturaPeso($id);
 
       return $aluno;
     }
@@ -1225,6 +1248,26 @@ class AlunoController extends ApiCoreController
     }
   }
 
+  function saveHistoricoAlturaPeso($alunoId){
+    $obj = new clsPmieducarAlunoHistoricoAlturaPeso($alunoId);
+    // exclui todos
+    $obj->excluir();
+
+    foreach ($this->getRequest()->data_historico as $key => $value) {
+      $data_historico = $value;
+      $altura = $this->getRequest()->historico_altura[$key];
+      $peso   = $this->getRequest()->historico_peso[$key];
+
+      $obj->data_historico = $data_historico;
+      $obj->altura         = $altura;
+      $obj->peso           = $peso;
+
+      if (!$obj->cadastra()) {
+        $this->messenger->append('sim.');
+      }
+    }
+  }
+
   protected function post() {
     if ($this->canPost()) {
       $id = $this->createOrUpdateAluno();
@@ -1242,6 +1285,7 @@ class AlunoController extends ApiCoreController
         $this->createOrUpdateFichaMedica($id);
         $this->createOrUpdateMoradia($id);
         $this->saveProjetos($id);
+        $this->saveHistoricoAlturaPeso($id);        
         $this->createOrUpdatePessoaTransporte($pessoaId);
         $this->createOrUpdateDocumentos($pessoaId);
         $this->createOrUpdatePessoa($pessoaId);
@@ -1271,6 +1315,7 @@ class AlunoController extends ApiCoreController
       $this->createOrUpdateFichaMedica($id);
       $this->createOrUpdateMoradia($id);
       $this->saveProjetos($id);
+      $this->saveHistoricoAlturaPeso($id);
       $this->createOrUpdatePessoaTransporte($pessoaId);
       $this->createOrUpdateDocumentos($pessoaId);
       $this->createOrUpdatePessoa($pessoaId);
