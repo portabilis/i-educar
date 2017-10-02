@@ -24,6 +24,7 @@ $j("#ref_cod_instituicao").change(function() {
 $j("#ref_cod_curso").change(function() {
     curso_id = $j('#ref_cod_curso').val();
     if (curso_id != '') {
+        comboSerie.empty();
         getSeries();
     }else{
         comboSerie.empty();
