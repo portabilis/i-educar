@@ -1371,6 +1371,8 @@ function canShowParentsFields(){
         $j('.alunoTab-active').toggleClass('alunoTab-active alunoTab');
         $j('#tab2').toggleClass('alunoTab alunoTab-active')
         $j('.tablecadastro >tbody  > tr').each(function(index, row) {
+
+          $j('#tr_historico_altura_peso_tit td').removeClass();
           if (row.id!='stop'){
             if (index> $j('#tr_laudo_medico').index() - 1 && index < $j('#tr_responsavel_parentesco_celular').index() - 1){
               if (first_click_medica)
