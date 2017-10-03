@@ -345,7 +345,9 @@ resourceOptions.handleGet = function(dataResponse) {
 
   $beneficios.trigger('chosen:updated');
 
-
+  if (dataResponse.historico_altura_peso.length == 0){
+    $j("[name^=tr_historico_altura_peso]").remove();
+  }
   $j.each(dataResponse.historico_altura_peso, function(i, object){
     if(i > 0)
       $j('#btn_add_tab_add_1').click();

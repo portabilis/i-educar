@@ -953,12 +953,12 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     // Histórico de altura e peso
 
     $this->campoTabelaInicio("historico_altura_peso","Histórico de altura e peso",array('Data', 'Altura (m)', 'Peso (kg)'));
-    
-    $this->inputsHelper()->date( 'data_historico');
 
-    $this->inputsHelper()->numeric('historico_altura');
+    $this->campoData( 'data_historico');
 
-    $this->inputsHelper()->numeric('historico_peso');
+    $this->campoNumero('historico_altura');
+
+    $this->campoNumero('historico_peso');
 
     $this->campoTabelaFim();
 
