@@ -1,3 +1,9 @@
+var url =  window.location.href;
+var modoCadastro = url.indexOf("id=") == -1;
+
+if(modoCadastro) {
+    $j("[name^=tr_historico_altura_peso]").remove();
+}
    $j('#autorizado_um').closest('tr').show();
    $j('#parentesco_um').closest('tr').show();
 
