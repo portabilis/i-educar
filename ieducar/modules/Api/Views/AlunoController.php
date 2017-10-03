@@ -1254,7 +1254,7 @@ class AlunoController extends ApiCoreController
     $obj->excluir();
 
     foreach ($this->getRequest()->data_historico as $key => $value) {
-      $data_historico = $value;
+      $data_historico = Portabilis_Date_Utils::brToPgSQL($value);
       $altura = $this->getRequest()->historico_altura[$key];
       $peso   = $this->getRequest()->historico_peso[$key];
 
