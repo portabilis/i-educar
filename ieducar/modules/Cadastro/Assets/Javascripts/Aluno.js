@@ -3,7 +3,8 @@
 
 
 
-
+$j('input[id^="historico_altura"]').mask('0.00', {reverse: true});
+$j('input[id^="historico_peso"]').mask('000.00', {reverse: true});
 
 $j('#autorizado_um').change(abriCampoDois);
 $j('#autorizado_dois').change(abriCampoTres);
@@ -343,6 +344,16 @@ resourceOptions.handleGet = function(dataResponse) {
   });
 
   $beneficios.trigger('chosen:updated');
+
+
+  $j.each(dataResponse.historico_altura_peso, function(i, object){
+    if(i > 0)
+      $j('#btn_add_tab_add_1').click();
+
+    $j('#data_historico\\['+i+'\\]').val(object.data_historico);
+    $j('#historico_altura\\['+i+'\\]').val(object.altura);
+    $j('#historico_peso\\['+i+'\\]').val(object.peso);
+  });
 
   $j.each(dataResponse.projetos, function(i, object){
     if(i > 0)
@@ -1360,6 +1371,8 @@ function canShowParentsFields(){
         $j('.alunoTab-active').toggleClass('alunoTab-active alunoTab');
         $j('#tab2').toggleClass('alunoTab alunoTab-active')
         $j('.tablecadastro >tbody  > tr').each(function(index, row) {
+
+          $j('#tr_historico_altura_peso_tit td').removeClass();
           if (row.id!='stop'){
             if (index> $j('#tr_laudo_medico').index() - 1 && index < $j('#tr_responsavel_parentesco_celular').index() - 1){
               if (first_click_medica)
@@ -1386,7 +1399,7 @@ function canShowParentsFields(){
         $j('#tab4').toggleClass('alunoTab alunoTab-active')
         $j('.tablecadastro >tbody  > tr').each(function(index, row) {
           if (row.id!='stop'){
-            if (index> $j('#tr_responsavel_parentesco_celular').index() - 1 &&index < $j('#tr_lixo').index()){
+            if (index> $j('#tr_responsavel_parentesco_celular').index() - 1 &&index < $j('#tr_fossa').index()){
               row.show();
             }else if(index!=0){
               row.hide();
@@ -1404,7 +1417,7 @@ function canShowParentsFields(){
         $j('#tab5').toggleClass('alunoTab alunoTab-active')
         $j('.tablecadastro >tbody  > tr').each(function(index, row) {
           if (row.id!='stop'){
-            if (index>= $j('#tr_lixo').index() &&index < $j('#tr_recebe_escolarizacao_em_outro_espaco').index()){
+            if (index>= $j('#tr_fossa').index() &&index < $j('#tr_recurso_prova_inep_prova_braille').index()){
               row.show();
             }else if(index!=0){
               row.hide();
@@ -1420,7 +1433,7 @@ function canShowParentsFields(){
         $j('#tab6').toggleClass('alunoTab alunoTab-active')
         $j('.tablecadastro >tbody  > tr').each(function(index, row) {
           if (row.id!='stop'){
-            if (index>= $j('#tr_recebe_escolarizacao_em_outro_espaco').index() && index < $j('#tr_recebe_escolarizacao_em_outro_espaco').index() + 1){
+            if (index>= $j('#tr_recurso_prova_inep_prova_braille').index() && index < $j('#tr_recurso_prova_inep_prova_braille').index() + 1){
               row.show();
             }else if(index!=0){
               row.hide();

@@ -950,6 +950,20 @@ class AlunoController extends Portabilis_Controller_Page_EditController
        ** Dados para a Aba 'Ficha médica' **
        ************************************* */
 
+    // Histórico de altura e peso
+
+    $this->campoTabelaInicio("historico_altura_peso","Histórico de altura e peso",array('Data', 'Altura (m)', 'Peso (kg)'));
+    
+    $this->inputsHelper()->date( 'data_historico');
+
+    $this->inputsHelper()->numeric('historico_altura');
+
+    $this->inputsHelper()->numeric('historico_peso');
+
+    $this->campoTabelaFim();
+
+    // Fim histórico de altura e peso
+
     // altura
     $options = array('label' => $this->_getLabel('altura'), 'size' => 5, 'max_length' => 4, 'required' => false, 'placeholder' => '' );
     $this->inputsHelper()->numeric('altura',$options);
