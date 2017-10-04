@@ -138,7 +138,7 @@ class clsBase extends clsConfig
                             <script type="text/javascript" src="scripts/suporte_freshdesk.js?v=2"></script>';
       $saida = str_replace("<!-- #&FRESHDESK&# -->", $suporte_freshdesk, $saida);
     }elseif($GLOBALS['coreExt']['Config']->app->widget_***REMOVED*** == 1 && $this->renderMenu){
-      $suporte_freshdesk = '<script type="text/javascript" src="http://assets.freshdesk.com/widget/freshwidget.js"></script>
+      $suporte_freshdesk = '<script type="text/javascript" src="https://assets.freshdesk.com/widget/freshwidget.js"></script>
                             <script type="text/javascript" src="scripts/suporte_freshdesk_***REMOVED***.js?v=2"></script>';
       $saida = str_replace("<!-- #&FRESHDESK&# -->", $suporte_freshdesk, $saida);
     }
