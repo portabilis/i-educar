@@ -613,8 +613,17 @@ class clsBase extends clsConfig
     $saida = str_replace("<!-- #&CORPO&# -->",        $corpo,         $saida);
     $saida = str_replace("<!-- #&ANUNCIO&# -->",      $menu_dinamico, $saida);
     $saida = str_replace("<!-- #&FOTO&# -->",         $foto, $saida);
-
+    
     $administrativeInfoFetcher = new Portabilis_AdministrativeInfoFetcher();
+
+    $showOnboarding = $administrativeInfoFetcher->getShowOnboarding();
+    $iconeCompass = '';
+    if($showOnboarding){
+      $iconeCompass = '<a class="icons-top" href="#" onclick="Conpass.startProject(\'AHA Moment Portabilis\', \'dGlhZ29AcG9ydGFiaWxpcy5jb20uYnI6cG9ydGFiaWxpczA5MQ==\', {showModal: true} );">
+                          <img id="help" src="imagens/icon-help.png">
+                       </a>';
+    }
+    $saida = str_replace("<!-- #&ICONE_COMPASS&# -->", $iconeCompass, $saida);
     $saida = str_replace("<!-- #&RODAPE_INTERNO&# -->", $administrativeInfoFetcher->getInternalFooter(), $saida);
 
     // Pega o endereço IP do host, primeiro com HTTP_X_FORWARDED_FOR (para pegar o IP real
