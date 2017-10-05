@@ -450,13 +450,13 @@ class clsPmieducarAluno
         $gruda = ', ';
       }
 
-      if (is_string($this->url_documento)) {
+      if (is_string($this->url_documento) && $this->url_documento != '') {
         $campos  .= "{$gruda}url_documento";
         $valores .= "{$gruda}'{$this->url_documento}'";
         $gruda = ', ';
       }
 
-      if (is_string($this->url_laudo_medico)) {
+      if (is_string($this->url_laudo_medico) && $this->url_laudo_medico != '') {
         $campos  .= "{$gruda}url_laudo_medico";
         $valores .= "{$gruda}'{$this->url_laudo_medico}'";
         $gruda = ', ';
@@ -689,12 +689,12 @@ class clsPmieducarAluno
         $gruda = ', ';
       }
 
-      if (is_string($this->url_documento)) {
+      if (is_string($this->url_documento) && $this->url_documento != '') {
         $set .= "{$gruda}url_documento = '{$this->url_documento}'";
         $gruda = ', ';
       }
 
-      if (is_string($this->url_laudo_medico)) {
+      if (is_string($this->url_laudo_medico) && $this->url_laudo_medico != '') {
         $set .= "{$gruda}url_laudo_medico = '{$this->url_laudo_medico}'";
         $gruda = ', ';
       }
