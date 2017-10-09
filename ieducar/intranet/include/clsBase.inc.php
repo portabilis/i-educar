@@ -621,13 +621,14 @@ class clsBase extends clsConfig
     $administrativeInfoFetcher = new Portabilis_AdministrativeInfoFetcher();
 
     $showOnboarding = $administrativeInfoFetcher->getShowOnboarding();
-    $iconeCompass = '';
     if($showOnboarding){
+      $iconeCompass = '';
       $iconeCompass = '<a class="icons-top" href="#" onclick="Conpass.startProject(\'AHA Moment Portabilis\', \'dGlhZ29AcG9ydGFiaWxpcy5jb20uYnI6cG9ydGFiaWxpczA5MQ==\', {showModal: true} );">
                           <img id="help" src="imagens/icon-help.png">
                        </a>';
+      $saida = str_replace("<!-- #&ICONE_COMPASS&# -->", $iconeCompass, $saida);
     }
-    $saida = str_replace("<!-- #&ICONE_COMPASS&# -->", $iconeCompass, $saida);
+
     $saida = str_replace("<!-- #&RODAPE_INTERNO&# -->", $administrativeInfoFetcher->getInternalFooter(), $saida);
 
     // Pega o endereço IP do host, primeiro com HTTP_X_FORWARDED_FOR (para pegar o IP real
@@ -647,17 +648,17 @@ class clsBase extends clsConfig
     $saida .= '<script type="text/javascript" src="scripts/select2/select2.full.min.js"></script>';
     $saida .= '<script type="text/javascript" src="scripts/select2/pt-BR.js"></script>';
     $saida .= "<link rel=stylesheet type='text/css' href='scripts/select2/select2.min.css' />";
+    if($showOnboarding){
+      $saida .= '<script type="text/javascript" src="https://api.conpass.io/conpass.js"></script>';
+      $saida .= '<script type="text/javascript">
 
-    $saida .= '<script type="text/javascript" src="https://api.conpass.io/conpass.js"></script>';
-    $saida .= '<script type="text/javascript">
-
-      window.onload = function(e) {
-          Conpass.close();
-          Conpass.startProject( \'AHA Moment Portabilis\', \'dGlhZ29AcG9ydGFiaWxpcy5jb20uYnI6cG9ydGFiaWxpczA5MQ==\' );
-          Conpass.identifyUser( { name: \''.$nomePessoa.'\' , email: \''.$email.'\' }, \'dGlhZ29AcG9ydGFiaWxpcy5jb20uYnI6cG9ydGFiaWxpczA5MQ==\' );
-      }
-
-    </script>';
+        window.onload = function(e) {
+              Conpass.close();
+              Conpass.startProject( \'AHA Moment Portabilis\', \'dGlhZ29AcG9ydGFiaWxpcy5jb20uYnI6cG9ydGFiaWxpczA5MQ==\' );
+              Conpass.identifyUser( { name: \''.$nomePessoa.'\' , email: \''.$email.'\' }, \'dGlhZ29AcG9ydGFiaWxpcy5jb20uYnI6cG9ydGFiaWxpczA5MQ==\' );
+          }
+      </script>';
+    }
 
     return $saida;
   }
