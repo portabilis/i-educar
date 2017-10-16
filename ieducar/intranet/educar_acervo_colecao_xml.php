@@ -38,7 +38,7 @@
 	{
 		$db = new clsBanco();
 		$sql = "SELECT
-					cod_acervo_colecao, COALESCE(nm_colecao, 'TEste') AS nm_colecao
+					cod_acervo_colecao, nm_colecao
 				FROM
 					pmieducar.acervo_colecao
 				WHERE
