@@ -73,6 +73,7 @@ var $loadingLaudoMedico =  $j('<img>').attr('src', 'imagens/indicator.gif')
 
 var $arrayLaudoMedico = [];
 var $arrayUrlLaudoMedico = [];
+var $arrayDataLaudoMedico = [];
 
 function excluirLaudoMedico(event){
   $arrayUrlLaudoMedico[event.data.i] = '';
@@ -87,21 +88,26 @@ function laudoMedicoObrigatorio(){
   messageUtils.error('Deve ser anexado um laudo médico para alunos com deficiências');
 }
 
-function addLaudoMedico(url){
-  $index = $arrayLaudoMedico.length + 1;
-  //$j('#url_laudo_medico').val(url);
+function addLaudoMedico(url, data){
+  $index = $arrayLaudoMedico.length;
+  $id = $index + 1;
   $arrayUrlLaudoMedico[$index] = url;
-  $arrayLaudoMedico[$arrayLaudoMedico.length] = $j('<div>').append($j('<span>').html('Laudo '+$index+':')
-                                                                          .attr('id', 'laudo'+$index)
+  $arrayDataLaudoMedico[$index] = data;
+  var dataLaudoMedico = '';
+  if (data) {
+    dataLaudoMedico = ' adicionado em ' + data;
+  }
+  $arrayLaudoMedico[$arrayLaudoMedico.length] = $j('<div>').append($j('<span>').html('Laudo '+$id+dataLaudoMedico+':')
+                                                                          .attr('id', 'laudo'+$id)
                                                                           .append($j('<a>').html('Excluir')
                                                                                            .addClass('decorated')
-                                                                                           .attr('id','link_excluir_laudo_medico_'+$index)
+                                                                                           .attr('id','link_excluir_laudo_medico_'+$id)
                                                                                            .css('cursor','pointer')
                                                                                            .css('margin-left','10px')
-                                                                                           .click({i: $index}, excluirLaudoMedico))
+                                                                                           .click({i: $id}, excluirLaudoMedico))
                                                                           .append($j('<a>').html('Visualizar')
                                                                                            .addClass('decorated')
-                                                                                           .attr('id','link_visualizar_laudo_medico_'+$index)
+                                                                                           .attr('id','link_visualizar_laudo_medico_'+$id)
                                                                                            .attr('target','_blank')
                                                                                            .attr('href',url)
                                                                                            .css('cursor','pointer')
@@ -115,7 +121,10 @@ function montaUrlLaudoMedico(){
 
   for (var i = 0; i < $arrayUrlLaudoMedico.length; i++) {
     if ($arrayUrlLaudoMedico[i]){
-      url += $arrayUrlLaudoMedico[i]+','
+      var dataLaudo = '';
+      var urlLaudo = $arrayUrlLaudoMedico[i];
+      if($arrayDataLaudoMedico[i]){dataLaudo = '"data" : "' + $arrayDataLaudoMedico[i] + '",'};
+      url += '{' + dataLaudo + '"url" : "'+ urlLaudo +'"},'
     }
   }
   //Remove a ultima vírgula
@@ -123,7 +132,7 @@ function montaUrlLaudoMedico(){
     url = url.substring(0, url.length-1);
   }
 
-  $j('#url_laudo_medico').val(url);
+  $j('#url_laudo_medico').val('[' + url + ']');
 }
 
 function certidaoNascimentoInvalida(){
@@ -163,6 +172,7 @@ var $loadingDocumento =  $j('<img>').attr('src', 'imagens/indicator.gif')
 
 var $arrayDocumento = [];
 var $arrayUrlDocumento= [];
+var $arrayDataDocumento= [];
 
 function excluirDocumento(event){
   $arrayUrlDocumento[event.data.i] = '';
@@ -172,21 +182,27 @@ function excluirDocumento(event){
   montaUrlDocumento();
 }
 
-function addDocumento(url){
-  $index = $arrayDocumento.length + 1;
-  //$j('#url_documento').val(url);
+function addDocumento(url, data){
+  $index = $arrayDocumento.length;
+  $id = $index + 1;
   $arrayUrlDocumento[$index] = url;
-  $arrayDocumento[$arrayDocumento.length] = $j('<div>').append($j('<span>').html('Documento '+$index+':')
-                                                                          .attr('id', 'documento'+$index)
+  $arrayDataDocumento[$index] = data;
+  var dataDocumento = '';
+  if (data) {
+    dataDocumento = ' adicionado em ' + data;
+  }
+  
+  $arrayDocumento[$arrayDocumento.length] = $j('<div>').append($j('<span>').html('Documento '+$id+dataDocumento+':')
+                                                                          .attr('id', 'documento'+$id)
                                                                           .append($j('<a>').html('Excluir')
                                                                                            .addClass('decorated')
-                                                                                           .attr('id','link_excluir_documento_'+$index)
+                                                                                           .attr('id','link_excluir_documento_'+$id)
                                                                                            .css('cursor','pointer')
                                                                                            .css('margin-left','10px')
-                                                                                           .click({i: $index}, excluirDocumento))
+                                                                                           .click({i: $id}, excluirDocumento))
                                                                           .append($j('<a>').html('Visualizar')
                                                                                            .addClass('decorated')
-                                                                                           .attr('id','link_visualizar_documento_'+$index)
+                                                                                           .attr('id','link_visualizar_documento_'+$id)
                                                                                            .attr('target','_blank')
                                                                                            .attr('href',url)
                                                                                            .css('cursor','pointer')
@@ -200,15 +216,19 @@ function montaUrlDocumento(){
 
   for (var i = 0; i < $arrayUrlDocumento.length; i++) {
     if ($arrayUrlDocumento[i]){
-      url += $arrayUrlDocumento[i]+','
+      var dataDocumento = '';
+      var urlDocumento = $arrayUrlDocumento[i];
+      if($arrayDataDocumento[i]){dataDocumento = '"data" : "' + $arrayDataDocumento[i] + '",'};
+      url += '{' + dataDocumento + '"url" : "'+ urlDocumento +'"},'
     }
   }
+
   //Remove a ultima vírgula
   if (url.substring(url.length-1, url.length) == ","){
     url = url.substring(0, url.length-1);
   }
 
-  $j('#url_documento').val(url);
+  $j('#url_documento').val('[' + url + ']');
 }
 
 var $paiNomeField = $j('#pai_nome');
@@ -433,16 +453,16 @@ if($j('#autorizado_quatro').val() == ''){
 
 
   if(dataResponse.url_laudo_medico){
-    var arrayLaudo = dataResponse.url_laudo_medico.split(",");
+    var arrayLaudo = JSON.parse(dataResponse.url_laudo_medico);
     for (i = 0; i < arrayLaudo.length; i++) {
-      addLaudoMedico(arrayLaudo[i]);
+      addLaudoMedico(arrayLaudo[i].url, arrayLaudo[i].data);
     }
   }
 
   if(dataResponse.url_documento){
-    var arrayDocumento = dataResponse.url_documento.split(",");
+    var arrayDocumento = JSON.parse(dataResponse.url_documento);
     for (i = 0; i < arrayDocumento.length; i++) {
-      addDocumento(arrayDocumento[i]);
+      addDocumento(arrayDocumento[i].url, arrayDocumento[i].data);
     }
   }
 
@@ -1167,6 +1187,16 @@ function canShowParentsFields(){
 
 (function($) {
   $(document).ready(function() {
+
+    function currentDate(){
+      var today = new Date(); 
+      var dd = today.getDate(); 
+      var mm = today.getMonth()+1; 
+      var yyyy = today.getFullYear(); 
+      if(dd<10){dd='0'+dd} 
+      if(mm<10){mm='0'+mm} 
+      return dd+'/'+mm+'/'+yyyy;
+    }
     // laudo médico
     $j('#laudo_medico').on('change', prepareUpload);
 
@@ -1216,7 +1246,7 @@ function canShowParentsFields(){
               }else{
                 messageUtils.success('Laudo médico carregado com sucesso');
                 $j('#laudo_medico').addClass('success');
-                addLaudoMedico(dataResponse.file_url);
+                addLaudoMedico(dataResponse.file_url, currentDate());
               }
 
             },
@@ -1265,7 +1295,7 @@ function canShowParentsFields(){
               }else{
                 messageUtils.success('Documento carregado com sucesso');
                 $j('#documento').addClass('success');
-                addDocumento(dataResponse.file_url);
+                addDocumento(dataResponse.file_url, currentDate());
               }
 
             },

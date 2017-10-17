@@ -613,13 +613,20 @@ class indice extends clsDetalhe
 
     if ($registro['url_documento'] && $registro['url_documento'] != '') {
       $tabela = '<table border="0" width="300" cellpadding="3"><tr bgcolor="#ccdce6" align="center"><td>Documentos</td></tr>';
-      $cor    = '#D1DADF';
+      $cor    = '#e9f0f8';
 
-      $urlDocumento = explode(",", $registro['url_documento']);
-      for ($i = 0; $i < count($urlDocumento); $i++) {
-        $cor = $cor == '#D1DADF' ? '#f5f9fd' : '#D1DADF';
-
-        $tabela .= "<tr bgcolor='{$cor}' align='center'><td><a href='{$urlDocumento[$i]}' target='_blank' > Visualizar documento ". (count($urlDocumento) > 1 ? ($i+1) : "")." </a></td></tr>";
+      $arrayDocumentos = json_decode($registro['url_documento']);
+      foreach ($arrayDocumentos as $key => $documento) {
+        $cor = $cor == '#e9f0f8' ? '#f5f9fd' : '#e9f0f8';
+        
+        $tabela .= "<tr bgcolor='". $cor. "'
+                        align='center'>
+                          <td>
+                            <a href='" . $documento->url . "'
+                               target='_blank' > Visualizar documento ". (count($documento) > 1 ? ($key+1) : "")."
+                            </a>
+                          </td>
+                    </tr>";
       }
 
       $tabela .= '</table>';
