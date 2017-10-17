@@ -168,8 +168,8 @@ class clsPmieducarAluno
         a.ref_usuario_cad, a.ref_idpes, a.data_cadastro, a.data_exclusao, a.ativo, a.caminho_foto, a.analfabeto, a.nm_pai, a.nm_mae,tipo_responsavel, a.aluno_estado_id,
         a.recurso_prova_inep_aux_ledor, a.recurso_prova_inep_aux_transcricao, a.recurso_prova_inep_guia_interprete, a.recurso_prova_inep_interprete_libras, a.recurso_prova_inep_leitura_labial,
         a.recurso_prova_inep_prova_ampliada_16, a.recurso_prova_inep_prova_ampliada_20, a.recurso_prova_inep_prova_ampliada_24, a.recurso_prova_inep_prova_braille, a.recebe_escolarizacao_em_outro_espaco,
-        a.justificativa_falta_documentacao, a.url_laudo_medico, a.codigo_sistema, a.veiculo_transporte_escolar, a.parentesco_um, a.autorizado_um, a.parentesco_dois, a.autorizado_dois,
-        a.parentesco_tres, a.autorizado_tres, a.parentesco_quatro, a.autorizado_quatro, a.parentesco_cinco, a.autorizado_cinco, a.url_documento';
+        a.justificativa_falta_documentacao, a.url_laudo_medico::text, a.codigo_sistema, a.veiculo_transporte_escolar, a.parentesco_um, a.autorizado_um, a.parentesco_dois, a.autorizado_dois,
+        a.parentesco_tres, a.autorizado_tres, a.parentesco_quatro, a.autorizado_quatro, a.parentesco_cinco, a.autorizado_cinco, a.url_documento::text';
 
     if (is_numeric($ref_usuario_exc)) {
       if (class_exists('clsPmieducarUsuario')) {
