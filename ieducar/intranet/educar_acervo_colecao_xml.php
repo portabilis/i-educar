@@ -51,6 +51,7 @@
 			while ($db->ProximoRegistro())
 			{
 				list($cod_acervo_colecao, $nm_colecao) = $db->Tupla();
+				$nm_colecao=preg_replace('/&(?!#?[a-z0-9]+;)/', '&amp;', $nm_colecao);
 				echo "<acervo_colecao cod_acervo_colecao=\"{$cod_acervo_colecao}\">{$nm_colecao}</acervo_colecao>\n";
 			}
 		}
