@@ -1674,8 +1674,8 @@ class clsPmieducarServidor
     $db = new clsBanco();
     $db->Consulta("
       SELECT
-        EXTRACT(HOUR FROM (SUM(hora_final - qhh.hora_inicial))) AS hora,
-        EXTRACT(MINUTE FROM (SUM(hora_final - qhh.hora_inicial))) AS min
+        EXTRACT(HOUR FROM (SUM(hora_final - hora_inicial))) AS hora,
+        EXTRACT(MINUTE FROM (SUM(hora_final - hora_inicial))) AS min
       FROM
         pmieducar.servidor_alocacao
       WHERE
