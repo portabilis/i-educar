@@ -288,10 +288,10 @@ class clsPmieducarTipoEnsino
 				$valores .= "{$gruda}'{$this->ref_cod_instituicao}'";
 				$gruda = ", ";
 			}
-			if (is_bool($this->atividade_completar))
+			if (is_bool($this->atividade_complementar))
 			{
-				$campos .= "{$gruda}atividade_completar";
-				$aux = dbBool($this->atividade_completar) ? "TRUE" : "FALSE";
+				$campos .= "{$gruda}atividade_complementar";
+				$aux = dbBool($this->atividade_complementar) ? "TRUE" : "FALSE";
 				$valores .= "{$gruda}{$aux}";
 				$gruda = ", ";
 			}
