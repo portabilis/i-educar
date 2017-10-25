@@ -79,12 +79,12 @@ class TurmaController extends ApiCoreController
     $lstMatriculaTurma  = $objMatriculaTurma->lista(null, $codTurma);
 
     foreach ($lstMatriculaTurma as $matricula) {
-      $lstNomes[] = array('nome'          => $matricula['nome'],
+      $lstNomes[] = array('nome'              => strtoupper($matricula['nome']),
                           'ref_cod_matricula' => $matricula['ref_cod_matricula'],
-                          'sequencial'    => $matricula['sequencial']
+                          'sequencial'        => $matricula['sequencial']
                         );
     }
-    sort($lstNomes);
+    sort($lstNomes); //echo "<pre>";print_r($lstNomes);die;
     array_unshift($lstNomes, "indice zero");
     $quantidadeAlunos   = count($lstNomes);
 
@@ -146,6 +146,7 @@ class TurmaController extends ApiCoreController
                    $tiposBoletim::BIMESTRAL_RETRATO_CAMPOS_DO_JORDAO            => 'portabilis_boletim_bimestral_campos_do_jordao',
                    $tiposBoletim::TRIMESTRAL_RECUPERACAO_PARALELA_RONDON        => 'portabilis_boletim_trimestral_recuperacao_paralela_rondon',
                    $tiposBoletim::TRIMESTRAL_NUMERICO_BALNEARIO_CAMBORIU        => 'portabilis_boletim_trimestral_numerico_balneario_camboriu',
+                   $tiposBoletim::TRIMESTRAL_CONCEITUAL_1AO3_RONDON             => 'portabilis_boletim_trimestral_rondon',
                    $tiposBoletim::BIMESTRAL_TRIPLO                              => 'portabilis_boletim_bimestral_triplo',
                    $tiposBoletim::PARECER_DESCRITIVO_EDUCACAO_INFANTIL          => 'portabilis_boletim_educacao_infantil');
 
