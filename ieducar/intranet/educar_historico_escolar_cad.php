@@ -300,7 +300,7 @@ class indice extends clsCadastro
 			              3 => "Cursando",
 			              4 => "Transferido",
 			              6 => 'Abandono',
-			              12 => 'Aprovado com depend&ecirc;ncia',
+			              12 => 'Aprovado com dependência',
 			              13 => 'Aprovado pelo conselho',
 			              14 => 'Reprovado por faltas');
 		$this->campoLista( "aprovado", "Situa&ccedil;&atilde;o", $opcoes, $this->aprovado );
