@@ -752,22 +752,34 @@ class AlunoController extends ApiCoreController
     // caso nao receba id da escola, pesquisa por codigo aluno em todas as escolas,
     // alunos com e sem matricula são selecionados.
     if (! $this->getRequest()->escola_id) {
-      $sqls[] = "select distinct aluno.cod_aluno as id, pessoa.nome as name from
-                 pmieducar.aluno, cadastro.pessoa where pessoa.idpes = aluno.ref_idpes
-                 and aluno.ativo = 1 and aluno.cod_aluno::varchar like $1||'%' and $2 = $2
-                 order by cod_aluno limit 15";
+      $sqls[] = "SELECT DISTINCT aluno.cod_aluno as id,
+                        pessoa.nome As name
+                   FROM pmieducar.aluno
+                  INNER JOIN cadastro.pessoa ON (pessoa.idpes = aluno.ref_idpes)
+                  WHERE aluno.ativo = 1
+                    AND aluno.cod_aluno::VARCHAR LIKE $1||'%'
+                    AND $2 = $2
+                  ORDER BY name
+                  LIMIT 15";
     }
 
     // seleciona por (codigo matricula ou codigo aluno) e opcionalmente por codigo escola,
     // apenas alunos com matricula são selecionados.
-    $sqls[] = "select * from (select distinct ON (aluno.cod_aluno) aluno.cod_aluno as id,
-               matricula.cod_matricula as matricula_id, pessoa.nome as name from pmieducar.matricula,
-               pmieducar.aluno, cadastro.pessoa where aluno.cod_aluno = matricula.ref_cod_aluno and
-               pessoa.idpes = aluno.ref_idpes and aluno.ativo = matricula.ativo and
-               matricula.ativo = 1 and
-               (select case when $2 != 0 then matricula.ref_ref_cod_escola = $2 else 1=1 end) and
-               (matricula.cod_matricula::varchar like $1||'%' or matricula.ref_cod_aluno::varchar like '$1'||'%') and
-               matricula.aprovado in (1, 2, 3, 4, 7, 8, 9) limit 15) as alunos order by id";
+    $sqls[] = "SELECT DISTINCT ON (pessoa.nome) pessoa.nome AS name,
+                      aluno.cod_aluno AS id,
+                      matricula.cod_matricula AS matricula_id
+                 FROM pmieducar.matricula
+                INNER JOIN pmieducar.aluno ON (aluno.cod_aluno = matricula.ref_cod_aluno)
+                INNER JOIN cadastro.pessoa ON (pessoa.idpes = aluno.ref_idpes)
+                WHERE aluno.ativo = matricula.ativo
+                  AND matricula.ativo = 1
+                  AND CASE WHEN $2 != 0 THEN matricula.ref_ref_cod_escola = $2
+                           ELSE TRUE
+                      END
+                  AND (matricula.cod_matricula::VARCHAR LIKE $1||'%' OR
+                       matricula.ref_cod_aluno::VARCHAR LIKE $1||'%')
+                  AND matricula.aprovado IN (1, 2, 3, 4, 7, 8, 9)
+                LIMIT 15";
 
     return $sqls;
   }
@@ -779,23 +791,33 @@ class AlunoController extends ApiCoreController
     // caso nao receba id da escola, pesquisa por nome aluno em todas as escolas,
     // alunos com e sem matricula são selecionados.
     if (! $this->getRequest()->escola_id) {
-     $sqls[] = "select distinct aluno.cod_aluno as id,
-                pessoa.nome as name from pmieducar.aluno, cadastro.pessoa where
-                pessoa.idpes = aluno.ref_idpes and aluno.ativo = 1 and
-                lower((pessoa.nome)) like '%'||lower(($1))||'%' and $2 = $2
-                order by nome limit 15";
+     $sqls[] = "SELECT DISTINCT aluno.cod_aluno as id,
+                       pessoa.nome As name
+                  FROM pmieducar.aluno
+                 INNER JOIN cadastro.pessoa ON (pessoa.idpes = aluno.ref_idpes)
+                 WHERE aluno.ativo = 1
+                   AND lower((pessoa.nome)) LIKE '%'||lower(($1))||'%'
+                   AND $2 = $2
+                 ORDER BY name
+                 LIMIT 15";
     }
 
     // seleciona por nome aluno e e opcionalmente  por codigo escola,
     // apenas alunos com matricula são selecionados.
-    $sqls[] = "select * from(select distinct ON (aluno.cod_aluno) aluno.cod_aluno as id,
-            matricula.cod_matricula as matricula_id, pessoa.nome as name from pmieducar.matricula,
-            pmieducar.aluno, cadastro.pessoa where aluno.cod_aluno = matricula.ref_cod_aluno and
-            pessoa.idpes = aluno.ref_idpes and aluno.ativo = matricula.ativo and
-            matricula.ativo = 1 and (select case when $2 != 0 then matricula.ref_ref_cod_escola = $2
-            else 1=1 end) and
-            translate(upper(nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') like translate(upper('%'|| $1 ||'%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') and matricula.aprovado in
-            (1, 2, 3, 4, 7, 8, 9) limit 15) as alunos order by name";
+    $sqls[] = "SELECT DISTINCT ON (pessoa.nome) pessoa.nome AS name,
+                      aluno.cod_aluno AS id,
+                      matricula.cod_matricula AS matricula_id
+                 FROM pmieducar.matricula
+                INNER JOIN pmieducar.aluno ON (aluno.cod_aluno = matricula.ref_cod_aluno)
+                INNER JOIN cadastro.pessoa ON (pessoa.idpes = aluno.ref_idpes)
+                WHERE aluno.ativo = matricula.ativo
+                  AND matricula.ativo = 1
+                  AND CASE WHEN $2 != 0 THEN matricula.ref_ref_cod_escola = $2
+                           ELSE TRUE
+                      END
+                  AND translate(upper(nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%'|| $1 ||'%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')
+                  AND matricula.aprovado IN (1, 2, 3, 4, 7, 8, 9)
+                LIMIT 15";
 
     return $sqls;
   }
