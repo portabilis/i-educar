@@ -217,11 +217,12 @@ class clsControlador
     $this->destroyLoginSession();
     require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/bootstrap.php';
     $parceiro = $GLOBALS['coreExt']['Config']->app->template->layout;
-
-    $templateName = (trim($parceiro)=='' ? 'templates/nvp_htmlloginintranet.tpl' : 'templates/'.trim($parceiro));
-    $templateFile = fopen($templateName, "r");
-    $templateText = fread($templateFile, filesize($templateName));
-    $templateText = str_replace( "<!-- #&ERROLOGIN&# -->", $this->messenger->toHtml('p'), $templateText);
+    $dbName   = $GLOBALS['coreExt']['Config']->app->database->dbname;
+    $linkCriarConta = 'https://login.ieducar.com.br/' . $dbName;
+    $templateName   = (trim($parceiro)=='' ? 'templates/nvp_htmlloginintranet.tpl' : 'templates/'.trim($parceiro));
+    $templateFile   = fopen($templateName, "r");
+    $templateText   = fread($templateFile, filesize($templateName));
+    $templateText   = str_replace( "<!-- #&ERROLOGIN&# -->", $this->messenger->toHtml('p'), $templateText);
 
     $requiresHumanAccessValidation = isset($_SESSION['tentativas_login_falhas']) &&
                                      is_numeric($_SESSION['tentativas_login_falhas']) &&
@@ -236,6 +237,7 @@ class clsControlador
     $templateText = str_replace( "<!-- #&RODAPE_LOGIN&# -->", $this->administrativeInfoFetcher->getLoginFooter(), $templateText);
     $templateText = str_replace( "<!-- #&RODAPE_EXTERNO&# -->", $this->administrativeInfoFetcher->getExternalFooter(), $templateText);
     $templateText = str_replace( "<!-- #&LINKS_SOCIAL&# -->", $this->administrativeInfoFetcher->getSocialMediaLinks(), $templateText);
+    $templateText = str_replace( "<!-- #&LINKCRIARCONTA&# -->", $linkCriarConta, $templateText);
 
     fclose($templateFile);
     die($templateText);
