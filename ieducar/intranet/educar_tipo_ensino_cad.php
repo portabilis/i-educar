@@ -56,6 +56,7 @@ class indice extends clsCadastro
 	var $data_cadastro;
 	var $data_exclusao;
 	var $ativo;
+	var $atividade_complementar;
 
 	var $ref_cod_instituicao;
 
@@ -76,7 +77,7 @@ class indice extends clsCadastro
 
 		if( is_numeric( $this->cod_tipo_ensino ) )
 		{
-
+			
 			$obj = new clsPmieducarTipoEnsino($this->cod_tipo_ensino,null,null,null,null,null,1);
 			if(!$registro = $obj->detalhe()){
 				header("Location: educar_tipo_ensino_lst.php");
@@ -96,6 +97,7 @@ class indice extends clsCadastro
 
 				$retorno = "Editar";
 			}
+			$this->atividade_complementar = dbBool($this->atividade_complementar);
 		}
 		$this->url_cancelar = ($retorno == "Editar") ? "educar_tipo_ensino_det.php?cod_tipo_ensino={$registro["cod_tipo_ensino"]}" : "educar_tipo_ensino_lst.php";
 
@@ -124,6 +126,8 @@ class indice extends clsCadastro
 		// text
 		$this->campoTexto( "nm_tipo", "Tipo de Ensino", $this->nm_tipo, 30, 255, true );
 
+		$this->campoCheck("atividade_complementar", "Atividade complementar", $this->atividade_complementar );
+
 		// data
 
 	}
@@ -134,7 +138,14 @@ class indice extends clsCadastro
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
 
-		$obj = new clsPmieducarTipoEnsino( $this->cod_tipo_ensino, null, $this->pessoa_logada, $this->nm_tipo, null, null, 1, $this->ref_cod_instituicao );
+		$this->atividade_complementar = is_null($this->atividade_complementar) ? FALSE : TRUE;
+
+		$obj = new clsPmieducarTipoEnsino();
+		$obj->ref_usuario_cad        = $this->pessoa_logada;
+		$obj->nm_tipo                = $this->nm_tipo;
+		$obj->ativo                  = 1;
+		$obj->ref_cod_instituicao    = $this->ref_cod_instituicao;
+		$obj->atividade_complementar = $this->atividade_complementar;
 		$cadastrou = $obj->cadastra();
 		if( $cadastrou )
 		{
@@ -161,10 +172,19 @@ class indice extends clsCadastro
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
 
+		$this->atividade_complementar = is_null($this->atividade_complementar) ? FALSE : TRUE;
+
 		$tipoEnsinoDetalhe = new clsPmieducarTipoEnsino($this->cod_tipo_ensino);
 		$tipoEnsinoDetalheAntes = $tipoEnsinoDetalhe->detalhe();
 
-		$obj = new clsPmieducarTipoEnsino($this->cod_tipo_ensino, $this->pessoa_logada, null, $this->nm_tipo, null, null, 1, $this->ref_cod_instituicao);
+		$obj = new clsPmieducarTipoEnsino();
+		$obj->cod_tipo_ensino        = $this->cod_tipo_ensino;
+		$obj->ref_usuario_exc        = $this->pessoa_logada;
+		$obj->nm_tipo                = $this->nm_tipo;
+		$obj->ativo                  = 1;
+		$obj->ref_cod_instituicao    = $this->ref_cod_instituicao;
+		$obj->atividade_complementar = $this->atividade_complementar;
+
 		$editou = $obj->edita();
 		if( $editou )
 		{

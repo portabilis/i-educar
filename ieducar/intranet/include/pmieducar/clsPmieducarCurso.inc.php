@@ -774,6 +774,25 @@ class clsPmieducarCurso
     return FALSE;
   }
 
+  function cursoDeAtividadeComplementar(){
+    if (is_numeric($this->cod_curso)) {
+      $db = new clsBanco();
+
+      $sql = "SELECT 1
+                FROM {$this->_tabela}
+               INNER JOIN pmieducar.tipo_ensino ON (tipo_ensino.cod_tipo_ensino = curso.ref_cod_tipo_ensino)
+               WHERE tipo_ensino.atividade_complementar = TRUE
+                 AND cod_curso =" . $this->cod_curso;
+      $cursoDeAtividadeComplementar = $db->CampoUnico($sql);
+      
+      if($cursoDeAtividadeComplementar){
+        return true;
+      }
+
+      return false;
+    }
+  }
+
   /**
    * Exclui um registro.
    * @return bool

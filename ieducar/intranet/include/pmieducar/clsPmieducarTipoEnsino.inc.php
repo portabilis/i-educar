@@ -43,6 +43,7 @@ class clsPmieducarTipoEnsino
 	var $ativo;
 
 	var $ref_cod_instituicao;
+	var $atividade_complementar;
 
 	// propriedades padrao
 
@@ -108,13 +109,29 @@ class clsPmieducarTipoEnsino
 	 *
 	 * @return object
 	 */
-	function clsPmieducarTipoEnsino( $cod_tipo_ensino = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_tipo = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $ref_cod_instituicao = null )
+	function clsPmieducarTipoEnsino( $cod_tipo_ensino        = NULL,
+									 $ref_usuario_exc        = NULL,
+									 $ref_usuario_cad        = NULL,
+									 $nm_tipo                = NULL,
+									 $data_cadastro          = NULL,
+									 $data_exclusao          = NULL,
+									 $ativo                  = NULL,
+									 $ref_cod_instituicao    = NULL,
+									 $atividade_complementar = NULL)									 
 	{
 		$db = new clsBanco();
 		$this->_schema = "pmieducar.";
 		$this->_tabela = "{$this->_schema}tipo_ensino";
 
-		$this->_campos_lista = $this->_todos_campos = "cod_tipo_ensino, ref_usuario_exc, ref_usuario_cad, nm_tipo, data_cadastro, data_exclusao, ativo, ref_cod_instituicao";
+		$this->_campos_lista = $this->_todos_campos = "cod_tipo_ensino,
+		                                               ref_usuario_exc,
+		                                               ref_usuario_cad,
+		                                               nm_tipo,
+		                                               data_cadastro,
+		                                               data_exclusao,
+		                                               ativo,
+													   ref_cod_instituicao,
+													   atividade_complementar";
 
 		if( is_numeric( $ref_usuario_exc ) )
 		{
@@ -222,6 +239,10 @@ class clsPmieducarTipoEnsino
 		{
 			$this->ativo = $ativo;
 		}
+		if( is_bool( $atividade_complementar ) )
+		{
+			$this->atividade_complementar = $atividade_complementar;
+		}
 
 	}
 
@@ -265,6 +286,13 @@ class clsPmieducarTipoEnsino
 			{
 				$campos .= "{$gruda}ref_cod_instituicao";
 				$valores .= "{$gruda}'{$this->ref_cod_instituicao}'";
+				$gruda = ", ";
+			}
+			if (is_bool($this->atividade_complementar))
+			{
+				$campos .= "{$gruda}atividade_complementar";
+				$aux = dbBool($this->atividade_complementar) ? "TRUE" : "FALSE";
+				$valores .= "{$gruda}{$aux}";
 				$gruda = ", ";
 			}
 
@@ -317,6 +345,12 @@ class clsPmieducarTipoEnsino
 			if( is_numeric( $this->ref_cod_instituicao ) )
 			{
 				$set .= "{$gruda}ref_cod_instituicao = '{$this->ref_cod_instituicao}'";
+				$gruda = ", ";
+			}
+			if (is_bool($this->atividade_complementar))
+			{
+				$aux = dbBool($this->atividade_complementar) ? "TRUE" : "FALSE";
+				$set .= "{$gruda}atividade_complementar = {$aux}";
 				$gruda = ", ";
 			}
 
