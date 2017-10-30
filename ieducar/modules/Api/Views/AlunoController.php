@@ -752,10 +752,14 @@ class AlunoController extends ApiCoreController
     // caso nao receba id da escola, pesquisa por codigo aluno em todas as escolas,
     // alunos com e sem matricula são selecionados.
     if (! $this->getRequest()->escola_id) {
-      $sqls[] = "select distinct aluno.cod_aluno as id, pessoa.nome as name from
+      /*$sqls[] = "select distinct aluno.cod_aluno as id, pessoa.nome as name from
                  pmieducar.aluno, cadastro.pessoa where pessoa.idpes = aluno.ref_idpes
                  and aluno.ativo = 1 and aluno.cod_aluno::varchar like $1||'%' and $2 = $2
-                 order by cod_aluno limit 15";
+                 order by cod_aluno limit 15";*/
+      $sqls[] = "select distinct aluno.cod_aluno as id, pessoa.nome as name from
+        pmieducar.aluno, cadastro.pessoa where pessoa.idpes = aluno.ref_idpes
+        and aluno.ativo = 1 and aluno.cod_aluno::varchar(255) like $1||'%' and $2 = $2
+        order by cod_aluno limit 15";
     }
 
     // seleciona por (codigo matricula ou codigo aluno) e opcionalmente por codigo escola,
