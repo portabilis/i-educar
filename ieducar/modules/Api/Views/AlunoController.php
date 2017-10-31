@@ -752,22 +752,38 @@ class AlunoController extends ApiCoreController
     // caso nao receba id da escola, pesquisa por codigo aluno em todas as escolas,
     // alunos com e sem matricula são selecionados.
     if (! $this->getRequest()->escola_id) {
-      $sqls[] = "select distinct aluno.cod_aluno as id, pessoa.nome as name from
+      /*$sqls[] = "select distinct aluno.cod_aluno as id, pessoa.nome as name from
                  pmieducar.aluno, cadastro.pessoa where pessoa.idpes = aluno.ref_idpes
                  and aluno.ativo = 1 and aluno.cod_aluno::varchar like $1||'%' and $2 = $2
-                 order by cod_aluno limit 15";
+                 order by cod_aluno limit 15";*/
+      $sqls[] = "select distinct aluno.cod_aluno as id, pessoa.nome as name from
+        pmieducar.aluno, cadastro.pessoa where pessoa.idpes = aluno.ref_idpes
+        and aluno.ativo = 1 and aluno.cod_aluno::varchar(255) like $1||'%' and $2 = $2
+        order by cod_aluno limit 15";
     }
 
     // seleciona por (codigo matricula ou codigo aluno) e opcionalmente por codigo escola,
     // apenas alunos com matricula são selecionados.
-    $sqls[] = "select * from (select distinct ON (aluno.cod_aluno) aluno.cod_aluno as id,
+    /*$sqls[] = "select * from (select distinct ON (aluno.cod_aluno) aluno.cod_aluno as id,
                matricula.cod_matricula as matricula_id, pessoa.nome as name from pmieducar.matricula,
                pmieducar.aluno, cadastro.pessoa where aluno.cod_aluno = matricula.ref_cod_aluno and
                pessoa.idpes = aluno.ref_idpes and aluno.ativo = matricula.ativo and
                matricula.ativo = 1 and
                (select case when $2 != 0 then matricula.ref_ref_cod_escola = $2 else 1=1 end) and
                (matricula.cod_matricula::varchar like $1||'%' or matricula.ref_cod_aluno::varchar like '$1'||'%') and
-               matricula.aprovado in (1, 2, 3, 4, 7, 8, 9) limit 15) as alunos order by id";
+               matricula.aprovado in (1, 2, 3, 4, 7, 8, 9) limit 15) as alunos order by id";*/
+    $sqls[] = "select * from
+    (select distinct ON (aluno.cod_aluno) aluno.cod_aluno as id, matricula.cod_matricula as matricula_id, pessoa.nome as name
+    from pmieducar.matricula, pmieducar.aluno, cadastro.pessoa
+    where aluno.cod_aluno = matricula.ref_cod_aluno
+      and pessoa.idpes = aluno.ref_idpes
+      and aluno.ativo = matricula.ativo
+      and matricula.ativo = 1
+      and (select case when $2 != 0 then matricula.ref_ref_cod_escola = $2 else 1=1 end)
+      and (matricula.ref_cod_aluno::varchar(255) like $1||'%')
+      and matricula.aprovado in (1, 2, 3, 4, 7, 8, 9) limit 15) as alunos
+    order by id";
+
 
     return $sqls;
   }
