@@ -129,6 +129,7 @@ class RegraController extends ApiCoreController
       $sql = "SELECT
                 id,
                 tabela_arredondamento_id,
+                tabela_arredondamento_id_conceitual,
                 tipo_nota,
                 tipo_presenca,
                 parecer_descritivo,
@@ -147,7 +148,7 @@ class RegraController extends ApiCoreController
 
       $_regras = $this->fetchPreparedQuery($sql, array($instituicaoId, $ano));
 
-      $attrs = array('id', 'tabela_arredondamento_id', 'tipo_nota', 'tipo_presenca', 'parecer_descritivo',
+      $attrs = array('id', 'tabela_arredondamento_id', 'tabela_arredondamento_id_conceitual', 'tipo_nota', 'tipo_presenca', 'parecer_descritivo',
                       'turma_id', 'tipo_recuperacao', 'media_recuperacao_paralela', 'nota_maxima_geral',
                       'nota_maxima_exame');
       $_regras = Portabilis_Array_Utils::filterSet($_regras, $attrs);
@@ -157,6 +158,7 @@ class RegraController extends ApiCoreController
       foreach ($_regras as $regra) {
         $__regras[$regra['id']]['id'] = $regra['id'];
         $__regras[$regra['id']]['tabela_arredondamento_id'] = $regra['tabela_arredondamento_id'];
+        $__regras[$regra['id']]['tabela_arredondamento_id_conceitual'] = $regra['tabela_arredondamento_id_conceitual'];
         $__regras[$regra['id']]['tipo_nota'] = $regra['tipo_nota'];
         $__regras[$regra['id']]['tipo_presenca'] = $regra['tipo_presenca'];
         $__regras[$regra['id']]['parecer_descritivo'] = $regra['parecer_descritivo'];
