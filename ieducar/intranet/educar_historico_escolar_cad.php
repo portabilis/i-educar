@@ -186,8 +186,6 @@ class indice extends clsCadastro
 			$habilitaCargaHoraria = $this->habilitaCargaHoraria($this->ref_cod_instituicao);
 		}
 
-		//$this->campoOculto( 'ref_cod_instituicao', $this->ref_cod_instituicao );
-
 		$obj_nivel = new clsPmieducarUsuario($this->pessoa_logada);
 		$nivel_usuario = $obj_nivel->detalhe();
 
@@ -275,6 +273,7 @@ class indice extends clsCadastro
 
 
 		$this->campoTexto( "nm_serie", $GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu' ? "Ano/S&eacute;rie" : "S&eacute;rie", $this->nm_serie, 30, 255, true );
+		$this->campoCheck("dependencia", "Histórico de dependência", $this->dependencia);
 		$this->campoNumero( "ano", "Ano", $this->ano, 4, 4, true );
 		if (validaControlePosicaoHistorico()) {
 			$this->campoNumero( "posicao", "Posição", $this->posicao, 1, 1, true, 'Informe a coluna equivalente a série/ano/etapa a qual o histórico pertence. Ex.: 1º ano informe 1, 2º ano informe 2' );
@@ -309,7 +308,7 @@ class indice extends clsCadastro
 		$this->campoTexto( "livro", "Livro", $this->livro, 30, 50, false);
 		$this->campoTexto( "folha", "Folha", $this->folha, 30, 50, false);
 
-		$this->campoCheck("dependencia", "Histórico de dependência", $this->dependencia);
+		// $this->campoCheck("dependencia", "Histórico de dependência", $this->dependencia);
 
 
 	//---------------------INCLUI DISCIPLINAS---------------------//
