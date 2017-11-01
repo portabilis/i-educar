@@ -67,7 +67,7 @@ class App_Model_MatriculaSituacao extends CoreExt_Enum
     self::EM_EXAME                 => 'Em exame',
     self::APROVADO_APOS_EXAME      => 'Aprovado após exame',
     self::PRE_MATRICULA            => 'Pré-matrícula',
-    self::APROVADO_COM_DEPENDENCIA => 'Aprovado com depend&ecirc;ncia',
+    self::APROVADO_COM_DEPENDENCIA => 'Aprovado com dependência',
     self::APROVADO_PELO_CONSELHO   => 'Aprovado pelo conselho',
     self::REPROVADO_POR_FALTAS     => 'Reprovado por faltas',
     self::FALECIDO                 => 'Falecido'
