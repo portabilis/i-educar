@@ -1,3 +1,20 @@
+hideShowTabelaArredondamentoNota();
+$j('input:radio').change(function(){
+  hideShowTabelaArredondamentoNota();
+}); 
+
+function hideShowTabelaArredondamentoNota(){
+  if($j("input[name='tipoNota']:checked").val() == 3){
+    $j('#tr_tabelaArredondamento').hide();
+    $j('#tr_tabelaArredondamentoNumero').show();
+    $j('#tr_tabelaArredondamentoConceitual').show();
+  }else{
+    $j('#tr_tabelaArredondamento').show();
+    $j('#tr_tabelaArredondamentoNumero').hide();
+    $j('#tr_tabelaArredondamentoConceitual').hide();
+  }
+}
+
 $j(function(){
 	$tipoRecuperacaoParalelaField = $j('#tipoRecuperacaoParalela');
 	$usaNotaGeralPorEtapaField = $j('#notaGeralPorEtapa');

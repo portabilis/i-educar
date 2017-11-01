@@ -73,6 +73,14 @@ class EditController extends Core_Controller_Page_EditController
       'label'  => 'Tabela de arredondamento de nota',
       'help'   => ''
     ),
+    'tabelaArredondamentoNumerico' => array(
+      'label'  => 'Tabela de arredondamento de nota numérica',
+      'help'   => ''
+    ),
+    'tabelaArredondamentoConceitual' => array(
+      'label'  => 'Tabela de arredondamento de nota conceitual',
+      'help'   => ''
+    ),
     'media' => array(
       'label'  => 'Média final para promoção',
       'help'   => 'Informe a média necessária para promoção<br />
@@ -364,12 +372,28 @@ var tabela_arredondamento = new function() {
     $tabelaArredondamento = $this->getDataMapper()->findTabelaArredondamento($this->getEntity());
     $tabelaArredondamento = CoreExt_Entity::entityFilterAttr($tabelaArredondamento, 'id', 'nome');
 
+    // Tabela de arredondamento numérico
+    $tabelaArredondamentoNumerico = $this->getDataMapper()->findTabelaArredondamento($this->getEntity(), array('tipo_nota' => 1));
+    $tabelaArredondamentoNumerico = CoreExt_Entity::entityFilterAttr($tabelaArredondamentoNumerico, 'id', 'nome');
+
+    // Tabela de arredondamento conceitual
+    $tabelaArredondamentoConceitual = $this->getDataMapper()->findTabelaArredondamento($this->getEntity(), array('tipo_nota' => 2));
+    $tabelaArredondamentoConceitual = CoreExt_Entity::entityFilterAttr($tabelaArredondamentoConceitual, 'id', 'nome');
+
     if (empty($tabelaArredondamento)) {
       $tabelaArredondamento = array(0 => 'O tipo de nota não possui tabela de arredondamento.');
     }
 
     $this->campoLista('tabelaArredondamento', $this->_getLabel('tabelaArredondamento'),
       $tabelaArredondamento, $this->getEntity()->get('tabelaArredondamento'), '',
+      FALSE, $this->_getHelp('tabelaArredondamento'), '', FALSE, FALSE);
+
+    $this->campoLista('tabelaArredondamentoNumero', $this->_getLabel('tabelaArredondamentoNumerico'),
+      $tabelaArredondamentoNumerico, $this->getEntity()->get('tabelaArredondamento'), '',
+      FALSE, $this->_getHelp('tabelaArredondamento'), '', FALSE, FALSE);
+      
+    $this->campoLista('tabelaArredondamentoConceitual', $this->_getLabel('tabelaArredondamentoConceitual'),
+      $tabelaArredondamentoConceitual, $this->getEntity()->get('tabelaArredondamentoConceitual'), '',
       FALSE, $this->_getHelp('tabelaArredondamento'), '', FALSE, FALSE);
 
     // Tipo progressão
@@ -529,6 +553,10 @@ var tabela_arredondamento = new function() {
 
     $data = array();
 
+    if($_POST['tipoNota']==3){
+      $_POST['tabelaArredondamento'] = $_POST['tabelaArredondamentoNumero'];
+    }
+    
     foreach ($_POST as $key => $val) {
       if (array_key_exists($key, $this->_formMap)) {
         $data[$key] = $val;

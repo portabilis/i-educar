@@ -6,14 +6,15 @@ submitButton.click(function(){
     var componentesInput = $j('[name*=carga_horaria]');
     var arrayComponentes = [];
     componentesInput.each(function(i) {
-        nome  = this.name;
-        key   = nome.split('componentes[').pop().split('][').shift();
-        check = $j('[name="componentes['+key+'][id]"]').is(':checked');
-        id    = $j('[name="componentes['+key+'][id]"]').val();
-        carga = $j('[name="componentes['+key+'][carga_horaria]"]').val();
+        nome      = this.name;
+        key       = nome.split('componentes[').pop().split('][').shift();
+        check     = $j('[name="componentes['+key+'][id]"]').is(':checked');
+        id        = $j('[name="componentes['+key+'][id]"]').val();
+        carga     = $j('[name="componentes['+key+'][carga_horaria]"]').val();
+        tipo_nota = $j('[name="componentes['+key+'][tipo_nota]"]').val();
 
         if(check){
-            arrayComponentes.push({id : id, carga_horaria : carga});
+            arrayComponentes.push({id : id, carga_horaria : carga, tipo_nota : tipo_nota});
         }
     });
     atualizaComponentesSerie(arrayComponentes);
@@ -51,16 +52,21 @@ function handleAtualizaComponentesSerie(response) {
                 if (confirm('Você adicionou ' + response.insert.length + ' novo(s) componente(s) na série ' + nmSerie + '. Deseja aplicar para todas as escolas?')) {
                     adicionaComponentesNasEscolas(response.insert);
                 }
+            }else{
+                redirecionaListagem()
             }
             messageUtils.success('Componentes da série alterados com sucesso!');
-            acao();
         }
     }
     
-    function handleErroAtualizaComponentesSerie(response){
-        handleMessages([{type : 'error', msg : 'Erro ao alterar componentes da série: ' + response.statusText}], '');
-        safeLog(response);
-    }
+function handleCompleteAtualizaComponentesSerie(){
+    
+}
+
+function handleErroAtualizaComponentesSerie(response){
+    handleMessages([{type : 'error', msg : 'Erro ao alterar componentes da série: ' + response.statusText}], '');
+    safeLog(response);
+}
 
 function adicionaComponentesNasEscolas(componentes){
     var url = postResourceUrlBuilder.buildUrl('/module/Api/ComponentesSerie', 'replica-componentes-adicionados-escolas', {});
@@ -82,9 +88,10 @@ function adicionaComponentesNasEscolas(componentes){
 
 function handleReplicaComponentesEscola(response){
     if(response.any_error_msg){
-        return messageUtils.error('Erro ao aplicar alterações para todas as escolas.');
+        messageUtils.error('Erro ao aplicar alterações para todas as escolas.');
     }
-    return messageUtils.success('Alterações aplicadas para todas as escolas.');
+    messageUtils.success('Alterações aplicadas para todas as escolas.');
+    redirecionaListagem();
 }
 
 function handleErroReplicaComponentesEscola(response){
@@ -103,7 +110,8 @@ deleteButton.removeAttr('onclick');
 deleteButton.click(function(){
     if (confirm('Deseja excluir os componentes da série? Isso também excluirá de todas as escolas e turmas do ano atual.')) {
         excluiComponentesDaSerie();
-        window.location.href = "/intranet/educar_componentes_serie_lst.php";
+    }else{
+        redirecionaListagem();
     }
 });
 
@@ -111,7 +119,7 @@ function excluiComponentesDaSerie(){
     var url = postResourceUrlBuilder.buildUrl('/module/Api/ComponentesSerie', 'exclui-componentes-serie', {});
 
     var options = {
-    //   type     : 'POST',
+      type     : 'POST',
       url      : url,
       dataType : 'json',
       data     : {
@@ -129,9 +137,15 @@ function handleExcluiComponentesDaSerie(response){
         return messageUtils.error('Erro ao excluir componentes da série.');
     }
     messageUtils.success('Componentes excluídos com sucesso.');
+    redirecionaListagem();
 }
 
 function handleErroExcluiComponentesDaSerie(response){
     handleMessages([{type : 'error', msg : 'Erro ao aplicar alterações para todas as escolas: ' + response.statusText}], '');
     safeLog(response);
+}
+
+
+function redirecionaListagem(){
+    window.location.href = "/intranet/educar_componentes_serie_lst.php";
 }

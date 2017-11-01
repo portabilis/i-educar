@@ -734,7 +734,6 @@ class clsPmieducarSerie
 
   function listaSeriesComComponentesVinculados($int_cod_serie = NULL,
                                                $int_ref_cod_curso = NULL,
-                                               $str_nm_serie = NULL,
                                                $int_ref_cod_instituicao = NULL,
                                                $int_ativo = NULL)
   {
@@ -752,11 +751,6 @@ class clsPmieducarSerie
 
     if (is_numeric($int_ref_cod_curso)) {
       $filtros .= "{$whereAnd} s.ref_cod_curso = '{$int_ref_cod_curso}'";
-      $whereAnd = " AND ";
-    }
-
-    if (is_string($str_nm_serie)) {
-      $filtros .= "{$whereAnd} translate(upper(s.nm_serie),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nm_serie}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
       $whereAnd = " AND ";
     }
 

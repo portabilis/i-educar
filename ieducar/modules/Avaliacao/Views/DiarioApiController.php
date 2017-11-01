@@ -942,12 +942,13 @@ class DiarioApiController extends ApiCoreController
         $matricula   = array();
         $matriculaId = $aluno['ref_cod_matricula'];
         $turmaId     = $aluno['ref_cod_turma'];
+        $serieId     = $aluno['ref_ref_cod_serie'];
 
         // seta id da matricula a ser usado pelo metodo serviceBoletim
         $this->setCurrentMatriculaId($matriculaId);
 
         if(! (dbBool($aluno['remanejado']) || dbBool($aluno['transferido']) || dbBool($aluno['abandono']) || dbBool($aluno['reclassificado']) || dbBool($aluno['falecido'])))
-          $matricula['componentes_curriculares'] = $this->loadComponentesCurricularesForMatricula($matriculaId, $turmaId);
+          $matricula['componentes_curriculares'] = $this->loadComponentesCurricularesForMatricula($matriculaId, $turmaId, $serieId);
 
         $matricula['matricula_id']             = $aluno['ref_cod_matricula'];
         $matricula['aluno_id']                 = $aluno['ref_cod_aluno'];
@@ -1125,7 +1126,7 @@ class DiarioApiController extends ApiCoreController
 
   // outros metodos auxiliares
 
-  protected function loadComponentesCurricularesForMatricula($matriculaId, $turmaId) {
+  protected function loadComponentesCurricularesForMatricula($matriculaId, $turmaId, $serieId) {
     $componentesCurriculares  = array();
 
     $componenteCurricularId   = $this->getRequest()->componente_curricular_id;
@@ -1138,6 +1139,7 @@ class DiarioApiController extends ApiCoreController
     foreach($_componentesCurriculares as $_componente) {
       $componente                          = array();
       $componenteId = $_componente->get('id');
+      $tipoNota     = $this->getTipoNotaComponenteSerie($componenteId, $serieId);
 
       if (clsPmieducarTurma::verificaDisciplinaDispensada($turmaId, $componenteId))
         continue;
@@ -1149,6 +1151,7 @@ class DiarioApiController extends ApiCoreController
       $componente['falta_atual']               = $this->getFaltaAtual($etapa = null, $componente['id']);
       $componente['parecer_atual']             = $this->getParecerAtual($componente['id']);
       $componente['situacao']                  = $this->getSituacaoComponente($componente['id']);
+      $componente['tipo_nota']                 = $tipoNota;
 
       $gravaNotaExame = ($componente['situacao'] == 'Em exame' || $componente['situacao'] == 'Aprovado após exame' || $componente['situacao'] == 'Retido');
 
@@ -1203,6 +1206,17 @@ class DiarioApiController extends ApiCoreController
     }
     return $componentesCurriculares;
   }
+
+  protected function getTipoNotaComponenteSerie($componenteId, $serieId){
+    $sql = "SELECT tipo_nota
+              FROM modules.componente_curricular_ano_escolar
+             WHERE ano_escolar_id = $1
+               AND componente_curricular_id = $2";
+    
+    $tipoNota = $this->fetchPreparedQuery($sql, array($serieId, $componenteId));
+
+    return $tipoNota[0]['tipo_nota'] ;
+}
 
 
   protected function getAreaConhecimento($componenteCurricularId = null) {
@@ -1533,6 +1547,36 @@ class DiarioApiController extends ApiCoreController
     return $opcoes;
   }
 
+  //Usado apenas quando na regra o sistema de nota é "Numérica e conceitual"
+  protected function getOpcoesNotasConceituais() {
+    $opcoes = array();
+
+    if ($this->canGetOpcoesNotas()) {
+      $tpNota  = $this->serviceBoletim()->getRegra()->get('tipoNota');
+      $cnsNota = RegraAvaliacao_Model_Nota_TipoValor;
+
+      if ($tpNota != $cnsNota::NENHUM) {
+        $tabela = $this->serviceBoletim()->getRegra()->tabelaArredondamentoConceitual->findTabelaValor();
+
+        foreach ($tabela as $index => $item) {
+          if ($tpNota == $cnsNota::NUMERICA) {
+            $nota = str_replace(',', '.', (string) $item->nome);
+            $opcoes[$nota] = $nota;
+          }
+          else {
+            // $nota                   = str_replace(',', '.', (string) $item->valorMaximo);
+            $opcoes[$index] = array('valor_minimo' => str_replace(',', '.', (string) $item->valorMinimo),
+                                    'valor_maximo' => str_replace(',', '.', (string) $item->valorMaximo),
+                                    'descricao'    => $this->safeString($item->nome . ' (' . $item->descricao .  ')'));
+
+          }
+        }
+      }
+    }
+
+    return $opcoes;
+  }
+
   protected function getNavegacaoTab(){
      return $this->getRequest()->navegacao_tab;
   }
@@ -1575,6 +1619,8 @@ class DiarioApiController extends ApiCoreController
         $itensRegra['tipo_nota'] = 'conceitual';
         //incluido opcoes notas, pois notas conceituais requer isto para visualizar os nomes
       }
+      elseif ($tpNota == $cnsNota::NUMERICACONCEITUAL)
+        $itensRegra['tipo_nota'] = 'numericaconceitual';
       else
         $itensRegra['tipo_nota'] = $tpNota;
 
@@ -1601,7 +1647,10 @@ class DiarioApiController extends ApiCoreController
         $itensRegra['tipo_parecer_descritivo'] = $tpParecer;
 
       // opcoes notas
-      $itensRegra['opcoes_notas']      = $this->getOpcoesNotas();
+      $itensRegra['opcoes_notas'] = $this->getOpcoesNotas();
+      if ($tpNota == $cnsNota::NUMERICACONCEITUAL){
+        $itensRegra['opcoes_notas_conceituais'] = $this->getOpcoesNotasConceituais();
+      }
 
       // etapas
       $itensRegra['quantidade_etapas'] = $this->serviceBoletim()->getOption('etapas');

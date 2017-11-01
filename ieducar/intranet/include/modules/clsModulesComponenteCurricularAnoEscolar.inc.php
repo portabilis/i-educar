@@ -39,6 +39,7 @@ class clsModulesComponenteCurricularAnoEscolar
 	var $componente_curricular_id;
 	var $ano_escolar_id;
 	var $carga_horaria;
+	var $tipo_nota;
     var $componentes;
     var $updateInfo;
 
@@ -54,10 +55,11 @@ class clsModulesComponenteCurricularAnoEscolar
 
 
     function clsModulesComponenteCurricularAnoEscolar($componente_curricular_id = NULL,
-                                                    $ano_escolar_id           = NULL,
-                                                    $carga_horaria            = NULL,
-                                                    $componentes              = NULL,
-                                                    $updateInfo               = NULL)
+                                                      $ano_escolar_id           = NULL,
+                                                      $carga_horaria            = NULL,
+                                                      $tipo_nota                = NULL,
+                                                      $componentes              = NULL,
+                                                      $updateInfo               = NULL)
     {
         $this->_schema = "modules.";
         $this->_tabela = "{$this->_schema}componente_curricular_ano_escolar";
@@ -73,6 +75,9 @@ class clsModulesComponenteCurricularAnoEscolar
         }
         if (is_numeric($carga_horaria)) {
             $this->$carga_horaria = $carga_horaria;
+		}
+        if (is_numeric($tipo_nota)) {
+            $this->$tipo_nota = $tipo_nota;
         }
         if (is_array($componentes)) {
             $this->componentes = $componentes;
@@ -88,13 +93,17 @@ class clsModulesComponenteCurricularAnoEscolar
 		
 		if ($this->updateInfo['update']) {
 			foreach ($this->updateInfo['update'] as $componenteUpdate) {
-				$this->editaComponente(intval($componenteUpdate['id']), intval($componenteUpdate['carga_horaria']));
+				$this->editaComponente(intval($componenteUpdate['id']),
+									   intval($componenteUpdate['carga_horaria']),
+									   intval($componenteUpdate['tipo_nota']));
 			}
 		}
 
 		if ($this->updateInfo['insert']) {
 			foreach ($this->updateInfo['insert'] as $componenteInsert) {
-				$this->cadastraComponente(intval($componenteInsert['id']), intval($componenteInsert['carga_horaria']));
+				$this->cadastraComponente(intval($componenteInsert['id']),
+										  intval($componenteInsert['carga_horaria']),
+										  intval($componenteInsert['tipo_nota']));
 			}
 		}
 
@@ -118,10 +127,12 @@ class clsModulesComponenteCurricularAnoEscolar
             if (in_array($componente['id'], $this->getComponentesSerie())) {
                 $this->updateInfo['update'][$u]['id'] = $componente['id'];
                 $this->updateInfo['update'][$u]['carga_horaria'] = $componente['carga_horaria'];
+                $this->updateInfo['update'][$u]['tipo_nota'] = $componente['tipo_nota'];
                 $u++;
             }else{
                 $this->updateInfo['insert'][$i]['id'] = $componente['id'];
                 $this->updateInfo['insert'][$i]['carga_horaria'] = $componente['carga_horaria'];
+                $this->updateInfo['insert'][$i]['tipo_nota'] = $componente['tipo_nota'];
                 $i++;
             }
         }
@@ -159,7 +170,8 @@ class clsModulesComponenteCurricularAnoEscolar
 	}
 	
 	private function cadastraComponente($componente_curricular_id = NULL,
-								        $carga_horaria            = NULL)
+										$carga_horaria            = NULL,
+										$tipo_nota                = NULL)
 	{
 		if(is_numeric($componente_curricular_id) && is_numeric($carga_horaria)){
 			
@@ -167,7 +179,8 @@ class clsModulesComponenteCurricularAnoEscolar
 			
 			$sql = "INSERT INTO {$this->_tabela} VALUES( $componente_curricular_id,
 			                                             $this->ano_escolar_id,
-														 $carga_horaria)";
+														 $carga_horaria,
+														 $tipo_nota)";
 			$db->Consulta( $sql );
 
 			return true;
@@ -177,7 +190,8 @@ class clsModulesComponenteCurricularAnoEscolar
 	}
 
 	private function editaComponente($componente_curricular_id = NULL,
-							         $carga_horaria            = NULL)
+							         $carga_horaria            = NULL,
+									 $tipo_nota                = NULL)
 	{
 		$db = new clsBanco();
 		$set = "";
@@ -187,6 +201,12 @@ class clsModulesComponenteCurricularAnoEscolar
 			if( is_numeric( $carga_horaria ) )
 			{
 				$set .= "{$gruda}carga_horaria = {$carga_horaria}";
+				$gruda = ", ";
+			}
+
+			if( is_numeric( $tipo_nota ) )
+			{
+				$set .= "{$gruda}tipo_nota = {$tipo_nota}";
 				$gruda = ", ";
 			}
 
@@ -248,6 +268,12 @@ class clsModulesComponenteCurricularAnoEscolar
 				$valores .= "{$gruda}'{$this->carga_horaria}'";
 				$gruda = ", ";
 			}
+
+			if (is_numeric($this->tipo_nota)) {
+				$campos .= "{$gruda}tipo_nota";
+				$valores .= "{$gruda}'{$this->tipo_nota}'";
+				$gruda = ", ";
+			}
 			
 			$sql = "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )";
 
@@ -279,7 +305,8 @@ class clsModulesComponenteCurricularAnoEscolar
 	// Retorna uma lista filtrados de acordo com os parametros
 	function lista( $componente_curricular_id = NULL,
                     $ano_escolar_id           = NULL,
-                    $carga_horaria            = NULL)
+					$carga_horaria            = NULL,
+					$tipo_nota                = NULL)
 	{
 		$sql = "SELECT {$this->_campos_lista}
                   FROM {$this->_tabela}";
@@ -300,6 +327,11 @@ class clsModulesComponenteCurricularAnoEscolar
         if( is_numeric( $carga_horaria ) )
         {
         $filtros .= "{$whereAnd} carga_horaria = {$carga_horaria}";
+        $whereAnd = " AND ";
+		}
+		if( is_numeric( $tipo_nota ) )
+        {
+        $filtros .= "{$whereAnd} tipo_$tipo_nota = {$tipo_nota}";
         $whereAnd = " AND ";
         }
 
