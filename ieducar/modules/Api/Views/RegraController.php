@@ -56,20 +56,21 @@ class RegraController extends ApiCoreController
     if($this->canGetTabelasDeArredondamento()){
       $instituicaoId = $this->getRequest()->instituicao_id;
 
-      $sql = "SELECT ta.id, ta.nome, tav.nome as rotulo, tav.descricao, tav.valor_maximo, tav.casa_decimal_exata, tav.acao
+      $sql = "SELECT ta.id, ta.nome, ta.tipo_nota, tav.nome as rotulo, tav.descricao, tav.valor_maximo, tav.casa_decimal_exata, tav.acao
                 FROM modules.tabela_arredondamento ta
                 INNER JOIN modules.tabela_arredondamento_valor tav ON tav.tabela_arredondamento_id = ta.id
                 WHERE ta.instituicao_id = $1";
 
       $tabelas = $this->fetchPreparedQuery($sql, array($instituicaoId));
 
-      $attrs = array('id', 'nome', 'rotulo', 'descricao', 'valor_maximo', 'casa_decimal_exata', 'acao');
+      $attrs = array('id', 'nome', 'tipo_nota', 'rotulo', 'descricao', 'valor_maximo', 'casa_decimal_exata', 'acao');
       $tabelas = Portabilis_Array_Utils::filterSet($tabelas, $attrs);
       $_tabelas = array();
 
       foreach ($tabelas as $tabela) {
         $_tabelas[$tabela['id']]['id'] = $tabela['id'];
         $_tabelas[$tabela['id']]['nome'] = Portabilis_String_Utils::toUtf8($tabela['nome']);
+        $_tabelas[$tabela['id']]['tipo_nota'] = $tabela['tipo_nota'];
         $_tabelas[$tabela['id']]['valores'][] = array(
           'rotulo' => Portabilis_String_Utils::toUtf8($tabela['rotulo']),
           'descricao' => Portabilis_String_Utils::toUtf8($tabela['descricao']),
