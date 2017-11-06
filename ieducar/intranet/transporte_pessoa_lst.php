@@ -113,14 +113,15 @@ class indice extends clsListagem
 		) );
 
 		// Paginador
-		$this->limite = 20000000000;
+		$this->limite = 20;
 		$this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
 		$obj = new clsModulesPessoaTransporte();
 		$obj->setLimite($this->limite,$this->offset);
 
 		$lista = $obj->lista($this->cod_pessoa_transporte, null, $this->ref_cod_rota_transporte_escolar,null, null,$this->nome_pessoa,$this->nome_destino, $this->ano_rota);
-		$total = $lista->_total;
+
+		$total = $obj->_total;
 
 		foreach ( $lista AS $registro ) {
 
