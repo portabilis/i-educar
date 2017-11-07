@@ -1,7 +1,8 @@
-.idea/*
+*.idea
 *~
 # Vagrant
 /.vagrant
 Vagrantfile
 deploy/.ruby-version
 ieducar/configuration/ieducar.ini
+.vscode/
