@@ -51,6 +51,9 @@
 			while ($db->ProximoRegistro())
 			{
 				list($cod_acervo_editora, $nm_editora) = $db->Tupla();
+        $cod_acervo_editora = htmlspecialchars($cod_acervo_editora);
+        $nm_editora = htmlspecialchars($nm_editora);
+
 				echo "<acervo_editora cod_acervo_editora=\"{$cod_acervo_editora}\">{$nm_editora}</acervo_editora>\n";
 			}
 		}
