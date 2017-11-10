@@ -95,7 +95,7 @@
 
       <div id="login-form" class="box shadow">
         <h1>Acesse sua conta</h1>
-        Não possui uma conta? <a target="_BLANK" href="<!-- #&LINKCRIARCONTA&# -->">Crie sua conta agora</a>.
+        <!-- #&CRIARCONTA&# -->
         <form action="" method="post">
           <label class="" for="login">Matrícula:</label>
           <input type="text" name="login" id="login">
