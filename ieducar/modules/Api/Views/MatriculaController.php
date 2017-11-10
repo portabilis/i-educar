@@ -368,10 +368,10 @@ class MatriculaController extends ApiCoreController
     $alunoId     = $matricula['ref_cod_aluno'];
     $situacaoAndamento  = App_Model_MatriculaSituacao::EM_ANDAMENTO;
 
-    $sql = 'update pmieducar.matricula_turma set ativo = 1, reclassificado = NULL where ref_cod_matricula = $1';
+    $sql = 'update pmieducar.matricula_turma set ativo = 1, reclassificado = NULL, data_exclusao = NULL where ref_cod_matricula = $1';
     $this->fetchPreparedQuery($sql, array($matriculaId));
 
-    $sql = 'update pmieducar.matricula set matricula_reclassificacao = 0, aprovado = $1 where cod_matricula = $2';
+    $sql = 'update pmieducar.matricula set matricula_reclassificacao = 0, data_exclusao = NULL, aprovado = $1 where cod_matricula = $2';
     $this->fetchPreparedQuery($sql, array($situacaoAndamento, $matriculaId));
 
     return array('aluno_id' => $alunoId);
