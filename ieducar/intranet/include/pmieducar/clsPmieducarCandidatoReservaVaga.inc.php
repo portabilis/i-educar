@@ -58,6 +58,7 @@ class clsPmieducarCandidatoReservaVaga
   var $codUsuario;
   var $mae_trabalha;
   var $mae_fez_pre_natal;
+  var $moradia;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -122,7 +123,8 @@ class clsPmieducarCandidatoReservaVaga
                        $ref_cod_escola = NULL,
                        $quantidade_membros = NULL,
                        $mae_trabalha = NULL,
-                       $mae_fez_pre_natal = NULL)
+                       $mae_fez_pre_natal = NULL,
+                       $moradia = NULL)
   {
     $db = new clsBanco();
     $this->_schema = 'pmieducar.';
@@ -143,7 +145,8 @@ class clsPmieducarCandidatoReservaVaga
                                                     crv.ref_cod_escola,
                                                     crv.quantidade_membros,
                                                     crv.mae_trabalha,
-                                                    crv.mae_fez_pre_natal ';
+                                                    crv.mae_fez_pre_natal,
+                                                    crv.moradia ';
 
     if (is_numeric($cod_candidato_reserva_vaga)) {
       $this->cod_candidato_reserva_vaga = $cod_candidato_reserva_vaga;
@@ -187,6 +190,10 @@ class clsPmieducarCandidatoReservaVaga
     
     if (is_bool($mae_fez_pre_natal)) {
       $this->mae_fez_pre_natal = $mae_fez_pre_natal;
+    }
+
+    if (is_numeric($moradia)) {
+      $this->moradia = $moradia;
     }
   }
 
@@ -272,6 +279,12 @@ class clsPmieducarCandidatoReservaVaga
         $gruda = ', ';
       }
 
+      if (is_numeric($this->moradia)) {
+        $campos  .= "{$gruda}moradia";
+        $valores .= "{$gruda}'{$this->moradia}'";
+        $gruda = ', ';
+      }
+
       $campos  .= "{$gruda}data_cad";
       $valores .= "{$gruda}NOW()";
       $gruda = ', ';
@@ -352,6 +365,11 @@ class clsPmieducarCandidatoReservaVaga
         $gruda = ', ';
       }else{
         $set .= "{$gruda}mae_fez_pre_natal = false";
+        $gruda = ', ';
+      }
+
+      if (is_numeric($this->moradia)) {
+        $set .= "{$gruda}moradia = '{$this->moradia}'";
         $gruda = ', ';
       }
 
