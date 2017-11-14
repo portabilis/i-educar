@@ -58,7 +58,7 @@ class clsPmieducarCandidatoReservaVaga
   var $codUsuario;
   var $membros_trabalham;
   var $mae_fez_pre_natal;
-
+  var $hora_solicitacao;
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
    * @var int
@@ -122,7 +122,8 @@ class clsPmieducarCandidatoReservaVaga
                        $ref_cod_escola = NULL,
                        $quantidade_membros = NULL,
                        $membros_trabalham = NULL,
-                       $mae_fez_pre_natal = NULL)
+                       $mae_fez_pre_natal = NULL,
+                       $hora_solicitacao = NULL)
   {
     $db = new clsBanco();
     $this->_schema = 'pmieducar.';
@@ -143,7 +144,8 @@ class clsPmieducarCandidatoReservaVaga
                                                     crv.ref_cod_escola,
                                                     crv.quantidade_membros,
                                                     crv.membros_trabalham,
-                                                    crv.mae_fez_pre_natal ';
+                                                    crv.mae_fez_pre_natal,
+                                                    crv.hora_solicitacao ';
 
     if (is_numeric($cod_candidato_reserva_vaga)) {
       $this->cod_candidato_reserva_vaga = $cod_candidato_reserva_vaga;
@@ -187,6 +189,10 @@ class clsPmieducarCandidatoReservaVaga
     
     if (is_bool($mae_fez_pre_natal)) {
       $this->mae_fez_pre_natal = $mae_fez_pre_natal;
+    }
+
+    if (is_string($hora_solicitacao)){
+      $this->hora_solicitacao = $hora_solicitacao;
     }
   }
 
@@ -269,6 +275,12 @@ class clsPmieducarCandidatoReservaVaga
         $gruda = ', ';
       }
 
+      if (is_string($this->hora_solicitacao)) {
+        $campos  .= "{$gruda}hora_solicitacao";
+        $valores .= "{$gruda}'$this->hora_solicitacao'";
+        $gruda = ', ';
+      }
+
       $campos  .= "{$gruda}data_cad";
       $valores .= "{$gruda}NOW()";
       $gruda = ', ';
@@ -346,6 +358,11 @@ class clsPmieducarCandidatoReservaVaga
         $gruda = ', ';
       }else{
         $set .= "{$gruda}mae_fez_pre_natal = false";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->hora_solicitacao)) {
+        $set .= "{$gruda}hora_solicitacao = '$this->hora_solicitacao'";
         $gruda = ', ';
       }
 
