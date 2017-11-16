@@ -25,7 +25,7 @@
  * @package   iEd_Pmieducar
  * @since     ?
  * @version   $Id$
- */
+ **/
 
 require_once 'include/pmieducar/geral.inc.php';
 
@@ -56,9 +56,9 @@ class clsPmieducarCandidatoReservaVaga
   var $data_situacao;
   var $quantidade_membros;
   var $codUsuario;
-  var $mae_trabalha;
+  var $membros_trabalham;
   var $mae_fez_pre_natal;
-
+  var $hora_solicitacao;
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
    * @var int
@@ -121,8 +121,9 @@ class clsPmieducarCandidatoReservaVaga
                        $ref_cod_pessoa_cad = NULL,
                        $ref_cod_escola = NULL,
                        $quantidade_membros = NULL,
-                       $mae_trabalha = NULL,
-                       $mae_fez_pre_natal = NULL)
+                       $membros_trabalham = NULL,
+                       $mae_fez_pre_natal = NULL,
+                       $hora_solicitacao = NULL)
   {
     $db = new clsBanco();
     $this->_schema = 'pmieducar.';
@@ -142,8 +143,9 @@ class clsPmieducarCandidatoReservaVaga
                                                     crv.ref_cod_matricula,
                                                     crv.ref_cod_escola,
                                                     crv.quantidade_membros,
-                                                    crv.mae_trabalha,
-                                                    crv.mae_fez_pre_natal ';
+                                                    crv.membros_trabalham,
+                                                    crv.mae_fez_pre_natal,
+                                                    crv.hora_solicitacao ';
 
     if (is_numeric($cod_candidato_reserva_vaga)) {
       $this->cod_candidato_reserva_vaga = $cod_candidato_reserva_vaga;
@@ -181,12 +183,16 @@ class clsPmieducarCandidatoReservaVaga
       $this->quantidade_membros = $quantidade_membros;
     }
 
-    if (is_bool($mae_trabalha)) {
-      $this->mae_trabalha = $mae_trabalha;
+    if (is_numeric($membros_trabalham)) {
+      $this->membros_trabalham = $membros_trabalham;
     }
     
     if (is_bool($mae_fez_pre_natal)) {
       $this->mae_fez_pre_natal = $mae_fez_pre_natal;
+    }
+
+    if (is_string($hora_solicitacao)){
+      $this->hora_solicitacao = $hora_solicitacao;
     }
   }
 
@@ -252,15 +258,12 @@ class clsPmieducarCandidatoReservaVaga
         $gruda = ', ';
       }
 
-      if (is_bool($this->mae_trabalha) && $this->mae_trabalha) {
-        $campos  .= "{$gruda}mae_trabalha";
-        $valores .= "{$gruda}true";
-        $gruda = ', ';
-      }else{
-        $campos  .= "{$gruda}mae_trabalha";
-        $valores .= "{$gruda}false";
+      if (is_numeric($this->membros_trabalham)) {
+        $campos  .= "{$gruda}membros_trabalham";
+        $valores .= "{$gruda}$this->membros_trabalham";
         $gruda = ', ';
       }
+
 
       if (is_bool($this->mae_fez_pre_natal) && $this->mae_fez_pre_natal) {
         $campos  .= "{$gruda}mae_fez_pre_natal";
@@ -269,6 +272,12 @@ class clsPmieducarCandidatoReservaVaga
       }else{
         $campos  .= "{$gruda}mae_fez_pre_natal";
         $valores .= "{$gruda}false";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->hora_solicitacao)) {
+        $campos  .= "{$gruda}hora_solicitacao";
+        $valores .= "{$gruda}'$this->hora_solicitacao'";
         $gruda = ', ';
       }
 
@@ -339,11 +348,8 @@ class clsPmieducarCandidatoReservaVaga
         $gruda = ', ';
       }
 
-      if (is_bool($this->mae_trabalha) && $this->mae_trabalha) {
-        $set .= "{$gruda}mae_trabalha = true";
-        $gruda = ', ';
-      }else{
-        $set .= "{$gruda}mae_trabalha = false";
+      if (is_numeric($this->membros_trabalham)) {
+        $set .= "{$gruda}membros_trabalham = $this->membros_trabalham";
         $gruda = ', ';
       }
 
@@ -352,6 +358,11 @@ class clsPmieducarCandidatoReservaVaga
         $gruda = ', ';
       }else{
         $set .= "{$gruda}mae_fez_pre_natal = false";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->hora_solicitacao)) {
+        $set .= "{$gruda}hora_solicitacao = '$this->hora_solicitacao'";
         $gruda = ', ';
       }
 
