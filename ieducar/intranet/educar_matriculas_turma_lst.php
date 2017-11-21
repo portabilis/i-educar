@@ -101,7 +101,8 @@ class indice extends clsListagem
 
 		$this->addCabecalhos($lista_busca);
 
-	    $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'curso', 'serie', 'turma', 'anoLetivo'));
+        $this->inputsHelper()->dynamic(array('ano', 'instituicao'));
+	    $this->inputsHelper()->dynamic(array('escola', 'curso', 'serie', 'turma'),array('required' => FALSE));
 
 		if ( $this->ref_cod_escola )
 		{
