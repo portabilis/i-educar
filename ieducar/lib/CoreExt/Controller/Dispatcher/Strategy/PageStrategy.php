@@ -129,6 +129,11 @@ class CoreExt_Controller_Dispatcher_Strategy_PageStrategy
     require_once $controllerFile;
     $pageController = new $pageController();
 
+      if (extension_loaded ('newrelic')) {
+          $info = $_SERVER["SERVER_NAME"] . $_SERVER['REDIRECT_URL'];
+          newrelic_name_transaction($info);
+      }
+
     // Injeta as instâncias CoreExt_Dispatcher_Interface, CoreExt_Request_Interface
     // CoreExt_Session no page controller
     $pageController->setDispatcher($this);
