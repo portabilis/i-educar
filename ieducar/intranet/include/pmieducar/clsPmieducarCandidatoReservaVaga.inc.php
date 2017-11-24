@@ -350,10 +350,16 @@ class clsPmieducarCandidatoReservaVaga
       if (is_numeric($this->quantidade_membros)) {
         $set .= "{$gruda}quantidade_membros = '{$this->quantidade_membros}'";
         $gruda = ', ';
+      }else{
+        $set .= "{$gruda}quantidade_membros = NULL";
+        $gruda = ', ';
       }
 
       if (is_numeric($this->membros_trabalham)) {
         $set .= "{$gruda}membros_trabalham = $this->membros_trabalham";
+        $gruda = ', ';
+      }else{
+        $set .= "{$gruda}membros_trabalham = NULL";
         $gruda = ', ';
       }
 
