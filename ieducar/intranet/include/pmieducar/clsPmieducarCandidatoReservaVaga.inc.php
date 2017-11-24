@@ -275,9 +275,13 @@ class clsPmieducarCandidatoReservaVaga
         $gruda = ', ';
       }
 
-      if (is_string($this->hora_solicitacao)) {
+      if (is_string($this->hora_solicitacao) && !empty($this->hora_solicitacao)) {
         $campos  .= "{$gruda}hora_solicitacao";
         $valores .= "{$gruda}'$this->hora_solicitacao'";
+        $gruda = ', ';
+      }if (empty($this->hora_solicitacao)) {
+        $campos  .= "{$gruda}hora_solicitacao";
+        $valores .= "{$gruda}NULL";
         $gruda = ', ';
       }
 
@@ -346,10 +350,16 @@ class clsPmieducarCandidatoReservaVaga
       if (is_numeric($this->quantidade_membros)) {
         $set .= "{$gruda}quantidade_membros = '{$this->quantidade_membros}'";
         $gruda = ', ';
+      }else{
+        $set .= "{$gruda}quantidade_membros = NULL";
+        $gruda = ', ';
       }
 
       if (is_numeric($this->membros_trabalham)) {
         $set .= "{$gruda}membros_trabalham = $this->membros_trabalham";
+        $gruda = ', ';
+      }else{
+        $set .= "{$gruda}membros_trabalham = NULL";
         $gruda = ', ';
       }
 
@@ -361,8 +371,11 @@ class clsPmieducarCandidatoReservaVaga
         $gruda = ', ';
       }
 
-      if (is_string($this->hora_solicitacao)) {
+      if (is_string($this->hora_solicitacao) && !empty($this->hora_solicitacao)) {
         $set .= "{$gruda}hora_solicitacao = '$this->hora_solicitacao'";
+        $gruda = ', ';
+      }elseif (empty($this->hora_solicitacao)) {
+        $set .= "{$gruda}hora_solicitacao = NULL";
         $gruda = ', ';
       }
 
