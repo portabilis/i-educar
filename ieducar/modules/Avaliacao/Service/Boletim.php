@@ -2976,7 +2976,11 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
           elseif ($situacaoBoletim->aprovado && !$situacaoBoletim->retidoFalta)
             $novaSituacaoMatricula = App_Model_MatriculaSituacao::APROVADO;
           elseif ($situacaoBoletim->retidoFalta)
-            $novaSituacaoMatricula = App_Model_MatriculaSituacao::REPROVADO_POR_FALTAS;
+            if (!$situacaoBoletim->aprovado){
+              $novaSituacaoMatricula = App_Model_MatriculaSituacao::REPROVADO;
+            } else {
+              $novaSituacaoMatricula = App_Model_MatriculaSituacao::REPROVADO_POR_FALTAS;
+            }
           else
             $novaSituacaoMatricula = App_Model_MatriculaSituacao::REPROVADO;
           break;
@@ -2988,7 +2992,11 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
           elseif ($situacaoBoletim->aprovado)
             $novaSituacaoMatricula = App_Model_MatriculaSituacao::APROVADO;
           elseif ($situacaoBoletim->retidoFalta)
-            $novaSituacaoMatricula = App_Model_MatriculaSituacao::REPROVADO_POR_FALTAS;
+            if (!$situacaoBoletim->aprovado){
+              $novaSituacaoMatricula = App_Model_MatriculaSituacao::REPROVADO;
+            } else {
+              $novaSituacaoMatricula = App_Model_MatriculaSituacao::REPROVADO_POR_FALTAS;
+            }
           else
             $novaSituacaoMatricula = App_Model_MatriculaSituacao::REPROVADO;
 
