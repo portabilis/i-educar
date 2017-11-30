@@ -114,8 +114,9 @@ class ReservavagaController extends ApiCoreController
     $nome = $this->getRequest()->nome;
     $cpfResponsavel = $this->getRequest()->cpf;
     $dataNascimento = $this->getRequest()->dataNascimento;
+    $anoReserva = $this->getRequest()->anoReserva;
 
-    if ($nome && $cpfResponsavel && $dataNascimento){
+    if ($nome && $cpfResponsavel && $dataNascimento && $anoReserva){
 
       $sql = "SELECT aluno.cod_aluno AS codigo
                 FROM pmieducar.aluno
@@ -126,13 +127,14 @@ class ReservavagaController extends ApiCoreController
                 WHERE fisica.data_nasc = $3
                   AND responsavel.cpf = $2
                   AND matricula.aprovado = 3
+                  AND matricula.ano = $4
                   AND translate(public.fcn_upper(trim(pessoa.nome)),
                       'åáàãâäéèêëíìîïóòõôöúùüûçÿýñÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ',
                       'aaaaaaeeeeiiiiooooouuuucyynAAAAAAEEEEIIIIOOOOOUUUUCYN') = translate(public.fcn_upper(trim($1)),
                       'åáàãâäéèêëíìîïóòõôöúùüûçÿýñÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ',
                       'aaaaaaeeeeiiiiooooouuuucyynAAAAAAEEEEIIIIOOOOOUUUUCYN')";
 
-      $aluno = $this->fetchPreparedQuery($sql, array($nome, idFederal2int($cpfResponsavel), Portabilis_Date_Utils::brToPgSQL($dataNascimento)));
+      $aluno = $this->fetchPreparedQuery($sql, array($nome, idFederal2int($cpfResponsavel), Portabilis_Date_Utils::brToPgSQL($dataNascimento), $anoReserva));
 
       if(!empty($aluno)){
         return array('codigo' => $aluno[0]['codigo']);
