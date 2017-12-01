@@ -1274,8 +1274,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         break;
       case App_Model_MatriculaSituacao::REPROVADO:
         $situacao->retidoFalta = TRUE;
-        $situacao->aprovado    = FALSE;
-
         // Mesmo se reprovado por falta, só da a situação final após o lançamento de todas as notas
         $situacoesFinais = array(App_Model_MatriculaSituacao::REPROVADO, App_Model_MatriculaSituacao::APROVADO, App_Model_MatriculaSituacao::APROVADO_APOS_EXAME);
         $situacao->andamento = (in_array($flagSituacaoNota, $situacoesFinais)) ? FALSE : TRUE;
@@ -1295,11 +1293,11 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     elseif (! $situacao->andamento and $situacao->aprovado and $situacao->aprovadoComDependencia)
       $situacao->situacao = App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA;
 
+    elseif (! $situacao->andamento and $situacao->retidoFalta)
+        $situacao->situacao = App_Model_MatriculaSituacao::REPROVADO;
+
     elseif (! $situacao->andamento and $situacao->aprovado)
       $situacao->situacao = App_Model_MatriculaSituacao::APROVADO;
-
-    elseif (! $situacao->andamento and (! $situacao->aprovado || $situacao->retidoFalta))
-      $situacao->situacao = App_Model_MatriculaSituacao::REPROVADO;
 
     return $situacao;
   }
@@ -2987,18 +2985,18 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
         case RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_SOMENTE_MEDIA || RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MANUAL:
 
-          if ($situacaoBoletim->aprovado && $situacaoBoletim->aprovadoComDependencia)
-            $novaSituacaoMatricula = App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA;
-          elseif ($situacaoBoletim->aprovado)
-            $novaSituacaoMatricula = App_Model_MatriculaSituacao::APROVADO;
-          elseif ($situacaoBoletim->retidoFalta)
-            if (!$situacaoBoletim->aprovado){
-              $novaSituacaoMatricula = App_Model_MatriculaSituacao::REPROVADO;
-            } else {
-              $novaSituacaoMatricula = App_Model_MatriculaSituacao::REPROVADO_POR_FALTAS;
-            }
-          else
+        if ($situacaoBoletim->aprovado && $situacaoBoletim->aprovadoComDependencia)
+          $novaSituacaoMatricula = App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA;
+        elseif ($situacaoBoletim->retidoFalta)
+          if (!$situacaoBoletim->aprovado){
             $novaSituacaoMatricula = App_Model_MatriculaSituacao::REPROVADO;
+          } else {
+            $novaSituacaoMatricula = App_Model_MatriculaSituacao::REPROVADO_POR_FALTAS;
+          }
+        elseif (!$situacaoBoletim->aprovado)
+            $novaSituacaoMatricula = App_Model_MatriculaSituacao::REPROVADO;
+        else
+            $novaSituacaoMatricula = App_Model_MatriculaSituacao::APROVADO;
 
           break;
 
