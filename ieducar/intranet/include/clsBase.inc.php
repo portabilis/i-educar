@@ -607,7 +607,7 @@ class clsBase extends clsConfig
 
         $administrativeInfoFetcher = new Portabilis_AdministrativeInfoFetcher();
 
-        $showOnboarding = true; // $administrativeInfoFetcher->getShowOnboarding();
+        $showOnboarding = $administrativeInfoFetcher->getShowOnboarding();
         if ($showOnboarding) {
             $iconeCompass = "
                 <a class=\"icons-top\" href=\"#\" onclick=\"openConpassFlow()\">
