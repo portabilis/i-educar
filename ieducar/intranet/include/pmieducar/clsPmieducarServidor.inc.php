@@ -841,7 +841,8 @@ class clsPmieducarServidor
 
     $this->_schema = "pmieducar.";
     $tabela_compl  = "LEFT JOIN cadastro.pessoa p ON (s.cod_servidor = p.idpes)
-                      LEFT JOIN portal.funcionario func ON (s.cod_servidor = func.ref_cod_pessoa_fj)";
+                      LEFT JOIN portal.funcionario func ON (s.cod_servidor = func.ref_cod_pessoa_fj)
+                      LEFT JOIN pmieducar.servidor_funcao as sf ON s.cod_servidor = sf.ref_cod_servidor";
     $filtros       = "WHERE s.ativo = '1'
                         AND s.ref_cod_instituicao = $cod_instituicao
                         AND (s.cod_servidor IN (SELECT a.ref_cod_servidor
@@ -960,6 +961,7 @@ class clsPmieducarServidor
     if (is_bool($bool_ordena_por_nome)) {
       $tabela_compl         .= ' LEFT JOIN cadastro.pessoa p ON s.cod_servidor = p.idpes ';
       $tabela_compl         .= ' LEFT JOIN portal.funcionario func ON s.cod_servidor = func.ref_cod_pessoa_fj';
+      $tabela_compl         .= ' LEFT JOIN pmieducar.servidor_funcao as sf ON s.cod_servidor = sf.ref_cod_servidor';
       $this->_campos_lista2 .= ', p.nome';
       $this->setOrderby('nome');
     }
@@ -1009,7 +1011,7 @@ class clsPmieducarServidor
       $whereAnd = " AND ";
     }
     if (is_string($matricula_funcionario)) {
-      $filtros .= "{$whereAnd} public.fcn_upper(func.matricula) LIKE public.fcn_upper('%{$matricula_funcionario}%')";
+      $filtros .= "{$whereAnd} public.fcn_upper(sf.matricula) LIKE public.fcn_upper('%{$matricula_funcionario}%')";
       $whereAnd = " AND ";
     }
     // Busca tipo LIKE pelo nome do servidor
@@ -1318,12 +1320,11 @@ class clsPmieducarServidor
     $countCampos = count(explode(',', $this->_campos_lista));
     $resultado = array();
     $db = new clsBanco();
-    $sql = "SELECT {$this->_campos_lista2} FROM {$this->_schema}servidor s{$tabela_compl} {$filtros}" .
-      $this->getOrderby() . $this->getLimite();
-    $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_schema}servidor s{$tabela_compl} {$filtros}");
-    // Executa a query
-    //echo"<pre>";var_dump($sql);die;
+    $sql = "SELECT distinct {$this->_campos_lista2} FROM {$this->_schema}servidor s{$tabela_compl} {$filtros}" . $this->getOrderby() . $this->getLimite();
+
+    $this->_total = $db->CampoUnico("SELECT distinct COUNT(0) FROM {$this->_schema}servidor s{$tabela_compl} {$filtros}");
     $db->Consulta($sql);
+    
     if ($countCampos > 1) {
       while ($db->ProximoRegistro()) {
         $tupla = $db->Tupla();

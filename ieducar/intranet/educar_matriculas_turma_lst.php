@@ -101,7 +101,8 @@ class indice extends clsListagem
 
 		$this->addCabecalhos($lista_busca);
 
-	    $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'curso', 'serie', 'turma', 'anoLetivo'));
+        $this->inputsHelper()->dynamic(array('ano', 'instituicao'),array('required' => TRUE));
+	    $this->inputsHelper()->dynamic(array('escola', 'curso', 'serie', 'turma'),array('required' => FALSE));
 
 		if ( $this->ref_cod_escola )
 		{
@@ -115,8 +116,8 @@ class indice extends clsListagem
 		$obj_turma = new clsPmieducarTurma();
 		$obj_turma->setOrderby( "nm_turma ASC" );
 		$obj_turma->setLimite( $this->limite, $this->offset );
-		if (!$this->ano_letivo)
-			$this->ano_letivo = date (Y);
+		if (!$this->ano)
+			$this->ano = date (Y);
 
 		if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar($this->pessoa_logada)) {
 			$obj_turma->codUsuario = $this->pessoa_logada;
@@ -157,7 +158,7 @@ class indice extends clsListagem
 			null,
 			null,
 			null,
-			$this->ano_letivo
+			$this->ano
 		);
 
 		$total = $obj_turma->_total;
