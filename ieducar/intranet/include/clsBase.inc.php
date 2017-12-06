@@ -607,10 +607,10 @@ class clsBase extends clsConfig
 
         $administrativeInfoFetcher = new Portabilis_AdministrativeInfoFetcher();
 
-        $showOnboarding = $administrativeInfoFetcher->getShowOnboarding();
+        $showOnboarding = true; // $administrativeInfoFetcher->getShowOnboarding();
         if ($showOnboarding) {
             $iconeCompass = "
-                <a class=\"icons-top\" href=\"#\" onclick=\"Conpass.startFlow('AHA Moment Portabilis');\">
+                <a class=\"icons-top\" href=\"#\" onclick=\"openConpassFlow()\">
                     <img id=\"help\" src=\"imagens/icon-help.png\">
                 </a>
             ";
@@ -646,6 +646,10 @@ class clsBase extends clsConfig
 
             $saida .= "
                 <script type=\"text/javascript\">
+                    function openConpassFlow() {
+                        Conpass.startFlow('AHA Moment Portabilis', { show: true });
+                    }
+
                     window.onload = function(e) {
                         Conpass.close();
                         Conpass.startFlow(\"AHA Moment Portabilis\");
