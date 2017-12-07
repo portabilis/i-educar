@@ -652,7 +652,7 @@ class clsBase extends clsConfig
 
                     window.onload = function(e) {
                         Conpass.close();
-                        Conpass.startFlow(\"AHA Moment Portabilis\");
+                        Conpass.startFlow(\"Encerramento e início do ano letivo\");
                         Conpass.identifyUser({ name: \"{$nomePessoa}\", email: \"{$email}\" });
                     }
                 </script>
