@@ -647,7 +647,7 @@ class clsBase extends clsConfig
             $saida .= "
                 <script type=\"text/javascript\">
                     function openConpassFlow() {
-                        Conpass.startFlow('AHA Moment Portabilis', { show: true });
+                        Conpass.startFlow(\"Encerramento e início do ano letivo\", { show: true });
                     }
 
                     window.onload = function(e) {
