@@ -607,7 +607,7 @@ class clsBase extends clsConfig
 
         $administrativeInfoFetcher = new Portabilis_AdministrativeInfoFetcher();
 
-        $showOnboarding = $administrativeInfoFetcher->getShowOnboarding();
+        $showOnboarding = true; // $administrativeInfoFetcher->getShowOnboarding();
         if ($showOnboarding) {
             $iconeCompass = "
                 <a class=\"icons-top\" href=\"#\" onclick=\"openConpassFlow()\">
@@ -646,13 +646,15 @@ class clsBase extends clsConfig
 
             $saida .= "
                 <script type=\"text/javascript\">
+                    var titleFlow = \"Encerramento e início do ano letivo\";
+
                     function openConpassFlow() {
-                        Conpass.startFlow(\"Encerramento e início do ano letivo\", { show: true });
+                        Conpass.startFlow(titleFlow, { show: true });
                     }
 
                     window.onload = function(e) {
                         Conpass.close();
-                        Conpass.startFlow(\"Encerramento e início do ano letivo\");
+                        Conpass.startFlow(titleFlow);
                         Conpass.identifyUser({ name: \"{$nomePessoa}\", email: \"{$email}\" });
                     }
                 </script>
