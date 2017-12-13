@@ -563,20 +563,21 @@ class clsPmieducarUsuario
                        END AS status,
                        tu.nm_tipo,
                        i.nm_instituicao,
-                       relatorio.get_nome_escola(u.ref_cod_escola) AS nm_escola
+                       (select REPLACE(TEXTCAT_ALL(relatorio.get_nome_escola(ref_cod_escola)),'<br>',',') FROM pmieducar.escola_usuario 
+                        WHERE ref_cod_usuario = u.cod_usuario".
+                            (is_numeric( $int_ref_cod_escola ) ? " AND ref_cod_escola = '{$int_ref_cod_escola}'" :"").") AS nm_escola
                   FROM {$this->_tabela} u
-                 INNER JOIN cadastro.pessoa p ON (p.idpes = u.cod_usuario)
-                 INNER JOIN portal.funcionario f ON (f.ref_cod_pessoa_fj = p.idpes)
-                 INNER JOIN pmieducar.tipo_usuario tu ON (tu.cod_tipo_usuario = u.ref_cod_tipo_usuario
-                                                          AND tu.ativo = 1)
-                 INNER JOIN pmieducar.instituicao i ON (i.cod_instituicao = u.ref_cod_instituicao)";
+                  INNER JOIN cadastro.pessoa p ON (p.idpes = u.cod_usuario)
+                  INNER JOIN portal.funcionario f ON (f.ref_cod_pessoa_fj = p.idpes)
+                  INNER JOIN pmieducar.tipo_usuario tu ON (tu.cod_tipo_usuario = u.ref_cod_tipo_usuario AND tu.ativo = 1)
+                  INNER JOIN pmieducar.instituicao i ON (i.cod_instituicao = u.ref_cod_instituicao)";
 
 		$whereAnd = " AND ";
 		$filtros = " WHERE u.ref_cod_tipo_usuario = tu.cod_tipo_usuario ";
 
 		if( is_numeric( $int_ref_cod_escola ) )
 		{
-			$filtros .= "{$whereAnd} u.ref_cod_escola = '{$int_ref_cod_escola}'";
+			$filtros .= "{$whereAnd} exists(select 1 FROM pmieducar.escola_usuario WHERE ref_cod_usuario = u.cod_usuario AND ref_cod_escola = '{$int_ref_cod_escola}')";
 			$whereAnd = " AND ";
 		}
 		if( is_numeric( $int_ref_cod_instituicao ) )
