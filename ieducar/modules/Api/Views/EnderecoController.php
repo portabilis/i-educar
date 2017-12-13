@@ -47,21 +47,28 @@ class EnderecoController extends ApiCoreController
     // consulta dados
 
     $select = "
-      SELECT
-        c.idlog, c.cep, c.idbai, b.nome as nome_bairro, d.nome as nome_distrito, d.iddis, l.nome as nome_logradouro, u.sigla_uf, m.nome, t.idtlog, t.descricao as tipo_logradouro, m.idmun, b.zona_localizacao
-
-      FROM
-        urbano.cep_logradouro_bairro c, public.bairro b, public.logradouro l, public.distrito d,
-        public.municipio m, public.uf u, urbano.tipo_logradouro t
-      WHERE
-        c.idlog = l.idlog AND
-        c.idbai = b.idbai AND
-        d.iddis = b.iddis AND
-        l.idmun = d.idmun AND
-        l.idmun = m.idmun AND
-        l.idtlog = t.idtlog AND
-        m.sigla_uf = u.sigla_uf AND
-        c.cep = {$cep} LIMIT 1";
+                SELECT c.idlog,
+                       c.cep,
+                       c.idbai,
+                       b.nome AS nome_bairro,
+                       d.nome AS nome_distrito,
+                       d.iddis,
+                       l.nome AS nome_logradouro,
+                       u.sigla_uf,
+                       m.nome,
+                       t.idtlog,
+                       t.descricao AS tipo_logradouro,
+                       m.idmun,
+                       b.zona_localizacao
+                FROM urbano.cep_logradouro_bairro c
+                INNER JOIN public.bairro b ON b.idbai = c.idbai
+                INNER JOIN public.logradouro l ON l.idlog = c.idlog
+                INNER JOIN urbano.tipo_logradouro t ON t.idtlog = l.idtlog
+                INNER JOIN public.distrito d ON d.idmun = l.idmun
+                INNER JOIN public.municipio m ON m.idmun = l.idmun
+                                             AND m.idmun = d.idmun
+                INNER JOIN public.uf u ON u.sigla_uf = m.sigla_uf
+                WHERE c.cep = {$cep} LIMIT 1";
 
 
 
