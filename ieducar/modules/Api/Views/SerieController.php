@@ -117,6 +117,47 @@ class SerieController extends ApiCoreController
         return array('series' => $series );
   }
 
+  protected function getSeriesPorEscola(){
+    $escolas = $this->getRequest()->escolas;
+
+    if(is_array($escolas)) {
+        foreach ($escolas as $key => $escola) {
+            $query[$key] = "SELECT distinct s.cod_serie, s.nm_serie
+                              FROM pmieducar.serie s
+                             INNER JOIN pmieducar.escola_serie es ON es.ref_cod_serie = s.cod_serie
+                             WHERE es.ativo = 1
+                               AND s.ativo = 1
+                               AND es.ref_cod_escola = $escola ";
+        }
+        $query = implode("\n INTERSECT \n", $query);
+        $orderBy = " ORDER BY nm_serie ASC ";
+        $sql = $query . $orderBy;
+    }else{
+        $sql = "SELECT distinct s.cod_serie, s.nm_serie
+                  FROM pmieducar.serie s
+                 INNER JOIN pmieducar.escola_serie es ON es.ref_cod_serie = s.cod_serie
+                 WHERE es.ativo = 1
+                   AND s.ativo = 1
+                   AND es.ref_cod_escola = $escolas
+                 ORDER BY s.nm_serie ASC ";
+    }
+
+    $series = $this->fetchPreparedQuery($sql);
+
+    foreach ($series as &$serie) {
+      $serie['nm_serie'] = mb_strtoupper($serie['nm_serie'], 'UTF-8');
+    }
+
+    $attrs = array(
+      'cod_serie'       => 'id',
+      'nm_serie'        => 'nome'
+    );
+
+    $series = Portabilis_Array_Utils::filterSet($series, $attrs);
+
+    return array('series' => $series );
+  }
+
   protected function getSeriesPorCurso(){
     $cursoId = $this->getRequest()->curso_id;
 
@@ -180,6 +221,8 @@ class SerieController extends ApiCoreController
       $this->appendResponse($this->getSeries());
     elseif ($this->isRequestFor('get', 'series-curso'))
       $this->appendResponse($this->getSeriesPorCurso());
+    elseif ($this->isRequestFor('get', 'series-escola'))
+      $this->appendResponse($this->getSeriesPorEscola());
     elseif ($this->isRequestFor('get', 'series-curso-sem-componentes'))
       $this->appendResponse($this->getSeriesSemComponentesVinculados());
     elseif ($this->isRequestFor('get', 'bloqueio-faixa-etaria'))
