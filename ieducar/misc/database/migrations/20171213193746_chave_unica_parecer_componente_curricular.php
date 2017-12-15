@@ -10,7 +10,7 @@ class ChaveUnicaParecerComponenteCurricular extends AbstractMigration
                 select min(id)
                 from modules.parecer_componente_curricular
                 group by parecer_aluno_id, componente_curricular_id, etapa
-                having count(parecer_aluno_id::varchar||componente_curricular_id::varchar||etapa) > 1
+                having count(1) > 1
             );
         ");
 
