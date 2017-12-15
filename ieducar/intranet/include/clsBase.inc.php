@@ -653,7 +653,6 @@ class clsBase extends clsConfig
                     }
 
                     window.onload = function(e) {
-                        Conpass.close();
                         Conpass.startFlow(titleFlow);
                         Conpass.identifyUser({ name: \"{$nomePessoa}\", email: \"{$email}\" });
                     }
