@@ -176,11 +176,7 @@ class indice extends clsListagem
 					$opcoes_fonte[$fonte["cod_fonte"]] = $fonte["nm_fonte"];
 				}
 			}
-		} else {
-          throw new App_Model_Exception(
-            sprintf("Seu usuário não está vinculado a nenhuma biblioteca.", $id)
-          );
-        }
+		}
 
 		$this->campoLista( "ref_cod_exemplar_tipo", "Exemplar Tipo", $opcoes, $this->ref_cod_exemplar_tipo,null,null,null,null,null,false );
 
