@@ -42,100 +42,100 @@ class clsIndexBase extends clsBase
   public function Formular() {
     $this->SetTitulo($this->_instituicao . 'Servidores - Detalhe Categoria Nível');
     $this->processoAp = "829"; 
-		$this->addEstilo('localizacaoSistema');    
+        $this->addEstilo('localizacaoSistema');    
   }
 }
 
 
 class indice extends clsDetalhe
 {
-	/**
-	 * Titulo no topo da pagina
-	 *
-	 * @var int
-	 */
-	var $titulo;
+    /**
+     * Titulo no topo da pagina
+     *
+     * @var int
+     */
+    var $titulo;
 
-	var $cod_categoria_nivel;
-	var $ref_usuario_exc;
-	var $ref_usuario_cad;
-	var $nm_categoria_nivel;
-	var $data_cadastro;
-	var $data_exclusao;
-	var $ativo;
+    var $cod_categoria_nivel;
+    var $ref_usuario_exc;
+    var $ref_usuario_cad;
+    var $nm_categoria_nivel;
+    var $data_cadastro;
+    var $data_exclusao;
+    var $ativo;
 
-	function Gerar()
-	{
-		@session_start();
-		$this->pessoa_logada = $_SESSION['id_pessoa'];
-		session_write_close();
+    function Gerar()
+    {
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        session_write_close();
 
-		$this->titulo = "Categoria Nivel - Detalhe";
-		$this->addBanner("imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet");
+        $this->titulo = "Categoria Nivel - Detalhe";
+        $this->addBanner("imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet");
 
-		$this->cod_categoria_nivel=$_GET["cod_categoria_nivel"];
+        $this->cod_categoria_nivel=$_GET["cod_categoria_nivel"];
 
-		$tmp_obj = new clsPmieducarCategoriaNivel( $this->cod_categoria_nivel );
-		$registro = $tmp_obj->detalhe();
+        $tmp_obj = new clsPmieducarCategoriaNivel( $this->cod_categoria_nivel );
+        $registro = $tmp_obj->detalhe();
 
-		if( ! $registro )
-		{
-			header( "location: educar_categoria_nivel_lst.php" );
-			die();
-		}
-
-
-		if( $registro["cod_categoria_nivel"] )
-		{
-			$this->addDetalhe( array( "Categoria", "{$registro["cod_categoria_nivel"]}") );
-		}
-		if( $registro["nm_categoria_nivel"] )
-		{
-			$this->addDetalhe( array( "Nome Categoria", "{$registro["nm_categoria_nivel"]}") );
-		}
-
-		$tab_niveis = null;
-
-		$obj_nivel = new clsPmieducarNivel();
-		$lst_nivel = $obj_nivel->buscaSequenciaNivel($this->cod_categoria_nivel);
-
-		if($lst_nivel)
-		{
-			$tab_niveis .= "<table cellspacing='0' cellpadding='0' width='200' border='0'>";
-
-			$class2 = $class2 == "formlttd" ? "formmdtd" : "formlttd" ;
-			$tab_niveis .= " <tr>
-								<td bgcolor='#ccdce6' align='center'>N&iacute;veis</td>
-								<td bgcolor='#ccdce6' align='center'>Subn&iacute;veis</td>
-							</tr>";
-			foreach ($lst_nivel as $nivel)
-			{
-
-				$tab_niveis .= " <tr class='$class2' align='center'>
-									<td align='left'>{$nivel['nm_nivel']}</td>
-									<td align='center'><a style='color:#0ac336;' href='javascript:popless(\"{$nivel['cod_nivel']}\")'><i class='fa fa-plus-square' aria-hidden='true'></i></a></td>
-								</tr>";
-
-				$class2 = $class2 == "formlttd" ? "formmdtd" : "formlttd" ;
-
-			}
-			$tab_niveis .=	"</table>";
-
-			$this->addDetalhe(array("N&iacute;veis", "$tab_niveis"));
-		}
+        if( ! $registro )
+        {
+            header( "location: educar_categoria_nivel_lst.php" );
+            die();
+        }
 
 
-		$obj_permissoes = new clsPermissoes();
-		if( $obj_permissoes->permissao_cadastra( 829, $this->pessoa_logada, 3, null, true ) )
-		{
-			$this->url_novo = "educar_categoria_nivel_cad.php";
-			$this->url_editar = "educar_categoria_nivel_cad.php?cod_categoria_nivel={$registro["cod_categoria_nivel"]}";
-			$this->array_botao[] = 'Adicionar Níveis';
-			$this->array_botao_url[] = "educar_nivel_cad.php?cod_categoria={$registro["cod_categoria_nivel"]}";
-		}
+        if( $registro["cod_categoria_nivel"] )
+        {
+            $this->addDetalhe( array( "Categoria", "{$registro["cod_categoria_nivel"]}") );
+        }
+        if( $registro["nm_categoria_nivel"] )
+        {
+            $this->addDetalhe( array( "Nome Categoria", "{$registro["nm_categoria_nivel"]}") );
+        }
 
-		$this->url_cancelar = "educar_categoria_nivel_lst.php";
-		$this->largura = "100%";
+        $tab_niveis = null;
+
+        $obj_nivel = new clsPmieducarNivel();
+        $lst_nivel = $obj_nivel->buscaSequenciaNivel($this->cod_categoria_nivel);
+
+        if($lst_nivel)
+        {
+            $tab_niveis .= "<table cellspacing='0' cellpadding='0' width='200' border='0'>";
+
+            $class2 = $class2 == "formlttd" ? "formmdtd" : "formlttd" ;
+            $tab_niveis .= " <tr>
+                                <td bgcolor='#ccdce6' align='center'>N&iacute;veis</td>
+                                <td bgcolor='#ccdce6' align='center'>Subn&iacute;veis</td>
+                            </tr>";
+            foreach ($lst_nivel as $nivel)
+            {
+
+                $tab_niveis .= " <tr class='$class2' align='center'>
+                                    <td align='left'>{$nivel['nm_nivel']}</td>
+                                    <td align='center'><a style='color:#0ac336;' href='javascript:popless(\"{$nivel['cod_nivel']}\")'><i class='fa fa-plus-square' aria-hidden='true'></i></a></td>
+                                </tr>";
+
+                $class2 = $class2 == "formlttd" ? "formmdtd" : "formlttd" ;
+
+            }
+            $tab_niveis .=  "</table>";
+
+            $this->addDetalhe(array("N&iacute;veis", "$tab_niveis"));
+        }
+
+
+        $obj_permissoes = new clsPermissoes();
+        if( $obj_permissoes->permissao_cadastra( 829, $this->pessoa_logada, 3, null, true ) )
+        {
+            $this->url_novo = "educar_categoria_nivel_cad.php";
+            $this->url_editar = "educar_categoria_nivel_cad.php?cod_categoria_nivel={$registro["cod_categoria_nivel"]}";
+            $this->array_botao[] = 'Adicionar Níveis';
+            $this->array_botao_url[] = "educar_nivel_cad.php?cod_categoria={$registro["cod_categoria_nivel"]}";
+        }
+
+        $this->url_cancelar = "educar_categoria_nivel_lst.php";
+        $this->largura = "100%";
 
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
@@ -143,8 +143,8 @@ class indice extends clsDetalhe
          "educar_servidores_index.php"       => "Servidores",
          ""                                  => "Detalhe da categoria/n&iacute;vel"
     ));
-    $this->enviaLocalizacao($localizacao->montar());		
-	}
+    $this->enviaLocalizacao($localizacao->montar());        
+    }
 }
 
 // cria uma extensao da classe base
@@ -158,10 +158,10 @@ $pagina->MakeAll();
 ?>
 
 <script type="text/javascript">
-	function popless(nivel)
-	{
-		var campoCategoria = <?=$_GET["cod_categoria_nivel"];?>;
-		pesquisa_valores_popless('educar_subniveis_cad.php?ref_cod_categoria='+campoCategoria+'&ref_cod_nivel='+nivel, '');
-	}
+    function popless(nivel)
+    {
+        var campoCategoria = <?=$_GET["cod_categoria_nivel"];?>;
+        pesquisa_valores_popless('educar_subniveis_cad.php?ref_cod_categoria='+campoCategoria+'&ref_cod_nivel='+nivel, '');
+    }
 
 </script>

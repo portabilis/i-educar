@@ -419,45 +419,45 @@ class MatriculaController extends ApiCoreController
   }
 
   protected function validaDataEntrada(){
-  	if(!Portabilis_Date_Utils::validaData($this->getRequest()->data_entrada)){
-  		$this->messenger->append('Valor inválido para data de entrada ' . $this->getRequest()->data_entrada, 'error');
-  		return false;
-  	}else{
-  		return true;
-  	}
+    if(!Portabilis_Date_Utils::validaData($this->getRequest()->data_entrada)){
+        $this->messenger->append('Valor inválido para data de entrada ' . $this->getRequest()->data_entrada, 'error');
+        return false;
+    }else{
+        return true;
+    }
   }
 
   protected function validaDataSaida(){
-  	if(!Portabilis_Date_Utils::validaData($this->getRequest()->data_saida)){
-  		$this->messenger->append('Valor inválido para data de saída', 'error');
-  		return false;
-  	}else{
-  		return true;
-  	}
+    if(!Portabilis_Date_Utils::validaData($this->getRequest()->data_saida)){
+        $this->messenger->append('Valor inválido para data de saída', 'error');
+        return false;
+    }else{
+        return true;
+    }
   }
 
   protected function postDataEntrada(){
-  	if($this->validaDataEntrada()){
-  		$matricula_id = $this->getRequest()->matricula_id;
-  		$data_entrada = Portabilis_Date_Utils::brToPgSQL($this->getRequest()->data_entrada);
-  		$matricula = new clsPmieducarMatricula($matricula_id);
-  		$matricula->data_matricula = $data_entrada;
-  		if($matricula->edita()){
-  			$this->messenger->append('Data de entrada atualizada com sucesso.', 'success');
-  		}
-  	}
+    if($this->validaDataEntrada()){
+        $matricula_id = $this->getRequest()->matricula_id;
+        $data_entrada = Portabilis_Date_Utils::brToPgSQL($this->getRequest()->data_entrada);
+        $matricula = new clsPmieducarMatricula($matricula_id);
+        $matricula->data_matricula = $data_entrada;
+        if($matricula->edita()){
+            $this->messenger->append('Data de entrada atualizada com sucesso.', 'success');
+        }
+    }
   }
 
   protected function postDataSaida(){
-  	if($this->validaDataSaida()){
-  		$matricula_id = $this->getRequest()->matricula_id;
-  		$data_saida = Portabilis_Date_Utils::brToPgSQL($this->getRequest()->data_saida);
-  		$matricula = new clsPmieducarMatricula($matricula_id);
-  		$matricula->data_cancel = $data_saida;
-  		if($matricula->edita()){
-  			return $this->messenger->append('Data de saida atualizada com sucesso.', 'success');
-  		}
-  	}
+    if($this->validaDataSaida()){
+        $matricula_id = $this->getRequest()->matricula_id;
+        $data_saida = Portabilis_Date_Utils::brToPgSQL($this->getRequest()->data_saida);
+        $matricula = new clsPmieducarMatricula($matricula_id);
+        $matricula->data_cancel = $data_saida;
+        if($matricula->edita()){
+            return $this->messenger->append('Data de saida atualizada com sucesso.', 'success');
+        }
+    }
   }
   protected function postSituacao(){
     if($this->validatesPresenceOf('matricula_id') && $this->validatesPresenceOf('nova_situacao')){
@@ -588,11 +588,11 @@ class MatriculaController extends ApiCoreController
     elseif ($this->isRequestFor('post', 'reserva-externa'))
       $this->appendResponse($this->postReservaExterna());
 
-  	elseif ($this->isRequestFor('post', 'data-entrada'))
-  	  $this->appendResponse($this->postDataEntrada());
+    elseif ($this->isRequestFor('post', 'data-entrada'))
+      $this->appendResponse($this->postDataEntrada());
 
-  	elseif ($this->isRequestFor('post', 'data-saida'))
-  	  $this->appendResponse($this->postDataSaida());
+    elseif ($this->isRequestFor('post', 'data-saida'))
+      $this->appendResponse($this->postDataSaida());
 
     elseif ($this->isRequestFor('post', 'situacao'))
       $this->appendResponse($this->postSituacao());
