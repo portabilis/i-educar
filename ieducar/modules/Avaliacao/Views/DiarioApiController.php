@@ -1152,7 +1152,7 @@ class DiarioApiController extends ApiCoreController
       $componente['parecer_atual']             = $this->getParecerAtual($componente['id']);
       $componente['situacao']                  = $this->getSituacaoComponente($componente['id']);
       $componente['tipo_nota']                 = $tipoNota;
-
+      $componente['ultima_etapa']              = App_Model_IedFinder::getUltimaEtapaComponente($turmaId, $componenteId);
       $gravaNotaExame = ($componente['situacao'] == 'Em exame' || $componente['situacao'] == 'Aprovado após exame' || $componente['situacao'] == 'Retido');
 
       $componente['nota_necessaria_exame']     = ($gravaNotaExame ? $this->getNotaNecessariaExame($componente['id']) : null );
@@ -1428,9 +1428,16 @@ class DiarioApiController extends ApiCoreController
   }
 
   protected function getNotaExame($componenteCurricularId = null) {
+
+    $turmaId = $this->getRequest()->turma_id;
+    $regra = $this->serviceBoletim()->getRegra();
+    $defineComponentePorEtapa = $regra->get('definirComponentePorEtapa') == 1;
+    $ultimaEtapa = $this->getRequest()->etapa == $this->serviceBoletim()->getOption('etapas');
+    $ultimaEtapaComponente = App_Model_IedFinder::getUltimaEtapaComponente($turmaId, $componenteCurricularId);
+
     // somente recupera nota de exame se estiver buscando as matriculas da ultima etapa
     // se existe nota de exame, esta é recuperada mesmo que a regra de avaliação não use mais exame
-    if($this->getRequest()->etapa == $this->serviceBoletim()->getOption('etapas'))
+    if($ultimaEtapa || ($defineComponentePorEtapa && $ultimaEtapaComponente))
       $nota = $this->getNotaAtual($etapa = 'Rc', $componenteCurricularId);
     else
       $nota = '';
@@ -1628,6 +1635,7 @@ class DiarioApiController extends ApiCoreController
       //Lançamento de nota manual
       $tpProgressao = $this->serviceBoletim()->getRegra()->get('tipoProgressao');
       $itensRegra['progressao_manual'] = ($tpProgressao == RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MANUAL);
+      $itensRegra['progressao_continuada'] = ($tpProgressao == RegraAvaliacao_Model_TipoProgressao::CONTINUADA);
 
       // tipo parecer
       $cnsParecer = RegraAvaliacao_Model_TipoParecerDescritivo;
@@ -1686,6 +1694,8 @@ class DiarioApiController extends ApiCoreController
     }else{
       $itensRegra['nota_geral_por_etapa'] = "NAO UTILIZA";
     }
+
+    $itensRegra['definir_componente_por_etapa'] = $regra->get('definirComponentePorEtapa') == 1;
 
     return $itensRegra;
   }
