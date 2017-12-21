@@ -744,6 +744,7 @@ function setTableSearchDetails($tableSearchDetails, dataDetails) {
   }
 
   progressaoManual = dataDetails.progressao_manual;
+  progressaoContinuada = dataDetails.progressao_continuada;
 
   $j('<caption />').html('<strong>Lan&#231;amento de notas por turma</strong>').appendTo($tableSearchDetails);
 
@@ -836,7 +837,6 @@ function handleSearch($resultTable, dataResponse) {
     updateComponenteCurricularHeaders($linha, $j('<th />'));
 
   $linha.appendTo($resultTable);
-
   //set (result) rows
   $j.each(dataResponse.matriculas, function(index, value) {
     var $linha = $j('<tr />').addClass(componenteCurricularSelected ? '' : 'strong');
@@ -888,7 +888,8 @@ function handleSearch($resultTable, dataResponse) {
 
   // seta colspan [th, td].aluno quando exibe nota exame
   if ($tableSearchDetails.data('details').tipo_nota != 'nenhum' &&
-      $tableSearchDetails.data('details').quantidade_etapas == $j('#etapa').val()) {
+      ($tableSearchDetails.data('details').quantidade_etapas == $j('#etapa').val() ||
+       $tableSearchDetails.data('details').definir_componente_por_etapa)) {
     $resultTable.find('[colspan]:not(.area-conhecimento)').attr('colspan', componenteCurricularSelected ? 1 : 10);
   }
 
@@ -1199,8 +1200,13 @@ function updateComponenteCurricular($targetElement, matriculaId, cc) {
       notaField(matriculaId, cc.id, cc.nota_atual, cc.area_id, getNotaGeralMaxLength(), cc.tipo_nota).appendTo($targetElement);
     }
 
+    var ultimaEtapa = $tableSearchDetails.data('details').quantidade_etapas == $j('#etapa').val();
+    var definirComponentesEtapa = $tableSearchDetails.data('details').definir_componente_por_etapa;
+    var ultimaEtapaComponente = cc.ultima_etapa ==  $j('#etapa').val();
+
     // mostra nota exame, média final e situação do aluno caso estiver selecionado a ultima etapa
-    if ($tableSearchDetails.data('details').quantidade_etapas == $j('#etapa').val()) {
+    if (ultimaEtapa || (definirComponentesEtapa && !progressaoContinuada)) {
+
       var $fieldNotaExame = notaExameField(matriculaId, cc.id, cc.nota_exame, getNotaExameFinalMaxLength(), cc.tipo_nota);
 
       var $fieldNN = notaNecessariaField(matriculaId, cc.id, cc.nota_necessaria_exame);
@@ -1210,11 +1216,17 @@ function updateComponenteCurricular($targetElement, matriculaId, cc) {
         $fieldNN.children().text('-');
       }
 
-      $fieldNotaExame.appendTo($targetElement);
+      if(ultimaEtapa || ultimaEtapaComponente) {
+          $fieldNotaExame.appendTo($targetElement);
+      }else {
+          $j('<td />').html('').appendTo($targetElement);
+      }
 
-      // Adiciona campo com nota necessária
-
-      $fieldNN.appendTo($targetElement);
+      /* Adiciona campo com nota necessária, exeto em casos de componentes
+         específicos por etapa */
+      if (!definirComponentesEtapa) {
+          $fieldNN.appendTo($targetElement);
+      }
 
       if(progressaoManual){
         if($tableSearchDetails.data('details').tipo_nota == 'numerica'){
@@ -1239,8 +1251,10 @@ function updateComponenteCurricular($targetElement, matriculaId, cc) {
 }
 
 function updateComponenteCurricularHeaders($targetElement, $tagElement) {
-  var useNota                = $tableSearchDetails.data('details').tipo_nota != 'nenhum';
-  var useParecer             = $tableSearchDetails.data('details').tipo_parecer_descritivo != 'nenhum';
+  var useNota                 = $tableSearchDetails.data('details').tipo_nota != 'nenhum';
+  var useParecer              = $tableSearchDetails.data('details').tipo_parecer_descritivo != 'nenhum';
+  var ultimaEtapa             = $tableSearchDetails.data('details').quantidade_etapas == $j('#etapa').val();
+  var definirComponentesEtapa = $tableSearchDetails.data('details').definir_componente_por_etapa;
 
   $tagElement.clone().addClass('center').html(safeUtf8Decode('Situação')).appendTo($targetElement);
 
@@ -1253,9 +1267,11 @@ function updateComponenteCurricularHeaders($targetElement, $tagElement) {
     if(window.habilita_campo_etapa_especifica){
       $tagElement.clone().addClass('center').html(safeUtf8Decode(window.tipo_recuperacao_paralela_nome)).appendTo($targetElement);
     }
-    if ($tableSearchDetails.data('details').quantidade_etapas == $j('#etapa').val()){
+    if (ultimaEtapa || (definirComponentesEtapa && !progressaoContinuada)){
       $tagElement.clone().addClass('center').html('Nota '+nomenclatura_exame).appendTo($targetElement);
-      $tagElement.clone().addClass('center').html(safeUtf8Decode('Nota necessária no '+nomenclatura_exame)).appendTo($targetElement);
+      if (!definirComponentesEtapa) {
+          $tagElement.clone().addClass('center').html(safeUtf8Decode('Nota necessária no ' + nomenclatura_exame)).appendTo($targetElement);
+      }
       if(progressaoManual){
         $tagElement.clone().addClass('center').html(safeUtf8Decode('Média final')).appendTo($targetElement);
       }
@@ -1406,15 +1422,17 @@ function changeMediaValue(elementId, nota, notaArredondada){
 function situacaoFinalField($matriculaId, $situacao){
 
   var $selectSituacao  = $j('<select />').attr('id', 'situacao' + '-matricula-' + $matriculaId + '-cc-').addClass('situacao-cc').data('matricula_id', $matriculaId);
-  var $optionDefault              = $j('<option />').html('').val(0).attr('selected', 'selected');
-  var $optionAprovado             = $j('<option />').html('Aprovado').val(1);
-  var $optionRetido               = $j('<option />').html('Retido').val(2);
-  var $optionAprovadoPeloConselho = $j('<option />').html('Aprovado pelo conselho').val(13);
+  var $optionDefault                = $j('<option />').html('').val(0).attr('selected', 'selected');
+  var $optionAprovado               = $j('<option />').html('Aprovado').val(1);
+  var $optionRetido                 = $j('<option />').html('Retido').val(2);
+  var $optionAprovadoPeloConselho   = $j('<option />').html('Aprovado pelo conselho').val(13);
+  var $optionAprovadoComDependencia = $j('<option />').html('Aprovado com dependência').val(12);
 
   $optionDefault.appendTo($selectSituacao);
   $optionAprovado.appendTo($selectSituacao);
   $optionRetido.appendTo($selectSituacao);
   $optionAprovadoPeloConselho.appendTo($selectSituacao);
+  $optionAprovadoComDependencia.appendTo($selectSituacao);
 
   var $element = $j('<tr />').addClass('center resultado-final');
   $j('<td />').addClass('center resultado-final').html(safeUtf8Decode('Situação final')).appendTo($element);
