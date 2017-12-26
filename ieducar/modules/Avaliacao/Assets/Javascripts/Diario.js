@@ -1422,15 +1422,17 @@ function changeMediaValue(elementId, nota, notaArredondada){
 function situacaoFinalField($matriculaId, $situacao){
 
   var $selectSituacao  = $j('<select />').attr('id', 'situacao' + '-matricula-' + $matriculaId + '-cc-').addClass('situacao-cc').data('matricula_id', $matriculaId);
-  var $optionDefault              = $j('<option />').html('').val(0).attr('selected', 'selected');
-  var $optionAprovado             = $j('<option />').html('Aprovado').val(1);
-  var $optionRetido               = $j('<option />').html('Retido').val(2);
-  var $optionAprovadoPeloConselho = $j('<option />').html('Aprovado pelo conselho').val(13);
+  var $optionDefault                = $j('<option />').html('').val(0).attr('selected', 'selected');
+  var $optionAprovado               = $j('<option />').html('Aprovado').val(1);
+  var $optionRetido                 = $j('<option />').html('Retido').val(2);
+  var $optionAprovadoPeloConselho   = $j('<option />').html('Aprovado pelo conselho').val(13);
+  var $optionAprovadoComDependencia = $j('<option />').html('Aprovado com dependência').val(12);
 
   $optionDefault.appendTo($selectSituacao);
   $optionAprovado.appendTo($selectSituacao);
   $optionRetido.appendTo($selectSituacao);
   $optionAprovadoPeloConselho.appendTo($selectSituacao);
+  $optionAprovadoComDependencia.appendTo($selectSituacao);
 
   var $element = $j('<tr />').addClass('center resultado-final');
   $j('<td />').addClass('center resultado-final').html(safeUtf8Decode('Situação final')).appendTo($element);
