@@ -5,4 +5,4 @@
 Vagrantfile
 deploy/.ruby-version
 ieducar/configuration/ieducar.ini
-.vscode/
+*.vscode
