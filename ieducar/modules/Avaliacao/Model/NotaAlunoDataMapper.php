@@ -54,6 +54,6 @@ class Avaliacao_Model_NotaAlunoDataMapper extends CoreExt_DataMapper
   );
 
   protected $_primaryKey = array(
-  	'matricula'
+    'matricula'
   );
 }
