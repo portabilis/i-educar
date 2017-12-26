@@ -833,7 +833,7 @@ class App_Model_IedFinder extends CoreExt_Entity
 
     if (FALSE === $biblioteca) {
       throw new App_Model_Exception(
-        sprintf('Biblioteca com o código "%d" não existe.', $id)
+        sprintf("Seu usuário não está vinculado a nenhuma biblioteca.", $id)
       );
     }
 

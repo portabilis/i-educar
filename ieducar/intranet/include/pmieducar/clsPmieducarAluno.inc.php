@@ -1086,21 +1086,15 @@ class clsPmieducarAluno
     $filtros = '';
     $this->resetCamposLista();
 
-    $this->_campos_lista .= '
-       , (
-         SELECT
-           nome
-         FROM
-           cadastro.pessoa
-         WHERE
-           idpes = ref_idpes
-         ) AS nome_aluno';
+    $this->_campos_lista .= ', pessoa.nome AS nome_aluno';
 
     if($filtra_baseado_matricula)
       $sql = "SELECT distinct {$this->_campos_lista} FROM {$this->_tabela} INNER JOIN pmieducar.matricula m ON (m.ref_cod_aluno = a.cod_aluno) ";
     else
       $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
 
+    $sql .= '
+             LEFT JOIN cadastro.pessoa ON pessoa.idpes = a.ref_idpes';
     if($idsetorbai)
       $sql .= '
         INNER JOIN cadastro.endereco_pessoa ep ON (a.ref_idpes = ep.idpes)
@@ -1131,6 +1125,7 @@ class clsPmieducarAluno
     }
 
     if(is_string($aluno_estado_id)) {
+      $aluno_estado_id = str_replace('-', '', str_replace('.', '', $aluno_estado_id));
       $filtros .= "{$whereAnd} a.aluno_estado_id LIKE '%{$aluno_estado_id}%'";
       $whereAnd = ' AND ';
     }

@@ -98,7 +98,6 @@ class indice extends clsCadastro
   function Inicializar()
   {
     //$retorno = 'Novo';
-
     @session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     @session_write_close();
@@ -849,10 +848,11 @@ class indice extends clsCadastro
         $detEnturmacao = $enturmacao->detalhe();
         $detEnturmacao = $detEnturmacao['data_enturmacao'];
         $enturmacao->data_enturmacao = $detEnturmacao;
-        if ($result && ! $enturmacao->edita())
+
+        if ($result && ! $enturmacao->edita()){
           $result = false;
-        else
-          $enturmacao->marcaAlunoTransferido($this->data_matricula);
+        }
+
       }
     }
 
