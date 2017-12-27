@@ -107,7 +107,7 @@ class Portabilis_View_Helper_DynamicInput_PesquisaAluno extends Portabilis_View_
 
           if (validatesPresenseOfValueInRequiredFields(additionalFields, exceptFields)) {
 
-    	      var escolaId = document.getElementById("ref_cod_escola").value;
+              var escolaId = document.getElementById("ref_cod_escola").value;
             pesquisa_valores_popless("/intranet/educar_pesquisa_aluno.php?ref_cod_escola="+escolaId);
           }
         }';

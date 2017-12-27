@@ -46,13 +46,13 @@ require_once 'lib/Portabilis/Report/ReportFactory.php';
 
 class Portabilis_Report_ReportFactoryRemote extends Portabilis_Report_ReportFactory
 {
-	function setSettings($config) {
-	  $this->settings['url'] 			 = $config->report->remote_factory->url;
-	  $this->settings['app_name']	 = $config->report->remote_factory->this_app_name;
-		$this->settings['username']  = $config->report->remote_factory->username;
-	  $this->settings['password']  = $config->report->remote_factory->password;
-	  $this->settings['logo_name'] = $config->report->remote_factory->logo_name;
-	}
+    function setSettings($config) {
+      $this->settings['url']             = $config->report->remote_factory->url;
+      $this->settings['app_name']    = $config->report->remote_factory->this_app_name;
+        $this->settings['username']  = $config->report->remote_factory->username;
+      $this->settings['password']  = $config->report->remote_factory->password;
+      $this->settings['logo_name'] = $config->report->remote_factory->logo_name;
+    }
 
   function dumps($report, $options = array()) {
     $defaultOptions = array('add_logo_name_arg' => true, 'encoding' => 'uncoded');
@@ -61,9 +61,9 @@ class Portabilis_Report_ReportFactoryRemote extends Portabilis_Report_ReportFact
     // logo helper
 
     if ($options['add_logo_name_arg'] and ! $this->settings['logo_name'])
-    	throw new Exception("The option 'add_logo_name_arg' is true, but no logo_name defined in configurations!");
+        throw new Exception("The option 'add_logo_name_arg' is true, but no logo_name defined in configurations!");
 
-		elseif ($options['add_logo_name_arg'])
+        elseif ($options['add_logo_name_arg'])
       $report->addArg('logo_name', $this->settings['logo_name']);
 
 
