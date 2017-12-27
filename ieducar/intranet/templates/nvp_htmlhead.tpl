@@ -1,5 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-  "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="pt" class="no-js">
 <head>
   <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
@@ -103,6 +102,7 @@
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
+      gtag('set', {'content_group1': window.location.hostname});
 
       user_id = '<!-- #&USER_ID&# -->';
       if (user_id) {

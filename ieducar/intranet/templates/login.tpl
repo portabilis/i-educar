@@ -65,6 +65,7 @@
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
+      gtag('set', {'content_group1': window.location.hostname});
 
       gtag('config', '***REMOVED***');
     }
