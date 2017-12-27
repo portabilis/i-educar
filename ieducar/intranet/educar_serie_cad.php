@@ -222,7 +222,7 @@ class indice extends clsCadastro
 
     $this->campoNumero('idade_final', '&nbsp;até', $this->idade_final, 2, 2, FALSE);
 
-		$this->campoMemo( "observacao_historico", "Observa&ccedil;&atilde;o histórico", $this->observacao_historico, 60, 5, false );
+        $this->campoMemo( "observacao_historico", "Observa&ccedil;&atilde;o histórico", $this->observacao_historico, 60, 5, false );
 
     $this->campoCheck("alerta_faixa_etaria", "Exibir alerta ao tentar matricular alunos fora da faixa etária da série/ano", $this->alerta_faixa_etaria);
     $this->campoCheck("bloquear_matricula_faixa_etaria", "Bloquear matrículas de alunos fora da faixa etária da série/ano", $this->bloquear_matricula_faixa_etaria);
@@ -401,7 +401,7 @@ function RegrasInstituicao(xml_qtd_regras)
   }
   else {
     campoRegras.options[0].text = 'A instituição não possui uma Regra de Avaliação';
-	  campoRegrasDiferenciadas.options[0].text = 'A instituição não possui uma Regra de Avaliação';
+      campoRegrasDiferenciadas.options[0].text = 'A instituição não possui uma Regra de Avaliação';
   }
 }
 

@@ -30,13 +30,13 @@ class ReordenaSequencialFechamento extends AbstractMigration
                         INNER JOIN pmieducar.escola ON (escola.cod_escola = matricula.ref_ref_cod_escola)
                         INNER JOIN pmieducar.instituicao ON (instituicao.cod_instituicao = escola.ref_cod_instituicao)
                         WHERE matricula.ativo = 1
-			AND matricula.ano = 2017
-			AND (CASE WHEN matricula_turma.ativo = 1 THEN TRUE
-				  WHEN matricula_turma.transferido THEN TRUE
-				  WHEN matricula_turma.remanejado THEN TRUE
-				  WHEN matricula_turma.abandono  THEN TRUE
-				  WHEN matricula.dependencia THEN TRUE
-				  ELSE FALSE END)
+            AND matricula.ano = 2017
+            AND (CASE WHEN matricula_turma.ativo = 1 THEN TRUE
+                  WHEN matricula_turma.transferido THEN TRUE
+                  WHEN matricula_turma.remanejado THEN TRUE
+                  WHEN matricula_turma.abandono  THEN TRUE
+                  WHEN matricula.dependencia THEN TRUE
+                  ELSE FALSE END)
                         AND matricula_turma.sequencial = (SELECT MAX(sequencial)
                                             FROM pmieducar.matricula_turma mt
                                             WHERE mt.ref_cod_matricula = matricula_turma.ref_cod_matricula
@@ -51,11 +51,11 @@ class ReordenaSequencialFechamento extends AbstractMigration
                                                         WHERE matricula.ativo = 1
                                                         AND matricula.ano = 2017
                                                         AND (CASE WHEN matricula_turma.ativo = 1 THEN TRUE
-								  WHEN matricula_turma.transferido THEN TRUE
-								  WHEN matricula_turma.remanejado THEN TRUE
-								  WHEN matricula_turma.abandono THEN TRUE
-								  WHEN matricula.dependencia THEN TRUE
-								  ELSE FALSE END)
+                                  WHEN matricula_turma.transferido THEN TRUE
+                                  WHEN matricula_turma.remanejado THEN TRUE
+                                  WHEN matricula_turma.abandono THEN TRUE
+                                  WHEN matricula.dependencia THEN TRUE
+                                  ELSE FALSE END)
                                                         AND matricula_turma.sequencial = (SELECT MAX(sequencial)
                                                                             FROM pmieducar.matricula_turma mt
                                                                             WHERE mt.ref_cod_matricula = matricula_turma.ref_cod_matricula

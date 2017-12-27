@@ -20,18 +20,18 @@
  * com este programa; se nÃ£o, escreva para a Free Software Foundation, Inc., no
  * endereÃ§o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    	Lucas Schmoeller da Silva <lucas@portabilis.com.br>
- * @category  	i-Educar
- * @license   	@@license@@
- * @package   	Api
+ * @author      Lucas Schmoeller da Silva <lucas@portabilis.com.br>
+ * @category    i-Educar
+ * @license     @@license@@
+ * @package     Api
  * @subpackage  Modules
- * @since   	Arquivo disponÃ­vel desde a versÃ£o ?
- * @version  	$Id$
+ * @since       Arquivo disponÃ­vel desde a versÃ£o ?
+ * @version     $Id$
  */
 
 class PictureController {
 
-	var $imageFile;
+    var $imageFile;
     var $errorMessage;
     var $maxWidth;
     var $maxHeight;

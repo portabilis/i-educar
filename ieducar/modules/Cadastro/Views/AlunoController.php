@@ -413,9 +413,9 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     $options = array('label' => $this->_getLabel('aluno_inep_id'), 'required' => false, 'size' => 25, 'max_length' => 14);
 
     if($labels_botucatu){
-    	$this->inputsHelper()->hidden('aluno_inep_id', array('value' => null));
+        $this->inputsHelper()->hidden('aluno_inep_id', array('value' => null));
     }else{
-    	$this->inputsHelper()->integer('aluno_inep_id', $options);
+        $this->inputsHelper()->integer('aluno_inep_id', $options);
     }
 
     // código aluno rede estadual

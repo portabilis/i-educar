@@ -3,8 +3,8 @@
 use Phinx\Migration\AbstractMigration;
 
 class AjustaViewAdicionaCamposCargaHorariaDisciplinaPorSerie extends AbstractMigration {
-	public function up() {
-		$this->execute("DROP VIEW relatorio.view_historico_9anos;
+    public function up() {
+        $this->execute("DROP VIEW relatorio.view_historico_9anos;
             CREATE OR REPLACE VIEW relatorio.view_historico_9anos AS
                 SELECT historico.cod_aluno,
        historico.disciplina,
@@ -1607,5 +1607,5 @@ GROUP BY historico.disciplina,
          historico.frequencia8,
          historico.frequencia9;
 ");
-	}
+    }
 }

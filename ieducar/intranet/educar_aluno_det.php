@@ -271,13 +271,13 @@ class indice extends clsDetalhe
           strtotime(substr($detalheDocumento['data_exp_rg'], 0, 19)));
       }
 
-      $registro['sigla_uf_exp_rg'] 	   = $detalheDocumento['sigla_uf_exp_rg'];
-      $registro['tipo_cert_civil'] 	   = $detalheDocumento['tipo_cert_civil'];
+      $registro['sigla_uf_exp_rg']     = $detalheDocumento['sigla_uf_exp_rg'];
+      $registro['tipo_cert_civil']     = $detalheDocumento['tipo_cert_civil'];
       $registro['certidao_nascimento'] = $detalheDocumento['certidao_nascimento'];
       $registro['certidao_casamento']  = $detalheDocumento['certidao_casamento'];
-      $registro['num_termo']       	   = $detalheDocumento['num_termo'];
-      $registro['num_livro']       	   = $detalheDocumento['num_livro'];
-      $registro['num_folha']       	   = $detalheDocumento['num_folha'];
+      $registro['num_termo']           = $detalheDocumento['num_termo'];
+      $registro['num_livro']           = $detalheDocumento['num_livro'];
+      $registro['num_folha']           = $detalheDocumento['num_folha'];
 
       if ($detalheDocumento['data_emissao_cert_civil']) {
         $registro['data_emissao_cert_civil'] = date('d/m/Y',
@@ -381,7 +381,7 @@ class indice extends clsDetalhe
     try {
       $alunoInep = $alunoMapper->find(array('aluno' => $this->cod_aluno));
       if(!$GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu'){
-      	$this->addDetalhe(array('Código inep', $alunoInep->alunoInep));
+        $this->addDetalhe(array('Código inep', $alunoInep->alunoInep));
       }
     }
     catch(Exception $e) {
@@ -682,17 +682,17 @@ class indice extends clsDetalhe
 
       $this->addDetalhe(array('Tipo Certidão Civil', $lista_tipo_cert_civil[$registro['tipo_cert_civil']]));
 
-    	if ($registro['num_termo']) {
-    	  $this->addDetalhe(array('Termo', $registro['num_termo']));
-    	}
+        if ($registro['num_termo']) {
+          $this->addDetalhe(array('Termo', $registro['num_termo']));
+        }
 
-	   	if ($registro['num_livro']) {
-	    	$this->addDetalhe(array('Livro', $registro['num_livro']));
-	   	}
+        if ($registro['num_livro']) {
+            $this->addDetalhe(array('Livro', $registro['num_livro']));
+        }
 
-	   	if ($registro['num_folha']) {
-	    	$this->addDetalhe(array('Folha', $registro['num_folha']));
-    	}
+        if ($registro['num_folha']) {
+            $this->addDetalhe(array('Folha', $registro['num_folha']));
+        }
     }
 
     if ($registro['data_emissao_cert_civil']) {

@@ -11,7 +11,7 @@ class PDF_Unicode extends PDF_Chinese
   function PDF_Unicode ($layout="P",$uom="mm",$papersize="A4",$charset = 'UTF-8')
   {
     $this->FPDF ($layout, $uom, $papersize);
-	//$this->FPDF ('L', 'mm', 'A4');
+    //$this->FPDF ('L', 'mm', 'A4');
     $this->charset = strtoupper(str_replace ('-', '', $charset));
     $this->isUnicode = in_array ($this->charset, array ('UTF8', 'UTF16', 'UCS2'));
   }
@@ -134,9 +134,9 @@ class PDF_Unicode extends PDF_Chinese
       $c=mb_substr($s,$i,1);
       $ord = hexdec(bin2hex($c));
       if($ord<128) {
-	$l+=$cw[chr($ord)];
+    $l+=$cw[chr($ord)];
       } else {
-	$l+=1000;
+    $l+=1000;
       }
       $i++;
     }
@@ -161,74 +161,74 @@ class PDF_Unicode extends PDF_Chinese
     $k=$this->k;
     if($this->y+$h>$this->PageBreakTrigger && !$this->InFooter && $this->AcceptPageBreak())
       {
-	//Automatic page break
-	$x=$this->x;
-	$ws=$this->ws;
-	if($ws>0)
-	  {
-	    $this->ws=0;
-	    $this->_out('0 Tw');
-	  }
-	$this->AddPage($this->CurOrientation);
-	$this->x=$x;
-	if($ws>0)
-	  {
-	    $this->ws=$ws;
-	    $this->_out(sprintf('%.3f Tw',$ws*$k));
-	  }
+    //Automatic page break
+    $x=$this->x;
+    $ws=$this->ws;
+    if($ws>0)
+      {
+        $this->ws=0;
+        $this->_out('0 Tw');
+      }
+    $this->AddPage($this->CurOrientation);
+    $this->x=$x;
+    if($ws>0)
+      {
+        $this->ws=$ws;
+        $this->_out(sprintf('%.3f Tw',$ws*$k));
+      }
       }
     if($w==0)
       $w=$this->w-$this->rMargin-$this->x;
     $s='';
     if($fill==1 || $border==1)
       {
-	if($fill==1)
-	  $op=($border==1) ? 'B' : 'f';
-	else
-	  $op='S';
-	$s=sprintf('%.2f %.2f %.2f %.2f re %s ',$this->x*$k,($this->h-$this->y)*$k,$w*$k,-$h*$k,$op);
+    if($fill==1)
+      $op=($border==1) ? 'B' : 'f';
+    else
+      $op='S';
+    $s=sprintf('%.2f %.2f %.2f %.2f re %s ',$this->x*$k,($this->h-$this->y)*$k,$w*$k,-$h*$k,$op);
       }
     if(is_string($border))
       {
-	$x=$this->x;
-	$y=$this->y;
-	if(strpos($border,'L')!==false)
-	  $s.=sprintf('%.2f %.2f m %.2f %.2f l S ',$x*$k,($this->h-$y)*$k,$x*$k,($this->h-($y+$h))*$k);
-	if(strpos($border,'T')!==false)
-	  $s.=sprintf('%.2f %.2f m %.2f %.2f l S ',$x*$k,($this->h-$y)*$k,($x+$w)*$k,($this->h-$y)*$k);
-	if(strpos($border,'R')!==false)
-	  $s.=sprintf('%.2f %.2f m %.2f %.2f l S ',($x+$w)*$k,($this->h-$y)*$k,($x+$w)*$k,($this->h-($y+$h))*$k);
-	if(strpos($border,'B')!==false)
-	  $s.=sprintf('%.2f %.2f m %.2f %.2f l S ',$x*$k,($this->h-($y+$h))*$k,($x+$w)*$k,($this->h-($y+$h))*$k);
+    $x=$this->x;
+    $y=$this->y;
+    if(strpos($border,'L')!==false)
+      $s.=sprintf('%.2f %.2f m %.2f %.2f l S ',$x*$k,($this->h-$y)*$k,$x*$k,($this->h-($y+$h))*$k);
+    if(strpos($border,'T')!==false)
+      $s.=sprintf('%.2f %.2f m %.2f %.2f l S ',$x*$k,($this->h-$y)*$k,($x+$w)*$k,($this->h-$y)*$k);
+    if(strpos($border,'R')!==false)
+      $s.=sprintf('%.2f %.2f m %.2f %.2f l S ',($x+$w)*$k,($this->h-$y)*$k,($x+$w)*$k,($this->h-($y+$h))*$k);
+    if(strpos($border,'B')!==false)
+      $s.=sprintf('%.2f %.2f m %.2f %.2f l S ',$x*$k,($this->h-($y+$h))*$k,($x+$w)*$k,($this->h-($y+$h))*$k);
       }
     if($txt!=='')
       {
-	if($align=='R')
-	  $dx=$w-$this->cMargin-$this->GetUniStringWidth($txt);
-	elseif($align=='C')
-	  $dx=($w-$this->GetUniStringWidth($txt))/2;
-	else
-	  $dx=$this->cMargin;
-	if($this->ColorFlag)
-	  $s.='q '.$this->TextColor.' ';
-	$s.=sprintf('BT %.2f %.2f Td <%s> Tj ET',($this->x+$dx)*$k,
-		    ($this->h-($this->y+.5*$h+.3*$this->FontSize))*$k,bin2hex($txt));
-	if($this->underline)
-	  $s.=' '.$this->_dounderline($this->x+$dx,$this->y+.5*$h+.3*$this->FontSize,$txt);
-	if($this->ColorFlag)
-	  $s.=' Q';
-	if($link)
-	  $this->Link($this->x+$dx,$this->y+.5*$h-.5*$this->FontSize,$this->GetUniStringWidth($txt),$this->FontSize,$link);
+    if($align=='R')
+      $dx=$w-$this->cMargin-$this->GetUniStringWidth($txt);
+    elseif($align=='C')
+      $dx=($w-$this->GetUniStringWidth($txt))/2;
+    else
+      $dx=$this->cMargin;
+    if($this->ColorFlag)
+      $s.='q '.$this->TextColor.' ';
+    $s.=sprintf('BT %.2f %.2f Td <%s> Tj ET',($this->x+$dx)*$k,
+            ($this->h-($this->y+.5*$h+.3*$this->FontSize))*$k,bin2hex($txt));
+    if($this->underline)
+      $s.=' '.$this->_dounderline($this->x+$dx,$this->y+.5*$h+.3*$this->FontSize,$txt);
+    if($this->ColorFlag)
+      $s.=' Q';
+    if($link)
+      $this->Link($this->x+$dx,$this->y+.5*$h-.5*$this->FontSize,$this->GetUniStringWidth($txt),$this->FontSize,$link);
       }
     if($s)
       $this->_out($s);
     $this->lasth=$h;
     if($ln>0)
       {
-	//Go to next line
-	$this->y+=$h;
-	if($ln==1)
-	  $this->x=$this->lMargin;
+    //Go to next line
+    $this->y+=$h;
+    if($ln==1)
+      $this->x=$this->lMargin;
       }
     else
       $this->x+=$w;
@@ -251,21 +251,21 @@ class PDF_Unicode extends PDF_Chinese
     $b=0;
     if($border)
       {
-	if($border==1)
-	  {
-	    $border='LTRB';
-	    $b='LRT';
-	    $b2='LR';
-	  }
-	else
-	  {
-	    $b2='';
-	    if(is_int(strpos($border,'L')))
-	      $b2.='L';
-	    if(is_int(strpos($border,'R')))
-	      $b2.='R';
-	    $b=is_int(strpos($border,'T')) ? $b2.'T' : $b2;
-	  }
+    if($border==1)
+      {
+        $border='LTRB';
+        $b='LRT';
+        $b2='LR';
+      }
+    else
+      {
+        $b2='';
+        if(is_int(strpos($border,'L')))
+          $b2.='L';
+        if(is_int(strpos($border,'R')))
+          $b2.='R';
+        $b=is_int(strpos($border,'T')) ? $b2.'T' : $b2;
+      }
       }
     $sep=-1;
     $i=0;
@@ -274,52 +274,52 @@ class PDF_Unicode extends PDF_Chinese
     $nl=1;
     while($i<$nb)
       {
-	//Get next character
-	$c=mb_substr($s,$i,1);
-	$ord = hexdec(bin2hex($c));
-	$ascii = ($ord < 128);
-	if($c==mb_convert_encoding("\n", $enc, $this->charset))
-	  {
-	    //Explicit line break
-	    $this->UniCell($w,$h,mb_substr($s,$j,$i-$j),$b,2,$align,$fill);
-	    $i++;
-	    $sep=-1;
-	    $j=$i;
-	    $l=0;
-	    $nl++;
-	    if($border && $nl==2)
-	      $b=$b2;
-	    continue;
-	  }
-	if(!$ascii || $c==mb_convert_encoding(' ', $enc, $this->charset))
-	  {
-	    $sep=$i;
-	    $ls=$l;
-	  }
-	$l+=$ascii ? $cw[chr($ord)] : 1000;
-	if($l>$wmax)
-	  {
-	    //Automatic line break
-	    if($sep==-1 || $i==$j)
-	      {
-		if($i==$j)
-		  $i++; //=$ascii ? 1 : 2;
-		$this->UniCell($w,$h,mb_substr($s,$j,$i-$j),$b,2,$align,$fill);
-	      }
-	    else
-	      {
-		$this->UniCell($w,$h,mb_substr($s,$j,$sep-$j),$b,2,$align,$fill);
-		$i=(mb_substr($s,$sep,1)==mb_convert_encoding(' ', $enc, $this->charset)) ? $sep+1 : $sep;
-	      }
-	    $sep=-1;
-	    $j=$i;
-	    $l=0;
-	    $nl++;
-	    if($border && $nl==2)
-	      $b=$b2;
-	  }
-	else
-	  $i++; //=$ascii ? 1 : 2;
+    //Get next character
+    $c=mb_substr($s,$i,1);
+    $ord = hexdec(bin2hex($c));
+    $ascii = ($ord < 128);
+    if($c==mb_convert_encoding("\n", $enc, $this->charset))
+      {
+        //Explicit line break
+        $this->UniCell($w,$h,mb_substr($s,$j,$i-$j),$b,2,$align,$fill);
+        $i++;
+        $sep=-1;
+        $j=$i;
+        $l=0;
+        $nl++;
+        if($border && $nl==2)
+          $b=$b2;
+        continue;
+      }
+    if(!$ascii || $c==mb_convert_encoding(' ', $enc, $this->charset))
+      {
+        $sep=$i;
+        $ls=$l;
+      }
+    $l+=$ascii ? $cw[chr($ord)] : 1000;
+    if($l>$wmax)
+      {
+        //Automatic line break
+        if($sep==-1 || $i==$j)
+          {
+        if($i==$j)
+          $i++; //=$ascii ? 1 : 2;
+        $this->UniCell($w,$h,mb_substr($s,$j,$i-$j),$b,2,$align,$fill);
+          }
+        else
+          {
+        $this->UniCell($w,$h,mb_substr($s,$j,$sep-$j),$b,2,$align,$fill);
+        $i=(mb_substr($s,$sep,1)==mb_convert_encoding(' ', $enc, $this->charset)) ? $sep+1 : $sep;
+          }
+        $sep=-1;
+        $j=$i;
+        $l=0;
+        $nl++;
+        if($border && $nl==2)
+          $b=$b2;
+      }
+    else
+      $i++; //=$ascii ? 1 : 2;
       }
     //Last chunk
     if($border && is_int(strpos($border,'B')))
@@ -345,69 +345,69 @@ class PDF_Unicode extends PDF_Chinese
     $nl=1;
     while($i<$nb)
       {
-	//Get next character
-	$c=mb_substr($s,$i,1);
-	//Check if ASCII or MB
-	$ord = hexdec(bin2hex($c));
-	$ascii=($ord < 128);
-	if($c==mb_convert_encoding("\n", $enc, $this->charset))
-	  {
-	    //Explicit line break
-	    $this->UniCell($w,$h,mb_substr($s,$j,$i-$j),0,2,'',0,$link);
-	    $i++;
-	    $sep=-1;
-	    $j=$i;
-	    $l=0;
-	    if($nl==1)
-	      {
-		$this->x=$this->lMargin;
-		$w=$this->w-$this->rMargin-$this->x;
-		$wmax=($w-2*$this->cMargin)*1000/$this->FontSize;
-	      }
-	    $nl++;
-	    continue;
-	  }
-	if(!$ascii || $c==mb_convert_encoding(' ', $enc, $this->charset))
-	  $sep=$i;
-	$l+=$ascii ? $cw[chr($ord)] : 1000;
-	if($l>$wmax)
-	  {
-	    //Automatic line break
-	    if($sep==-1 || $i==$j)
-	      {
-		if($this->x>$this->lMargin)
-		  {
-		    //Move to next line
-		    $this->x=$this->lMargin;
-		    $this->y+=$h;
-		    $w=$this->w-$this->rMargin-$this->x;
-		    $wmax=($w-2*$this->cMargin)*1000/$this->FontSize;
-		    $i++;
-		    $nl++;
-		    continue;
-		  }
-		if($i==$j)
-		  $i++; //=$ascii ? 1 : 2;
-		$this->UniCell($w,$h,mb_substr($s,$j,$i-$j),0,2,'',0,$link);
-	      }
-	    else
-	      {
-		$this->UniCell($w,$h,mb_substr($s,$j,$sep-$j),0,2,'',0,$link);
-		$i=(mb_substr($s,$sep,1)==mb_convert_encoding(' ', $enc, $this->charset)) ? $sep+1 : $sep;
-	      }
-	    $sep=-1;
-	    $j=$i;
-	    $l=0;
-	    if($nl==1)
-	      {
-		$this->x=$this->lMargin;
-		$w=$this->w-$this->rMargin-$this->x;
-		$wmax=($w-2*$this->cMargin)*1000/$this->FontSize;
-	      }
-	    $nl++;
-	  }
-	else
-	  $i++; //=$ascii ? 1 : 2;
+    //Get next character
+    $c=mb_substr($s,$i,1);
+    //Check if ASCII or MB
+    $ord = hexdec(bin2hex($c));
+    $ascii=($ord < 128);
+    if($c==mb_convert_encoding("\n", $enc, $this->charset))
+      {
+        //Explicit line break
+        $this->UniCell($w,$h,mb_substr($s,$j,$i-$j),0,2,'',0,$link);
+        $i++;
+        $sep=-1;
+        $j=$i;
+        $l=0;
+        if($nl==1)
+          {
+        $this->x=$this->lMargin;
+        $w=$this->w-$this->rMargin-$this->x;
+        $wmax=($w-2*$this->cMargin)*1000/$this->FontSize;
+          }
+        $nl++;
+        continue;
+      }
+    if(!$ascii || $c==mb_convert_encoding(' ', $enc, $this->charset))
+      $sep=$i;
+    $l+=$ascii ? $cw[chr($ord)] : 1000;
+    if($l>$wmax)
+      {
+        //Automatic line break
+        if($sep==-1 || $i==$j)
+          {
+        if($this->x>$this->lMargin)
+          {
+            //Move to next line
+            $this->x=$this->lMargin;
+            $this->y+=$h;
+            $w=$this->w-$this->rMargin-$this->x;
+            $wmax=($w-2*$this->cMargin)*1000/$this->FontSize;
+            $i++;
+            $nl++;
+            continue;
+          }
+        if($i==$j)
+          $i++; //=$ascii ? 1 : 2;
+        $this->UniCell($w,$h,mb_substr($s,$j,$i-$j),0,2,'',0,$link);
+          }
+        else
+          {
+        $this->UniCell($w,$h,mb_substr($s,$j,$sep-$j),0,2,'',0,$link);
+        $i=(mb_substr($s,$sep,1)==mb_convert_encoding(' ', $enc, $this->charset)) ? $sep+1 : $sep;
+          }
+        $sep=-1;
+        $j=$i;
+        $l=0;
+        if($nl==1)
+          {
+        $this->x=$this->lMargin;
+        $w=$this->w-$this->rMargin-$this->x;
+        $wmax=($w-2*$this->cMargin)*1000/$this->FontSize;
+          }
+        $nl++;
+      }
+    else
+      $i++; //=$ascii ? 1 : 2;
       }
     //Last chunk
     if($i!=$j)

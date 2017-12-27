@@ -629,7 +629,7 @@ class clsPessoaFisica extends clsPessoaFj
     }
   }
 
-	function detalheSimples()
+    function detalheSimples()
   {
     if (is_numeric($this->idpes)) {
       $sql = "SELECT * FROM cadastro.fisica WHERE idpes = '{$this->idpes}' AND ativo = 1;";
