@@ -182,7 +182,7 @@ class clsModulesAuditoriaGeral
                          {$valorNovo},
                          NOW())";
 
-	   $db = new clsBanco();
+       $db = new clsBanco();
      $db->Consulta($sql);
   }
 
