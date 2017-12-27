@@ -23,16 +23,17 @@
       if (navigator && navigator.platform) {
         var platform = navigator.platform.toLowerCase();
 
-        if (platform.indexOf('win') > -1)
+        if (platform.indexOf('win') > -1) {
           so = 'windows';
-        else if (platform.indexOf('linux') > -1)
+        } else if (platform.indexOf('linux') > -1) {
           so = 'linux';
-        else if (platform.indexOf('mac') > -1)
+        } else if (platform.indexOf('mac') > -1) {
           so = 'macOS';
-        else if (platform.indexOf('x11') > -1)
+        } else if (platform.indexOf('x11') > -1) {
           so = 'unix';
-        else
+        } else {
           so = platform;
+        }
       }
 
       return so;
@@ -41,18 +42,20 @@
     function loginpage_onload() {
       var domainName = window.location.hostname;
 
-      if (domainName.indexOf('treinamento') < 0 && domainName.indexOf('demonstracao') < 0)
+      if (domainName.indexOf('treinamento') < 0 && domainName.indexOf('demonstracao') < 0) {
         $j('.only-for-clients').show();
+      }
 
       $j('.fade-in').fadeIn('slow');
 
       $j('#login').focus();
 
       // used for support links
-      if (currentSO() == 'windows')
+      if (currentSO() == 'windows') {
         $j('.visible-for-windows-so').show();
-      else
+      } else {
         $j('.visible-for-non-windows-so').show();
+      }
     }
   </script>
 
