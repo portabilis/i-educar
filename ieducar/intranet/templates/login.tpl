@@ -13,6 +13,7 @@
     <script type='text/javascript' src='scripts/jquery/jquery-1.8.3.min.js?5'></script>
 
   <script type="text/javascript">
+    window.ambiente = '<!-- #&CORE_EXT_CONFIGURATION_ENV&# -->';
 
     var $j = jQuery.noConflict();
 
@@ -53,22 +54,16 @@
       else
         $j('.visible-for-non-windows-so').show();
     }
+  </script>
 
-    // set up google analytics
-    var domainName = "#&GOOGLE_ANALYTICS_DOMAIN_NAME&#";
+  <script async src="https://www.googletagmanager.com/gtag/js?id=***REMOVED***"></script>
+  <script>
+    if (window.ambiente == 'production') {
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
 
-    // track only production requests.
-    if (domainName.indexOf('local.') < 0 && domainName.indexOf('test.') < 0) {
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', '***REMOVED***']);
-      _gaq.push(['_setDomainName', domainName]);
-      _gaq.push(['_trackPageview']);
-
-      (function() {
-        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js?5';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-      })();
+      gtag('config', '***REMOVED***');
     }
   </script>
 
