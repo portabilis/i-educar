@@ -74,7 +74,7 @@ class clsMenuSuspenso
     $this->alvo                 = $alvo;
     $this->suprime_menu         = $suprime_menu;
     $this->ref_cod_tutormenu    = $ref_cod_tutormenu;
-	// $this->tipo_menu			= $tipo_menu;
+    // $this->tipo_menu         = $tipo_menu;
 
     $this->tabela = "menu";
     $this->schema = "pmicontrolesis";

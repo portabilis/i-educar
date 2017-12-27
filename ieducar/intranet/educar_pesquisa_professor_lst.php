@@ -154,7 +154,7 @@ class indice extends clsListagem
         ) );
       }
     }
-	$this->largura = '100%';
+    $this->largura = '100%';
     $obj_permissoes = new clsPermissoes();
     session_write_close();
   }

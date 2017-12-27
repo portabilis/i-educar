@@ -379,17 +379,17 @@ class indice extends clsCadastro
 
     unset($opcoes);
     if (!is_null($this->ref_cod_serie)){
-    	$anoEscolar = new ComponenteCurricular_Model_AnoEscolarDataMapper();
-    	$opcaoPadrao = array(null => 'Selecione');
-    	$listaComponentes = $anoEscolar->findComponentePorSerie($this->ref_cod_serie);
-    	if(!empty($listaComponentes)){
-	    	foreach($listaComponentes as $componente){
-		    	$componente->nome = ucwords(strtolower($componente->nome));
-		    	$opcoes["{$componente->id}"] = "{$componente->nome}";
-	    	}
-    	$opcoes = $opcaoPadrao + $opcoes;
-    	$this->campoLista('ref_cod_disciplina_dispensada', 'Disciplina dispensada', $opcoes, $this->ref_cod_disciplina_dispensada, '', FALSE, '', '', FALSE, FALSE);
-    	}
+        $anoEscolar = new ComponenteCurricular_Model_AnoEscolarDataMapper();
+        $opcaoPadrao = array(null => 'Selecione');
+        $listaComponentes = $anoEscolar->findComponentePorSerie($this->ref_cod_serie);
+        if(!empty($listaComponentes)){
+            foreach($listaComponentes as $componente){
+                $componente->nome = ucwords(strtolower($componente->nome));
+                $opcoes["{$componente->id}"] = "{$componente->nome}";
+            }
+        $opcoes = $opcaoPadrao + $opcoes;
+        $this->campoLista('ref_cod_disciplina_dispensada', 'Disciplina dispensada', $opcoes, $this->ref_cod_disciplina_dispensada, '', FALSE, '', '', FALSE, FALSE);
+        }
     }
 
     $ativo = isset($this->cod_turma) ? dbBool($this->visivel) : true;
