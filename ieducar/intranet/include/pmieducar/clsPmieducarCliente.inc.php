@@ -36,472 +36,472 @@ require_once 'include/pmieducar/geral.inc.php';
  */
 class clsPmieducarCliente
 {
-	var $cod_cliente;
-	var $ref_usuario_exc;
-	var $ref_usuario_cad;
-	var $ref_idpes;
-	var $login;
-	var $senha;
-	var $data_cadastro;
-	var $data_exclusao;
-	var $ativo;
-	var $observacoes;
+    var $cod_cliente;
+    var $ref_usuario_exc;
+    var $ref_usuario_cad;
+    var $ref_idpes;
+    var $login;
+    var $senha;
+    var $data_cadastro;
+    var $data_exclusao;
+    var $ativo;
+    var $observacoes;
 
-	// propriedades padrao
+    // propriedades padrao
 
-	/**
-	 * Armazena o total de resultados obtidos na ultima chamada ao metodo lista
-	 *
-	 * @var int
-	 */
-	var $_total;
+    /**
+     * Armazena o total de resultados obtidos na ultima chamada ao metodo lista
+     *
+     * @var int
+     */
+    var $_total;
 
-	/**
-	 * Nome do schema
-	 *
-	 * @var string
-	 */
-	var $_schema;
+    /**
+     * Nome do schema
+     *
+     * @var string
+     */
+    var $_schema;
 
-	/**
-	 * Nome da tabela
-	 *
-	 * @var string
-	 */
-	var $_tabela;
+    /**
+     * Nome da tabela
+     *
+     * @var string
+     */
+    var $_tabela;
 
-	/**
-	 * Lista separada por virgula, com os campos que devem ser selecionados na proxima chamado ao metodo lista
-	 *
-	 * @var string
-	 */
-	var $_campos_lista;
+    /**
+     * Lista separada por virgula, com os campos que devem ser selecionados na proxima chamado ao metodo lista
+     *
+     * @var string
+     */
+    var $_campos_lista;
 
-	/**
-	 * Lista com todos os campos da tabela separados por virgula, padrao para selecao no metodo lista
-	 *
-	 * @var string
-	 */
-	var $_todos_campos;
+    /**
+     * Lista com todos os campos da tabela separados por virgula, padrao para selecao no metodo lista
+     *
+     * @var string
+     */
+    var $_todos_campos;
 
-	/**
-	 * Valor que define a quantidade de registros a ser retornada pelo metodo lista
-	 *
-	 * @var int
-	 */
-	var $_limite_quantidade;
+    /**
+     * Valor que define a quantidade de registros a ser retornada pelo metodo lista
+     *
+     * @var int
+     */
+    var $_limite_quantidade;
 
-	/**
-	 * Define o valor de offset no retorno dos registros no metodo lista
-	 *
-	 * @var int
-	 */
-	var $_limite_offset;
+    /**
+     * Define o valor de offset no retorno dos registros no metodo lista
+     *
+     * @var int
+     */
+    var $_limite_offset;
 
-	/**
-	 * Define o campo padrao para ser usado como padrao de ordenacao no metodo lista
-	 *
-	 * @var string
-	 */
-	var $_campo_order_by;
-
-
-
-	/**
-	 * Construtor (PHP 4)
-	 *
-	 * @return object
-	 */
-	function clsPmieducarCliente($cod_cliente = NULL, $ref_usuario_exc = NULL,
-	  $ref_usuario_cad = NULL, $ref_idpes = NULL, $login = NULL, $senha = NULL, $data_cadastro = NULL,
-	  $data_exclusao = NULL, $ativo = NULL, $observacoes = NULL) {
-
-		$db = new clsBanco();
-		$this->_schema = "pmieducar.";
-		$this->_tabela = "{$this->_schema}cliente";
-
-		$this->_campos_lista = $this->_todos_campos = "c.cod_cliente, c.ref_usuario_exc, c.ref_usuario_cad, c.ref_idpes, c.login, c.senha, c.data_cadastro, c.data_exclusao, c.ativo, c.observacoes";
-
-		if( is_numeric( $ref_usuario_cad ) )
-		{
-			if( class_exists( "clsPmieducarUsuario" ) )
-			{
-				$tmp_obj = new clsPmieducarUsuario( $ref_usuario_cad );
-				if( method_exists( $tmp_obj, "existe") )
-				{
-					if( $tmp_obj->existe() )
-					{
-						$this->ref_usuario_cad = $ref_usuario_cad;
-					}
-				}
-				else if( method_exists( $tmp_obj, "detalhe") )
-				{
-					if( $tmp_obj->detalhe() )
-					{
-						$this->ref_usuario_cad = $ref_usuario_cad;
-					}
-				}
-			}
-			else
-			{
-				if( $db->CampoUnico( "SELECT 1 FROM pmieducar.usuario WHERE cod_usuario = '{$ref_usuario_cad}'" ) )
-				{
-					$this->ref_usuario_cad = $ref_usuario_cad;
-				}
-			}
-		}
-		if( is_numeric( $ref_usuario_exc ) )
-		{
-			if( class_exists( "clsPmieducarUsuario" ) )
-			{
-				$tmp_obj = new clsPmieducarUsuario( $ref_usuario_exc );
-				if( method_exists( $tmp_obj, "existe") )
-				{
-					if( $tmp_obj->existe() )
-					{
-						$this->ref_usuario_exc = $ref_usuario_exc;
-					}
-				}
-				else if( method_exists( $tmp_obj, "detalhe") )
-				{
-					if( $tmp_obj->detalhe() )
-					{
-						$this->ref_usuario_exc = $ref_usuario_exc;
-					}
-				}
-			}
-			else
-			{
-				if( $db->CampoUnico( "SELECT 1 FROM pmieducar.usuario WHERE cod_usuario = '{$ref_usuario_exc}'" ) )
-				{
-					$this->ref_usuario_exc = $ref_usuario_exc;
-				}
-			}
-		}
-		if( is_numeric( $ref_idpes ) )
-		{
-			if( class_exists( "clsCadastroFisica" ) )
-			{
-				$tmp_obj = new clsCadastroFisica( $ref_idpes );
-				if( method_exists( $tmp_obj, "existe") )
-				{
-					if( $tmp_obj->existe() )
-					{
-						$this->ref_idpes = $ref_idpes;
-					}
-				}
-				else if( method_exists( $tmp_obj, "detalhe") )
-				{
-					if( $tmp_obj->detalhe() )
-					{
-						$this->ref_idpes = $ref_idpes;
-					}
-				}
-			}
-			else
-			{
-				if( $db->CampoUnico( "SELECT 1 FROM cadastro.fisica WHERE idpes = '{$ref_idpes}'" ) )
-				{
-					$this->ref_idpes = $ref_idpes;
-				}
-			}
-		}
+    /**
+     * Define o campo padrao para ser usado como padrao de ordenacao no metodo lista
+     *
+     * @var string
+     */
+    var $_campo_order_by;
 
 
-		if( is_numeric( $cod_cliente ) )
-		{
-			$this->cod_cliente = $cod_cliente;
-		}
-		if( is_numeric( $login ) )
-		{
-			$this->login = $login;
-		}
-		if( is_string( $senha ) )
-		{
-			$this->senha = $senha;
-		}
-		if( is_string( $data_cadastro ) )
-		{
-			$this->data_cadastro = $data_cadastro;
-		}
-		if( is_string( $data_exclusao ) )
-		{
-			$this->data_exclusao = $data_exclusao;
-		}
-		if( is_numeric( $ativo ) )
-		{
-			$this->ativo = $ativo;
-		}
-		if (is_string($observacoes))
-		{
-			$this->observacoes = $observacoes;
-		}
 
-	}
+    /**
+     * Construtor (PHP 4)
+     *
+     * @return object
+     */
+    function clsPmieducarCliente($cod_cliente = NULL, $ref_usuario_exc = NULL,
+      $ref_usuario_cad = NULL, $ref_idpes = NULL, $login = NULL, $senha = NULL, $data_cadastro = NULL,
+      $data_exclusao = NULL, $ativo = NULL, $observacoes = NULL) {
 
-	/**
-	 * Cria um novo registro
-	 *
-	 * @return bool
-	 */
-	function cadastra()
-	{
-		if( is_numeric( $this->ref_usuario_cad ) && is_numeric( $this->ref_idpes ) )
-		{
-			$db = new clsBanco();
+        $db = new clsBanco();
+        $this->_schema = "pmieducar.";
+        $this->_tabela = "{$this->_schema}cliente";
 
-			$campos = "";
-			$valores = "";
-			$gruda = "";
+        $this->_campos_lista = $this->_todos_campos = "c.cod_cliente, c.ref_usuario_exc, c.ref_usuario_cad, c.ref_idpes, c.login, c.senha, c.data_cadastro, c.data_exclusao, c.ativo, c.observacoes";
 
-			if( is_numeric( $this->ref_usuario_cad ) )
-			{
-				$campos .= "{$gruda}ref_usuario_cad";
-				$valores .= "{$gruda}'{$this->ref_usuario_cad}'";
-				$gruda = ", ";
-			}
-			if( is_numeric( $this->ref_idpes ) )
-			{
-				$campos .= "{$gruda}ref_idpes";
-				$valores .= "{$gruda}'{$this->ref_idpes}'";
-				$gruda = ", ";
-			}
-			if( is_numeric( $this->login ) )
-			{
-				$campos .= "{$gruda}login";
-				$valores .= "{$gruda}'{$this->login}'";
-				$gruda = ", ";
-			}
-			if( is_string( $this->senha ) )
-			{
-				$campos .= "{$gruda}senha";
-				$valores .= "{$gruda}'{$this->senha}'";
-				$gruda = ", ";
-			}
-			$campos .= "{$gruda}data_cadastro";
-			$valores .= "{$gruda}NOW()";
-			$gruda = ", ";
-			$campos .= "{$gruda}ativo";
-			$valores .= "{$gruda}'1'";
-			$gruda = ", ";
-			if( is_string( $this->observacoes ) )
-			{
-				$campos .= "{$gruda}observacoes";
-				$valores .= "{$gruda}'{$this->observacoes}'";
-				$gruda = ", ";
-			}
-
-			// echo $this->observacoes; die;
-
-			$db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
-			return $db->InsertId( "{$this->_tabela}_cod_cliente_seq");
-		}
-		return false;
-	}
-
-	/**
-	 * Edita os dados de um registro
-	 *
-	 * @return bool
-	 */
-	function edita()
-	{
-		if( is_numeric( $this->cod_cliente ) && is_numeric( $this->ref_usuario_exc ) )
-		{
-
-			$db = new clsBanco();
-			$set = "";
-
-			if( is_numeric( $this->ref_usuario_exc ) )
-			{
-				$set .= "{$gruda}ref_usuario_exc = '{$this->ref_usuario_exc}'";
-				$gruda = ", ";
-			}
-			if( is_numeric( $this->ref_usuario_cad ) )
-			{
-				$set .= "{$gruda}ref_usuario_cad = '{$this->ref_usuario_cad}'";
-				$gruda = ", ";
-			}
-			if( is_numeric( $this->ref_idpes ) )
-			{
-				$set .= "{$gruda}ref_idpes = '{$this->ref_idpes}'";
-				$gruda = ", ";
-			}
-			if( is_numeric( $this->login ) )
-			{
-				$set .= "{$gruda}login = '{$this->login}'";
-				$gruda = ", ";
-			}
-			if( is_string( $this->senha ) )
-			{
-				$set .= "{$gruda}senha = '{$this->senha}'";
-				$gruda = ", ";
-			}
-			if( is_string( $this->data_cadastro ) )
-			{
-				$set .= "{$gruda}data_cadastro = '{$this->data_cadastro}'";
-				$gruda = ", ";
-			}
-			$set .= "{$gruda}data_exclusao = NOW()";
-			$gruda = ", ";
-			if( is_numeric( $this->ativo ) )
-			{
-				$set .= "{$gruda}ativo = '{$this->ativo}'";
-				$gruda = ", ";
-			}
-			if( is_string( $this->observacoes ) )
-			{
-				$set .= "{$gruda}observacoes = '{$this->observacoes}'";
-				$gruda = ", ";
-			}
+        if( is_numeric( $ref_usuario_cad ) )
+        {
+            if( class_exists( "clsPmieducarUsuario" ) )
+            {
+                $tmp_obj = new clsPmieducarUsuario( $ref_usuario_cad );
+                if( method_exists( $tmp_obj, "existe") )
+                {
+                    if( $tmp_obj->existe() )
+                    {
+                        $this->ref_usuario_cad = $ref_usuario_cad;
+                    }
+                }
+                else if( method_exists( $tmp_obj, "detalhe") )
+                {
+                    if( $tmp_obj->detalhe() )
+                    {
+                        $this->ref_usuario_cad = $ref_usuario_cad;
+                    }
+                }
+            }
+            else
+            {
+                if( $db->CampoUnico( "SELECT 1 FROM pmieducar.usuario WHERE cod_usuario = '{$ref_usuario_cad}'" ) )
+                {
+                    $this->ref_usuario_cad = $ref_usuario_cad;
+                }
+            }
+        }
+        if( is_numeric( $ref_usuario_exc ) )
+        {
+            if( class_exists( "clsPmieducarUsuario" ) )
+            {
+                $tmp_obj = new clsPmieducarUsuario( $ref_usuario_exc );
+                if( method_exists( $tmp_obj, "existe") )
+                {
+                    if( $tmp_obj->existe() )
+                    {
+                        $this->ref_usuario_exc = $ref_usuario_exc;
+                    }
+                }
+                else if( method_exists( $tmp_obj, "detalhe") )
+                {
+                    if( $tmp_obj->detalhe() )
+                    {
+                        $this->ref_usuario_exc = $ref_usuario_exc;
+                    }
+                }
+            }
+            else
+            {
+                if( $db->CampoUnico( "SELECT 1 FROM pmieducar.usuario WHERE cod_usuario = '{$ref_usuario_exc}'" ) )
+                {
+                    $this->ref_usuario_exc = $ref_usuario_exc;
+                }
+            }
+        }
+        if( is_numeric( $ref_idpes ) )
+        {
+            if( class_exists( "clsCadastroFisica" ) )
+            {
+                $tmp_obj = new clsCadastroFisica( $ref_idpes );
+                if( method_exists( $tmp_obj, "existe") )
+                {
+                    if( $tmp_obj->existe() )
+                    {
+                        $this->ref_idpes = $ref_idpes;
+                    }
+                }
+                else if( method_exists( $tmp_obj, "detalhe") )
+                {
+                    if( $tmp_obj->detalhe() )
+                    {
+                        $this->ref_idpes = $ref_idpes;
+                    }
+                }
+            }
+            else
+            {
+                if( $db->CampoUnico( "SELECT 1 FROM cadastro.fisica WHERE idpes = '{$ref_idpes}'" ) )
+                {
+                    $this->ref_idpes = $ref_idpes;
+                }
+            }
+        }
 
 
-			if( $set )
-			{
-				$db->Consulta( "UPDATE {$this->_tabela} SET $set WHERE cod_cliente = '{$this->cod_cliente}'" );
-				return true;
-			}
-		}
-		return false;
-	}
+        if( is_numeric( $cod_cliente ) )
+        {
+            $this->cod_cliente = $cod_cliente;
+        }
+        if( is_numeric( $login ) )
+        {
+            $this->login = $login;
+        }
+        if( is_string( $senha ) )
+        {
+            $this->senha = $senha;
+        }
+        if( is_string( $data_cadastro ) )
+        {
+            $this->data_cadastro = $data_cadastro;
+        }
+        if( is_string( $data_exclusao ) )
+        {
+            $this->data_exclusao = $data_exclusao;
+        }
+        if( is_numeric( $ativo ) )
+        {
+            $this->ativo = $ativo;
+        }
+        if (is_string($observacoes))
+        {
+            $this->observacoes = $observacoes;
+        }
 
-	/**
-	 * Retorna uma lista filtrados de acordo com os parametros
-	 *
-	 * @return array
-	 */
-	function lista( $int_cod_cliente = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_ref_idpes = null, $int_login = null, $str_senha = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $str_nm_cliente = null, $str_suspenso = null, $int_ref_cod_biblioteca = null )
-	{
-		$tab_adicional  = '';
-		$condicao	    = '';
-		$camp_adicional = '';
-		if ( is_string( $str_suspenso ) )
-		{
-			$tab_adicional  .= ", {$this->_schema}cliente_suspensao cs ";
-			$condicao 	    .= " AND c.cod_cliente = cs.ref_cod_cliente ";
-		}
-		if( is_numeric($int_ref_cod_biblioteca) || is_array($int_ref_cod_biblioteca))
-		{
-			$tab_adicional  .= ", {$this->_schema}cliente_tipo ct ";
-			$tab_adicional  .= ", {$this->_schema}cliente_tipo_cliente ctc ";
-		}
-		$sql 	  = "SELECT {$this->_campos_lista}, p.nome{$camp_adicional} FROM {$this->_tabela} c, cadastro.pessoa p {$tab_adicional}";
-		$whereAnd = " AND ";
+    }
 
-		$filtros = "WHERE c.ref_idpes = p.idpes {$condicao}";
+    /**
+     * Cria um novo registro
+     *
+     * @return bool
+     */
+    function cadastra()
+    {
+        if( is_numeric( $this->ref_usuario_cad ) && is_numeric( $this->ref_idpes ) )
+        {
+            $db = new clsBanco();
 
-		if( is_numeric( $int_cod_cliente ) )
-		{
-			$filtros .= "{$whereAnd} c.cod_cliente = '{$int_cod_cliente}'";
-			$whereAnd = " AND ";
-		}
-		if( is_numeric( $int_ref_usuario_exc ) )
-		{
-			$filtros .= "{$whereAnd} c.ref_usuario_exc = '{$int_ref_usuario_exc}'";
-			$whereAnd = " AND ";
-		}
-		if( is_numeric( $int_ref_usuario_cad ) )
-		{
-			$filtros .= "{$whereAnd} c.ref_usuario_cad = '{$int_ref_usuario_cad}'";
-			$whereAnd = " AND ";
-		}
-		if( is_numeric( $int_ref_idpes ) )
-		{
-			$filtros .= "{$whereAnd} c.ref_idpes = '{$int_ref_idpes}'";
-			$whereAnd = " AND ";
-		}
-		if( is_numeric( $int_login ) )
-		{
-			$filtros .= "{$whereAnd} c.login = '{$int_login}'";
-			$whereAnd = " AND ";
-		}
-		if( is_string( $str_senha ) )
-		{
-			$filtros .= "{$whereAnd} c.senha = '{$str_senha}'";
-			$whereAnd = " AND ";
-		}
-		if( is_string( $date_data_cadastro_ini ) )
-		{
-			$filtros .= "{$whereAnd} c.data_cadastro >= '{$date_data_cadastro_ini}'";
-			$whereAnd = " AND ";
-		}
-		if( is_string( $date_data_cadastro_fim ) )
-		{
-			$filtros .= "{$whereAnd} c.data_cadastro <= '{$date_data_cadastro_fim}'";
-			$whereAnd = " AND ";
-		}
-		if( is_string( $date_data_exclusao_ini ) )
-		{
-			$filtros .= "{$whereAnd} c.data_exclusao >= '{$date_data_exclusao_ini}'";
-			$whereAnd = " AND ";
-		}
-		if( is_string( $date_data_exclusao_fim ) )
-		{
-			$filtros .= "{$whereAnd} c.data_exclusao <= '{$date_data_exclusao_fim}'";
-			$whereAnd = " AND ";
-		}
-		if( is_null( $int_ativo ) || $int_ativo )
-		{
-			$filtros .= "{$whereAnd} c.ativo = '1'";
-			$whereAnd = " AND ";
-		}
-		else
-		{
-			$filtros .= "{$whereAnd} c.ativo = '0'";
-			$whereAnd = " AND ";
-		}
-		if( is_string( $str_nm_cliente ) )
-		{
-			$filtros .= "{$whereAnd} translate(upper(p.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nm_cliente}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
-			$whereAnd = " AND ";
-		}
-		if(is_array($int_ref_cod_biblioteca))
-		{
-			$bibs = implode(", ", $int_ref_cod_biblioteca);
-			$filtros .= "{$whereAnd} c.cod_cliente = ctc.ref_cod_cliente AND ctc.ref_cod_cliente_tipo = ct.cod_cliente_tipo AND ct.ref_cod_biblioteca IN ($bibs) ";
-			$whereAnd = " AND ";
-		}
-		elseif (is_numeric($int_ref_cod_biblioteca))
-		{
-			$filtros .= "{$whereAnd} c.cod_cliente = ctc.ref_cod_cliente AND ctc.ref_cod_cliente_tipo = ct.cod_cliente_tipo AND ct.ref_cod_biblioteca = '$int_ref_cod_biblioteca' ";
-			$whereAnd = " AND ";
-		}
+            $campos = "";
+            $valores = "";
+            $gruda = "";
 
-		$db = new clsBanco();
-		$countCampos = count( explode( ",", $this->_campos_lista ) );
-		$resultado = array();
+            if( is_numeric( $this->ref_usuario_cad ) )
+            {
+                $campos .= "{$gruda}ref_usuario_cad";
+                $valores .= "{$gruda}'{$this->ref_usuario_cad}'";
+                $gruda = ", ";
+            }
+            if( is_numeric( $this->ref_idpes ) )
+            {
+                $campos .= "{$gruda}ref_idpes";
+                $valores .= "{$gruda}'{$this->ref_idpes}'";
+                $gruda = ", ";
+            }
+            if( is_numeric( $this->login ) )
+            {
+                $campos .= "{$gruda}login";
+                $valores .= "{$gruda}'{$this->login}'";
+                $gruda = ", ";
+            }
+            if( is_string( $this->senha ) )
+            {
+                $campos .= "{$gruda}senha";
+                $valores .= "{$gruda}'{$this->senha}'";
+                $gruda = ", ";
+            }
+            $campos .= "{$gruda}data_cadastro";
+            $valores .= "{$gruda}NOW()";
+            $gruda = ", ";
+            $campos .= "{$gruda}ativo";
+            $valores .= "{$gruda}'1'";
+            $gruda = ", ";
+            if( is_string( $this->observacoes ) )
+            {
+                $campos .= "{$gruda}observacoes";
+                $valores .= "{$gruda}'{$this->observacoes}'";
+                $gruda = ", ";
+            }
 
-		$sql .= $filtros . $this->getOrderby() . $this->getLimite();
+            // echo $this->observacoes; die;
 
-		$this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} c, cadastro.pessoa p{$tab_adicional} {$filtros}" );
+            $db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
+            return $db->InsertId( "{$this->_tabela}_cod_cliente_seq");
+        }
+        return false;
+    }
 
-		$db->Consulta( $sql );
+    /**
+     * Edita os dados de um registro
+     *
+     * @return bool
+     */
+    function edita()
+    {
+        if( is_numeric( $this->cod_cliente ) && is_numeric( $this->ref_usuario_exc ) )
+        {
 
-		if( $countCampos > 1 )
-		{
-			while ( $db->ProximoRegistro() )
-			{
-				$tupla = $db->Tupla();
+            $db = new clsBanco();
+            $set = "";
 
-				$tupla["_total"] = $this->_total;
-				$resultado[] = $tupla;
-			}
-		}
-		else
-		{
-			while ( $db->ProximoRegistro() )
-			{
-				$tupla = $db->Tupla();
-				$resultado[] = $tupla[$this->_campos_lista];
-			}
-		}
+            if( is_numeric( $this->ref_usuario_exc ) )
+            {
+                $set .= "{$gruda}ref_usuario_exc = '{$this->ref_usuario_exc}'";
+                $gruda = ", ";
+            }
+            if( is_numeric( $this->ref_usuario_cad ) )
+            {
+                $set .= "{$gruda}ref_usuario_cad = '{$this->ref_usuario_cad}'";
+                $gruda = ", ";
+            }
+            if( is_numeric( $this->ref_idpes ) )
+            {
+                $set .= "{$gruda}ref_idpes = '{$this->ref_idpes}'";
+                $gruda = ", ";
+            }
+            if( is_numeric( $this->login ) )
+            {
+                $set .= "{$gruda}login = '{$this->login}'";
+                $gruda = ", ";
+            }
+            if( is_string( $this->senha ) )
+            {
+                $set .= "{$gruda}senha = '{$this->senha}'";
+                $gruda = ", ";
+            }
+            if( is_string( $this->data_cadastro ) )
+            {
+                $set .= "{$gruda}data_cadastro = '{$this->data_cadastro}'";
+                $gruda = ", ";
+            }
+            $set .= "{$gruda}data_exclusao = NOW()";
+            $gruda = ", ";
+            if( is_numeric( $this->ativo ) )
+            {
+                $set .= "{$gruda}ativo = '{$this->ativo}'";
+                $gruda = ", ";
+            }
+            if( is_string( $this->observacoes ) )
+            {
+                $set .= "{$gruda}observacoes = '{$this->observacoes}'";
+                $gruda = ", ";
+            }
 
-		if( count( $resultado ) )
-		{
-			return $resultado;
-		}
-		return false;
-	}
+
+            if( $set )
+            {
+                $db->Consulta( "UPDATE {$this->_tabela} SET $set WHERE cod_cliente = '{$this->cod_cliente}'" );
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Retorna uma lista filtrados de acordo com os parametros
+     *
+     * @return array
+     */
+    function lista( $int_cod_cliente = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_ref_idpes = null, $int_login = null, $str_senha = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $str_nm_cliente = null, $str_suspenso = null, $int_ref_cod_biblioteca = null )
+    {
+        $tab_adicional  = '';
+        $condicao       = '';
+        $camp_adicional = '';
+        if ( is_string( $str_suspenso ) )
+        {
+            $tab_adicional  .= ", {$this->_schema}cliente_suspensao cs ";
+            $condicao       .= " AND c.cod_cliente = cs.ref_cod_cliente ";
+        }
+        if( is_numeric($int_ref_cod_biblioteca) || is_array($int_ref_cod_biblioteca))
+        {
+            $tab_adicional  .= ", {$this->_schema}cliente_tipo ct ";
+            $tab_adicional  .= ", {$this->_schema}cliente_tipo_cliente ctc ";
+        }
+        $sql      = "SELECT {$this->_campos_lista}, p.nome{$camp_adicional} FROM {$this->_tabela} c, cadastro.pessoa p {$tab_adicional}";
+        $whereAnd = " AND ";
+
+        $filtros = "WHERE c.ref_idpes = p.idpes {$condicao}";
+
+        if( is_numeric( $int_cod_cliente ) )
+        {
+            $filtros .= "{$whereAnd} c.cod_cliente = '{$int_cod_cliente}'";
+            $whereAnd = " AND ";
+        }
+        if( is_numeric( $int_ref_usuario_exc ) )
+        {
+            $filtros .= "{$whereAnd} c.ref_usuario_exc = '{$int_ref_usuario_exc}'";
+            $whereAnd = " AND ";
+        }
+        if( is_numeric( $int_ref_usuario_cad ) )
+        {
+            $filtros .= "{$whereAnd} c.ref_usuario_cad = '{$int_ref_usuario_cad}'";
+            $whereAnd = " AND ";
+        }
+        if( is_numeric( $int_ref_idpes ) )
+        {
+            $filtros .= "{$whereAnd} c.ref_idpes = '{$int_ref_idpes}'";
+            $whereAnd = " AND ";
+        }
+        if( is_numeric( $int_login ) )
+        {
+            $filtros .= "{$whereAnd} c.login = '{$int_login}'";
+            $whereAnd = " AND ";
+        }
+        if( is_string( $str_senha ) )
+        {
+            $filtros .= "{$whereAnd} c.senha = '{$str_senha}'";
+            $whereAnd = " AND ";
+        }
+        if( is_string( $date_data_cadastro_ini ) )
+        {
+            $filtros .= "{$whereAnd} c.data_cadastro >= '{$date_data_cadastro_ini}'";
+            $whereAnd = " AND ";
+        }
+        if( is_string( $date_data_cadastro_fim ) )
+        {
+            $filtros .= "{$whereAnd} c.data_cadastro <= '{$date_data_cadastro_fim}'";
+            $whereAnd = " AND ";
+        }
+        if( is_string( $date_data_exclusao_ini ) )
+        {
+            $filtros .= "{$whereAnd} c.data_exclusao >= '{$date_data_exclusao_ini}'";
+            $whereAnd = " AND ";
+        }
+        if( is_string( $date_data_exclusao_fim ) )
+        {
+            $filtros .= "{$whereAnd} c.data_exclusao <= '{$date_data_exclusao_fim}'";
+            $whereAnd = " AND ";
+        }
+        if( is_null( $int_ativo ) || $int_ativo )
+        {
+            $filtros .= "{$whereAnd} c.ativo = '1'";
+            $whereAnd = " AND ";
+        }
+        else
+        {
+            $filtros .= "{$whereAnd} c.ativo = '0'";
+            $whereAnd = " AND ";
+        }
+        if( is_string( $str_nm_cliente ) )
+        {
+            $filtros .= "{$whereAnd} translate(upper(p.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nm_cliente}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
+            $whereAnd = " AND ";
+        }
+        if(is_array($int_ref_cod_biblioteca))
+        {
+            $bibs = implode(", ", $int_ref_cod_biblioteca);
+            $filtros .= "{$whereAnd} c.cod_cliente = ctc.ref_cod_cliente AND ctc.ref_cod_cliente_tipo = ct.cod_cliente_tipo AND ct.ref_cod_biblioteca IN ($bibs) ";
+            $whereAnd = " AND ";
+        }
+        elseif (is_numeric($int_ref_cod_biblioteca))
+        {
+            $filtros .= "{$whereAnd} c.cod_cliente = ctc.ref_cod_cliente AND ctc.ref_cod_cliente_tipo = ct.cod_cliente_tipo AND ct.ref_cod_biblioteca = '$int_ref_cod_biblioteca' ";
+            $whereAnd = " AND ";
+        }
+
+        $db = new clsBanco();
+        $countCampos = count( explode( ",", $this->_campos_lista ) );
+        $resultado = array();
+
+        $sql .= $filtros . $this->getOrderby() . $this->getLimite();
+
+        $this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} c, cadastro.pessoa p{$tab_adicional} {$filtros}" );
+
+        $db->Consulta( $sql );
+
+        if( $countCampos > 1 )
+        {
+            while ( $db->ProximoRegistro() )
+            {
+                $tupla = $db->Tupla();
+
+                $tupla["_total"] = $this->_total;
+                $resultado[] = $tupla;
+            }
+        }
+        else
+        {
+            while ( $db->ProximoRegistro() )
+            {
+                $tupla = $db->Tupla();
+                $resultado[] = $tupla[$this->_campos_lista];
+            }
+        }
+
+        if( count( $resultado ) )
+        {
+            return $resultado;
+        }
+        return false;
+    }
 
 
 
@@ -638,7 +638,7 @@ class clsPmieducarCliente
                 FROM pmieducar.cliente_suspensao cs
                 WHERE cs.ref_cod_cliente = c.cod_cliente
                 AND cs.data_liberacao IS NULL) AS id_suspensao ";
-	$sql = "
+    $sql = "
             FROM
               pmieducar.cliente                c,
               pmieducar.cliente_tipo_cliente ctc,
@@ -659,7 +659,7 @@ class clsPmieducarCliente
               AND ctc.ativo             = '{$int_ativo}'
               $filtros";
 
-	$this->_total = $db->CampoUnico( "SELECT COUNT(0) ".$sql );              
+    $this->_total = $db->CampoUnico( "SELECT COUNT(0) ".$sql );              
 
     $sql .= $this->getOrderby() . $this->getLimite();
     $db->Consulta($select .$sql);    
@@ -677,293 +677,293 @@ class clsPmieducarCliente
 
 
 
-	/**
-	 * Retorna uma lista filtrados de acordo com os parametros
-	 *
-	 * @return array
-	 */
-	function listaPesquisaCliente( $int_cod_cliente = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_ref_idpes = null, $int_login = null, $str_senha = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $str_nm_cliente = null, $int_ref_cod_biblioteca = null )
-	{
-		$sql = "SELECT {$this->_campos_lista}, ct.ref_cod_biblioteca, p.nome FROM {$this->_tabela} c, {$this->_schema}cliente_tipo_cliente ctc, {$this->_schema}cliente_tipo ct, cadastro.pessoa p";
-		$filtros = "";
+    /**
+     * Retorna uma lista filtrados de acordo com os parametros
+     *
+     * @return array
+     */
+    function listaPesquisaCliente( $int_cod_cliente = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_ref_idpes = null, $int_login = null, $str_senha = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $str_nm_cliente = null, $int_ref_cod_biblioteca = null )
+    {
+        $sql = "SELECT {$this->_campos_lista}, ct.ref_cod_biblioteca, p.nome FROM {$this->_tabela} c, {$this->_schema}cliente_tipo_cliente ctc, {$this->_schema}cliente_tipo ct, cadastro.pessoa p";
+        $filtros = "";
 
-		$whereAnd = " WHERE c.cod_cliente = ctc.ref_cod_cliente AND ctc.ref_cod_cliente_tipo = ct.cod_cliente_tipo AND c.ref_idpes = p.idpes AND";
+        $whereAnd = " WHERE c.cod_cliente = ctc.ref_cod_cliente AND ctc.ref_cod_cliente_tipo = ct.cod_cliente_tipo AND c.ref_idpes = p.idpes AND";
 
-		if( is_numeric( $int_cod_cliente ) )
-		{
-			$filtros .= "{$whereAnd} c.cod_cliente = '{$int_cod_cliente}'";
-			$whereAnd = " AND ";
-		}
-		if( is_numeric( $int_ref_usuario_exc ) )
-		{
-			$filtros .= "{$whereAnd} c.ref_usuario_exc = '{$int_ref_usuario_exc}'";
-			$whereAnd = " AND ";
-		}
-		if( is_numeric( $int_ref_usuario_cad ) )
-		{
-			$filtros .= "{$whereAnd} c.ref_usuario_cad = '{$int_ref_usuario_cad}'";
-			$whereAnd = " AND ";
-		}
-		if( is_numeric( $int_ref_idpes ) )
-		{
-			$filtros .= "{$whereAnd} c.ref_idpes = '{$int_ref_idpes}'";
-			$whereAnd = " AND ";
-		}
-		if( is_numeric( $int_login ) )
-		{
-			$filtros .= "{$whereAnd} c.login = '{$int_login}'";
-			$whereAnd = " AND ";
-		}
-		if( is_string( $str_senha ) )
-		{
-			$filtros .= "{$whereAnd} c.senha = '{$str_senha}'";
-			$whereAnd = " AND ";
-		}
-		if( is_string( $date_data_cadastro_ini ) )
-		{
-			$filtros .= "{$whereAnd} c.data_cadastro >= '{$date_data_cadastro_ini}'";
-			$whereAnd = " AND ";
-		}
-		if( is_string( $date_data_cadastro_fim ) )
-		{
-			$filtros .= "{$whereAnd} c.data_cadastro <= '{$date_data_cadastro_fim}'";
-			$whereAnd = " AND ";
-		}
-		if( is_string( $date_data_exclusao_ini ) )
-		{
-			$filtros .= "{$whereAnd} c.data_exclusao >= '{$date_data_exclusao_ini}'";
-			$whereAnd = " AND ";
-		}
-		if( is_string( $date_data_exclusao_fim ) )
-		{
-			$filtros .= "{$whereAnd} c.data_exclusao <= '{$date_data_exclusao_fim}'";
-			$whereAnd = " AND ";
-		}
-		if( is_null( $int_ativo ) || $int_ativo )
-		{
-			$filtros .= "{$whereAnd} c.ativo = '1'";
-			$whereAnd = " AND ";
-		}
-		else
-		{
-			$filtros .= "{$whereAnd} c.ativo = '0'";
-			$whereAnd = " AND ";
-		}
-		if( is_string( $str_nm_cliente ) )
-		{
-			$filtros .= "{$whereAnd} p.nome LIKE '%{$str_nm_cliente}%'";
-			$whereAnd = " AND ";
-		}
-		if( is_numeric( $int_ref_cod_biblioteca ) )
-		{
-			$filtros .= "{$whereAnd} ct.ref_cod_biblioteca = '{$int_ref_cod_biblioteca}'";
-			$whereAnd = " AND ";
-		}
+        if( is_numeric( $int_cod_cliente ) )
+        {
+            $filtros .= "{$whereAnd} c.cod_cliente = '{$int_cod_cliente}'";
+            $whereAnd = " AND ";
+        }
+        if( is_numeric( $int_ref_usuario_exc ) )
+        {
+            $filtros .= "{$whereAnd} c.ref_usuario_exc = '{$int_ref_usuario_exc}'";
+            $whereAnd = " AND ";
+        }
+        if( is_numeric( $int_ref_usuario_cad ) )
+        {
+            $filtros .= "{$whereAnd} c.ref_usuario_cad = '{$int_ref_usuario_cad}'";
+            $whereAnd = " AND ";
+        }
+        if( is_numeric( $int_ref_idpes ) )
+        {
+            $filtros .= "{$whereAnd} c.ref_idpes = '{$int_ref_idpes}'";
+            $whereAnd = " AND ";
+        }
+        if( is_numeric( $int_login ) )
+        {
+            $filtros .= "{$whereAnd} c.login = '{$int_login}'";
+            $whereAnd = " AND ";
+        }
+        if( is_string( $str_senha ) )
+        {
+            $filtros .= "{$whereAnd} c.senha = '{$str_senha}'";
+            $whereAnd = " AND ";
+        }
+        if( is_string( $date_data_cadastro_ini ) )
+        {
+            $filtros .= "{$whereAnd} c.data_cadastro >= '{$date_data_cadastro_ini}'";
+            $whereAnd = " AND ";
+        }
+        if( is_string( $date_data_cadastro_fim ) )
+        {
+            $filtros .= "{$whereAnd} c.data_cadastro <= '{$date_data_cadastro_fim}'";
+            $whereAnd = " AND ";
+        }
+        if( is_string( $date_data_exclusao_ini ) )
+        {
+            $filtros .= "{$whereAnd} c.data_exclusao >= '{$date_data_exclusao_ini}'";
+            $whereAnd = " AND ";
+        }
+        if( is_string( $date_data_exclusao_fim ) )
+        {
+            $filtros .= "{$whereAnd} c.data_exclusao <= '{$date_data_exclusao_fim}'";
+            $whereAnd = " AND ";
+        }
+        if( is_null( $int_ativo ) || $int_ativo )
+        {
+            $filtros .= "{$whereAnd} c.ativo = '1'";
+            $whereAnd = " AND ";
+        }
+        else
+        {
+            $filtros .= "{$whereAnd} c.ativo = '0'";
+            $whereAnd = " AND ";
+        }
+        if( is_string( $str_nm_cliente ) )
+        {
+            $filtros .= "{$whereAnd} p.nome LIKE '%{$str_nm_cliente}%'";
+            $whereAnd = " AND ";
+        }
+        if( is_numeric( $int_ref_cod_biblioteca ) )
+        {
+            $filtros .= "{$whereAnd} ct.ref_cod_biblioteca = '{$int_ref_cod_biblioteca}'";
+            $whereAnd = " AND ";
+        }
 
-		$db = new clsBanco();
-		$countCampos = count( explode( ",", $this->_campos_lista ) );
-		$resultado = array();
+        $db = new clsBanco();
+        $countCampos = count( explode( ",", $this->_campos_lista ) );
+        $resultado = array();
 
-		$sql .= $filtros . $this->getOrderby() . $this->getLimite();
+        $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
-		$this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} c, {$this->_schema}cliente_tipo_cliente ctc, {$this->_schema}cliente_tipo ct, cadastro.pessoa p {$filtros}" );
+        $this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} c, {$this->_schema}cliente_tipo_cliente ctc, {$this->_schema}cliente_tipo ct, cadastro.pessoa p {$filtros}" );
 
-		$db->Consulta( $sql );
+        $db->Consulta( $sql );
 
-		if( $countCampos > 1 )
-		{
-			while ( $db->ProximoRegistro() )
-			{
-				$tupla = $db->Tupla();
+        if( $countCampos > 1 )
+        {
+            while ( $db->ProximoRegistro() )
+            {
+                $tupla = $db->Tupla();
 
-				$tupla["_total"] = $this->_total;
-				$resultado[] = $tupla;
-			}
-		}
-		else
-		{
-			while ( $db->ProximoRegistro() )
-			{
-				$tupla = $db->Tupla();
-				$resultado[] = $tupla[$this->_campos_lista];
-			}
-		}
-		if( count( $resultado ) )
-		{
-			return $resultado;
-		}
-		return false;
-	}
+                $tupla["_total"] = $this->_total;
+                $resultado[] = $tupla;
+            }
+        }
+        else
+        {
+            while ( $db->ProximoRegistro() )
+            {
+                $tupla = $db->Tupla();
+                $resultado[] = $tupla[$this->_campos_lista];
+            }
+        }
+        if( count( $resultado ) )
+        {
+            return $resultado;
+        }
+        return false;
+    }
 
-	/**
-	 * Retorna um array com os dados de um registro
-	 *
-	 * @return array
-	 */
-	function detalhe()
-	{
-		if( is_numeric( $this->cod_cliente ) )
-		{
+    /**
+     * Retorna um array com os dados de um registro
+     *
+     * @return array
+     */
+    function detalhe()
+    {
+        if( is_numeric( $this->cod_cliente ) )
+        {
 
-		$db = new clsBanco();
-		$db->Consulta( "SELECT {$this->_todos_campos} FROM {$this->_tabela} c WHERE c.cod_cliente = '{$this->cod_cliente}'" );
-		$db->ProximoRegistro();
-		return $db->Tupla();
-		}
-		elseif ( is_numeric( $this->ref_idpes ) )
-		{
-			$db = new clsBanco();
-			$db->Consulta( "SELECT {$this->_todos_campos} FROM {$this->_tabela} c WHERE c.ref_idpes = '{$this->ref_idpes}'" );
-			$db->ProximoRegistro();
-			return $db->Tupla();
-		}
-		return false;
-	}
+        $db = new clsBanco();
+        $db->Consulta( "SELECT {$this->_todos_campos} FROM {$this->_tabela} c WHERE c.cod_cliente = '{$this->cod_cliente}'" );
+        $db->ProximoRegistro();
+        return $db->Tupla();
+        }
+        elseif ( is_numeric( $this->ref_idpes ) )
+        {
+            $db = new clsBanco();
+            $db->Consulta( "SELECT {$this->_todos_campos} FROM {$this->_tabela} c WHERE c.ref_idpes = '{$this->ref_idpes}'" );
+            $db->ProximoRegistro();
+            return $db->Tupla();
+        }
+        return false;
+    }
 
-	/**
-	 * Retorna um array com os dados de um registro
-	 *
-	 * @return array
-	 */
-	function existe()
-	{
-		if( is_numeric( $this->cod_cliente ) )
-		{
+    /**
+     * Retorna um array com os dados de um registro
+     *
+     * @return array
+     */
+    function existe()
+    {
+        if( is_numeric( $this->cod_cliente ) )
+        {
 
-		$db = new clsBanco();
-		$db->Consulta( "SELECT 1 FROM {$this->_tabela} WHERE cod_cliente = '{$this->cod_cliente}'" );
-		$db->ProximoRegistro();
-		return $db->Tupla();
-		}
-		return false;
-	}
+        $db = new clsBanco();
+        $db->Consulta( "SELECT 1 FROM {$this->_tabela} WHERE cod_cliente = '{$this->cod_cliente}'" );
+        $db->ProximoRegistro();
+        return $db->Tupla();
+        }
+        return false;
+    }
 
-	/**
-	 * Exclui um registro
-	 *
-	 * @return bool
-	 */
-	function excluir()
-	{
-		if( is_numeric( $this->cod_cliente ) && is_numeric( $this->ref_usuario_exc ) )
-		{
+    /**
+     * Exclui um registro
+     *
+     * @return bool
+     */
+    function excluir()
+    {
+        if( is_numeric( $this->cod_cliente ) && is_numeric( $this->ref_usuario_exc ) )
+        {
 
-		/*
-			delete
-		$db = new clsBanco();
-		$db->Consulta( "DELETE FROM {$this->_tabela} WHERE cod_cliente = '{$this->cod_cliente}'" );
-		return true;
-		*/
+        /*
+            delete
+        $db = new clsBanco();
+        $db->Consulta( "DELETE FROM {$this->_tabela} WHERE cod_cliente = '{$this->cod_cliente}'" );
+        return true;
+        */
 
-		$this->ativo = 0;
-			return $this->edita();
-		}
-		return false;
-	}
+        $this->ativo = 0;
+            return $this->edita();
+        }
+        return false;
+    }
 
-	/**
-	 * Define quais campos da tabela serao selecionados na invocacao do metodo lista
-	 *
-	 * @return null
-	 */
-	function setCamposLista( $str_campos )
-	{
-		$this->_campos_lista = $str_campos;
-	}
+    /**
+     * Define quais campos da tabela serao selecionados na invocacao do metodo lista
+     *
+     * @return null
+     */
+    function setCamposLista( $str_campos )
+    {
+        $this->_campos_lista = $str_campos;
+    }
 
-	/**
-	 * Define que o metodo Lista devera retornoar todos os campos da tabela
-	 *
-	 * @return null
-	 */
-	function resetCamposLista()
-	{
-		$this->_campos_lista = $this->_todos_campos;
-	}
+    /**
+     * Define que o metodo Lista devera retornoar todos os campos da tabela
+     *
+     * @return null
+     */
+    function resetCamposLista()
+    {
+        $this->_campos_lista = $this->_todos_campos;
+    }
 
-	/**
-	 * Define limites de retorno para o metodo lista
-	 *
-	 * @return null
-	 */
-	function setLimite( $intLimiteQtd, $intLimiteOffset = null )
-	{
-		$this->_limite_quantidade = $intLimiteQtd;
-		$this->_limite_offset = $intLimiteOffset;
-	}
+    /**
+     * Define limites de retorno para o metodo lista
+     *
+     * @return null
+     */
+    function setLimite( $intLimiteQtd, $intLimiteOffset = null )
+    {
+        $this->_limite_quantidade = $intLimiteQtd;
+        $this->_limite_offset = $intLimiteOffset;
+    }
 
-	/**
-	 * Retorna a string com o trecho da query resposavel pelo Limite de registros
-	 *
-	 * @return string
-	 */
-	function getLimite()
-	{
-		if( is_numeric( $this->_limite_quantidade ) )
-		{
-			$retorno = " LIMIT {$this->_limite_quantidade}";
-			if( is_numeric( $this->_limite_offset ) )
-			{
-				$retorno .= " OFFSET {$this->_limite_offset} ";
-			}
-			return $retorno;
-		}
-		return "";
-	}
+    /**
+     * Retorna a string com o trecho da query resposavel pelo Limite de registros
+     *
+     * @return string
+     */
+    function getLimite()
+    {
+        if( is_numeric( $this->_limite_quantidade ) )
+        {
+            $retorno = " LIMIT {$this->_limite_quantidade}";
+            if( is_numeric( $this->_limite_offset ) )
+            {
+                $retorno .= " OFFSET {$this->_limite_offset} ";
+            }
+            return $retorno;
+        }
+        return "";
+    }
 
-	/**
-	 * Define campo para ser utilizado como ordenacao no metolo lista
-	 *
-	 * @return null
-	 */
-	function setOrderby( $strNomeCampo )
-	{
-		// limpa a string de possiveis erros (delete, insert, etc)
-		//$strNomeCampo = eregi_replace();
+    /**
+     * Define campo para ser utilizado como ordenacao no metolo lista
+     *
+     * @return null
+     */
+    function setOrderby( $strNomeCampo )
+    {
+        // limpa a string de possiveis erros (delete, insert, etc)
+        //$strNomeCampo = eregi_replace();
 
-		if( is_string( $strNomeCampo ) && $strNomeCampo )
-		{
-			$this->_campo_order_by = $strNomeCampo;
-		}
-	}
+        if( is_string( $strNomeCampo ) && $strNomeCampo )
+        {
+            $this->_campo_order_by = $strNomeCampo;
+        }
+    }
 
-	/**
-	 * Retorna a string com o trecho da query resposavel pela Ordenacao dos registros
-	 *
-	 * @return string
-	 */
-	function getOrderby()
-	{
-		if( is_string( $this->_campo_order_by ) )
-		{
-			return " ORDER BY {$this->_campo_order_by} ";
-		}
-		return "";
-	}
+    /**
+     * Retorna a string com o trecho da query resposavel pela Ordenacao dos registros
+     *
+     * @return string
+     */
+    function getOrderby()
+    {
+        if( is_string( $this->_campo_order_by ) )
+        {
+            return " ORDER BY {$this->_campo_order_by} ";
+        }
+        return "";
+    }
 
-	/**
-	 * Retorna um array com o codigo do tipo de cliente e o nome do tipo de cliente
-	 *
-	 * @return array
-	 */
-	function retornaTipoCliente( $int_cod_cliente, $int_cod_biblioteca )
-	{
-		if( is_numeric( $int_cod_cliente ) && is_numeric( $int_cod_biblioteca ) )
-		{
-			$db = new clsBanco();
-			$db->Consulta( "SELECT ct.cod_cliente_tipo,
-							       ct.nm_tipo
-							  FROM pmieducar.cliente	            c,
-							       pmieducar.cliente_tipo_cliente ctc,
-							       pmieducar.cliente_tipo 	       ct
-							 WHERE c.cod_cliente 	     = ctc.ref_cod_cliente
-							   AND ct.cod_cliente_tipo   = ctc.ref_cod_cliente_tipo
-							   AND c.cod_cliente         = '{$int_cod_cliente}'
-							   AND ct.ref_cod_biblioteca = '{$int_cod_biblioteca}'" );
-			$db->ProximoRegistro();
-			return $db->Tupla();
-		}
-		return false;
-	}
+    /**
+     * Retorna um array com o codigo do tipo de cliente e o nome do tipo de cliente
+     *
+     * @return array
+     */
+    function retornaTipoCliente( $int_cod_cliente, $int_cod_biblioteca )
+    {
+        if( is_numeric( $int_cod_cliente ) && is_numeric( $int_cod_biblioteca ) )
+        {
+            $db = new clsBanco();
+            $db->Consulta( "SELECT ct.cod_cliente_tipo,
+                                   ct.nm_tipo
+                              FROM pmieducar.cliente                c,
+                                   pmieducar.cliente_tipo_cliente ctc,
+                                   pmieducar.cliente_tipo          ct
+                             WHERE c.cod_cliente         = ctc.ref_cod_cliente
+                               AND ct.cod_cliente_tipo   = ctc.ref_cod_cliente_tipo
+                               AND c.cod_cliente         = '{$int_cod_cliente}'
+                               AND ct.ref_cod_biblioteca = '{$int_cod_biblioteca}'" );
+            $db->ProximoRegistro();
+            return $db->Tupla();
+        }
+        return false;
+    }
 
 }

@@ -312,8 +312,9 @@ class indice extends clsDetalhe
           <tr class='$class' align='left'>
             <td><b>{$det_funcao['nm_funcao']}</b></td>
           </tr>";
-
-        $this->is_professor = (bool) $det_funcao['professor'];
+        if (!$this->is_professor){
+            $this->is_professor = (bool) $det_funcao['professor'];
+        }
 
         $class = $class == "formlttd" ? "formmdtd" : "formlttd" ;
       }
