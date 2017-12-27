@@ -1,29 +1,29 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
-	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
-	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
-	*						ctima@itajai.sc.gov.br					    	 *
-	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
-	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
-	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
-	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
-	*	02111-1307, USA.													 *
-	*																		 *
-	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+    *                                                                        *
+    *   @author Prefeitura Municipal de Itajaí                               *
+    *   @updated 29/03/2007                                                  *
+    *   Pacote: i-PLB Software Público Livre e Brasileiro                    *
+    *                                                                        *
+    *   Copyright (C) 2006  PMI - Prefeitura Municipal de Itajaí             *
+    *                       ctima@itajai.sc.gov.br                           *
+    *                                                                        *
+    *   Este  programa  é  software livre, você pode redistribuí-lo e/ou     *
+    *   modificá-lo sob os termos da Licença Pública Geral GNU, conforme     *
+    *   publicada pela Free  Software  Foundation,  tanto  a versão 2 da     *
+    *   Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.    *
+    *                                                                        *
+    *   Este programa  é distribuído na expectativa de ser útil, mas SEM     *
+    *   QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-     *
+    *   ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-     *
+    *   sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.     *
+    *                                                                        *
+    *   Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU     *
+    *   junto  com  este  programa. Se não, escreva para a Free Software     *
+    *   Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA     *
+    *   02111-1307, USA.                                                     *
+    *                                                                        *
+    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -32,76 +32,76 @@ require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsIndexBase extends clsBase
 {
-	function Formular()
-	{
-		$this->SetTitulo( "{$this->_instituicao} i-Educar - Cole&ccedil;&atilde;o" );
-		$this->processoAp = "593";
-		$this->addEstilo('localizacaoSistema');
-	}
+    function Formular()
+    {
+        $this->SetTitulo( "{$this->_instituicao} i-Educar - Cole&ccedil;&atilde;o" );
+        $this->processoAp = "593";
+        $this->addEstilo('localizacaoSistema');
+    }
 }
 
 class indice extends clsCadastro
 {
-	/**
-	 * Referencia pega da session para o idpes do usuario atual
-	 *
-	 * @var int
-	 */
-	var $pessoa_logada;
+    /**
+     * Referencia pega da session para o idpes do usuario atual
+     *
+     * @var int
+     */
+    var $pessoa_logada;
 
-	var $cod_acervo_colecao;
-	var $ref_usuario_exc;
-	var $ref_usuario_cad;
-	var $nm_colecao;
-	var $descricao;
-	var $data_cadastro;
-	var $data_exclusao;
-	var $ativo;
-	var $ref_cod_biblioteca;
+    var $cod_acervo_colecao;
+    var $ref_usuario_exc;
+    var $ref_usuario_cad;
+    var $nm_colecao;
+    var $descricao;
+    var $data_cadastro;
+    var $data_exclusao;
+    var $ativo;
+    var $ref_cod_biblioteca;
 
-	function Inicializar()
-	{
-		$retorno = "Novo";
-		@session_start();
-		$this->pessoa_logada = $_SESSION['id_pessoa'];
-		@session_write_close();
+    function Inicializar()
+    {
+        $retorno = "Novo";
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        @session_write_close();
 
-		$this->cod_acervo_colecao=$_GET["cod_acervo_colecao"];
+        $this->cod_acervo_colecao=$_GET["cod_acervo_colecao"];
 
-		$obj_permissoes = new clsPermissoes();
-		$obj_permissoes->permissao_cadastra( 593, $this->pessoa_logada, 11,  "educar_acervo_colecao_lst.php" );
+        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes->permissao_cadastra( 593, $this->pessoa_logada, 11,  "educar_acervo_colecao_lst.php" );
 
-		if( is_numeric( $this->cod_acervo_colecao ) )
-		{
+        if( is_numeric( $this->cod_acervo_colecao ) )
+        {
 
-			$obj = new clsPmieducarAcervoColecao( $this->cod_acervo_colecao );
-			$registro  = $obj->detalhe();
-			if( $registro )
-			{
-				foreach( $registro AS $campo => $val )	// passa todos os valores obtidos no registro para atributos do objeto
-					$this->$campo = $val;
+            $obj = new clsPmieducarAcervoColecao( $this->cod_acervo_colecao );
+            $registro  = $obj->detalhe();
+            if( $registro )
+            {
+                foreach( $registro AS $campo => $val )  // passa todos os valores obtidos no registro para atributos do objeto
+                    $this->$campo = $val;
 
- 			    $obj_obra = new clsPmieducarAcervoColecao($this->cod_acervo_colecao);
-         		$det_obra = $obj_obra->detalhe();
+                $obj_obra = new clsPmieducarAcervoColecao($this->cod_acervo_colecao);
+                $det_obra = $obj_obra->detalhe();
 
-         		$obj_biblioteca = new clsPmieducarBiblioteca($det_obra["ref_cod_biblioteca"]);
-         		$obj_det = $obj_biblioteca->detalhe();
+                $obj_biblioteca = new clsPmieducarBiblioteca($det_obra["ref_cod_biblioteca"]);
+                $obj_det = $obj_biblioteca->detalhe();
 
-         		$this->ref_cod_instituicao = $obj_det["ref_cod_instituicao"];
-         		$this->ref_cod_escola = $obj_det["ref_cod_escola"];
-         		$this->ref_cod_biblioteca = $obj_det["cod_biblioteca"];
+                $this->ref_cod_instituicao = $obj_det["ref_cod_instituicao"];
+                $this->ref_cod_escola = $obj_det["ref_cod_escola"];
+                $this->ref_cod_biblioteca = $obj_det["cod_biblioteca"];
 
-				$obj_permissoes = new clsPermissoes();
-				if( $obj_permissoes->permissao_excluir( 593, $this->pessoa_logada, 11 ) )
-				{
-					$this->fexcluir = true;
-				}
+                $obj_permissoes = new clsPermissoes();
+                if( $obj_permissoes->permissao_excluir( 593, $this->pessoa_logada, 11 ) )
+                {
+                    $this->fexcluir = true;
+                }
 
-				$retorno = "Editar";
-			}
-		}
-		$this->url_cancelar = ($retorno == "Editar") ? "educar_acervo_colecao_det.php?cod_acervo_colecao={$registro["cod_acervo_colecao"]}" : "educar_acervo_colecao_lst.php";
-		$this->nome_url_cancelar = "Cancelar";
+                $retorno = "Editar";
+            }
+        }
+        $this->url_cancelar = ($retorno == "Editar") ? "educar_acervo_colecao_det.php?cod_acervo_colecao={$registro["cod_acervo_colecao"]}" : "educar_acervo_colecao_lst.php";
+        $this->nome_url_cancelar = "Cancelar";
 
     $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
     $localizacao = new LocalizacaoSistema();
@@ -112,134 +112,134 @@ class indice extends clsCadastro
     ));
     $this->enviaLocalizacao($localizacao->montar());
 
-		return $retorno;
-	}
+        return $retorno;
+    }
 
-	function Gerar()
-	{
-		@session_start();
-		$this->pessoa_logada = $_SESSION['id_pessoa'];
-		@session_write_close();
-		// primary keys
-		$this->campoOculto( "cod_acervo_colecao", $this->cod_acervo_colecao );
+    function Gerar()
+    {
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        @session_write_close();
+        // primary keys
+        $this->campoOculto( "cod_acervo_colecao", $this->cod_acervo_colecao );
 
-		// foreign keys
+        // foreign keys
 
-		/*$obj_pessoa_bib = new clsPmieducarBibliotecaUsuario();
-		$lst_pessoa_bib = $obj_pessoa_bib->lista(null, $this->pessoa_logada);
+        /*$obj_pessoa_bib = new clsPmieducarBibliotecaUsuario();
+        $lst_pessoa_bib = $obj_pessoa_bib->lista(null, $this->pessoa_logada);
 
-		$opcoes = array("" => "Selecione");
-		if(is_array($lst_pessoa_bib))
-		{
-			foreach ($lst_pessoa_bib as $bib)
-			{
-				$obj_biblioteca = new clsPmieducarBiblioteca($bib['ref_cod_biblioteca']);
-				$det_biblioteca = $obj_biblioteca->detalhe();
+        $opcoes = array("" => "Selecione");
+        if(is_array($lst_pessoa_bib))
+        {
+            foreach ($lst_pessoa_bib as $bib)
+            {
+                $obj_biblioteca = new clsPmieducarBiblioteca($bib['ref_cod_biblioteca']);
+                $det_biblioteca = $obj_biblioteca->detalhe();
 
-				$opcoes[$det_biblioteca['cod_biblioteca']] = $det_biblioteca['nm_biblioteca'];
-			}
-		}
-		$this->campoLista("ref_cod_biblioteca", "Biblioteca", $opcoes, $this->ref_cod_biblioteca);*/
-		$get_escola     = 1;
-		$escola_obrigatorio = false;
-		$get_biblioteca = 1;
-		$instituicao_obrigatorio = true;
-		$biblioteca_obrigatorio = true;
-		include("include/pmieducar/educar_campo_lista.php");
-
-
-		// text
-		$this->campoTexto( "nm_colecao", "Cole&ccedil;&atilde;o", $this->nm_colecao, 30, 255, true );
-		$this->campoMemo( "descricao", "Descri&ccedil;&atilde;o", $this->descricao, 60, 5, false );
-
-	}
-
-	function Novo()
-	{
-		@session_start();
-		 $this->pessoa_logada = $_SESSION['id_pessoa'];
-		@session_write_close();
-
-		$obj_permissoes = new clsPermissoes();
-		$obj_permissoes->permissao_cadastra( 593, $this->pessoa_logada, 11,  "educar_acervo_colecao_lst.php" );
+                $opcoes[$det_biblioteca['cod_biblioteca']] = $det_biblioteca['nm_biblioteca'];
+            }
+        }
+        $this->campoLista("ref_cod_biblioteca", "Biblioteca", $opcoes, $this->ref_cod_biblioteca);*/
+        $get_escola     = 1;
+        $escola_obrigatorio = false;
+        $get_biblioteca = 1;
+        $instituicao_obrigatorio = true;
+        $biblioteca_obrigatorio = true;
+        include("include/pmieducar/educar_campo_lista.php");
 
 
-		$obj = new clsPmieducarAcervoColecao( $this->cod_acervo_colecao, $this->pessoa_logada, $this->pessoa_logada, $this->nm_colecao, $this->descricao, $this->data_cadastro, $this->data_exclusao, $this->ativo, $this->ref_cod_biblioteca );
-		$this->cod_acervo_colecao = $cadastrou = $obj->cadastra();
-		if( $cadastrou )
-		{
+        // text
+        $this->campoTexto( "nm_colecao", "Cole&ccedil;&atilde;o", $this->nm_colecao, 30, 255, true );
+        $this->campoMemo( "descricao", "Descri&ccedil;&atilde;o", $this->descricao, 60, 5, false );
+
+    }
+
+    function Novo()
+    {
+        @session_start();
+         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        @session_write_close();
+
+        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes->permissao_cadastra( 593, $this->pessoa_logada, 11,  "educar_acervo_colecao_lst.php" );
+
+
+        $obj = new clsPmieducarAcervoColecao( $this->cod_acervo_colecao, $this->pessoa_logada, $this->pessoa_logada, $this->nm_colecao, $this->descricao, $this->data_cadastro, $this->data_exclusao, $this->ativo, $this->ref_cod_biblioteca );
+        $this->cod_acervo_colecao = $cadastrou = $obj->cadastra();
+        if( $cadastrou )
+        {
       $obj->cod_acervo_colecao = $this->cod_acervo_colecao;
       $acervo_colecao = $obj->detalhe();
       $auditoria = new clsModulesAuditoriaGeral("acervo_colecao", $this->pessoa_logada, $this->cod_acervo_colecao);
       $auditoria->inclusao($acervo_colecao);
-			$this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-			header( "Location: educar_acervo_colecao_lst.php" );
-			die();
-			return true;
-		}
+            $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
+            header( "Location: educar_acervo_colecao_lst.php" );
+            die();
+            return true;
+        }
 
-		$this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-		echo "<!--\nErro ao cadastrar clsPmieducarAcervoColecao\nvalores obrigatorios\nis_numeric( $this->ref_usuario_cad ) && is_string( $this->nm_colecao )\n-->";
-		return false;
-	}
+        $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
+        echo "<!--\nErro ao cadastrar clsPmieducarAcervoColecao\nvalores obrigatorios\nis_numeric( $this->ref_usuario_cad ) && is_string( $this->nm_colecao )\n-->";
+        return false;
+    }
 
-	function Editar()
-	{
-		@session_start();
-		 $this->pessoa_logada = $_SESSION['id_pessoa'];
-		@session_write_close();
+    function Editar()
+    {
+        @session_start();
+         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        @session_write_close();
 
-		$obj_permissoes = new clsPermissoes();
-		$obj_permissoes->permissao_cadastra( 593, $this->pessoa_logada, 11,  "educar_acervo_colecao_lst.php" );
+        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes->permissao_cadastra( 593, $this->pessoa_logada, 11,  "educar_acervo_colecao_lst.php" );
 
 
-		$obj = new clsPmieducarAcervoColecao($this->cod_acervo_colecao, $this->pessoa_logada, $this->pessoa_logada, $this->nm_colecao, $this->descricao, $this->data_cadastro, $this->data_exclusao, $this->ativo, $this->ref_cod_biblioteca);
+        $obj = new clsPmieducarAcervoColecao($this->cod_acervo_colecao, $this->pessoa_logada, $this->pessoa_logada, $this->nm_colecao, $this->descricao, $this->data_cadastro, $this->data_exclusao, $this->ativo, $this->ref_cod_biblioteca);
     $detalheAntigo = $obj->detalhe();
-		$editou = $obj->edita();
-		if( $editou )
-		{
+        $editou = $obj->edita();
+        if( $editou )
+        {
       $detalheAtual = $obj->detalhe();
       $auditoria = new clsModulesAuditoriaGeral("acervo_colecao", $this->pessoa_logada, $this->cod_acervo_colecao);
       $auditoria->alteracao($detalheAntigo, $detalheAtual);
-			$this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-			header( "Location: educar_acervo_colecao_lst.php" );
-			die();
-			return true;
-		}
+            $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
+            header( "Location: educar_acervo_colecao_lst.php" );
+            die();
+            return true;
+        }
 
-		$this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-		echo "<!--\nErro ao editar clsPmieducarAcervoColecao\nvalores obrigatorios\nif( is_numeric( $this->cod_acervo_colecao ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
-		return false;
-	}
+        $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
+        echo "<!--\nErro ao editar clsPmieducarAcervoColecao\nvalores obrigatorios\nif( is_numeric( $this->cod_acervo_colecao ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
+        return false;
+    }
 
-	function Excluir()
-	{
-		@session_start();
-		 $this->pessoa_logada = $_SESSION['id_pessoa'];
-		@session_write_close();
+    function Excluir()
+    {
+        @session_start();
+         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        @session_write_close();
 
-		$obj_permissoes = new clsPermissoes();
-		$obj_permissoes->permissao_excluir( 593, $this->pessoa_logada, 11,  "educar_acervo_colecao_lst.php" );
+        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes->permissao_excluir( 593, $this->pessoa_logada, 11,  "educar_acervo_colecao_lst.php" );
 
 
-		$obj = new clsPmieducarAcervoColecao($this->cod_acervo_colecao, $this->pessoa_logada, $this->pessoa_logada, $this->nm_colecao, $this->descricao, $this->data_cadastro, $this->data_exclusao, 0);
+        $obj = new clsPmieducarAcervoColecao($this->cod_acervo_colecao, $this->pessoa_logada, $this->pessoa_logada, $this->nm_colecao, $this->descricao, $this->data_cadastro, $this->data_exclusao, 0);
     $detalhe = $obj->detalhe();
-		$excluiu = $obj->excluir();
-		if( $excluiu )
-		{
+        $excluiu = $obj->excluir();
+        if( $excluiu )
+        {
 
       $auditoria = new clsModulesAuditoriaGeral("acervo_colecao", $this->pessoa_logada, $this->cod_acervo_colecao);
       $auditoria->exclusao($detalhe);
-			$this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-			header( "Location: educar_acervo_colecao_lst.php" );
-			die();
-			return true;
-		}
+            $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
+            header( "Location: educar_acervo_colecao_lst.php" );
+            die();
+            return true;
+        }
 
-		$this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-		echo "<!--\nErro ao excluir clsPmieducarAcervoColecao\nvalores obrigatorios\nif( is_numeric( $this->cod_acervo_colecao ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
-		return false;
-	}
+        $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
+        echo "<!--\nErro ao excluir clsPmieducarAcervoColecao\nvalores obrigatorios\nif( is_numeric( $this->cod_acervo_colecao ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
+        return false;
+    }
 }
 
 // cria uma extensao da classe base

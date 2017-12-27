@@ -35,126 +35,126 @@ require_once 'include/modules/clsModulesPessoaTransporte.inc.php';
 
 class clsIndexBase extends clsBase
 {
-	function Formular()
-	{
-		$this->SetTitulo( "{$this->_instituicao} i-Educar - Usuários de transporte" );
-		$this->processoAp = "21240";
-		$this->addEstilo('localizacaoSistema');
-	}
+    function Formular()
+    {
+        $this->SetTitulo( "{$this->_instituicao} i-Educar - Usuários de transporte" );
+        $this->processoAp = "21240";
+        $this->addEstilo('localizacaoSistema');
+    }
 }
 
 class indice extends clsListagem
 {
 
-	/**
-	 * Referencia pega da session para o idpes do usuario atual
-	 *
-	 * @var int
-	 */
-	var $pessoa_logada;
+    /**
+     * Referencia pega da session para o idpes do usuario atual
+     *
+     * @var int
+     */
+    var $pessoa_logada;
 
-	/**
-	 * Titulo no topo da pagina
-	 *
-	 * @var int
-	 */
-	var $titulo;
+    /**
+     * Titulo no topo da pagina
+     *
+     * @var int
+     */
+    var $titulo;
 
-	/**
-	 * Quantidade de registros a ser apresentada em cada pagina
-	 *
-	 * @var int
-	 */
-	var $limite;
+    /**
+     * Quantidade de registros a ser apresentada em cada pagina
+     *
+     * @var int
+     */
+    var $limite;
 
-	/**
-	 * Inicio dos registros a serem exibidos (limit)
-	 *
-	 * @var int
-	 */
-	var $offset;
+    /**
+     * Inicio dos registros a serem exibidos (limit)
+     *
+     * @var int
+     */
+    var $offset;
 
-	var $cod_pessoa_transporte;
-	var $ref_cod_rota_transporte_escolar;
-	var $nome_pessoa;
-	var $nome_destino;
-	var $ano_rota;
+    var $cod_pessoa_transporte;
+    var $ref_cod_rota_transporte_escolar;
+    var $nome_pessoa;
+    var $nome_destino;
+    var $ano_rota;
 
-	function Gerar()
-	{
+    function Gerar()
+    {
 
-		@session_start();
-			$this->pessoa_logada = $_SESSION['id_pessoa'];
-		session_write_close();
+        @session_start();
+            $this->pessoa_logada = $_SESSION['id_pessoa'];
+        session_write_close();
 
-		$this->titulo = "Usuário de transporte - Listagem";
+        $this->titulo = "Usuário de transporte - Listagem";
 
-		foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
-			$this->$var = ( $val === "" ) ? null: $val;
+        foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
+            $this->$var = ( $val === "" ) ? null: $val;
 
-		$this->campoNumero("cod_pessoa_transporte","C&oacute;digo",$this->cod_pessoa_transporte,20,255,false);
-		$this->campoTexto("nome_pessoa","Nome da pessoa", $this->nome_pessoa,50,255,false);
-		$this->campoTexto("nome_destino","Nome do destino", $this->nome_destino,70,255,false);
+        $this->campoNumero("cod_pessoa_transporte","C&oacute;digo",$this->cod_pessoa_transporte,20,255,false);
+        $this->campoTexto("nome_pessoa","Nome da pessoa", $this->nome_pessoa,50,255,false);
+        $this->campoTexto("nome_destino","Nome do destino", $this->nome_destino,70,255,false);
 
-		$this->campoTexto("ano_rota","Ano", $this->ano_rota,20,4,false);
+        $this->campoTexto("ano_rota","Ano", $this->ano_rota,20,4,false);
 
-		$this->inputsHelper()->dynamic('rotas',  array('required' =>  false));
+        $this->inputsHelper()->dynamic('rotas',  array('required' =>  false));
 
-		$obj_permissoes = new clsPermissoes();
+        $obj_permissoes = new clsPermissoes();
 
-		$nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
+        $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
-		$this->addCabecalhos( array(
-			"C&oacute;digo",
-			"Nome da pessoa",
-			"Rota",
-			"Destino",
-			"Ponto de embarque"
-		) );
+        $this->addCabecalhos( array(
+            "C&oacute;digo",
+            "Nome da pessoa",
+            "Rota",
+            "Destino",
+            "Ponto de embarque"
+        ) );
 
-		// Paginador
-		$this->limite = 20;
-		$this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
+        // Paginador
+        $this->limite = 20;
+        $this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
-		$obj = new clsModulesPessoaTransporte();
-		$obj->setLimite($this->limite,$this->offset);
+        $obj = new clsModulesPessoaTransporte();
+        $obj->setLimite($this->limite,$this->offset);
 
-		$lista = $obj->lista($this->cod_pessoa_transporte, null, $this->ref_cod_rota_transporte_escolar,null, null,$this->nome_pessoa,$this->nome_destino, $this->ano_rota);
+        $lista = $obj->lista($this->cod_pessoa_transporte, null, $this->ref_cod_rota_transporte_escolar,null, null,$this->nome_pessoa,$this->nome_destino, $this->ano_rota);
 
-		$total = $obj->_total;
+        $total = $obj->_total;
 
-		foreach ( $lista AS $registro ) {
+        foreach ( $lista AS $registro ) {
 
-			$this->addLinhas( array(
-				"<a href=\"transporte_pessoa_det.php?cod_pt={$registro["cod_pessoa_transporte"]}\">{$registro["cod_pessoa_transporte"]}</a>",
-				"<a href=\"transporte_pessoa_det.php?cod_pt={$registro["cod_pessoa_transporte"]}\">{$registro["nome_pessoa"]}</a>",
-				"<a href=\"transporte_pessoa_det.php?cod_pt={$registro["cod_pessoa_transporte"]}\">{$registro["nome_rota"]}</a>",
-				"<a href=\"transporte_pessoa_det.php?cod_pt={$registro["cod_pessoa_transporte"]}\">".(trim($registro["nome_destino"])=='' ? $registro["nome_destino2"] : $registro["nome_destino"])."</a>",
-				"<a href=\"transporte_pessoa_det.php?cod_pt={$registro["cod_pessoa_transporte"]}\">{$registro["nome_ponto"]}</a>"
-			) );
-		}
+            $this->addLinhas( array(
+                "<a href=\"transporte_pessoa_det.php?cod_pt={$registro["cod_pessoa_transporte"]}\">{$registro["cod_pessoa_transporte"]}</a>",
+                "<a href=\"transporte_pessoa_det.php?cod_pt={$registro["cod_pessoa_transporte"]}\">{$registro["nome_pessoa"]}</a>",
+                "<a href=\"transporte_pessoa_det.php?cod_pt={$registro["cod_pessoa_transporte"]}\">{$registro["nome_rota"]}</a>",
+                "<a href=\"transporte_pessoa_det.php?cod_pt={$registro["cod_pessoa_transporte"]}\">".(trim($registro["nome_destino"])=='' ? $registro["nome_destino2"] : $registro["nome_destino"])."</a>",
+                "<a href=\"transporte_pessoa_det.php?cod_pt={$registro["cod_pessoa_transporte"]}\">{$registro["nome_ponto"]}</a>"
+            ) );
+        }
 
-		$this->addPaginador2( "transporte_pessoa_lst.php", $total, $_GET, $this->nome, $this->limite );
+        $this->addPaginador2( "transporte_pessoa_lst.php", $total, $_GET, $this->nome, $this->limite );
 
-		//**
-		$this->largura = "100%";
+        //**
+        $this->largura = "100%";
 
-		$obj_permissao = new clsPermissoes();
+        $obj_permissao = new clsPermissoes();
 
-	    if($obj_permissao->permissao_cadastra(21240, $this->pessoa_logada,7,null,true))
-	    {
-	    	$this->acao = "go(\"../module/TransporteEscolar/Pessoatransporte\")";
-			$this->nome_acao = "Novo";
-	    }
+        if($obj_permissao->permissao_cadastra(21240, $this->pessoa_logada,7,null,true))
+        {
+            $this->acao = "go(\"../module/TransporteEscolar/Pessoatransporte\")";
+            $this->nome_acao = "Novo";
+        }
 
-	    $localizacao = new LocalizacaoSistema();
-	    $localizacao->entradaCaminhos( array(
-	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-	         "educar_transporte_escolar_index.php"                  => "Transporte escolar",
-	         ""                                  => "Listagem de usu&aacute;rios de tranposrte"
-	    ));
-	    $this->enviaLocalizacao($localizacao->montar());
-	}
+        $localizacao = new LocalizacaoSistema();
+        $localizacao->entradaCaminhos( array(
+             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+             "educar_transporte_escolar_index.php"                  => "Transporte escolar",
+             ""                                  => "Listagem de usu&aacute;rios de tranposrte"
+        ));
+        $this->enviaLocalizacao($localizacao->montar());
+    }
 }
 // cria uma extensao da classe base
 $pagina = new clsIndexBase();

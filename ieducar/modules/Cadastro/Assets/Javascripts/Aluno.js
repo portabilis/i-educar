@@ -385,7 +385,7 @@ resourceOptions.handleGet = function(dataResponse) {
 
   $j.each(dataResponse.projetos, function(i, object){
     if(i > 0)
-      $j('#btn_add_tab_add_1').click();
+      $j('#btn_add_tab_add_2').click();
 
     $j('#projeto_cod_projeto\\['+i+'\\]').val(object.projeto_cod_projeto);
     $j('#projeto_data_inclusao\\['+i+'\\]').val(object.projeto_data_inclusao);
@@ -2181,7 +2181,7 @@ function setAutoComplete() {
 
 setAutoComplete();
 
-var $addProjetoButton = $j('#btn_add_tab_add_1');
+var $addProjetoButton = $j('#btn_add_tab_add_2');
 
 $addProjetoButton.click(function(){
   setAutoComplete();
