@@ -43,12 +43,12 @@ class Portabilis_Currency_Utils {
   
   //converte um valor numérico de moeda brasileira (ex: 2,32) para estrangeira (2.32)
   public static function moedaBrToUs($valor) {
-  	return str_replace(',', '.', (str_replace('.', '', $valor)));
+    return str_replace(',', '.', (str_replace('.', '', $valor)));
   }
 
   //converte um valor numérico de moeda estrangeira (ex: 2.32) para brasileira (2,32)
   public static function moedaUsToBr($valor){
-  	return str_replace('.', ',', $valor);
+    return str_replace('.', ',', $valor);
   }
 
 }

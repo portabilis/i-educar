@@ -83,12 +83,12 @@ class clsPmieducarMotivoAfastamento {
    */
   public $_limite_quantidade;
 
-	/**
-	 * Define o valor de offset no retorno dos registros no metodo lista
-	 *
-	 * @var int
-	 */
-	public $_limite_offset;
+    /**
+     * Define o valor de offset no retorno dos registros no metodo lista
+     *
+     * @var int
+     */
+    public $_limite_offset;
 
   /**
    * Define o campo padrao para ser usado como padrao de ordenacao no metodo lista
@@ -208,57 +208,57 @@ class clsPmieducarMotivoAfastamento {
 
 
 
-	/**
-	 * Cria um novo registro
-	 *
-	 * @return bool
-	 */
-	function cadastra()
-	{
-		if( is_numeric( $this->ref_usuario_cad ) && is_string( $this->nm_motivo ) && is_numeric( $this->ref_cod_instituicao ) )
-		{
-			$db = new clsBanco();
+    /**
+     * Cria um novo registro
+     *
+     * @return bool
+     */
+    function cadastra()
+    {
+        if( is_numeric( $this->ref_usuario_cad ) && is_string( $this->nm_motivo ) && is_numeric( $this->ref_cod_instituicao ) )
+        {
+            $db = new clsBanco();
 
-			$campos = "";
-			$valores = "";
-			$gruda = "";
+            $campos = "";
+            $valores = "";
+            $gruda = "";
 
-			if( is_numeric( $this->ref_usuario_cad ) )
-			{
-				$campos .= "{$gruda}ref_usuario_cad";
-				$valores .= "{$gruda}'{$this->ref_usuario_cad}'";
-				$gruda = ", ";
-			}
-			if( is_string( $this->nm_motivo ) )
-			{
-				$campos .= "{$gruda}nm_motivo";
-				$valores .= "{$gruda}'{$this->nm_motivo}'";
-				$gruda = ", ";
-			}
-			if( is_string( $this->descricao ) )
-			{
-				$campos .= "{$gruda}descricao";
-				$valores .= "{$gruda}'{$this->descricao}'";
-				$gruda = ", ";
-			}
-			$campos .= "{$gruda}data_cadastro";
-			$valores .= "{$gruda}NOW()";
-			$gruda = ", ";
-			$campos .= "{$gruda}ativo";
-			$valores .= "{$gruda}'1'";
-			$gruda = ", ";
-			if( is_numeric( $this->ref_cod_instituicao ) )
-			{
-				$campos .= "{$gruda}ref_cod_instituicao";
-				$valores .= "{$gruda}'{$this->ref_cod_instituicao}'";
-				$gruda = ", ";
-			}
+            if( is_numeric( $this->ref_usuario_cad ) )
+            {
+                $campos .= "{$gruda}ref_usuario_cad";
+                $valores .= "{$gruda}'{$this->ref_usuario_cad}'";
+                $gruda = ", ";
+            }
+            if( is_string( $this->nm_motivo ) )
+            {
+                $campos .= "{$gruda}nm_motivo";
+                $valores .= "{$gruda}'{$this->nm_motivo}'";
+                $gruda = ", ";
+            }
+            if( is_string( $this->descricao ) )
+            {
+                $campos .= "{$gruda}descricao";
+                $valores .= "{$gruda}'{$this->descricao}'";
+                $gruda = ", ";
+            }
+            $campos .= "{$gruda}data_cadastro";
+            $valores .= "{$gruda}NOW()";
+            $gruda = ", ";
+            $campos .= "{$gruda}ativo";
+            $valores .= "{$gruda}'1'";
+            $gruda = ", ";
+            if( is_numeric( $this->ref_cod_instituicao ) )
+            {
+                $campos .= "{$gruda}ref_cod_instituicao";
+                $valores .= "{$gruda}'{$this->ref_cod_instituicao}'";
+                $gruda = ", ";
+            }
 
-			$db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
-			return $db->InsertId( "{$this->_tabela}_cod_motivo_afastamento_seq");
-		}
-		return false;
-	}
+            $db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
+            return $db->InsertId( "{$this->_tabela}_cod_motivo_afastamento_seq");
+        }
+        return false;
+    }
 
 
 
@@ -328,150 +328,150 @@ class clsPmieducarMotivoAfastamento {
     return FALSE;
   }
 
-	/**
-	 * Retorna uma lista filtrados de acordo com os parametros
-	 *
-	 * @return array
-	 */
-	function lista( $int_cod_motivo_afastamento = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_nm_motivo = null, $str_descricao = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_instituicao = null )
-	{
-		$sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
-		$filtros = "";
+    /**
+     * Retorna uma lista filtrados de acordo com os parametros
+     *
+     * @return array
+     */
+    function lista( $int_cod_motivo_afastamento = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_nm_motivo = null, $str_descricao = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_instituicao = null )
+    {
+        $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
+        $filtros = "";
 
-		$whereAnd = " WHERE ";
+        $whereAnd = " WHERE ";
 
-		if( is_numeric( $int_cod_motivo_afastamento ) )
-		{
-			$filtros .= "{$whereAnd} cod_motivo_afastamento = '{$int_cod_motivo_afastamento}'";
-			$whereAnd = " AND ";
-		}
-		if( is_numeric( $int_ref_usuario_exc ) )
-		{
-			$filtros .= "{$whereAnd} ref_usuario_exc = '{$int_ref_usuario_exc}'";
-			$whereAnd = " AND ";
-		}
-		if( is_numeric( $int_ref_usuario_cad ) )
-		{
-			$filtros .= "{$whereAnd} ref_usuario_cad = '{$int_ref_usuario_cad}'";
-			$whereAnd = " AND ";
-		}
-		if( is_string( $str_nm_motivo ) )
-		{
-			$filtros .= "{$whereAnd} nm_motivo LIKE '%{$str_nm_motivo}%'";
-			$whereAnd = " AND ";
-		}
-		if( is_string( $str_descricao ) )
-		{
-			$filtros .= "{$whereAnd} descricao LIKE '%{$str_descricao}%'";
-			$whereAnd = " AND ";
-		}
-		if( is_string( $date_data_cadastro_ini ) )
-		{
-			$filtros .= "{$whereAnd} data_cadastro >= '{$date_data_cadastro_ini}'";
-			$whereAnd = " AND ";
-		}
-		if( is_string( $date_data_cadastro_fim ) )
-		{
-			$filtros .= "{$whereAnd} data_cadastro <= '{$date_data_cadastro_fim}'";
-			$whereAnd = " AND ";
-		}
-		if( is_string( $date_data_exclusao_ini ) )
-		{
-			$filtros .= "{$whereAnd} data_exclusao >= '{$date_data_exclusao_ini}'";
-			$whereAnd = " AND ";
-		}
-		if( is_string( $date_data_exclusao_fim ) )
-		{
-			$filtros .= "{$whereAnd} data_exclusao <= '{$date_data_exclusao_fim}'";
-			$whereAnd = " AND ";
-		}
-		if( is_null( $int_ativo ) || $int_ativo )
-		{
-			$filtros .= "{$whereAnd} ativo = '1'";
-			$whereAnd = " AND ";
-		}
-		else
-		{
-			$filtros .= "{$whereAnd} ativo = '0'";
-			$whereAnd = " AND ";
-		}
-		if( is_numeric( $int_ref_cod_instituicao ) )
-		{
-			$filtros .= "{$whereAnd} ref_cod_instituicao = '{$int_ref_cod_instituicao}'";
-			$whereAnd = " AND ";
-		}
+        if( is_numeric( $int_cod_motivo_afastamento ) )
+        {
+            $filtros .= "{$whereAnd} cod_motivo_afastamento = '{$int_cod_motivo_afastamento}'";
+            $whereAnd = " AND ";
+        }
+        if( is_numeric( $int_ref_usuario_exc ) )
+        {
+            $filtros .= "{$whereAnd} ref_usuario_exc = '{$int_ref_usuario_exc}'";
+            $whereAnd = " AND ";
+        }
+        if( is_numeric( $int_ref_usuario_cad ) )
+        {
+            $filtros .= "{$whereAnd} ref_usuario_cad = '{$int_ref_usuario_cad}'";
+            $whereAnd = " AND ";
+        }
+        if( is_string( $str_nm_motivo ) )
+        {
+            $filtros .= "{$whereAnd} nm_motivo LIKE '%{$str_nm_motivo}%'";
+            $whereAnd = " AND ";
+        }
+        if( is_string( $str_descricao ) )
+        {
+            $filtros .= "{$whereAnd} descricao LIKE '%{$str_descricao}%'";
+            $whereAnd = " AND ";
+        }
+        if( is_string( $date_data_cadastro_ini ) )
+        {
+            $filtros .= "{$whereAnd} data_cadastro >= '{$date_data_cadastro_ini}'";
+            $whereAnd = " AND ";
+        }
+        if( is_string( $date_data_cadastro_fim ) )
+        {
+            $filtros .= "{$whereAnd} data_cadastro <= '{$date_data_cadastro_fim}'";
+            $whereAnd = " AND ";
+        }
+        if( is_string( $date_data_exclusao_ini ) )
+        {
+            $filtros .= "{$whereAnd} data_exclusao >= '{$date_data_exclusao_ini}'";
+            $whereAnd = " AND ";
+        }
+        if( is_string( $date_data_exclusao_fim ) )
+        {
+            $filtros .= "{$whereAnd} data_exclusao <= '{$date_data_exclusao_fim}'";
+            $whereAnd = " AND ";
+        }
+        if( is_null( $int_ativo ) || $int_ativo )
+        {
+            $filtros .= "{$whereAnd} ativo = '1'";
+            $whereAnd = " AND ";
+        }
+        else
+        {
+            $filtros .= "{$whereAnd} ativo = '0'";
+            $whereAnd = " AND ";
+        }
+        if( is_numeric( $int_ref_cod_instituicao ) )
+        {
+            $filtros .= "{$whereAnd} ref_cod_instituicao = '{$int_ref_cod_instituicao}'";
+            $whereAnd = " AND ";
+        }
 
 
-		$db = new clsBanco();
-		$countCampos = count( explode( ",", $this->_campos_lista ) );
-		$resultado = array();
+        $db = new clsBanco();
+        $countCampos = count( explode( ",", $this->_campos_lista ) );
+        $resultado = array();
 
-		$sql .= $filtros . $this->getOrderby() . $this->getLimite();
+        $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
-		$this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} {$filtros}" );
+        $this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} {$filtros}" );
 
-		$db->Consulta( $sql );
+        $db->Consulta( $sql );
 
-		if( $countCampos > 1 )
-		{
-			while ( $db->ProximoRegistro() )
-			{
-				$tupla = $db->Tupla();
+        if( $countCampos > 1 )
+        {
+            while ( $db->ProximoRegistro() )
+            {
+                $tupla = $db->Tupla();
 
-				$tupla["_total"] = $this->_total;
-				$resultado[] = $tupla;
-			}
-		}
-		else
-		{
-			while ( $db->ProximoRegistro() )
-			{
-				$tupla = $db->Tupla();
-				$resultado[] = $tupla[$this->_campos_lista];
-			}
-		}
-		if( count( $resultado ) )
-		{
-			return $resultado;
-		}
-		return false;
-	}
+                $tupla["_total"] = $this->_total;
+                $resultado[] = $tupla;
+            }
+        }
+        else
+        {
+            while ( $db->ProximoRegistro() )
+            {
+                $tupla = $db->Tupla();
+                $resultado[] = $tupla[$this->_campos_lista];
+            }
+        }
+        if( count( $resultado ) )
+        {
+            return $resultado;
+        }
+        return false;
+    }
 
-	/**
-	 * Retorna um array com os dados de um registro
-	 *
-	 * @return array
-	 */
-	function detalhe()
-	{
-		if( is_numeric( $this->cod_motivo_afastamento ) )
-		{
+    /**
+     * Retorna um array com os dados de um registro
+     *
+     * @return array
+     */
+    function detalhe()
+    {
+        if( is_numeric( $this->cod_motivo_afastamento ) )
+        {
 
-		$db = new clsBanco();
-		$db->Consulta( "SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE cod_motivo_afastamento = '{$this->cod_motivo_afastamento}'" );
-		$db->ProximoRegistro();
-		return $db->Tupla();
-		}
-		return false;
-	}
+        $db = new clsBanco();
+        $db->Consulta( "SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE cod_motivo_afastamento = '{$this->cod_motivo_afastamento}'" );
+        $db->ProximoRegistro();
+        return $db->Tupla();
+        }
+        return false;
+    }
 
-	/**
-	 * Retorna um array com os dados de um registro
-	 *
-	 * @return array
-	 */
-	function existe()
-	{
-		if( is_numeric( $this->cod_motivo_afastamento ) )
-		{
+    /**
+     * Retorna um array com os dados de um registro
+     *
+     * @return array
+     */
+    function existe()
+    {
+        if( is_numeric( $this->cod_motivo_afastamento ) )
+        {
 
-		$db = new clsBanco();
-		$db->Consulta( "SELECT 1 FROM {$this->_tabela} WHERE cod_motivo_afastamento = '{$this->cod_motivo_afastamento}'" );
-		$db->ProximoRegistro();
-		return $db->Tupla();
-		}
-		return false;
-	}
+        $db = new clsBanco();
+        $db->Consulta( "SELECT 1 FROM {$this->_tabela} WHERE cod_motivo_afastamento = '{$this->cod_motivo_afastamento}'" );
+        $db->ProximoRegistro();
+        return $db->Tupla();
+        }
+        return false;
+    }
 
 
 
@@ -497,84 +497,84 @@ class clsPmieducarMotivoAfastamento {
 
 
 
-	/**
-	 * Define quais campos da tabela serao selecionados na invocacao do metodo lista
-	 *
-	 * @return null
-	 */
-	function setCamposLista( $str_campos )
-	{
-		$this->_campos_lista = $str_campos;
-	}
+    /**
+     * Define quais campos da tabela serao selecionados na invocacao do metodo lista
+     *
+     * @return null
+     */
+    function setCamposLista( $str_campos )
+    {
+        $this->_campos_lista = $str_campos;
+    }
 
-	/**
-	 * Define que o metodo Lista devera retornoar todos os campos da tabela
-	 *
-	 * @return null
-	 */
-	function resetCamposLista()
-	{
-		$this->_campos_lista = $this->_todos_campos;
-	}
+    /**
+     * Define que o metodo Lista devera retornoar todos os campos da tabela
+     *
+     * @return null
+     */
+    function resetCamposLista()
+    {
+        $this->_campos_lista = $this->_todos_campos;
+    }
 
-	/**
-	 * Define limites de retorno para o metodo lista
-	 *
-	 * @return null
-	 */
-	function setLimite( $intLimiteQtd, $intLimiteOffset = null )
-	{
-		$this->_limite_quantidade = $intLimiteQtd;
-		$this->_limite_offset = $intLimiteOffset;
-	}
+    /**
+     * Define limites de retorno para o metodo lista
+     *
+     * @return null
+     */
+    function setLimite( $intLimiteQtd, $intLimiteOffset = null )
+    {
+        $this->_limite_quantidade = $intLimiteQtd;
+        $this->_limite_offset = $intLimiteOffset;
+    }
 
-	/**
-	 * Retorna a string com o trecho da query resposavel pelo Limite de registros
-	 *
-	 * @return string
-	 */
-	function getLimite()
-	{
-		if( is_numeric( $this->_limite_quantidade ) )
-		{
-			$retorno = " LIMIT {$this->_limite_quantidade}";
-			if( is_numeric( $this->_limite_offset ) )
-			{
-				$retorno .= " OFFSET {$this->_limite_offset} ";
-			}
-			return $retorno;
-		}
-		return "";
-	}
+    /**
+     * Retorna a string com o trecho da query resposavel pelo Limite de registros
+     *
+     * @return string
+     */
+    function getLimite()
+    {
+        if( is_numeric( $this->_limite_quantidade ) )
+        {
+            $retorno = " LIMIT {$this->_limite_quantidade}";
+            if( is_numeric( $this->_limite_offset ) )
+            {
+                $retorno .= " OFFSET {$this->_limite_offset} ";
+            }
+            return $retorno;
+        }
+        return "";
+    }
 
-	/**
-	 * Define campo para ser utilizado como ordenacao no metolo lista
-	 *
-	 * @return null
-	 */
-	function setOrderby( $strNomeCampo )
-	{
-		// limpa a string de possiveis erros (delete, insert, etc)
-		//$strNomeCampo = eregi_replace();
+    /**
+     * Define campo para ser utilizado como ordenacao no metolo lista
+     *
+     * @return null
+     */
+    function setOrderby( $strNomeCampo )
+    {
+        // limpa a string de possiveis erros (delete, insert, etc)
+        //$strNomeCampo = eregi_replace();
 
-		if( is_string( $strNomeCampo ) && $strNomeCampo )
-		{
-			$this->_campo_order_by = $strNomeCampo;
-		}
-	}
+        if( is_string( $strNomeCampo ) && $strNomeCampo )
+        {
+            $this->_campo_order_by = $strNomeCampo;
+        }
+    }
 
-	/**
-	 * Retorna a string com o trecho da query resposavel pela Ordenacao dos registros
-	 *
-	 * @return string
-	 */
-	function getOrderby()
-	{
-		if( is_string( $this->_campo_order_by ) )
-		{
-			return " ORDER BY {$this->_campo_order_by} ";
-		}
-		return "";
-	}
+    /**
+     * Retorna a string com o trecho da query resposavel pela Ordenacao dos registros
+     *
+     * @return string
+     */
+    function getOrderby()
+    {
+        if( is_string( $this->_campo_order_by ) )
+        {
+            return " ORDER BY {$this->_campo_order_by} ";
+        }
+        return "";
+    }
 
 }

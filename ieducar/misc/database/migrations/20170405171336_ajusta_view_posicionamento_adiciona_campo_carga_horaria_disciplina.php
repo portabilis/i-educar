@@ -3,8 +3,8 @@
 use Phinx\Migration\AbstractMigration;
 
 class AjustaViewPosicionamentoAdicionaCampoCargaHorariaDisciplina extends AbstractMigration {
-	public function up() {
-		$this->execute("DROP VIEW relatorio.view_dados_historico_posicionamento;
+    public function up() {
+        $this->execute("DROP VIEW relatorio.view_dados_historico_posicionamento;
         CREATE OR REPLACE VIEW relatorio.view_dados_historico_posicionamento AS
             SELECT he.ref_cod_aluno,
        fcn_upper(hd.nm_disciplina) AS nm_disciplina,
@@ -634,5 +634,5 @@ GROUP BY he.ref_cod_aluno,
          he8.aprovado,
          he9.aprovado;
 ");
-	}
+    }
 }

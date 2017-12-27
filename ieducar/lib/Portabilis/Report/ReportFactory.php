@@ -45,10 +45,10 @@ class Portabilis_Report_ReportFactory
 {
 
   function __construct() {
-		$this->config   = $GLOBALS['coreExt']['Config'];
-		$this->settings = array();
+        $this->config   = $GLOBALS['coreExt']['Config'];
+        $this->settings = array();
 
-		$this->setSettings($this->config);
+        $this->setSettings($this->config);
   }
 
   // wrapper for Portabilis_Array_Utils::merge
@@ -56,9 +56,9 @@ class Portabilis_Report_ReportFactory
     return Portabilis_Array_Utils::merge($options, $defaultOptions);
   }
 
-	function setSettings($config) {
+    function setSettings($config) {
     throw new Exception("The method 'setSettings' from class Portabilis_Report_ReportFactory must be overridden!");
-	}
+    }
 
   function dumps($report, $options = array()) {
     throw new Exception("The method 'dumps' from class Portabilis_Report_ReportFactory must be overridden!");

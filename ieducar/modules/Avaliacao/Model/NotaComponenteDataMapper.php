@@ -54,7 +54,7 @@ class Avaliacao_Model_NotaComponenteDataMapper extends CoreExt_DataMapper
     'componenteCurricular'      => 'componente_curricular_id',
     'notaArredondada'           => 'nota_arredondada',
     'notaRecuperacaoParalela'   => 'nota_recuperacao',
-    'notaRecuperacaoEspecifica'	=> 'nota_recuperacao_especifica',
-    'notaOriginal'		          => 'nota_original'
+    'notaRecuperacaoEspecifica' => 'nota_recuperacao_especifica',
+    'notaOriginal'                => 'nota_original'
   );
 }

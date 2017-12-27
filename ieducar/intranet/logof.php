@@ -6,8 +6,8 @@
  * @updated 29/03/2007
  * Pacote: i-PLB Software Público Livre e Brasileiro
  *
- * Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí
- *					ctima@itajai.sc.gov.br
+ * Copyright (C) 2006   PMI - Prefeitura Municipal de Itajaí
+ *                  ctima@itajai.sc.gov.br
  *
  * Este  programa  é  software livre, você pode redistribuí-lo e/ou
  * modificá-lo sob os termos da Licença Pública Geral GNU, conforme

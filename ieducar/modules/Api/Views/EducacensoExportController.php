@@ -268,7 +268,7 @@ class EducacensoExportController extends ApiCoreController
 
   protected function exportaDadosRegistro00($escolaId, $ano){
     $sql =
-    	' SELECT
+        ' SELECT
         \'00\' as r00s1,
         ece.cod_escola_inep as r00s2,
 
@@ -411,7 +411,7 @@ class EducacensoExportController extends ApiCoreController
 
   protected function exportaDadosRegistro10($escolaId){
     $sql =
-    	'SELECT
+        'SELECT
       \'10\' as r10s1,
       ece.cod_escola_inep as r10s2,
 
@@ -625,7 +625,7 @@ class EducacensoExportController extends ApiCoreController
 
   protected function exportaDadosRegistro20($escolaId, $turmaId, $data_ini, $data_fim){
     $sql =
-    	' SELECT
+        ' SELECT
         \'20\' as r20s1,
         ece.cod_escola_inep as r20s2,
         t.cod_turma as r20s4,
@@ -742,10 +742,10 @@ class EducacensoExportController extends ApiCoreController
         $r20s19 = NULL;
 
       $coddigoEducacensoToSeq =
-      			 array( 1 => '40', 2 => '41', 3 => '42', 4 => '43', 5 => '44', 6 => '45', 7 => '46',
-      			 			  8 => '47', 30 => '48', 9 => '49', 10 => '50', 11 => '51', 12 => '52', 13 => '53',
-      			 			  14 => '54', 28 => '55', 29 => '56', 16 => '57', 17 => '58', 20 => '59', 21 => '60',
-      			 			  23 => '61', 25 => '62', 26 => '63', 27 => '64', 99 => '65');
+                 array( 1 => '40', 2 => '41', 3 => '42', 4 => '43', 5 => '44', 6 => '45', 7 => '46',
+                              8 => '47', 30 => '48', 9 => '49', 10 => '50', 11 => '51', 12 => '52', 13 => '53',
+                              14 => '54', 28 => '55', 29 => '56', 16 => '57', 17 => '58', 20 => '59', 21 => '60',
+                              23 => '61', 25 => '62', 26 => '63', 27 => '64', 99 => '65');
       try{
         $componentesTurma = App_Model_IedFinder::getComponentesTurma($serieid, $escolaId, $turmaId);
       }catch(Exception $e){
@@ -789,8 +789,8 @@ class EducacensoExportController extends ApiCoreController
                 continue;
               }
             }
-          	${ 'r20s'. $coddigoEducacensoToSeq[$codigoEducacenso]} = ($professorVinculado ? 1 : 2);
-        	}
+            ${ 'r20s'. $coddigoEducacensoToSeq[$codigoEducacenso]} = ($professorVinculado ? 1 : 2);
+            }
         }
 
       }
@@ -834,7 +834,7 @@ class EducacensoExportController extends ApiCoreController
 
   protected function exportaDadosRegistro30($servidorId, $escolaId){
     $sql =
-    	' SELECT
+        ' SELECT
         \'30\' as r30s1,
         ece.cod_escola_inep as r30s2,
         ecd.cod_docente_inep as r30s3,
@@ -948,43 +948,43 @@ class EducacensoExportController extends ApiCoreController
     $sql =
     'SELECT
 
-		\'40\' as r40s1,
-		ece.cod_escola_inep as r40s2,
+        \'40\' as r40s1,
+        ece.cod_escola_inep as r40s2,
     ecd.cod_docente_inep as r40s3,
-		s.cod_servidor as r40s4,
-		fis.cpf as r40s5,
-		b.zona_localizacao as r40s6,
-		ep.cep as r40s7,
-		l.idtlog || l.nome as r40s8,
+        s.cod_servidor as r40s4,
+        fis.cpf as r40s5,
+        b.zona_localizacao as r40s6,
+        ep.cep as r40s7,
+        l.idtlog || l.nome as r40s8,
     ep.numero as r40s9,
-		ep.complemento as r40s10,
-		b.nome as r40s11,
-		uf.cod_ibge as r40s12,
-		m.cod_ibge as r40s13
+        ep.complemento as r40s10,
+        b.nome as r40s11,
+        uf.cod_ibge as r40s12,
+        m.cod_ibge as r40s13
 
-		FROM 	pmieducar.servidor s
-		INNER JOIN cadastro.fisica fis ON (fis.idpes = s.cod_servidor)
-		INNER JOIN cadastro.pessoa p ON (fis.idpes = p.idpes)
+        FROM    pmieducar.servidor s
+        INNER JOIN cadastro.fisica fis ON (fis.idpes = s.cod_servidor)
+        INNER JOIN cadastro.pessoa p ON (fis.idpes = p.idpes)
     INNER JOIN modules.professor_turma pt ON (pt.servidor_id = s.cod_servidor)
     INNER JOIN pmieducar.turma t ON (t.cod_turma = pt.turma_id)
     INNER JOIN pmieducar.escola e ON (e.cod_escola = t.ref_ref_cod_escola)
-		INNER JOIN modules.educacenso_cod_escola ece ON (ece.cod_escola = e.cod_escola)
-		 LEFT JOIN cadastro.endereco_pessoa ep ON (ep.idpes = p.idpes)
-		 LEFT JOIN urbano.cep_logradouro_bairro clb ON (clb.idbai = ep.idbai AND clb.idlog = ep.idlog AND clb.cep = ep.cep)
-		 LEFT JOIN public.bairro b ON (clb.idbai = b.idbai)
-		 LEFT JOIN urbano.cep_logradouro cl ON (cl.idlog = clb.idlog AND clb.cep = cl.cep)
-		 LEFT JOIN public.distrito d ON (d.iddis = b.iddis)
-		 LEFT JOIN public.municipio m ON (d.idmun = m.idmun)
-		 LEFT JOIN public.uf ON (uf.sigla_uf = m.sigla_uf)
-		 LEFT JOIN public.pais ON (pais.idpais = uf.idpais)
-		 LEFT JOIN public.logradouro l ON (l.idlog = cl.idlog)
+        INNER JOIN modules.educacenso_cod_escola ece ON (ece.cod_escola = e.cod_escola)
+         LEFT JOIN cadastro.endereco_pessoa ep ON (ep.idpes = p.idpes)
+         LEFT JOIN urbano.cep_logradouro_bairro clb ON (clb.idbai = ep.idbai AND clb.idlog = ep.idlog AND clb.cep = ep.cep)
+         LEFT JOIN public.bairro b ON (clb.idbai = b.idbai)
+         LEFT JOIN urbano.cep_logradouro cl ON (cl.idlog = clb.idlog AND clb.cep = cl.cep)
+         LEFT JOIN public.distrito d ON (d.iddis = b.iddis)
+         LEFT JOIN public.municipio m ON (d.idmun = m.idmun)
+         LEFT JOIN public.uf ON (uf.sigla_uf = m.sigla_uf)
+         LEFT JOIN public.pais ON (pais.idpais = uf.idpais)
+         LEFT JOIN public.logradouro l ON (l.idlog = cl.idlog)
      LEFT JOIN modules.educacenso_cod_docente ecd ON ecd.cod_servidor = s.cod_servidor
-		WHERE s.cod_servidor = $1
+        WHERE s.cod_servidor = $1
       AND COALESCE(t.nao_informar_educacenso, 0) = 0
       AND e.cod_escola = $2
       AND t.ativo = 1
       AND t.visivel = TRUE
-		LIMIT 1
+        LIMIT 1
     ';
 
     // Transforma todos resultados em variáveis
@@ -1012,76 +1012,76 @@ class EducacensoExportController extends ApiCoreController
 
   protected function exportaDadosRegistro50($servidorId, $escolaId){
 
-  	$sql =
-  	'SELECT
+    $sql =
+    'SELECT
 
-		\'50\' as r50s1,
-		ece.cod_escola_inep as r50s2,
+        \'50\' as r50s1,
+        ece.cod_escola_inep as r50s2,
     ecd.cod_docente_inep as r50s3,
-		s.cod_servidor as r50s4,
-		esc.escolaridade as r50s5,
-		situacao_curso_superior_1 as r50s6,
-		formacao_complementacao_pedagogica_1 as r50s7,
+        s.cod_servidor as r50s4,
+        esc.escolaridade as r50s5,
+        situacao_curso_superior_1 as r50s6,
+        formacao_complementacao_pedagogica_1 as r50s7,
     (SELECT curso_id FROM modules.educacenso_curso_superior ecs WHERE ecs.id = codigo_curso_superior_1) as r50s8,
-		(SELECT grau_academico FROM modules.educacenso_curso_superior ecs WHERE ecs.id = codigo_curso_superior_1) as grau_academico_curso_superior_1,
-		ano_inicio_curso_superior_1 as r50s9,
-		ano_conclusao_curso_superior_1 as r50s10,
-		-- tipo_instituicao_curso_superior_1 as r50s11,
-		(SELECT ies_id FROM modules.educacenso_ies ei WHERE ei.id = instituicao_curso_superior_1) as r50s11,
-		situacao_curso_superior_2 as r50s12,
-		formacao_complementacao_pedagogica_2 as r50s13,
+        (SELECT grau_academico FROM modules.educacenso_curso_superior ecs WHERE ecs.id = codigo_curso_superior_1) as grau_academico_curso_superior_1,
+        ano_inicio_curso_superior_1 as r50s9,
+        ano_conclusao_curso_superior_1 as r50s10,
+        -- tipo_instituicao_curso_superior_1 as r50s11,
+        (SELECT ies_id FROM modules.educacenso_ies ei WHERE ei.id = instituicao_curso_superior_1) as r50s11,
+        situacao_curso_superior_2 as r50s12,
+        formacao_complementacao_pedagogica_2 as r50s13,
     (SELECT curso_id FROM modules.educacenso_curso_superior ecs WHERE ecs.id = codigo_curso_superior_2) as r50s14,
     (SELECT grau_academico FROM modules.educacenso_curso_superior ecs WHERE ecs.id = codigo_curso_superior_2) as grau_academico_curso_superior_2,
-		ano_inicio_curso_superior_2 as r50s15,
-		ano_conclusao_curso_superior_2 as r50s16,
-		-- tipo_instituicao_curso_superior_2 as r50s18,
-		(SELECT ies_id FROM modules.educacenso_ies ei WHERE ei.id = instituicao_curso_superior_2) as r50s17,
-		situacao_curso_superior_3 as r50s18,
-		formacao_complementacao_pedagogica_3 as r50s19,
-		(SELECT curso_id FROM modules.educacenso_curso_superior ecs WHERE ecs.id = codigo_curso_superior_3) as r50s20,
+        ano_inicio_curso_superior_2 as r50s15,
+        ano_conclusao_curso_superior_2 as r50s16,
+        -- tipo_instituicao_curso_superior_2 as r50s18,
+        (SELECT ies_id FROM modules.educacenso_ies ei WHERE ei.id = instituicao_curso_superior_2) as r50s17,
+        situacao_curso_superior_3 as r50s18,
+        formacao_complementacao_pedagogica_3 as r50s19,
+        (SELECT curso_id FROM modules.educacenso_curso_superior ecs WHERE ecs.id = codigo_curso_superior_3) as r50s20,
     (SELECT grau_academico FROM modules.educacenso_curso_superior ecs
     WHERE ecs.id = codigo_curso_superior_3) as grau_academico_curso_superior_3,
-		ano_inicio_curso_superior_3 as r50s21,
-		ano_conclusao_curso_superior_3 as r50s22,
-		-- tipo_instituicao_curso_superior_3 as r50s25,
-		(SELECT ies_id FROM modules.educacenso_ies ei WHERE ei.id = instituicao_curso_superior_3) as r50s23,
-		pos_especializacao as r50s24,
-		pos_mestrado as r50s25,
-		pos_doutorado as r50s26,
-		pos_nenhuma as r50s27,
-		curso_creche as r50s28,
-		curso_pre_escola as r50s29,
-		curso_anos_iniciais as r50s30,
-		curso_anos_finais as r50s31,
-		curso_ensino_medio as r50s32,
-		curso_eja as r50s33,
-		curso_educacao_especial as r50s34,
-		curso_educacao_indigena as r50s35,
-		curso_educacao_campo as r50s36,
-		curso_educacao_ambiental as r50s37,
-		curso_educacao_direitos_humanos as r50s38,
-		curso_genero_diversidade_sexual as r50s39,
-		curso_direito_crianca_adolescente as r50s40,
-		curso_relacoes_etnicorraciais as r50s41,
-		curso_outros as r50s42,
-		curso_nenhum as r50s43
+        ano_inicio_curso_superior_3 as r50s21,
+        ano_conclusao_curso_superior_3 as r50s22,
+        -- tipo_instituicao_curso_superior_3 as r50s25,
+        (SELECT ies_id FROM modules.educacenso_ies ei WHERE ei.id = instituicao_curso_superior_3) as r50s23,
+        pos_especializacao as r50s24,
+        pos_mestrado as r50s25,
+        pos_doutorado as r50s26,
+        pos_nenhuma as r50s27,
+        curso_creche as r50s28,
+        curso_pre_escola as r50s29,
+        curso_anos_iniciais as r50s30,
+        curso_anos_finais as r50s31,
+        curso_ensino_medio as r50s32,
+        curso_eja as r50s33,
+        curso_educacao_especial as r50s34,
+        curso_educacao_indigena as r50s35,
+        curso_educacao_campo as r50s36,
+        curso_educacao_ambiental as r50s37,
+        curso_educacao_direitos_humanos as r50s38,
+        curso_genero_diversidade_sexual as r50s39,
+        curso_direito_crianca_adolescente as r50s40,
+        curso_relacoes_etnicorraciais as r50s41,
+        curso_outros as r50s42,
+        curso_nenhum as r50s43
 
-		FROM 	pmieducar.servidor s
-		INNER JOIN cadastro.fisica fis ON (fis.idpes = s.cod_servidor)
-		INNER JOIN cadastro.pessoa p ON (fis.idpes = p.idpes)
+        FROM    pmieducar.servidor s
+        INNER JOIN cadastro.fisica fis ON (fis.idpes = s.cod_servidor)
+        INNER JOIN cadastro.pessoa p ON (fis.idpes = p.idpes)
     INNER JOIN modules.professor_turma pt ON (pt.servidor_id = s.cod_servidor)
     INNER JOIN pmieducar.turma t ON (t.cod_turma = pt.turma_id)
     INNER JOIN pmieducar.escola e ON (e.cod_escola = t.ref_ref_cod_escola)
-		INNER JOIN modules.educacenso_cod_escola ece ON (ece.cod_escola = e.cod_escola)
-		LEFT JOIN cadastro.escolaridade esc ON (esc.idesco = s.ref_idesco)
+        INNER JOIN modules.educacenso_cod_escola ece ON (ece.cod_escola = e.cod_escola)
+        LEFT JOIN cadastro.escolaridade esc ON (esc.idesco = s.ref_idesco)
     LEFT JOIN modules.educacenso_cod_docente ecd ON ecd.cod_servidor = s.cod_servidor
-		WHERE s.cod_servidor = $1
+        WHERE s.cod_servidor = $1
       AND COALESCE(t.nao_informar_educacenso, 0) = 0
       AND e.cod_escola = $2
       AND t.ativo = 1
       AND t.visivel = TRUE
-		LIMIT 1
-  	';
+        LIMIT 1
+    ';
 
     // Transforma todos resultados em variáveis
     extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, array('return_only' => 'first-row', 'params' => array($servidorId, $escolaId))));
@@ -1139,7 +1139,7 @@ class EducacensoExportController extends ApiCoreController
       $cont= 0;
       for ($i=1; $i <= $numeroRegistros; $i++){
         if($i >= 31)
-        	$return .= (${'r50s'.$i} == 1 ? 1 : 0).$d;
+            $return .= (${'r50s'.$i} == 1 ? 1 : 0).$d;
         else
           $return .= ${'r50s'.$i}.$d;
       }
@@ -1152,199 +1152,199 @@ class EducacensoExportController extends ApiCoreController
 
   protected function exportaDadosRegistro51($servidorId, $escolaId, $data_ini, $data_fim, $ano){
 
-  	$sql =
-  	 'SELECT
+    $sql =
+     'SELECT
 
-			\'51\' as r51s1,
-			ece.cod_escola_inep as r51s2,
+            \'51\' as r51s1,
+            ece.cod_escola_inep as r51s2,
       ecd.cod_docente_inep as r51s3,
-			s.cod_servidor as r51s4,
-			t.cod_turma as r51s6,
-			pt.funcao_exercida as r51s7,
-			pt.tipo_vinculo as r51s8,
+            s.cod_servidor as r51s4,
+            t.cod_turma as r51s6,
+            pt.funcao_exercida as r51s7,
+            pt.tipo_vinculo as r51s8,
 
-			(
-			SELECT distinct(cc.codigo_educacenso)
+            (
+            SELECT distinct(cc.codigo_educacenso)
 
-				FROM modules.componente_curricular cc
-				INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)
+                FROM modules.componente_curricular cc
+                INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)
 
-				WHERE	ptd.professor_turma_id = pt.id
-				ORDER BY codigo_educacenso
-				OFFSET 0
-				LIMIT 1
-			) as r51s9,
+                WHERE   ptd.professor_turma_id = pt.id
+                ORDER BY codigo_educacenso
+                OFFSET 0
+                LIMIT 1
+            ) as r51s9,
 
-			(
-			SELECT distinct(cc.codigo_educacenso)
+            (
+            SELECT distinct(cc.codigo_educacenso)
 
-				FROM modules.componente_curricular cc
-				INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)
+                FROM modules.componente_curricular cc
+                INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)
 
-				WHERE	ptd.professor_turma_id = pt.id
+                WHERE   ptd.professor_turma_id = pt.id
 
-				ORDER BY codigo_educacenso
-				OFFSET 1
-				LIMIT 1
-			) as r51s10,
+                ORDER BY codigo_educacenso
+                OFFSET 1
+                LIMIT 1
+            ) as r51s10,
 
-			(
-			SELECT distinct(cc.codigo_educacenso)
+            (
+            SELECT distinct(cc.codigo_educacenso)
 
-				FROM modules.componente_curricular cc
-				INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)
+                FROM modules.componente_curricular cc
+                INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)
 
-				WHERE	ptd.professor_turma_id = pt.id
+                WHERE   ptd.professor_turma_id = pt.id
 
-				ORDER BY codigo_educacenso
-				OFFSET 2
-				LIMIT 1
-			) as r51s11,
+                ORDER BY codigo_educacenso
+                OFFSET 2
+                LIMIT 1
+            ) as r51s11,
 
-			(
-			SELECT distinct(cc.codigo_educacenso)
+            (
+            SELECT distinct(cc.codigo_educacenso)
 
-				FROM modules.componente_curricular cc
-				INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)
+                FROM modules.componente_curricular cc
+                INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)
 
-				WHERE	ptd.professor_turma_id = pt.id
+                WHERE   ptd.professor_turma_id = pt.id
 
-				ORDER BY codigo_educacenso
-				OFFSET 3
-				LIMIT 1
-			) as r51s12,
+                ORDER BY codigo_educacenso
+                OFFSET 3
+                LIMIT 1
+            ) as r51s12,
 
-			(
-			SELECT distinct(cc.codigo_educacenso)
+            (
+            SELECT distinct(cc.codigo_educacenso)
 
-				FROM modules.componente_curricular cc
-				INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)
+                FROM modules.componente_curricular cc
+                INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)
 
-				WHERE	ptd.professor_turma_id = pt.id
+                WHERE   ptd.professor_turma_id = pt.id
 
-				ORDER BY codigo_educacenso
-				OFFSET 4
-				LIMIT 1
-			) as r51s13,
+                ORDER BY codigo_educacenso
+                OFFSET 4
+                LIMIT 1
+            ) as r51s13,
 
-			(
-			SELECT distinct(cc.codigo_educacenso)
+            (
+            SELECT distinct(cc.codigo_educacenso)
 
-				FROM modules.componente_curricular cc
-				INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)
+                FROM modules.componente_curricular cc
+                INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)
 
-				WHERE	ptd.professor_turma_id = pt.id
+                WHERE   ptd.professor_turma_id = pt.id
 
-				ORDER BY codigo_educacenso
-				OFFSET 5
-				LIMIT 1
-			) as r51s14,
+                ORDER BY codigo_educacenso
+                OFFSET 5
+                LIMIT 1
+            ) as r51s14,
 
-			(
-			SELECT distinct(cc.codigo_educacenso)
+            (
+            SELECT distinct(cc.codigo_educacenso)
 
-				FROM modules.componente_curricular cc
-				INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)
+                FROM modules.componente_curricular cc
+                INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)
 
-				WHERE	ptd.professor_turma_id = pt.id
+                WHERE   ptd.professor_turma_id = pt.id
 
-				ORDER BY codigo_educacenso
-				OFFSET 6
-				LIMIT 1
-			) as r51s15,
+                ORDER BY codigo_educacenso
+                OFFSET 6
+                LIMIT 1
+            ) as r51s15,
 
-			(
-			SELECT distinct(cc.codigo_educacenso)
+            (
+            SELECT distinct(cc.codigo_educacenso)
 
-				FROM modules.componente_curricular cc
-				INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)
+                FROM modules.componente_curricular cc
+                INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)
 
-				WHERE	ptd.professor_turma_id = pt.id
+                WHERE   ptd.professor_turma_id = pt.id
 
-				ORDER BY codigo_educacenso
-				OFFSET 7
-				LIMIT 1
-			) as r51s16,
+                ORDER BY codigo_educacenso
+                OFFSET 7
+                LIMIT 1
+            ) as r51s16,
 
-			(
-			SELECT distinct(cc.codigo_educacenso)
+            (
+            SELECT distinct(cc.codigo_educacenso)
 
-				FROM modules.componente_curricular cc
-				INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)
+                FROM modules.componente_curricular cc
+                INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)
 
-				WHERE	ptd.professor_turma_id = pt.id
+                WHERE   ptd.professor_turma_id = pt.id
 
-				ORDER BY codigo_educacenso
-				OFFSET 8
-				LIMIT 1
-			) as r51s17,
+                ORDER BY codigo_educacenso
+                OFFSET 8
+                LIMIT 1
+            ) as r51s17,
 
-			(
-			SELECT distinct(cc.codigo_educacenso)
+            (
+            SELECT distinct(cc.codigo_educacenso)
 
-				FROM modules.componente_curricular cc
-				INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)
+                FROM modules.componente_curricular cc
+                INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)
 
-				WHERE	ptd.professor_turma_id = pt.id
+                WHERE   ptd.professor_turma_id = pt.id
 
-				ORDER BY codigo_educacenso
-				OFFSET 9
-				LIMIT 1
-			) as r51s18,
+                ORDER BY codigo_educacenso
+                OFFSET 9
+                LIMIT 1
+            ) as r51s18,
 
-			(
-			SELECT distinct(cc.codigo_educacenso)
+            (
+            SELECT distinct(cc.codigo_educacenso)
 
-				FROM modules.componente_curricular cc
-				INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)
+                FROM modules.componente_curricular cc
+                INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)
 
-				WHERE	ptd.professor_turma_id = pt.id
+                WHERE   ptd.professor_turma_id = pt.id
 
-				ORDER BY codigo_educacenso
-				OFFSET 10
-				LIMIT 1
-			) as r51s19,
+                ORDER BY codigo_educacenso
+                OFFSET 10
+                LIMIT 1
+            ) as r51s19,
 
-			(
-			SELECT distinct(cc.codigo_educacenso)
+            (
+            SELECT distinct(cc.codigo_educacenso)
 
-				FROM modules.componente_curricular cc
-				INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)
+                FROM modules.componente_curricular cc
+                INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)
 
-				WHERE	ptd.professor_turma_id = pt.id
+                WHERE   ptd.professor_turma_id = pt.id
 
-				ORDER BY codigo_educacenso
-				OFFSET 11
-				LIMIT 1
-			) as r51s20,
+                ORDER BY codigo_educacenso
+                OFFSET 11
+                LIMIT 1
+            ) as r51s20,
 
-			(
-			SELECT distinct(cc.codigo_educacenso)
+            (
+            SELECT distinct(cc.codigo_educacenso)
 
-				FROM modules.componente_curricular cc
-				INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)
+                FROM modules.componente_curricular cc
+                INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)
 
-				WHERE	ptd.professor_turma_id = pt.id
+                WHERE   ptd.professor_turma_id = pt.id
 
-				ORDER BY codigo_educacenso
-				OFFSET 12
-				LIMIT 1
-			) as r51s21,
+                ORDER BY codigo_educacenso
+                OFFSET 12
+                LIMIT 1
+            ) as r51s21,
       t.tipo_atendimento AS tipo_atendimento,
       t.etapa_educacenso AS etapa_ensino,
       e.dependencia_administrativa as dependencia_administrativa
 
 
-			FROM 	pmieducar.servidor s
-			INNER JOIN cadastro.fisica fis ON (fis.idpes = s.cod_servidor)
-			INNER JOIN cadastro.pessoa p ON (fis.idpes = p.idpes)
-			INNER JOIN modules.professor_turma pt ON (pt.servidor_id = s.cod_servidor)
-			INNER JOIN pmieducar.turma t ON (pt.turma_id = t.cod_turma)
+            FROM    pmieducar.servidor s
+            INNER JOIN cadastro.fisica fis ON (fis.idpes = s.cod_servidor)
+            INNER JOIN cadastro.pessoa p ON (fis.idpes = p.idpes)
+            INNER JOIN modules.professor_turma pt ON (pt.servidor_id = s.cod_servidor)
+            INNER JOIN pmieducar.turma t ON (pt.turma_id = t.cod_turma)
       INNER JOIN pmieducar.escola e ON (t.ref_ref_cod_escola = e.cod_escola)
       INNER JOIN modules.educacenso_cod_escola ece ON (ece.cod_escola = e.cod_escola)
       LEFT JOIN modules.educacenso_cod_docente ecd ON ecd.cod_servidor = s.cod_servidor
-			WHERE s.cod_servidor = $1
-			AND e.cod_escola = t.ref_ref_cod_escola
+            WHERE s.cod_servidor = $1
+            AND e.cod_escola = t.ref_ref_cod_escola
       AND COALESCE(t.nao_informar_educacenso, 0) = 0
       AND e.cod_escola = $2
       AND t.ativo = 1
@@ -1357,11 +1357,11 @@ class EducacensoExportController extends ApiCoreController
               AND (mt.ativo = 1 OR mt.data_exclusao > DATE($3))
               AND COALESCE(m.data_matricula,m.data_cadastro) BETWEEN DATE($3) AND DATE($4)
             LIMIT 1) IS NOT NULL
-  	';
+    ';
 
 
     // Transforma todos resultados em variáveis
-		$d = '|';
+        $d = '|';
     $return = '';
     $numeroRegistros = 21;
 
@@ -1378,8 +1378,8 @@ class EducacensoExportController extends ApiCoreController
     $ejaEnsinoFundamental = 65;
 
     foreach (Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($servidorId, $escolaId, $data_ini, $data_fim, $ano))) as $reg) {
-    	extract($reg);
-	    for ($i=1; $i <= $numeroRegistros ; $i++) {
+        extract($reg);
+        for ($i=1; $i <= $numeroRegistros ; $i++) {
 
         $escolaPrivada = $dependencia_administrativa == 4;
 
@@ -1401,11 +1401,11 @@ class EducacensoExportController extends ApiCoreController
           }
         }
 
-	    	$return .= ${'r51s'.$i}.$d;
+            $return .= ${'r51s'.$i}.$d;
       }
 
       $return = substr_replace($return, "", -1);
-	    $return .= "\n";
+        $return .= "\n";
     }
     return $return;
   }
