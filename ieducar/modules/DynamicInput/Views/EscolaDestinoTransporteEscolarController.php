@@ -19,14 +19,14 @@ class EscolaDestinoTransporteEscolarController extends ApiCoreController{
 
      $sql    = 'SELECT idpes AS id, 
                        nome AS nome
- 				          FROM cadastro.pessoa
- 				          WHERE idpes IN
+                          FROM cadastro.pessoa
+                          WHERE idpes IN
                     (SELECT ref_idpes_destino
- 				               FROM modules.rota_transporte_escolar)
+                               FROM modules.rota_transporte_escolar)
                     OR idpes IN
                     (SELECT ref_idpes_destino
                        FROM modules.pessoa_transporte)
- 				          ORDER BY (lower(nome)) ASC';
+                          ORDER BY (lower(nome)) ASC';
 
 
 

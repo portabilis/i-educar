@@ -706,7 +706,7 @@ class AlunoController extends ApiCoreController
         $attrsFilter                   = array('ref_cod_tipo_ocorrencia_disciplinar' => 'tipo',
                                                'data_cadastro'                       => 'data_hora',
                                                'observacao'                          => 'descricao',
-                                               'cod_ocorrencia_disciplinar' 	     => 'ocorrencia_disciplinar_id');
+                                               'cod_ocorrencia_disciplinar'          => 'ocorrencia_disciplinar_id');
 
         $ocorrenciasMatricula = Portabilis_Array_Utils::filterSet($ocorrenciasMatricula, $attrsFilter);
 
@@ -1405,7 +1405,7 @@ class AlunoController extends ApiCoreController
                                    'error', false, 'error');
       }
     }else{
-    	$this->messenger->append('O cadastro não pode ser removido, pois existem matrículas vinculadas.', 'error', false, 'error');
+        $this->messenger->append('O cadastro não pode ser removido, pois existem matrículas vinculadas.', 'error', false, 'error');
     }
     return array('id' => $id);
   }
@@ -1528,11 +1528,11 @@ class AlunoController extends ApiCoreController
   }
 
   protected function loadAcessoDataEntradaSaida(){
-  	@session_start();
+    @session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
-  	$acesso = new clsPermissoes();
-  	session_write_close();
-  	return $acesso->permissao_cadastra(626, $this->pessoa_logada, 7, null, true);
+    $acesso = new clsPermissoes();
+    session_write_close();
+    return $acesso->permissao_cadastra(626, $this->pessoa_logada, 7, null, true);
   }
   protected function isUsuarioAdmin(){
     @session_start();

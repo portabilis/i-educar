@@ -112,7 +112,7 @@ class indice extends clsCadastro
 
     $this->url_cancelar = $retorno == 'Editar' ?
       sprintf('educar_bloqueio_lancamento_faltas_notas_det.php?cod_bloqueio=%d', $this->cod_bloqueio) :
-      			'educar_bloqueio_lancamento_faltas_notas_lst.php';
+                'educar_bloqueio_lancamento_faltas_notas_lst.php';
 
     $this->nome_url_cancelar = 'Cancelar';
 

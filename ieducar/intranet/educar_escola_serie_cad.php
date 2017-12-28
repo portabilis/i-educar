@@ -229,9 +229,9 @@ class indice extends clsCadastro
     $this->campoHora('hora_fim_intervalo', 'Hora Fim Intervalo',
       $this->hora_fim_intervalo, false);
 
-		$this->campoCheck("bloquear_enturmacao_sem_vagas", "Bloquear enturmação após atingir limite de vagas", $this->bloquear_enturmacao_sem_vagas);
+        $this->campoCheck("bloquear_enturmacao_sem_vagas", "Bloquear enturmação após atingir limite de vagas", $this->bloquear_enturmacao_sem_vagas);
 
-		$this->campoCheck("bloquear_cadastro_turma_para_serie_com_vagas", "Bloquear cadastro de novas turmas antes de atingir limite de vagas (no mesmo turno)", $this->bloquear_cadastro_turma_para_serie_com_vagas);
+        $this->campoCheck("bloquear_cadastro_turma_para_serie_com_vagas", "Bloquear cadastro de novas turmas antes de atingir limite de vagas (no mesmo turno)", $this->bloquear_cadastro_turma_para_serie_com_vagas);
 
     $this->campoQuebra();
 

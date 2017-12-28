@@ -99,10 +99,10 @@ class Portabilis_View_Helper_DynamicInput_BibliotecaPesquisaCliente extends Port
         var exceptFields     = getElementFor('nome_cliente');
 
         if (validatesPresenseOfValueInRequiredFields(additionalFields, exceptFields)) {
-  	      var bibliotecaId   = getElementFor('biblioteca').val();
+          var bibliotecaId   = getElementFor('biblioteca').val();
           var attrIdName     = getElementFor('cliente').attr('id');
 
-	        pesquisa_valores_popless('educar_pesquisa_cliente_lst.php?campo1='+attrIdName+'&campo2=nome_cliente&ref_cod_biblioteca='+bibliotecaId);
+            pesquisa_valores_popless('educar_pesquisa_cliente_lst.php?campo1='+attrIdName+'&campo2=nome_cliente&ref_cod_biblioteca='+bibliotecaId);
         }
       }
     ");
