@@ -159,7 +159,7 @@ class indice extends clsCadastro
                            'size' => 50,
                            'required' => false);
 
- 		$this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+        $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
     $this->campoRotulo('componentes_', 'Componentes da série',"<table id='componentes'></table>");
 

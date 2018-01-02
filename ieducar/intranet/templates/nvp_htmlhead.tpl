@@ -1,5 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-  "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="pt" class="no-js">
 <head>
   <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
@@ -41,6 +40,8 @@
   <script type="text/javascript" src="scripts/scriptaculous/effects.js?5"></script>
   <script type="text/javascript" src="scripts/jquery.mask.min.js?5"></script>
   <script type="text/javascript">
+    window.ambiente = '<!-- #&CORE_EXT_CONFIGURATION_ENV&# -->';
+
     var running = false;
     var altura  = null;
 
@@ -92,6 +93,23 @@
       running = true;
 
       new Effect.toggle($('div_' + div_id), 'slide', {afterFinish: changeImage, duration: 0.3, beforeStart: teste});
+    }
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=***REMOVED***"></script>
+  <script>
+    if (window.ambiente == 'production') {
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('set', {'content_group1': window.location.hostname});
+
+      user_id = '<!-- #&USER_ID&# -->';
+      if (user_id) {
+        gtag('set', {'user_id': user_id});
+      }
+
+      gtag('config', '***REMOVED***');
     }
   </script>
 

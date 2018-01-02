@@ -237,6 +237,7 @@ class clsControlador
     if ($requiresHumanAccessValidation)
       $templateText = str_replace( "<!-- #&RECAPTCHA&# -->", Portabilis_Utils_ReCaptcha::getWidget(), $templateText);
 
+    $templateText = str_replace( "<!-- #&CORE_EXT_CONFIGURATION_ENV&# -->", CORE_EXT_CONFIGURATION_ENV, $templateText);
     $templateText = str_replace( "<!-- #&MENSAGENS&# -->", $this->administrativeMessagesFetcher->getMessages(), $templateText);
     $templateText = str_replace( "<!-- #&BRASAO&# -->", $this->administrativeInfoFetcher->getLoginLogo(), $templateText);
     $templateText = str_replace( "<!-- #&NOME_ENTIDADE&# -->", $this->administrativeInfoFetcher->getEntityName(), $templateText);
