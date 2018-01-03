@@ -346,7 +346,7 @@ class clsCampos extends Core_Controller_Page_Abstract
             $this->__adicionando_tabela ? $nome : $campo,
             $obrigatorio ? "/[0-9]{3}\.[0-9]{3}\.[0-9]{3}-[0-9]{1}/" : '',
             $valor,
-            14,
+            13,
             13,
             'nnn.nnn.nnn-n',
             $descricao,
