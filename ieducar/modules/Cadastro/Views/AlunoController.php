@@ -438,7 +438,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         // código aluno rede estadual
         $this->campoRA(
             "aluno_estado_id",
-            $labels_botucatu ? Portabilis_String_Utils::toLatin1("Código rede estadual (RA)") : $this->_getLabel('aluno_estado_id'),
+            Portabilis_String_Utils::toLatin1("Código rede estadual do aluno (RA)"),
             $this->aluno_estado_id,
             FALSE
         );

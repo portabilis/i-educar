@@ -176,6 +176,12 @@ var newSubmitForm = function (event) {
         return certidaoCasamentoInvalida();
     }
 
+    // Valida se o tamanho do campo aluno_estado_id é igual à 13
+    if ($j('#aluno_estado_id').val() !== '' && $j('#aluno_estado_id').val().length !== 13) {
+        messageUtils.error('O campo Código rede estadual (RA) deve conter exatos 13 dígitos.');
+        return false;
+    }
+
     submitFormExterno();
 };
 
