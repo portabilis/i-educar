@@ -502,7 +502,13 @@ class AlunoController extends ApiCoreController
 
         $aluno = new clsPmieducarAluno();
         $aluno->cod_aluno = $id;
-        $aluno->aluno_estado_id = strtoupper(Portabilis_String_Utils::toLatin1($this->getRequest()->aluno_estado_id));
+
+        $alunoEstadoId = strtoupper(Portabilis_String_Utils::toLatin1($this->getRequest()->aluno_estado_id));
+        $alunoEstadoId = str_replace(".", "", $alunoEstadoId);
+        $alunoEstadoId = str_replace("-", "", $alunoEstadoId);
+        $alunoEstadoId = preg_replace('"(.{3})(.{3})(.{3})(.{1})"', '\\1.\\2.\\3-\\4', $alunoEstadoId);
+        $aluno->aluno_estado_id = $alunoEstadoId;
+
         $aluno->codigo_sistema = Portabilis_String_Utils::toLatin1($this->getRequest()->codigo_sistema);
         $aluno->autorizado_um = Portabilis_String_Utils::toLatin1($this->getRequest()->autorizado_um);
         $aluno->parentesco_um = Portabilis_String_Utils::toLatin1($this->getRequest()->parentesco_um);
