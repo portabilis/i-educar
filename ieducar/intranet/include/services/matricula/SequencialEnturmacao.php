@@ -97,18 +97,18 @@ class SequencialEnturmacao {
       $sql = "SELECT MAX(sequencial_fechamento) + 1
                 FROM pmieducar.matricula_turma
                INNER JOIN pmieducar.matricula ON (matricula.cod_matricula = matricula_turma.ref_cod_matricula)
+               INNER JOIN pmieducar.escola ON (matricula.ref_ref_cod_escola = escola.cod_escola)
+               INNER JOIN pmieducar.instituicao ON (instituicao.cod_instituicao = escola.ref_cod_instituicao)
                INNER JOIN pmieducar.aluno ON (aluno.cod_aluno = matricula.ref_cod_aluno)
                INNER JOIN cadastro.pessoa ON (pessoa.idpes = aluno.ref_idpes)
                WHERE matricula.ativo = 1
                  AND ref_cod_turma = {$this->refCodTurma}
-                 AND matricula_turma.data_enturmacao < (SELECT data_base_remanejamento
-                                                          FROM pmieducar.instituicao
-                                                         WHERE ativo = 1)
-                                                           AND pessoa.nome < (SELECT pessoa.nome
-                                                                                FROM pmieducar.matricula
-                                                                               INNER JOIN pmieducar.aluno ON (aluno.cod_aluno = matricula.ref_cod_aluno)
-                                                                               INNER JOIN cadastro.pessoa ON (pessoa.idpes = aluno.ref_idpes)
-                                                                               WHERE matricula.cod_matricula = {$this->refCodMatricula})";
+                 AND matricula_turma.data_enturmacao < instituicao.data_base_remanejamento
+                 AND pessoa.nome < (SELECT pessoa.nome
+                                      FROM pmieducar.matricula
+                                     INNER JOIN pmieducar.aluno ON (aluno.cod_aluno = matricula.ref_cod_aluno)
+                                     INNER JOIN cadastro.pessoa ON (pessoa.idpes = aluno.ref_idpes)
+                                     WHERE matricula.cod_matricula = {$this->refCodMatricula})";
 
       if (!$this->matriculaDependencia()) {
         $sql .= " AND matricula.dependencia = FALSE";
