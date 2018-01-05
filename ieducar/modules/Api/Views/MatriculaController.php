@@ -274,6 +274,7 @@ class MatriculaController extends ApiCoreController
                          coalesce(matricula_turma.data_exclusao::date::varchar, matricula.data_cancel::date::varchar, '') AS data_saida,
                          coalesce(matricula_turma.updated_at::varchar, '') AS data_atualizacao,
                          (CASE
+                              WHEN coalesce(instituicao.data_base_transferencia, instituicao.data_base_remanejamento) IS NULL THEN false
                               WHEN matricula.aprovado = 4
                                    AND matricula_turma.transferido = TRUE THEN TRUE
                               WHEN matricula.aprovado = 3
@@ -281,6 +282,8 @@ class MatriculaController extends ApiCoreController
                               ELSE FALSE
                           END) AS apresentar_fora_da_data
                   FROM matricula
+                  INNER JOIN pmieducar.escola ON (escola.cod_escola = matricula.ref_ref_cod_escola)
+                  INNER JOIN pmieducar.instituicao ON (instituicao.cod_instituicao = escola.ref_cod_instituicao)
                   LEFT JOIN matricula_turma ON matricula_turma.ref_cod_matricula = matricula.cod_matricula
                   WHERE cod_matricula = $1";
 
@@ -365,10 +368,10 @@ class MatriculaController extends ApiCoreController
     $alunoId     = $matricula['ref_cod_aluno'];
     $situacaoAndamento  = App_Model_MatriculaSituacao::EM_ANDAMENTO;
 
-    $sql = 'update pmieducar.matricula_turma set ativo = 1, reclassificado = NULL where ref_cod_matricula = $1';
+    $sql = 'update pmieducar.matricula_turma set ativo = 1, reclassificado = NULL, data_exclusao = NULL where ref_cod_matricula = $1';
     $this->fetchPreparedQuery($sql, array($matriculaId));
 
-    $sql = 'update pmieducar.matricula set matricula_reclassificacao = 0, aprovado = $1 where cod_matricula = $2';
+    $sql = 'update pmieducar.matricula set matricula_reclassificacao = 0, data_exclusao = NULL, aprovado = $1 where cod_matricula = $2';
     $this->fetchPreparedQuery($sql, array($situacaoAndamento, $matriculaId));
 
     return array('aluno_id' => $alunoId);
@@ -416,45 +419,45 @@ class MatriculaController extends ApiCoreController
   }
 
   protected function validaDataEntrada(){
-  	if(!Portabilis_Date_Utils::validaData($this->getRequest()->data_entrada)){
-  		$this->messenger->append('Valor inválido para data de entrada ' . $this->getRequest()->data_entrada, 'error');
-  		return false;
-  	}else{
-  		return true;
-  	}
+    if(!Portabilis_Date_Utils::validaData($this->getRequest()->data_entrada)){
+        $this->messenger->append('Valor inválido para data de entrada ' . $this->getRequest()->data_entrada, 'error');
+        return false;
+    }else{
+        return true;
+    }
   }
 
   protected function validaDataSaida(){
-  	if(!Portabilis_Date_Utils::validaData($this->getRequest()->data_saida)){
-  		$this->messenger->append('Valor inválido para data de saída', 'error');
-  		return false;
-  	}else{
-  		return true;
-  	}
+    if(!Portabilis_Date_Utils::validaData($this->getRequest()->data_saida)){
+        $this->messenger->append('Valor inválido para data de saída', 'error');
+        return false;
+    }else{
+        return true;
+    }
   }
 
   protected function postDataEntrada(){
-  	if($this->validaDataEntrada()){
-  		$matricula_id = $this->getRequest()->matricula_id;
-  		$data_entrada = Portabilis_Date_Utils::brToPgSQL($this->getRequest()->data_entrada);
-  		$matricula = new clsPmieducarMatricula($matricula_id);
-  		$matricula->data_matricula = $data_entrada;
-  		if($matricula->edita()){
-  			$this->messenger->append('Data de entrada atualizada com sucesso.', 'success');
-  		}
-  	}
+    if($this->validaDataEntrada()){
+        $matricula_id = $this->getRequest()->matricula_id;
+        $data_entrada = Portabilis_Date_Utils::brToPgSQL($this->getRequest()->data_entrada);
+        $matricula = new clsPmieducarMatricula($matricula_id);
+        $matricula->data_matricula = $data_entrada;
+        if($matricula->edita()){
+            $this->messenger->append('Data de entrada atualizada com sucesso.', 'success');
+        }
+    }
   }
 
   protected function postDataSaida(){
-  	if($this->validaDataSaida()){
-  		$matricula_id = $this->getRequest()->matricula_id;
-  		$data_saida = Portabilis_Date_Utils::brToPgSQL($this->getRequest()->data_saida);
-  		$matricula = new clsPmieducarMatricula($matricula_id);
-  		$matricula->data_cancel = $data_saida;
-  		if($matricula->edita()){
-  			return $this->messenger->append('Data de saida atualizada com sucesso.', 'success');
-  		}
-  	}
+    if($this->validaDataSaida()){
+        $matricula_id = $this->getRequest()->matricula_id;
+        $data_saida = Portabilis_Date_Utils::brToPgSQL($this->getRequest()->data_saida);
+        $matricula = new clsPmieducarMatricula($matricula_id);
+        $matricula->data_cancel = $data_saida;
+        if($matricula->edita()){
+            return $this->messenger->append('Data de saida atualizada com sucesso.', 'success');
+        }
+    }
   }
   protected function postSituacao(){
     if($this->validatesPresenceOf('matricula_id') && $this->validatesPresenceOf('nova_situacao')){
@@ -585,11 +588,11 @@ class MatriculaController extends ApiCoreController
     elseif ($this->isRequestFor('post', 'reserva-externa'))
       $this->appendResponse($this->postReservaExterna());
 
-  	elseif ($this->isRequestFor('post', 'data-entrada'))
-  	  $this->appendResponse($this->postDataEntrada());
+    elseif ($this->isRequestFor('post', 'data-entrada'))
+      $this->appendResponse($this->postDataEntrada());
 
-  	elseif ($this->isRequestFor('post', 'data-saida'))
-  	  $this->appendResponse($this->postDataSaida());
+    elseif ($this->isRequestFor('post', 'data-saida'))
+      $this->appendResponse($this->postDataSaida());
 
     elseif ($this->isRequestFor('post', 'situacao'))
       $this->appendResponse($this->postSituacao());

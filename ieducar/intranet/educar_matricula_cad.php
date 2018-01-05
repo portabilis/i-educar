@@ -98,7 +98,6 @@ class indice extends clsCadastro
   function Inicializar()
   {
     //$retorno = 'Novo';
-
     @session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     @session_write_close();
@@ -328,7 +327,16 @@ class indice extends clsCadastro
       require_once 'include/pmieducar/clsPmieducarSerie.inc.php';
       $db = new clsBanco();
 
-      $db->Consulta("select ref_ref_cod_serie, ref_cod_curso from pmieducar.matricula where ano = $this->ano and ativo = 1 and ref_ref_cod_escola = $this->ref_cod_escola and ref_cod_curso = $this->ref_cod_curso and ref_cod_aluno = $this->ref_cod_aluno and aprovado = 3 AND dependencia = FALSE ");
+      $db->Consulta("SELECT ref_ref_cod_serie,
+                            ref_cod_curso
+                       FROM pmieducar.matricula
+                      WHERE ano = $this->ano
+                        AND ativo = 1
+                        AND ref_ref_cod_escola = $this->ref_cod_escola
+                        AND ref_cod_curso = $this->ref_cod_curso
+                        AND ref_cod_aluno = $this->ref_cod_aluno
+                        AND aprovado = 3
+                        AND dependencia = FALSE ");
 
       $db->ProximoRegistro();
       $m = $db->Tupla();
@@ -366,8 +374,11 @@ class indice extends clsCadastro
         if (is_array($m) && count($m) && !$dependencia){
 
           $mesmoCursoAno = ($m['ref_cod_curso'] == $this->ref_cod_curso && $m['ano'] == $this->ano);
+          $cursoADeferir = new clsPmieducarCurso($this->ref_cod_curso);
+          $cursoDeAtividadeComplementar = $cursoADeferir->cursoDeAtividadeComplementar();
 
-          if ($mesmoCursoAno || $GLOBALS['coreExt']['Config']->app->matricula->multiplas_matriculas == 0){
+          if (($mesmoCursoAno || $GLOBALS['coreExt']['Config']->app->matricula->multiplas_matriculas == 0) && !$cursoDeAtividadeComplementar){
+
             require_once 'include/pmieducar/clsPmieducarEscola.inc.php';
             require_once 'include/pessoa/clsJuridica.inc.php';
 
@@ -837,10 +848,11 @@ class indice extends clsCadastro
         $detEnturmacao = $enturmacao->detalhe();
         $detEnturmacao = $detEnturmacao['data_enturmacao'];
         $enturmacao->data_enturmacao = $detEnturmacao;
-        if ($result && ! $enturmacao->edita())
+
+        if ($result && ! $enturmacao->edita()){
           $result = false;
-        else
-          $enturmacao->marcaAlunoTransferido($this->data_matricula);
+        }
+
       }
     }
 

@@ -644,7 +644,7 @@ class clsCadastro extends clsCampos
     }
 
     if ($this->fexcluir) {
-      $retorno .=  "&nbsp;<input type='button' class='botaolistagem' onclick='javascript:{$this->script_excluir}' value=' Excluir '>&nbsp;";
+      $retorno .=  "&nbsp;<input id='btn_excluir' type='button' class='botaolistagem' onclick='javascript:{$this->script_excluir}' value=' Excluir '>&nbsp;";
     }
     if ($this->bot_alt) {
       $retorno .=  "&nbsp;<input type='button' class='botaolistagem' onclick='javascript: go( \"$this->url_alt\" );' value=' $this->nome_url_alt '>&nbsp;";

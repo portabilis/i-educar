@@ -168,8 +168,8 @@ class clsPmieducarAluno
         a.ref_usuario_cad, a.ref_idpes, a.data_cadastro, a.data_exclusao, a.ativo, a.caminho_foto, a.analfabeto, a.nm_pai, a.nm_mae,tipo_responsavel, a.aluno_estado_id,
         a.recurso_prova_inep_aux_ledor, a.recurso_prova_inep_aux_transcricao, a.recurso_prova_inep_guia_interprete, a.recurso_prova_inep_interprete_libras, a.recurso_prova_inep_leitura_labial,
         a.recurso_prova_inep_prova_ampliada_16, a.recurso_prova_inep_prova_ampliada_20, a.recurso_prova_inep_prova_ampliada_24, a.recurso_prova_inep_prova_braille, a.recebe_escolarizacao_em_outro_espaco,
-        a.justificativa_falta_documentacao, a.url_laudo_medico, a.codigo_sistema, a.veiculo_transporte_escolar, a.parentesco_um, a.autorizado_um, a.parentesco_dois, a.autorizado_dois,
-        a.parentesco_tres, a.autorizado_tres, a.parentesco_quatro, a.autorizado_quatro, a.parentesco_cinco, a.autorizado_cinco, a.url_documento';
+        a.justificativa_falta_documentacao, a.url_laudo_medico::text, a.codigo_sistema, a.veiculo_transporte_escolar, a.parentesco_um, a.autorizado_um, a.parentesco_dois, a.autorizado_dois,
+        a.parentesco_tres, a.autorizado_tres, a.parentesco_quatro, a.autorizado_quatro, a.parentesco_cinco, a.autorizado_cinco, a.url_documento::text';
 
     if (is_numeric($ref_usuario_exc)) {
       if (class_exists('clsPmieducarUsuario')) {
@@ -450,13 +450,13 @@ class clsPmieducarAluno
         $gruda = ', ';
       }
 
-      if (is_string($this->url_documento)) {
+      if (is_string($this->url_documento) && $this->url_documento != '') {
         $campos  .= "{$gruda}url_documento";
         $valores .= "{$gruda}'{$this->url_documento}'";
         $gruda = ', ';
       }
 
-      if (is_string($this->url_laudo_medico)) {
+      if (is_string($this->url_laudo_medico) && $this->url_laudo_medico != '') {
         $campos  .= "{$gruda}url_laudo_medico";
         $valores .= "{$gruda}'{$this->url_laudo_medico}'";
         $gruda = ', ';
@@ -689,12 +689,12 @@ class clsPmieducarAluno
         $gruda = ', ';
       }
 
-      if (is_string($this->url_documento)) {
+      if (is_string($this->url_documento) && $this->url_documento != '') {
         $set .= "{$gruda}url_documento = '{$this->url_documento}'";
         $gruda = ', ';
       }
 
-      if (is_string($this->url_laudo_medico)) {
+      if (is_string($this->url_laudo_medico) && $this->url_laudo_medico != '') {
         $set .= "{$gruda}url_laudo_medico = '{$this->url_laudo_medico}'";
         $gruda = ', ';
       }
@@ -1086,21 +1086,15 @@ class clsPmieducarAluno
     $filtros = '';
     $this->resetCamposLista();
 
-    $this->_campos_lista .= '
-       , (
-         SELECT
-           nome
-         FROM
-           cadastro.pessoa
-         WHERE
-           idpes = ref_idpes
-         ) AS nome_aluno';
+    $this->_campos_lista .= ', pessoa.nome AS nome_aluno';
 
     if($filtra_baseado_matricula)
       $sql = "SELECT distinct {$this->_campos_lista} FROM {$this->_tabela} INNER JOIN pmieducar.matricula m ON (m.ref_cod_aluno = a.cod_aluno) ";
     else
       $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
 
+    $sql .= '
+             LEFT JOIN cadastro.pessoa ON pessoa.idpes = a.ref_idpes';
     if($idsetorbai)
       $sql .= '
         INNER JOIN cadastro.endereco_pessoa ep ON (a.ref_idpes = ep.idpes)
@@ -1131,6 +1125,7 @@ class clsPmieducarAluno
     }
 
     if(is_string($aluno_estado_id)) {
+      $aluno_estado_id = str_replace('-', '', str_replace('.', '', $aluno_estado_id));
       $filtros .= "{$whereAnd} a.aluno_estado_id LIKE '%{$aluno_estado_id}%'";
       $whereAnd = ' AND ';
     }

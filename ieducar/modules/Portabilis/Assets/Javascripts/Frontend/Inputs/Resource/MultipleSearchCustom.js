@@ -7,10 +7,12 @@
     $customElement.trigger('chosen:updated');
 
     var handleGetValues = function() {
-      $j.each(value, function(id, values) {
+      if(value){
+        $j.each(value, function(id, values) {
 
-        $customElement.children("[value=" + values + "]").attr('selected', '');
-      });
+          $customElement.children("[value=" + values + "]").attr('selected', '');
+        });
+      }
 
       $customElement.trigger('chosen:updated');
     }

@@ -306,7 +306,6 @@ class TabelaArredondamento_Model_Tabela extends CoreExt_Entity
 
   public function deleteAllValues()
   {
-    // echo $this->_data['id']; die;
     $tabelaArredondamentoId = $this->_data['id'];
     if ($tabelaArredondamentoId) {
       $db = new clsBanco();

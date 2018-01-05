@@ -27,6 +27,10 @@ input, select, textarea, span.select2.select2-container.select2-container--defau
   border-radius: 3px;
 }
 
+input:read-only {
+  background-color: #e9f0f8 !important;
+}
+
 .select2-container{
   font-size: 14px;
   line-height: 15px;
@@ -908,6 +912,7 @@ td.area-conhecimento-destaque {
   padding: 8px;
   font-size: 14px;
   color: #47728f;
+  box-sizing: border-box;
 }
 
 .chosen-choices{
@@ -923,7 +928,7 @@ td.area-conhecimento-destaque {
   padding: 8px;
   font-size: 14px;
   color: #47728f;
-  max-width: 450px;
+  max-width: 100%;
 }
 
 #formcadastro .formmdtd,
@@ -1019,6 +1024,23 @@ table.tablelistagem.auditoria-tab tr:nth-child(2n+1) td.formlttd{
   background-color: rgb(233, 239, 247) !important;
 }
 
+.area_conhecimento_title td {
+    padding: 13px 0;
+}
+
+.area_conhecimento_title {
+    font-size: 14px;
+    margin: 10px;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+a.clone-values {
+  color: #47728f;
+  font-size: 15px;
+  cursor: pointer;
+}
+
 
 /**************************************
 **********TABELAS DE ADIÇÃO************
@@ -1048,28 +1070,6 @@ table.tabela-adicao .obrigatorio{
   width: 100% !important;
 }
 
-tr#adicionar_linha{
-  background-color: #f5f9fd;
-}
-
-#adicionar_linha td a{
-  color: #47728f;
-}
-
-#adicionar_linha td a:hover{
-  text-decoration: none;
-}
-
-#adicionar_linha td a img{
-  float: left;
-  margin-right: 5px;
-}
-
-#adicionar_linha td a p{
-  padding: 5px;
-  margin: 0;
-}
-
 table.paginacao{
   border-collapse: collapse;
   margin-top: 10px;
@@ -1086,6 +1086,22 @@ color: #188ad1
 
 table.paginacao td a.nvp_paginador {
     font-size: 14px;
+}
+
+#tabela_arredondamento_numerica tr:last-child,
+#tabela_arredondamento_numerica tr.tr_tabela_arredondamento_numerica td:last-child,
+#tabela_arredondamento_numerica tr#tr_tabela_arredondamento_numerica_cab td:last-child {
+    display: none !important;
+}
+
+#tabela_arredondamento tr.tr_tabela_arredondamento td:first-child,
+#tabela_arredondamento #td_id,
+#tabela_arredondamento_numerica tr.tr_tabela_arredondamento_numerica td:first-child,
+#tabela_arredondamento_numerica #td_id,
+#tabela_arredondamento_numerica .valor_nome,
+#tabela_arredondamento_numerica #td_nome
+ {
+    display: none;
 }
 
 /**************************************

@@ -35,6 +35,7 @@ require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
 require_once 'image_check.php';
 require_once 'include/pmieducar/clsPmieducarAluno.inc.php';
 require_once 'include/pmieducar/clsPmieducarProjeto.inc.php';
+require_once 'include/pmieducar/clsPmieducarAlunoHistoricoAlturaPeso.inc.php';
 require_once 'include/modules/clsModulesFichaMedicaAluno.inc.php';
 require_once 'include/modules/clsModulesMoradiaAluno.inc.php';
 require_once 'include/pmieducar/clsPermissoes.inc.php';
@@ -705,7 +706,7 @@ class AlunoController extends ApiCoreController
         $attrsFilter                   = array('ref_cod_tipo_ocorrencia_disciplinar' => 'tipo',
                                                'data_cadastro'                       => 'data_hora',
                                                'observacao'                          => 'descricao',
-                                               'cod_ocorrencia_disciplinar' 	     => 'ocorrencia_disciplinar_id');
+                                               'cod_ocorrencia_disciplinar'          => 'ocorrencia_disciplinar_id');
 
         $ocorrenciasMatricula = Portabilis_Array_Utils::filterSet($ocorrenciasMatricula, $attrsFilter);
 
@@ -751,22 +752,38 @@ class AlunoController extends ApiCoreController
     // caso nao receba id da escola, pesquisa por codigo aluno em todas as escolas,
     // alunos com e sem matricula são selecionados.
     if (! $this->getRequest()->escola_id) {
-      $sqls[] = "select distinct aluno.cod_aluno as id, pessoa.nome as name from
+      /*$sqls[] = "select distinct aluno.cod_aluno as id, pessoa.nome as name from
                  pmieducar.aluno, cadastro.pessoa where pessoa.idpes = aluno.ref_idpes
                  and aluno.ativo = 1 and aluno.cod_aluno::varchar like $1||'%' and $2 = $2
-                 order by cod_aluno limit 15";
+                 order by cod_aluno limit 15";*/
+      $sqls[] = "select distinct aluno.cod_aluno as id, pessoa.nome as name from
+        pmieducar.aluno, cadastro.pessoa where pessoa.idpes = aluno.ref_idpes
+        and aluno.ativo = 1 and aluno.cod_aluno::varchar(255) like $1||'%' and $2 = $2
+        order by cod_aluno limit 15";
     }
 
     // seleciona por (codigo matricula ou codigo aluno) e opcionalmente por codigo escola,
     // apenas alunos com matricula são selecionados.
-    $sqls[] = "select * from (select distinct ON (aluno.cod_aluno) aluno.cod_aluno as id,
+    /*$sqls[] = "select * from (select distinct ON (aluno.cod_aluno) aluno.cod_aluno as id,
                matricula.cod_matricula as matricula_id, pessoa.nome as name from pmieducar.matricula,
                pmieducar.aluno, cadastro.pessoa where aluno.cod_aluno = matricula.ref_cod_aluno and
                pessoa.idpes = aluno.ref_idpes and aluno.ativo = matricula.ativo and
                matricula.ativo = 1 and
                (select case when $2 != 0 then matricula.ref_ref_cod_escola = $2 else 1=1 end) and
                (matricula.cod_matricula::varchar like $1||'%' or matricula.ref_cod_aluno::varchar like '$1'||'%') and
-               matricula.aprovado in (1, 2, 3, 4, 7, 8, 9) limit 15) as alunos order by id";
+               matricula.aprovado in (1, 2, 3, 4, 7, 8, 9) limit 15) as alunos order by id";*/
+    $sqls[] = "select * from
+    (select distinct ON (aluno.cod_aluno) aluno.cod_aluno as id, matricula.cod_matricula as matricula_id, pessoa.nome as name
+    from pmieducar.matricula, pmieducar.aluno, cadastro.pessoa
+    where aluno.cod_aluno = matricula.ref_cod_aluno
+      and pessoa.idpes = aluno.ref_idpes
+      and aluno.ativo = matricula.ativo
+      and matricula.ativo = 1
+      and (select case when $2 != 0 then matricula.ref_ref_cod_escola = $2 else 1=1 end)
+      and (matricula.ref_cod_aluno::varchar(255) like $1||'%')
+      and matricula.aprovado in (1, 2, 3, 4, 7, 8, 9) limit 15) as alunos
+    order by id";
+
 
     return $sqls;
   }
@@ -867,6 +884,27 @@ class AlunoController extends ApiCoreController
     }
 
     return $_projetos;
+  }
+
+  protected function loadHistoricoAlturaPeso($alunoId) {
+    $sql = "SELECT to_char(data_historico, 'dd/mm/yyyy') AS data_historico,
+                   altura,
+                   peso
+              FROM  pmieducar.aluno_historico_altura_peso
+              WHERE ref_cod_aluno = $1";
+
+    $historicoAlturaPeso = $this->fetchPreparedQuery($sql, $alunoId, false);
+
+    // transforma array de arrays em array chave valor
+    $_historicoAlturaPeso = array();
+
+    foreach ($historicoAlturaPeso as $alturaPeso) {
+      $_historicoAlturaPeso[] = array('data_historico' => $alturaPeso['data_historico'],
+                                      'altura'         => $alturaPeso['altura'],
+                                      'peso'           => $alturaPeso['peso']);
+    }
+
+    return $_historicoAlturaPeso;
   }
 
   protected function get() {
@@ -984,6 +1022,7 @@ class AlunoController extends ApiCoreController
       $aluno['beneficios'] = $this->loadBeneficios($id);
 
       $aluno['projetos'] = $this->loadProjetos($id);
+      $aluno['historico_altura_peso'] = $this->loadHistoricoAlturaPeso($id);
 
       return $aluno;
     }
@@ -1225,6 +1264,26 @@ class AlunoController extends ApiCoreController
     }
   }
 
+  function saveHistoricoAlturaPeso($alunoId){
+    $obj = new clsPmieducarAlunoHistoricoAlturaPeso($alunoId);
+    // exclui todos
+    $obj->excluir();
+
+    foreach ($this->getRequest()->data_historico as $key => $value) {
+      $data_historico = Portabilis_Date_Utils::brToPgSQL($value);
+      $altura = $this->getRequest()->historico_altura[$key];
+      $peso   = $this->getRequest()->historico_peso[$key];
+
+      $obj->data_historico = $data_historico;
+      $obj->altura         = $altura;
+      $obj->peso           = $peso;
+
+      if (!$obj->cadastra()) {
+        $this->messenger->append('Erro ao cadastrar histórico de altura e peso.');
+      }
+    }
+  }
+
   protected function post() {
     if ($this->canPost()) {
       $id = $this->createOrUpdateAluno();
@@ -1242,6 +1301,7 @@ class AlunoController extends ApiCoreController
         $this->createOrUpdateFichaMedica($id);
         $this->createOrUpdateMoradia($id);
         $this->saveProjetos($id);
+        $this->saveHistoricoAlturaPeso($id);        
         $this->createOrUpdatePessoaTransporte($pessoaId);
         $this->createOrUpdateDocumentos($pessoaId);
         $this->createOrUpdatePessoa($pessoaId);
@@ -1271,6 +1331,7 @@ class AlunoController extends ApiCoreController
       $this->createOrUpdateFichaMedica($id);
       $this->createOrUpdateMoradia($id);
       $this->saveProjetos($id);
+      $this->saveHistoricoAlturaPeso($id);
       $this->createOrUpdatePessoaTransporte($pessoaId);
       $this->createOrUpdateDocumentos($pessoaId);
       $this->createOrUpdatePessoa($pessoaId);
@@ -1344,7 +1405,7 @@ class AlunoController extends ApiCoreController
                                    'error', false, 'error');
       }
     }else{
-    	$this->messenger->append('O cadastro não pode ser removido, pois existem matrículas vinculadas.', 'error', false, 'error');
+        $this->messenger->append('O cadastro não pode ser removido, pois existem matrículas vinculadas.', 'error', false, 'error');
     }
     return array('id' => $id);
   }
@@ -1467,11 +1528,11 @@ class AlunoController extends ApiCoreController
   }
 
   protected function loadAcessoDataEntradaSaida(){
-  	@session_start();
+    @session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
-  	$acesso = new clsPermissoes();
-  	session_write_close();
-  	return $acesso->permissao_cadastra(626, $this->pessoa_logada, 7, null, true);
+    $acesso = new clsPermissoes();
+    session_write_close();
+    return $acesso->permissao_cadastra(626, $this->pessoa_logada, 7, null, true);
   }
   protected function isUsuarioAdmin(){
     @session_start();

@@ -115,7 +115,7 @@ class Portabilis_View_Helper_DynamicInput_BibliotecaPesquisaObra extends Portabi
         var exceptFields     = getElementFor("titulo_obra");
 
         if (validatesPresenseOfValueInRequiredFields(additionalFields, exceptFields)) {
-  	      var bibliotecaId = getElementFor("biblioteca").val();
+          var bibliotecaId = getElementFor("biblioteca").val();
 
           pesquisa_valores_popless("educar_pesquisa_obra_lst.php?campo1=ref_cod_acervo&campo2=titulo_obra&campo3="+bibliotecaId)
         }

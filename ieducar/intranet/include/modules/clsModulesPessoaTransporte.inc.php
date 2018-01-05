@@ -302,14 +302,27 @@ class clsModulesPessoaTransporte
                    p.nome AS nome_pessoa,
                    rte.descricao AS nome_rota,
                    pte.descricao AS nome_ponto,
-                   pd2.nome AS nome_destino2
-             FROM {$this->_tabela} pt
-             LEFT JOIN cadastro.pessoa pd ON (pd.idpes = pt.ref_idpes_destino)
-             LEFT JOIN cadastro.pessoa p ON (p.idpes = pt.ref_idpes)
-             LEFT JOIN modules.rota_transporte_escolar rte ON (rte.cod_rota_transporte_escolar = pt.ref_cod_rota_transporte_escolar)
-             LEFT JOIN modules.ponto_transporte_escolar pte ON (pte.cod_ponto_transporte_escolar = pt.ref_cod_ponto_transporte_escolar)
-             LEFT JOIN cadastro.pessoa pd2 ON (pd2.idpes = rte.ref_idpes_destino
-                                           AND pt.ref_cod_rota_transporte_escolar = rte.cod_rota_transporte_escolar)";
+                   pd2.nome AS nome_destino2";
+
+    $sqlConditions = "
+      FROM {$this->_tabela} pt
+      LEFT JOIN cadastro.pessoa pd
+        ON (pd.idpes = pt.ref_idpes_destino)
+      LEFT JOIN cadastro.pessoa p
+        ON (p.idpes = pt.ref_idpes)
+      LEFT JOIN modules.rota_transporte_escolar rte
+        ON (rte.cod_rota_transporte_escolar = pt.ref_cod_rota_transporte_escolar)
+      LEFT JOIN modules.ponto_transporte_escolar pte
+        ON (pte.cod_ponto_transporte_escolar = pt.ref_cod_ponto_transporte_escolar)
+      LEFT JOIN cadastro.pessoa pd2
+        ON (
+          pd2.idpes = rte.ref_idpes_destino AND
+          pt.ref_cod_rota_transporte_escolar = rte.cod_rota_transporte_escolar    
+        )
+    ";
+
+    $sql .= $sqlConditions;
+
     $filtros = "";
 
     $whereAnd = " WHERE ";
@@ -362,16 +375,20 @@ class clsModulesPessoaTransporte
     $resultado = array();
 
     $sql .= $filtros . $whereNomes. $this->getOrderby() . $this->getLimite();
-    // echo $sql; die;
+    
+    $sqlCount = "
+      SELECT COUNT(0) {$sqlConditions} {$filtros} {$whereNomes}
+    ";
 
-    $this->_total = $db->CampoUnico("SELECT COUNT(0)
+    $this->_total = $db->CampoUnico($sqlCount);
+    /*$this->_total = $db->CampoUnico("SELECT COUNT(0)
                                        FROM {$this->_tabela} pt
                                        LEFT JOIN cadastro.pessoa pd ON (pd.idpes = pt.ref_idpes_destino)
                                        LEFT JOIN cadastro.pessoa p ON (p.idpes = pt.ref_idpes)
                                        LEFT JOIN modules.rota_transporte_escolar rte ON (rte.cod_rota_transporte_escolar = pt.ref_cod_rota_transporte_escolar)
                                        LEFT JOIN modules.ponto_transporte_escolar pte ON (pte.cod_ponto_transporte_escolar = pt.ref_cod_ponto_transporte_escolar)
                                        LEFT JOIN cadastro.pessoa pd2 ON (pd2.idpes = rte.ref_idpes_destino
-                                                                     AND pt.ref_cod_rota_transporte_escolar = rte.cod_rota_transporte_escolar) {$filtros}");
+                                                                     AND pt.ref_cod_rota_transporte_escolar = rte.cod_rota_transporte_escolar) {$filtros}");*/
 
     $db->Consulta($sql);
 

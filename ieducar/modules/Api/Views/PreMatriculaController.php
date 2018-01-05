@@ -52,7 +52,7 @@ class PreMatriculaController extends ApiCoreController
 
   protected function homologarPreMatricula(){
     if($this->canHomologarPreMatricula()){
-  	  // Dados da matrícula
+      // Dados da matrícula
       $anoLetivo = $this->getRequest()->ano_letivo;
       $cursoId = $this->getRequest()->curso_id;
       $serieId = $this->getRequest()->serie_id;
@@ -91,35 +91,35 @@ class PreMatriculaController extends ApiCoreController
       $alunoIdMatricula = $det_m['ref_cod_aluno'];
 
       if($det_m['aprovado'] != 11){
-      	$this->messenger->append("Matrícula já homologada.");
-      	return array("cod_matricula" => 0);
+        $this->messenger->append("Matrícula já homologada.");
+        return array("cod_matricula" => 0);
       }
 
-	  // $this->messenger->append("max alunos turma: " . $this->_maxAlunosTurma($turmaId) . "alunos matriculados na turma: " . $this->_alunosMatriculadosTurma($turmaId));
+      // $this->messenger->append("max alunos turma: " . $this->_maxAlunosTurma($turmaId) . "alunos matriculados na turma: " . $this->_alunosMatriculadosTurma($turmaId));
       if($this->_maxAlunosTurma($turmaId) <= $this->_alunosMatriculadosTurma($turmaId)){
-	    $this->messenger->append("Aparentemente não existem vagas disponíveis para a seleção informada. Altere a seleção e tente novamente.");
-	    return array("cod_matricula" => 0);
-	   }
+        $this->messenger->append("Aparentemente não existem vagas disponíveis para a seleção informada. Altere a seleção e tente novamente.");
+        return array("cod_matricula" => 0);
+       }
 
      $obj_a = null;
      $aluno_id = null;
 
-	   if($alunoIdParametro){
+       if($alunoIdParametro){
        $aluno_id = $alunoIdParametro;
-	   	 $obj_a = new clsPmieducarAluno($alunoIdParametro);
-	   	 if($obj_a->detalhe()){
+         $obj_a = new clsPmieducarAluno($alunoIdParametro);
+         if($obj_a->detalhe()){
 
-	     	$obj_m = new clsPmieducarMatricula($matriculaId);
-	  		$obj_m->ref_cod_aluno = $alunoIdParametro;
-	  		$obj_m->edita();
+            $obj_m = new clsPmieducarMatricula($matriculaId);
+            $obj_m->ref_cod_aluno = $alunoIdParametro;
+            $obj_m->edita();
 
-	  		$obj_a->ativo = 1;
-	  		$obj_a->edita();
+            $obj_a->ativo = 1;
+            $obj_a->edita();
 
         if($alunoIdParametro != $alunoIdMatricula){
-	  		 $this->excluirInformacoesAluno($alunoIdMatricula);
+             $this->excluirInformacoesAluno($alunoIdMatricula);
         }
-	 	  }
+          }
     }else {
       $aluno_id = $alunoIdMatricula;
       $obj_a = new clsPmieducarAluno($alunoIdMatricula);
@@ -144,34 +144,34 @@ class PreMatriculaController extends ApiCoreController
       $maeIsResponsavel = ($pessoaMaeId == $pessoaResponsavelId);
 
       if(is_numeric($pessoaMaeId)){
-      	$pessoaMaeAluno = new clsPessoa_($pessoaMaeId);
-      	$pessoaMaeAluno->nome = $nomeMae;
-      	$pessoaMaeAluno->edita();
+        $pessoaMaeAluno = new clsPessoa_($pessoaMaeId);
+        $pessoaMaeAluno->nome = $nomeMae;
+        $pessoaMaeAluno->edita();
 
-      	$pessoaFisicaMaeAluno = new clsFisica($pessoaMaeId);
-      	$pessoaFisicaMaeAluno->cpf = $cpfMae;
-      	$pessoaFisicaMaeAluno->idpes_rev = 1;
-      	$pessoaFisicaMaeAluno->edita();
+        $pessoaFisicaMaeAluno = new clsFisica($pessoaMaeId);
+        $pessoaFisicaMaeAluno->cpf = $cpfMae;
+        $pessoaFisicaMaeAluno->idpes_rev = 1;
+        $pessoaFisicaMaeAluno->edita();
       }
       elseif(is_numeric($cpfMae)){
         $pessoaMaeId = $this->createOrUpdatePessoaResponsavel($cpfMae, $nomeMae);
         $this->createOrUpdatePessoaFisicaResponsavel($pessoaMaeId, $cpfMae);
       }
       if(!$maeIsResponsavel){
-      	if(is_numeric($pessoaResponsavelId)){
-      		$pessoaResponsavelAluno = new clsPessoa_($pessoaResponsavelId);
-      		$pessoaResponsavelAluno->nome = $nomeResponsavel;
-      		$pessoaResponsavelAluno->edita();
+        if(is_numeric($pessoaResponsavelId)){
+            $pessoaResponsavelAluno = new clsPessoa_($pessoaResponsavelId);
+            $pessoaResponsavelAluno->nome = $nomeResponsavel;
+            $pessoaResponsavelAluno->edita();
 
-	      	$pessoaFisicaResponsavelAluno = new clsFisica($pessoaResponsavelId);
-	      	$pessoaFisicaResponsavelAluno->cpf = $cpfResponsavel;
-	      	$pessoaFisicaResponsavelAluno->idpes_rev = 1;
-      		$pessoaFisicaResponsavelAluno->edita();
-      	}
-      	elseif(is_numeric($cpfResponsavel)){
-        	$pessoaResponsavelId = $this->createOrUpdatePessoaResponsavel($cpfResponsavel, $nomeResponsavel);
-        	$this->createOrUpdatePessoaFisicaResponsavel($pessoaResponsavelId, $cpfResponsavel);
-      	}
+            $pessoaFisicaResponsavelAluno = new clsFisica($pessoaResponsavelId);
+            $pessoaFisicaResponsavelAluno->cpf = $cpfResponsavel;
+            $pessoaFisicaResponsavelAluno->idpes_rev = 1;
+            $pessoaFisicaResponsavelAluno->edita();
+        }
+        elseif(is_numeric($cpfResponsavel)){
+            $pessoaResponsavelId = $this->createOrUpdatePessoaResponsavel($cpfResponsavel, $nomeResponsavel);
+            $this->createOrUpdatePessoaFisicaResponsavel($pessoaResponsavelId, $cpfResponsavel);
+        }
       }
 
       $this->createOrUpdatePessoaFisica($pessoaAlunoId, $pessoaResponsavelId, $pessoaMaeId, $dataNascAluno, $sexoAluno);
@@ -180,14 +180,14 @@ class PreMatriculaController extends ApiCoreController
 
       $this->updateDeficiencias($pessoaAlunoId, $deficiencias);
 
-	    $this->createOrUpdateEndereco($pessoaAlunoId, $cep, $rua, $numero, $complemento, $bairro, $cidade, $estado, $pais);
+        $this->createOrUpdateEndereco($pessoaAlunoId, $cep, $rua, $numero, $complemento, $bairro, $cidade, $estado, $pais);
 
-  	  // $this->messenger->append("escola:" . $escolaId . " serie:" . $serieId . " anoletivo:" . $anoLetivo .
-  	  		                    // " curso: " . $cursoId . " aluno:" . $alunoId . " turma: " . $turmaId . "matricula: " . $matriculaId);
+      // $this->messenger->append("escola:" . $escolaId . " serie:" . $serieId . " anoletivo:" . $anoLetivo .
+                                // " curso: " . $cursoId . " aluno:" . $alunoId . " turma: " . $turmaId . "matricula: " . $matriculaId);
 
       return array("cod_matricula" => $this->enturmaPreMatricula($aluno_id, $turmaId, $matriculaId, $maeIsResponsavel));
 
-	}
+    }
 }
   protected function canRegistrarPreMatricula(){
     return $this->validatesPresenceOf('ano_letivo') && $this->validatesPresenceOf('curso_id')
@@ -369,10 +369,10 @@ class PreMatriculaController extends ApiCoreController
         $this->updateDeficiencias($pessoaAlunoId, $deficiencias);
 
       if($this->_maxAlunosTurma($turmaId) <= $this->_alunosMatriculadosTurma($turmaId)){
-      	// $this->messenger->append("max alunos turma: " . $this->_maxAlunosTurma($turmaId) . "alunos matriculados na turma: " . $this->_alunosMatriculadosTurma($turmaId));
-      	$this->messenger->append("Aparentemente não existem vagas disponíveis para a seleção informada. Altere a seleção e tente novamente.");
-      	return array("cod_matricula" => 0);
-  	  }
+        // $this->messenger->append("max alunos turma: " . $this->_maxAlunosTurma($turmaId) . "alunos matriculados na turma: " . $this->_alunosMatriculadosTurma($turmaId));
+        $this->messenger->append("Aparentemente não existem vagas disponíveis para a seleção informada. Altere a seleção e tente novamente.");
+        return array("cod_matricula" => 0);
+      }
 
       return array("cod_matricula" => $this->cadastraMatricula($escolaId, $serieId, $anoLetivo, $cursoId, $alunoId, $turmaId));
 
@@ -394,14 +394,14 @@ class PreMatriculaController extends ApiCoreController
   }
 
   protected function enturmaPreMatricula($alunoId, $turmaId, $matriculaId, $maeIsResponsavel){
-  	// $this->messenger->append($escolaId, $serieId, $anoLetivo, $cursoId, $alunoId, $turmaId, $matriculaId);
+    // $this->messenger->append($escolaId, $serieId, $anoLetivo, $cursoId, $alunoId, $turmaId, $matriculaId);
 
-  	$obj_a = new clsPmieducarAluno($alunoId);
-	  $obj_a->ativo = 1;
-	if($maeIsResponsavel){
-		$obj_a->tipo_responsavel = 'm';
-	}
-	$obj_a->edita();
+    $obj_a = new clsPmieducarAluno($alunoId);
+      $obj_a->ativo = 1;
+    if($maeIsResponsavel){
+        $obj_a->tipo_responsavel = 'm';
+    }
+    $obj_a->edita();
 
     $obj_m = new clsPmieducarMatricula($matriculaId);
     $obj_m->aprovado = 3;
@@ -532,32 +532,32 @@ class PreMatriculaController extends ApiCoreController
     else
       $retorno = $detalhe['cod_aluno'];
 
-  	if($ativo == 0){
-  		$aluno = new clsPmieducarAluno($retorno);
-  		$aluno->ativo = 0;
-  		$aluno->edita();
-  	}
+    if($ativo == 0){
+        $aluno = new clsPmieducarAluno($retorno);
+        $aluno->ativo = 0;
+        $aluno->edita();
+    }
 
     return $retorno;
   }
 
   protected function _maxAlunosTurma($turmaId){
-  	$obj_t = new clsPmieducarTurma($turmaId);
+    $obj_t = new clsPmieducarTurma($turmaId);
     $det_t = $obj_t->detalhe();
     $maxAlunosTurma = $det_t['max_aluno'];
     return $maxAlunosTurma;
   }
 
   protected function _alunosMatriculadosTurma($turmaId){
-  	$obj_mt = new clsPmieducarMatriculaTurma($turmaId);
+    $obj_mt = new clsPmieducarMatriculaTurma($turmaId);
 
     return count(array_filter(($obj_mt->lista($int_ref_cod_matricula = NULL, $int_ref_cod_turma = $turmaId,
-              								  $int_ref_usuario_exc = NULL, $int_ref_usuario_cad = NULL,
-              								  $date_data_cadastro_ini = NULL, $date_data_cadastro_fim = NULL,
-              								  $date_data_exclusao_ini = NULL, $date_data_exclusao_fim = NULL, $int_ativo = 1,
-              								  $int_ref_cod_serie = $this->ref_cod_serie, $int_ref_cod_curso = NULL,
-              								  $int_ref_cod_escola = NULL,
-              								  $int_ref_cod_instituicao = $this->getRequest()->instituicao_id))));
+                                              $int_ref_usuario_exc = NULL, $int_ref_usuario_cad = NULL,
+                                              $date_data_cadastro_ini = NULL, $date_data_cadastro_fim = NULL,
+                                              $date_data_exclusao_ini = NULL, $date_data_exclusao_fim = NULL, $int_ativo = 1,
+                                              $int_ref_cod_serie = $this->ref_cod_serie, $int_ref_cod_curso = NULL,
+                                              $int_ref_cod_escola = NULL,
+                                              $int_ref_cod_instituicao = $this->getRequest()->instituicao_id))));
   }
 
   protected function canCancelarPreMatricula(){
@@ -599,16 +599,16 @@ class PreMatriculaController extends ApiCoreController
 
   protected function createOrUpdateEndereco($pessoaAlunoId, $cep, $rua, $numero, $complemento, $bairro, $cidade, $estado, $pais) {
 
-  	$municipioId  = Portabilis_Utils_Database::selectField("SELECT idmun FROM public.municipio WHERE translate(upper(nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') = translate(upper($1),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') limit 1", $cidade);
-  	$distritoId   = Portabilis_Utils_Database::selectField("SELECT iddis FROM public.distrito WHERE translate(upper(nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') = translate(upper($1),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') limit 1", $cidade);
+    $municipioId  = Portabilis_Utils_Database::selectField("SELECT idmun FROM public.municipio WHERE translate(upper(nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') = translate(upper($1),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') limit 1", $cidade);
+    $distritoId   = Portabilis_Utils_Database::selectField("SELECT iddis FROM public.distrito WHERE translate(upper(nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') = translate(upper($1),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') limit 1", $cidade);
 
-  	if($municipioId){
-  		$bairroId     = Portabilis_Utils_Database::selectField("SELECT idbai FROM public.bairro WHERE translate(upper(nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') = translate(upper($1),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') and idmun = $2 limit 1", array($bairro, $municipioId));
+    if($municipioId){
+        $bairroId     = Portabilis_Utils_Database::selectField("SELECT idbai FROM public.bairro WHERE translate(upper(nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') = translate(upper($1),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') and idmun = $2 limit 1", array($bairro, $municipioId));
       $logradouroId = Portabilis_Utils_Database::selectField("SELECT idlog FROM public.logradouro WHERE translate(upper(nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') = translate(upper($1),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') and idmun = $2 limit 1", array($rua, $municipioId));
     }
 
-  	// $this->messenger->append("Bairro: " . $bairroId . "Logradouro: " . $logradouroId . "Municipio: " . $municipioId . "Distrito: " . $distritoId . "cep: " . $cep);
-  	// $this->messenger->append(" parametros: " . $pessoaAlunoId." ". $cep." ". $rua." ". $numero." ". $complemento." ". $bairro." ". $cidade." ". $estado." ". $pais);
+    // $this->messenger->append("Bairro: " . $bairroId . "Logradouro: " . $logradouroId . "Municipio: " . $municipioId . "Distrito: " . $distritoId . "cep: " . $cep);
+    // $this->messenger->append(" parametros: " . $pessoaAlunoId." ". $cep." ". $rua." ". $numero." ". $complemento." ". $bairro." ". $cidade." ". $estado." ". $pais);
     if ($cep && is_numeric($bairroId) && is_numeric($logradouroId)){
       $this->_createOrUpdatePessoaEndereco($pessoaAlunoId, $cep, $logradouroId, $numero, $complemento, $bairroId);
     } else if($cep && is_numeric($municipioId) && is_numeric($distritoId)){
@@ -710,7 +710,7 @@ class PreMatriculaController extends ApiCoreController
   public function Gerar() {
     if ($this->isRequestFor('post', 'registrar-pre-matricula'))
       $this->appendResponse($this->registrarPreMatricula());
-  	elseif ($this->isRequestFor('post', 'homologar-pre-matricula'))
+    elseif ($this->isRequestFor('post', 'homologar-pre-matricula'))
       $this->appendResponse($this->homologarPreMatricula());
     elseif ($this->isRequestFor('post', 'cancelar-pre-matricula'))
       $this->appendResponse($this->cancelarPreMatricula());

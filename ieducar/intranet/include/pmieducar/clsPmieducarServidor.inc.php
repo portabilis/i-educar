@@ -841,7 +841,8 @@ class clsPmieducarServidor
 
     $this->_schema = "pmieducar.";
     $tabela_compl  = "LEFT JOIN cadastro.pessoa p ON (s.cod_servidor = p.idpes)
-                      LEFT JOIN portal.funcionario func ON (s.cod_servidor = func.ref_cod_pessoa_fj)";
+                      LEFT JOIN portal.funcionario func ON (s.cod_servidor = func.ref_cod_pessoa_fj)
+                      LEFT JOIN pmieducar.servidor_funcao as sf ON s.cod_servidor = sf.ref_cod_servidor";
     $filtros       = "WHERE s.ativo = '1'
                         AND s.ref_cod_instituicao = $cod_instituicao
                         AND (s.cod_servidor IN (SELECT a.ref_cod_servidor
@@ -960,6 +961,7 @@ class clsPmieducarServidor
     if (is_bool($bool_ordena_por_nome)) {
       $tabela_compl         .= ' LEFT JOIN cadastro.pessoa p ON s.cod_servidor = p.idpes ';
       $tabela_compl         .= ' LEFT JOIN portal.funcionario func ON s.cod_servidor = func.ref_cod_pessoa_fj';
+      $tabela_compl         .= ' LEFT JOIN pmieducar.servidor_funcao as sf ON s.cod_servidor = sf.ref_cod_servidor';
       $this->_campos_lista2 .= ', p.nome';
       $this->setOrderby('nome');
     }
@@ -1009,7 +1011,7 @@ class clsPmieducarServidor
       $whereAnd = " AND ";
     }
     if (is_string($matricula_funcionario)) {
-      $filtros .= "{$whereAnd} public.fcn_upper(func.matricula) LIKE public.fcn_upper('%{$matricula_funcionario}%')";
+      $filtros .= "{$whereAnd} public.fcn_upper(sf.matricula) LIKE public.fcn_upper('%{$matricula_funcionario}%')";
       $whereAnd = " AND ";
     }
     // Busca tipo LIKE pelo nome do servidor
@@ -1096,20 +1098,28 @@ class clsPmieducarServidor
           AND a.carga_horaria >= COALESCE(
           (SELECT SUM(qhh.hora_final - qhh.hora_inicial)
             FROM pmieducar.quadro_horario_horarios qhh
+            INNER JOIN pmieducar.quadro_horario ON (quadro_horario.cod_quadro_horario = qhh.ref_cod_quadro_horario
+                                                    AND quadro_horario.ativo = 1)
+            INNER JOIN pmieducar.turma ON (turma.cod_turma = quadro_horario.ref_cod_turma
+                                           AND turma.ativo = 1)
             WHERE qhh.ref_cod_instituicao_servidor = '$int_ref_cod_instituicao'
             AND qhh.ref_cod_escola = '$int_ref_cod_escola'
-            AND hora_inicial >= '06:00'
-            AND hora_inicial <= '12:00'
+            AND qhh.hora_inicial >= '06:00'
+            AND qhh.hora_inicial <= '12:00'
             AND qhh.ativo = '1'
             AND qhh.dia_semana <> '$int_dia_semana'
             AND qhh.ref_servidor = a.ref_cod_servidor
             GROUP BY qhh.ref_servidor) ,'00:00')  + '$str_hr_mat' + COALESCE(
             (SELECT SUM( qhha.hora_final - qhha.hora_inicial )
               FROM pmieducar.quadro_horario_horarios_aux qhha
+              INNER JOIN pmieducar.quadro_horario ON (quadro_horario.cod_quadro_horario = qhha.ref_cod_quadro_horario
+                                                      AND quadro_horario.ativo = 1)
+              INNER JOIN pmieducar.turma ON (turma.cod_turma = quadro_horario.ref_cod_turma
+                                             AND turma.ativo = 1)
               WHERE qhha.ref_cod_instituicao_servidor = '$int_ref_cod_instituicao'
               AND qhha.ref_cod_escola = $int_ref_cod_escola
-              AND hora_inicial >= '06:00'
-              AND hora_inicial <= '12:00'
+              AND qhha.hora_inicial >= '06:00'
+              AND qhha.hora_inicial <= '12:00'
               AND qhha.ref_servidor = a.ref_cod_servidor
               AND identificador = '$int_identificador'
               GROUP BY qhha.ref_servidor),'00:00')) OR s.multi_seriado )";
@@ -1133,21 +1143,29 @@ class clsPmieducarServidor
                 AND a.carga_horaria >= COALESCE(
                   (SELECT SUM( qhh.hora_final - qhh.hora_inicial )
                   FROM pmieducar.quadro_horario_horarios qhh
+                  INNER JOIN pmieducar.quadro_horario ON (quadro_horario.cod_quadro_horario = qhh.ref_cod_quadro_horario
+                                                          AND quadro_horario.ativo = 1)
+                  INNER JOIN pmieducar.turma ON (turma.cod_turma = quadro_horario.ref_cod_turma
+                                                 AND turma.ativo = 1)
                   WHERE qhh.ref_cod_instituicao_servidor = '$int_ref_cod_instituicao'
                   AND qhh.ref_cod_escola = '$int_ref_cod_escola'
                   AND qhh.ativo = '1'
-                  AND hora_inicial >= '12:00'
-                  AND hora_inicial <= '18:00'
+                  AND qhh.hora_inicial >= '12:00'
+                  AND qhh.hora_inicial <= '18:00'
                   AND qhh.dia_semana <> '$int_dia_semana'
                   AND qhh.ref_servidor = a.ref_cod_servidor
                   GROUP BY qhh.ref_servidor ),'00:00') + '$str_hr_ves' +  COALESCE(
                   (SELECT SUM( qhha.hora_final - qhha.hora_inicial )
                     FROM pmieducar.quadro_horario_horarios_aux qhha
+                    INNER JOIN pmieducar.quadro_horario ON (quadro_horario.cod_quadro_horario = qhha.ref_cod_quadro_horario
+                                                            AND quadro_horario.ativo = 1)
+                    INNER JOIN pmieducar.turma ON (turma.cod_turma = quadro_horario.ref_cod_turma
+                                                   AND turma.ativo = 1)
                     WHERE qhha.ref_cod_instituicao_servidor = '$int_ref_cod_instituicao'
                     AND qhha.ref_cod_escola = '$int_ref_cod_escola'
                     AND qhha.ref_servidor = a.ref_cod_servidor
-                    AND hora_inicial >= '12:00'
-                    AND hora_inicial <= '18:00'
+                    AND qhha.hora_inicial >= '12:00'
+                    AND qhha.hora_inicial <= '18:00'
                     AND identificador = '$int_identificador'
                     GROUP BY qhha.ref_servidor),'00:00') ) OR s.multi_seriado ) ";
           }
@@ -1169,21 +1187,29 @@ class clsPmieducarServidor
               AND a.carga_horaria >= COALESCE(
               (SELECT SUM(qhh.hora_final - qhh.hora_inicial)
                 FROM pmieducar.quadro_horario_horarios qhh
+               INNER JOIN pmieducar.quadro_horario ON (quadro_horario.cod_quadro_horario = qhh.ref_cod_quadro_horario
+                                                       AND quadro_horario.ativo = 1)
+               INNER JOIN pmieducar.turma ON (turma.cod_turma = quadro_horario.ref_cod_turma
+                                              AND turma.ativo = 1)
                 WHERE qhh.ref_cod_instituicao_servidor = '$int_ref_cod_instituicao'
                 AND qhh.ref_cod_escola = '$int_ref_cod_escola'
                 AND qhh.ativo = '1'
-                AND hora_inicial >= '18:00'
-                AND hora_inicial <= '23:59'
+                AND qhh.hora_inicial >= '18:00'
+                AND qhh.hora_inicial <= '23:59'
                 AND qhh.dia_semana <> '$int_dia_semana'
                 AND qhh.ref_servidor = a.ref_cod_servidor
                 GROUP BY qhh.ref_servidor ),'00:00')  + '$str_hr_not' +  COALESCE(
                   (SELECT SUM( qhha.hora_final - qhha.hora_inicial )
                   FROM pmieducar.quadro_horario_horarios_aux qhha
+                  INNER JOIN pmieducar.quadro_horario ON (quadro_horario.cod_quadro_horario = qhha.ref_cod_quadro_horario
+                                                          AND quadro_horario.ativo = 1)
+                  INNER JOIN pmieducar.turma ON (turma.cod_turma = quadro_horario.ref_cod_turma
+                                                 AND turma.ativo = 1)
                   WHERE qhha.ref_cod_instituicao_servidor = '$int_ref_cod_instituicao'
                   AND qhha.ref_cod_escola = '$int_ref_cod_escola'
                   AND qhha.ref_servidor = a.ref_cod_servidor
-                  AND hora_inicial >= '18:00'
-                  AND hora_inicial <= '23:59'
+                  AND qhha.hora_inicial >= '18:00'
+                  AND qhha.hora_inicial <= '23:59'
                   AND identificador = '$int_identificador'
                   GROUP BY qhha.ref_servidor),'00:00') ) OR s.multi_seriado) ";
           }
@@ -1201,7 +1227,7 @@ class clsPmieducarServidor
         else {
           $filtros .= "
       {$whereAnd} ((s.carga_horaria >= COALESCE(
-                    (SELECT sum(hora_final - hora_inicial) + '" . abs($horas) . ":" . abs($minutos)."'
+                    (SELECT sum(hora_final - qhh.hora_inicial) + '" . abs($horas) . ":" . abs($minutos)."'
                       FROM pmieducar.servidor_alocacao sa
                       WHERE sa.ref_cod_servidor = s.cod_servidor
                       AND sa.ref_ref_cod_instituicao ='{$int_ref_cod_instituicao}'),'00:00')) OR s.multi_seriado)";
@@ -1268,7 +1294,11 @@ class clsPmieducarServidor
       $filtros .= "
     {$whereAnd} (s.cod_servidor NOT IN
       (SELECT DISTINCT qhh.ref_servidor
-        FROM pmieducar.quadro_horario_horarios qhh
+         FROM pmieducar.quadro_horario_horarios qhh
+        INNER JOIN pmieducar.quadro_horario ON (quadro_horario.cod_quadro_horario = qhh.ref_cod_quadro_horario
+                                                AND quadro_horario.ativo = 1)
+        INNER JOIN pmieducar.turma ON (turma.cod_turma = quadro_horario.ref_cod_turma
+                                       AND turma.ativo = 1)
         WHERE qhh.ref_servidor = s.cod_servidor
         AND qhh.ref_cod_instituicao_servidor = s.ref_cod_instituicao
         AND qhh.dia_semana = '{$array_horario[0]}'
@@ -1290,12 +1320,11 @@ class clsPmieducarServidor
     $countCampos = count(explode(',', $this->_campos_lista));
     $resultado = array();
     $db = new clsBanco();
-    $sql = "SELECT {$this->_campos_lista2} FROM {$this->_schema}servidor s{$tabela_compl} {$filtros}" .
-      $this->getOrderby() . $this->getLimite();
-    $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_schema}servidor s{$tabela_compl} {$filtros}");
-    // Executa a query
-    //echo"<pre>";var_dump($sql);die;
+    $sql = "SELECT distinct {$this->_campos_lista2} FROM {$this->_schema}servidor s{$tabela_compl} {$filtros}" . $this->getOrderby() . $this->getLimite();
+
+    $this->_total = $db->CampoUnico("SELECT distinct COUNT(0) FROM {$this->_schema}servidor s{$tabela_compl} {$filtros}");
     $db->Consulta($sql);
+    
     if ($countCampos > 1) {
       while ($db->ProximoRegistro()) {
         $tupla = $db->Tupla();
@@ -1501,7 +1530,7 @@ class clsPmieducarServidor
    *   informado, usa o código disponível no objeto atual
    * @return  array|bool  Array associativo com os índices nm_escola, nm_curso,
    *   nm_serie, nm_turma, nome (componente curricular), dia_semana,
-   *   hora_inicial e hora_final.
+   *   qhh.hora_inicial e hora_final.
    */
   function getHorariosServidor($codServidor = NULL, $codInstituicao = NULL)
   {
@@ -1541,7 +1570,7 @@ class clsPmieducarServidor
             ORDER BY
               nm_escola,
               dia_semana,
-              hora_inicial';
+              qhh.hora_inicial';
       $sql = sprintf($sql, $codigos['codServidor'], $codigos['codInstituicao']);
       $db = new clsBanco();
       $db->Consulta($sql);

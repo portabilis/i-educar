@@ -413,9 +413,9 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     $options = array('label' => $this->_getLabel('aluno_inep_id'), 'required' => false, 'size' => 25, 'max_length' => 14);
 
     if($labels_botucatu){
-    	$this->inputsHelper()->hidden('aluno_inep_id', array('value' => null));
+        $this->inputsHelper()->hidden('aluno_inep_id', array('value' => null));
     }else{
-    	$this->inputsHelper()->integer('aluno_inep_id', $options);
+        $this->inputsHelper()->integer('aluno_inep_id', $options);
     }
 
     // código aluno rede estadual
@@ -949,6 +949,20 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     /* *************************************
        ** Dados para a Aba 'Ficha médica' **
        ************************************* */
+
+    // Histórico de altura e peso
+
+    $this->campoTabelaInicio("historico_altura_peso","Histórico de altura e peso",array('Data', 'Altura (m)', 'Peso (kg)'));
+
+    $this->inputsHelper()->date('data_historico');
+
+    $this->inputsHelper()->numeric('historico_altura');
+
+    $this->inputsHelper()->numeric('historico_peso');
+
+    $this->campoTabelaFim();
+
+    // Fim histórico de altura e peso
 
     // altura
     $options = array('label' => $this->_getLabel('altura'), 'size' => 5, 'max_length' => 4, 'required' => false, 'placeholder' => '' );

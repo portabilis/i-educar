@@ -4,7 +4,7 @@ MAINTAINER Caroline Salib <caroline@portabilis.com.br>
 
 RUN apt-get -y update \
     && apt-get -y upgrade \
-    && apt-get install -y apache2 php5 libapache2-mod-php5 php5-pgsql php-pear php5-curl rpl wget \
+    && apt-get install -y apache2 php5 libapache2-mod-php5 php5-pgsql php-pear php5-curl rpl wget php5-xdebug \
     && a2enmod rewrite \
     && apt-get clean
 
@@ -14,6 +14,11 @@ RUN apt-get install -y libreadline6 libreadline6-dev make gcc zlib1g-dev
 RUN pear install XML_RPC2 Mail Net_SMTP Services_ReCaptcha
 
 ADD ieducar.conf /etc/apache2/sites-available/default
+
+RUN echo "xdebug.remote_enable=on" >> /etc/php5/apache2/conf.d/xdebug.ini
+RUN echo "xdebug.remote_autostart=off" >> /etc/php5/apache2/conf.d/xdebug.ini
+RUN echo "xdebug.remote_host=172.17.0.1" >> /etc/php5/apache2/conf.d/xdebug.ini
+RUN echo "xdebug.idekey=PHPSTORM" >> /etc/php5/apache2/conf.d/xdebug.ini
 
 EXPOSE 80
 

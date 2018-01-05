@@ -103,18 +103,23 @@ class ServidorController extends ApiCoreController
                      p.nome as name,
                      pt.turma_id,
                      pt.permite_lancar_faltas_componente as permite_lancar_faltas_componente,
-                     ptd.componente_curricular_id as disciplina_id
+                     ptd.componente_curricular_id as disciplina_id,
+                     ccae.tipo_nota,
+                     pt.updated_at as updated_at
               FROM pmieducar.servidor s
               INNER JOIN cadastro.pessoa p ON s.cod_servidor = p.idpes
               INNER JOIN modules.professor_turma pt ON s.cod_servidor = pt.servidor_id AND s.ref_cod_instituicao = pt.instituicao_id
               INNER JOIN modules.professor_turma_disciplina ptd ON pt.id = ptd.professor_turma_id
+              INNER JOIN pmieducar.turma t ON (t.cod_turma = pt.turma_id)
+              INNER JOIN modules.componente_curricular_ano_escolar ccae ON (ccae.ano_escolar_id = t.ref_ref_cod_serie
+                                                                            AND ccae.componente_curricular_id = ptd.componente_curricular_id)
               WHERE s.ref_cod_instituicao = $1
               AND pt.ano = $2
-              GROUP BY pt.id, s.cod_servidor, p.nome, pt.turma_id, pt.permite_lancar_faltas_componente, ptd.componente_curricular_id";
+              GROUP BY pt.id, s.cod_servidor, p.nome, pt.turma_id, pt.permite_lancar_faltas_componente, ptd.componente_curricular_id, ccae.tipo_nota";
 
       $_servidores = $this->fetchPreparedQuery($sql, array($instituicaoId, $ano));
 
-      $attrs = array('id', 'servidor_id', 'name', 'turma_id', 'permite_lancar_faltas_componente', 'disciplina_id');
+      $attrs = array('id', 'servidor_id', 'name', 'turma_id', 'permite_lancar_faltas_componente', 'disciplina_id','tipo_nota', 'updated_at');
       $_servidores = Portabilis_Array_Utils::filterSet($_servidores, $attrs);
       $servidores = array();
       $__servidores = array();
@@ -123,10 +128,12 @@ class ServidorController extends ApiCoreController
         $__servidores[$servidor['id']]['id'] = $servidor['id'];
         $__servidores[$servidor['id']]['servidor_id'] = $servidor['servidor_id'];
         $__servidores[$servidor['id']]['name'] = Portabilis_String_Utils::toUtf8($servidor['name']);
+        $__servidores[$servidor['id']]['updated_at'] = $servidor['updated_at'];
         $__servidores[$servidor['id']]['disciplinas_turmas'][] = array(
           'turma_id' => $servidor['turma_id'],
           'disciplina_id' => $servidor['disciplina_id'],
-          'permite_lancar_faltas_componente' => $servidor['permite_lancar_faltas_componente']
+          'permite_lancar_faltas_componente' => $servidor['permite_lancar_faltas_componente'],
+          'tipo_nota' => $servidor['tipo_nota']
         );
       }
 

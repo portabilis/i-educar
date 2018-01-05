@@ -125,6 +125,7 @@ class indice extends clsCadastro
     $registros = explode("\n", $arquivo);
 
     foreach ($registros as $registro) {
+      header_remove('Set-Cookie');
       $dadosRegistro = explode("|", $registro);
       $numeroRegistro = $dadosRegistro[0];
 
@@ -516,7 +517,6 @@ class indice extends clsCadastro
       if(!empty($inepTurma)){
         $codTurma = $this->existeTurma($inepTurma);
       }
-
 
       if(!$codTurma){
 
@@ -1276,7 +1276,7 @@ class indice extends clsCadastro
 
       $obj = new clsPmieducarMatricula(NULL, NULL,
           $detalheTurma['ref_ref_cod_escola'], $detalheTurma['ref_ref_cod_serie'], NULL,
-          $this->pessoa_logada, $codAluno, 3, NULL, NULL, 1, $this->ano,
+          $this->pessoa_logada, $codAluno, 1, NULL, NULL, 1, $this->ano,
           1, NULL, NULL, NULL, NULL, $detalheTurma['ref_cod_curso'],
           NULL, NULL, date('Y-m-d'));
 
@@ -1622,7 +1622,7 @@ class indice extends clsCadastro
 
   function getOrCreateBairro($idmun, $iddis, $nomeBairro, $localizacao){
     $idbai = $this->getBairro($idmun, $iddis, $nomeBairro);
-
+    $nomeBairro = utf8_decode($nomeBairro);
     if(!$idbai){
       $bairro = new clsBairro();
       $bairro->idmun = $idmun;
@@ -1636,6 +1636,7 @@ class indice extends clsCadastro
   }
 
   function getBairro($idmun, $iddis, $nomeBairro){
+    $nomeBairro = utf8_encode($nomeBairro);
     $sql = "SELECT idbai
               FROM public.bairro
               WHERE idmun = {$idmun}
@@ -1926,6 +1927,13 @@ class indice extends clsCadastro
   }
 
   private $etapasCenso = array(
+      0 => array(
+        'curso' => "Atividade complementar",
+        'serie' => "Atividade complementar",
+        'etapa' => 1,
+        'etapas' => 1,
+        'nivel' => 'Outros'
+      ),
       1 => array(
         'curso' => "Educação Infantil",
         'serie' => "Creche (0 a 3 anos)",

@@ -66,7 +66,7 @@ var handleGetMatriculas = function(dataResponse) {
               {val: 4, text: 'Transferido'},
               {val: 5, text: 'Reclassificado'},
               {val: 6, text: 'Abandono'},
-              {val: 12, text: 'Aprovado com depend\u00eacia'},
+              {val: 12, text: 'Aprovado com dependência'},
               {val: 13, text: 'Aprovado pelo conselho'},
               {val: 14, text: 'Reprovado por faltas'},
               {val: 15, text: 'Falecido'}

@@ -2,9 +2,7 @@
 <tr id="topo" class="topo">
 	<td class="logo" align="left"><a style="color:#FFF; text-decoration: none;" href="/">i-Educar</a></td>
 	<td id="perfil-user-id" class="perfil-user" align="right">
-		<a class="icons-top" href="#" onclick="Conpass.startProject('AHA Moment Portabilis', 'dGlhZ29AcG9ydGFiaWxpcy5jb20uYnI6cG9ydGFiaWxpczA5MQ==', {showModal: true} );">
-			<img id="help" src="imagens/icon-help.png">
-		</a>
+		<!-- #&ICONE_COMPASS&# -->
 		<a class="icons-top" href="#">
 			<img id="notificacao" src="imagens/icon-nav-notifications.png">
 		</a>

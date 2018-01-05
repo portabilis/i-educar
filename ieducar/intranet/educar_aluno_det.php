@@ -271,13 +271,13 @@ class indice extends clsDetalhe
           strtotime(substr($detalheDocumento['data_exp_rg'], 0, 19)));
       }
 
-      $registro['sigla_uf_exp_rg'] 	   = $detalheDocumento['sigla_uf_exp_rg'];
-      $registro['tipo_cert_civil'] 	   = $detalheDocumento['tipo_cert_civil'];
+      $registro['sigla_uf_exp_rg']     = $detalheDocumento['sigla_uf_exp_rg'];
+      $registro['tipo_cert_civil']     = $detalheDocumento['tipo_cert_civil'];
       $registro['certidao_nascimento'] = $detalheDocumento['certidao_nascimento'];
       $registro['certidao_casamento']  = $detalheDocumento['certidao_casamento'];
-      $registro['num_termo']       	   = $detalheDocumento['num_termo'];
-      $registro['num_livro']       	   = $detalheDocumento['num_livro'];
-      $registro['num_folha']       	   = $detalheDocumento['num_folha'];
+      $registro['num_termo']           = $detalheDocumento['num_termo'];
+      $registro['num_livro']           = $detalheDocumento['num_livro'];
+      $registro['num_folha']           = $detalheDocumento['num_folha'];
 
       if ($detalheDocumento['data_emissao_cert_civil']) {
         $registro['data_emissao_cert_civil'] = date('d/m/Y',
@@ -381,7 +381,7 @@ class indice extends clsDetalhe
     try {
       $alunoInep = $alunoMapper->find(array('aluno' => $this->cod_aluno));
       if(!$GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu'){
-      	$this->addDetalhe(array('Código inep', $alunoInep->alunoInep));
+        $this->addDetalhe(array('Código inep', $alunoInep->alunoInep));
       }
     }
     catch(Exception $e) {
@@ -613,13 +613,20 @@ class indice extends clsDetalhe
 
     if ($registro['url_documento'] && $registro['url_documento'] != '') {
       $tabela = '<table border="0" width="300" cellpadding="3"><tr bgcolor="#ccdce6" align="center"><td>Documentos</td></tr>';
-      $cor    = '#D1DADF';
+      $cor    = '#e9f0f8';
 
-      $urlDocumento = explode(",", $registro['url_documento']);
-      for ($i = 0; $i < count($urlDocumento); $i++) {
-        $cor = $cor == '#D1DADF' ? '#f5f9fd' : '#D1DADF';
-
-        $tabela .= "<tr bgcolor='{$cor}' align='center'><td><a href='{$urlDocumento[$i]}' target='_blank' > Visualizar documento ". (count($urlDocumento) > 1 ? ($i+1) : "")." </a></td></tr>";
+      $arrayDocumentos = json_decode($registro['url_documento']);
+      foreach ($arrayDocumentos as $key => $documento) {
+        $cor = $cor == '#e9f0f8' ? '#f5f9fd' : '#e9f0f8';
+        
+        $tabela .= "<tr bgcolor='". $cor. "'
+                        align='center'>
+                          <td>
+                            <a href='" . $documento->url . "'
+                               target='_blank' > Visualizar documento ". (count($documento) > 1 ? ($key+1) : "")."
+                            </a>
+                          </td>
+                    </tr>";
       }
 
       $tabela .= '</table>';
@@ -675,17 +682,17 @@ class indice extends clsDetalhe
 
       $this->addDetalhe(array('Tipo Certidão Civil', $lista_tipo_cert_civil[$registro['tipo_cert_civil']]));
 
-    	if ($registro['num_termo']) {
-    	  $this->addDetalhe(array('Termo', $registro['num_termo']));
-    	}
+        if ($registro['num_termo']) {
+          $this->addDetalhe(array('Termo', $registro['num_termo']));
+        }
 
-	   	if ($registro['num_livro']) {
-	    	$this->addDetalhe(array('Livro', $registro['num_livro']));
-	   	}
+        if ($registro['num_livro']) {
+            $this->addDetalhe(array('Livro', $registro['num_livro']));
+        }
 
-	   	if ($registro['num_folha']) {
-	    	$this->addDetalhe(array('Folha', $registro['num_folha']));
-    	}
+        if ($registro['num_folha']) {
+            $this->addDetalhe(array('Folha', $registro['num_folha']));
+        }
     }
 
     if ($registro['data_emissao_cert_civil']) {

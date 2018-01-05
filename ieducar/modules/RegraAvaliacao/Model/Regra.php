@@ -50,30 +50,31 @@ require_once 'RegraAvaliacao/Model/TipoRecuperacaoParalela.php';
 class RegraAvaliacao_Model_Regra extends CoreExt_Entity
 {
   protected $_data = array(
-    'instituicao'               => NULL,
-    'nome'                      => NULL,
-    'tipoNota'                  => NULL,
-    'tipoProgressao'            => NULL,
-    'tabelaArredondamento'      => NULL,
-    'media'                     => NULL,
-    'formulaMedia'              => NULL,
-    'formulaRecuperacao'        => NULL,
-    'porcentagemPresenca'       => NULL,
-    'parecerDescritivo'         => NULL,
-    'tipoPresenca'              => NULL,
-    'mediaRecuperacao'          => NULL,
-    'tipoRecuperacaoParalela'   => NULL,
-    'mediaRecuperacaoParalela'  => NULL,
-    'notaMaximaGeral'           => NULL,
-    'notaMinimaGeral'           => NULL,
-    'notaMaximaExameFinal'      => NULL,
-    'qtdCasasDecimais'          => NULL,
-    'notaGeralPorEtapa'         => NULL,
-    'definirComponentePorEtapa' => NULL,
-    'qtdDisciplinasDependencia' => NULL,
-    'qtdMatriculasDependencia'  => NULL,
-    'aprovaMediaDisciplina'     => NULL,
-    'reprovacaoAutomatica'      => NULL
+    'instituicao'                    => NULL,
+    'nome'                           => NULL,
+    'tipoNota'                       => NULL,
+    'tipoProgressao'                 => NULL,
+    'tabelaArredondamento'           => NULL,
+    'tabelaArredondamentoConceitual' => NULL,
+    'media'                          => NULL,
+    'formulaMedia'                   => NULL,
+    'formulaRecuperacao'             => NULL,
+    'porcentagemPresenca'            => NULL,
+    'parecerDescritivo'              => NULL,
+    'tipoPresenca'                   => NULL,
+    'mediaRecuperacao'               => NULL,
+    'tipoRecuperacaoParalela'        => NULL,
+    'mediaRecuperacaoParalela'       => NULL,
+    'notaMaximaGeral'                => NULL,
+    'notaMinimaGeral'                => NULL,
+    'notaMaximaExameFinal'           => NULL,
+    'qtdCasasDecimais'               => NULL,
+    'notaGeralPorEtapa'              => NULL,
+    'definirComponentePorEtapa'      => NULL,
+    'qtdDisciplinasDependencia'      => NULL,
+    'qtdMatriculasDependencia'       => NULL,
+    'aprovaMediaDisciplina'          => NULL,
+    'reprovacaoAutomatica'           => NULL
   );
 
   protected $_dataTypes = array(
@@ -96,6 +97,12 @@ class RegraAvaliacao_Model_Regra extends CoreExt_Entity
       'file'  => 'RegraAvaliacao/Model/Nota/TipoValor.php'
     ),
     'tabelaArredondamento' => array(
+      'value' => 1,
+      'class' => 'TabelaArredondamento_Model_TabelaDataMapper',
+      'file'  => 'TabelaArredondamento/Model/TabelaDataMapper.php',
+      'null'  => TRUE
+    ),
+    'tabelaArredondamentoConceitual' => array(
       'value' => 1,
       'class' => 'TabelaArredondamento_Model_TabelaDataMapper',
       'file'  => 'TabelaArredondamento/Model/TabelaDataMapper.php',
@@ -218,6 +225,11 @@ class RegraAvaliacao_Model_Regra extends CoreExt_Entity
         'choices' => $tipoProgressao->getKeys()
       )),
       'tabelaArredondamento' => new CoreExt_Validate_Choice(array(
+        'choices' => $tabelas,
+        'choice_error' => 'A tabela de arredondamento selecionada não '
+                        . 'corresponde ao sistema de nota escolhido.'
+      )),
+      'tabelaArredondamentoConceitual' => new CoreExt_Validate_Choice(array(
         'choices' => $tabelas,
         'choice_error' => 'A tabela de arredondamento selecionada não '
                         . 'corresponde ao sistema de nota escolhido.'

@@ -1,29 +1,29 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
-	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
-	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
-	*						ctima@itajai.sc.gov.br					    	 *
-	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
-	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
-	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
-	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
-	*	02111-1307, USA.													 *
-	*																		 *
-	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+    *                                                                        *
+    *   @author Prefeitura Municipal de Itajaí                               *
+    *   @updated 29/03/2007                                                  *
+    *   Pacote: i-PLB Software Público Livre e Brasileiro                    *
+    *                                                                        *
+    *   Copyright (C) 2006  PMI - Prefeitura Municipal de Itajaí             *
+    *                       ctima@itajai.sc.gov.br                           *
+    *                                                                        *
+    *   Este  programa  é  software livre, você pode redistribuí-lo e/ou     *
+    *   modificá-lo sob os termos da Licença Pública Geral GNU, conforme     *
+    *   publicada pela Free  Software  Foundation,  tanto  a versão 2 da     *
+    *   Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.    *
+    *                                                                        *
+    *   Este programa  é distribuído na expectativa de ser útil, mas SEM     *
+    *   QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-     *
+    *   ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-     *
+    *   sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.     *
+    *                                                                        *
+    *   Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU     *
+    *   junto  com  este  programa. Se não, escreva para a Free Software     *
+    *   Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA     *
+    *   02111-1307, USA.                                                     *
+    *                                                                        *
+    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsDetalhe.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -31,45 +31,45 @@ require_once( "include/pmieducar/geral.inc.php" );
 
 class clsIndexBase extends clsBase
 {
-	function Formular()
-	{
-		$this->SetTitulo( "{$this->_instituicao} i-Educar - Cole&ccedil&atilde;o" );
-		$this->processoAp = "593";
-		$this->addEstilo('localizacaoSistema');
-	}
+    function Formular()
+    {
+        $this->SetTitulo( "{$this->_instituicao} i-Educar - Cole&ccedil&atilde;o" );
+        $this->processoAp = "593";
+        $this->addEstilo('localizacaoSistema');
+    }
 }
 
 class indice extends clsDetalhe
 {
-	/**
-	 * Titulo no topo da pagina
-	 *
-	 * @var int
-	 */
-	var $titulo;
+    /**
+     * Titulo no topo da pagina
+     *
+     * @var int
+     */
+    var $titulo;
 
-	var $cod_acervo_colecao;
-	var $ref_usuario_exc;
-	var $ref_usuario_cad;
-	var $nm_colecao;
-	var $descricao;
-	var $data_cadastro;
-	var $data_exclusao;
-	var $ativo;
+    var $cod_acervo_colecao;
+    var $ref_usuario_exc;
+    var $ref_usuario_cad;
+    var $nm_colecao;
+    var $descricao;
+    var $data_cadastro;
+    var $data_exclusao;
+    var $ativo;
 
-	function Gerar()
-	{
-		@session_start();
-		$this->pessoa_logada = $_SESSION['id_pessoa'];
-		session_write_close();
+    function Gerar()
+    {
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        session_write_close();
 
-		$this->titulo = "Cole&ccedil&atilde;o - Detalhe";
-		
+        $this->titulo = "Cole&ccedil&atilde;o - Detalhe";
+        
 
-		$this->cod_acervo_colecao=$_GET["cod_acervo_colecao"];
+        $this->cod_acervo_colecao=$_GET["cod_acervo_colecao"];
 
-		$tmp_obj = new clsPmieducarAcervoColecao( $this->cod_acervo_colecao );
-		$registro = $tmp_obj->detalhe();
+        $tmp_obj = new clsPmieducarAcervoColecao( $this->cod_acervo_colecao );
+        $registro = $tmp_obj->detalhe();
 
 
                if( class_exists( "clsPmieducarBiblioteca" ) )
@@ -114,11 +114,11 @@ class indice extends clsDetalhe
     $obj_permissoes = new clsPermissoes();
     $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
      
-	if( ! $registro )
-	{
-		header( "location: educar_acervo_colecao_lst.php" );
-		die();
-	}
+    if( ! $registro )
+    {
+        header( "location: educar_acervo_colecao_lst.php" );
+        die();
+    }
                
     if ($nivel_usuario == 1)
     {
@@ -130,39 +130,39 @@ class indice extends clsDetalhe
                 
     if ($nivel_usuario == 1 || $nivel_usuario == 2)
     {
-      	if( $registro["ref_cod_escola"] )
-      	{
-	        $this->addDetalhe( array( "Escola", "{$registro["ref_cod_escola"]}") );
-      	}
+        if( $registro["ref_cod_escola"] )
+        {
+            $this->addDetalhe( array( "Escola", "{$registro["ref_cod_escola"]}") );
+        }
     }
 
     if( $registro["ref_cod_biblioteca"] )
     {
-	    $this->addDetalhe( array( "Biblioteca", "{$registro["ref_cod_biblioteca"]}") );
+        $this->addDetalhe( array( "Biblioteca", "{$registro["ref_cod_biblioteca"]}") );
     }
-                		
+                        
 
-	if( $registro["cod_acervo_colecao"] )
-	{
-		$this->addDetalhe( array( "C&oacute;digo Cole&ccedil;&atilde;o", "{$registro["cod_acervo_colecao"]}") );
-	}
-	if( $registro["nm_colecao"] )
-	{
-		$this->addDetalhe( array( "Cole&ccedil;&atilde;o", "{$registro["nm_colecao"]}") );
-	}
-	if( $registro["descricao"] )
-	{
-		$this->addDetalhe( array( "Descri&ccedil;&atilde;o", "{$registro["descricao"]}") );
-	}
-	$obj_permissoes = new clsPermissoes();
-	if( $obj_permissoes->permissao_cadastra( 593, $this->pessoa_logada, 11 ) )
-	{
-		$this->url_novo = "educar_acervo_colecao_cad.php";
-		$this->url_editar = "educar_acervo_colecao_cad.php?cod_acervo_colecao={$registro["cod_acervo_colecao"]}";
-	}
+    if( $registro["cod_acervo_colecao"] )
+    {
+        $this->addDetalhe( array( "C&oacute;digo Cole&ccedil;&atilde;o", "{$registro["cod_acervo_colecao"]}") );
+    }
+    if( $registro["nm_colecao"] )
+    {
+        $this->addDetalhe( array( "Cole&ccedil;&atilde;o", "{$registro["nm_colecao"]}") );
+    }
+    if( $registro["descricao"] )
+    {
+        $this->addDetalhe( array( "Descri&ccedil;&atilde;o", "{$registro["descricao"]}") );
+    }
+    $obj_permissoes = new clsPermissoes();
+    if( $obj_permissoes->permissao_cadastra( 593, $this->pessoa_logada, 11 ) )
+    {
+        $this->url_novo = "educar_acervo_colecao_cad.php";
+        $this->url_editar = "educar_acervo_colecao_cad.php?cod_acervo_colecao={$registro["cod_acervo_colecao"]}";
+    }
 
-	$this->url_cancelar = "educar_acervo_colecao_lst.php";
-	$this->largura = "100%";
+    $this->url_cancelar = "educar_acervo_colecao_lst.php";
+    $this->largura = "100%";
 
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
@@ -170,9 +170,9 @@ class indice extends clsDetalhe
          "educar_biblioteca_index.php"                  => "Biblioteca",
          ""                                  => "Detalhe da cole&ccedil;&atilde;o"
     ));
-    $this->enviaLocalizacao($localizacao->montar());	
-	
-	}
+    $this->enviaLocalizacao($localizacao->montar());    
+    
+    }
 }
 
 // cria uma extensao da classe base
