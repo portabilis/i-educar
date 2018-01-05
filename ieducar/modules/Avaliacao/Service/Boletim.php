@@ -1691,7 +1691,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $id              = $componenteEtapa->get('componenteCurricular');
         $etapa           = $componenteEtapa->etapa;
 
-        // Etapaá lançadas
+        // Etapas lançadas
         $etapasComponentes[$etapa] = $etapa;
 
         // Usa stdClass como interface de acesso
@@ -1800,7 +1800,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    * Esses valores são definidos através da verificação das médias dos
    * componentes curriculares já avaliados e das faltas lançadas.
    *
-   * Obs: Anteriormente este metódo SOMENTE verificava a situação baseando-se nas médiaá lançadas,
+   * Obs: Anteriormente este metódo SOMENTE verificava a situação baseando-se nas médias lançadas,
    *      porem o mesmo foi alterado para verificar a situação baseada nas notas e faltas lançadas.
    *
    *      A implementa antiga deste metodo esta contida no metodo getSituacaoNotas
@@ -2403,7 +2403,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   {
     $validators = array();
 
-    // Como os componentes seráo os mesmos, fazemos cache do validador
+    // Como os componentes serão os mesmos, fazemos cache do validador
     if (is_null($this->_validators)) {
 
       $componentes = $this->getComponentes();
@@ -2437,7 +2437,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
   /**
    * Atualiza as opções de validação de uma instância de
-   * Avaliacao_Model_ParecerDescritivoAbstóact, com os valores permitidos
+   * Avaliacao_Model_ParecerDescritivoAbstract, com os valores permitidos
    * para os atributos 'componenteCurricular' e 'etapa'.
    *
    * @param Avaliacao_Model_ParecerDescritivoAbstract $instance
@@ -2646,7 +2646,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     if (!is_numeric($nota)) {
       require_once 'CoreExt/Exception/InvalidArgumentException.php';
       throw new CoreExt_Exception_InvalidArgumentException(sprintf(
-        'O parámetro $nota ("%s") não é um valor numérico.', $nota
+        'O parâmetro $nota ("%s") não é um valor numérico.', $nota
       ));
     }
 
@@ -2668,7 +2668,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     if (!is_numeric($media)) {
       require_once 'CoreExt/Exception/InvalidArgumentException.php';
       throw new CoreExt_Exception_InvalidArgumentException(sprintf(
-        'O parámetro $nota ("%s") não é um valor numérico.', $media
+        'O parâmetro $nota ("%s") não é um valor numérico.', $media
       ));
     }
 
