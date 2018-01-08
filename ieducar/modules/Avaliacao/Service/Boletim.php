@@ -1391,6 +1391,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     // Carrega as médias pois este método pode ser chamado após a chamada a saveNotas()
     $mediasComponentes = $this->_loadMedias()
                               ->getMediasComponentes();
+    $componentes = $this->getComponentes();
+    $mediasComponentes = array_intersect_key($mediasComponentes, $componentes); 
 
     $disciplinaDispensadaTurma = clsPmieducarTurma::getDisciplinaDispensada($this->getOption('ref_cod_turma'));
 
@@ -1445,8 +1447,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
       return $situacao;
     }
-
-    $componentes = $this->getComponentes();
 
     if(is_numeric($disciplinaDispensadaTurma)){
       unset($componentes[$disciplinaDispensadaTurma]);
@@ -1654,6 +1654,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $etapa                              = 0;
     $faltasComponentes                  = array();
 
+    $componentes = $this->getComponentes();
+
     $disciplinaDispensadaTurma = clsPmieducarTurma::getDisciplinaDispensada($this->getOption('ref_cod_turma'));
 
     // Carrega faltas lançadas (persistidas)
@@ -1677,7 +1679,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
     elseif ($tipoFaltaPorComponente) {
       $faltas = $this->_faltasComponentes;
-      $total   = 0;
+      $faltas = array_intersect_key($faltas, $componentes);
+      $total  = 0;
       $etapasComponentes = array();
       $faltasComponentes = array();
 
@@ -1727,7 +1730,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $total += $componenteTotal;
       }
 
-      $componentes = $this->getComponentes();
 
       if(is_numeric($disciplinaDispensadaTurma)){
         unset($componentes[$disciplinaDispensadaTurma]);
