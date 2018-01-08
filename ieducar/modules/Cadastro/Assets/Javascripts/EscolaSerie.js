@@ -8,6 +8,7 @@ document.getElementById('ref_cod_escola').onchange = function () {
 
 document.getElementById('ref_cod_curso').onchange = function () {
     getSerie();
+    
     var campoDisciplinas = document.getElementById('disciplinas');
     campoDisciplinas.innerHTML = "Nenhuma série selecionada";
 }
@@ -41,8 +42,7 @@ function getDisciplina(xml_disciplina) {
             conteudo += '</div>';
             conteudo += '<br style="clear: left" />';
         }
-    }
-    else {
+    } else {
         campoDisciplinas.innerHTML = 'A série/ano escolar não possui componentes '
             + 'curriculares cadastrados.';
     }
@@ -62,7 +62,7 @@ document.getElementById('ref_cod_serie').onchange = function () {
 
     var xml_disciplina = new ajax(getDisciplina);
     xml_disciplina.envia("educar_disciplina_xml.php?ser=" + campoSerie);
-}
+};
 
 after_getEscola = function () {
     getEscolaCurso();
@@ -74,10 +74,10 @@ after_getEscola = function () {
 
 function getSerie() {
     var campoCurso = document.getElementById('ref_cod_curso').value;
+
     if (document.getElementById('ref_cod_escola')) {
         var campoEscola = document.getElementById('ref_cod_escola').value;
-    }
-    else if (document.getElementById('ref_ref_cod_escola')) {
+    } else if (document.getElementById('ref_ref_cod_escola')) {
         var campoEscola = document.getElementById('ref_ref_cod_escola').value;
     }
 
@@ -86,14 +86,14 @@ function getSerie() {
     campoSerie.length = 1;
 
     limpaCampos(4);
+
     if (campoEscola && campoCurso) {
         campoSerie.disabled = true;
         campoSerie.options[0].text = 'Carregando séries';
 
         var xml = new ajax(atualizaLstSerie);
         xml.envia("educar_serie_not_escola_xml.php?esc=" + campoEscola + "&cur=" + campoCurso);
-    }
-    else {
+    } else {
         campoSerie.options[0].text = 'Selecione';
     }
 }
@@ -107,11 +107,14 @@ function atualizaLstSerie(xml) {
     series = xml.getElementsByTagName('serie');
     if (series.length) {
         for (var i = 0; i < series.length; i++) {
-            campoSerie.options[campoSerie.options.length] = new Option(series[i].firstChild.data,
-                series[i].getAttribute('cod_serie'), false, false);
+            campoSerie.options[campoSerie.options.length] = new Option(
+                series[i].firstChild.data,
+                series[i].getAttribute('cod_serie'),
+                false,
+                false
+            );
         }
-    }
-    else {
+    } else {
         campoSerie.options[0].text = 'O curso não possui nenhuma série ou todas as séries já estã associadas a essa escola';
         campoSerie.disabled = true;
     }
@@ -122,6 +125,7 @@ function marcarCheck(idValue) {
     var contaForm = document.formcadastro.elements.length;
     var campo = document.formcadastro;
     var i;
+
     if (idValue == 'disciplinas[]') {
         for (i = 0; i < contaForm; i++) {
             if (campo.elements[i].id == idValue) {
