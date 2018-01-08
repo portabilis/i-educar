@@ -8,7 +8,7 @@ document.getElementById('ref_cod_escola').onchange = function () {
 
 document.getElementById('ref_cod_curso').onchange = function () {
     getSerie();
-    
+
     var campoDisciplinas = document.getElementById('disciplinas');
     campoDisciplinas.innerHTML = "Nenhuma série selecionada";
 }

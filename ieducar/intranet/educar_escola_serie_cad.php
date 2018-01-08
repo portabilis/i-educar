@@ -37,6 +37,7 @@ require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
 require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
 require_once 'Avaliacao/Fixups/CleanComponentesCurriculares.php';
 require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
+require_once 'include/modules/clsEscolaSerie.inc.php';
 
 /**
  * clsIndexBase class.
@@ -438,6 +439,10 @@ class indice extends clsCadastro
         $this->ref_cod_curso = $this->ref_cod_curso_;
         $this->ref_cod_serie = $this->ref_cod_serie_;
 
+        // Valida a possibilidade de exclusão dos componentes da serie
+        $escolaSerie = new clsEscolaSerie($this->ref_cod_escola, $this->ref_cod_serie);
+        $escolaSerie->validaExclusaoComponentes($this->disciplinas);
+
         $anoEscolar = new ComponenteCurricular_Model_AnoEscolarDataMapper();
         $componenteAno = $anoEscolar->findComponentePorSerie($this->ref_cod_serie);
 
@@ -482,7 +487,7 @@ class indice extends clsCadastro
             1
         );
 
-        $obj->excluirTodos();
+        $obj->excluirNaoSelecionados($this->disciplinas);
 
         if ($editou) {
             if ($this->disciplinas) {
@@ -610,6 +615,7 @@ class indice extends clsCadastro
         $scripts = array(
             '/modules/Cadastro/Assets/Javascripts/EscolaSerie.js'
         );
+
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
     }
 }
