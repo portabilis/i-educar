@@ -1125,7 +1125,6 @@ class clsPmieducarAluno
     }
 
     if(is_string($aluno_estado_id)) {
-      $aluno_estado_id = str_replace('-', '', str_replace('.', '', $aluno_estado_id));
       $filtros .= "{$whereAnd} a.aluno_estado_id LIKE '%{$aluno_estado_id}%'";
       $whereAnd = ' AND ';
     }
