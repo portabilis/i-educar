@@ -32,12 +32,12 @@ class clsEscolaSerie
     protected function validaDispensaComponente($componentesSelecionados)
     {
         $sql = "
-            SELECT dd.ref_cod_disciplina AS cod_disciplina, cc.nome AS componente, dd.ref_cod_matricula AS matricula
-            FROM pmieducar.dispensa_disciplina AS dd
-            INNER JOIN modules.componente_curricular AS cc ON cc.id = dd.ref_cod_disciplina
-            WHERE dd.ref_cod_escola = 2
-            AND dd.ref_cod_serie = 38
-            AND dd.ref_cod_disciplina NOT IN ({$componentesSelecionados})
+            SELECT dispensa_disciplina.ref_cod_disciplina AS cod_disciplina, componente_curricular.nome AS componente, dispensa_disciplina.ref_cod_matricula AS matricula
+            FROM pmieducar.dispensa_disciplina
+            INNER JOIN modules.componente_curricular ON componente_curricular.id = dispensa_disciplina.ref_cod_disciplina
+            WHERE dispensa_disciplina.ref_cod_escola = {$this->escola}
+            AND dispensa_disciplina.ref_cod_serie = {$this->serie}
+            AND dispensa_disciplina.ref_cod_disciplina NOT IN ({$componentesSelecionados})
         ";
 
         $this->db->Consulta($sql);
