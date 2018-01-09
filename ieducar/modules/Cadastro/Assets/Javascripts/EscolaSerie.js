@@ -149,25 +149,3 @@ function marcarCheck(idValue) {
 }
 
 $j('.etapas_utilizadas').mask("9,9,9,9", {placeholder: "1,2,3..."});
-
-/*function onEtapasEspecificasChange(){
-  var cod_matricula;
-
-  cod_matricula = onlyNumbers($j(this).attr('name'));
-
-  if($j(this).is(":checked")){
-    $j('#etapas_utilizadas_' + cod_matricula).show();
-  }else{
-    $j('#etapas_utilizadas_' + cod_matricula).hide();
-  }
-}
-
-function onlyNumbers(text){
-  return text.match((/\d+/))[0];
-}
-
-$j('.etapas_especificas').on('change', onEtapasEspecificasChange);
-
-$j('.etapas_especificas').each(function(){
-  $j('.etapas_especificas').trigger("change");
-})*/
