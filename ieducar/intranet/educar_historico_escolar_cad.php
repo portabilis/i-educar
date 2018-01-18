@@ -342,7 +342,7 @@ class indice extends clsCadastro
         }
 
 
-        $this->campoTabelaInicio("notas","Notas",array("Disciplina","Nota","Faltas", '<p title="Informe a carga horária somente se a disciplina não pertencer à grade curricular do município.">C.H (?)</p>', "Ordem", "Dependência"),$this->historico_disciplinas);
+        $this->campoTabelaInicio("notas","Notas",array("Disciplina","Nota","Faltas", 'C.H', "Ordem", "Dependência"),$this->historico_disciplinas);
 
         //$this->campoTexto( "nm_disciplina", "Disciplina", $this->nm_disciplina, 30, 255, false, false, false, '', '', 'autoCompleteComponentesCurricular(this)', 'onfocus' );
         $this->campoTexto( "nm_disciplina", "Disciplina", $this->nm_disciplina, 30, 255, false, false, false, '', '', '', 'onfocus' );
