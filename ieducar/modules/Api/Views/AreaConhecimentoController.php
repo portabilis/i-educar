@@ -80,12 +80,8 @@ class AreaConhecimentoController extends ApiCoreController {
               ORDER BY (lower(ac.nome)) ASC';
 
         $paramsSql = array($serieId);
-        $areasConhecimento = $this->fetchPreparedQuery($sql, $paramsSql);
-        $options = array();
-        $options = Portabilis_Array_Utils::setAsIdValue($areasConhecimento, 'id', 'nome');
 
-        return array('options' => $options);
-
+        return $this->getReturnRequest($this->fetchPreparedQuery($sql, $paramsSql));
       }
 
     protected function getAreasDeConhecimentoForEscolaSerie() {
@@ -105,12 +101,32 @@ class AreaConhecimentoController extends ApiCoreController {
               ORDER BY (lower(ac.nome)) ASC';
 
         $paramsSql = array($escolaId, $serieId);
-        $areasConhecimento = $this->fetchPreparedQuery($sql, $paramsSql);
+
+        return $this->getReturnRequest($this->fetchPreparedQuery($sql, $paramsSql));
+    }
+
+    protected function getAreasDeConhecimentoForTurma(){
+        $turmaId = $this->getRequest()->turma_id;
+
+        $sql = 'SELECT ac.id AS id, (ac.nome) AS nome
+                  FROM modules.area_conhecimento ac
+                 WHERE ac.id in ( SELECT distinct area_conhecimento_id
+                                    FROM relatorio.view_componente_curricular
+                                   WHERE cod_turma = $1
+                 )
+                 ORDER BY (lower(ac.nome)) ASC';
+
+        $paramsSql = array($turmaId);
+
+        return $this->getReturnRequest($this->fetchPreparedQuery($sql, $paramsSql));
+    }
+
+    protected function getReturnRequest($areasConhecimento){
+
         $options = array();
         $options = Portabilis_Array_Utils::setAsIdValue($areasConhecimento, 'id', 'nome');
 
         return array('options' => $options);
-
     }
 
     public function Gerar() {
@@ -120,6 +136,8 @@ class AreaConhecimentoController extends ApiCoreController {
             $this->appendResponse($this->getAreasDeConhecimentoForSerie());
         elseif($this->isRequestFor('get', 'areaconhecimento-escolaserie'))
             $this->appendResponse($this->getAreasDeConhecimentoForEscolaSerie());
+        elseif($this->isRequestFor('get', 'areaconhecimento-turma'))
+            $this->appendResponse($this->getAreasDeConhecimentoForTurma());
         else {
             $this->notImplementedOperationError();
         }
