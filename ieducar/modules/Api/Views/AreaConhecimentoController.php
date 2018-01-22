@@ -134,10 +134,10 @@ class AreaConhecimentoController extends ApiCoreController {
             $this->appendResponse($this->getAreasDeConhecimento());
         elseif($this->isRequestFor('get', 'areaconhecimento-serie'))
             $this->appendResponse($this->getAreasDeConhecimentoForSerie());
-        elseif($this->isRequestFor('get', 'areaconhecimento-escolaserie'))
-            $this->appendResponse($this->getAreasDeConhecimentoForEscolaSerie());
         elseif($this->isRequestFor('get', 'areaconhecimento-turma'))
             $this->appendResponse($this->getAreasDeConhecimentoForTurma());
+        elseif($this->isRequestFor('get', 'areaconhecimento-escolaserie'))
+            $this->appendResponse($this->getAreasDeConhecimentoForEscolaSerie());
         else {
             $this->notImplementedOperationError();
         }
