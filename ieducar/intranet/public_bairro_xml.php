@@ -44,6 +44,7 @@
                 public.bairro
             WHERE
                 idmun = '{$_GET["mun"]}'
+            and trim(coalesce(nome,'')) <> ''
             ORDER BY
                 nome ASC
             " );
