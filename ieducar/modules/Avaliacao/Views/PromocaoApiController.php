@@ -53,11 +53,11 @@ class PromocaoApiController extends ApiCoreController
   protected function canAcceptRequest() {
     return parent::canAcceptRequest()    &&
            $this->validatesUserIsAdmin() &&
-           $this->validatesPresenceOf('ano_escolar');
+           $this->validatesPresenceOf('ano');
   }
 
   protected function canDeleteOldComponentesCurriculares() {
-    return $this->validatesPresenceOf('ano_escolar');
+    return $this->validatesPresenceOf('ano');
   }
 
   protected function canPostPromocaoMatricula() {
@@ -67,24 +67,33 @@ class PromocaoApiController extends ApiCoreController
 
   protected function canGetQuantidadeMatriculas() {
     return $this->validatesPresenceOf('instituicao_id') &&
-           $this->validatesPresenceOf('ano_escolar');
+           $this->validatesPresenceOf('ano');
   }
 
   protected function loadNextMatriculaId($currentMatriculaId) {
     $escolaId = $this->getRequest()->escola == "" ? 0 : $this->getRequest()->escola;
-    $sql = "select m.cod_matricula
-              from pmieducar.matricula as m,
-                   pmieducar.matricula_turma as mt
-             where m.ano = $1
-               and m.ativo = 1
-               and mt.ref_cod_matricula = m.cod_matricula
-               and mt.ativo = 1
-               and ref_cod_matricula > $2
-               and (case when $3 = 0 then true else $3 = m.ref_ref_cod_escola end)
-             order by ref_cod_matricula
-             limit 1";
+    $cursoId = empty($this->getRequest()->curso) ? 0 : $this->getRequest()->curso;
+    $serieId = empty($this->getRequest()->serie) ? 0 : $this->getRequest()->serie;
+    $turmaId = empty($this->getRequest()->turma) ? 0 : $this->getRequest()->turma;
+    $matricula = empty($this->getRequest()->matricula) ? 10 : $this->getRequest()->matricula;
+    $sql = "SELECT m.cod_matricula
+              FROM pmieducar.matricula AS m
+        INNER JOIN pmieducar.matricula_turma AS mt ON m.cod_matricula = mt.ref_cod_matricula
+             WHERE m.ano = $1
+               AND m.ativo = 1
+               AND mt.ref_cod_matricula = m.cod_matricula
+               AND mt.ativo = 1
+               AND ref_cod_matricula > $2
+               AND (CASE WHEN $3 = 0  THEN true else $3 = m.ref_ref_cod_escola END)
+               AND (CASE WHEN $4 = 0  THEN true else $4 = m.ref_cod_curso END)
+               AND (CASE WHEN $5 = 0  THEN true else $5 = m.ref_ref_cod_serie END)
+               AND (CASE WHEN $6 = 0  THEN true else $6 = mt.ref_cod_turma END)
+               AND (CASE WHEN $7 = 10 THEN true
+                         WHEN $7 = 9  THEN m.aprovado NOT IN (4,6) ELSE $6 = m.aprovado END)
+          ORDER BY ref_cod_matricula
+             LIMIT 1";
 
-    $options = array('params'      => array($this->getRequest()->ano_escolar, $currentMatriculaId, $escolaId),
+    $options = array('params'      => array($this->getRequest()->ano, $currentMatriculaId, $escolaId, $cursoId, $serieId, $turmaId, $matricula),
                      'return_only' => 'first-field');
 
     return Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
@@ -92,7 +101,10 @@ class PromocaoApiController extends ApiCoreController
 
 
   function loadSituacaoArmazenadaMatricula($matriculaId) {
-    $sql     = "select aprovado from pmieducar.matricula where cod_matricula = $1 limit 1";
+    $sql     = "SELECT aprovado
+                  FROM pmieducar.matricula
+                 WHERE cod_matricula = $1
+                 LIMIT 1";
 
     $options = array('params' => $matriculaId, 'return_only' => 'first-field');
     return Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
@@ -100,12 +112,19 @@ class PromocaoApiController extends ApiCoreController
 
 
   protected function loadDadosMatricula($matriculaId){
-    $sql = "select m.cod_matricula as matricula_id, m.ref_cod_aluno as aluno_id,
-            m.ref_ref_cod_escola as escola_id, m.ref_cod_curso as curso_id,
-            m.ref_ref_cod_serie as serie_id, mt.ref_cod_turma as turma_id, m.ano,
-            m.aprovado from pmieducar.matricula  as m, pmieducar.matricula_turma as mt
-            where mt.ref_cod_matricula = m.cod_matricula and mt.ativo = 1 and
-            cod_matricula = $1 limit 1";
+    $sql = "SELECT m.cod_matricula AS matricula_id,
+                   m.ref_cod_aluno AS aluno_id,
+                   m.ref_ref_cod_escola AS escola_id,
+                   m.ref_cod_curso AS curso_id,
+                   m.ref_ref_cod_serie AS serie_id,
+                   mt.ref_cod_turma AS turma_id,
+                   m.ano,
+                   m.aprovado
+              FROM pmieducar.matricula  AS m
+        INNER JOIN pmieducar.matricula_turma AS mt ON mt.ref_cod_matricula = m.cod_matricula
+             WHERE mt.ativo = 1
+               AND cod_matricula = $1
+             LIMIT 1";
 
     $options = array('params' => $matriculaId, 'return_only' => 'first-row');
     return Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
@@ -120,24 +139,34 @@ class PromocaoApiController extends ApiCoreController
     $escolaId = $dadosMatricula['escola_id'];
     $turmaId = $dadosMatricula['turma_id'];
 
-    $sql = "select cc.id, cc.nome from modules.componente_curricular_turma as cct,
-            modules.componente_curricular as cc, pmieducar.escola_ano_letivo as al
-            where cct.turma_id = $1 and cct.escola_id = $2 and
-            cct.componente_curricular_id = cc.id and al.ano = $3 and
-            cct.escola_id = al.ref_cod_escola and cc.instituicao_id = $4";
+    $sql = "SELECT cc.id, cc.nome
+              FROM modules.componente_curricular_turma AS cct
+        INNER JOIN modules.componente_curricular AS cc ON cct.componente_curricular_id = cc.id
+        INNER JOIN pmieducar.escola_ano_letivo AS al ON cct.escola_id = al.ref_cod_escola
+             WHERE cct.turma_id = $1
+               AND cct.escola_id = $2
+               AND al.ano = $3
+               AND cc.instituicao_id = $4";
 
     $options = array('params' => array($turmaId, $escolaId, $anoEscolar, $this->getRequest()->instituicao_id));
     $componentesCurricularesTurma = Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
 
-    if (count($componentesCurricularesTurma))
+    if (count($componentesCurricularesTurma)) {
       return $componentesCurricularesTurma;
+    }
 
-    $sql = "select cc.id, cc.nome from pmieducar.turma as t, pmieducar.escola_serie_disciplina as esd,
-            modules.componente_curricular as cc, pmieducar.escola_ano_letivo as al
-            where t.cod_turma = $1 and esd.ref_ref_cod_escola = $2 and
-            t.ref_ref_cod_serie = esd.ref_ref_cod_serie and esd.ref_cod_disciplina = cc.id and
-            al.ano = $3 and cc.instituicao_id = $4 and esd.ref_ref_cod_escola = al.ref_cod_escola and
-            t.ativo = 1 and esd.ativo = 1 and al.ativo = 1";
+    $sql = "SELECT cc.id, cc.nome
+              FROM pmieducar.turma AS t
+        INNER JOIN pmieducar.escola_serie_disciplina AS esd ON t.ref_ref_cod_serie = esd.ref_ref_cod_serie
+        INNER JOIN modules.componente_curricular AS cc ON esd.ref_cod_disciplina = cc.id
+        INNER JOIN pmieducar.escola_ano_letivo AS al ON esd.ref_ref_cod_escola = al.ref_cod_escola
+             WHERE t.cod_turma = $1
+               AND esd.ref_ref_cod_escola = $2
+               AND al.ano = $3
+               AND cc.instituicao_id = $4
+               AND t.ativo = 1
+               AND esd.ativo = 1
+               AND al.ativo = 1";
 
     $options = array('params' => array($turmaId, $escolaId, $anoEscolar, $this->getRequest()->instituicao_id));
     $componentesCurricularesSerie = Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
@@ -168,8 +197,7 @@ class PromocaoApiController extends ApiCoreController
         $this->_boletimServices[$matriculaId] = new Avaliacao_Service_Boletim($params);
       }
       catch (Exception $e) {
-        $this->messenger->append("Erro ao instanciar serviço boletim para matricula {$matriculaId}: " .
-                                 $e->getMessage(), 'error', true);
+        $this->messenger->append("Erro ao instanciar serviço boletim para matricula {$matriculaId}: " . $e->getMessage(), 'error', true);
       }
     }
 
@@ -216,10 +244,10 @@ class PromocaoApiController extends ApiCoreController
     $componentesCurriculares = $this->loadComponentesCurriculares($matriculaId);
 
     if($tpPresenca == $cnsPresenca::GERAL) {
-      foreach(range(1, $this->boletimService()->getOption('etapas')) as $etapa){
+      foreach(range(1, $this->boletimService()->getOption('etapas')) AS $etapa){
         $hasNotaOrParecerInEtapa = false;
 
-        foreach($componentesCurriculares as $cc){
+        foreach($componentesCurriculares AS $cc){
           $nota    = $this->getNota($etapa, $cc['id']);
           $parecer = $this->getParecerDescritivo($etapa, $cc['id']);
 
@@ -284,21 +312,30 @@ class PromocaoApiController extends ApiCoreController
 
   // api responders
 
-  protected function getQuantidadeMatriculas(){
-    if($this->canGetQuantidadeMatriculas()) {
-      $escolaId = is_null($this->getRequest()->escola) ? 0 : $this->getRequest()->escola;
-      $sql = "select count(m.cod_matricula)
-               from pmieducar.matricula as m,
-                    pmieducar.matricula_turma as mt
-              where m.ano = $1
-                and m.ativo = 1
-                and mt.ref_cod_matricula = m.cod_matricula
-                and mt.ativo = 1
-                and (case when $2 = 0 then true else $2 = m.ref_ref_cod_escola end)";
+    protected function getQuantidadeMatriculas(){
+        if($this->canGetQuantidadeMatriculas()) {
+            $escolaId = empty($this->getRequest()->escola) ? 0 : $this->getRequest()->escola;
+            $cursoId = empty($this->getRequest()->curso) ? 0 : $this->getRequest()->curso;
+            $serieId = empty($this->getRequest()->serie) ? 0 : $this->getRequest()->serie;
+            $turmaId = empty($this->getRequest()->turma) ? 0 : $this->getRequest()->turma;
+            $matricula = empty($this->getRequest()->matricula) ? 10 : $this->getRequest()->matricula;
+            $sql = "SELECT count(m.cod_matricula)
+                    FROM pmieducar.matricula AS m
+                INNER JOIN pmieducar.matricula_turma AS mt ON mt.ref_cod_matricula = m.cod_matricula
+                    WHERE m.ano = $1
+                        AND m.ativo = 1
+                        AND mt.ref_cod_matricula = m.cod_matricula
+                        AND mt.ativo = 1
+                        AND (CASE WHEN $2 = 0  THEN true ELSE $2 = m.ref_ref_cod_escola END)
+                        AND (CASE WHEN $3 = 0  THEN true ELSE $3 = m.ref_cod_curso END)
+                        AND (CASE WHEN $4 = 0  THEN true ELSE $4 = m.ref_ref_cod_serie END)
+                        AND (CASE WHEN $5 = 0  THEN true ELSE $5 = mt.ref_cod_turma END)
+                        AND (CASE WHEN $6 = 10 THEN true
+                                WHEN $6 = 9  THEN m.aprovado NOT IN (4,6) ELSE $6 = m.aprovado END)";
 
-      $options = array('params' => array($this->getRequest()->ano_escolar, $escolaId), 'return_only' => 'first-field');
-      return Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
-    }
+            $options = array('params' => array($this->getRequest()->ano, $escolaId, $cursoId, $serieId, $turmaId,$matricula), 'return_only' => 'first-field');
+            return Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
+        }
   }
 
   protected function postPromocaoMatricula() {
@@ -348,7 +385,7 @@ class PromocaoApiController extends ApiCoreController
     as das turmas / séries para que os alunos destas possam ser promovidos */
   protected function deleteOldComponentesCurriculares() {
     if ($this->canDeleteOldComponentesCurriculares()) {
-      CleanComponentesCurriculares::destroyOldResources($this->getRequest()->ano_escolar);
+      CleanComponentesCurriculares::destroyOldResources($this->getRequest()->ano);
 
       $this->messenger->append("Removido notas, medias notas e faltas de antigos componentes curriculares, " .
                                "vinculados a turmas / séries.", 'notice');
@@ -359,7 +396,7 @@ class PromocaoApiController extends ApiCoreController
 
     $matriculaId = $this->matriculaId();
 
-    foreach(App_Model_IedFinder::getComponentesPorMatricula($matriculaId) as $_componente){
+    foreach(App_Model_IedFinder::getComponentesPorMatricula($matriculaId) AS $_componente){
       $componenteId = $_componente->get('id');
 
       $nota_exame = str_replace(',', '.', $this->boletimService()->preverNotaRecuperacao($componenteId));
