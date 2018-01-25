@@ -36,18 +36,12 @@
     if( is_numeric( $_GET["mun"] ) )
     {
         $db = new clsBanco();
-        $db->Consulta( "
-            SELECT
-                idbai
-                , nome
-            FROM
-                public.bairro
-            WHERE
-                idmun = '{$_GET["mun"]}'
-            and trim(coalesce(nome,'')) <> ''
-            ORDER BY
-                nome ASC
-            " );
+        $db->Consulta("SELECT idbai,
+                              nome
+                         FROM public.bairro
+                        WHERE idmun = '{$_GET["mun"]}'
+                          AND trim(coalesce(nome,'')) <> ''
+                     ORDER BY nome ASC");
 
         while ( $db->ProximoRegistro() )
         {
