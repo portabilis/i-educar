@@ -323,7 +323,7 @@ class indice extends clsCadastro
                           WHERE na.id = ncc.nota_aluno_id
                             AND na.matricula_id = $this->ref_cod_matricula
                             AND ncc.componente_curricular_id = $this->ref_cod_disciplina
-                            AND ncc.etapa = $etapa");
+                            AND ncc.etapa = $etapa::character varying");
         }
       }
 
