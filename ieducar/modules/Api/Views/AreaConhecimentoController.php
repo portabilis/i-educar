@@ -130,15 +130,15 @@ class AreaConhecimentoController extends ApiCoreController {
     }
 
     public function Gerar() {
-        if ($this->isRequestFor('get', 'areas-de-conhecimento'))
+        if ($this->isRequestFor('get', 'areas-de-conhecimento')) {
             $this->appendResponse($this->getAreasDeConhecimento());
-        elseif($this->isRequestFor('get', 'areaconhecimento-serie'))
+        } elseif($this->isRequestFor('get', 'areaconhecimento-serie')) {
             $this->appendResponse($this->getAreasDeConhecimentoForSerie());
-        elseif($this->isRequestFor('get', 'areaconhecimento-turma'))
+        } elseif($this->isRequestFor('get', 'areaconhecimento-turma')) {
             $this->appendResponse($this->getAreasDeConhecimentoForTurma());
-        elseif($this->isRequestFor('get', 'areaconhecimento-escolaserie'))
+        } elseif($this->isRequestFor('get', 'areaconhecimento-escolaserie')) {
             $this->appendResponse($this->getAreasDeConhecimentoForEscolaSerie());
-        else {
+        } else {
             $this->notImplementedOperationError();
         }
     }
