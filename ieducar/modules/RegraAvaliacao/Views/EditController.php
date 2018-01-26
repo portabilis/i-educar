@@ -555,9 +555,7 @@ var tabela_arredondamento = new function() {
 
     if($_POST['tipoNota']==3){
       $_POST['tabelaArredondamento'] = $_POST['tabelaArredondamentoNumero'];
-    }
-
-    if ($_POST['tipoNota'] != "1" && $_POST['tipoNota'] != "2") {
+    } else {
         $_POST['tabelaArredondamentoConceitual'] = null;
     }
 
