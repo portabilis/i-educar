@@ -142,6 +142,8 @@ require_once 'include/pmieducar/clsPmieducarCandidatoReservaVaga.inc.php';
 require_once 'include/pmieducar/clsPmieducarSerieVaga.inc.php';
 require_once 'include/pmieducar/clsPmieducarBloqueioLancamentoFaltasNotas.inc.php';
 require_once 'include/pmieducar/clsPmieducarConfiguracoesGerais.inc.php';
+require_once 'include/pmieducar/clsPmieducarCandidatoFilaUnica.inc.php';
+require_once 'include/pmieducar/clsPmieducarEscolaCandidatoFilaUnica.inc.php';
 
 //Biblioteca
 require_once 'include/pmieducar/clsPmieducarBiblioteca.inc.php';
