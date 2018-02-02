@@ -640,16 +640,6 @@ class clsPmieducarInstituicao
       }
 
       if (dbBool($this->exigir_dados_socieconomicos)) {
-        $campos .= "{$gruda}exigir_dados_socieconomicos";
-        $valores .= "{$gruda} true ";
-        $gruda = ", ";
-      }else{
-        $campos .= "{$gruda}exigir_dados_socieconomicos";
-        $valores .= "{$gruda} false ";
-        $gruda = ", ";
-      }
-
-      if ($this->exigir_dados_socioeconomicos) {
         $campos .= "{$gruda}exigir_dados_socioeconomicos";
         $valores .= "{$gruda} true ";
         $gruda = ", ";
