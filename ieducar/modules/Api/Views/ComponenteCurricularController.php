@@ -47,7 +47,7 @@ class ComponenteCurricularController extends ApiCoreController
   // subescreve para pesquisar %query%, e nao query% como por padrão
   protected function sqlsForStringSearch() {
     return "select distinct id, nome as name from modules.componente_curricular
-            where lower(to_ascii(nome)) like '%'||lower(to_ascii($1))||'%' order by nome limit 15";
+            where lower(nome) like '%'||lower($1)||'%' order by nome limit 15";
   }
 
   // subscreve formatResourceValue para não adicionar 'id -' a frente do resultado
