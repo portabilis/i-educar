@@ -252,16 +252,24 @@ class clsPmieducarCandidatoFilaUnica
                 $valores .= "{$gruda}'{$this->hora_solicitacao}'";
                 $gruda = ", ";
             }
-            if(is_string($this->horario_inicial))
+            if(is_string($this->horario_inicial) && !empty($this->horario_inicial))
             {
                 $campos .= "{$gruda}horario_inicial";
                 $valores .= "{$gruda}'{$this->horario_inicial}'";
                 $gruda = ", ";
+            }else{
+                $campos .= "{$gruda}horario_inicial";
+                $valores .= "{$gruda}NULL";
+                $gruda = ", ";
             }
-            if(is_string($this->horario_final))
+            if(is_string($this->horario_final) && !empty($this->horario_final))
             {
                 $campos .= "{$gruda}horario_final";
                 $valores .= "{$gruda}'{$this->horario_final}'";
+                $gruda = ", ";
+            }else{
+                $campos .= "{$gruda}horario_final";
+                $valores .= "{$gruda}NULL";
                 $gruda = ", ";
             }
             if(is_string($this->situacao))
@@ -290,8 +298,8 @@ class clsPmieducarCandidatoFilaUnica
             $campos .= "{$gruda}ativo";
             $valores .= "{$gruda}'1'";
             $gruda = ", ";
-
-            return $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores ) RETURNING cod_candidato_fila_unica");
+            
+            return $db->campoUnico("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores ) RETURNING cod_candidato_fila_unica");
         }
         return false;
     }
@@ -419,7 +427,8 @@ class clsPmieducarCandidatoFilaUnica
                        d.certidao_nascimento,
                        d.num_termo,
                        d.num_livro,
-                       d.num_folha
+                       d.num_folha,
+                       d.comprovante_residencia
                   FROM {$this->_tabela} cfu";
         $sql .= " INNER JOIN pmieducar.aluno a ON (a.cod_aluno = cfu.ref_cod_aluno)
                   INNER JOIN cadastro.pessoa p ON (p.idpes = a.ref_idpes)
@@ -581,7 +590,8 @@ class clsPmieducarCandidatoFilaUnica
                                   d.certidao_nascimento,
                                   d.num_termo,
                                   d.num_folha,
-                                  d.num_livro
+                                  d.num_livro,
+                                  d.comprovante_residencia
                              FROM {$this->_tabela} cfu
                             INNER JOIN pmieducar.aluno a ON (a.cod_aluno = cfu.ref_cod_aluno)
                             INNER JOIN cadastro.pessoa p ON (p.idpes = a.ref_idpes)
