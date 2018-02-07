@@ -60,6 +60,7 @@ class clsDocumento
     var $certidao_casamento;
     var $cartorio_cert_civil_inep;
     var $passaporte;
+    var $comprovante_residencia;
 
     var $tabela;
     var $schema = "cadastro";
@@ -69,7 +70,7 @@ class clsDocumento
      *
      * @return Object:clsDocumento
      */
-    function clsDocumento( $int_idpes = false, $int_rg = false, $str_data_exp_rg = false, $str_sigla_uf_exp_rg = false, $int_tipo_cert_civil = false, $int_num_termo = false, $int_num_livro = false, $int_num_folha = false, $str_data_emissao_cert_civil = false, $str_sigla_uf_cert_civil = false, $str_cartorio_cert_civil = false, $int_num_cart_trabalho = false, $int_serie_cart_trabalho = false, $str_data_emissao_cart_trabalho = false, $str_sigla_uf_cart_trabalho = false, $int_num_tit_eleitor = false, $int_zona_tit_eleitor = false, $int_secao_tit_eleitor = false, $int_idorg_exp_rg = false, $str_certidao_nascimento = null, $str_certidao_casamento = null, $str_passaporte)
+    function clsDocumento( $int_idpes = false, $int_rg = false, $str_data_exp_rg = false, $str_sigla_uf_exp_rg = false, $int_tipo_cert_civil = false, $int_num_termo = false, $int_num_livro = false, $int_num_folha = false, $str_data_emissao_cert_civil = false, $str_sigla_uf_cert_civil = false, $str_cartorio_cert_civil = false, $int_num_cart_trabalho = false, $int_serie_cart_trabalho = false, $str_data_emissao_cart_trabalho = false, $str_sigla_uf_cart_trabalho = false, $int_num_tit_eleitor = false, $int_zona_tit_eleitor = false, $int_secao_tit_eleitor = false, $int_idorg_exp_rg = false, $str_certidao_nascimento = null, $str_certidao_casamento = null, $str_passaporte, $str_comprovante_residencia = null)
     {
         $objPessoa = new clsFisica($int_idpes);
         if($objPessoa->detalhe())
@@ -119,6 +120,7 @@ class clsDocumento
     $this->certidao_nascimento = $str_certidao_nascimento;
     $this->certidao_casamento = $str_certidao_casamento;
     $this->passaporte = $str_passaporte;
+    $this->comprovante_residencia = $str_comprovante_residencia;
 
         $this->tabela = "documento";
     }
@@ -247,6 +249,12 @@ class clsDocumento
             {
                 $campos .= ", passaporte";
                 $values .= ", '{$this->passaporte}'";
+            }
+
+            if( is_string( $this->comprovante_residencia ))
+            {
+                $campos .= ", comprovante_residencia";
+                $values .= ", '{$this->comprovante_residencia}'";
             }
 
             $db->Consulta( "INSERT INTO {$this->schema}.{$this->tabela} ( idpes , origem_gravacao, idsis_cad, data_cad, operacao $campos ) VALUES ( '{$this->idpes}', 'M', 17, NOW(), 'I' $values )" );
@@ -489,6 +497,12 @@ class clsDocumento
         if( ! is_null( $this->passaporte ))
         {
             $set .= $gruda."passaporte = '{$this->passaporte}'";
+            $gruda = ", ";
+        }
+
+        if( ! is_null( $this->comprovante_residencia ))
+        {
+            $set .= $gruda."comprovante_residencia = '{$this->comprovante_residencia}'";
             $gruda = ", ";
         }
 
