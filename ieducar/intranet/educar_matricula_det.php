@@ -336,11 +336,9 @@ class indice extends clsDetalhe
           $this->array_botao[]            = 'Cancelar solicitação transferência';
           $this->array_botao_url_script[] = "go(\"educar_transferencia_solicitacao_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}&cancela=true\")";
         }
-        else {
-          if ($registro['ref_ref_cod_serie']) {
+        elseif ($registro['ref_ref_cod_serie']) {
             $this->array_botao[]            = ( $GLOBALS['coreExt']['Config']->app->database->dbname == 'botucatu' ? 'Deslocamento / Transferência' : 'Solicitar transferência' );
             $this->array_botao_url_script[] = "go(\"educar_transferencia_solicitacao_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\")";
-          }
         }
 
         if ($registro['aprovado'] == 3 &&
