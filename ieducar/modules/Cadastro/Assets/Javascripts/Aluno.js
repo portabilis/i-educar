@@ -77,7 +77,7 @@ var $arrayUrlLaudoMedico = [];
 var $arrayDataLaudoMedico = [];
 
 function excluirLaudoMedico(event) {
-    $arrayUrlLaudoMedico[event.data.i] = '';
+    $arrayUrlLaudoMedico.splice(event.data.i - 1,1);
     $j('#laudo_medico').val('').removeClass('success');
     messageUtils.notice('Laudo médico excluído com sucesso!');
     $j('#laudo' + event.data.i).hide();
@@ -196,7 +196,7 @@ var $arrayUrlDocumento = [];
 var $arrayDataDocumento = [];
 
 function excluirDocumento(event) {
-    $arrayUrlDocumento[event.data.i] = '';
+    $arrayUrlDocumento.splice(event.data.i - 1,1);
     $j('#documento').val('').removeClass('success');
     messageUtils.notice('Documento excluído com sucesso!');
     $j('#documento' + event.data.i).hide();
@@ -241,7 +241,7 @@ function addDocumento(url, data) {
 
 function montaUrlDocumento() {
     var url = '';
-
+    
     for (var i = 0; i < $arrayUrlDocumento.length; i++) {
         if ($arrayUrlDocumento[i]) {
             var dataDocumento = '';
