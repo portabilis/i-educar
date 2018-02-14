@@ -144,6 +144,7 @@ require_once 'include/pmieducar/clsPmieducarBloqueioLancamentoFaltasNotas.inc.ph
 require_once 'include/pmieducar/clsPmieducarConfiguracoesGerais.inc.php';
 require_once 'include/pmieducar/clsPmieducarCandidatoFilaUnica.inc.php';
 require_once 'include/pmieducar/clsPmieducarEscolaCandidatoFilaUnica.inc.php';
+require_once 'include/pmieducar/clsPmieducarResponsaveisAluno.inc.php';
 
 //Biblioteca
 require_once 'include/pmieducar/clsPmieducarBiblioteca.inc.php';

@@ -145,18 +145,66 @@ class FilaUnicaController extends ApiCoreController
         return false;
     }
 
-  public function Gerar() {
-    if ($this->isRequestFor('get', 'get-aluno-by-certidao')) {
-        $this->appendResponse($this->getDadosAlunoByCertidao());
-    }else if ($this->isRequestFor('get', 'matricula-andamento')){
-        $this->appendResponse($this->getMatriculaAlunoAndamento());
-    }else if ($this->isRequestFor('get', 'solicitacao-andamento')){
-        $this->appendResponse($this->getSolicitacaoAndamento());
-    }else if ($this->isRequestFor('get', 'series-sugeridas')){
-        $this->appendResponse($this->getSeriesSugeridas());
+    protected function getDadosResponsaveisAluno() {
+        $aluno = $this->getRequest()->aluno_id;
+        if($aluno){
+            $sql = "SELECT pessoa.idpes,
+                           vinculo_familiar,
+                           pessoa.nome,
+                           fisica.cpf,
+                           fisica.tipo_trabalho,
+                           fisica.local_trabalho,
+                           documento.declaracao_trabalho_autonomo,
+                           to_char(fisica.horario_inicial_trabalho, 'hh:mm') AS horario_inicial_trabalho,
+                           to_char(fisica.horario_final_trabalho, 'hh:mm') AS horario_final_trabalho,
+                           fpr.ddd AS ddd_telefone,
+                           fpr.fone AS telefone,
+                           fpc.ddd AS ddd_telefone_celular,
+                           fpc.fone AS telefone_celular
+                      FROM pmieducar.responsaveis_aluno
+                     INNER JOIN cadastro.fisica ON (fisica.idpes = responsaveis_aluno.ref_idpes)
+                     INNER JOIN cadastro.pessoa ON (pessoa.idpes = responsaveis_aluno.ref_idpes)
+                      LEFT JOIN cadastro.documento ON (documento.idpes = responsaveis_aluno.ref_idpes)
+                      LEFT JOIN cadastro.fone_pessoa fpr ON (fpr.idpes = responsaveis_aluno.ref_idpes
+                                                             AND fpr.tipo = 1)
+                      LEFT JOIN cadastro.fone_pessoa fpc ON (fpc.idpes = responsaveis_aluno.ref_idpes
+                                                             AND fpc.tipo = 2)
+                     WHERE ref_cod_aluno = {$aluno}";
+            $attrs = array(
+                'idpes',
+                'vinculo_familiar',
+                'nome',
+                'cpf',
+                'tipo_trabalho',
+                'local_trabalho',
+                'declaracao_trabalho_autonomo',
+                'horario_inicial_trabalho',
+                'horario_final_trabalho',
+                'ddd_telefone',
+                'telefone',
+                'ddd_telefone_celular',
+                'telefone_celular'
+            );
+            $responsaveis = Portabilis_Array_Utils::filterSet($this->fetchPreparedQuery($sql), $attrs);
+            return array('responsaveis' => $responsaveis);
+        }
+        return false;
     }
-    else{
-      $this->notImplementedOperationError();
+
+    public function Gerar() {
+        if ($this->isRequestFor('get', 'get-aluno-by-certidao')) {
+            $this->appendResponse($this->getDadosAlunoByCertidao());
+        }else if ($this->isRequestFor('get', 'matricula-andamento')){
+            $this->appendResponse($this->getMatriculaAlunoAndamento());
+        }else if ($this->isRequestFor('get', 'solicitacao-andamento')){
+            $this->appendResponse($this->getSolicitacaoAndamento());
+        }else if ($this->isRequestFor('get', 'series-sugeridas')){
+            $this->appendResponse($this->getSeriesSugeridas());
+        }else if ($this->isRequestFor('get', 'responsaveis-aluno')){
+            $this->appendResponse($this->getDadosResponsaveisAluno());
+        }
+        else{
+        $this->notImplementedOperationError();
+        }
     }
-  }
 }
