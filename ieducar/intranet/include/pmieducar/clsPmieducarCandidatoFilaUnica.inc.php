@@ -519,7 +519,7 @@ class clsPmieducarCandidatoFilaUnica
         }
         if(is_numeric($this->ativo))
         {
-            $filtros .= "{$whereAnd} ativo = '{$this->ativo}'";
+            $filtros .= "{$whereAnd} cfu.ativo = '{$this->ativo}'";
             $whereAnd = " AND ";
         }
         if(is_string($nome))
@@ -543,8 +543,8 @@ class clsPmieducarCandidatoFilaUnica
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
         $this->_total = $db->CampoUnico("SELECT COUNT(0)
-                                            FROM {$this->_tabela}
-                                            INNER JOIN pmieducar.aluno ON (aluno.cod_aluno = candidato_fila_unica.ref_cod_aluno)
+                                            FROM {$this->_tabela} cfu
+                                            INNER JOIN pmieducar.aluno ON (aluno.cod_aluno = cfu.ref_cod_aluno)
                                             INNER JOIN cadastro.pessoa ON (pessoa.idpes = aluno.ref_idpes) {$filtros}");
         
         $db->Consulta( $sql );
