@@ -418,7 +418,7 @@ class clsPmieducarCandidatoFilaUnica
      * @return array
      */
     function lista($nome = NULL,
-                   $nome_responsavel_principal = NULL,
+                   $nome_responsavel = NULL,
                    $ref_cod_escola = NULL)
     {
         $sql = "SELECT {$this->_campos_lista},
@@ -428,7 +428,14 @@ class clsPmieducarCandidatoFilaUnica
                        d.num_termo,
                        d.num_livro,
                        d.num_folha,
-                       d.comprovante_residencia
+                       d.comprovante_residencia,
+                       (SELECT (replace(textcat_all(nome),' <br>',','))
+                          FROM (SELECT p.nome
+                                  FROM pmieducar.responsaveis_aluno ra
+                                 INNER JOIN cadastro.pessoa p ON (p.idpes = ra.ref_idpes)
+                                 WHERE ref_cod_aluno = cfu.ref_cod_aluno
+                                 ORDER BY vinculo_familiar
+                                 LIMIT 3) r) AS responsaveis
                   FROM {$this->_tabela} cfu";
         $sql .= " INNER JOIN pmieducar.aluno a ON (a.cod_aluno = cfu.ref_cod_aluno)
                   INNER JOIN cadastro.pessoa p ON (p.idpes = a.ref_idpes)
@@ -535,11 +542,20 @@ class clsPmieducarCandidatoFilaUnica
                                                 AND ref_cod_escola = {$ref_cod_escola})";
             $whereAnd = " AND ";
         }
+        if(is_string($nome_responsavel)){
+            $filtros .= "{$whereAnd} (SELECT upper(replace(textcat_all(nome),' <br>',','))
+                                        FROM (SELECT p.nome
+                                                FROM pmieducar.responsaveis_aluno ra
+                                               INNER JOIN cadastro.pessoa p ON (p.idpes = ra.ref_idpes)
+                                               WHERE ref_cod_aluno = cfu.ref_cod_aluno
+                                               ORDER BY vinculo_familiar
+                                               LIMIT 3) r) LIKE upper('%{$nome_responsavel}%')";
+        }
 
         $db = new clsBanco();
         $countCampos = count( explode( ",", $this->_campos_lista ) );
         $resultado = array();
-        
+
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
         $this->_total = $db->CampoUnico("SELECT COUNT(0)
