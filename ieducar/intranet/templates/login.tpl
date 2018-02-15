@@ -13,6 +13,7 @@
     <script type='text/javascript' src='scripts/jquery/jquery-1.8.3.min.js?5'></script>
 
   <script type="text/javascript">
+    window.ambiente = '<!-- #&CORE_EXT_CONFIGURATION_ENV&# -->';
 
     var $j = jQuery.noConflict();
 
@@ -22,16 +23,17 @@
       if (navigator && navigator.platform) {
         var platform = navigator.platform.toLowerCase();
 
-        if (platform.indexOf('win') > -1)
+        if (platform.indexOf('win') > -1) {
           so = 'windows';
-        else if (platform.indexOf('linux') > -1)
+        } else if (platform.indexOf('linux') > -1) {
           so = 'linux';
-        else if (platform.indexOf('mac') > -1)
+        } else if (platform.indexOf('mac') > -1) {
           so = 'macOS';
-        else if (platform.indexOf('x11') > -1)
+        } else if (platform.indexOf('x11') > -1) {
           so = 'unix';
-        else
+        } else {
           so = platform;
+        }
       }
 
       return so;
@@ -40,35 +42,32 @@
     function loginpage_onload() {
       var domainName = window.location.hostname;
 
-      if (domainName.indexOf('treinamento') < 0 && domainName.indexOf('demonstracao') < 0)
+      if (domainName.indexOf('treinamento') < 0 && domainName.indexOf('demonstracao') < 0) {
         $j('.only-for-clients').show();
+      }
 
       $j('.fade-in').fadeIn('slow');
 
       $j('#login').focus();
 
       // used for support links
-      if (currentSO() == 'windows')
+      if (currentSO() == 'windows') {
         $j('.visible-for-windows-so').show();
-      else
+      } else {
         $j('.visible-for-non-windows-so').show();
+      }
     }
+  </script>
 
-    // set up google analytics
-    var domainName = "#&GOOGLE_ANALYTICS_DOMAIN_NAME&#";
+  <script async src="https://www.googletagmanager.com/gtag/js?id=***REMOVED***"></script>
+  <script>
+    if (window.ambiente == 'production') {
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('set', {'content_group1': window.location.hostname});
 
-    // track only production requests.
-    if (domainName.indexOf('local.') < 0 && domainName.indexOf('test.') < 0) {
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', '***REMOVED***']);
-      _gaq.push(['_setDomainName', domainName]);
-      _gaq.push(['_trackPageview']);
-
-      (function() {
-        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js?5';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-      })();
+      gtag('config', '***REMOVED***');
     }
   </script>
 
@@ -95,6 +94,7 @@
 
       <div id="login-form" class="box shadow">
         <h1>Acesse sua conta</h1>
+        <!-- #&CRIARCONTA&# -->
         <form action="" method="post">
           <label class="" for="login">Matrícula:</label>
           <input type="text" name="login" id="login">

@@ -48,7 +48,7 @@ class clsIndexBase extends clsBase
   function Formular()
   {
     $this->SetTitulo($this->_instituicao . ' i-Educar - Componentes da série');
-    $this->processoAp = '583';
+    $this->processoAp = '9998859';
     $this->addEstilo("localizacaoSistema");
   }
 }
@@ -106,10 +106,7 @@ class indice extends clsListagem
 
     $this->addCabecalhos($lista_busca);
 
-    $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'curso'));
-
-    // outros Filtros
-    $this->campoTexto('nm_serie', 'Série', $this->nm_serie, 30, 255, FALSE);
+    $this->inputsHelper()->dynamic(array('instituicao', 'curso', 'serie'), array('required' => false));
 
     // Paginador
     $this->limite = 10;
@@ -120,9 +117,8 @@ class indice extends clsListagem
     $obj_serie->setOrderby("nm_serie ASC");
     $obj_serie->setLimite($this->limite, $this->offset);
 
-    $lista = $obj_serie->listaSeriesComComponentesVinculados(NULL,
+    $lista = $obj_serie->listaSeriesComComponentesVinculados($this->ref_cod_serie,
                                                              $this->ref_cod_curso,
-                                                             $this->nm_serie,
                                                              $this->ref_cod_instituicao,
                                                              1);
 
@@ -156,7 +152,7 @@ class indice extends clsListagem
 
     $this->addPaginador2("educar_componentes_serie_lst.php", $total, $_GET, $this->nome, $this->limite);
 
-    if ($obj_permissoes->permissao_cadastra(583, $this->pessoa_logada, 3)) {
+    if ($obj_permissoes->permissao_cadastra(9998859, $this->pessoa_logada, 3)) {
       $this->acao = "go(\"educar_componentes_serie_cad.php\")";
       $this->nome_acao = "Novo";
     }
@@ -167,10 +163,11 @@ class indice extends clsListagem
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_index.php"                  => "Escola",
-         ""        => "Componentes das séries"             
+         ""        => "Componentes da série"             
     ));
     $this->enviaLocalizacao($localizacao->montar());  
-
+    $scripts = array('/modules/Cadastro/Assets/Javascripts/ComponentesSerieFiltros.js');
+    Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
   }
 }
 

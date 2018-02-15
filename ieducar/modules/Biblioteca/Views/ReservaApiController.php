@@ -302,7 +302,7 @@ class ReservaApiController extends ApiCoreController
                                      $this->getRequest()->ref_cod_escola);
 
     if(is_array($emprestimo) && ! empty($emprestimo)) {
-  	  $emprestimo                              = array_shift($emprestimo);
+      $emprestimo                              = array_shift($emprestimo);
       $cliente                                 = $this->loadCliente($emprestimo["ref_cod_cliente"]);
 
       $_emprestimo['exists']                   = true;
@@ -342,8 +342,8 @@ class ReservaApiController extends ApiCoreController
 
       $this->_reservas = array();
 
-		  $reservas = new clsPmieducarReservas();
-		  $reservas = $reservas->lista(null,
+          $reservas = new clsPmieducarReservas();
+          $reservas = $reservas->lista(null,
                                    null,
                                    null,
                                    $clienteId,
@@ -394,13 +394,13 @@ class ReservaApiController extends ApiCoreController
 
     $_cliente = array('id' => $id);
 
-		$cliente = new clsPmieducarCliente($id);
-		$cliente = $cliente->detalhe();
+        $cliente = new clsPmieducarCliente($id);
+        $cliente = $cliente->detalhe();
 
     $_cliente['pessoaId'] = $cliente["ref_idpes"];
 
-		$pessoa = new clsPessoa_($_cliente['pessoaId']);
-		$pessoa = $pessoa->detalhe();
+        $pessoa = new clsPessoa_($_cliente['pessoaId']);
+        $pessoa = $pessoa->detalhe();
 
     $_cliente['nome']        = $pessoa["nome"];
 
@@ -433,7 +433,7 @@ class ReservaApiController extends ApiCoreController
     $acervo             = $this->getAcervo($exemplar['ref_cod_acervo']);
     $exemplarTipoId     = $acervo['ref_cod_exemplar_tipo'];
 
-		$clienteTipoCliente = new clsPmieducarClienteTipoCliente();
+        $clienteTipoCliente = new clsPmieducarClienteTipoCliente();
 
     $clienteTipoCliente      = $clienteTipoCliente->lista(null,
                                                           $this->getRequest()->ref_cod_cliente,
@@ -448,12 +448,12 @@ class ReservaApiController extends ApiCoreController
 
     $clienteTipoId           = $clienteTipoCliente[0]['ref_cod_cliente_tipo'];
 
-		$clienteTipoExemplarTipo = new clsPmieducarClienteTipoExemplarTipo($clienteTipoId,
+        $clienteTipoExemplarTipo = new clsPmieducarClienteTipoExemplarTipo($clienteTipoId,
                                                                        $exemplarTipoId);
 
-		$clienteTipoExemplarTipo = $clienteTipoExemplarTipo->detalhe();
+        $clienteTipoExemplarTipo = $clienteTipoExemplarTipo->detalhe();
 
-		return $clienteTipoExemplarTipo["dias_emprestimo"];
+        return $clienteTipoExemplarTipo["dias_emprestimo"];
   }
 
 
@@ -474,7 +474,7 @@ class ReservaApiController extends ApiCoreController
 
   protected function loadExemplares($reload = false) {
     if ($reload || ! isset($this->_exemplares)) {
-		  $this->_exemplares = new clsPmieducarExemplar();
+          $this->_exemplares = new clsPmieducarExemplar();
       $this->_exemplares = $this->_exemplares->lista(null,
                                                      null,
                                                      null,
@@ -522,7 +522,7 @@ class ReservaApiController extends ApiCoreController
       $exemplar               = $this->loadExemplar();
       $dataPrevistaDisponivel = $this->getDataPrevistaDisponivelForExemplarAfterLastPendencia($exemplar);
 
-  		$reserva = new clsPmieducarReservas(null,
+        $reserva = new clsPmieducarReservas(null,
                                           null,
                                           $this->getSession()->id_pessoa,
                                           $this->getRequest()->ref_cod_cliente,
@@ -532,7 +532,7 @@ class ReservaApiController extends ApiCoreController
                                           $this->getRequest()->exemplar_id,
                                           1);
 
-		  if($reserva->cadastra())
+          if($reserva->cadastra())
         $this->messenger->append("Reserva realizada com sucesso.", 'success');
       else
         $this->messenger->append("Aparentemente a reserva não foi cadastrada, por favor, tente novamente.", 'error');
@@ -547,8 +547,8 @@ class ReservaApiController extends ApiCoreController
       $exemplar = $this->loadExemplar();
 
       // chamado list para assegurar que esta excluindo a reserva do cliente, biblioteca, instituicao e escola
-		  $reservas = new clsPmieducarReservas();
-		  $reservas = $reservas->lista($this->getRequest()->reserva_id,
+          $reservas = new clsPmieducarReservas();
+          $reservas = $reservas->lista($this->getRequest()->reserva_id,
                                    null,
                                    null,
                                    $this->getRequest()->ref_cod_cliente,
@@ -566,7 +566,7 @@ class ReservaApiController extends ApiCoreController
                                    $data_retirada_null = true);
 
       foreach ($reservas as $reserva) {
-    		$_reserva = new clsPmieducarReservas($this->getRequest()->reserva_id);
+            $_reserva = new clsPmieducarReservas($this->getRequest()->reserva_id);
 
         if($_reserva->excluir())
           $this->messenger->append("Reserva cancelada com sucesso.", 'success');

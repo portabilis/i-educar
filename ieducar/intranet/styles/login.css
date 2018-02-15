@@ -14,6 +14,8 @@ h1{
   color: #596066;
   font-weight: normal;
   margin-top: 0;
+  margin: 0;
+  padding: 0;
 }
 
 h2{
@@ -46,6 +48,10 @@ a{
   padding: 50px;
   box-sizing: border-box;
   text-align: left;
+}
+
+#login-form form{
+  margin-top: 25px;
 }
 
 #login-form, #login-form form {

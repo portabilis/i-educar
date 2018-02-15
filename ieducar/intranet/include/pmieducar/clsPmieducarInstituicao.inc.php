@@ -78,6 +78,7 @@ class clsPmieducarInstituicao
   var $componente_curricular_turma;
   var $reprova_dependencia_ano_concluinte;
   var $data_educacenso;
+  var $exigir_dados_socioeconomicos;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -132,20 +133,74 @@ class clsPmieducarInstituicao
   /**
    * Construtor.
    */
-  function clsPmieducarInstituicao($cod_instituicao = NULL, $ref_usuario_exc = NULL,
-    $ref_usuario_cad = NULL, $ref_idtlog = NULL, $ref_sigla_uf = NULL, $cep = NULL,
-    $cidade = NULL, $bairro = NULL, $logradouro = NULL, $numero = NULL,
-    $complemento = NULL, $nm_responsavel = NULL, $ddd_telefone = NULL,
-    $telefone = NULL, $data_cadastro = NULL, $data_exclusao = NULL,
-    $ativo = NULL, $nm_instituicao = NULL, $controlar_espaco_utilizacao_aluno = NULL,
-    $percentagem_maxima_ocupacao_salas = NULL, $quantidade_alunos_metro_quadrado = NULL)
+  function clsPmieducarInstituicao($cod_instituicao = NULL,
+                                   $ref_usuario_exc = NULL,
+                                   $ref_usuario_cad = NULL,
+                                   $ref_idtlog = NULL,
+                                   $ref_sigla_uf = NULL,
+                                   $cep = NULL,
+                                   $cidade = NULL,
+                                   $bairro = NULL,
+                                   $logradouro = NULL,
+                                   $numero = NULL,
+                                   $complemento = NULL,
+                                   $nm_responsavel = NULL,
+                                   $ddd_telefone = NULL,
+                                   $telefone = NULL,
+                                   $data_cadastro = NULL,
+                                   $data_exclusao = NULL,
+                                   $ativo = NULL,
+                                   $nm_instituicao = NULL,
+                                   $controlar_espaco_utilizacao_aluno = NULL,
+                                   $percentagem_maxima_ocupacao_salas = NULL,
+                                   $quantidade_alunos_metro_quadrado = NULL,
+                                   $exigir_dados_socioeconomicos = NULL)
   {
     $db = new clsBanco();
     $this->_schema = "pmieducar.";
     $this->_tabela = "{$this->_schema}instituicao";
-    $this->_campos_lista = $this->_todos_campos = "cod_instituicao, ref_usuario_exc, ref_usuario_cad, ref_idtlog, ref_sigla_uf, cep, cidade, bairro, logradouro, numero, complemento, nm_responsavel, ddd_telefone, telefone, data_cadastro, data_exclusao, ativo, nm_instituicao, data_base_transferencia, data_base_remanejamento, controlar_espaco_utilizacao_aluno, percentagem_maxima_ocupacao_salas, quantidade_alunos_metro_quadrado, exigir_vinculo_turma_professor, gerar_historico_transferencia, matricula_apenas_bairro_escola, restringir_historico_escolar, coordenador_transporte, restringir_multiplas_enturmacoes, permissao_filtro_abandono_transferencia, data_base_matricula, multiplas_reserva_vaga,
-      reserva_integral_somente_com_renda, data_expiracao_reserva_vaga, data_fechamento, componente_curricular_turma,
-      controlar_posicao_historicos, reprova_dependencia_ano_concluinte, data_educacenso, bloqueia_matricula_serie_nao_seguinte, permitir_carga_horaria ";
+    $this->_campos_lista = $this->_todos_campos = "cod_instituicao,
+                                                   ref_usuario_exc,
+                                                   ref_usuario_cad,
+                                                   ref_idtlog,
+                                                   ref_sigla_uf,
+                                                   cep,
+                                                   cidade,
+                                                   bairro,
+                                                   logradouro,
+                                                   numero,
+                                                   complemento,
+                                                   nm_responsavel,
+                                                   ddd_telefone,
+                                                   telefone,
+                                                   data_cadastro,
+                                                   data_exclusao,
+                                                   ativo,
+                                                   nm_instituicao,
+                                                   data_base_transferencia,
+                                                   data_base_remanejamento,
+                                                   controlar_espaco_utilizacao_aluno,
+                                                   percentagem_maxima_ocupacao_salas,
+                                                   quantidade_alunos_metro_quadrado,
+                                                   exigir_vinculo_turma_professor,
+                                                   gerar_historico_transferencia,
+                                                   matricula_apenas_bairro_escola,
+                                                   restringir_historico_escolar,
+                                                   coordenador_transporte,
+                                                   restringir_multiplas_enturmacoes,
+                                                   permissao_filtro_abandono_transferencia,
+                                                   data_base_matricula,
+                                                   multiplas_reserva_vaga,
+                                                   reserva_integral_somente_com_renda,
+                                                   data_expiracao_reserva_vaga,
+                                                   data_fechamento,
+                                                   componente_curricular_turma,
+                                                   controlar_posicao_historicos,
+                                                   reprova_dependencia_ano_concluinte,
+                                                   data_educacenso,
+                                                   bloqueia_matricula_serie_nao_seguinte,
+                                                   permitir_carga_horaria,
+                                                   exigir_dados_socioeconomicos ";
 
     if (is_numeric($ref_usuario_cad)) {
       if (class_exists('clsPmieducarUsuario')) {
@@ -279,6 +334,10 @@ class clsPmieducarInstituicao
 
     if (is_numeric($quantidade_alunos_metro_quadrado)){
       $this->quantidade_alunos_metro_quadrado =$quantidade_alunos_metro_quadrado;
+    }
+
+    if (is_bool($exigir_dados_socioeconomicos)){
+      $this->exigir_dados_socioeconomicos = $exigir_dados_socioeconomicos;
     }
   }
 
@@ -580,6 +639,16 @@ class clsPmieducarInstituicao
         $gruda = ", ";
       }
 
+      if (dbBool($this->exigir_dados_socieconomicos)) {
+        $campos .= "{$gruda}exigir_dados_socioeconomicos";
+        $valores .= "{$gruda} true ";
+        $gruda = ", ";
+      }else{
+        $campos .= "{$gruda}exigir_dados_socioeconomicos";
+        $valores .= "{$gruda} false ";
+        $gruda = ", ";
+      }
+
       $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
       return $db->InsertId("{$this->_tabela}_cod_instituicao_seq");
     }
@@ -855,6 +924,14 @@ class clsPmieducarInstituicao
         $gruda = ", ";
       }else{
         $set .= "{$gruda}data_educacenso = NULL ";
+        $gruda = ", ";
+      }
+
+      if ($this->exigir_dados_socioeconomicos) {
+        $set .= "{$gruda}exigir_dados_socioeconomicos = true ";
+        $gruda = ", ";
+      }else{
+        $set .= "{$gruda}exigir_dados_socioeconomicos = false ";
         $gruda = ", ";
       }
 

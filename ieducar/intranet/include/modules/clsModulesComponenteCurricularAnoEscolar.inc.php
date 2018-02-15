@@ -2,29 +2,29 @@
 // error_reporting(E_ERROR);
 // ini_set("display_errors", 1);
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-*																	     *
-*	@author Prefeitura Municipal de Itajaí								 *
-*	@updated 29/03/2007													 *
-*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
-*																		 *
-*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
-*						ctima@itajai.sc.gov.br					    	 *
-*																		 *
-*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
-*																		 *
-*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
-*																		 *
-*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-*	junto  com  este  programa. Se não, escreva para a Free Software	 *
-*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
-*	02111-1307, USA.													 *
-*																		 *
+*                                                                        *
+*   @author Prefeitura Municipal de Itajaí                               *
+*   @updated 29/03/2007                                                  *
+*   Pacote: i-PLB Software Público Livre e Brasileiro                    *
+*                                                                        *
+*   Copyright (C) 2006  PMI - Prefeitura Municipal de Itajaí             *
+*                       ctima@itajai.sc.gov.br                           *
+*                                                                        *
+*   Este  programa  é  software livre, você pode redistribuí-lo e/ou     *
+*   modificá-lo sob os termos da Licença Pública Geral GNU, conforme     *
+*   publicada pela Free  Software  Foundation,  tanto  a versão 2 da     *
+*   Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.    *
+*                                                                        *
+*   Este programa  é distribuído na expectativa de ser útil, mas SEM     *
+*   QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-     *
+*   ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-     *
+*   sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.     *
+*                                                                        *
+*   Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU     *
+*   junto  com  este  programa. Se não, escreva para a Free Software     *
+*   Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA     *
+*   02111-1307, USA.                                                     *
+*                                                                        *
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /**
 * @author Prefeitura Municipal de Itajaí
@@ -36,28 +36,30 @@ require_once( "include/pmieducar/geral.inc.php" );
 
 class clsModulesComponenteCurricularAnoEscolar
 {
-	var $componente_curricular_id;
-	var $ano_escolar_id;
-	var $carga_horaria;
+    var $componente_curricular_id;
+    var $ano_escolar_id;
+    var $carga_horaria;
+    var $tipo_nota;
     var $componentes;
     var $updateInfo;
 
-	// propriedades padrao
-	var $_total; // Armazena o total de resultados obtidos na ultima chamada ao metodo lista
-	var $_schema; // Nome do schema
-	var $_tabela; // Nome da tabela
-	var $_campos_lista; // Lista separada por virgula, com os campos que devem ser selecionados na proxima chamado ao metodo lista
-	var $_todos_campos; // Lista com todos os campos da tabela separados por virgula, padrao para selecao no metodo lista
-	var $_limite_quantidade; // Valor que define a quantidade de registros a ser retornada pelo metodo lista
-	var $_limite_offset; // Define o valor de offset no retorno dos registros no metodo lista
-	var $_campo_order_by; // Define o campo padrao para ser usado como padrao de ordenacao no metodo lista
+    // propriedades padrao
+    var $_total; // Armazena o total de resultados obtidos na ultima chamada ao metodo lista
+    var $_schema; // Nome do schema
+    var $_tabela; // Nome da tabela
+    var $_campos_lista; // Lista separada por virgula, com os campos que devem ser selecionados na proxima chamado ao metodo lista
+    var $_todos_campos; // Lista com todos os campos da tabela separados por virgula, padrao para selecao no metodo lista
+    var $_limite_quantidade; // Valor que define a quantidade de registros a ser retornada pelo metodo lista
+    var $_limite_offset; // Define o valor de offset no retorno dos registros no metodo lista
+    var $_campo_order_by; // Define o campo padrao para ser usado como padrao de ordenacao no metodo lista
 
 
     function clsModulesComponenteCurricularAnoEscolar($componente_curricular_id = NULL,
-                                                    $ano_escolar_id           = NULL,
-                                                    $carga_horaria            = NULL,
-                                                    $componentes              = NULL,
-                                                    $updateInfo               = NULL)
+                                                      $ano_escolar_id           = NULL,
+                                                      $carga_horaria            = NULL,
+                                                      $tipo_nota                = NULL,
+                                                      $componentes              = NULL,
+                                                      $updateInfo               = NULL)
     {
         $this->_schema = "modules.";
         $this->_tabela = "{$this->_schema}componente_curricular_ano_escolar";
@@ -74,6 +76,9 @@ class clsModulesComponenteCurricularAnoEscolar
         if (is_numeric($carga_horaria)) {
             $this->$carga_horaria = $carga_horaria;
         }
+        if (is_numeric($tipo_nota)) {
+            $this->$tipo_nota = $tipo_nota;
+        }
         if (is_array($componentes)) {
             $this->componentes = $componentes;
         }
@@ -84,29 +89,33 @@ class clsModulesComponenteCurricularAnoEscolar
 
     function atualizaComponentesDaSerie(){
 
-		$this->updateInfo();
-		
-		if ($this->updateInfo['update']) {
-			foreach ($this->updateInfo['update'] as $componenteUpdate) {
-				$this->editaComponente(intval($componenteUpdate['id']), intval($componenteUpdate['carga_horaria']));
-			}
-		}
+        $this->updateInfo();
+        
+        if ($this->updateInfo['update']) {
+            foreach ($this->updateInfo['update'] as $componenteUpdate) {
+                $this->editaComponente(intval($componenteUpdate['id']),
+                                       intval($componenteUpdate['carga_horaria']),
+                                       intval($componenteUpdate['tipo_nota']));
+            }
+        }
 
-		if ($this->updateInfo['insert']) {
-			foreach ($this->updateInfo['insert'] as $componenteInsert) {
-				$this->cadastraComponente(intval($componenteInsert['id']), intval($componenteInsert['carga_horaria']));
-			}
-		}
+        if ($this->updateInfo['insert']) {
+            foreach ($this->updateInfo['insert'] as $componenteInsert) {
+                $this->cadastraComponente(intval($componenteInsert['id']),
+                                          intval($componenteInsert['carga_horaria']),
+                                          intval($componenteInsert['tipo_nota']));
+            }
+        }
 
-		if ($this->updateInfo['delete']) {
-			foreach ($this->updateInfo['delete'] as $componenteDelete) {
-				$this->excluiComponente(intval($componenteDelete));
-			}
-		}
+        if ($this->updateInfo['delete']) {
+            foreach ($this->updateInfo['delete'] as $componenteDelete) {
+                $this->excluiComponente(intval($componenteDelete));
+            }
+        }
 
-		return true;
+        return true;
 
-	}
+    }
 
     function updateInfo(){
         
@@ -118,10 +127,12 @@ class clsModulesComponenteCurricularAnoEscolar
             if (in_array($componente['id'], $this->getComponentesSerie())) {
                 $this->updateInfo['update'][$u]['id'] = $componente['id'];
                 $this->updateInfo['update'][$u]['carga_horaria'] = $componente['carga_horaria'];
+                $this->updateInfo['update'][$u]['tipo_nota'] = $componente['tipo_nota'];
                 $u++;
             }else{
                 $this->updateInfo['insert'][$i]['id'] = $componente['id'];
                 $this->updateInfo['insert'][$i]['carga_horaria'] = $componente['carga_horaria'];
+                $this->updateInfo['insert'][$i]['tipo_nota'] = $componente['tipo_nota'];
                 $i++;
             }
         }
@@ -132,8 +143,8 @@ class clsModulesComponenteCurricularAnoEscolar
                 $d++;
             }
         }
-		
-		return $this->updateInfo;
+        
+        return $this->updateInfo;
     }
 
     function getComponentesSerie(){
@@ -156,142 +167,158 @@ class clsModulesComponenteCurricularAnoEscolar
         }
 
         return false;
-	}
-	
-	private function cadastraComponente($componente_curricular_id = NULL,
-								        $carga_horaria            = NULL)
-	{
-		if(is_numeric($componente_curricular_id) && is_numeric($carga_horaria)){
-			
-			$db = new clsBanco();
-			
-			$sql = "INSERT INTO {$this->_tabela} VALUES( $componente_curricular_id,
-			                                             $this->ano_escolar_id,
-														 $carga_horaria)";
-			$db->Consulta( $sql );
+    }
+    
+    private function cadastraComponente($componente_curricular_id = NULL,
+                                        $carga_horaria            = NULL,
+                                        $tipo_nota                = NULL)
+    {
+        if(is_numeric($componente_curricular_id) && is_numeric($carga_horaria)){
+            
+            $db = new clsBanco();
+            
+            $sql = "INSERT INTO {$this->_tabela} VALUES( $componente_curricular_id,
+                                                         $this->ano_escolar_id,
+                                                         $carga_horaria,
+                                                         $tipo_nota)";
+            $db->Consulta( $sql );
 
-			return true;
-		}
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	private function editaComponente($componente_curricular_id = NULL,
-							         $carga_horaria            = NULL)
-	{
-		$db = new clsBanco();
-		$set = "";
+    private function editaComponente($componente_curricular_id = NULL,
+                                     $carga_horaria            = NULL,
+                                     $tipo_nota                = NULL)
+    {
+        $db = new clsBanco();
+        $set = "";
 
-		if(is_numeric($componente_curricular_id)){
+        if(is_numeric($componente_curricular_id)){
 
-			if( is_numeric( $carga_horaria ) )
-			{
-				$set .= "{$gruda}carga_horaria = {$carga_horaria}";
-				$gruda = ", ";
-			}
+            if( is_numeric( $carga_horaria ) )
+            {
+                $set .= "{$gruda}carga_horaria = {$carga_horaria}";
+                $gruda = ", ";
+            }
 
-			if( $set )
-			{
-				$sql = "UPDATE {$this->_tabela}
-					       SET $set
-						 WHERE componente_curricular_id = {$componente_curricular_id}
-						   AND ano_escolar_id           = {$this->ano_escolar_id}";
-				
-				$db->Consulta( $sql );
-				return true;
-			}
-		}
+            if( is_numeric( $tipo_nota ) )
+            {
+                $set .= "{$gruda}tipo_nota = {$tipo_nota}";
+                $gruda = ", ";
+            }
 
-		return false;
-	}
+            if( $set )
+            {
+                $sql = "UPDATE {$this->_tabela}
+                           SET $set
+                         WHERE componente_curricular_id = {$componente_curricular_id}
+                           AND ano_escolar_id           = {$this->ano_escolar_id}";
+                
+                $db->Consulta( $sql );
+                return true;
+            }
+        }
 
-	private function excluiComponente($componente_curricular_id = NULL)
-	{
-		if(is_numeric($componente_curricular_id)){
-			
-			$db = new clsBanco();
-			
-			$sql = "DELETE FROM {$this->_tabela}
-					 WHERE componente_curricular_id = {$componente_curricular_id}
-					   AND ano_escolar_id = {$this->ano_escolar_id}";
-			$db->Consulta( $sql );
+        return false;
+    }
 
-			return true;
-		}
+    private function excluiComponente($componente_curricular_id = NULL)
+    {
+        if(is_numeric($componente_curricular_id)){
+            
+            $db = new clsBanco();
+            
+            $sql = "DELETE FROM {$this->_tabela}
+                     WHERE componente_curricular_id = {$componente_curricular_id}
+                       AND ano_escolar_id = {$this->ano_escolar_id}";
+            $db->Consulta( $sql );
 
-		return false;
-	}
+            return true;
+        }
 
-	function cadastra(){
-		if(is_numeric($this->componente_curricular_id) && is_numeric($this->ano_escolar_id)){
-			
-			$db = new clsBanco();
+        return false;
+    }
 
-			$campos  = '';
-			$valores = '';
-			$gruda   = '';
-			
-			if (is_numeric($this->ano_escolar_id)) {
-				$campos .= "{$gruda}ano_escolar_id";
-				$valores .= "{$gruda}'{$this->ano_escolar_id}'";
-				$gruda = ", ";
-			}
+    function cadastra(){
+        if(is_numeric($this->componente_curricular_id) && is_numeric($this->ano_escolar_id)){
+            
+            $db = new clsBanco();
 
-			if (is_numeric($this->componente_curricular_id)) {
-				$campos .= "{$gruda}componente_curricular_id";
-				$valores .= "{$gruda}'{$this->componente_curricular_id}'";
-				$gruda = ", ";
-			}
-			
-			if (is_numeric($this->carga_horaria)) {
-				$campos .= "{$gruda}carga_horaria";
-				$valores .= "{$gruda}'{$this->carga_horaria}'";
-				$gruda = ", ";
-			}
-			
-			$sql = "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )";
+            $campos  = '';
+            $valores = '';
+            $gruda   = '';
+            
+            if (is_numeric($this->ano_escolar_id)) {
+                $campos .= "{$gruda}ano_escolar_id";
+                $valores .= "{$gruda}'{$this->ano_escolar_id}'";
+                $gruda = ", ";
+            }
 
-			$db->Consulta( $sql );
+            if (is_numeric($this->componente_curricular_id)) {
+                $campos .= "{$gruda}componente_curricular_id";
+                $valores .= "{$gruda}'{$this->componente_curricular_id}'";
+                $gruda = ", ";
+            }
+            
+            if (is_numeric($this->carga_horaria)) {
+                $campos .= "{$gruda}carga_horaria";
+                $valores .= "{$gruda}'{$this->carga_horaria}'";
+                $gruda = ", ";
+            }
 
-			return true;
-		}
+            if (is_numeric($this->tipo_nota)) {
+                $campos .= "{$gruda}tipo_nota";
+                $valores .= "{$gruda}'{$this->tipo_nota}'";
+                $gruda = ", ";
+            }
+            
+            $sql = "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )";
 
-		return false;
-	}
+            $db->Consulta( $sql );
 
-	function exclui()
-	{
-		if(is_numeric($this->ano_escolar_id)){
-			
-			$db = new clsBanco();
-			
-			$sql = "DELETE FROM {$this->_tabela}
-					 WHERE ano_escolar_id = {$this->ano_escolar_id}";
+            return true;
+        }
 
-			$db->Consulta( $sql );
+        return false;
+    }
 
-			return true;
-		}
+    function exclui()
+    {
+        if(is_numeric($this->ano_escolar_id)){
+            
+            $db = new clsBanco();
+            
+            $sql = "DELETE FROM {$this->_tabela}
+                     WHERE ano_escolar_id = {$this->ano_escolar_id}";
 
-		return false;
-	}
+            $db->Consulta( $sql );
 
-	// Retorna uma lista filtrados de acordo com os parametros
-	function lista( $componente_curricular_id = NULL,
+            return true;
+        }
+
+        return false;
+    }
+
+    // Retorna uma lista filtrados de acordo com os parametros
+    function lista( $componente_curricular_id = NULL,
                     $ano_escolar_id           = NULL,
-                    $carga_horaria            = NULL)
-	{
-		$sql = "SELECT {$this->_campos_lista}
+                    $carga_horaria            = NULL,
+                    $tipo_nota                = NULL)
+    {
+        $sql = "SELECT {$this->_campos_lista}
                   FROM {$this->_tabela}";
-		$filtros = "";
+        $filtros = "";
 
-		$whereAnd = " WHERE ";
+        $whereAnd = " WHERE ";
 
-		if( is_numeric( $componente_curricular_id ) )
-		{
-			$filtros .= "{$whereAnd} componente_curricular_id = {$componente_curricular_id}";
-			$whereAnd = " AND ";
-		}
+        if( is_numeric( $componente_curricular_id ) )
+        {
+            $filtros .= "{$whereAnd} componente_curricular_id = {$componente_curricular_id}";
+            $whereAnd = " AND ";
+        }
         if( is_numeric( $ano_escolar_id ) )
         {
         $filtros .= "{$whereAnd} ano_escolar_id = {$ano_escolar_id}";
@@ -302,97 +329,102 @@ class clsModulesComponenteCurricularAnoEscolar
         $filtros .= "{$whereAnd} carga_horaria = {$carga_horaria}";
         $whereAnd = " AND ";
         }
+        if( is_numeric( $tipo_nota ) )
+        {
+        $filtros .= "{$whereAnd} tipo_$tipo_nota = {$tipo_nota}";
+        $whereAnd = " AND ";
+        }
 
-		$db = new clsBanco();
-		$countCampos = count( explode( ",", $this->_campos_lista ) );
-		$resultado = array();
+        $db = new clsBanco();
+        $countCampos = count( explode( ",", $this->_campos_lista ) );
+        $resultado = array();
 
-		$sql .= $filtros . $this->getOrderby() . $this->getLimite();
+        $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
-		$this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} {$filtros}" );
+        $this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} {$filtros}" );
 
-		$db->Consulta( $sql );
+        $db->Consulta( $sql );
 
-		if( $countCampos > 1 )
-		{
-			while ( $db->ProximoRegistro() )
-			{
-				$tupla = $db->Tupla();
+        if( $countCampos > 1 )
+        {
+            while ( $db->ProximoRegistro() )
+            {
+                $tupla = $db->Tupla();
 
-				$tupla["_total"] = $this->_total;
-				$resultado[] = $tupla;
-			}
-		}
-		else
-		{
-			while ( $db->ProximoRegistro() )
-			{
-				$tupla = $db->Tupla();
-				$resultado[] = $tupla[$this->_campos_lista];
-			}
-		}
-		if( count( $resultado ) )
-		{
-			return $resultado;
-		}
-		return false;
-	}
+                $tupla["_total"] = $this->_total;
+                $resultado[] = $tupla;
+            }
+        }
+        else
+        {
+            while ( $db->ProximoRegistro() )
+            {
+                $tupla = $db->Tupla();
+                $resultado[] = $tupla[$this->_campos_lista];
+            }
+        }
+        if( count( $resultado ) )
+        {
+            return $resultado;
+        }
+        return false;
+    }
 
-	// Define quais campos da tabela serao selecionados na invocacao do metodo lista
-	function setCamposLista( $str_campos )
-	{
-		$this->_campos_lista = $str_campos;
-	}
+    // Define quais campos da tabela serao selecionados na invocacao do metodo lista
+    function setCamposLista( $str_campos )
+    {
+        $this->_campos_lista = $str_campos;
+    }
 
-	// Define que o metodo Lista devera retornoar todos os campos da tabela
-	function resetCamposLista()
-	{
-		$this->_campos_lista = $this->_todos_campos;
-	}
+    // Define que o metodo Lista devera retornoar todos os campos da tabela
+    function resetCamposLista()
+    {
+        $this->_campos_lista = $this->_todos_campos;
+    }
 
-	// Define limites de retorno para o metodo lista
-	function setLimite( $intLimiteQtd, $intLimiteOffset = null )
-	{
-		$this->_limite_quantidade = $intLimiteQtd;
-		$this->_limite_offset = $intLimiteOffset;
-	}
+    // Define limites de retorno para o metodo lista
+    function setLimite( $intLimiteQtd, $intLimiteOffset = null )
+    {
+        $this->_limite_quantidade = $intLimiteQtd;
+        $this->_limite_offset = $intLimiteOffset;
+    }
 
-	// Retorna a string com o trecho da query resposavel pelo Limite de registros
-	function getLimite()
-	{
-		if( is_numeric( $this->_limite_quantidade ) )
-		{
-			$retorno = " LIMIT {$this->_limite_quantidade}";
-			if( is_numeric( $this->_limite_offset ) )
-			{
-				$retorno .= " OFFSET {$this->_limite_offset} ";
-			}
-			return $retorno;
-		}
-		return "";
-	}
+    // Retorna a string com o trecho da query resposavel pelo Limite de registros
+    function getLimite()
+    {
+        if( is_numeric( $this->_limite_quantidade ) )
+        {
+            $retorno = " LIMIT {$this->_limite_quantidade}";
+            if( is_numeric( $this->_limite_offset ) )
+            {
+                $retorno .= " OFFSET {$this->_limite_offset} ";
+            }
+            return $retorno;
+        }
+        return "";
+    }
 
-	// Define campo para ser utilizado como ordenacao no metolo lista
-	function setOrderby( $strNomeCampo )
-	{
-		// limpa a string de possiveis erros (delete, insert, etc)
-		// $strNomeCampo = eregi_replace();
+    // Define campo para ser utilizado como ordenacao no metolo lista
+    function setOrderby( $strNomeCampo )
+    {
+        // limpa a string de possiveis erros (delete, insert, etc)
+        // $strNomeCampo = eregi_replace();
 
-		if( is_string( $strNomeCampo ) && $strNomeCampo )
-		{
-			$this->_campo_order_by = $strNomeCampo;
-		}
-	}
+        if( is_string( $strNomeCampo ) && $strNomeCampo )
+        {
+            $this->_campo_order_by = $strNomeCampo;
+        }
+    }
 
-	// Retorna a string com o trecho da query resposavel pela Ordenacao dos registros
-	function getOrderby()
-	{
-		if( is_string( $this->_campo_order_by ) )
-		{
-			return " ORDER BY {$this->_campo_order_by} ";
-		}
-		return "";
-	}
+    // Retorna a string com o trecho da query resposavel pela Ordenacao dos registros
+    function getOrderby()
+    {
+        if( is_string( $this->_campo_order_by ) )
+        {
+            return " ORDER BY {$this->_campo_order_by} ";
+        }
+        return "";
+    }
 
 }
 ?>

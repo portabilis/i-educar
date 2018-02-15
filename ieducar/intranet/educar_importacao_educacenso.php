@@ -1276,7 +1276,7 @@ class indice extends clsCadastro
 
       $obj = new clsPmieducarMatricula(NULL, NULL,
           $detalheTurma['ref_ref_cod_escola'], $detalheTurma['ref_ref_cod_serie'], NULL,
-          $this->pessoa_logada, $codAluno, 3, NULL, NULL, 1, $this->ano,
+          $this->pessoa_logada, $codAluno, 1, NULL, NULL, 1, $this->ano,
           1, NULL, NULL, NULL, NULL, $detalheTurma['ref_cod_curso'],
           NULL, NULL, date('Y-m-d'));
 

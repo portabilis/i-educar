@@ -25,7 +25,7 @@
  * @package   iEd_Pmieducar
  * @since     ?
  * @version   $Id$
- */
+ **/
 
 require_once 'include/pmieducar/geral.inc.php';
 
@@ -56,7 +56,9 @@ class clsPmieducarCandidatoReservaVaga
   var $data_situacao;
   var $quantidade_membros;
   var $codUsuario;
-
+  var $membros_trabalham;
+  var $mae_fez_pre_natal;
+  var $hora_solicitacao;
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
    * @var int
@@ -110,16 +112,40 @@ class clsPmieducarCandidatoReservaVaga
   /**
    * Construtor.
    */
-  function __construct($cod_candidato_reserva_vaga = NULL, $ano_letivo = NULL, $data_solicitacao = NULL,
-    $ref_cod_aluno = NULL, $ref_cod_serie = NULL, $ref_cod_turno = NULL,
-    $ref_cod_pessoa_cad = NULL, $ref_cod_escola = NULL, $quantidade_membros = NULL)
+  function __construct($cod_candidato_reserva_vaga = NULL,
+                       $ano_letivo = NULL,
+                       $data_solicitacao = NULL,
+                       $ref_cod_aluno = NULL,
+                       $ref_cod_serie = NULL,
+                       $ref_cod_turno = NULL,
+                       $ref_cod_pessoa_cad = NULL,
+                       $ref_cod_escola = NULL,
+                       $quantidade_membros = NULL,
+                       $membros_trabalham = NULL,
+                       $mae_fez_pre_natal = NULL,
+                       $hora_solicitacao = NULL)
   {
     $db = new clsBanco();
     $this->_schema = 'pmieducar.';
     $this->_tabela = $this->_schema . 'candidato_reserva_vaga crv ';
 
-    $this->_campos_lista = $this->_todos_campos = ' crv.cod_candidato_reserva_vaga, crv.ano_letivo, crv.data_solicitacao,
-      crv.ref_cod_aluno, crv.ref_cod_serie, crv.ref_cod_turno, crv.ref_cod_pessoa_cad, crv.data_cad, crv.data_update, crv.data_situacao, crv.situacao, crv.ref_cod_matricula, crv.ref_cod_escola, crv.quantidade_membros  ';
+    $this->_campos_lista = $this->_todos_campos = ' crv.cod_candidato_reserva_vaga,
+                                                    crv.ano_letivo,
+                                                    crv.data_solicitacao,
+                                                    crv.ref_cod_aluno,
+                                                    crv.ref_cod_serie,
+                                                    crv.ref_cod_turno,
+                                                    crv.ref_cod_pessoa_cad,
+                                                    crv.data_cad,
+                                                    crv.data_update,
+                                                    crv.data_situacao,
+                                                    crv.situacao,
+                                                    crv.ref_cod_matricula,
+                                                    crv.ref_cod_escola,
+                                                    crv.quantidade_membros,
+                                                    crv.membros_trabalham,
+                                                    crv.mae_fez_pre_natal,
+                                                    crv.hora_solicitacao ';
 
     if (is_numeric($cod_candidato_reserva_vaga)) {
       $this->cod_candidato_reserva_vaga = $cod_candidato_reserva_vaga;
@@ -155,6 +181,18 @@ class clsPmieducarCandidatoReservaVaga
 
     if (is_numeric($quantidade_membros)) {
       $this->quantidade_membros = $quantidade_membros;
+    }
+
+    if (is_numeric($membros_trabalham)) {
+      $this->membros_trabalham = $membros_trabalham;
+    }
+    
+    if (is_bool($mae_fez_pre_natal)) {
+      $this->mae_fez_pre_natal = $mae_fez_pre_natal;
+    }
+
+    if (is_string($hora_solicitacao)){
+      $this->hora_solicitacao = $hora_solicitacao;
     }
   }
 
@@ -217,6 +255,33 @@ class clsPmieducarCandidatoReservaVaga
       if (is_numeric($this->ref_cod_pessoa_cad)) {
         $campos  .= "{$gruda}ref_cod_pessoa_cad";
         $valores .= "{$gruda}'{$this->ref_cod_pessoa_cad}'";
+        $gruda = ', ';
+      }
+
+      if (is_numeric($this->membros_trabalham)) {
+        $campos  .= "{$gruda}membros_trabalham";
+        $valores .= "{$gruda}$this->membros_trabalham";
+        $gruda = ', ';
+      }
+
+
+      if (is_bool($this->mae_fez_pre_natal) && $this->mae_fez_pre_natal) {
+        $campos  .= "{$gruda}mae_fez_pre_natal";
+        $valores .= "{$gruda}true";
+        $gruda = ', ';
+      }else{
+        $campos  .= "{$gruda}mae_fez_pre_natal";
+        $valores .= "{$gruda}false";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->hora_solicitacao) && !empty($this->hora_solicitacao)) {
+        $campos  .= "{$gruda}hora_solicitacao";
+        $valores .= "{$gruda}'$this->hora_solicitacao'";
+        $gruda = ', ';
+      }if (empty($this->hora_solicitacao)) {
+        $campos  .= "{$gruda}hora_solicitacao";
+        $valores .= "{$gruda}NULL";
         $gruda = ', ';
       }
 
@@ -284,6 +349,33 @@ class clsPmieducarCandidatoReservaVaga
 
       if (is_numeric($this->quantidade_membros)) {
         $set .= "{$gruda}quantidade_membros = '{$this->quantidade_membros}'";
+        $gruda = ', ';
+      }else{
+        $set .= "{$gruda}quantidade_membros = NULL";
+        $gruda = ', ';
+      }
+
+      if (is_numeric($this->membros_trabalham)) {
+        $set .= "{$gruda}membros_trabalham = $this->membros_trabalham";
+        $gruda = ', ';
+      }else{
+        $set .= "{$gruda}membros_trabalham = NULL";
+        $gruda = ', ';
+      }
+
+      if (is_bool($this->mae_fez_pre_natal) && $this->mae_fez_pre_natal) {
+        $set .= "{$gruda}mae_fez_pre_natal = true";
+        $gruda = ', ';
+      }else{
+        $set .= "{$gruda}mae_fez_pre_natal = false";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->hora_solicitacao) && !empty($this->hora_solicitacao)) {
+        $set .= "{$gruda}hora_solicitacao = '$this->hora_solicitacao'";
+        $gruda = ', ';
+      }elseif (empty($this->hora_solicitacao)) {
+        $set .= "{$gruda}hora_solicitacao = NULL";
         $gruda = ', ';
       }
 

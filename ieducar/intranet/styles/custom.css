@@ -27,6 +27,10 @@ input, select, textarea, span.select2.select2-container.select2-container--defau
   border-radius: 3px;
 }
 
+input:read-only {
+  background-color: #e9f0f8 !important;
+}
+
 .select2-container{
   font-size: 14px;
   line-height: 15px;
@@ -1029,6 +1033,12 @@ table.tablelistagem.auditoria-tab tr:nth-child(2n+1) td.formlttd{
     margin: 10px;
     text-transform: uppercase;
     font-weight: bold;
+}
+
+a.clone-values {
+  color: #47728f;
+  font-size: 15px;
+  cursor: pointer;
 }
 
 

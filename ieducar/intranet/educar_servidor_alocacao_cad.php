@@ -120,6 +120,7 @@ class indice extends clsCadastro
     } else if (is_numeric($ref_cod_servidor) && is_numeric($ref_ref_cod_instituicao)) {
       $this->ref_ref_cod_instituicao = $ref_ref_cod_instituicao;
       $this->ref_cod_servidor        = $ref_cod_servidor;
+      $this->ref_cod_instituicao = $ref_ref_cod_instituicao;
     } else {
       header('Location: educar_servidor_lst.php');
       die();
@@ -333,8 +334,8 @@ class indice extends clsCadastro
   }
 
   function hhmmToMinutes($hhmm){
-  	list($hora, $minuto) = split(':', $hhmm);
-  	return (((int)$hora * 60) + $minuto);
+    list($hora, $minuto) = split(':', $hhmm);
+    return (((int)$hora * 60) + $minuto);
   }
 
   function arrayHhmmToMinutes($array){

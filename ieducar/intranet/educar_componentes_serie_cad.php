@@ -50,7 +50,7 @@ class clsIndexBase extends clsBase
   function Formular()
   {
     $this->SetTitulo($this->_instituicao . ' i-Educar - S&eacute;rie');
-    $this->processoAp = '583';
+    $this->processoAp = '9998859';
     $this->addEstilo("localizacaoSistema");
   }
 }
@@ -86,7 +86,7 @@ class indice extends clsCadastro
     $this->serie_id=$_GET['serie_id'];
 
     $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_cadastra(583, $this->pessoa_logada, 3,
+    $obj_permissoes->permissao_cadastra(9998859, $this->pessoa_logada, 3,
       'educar_componentes_serie_lst.php');
 
     if (is_numeric($this->serie_id)) {
@@ -104,7 +104,7 @@ class indice extends clsCadastro
         $obj_curso = new clsPmieducarCurso($registro['ref_cod_curso']);
         $obj_curso_det = $obj_curso->detalhe();
         $this->instituicao_id = $obj_curso_det['ref_cod_instituicao'];
-        $this->fexcluir = $obj_permissoes->permissao_excluir(583,
+        $this->fexcluir = $obj_permissoes->permissao_excluir(9998859,
           $this->pessoa_logada,3);
       }
     }
@@ -159,7 +159,7 @@ class indice extends clsCadastro
                            'size' => 50,
                            'required' => false);
 
- 		$this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+        $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
     $this->campoRotulo('componentes_', 'Componentes da série',"<table id='componentes'></table>");
 

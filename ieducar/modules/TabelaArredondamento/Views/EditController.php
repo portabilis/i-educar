@@ -187,7 +187,8 @@ class EditController extends Core_Controller_Page_EditController
     $notaTipoValor = RegraAvaliacao_Model_Nota_TipoValor::getInstance();
     $notaTipos = $notaTipoValor->getEnums();
     unset($notaTipos[RegraAvaliacao_Model_Nota_TipoValor::NENHUM]);
-
+    unset($notaTipos[RegraAvaliacao_Model_Nota_TipoValor::NUMERICACONCEITUAL]);
+    
     if ($this->getEntity()->id!='')
       $this->campoTexto('tipNota',$this->_getLabel('tipoNota'),$notaTipos[$this->getEntity()->get('tipoNota')],40,40,false,false,false,'','','','',true);
     else

@@ -51,9 +51,10 @@ class ComponentesSerieController extends ApiCoreController
         foreach ($componentes as $key => $componente) {
             $arrayComponentes[$key]['id'] = $componente->id;
             $arrayComponentes[$key]['carga_horaria'] = $componente->carga_horaria;
+            $arrayComponentes[$key]['tipo_nota'] = $componente->tipo_nota;
         }
 
-        $obj = new clsModulesComponenteCurricularAnoEscolar(NULL, $serieId, NULL, $arrayComponentes);
+        $obj = new clsModulesComponenteCurricularAnoEscolar(NULL, $serieId, NULL, NULL,  $arrayComponentes);
 
         $updateInfo = $obj->updateInfo();            
         $componentesAtualizados = $updateInfo['update'];
