@@ -603,15 +603,28 @@ class clsPmieducarCandidatoFilaUnica
             $db->Consulta("SELECT {$this->_todos_campos},
                                   p.nome,
                                   f.data_nasc,
+                                  s.nm_serie,
                                   d.certidao_nascimento,
                                   d.num_termo,
                                   d.num_folha,
                                   d.num_livro,
-                                  d.comprovante_residencia
+                                  d.comprovante_residencia,
+                                  (SELECT (replace(textcat_all(nome),' <br>',','))
+                                     FROM (SELECT p.nome
+                                             FROM pmieducar.responsaveis_aluno ra
+                                            INNER JOIN cadastro.pessoa p ON (p.idpes = ra.ref_idpes)
+                                            WHERE ref_cod_aluno = cfu.ref_cod_aluno
+                                            ORDER BY vinculo_familiar) r) AS responsaveis,
+                                  (SELECT textcat_all(relatorio.get_nome_escola(ref_cod_escola))
+                                     FROM (SELECT ref_cod_escola
+                                             FROM pmieducar.escola_candidato_fila_unica ecfu
+                                            WHERE ref_cod_candidato_fila_unica = cfu.cod_candidato_fila_unica
+                                            ORDER BY sequencial) e) AS escolas
                              FROM {$this->_tabela} cfu
                             INNER JOIN pmieducar.aluno a ON (a.cod_aluno = cfu.ref_cod_aluno)
                             INNER JOIN cadastro.pessoa p ON (p.idpes = a.ref_idpes)
                             INNER JOIN cadastro.fisica f ON (f.idpes = a.ref_idpes)
+                            INNER JOIN pmieducar.serie s ON (s.cod_serie = cfu.ref_cod_serie)
                              LEFT JOIN cadastro.documento d ON (d.idpes = a.ref_idpes)
                             WHERE cod_candidato_fila_unica = {$this->cod_candidato_fila_unica}");
             $db->ProximoRegistro();
