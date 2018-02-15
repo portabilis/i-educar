@@ -58,6 +58,14 @@ class FilaUnicaController extends ApiCoreController
                        documento.num_livro,
                        documento.certidao_nascimento,
                        to_char(endereco_pessoa.cep, '99999-999') AS cep,
+                       endereco_pessoa.idlog,
+                       endereco_pessoa.idbai,
+                       bairro.nome || ' / Zona ' || CASE bairro.zona_localizacao WHEN 1 THEN 'urbana' WHEN 2 THEN 'rural' END AS nm_bairro,
+                       municipio.idmun,
+                       municipio.idmun || ' - ' || municipio.nome AS nm_municipio,
+                       distrito.iddis,
+                       distrito.iddis || ' - ' || distrito.nome AS nm_distrito,
+                       tipo_logradouro.descricao || ' ' || logradouro.nome AS nm_logradouro,
                        endereco_pessoa.numero,
                        endereco_pessoa.letra,
                        endereco_pessoa.complemento,
@@ -69,6 +77,11 @@ class FilaUnicaController extends ApiCoreController
                  INNER JOIN cadastro.fisica ON (fisica.idpes = aluno.ref_idpes)
                  INNER JOIN cadastro.documento ON (documento.idpes = aluno.ref_idpes)
                   LEFT JOIN cadastro.endereco_pessoa ON (endereco_pessoa.idpes = aluno.ref_idpes)
+                  LEFT JOIN public.bairro ON (bairro.idbai = endereco_pessoa.idbai)
+                  LEFT JOIN public.logradouro ON (logradouro.idlog = endereco_pessoa.idlog)
+                  LEFT JOIN urbano.tipo_logradouro ON (tipo_logradouro.idtlog = logradouro.idtlog)
+                  LEFT JOIN public.municipio ON (municipio.idmun = bairro.idmun)
+                  LEFT JOIN public.distrito ON (distrito.idmun = bairro.idmun)
                  WHERE CASE WHEN {$tipoCertidao} != 1
                                  THEN num_termo = '{$numTermo}'
                                   AND num_livro = '{$numLivro}'
@@ -86,6 +99,14 @@ class FilaUnicaController extends ApiCoreController
             'num_livro',
             'certidao_nascimento',
             'cep',
+            'idlog',
+            'idbai',
+            'nm_bairro',
+            'idmun',
+            'nm_municipio',
+            'iddis',
+            'nm_distrito',
+            'nm_logradouro',
             'numero',
             'letra',
             'complemento',
