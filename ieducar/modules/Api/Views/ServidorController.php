@@ -105,7 +105,8 @@ class ServidorController extends ApiCoreController
                      pt.permite_lancar_faltas_componente as permite_lancar_faltas_componente,
                      ptd.componente_curricular_id as disciplina_id,
                      ccae.tipo_nota,
-                     pt.updated_at as updated_at
+                     pt.updated_at as updated_at,
+                     s.ativo as ativo
               FROM pmieducar.servidor s
               INNER JOIN cadastro.pessoa p ON s.cod_servidor = p.idpes
               INNER JOIN modules.professor_turma pt ON s.cod_servidor = pt.servidor_id AND s.ref_cod_instituicao = pt.instituicao_id
@@ -115,11 +116,11 @@ class ServidorController extends ApiCoreController
                                                                             AND ccae.componente_curricular_id = ptd.componente_curricular_id)
               WHERE s.ref_cod_instituicao = $1
               AND pt.ano = $2
-              GROUP BY pt.id, s.cod_servidor, p.nome, pt.turma_id, pt.permite_lancar_faltas_componente, ptd.componente_curricular_id, ccae.tipo_nota";
+              GROUP BY pt.id, s.cod_servidor, p.nome, pt.turma_id, pt.permite_lancar_faltas_componente, ptd.componente_curricular_id, ccae.tipo_nota, s.ativo";
 
       $_servidores = $this->fetchPreparedQuery($sql, array($instituicaoId, $ano));
 
-      $attrs = array('id', 'servidor_id', 'name', 'turma_id', 'permite_lancar_faltas_componente', 'disciplina_id','tipo_nota', 'updated_at');
+      $attrs = array('id', 'servidor_id', 'name', 'turma_id', 'permite_lancar_faltas_componente', 'disciplina_id','tipo_nota', 'updated_at', 'ativo');
       $_servidores = Portabilis_Array_Utils::filterSet($_servidores, $attrs);
       $servidores = array();
       $__servidores = array();
@@ -129,6 +130,7 @@ class ServidorController extends ApiCoreController
         $__servidores[$servidor['id']]['servidor_id'] = $servidor['servidor_id'];
         $__servidores[$servidor['id']]['name'] = Portabilis_String_Utils::toUtf8($servidor['name']);
         $__servidores[$servidor['id']]['updated_at'] = $servidor['updated_at'];
+        $__servidores[$servidor['id']]['ativo'] = $servidor['ativo'];
         $__servidores[$servidor['id']]['disciplinas_turmas'][] = array(
           'turma_id' => $servidor['turma_id'],
           'disciplina_id' => $servidor['disciplina_id'],
