@@ -372,7 +372,7 @@ class indice extends clsCadastro
                             WHERE fa.id = fcc.falta_aluno_id
                               AND fa.matricula_id = $this->ref_cod_matricula
                               AND fcc.componente_curricular_id = $this->ref_cod_disciplina
-                              AND fcc.etapa = $etapa");
+                              AND fcc.etapa = $etapa::CHARACTER VARYING ");
           }
         }
       }
