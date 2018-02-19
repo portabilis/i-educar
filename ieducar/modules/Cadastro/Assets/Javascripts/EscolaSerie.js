@@ -149,3 +149,46 @@ function marcarCheck(idValue) {
 }
 
 $j('.etapas_utilizadas').mask("9,9,9,9", {placeholder: "1,2,3..."});
+
+
+var submitButton = $j('#btn_enviar');
+submitButton.removeAttr('onclick');
+
+function existeDependencia(componentes){
+    serie = $j('#ref_cod_serie_').val();
+    escola = $j('#ref_cod_escola_').val();
+    var url = getResourceUrlBuilder.buildUrl('/module/Api/ComponentesSerie',
+                                             'existe-dependencia',
+                                             {disciplinas : componentes,
+                                              serie_id : serie,
+                                              escola_id : escola});
+
+    var options = {
+        url      : url,
+        dataType : 'json',
+        success  : function (dataResponse) {
+            if(dataResponse.existe_dependencia){
+                messageUtils.error('Não foi possível remover o componente. Existe registros de dependência neste componente.');
+            }else {
+                acao();
+            }
+        }
+    };
+
+    getResource(options);
+}
+
+submitButton.click(function(){
+    var componentesInput = $j('[name*=disciplinas]');
+    var arrayComponentes = [];
+
+    componentesInput.each(function(i, input) {
+        id = input.name.replace(/\D/g, '');
+        check = $j('[name="disciplinas[' + id + ']"]').is(':checked');
+
+        if (check) {
+            arrayComponentes.push(id);
+        }
+    });
+    existeDependencia(arrayComponentes);
+});

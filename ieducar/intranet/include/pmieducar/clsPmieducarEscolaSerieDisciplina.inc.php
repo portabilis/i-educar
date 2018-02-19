@@ -586,4 +586,28 @@ class clsPmieducarEscolaSerieDisciplina
 
         return FALSE;
     }
+
+    function existeDependencia (array $listaComponentesSelecionados)
+    {
+        if (is_numeric($this->ref_ref_cod_serie) && is_numeric($this->ref_ref_cod_escola)) {
+            $componentesSelecionados = join(',', $listaComponentesSelecionados);
+
+            $db = new clsBanco();
+            $sql = "SELECT 1 FROM {$this->_tabela}
+                     WHERE ref_ref_cod_serie = '{$this->ref_ref_cod_serie}'
+                       AND ref_ref_cod_escola = '{$this->ref_ref_cod_escola}'
+                       AND ref_cod_disciplina NOT IN ({$componentesSelecionados})
+                       AND EXISTS (SELECT 1
+                                     FROM pmieducar.disciplina_dependencia
+                                    WHERE disciplina_dependencia.ref_cod_disciplina NOT IN ({$componentesSelecionados})
+                                      AND disciplina_dependencia.ref_cod_escola = {$this->_tabela}.ref_ref_cod_escola
+                                      AND disciplina_dependencia.ref_cod_serie = {$this->_tabela}.ref_ref_cod_serie)";
+            if ($db->CampoUnico($sql) == 1)
+            {
+                return TRUE;
+            }
+            return FALSE;
+        }
+        return FALSE;
+    }
 }

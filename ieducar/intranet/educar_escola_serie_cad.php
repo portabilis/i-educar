@@ -489,6 +489,7 @@ class indice extends clsCadastro
 
         $obj->excluirNaoSelecionados($this->disciplinas);
 
+
         if ($editou) {
             if ($this->disciplinas) {
                 foreach ($this->disciplinas as $key => $campo) {
@@ -613,6 +614,7 @@ class indice extends clsCadastro
 
     public function loadAssets() {
         $scripts = array(
+            '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
             '/modules/Cadastro/Assets/Javascripts/EscolaSerie.js'
         );
 
