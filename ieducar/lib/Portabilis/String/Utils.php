@@ -164,4 +164,8 @@ class Portabilis_String_Utils {
 
     return str_replace('_', ' ', ucwords($str));
   }
+
+  public static function emptyOrNull($str){
+    return is_null($str) || empty($str);
+  }
 }
