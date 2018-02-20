@@ -396,10 +396,10 @@ class PessoaController extends ApiCoreController
       $attrs   = array('id', 'nome');
       $pessoa  = Portabilis_Array_Utils::filter($pessoa, $attrs);
 
-      $details = $this->loadDetails($this->getRequest()->id);
+      $details = $this->loadDetails($pessoa['id']);
       $pessoa  = Portabilis_Array_Utils::merge($pessoa, $details);
 
-      $pessoa['deficiencias'] = $this->loadDeficiencias($this->getRequest()->id);
+      $pessoa['deficiencias'] = $this->loadDeficiencias($pessoa['id']);
     }
 
     return $pessoa;
