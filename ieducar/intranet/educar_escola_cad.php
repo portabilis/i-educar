@@ -2046,6 +2046,11 @@ if(!$this->isEnderecoExterno){
         if (!$this->validaDadosTelefones()) return false;
         if (!$this->validaLatitudeLongitude()) return false;
 
+        if (!empty($this->codigo_inep_escola_compartilhada) && strlen($this->codigo_inep_escola_compartilhada) != 8) {
+            $this->mensagem = 'O código INEP da escola que compartilha o prédio deve conter 8 dígitos.';
+            return false;
+        }
+
     unset($this->mantenedora_escola_privada[0]);
     $mantenedora_escola_privada = implode(',', $this->mantenedora_escola_privada);
 
