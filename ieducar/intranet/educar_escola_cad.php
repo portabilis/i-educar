@@ -1336,6 +1336,9 @@ if(!$this->isEnderecoExterno){
 
         $options = array('label' => Portabilis_String_Utils::toLatin1('Destinação do lixo - Outros'), 'value' => $this->lixo_outros);
         $this->inputsHelper()->checkbox('lixo_outros', $options);
+        
+        $options = array('label' => Portabilis_String_Utils::toLatin1('Marcar todas'));
+        $this->inputsHelper()->checkbox('marcar_todas_dependencias', $options);
 
         $options = array('label' => Portabilis_String_Utils::toLatin1('Sala de diretoria'), 'value' => $this->dependencia_sala_diretoria);
         $this->inputsHelper()->checkbox('dependencia_sala_diretoria', $options);

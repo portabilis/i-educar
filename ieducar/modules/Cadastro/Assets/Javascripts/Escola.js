@@ -1,6 +1,36 @@
 var $submitButton      = $j('#btn_enviar');
 var $escolaInepIdField = $j('#escola_inep_id');
 var $escolaIdField     = $j('#cod_escola');
+var $arrayCheckDependencias = ['dependencia_sala_diretoria',
+                               'dependencia_sala_professores',
+                               'dependencia_sala_secretaria',
+                               'dependencia_laboratorio_informatica',
+                               'dependencia_laboratorio_ciencias',
+                               'dependencia_sala_aee',
+                               'dependencia_quadra_coberta',
+                               'dependencia_quadra_descoberta',
+                               'dependencia_cozinha',
+                               'dependencia_biblioteca',
+                               'dependencia_sala_leitura',
+                               'dependencia_parque_infantil',
+                               'dependencia_bercario',
+                               'dependencia_banheiro_fora',
+                               'dependencia_banheiro_dentro',
+                               'dependencia_banheiro_infantil',
+                               'dependencia_banheiro_deficiente',
+                               'dependencia_banheiro_chuveiro',
+                               'dependencia_vias_deficiente',
+                               'dependencia_refeitorio',
+                               'dependencia_dispensa',
+                               'dependencia_aumoxarifado',
+                               'dependencia_auditorio',
+                               'dependencia_patio_coberto',
+                               'dependencia_patio_descoberto',
+                               'dependencia_alojamento_aluno',
+                               'dependencia_alojamento_professor',
+                               'dependencia_area_verde',
+                               'dependencia_lavanderia',
+                               'dependencia_unidade_climatizada'];
 
 $escolaInepIdField.closest('tr').hide();
 
@@ -75,6 +105,16 @@ $j(document.formcadastro).removeAttr('onsubmit');
 // bind events
 $submitButton.click(submitForm);
 
+$j('#marcar_todas_dependencias').click(
+    function(){
+        var check = $j('#marcar_todas_dependencias').is(':checked');
+        $arrayCheckDependencias.each(
+            function(idElement){
+                $j( '#' + idElement).prop("checked",check);
+            }
+        );
+    }
+);
 
 //abas
 
@@ -87,13 +127,13 @@ if (!$j('#cnpj').is(':visible')){
 
   // Atribui um id a linha, para identificar até onde/a partir de onde esconder os campos
   $j('#condicao').closest('tr').attr('id','tcondicao');
-  $j('#dependencia_sala_diretoria').closest('tr').attr('id','tdependencia_sala_diretoria');
+  $j('#marcar_todas_dependencias').closest('tr').attr('id','tmarcar_todas_dependencias');
   $j('#televisoes').closest('tr').attr('id','ttelevisoes');
   $j('#atendimento_aee').closest('tr').attr('id','tatendimento_aee');
 
   // Pega o número dessa linha
   linha_inicial_infra = $j('#tcondicao').index()-1;
-  linha_inicial_dependencia = $j('#tdependencia_sala_diretoria').index()-1;
+  linha_inicial_dependencia = $j('#tmarcar_todas_dependencias').index()-1;
   linha_inicial_equipamento = $j('#ttelevisoes').index()-1;
   linha_inicial_dados = $j('#tatendimento_aee').index()-1;  
 
