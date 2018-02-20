@@ -1651,7 +1651,11 @@ if(!$this->isEnderecoExterno){
 
         unset($this->mantenedora_escola_privada[0]);
         $mantenedora_escola_privada = implode(',', $this->mantenedora_escola_privada);
-
+        
+        if (!empty($this->escola_inep_id) && strlen($this->escola_inep_id) != 8) {
+            $this->mensagem = 'O código INEP da escola deve conter 8 dígitos.';
+            return false;
+        }
         if (!empty($this->orgao_regional) && strlen($this->orgao_regional) != 5) {
             $this->mensagem = 'O código do orgão regional de ensino deve conter 5 dígitos.';
             return false;
@@ -2070,6 +2074,10 @@ if(!$this->isEnderecoExterno){
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 561, $this->pessoa_logada, 7, "educar_escola_lst.php" );
 
+        if (!empty($this->escola_inep_id) && strlen($this->escola_inep_id) != 8) {
+            $this->mensagem = 'O código INEP da escola deve conter 8 dígitos.';
+            return false;
+        }
         if (!empty($this->orgao_regional) && strlen($this->orgao_regional) != 5) {
             $this->mensagem = 'O código do orgão regional de ensino deve conter 5 dígitos.';
             return false;
