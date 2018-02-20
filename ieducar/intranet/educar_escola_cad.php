@@ -174,14 +174,9 @@ class indice extends clsCadastro
   var $dependencia_alojamento_professor;
   var $dependencia_area_verde;
   var $dependencia_lavanderia;
-  var $dependencia_unidade_climatizada;
-  var $dependencia_quantidade_ambiente_climatizado;
   var $dependencia_nenhuma_relacionada;
   var $dependencia_numero_salas_existente;
   var $dependencia_numero_salas_utilizadas;
-  var $porte_quadra_descoberta;
-  var $porte_quadra_coberta;
-  var $tipo_cobertura_patio;
   var $total_funcionario;
     var $atendimento_aee;
     var $atividade_complementar;
@@ -1208,27 +1203,27 @@ if(!$this->isEnderecoExterno){
             $this->campoOculto( "incluir_curso", "" );
             $this->campoQuebra();
 
-            $resources = array(0 => 'Selecione',
-                               1 => Portabilis_String_Utils::toLatin1('Próprio'),
-                               2 => 'Alugado',
-                               3 => 'Cedido');
-
-        $options = array('label' => Portabilis_String_Utils::toLatin1('Forma de ocupação do prédio'), 'resources' => $resources, 'value' => $this->condicao, 'size' => 70, 'required' => false);
-        $this->inputsHelper()->select('condicao', $options);
-
-            $resources = array(0  => 'Selecione',
-                               3  => Portabilis_String_Utils::toLatin1('Prédio escolar'),
-                               4  => Portabilis_String_Utils::toLatin1('Templo/Igreja'),
-                               5  => Portabilis_String_Utils::toLatin1('Sala de empresa'),
-                               6 => Portabilis_String_Utils::toLatin1('Casa do professor'),
-                               7 => Portabilis_String_Utils::toLatin1('Salas em outra escola'),
-                               8 => Portabilis_String_Utils::toLatin1('Galpão/rancho/paiol/barracão'),
-                               9 => Portabilis_String_Utils::toLatin1('Unidade de atendimento socioeducativa'),
-                               10 => Portabilis_String_Utils::toLatin1('Unidade prisional'),
-                               11 => 'Outros');
+        $resources = array(0  => 'Selecione',
+                           3  => Portabilis_String_Utils::toLatin1('Prédio escolar'),
+                           4  => Portabilis_String_Utils::toLatin1('Templo/Igreja'),
+                           5  => Portabilis_String_Utils::toLatin1('Sala de empresa'),
+                           6 => Portabilis_String_Utils::toLatin1('Casa do professor'),
+                           7 => Portabilis_String_Utils::toLatin1('Salas em outra escola'),
+                           8 => Portabilis_String_Utils::toLatin1('Galpão/rancho/paiol/barracão'),
+                           9 => Portabilis_String_Utils::toLatin1('Unidade de atendimento socioeducativa'),
+                           10 => Portabilis_String_Utils::toLatin1('Unidade prisional'),
+                           11 => 'Outros');
 
         $options = array('label' => Portabilis_String_Utils::toLatin1('Local de funcionamento'), 'resources' => $resources, 'value' => $this->local_funcionamento, 'size' => 70, 'required' => false);
         $this->inputsHelper()->select('local_funcionamento', $options);
+        
+        $resources = array(0 => 'Selecione',
+                           1 => Portabilis_String_Utils::toLatin1('Próprio'),
+                           2 => 'Alugado',
+                           3 => 'Cedido');
+
+        $options = array('label' => Portabilis_String_Utils::toLatin1('Forma de ocupação do prédio'), 'resources' => $resources, 'value' => $this->condicao, 'size' => 70, 'required' => false);
+        $this->inputsHelper()->select('condicao', $options);
 
         $options = array('label' => Portabilis_String_Utils::toLatin1('Código da escola que compartilha o prédio'),
             'label_hint' => Portabilis_String_Utils::toLatin1('Caso compartilhe o prédio escolar com outra escola preencha com o código INEP'),
@@ -1361,24 +1356,8 @@ if(!$this->isEnderecoExterno){
         $options = array('label' => Portabilis_String_Utils::toLatin1('Quadra de esportes coberta'), 'value' => $this->dependencia_quadra_coberta);
         $this->inputsHelper()->checkbox('dependencia_quadra_coberta', $options);
 
-        $resources = array( null => 'Selecione',
-                            1    => 'Pequena',
-                            2    => Portabilis_String_Utils::toLatin1('Média'),
-                            3    => 'Grande',);
-
-            $options = array('label' => Portabilis_String_Utils::toLatin1('Porte'), 'resources' => $resources, 'value' => $this->porte_quadra_coberta, 'required' => false, 'size' => 70,);
-        $this->inputsHelper()->select('porte_quadra_coberta', $options);
-
         $options = array('label' => Portabilis_String_Utils::toLatin1('Quadra de esportes descoberta'), 'value' => $this->dependencia_quadra_descoberta);
         $this->inputsHelper()->checkbox('dependencia_quadra_descoberta', $options);
-
-        $resources = array( null => 'Selecione',
-                            1    => 'Pequena',
-                            2    => Portabilis_String_Utils::toLatin1('Média'),
-                            3    => 'Grande',);
-
-            $options = array('label' => Portabilis_String_Utils::toLatin1('Porte'), 'resources' => $resources, 'value' => $this->porte_quadra_descoberta, 'required' => false, 'size' => 70,);
-        $this->inputsHelper()->select('porte_quadra_descoberta', $options);
 
         $options = array('label' => Portabilis_String_Utils::toLatin1('Cozinha'), 'value' => $this->dependencia_cozinha);
         $this->inputsHelper()->checkbox('dependencia_cozinha', $options);
@@ -1407,11 +1386,11 @@ if(!$this->isEnderecoExterno){
         $options = array('label' => Portabilis_String_Utils::toLatin1('Banheiro adequado a alunos com deficiência ou mobilidade reduzida'), 'value' => $this->dependencia_banheiro_deficiente);
         $this->inputsHelper()->checkbox('dependencia_banheiro_deficiente', $options);
 
-        $options = array('label' => Portabilis_String_Utils::toLatin1('Banheiro com chuveiro'), 'value' => $this->dependencia_banheiro_chuveiro);
-        $this->inputsHelper()->checkbox('dependencia_banheiro_chuveiro', $options);
-
         $options = array('label' => Portabilis_String_Utils::toLatin1('Dependências e vias adequadas a alunos com deficiência ou mobilidade reduzida'), 'value' => $this->dependencia_vias_deficiente);
         $this->inputsHelper()->checkbox('dependencia_vias_deficiente', $options);
+
+        $options = array('label' => Portabilis_String_Utils::toLatin1('Banheiro com chuveiro'), 'value' => $this->dependencia_banheiro_chuveiro);
+        $this->inputsHelper()->checkbox('dependencia_banheiro_chuveiro', $options);
 
         $options = array('label' => Portabilis_String_Utils::toLatin1('Refeitório'), 'value' => $this->dependencia_refeitorio);
         $this->inputsHelper()->checkbox('dependencia_refeitorio', $options);
@@ -1436,9 +1415,6 @@ if(!$this->isEnderecoExterno){
                             2    => 'Telhado',
                             3    => 'Outras',);
 
-            $options = array('label' => Portabilis_String_Utils::toLatin1('Tipo da cobertura'), 'resources' => $resources, 'value' => $this->tipo_cobertura_patio, 'required' => false, 'size' => 70,);
-        $this->inputsHelper()->select('tipo_cobertura_patio', $options);
-
         $options = array('label' => Portabilis_String_Utils::toLatin1('Alojamento de aluno'), 'value' => $this->dependencia_alojamento_aluno);
         $this->inputsHelper()->checkbox('dependencia_alojamento_aluno', $options);
 
@@ -1456,12 +1432,6 @@ if(!$this->isEnderecoExterno){
                             2    => Portabilis_String_Utils::toLatin1('Não'),
                             3    => 'Parcial',);
 
-            $options = array('label' => Portabilis_String_Utils::toLatin1('Unidade climatizada'), 'resources' => $resources, 'value' => $this->dependencia_unidade_climatizada, 'required' => false, 'size' => 70,);
-        $this->inputsHelper()->select('dependencia_unidade_climatizada', $options);
-
-        $options = array('label' => Portabilis_String_Utils::toLatin1('Quantidade de ambientes climatizados'), 'resources' => $resources, 'value' => $this->dependencia_quantidade_ambiente_climatizado, 'required' => false, 'size' => 5, 'placeholder' => '');
-        $this->inputsHelper()->integer('dependencia_quantidade_ambiente_climatizado', $options);
-
         $options = array('label' => Portabilis_String_Utils::toLatin1('Nenhuma das relacionadas'), 'value' => $this->dependencia_nenhuma_relacionada);
         $this->inputsHelper()->checkbox('dependencia_nenhuma_relacionada', $options);
 
@@ -1469,10 +1439,7 @@ if(!$this->isEnderecoExterno){
         $this->inputsHelper()->integer('dependencia_numero_salas_existente', $options);
 
         $options = array('label' => Portabilis_String_Utils::toLatin1('Número de salas utilizadas como sala de aula - Dentro e fora do prédio'), 'resources' => $resources, 'value' => $this->dependencia_numero_salas_utilizadas, 'required' => false, 'size' => 5, 'placeholder' => '');
-            $this->inputsHelper()->integer('dependencia_numero_salas_utilizadas', $options);
-
-            $options = array('label' => Portabilis_String_Utils::toLatin1('Total de funcionários da escola (inclusive profissionais escolares em sala de aula)'), 'resources' => $resources, 'value' => $this->total_funcionario, 'required' => false, 'size' => 5, 'placeholder' => '');
-            $this->inputsHelper()->integer('total_funcionario', $options);
+        $this->inputsHelper()->integer('dependencia_numero_salas_utilizadas', $options);
 
         $options = array('label' => Portabilis_String_Utils::toLatin1('Quantidade de televisores'), 'resources' => $resources, 'value' => $this->televisoes, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
         $this->inputsHelper()->integer('televisoes', $options);
@@ -1507,8 +1474,8 @@ if(!$this->isEnderecoExterno){
         $options = array('label' => Portabilis_String_Utils::toLatin1('Quantidade de máquinas fotográficas ou filmadoras'), 'resources' => $resources, 'value' => $this->maquinas_fotograficas, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
         $this->inputsHelper()->integer('maquinas_fotograficas', $options);
 
-        $options = array('label' => Portabilis_String_Utils::toLatin1('Quantidade total de computadores'), 'resources' => $resources, 'value' => $this->computadores, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
-        $this->inputsHelper()->integer('computadores', $options);
+        $options = array('label' => Portabilis_String_Utils::toLatin1('Quantidade de impressoras multifuncionais'), 'resources' => $resources, 'value' => $this->impressoras_multifuncionais, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
+        $this->inputsHelper()->integer('impressoras_multifuncionais', $options);
 
         $options = array('label' => Portabilis_String_Utils::toLatin1('Quantidade de computadores de uso administrativo'), 'resources' => $resources, 'value' => $this->computadores_administrativo, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
         $this->inputsHelper()->integer('computadores_administrativo', $options);
@@ -1516,14 +1483,17 @@ if(!$this->isEnderecoExterno){
         $options = array('label' => Portabilis_String_Utils::toLatin1('Quantidade de computadores de uso dos alunos'), 'resources' => $resources, 'value' => $this->computadores_alunos, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
         $this->inputsHelper()->integer('computadores_alunos', $options);
 
-        $options = array('label' => Portabilis_String_Utils::toLatin1('Quantidade de impressoras multifuncionais'), 'resources' => $resources, 'value' => $this->impressoras_multifuncionais, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
-        $this->inputsHelper()->integer('impressoras_multifuncionais', $options);
+        $options = array('label' => Portabilis_String_Utils::toLatin1('Quantidade total de computadores'), 'resources' => $resources, 'value' => $this->computadores, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
+        $this->inputsHelper()->integer('computadores', $options);
 
         $options = array('label' => Portabilis_String_Utils::toLatin1('Possui internet'), 'value' => $this->acesso_internet);
         $this->inputsHelper()->checkbox('acesso_internet', $options);
 
         $options = array('label' => Portabilis_String_Utils::toLatin1('Possui banda larga'), 'value' => $this->banda_larga);
         $this->inputsHelper()->checkbox('banda_larga', $options);
+
+        $options = array('label' => Portabilis_String_Utils::toLatin1('Total de funcionários da escola (inclusive profissionais escolares em sala de aula)'), 'resources' => $resources, 'value' => $this->total_funcionario, 'required' => false, 'size' => 5, 'placeholder' => '');
+        $this->inputsHelper()->integer('total_funcionario', $options);
 
             $resources = array( -1 => 'Selecione',
                                 0    => Portabilis_String_Utils::toLatin1('Não oferece'),
@@ -1651,7 +1621,7 @@ if(!$this->isEnderecoExterno){
 
         unset($this->mantenedora_escola_privada[0]);
         $mantenedora_escola_privada = implode(',', $this->mantenedora_escola_privada);
-        
+
         if (!empty($this->escola_inep_id) && strlen($this->escola_inep_id) != 8) {
             $this->mensagem = 'O código INEP da escola deve conter 8 dígitos.';
             return false;
@@ -1747,14 +1717,9 @@ if(!$this->isEnderecoExterno){
                     $obj->dependencia_alojamento_professor = $this->dependencia_alojamento_professor == 'on' ? 1 : 0;
                     $obj->dependencia_area_verde = $this->dependencia_area_verde == 'on' ? 1 : 0;
                     $obj->dependencia_lavanderia = $this->dependencia_lavanderia == 'on' ? 1 : 0;
-                    $obj->dependencia_unidade_climatizada = $this->dependencia_unidade_climatizada;
-                    $obj->dependencia_quantidade_ambiente_climatizado = $this->dependencia_quantidade_ambiente_climatizado;
                     $obj->dependencia_nenhuma_relacionada = $this->dependencia_nenhuma_relacionada == 'on' ? 1 : 0;
                     $obj->dependencia_numero_salas_utilizadas = $this->dependencia_numero_salas_utilizadas;
                     $obj->dependencia_numero_salas_existente = $this->dependencia_numero_salas_existente;
-                    $obj->porte_quadra_descoberta = $this->porte_quadra_descoberta;
-                    $obj->porte_quadra_coberta = $this->porte_quadra_coberta;
-                    $obj->tipo_cobertura_patio = $this->tipo_cobertura_patio;
                     $obj->total_funcionario = $this->total_funcionario;
                     $obj->atendimento_aee = $this->atendimento_aee;
                     $obj->atividade_complementar = $this->atividade_complementar;
@@ -1964,14 +1929,9 @@ if(!$this->isEnderecoExterno){
             $obj->dependencia_alojamento_professor = $this->dependencia_alojamento_professor == 'on' ? 1 : 0;
             $obj->dependencia_area_verde = $this->dependencia_area_verde == 'on' ? 1 : 0;
             $obj->dependencia_lavanderia = $this->dependencia_lavanderia == 'on' ? 1 : 0;
-            $obj->dependencia_unidade_climatizada = $this->dependencia_unidade_climatizada;
-            $obj->dependencia_quantidade_ambiente_climatizado = $this->dependencia_quantidade_ambiente_climatizado;
             $obj->dependencia_nenhuma_relacionada = $this->dependencia_nenhuma_relacionada == 'on' ? 1 : 0;
             $obj->dependencia_numero_salas_utilizadas = $this->dependencia_numero_salas_utilizadas;
             $obj->dependencia_numero_salas_existente = $this->dependencia_numero_salas_existente;
-            $obj->porte_quadra_descoberta = $this->porte_quadra_descoberta;
-            $obj->porte_quadra_coberta = $this->porte_quadra_coberta;
-            $obj->tipo_cobertura_patio = $this->tipo_cobertura_patio;
             $obj->total_funcionario = $this->total_funcionario;
             $obj->atendimento_aee = $this->atendimento_aee;
             $obj->atividade_complementar = $this->atividade_complementar;
@@ -2168,14 +2128,9 @@ if(!$this->isEnderecoExterno){
             $obj->dependencia_alojamento_professor = $this->dependencia_alojamento_professor == 'on' ? 1 : 0;
             $obj->dependencia_area_verde = $this->dependencia_area_verde == 'on' ? 1 : 0;
             $obj->dependencia_lavanderia = $this->dependencia_lavanderia == 'on' ? 1 : 0;
-            $obj->dependencia_unidade_climatizada = $this->dependencia_unidade_climatizada;
-            $obj->dependencia_quantidade_ambiente_climatizado = $this->dependencia_quantidade_ambiente_climatizado;
             $obj->dependencia_nenhuma_relacionada = $this->dependencia_nenhuma_relacionada == 'on' ? 1 : 0;
             $obj->dependencia_numero_salas_utilizadas = $this->dependencia_numero_salas_utilizadas;
             $obj->dependencia_numero_salas_existente = $this->dependencia_numero_salas_existente;
-            $obj->porte_quadra_descoberta = $this->porte_quadra_descoberta;
-            $obj->porte_quadra_coberta = $this->porte_quadra_coberta;
-            $obj->tipo_cobertura_patio = $this->tipo_cobertura_patio;
             $obj->total_funcionario = $this->total_funcionario;
             $obj->atendimento_aee = $this->atendimento_aee;
             $obj->atividade_complementar = $this->atividade_complementar;
@@ -2298,9 +2253,6 @@ if(!$this->isEnderecoExterno){
             $obj->dependencia_nenhuma_relacionada = $this->dependencia_nenhuma_relacionada == 'on' ? 1 : 0;
             $obj->dependencia_numero_salas_utilizadas = $this->dependencia_numero_salas_utilizadas;
             $obj->dependencia_numero_salas_existente = $this->dependencia_numero_salas_existente;
-            $obj->porte_quadra_descoberta = $this->porte_quadra_descoberta;
-            $obj->porte_quadra_coberta = $this->porte_quadra_coberta;
-            $obj->tipo_cobertura_patio = $this->tipo_cobertura_patio;
             $obj->total_funcionario = $this->total_funcionario;
             $obj->atendimento_aee = $this->atendimento_aee;
             $obj->atividade_complementar = $this->atividade_complementar;

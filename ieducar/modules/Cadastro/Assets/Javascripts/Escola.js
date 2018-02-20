@@ -29,8 +29,7 @@ var $arrayCheckDependencias = ['dependencia_sala_diretoria',
                                'dependencia_alojamento_aluno',
                                'dependencia_alojamento_professor',
                                'dependencia_area_verde',
-                               'dependencia_lavanderia',
-                               'dependencia_unidade_climatizada'];
+                               'dependencia_lavanderia'];
 
 $escolaInepIdField.closest('tr').hide();
 
@@ -127,13 +126,13 @@ if (!$j('#cnpj').is(':visible')){
   $j('#tab1').addClass('escolaTab-active').removeClass('escolaTab');
 
   // Atribui um id a linha, para identificar até onde/a partir de onde esconder os campos
-  $j('#condicao').closest('tr').attr('id','tcondicao');
+  $j('#local_funcionamento').closest('tr').attr('id','tlocal_funcionamento');
   $j('#marcar_todas_dependencias').closest('tr').attr('id','tmarcar_todas_dependencias');
   $j('#televisoes').closest('tr').attr('id','ttelevisoes');
   $j('#atendimento_aee').closest('tr').attr('id','tatendimento_aee');
 
   // Pega o número dessa linha
-  linha_inicial_infra = $j('#tcondicao').index()-1;
+  linha_inicial_infra = $j('#tlocal_funcionamento').index()-1;
   linha_inicial_dependencia = $j('#tmarcar_todas_dependencias').index()-1;
   linha_inicial_equipamento = $j('#ttelevisoes').index()-1;
   linha_inicial_dados = $j('#tatendimento_aee').index()-1;  
