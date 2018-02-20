@@ -539,7 +539,7 @@ class indice extends clsCadastro
         }
         else
         {
-        $this->inputsHelper()->integer('escola_inep_id', array('label' => 'Código INEP', 'placeholder' => 'INEP', 'required' => false, 'max_length' => 14, 'label_hint' => 'Somente números'));
+        $this->inputsHelper()->integer('escola_inep_id', array('label' => 'Código INEP', 'placeholder' => 'INEP', 'required' => false, 'max_length' => 8, 'label_hint' => 'Somente números'));
 
             if( $_POST )
             foreach( $_POST AS $campo => $val )
