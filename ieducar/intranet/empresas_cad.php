@@ -480,8 +480,8 @@ class indice extends clsCadastro
 
     $options = array(
       'required'    => false,
-      'label'       => "(ddd) / {$typeLabel}",
-      'placeholder' => 'ddd',
+      'label'       => "(DDD) / {$typeLabel}",
+      'placeholder' => 'DDD',
       'value'       => $this->{"ddd_telefone_{$type}"},
       'max_length'  => 3,
       'size'        => 3,
