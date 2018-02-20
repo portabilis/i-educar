@@ -77,7 +77,7 @@ var getEscola = function(escolaId) {
 }
 
 var putEscola = function() {
-  var inep = $escolaInepIdField.val().length == 8 ? $escolaInepIdField : ''
+  var inep = $escolaInepIdField.val().length == 8 ? $escolaInepIdField.val() : '';
   var data = {
     id             : $escolaIdField.val(),
     escola_inep_id : inep
