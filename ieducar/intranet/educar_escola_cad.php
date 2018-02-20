@@ -1216,7 +1216,7 @@ if(!$this->isEnderecoExterno){
 
         $options = array('label' => Portabilis_String_Utils::toLatin1('Local de funcionamento'), 'resources' => $resources, 'value' => $this->local_funcionamento, 'size' => 70, 'required' => false);
         $this->inputsHelper()->select('local_funcionamento', $options);
-        
+
         $resources = array(0 => 'Selecione',
                            1 => Portabilis_String_Utils::toLatin1('Próprio'),
                            2 => 'Alugado',
@@ -2043,6 +2043,7 @@ if(!$this->isEnderecoExterno){
             return false;
         }
 
+        if (!$this->validaDadosTelefones()) return false;
         if (!$this->validaLatitudeLongitude()) return false;
 
     unset($this->mantenedora_escola_privada[0]);
@@ -2600,6 +2601,31 @@ if(!$this->isEnderecoExterno){
 
     return true;
   }
+
+    protected function validaDadosTelefones(){
+        return $this->validaDDDTelefone($this->p_ddd_telefone_1, $this->p_telefone_1, 'Telefone 1') &&
+               $this->validaDDDTelefone($this->p_ddd_telefone_2, $this->p_telefone_2, 'Telefone 2') &&
+               $this->validaDDDTelefone($this->p_ddd_telefone_mov, $this->p_telefone_mov, 'Celular') &&
+               $this->validaDDDTelefone($this->p_ddd_telefone_fax, $this->p_telefone_fax, 'Fax');
+    }
+    protected function validaDDDTelefone($valorDDD = null, $valorTelefone = null, $nomeCampo)
+    {
+        if(!empty($valorDDD) && empty($valorTelefone)){
+            $this->mensagem = $this->msgRequereTelefone($nomeCampo);
+            return false;
+        }
+        if(empty($valorDDD) && !empty($valorTelefone)){
+            $this->mensagem = $this->msgRequereDDD($nomeCampo);
+            return false;
+        }
+        return true;
+    }
+    protected function msgRequereDDD($nomeCampo = null){
+        return "O campo: DDD, deve ser preenchido quando o {$nomeCampo} estiver preenchido.";
+    }
+    protected function msgRequereTelefone($nomeCampo = null){
+        return "O campo: {$nomeCampo}, deve ser preenchido quando o DDD estiver preenchido.";
+    }
 }
 
 // cria uma extensao da classe base
