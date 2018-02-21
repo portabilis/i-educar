@@ -1536,15 +1536,15 @@ if(!$this->isEnderecoExterno){
 
         $options = array('label' => Portabilis_String_Utils::toLatin1('Materiais didáticos específicos para atendimento à diversidade sócio-cultural - Indígena'), 'value' => $this->didatico_indigena);
         $this->inputsHelper()->checkbox('didatico_indigena', $options);
-
-        $options = array('label' => Portabilis_String_Utils::toLatin1('Escola indígena'), 'value' => $this->educacao_indigena);
-        $this->inputsHelper()->checkbox('educacao_indigena', $options);
-
-        $resources = array( 1    => Portabilis_String_Utils::toLatin1('Língua Portuguesa'),
-                            2    => Portabilis_String_Utils::toLatin1('Línguia Indígena'));
-
-        $options = array('label' => Portabilis_String_Utils::toLatin1('Línguas indígenas'), 'resources' => $resources, 'value' => $this->lingua_ministrada, 'required' => false, 'size' => 70,);
-        $this->inputsHelper()->select('lingua_ministrada', $options);
+        
+        $resources = array( 0 => 'Não',
+                            1 => 'Sim');
+        $options = array('label' => 'Escola indígena',
+                         'resources' => $resources,
+                         'value' => $this->educacao_indigena,
+                         'required' => false,
+                         'size' => 70,);
+        $this->inputsHelper()->select('educacao_indigena', $options);
 
         $resources = array( 0 => 'Selecione');
 
@@ -1557,14 +1557,32 @@ if(!$this->isEnderecoExterno){
         $options = array('label' => Portabilis_String_Utils::toLatin1('Línguas indígenas'), 'resources' => $resources, 'value' => $this->lingua_ministrada, 'required' => false, 'size' => 70,);
         $this->inputsHelper()->select('lingua_ministrada', $options);
 
-        $options = array('label' => Portabilis_String_Utils::toLatin1('Escola cede espaço para turmas do Brasil Alfabetizado'), 'value' => $this->espaco_brasil_aprendizado);
-        $this->inputsHelper()->checkbox('espaco_brasil_aprendizado', $options);
+        $resources = array( 0 => 'Não',
+                            1 => 'Sim');
+        $options = array('label' => 'Escola cede espaço para turmas do Brasil Alfabetizado',
+                         'resources' => $resources,
+                         'value' => $this->espaco_brasil_aprendizado,
+                         'required' => false,
+                         'size' => 70);
+        $this->inputsHelper()->select('espaco_brasil_aprendizado', $options);
 
-        $options = array('label' => Portabilis_String_Utils::toLatin1('Escola abre aos finais de semana para a comunidade'), 'value' => $this->abre_final_semana);
-        $this->inputsHelper()->checkbox('abre_final_semana', $options);
+        $resources = array( 0 => 'Não',
+                            1 => 'Sim');
+        $options = array('label' => 'Escola abre aos finais de semana para a comunidade',
+                         'resources' => $resources,
+                         'value' => $this->abre_final_semana,
+                         'required' => false,
+                         'size' => 70);
+        $this->inputsHelper()->select('abre_final_semana', $options);
 
-        $options = array('label' => Portabilis_String_Utils::toLatin1('Escola com proposta pedagógica de formação por alternância'), 'value' => $this->proposta_pedagogica);
-        $this->inputsHelper()->checkbox('proposta_pedagogica', $options);
+        $resources = array( 0 => 'Não',
+                            1 => 'Sim');
+        $options = array('label' => 'Escola com proposta pedagógica de formação por alternância',
+                         'resources' => $resources,
+                         'value' => $this->proposta_pedagogica,
+                         'required' => false,
+                         'size' => 70);
+        $this->inputsHelper()->select('proposta_pedagogica', $options);
 
         $resources = array('' => 'Selecione',
                            1  => 'Particular',
@@ -1730,11 +1748,12 @@ if(!$this->isEnderecoExterno){
                     $obj->didatico_nao_utiliza = $this->didatico_nao_utiliza == 'on' ? 1 : 0;
                     $obj->didatico_quilombola = $this->didatico_quilombola == 'on' ? 1 : 0;
                     $obj->didatico_indigena = $this->didatico_indigena == 'on' ? 1 : 0;
-                    $obj->educacao_indigena = $this->educacao_indigena == 'on' ? 1 : 0;
+                    $obj->educacao_indigena = $this->educacao_indigena;
                     $obj->lingua_ministrada = $this->lingua_ministrada;
-                    $obj->espaco_brasil_aprendizado = $this->espaco_brasil_aprendizado == 'on' ? 1 : 0;
-                    $obj->abre_final_semana = $this->abre_final_semana == 'on' ? 1 : 0;
+                    $obj->espaco_brasil_aprendizado = $this->espaco_brasil_aprendizado;
+                    $obj->abre_final_semana = $this->abre_final_semana;
                     $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
+                    $obj->proposta_pedagogica = $this->proposta_pedagogica;
                     $obj->televisoes = $this->televisoes;
                     $obj->videocassetes = $this->videocassetes;
                     $obj->dvds = $this->dvds;
@@ -1942,12 +1961,12 @@ if(!$this->isEnderecoExterno){
             $obj->didatico_nao_utiliza = $this->didatico_nao_utiliza == 'on' ? 1 : 0;
             $obj->didatico_quilombola = $this->didatico_quilombola == 'on' ? 1 : 0;
             $obj->didatico_indigena = $this->didatico_indigena == 'on' ? 1 : 0;
-            $obj->educacao_indigena = $this->educacao_indigena == 'on' ? 1 : 0;
+            $obj->educacao_indigena = $this->educacao_indigena;
             $obj->lingua_ministrada = $this->lingua_ministrada;
-            $obj->espaco_brasil_aprendizado = $this->espaco_brasil_aprendizado == 'on' ? 1 : 0;
-            $obj->abre_final_semana = $this->abre_final_semana == 'on' ? 1 : 0;
+            $obj->espaco_brasil_aprendizado = $this->espaco_brasil_aprendizado;
+            $obj->abre_final_semana = $this->abre_final_semana;
             $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
-            $obj->proposta_pedagogica = $this->proposta_pedagogica == 'on' ? 1 : 0;
+            $obj->proposta_pedagogica = $this->proposta_pedagogica;
             $obj->televisoes = $this->televisoes;
             $obj->videocassetes = $this->videocassetes;
             $obj->dvds = $this->dvds;
@@ -2147,12 +2166,12 @@ if(!$this->isEnderecoExterno){
             $obj->didatico_nao_utiliza = $this->didatico_nao_utiliza == 'on' ? 1 : 0;
             $obj->didatico_quilombola = $this->didatico_quilombola == 'on' ? 1 : 0;
             $obj->didatico_indigena = $this->didatico_indigena == 'on' ? 1 : 0;
-            $obj->educacao_indigena = $this->educacao_indigena == 'on' ? 1 : 0;
+            $obj->educacao_indigena = $this->educacao_indigena;
             $obj->lingua_ministrada = $this->lingua_ministrada;
-            $obj->espaco_brasil_aprendizado = $this->espaco_brasil_aprendizado == 'on' ? 1 : 0;
-            $obj->abre_final_semana = $this->abre_final_semana == 'on' ? 1 : 0;
+            $obj->espaco_brasil_aprendizado = $this->espaco_brasil_aprendizado;
+            $obj->abre_final_semana = $this->abre_final_semana;
             $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
-            $obj->proposta_pedagogica = $this->proposta_pedagogica == 'on' ? 1 : 0;
+            $obj->proposta_pedagogica = $this->proposta_pedagogica;
             $obj->televisoes = $this->televisoes;
             $obj->videocassetes = $this->videocassetes;
             $obj->dvds = $this->dvds;
@@ -2269,12 +2288,12 @@ if(!$this->isEnderecoExterno){
             $obj->didatico_nao_utiliza = $this->didatico_nao_utiliza == 'on' ? 1 : 0;
             $obj->didatico_quilombola = $this->didatico_quilombola == 'on' ? 1 : 0;
             $obj->didatico_indigena = $this->didatico_indigena == 'on' ? 1 : 0;
-            $obj->educacao_indigena = $this->educacao_indigena == 'on' ? 1 : 0;
+            $obj->educacao_indigena = $this->educacao_indigena;
             $obj->lingua_ministrada = $this->lingua_ministrada;
-            $obj->espaco_brasil_aprendizado = $this->espaco_brasil_aprendizado == 'on' ? 1 : 0;
-            $obj->abre_final_semana = $this->abre_final_semana == 'on' ? 1 : 0;
+            $obj->espaco_brasil_aprendizado = $this->espaco_brasil_aprendizado;
+            $obj->abre_final_semana = $this->abre_final_semana;
             $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
-            $obj->proposta_pedagogica = $this->proposta_pedagogica == 'on' ? 1 : 0;
+            $obj->proposta_pedagogica = $this->proposta_pedagogica;
             $obj->televisoes = $this->televisoes;
             $obj->videocassetes = $this->videocassetes;
             $obj->dvds = $this->dvds;
