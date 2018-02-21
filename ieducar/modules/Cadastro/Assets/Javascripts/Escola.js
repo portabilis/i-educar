@@ -124,6 +124,19 @@ $j('#local_funcionamento').change(
   }
 );
 
+$j('#educacao_indigena').change(
+  function(){
+      var escolaIndigena = this.value == 1;
+      if(escolaIndigena){
+        makeRequired('lingua_ministrada');
+        $j('#lingua_ministrada').prop('disabled', false);
+      }else{
+        makeUnrequired('lingua_ministrada');
+        $j('#lingua_ministrada').prop('disabled', true);
+      }
+  }
+);
+
 //abas
 
 // hide nos campos das outras abas (deixando só os campos da primeira aba)
