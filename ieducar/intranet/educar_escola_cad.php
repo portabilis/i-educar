@@ -1512,9 +1512,18 @@ if(!$this->isEnderecoExterno){
 
         $options = array('label' => Portabilis_String_Utils::toLatin1('Atividade complementar'), 'resources' => $resources, 'value' => $this->atividade_complementar, 'required' => false, 'size' => 70,);
         $this->inputsHelper()->select('atividade_complementar', $options);
-
-        $options = array('label' => Portabilis_String_Utils::toLatin1('Ensino fundamental organizado em ciclos'), 'value' => $this->fundamental_ciclo);
-        $this->inputsHelper()->checkbox('fundamental_ciclo', $options);
+        
+        $objEscola = new clsPmieducarEscola($this->cod_escola);
+        $habilitaFundamentalCiclo = dbBool($objEscola->possuiTurmasDoEnsinoFundamentalEmCiclos());
+        $resources = array(0 => 'Não',
+                           1 => 'Sim');
+        $options = array('label' => 'Ensino fundamental organizado em ciclos',
+            'resources' => $resources,
+            'value' => $this->fundamental_ciclo,
+            'required' => false,
+            'size' => 70,
+            'disabled' => !$habilitaFundamentalCiclo);
+        $this->inputsHelper()->select('fundamental_ciclo', $options);
 
         $resources = array( 0 => 'Selecione',
                             1 => Portabilis_String_Utils::toLatin1('Área de assentamento'),
@@ -1752,7 +1761,7 @@ if(!$this->isEnderecoExterno){
                     $obj->total_funcionario = $this->total_funcionario;
                     $obj->atendimento_aee = $this->atendimento_aee;
                     $obj->atividade_complementar = $this->atividade_complementar;
-                    $obj->fundamental_ciclo = $this->fundamental_ciclo == 'on' ? 1 : 0;
+                    $obj->fundamental_ciclo = $this->fundamental_ciclo;
                     $obj->localizacao_diferenciada = $this->localizacao_diferenciada;
                     $obj->didatico_nao_utiliza = $this->didatico_nao_utiliza == 'on' ? 1 : 0;
                     $obj->didatico_quilombola = $this->didatico_quilombola == 'on' ? 1 : 0;
@@ -1965,7 +1974,7 @@ if(!$this->isEnderecoExterno){
             $obj->total_funcionario = $this->total_funcionario;
             $obj->atendimento_aee = $this->atendimento_aee;
             $obj->atividade_complementar = $this->atividade_complementar;
-            $obj->fundamental_ciclo = $this->fundamental_ciclo == 'on' ? 1 : 0;
+            $obj->fundamental_ciclo = $this->fundamental_ciclo;
             $obj->localizacao_diferenciada = $this->localizacao_diferenciada;
             $obj->didatico_nao_utiliza = $this->didatico_nao_utiliza == 'on' ? 1 : 0;
             $obj->didatico_quilombola = $this->didatico_quilombola == 'on' ? 1 : 0;
@@ -2170,7 +2179,7 @@ if(!$this->isEnderecoExterno){
             $obj->total_funcionario = $this->total_funcionario;
             $obj->atendimento_aee = $this->atendimento_aee;
             $obj->atividade_complementar = $this->atividade_complementar;
-            $obj->fundamental_ciclo = $this->fundamental_ciclo == 'on' ? 1 : 0;
+            $obj->fundamental_ciclo = $this->fundamental_ciclo;
             $obj->localizacao_diferenciada = $this->localizacao_diferenciada;
             $obj->didatico_nao_utiliza = $this->didatico_nao_utiliza == 'on' ? 1 : 0;
             $obj->didatico_quilombola = $this->didatico_quilombola == 'on' ? 1 : 0;
@@ -2292,7 +2301,7 @@ if(!$this->isEnderecoExterno){
             $obj->total_funcionario = $this->total_funcionario;
             $obj->atendimento_aee = $this->atendimento_aee;
             $obj->atividade_complementar = $this->atividade_complementar;
-            $obj->fundamental_ciclo = $this->fundamental_ciclo == 'on' ? 1 : 0;
+            $obj->fundamental_ciclo = $this->fundamental_ciclo;
             $obj->localizacao_diferenciada = $this->localizacao_diferenciada;
             $obj->didatico_nao_utiliza = $this->didatico_nao_utiliza == 'on' ? 1 : 0;
             $obj->didatico_quilombola = $this->didatico_quilombola == 'on' ? 1 : 0;
