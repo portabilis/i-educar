@@ -116,6 +116,14 @@ $j('#marcar_todas_dependencias').click(
     }
 );
 
+$j('#local_funcionamento').change(
+  function(){
+      var disabled = this.value != 3;
+      $j('#condicao').prop("disabled",disabled);
+      $j('#codigo_inep_escola_compartilhada').prop("disabled",disabled);
+  }
+);
+
 //abas
 
 // hide nos campos das outras abas (deixando só os campos da primeira aba)

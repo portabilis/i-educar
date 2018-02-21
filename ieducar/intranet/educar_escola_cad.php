@@ -1213,7 +1213,8 @@ if(!$this->isEnderecoExterno){
                            9 => Portabilis_String_Utils::toLatin1('Unidade de atendimento socioeducativa'),
                            10 => Portabilis_String_Utils::toLatin1('Unidade prisional'),
                            11 => 'Outros');
-
+        
+        $disabled = $this->local_funcionamento != 3;
         $options = array('label' => Portabilis_String_Utils::toLatin1('Local de funcionamento'), 'resources' => $resources, 'value' => $this->local_funcionamento, 'size' => 70, 'required' => false);
         $this->inputsHelper()->select('local_funcionamento', $options);
 
@@ -1222,10 +1223,11 @@ if(!$this->isEnderecoExterno){
                            2 => 'Alugado',
                            3 => 'Cedido');
 
-        $options = array('label' => Portabilis_String_Utils::toLatin1('Forma de ocupação do prédio'), 'resources' => $resources, 'value' => $this->condicao, 'size' => 70, 'required' => false);
+        $options = array('disabled' => $disabled, 'label' => Portabilis_String_Utils::toLatin1('Forma de ocupação do prédio'), 'resources' => $resources, 'value' => $this->condicao, 'size' => 70, 'required' => false);
         $this->inputsHelper()->select('condicao', $options);
 
         $options = array('label' => Portabilis_String_Utils::toLatin1('Código da escola que compartilha o prédio'),
+            'disabled' => $disabled,
             'label_hint' => Portabilis_String_Utils::toLatin1('Caso compartilhe o prédio escolar com outra escola preencha com o código INEP'),
             'resources' => $resources, 'value' => $this->codigo_inep_escola_compartilhada, 'required' => false,
             'size' => 8, 'max_length' => 8, 'placeholder' => '');
