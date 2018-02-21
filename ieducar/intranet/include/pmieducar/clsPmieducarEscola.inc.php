@@ -137,9 +137,7 @@ class clsPmieducarEscola
   var $atividade_complementar;
   var $fundamental_ciclo;
   var $localizacao_diferenciada;
-  var $didatico_nao_utiliza;
-  var $didatico_quilombola;
-  var $didatico_indigena;
+  var $materiais_didaticos_especificos;
   var $educacao_indigena;
   var $lingua_ministrada;
   var $espaco_brasil_aprendizado;
@@ -253,7 +251,7 @@ class clsPmieducarEscola
           e.dependencia_banheiro_dentro, e.dependencia_banheiro_infantil, e.dependencia_banheiro_deficiente, e.dependencia_banheiro_chuveiro, e.dependencia_vias_deficiente, e.dependencia_refeitorio, e.dependencia_dispensa, e.dependencia_aumoxarifado, e.dependencia_auditorio,
           e.dependencia_patio_coberto, e.dependencia_patio_descoberto, e.dependencia_alojamento_aluno, e.dependencia_alojamento_professor, e.dependencia_area_verde, e.dependencia_lavanderia, e.dependencia_unidade_climatizada,
           e.dependencia_quantidade_ambiente_climatizado, e.dependencia_nenhuma_relacionada, e.dependencia_numero_salas_existente, dependencia_numero_salas_utilizadas, e.porte_quadra_descoberta, e.porte_quadra_coberta, e.tipo_cobertura_patio,
-          e.total_funcionario, e.atendimento_aee, e.fundamental_ciclo, e.localizacao_diferenciada, e.didatico_nao_utiliza, e.didatico_quilombola, e.didatico_indigena, e.educacao_indigena, e.lingua_ministrada, e.espaco_brasil_aprendizado,
+          e.total_funcionario, e.atendimento_aee, e.fundamental_ciclo, e.localizacao_diferenciada, e.materiais_didaticos_especificos, e.educacao_indigena, e.lingua_ministrada, e.espaco_brasil_aprendizado,
           e.abre_final_semana, e.codigo_lingua_indigena, e.atividade_complementar, e.proposta_pedagogica, e.local_funcionamento, e.codigo_inep_escola_compartilhada, e.televisoes, e.videocassetes, e.dvds, e.antenas_parabolicas, e.copiadoras,
           e.retroprojetores, e.impressoras, e.aparelhos_de_som, e.projetores_digitais, e.faxs, e.maquinas_fotograficas, e.computadores, e.computadores_administrativo, e.computadores_alunos, e.impressoras_multifuncionais, e.acesso_internet, e.banda_larga, e.ato_criacao, e.ato_autorizativo, e.ref_idpes_secretario_escolar, e.utiliza_regra_diferenciada, e.orgao_regional, e.categoria_escola_privada, e.conveniada_com_poder_publico, e.mantenedora_escola_privada, e.cnpj_mantenedora_principal
           ';
@@ -956,21 +954,9 @@ class clsPmieducarEscola
         $gruda = ", ";
       }
 
-      if (is_numeric($this->didatico_nao_utiliza)) {
-        $campos .= "{$gruda}didatico_nao_utiliza";
-        $valores .= "{$gruda}'{$this->didatico_nao_utiliza}'";
-        $gruda = ", ";
-      }
-
-      if (is_numeric($this->didatico_quilombola)) {
-        $campos .= "{$gruda}didatico_quilombola";
-        $valores .= "{$gruda}'{$this->didatico_quilombola}'";
-        $gruda = ", ";
-      }
-
-      if (is_numeric($this->didatico_indigena)) {
-        $campos .= "{$gruda}didatico_indigena";
-        $valores .= "{$gruda}'{$this->didatico_indigena}'";
+      if (is_numeric($this->materiais_didaticos_especificos)) {
+        $campos .= "{$gruda}materiais_didaticos_especificos";
+        $valores .= "{$gruda}'{$this->materiais_didaticos_especificos}'";
         $gruda = ", ";
       }
 
@@ -1663,18 +1649,8 @@ class clsPmieducarEscola
         $gruda = ", ";
       }
 
-      if (is_numeric($this->didatico_nao_utiliza)) {
-        $set .= "{$gruda}didatico_nao_utiliza = '{$this->didatico_nao_utiliza}'";
-        $gruda = ", ";
-      }
-
-      if (is_numeric($this->didatico_quilombola)) {
-        $set .= "{$gruda}didatico_quilombola = '{$this->didatico_quilombola}'";
-        $gruda = ", ";
-      }
-
-      if (is_numeric($this->didatico_indigena)) {
-        $set .= "{$gruda}didatico_indigena = '{$this->didatico_indigena}'";
+      if (is_numeric($this->materiais_didaticos_especificos)) {
+        $set .= "{$gruda}materiais_didaticos_especificos = '{$this->materiais_didaticos_especificos}'";
         $gruda = ", ";
       }
 

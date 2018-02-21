@@ -182,9 +182,7 @@ class indice extends clsCadastro
     var $atividade_complementar;
     var $fundamental_ciclo;
     var $localizacao_diferenciada;
-    var $didatico_nao_utiliza;
-    var $didatico_quilombola;
-    var $didatico_indigena;
+    var $materiais_didaticos_especificos;
     var $educacao_indigena;
     var $lingua_ministrada;
     var $espaco_brasil_aprendizado;
@@ -1536,15 +1534,16 @@ if(!$this->isEnderecoExterno){
 
         $options = array('label' => Portabilis_String_Utils::toLatin1('Localização diferenciada da escola'), 'resources' => $resources, 'value' => $this->localizacao_diferenciada, 'required' => false, 'size' => 70,);
         $this->inputsHelper()->select('localizacao_diferenciada', $options);
-
-        $options = array('label' => Portabilis_String_Utils::toLatin1('Materiais didáticos específicos para atendimento à diversidade sócio-cultural - Não utiliza'), 'value' => $this->didatico_nao_utiliza);
-        $this->inputsHelper()->checkbox('didatico_nao_utiliza', $options);
-
-        $options = array('label' => Portabilis_String_Utils::toLatin1('Materiais didáticos específicos para atendimento à diversidade sócio-cultural - Quilombola'), 'value' => $this->didatico_quilombola);
-        $this->inputsHelper()->checkbox('didatico_quilombola', $options);
-
-        $options = array('label' => Portabilis_String_Utils::toLatin1('Materiais didáticos específicos para atendimento à diversidade sócio-cultural - Indígena'), 'value' => $this->didatico_indigena);
-        $this->inputsHelper()->checkbox('didatico_indigena', $options);
+        
+        $resources = array(1 => 'Não utiliza',
+                           2 => 'Quilombola',
+                           3 => 'Indígena');
+        $options = array('label' => 'Materiais didáticos específicos para atendimento à diversidade sócio-cultural',
+                         'resources' => $resources,
+                         'value' => $this->materiais_didaticos_especificos,
+                         'required' => false,
+                         'size' => 70);
+        $this->inputsHelper()->select('materiais_didaticos_especificos', $options);
         
         $resources = array( 0 => 'Não',
                             1 => 'Sim');
@@ -1763,9 +1762,7 @@ if(!$this->isEnderecoExterno){
                     $obj->atividade_complementar = $this->atividade_complementar;
                     $obj->fundamental_ciclo = $this->fundamental_ciclo;
                     $obj->localizacao_diferenciada = $this->localizacao_diferenciada;
-                    $obj->didatico_nao_utiliza = $this->didatico_nao_utiliza == 'on' ? 1 : 0;
-                    $obj->didatico_quilombola = $this->didatico_quilombola == 'on' ? 1 : 0;
-                    $obj->didatico_indigena = $this->didatico_indigena == 'on' ? 1 : 0;
+                    $obj->materiais_didaticos_especificos = $this->materiais_didaticos_especificos;
                     $obj->educacao_indigena = $this->educacao_indigena;
                     $obj->lingua_ministrada = $this->lingua_ministrada;
                     $obj->espaco_brasil_aprendizado = $this->espaco_brasil_aprendizado;
@@ -1976,9 +1973,7 @@ if(!$this->isEnderecoExterno){
             $obj->atividade_complementar = $this->atividade_complementar;
             $obj->fundamental_ciclo = $this->fundamental_ciclo;
             $obj->localizacao_diferenciada = $this->localizacao_diferenciada;
-            $obj->didatico_nao_utiliza = $this->didatico_nao_utiliza == 'on' ? 1 : 0;
-            $obj->didatico_quilombola = $this->didatico_quilombola == 'on' ? 1 : 0;
-            $obj->didatico_indigena = $this->didatico_indigena == 'on' ? 1 : 0;
+            $obj->materiais_didaticos_especificos = $this->materiais_didaticos_especificos;
             $obj->educacao_indigena = $this->educacao_indigena;
             $obj->lingua_ministrada = $this->lingua_ministrada;
             $obj->espaco_brasil_aprendizado = $this->espaco_brasil_aprendizado;
@@ -2181,9 +2176,7 @@ if(!$this->isEnderecoExterno){
             $obj->atividade_complementar = $this->atividade_complementar;
             $obj->fundamental_ciclo = $this->fundamental_ciclo;
             $obj->localizacao_diferenciada = $this->localizacao_diferenciada;
-            $obj->didatico_nao_utiliza = $this->didatico_nao_utiliza == 'on' ? 1 : 0;
-            $obj->didatico_quilombola = $this->didatico_quilombola == 'on' ? 1 : 0;
-            $obj->didatico_indigena = $this->didatico_indigena == 'on' ? 1 : 0;
+            $obj->materiais_didaticos_especificos = $this->materiais_didaticos_especificos;
             $obj->educacao_indigena = $this->educacao_indigena;
             $obj->lingua_ministrada = $this->lingua_ministrada;
             $obj->espaco_brasil_aprendizado = $this->espaco_brasil_aprendizado;
@@ -2303,9 +2296,7 @@ if(!$this->isEnderecoExterno){
             $obj->atividade_complementar = $this->atividade_complementar;
             $obj->fundamental_ciclo = $this->fundamental_ciclo;
             $obj->localizacao_diferenciada = $this->localizacao_diferenciada;
-            $obj->didatico_nao_utiliza = $this->didatico_nao_utiliza == 'on' ? 1 : 0;
-            $obj->didatico_quilombola = $this->didatico_quilombola == 'on' ? 1 : 0;
-            $obj->didatico_indigena = $this->didatico_indigena == 'on' ? 1 : 0;
+            $obj->materiais_didaticos_especificos = $this->materiais_didaticos_especificos;
             $obj->educacao_indigena = $this->educacao_indigena;
             $obj->lingua_ministrada = $this->lingua_ministrada;
             $obj->espaco_brasil_aprendizado = $this->espaco_brasil_aprendizado;

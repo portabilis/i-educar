@@ -527,9 +527,15 @@ class EducacensoExportController extends ApiCoreController
 
       fundamental_ciclo as r10s96,
       localizacao_diferenciada as r10s97,
-      didatico_nao_utiliza as r10s98,
-      didatico_quilombola as r10s99,
-      didatico_indigena as r10s100,
+      CASE WHEN materiais_didaticos_especificos = 1 THEN 1
+           ELSE 0
+       END as r10s98,
+      CASE WHEN materiais_didaticos_especificos = 2 THEN 1
+           ELSE 0
+       END as r10s99,
+      CASE WHEN materiais_didaticos_especificos = 3 THEN 1
+           ELSE 0
+       END as r10s100,
       educacao_indigena as r10s101,
       lingua_ministrada,
       codigo_lingua_indigena as r10s104,

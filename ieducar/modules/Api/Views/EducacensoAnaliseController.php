@@ -276,9 +276,7 @@ class EducacensoAnaliseController extends ApiCoreController
                    escola.atendimento_aee AS atendimento_aee,
                    escola.atividade_complementar AS atividade_complementar,
                    escola.localizacao_diferenciada AS localizacao_diferenciada,
-                   escola.didatico_nao_utiliza AS didatico_nao_utiliza,
-                   escola.didatico_quilombola AS didatico_quilombola,
-                   escola.didatico_indigena AS didatico_indigena,
+                   escola.materiais_didaticos_especificos AS materiais_didaticos_especificos,
                    escola.lingua_ministrada AS lingua_ministrada,
                    escola.educacao_indigena AS educacao_indigena,
                    juridica.fantasia AS nome_escola
@@ -342,7 +340,7 @@ class EducacensoAnaliseController extends ApiCoreController
                            $escola["computadores_administrativo"] || $escola["computadores_alunos"] ||
                            $escola["impressoras_multifuncionais"]);
 
-    $existeMaterialDidatico = ($escola["didatico_nao_utiliza"] || $escola["didatico_quilombola"] || $escola["didatico_indigena"]);
+    $existeMaterialDidatico = $escola["materiais_didaticos_especificos"];
 
     $mensagem = array();
 
