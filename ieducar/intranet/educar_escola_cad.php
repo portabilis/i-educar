@@ -1582,7 +1582,7 @@ if(!$this->isEnderecoExterno){
             $resources[$reg['id']] = $reg['lingua'];
         }
 
-        $options = array('label' => Portabilis_String_Utils::toLatin1('Língua em que o ensino é ministrado'), 'resources' => $resources, 'value' => $this->lingua_ministrada, 'required' => false, 'size' => 70,);
+        $options = array('label' => Portabilis_String_Utils::toLatin1('Línguas indígenas'), 'resources' => $resources, 'value' => $this->lingua_ministrada, 'required' => false, 'size' => 70,);
         $this->inputsHelper()->select('lingua_ministrada', $options);
 
         $options = array('label' => Portabilis_String_Utils::toLatin1('Escola cede espaço para turmas do Brasil Alfabetizado'), 'value' => $this->espaco_brasil_aprendizado);
