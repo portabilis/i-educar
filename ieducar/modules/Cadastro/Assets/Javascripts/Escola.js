@@ -133,6 +133,20 @@ $j('#educacao_indigena').change(
       }else{
         makeUnrequired('lingua_ministrada');
         $j('#lingua_ministrada').prop('disabled', true);
+        $j('#codigo_lingua_indigena').prop('disabled', true);
+        $j('#lingua_ministrada').val(1)
+      }
+  }
+);
+$j('#lingua_ministrada').change(
+  function(){
+      var linguaIndigena = this.value == 2;
+      if(linguaIndigena){
+        makeRequired('codigo_lingua_indigena');
+        $j('#codigo_lingua_indigena').prop('disabled', false);
+      }else{
+        makeUnrequired('codigo_lingua_indigena');
+        $j('#codigo_lingua_indigena').prop('disabled', true);
       }
   }
 );

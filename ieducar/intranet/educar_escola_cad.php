@@ -1560,22 +1560,29 @@ if(!$this->isEnderecoExterno){
         $resources = array( 1    => Portabilis_String_Utils::toLatin1('Língua Portuguesa'),
                             2    => Portabilis_String_Utils::toLatin1('Línguia Indígena'));
 
-        $options = array('label' => Portabilis_String_Utils::toLatin1('Língua em que o ensino é ministrado'), 'resources' => $resources, 'value' => $this->lingua_ministrada, 'required' => false, 'size' => 70,);
-        $this->inputsHelper()->select('lingua_ministrada', $options);
+        $habilitaLiguaMinistrada = $this->educacao_indigena == 1;
 
-        $habilitaLiguasIndigenas = $this->educacao_indigena == 1;
-        $resources = array( NULL => 'Selecione');
+        $options = array('label' => 'Língua em que o ensino é ministrado',
+                         'resources' => $resources,
+                         'value' => $this->lingua_ministrada,
+                         'required' => $habilitaLiguaMinistrada,
+                         'disabled' => !$habilitaLiguaMinistrada,
+                         'size' => 70);
+        $this->inputsHelper()->select('lingua_ministrada', $options);
+        
+        $habilitaLiguasIndigenas = $this->lingua_ministrada == 2;
+        
         $resources_ = Portabilis_Utils_Database::fetchPreparedQuery('SELECT * FROM modules.lingua_indigena_educacenso');
         foreach ($resources_ as $reg) {
             $resources[$reg['id']] = $reg['lingua'];
         }
         $options = array('label' => Portabilis_String_Utils::toLatin1('Línguas indígenas'),
                          'resources' => $resources,
-                         'value' => $this->lingua_ministrada,
-                         'required' => $habilitaLiguasIndigenas,
-                         'disabled' => !$habilitaLiguasIndigenas,
+                         'value' => $this->codigo_lingua_indigena,
+                         'required' => $habilitaLiguasIndigenas && $habilitaLiguaMinistrada,
+                         'disabled' => !$habilitaLiguasIndigenas || !$habilitaLiguaMinistrada,
                          'size' => 70,);
-        $this->inputsHelper()->select('lingua_ministrada', $options);
+        $this->inputsHelper()->select('codigo_lingua_indigena', $options);
 
         $resources = array( 0 => 'Não',
                             1 => 'Sim');

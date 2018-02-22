@@ -1662,6 +1662,9 @@ class clsPmieducarEscola
       if (is_numeric($this->lingua_ministrada)) {
         $set .= "{$gruda}lingua_ministrada = '{$this->lingua_ministrada}'";
         $gruda = ", ";
+      }else{
+        $set .= "{$gruda}lingua_ministrada = NULL";
+        $gruda = ", ";
       }
 
       if (is_numeric($this->espaco_brasil_aprendizado)) {
@@ -1676,6 +1679,9 @@ class clsPmieducarEscola
 
       if (is_numeric($this->codigo_lingua_indigena)) {
         $set .= "{$gruda}codigo_lingua_indigena = '{$this->codigo_lingua_indigena}'";
+        $gruda = ", ";
+      }else{
+        $set .= "{$gruda}codigo_lingua_indigena = NULL";
         $gruda = ", ";
       }
 

@@ -537,7 +537,8 @@ class EducacensoExportController extends ApiCoreController
            ELSE 0
        END as r10s100,
       educacao_indigena as r10s101,
-      lingua_ministrada,
+      CASE WHEN lingua_ministrada = 1 THEN 1 ELSE 0 END AS r10s102,
+      CASE WHEN lingua_ministrada = 2 THEN 1 ELSE 0 END AS r10s103,
       codigo_lingua_indigena as r10s104,
       espaco_brasil_aprendizado as r10s105,
       abre_final_semana as r10s106,
@@ -608,12 +609,10 @@ class EducacensoExportController extends ApiCoreController
       $r10s98 = 1;
       $r10s99 = $r10s100 = 0;
 
-      if($lingua_ministrada && $r10s101){
-        $r10s102 = 1;
-        $r10s104 = $lingua_ministrada;
-      }elseif ($r10s124)
-        $r10s103 = 1;
-
+      if(!$r10s101){
+        $r10s102 = $r10s103 = $r10s104 = NULL;
+      }
+      
       for ($i=1; $i <= 107 ; $i++){
         if($i>=71 && $i<=85)
           $return .= (${'r10s'.$i} == 0 ? '' : ${'r10s'.$i}).$d;
