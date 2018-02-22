@@ -204,7 +204,6 @@ class indice extends clsCadastro
     var $computadores_alunos;
     var $impressoras_multifuncionais;
     var $acesso_internet;
-    var $banda_larga;
     var $ato_criacao;
     var $ato_autorizativo;
     var $secretario_id;
@@ -1485,12 +1484,16 @@ if(!$this->isEnderecoExterno){
 
         $options = array('label' => Portabilis_String_Utils::toLatin1('Quantidade total de computadores'), 'resources' => $resources, 'value' => $this->computadores, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
         $this->inputsHelper()->integer('computadores', $options);
-
-        $options = array('label' => Portabilis_String_Utils::toLatin1('Possui internet'), 'value' => $this->acesso_internet);
-        $this->inputsHelper()->checkbox('acesso_internet', $options);
-
-        $options = array('label' => Portabilis_String_Utils::toLatin1('Possui banda larga'), 'value' => $this->banda_larga);
-        $this->inputsHelper()->checkbox('banda_larga', $options);
+        
+        $disabled = $this->computadores > 0;
+        $resources = array(0 => 'Não',
+                           1 => 'Sim');
+        $options = array('label' => 'Possui internet',
+                         'resources' => $resources,
+                         'value' => $this->acesso_internet,
+                         'required' => false,
+                         'disabled' => !$disabled);
+        $this->inputsHelper()->select('acesso_internet', $options);
 
         $options = array('label' => Portabilis_String_Utils::toLatin1('Total de funcionários da escola (inclusive profissionais escolares em sala de aula)'), 'resources' => $resources, 'value' => $this->total_funcionario, 'required' => false, 'size' => 5, 'placeholder' => '');
         $this->inputsHelper()->integer('total_funcionario', $options);
@@ -1784,8 +1787,7 @@ if(!$this->isEnderecoExterno){
                     $obj->computadores_administrativo = $this->computadores_administrativo;
                     $obj->computadores_alunos = $this->computadores_alunos;
                     $obj->impressoras_multifuncionais = $this->impressoras_multifuncionais;
-                    $obj->acesso_internet = $this->acesso_internet == 'on' ? 1 : 0;
-                    $obj->banda_larga = $this->banda_larga == 'on' ? 1 : 0;
+                    $obj->acesso_internet = $this->acesso_internet;
                     $obj->ato_criacao = $this->ato_criacao;
                     $obj->ato_autorizativo = $this->ato_autorizativo;
                     $obj->ref_idpes_secretario_escolar = $this->secretario_id;
@@ -1995,8 +1997,7 @@ if(!$this->isEnderecoExterno){
             $obj->computadores_administrativo = $this->computadores_administrativo;
             $obj->computadores_alunos = $this->computadores_alunos;
             $obj->impressoras_multifuncionais = $this->impressoras_multifuncionais;
-            $obj->acesso_internet = $this->acesso_internet == 'on' ? 1 : 0;
-            $obj->banda_larga = $this->banda_larga == 'on' ? 1 : 0;
+            $obj->acesso_internet = $this->acesso_internet;
             $obj->ato_criacao = $this->ato_criacao;
             $obj->ato_autorizativo = $this->ato_autorizativo;
             $obj->ref_idpes_secretario_escolar = $this->secretario_id;
@@ -2198,8 +2199,7 @@ if(!$this->isEnderecoExterno){
             $obj->computadores_administrativo = $this->computadores_administrativo;
             $obj->computadores_alunos = $this->computadores_alunos;
             $obj->impressoras_multifuncionais = $this->impressoras_multifuncionais;
-            $obj->acesso_internet = $this->acesso_internet == 'on' ? 1 : 0;
-            $obj->banda_larga = $this->banda_larga == 'on' ? 1 : 0;
+            $obj->acesso_internet = $this->acesso_internet;
             $obj->ato_criacao = $this->ato_criacao;
             $obj->ato_autorizativo = $this->ato_autorizativo;
             $obj->ref_idpes_secretario_escolar = $this->secretario_id;
@@ -2318,8 +2318,7 @@ if(!$this->isEnderecoExterno){
             $obj->computadores_administrativo = $this->computadores_administrativo;
             $obj->computadores_alunos = $this->computadores_alunos;
             $obj->impressoras_multifuncionais = $this->impressoras_multifuncionais;
-            $obj->acesso_internet = $this->acesso_internet == 'on' ? 1 : 0;
-            $obj->banda_larga = $this->banda_larga == 'on' ? 1 : 0;
+            $obj->acesso_internet = $this->acesso_internet;
             $obj->ato_criacao = $this->ato_criacao;
             $obj->ato_autorizativo = $this->ato_autorizativo;
             $obj->ref_idpes_secretario_escolar = $this->secretario_id;

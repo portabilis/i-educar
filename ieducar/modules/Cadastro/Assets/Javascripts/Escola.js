@@ -137,6 +137,13 @@ $j('#educacao_indigena').change(
   }
 );
 
+$j('#computadores').change(
+  function(){
+      var possuiComputadores = this.value > 0;
+      $j('#acesso_internet').prop('disabled', !possuiComputadores);
+  }
+);
+
 //abas
 
 // hide nos campos das outras abas (deixando só os campos da primeira aba)
