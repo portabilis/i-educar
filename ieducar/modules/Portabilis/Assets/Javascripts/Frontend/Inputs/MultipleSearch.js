@@ -1,5 +1,5 @@
 // multiple search input
-
+var arrayOptions = [];
 var defaultChosenOptions = {
   no_results_text: "Sem resultados para ",
   width: '231px',
