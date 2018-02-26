@@ -286,6 +286,10 @@ class indice extends clsCadastro
             clsPmieducarHistoricoEscolar::gerarHistoricoTransferencia($this->ref_cod_matricula, $this->pessoa_logada);
 
         $obj = new clsPmieducarTransferenciaSolicitacao( null, $this->ref_cod_transferencia_tipo, null, $this->pessoa_logada, null, $this->ref_cod_matricula, $this->observacao, null, null, $this->ativo, $this->data_transferencia, $this->escola_destino_externa, $this->ref_cod_escola_destino, $this->estado_escola_destino_externa, $this->municipio_escola_destino_externa);
+        if ($obj->existSolicitacaoTransferenciaAtiva()){
+            $this->mensagem = "Já existe uma solitação de transferência ativa.<br>";
+            return false;
+        }
         $cadastrou = $obj->cadastra();
         if( $cadastrou )
         {
