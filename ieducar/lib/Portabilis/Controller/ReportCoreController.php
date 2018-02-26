@@ -136,6 +136,8 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
         throw new Exception('No report result to render!');
 
       $this->headers($result);
+      ob_clean();
+      flush();
       echo $result;
     }
     catch (Exception $e) {

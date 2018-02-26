@@ -1024,10 +1024,11 @@ function Output($name='',$dest='')
                     header("Expires: 0");
                     header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
                     header("Cache-Control: private",false);
-                    header("Content-Type: application/pdf;");
                     header("Content-Disposition: inline;");
                     header("Content-Transfer-Encoding: binary");
                     header("Content-Length: ".strlen($this->buffer));
+                    ob_clean();
+                    flush();
             }
             echo $this->buffer;
             break;
