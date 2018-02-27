@@ -225,20 +225,14 @@ class indice extends clsCadastro
   }
 
   function existeComponenteSerie(){
-      $retorna = true;
       $db = new clsBanco();
-      $sql = "SELECT 1
-                FROM pmieducar.escola_serie_disciplina
-               WHERE ref_ref_cod_serie = {$this->ref_cod_serie}
-                 AND ref_ref_cod_escola = {$this->ref_cod_escola} 
-                 AND ref_cod_disciplina = {$this->ref_cod_disciplina}
-                 AND escola_serie_disciplina.ativo = 1";
-      if (($db->campoUnico($sql)) == 1)
-      {
-        $retorna =  false;
-      }
-
-      return $retorna;
+      $sql = "SELECT  EXISTS (SELECT 1
+                                FROM pmieducar.escola_serie_disciplina
+                               WHERE ref_ref_cod_serie = {$this->ref_cod_serie}
+                                 AND ref_ref_cod_escola = {$this->ref_cod_escola}
+                                 AND ref_cod_disciplina = {$this->ref_cod_disciplina}
+                                 AND escola_serie_disciplina.ativo = 1)";
+      return dbBool($db->campoUnico($sql));
   }
 
   function validaQuantidadeDisciplinasDependencia(){
@@ -288,7 +282,7 @@ class indice extends clsCadastro
       return false;
     }
 
-    if($this->existeComponenteSerie()) {
+    if(!$this->existeComponenteSerie()) {
         $this->mensagem = 'O componente não está habilitado na série da escola.';
         $this->url_cancelar = 'educar_disciplina_dependencia_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula;
         $this->nome_url_cancelar = 'Cancelar';

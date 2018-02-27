@@ -206,12 +206,7 @@ class ComponentesSerieController extends ApiCoreController
         $disciplinas = $this->getRequest()->disciplinas;
         $disciplinas = explode(',', $disciplinas);
 
-        $obj = new clsPmieducarEscolaSerieDisciplina(
-            $serie,
-            $escola,
-            NULL,
-            1
-        );
+        $obj = new clsPmieducarEscolaSerieDisciplina($serie, $escola, NULL, 1);
 
         return array('existe_dependencia' => $obj->existeDependencia($disciplinas));
     }
