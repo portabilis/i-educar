@@ -479,6 +479,9 @@ class indice extends clsCadastro
         if(is_string($this->abastecimento_agua)){
             $this->abastecimento_agua = explode(',',str_replace(array('{', "}"), '', $this->abastecimento_agua));
         }
+        if(is_string( $this->mantenedora_escola_privada)){
+             $this->mantenedora_escola_privada = explode(',',str_replace(array('{', "}"), '',  $this->mantenedora_escola_privada));
+        }
 
         $this->url_cancelar = ($retorno == "Editar") ? "educar_escola_det.php?cod_escola={$registro["cod_escola"]}" : "educar_escola_lst.php";
 
@@ -1639,13 +1642,11 @@ if(!$this->isEnderecoExterno){
                          'size'      => 70,);
         $this->inputsHelper()->select('conveniada_com_poder_publico', $options);
 
-        $values = explode(',',str_replace(array('{', "}"), '', $this->mantenedora_escola_privada));
-
         $helperOptions = array('objectName'  => 'mantenedora_escola_privada');
         $options       = array('label' => 'Mantenedora escola privada',
                                'size' => 50,
                                'required' => false,
-                               'options' => array('values' => $values,
+                               'options' => array('values' => $this->mantenedora_escola_privada,
                                                   'all_values' => array(1  => 'Empresa, grupos empresariais do setor privado ou pessoa física',
                                                                         2  => 'Sindicatos de trabalhadores ou patronais, associações ou cooperativas',
                                                                         3  => 'Organização não governamental (ONG) internacional ou nacional/Oscip',
