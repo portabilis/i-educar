@@ -128,15 +128,12 @@ class indice extends clsCadastro
     var $medidor_energia;
     var $agua_consumida;
     var $abastecimento_agua;
+    var $abastecimento_energia;
     var $agua_rede_publica;
     var $agua_poco_artesiano;
     var $agua_cacimba_cisterna_poco;
     var $agua_fonte_rio;
     var $agua_inexistente;
-    var $energia_rede_publica;
-    var $energia_gerador;
-    var $energia_outros;
-    var $energia_inexistente;
     var $esgoto_rede_publica;
     var $esgoto_fossa;
     var $esgoto_inexistente;
@@ -478,6 +475,9 @@ class indice extends clsCadastro
 
         if(is_string($this->abastecimento_agua)){
             $this->abastecimento_agua = explode(',',str_replace(array('{', "}"), '', $this->abastecimento_agua));
+        }
+        if(is_string($this->abastecimento_energia)){
+            $this->abastecimento_energia = explode(',',str_replace(array('{', "}"), '', $this->abastecimento_energia));
         }
         if(is_string( $this->mantenedora_escola_privada)){
              $this->mantenedora_escola_privada = explode(',',str_replace(array('{', "}"), '',  $this->mantenedora_escola_privada));
@@ -1298,17 +1298,16 @@ if(!$this->isEnderecoExterno){
 
         $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-        $options = array('label' => Portabilis_String_Utils::toLatin1('Abastecimento de energia elétrica - Rede pública'), 'value' => $this->energia_rede_publica);
-        $this->inputsHelper()->checkbox('energia_rede_publica', $options);
-
-        $options = array('label' => Portabilis_String_Utils::toLatin1('Abastecimento de energia elétrica - Gerador'), 'value' => $this->energia_gerador);
-        $this->inputsHelper()->checkbox('energia_gerador', $options);
-
-        $options = array('label' => Portabilis_String_Utils::toLatin1('Abastecimento de energia elétrica - Outros (Ex.: Energia eólica, solar, etc.)'), 'value' => $this->energia_outros);
-        $this->inputsHelper()->checkbox('energia_outros', $options);
-
-        $options = array('label' => Portabilis_String_Utils::toLatin1('Abastecimento de energia elétrica - Inexistente'), 'value' => $this->energia_inexistente);
-        $this->inputsHelper()->checkbox('energia_inexistente', $options);
+        $helperOptions = array('objectName'  => 'abastecimento_energia');
+        $options       = array('label' => 'Abastecimento de energia elétrica',
+                               'size' => 50,
+                               'required' => false,
+                               'options' => array('values' => $this->abastecimento_energia,
+                                                  'all_values' => array(1  => 'Rede pública',
+                                                                        2  => 'Gerador',
+                                                                        3  => 'Outros (Ex.: Energia eólica, solar, etc.)',
+                                                                        4  => 'Inexistente')));
+        $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
         $options = array('label' => Portabilis_String_Utils::toLatin1('Esgoto sanitário - Rede pública'), 'value' => $this->esgoto_rede_publica);
         $this->inputsHelper()->checkbox('esgoto_rede_publica', $options);
@@ -1674,6 +1673,8 @@ if(!$this->isEnderecoExterno){
         $mantenedora_escola_privada = implode(',', $this->mantenedora_escola_privada);
         unset($this->abastecimento_agua[0]);
         $abastecimento_agua = implode(',', $this->abastecimento_agua);
+        unset($this->abastecimento_energia[0]);
+        $abastecimento_energia = implode(',', $this->abastecimento_energia);
 
         if (!empty($this->escola_inep_id) && strlen($this->escola_inep_id) != 8) {
             $this->mensagem = 'O código INEP da escola deve conter 8 dígitos.';
@@ -1685,6 +1686,15 @@ if(!$this->isEnderecoExterno){
         }
 
         if (!$this->validaLatitudeLongitude()) return false;
+
+        if(in_array(5, $this->abastecimento_agua) && count($this->abastecimento_agua) > 1){
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de água</b>, quando a opção: <b>Inexistente</b> estiver selecionada.';
+            return false;
+        }
+        if(in_array(5, $this->abastecimento_energia) && count($this->abastecimento_energia) > 1){
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de água</b>, quando a opção: <b>Inexistente</b> estiver selecionada.';
+            return false;
+        }
 
     $this->bloquear_lancamento_diario_anos_letivos_encerrados = is_null($this->bloquear_lancamento_diario_anos_letivos_encerrados) ? 0 : 1;
     $this->utiliza_regra_diferenciada = !is_null($this->utiliza_regra_diferenciada);
@@ -1724,10 +1734,7 @@ if(!$this->isEnderecoExterno){
                     $obj->medidor_energia = $this->medidor_energia;
                     $obj->agua_consumida = $this->agua_consumida;
                     $obj->abastecimento_agua = $abastecimento_agua;
-                    $obj->energia_rede_publica = $this->energia_rede_publica == 'on' ? 1 : 0;
-                    $obj->energia_gerador = $this->energia_gerador == 'on' ? 1 : 0;
-                    $obj->energia_outros = $this->energia_outros == 'on' ? 1 : 0;
-                    $obj->energia_inexistente = $this->energia_inexistente == 'on' ? 1 : 0;
+                    $obj->abastecimento_energia = $abastecimento_energia;
                     $obj->esgoto_rede_publica = $this->esgoto_rede_publica == 'on' ? 1 : 0;
                     $obj->esgoto_fossa = $this->esgoto_fossa == 'on' ? 1 : 0;
                     $obj->esgoto_inexistente = $this->esgoto_inexistente == 'on' ? 1 : 0;
@@ -1930,10 +1937,7 @@ if(!$this->isEnderecoExterno){
             $obj->medidor_energia = $this->medidor_energia;
             $obj->agua_consumida = $this->agua_consumida;
             $obj->abastecimento_agua = $abastecimento_agua;
-            $obj->energia_rede_publica = $this->energia_rede_publica == 'on' ? 1 : 0;
-            $obj->energia_gerador = $this->energia_gerador == 'on' ? 1 : 0;
-            $obj->energia_outros = $this->energia_outros == 'on' ? 1 : 0;
-            $obj->energia_inexistente = $this->energia_inexistente == 'on' ? 1 : 0;
+            $obj->abastecimento_energia = $abastecimento_energia;
             $obj->esgoto_rede_publica = $this->esgoto_rede_publica == 'on' ? 1 : 0;
             $obj->esgoto_fossa = $this->esgoto_fossa == 'on' ? 1 : 0;
             $obj->esgoto_inexistente = $this->esgoto_inexistente == 'on' ? 1 : 0;
@@ -2095,8 +2099,14 @@ if(!$this->isEnderecoExterno){
     $mantenedora_escola_privada = implode(',', $this->mantenedora_escola_privada);
     unset($this->abastecimento_agua[0]);
     $abastecimento_agua = implode(',', $this->abastecimento_agua);
+    unset($this->abastecimento_energia[0]);
+    $abastecimento_energia = implode(',', $this->abastecimento_energia);
 
     if(in_array(5, $this->abastecimento_agua) && count($this->abastecimento_agua) > 1){
+        $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de água</b>, quando a opção: <b>Inexistente</b> estiver selecionada.';
+        return false;
+    }
+    if(in_array(5, $this->abastecimento_energia) && count($this->abastecimento_energia) > 1){
         $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de água</b>, quando a opção: <b>Inexistente</b> estiver selecionada.';
         return false;
     }
@@ -2135,10 +2145,7 @@ if(!$this->isEnderecoExterno){
             $obj->medidor_energia = $this->medidor_energia;
             $obj->agua_consumida = $this->agua_consumida;
             $obj->abastecimento_agua = $abastecimento_agua;
-            $obj->energia_rede_publica = $this->energia_rede_publica == 'on' ? 1 : 0;
-            $obj->energia_gerador = $this->energia_gerador == 'on' ? 1 : 0;
-            $obj->energia_outros = $this->energia_outros == 'on' ? 1 : 0;
-            $obj->energia_inexistente = $this->energia_inexistente == 'on' ? 1 : 0;
+            $obj->abastecimento_energia = $abastecimento_energia;
             $obj->esgoto_rede_publica = $this->esgoto_rede_publica == 'on' ? 1 : 0;
             $obj->esgoto_fossa = $this->esgoto_fossa == 'on' ? 1 : 0;
             $obj->esgoto_inexistente = $this->esgoto_inexistente == 'on' ? 1 : 0;
@@ -2248,10 +2255,7 @@ if(!$this->isEnderecoExterno){
             $obj->medidor_energia = $this->medidor_energia;
             $obj->agua_consumida = $this->agua_consumida;
             $obj->abastecimento_agua = $abastecimento_agua;
-            $obj->energia_rede_publica = $this->energia_rede_publica == 'on' ? 1 : 0;
-            $obj->energia_gerador = $this->energia_gerador == 'on' ? 1 : 0;
-            $obj->energia_outros = $this->energia_outros == 'on' ? 1 : 0;
-            $obj->energia_inexistente = $this->energia_inexistente == 'on' ? 1 : 0;
+            $obj->abastecimento_energia = $abastecimento_energia;
             $obj->esgoto_rede_publica = $this->esgoto_rede_publica == 'on' ? 1 : 0;
             $obj->esgoto_fossa = $this->esgoto_fossa == 'on' ? 1 : 0;
             $obj->esgoto_inexistente = $this->esgoto_inexistente == 'on' ? 1 : 0;
