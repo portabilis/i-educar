@@ -419,11 +419,11 @@ class EducacensoExportController extends ApiCoreController
       e.condicao as r10s12,
       e.codigo_inep_escola_compartilhada,
       e.agua_consumida as r10s20,
-      e.agua_rede_publica as r10s21,
-      e.agua_poco_artesiano as r10s22,
-      e.agua_cacimba_cisterna_poco as r10s23,
-      e.agua_fonte_rio as r10s24,
-      e.agua_inexistente as r10s25,
+      CASE WHEN e.abastecimento_agua::varchar LIKE \'%1%\' THEN 1 ELSE 0 END as r10s21,
+      CASE WHEN e.abastecimento_agua::varchar LIKE \'%2%\' THEN 1 ELSE 0 END as r10s22,
+      CASE WHEN e.abastecimento_agua::varchar LIKE \'%3%\' THEN 1 ELSE 0 END as r10s23,
+      CASE WHEN e.abastecimento_agua::varchar LIKE \'%4%\' THEN 1 ELSE 0 END as r10s24,
+      CASE WHEN e.abastecimento_agua::varchar LIKE \'%5%\' THEN 1 ELSE 0 END as r10s25,
       e.energia_rede_publica as r10s26,
       e.energia_gerador as r10s27,
       e.energia_outros as r10s28,
@@ -589,6 +589,10 @@ class EducacensoExportController extends ApiCoreController
           $this->msg .= "Dados para formular o registro 10 campo 12 da escola {$escolaId} com problemas. Obrigatório quando o campo 3 for igual a 1 <br/>";
           $this->error = true;
         }
+      }
+
+      if($r10s25 == 1){
+        $r10s21 = $r10s22 = $r10s23 = $r10s24 = 0;
       }
 
       if (!$r10s82) {
