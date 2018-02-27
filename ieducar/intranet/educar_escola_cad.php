@@ -130,6 +130,7 @@ class indice extends clsCadastro
     var $abastecimento_agua;
     var $abastecimento_energia;
     var $esgoto_sanitario;
+    var $destinacao_lixo;
     var $agua_rede_publica;
     var $agua_poco_artesiano;
     var $agua_cacimba_cisterna_poco;
@@ -479,6 +480,9 @@ class indice extends clsCadastro
         }
         if(is_string($this->esgoto_sanitario)){
             $this->esgoto_sanitario = explode(',',str_replace(array('{', "}"), '', $this->esgoto_sanitario));
+        }
+        if(is_string($this->destinacao_lixo)){
+            $this->destinacao_lixo = explode(',',str_replace(array('{', "}"), '', $this->destinacao_lixo));
         }
         if(is_string( $this->mantenedora_escola_privada)){
              $this->mantenedora_escola_privada = explode(',',str_replace(array('{', "}"), '',  $this->mantenedora_escola_privada));
@@ -1320,23 +1324,18 @@ if(!$this->isEnderecoExterno){
                                                                         3  => 'Inexistente')));
         $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-        $options = array('label' => Portabilis_String_Utils::toLatin1('Destinação do lixo - Coleta periódica'), 'value' => $this->lixo_coleta_periodica);
-        $this->inputsHelper()->checkbox('lixo_coleta_periodica', $options);
-
-        $options = array('label' => Portabilis_String_Utils::toLatin1('Destinação do lixo - Queima'), 'value' => $this->lixo_queima);
-        $this->inputsHelper()->checkbox('lixo_queima', $options);
-
-        $options = array('label' => Portabilis_String_Utils::toLatin1('Destinação do lixo - Joga em outra área'), 'value' => $this->lixo_joga_outra_area);
-        $this->inputsHelper()->checkbox('lixo_joga_outra_area', $options);
-
-        $options = array('label' => Portabilis_String_Utils::toLatin1('Destinação do lixo - Recicla'), 'value' => $this->lixo_recicla);
-        $this->inputsHelper()->checkbox('lixo_recicla', $options);
-
-        $options = array('label' => Portabilis_String_Utils::toLatin1('Destinação do lixo - Enterra'), 'value' => $this->lixo_enterra);
-        $this->inputsHelper()->checkbox('lixo_enterra', $options);
-
-        $options = array('label' => Portabilis_String_Utils::toLatin1('Destinação do lixo - Outros'), 'value' => $this->lixo_outros);
-        $this->inputsHelper()->checkbox('lixo_outros', $options);
+        $helperOptions = array('objectName'  => 'destinacao_lixo');
+        $options       = array('label' => 'Destinação do lixo',
+                               'size' => 50,
+                               'required' => false,
+                               'options' => array('values' => $this->destinacao_lixo,
+                                                  'all_values' => array(1 => 'Coleta periódica',
+                                                                        2 => 'Queima',
+                                                                        3 => 'Joga em outra área',
+                                                                        4 => 'Recicla',
+                                                                        5 => 'Enterra',
+                                                                        6 => 'Outros')));
+        $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
         
         $options = array('label' => Portabilis_String_Utils::toLatin1('Marcar todas'));
         $this->inputsHelper()->checkbox('marcar_todas_dependencias', $options);
@@ -1679,6 +1678,8 @@ if(!$this->isEnderecoExterno){
         $abastecimento_energia = implode(',', $this->abastecimento_energia);
         unset($this->esgoto_sanitario[0]);
         $esgoto_sanitario = implode(',', $this->esgoto_sanitario);
+        unset($this->destinacao_lixo[0]);
+        $destinacao_lixo = implode(',', $this->destinacao_lixo);
 
         if (!empty($this->escola_inep_id) && strlen($this->escola_inep_id) != 8) {
             $this->mensagem = 'O código INEP da escola deve conter 8 dígitos.';
@@ -1744,6 +1745,7 @@ if(!$this->isEnderecoExterno){
                     $obj->abastecimento_agua = $abastecimento_agua;
                     $obj->abastecimento_energia = $abastecimento_energia;
                     $obj->esgoto_sanitario = $esgoto_sanitario;
+                    $obj->destinacao_lixo = $destinacao_lixo;
                     $obj->lixo_coleta_periodica = $this->lixo_coleta_periodica == 'on' ? 1 : 0;
                     $obj->lixo_queima = $this->lixo_queima == 'on' ? 1 : 0;
                     $obj->lixo_joga_outra_area = $this->lixo_joga_outra_area == 'on' ? 1 : 0;
@@ -1945,6 +1947,7 @@ if(!$this->isEnderecoExterno){
             $obj->abastecimento_agua = $abastecimento_agua;
             $obj->abastecimento_energia = $abastecimento_energia;
             $obj->esgoto_sanitario = $esgoto_sanitario;
+            $obj->destinacao_lixo = $destinacao_lixo;
             $obj->lixo_coleta_periodica = $this->lixo_coleta_periodica == 'on' ? 1 : 0;
             $obj->lixo_queima = $this->lixo_queima == 'on' ? 1 : 0;
             $obj->lixo_joga_outra_area = $this->lixo_joga_outra_area == 'on' ? 1 : 0;
@@ -2107,6 +2110,8 @@ if(!$this->isEnderecoExterno){
     $abastecimento_energia = implode(',', $this->abastecimento_energia);
     unset($this->esgoto_sanitario[0]);
     $esgoto_sanitario = implode(',', $this->esgoto_sanitario);
+    unset($this->destinacao_lixo[0]);
+    $destinacao_lixo = implode(',', $this->destinacao_lixo);
 
     if(in_array(5, $this->abastecimento_agua) && count($this->abastecimento_agua) > 1){
         $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de água</b>, quando a opção: <b>Inexistente</b> estiver selecionada.';
@@ -2157,6 +2162,7 @@ if(!$this->isEnderecoExterno){
             $obj->abastecimento_agua = $abastecimento_agua;
             $obj->abastecimento_energia = $abastecimento_energia;
             $obj->esgoto_sanitario = $esgoto_sanitario;
+            $obj->destinacao_lixo = $destinacao_lixo;
             $obj->lixo_coleta_periodica = $this->lixo_coleta_periodica == 'on' ? 1 : 0;
             $obj->lixo_queima = $this->lixo_queima == 'on' ? 1 : 0;
             $obj->lixo_joga_outra_area = $this->lixo_joga_outra_area == 'on' ? 1 : 0;
@@ -2265,6 +2271,7 @@ if(!$this->isEnderecoExterno){
             $obj->abastecimento_agua = $abastecimento_agua;
             $obj->abastecimento_energia = $abastecimento_energia;
             $obj->esgoto_sanitario = $esgoto_sanitario;
+            $obj->destinacao_lixo = $destinacao_lixo;
             $obj->lixo_coleta_periodica = $this->lixo_coleta_periodica == 'on' ? 1 : 0;
             $obj->lixo_queima = $this->lixo_queima == 'on' ? 1 : 0;
             $obj->lixo_joga_outra_area = $this->lixo_joga_outra_area == 'on' ? 1 : 0;
