@@ -129,14 +129,12 @@ class indice extends clsCadastro
     var $agua_consumida;
     var $abastecimento_agua;
     var $abastecimento_energia;
+    var $esgoto_sanitario;
     var $agua_rede_publica;
     var $agua_poco_artesiano;
     var $agua_cacimba_cisterna_poco;
     var $agua_fonte_rio;
     var $agua_inexistente;
-    var $esgoto_rede_publica;
-    var $esgoto_fossa;
-    var $esgoto_inexistente;
     var $lixo_coleta_periodica;
     var $lixo_queima;
     var $lixo_joga_outra_area;
@@ -478,6 +476,9 @@ class indice extends clsCadastro
         }
         if(is_string($this->abastecimento_energia)){
             $this->abastecimento_energia = explode(',',str_replace(array('{', "}"), '', $this->abastecimento_energia));
+        }
+        if(is_string($this->esgoto_sanitario)){
+            $this->esgoto_sanitario = explode(',',str_replace(array('{', "}"), '', $this->esgoto_sanitario));
         }
         if(is_string( $this->mantenedora_escola_privada)){
              $this->mantenedora_escola_privada = explode(',',str_replace(array('{', "}"), '',  $this->mantenedora_escola_privada));
@@ -1309,14 +1310,15 @@ if(!$this->isEnderecoExterno){
                                                                         4  => 'Inexistente')));
         $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-        $options = array('label' => Portabilis_String_Utils::toLatin1('Esgoto sanitário - Rede pública'), 'value' => $this->esgoto_rede_publica);
-        $this->inputsHelper()->checkbox('esgoto_rede_publica', $options);
-
-        $options = array('label' => Portabilis_String_Utils::toLatin1('Esgoto sanitário - Fossa'), 'value' => $this->esgoto_fossa);
-        $this->inputsHelper()->checkbox('esgoto_fossa', $options);
-
-        $options = array('label' => Portabilis_String_Utils::toLatin1('Esgoto sanitário - Inexistente'), 'value' => $this->esgoto_inexistente);
-        $this->inputsHelper()->checkbox('esgoto_inexistente', $options);
+        $helperOptions = array('objectName'  => 'esgoto_sanitario');
+        $options       = array('label' => 'Esgoto sanitário',
+                               'size' => 50,
+                               'required' => false,
+                               'options' => array('values' => $this->esgoto_sanitario,
+                                                  'all_values' => array(1  => 'Rede pública',
+                                                                        2  => 'Fossa',
+                                                                        3  => 'Inexistente')));
+        $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
         $options = array('label' => Portabilis_String_Utils::toLatin1('Destinação do lixo - Coleta periódica'), 'value' => $this->lixo_coleta_periodica);
         $this->inputsHelper()->checkbox('lixo_coleta_periodica', $options);
@@ -1675,6 +1677,8 @@ if(!$this->isEnderecoExterno){
         $abastecimento_agua = implode(',', $this->abastecimento_agua);
         unset($this->abastecimento_energia[0]);
         $abastecimento_energia = implode(',', $this->abastecimento_energia);
+        unset($this->esgoto_sanitario[0]);
+        $esgoto_sanitario = implode(',', $this->esgoto_sanitario);
 
         if (!empty($this->escola_inep_id) && strlen($this->escola_inep_id) != 8) {
             $this->mensagem = 'O código INEP da escola deve conter 8 dígitos.';
@@ -1691,8 +1695,12 @@ if(!$this->isEnderecoExterno){
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de água</b>, quando a opção: <b>Inexistente</b> estiver selecionada.';
             return false;
         }
-        if(in_array(5, $this->abastecimento_energia) && count($this->abastecimento_energia) > 1){
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de água</b>, quando a opção: <b>Inexistente</b> estiver selecionada.';
+        if(in_array(4, $this->abastecimento_energia) && count($this->abastecimento_energia) > 1){
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de energia elétrica</b>, quando a opção: <b>Inexistente</b> estiver selecionada.';
+            return false;
+        }
+        if(in_array(3, $this->esgoto_sanitario) && count($this->esgoto_sanitario) > 1){
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Esgoto sanitário</b>, quando a opção: <b>Inexistente</b> estiver selecionada.';
             return false;
         }
 
@@ -1735,9 +1743,7 @@ if(!$this->isEnderecoExterno){
                     $obj->agua_consumida = $this->agua_consumida;
                     $obj->abastecimento_agua = $abastecimento_agua;
                     $obj->abastecimento_energia = $abastecimento_energia;
-                    $obj->esgoto_rede_publica = $this->esgoto_rede_publica == 'on' ? 1 : 0;
-                    $obj->esgoto_fossa = $this->esgoto_fossa == 'on' ? 1 : 0;
-                    $obj->esgoto_inexistente = $this->esgoto_inexistente == 'on' ? 1 : 0;
+                    $obj->esgoto_sanitario = $esgoto_sanitario;
                     $obj->lixo_coleta_periodica = $this->lixo_coleta_periodica == 'on' ? 1 : 0;
                     $obj->lixo_queima = $this->lixo_queima == 'on' ? 1 : 0;
                     $obj->lixo_joga_outra_area = $this->lixo_joga_outra_area == 'on' ? 1 : 0;
@@ -1938,9 +1944,7 @@ if(!$this->isEnderecoExterno){
             $obj->agua_consumida = $this->agua_consumida;
             $obj->abastecimento_agua = $abastecimento_agua;
             $obj->abastecimento_energia = $abastecimento_energia;
-            $obj->esgoto_rede_publica = $this->esgoto_rede_publica == 'on' ? 1 : 0;
-            $obj->esgoto_fossa = $this->esgoto_fossa == 'on' ? 1 : 0;
-            $obj->esgoto_inexistente = $this->esgoto_inexistente == 'on' ? 1 : 0;
+            $obj->esgoto_sanitario = $esgoto_sanitario;
             $obj->lixo_coleta_periodica = $this->lixo_coleta_periodica == 'on' ? 1 : 0;
             $obj->lixo_queima = $this->lixo_queima == 'on' ? 1 : 0;
             $obj->lixo_joga_outra_area = $this->lixo_joga_outra_area == 'on' ? 1 : 0;
@@ -2101,13 +2105,19 @@ if(!$this->isEnderecoExterno){
     $abastecimento_agua = implode(',', $this->abastecimento_agua);
     unset($this->abastecimento_energia[0]);
     $abastecimento_energia = implode(',', $this->abastecimento_energia);
+    unset($this->esgoto_sanitario[0]);
+    $esgoto_sanitario = implode(',', $this->esgoto_sanitario);
 
     if(in_array(5, $this->abastecimento_agua) && count($this->abastecimento_agua) > 1){
         $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de água</b>, quando a opção: <b>Inexistente</b> estiver selecionada.';
         return false;
     }
-    if(in_array(5, $this->abastecimento_energia) && count($this->abastecimento_energia) > 1){
-        $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de água</b>, quando a opção: <b>Inexistente</b> estiver selecionada.';
+    if(in_array(4, $this->abastecimento_energia) && count($this->abastecimento_energia) > 1){
+        $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de energia elétrica</b>, quando a opção: <b>Inexistente</b> estiver selecionada.';
+        return false;
+    }
+    if(in_array(3, $this->esgoto_sanitario) && count($this->esgoto_sanitario) > 1){
+        $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Esgoto sanitário</b>, quando a opção: <b>Inexistente</b> estiver selecionada.';
         return false;
     }
 
@@ -2146,9 +2156,7 @@ if(!$this->isEnderecoExterno){
             $obj->agua_consumida = $this->agua_consumida;
             $obj->abastecimento_agua = $abastecimento_agua;
             $obj->abastecimento_energia = $abastecimento_energia;
-            $obj->esgoto_rede_publica = $this->esgoto_rede_publica == 'on' ? 1 : 0;
-            $obj->esgoto_fossa = $this->esgoto_fossa == 'on' ? 1 : 0;
-            $obj->esgoto_inexistente = $this->esgoto_inexistente == 'on' ? 1 : 0;
+            $obj->esgoto_sanitario = $esgoto_sanitario;
             $obj->lixo_coleta_periodica = $this->lixo_coleta_periodica == 'on' ? 1 : 0;
             $obj->lixo_queima = $this->lixo_queima == 'on' ? 1 : 0;
             $obj->lixo_joga_outra_area = $this->lixo_joga_outra_area == 'on' ? 1 : 0;
@@ -2256,9 +2264,7 @@ if(!$this->isEnderecoExterno){
             $obj->agua_consumida = $this->agua_consumida;
             $obj->abastecimento_agua = $abastecimento_agua;
             $obj->abastecimento_energia = $abastecimento_energia;
-            $obj->esgoto_rede_publica = $this->esgoto_rede_publica == 'on' ? 1 : 0;
-            $obj->esgoto_fossa = $this->esgoto_fossa == 'on' ? 1 : 0;
-            $obj->esgoto_inexistente = $this->esgoto_inexistente == 'on' ? 1 : 0;
+            $obj->esgoto_sanitario = $esgoto_sanitario;
             $obj->lixo_coleta_periodica = $this->lixo_coleta_periodica == 'on' ? 1 : 0;
             $obj->lixo_queima = $this->lixo_queima == 'on' ? 1 : 0;
             $obj->lixo_joga_outra_area = $this->lixo_joga_outra_area == 'on' ? 1 : 0;

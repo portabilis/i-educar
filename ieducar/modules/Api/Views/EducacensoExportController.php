@@ -428,9 +428,9 @@ class EducacensoExportController extends ApiCoreController
       CASE WHEN e.abastecimento_energia::varchar LIKE \'%2%\' THEN 1 ELSE 0 END as r10s27,
       CASE WHEN e.abastecimento_energia::varchar LIKE \'%3%\' THEN 1 ELSE 0 END as r10s28,
       CASE WHEN e.abastecimento_energia::varchar LIKE \'%4%\' THEN 1 ELSE 0 END as r10s29,
-      e.esgoto_rede_publica as r10s30,
-      e.esgoto_fossa as r10s31,
-      e.esgoto_inexistente as r10s32,
+      CASE WHEN e.esgoto_sanitario::varchar LIKE \'%1%\' THEN 1 ELSE 0 END as r10s30,
+      CASE WHEN e.esgoto_sanitario::varchar LIKE \'%2%\' THEN 1 ELSE 0 END as r10s31,
+      CASE WHEN e.esgoto_sanitario::varchar LIKE \'%3%\' THEN 1 ELSE 0 END as r10s32,
       e.lixo_coleta_periodica as r10s33,
       e.lixo_queima as r10s34,
       e.lixo_joga_outra_area as r10s35,
@@ -597,6 +597,10 @@ class EducacensoExportController extends ApiCoreController
 
       if($r10s29 == 1){
         $r10s26 = $r10s27 = $r10s28 = 0;
+      }
+
+      if($r10s32 == 1){
+        $r10s30 = $r10s31 = 0;
       }
 
       if (!$r10s82) {

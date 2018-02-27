@@ -78,6 +78,7 @@ class clsPmieducarEscola
   var $medidor_energia;
   var $abastecimento_agua;
   var $abastecimento_energia;
+  var $esgoto_sanitario;
   var $agua_consumida;
   var $agua_rede_publica;
   var $agua_poco_artesiano;
@@ -246,7 +247,7 @@ class clsPmieducarEscola
 
     $this->_campos_lista = $this->_todos_campos = 'e.cod_escola, e.ref_usuario_cad, e.ref_usuario_exc, e.ref_cod_instituicao, e.ref_cod_escola_localizacao, e.ref_cod_escola_rede_ensino, e.ref_idpes, e.sigla, e.data_cadastro,
           e.data_exclusao, e.ativo, e.bloquear_lancamento_diario_anos_letivos_encerrados, e.situacao_funcionamento, e.dependencia_administrativa, e.latitude, e.longitude, e.regulamentacao, e.acesso, e.cargo_gestor, e.ref_idpes_gestor, e.area_terreno_total,
-          e.condicao, e.area_construida, e.area_disponivel, e.num_pavimentos, e.decreto_criacao, e.tipo_piso, e.medidor_energia, e.agua_consumida, e.abastecimento_agua, e.abastecimento_energia, e.agua_rede_publica, e.agua_poco_artesiano, e.agua_cacimba_cisterna_poco, e.agua_fonte_rio,
+          e.condicao, e.area_construida, e.area_disponivel, e.num_pavimentos, e.decreto_criacao, e.tipo_piso, e.medidor_energia, e.agua_consumida, e.abastecimento_agua, e.abastecimento_energia, e.esgoto_sanitario, e.agua_rede_publica, e.agua_poco_artesiano, e.agua_cacimba_cisterna_poco, e.agua_fonte_rio,
           e.agua_inexistente, e.energia_rede_publica, e.energia_outros, e.energia_gerador, e.energia_inexistente, e.esgoto_rede_publica, e.esgoto_fossa, e.esgoto_inexistente, e.lixo_coleta_periodica, e.lixo_queima, e.lixo_joga_outra_area,
           e.lixo_recicla, e.lixo_enterra, e.lixo_outros, e.dependencia_sala_diretoria, e.dependencia_sala_professores, e.dependencia_sala_secretaria, e.dependencia_laboratorio_informatica, e.dependencia_laboratorio_ciencias, e.dependencia_sala_aee,
           e.dependencia_quadra_coberta, e.dependencia_quadra_descoberta, e.dependencia_cozinha, e.dependencia_biblioteca, e.dependencia_sala_leitura, e.dependencia_parque_infantil, e.dependencia_bercario, e.dependencia_banheiro_fora,
@@ -601,9 +602,16 @@ class clsPmieducarEscola
         $valores .= "{$gruda}'{{$this->abastecimento_agua}}'";
         $gruda = ", ";
       }
+
       if (is_string($this->abastecimento_energia)) {
         $campos .= "{$gruda}abastecimento_energia";
         $valores .= "{$gruda}'{{$this->abastecimento_energia}}'";
+        $gruda = ", ";
+      }
+
+      if (is_string($this->esgoto_sanitario)) {
+        $campos .= "{$gruda}esgoto_sanitario";
+        $valores .= "{$gruda}'{{$this->esgoto_sanitario}}'";
         $gruda = ", ";
       }
 
@@ -1369,6 +1377,11 @@ class clsPmieducarEscola
 
       if (is_string($this->abastecimento_energia)) {
         $set .= "{$gruda}abastecimento_energia = '{{$this->abastecimento_energia}}'";
+        $gruda = ", ";
+      }
+
+      if (is_string($this->esgoto_sanitario)) {
+        $set .= "{$gruda}esgoto_sanitario = '{{$this->esgoto_sanitario}}'";
         $gruda = ", ";
       }
 
