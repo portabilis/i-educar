@@ -371,7 +371,7 @@ class indice extends clsCadastro
     $this->campoLista('ref_cod_turma_tipo', 'Tipo de turma', $opcoes,
       $this->ref_cod_turma_tipo, '', FALSE, '', $script);
 
-    $this->campoTexto('nm_turma', 'Turma', $this->nm_turma, 30, 255, TRUE);
+    $this->campoTexto('nm_turma', 'Nome da turma', $this->nm_turma, 30, 255, TRUE);
 
     $this->campoTexto('sgl_turma', $GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu' ? 'C&oacute;digo da sala Prodesp/GDAE' : 'Sigla', $this->sgl_turma, 15, 15, FALSE);
 
@@ -406,14 +406,14 @@ class indice extends clsCadastro
     $this->campoQuebra2();
 
     // hora
-    $this->campoHora('hora_inicial', 'Hora Inicial', $this->hora_inicial, FALSE);
+    $this->campoHora('hora_inicial', 'Hora inicial', $this->hora_inicial, FALSE);
 
-    $this->campoHora('hora_final', 'Hora Final', $this->hora_final, FALSE);
+    $this->campoHora('hora_final', 'Hora final', $this->hora_final, FALSE);
 
-    $this->campoHora('hora_inicio_intervalo', 'Hora In&iacute;cio Intervalo',
+    $this->campoHora('hora_inicio_intervalo', 'Hora início intervalo',
       $this->hora_inicio_intervalo, FALSE);
 
-    $this->campoHora( 'hora_fim_intervalo', 'Hora Fim Intervalo', $this->hora_fim_intervalo, FALSE);
+    $this->campoHora( 'hora_fim_intervalo', 'Hora fim intervalo', $this->hora_fim_intervalo, FALSE);
 
     $this->inputsHelper()->turmaTurno();
 
@@ -594,7 +594,9 @@ class indice extends clsCadastro
 
     $this->acao_enviar = 'valida()';
 
-    $this->inputsHelper()->integer('codigo_inep_educacenso', array('label' => 'Código inep',
+    $this->inputsHelper()->integer('codigo_inep_educacenso', array('label' => 'Código INEP',
+                                                                   'label_hint' => 'Somente números',
+                                                                   'placeholder' => 'INEP',
                                                                    'required' => false,
                                                                    'max_length' => 14,
                                                                    'value' => $this->codigo_inep_educacenso));
@@ -612,7 +614,7 @@ class indice extends clsCadastro
     $options = array('label' => 'Tipo de atendimento', 'resources' => $resources, 'value' => $this->tipo_atendimento, 'required' => false, 'size' => 70,);
     $this->inputsHelper()->select('tipo_atendimento', $options);
 
-    $options = array('label' => Portabilis_String_Utils::toLatin1('Turma participante do Programa Mais Educação/Ensino médio Inovador'), 'value' => $this->turma_mais_educacao);
+    $options = array('label' => Portabilis_String_Utils::toLatin1('Turma participante do programa Mais Educação/Ensino Médio Inovador'), 'value' => $this->turma_mais_educacao);
     $this->inputsHelper()->checkbox('turma_mais_educacao', $options);
 
     $options = array('label' => Portabilis_String_Utils::toLatin1('Código do tipo de atividade complementar 1'), 'value' => $this->atividade_complementar_1, 'required' => false, 'size' => 5, 'max_length' => 5, 'placeholder' => '');
