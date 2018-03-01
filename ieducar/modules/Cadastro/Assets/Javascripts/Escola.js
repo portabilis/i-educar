@@ -111,6 +111,8 @@ $j('#marcar_todas_dependencias').click(
         $arrayCheckDependencias.each(
             function(idElement){
                 $j( '#' + idElement).prop("checked",check);
+                var on = check ? 'on' : '';
+                $j( '#' + idElement).val(on);
             }
         );
     }
