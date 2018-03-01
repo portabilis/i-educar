@@ -690,8 +690,7 @@ class indice extends clsCadastro
         if ($countEscolasIguais > 0){
           $obj_crv = new clsPmieducarCandidatoReservaVaga($this->ref_cod_candidato_reserva_vaga);
           $obj_crv->vinculaMatricula($this->ref_cod_escola, $this->cod_matricula, $this->ref_cod_aluno);
-        }
-        if ($this->ref_cod_candidato_fila_unica) {
+        } else if ($this->ref_cod_candidato_fila_unica) {
             $obj_cfu = new clsPmieducarCandidatoFilaUnica($this->ref_cod_candidato_fila_unica);
             $obj_cfu->vinculaMatricula($this->cod_matricula);
         }
