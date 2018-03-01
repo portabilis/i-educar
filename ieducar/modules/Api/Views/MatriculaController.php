@@ -469,11 +469,12 @@ class MatriculaController extends ApiCoreController
       $situacaoAntiga = $matricula->aprovado;
       $situacaoNova   = $this->getRequest()->nova_situacao;
 
-      if($situacaoNova == App_Model_MatriculaSituacao::TRANSFERIDO ||
+      $enturmacoes = new clsPmieducarMatriculaTurma();
+      $enturmacoes = $enturmacoes->lista($matriculaId, null, null, null, null, null, null, null, 1 );
+
+        if($situacaoNova == App_Model_MatriculaSituacao::TRANSFERIDO ||
          $situacaoNova == App_Model_MatriculaSituacao::ABANDONO ||
          $situacaoNova == App_Model_MatriculaSituacao::FALECIDO ){
-        $enturmacoes = new clsPmieducarMatriculaTurma();
-        $enturmacoes = $enturmacoes->lista($matriculaId, null, null, null, null, null, null, null, 1 );
 
         if($enturmacoes){
 
@@ -495,9 +496,9 @@ class MatriculaController extends ApiCoreController
         $params = array($matriculaId);
         $sql = 'SELECT sequencial as codigo FROM pmieducar.matricula_turma where ref_cod_matricula = $1 order by ativo desc, sequencial desc limit 1';
         $sequencial = $this->fetchPreparedQuery($sql, $params, false, 'first-field');
-
-        $sql = 'UPDATE pmieducar.matricula_turma set ativo = 1, transferido = false, remanejado = false, abandono = false, reclassificado = false where sequencial = $1 and ref_cod_matricula = $2';
-
+        if($enturmacoes) {
+          $sql = 'UPDATE pmieducar.matricula_turma set ativo = 1, transferido = false, remanejado = false, abandono = false, reclassificado = false where sequencial = $1 and ref_cod_matricula = $2';
+        }
         $params = array($sequencial, $matriculaId);
         $this->fetchPreparedQuery($sql, $params);
 
