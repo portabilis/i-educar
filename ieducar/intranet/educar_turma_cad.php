@@ -2058,25 +2058,27 @@ function atualizaTurmaCad_EscolaSerie(xml)
 
 function valida()
 {
-  if (document.getElementById('padrao_ano_escolar').value == 1) {
-    var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
-    var campoEscola      = document.getElementById('ref_cod_escola').value;
-    var campoTurma       = document.getElementById('cod_turma').value;
-    var campoComodo      = document.getElementById('ref_cod_infra_predio_comodo').value;
-    var campoCurso       = document.getElementById('ref_cod_curso').value;
-    var campoSerie       = document.getElementById('ref_cod_serie').value;
+  if (validaMinutos()) {
+    if (document.getElementById('padrao_ano_escolar').value == 1) {
+      var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
+      var campoEscola      = document.getElementById('ref_cod_escola').value;
+      var campoTurma       = document.getElementById('cod_turma').value;
+      var campoComodo      = document.getElementById('ref_cod_infra_predio_comodo').value;
+      var campoCurso       = document.getElementById('ref_cod_curso').value;
+      var campoSerie       = document.getElementById('ref_cod_serie').value;
 
-    var url  = 'educar_turma_sala_xml.php';
-    var pars = '?inst=' + campoInstituicao + '&esc=' + campoEscola + '&not_tur=' +
-               campoTurma + '&com=' + campoComodo + '&cur=' + campoCurso+ '&ser=' + campoSerie;
+      var url  = 'educar_turma_sala_xml.php';
+      var pars = '?inst=' + campoInstituicao + '&esc=' + campoEscola + '&not_tur=' +
+                campoTurma + '&com=' + campoComodo + '&cur=' + campoCurso+ '&ser=' + campoSerie;
 
-    var xml1 = new ajax(valida_xml);
-    strURL   = url + pars;
+      var xml1 = new ajax(valida_xml);
+      strURL   = url + pars;
 
-    xml1.envia(strURL);
-  }
-  else {
-    valida_xml(null);
+      xml1.envia(strURL);
+    }
+    else {
+      valida_xml(null);
+    }
   }
 }
 

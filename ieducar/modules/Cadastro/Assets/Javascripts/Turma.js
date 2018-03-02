@@ -25,6 +25,27 @@ $j('.tablecadastro >tbody  > tr').each(function(index, row) {
   }
 });
 
+
+function validaMinutos() {
+  var campos = [{'id' : 'hora_inicial', 'label' : 'Hora inicial'},
+                {'id' : 'hora_final', 'label' : 'Hora final'},
+                {'id' : 'hora_inicio_intervalo', 'label' : 'Hora início intervalo'}];
+  var minutosPermitidos = ['00','05','10','15','20','25','30','35','40','45','50','55'];
+  var retorno = true;
+
+  $j.each(campos, function(i, campo) {
+    var hora = $j('#' + campo.id).val();
+    var minutos = hora.substr(3, 2);
+    var minutosValidos = $j.inArray(minutos,minutosPermitidos) != -1;
+    if (!minutosValidos) {
+      alert('Preencha o campo ' + campo.label + ' corretamente');
+      retorno = false;
+      return false;
+    }
+  });
+  return retorno;
+}
+
 $j(document).ready(function() {
 
   // on click das abas
