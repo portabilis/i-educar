@@ -2058,7 +2058,7 @@ function atualizaTurmaCad_EscolaSerie(xml)
 
 function valida()
 {
-  if (validaMinutos()) {
+  if (validaHorarioInicialFinal() && validaMinutos()) {
     if (document.getElementById('padrao_ano_escolar').value == 1) {
       var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
       var campoEscola      = document.getElementById('ref_cod_escola').value;

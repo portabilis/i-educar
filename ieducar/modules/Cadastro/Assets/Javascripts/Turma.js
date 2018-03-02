@@ -25,6 +25,15 @@ $j('.tablecadastro >tbody  > tr').each(function(index, row) {
   }
 });
 
+function validaHorarioInicialFinal() {
+  var horarioInicial = $j('#hora_inicial').val().replace(':', '');
+  var horarioFinal = $j('#hora_final').val().replace(':', '');
+  if (horarioInicial > horarioFinal){
+    alert('O horário inicial não pode ser maior que o horário final.');
+    return false;
+  }
+  return true;
+}
 
 function validaMinutos() {
   var campos = [{'id' : 'hora_inicial', 'label' : 'Hora inicial'},
