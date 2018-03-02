@@ -264,7 +264,7 @@ class clsDocumento
                 $campos .= ", declaracao_trabalho_autonomo";
                 $values .= ", '{$this->declaracao_trabalho_autonomo}'";
             }
-            echo "INSERT INTO {$this->schema}.{$this->tabela} ( idpes , origem_gravacao, idsis_cad, data_cad, operacao $campos ) VALUES ( '{$this->idpes}', 'M', 17, NOW(), 'I' $values )";
+
             $db->Consulta( "INSERT INTO {$this->schema}.{$this->tabela} ( idpes , origem_gravacao, idsis_cad, data_cad, operacao $campos ) VALUES ( '{$this->idpes}', 'M', 17, NOW(), 'I' $values )" );
 
             return true;
