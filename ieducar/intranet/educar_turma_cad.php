@@ -2254,7 +2254,6 @@ $j("#definir_componentes_diferenciados").on("click", function(){
 });
 
 $j('.check-disciplina').on('change', function(){
-  console.log("clicked");
   var enabled = $j(this).prop('checked');
   $j(this).closest('.linha-disciplina').find('input:not(.check-disciplina)').attr("disabled", !enabled);
 });
