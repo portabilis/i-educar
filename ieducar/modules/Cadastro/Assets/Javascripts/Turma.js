@@ -46,7 +46,7 @@ function validaMinutos() {
     var hora = $j('#' + campo.id).val();
     var minutos = hora.substr(3, 2);
     var minutosValidos = $j.inArray(minutos,minutosPermitidos) != -1;
-    if (!minutosValidos) {
+    if (minutos != '' && !minutosValidos) {
       alert('Preencha o campo ' + campo.label + ' corretamente');
       retorno = false;
       return false;
