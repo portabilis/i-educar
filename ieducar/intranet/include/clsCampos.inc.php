@@ -318,7 +318,7 @@ class clsCampos extends Core_Controller_Page_Abstract
         );
     }
 
-    function campoCpf($nome, $campo, $valor, $obrigatorio = FALSE, $descricao = FALSE, $disabled = FALSE)
+    function campoCpf($nome, $campo, $valor, $obrigatorio = FALSE, $descricao = FALSE, $disabled = FALSE, $onChange = '')
     {
         $arr_componente = array(
             'cpf',
@@ -329,7 +329,8 @@ class clsCampos extends Core_Controller_Page_Abstract
             14,
             'nnn.nnn.nnn-nn',
             $descricao,
-            $disabled
+            $disabled,
+            $onChange
         );
 
         if (!$this->__adicionando_tabela) {
@@ -1403,7 +1404,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                                 break;
 
                             case 'cpf':
-                                $retorno .= $this->getCampoCPF("{$nome}[{$key2}]", "{$nome}[{$key2}]", $valor[$key], $class, $campo_[4], $campo_[5], $campo_[8]);
+                                $retorno .= $this->getCampoCPF("{$nome}[{$key2}]", "{$nome}[{$key2}]", $valor[$key], $class, $campo_[4], $campo_[5], $campo_[8], $campo_[9]);
                                 break;
 
                             case 'idfederal':
@@ -2772,7 +2773,7 @@ class clsCampos extends Core_Controller_Page_Abstract
         return "<input onKeyPress=\"formataCNPJ(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$id}\" value=\"{$valor}\" size=\"{$tamanhovisivel}\" maxlength=\"{$tamanhomaximo}\">";
     }
 
-    function getCampoCPF($nome, $id = '', $valor, $class, $tamanhovisivel, $tamanhomaximo, $disabled = FALSE)
+    function getCampoCPF($nome, $id = '', $valor, $class, $tamanhovisivel, $tamanhomaximo, $disabled = FALSE, $onChange = '')
     {
         $id = $id ? $id : $nome;
 
@@ -2782,7 +2783,7 @@ class clsCampos extends Core_Controller_Page_Abstract
             $disabled = '';
         }
 
-        return "<input onKeyPress=\"formataCPF(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$id}\" value=\"{$valor}\" size=\"{$tamanhovisivel}\" maxlength=\"{$tamanhomaximo}\" $disabled>";
+        return "<input onChange=\"{$onChange}\"onKeyPress=\"formataCPF(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$id}\" value=\"{$valor}\" size=\"{$tamanhovisivel}\" maxlength=\"{$tamanhomaximo}\" $disabled>";
     }
 
     function getCampoIdFederal($nome, $id = '', $valor, $class, $tamanhovisivel,
