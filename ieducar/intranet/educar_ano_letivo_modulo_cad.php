@@ -424,7 +424,7 @@ class indice extends clsCadastro
                       'data_cadastro', 'data_exclusao', 'ativo', 'ref_cod_turma_tipo', 'hora_inicial', 'hora_final',
                       'hora_inicio_intervalo', 'hora_fim_intervalo', 'ref_cod_regente', 'ref_cod_instituicao_regente',
                       'ref_cod_instituicao',  'ref_cod_curso', 'ref_ref_cod_serie_mult', 'ref_ref_cod_escola_mult',
-                      'visivel', 'turma_turno_id', 'tipo_boletim', 'ano');
+                      'visivel', 'turma_turno_id', 'tipo_boletim', 'ano', 'dias_semana');
 
       $turmaDestino = new clsPmieducarTurma();
 
@@ -436,7 +436,6 @@ class indice extends clsCadastro
 
       $this->copiarComponenteCurricularTurma($turmaOrigem['cod_turma'], $turmaDestinoId);
       $this->copiarModulosTurma($turmaOrigem['cod_turma'], $turmaDestinoId, $anoOrigem, $anoDestino);
-      $this->copiarDiasSemanaTurma($turmaOrigem['cod_turma'], $turmaDestinoId);
     }
   }
 
@@ -489,23 +488,6 @@ class indice extends clsCadastro
       }
 
       $moduloDestino->cadastra();
-    }
-  }
-
-  function copiarDiasSemanaTurma($turmaOrigemId, $turmaDestinoId) {
-    $diasSemanaTurmaOrigem = new clsPmieducarTurmaDiaSemana();
-    $diasSemanaTurmaOrigem = $diasSemanaTurmaOrigem->lista(null, $turmaOrigemId);
-
-    $fields = array('dia_semana', 'hora_inicial', 'hora_final');
-
-    foreach ($diasSemanaTurmaOrigem as $diaSemanaOrigem) {
-      $diaSemanaDestino = new clsPmieducarTurmaDiaSemana();
-
-      foreach ($fields as $fieldName)
-        $diaSemanaDestino->$fieldName = $diaSemanaOrigem[$fieldName];
-
-      $diaSemanaDestino->ref_cod_turma = $turmaDestinoId;
-      $diaSemanaDestino->cadastra();
     }
   }
 }
