@@ -371,10 +371,10 @@ class indice extends clsCadastro
       60, 5, FALSE);
 
     $resources = array(null => 'Selecione',
-                       1 => Portabilis_String_Utils::toLatin1('Ensino Regular'),
-                       2 => Portabilis_String_Utils::toLatin1('Educação Especial'),
-                       3 => Portabilis_String_Utils::toLatin1('Educação Jovens e Adultos'),
-                       4 => Portabilis_String_Utils::toLatin1('Educação Profissional'));
+                       1 => Portabilis_String_Utils::toLatin1('Ensino regular'),
+                       2 => Portabilis_String_Utils::toLatin1('Educação especial'),
+                       3 => Portabilis_String_Utils::toLatin1('Educação jovens e adultos'),
+                       4 => Portabilis_String_Utils::toLatin1('Educação profissional'));
 
     $options = array('label' => Portabilis_String_Utils::toLatin1('Modalidade do curso'), 'resources' => $resources, 'value' => $this->modalidade_curso);
     $this->inputsHelper()->select('modalidade_curso', $options);
