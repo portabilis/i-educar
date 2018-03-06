@@ -25,6 +25,8 @@ $j('.tablecadastro >tbody  > tr').each(function(index, row) {
   }
 });
 
+var modoCadastro = $j('#retorno').val() == 'Novo';
+
 function validaHorarioInicialFinal() {
   var horarioInicial = $j('#hora_inicial').val().replace(':', '');
   var horarioFinal = $j('#hora_final').val().replace(':', '');
@@ -53,6 +55,79 @@ function validaMinutos() {
     }
   });
   return retorno;
+}
+
+$j('#ref_cod_curso').on('change', habilitaTurmaMaisEducacao);
+$j('#tipo_atendimento').on('change', habilitaTurmaMaisEducacao);
+$j('#tipo_mediacao_didatico_pedagogico').on('change', habilitaTurmaMaisEducacao);
+$j('#etapa_educacenso').on('change', habilitaTurmaMaisEducacao);
+
+habilitaTurmaMaisEducacao();
+
+function habilitaTurmaMaisEducacao() {
+  if (modoCadastro) {
+    getDependenciaAdministrativaEscola();
+    getModalidadeCurso();
+  }
+
+  var didaticoPedagogicoPresencial = $j('#tipo_mediacao_didatico_pedagogico').val() == 1;
+  var dependenciaAdministrativaEstadualMunicipal = $j('#dependencia_administrativa').val() == 2 ||
+                                                   $j('#dependencia_administrativa').val() == 3;
+  var atendimentoClasseHospitalarAee = $j('#tipo_atendimento').val() == 1 ||
+                                       $j('#tipo_atendimento').val() == 5;
+  var atendimentoAtividadeComplementar = $j('#tipo_atendimento').val() == 4;
+  var modalidadeEja = $j('#modalidade_curso').val() == 3;
+  var etapaEducacenso = ($j('#etapa_educacenso').val() >= 4 &&
+                         $j('#etapa_educacenso').val() <= 38) ||
+                        ($j('#etapa_educacenso').val() == 41);  
+  var validaTipoAtendimento = !atendimentoAtividadeComplementar ? !modalidadeEja && etapaEducacenso : true;
+  
+  if (
+    didaticoPedagogicoPresencial &&
+    dependenciaAdministrativaEstadualMunicipal &&
+    !atendimentoClasseHospitalarAee &&
+    validaTipoAtendimento
+  ) {
+    $j("#turma_mais_educacao").attr('disabled', false);
+  } else {
+    $j("#turma_mais_educacao").attr('disabled', true);
+  }
+}
+
+function getDependenciaAdministrativaEscola(){
+  var options = {
+    dataType : 'json',
+    url : getResourceUrlBuilder.buildUrl(
+      '/module/Api/Escola',
+      'escola-dependencia-administrativa',
+      {escola_id : $j('#ref_cod_escola').val()}
+    ),
+    async : false,
+    success : function(dataResponse) {
+      if (dataResponse.dependencia_administrativa) {
+        $j('#dependencia_administrativa').val(dataResponse.dependencia_administrativa);
+      }
+    }
+  }
+  getResource(options);
+}
+
+function getModalidadeCurso(){
+  var options = {
+    dataType : 'json',
+    url : getResourceUrlBuilder.buildUrl(
+      '/module/Api/Curso',
+      'modalidade-curso',
+      {curso_id : $j('#ref_cod_curso').val()}
+    ),
+    async : false,
+    success : function(dataResponse) {
+      if (dataResponse.modalidade_curso) {
+        $j('#modalidade_curso').val(dataResponse.modalidade_curso);
+      }
+    }
+  }
+  getResource(options);
 }
 
 $j(document).ready(function() {

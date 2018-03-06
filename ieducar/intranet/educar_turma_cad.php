@@ -159,6 +159,8 @@ class indice extends clsCadastro
   var $etapas_utilizadas;
   var $definirComponentePorEtapa;
 
+  var $retorno;
+
   var $dias_da_semana = array(
     '' => 'Selecione',
     1  => 'Domingo',
@@ -200,7 +202,8 @@ class indice extends clsCadastro
 
         $this->definirComponentePorEtapa = ($regra_avaliacao->definirComponentePorEtapa == 1);
       }
-
+      
+      $this->dependencia_administrativa = $det_esc['dependencia_administrativa'];
       $this->ref_cod_escola      = $det_esc['cod_escola'];
       $this->ref_cod_instituicao = $det_esc['ref_cod_instituicao'];
       $this->ref_cod_curso       = $det_ser['ref_cod_curso'];
@@ -209,6 +212,7 @@ class indice extends clsCadastro
       $obj_curso = new clsPmieducarCurso(($this->ref_cod_curso));
       $det_curso = $obj_curso->detalhe();
       $this->padrao_ano_escolar = $det_curso['padrao_ano_escolar'];
+      $this->modalidade_curso = $det_curso['modalidade_curso'];
 
       $inep = $obj_turma->getInep();
 
@@ -249,6 +253,8 @@ class indice extends clsCadastro
 
     $this->nome_url_cancelar = 'Cancelar';
 
+    $this->retorno = $retorno;
+
     return $retorno;
   }
 
@@ -274,6 +280,9 @@ class indice extends clsCadastro
     if (is_numeric($this->ano_letivo)) $this->ano = $this->ano_letivo;
 
     $this->campoOculto('cod_turma', $this->cod_turma);
+    $this->campoOculto('dependencia_administrativa', $this->dependencia_administrativa);
+    $this->campoOculto('modalidade_curso', $this->modalidade_curso);
+    $this->campoOculto('retorno', $this->retorno);
 
     $bloqueia = false;
     $anoVisivel = false;
@@ -614,9 +623,6 @@ class indice extends clsCadastro
     $options = array('label' => 'Tipo de atendimento', 'resources' => $resources, 'value' => $this->tipo_atendimento, 'required' => false, 'size' => 70,);
     $this->inputsHelper()->select('tipo_atendimento', $options);
 
-    $options = array('label' => Portabilis_String_Utils::toLatin1('Turma participante do programa Mais Educação/Ensino Médio Inovador'), 'value' => $this->turma_mais_educacao);
-    $this->inputsHelper()->checkbox('turma_mais_educacao', $options);
-
     $options = array('label' => Portabilis_String_Utils::toLatin1('Código do tipo de atividade complementar 1'), 'value' => $this->atividade_complementar_1, 'required' => false, 'size' => 5, 'max_length' => 5, 'placeholder' => '');
     $this->inputsHelper()->integer('atividade_complementar_1', $options);
 
@@ -760,6 +766,14 @@ class indice extends clsCadastro
                      'value' => $this->nao_informar_educacenso,
                      'label_hint' => Portabilis_String_Utils::toLatin1('Caso este campo seja selecionado, esta turma e todas as matrículas vinculadas a mesma, não serão informadas no arquivo de exportação do Censo escolar'));
     $this->inputsHelper()->checkbox('nao_informar_educacenso', $options);
+
+    $resources = array(
+      0 => 'Não',
+      1 => 'Sim'
+    );
+    $options = array(
+      'label' => 'Turma participante do programa Mais Educação/Ensino Médio Inovador', 'resources' => $resources, 'value' => $this->turma_mais_educacao, 'required' => false);
+    $this->inputsHelper()->select('turma_mais_educacao', $options);
   }
 
   function montaListaComponentesSerieEscola(){
@@ -964,7 +978,7 @@ class indice extends clsCadastro
           $this->ref_cod_curso, $this->ref_cod_serie_mult, $this->ref_cod_escola,
           $this->visivel, $this->turma_turno_id, $this->tipo_boletim, $this->ano_letivo);
         $obj->tipo_atendimento = $this->tipo_atendimento;
-        $obj->turma_mais_educacao = $this->turma_mais_educacao == 'on' ? 1 : 0;
+        $obj->turma_mais_educacao = $this->turma_mais_educacao;
         $obj->atividade_complementar_1 = $this->atividade_complementar_1;
         $obj->atividade_complementar_2 = $this->atividade_complementar_2;
         $obj->atividade_complementar_3 = $this->atividade_complementar_3;
@@ -1082,7 +1096,7 @@ class indice extends clsCadastro
         $this->ref_cod_serie_mult, $this->ref_cod_escola, $this->visivel,
         $this->turma_turno_id, $this->tipo_boletim, $this->ano_letivo);
       $obj->tipo_atendimento = $this->tipo_atendimento;
-      $obj->turma_mais_educacao = $this->turma_mais_educacao == 'on' ? 1 : 0;
+      $obj->turma_mais_educacao = $this->turma_mais_educacao;
       $obj->atividade_complementar_1 = $this->atividade_complementar_1;
       $obj->atividade_complementar_2 = $this->atividade_complementar_2;
       $obj->atividade_complementar_3 = $this->atividade_complementar_3;
@@ -1207,7 +1221,7 @@ class indice extends clsCadastro
           $this->tipo_boletim,
           $this->ano_letivo);
         $obj->tipo_atendimento = $this->tipo_atendimento;
-        $obj->turma_mais_educacao = $this->turma_mais_educacao == 'on' ? 1 : 0;
+        $obj->turma_mais_educacao = $this->turma_mais_educacao;
         $obj->atividade_complementar_1 = $this->atividade_complementar_1;
         $obj->atividade_complementar_2 = $this->atividade_complementar_2;
         $obj->atividade_complementar_3 = $this->atividade_complementar_3;
@@ -1323,7 +1337,7 @@ class indice extends clsCadastro
         $this->ref_cod_curso, $this->ref_cod_serie_mult, $this->ref_cod_escola,
         $this->visivel, $this->turma_turno_id, $this->tipo_boletim, $this->ano_letivo);
       $obj->tipo_atendimento = $this->tipo_atendimento;
-      $obj->turma_mais_educacao = $this->turma_mais_educacao == 'on' ? 1 : 0;
+      $obj->turma_mais_educacao = $this->turma_mais_educacao;
       $obj->atividade_complementar_1 = $this->atividade_complementar_1;
       $obj->atividade_complementar_2 = $this->atividade_complementar_2;
       $obj->atividade_complementar_3 = $this->atividade_complementar_3;
