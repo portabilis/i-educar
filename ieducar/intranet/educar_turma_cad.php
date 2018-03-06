@@ -112,13 +112,6 @@ class indice extends clsCadastro
   var $incluir_modulo;
   var $excluir_modulo;
 
-  // Inclui dia da semana
-  var $dia_semana;
-  var $ds_hora_inicial;
-  var $ds_hora_final;
-  var $turma_dia_semana;
-  var $incluir_dia_semana;
-  var $excluir_dia_semana;
   var $visivel;
 
   var $tipo_atendimento;
@@ -148,6 +141,7 @@ class indice extends clsCadastro
   var $ref_cod_disciplina_dispensada;
   var $codigo_inep_educacenso;
   var $tipo_mediacao_didatico_pedagogico;
+  var $dias_semana;
 
   var $sequencial;
   var $ref_cod_modulo;
@@ -239,6 +233,10 @@ class indice extends clsCadastro
       }
     }
 
+    if (is_string($this->dias_semana)) {
+      $this->dias_semana = explode(',',str_replace(array('{', "}"), '', $this->dias_semana));
+    }
+
     $this->url_cancelar      = $retorno == 'Editar' ?
       'educar_turma_det.php?cod_turma=' . $registro['cod_turma'] : 'educar_turma_lst.php';
 
@@ -260,17 +258,6 @@ class indice extends clsCadastro
 
   function Gerar()
   {
-
-    $scripts = array(
-      '/modules/Cadastro/Assets/Javascripts/Turma.js'
-      );
-
-    Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
-
-    $styles = array ('/modules/Cadastro/Assets/Stylesheets/Turma.css');
-
-    Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
-
     if ($_POST) {
       foreach ($_POST as $campo => $val) {
         $this->$campo = $this->$campo ? $this->$campo : $val;
@@ -435,6 +422,20 @@ class indice extends clsCadastro
 
     $this->campoLista('tipo_boletim', 'Modelo relat&oacute;rio boletim', $tiposBoletim, $this->tipo_boletim);
 
+    $helperOptions = array('objectName'  => 'dias_semana');
+    $options       = array('label' => 'Dias da semana',
+                            'size' => 50,
+                            'required' => false,
+                            'options' => array('values' => $this->dias_semana,
+                                              'all_values' => array(1 => 'Domingo',
+                                                                    2  => 'Segunda',
+                                                                    3  => 'Terça',
+                                                                    4  => 'Quarta',
+                                                                    5  => 'Quinta',
+                                                                    6  => 'Sexta',
+                                                                    7  => 'Sábado')));
+    $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+
     $this->montaListaComponentesSerieEscola();
 
 
@@ -496,110 +497,7 @@ class indice extends clsCadastro
 
     $this->campoTabelaFim();
 
-    $this->campoQuebra2();
-
-    if ($_POST['turma_dia_semana']) {
-      $this->turma_dia_semana = unserialize(urldecode($_POST['turma_dia_semana']));
-    }
-
-    if (is_numeric($this->cod_turma) && !$_POST) {
-      $obj = new clsPmieducarTurmaDiaSemana();
-      $registros = $obj->lista(NULL, $this->cod_turma);
-
-      if ($registros) {
-        foreach ($registros as $campo) {
-          $aux['dia_semana_']   = $campo['dia_semana'];
-          $aux['hora_inicial_'] = $campo['hora_inicial'];
-          $aux['hora_final_']   = $campo['hora_final'];
-
-          $this->turma_dia_semana[] = $aux;
-        }
-      }
-    }
-
-    unset($aux);
-
-    if ($_POST['dia_semana'] && $_POST['ds_hora_inicial'] && $_POST['ds_hora_final']) {
-      $aux['dia_semana_']   = $_POST['dia_semana'];
-      $aux['hora_inicial_'] = $_POST['ds_hora_inicial'];
-      $aux['hora_final_']   = $_POST['ds_hora_final'];
-
-      $this->turma_dia_semana[] = $aux;
-
-      unset($this->dia_semana);
-      unset($this->ds_hora_inicial);
-      unset($this->ds_hora_final);
-    }
-
-    $this->campoOculto('excluir_dia_semana', '');
-    unset($aux);
-
-    if ($this->turma_dia_semana) {
-      foreach ($this->turma_dia_semana as $key => $dias_semana) {
-        if ($this->excluir_dia_semana == $dias_semana['dia_semana_']) {
-          unset($this->turma_dia_semana[$key]);
-          unset($this->excluir_dia_semana);
-        }
-        else {
-          $nm_dia_semana = $this->dias_da_semana[$dias_semana['dia_semana_']];
-
-          $this->campoTextoInv('dia_semana_' . $dias_semana['dia_semana_'], '',
-            $nm_dia_semana, 8, 8, FALSE, FALSE, TRUE, '', '', '', '', 'dia_semana');
-
-          $this->campoTextoInv('hora_inicial_' . $dias_semana['dia_semana_'], '',
-            $dias_semana['hora_inicial_'], 5, 5, FALSE, FALSE, TRUE, '', '', '',
-            '', 'ds_hora_inicial_');
-
-          $this->campoTextoInv('hora_final_' . $dias_semana['dia_semana_'], '',
-            $dias_semana['hora_final_'], 5, 5, FALSE, FALSE, FALSE, '',
-            "<a href='#' id=\"event_excluir_dia_semana_{$dias_semana["dia_semana_"]}\"><img src='imagens/nvp_bola_xis.gif' title='Excluir' border=0></a>",
-            '', '', 'ds_hora_final_'
-          );
-          $scriptExcluir .= "
-                <script type=\"text/javascript\">
-                    document.getElementById('event_excluir_dia_semana_{$dias_semana["dia_semana_"]}').onclick = excluirModulo{$dias_semana["dia_semana_"]};
-
-                    function excluirModulo{$dias_semana["dia_semana_"]}(){
-                      document.getElementById('excluir_dia_semana').value = '{$dias_semana["dia_semana_"]}';
-                      document.getElementById('tipoacao').value = '';
-                      {$this->__nome}.submit();
-                    }
-                </script>";
-
-          $aux['dia_semana_']   = $dias_semana['dia_semana_'];
-          $aux['hora_inicial_'] = $dias_semana['hora_inicial_'];
-          $aux['hora_final_']   = $dias_semana['hora_final_'];
-        }
-      }
-    }
-
-    $this->campoOculto('turma_dia_semana', serialize($this->turma_dia_semana));
-
-    if (class_exists('clsPmieducarTurmaDiaSemana')) {
-      $opcoes = $this->dias_da_semana;
-    }
-    else {
-      echo '<!--\nErro\nClasse clsPmieducarTurmaDiaSemana n&atilde;o encontrada\n-->';
-      $opcoes = array('' => 'Erro na gera&ccedil;&atilde;o');
-    }
-
-    $this->campoLista('dia_semana', 'Dia Semana', $opcoes, $this->dia_semana, NULL,
-      false, '', '', false, false);
-
-    $this->campoHora('ds_hora_inicial', 'Hora Inicial', $this->ds_hora_inicial, FALSE);
-
-    $this->campoHora('ds_hora_final', 'Hora Final', $this->ds_hora_final, FALSE);
-
-    $this->campoOculto('incluir_dia_semana', '');
-
-    $this->campoRotulo('bt_incluir_dia_semana', 'Dia Semana',
-      "<a href='#' id=\"event_incluir_dia_semana\"><img src='imagens/nvp_bot_adiciona.gif' alt='adicionar' title='Incluir' border=0></a>"
-    );
-
     $this->campoOculto('padrao_ano_escolar', $this->padrao_ano_escolar);
-
-    // Colocado o script com esse campo pois tentando dar um 'print' ou 'echo' o script não funcionava
-    $this->campoTextoInv('scripts', $scriptExcluir);
 
     $this->acao_enviar = 'valida()';
 
@@ -774,6 +672,15 @@ class indice extends clsCadastro
     $options = array(
       'label' => 'Turma participante do programa Mais Educação/Ensino Médio Inovador', 'resources' => $resources, 'value' => $this->turma_mais_educacao, 'required' => false);
     $this->inputsHelper()->select('turma_mais_educacao', $options);
+
+    $scripts = array(
+      '/modules/Cadastro/Assets/Javascripts/Turma.js'
+    );
+    Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
+
+    $styles = array ('/modules/Cadastro/Assets/Stylesheets/Turma.css');
+
+    Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
   }
 
   function montaListaComponentesSerieEscola(){
@@ -933,6 +840,8 @@ class indice extends clsCadastro
     @session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     @session_write_close();
+    unset($this->dias_semana[0]);
+    $dias_semana = implode(',', $this->dias_semana);
 
     if(! $this->canCreateTurma($this->ref_cod_escola, $this->ref_cod_serie, $this->turma_turno_id))
       return false;
@@ -952,8 +861,6 @@ class indice extends clsCadastro
     else {
       $this->visivel = FALSE;
     }
-
-    $this->turma_dia_semana = unserialize(urldecode($this->turma_dia_semana));
 
     // Não segue o padrao do curso
     if ($this->padrao_ano_escolar == 0) {
@@ -1005,6 +912,7 @@ class indice extends clsCadastro
         $obj->ref_cod_disciplina_dispensada = $this->ref_cod_disciplina_dispensada == "" ? NULL : $this->ref_cod_disciplina_dispensada;
         $obj->nao_informar_educacenso = $this->nao_informar_educacenso == 'on' ? 1 : 0;
         $obj->tipo_mediacao_didatico_pedagogico = $this->tipo_mediacao_didatico_pedagogico;
+        $obj->dias_semana = $dias_semana;
 
         $this->cod_turma = $cadastrou = $obj->cadastra();
 
@@ -1040,20 +948,6 @@ class indice extends clsCadastro
                 }
             }
 
-          // Cadastra dia semana
-          foreach ($this->turma_dia_semana as $campo) {
-            $obj = new clsPmieducarTurmaDiaSemana($campo["dia_semana_"],
-              $cadastrou, $campo["hora_inicial_"], $campo["hora_final_"]);
-
-            $cadastrou2  = $obj->cadastra();
-
-            if (!$cadastrou2) {
-              $this->mensagem = 'Cadastro n&atilde;o realizado.';
-              echo "<!--\nErro ao cadastrar clsPmieducarTurmaDiaSemana\nvalores obrigat&oacute;rios\nis_numeric( $cadastrou ) && is_numeric( {$campo["dia_semana_"]} ) && is_string( {$campo["hora_inicial_"]} ) && is_string( {$campo["hora_final_"]} )\n-->";
-
-              return FALSE;
-            }
-          }
           $this->atualizaComponentesCurriculares(
             $this->ref_cod_serie, $this->ref_cod_escola, $this->cod_turma,
             $this->disciplinas, $this->carga_horaria, $this->usar_componente, $this->docente_vinculado
@@ -1123,26 +1017,13 @@ class indice extends clsCadastro
       $obj->ref_cod_disciplina_dispensada = $this->ref_cod_disciplina_dispensada == "" ? NULL : $this->ref_cod_disciplina_dispensada;
       $obj->nao_informar_educacenso = $this->nao_informar_educacenso == 'on' ? 1 : 0;
       $obj->tipo_mediacao_didatico_pedagogico = $this->tipo_mediacao_didatico_pedagogico;
+      $obj->dias_semana = $dias_semana;
 
       $this->cod_turma = $cadastrou = $obj->cadastra();
 
 
       if ($cadastrou) {
 
-        // Cadastra dia semana
-        foreach ($this->turma_dia_semana as $campo) {
-          $obj = new clsPmieducarTurmaDiaSemana($campo["dia_semana_"],
-            $cadastrou, $campo["hora_inicial_"], $campo["hora_final_"]);
-
-          $cadastrou2  = $obj->cadastra();
-
-          if (!$cadastrou2) {
-            $this->mensagem = 'Cadastro n&atilde;o realizado.';
-            echo "<!--\nErro ao cadastrar clsPmieducarTurmaDiaSemana\nvalores obrigat&oacute;rios\nis_numeric( $cadastrou ) && is_numeric( {$campo["dia_semana_"]} ) && is_string( {$campo["hora_inicial_"]} ) && is_string( {$campo["hora_final_"]} )\n-->";
-
-            return FALSE;
-          }
-        }
         $this->atualizaComponentesCurriculares(
           $this->ref_cod_serie, $this->ref_cod_escola, $this->cod_turma,
           $this->disciplinas, $this->carga_horaria, $this->usar_componente, $this->docente_vinculado
@@ -1175,6 +1056,9 @@ class indice extends clsCadastro
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     @session_write_close();
 
+    unset($this->dias_semana[0]);
+    $dias_semana = implode(',', $this->dias_semana);
+
     $turmaDetalhe = new clsPmieducarTurma($this->cod_turma);
     $turmaDetalhe = $turmaDetalhe->detalhe();
 
@@ -1200,8 +1084,6 @@ class indice extends clsCadastro
     else {
       $this->visivel = FALSE;
     }
-
-    $this->turma_dia_semana = unserialize(urldecode($this->turma_dia_semana));
 
     // Não segue o padrão do curso
 
@@ -1248,6 +1130,7 @@ class indice extends clsCadastro
         $obj->ref_cod_disciplina_dispensada = $this->ref_cod_disciplina_dispensada == "" ? NULL : $this->ref_cod_disciplina_dispensada;
         $obj->nao_informar_educacenso = $this->nao_informar_educacenso == 'on' ? 1 : 0;
         $obj->tipo_mediacao_didatico_pedagogico = $this->tipo_mediacao_didatico_pedagogico;
+        $obj->dias_semana = $dias_semana;
 
         $editou = $obj->edita();
 
@@ -1289,27 +1172,6 @@ class indice extends clsCadastro
                   }
               }
             }
-
-
-          // Edita o dia da semana
-          $obj  = new clsPmieducarTurmaDiaSemana(NULL, $this->cod_turma);
-          $excluiu = $obj->excluirTodos();
-
-          if ($excluiu) {
-            foreach ($this->turma_dia_semana as $campo) {
-              $obj = new clsPmieducarTurmaDiaSemana($campo["dia_semana_"],
-                $this->cod_turma, $campo["hora_inicial_"], $campo["hora_final_"]);
-
-              $cadastrou2  = $obj->cadastra();
-
-              if (!$cadastrou2) {
-                $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.';
-                echo "<!--\nErro ao editar clsPmieducarTurmaDiaSemana\nvalores obrigat&oacute;rios\nis_numeric( $this->cod_turma ) && is_numeric( {$campo["dia_semana_"]} ) \n-->";
-
-                return FALSE;
-              }
-            }
-          }
         }
         else {
           $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.';
@@ -1364,6 +1226,7 @@ class indice extends clsCadastro
       $obj->ref_cod_disciplina_dispensada = $this->ref_cod_disciplina_dispensada == "" ? NULL : $this->ref_cod_disciplina_dispensada;
       $obj->nao_informar_educacenso = $this->nao_informar_educacenso == 'on' ? 1 : 0;
       $obj->tipo_mediacao_didatico_pedagogico = $this->tipo_mediacao_didatico_pedagogico;
+      $obj->dias_semana = $dias_semana;
 
       $editou = $obj->edita();
     }
@@ -1388,25 +1251,6 @@ class indice extends clsCadastro
 
     if ($editou) {
 
-      // Edita o dia da semana
-      $obj  = new clsPmieducarTurmaDiaSemana(NULL, $this->cod_turma);
-      $excluiu = $obj->excluirTodos();
-
-      if ($excluiu) {
-        foreach ($this->turma_dia_semana as $campo) {
-          $obj = new clsPmieducarTurmaDiaSemana($campo["dia_semana_"],
-            $this->cod_turma, $campo["hora_inicial_"], $campo["hora_final_"]);
-
-          $cadastrou2  = $obj->cadastra();
-
-          if (!$cadastrou2) {
-            $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.';
-            echo "<!--\nErro ao editar clsPmieducarTurmaDiaSemana\nvalores obrigat&oacute;rios\nis_numeric( $this->cod_turma ) && is_numeric( {$campo["dia_semana_"]} ) \n-->";
-
-            return FALSE;
-          }
-        }
-      }
       $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.';
       header('Location: educar_turma_lst.php');
       die();
@@ -1473,24 +1317,12 @@ class indice extends clsCadastro
       $excluiu1 = $obj->excluirTodos($this->cod_turma);
 
       if ($excluiu1) {
-        $obj      = new clsPmieducarTurmaDiaSemana(NULL, $this->cod_turma);
-        $excluiu2 = $obj->excluirTodos();
+        $auditoria = new clsModulesAuditoriaGeral("turma", $this->pessoa_logada, $this->cod_turma);
+        $auditoria->exclusao($turma);
 
-        if ($excluiu2) {
-
-          $auditoria = new clsModulesAuditoriaGeral("turma", $this->pessoa_logada, $this->cod_turma);
-          $auditoria->exclusao($turma);
-
-          $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.';
-          header('Location: educar_turma_lst.php');
-          die();
-        }
-        else {
-          $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.';
-          echo "<!--\nErro ao excluir clsPmieducarTurma\nvalores obrigatorios\nif( is_numeric( $this->cod_turma ) && is_numeric( $this->pessoa_logada ) )\n-->";
-
-          return FALSE;
-        }
+        $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.';
+        header('Location: educar_turma_lst.php');
+        die();
       }
       else
       {
@@ -1699,12 +1531,6 @@ var evtOnLoad = function()
   setVisibility('tr_hora_inicio_intervalo',false);
   setVisibility('tr_hora_fim_intervalo',false);
 
-  // Inclui dia da semana
-  //setVisibility('tr_dia_semana',false);
-  //setVisibility('tr_ds_hora_inicial',false);
-  //setVisibility('tr_ds_hora_final',false);
-  //setVisibility('tr_bt_incluir_dia_semana',false);
-
   if (!document.getElementById('ref_cod_serie').value) {
     setVisibility('tr_multiseriada',false);
     setVisibility('tr_ref_cod_serie_mult', document.getElementById('multiseriada').checked ? true : false);
@@ -1737,11 +1563,6 @@ var evtOnLoad = function()
     setVisibility('tr_turma_modulo', false);
   }else if (document.getElementById('padrao_ano_escolar').value == 0) {
     setVisibility('tr_turma_modulo', true);
-
-    setVisibility('tr_dia_semana', true);
-    setVisibility('tr_ds_hora_inicial', true);
-    setVisibility('tr_ds_hora_final', true);
-    setVisibility('tr_bt_incluir_dia_semana', true);
 
     var hr_tag = document.getElementsByTagName('hr');
     for (var ct = 0;ct < hr_tag.length; ct++) {
@@ -1960,39 +1781,6 @@ function PadraoAnoEscolar(xml)
 
   setVisibility('tr_turma_modulo', false);
 
-  /*setVisibility('tr_dia_semana', false);
-  setVisibility('tr_ds_hora_inicial', false);
-  setVisibility('tr_ds_hora_final', false);
-  setVisibility('tr_bt_incluir_dia_semana', false);
-
-  if (document.getElementById('tr_dia_semana_1')) {
-    setVisibility('tr_dia_semana_1', false);
-  }
-
-  if (document.getElementById('tr_dia_semana_2')) {
-    setVisibility('tr_dia_semana_2', false);
-  }
-
-  if (document.getElementById('tr_dia_semana_3')) {
-    setVisibility('tr_dia_semana_3', false);
-  }
-
-  if (document.getElementById('tr_dia_semana_4')) {
-    setVisibility('tr_dia_semana_4', false);
-  }
-
-  if (document.getElementById('tr_dia_semana_5')) {
-    setVisibility('tr_dia_semana_5', false);
-  }
-
-  if (document.getElementById('tr_dia_semana_6')) {
-    setVisibility('tr_dia_semana_6', false);
-  }
-
-  if (document.getElementById('tr_dia_semana_7')) {
-    setVisibility('tr_dia_semana_7', false);
-  }*/
-
   setVisibility('tr_hora_inicial', true);
   setVisibility('tr_hora_final', true);
   setVisibility('tr_hora_inicio_intervalo', true);
@@ -2006,40 +1794,6 @@ function PadraoAnoEscolar(xml)
 
   if (document.getElementById('padrao_ano_escolar').value == 0) {
     setVisibility('tr_turma_modulo', true);
-  }
-
-
-  setVisibility('tr_dia_semana', true);
-  setVisibility('tr_ds_hora_inicial', true);
-  setVisibility('tr_ds_hora_final', true);
-  setVisibility('tr_bt_incluir_dia_semana', true);
-
-  if (document.getElementById('tr_dia_semana_1')) {
-    setVisibility('tr_dia_semana_1', true);
-  }
-
-  if (document.getElementById('tr_dia_semana_2')) {
-    setVisibility('tr_dia_semana_2', true);
-  }
-
-  if (document.getElementById('tr_dia_semana_3')) {
-    setVisibility('tr_dia_semana_3', true);
-  }
-
-  if (document.getElementById('tr_dia_semana_4')) {
-    setVisibility('tr_dia_semana_4', true);
-  }
-
-  if (document.getElementById('tr_dia_semana_5')) {
-    setVisibility('tr_dia_semana_5', true);
-  }
-
-  if (document.getElementById('tr_dia_semana_6')) {
-    setVisibility('tr_dia_semana_6', true);
-  }
-
-  if (document.getElementById('tr_dia_semana_7')) {
-    setVisibility('tr_dia_semana_7', true);
   }
 }
 
@@ -2132,19 +1886,12 @@ function valida_xml(xml)
   }
   else if (document.getElementById('padrao_ano_escolar').value == 0) {
     var qtdModulo = document.getElementsByName('ref_cod_modulo').length;
-    var qtdDiaSemana = document.getElementsByName('dia_semana').length;
 
     if (qtdModulo == 1) {
       alert("ATEN\u00c7\u00c3O!\n\u00c9 necess\u00e1rio incluir um 'M\u00f3dulo'!");
       document.getElementById('ref_cod_modulo').focus();
       return false;
     }
-    /*
-    if (qtdDiaSemana == 1) {
-      alert("ATENÇÂO! \n É necess&aacute;rio incluir um 'Dia da Semana'!");
-      document.getElementById('dia_semana').focus();
-      return false;
-    }*/
   }
 
   if (document.getElementById('padrao_ano_escolar') == 1) {
@@ -2247,13 +1994,6 @@ function atualizaLstEscolaCursoSerie(xml)
   }
 }
 
-document.getElementById('event_incluir_dia_semana').onclick = incluirDiaSemana;
-
-function incluirDiaSemana(){
-  document.getElementById('incluir_dia_semana').value = 'S';
-  document.getElementById('tipoacao').value = '';
-  acao();
-}
 
 $j(document).ready( function(){
   $j('#scripts').closest('tr').hide();
