@@ -117,17 +117,7 @@ class indice extends clsCadastro
   var $tipo_atendimento;
   var $turma_mais_educacao;
   var $atividades_complementares;
-  var $aee_braille;
-  var $aee_recurso_optico;
-  var $aee_estrategia_desenvolvimento;
-  var $aee_tecnica_mobilidade;
-  var $aee_libras;
-  var $aee_caa;
-  var $aee_curricular;
-  var $aee_soroban;
-  var $aee_informatica;
-  var $aee_lingua_escrita;
-  var $aee_autonomia;
+  var $atividades_aee;
   var $cod_curso_profissional;
   var $turma_sem_professor;
   var $turma_unificada;
@@ -234,6 +224,10 @@ class indice extends clsCadastro
 
     if (is_string($this->atividades_complementares)) {
       $this->atividades_complementares = explode(',',str_replace(array('{', "}"), '', $this->atividades_complementares));
+    }
+
+    if (is_string($this->atividades_aee)) {
+      $this->atividades_aee = explode(',',str_replace(array('{', "}"), '', $this->atividades_aee));
     }
 
     $this->url_cancelar      = $retorno == 'Editar' ?
@@ -585,38 +579,23 @@ class indice extends clsCadastro
                                                                     15101 => '15101 - Memória e História das Comunidades Tradicionais')));
     $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-    $options = array('label' => Portabilis_String_Utils::toLatin1('Ensino do Sistema Braille'), 'value' => $this->aee_braille);
-    $this->inputsHelper()->checkbox('aee_braille', $options);
-
-    $options = array('label' => Portabilis_String_Utils::toLatin1('Ensino de uso de recursos ópticos e não ópticos'), 'value' => $this->aee_recurso_optico);
-    $this->inputsHelper()->checkbox('aee_recurso_optico', $options);
-
-    $options = array('label' => Portabilis_String_Utils::toLatin1('Estratégias para o desenvolvimento de processos mentais'), 'value' => $this->aee_estrategia_desenvolvimento);
-    $this->inputsHelper()->checkbox('aee_estrategia_desenvolvimento', $options);
-
-    $options = array('label' => Portabilis_String_Utils::toLatin1('Técnica de orientações a mobilidade'), 'value' => $this->aee_tecnica_mobilidade);
-    $this->inputsHelper()->checkbox('aee_tecnica_mobilidade', $options);
-
-    $options = array('label' => Portabilis_String_Utils::toLatin1('Ensino da Língua Brasileira de Sinais - LIBRAS'), 'value' => $this->aee_libras);
-    $this->inputsHelper()->checkbox('aee_libras', $options);
-
-    $options = array('label' => Portabilis_String_Utils::toLatin1('Ensino de uso da Comunicação Alternativa e Aumentativa - CAA'), 'value' => $this->aee_caa);
-    $this->inputsHelper()->checkbox('aee_caa', $options);
-
-    $options = array('label' => Portabilis_String_Utils::toLatin1('Estratégias para enriquecimento curricular'), 'value' => $this->aee_curricular);
-    $this->inputsHelper()->checkbox('aee_curricular', $options);
-
-    $options = array('label' => Portabilis_String_Utils::toLatin1('Ensino do uso do Soroban'), 'value' => $this->aee_soroban);
-    $this->inputsHelper()->checkbox('aee_soroban', $options);
-
-    $options = array('label' => Portabilis_String_Utils::toLatin1('Ensino da usabilidade e das funcionalidades de informática acessível'), 'value' => $this->aee_informatica);
-    $this->inputsHelper()->checkbox('aee_informatica', $options);
-
-    $options = array('label' => Portabilis_String_Utils::toLatin1('Ensino da Língua Portuguesa na modalidade escrita'), 'value' => $this->aee_lingua_escrita);
-    $this->inputsHelper()->checkbox('aee_lingua_escrita', $options);
-
-    $options = array('label' => Portabilis_String_Utils::toLatin1('Estratégias para autonomia no ambiente escolar'), 'value' => $this->aee_autonomia);
-    $this->inputsHelper()->checkbox('aee_autonomia', $options);
+    $helperOptions = array('objectName'  => 'atividades_aee');
+    $options       = array('label' => 'Atividades do Atendimento Educacional Especializado - AEE',
+                            'size' => 50,
+                            'required' => false,
+                            'options' => array('values' => $this->atividades_aee,
+                                              'all_values' => array( 1 => 'Ensino do Sistema Braille',
+                                                                     2 => 'Ensino de uso de recursos ópticos e não ópticos',
+                                                                     3 => 'Estratégias para o desenvolvimento de processos mentais',
+                                                                     4 => 'Técnica de orientações a mobilidade',
+                                                                     5 => 'Ensino da Língua Brasileira de Sinais - LIBRAS',
+                                                                     6 => 'Ensino de uso da Comunicação Alternativa e Aumentativa - CAA',
+                                                                     7 => 'Estratégias para enriquecimento curricular',
+                                                                     8 => 'Ensino do uso do Soroban',
+                                                                     9 => 'Ensino da usabilidade e das funcionalidades de informática acessível',
+                                                                    10 => 'Ensino da Língua Portuguesa na modalidade escrita',
+                                                                    11 => 'Estratégias para autonomia no ambiente escolar')));
+    $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
     $options = array('label' => Portabilis_String_Utils::toLatin1('Código curso educação profissional'), 'value' => $this->cod_curso_profissional, 'required' => false, 'size' => 8, 'max_length' => 8, 'placeholder' => '');
     $this->inputsHelper()->integer('cod_curso_profissional', $options);
@@ -891,9 +870,15 @@ class indice extends clsCadastro
     $dias_semana = implode(',', $this->dias_semana);
     unset($this->atividades_complementares[0]);
     $atividades_complementares = implode(',', $this->atividades_complementares);
+    unset($this->atividades_aee[0]);
+    $atividades_aee = implode(',', $this->atividades_aee);
 
     if ($this->tipo_atendimento != 4) {
       $atividades_complementares = '';
+    }
+
+    if ($this->tipo_atendimento != 5) {
+      $atividades_aee = '';
     }
 
     if(! $this->canCreateTurma($this->ref_cod_escola, $this->ref_cod_serie, $this->turma_turno_id))
@@ -939,17 +924,6 @@ class indice extends clsCadastro
           $this->visivel, $this->turma_turno_id, $this->tipo_boletim, $this->ano_letivo);
         $obj->tipo_atendimento = $this->tipo_atendimento;
         $obj->turma_mais_educacao = $this->turma_mais_educacao;
-        $obj->aee_braille = $this->aee_braille == 'on' ? 1 : 0;
-        $obj->aee_recurso_optico = $this->aee_recurso_optico == 'on' ? 1 : 0;
-        $obj->aee_estrategia_desenvolvimento = $this->aee_estrategia_desenvolvimento == 'on' ? 1 : 0;
-        $obj->aee_tecnica_mobilidade = $this->aee_tecnica_mobilidade == 'on' ? 1 : 0;
-        $obj->aee_libras = $this->aee_libras == 'on' ? 1 : 0;
-        $obj->aee_caa = $this->aee_caa == 'on' ? 1 : 0;
-        $obj->aee_curricular = $this->aee_curricular == 'on' ? 1 : 0;
-        $obj->aee_soroban = $this->aee_soroban == 'on' ? 1 : 0;
-        $obj->aee_informatica = $this->aee_informatica == 'on' ? 1 : 0;
-        $obj->aee_lingua_escrita = $this->aee_lingua_escrita == 'on' ? 1 : 0;
-        $obj->aee_autonomia = $this->aee_autonomia == 'on' ? 1 : 0;
         $obj->cod_curso_profissional = $this->cod_curso_profissional;
         $obj->turma_sem_professor = $this->turma_sem_professor == 'on' ? 1 : 0;
         $obj->turma_unificada = $this->turma_unificada == "" ? NULL : $this->turma_unificada;
@@ -961,6 +935,7 @@ class indice extends clsCadastro
         $obj->tipo_mediacao_didatico_pedagogico = $this->tipo_mediacao_didatico_pedagogico;
         $obj->dias_semana = $dias_semana;
         $obj->atividades_complementares = $atividades_complementares;
+        $obj->atividades_aee = $atividades_aee;
 
         $this->cod_turma = $cadastrou = $obj->cadastra();
 
@@ -1039,17 +1014,6 @@ class indice extends clsCadastro
         $this->turma_turno_id, $this->tipo_boletim, $this->ano_letivo);
       $obj->tipo_atendimento = $this->tipo_atendimento;
       $obj->turma_mais_educacao = $this->turma_mais_educacao;
-      $obj->aee_braille = $this->aee_braille == 'on' ? 1 : 0;
-      $obj->aee_recurso_optico = $this->aee_recurso_optico == 'on' ? 1 : 0;
-      $obj->aee_estrategia_desenvolvimento = $this->aee_estrategia_desenvolvimento == 'on' ? 1 : 0;
-      $obj->aee_tecnica_mobilidade = $this->aee_tecnica_mobilidade == 'on' ? 1 : 0;
-      $obj->aee_libras = $this->aee_libras == 'on' ? 1 : 0;
-      $obj->aee_caa = $this->aee_caa == 'on' ? 1 : 0;
-      $obj->aee_curricular = $this->aee_curricular == 'on' ? 1 : 0;
-      $obj->aee_soroban = $this->aee_soroban == 'on' ? 1 : 0;
-      $obj->aee_informatica = $this->aee_informatica == 'on' ? 1 : 0;
-      $obj->aee_lingua_escrita = $this->aee_lingua_escrita == 'on' ? 1 : 0;
-      $obj->aee_autonomia = $this->aee_autonomia == 'on' ? 1 : 0;
       $obj->cod_curso_profissional = $this->cod_curso_profissional;
       $obj->turma_sem_professor = $this->turma_sem_professor == 'on' ? 1 : 0;
       $obj->turma_unificada = $this->turma_unificada == "" ? NULL : $this->turma_unificada;
@@ -1061,6 +1025,7 @@ class indice extends clsCadastro
       $obj->tipo_mediacao_didatico_pedagogico = $this->tipo_mediacao_didatico_pedagogico;
       $obj->dias_semana = $dias_semana;
       $obj->atividades_complementares = $atividades_complementares;
+      $obj->atividades_aee = $atividades_aee;
 
       $this->cod_turma = $cadastrou = $obj->cadastra();
 
@@ -1103,9 +1068,15 @@ class indice extends clsCadastro
     $dias_semana = implode(',', $this->dias_semana);
     unset($this->atividades_complementares[0]);
     $atividades_complementares = implode(',', $this->atividades_complementares);
+    unset($this->atividades_aee[0]);
+    $atividades_aee = implode(',', $this->atividades_aee);
 
     if ($this->tipo_atendimento != 4) {
       $atividades_complementares = '';
+    }
+
+    if ($this->tipo_atendimento != 5) {
+      $atividades_aee = '';
     }
 
     $turmaDetalhe = new clsPmieducarTurma($this->cod_turma);
@@ -1153,17 +1124,6 @@ class indice extends clsCadastro
           $this->ano_letivo);
         $obj->tipo_atendimento = $this->tipo_atendimento;
         $obj->turma_mais_educacao = $this->turma_mais_educacao;
-        $obj->aee_braille = $this->aee_braille == 'on' ? 1 : 0;
-        $obj->aee_recurso_optico = $this->aee_recurso_optico == 'on' ? 1 : 0;
-        $obj->aee_estrategia_desenvolvimento = $this->aee_estrategia_desenvolvimento == 'on' ? 1 : 0;
-        $obj->aee_tecnica_mobilidade = $this->aee_tecnica_mobilidade == 'on' ? 1 : 0;
-        $obj->aee_libras = $this->aee_libras == 'on' ? 1 : 0;
-        $obj->aee_caa = $this->aee_caa == 'on' ? 1 : 0;
-        $obj->aee_curricular = $this->aee_curricular == 'on' ? 1 : 0;
-        $obj->aee_soroban = $this->aee_soroban == 'on' ? 1 : 0;
-        $obj->aee_informatica = $this->aee_informatica == 'on' ? 1 : 0;
-        $obj->aee_lingua_escrita = $this->aee_lingua_escrita == 'on' ? 1 : 0;
-        $obj->aee_autonomia = $this->aee_autonomia == 'on' ? 1 : 0;
         $obj->cod_curso_profissional = $this->cod_curso_profissional;
         $obj->turma_sem_professor = $this->turma_sem_professor == 'on' ? 1 : 0;
         $obj->turma_unificada = $this->turma_unificada == "" ? NULL : $this->turma_unificada;
@@ -1175,6 +1135,7 @@ class indice extends clsCadastro
         $obj->tipo_mediacao_didatico_pedagogico = $this->tipo_mediacao_didatico_pedagogico;
         $obj->dias_semana = $dias_semana;
         $obj->atividades_complementares = $atividades_complementares;
+        $obj->atividades_aee = $atividades_aee;
 
         $editou = $obj->edita();
 
@@ -1244,17 +1205,6 @@ class indice extends clsCadastro
         $this->visivel, $this->turma_turno_id, $this->tipo_boletim, $this->ano_letivo);
       $obj->tipo_atendimento = $this->tipo_atendimento;
       $obj->turma_mais_educacao = $this->turma_mais_educacao;
-      $obj->aee_braille = $this->aee_braille == 'on' ? 1 : 0;
-      $obj->aee_recurso_optico = $this->aee_recurso_optico == 'on' ? 1 : 0;
-      $obj->aee_estrategia_desenvolvimento = $this->aee_estrategia_desenvolvimento == 'on' ? 1 : 0;
-      $obj->aee_tecnica_mobilidade = $this->aee_tecnica_mobilidade == 'on' ? 1 : 0;
-      $obj->aee_libras = $this->aee_libras == 'on' ? 1 : 0;
-      $obj->aee_caa = $this->aee_caa == 'on' ? 1 : 0;
-      $obj->aee_curricular = $this->aee_curricular == 'on' ? 1 : 0;
-      $obj->aee_soroban = $this->aee_soroban == 'on' ? 1 : 0;
-      $obj->aee_informatica = $this->aee_informatica == 'on' ? 1 : 0;
-      $obj->aee_lingua_escrita = $this->aee_lingua_escrita == 'on' ? 1 : 0;
-      $obj->aee_autonomia = $this->aee_autonomia == 'on' ? 1 : 0;
       $obj->cod_curso_profissional = $this->cod_curso_profissional;
       $obj->turma_sem_professor = $this->turma_sem_professor == 'on' ? 1 : 0;
       $obj->turma_unificada = $this->turma_unificada == "" ? NULL : $this->turma_unificada;
@@ -1266,6 +1216,7 @@ class indice extends clsCadastro
       $obj->tipo_mediacao_didatico_pedagogico = $this->tipo_mediacao_didatico_pedagogico;
       $obj->dias_semana = $dias_semana;
       $obj->atividades_complementares = $atividades_complementares;
+      $obj->atividades_aee = $atividades_aee;
 
       $editou = $obj->edita();
     }

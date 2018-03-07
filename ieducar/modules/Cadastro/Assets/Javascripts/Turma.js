@@ -27,7 +27,10 @@ $j('.tablecadastro >tbody  > tr').each(function(index, row) {
 
 var modoCadastro = $j('#retorno').val() == 'Novo';
 
-$j('#tipo_atendimento').on('change', mostraAtividadesComplementares);
+$j('#tipo_atendimento').change(function() {
+  mostraAtividadesComplementares();
+  mostraAtividadesAee();
+});
 
 function mostraAtividadesComplementares(){
   var mostraCampo = $j('#tipo_atendimento').val() == '4';
@@ -35,6 +38,15 @@ function mostraAtividadesComplementares(){
     $j('#tr_atividades_complementares').show();
   } else {
     $j('#tr_atividades_complementares').hide();
+  }
+}
+
+function mostraAtividadesAee() {
+  var mostraCampo = $j('#tipo_atendimento').val() == '5';
+  if (mostraCampo) {
+    $j('#tr_atividades_aee').show();
+  } else {
+    $j('#tr_atividades_aee').hide();
   }
 }
 
@@ -200,6 +212,7 @@ $j(document).ready(function() {
           return false;
       });
       mostraAtividadesComplementares();
+      mostraAtividadesAee();
     });
 
   // fix checkboxs

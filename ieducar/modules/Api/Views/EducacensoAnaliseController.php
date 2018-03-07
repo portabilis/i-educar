@@ -445,17 +445,7 @@ class EducacensoAnaliseController extends ApiCoreController
                    turma.dias_semana AS dias_semana,
                    turma.tipo_atendimento AS tipo_atendimento,
                    turma.atividades_complementares[1] AS atividades_complementares,
-                   turma.aee_braille AS aee_braille,
-                   turma.aee_recurso_optico AS aee_recurso_optico ,
-                   turma.aee_estrategia_desenvolvimento AS aee_estrategia_desenvolvimento,
-                   turma.aee_tecnica_mobilidade AS aee_tecnica_mobilidade,
-                   turma.aee_libras AS aee_libras,
-                   turma.aee_caa AS aee_caa,
-                   turma.aee_curricular AS aee_curricular,
-                   turma.aee_soroban AS aee_soroban,
-                   turma.aee_informatica AS aee_informatica,
-                   turma.aee_lingua_escrita AS aee_lingua_escrita,
-                   turma.aee_autonomia AS aee_autonomia,
+                   turma.atividades_aee[1] AS atividades_aee,
                    turma.etapa_educacenso AS etapa_educacenso,
                    juridica.fantasia AS nome_escola
               FROM pmieducar.escola
@@ -484,12 +474,7 @@ class EducacensoAnaliseController extends ApiCoreController
       $atividadeComplementar = ($turma["tipo_atendimento"] == 4); //Código 4 fixo no cadastro de turma
       $existeAtividadeComplementar = ($turma["atividades_complementares"]);
       $atendimentoAee = ($turma["tipo_atendimento"] == 5); //Código 5 fixo no cadastro de turma
-      $existeAee = ($turma["aee_braille"] || $turma["aee_recurso_optico"] ||
-                    $turma["aee_estrategia_desenvolvimento"] || $turma["aee_tecnica_mobilidade"] ||
-                    $turma["aee_libras"] || $turma["aee_caa"] ||
-                    $turma["aee_curricular"] || $turma["aee_soroban"] ||
-                    $turma["aee_informatica"] || $turma["aee_lingua_escrita"] ||
-                    $turma["aee_autonomia"]);
+      $existeAee = ($turma["atividades_aee"]);
 
       switch ($turma['tipo_atendimento']) {
         case 0:
