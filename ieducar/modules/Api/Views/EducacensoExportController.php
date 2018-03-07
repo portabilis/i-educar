@@ -652,48 +652,13 @@ class EducacensoExportController extends ApiCoreController
         substring(t.hora_inicial::varchar,4,2) as r20s8,
         substring(t.hora_final::varchar,1,2) as r20s9,
         substring(t.hora_final::varchar,4,2) as r20s10,
-        (SELECT 1
-          FROM turma_dia_semana
-          WHERE ref_cod_turma = t.cod_turma
-          AND dia_semana = 1
-          LIMIT 1
-        ) as r20s11,
-        (SELECT 1
-          FROM turma_dia_semana
-          WHERE ref_cod_turma = t.cod_turma
-          AND dia_semana = 2
-          LIMIT 1
-        ) as r20s12,
-        (SELECT 1
-          FROM turma_dia_semana
-          WHERE ref_cod_turma = t.cod_turma
-          AND dia_semana = 3
-          LIMIT 1
-        ) as r20s13,
-        (SELECT 1
-          FROM turma_dia_semana
-          WHERE ref_cod_turma = t.cod_turma
-          AND dia_semana = 4
-          LIMIT 1
-        ) as r20s14,
-        (SELECT 1
-          FROM turma_dia_semana
-          WHERE ref_cod_turma = t.cod_turma
-          AND dia_semana = 5
-          LIMIT 1
-        ) as r20s15,
-        (SELECT 1
-          FROM turma_dia_semana
-          WHERE ref_cod_turma = t.cod_turma
-          AND dia_semana = 6
-          LIMIT 1
-        ) as r20s16,
-        (SELECT 1
-          FROM turma_dia_semana
-          WHERE ref_cod_turma = t.cod_turma
-          AND dia_semana = 7
-          LIMIT 1
-        ) as r20s17,
+        CASE WHEN t.dias_semana::varchar LIKE \'%1%\' THEN 1 ELSE 0 END as r20s11,
+        CASE WHEN t.dias_semana::varchar LIKE \'%2%\' THEN 1 ELSE 0 END as r20s12,
+        CASE WHEN t.dias_semana::varchar LIKE \'%3%\' THEN 1 ELSE 0 END as r20s13,
+        CASE WHEN t.dias_semana::varchar LIKE \'%4%\' THEN 1 ELSE 0 END as r20s14,
+        CASE WHEN t.dias_semana::varchar LIKE \'%5%\' THEN 1 ELSE 0 END as r20s15,
+        CASE WHEN t.dias_semana::varchar LIKE \'%6%\' THEN 1 ELSE 0 END as r20s16,
+        CASE WHEN t.dias_semana::varchar LIKE \'%7%\' THEN 1 ELSE 0 END as r20s17,
         t.tipo_atendimento as r20s18,
         t.turma_mais_educacao as r20s19,
 

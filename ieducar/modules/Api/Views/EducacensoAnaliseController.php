@@ -442,9 +442,7 @@ class EducacensoAnaliseController extends ApiCoreController
     $sql = "SELECT turma.nm_turma AS nome_turma,
                    turma.hora_inicial AS hora_inicial,
                    turma.hora_final AS hora_final,
-                   (SELECT TRUE
-                      FROM pmieducar.turma_dia_semana
-                     WHERE ref_cod_turma = turma.cod_turma LIMIT 1) AS dias_semana,
+                   turma.dias_semana AS dias_semana,
                    turma.tipo_atendimento AS tipo_atendimento,
                    turma.atividade_complementar_1 AS atividade_complementar_1,
                    turma.atividade_complementar_2 AS atividade_complementar_2,
