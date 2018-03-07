@@ -101,6 +101,7 @@ class clsPmieducarTurma
   var $nao_informar_educacenso;
   var $tipo_mediacao_didatico_pedagogico;
   var $dias_semana;
+  var $atividades_complementares;
 
   var $listarNaoInformarEducacenso = TRUE;
     var $codUsuario;
@@ -176,7 +177,7 @@ class clsPmieducarTurma
 
         $this->_campos_lista = $this->_todos_campos = "t.cod_turma, t.ref_usuario_exc, t.ref_usuario_cad, t.ref_ref_cod_serie, t.ref_ref_cod_escola, t.ref_cod_infra_predio_comodo, t.nm_turma, t.sgl_turma, t.max_aluno, t.multiseriada, t.data_cadastro, t.data_exclusao, t.ativo, t.ref_cod_turma_tipo, t.hora_inicial, t.hora_final, t.hora_inicio_intervalo, t.hora_fim_intervalo, t.ref_cod_regente, t.ref_cod_instituicao_regente,t.ref_cod_instituicao, t.ref_cod_curso, t.ref_ref_cod_serie_mult, t.ref_ref_cod_escola_mult, t.visivel, t.turma_turno_id, t.tipo_boletim, t.ano,
         t.tipo_atendimento, t.turma_mais_educacao, t.atividade_complementar_1, t.atividade_complementar_2, t.atividade_complementar_3, t.atividade_complementar_4, t.atividade_complementar_5, t.atividade_complementar_6, t.aee_braille, t.aee_recurso_optico, t.aee_estrategia_desenvolvimento, t.aee_tecnica_mobilidade, t.aee_libras, t.aee_caa, t.aee_curricular, t.aee_soroban, t.aee_informatica, t.aee_lingua_escrita, t.aee_autonomia, t.cod_curso_profissional, t.turma_sem_professor, t.turma_unificada, t.etapa_educacenso, t.etapa_educacenso2, t.ref_cod_disciplina_dispensada, t.parecer_1_etapa, t.parecer_2_etapa,
-        t.parecer_3_etapa, t.parecer_4_etapa, t.nao_informar_educacenso, t.tipo_mediacao_didatico_pedagogico, t.dias_semana";
+        t.parecer_3_etapa, t.parecer_4_etapa, t.nao_informar_educacenso, t.tipo_mediacao_didatico_pedagogico, t.dias_semana, t.atividades_complementares ";
 
         if( is_numeric( $ref_cod_turma_tipo ) )
         {
@@ -844,6 +845,12 @@ class clsPmieducarTurma
                 $gruda    = ", ";
             }
 
+            if(is_string($this->atividades_complementares)){
+                $campos  .= "{$gruda}atividades_complementares";
+                $valores .= "{$gruda}'{{$this->atividades_complementares}}'";
+                $gruda    = ", ";
+            }
+
             $db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
             return $db->InsertId( "{$this->_tabela}_cod_turma_seq");
         }
@@ -1203,6 +1210,11 @@ class clsPmieducarTurma
 
             if(is_string($this->dias_semana)){
                 $set  .= "{$gruda}dias_semana = '{{$this->dias_semana}}'";
+                $gruda = ", ";
+            }
+
+            if(is_string($this->atividades_complementares)){
+                $set  .= "{$gruda}atividades_complementares = '{{$this->atividades_complementares}}'";
                 $gruda = ", ";
             }
 

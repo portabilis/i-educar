@@ -116,12 +116,7 @@ class indice extends clsCadastro
 
   var $tipo_atendimento;
   var $turma_mais_educacao;
-  var $atividade_complementar_1;
-  var $atividade_complementar_2;
-  var $atividade_complementar_3;
-  var $atividade_complementar_4;
-  var $atividade_complementar_5;
-  var $atividade_complementar_6;
+  var $atividades_complementares;
   var $aee_braille;
   var $aee_recurso_optico;
   var $aee_estrategia_desenvolvimento;
@@ -235,6 +230,10 @@ class indice extends clsCadastro
 
     if (is_string($this->dias_semana)) {
       $this->dias_semana = explode(',',str_replace(array('{', "}"), '', $this->dias_semana));
+    }
+
+    if (is_string($this->atividades_complementares)) {
+      $this->atividades_complementares = explode(',',str_replace(array('{', "}"), '', $this->atividades_complementares));
     }
 
     $this->url_cancelar      = $retorno == 'Editar' ?
@@ -521,23 +520,70 @@ class indice extends clsCadastro
     $options = array('label' => 'Tipo de atendimento', 'resources' => $resources, 'value' => $this->tipo_atendimento, 'required' => false, 'size' => 70,);
     $this->inputsHelper()->select('tipo_atendimento', $options);
 
-    $options = array('label' => Portabilis_String_Utils::toLatin1('Código do tipo de atividade complementar 1'), 'value' => $this->atividade_complementar_1, 'required' => false, 'size' => 5, 'max_length' => 5, 'placeholder' => '');
-    $this->inputsHelper()->integer('atividade_complementar_1', $options);
-
-    $options = array('label' => Portabilis_String_Utils::toLatin1('Código do tipo de atividade complementar 2'), 'value' => $this->atividade_complementar_2, 'required' => false, 'size' => 5, 'max_length' => 5, 'placeholder' => '');
-    $this->inputsHelper()->integer('atividade_complementar_2', $options);
-
-    $options = array('label' => Portabilis_String_Utils::toLatin1('Código do tipo de atividade complementar 3'), 'value' => $this->atividade_complementar_3, 'required' => false, 'size' => 5, 'max_length' => 5, 'placeholder' => '');
-    $this->inputsHelper()->integer('atividade_complementar_3', $options);
-
-    $options = array('label' => Portabilis_String_Utils::toLatin1('Código do tipo de atividade complementar 4'), 'value' => $this->atividade_complementar_4, 'required' => false, 'size' => 5, 'max_length' => 5, 'placeholder' => '');
-    $this->inputsHelper()->integer('atividade_complementar_4', $options);
-
-    $options = array('label' => Portabilis_String_Utils::toLatin1('Código do tipo de atividade complementar 5'), 'value' => $this->atividade_complementar_5, 'required' => false, 'size' => 5, 'max_length' => 5, 'placeholder' => '');
-    $this->inputsHelper()->integer('atividade_complementar_5', $options);
-
-    $options = array('label' => Portabilis_String_Utils::toLatin1('Código do tipo de atividade complementar 6'), 'value' => $this->atividade_complementar_6, 'required' => false, 'size' => 5, 'max_length' => 5, 'placeholder' => '');
-    $this->inputsHelper()->integer('atividade_complementar_6', $options);
+    $helperOptions = array('objectName'  => 'atividades_complementares');
+    $options       = array('label' => 'Tipos de atividades complementares',
+                            'size' => 50,
+                            'required' => false,
+                            'options' => array('values' => $this->atividades_complementares,
+                                              'all_values' => array(11002 => '11002 - Canto coral',
+                                                                    11006 => '11006 - Banda',
+                                                                    11011 => '11011 - Iniciação musical',
+                                                                    12003 => '12003 - Desenho',
+                                                                    12004 => '12004 - Escultura e Cerâmica',
+                                                                    12005 => '12005 - Grafite',
+                                                                    12007 => '12007 - Pintura',
+                                                                    13001 => '13001 - Cineclube',
+                                                                    14001 => '14001 - Teatro',
+                                                                    14002 => '14002 - Danças',
+                                                                    14004 => '14004 - Práticas Circenses',
+                                                                    15001 => '15001 - Capoeira',
+                                                                    15002 => '15002 - Artesanato Popular ',
+                                                                    15003 => '15003 - Brinquedos e Artesanato Regional',
+                                                                    15004 => '15004 - Contos',
+                                                                    16001 => '16001 - Educação Patrimonial',
+                                                                    17004 => '17004 - Leitura',
+                                                                    17002 => '17002 - Sala Temática para o Estudo de Línguas Estrangeiras',
+                                                                    19999 => '19999 - Outra categoria de Cultura, Artes e Educação Patrimonial',
+                                                                    21001 => '21001 - Recreação (Brinquedoteca e Jogos)',
+                                                                    22007 => '22007 - Yoga',
+                                                                    22009 => '22009 - Tênis de campo',
+                                                                    22011 => '22011 - Atletismo',
+                                                                    22012 => '22012 - Badminton',
+                                                                    22014 => '22014 - Basquete',
+                                                                    22015 => '22015 - Ciclismo',
+                                                                    22018 => '22018 - Futebol',
+                                                                    22019 => '22019 - Futsal',
+                                                                    22020 => '22020 - Ginástica (rítmica, artística, acrobática)',
+                                                                    22021 => '22021 - Handebol',
+                                                                    22022 => '22022 - Judô',
+                                                                    22023 => '22023 - Karatê',
+                                                                    22024 => '22024 - Luta Olímpica',
+                                                                    22025 => '22025 - Natação',
+                                                                    22026 => '22026 - Taekwondo',
+                                                                    22027 => '22027 - Tênis de Mesa',
+                                                                    22028 => '22028 - Voleibol',
+                                                                    22029 => '22029 - Vôlei de Praia',
+                                                                    22032 => '22032 - Xadrez tradicional/Xadrez virtual ',
+                                                                    29999 => '29999 - Outra categoria de Esporte e Lazer',
+                                                                    31002 => '31002 - Português',
+                                                                    31001 => '31001 - Matemática',
+                                                                    39999 => '39999 - Outra categoria de Acompanhamento Pedagógico',
+                                                                    41007 => '41007 - Educação em Direitos Humanos',
+                                                                    71007 => '71007 - Promoção da Saúde e Prevenção de Doenças e Agravos à Saúde',
+                                                                    10103 => '10103 - Iniciação Científica',
+                                                                    13301 => '13301 - Educação Ambiental e Desenvolvimento Sustentável',
+                                                                    13108 => '13108 - Economia Solidária e Criativa/Educação Econômica (Educação Financeira e Fiscal)',
+                                                                    14101 => '14101 - Fotografia',
+                                                                    14102 => '14102 - História em Quadrinhos',
+                                                                    14103 => '14103 - Jornal Escolar',
+                                                                    14104 => '14104 - Rádio Escolar',
+                                                                    14105 => '14105 - Vídeo',
+                                                                    14201 => '14201 - Robótica Educacional',
+                                                                    14202 => '14202 - Tecnologicas Educacionais',
+                                                                    14203 => '14203 - Ambientes de Redes Sociais',
+                                                                    14999 => '14999 - Outra Categoria de Comunicação, Uso de Mídias e Cultura Digital e Tecnológica',
+                                                                    15101 => '15101 - Memória e História das Comunidades Tradicionais')));
+    $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
     $options = array('label' => Portabilis_String_Utils::toLatin1('Ensino do Sistema Braille'), 'value' => $this->aee_braille);
     $this->inputsHelper()->checkbox('aee_braille', $options);
@@ -840,8 +886,15 @@ class indice extends clsCadastro
     @session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     @session_write_close();
+
     unset($this->dias_semana[0]);
     $dias_semana = implode(',', $this->dias_semana);
+    unset($this->atividades_complementares[0]);
+    $atividades_complementares = implode(',', $this->atividades_complementares);
+
+    if ($this->tipo_atendimento != 4) {
+      $atividades_complementares = '';
+    }
 
     if(! $this->canCreateTurma($this->ref_cod_escola, $this->ref_cod_serie, $this->turma_turno_id))
       return false;
@@ -886,12 +939,6 @@ class indice extends clsCadastro
           $this->visivel, $this->turma_turno_id, $this->tipo_boletim, $this->ano_letivo);
         $obj->tipo_atendimento = $this->tipo_atendimento;
         $obj->turma_mais_educacao = $this->turma_mais_educacao;
-        $obj->atividade_complementar_1 = $this->atividade_complementar_1;
-        $obj->atividade_complementar_2 = $this->atividade_complementar_2;
-        $obj->atividade_complementar_3 = $this->atividade_complementar_3;
-        $obj->atividade_complementar_4 = $this->atividade_complementar_4;
-        $obj->atividade_complementar_5 = $this->atividade_complementar_5;
-        $obj->atividade_complementar_6 = $this->atividade_complementar_6;
         $obj->aee_braille = $this->aee_braille == 'on' ? 1 : 0;
         $obj->aee_recurso_optico = $this->aee_recurso_optico == 'on' ? 1 : 0;
         $obj->aee_estrategia_desenvolvimento = $this->aee_estrategia_desenvolvimento == 'on' ? 1 : 0;
@@ -913,6 +960,7 @@ class indice extends clsCadastro
         $obj->nao_informar_educacenso = $this->nao_informar_educacenso == 'on' ? 1 : 0;
         $obj->tipo_mediacao_didatico_pedagogico = $this->tipo_mediacao_didatico_pedagogico;
         $obj->dias_semana = $dias_semana;
+        $obj->atividades_complementares = $atividades_complementares;
 
         $this->cod_turma = $cadastrou = $obj->cadastra();
 
@@ -991,12 +1039,6 @@ class indice extends clsCadastro
         $this->turma_turno_id, $this->tipo_boletim, $this->ano_letivo);
       $obj->tipo_atendimento = $this->tipo_atendimento;
       $obj->turma_mais_educacao = $this->turma_mais_educacao;
-      $obj->atividade_complementar_1 = $this->atividade_complementar_1;
-      $obj->atividade_complementar_2 = $this->atividade_complementar_2;
-      $obj->atividade_complementar_3 = $this->atividade_complementar_3;
-      $obj->atividade_complementar_4 = $this->atividade_complementar_4;
-      $obj->atividade_complementar_5 = $this->atividade_complementar_5;
-      $obj->atividade_complementar_6 = $this->atividade_complementar_6;
       $obj->aee_braille = $this->aee_braille == 'on' ? 1 : 0;
       $obj->aee_recurso_optico = $this->aee_recurso_optico == 'on' ? 1 : 0;
       $obj->aee_estrategia_desenvolvimento = $this->aee_estrategia_desenvolvimento == 'on' ? 1 : 0;
@@ -1018,6 +1060,7 @@ class indice extends clsCadastro
       $obj->nao_informar_educacenso = $this->nao_informar_educacenso == 'on' ? 1 : 0;
       $obj->tipo_mediacao_didatico_pedagogico = $this->tipo_mediacao_didatico_pedagogico;
       $obj->dias_semana = $dias_semana;
+      $obj->atividades_complementares = $atividades_complementares;
 
       $this->cod_turma = $cadastrou = $obj->cadastra();
 
@@ -1058,6 +1101,12 @@ class indice extends clsCadastro
 
     unset($this->dias_semana[0]);
     $dias_semana = implode(',', $this->dias_semana);
+    unset($this->atividades_complementares[0]);
+    $atividades_complementares = implode(',', $this->atividades_complementares);
+
+    if ($this->tipo_atendimento != 4) {
+      $atividades_complementares = '';
+    }
 
     $turmaDetalhe = new clsPmieducarTurma($this->cod_turma);
     $turmaDetalhe = $turmaDetalhe->detalhe();
@@ -1104,12 +1153,6 @@ class indice extends clsCadastro
           $this->ano_letivo);
         $obj->tipo_atendimento = $this->tipo_atendimento;
         $obj->turma_mais_educacao = $this->turma_mais_educacao;
-        $obj->atividade_complementar_1 = $this->atividade_complementar_1;
-        $obj->atividade_complementar_2 = $this->atividade_complementar_2;
-        $obj->atividade_complementar_3 = $this->atividade_complementar_3;
-        $obj->atividade_complementar_4 = $this->atividade_complementar_4;
-        $obj->atividade_complementar_5 = $this->atividade_complementar_5;
-        $obj->atividade_complementar_6 = $this->atividade_complementar_6;
         $obj->aee_braille = $this->aee_braille == 'on' ? 1 : 0;
         $obj->aee_recurso_optico = $this->aee_recurso_optico == 'on' ? 1 : 0;
         $obj->aee_estrategia_desenvolvimento = $this->aee_estrategia_desenvolvimento == 'on' ? 1 : 0;
@@ -1131,6 +1174,7 @@ class indice extends clsCadastro
         $obj->nao_informar_educacenso = $this->nao_informar_educacenso == 'on' ? 1 : 0;
         $obj->tipo_mediacao_didatico_pedagogico = $this->tipo_mediacao_didatico_pedagogico;
         $obj->dias_semana = $dias_semana;
+        $obj->atividades_complementares = $atividades_complementares;
 
         $editou = $obj->edita();
 
@@ -1200,12 +1244,6 @@ class indice extends clsCadastro
         $this->visivel, $this->turma_turno_id, $this->tipo_boletim, $this->ano_letivo);
       $obj->tipo_atendimento = $this->tipo_atendimento;
       $obj->turma_mais_educacao = $this->turma_mais_educacao;
-      $obj->atividade_complementar_1 = $this->atividade_complementar_1;
-      $obj->atividade_complementar_2 = $this->atividade_complementar_2;
-      $obj->atividade_complementar_3 = $this->atividade_complementar_3;
-      $obj->atividade_complementar_4 = $this->atividade_complementar_4;
-      $obj->atividade_complementar_5 = $this->atividade_complementar_5;
-      $obj->atividade_complementar_6 = $this->atividade_complementar_6;
       $obj->aee_braille = $this->aee_braille == 'on' ? 1 : 0;
       $obj->aee_recurso_optico = $this->aee_recurso_optico == 'on' ? 1 : 0;
       $obj->aee_estrategia_desenvolvimento = $this->aee_estrategia_desenvolvimento == 'on' ? 1 : 0;
@@ -1227,6 +1265,7 @@ class indice extends clsCadastro
       $obj->nao_informar_educacenso = $this->nao_informar_educacenso == 'on' ? 1 : 0;
       $obj->tipo_mediacao_didatico_pedagogico = $this->tipo_mediacao_didatico_pedagogico;
       $obj->dias_semana = $dias_semana;
+      $obj->atividades_complementares = $atividades_complementares;
 
       $editou = $obj->edita();
     }
@@ -1826,7 +1865,7 @@ function atualizaTurmaCad_EscolaSerie(xml)
 
 function valida()
 {
-  if (validaHorarioInicialFinal() && validaMinutos()) {
+  if (validaHorarioInicialFinal() && validaMinutos() && validaAtividadesComplementares()) {
     if (document.getElementById('padrao_ano_escolar').value == 1) {
       var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
       var campoEscola      = document.getElementById('ref_cod_escola').value;

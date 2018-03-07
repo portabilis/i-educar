@@ -27,6 +27,17 @@ $j('.tablecadastro >tbody  > tr').each(function(index, row) {
 
 var modoCadastro = $j('#retorno').val() == 'Novo';
 
+$j('#tipo_atendimento').on('change', mostraAtividadesComplementares);
+
+function mostraAtividadesComplementares(){
+  var mostraCampo = $j('#tipo_atendimento').val() == '4';
+  if (mostraCampo) {
+    $j('#tr_atividades_complementares').show();
+  } else {
+    $j('#tr_atividades_complementares').hide();
+  }
+}
+
 function validaHorarioInicialFinal() {
   var horarioInicial = $j('#hora_inicial').val().replace(':', '');
   var horarioFinal = $j('#hora_final').val().replace(':', '');
@@ -55,6 +66,17 @@ function validaMinutos() {
     }
   });
   return retorno;
+}
+
+function validaAtividadesComplementares() {
+  // recebe - 1 pois a primeira sempre é nula
+  var qtdeAtividadesComplementares = $j('#atividades_complementares').val().length - 1;
+
+  if (qtdeAtividadesComplementares > 6) {
+    alert('O campo: Atividades complementares, não pode ter mais que 6 opções.');
+    return false;
+  }
+  return true;
 }
 
 $j('#ref_cod_curso').on('change', habilitaTurmaMaisEducacao);
@@ -177,6 +199,7 @@ $j(document).ready(function() {
         }else
           return false;
       });
+      mostraAtividadesComplementares();
     });
 
   // fix checkboxs

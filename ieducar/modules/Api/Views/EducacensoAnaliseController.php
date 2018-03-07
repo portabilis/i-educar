@@ -444,12 +444,7 @@ class EducacensoAnaliseController extends ApiCoreController
                    turma.hora_final AS hora_final,
                    turma.dias_semana AS dias_semana,
                    turma.tipo_atendimento AS tipo_atendimento,
-                   turma.atividade_complementar_1 AS atividade_complementar_1,
-                   turma.atividade_complementar_2 AS atividade_complementar_2,
-                   turma.atividade_complementar_3 AS atividade_complementar_3,
-                   turma.atividade_complementar_4 AS atividade_complementar_4,
-                   turma.atividade_complementar_5 AS atividade_complementar_5,
-                   turma.atividade_complementar_6 AS atividade_complementar_6,
+                   turma.atividades_complementares[1] AS atividades_complementares,
                    turma.aee_braille AS aee_braille,
                    turma.aee_recurso_optico AS aee_recurso_optico ,
                    turma.aee_estrategia_desenvolvimento AS aee_estrategia_desenvolvimento,
@@ -487,9 +482,7 @@ class EducacensoAnaliseController extends ApiCoreController
       $nomeEscola = Portabilis_String_Utils::toUtf8(strtoupper($turma["nome_escola"]));
       $nomeTurma  = Portabilis_String_Utils::toUtf8(strtoupper($turma["nome_turma"]));
       $atividadeComplementar = ($turma["tipo_atendimento"] == 4); //Código 4 fixo no cadastro de turma
-      $existeAtividadeComplementar = ($turma["atividade_complementar_1"] || $turma["atividade_complementar_2"] ||
-                                      $turma["atividade_complementar_3"] || $turma["atividade_complementar_4"] ||
-                                      $turma["atividade_complementar_5"] || $turma["atividade_complementar_6"]);
+      $existeAtividadeComplementar = ($turma["atividades_complementares"]);
       $atendimentoAee = ($turma["tipo_atendimento"] == 5); //Código 5 fixo no cadastro de turma
       $existeAee = ($turma["aee_braille"] || $turma["aee_recurso_optico"] ||
                     $turma["aee_estrategia_desenvolvimento"] || $turma["aee_tecnica_mobilidade"] ||
