@@ -853,7 +853,7 @@ class AjusteView9AnosMatriculaDependencia extends AbstractMigration
                                       WHEN he.aprovado = 15 THEN 'Fal'::text
                                       ELSE ''::text
                                   END
-                              END AS "case"
+                              END AS \"case\"
                          FROM historico_escolar he
                         WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND he.ativo = 1 AND he.sequencial = (( SELECT max(hee.sequencial) AS max
                                  FROM historico_escolar hee
@@ -888,7 +888,7 @@ class AjusteView9AnosMatriculaDependencia extends AbstractMigration
                                       WHEN he.aprovado = 15 THEN 'Fal'::text
                                       ELSE ''::text
                                   END
-                              END AS "case"
+                              END AS \"case\"
                          FROM historico_escolar he
                         WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND he.ativo = 1 AND he.sequencial = (( SELECT max(hee.sequencial) AS max
                                  FROM historico_escolar hee
@@ -923,7 +923,7 @@ class AjusteView9AnosMatriculaDependencia extends AbstractMigration
                                       WHEN he.aprovado = 15 THEN 'Fal'::text
                                       ELSE ''::text
                                   END
-                              END AS "case"
+                              END AS \"case\"
                          FROM historico_escolar he
                         WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND he.ativo = 1 AND he.sequencial = (( SELECT max(hee.sequencial) AS max
                                  FROM historico_escolar hee
@@ -958,7 +958,7 @@ class AjusteView9AnosMatriculaDependencia extends AbstractMigration
                                       WHEN he.aprovado = 15 THEN 'Fal'::text
                                       ELSE ''::text
                                   END
-                              END AS "case"
+                              END AS \"case\"
                          FROM historico_escolar he
                         WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND he.ativo = 1 AND he.sequencial = (( SELECT max(hee.sequencial) AS max
                                  FROM historico_escolar hee
@@ -993,7 +993,7 @@ class AjusteView9AnosMatriculaDependencia extends AbstractMigration
                                       WHEN he.aprovado = 15 THEN 'Fal'::text
                                       ELSE ''::text
                                   END
-                              END AS "case"
+                              END AS \"case\"
                          FROM historico_escolar he
                         WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND he.ativo = 1 AND he.sequencial = (( SELECT max(hee.sequencial) AS max
                                  FROM historico_escolar hee
@@ -1028,7 +1028,7 @@ class AjusteView9AnosMatriculaDependencia extends AbstractMigration
                                       WHEN he.aprovado = 15 THEN 'Fal'::text
                                       ELSE ''::text
                                   END
-                              END AS "case"
+                              END AS \"case\"
                          FROM historico_escolar he
                         WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND he.ativo = 1 AND he.sequencial = (( SELECT max(hee.sequencial) AS max
                                  FROM historico_escolar hee
@@ -1063,7 +1063,7 @@ class AjusteView9AnosMatriculaDependencia extends AbstractMigration
                                       WHEN he.aprovado = 15 THEN 'Fal'::text
                                       ELSE ''::text
                                   END
-                              END AS "case"
+                              END AS \"case\"
                          FROM historico_escolar he
                         WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND he.ativo = 1 AND he.sequencial = (( SELECT max(hee.sequencial) AS max
                                  FROM historico_escolar hee
@@ -1098,7 +1098,7 @@ class AjusteView9AnosMatriculaDependencia extends AbstractMigration
                                       WHEN he.aprovado = 15 THEN 'Fal'::text
                                       ELSE ''::text
                                   END
-                              END AS "case"
+                              END AS \"case\"
                          FROM historico_escolar he
                         WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND he.ativo = 1 AND he.sequencial = (( SELECT max(hee.sequencial) AS max
                                  FROM historico_escolar hee
@@ -1133,7 +1133,7 @@ class AjusteView9AnosMatriculaDependencia extends AbstractMigration
                                       WHEN he.aprovado = 15 THEN 'Fal'::text
                                       ELSE ''::text
                                   END
-                              END AS "case"
+                              END AS \"case\"
                          FROM historico_escolar he
                         WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND he.ativo = 1 AND he.sequencial = (( SELECT max(hee.sequencial) AS max
                                  FROM historico_escolar hee
