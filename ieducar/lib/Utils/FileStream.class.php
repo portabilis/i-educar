@@ -139,7 +139,7 @@ class FileStream
     // Headers para stream de arquivo
     header('Content-Description: File Transfer');
     header('Content-Type: ' . $mimetype);
-    header('Content-Disposition: attachment; filename='.basename($this->filepath));
+    header('Content-Disposition: attachment;');
     header('Content-Transfer-Encoding: binary');
     header('Expires: 0');
     header('Cache-Control: must-revalidate, post-check=0, pre-check=0');

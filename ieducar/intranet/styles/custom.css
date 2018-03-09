@@ -93,6 +93,16 @@ select{
   cursor: pointer;
 }
 
+span.error_notice {
+  display: table;
+  padding: 7px;
+  margin: 5px 0px;
+  background-color: #ffdbdb;
+  border: solid 1px #ffb2b2;
+  color: #d46262;
+  border-radius: 3px;
+}
+
 /**************************************
 ************ TOPO / RODAPÉ ************
 **************************************/
