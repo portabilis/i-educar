@@ -1019,8 +1019,16 @@ function Output($name='',$dest='')
                 header('Content-Type: application/pdf');
                 if(headers_sent())
                     $this->Error('Some data has already been output to browser, can\'t send PDF file');
-                header('Content-Length: '.strlen($this->buffer));
-                header('Content-disposition: inline; filename="'.$name.'"');
+
+                    header("Pragma: public");
+                    header("Expires: 0");
+                    header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+                    header("Cache-Control: private",false);
+                    header("Content-Disposition: inline;");
+                    header("Content-Transfer-Encoding: binary");
+                    header("Content-Length: ".strlen($this->buffer));
+                    ob_clean();
+                    flush();
             }
             echo $this->buffer;
             break;
