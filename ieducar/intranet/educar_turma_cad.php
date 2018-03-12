@@ -518,69 +518,15 @@ class indice extends clsCadastro
     $options = array('label' => 'Tipo de atendimento', 'resources' => $resources, 'value' => $this->tipo_atendimento, 'required' => false, 'size' => 70,);
     $this->inputsHelper()->select('tipo_atendimento', $options);
 
+    $json_file = file_get_contents("educacenso_json/atividades_complementares.json");   
+    $atividadesComplementares = json_decode($json_file, true);
+
     $helperOptions = array('objectName'  => 'atividades_complementares');
     $options       = array('label' => 'Tipos de atividades complementares',
                             'size' => 50,
                             'required' => false,
                             'options' => array('values' => $this->atividades_complementares,
-                                              'all_values' => array(11002 => '11002 - Canto coral',
-                                                                    11006 => '11006 - Banda',
-                                                                    11011 => '11011 - Iniciação musical',
-                                                                    12003 => '12003 - Desenho',
-                                                                    12004 => '12004 - Escultura e Cerâmica',
-                                                                    12005 => '12005 - Grafite',
-                                                                    12007 => '12007 - Pintura',
-                                                                    13001 => '13001 - Cineclube',
-                                                                    14001 => '14001 - Teatro',
-                                                                    14002 => '14002 - Danças',
-                                                                    14004 => '14004 - Práticas Circenses',
-                                                                    15001 => '15001 - Capoeira',
-                                                                    15002 => '15002 - Artesanato Popular ',
-                                                                    15003 => '15003 - Brinquedos e Artesanato Regional',
-                                                                    15004 => '15004 - Contos',
-                                                                    16001 => '16001 - Educação Patrimonial',
-                                                                    17004 => '17004 - Leitura',
-                                                                    17002 => '17002 - Sala Temática para o Estudo de Línguas Estrangeiras',
-                                                                    19999 => '19999 - Outra categoria de Cultura, Artes e Educação Patrimonial',
-                                                                    21001 => '21001 - Recreação (Brinquedoteca e Jogos)',
-                                                                    22007 => '22007 - Yoga',
-                                                                    22009 => '22009 - Tênis de campo',
-                                                                    22011 => '22011 - Atletismo',
-                                                                    22012 => '22012 - Badminton',
-                                                                    22014 => '22014 - Basquete',
-                                                                    22015 => '22015 - Ciclismo',
-                                                                    22018 => '22018 - Futebol',
-                                                                    22019 => '22019 - Futsal',
-                                                                    22020 => '22020 - Ginástica (rítmica, artística, acrobática)',
-                                                                    22021 => '22021 - Handebol',
-                                                                    22022 => '22022 - Judô',
-                                                                    22023 => '22023 - Karatê',
-                                                                    22024 => '22024 - Luta Olímpica',
-                                                                    22025 => '22025 - Natação',
-                                                                    22026 => '22026 - Taekwondo',
-                                                                    22027 => '22027 - Tênis de Mesa',
-                                                                    22028 => '22028 - Voleibol',
-                                                                    22029 => '22029 - Vôlei de Praia',
-                                                                    22032 => '22032 - Xadrez tradicional/Xadrez virtual ',
-                                                                    29999 => '29999 - Outra categoria de Esporte e Lazer',
-                                                                    31002 => '31002 - Português',
-                                                                    31001 => '31001 - Matemática',
-                                                                    39999 => '39999 - Outra categoria de Acompanhamento Pedagógico',
-                                                                    41007 => '41007 - Educação em Direitos Humanos',
-                                                                    71007 => '71007 - Promoção da Saúde e Prevenção de Doenças e Agravos à Saúde',
-                                                                    10103 => '10103 - Iniciação Científica',
-                                                                    13301 => '13301 - Educação Ambiental e Desenvolvimento Sustentável',
-                                                                    13108 => '13108 - Economia Solidária e Criativa/Educação Econômica (Educação Financeira e Fiscal)',
-                                                                    14101 => '14101 - Fotografia',
-                                                                    14102 => '14102 - História em Quadrinhos',
-                                                                    14103 => '14103 - Jornal Escolar',
-                                                                    14104 => '14104 - Rádio Escolar',
-                                                                    14105 => '14105 - Vídeo',
-                                                                    14201 => '14201 - Robótica Educacional',
-                                                                    14202 => '14202 - Tecnologicas Educacionais',
-                                                                    14203 => '14203 - Ambientes de Redes Sociais',
-                                                                    14999 => '14999 - Outra Categoria de Comunicação, Uso de Mídias e Cultura Digital e Tecnológica',
-                                                                    15101 => '15101 - Memória e História das Comunidades Tradicionais')));
+                                              'all_values' => $atividadesComplementares));
     $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
     $helperOptions = array('objectName'  => 'atividades_aee');
@@ -616,68 +562,16 @@ class indice extends clsCadastro
     $options = array('label' => 'Turma unificada', 'resources' => $resources,'label_hint' => 'Selecione somente se a turma for unificada', 'value' => $this->turma_unificada, 'required' => false, 'size' => 70,);
     $this->inputsHelper()->select('turma_unificada', $options);
 
-    $etapas_educacenso = array(
-      null => 'Selecione',
-      1  => Portabilis_String_Utils::toLatin1('Educação Infantil - Creche (0 a 3 anos)'),
-      2  => Portabilis_String_Utils::toLatin1('Educação Infantil - Pré-escola (4 e 5 anos)'),
-      3  => Portabilis_String_Utils::toLatin1('Educação Infantil - Unificada (0 a 5 anos)'),
-      4  => Portabilis_String_Utils::toLatin1('Ensino Fundamental de 8 anos - 1ª Série'),
-      5  => Portabilis_String_Utils::toLatin1('Ensino Fundamental de 8 anos - 2ª Série'),
-      6  => Portabilis_String_Utils::toLatin1('Ensino Fundamental de 8 anos - 3ª Série'),
-      7  => Portabilis_String_Utils::toLatin1('Ensino Fundamental de 8 anos - 4ª Série'),
-      8  => Portabilis_String_Utils::toLatin1('Ensino Fundamental de 8 anos - 5ª Série'),
-      9  => Portabilis_String_Utils::toLatin1('Ensino Fundamental de 8 anos - 6ª Série'),
-      10 => Portabilis_String_Utils::toLatin1('Ensino Fundamental de 8 anos - 7ª Série'),
-      11 => Portabilis_String_Utils::toLatin1('Ensino Fundamental de 8 anos - 8ª Série'),
-      12 => Portabilis_String_Utils::toLatin1('Ensino Fundamental de 8 anos - Multi'),
-      13 => Portabilis_String_Utils::toLatin1('Ensino Fundamental de 8 anos - Correção de Fluxo'),
-      14 => Portabilis_String_Utils::toLatin1('Ensino Fundamental de 9 anos - 1º Ano'),
-      15 => Portabilis_String_Utils::toLatin1('Ensino Fundamental de 9 anos - 2º Ano'),
-      16 => Portabilis_String_Utils::toLatin1('Ensino Fundamental de 9 anos - 3º Ano'),
-      17 => Portabilis_String_Utils::toLatin1('Ensino Fundamental de 9 anos - 4º Ano'),
-      18 => Portabilis_String_Utils::toLatin1('Ensino Fundamental de 9 anos - 5º Ano'),
-      19 => Portabilis_String_Utils::toLatin1('Ensino Fundamental de 9 anos - 6º Ano'),
-      20 => Portabilis_String_Utils::toLatin1('Ensino Fundamental de 9 anos - 7º Ano'),
-      21 => Portabilis_String_Utils::toLatin1('Ensino Fundamental de 9 anos - 8º Ano'),
-      22 => Portabilis_String_Utils::toLatin1('Ensino Fundamental de 9 anos - Multi'),
-      23 => Portabilis_String_Utils::toLatin1('Ensino Fundamental de 9 anos - Correção de Fluxo'),
-      24 => Portabilis_String_Utils::toLatin1('Ensino Fundamental de 8 e 9 anos - Multi 8 e 9 anos'),
-      25 => Portabilis_String_Utils::toLatin1('Ensino Médio - 1ª Série'),
-      26 => Portabilis_String_Utils::toLatin1('Ensino Médio - 2ª Série'),
-      27 => Portabilis_String_Utils::toLatin1('Ensino Médio - 3ª Série'),
-      28 => Portabilis_String_Utils::toLatin1('Ensino Médio - 4ª Série'),
-      29 => Portabilis_String_Utils::toLatin1('Ensino Médio - Não Seriada'),
-      30 => Portabilis_String_Utils::toLatin1('Curso Técnico Integrado (Ensino Médio Integrado) 1ª Série'),
-      31 => Portabilis_String_Utils::toLatin1('Curso Técnico Integrado (Ensino Médio Integrado) 2ª Série'),
-      32 => Portabilis_String_Utils::toLatin1('Curso Técnico Integrado (Ensino Médio Integrado) 3ª Série'),
-      33 => Portabilis_String_Utils::toLatin1('Curso Técnico Integrado (Ensino Médio Integrado) 4ª Série'),
-      34 => Portabilis_String_Utils::toLatin1('Curso Técnico Integrado (Ensino Médio Integrado) Não Seriada'),
-      35 => Portabilis_String_Utils::toLatin1('Ensino Médio - Normal/Magistério 1ª Série'),
-      36 => Portabilis_String_Utils::toLatin1('Ensino Médio - Normal/Magistério 2ª Série'),
-      37 => Portabilis_String_Utils::toLatin1('Ensino Médio - Normal/Magistério 3ª Série'),
-      38 => Portabilis_String_Utils::toLatin1('Ensino Médio - Normal/Magistério 4ª Série'),
-      39 => Portabilis_String_Utils::toLatin1('Curso Técnico  - Concomitante'),
-      40 => Portabilis_String_Utils::toLatin1('Curso Técnico  - Subsequente'),
-      41 => Portabilis_String_Utils::toLatin1('Ensino Fundamental de 9 anos - 9º Ano'),
-      69 => Portabilis_String_Utils::toLatin1('EJA - Ensino Fundamental -  Anos iniciais'),
-      70 => Portabilis_String_Utils::toLatin1('EJA - Ensino Fundamental -  Anos finais'),
-      71 => Portabilis_String_Utils::toLatin1('EJA - Ensino Médio'),
-      72 => Portabilis_String_Utils::toLatin1('EJA - Ensino Fundamental - Anos iniciais e Anos finais'),
-      56 => Portabilis_String_Utils::toLatin1('Educação Infantil e Ensino Fundamental (8 e 9 anos) Multietapa'),
-      73 => Portabilis_String_Utils::toLatin1('Curso FIC integrado na modalidade EJA - Nível Fundamental (EJA integrada à Educação Profissional de Nível Fundamental)'),
-      74 => Portabilis_String_Utils::toLatin1('Curso Técnico Integrado na Modalidade EJA (EJA integrada à Educação Profissional de Nível Médio)'),
-      64 => Portabilis_String_Utils::toLatin1('Curso Técnico Misto'),
-      65 => Portabilis_String_Utils::toLatin1('EJA - Ensino Fundamental - Projovem Urbano'),
-      67 => Portabilis_String_Utils::toLatin1('Curso FIC integrado na modalidade EJA  - Nível Médio'),
-      68 => Portabilis_String_Utils::toLatin1('Curso FIC Concomitante ')
-    );
+    $json_file = file_get_contents("educacenso_json/etapas_ensino.json");   
+    $etapas_educacenso = json_decode($json_file, true);
+    $etapas_educacenso = array_merge(array(null => 'Selecione'), $etapas_educacenso);
 
     $options = array('label' => 'Etapa de ensino', 'resources' => $etapas_educacenso, 'value' => $this->etapa_educacenso, 'required' => false, 'size' => 70,);
     $this->inputsHelper()->select('etapa_educacenso', $options);
 
     $json_file = file_get_contents("educacenso_json/cursos_da_educacao_profissional.json");   
-    $json_str = json_decode($json_file, true);
-    $cursos = $json_str['cursos_educacao_profissional'];
+    $cursos = json_decode($json_file, true);
+
     $helperOptions = array('objectName'  => 'cod_curso_profissional',
                            'type' => 'single');
     $options       = array('label' => 'Curso técnico',
