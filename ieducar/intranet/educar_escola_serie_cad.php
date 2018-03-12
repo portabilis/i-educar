@@ -345,16 +345,6 @@ class indice extends clsCadastro
         $anoEscolar = new ComponenteCurricular_Model_AnoEscolarDataMapper();
         $componenteAno = $anoEscolar->findComponentePorSerie($this->ref_cod_serie);
 
-        /*
-         * Se $disciplinas não for informado e o ano escolar tem componentes
-         * curriculares cadastrados, retorna erro.
-         */
-        if (!is_array($this->disciplinas) && (is_array($componenteAno) && 0 < count($componenteAno))) {
-            echo "<script> alert('É necessário adicionar pelo menos um componente curricular.') </script>";
-            $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
-            return FALSE;
-        }
-
         $this->bloquear_enturmacao_sem_vagas = is_null($this->bloquear_enturmacao_sem_vagas) ? 0 : 1;
         $this->bloquear_cadastro_turma_para_serie_com_vagas = is_null($this->bloquear_cadastro_turma_para_serie_com_vagas) ? 0 : 1;
 
@@ -445,15 +435,6 @@ class indice extends clsCadastro
 
         $anoEscolar = new ComponenteCurricular_Model_AnoEscolarDataMapper();
         $componenteAno = $anoEscolar->findComponentePorSerie($this->ref_cod_serie);
-
-        /**
-         * @see indice#Novo();
-         */
-        if (!is_array($this->disciplinas) && (is_array($componenteAno) && 0 < count($componenteAno)) ) {
-            echo "<script>alert('É necessário adicionar pelo menos um componente curricular.');</script>";
-            $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
-            return FALSE;
-        }
 
         $this->bloquear_enturmacao_sem_vagas = is_null($this->bloquear_enturmacao_sem_vagas) ? 0 : 1;
         $this->bloquear_cadastro_turma_para_serie_com_vagas = is_null($this->bloquear_cadastro_turma_para_serie_com_vagas) ? 0 : 1;

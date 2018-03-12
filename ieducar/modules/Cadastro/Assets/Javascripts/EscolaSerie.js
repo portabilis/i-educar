@@ -1,3 +1,25 @@
+function existeComponentesHabilitados() {
+    var retorno = false;
+    $j('input[name^="disciplinas["]').each(function(input) {
+        var isChecked = $j('input[name="' + this.name + '"]').is(':checked');
+        if (isChecked) {
+            retorno = true;
+            return true;
+        }
+    });
+
+    return retorno;
+}
+
+$j('#btn_enviar').removeAttr('onclick');
+$j('#btn_enviar').click(function () {
+    if(!existeComponentesHabilitados()) {
+        alert('É necessário adicionar pelo menos um componente curricular.');
+    }else{
+        acao();
+    }
+})
+
 document.getElementById('ref_cod_instituicao').onchange = function () {
     getDuploEscolaCurso();
 }
