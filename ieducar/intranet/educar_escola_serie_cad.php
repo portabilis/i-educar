@@ -342,9 +342,6 @@ class indice extends clsCadastro
             $this->ref_cod_serie = $this->ref_cod_serie_;
         }
 
-        $anoEscolar = new ComponenteCurricular_Model_AnoEscolarDataMapper();
-        $componenteAno = $anoEscolar->findComponentePorSerie($this->ref_cod_serie);
-
         $this->bloquear_enturmacao_sem_vagas = is_null($this->bloquear_enturmacao_sem_vagas) ? 0 : 1;
         $this->bloquear_cadastro_turma_para_serie_com_vagas = is_null($this->bloquear_cadastro_turma_para_serie_com_vagas) ? 0 : 1;
 
@@ -432,9 +429,6 @@ class indice extends clsCadastro
         // Valida a possibilidade de exclusão dos componentes da serie
         $escolaSerie = new clsEscolaSerie($this->ref_cod_escola, $this->ref_cod_serie);
         $escolaSerie->validaExclusaoComponentes($this->disciplinas);
-
-        $anoEscolar = new ComponenteCurricular_Model_AnoEscolarDataMapper();
-        $componenteAno = $anoEscolar->findComponentePorSerie($this->ref_cod_serie);
 
         $this->bloquear_enturmacao_sem_vagas = is_null($this->bloquear_enturmacao_sem_vagas) ? 0 : 1;
         $this->bloquear_cadastro_turma_para_serie_com_vagas = is_null($this->bloquear_cadastro_turma_para_serie_com_vagas) ? 0 : 1;
