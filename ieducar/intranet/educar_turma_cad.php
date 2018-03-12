@@ -230,6 +230,10 @@ class indice extends clsCadastro
       $this->atividades_aee = explode(',',str_replace(array('{', "}"), '', $this->atividades_aee));
     }
 
+    if (is_string($this->cod_curso_profissional)) {
+      $this->cod_curso_profissional = explode(',',str_replace(array('{', "}"), '', $this->cod_curso_profissional));
+    }
+
     $this->url_cancelar      = $retorno == 'Editar' ?
       'educar_turma_det.php?cod_turma=' . $registro['cod_turma'] : 'educar_turma_lst.php';
 
@@ -597,9 +601,6 @@ class indice extends clsCadastro
                                                                     11 => 'Estratégias para autonomia no ambiente escolar')));
     $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-    $options = array('label' => Portabilis_String_Utils::toLatin1('Código curso educação profissional'), 'value' => $this->cod_curso_profissional, 'required' => false, 'size' => 8, 'max_length' => 8, 'placeholder' => '');
-    $this->inputsHelper()->integer('cod_curso_profissional', $options);
-
     $options = array('label' => Portabilis_String_Utils::toLatin1('Turma não tem profissional escolar em sala de aula'), 'value' => $this->turma_sem_professor);
     $this->inputsHelper()->checkbox('turma_sem_professor', $options);
 
@@ -673,6 +674,18 @@ class indice extends clsCadastro
 
     $options = array('label' => 'Etapa de ensino', 'resources' => $etapas_educacenso, 'value' => $this->etapa_educacenso, 'required' => false, 'size' => 70,);
     $this->inputsHelper()->select('etapa_educacenso', $options);
+
+    $json_file = file_get_contents("educacenso_json/cursos_da_educacao_profissional.json");   
+    $json_str = json_decode($json_file, true);
+    $cursos = $json_str['cursos_educacao_profissional'];
+    $helperOptions = array('objectName'  => 'cod_curso_profissional',
+                           'type' => 'single');
+    $options       = array('label' => 'Curso técnico',
+                            'size' => 50,
+                            'required' => false,
+                            'options' => array('values' => $this->cod_curso_profissional,
+                                               'all_values' => $cursos));
+    $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
     $options = array('label' => 'Etapa da turma', 'resources' => $etapas_educacenso, 'value' => $this->etapa_educacenso2, 'required' => false, 'size' => 70,);
     $this->inputsHelper()->select('etapa_educacenso2', $options);
@@ -872,6 +885,8 @@ class indice extends clsCadastro
     $atividades_complementares = implode(',', $this->atividades_complementares);
     unset($this->atividades_aee[0]);
     $atividades_aee = implode(',', $this->atividades_aee);
+    unset($this->cod_curso_profissional[0]);
+    $cod_curso_profissional = implode(',', $this->cod_curso_profissional);
 
     if ($this->tipo_atendimento != 4) {
       $atividades_complementares = '';
@@ -879,6 +894,12 @@ class indice extends clsCadastro
 
     if ($this->tipo_atendimento != 5) {
       $atividades_aee = '';
+    }
+
+    $etapasCursoTecnico = array(30, 31, 32, 33, 34, 39, 40, 64, 74);
+
+    if (!in_array($this->etapa_educacenso, $etapasCursoTecnico)) {
+      $cod_curso_profissional = NULL;
     }
 
     if(! $this->canCreateTurma($this->ref_cod_escola, $this->ref_cod_serie, $this->turma_turno_id))
@@ -924,7 +945,7 @@ class indice extends clsCadastro
           $this->visivel, $this->turma_turno_id, $this->tipo_boletim, $this->ano_letivo);
         $obj->tipo_atendimento = $this->tipo_atendimento;
         $obj->turma_mais_educacao = $this->turma_mais_educacao;
-        $obj->cod_curso_profissional = $this->cod_curso_profissional;
+        $obj->cod_curso_profissional = $cod_curso_profissional;
         $obj->turma_sem_professor = $this->turma_sem_professor == 'on' ? 1 : 0;
         $obj->turma_unificada = $this->turma_unificada == "" ? NULL : $this->turma_unificada;
         $obj->etapa_educacenso = $this->etapa_educacenso == "" ? NULL : $this->etapa_educacenso;
@@ -1014,7 +1035,7 @@ class indice extends clsCadastro
         $this->turma_turno_id, $this->tipo_boletim, $this->ano_letivo);
       $obj->tipo_atendimento = $this->tipo_atendimento;
       $obj->turma_mais_educacao = $this->turma_mais_educacao;
-      $obj->cod_curso_profissional = $this->cod_curso_profissional;
+      $obj->cod_curso_profissional = $cod_curso_profissional;
       $obj->turma_sem_professor = $this->turma_sem_professor == 'on' ? 1 : 0;
       $obj->turma_unificada = $this->turma_unificada == "" ? NULL : $this->turma_unificada;
       $obj->etapa_educacenso = $this->etapa_educacenso == "" ? NULL : $this->etapa_educacenso;
@@ -1070,6 +1091,7 @@ class indice extends clsCadastro
     $atividades_complementares = implode(',', $this->atividades_complementares);
     unset($this->atividades_aee[0]);
     $atividades_aee = implode(',', $this->atividades_aee);
+    $cod_curso_profissional = $this->cod_curso_profissional[0];
 
     if ($this->tipo_atendimento != 4) {
       $atividades_complementares = '';
@@ -1077,6 +1099,10 @@ class indice extends clsCadastro
 
     if ($this->tipo_atendimento != 5) {
       $atividades_aee = '';
+    }
+
+    if (!in_array($this->etapa_educacenso, $etapasCursoTecnico)) {
+      $cod_curso_profissional = NULL;
     }
 
     $turmaDetalhe = new clsPmieducarTurma($this->cod_turma);
@@ -1124,7 +1150,7 @@ class indice extends clsCadastro
           $this->ano_letivo);
         $obj->tipo_atendimento = $this->tipo_atendimento;
         $obj->turma_mais_educacao = $this->turma_mais_educacao;
-        $obj->cod_curso_profissional = $this->cod_curso_profissional;
+        $obj->cod_curso_profissional = $cod_curso_profissional;
         $obj->turma_sem_professor = $this->turma_sem_professor == 'on' ? 1 : 0;
         $obj->turma_unificada = $this->turma_unificada == "" ? NULL : $this->turma_unificada;
         $obj->etapa_educacenso = $this->etapa_educacenso == "" ? NULL : $this->etapa_educacenso;
@@ -1205,7 +1231,7 @@ class indice extends clsCadastro
         $this->visivel, $this->turma_turno_id, $this->tipo_boletim, $this->ano_letivo);
       $obj->tipo_atendimento = $this->tipo_atendimento;
       $obj->turma_mais_educacao = $this->turma_mais_educacao;
-      $obj->cod_curso_profissional = $this->cod_curso_profissional;
+      $obj->cod_curso_profissional = $cod_curso_profissional;
       $obj->turma_sem_professor = $this->turma_sem_professor == 'on' ? 1 : 0;
       $obj->turma_unificada = $this->turma_unificada == "" ? NULL : $this->turma_unificada;
       $obj->etapa_educacenso = $this->etapa_educacenso == "" ? NULL : $this->etapa_educacenso;

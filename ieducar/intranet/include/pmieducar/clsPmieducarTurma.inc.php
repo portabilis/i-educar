@@ -1156,6 +1156,9 @@ class clsPmieducarTurma
             if(is_numeric($this->cod_curso_profissional)) {
                 $set  .= "{$gruda}cod_curso_profissional = '{$this->cod_curso_profissional}'";
                 $gruda = ", ";
+            } else {
+                $set  .= "{$gruda}cod_curso_profissional = NULL";
+                $gruda = ", ";
             }
 
             if(is_numeric($this->turma_unificada)) {

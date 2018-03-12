@@ -32,6 +32,10 @@ $j('#tipo_atendimento').change(function() {
   mostraAtividadesAee();
 });
 
+$j('#etapa_educacenso').change(function() {
+  mostraCursoTecnico();
+});
+
 function mostraAtividadesComplementares(){
   var mostraCampo = $j('#tipo_atendimento').val() == '4';
   if (mostraCampo) {
@@ -47,6 +51,16 @@ function mostraAtividadesAee() {
     $j('#tr_atividades_aee').show();
   } else {
     $j('#tr_atividades_aee').hide();
+  }
+}
+
+function mostraCursoTecnico() {
+  var etapasEnsinoTecnico = ['30', '31', '32', '33', '34', '39', '40', '64', '74'];
+  var mostraCampo = $j.inArray($j('#etapa_educacenso').val(),etapasEnsinoTecnico) != -1;
+  if (mostraCampo) {
+    $j('#tr_cod_curso_profissional').show();
+  } else {
+    $j('#tr_cod_curso_profissional').hide();
   }
 }
 
@@ -213,6 +227,7 @@ $j(document).ready(function() {
       });
       mostraAtividadesComplementares();
       mostraAtividadesAee();
+      mostraCursoTecnico();
     });
 
   // fix checkboxs
