@@ -779,8 +779,7 @@ class indice extends clsCadastro
     $atividades_complementares = '{' . implode(',', $this->atividades_complementares) . '}';
     unset($this->atividades_aee[0]);
     $atividades_aee = '{' . implode(',', $this->atividades_aee) . '}';
-    unset($this->cod_curso_profissional[0]);
-    $cod_curso_profissional = implode(',', $this->cod_curso_profissional);
+    $cod_curso_profissional = $this->cod_curso_profissional[0];
 
     if ($this->tipo_atendimento != 4) {
       $atividades_complementares = '';
