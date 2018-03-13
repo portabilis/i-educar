@@ -774,11 +774,11 @@ class indice extends clsCadastro
     @session_write_close();
 
     unset($this->dias_semana[0]);
-    $dias_semana = implode(',', $this->dias_semana);
+    $dias_semana = '{' . implode(',', $this->dias_semana) . '}';
     unset($this->atividades_complementares[0]);
-    $atividades_complementares = implode(',', $this->atividades_complementares);
+    $atividades_complementares = '{' . implode(',', $this->atividades_complementares) . '}';
     unset($this->atividades_aee[0]);
-    $atividades_aee = implode(',', $this->atividades_aee);
+    $atividades_aee = '{' . implode(',', $this->atividades_aee) . '}';
     unset($this->cod_curso_profissional[0]);
     $cod_curso_profissional = implode(',', $this->cod_curso_profissional);
 
@@ -980,11 +980,11 @@ class indice extends clsCadastro
     @session_write_close();
 
     unset($this->dias_semana[0]);
-    $dias_semana = implode(',', $this->dias_semana);
+    $dias_semana = '{' . implode(',', $this->dias_semana) . '}';
     unset($this->atividades_complementares[0]);
-    $atividades_complementares = implode(',', $this->atividades_complementares);
+    $atividades_complementares = '{' . implode(',', $this->atividades_complementares) . '}';
     unset($this->atividades_aee[0]);
-    $atividades_aee = implode(',', $this->atividades_aee);
+    $atividades_aee = '{' . implode(',', $this->atividades_aee) . '}';
     $cod_curso_profissional = $this->cod_curso_profissional[0];
 
     if ($this->tipo_atendimento != 4) {

@@ -842,19 +842,19 @@ class clsPmieducarTurma
 
             if(is_string($this->dias_semana)){
                 $campos  .= "{$gruda}dias_semana";
-                $valores .= "{$gruda}'{{$this->dias_semana}}'";
+                $valores .= "{$gruda}'{$this->dias_semana}'";
                 $gruda    = ", ";
             }
 
             if(is_string($this->atividades_complementares)){
                 $campos  .= "{$gruda}atividades_complementares";
-                $valores .= "{$gruda}'{{$this->atividades_complementares}}'";
+                $valores .= "{$gruda}'{$this->atividades_complementares}'";
                 $gruda    = ", ";
             }
 
             if(is_string($this->atividades_aee)){
                 $campos  .= "{$gruda}atividades_aee";
-                $valores .= "{$gruda}'{{$this->atividades_aee}}'";
+                $valores .= "{$gruda}'{$this->atividades_aee}'";
                 $gruda    = ", ";
             }
 
@@ -1219,17 +1219,17 @@ class clsPmieducarTurma
             }
 
             if(is_string($this->dias_semana)){
-                $set  .= "{$gruda}dias_semana = '{{$this->dias_semana}}'";
+                $set  .= "{$gruda}dias_semana = '{$this->dias_semana}'";
                 $gruda = ", ";
             }
 
             if(is_string($this->atividades_complementares)){
-                $set  .= "{$gruda}atividades_complementares = '{{$this->atividades_complementares}}'";
+                $set  .= "{$gruda}atividades_complementares = '{$this->atividades_complementares}'";
                 $gruda = ", ";
             }
 
             if(is_string($this->atividades_aee)){
-                $set  .= "{$gruda}atividades_aee = '{{$this->atividades_aee}}'";
+                $set  .= "{$gruda}atividades_aee = '{$this->atividades_aee}'";
                 $gruda = ", ";
             }
 
