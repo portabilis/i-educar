@@ -348,13 +348,14 @@ abstract class CoreExt_DataMapper
     }
     elseif (is_array($pkey)) {
       foreach ($pkey as $key => $pk) {
-        if (is_int($key)) {
+        if (is_numeric($pk)) {
           $whereName = $this->_getTableColumn($this->_primaryKey[$key]);
+          $where[] = sprintf("%s = '%d'", $whereName, floatval($pk));
         }
-        elseif (is_string($key)) {
-          $whereName = $this->_getTableColumn($key);
+        elseif (is_string($pk)) {
+          $whereName = $this->_getTableColumn($this->_primaryKey[$key]);
+          $where[] = sprintf("%s = '%s'", $whereName, $pk);
         }
-        $where[] = sprintf("%s = '%d'", $whereName, floatval($pk));
       }
     }
 
@@ -424,11 +425,14 @@ abstract class CoreExt_DataMapper
   protected function _getUpdateStatment(CoreExt_Entity $instance)
   {
     $sql = 'UPDATE %s SET %s WHERE %s';
-    $data = $this->_getDbAdapter()->formatValues($instance->toDataArray());
+    // Retorna somente os campos que foram alterados
+    $data = $this->_getDbAdapter()->formatValues($this->returnOnlyFieldsChanged($instance));
 
     // Remove o campo identidade e campos não-persistentes
     $data = $this->_cleanData($data);
-
+    if (empty($data)){
+        return "";
+    }
     // Trata os valores NULL diferentemente dos outros, para evitar erro
     // de execução query
     $columns = array();
@@ -447,11 +451,29 @@ abstract class CoreExt_DataMapper
     $where = array();
     foreach ($this->_primaryKey as $pk) {
       $whereName = $this->_getTableColumn($pk);
-      $where[] = sprintf("%s = '%d'", $whereName, $instance->get($pk));
+      $where[] = sprintf("%s = '%s'", $whereName, $instance->get($pk));
     }
 
     return sprintf($sql, $this->_getTableName(), implode(', ', $columns),
       implode(' AND ', $where));
+  }
+
+  //retorna todos os campos que estÃ£o diferentes da entidade no banco
+  protected function returnOnlyFieldsChanged($instance){
+    if (is_array($this->_primaryKey)) {
+      $pkValue = array();
+      foreach ($this->_primaryKey as $pk) {
+        $pkValue[] = $instance->get($pk);
+      }
+      $tmpEntry = $this->find($pkValue);
+    } else {
+      $tmpEntry = $this->find($instance->id);
+    }
+    $oldInstance = $tmpEntry->toDataArray();
+
+    $newInstance = $instance->toDataArray();
+
+    return array_diff_assoc( $newInstance, $oldInstance);
   }
 
   /**
@@ -719,8 +741,10 @@ abstract class CoreExt_DataMapper
    */
   protected function _cleanData(array $data)
   {
-    if (array_key_exists('id', $data)) {
-      unset($data['id']);
+    foreach ($this->_primaryKey as $key) {
+      if (array_key_exists($key, $data)) {
+        unset($data[$key]);
+      }
     }
 
     // Remove dados não-persistíveis
