@@ -782,11 +782,11 @@ class indice extends clsCadastro
     $cod_curso_profissional = $this->cod_curso_profissional[0];
 
     if ($this->tipo_atendimento != 4) {
-      $atividades_complementares = '';
+      $atividades_complementares = '{}';
     }
 
     if ($this->tipo_atendimento != 5) {
-      $atividades_aee = '';
+      $atividades_aee = '{}';
     }
 
     $etapasCursoTecnico = array(30, 31, 32, 33, 34, 39, 40, 64, 74);
@@ -982,16 +982,17 @@ class indice extends clsCadastro
     $dias_semana = '{' . implode(',', $this->dias_semana) . '}';
     unset($this->atividades_complementares[0]);
     $atividades_complementares = '{' . implode(',', $this->atividades_complementares) . '}';
+    var_dump($atividades_complementares);
     unset($this->atividades_aee[0]);
     $atividades_aee = '{' . implode(',', $this->atividades_aee) . '}';
     $cod_curso_profissional = $this->cod_curso_profissional[0];
 
     if ($this->tipo_atendimento != 4) {
-      $atividades_complementares = '';
+      $atividades_complementares = '{}';
     }
 
     if ($this->tipo_atendimento != 5) {
-      $atividades_aee = '';
+      $atividades_aee = '{}';
     }
 
     if (!in_array($this->etapa_educacenso, $etapasCursoTecnico)) {
