@@ -490,7 +490,7 @@ class clsPmieducarTransferenciaSolicitacao
 
     /**
     *
-    * Apaga os registros de uma matricula em uma escola que foi a aceitação da transferencia 
+    * Apaga os registros de uma matricula em uma escola que foi a aceitação da transferencia
     *
     * @return boolean
     */
@@ -517,12 +517,12 @@ class clsPmieducarTransferenciaSolicitacao
 
         if( !is_null($bool_matricula_entrada) )
         {
-            if( $bool_matricula_entrada == true ) 
+            if( $bool_matricula_entrada == true )
             {
                 $filtros .= "{$whereAnd}ts.ref_cod_matricula_entrada IS NOT NULL ";
                 $whereAnd = " AND ";
             }
-            else 
+            else
             {
                 $filtros .= "{$whereAnd}ts.ref_cod_matricula_entrada IS NULL ";
                 $whereAnd = " AND ";
@@ -819,6 +819,23 @@ die($sql);
         }
         return "";
     }
+
+    /**
+     * Retorna se existe solicitações para matrícula.
+     * @return boolean
+     */
+    function existSolicitacaoTransferenciaAtiva(){
+        if( is_numeric( $this->ref_cod_matricula_saida ) )
+        {
+            $db = new clsBanco();
+            $db->Consulta( "SELECT 1 FROM {$this->_tabela} WHERE ref_cod_matricula_saida = '{$this->ref_cod_matricula_saida}' AND ativo = '1'" );
+            $db->ProximoRegistro();
+            return $db->Tupla();
+        }
+        return false;
+
+    }
+
 
 }
 ?>
