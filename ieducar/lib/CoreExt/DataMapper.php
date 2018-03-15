@@ -351,8 +351,7 @@ abstract class CoreExt_DataMapper
         $whereName = $this->_getTableColumn($this->_primaryKey[$key]);
         if (is_numeric($pk)) {
           $where[] = sprintf("%s = '%d'", $whereName, floatval($pk));
-        }
-        elseif (is_string($pk)) {
+        } elseif (is_string($pk)) {
           $where[] = sprintf("%s = '%s'", $whereName, $pk);
         }
       }
@@ -429,7 +428,7 @@ abstract class CoreExt_DataMapper
 
     // Remove o campo identidade e campos n�o-persistentes
     $data = $this->_cleanData($data);
-    if (empty($data)){
+    if (empty($data)) {
         return "";
     }
     // Trata os valores NULL diferentemente dos outros, para evitar erro
@@ -458,7 +457,8 @@ abstract class CoreExt_DataMapper
   }
 
   //retorna todos os campos que estão diferentes da entidade no banco
-  protected function returnOnlyFieldsChanged($instance){
+  protected function returnOnlyFieldsChanged($instance)
+  {
     if (is_array($this->_primaryKey)) {
       $pkValue = array();
       foreach ($this->_primaryKey as $pk) {
