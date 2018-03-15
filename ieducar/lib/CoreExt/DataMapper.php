@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gestï¿½o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaï¿½
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa ï¿½ software livre; vocï¿½ pode redistribuï¿½-lo e/ou modificï¿½-lo
+ * sob os termos da Licenï¿½a Pï¿½blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versï¿½o 2 da Licenï¿½a, como (a seu critï¿½rio)
+ * qualquer versï¿½o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa ï¿½ distribuï¿½do na expectativa de que seja ï¿½til, porï¿½m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implï¿½cita de COMERCIABILIDADE OU
+ * ADEQUAï¿½ï¿½O A UMA FINALIDADE ESPECï¿½FICA. Consulte a Licenï¿½a Pï¿½blica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Vocï¿½ deve ter recebido uma cï¿½pia da Licenï¿½a Pï¿½blica Geral do GNU junto
+ * com este programa; se nï¿½o, escreva para a Free Software Foundation, Inc., no
+ * endereï¿½o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @author    Eriksen Costa Paixï¿½o <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   CoreExt_DataMapper
- * @since     Arquivo disponível desde a versão 1.1.0
+ * @since     Arquivo disponï¿½vel desde a versï¿½o 1.1.0
  * @version   $Id$
  */
 require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
@@ -32,17 +32,17 @@ require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
  * CoreExt_DataMapper abstract class.
  *
  * Implementa alguns dos conceitos do pattern Data Mapper de forma simples. A
- * intenção é o de tornar o mapeamento objeto-relacional mais simples,
- * permitindo a criação de objetos de domínio novos que interajam com objetos
- * de domínio legados.
+ * intenï¿½ï¿½o ï¿½ o de tornar o mapeamento objeto-relacional mais simples,
+ * permitindo a criaï¿½ï¿½o de objetos de domï¿½nio novos que interajam com objetos
+ * de domï¿½nio legados.
  *
- * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @author    Eriksen Costa Paixï¿½o <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   CoreExt_DataMapper
- * @since     Classe disponível desde a versão 1.1.0
- * @todo      Refactoring dos métodos get*Statment() com extract method
- * @todo      Testes para ordenação em findAll()
+ * @since     Classe disponï¿½vel desde a versï¿½o 1.1.0
+ * @todo      Refactoring dos mï¿½todos get*Statment() com extract method
+ * @todo      Testes para ordenaï¿½ï¿½o em findAll()
  * @version   @@package_version@@
  */
 abstract class CoreExt_DataMapper
@@ -60,13 +60,13 @@ abstract class CoreExt_DataMapper
   protected $_attributeMap = array();
 
   /**
-   * Atributos não-persistíveis.
+   * Atributos nï¿½o-persistï¿½veis.
    * @var array
    */
   protected $_notPersistable = array();
 
   /**
-   * Define as chaves primárias da tabela. Configurada automaticamente para
+   * Define as chaves primï¿½rias da tabela. Configurada automaticamente para
    * usar o campo identidade de CoreExt_Entity.
    * @see CoreExt_Entity::_createIdentityField()
    * @var array
@@ -74,22 +74,22 @@ abstract class CoreExt_DataMapper
   protected $_primaryKey = array('id');
 
   /**
-   * Objeto de conexão com o banco de dados.
+   * Objeto de conexï¿½o com o banco de dados.
    * @var clsBanco
    */
   protected $_dbAdapter = NULL;
 
   /**
-   * Instância padrão para uso em objetos CoreExt_DataMapper. Isso possibilita
-   * que a mesma instância do adapter de conexão com o banco de dados seja
-   * reutilizado em várias instâncias de CoreExt_DataMapper.
+   * Instï¿½ncia padrï¿½o para uso em objetos CoreExt_DataMapper. Isso possibilita
+   * que a mesma instï¿½ncia do adapter de conexï¿½o com o banco de dados seja
+   * reutilizado em vï¿½rias instï¿½ncias de CoreExt_DataMapper.
    *
    * @var clsBanco
    */
   protected static $_defaultDbAdapter = NULL;
 
   /**
-   * Nome da tabela em que o objeto é mapeado.
+   * Nome da tabela em que o objeto ï¿½ mapeado.
    * @var string
    */
   protected $_tableName = '';
@@ -117,9 +117,9 @@ abstract class CoreExt_DataMapper
   }
 
   /**
-   * Setter para configuração de um adapter de banco de dados padrão usado
-   * nas instâncias concretas de CoreExt_DataMapper quando nenhuma instância de
-   * clsBanco é passada ao construtor.
+   * Setter para configuraï¿½ï¿½o de um adapter de banco de dados padrï¿½o usado
+   * nas instï¿½ncias concretas de CoreExt_DataMapper quando nenhuma instï¿½ncia de
+   * clsBanco ï¿½ passada ao construtor.
    * @param clsBanco $db
    */
   public static function setDefaultDbAdapter(clsBanco $db = NULL)
@@ -128,8 +128,8 @@ abstract class CoreExt_DataMapper
   }
 
   /**
-   * Reseta o adapter padrão, fazendo com que CoreExt_DataMapper instancie
-   * automaticamente uma instância de clsBanco quando necessário.
+   * Reseta o adapter padrï¿½o, fazendo com que CoreExt_DataMapper instancie
+   * automaticamente uma instï¿½ncia de clsBanco quando necessï¿½rio.
    */
   public static function resetDefaultDbAdapter()
   {
@@ -137,11 +137,11 @@ abstract class CoreExt_DataMapper
   }
 
   /**
-   * Setter para o objeto de adapter responsável pela interação com o banco de
+   * Setter para o objeto de adapter responsï¿½vel pela interaï¿½ï¿½o com o banco de
    * dados.
    *
    * @param  clsBanco $db
-   * @return CoreExt_DataMapper Provê interface fluída
+   * @return CoreExt_DataMapper Provï¿½ interface fluï¿½da
    */
   protected function _setDbAdapter(clsBanco $db)
   {
@@ -152,16 +152,16 @@ abstract class CoreExt_DataMapper
   /**
    * Getter para o objeto de adapter de banco de dados.
    *
-   * Se nenhuma instância foi explicitamente passada ao construtor,
-   * tenta atribuir uma instância por padrão, na seguinte ordem:
+   * Se nenhuma instï¿½ncia foi explicitamente passada ao construtor,
+   * tenta atribuir uma instï¿½ncia por padrï¿½o, na seguinte ordem:
    *
-   * - Usando o adapter provido pelo método estático setDefaultDbAdapter
-   * (útil para usar várias instâncias de CoreExt_DataMapper sem a instanciação
+   * - Usando o adapter provido pelo mï¿½todo estï¿½tico setDefaultDbAdapter
+   * (ï¿½til para usar vï¿½rias instï¿½ncias de CoreExt_DataMapper sem a instanciaï¿½ï¿½o
    * da classe clsBanco)
    * - Ou, instanciando a classe clsBanco
    *
-   * Usar o setter estático tem a vantagem de reduzir o overhead causado pela
-   * instanciação a clsBanco a cada novo objeto CoreExt_DataMapper.
+   * Usar o setter estï¿½tico tem a vantagem de reduzir o overhead causado pela
+   * instanciaï¿½ï¿½o a clsBanco a cada novo objeto CoreExt_DataMapper.
    *
    * @return clsBanco
    */
@@ -180,7 +180,7 @@ abstract class CoreExt_DataMapper
   }
 
   /**
-   * Getter público para o objeto de adapter de banco de dados.
+   * Getter pï¿½blico para o objeto de adapter de banco de dados.
    * @return clsBanco
    */
   public function getDbAdapter()
@@ -201,7 +201,7 @@ abstract class CoreExt_DataMapper
   }
 
   /**
-   * Retorna o nome do recurso, isto é o nome da tabela sem '_',
+   * Retorna o nome do recurso, isto ï¿½ o nome da tabela sem '_',
    * Ex: transporte_aluno => transporte aluno.
    *
    * @return string
@@ -215,7 +215,7 @@ abstract class CoreExt_DataMapper
    * Retorna os nomes das colunas da tabela em um array, de acordo com o array
    * de dados associativo $data.
    *
-   * Caso nenhum array seja passado, é usado o array de atributos da classe
+   * Caso nenhum array seja passado, ï¿½ usado o array de atributos da classe
    * CoreExt_Entity ao qual o data mapper mapeia.
    *
    * @param array $data
@@ -232,7 +232,7 @@ abstract class CoreExt_DataMapper
 
     $tempColumns = array_map(array($this, '_getTableColumn'), array_keys($data));
 
-    // Remove colunas não-persistíveis
+    // Remove colunas nï¿½o-persistï¿½veis
     foreach ($tempColumns as $key => $column) {
       if (is_null($column)) {
         continue;
@@ -247,10 +247,10 @@ abstract class CoreExt_DataMapper
    * Retorna o nome do campo da tabela caso o identificador do atributo
    * esteja mapeado em $_attributeMap.
    *
-   * Caso contrário, retorna o próprio identificador do atributo.
+   * Caso contrï¿½rio, retorna o prï¿½prio identificador do atributo.
    *
    * @param string $key
-   * @return string|NULL NULL para coluna não persistível
+   * @return string|NULL NULL para coluna nï¿½o persistï¿½vel
    */
   protected function _getTableColumn($key)
   {
@@ -265,7 +265,7 @@ abstract class CoreExt_DataMapper
   }
 
   /**
-   * Retorna os nomes das colunas da tabela separados por vírgula e espaço (', ').
+   * Retorna os nomes das colunas da tabela separados por vï¿½rgula e espaï¿½o (', ').
    *
    * @param array $data
    * @return string
@@ -276,7 +276,7 @@ abstract class CoreExt_DataMapper
   }
 
   /**
-   * Retorna uma query SQL de recuperação de todos os registros de uma tabela.
+   * Retorna uma query SQL de recuperaï¿½ï¿½o de todos os registros de uma tabela.
    *
    * @param array $data
    * @param array $where
@@ -297,11 +297,11 @@ abstract class CoreExt_DataMapper
         preg_match('/[<,=,>]/', $value, $matches);
         $hasComparisonSign = ! empty($matches);
 
-        // Caso $value contenha <, > ou =, ex: '> $1', não adiciona sinal de igual.
+        // Caso $value contenha <, > ou =, ex: '> $1', nï¿½o adiciona sinal de igual.
         if($hasComparisonSign)
           $where[] = sprintf("%s %s", $whereName, $value);
 
-        // Caso $value contenha parametros para consulta preparada ($1, $2...), não adiciona $value entre aspas.
+        // Caso $value contenha parametros para consulta preparada ($1, $2...), nï¿½o adiciona $value entre aspas.
         elseif(strpos($value, '$') > -1)
           $where[] = sprintf("%s = %s", $whereName, $value);
 
@@ -328,11 +328,11 @@ abstract class CoreExt_DataMapper
   }
 
   /**
-   * Retorna uma query SQL de recuperação de registro baseada na identidade.
+   * Retorna uma query SQL de recuperaï¿½ï¿½o de registro baseada na identidade.
    *
    * Converte o argumento $pkey para float, como forma de
    * evitar os problemas do tipo int em ambientes 32 bit (mais especificamente,
-   * a ausência de um tipo long).
+   * a ausï¿½ncia de um tipo long).
    *
    * @link   http://php.net/manual/en/language.types.integer.php
    * @link   http://php.net/manual/en/function.intval.php
@@ -348,12 +348,11 @@ abstract class CoreExt_DataMapper
     }
     elseif (is_array($pkey)) {
       foreach ($pkey as $key => $pk) {
+        $whereName = $this->_getTableColumn($this->_primaryKey[$key]);
         if (is_numeric($pk)) {
-          $whereName = $this->_getTableColumn($this->_primaryKey[$key]);
           $where[] = sprintf("%s = '%d'", $whereName, floatval($pk));
         }
         elseif (is_string($pk)) {
-          $whereName = $this->_getTableColumn($this->_primaryKey[$key]);
           $where[] = sprintf("%s = '%s'", $whereName, $pk);
         }
       }
@@ -364,11 +363,11 @@ abstract class CoreExt_DataMapper
   }
 
   /**
-   * Retorna uma query SQL para a operação INSERT. Utiliza para isso os
-   * atributos da instância CoreExt_Entity, com o cuidado de remover o
+   * Retorna uma query SQL para a operaï¿½ï¿½o INSERT. Utiliza para isso os
+   * atributos da instï¿½ncia CoreExt_Entity, com o cuidado de remover o
    * campo identidade.
    *
-   * Uma query gerada por esse método segue a forma:
+   * Uma query gerada por esse mï¿½todo segue a forma:
    * <code>
    * INSERT INTO [schema.]table (column) VALUES ('value');
    * </code>
@@ -381,7 +380,7 @@ abstract class CoreExt_DataMapper
     $sql = 'INSERT INTO %s (%s) VALUES (%s)';
     $data = $this->_getDbAdapter()->formatValues($instance->toDataArray());
 
-    // Remove o campo identidade e campos não-persistentes
+    // Remove o campo identidade e campos nï¿½o-persistentes
     $data = $this->_cleanData($data);
 
     // Pega apenas os valores do array
@@ -391,7 +390,7 @@ abstract class CoreExt_DataMapper
     $columns = $this->_getTableColumns($data);
 
     // Trata os valores NULL diferentemente dos outros, para evitar erro
-    // de execução query
+    // de execuï¿½ï¿½o query
     $valuesStmt = array();
     for ($i = 0, $count = count($values); $i < $count; $i++) {
       $value = $values[$i];
@@ -410,11 +409,11 @@ abstract class CoreExt_DataMapper
   }
 
   /**
-   * Retorna uma query SQL para a operação UPDATE. Utiliza para isso os
-   * atributos da instância CoreExt_Entity, usando o atributo identidade
+   * Retorna uma query SQL para a operaï¿½ï¿½o UPDATE. Utiliza para isso os
+   * atributos da instï¿½ncia CoreExt_Entity, usando o atributo identidade
    * para especificar qual registro atualizar na tabela.
    *
-   * Uma query gerada por esse método segue a forma:
+   * Uma query gerada por esse mï¿½todo segue a forma:
    * <code>
    * UPDATE [schema.]table SET column='value' WHERE id = 'idValue';
    * </code>
@@ -428,13 +427,13 @@ abstract class CoreExt_DataMapper
     // Retorna somente os campos que foram alterados
     $data = $this->_getDbAdapter()->formatValues($this->returnOnlyFieldsChanged($instance));
 
-    // Remove o campo identidade e campos não-persistentes
+    // Remove o campo identidade e campos nï¿½o-persistentes
     $data = $this->_cleanData($data);
     if (empty($data)){
         return "";
     }
     // Trata os valores NULL diferentemente dos outros, para evitar erro
-    // de execução query
+    // de execuï¿½ï¿½o query
     $columns = array();
     foreach ($data as $key => $value) {
       $columnName = $this->_getTableColumn($key);
@@ -477,11 +476,11 @@ abstract class CoreExt_DataMapper
   }
 
   /**
-   * Retorna uma query SQL para a operação DELETE. Utiliza para isso o
-   * atributo identidade "id" (caso seja passada uma instância de CoreExt_Entity
-   * como parâmetro) ou o valor inteiro passado como parâmetro.
+   * Retorna uma query SQL para a operaï¿½ï¿½o DELETE. Utiliza para isso o
+   * atributo identidade "id" (caso seja passada uma instï¿½ncia de CoreExt_Entity
+   * como parï¿½metro) ou o valor inteiro passado como parï¿½metro.
    *
-   * Uma query gerada por esse método segue a forma:
+   * Uma query gerada por esse mï¿½todo segue a forma:
    * <code>
    * DELETE FROM [schema.]table WHERE id = 'idValue';
    * </code>
@@ -518,10 +517,10 @@ abstract class CoreExt_DataMapper
    * Retorna todos os registros como objetos CoreExt_Entity retornados pela
    * query de _getFindAllStatment().
    *
-   * @param  array $columns Atributos a serem carregados. O atributo id é sempre carregado.
+   * @param  array $columns Atributos a serem carregados. O atributo id ï¿½ sempre carregado.
    * @param  array $where
    * @param  array $orderBy
-   * @param  array $addColumnIdIfNotSet Se true, adiciona a coluna 'id' caso não esteja definido no array $columns
+   * @param  array $addColumnIdIfNotSet Se true, adiciona a coluna 'id' caso nï¿½o esteja definido no array $columns
    * @return array
    * @todo   Problema potencial com busca em registros com compount key. Testar.
    */
@@ -541,7 +540,7 @@ abstract class CoreExt_DataMapper
     $this->_getDbAdapter()->Consulta($this->_getFindAllStatment($columns, $where, $orderBy));
     $list = array();
 
-    // Retorna o locale para o usado no restante da aplicação
+    // Retorna o locale para o usado no restante da aplicaï¿½ï¿½o
     $this->getLocale()->setLocale();
 
     while ($this->_getDbAdapter()->ProximoRegistro()) {
@@ -556,11 +555,11 @@ abstract class CoreExt_DataMapper
    * Retorna todos os registros como objetos CoreExt_Entity retornados pela
    * query de _getFindAllStatment() (usando consulta preparada, util para evitar sql injection).
    *
-   * @param  array $columns Atributos a serem carregados. O atributo id é sempre carregado.
+   * @param  array $columns Atributos a serem carregados. O atributo id ï¿½ sempre carregado.
    * @param  array $where   Condicoes preparadas ex: array('arg1 = $1', 'arg2 = $2');
-   * @param  array $params  Valor das condiçoes ($1, $2 ...) ex: array('1', '3');
+   * @param  array $params  Valor das condiï¿½oes ($1, $2 ...) ex: array('1', '3');
    * @param  array $orderBy
-   * @param  array $addColumnIdIfNotSet Se true, adiciona a coluna 'id' caso não esteja definido no array $columns
+   * @param  array $addColumnIdIfNotSet Se true, adiciona a coluna 'id' caso nï¿½o esteja definido no array $columns
    * @return array
    * @todo
    */
@@ -581,7 +580,7 @@ abstract class CoreExt_DataMapper
     $sql = $this->_getFindAllStatment($columns, $where, $orderBy);
 
     if ($this->_getDbAdapter()->execPreparedQuery($sql, $params) != false) {
-      // Retorna o locale para o usado no restante da aplicação
+      // Retorna o locale para o usado no restante da aplicaï¿½ï¿½o
       $this->getLocale()->setLocale();
 
       while ($this->_getDbAdapter()->ProximoRegistro()) {
@@ -594,7 +593,7 @@ abstract class CoreExt_DataMapper
 
 
   /**
-   * Retorna um registro que tenha como identificador (chave única ou composta)
+   * Retorna um registro que tenha como identificador (chave ï¿½nica ou composta)
    * o valor dado por $pkey.
    *
    * @param  array|long $pkey
@@ -611,7 +610,7 @@ abstract class CoreExt_DataMapper
   }
 
   /**
-   * Salva ou atualiza um registro através de uma instância de CoreExt_Entity.
+   * Salva ou atualiza um registro atravï¿½s de uma instï¿½ncia de CoreExt_Entity.
    *
    * @param  CoreExt_Entity $instance
    * @return bool
@@ -621,26 +620,32 @@ abstract class CoreExt_DataMapper
   {
     /*
     if (!$instance->isValid()) {
-      throw new Exception('A instânca de "' . get_class($instance) . '" contém erros de validação.');
+      throw new Exception('A instï¿½nca de "' . get_class($instance) . '" contï¿½m erros de validaï¿½ï¿½o.');
     }*/
 
     // Coumpound key, todos os valores precisam estar setados, seja para
-    // INSERT ou UPDATE. A instância precisa ser marcada explicitamente
+    // INSERT ou UPDATE. A instï¿½ncia precisa ser marcada explicitamente
     // como "old" para que UPDATE seja chamado.
+    $allHasValue = true;
     if (1 < count($this->_primaryKey)) {
       foreach ($this->_primaryKey as $pk) {
         $value = $instance->get($pk);
         if (!isset($value)) {
+          $allHasValue = false;
           require_once 'CoreExt/DataMapper/Exception.php';
           throw new CoreExt_DataMapper_Exception('Erro de compound key. Uma das primary keys tem o valor NULL: "' . $pk . '"');
         }
       }
     }
-    // Field identity, se estiver presente, marca instância como "old".
+    // Field identity, se estiver presente, marca instï¿½ncia como "old".
     elseif (1 == count($this->_primaryKey)) {
-      if (isset($instance->id)) {
-        $instance->markOld();
+      if (!isset($instance->id)) {
+        $allHasValue = false;
       }
+    }
+
+    if ($allHasValue) {
+      $instance->markOld();
     }
 
     @session_start();
@@ -676,14 +681,14 @@ abstract class CoreExt_DataMapper
 
     return $return;
 
-    // Retorna o locale para o usado no restante da aplicação
+    // Retorna o locale para o usado no restante da aplicaï¿½ï¿½o
     $this->getLocale()->setLocale();
   }
 
   /**
-   * Apaga um registro através de uma instância CoreExt_Entity. Pode apagar
-   * recebendo uma instância com as chaves primárias setadas ou um array
-   * associativo de chaves primárias e seus valores.
+   * Apaga um registro atravï¿½s de uma instï¿½ncia CoreExt_Entity. Pode apagar
+   * recebendo uma instï¿½ncia com as chaves primï¿½rias setadas ou um array
+   * associativo de chaves primï¿½rias e seus valores.
    *
    * Exemplo:
    * <code>
@@ -694,10 +699,10 @@ abstract class CoreExt_DataMapper
    * // Por valor do campo identidade 'id'
    * $dataMapper->delete(1);
    *
-   * // Pelas chaves primárias de uma instância
+   * // Pelas chaves primï¿½rias de uma instï¿½ncia
    * $dataMapper->delete($instance);
    *
-   * // Por um array de chaves associativas de chaves primárias
+   * // Por um array de chaves associativas de chaves primï¿½rias
    * $dataMapper->delete(array('pk1' => 1, 'pk2' => 2));
    * </code>
    *
@@ -727,7 +732,7 @@ abstract class CoreExt_DataMapper
   }
 
   /**
-   * Retorna uma nova instância de CoreExt_Entity. A instância criada não
+   * Retorna uma nova instï¿½ncia de CoreExt_Entity. A instï¿½ncia criada nï¿½o
    * produz efeito algum no comportamento de CoreExt_DataMapper.
    *
    * @return CoreExt_Entity
@@ -747,7 +752,7 @@ abstract class CoreExt_DataMapper
       }
     }
 
-    // Remove dados não-persistíveis
+    // Remove dados nï¿½o-persistï¿½veis
     foreach ($this->_notPersistable as $field) {
       if (array_key_exists($field, $data)) {
         unset($data[$field]);
@@ -759,7 +764,7 @@ abstract class CoreExt_DataMapper
 
   /**
    * Cria um objeto CoreExt_Entity com os valores dos campos relacionais
-   * mapeados para os atributos da instância.
+   * mapeados para os atributos da instï¿½ncia.
    *
    * @param array $data
    * @return CoreExt_Entity
@@ -773,12 +778,12 @@ abstract class CoreExt_DataMapper
   }
 
   /**
-   * Mapeia os campos relacionais para os atributos de uma instância de
+   * Mapeia os campos relacionais para os atributos de uma instï¿½ncia de
    * CoreExt_Entity.
    *
    * @param  array $data
    * @param  CoreExt_Entity $instance
-   * @return CoreExt_Entity A instância com os atributos mapeados
+   * @return CoreExt_Entity A instï¿½ncia com os atributos mapeados
    */
   protected function _mapData($data, CoreExt_Entity $instance)
   {
@@ -787,7 +792,7 @@ abstract class CoreExt_DataMapper
         $instance->$key = $value;
       }
       catch (CoreExt_Exception_InvalidArgumentException $e) {
-        // Caso o campo não tenha um atributo correspondente, procura no
+        // Caso o campo nï¿½o tenha um atributo correspondente, procura no
         // mapa de atributos pelo equivalente e atribue.
         if (FALSE !== ($index = array_search($key, $this->_attributeMap))) {
           $instance->$index = $value;
@@ -800,7 +805,7 @@ abstract class CoreExt_DataMapper
   /**
    * Setter.
    * @param CoreExt_Locale $instance
-   * @return CoreExt_DataMapper Provê interface fluída
+   * @return CoreExt_DataMapper Provï¿½ interface fluï¿½da
    */
   public function setLocale(CoreExt_Locale $instance)
   {
