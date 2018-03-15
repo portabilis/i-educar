@@ -915,6 +915,9 @@ class indice extends clsCadastro
                                9  => 'Unidade de atendimento socioeducativa',
                                10 => 'Unidade prisional',
                                11 => 'Outros');
+
+            // Os campos: Forma de ocupação do prédio e Código da escola que compartilha o prédio
+            // serão desabilitados quando local de funcionamento for diferente de 3 (Prédio escolar)
             $disabled = $this->local_funcionamento != 3;
             $options = array('label' => 'Local de funcionamento', 'resources' => $resources, 'value' => $this->local_funcionamento, 'size' => 70, 'required' => false);
             $this->inputsHelper()->select('local_funcionamento', $options);
@@ -1358,8 +1361,7 @@ class indice extends clsCadastro
         unset($this->destinacao_lixo[0]);
         $destinacao_lixo = implode(',', $this->destinacao_lixo);
 
-        if (!empty($this->escola_inep_id) && strlen($this->escola_inep_id) != 8) {
-            $this->mensagem = 'O código INEP da escola deve conter 8 dígitos.';
+        if(!$this->validaDigitosInepEscola($this->escola_inep_id, 'INEP da escola')) {
             return false;
         }
 
@@ -1369,6 +1371,10 @@ class indice extends clsCadastro
         }
 
         if (!$this->validaLatitudeLongitude()) {
+            return false;
+        }
+
+        if(!$this->validaDigitosInepEscola($this->codigo_inep_escola_compartilhada, 'INEP da escola que compartilha o prédio')) {
             return false;
         }
 
@@ -1713,8 +1719,7 @@ class indice extends clsCadastro
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 7, "educar_escola_lst.php");
 
-        if (!empty($this->escola_inep_id) && strlen($this->escola_inep_id) != 8) {
-            $this->mensagem = 'O código INEP da escola deve conter 8 dígitos.';
+        if(!$this->validaDigitosInepEscola($this->escola_inep_id, 'INEP da escola')) {
             return false;
         }
 
@@ -1731,8 +1736,7 @@ class indice extends clsCadastro
             return false;
         }
 
-        if (!empty($this->codigo_inep_escola_compartilhada) && strlen($this->codigo_inep_escola_compartilhada) != 8) {
-            $this->mensagem = 'O código INEP da escola que compartilha o prédio deve conter 8 dígitos.';
+        if(!$this->validaDigitosInepEscola($this->codigo_inep_escola_compartilhada, 'INEP da escola que compartilha o prédio')) {
             return false;
         }
     
@@ -2179,25 +2183,28 @@ class indice extends clsCadastro
 
     protected function validaDDDTelefone($valorDDD = null, $valorTelefone = null, $nomeCampo)
     {
+        $msgRequereTelefone = "O campo: {$nomeCampo}, deve ser preenchido quando o DDD estiver preenchido.";
+        $msgRequereDDD = "O campo: DDD, deve ser preenchido quando o {$nomeCampo} estiver preenchido.";
+
         if (!empty($valorDDD) && empty($valorTelefone)) {
-            $this->mensagem = $this->msgRequereTelefone($nomeCampo);
+            $this->mensagem = $msgRequereTelefone;
             return false;
         }
 
         if (empty($valorDDD) && !empty($valorTelefone)) {
-            $this->mensagem = $this->msgRequereDDD($nomeCampo);
+            $this->mensagem = $msgRequereDDD;
             return false;
         }
 
         return true;
     }
 
-    protected function msgRequereDDD($nomeCampo = null){
-        return "O campo: DDD, deve ser preenchido quando o {$nomeCampo} estiver preenchido.";
-    }
-
-    protected function msgRequereTelefone($nomeCampo = null){
-        return "O campo: {$nomeCampo}, deve ser preenchido quando o DDD estiver preenchido.";
+    protected function validaDigitosInepEscola($inep, $nomeCampo) {
+        if (!empty($inep) && strlen($inep) != 8) {
+            $this->mensagem = "O campo: {$nomedocampo} deve conter 8 dígitos.";
+            return false;
+        }
+        return true;
     }
 }
 
