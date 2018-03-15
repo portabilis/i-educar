@@ -425,7 +425,7 @@ class indice extends clsCadastro
                       'hora_inicio_intervalo', 'hora_fim_intervalo', 'ref_cod_regente', 'ref_cod_instituicao_regente',
                       'ref_cod_instituicao', 'ref_cod_curso', 'ref_ref_cod_serie_mult', 'ref_ref_cod_escola_mult',
                       'visivel', 'turma_turno_id', 'tipo_boletim', 'ano', 'dias_semana', 'atividades_complementares',
-                      'atividades_aee', 'turma_unificada', 'tipo_atendimento', 'turma_sem_professor', 'etapa_educacenso',
+                      'atividades_aee', 'turma_unificada', 'tipo_atendimento', 'etapa_educacenso',
                       'etapa_educacenso2', 'cod_curso_profissional', 'tipo_mediacao_didatico_pedagogico',
                       'nao_informar_educacenso', 'turma_mais_educacao');
 

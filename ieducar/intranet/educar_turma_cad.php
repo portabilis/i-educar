@@ -119,7 +119,6 @@ class indice extends clsCadastro
   var $atividades_complementares;
   var $atividades_aee;
   var $cod_curso_profissional;
-  var $turma_sem_professor;
   var $turma_unificada;
   var $etapa_educacenso;
   var $etapa_educacenso2;
@@ -547,9 +546,6 @@ class indice extends clsCadastro
                                                                     11 => 'Estratégias para autonomia no ambiente escolar')));
     $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-    $options = array('label' => Portabilis_String_Utils::toLatin1('Turma não tem profissional escolar em sala de aula'), 'value' => $this->turma_sem_professor);
-    $this->inputsHelper()->checkbox('turma_sem_professor', $options);
-
     $resources = Portabilis_Utils_Database::fetchPreparedQuery('SELECT id,nome FROM modules.etapas_educacenso');
     $resources = Portabilis_Array_Utils::setAsIdValue($resources, 'id', 'nome');
     $resources = Portabilis_Array_Utils::merge($resources, array('null' => 'Selecione'));
@@ -839,7 +835,6 @@ class indice extends clsCadastro
         $obj->tipo_atendimento = $this->tipo_atendimento;
         $obj->turma_mais_educacao = $this->turma_mais_educacao;
         $obj->cod_curso_profissional = $cod_curso_profissional;
-        $obj->turma_sem_professor = $this->turma_sem_professor == 'on' ? 1 : 0;
         $obj->turma_unificada = $this->turma_unificada == "" ? NULL : $this->turma_unificada;
         $obj->etapa_educacenso = $this->etapa_educacenso == "" ? NULL : $this->etapa_educacenso;
         $obj->etapa_educacenso2 = $this->etapa_educacenso2 == "" ? NULL : $this->etapa_educacenso2;
@@ -929,7 +924,6 @@ class indice extends clsCadastro
       $obj->tipo_atendimento = $this->tipo_atendimento;
       $obj->turma_mais_educacao = $this->turma_mais_educacao;
       $obj->cod_curso_profissional = $cod_curso_profissional;
-      $obj->turma_sem_professor = $this->turma_sem_professor == 'on' ? 1 : 0;
       $obj->turma_unificada = $this->turma_unificada == "" ? NULL : $this->turma_unificada;
       $obj->etapa_educacenso = $this->etapa_educacenso == "" ? NULL : $this->etapa_educacenso;
       $obj->etapa_educacenso2 = $this->etapa_educacenso2 == "" ? NULL : $this->etapa_educacenso2;
@@ -1045,7 +1039,6 @@ class indice extends clsCadastro
         $obj->tipo_atendimento = $this->tipo_atendimento;
         $obj->turma_mais_educacao = $this->turma_mais_educacao;
         $obj->cod_curso_profissional = $cod_curso_profissional;
-        $obj->turma_sem_professor = $this->turma_sem_professor == 'on' ? 1 : 0;
         $obj->turma_unificada = $this->turma_unificada == "" ? NULL : $this->turma_unificada;
         $obj->etapa_educacenso = $this->etapa_educacenso == "" ? NULL : $this->etapa_educacenso;
         $obj->etapa_educacenso2 = $this->etapa_educacenso2 == "" ? NULL : $this->etapa_educacenso2;
@@ -1126,7 +1119,6 @@ class indice extends clsCadastro
       $obj->tipo_atendimento = $this->tipo_atendimento;
       $obj->turma_mais_educacao = $this->turma_mais_educacao;
       $obj->cod_curso_profissional = $cod_curso_profissional;
-      $obj->turma_sem_professor = $this->turma_sem_professor == 'on' ? 1 : 0;
       $obj->turma_unificada = $this->turma_unificada == "" ? NULL : $this->turma_unificada;
       $obj->etapa_educacenso = $this->etapa_educacenso == "" ? NULL : $this->etapa_educacenso;
       $obj->etapa_educacenso2 = $this->etapa_educacenso2 == "" ? NULL : $this->etapa_educacenso2;
