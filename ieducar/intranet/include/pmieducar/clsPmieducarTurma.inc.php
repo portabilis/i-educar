@@ -1028,7 +1028,7 @@ class clsPmieducarTurma
             if(is_numeric($this->turma_mais_educacao)) {
                 $set  .= "{$gruda}turma_mais_educacao = '{$this->turma_mais_educacao}'";
                 $gruda = ", ";
-            }else{
+            } else {
                 $set  .= "{$gruda}turma_mais_educacao = NULL";
                 $gruda = ", ";
             }
