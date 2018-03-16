@@ -94,6 +94,7 @@ class indice extends clsCadastro
   var $dependencia;
 
   var $ref_cod_candidato_reserva_vaga;
+  var $ref_cod_candidato_fila_unica;
 
   function Inicializar()
   {
@@ -106,6 +107,7 @@ class indice extends clsCadastro
     $this->cod_matricula = $_GET['cod_matricula'];
     $this->ref_cod_aluno = $_GET['ref_cod_aluno'];
     $this->ref_cod_candidato_reserva_vaga = $_GET['ref_cod_candidato_reserva_vaga'];
+    $this->ref_cod_candidato_fila_unica = $_GET['cod_candidato_fila_unica'];
 
     $retorno = ($this->ref_cod_turma_copiar_enturmacoes ? 'Enturmar' : 'Novo');
 
@@ -153,6 +155,7 @@ class indice extends clsCadastro
     $this->campoOculto("cod_matricula", $this->cod_matricula);
     $this->campoOculto("ref_cod_aluno", $this->ref_cod_aluno);
     $this->campoOculto("ref_cod_candidato_reserva_vaga", $this->ref_cod_candidato_reserva_vaga);
+    $this->campoOculto("ref_cod_candidato_fila_unica", $this->ref_cod_candidato_fila_unica);
 
     if ($this->ref_cod_aluno){
       $obj_aluno = new clsPmieducarAluno();
@@ -197,6 +200,9 @@ class indice extends clsCadastro
         $this->campoOculto('is_padrao', $det_curso['padrao_ano_escolar']);
       }
     }
+
+      $script = array('/modules/Cadastro/Assets/Javascripts/Matricula.js');
+      Portabilis_View_Helper_Application::loadJavascript($this, $script);
 
     $this->acao_enviar = 'formUtils.submit()';
   }
@@ -684,6 +690,9 @@ class indice extends clsCadastro
         if ($countEscolasIguais > 0){
           $obj_crv = new clsPmieducarCandidatoReservaVaga($this->ref_cod_candidato_reserva_vaga);
           $obj_crv->vinculaMatricula($this->ref_cod_escola, $this->cod_matricula, $this->ref_cod_aluno);
+        } else if ($this->ref_cod_candidato_fila_unica) {
+            $obj_cfu = new clsPmieducarCandidatoFilaUnica($this->ref_cod_candidato_fila_unica);
+            $obj_cfu->vinculaMatricula($this->cod_matricula);
         }
 
         $this->enturmacaoMatricula($this->cod_matricula, $this->ref_cod_turma);
@@ -886,7 +895,7 @@ class indice extends clsCadastro
     $lst_sequencia = $obj_sequencia->lista(
       NULL, $ref_cod_serie, NULL, NULL, NULL, NULL, NULL, NULL, 1
     );
-    
+
     // Verifica se a série da matrícula cancelada é sequência de alguma outra série
     if (is_array($lst_sequencia)) {
       $det_sequencia    = array_shift($lst_sequencia);
@@ -1088,14 +1097,3 @@ $pagina->addForm($miolo);
 // Gera o código HTML
 $pagina->MakeAll();
 ?>
-
-<script>
-  $j(document).ready(function(){
-
-    $j("#ano").on('change', function(){
-      $j("#ref_cod_serie").val("");
-      $j("#ref_cod_turma").val("");
-    });
-
-  });
-</script>
