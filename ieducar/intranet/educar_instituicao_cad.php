@@ -94,6 +94,7 @@ class indice extends clsCadastro
     var $reprova_dependencia_ano_concluinte;
     var $bloqueia_matricula_serie_nao_seguinte;
     var $data_educacenso;
+    var $altera_atestado_para_declaracao;
 
     function Inicializar()
     {
@@ -149,6 +150,8 @@ class indice extends clsCadastro
         $this->reserva_integral_somente_com_renda      = dbBool($this->reserva_integral_somente_com_renda);
         $this->bloqueia_matricula_serie_nao_seguinte   = dbBool($this->bloqueia_matricula_serie_nao_seguinte);
         $this->exigir_dados_socioeconomicos            = dbBool($this->exigir_dados_socioeconomicos);
+        $this->altera_atestado_para_declaracao                      = dbBool($this->altera_atestado_para_declaracao);
+
 
         return $retorno;
     }
@@ -271,6 +274,7 @@ class indice extends clsCadastro
                           "Caso marcado, o aluno que reprovar em algum componente em ano concluinte será automaticamente reprovado.");
 
         $this->campoCheck("bloqueia_matricula_serie_nao_seguinte", "Não permitir matrículas que não respeitem a sequência de enturmação", $this->bloqueia_matricula_serie_nao_seguinte);
+        $this->campoCheck("altera_atestado_para_declaracao", "Altera nome do titulo do menu e relatórios de Atestado para Declaração.", $this->altera_atestado_para_declaracao);
 
         $this->inputsHelper()->text('data_base', array('label' => 'Data base para matrícula (dia/mês)',
                                                         'size' => 5,
@@ -318,6 +322,7 @@ class indice extends clsCadastro
         $obj->reserva_integral_somente_com_renda      = !is_null($this->reserva_integral_somente_com_renda);
         $obj->coordenador_transporte                  = $this->pessoa_coordenador_transporte;
         $obj->controlar_espaco_utilizacao_aluno       = is_null($this->controlar_espaco_utilizacao_aluno) ? 0 : 1;
+        $obj->altera_atestado_para_declaracao                       = is_null($this->altera_atestado_para_declaracao) ? 0 : 1;
         $obj->percentagem_maxima_ocupacao_salas       = Portabilis_Currency_Utils::moedaBrToUs($this->percentagem_maxima_ocupacao_salas);
         $obj->data_base_matricula                     = Portabilis_Date_Utils::brToPgSQL_ddmm($this->data_base);
         $obj->data_fechamento                         = Portabilis_Date_Utils::brToPgSQL_ddmm($this->data_fechamento);
@@ -332,6 +337,8 @@ class indice extends clsCadastro
           $instituicao = $instituicao->detalhe();
           $auditoria = new clsModulesAuditoriaGeral("instituicao", $this->pessoa_logada, $cod_instituicao);
           $auditoria->inclusao($instituicao);
+          $obj_altera = new clsPmieducarAlteraAtestadoParaDeclaracao($this->altera_atestado_para_declaracao);
+          $obj_altera->editaMenus();
           $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
           header( "Location: educar_instituicao_lst.php" );
           die();
@@ -368,6 +375,7 @@ class indice extends clsCadastro
         $obj->reserva_integral_somente_com_renda      = !is_null($this->reserva_integral_somente_com_renda);
         $obj->coordenador_transporte                  = $this->pessoa_coordenador_transporte;
         $obj->controlar_espaco_utilizacao_aluno       = is_null($this->controlar_espaco_utilizacao_aluno) ? 0 : 1;
+        $obj->altera_atestado_para_declaracao                       = is_null($this->altera_atestado_para_declaracao) ? 0 : 1;
         $obj->percentagem_maxima_ocupacao_salas       = Portabilis_Currency_Utils::moedaBrToUs($this->percentagem_maxima_ocupacao_salas);
         $obj->data_base_matricula                     = Portabilis_Date_Utils::brToPgSQL_ddmm($this->data_base);
         $obj->data_fechamento                         = Portabilis_Date_Utils::brToPgSQL_ddmm($this->data_fechamento);
@@ -382,6 +390,8 @@ class indice extends clsCadastro
           $detalheAtual = $obj->detalhe();
           $auditoria = new clsModulesAuditoriaGeral("instituicao", $this->pessoa_logada, $this->cod_instituicao);
           $auditoria->alteracao($detalheAntigo, $detalheAtual);
+          $obj_altera = new clsPmieducarAlteraAtestadoParaDeclaracao($this->altera_atestado_para_declaracao);
+          $obj_altera->editaMenus();
           $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
           header( "Location: educar_instituicao_lst.php" );
           die();

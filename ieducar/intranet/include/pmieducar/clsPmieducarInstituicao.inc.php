@@ -79,6 +79,7 @@ class clsPmieducarInstituicao
   var $reprova_dependencia_ano_concluinte;
   var $data_educacenso;
   var $exigir_dados_socioeconomicos;
+  var $altera_atestado_para_declaracao;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -154,7 +155,8 @@ class clsPmieducarInstituicao
                                    $controlar_espaco_utilizacao_aluno = NULL,
                                    $percentagem_maxima_ocupacao_salas = NULL,
                                    $quantidade_alunos_metro_quadrado = NULL,
-                                   $exigir_dados_socioeconomicos = NULL)
+                                   $exigir_dados_socioeconomicos = NULL,
+                                   $altera_atestado_para_declaracao = NULL)
   {
     $db = new clsBanco();
     $this->_schema = "pmieducar.";
@@ -200,7 +202,8 @@ class clsPmieducarInstituicao
                                                    data_educacenso,
                                                    bloqueia_matricula_serie_nao_seguinte,
                                                    permitir_carga_horaria,
-                                                   exigir_dados_socioeconomicos ";
+                                                   exigir_dados_socioeconomicos,
+                                                   altera_atestado_para_declaracao";
 
     if (is_numeric($ref_usuario_cad)) {
       if (class_exists('clsPmieducarUsuario')) {
@@ -649,6 +652,16 @@ class clsPmieducarInstituicao
         $gruda = ", ";
       }
 
+      if (dbBool($this->altera_atestado_para_declaracao)) {
+        $campos .= "{$gruda}altera_atestado_para_declaracao";
+        $valores .= "{$gruda} true ";
+        $gruda = ", ";
+      }else{
+        $campos .= "{$gruda}altera_atestado_para_declaracao";
+        $valores .= "{$gruda} false ";
+        $gruda = ", ";
+      }
+
       $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
       return $db->InsertId("{$this->_tabela}_cod_instituicao_seq");
     }
@@ -932,6 +945,14 @@ class clsPmieducarInstituicao
         $gruda = ", ";
       }else{
         $set .= "{$gruda}exigir_dados_socioeconomicos = false ";
+        $gruda = ", ";
+      }
+
+      if ($this->altera_atestado_para_declaracao) {
+        $set .= "{$gruda}altera_atestado_para_declaracao = true ";
+        $gruda = ", ";
+      }else{
+        $set .= "{$gruda}altera_atestado_para_declaracao = false ";
         $gruda = ", ";
       }
 
