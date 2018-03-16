@@ -52,32 +52,32 @@ class clsPmieducarCandidatoFilaUnica
     var $via_judicial;
     var $via_judicial_doc;
     var $ativo;
-    
+
     // propriedades padrao
-    
+
     // Armazena o total de resultados obtidos na ultima chamada ao metodo lista
     var $_total;
-    
+
     // Nome do schema
     var $_schema;
-    
+
     // Nome da tabela
     var $_tabela;
-    
+
     // Lista separada por virgula, com os campos que devem ser selecionados na proxima chamado ao metodo lista
     var $_campos_lista;
-    
+
     // Lista com todos os campos da tabela separados por virgula, padrao para selecao no metodo lista
     var $_todos_campos;
-    
+
     // Valor que define a quantidade de registros a ser retornada pelo metodo lista
     var $_limite_quantidade;
-    
+
     // Define o valor de offset no retorno dos registros no metodo lista
     var $_limite_offset;
-    
+
     // Define o campo padrao para ser usado como padrao de ordenacao no metodo lista
-    var $_campo_order_by;    
+    var $_campo_order_by;
 
     // Construtor (PHP 4)
     function clsPmieducarCandidatoFilaUnica($cod_candidato_fila_unica = NULL,
@@ -118,6 +118,7 @@ class clsPmieducarCandidatoFilaUnica
                                                        cfu.horario_inicial,
                                                        cfu.horario_final,
                                                        cfu.situacao,
+                                                       cfu.motivo,
                                                        cfu.via_judicial,
                                                        cfu.via_judicial_doc,
                                                        cfu.ativo";
@@ -211,7 +212,7 @@ class clsPmieducarCandidatoFilaUnica
            && is_numeric($this->ano_letivo))
         {
             $db = new clsBanco();
-            
+
             $campos = "";
             $valores = "";
             $gruda = "";
@@ -231,15 +232,15 @@ class clsPmieducarCandidatoFilaUnica
             $campos .= "{$gruda}ref_cod_pessoa_cad";
             $valores .= "{$gruda}{$this->ref_cod_pessoa_cad}";
             $gruda = ", ";
-            
+
             $campos .= "{$gruda}data_cadastro";
             $valores .= "{$gruda}NOW()";
             $gruda = ", ";
-            
+
             $campos .= "{$gruda}ano_letivo";
             $valores .= "{$gruda}{$this->ano_letivo}";
             $gruda = ", ";
-            
+
             if(is_string($this->data_solicitacao))
             {
                 $campos .= "{$gruda}data_solicitacao";
@@ -294,16 +295,16 @@ class clsPmieducarCandidatoFilaUnica
                 $valores .= "{$gruda}'{$this->via_judicial_doc}'";
                 $gruda = ", ";
             }
-            
+
             $campos .= "{$gruda}ativo";
             $valores .= "{$gruda}'1'";
             $gruda = ", ";
-            
+
             return $db->campoUnico("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores ) RETURNING cod_candidato_fila_unica");
         }
         return false;
     }
-    
+
     /**
      * Edita os dados de um registro
      *
@@ -402,7 +403,7 @@ class clsPmieducarCandidatoFilaUnica
                 $set .= "{$gruda}ativo = {$this->ativo}";
                 $gruda = ", ";
             }
-            
+
             if( $set )
             {
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_candidato_fila_unica = {$this->cod_candidato_fila_unica}");
@@ -411,7 +412,7 @@ class clsPmieducarCandidatoFilaUnica
         }
         return false;
     }
-    
+
     /**
      * Retorna uma lista filtrados de acordo com os parametros
      *
@@ -443,7 +444,7 @@ class clsPmieducarCandidatoFilaUnica
                    LEFT JOIN cadastro.documento d ON (d.idpes = a.ref_idpes)";
 
         $filtros = "";
-        
+
         $whereAnd = " WHERE ";
 
         if(is_numeric($this->cod_candidato_fila_unica))
@@ -562,22 +563,22 @@ class clsPmieducarCandidatoFilaUnica
                                             FROM {$this->_tabela} cfu
                                             INNER JOIN pmieducar.aluno ON (aluno.cod_aluno = cfu.ref_cod_aluno)
                                             INNER JOIN cadastro.pessoa ON (pessoa.idpes = aluno.ref_idpes) {$filtros}");
-        
+
         $db->Consulta( $sql );
-        
+
         if( $countCampos > 1 )
         {
-            while ( $db->ProximoRegistro() ) 
+            while ( $db->ProximoRegistro() )
             {
                 $tupla = $db->Tupla();
-            
+
                 $tupla["_total"] = $this->_total;
                 $resultado[] = $tupla;
             }
         }
-        else 
+        else
         {
-            while ( $db->ProximoRegistro() ) 
+            while ( $db->ProximoRegistro() )
             {
                 $tupla = $db->Tupla();
                 $resultado[] = $tupla[$this->_campos_lista];
@@ -589,7 +590,7 @@ class clsPmieducarCandidatoFilaUnica
         }
         return false;
     }
-    
+
     /**
      * Retorna um array com os dados de um registro
      *
@@ -632,7 +633,7 @@ class clsPmieducarCandidatoFilaUnica
         }
         return false;
     }
-    
+
     /**
      * Retorna um array com os dados de um registro
      *
@@ -649,7 +650,7 @@ class clsPmieducarCandidatoFilaUnica
         }
         return false;
     }
-    
+
     /**
      * Exclui um registro
      *
@@ -664,7 +665,7 @@ class clsPmieducarCandidatoFilaUnica
         }
         return false;
     }
-    
+
     /**
      * Define quais campos da tabela serao selecionados na invocacao do metodo lista
      *
@@ -674,7 +675,7 @@ class clsPmieducarCandidatoFilaUnica
     {
         $this->_campos_lista = $str_campos;
     }
-    
+
     /**
      * Define que o metodo Lista devera retornoar todos os campos da tabela
      *
@@ -684,7 +685,7 @@ class clsPmieducarCandidatoFilaUnica
     {
         $this->_campos_lista = $this->_todos_campos;
     }
-    
+
     /**
      * Define limites de retorno para o metodo lista
      *
@@ -695,7 +696,7 @@ class clsPmieducarCandidatoFilaUnica
         $this->_limite_quantidade = $intLimiteQtd;
         $this->_limite_offset = $intLimiteOffset;
     }
-    
+
     /**
      * Retorna a string com o trecho da query resposavel pelo Limite de registros
      *
@@ -714,7 +715,7 @@ class clsPmieducarCandidatoFilaUnica
         }
         return "";
     }
-    
+
     /**
      * Define campo para ser utilizado como ordenacao no metolo lista
      *
@@ -724,13 +725,13 @@ class clsPmieducarCandidatoFilaUnica
     {
         // limpa a string de possiveis erros (delete, insert, etc)
         //$strNomeCampo = eregi_replace();
-        
+
         if( is_string( $strNomeCampo ) && $strNomeCampo )
         {
             $this->_campo_order_by = $strNomeCampo;
         }
     }
-    
+
     /**
      * Retorna a string com o trecho da query resposavel pela Ordenacao dos registros
      *
@@ -743,6 +744,30 @@ class clsPmieducarCandidatoFilaUnica
             return " ORDER BY {$this->_campo_order_by} ";
         }
         return "";
-    }    
+    }
+
+    function indefereCandidatura($motivo = null) {
+        $motivo = $motivo == null ? "null" : "'". $motivo ."'";
+
+        if (is_numeric($this->cod_candidato_fila_unica)) {
+            $db = new clsBanco();
+            $db->Consulta("UPDATE pmieducar.candidato_fila_unica SET situacao = 'I', motivo = $motivo, data_situacao = NOW()
+                            WHERE cod_candidato_fila_unica = '{$this->cod_candidato_fila_unica}'");
+            $db->ProximoRegistro();
+            return $db->Tupla();
+        }
+        return FALSE;
+    }
+
+    function vinculaMatricula($ref_cod_matricula) {
+        if (is_numeric($ref_cod_matricula)) {
+            $db = new clsBanco();
+            $db->Consulta("UPDATE pmieducar.candidato_fila_unica SET ref_cod_matricula = '{$ref_cod_matricula}', situacao = 'A', data_situacao = NOW()
+                      WHERE cod_candidato_fila_unica = '{$this->cod_candidato_fila_unica}'");
+            $db->ProximoRegistro();
+            return $db->Tupla();
+        }
+        return FALSE;
+    }
 }
 ?>
