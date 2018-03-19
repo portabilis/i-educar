@@ -1179,14 +1179,11 @@ class indice extends clsCadastro
             $this->inputsHelper()->integer('computadores', $options);
         
             $disabled = $this->computadores > 0;
-            $resources = array(0 => 'Não',
-                            1 => 'Sim');
             $options = array('label' => 'Possui internet',
-                            'resources' => $resources,
-                            'value' => $this->acesso_internet,
-                            'required' => false,
-                            'disabled' => !$disabled);
-            $this->inputsHelper()->select('acesso_internet', $options);
+                             'value' => $this->acesso_internet,
+                             'required' => false,
+                             'disabled' => !$disabled);
+            $this->inputsHelper()->booleanSelect('acesso_internet', $options);
 
             $options = array('label' => 'Total de funcionários da escola (inclusive profissionais escolares em sala de aula)', 'resources' => $resources, 'value' => $this->total_funcionario, 'required' => false, 'size' => 5, 'placeholder' => '');
             $this->inputsHelper()->integer('total_funcionario', $options);
@@ -1210,15 +1207,12 @@ class indice extends clsCadastro
                 $objEscola = new clsPmieducarEscola($this->cod_escola);
                 $habilitaFundamentalCiclo = dbBool($objEscola->possuiTurmasDoEnsinoFundamentalEmCiclos());
             }
-            $resources = array(0 => 'Não',
-                            1 => 'Sim');
+
             $options = array('label' => 'Ensino fundamental organizado em ciclos',
-                             'resources' => $resources,
                              'value' => $this->fundamental_ciclo,
                              'required' => false,
-                             'size' => 70,
                              'disabled' => !$habilitaFundamentalCiclo);
-            $this->inputsHelper()->select('fundamental_ciclo', $options);
+            $this->inputsHelper()->booleanSelect('fundamental_ciclo', $options);
 
             $resources = array(0 => 'Selecione',
                                1 => 'Área de assentamento',
@@ -1240,15 +1234,11 @@ class indice extends clsCadastro
                              'required' => false,
                              'size' => 70);
             $this->inputsHelper()->select('materiais_didaticos_especificos', $options);
-        
-            $resources = array(0 => 'Não',
-                               1 => 'Sim');
+
             $options = array('label' => 'Escola indígena',
-                             'resources' => $resources,
                              'value' => $this->educacao_indigena,
-                             'required' => false,
-                             'size' => 70);
-            $this->inputsHelper()->select('educacao_indigena', $options);
+                             'required' => false);
+            $this->inputsHelper()->booleanSelect('educacao_indigena', $options);
 
             $resources = array(1 => 'Língua Portuguesa',
                                2 => 'Línguia Indígena');
@@ -1276,32 +1266,20 @@ class indice extends clsCadastro
                              'size' => 70);
             $this->inputsHelper()->select('codigo_lingua_indigena', $options);
 
-            $resources = array(0 => 'Não',
-                               1 => 'Sim');
             $options = array('label' => 'Escola cede espaço para turmas do Brasil Alfabetizado',
-                             'resources' => $resources,
                              'value' => $this->espaco_brasil_aprendizado,
-                             'required' => false,
-                             'size' => 70);
-            $this->inputsHelper()->select('espaco_brasil_aprendizado', $options);
+                             'required' => false);
+            $this->inputsHelper()->booleanSelect('espaco_brasil_aprendizado', $options);
 
-            $resources = array(0 => 'Não',
-                               1 => 'Sim');
             $options = array('label' => 'Escola abre aos finais de semana para a comunidade',
-                             'resources' => $resources,
                              'value' => $this->abre_final_semana,
-                             'required' => false,
-                             'size' => 70);
-            $this->inputsHelper()->select('abre_final_semana', $options);
+                             'required' => false);
+            $this->inputsHelper()->booleanSelect('abre_final_semana', $options);
 
-            $resources = array(0 => 'Não',
-                               1 => 'Sim');
             $options = array('label' => 'Escola com proposta pedagógica de formação por alternância',
-                             'resources' => $resources,
                              'value' => $this->proposta_pedagogica,
-                             'required' => false,
-                             'size' => 70);
-            $this->inputsHelper()->select('proposta_pedagogica', $options);
+                             'required' => false);
+            $this->inputsHelper()->booleanSelect('proposta_pedagogica', $options);
 
             $resources = array('' => 'Selecione',
                                1  => 'Particular',
