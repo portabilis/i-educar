@@ -337,7 +337,7 @@ class indice extends clsCadastro
           $instituicao = $instituicao->detalhe();
           $auditoria = new clsModulesAuditoriaGeral("instituicao", $this->pessoa_logada, $cod_instituicao);
           $auditoria->inclusao($instituicao);
-          $obj_altera = new clsPmieducarAlteraAtestadoParaDeclaracao($this->altera_atestado_para_declaracao);
+          $obj_altera = new alteraAtestadoParaDeclaracao($this->altera_atestado_para_declaracao);
           $obj_altera->editaMenus();
           $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
           header( "Location: educar_instituicao_lst.php" );
@@ -390,7 +390,7 @@ class indice extends clsCadastro
           $detalheAtual = $obj->detalhe();
           $auditoria = new clsModulesAuditoriaGeral("instituicao", $this->pessoa_logada, $this->cod_instituicao);
           $auditoria->alteracao($detalheAntigo, $detalheAtual);
-          $obj_altera = new clsPmieducarAlteraAtestadoParaDeclaracao($this->altera_atestado_para_declaracao);
+          $obj_altera = new alteraAtestadoParaDeclaracao($this->altera_atestado_para_declaracao);
           $obj_altera->editaMenus();
           $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
           header( "Location: educar_instituicao_lst.php" );
