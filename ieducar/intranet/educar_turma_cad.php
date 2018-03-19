@@ -517,9 +517,7 @@ class indice extends clsCadastro
     $options = array('label' => 'Tipo de atendimento', 'resources' => $resources, 'value' => $this->tipo_atendimento, 'required' => false, 'size' => 70,);
     $this->inputsHelper()->select('tipo_atendimento', $options);
 
-    $json_file = file_get_contents("educacenso_json/atividades_complementares.json");   
-    $atividadesComplementares = json_decode($json_file, true);
-
+    $atividadesComplementares = loadJson('educacenso_json/atividades_complementares.json');
     $helperOptions = array('objectName'  => 'atividades_complementares');
     $options       = array('label' => 'Tipos de atividades complementares',
                             'size' => 50,
@@ -558,16 +556,13 @@ class indice extends clsCadastro
     $options = array('label' => 'Turma unificada', 'resources' => $resources,'label_hint' => 'Selecione somente se a turma for unificada', 'value' => $this->turma_unificada, 'required' => false, 'size' => 70,);
     $this->inputsHelper()->select('turma_unificada', $options);
 
-    $json_file = file_get_contents("educacenso_json/etapas_ensino.json");   
-    $etapas_educacenso = json_decode($json_file, true);
+    $etapas_educacenso = loadJson('educacenso_json/etapas_ensino.json');
     $etapas_educacenso = array_merge(array(null => 'Selecione'), $etapas_educacenso);
 
     $options = array('label' => 'Etapa de ensino', 'resources' => $etapas_educacenso, 'value' => $this->etapa_educacenso, 'required' => false, 'size' => 70,);
     $this->inputsHelper()->select('etapa_educacenso', $options);
 
-    $json_file = file_get_contents("educacenso_json/cursos_da_educacao_profissional.json");   
-    $cursos = json_decode($json_file, true);
-
+    $cursos = loadJson('educacenso_json/cursos_da_educacao_profissional.json');
     $helperOptions = array('objectName'  => 'cod_curso_profissional',
                            'type' => 'single');
     $options       = array('label' => 'Curso técnico',
