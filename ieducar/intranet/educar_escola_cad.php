@@ -1179,7 +1179,7 @@ class indice extends clsCadastro
             $this->inputsHelper()->integer('computadores', $options);
         
             $disabled = $this->computadores > 0;
-            $options = array('label' => 'Possui internet',
+            $options = array('label' => 'Possui internet banda larga',
                              'value' => $this->acesso_internet,
                              'required' => false,
                              'disabled' => !$disabled);
