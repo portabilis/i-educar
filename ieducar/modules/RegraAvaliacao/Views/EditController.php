@@ -555,8 +555,10 @@ var tabela_arredondamento = new function() {
 
     if($_POST['tipoNota']==3){
       $_POST['tabelaArredondamento'] = $_POST['tabelaArredondamentoNumero'];
+    } else {
+        $_POST['tabelaArredondamentoConceitual'] = null;
     }
-    
+
     foreach ($_POST as $key => $val) {
       if (array_key_exists($key, $this->_formMap)) {
         $data[$key] = $val;

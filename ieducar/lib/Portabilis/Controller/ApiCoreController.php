@@ -77,6 +77,10 @@ class ApiCoreController extends Core_Controller_Page_EditController
     return Portabilis_Utils_User::load($this->getSession()->id_pessoa);
   }
 
+  protected function getNivelAcesso() {
+    return Portabilis_Utils_User::getNivelAcesso();
+  }
+
 
   // validators
 
