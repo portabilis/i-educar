@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: matheus
- * Date: 14/03/18
- * Time: 14:45
- */
 
 class alteraAtestadoParaDeclaracao
 {
