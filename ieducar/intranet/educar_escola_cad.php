@@ -2179,7 +2179,7 @@ class indice extends clsCadastro
 
     protected function validaDigitosInepEscola($inep, $nomeCampo) {
         if (!empty($inep) && strlen($inep) != 8) {
-            $this->mensagem = "O campo: {$nomedocampo} deve conter 8 dígitos.";
+            $this->mensagem = "O campo: {$nomeCampo} deve conter 8 dígitos.";
             return false;
         }
         return true;
