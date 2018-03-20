@@ -770,7 +770,7 @@ class indice extends clsCadastro
             $this->inputsHelper()->text('longitude', array('max_length' => '20', 'size' => '20', 'required' => false, 'value' => $this->longitude, 'label_hint' => 'São aceito somente os seguintes caracteres: 0123456789 .-'));
             $this->campoCheck("bloquear_lancamento_diario_anos_letivos_encerrados", "Bloquear lançamento no diário para anos letivos encerrados", $this->bloquear_lancamento_diario_anos_letivos_encerrados);
             $this->campoCheck("utiliza_regra_diferenciada", "Utiliza regra diferenciada", dbBool($this->utiliza_regra_diferenciada), '', FALSE, FALSE, FALSE, 'Se marcado, utilizará regra de avaliação diferenciada informada na Série');
-            $this->campoNumero("orgao_regional", "Código do orgão regional de ensino",  $this->orgao_regional, "5", "5", false);
+            $this->campoNumero("orgao_regional", "Código do órgão regional de ensino",  $this->orgao_regional, "5", "5", false);
 
             $resources = array(1 => 'Em atividade',
                                2 => 'Paralisada',
@@ -1026,7 +1026,7 @@ class indice extends clsCadastro
                                                                           6 => 'Outros')));
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
         
-            $options = array('label' => 'Marcar todas');
+            $options = array('label' => 'Marcar todos');
             $this->inputsHelper()->checkbox('marcar_todas_dependencias', $options);
 
             $options = array('label' => 'Sala de diretoria', 'value' => $this->dependencia_sala_diretoria);
@@ -1074,7 +1074,7 @@ class indice extends clsCadastro
             $options = array('label' => 'Banheiro dentro do prédio', 'value' => $this->dependencia_banheiro_dentro);
             $this->inputsHelper()->checkbox('dependencia_banheiro_dentro', $options);
 
-            $options = array('label' => 'Banheiro adequado à Educação Infantil', 'value' => $this->dependencia_banheiro_infantil);
+            $options = array('label' => 'Banheiro adequado à Educação infantil', 'value' => $this->dependencia_banheiro_infantil);
             $this->inputsHelper()->checkbox('dependencia_banheiro_infantil', $options);
 
             $options = array('label' => 'Banheiro adequado a alunos com deficiência ou mobilidade reduzida', 'value' => $this->dependencia_banheiro_deficiente);
@@ -1344,7 +1344,7 @@ class indice extends clsCadastro
         }
 
         if (!empty($this->orgao_regional) && strlen($this->orgao_regional) != 5) {
-            $this->mensagem = 'O código do orgão regional de ensino deve conter 5 dígitos.';
+            $this->mensagem = 'O código do órgão regional de ensino deve conter 5 dígitos.';
             return false;
         }
 
@@ -1702,7 +1702,7 @@ class indice extends clsCadastro
         }
 
         if (!empty($this->orgao_regional) && strlen($this->orgao_regional) != 5) {
-            $this->mensagem = 'O código do orgão regional de ensino deve conter 5 dígitos.';
+            $this->mensagem = 'O código do órgão regional de ensino deve conter 5 dígitos.';
             return false;
         }
 
