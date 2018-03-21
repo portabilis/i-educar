@@ -1339,7 +1339,7 @@ class indice extends clsCadastro
         unset($this->destinacao_lixo[0]);
         $destinacao_lixo = implode(',', $this->destinacao_lixo);
 
-        if(!$this->validaDigitosInepEscola($this->escola_inep_id, 'INEP da escola')) {
+        if(!$this->validaDigitosInepEscola($this->escola_inep_id, 'Código INEP')) {
             return false;
         }
 
@@ -1352,7 +1352,7 @@ class indice extends clsCadastro
             return false;
         }
 
-        if(!$this->validaDigitosInepEscola($this->codigo_inep_escola_compartilhada, 'INEP da escola que compartilha o prédio')) {
+        if(!$this->validaDigitosInepEscola($this->codigo_inep_escola_compartilhada, 'Código da escola que compartilha o prédio')) {
             return false;
         }
 
@@ -1697,7 +1697,7 @@ class indice extends clsCadastro
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 7, "educar_escola_lst.php");
 
-        if(!$this->validaDigitosInepEscola($this->escola_inep_id, 'INEP da escola')) {
+        if(!$this->validaDigitosInepEscola($this->escola_inep_id, 'Código INEP')) {
             return false;
         }
 
@@ -1706,7 +1706,7 @@ class indice extends clsCadastro
             return false;
         }
 
-        if (!$this->validaDadosTelefones()){
+        if (!$this->validaDadosTelefones()) {
             return false;
         }
 
@@ -1714,7 +1714,7 @@ class indice extends clsCadastro
             return false;
         }
 
-        if(!$this->validaDigitosInepEscola($this->codigo_inep_escola_compartilhada, 'INEP da escola que compartilha o prédio')) {
+        if(!$this->validaDigitosInepEscola($this->codigo_inep_escola_compartilhada, 'Código da escola que compartilha o prédio')) {
             return false;
         }
     
