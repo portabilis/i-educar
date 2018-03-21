@@ -248,7 +248,7 @@ class indice extends clsCadastro
         );
 
         $this->campoCheck("bloqueia_matricula_serie_nao_seguinte", "Não permitir matrículas que não respeitem a sequência de enturmação", $this->bloqueia_matricula_serie_nao_seguinte);
-        $this->campoCheck("altera_atestado_para_declaracao", "Altera nome do titulo do menu e relatórios de Atestado para Declaração.", $this->altera_atestado_para_declaracao);
+        $this->campoCheck("altera_atestado_para_declaracao", "Alterar nome do título do menu e relatórios de Atestado para Declaração.", $this->altera_atestado_para_declaracao);
 
         $this->inputsHelper()->text(
             'data_base',
