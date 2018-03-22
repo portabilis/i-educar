@@ -126,7 +126,7 @@ class clsModulesMoradiaAluno
   /**
    * Construtor.
    */
-  function clsModulesMoradiaAluno($ref_cod_aluno = NULL,
+  function __construct($ref_cod_aluno = NULL,
      $moradia = NULL, $material = NULL,
      $casa_outra = NULL, $moradia_situacao = NULL,
      $quartos = NULL, $sala = NULL,

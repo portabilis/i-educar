@@ -59,7 +59,7 @@ class clsPessoaAuxiliar
      *
      * @return Object
      */
-    function clsPessoaAuxiliar( $int_cod_pessoa_auxiliar = null, $str_nm_pessoa = null, $str_sexo = null, $int_cep = null, $str_logradouro = null, $str_cidade = null, $str_bairro = null, $str_complemento = null, $int_numero = null, $str_letra = null, $int_numero_ap = null, $int_bloco = null, $int_andar = null, $str_estado = null, $str_email = null, $int_rg = null, $str_data_edicao = null, $str_data_nasc = null )
+    function __construct( $int_cod_pessoa_auxiliar = null, $str_nm_pessoa = null, $str_sexo = null, $int_cep = null, $str_logradouro = null, $str_cidade = null, $str_bairro = null, $str_complemento = null, $int_numero = null, $str_letra = null, $int_numero_ap = null, $int_bloco = null, $int_andar = null, $str_estado = null, $str_email = null, $int_rg = null, $str_data_edicao = null, $str_data_nasc = null )
     {
         if(is_numeric($int_cod_pessoa_auxiliar))
         {

@@ -102,7 +102,7 @@ class clsPmieducarBackup
      *
      * @return object
      */
-    function clsPmieducarBackup($idBackup = null,
+    function __construct($idBackup = null,
                                 $caminho = null,
                                 $dataBackup = null)
     {

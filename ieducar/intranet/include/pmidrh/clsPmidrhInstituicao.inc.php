@@ -114,7 +114,7 @@ class clsPmidrhInstituicao
      *
      * @return object
      */
-    function clsPmidrhInstituicao( $cod_instituicao = null, $ref_funcionario_exc = null, $ref_funcionario_cad = null, $nm_instituicao = null, $data_cadastro = null, $data_exclusao = null, $ativo = null )
+    function __construct( $cod_instituicao = null, $ref_funcionario_exc = null, $ref_funcionario_cad = null, $nm_instituicao = null, $data_cadastro = null, $data_exclusao = null, $ativo = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmidrh.";

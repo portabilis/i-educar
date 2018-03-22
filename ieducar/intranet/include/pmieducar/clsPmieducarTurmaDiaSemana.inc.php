@@ -103,7 +103,7 @@ class clsPmieducarTurmaDiaSemana
      *
      * @return object
      */
-    function clsPmieducarTurmaDiaSemana( $dia_semana = null, $ref_cod_turma = null, $hora_inicial = null, $hora_final = null )
+    function __construct( $dia_semana = null, $ref_cod_turma = null, $hora_inicial = null, $hora_final = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmieducar.";

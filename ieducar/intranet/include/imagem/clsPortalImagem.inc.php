@@ -109,7 +109,7 @@ class clsPortalImagem
   /**
    * Construtor.
    */
-  function clsPortalImagem($cod_imagem = NULL, $ref_cod_imagem_tipo = NULL,
+  function __construct($cod_imagem = NULL, $ref_cod_imagem_tipo = NULL,
     $fileIndex = NULL, $nm_imagem = NULL, $extensao = NULL, $altura = NULL,
     $largura = NULL, $data_cadastro = NULL, $ref_cod_pessoa_cad = NULL,
     $data_exclusao = NULL, $ref_cod_pessoa_exc = NULL)

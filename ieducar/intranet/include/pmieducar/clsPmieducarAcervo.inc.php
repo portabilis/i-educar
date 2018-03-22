@@ -130,7 +130,7 @@ class clsPmieducarAcervo
      *
      * @return object
      */
-    function clsPmieducarAcervo( $cod_acervo = null,
+    function __construct( $cod_acervo = null,
                                  $ref_cod_exemplar_tipo = null,
                                  $ref_cod_acervo = null,
                                  $ref_usuario_exc = null,

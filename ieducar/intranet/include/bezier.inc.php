@@ -35,7 +35,7 @@ class Bezier
     var $curve_points = array();
     var $curve_length = 0;
 
-    function Bezier($p0, $p1, $p2, $p3, $steps)
+    function __construct($p0, $p1, $p2, $p3, $steps)
     {
         $this->p0 = $p0;
         $this->p1 = $p1;

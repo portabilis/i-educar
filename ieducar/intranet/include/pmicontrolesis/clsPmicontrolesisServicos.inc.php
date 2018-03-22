@@ -109,7 +109,7 @@ class clsPmicontrolesisServicos
      *
      * @return object
      */
-    function clsPmicontrolesisServicos( $cod_servicos = null, $ref_cod_funcionario_cad = null, $ref_cod_funcionario_exc = null, $url = null, $caminho = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $title = null, $descricao = null )
+    function __construct( $cod_servicos = null, $ref_cod_funcionario_cad = null, $ref_cod_funcionario_exc = null, $url = null, $caminho = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $title = null, $descricao = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmicontrolesis.";

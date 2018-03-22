@@ -108,7 +108,7 @@ class clsPmieducarDispensaDisciplina
   /**
    * Construtor.
    */
-  function clsPmieducarDispensaDisciplina($ref_cod_matricula = NULL,
+  function __construct($ref_cod_matricula = NULL,
     $ref_cod_serie = NULL, $ref_cod_escola = NULL, $ref_cod_disciplina = NULL,
     $ref_usuario_exc = NULL, $ref_usuario_cad = NULL, $ref_cod_tipo_dispensa = NULL,
     $data_cadastro = NULL, $data_exclusao = NULL, $ativo = NULL, $observacao = NULL,

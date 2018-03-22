@@ -109,7 +109,7 @@ class clsUrbanoCepLogradouroBairro
      *
      * @return object
      */
-    function clsUrbanoCepLogradouroBairro( $idlog = null, $cep = null, $idbai = null, $idpes_rev = null, $data_rev = null, $origem_gravacao = null, $idpes_cad = null, $data_cad = null, $operacao = null, $idsis_rev = null, $idsis_cad = null )
+    function __construct( $idlog = null, $cep = null, $idbai = null, $idpes_rev = null, $data_rev = null, $origem_gravacao = null, $idpes_cad = null, $data_cad = null, $operacao = null, $idsis_rev = null, $idsis_cad = null )
     {
         $db = new clsBanco();
         $this->_schema = "urbano.";

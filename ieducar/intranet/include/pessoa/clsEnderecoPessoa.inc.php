@@ -23,7 +23,7 @@ class clsPessoaEndereco
   var $schema_cadastro = 'cadastro';
   var $tabela          = 'endereco_pessoa';
 
-  function clsPessoaEndereco($int_idpes = FALSE, $numeric_cep = FALSE,
+  function __construct($int_idpes = FALSE, $numeric_cep = FALSE,
     $int_idlog = FALSE, $int_idbai = FALSE, $numeric_numero = FALSE,
     $str_complemento = FALSE, $date_reside_desde = FALSE, $str1_letra = FALSE,
     $str_bloco = FALSE, $int_apartamento = FALSE, $int_andar = FALSE,

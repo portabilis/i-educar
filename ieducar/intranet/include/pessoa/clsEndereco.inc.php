@@ -70,7 +70,7 @@ class clsEndereco
    * Construtor.
    * @param int $idpes
    */
-  function clsEndereco($idpes = FALSE)
+  function __construct($idpes = FALSE)
   {
     $this->idpes = $idpes;
   }

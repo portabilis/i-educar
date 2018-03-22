@@ -105,7 +105,7 @@ class clsPmieducarConfiguracoesGerais
   /**
    * Construtor.
    */
-  function clsPmieducarConfiguracoesGerais($ref_cod_instituicao, $permite_relacionamento_posvendas, $url_novo_educacao)
+  function __construct($ref_cod_instituicao, $permite_relacionamento_posvendas, $url_novo_educacao)
   {
     $this->_schema = 'pmieducar.';
     $this->_tabela = $this->_schema . 'configuracoes_gerais';

@@ -101,7 +101,7 @@ class clsPmieducarBloqueioLancamentoFaltasNotas
   /**
    * Construtor.
    */
-  function clsPmieducarBloqueioLancamentoFaltasNotas($cod_bloqueio = NULL,
+  function __construct($cod_bloqueio = NULL,
                                                      $ano = NULL,
                                                      $ref_cod_escola = NULL,
                                                      $etapa = NULL,

@@ -103,7 +103,7 @@ class clsPmidrhLogVisualizacaoOlerite
      *
      * @return object
      */
-    function clsPmidrhLogVisualizacaoOlerite( $ref_ref_cod_pessoa_fj = null, $cod_visualizacao = null, $data_visualizacao = null, $cod_olerite = null )
+    function __construct( $ref_ref_cod_pessoa_fj = null, $cod_visualizacao = null, $data_visualizacao = null, $cod_olerite = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmidrh.";

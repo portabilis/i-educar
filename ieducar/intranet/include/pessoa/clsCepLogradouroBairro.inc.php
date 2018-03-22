@@ -41,7 +41,7 @@ class clsCepLogradouroBairro
      *
      * @return Object:clsCepLogradouroBairro
      */
-    function clsCepLogradouroBairro( $idlog=false, $cep=false, $idbai=false)
+    function __construct( $idlog=false, $cep=false, $idbai=false)
     {
         $objLogradouro = new clsLogradouro($idlog);
         if ($objLogradouro->detalhe())

@@ -39,7 +39,7 @@ class clsEmail
     var $conteudoCompilado;
     var $charset = "";
     
-    function  clsEmail( $destinatarios, $assunto, $conteudo, $template=false, $remetente=false, $remetenteNome=false, $replyto=false, $tipo="html", $strFooter=false )
+    function __construct( $destinatarios, $assunto, $conteudo, $template=false, $remetente=false, $remetenteNome=false, $replyto=false, $tipo="html", $strFooter=false )
     {
         $this->compilado = false;
         $this->destinatarios = $destinatarios;

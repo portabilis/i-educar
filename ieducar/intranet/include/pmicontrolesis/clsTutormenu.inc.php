@@ -40,7 +40,7 @@ class clsTutormenu
      *
      * @return Object:clsGrupo
      */
-    function clstutormenu( $cod_tutormenu = false, $nm_tutormenu = false )
+    function __construct( $cod_tutormenu = false, $nm_tutormenu = false )
     {
         $this->cod_tutormenu = $cod_tutormenu;
         $this->nm_tutormenu  = $nm_tutormenu;

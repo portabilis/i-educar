@@ -39,7 +39,7 @@ class PictureController {
     var $suportedExtensions;
     var $imageName;
 
-    function PictureController($imageFile, $maxWidth = NULL, $maxHeight = NULL, $maxSize = NULL,
+    function __construct($imageFile, $maxWidth = NULL, $maxHeight = NULL, $maxSize = NULL,
                              $suportedExtensions = NULL){
 
         

@@ -68,7 +68,7 @@ class clsPmieducarResponsaveisAluno
      *
      * @return object
      */
-    function clsPmieducarResponsaveisAluno($ref_cod_aluno = null,
+    function __construct($ref_cod_aluno = null,
                                                   $ref_idpes = null,
                                                   $vinculo_familiar = null)
     {

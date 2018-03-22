@@ -104,7 +104,7 @@ class clsPmieducarMotivoAfastamento {
    *
    * @return clsPmieducarMotivoAfastamento
    */
-  public function clsPmieducarMotivoAfastamento($cod_motivo_afastamento = NULL,
+  public function __construct($cod_motivo_afastamento = NULL,
     $ref_usuario_exc = NULL, $ref_usuario_cad = NULL, $nm_motivo = NULL,
     $descricao = NULL, $data_cadastro = NULL, $data_exclusao = NULL,
     $ativo = NULL, $ref_cod_instituicao = NULL) {

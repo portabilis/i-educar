@@ -58,7 +58,7 @@ class clsPessoaFisicaAlterado extends clsPessoaFj
     var $banco = 'pmi';
     var $schema_cadastro = "cadastro";
 
-    function  clsPessoaFisicaAlterado($int_idpes = false, $numeric_cpf = false, $date_data_nasc = false, $str_sexo = false, $int_idpes_mae =false, $int_idpes_pai = false)
+    function __construct($int_idpes = false, $numeric_cpf = false, $date_data_nasc = false, $str_sexo = false, $int_idpes_mae =false, $int_idpes_pai = false)
     {
         $this->idpes = $int_idpes;
         $this->cpf = $numeric_cpf;

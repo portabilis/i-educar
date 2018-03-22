@@ -114,7 +114,7 @@ class clsCadastroReligiao
      *
      * @return object
      */
-    function clsCadastroReligiao( $cod_religiao = null, $idpes_exc = null, $idpes_cad = null, $nm_religiao = null, $data_cadastro = null, $data_exclusao = null, $ativo = null )
+    function __construct( $cod_religiao = null, $idpes_exc = null, $idpes_cad = null, $nm_religiao = null, $data_cadastro = null, $data_exclusao = null, $ativo = null )
     {
         $db = new clsBanco();
         $this->_schema = "cadastro.";

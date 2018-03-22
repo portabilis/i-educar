@@ -114,7 +114,7 @@ class clsPortalPortalPlanta
      *
      * @return object
      */
-    function clsPortalPortalPlanta( $cod_planta = null, $local_plantio = null, $data = null, $observacao = null, $nm_planta = null, $nm_cientifico = null, $ativo = null )
+    function __construct( $cod_planta = null, $local_plantio = null, $data = null, $observacao = null, $nm_planta = null, $nm_cientifico = null, $ativo = null )
     {
         $db = new clsBanco();
         $this->_schema = "portal.";

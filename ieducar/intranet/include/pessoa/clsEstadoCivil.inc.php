@@ -40,7 +40,7 @@ class clsEstadoCivil
      *
      * @return Object:clsEstadoCivil
      */
-    function clsEstadoCivil( $ideciv=false, $descricao=false)
+    function __construct( $ideciv=false, $descricao=false)
     {
         $this->ideciv    = $ideciv;
         $this->descricao = $descricao;

@@ -107,7 +107,7 @@ class clsPublicPais
      *
      * @return object
      */
-    function clsPublicPais( $idpais = null, $nome = null, $geom = null, $cod_ibge = null )
+    function __construct( $idpais = null, $nome = null, $geom = null, $cod_ibge = null )
     {
         $db = new clsBanco();
         $this->_schema = "public.";

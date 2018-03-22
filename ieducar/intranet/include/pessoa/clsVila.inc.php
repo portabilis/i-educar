@@ -42,7 +42,7 @@ class clsVila
      *
      * @return Object:clsVila
      */
-    function clsVila( $int_idvil= false, $int_idmun = false, $str_nome = false, $str_geom = false )
+    function __construct( $int_idvil= false, $int_idmun = false, $str_nome = false, $str_geom = false )
     {
         $this->idvil = $int_idvil;
 

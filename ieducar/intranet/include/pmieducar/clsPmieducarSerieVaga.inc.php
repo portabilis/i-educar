@@ -104,7 +104,7 @@ class clsPmieducarSerieVaga
   /**
    * Construtor.
    */
-  function clsPmieducarSerieVaga($cod_serie_vaga = NULL, $ano = NULL, $ref_cod_instituicao = NULL,
+  function __construct($cod_serie_vaga = NULL, $ano = NULL, $ref_cod_instituicao = NULL,
                                   $ref_cod_escola = NULL, $ref_cod_curso = NULL, $ref_cod_serie = NULL, $turno = NULL, $vagas = NULL)
   {
     $db = new clsBanco();

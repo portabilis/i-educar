@@ -103,7 +103,7 @@ class clsPmieducarTurmaDisciplina
      *
      * @return object
      */
-    function clsPmieducarTurmaDisciplina( $ref_cod_turma = null, $ref_cod_disciplina = null, $ref_cod_escola = null, $ref_cod_serie = null )
+    function __construct( $ref_cod_turma = null, $ref_cod_disciplina = null, $ref_cod_escola = null, $ref_cod_serie = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmieducar.";

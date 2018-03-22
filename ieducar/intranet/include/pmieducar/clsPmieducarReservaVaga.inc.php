@@ -121,7 +121,7 @@ class clsPmieducarReservaVaga
    * @param string $nm_aluno
    * @param int $cpf_responsavel
    */
-  function clsPmieducarReservaVaga($cod_reserva_vaga = NULL,
+  function __construct($cod_reserva_vaga = NULL,
     $ref_ref_cod_escola = NULL, $ref_ref_cod_serie = NULL, $ref_usuario_exc = NULL,
     $ref_usuario_cad = NULL, $ref_cod_aluno = NULL, $data_cadastro = NULL,
     $data_exclusao = NULL, $ativo = NULL, $nm_aluno = NULL, $cpf_responsavel = NULL)

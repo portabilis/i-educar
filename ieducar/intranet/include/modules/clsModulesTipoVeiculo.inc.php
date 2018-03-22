@@ -98,7 +98,7 @@ class clsModulesTipoVeiculo
   /**
    * Construtor.
    */
-  function clsModulesTipoVeiculo($cod_tipo_veiculo = NULL, $descricao = NULL )
+  function __construct($cod_tipo_veiculo = NULL, $descricao = NULL )
   {
     $db = new clsBanco();
     $this->_schema = "modules.";

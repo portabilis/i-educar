@@ -94,7 +94,7 @@ class clsPmieducarSubnivel
      *
      * @return object
      */
-    function clsPmieducarSubnivel( $cod_subnivel = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $ref_cod_subnivel_anterior = null, $ref_cod_nivel = null, $nm_subnivel = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $salario = null )
+    function __construct( $cod_subnivel = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $ref_cod_subnivel_anterior = null, $ref_cod_nivel = null, $nm_subnivel = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $salario = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmieducar.";

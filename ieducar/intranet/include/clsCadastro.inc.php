@@ -117,7 +117,7 @@ class clsCadastro extends clsCampos
     $this->bannerClose = $boolFechaBanner;
   }
 
-  function clsCadastro()
+  function __construct()
   {
     parent::__construct();
     $this->tipoacao = @$_POST['tipoacao'];

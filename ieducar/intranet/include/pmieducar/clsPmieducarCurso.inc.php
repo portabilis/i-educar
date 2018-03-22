@@ -124,7 +124,7 @@ class clsPmieducarCurso
    *   $avaliacao_globalizada serão removidos do construtor. Seus valores são
    *   ignorados.
    */
-  function clsPmieducarCurso($cod_curso = NULL, $ref_usuario_cad = NULL,
+  function __construct($cod_curso = NULL, $ref_usuario_cad = NULL,
     $ref_cod_tipo_regime = NULL, $ref_cod_nivel_ensino = NULL,
     $ref_cod_tipo_ensino = NULL, $ref_cod_tipo_avaliacao = NULL, $nm_curso = NULL,
     $sgl_curso = NULL, $qtd_etapas = NULL, $frequencia_minima = NULL, $media = NULL,

@@ -68,7 +68,7 @@ class clsEnderecoExterno
   /**
    * Construtor.
    */
-  function clsEnderecoExterno($idpes = FALSE, $tipo = FALSE, $idtlog = FALSE,
+  function __construct($idpes = FALSE, $tipo = FALSE, $idtlog = FALSE,
     $logradouro = FALSE, $numero = FALSE, $letra = FALSE, $complemento = FALSE,
     $bairro = FALSE, $cep = FALSE, $cidade = FALSE, $sigla_uf = FALSE,
     $reside_desde = FALSE, $bloco = FALSE, $apartamento = FALSE, $andar = FALSE,

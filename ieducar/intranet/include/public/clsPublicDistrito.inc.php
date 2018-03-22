@@ -106,7 +106,7 @@ class clsPublicDistrito
    */
   var $_campo_order_by;
 
-  function clsPublicDistrito($idmun = NULL, $geom = NULL, $iddis = NULL,
+  function __construct($idmun = NULL, $geom = NULL, $iddis = NULL,
     $nome = NULL, $idpes_rev = NULL, $data_rev = NULL, $origem_gravacao = NULL,
     $idpes_cad = NULL, $data_cad = NULL, $operacao = NULL, $idsis_rev = NULL,
     $idsis_cad = NULL, $cod_ibge = NULL)

@@ -49,7 +49,7 @@ class clsOrgaoEmissorRg
      *
      * @return Object:clsOrgaoEmissorRg
      */
-    function clsOrgaoEmissorRg( $int_idorg_rg = false, $str_sigla = false, $str_descricao = false, $str_situacao = false )
+    function __construct( $int_idorg_rg = false, $str_sigla = false, $str_descricao = false, $str_situacao = false )
     {
         $this->idorg_rg = $int_idorg_rg;
         $this->sigla= $str_sigla;

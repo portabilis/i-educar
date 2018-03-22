@@ -47,7 +47,7 @@ class clsAgenda
     var $time_ontem;
     var $time_real_atual;
     
-    function  clsAgenda( $int_cod_editor = 0 , $int_cod_pessoa_dono=false, $int_cod_agenda=false, $time = false )
+    function __construct( $int_cod_editor = 0 , $int_cod_pessoa_dono=false, $int_cod_agenda=false, $time = false )
     {
         $db = new clsBanco();
         $this->cod_pessoa_dono = $int_cod_pessoa_dono;

@@ -82,7 +82,7 @@ class clsPortalFiaAplicacao
      *
      * @return object
      */
-    function clsPortalFiaAplicacao( $cod_aplicacao = null, $ano = null, $num_entidade = null, $valor = null )
+    function __construct( $cod_aplicacao = null, $ano = null, $num_entidade = null, $valor = null )
     {
         $db = new clsBanco();
         $this->_schema = "portal.";

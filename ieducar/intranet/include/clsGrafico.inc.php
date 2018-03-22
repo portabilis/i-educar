@@ -64,7 +64,7 @@
         var $globalAlign;
         
         
-        function clsGrafico($valor, $titulo="Gráfico", $tgrafico=600,  $legConteudo="" )
+        function __construct($valor, $titulo="Gráfico", $tgrafico=600,  $legConteudo="" )
         {
             $this->arrValores = $valor;         
             $this->intTamGrafico = $tgrafico;

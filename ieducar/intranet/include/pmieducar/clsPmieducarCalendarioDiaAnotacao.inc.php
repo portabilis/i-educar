@@ -103,7 +103,7 @@ class clsPmieducarCalendarioDiaAnotacao
      *
      * @return object
      */
-    function clsPmieducarCalendarioDiaAnotacao( $ref_dia = null, $ref_mes = null, $ref_ref_cod_calendario_ano_letivo = null, $ref_cod_calendario_anotacao = null )
+    function __construct( $ref_dia = null, $ref_mes = null, $ref_ref_cod_calendario_ano_letivo = null, $ref_cod_calendario_anotacao = null )
     {
 
         $db = new clsBanco();

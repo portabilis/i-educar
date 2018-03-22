@@ -47,7 +47,7 @@ class indice extends clsCadastro
     var $cod_agenda,
         $link;
 
-        function indice()
+        function __construct()
     {
         foreach ($_GET as $nm => $var)
         {

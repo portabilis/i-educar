@@ -125,7 +125,7 @@ class clsPmieducarSerie
   /**
    * Construtor.
    */
-  function clsPmieducarSerie($cod_serie = NULL, $ref_usuario_exc = NULL,
+  function __construct($cod_serie = NULL, $ref_usuario_exc = NULL,
     $ref_usuario_cad = NULL, $ref_cod_curso = NULL, $nm_serie = NULL,
     $etapa_curso = NULL, $concluinte = NULL, $carga_horaria = NULL,
     $data_cadastro = NULL, $data_exclusao = NULL, $ativo = NULL,

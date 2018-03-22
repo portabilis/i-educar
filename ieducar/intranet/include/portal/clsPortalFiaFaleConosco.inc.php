@@ -85,7 +85,7 @@ class clsPortalFiaFaleConosco
      *
      * @return object
      */
-    function clsPortalFiaFaleConosco( $cod_fale_conosco = null, $data_cadastro = null, $email_remetente = null, $nm_remetente = null, $mensagem = null )
+    function __construct( $cod_fale_conosco = null, $data_cadastro = null, $email_remetente = null, $nm_remetente = null, $mensagem = null )
     {
         $db = new clsBanco();
         $this->_schema = "portal.";

@@ -98,7 +98,7 @@ class clsPmieducarCategoriaAcervo
      */
     var $_campo_order_by;
 
-    function clsPmieducarCategoriaAcervo($id = null, $descricao = null, $observacoes = null ){
+    function __construct($id = null, $descricao = null, $observacoes = null ){
         $db = new clsBanco();
         $this->_schema = "pmieducar.";
         $this->_tabela = "{$this->_schema}categoria_obra";

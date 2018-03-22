@@ -78,7 +78,7 @@ class clsCampos extends Core_Controller_Page_Abstract
     var $ref_cod_escola;
     var $ref_cod_instituicao;
 
-    function clsCampos()
+    function __construct()
     {
         parent::__construct();
     }

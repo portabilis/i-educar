@@ -45,7 +45,7 @@ class clsLogradouro
      *
      * @return Object:clsLogradouro
      */
-    function clsLogradouro( $int_idlog = false, $str_idtlog=false, $str_nome=false, $int_idmun=false, $str_geom=false, $str_ident_oficial=false, $idpes_cad = null )
+    function __construct( $int_idlog = false, $str_idtlog=false, $str_nome=false, $int_idmun=false, $str_geom=false, $str_ident_oficial=false, $idpes_cad = null )
     {
         $this->idlog = $int_idlog;
         

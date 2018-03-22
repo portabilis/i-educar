@@ -133,7 +133,7 @@ class clsPmieducarInstituicao
   /**
    * Construtor.
    */
-  function clsPmieducarInstituicao($cod_instituicao = NULL,
+  function __construct($cod_instituicao = NULL,
                                    $ref_usuario_exc = NULL,
                                    $ref_usuario_cad = NULL,
                                    $ref_idtlog = NULL,

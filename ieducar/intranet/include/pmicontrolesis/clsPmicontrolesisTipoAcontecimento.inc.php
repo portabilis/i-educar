@@ -107,7 +107,7 @@ class clsPmicontrolesisTipoAcontecimento
      *
      * @return object
      */
-    function clsPmicontrolesisTipoAcontecimento( $cod_tipo_acontecimento = null, $ref_cod_funcionario_cad = null, $ref_cod_funcionario_exc = null, $nm_tipo = null, $caminho = null, $data_cadastro = null, $data_exclusao = null, $ativo = null )
+    function __construct( $cod_tipo_acontecimento = null, $ref_cod_funcionario_cad = null, $ref_cod_funcionario_exc = null, $nm_tipo = null, $caminho = null, $data_cadastro = null, $data_exclusao = null, $ativo = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmicontrolesis.";

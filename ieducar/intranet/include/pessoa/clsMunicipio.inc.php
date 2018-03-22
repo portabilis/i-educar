@@ -57,7 +57,7 @@ class clsMunicipio
      *
      * @return Object:clsMunicipio
      */
-    function clsMunicipio( $int_idmun = false, $str_nome = false, $str_sigla_uf = false, $int_area_km2 = false, $int_idmreg = false, $int_idasmun = false, $int_cod_ibge = false, $str_geom =false, $str_tipo = false, $int_idmun_pai = false, $int_idpes_cad = false, $int_idpes_rev = false, $str_origem_gravacao = false, $str_operacao=false, $int_idsis_cad=false, $int_idsis_rev=false )
+    function __construct( $int_idmun = false, $str_nome = false, $str_sigla_uf = false, $int_area_km2 = false, $int_idmreg = false, $int_idasmun = false, $int_cod_ibge = false, $str_geom =false, $str_tipo = false, $int_idmun_pai = false, $int_idpes_cad = false, $int_idpes_rev = false, $str_origem_gravacao = false, $str_operacao=false, $int_idsis_cad=false, $int_idsis_rev=false )
     {
         if($int_idmun)
         {

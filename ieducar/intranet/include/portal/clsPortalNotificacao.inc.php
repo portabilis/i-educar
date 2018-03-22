@@ -114,7 +114,7 @@ class clsPortalNotificacao
      *
      * @return object
      */
-    function clsPortalNotificacao( $cod_notificacao = null, $ref_cod_funcionario = null, $titulo = null, $conteudo = null, $data_hora_ativa = null, $url = null, $visualizacoes = null )
+    function __construct( $cod_notificacao = null, $ref_cod_funcionario = null, $titulo = null, $conteudo = null, $data_hora_ativa = null, $url = null, $visualizacoes = null )
     {
         $db = new clsBanco();
         $this->_schema = "portal.";

@@ -44,7 +44,7 @@ require_once 'include/clsMenuFuncionario.inc.php';
  */
 class clsPermissoes
 {
-  function clsPermissoes()
+  function __construct()
   {
   }
 

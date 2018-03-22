@@ -115,7 +115,7 @@ class clsPmieducarNotaAluno
      *
      * @return object
      */
-    function clsPmieducarNotaAluno( $cod_nota_aluno = null, $ref_sequencial = null, $ref_ref_cod_tipo_avaliacao = null, $ref_cod_serie = null, $ref_cod_escola = null, $ref_cod_disciplina = null, $ref_cod_matricula = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $modulo = null, $ref_cod_curso_disciplina = null, $nota = null )
+    function __construct( $cod_nota_aluno = null, $ref_sequencial = null, $ref_ref_cod_tipo_avaliacao = null, $ref_cod_serie = null, $ref_cod_escola = null, $ref_cod_disciplina = null, $ref_cod_matricula = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $modulo = null, $ref_cod_curso_disciplina = null, $nota = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmieducar.";

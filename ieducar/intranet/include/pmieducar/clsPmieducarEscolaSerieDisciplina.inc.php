@@ -105,7 +105,7 @@ class clsPmieducarEscolaSerieDisciplina
     /**
      * Construtor.
      */
-    function clsPmieducarEscolaSerieDisciplina(
+    function __construct(
         $ref_ref_cod_serie = NULL,
         $ref_ref_cod_escola = NULL,
         $ref_cod_disciplina = NULL,

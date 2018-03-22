@@ -40,7 +40,7 @@ class clsFuncionarioSu
      *
      * @return Object
      */
-    function clsFuncionarioSu( $int_ref_ref_cod_pessoa_fj = false )
+    function __construct( $int_ref_ref_cod_pessoa_fj = false )
     {
         if(is_numeric($int_ref_ref_cod_pessoa_fj))
         {

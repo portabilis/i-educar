@@ -41,7 +41,7 @@ class clsAtendimentoPessoa
      *
      * @return Object
      */
-    function clsAtendimentoPessoa( $int_ref_cod_atendimento = false, $int_ref_ref_cod_pessoa_fj = false, $int_master = false )
+    function __construct( $int_ref_cod_atendimento = false, $int_ref_ref_cod_pessoa_fj = false, $int_master = false )
     {
         if(is_numeric($int_ref_cod_atendimento))
         {

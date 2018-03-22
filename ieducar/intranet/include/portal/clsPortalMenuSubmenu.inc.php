@@ -112,7 +112,7 @@ class clsPortalMenuSubmenu
      *
      * @return object
      */
-    function clsPortalMenuSubmenu( $cod_menu_submenu = null, $ref_cod_menu_menu = null, $cod_sistema = null, $nm_submenu = null, $arquivo = null, $title = null)
+    function __construct( $cod_menu_submenu = null, $ref_cod_menu_menu = null, $cod_sistema = null, $nm_submenu = null, $arquivo = null, $title = null)
     {
         $db = new clsBanco();
         $this->_schema = "portal.";

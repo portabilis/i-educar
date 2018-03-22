@@ -48,7 +48,7 @@ class clsReuniao
      *
      * @return Object:clsnatureza
      */
-    function clsReuniao( $int_cod_reuniao = false, $int_ref_moderador = false, $int_ref_grupos_moderador = false, $str_descricao = false,  $bool_email_enviado = false,  $date_data_inicio_marcado = false, $date_data_fim_marcado = false, $date_data_inicio_real = false, $date_date_fim_real = false, $int_publica = false )
+    function __construct( $int_cod_reuniao = false, $int_ref_moderador = false, $int_ref_grupos_moderador = false, $str_descricao = false,  $bool_email_enviado = false,  $date_data_inicio_marcado = false, $date_data_fim_marcado = false, $date_data_inicio_real = false, $date_date_fim_real = false, $int_publica = false )
     {
         $this->cod_reuniao = is_numeric($int_cod_reuniao) ? $int_cod_reuniao : false;
         $this->ref_moderador = is_numeric($int_ref_moderador) ? $int_ref_moderador : false;

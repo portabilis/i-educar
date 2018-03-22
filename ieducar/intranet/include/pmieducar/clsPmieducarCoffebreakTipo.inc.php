@@ -108,7 +108,7 @@ class clsPmieducarCoffebreakTipo
      *
      * @return object
      */
-    function clsPmieducarCoffebreakTipo( $cod_coffebreak_tipo = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_tipo = null, $desc_tipo = null, $custo_unitario = null, $data_cadastro = null, $data_exclusao = null, $ativo = null )
+    function __construct( $cod_coffebreak_tipo = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_tipo = null, $desc_tipo = null, $custo_unitario = null, $data_cadastro = null, $data_exclusao = null, $ativo = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmieducar.";

@@ -45,7 +45,7 @@ class clsParticipante
      *
      * @return Object
      */
-    function clsParticipante( $int_ref_ref_idpes = false, $int_ref_ref_cod_grupos = false, $int_ref_cod_reuniao = false, $int_sequencial = false, $date_data_chegada = false, $date_data_saida = false )
+    function __construct( $int_ref_ref_idpes = false, $int_ref_ref_cod_grupos = false, $int_ref_cod_reuniao = false, $int_sequencial = false, $date_data_chegada = false, $date_data_saida = false )
     {
         if(is_numeric($int_ref_ref_idpes))
         {

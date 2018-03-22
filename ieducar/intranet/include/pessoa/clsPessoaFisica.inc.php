@@ -82,7 +82,7 @@ class clsPessoaFisica extends clsPessoaFj
   /**
    * Construtor.
    */
-  function  clsPessoaFisica($int_idpes = FALSE, $numeric_cpf = FALSE,
+  function __construct($int_idpes = FALSE, $numeric_cpf = FALSE,
     $date_data_nasc = FALSE, $str_sexo = FALSE, $int_idpes_mae = FALSE,
     $int_idpes_pai = FALSE)
   {

@@ -115,7 +115,7 @@ class clsCadastroRaca
      *
      * @return object
      */
-    function clsCadastroRaca( $cod_raca = null, $idpes_exc = null, $idpes_cad = null, $nm_raca = null, $data_cadastro = null, $data_exclusao = null, $ativo = null )
+    function __construct( $cod_raca = null, $idpes_exc = null, $idpes_cad = null, $nm_raca = null, $data_cadastro = null, $data_exclusao = null, $ativo = null )
     {
         $db = new clsBanco();
         $this->_schema = "cadastro.";

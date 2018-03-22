@@ -44,7 +44,7 @@ class clsUf
      *
      * @return Object:clsUf
      */
-    function clsUf( $str_sigla_uf=false, $str_nome=false, $str_geom=false, $int_idpais=false )
+    function __construct( $str_sigla_uf=false, $str_nome=false, $str_geom=false, $int_idpais=false )
     {
         global $coreExt;
         $this->config = $coreExt['Config'];
