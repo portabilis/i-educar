@@ -775,38 +775,37 @@ class indice extends clsCadastro
     $objTurma = $this->montaObjetoTurma(null, $this->pessoa_logada);
     $this->cod_turma = $cadastrou = $objTurma->cadastra();
 
-    if ($cadastrou) {
+    if (!$cadastrou) {
 
-        $turma = new clsPmieducarTurma($this->cod_turma);
-        $turma = $turma->detalhe();
-        $auditoria = new clsModulesAuditoriaGeral("turma", $this->pessoa_logada, $this->cod_turma);
-        $auditoria->inclusao($turma);
+      $this->mensagem = 'Cadastro não realizado.';
+      echo "<!--\nErro ao cadastrar clsPmieducarTurma\nvalores obrigatorios\nis_numeric( $this->pessoa_logada ) && is_numeric( $this->ref_cod_serie ) && is_numeric( $this->ref_cod_escola ) && is_numeric( $this->ref_cod_infra_predio_comodo ) && is_string( $this->nm_turma ) && is_numeric( $this->max_aluno ) && is_numeric( $this->multiseriada ) && is_numeric( $this->ref_cod_turma_tipo )\n-->";
 
-        $this->atualizaComponentesCurriculares(
-            $this->ref_cod_serie,
-            $this->ref_cod_escola,
-            $this->cod_turma,
-            $this->disciplinas,
-            $this->carga_horaria,
-            $this->usar_componente,
-            $this->docente_vinculado
-        );
-        
-        $this->cadastraInepTurma($this->cod_turma, $this->codigo_inep_educacenso);
+      return false;
+    }
 
-        if (!$this->atualizaModulos()) {
-            return false;
-        }
+    $turma = new clsPmieducarTurma($this->cod_turma);
+    $turma = $turma->detalhe();
+    $auditoria = new clsModulesAuditoriaGeral("turma", $this->pessoa_logada, $this->cod_turma);
+    $auditoria->inclusao($turma);
 
-        $this->mensagem .= 'Cadastro efetuado com sucesso.';
-        header('Location: educar_turma_lst.php');
-    } else {
-        $this->mensagem = 'Cadastro não realizado.';
-        echo "<!--\nErro ao cadastrar clsPmieducarTurma\nvalores obrigatorios\nis_numeric( $this->pessoa_logada ) && is_numeric( $this->ref_cod_serie ) && is_numeric( $this->ref_cod_escola ) && is_numeric( $this->ref_cod_infra_predio_comodo ) && is_string( $this->nm_turma ) && is_numeric( $this->max_aluno ) && is_numeric( $this->multiseriada ) && is_numeric( $this->ref_cod_turma_tipo )\n-->";
+    $this->atualizaComponentesCurriculares(
+        $this->ref_cod_serie,
+        $this->ref_cod_escola,
+        $this->cod_turma,
+        $this->disciplinas,
+        $this->carga_horaria,
+        $this->usar_componente,
+        $this->docente_vinculado
+    );
+    
+    $this->cadastraInepTurma($this->cod_turma, $this->codigo_inep_educacenso);
 
+    if (!$this->atualizaModulos()) {
         return false;
     }
 
+    $this->mensagem .= 'Cadastro efetuado com sucesso.';
+    header('Location: educar_turma_lst.php');
   }
 
   function Editar()
@@ -838,35 +837,35 @@ class indice extends clsCadastro
       CleanComponentesCurriculares::destroyOldResources($anoLetivo);
     }
 
-    if ($editou) {
-        $auditoria = new clsModulesAuditoriaGeral("turma", $this->pessoa_logada, $this->cod_turma);
-        $auditoria->alteracao($turmaDetalhe, $objTurma->detalhe());
-
-        $this->atualizaComponentesCurriculares(
-            $turmaDetalhe['ref_ref_cod_serie'],
-            $turmaDetalhe['ref_ref_cod_escola'],
-            $this->cod_turma,
-            $this->disciplinas,
-            $this->carga_horaria,
-            $this->usar_componente,
-            $this->docente_vinculado
-        );
-        
-        $this->cadastraInepTurma($this->cod_turma, $this->codigo_inep_educacenso);
-
-        if (!$this->atualizaModulos()) {
-            return false;
-        }
-
-        $this->mensagem .= 'Edição efetuada com sucesso.';
-        header('Location: educar_turma_lst.php');
-        die();
-    } else {
+    if (!$editou) {
         $this->mensagem = 'Edição não realizada.';
         echo "<!--\nErro ao editar clsPmieducarTurma\nvalores obrigatorios\nis_numeric( $this->pessoa_logada ) && is_numeric( $this->ref_cod_serie ) && is_numeric( $this->ref_cod_escola ) && is_numeric( $this->ref_cod_infra_predio_comodo ) && is_string( $this->nm_turma ) && is_numeric( $this->max_aluno ) && is_numeric( $this->multiseriada ) && is_numeric( $this->ref_cod_turma_tipo )\n-->";
 
         return false;
     }
+
+    $auditoria = new clsModulesAuditoriaGeral("turma", $this->pessoa_logada, $this->cod_turma);
+    $auditoria->alteracao($turmaDetalhe, $objTurma->detalhe());
+
+    $this->atualizaComponentesCurriculares(
+        $turmaDetalhe['ref_ref_cod_serie'],
+        $turmaDetalhe['ref_ref_cod_escola'],
+        $this->cod_turma,
+        $this->disciplinas,
+        $this->carga_horaria,
+        $this->usar_componente,
+        $this->docente_vinculado
+    );
+    
+    $this->cadastraInepTurma($this->cod_turma, $this->codigo_inep_educacenso);
+
+    if (!$this->atualizaModulos()) {
+        return false;
+    }
+
+    $this->mensagem .= 'Edição efetuada com sucesso.';
+    header('Location: educar_turma_lst.php');
+    die();
   }
 
 
