@@ -764,20 +764,6 @@ class indice extends clsCadastro
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     @session_write_close();
 
-    if ($this->tipo_atendimento != 4) {
-      $atividades_complementares = '{}';
-    }
-
-    if ($this->tipo_atendimento != 5) {
-      $atividades_aee = '{}';
-    }
-
-    $etapasCursoTecnico = array(30, 31, 32, 33, 34, 39, 40, 64, 74);
-
-    if (!in_array($this->etapa_educacenso, $etapasCursoTecnico)) {
-      $cod_curso_profissional = NULL;
-    }
-
     if(!$this->canCreateTurma($this->ref_cod_escola, $this->ref_cod_serie, $this->turma_turno_id))
       return false;
 
@@ -828,18 +814,6 @@ class indice extends clsCadastro
     @session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     @session_write_close();
-
-    if ($this->tipo_atendimento != 4) {
-      $atividades_complementares = '{}';
-    }
-
-    if ($this->tipo_atendimento != 5) {
-      $atividades_aee = '{}';
-    }
-
-    if (!in_array($this->etapa_educacenso, $etapasCursoTecnico)) {
-      $cod_curso_profissional = NULL;
-    }
 
     $turmaDetalhe = new clsPmieducarTurma($this->cod_turma);
     $turmaDetalhe = $turmaDetalhe->detalhe();
@@ -905,6 +879,20 @@ function montaObjetoTurma($codTurma = null, $usuarioCad = null, $usuarioExc = nu
     unset($this->atividades_aee[0]);
     $this->atividades_aee = '{' . implode(',', $this->atividades_aee) . '}';
     $this->cod_curso_profissional = $this->cod_curso_profissional[0];
+
+    if ($this->tipo_atendimento != 4) {
+      $this->atividades_complementares = '{}';
+    }
+
+    if ($this->tipo_atendimento != 5) {
+      $this->atividades_aee = '{}';
+    }
+
+    $etapasCursoTecnico = array(30, 31, 32, 33, 34, 39, 40, 64, 74);
+
+    if (!in_array($this->etapa_educacenso, $etapasCursoTecnico)) {
+      $this->cod_curso_profissional = NULL;
+    }
 
     $objTurma = new clsPmieducarTurma($codTurma);
     $objTurma->ref_usuario_cad = $usuarioCad;
