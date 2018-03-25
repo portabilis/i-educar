@@ -49,6 +49,8 @@ class ComponenteCurricular_Model_ComponenteDataMapper extends CoreExt_DataMapper
   protected $_tableName   = 'componente_curricular';
   protected $_tableSchema = 'modules';
 
+  protected $_primaryKey = array('id', 'instituicao');
+
   protected $_attributeMap = array(
     'instituicao' => 'instituicao_id',
     'area_conhecimento' => 'area_conhecimento_id'
