@@ -16,22 +16,29 @@
     function handleGetSerie(response) {
       var selectOptions = response['options'];
       $j('select[id^=multiple_search_serie]').each(function () {
-        updateChozen($j(this), selectOptions);
+        var opt = montaOptions(selectOptions);
+        updateChozen($j(this), opt);
       });
 
     }
 
     function updateChozen(input, values){
+      input.append(values);
+      input.trigger("chosen:updated");
+    };
+
+    function montaOptions(values) {
+      var opt = '';
       $j.each(values, function(index, value){
-        var opt = '<optgroup label="' + value.nome + '">';
+         opt += '<optgroup label="' + value.nome + '">';
         $j.each(value.series, function (index2, value2) {
           opt +='<option value="' + index2 + '"> ' + value2 + '</option>';
         })
-        opt+='</optgroup>';
-        input.append(opt);
+        opt +='</optgroup>';
       });
-      input.trigger("chosen:updated");
-    };
+
+      return opt;
+    }
 
   });
 })(jQuery);
