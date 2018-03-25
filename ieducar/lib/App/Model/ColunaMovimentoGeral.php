@@ -4,6 +4,7 @@ require_once 'CoreExt/Enum.php';
 
 class ColunaMovimentoGeral extends CoreExt_Enum
 {
+    const EDUCACAO_INFANTIL_ANO = 0;
     const PRIMEIRO_ANO = 1;
     const SEGUNDO_ANO = 2;
     const TERCEIRO_ANO = 3;
@@ -13,9 +14,9 @@ class ColunaMovimentoGeral extends CoreExt_Enum
     const SETIMO_ANO = 7;
     const OITAVO_ANO = 8;
     const NONO_ANO = 9;
-    const EDUCACAO_INFANTIL_ANO = 10;
 
     protected $_data = array(
+        self::EDUCACAO_INFANTIL_ANO => 'Educação infantil',
         self::PRIMEIRO_ANO => '1° ano',
         self::SEGUNDO_ANO => '2° ano',
         self::TERCEIRO_ANO => '3° ano',
@@ -24,8 +25,7 @@ class ColunaMovimentoGeral extends CoreExt_Enum
         self::SEXTO_ANO => '6° ano',
         self::SETIMO_ANO => '7° ano',
         self::OITAVO_ANO => '8° ano',
-        self::NONO_ANO => '9° ano',
-        self::EDUCACAO_INFANTIL_ANO => 'Educação infantil'
+        self::NONO_ANO => '9° ano'
     );
 
     public static function getInstance()
