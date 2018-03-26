@@ -764,8 +764,9 @@ class indice extends clsCadastro
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     @session_write_close();
 
-    if(!$this->canCreateTurma($this->ref_cod_escola, $this->ref_cod_serie, $this->turma_turno_id))
+    if (!$this->canCreateTurma($this->ref_cod_escola, $this->ref_cod_serie, $this->turma_turno_id)) {
       return false;
+    }
     
     if (!$this->verificaModulos()) {
       return false;
@@ -877,142 +878,142 @@ class indice extends clsCadastro
   }
 
 
-function montaObjetoTurma($codTurma = null, $usuarioCad = null, $usuarioExc = null)
-{
-    unset($this->dias_semana[0]);
-    $this->dias_semana = '{' . implode(',', $this->dias_semana) . '}';
-    unset($this->atividades_complementares[0]);
-    $this->atividades_complementares = '{' . implode(',', $this->atividades_complementares) . '}';
-    unset($this->atividades_aee[0]);
-    $this->atividades_aee = '{' . implode(',', $this->atividades_aee) . '}';
-    $this->cod_curso_profissional = $this->cod_curso_profissional[0];
+  function montaObjetoTurma($codTurma = null, $usuarioCad = null, $usuarioExc = null)
+  {
+      unset($this->dias_semana[0]);
+      $this->dias_semana = '{' . implode(',', $this->dias_semana) . '}';
+      unset($this->atividades_complementares[0]);
+      $this->atividades_complementares = '{' . implode(',', $this->atividades_complementares) . '}';
+      unset($this->atividades_aee[0]);
+      $this->atividades_aee = '{' . implode(',', $this->atividades_aee) . '}';
+      $this->cod_curso_profissional = $this->cod_curso_profissional[0];
 
-    if ($this->tipo_atendimento != 4) {
-      $this->atividades_complementares = '{}';
-    }
+      if ($this->tipo_atendimento != 4) {
+        $this->atividades_complementares = '{}';
+      }
 
-    if ($this->tipo_atendimento != 5) {
-      $this->atividades_aee = '{}';
-    }
+      if ($this->tipo_atendimento != 5) {
+        $this->atividades_aee = '{}';
+      }
 
-    $etapasCursoTecnico = array(30, 31, 32, 33, 34, 39, 40, 64, 74);
+      $etapasCursoTecnico = array(30, 31, 32, 33, 34, 39, 40, 64, 74);
 
-    if (!in_array($this->etapa_educacenso, $etapasCursoTecnico)) {
-      $this->cod_curso_profissional = NULL;
-    }
+      if (!in_array($this->etapa_educacenso, $etapasCursoTecnico)) {
+        $this->cod_curso_profissional = NULL;
+      }
 
-    $objTurma = new clsPmieducarTurma($codTurma);
-    $objTurma->ref_usuario_cad = $usuarioCad;
-    $objTurma->ref_usuario_exc = $usuarioExc;
-    $objTurma->ref_ref_cod_serie = $this->ref_cod_serie;
-    $objTurma->ref_ref_cod_escola = $this->ref_cod_escola;
-    $objTurma->ref_cod_infra_predio_comodo = $this->ref_cod_infra_predio_comodo;
-    $objTurma->nm_turma = $this->nm_turma;
-    $objTurma->sgl_turma = $this->sgl_turma;
-    $objTurma->max_aluno = $this->max_aluno;
-    $objTurma->multiseriada = $this->multiseriada;
-    $objTurma->ativo = 1;
-    $objTurma->ref_cod_turma_tipo = $this->ref_cod_turma_tipo;
-    $objTurma->hora_inicial = $this->hora_inicial;
-    $objTurma->hora_final = $this->hora_final;
-    $objTurma->hora_inicio_intervalo = $this->hora_inicio_intervalo;
-    $objTurma->hora_fim_intervalo = $this->hora_fim_intervalo;
-    $objTurma->ref_cod_regente = $this->ref_cod_regente;
-    $objTurma->ref_cod_instituicao_regente = $this->ref_cod_instituicao_regente;
-    $objTurma->ref_cod_instituicao = $this->ref_cod_instituicao;
-    $objTurma->ref_cod_curso = $this->ref_cod_curso;
-    $objTurma->ref_ref_cod_serie_mult = $this->ref_cod_serie_mult;
-    $objTurma->ref_ref_cod_escola_mult = $this->ref_cod_escola;
-    $objTurma->visivel = $this->visivel;
-    $objTurma->turma_turno_id = $this->turma_turno_id;
-    $objTurma->tipo_boletim = $this->tipo_boletim;
-    $objTurma->ano = $this->ano_letivo;
-    $objTurma->tipo_atendimento = $this->tipo_atendimento;
-    $objTurma->turma_mais_educacao = $this->turma_mais_educacao;
-    $objTurma->cod_curso_profissional = $this->cod_curso_profissional;
-    $objTurma->turma_unificada = $this->turma_unificada == "" ? NULL : $this->turma_unificada;
-    $objTurma->etapa_educacenso = $this->etapa_educacenso == "" ? NULL : $this->etapa_educacenso;
-    $objTurma->etapa_educacenso2 = $this->etapa_educacenso2 == "" ? NULL : $this->etapa_educacenso2;
-    $objTurma->ref_ref_cod_serie_mult = $this->ref_cod_serie_mult == "" ? NULL : $this->ref_cod_serie_mult;
-    $objTurma->ref_cod_disciplina_dispensada = $this->ref_cod_disciplina_dispensada == "" ? NULL : $this->ref_cod_disciplina_dispensada;
-    $objTurma->nao_informar_educacenso = $this->nao_informar_educacenso == 'on' ? 1 : 0;
-    $objTurma->tipo_mediacao_didatico_pedagogico = $this->tipo_mediacao_didatico_pedagogico;
-    $objTurma->dias_semana = $this->dias_semana;
-    $objTurma->atividades_complementares = $this->atividades_complementares;
-    $objTurma->atividades_aee = $this->atividades_aee;
+      $objTurma = new clsPmieducarTurma($codTurma);
+      $objTurma->ref_usuario_cad = $usuarioCad;
+      $objTurma->ref_usuario_exc = $usuarioExc;
+      $objTurma->ref_ref_cod_serie = $this->ref_cod_serie;
+      $objTurma->ref_ref_cod_escola = $this->ref_cod_escola;
+      $objTurma->ref_cod_infra_predio_comodo = $this->ref_cod_infra_predio_comodo;
+      $objTurma->nm_turma = $this->nm_turma;
+      $objTurma->sgl_turma = $this->sgl_turma;
+      $objTurma->max_aluno = $this->max_aluno;
+      $objTurma->multiseriada = $this->multiseriada;
+      $objTurma->ativo = 1;
+      $objTurma->ref_cod_turma_tipo = $this->ref_cod_turma_tipo;
+      $objTurma->hora_inicial = $this->hora_inicial;
+      $objTurma->hora_final = $this->hora_final;
+      $objTurma->hora_inicio_intervalo = $this->hora_inicio_intervalo;
+      $objTurma->hora_fim_intervalo = $this->hora_fim_intervalo;
+      $objTurma->ref_cod_regente = $this->ref_cod_regente;
+      $objTurma->ref_cod_instituicao_regente = $this->ref_cod_instituicao_regente;
+      $objTurma->ref_cod_instituicao = $this->ref_cod_instituicao;
+      $objTurma->ref_cod_curso = $this->ref_cod_curso;
+      $objTurma->ref_ref_cod_serie_mult = $this->ref_cod_serie_mult;
+      $objTurma->ref_ref_cod_escola_mult = $this->ref_cod_escola;
+      $objTurma->visivel = $this->visivel;
+      $objTurma->turma_turno_id = $this->turma_turno_id;
+      $objTurma->tipo_boletim = $this->tipo_boletim;
+      $objTurma->ano = $this->ano_letivo;
+      $objTurma->tipo_atendimento = $this->tipo_atendimento;
+      $objTurma->turma_mais_educacao = $this->turma_mais_educacao;
+      $objTurma->cod_curso_profissional = $this->cod_curso_profissional;
+      $objTurma->turma_unificada = $this->turma_unificada == "" ? NULL : $this->turma_unificada;
+      $objTurma->etapa_educacenso = $this->etapa_educacenso == "" ? NULL : $this->etapa_educacenso;
+      $objTurma->etapa_educacenso2 = $this->etapa_educacenso2 == "" ? NULL : $this->etapa_educacenso2;
+      $objTurma->ref_ref_cod_serie_mult = $this->ref_cod_serie_mult == "" ? NULL : $this->ref_cod_serie_mult;
+      $objTurma->ref_cod_disciplina_dispensada = $this->ref_cod_disciplina_dispensada == "" ? NULL : $this->ref_cod_disciplina_dispensada;
+      $objTurma->nao_informar_educacenso = $this->nao_informar_educacenso == 'on' ? 1 : 0;
+      $objTurma->tipo_mediacao_didatico_pedagogico = $this->tipo_mediacao_didatico_pedagogico;
+      $objTurma->dias_semana = $this->dias_semana;
+      $objTurma->atividades_complementares = $this->atividades_complementares;
+      $objTurma->atividades_aee = $this->atividades_aee;
 
-    return $objTurma;
-}
+      return $objTurma;
+  }
 
-function atualizaModulos()
-{
-    $objModulo = new clsPmieducarTurmaModulo();
-    $excluiu = $objModulo->excluirTodos($this->cod_turma);
-    $modulos = $this->montaModulos();
+  function atualizaModulos()
+  {
+      $objModulo = new clsPmieducarTurmaModulo();
+      $excluiu = $objModulo->excluirTodos($this->cod_turma);
+      $modulos = $this->montaModulos();
 
-    if (!$excluiu){
-        $this->mensagem = 'Edição não realizada.';
-        return false;
-    }
-    
-    foreach ($modulos as $modulo) {
-        $this->cadastraModulo($modulo);
-    }
+      if (!$excluiu){
+          $this->mensagem = 'Edição não realizada.';
+          return false;
+      }
+      
+      foreach ($modulos as $modulo) {
+          $this->cadastraModulo($modulo);
+      }
 
-    return true;
-}
+      return true;
+  }
 
-function montaModulos()
-{
-    foreach ($this->ref_cod_modulo as $key => $modulo) {
-        $turmaModulo[$key]['sequencial'] = $key;
-        $turmaModulo[$key]['ref_cod_modulo'] = $this->ref_cod_modulo[$key];
-        $turmaModulo[$key]['data_inicio'] = $this->data_inicio[$key];
-        $turmaModulo[$key]['data_fim'] = $this->data_fim[$key];
-        $turmaModulo[$key]['dias_letivos'] = $this->dias_letivos[$key];
-    }
+  function montaModulos()
+  {
+      foreach ($this->ref_cod_modulo as $key => $modulo) {
+          $turmaModulo[$key]['sequencial'] = $key;
+          $turmaModulo[$key]['ref_cod_modulo'] = $this->ref_cod_modulo[$key];
+          $turmaModulo[$key]['data_inicio'] = $this->data_inicio[$key];
+          $turmaModulo[$key]['data_fim'] = $this->data_fim[$key];
+          $turmaModulo[$key]['dias_letivos'] = $this->dias_letivos[$key];
+      }
 
-    return $turmaModulo;
-}
+      return $turmaModulo;
+  }
 
-function cadastraModulo($modulo)
-{
-    $modulo['data_inicio'] = dataToBanco($modulo['data_inicio']);
-    $modulo['data_fim']    = dataToBanco($modulo['data_fim']);
+  function cadastraModulo($modulo)
+  {
+      $modulo['data_inicio'] = dataToBanco($modulo['data_inicio']);
+      $modulo['data_fim']    = dataToBanco($modulo['data_fim']);
 
-    $objModulo = new clsPmieducarTurmaModulo($this->cod_turma);
-    $objModulo->ref_cod_modulo = $modulo['ref_cod_modulo'];
-    $objModulo->sequencial = $modulo['sequencial'];
-    $objModulo->data_inicio = $modulo['data_inicio'];
-    $objModulo->data_fim = $modulo['data_fim'];
-    $objModulo->dias_letivos = $modulo['dias_letivos'];
+      $objModulo = new clsPmieducarTurmaModulo($this->cod_turma);
+      $objModulo->ref_cod_modulo = $modulo['ref_cod_modulo'];
+      $objModulo->sequencial = $modulo['sequencial'];
+      $objModulo->data_inicio = $modulo['data_inicio'];
+      $objModulo->data_fim = $modulo['data_fim'];
+      $objModulo->dias_letivos = $modulo['dias_letivos'];
 
-    $cadastrou = $objModulo->cadastra();
+      $cadastrou = $objModulo->cadastra();
 
-    if (!$cadastrou) {
-        echo "<!--\nErro ao editar clsPmieducarTurmaModulo\nvalores obrigatorios\nis_numeric( $this->cod_turma ) && is_numeric( {$modulo["ref_cod_modulo_"]} ) \n-->";
-    }
+      if (!$cadastrou) {
+          echo "<!--\nErro ao editar clsPmieducarTurmaModulo\nvalores obrigatorios\nis_numeric( $this->cod_turma ) && is_numeric( {$modulo["ref_cod_modulo_"]} ) \n-->";
+      }
 
-    return true;
-}
+      return true;
+  }
 
-function verificaModulos()
-{
-    $cursoPadraoAnoEscolar = $this->padrao_ano_escolar == 1;
-    $possuiModulosInformados = (count($this->ref_cod_modulo) > 1 || $this->ref_cod_modulo[0] != '');
+  function verificaModulos()
+  {
+      $cursoPadraoAnoEscolar = $this->padrao_ano_escolar == 1;
+      $possuiModulosInformados = (count($this->ref_cod_modulo) > 1 || $this->ref_cod_modulo[0] != '');
 
-    if ($cursoPadraoAnoEscolar) {
-        return true;
-    }
+      if ($cursoPadraoAnoEscolar) {
+          return true;
+      }
 
-    if (!$possuiModulosInformados) {
-        echo '<script type="text/javascript">alert("É necessario adicionar pelo menos 1 módulo!")</script>';
-        $this->mensagem = 'Edição não realizada.';
-        return false;
-    }
+      if (!$possuiModulosInformados) {
+          echo '<script type="text/javascript">alert("É necessario adicionar pelo menos 1 módulo!")</script>';
+          $this->mensagem = 'Edição não realizada.';
+          return false;
+      }
 
-    return true;
-}
+      return true;
+  }
 
   function atualizaComponentesCurriculares($codSerie, $codEscola, $codTurma, $componentes, $cargaHoraria, $usarComponente, $docente)
   {
