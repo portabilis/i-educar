@@ -805,9 +805,7 @@ class indice extends clsCadastro
     
     $this->cadastraInepTurma($this->cod_turma, $this->codigo_inep_educacenso);
 
-    if (!$this->atualizaModulos()) {
-        return false;
-    }
+    $this->atualizaModulos();
 
     $this->mensagem .= 'Cadastro efetuado com sucesso.';
     header('Location: educar_turma_lst.php');
@@ -868,9 +866,7 @@ class indice extends clsCadastro
     
     $this->cadastraInepTurma($this->cod_turma, $this->codigo_inep_educacenso);
 
-    if (!$this->atualizaModulos()) {
-        return false;
-    }
+    $this->atualizaModulos();
 
     $this->mensagem .= 'Edição efetuada com sucesso.';
     header('Location: educar_turma_lst.php');
