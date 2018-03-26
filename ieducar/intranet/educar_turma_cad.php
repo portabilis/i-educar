@@ -766,6 +766,10 @@ class indice extends clsCadastro
 
     if(!$this->canCreateTurma($this->ref_cod_escola, $this->ref_cod_serie, $this->turma_turno_id))
       return false;
+    
+    if (!$this->verificaModulos()) {
+      return false;
+    }
 
     $this->ref_cod_instituicao_regente = $this->ref_cod_instituicao;
 
@@ -813,6 +817,10 @@ class indice extends clsCadastro
     @session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     @session_write_close();
+
+    if (!$this->verificaModulos()) {
+      return false;
+    }
 
     $turmaDetalhe = new clsPmieducarTurma($this->cod_turma);
     $turmaDetalhe = $turmaDetalhe->detalhe();
@@ -938,19 +946,6 @@ function montaObjetoTurma($codTurma = null, $usuarioCad = null, $usuarioExc = nu
 
 function atualizaModulos()
 {
-    $cursoPadraoAnoEscolar = $this->padrao_ano_escolar == 1;
-    $possuiModulosInformados = $this->ref_cod_modulo && $this->data_inicio && $this->data_fim;
-
-    if ($cursoPadraoAnoEscolar) {
-        return true;
-    }
-
-    if (!$possuiModulosInformados) {
-        echo '<script type="text/javascript">alert("É necessario adicionar pelo menos 1 módulo!")</script>';
-        $this->mensagem = 'Edição não realizada.';
-        return false;
-    }
-
     $objModulo = new clsPmieducarTurmaModulo();
     $excluiu = $objModulo->excluirTodos($this->cod_turma);
     $modulos = $this->montaModulos();
@@ -996,6 +991,24 @@ function cadastraModulo($modulo)
 
     if (!$cadastrou) {
         echo "<!--\nErro ao editar clsPmieducarTurmaModulo\nvalores obrigatorios\nis_numeric( $this->cod_turma ) && is_numeric( {$modulo["ref_cod_modulo_"]} ) \n-->";
+    }
+
+    return true;
+}
+
+function verificaModulos()
+{
+    $cursoPadraoAnoEscolar = $this->padrao_ano_escolar == 1;
+    $possuiModulosInformados = (count($this->ref_cod_modulo) > 1 || $this->ref_cod_modulo[0] != '');
+
+    if ($cursoPadraoAnoEscolar) {
+        return true;
+    }
+
+    if (!$possuiModulosInformados) {
+        echo '<script type="text/javascript">alert("É necessario adicionar pelo menos 1 módulo!")</script>';
+        $this->mensagem = 'Edição não realizada.';
+        return false;
     }
 
     return true;
