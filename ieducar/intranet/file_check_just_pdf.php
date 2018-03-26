@@ -35,10 +35,8 @@ class FileController {
     var $errorMessage;
     var $maxSize;
     var $suportedExtensions;
-    /** @noinspection PhpConstructorStyleInspection */
 
-    /** @noinspection PhpConstructorStyleInspection */
-    function FileController($file, $maxSize = NULL,
+    function __construct($file, $maxSize = NULL,
                              $suportedExtensions = NULL){
 
         $this->file = $file;
