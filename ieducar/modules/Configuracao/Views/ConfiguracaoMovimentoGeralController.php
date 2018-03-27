@@ -81,7 +81,6 @@ class indice extends clsCadastro
 
     function Inicializar()
     {
-        $this->loadConfig();
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(9998866, $_SESSION['id_pessoa'], 1,
             'educar_index.php');
@@ -96,8 +95,9 @@ class indice extends clsCadastro
     }
 
     public function Gerar() {
+        $this->loadConfig();
         foreach ($this->_formMap as $key => $value){
-            $this->inputsHelper()->multipleSearchSerie($key, array('label' => $value['label'], 'required' => false));
+            $this->inputsHelper()->multipleSearchSerie($key, array('label' => $value['label'], 'required' => false, 'values' => $value['value'], 'coluna' => $value['coluna']),'');
         }
     }
 
@@ -111,7 +111,7 @@ class indice extends clsCadastro
             }
             $series[] = $config->get('serie');
 
-            $this->_formMap['serie-'.$config->get('coluna')]['value'] = implode(',',$series);
+            $this->_formMap['serie-'.$config->get('coluna')]['value'] = $series;
         }
     }
 
