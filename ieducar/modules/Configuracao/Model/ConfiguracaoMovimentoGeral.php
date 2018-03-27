@@ -9,10 +9,6 @@ class ConfiguracaoMovimentoGeral extends CoreExt_Entity
         'coluna'    => NULL
     );
 
-    protected $_dataTypes = array(
-        'coluna' => 'integer'
-    );
-
     public function getDefaultValidatorCollection()
     {
         return array();
