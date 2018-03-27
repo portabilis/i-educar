@@ -2,6 +2,7 @@
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
+require_once 'Configuracao/Model/ConfiguracaoMovimentoGeralDataMapper.php';
 
 class clsIndexBase extends clsBase
 {
@@ -15,51 +16,72 @@ class clsIndexBase extends clsBase
 
 class indice extends clsCadastro
 {
-    public $_formMap    = array(
+    private $configDataMapper;
+    protected $_formMap    = array(
         'serie-0' => array(
             'label' => 'Educação infantil',
+            'coluna'=> 0,
+            'value' => '',
             'help'  => ''
         ),
         'serie-1' => array(
             'label' => '1° ano',
-            'help'  => ''
+            'coluna'=> 1,
+            'value' => ''
         ),
         'serie-2' => array(
             'label' => '2° ano',
+            'coluna'=> 2,
+            'value' => '',
             'help'  => ''
         ),
         'serie-3' => array(
             'label' => '3° ano',
+            'coluna'=> 3,
+            'value' => '',
             'help'  => ''
         ),
         'serie-4' => array(
             'label' => '4° ano',
+            'coluna'=> 4,
+            'value' => '',
             'help'  => ''
         ),
         'serie-5' => array(
             'label' => '5° ano',
+            'coluna'=> 5,
+            'value' => '',
             'help'  => ''
         ),
         'serie-6' => array(
             'label' => '6° ano',
+            'coluna'=> 6,
+            'value' => '',
             'help'  => ''
         ),
         'serie-7' => array(
             'label' => '7° ano',
+            'coluna'=> 7,
+            'value' => '',
             'help'  => ''
         ),
         'serie-8' => array(
             'label' => '8° ano',
+            'coluna'=> 8,
+            'value' => '',
             'help'  => ''
         ),
         'serie-9' => array(
             'label' => '9° ano',
+            'coluna'=> 9,
+            'value' => '',
             'help'  => ''
         )
     );
 
     function Inicializar()
     {
+        $this->loadConfig();
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(9998866, $_SESSION['id_pessoa'], 1,
             'educar_index.php');
@@ -74,32 +96,54 @@ class indice extends clsCadastro
     }
 
     public function Gerar() {
-
         foreach ($this->_formMap as $key => $value){
-//            $this->inputsHelper()->multipleSearchSerie($key, array('label' => $this->_getLabel($key), 'required' => false));
+            $this->inputsHelper()->multipleSearchSerie($key, array('label' => $value['label'], 'required' => false));
+        }
+    }
+
+    function loadConfig() {
+        $this->configDataMapper = new ConfiguracaoMovimentoGeralDataMapper();
+        foreach ($this->configDataMapper->findAll() as $config){
+            $config;
+            $series = explode(',', $this->_formMap['serie-'.$config->get('coluna')]['value']);
+            if (empty($series[0])){
+                $series = array();
+            }
+            $series[] = $config->get('serie');
+
+            $this->_formMap['serie-'.$config->get('coluna')]['value'] = implode(',',$series);
         }
     }
 
     function Editar()
     {
 
-//        $configuracoes = new clsPmieducarConfiguracoesGerais($ref_cod_instituicao, $permiteRelacionamentoPosvendas, $this->url_novo_educacao);
-//        $detalheAntigo = $configuracoes->detalhe();
-//        $editou = $configuracoes->edita();
-//
-//        if( $editou )
-//        {
-//            $detalheAtual = $configuracoes->detalhe();
-//            $auditoria = new clsModulesAuditoriaGeral("configuracoes_gerais", $this->pessoa_logada, $ref_cod_instituicao ? $ref_cod_instituicao : 'null');
-//            $auditoria->alteracao($detalheAntigo, $detalheAtual);
-//            $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-//            header( "Location: index.php" );
-//            die();
-//            return true;
-//        }
-//
-//        $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-//        return false;
+        $this->configDataMapper = new ConfiguracaoMovimentoGeralDataMapper();
+        $salvou = true;
+        $this->deleteAllConfigs();
+        foreach ($_POST as $key => $value){
+            if (strpos($key,'multiple_search_serie_serie-') === 0) {
+                $series = array();
+                if (!empty($value)){
+                    $series = explode(',', $value);
+                }
+                $coluna = str_replace('multiple_search_serie_serie-', '', $key);
+                foreach ($series as $serie) {
+                    if (isset($serie)){
+                        $this->configDataMapper->save($this->configDataMapper->createNewEntityInstance(array('coluna' => $coluna, 'serie' => $serie)));
+                    }
+                }
+            }
+        }
+        $this->mensagem .= "Edição efetuada com sucesso.<br>";
+        return $salvou;
+    }
+
+    function deleteAllConfigs() {
+        $this->configDataMapper = new ConfiguracaoMovimentoGeralDataMapper();
+        foreach ($this->configDataMapper->findAll() as $config){
+            $this->configDataMapper->delete($config);
+        }
     }
 
 }
