@@ -270,7 +270,6 @@ class indice extends clsCadastro
 
   function Novo()
   {
-      var_dump("saihdusa");die;
     @session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     @session_write_close();
@@ -308,7 +307,6 @@ class indice extends clsCadastro
     }
 
     if(!$this->existeComponenteSerie()) {
-
         $this->mensagem = 'O componente não está habilitado na série da escola.';
         $this->url_cancelar = 'educar_disciplina_dependencia_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula;
         $this->nome_url_cancelar = 'Cancelar';
