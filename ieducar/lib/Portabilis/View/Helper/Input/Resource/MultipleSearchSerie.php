@@ -26,10 +26,13 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchSerie extends Portabil
     protected function placeholderJs($options) {
         $optionsVarName = "multipleSearch" . Portabilis_String_Utils::camelize($options['objectName']) . "Options";
         $js             = "if (typeof $optionsVarName == 'undefined') { $optionsVarName = {} };
-                       $optionsVarName.placeholder = 'Selecione as séries';
-                       ";
+                       $optionsVarName.placeholder = safeUtf8Decode('Selecione');";
 
-        Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js, $afterReady = true);
+        $json = json_encode($options['options']['values']);
+
+        $js .= 'arrayOptions.push({element : $j("#'. $options['objectName'] . "_serie-". $options['options']['coluna'] .'"),values : '. $json .'})';
+
+        Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js, $afterReady = false);
     }
     protected function loadAssets() {
         Portabilis_View_Helper_Application::loadChosenLib($this->viewInstance);
