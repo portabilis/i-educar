@@ -36,6 +36,4 @@ CMD update-alternatives --config java
 
 CMD chmod 777 /home/portabilis/ieducar/modules/Reports/ReportSources/Portabilis/
 
-CMD service apache2 restart
-
 CMD /usr/sbin/apache2ctl -D FOREGROUND
