@@ -27,54 +27,54 @@ class indice extends clsCadastro
         'serie-1' => array(
             'label' => '1° ano',
             'coluna'=> 1,
-            'value' => ''
+            'value' => array()
         ),
         'serie-2' => array(
             'label' => '2° ano',
             'coluna'=> 2,
-            'value' => '',
+            'value' => array(),
             'help'  => ''
         ),
         'serie-3' => array(
             'label' => '3° ano',
             'coluna'=> 3,
-            'value' => '',
+            'value' => array(),
             'help'  => ''
         ),
         'serie-4' => array(
             'label' => '4° ano',
             'coluna'=> 4,
-            'value' => '',
+            'value' => array(),
             'help'  => ''
         ),
         'serie-5' => array(
             'label' => '5° ano',
             'coluna'=> 5,
-            'value' => '',
+            'value' => array(),
             'help'  => ''
         ),
         'serie-6' => array(
             'label' => '6° ano',
             'coluna'=> 6,
-            'value' => '',
+            'value' => array(),
             'help'  => ''
         ),
         'serie-7' => array(
             'label' => '7° ano',
             'coluna'=> 7,
-            'value' => '',
+            'value' => array(),
             'help'  => ''
         ),
         'serie-8' => array(
             'label' => '8° ano',
             'coluna'=> 8,
-            'value' => '',
+            'value' => array(),
             'help'  => ''
         ),
         'serie-9' => array(
             'label' => '9° ano',
             'coluna'=> 9,
-            'value' => '',
+            'value' => array(),
             'help'  => ''
         )
     );
@@ -105,10 +105,8 @@ class indice extends clsCadastro
         $this->configDataMapper = new ConfiguracaoMovimentoGeralDataMapper();
         foreach ($this->configDataMapper->findAll() as $config){
             $config;
-            $series = explode(',', $this->_formMap['serie-'.$config->get('coluna')]['value']);
-            if (empty($series[0])){
-                $series = array();
-            }
+            $series = $this->_formMap['serie-'.$config->get('coluna')]['value'];
+
             $series[] = $config->get('serie');
 
             $this->_formMap['serie-'.$config->get('coluna')]['value'] = $series;
@@ -123,13 +121,10 @@ class indice extends clsCadastro
         $this->deleteAllConfigs();
         foreach ($_POST as $key => $value){
             if (strpos($key,'multiple_search_serie_serie-') === 0) {
-                $series = array();
-                if (!empty($value)){
-                    $series = explode(',', $value);
-                }
+                $series = $value;
                 $coluna = str_replace('multiple_search_serie_serie-', '', $key);
                 foreach ($series as $serie) {
-                    if (isset($serie)){
+                    if (!empty($serie)){
                         $this->configDataMapper->save($this->configDataMapper->createNewEntityInstance(array('coluna' => $coluna, 'serie' => $serie)));
                     }
                 }
