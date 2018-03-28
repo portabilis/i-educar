@@ -55,4 +55,6 @@ class FormulaMedia_Model_FormulaDataMapper extends CoreExt_DataMapper
     'tipoFormula'  => 'tipo_formula',
     'substituiMenorNotaRc'  => 'substitui_menor_nota_rc',
   );
+
+  protected $_primaryKey = array('id', 'instituicao');
 }

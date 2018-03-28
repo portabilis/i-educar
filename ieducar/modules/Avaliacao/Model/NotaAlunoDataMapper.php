@@ -52,8 +52,4 @@ class Avaliacao_Model_NotaAlunoDataMapper extends CoreExt_DataMapper
   protected $_attributeMap = array(
     'matricula' => 'matricula_id'
   );
-
-  protected $_primaryKey = array(
-    'matricula'
-  );
 }
