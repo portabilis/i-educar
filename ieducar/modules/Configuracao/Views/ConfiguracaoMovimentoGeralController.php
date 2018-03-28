@@ -21,7 +21,7 @@ class indice extends clsCadastro
         'serie-0' => array(
             'label' => 'Educação infantil',
             'coluna'=> 0,
-            'value' => '',
+            'value' => array(),
             'help'  => ''
         ),
         'serie-1' => array(
