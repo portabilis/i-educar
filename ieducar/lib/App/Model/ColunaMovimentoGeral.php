@@ -4,7 +4,7 @@ require_once 'CoreExt/Enum.php';
 
 class ColunaMovimentoGeral extends CoreExt_Enum
 {
-    const EDUCACAO_INFANTIL_ANO = 0;
+    const EDUCACAO_INFANTIL = 0;
     const PRIMEIRO_ANO = 1;
     const SEGUNDO_ANO = 2;
     const TERCEIRO_ANO = 3;
@@ -16,7 +16,7 @@ class ColunaMovimentoGeral extends CoreExt_Enum
     const NONO_ANO = 9;
 
     protected $_data = array(
-        self::EDUCACAO_INFANTIL_ANO => 'Educação infantil',
+        self::EDUCACAO_INFANTIL => 'Educação infantil',
         self::PRIMEIRO_ANO => '1° ano',
         self::SEGUNDO_ANO => '2° ano',
         self::TERCEIRO_ANO => '3° ano',
