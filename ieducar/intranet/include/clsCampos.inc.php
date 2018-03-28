@@ -2634,7 +2634,7 @@ class clsCampos extends Core_Controller_Page_Abstract
     }
 
     function getCampoTexto($nome, $id = '', $valor = '', $tamanhovisivel = '',
-                           $tamanhomaximo = '', $evento = '', $disabled = '', $descricao = '',
+                           $tamanhomaximo = '', $evento = '', $disabled = '', $__descricao = '',
                            $class = '', $descricao = '')
     {
         $id = $id ? $id : $nome;

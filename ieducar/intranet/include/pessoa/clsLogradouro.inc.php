@@ -234,7 +234,7 @@ class clsLogradouro
      *
      * @return Array
      */
-    function listamun( $str_idtlog=false, $str_nome=false, $int_idmun_que_papo_e_esse=false, $int_idmun=false, $str_geom=false, $str_ident_oficial=false, $int_limite_ini=0, $int_limite_qtd=20, $str_orderBy = false )
+    function listamun( $str_idtlog=false, $str_nome=false, $__int_id=false, $int_idmun=false, $str_geom=false, $str_ident_oficial=false, $int_limite_ini=0, $int_limite_qtd=20, $str_orderBy = false )
     {
         // verificacoes de filtros a serem usados
         $whereAnd = "WHERE ";
