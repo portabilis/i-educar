@@ -197,11 +197,11 @@ class SerieController extends ApiCoreController
       $series = Portabilis_Array_Utils::filterSet($series, $attrs);
 
       foreach ( $series as $serie) {
-          $porCurso[$serie['cod_curso']]['nome'] = $serie['nm_curso'];
-          $porCurso[$serie['cod_curso']]['series'][$serie['id']] = $serie['nome'];
+          $seriePorCurso[$serie['cod_curso']]['nome'] = $serie['nm_curso'];
+          $seriePorCurso[$serie['cod_curso']]['series'][$serie['id']] = $serie['nome'];
       }
 
-      return array('options' => $porCurso );
+      return array('options' => $seriePorCurso );
   }
 
   protected function canGetBloqueioFaixaEtaria(){
