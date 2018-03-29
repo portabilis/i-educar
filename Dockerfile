@@ -4,7 +4,7 @@ MAINTAINER Everton Muniz <munizeverton@gmail.com>
 
 RUN apt-get -y update \
     && apt-get -y upgrade \
-    && apt-get install -y apache2 php7.0 libapache2-mod-php7.0 php7.0-pgsql php-pear php7.0-curl rpl wget php-xdebug \
+    && apt-get install -y apache2 php7.0 libapache2-mod-php7.0 php7.0-pgsql php-pear php7.0-curl rpl wget php-xdebug php-mbstring \
     && a2enmod rewrite \
     && apt-get clean
 
