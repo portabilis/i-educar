@@ -886,12 +886,11 @@ class DiarioApiController extends ApiCoreController
 
     protected function getMatriculas()
     {
-        $matriculas = array();
+        $regras = $matriculas = array();
 
         if ($this->canGetMatriculas()) {
             $alunos = new clsPmieducarMatriculaTurma();
-            $alunos->setOrderby("sequencial_fechamento , translate(pessoa.nome,'" . Portabilis_String_Utils::toLatin1(åáàãâäéèêëíìîïóòõôöúùüûçÿýñÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ) . "', '" . Portabilis_String_Utils::toLatin1(aaaaaaeeeeiiiiooooouuuucyynAAAAAAEEEEIIIIOOOOOUUUUCYN) . "')
-");
+            $alunos->setOrderby("sequencial_fechamento , translate(pessoa.nome,'" . Portabilis_String_Utils::toLatin1(åáàãâäéèêëíìîïóòõôöúùüûçÿýñÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ) . "', '" . Portabilis_String_Utils::toLatin1(aaaaaaeeeeiiiiooooouuuucyynAAAAAAEEEEIIIIOOOOOUUUUCYN) . "')");
 
             $alunos = $alunos->lista(
                 $this->getRequest()->matricula_id,
@@ -963,13 +962,17 @@ class DiarioApiController extends ApiCoreController
                     $matricula['situacao_deslocamento'] = null;
                 }
 
+                $matricula['regra'] = $this->getRegraAvaliacao();
+
+                $regras[$matricula['regra']['id']] = $matricula['regra'];
+
                 $matriculas[] = $matricula;
             }
         }
 
         // adiciona regras de avaliacao
         if (!empty($matriculas)) {
-            $this->appendResponse('details', $this->getRegraAvaliacao());
+            $this->appendResponse('details', array_values($regras));
         }
 
         $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
@@ -1637,6 +1640,10 @@ class DiarioApiController extends ApiCoreController
             $regra = $this->serviceBoletim()->getRegra();
             $itensRegra['id'] = $regra->get('id');
             $itensRegra['nome'] = $this->safeString($regra->get('nome'));
+            $itensRegra['nota_maxima_geral'] = $regra->get('notaMaximaGeral');
+            $itensRegra['nota_minima_geral'] = $regra->get('notaMinimaGeral');
+            $itensRegra['nota_maxima_exame_final'] = $regra->get('notaMaximaExameFinal');
+            $itensRegra['qtd_casas_decimais'] = $regra->get('qtdCasasDecimais');
 
             // tipo presença
             $cnsPresenca = RegraAvaliacao_Model_TipoPresenca;
@@ -1736,21 +1743,6 @@ class DiarioApiController extends ApiCoreController
         return $itensRegra;
     }
 
-    protected function getNotaLimits()
-    {
-        $notaLimits = array();
-
-        if ($this->canGetRegraAvaliacao()) {
-            $regra = $this->serviceBoletim()->getRegra();
-            $notaLimits['nota_maxima_geral'] = $regra->get('notaMaximaGeral');
-            $notaLimits['nota_minima_geral'] = $regra->get('notaMinimaGeral');
-            $notaLimits['nota_maxima_exame_final'] = $regra->get('notaMaximaExameFinal');
-            $notaLimits['qtd_casas_decimais'] = $regra->get('qtdCasasDecimais');
-        }
-
-        return $notaLimits;
-    }
-
     protected function inserirAuditoriaNotas($notaAntiga, $notaNova)
     {
         if ($this->usaAuditoriaNotas()) {
@@ -1805,7 +1797,6 @@ class DiarioApiController extends ApiCoreController
             $this->appendResponse('matriculas', $this->getMatriculas());
             $this->appendResponse('navegacao_tab', $this->getNavegacaoTab());
             $this->appendResponse('can_change', $this->canChange());
-            $this->appendResponse('nota_limits', $this->getNotaLimits());
         } elseif ($this->isRequestFor('post', 'nota') || $this->isRequestFor('post', 'nota_exame')) {
             $this->postNota();
         } elseif ($this->isRequestFor('post', 'nota_recuperacao_paralela')) {
