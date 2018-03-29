@@ -108,7 +108,7 @@ class RegraController extends ApiCoreController
             $ano = $this->getRequest()->ano;
 
             $sql = "SELECT
-                id,
+                ra.id,
                 tabela_arredondamento_id,
                 tabela_arredondamento_id_conceitual,
                 tipo_nota,
@@ -118,14 +118,17 @@ class RegraController extends ApiCoreController
                 tipo_recuperacao_paralela AS tipo_recuperacao,
                 media_recuperacao_paralela,
                 nota_maxima_geral,
-                nota_maxima_exame_final as nota_maxima_exame
+                nota_maxima_exame_final as nota_maxima_exame,
+                regra_diferenciada_id
                 FROM modules.regra_avaliacao ra
                 LEFT JOIN pmieducar.serie s ON s.regra_avaliacao_id = ra.id
                 LEFT JOIN pmieducar.turma t ON t.ref_ref_cod_serie = s.cod_serie
                 WHERE s.ativo = 1
                 AND t.ativo = 1
                 AND ra.instituicao_id = $1
-                AND t.ano = $2";
+                AND t.ano = $2
+                ORDER BY COALESCE(ra.regra_diferenciada_id,0), ra.id, t.cod_turma
+                ";
 
             $_regras = $this->fetchPreparedQuery($sql, array($instituicaoId, $ano));
 
@@ -133,7 +136,7 @@ class RegraController extends ApiCoreController
                 'id', 'tabela_arredondamento_id', 'tabela_arredondamento_id_conceitual',
                 'tipo_nota', 'tipo_presenca', 'parecer_descritivo', 'turma_id',
                 'tipo_recuperacao', 'media_recuperacao_paralela', 'nota_maxima_geral',
-                'nota_maxima_exame'
+                'nota_maxima_exame', 'regra_diferenciada_id'
             );
             $_regras = Portabilis_Array_Utils::filterSet($_regras, $attrs);
             $regras = array();
@@ -141,6 +144,7 @@ class RegraController extends ApiCoreController
 
             foreach ($_regras as $regra) {
                 $__regras[$regra['id']]['id'] = $regra['id'];
+                $__regras[$regra['id']]['regra_diferenciada_id']= $regra['regra_diferenciada_id'];
                 $__regras[$regra['id']]['tabela_arredondamento_id']= $regra['tabela_arredondamento_id'];
                 $__regras[$regra['id']]['tabela_arredondamento_id_conceitual'] = $regra['tabela_arredondamento_id_conceitual'];
                 $__regras[$regra['id']]['tipo_nota'] = $regra['tipo_nota'];
