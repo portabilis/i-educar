@@ -48,8 +48,8 @@ class DiarioController extends ApiCoreController
 {
   protected $_processoAp        = 642;
 
-  protected function getRegra($turmaId) {
-    return App_Model_IedFinder::getRegraAvaliacaoPorTurma($turmaId);
+  protected function getRegra($matriculaId) {
+    return App_Model_IedFinder::getRegraAvaliacaoPorMatricula($matriculaId);
   }
 
   protected function getComponentesPorMatricula($matriculaId) {
@@ -190,13 +190,13 @@ class DiarioController extends ApiCoreController
         foreach($notaTurma as $alunoId => $notaTurmaAluno){
 
           $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
-        
+
           if (!empty($matriculaId)){
             foreach ($notaTurmaAluno as $componenteCurricularId => $notaTurmaAlunoDisciplina){
               if($this->validateComponenteTurma($turmaId, $componenteCurricularId)){
                 $valor = $notaTurmaAlunoDisciplina['nota'];
                 $notaRecuperacao = $notaTurmaAlunoDisciplina['recuperacao'];
-                $nomeCampoRecuperacao = $this->defineCampoTipoRecuperacao($turmaId);
+                $nomeCampoRecuperacao = $this->defineCampoTipoRecuperacao($matriculaId);
                 $valor = $this->truncate($valor, 4);
 
                 $recuperacaoEspecifica = $nomeCampoRecuperacao == 'notaRecuperacaoEspecifica';
@@ -241,6 +241,8 @@ class DiarioController extends ApiCoreController
 
         foreach($notaTurma as $alunoId => $notaTurmaAluno){
 
+            $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
+
           foreach ($notaTurmaAluno as $componenteCurricularId => $notaTurmaAlunoDisciplina){
             if($this->validateComponenteTurma($turmaId, $componenteCurricularId)){
               $notaOriginal = $notaTurmaAlunoDisciplina['nota'];
@@ -255,7 +257,7 @@ class DiarioController extends ApiCoreController
               }
 
               $notaRecuperacao = $notaTurmaAlunoDisciplina['recuperacao'];
-              $nomeCampoRecuperacao = $this->defineCampoTipoRecuperacao($turmaId);
+              $nomeCampoRecuperacao = $this->defineCampoTipoRecuperacao($matriculaId);
 
               $recuperacaoEspecifica = $nomeCampoRecuperacao == 'notaRecuperacaoEspecifica';
               $notaAposRecuperacao = (($notaRecuperacao > $notaOriginal) ? $notaRecuperacao : $notaOriginal);
@@ -283,8 +285,8 @@ class DiarioController extends ApiCoreController
     }
   }
 
-  private function defineCampoTipoRecuperacao($turmaId){
-    $regra = $this->getRegra($turmaId);
+  private function defineCampoTipoRecuperacao($matriculaId){
+    $regra = $this->getRegra($matriculaId);
     $campoRecuperacao = '';
     switch ($regra->get('tipoRecuperacaoParalela')) {
       case RegraAvaliacao_Model_TipoRecuperacaoParalela::USAR_POR_ETAPA:
@@ -306,13 +308,16 @@ class DiarioController extends ApiCoreController
       $faltas = $this->getRequest()->faltas;
 
       foreach ($faltas as $turmaId => $faltaTurma) {
-        if($this->getRegra($turmaId)->get('tipoPresenca') != RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE){
-          throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de faltas por componente."));
-        }
         foreach ($faltaTurma as $alunoId => $faltaTurmaAluno) {
 
-          foreach ($faltaTurmaAluno as $componenteCurricularId => $faltaTurmaAlunoDisciplina){
             $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
+
+            if($this->getRegra($matriculaId)->get('tipoPresenca') != RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE){
+                throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de faltas por componente."));
+            }
+
+          foreach ($faltaTurmaAluno as $componenteCurricularId => $faltaTurmaAlunoDisciplina){
+
             if($matriculaId){
 
               if($this->validateMatricula($matriculaId)){
@@ -345,14 +350,17 @@ class DiarioController extends ApiCoreController
       $faltas = $this->getRequest()->faltas;
 
       foreach ($faltas as $turmaId => $faltaTurma) {
-        if($this->getRegra($turmaId)->get('tipoPresenca') != RegraAvaliacao_Model_TipoPresenca::GERAL){
-          throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de faltas geral."));
-        }
+
 
         foreach ($faltaTurma as $alunoId => $faltaTurmaAluno) {
           $faltas = $faltaTurmaAluno['valor'];
 
-          if($this->findMatriculaByTurmaAndAluno($turmaId, $alunoId)){
+          $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
+          if($matriculaId){
+
+            if($this->getRegra($matriculaId)->get('tipoPresenca') != RegraAvaliacao_Model_TipoPresenca::GERAL){
+                throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de faltas geral."));
+            }
 
             $falta = new Avaliacao_Model_FaltaGeral(array(
               'quantidade'           => $faltas,
@@ -375,12 +383,14 @@ class DiarioController extends ApiCoreController
       $etapa = $this->getRequest()->etapa;
 
       foreach ($pareceres as $turmaId => $parecerTurma) {
-        if($this->getRegra($turmaId)->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE){
-          throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de pareceres por etapa e componente."));
-        }
 
         foreach ($parecerTurma as $alunoId => $parecerTurmaAluno) {
-          if($this->findMatriculaByTurmaAndAluno($turmaId, $alunoId)){
+            $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
+          if($matriculaId){
+
+            if($this->getRegra($matriculaId)->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE){
+              throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de pareceres por etapa e componente."));
+            }
 
             foreach ($parecerTurmaAluno as $componenteCurricularId => $parecerTurmaAlunoComponente) {
               if($this->validateComponenteTurma($turmaId, $componenteCurricularId)){
@@ -410,12 +420,14 @@ class DiarioController extends ApiCoreController
       $pareceres = $this->getRequest()->pareceres;
 
       foreach ($pareceres as $turmaId => $parecerTurma) {
-        if($this->getRegra($turmaId)->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE){
-          throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de pareceres anual por componente."));
-        }
-
         foreach ($parecerTurma as $alunoId => $parecerTurmaAluno) {
-          if($this->findMatriculaByTurmaAndAluno($turmaId, $alunoId)){
+            $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
+          if($matriculaId){
+
+            if($this->getRegra($matriculaId)->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE){
+              throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de pareceres anual por componente."));
+            }
+
 
             foreach ($parecerTurmaAluno as $componenteCurricularId => $parecerTurmaAlunoComponente) {
               if($this->validateComponenteCurricular($matriculaId, $componenteCurricularId)){
@@ -445,12 +457,14 @@ class DiarioController extends ApiCoreController
       $etapa = $this->getRequest()->etapa;
 
       foreach ($pareceres as $turmaId => $parecerTurma) {
-        if($this->getRegra($turmaId)->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL){
-          throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de pareceres por etapa geral."));
-        }
-
         foreach ($parecerTurma as $alunoId => $parecerTurmaAluno) {
-          if($this->findMatriculaByTurmaAndAluno($turmaId, $alunoId)){
+
+            $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
+          if($matriculaId){
+
+            if($this->getRegra($matriculaId)->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL){
+                throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de pareceres por etapa geral."));
+            }
             $parecer = $parecerTurmaAluno['valor'];
 
             $parecerDescritivo = new Avaliacao_Model_ParecerDescritivoGeral(array(
@@ -473,13 +487,16 @@ class DiarioController extends ApiCoreController
       $pareceres = $this->getRequest()->pareceres;
 
       foreach ($pareceres as $turmaId => $parecerTurma) {
-        if($this->getRegra($turmaId)->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL){
-          throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de pareceres anual geral."));
-        }
 
         foreach ($parecerTurma as $alunoId => $parecerTurmaAluno) {
+
           $parecer = $parecerTurmaAluno['valor'];
-          if($this->findMatriculaByTurmaAndAluno($turmaId, $alunoId)){
+          $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
+          if($matriculaId){
+
+            if($this->getRegra($matriculaId)->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL){
+              throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de pareceres anual geral."));
+            }
 
             $parecerDescritivo = new Avaliacao_Model_ParecerDescritivoGeral(array(
               'parecer' => Portabilis_String_Utils::toLatin1($parecer)
