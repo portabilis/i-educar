@@ -1357,6 +1357,7 @@ function updateComponenteCurriculares($targetElement, matriculaId, componentesCu
      }
 
     var $ccRow = $j('<tr />').addClass('tr-componente-curricular').data('areaid', cc.area_id);
+    $ccRow.data('regra', regra);
 
     $j('<td />').addClass('center').html(cc.nome).appendTo($ccRow);
     updateComponenteCurricular($ccRow, matriculaId, cc, regra);
@@ -1402,7 +1403,7 @@ function updateResourceRow(dataResponse) {
   var $fieldNN = $j('#nn-matricula-' + matriculaId + '-cc-' + ccId);
   var $fieldMedia = $j('#media-matricula-' + matriculaId + '-cc-' + ccId);
 
-  var regra = $fieldNotaExame.closest('tr').data('regra');
+  var regra = $situacaoField.closest('tr').data('regra');
 
   var habilitaCampoEtapaEspecifica = regra.tipo_recuperacao_paralela == 'etapas_especificas' && regra.habilita_campo_etapa_especifica;
   var usaNotaGeralPorEtapa = regra.nota_geral_por_etapa == 'SIM';
