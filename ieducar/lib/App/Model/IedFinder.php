@@ -600,6 +600,7 @@ class App_Model_IedFinder extends CoreExt_Entity
     $matricula = self::getMatricula($codMatricula);
     $serie     = self::getSerie($matricula['ref_ref_cod_serie']);
     $escola     = self::getEscola($matricula['ref_ref_cod_escola']);
+    $possuiDeficiencia = self::verificaSePossuiDeficiencia($matricula['ref_cod_aluno']);
 
     if (is_null($mapper)) {
       require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
@@ -611,7 +612,12 @@ class App_Model_IedFinder extends CoreExt_Entity
     else
       $intRegra = $serie['regra_avaliacao_id'];
 
-    return $mapper->find($intRegra);
+    $regra = $mapper->find($intRegra);
+    if($possuiDeficiencia && $regra->regraDiferenciada){
+        $regra = $regra->regraDiferenciada;
+    }
+
+    return $regra;
   }
 
   /**
@@ -1106,6 +1112,21 @@ class App_Model_IedFinder extends CoreExt_Entity
     $resultado = Portabilis_Utils_Database::fetchPreparedQuery($cc_nota,array('params' => array($matricula, $componente)));
 
     return $resultado;
+  }
+
+  public static function verificaSePossuiDeficiencia($alunoId) {
+
+    $sql = 'SELECT 1
+            FROM cadastro.fisica_deficiencia fd
+            JOIN PMIEDUCAR.ALUNO A
+            ON fd.ref_idpes = a.ref_idpes
+            JOIN cadastro.deficiencia d
+            ON d.cod_deficiencia = fd.ref_cod_deficiencia
+            WHERE a.cod_aluno = $1
+            AND d.nm_deficiencia NOT ILIKE \'nenhuma\'
+            LIMIT 1 ';
+
+    return Portabilis_Utils_Database::selectField($sql,array('params' => array($alunoId))) == 1;
   }
 
   public static function getNotasLancadasAluno($ref_cod_matricula, $ref_cod_disciplina, $etapa) {

@@ -64,7 +64,8 @@ class ViewController extends Core_Controller_Page_ViewController
     'Nota máxima' => 'notaMaximaGeral',
     'Nota mínima' => 'notaMinimaGeral',
     'Nota máxima para exame final' => 'notaMaximaExameFinal',
-    'Número máximo de casas decimais' => 'qtdCasasDecimais'
+    'Número máximo de casas decimais' => 'qtdCasasDecimais',
+    'Regra diferenciada' => 'regraDiferenciada'
   );
   protected function _preRender(){
 

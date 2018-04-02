@@ -1,4 +1,6 @@
 <?php
+error_reporting(E_ERROR);
+ini_set("display_errors", 1);
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -124,6 +126,10 @@ class EditController extends Core_Controller_Page_EditController
     'mediaRecuperacaoParalela' => array(
       'label'   => 'Média da recuperação paralela',
       'help'    => ''
+    ),
+    'regraDiferenciada' => array(
+      'label'   => 'Regra diferenciada',
+      'help'    => 'Regra para avaliação de alunos com deficiência'
     ),
     'notaMaximaGeral' => array(
       'label'   => 'Nota máxima geral',
@@ -391,7 +397,7 @@ var tabela_arredondamento = new function() {
     $this->campoLista('tabelaArredondamentoNumero', $this->_getLabel('tabelaArredondamentoNumerico'),
       $tabelaArredondamentoNumerico, $this->getEntity()->get('tabelaArredondamento'), '',
       FALSE, $this->_getHelp('tabelaArredondamento'), '', FALSE, FALSE);
-      
+
     $this->campoLista('tabelaArredondamentoConceitual', $this->_getLabel('tabelaArredondamentoConceitual'),
       $tabelaArredondamentoConceitual, $this->getEntity()->get('tabelaArredondamentoConceitual'), '',
       FALSE, $this->_getHelp('tabelaArredondamento'), '', FALSE, FALSE);
@@ -482,6 +488,21 @@ var tabela_arredondamento = new function() {
     $this->campoTexto('mediaRecuperacaoParalela', $this->_getLabel('mediaRecuperacaoParalela'),
                        $this->getEntity()->mediaRecuperacaoParalela, 5, 50, FALSE, FALSE,
                        FALSE, $this->_getHelp('mediaRecuperacaoParalela'));
+
+
+    $opcaoPadrao = array(NULL => 'Não utiliza');
+    $regras = $this->getDataMapper()->findAll(
+        array('id', 'nome'),
+        array(),
+        array('id'=> 'asc'),
+        false
+    );
+
+    $regras = CoreExt_Entity::entityFilterAttr($regras, 'id', 'nome');
+    $regras[0] = 'Não utiliza';
+    $this->campoLista('regraDiferenciada', $this->_getLabel('regraDiferenciada'),
+      $regras, $this->getEntity()->get('regraDiferenciada'), '',
+      FALSE, $this->_getHelp('regraDiferenciada'), '', FALSE, FALSE);
 
     // Parte condicional
     if (!$this->getEntity()->isNew()) {
