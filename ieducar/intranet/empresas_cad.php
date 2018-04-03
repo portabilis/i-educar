@@ -359,6 +359,13 @@ class indice extends clsCadastro
 
     function Editar()
     {
+        if (!$this->validaDadosTelefones()) {
+            // variável buscar_empresa é usada para definir os campos que aparecem na tela, quando false apresenta apenas o campo de CNPJ
+            // por tanto é preciso setar para true para que a mensagem de erro seja apresentada com os demais campos normalmente.
+            $this->busca_empresa = true;
+            return false;
+        }
+
         $this->cnpj = idFederal2int($this->cnpj);
         $this->insc_est = idFederal2int($this->insc_est);
 
@@ -503,6 +510,31 @@ class indice extends clsCadastro
 
     $this->inputsHelper()->integer("telefone_{$type}", $options);
   }
+
+    protected function validaDadosTelefones(){
+        return $this->validaDDDTelefone($this->ddd_telefone_1, $this->telefone_1, 'Telefone 1') &&
+               $this->validaDDDTelefone($this->ddd_telefone_2, $this->telefone_2, 'Telefone 2') &&
+               $this->validaDDDTelefone($this->ddd_telefone_mov, $this->telefone_mov, 'Celular') &&
+               $this->validaDDDTelefone($this->ddd_telefone_fax, $this->telefone_fax, 'Fax');
+    }
+
+    protected function validaDDDTelefone($valorDDD = null, $valorTelefone = null, $nomeCampo)
+    {
+        $msgRequereTelefone = "O campo: {$nomeCampo}, deve ser preenchido quando o DDD estiver preenchido.";
+        $msgRequereDDD = "O campo: DDD, deve ser preenchido quando o {$nomeCampo} estiver preenchido.";
+
+        if (!empty($valorDDD) && empty($valorTelefone)) {
+            $this->mensagem = $msgRequereTelefone;
+            return false;
+        }
+
+        if (empty($valorDDD) && !empty($valorTelefone)) {
+            $this->mensagem = $msgRequereDDD;
+            return false;
+        }
+
+        return true;
+    }
 
 }
 
