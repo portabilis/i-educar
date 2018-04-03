@@ -410,24 +410,24 @@ class indice extends clsCadastro
     $camposEscola['abastecimento_agua'] = '{'.implode(',', $camposEscola['abastecimento_agua']).'}';
 
     $camposEscola['abastecimento_energia'] = array();
-    for ($i=6; $i <= 9; $i++) { 
-      if($dadosRegistro[20+$i-1]){
+    for ($i=1; $i <= 4; $i++) { 
+      if($dadosRegistro[25+$i-1]){
         $camposEscola['abastecimento_energia'][] = $i;
       }
     }
     $camposEscola['abastecimento_energia'] = '{'.implode(',', $camposEscola['abastecimento_energia']).'}';
 
     $camposEscola['esgoto_sanitario'] = array();
-    for ($i=0; $i <= 2; $i++) { 
-      if($dadosRegistro[30+$i-1]){
+    for ($i=1; $i <= 3; $i++) { 
+      if($dadosRegistro[29+$i-1]){
         $camposEscola['esgoto_sanitario'][] = $i;
       }
     }
     $camposEscola['esgoto_sanitario'] = '{'.implode(',', $camposEscola['esgoto_sanitario']).'}';
 
     $camposEscola['destinacao_lixo'] = array();
-    for ($i=3; $i <= 8; $i++) { 
-      if($dadosRegistro[30+$i-1]){
+    for ($i=1; $i <= 6; $i++) { 
+      if($dadosRegistro[32+$i-1]){
         $camposEscola['destinacao_lixo'][] = $i;
       }
     }
