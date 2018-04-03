@@ -56,8 +56,6 @@ class TabelaArredondamento_Model_TabelaDataMapper extends CoreExt_DataMapper
     'tipoNota'    => 'tipo_nota'
   );
 
-  protected $_primaryKey = array('id', 'instituicao');
-
   /**
    * @var TabelaArredondamento_Model_TabelaValorDataMapper
    */

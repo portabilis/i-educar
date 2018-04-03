@@ -76,9 +76,6 @@ class RegraAvaliacao_Model_RegraDataMapper extends CoreExt_DataMapper
     'reprovacaoAutomatica'           => 'reprovacao_automatica',
   );
 
-
-  protected $_primaryKey = array('id','intituicao');
-
   /**
    * @var FormulaMedia_Model_FormulaDataMapper
    */
