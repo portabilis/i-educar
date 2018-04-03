@@ -52,7 +52,8 @@ class SqlServerAdapter extends PdoAdapter implements AdapterInterface
         if (null === $this->connection) {
             if (!class_exists('PDO') || !in_array('sqlsrv', \PDO::getAvailableDrivers(), true)) {
                 // try our connection via freetds (Mac/Linux)
-                return $this->connectDblib();
+                $this->connectDblib();
+                return;
             }
 
             $db = null;
@@ -203,8 +204,6 @@ class SqlServerAdapter extends PdoAdapter implements AdapterInterface
      */
     public function createTable(Table $table)
     {
-        $this->startCommandTimer();
-
         $options = $table->getOptions();
 
         // Add the default primary key
@@ -266,34 +265,26 @@ class SqlServerAdapter extends PdoAdapter implements AdapterInterface
 
         // set the foreign keys
         $foreignKeys = $table->getForeignKeys();
-        if (!empty($foreignKeys)) {
-            foreach ($foreignKeys as $foreignKey) {
-                $sqlBuffer[] = $this->getForeignKeySqlDefinition($foreignKey, $table->getName());
-            }
+        foreach ($foreignKeys as $foreignKey) {
+            $sqlBuffer[] = $this->getForeignKeySqlDefinition($foreignKey, $table->getName());
         }
 
         $sql .= implode(', ', $sqlBuffer);
         $sql .= ');';
 
         // process column comments
-        if (!empty($columnsWithComments)) {
-            foreach ($columnsWithComments as $column) {
-                $sql .= $this->getColumnCommentSqlDefinition($column, $table->getName());
-            }
+        foreach ($columnsWithComments as $column) {
+            $sql .= $this->getColumnCommentSqlDefinition($column, $table->getName());
         }
 
         // set the indexes
         $indexes = $table->getIndexes();
-        if (!empty($indexes)) {
-            foreach ($indexes as $index) {
-                $sql .= $this->getIndexSqlDefinition($index, $table->getName());
-            }
+        foreach ($indexes as $index) {
+            $sql .= $this->getIndexSqlDefinition($index, $table->getName());
         }
 
         // execute the sql
-        $this->writeCommand('createTable', array($table->getName()));
         $this->execute($sql);
-        $this->endCommandTimer();
     }
 
     /**
@@ -326,10 +317,7 @@ class SqlServerAdapter extends PdoAdapter implements AdapterInterface
      */
     public function renameTable($tableName, $newTableName)
     {
-        $this->startCommandTimer();
-        $this->writeCommand('renameTable', array($tableName, $newTableName));
         $this->execute(sprintf('EXEC sp_rename \'%s\', \'%s\'', $tableName, $newTableName));
-        $this->endCommandTimer();
     }
 
     /**
@@ -337,10 +325,20 @@ class SqlServerAdapter extends PdoAdapter implements AdapterInterface
      */
     public function dropTable($tableName)
     {
-        $this->startCommandTimer();
-        $this->writeCommand('dropTable', array($tableName));
         $this->execute(sprintf('DROP TABLE %s', $this->quoteTableName($tableName)));
-        $this->endCommandTimer();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function truncateTable($tableName)
+    {
+        $sql = sprintf(
+            'TRUNCATE TABLE %s',
+            $this->quoteTableName($tableName)
+        );
+
+        $this->execute($sql);
     }
 
     public function getColumnComment($tableName, $columnName)
@@ -419,7 +417,7 @@ class SqlServerAdapter extends PdoAdapter implements AdapterInterface
     /**
      * {@inheritdoc}
      */
-    public function hasColumn($tableName, $columnName, $options = array())
+    public function hasColumn($tableName, $columnName)
     {
         $sql = sprintf(
             "SELECT count(*) as [count]
@@ -438,7 +436,6 @@ class SqlServerAdapter extends PdoAdapter implements AdapterInterface
      */
     public function addColumn(Table $table, Column $column)
     {
-        $this->startCommandTimer();
         $sql = sprintf(
             'ALTER TABLE %s ADD %s %s',
             $this->quoteTableName($table->getName()),
@@ -446,9 +443,7 @@ class SqlServerAdapter extends PdoAdapter implements AdapterInterface
             $this->getColumnSqlDefinition($column)
         );
 
-        $this->writeCommand('addColumn', array($table->getName(), $column->getName(), $column->getType()));
         $this->execute($sql);
-        $this->endCommandTimer();
     }
 
     /**
@@ -456,12 +451,9 @@ class SqlServerAdapter extends PdoAdapter implements AdapterInterface
      */
     public function renameColumn($tableName, $columnName, $newColumnName)
     {
-        $this->startCommandTimer();
-
         if (!$this->hasColumn($tableName, $columnName)) {
             throw new \InvalidArgumentException("The specified column does not exist: $columnName");
         }
-        $this->writeCommand('renameColumn', array($tableName, $columnName, $newColumnName));
         $this->renameDefault($tableName, $columnName, $newColumnName);
         $this->execute(
              sprintf(
@@ -471,7 +463,6 @@ class SqlServerAdapter extends PdoAdapter implements AdapterInterface
                  $newColumnName
              )
         );
-        $this->endCommandTimer();
     }
 
     protected function renameDefault($tableName, $columnName, $newColumnName)
@@ -520,8 +511,6 @@ SQL;
      */
     public function changeColumn($tableName, $columnName, Column $newColumn)
     {
-        $this->startCommandTimer();
-        $this->writeCommand('changeColumn', array($tableName, $columnName, $newColumn->getType()));
         $columns = $this->getColumns($tableName);
         $changeDefault = $newColumn->getDefault() !== $columns[$columnName]->getDefault() || $newColumn->getType() !== $columns[$columnName]->getType();
         if ($columnName !== $newColumn->getName()) {
@@ -549,7 +538,6 @@ SQL;
         if ($changeDefault) {
             $this->changeDefault($tableName, $newColumn);
         }
-        $this->endCommandTimer();
     }
 
     /**
@@ -557,8 +545,6 @@ SQL;
      */
     public function dropColumn($tableName, $columnName)
     {
-        $this->startCommandTimer();
-        $this->writeCommand('dropColumn', array($tableName, $columnName));
         $this->dropDefaultConstraint($tableName, $columnName);
 
         $this->execute(
@@ -568,7 +554,6 @@ SQL;
                 $this->quoteColumnName($columnName)
             )
         );
-        $this->endCommandTimer();
     }
 
     protected function dropDefaultConstraint($tableName, $columnName)
@@ -694,11 +679,8 @@ ORDER BY T.[name], I.[index_id];";
      */
     public function addIndex(Table $table, Index $index)
     {
-        $this->startCommandTimer();
-        $this->writeCommand('addIndex', array($table->getName(), $index->getColumns()));
         $sql = $this->getIndexSqlDefinition($index, $table->getName());
         $this->execute($sql);
-        $this->endCommandTimer();
     }
 
     /**
@@ -706,12 +688,10 @@ ORDER BY T.[name], I.[index_id];";
      */
     public function dropIndex($tableName, $columns)
     {
-        $this->startCommandTimer();
         if (is_string($columns)) {
             $columns = array($columns); // str to array
         }
 
-        $this->writeCommand('dropIndex', array($tableName, $columns));
         $indexes = $this->getIndexes($tableName);
         $columns = array_map('strtolower', $columns);
 
@@ -725,7 +705,6 @@ ORDER BY T.[name], I.[index_id];";
                         $this->quoteTableName($tableName)
                     )
                 );
-                $this->endCommandTimer();
                 return;
             }
         }
@@ -736,9 +715,6 @@ ORDER BY T.[name], I.[index_id];";
      */
     public function dropIndexByName($tableName, $indexName)
     {
-        $this->startCommandTimer();
-
-        $this->writeCommand('dropIndexByName', array($tableName, $indexName));
         $indexes = $this->getIndexes($tableName);
 
         foreach ($indexes as $name => $index) {
@@ -750,7 +726,6 @@ ORDER BY T.[name], I.[index_id];";
                         $this->quoteTableName($tableName)
                     )
                 );
-                $this->endCommandTimer();
                 return;
             }
         }
@@ -819,8 +794,6 @@ ORDER BY T.[name], I.[index_id];";
      */
     public function addForeignKey(Table $table, ForeignKey $foreignKey)
     {
-        $this->startCommandTimer();
-        $this->writeCommand('addForeignKey', array($table->getName(), $foreignKey->getColumns()));
         $this->execute(
             sprintf(
                 'ALTER TABLE %s ADD %s',
@@ -828,7 +801,6 @@ ORDER BY T.[name], I.[index_id];";
                 $this->getForeignKeySqlDefinition($foreignKey, $table->getName())
             )
         );
-        $this->endCommandTimer();
     }
 
     /**
@@ -836,12 +808,9 @@ ORDER BY T.[name], I.[index_id];";
      */
     public function dropForeignKey($tableName, $columns, $constraint = null)
     {
-        $this->startCommandTimer();
         if (is_string($columns)) {
             $columns = array($columns); // str to array
         }
-
-        $this->writeCommand('dropForeignKey', array($tableName, $columns));
 
         if ($constraint) {
             $this->execute(
@@ -851,7 +820,6 @@ ORDER BY T.[name], I.[index_id];";
                     $constraint
                 )
             );
-            $this->endCommandTimer();
             return;
         } else {
             foreach ($columns as $column) {
@@ -875,7 +843,6 @@ ORDER BY T.[name], I.[index_id];";
                 }
             }
         }
-        $this->endCommandTimer();
     }
 
     /**
@@ -1000,16 +967,12 @@ ORDER BY T.[name], I.[index_id];";
      */
     public function createDatabase($name, $options = array())
     {
-        $this->startCommandTimer();
-        $this->writeCommand('createDatabase', array($name));
-
         if (isset($options['collation'])) {
             $this->execute(sprintf('CREATE DATABASE [%s] COLLATE [%s]', $name, $options['collation']));
         } else {
             $this->execute(sprintf('CREATE DATABASE [%s]', $name));
         }
         $this->execute(sprintf('USE [%s]', $name));
-        $this->endCommandTimer();
     }
 
     /**
@@ -1032,8 +995,6 @@ ORDER BY T.[name], I.[index_id];";
      */
     public function dropDatabase($name)
     {
-        $this->startCommandTimer();
-        $this->writeCommand('dropDatabase', array($name));
         $sql = <<<SQL
 USE master;
 IF EXISTS(select * from sys.databases where name=N'$name')
@@ -1041,7 +1002,6 @@ ALTER DATABASE [$name] SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
 DROP DATABASE [$name];
 SQL;
         $this->execute($sql);
-        $this->endCommandTimer();
     }
 
     /**
@@ -1162,5 +1122,21 @@ SQL;
     public function getColumnTypes()
     {
         return array_merge(parent::getColumnTypes(), array('filestream'));
+    }
+    
+    /**
+     * Records a migration being run.
+     *
+     * @param \Phinx\Migration\MigrationInterface $migration Migration
+     * @param string $direction Direction
+     * @param int $startTime Start Time
+     * @param int $endTime End Time
+     * @return AdapterInterface
+     */
+    public function migrated(\Phinx\Migration\MigrationInterface $migration, $direction, $startTime, $endTime)
+    {
+        $startTime = str_replace(' ', 'T', $startTime);
+        $endTime = str_replace(' ', 'T', $endTime);
+        return parent::migrated($migration, $direction, $startTime, $endTime);
     }
 }

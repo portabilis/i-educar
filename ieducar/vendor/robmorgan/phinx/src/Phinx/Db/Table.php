@@ -258,7 +258,7 @@ class Table
     }
 
     /**
-     * Gets an array of foreign keys waiting to be commited.
+     * Sets an array of foreign keys waiting to be commited.
      *
      * @param ForeignKey[] $foreignKeys foreign keys
      * @return Table
@@ -416,12 +416,11 @@ class Table
      * Checks to see if a column exists.
      *
      * @param string $columnName Column Name
-     * @param array $options Options
      * @return boolean
      */
-    public function hasColumn($columnName, $options = array())
+    public function hasColumn($columnName)
     {
-        return $this->getAdapter()->hasColumn($this->getName(), $columnName, $options);
+        return $this->getAdapter()->hasColumn($this->getName(), $columnName);
     }
 
     /**
@@ -455,12 +454,11 @@ class Table
      * Removes the given index from a table.
      *
      * @param array $columns Columns
-     * @param array $options Options
      * @return Table
      */
-    public function removeIndex($columns, $options = array())
+    public function removeIndex($columns)
     {
-        $this->getAdapter()->dropIndex($this->getName(), $columns, $options);
+        $this->getAdapter()->dropIndex($this->getName(), $columns);
         return $this;
     }
 
@@ -483,9 +481,9 @@ class Table
      * @param array        $options Options
      * @return boolean
      */
-    public function hasIndex($columns, $options = array())
+    public function hasIndex($columns)
     {
-        return $this->getAdapter()->hasIndex($this->getName(), $columns, $options);
+        return $this->getAdapter()->hasIndex($this->getName(), $columns);
     }
 
     /**
@@ -649,9 +647,39 @@ class Table
      */
     public function saveData()
     {
-        foreach ($this->getData() as $row) {
-            $this->getAdapter()->insert($this, $row);
+        $rows = $this->getData();
+        if (empty($rows)) {
+            return;
         }
+
+        $bulk = true;
+        $row = current($rows);
+        $c = array_keys($row);
+        foreach($this->getData() as $row) {
+            $k = array_keys($row);
+            if ($k != $c) {
+                $bulk = false;
+                break;
+            }
+        }
+
+        if ($bulk) {
+            $this->getAdapter()->bulkinsert($this, $this->getData());
+        } else {
+            foreach ($this->getData() as $row) {
+                $this->getAdapter()->insert($this, $row);
+            }
+        }
+    }
+
+    /**
+     * Truncates the table.
+     *
+     * @return void
+     */
+    public function truncate()
+    {
+        $this->getAdapter()->truncateTable($this->getName());
     }
 
     /**

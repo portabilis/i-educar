@@ -55,6 +55,7 @@ class ProxyAdapter extends AdapterWrapper
     {
         return 'ProxyAdapter';
     }
+
     /**
      * {@inheritdoc}
      */
@@ -77,6 +78,15 @@ class ProxyAdapter extends AdapterWrapper
     public function dropTable($tableName)
     {
         $this->recordCommand('dropTable', array($tableName));
+    }
+
+
+    /**
+     * {@inheritdoc}
+     */
+    public function truncateTable($tableName)
+    {
+        $this->recordCommand('truncateTable', array($tableName));
     }
 
     /**

@@ -32,6 +32,7 @@ use Phinx\Db\Adapter\AdapterFactory;
 use Phinx\Db\Adapter\AdapterInterface;
 use Phinx\Migration\MigrationInterface;
 use Phinx\Seed\SeedInterface;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class Environment
@@ -45,6 +46,11 @@ class Environment
      * @var array
      */
     protected $options;
+
+    /**
+     * @var InputInterface
+     */
+    protected $input;
 
     /**
      * @var OutputInterface
@@ -88,8 +94,10 @@ class Environment
      */
     public function executeMigration(MigrationInterface $migration, $direction = MigrationInterface::UP)
     {
-        $startTime = time();
         $direction = ($direction === MigrationInterface::UP) ? MigrationInterface::UP : MigrationInterface::DOWN;
+        $migration->setMigratingUp($direction === MigrationInterface::UP);
+
+        $startTime = time();
         $migration->setAdapter($this->getAdapter());
 
         // begin the transaction if the adapter supports it
@@ -99,9 +107,12 @@ class Environment
 
         // Run the migration
         if (method_exists($migration, MigrationInterface::CHANGE)) {
+
             if ($direction === MigrationInterface::DOWN) {
                 // Create an instance of the ProxyAdapter so we can record all
                 // of the migration commands for reverse playback
+
+                /** @var \Phinx\Db\Adapter\ProxyAdapter $proxyAdapter */
                 $proxyAdapter = AdapterFactory::instance()
                     ->getWrapper('proxy', $this->getAdapter());
                 $migration->setAdapter($proxyAdapter);
@@ -197,6 +208,28 @@ class Environment
     }
 
     /**
+     * Sets the console input.
+     *
+     * @param InputInterface $input
+     * @return Environment
+     */
+    public function setInput(InputInterface $input)
+    {
+        $this->input = $input;
+        return $this;
+    }
+
+    /**
+     * Gets the console input.
+     *
+     * @return InputInterface
+     */
+    public function getInput()
+    {
+        return $this->input;
+    }
+
+    /**
      * Sets the console output.
      *
      * @param OutputInterface $output Output
@@ -229,7 +262,8 @@ class Environment
     }
 
     /**
-     * Get all migration log entries, indexed by version number.
+     * Get all migration log entries, indexed by version creation time and sorted ascendingly by the configuration's 
+     * version_order option
      *
      * @return array
      */
@@ -298,18 +332,27 @@ class Environment
                 throw new \RuntimeException('The specified connection is not a PDO instance');
             }
 
+            $this->options['connection']->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
             $this->options['adapter'] = $this->options['connection']->getAttribute(\PDO::ATTR_DRIVER_NAME);
         }
         if (!isset($this->options['adapter'])) {
             throw new \RuntimeException('No adapter was specified for environment: ' . $this->getName());
         }
 
-        $adapter = AdapterFactory::instance()
+        $factory = AdapterFactory::instance();
+        $adapter = $factory
             ->getAdapter($this->options['adapter'], $this->options);
 
+        // Automatically time the executed commands
+        $adapter = $factory->getWrapper('timed', $adapter);
+
         if (isset($this->options['wrapper'])) {
-            $adapter = AdapterFactory::instance()
+            $adapter = $factory
                 ->getWrapper($this->options['wrapper'], $adapter);
+        }
+
+        if ($this->getInput()) {
+            $adapter->setInput($this->getInput());
         }
 
         if ($this->getOutput()) {

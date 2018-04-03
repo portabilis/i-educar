@@ -66,6 +66,13 @@ abstract class AbstractMigration implements MigrationInterface
     protected $input;
 
     /**
+     * Whether this migration is being applied or reverted
+     *
+     * @var bool
+     */
+    protected $isMigratingUp = true;
+
+    /**
      * Class Constructor.
      *
      * @param int $version Migration Version
@@ -187,6 +194,23 @@ abstract class AbstractMigration implements MigrationInterface
     /**
      * {@inheritdoc}
      */
+    public function setMigratingUp($goingUp)
+    {
+        $this->isMigratingUp = $goingUp;
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isMigratingUp()
+    {
+        return $this->isMigratingUp;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function execute($sql)
     {
         return $this->getAdapter()->execute($sql);
@@ -225,7 +249,7 @@ abstract class AbstractMigration implements MigrationInterface
         if (is_string($table)) {
             $table = new Table($table, array(), $this->getAdapter());
         }
-        return $table->insert($data)->save();
+        $table->insert($data)->save();
     }
 
     /**
