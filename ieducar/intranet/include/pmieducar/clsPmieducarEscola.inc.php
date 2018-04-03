@@ -1828,10 +1828,12 @@ class clsPmieducarEscola
   }
 
   function possuiTurmasDoEnsinoFundamentalEmCiclos() {
+    $anoAtual = date('Y');
     $sql = "SELECT EXISTS (SELECT 1
-              FROM pmieducar.turma
-             WHERE ref_ref_cod_escola = {$this->cod_escola}
-               AND etapa_educacenso IN (4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,41,56))";
+                             FROM pmieducar.turma
+                            WHERE ref_ref_cod_escola = {$this->cod_escola}
+                              AND etapa_educacenso IN (4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,41,56)
+                              AND ano = {$anoAtual})";
     $db = new clsBanco();
     return $db->CampoUnico($sql);
   }

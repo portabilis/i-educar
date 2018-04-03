@@ -770,7 +770,7 @@ class indice extends clsCadastro
             $this->inputsHelper()->text('longitude', array('max_length' => '20', 'size' => '20', 'required' => false, 'value' => $this->longitude, 'label_hint' => 'São aceito somente os seguintes caracteres: 0123456789 .-'));
             $this->campoCheck("bloquear_lancamento_diario_anos_letivos_encerrados", "Bloquear lançamento no diário para anos letivos encerrados", $this->bloquear_lancamento_diario_anos_letivos_encerrados);
             $this->campoCheck("utiliza_regra_diferenciada", "Utiliza regra diferenciada", dbBool($this->utiliza_regra_diferenciada), '', FALSE, FALSE, FALSE, 'Se marcado, utilizará regra de avaliação diferenciada informada na Série');
-            $this->campoNumero("orgao_regional", "Código do orgão regional de ensino",  $this->orgao_regional, "5", "5", false);
+            $this->campoNumero("orgao_regional", "Código do órgão regional de ensino",  $this->orgao_regional, "5", "5", false);
 
             $resources = array(1 => 'Em atividade',
                                2 => 'Paralisada',
@@ -915,6 +915,9 @@ class indice extends clsCadastro
                                9  => 'Unidade de atendimento socioeducativa',
                                10 => 'Unidade prisional',
                                11 => 'Outros');
+
+            // Os campos: Forma de ocupação do prédio e Código da escola que compartilha o prédio
+            // serão desabilitados quando local de funcionamento for diferente de 3 (Prédio escolar)
             $disabled = $this->local_funcionamento != 3;
             $options = array('label' => 'Local de funcionamento', 'resources' => $resources, 'value' => $this->local_funcionamento, 'size' => 70, 'required' => false);
             $this->inputsHelper()->select('local_funcionamento', $options);
@@ -1023,7 +1026,7 @@ class indice extends clsCadastro
                                                                           6 => 'Outros')));
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
         
-            $options = array('label' => 'Marcar todas');
+            $options = array('label' => 'Marcar todos');
             $this->inputsHelper()->checkbox('marcar_todas_dependencias', $options);
 
             $options = array('label' => 'Sala de diretoria', 'value' => $this->dependencia_sala_diretoria);
@@ -1071,7 +1074,7 @@ class indice extends clsCadastro
             $options = array('label' => 'Banheiro dentro do prédio', 'value' => $this->dependencia_banheiro_dentro);
             $this->inputsHelper()->checkbox('dependencia_banheiro_dentro', $options);
 
-            $options = array('label' => 'Banheiro adequado à Educação Infantil', 'value' => $this->dependencia_banheiro_infantil);
+            $options = array('label' => 'Banheiro adequado à Educação infantil', 'value' => $this->dependencia_banheiro_infantil);
             $this->inputsHelper()->checkbox('dependencia_banheiro_infantil', $options);
 
             $options = array('label' => 'Banheiro adequado a alunos com deficiência ou mobilidade reduzida', 'value' => $this->dependencia_banheiro_deficiente);
@@ -1176,14 +1179,11 @@ class indice extends clsCadastro
             $this->inputsHelper()->integer('computadores', $options);
         
             $disabled = $this->computadores > 0;
-            $resources = array(0 => 'Não',
-                            1 => 'Sim');
-            $options = array('label' => 'Possui internet',
-                            'resources' => $resources,
-                            'value' => $this->acesso_internet,
-                            'required' => false,
-                            'disabled' => !$disabled);
-            $this->inputsHelper()->select('acesso_internet', $options);
+            $options = array('label' => 'Possui internet banda larga',
+                             'value' => $this->acesso_internet,
+                             'required' => false,
+                             'disabled' => !$disabled);
+            $this->inputsHelper()->booleanSelect('acesso_internet', $options);
 
             $options = array('label' => 'Total de funcionários da escola (inclusive profissionais escolares em sala de aula)', 'resources' => $resources, 'value' => $this->total_funcionario, 'required' => false, 'size' => 5, 'placeholder' => '');
             $this->inputsHelper()->integer('total_funcionario', $options);
@@ -1207,15 +1207,12 @@ class indice extends clsCadastro
                 $objEscola = new clsPmieducarEscola($this->cod_escola);
                 $habilitaFundamentalCiclo = dbBool($objEscola->possuiTurmasDoEnsinoFundamentalEmCiclos());
             }
-            $resources = array(0 => 'Não',
-                            1 => 'Sim');
+
             $options = array('label' => 'Ensino fundamental organizado em ciclos',
-                             'resources' => $resources,
                              'value' => $this->fundamental_ciclo,
                              'required' => false,
-                             'size' => 70,
                              'disabled' => !$habilitaFundamentalCiclo);
-            $this->inputsHelper()->select('fundamental_ciclo', $options);
+            $this->inputsHelper()->booleanSelect('fundamental_ciclo', $options);
 
             $resources = array(0 => 'Selecione',
                                1 => 'Área de assentamento',
@@ -1237,18 +1234,14 @@ class indice extends clsCadastro
                              'required' => false,
                              'size' => 70);
             $this->inputsHelper()->select('materiais_didaticos_especificos', $options);
-        
-            $resources = array(0 => 'Não',
-                               1 => 'Sim');
+
             $options = array('label' => 'Escola indígena',
-                             'resources' => $resources,
                              'value' => $this->educacao_indigena,
-                             'required' => false,
-                             'size' => 70);
-            $this->inputsHelper()->select('educacao_indigena', $options);
+                             'required' => false);
+            $this->inputsHelper()->booleanSelect('educacao_indigena', $options);
 
             $resources = array(1 => 'Língua Portuguesa',
-                               2 => 'Línguia Indígena');
+                               2 => 'Língua Indígena');
             $habilitaLiguaMinistrada = $this->educacao_indigena == 1;
             $options = array('label' => 'Língua em que o ensino é ministrado',
                              'resources' => $resources,
@@ -1273,32 +1266,20 @@ class indice extends clsCadastro
                              'size' => 70);
             $this->inputsHelper()->select('codigo_lingua_indigena', $options);
 
-            $resources = array(0 => 'Não',
-                               1 => 'Sim');
             $options = array('label' => 'Escola cede espaço para turmas do Brasil Alfabetizado',
-                             'resources' => $resources,
                              'value' => $this->espaco_brasil_aprendizado,
-                             'required' => false,
-                             'size' => 70);
-            $this->inputsHelper()->select('espaco_brasil_aprendizado', $options);
+                             'required' => false);
+            $this->inputsHelper()->booleanSelect('espaco_brasil_aprendizado', $options);
 
-            $resources = array(0 => 'Não',
-                               1 => 'Sim');
             $options = array('label' => 'Escola abre aos finais de semana para a comunidade',
-                             'resources' => $resources,
                              'value' => $this->abre_final_semana,
-                             'required' => false,
-                             'size' => 70);
-            $this->inputsHelper()->select('abre_final_semana', $options);
+                             'required' => false);
+            $this->inputsHelper()->booleanSelect('abre_final_semana', $options);
 
-            $resources = array(0 => 'Não',
-                               1 => 'Sim');
             $options = array('label' => 'Escola com proposta pedagógica de formação por alternância',
-                             'resources' => $resources,
                              'value' => $this->proposta_pedagogica,
-                             'required' => false,
-                             'size' => 70);
-            $this->inputsHelper()->select('proposta_pedagogica', $options);
+                             'required' => false);
+            $this->inputsHelper()->booleanSelect('proposta_pedagogica', $options);
 
             $resources = array('' => 'Selecione',
                                1  => 'Particular',
@@ -1358,17 +1339,20 @@ class indice extends clsCadastro
         unset($this->destinacao_lixo[0]);
         $destinacao_lixo = implode(',', $this->destinacao_lixo);
 
-        if (!empty($this->escola_inep_id) && strlen($this->escola_inep_id) != 8) {
-            $this->mensagem = 'O código INEP da escola deve conter 8 dígitos.';
+        if(!$this->validaDigitosInepEscola($this->escola_inep_id, 'Código INEP')) {
             return false;
         }
 
         if (!empty($this->orgao_regional) && strlen($this->orgao_regional) != 5) {
-            $this->mensagem = 'O código do orgão regional de ensino deve conter 5 dígitos.';
+            $this->mensagem = 'O código do órgão regional de ensino deve conter 5 dígitos.';
             return false;
         }
 
         if (!$this->validaLatitudeLongitude()) {
+            return false;
+        }
+
+        if(!$this->validaDigitosInepEscola($this->codigo_inep_escola_compartilhada, 'Código da escola que compartilha o prédio')) {
             return false;
         }
 
@@ -1713,17 +1697,16 @@ class indice extends clsCadastro
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 7, "educar_escola_lst.php");
 
-        if (!empty($this->escola_inep_id) && strlen($this->escola_inep_id) != 8) {
-            $this->mensagem = 'O código INEP da escola deve conter 8 dígitos.';
+        if(!$this->validaDigitosInepEscola($this->escola_inep_id, 'Código INEP')) {
             return false;
         }
 
         if (!empty($this->orgao_regional) && strlen($this->orgao_regional) != 5) {
-            $this->mensagem = 'O código do orgão regional de ensino deve conter 5 dígitos.';
+            $this->mensagem = 'O código do órgão regional de ensino deve conter 5 dígitos.';
             return false;
         }
 
-        if (!$this->validaDadosTelefones()){
+        if (!$this->validaDadosTelefones()) {
             return false;
         }
 
@@ -1731,8 +1714,7 @@ class indice extends clsCadastro
             return false;
         }
 
-        if (!empty($this->codigo_inep_escola_compartilhada) && strlen($this->codigo_inep_escola_compartilhada) != 8) {
-            $this->mensagem = 'O código INEP da escola que compartilha o prédio deve conter 8 dígitos.';
+        if(!$this->validaDigitosInepEscola($this->codigo_inep_escola_compartilhada, 'Código da escola que compartilha o prédio')) {
             return false;
         }
     
@@ -2179,25 +2161,28 @@ class indice extends clsCadastro
 
     protected function validaDDDTelefone($valorDDD = null, $valorTelefone = null, $nomeCampo)
     {
+        $msgRequereTelefone = "O campo: {$nomeCampo}, deve ser preenchido quando o DDD estiver preenchido.";
+        $msgRequereDDD = "O campo: DDD, deve ser preenchido quando o {$nomeCampo} estiver preenchido.";
+
         if (!empty($valorDDD) && empty($valorTelefone)) {
-            $this->mensagem = $this->msgRequereTelefone($nomeCampo);
+            $this->mensagem = $msgRequereTelefone;
             return false;
         }
 
         if (empty($valorDDD) && !empty($valorTelefone)) {
-            $this->mensagem = $this->msgRequereDDD($nomeCampo);
+            $this->mensagem = $msgRequereDDD;
             return false;
         }
 
         return true;
     }
 
-    protected function msgRequereDDD($nomeCampo = null){
-        return "O campo: DDD, deve ser preenchido quando o {$nomeCampo} estiver preenchido.";
-    }
-
-    protected function msgRequereTelefone($nomeCampo = null){
-        return "O campo: {$nomeCampo}, deve ser preenchido quando o DDD estiver preenchido.";
+    protected function validaDigitosInepEscola($inep, $nomeCampo) {
+        if (!empty($inep) && strlen($inep) != 8) {
+            $this->mensagem = "O campo: {$nomeCampo} deve conter 8 dígitos.";
+            return false;
+        }
+        return true;
     }
 }
 

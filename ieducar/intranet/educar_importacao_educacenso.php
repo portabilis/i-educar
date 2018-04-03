@@ -333,24 +333,6 @@ class indice extends clsCadastro
       'condicao' => $dadosRegistro[12-1],
       'codigo_inep_escola_compartilhada' => $dadosRegistro[14-1],
       'agua_consumida' => $dadosRegistro[20-1],
-      'agua_rede_publica' => $dadosRegistro[21-1],
-      'agua_poco_artesiano' => $dadosRegistro[22-1],
-      'agua_cacimba_cisterna_poco' => $dadosRegistro[23-1],
-      'agua_fonte_rio' => $dadosRegistro[24-1],
-      'agua_inexistente' => $dadosRegistro[25-1],
-      'energia_rede_publica' => $dadosRegistro[26-1],
-      'energia_gerador' => $dadosRegistro[27-1],
-      'energia_outros' => $dadosRegistro[28-1],
-      'energia_inexistente' => $dadosRegistro[29-1],
-      'esgoto_rede_publica' => $dadosRegistro[30-1],
-      'esgoto_fossa' => $dadosRegistro[31-1],
-      'esgoto_inexistente' => $dadosRegistro[32-1],
-      'lixo_coleta_periodica' => $dadosRegistro[33-1],
-      'lixo_queima' => $dadosRegistro[34-1],
-      'lixo_joga_outra_area' => $dadosRegistro[35-1],
-      'lixo_recicla' => $dadosRegistro[36-1],
-      'lixo_enterra' => $dadosRegistro[37-1],
-      'lixo_outros' => $dadosRegistro[38-1],
       'dependencia_sala_diretoria' => $dadosRegistro[39-1],
       'dependencia_sala_professores' => $dadosRegistro[40-1],
       'dependencia_sala_secretaria' => $dadosRegistro[41-1],
@@ -419,6 +401,38 @@ class indice extends clsCadastro
       'proposta_pedagogica' => $dadosRegistro[107-1],
     );
 
+    $camposEscola['abastecimento_agua'] = array();
+    for ($i=1; $i <= 5; $i++) { 
+      if($dadosRegistro[20+$i-1]){
+        $camposEscola['abastecimento_agua'][] = $i;
+      }
+    }
+    $camposEscola['abastecimento_agua'] = '{'.implode(',', $camposEscola['abastecimento_agua']).'}';
+
+    $camposEscola['abastecimento_energia'] = array();
+    for ($i=6; $i <= 9; $i++) { 
+      if($dadosRegistro[20+$i-1]){
+        $camposEscola['abastecimento_energia'][] = $i;
+      }
+    }
+    $camposEscola['abastecimento_energia'] = '{'.implode(',', $camposEscola['abastecimento_energia']).'}';
+
+    $camposEscola['esgoto_sanitario'] = array();
+    for ($i=0; $i <= 2; $i++) { 
+      if($dadosRegistro[30+$i-1]){
+        $camposEscola['esgoto_sanitario'][] = $i;
+      }
+    }
+    $camposEscola['esgoto_sanitario'] = '{'.implode(',', $camposEscola['esgoto_sanitario']).'}';
+
+    $camposEscola['destinacao_lixo'] = array();
+    for ($i=3; $i <= 8; $i++) { 
+      if($dadosRegistro[30+$i-1]){
+        $camposEscola['destinacao_lixo'][] = $i;
+      }
+    }
+    $camposEscola['destinacao_lixo'] = '{'.implode(',', $camposEscola['destinacao_lixo']).'}';
+    
     $codEscola = $this->existeEscola($inep);
     if($codEscola){
       $objEscola = new clsPmieducarEscola($codEscola);

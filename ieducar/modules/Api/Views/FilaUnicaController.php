@@ -40,7 +40,7 @@ require_once 'include/funcoes.inc.php';
 
 class FilaUnicaController extends ApiCoreController
 {
-  
+
     protected function getDadosAlunoByCertidao()
     {
         $tipoCertidao = $this->getRequest()->tipo_certidao;
@@ -121,7 +121,7 @@ class FilaUnicaController extends ApiCoreController
     protected function getMatriculaAlunoAndamento() {
         $anoLetivo = $this->getRequest()->ano_letivo;
         $aluno = $this->getRequest()->aluno_id;
-        
+
         if($aluno && $anoLetivo){
             $sql = "SELECT cod_matricula,
                            ref_cod_aluno AS cod_aluno
@@ -160,7 +160,7 @@ class FilaUnicaController extends ApiCoreController
                       FROM pmieducar.serie
                      WHERE ativo = 1
                        AND $1 BETWEEN idade_inicial AND idade_final";
-            $series = Portabilis_Array_Utils::filterSet($this->fetchPreparedQuery($sql, $idade), 'nm_serie'); 
+            $series = Portabilis_Array_Utils::filterSet($this->fetchPreparedQuery($sql, $idade), 'nm_serie');
             return array('series' => $series);
         }
         return false;
@@ -212,6 +212,33 @@ class FilaUnicaController extends ApiCoreController
         return false;
     }
 
+    protected function getMontaSelectEscolasCandidato(){
+        $cod_candidato_fila_unica = $this->getRequest()->cod_candidato_fila_unica;
+        $user                     = $this->currentUser();
+        $userId = $user['id'];
+        $nivelAcesso = $this->getNivelAcesso();
+        $acessoEscolar = $nivelAcesso == 4;
+        if($cod_candidato_fila_unica){
+
+            $sql = "SELECT ecdu.ref_cod_escola AS ref_cod_escola,
+                           juridica.fantasia AS nome 
+                      FROM pmieducar.escola_candidato_fila_unica AS ecdu
+                INNER JOIN pmieducar.escola AS esc ON esc.cod_escola = ecdu.ref_cod_escola
+                INNER JOIN cadastro.juridica ON juridica.idpes = esc.ref_idpes
+                     WHERE ecdu.ref_cod_candidato_fila_unica = {$cod_candidato_fila_unica}";
+            if ($acessoEscolar){
+                $sql .= " AND EXISTS( SELECT 1 
+                                        FROM pmieducar.escola_usuario 
+                                       WHERE escola_usuario.ref_cod_usuario = {$userId} 
+                                         AND escola_usuario.ref_cod_escola = esc.cod_escola )";
+            }
+            $escolas_candidato = Portabilis_Utils_Database::fetchPreparedQuery($sql);
+            return array('escolas' => $escolas_candidato);
+        }
+
+        return false;
+    }
+
     public function Gerar() {
         if ($this->isRequestFor('get', 'get-aluno-by-certidao')) {
             $this->appendResponse($this->getDadosAlunoByCertidao());
@@ -223,9 +250,10 @@ class FilaUnicaController extends ApiCoreController
             $this->appendResponse($this->getSeriesSugeridas());
         }else if ($this->isRequestFor('get', 'responsaveis-aluno')){
             $this->appendResponse($this->getDadosResponsaveisAluno());
-        }
-        else{
-        $this->notImplementedOperationError();
+        }else if ($this->isRequestFor('get', 'escolas-candidato')){
+            $this->appendResponse($this->getMontaSelectEscolasCandidato());
+        }else{
+            $this->notImplementedOperationError();
         }
     }
 }
