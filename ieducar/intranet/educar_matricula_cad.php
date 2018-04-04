@@ -127,7 +127,7 @@ class indice extends clsCadastro
     $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7, $url);
 
     if (is_numeric($this->cod_matricula)) {
-      if ($obj_permissoes->permissao_excluir(578, $this->pessoa_logada, 7)) {
+      if ($obj_permissoes->permissao_excluir(627, $this->pessoa_logada, 7)) {
         $this->Excluir();
       }
     }
