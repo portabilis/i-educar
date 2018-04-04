@@ -521,6 +521,30 @@ class indice extends clsCadastro
       'cod_curso_profissional' => $dadosRegistro[39-1],
     );
 
+    $camposTurma['dias_semana'] = array();
+    for ($i=1; $i <= 7; $i++) { 
+      if($dadosRegistro[10+$i-1]){
+        $camposTurma['dias_semana'][] = $i;
+      }
+    }
+    $camposTurma['dias_semana'] = '{'.implode(',', $camposTurma['dias_semana']).'}';
+
+    $camposTurma['atividades_complementares'] = array();
+    for ($i=1; $i <= 6; $i++) { 
+      if($dadosRegistro[19+$i-1]){
+        $camposTurma['atividades_complementares'][] = $dadosRegistro[19+$i-1];
+      }
+    }
+    $camposTurma['atividades_complementares'] = '{'.implode(',', $camposTurma['atividades_complementares']).'}';
+
+    $camposTurma['atividades_aee'] = array();
+    for ($i=1; $i <= 11; $i++) { 
+      if($dadosRegistro[25+$i-1]){
+        $camposTurma['atividades_aee'][] = $i;
+      }
+    }
+    $camposTurma['atividades_aee'] = '{'.implode(',', $camposTurma['atividades_aee']).'}';
+
 
     $modalidadeEnsinoCenso = $dadosRegistro[37-1];
     $etapaEnsinoCenso = $dadosRegistro[38-1];
