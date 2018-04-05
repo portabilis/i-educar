@@ -696,9 +696,9 @@ class indice extends clsCadastro
 
     // tipos
     $tiposNacionalidade = array(null => 'Selecione',
-                                '1'  => 'Brasileiro',
-                                '2'  => 'Naturalizado brasileiro',
-                                '3'  => 'Estrangeiro');
+                                '1'  => 'Brasileira',
+                                '2'  => 'Brasileira nascido no Exterior ou Naturalizado',
+                                '3'  => 'Estrangeira');
 
     $options            = array('label'       => 'Nacionalidade',
                                 'resources'   => $tiposNacionalidade,
@@ -925,7 +925,7 @@ class indice extends clsCadastro
                    2  => 'Rural');
 
     $options = array(
-      'label'       => 'Zona Localização',
+      'label'       => 'Zona localização',
       'value'       => $this->zona_localizacao_censo,
       'resources'   => $zonas,
       'required'    => false

@@ -1,3 +1,18 @@
+$j('#btn_enviar').removeAttr('onclick');
+$j('#btn_enviar').on('click', validaServidor);
+
+function validaServidor(){
+  var inepServidor = $j('#cod_docente_inep').val();
+
+  if (inepServidor.length > 0 && inepServidor.length != 12) {
+    messageUtils.error('O código INEP deve conter 12 dígitos');
+    return false;
+  }
+  
+  acao();
+}
+
+
 //abas
 
 $j('.tablecadastro').children().children('tr:first').children('td:first').append('<div id="tabControl"><ul><li><div id="tab1" class="servidorTab"> <span class="tabText">Dados gerais</span></div></li><li><div id="tab2" class="servidorTab"> <span class="tabText">Dados adicionais</span></div></li></ul></div>');
