@@ -881,7 +881,7 @@ class indice extends clsCadastro
     @session_write_close();
 
     $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_excluir(578, $this->pessoa_logada, 7,
+    $obj_permissoes->permissao_excluir(627, $this->pessoa_logada, 7,
       'educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno);
 
     if (! $this->desativaEnturmacoesMatricula($this->cod_matricula))
