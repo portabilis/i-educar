@@ -468,7 +468,7 @@ class indice extends clsCadastro
     $resources = array(
       null => 'Selecione',
       1 => Portabilis_String_Utils::toLatin1('Concluído'),
-      2 => 'Cursando'
+      2 => 'Em andamento'
     );
 
     $options = array(
@@ -547,7 +547,7 @@ class indice extends clsCadastro
     $resources = array(
       null => 'Selecione',
       1 => Portabilis_String_Utils::toLatin1('Concluído'),
-      2 => 'Cursando'
+      2 => 'Em andamento'
     );
 
     $options = array(
@@ -627,7 +627,7 @@ class indice extends clsCadastro
     $resources = array(
       null => 'Selecione',
       1 => Portabilis_String_Utils::toLatin1('Concluído'),
-      2 => 'Cursando'
+      2 => 'Em andamento'
     );
 
     $options = array(
