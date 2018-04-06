@@ -134,6 +134,7 @@ $j('#educacao_indigena').change(
         $j('#lingua_ministrada').prop('disabled', false);
       }else{
         makeUnrequired('lingua_ministrada');
+        makeUnrequired('codigo_lingua_indigena');
         $j('#lingua_ministrada').prop('disabled', true);
         $j('#codigo_lingua_indigena').prop('disabled', true);
         $j('#lingua_ministrada').val(1)

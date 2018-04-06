@@ -126,7 +126,7 @@ class EducacensoExportController extends ApiCoreController
     $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
 
     $export = $this->exportaDadosRegistro00($escolaId, $ano);
-    $export .= $this->exportaDadosRegistro10($escolaId);
+    $export .= $this->exportaDadosRegistro10($escolaId, $ano);
     foreach ($this->getTurmas($escolaId, $ano) as $turmaId => $turmaNome) {
       $export .= $this->exportaDadosRegistro20($escolaId, $turmaId, $data_ini, $data_fim);
     }
@@ -409,7 +409,7 @@ class EducacensoExportController extends ApiCoreController
     }
   }
 
-  protected function exportaDadosRegistro10($escolaId){
+  protected function exportaDadosRegistro10($escolaId, $ano){
     $sql =
         'SELECT
       \'10\' as r10s1,
@@ -548,6 +548,7 @@ class EducacensoExportController extends ApiCoreController
          FROM pmieducar.turma
         WHERE ref_ref_cod_escola = $1
           AND etapa_educacenso IN (4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,41,56)
+          AND ano = $2
         LIMIT 1
       ) AS etapa_ensino_fundamental
 
@@ -560,7 +561,7 @@ class EducacensoExportController extends ApiCoreController
 
     $exclusivamente = 2;
 
-    extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, array('return_only' => 'first-row', 'params' => array($escolaId))));
+    extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, array('return_only' => 'first-row', 'params' => array($escolaId, $ano))));
     if($r10s1){
       $d = '|';
       $return = '';
