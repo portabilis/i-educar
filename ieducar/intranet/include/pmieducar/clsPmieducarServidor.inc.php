@@ -52,21 +52,18 @@ class clsPmieducarServidor
   var $codigo_curso_superior_1;
   var $ano_inicio_curso_superior_1;
   var $ano_conclusao_curso_superior_1;
-  var $tipo_instituicao_curso_superior_1;
   var $instituicao_curso_superior_1;
   var $situacao_curso_superior_2;
   var $formacao_complementacao_pedagogica_2;
   var $codigo_curso_superior_2;
   var $ano_inicio_curso_superior_2;
   var $ano_conclusao_curso_superior_2;
-  var $tipo_instituicao_curso_superior_2;
   var $instituicao_curso_superior_2;
   var $situacao_curso_superior_3;
   var $formacao_complementacao_pedagogica_3;
   var $codigo_curso_superior_3;
   var $ano_inicio_curso_superior_3;
   var $ano_conclusao_curso_superior_3;
-  var $tipo_instituicao_curso_superior_3;
   var $instituicao_curso_superior_3;
   var $pos_especializacao;
   var $pos_mestrado;
@@ -151,17 +148,17 @@ class clsPmieducarServidor
     $this->_schema = 'pmieducar.';
     $this->_tabela = $this->_schema . 'servidor';
     $this->_campos_lista = $this->_todos_campos = "cod_servidor, ref_idesco, carga_horaria, data_cadastro, data_exclusao, ativo, ref_cod_instituicao,ref_cod_subnivel,
-    situacao_curso_superior_1, formacao_complementacao_pedagogica_1, codigo_curso_superior_1, ano_inicio_curso_superior_1, ano_conclusao_curso_superior_1, tipo_instituicao_curso_superior_1, instituicao_curso_superior_1,
-    situacao_curso_superior_2, formacao_complementacao_pedagogica_2, codigo_curso_superior_2, ano_inicio_curso_superior_2, ano_conclusao_curso_superior_2, tipo_instituicao_curso_superior_2, instituicao_curso_superior_2,
-    situacao_curso_superior_3, formacao_complementacao_pedagogica_3, codigo_curso_superior_3, ano_inicio_curso_superior_3, ano_conclusao_curso_superior_3, tipo_instituicao_curso_superior_3, instituicao_curso_superior_3,
+    situacao_curso_superior_1, formacao_complementacao_pedagogica_1, codigo_curso_superior_1, ano_inicio_curso_superior_1, ano_conclusao_curso_superior_1, instituicao_curso_superior_1,
+    situacao_curso_superior_2, formacao_complementacao_pedagogica_2, codigo_curso_superior_2, ano_inicio_curso_superior_2, ano_conclusao_curso_superior_2, instituicao_curso_superior_2,
+    situacao_curso_superior_3, formacao_complementacao_pedagogica_3, codigo_curso_superior_3, ano_inicio_curso_superior_3, ano_conclusao_curso_superior_3, instituicao_curso_superior_3,
     pos_especializacao, pos_mestrado, pos_doutorado, pos_nenhuma, curso_creche, curso_pre_escola, curso_anos_iniciais, curso_anos_finais, curso_ensino_medio, curso_eja, curso_educacao_especial, curso_educacao_indigena,
     curso_educacao_campo, curso_educacao_ambiental, curso_educacao_campo, curso_educacao_direitos_humanos, curso_genero_diversidade_sexual, curso_direito_crianca_adolescente, curso_relacoes_etnicorraciais, curso_outros, curso_nenhum,
     multi_seriado
     ";
     $this->_campos_lista2 = $this->_todos_campos2 = "s.cod_servidor, s.ref_idesco, s.carga_horaria, s.data_cadastro, s.data_exclusao, s.ativo, s.ref_cod_instituicao,s.ref_cod_subnivel,
-    s.situacao_curso_superior_1, s.formacao_complementacao_pedagogica_1, s.codigo_curso_superior_1, s.ano_inicio_curso_superior_1, s.ano_conclusao_curso_superior_1, s.tipo_instituicao_curso_superior_1, s.instituicao_curso_superior_1,
-    s.situacao_curso_superior_2, s.formacao_complementacao_pedagogica_2, s.codigo_curso_superior_2, s.ano_inicio_curso_superior_2, s.ano_conclusao_curso_superior_2, s.tipo_instituicao_curso_superior_2, s.instituicao_curso_superior_2,
-    s.situacao_curso_superior_3, s.formacao_complementacao_pedagogica_3, s.codigo_curso_superior_3, s.ano_inicio_curso_superior_3, s.ano_conclusao_curso_superior_3, s.tipo_instituicao_curso_superior_3, s.instituicao_curso_superior_3,
+    s.situacao_curso_superior_1, s.formacao_complementacao_pedagogica_1, s.codigo_curso_superior_1, s.ano_inicio_curso_superior_1, s.ano_conclusao_curso_superior_1, s.instituicao_curso_superior_1,
+    s.situacao_curso_superior_2, s.formacao_complementacao_pedagogica_2, s.codigo_curso_superior_2, s.ano_inicio_curso_superior_2, s.ano_conclusao_curso_superior_2, s.instituicao_curso_superior_2,
+    s.situacao_curso_superior_3, s.formacao_complementacao_pedagogica_3, s.codigo_curso_superior_3, s.ano_inicio_curso_superior_3, s.ano_conclusao_curso_superior_3, s.instituicao_curso_superior_3,
     s.pos_especializacao, s.pos_mestrado, s.pos_doutorado, s.pos_nenhuma, s.curso_creche, s.curso_pre_escola, s.curso_anos_iniciais, s.curso_anos_finais, s.curso_ensino_medio, s.curso_eja, s.curso_educacao_especial, s.curso_educacao_indigena,
     s.curso_educacao_campo, s.curso_educacao_ambiental, s.curso_educacao_campo, s.curso_educacao_direitos_humanos, s.curso_genero_diversidade_sexual, s.curso_direito_crianca_adolescente, s.curso_relacoes_etnicorraciais, s.curso_outros, s.curso_nenhum,
     s.multi_seriado,
@@ -321,11 +318,6 @@ class clsPmieducarServidor
         $valores .= "{$gruda}'{$this->ano_conclusao_curso_superior_1}'";
         $gruda = ", ";
       }
-      if (is_numeric( $this->tipo_instituicao_curso_superior_1)) {
-        $campos .= "{$gruda}tipo_instituicao_curso_superior_1";
-        $valores .= "{$gruda}'{$this->tipo_instituicao_curso_superior_1}'";
-        $gruda = ", ";
-      }
       if (is_numeric( $this->instituicao_curso_superior_1)) {
         $campos .= "{$gruda}instituicao_curso_superior_1";
         $valores .= "{$gruda}'{$this->instituicao_curso_superior_1}'";
@@ -356,11 +348,6 @@ class clsPmieducarServidor
         $valores .= "{$gruda}'{$this->ano_conclusao_curso_superior_2}'";
         $gruda = ", ";
       }
-      if (is_numeric( $this->tipo_instituicao_curso_superior_2)) {
-        $campos .= "{$gruda}tipo_instituicao_curso_superior_2";
-        $valores .= "{$gruda}'{$this->tipo_instituicao_curso_superior_2}'";
-        $gruda = ", ";
-      }
       if (is_numeric( $this->instituicao_curso_superior_2)) {
         $campos .= "{$gruda}instituicao_curso_superior_2";
         $valores .= "{$gruda}'{$this->instituicao_curso_superior_2}'";
@@ -389,11 +376,6 @@ class clsPmieducarServidor
       if (is_numeric( $this->ano_conclusao_curso_superior_3)) {
         $campos .= "{$gruda}ano_conclusao_curso_superior_3";
         $valores .= "{$gruda}'{$this->ano_conclusao_curso_superior_3}'";
-        $gruda = ", ";
-      }
-      if (is_numeric( $this->tipo_instituicao_curso_superior_3)) {
-        $campos .= "{$gruda}tipo_instituicao_curso_superior_3";
-        $valores .= "{$gruda}'{$this->tipo_instituicao_curso_superior_3}'";
         $gruda = ", ";
       }
       if (is_numeric( $this->instituicao_curso_superior_3)) {
@@ -578,13 +560,6 @@ class clsPmieducarServidor
         $set .= "{$gruda}ano_conclusao_curso_superior_1 = NULL";
         $gruda = ", ";
       }
-      if (is_numeric($this->tipo_instituicao_curso_superior_1)) {
-        $set .= "{$gruda}tipo_instituicao_curso_superior_1 = '{$this->tipo_instituicao_curso_superior_1}'";
-        $gruda = ", ";
-      } else {
-        $set .= "{$gruda}tipo_instituicao_curso_superior_1 = NULL";
-        $gruda = ", ";
-      }
       if (is_numeric($this->instituicao_curso_superior_1)) {
         $set .= "{$gruda}instituicao_curso_superior_1 = '{$this->instituicao_curso_superior_1}'";
         $gruda = ", ";
@@ -624,13 +599,6 @@ class clsPmieducarServidor
         $set .= "{$gruda}ano_conclusao_curso_superior_2 = NULL";
         $gruda = ", ";
       }
-      if (is_numeric($this->tipo_instituicao_curso_superior_2)) {
-        $set .= "{$gruda}tipo_instituicao_curso_superior_2 = '{$this->tipo_instituicao_curso_superior_2}'";
-        $gruda = ", ";
-      } else {
-        $set .= "{$gruda}tipo_instituicao_curso_superior_2 = NULL";
-        $gruda = ", ";
-      }
       if (is_numeric($this->instituicao_curso_superior_2)) {
         $set .= "{$gruda}instituicao_curso_superior_2 = '{$this->instituicao_curso_superior_2}'";
         $gruda = ", ";
@@ -668,13 +636,6 @@ class clsPmieducarServidor
         $gruda = ", ";
       }else{
         $set .= "{$gruda}ano_conclusao_curso_superior_3 = NULL";
-        $gruda = ", ";
-      }
-      if (is_numeric($this->tipo_instituicao_curso_superior_3)) {
-        $set .= "{$gruda}tipo_instituicao_curso_superior_3 = '{$this->tipo_instituicao_curso_superior_3}'";
-        $gruda = ", ";
-      } else {
-        $set .= "{$gruda}tipo_instituicao_curso_superior_3 = NULL";
         $gruda = ", ";
       }
       if (is_numeric($this->instituicao_curso_superior_3)) {

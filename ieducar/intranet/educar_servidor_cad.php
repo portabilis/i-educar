@@ -86,21 +86,18 @@ class indice extends clsCadastro
   var $codigo_curso_superior_1;
   var $ano_inicio_curso_superior_1;
   var $ano_conclusao_curso_superior_1;
-  var $tipo_instituicao_curso_superior_1;
   var $instituicao_curso_superior_1;
   var $situacao_curso_superior_2;
   var $formacao_complementacao_pedagogica_2;
   var $codigo_curso_superior_2;
   var $ano_inicio_curso_superior_2;
   var $ano_conclusao_curso_superior_2;
-  var $tipo_instituicao_curso_superior_2;
   var $instituicao_curso_superior_2;
   var $situacao_curso_superior_3;
   var $formacao_complementacao_pedagogica_3;
   var $codigo_curso_superior_3;
   var $ano_inicio_curso_superior_3;
   var $ano_conclusao_curso_superior_3;
-  var $tipo_instituicao_curso_superior_3;
   var $instituicao_curso_superior_3;
   var $pos_especializacao;
   var $pos_mestrado;
@@ -521,14 +518,6 @@ class indice extends clsCadastro
     );
 
     $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Tipo de instituição do curso superior 1'),
-      'resources' => $resources,
-      'value' => $this->tipo_instituicao_curso_superior_1,
-      'required' => false
-    );
-    $this->inputsHelper()->select('tipo_instituicao_curso_superior_1', $options);
-
-    $options = array(
       'label' => Portabilis_String_Utils::toLatin1('Instituição do curso superior 1'),
       'required'   => false
     );
@@ -600,14 +589,6 @@ class indice extends clsCadastro
     );
 
     $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Tipo de instituição do curso superior 2'),
-      'resources' => $resources,
-      'value' => $this->tipo_instituicao_curso_superior_2,
-      'required' => false
-    );
-    $this->inputsHelper()->select('tipo_instituicao_curso_superior_2', $options);
-
-    $options = array(
       'label' => Portabilis_String_Utils::toLatin1('Instituição do curso superior 2'),
       'required' => false
     );
@@ -677,14 +658,6 @@ class indice extends clsCadastro
       1 => Portabilis_String_Utils::toLatin1('Pública'),
       2 => 'Privada'
     );
-
-    $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Tipo de instituição do curso superior 3'),
-      'resources' => $resources,
-      'value' => $this->tipo_instituicao_curso_superior_3,
-      'required' => false
-    );
-    $this->inputsHelper()->select('tipo_instituicao_curso_superior_3', $options);
 
     $options = array(
       'label' => Portabilis_String_Utils::toLatin1('Instituição do curso superior 3'),
@@ -1071,21 +1044,18 @@ class indice extends clsCadastro
     $obj->codigo_curso_superior_1 = $this->codigo_curso_superior_1_id;
     $obj->ano_inicio_curso_superior_1 = $this->ano_inicio_curso_superior_1;
     $obj->ano_conclusao_curso_superior_1 = $this->ano_conclusao_curso_superior_1;
-    $obj->tipo_instituicao_curso_superior_1 = $this->tipo_instituicao_curso_superior_1;
     $obj->instituicao_curso_superior_1 = $this->instituicao_curso_superior_1_id;
     $obj->situacao_curso_superior_2 = $this->situacao_curso_superior_2;
     $obj->formacao_complementacao_pedagogica_2 = $this->formacao_complementacao_pedagogica_2;
     $obj->codigo_curso_superior_2 = $this->codigo_curso_superior_2_id;
     $obj->ano_inicio_curso_superior_2 = $this->ano_inicio_curso_superior_2;
     $obj->ano_conclusao_curso_superior_2 = $this->ano_conclusao_curso_superior_2;
-    $obj->tipo_instituicao_curso_superior_2 = $this->tipo_instituicao_curso_superior_2;
     $obj->instituicao_curso_superior_2 = $this->instituicao_curso_superior_2_id;
     $obj->situacao_curso_superior_3 = $this->situacao_curso_superior_3;
     $obj->formacao_complementacao_pedagogica_3 = $this->formacao_complementacao_pedagogica_3;
     $obj->codigo_curso_superior_3 = $this->codigo_curso_superior_3_id;
     $obj->ano_inicio_curso_superior_3 = $this->ano_inicio_curso_superior_3;
     $obj->ano_conclusao_curso_superior_3 = $this->ano_conclusao_curso_superior_3;
-    $obj->tipo_instituicao_curso_superior_3 = $this->tipo_instituicao_curso_superior_3;
     $obj->instituicao_curso_superior_3 = $this->instituicao_curso_superior_3_id;
     $obj->pos_especializacao = $this->pos_especializacao == 'on' ? 1 : 0;
     $obj->pos_mestrado = $this->pos_mestrado == 'on' ? 1 : 0;
