@@ -1,7 +1,7 @@
 $j('#btn_enviar').removeAttr('onclick');
 $j('#btn_enviar').on('click', validaServidor);
 
-function validaServidor(){
+function validaServidor() {
   var inepServidor = $j('#cod_docente_inep').val();
 
   if (inepServidor.length > 0 && inepServidor.length != 12) {
@@ -12,6 +12,27 @@ function validaServidor(){
   acao();
 }
 
+habilitaComplementacaoPedagogica(1);
+habilitaComplementacaoPedagogica(2);
+habilitaComplementacaoPedagogica(3);
+
+$j('#situacao_curso_superior_1').on('change', () => habilitaComplementacaoPedagogica(1));
+$j('#codigo_curso_superior_1').on('change', () => habilitaComplementacaoPedagogica(1));
+
+$j('#situacao_curso_superior_2').on('change', () => habilitaComplementacaoPedagogica(2));
+$j('#codigo_curso_superior_2').on('change', () => habilitaComplementacaoPedagogica(2));
+
+$j('#situacao_curso_superior_3').on('change', () => habilitaComplementacaoPedagogica(3));
+$j('#codigo_curso_superior_3').on('change', () => habilitaComplementacaoPedagogica(3));
+
+function habilitaComplementacaoPedagogica(seq) {
+  var cursoSuperiorConcluido = $j('#situacao_curso_superior_'+seq).val() == 1;
+  var tecnologo = $j('#codigo_curso_superior_'+seq).val().search('Tecnologo') != -1;
+  var bacharelado  = $j('#codigo_curso_superior_'+seq).val().search('Bacharelado') != -1;
+  var habilitaCampo = cursoSuperiorConcluido && (tecnologo || bacharelado);
+
+  $j('#formacao_complementacao_pedagogica_'+seq).attr('disabled', !habilitaCampo);
+}
 
 //abas
 

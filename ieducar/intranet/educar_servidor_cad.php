@@ -480,12 +480,10 @@ class indice extends clsCadastro
 
     $this->inputsHelper()->select('situacao_curso_superior_1', $options);
 
-    $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Possui formação/complementação pedagógica 1'),
-      'value' => $this->formacao_complementacao_pedagogica_1
-    );
-
-    $this->inputsHelper()->checkbox('formacao_complementacao_pedagogica_1', $options);
+    $options = array('label' => 'Possui formação/complementação pedagógica 1',
+                     'value' => $this->formacao_complementacao_pedagogica_1,
+                     'required' => false);
+    $this->inputsHelper()->booleanSelect('formacao_complementacao_pedagogica_1', $options);
 
     $options = array('label' => Portabilis_String_Utils::toLatin1('Curso superior 1'), 'required'   => false);
     $helperOptions = array(
@@ -558,11 +556,10 @@ class indice extends clsCadastro
     );
     $this->inputsHelper()->select('situacao_curso_superior_2', $options);
 
-    $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Possui formação/complementação pedagógica 2'),
-      'value' => $this->formacao_complementacao_pedagogica_2
-    );
-    $this->inputsHelper()->checkbox('formacao_complementacao_pedagogica_2', $options);
+    $options = array('label' => 'Possui formação/complementação pedagógica 2',
+                     'value' => $this->formacao_complementacao_pedagogica_2,
+                     'required' => false);
+    $this->inputsHelper()->booleanSelect('formacao_complementacao_pedagogica_2', $options);
 
     $options = array(
       'label' => Portabilis_String_Utils::toLatin1('Curso superior 2'),
@@ -638,11 +635,10 @@ class indice extends clsCadastro
     );
     $this->inputsHelper()->select('situacao_curso_superior_3', $options);
 
-    $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Possui formação/complementação pedagógica 3'),
-      'value' => $this->formacao_complementacao_pedagogica_3
-    );
-    $this->inputsHelper()->checkbox('formacao_complementacao_pedagogica_3', $options);
+    $options = array('label' => 'Possui formação/complementação pedagógica 3',
+                     'value' => $this->formacao_complementacao_pedagogica_3,
+                     'required' => false);
+    $this->inputsHelper()->booleanSelect('formacao_complementacao_pedagogica_3', $options);
 
     $options = array(
       'label' => Portabilis_String_Utils::toLatin1('Curso superior 3'),
@@ -1071,21 +1067,21 @@ class indice extends clsCadastro
   function addCamposCenso($obj){
 
     $obj->situacao_curso_superior_1 = $this->situacao_curso_superior_1;
-    $obj->formacao_complementacao_pedagogica_1 = $this->formacao_complementacao_pedagogica_1 == 'on' ? 1 : 0;
+    $obj->formacao_complementacao_pedagogica_1 = $this->formacao_complementacao_pedagogica_1;
     $obj->codigo_curso_superior_1 = $this->codigo_curso_superior_1_id;
     $obj->ano_inicio_curso_superior_1 = $this->ano_inicio_curso_superior_1;
     $obj->ano_conclusao_curso_superior_1 = $this->ano_conclusao_curso_superior_1;
     $obj->tipo_instituicao_curso_superior_1 = $this->tipo_instituicao_curso_superior_1;
     $obj->instituicao_curso_superior_1 = $this->instituicao_curso_superior_1_id;
     $obj->situacao_curso_superior_2 = $this->situacao_curso_superior_2;
-    $obj->formacao_complementacao_pedagogica_2 = $this->formacao_complementacao_pedagogica_2 == 'on' ? 1 : 0;
+    $obj->formacao_complementacao_pedagogica_2 = $this->formacao_complementacao_pedagogica_2;
     $obj->codigo_curso_superior_2 = $this->codigo_curso_superior_2_id;
     $obj->ano_inicio_curso_superior_2 = $this->ano_inicio_curso_superior_2;
     $obj->ano_conclusao_curso_superior_2 = $this->ano_conclusao_curso_superior_2;
     $obj->tipo_instituicao_curso_superior_2 = $this->tipo_instituicao_curso_superior_2;
     $obj->instituicao_curso_superior_2 = $this->instituicao_curso_superior_2_id;
     $obj->situacao_curso_superior_3 = $this->situacao_curso_superior_3;
-    $obj->formacao_complementacao_pedagogica_3 = $this->formacao_complementacao_pedagogica_3 == 'on' ? 1 : 0;
+    $obj->formacao_complementacao_pedagogica_3 = $this->formacao_complementacao_pedagogica_3;
     $obj->codigo_curso_superior_3 = $this->codigo_curso_superior_3_id;
     $obj->ano_inicio_curso_superior_3 = $this->ano_inicio_curso_superior_3;
     $obj->ano_conclusao_curso_superior_3 = $this->ano_conclusao_curso_superior_3;
