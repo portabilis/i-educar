@@ -29,8 +29,7 @@ var $arrayCheckDependencias = ['dependencia_sala_diretoria',
                                'dependencia_alojamento_aluno',
                                'dependencia_alojamento_professor',
                                'dependencia_area_verde',
-                               'dependencia_lavanderia',
-                               'dependencia_unidade_climatizada'];
+                               'dependencia_lavanderia'];
 
 $escolaInepIdField.closest('tr').hide();
 
@@ -78,9 +77,10 @@ var getEscola = function(escolaId) {
 }
 
 var putEscola = function() {
+  var inep = $escolaInepIdField.val().length == 8 ? $escolaInepIdField.val() : '';
   var data = {
     id             : $escolaIdField.val(),
-    escola_inep_id : $escolaInepIdField.val()
+    escola_inep_id : inep
   };
 
   var options = {
@@ -111,9 +111,54 @@ $j('#marcar_todas_dependencias').click(
         $arrayCheckDependencias.each(
             function(idElement){
                 $j( '#' + idElement).prop("checked",check);
+                var on = check ? 'on' : '';
+                $j( '#' + idElement).val(on);
             }
         );
     }
+);
+
+$j('#local_funcionamento').change(
+  function(){
+      var disabled = this.value != 3;
+      $j('#condicao').prop("disabled",disabled);
+      $j('#codigo_inep_escola_compartilhada').prop("disabled",disabled);
+  }
+);
+
+$j('#educacao_indigena').change(
+  function(){
+      var escolaIndigena = this.value == 1;
+      if(escolaIndigena){
+        makeRequired('lingua_ministrada');
+        $j('#lingua_ministrada').prop('disabled', false);
+      }else{
+        makeUnrequired('lingua_ministrada');
+        makeUnrequired('codigo_lingua_indigena');
+        $j('#lingua_ministrada').prop('disabled', true);
+        $j('#codigo_lingua_indigena').prop('disabled', true);
+        $j('#lingua_ministrada').val(1)
+      }
+  }
+);
+$j('#lingua_ministrada').change(
+  function(){
+      var linguaIndigena = this.value == 2;
+      if(linguaIndigena){
+        makeRequired('codigo_lingua_indigena');
+        $j('#codigo_lingua_indigena').prop('disabled', false);
+      }else{
+        makeUnrequired('codigo_lingua_indigena');
+        $j('#codigo_lingua_indigena').prop('disabled', true);
+      }
+  }
+);
+
+$j('#computadores').change(
+  function(){
+      var possuiComputadores = this.value > 0;
+      $j('#acesso_internet').prop('disabled', !possuiComputadores);
+  }
 );
 
 //abas
@@ -126,13 +171,13 @@ if (!$j('#cnpj').is(':visible')){
   $j('#tab1').addClass('escolaTab-active').removeClass('escolaTab');
 
   // Atribui um id a linha, para identificar até onde/a partir de onde esconder os campos
-  $j('#condicao').closest('tr').attr('id','tcondicao');
+  $j('#local_funcionamento').closest('tr').attr('id','tlocal_funcionamento');
   $j('#marcar_todas_dependencias').closest('tr').attr('id','tmarcar_todas_dependencias');
   $j('#televisoes').closest('tr').attr('id','ttelevisoes');
   $j('#atendimento_aee').closest('tr').attr('id','tatendimento_aee');
 
   // Pega o número dessa linha
-  linha_inicial_infra = $j('#tcondicao').index()-1;
+  linha_inicial_infra = $j('#tlocal_funcionamento').index()-1;
   linha_inicial_dependencia = $j('#tmarcar_todas_dependencias').index()-1;
   linha_inicial_equipamento = $j('#ttelevisoes').index()-1;
   linha_inicial_dados = $j('#tatendimento_aee').index()-1;  
@@ -256,3 +301,110 @@ $j(document).ready(function() {
   // fix checkboxs
   $j('input:checked').val('on');
 });
+
+document.getElementById('cnpj').readOnly = true;
+
+function getRedeEnsino(xml_escola_rede_ensino)
+{
+    var campoRedeEnsino = document.getElementById('ref_cod_escola_rede_ensino');
+    var DOM_array = xml_escola_rede_ensino.getElementsByTagName( "escola_rede_ensino" );
+
+    if(DOM_array.length)
+    {
+        campoRedeEnsino.length = 1;
+        campoRedeEnsino.options[0].text = 'Selecione uma rede de ensino';
+        campoRedeEnsino.disabled = false;
+
+        for( var i = 0; i < DOM_array.length; i++ )
+        {
+            campoRedeEnsino.options[campoRedeEnsino.options.length] = new Option( DOM_array[i].firstChild.data, DOM_array[i].getAttribute("cod_escola_rede_ensino"),false,false);
+        }
+    }
+    else
+        campoRedeEnsino.options[0].text = 'A instituição não possui nenhuma rede de ensino';
+}
+
+function getLocalizacao(xml_escola_localizacao)
+{
+    var campoLocalizacao = document.getElementById('ref_cod_escola_localizacao');
+    var DOM_array = xml_escola_localizacao.getElementsByTagName( "escola_localizacao" );
+
+    if(DOM_array.length)
+    {
+        campoLocalizacao.length = 1;
+        campoLocalizacao.options[0].text = 'Selecione uma localização';
+        campoLocalizacao.disabled = false;
+
+        for( var i = 0; i < DOM_array.length; i++ )
+        {
+            campoLocalizacao.options[campoLocalizacao.options.length] = new Option( DOM_array[i].firstChild.data, DOM_array[i].getAttribute("cod_escola_localizacao"),false,false);
+        }
+    }
+    else
+        campoLocalizacao.options[0].text = 'A instituição não possui nenhuma localização';
+}
+
+function getCurso(xml_curso)
+{
+    var campoCurso = document.getElementById('ref_cod_curso');
+    var DOM_array = xml_curso.getElementsByTagName( "curso" );
+
+    if(DOM_array.length)
+    {
+        campoCurso.length = 1;
+        campoCurso.options[0].text = 'Selecione um curso';
+        campoCurso.disabled = false;
+
+        for( var i = 0; i < DOM_array.length; i++ )
+        {
+            campoCurso.options[campoCurso.options.length] = new Option( DOM_array[i].firstChild.data, DOM_array[i].getAttribute("cod_curso"),false,false);
+        }
+    }
+    else
+        campoCurso.options[0].text = 'A instituição não possui nenhum curso';
+}
+
+
+if ( document.getElementById('ref_cod_instituicao') )
+{
+    document.getElementById('ref_cod_instituicao').onchange = function()
+    {
+        var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
+
+        var campoRedeEnsino = document.getElementById('ref_cod_escola_rede_ensino');
+        campoRedeEnsino.length = 1;
+        campoRedeEnsino.disabled = true;
+        campoRedeEnsino.options[0].text = 'Carregando rede de ensino';
+
+        var campoLocalizacao = document.getElementById('ref_cod_escola_localizacao');
+        campoLocalizacao.length = 1;
+        campoLocalizacao.disabled = true;
+        campoLocalizacao.options[0].text = 'Carregando localização';
+
+        var campoCurso = document.getElementById('ref_cod_curso');
+        campoCurso.length = 1;
+        campoCurso.disabled = true;
+        campoCurso.options[0].text = 'Carregando curso';
+
+        var xml_escola_rede_ensino = new ajax( getRedeEnsino );
+        xml_escola_rede_ensino.envia( "educar_escola_rede_ensino_xml.php?ins="+campoInstituicao );
+
+        var xml_escola_localizacao = new ajax( getLocalizacao );
+        xml_escola_localizacao.envia( "educar_escola_localizacao_xml.php?ins="+campoInstituicao );
+
+        var xml_curso = new ajax( getCurso );
+        xml_curso.envia( "educar_curso_xml2.php?ins="+campoInstituicao );
+
+        if (this.value == '')
+        {
+            $('img_rede_ensino').style.display = 'none;';
+            $('img_localizacao').style.display = 'none;';
+        }
+        else
+        {
+            $('img_rede_ensino').style.display = '';
+            $('img_localizacao').style.display = '';
+        }
+
+    }
+}

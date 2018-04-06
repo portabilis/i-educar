@@ -1,31 +1,22 @@
 (function($){
-
   $(document).ready(function(){
+    $j.each(arrayOptions, function(id, values) {
+      values.element.trigger('chosen:updated');
+      getValues(values.element, values.values);
+    });
 
-    $customElement = $j('#' + elementName);
-
-    $customElement.trigger('chosen:updated');
-
-    var handleGetValues = function() {
-      if(value){
-        $j.each(value, function(id, values) {
-
-          $customElement.children("[value=" + values + "]").attr('selected', '');
-        });
-      }
-
-      $customElement.trigger('chosen:updated');
+    function getValues(element, val) {
+      var options = {
+        success  : function(){
+          if(val){
+            $j.each(val, function(id, values) {
+              element.children("[value=" + values + "]").attr('selected', '');
+            });
+          }
+          element.trigger('chosen:updated');
+        },
+      };
+      getResource(options);
     }
-
-  var getValues = function() {
-    var options = {
-      success  : handleGetValues,
-    };
-
-    getResource(options);
-  }
-
-  getValues();
-
   });
 })(jQuery);
