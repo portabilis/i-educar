@@ -299,7 +299,9 @@ class DiarioController extends ApiCoreController
                 foreach ($faltaTurma as $alunoId => $faltaTurmaAluno) {
 
                     $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
-
+                    if(empty($matriculaId)){
+                        continue;
+                    }
                     if ($this->getRegra($matriculaId)->get('tipoPresenca') != RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
                         throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de faltas por componente."));
                     }
