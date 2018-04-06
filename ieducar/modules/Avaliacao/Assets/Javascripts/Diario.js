@@ -1244,13 +1244,15 @@ function updateComponenteCurricular($targetElement, matriculaId, cc, regra) {
       }
 
       $fieldMedia.appendTo($targetElement);
+    }else if(hAlgumaProgressaoManual){
+      $emptyTd.clone().appendTo($targetElement);
     }
   }else if((hUseNota && (hUltimaEtapa || (hDefinirComponentesEtapa && !hProgressaoContinuada)))){
     $emptyTd.clone().appendTo($targetElement);
     if(!hDefinirComponentesEtapa){
       $emptyTd.clone().appendTo($targetElement);
     }
-    if(hProgressaoManual){
+    if(hAlgumaProgressaoManual){
       $emptyTd.clone().appendTo($targetElement);
     }
   }
