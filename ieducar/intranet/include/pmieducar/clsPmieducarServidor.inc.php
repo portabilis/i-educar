@@ -65,10 +65,7 @@ class clsPmieducarServidor
   var $ano_inicio_curso_superior_3;
   var $ano_conclusao_curso_superior_3;
   var $instituicao_curso_superior_3;
-  var $pos_especializacao;
-  var $pos_mestrado;
-  var $pos_doutorado;
-  var $pos_nenhuma;
+  var $pos_graduacao;
   var $curso_creche;
   var $curso_pre_escola;
   var $curso_anos_iniciais;
@@ -151,7 +148,7 @@ class clsPmieducarServidor
     situacao_curso_superior_1, formacao_complementacao_pedagogica_1, codigo_curso_superior_1, ano_inicio_curso_superior_1, ano_conclusao_curso_superior_1, instituicao_curso_superior_1,
     situacao_curso_superior_2, formacao_complementacao_pedagogica_2, codigo_curso_superior_2, ano_inicio_curso_superior_2, ano_conclusao_curso_superior_2, instituicao_curso_superior_2,
     situacao_curso_superior_3, formacao_complementacao_pedagogica_3, codigo_curso_superior_3, ano_inicio_curso_superior_3, ano_conclusao_curso_superior_3, instituicao_curso_superior_3,
-    pos_especializacao, pos_mestrado, pos_doutorado, pos_nenhuma, curso_creche, curso_pre_escola, curso_anos_iniciais, curso_anos_finais, curso_ensino_medio, curso_eja, curso_educacao_especial, curso_educacao_indigena,
+    pos_graduacao, curso_creche, curso_pre_escola, curso_anos_iniciais, curso_anos_finais, curso_ensino_medio, curso_eja, curso_educacao_especial, curso_educacao_indigena,
     curso_educacao_campo, curso_educacao_ambiental, curso_educacao_campo, curso_educacao_direitos_humanos, curso_genero_diversidade_sexual, curso_direito_crianca_adolescente, curso_relacoes_etnicorraciais, curso_outros, curso_nenhum,
     multi_seriado
     ";
@@ -159,7 +156,7 @@ class clsPmieducarServidor
     s.situacao_curso_superior_1, s.formacao_complementacao_pedagogica_1, s.codigo_curso_superior_1, s.ano_inicio_curso_superior_1, s.ano_conclusao_curso_superior_1, s.instituicao_curso_superior_1,
     s.situacao_curso_superior_2, s.formacao_complementacao_pedagogica_2, s.codigo_curso_superior_2, s.ano_inicio_curso_superior_2, s.ano_conclusao_curso_superior_2, s.instituicao_curso_superior_2,
     s.situacao_curso_superior_3, s.formacao_complementacao_pedagogica_3, s.codigo_curso_superior_3, s.ano_inicio_curso_superior_3, s.ano_conclusao_curso_superior_3, s.instituicao_curso_superior_3,
-    s.pos_especializacao, s.pos_mestrado, s.pos_doutorado, s.pos_nenhuma, s.curso_creche, s.curso_pre_escola, s.curso_anos_iniciais, s.curso_anos_finais, s.curso_ensino_medio, s.curso_eja, s.curso_educacao_especial, s.curso_educacao_indigena,
+    s.pos_graduacao, s.curso_creche, s.curso_pre_escola, s.curso_anos_iniciais, s.curso_anos_finais, s.curso_ensino_medio, s.curso_eja, s.curso_educacao_especial, s.curso_educacao_indigena,
     s.curso_educacao_campo, s.curso_educacao_ambiental, s.curso_educacao_campo, s.curso_educacao_direitos_humanos, s.curso_genero_diversidade_sexual, s.curso_direito_crianca_adolescente, s.curso_relacoes_etnicorraciais, s.curso_outros, s.curso_nenhum,
     s.multi_seriado,
     (SELECT replace(textcat_all(matricula),' <br>',',')
@@ -383,24 +380,9 @@ class clsPmieducarServidor
         $valores .= "{$gruda}'{$this->instituicao_curso_superior_3}'";
         $gruda = ", ";
       }
-      if (is_numeric( $this->pos_especializacao)) {
-        $campos .= "{$gruda}pos_especializacao";
-        $valores .= "{$gruda}'{$this->pos_especializacao}'";
-        $gruda = ", ";
-      }
-      if (is_numeric( $this->pos_mestrado)) {
-        $campos .= "{$gruda}pos_mestrado";
-        $valores .= "{$gruda}'{$this->pos_mestrado}'";
-        $gruda = ", ";
-      }
-      if (is_numeric( $this->pos_doutorado)) {
-        $campos .= "{$gruda}pos_doutorado";
-        $valores .= "{$gruda}'{$this->pos_doutorado}'";
-        $gruda = ", ";
-      }
-      if (is_numeric( $this->pos_nenhuma)) {
-        $campos .= "{$gruda}pos_nenhuma";
-        $valores .= "{$gruda}'{$this->pos_nenhuma}'";
+      if (is_string( $this->pos_graduacao)) {
+        $campos .= "{$gruda}pos_graduacao";
+        $valores .= "{$gruda}'{$this->pos_graduacao}'";
         $gruda = ", ";
       }
       if (is_numeric( $this->curso_creche)) {
@@ -645,20 +627,8 @@ class clsPmieducarServidor
         $set .= "{$gruda}instituicao_curso_superior_3 = NULL";
         $gruda = ", ";
       }
-      if (is_numeric($this->pos_especializacao)) {
-        $set .= "{$gruda}pos_especializacao = '{$this->pos_especializacao}'";
-        $gruda = ", ";
-      }
-      if (is_numeric($this->pos_mestrado)) {
-        $set .= "{$gruda}pos_mestrado = '{$this->pos_mestrado}'";
-        $gruda = ", ";
-      }
-      if (is_numeric($this->pos_doutorado)) {
-        $set .= "{$gruda}pos_doutorado = '{$this->pos_doutorado}'";
-        $gruda = ", ";
-      }
-      if (is_numeric($this->pos_nenhuma)) {
-        $set .= "{$gruda}pos_nenhuma = '{$this->pos_nenhuma}'";
+      if (is_string($this->pos_graduacao)) {
+        $set .= "{$gruda}pos_graduacao = '{$this->pos_graduacao}'";
         $gruda = ", ";
       }
       if (is_numeric($this->curso_creche)) {

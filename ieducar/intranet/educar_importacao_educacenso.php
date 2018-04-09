@@ -967,10 +967,6 @@ class indice extends clsCadastro
       'formacao_complementacao_pedagogica_3' => $dadosRegistro[19-1],
       'ano_inicio_curso_superior_3' => $dadosRegistro[21-1],
       'ano_conclusao_curso_superior_3' => $dadosRegistro[22-1],
-      'pos_especializacao' => $dadosRegistro[24-1],
-      'pos_mestrado' => $dadosRegistro[25-1],
-      'pos_doutorado' => $dadosRegistro[26-1],
-      'pos_nenhuma' => $dadosRegistro[27-1],
       'curso_creche' => $dadosRegistro[28-1],
       'curso_pre_escola' => $dadosRegistro[29-1],
       'curso_anos_iniciais' => $dadosRegistro[30-1],
@@ -988,6 +984,14 @@ class indice extends clsCadastro
       'curso_outros' => $dadosRegistro[42-1],
       'curso_nenhum' => $dadosRegistro[43-1],
     );
+
+    $cursosServidor['pos_graduacao'] = array();
+    for ($i=1; $i <= 4; $i++) { 
+      if($dadosRegistro[23+$i-1]){
+        $cursosServidor['pos_graduacao'][] = $i;
+      }
+    }
+    $cursosServidor['pos_graduacao'] = '{'.implode(',', $cursosServidor['pos_graduacao']).'}';
 
     if(!is_numeric($inepServidor)){
       return false;

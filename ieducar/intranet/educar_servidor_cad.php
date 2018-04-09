@@ -99,10 +99,6 @@ class indice extends clsCadastro
   var $ano_inicio_curso_superior_3;
   var $ano_conclusao_curso_superior_3;
   var $instituicao_curso_superior_3;
-  var $pos_especializacao;
-  var $pos_mestrado;
-  var $pos_doutorado;
-  var $pos_nenhuma;
   var $curso_creche;
   var $curso_pre_escola;
   var $curso_anos_iniciais;
@@ -229,6 +225,10 @@ class indice extends clsCadastro
             $det_disciplina = $obj_disciplina->detalhe();
             $this->cursos_disciplina[$det_disciplina['ref_cod_curso']][$disciplina['ref_cod_disciplina']] = $disciplina['ref_cod_disciplina'];
           }
+        }
+
+        if (is_string($this->pos_graduacao)) {
+          $this->pos_graduacao = explode(',',str_replace(array('{', "}"), '', $this->pos_graduacao));
         }
 
         @session_start();
@@ -673,29 +673,16 @@ class indice extends clsCadastro
 
     $this->campoQuebra();
 
-    $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Pós-Graduação - Especialização'),
-      'value' => $this->pos_especializacao
-    );
-    $this->inputsHelper()->checkbox('pos_especializacao', $options);
-
-    $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Pós-Graduação - Mestrado'),
-      'value' => $this->pos_mestrado
-    );
-    $this->inputsHelper()->checkbox('pos_mestrado', $options);
-
-    $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Pós-Graduação - Doutorado'),
-      'value' => $this->pos_doutorado
-    );
-    $this->inputsHelper()->checkbox('pos_doutorado', $options);
-
-    $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Pós-Graduação - Nenhuma'),
-      'value' => $this->pos_nenhuma
-    );
-    $this->inputsHelper()->checkbox('pos_nenhuma', $options);
+    $helperOptions = array('objectName'  => 'pos_graduacao');
+    $options       = array('label' => 'Possui pós-graduação',
+                            'required' => false,
+                            'options' => array('values' => $this->pos_graduacao,
+                                               'all_values' => array(
+                                                  1 => 'Especialização',
+                                                  2 => 'Mestrado',
+                                                  3 => 'Doutorado',
+                                                  4 => 'Nenhuma')));
+    $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
     $options = array(
       'label' => Portabilis_String_Utils::toLatin1('Curso de Formação Continuada(min. 80hrs) - Específico para Creche (0 a 3 anos)'),
@@ -807,6 +794,9 @@ class indice extends clsCadastro
     $this->carga_horaria = $hour + $min;
     $this->carga_horaria = $hour + $min;
 
+    unset($this->pos_graduacao[0]);
+    $this->pos_graduacao = '{' . implode(',', $this->pos_graduacao) . '}';
+
     @session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     @session_write_close();
@@ -888,6 +878,9 @@ class indice extends clsCadastro
     $min     = abs(((int) ($timesep[1] / 60)) - ($timesep[1] / 60)) . '<br>';
     $this->carga_horaria = $hour + $min;
     $this->carga_horaria = $hour + $min;
+
+    unset($this->pos_graduacao[0]);
+    $this->pos_graduacao = '{' . implode(',', $this->pos_graduacao) . '}';
 
     @session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
@@ -1057,11 +1050,7 @@ class indice extends clsCadastro
     $obj->ano_inicio_curso_superior_3 = $this->ano_inicio_curso_superior_3;
     $obj->ano_conclusao_curso_superior_3 = $this->ano_conclusao_curso_superior_3;
     $obj->instituicao_curso_superior_3 = $this->instituicao_curso_superior_3_id;
-    $obj->pos_especializacao = $this->pos_especializacao == 'on' ? 1 : 0;
-    $obj->pos_mestrado = $this->pos_mestrado == 'on' ? 1 : 0;
-    $obj->pos_doutorado = $this->pos_doutorado == 'on' ? 1 : 0;
-    $obj->pos_nenhuma = $this->pos_nenhuma == 'on' ? 1 : 0;
-    $obj->curso_creche = $this->curso_creche == 'on' ? 1 : 0;
+    $obj->pos_graduacao = $this->pos_graduacao;
     $obj->curso_pre_escola = $this->curso_pre_escola == 'on' ? 1 : 0;
     $obj->curso_anos_iniciais = $this->curso_anos_iniciais == 'on' ? 1 : 0;
     $obj->curso_anos_finais = $this->curso_anos_finais == 'on' ? 1 : 0;
