@@ -34,6 +34,18 @@ var formUtils = {
   }
 };
 
+function makeRequired(elementId) {
+  $j('<span class="campo_obrigatorio">*</span>').insertAfter($j('#tr_' + elementId + ' td:nth-child(1) span'));
+  $j('#' + elementId).addClass('obrigatorio');
+  $j('#' + elementId).removeClass('geral');
+}
+
+function makeUnrequired(elementId) {
+  $j('#tr_' + elementId + ' td span.campo_obrigatorio').remove();
+  $j('#' + elementId).addClass('geral');
+  $j('#' + elementId).removeClass('obrigatorio');
+}
+
 function fixupFieldsWidth(additionalFields, force){
   if (! $j(document).data('fixed-fields-width') || force) {
     var maxWidth = 0;
