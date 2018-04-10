@@ -639,25 +639,12 @@ class clsBase extends clsConfig
         $saida .= "<script type=\"text/javascript\" src=\"scripts/select2/pt-BR.js\"></script>";
         $saida .= "<link type=\"text/css\" rel=\"stylesheet\" href=\"scripts/select2/select2.min.css\" />";
 
-        if ($showOnboarding) {
-            $saida .= "
-                <script type=\"text/javascript\">
-                    (function(c,o,n,p,a,ss){ c.cp=c.cp||function(){(c.cp.q=c.cp.q||[]).push(arguments)}; c.cpt=p;a=o.getElementsByTagName('head')[0];ss=o.createElement('script'); ss.async=1;ss.src=n;a.appendChild(ss); })(window,document,'https://api.conpass.io/v2/conpass.js', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsiX2lkIjoiNTk2NTI1OTcxOGVlMGYxZmM5NmRjZmU2IiwidXBkYXRlZEF0IjoiMjAxNy0wNy0xMVQxOToyMzowMy4zMDNaIiwiY3JlYXRlZEF0IjoiMjAxNy0wNy0xMVQxOToyMzowMy4zMDNaIiwiYmFjb24iOiJyeXlqcml6SFciLCJlbWFpbCI6InRpYWdvQHBvcnRhYmlsaXMuY29tLmJyIiwiX192IjowLCJhY3RpdmUiOnRydWUsImxhbmd1YWdlIjoicHQtYnIifSwiaWF0IjoxNTEyNDgxMDM5LCJhdWQiOiJtYXN0ZXJhcHAifQ.GjctUjqFlC8GuITZ77nLMQmfCFYvBz5A0A4qzargQX0');
-                </script>
-            ";
+        if (true) {
+            $saida .= "<script src='https://fast.conpass.io/H1gWceptS_G.js'></script>";
 
             $saida .= "
                 <script type=\"text/javascript\">
-                    var titleFlow = \"Encerramento e início do ano letivo\";
-
-                    function openConpassFlow() {
-                        Conpass.startFlow(titleFlow, { show: true });
-                    }
-
-                    window.onload = function(e) {
-                        Conpass.startFlow(titleFlow);
-                        Conpass.identifyUser({ name: \"{$nomePessoa}\", email: \"{$email}\" });
-                    }
+                        Conpass.init({ name: \"{$nomePessoa}\", email: \"{$email}\" });
                 </script>
             ";
         }
