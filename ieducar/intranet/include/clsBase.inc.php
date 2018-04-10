@@ -639,7 +639,7 @@ class clsBase extends clsConfig
         $saida .= "<script type=\"text/javascript\" src=\"scripts/select2/pt-BR.js\"></script>";
         $saida .= "<link type=\"text/css\" rel=\"stylesheet\" href=\"scripts/select2/select2.min.css\" />";
 
-        if (showOnboarding) {
+        if ($showOnboarding) {
             $saida .= "<script src='https://fast.conpass.io/H1gWceptS_G.js'></script>";
 
             $saida .= "
