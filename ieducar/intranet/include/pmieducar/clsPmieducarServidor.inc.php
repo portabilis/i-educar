@@ -66,22 +66,7 @@ class clsPmieducarServidor
   var $ano_conclusao_curso_superior_3;
   var $instituicao_curso_superior_3;
   var $pos_graduacao;
-  var $curso_creche;
-  var $curso_pre_escola;
-  var $curso_anos_iniciais;
-  var $curso_anos_finais;
-  var $curso_ensino_medio;
-  var $curso_eja;
-  var $curso_educacao_especial;
-  var $curso_educacao_indigena;
-  var $curso_educacao_campo;
-  var $curso_educacao_ambiental;
-  var $curso_educacao_direitos_humanos;
-  var $curso_genero_diversidade_sexual;
-  var $curso_direito_crianca_adolescente;
-  var $curso_relacoes_etnicorraciais;
-  var $curso_outros;
-  var $curso_nenhum;
+  var $curso_formacao_continuada;
   var $multi_seriado;
     /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -148,17 +133,13 @@ class clsPmieducarServidor
     situacao_curso_superior_1, formacao_complementacao_pedagogica_1, codigo_curso_superior_1, ano_inicio_curso_superior_1, ano_conclusao_curso_superior_1, instituicao_curso_superior_1,
     situacao_curso_superior_2, formacao_complementacao_pedagogica_2, codigo_curso_superior_2, ano_inicio_curso_superior_2, ano_conclusao_curso_superior_2, instituicao_curso_superior_2,
     situacao_curso_superior_3, formacao_complementacao_pedagogica_3, codigo_curso_superior_3, ano_inicio_curso_superior_3, ano_conclusao_curso_superior_3, instituicao_curso_superior_3,
-    pos_graduacao, curso_creche, curso_pre_escola, curso_anos_iniciais, curso_anos_finais, curso_ensino_medio, curso_eja, curso_educacao_especial, curso_educacao_indigena,
-    curso_educacao_campo, curso_educacao_ambiental, curso_educacao_campo, curso_educacao_direitos_humanos, curso_genero_diversidade_sexual, curso_direito_crianca_adolescente, curso_relacoes_etnicorraciais, curso_outros, curso_nenhum,
-    multi_seriado
+    pos_graduacao, curso_formacao_continuada, multi_seriado
     ";
     $this->_campos_lista2 = $this->_todos_campos2 = "s.cod_servidor, s.ref_idesco, s.carga_horaria, s.data_cadastro, s.data_exclusao, s.ativo, s.ref_cod_instituicao,s.ref_cod_subnivel,
     s.situacao_curso_superior_1, s.formacao_complementacao_pedagogica_1, s.codigo_curso_superior_1, s.ano_inicio_curso_superior_1, s.ano_conclusao_curso_superior_1, s.instituicao_curso_superior_1,
     s.situacao_curso_superior_2, s.formacao_complementacao_pedagogica_2, s.codigo_curso_superior_2, s.ano_inicio_curso_superior_2, s.ano_conclusao_curso_superior_2, s.instituicao_curso_superior_2,
     s.situacao_curso_superior_3, s.formacao_complementacao_pedagogica_3, s.codigo_curso_superior_3, s.ano_inicio_curso_superior_3, s.ano_conclusao_curso_superior_3, s.instituicao_curso_superior_3,
-    s.pos_graduacao, s.curso_creche, s.curso_pre_escola, s.curso_anos_iniciais, s.curso_anos_finais, s.curso_ensino_medio, s.curso_eja, s.curso_educacao_especial, s.curso_educacao_indigena,
-    s.curso_educacao_campo, s.curso_educacao_ambiental, s.curso_educacao_campo, s.curso_educacao_direitos_humanos, s.curso_genero_diversidade_sexual, s.curso_direito_crianca_adolescente, s.curso_relacoes_etnicorraciais, s.curso_outros, s.curso_nenhum,
-    s.multi_seriado,
+    s.pos_graduacao, s.curso_formacao_continuada, s.multi_seriado,
     (SELECT replace(textcat_all(matricula),' <br>',',')
           FROM pmieducar.servidor_funcao sf
          WHERE s.cod_servidor = sf.ref_cod_servidor) as matricula_servidor
@@ -385,84 +366,9 @@ class clsPmieducarServidor
         $valores .= "{$gruda}'{$this->pos_graduacao}'";
         $gruda = ", ";
       }
-      if (is_numeric( $this->curso_creche)) {
-        $campos .= "{$gruda}curso_creche";
-        $valores .= "{$gruda}'{$this->curso_creche}'";
-        $gruda = ", ";
-      }
-      if (is_numeric( $this->curso_pre_escola)) {
-        $campos .= "{$gruda}curso_pre_escola";
-        $valores .= "{$gruda}'{$this->curso_pre_escola}'";
-        $gruda = ", ";
-      }
-      if (is_numeric( $this->curso_anos_iniciais)) {
-        $campos .= "{$gruda}curso_anos_iniciais";
-        $valores .= "{$gruda}'{$this->curso_anos_iniciais}'";
-        $gruda = ", ";
-      }
-      if (is_numeric( $this->curso_anos_finais)) {
-        $campos .= "{$gruda}curso_anos_finais";
-        $valores .= "{$gruda}'{$this->curso_anos_finais}'";
-        $gruda = ", ";
-      }
-      if (is_numeric( $this->curso_ensino_medio)) {
-        $campos .= "{$gruda}curso_ensino_medio";
-        $valores .= "{$gruda}'{$this->curso_ensino_medio}'";
-        $gruda = ", ";
-      }
-      if (is_numeric( $this->curso_eja)) {
-        $campos .= "{$gruda}curso_eja";
-        $valores .= "{$gruda}'{$this->curso_eja}'";
-        $gruda = ", ";
-      }
-      if (is_numeric( $this->curso_educacao_especial)) {
-        $campos .= "{$gruda}curso_educacao_especial";
-        $valores .= "{$gruda}'{$this->curso_educacao_especial}'";
-        $gruda = ", ";
-      }
-      if (is_numeric( $this->curso_educacao_indigena)) {
-        $campos .= "{$gruda}curso_educacao_indigena";
-        $valores .= "{$gruda}'{$this->curso_educacao_indigena}'";
-        $gruda = ", ";
-      }
-      if (is_numeric( $this->curso_educacao_campo)) {
-        $campos .= "{$gruda}curso_educacao_campo";
-        $valores .= "{$gruda}'{$this->curso_educacao_campo}'";
-        $gruda = ", ";
-      }
-      if (is_numeric( $this->curso_educacao_ambiental)) {
-        $campos .= "{$gruda}curso_educacao_ambiental";
-        $valores .= "{$gruda}'{$this->curso_educacao_ambiental}'";
-        $gruda = ", ";
-      }
-      if (is_numeric( $this->curso_educacao_direitos_humanos)) {
-        $campos .= "{$gruda}curso_educacao_direitos_humanos";
-        $valores .= "{$gruda}'{$this->curso_educacao_direitos_humanos}'";
-        $gruda = ", ";
-      }
-      if (is_numeric( $this->curso_genero_diversidade_sexual)) {
-        $campos .= "{$gruda}curso_genero_diversidade_sexual";
-        $valores .= "{$gruda}'{$this->curso_genero_diversidade_sexual}'";
-        $gruda = ", ";
-      }
-      if (is_numeric( $this->curso_direito_crianca_adolescente)) {
-        $campos .= "{$gruda}curso_direito_crianca_adolescente";
-        $valores .= "{$gruda}'{$this->curso_direito_crianca_adolescente}'";
-        $gruda = ", ";
-      }
-      if (is_numeric( $this->curso_relacoes_etnicorraciais)) {
-        $campos .= "{$gruda}curso_relacoes_etnicorraciais";
-        $valores .= "{$gruda}'{$this->curso_relacoes_etnicorraciais}'";
-        $gruda = ", ";
-      }
-      if (is_numeric( $this->curso_outros)) {
-        $campos .= "{$gruda}curso_outros";
-        $valores .= "{$gruda}'{$this->curso_outros}'";
-        $gruda = ", ";
-      }
-      if (is_numeric( $this->curso_nenhum)) {
-        $campos .= "{$gruda}curso_nenhum";
-        $valores .= "{$gruda}'{$this->curso_nenhum}'";
+      if (is_string( $this->curso_formacao_continuada)) {
+        $campos .= "{$gruda}curso_formacao_continuada";
+        $valores .= "{$gruda}'{$this->curso_formacao_continuada}'";
         $gruda = ", ";
       }
       if (dbBool( $this->multi_seriado)) {
@@ -631,68 +537,8 @@ class clsPmieducarServidor
         $set .= "{$gruda}pos_graduacao = '{$this->pos_graduacao}'";
         $gruda = ", ";
       }
-      if (is_numeric($this->curso_creche)) {
-        $set .= "{$gruda}curso_creche = '{$this->curso_creche}'";
-        $gruda = ", ";
-      }
-      if (is_numeric($this->curso_pre_escola)) {
-        $set .= "{$gruda}curso_pre_escola = '{$this->curso_pre_escola}'";
-        $gruda = ", ";
-      }
-      if (is_numeric($this->curso_anos_iniciais)) {
-        $set .= "{$gruda}curso_anos_iniciais = '{$this->curso_anos_iniciais}'";
-        $gruda = ", ";
-      }
-      if (is_numeric($this->curso_anos_finais)) {
-        $set .= "{$gruda}curso_anos_finais = '{$this->curso_anos_finais}'";
-        $gruda = ", ";
-      }
-      if (is_numeric($this->curso_ensino_medio)) {
-        $set .= "{$gruda}curso_ensino_medio = '{$this->curso_ensino_medio}'";
-        $gruda = ", ";
-      }
-      if (is_numeric($this->curso_eja)) {
-        $set .= "{$gruda}curso_eja = '{$this->curso_eja}'";
-        $gruda = ", ";
-      }
-      if (is_numeric($this->curso_educacao_especial)) {
-        $set .= "{$gruda}curso_educacao_especial = '{$this->curso_educacao_especial}'";
-        $gruda = ", ";
-      }
-      if (is_numeric($this->curso_educacao_indigena)) {
-        $set .= "{$gruda}curso_educacao_indigena = '{$this->curso_educacao_indigena}'";
-        $gruda = ", ";
-      }
-      if (is_numeric($this->curso_educacao_campo)) {
-        $set .= "{$gruda}curso_educacao_campo = '{$this->curso_educacao_campo}'";
-        $gruda = ", ";
-      }
-      if (is_numeric($this->curso_educacao_ambiental)) {
-        $set .= "{$gruda}curso_educacao_ambiental = '{$this->curso_educacao_ambiental}'";
-        $gruda = ", ";
-      }
-      if (is_numeric($this->curso_educacao_direitos_humanos)) {
-        $set .= "{$gruda}curso_educacao_direitos_humanos = '{$this->curso_educacao_direitos_humanos}'";
-        $gruda = ", ";
-      }
-      if (is_numeric($this->curso_genero_diversidade_sexual)) {
-        $set .= "{$gruda}curso_genero_diversidade_sexual = '{$this->curso_genero_diversidade_sexual}'";
-        $gruda = ", ";
-      }
-      if (is_numeric($this->curso_direito_crianca_adolescente)) {
-        $set .= "{$gruda}curso_direito_crianca_adolescente = '{$this->curso_direito_crianca_adolescente}'";
-        $gruda = ", ";
-      }
-      if (is_numeric($this->curso_relacoes_etnicorraciais)) {
-        $set .= "{$gruda}curso_relacoes_etnicorraciais = '{$this->curso_relacoes_etnicorraciais}'";
-        $gruda = ", ";
-      }
-      if (is_numeric($this->curso_outros)) {
-        $set .= "{$gruda}curso_outros = '{$this->curso_outros}'";
-        $gruda = ", ";
-      }
-      if (is_numeric($this->curso_nenhum)) {
-        $set .= "{$gruda}curso_nenhum = '{$this->curso_nenhum}'";
+      if (is_string($this->curso_formacao_continuada)) {
+        $set .= "{$gruda}curso_formacao_continuada = '{$this->curso_formacao_continuada}'";
         $gruda = ", ";
       }
       if (dbBool($this->multi_seriado)) {

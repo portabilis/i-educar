@@ -1,6 +1,6 @@
 $j('#btn_enviar').removeAttr('onclick');
 $j('#btn_enviar').on('click', () => {
-  if (!validaServidor() || !validaPosGraduacao()) {
+  if (!validaServidor() || !validaPosGraduacao() || !validaCursoFormacaoContinuada()) {
     return false;
   }
 
@@ -25,6 +25,19 @@ function validaPosGraduacao() {
 
   if (possuiOpcaoNenhuma && possuiMaisDeUmaOpcao) {
     messageUtils.error('Não é possível informar mais de uma opção no campo: <b>Possui pós-graduação</b>, quando a opção: <b>Nenhuma</b> estiver selecionada.');
+    return false;
+  }
+
+  return true;
+}
+
+function validaCursoFormacaoContinuada() {
+  cursoFormacaoContinuada = $j('#curso_formacao_continuada').val();
+  possuiOpcaoNenhum = $j.inArray('16', cursoFormacaoContinuada) != -1;
+  possuiMaisDeUmaOpcao = cursoFormacaoContinuada.length > 2; // nos campos do tipo chosen sempre vem uma opção a mais em branco
+
+  if (possuiOpcaoNenhum && possuiMaisDeUmaOpcao) {
+    messageUtils.error('Não é possível informar mais de uma opção no campo: <b>Possui cursos de formação continuada</b>, quando a opção: <b>Nenhum</b> estiver selecionada.');
     return false;
   }
 
