@@ -7,3 +7,4 @@ deploy/.ruby-version
 ieducar/configuration/ieducar.ini
 *.vscode
 ieducar/modules/Reports
+ieducar/vendor
