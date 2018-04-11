@@ -500,12 +500,6 @@ class indice extends clsCadastro
     );
     $this->inputsHelper()->integer('ano_conclusao_curso_superior_1', $options);
 
-    $resources = array(
-      null => 'Selecione',
-      1 => Portabilis_String_Utils::toLatin1('Pública'),
-      2 => 'Privada'
-    );
-
     $options = array(
       'label' => Portabilis_String_Utils::toLatin1('Instituição do curso superior 1'),
       'required'   => false
@@ -571,12 +565,6 @@ class indice extends clsCadastro
     );
     $this->inputsHelper()->integer('ano_conclusao_curso_superior_2', $options);
 
-    $resources = array(
-      null => 'Selecione',
-      1 => Portabilis_String_Utils::toLatin1('Pública'),
-      2 => 'Privada'
-    );
-
     $options = array(
       'label' => Portabilis_String_Utils::toLatin1('Instituição do curso superior 2'),
       'required' => false
@@ -641,12 +629,6 @@ class indice extends clsCadastro
       'required' => false
     );
     $this->inputsHelper()->integer('ano_conclusao_curso_superior_3', $options);
-
-    $resources = array(
-      null => 'Selecione',
-      1 => Portabilis_String_Utils::toLatin1('Pública'),
-      2 => 'Privada'
-    );
 
     $options = array(
       'label' => Portabilis_String_Utils::toLatin1('Instituição do curso superior 3'),
