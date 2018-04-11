@@ -96,7 +96,7 @@ class clsPmieducarInstituicao
     /**
      * Construtor.
      */
-    function clsPmieducarInstituicao(
+    function __construct(
         $cod_instituicao = null,
         $ref_usuario_exc = null,
         $ref_usuario_cad = null,
