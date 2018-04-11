@@ -1,165 +1,131 @@
 <?php
 
-/**
- * i-Educar - Sistema de gestão escolar
- *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
- *                     <ctima@itajai.sc.gov.br>
- *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
- *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
- * do GNU para mais detalhes.
- *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
- *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   iEd_Pmieducar
- * @since     Arquivo disponível desde a versão 1.0.0
- * @version   $Id$
- */
-
 require_once 'include/pmieducar/geral.inc.php';
 
-/**
- * clsPmieducarInstituicao class.
- *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
- * @version   @@package_version@@
- */
 class clsPmieducarInstituicao
 {
-  var $cod_instituicao;
-  var $ref_usuario_exc;
-  var $ref_usuario_cad;
-  var $ref_idtlog;
-  var $ref_sigla_uf;
-  var $cep;
-  var $cidade;
-  var $bairro;
-  var $logradouro;
-  var $numero;
-  var $complemento;
-  var $nm_responsavel;
-  var $ddd_telefone;
-  var $telefone;
-  var $data_cadastro;
-  var $data_exclusao;
-  var $ativo;
-  var $nm_instituicao;
-  var $data_base_remanejamento;
-  var $data_base_transferencia;
-  var $exigir_vinculo_turma_professor;
-  var $controlar_espaco_utilizacao_aluno;
-  var $percentagem_maxima_ocupacao_salas;
-  var $quantidade_alunos_metro_quadrado;
-  var $gerar_historico_transferencia;
-  var $controlar_posicao_historicos;
-  var $restringir_multiplas_enturmacoes;
-  var $permissao_filtro_abandono_transferencia;
-  var $data_base_matricula;
-  var $multiplas_reserva_vaga;
-  var $permitir_carga_horaria;
-  var $reserva_integral_somente_com_renda;
-  var $data_expiracao_reserva_vaga;
-  var $componente_curricular_turma;
-  var $reprova_dependencia_ano_concluinte;
-  var $data_educacenso;
-  var $exigir_dados_socioeconomicos;
+    var $cod_instituicao;
+    var $ref_usuario_exc;
+    var $ref_usuario_cad;
+    var $ref_idtlog;
+    var $ref_sigla_uf;
+    var $cep;
+    var $cidade;
+    var $bairro;
+    var $logradouro;
+    var $numero;
+    var $complemento;
+    var $nm_responsavel;
+    var $ddd_telefone;
+    var $telefone;
+    var $data_cadastro;
+    var $data_exclusao;
+    var $ativo;
+    var $nm_instituicao;
+    var $data_base_remanejamento;
+    var $data_base_transferencia;
+    var $exigir_vinculo_turma_professor;
+    var $controlar_espaco_utilizacao_aluno;
+    var $percentagem_maxima_ocupacao_salas;
+    var $quantidade_alunos_metro_quadrado;
+    var $gerar_historico_transferencia;
+    var $controlar_posicao_historicos;
+    var $restringir_multiplas_enturmacoes;
+    var $permissao_filtro_abandono_transferencia;
+    var $data_base_matricula;
+    var $multiplas_reserva_vaga;
+    var $permitir_carga_horaria;
+    var $reserva_integral_somente_com_renda;
+    var $data_expiracao_reserva_vaga;
+    var $componente_curricular_turma;
+    var $reprova_dependencia_ano_concluinte;
+    var $data_educacenso;
+    var $exigir_dados_socioeconomicos;
+    var $altera_atestado_para_declaracao;
 
-  /**
-   * Armazena o total de resultados obtidos na última chamada ao método lista().
-   * @var int
-   */
-  var $_total;
+    /**
+     * Armazena o total de resultados obtidos na última chamada ao método lista().
+     * @var int
+     */
+    var $_total;
 
-  /**
-   * Nome do schema.
-   * @var string
-   */
-  var $_schema;
+    /**
+     * Nome do schema.
+     * @var string
+     */
+    var $_schema;
 
-  /**
-   * Nome da tabela.
-   * @var string
-   */
-  var $_tabela;
+    /**
+     * Nome da tabela.
+     * @var string
+     */
+    var $_tabela;
 
-  /**
-   * Lista separada por vírgula, com os campos que devem ser selecionados na
-   * próxima chamado ao método lista().
-   * @var string
-   */
-  var $_campos_lista;
+    /**
+     * Lista separada por vírgula, com os campos que devem ser selecionados na
+     * próxima chamado ao método lista().
+     * @var string
+     */
+    var $_campos_lista;
 
-  /**
-   * Lista com todos os campos da tabela separados por vírgula, padrão para
-   * seleção no método lista.
-   * @var string
-   */
-  var $_todos_campos;
+    /**
+     * Lista com todos os campos da tabela separados por vírgula, padrão para
+     * seleção no método lista.
+     * @var string
+     */
+    var $_todos_campos;
 
-  /**
-   * Valor que define a quantidade de registros a ser retornada pelo método lista().
-   * @var int
-   */
-  var $_limite_quantidade;
+    /**
+     * Valor que define a quantidade de registros a ser retornada pelo método lista().
+     * @var int
+     */
+    var $_limite_quantidade;
 
-  /**
-   * Define o valor de offset no retorno dos registros no método lista().
-   * @var int
-   */
-  var $_limite_offset;
+    /**
+     * Define o valor de offset no retorno dos registros no método lista().
+     * @var int
+     */
+    var $_limite_offset;
 
-  /**
-   * Define o campo para ser usado como padrão de ordenação no método lista().
-   * @var string
-   */
-  var $_campo_order_by;
+    /**
+     * Define o campo para ser usado como padrão de ordenação no método lista().
+     * @var string
+     */
+    var $_campo_order_by;
 
-  /**
-   * Construtor.
-   */
-  function __construct($cod_instituicao = NULL,
-                                   $ref_usuario_exc = NULL,
-                                   $ref_usuario_cad = NULL,
-                                   $ref_idtlog = NULL,
-                                   $ref_sigla_uf = NULL,
-                                   $cep = NULL,
-                                   $cidade = NULL,
-                                   $bairro = NULL,
-                                   $logradouro = NULL,
-                                   $numero = NULL,
-                                   $complemento = NULL,
-                                   $nm_responsavel = NULL,
-                                   $ddd_telefone = NULL,
-                                   $telefone = NULL,
-                                   $data_cadastro = NULL,
-                                   $data_exclusao = NULL,
-                                   $ativo = NULL,
-                                   $nm_instituicao = NULL,
-                                   $controlar_espaco_utilizacao_aluno = NULL,
-                                   $percentagem_maxima_ocupacao_salas = NULL,
-                                   $quantidade_alunos_metro_quadrado = NULL,
-                                   $exigir_dados_socioeconomicos = NULL)
-  {
-    $db = new clsBanco();
-    $this->_schema = "pmieducar.";
-    $this->_tabela = "{$this->_schema}instituicao";
-    $this->_campos_lista = $this->_todos_campos = "cod_instituicao,
+    /**
+     * Construtor.
+     */
+    function clsPmieducarInstituicao(
+        $cod_instituicao = null,
+        $ref_usuario_exc = null,
+        $ref_usuario_cad = null,
+        $ref_idtlog = null,
+        $ref_sigla_uf = null,
+        $cep = null,
+        $cidade = null,
+        $bairro = null,
+        $logradouro = null,
+        $numero = null,
+        $complemento = null,
+        $nm_responsavel = null,
+        $ddd_telefone = null,
+        $telefone = null,
+        $data_cadastro = null,
+        $data_exclusao = null,
+        $ativo = null,
+        $nm_instituicao = null,
+        $controlar_espaco_utilizacao_aluno = null,
+        $percentagem_maxima_ocupacao_salas = null,
+        $quantidade_alunos_metro_quadrado = null,
+        $exigir_dados_socioeconomicos = null,
+        $altera_atestado_para_declaracao = null
+    )
+    {
+        $db = new clsBanco();
+        $this->_schema = "pmieducar.";
+        $this->_tabela = "{$this->_schema}instituicao";
+        $this->_campos_lista = $this->_todos_campos = "cod_instituicao,
                                                    ref_usuario_exc,
                                                    ref_usuario_cad,
                                                    ref_idtlog,
@@ -200,983 +166,1015 @@ class clsPmieducarInstituicao
                                                    data_educacenso,
                                                    bloqueia_matricula_serie_nao_seguinte,
                                                    permitir_carga_horaria,
-                                                   exigir_dados_socioeconomicos ";
+                                                   exigir_dados_socioeconomicos,
+                                                   altera_atestado_para_declaracao";
 
-    if (is_numeric($ref_usuario_cad)) {
-      if (class_exists('clsPmieducarUsuario')) {
-        $tmp_obj = new clsPmieducarUsuario($ref_usuario_cad);
-        if (method_exists($tmp_obj, 'existe')) {
-          if ($tmp_obj->existe()) {
-            $this->ref_usuario_cad = $ref_usuario_cad;
-          }
+        if (is_numeric($ref_usuario_cad)) {
+            if (class_exists('clsPmieducarUsuario')) {
+                $tmp_obj = new clsPmieducarUsuario($ref_usuario_cad);
+                if (method_exists($tmp_obj, 'existe')) {
+                    if ($tmp_obj->existe()) {
+                        $this->ref_usuario_cad = $ref_usuario_cad;
+                    }
+                } elseif (method_exists($tmp_obj, 'detalhe')) {
+                    if ($tmp_obj->detalhe()) {
+                        $this->ref_usuario_cad = $ref_usuario_cad;
+                    }
+                }
+            } else {
+                if ($db->CampoUnico("SELECT 1 FROM pmieducar.usuario WHERE cod_usuario = '{$ref_usuario_cad}'")) {
+                    $this->ref_usuario_cad = $ref_usuario_cad;
+                }
+            }
         }
-        elseif (method_exists($tmp_obj, 'detalhe')) {
-          if ($tmp_obj->detalhe()) {
-            $this->ref_usuario_cad = $ref_usuario_cad;
-          }
+
+        if (is_numeric($ref_usuario_exc)) {
+            if (class_exists('clsPmieducarUsuario')) {
+                $tmp_obj = new clsPmieducarUsuario($ref_usuario_exc);
+                if (method_exists($tmp_obj, 'existe')) {
+                    if ($tmp_obj->existe()) {
+                        $this->ref_usuario_exc = $ref_usuario_exc;
+                    }
+                } elseif (method_exists($tmp_obj, 'detalhe')) {
+                    if ($tmp_obj->detalhe()) {
+                        $this->ref_usuario_exc = $ref_usuario_exc;
+                    }
+                }
+            } else {
+                if ($db->CampoUnico("SELECT 1 FROM pmieducar.usuario WHERE cod_usuario = '{$ref_usuario_exc}'")) {
+                    $this->ref_usuario_exc = $ref_usuario_exc;
+                }
+            }
         }
-      }
-      else {
-        if ($db->CampoUnico("SELECT 1 FROM pmieducar.usuario WHERE cod_usuario = '{$ref_usuario_cad}'")) {
-          $this->ref_usuario_cad = $ref_usuario_cad;
+        if (is_string($ref_idtlog)) {
+            if (class_exists('clsTipoLogradouro')) {
+                $tmp_obj = new clsTipoLogradouro($ref_idtlog);
+                if (method_exists($tmp_obj, 'existe')) {
+                    if ($tmp_obj->existe()) {
+                        $this->ref_idtlog = $ref_idtlog;
+                    }
+                } elseif (method_exists($tmp_obj, 'detalhe')) {
+                    if ($tmp_obj->detalhe()) {
+                        $this->ref_idtlog = $ref_idtlog;
+                    }
+                }
+            } else {
+                if ($db->CampoUnico("SELECT 1 FROM urbano.tipo_logradouro WHERE idtlog = '{$ref_idtlog}'")) {
+                    $this->ref_idtlog = $ref_idtlog;
+                }
+            }
         }
-      }
-    }
 
-    if (is_numeric($ref_usuario_exc)) {
-      if (class_exists('clsPmieducarUsuario')) {
-        $tmp_obj = new clsPmieducarUsuario($ref_usuario_exc);
-        if (method_exists($tmp_obj, 'existe')) {
-          if ($tmp_obj->existe()) {
-            $this->ref_usuario_exc = $ref_usuario_exc;
-          }
+        if (is_numeric($cod_instituicao)) {
+            $this->cod_instituicao = $cod_instituicao;
         }
-        elseif (method_exists($tmp_obj, 'detalhe')) {
-          if ($tmp_obj->detalhe()) {
-            $this->ref_usuario_exc = $ref_usuario_exc;
-          }
+
+        if (is_string($ref_sigla_uf)) {
+            $this->ref_sigla_uf = $ref_sigla_uf;
         }
-      }
-      else {
-        if ($db->CampoUnico("SELECT 1 FROM pmieducar.usuario WHERE cod_usuario = '{$ref_usuario_exc}'")) {
-          $this->ref_usuario_exc = $ref_usuario_exc;
+
+        if (is_numeric($cep)) {
+            $this->cep = $cep;
         }
-      }
-    }
-    if (is_string($ref_idtlog)) {
-      if (class_exists('clsTipoLogradouro')) {
-        $tmp_obj = new clsTipoLogradouro($ref_idtlog);
-        if (method_exists($tmp_obj, 'existe')) {
-          if ($tmp_obj->existe()) {
-            $this->ref_idtlog = $ref_idtlog;
-          }
+
+        if (is_string($cidade)) {
+            $this->cidade = $cidade;
         }
-        elseif (method_exists($tmp_obj, 'detalhe')) {
-          if ($tmp_obj->detalhe()) {
-            $this->ref_idtlog = $ref_idtlog;
-          }
+
+        if (is_string($bairro)) {
+            $this->bairro = $bairro;
         }
-      }
-      else {
-        if ($db->CampoUnico("SELECT 1 FROM urbano.tipo_logradouro WHERE idtlog = '{$ref_idtlog}'")) {
-          $this->ref_idtlog = $ref_idtlog;
+
+        if (is_string($logradouro)) {
+            $this->logradouro = $logradouro;
         }
-      }
+
+        if (is_numeric($numero)) {
+            $this->numero = $numero;
+        }
+
+        if (is_string($complemento)) {
+            $this->complemento = $complemento;
+        }
+
+        if (is_string($nm_responsavel)) {
+            $this->nm_responsavel = $nm_responsavel;
+        }
+
+        if (is_numeric($ddd_telefone)) {
+            $this->ddd_telefone = $ddd_telefone;
+        }
+
+        if (is_numeric($telefone)) {
+            $this->telefone = $telefone;
+        }
+
+        if (is_string($data_cadastro)) {
+            $this->data_cadastro = $data_cadastro;
+        }
+
+        if (is_string($data_exclusao)) {
+            $this->data_exclusao = $data_exclusao;
+        }
+
+        if (is_numeric($ativo)) {
+            $this->ativo = $ativo;
+        }
+
+        if (is_string($nm_instituicao)) {
+            $this->nm_instituicao = $nm_instituicao;
+        }
+
+        if (is_numeric($controlar_espaco_utilizacao_aluno)) {
+            $this->controlar_espaco_utilizacao_aluno = $controlar_espaco_utilizacao_aluno;
+        }
+
+        if (is_numeric($percentagem_maxima_ocupacao_salas)) {
+            $this->percentagem_maxima_ocupacao_salas = $percentagem_maxima_ocupacao_salas;
+        }
+
+        if (is_numeric($quantidade_alunos_metro_quadrado)) {
+            $this->quantidade_alunos_metro_quadrado = $quantidade_alunos_metro_quadrado;
+        }
+
+        if (is_bool($exigir_dados_socioeconomicos)) {
+            $this->exigir_dados_socioeconomicos = $exigir_dados_socioeconomicos;
+        }
     }
 
-    if (is_numeric($cod_instituicao)) {
-      $this->cod_instituicao = $cod_instituicao;
-    }
-
-    if (is_string($ref_sigla_uf)) {
-      $this->ref_sigla_uf = $ref_sigla_uf;
-    }
-
-    if (is_numeric($cep)) {
-      $this->cep = $cep;
-    }
-
-    if (is_string($cidade)) {
-      $this->cidade = $cidade;
-    }
-
-    if (is_string($bairro)) {
-      $this->bairro = $bairro;
-    }
-
-    if (is_string($logradouro)) {
-      $this->logradouro = $logradouro;
-    }
-
-    if (is_numeric($numero)) {
-      $this->numero = $numero;
-    }
-
-    if (is_string($complemento)) {
-      $this->complemento = $complemento;
-    }
-
-    if (is_string($nm_responsavel)) {
-      $this->nm_responsavel = $nm_responsavel;
-    }
-
-    if (is_numeric($ddd_telefone)) {
-      $this->ddd_telefone = $ddd_telefone;
-    }
-
-    if (is_numeric($telefone)) {
-      $this->telefone = $telefone;
-    }
-
-    if (is_string($data_cadastro)) {
-      $this->data_cadastro = $data_cadastro;
-    }
-
-    if (is_string($data_exclusao)) {
-      $this->data_exclusao = $data_exclusao;
-    }
-
-    if (is_numeric($ativo)) {
-      $this->ativo = $ativo;
-    }
-
-    if (is_string($nm_instituicao)) {
-      $this->nm_instituicao = $nm_instituicao;
-    }
-
-    if (is_numeric($controlar_espaco_utilizacao_aluno)){
-      $this->controlar_espaco_utilizacao_aluno = $controlar_espaco_utilizacao_aluno;
-    }
-
-    if (is_numeric($percentagem_maxima_ocupacao_salas)){
-      $this->percentagem_maxima_ocupacao_salas = $percentagem_maxima_ocupacao_salas;
-    }
-
-    if (is_numeric($quantidade_alunos_metro_quadrado)){
-      $this->quantidade_alunos_metro_quadrado =$quantidade_alunos_metro_quadrado;
-    }
-
-    if (is_bool($exigir_dados_socioeconomicos)){
-      $this->exigir_dados_socioeconomicos = $exigir_dados_socioeconomicos;
-    }
-  }
-
-  /**
-   * Cria um novo registro.
-   * @return bool
-   */
-  function cadastra()
-  {
-    if (is_numeric($this->ref_usuario_cad) && is_string($this->ref_idtlog) &&
-      is_string($this->ref_sigla_uf) && is_numeric($this->cep) &&
-      is_string($this->cidade) && is_string($this->bairro) &&
-      is_string($this->logradouro) && is_string($this->nm_responsavel) &&
-      is_numeric($this->ativo) && is_string($this->nm_instituicao))
+    function canRegister()
     {
-      $db = new clsBanco();
-
-      $campos  = '';
-      $valores = '';
-      $gruda   = '';
-
-      if (is_numeric($this->ref_usuario_exc)) {
-        $campos .= "{$gruda}ref_usuario_exc";
-        $valores .= "{$gruda}'{$this->ref_usuario_exc}'";
-        $gruda = ", ";
-      }
-
-      if (is_numeric($this->ref_usuario_cad)) {
-        $campos .= "{$gruda}ref_usuario_cad";
-        $valores .= "{$gruda}'{$this->ref_usuario_cad}'";
-        $gruda = ", ";
-      }
-
-      if (is_string($this->ref_idtlog)) {
-        $campos .= "{$gruda}ref_idtlog";
-        $valores .= "{$gruda}'{$this->ref_idtlog}'";
-        $gruda = ", ";
-      }
-
-      if (is_string($this->ref_sigla_uf)) {
-        $campos .= "{$gruda}ref_sigla_uf";
-        $valores .= "{$gruda}'{$this->ref_sigla_uf}'";
-        $gruda = ", ";
-      }
-
-      if (is_numeric($this->cep)) {
-        $campos .= "{$gruda}cep";
-        $valores .= "{$gruda}'{$this->cep}'";
-        $gruda = ", ";
-      }
-
-      if (is_string($this->cidade)) {
-        $campos .= "{$gruda}cidade";
-        $valores .= "{$gruda}'{$this->cidade}'";
-        $gruda = ", ";
-      }
-
-      if (is_string($this->bairro)) {
-        $campos .= "{$gruda}bairro";
-        $valores .= "{$gruda}'{$this->bairro}'";
-        $gruda = ", ";
-      }
-
-      if (is_string($this->logradouro)) {
-        $campos .= "{$gruda}logradouro";
-        $valores .= "{$gruda}'{$this->logradouro}'";
-        $gruda = ", ";
-      }
-
-      if (is_numeric($this->numero)) {
-        $campos .= "{$gruda}numero";
-        $valores .= "{$gruda}'{$this->numero}'";
-        $gruda = ", ";
-      }
-
-      if (is_string($this->complemento)) {
-        $campos .= "{$gruda}complemento";
-        $valores .= "{$gruda}'{$this->complemento}'";
-        $gruda = ", ";
-      }
-
-      if (is_string($this->nm_responsavel)) {
-        $campos .= "{$gruda}nm_responsavel";
-        $valores .= "{$gruda}'{$this->nm_responsavel}'";
-        $gruda = ", ";
-      }
-
-      if (is_numeric($this->ddd_telefone)) {
-        $campos .= "{$gruda}ddd_telefone";
-        $valores .= "{$gruda}'{$this->ddd_telefone}'";
-        $gruda = ", ";
-      }
-
-      if (is_numeric($this->telefone)) {
-        $campos .= "{$gruda}telefone";
-        $valores .= "{$gruda}'{$this->telefone}'";
-        $gruda = ", ";
-      }
-
-      $campos .= "{$gruda}data_cadastro";
-      $valores .= "{$gruda}NOW()";
-      $gruda = ", ";
-
-      if (is_numeric($this->ativo)) {
-        $campos .= "{$gruda}ativo";
-        $valores .= "{$gruda}'{$this->ativo}'";
-        $gruda = ", ";
-      }
-
-      if (is_string($this->nm_instituicao)) {
-        $campos .= "{$gruda}nm_instituicao";
-        $valores .= "{$gruda}'{$this->nm_instituicao}'";
-        $gruda = ", ";
-      }
-
-      if ((is_string($this->data_base_remanejamento)) AND !empty($this->data_base_remanejamento) ) {
-        $campos .= "{$gruda}data_base_remanejamento";
-        $valores .= "{$gruda}'{$this->data_base_remanejamento}'";
-        $gruda = ", ";
-      }
-
-      if ((is_string($this->data_base_transferencia)) AND !empty($this->data_base_transferencia)) {
-        $campos .= "{$gruda}data_base_transferencia";
-        $valores .= "{$gruda}'{$this->data_base_transferencia}'";
-        $gruda = ", ";
-      }
-
-      if ((is_string($this->data_expiracao_reserva_vaga)) AND !empty($this->data_expiracao_reserva_vaga)) {
-        $campos .= "{$gruda}data_expiracao_reserva_vaga";
-        $valores .= "{$gruda}'{$this->data_expiracao_reserva_vaga}'";
-        $gruda = ", ";
-      }
-
-      if (is_numeric($this->exigir_vinculo_turma_professor)) {
-        $campos .= "{$gruda}exigir_vinculo_turma_professor";
-        $valores .= "{$gruda}'{$this->exigir_vinculo_turma_professor}'";
-        $gruda = ", ";
-      }
-
-      if (is_numeric($this->controlar_espaco_utilizacao_aluno)) {
-        $campos .= "{$gruda}controlar_espaco_utilizacao_aluno";
-        $valores .= "{$gruda}'{$this->controlar_espaco_utilizacao_aluno}'";
-        $gruda = ", ";
-      }
-
-      if (is_numeric($this->percentagem_maxima_ocupacao_salas)) {
-        $campos .= "{$gruda}percentagem_maxima_ocupacao_salas";
-        $valores .= "{$gruda}'{$this->percentagem_maxima_ocupacao_salas}'";
-        $gruda = ", ";
-      }
-
-      if (is_numeric($this->quantidade_alunos_metro_quadrado)) {
-        $campos .= "{$gruda}quantidade_alunos_metro_quadrado";
-        $valores .= "{$gruda}'{$this->quantidade_alunos_metro_quadrado}'";
-        $gruda = ", ";
-      }
-
-      if (dbBool($this->gerar_historico_transferencia)) {
-        $campos .= "{$gruda}gerar_historico_transferencia";
-        $valores .= "{$gruda} true ";
-        $gruda = ", ";
-      }else{
-        $campos .= "{$gruda}gerar_historico_transferencia";
-        $valores .= "{$gruda} false ";
-        $gruda = ", ";
-      }
-      if (dbBool($this->controlar_posicao_historicos)) {
-        $campos .= "{$gruda}controlar_posicao_historicos";
-        $valores .= "{$gruda} true ";
-        $gruda = ", ";
-      }else{
-        $campos .= "{$gruda}controlar_posicao_historicos";
-        $valores .= "{$gruda} false ";
-        $gruda = ", ";
-      }
-      if (dbBool($this->matricula_apenas_bairro_escola)) {
-        $campos .= "{$gruda}matricula_apenas_bairro_escola";
-        $valores .= "{$gruda} true ";
-        $gruda = ", ";
-      }else{
-        $campos .= "{$gruda}matricula_apenas_bairro_escola";
-        $valores .= "{$gruda} false ";
-        $gruda = ", ";
-      }
-      if (dbBool($this->restringir_historico_escolar)) {
-        $campos .= "{$gruda}restringir_historico_escolar";
-        $valores .= "{$gruda} true ";
-        $gruda = ", ";
-      }else{
-        $campos .= "{$gruda}restringir_historico_escolar";
-        $valores .= "{$gruda} false ";
-        $gruda = ", ";
-      }
-
-      if (strripos($this->coordenador_transporte, '-') and strripos($this->coordenador_transporte, '('))
-        $this->coordenador_transporte = $this->parte_string($this->coordenador_transporte, '-', '(');
-
-      if (is_string($this->coordenador_transporte)) {
-        $campos .= "{$gruda}coordenador_transporte";
-        $valores .= "{$gruda}'{$this->coordenador_transporte}'";
-        $gruda = ", ";
-      }
-
-      if (dbBool($this->restringir_multiplas_enturmacoes)) {
-        $campos .= "{$gruda}restringir_multiplas_enturmacoes";
-        $valores .= "{$gruda} true ";
-        $gruda = ", ";
-      }else{
-        $campos .= "{$gruda}restringir_multiplas_enturmacoes";
-        $valores .= "{$gruda} false ";
-        $gruda = ", ";
-      }
-
-      if (dbBool($this->permissao_filtro_abandono_transferencia)) {
-        $campos .= "{$gruda}permissao_filtro_abandono_transferencia";
-        $valores .= "{$gruda} true ";
-        $gruda = ", ";
-      }else{
-        $campos .= "{$gruda}permissao_filtro_abandono_transferencia";
-        $valores .= "{$gruda} false ";
-        $gruda = ", ";
-      }
-
-      if (dbBool($this->multiplas_reserva_vaga)) {
-        $campos .= "{$gruda}multiplas_reserva_vaga";
-        $valores .= "{$gruda} true ";
-        $gruda = ", ";
-      }else{
-        $campos .= "{$gruda}multiplas_reserva_vaga";
-        $valores .= "{$gruda} false ";
-        $gruda = ", ";
-      }
-
-      if (dbBool($this->permitir_carga_horaria)) {
-        $campos .= "{$gruda}permitir_carga_horaria";
-        $valores .= "{$gruda} true ";
-        $gruda = ", ";
-      }else{
-        $campos .= "{$gruda}permitir_carga_horaria";
-        $valores .= "{$gruda} false ";
-        $gruda = ", ";
-      }
-
-      if (dbBool($this->componente_curricular_turma)) {
-        $campos .= "{$gruda}componente_curricular_turma";
-        $valores .= "{$gruda} TRUE ";
-        $gruda = ", ";
-      }else{
-        $campos .= "{$gruda}componente_curricular_turma";
-        $valores .= "{$gruda} FALSE ";
-        $gruda = ", ";
-      }
-
-      if (dbBool($this->reprova_dependencia_ano_concluinte)) {
-        $campos .= "{$gruda}reprova_dependencia_ano_concluinte";
-        $valores .= "{$gruda} TRUE ";
-        $gruda = ", ";
-      }else{
-        $campos .= "{$gruda}reprova_dependencia_ano_concluinte";
-        $valores .= "{$gruda} FALSE ";
-        $gruda = ", ";
-      }
-
-      if (dbBool($this->reserva_integral_somente_com_renda)) {
-        $campos .= "{$gruda}reserva_integral_somente_com_renda";
-        $valores .= "{$gruda} true ";
-        $gruda = ", ";
-      }else{
-        $campos .= "{$gruda}reserva_integral_somente_com_renda";
-        $valores .= "{$gruda} false ";
-        $gruda = ", ";
-      }
-
-      if (dbBool($this->bloqueia_matricula_serie_nao_seguinte)) {
-        $campos .= "{$gruda}bloqueia_matricula_serie_nao_seguinte";
-        $valores .= "{$gruda} true ";
-        $gruda = ", ";
-      }else{
-        $campos .= "{$gruda}bloqueia_matricula_serie_nao_seguinte";
-        $valores .= "{$gruda} false ";
-        $gruda = ", ";
-      }
-
-      if ((is_string($this->data_base_matricula)) AND !empty($this->data_base_matricula)) {
-        $campos .= "{$gruda}data_base_matricula";
-        $valores .= "{$gruda}'{$this->data_base_matricula}'";
-        $gruda = ", ";
-      }
-
-      if ((is_string($this->data_fechamento)) AND !empty($this->data_fechamento)) {
-        $campos .= "{$gruda}data_fechamento";
-        $valores .= "{$gruda}'{$this->data_fechamento}'";
-        $gruda = ", ";
-      }
-
-      if ((is_string($this->data_educacenso)) AND !empty($this->data_educacenso)) {
-        $campos .= "{$gruda}data_educacenso";
-        $valores .= "{$gruda}'{$this->data_educacenso}'";
-        $gruda = ", ";
-      }
-
-      if (dbBool($this->exigir_dados_socieconomicos)) {
-        $campos .= "{$gruda}exigir_dados_socioeconomicos";
-        $valores .= "{$gruda} true ";
-        $gruda = ", ";
-      }else{
-        $campos .= "{$gruda}exigir_dados_socioeconomicos";
-        $valores .= "{$gruda} false ";
-        $gruda = ", ";
-      }
-
-      $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
-      return $db->InsertId("{$this->_tabela}_cod_instituicao_seq");
+        return is_numeric($this->ref_usuario_cad) && is_string($this->ref_idtlog) &&
+            is_string($this->ref_sigla_uf) && is_numeric($this->cep) &&
+            is_string($this->cidade) && is_string($this->bairro) &&
+            is_string($this->logradouro) && is_string($this->nm_responsavel) &&
+            is_numeric($this->ativo) && is_string($this->nm_instituicao);
     }
 
-    return FALSE;
-  }
+    /**
+     * Cria um novo registro.
+     * @return bool
+     */
+    function cadastra()
+    {
+        if ($this->canRegister()) {
+            $db = new clsBanco();
 
-  /**
-   * Edita os dados de um registro.
-   * @return bool
-   */
-  function edita()
-  {
-    if (is_numeric($this->cod_instituicao)) {
-      $db  = new clsBanco();
-      $set = '';
+            $campos = '';
+            $valores = '';
+            $gruda = '';
 
-      if (is_numeric($this->ref_usuario_exc)) {
-        $set .= "{$gruda}ref_usuario_exc = '{$this->ref_usuario_exc}'";
-        $gruda = ", ";
-      }
+            if (is_numeric($this->ref_usuario_exc)) {
+                $campos .= "{$gruda}ref_usuario_exc";
+                $valores .= "{$gruda}'{$this->ref_usuario_exc}'";
+                $gruda = ", ";
+            }
 
-      if (is_numeric($this->ref_usuario_cad)) {
-        $set .= "{$gruda}ref_usuario_cad = '{$this->ref_usuario_cad}'";
-        $gruda = ", ";
-      }
+            if (is_numeric($this->ref_usuario_cad)) {
+                $campos .= "{$gruda}ref_usuario_cad";
+                $valores .= "{$gruda}'{$this->ref_usuario_cad}'";
+                $gruda = ", ";
+            }
 
-      if (is_string($this->ref_idtlog)) {
-        $set .= "{$gruda}ref_idtlog = '{$this->ref_idtlog}'";
-        $gruda = ", ";
-      }
+            if (is_string($this->ref_idtlog)) {
+                $campos .= "{$gruda}ref_idtlog";
+                $valores .= "{$gruda}'{$this->ref_idtlog}'";
+                $gruda = ", ";
+            }
 
-      if (is_string($this->ref_sigla_uf)) {
-        $set .= "{$gruda}ref_sigla_uf = '{$this->ref_sigla_uf}'";
-        $gruda = ", ";
-      }
+            if (is_string($this->ref_sigla_uf)) {
+                $campos .= "{$gruda}ref_sigla_uf";
+                $valores .= "{$gruda}'{$this->ref_sigla_uf}'";
+                $gruda = ", ";
+            }
 
-      if (is_numeric($this->cep)) {
-        $set .= "{$gruda}cep = '{$this->cep}'";
-        $gruda = ", ";
-      }
+            if (is_numeric($this->cep)) {
+                $campos .= "{$gruda}cep";
+                $valores .= "{$gruda}'{$this->cep}'";
+                $gruda = ", ";
+            }
 
-      if (is_string($this->cidade)) {
-        $set .= "{$gruda}cidade = '{$this->cidade}'";
-        $gruda = ", ";
-      }
+            if (is_string($this->cidade)) {
+                $campos .= "{$gruda}cidade";
+                $valores .= "{$gruda}'{$this->cidade}'";
+                $gruda = ", ";
+            }
 
-      if (is_string($this->bairro)) {
-        $set .= "{$gruda}bairro = '{$this->bairro}'";
-        $gruda = ", ";
-      }
+            if (is_string($this->bairro)) {
+                $campos .= "{$gruda}bairro";
+                $valores .= "{$gruda}'{$this->bairro}'";
+                $gruda = ", ";
+            }
 
-      if (is_string($this->logradouro)) {
-        $set .= "{$gruda}logradouro = '{$this->logradouro}'";
-        $gruda = ", ";
-      }
+            if (is_string($this->logradouro)) {
+                $campos .= "{$gruda}logradouro";
+                $valores .= "{$gruda}'{$this->logradouro}'";
+                $gruda = ", ";
+            }
 
-      if (is_numeric($this->numero)) {
-        $set .= "{$gruda}numero = '{$this->numero}'";
-        $gruda = ", ";
-      }
+            if (is_numeric($this->numero)) {
+                $campos .= "{$gruda}numero";
+                $valores .= "{$gruda}'{$this->numero}'";
+                $gruda = ", ";
+            }
 
-      if (is_string($this->complemento)) {
-        $set .= "{$gruda}complemento = '{$this->complemento}'";
-        $gruda = ", ";
-      }
+            if (is_string($this->complemento)) {
+                $campos .= "{$gruda}complemento";
+                $valores .= "{$gruda}'{$this->complemento}'";
+                $gruda = ", ";
+            }
 
-      if (is_string($this->nm_responsavel)) {
-        $set .= "{$gruda}nm_responsavel = '{$this->nm_responsavel}'";
-        $gruda = ", ";
-      }
+            if (is_string($this->nm_responsavel)) {
+                $campos .= "{$gruda}nm_responsavel";
+                $valores .= "{$gruda}'{$this->nm_responsavel}'";
+                $gruda = ", ";
+            }
 
-      if (is_numeric($this->ddd_telefone)) {
-        $set .= "{$gruda}ddd_telefone = '{$this->ddd_telefone}'";
-        $gruda = ", ";
-      }
+            if (is_numeric($this->ddd_telefone)) {
+                $campos .= "{$gruda}ddd_telefone";
+                $valores .= "{$gruda}'{$this->ddd_telefone}'";
+                $gruda = ", ";
+            }
 
-      if (is_numeric($this->telefone)) {
-        $set .= "{$gruda}telefone = '{$this->telefone}'";
-        $gruda = ", ";
-      }
+            if (is_numeric($this->telefone)) {
+                $campos .= "{$gruda}telefone";
+                $valores .= "{$gruda}'{$this->telefone}'";
+                $gruda = ", ";
+            }
 
-      if (is_string($this->data_cadastro)) {
-        $set .= "{$gruda}data_cadastro = '{$this->data_cadastro}'";
-        $gruda = ", ";
-      }
+            $campos .= "{$gruda}data_cadastro";
+            $valores .= "{$gruda}NOW()";
+            $gruda = ", ";
 
-      $set .= "{$gruda}data_exclusao = NOW()";
-      $gruda = ", ";
+            if (is_numeric($this->ativo)) {
+                $campos .= "{$gruda}ativo";
+                $valores .= "{$gruda}'{$this->ativo}'";
+                $gruda = ", ";
+            }
 
-      if (is_numeric($this->ativo)) {
-        $set .= "{$gruda}ativo = '{$this->ativo}'";
-        $gruda = ", ";
-      }
+            if (is_string($this->nm_instituicao)) {
+                $campos .= "{$gruda}nm_instituicao";
+                $valores .= "{$gruda}'{$this->nm_instituicao}'";
+                $gruda = ", ";
+            }
 
-      if (is_string($this->nm_instituicao)) {
-        $set .= "{$gruda}nm_instituicao = '{$this->nm_instituicao}'";
-        $gruda = ", ";
-      }
+            if ((is_string($this->data_base_remanejamento)) AND !empty($this->data_base_remanejamento)) {
+                $campos .= "{$gruda}data_base_remanejamento";
+                $valores .= "{$gruda}'{$this->data_base_remanejamento}'";
+                $gruda = ", ";
+            }
 
-      if (is_string($this->data_base_transferencia) AND !empty($this->data_base_transferencia)) {
-        $set .= "{$gruda}data_base_transferencia = '{$this->data_base_transferencia}'";
-        $gruda = ", ";
-      }else{
-        $set .= "{$gruda}data_base_transferencia = NULL ";
-        $gruda = ", ";
-      }
+            if ((is_string($this->data_base_transferencia)) AND !empty($this->data_base_transferencia)) {
+                $campos .= "{$gruda}data_base_transferencia";
+                $valores .= "{$gruda}'{$this->data_base_transferencia}'";
+                $gruda = ", ";
+            }
 
-      if (is_string($this->data_expiracao_reserva_vaga) AND !empty($this->data_expiracao_reserva_vaga)) {
-        $set .= "{$gruda}data_expiracao_reserva_vaga = '{$this->data_expiracao_reserva_vaga}'";
-        $gruda = ", ";
-      }else{
-        $set .= "{$gruda}data_expiracao_reserva_vaga = NULL ";
-        $gruda = ", ";
-      }
+            if ((is_string($this->data_expiracao_reserva_vaga)) AND !empty($this->data_expiracao_reserva_vaga)) {
+                $campos .= "{$gruda}data_expiracao_reserva_vaga";
+                $valores .= "{$gruda}'{$this->data_expiracao_reserva_vaga}'";
+                $gruda = ", ";
+            }
 
-      if (is_string($this->data_base_remanejamento) AND !empty($this->data_base_remanejamento) ) {
-        $set .= "{$gruda}data_base_remanejamento = '{$this->data_base_remanejamento}'";
-        $gruda = ", ";
-      }else{
-        $set .= "{$gruda}data_base_remanejamento = NULL ";
-        $gruda = ", ";
-      }
+            if (is_numeric($this->exigir_vinculo_turma_professor)) {
+                $campos .= "{$gruda}exigir_vinculo_turma_professor";
+                $valores .= "{$gruda}'{$this->exigir_vinculo_turma_professor}'";
+                $gruda = ", ";
+            }
 
-      if (is_numeric($this->controlar_espaco_utilizacao_aluno)) {
-        $set .= "{$gruda}controlar_espaco_utilizacao_aluno = '{$this->controlar_espaco_utilizacao_aluno}'";
-        $gruda = ", ";
-      }
+            if (is_numeric($this->controlar_espaco_utilizacao_aluno)) {
+                $campos .= "{$gruda}controlar_espaco_utilizacao_aluno";
+                $valores .= "{$gruda}'{$this->controlar_espaco_utilizacao_aluno}'";
+                $gruda = ", ";
+            }
 
-      if (is_numeric($this->exigir_vinculo_turma_professor)) {
-        $set .= "{$gruda}exigir_vinculo_turma_professor = '{$this->exigir_vinculo_turma_professor}'";
-        $gruda = ", ";
-      }
+            if (is_numeric($this->percentagem_maxima_ocupacao_salas)) {
+                $campos .= "{$gruda}percentagem_maxima_ocupacao_salas";
+                $valores .= "{$gruda}'{$this->percentagem_maxima_ocupacao_salas}'";
+                $gruda = ", ";
+            }
 
-      if (dbBool($this->gerar_historico_transferencia)) {
-        $set .= "{$gruda}gerar_historico_transferencia = true ";
-        $gruda = ", ";
-      }else{
-        $set .= "{$gruda}gerar_historico_transferencia = false ";
-        $gruda = ", ";
-      }
+            if (is_numeric($this->quantidade_alunos_metro_quadrado)) {
+                $campos .= "{$gruda}quantidade_alunos_metro_quadrado";
+                $valores .= "{$gruda}'{$this->quantidade_alunos_metro_quadrado}'";
+                $gruda = ", ";
+            }
 
-      if (dbBool($this->controlar_posicao_historicos)) {
-        $set .= "{$gruda}controlar_posicao_historicos = true ";
-        $gruda = ", ";
-      }else{
-        $set .= "{$gruda}controlar_posicao_historicos = false ";
-        $gruda = ", ";
-      }
+            if (dbBool($this->gerar_historico_transferencia)) {
+                $campos .= "{$gruda}gerar_historico_transferencia";
+                $valores .= "{$gruda} true ";
+                $gruda = ", ";
+            } else {
+                $campos .= "{$gruda}gerar_historico_transferencia";
+                $valores .= "{$gruda} false ";
+                $gruda = ", ";
+            }
+            if (dbBool($this->controlar_posicao_historicos)) {
+                $campos .= "{$gruda}controlar_posicao_historicos";
+                $valores .= "{$gruda} true ";
+                $gruda = ", ";
+            } else {
+                $campos .= "{$gruda}controlar_posicao_historicos";
+                $valores .= "{$gruda} false ";
+                $gruda = ", ";
+            }
+            if (dbBool($this->matricula_apenas_bairro_escola)) {
+                $campos .= "{$gruda}matricula_apenas_bairro_escola";
+                $valores .= "{$gruda} true ";
+                $gruda = ", ";
+            } else {
+                $campos .= "{$gruda}matricula_apenas_bairro_escola";
+                $valores .= "{$gruda} false ";
+                $gruda = ", ";
+            }
+            if (dbBool($this->restringir_historico_escolar)) {
+                $campos .= "{$gruda}restringir_historico_escolar";
+                $valores .= "{$gruda} true ";
+                $gruda = ", ";
+            } else {
+                $campos .= "{$gruda}restringir_historico_escolar";
+                $valores .= "{$gruda} false ";
+                $gruda = ", ";
+            }
 
-      if (dbBool($this->matricula_apenas_bairro_escola)) {
-        $set .= "{$gruda}matricula_apenas_bairro_escola = true ";
-        $gruda = ", ";
-      }else{
-        $set .= "{$gruda}matricula_apenas_bairro_escola = false ";
-        $gruda = ", ";
-      }
+            if (strripos($this->coordenador_transporte, '-') and strripos($this->coordenador_transporte, '(')) {
+                $this->coordenador_transporte = $this->parteString($this->coordenador_transporte, '-', '(');
+            }
 
-      if (dbBool($this->restringir_historico_escolar)) {
-        $set .= "{$gruda}restringir_historico_escolar = true ";
-        $gruda = ", ";
-      }else{
-        $set .= "{$gruda}restringir_historico_escolar = false ";
-        $gruda = ", ";
-      }
-      if (strripos($this->coordenador_transporte, '-') and strripos($this->coordenador_transporte, '('))
-        $this->coordenador_transporte = $this->parte_string($this->coordenador_transporte, '-', '(');
+            if (is_string($this->coordenador_transporte)) {
+                $campos .= "{$gruda}coordenador_transporte";
+                $valores .= "{$gruda}'{$this->coordenador_transporte}'";
+                $gruda = ", ";
+            }
 
-      if (is_string($this->coordenador_transporte)) {
-        $set .= "{$gruda}coordenador_transporte = '{$this->coordenador_transporte}'";
-        $gruda = ", ";
-      }
+            if (dbBool($this->restringir_multiplas_enturmacoes)) {
+                $campos .= "{$gruda}restringir_multiplas_enturmacoes";
+                $valores .= "{$gruda} true ";
+                $gruda = ", ";
+            } else {
+                $campos .= "{$gruda}restringir_multiplas_enturmacoes";
+                $valores .= "{$gruda} false ";
+                $gruda = ", ";
+            }
 
-      if (is_numeric($this->percentagem_maxima_ocupacao_salas) AND !empty($this->percentagem_maxima_ocupacao_salas)) {
-        $set .= "{$gruda}percentagem_maxima_ocupacao_salas = '{$this->percentagem_maxima_ocupacao_salas}'";
-        $gruda = ", ";
-      }else{
-        $set .= "{$gruda}percentagem_maxima_ocupacao_salas = NULL";
-        $gruda = ", ";
-      }
+            if (dbBool($this->permissao_filtro_abandono_transferencia)) {
+                $campos .= "{$gruda}permissao_filtro_abandono_transferencia";
+                $valores .= "{$gruda} true ";
+                $gruda = ", ";
+            } else {
+                $campos .= "{$gruda}permissao_filtro_abandono_transferencia";
+                $valores .= "{$gruda} false ";
+                $gruda = ", ";
+            }
 
-      if (is_numeric($this->quantidade_alunos_metro_quadrado) AND !empty($this->quantidade_alunos_metro_quadrado)) {
-        $set .= "{$gruda}quantidade_alunos_metro_quadrado = '{$this->quantidade_alunos_metro_quadrado}'";
-        $gruda = ", ";
-      }else{
-        $set .= "{$gruda}quantidade_alunos_metro_quadrado = NULL";
-        $gruda = ", ";
-      }
+            if (dbBool($this->multiplas_reserva_vaga)) {
+                $campos .= "{$gruda}multiplas_reserva_vaga";
+                $valores .= "{$gruda} true ";
+                $gruda = ", ";
+            } else {
+                $campos .= "{$gruda}multiplas_reserva_vaga";
+                $valores .= "{$gruda} false ";
+                $gruda = ", ";
+            }
 
-      if (dbBool($this->restringir_multiplas_enturmacoes)) {
-        $set .= "{$gruda}restringir_multiplas_enturmacoes = true ";
-        $gruda = ", ";
-      }else{
-        $set .= "{$gruda}restringir_multiplas_enturmacoes = false ";
-        $gruda = ", ";
-      }
+            if (dbBool($this->permitir_carga_horaria)) {
+                $campos .= "{$gruda}permitir_carga_horaria";
+                $valores .= "{$gruda} true ";
+                $gruda = ", ";
+            } else {
+                $campos .= "{$gruda}permitir_carga_horaria";
+                $valores .= "{$gruda} false ";
+                $gruda = ", ";
+            }
 
-      if (dbBool($this->permissao_filtro_abandono_transferencia)) {
-        $set .= "{$gruda}permissao_filtro_abandono_transferencia = true ";
-        $gruda = ", ";
-      }else{
-        $set .= "{$gruda}permissao_filtro_abandono_transferencia = false ";
-        $gruda = ", ";
-      }
+            if (dbBool($this->componente_curricular_turma)) {
+                $campos .= "{$gruda}componente_curricular_turma";
+                $valores .= "{$gruda} true ";
+                $gruda = ", ";
+            } else {
+                $campos .= "{$gruda}componente_curricular_turma";
+                $valores .= "{$gruda} false ";
+                $gruda = ", ";
+            }
 
-      if (dbBool($this->multiplas_reserva_vaga)) {
-        $set .= "{$gruda}multiplas_reserva_vaga = true ";
-        $gruda = ", ";
-      }else{
-        $set .= "{$gruda}multiplas_reserva_vaga = false ";
-        $gruda = ", ";
-      }
+            if (dbBool($this->reprova_dependencia_ano_concluinte)) {
+                $campos .= "{$gruda}reprova_dependencia_ano_concluinte";
+                $valores .= "{$gruda} true ";
+                $gruda = ", ";
+            } else {
+                $campos .= "{$gruda}reprova_dependencia_ano_concluinte";
+                $valores .= "{$gruda} false ";
+                $gruda = ", ";
+            }
 
-      if (dbBool($this->permitir_carga_horaria)) {
-        $set .= "{$gruda}permitir_carga_horaria = true ";
-        $gruda = ", ";
-      }else{
-        $set .= "{$gruda}permitir_carga_horaria = false ";
-        $gruda = ", ";
-      }
+            if (dbBool($this->reserva_integral_somente_com_renda)) {
+                $campos .= "{$gruda}reserva_integral_somente_com_renda";
+                $valores .= "{$gruda} true ";
+                $gruda = ", ";
+            } else {
+                $campos .= "{$gruda}reserva_integral_somente_com_renda";
+                $valores .= "{$gruda} false ";
+                $gruda = ", ";
+            }
 
-      if (dbBool($this->reserva_integral_somente_com_renda)) {
-        $set .= "{$gruda}reserva_integral_somente_com_renda = true ";
-        $gruda = ", ";
-      }else{
-        $set .= "{$gruda}reserva_integral_somente_com_renda = false ";
-        $gruda = ", ";
-      }
+            if (dbBool($this->bloqueia_matricula_serie_nao_seguinte)) {
+                $campos .= "{$gruda}bloqueia_matricula_serie_nao_seguinte";
+                $valores .= "{$gruda} true ";
+                $gruda = ", ";
+            } else {
+                $campos .= "{$gruda}bloqueia_matricula_serie_nao_seguinte";
+                $valores .= "{$gruda} false ";
+                $gruda = ", ";
+            }
 
-      if (dbBool($this->componente_curricular_turma)) {
-        $set .= "{$gruda}componente_curricular_turma = TRUE ";
-        $gruda = ", ";
-      }else{
-        $set .= "{$gruda}componente_curricular_turma = FALSE ";
-        $gruda = ", ";
-      }
+            if ((is_string($this->data_base_matricula)) AND !empty($this->data_base_matricula)) {
+                $campos .= "{$gruda}data_base_matricula";
+                $valores .= "{$gruda}'{$this->data_base_matricula}'";
+                $gruda = ", ";
+            }
 
-      if (dbBool($this->reprova_dependencia_ano_concluinte)) {
-        $set .= "{$gruda}reprova_dependencia_ano_concluinte = TRUE ";
-        $gruda = ", ";
-      }else{
-        $set .= "{$gruda}reprova_dependencia_ano_concluinte = FALSE ";
-        $gruda = ", ";
-      }
+            if ((is_string($this->data_fechamento)) AND !empty($this->data_fechamento)) {
+                $campos .= "{$gruda}data_fechamento";
+                $valores .= "{$gruda}'{$this->data_fechamento}'";
+                $gruda = ", ";
+            }
 
-      if (dbBool($this->bloqueia_matricula_serie_nao_seguinte)) {
-        $set .= "{$gruda}bloqueia_matricula_serie_nao_seguinte = TRUE ";
-        $gruda = ", ";
-      }else{
-        $set .= "{$gruda}bloqueia_matricula_serie_nao_seguinte = FALSE ";
-        $gruda = ", ";
-      }
+            if ((is_string($this->data_educacenso)) AND !empty($this->data_educacenso)) {
+                $campos .= "{$gruda}data_educacenso";
+                $valores .= "{$gruda}'{$this->data_educacenso}'";
+                $gruda = ", ";
+            }
 
-      if (is_string($this->data_base_matricula) AND !empty($this->data_base_matricula)) {
-        $set .= "{$gruda}data_base_matricula = '{$this->data_base_matricula}'";
-        $gruda = ", ";
-      }else{
-        $set .= "{$gruda}data_base_matricula = NULL ";
-        $gruda = ", ";
-      }
+            if (dbBool($this->exigir_dados_socieconomicos)) {
+                $campos .= "{$gruda}exigir_dados_socioeconomicos";
+                $valores .= "{$gruda} true ";
+                $gruda = ", ";
+            } else {
+                $campos .= "{$gruda}exigir_dados_socioeconomicos";
+                $valores .= "{$gruda} false ";
+                $gruda = ", ";
+            }
 
-      if (is_string($this->data_fechamento) AND !empty($this->data_fechamento)) {
-        $set .= "{$gruda}data_fechamento = '{$this->data_fechamento}'";
-        $gruda = ", ";
-      }else{
-        $set .= "{$gruda}data_fechamento = NULL ";
-        $gruda = ", ";
-      }
+            if (dbBool($this->altera_atestado_para_declaracao)) {
+                $campos .= "{$gruda}altera_atestado_para_declaracao";
+                $valores .= "{$gruda} true ";
+                $gruda = ", ";
+            } else {
+                $campos .= "{$gruda}altera_atestado_para_declaracao";
+                $valores .= "{$gruda} false ";
+                $gruda = ", ";
+            }
 
-      if (is_string($this->data_educacenso) AND !empty($this->data_educacenso)) {
-        $data_educacenso_pg = Portabilis_Date_Utils::brToPgSQL($this->data_educacenso);
-        $set .= "{$gruda}data_educacenso = '{$data_educacenso_pg}'";
-        $gruda = ", ";
-      }else{
-        $set .= "{$gruda}data_educacenso = NULL ";
-        $gruda = ", ";
-      }
+            $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
+            return $db->InsertId("{$this->_tabela}_cod_instituicao_seq");
+        }
 
-      if ($this->exigir_dados_socioeconomicos) {
-        $set .= "{$gruda}exigir_dados_socioeconomicos = true ";
-        $gruda = ", ";
-      }else{
-        $set .= "{$gruda}exigir_dados_socioeconomicos = false ";
-        $gruda = ", ";
-      }
-
-      if ($set) {
-        $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_instituicao = '{$this->cod_instituicao}'");
-        return TRUE;
-      }
+        return false;
     }
 
-    return FALSE;
-  }
-  function parte_string($string, $ponto_inicio, $ponto_final){
-    $num = 1;
-    if ($string and $ponto_inicio)
-      $registro = explode($ponto_inicio, $string);
-    if ($ponto_final){
-      $num = 0;
-      $registro = explode($ponto_final, $registro[1]);
+    /**
+     * Edita os dados de um registro.
+     * @return bool
+     */
+    function edita()
+    {
+        if (is_numeric($this->cod_instituicao)) {
+            $db = new clsBanco();
+            $set = '';
+
+            if (is_numeric($this->ref_usuario_exc)) {
+                $set .= "{$gruda}ref_usuario_exc = '{$this->ref_usuario_exc}'";
+                $gruda = ", ";
+            }
+
+            if (is_numeric($this->ref_usuario_cad)) {
+                $set .= "{$gruda}ref_usuario_cad = '{$this->ref_usuario_cad}'";
+                $gruda = ", ";
+            }
+
+            if (is_string($this->ref_idtlog)) {
+                $set .= "{$gruda}ref_idtlog = '{$this->ref_idtlog}'";
+                $gruda = ", ";
+            }
+
+            if (is_string($this->ref_sigla_uf)) {
+                $set .= "{$gruda}ref_sigla_uf = '{$this->ref_sigla_uf}'";
+                $gruda = ", ";
+            }
+
+            if (is_numeric($this->cep)) {
+                $set .= "{$gruda}cep = '{$this->cep}'";
+                $gruda = ", ";
+            }
+
+            if (is_string($this->cidade)) {
+                $set .= "{$gruda}cidade = '{$this->cidade}'";
+                $gruda = ", ";
+            }
+
+            if (is_string($this->bairro)) {
+                $set .= "{$gruda}bairro = '{$this->bairro}'";
+                $gruda = ", ";
+            }
+
+            if (is_string($this->logradouro)) {
+                $set .= "{$gruda}logradouro = '{$this->logradouro}'";
+                $gruda = ", ";
+            }
+
+            if (is_numeric($this->numero)) {
+                $set .= "{$gruda}numero = '{$this->numero}'";
+                $gruda = ", ";
+            }
+
+            if (is_string($this->complemento)) {
+                $set .= "{$gruda}complemento = '{$this->complemento}'";
+                $gruda = ", ";
+            }
+
+            if (is_string($this->nm_responsavel)) {
+                $set .= "{$gruda}nm_responsavel = '{$this->nm_responsavel}'";
+                $gruda = ", ";
+            }
+
+            if (is_numeric($this->ddd_telefone)) {
+                $set .= "{$gruda}ddd_telefone = '{$this->ddd_telefone}'";
+                $gruda = ", ";
+            }
+
+            if (is_numeric($this->telefone)) {
+                $set .= "{$gruda}telefone = '{$this->telefone}'";
+                $gruda = ", ";
+            }
+
+            if (is_string($this->data_cadastro)) {
+                $set .= "{$gruda}data_cadastro = '{$this->data_cadastro}'";
+                $gruda = ", ";
+            }
+
+            $set .= "{$gruda}data_exclusao = NOW()";
+            $gruda = ", ";
+
+            if (is_numeric($this->ativo)) {
+                $set .= "{$gruda}ativo = '{$this->ativo}'";
+                $gruda = ", ";
+            }
+
+            if (is_string($this->nm_instituicao)) {
+                $set .= "{$gruda}nm_instituicao = '{$this->nm_instituicao}'";
+                $gruda = ", ";
+            }
+
+            if (is_string($this->data_base_transferencia) AND !empty($this->data_base_transferencia)) {
+                $set .= "{$gruda}data_base_transferencia = '{$this->data_base_transferencia}'";
+                $gruda = ", ";
+            } else {
+                $set .= "{$gruda}data_base_transferencia = null ";
+                $gruda = ", ";
+            }
+
+            if (is_string($this->data_expiracao_reserva_vaga) AND !empty($this->data_expiracao_reserva_vaga)) {
+                $set .= "{$gruda}data_expiracao_reserva_vaga = '{$this->data_expiracao_reserva_vaga}'";
+                $gruda = ", ";
+            } else {
+                $set .= "{$gruda}data_expiracao_reserva_vaga = null ";
+                $gruda = ", ";
+            }
+
+            if (is_string($this->data_base_remanejamento) AND !empty($this->data_base_remanejamento)) {
+                $set .= "{$gruda}data_base_remanejamento = '{$this->data_base_remanejamento}'";
+                $gruda = ", ";
+            } else {
+                $set .= "{$gruda}data_base_remanejamento = null ";
+                $gruda = ", ";
+            }
+
+            if (is_numeric($this->controlar_espaco_utilizacao_aluno)) {
+                $set .= "{$gruda}controlar_espaco_utilizacao_aluno = '{$this->controlar_espaco_utilizacao_aluno}'";
+                $gruda = ", ";
+            }
+
+            if (is_numeric($this->exigir_vinculo_turma_professor)) {
+                $set .= "{$gruda}exigir_vinculo_turma_professor = '{$this->exigir_vinculo_turma_professor}'";
+                $gruda = ", ";
+            }
+
+            if (dbBool($this->gerar_historico_transferencia)) {
+                $set .= "{$gruda}gerar_historico_transferencia = true ";
+                $gruda = ", ";
+            } else {
+                $set .= "{$gruda}gerar_historico_transferencia = false ";
+                $gruda = ", ";
+            }
+
+            if (dbBool($this->controlar_posicao_historicos)) {
+                $set .= "{$gruda}controlar_posicao_historicos = true ";
+                $gruda = ", ";
+            } else {
+                $set .= "{$gruda}controlar_posicao_historicos = false ";
+                $gruda = ", ";
+            }
+
+            if (dbBool($this->matricula_apenas_bairro_escola)) {
+                $set .= "{$gruda}matricula_apenas_bairro_escola = true ";
+                $gruda = ", ";
+            } else {
+                $set .= "{$gruda}matricula_apenas_bairro_escola = false ";
+                $gruda = ", ";
+            }
+
+            if (dbBool($this->restringir_historico_escolar)) {
+                $set .= "{$gruda}restringir_historico_escolar = true ";
+                $gruda = ", ";
+            } else {
+                $set .= "{$gruda}restringir_historico_escolar = false ";
+                $gruda = ", ";
+            }
+            if (strripos($this->coordenador_transporte, '-') and strripos($this->coordenador_transporte, '(')) {
+                $this->coordenador_transporte = $this->parteString($this->coordenador_transporte, '-', '(');
+            }
+
+            if (is_string($this->coordenador_transporte)) {
+                $set .= "{$gruda}coordenador_transporte = '{$this->coordenador_transporte}'";
+                $gruda = ", ";
+            }
+
+            if (is_numeric($this->percentagem_maxima_ocupacao_salas) AND !empty($this->percentagem_maxima_ocupacao_salas)) {
+                $set .= "{$gruda}percentagem_maxima_ocupacao_salas = '{$this->percentagem_maxima_ocupacao_salas}'";
+                $gruda = ", ";
+            } else {
+                $set .= "{$gruda}percentagem_maxima_ocupacao_salas = null";
+                $gruda = ", ";
+            }
+
+            if (is_numeric($this->quantidade_alunos_metro_quadrado) AND !empty($this->quantidade_alunos_metro_quadrado)) {
+                $set .= "{$gruda}quantidade_alunos_metro_quadrado = '{$this->quantidade_alunos_metro_quadrado}'";
+                $gruda = ", ";
+            } else {
+                $set .= "{$gruda}quantidade_alunos_metro_quadrado = null";
+                $gruda = ", ";
+            }
+
+            if (dbBool($this->restringir_multiplas_enturmacoes)) {
+                $set .= "{$gruda}restringir_multiplas_enturmacoes = true ";
+                $gruda = ", ";
+            } else {
+                $set .= "{$gruda}restringir_multiplas_enturmacoes = false ";
+                $gruda = ", ";
+            }
+
+            if (dbBool($this->permissao_filtro_abandono_transferencia)) {
+                $set .= "{$gruda}permissao_filtro_abandono_transferencia = true ";
+                $gruda = ", ";
+            } else {
+                $set .= "{$gruda}permissao_filtro_abandono_transferencia = false ";
+                $gruda = ", ";
+            }
+
+            if (dbBool($this->multiplas_reserva_vaga)) {
+                $set .= "{$gruda}multiplas_reserva_vaga = true ";
+                $gruda = ", ";
+            } else {
+                $set .= "{$gruda}multiplas_reserva_vaga = false ";
+                $gruda = ", ";
+            }
+
+            if (dbBool($this->permitir_carga_horaria)) {
+                $set .= "{$gruda}permitir_carga_horaria = true ";
+                $gruda = ", ";
+            } else {
+                $set .= "{$gruda}permitir_carga_horaria = false ";
+                $gruda = ", ";
+            }
+
+            if (dbBool($this->reserva_integral_somente_com_renda)) {
+                $set .= "{$gruda}reserva_integral_somente_com_renda = true ";
+                $gruda = ", ";
+            } else {
+                $set .= "{$gruda}reserva_integral_somente_com_renda = false ";
+                $gruda = ", ";
+            }
+
+            if (dbBool($this->componente_curricular_turma)) {
+                $set .= "{$gruda}componente_curricular_turma = true ";
+                $gruda = ", ";
+            } else {
+                $set .= "{$gruda}componente_curricular_turma = false ";
+                $gruda = ", ";
+            }
+
+            if (dbBool($this->reprova_dependencia_ano_concluinte)) {
+                $set .= "{$gruda}reprova_dependencia_ano_concluinte = true ";
+                $gruda = ", ";
+            } else {
+                $set .= "{$gruda}reprova_dependencia_ano_concluinte = false ";
+                $gruda = ", ";
+            }
+
+            if (dbBool($this->bloqueia_matricula_serie_nao_seguinte)) {
+                $set .= "{$gruda}bloqueia_matricula_serie_nao_seguinte = true ";
+                $gruda = ", ";
+            } else {
+                $set .= "{$gruda}bloqueia_matricula_serie_nao_seguinte = false ";
+                $gruda = ", ";
+            }
+
+            if (is_string($this->data_base_matricula) AND !empty($this->data_base_matricula)) {
+                $set .= "{$gruda}data_base_matricula = '{$this->data_base_matricula}'";
+                $gruda = ", ";
+            } else {
+                $set .= "{$gruda}data_base_matricula = null ";
+                $gruda = ", ";
+            }
+
+            if (is_string($this->data_fechamento) AND !empty($this->data_fechamento)) {
+                $set .= "{$gruda}data_fechamento = '{$this->data_fechamento}'";
+                $gruda = ", ";
+            } else {
+                $set .= "{$gruda}data_fechamento = null ";
+                $gruda = ", ";
+            }
+
+            if (is_string($this->data_educacenso) AND !empty($this->data_educacenso)) {
+                $data_educacenso_pg = Portabilis_Date_Utils::brToPgSQL($this->data_educacenso);
+                $set .= "{$gruda}data_educacenso = '{$data_educacenso_pg}'";
+                $gruda = ", ";
+            } else {
+                $set .= "{$gruda}data_educacenso = null ";
+                $gruda = ", ";
+            }
+
+            if ($this->exigir_dados_socioeconomicos) {
+                $set .= "{$gruda}exigir_dados_socioeconomicos = true ";
+                $gruda = ", ";
+            } else {
+                $set .= "{$gruda}exigir_dados_socioeconomicos = false ";
+                $gruda = ", ";
+            }
+
+            if ($this->altera_atestado_para_declaracao) {
+                $set .= "{$gruda}altera_atestado_para_declaracao = true ";
+                $gruda = ", ";
+            } else {
+                $set .= "{$gruda}altera_atestado_para_declaracao = false ";
+                $gruda = ", ";
+            }
+
+            if ($set) {
+                $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_instituicao = '{$this->cod_instituicao}'");
+                return true;
+            }
+        }
+
+        return false;
     }
-    return $registro[$num];
-  }
-  /**
-   * Retorna uma lista de registros filtrados de acordo com os parâmetros.
-   * @return array
-   */
-  function lista($int_cod_instituicao = NULL, $str_ref_sigla_uf = NULL,
-    $int_cep = NULL, $str_cidade = NULL, $str_bairro = NULL, $str_logradouro = NULL,
-    $int_numero = NULL, $str_complemento = NULL, $str_nm_responsavel = NULL,
-    $int_ddd_telefone = NULL, $int_telefone = NULL, $date_data_cadastro = NULL,
-    $date_data_exclusao = NULL, $int_ativo = NULL, $str_nm_instituicao = NULL)
-  {
-    $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
-    $filtros = "";
 
-    $whereAnd = " WHERE ";
-
-    if (is_numeric($int_cod_instituicao)) {
-      $filtros .= "{$whereAnd} cod_instituicao = '{$int_cod_instituicao}'";
-      $whereAnd = " AND ";
+    function parteString($string, $ponto_inicio, $ponto_final)
+    {
+        $num = 1;
+        if ($string and $ponto_inicio) {
+            $registro = explode($ponto_inicio, $string);
+        }
+        if ($ponto_final) {
+            $num = 0;
+            $registro = explode($ponto_final, $registro[1]);
+        }
+        return $registro[$num];
     }
 
-    if (is_string($str_ref_sigla_uf)) {
-      $filtros .= "{$whereAnd} ref_sigla_uf LIKE '%{$str_ref_sigla_uf}%'";
-      $whereAnd = " AND ";
+    /**
+     * Retorna uma lista de registros filtrados de acordo com os parâmetros.
+     * @return array
+     */
+    function lista(
+        $int_cod_instituicao = null,
+        $str_ref_sigla_uf = null,
+        $int_cep = null,
+        $str_cidade = null,
+        $str_bairro = null,
+        $str_logradouro = null,
+        $int_numero = null,
+        $str_complemento = null,
+        $str_nm_responsavel = null,
+        $int_ddd_telefone = null,
+        $int_telefone = null,
+        $date_data_cadastro = null,
+        $date_data_exclusao = null,
+        $int_ativo = null,
+        $str_nm_instituicao = null
+    ) {
+        $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
+        $filtros = "";
+
+        $whereAnd = " WHERE ";
+
+        if (is_numeric($int_cod_instituicao)) {
+            $filtros .= "{$whereAnd} cod_instituicao = '{$int_cod_instituicao}'";
+            $whereAnd = " AND ";
+        }
+
+        if (is_string($str_ref_sigla_uf)) {
+            $filtros .= "{$whereAnd} ref_sigla_uf LIKE '%{$str_ref_sigla_uf}%'";
+            $whereAnd = " AND ";
+        }
+
+        if (is_numeric($int_cep)) {
+            $filtros .= "{$whereAnd} cep = '{$int_cep}'";
+            $whereAnd = " AND ";
+        }
+
+        if (is_string($str_cidade)) {
+            $filtros .= "{$whereAnd} cidade LIKE '%{$str_cidade}%'";
+            $whereAnd = " AND ";
+        }
+
+        if (is_string($str_bairro)) {
+            $filtros .= "{$whereAnd} bairro LIKE '%{$str_bairro}%'";
+            $whereAnd = " AND ";
+        }
+
+        if (is_string($str_logradouro)) {
+            $filtros .= "{$whereAnd} logradouro LIKE '%{$str_logradouro}%'";
+            $whereAnd = " AND ";
+        }
+
+        if (is_numeric($int_numero)) {
+            $filtros .= "{$whereAnd} numero = '{$int_numero}'";
+            $whereAnd = " AND ";
+        }
+
+        if (is_string($str_complemento)) {
+            $filtros .= "{$whereAnd} complemento LIKE '%{$str_complemento}%'";
+            $whereAnd = " AND ";
+        }
+
+        if (is_string($str_nm_responsavel)) {
+            $filtros .= "{$whereAnd} nm_responsavel LIKE '%{$str_nm_responsavel}%'";
+            $whereAnd = " AND ";
+        }
+
+        if (is_numeric($int_ddd_telefone)) {
+            $filtros .= "{$whereAnd} ddd_telefone = '{$int_ddd_telefone}'";
+            $whereAnd = " AND ";
+        }
+
+        if (is_numeric($int_telefone)) {
+            $filtros .= "{$whereAnd} telefone = '{$int_telefone}'";
+            $whereAnd = " AND ";
+        }
+
+        if (is_null($int_ativo) || $int_ativo) {
+            $filtros .= "{$whereAnd} ativo = '1'";
+            $whereAnd = " AND ";
+        } else {
+            $filtros .= "{$whereAnd} ativo = '0'";
+            $whereAnd = " AND ";
+        }
+
+        if (is_string($str_nm_instituicao)) {
+            $filtros .= "{$whereAnd} nm_instituicao LIKE '%{$str_nm_instituicao}%'";
+            $whereAnd = " AND ";
+        }
+
+        $db = new clsBanco();
+        $countCampos = count(explode(',', $this->_campos_lista));
+        $resultado = array();
+
+        $sql .= $filtros . $this->getOrderby() . $this->getLimite();
+
+        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} {$filtros}");
+
+        $db->Consulta($sql);
+
+        if ($countCampos > 1) {
+            while ($db->ProximoRegistro()) {
+                $tupla = $db->Tupla();
+                $tupla["_total"] = $this->_total;
+                $resultado[] = $tupla;
+            }
+        } else {
+            while ($db->ProximoRegistro()) {
+                $tupla = $db->Tupla();
+                $resultado[] = $tupla[$this->_campos_lista];
+            }
+        }
+        if (count($resultado)) {
+            return $resultado;
+        }
+
+        return false;
     }
 
-    if (is_numeric($int_cep)) {
-      $filtros .= "{$whereAnd} cep = '{$int_cep}'";
-      $whereAnd = " AND ";
+    /**
+     * Retorna um array com os dados de um registro.
+     * @return array
+     */
+    function detalhe()
+    {
+        if (is_numeric($this->cod_instituicao)) {
+            $db = new clsBanco();
+            $db->Consulta("SELECT {$this->_todos_campos},fcn_upper_nrm(nm_instituicao) as nm_instituicao_upper FROM {$this->_tabela} WHERE cod_instituicao = '{$this->cod_instituicao}'");
+            $db->ProximoRegistro();
+            return $db->Tupla();
+        }
+
+        return false;
     }
 
-    if (is_string($str_cidade)) {
-      $filtros .= "{$whereAnd} cidade LIKE '%{$str_cidade}%'";
-      $whereAnd = " AND ";
+    /**
+     * Retorna um array com os dados de um registro.
+     * @return array
+     */
+    function existe()
+    {
+        if (is_numeric($this->cod_instituicao)) {
+            $db = new clsBanco();
+            $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE cod_instituicao = '{$this->cod_instituicao}'");
+            $db->ProximoRegistro();
+            return $db->Tupla();
+        }
+
+        return false;
     }
 
-    if (is_string($str_bairro)) {
-      $filtros .= "{$whereAnd} bairro LIKE '%{$str_bairro}%'";
-      $whereAnd = " AND ";
+    /**
+     * Exclui um registro.
+     * @return bool
+     */
+    function excluir()
+    {
+        if (is_numeric($this->cod_instituicao)) {
+            $this->ativo = 0;
+            return $this->edita();
+        }
+
+        return false;
     }
 
-    if (is_string($str_logradouro)) {
-      $filtros .= "{$whereAnd} logradouro LIKE '%{$str_logradouro}%'";
-      $whereAnd = " AND ";
+    /**
+     * Define quais campos da tabela serão selecionados no método Lista().
+     */
+    function setCamposLista($str_campos)
+    {
+        $this->_campos_lista = $str_campos;
     }
 
-    if (is_numeric($int_numero)) {
-      $filtros .= "{$whereAnd} numero = '{$int_numero}'";
-      $whereAnd = " AND ";
+    /**
+     * Define que o método Lista() deverpa retornar todos os campos da tabela.
+     */
+    function resetCamposLista()
+    {
+        $this->_campos_lista = $this->_todos_campos;
     }
 
-    if (is_string($str_complemento)) {
-      $filtros .= "{$whereAnd} complemento LIKE '%{$str_complemento}%'";
-      $whereAnd = " AND ";
+    /**
+     * Define limites de retorno para o método Lista().
+     */
+    function setLimite($intLimiteQtd, $intLimiteOffset = null)
+    {
+        $this->_limite_quantidade = $intLimiteQtd;
+        $this->_limite_offset = $intLimiteOffset;
     }
 
-    if (is_string($str_nm_responsavel)) {
-      $filtros .= "{$whereAnd} nm_responsavel LIKE '%{$str_nm_responsavel}%'";
-      $whereAnd = " AND ";
+    /**
+     * Retorna a string com o trecho da query responsável pelo limite de
+     * registros retornados/afetados.
+     *
+     * @return string
+     */
+    function getLimite()
+    {
+        if (is_numeric($this->_limite_quantidade)) {
+            $retorno = " LIMIT {$this->_limite_quantidade}";
+            if (is_numeric($this->_limite_offset)) {
+                $retorno .= " OFFSET {$this->_limite_offset} ";
+            }
+            return $retorno;
+        }
+        return '';
     }
 
-    if (is_numeric($int_ddd_telefone)) {
-      $filtros .= "{$whereAnd} ddd_telefone = '{$int_ddd_telefone}'";
-      $whereAnd = " AND ";
+    /**
+     * Define o campo para ser utilizado como ordenação no método Lista().
+     */
+    function setOrderby($strNomeCampo)
+    {
+        if (is_string($strNomeCampo) && $strNomeCampo) {
+            $this->_campo_order_by = $strNomeCampo;
+        }
     }
 
-    if (is_numeric($int_telefone)) {
-      $filtros .= "{$whereAnd} telefone = '{$int_telefone}'";
-      $whereAnd = " AND ";
+    /**
+     * Retorna a string com o trecho da query responsável pela Ordenação dos
+     * registros.
+     *
+     * @return string
+     */
+    function getOrderby()
+    {
+        if (is_string($this->_campo_order_by)) {
+            return " ORDER BY {$this->_campo_order_by} ";
+        }
+        return '';
     }
-
-    if (is_null($int_ativo) || $int_ativo) {
-      $filtros .= "{$whereAnd} ativo = '1'";
-      $whereAnd = " AND ";
-    }
-    else {
-      $filtros .= "{$whereAnd} ativo = '0'";
-      $whereAnd = " AND ";
-    }
-
-    if (is_string($str_nm_instituicao)) {
-      $filtros .= "{$whereAnd} nm_instituicao LIKE '%{$str_nm_instituicao}%'";
-      $whereAnd = " AND ";
-    }
-
-    $db = new clsBanco();
-    $countCampos = count(explode(',', $this->_campos_lista));
-    $resultado = array();
-
-    $sql .= $filtros . $this->getOrderby() . $this->getLimite();
-
-    $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} {$filtros}");
-
-    $db->Consulta($sql);
-
-    if ($countCampos > 1) {
-      while ($db->ProximoRegistro()) {
-        $tupla = $db->Tupla();
-        $tupla["_total"] = $this->_total;
-        $resultado[] = $tupla;
-      }
-    }
-    else {
-      while ($db->ProximoRegistro()) {
-        $tupla = $db->Tupla();
-        $resultado[] = $tupla[$this->_campos_lista];
-      }
-    }
-    if (count($resultado)) {
-      return $resultado;
-    }
-
-    return FALSE;
-  }
-
-  /**
-   * Retorna um array com os dados de um registro.
-   * @return array
-   */
-  function detalhe()
-  {
-    if (is_numeric($this->cod_instituicao)) {
-      $db = new clsBanco();
-      $db->Consulta("SELECT {$this->_todos_campos},fcn_upper_nrm(nm_instituicao) as nm_instituicao_upper FROM {$this->_tabela} WHERE cod_instituicao = '{$this->cod_instituicao}'");
-      $db->ProximoRegistro();
-      return $db->Tupla();
-    }
-
-    return FALSE;
-  }
-
-  /**
-   * Retorna um array com os dados de um registro.
-   * @return array
-   */
-  function existe()
-  {
-    if (is_numeric($this->cod_instituicao)) {
-      $db = new clsBanco();
-      $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE cod_instituicao = '{$this->cod_instituicao}'");
-      $db->ProximoRegistro();
-      return $db->Tupla();
-    }
-
-    return FALSE;
-  }
-
-  /**
-   * Exclui um registro.
-   * @return bool
-   */
-  function excluir()
-  {
-    if (is_numeric($this->cod_instituicao)) {
-      $this->ativo = 0;
-      return $this->edita();
-    }
-
-    return FALSE;
-  }
-
-  /**
-   * Define quais campos da tabela serão selecionados no método Lista().
-   */
-  function setCamposLista($str_campos)
-  {
-    $this->_campos_lista = $str_campos;
-  }
-
-  /**
-   * Define que o método Lista() deverpa retornar todos os campos da tabela.
-   */
-  function resetCamposLista()
-  {
-    $this->_campos_lista = $this->_todos_campos;
-  }
-
-  /**
-   * Define limites de retorno para o método Lista().
-   */
-  function setLimite($intLimiteQtd, $intLimiteOffset = NULL)
-  {
-    $this->_limite_quantidade = $intLimiteQtd;
-    $this->_limite_offset = $intLimiteOffset;
-  }
-
-  /**
-   * Retorna a string com o trecho da query responsável pelo limite de
-   * registros retornados/afetados.
-   *
-   * @return string
-   */
-  function getLimite()
-  {
-    if (is_numeric($this->_limite_quantidade)) {
-      $retorno = " LIMIT {$this->_limite_quantidade}";
-      if (is_numeric($this->_limite_offset)) {
-        $retorno .= " OFFSET {$this->_limite_offset} ";
-      }
-      return $retorno;
-    }
-    return '';
-  }
-
-  /**
-   * Define o campo para ser utilizado como ordenação no método Lista().
-   */
-  function setOrderby($strNomeCampo)
-  {
-    if (is_string($strNomeCampo) && $strNomeCampo ) {
-      $this->_campo_order_by = $strNomeCampo;
-    }
-  }
-
-  /**
-   * Retorna a string com o trecho da query responsável pela Ordenação dos
-   * registros.
-   *
-   * @return string
-   */
-  function getOrderby()
-  {
-    if (is_string($this->_campo_order_by)) {
-      return " ORDER BY {$this->_campo_order_by} ";
-    }
-    return '';
-  }
 }

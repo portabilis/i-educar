@@ -133,6 +133,12 @@ class Portabilis_View_Helper_Inputs {
     $this->input('textArea', $attrName, $inputOptions, $helperOptions);
   }
 
+  public function booleanSelect($attrName, $inputOptions = array(), $helperOptions = array()) {
+    $resources = array(0 => 'Não', 1 => 'Sim');
+    $inputOptions['resources'] = $resources;
+    $this->select($attrName, $inputOptions, $helperOptions);
+  }
+
 
   // simple search input helper
 
@@ -320,6 +326,10 @@ class Portabilis_View_Helper_Inputs {
 
   public function multipleSearchDocumentosAtestadoVaga($attrName, $inputOptions = array(), $helperOptions = array()) {
     $this->multipleSearchResourceInput('multipleSearchDocumentosAtestadoVaga', $attrName, $inputOptions, $helperOptions);
+  }
+
+  public function multipleSearchSerie($attrName, $inputOptions = array(), $helperOptions = array()) {
+      $this->multipleSearchResourceInput('multipleSearchSerie', $attrName, $inputOptions, $helperOptions);
   }
 
   public function multipleSearchCustom($attrName, $inputOptions = array(), $helperOptions = array()) {
