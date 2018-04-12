@@ -1644,6 +1644,7 @@ class DiarioApiController extends ApiCoreController
             $itensRegra['nota_minima_geral'] = $regra->get('notaMinimaGeral');
             $itensRegra['nota_maxima_exame_final'] = $regra->get('notaMaximaExameFinal');
             $itensRegra['qtd_casas_decimais'] = $regra->get('qtdCasasDecimais');
+            $itensRegra['regra_diferenciada_id'] = $regra->get('regraDiferenciada');
 
             // tipo presença
             $cnsPresenca = RegraAvaliacao_Model_TipoPresenca;
