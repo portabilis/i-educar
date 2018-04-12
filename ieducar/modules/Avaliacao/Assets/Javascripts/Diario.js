@@ -1328,7 +1328,7 @@ var hAlgumaProgressaoManual;
 
 function updateComponenteCurricularHeaders($targetElement, $tagElement) {
   var regras = $tableSearchDetails.data('regras');
-  hHabilitaCampoEtapaEspecifica = regras.filter(function(regra){return regra.tipo_recuperacao_paralela == 'etapas_especificas' && this.habilita_campo_etapa_especifica; }).length > 0;
+  hHabilitaCampoEtapaEspecifica = regras.filter(function(regra){return regra.tipo_recuperacao_paralela == 'etapas_especificas' && regra.habilita_campo_etapa_especifica; }).length > 0;
   hUsaNotaGeralPorEtapa = regras.filter(function(regra){return regra.nota_geral_por_etapa == 'SIM'; }).length > 0;
   hUsaRecuperacaoParalelaPorEtapa = regras.filter(function(regra){return regra.tipo_recuperacao_paralela == 'por_etapa'; }).length > 0;
   hUseNota                 = regras.filter(function(regra){return regra.tipo_nota != 'nenhum'; }).length > 0;
@@ -1348,7 +1348,7 @@ function updateComponenteCurricularHeaders($targetElement, $tagElement) {
       $tagElement.clone().addClass('center').html(safeUtf8Decode('Recuperação paralela')).appendTo($targetElement);
     }
     if(hHabilitaCampoEtapaEspecifica){
-      var tipoRecuperacaoParalelaNome = regras[regras.indexOf(function(){return regra.tipo_recuperacao_paralela == 'etapas_especificas' && regra.habilita_campo_etapa_especifica; })]['tipo_recuperacao_paralela_nome'];
+      var tipoRecuperacaoParalelaNome = regras.filter(function(regra){return regra.tipo_recuperacao_paralela == 'etapas_especificas' && regra.habilita_campo_etapa_especifica; })[0]['tipo_recuperacao_paralela_nome'];
       $tagElement.clone().addClass('center').html(safeUtf8Decode(tipoRecuperacaoParalelaNome)).appendTo($targetElement);
     }
     if (hUltimaEtapa || (hDefinirComponentesEtapa && !hProgressaoContinuada)){
