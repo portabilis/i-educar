@@ -148,6 +148,8 @@ class indice extends clsCadastro
   var $ref_cod_disciplina_dispensada;
   var $codigo_inep_educacenso;
   var $tipo_mediacao_didatico_pedagogico;
+  var $tipo_boletim;
+  var $tipo_boletim_diferenciado;
 
   var $sequencial;
   var $ref_cod_modulo;
@@ -425,6 +427,7 @@ class indice extends clsCadastro
     $tiposBoletim = Portabilis_Array_Utils::insertIn(null, "Selecione um modelo", $tiposBoletim);
 
     $this->campoLista('tipo_boletim', 'Modelo relat&oacute;rio boletim', $tiposBoletim, $this->tipo_boletim);
+    $this->campoLista('tipo_boletim_diferenciado', 'Modelo relat&oacute;rio boletim diferenciado', $tiposBoletim, $this->tipo_boletim_diferenciado);
 
     $this->montaListaComponentesSerieEscola();
 
@@ -961,6 +964,7 @@ class indice extends clsCadastro
           $this->ref_cod_instituicao_regente, $this->ref_cod_instituicao,
           $this->ref_cod_curso, $this->ref_cod_serie_mult, $this->ref_cod_escola,
           $this->visivel, $this->turma_turno_id, $this->tipo_boletim, $this->ano_letivo);
+        $obj->tipo_boletim_diferenciado = $this->tipo_boletim_diferenciado;
         $obj->tipo_atendimento = $this->tipo_atendimento;
         $obj->turma_mais_educacao = $this->turma_mais_educacao == 'on' ? 1 : 0;
         $obj->atividade_complementar_1 = $this->atividade_complementar_1;
@@ -1079,6 +1083,7 @@ class indice extends clsCadastro
         $this->ref_cod_instituicao, $this->ref_cod_curso,
         $this->ref_cod_serie_mult, $this->ref_cod_escola, $this->visivel,
         $this->turma_turno_id, $this->tipo_boletim, $this->ano_letivo);
+      $obj->tipo_boletim_diferenciado = $this->tipo_boletim_diferenciado;
       $obj->tipo_atendimento = $this->tipo_atendimento;
       $obj->turma_mais_educacao = $this->turma_mais_educacao == 'on' ? 1 : 0;
       $obj->atividade_complementar_1 = $this->atividade_complementar_1;
@@ -1204,6 +1209,7 @@ class indice extends clsCadastro
           $this->turma_turno_id,
           $this->tipo_boletim,
           $this->ano_letivo);
+        $obj->tipo_boletim_diferenciado = $this->tipo_boletim_diferenciado;
         $obj->tipo_atendimento = $this->tipo_atendimento;
         $obj->turma_mais_educacao = $this->turma_mais_educacao == 'on' ? 1 : 0;
         $obj->atividade_complementar_1 = $this->atividade_complementar_1;
@@ -1320,6 +1326,7 @@ class indice extends clsCadastro
         $this->ref_cod_instituicao_regente, $this->ref_cod_instituicao,
         $this->ref_cod_curso, $this->ref_cod_serie_mult, $this->ref_cod_escola,
         $this->visivel, $this->turma_turno_id, $this->tipo_boletim, $this->ano_letivo);
+      $obj->tipo_boletim_diferenciado = $this->tipo_boletim_diferenciado;
       $obj->tipo_atendimento = $this->tipo_atendimento;
       $obj->turma_mais_educacao = $this->turma_mais_educacao == 'on' ? 1 : 0;
       $obj->atividade_complementar_1 = $this->atividade_complementar_1;
