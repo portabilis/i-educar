@@ -1,6 +1,6 @@
 <?php
-error_reporting(E_ERROR);
-ini_set("display_errors", 1);
+//error_reporting(E_ERROR);
+//ini_set("display_errors", 1);
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -478,19 +478,7 @@ var tabela_arredondamento = new function() {
     $this->campoCheck('aprovaMediaDisciplina', $this->_getLabel('aprovaMediaDisciplina'),
         $this->getEntity()->aprovaMediaDisciplina, '', FALSE, FALSE, FALSE, $this->_getHelp('aprovaMediaDisciplina'));
 
-    $tipoRecuperacaoParalela = RegraAvaliacao_Model_TipoRecuperacaoParalela::getInstance();
 
-    $this->campoLista('tipoRecuperacaoParalela', $this->_getLabel('tipoRecuperacaoParalela'),
-      $tipoRecuperacaoParalela->getEnums(), $this->getEntity()->get('tipoRecuperacaoParalela'), '', FALSE,
-      $this->_getHelp('tipoRecuperacaoParalela'), '', FALSE, FALSE);
-
-
-    $this->campoTexto('mediaRecuperacaoParalela', $this->_getLabel('mediaRecuperacaoParalela'),
-                       $this->getEntity()->mediaRecuperacaoParalela, 5, 50, FALSE, FALSE,
-                       FALSE, $this->_getHelp('mediaRecuperacaoParalela'));
-
-
-    $opcaoPadrao = array(NULL => 'Não utiliza');
     $regras = $this->getDataMapper()->findAll(
         array('id', 'nome'),
         array(),
@@ -503,6 +491,18 @@ var tabela_arredondamento = new function() {
     $this->campoLista('regraDiferenciada', $this->_getLabel('regraDiferenciada'),
       $regras, $this->getEntity()->get('regraDiferenciada'), '',
       FALSE, $this->_getHelp('regraDiferenciada'), '', FALSE, FALSE);
+
+    $tipoRecuperacaoParalela = RegraAvaliacao_Model_TipoRecuperacaoParalela::getInstance();
+
+    $this->campoLista('tipoRecuperacaoParalela', $this->_getLabel('tipoRecuperacaoParalela'),
+      $tipoRecuperacaoParalela->getEnums(), $this->getEntity()->get('tipoRecuperacaoParalela'), '', FALSE,
+      $this->_getHelp('tipoRecuperacaoParalela'), '', FALSE, FALSE);
+
+
+    $this->campoTexto('mediaRecuperacaoParalela', $this->_getLabel('mediaRecuperacaoParalela'),
+                       $this->getEntity()->mediaRecuperacaoParalela, 5, 50, FALSE, FALSE,
+                       FALSE, $this->_getHelp('mediaRecuperacaoParalela'));
+
 
     // Parte condicional
     if (!$this->getEntity()->isNew()) {

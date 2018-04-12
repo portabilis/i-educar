@@ -7,6 +7,8 @@ var API_URL_BASE  = 'diarioApi';
 var RESOURCE_NAME  = 'matricula';
 var RESOURCES_NAME = 'matriculas';
 
+var REGRA_DIFERENCIADA_TEXT = '* Regra diferenciada para alunos com deficiência';
+
 var POST_LABEL   = '';
 var DELETE_LABEL = '';
 
@@ -735,8 +737,26 @@ function handleChange(dataResponse) {
   updateResourceRow(dataResponse);
 }
 
+var regraDiferenciadaId = undefined;
+
+var setRegraDiferenciadaId = function(regras){
+  regraDiferenciadaId = undefined;
+  if(regras && regras.length > 1){
+    $j.each(regras, function(){
+      var regraDiferenciadaAtual = this.regra_diferenciada_id;
+      if(regraDiferenciadaAtual){
+        var regrasDiferenciadas = regras.filter((regra)=>regra.id == regraDiferenciadaAtual);
+        if(regrasDiferenciadas.length){
+          regraDiferenciadaId = regrasDiferenciadas[0]['id'];
+        }
+      }
+    });
+  }
+}
 
 function setTableSearchDetails($tableSearchDetails, dataDetails) {
+  setRegraDiferenciadaId(dataDetails);
+
   var componenteCurricularSelected = ($j('#ref_cod_componente_curricular').val() != '');
   showBotaoReplicarNotas = ($j('#mostrar_botao_replicar_todos').val() == "1");
 
@@ -783,7 +803,11 @@ function setTableSearchDetails($tableSearchDetails, dataDetails) {
                            $j('#tr_nm_escola span:last').html();
 
     $j('<td />').html(safeToUpperCase($htmlEscolaField)).appendTo($linha);
-    $j('<td />').html(regra.id + ' - ' +safeToUpperCase(regra.nome)).appendTo($linha);
+    var descricaoCompletaRegra = regra.id + ' - ' +safeToUpperCase(regra.nome);
+    if(regra.id == regraDiferenciadaId){
+      descricaoCompletaRegra = `* ${descricaoCompletaRegra}`;
+    }
+    $j('<td />').html(descricaoCompletaRegra).appendTo($linha);
 
     //corrige acentuação
     var tipoNota = regra.tipo_nota.replace('_', ' ');
@@ -798,11 +822,25 @@ function setTableSearchDetails($tableSearchDetails, dataDetails) {
     $linha.appendTo($tableSearchDetails);
   });
 
+  if(regraDiferenciadaId){
+    var tfootColspan = $linha.find('th').length;
+    var $tfoot = $j('<tfoot/>');
+    $j('<tr/>').append(
+      $j('<td/>').attr('style', 'text-align: left;')
+                 .attr('colspan', tfootColspan)
+                 .text(REGRA_DIFERENCIADA_TEXT)
+    ).appendTo($tfoot)
+
+    $tableSearchDetails.append($tfoot);
+  }
+
   $tableSearchDetails.show();
 
   nomenclatura_exame = dataDetails[0].nomenclatura_exame;
 
   $tableSearchDetails.data('regras', dataDetails);
+
+
 }
 
 var nextTabIndex = 1;
@@ -841,7 +879,12 @@ function handleSearch($resultTable, dataResponse) {
     $linha.data('regra', value.regra);
 
     $j('<td />').html(value.matricula_id).addClass('center').appendTo($linha);
-    $j('<td />').html(value.aluno_id + ' - ' +safeToUpperCase(value.nome))
+
+    var descricaoAluno = `${value.aluno_id} - ${safeToUpperCase(value.nome)}`;
+    if(value.regra.id == regraDiferenciadaId){
+      descricaoAluno = `* ${descricaoAluno}`;
+    }
+    $j('<td />').html(descricaoAluno)
                 .attr('colspan', componenteCurricularSelected ? 0 : 5)
                 .appendTo($linha);
 
@@ -1611,8 +1654,13 @@ function criaBotaoReplicarNotasPorArea(componentesCurriculares){
                    .unbind();
     $j('#replicar-todas-notas-' + value).on('click', function(){
       if(confirm(safeUtf8Decode("Você deseja realmente modificar todos os conceitos desta área de conhecimento?"))){
-        $j('.area-id-' + value).val($j('.area-id-' + value).first().val())
-                                    .trigger('change');
+        var notaPadrao = $j('.area-id-' + value).first().val();
+        $j('.area-id-' + value).each(function(){
+          var regra = $j(this).closest('tr').data('regra');
+          if(regra.id != regraDiferenciadaId){
+            $j(this).val(notaPadrao).trigger('change');
+          }
+        });
       }
     });
   });
@@ -1628,8 +1676,13 @@ function criaBotaoReplicarNotas(){
                    .unbind();
     $j('#replicar-todas-notas').on('click', function(){
       if(confirm(safeUtf8Decode("Você deseja realmente modificar todos os conceitos desta área de conhecimento?"))){
-        $j('.nota-matricula-cc').val($j('.nota-matricula-cc').first().val())
-                                   .trigger('change');
+          var notaPadrao = $j('.nota-matricula-cc').first().val();
+          $j('.nota-matricula-cc').each(function(){
+            var regra = $j(this).closest('tr').data('regra');
+            if(regra.id != regraDiferenciadaId){
+              $j(this).val(notaPadrao).trigger('change');
+            }
+          });
         }
     });
   }
