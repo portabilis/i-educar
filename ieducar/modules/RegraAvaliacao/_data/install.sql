@@ -1,11 +1,11 @@
 -- //
 
 --
--- Cria as tabelas para o módulo Regra de Avaliação. Esse módulo é composto por
--- outros 4 módulos interdependentes e por isso esse delta define a criação
+-- Cria as tabelas para o mÃ³dulo Regra de AvaliaÃ§Ã£o. Esse mÃ³dulo Ã© composto por
+-- outros 4 mÃ³dulos interdependentes e por isso esse delta define a criaÃ§Ã£o
 -- das tabelas relacionadas.
 --
--- @author   Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+-- @author   Eriksen Costa PaixÃ£o <eriksen.paixao_bs@cobra.com.br>
 -- @license  @@license@@
 -- @version  $Id$
 --

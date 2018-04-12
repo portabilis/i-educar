@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author    Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   CoreExt_View
- * @since     Arquivo disponÌvel desde a vers„o 1.1.0
+ * @since     Arquivo dispon√≠vel desde a vers√£o 1.1.0
  * @version   $Id$
  */
 
@@ -33,13 +33,13 @@ require_once 'CoreExt/View/Helper/Abstract.php';
 /**
  * CoreExt_View_Helper_TableHelper class.
  *
- * Helper para a criaÁ„o de tabelas HTML atravÈs de arrays associativos.
+ * Helper para a cria√ß√£o de tabelas HTML atrav√©s de arrays associativos.
  *
- * @author    Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author    Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   CoreExt_View
- * @since     Classe disponÌvel desde a vers„o 1.1.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.1.0
  * @version   @@package_version@@
  */
 class CoreExt_View_Helper_TableHelper extends CoreExt_View_Helper_Abstract
@@ -56,7 +56,7 @@ class CoreExt_View_Helper_TableHelper extends CoreExt_View_Helper_Abstract
   }
 
   /**
-   * Retorna uma inst‚ncia singleton.
+   * Retorna uma inst√¢ncia singleton.
    * @return CoreExt_View_Helper_Abstract
    */
   public static function getInstance()
@@ -68,7 +68,7 @@ class CoreExt_View_Helper_TableHelper extends CoreExt_View_Helper_Abstract
 
   /**
    * Reseta os dados da tabela.
-   * @return CoreExt_View_Helper_TableHelper ProvÍ interface fluÌda
+   * @return CoreExt_View_Helper_TableHelper Prov√™ interface flu√≠da
    */
   public function resetTable()
   {
@@ -79,13 +79,13 @@ class CoreExt_View_Helper_TableHelper extends CoreExt_View_Helper_Abstract
   }
 
   /**
-   * Adiciona um array para um row de tabela para a tag cabeÁalho (thead). Cada
+   * Adiciona um array para um row de tabela para a tag cabe√ßalho (thead). Cada
    * valor do array precisa ser um array associativo, podendo conter os
    * seguintes atributos:
    *
-   * - data: o valor que ser· impresso na cÈlula (td) da tabela
+   * - data: o valor que ser√° impresso na c√©lula (td) da tabela
    * - colspan: valor inteiro para colspan {@link }
-   * - attributes: array associativo onde o nome do atributo È o Ìndice
+   * - attributes: array associativo onde o nome do atributo √© o √≠ndice
    *
    * <code>
    * $table = CoreExt_View_Helper_TableHelper::getInstance();
@@ -110,7 +110,7 @@ class CoreExt_View_Helper_TableHelper extends CoreExt_View_Helper_Abstract
    * </code>
    *
    * @param array $cols
-   * @return CoreExt_View_Helper_TableHelper ProvÍ interface fluÌda
+   * @return CoreExt_View_Helper_TableHelper Prov√™ interface flu√≠da
    */
   public function addHeaderRow(array $cols, array $rowAttributes = array())
   {
@@ -122,7 +122,7 @@ class CoreExt_View_Helper_TableHelper extends CoreExt_View_Helper_Abstract
    * Adiciona um array para um row de tabela para a tag corpo (tbody).
    *
    * @param $cols
-   * @return CoreExt_View_Helper_TableHelper ProvÍ interface fluÌda
+   * @return CoreExt_View_Helper_TableHelper Prov√™ interface flu√≠da
    * @see CoreExt_View_Helper_TableHelper::addHeaderRow(array $cols)
    */
   public function addBodyRow(array $cols, array $rowAttributes = array())
@@ -132,10 +132,10 @@ class CoreExt_View_Helper_TableHelper extends CoreExt_View_Helper_Abstract
   }
 
   /**
-   * Adiciona um array para um row de tabela para a tag rodapÈ (tfooter).
+   * Adiciona um array para um row de tabela para a tag rodap√© (tfooter).
    *
    * @param $cols
-   * @return CoreExt_View_Helper_TableHelper ProvÍ interface fluÌda
+   * @return CoreExt_View_Helper_TableHelper Prov√™ interface flu√≠da
    * @see CoreExt_View_Helper_TableHelper::addHeaderRow(array $cols)
    */
   public function addFooterRow(array $cols, array $rowAttributes = array())
@@ -145,7 +145,7 @@ class CoreExt_View_Helper_TableHelper extends CoreExt_View_Helper_Abstract
   }
 
   /**
-   * Cria uma tabela HTML usando os valores passados para os mÈtodos add*().
+   * Cria uma tabela HTML usando os valores passados para os m√©todos add*().
    *
    * @param array $tableAttributes
    * @return string
@@ -164,7 +164,7 @@ class CoreExt_View_Helper_TableHelper extends CoreExt_View_Helper_Abstract
   }
 
   /**
-   * Cria a seÁ„o thead de uma tabela.
+   * Cria a se√ß√£o thead de uma tabela.
    * @param bool $indent
    * @return string
    */
@@ -174,7 +174,7 @@ class CoreExt_View_Helper_TableHelper extends CoreExt_View_Helper_Abstract
   }
 
   /**
-   * Cria a seÁ„o tbody de uma tabela.
+   * Cria a se√ß√£o tbody de uma tabela.
    * @param bool $indent
    * @return string
    */
@@ -184,7 +184,7 @@ class CoreExt_View_Helper_TableHelper extends CoreExt_View_Helper_Abstract
   }
 
   /**
-   * Cria a seÁ„o tfooter de uma tabela.
+   * Cria a se√ß√£o tfooter de uma tabela.
    * @param bool $indent
    * @return string
    */
@@ -207,7 +207,7 @@ class CoreExt_View_Helper_TableHelper extends CoreExt_View_Helper_Abstract
   }
 
   /**
-   * Cria cÛdigo Html de um row de tabela.
+   * Cria c√≥digo Html de um row de tabela.
    *
    * @param string $closure
    * @param array $rows
@@ -270,7 +270,7 @@ class CoreExt_View_Helper_TableHelper extends CoreExt_View_Helper_Abstract
   }
 
   /**
-   * Implementa mÈtodo m·gico __toString().
+   * Implementa m√©todo m√°gico __toString().
    * @link
    */
   public function __toString()

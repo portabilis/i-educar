@@ -1,31 +1,31 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     Avaliacao
  * @subpackage  Modules
- * @since       Arquivo disponÌvel desde a vers„o 1.1.0
+ * @since       Arquivo dispon√≠vel desde a vers√£o 1.1.0
  * @version     $Id$
  */
 
@@ -36,20 +36,20 @@ require_once 'Avaliacao/Service/Boletim.php';
 /**
  * NotaController class.
  *
- * @author      Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     Avaliacao
  * @subpackage  Modules
- * @since       Classe disponÌvel desde a vers„o 1.1.0
+ * @since       Classe dispon√≠vel desde a vers√£o 1.1.0
  * @todo        Criar interface alternativa a Core_Controller_Page_EditController
- *   j· que nem todos os formul·rios mapearam 1:1 a inst‚ncias CoreExt_DataMapper.
+ *   j√° que nem todos os formul√°rios mapearam 1:1 a inst√¢ncias CoreExt_DataMapper.
  * @version     @@package_version@@
  */
 class NotaController extends Core_Controller_Page_EditController
 {
   protected $_dataMapper        = 'Avaliacao_Model_NotaComponenteDataMapper';
-  protected $_titulo            = 'AvaliaÁ„o do aluno | Nota';
+  protected $_titulo            = 'Avalia√ß√£o do aluno | Nota';
   protected $_processoAp        = 642;
   protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
   protected $_saveOption        = TRUE;
@@ -100,7 +100,7 @@ class NotaController extends Core_Controller_Page_EditController
    */
   protected function _preConstruct()
   {
-    // Id do usu·rio na session
+    // Id do usu√°rio na session
     $usuario = $this->getSession()->id_pessoa;
 
     $this->_options = array(
@@ -165,7 +165,7 @@ class NotaController extends Core_Controller_Page_EditController
 
     $this->campoRotulo('1nome', 'Nome', $matricula['nome']);
     $this->campoRotulo('2curso', 'Curso', $matricula['curso_nome']);
-    $this->campoRotulo('3serie', 'SÈrie', $matricula['serie_nome']);
+    $this->campoRotulo('3serie', 'S√©rie', $matricula['serie_nome']);
     $this->campoRotulo('4turma', 'Turma', $matricula['turma_nome']);
     $this->campoRotulo('5etapa', 'Etapa', $this->_etapa == 'Rc' ? 'Exame' : $this->_etapa);
 
@@ -234,10 +234,10 @@ class NotaController extends Core_Controller_Page_EditController
       $this->_service->save();
     }
     catch (CoreExt_Service_Exception $e) {
-      // Ok. N„o pode promover por se tratar de progress„o manual ou por estar em andamento
+      // Ok. N√£o pode promover por se tratar de progress√£o manual ou por estar em andamento
     }
     catch (Exception $e) {
-      $this->mensagem = 'Erro no preenchimento do formul·rio. ';
+      $this->mensagem = 'Erro no preenchimento do formul√°rio. ';
       return FALSE;
     }
 

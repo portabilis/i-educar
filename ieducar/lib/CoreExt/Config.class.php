@@ -1,31 +1,31 @@
 <?php
 
 /*
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  */
 
 /**
  * CoreExt_Config class.
  *
  * Transforma um array comum em um objeto CoreExt_Config, permitindo que esse
- * array seja acessado com o operador ->, assim como vari·veis de inst‚ncia.
+ * array seja acessado com o operador ->, assim como vari√°veis de inst√¢ncia.
  * Dessa forma, um array como:
  *
  * <code>
@@ -49,14 +49,14 @@
  * print $config->app->database->dbname;
  * </code>
  *
- * Essa classe foi fortemente baseada na classe Zend_Config do Zend Framework sÛ
+ * Essa classe foi fortemente baseada na classe Zend_Config do Zend Framework s√≥
  * que implementa menos funcionalidades.
  *
- * @author      Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
  * @package     CoreExt
  * @subpackage  Config
- * @since       Classe disponÌvel desde a vers„o 1.1.0
+ * @since       Classe dispon√≠vel desde a vers√£o 1.1.0
  * @version     $Id$
  */
 class CoreExt_Config implements Countable, Iterator
@@ -69,19 +69,19 @@ class CoreExt_Config implements Countable, Iterator
   protected $config;
 
   /**
-   * Array com mensagens de erro causadas por funÁıes PHP.
+   * Array com mensagens de erro causadas por fun√ß√µes PHP.
    * @var array
    */
   protected $errors = array();
 
   /**
-   * Õndice interno do array para a implementaÁ„o da interface Iterator.
+   * √çndice interno do array para a implementa√ß√£o da interface Iterator.
    * @var int
    */
   private $_index = 0;
 
   /**
-   * Quantidade de items do array de sobrecarga $config para a implementaÁ„o da interface Countable.
+   * Quantidade de items do array de sobrecarga $config para a implementa√ß√£o da interface Countable.
    * @var int
    */
   private $_count = 0;
@@ -89,7 +89,7 @@ class CoreExt_Config implements Countable, Iterator
   /**
    * Construtor da classe.
    *
-   * @param  $array  Array associativo com as diretivas de configuraÁ„o.
+   * @param  $array  Array associativo com as diretivas de configura√ß√£o.
    */
   public function __construct($array)
   {
@@ -108,21 +108,21 @@ class CoreExt_Config implements Countable, Iterator
   /**
    * Retorna o valor do array de sobrecarga $config.
    *
-   * Este mÈtodo deve ser usado toda vez que a vari·vel de configuraÁ„o puder
-   * ser sobrescrita por um storage de configuraÁ„o externa ao cÛdigo, como o
-   * arquivo ini. Um exemplo seria para a criaÁ„o de um arquivo on the fly no
-   * filesystem. No cÛdigo pode ser assumido que o local padr„o ser·
-   * intranet/tmp mas, se esse valor puder ser sobrescrito pelo ini, esse mÈtodo
-   * dever· ser utilizado:
+   * Este m√©todo deve ser usado toda vez que a vari√°vel de configura√ß√£o puder
+   * ser sobrescrita por um storage de configura√ß√£o externa ao c√≥digo, como o
+   * arquivo ini. Um exemplo seria para a cria√ß√£o de um arquivo on the fly no
+   * filesystem. No c√≥digo pode ser assumido que o local padr√£o ser√°
+   * intranet/tmp mas, se esse valor puder ser sobrescrito pelo ini, esse m√©todo
+   * dever√° ser utilizado:
    * <code>
    * $dir = $config->get($config->app->filesystem->tmp_dir, 'intranet/tmp');
    * </code>
    *
-   * Se a vari·vel de configuraÁ„o n„o for sobrescrita por um arquivo ini ou
-   * array de configuraÁ„o, o valor padr„o (segundo par‚metro) ser· utilizado.
+   * Se a vari√°vel de configura√ß√£o n√£o for sobrescrita por um arquivo ini ou
+   * array de configura√ß√£o, o valor padr√£o (segundo par√¢metro) ser√° utilizado.
    *
-   * @param   mixed  $value1  Valor retornado pelo array de configuraÁ„o sobrecarregado
-   * @param   mixed  $value2  Valor padr„o caso n„o exista uma configuraÁ„o sobrecarregada
+   * @param   mixed  $value1  Valor retornado pelo array de configura√ß√£o sobrecarregado
+   * @param   mixed  $value2  Valor padr√£o caso n√£o exista uma configura√ß√£o sobrecarregada
    * @return  mixed
    */
   public function get($value1, $value2 = NULL)
@@ -132,17 +132,17 @@ class CoreExt_Config implements Countable, Iterator
     }
 
     if (NULL == $value2) {
-      throw new Exception('O segundo par‚metro deve conter algum valor n„o nulo.');
+      throw new Exception('O segundo par√¢metro deve conter algum valor n√£o nulo.');
     }
 
     return $value2;
   }
 
   /**
-   * Retorna o valor armazenado pelo Ìndice no array de sobrecarga $config.
+   * Retorna o valor armazenado pelo √≠ndice no array de sobrecarga $config.
    *
-   * @param   $key    Õndice (nome) da vari·vel criada por sobrecarga
-   * @param   $value  Valor padr„o caso o Ìndice n„o exista
+   * @param   $key    √çndice (nome) da vari√°vel criada por sobrecarga
+   * @param   $value  Valor padr√£o caso o √≠ndice n√£o exista
    * @return  mixed   O valor armazenado em
    */
   private function getFrom($key, $value = NULL)
@@ -155,7 +155,7 @@ class CoreExt_Config implements Countable, Iterator
   }
 
   /**
-   * ImplementaÁ„o do mÈtodo m·gico __get().
+   * Implementa√ß√£o do m√©todo m√°gico __get().
    *
    * @param $key
    * @return unknown_type
@@ -165,7 +165,7 @@ class CoreExt_Config implements Countable, Iterator
   }
 
   /**
-   * Retorna o conte˙do do array de sobrecarga em um array associativo simples.
+   * Retorna o conte√∫do do array de sobrecarga em um array associativo simples.
    * @return  array
    */
   public function toArray()
@@ -178,14 +178,14 @@ class CoreExt_Config implements Countable, Iterator
   }
 
   /**
-   * ImplementaÁ„o do mÈtodo count() da interface Countable.
+   * Implementa√ß√£o do m√©todo count() da interface Countable.
    */
   public function count() {
     return $this->_count;
   }
 
   /**
-   * ImplementaÁ„o do mÈtodo next() da interface Iterator.
+   * Implementa√ß√£o do m√©todo next() da interface Iterator.
    */
   public function next() {
     next($this->config);
@@ -193,7 +193,7 @@ class CoreExt_Config implements Countable, Iterator
   }
 
   /**
-   * ImplementaÁ„o do mÈtodo next() da interface Iterator.
+   * Implementa√ß√£o do m√©todo next() da interface Iterator.
    */
   public function rewind() {
     reset($this->config);
@@ -201,21 +201,21 @@ class CoreExt_Config implements Countable, Iterator
   }
 
   /**
-   * ImplementaÁ„o do mÈtodo current() da interface Iterator.
+   * Implementa√ß√£o do m√©todo current() da interface Iterator.
    */
   public function current() {
     return current($this->config);
   }
 
   /**
-   * ImplementaÁ„o do mÈtodo key() da interface Iterator.
+   * Implementa√ß√£o do m√©todo key() da interface Iterator.
    */
   public function key() {
     return key($this->config);
   }
 
   /**
-   * ImplementaÁ„o do mÈtodo valid() da interface Iterator.
+   * Implementa√ß√£o do m√©todo valid() da interface Iterator.
    */
   public function valid() {
     return $this->_index < $this->_count && $this->_index > -1;
@@ -224,13 +224,13 @@ class CoreExt_Config implements Countable, Iterator
   /**
    * Merge recursivo mantendo chaves distintas.
    *
-   * Realiza um merge recursivo entre dois arrays. … semelhante a funÁ„o PHP
+   * Realiza um merge recursivo entre dois arrays. √â semelhante a fun√ß√£o PHP
    * {@link http://php.net/array_merge_recursive array_merge_recursive} exceto
-   * pelo fato de que esta mantÈm apenas um valor de uma chave do array ao invÈs
-   * de criar m˙ltiplos valores para a mesma chave como na funÁ„o original.
+   * pelo fato de que esta mant√©m apenas um valor de uma chave do array ao inv√©s
+   * de criar m√∫ltiplos valores para a mesma chave como na fun√ß√£o original.
    *
    * @author  Daniel Smedegaard Buus <daniel@danielsmedegaardbuus.dk>
-   * @link    http://www.php.net/manual/pt_BR/function.array-merge-recursive.php#89684  CÛdigo fonte original
+   * @link    http://www.php.net/manual/pt_BR/function.array-merge-recursive.php#89684  C√≥digo fonte original
    * @param   array  $arr1
    * @param   array  $arr2
    * @return  array
@@ -255,10 +255,10 @@ class CoreExt_Config implements Countable, Iterator
   }
 
   /**
-   * MÈtodo callback para a funÁ„o set_error_handler().
+   * M√©todo callback para a fun√ß√£o set_error_handler().
    *
-   * Handler para os erros internos da classe. Dessa forma, È possÌvel usar
-   * os blocos try/catch para lanÁar exceÁıes.
+   * Handler para os erros internos da classe. Dessa forma, √© poss√≠vel usar
+   * os blocos try/catch para lan√ßar exce√ß√µes.
    *
    * @see  http://php.net/set_error_handler
    * @param  $errno

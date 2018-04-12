@@ -1,10 +1,10 @@
 -- //
 
 --
--- Remove campos da tabela pmieducar.curso que ficar„o em desuso apÛs integraÁ„o 
--- com mÛdulo Regra AvaliaÁ„o.
+-- Remove campos da tabela pmieducar.curso que ficar√£o em desuso ap√≥s integra√ß√£o 
+-- com m√≥dulo Regra Avalia√ß√£o.
 --
--- @author   Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+-- @author   Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
 -- @license  @@license@@
 -- @version  $Id$
 --

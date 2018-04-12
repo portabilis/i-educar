@@ -1,26 +1,26 @@
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de ItajaÌ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja√≠ <ctima@itajai.sc.gov.br>
  * @license   @@license@@
- * @since     Arquivo disponÌvel desde a vers„o 1.0.0
+ * @since     Arquivo dispon√≠vel desde a vers√£o 1.0.0
  * @version   $Id$
  */
 
@@ -33,7 +33,7 @@ function openfoto(foto, altura, largura)
 }
 
 /**
- * @TODO Remover funÁ„o, chamadas no i-Educar comentadas (cÛdigo nunca invocado).
+ * @TODO Remover fun√ß√£o, chamadas no i-Educar comentadas (c√≥digo nunca invocado).
  *   Ver: $ egrep -rn 'setFocus[ ]{0,3}\(' intranet/
  */
 function setFocus(campo)
@@ -57,8 +57,8 @@ function setFocus(campo)
 }
 
 /**
- * @TODO Remover funÁ„o, chamadas no i-Educar comentadas (cÛdigo nunca invocado).
- *   Remover tambÈm o cÛdigo legado que o referencia, funcionalidades in˙teis.
+ * @TODO Remover fun√ß√£o, chamadas no i-Educar comentadas (c√≥digo nunca invocado).
+ *   Remover tamb√©m o c√≥digo legado que o referencia, funcionalidades in√∫teis.
  *   Ver: $ egrep -rn 'openurl[ ]{0,3}\(' intranet/
  */
 function openurl(url)
@@ -67,8 +67,8 @@ function openurl(url)
 }
 
 /**
- * @TODO Remover funÁ„o, chamadas no i-Educar s„o em cÛdigo legado em
- *   funcionalidades in˙teis.
+ * @TODO Remover fun√ß√£o, chamadas no i-Educar s√£o em c√≥digo legado em
+ *   funcionalidades in√∫teis.
  *   Ver: $ egrep -rn 'retorna[ ]{0,3}\(' intranet/
  */
 function retorna(form, campo, valor)
@@ -85,8 +85,8 @@ function retorna(form, campo, valor)
 }
 
 /**
- * @TODO Remover funÁ„o, chamadas no i-Educar s„o em cÛdigo legado em
- *   funcionalidades in˙teis.
+ * @TODO Remover fun√ß√£o, chamadas no i-Educar s√£o em c√≥digo legado em
+ *   funcionalidades in√∫teis.
  *   Ver: $ egrep -rn 'insereSubmit[ ]{0,3}\(' intranet/
  */
 function insereSubmit()
@@ -104,7 +104,7 @@ function insereSubmitLista()
 }
 
 /**
- * @TODO Remover funÁ„o apÛs remover todos os arquivos legados n„o utilizados
+ * @TODO Remover fun√ß√£o ap√≥s remover todos os arquivos legados n√£o utilizados
  *   presentes no i-Educar. Ver: $ egrep -rn 'excluirSumit[ ]{0,3}\(' intranet/
  */
 function excluirSumit(id, nome_campo)
@@ -122,10 +122,10 @@ function excluirSumit(id, nome_campo)
 }
 
 
-// Scripts origin·rios de clsCampos.inc.php
+// Scripts origin√°rios de clsCampos.inc.php
 
 /**
- * @TODO Remover funÁ„o apÛs remover trechos de cÛdigo para campos 'latitude'
+ * @TODO Remover fun√ß√£o ap√≥s remover trechos de c√≥digo para campos 'latitude'
  *   e 'longitude' de clsCampos.inc.php.
  *   Ver: $ egrep -rn 'colocamenos[ ]{0,3}\(' intranet/
  */
@@ -550,8 +550,8 @@ function formataCNPJ(campo, e)
 }
 
 /**
- * @TODO Remover funÁ„o apÛs remover trechos de cÛdigo para campos 'fone' de
- *   clsCampos.inc.php. N„o existem chamadas para campoFone().
+ * @TODO Remover fun√ß√£o ap√≥s remover trechos de c√≥digo para campos 'fone' de
+ *   clsCampos.inc.php. N√£o existem chamadas para campoFone().
  *   Ver: $ egrep -rn 'formataFone[ ]{0,3}\(' intranet/
  */
  function formataFoneNew(campo, e)
@@ -617,9 +617,9 @@ function formataFone(campo, e)
 }
 
 /**
- * @TODO Remover funÁ„o. Aparentemente nunca È chamada, a ˙nica p·gina que chama
- *   clsCampos::campoTextoPesquisa() (intranet/funcionario_cad.php) n„o entra
- *   no trecho de cÛdigo que gera o output HTML para esta funÁ„o.
+ * @TODO Remover fun√ß√£o. Aparentemente nunca √© chamada, a √∫nica p√°gina que chama
+ *   clsCampos::campoTextoPesquisa() (intranet/funcionario_cad.php) n√£o entra
+ *   no trecho de c√≥digo que gera o output HTML para esta fun√ß√£o.
  */
 function pesquisa_valores_f(caminho, campo, flag, pag_cadastro)
 {
@@ -643,8 +643,8 @@ function pesquisa_valores_popless(caminho, campo)
 }
 
 /**
- * @TODO Remover funÁ„o apÛs remover trechos de cÛdigo para campos
- *   'listaativarpeso<select>' de clsCampos.inc.php. N„o existem chamadas para
+ * @TODO Remover fun√ß√£o ap√≥s remover trechos de c√≥digo para campos
+ *   'listaativarpeso<select>' de clsCampos.inc.php. N√£o existem chamadas para
  *   campoFoneListaAtivarPeso<Select>().
  *   Ver: $ egrep -rn 'formataFone[ ]{0,3}\(' intranet/
  */
@@ -875,7 +875,7 @@ function cv_libera_campos(campo1, campo2, campo3, campo4, campo5, campo6, campo7
     parent.afterUnsetSearchFields(self);
 }
 
-// FunÁ„o a ser executada antes de fechar a janela.
+// Fun√ß√£o a ser executada antes de fechar a janela.
 var exec = null;
 
 function set_campo_pesquisa()
@@ -954,7 +954,7 @@ function set_campo_pesquisa()
   }
 }
 
-// Retorna 0 caso n„o tenha propriedades
+// Retorna 0 caso n√£o tenha propriedades
 function hasProperties(obj)
 {
   prop = '';

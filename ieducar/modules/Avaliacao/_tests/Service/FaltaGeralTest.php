@@ -1,31 +1,31 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     Avaliacao
  * @subpackage  UnitTests
- * @since       Arquivo disponÌvel desde a vers„o 1.1.0
+ * @since       Arquivo dispon√≠vel desde a vers√£o 1.1.0
  * @version     $Id$
  */
 
@@ -34,12 +34,12 @@ require_once 'Avaliacao/_tests/Service/FaltaCommon.php';
 /**
  * Avaliacao_Service_FaltaGeralTest class.
  *
- * @author      Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     Avaliacao
  * @subpackage  UnitTests
- * @since       Classe disponÌvel desde a vers„o 1.1.0
+ * @since       Classe dispon√≠vel desde a vers√£o 1.1.0
  * @version     @@package_version@@
  */
 class Avaliacao_Service_FaltaGeralTest extends Avaliacao_Service_FaltaCommon
@@ -73,9 +73,9 @@ class Avaliacao_Service_FaltaGeralTest extends Avaliacao_Service_FaltaCommon
     $this->assertType('CoreExt_Validate_Choice', $validators['etapa']);
     $this->assertFalse(isset($validators['componenteCurricular']));
 
-    // OpÁıes dos validadores
+    // Op√ß√µes dos validadores
 
-    // Etapas possÌveis para o lanÁamento de nota
+    // Etapas poss√≠veis para o lan√ßamento de nota
     $this->assertEquals(
       array_merge(range(1, count($this->_getConfigOptions('anoLetivoModulo'))), array('Rc')),
       $validators['etapa']->getOption('choices')
@@ -146,7 +146,7 @@ class Avaliacao_Service_FaltaGeralTest extends Avaliacao_Service_FaltaCommon
 
   /**
    * Testa o service adicionando novas faltas para um componente curricular,
-   * que inclusive j· tem a falta lanÁada para a segunda etapa.
+   * que inclusive j√° tem a falta lan√ßada para a segunda etapa.
    */
   public function testSalvasFaltasNoBoletimComEtapasLancadas()
   {
@@ -212,7 +212,7 @@ class Avaliacao_Service_FaltaGeralTest extends Avaliacao_Service_FaltaCommon
         'quantidade' => 7,
         'etapa'      => 2
       )),
-      // Etapa omitida, ser· atribuÌda a etapa '3'
+      // Etapa omitida, ser√° atribu√≠da a etapa '3'
       new Avaliacao_Model_FaltaGeral(array(
         'quantidade' => 9
       ))
@@ -262,7 +262,7 @@ class Avaliacao_Service_FaltaGeralTest extends Avaliacao_Service_FaltaCommon
     $falta = array_shift($faltas);
     $this->assertEquals(2, $falta->etapa);
 
-    // Etapa atribuÌda automaticamente
+    // Etapa atribu√≠da automaticamente
     $falta = array_shift($faltas);
     $this->assertEquals(3, $falta->etapa);
   }
