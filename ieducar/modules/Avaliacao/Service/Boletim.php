@@ -981,11 +981,11 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   protected function _setMatriculaInfo()
   {
     $codMatricula = $this->getOption('matricula');
-    $etapaAtual = $_GET['etapa'] == 'Rc' ? $etapas : $_GET['etapa'];
 
     $matricula = App_Model_IedFinder::getMatricula($codMatricula);
 
     $etapas = App_Model_IedFinder::getQuantidadeDeModulosMatricula($codMatricula, $matricula);
+    $etapaAtual = $_GET['etapa'] == 'Rc' ? $etapas : $_GET['etapa'];
 
     $this->_setRegra(App_Model_IedFinder::getRegraAvaliacaoPorMatricula(
             $codMatricula, $this->getRegraDataMapper(), $matricula
@@ -1001,6 +1001,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $this->setOption('serieDiasLetivos',  $matricula['serie_dias_letivos']);
     $this->setOption('ref_cod_turma',     $matricula['ref_cod_turma']);
     $this->setOption('etapas',            $etapas);
+    $this->setOption('etapaAtual',            $etapaAtual);
 
     return $this;
   }
@@ -2966,6 +2967,20 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     return $this;
   }
 
+  protected function reloadComponentes(){
+    $this->_setComponentes(
+        App_Model_IedFinder::getComponentesPorMatricula(
+            $this->getOption('matricula'),
+            $this->getComponenteDataMapper(),
+            $this->getComponenteTurmaDataMapper(),
+            null,
+            $this->getOption('etapaAtual'),
+            null,
+            $this->getOption('matriculaData')
+        )
+    );
+  }
+
   /**
    * Promove o aluno de etapa escolar caso esteja aprovado de acordo com o
    * necessário estabelecido por tipoProgressao de
@@ -2978,6 +2993,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
   public function promover($novaSituacaoMatricula = NULL)
   {
+    // Essa função é necessária para promoção pois precisamos considerar a
+    // situação de todas as disciplinas e não só da que está sendo lançada
+    $this->reloadComponentes();
     $tipoProgressao = $this->getRegra()->get('tipoProgressao');
     $situacaoMatricula = $this->getOption('aprovado');
     $situacaoBoletim = $this->getSituacaoAluno();
