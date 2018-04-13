@@ -645,7 +645,7 @@ class clsBase extends clsConfig
 
             $saida .= "
                 <script type=\"text/javascript\">
-                    var titleFlow = \"Encerramento e início do ano letivo\";
+                    var titleFlow = \"Pesquisa de satisfação\";
                     function openConpassFlow() {
                         Conpass.startFlow(titleFlow, { show: true });
                     }
