@@ -642,8 +642,16 @@ class clsBase extends clsConfig
         if ($showOnboarding) {
             $saida .= "<script src='https://fast.conpass.io/H1gWceptS_G.js'></script>";
 
+
             $saida .= "
                 <script type=\"text/javascript\">
+                    var titleFlow = \"Encerramento e início do ano letivo\";
+                    function openConpassFlow() {
+                        Conpass.startFlow(titleFlow, { show: true });
+                    }
+                    window.onload = function(e) {
+                        Conpass.startFlow(titleFlow);
+                    }
                         Conpass.init({ name: \"{$nomePessoa}\", email: \"{$email}\" });
                 </script>
             ";
