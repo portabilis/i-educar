@@ -210,14 +210,10 @@ class Portabilis_Array_Utils {
   }
 
   public static function arrayColumn($array, $column) {
-    $newArray = array();
 
-    foreach ($array as $item) {
-      if (array_key_exists($column, $item)) {
-        $newArray[] = $item[$column];
-      }
-    }
+    return array_map(function($val) use ($column) {
+      return $val[$column];
+    },$array);
 
-    return $newArray;
   }
 }
