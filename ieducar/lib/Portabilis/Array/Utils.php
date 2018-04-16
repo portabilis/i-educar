@@ -208,4 +208,16 @@ class Portabilis_Array_Utils {
 
     return $array;
   }
+
+  public static function arrayColumn($array, $column) {
+    $newArray = array();
+
+    foreach ($array as $item) {
+      if (array_key_exists($column, $item)) {
+        $newArray[] = $item[$column];
+      }
+    }
+
+    return $newArray;
+  }
 }
