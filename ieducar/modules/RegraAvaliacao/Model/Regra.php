@@ -74,7 +74,8 @@ class RegraAvaliacao_Model_Regra extends CoreExt_Entity
     'qtdDisciplinasDependencia'      => NULL,
     'qtdMatriculasDependencia'       => NULL,
     'aprovaMediaDisciplina'          => NULL,
-    'reprovacaoAutomatica'           => NULL
+    'reprovacaoAutomatica'           => NULL,
+    'regraDiferenciada'              => NULL,
   );
 
   protected $_dataTypes = array(
@@ -141,6 +142,12 @@ class RegraAvaliacao_Model_Regra extends CoreExt_Entity
       'class' => 'RegraAvaliacao_Model_TipoRecuperacaoParalela',
       'file'  => 'RegraAvaliacao/Model/TipoRecuperacaoParalela.php',
       'null'  => TRUE
+    ),
+    'regraDiferenciada' => array(
+      'value' => NULL,
+      'class' => 'RegraAvaliacao_Model_RegraDataMapper',
+      'file'  => 'RegraAvaliacao/Model/RegraDataMapper.php',
+      'null'  => TRUE
     )
   );
 
@@ -182,6 +189,11 @@ class RegraAvaliacao_Model_Regra extends CoreExt_Entity
     $formulaRecuperacao = CoreExt_Entity::entityFilterAttr($formulaRecuperacao, 'id');
     $formulaRecuperacao[0] = NULL;
 
+    // ids de regras diferenciadas
+    $regraDiferenciada = $this->getDataMapper()->findAll();
+    $regraDiferenciada = CoreExt_Entity::entityFilterAttr($regraDiferenciada, 'id');
+    $regraDiferenciada[0] = NULL;
+
     // ids de tabelas de arredondamento
     $tabelas = $this->getDataMapper()->findTabelaArredondamento($this);
     $tabelas = CoreExt_Entity::entityFilterAttr($tabelas, 'id');
@@ -216,6 +228,10 @@ class RegraAvaliacao_Model_Regra extends CoreExt_Entity
       )),
       'formulaRecuperacao' => new CoreExt_Validate_Choice(array(
         'choices' => $formulaRecuperacao,
+        'required' => FALSE
+      )),
+      'regraDiferenciada' => new CoreExt_Validate_Choice(array(
+        'choices' => $regraDiferenciada,
         'required' => FALSE
       )),
       'tipoNota' => new CoreExt_Validate_Choice(array(
