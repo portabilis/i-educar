@@ -1,34 +1,4 @@
 <?php
-// error_reporting(E_ERROR);
-// ini_set("display_errors", 1);
-/**
- * i-Educar - Sistema de gestão escolar
- *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
- *     <ctima@itajai.sc.gov.br>
- *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
- *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
- * do GNU para mais detalhes.
- *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
- *
- * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   Api
- * @subpackage  Modules
- * @since   Arquivo disponível desde a versão ?
- * @version   $Id$
- */
 
 require_once 'Portabilis/Controller/ApiCoreController.php';
 require_once 'Avaliacao/Service/Boletim.php';
@@ -46,69 +16,75 @@ require_once 'Portabilis/String/Utils.php';
 
 class DiarioController extends ApiCoreController
 {
-  protected $_processoAp        = 642;
+    protected $_processoAp = 642;
 
-  protected function getRegra($turmaId) {
-    return App_Model_IedFinder::getRegraAvaliacaoPorTurma($turmaId);
-  }
-
-  protected function getComponentesPorMatricula($matriculaId) {
-    return App_Model_IedFinder::getComponentesPorMatricula($matriculaId);
-  }
-
-  protected function getComponentesPorTurma($turmaId) {
-    $objTurma = new clsPmieducarTurma($turmaId);
-    $detTurma = $objTurma->detalhe();
-    $escolaId = $detTurma["ref_ref_cod_escola"];
-    $serieId = $detTurma["ref_ref_cod_serie"];
-    return App_Model_IedFinder::getComponentesTurma($serieId, $escolaId, $turmaId);
-  }
-
-  protected function validateComponenteCurricular($matriculaId, $componenteCurricularId){
-
-    $componentes = $this->getComponentesPorMatricula($matriculaId);
-    $componentes = CoreExt_Entity::entityFilterAttr($componentes, 'id', 'id');
-    $valid = in_array($componenteCurricularId, $componentes);
-    if(!$valid){
-      throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("Componente curricular de código $componenteCurricularId não existe para essa turma/matrícula."));
+    protected function getRegra($matriculaId)
+    {
+        return App_Model_IedFinder::getRegraAvaliacaoPorMatricula($matriculaId);
     }
-    return $valid;
-  }
 
-  protected function validateComponenteTurma($turmaId, $componenteCurricularId){
-
-    $componentesTurma = $this->getComponentesPorTurma($turmaId);
-    $componentesTurma = CoreExt_Entity::entityFilterAttr($componentesTurma, 'id', 'id');
-    $valid = in_array($componenteCurricularId, $componentesTurma);
-    if(!$valid){
-      throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("Componente curricular de código $componenteCurricularId não existe para a turma $turmaId ."));
+    protected function getComponentesPorMatricula($matriculaId)
+    {
+        return App_Model_IedFinder::getComponentesPorMatricula($matriculaId);
     }
-    return $valid;
-  }
 
-  protected function trySaveServiceBoletim($turmaId, $alunoId) {
-    try {
-      $this->serviceBoletim($turmaId, $alunoId)->save();
+    protected function getComponentesPorTurma($turmaId)
+    {
+        $objTurma = new clsPmieducarTurma($turmaId);
+        $detTurma = $objTurma->detalhe();
+        $escolaId = $detTurma["ref_ref_cod_escola"];
+        $serieId = $detTurma["ref_ref_cod_serie"];
+        return App_Model_IedFinder::getComponentesTurma($serieId, $escolaId, $turmaId);
     }
-    catch (CoreExt_Service_Exception $e) {
-      // excecoes ignoradas :( pois servico lanca excecoes de alertas, que não são exatamente erros.
-      // error_log('CoreExt_Service_Exception ignorada: ' . $e->getMessage());
-    }
-  }
 
-  protected function trySaveServiceBoletimFaltas($turmaId, $alunoId) {
-    try {
-      $this->serviceBoletim($turmaId, $alunoId)->saveFaltas();
-      $this->serviceBoletim($turmaId, $alunoId)->promover();
-    }
-    catch (CoreExt_Service_Exception $e) {
-    }
-  }
+    protected function validateComponenteCurricular($matriculaId, $componenteCurricularId)
+    {
 
-  protected function findMatriculaByTurmaAndAluno($turmaId, $alunoId){
-    $resultado = array();
+        $componentes = $this->getComponentesPorMatricula($matriculaId);
+        $componentes = CoreExt_Entity::entityFilterAttr($componentes, 'id', 'id');
+        $valid = in_array($componenteCurricularId, $componentes);
+        if (!$valid) {
+            throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("Componente curricular de código $componenteCurricularId não existe para essa turma/matrícula."));
+        }
+        return $valid;
+    }
 
-    $sql = 'SELECT m.cod_matricula AS id
+    protected function validateComponenteTurma($turmaId, $componenteCurricularId)
+    {
+
+        $componentesTurma = $this->getComponentesPorTurma($turmaId);
+        $componentesTurma = CoreExt_Entity::entityFilterAttr($componentesTurma, 'id', 'id');
+        $valid = in_array($componenteCurricularId, $componentesTurma);
+        if (!$valid) {
+            throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("Componente curricular de código $componenteCurricularId não existe para a turma $turmaId ."));
+        }
+        return $valid;
+    }
+
+    protected function trySaveServiceBoletim($turmaId, $alunoId)
+    {
+        try {
+            $this->serviceBoletim($turmaId, $alunoId)->save();
+        } catch (CoreExt_Service_Exception $e) {
+            // excecoes ignoradas :( pois servico lanca excecoes de alertas, que não são exatamente erros.
+            // error_log('CoreExt_Service_Exception ignorada: ' . $e->getMessage());
+        }
+    }
+
+    protected function trySaveServiceBoletimFaltas($turmaId, $alunoId)
+    {
+        try {
+            $this->serviceBoletim($turmaId, $alunoId)->saveFaltas();
+            $this->serviceBoletim($turmaId, $alunoId)->promover();
+        } catch (CoreExt_Service_Exception $e) {
+        }
+    }
+
+    protected function findMatriculaByTurmaAndAluno($turmaId, $alunoId)
+    {
+        $resultado = array();
+
+        $sql = 'SELECT m.cod_matricula AS id
               FROM pmieducar.matricula m
               INNER JOIN pmieducar.matricula_turma mt ON m.cod_matricula = mt.ref_cod_matricula
               WHERE m.ativo = 1
@@ -119,445 +95,485 @@ class DiarioController extends ApiCoreController
             ORDER BY m.aprovado
               LIMIT 1';
 
-    $matriculaId = $this->fetchPreparedQuery($sql, array($turmaId, $alunoId), true, 'first-field');
+        $matriculaId = $this->fetchPreparedQuery($sql, array($turmaId, $alunoId), true, 'first-field');
 
-    return $matriculaId;
-  }
-
-  protected function serviceBoletim($turmaId, $alunoId) {
-    $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
-    if($matriculaId){
-
-      if (! isset($this->_boletimServiceInstances))
-        $this->_boletimServiceInstances = array();
-
-      // set service
-      if (! isset($this->_boletimServiceInstances[$matriculaId])) {
-        try {
-          $params = array('matricula' => $matriculaId);
-          $this->_boletimServiceInstances[$matriculaId] = new Avaliacao_Service_Boletim($params);
-        }
-        catch (Exception $e){
-          $this->messenger->append(Portabilis_String_Utils::toLatin1("Erro ao instanciar serviço boletim para matricula {$matriculaId}: ") . $e->getMessage(), 'error', true);
-        }
-      }
-
-      // validates service
-      if (is_null($this->_boletimServiceInstances[$matriculaId]))
-        throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("Não foi possivel instanciar o serviço boletim para a matrícula $matriculaId."));
-
-      return $this->_boletimServiceInstances[$matriculaId];
-    }else{
-      return false;
+        return $matriculaId;
     }
-  }
 
-  protected function canPostNotas(){
-    return $this->validatesPresenceOf('notas') && $this->validatesPresenceOf('etapa');
-  }
+    protected function serviceBoletim($turmaId, $alunoId)
+    {
+        $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
+        if ($matriculaId) {
 
-  protected function canPostFaltasPorComponente(){
-    return $this->validatesPresenceOf('faltas') && $this->validatesPresenceOf('etapa');
-  }
+            if (!isset($this->_boletimServiceInstances)) {
+                $this->_boletimServiceInstances = array();
+            }
 
-  protected function canPostFaltasGeral(){
-    return $this->validatesPresenceOf('faltas') && $this->validatesPresenceOf('etapa');
-  }
-
-  protected function canPostPareceresPorEtapaComponente(){
-    return $this->validatesPresenceOf('pareceres') && $this->validatesPresenceOf('etapa');
-  }
-
-  protected function canPostPareceresAnualPorComponente(){
-    return $this->validatesPresenceOf('pareceres');
-  }
-
-  protected function canPostPareceresAnualGeral(){
-    return $this->validatesPresenceOf('pareceres');
-  }
-
-  protected function canPostPareceresPorEtapaGeral(){
-    return $this->validatesPresenceOf('pareceres') && $this->validatesPresenceOf('etapa');
-  }
-
-  protected function postNotas(){
-    if($this->canPostNotas()){
-      $etapa = $this->getRequest()->etapa;
-      $notas = $this->getRequest()->notas;
-
-      foreach ($notas as $turmaId => $notaTurma) {
-
-        foreach($notaTurma as $alunoId => $notaTurmaAluno){
-
-          $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
-        
-          if (!empty($matriculaId)){
-            foreach ($notaTurmaAluno as $componenteCurricularId => $notaTurmaAlunoDisciplina){
-              if($this->validateComponenteTurma($turmaId, $componenteCurricularId)){
-                $valor = $notaTurmaAlunoDisciplina['nota'];
-                $notaRecuperacao = $notaTurmaAlunoDisciplina['recuperacao'];
-                $nomeCampoRecuperacao = $this->defineCampoTipoRecuperacao($turmaId);
-                $valor = $this->truncate($valor, 4);
-
-                $recuperacaoEspecifica = $nomeCampoRecuperacao == 'notaRecuperacaoEspecifica';
-
-                $notaAposRecuperacao = (($notaRecuperacao > $valor) ? $notaRecuperacao : $valor);
-
-                $valorNota = $recuperacaoEspecifica ? $valor : $notaAposRecuperacao;
-
-                $array_nota = array(
-                      'componenteCurricular' => $componenteCurricularId,
-                      'nota'                 => $valorNota,
-                      'etapa'                => $etapa,
-                      'notaOriginal'         => $valor);
-
-                if(!empty($nomeCampoRecuperacao)){
-                  $array_nota[$nomeCampoRecuperacao] = $notaRecuperacao;
+            // set service
+            if (!isset($this->_boletimServiceInstances[$matriculaId])) {
+                try {
+                    $params = array('matricula' => $matriculaId);
+                    $this->_boletimServiceInstances[$matriculaId] = new Avaliacao_Service_Boletim($params);
+                } catch (Exception $e) {
+                    $this->messenger->append(Portabilis_String_Utils::toLatin1("Erro ao instanciar serviço boletim para matricula {$matriculaId}: ") . $e->getMessage(), 'error', true);
                 }
+            }
 
-                $nota = new Avaliacao_Model_NotaComponente($array_nota);
+            // validates service
+            if (is_null($this->_boletimServiceInstances[$matriculaId])) {
+                throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("Não foi possivel instanciar o serviço boletim para a matrícula $matriculaId."));
+            }
 
-                if($this->serviceBoletim($turmaId, $alunoId)){
-                  $this->serviceBoletim($turmaId, $alunoId)->addNota($nota);
-                  $this->trySaveServiceBoletim($turmaId, $alunoId);
+            return $this->_boletimServiceInstances[$matriculaId];
+        } else {
+            return false;
+        }
+    }
 
-                  $this->atualizaNotaNecessariaExame($turmaId, $alunoId, $componenteCurricularId);
+    protected function canPostNotas()
+    {
+        return $this->validatesPresenceOf('notas') && $this->validatesPresenceOf('etapa');
+    }
+
+    protected function canPostFaltasPorComponente()
+    {
+        return $this->validatesPresenceOf('faltas') && $this->validatesPresenceOf('etapa');
+    }
+
+    protected function canPostFaltasGeral()
+    {
+        return $this->validatesPresenceOf('faltas') && $this->validatesPresenceOf('etapa');
+    }
+
+    protected function canPostPareceresPorEtapaComponente()
+    {
+        return $this->validatesPresenceOf('pareceres') && $this->validatesPresenceOf('etapa');
+    }
+
+    protected function canPostPareceresAnualPorComponente()
+    {
+        return $this->validatesPresenceOf('pareceres');
+    }
+
+    protected function canPostPareceresAnualGeral()
+    {
+        return $this->validatesPresenceOf('pareceres');
+    }
+
+    protected function canPostPareceresPorEtapaGeral()
+    {
+        return $this->validatesPresenceOf('pareceres') && $this->validatesPresenceOf('etapa');
+    }
+
+    protected function postNotas()
+    {
+        if ($this->canPostNotas()) {
+            $etapa = $this->getRequest()->etapa;
+            $notas = $this->getRequest()->notas;
+
+            foreach ($notas as $turmaId => $notaTurma) {
+
+                foreach ($notaTurma as $alunoId => $notaTurmaAluno) {
+
+                    $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
+
+                    if (!empty($matriculaId)) {
+                        foreach ($notaTurmaAluno as $componenteCurricularId => $notaTurmaAlunoDisciplina) {
+                            if ($this->validateComponenteTurma($turmaId, $componenteCurricularId)) {
+                                $valor = $notaTurmaAlunoDisciplina['nota'];
+                                $notaRecuperacao = $notaTurmaAlunoDisciplina['recuperacao'];
+                                $nomeCampoRecuperacao = $this->defineCampoTipoRecuperacao($matriculaId);
+                                $valor = $this->truncate($valor, 4);
+
+                                $recuperacaoEspecifica = $nomeCampoRecuperacao == 'notaRecuperacaoEspecifica';
+
+                                $notaAposRecuperacao = (($notaRecuperacao > $valor) ? $notaRecuperacao : $valor);
+
+                                $valorNota = $recuperacaoEspecifica ? $valor : $notaAposRecuperacao;
+
+                                $array_nota = array(
+                                    'componenteCurricular' => $componenteCurricularId,
+                                    'nota' => $valorNota,
+                                    'etapa' => $etapa,
+                                    'notaOriginal' => $valor);
+
+                                if (!empty($nomeCampoRecuperacao)) {
+                                    $array_nota[$nomeCampoRecuperacao] = $notaRecuperacao;
+                                }
+
+                                $nota = new Avaliacao_Model_NotaComponente($array_nota);
+
+                                if ($this->serviceBoletim($turmaId, $alunoId)) {
+                                    $this->serviceBoletim($turmaId, $alunoId)->addNota($nota);
+                                    $this->trySaveServiceBoletim($turmaId, $alunoId);
+
+                                    $this->atualizaNotaNecessariaExame($turmaId, $alunoId, $componenteCurricularId);
+                                }
+                            }
+                        }
+                    }
                 }
-              }
+                $this->messenger->append('Notas postadas com sucesso!', 'success');
             }
-          }
         }
-        $this->messenger->append('Notas postadas com sucesso!', 'success');
-      }
     }
-  }
 
-  protected function postRecuperacoes(){
-    if($this->canPostNotas()){
-      $etapa = $this->getRequest()->etapa;
-      $notas = $this->getRequest()->notas;
+    protected function postRecuperacoes()
+    {
+        if ($this->canPostNotas()) {
+            $etapa = $this->getRequest()->etapa;
+            $notas = $this->getRequest()->notas;
 
-      foreach ($notas as $turmaId => $notaTurma) {
+            foreach ($notas as $turmaId => $notaTurma) {
 
-        foreach($notaTurma as $alunoId => $notaTurmaAluno){
+                foreach ($notaTurma as $alunoId => $notaTurmaAluno) {
 
-          foreach ($notaTurmaAluno as $componenteCurricularId => $notaTurmaAlunoDisciplina){
-            if($this->validateComponenteTurma($turmaId, $componenteCurricularId)){
-              $notaOriginal = $notaTurmaAlunoDisciplina['nota'];
+                    $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
 
-              if(is_null($notaOriginal)){
-                $notaOriginalPersistida = $this->serviceBoletim($turmaId, $alunoId)->getNotaComponente($componenteCurricularId, $etapa)->notaOriginal;
-                if(is_null($notaOriginalPersistida)){
-                  $notaOriginal = 0.0;
-                }else{
-                  $notaOriginal = $notaOriginalPersistida;
+                    foreach ($notaTurmaAluno as $componenteCurricularId => $notaTurmaAlunoDisciplina) {
+                        if ($this->validateComponenteTurma($turmaId, $componenteCurricularId)) {
+                            $notaOriginal = $notaTurmaAlunoDisciplina['nota'];
+
+                            if (is_null($notaOriginal)) {
+                                $notaOriginalPersistida = $this->serviceBoletim($turmaId, $alunoId)->getNotaComponente($componenteCurricularId, $etapa)->notaOriginal;
+                                if (is_null($notaOriginalPersistida)) {
+                                    $notaOriginal = 0.0;
+                                } else {
+                                    $notaOriginal = $notaOriginalPersistida;
+                                }
+                            }
+
+                            $notaRecuperacao = $notaTurmaAlunoDisciplina['recuperacao'];
+                            $nomeCampoRecuperacao = $this->defineCampoTipoRecuperacao($matriculaId);
+
+                            $recuperacaoEspecifica = $nomeCampoRecuperacao == 'notaRecuperacaoEspecifica';
+                            $notaAposRecuperacao = (($notaRecuperacao > $notaOriginal) ? $notaRecuperacao : $notaOriginal);
+                            $valorNota = is_null($recuperacaoEspecifica) ? $notaOriginal : $notaAposRecuperacao;
+
+                            $notaOriginal = $this->truncate($notaOriginal, 4);
+                            $array_nota = array(
+                                'componenteCurricular' => $componenteCurricularId,
+                                'nota' => $valorNota,
+                                'etapa' => $etapa,
+                                'notaOriginal' => $notaOriginal,
+                                $nomeCampoRecuperacao => $notaRecuperacao);
+
+                            $nota = new Avaliacao_Model_NotaComponente($array_nota);
+
+                            if ($this->serviceBoletim($turmaId, $alunoId)) {
+                                $this->serviceBoletim($turmaId, $alunoId)->addNota($nota);
+                                $this->trySaveServiceBoletim($turmaId, $alunoId);
+                            }
+                        }
+                    }
                 }
-              }
-
-              $notaRecuperacao = $notaTurmaAlunoDisciplina['recuperacao'];
-              $nomeCampoRecuperacao = $this->defineCampoTipoRecuperacao($turmaId);
-
-              $recuperacaoEspecifica = $nomeCampoRecuperacao == 'notaRecuperacaoEspecifica';
-              $notaAposRecuperacao = (($notaRecuperacao > $notaOriginal) ? $notaRecuperacao : $notaOriginal);
-              $valorNota = is_null($recuperacaoEspecifica) ? $notaOriginal : $notaAposRecuperacao;
-
-              $notaOriginal = $this->truncate($notaOriginal, 4);
-              $array_nota = array(
-                    'componenteCurricular' => $componenteCurricularId,
-                    'nota'                 => $valorNota,
-                    'etapa'                => $etapa,
-                    'notaOriginal'         => $notaOriginal,
-                    $nomeCampoRecuperacao  => $notaRecuperacao);
-
-              $nota = new Avaliacao_Model_NotaComponente($array_nota);
-
-              if($this->serviceBoletim($turmaId, $alunoId)){
-                $this->serviceBoletim($turmaId, $alunoId)->addNota($nota);
-                $this->trySaveServiceBoletim($turmaId, $alunoId);
-              }
+                $this->messenger->append('Recuperacoes postadas com sucesso!', 'success');
             }
-          }
         }
-        $this->messenger->append('Recuperacoes postadas com sucesso!', 'success');
-      }
-    }
-  }
-
-  private function defineCampoTipoRecuperacao($turmaId){
-    $regra = $this->getRegra($turmaId);
-    $campoRecuperacao = '';
-    switch ($regra->get('tipoRecuperacaoParalela')) {
-      case RegraAvaliacao_Model_TipoRecuperacaoParalela::USAR_POR_ETAPA:
-        $campoRecuperacao = 'notaRecuperacaoParalela';
-        break;
-
-      case RegraAvaliacao_Model_TipoRecuperacaoParalela::USAR_POR_ETAPAS_ESPECIFICAS:
-        $campoRecuperacao = 'notaRecuperacaoEspecifica';
-        break;
     }
 
-    return $campoRecuperacao;
-  }
+    private function defineCampoTipoRecuperacao($matriculaId)
+    {
+        $regra = $this->getRegra($matriculaId);
+        $campoRecuperacao = '';
+        switch ($regra->get('tipoRecuperacaoParalela')) {
+            case RegraAvaliacao_Model_TipoRecuperacaoParalela::USAR_POR_ETAPA:
+                $campoRecuperacao = 'notaRecuperacaoParalela';
+                break;
 
-
-  protected function postFaltasPorComponente(){
-    if($this->canPostFaltasPorComponente()){
-      $etapa = $this->getRequest()->etapa;
-      $faltas = $this->getRequest()->faltas;
-
-      foreach ($faltas as $turmaId => $faltaTurma) {
-        if($this->getRegra($turmaId)->get('tipoPresenca') != RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE){
-          throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de faltas por componente."));
+            case RegraAvaliacao_Model_TipoRecuperacaoParalela::USAR_POR_ETAPAS_ESPECIFICAS:
+                $campoRecuperacao = 'notaRecuperacaoEspecifica';
+                break;
         }
-        foreach ($faltaTurma as $alunoId => $faltaTurmaAluno) {
 
-          foreach ($faltaTurmaAluno as $componenteCurricularId => $faltaTurmaAlunoDisciplina){
-            $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
-            if($matriculaId){
+        return $campoRecuperacao;
+    }
 
-              if($this->validateMatricula($matriculaId)){
+    protected function postFaltasPorComponente()
+    {
+        if ($this->canPostFaltasPorComponente()) {
+            $etapa = $this->getRequest()->etapa;
+            $faltas = $this->getRequest()->faltas;
 
-                if($this->validateComponenteTurma($turmaId, $componenteCurricularId)){
-                  $valor = $faltaTurmaAlunoDisciplina["valor"];
+            foreach ($faltas as $turmaId => $faltaTurma) {
+                foreach ($faltaTurma as $alunoId => $faltaTurmaAluno) {
 
-                  $falta = new Avaliacao_Model_FaltaComponente(array(
-                    'componenteCurricular' => $componenteCurricularId,
-                    'quantidade'           => $valor,
-                    'etapa'                => $etapa
-                  ));
+                    $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
+                    if(empty($matriculaId)){
+                        continue;
+                    }
+                    if ($this->getRegra($matriculaId)->get('tipoPresenca') != RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
+                        throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de faltas por componente."));
+                    }
 
-                  $this->serviceBoletim($turmaId, $alunoId)->addFalta($falta);
-                  $this->trySaveServiceBoletimFaltas($turmaId, $alunoId);
+                    foreach ($faltaTurmaAluno as $componenteCurricularId => $faltaTurmaAlunoDisciplina) {
+
+                        if ($matriculaId) {
+
+                            if ($this->validateMatricula($matriculaId)) {
+
+                                if ($this->validateComponenteTurma($turmaId, $componenteCurricularId)) {
+                                    $valor = $faltaTurmaAlunoDisciplina["valor"];
+
+                                    $falta = new Avaliacao_Model_FaltaComponente(array(
+                                        'componenteCurricular' => $componenteCurricularId,
+                                        'quantidade' => $valor,
+                                        'etapa' => $etapa,
+                                    ));
+
+                                    $this->serviceBoletim($turmaId, $alunoId)->addFalta($falta);
+                                    $this->trySaveServiceBoletimFaltas($turmaId, $alunoId);
+                                }
+                            }
+                        }
+                    }
                 }
-              }
             }
-          }
-        }
-      }
 
-      $this->messenger->append('Faltas postadas com sucesso!', 'success');
+            $this->messenger->append('Faltas postadas com sucesso!', 'success');
+        }
     }
-  }
 
-  protected function postFaltasGeral(){
-    if($this->canPostFaltasPorComponente()){
-      $etapa = $this->getRequest()->etapa;
-      $faltas = $this->getRequest()->faltas;
+    protected function postFaltasGeral()
+    {
+        if ($this->canPostFaltasPorComponente()) {
+            $etapa = $this->getRequest()->etapa;
+            $faltas = $this->getRequest()->faltas;
 
-      foreach ($faltas as $turmaId => $faltaTurma) {
-        if($this->getRegra($turmaId)->get('tipoPresenca') != RegraAvaliacao_Model_TipoPresenca::GERAL){
-          throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de faltas geral."));
-        }
+            foreach ($faltas as $turmaId => $faltaTurma) {
 
-        foreach ($faltaTurma as $alunoId => $faltaTurmaAluno) {
-          $faltas = $faltaTurmaAluno['valor'];
+                foreach ($faltaTurma as $alunoId => $faltaTurmaAluno) {
+                    $faltas = $faltaTurmaAluno['valor'];
 
-          if($this->findMatriculaByTurmaAndAluno($turmaId, $alunoId)){
+                    $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
+                    if ($matriculaId) {
 
-            $falta = new Avaliacao_Model_FaltaGeral(array(
-              'quantidade'           => $faltas,
-              'etapa'                => $etapa
-            ));
+                        if ($this->getRegra($matriculaId)->get('tipoPresenca') != RegraAvaliacao_Model_TipoPresenca::GERAL) {
+                            throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de faltas geral."));
+                        }
 
-            $this->serviceBoletim($turmaId, $alunoId)->addFalta($falta);
-            $this->trySaveServiceBoletimFaltas($turmaId, $alunoId);
-          }
-        }
-      }
+                        $falta = new Avaliacao_Model_FaltaGeral(array(
+                            'quantidade' => $faltas,
+                            'etapa' => $etapa,
+                        ));
 
-      $this->messenger->append('Faltas postadas com sucesso!', 'success');
-    }
-  }
-
-  protected function postPareceresPorEtapaComponente(){
-    if($this->canPostPareceresPorEtapaComponente()){
-      $pareceres = $this->getRequest()->pareceres;
-      $etapa = $this->getRequest()->etapa;
-
-      foreach ($pareceres as $turmaId => $parecerTurma) {
-        if($this->getRegra($turmaId)->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE){
-          throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de pareceres por etapa e componente."));
-        }
-
-        foreach ($parecerTurma as $alunoId => $parecerTurmaAluno) {
-          if($this->findMatriculaByTurmaAndAluno($turmaId, $alunoId)){
-
-            foreach ($parecerTurmaAluno as $componenteCurricularId => $parecerTurmaAlunoComponente) {
-              if($this->validateComponenteTurma($turmaId, $componenteCurricularId)){
-
-                $parecer = $parecerTurmaAlunoComponente['valor'];
-
-                $parecerDescritivo = new Avaliacao_Model_ParecerDescritivoComponente(array(
-                  'componenteCurricular' => $componenteCurricularId,
-                  'parecer'              => Portabilis_String_Utils::toLatin1($parecer),
-                  'etapa'                => $etapa
-                ));
-
-                $this->serviceBoletim($turmaId, $alunoId)->addParecer($parecerDescritivo);
-                $this->trySaveServiceBoletim($turmaId, $alunoId);
-              }
+                        $this->serviceBoletim($turmaId, $alunoId)->addFalta($falta);
+                        $this->trySaveServiceBoletimFaltas($turmaId, $alunoId);
+                    }
+                }
             }
-          }
-        }
-      }
 
-      $this->messenger->append('Pareceres postados com sucesso!', 'success');
+            $this->messenger->append('Faltas postadas com sucesso!', 'success');
+        }
     }
-  }
 
-  protected function postPareceresAnualPorComponente(){
-    if($this->canPostPareceresAnualPorComponente()){
-      $pareceres = $this->getRequest()->pareceres;
+    protected function postPareceresPorEtapaComponente()
+    {
+        if ($this->canPostPareceresPorEtapaComponente()) {
+            $pareceres = $this->getRequest()->pareceres;
+            $etapa = $this->getRequest()->etapa;
 
-      foreach ($pareceres as $turmaId => $parecerTurma) {
-        if($this->getRegra($turmaId)->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE){
-          throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de pareceres anual por componente."));
-        }
+            foreach ($pareceres as $turmaId => $parecerTurma) {
 
-        foreach ($parecerTurma as $alunoId => $parecerTurmaAluno) {
-          if($this->findMatriculaByTurmaAndAluno($turmaId, $alunoId)){
+                foreach ($parecerTurma as $alunoId => $parecerTurmaAluno) {
+                    $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
+                    if ($matriculaId) {
 
-            foreach ($parecerTurmaAluno as $componenteCurricularId => $parecerTurmaAlunoComponente) {
-              if($this->validateComponenteCurricular($matriculaId, $componenteCurricularId)){
+                        if ($this->getRegra($matriculaId)->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE) {
+                            throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de pareceres por etapa e componente."));
+                        }
 
-                $parecer = $parecerTurmaAlunoComponente['valor'];
+                        foreach ($parecerTurmaAluno as $componenteCurricularId => $parecerTurmaAlunoComponente) {
+                            if ($this->validateComponenteTurma($turmaId, $componenteCurricularId)) {
 
-                $parecerDescritivo = new Avaliacao_Model_ParecerDescritivoComponente(array(
-                  'componenteCurricular' => $componenteCurricularId,
-                  'parecer'              => Portabilis_String_Utils::toLatin1($parecer)
-                ));
+                                $parecer = $parecerTurmaAlunoComponente['valor'];
 
-                $this->serviceBoletim($turmaId, $alunoId)->addParecer($parecerDescritivo);
-                $this->trySaveServiceBoletim($turmaId, $alunoId);
-              }
+                                $parecerDescritivo = new Avaliacao_Model_ParecerDescritivoComponente(array(
+                                    'componenteCurricular' => $componenteCurricularId,
+                                    'parecer' => Portabilis_String_Utils::toLatin1($parecer),
+                                    'etapa' => $etapa,
+                                ));
+
+                                $this->serviceBoletim($turmaId, $alunoId)->addParecer($parecerDescritivo);
+                                $this->trySaveServiceBoletim($turmaId, $alunoId);
+                            }
+                        }
+                    }
+                }
             }
-          }
-        }
-      }
 
-      $this->messenger->append('Pareceres postados com sucesso!', 'success');
+            $this->messenger->append('Pareceres postados com sucesso!', 'success');
+        }
     }
-  }
 
-  protected function postPareceresPorEtapaGeral(){
-    if($this->canPostPareceresPorEtapaGeral()){
-      $pareceres = $this->getRequest()->pareceres;
-      $etapa = $this->getRequest()->etapa;
+    protected function postPareceresAnualPorComponente()
+    {
+        if ($this->canPostPareceresAnualPorComponente()) {
+            $pareceres = $this->getRequest()->pareceres;
 
-      foreach ($pareceres as $turmaId => $parecerTurma) {
-        if($this->getRegra($turmaId)->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL){
-          throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de pareceres por etapa geral."));
+            foreach ($pareceres as $turmaId => $parecerTurma) {
+                foreach ($parecerTurma as $alunoId => $parecerTurmaAluno) {
+                    $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
+                    if ($matriculaId) {
+
+                        if ($this->getRegra($matriculaId)->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE) {
+                            throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de pareceres anual por componente."));
+                        }
+
+                        foreach ($parecerTurmaAluno as $componenteCurricularId => $parecerTurmaAlunoComponente) {
+                            if ($this->validateComponenteCurricular($matriculaId, $componenteCurricularId)) {
+
+                                $parecer = $parecerTurmaAlunoComponente['valor'];
+
+                                $parecerDescritivo = new Avaliacao_Model_ParecerDescritivoComponente(array(
+                                    'componenteCurricular' => $componenteCurricularId,
+                                    'parecer' => Portabilis_String_Utils::toLatin1($parecer),
+                                ));
+
+                                $this->serviceBoletim($turmaId, $alunoId)->addParecer($parecerDescritivo);
+                                $this->trySaveServiceBoletim($turmaId, $alunoId);
+                            }
+                        }
+                    }
+                }
+            }
+
+            $this->messenger->append('Pareceres postados com sucesso!', 'success');
         }
-
-        foreach ($parecerTurma as $alunoId => $parecerTurmaAluno) {
-          if($this->findMatriculaByTurmaAndAluno($turmaId, $alunoId)){
-            $parecer = $parecerTurmaAluno['valor'];
-
-            $parecerDescritivo = new Avaliacao_Model_ParecerDescritivoGeral(array(
-              'parecer'           => Portabilis_String_Utils::toLatin1($parecer),
-              'etapa'             => $etapa
-            ));
-
-            $this->serviceBoletim($turmaId, $alunoId)->addParecer($parecerDescritivo);
-            $this->trySaveServiceBoletim($turmaId, $alunoId);
-          }
-        }
-      }
-
-      $this->messenger->append('Pareceres postados com sucesso!', 'success');
     }
-  }
 
-  protected function postPareceresAnualGeral(){
-    if($this->canPostPareceresAnualGeral()){
-      $pareceres = $this->getRequest()->pareceres;
+    protected function postPareceresPorEtapaGeral()
+    {
+        if ($this->canPostPareceresPorEtapaGeral()) {
+            $pareceres = $this->getRequest()->pareceres;
+            $etapa = $this->getRequest()->etapa;
 
-      foreach ($pareceres as $turmaId => $parecerTurma) {
-        if($this->getRegra($turmaId)->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL){
-          throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de pareceres anual geral."));
+            foreach ($pareceres as $turmaId => $parecerTurma) {
+                foreach ($parecerTurma as $alunoId => $parecerTurmaAluno) {
+
+                    $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
+                    if ($matriculaId) {
+
+                        if ($this->getRegra($matriculaId)->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL) {
+                            throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de pareceres por etapa geral."));
+                        }
+                        $parecer = $parecerTurmaAluno['valor'];
+
+                        $parecerDescritivo = new Avaliacao_Model_ParecerDescritivoGeral(array(
+                            'parecer' => Portabilis_String_Utils::toLatin1($parecer),
+                            'etapa' => $etapa,
+                        ));
+
+                        $this->serviceBoletim($turmaId, $alunoId)->addParecer($parecerDescritivo);
+                        $this->trySaveServiceBoletim($turmaId, $alunoId);
+                    }
+                }
+            }
+
+            $this->messenger->append('Pareceres postados com sucesso!', 'success');
         }
+    }
 
-        foreach ($parecerTurma as $alunoId => $parecerTurmaAluno) {
-          $parecer = $parecerTurmaAluno['valor'];
-          if($this->findMatriculaByTurmaAndAluno($turmaId, $alunoId)){
+    protected function postPareceresAnualGeral()
+    {
+        if ($this->canPostPareceresAnualGeral()) {
+            $pareceres = $this->getRequest()->pareceres;
 
-            $parecerDescritivo = new Avaliacao_Model_ParecerDescritivoGeral(array(
-              'parecer' => Portabilis_String_Utils::toLatin1($parecer)
-            ));
+            foreach ($pareceres as $turmaId => $parecerTurma) {
 
-            $this->serviceBoletim($turmaId, $alunoId)->addParecer($parecerDescritivo);
-            $this->trySaveServiceBoletim($turmaId, $alunoId);
-          }
+                foreach ($parecerTurma as $alunoId => $parecerTurmaAluno) {
+
+                    $parecer = $parecerTurmaAluno['valor'];
+                    $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
+                    if ($matriculaId) {
+
+                        if ($this->getRegra($matriculaId)->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL) {
+                            throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de pareceres anual geral."));
+                        }
+
+                        $parecerDescritivo = new Avaliacao_Model_ParecerDescritivoGeral(array(
+                            'parecer' => Portabilis_String_Utils::toLatin1($parecer),
+                        ));
+
+                        $this->serviceBoletim($turmaId, $alunoId)->addParecer($parecerDescritivo);
+                        $this->trySaveServiceBoletim($turmaId, $alunoId);
+                    }
+                }
+            }
+
+            $this->messenger->append('Pareceres postados com sucesso!', 'success');
         }
-      }
-
-      $this->messenger->append('Pareceres postados com sucesso!', 'success');
     }
-  }
 
-  protected function atualizaNotaNecessariaExame($turmaId, $alunoId, $componenteCurricularId) {
-    $notaExame = urldecode($this->serviceBoletim($turmaId, $alunoId)->preverNotaRecuperacao($componenteCurricularId));
-    $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
-    $situacaoComponente = $this->serviceBoletim($turmaId, $alunoId)
-                               ->getSituacaoComponentesCurriculares()
-                               ->componentesCurriculares[$componenteCurricularId]
-                               ->situacao;
+    protected function atualizaNotaNecessariaExame($turmaId, $alunoId, $componenteCurricularId)
+    {
+        $notaExame = urldecode($this->serviceBoletim($turmaId, $alunoId)->preverNotaRecuperacao($componenteCurricularId));
+        $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
+        $situacaoComponente = $this->serviceBoletim($turmaId, $alunoId)
+            ->getSituacaoComponentesCurriculares()
+            ->componentesCurriculares[$componenteCurricularId]
+            ->situacao;
 
-    $situacaoEmExame = ($situacaoComponente == App_Model_MatriculaSituacao::EM_EXAME ||
-                        $situacaoComponente == App_Model_MatriculaSituacao::APROVADO_APOS_EXAME ||
-                        $situacaoComponente == App_Model_MatriculaSituacao::REPROVADO);
+        $situacaoEmExame = ($situacaoComponente == App_Model_MatriculaSituacao::EM_EXAME ||
+            $situacaoComponente == App_Model_MatriculaSituacao::APROVADO_APOS_EXAME ||
+            $situacaoComponente == App_Model_MatriculaSituacao::REPROVADO);
 
-    if (!empty($notaExame) && $situacaoEmExame) {
-      $obj = new clsModulesNotaExame($matriculaId, $componenteCurricularId, $notaExame);
+        if (!empty($notaExame) && $situacaoEmExame) {
+            $obj = new clsModulesNotaExame($matriculaId, $componenteCurricularId, $notaExame);
 
-      $obj->existe() ? $obj->edita() : $obj->cadastra();
-    } else {
-      $obj = new clsModulesNotaExame($matriculaId, $componenteCurricularId);
-      $obj->excluir();
+            $obj->existe() ? $obj->edita() : $obj->cadastra();
+        } else {
+            $obj = new clsModulesNotaExame($matriculaId, $componenteCurricularId);
+            $obj->excluir();
+        }
     }
-  }
 
-  protected function validateMatricula($matriculaId){
+    protected function validateMatricula($matriculaId)
+    {
 
-    $ativo = false;
+        $ativo = false;
 
-    if(!empty($matriculaId)){
-      $sql = "SELECT m.ativo as ativo
+        if (!empty($matriculaId)) {
+            $sql = "SELECT m.ativo as ativo
                 FROM pmieducar.matricula m
                WHERE m.cod_matricula = $1
                LIMIT 1";
 
-      $ativo = $this->fetchPreparedQuery($sql, array($matriculaId), true, 'first-field');
+            $ativo = $this->fetchPreparedQuery($sql, array($matriculaId), true, 'first-field');
+        }
+
+        return $ativo;
     }
 
-    return $ativo;
-  }
-
-  private function truncate($val, $f="0"){
-    if(($p = strpos($val, '.')) !== false) {
-        $val = floatval(substr($val, 0, $p + 1 + $f));
+    private function truncate($val, $f = "0")
+    {
+        if (($p = strpos($val, '.')) !== false) {
+            $val = floatval(substr($val, 0, $p + 1 + $f));
+        }
+        return $val;
     }
-    return $val;
-  }
 
-  public function Gerar() {
-    if ($this->isRequestFor('post', 'notas'))
-      $this->appendResponse($this->postNotas());
-    elseif ($this->isRequestFor('post', 'recuperacoes'))
-      $this->appendResponse($this->postRecuperacoes());
-    elseif ($this->isRequestFor('post', 'faltas-por-componente'))
-      $this->appendResponse($this->postFaltasPorComponente());
-    elseif ($this->isRequestFor('post', 'faltas-geral'))
-      $this->appendResponse($this->postFaltasGeral());
-    elseif ($this->isRequestFor('post', 'pareceres-por-etapa-e-componente'))
-      $this->appendResponse($this->postPareceresPorEtapaComponente());
-    elseif ($this->isRequestFor('post', 'pareceres-por-etapa-geral'))
-      $this->appendResponse($this->postPareceresPorEtapaGeral());
-    elseif ($this->isRequestFor('post', 'pareceres-anual-por-componente'))
-      $this->appendResponse($this->postPareceresAnualPorComponente());
-    elseif ($this->isRequestFor('post', 'pareceres-anual-geral'))
-      $this->appendResponse($this->postPareceresAnualGeral());
-    else
-      $this->notImplementedOperationError();
-  }
+    public function Gerar()
+    {
+        if ($this->isRequestFor('post', 'notas')) {
+            $this->appendResponse($this->postNotas());
+        } elseif ($this->isRequestFor('post', 'recuperacoes')) {
+            $this->appendResponse($this->postRecuperacoes());
+        } elseif ($this->isRequestFor('post', 'faltas-por-componente')) {
+            $this->appendResponse($this->postFaltasPorComponente());
+        } elseif ($this->isRequestFor('post', 'faltas-geral')) {
+            $this->appendResponse($this->postFaltasGeral());
+        } elseif ($this->isRequestFor('post', 'pareceres-por-etapa-e-componente')) {
+            $this->appendResponse($this->postPareceresPorEtapaComponente());
+        } elseif ($this->isRequestFor('post', 'pareceres-por-etapa-geral')) {
+            $this->appendResponse($this->postPareceresPorEtapaGeral());
+        } elseif ($this->isRequestFor('post', 'pareceres-anual-por-componente')) {
+            $this->appendResponse($this->postPareceresAnualPorComponente());
+        } elseif ($this->isRequestFor('post', 'pareceres-anual-geral')) {
+            $this->appendResponse($this->postPareceresAnualGeral());
+        } else {
+            $this->notImplementedOperationError();
+        }
+
+    }
 }

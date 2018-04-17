@@ -824,7 +824,7 @@ function setTableSearchDetails($tableSearchDetails, dataDetails) {
 
   if(regraDiferenciadaId){
     var tfootColspan = $linha.find('th').length;
-    var $tfoot = $j('<tfoot/>');
+    var $tfoot = $j('<tfoot/>').attr('style', 'position: absolute;margin-top: 30px;');
     $j('<tr/>').append(
       $j('<td/>').attr('style', 'text-align: left;')
                  .attr('colspan', tfootColspan)
@@ -832,6 +832,7 @@ function setTableSearchDetails($tableSearchDetails, dataDetails) {
     ).appendTo($tfoot)
 
     $tableSearchDetails.append($tfoot);
+    $tableSearchDetails.attr('style','border-bottom-width: 0px;')
   }
 
   $tableSearchDetails.show();
@@ -839,8 +840,6 @@ function setTableSearchDetails($tableSearchDetails, dataDetails) {
   nomenclatura_exame = dataDetails[0].nomenclatura_exame;
 
   $tableSearchDetails.data('regras', dataDetails);
-
-
 }
 
 var nextTabIndex = 1;
