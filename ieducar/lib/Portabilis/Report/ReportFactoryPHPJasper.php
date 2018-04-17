@@ -94,7 +94,7 @@ class Portabilis_Report_ReportFactoryPHPJasper extends Portabilis_Report_ReportF
 
     $builder = new JasperPHP();
     $return = $builder->process(
-        $this->getReportsPath() . $report->templateName() . '.jrxml',
+        $this->getReportsPath() . $report->templateName() . '.jasper',
         $outputFile,
         array("pdf"),
         $report->args,
