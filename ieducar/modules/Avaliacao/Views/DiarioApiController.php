@@ -1021,7 +1021,11 @@ class DiarioApiController extends ApiCoreController
         // set service
         if (!isset($this->_boletimServiceInstances[$matriculaId]) || $reload) {
             try {
-                $params = array('matricula' => $matriculaId, 'usuario' => $this->getSession()->id_pessoa);
+                $params = array(
+                    'matricula' => $matriculaId,
+                    'usuario' => $this->getSession()->id_pessoa,
+                    'componenteCurricularId' => $this->getRequest()->componente_curricular_id,
+                );
                 $this->_boletimServiceInstances[$matriculaId] = new Avaliacao_Service_Boletim($params);
             } catch (Exception $e) {
                 $this->messenger->append("Erro ao instanciar serviço boletim para matricula {$matriculaId}: " . $e->getMessage(), 'error', true);
@@ -1112,18 +1116,33 @@ class DiarioApiController extends ApiCoreController
             $ccId = $this->getRequest()->componente_curricular_id;
         }
 
-        $situacao = 'Situação não recuperada';
+        $situacao = null;
+
+        $situacoes = $this->getSituacaoComponentes();
+        if(isset($situacoes[$ccId])){
+            $situacao = $situacoes[$ccId];
+        }
+
+        return $this->safeString($situacao);
+    }
+
+    protected function getSituacaoComponentes()
+    {
+        $situacoes = array();
 
         try {
-            $situacaoCc = $this->serviceBoletim()->getSituacaoComponentesCurriculares()->componentesCurriculares[$ccId];
-            $situacao = App_Model_MatriculaSituacao::getInstance()->getValue($situacaoCc->situacao);
+            $componentesCurriculares = $this->serviceBoletim()->getSituacaoComponentesCurriculares()->componentesCurriculares;
+            foreach($componentesCurriculares as $componenteCurricularId => $situacaoCc){
+                $situacoes[$componenteCurricularId] = App_Model_MatriculaSituacao::getInstance()->getValue($situacaoCc->situacao);
+            }
+
         } catch (Exception $e) {
             $matriculaId = $this->getRequest()->matricula_id;
             $this->messenger->append("Erro ao recuperar situação da matrícula '$matriculaId': " .
                 $e->getMessage());
         }
 
-        return $this->safeString($situacao);
+        return $situacoes;
     }
 
     // outros metodos auxiliares
@@ -1138,7 +1157,7 @@ class DiarioApiController extends ApiCoreController
         $_componentesCurriculares = App_Model_IedFinder::getComponentesPorMatricula($matriculaId, null, null, $componenteCurricularId, $etapa, $turmaId);
 
         $turmaId = $this->getRequest()->turma_id;
-
+        $situacoes = $this->getSituacaoComponentes();
         foreach ($_componentesCurriculares as $_componente) {
             $componente = array();
             $componenteId = $_componente->get('id');
@@ -1154,7 +1173,7 @@ class DiarioApiController extends ApiCoreController
             $componente['nota_exame'] = $this->getNotaExame($componente['id']);
             $componente['falta_atual'] = $this->getFaltaAtual($etapa = null, $componente['id']);
             $componente['parecer_atual'] = $this->getParecerAtual($componente['id']);
-            $componente['situacao'] = $this->getSituacaoComponente($componente['id']);
+            $componente['situacao'] = $this->safeString($situacoes[$componente['id']]);
             $componente['tipo_nota'] = $tipoNota;
             $componente['ultima_etapa'] = App_Model_IedFinder::getUltimaEtapaComponente($turmaId, $componenteId);
             $gravaNotaExame = ($componente['situacao'] == 'Em exame' || $componente['situacao'] == 'Aprovado após exame' || $componente['situacao'] == 'Retido');
