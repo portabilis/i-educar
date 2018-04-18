@@ -130,25 +130,25 @@ class clsBase extends clsConfig
         if (is_array($this->estilos) && count($this->estilos)) {
             $estilos = '';
             foreach ($this->estilos as $estilo) {
-                $estilos .= "<link rel=stylesheet type='text/css' href='styles/{$estilo}.css?assets_version=" . Portabilis_Assets_Version::VERSION . "' />";
+                $estilos .= "<link rel=stylesheet type='text/css' href='/intranet/styles/{$estilo}.css?assets_version=" . Portabilis_Assets_Version::VERSION . "' />";
             }
             $saida = str_replace("<!-- #&ESTILO&# -->", $estilos, $saida);
         }
 
         if ($GLOBALS['coreExt']['Config']->app->widget == 1 && $this->renderMenu) {
             $suporte_freshdesk = '<script type="text/javascript" src="https://assets.freshdesk.com/widget/freshwidget.js"></script>
-                            <script type="text/javascript" src="scripts/suporte_freshdesk.js?v=2"></script>';
+                            <script type="text/javascript" src="/intranet/scripts/suporte_freshdesk.js?v=2"></script>';
             $saida = str_replace("<!-- #&FRESHDESK&# -->", $suporte_freshdesk, $saida);
         } elseif ($GLOBALS['coreExt']['Config']->app->widget_***REMOVED*** == 1 && $this->renderMenu) {
             $suporte_freshdesk = '<script type="text/javascript" src="https://assets.freshdesk.com/widget/freshwidget.js"></script>
-                            <script type="text/javascript" src="scripts/suporte_freshdesk_***REMOVED***.js?v=2"></script>';
+                            <script type="text/javascript" src="/intranet/scripts/suporte_freshdesk_***REMOVED***.js?v=2"></script>';
             $saida = str_replace("<!-- #&FRESHDESK&# -->", $suporte_freshdesk, $saida);
         }
 
         if (is_array($this->scripts) && count($this->scripts)) {
             $estilos = '';
             foreach ($this->scripts as $script) {
-                $scripts .= "<script type='text/javascript' src='scripts/{$script}.js?assets_version=" . Portabilis_Assets_Version::VERSION . "' ></script>";
+                $scripts .= "<script type='text/javascript' src='/intranet/scripts/{$script}.js?assets_version=" . Portabilis_Assets_Version::VERSION . "' ></script>";
             }
             $saida = str_replace("<!-- #&SCRIPT&# -->", $scripts, $saida);
         }
@@ -400,6 +400,12 @@ class clsBase extends clsConfig
                         } else {
                             $menu_suspenso['caminho'] = '../../intranet/' . $menu_suspenso['caminho'];
                         }
+                    } elseif ($uri[2] == 'filaunica') {
+                        if (0 === strpos($menu_suspenso['caminho'], 'module')) {
+                            $menu_suspenso['caminho'] = '../../' . $menu_suspenso['caminho'];
+                        } else {
+                            $menu_suspenso['caminho'] = '../' . $menu_suspenso['caminho'];
+                        }
                     } elseif (0 === strpos($menu_suspenso['caminho'], 'module')) {
                         $menu_suspenso['caminho'] = '../../' . $menu_suspenso['caminho'];
                     }
@@ -635,9 +641,9 @@ class clsBase extends clsConfig
         $sql = "UPDATE funcionario SET ip_logado = '$ip_maquina' , data_login = NOW() WHERE ref_cod_pessoa_fj = {$this->currentUserId()}";
         $this->db()->Consulta($sql);
 
-        $saida .= "<script type=\"text/javascript\" src=\"scripts/select2/select2.full.min.js\"></script>";
-        $saida .= "<script type=\"text/javascript\" src=\"scripts/select2/pt-BR.js\"></script>";
-        $saida .= "<link type=\"text/css\" rel=\"stylesheet\" href=\"scripts/select2/select2.min.css\" />";
+        $saida .= "<script type=\"text/javascript\" src=\"/intranet/scripts/select2/select2.full.min.js\"></script>";
+        $saida .= "<script type=\"text/javascript\" src=\"/intranet/scripts/select2/pt-BR.js\"></script>";
+        $saida .= "<link type=\"text/css\" rel=\"stylesheet\" href=\"/intranet/scripts/select2/select2.min.css\" />";
 
         if ($showOnboarding) {
             $saida .= "<script src='https://fast.conpass.io/H1gWceptS_G.js'></script>";
@@ -695,7 +701,7 @@ class clsBase extends clsConfig
             foreach ($listaBanners as $ind => $banner) {
                 if ($banner["controle_inicio"] <= $sorteio && $banner["controle_fim"] >= $sorteio) {
                     if ($pregadas == 0) {
-                        $img = "<IMG style='margin-top: 170px;' src='fotos/imgs/{$banner['caminho']}' border=0 title='{$banner['titulo']}' alt='{$banner['titulo']}' width='149' height='74'>";
+                        $img = "<IMG style='margin-top: 170px;' src='/intranet/fotos/imgs/{$banner['caminho']}' border=0 title='{$banner['titulo']}' alt='{$banner['titulo']}' width='149' height='74'>";
 
                         if (!empty($banner['link'])) {
                             $retorno .= "<a href='{$banner['link']}' target='_blank' alt='{$banner['titulo']}'>{$img}</a><BR><BR>";
@@ -703,7 +709,7 @@ class clsBase extends clsConfig
                             $retorno .= "{$img}<BR><BR>";
                         }
                     } else {
-                        $img = "<IMG src='fotos/imgs/{$banner['caminho']}' border=0 title='{$banner['titulo']}' alt='{$banner['titulo']}' width='149' height='74'>";
+                        $img = "<IMG src='/intranet/fotos/imgs/{$banner['caminho']}' border=0 title='{$banner['titulo']}' alt='{$banner['titulo']}' width='149' height='74'>";
 
                         if (!empty($banner['link'])) {
                             $retorno .= "<a href='{$banner['link']}' target='_blank' alt='{$banner['titulo']}'>{$img}</a><BR><BR>";
@@ -880,13 +886,13 @@ class clsBase extends clsConfig
     function buscaRapida()
     {
 
-        $css .= "<link rel=stylesheet type='text/css' href='styles/buscaMenu.css?assets_version=" . Portabilis_Assets_Version::VERSION . "' />";
-        $css .= "<link rel=stylesheet type='text/css' href='scripts/jquery/jquery-ui.min-1.9.2/css/custom/jquery-ui-1.9.2.custom.min.css?assets_version=" . Portabilis_Assets_Version::VERSION . "' />";
+        $css .= "<link rel=stylesheet type='text/css' href='/intranet/styles/buscaMenu.css?assets_version=" . Portabilis_Assets_Version::VERSION . "' />";
+        $css .= "<link rel=stylesheet type='text/css' href='/intranet/scripts/jquery/jquery-ui.min-1.9.2/css/custom/jquery-ui-1.9.2.custom.min.css?assets_version=" . Portabilis_Assets_Version::VERSION . "' />";
 
         $js .= "<script type='text/javascript' src='/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/SimpleSearch.js'></script>";
         $js .= "<script type='text/javascript' src='/modules/Portabilis/Assets/Javascripts/Utils.js'></script>";
-        $js .= "<script type='text/javascript' src='scripts/buscaMenu.js?assets_version= " . Portabilis_Assets_Version::VERSION . "'></script>";
-        $js .= "<script type='text/javascript' src='scripts/jquery/jquery-ui.min-1.9.2/js/jquery-ui-1.9.2.custom.min.js?assets_version= " . Portabilis_Assets_Version::VERSION . "'></script>";
+        $js .= "<script type='text/javascript' src='/intranet/scripts/buscaMenu.js?assets_version= " . Portabilis_Assets_Version::VERSION . "'></script>";
+        $js .= "<script type='text/javascript' src='/intranet/scripts/jquery/jquery-ui.min-1.9.2/js/jquery-ui-1.9.2.custom.min.js?assets_version= " . Portabilis_Assets_Version::VERSION . "'></script>";
 
         $titulo .= "<div title='Busca rápida' class='title-busca-rapida'>";
         $titulo .= "<table width='168' class='title active-section-title' style='-moz-user-select: none;'>";
