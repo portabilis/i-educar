@@ -8,3 +8,4 @@ ieducar/configuration/ieducar.ini
 *.vscode
 ieducar/modules/Reports
 ieducar/intranet/filaunica
+ieducar/misc/database/migrations/portabilis
