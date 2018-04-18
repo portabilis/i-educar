@@ -119,18 +119,49 @@ class RegraController extends ApiCoreController
                 media_recuperacao_paralela,
                 nota_maxima_geral,
                 nota_maxima_exame_final as nota_maxima_exame,
-                regra_diferenciada_id
+                COALESCE(ra.regra_diferenciada_id,0) AS regra_diferenciada_id
                 FROM modules.regra_avaliacao ra
-                LEFT JOIN pmieducar.serie s ON s.regra_avaliacao_id = ra.id
+                LEFT JOIN pmieducar.serie s
+                ON s.regra_avaliacao_id = ra.id
                 LEFT JOIN pmieducar.turma t ON t.ref_ref_cod_serie = s.cod_serie
                 WHERE s.ativo = 1
                 AND t.ativo = 1
                 AND ra.instituicao_id = $1
                 AND t.ano = $2
-                ORDER BY COALESCE(ra.regra_diferenciada_id,0), ra.id, t.cod_turma
+
+                UNION
+
+                SELECT
+                        ra.id,
+                        ra.tabela_arredondamento_id,
+                        ra.tabela_arredondamento_id_conceitual,
+                        ra.tipo_nota,
+                        ra.tipo_presenca,
+                        ra.parecer_descritivo,
+                        cod_turma as turma_id,
+                        ra.tipo_recuperacao_paralela AS tipo_recuperacao,
+                        ra.media_recuperacao_paralela,
+                        ra.nota_maxima_geral,
+                        ra.nota_maxima_exame_final as nota_maxima_exame,
+                        COALESCE(ra.regra_diferenciada_id,0) AS regra_diferenciada_id
+                        FROM modules.regra_avaliacao ra
+                        JOIN modules.regra_avaliacao ra_join
+                        ON ra.id = ra_join.regra_diferenciada_id
+                        JOIN pmieducar.serie s
+                        ON s.regra_avaliacao_id = ra_join.id
+                        JOIN pmieducar.turma t ON t.ref_ref_cod_serie = s.cod_serie
+                        WHERE s.ativo = 1
+                        AND t.ativo = 1
+                        AND ra.instituicao_id = $3
+                        AND t.ano = $4
+
+                        ORDER BY regra_diferenciada_id, id, turma_id
+
                 ";
 
-            $_regras = $this->fetchPreparedQuery($sql, array($instituicaoId, $ano));
+            $_regras = $this->fetchPreparedQuery($sql, array(
+                $instituicaoId, $ano,$instituicaoId, $ano
+            ));
 
             $attrs = array(
                 'id', 'tabela_arredondamento_id', 'tabela_arredondamento_id_conceitual',
@@ -144,7 +175,7 @@ class RegraController extends ApiCoreController
 
             foreach ($_regras as $regra) {
                 $__regras[$regra['id']]['id'] = $regra['id'];
-                $__regras[$regra['id']]['regra_diferenciada_id']= $regra['regra_diferenciada_id'];
+                $__regras[$regra['id']]['regra_diferenciada_id']= $regra['regra_diferenciada_id'] ?: null;
                 $__regras[$regra['id']]['tabela_arredondamento_id']= $regra['tabela_arredondamento_id'];
                 $__regras[$regra['id']]['tabela_arredondamento_id_conceitual'] = $regra['tabela_arredondamento_id_conceitual'];
                 $__regras[$regra['id']]['tipo_nota'] = $regra['tipo_nota'];
