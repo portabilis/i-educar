@@ -1,32 +1,5 @@
 <?php
 
-/**
- * i-Educar - Sistema de gestão escolar
- *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
- *                     <ctima@itajai.sc.gov.br>
- *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
- *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
- * do GNU para mais detalhes.
- *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
- *
- * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   CoreExt_DataMapper
- * @since     Arquivo disponível desde a versão 1.1.0
- * @version   $Id$
- */
 require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 /**
  * CoreExt_DataMapper abstract class.
@@ -71,7 +44,7 @@ abstract class CoreExt_DataMapper
    * @see CoreExt_Entity::_createIdentityField()
    * @var array
    */
-  protected $_primaryKey = array('id');
+  protected $_primaryKey = array('id' => 'id');
 
   /**
    * Objeto de conexão com o banco de dados.
@@ -343,20 +316,20 @@ abstract class CoreExt_DataMapper
   {
     $where = array();
 
-    if (!is_array($pkey)) {
-      $where[] = sprintf("id = '%d'", floatval($pkey));
-    }
-    elseif (is_array($pkey)) {
-      foreach ($pkey as $key => $pk) {
-        $whereName = $this->_getTableColumn($this->_primaryKey[$key]);
-        if (is_numeric($pk)) {
-          $where[] = sprintf("%s = '%d'", $whereName, floatval($pk));
-        } elseif (is_string($pk)) {
-          $where[] = sprintf("%s = '%s'", $whereName, $pk);
-        }
-      }
+     if (!is_array($pkey)){
+       $pkey = array(
+         array_shift(array_keys($this->_primaryKey)) => $pkey
+       );
+     }
+
+    foreach ($pkey as $key => $pk) {
+      $whereName = $this->_getTableColumn($this->_primaryKey[$key]);
+      $where[] = sprintf("%s = '%s'", $whereName, $pk);
     }
 
+    // if (empty($where)){
+    //     return '';
+    // }
     return sprintf("SELECT %s FROM %s WHERE %s", $this->_getTableColumns(),
       $this->_getTableName(), implode(' AND ', $where));
   }
@@ -393,12 +366,10 @@ abstract class CoreExt_DataMapper
     $valuesStmt = array();
     for ($i = 0, $count = count($values); $i < $count; $i++) {
       $value = $values[$i];
+      $replaceString = "'%s'";
       if (is_null($value)) {
         $value = "NULL";
         $replaceString = "%s";
-      }
-      else {
-        $replaceString = "'%s'";
       }
       $valuesStmt[] = sprintf($replaceString, $value);
     }
@@ -436,20 +407,20 @@ abstract class CoreExt_DataMapper
     $columns = array();
     foreach ($data as $key => $value) {
       $columnName = $this->_getTableColumn($key);
+      $replaceString = "%s = '%s'";
+
       if (is_null($value)) {
         $value = "NULL";
         $replaceString = "%s = %s";
       }
-      else {
-        $replaceString = "%s = '%s'";
-      }
+
       $columns[] = sprintf($replaceString, $columnName, $value);
     }
 
     $where = array();
-    foreach ($this->_primaryKey as $pk) {
-      $whereName = $this->_getTableColumn($pk);
-      $where[] = sprintf("%s = '%s'", $whereName, $instance->get($pk));
+    foreach ($this->_primaryKey as $key => $pk) {
+      $whereName = $this->_getTableColumn($key);
+      $where[] = sprintf("%s = '%s'", $whereName, $instance->get($key));
     }
 
     return sprintf($sql, $this->_getTableName(), implode(', ', $columns),
@@ -461,12 +432,10 @@ abstract class CoreExt_DataMapper
   {
     if (is_array($this->_primaryKey)) {
       $pkValue = array();
-      foreach ($this->_primaryKey as $pk) {
-        $pkValue[] = $instance->get($pk);
+      foreach ($this->_primaryKey as $key => $pk) {
+        $pkValue[$key] = $instance->get($key);
       }
       $tmpEntry = $this->find($pkValue);
-    } else {
-      $tmpEntry = $this->find($instance->id);
     }
     $oldInstance = $tmpEntry->toDataArray();
 
@@ -493,22 +462,18 @@ abstract class CoreExt_DataMapper
     $sql = 'DELETE FROM %s WHERE %s';
 
     $where = array();
-    if ($instance instanceof CoreExt_Entity) {
-      foreach ($this->_primaryKey as $pk) {
-        $whereName = $this->_getTableColumn($pk);
-        //$where[] = sprintf("%s = '%d'", $whereName, $instance->get($pk)); estoura o decimal. valor 9801762824 retornando 1211828232
-        $where[] = sprintf("%s = '%s'", $whereName, $instance->get($pk));
+    if (is_numeric($instance)) {
+      $where[] = sprintf("%s = '%s'", $this->_primaryKey[0], $instance);
+    } elseif (is_array($instance)) {
+      foreach ($this->_primaryKey as $key => $pk) {
+        $whereName = $this->_getTableColumn($key);
+        $where[] = sprintf("%s = '%s'", $whereName, $instance->get($key));
       }
     }
-    elseif (is_numeric($instance)) {
-      $where[] = sprintf("%s = '%d'", 'id', floatval($instance));
-    }
-    elseif (is_array($instance)) {
-      foreach ($this->_primaryKey as $pk) {
-        $whereName = $this->_getTableColumn($pk);
-        $where[] = sprintf("%s = '%d'", $whereName, $instance[$pk]);
-      }
-    }
+
+    // if(empty($where)) {
+    //   return '';
+    // }
 
     return sprintf($sql, $this->_getTableName(), implode(' AND ', $where));
   }
@@ -628,19 +593,13 @@ abstract class CoreExt_DataMapper
     // como "old" para que UPDATE seja chamado.
     $hasValuePk = true;
     if (1 < count($this->_primaryKey)) {
-      foreach ($this->_primaryKey as $pk) {
-        $value = $instance->get($pk);
+      foreach ($this->_primaryKey as $key => $pk) {
+        $value = $instance->get($key);
         if (!isset($value)) {
           $hasValuePk = false;
           require_once 'CoreExt/DataMapper/Exception.php';
           throw new CoreExt_DataMapper_Exception('Erro de compound key. Uma das primary keys tem o valor NULL: "' . $pk . '"');
         }
-      }
-    }
-    // Field identity, se estiver presente, marca instância como "old".
-    elseif (1 == count($this->_primaryKey)) {
-      if (isset($instance->id)) {
-          $hasValuePk = false;
       }
     }
 
@@ -652,7 +611,7 @@ abstract class CoreExt_DataMapper
     @session_write_close();
 
     if ($instance->isNew()) {
-      $returning = count($this->_primaryKey) == 1 && $this->_primaryKey[0] == 'id' ? ' RETURNING id;' : ' RETURNING NULL;';
+      $returning = count($this->_primaryKey) == 1 && array_shift(array_values($this->_primaryKey)) == 'id' ? ' RETURNING id;' : ' RETURNING NULL;';
       $return = $this->_getDbAdapter()->Consulta($this->_getSaveStatment($instance). $returning);
       $result = pg_fetch_row($return);
       $id = $result[0];
@@ -663,16 +622,21 @@ abstract class CoreExt_DataMapper
         $auditoria->inclusao($info);
       }
     }
-    elseif ($instance->id) {
-      $tmpEntry = $this->find($instance->id);
+    elseif ($instance->get(array_shift(array_keys($this->_primaryKey)))) {
+      $pkSave = array();
+      foreach ($this->_primaryKey as $key => $val) {
+        $pkSave[$key] = $instance->get($key);
+      }
+
+      $tmpEntry = $this->find($pkSave);
       $oldInfo = $tmpEntry->toDataArray();
 
       $return = $this->_getDbAdapter()->Consulta($this->_getUpdateStatment($instance));
 
-      $tmpEntry = $this->find($instance->id);
+      $tmpEntry = $this->find($pkSave);
       $newInfo = $tmpEntry->toDataArray();
 
-      $auditoria = new clsModulesAuditoriaGeral($this->_tableName, $pessoa_logada, $instance->id);
+      $auditoria = new clsModulesAuditoriaGeral($this->_tableName, $pessoa_logada, $instance->get(array_shift(array_keys($this->_primaryKey))));
       $auditoria->alteracao($oldInfo, $newInfo);
     } else {
       $return = $this->_getDbAdapter()->Consulta($this->_getUpdateStatment($instance));
@@ -745,7 +709,7 @@ abstract class CoreExt_DataMapper
    */
   protected function _cleanData(array $data)
   {
-    foreach ($this->_primaryKey as $key) {
+    foreach ($this->_primaryKey as $key => $val) {
       if (array_key_exists($key, $data)) {
         unset($data[$key]);
       }
