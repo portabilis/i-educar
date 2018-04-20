@@ -4,10 +4,10 @@
 -- Atualiza a foreign key constraint de pmieducar.escola_serie_disciplina
 -- para referenciar modules.componente_curricular.
 --
--- Essa medida faz parte da tarefa de substituiÁ„o do sistema de notas/faltas
--- por um mÛdulo mais robusto e parametriz·vel.
+-- Essa medida faz parte da tarefa de substitui√ß√£o do sistema de notas/faltas
+-- por um m√≥dulo mais robusto e parametriz√°vel.
 --
--- @author   Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+-- @author   Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
 -- @license  @@license@@
 -- @version  $Id$
 --

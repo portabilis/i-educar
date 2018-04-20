@@ -1,31 +1,31 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     App_Model
  * @subpackage  UnitTests
- * @since       Arquivo disponÌvel desde a vers„o 1.1.0
+ * @since       Arquivo dispon√≠vel desde a vers√£o 1.1.0
  * @version     $Id$
  */
 
@@ -50,20 +50,20 @@ require_once 'AreaConhecimento/Model/AreaDataMapper.php';
 /**
  * App_Model_IedFinderTest class.
  *
- * @author      Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     App_Model
  * @subpackage  UnitTests
- * @since       Classe disponÌvel desde a vers„o 1.1.0
+ * @since       Classe dispon√≠vel desde a vers√£o 1.1.0
  * @version     @@package_version@@
  */
 class App_Model_IedFinderTest extends UnitBaseTest
 {
   /**
-   * @todo Refatorar mÈtodo para uma classe stub, no diretÛrio do mÛdulo
+   * @todo Refatorar m√©todo para uma classe stub, no diret√≥rio do m√≥dulo
    *   TabelaArredondamento
-   * @todo Est· copiado em modules/Avaliacao/_tests/BoletimTest.php
+   * @todo Est√° copiado em modules/Avaliacao/_tests/BoletimTest.php
    */
   protected function _getTabelaArredondamento()
   {
@@ -97,14 +97,14 @@ class App_Model_IedFinderTest extends UnitBaseTest
     $tabelaDataMapper = new TabelaArredondamento_Model_TabelaDataMapper();
     $tabelaDataMapper->setTabelaValorDataMapper($mapperMock);
 
-    $tabela = new TabelaArredondamento_Model_Tabela(array('nome' => 'NumÈricas'));
+    $tabela = new TabelaArredondamento_Model_Tabela(array('nome' => 'Num√©ricas'));
     $tabela->setDataMapper($tabelaDataMapper);
     return $tabela;
   }
 
   /**
    * Configura mocks para ComponenteCurricular_Model_ComponenteDataMapper e
-   * ComponenteCurricular_Model_TurmaDataMapper para o mÈtodo getComponentesTurma().
+   * ComponenteCurricular_Model_TurmaDataMapper para o m√©todo getComponentesTurma().
    *
    * @return array ('componenteMock', 'turmaMock', 'expected')
    */
@@ -112,10 +112,10 @@ class App_Model_IedFinderTest extends UnitBaseTest
   {
     $returnComponenteMock = array(
       1 => new ComponenteCurricular_Model_Componente(
-        array('id' => 1, 'nome' => 'Matem·tica', 'cargaHoraria' => 100)
+        array('id' => 1, 'nome' => 'Matem√°tica', 'cargaHoraria' => 100)
       ),
       2 => new ComponenteCurricular_Model_Componente(
-        array('id' => 2, 'nome' => 'PortuguÍs', 'cargaHoraria' => 100)
+        array('id' => 2, 'nome' => 'Portugu√™s', 'cargaHoraria' => 100)
       )
     );
 
@@ -143,7 +143,7 @@ class App_Model_IedFinderTest extends UnitBaseTest
               ->with(array(), array('turma' => 1))
               ->will($this->returnValue($returnTurmaMock));
 
-    // O primeiro componente tem carga hor·ria definida na turma, o segundo usa o padr„o do componente
+    // O primeiro componente tem carga hor√°ria definida na turma, o segundo usa o padr√£o do componente
     $expected[1] = clone $expected[1];
     $expected[1]->cargaHoraria = 200;
 
@@ -165,45 +165,45 @@ class App_Model_IedFinderTest extends UnitBaseTest
          ->method('detalhe')
          ->will($this->returnValue($returnValue));
 
-    // Registra a inst‚ncia no repositÛrio de classes de CoreExt_Entity
+    // Registra a inst√¢ncia no reposit√≥rio de classes de CoreExt_Entity
     $instance = App_Model_IedFinder::addClassToStorage(
       'clsPmieducarCurso', $mock, NULL, TRUE);
 
     $curso = App_Model_IedFinder::getCurso(1);
     $this->assertEquals(
       $returnValue['nm_curso'], $curso,
-      '::getCurso() retorna o nome do curso atravÈs de uma busca pelo cÛdigo.'
+      '::getCurso() retorna o nome do curso atrav√©s de uma busca pelo c√≥digo.'
     );
   }
 
   public function testGetInstituicoes()
   {
-    $returnValue = array(array('cod_instituicao' => 1, 'nm_instituicao' => 'InstituiÁ„o'));
-    $expected = array(1 => 'InstituiÁ„o');
+    $returnValue = array(array('cod_instituicao' => 1, 'nm_instituicao' => 'Institui√ß√£o'));
+    $expected = array(1 => 'Institui√ß√£o');
 
     $mock = $this->getCleanMock('clsPmieducarInstituicao');
     $mock->expects($this->once())
          ->method('lista')
          ->will($this->returnValue($returnValue));
 
-    // Registra a inst‚ncia no repositÛrio de classes de CoreExt_Entity
+    // Registra a inst√¢ncia no reposit√≥rio de classes de CoreExt_Entity
     $instance = App_Model_IedFinder::addClassToStorage(
       'clsPmieducarInstituicao', $mock);
 
     $instituicoes = App_Model_IedFinder::getInstituicoes();
     $this->assertEquals(
       $expected, $instituicoes,
-      '::getInstituicoes() retorna todas as instituiÁıes cadastradas.'
+      '::getInstituicoes() retorna todas as institui√ß√µes cadastradas.'
     );
   }
 
   public function testGetSeries()
   {
-    // # FIXME corrigir teste uma vez que App_Model_IedFinder::getSeries n„o retorna
+    // # FIXME corrigir teste uma vez que App_Model_IedFinder::getSeries n√£o retorna
     // mais um array de arrays (id => objeto), e sim (id => nome serie)
     $returnValue = array(
-      1 => array('cod_serie' => 1, 'ref_ref_cod_instituicao' => 1, 'nm_serie' => 'PrÈ'),
-      2 => array('cod_serie' => 2, 'ref_ref_cod_instituicao' => 2, 'nm_serie' => 'PrÈ')
+      1 => array('cod_serie' => 1, 'ref_ref_cod_instituicao' => 1, 'nm_serie' => 'Pr√©'),
+      2 => array('cod_serie' => 2, 'ref_ref_cod_instituicao' => 2, 'nm_serie' => 'Pr√©')
     );
 
     $mock = $this->getCleanMock('clsPmieducarSerie');
@@ -211,20 +211,20 @@ class App_Model_IedFinderTest extends UnitBaseTest
          ->method('lista')
          ->will($this->onConsecutiveCalls($returnValue, array($returnValue[1])));
 
-    // Registra a inst‚ncia no repositÛrio de classes de CoreExt_Entity
+    // Registra a inst√¢ncia no reposit√≥rio de classes de CoreExt_Entity
     $instance = CoreExt_Entity::addClassToStorage(
       'clsPmieducarSerie', $mock, NULL, TRUE);
 
     $series = App_Model_IedFinder::getSeries();
     $this->assertEquals(
       $returnValue, $series,
-      '::getSeries() retorna todas as sÈries cadastradas.'
+      '::getSeries() retorna todas as s√©ries cadastradas.'
     );
 
     $series = App_Model_IedFinder::getSeries(1);
     $this->assertEquals(
       array(1 => $returnValue[1]), $series,
-      '::getSeries() retorna todas as sÈries de uma instituiÁ„o.'
+      '::getSeries() retorna todas as s√©ries de uma institui√ß√£o.'
     );
   }
 
@@ -253,16 +253,16 @@ class App_Model_IedFinderTest extends UnitBaseTest
   {
     $returnAnoEscolar = array(
       1 => new ComponenteCurricular_Model_Componente(
-        array('id' => 1, 'nome' => 'Matem·tica', 'cargaHoraria' => 100)
+        array('id' => 1, 'nome' => 'Matem√°tica', 'cargaHoraria' => 100)
       ),
       2 => new ComponenteCurricular_Model_Componente(
-        array('id' => 2, 'nome' => 'PortuguÍs', 'cargaHoraria' => 100)
+        array('id' => 2, 'nome' => 'Portugu√™s', 'cargaHoraria' => 100)
       ),
       3 => new ComponenteCurricular_Model_Componente(
-        array('id' => 3, 'nome' => 'CiÍncias', 'cargaHoraria' => 60)
+        array('id' => 3, 'nome' => 'Ci√™ncias', 'cargaHoraria' => 60)
       ),
       4 => new ComponenteCurricular_Model_Componente(
-        array('id' => 4, 'nome' => 'FÌsica', 'cargaHoraria' => 60)
+        array('id' => 4, 'nome' => 'F√≠sica', 'cargaHoraria' => 60)
       )
     );
 
@@ -292,14 +292,14 @@ class App_Model_IedFinderTest extends UnitBaseTest
 
     App_Model_IedFinder::addClassToStorage('clsPmieducarEscolaSerieDisciplina', $escolaMock, NULL, TRUE);
 
-    // O primeiro componente tem uma carga hor·ria definida em escola-sÈrie.
+    // O primeiro componente tem uma carga hor√°ria definida em escola-s√©rie.
     $expected[1] = clone $returnAnoEscolar[1];
     $expected[1]->cargaHoraria = 80;
 
     $componentes = App_Model_IedFinder::getEscolaSerieDisciplina(1, 1, $anoEscolarMock);
     $this->assertEquals(
       $expected, $componentes,
-      '::getEscolaSerieDisciplina() retorna os componentes de um escola-sÈrie.'
+      '::getEscolaSerieDisciplina() retorna os componentes de um escola-s√©rie.'
     );
   }
 
@@ -368,7 +368,7 @@ class App_Model_IedFinderTest extends UnitBaseTest
     $matricula = App_Model_IedFinder::getMatricula(1);
     $this->assertEquals(
       $expected, $matricula,
-      '::getMatricula() retorna os dados (escola, sÈrie, curso, turma e carga hor·ria) de uma matrÌcula.'
+      '::getMatricula() retorna os dados (escola, s√©rie, curso, turma e carga hor√°ria) de uma matr√≠cula.'
     );
   }
 
@@ -387,7 +387,7 @@ class App_Model_IedFinderTest extends UnitBaseTest
     // Marca como "old", para indicar que foi recuperado via CoreExt_DataMapper
     $expected->markOld();
 
-    // Retorna para matrÌcula
+    // Retorna para matr√≠cula
     $returnMatricula = array(
       'cod_matricula'      => 1,
       'ref_ref_cod_escola' => 1,
@@ -402,7 +402,7 @@ class App_Model_IedFinderTest extends UnitBaseTest
                   ->method('detalhe')
                   ->will($this->returnValue($returnMatricula));
 
-    // Registra a inst‚ncia no repositÛrio de classes de CoreExt_Entity
+    // Registra a inst√¢ncia no reposit√≥rio de classes de CoreExt_Entity
     App_Model_IedFinder::addClassToStorage('clsPmieducarMatricula',
       $matriculaMock, NULL, TRUE
     );
@@ -417,7 +417,7 @@ class App_Model_IedFinderTest extends UnitBaseTest
     $regraAvaliacao = App_Model_IedFinder::getRegraAvaliacaoPorMatricula(1, $mapperMock);
     $this->assertEquals(
       $expected, $regraAvaliacao,
-      '::getRegraAvaliacaoPorMatricula() retorna a regra de avaliaÁ„o de uma matrÌcula.'
+      '::getRegraAvaliacaoPorMatricula() retorna a regra de avalia√ß√£o de uma matr√≠cula.'
     );
   }
 
@@ -453,7 +453,7 @@ class App_Model_IedFinderTest extends UnitBaseTest
 
     $this->assertEquals(
       $expected, $componentes,
-      '::getComponentesPorMatricula() retorna os componentes curriculares de uma matrÌcula, descartando aqueles em regime de dispensa (dispensa de componente)'
+      '::getComponentesPorMatricula() retorna os componentes curriculares de uma matr√≠cula, descartando aqueles em regime de dispensa (dispensa de componente)'
     );
   }
 
@@ -486,7 +486,7 @@ class App_Model_IedFinderTest extends UnitBaseTest
                   ->with(1, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, 1)
                   ->will($this->returnValue($returnEscolaAno));
 
-    // Mock para o ano letivo (mÛdulos do ano)
+    // Mock para o ano letivo (m√≥dulos do ano)
     $anoLetivoMock = $this->getCleanMock('clsPmieducarAnoLetivoModulo');
     $anoLetivoMock->expects($this->any())
                   ->method('lista')
@@ -504,7 +504,7 @@ class App_Model_IedFinderTest extends UnitBaseTest
                ->method('detalhe')
                ->will($this->onConsecutiveCalls($returnModulo, $returnModulo));
 
-    // Adiciona mocks ao repositÛrio est·tico
+    // Adiciona mocks ao reposit√≥rio est√°tico
     App_Model_IedFinder::addClassToStorage('clsPmieducarEscolaAnoLetivo',
       $escolaAnoMock, NULL, TRUE);
     App_Model_IedFinder::addClassToStorage('clsPmieducarAnoLetivoModulo',
@@ -518,7 +518,7 @@ class App_Model_IedFinderTest extends UnitBaseTest
 
     $this->assertEquals(
       4, $modulos,
-      '::getQuantidadeDeModulosMatricula() retorna a quantidade de mÛdulos para uma matrÌcula de ano escolar padr„o (curso padr„o ano escolar).'
+      '::getQuantidadeDeModulosMatricula() retorna a quantidade de m√≥dulos para uma matr√≠cula de ano escolar padr√£o (curso padr√£o ano escolar).'
     );
   }
 
@@ -527,7 +527,7 @@ class App_Model_IedFinderTest extends UnitBaseTest
    */
   public function testGetQuantidadeDeModulosMatriculaCursoAnoNaoPadrao()
   {
-    // Curso n„o padr„o
+    // Curso n√£o padr√£o
     $returnCurso = array('cod_curso' => 1, 'carga_horaria' => 800, 'hora_falta' => (50 / 60), 'padrao_ano_escolar' => 0);
 
     $cursoMock = $this->getCleanMock('clsPmieducarCurso');
@@ -557,7 +557,7 @@ class App_Model_IedFinderTest extends UnitBaseTest
 
     $this->assertEquals(
       4, $etapas,
-      '::getQuantidadeDeModulosMatricula() retorna a quantidade de mÛdulos para uma matrÌcula de um ano escolar n„o padr„o (curso n„o padr„o).'
+      '::getQuantidadeDeModulosMatricula() retorna a quantidade de m√≥dulos para uma matr√≠cula de um ano escolar n√£o padr√£o (curso n√£o padr√£o).'
     );
   }
 }

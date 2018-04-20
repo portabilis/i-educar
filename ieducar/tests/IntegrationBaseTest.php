@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author    Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   IntegrationTests
- * @since     Arquivo disponÌvel desde a vers„o 1.1.0
+ * @since     Arquivo dispon√≠vel desde a vers√£o 1.1.0
  * @version   $Id$
  */
 
@@ -34,21 +34,21 @@ require_once 'CoreExt/DataMapper.php';
 /**
  * IntegrationBaseTest abstract class.
  *
- * Cria um ambiente de testes de integraÁ„o com um banco de dados sqlite em
- * memÛria. ⁄til para os testes dos novos componentes de domÌnio.
+ * Cria um ambiente de testes de integra√ß√£o com um banco de dados sqlite em
+ * mem√≥ria. √ötil para os testes dos novos componentes de dom√≠nio.
  *
- * @author    Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author    Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   IntegrationTests
- * @since     Classe disponÌvel desde a vers„o 1.1.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.1.0
  * @version   @@package_version@@
  */
 abstract class IntegrationBaseTest extends PHPUnit_Extensions_Database_TestCase
 {
   /**
-   * Objeto de conex„o com o banco de dados que ser· utilizado tanto pelas
-   * classes da aplicaÁ„o quanto pelos testes de integraÁ„o.
+   * Objeto de conex√£o com o banco de dados que ser√° utilizado tanto pelas
+   * classes da aplica√ß√£o quanto pelos testes de integra√ß√£o.
    *
    * @var CustomPdo
    */
@@ -63,7 +63,7 @@ abstract class IntegrationBaseTest extends PHPUnit_Extensions_Database_TestCase
   }
 
   /**
-   * Usa o setUp() para configurar a todas as inst‚ncias de CoreExt_DataMapper
+   * Usa o setUp() para configurar a todas as inst√¢ncias de CoreExt_DataMapper
    * que usem o adapter de banco dessa classe.
    */
   protected function setUp()
@@ -82,8 +82,8 @@ abstract class IntegrationBaseTest extends PHPUnit_Extensions_Database_TestCase
   }
 
   /**
-   * Retorna a conex„o usada pelos testes de integraÁ„o do DbUnit. Note que
-   * a conex„o È criada com o objeto PDO encapsulado em CustomPdo.
+   * Retorna a conex√£o usada pelos testes de integra√ß√£o do DbUnit. Note que
+   * a conex√£o √© criada com o objeto PDO encapsulado em CustomPdo.
    *
    * @return PHPUnit_Extensions_Database_DB_DefaultDatabaseConnection
    */
@@ -105,8 +105,8 @@ abstract class IntegrationBaseTest extends PHPUnit_Extensions_Database_TestCase
   }
 
 /**
-   * Retorna o caminho absoluto para um arquivo fixture dentro do diretÛrio
-   * _tests de um mÛdulo.
+   * Retorna o caminho absoluto para um arquivo fixture dentro do diret√≥rio
+   * _tests de um m√≥dulo.
    *
    * @param  string $filename
    * @return string

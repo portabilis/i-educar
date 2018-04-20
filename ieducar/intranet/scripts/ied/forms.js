@@ -1,40 +1,40 @@
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Eriksen Costa <eriksen.paixao_bs@cobra.com.br>
  * @license   @@license@@
- * @since     Arquivo disponÌvel desde a vers„o 2.0.0
+ * @since     Arquivo dispon√≠vel desde a vers√£o 2.0.0
  * @version   $Id$
  */
 
 /**
- * Closure com funÁıes utilit·rias para o manuseamento de formul·rios.
+ * Closure com fun√ß√µes utilit√°rias para o manuseamento de formul√°rios.
  */
 var ied_forms = new function() {
   var checker = 0;
 
   /**
-   * Seleciona/deseleciona campos checkbox de um formul·rio. Cada chamada ao
-   * mÈtodo executa uma aÁ„o de forma alternada: a primeira vez, altera a
+   * Seleciona/deseleciona campos checkbox de um formul√°rio. Cada chamada ao
+   * m√©todo executa uma a√ß√£o de forma alternada: a primeira vez, altera a
    * propriedade dos checkboxes para "checked", na segunda, remove a
-   * propriedade "checked" dos mesmos. Esse padr„o segue nas chamadas
+   * propriedade "checked" dos mesmos. Esse padr√£o segue nas chamadas
    * subsequentes.
    *
    * @param document docObj
@@ -56,14 +56,14 @@ var ied_forms = new function() {
   };
 
   /**
-   * Faz um bind de eventos para um elemento HTML. Baseia-se nos mÈtodos de
-   * eventos W3C e cl·ssico. O mÈtodo do Internet Explorer (attachEvent) È
-   * ignorado pois passa os argumentos das funÁıes anÙnimas com cÛpia e sim
-   * por referÍncia, fazendo com que as vari·veis this referenciem o objeto
+   * Faz um bind de eventos para um elemento HTML. Baseia-se nos m√©todos de
+   * eventos W3C e cl√°ssico. O m√©todo do Internet Explorer (attachEvent) √©
+   * ignorado pois passa os argumentos das fun√ß√µes an√¥nimas com c√≥pia e sim
+   * por refer√™ncia, fazendo com que as vari√°veis this referenciem o objeto
    * window global.
    *
-   * Para registrar diversas funÁıes como listener ao evento, crie uma funÁ„o
-   * anÙnima:
+   * Para registrar diversas fun√ß√µes como listener ao evento, crie uma fun√ß√£o
+   * an√¥nima:
    *
    * <code>
    * window.load = function() {
@@ -81,8 +81,8 @@ var ied_forms = new function() {
    * @param string   fieldsName
    * @param string   eventType      O tipo de evento para registrar o evento
    *   (listener), sem a parte 'on' do nome. Exemplos: click, focus, mouseout.
-   * @param string   eventFunction  Uma funÁ„o listener para o evento. Para
-   *   registrar v·rias funÁıes, crie uma funÁ„o anÙnima.
+   * @param string   eventFunction  Uma fun√ß√£o listener para o evento. Para
+   *   registrar v√°rias fun√ß√µes, crie uma fun√ß√£o an√¥nima.
    * @see ied_forms.getElementsByName
    * @link http://www.quirksmode.org/js/events_advanced.html Advanced event registration models
    * @link http://www.quirksmode.org/js/events_tradmod.html Traditional event registration model
@@ -97,7 +97,7 @@ var ied_forms = new function() {
         elements[e].addEventListener(eventType, eventFunction, false);
       }
       else {
-        // Usa o modo tradicional de registro de eventos ao invÈs do mÈtodo
+        // Usa o modo tradicional de registro de eventos ao inv√©s do m√©todo
         // nativo do Internet Explorer (attachEvent).
         elements[e]['on' + eventType] = eventFunction;
       }
@@ -105,14 +105,14 @@ var ied_forms = new function() {
   };
 
   /**
-   * Retorna objetos de um formul·rio ao qual o nome (atributo name) seja
-   * equivalente ao argumento fieldsName. Esse argumento aceita expressıes
-   * regulares, o que o torna mais flexÌvel para atribuir eventos ou atributos
-   * a m˙ltiplos elementos da ·rvore DOM.
+   * Retorna objetos de um formul√°rio ao qual o nome (atributo name) seja
+   * equivalente ao argumento fieldsName. Esse argumento aceita express√µes
+   * regulares, o que o torna mais flex√≠vel para atribuir eventos ou atributos
+   * a m√∫ltiplos elementos da √°rvore DOM.
    *
    * @param document docObj      Um objeto document, geralmente o objeto global document.
-   * @param string   formId      O atributo "id" do formul·rio.
-   * @param string   fieldsName  O nome do elemento de formul·rio ou uma string Regex.
+   * @param string   formId      O atributo "id" do formul√°rio.
+   * @param string   fieldsName  O nome do elemento de formul√°rio ou uma string Regex.
    * @return Array   Um array com os elementos encontrados.
    */
   this.getElementsByName = function(docObj, formId, fieldsName) {

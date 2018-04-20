@@ -1,4 +1,4 @@
--- Referências para aluno e docente i-Educar x Educacenso.
+-- ReferÃªncias para aluno e docente i-Educar x Educacenso.
 CREATE TABLE modules.educacenso_cod_aluno
 (
   cod_aluno integer NOT NULL,

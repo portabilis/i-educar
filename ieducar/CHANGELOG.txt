@@ -4,107 +4,107 @@ i-Educar 1.1.0 2010-02-15
 -------------------------
 
 - #37 by Eriksen, Walter Marinho: Grande limpeza no banco de dados. Apenas dados
-  essenciais est„o sendo distribuÌdos como paÌses, estados e municÌpios
-  brasileiros seguindo a documentaÁ„o do INEP/Educacenso/CEF
+  essenciais est√£o sendo distribu√≠dos como pa√≠ses, estados e munic√≠pios
+  brasileiros seguindo a documenta√ß√£o do INEP/Educacenso/CEF
 - Nova tabela no banco de dados, schema public, tabela changelog, para permitir
   versionamento do schema
 - Campo num_livro da tabela public.documento alterado para character varying,
-  devido a livros poderem conter caracteres alfa-numÈricos. Trigger de validaÁ„o
+  devido a livros poderem conter caracteres alfa-num√©ricos. Trigger de valida√ß√£o
   e arquivo PHP relacionado corrigidos
-- Arquivo .htaccess para servidores web Apache, com configuraÁ„o para garantir
-  uma melhor seguranÁa alÈm de configuraÁ„o mÌnima do PHP necess·ria para o
+- Arquivo .htaccess para servidores web Apache, com configura√ß√£o para garantir
+  uma melhor seguran√ßa al√©m de configura√ß√£o m√≠nima do PHP necess√°ria para o
   i-Educar
 - Arquivo robots.txt, indicando para os crawlers web a evitarem o processo de
-  indexaÁ„o dos diretÛrios e arquivos do i-Educar.
-- Novo modelo de configuraÁ„o da aplicaÁ„o. ConfiguraÁıes b·sicas est„o
+  indexa√ß√£o dos diret√≥rios e arquivos do i-Educar.
+- Novo modelo de configura√ß√£o da aplica√ß√£o. Configura√ß√µes b√°sicas est√£o
   localizadas no arquivo ieducar.ini
-- TÌtulo e logo dos relatÛrios configur·veis atravÈs do arquivo ieducar.ini
-- Fontes MS Core Fonts substituÌdas por FreeMonoBold e VeraSans
-- Corrigido bug de seguranÁa (ExposiÁ„o de informaÁ„o), veja SA-CORE-2009-002
+- T√≠tulo e logo dos relat√≥rios configur√°veis atrav√©s do arquivo ieducar.ini
+- Fontes MS Core Fonts substitu√≠das por FreeMonoBold e VeraSans
+- Corrigido bug de seguran√ßa (Exposi√ß√£o de informa√ß√£o), veja SA-CORE-2009-002
 - Corrigido uma variedade de pequenos bugs:
-   * #34 by Eriksen: Corrigido bug no uso de fontes TTF na geraÁ„o de PDF
-   * #35 by Eriksen: Corrigido bug na geraÁ„o de PDF para plataformas Windows e
+   * #34 by Eriksen: Corrigido bug no uso de fontes TTF na gera√ß√£o de PDF
+   * #35 by Eriksen: Corrigido bug na gera√ß√£o de PDF para plataformas Windows e
      Mac
    * #36 by Eriksen: Corrigido bug ao carregar listagem de estados de um dado
-     paÌs via XMLHttpRequest
-   * by Eriksen: Corrigido codificaÁ„o de caracteres em intranet/meusdados.php e
+     pa√≠s via XMLHttpRequest
+   * by Eriksen: Corrigido codifica√ß√£o de caracteres em intranet/meusdados.php e
      em intranet/adicionar_documentos_cad.php
-   * by Eriksen: Corrigido referÍncia a imagens no arquivo calendario.css que
-     afetava layout do quadro de hor·rios
-   * by Eriksen: Corrigido bug em alocaÁ„o de cursos e disciplinas para servidor
-     que impossibilitava o cadastro ou ediÁ„o dos mesmos
-   * by Eriksen: Corrigido bug que gerava erro de SQL na ediÁ„o de pessoa fÌsica
-   * by Eriksen: Corrigido bug que n„o listava clientes do mÛdulo Biblioteca atÈ
+   * by Eriksen: Corrigido refer√™ncia a imagens no arquivo calendario.css que
+     afetava layout do quadro de hor√°rios
+   * by Eriksen: Corrigido bug em aloca√ß√£o de cursos e disciplinas para servidor
+     que impossibilitava o cadastro ou edi√ß√£o dos mesmos
+   * by Eriksen: Corrigido bug que gerava erro de SQL na edi√ß√£o de pessoa f√≠sica
+   * by Eriksen: Corrigido bug que n√£o listava clientes do m√≥dulo Biblioteca at√©
      que um cliente estivesse suspenso
-   * #17 by Eriksen: Corrigido bug que n„o listava tipos de clientes de uma
-     Biblioteca na listagem de clientes do mÛdulo Biblioteca
+   * #17 by Eriksen: Corrigido bug que n√£o listava tipos de clientes de uma
+     Biblioteca na listagem de clientes do m√≥dulo Biblioteca
    * by Eriksen: Corrigido bug no cadastro de Reserva de Vaga para alunos
      externos
-   * by Eriksen: Corrigido bug na Emiss„o de documento de reserva de vaga que
-     n„o criava o PDF
-   * by Eriksen: Corrigido bug no select de estado na criaÁ„o de logradouro,
+   * by Eriksen: Corrigido bug na Emiss√£o de documento de reserva de vaga que
+     n√£o criava o PDF
+   * by Eriksen: Corrigido bug no select de estado na cria√ß√£o de logradouro,
      CEP e bairro
    * #39 by Eriksen: Corrigido bug no cadastro de escolaridade
    * #46 by Eriksen: Corrigido problemas nas sequences que resultavam em
      erro de SQL (chave duplicada). Corrige problema originado no ticket #37
-   * by Eriksen: AtualizaÁ„o do banco de dados com as permissıes padrıes do
-     tipo de usu·rio Biblioteca (complementa ticket #41)
-   * #15 by Eriksen: Corrigido bug que n„o listava os cursos de uma escola
-     na RematrÌcula autom·tica
-   * #42 by Eriksen: Corrigido bug de bloqueio de acesso indevido na emiss„o
-     de relatÛrio de Registros de transferÍncias expedidas
-   * #43 by Eriksen: Corrigido bug de bloqueio de acesso indevido na emiss„o
+   * by Eriksen: Atualiza√ß√£o do banco de dados com as permiss√µes padr√µes do
+     tipo de usu√°rio Biblioteca (complementa ticket #41)
+   * #15 by Eriksen: Corrigido bug que n√£o listava os cursos de uma escola
+     na Rematr√≠cula autom√°tica
+   * #42 by Eriksen: Corrigido bug de bloqueio de acesso indevido na emiss√£o
+     de relat√≥rio de Registros de transfer√™ncias expedidas
+   * #43 by Eriksen: Corrigido bug de bloqueio de acesso indevido na emiss√£o
      Ata de resultado final
-   * by Eriksen: Corrigido funÁ„o de formataÁ„o para CEPs que comecem com 0
-   * by Eriksen: Corrigido problemas com a restauraÁ„o de triggers e
-     constraints das tabelas public.uf e public.municipio em decorrÍncia da
+   * by Eriksen: Corrigido fun√ß√£o de formata√ß√£o para CEPs que comecem com 0
+   * by Eriksen: Corrigido problemas com a restaura√ß√£o de triggers e
+     constraints das tabelas public.uf e public.municipio em decorr√™ncia da
      tarefa de limpeza do ticket #37
 
 i-Educar 1.0.2, 2009-05-25
 --------------------------
 
 - Pequenos refactorings nas classes de unit e functional tests
-- Corrigido bug de seguranÁa (ExposiÁ„o de informaÁ„o), veja SA-CORE-2009-001
-- #30 by Eriksen, JosÈ RogÈrio Santos: Adicionado par‚metro porta na 
-  configuraÁ„o de conex„o com o servidor
+- Corrigido bug de seguran√ßa (Exposi√ß√£o de informa√ß√£o), veja SA-CORE-2009-001
+- #30 by Eriksen, Jos√© Rog√©rio Santos: Adicionado par√¢metro porta na 
+  configura√ß√£o de conex√£o com o servidor
 - Corrigido uma variedade de pequenos bugs:
    * #33 by Eriksen: Corrigido bug que ocultava nome de aluno na listagem de 
      Reserva de Vaga
-   * #32 by Eriksen: Corrigido execuÁ„o de regra de negÛcio ao afastar servidor
-   * #31 by Eriksen, JosÈ RogÈrio Santos: Corrigido erro em funÁ„o printf de 
+   * #32 by Eriksen: Corrigido execu√ß√£o de regra de neg√≥cio ao afastar servidor
+   * #31 by Eriksen, Jos√© Rog√©rio Santos: Corrigido erro em fun√ß√£o printf de 
      debugging
-   * #26 by Eriksen: Corrigido bug na substituiÁ„o de hor·rio de servidor
-   * #25 by Eriksen: Corrigido bug em select de funÁıes durante cadastro de novo
+   * #26 by Eriksen: Corrigido bug na substitui√ß√£o de hor√°rio de servidor
+   * #25 by Eriksen: Corrigido bug em select de fun√ß√µes durante cadastro de novo
      servidor
 
 i-Educar 1.0.1, 2009-05-04
 --------------------------
 
 - #6 e #27 by Eriksen: Adicionado arquivos CHANGELOG, README e LICENSE-pt_BR na
-  distribuiÁ„o do i-Educar
+  distribui√ß√£o do i-Educar
 - Corrigido uma variedade de pequenos bugs:
-   * #27 by Eriksen: Adicionado arquivo de erro de conex„o com o banco de dados,
-     incluindo sugestıes para soluÁ„o do problema
-   * #23 by Eriksen: Corrigido bug que n„o permitia afastar servidor
+   * #27 by Eriksen: Adicionado arquivo de erro de conex√£o com o banco de dados,
+     incluindo sugest√µes para solu√ß√£o do problema
+   * #23 by Eriksen: Corrigido bug que n√£o permitia afastar servidor
    * #22 by Eriksen: Corrigido erro na listagem de faltas e atrasos de um
-     servidor que listava as ocorrÍncias de todos quando deveria mostrar
+     servidor que listava as ocorr√™ncias de todos quando deveria mostrar
      apenas do servidor especificado. Melhorias no display de dados da escola,
      horas/minutos de um atraso e o tipo da entrada
-   * #21 by Eriksen: Corrigido bug de exclus„o de categoria de nÌvel de servidor
-   * #20 by Eriksen: Corrigido bug de atualizaÁ„o/exclus„o de cadastro de 
+   * #21 by Eriksen: Corrigido bug de exclus√£o de categoria de n√≠vel de servidor
+   * #20 by Eriksen: Corrigido bug de atualiza√ß√£o/exclus√£o de cadastro de 
      motivo de afastamento de servidor
    * #18 by Eriksen: Corrigido bug na biblioteca de cadastramento do mesmo
      cliente quando na verdade era para atualizar seus dados
-   * #17 by Eriksen: Corrigido bug da lista de clientes de biblioteca quando n„o
-     havia no mÌnimo um cliente suspenso
-   * #16 by Eriksen: Corrigido bug da lista de UFs vazia no histÛrico de aluno
-   * #13 by Eriksen: Corrigido erro no login quando usu·rio tinha m˙ltiplos 
-     endereÁos IPs
-   * #12 Dispensa de disciplina n„o funcionava
-   * #11 Hora da ocorrÍncia n„o gravava quando a mesma era editada
-   * #8 OpÁıes do select de tipo de cliente estavam duplicadas
-   * #7 AÁ„o de suspender cliente estava com SQL inv·lido
-   * #5 P·gina inicial usa caminho relativo e È script PHP; bug do logout
+   * #17 by Eriksen: Corrigido bug da lista de clientes de biblioteca quando n√£o
+     havia no m√≠nimo um cliente suspenso
+   * #16 by Eriksen: Corrigido bug da lista de UFs vazia no hist√≥rico de aluno
+   * #13 by Eriksen: Corrigido erro no login quando usu√°rio tinha m√∫ltiplos 
+     endere√ßos IPs
+   * #12 Dispensa de disciplina n√£o funcionava
+   * #11 Hora da ocorr√™ncia n√£o gravava quando a mesma era editada
+   * #8 Op√ß√µes do select de tipo de cliente estavam duplicadas
+   * #7 A√ß√£o de suspender cliente estava com SQL inv√°lido
+   * #5 P√°gina inicial usa caminho relativo e √© script PHP; bug do logout
      corrigido
 
 i-Educar 1.0.0, 2009-03-20

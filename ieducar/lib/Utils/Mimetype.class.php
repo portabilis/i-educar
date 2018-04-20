@@ -1,24 +1,24 @@
 <?php
 
 /*
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  */
 
 /*
@@ -57,25 +57,25 @@
 /**
  * mimetype class.
  *
- * Essa classe È uma modificaÁ„o da classe mimetype de Jason Sheets. A classe
- * original È distribuÌda sobre uma licenÁa BSD. Essa classe estava modificada
+ * Essa classe √© uma modifica√ß√£o da classe mimetype de Jason Sheets. A classe
+ * original √© distribu√≠da sobre uma licen√ßa BSD. Essa classe estava modificada
  * dentro do arquivo intranet/download.php mas para melhorar a testabilidade,
- * foi refatorada para a sua prÛpria classe novamente.
+ * foi refatorada para a sua pr√≥pria classe novamente.
  *
- * Essa classe poder· a vir ser depreciada em favor do uso da extens„o PECL
- * {@link http://php.net/fileinfo fileinfo} do PHP 5.2 (no core na vers„o 5.3).
- * No entanto, essa dependÍncia sÛ dever· ser implantada quando um instalador
- * ou processo de verificaÁ„o de dependÍncia estiver disponÌvel.
+ * Essa classe poder√° a vir ser depreciada em favor do uso da extens√£o PECL
+ * {@link http://php.net/fileinfo fileinfo} do PHP 5.2 (no core na vers√£o 5.3).
+ * No entanto, essa depend√™ncia s√≥ dever√° ser implantada quando um instalador
+ * ou processo de verifica√ß√£o de depend√™ncia estiver dispon√≠vel.
  *
- * @author   Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author   Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @author   Jason Sheets <jsheets@shadonet.com>
  * @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
  * @license  http://opensource.org/licenses/bsd-license.php  BSD License
- * @link     http://www.phpclasses.org/browse/file/2743.html  CÛdigo fonte original
+ * @link     http://www.phpclasses.org/browse/file/2743.html  C√≥digo fonte original
  * @package  Core
- * @since    Classe disponÌvel desde a vers„o 1.1.0
+ * @since    Classe dispon√≠vel desde a vers√£o 1.1.0
  * @todo     Verificar dual-licensing do arquivo
- * @todo     Substituir por fileinfo e adicionar dependÍncia na aplicaÁ„o
+ * @todo     Substituir por fileinfo e adicionar depend√™ncia na aplica√ß√£o
  * @version  $Id$
  */
 class Mimetype

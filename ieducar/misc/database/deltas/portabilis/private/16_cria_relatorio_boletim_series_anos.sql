@@ -1,14 +1,14 @@
  	-- //
   
  	--
- 	-- Cria relat髍io em: Documentos >> Hist髍icos >> Hist髍ico Escolar (S閞ies/Anos)
+ 	-- Cria relat贸rio em: Documentos >> Hist贸ricos >> Hist贸rico Escolar (S茅ries/Anos)
 	-- @author   Ricardo Bortolotto Dagostim <ricardo@portabilis.com.br>
  	-- @license  @@license@@
  	-- @version  $Id$
   
-  insert into portal.menu_submenu values(999220,55,2,'Hist髍ico Escolar (S閞ies/Anos)','portabilis_historico_escolar_series_anos.php',NULL,3);   
+  insert into portal.menu_submenu values(999220,55,2,'Hist贸rico Escolar (S茅ries/Anos)','portabilis_historico_escolar_series_anos.php',NULL,3);   
   insert into portal.menu_funcionario values(1,0,0,999220);
-  insert into pmicontrolesis.menu values(999220,999220,999460,'Hist髍ico Escolar (S閞ies/Anos)',3,'portabilis_historico_escolar_series_anos.php','_self',1,15,192);
+  insert into pmicontrolesis.menu values(999220,999220,999460,'Hist贸rico Escolar (S茅ries/Anos)',3,'portabilis_historico_escolar_series_anos.php','_self',1,15,192);
   insert into pmieducar.menu_tipo_usuario values(1,999220,1,0,1);
  
 	-- //@UNDO

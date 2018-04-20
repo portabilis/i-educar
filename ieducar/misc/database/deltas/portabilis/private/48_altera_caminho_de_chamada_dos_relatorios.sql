@@ -1,7 +1,7 @@
  	-- //
   
  	--
- 	-- Altera caminho de emissão dos relatórios para: module/Reports/.
+ 	-- Altera caminho de emissÃ£o dos relatÃ³rios para: module/Reports/.
 	-- @author   Ricardo Bortolotto Dagostim <ricardo@portabilis.com.br>
  	-- @license  @@license@@
  	-- @version  $Id$
@@ -9,7 +9,7 @@
   update portal.menu_submenu set arquivo = 'module/Reports/MovimentoAlunos' where cod_menu_submenu = 999201;
   update pmicontrolesis.menu set caminho = 'module/Reports/MovimentoAlunos' where ref_cod_menu_submenu = 999201;
 
-  -- Remove formulários antigos que foram unificados  
+  -- Remove formulÃ¡rios antigos que foram unificados  
 
   delete from pmieducar.menu_tipo_usuario where ref_cod_menu_submenu = 999104;
   delete from pmicontrolesis.menu where cod_menu = 999104;
@@ -121,8 +121,8 @@
   update portal.menu_submenu set arquivo = 'module/Reports/DiarioClasseContraCapa' where cod_menu_submenu in(999506);
   update pmicontrolesis.menu set caminho = 'module/Reports/DiarioClasseContraCapa' where ref_cod_menu_submenu in(999506);
 
-  update portal.menu_submenu set arquivo = 'module/Reports/HistoricoEscolar', nm_submenu = 'Histórico Escolar' where cod_menu_submenu = 999200;
-  update pmicontrolesis.menu set caminho = 'module/Reports/HistoricoEscolar', tt_menu = 'Histórico Escolar' where   ref_cod_menu_submenu = 999200;
+  update portal.menu_submenu set arquivo = 'module/Reports/HistoricoEscolar', nm_submenu = 'HistÃ³rico Escolar' where cod_menu_submenu = 999200;
+  update pmicontrolesis.menu set caminho = 'module/Reports/HistoricoEscolar', tt_menu = 'HistÃ³rico Escolar' where   ref_cod_menu_submenu = 999200;
 
   update pmicontrolesis.menu set ord_menu = 8 where cod_menu = 999605;
 
@@ -159,9 +159,9 @@
   update portal.menu_submenu set arquivo = 'portabilis_movimento_alunos.php' where cod_menu_submenu = 999201;
   update pmicontrolesis.menu set caminho = 'portabilis_movimento_alunos.php' where ref_cod_menu_submenu = 999201;
 
-  insert into portal.menu_submenu values(999104,55,2,'Frequência dos Professores','portabilis_frequencia_professor.php',NULL,3);
+  insert into portal.menu_submenu values(999104,55,2,'FrequÃªncia dos Professores','portabilis_frequencia_professor.php',NULL,3);
   insert into portal.menu_funcionario values(1,0,0,999104);
-  insert into pmicontrolesis.menu values(999104,999104,999301,'Frequência dos Professores',1,'portabilis_frequencia_professor.php','_self',1,15,84);
+  insert into pmicontrolesis.menu values(999104,999104,999301,'FrequÃªncia dos Professores',1,'portabilis_frequencia_professor.php','_self',1,15,84);
   insert into pmieducar.menu_tipo_usuario values(1,999104,1,0,1);
   
   insert into portal.menu_submenu values(999106,55,2,'Faltas dos Alunos por      Disciplina','portabilis_faltas_alunos_disciplinas.php',NULL,3);
@@ -169,9 +169,9 @@
   insert into pmicontrolesis.menu values(999106,999106,999301,'Faltas dos Alunos por Disciplina',3,'portabilis_faltas_alunos_disciplinas.php', '_self',1,15,192);
   insert into pmieducar.menu_tipo_usuario values(1,999106,1,0,1);
 
-  insert into portal.menu_submenu values(999612,55,2,'Boletim Escolar - (Ed. Infantil/1º Ano)','portabilis_boletim_educ_infantil_semestral.php',NULL,3);
+  insert into portal.menu_submenu values(999612,55,2,'Boletim Escolar - (Ed. Infantil/1Âº Ano)','portabilis_boletim_educ_infantil_semestral.php',NULL,3);
   insert into portal.menu_funcionario values(1,0,0,999612);
-  insert into pmicontrolesis.menu values(999612,999612,999450,'Boletim Escolar - (Ed. Infantil/1º Ano)',2,'portabilis_boletim_educ_infantil_semestral.php','_self',1,15,192);
+  insert into pmicontrolesis.menu values(999612,999612,999450,'Boletim Escolar - (Ed. Infantil/1Âº Ano)',2,'portabilis_boletim_educ_infantil_semestral.php','_self',1,15,192);
   insert into pmieducar.menu_tipo_usuario values(1,999612,1,0,1);
 
   insert into portal.menu_submenu values(999224,55,2,'Boletim Escolar - Parecer Desc. (Geral)','portabilis_boletim_parecer_geral.php',NULL,3);
@@ -194,14 +194,14 @@
   insert into pmicontrolesis.menu values(999218,999218,999450,'Boletim Escolar - Trimestral',8,'portabilis_boletim_trimestral.php','_self',1,15,192);
   insert into pmieducar.menu_tipo_usuario values(1,999218,1,0,1);
 
-  insert into portal.menu_submenu values(999215,55,2,'Histórico Escolar (9 Anos)','portabilis_historico_escolar_9anos.php',NULL,3);
+  insert into portal.menu_submenu values(999215,55,2,'HistÃ³rico Escolar (9 Anos)','portabilis_historico_escolar_9anos.php',NULL,3);
   insert into portal.menu_funcionario values(1,0,0,999215);
-  insert into pmicontrolesis.menu values(999215,999215,999460,'Histórico Escolar (9 Anos)',2,'portabilis_historico_escolar_9anos.php','_self',1,15,192);
+  insert into pmicontrolesis.menu values(999215,999215,999460,'HistÃ³rico Escolar (9 Anos)',2,'portabilis_historico_escolar_9anos.php','_self',1,15,192);
   insert into pmieducar.menu_tipo_usuario values(1,999215,1,0,1);
 
-  insert into portal.menu_submenu values(999220,55,2,'Histórico Escolar (Séries/Anos)','portabilis_historico_escolar_series_anos.php',NULL,3);
+  insert into portal.menu_submenu values(999220,55,2,'HistÃ³rico Escolar (SÃ©ries/Anos)','portabilis_historico_escolar_series_anos.php',NULL,3);
   insert into portal.menu_funcionario values(1,0,0,999220);
-  insert into pmicontrolesis.menu values(999220,999220,999460,'Histórico Escolar (Séries/Anos)',3,'portabilis_historico_escolar_series_anos.php','_self',1,15,192);
+  insert into pmicontrolesis.menu values(999220,999220,999460,'HistÃ³rico Escolar (SÃ©ries/Anos)',3,'portabilis_historico_escolar_series_anos.php','_self',1,15,192);
   insert into pmieducar.menu_tipo_usuario values(1,999220,1,0,1);
 
   update portal.menu_submenu set arquivo = 'portabilis_alunos_ocorrencias_disciplinares.php' where cod_menu_submenu = 999217;  
@@ -288,8 +288,8 @@
   update portal.menu_submenu set arquivo = 'portabilis_registro_contra_capa_diario.php' where cod_menu_submenu in(999506);
   update pmicontrolesis.menu set caminho = 'portabilis_registro_contra_capa_diario.php' where ref_cod_menu_submenu in(999506);
 
-  update portal.menu_submenu set arquivo = 'portabilis_historico_escolar.php', nm_submenu = 'Histórico Escolar (8 Anos)' where cod_menu_submenu = 999200;
-  update pmicontrolesis.menu set caminho = 'portabilis_historico_escolar.php', tt_menu = 'Histórico Escolar (8 Anos)' where ref_cod_menu_submenu = 999200;
+  update portal.menu_submenu set arquivo = 'portabilis_historico_escolar.php', nm_submenu = 'HistÃ³rico Escolar (8 Anos)' where cod_menu_submenu = 999200;
+  update pmicontrolesis.menu set caminho = 'portabilis_historico_escolar.php', tt_menu = 'HistÃ³rico Escolar (8 Anos)' where ref_cod_menu_submenu = 999200;
 
   update pmicontrolesis.menu set ord_menu = 3 where cod_menu = 999605;
 

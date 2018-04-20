@@ -3,13 +3,13 @@
 --
 -- Restaura triggers e constraints das tabelas public.municipio e public.uf
 -- que foram totalmente desabilitadas pelos scripts de limpeza de banco de
--- dados. O schema de todos os comandos é o public.
+-- dados. O schema de todos os comandos Ã© o public.
 --
--- Nenhum efeito colateral foi relatado por conta dessas remoções. Este
--- delta visa apenas a reestabelecer a eventual consistência que estas
--- triggers e constraint dão.
+-- Nenhum efeito colateral foi relatado por conta dessas remoÃ§Ãµes. Este
+-- delta visa apenas a reestabelecer a eventual consistÃªncia que estas
+-- triggers e constraint dÃ£o.
 --
--- Para visualizar a diferença e ter um número que indique a quantidade
+-- Para visualizar a diferenÃ§a e ter um nÃºmero que indique a quantidade
 -- de triggers habilitadas, execute a seguinte query em uma base do
 -- i-Educar 1.0.2 (rev. 57) e outra do primeiro beta do i-Educar 1.1.0
 -- (rev. 80). Substitua ? por 'municipio' e depois por 'uf'.
@@ -28,11 +28,11 @@
 --   AND pg_class.oid = pg_trigger.tgrelid)
 -- <code>
 --
--- O script que não reestabeleceu as triggers e constraints foi o da
--- terceira versão (2_populate_basic_data.sql@6516), disponível no ticket #37:
+-- O script que nÃ£o reestabeleceu as triggers e constraints foi o da
+-- terceira versÃ£o (2_populate_basic_data.sql@6516), disponÃ­vel no ticket #37:
 -- {@link http://svn.softwarepublico.gov.br/trac/ieducar/ticket/37#change_1}.
 --
--- @author   Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+-- @author   Eriksen Costa PaixÃ£o <eriksen.paixao_bs@cobra.com.br>
 -- @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
 -- @version  $Id$
 --
