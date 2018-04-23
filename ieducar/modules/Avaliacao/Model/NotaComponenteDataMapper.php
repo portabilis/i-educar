@@ -27,13 +27,15 @@ class Avaliacao_Model_NotaComponenteDataMapper extends CoreExt_DataMapper
   );
 
   protected $_attributeMap = array(
+      'id'                        => 'id',
       'notaAluno'                 => 'nota_aluno_id',
       'componenteCurricular'      => 'componente_curricular_id',
-      'etapa'                     => 'etapa',
       'nota'                      => 'nota',
       'notaArredondada'           => 'nota_arredondada',
+      'etapa'                     => 'etapa',
       'notaRecuperacaoParalela'   => 'nota_recuperacao',
-      'notaRecuperacaoEspecifica' => 'nota_recuperacao_especifica',
-      'notaOriginal'              => 'nota_original'
+      'notaOriginal'              => 'nota_original',
+      'notaRecuperacaoEspecifica' => 'nota_recuperacao_especifica'
+
   );
 }
