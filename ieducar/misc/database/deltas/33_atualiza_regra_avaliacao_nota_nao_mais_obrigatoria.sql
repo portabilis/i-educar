@@ -1,7 +1,7 @@
 -- //
 
 --
--- Remove a obrigatoriedade de FÛrmula de MÈdia para uma Regra de AvaliaÁ„o,
+-- Remove a obrigatoriedade de F√≥rmula de M√©dia para uma Regra de Avalia√ß√£o,
 -- possibilitando que o campo contenha o valor NULL.
 --
 -- @author   Eriksen Costa <eriksencosta@gmail.com>
@@ -16,9 +16,9 @@ ALTER TABLE modules.regra_avaliacao
 
 -- //@UNDO
 
--- N„o È o ideal, j· que esse pode ser de uma instituiÁ„o diferente. Mas como a
--- necessidade de um rollback È muito remota e precisamos satisfazer uma
--- foreign key, pegamos o primeiro id disponÌvel.
+-- N√£o √© o ideal, j√° que esse pode ser de uma institui√ß√£o diferente. Mas como a
+-- necessidade de um rollback √© muito remota e precisamos satisfazer uma
+-- foreign key, pegamos o primeiro id dispon√≠vel.
 UPDATE
   modules.regra_avaliacao
 SET

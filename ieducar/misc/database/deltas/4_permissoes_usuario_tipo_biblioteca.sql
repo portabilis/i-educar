@@ -1,20 +1,20 @@
 -- //
 
 --
--- Define as permissıes padrıes que o usu·rio do tipo Biblioteca ter·. Essas
--- permissıes estavam ausentes e, juntamente com o bug relatado no 
+-- Define as permiss√µes padr√µes que o usu√°rio do tipo Biblioteca ter√°. Essas
+-- permiss√µes estavam ausentes e, juntamente com o bug relatado no 
 -- {@link http://svn.softwarepublico.gov.br/trac/ieducar/ticket/41 ticket 41},
--- criava a dificuldade do usu·rio administrador criar usu·rios para o mÛdulo
+-- criava a dificuldade do usu√°rio administrador criar usu√°rios para o m√≥dulo
 -- Biblioteca.
 --
--- Todas as permissıes existentes s„o atribuÌdas ao tipo, com permiss„o para
--- cadastro e exclus„o, exceto para a funcionalidade "Biblioteca".
+-- Todas as permiss√µes existentes s√£o atribu√≠das ao tipo, com permiss√£o para
+-- cadastro e exclus√£o, exceto para a funcionalidade "Biblioteca".
 --
--- Esse delta exclui todas as permisıes para o tipo referenciado de valor 3,
--- ent„o, caso tenha dado outra sem‚ntica para esse tipo de usu·rio, 
+-- Esse delta exclui todas as permis√µes para o tipo referenciado de valor 3,
+-- ent√£o, caso tenha dado outra sem√¢ntica para esse tipo de usu√°rio, 
 -- desconsidere esse delta.
 --
--- @author   Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+-- @author   Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
 -- @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
 -- @version  $Id$
 --

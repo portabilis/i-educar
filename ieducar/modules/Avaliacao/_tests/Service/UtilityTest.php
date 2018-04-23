@@ -1,31 +1,31 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     Avaliacao
  * @subpackage  UnitTests
- * @since       Arquivo disponÌvel desde a vers„o 1.1.0
+ * @since       Arquivo dispon√≠vel desde a vers√£o 1.1.0
  * @version     $Id$
  */
 
@@ -34,12 +34,12 @@ require_once 'Avaliacao/_tests/Service/TestCommon.php';
 /**
  * Avaliacao_Service_UtilityTest class.
  *
- * @author      Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     Avaliacao
  * @subpackage  UnitTests
- * @since       Classe disponÌvel desde a vers„o 1.1.0
+ * @since       Classe dispon√≠vel desde a vers√£o 1.1.0
  * @version     @@package_version@@
  */
 class Avaliacao_Service_UtilityTest extends Avaliacao_Service_TestCommon
@@ -50,15 +50,15 @@ class Avaliacao_Service_UtilityTest extends Avaliacao_Service_TestCommon
 
     try {
       $service->arredondaNota(new Avaliacao_Model_NotaComponente());
-      $this->fail('O valor "inst‚ncia Avaliacao_Model_NotaComponente()" deveria '
-                  . 'ter causado um exceÁ„o pois o atributo "nota" È NULL por padr„o.');
+      $this->fail('O valor "inst√¢ncia Avaliacao_Model_NotaComponente()" deveria '
+                  . 'ter causado um exce√ß√£o pois o atributo "nota" √© NULL por padr√£o.');
     }
     catch (CoreExt_Exception_InvalidArgumentException $e) {
     }
 
     try {
       $service->arredondaNota('abc 7.5');
-      $this->fail('O valor "abc 7.5" deveria ter causado um exceÁ„o.');
+      $this->fail('O valor "abc 7.5" deveria ter causado um exce√ß√£o.');
     }
     catch (CoreExt_Exception_InvalidArgumentException $e) {
     }
@@ -72,7 +72,7 @@ class Avaliacao_Service_UtilityTest extends Avaliacao_Service_TestCommon
 
   public function testArredondaNotaConceitual()
   {
-    // Valores padr„o dos atributos de TabelaArredondamento_Model_TabelaValor
+    // Valores padr√£o dos atributos de TabelaArredondamento_Model_TabelaValor
     $data = array(
       'tabelaArredondamento' => 1,
       'nome'                 => NULL,
@@ -100,7 +100,7 @@ class Avaliacao_Service_UtilityTest extends Avaliacao_Service_TestCommon
     // O
     $tabelaValores[2] = new TabelaArredondamento_Model_TabelaValor($data);
     $tabelaValores[2]->nome        = 'O';
-    $tabelaValores[2]->descricao   = '”timo';
+    $tabelaValores[2]->descricao   = '√ìtimo';
     $tabelaValores[2]->valorMinimo = 8.01;
     $tabelaValores[2]->valorMaximo = 10.0;
 

@@ -4,13 +4,13 @@
 -- Atualiza a foreign key constraint de pmieducar.serie_disciplina
 -- para referenciar modules.componente_curricular.
 --
--- Adiciona referências a pmieducar.curso na tabela 
+-- Adiciona referÃªncias a pmieducar.curso na tabela 
 -- pmieducar.servidor_disciplina.
 --
--- Essa medida faz parte da tarefa de substituição do sistema de notas/faltas
--- por um módulo mais robusto e parametrizável.
+-- Essa medida faz parte da tarefa de substituiÃ§Ã£o do sistema de notas/faltas
+-- por um mÃ³dulo mais robusto e parametrizÃ¡vel.
 --
--- @author   Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+-- @author   Eriksen Costa PaixÃ£o <eriksen.paixao_bs@cobra.com.br>
 -- @license  @@license@@
 -- @version  $Id$
 --

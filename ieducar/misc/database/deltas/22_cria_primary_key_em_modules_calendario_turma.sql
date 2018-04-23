@@ -1,11 +1,11 @@
 -- //
 
 --
--- Cria a chave prim·ria na tabela modules.calendario_turma. O sql da tabela foi
--- gerado a partir de uma modelagem incompleta, que n„o continha as definiÁıes de
--- chave prim·ria.
+-- Cria a chave prim√°ria na tabela modules.calendario_turma. O sql da tabela foi
+-- gerado a partir de uma modelagem incompleta, que n√£o continha as defini√ß√µes de
+-- chave prim√°ria.
 --
--- @author   Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+-- @author   Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
 -- @license  @@license@@
 -- @version  $Id$
 --
@@ -16,6 +16,6 @@ ALTER TABLE "modules"."calendario_turma"
 
 -- //@UNDO
 
--- SQL omitido intencionalmente. A tabela n„o È para ser criada sem a primary key.
+-- SQL omitido intencionalmente. A tabela n√£o √© para ser criada sem a primary key.
 
 -- //

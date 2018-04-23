@@ -4,7 +4,7 @@
 -- Cria as tabelas modules.educacenso_cod_aluno e
 -- modules.educacenso_cod_docente.
 --
--- @author   Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+-- @author   Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
 -- @license  @@license@@
 -- @version  $Id$
 --
