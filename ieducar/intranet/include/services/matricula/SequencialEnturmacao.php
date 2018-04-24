@@ -152,7 +152,7 @@ class SequencialEnturmacao {
     $matricula = new clsPmieducarMatricula($this->refCodMatricula);
     $matricula = $matricula->detalhe();
 
-    $alunos['novo-aluno'] = strtoupper($matricula['nome']);
+    $alunos['novo-aluno'] = limpa_acentos(strtoupper($matricula['nome']));
 
     asort($alunos);
 
