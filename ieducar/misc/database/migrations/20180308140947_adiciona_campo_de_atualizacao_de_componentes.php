@@ -18,11 +18,11 @@ class AdicionaCampoDeAtualizacaoDeComponentes extends AbstractMigration
             END;
             $$ language 'plpgsql';
 
-            CREATE OR REPLACE TRIGGER update_escola_serie_disciplina_updated_at
+            CREATE TRIGGER update_escola_serie_disciplina_updated_at
             BEFORE UPDATE ON escola_serie_disciplina
             FOR EACH ROW EXECUTE PROCEDURE update_updated_at();
 
-            CREATE OR REPLACE TRIGGER update_componente_curricular_turma_updated_at
+            CREATE TRIGGER update_componente_curricular_turma_updated_at
             BEFORE UPDATE ON componente_curricular_turma
             FOR EACH ROW EXECUTE PROCEDURE update_updated_at();
         ");
