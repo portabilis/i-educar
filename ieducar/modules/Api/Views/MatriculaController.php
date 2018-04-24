@@ -37,6 +37,10 @@ require_once 'intranet/include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'Portabilis/Date/Utils.php';
 
+/**
+ * Class MatriculaController
+ * @deprecated Essa versão da API pública será descontinuada
+ */
 class MatriculaController extends ApiCoreController
 {
 

@@ -37,6 +37,10 @@ require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
 require_once 'intranet/include/pmieducar/clsPmieducarAlunoBeneficio.inc.php';
 
+/**
+ * Class BeneficioController
+ * @deprecated Essa versão da API pública será descontinuada
+ */
 class BeneficioController extends ApiCoreController
 {
   // search options

@@ -39,6 +39,10 @@ require_once 'Reports/Tipos/TipoBoletim.php';
 require_once "App/Model/IedFinder.php";
 require_once 'include/funcoes.inc.php';
 
+/**
+ * Class TurmaController
+ * @deprecated Essa versão da API pública será descontinuada
+ */
 class TurmaController extends ApiCoreController
 {
   // validators

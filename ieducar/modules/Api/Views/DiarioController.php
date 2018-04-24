@@ -44,6 +44,10 @@ require_once 'App/Model/MatriculaSituacao.php';
 
 require_once 'Portabilis/String/Utils.php';
 
+/**
+ * Class DiarioController
+ * @deprecated Essa versão da API pública será descontinuada
+ */
 class DiarioController extends ApiCoreController
 {
   protected $_processoAp        = 642;

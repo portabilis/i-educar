@@ -37,6 +37,10 @@ require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
 require_once 'lib/Portabilis/Utils/Database.php';
 
+/**
+ * Class EtapacursoController
+ * @deprecated Essa versão da API pública será descontinuada
+ */
 class EtapacursoController extends ApiCoreController
 {
   // search options

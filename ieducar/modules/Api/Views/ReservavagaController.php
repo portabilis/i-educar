@@ -38,6 +38,10 @@ require_once 'lib/Portabilis/String/Utils.php';
 require_once 'lib/Portabilis/Date/Utils.php';
 require_once 'include/funcoes.inc.php';
 
+/**
+ * Class ReservavagaController
+ * @deprecated Essa versão da API pública será descontinuada
+ */
 class ReservavagaController extends ApiCoreController
 {
 
