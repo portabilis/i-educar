@@ -323,7 +323,7 @@ abstract class CoreExt_DataMapper
      }
 
     foreach ($pkey as $key => $pk) {
-      $whereName = $this->_getTableColumn($this->_primaryKey[$key]);
+      $whereName = $this->_getTableColumn($key);
       $where[] = sprintf("%s = '%s'", $whereName, $pk);
     }
 
@@ -333,6 +333,7 @@ abstract class CoreExt_DataMapper
     return sprintf("SELECT %s FROM %s WHERE %s", $this->_getTableColumns(),
       $this->_getTableName(), implode(' AND ', $where));
   }
+
 
   /**
    * Retorna uma query SQL para a operação INSERT. Utiliza para isso os
@@ -352,8 +353,8 @@ abstract class CoreExt_DataMapper
     $sql = 'INSERT INTO %s (%s) VALUES (%s)';
     $data = $this->_getDbAdapter()->formatValues($instance->toDataArray());
 
-    // Remove o campo identidade e campos não-persistentes
-    $data = $this->_cleanData($data);
+    //Remove campos null
+    $data = $this->_cleanNullValuesToSave($data);
 
     // Pega apenas os valores do array
     $values = array_values($data);
@@ -462,18 +463,10 @@ abstract class CoreExt_DataMapper
     $sql = 'DELETE FROM %s WHERE %s';
 
     $where = array();
-    if (is_numeric($instance)) {
-      $where[] = sprintf("%s = '%s'", $this->_primaryKey[0], $instance);
-    } elseif (is_array($instance)) {
-      foreach ($this->_primaryKey as $key => $pk) {
-        $whereName = $this->_getTableColumn($key);
-        $where[] = sprintf("%s = '%s'", $whereName, $instance->get($key));
-      }
+    foreach ($this->_primaryKey as $key => $pk) {
+      $whereName = $this->_getTableColumn($key);
+      $where[] = sprintf("%s = '%s'", $whereName, $instance->get($key));
     }
-
-    // if(empty($where)) {
-    //   return '';
-    // }
 
     return sprintf($sql, $this->_getTableName(), implode(' AND ', $where));
   }
@@ -574,6 +567,23 @@ abstract class CoreExt_DataMapper
     return $this->_createEntityObject($this->_getDbAdapter()->Tupla());
   }
 
+    /**
+     * Retorna um registro que tenha como identificador (chave única ou composta)
+     * o valor dado por $pkey.
+     *
+     * @param  array|long $pkey
+     * @return CoreExt_Entity
+     * @throws Exception
+     */
+    public function exists($pkey)
+    {
+        $this->_getDbAdapter()->Consulta($this->_getFindStatment($pkey));
+        if (FALSE === $this->_getDbAdapter()->ProximoRegistro()) {
+            return false;
+        }
+        return true;
+    }
+
   /**
    * Salva ou atualiza um registro através de uma instância de CoreExt_Entity.
    *
@@ -597,21 +607,21 @@ abstract class CoreExt_DataMapper
         $value = $instance->get($key);
         if (!isset($value)) {
           $hasValuePk = false;
-          require_once 'CoreExt/DataMapper/Exception.php';
-          throw new CoreExt_DataMapper_Exception('Erro de compound key. Uma das primary keys tem o valor NULL: "' . $pk . '"');
         }
       }
     }
 
     if ($hasValuePk) {
-      $instance->markOld();
+      if ($this->exists($this->buildKeyToFind($instance))){
+        $instance->markOld();
+      }
     }
     @session_start();
     $pessoa_logada = $_SESSION['id_pessoa'];
     @session_write_close();
 
     if ($instance->isNew()) {
-      $returning = count($this->_primaryKey) == 1 && array_shift(array_values($this->_primaryKey)) == 'id' ? ' RETURNING id;' : ' RETURNING NULL;';
+      $returning = ' RETURNING '.implode(',', array_values($this->_primaryKey));
       $return = $this->_getDbAdapter()->Consulta($this->_getSaveStatment($instance). $returning);
       $result = pg_fetch_row($return);
       $id = $result[0];
@@ -622,11 +632,8 @@ abstract class CoreExt_DataMapper
         $auditoria->inclusao($info);
       }
     }
-    elseif ($instance->get(array_shift(array_keys($this->_primaryKey)))) {
-      $pkSave = array();
-      foreach ($this->_primaryKey as $key => $val) {
-        $pkSave[$key] = $instance->get($key);
-      }
+    elseif (!$instance->isNew()) {
+      $pkSave = $this->buildKeyToFind($instance);
 
       $tmpEntry = $this->find($pkSave);
       $oldInfo = $tmpEntry->toDataArray();
@@ -638,8 +645,6 @@ abstract class CoreExt_DataMapper
 
       $auditoria = new clsModulesAuditoriaGeral($this->_tableName, $pessoa_logada, $instance->get(array_shift(array_keys($this->_primaryKey))));
       $auditoria->alteracao($oldInfo, $newInfo);
-    } else {
-      $return = $this->_getDbAdapter()->Consulta($this->_getUpdateStatment($instance));
     }
 
     return $return;
@@ -675,23 +680,43 @@ abstract class CoreExt_DataMapper
   public function delete($instance)
   {
       $info = array();
-      if((is_object($instance) && $instance->id) || (!is_object($instance) && $instance)){
-        $tmpEntry = $this->find(is_object($instance) ? $instance->id : $instance);
+      $pkToDelete = $this->buildKeyToFind($instance);
+      if((is_object($instance) && $instance->id) || (!is_object($instance) && $instance)) {
+        $tmpEntry = $this->find($pkToDelete);
         $info = $tmpEntry->toDataArray();
       }
 
-      $return = $this->_getDbAdapter()->Consulta($this->_getDeleteStatment($instance));
+      $return = $this->_getDbAdapter()->Consulta($this->_getDeleteStatment($tmpEntry));
 
       if(count($info)){
         @session_start();
         $pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
-        $auditoria = new clsModulesAuditoriaGeral($this->_tableName, $pessoa_logada, $instance->id);
+        $auditoria = new clsModulesAuditoriaGeral($this->_tableName, $pessoa_logada, array_shift(array_values($instance)));
         $auditoria->exclusao($info);
       }
 
       return $return;
+  }
+
+  /**
+   * Retorna um array com chaves do mapper.
+   *
+   * @return array
+   */
+
+  public function buildKeyToFind($instance){
+      $pkInstance = array();
+      if (is_numeric($instance)){
+        $pkInstance[array_shift(array_keys($this->_primaryKey))] = $instance;
+      } else if (is_object($instance)) {
+        foreach ($this->_primaryKey as $key => $item) {
+          $pkInstance[$key] = $instance->get($key);
+        }
+      }
+
+      return $pkInstance;
   }
 
   /**
@@ -719,6 +744,19 @@ abstract class CoreExt_DataMapper
     foreach ($this->_notPersistable as $field) {
       if (array_key_exists($field, $data)) {
         unset($data[$field]);
+      }
+    }
+
+    return $data;
+  }
+
+  /*
+   * Remove campos null para realizar insert
+  */
+  protected function _cleanNullValuesToSave(array $data){
+    foreach ($data as $key => $val) {
+      if (is_null($val)){
+        unset($data[$key]);
       }
     }
 
