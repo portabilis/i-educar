@@ -348,13 +348,12 @@ abstract class CoreExt_DataMapper
     }
     elseif (is_array($pkey)) {
       foreach ($pkey as $key => $pk) {
-        if (is_int($key)) {
-          $whereName = $this->_getTableColumn($this->_primaryKey[$key]);
+        $whereName = $this->_getTableColumn($this->_primaryKey[$key]);
+        if (is_numeric($pk)) {
+          $where[] = sprintf("%s = '%d'", $whereName, floatval($pk));
+        } elseif (is_string($pk)) {
+          $where[] = sprintf("%s = '%s'", $whereName, $pk);
         }
-        elseif (is_string($key)) {
-          $whereName = $this->_getTableColumn($key);
-        }
-        $where[] = sprintf("%s = '%d'", $whereName, floatval($pk));
       }
     }
 
@@ -424,11 +423,14 @@ abstract class CoreExt_DataMapper
   protected function _getUpdateStatment(CoreExt_Entity $instance)
   {
     $sql = 'UPDATE %s SET %s WHERE %s';
-    $data = $this->_getDbAdapter()->formatValues($instance->toDataArray());
+    // Retorna somente os campos que foram alterados
+    $data = $this->_getDbAdapter()->formatValues($this->returnOnlyFieldsChanged($instance));
 
     // Remove o campo identidade e campos não-persistentes
     $data = $this->_cleanData($data);
-
+    if (empty($data)) {
+      return "";
+    }
     // Trata os valores NULL diferentemente dos outros, para evitar erro
     // de execução query
     $columns = array();
@@ -447,11 +449,30 @@ abstract class CoreExt_DataMapper
     $where = array();
     foreach ($this->_primaryKey as $pk) {
       $whereName = $this->_getTableColumn($pk);
-      $where[] = sprintf("%s = '%d'", $whereName, $instance->get($pk));
+      $where[] = sprintf("%s = '%s'", $whereName, $instance->get($pk));
     }
 
     return sprintf($sql, $this->_getTableName(), implode(', ', $columns),
       implode(' AND ', $where));
+  }
+
+  //retorna todos os campos que estão diferentes da entidade no banco
+  protected function returnOnlyFieldsChanged($instance)
+  {
+    if (is_array($this->_primaryKey)) {
+      $pkValue = array();
+      foreach ($this->_primaryKey as $pk) {
+        $pkValue[] = $instance->get($pk);
+      }
+      $tmpEntry = $this->find($pkValue);
+    } else {
+      $tmpEntry = $this->find($instance->id);
+    }
+    $oldInstance = $tmpEntry->toDataArray();
+
+    $newInstance = $instance->toDataArray();
+
+    return array_diff_assoc( $newInstance, $oldInstance);
   }
 
   /**
@@ -605,10 +626,12 @@ abstract class CoreExt_DataMapper
     // Coumpound key, todos os valores precisam estar setados, seja para
     // INSERT ou UPDATE. A instância precisa ser marcada explicitamente
     // como "old" para que UPDATE seja chamado.
+    $hasValuePk = true;
     if (1 < count($this->_primaryKey)) {
       foreach ($this->_primaryKey as $pk) {
         $value = $instance->get($pk);
         if (!isset($value)) {
+          $hasValuePk = false;
           require_once 'CoreExt/DataMapper/Exception.php';
           throw new CoreExt_DataMapper_Exception('Erro de compound key. Uma das primary keys tem o valor NULL: "' . $pk . '"');
         }
@@ -617,10 +640,13 @@ abstract class CoreExt_DataMapper
     // Field identity, se estiver presente, marca instância como "old".
     elseif (1 == count($this->_primaryKey)) {
       if (isset($instance->id)) {
-        $instance->markOld();
+          $hasValuePk = false;
       }
     }
 
+    if ($hasValuePk) {
+      $instance->markOld();
+    }
     @session_start();
     $pessoa_logada = $_SESSION['id_pessoa'];
     @session_write_close();
@@ -719,8 +745,10 @@ abstract class CoreExt_DataMapper
    */
   protected function _cleanData(array $data)
   {
-    if (array_key_exists('id', $data)) {
-      unset($data['id']);
+    foreach ($this->_primaryKey as $key) {
+      if (array_key_exists($key, $data)) {
+        unset($data[$key]);
+      }
     }
 
     // Remove dados não-persistíveis
