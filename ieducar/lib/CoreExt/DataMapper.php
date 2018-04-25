@@ -392,7 +392,7 @@ abstract class CoreExt_DataMapper
     // Remove o campo identidade e campos não-persistentes
     $data = $this->_cleanData($data);
     if (empty($data)) {
-      return "";
+      return '';
     }
     // Trata os valores NULL diferentemente dos outros, para evitar erro
     // de execução query
