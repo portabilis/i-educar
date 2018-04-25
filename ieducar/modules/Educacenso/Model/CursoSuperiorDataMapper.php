@@ -29,8 +29,4 @@ class Educacenso_Model_CursoSuperiorDataMapper extends CoreExt_DataMapper
         'created_at' => 'created_at',
         'updated_at' => 'updated_at'
     );
-
-    protected $_primaryKey = array(
-        'id' => 'id'
-    );
 }
