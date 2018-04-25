@@ -327,9 +327,6 @@ abstract class CoreExt_DataMapper
       $where[] = sprintf("%s = '%s'", $whereName, $pk);
     }
 
-    // if (empty($where)){
-    //     return '';
-    // }
     return sprintf("SELECT %s FROM %s WHERE %s", $this->_getTableColumns(),
       $this->_getTableName(), implode(' AND ', $where));
   }
