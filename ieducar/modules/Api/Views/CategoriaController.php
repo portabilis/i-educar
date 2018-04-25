@@ -37,6 +37,10 @@ require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
 require_once 'intranet/include/pmieducar/clsPmieducarCategoriaAcervo.inc.php';
 
+/**
+ * Class CategoriaController
+ * @deprecated Essa versão da API pública será descontinuada
+ */
 class CategoriaController extends ApiCoreController
 {
   // search options

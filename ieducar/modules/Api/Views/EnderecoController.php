@@ -37,6 +37,10 @@ require_once 'intranet/include/funcoes.inc.php';
 require_once 'intranet/include/pmieducar/clsPmieducarUsuario.inc.php';
 require_once 'intranet/include/pmieducar/clsPmieducarMenuTipoUsuario.inc.php';
 
+/**
+ * Class EnderecoController
+ * @deprecated Essa versão da API pública será descontinuada
+ */
 class EnderecoController extends ApiCoreController
 {
 
