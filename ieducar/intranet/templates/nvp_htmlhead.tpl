@@ -96,23 +96,6 @@
     }
   </script>
 
-  <script async src="https://www.googletagmanager.com/gtag/js?id=***REMOVED***"></script>
-  <script>
-    if (window.ambiente == 'production') {
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('set', {'content_group1': window.location.hostname});
-
-      user_id = '<!-- #&USER_ID&# -->';
-      if (user_id) {
-        gtag('set', {'user_id': user_id});
-      }
-
-      gtag('config', '***REMOVED***');
-    }
-  </script>
-
   <!-- #&SCRIPT&# -->
 
   <script type="text/javascript">

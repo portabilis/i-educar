@@ -59,18 +59,6 @@
     }
   </script>
 
-  <script async src="https://www.googletagmanager.com/gtag/js?id=***REMOVED***"></script>
-  <script>
-    if (window.ambiente == 'production') {
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('set', {'content_group1': window.location.hostname});
-
-      gtag('config', '***REMOVED***');
-    }
-  </script>
-
   </head>
   <body onload="loginpage_onload();" class="hidden fade-in">
      <div id="flash-container">
