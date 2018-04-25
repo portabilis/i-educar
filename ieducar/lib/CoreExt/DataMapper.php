@@ -386,8 +386,8 @@ abstract class CoreExt_DataMapper
   protected function _getUpdateStatment(CoreExt_Entity $instance)
   {
     $sql = 'UPDATE %s SET %s WHERE %s';
-    // Retorna somente os campos que foram alterados
-    $data = $this->_getDbAdapter()->formatValues($this->returnOnlyFieldsChanged($instance));
+    // Convert a entity em array, traz o array com dados formatados
+    $data = $this->_getDbAdapter()->formatValues($instance->toDataArray());
 
     // Remove o campo identidade e campos não-persistentes
     $data = $this->_cleanData($data);
@@ -401,7 +401,7 @@ abstract class CoreExt_DataMapper
       $columnName = $this->_getTableColumn($key);
       $replaceString = "%s = '%s'";
 
-      if (is_null($value)) {
+      if (empty($value)) {
         $value = "NULL";
         $replaceString = "%s = %s";
       }
@@ -410,30 +410,14 @@ abstract class CoreExt_DataMapper
     }
 
     $where = array();
-    foreach ($this->_primaryKey as $key => $pk) {
+    $keyToUpdate = $this->buildKeyToFind($instance);
+    foreach ($keyToUpdate  as $key => $value) {
       $whereName = $this->_getTableColumn($key);
-      $where[] = sprintf("%s = '%s'", $whereName, $instance->get($key));
+      $where[] = sprintf("%s = '%s'", $whereName, $value);
     }
 
     return sprintf($sql, $this->_getTableName(), implode(', ', $columns),
       implode(' AND ', $where));
-  }
-
-  //retorna todos os campos que estão diferentes da entidade no banco
-  protected function returnOnlyFieldsChanged($instance)
-  {
-    if (is_array($this->_primaryKey)) {
-      $pkValue = array();
-      foreach ($this->_primaryKey as $key => $pk) {
-        $pkValue[$key] = $instance->get($key);
-      }
-      $tmpEntry = $this->find($pkValue);
-    }
-    $oldInstance = $tmpEntry->toDataArray();
-
-    $newInstance = $instance->toDataArray();
-
-    return array_diff_assoc( $newInstance, $oldInstance);
   }
 
   /**
@@ -456,7 +440,7 @@ abstract class CoreExt_DataMapper
     $where = array();
     foreach ($pkToDelete as $key => $value) {
       $whereName = $this->_getTableColumn($key);
-      $where[] = sprintf("%s = '%s'", $whereName, $instance->get($key));
+      $where[] = sprintf("%s = '%s'", $whereName, $value);
     }
 
     return sprintf($sql, $this->_getTableName(), implode(' AND ', $where));
@@ -746,7 +730,7 @@ abstract class CoreExt_DataMapper
   */
   protected function _cleanNullValuesToSave(array $data){
     foreach ($data as $key => $val) {
-      if (is_null($val)){
+      if (empty($val)){
         unset($data[$key]);
       }
     }
