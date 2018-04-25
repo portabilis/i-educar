@@ -36,7 +36,9 @@ var multipleSearch = {
     var attrName = options.get('attrName');
     if (attrName) { attrName = '_' + attrName; }
 
-    var $input  = $j(buildId(options.get('objectName') + attrName));
+    var objectId = buildId(options.get('objectName') + attrName);
+
+    var $input  = $j(objectId);
 
     // fixups for chosen
     $input.attr('multiple', '');
@@ -47,7 +49,7 @@ var multipleSearch = {
     $input.chosen(options.get('chosenOptions'));
 
     // fixup to API receive all ids
-    $j("#"+objectName).attr('name', $j("#"+objectName).attr('name') + '[]');
+    $j(objectId).attr('name', $j(objectId).attr('name') + '[]');
   }
 };
 
