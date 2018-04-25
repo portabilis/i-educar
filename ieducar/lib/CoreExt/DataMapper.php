@@ -364,12 +364,7 @@ abstract class CoreExt_DataMapper
     $valuesStmt = array();
     for ($i = 0, $count = count($values); $i < $count; $i++) {
       $value = $values[$i];
-      $replaceString = "'%s'";
-      if (is_null($value)) {
-        $value = "NULL";
-        $replaceString = "%s";
-      }
-      $valuesStmt[] = sprintf($replaceString, $value);
+      $valuesStmt[] = sprintf("'%s'", $value);
     }
 
     $valuesStmt = join(", ", $valuesStmt);
