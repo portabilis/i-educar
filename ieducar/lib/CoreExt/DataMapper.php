@@ -449,12 +449,12 @@ abstract class CoreExt_DataMapper
    * @param mixed $instance
    * @return string
    */
-  protected function _getDeleteStatment($instance)
+  protected function _getDeleteStatment($pkToDelete)
   {
     $sql = 'DELETE FROM %s WHERE %s';
 
     $where = array();
-    foreach ($this->_primaryKey as $key => $pk) {
+    foreach ($pkToDelete as $key => $value) {
       $whereName = $this->_getTableColumn($key);
       $where[] = sprintf("%s = '%s'", $whereName, $instance->get($key));
     }
@@ -677,7 +677,7 @@ abstract class CoreExt_DataMapper
         $info = $tmpEntry->toDataArray();
       }
 
-      $return = $this->_getDbAdapter()->Consulta($this->_getDeleteStatment($tmpEntry));
+      $return = $this->_getDbAdapter()->Consulta($this->_getDeleteStatment($pkToDelete));
 
       if (count($info)){
         @session_start();
