@@ -1,43 +1,43 @@
 <?php
 
 /*
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gestÃ£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de ItajaÃ­
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa Ã© software livre; vocÃª pode redistribuÃ­-lo e/ou modificÃ¡-lo
+ * sob os termos da LicenÃ§a PÃºblica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versÃ£o 2 da LicenÃ§a, como (a seu critÃ©rio)
+ * qualquer versÃ£o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa Ã© distribuÃ­Â­do na expectativa de que seja Ãºtil, porÃ©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implÃ­Â­cita de COMERCIABILIDADE OU
+ * ADEQUAÃ‡ÃƒO A UMA FINALIDADE ESPECÃFICA. Consulte a LicenÃ§a PÃºblica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * VocÃª deve ter recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral do GNU junto
+ * com este programa; se nÃ£o, escreva para a Free Software Foundation, Inc., no
+ * endereÃ§o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  */
 
 /**
  * FileStream class.
  *
- * Classe para stream de arquivos implementando checagens de segurança como
- * diretórios permitidos e tipo de arquivo.
+ * Classe para stream de arquivos implementando checagens de seguranÃ§a como
+ * diretÃ³rios permitidos e tipo de arquivo.
  *
- * @author   Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @author   Eriksen Costa PaixÃ£o <eriksen.paixao_bs@cobra.com.br>
  * @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
  * @package  Core
- * @since    Classe disponível desde a versão 1.1.0
+ * @since    Classe disponÃ­vel desde a versÃ£o 1.1.0
  * @version  $Id$
  */
 class FileStream
 {
 
   /**
-   * Instância da classe Mimetype
+   * InstÃ¢ncia da classe Mimetype
    * @var Mimetype
    */
   protected $Mimetype    = NULL;
@@ -49,7 +49,7 @@ class FileStream
   protected $filepath    = NULL;
 
   /**
-   * Array de diretórios permitidos para stream de arquivos.
+   * Array de diretÃ³rios permitidos para stream de arquivos.
    * @var array
    */
   protected $allowedDirs = array();
@@ -59,7 +59,7 @@ class FileStream
    * Construtor.
    *
    * @param  Mimetype  $mimetype     Objeto Mimetype
-   * @param  array     $allowedDirs  Diretórios permitidos para stream
+   * @param  array     $allowedDirs  DiretÃ³rios permitidos para stream
    */
   public function __construct(Mimetype $mimetype, array $allowedDirs = array()) {
     $this->Mimetype = $mimetype;
@@ -68,7 +68,7 @@ class FileStream
 
   /**
    * Configura o nome do arquivo, verificando se o mesmo encontra-se em um
-   * diretório de acesso permitido e se é legível.
+   * diretÃ³rio de acesso permitido e se Ã© legÃ­vel.
    *
    * @param   string  $filepath  O caminho completo ou relativo do arquivo
    * @throws  Exception
@@ -79,7 +79,7 @@ class FileStream
   }
 
   /**
-   * Configura os diretórios permitidos para stream de arquivos.
+   * Configura os diretÃ³rios permitidos para stream de arquivos.
    *
    * @param   array  $v
    */
@@ -88,7 +88,7 @@ class FileStream
   }
 
   /**
-   * Verifica se o arquivo é legível e se está em um diretório permitido
+   * Verifica se o arquivo Ã© legÃ­vel e se estÃ¡ em um diretÃ³rio permitido
    * para stream de arquivos.
    *
    * @param   string  $filepath  O caminho completo ou relativo ao arquivo
@@ -99,20 +99,20 @@ class FileStream
     $fileinfo = pathinfo($filepath);
 
     if (! $this->isDirectoryAllowed($fileinfo['dirname'])) {
-      throw new Exception('Acesso ao diretório negado.');
+      throw new Exception('Acesso ao diretÃ³rio negado.');
     }
 
     if (! is_readable($filepath)) {
-      throw new Exception('Arquivo não existe.');
+      throw new Exception('Arquivo nÃ£o existe.');
     }
   }
 
   /**
-   * Verifica se o diretório está na lista de diretórios permitidos para
+   * Verifica se o diretÃ³rio estÃ¡ na lista de diretÃ³rios permitidos para
    * stream de arquivos.
    *
    * @param   string  $directory
-   * @return  bool    Retorna TRUE se o diretório é permitido
+   * @return  bool    Retorna TRUE se o diretÃ³rio Ã© permitido
    */
   public function isDirectoryAllowed($directory)
   {
@@ -133,7 +133,7 @@ class FileStream
     $mimetype = $this->Mimetype->getType($this->filepath);
 
     if (FALSE === $mimetype) {
-      throw new Exception('Extensão não suportada.');
+      throw new Exception('ExtensÃ£o nÃ£o suportada.');
     }
 
     // Headers para stream de arquivo
@@ -148,7 +148,7 @@ class FileStream
     ob_clean();
     flush();
 
-    // Lê o arquivo para stream buffer
+    // LÃª o arquivo para stream buffer
     readfile($this->filepath);
   }
 

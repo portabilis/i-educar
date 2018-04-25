@@ -1,31 +1,31 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     ComponenteCurricular
  * @subpackage  Modules
- * @since       Arquivo disponÌvel desde a vers„o 1.2.0
+ * @since       Arquivo dispon√≠vel desde a vers√£o 1.2.0
  * @version     $Id$
  */
 
@@ -35,12 +35,12 @@ require_once 'ComponenteCurricular/Model/Turma.php';
 /**
  * ComponenteCurricular_Model_TurmaDataMapper class.
  *
- * @author      Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     ComponenteCurricular
  * @subpackage  Modules
- * @since       Classe disponÌvel desde a vers„o 1.2.0
+ * @since       Classe dispon√≠vel desde a vers√£o 1.2.0
  * @version     @@package_version@@
  */
 class ComponenteCurricular_Model_TurmaDataMapper extends CoreExt_DataMapper
@@ -50,8 +50,8 @@ class ComponenteCurricular_Model_TurmaDataMapper extends CoreExt_DataMapper
   protected $_tableSchema = 'modules';
 
   /**
-   * Os atributos anoEscolar e escola est„o presentes apenas para
-   * fins de desnormalizaÁ„o.
+   * Os atributos anoEscolar e escola est√£o presentes apenas para
+   * fins de desnormaliza√ß√£o.
    * @var array
    */
   protected $_attributeMap = array(
@@ -70,16 +70,16 @@ class ComponenteCurricular_Model_TurmaDataMapper extends CoreExt_DataMapper
   );
 
   /**
-   * Realiza uma operaÁ„o de atualizaÁ„o em todas as inst‚ncias persistidas de
-   * ComponenteCurricular_Model_Turma. A atualizaÁ„o envolve criar, atualizar
-   * e/ou apagar inst‚ncias persistidas.
+   * Realiza uma opera√ß√£o de atualiza√ß√£o em todas as inst√¢ncias persistidas de
+   * ComponenteCurricular_Model_Turma. A atualiza√ß√£o envolve criar, atualizar
+   * e/ou apagar inst√¢ncias persistidas.
    *
-   * No exemplo de cÛdigo a seguir, se uma inst‚ncia de
-   * ComponenteCurricular_Model_Turma com uma referÍncia a componenteCurricular
+   * No exemplo de c√≥digo a seguir, se uma inst√¢ncia de
+   * ComponenteCurricular_Model_Turma com uma refer√™ncia a componenteCurricular
    * "1" existisse, esta teria seus atributos atualizados e persistidos
-   * novamente. Se a referÍncia n„o existisse, uma nova inst‚ncia de
+   * novamente. Se a refer√™ncia n√£o existisse, uma nova inst√¢ncia de
    * ComponenteCurricular_Model_Turma seria criada e persistida. Caso uma
-   * referÍncia a "2" existisse, esta seria apagada por n„o estar referenciada
+   * refer√™ncia a "2" existisse, esta seria apagada por n√£o estar referenciada
    * no array $componentes.
    *
    * <code>
@@ -92,9 +92,9 @@ class ComponenteCurricular_Model_TurmaDataMapper extends CoreExt_DataMapper
    *
    *
    *
-   * @param  int   $anoEscolar  O cÛdigo do ano escolar/sÈrie.
-   * @param  int   $escola      O cÛdigo da escola.
-   * @param  int   $turma       O cÛdigo da turma.
+   * @param  int   $anoEscolar  O c√≥digo do ano escolar/s√©rie.
+   * @param  int   $escola      O c√≥digo da escola.
+   * @param  int   $turma       O c√≥digo da turma.
    * @param  array $componentes (id => integer, cargaHoraria => float|null)
    * @throws Exception
    */

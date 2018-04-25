@@ -1,31 +1,31 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     CoreExt_Validate
  * @subpackage  UnitTests
- * @since       Arquivo disponÌvel desde a vers„o 1.1.0
+ * @since       Arquivo dispon√≠vel desde a vers√£o 1.1.0
  * @version     $Id$
  */
 
@@ -34,12 +34,12 @@ require_once 'CoreExt/Validate/Choice.php';
 /**
  * CoreExt_Validate_ChoiceTest class.
  *
- * @author      Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     CoreExt_Validate
  * @subpackage  UnitTests
- * @since       Classe disponÌvel desde a vers„o 1.1.0
+ * @since       Classe dispon√≠vel desde a vers√£o 1.1.0
  * @version     @@package_version@@
  */
 class CoreExt_Validate_ChoiceTest extends UnitBaseTest
@@ -48,7 +48,7 @@ class CoreExt_Validate_ChoiceTest extends UnitBaseTest
 
   protected $_choices = array(
     'bit' => array(0, 1),
-    'various' => array('sim', 'n„o', 'nda')
+    'various' => array('sim', 'n√£o', 'nda')
   );
 
   protected function setUp()
@@ -64,16 +64,16 @@ class CoreExt_Validate_ChoiceTest extends UnitBaseTest
   public function testEscolhaValida()
   {
     $this->_validator->setOptions(array('choices' => $this->_choices['bit']));
-    $this->assertTrue($this->_validator->isValid(0), 'Falhou na asserÁ„o "0" numÈrico.');
-    $this->assertTrue($this->_validator->isValid(1), 'Falhou na asserÁ„o "1" numÈrico.');
+    $this->assertTrue($this->_validator->isValid(0), 'Falhou na asser√ß√£o "0" num√©rico.');
+    $this->assertTrue($this->_validator->isValid(1), 'Falhou na asser√ß√£o "1" num√©rico.');
 
     // Teste para verificar como reage a tipos diferentes
-    $this->assertTrue($this->_validator->isValid('0'), 'Falhou na asserÁ„o "0" string.');
-    $this->assertTrue($this->_validator->isValid('1'), 'Falhou na asserÁ„o "1" string.');
+    $this->assertTrue($this->_validator->isValid('0'), 'Falhou na asser√ß√£o "0" string.');
+    $this->assertTrue($this->_validator->isValid('1'), 'Falhou na asser√ß√£o "1" string.');
 
     $this->_validator->setOptions(array('choices' => $this->_choices['various']));
     $this->assertTrue($this->_validator->isValid('sim'));
-    $this->assertTrue($this->_validator->isValid('n„o'));
+    $this->assertTrue($this->_validator->isValid('n√£o'));
     $this->assertTrue($this->_validator->isValid('nda'));
   }
 
@@ -82,28 +82,28 @@ class CoreExt_Validate_ChoiceTest extends UnitBaseTest
     $this->_validator->setOptions(array('choices' => $this->_choices['bit']));
     try {
       $this->_validator->isValid(2);
-      $this->fail("CoreExt_Validate_Choice deveria ter lanÁado exceÁ„o.");
+      $this->fail("CoreExt_Validate_Choice deveria ter lan√ßado exce√ß√£o.");
     }
     catch (Exception $e) {
-      $this->assertEquals('A opÁ„o "2" n„o existe.', $e->getMessage());
+      $this->assertEquals('A op√ß√£o "2" n√£o existe.', $e->getMessage());
     }
 
     // 'a' normalmente seria avaliado como 0, mas queremos garantir que isso
-    // n„o ocorra, por isso transformamos tudo em string em _validate().
+    // n√£o ocorra, por isso transformamos tudo em string em _validate().
     try {
       $this->_validator->isValid('a');
-      $this->fail("CoreExt_Validate_Choice deveria ter lanÁado exceÁ„o.");
+      $this->fail("CoreExt_Validate_Choice deveria ter lan√ßado exce√ß√£o.");
     }
     catch (Exception $e) {
-      $this->assertEquals('A opÁ„o "a" n„o existe.', $e->getMessage());
+      $this->assertEquals('A op√ß√£o "a" n√£o existe.', $e->getMessage());
     }
 
     try {
       $this->_validator->isValid('0a');
-      $this->fail("CoreExt_Validate_Choice deveria ter lanÁado exceÁ„o.");
+      $this->fail("CoreExt_Validate_Choice deveria ter lan√ßado exce√ß√£o.");
     }
     catch (Exception $e) {
-      $this->assertEquals('A opÁ„o "0a" n„o existe.', $e->getMessage());
+      $this->assertEquals('A op√ß√£o "0a" n√£o existe.', $e->getMessage());
     }
   }
 }

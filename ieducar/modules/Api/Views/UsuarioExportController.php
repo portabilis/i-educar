@@ -35,6 +35,10 @@ require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'intranet/include/clsBanco.inc.php';
 require_once 'intranet/include/clsBase.inc.php';
 
+/**
+ * Class UsuarioExportController
+ * @deprecated Essa versão da API pública será descontinuada
+ */
 class UsuarioExportController extends ApiCoreController
 {
 

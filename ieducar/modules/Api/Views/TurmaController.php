@@ -35,10 +35,14 @@
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
-require_once 'Portabilis/Model/Report/TipoBoletim.php';
+require_once 'Reports/Tipos/TipoBoletim.php';
 require_once "App/Model/IedFinder.php";
 require_once 'include/funcoes.inc.php';
 
+/**
+ * Class TurmaController
+ * @deprecated Essa versão da API pública será descontinuada
+ */
 class TurmaController extends ApiCoreController
 {
   // validators
@@ -79,7 +83,7 @@ class TurmaController extends ApiCoreController
     $lstMatriculaTurma  = $objMatriculaTurma->lista(null, $codTurma);
 
     foreach ($lstMatriculaTurma as $matricula) {
-      $lstNomes[] = array('nome'              => strtoupper($matricula['nome']),
+      $lstNomes[] = array('nome'              => limpa_acentos(strtoupper($matricula['nome'])),
                           'ref_cod_matricula' => $matricula['ref_cod_matricula'],
                           'sequencial'        => $matricula['sequencial']
                         );
@@ -105,51 +109,8 @@ class TurmaController extends ApiCoreController
     $tipo = App_Model_IedFinder::getTurma($codTurma = $this->getRequest()->id);
     $tipo = $tipo['tipo_boletim'];
 
-    $tiposBoletim = Portabilis_Model_Report_TipoBoletim;
-
-    $tipos = array(null                                                                 => 'indefinido',
-                   $tiposBoletim::BIMESTRAL                                             => 'portabilis_boletim',
-                   $tiposBoletim::BIMESTRAL_MODELO_FICHA                                => 'portabilis_ficha_individual_bimestral_duque',
-                   $tiposBoletim::BIMESTRAL_CONCEITUAL                                  => 'portabilis_boletim_primeiro_ano_bimestral',
-                   $tiposBoletim::BIMESTRAL_EDUCACAO_INFANTIL                           => 'portabilis_boletim_bimestral_infantil_manual',
-                   $tiposBoletim::TRIMESTRAL                                            => 'portabilis_boletim_trimestral',
-                   $tiposBoletim::TRIMESTRAL_CONCEITUAL                                 => 'portabilis_boletim_primeiro_ano_trimestral',
-                   $tiposBoletim::SEMESTRAL                                             => 'portabilis_boletim_semestral',
-                   $tiposBoletim::SEMESTRAL_CONCEITUAL                                  => 'portabilis_boletim_conceitual_semestral',
-                   $tiposBoletim::SEMESTRAL_CONCEITUAL_RETRATO                          => 'portabilis_boletim_primeiro_ano_semestral_retrato',
-                   $tiposBoletim::SEMESTRAL_EDUCACAO_INFANTIL                           => 'portabilis_boletim_educ_infantil_semestral',
-                   $tiposBoletim::PARECER_SEMESTRAL_MODELO1                             => 'portabilis_boletim_parecer_semestral_modelo1',
-                   $tiposBoletim::PARECER_DESCRITIVO_COMPONENTE                         => 'portabilis_boletim_parecer',
-                   $tiposBoletim::PARECER_DESCRITIVO_GERAL                              => 'portabilis_boletim_parecer_geral',
-                   $tiposBoletim::BIMESTRAL_MODELO2                             => 'portabilis_boletim_modelo2',
-                   $tiposBoletim::BIMESTRAL_PACAJA                                      => 'portabilis_boletim_bimestral_pacaja',
-                   $tiposBoletim::ANUAL                                                 => 'portabilis_boletim_anual',
-                   $tiposBoletim::BIMESTRAL_SEM_EXAME                                   => 'portabilis_boletim_bimestral_sem_exame',
-                   $tiposBoletim::EJA_BIMESTRAL_SEMESTRAL                               => 'portabilis_boletim_eja_bimestral_semestral',
-                   $tiposBoletim::PARECER_DESCRITIVO_GERAL_DUQUE                        => 'portabilis_boletim_parecer_geral_duque',
-                   $tiposBoletim::BIMESTRAL_CONCEITUAL_PARAUAPEBAS                  => 'portabilis_boletim_bimestral_conceitual_parauapebas',
-                   $tiposBoletim::BIMESTRAL_CONCEITUAL_SIMPLIFICADO_PARAUAPEBAS => 'portabilis_boletim_bimestral_conceitual_simplificado_parauapebas',
-                   $tiposBoletim::BIMESTRAL_CONCEITUAL_RETRATO_CACADOR          => 'portabilis_boletim_primeiro_ano_bimestral_retrato_cacador',
-                   $tiposBoletim::BIMESTRAL_RETRATO_PARAGOMINAS                 => 'portabilis_boletim_bimestral_paragominas',
-                   $tiposBoletim::TRIMESTRAL_RECUPERACAO_PARALELA               => 'portabilis_boletim_trimestral_recuperacao_paralela',
-                   $tiposBoletim::ACOMPANHAMENTO_EDUCACAO_INTANTIL              => 'portabilis_boletim_acompanhamento_educ_infantil',
-                   $tiposBoletim::AVALIACAO_INFANTIL_SEMESTRAL                  => 'portabilis_boletim_avaliacao_infantil_balneario_camboriu',
-                   $tiposBoletim::TRIMESTRAL_CONCEITUAL_PARECER                 => 'portabilis_boletim_conceitual_trimestral_parecer',
-                   $tiposBoletim::BIMESTRAL_RECUPERACAO_SEMESTRAL               => 'portabilis_boletim_recuperacao_semestral',
-                   $tiposBoletim::BIMESTRAL_CONCEITUAL_COCALDOSUL               => 'portabilis_boletim_bimestral_conceitual_cocaldosul',
-                   $tiposBoletim::BOLETIM_6AO9_SAOMIGUELDOSCAMPOS               => 'portabilis_boletim_6ao9_saomigueldoscampos',
-                   $tiposBoletim::TRIMESTRAL_CONCEITUAL_BC                      => 'portabilis_boletim_primeiro_ano_trimestral_bc',
-                   $tiposBoletim::BOLETIM_BONITO                                => 'portabilis_boletim_bonito',
-                   $tiposBoletim::BIMESTRAL_CONCEITUAL_PARECER                  => 'portabilis_boletim_primeiro_ano_bimestral_parecer',
-                   $tiposBoletim::BIMESTRAL_SAOMIGUELDOSCAMPOS                  => 'portabilis_boletim_pareceres_componente',
-                   $tiposBoletim::BIMESTRAL_CONCEITUAL_RETRATO_NAVEGANTES       => 'portabilis_boletim_primeiro_ano_bimestral_retrato_navegantes',
-                   $tiposBoletim::BIMESTRAL_RETRATO_CAMPOS_DO_JORDAO            => 'portabilis_boletim_bimestral_campos_do_jordao',
-                   $tiposBoletim::TRIMESTRAL_RECUPERACAO_PARALELA_RONDON        => 'portabilis_boletim_trimestral_recuperacao_paralela_rondon',
-                   $tiposBoletim::TRIMESTRAL_NUMERICO_BALNEARIO_CAMBORIU        => 'portabilis_boletim_trimestral_numerico_balneario_camboriu',
-                   $tiposBoletim::TRIMESTRAL_CONCEITUAL_1AO3_RONDON             => 'portabilis_boletim_trimestral_rondon',
-                   $tiposBoletim::BIMESTRAL_TRIPLO                              => 'portabilis_boletim_bimestral_triplo',
-                   $tiposBoletim::PARECER_DESCRITIVO_EDUCACAO_INFANTIL          => 'portabilis_boletim_educacao_infantil',
-                   $tiposBoletim::TRIMESTRAL_RESENDE                            => 'portabilis_boletim_trimestral2');
+    $tipos = Portabilis_Model_Report_TipoBoletim::getInstance()->getReports();
+    $tipos = Portabilis_Array_Utils::insertIn(null, "indefinido", $tipos);
 
     return array('tipo-boletim' => $tipos[$tipo]);
   }

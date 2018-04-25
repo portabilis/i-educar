@@ -30,6 +30,9 @@
 
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'include/clsMenuFuncionario.inc.php';
+require_once 'include/pmieducar/clsPmieducarEscolaUsuario.inc.php';
+require_once 'lib/Portabilis/Array/Utils.php';
+
 
 /**
  * clsPermissoes class.
@@ -262,6 +265,24 @@ class clsPermissoes
 
     return FALSE;
   }
+
+    /**
+     * Retorna lista de código identificador da escola ao qual o usuário está vinculado.
+     *
+     * @param int $int_idpes_usuario
+     * @return bool|array Retorna FALSE caso o usuário não exista
+     */
+    function getEscolas($int_idpes_usuario)
+    {
+        $objEscolaUsuario = new clsPmieducarEscolaUsuario();
+        $escolas = $objEscolaUsuario->lista($int_idpes_usuario);
+
+        if (!empty($escolas)) {
+            return Portabilis_Array_Utils::arrayColumn($escolas,'ref_cod_escola');
+        }
+
+        return FALSE;
+    }
 
   /**
    * Retorna um array associativo com os códigos identificadores da escola e

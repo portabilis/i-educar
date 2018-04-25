@@ -1,8 +1,8 @@
  	-- //
   
  	--
- 	-- Cria relatÛrio em: RelatÛrios >> Cadastrais >> RelaÁ„o Geral de Alunos por Escola e ajusta sequÍncia 
-  -- dos demais relatÛrios do memos menu.
+ 	-- Cria relat√≥rio em: Relat√≥rios >> Cadastrais >> Rela√ß√£o Geral de Alunos por Escola e ajusta sequ√™ncia 
+  -- dos demais relat√≥rios do memos menu.
 	-- @author   Ricardo Bortolotto Dagostim <ricardo@portabilis.com.br>
  	-- @license  @@license@@
  	-- @version  $Id$
@@ -11,9 +11,9 @@
   update pmicontrolesis.menu set ord_menu = 5 where cod_menu = 999105;
   update pmicontrolesis.menu set ord_menu = 6 where cod_menu = 999108;
   
-  insert into portal.menu_submenu values(999109,55,2,'RelaÁ„o Geral de Alunos por Escola','portabilis_alunos_relacao_geral_alunos_escola.php',NULL,3);
+  insert into portal.menu_submenu values(999109,55,2,'Rela√ß√£o Geral de Alunos por Escola','portabilis_alunos_relacao_geral_alunos_escola.php',NULL,3);
   insert into portal.menu_funcionario values(1,0,0,999109);
-  insert into pmicontrolesis.menu values(999109,999109,999300,'RelaÁ„o Geral de Alunos por Escola',3,'portabilis_alunos_relacao_geral_alunos_escola.php','_self',1,15,192);
+  insert into pmicontrolesis.menu values(999109,999109,999300,'Rela√ß√£o Geral de Alunos por Escola',3,'portabilis_alunos_relacao_geral_alunos_escola.php','_self',1,15,192);
   insert into pmieducar.menu_tipo_usuario values(1,999109,1,0,1);
 
  

@@ -1,13 +1,13 @@
 -- //
 
 --
--- Cria as tabelas para armazenamento de pareceres descritivos para o mÛdulo
--- AvaliaÁ„o.
+-- Cria as tabelas para armazenamento de pareceres descritivos para o m√≥dulo
+-- Avalia√ß√£o.
 --
--- Essa medida faz parte da tarefa de substituiÁ„o do sistema de notas/faltas
--- por um mÛdulo mais robusto e parametriz·vel.
+-- Essa medida faz parte da tarefa de substitui√ß√£o do sistema de notas/faltas
+-- por um m√≥dulo mais robusto e parametriz√°vel.
 --
--- @author   Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+-- @author   Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
 -- @license  @@license@@
 -- @version  $Id$
 --
