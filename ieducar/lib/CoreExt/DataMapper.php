@@ -271,11 +271,11 @@ abstract class CoreExt_DataMapper
         $hasComparisonSign = ! empty($matches);
 
         // Caso $value contenha <, > ou =, ex: '> $1', não adiciona sinal de igual.
-        if($hasComparisonSign)
+        if ($hasComparisonSign)
           $where[] = sprintf("%s %s", $whereName, $value);
 
         // Caso $value contenha parametros para consulta preparada ($1, $2...), não adiciona $value entre aspas.
-        elseif(strpos($value, '$') > -1)
+        elseif (strpos($value, '$') > -1)
           $where[] = sprintf("%s = %s", $whereName, $value);
 
         else
@@ -330,7 +330,6 @@ abstract class CoreExt_DataMapper
     return sprintf("SELECT %s FROM %s WHERE %s", $this->_getTableColumns(),
       $this->_getTableName(), implode(' AND ', $where));
   }
-
 
   /**
    * Retorna uma query SQL para a operação INSERT. Utiliza para isso os
@@ -673,14 +672,14 @@ abstract class CoreExt_DataMapper
   {
       $info = array();
       $pkToDelete = $this->buildKeyToFind($instance);
-      if((is_object($instance) && $instance->id) || (!is_object($instance) && $instance)) {
+      if ((is_object($instance) && $instance->id) || (!is_object($instance) && $instance)) {
         $tmpEntry = $this->find($pkToDelete);
         $info = $tmpEntry->toDataArray();
       }
 
       $return = $this->_getDbAdapter()->Consulta($this->_getDeleteStatment($tmpEntry));
 
-      if(count($info)){
+      if (count($info)){
         @session_start();
         $pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
