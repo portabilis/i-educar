@@ -165,8 +165,6 @@ class clsBase extends clsConfig
             $saida = str_replace("<!-- #&SCRIPT_HEADER&# -->", "", $saida);
         }
 
-        $saida = str_replace("<!-- #&GOOGLE_TAG_MANAGER_ID&# -->", $GLOBALS['coreExt']['Config']->app->gtm->id, $saida);
-
         return $saida;
     }
 
