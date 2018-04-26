@@ -4,7 +4,7 @@
 	<td id="perfil-user-id" class="perfil-user" align="right">
 		<!-- #&ICONE_COMPASS&# -->
 		<a class="icons-top" href="#">
-			<img id="notificacao" src="imagens/icon-nav-notifications.png">
+			<img id="notificacao" src="/intranet/imagens/icon-nav-notifications.png">
 		</a>
 		<a href="meusdados.php" title="Meus dados">
 			<div id="foto-user" class="foto-user" style="background: url('<!-- #&FOTO&# -->')"></div>
@@ -53,5 +53,5 @@
 </tr>
 </table>
 
-<script src="scripts/custom-file-input.js"></script>
+<script src="/intranet/scripts/custom-file-input.js"></script>
 </head>

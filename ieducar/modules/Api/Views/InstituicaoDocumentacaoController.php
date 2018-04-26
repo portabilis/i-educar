@@ -36,7 +36,10 @@ require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'intranet/include/clsBanco.inc.php';
 
-
+/**
+ * Class InstituicaoDocumentacaoController
+ * @deprecated Essa versão da API pública será descontinuada
+ */
 class InstituicaoDocumentacaoController extends ApiCoreController
 {
 

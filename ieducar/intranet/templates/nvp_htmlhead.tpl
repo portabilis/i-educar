@@ -21,12 +21,13 @@
   <link rel=stylesheet type='text/css' href='styles/styles.css?5' />
   <link rel=stylesheet type='text/css' href='styles/novo.css?5' />
   <link rel=stylesheet type='text/css' href='styles/menu.css?5' />
+  
   <link rel=stylesheet type='text/css' href='/intranet/styles/font-awesome.css?5' />
   <!--link rel=stylesheet type='text/css' href='styles/reset.css?5' />
   <link rel=stylesheet type='text/css' href='styles/portabilis.css?5' /-->
-  <link rel=stylesheet type='text/css' href='styles/min-portabilis.css?5?rand=3' />
-  <link rel=stylesheet type='text/css' href='styles/mytdt.css?5' />
-  <link rel=stylesheet type='text/css' href='styles/jquery.modal.css?5' />
+  <link rel=stylesheet type='text/css' href='/intranet/styles/min-portabilis.css?5?rand=3' />
+  <link rel=stylesheet type='text/css' href='/intranet/styles/mytdt.css?5' />
+  <link rel=stylesheet type='text/css' href='/intranet/styles/jquery.modal.css?5' />
   <script src="https://maps.google.com/maps/api/js?sensor=true" type="text/javascript" charset="utf-8"></script>
   <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
 
@@ -34,19 +35,19 @@
 
 <script>(function(e,t,n){var r=e.querySelectorAll("html")[0];r.className=r.className.replace(/(^|\s)no-js(\s|$)/,"$1js$2")})(document,window,0);</script>
 
-  <script type="text/javascript" src="scripts/padrao.js?5"></script>
-  <script type="text/javascript" src="scripts/novo.js?5"></script>
-  <script type="text/javascript" src="scripts/dom.js?5"></script>
-  <script type="text/javascript" src="scripts/menu.js?5"></script>
-  <script type="text/javascript" src="scripts/ied/forms.js?5"></script>
-  <script type="text/javascript" src="scripts/ied/phpjs.js?5"></script>
+  <script type="text/javascript" src="/intranet/scripts/padrao.js?5"></script>
+  <script type="text/javascript" src="/intranet/scripts/novo.js?5"></script>
+  <script type="text/javascript" src="/intranet/scripts/dom.js?5"></script>
+  <script type="text/javascript" src="/intranet/scripts/menu.js?5"></script>
+  <script type="text/javascript" src="/intranet/scripts/ied/forms.js?5"></script>
+  <script type="text/javascript" src="/intranet/scripts/ied/phpjs.js?5"></script>
   <!-- #&FRESHDESK&# -->
 
-  <script type="text/javascript" src="scripts/jquery/jquery-1.8.3.min.js?5"></script>
-  <script type="text/javascript" src="scripts/jquery/jquery.modal.min.js?5"></script>
-  <script type="text/javascript" src="scripts/prototype/prototype-1.7.1.0.js?5"></script>
-  <script type="text/javascript" src="scripts/scriptaculous/effects.js?5"></script>
-  <script type="text/javascript" src="scripts/jquery.mask.min.js?5"></script>
+  <script type="text/javascript" src="/intranet/scripts/jquery/jquery-1.8.3.min.js?5"></script>
+  <script type="text/javascript" src="/intranet/scripts/jquery/jquery.modal.min.js?5"></script>
+  <script type="text/javascript" src="/intranet/scripts/prototype/prototype-1.7.1.0.js?5"></script>
+  <script type="text/javascript" src="/intranet/scripts/scriptaculous/effects.js?5"></script>
+  <script type="text/javascript" src="/intranet/scripts/jquery.mask.min.js?5"></script>
   <script type="text/javascript">
     window.ambiente = '<!-- #&CORE_EXT_CONFIGURATION_ENV&# -->';
 
@@ -110,7 +111,7 @@
   <!-- #&SCRIPT_HEADER&# -->
   </script>
 
-<link rel=stylesheet type='text/css' href='styles/custom.css?5' />
+<link rel=stylesheet type='text/css' href='/intranet/styles/custom.css?5' />
 <body <!-- #&BODYSCRIPTS&# -->>
 
   <!-- Google Tag Manager (noscript) -->

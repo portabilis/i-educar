@@ -36,6 +36,10 @@ require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
 
+/**
+ * Class MunicipioController
+ * @deprecated Essa versão da API pública será descontinuada
+ */
 class MunicipioController extends ApiCoreController
 {
   // search options

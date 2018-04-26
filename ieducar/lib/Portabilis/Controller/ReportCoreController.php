@@ -77,7 +77,7 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
 
 
   public function Gerar() {
-    if (count($_POST) < 1) {
+    if (count($_POST) < 1 && !isset($_GET['print_report_with_get'])) {
       $this->appendFixups();
       $this->renderForm();
     }

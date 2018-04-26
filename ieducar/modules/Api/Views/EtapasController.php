@@ -2,6 +2,10 @@
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 
+/**
+ * Class EtapasController
+ * @deprecated Essa versão da API pública será descontinuada
+ */
 class EtapasController extends ApiCoreController
 {
     protected function canGetTurmasComEtapasEspecificas() {
