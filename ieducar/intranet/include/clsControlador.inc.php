@@ -245,6 +245,7 @@ class clsControlador
     $templateText = str_replace( "<!-- #&RODAPE_EXTERNO&# -->", $this->administrativeInfoFetcher->getExternalFooter(), $templateText);
     $templateText = str_replace( "<!-- #&LINKS_SOCIAL&# -->", $this->administrativeInfoFetcher->getSocialMediaLinks(), $templateText);
     $templateText = str_replace( "<!-- #&CRIARCONTA&# -->", $msgCriarConta, $templateText);
+    $templateText = str_replace("<!-- #&GOOGLE_TAG_MANAGER_ID&# -->", $GLOBALS['coreExt']['Config']->app->gtm->id, $templateText);
 
     fclose($templateFile);
     die($templateText);
