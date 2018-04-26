@@ -863,7 +863,7 @@ class clsBase extends clsConfig
             @session_write_close();
 
             error_log("Erro inesperado (pego em clsBase): " . $e->getMessage());
-            NotificationMailer::unexpectedError($e->getMessage());
+            (new NotificationMailer)->unexpectedError($e->getMessage());
 
             die("<script>document.location.href = '/module/Error/unexpected';</script>");
         }

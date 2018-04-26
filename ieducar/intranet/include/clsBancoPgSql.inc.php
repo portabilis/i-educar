@@ -804,7 +804,7 @@ abstract class clsBancoSQL_
     @session_write_close();
 
     $pgErrorMsg = $getError ? pg_result_error($this->bConsulta_ID) : '';
-    NotificationMailer::unexpectedDataBaseError($appErrorMsg, $pgErrorMsg, $this->strStringSQL);
+    (new NotificationMailer)->unexpectedDataBaseError($appErrorMsg, $pgErrorMsg, $this->strStringSQL);
 
     die("<script>document.location.href = '/module/Error/unexpected';</script>");
   }

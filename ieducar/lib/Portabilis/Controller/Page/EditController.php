@@ -153,7 +153,7 @@ class Portabilis_Controller_Page_EditController extends Core_Controller_Page_Edi
     return $this->_messenger;
   }
 
-
+  // Aparentemente este método não é chamado em lugar nenhum...
   protected function mailer() {
     if (! isset($this->_mailer))
       $this->_mailer = new Portabilis_Mailer();
