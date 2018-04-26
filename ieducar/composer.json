@@ -1,7 +1,10 @@
 {
+    "name": "i-Educar",
+    "description": "O maior software livre educacional do Brasil.",
     "require": {
         "portabilis/jasperphp": "v1.2.0",
         "robmorgan/phinx": "v0.8.1",
-        "gilbitron/php-simplecache": "^1.4"
+        "gilbitron/php-simplecache": "^1.4",
+        "swiftmailer/swiftmailer": "^6.0"
     }
 }
