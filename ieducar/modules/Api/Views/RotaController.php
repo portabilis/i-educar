@@ -40,6 +40,10 @@ require_once 'Portabilis/Array/Utils.php';
 require_once 'Portabilis/String/Utils.php';
 require_once 'Portabilis/Date/Utils.php';
 
+/**
+ * Class RotaController
+ * @deprecated Essa versão da API pública será descontinuada
+ */
 class RotaController extends ApiCoreController
 {
   protected $_processoAp        = 21238; //verificar

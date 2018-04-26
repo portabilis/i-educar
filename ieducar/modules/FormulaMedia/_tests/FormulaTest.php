@@ -1,31 +1,31 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     FormulaMedia
  * @subpackage  UnitTests
- * @since       Arquivo disponÌvel desde a vers„o 1.1.0
+ * @since       Arquivo dispon√≠vel desde a vers√£o 1.1.0
  * @version     $Id: /ieducar/branches/1.1.0-avaliacao/ieducar/modules/AreaConhecimento/_tests/AreaTest.php 862 2009-12-04T18:55:17.468486Z eriksen  $
  */
 
@@ -35,12 +35,12 @@ require_once 'include/pmieducar/clsPmieducarInstituicao.inc.php';
 /**
  * FormulaTest class.
  *
- * @author      Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     FormulaMedia
  * @subpackage  UnitTests
- * @since       Classe disponÌvel desde a vers„o 1.1.0
+ * @since       Classe dispon√≠vel desde a vers√£o 1.1.0
  * @version     @@package_version@@
  */
 class FormulaTest extends UnitBaseTest
@@ -86,9 +86,9 @@ class FormulaTest extends UnitBaseTest
   public function testEntityValidators()
   {
     // Valores de retorno
-    $returnValue = array(array('cod_instituicao' => 1, 'nm_instituicao' => 'InstituiÁ„o'));
+    $returnValue = array(array('cod_instituicao' => 1, 'nm_instituicao' => 'Institui√ß√£o'));
 
-    // Mock para instituiÁ„o
+    // Mock para institui√ß√£o
     $mock = $this->getCleanMock('clsPmieducarInstituicao');
     $mock->expects($this->any())
          ->method('lista')
@@ -102,20 +102,20 @@ class FormulaTest extends UnitBaseTest
     $this->assertType('FormulaMedia_Validate_Formula', $validators['formulaMedia']);
     $this->assertType('CoreExt_Validate_Choice', $validators['tipoFormula']);
 
-    // Se o tipo da fÛrmula for de mÈdia final, o validador ir· lanÁar uma
-    // exceÁ„o com a token Rc (RecuperaÁ„o)
+    // Se o tipo da f√≥rmula for de m√©dia final, o validador ir√° lan√ßar uma
+    // exce√ß√£o com a token Rc (Recupera√ß√£o)
     try {
       $validators['formulaMedia']->isValid('Se + Rc / 4');
-      $this->fail('FÛrmula deveria ter lanÁado exceÁ„o (Se + Rc / 4) pois o '
-                  . 'validador est· com a configuraÁ„o padr„o');
+      $this->fail('F√≥rmula deveria ter lan√ßado exce√ß√£o (Se + Rc / 4) pois o '
+                  . 'validador est√° com a configura√ß√£o padr√£o');
     }
     catch (Exception $e) {
     }
 
-    // Configura a inst‚ncia de FormulaMedia_Model_Formula para ser do tipo
-    // "mÈdia recuperaÁ„o", para verificar o validador.
-    // ReferÍncias podem ter seus valores atribuÌdos apenas na instanciaÁ„o
-    // sendo assim imut·veis. Por isso, um novo objeto.
+    // Configura a inst√¢ncia de FormulaMedia_Model_Formula para ser do tipo
+    // "m√©dia recupera√ß√£o", para verificar o validador.
+    // Refer√™ncias podem ter seus valores atribu√≠dos apenas na instancia√ß√£o
+    // sendo assim imut√°veis. Por isso, um novo objeto.
     $this->_entity = new FormulaMedia_Model_Formula(array('tipoFormula' => 2));
     $validators = $this->_entity->getDefaultValidatorCollection();
 
@@ -123,7 +123,7 @@ class FormulaTest extends UnitBaseTest
       $validators['formulaMedia']->isValid('Se + Rc / 4');
     }
     catch (Exception $e) {
-      $this->fail('FÛrmula n„o deveria ter lanÁado exceÁ„o.');
+      $this->fail('F√≥rmula n√£o deveria ter lan√ßado exce√ß√£o.');
     }
   }
 }

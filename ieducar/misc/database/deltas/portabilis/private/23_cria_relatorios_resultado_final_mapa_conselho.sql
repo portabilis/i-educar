@@ -1,7 +1,7 @@
  	-- //
   
  	--
- 	-- Cria os relatórios: Resultado Final e Mapa do Conselho de Classe.
+ 	-- Cria os relatÃ³rios: Resultado Final e Mapa do Conselho de Classe.
 	-- @author   Ricardo Bortolotto Dagostim <ricardo@portabilis.com.br>
  	-- @license  @@license@@
  	-- @version  $Id$  

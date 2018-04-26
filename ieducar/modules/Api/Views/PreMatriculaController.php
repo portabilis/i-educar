@@ -37,6 +37,10 @@ require_once 'Portabilis/Array/Utils.php';
 require_once 'Portabilis/Date/Utils.php';
 require_once 'include/pmieducar/geral.inc.php';
 
+/**
+ * Class PreMatriculaController
+ * @deprecated Essa versão da API pública será descontinuada
+ */
 class PreMatriculaController extends ApiCoreController
 {
   protected function canHomologarPreMatricula(){

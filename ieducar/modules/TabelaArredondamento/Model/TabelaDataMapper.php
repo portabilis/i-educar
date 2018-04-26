@@ -1,31 +1,31 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     TabelaArredondamento
  * @subpackage  Modules
- * @since       Arquivo disponÌvel desde a vers„o 1.1.0
+ * @since       Arquivo dispon√≠vel desde a vers√£o 1.1.0
  * @version     $Id$
  */
 
@@ -37,12 +37,12 @@ require_once 'App/Model/IedFinder.php';
 /**
  * TabelaArredondamento_Model_TabelaDataMapper class.
  *
- * @author      Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     TabelaArredondamento
  * @subpackage  Modules
- * @since       Classe disponÌvel desde a vers„o 1.1.0
+ * @since       Classe dispon√≠vel desde a vers√£o 1.1.0
  * @version     @@package_version@@
  */
 class TabelaArredondamento_Model_TabelaDataMapper extends CoreExt_DataMapper
@@ -64,7 +64,7 @@ class TabelaArredondamento_Model_TabelaDataMapper extends CoreExt_DataMapper
   /**
    * Setter.
    * @param TabelaArredondamento_Model_TabelaValorDataMapper $mapper
-   * @return CoreExt_DataMapper ProvÍ interface fluÌda
+   * @return CoreExt_DataMapper Prov√™ interface flu√≠da
    */
   public function setTabelaValorDataMapper(TabelaArredondamento_Model_TabelaValorDataMapper $mapper)
   {
@@ -86,12 +86,12 @@ class TabelaArredondamento_Model_TabelaDataMapper extends CoreExt_DataMapper
   }
 
   /**
-   * Finder para inst‚ncias de TabelaArredondamento_Model_TabelaValor que tenham
-   * referÍncias a inst‚ncia TabelaArredondamento_Model_Tabela passada como
-   * par‚metro.
+   * Finder para inst√¢ncias de TabelaArredondamento_Model_TabelaValor que tenham
+   * refer√™ncias a inst√¢ncia TabelaArredondamento_Model_Tabela passada como
+   * par√¢metro.
    *
    * @param TabelaArredondamento_Model_Tabela $instance
-   * @return array Um array de inst‚ncias TabelaArredondamento_Model_TabelaValor
+   * @return array Um array de inst√¢ncias TabelaArredondamento_Model_TabelaValor
    */
   public function findTabelaValor(TabelaArredondamento_Model_Tabela $instance)
   {

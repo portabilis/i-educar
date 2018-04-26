@@ -4,12 +4,12 @@
 -- Adiciona uma foreign key entre as tabelas pmieducar.serie e 
 -- modules.regra_avaliacao
 --
--- @author   Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+-- @author   Eriksen Costa PaixÃ£o <eriksen.paixao_bs@cobra.com.br>
 -- @license  @@license@@
 -- @version  $Id$
 --
 
--- Cria um índice único, pois a chave primária é composta
+-- Cria um Ã­ndice Ãºnico, pois a chave primÃ¡ria Ã© composta
 CREATE UNIQUE INDEX regra_avaliacao_id_key
   ON modules.regra_avaliacao USING btree (id);
 

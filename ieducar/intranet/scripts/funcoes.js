@@ -47,9 +47,9 @@ function DvCnpjOk(e) {
             dv = true;
      }
      if ( ! dv && tam > 0) {
-         mensagem = "           Erro de digitaÁ„o:\n";
+         mensagem = "           Erro de digita√ß√£o:\n";
          mensagem+= "          ===============\n\n";
-         mensagem+= " O CNPJ: " + e.value + " n„o existe!!\n";
+         mensagem+= " O CNPJ: " + e.value + " n√£o existe!!\n";
          mensagem+= " CONTROLE " +controle +"\n";
          alert(mensagem);
      }
@@ -95,7 +95,7 @@ function DvMod11Ok(e) {
     else {
          mensagem = "           Erro de digita\347\343o:\n";
          mensagem+= "          ===============\n\n";
-         mensagem+= "   DÌgito verificador incorreto!!\n";
+         mensagem+= "   D√≠gito verificador incorreto!!\n";
          alert(mensagem);
      }
     return res;
@@ -122,9 +122,9 @@ function DvCpfOk(e) {
             dv = true;
     }
      if ( ! dv && tam > 0) {
-         mensagem = "           Erro de digitaÁ„o:\n";
+         mensagem = "           Erro de digita√ß√£o:\n";
          mensagem+= "          ===============\n\n";
-         mensagem+= " O CPF: " + e.value + " n„o existe!!\n";
+         mensagem+= " O CPF: " + e.value + " n√£o existe!!\n";
          alert(mensagem);
      }
     return dv;
@@ -171,9 +171,9 @@ function DvProcessoOk(e) {
             dv = true;
     }
     if ( ! dv && tam > 0 ) {
-        mensagem = "           Erro de digitaÁ„o:\n";
+        mensagem = "           Erro de digita√ß√£o:\n";
         mensagem+= "          ===============\n\n";
-        mensagem+= " O Processo: " + e.value + " n„o existe!!\n";
+        mensagem+= " O Processo: " + e.value + " n√£o existe!!\n";
         alert(mensagem);
     }
     return dv;
@@ -217,12 +217,12 @@ function DataOk(e) {
              ano > 1900 && ano < 2100 ) dv=true;
     }
     if ( ! dv && tam > 0 ) {
-         mensagem = "           Erro de digitaÁ„o:\n";
+         mensagem = "           Erro de digita√ß√£o:\n";
          mensagem+= "          ===============\n\n";
-         mensagem+= " A data tem a seguinte formataÁ„o: DD/MM/AAAA!!\n";
-         mensagem+= "        onde DD È Dia do mÍs,\n";
-         mensagem+= "             MM È o n˙mero do mÍs,e \n";
-         mensagem+= "             AAAA È o Ano com 4 dÌgitos.\n\n";
+         mensagem+= " A data tem a seguinte formata√ß√£o: DD/MM/AAAA!!\n";
+         mensagem+= "        onde DD √© Dia do m√™s,\n";
+         mensagem+= "             MM √© o n√∫mero do m√™s,e \n";
+         mensagem+= "             AAAA √© o Ano com 4 d√≠gitos.\n\n";
          mensagem+= " Exemplo: 15/04/2001\n";
 	alert(mensagem);
 	e.focus();
@@ -261,9 +261,9 @@ function CepOk(e) {
         dv=true;
     }
     if ( tam>0 && tam < 8) {
-        mensagem = "           Erro de digitaÁ„o:\n";
+        mensagem = "           Erro de digita√ß√£o:\n";
         mensagem+= "          ===============\n\n";
-        mensagem+= " O Cep: " + e.value + " n„o existe!!\n\n\n";
+        mensagem+= " O Cep: " + e.value + " n√£o existe!!\n\n\n";
 		mensagem+= " Use o seguinte formato: ddddd-ddd\n\n";
         mensagem+= " Exemplo: 70800-200\n";
         alert(mensagem);
@@ -410,7 +410,7 @@ function FormataCpfCnpjCadastro(e) {
     else if ( s.length > 7 || s.length <= 0 ) {
         mensagem = "           Erro de digita\347\343o:\n";
         mensagem+= "          ===============\n\n";
-        mensagem+= " NÈmero de cadastro: " + e.value + " n\343o existe!!\n";
+        mensagem+= " N√©mero de cadastro: " + e.value + " n\343o existe!!\n";
         alert(mensagem);
     }
     return s;
@@ -422,7 +422,7 @@ function IntOk(e,min,max) {
     if ( ( v < min || v > max ) && e.value.length > 0 ) {
         mensagem = "           Erro de digita\347\343o:\n";
         mensagem+= "          ===============\n\n";
-        mensagem+= e.value + " n„o È um valor entre ";
+        mensagem+= e.value + " n√£o √© um valor entre ";
         mensagem+= min + " e " + max + "!!\n";
         alert(mensagem);
         return false;
@@ -430,7 +430,7 @@ function IntOk(e,min,max) {
     if ( v != v2 ) {
         mensagem = "           Erro de digita\347\343o:\n";
         mensagem+= "          ===============\n\n";
-        mensagem+= e.value + " n„o È È um n˙mero inteiro!!\n ";
+        mensagem+= e.value + " n√£o √© √© um n√∫mero inteiro!!\n ";
         alert(mensagem);
         return false;
     }
@@ -441,7 +441,7 @@ function IntOk(e,min,max) {
     else {
         mensagem = "           Erro de digita\347\343o:\n";
         mensagem+= "          ===============\n\n";
-        mensagem+= e.value + " n„o È È um n˙mero!!\n ";
+        mensagem+= e.value + " n√£o √© √© um n√∫mero!!\n ";
         alert(mensagem);
         return false;
     }
@@ -453,7 +453,7 @@ function FloatOk(e,min,max) {
     if ( ( v < min || v > max ) && e.value.length > 0 ) {
         mensagem = "           Erro de digita\347\343o:\n";
         mensagem+= "          ===============\n\n";
-        mensagem+= e.value + " n„o È um valor entre ";
+        mensagem+= e.value + " n√£o √© um valor entre ";
         mensagem+= min + " e " + max + "!!\n";
         alert(mensagem);
         return false;
@@ -465,7 +465,7 @@ function FloatOk(e,min,max) {
     else {
         mensagem = "           Erro de digita\347\343o:\n";
         mensagem+= "          ===============\n\n";
-        mensagem+= e.value + " n„o È È um n˙mero!!\n ";
+        mensagem+= e.value + " n√£o √© √© um n√∫mero!!\n ";
         alert(mensagem);
         return false;
     }
@@ -480,7 +480,7 @@ function PreencherOk(e,min) {
     if ( j < min ) {
         mensagem = "           Erro de digita\347\343o:\n";
         mensagem+= "          ===============\n\n";
-        mensagem+= e.value + " n„o contÈm o n˙mero mÌnimo de  ";
+        mensagem+= e.value + " n√£o cont√©m o n√∫mero m√≠nimo de  ";
         mensagem+= "carateres!!\n";
         alert(mensagem);
         return false;
@@ -506,8 +506,8 @@ function VerificarForm(f) {
     if ( ! sbmt ) {
         mensagem = "           Falta preencher dados\n";
         mensagem+= "          ===============\n\n";
-        mensagem+= "Este formul·rio tem campos obrigatÛrios que";
-        mensagem+= " n„o foram preenchidos!!\n";
+        mensagem+= "Este formul√°rio tem campos obrigat√≥rios que";
+        mensagem+= " n√£o foram preenchidos!!\n";
         alert(mensagem);
         return false;
     }

@@ -1,9 +1,9 @@
 -- //
 
 --
--- Cria as tabelas para o mÛdulo AvaliaÁ„o.
+-- Cria as tabelas para o m√≥dulo Avalia√ß√£o.
 --
--- @author   Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+-- @author   Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
 -- @license  @@license@@
 -- @version  $Id$
 --

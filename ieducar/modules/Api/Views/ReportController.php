@@ -36,6 +36,10 @@ require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once "Reports/Reports/BoletimReport.php";
 require_once "Reports/Reports/BoletimProfessorReport.php";
 
+/**
+ * Class ReportController
+ * @deprecated Essa versão da API pública será descontinuada
+ */
 class ReportController extends ApiCoreController
 {
 

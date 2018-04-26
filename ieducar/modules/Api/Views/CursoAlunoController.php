@@ -37,6 +37,10 @@ require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
 require_once 'lib/Portabilis/Utils/Database.php';
 
+/**
+ * Class CursoAlunoController
+ * @deprecated Essa versão da API pública será descontinuada
+ */
 class CursoAlunoController extends ApiCoreController
 {
 

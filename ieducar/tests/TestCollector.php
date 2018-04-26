@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author    Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   Tests
- * @since     Arquivo disponÌvel desde a vers„o 1.1.0
+ * @since     Arquivo dispon√≠vel desde a vers√£o 1.1.0
  * @version   $Id$
  */
 
@@ -34,16 +34,16 @@ require_once 'PHPUnit/Runner/IncludePathTestCollector.php';
 /**
  * TestCollector abstract class.
  *
- * Classe abstrata que provÍ um ponto de extens„o para classes de definiÁ„o de
- * suÌte de testes do PHPUnit (veja {@link Orga})
+ * Classe abstrata que prov√™ um ponto de extens√£o para classes de defini√ß√£o de
+ * su√≠te de testes do PHPUnit (veja {@link Orga})
  *
- * Ao estender corretamente essa classe, todos as classes de teste do diretÛrio
- * da classe de definiÁ„o de suÌte de testes ser„o adicionados ‡ suÌte,
- * tornando desnecess·rio a nessidade de usar os construtores de linguagem
+ * Ao estender corretamente essa classe, todos as classes de teste do diret√≥rio
+ * da classe de defini√ß√£o de su√≠te de testes ser√£o adicionados √† su√≠te,
+ * tornando desnecess√°rio a nessidade de usar os construtores de linguagem
  * require e include para incluir esses arquivos.
  *
  * Para estender essa classe, basta informar o caminho para o arquivo da classe
- * de definiÁ„o da suÌte na vari·vel protegida $_file, exemplo:
+ * de defini√ß√£o da su√≠te na vari√°vel protegida $_file, exemplo:
  *
  * <code>
  * class App_Model_AllTests extends TestCollector
@@ -52,25 +52,25 @@ require_once 'PHPUnit/Runner/IncludePathTestCollector.php';
  * }
  * </code>
  *
- * Isso È o suficiente para conseguir coletar todos os arquivos do diretÛrio.
- * Para criar uma suÌte de testes com todas as classes de teste do diretÛrio,
- * basta criar uma inst‚ncia da classe e chamar o mÈtodo addDirectoryTests():
+ * Isso √© o suficiente para conseguir coletar todos os arquivos do diret√≥rio.
+ * Para criar uma su√≠te de testes com todas as classes de teste do diret√≥rio,
+ * basta criar uma inst√¢ncia da classe e chamar o m√©todo addDirectoryTests():
  *
  * <code>
  * public static function suite()
  * {
  *   $instance = new self();
- *   return $instance->createTestSuite('App_Model: testes unit·rios')
+ *   return $instance->createTestSuite('App_Model: testes unit√°rios')
  *                   ->addDirectoryTests();
  * }
  * </code>
  *
- * Se a vari·vel de inst‚ncia $_name estiver sobrescrita, ela ser· utilizada
- * por padr„o caso o mÈtodo createTestSuite() seja chamado sem o par‚metro nome.
- * Dessa forma, basta chamar o mÈtodo addDirectoryTests():
+ * Se a vari√°vel de inst√¢ncia $_name estiver sobrescrita, ela ser√° utilizada
+ * por padr√£o caso o m√©todo createTestSuite() seja chamado sem o par√¢metro nome.
+ * Dessa forma, basta chamar o m√©todo addDirectoryTests():
  *
  * <code>
- * protected $_name = 'App_model: testes unit·rios';
+ * protected $_name = 'App_model: testes unit√°rios';
  *
  * public static function suite()
  * {
@@ -79,11 +79,11 @@ require_once 'PHPUnit/Runner/IncludePathTestCollector.php';
  * }
  * </code>
  *
- * @author    Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author    Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   Tests
- * @since     Classe disponÌvel desde a vers„o 1.1.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.1.0
  * @version   @@package_version@@
  */
 abstract class TestCollector
@@ -95,19 +95,19 @@ abstract class TestCollector
   protected $_file = NULL;
 
   /**
-   * DiretÛrio onde residem os arquivos com as classes de teste.
+   * Diret√≥rio onde residem os arquivos com as classes de teste.
    * @var array
    */
   protected $_directory = array();
 
   /**
-   * Nome da suÌte de testes.
+   * Nome da su√≠te de testes.
    * @var string
    */
   protected $_name  = '';
 
   /**
-   * Uma inst‚ncia de PHPUnit_Framework_TestSuite.
+   * Uma inst√¢ncia de PHPUnit_Framework_TestSuite.
    * @var PHPUnit_Framework_TestSuite
    */
   protected $_suite = NULL;
@@ -123,17 +123,17 @@ abstract class TestCollector
 
   /**
    * Cria um objeto PHPUnit_Framework_TestSuite com o nome passado como
-   * argumento ou usando a vari·vel de inst‚ncia $_name.
+   * argumento ou usando a vari√°vel de inst√¢ncia $_name.
    *
-   * @param   string  $name  O nome para a suÌte de testes
-   * @return  TestCollector  Interface fluÌda
+   * @param   string  $name  O nome para a su√≠te de testes
+   * @return  TestCollector  Interface flu√≠da
    * @throws  InvalidArgumentException
    */
   public function createTestSuite($name = '')
   {
     if ((trim((string) $name)) == '' && $this->_name == '') {
       throw new InvalidArgumentException('A classe concreta deve sobrescrever a '
-                . 'vari·vel "$_name" ou passar um nome v·lido ao chamar o mÈtodo'
+                . 'vari√°vel "$_name" ou passar um nome v√°lido ao chamar o m√©todo'
                 . 'createTestSuite().');
     }
     if (trim((string) $name) != '') {
@@ -145,15 +145,15 @@ abstract class TestCollector
   }
 
   /**
-   * Adiciona os testes do diretÛrio da classe de definiÁ„o de suÌte.
+   * Adiciona os testes do diret√≥rio da classe de defini√ß√£o de su√≠te.
    *
    * @param   PHPUnit_Framework_TestSuite  $suite
    * @return  PHPUnit_Framework_TestSuite
    */
   public function addDirectoryTests(PHPUnit_Framework_TestSuite $suite = NULL)
   {
-    // Se n„o existir um objeto PHPUnit_Framework_TestSuite, cria um com o nome
-    // do arquivo da classe de definiÁ„o da suÌte
+    // Se n√£o existir um objeto PHPUnit_Framework_TestSuite, cria um com o nome
+    // do arquivo da classe de defini√ß√£o da su√≠te
     if ($this->_suite == NULL && $suite == NULL) {
       $this->createTestSuite();
     }
@@ -166,8 +166,8 @@ abstract class TestCollector
   }
 
   /**
-   * Retorna um PHPUnit_Util_FilterIterator que contÈm as regras de inclus„o
-   * de testes do diretÛrio definido por $_fir.
+   * Retorna um PHPUnit_Util_FilterIterator que cont√©m as regras de inclus√£o
+   * de testes do diret√≥rio definido por $_fir.
    *
    * @return PHPUnit_Util_FilterIterator
    */
@@ -178,17 +178,17 @@ abstract class TestCollector
   }
 
   /**
-   * Define o diretÛrio atual da classe que estende TestCollector. O diretÛrio È
-   * definido pela vari·vel de inst‚ncia $_file.
+   * Define o diret√≥rio atual da classe que estende TestCollector. O diret√≥rio √©
+   * definido pela vari√°vel de inst√¢ncia $_file.
    *
-   * @throws  Exception  LanÁa exceÁ„o
-   * @todo    Refatorar o cÛdigo para utilizar {@link http://php.net/lsb Late static binding}
-   *          quando a vers„o do PHP for a 5.3.
+   * @throws  Exception  Lan√ßa exce√ß√£o
+   * @todo    Refatorar o c√≥digo para utilizar {@link http://php.net/lsb Late static binding}
+   *          quando a vers√£o do PHP for a 5.3.
    */
   protected function _defineCurrentDirectory()
   {
     if ($this->_file === NULL) {
-      throw new Exception('A classe concreta deve sobrescrever a vari·vel "$_file".');
+      throw new Exception('A classe concreta deve sobrescrever a vari√°vel "$_file".');
     }
     $directory = $this->_getDirectoryPath($this->_file);
     if (!array_search($directory, $this->_directory)) {
@@ -197,7 +197,7 @@ abstract class TestCollector
   }
 
   /**
-   * Pega o caminho do diretÛrio que ser· varrido para a inclus„o de testes.
+   * Pega o caminho do diret√≥rio que ser√° varrido para a inclus√£o de testes.
    * @param  string $path
    * @return string
    */
