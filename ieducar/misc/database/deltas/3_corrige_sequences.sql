@@ -2,14 +2,14 @@
 
 --
 -- Corrige sequences que apresentaram valores incorretos devido a limpeza do
--- banco de dados. Isso ocorre quando uma instruÁ„o SQL INSERT informa o valor
--- da chave prim·ria. O PostgreSQL n„o executa a chamada a nextval() dos campos
+-- banco de dados. Isso ocorre quando uma instru√ß√£o SQL INSERT informa o valor
+-- da chave prim√°ria. O PostgreSQL n√£o executa a chamada a nextval() dos campos
 -- de tipo serial e nem atualiza a sequence com setval(), apesar de esse
 -- comportamento estar presente nos tipos autoincrement do MySQL.
 --
--- O problema que ocorre È a execuÁ„o de um SQL INSERT sem passar um valor para
--- a chave prim·ria (sequence). Se o prÛximo valor da sequence j· estiver sendo
--- utilizado, um erro de integridade da chave È lanÁada.
+-- O problema que ocorre √© a execu√ß√£o de um SQL INSERT sem passar um valor para
+-- a chave prim√°ria (sequence). Se o pr√≥ximo valor da sequence j√° estiver sendo
+-- utilizado, um erro de integridade da chave √© lan√ßada.
 --
 -- Exemplo de SQL que resultaria em erro (observe o valor 1):
 -- <code>
@@ -18,7 +18,7 @@
 --  VALUES (1, ?, ?, ?, ?);
 -- <code>
 --
--- @author   Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+-- @author   Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
 -- @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
 -- @version  $Id$
 --

@@ -208,4 +208,12 @@ class Portabilis_Array_Utils {
 
     return $array;
   }
+
+  public static function arrayColumn($array, $column) {
+
+    return array_map(function($val) use ($column) {
+      return $val[$column];
+    },$array);
+
+  }
 }

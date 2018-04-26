@@ -1,54 +1,54 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author    Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   CoreExt_Singleton
- * @since     Arquivo disponÌvel desde a vers„o 1.1.0
+ * @since     Arquivo dispon√≠vel desde a vers√£o 1.1.0
  * @version   $Id$
  */
 
 /**
  * CoreExt_Singleton abstract class.
  *
- * Funciona como uma interface de atalho para minimizar a duplicaÁ„o de cÛdigo
- * para criar inst‚ncias singleton. Internamente, entretanto, funciona como um
- * {@link http://martinfowler.com/eaaCatalog/registry.html Registry} j· que
- * todas as suas subclasses estar„o armazenadas em um array est·tico desta
+ * Funciona como uma interface de atalho para minimizar a duplica√ß√£o de c√≥digo
+ * para criar inst√¢ncias singleton. Internamente, entretanto, funciona como um
+ * {@link http://martinfowler.com/eaaCatalog/registry.html Registry} j√° que
+ * todas as suas subclasses estar√£o armazenadas em um array est√°tico desta
  * classe.
  *
- * @author    Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author    Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @link      http://martinfowler.com/eaaCatalog/registry.html Registry pattern
  * @package   CoreExt_Singleton
- * @since     Classe disponÌvel desde a vers„o 1.1.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.1.0
  * @version   @@package_version@@
  */
 abstract class CoreExt_Singleton
 {
   /**
-   * A inst‚ncia singleton de CoreExt_Singleton
+   * A inst√¢ncia singleton de CoreExt_Singleton
    * @var array
    */
   private static $_instance = array();
@@ -61,11 +61,11 @@ abstract class CoreExt_Singleton
   }
 
   /**
-   * Sobrescreva esse mÈtodo para garantir que a subclasse possa criar um
-   * singleton. Esta deve fazer uma chamada ao mÈtodo _getInstance, passando
+   * Sobrescreva esse m√©todo para garantir que a subclasse possa criar um
+   * singleton. Esta deve fazer uma chamada ao m√©todo _getInstance, passando
    * uma string que tenha como valor o nome da classe. Uma forma conveniente
-   * de fazer isso È chamando _getInstance passando como par‚metro a constante
-   * m·gica __CLASS__.
+   * de fazer isso √© chamando _getInstance passando como par√¢metro a constante
+   * m√°gica __CLASS__.
    *
    * Exemplo:
    * <code>
@@ -82,13 +82,13 @@ abstract class CoreExt_Singleton
   public static function getInstance()
   {
     require_once 'CoreExt/Exception.php';
-    throw new CoreExt_Exception('… necess·rio sobrescrever o mÈtodo "getInstance()" de CoreExt_Singleton.');
+    throw new CoreExt_Exception('√â necess√°rio sobrescrever o m√©todo "getInstance()" de CoreExt_Singleton.');
   }
 
   /**
-   * Retorna uma inst‚ncia singleton, instanciando-a quando necess·rio.
+   * Retorna uma inst√¢ncia singleton, instanciando-a quando necess√°rio.
    *
-   * @param  string $self  Nome da subclasse de CoreExt_Singleton que ser· instanciada
+   * @param  string $self  Nome da subclasse de CoreExt_Singleton que ser√° instanciada
    * @return CoreExt_Singleton
    */
   protected static function _getInstance($self)

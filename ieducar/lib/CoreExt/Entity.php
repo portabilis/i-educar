@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author    Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   CoreExt_Entity
- * @since     Arquivo disponÌvel desde a vers„o 1.1.0
+ * @since     Arquivo dispon√≠vel desde a vers√£o 1.1.0
  * @version   $Id$
  */
 
@@ -33,42 +33,42 @@ require_once 'CoreExt/Entity/Validatable.php';
 /**
  * CoreExt_Entity abstract class.
  *
- * Um layer supertype para objetos da camada de domÌnio de todos os namespaces
- * da aplicaÁ„o.
+ * Um layer supertype para objetos da camada de dom√≠nio de todos os namespaces
+ * da aplica√ß√£o.
  *
- * @author    Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author    Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @link      http://martinfowler.com/eaaCatalog/layerSupertype.html
  * @package   CoreExt_Entity
- * @since     Classe disponÌvel desde a vers„o 1.1.0
- * @todo      Possibilitar uso opcional do campo identidade, ˙til para casos
+ * @since     Classe dispon√≠vel desde a vers√£o 1.1.0
+ * @todo      Possibilitar uso opcional do campo identidade, √∫til para casos
  *   de compound primary keys
  * @version   @@package_version@@
  */
 abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
 {
   /**
-   * Define se uma inst‚ncia È "nova" ou "velha" (caso seja carregada via
+   * Define se uma inst√¢ncia √© "nova" ou "velha" (caso seja carregada via
    * CoreExt_DataMapper).
    * @var bool
    */
   protected $_new = TRUE;
 
   /**
-   * Array associativo onde os Ìndices se comportar„o como atributos p˙blicos
-   * graÁas a implementaÁ„o dos mÈtodos m·gicos de overload.
+   * Array associativo onde os √≠ndices se comportar√£o como atributos p√∫blicos
+   * gra√ßas a implementa√ß√£o dos m√©todos m√°gicos de overload.
    *
    * @var array
    */
   protected $_data = array();
 
   /**
-   * Array associativo onde os Ìndices identificam o tipo de dado de uma
-   * propriedade p˙blica tal qual declarada em $_data.
+   * Array associativo onde os √≠ndices identificam o tipo de dado de uma
+   * propriedade p√∫blica tal qual declarada em $_data.
    *
    * @var array
-   * @see _getValue() ContÈm a lista de tipos atualmente suportados
+   * @see _getValue() Cont√©m a lista de tipos atualmente suportados
    */
   protected $_dataTypes = array();
 
@@ -78,7 +78,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
   protected $_dataMapper = NULL;
 
   /**
-   * Array associativo para referÍncias a objetos que ser„o carregados com
+   * Array associativo para refer√™ncias a objetos que ser√£o carregados com
    * lazy load.
    *
    * Uma reference pode ser de um dos tipos:
@@ -86,7 +86,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
    * - CoreExt_Enum
    *
    * Toda vez que uma reference for requisitada e acessada pela primeira vez,
-   * ela n„o far· mais lookups (buscas SQL, acesso a arrays de valores).
+   * ela n√£o far√° mais lookups (buscas SQL, acesso a arrays de valores).
    *
    * <code>
    * <?php
@@ -105,21 +105,21 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
   protected $_references = array();
 
   /**
-   * ColeÁ„o de validadores para as propriedades $_data de CoreExt_Entity.
+   * Cole√ß√£o de validadores para as propriedades $_data de CoreExt_Entity.
    * @var array
    */
   protected $_validators = array();
 
   /**
-   * ColeÁ„o de mensagens de erro retornado pelos validadores de $_validators
-   * durante a execuÁ„o do mÈtodo isValid().
+   * Cole√ß√£o de mensagens de erro retornado pelos validadores de $_validators
+   * durante a execu√ß√£o do m√©todo isValid().
    *
    * @var array
    */
   protected $_errors = array();
 
   /**
-   * Array com inst‚ncias para classes pertecentes ao namespace iEd_*.
+   * Array com inst√¢ncias para classes pertecentes ao namespace iEd_*.
    *
    * <code>
    * <?php
@@ -154,10 +154,10 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
   }
 
   /**
-   * Adiciona um campo identidade como atributo da inst‚ncia.
+   * Adiciona um campo identidade como atributo da inst√¢ncia.
    *
    * @link   http://martinfowler.com/eaaCatalog/identityField.html
-   * @return CoreExt_Entity ProvÍ interface fluÌda
+   * @return CoreExt_Entity Prov√™ interface flu√≠da
    */
   protected function _createIdentityField()
   {
@@ -167,11 +167,11 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
   }
 
   /**
-   * Atribui valor para cada atributo da classe que tenha correspondÍncia com
+   * Atribui valor para cada atributo da classe que tenha correspond√™ncia com
    * o indice do array $options passado como argumento.
    *
    * @param  array $options
-   * @return CoreExt_Entity ProvÍ interface fluÌda
+   * @return CoreExt_Entity Prov√™ interface flu√≠da
    */
   public function setOptions($options = array())
   {
@@ -182,24 +182,24 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
   }
 
   /**
-   * ImplementaÁ„o do mÈtodo m·gico __set().
+   * Implementa√ß√£o do m√©todo m√°gico __set().
    *
-   * Esse mÈtodo È um pouco complicado devido a lÛgica de configuraÁ„o das
-   * referÍncias para lazy loading.
+   * Esse m√©todo √© um pouco complicado devido a l√≥gica de configura√ß√£o das
+   * refer√™ncias para lazy loading.
    *
    * @link   http://php.net/manual/en/language.oop5.overloading.php
    * @param  string $key
    * @param  mixed  $val
-   * @return bool|NULL TRUE caso seja uma referÍncia v·lida ou NULL para o fluxo
-   *   normal do mÈtodo
+   * @return bool|NULL TRUE caso seja uma refer√™ncia v√°lida ou NULL para o fluxo
+   *   normal do m√©todo
    */
   public function __set($key, $val)
   {
     if ($this->_hasReference($key)) {
-      // Se houver uma referÍncia e ela pode ser NULL, atribui NULL quando
-      // a referÍncia for carregada por CoreExt_DataMapper (new = FALSE).
-      // Se for uma referÍncia a CoreExt_DataMapper, 0 ser· equivalente a NULL.
-      // Aqui, nem inst‚ncia tem, nem lazy load acontecer·.
+      // Se houver uma refer√™ncia e ela pode ser NULL, atribui NULL quando
+      // a refer√™ncia for carregada por CoreExt_DataMapper (new = FALSE).
+      // Se for uma refer√™ncia a CoreExt_DataMapper, 0 ser√° equivalente a NULL.
+      // Aqui, nem inst√¢ncia tem, nem lazy load acontecer√°.
       if (
         isset($this->_references[$key]['null']) &&
         TRUE == $this->_references[$key]['null'] &&
@@ -212,53 +212,53 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
         return TRUE;
       }
 
-      // Se a referÍncia for numÈrica, usa-a, marcando apenas a referÍncia e
+      // Se a refer√™ncia for num√©rica, usa-a, marcando apenas a refer√™ncia e
       // deixando o atributo NULL para o lazy load.
       if (is_numeric($val)) {
         $this->_references[$key]['value'] = $this->_getValue($key, $val);
         return TRUE;
       }
 
-      // Se for uma inst‚ncia de CoreExt_Entity e tiver um identificador,
-      // usa-o. ReferÍncias sem um valor poder„o ser consideradas como novas
-      // numa implementaÁ„o de save() de CoreExt_DataMapper que leve em
-      // consideraÁ„o as referÍncias, salvando-as ou atualizando-as.
+      // Se for uma inst√¢ncia de CoreExt_Entity e tiver um identificador,
+      // usa-o. Refer√™ncias sem um valor poder√£o ser consideradas como novas
+      // numa implementa√ß√£o de save() de CoreExt_DataMapper que leve em
+      // considera√ß√£o as refer√™ncias, salvando-as ou atualizando-as.
       elseif ($val instanceof CoreExt_Entity && isset($val->id)) {
         $this->_references[$key]['value'] = $this->_getValue($key, $val->id);
-        // N„o retorna, queremos aproveitar a inst‚ncia para n„o mais carreg·-la
+        // N√£o retorna, queremos aproveitar a inst√¢ncia para n√£o mais carreg√°-la
         // em __get().
       }
 
-      // Aqui, identificamos que o atributo n„o se encaixa em nenhum dos itens
-      // anteriores, lanÁando um ExceÁ„o. Como CoreExt_Enum n„o contÈm um
+      // Aqui, identificamos que o atributo n√£o se encaixa em nenhum dos itens
+      // anteriores, lan√ßando um Exce√ß√£o. Como CoreExt_Enum n√£o cont√©m um
       // estado (o valor corrente, por ser um Enum!), aceitamos apenas
-      // inst‚ncias de CoreExt_Entity como par‚metro
+      // inst√¢ncias de CoreExt_Entity como par√¢metro
       elseif (!($val instanceof CoreExt_Entity)) {
         require_once 'CoreExt/Exception/InvalidArgumentException.php';
         throw new CoreExt_Exception_InvalidArgumentException('O argumento passado para o atributo "' . $key
-                  . '" È inv·lido. Apenas os tipos "int" e "CoreExt_Entity" s„o suportados.');
+                  . '" √© inv√°lido. Apenas os tipos "int" e "CoreExt_Entity" s√£o suportados.');
       }
     }
 
-    // Se o atributo n„o existir, lanÁa exceÁ„o
+    // Se o atributo n√£o existir, lan√ßa exce√ß√£o
     if (!array_key_exists($key, $this->_data)) {
       require_once 'CoreExt/Exception/InvalidArgumentException.php';
       throw new CoreExt_Exception_InvalidArgumentException('A propriedade '
-                . $key . ' n„o existe em ' . __CLASS__ . '.');
+                . $key . ' n√£o existe em ' . __CLASS__ . '.');
     }
 
-    // Se for string vazia, o valor È NULL
+    // Se for string vazia, o valor √© NULL
     if ('' == trim($val)) {
       $this->_data[$key] = NULL;
     }
-    // Chama _getValue(), para fazer conversıes que forem necess·rias
+    // Chama _getValue(), para fazer convers√µes que forem necess√°rias
     else {
       $this->_data[$key] = $this->_getValue($key, $val);
     }
   }
 
   /**
-   * ImplementaÁ„o do mÈtodo m·gico __get().
+   * Implementa√ß√£o do m√©todo m√°gico __get().
    *
    * @link   http://php.net/manual/en/language.oop5.overloading.php
    * @param  string $key
@@ -279,8 +279,8 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
   }
 
   /**
-   * Getter. N„o resolve referÍncias com lazy load, ao invÈs disso, retorna
-   * o valor da referÍncia.
+   * Getter. N√£o resolve refer√™ncias com lazy load, ao inv√©s disso, retorna
+   * o valor da refer√™ncia.
    *
    * @param  string $key
    * @return mixed
@@ -295,7 +295,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
 
 
   /**
-   * ImplementaÁ„o do mÈtodo m·gico __isset().
+   * Implementa√ß√£o do m√©todo m√°gico __isset().
    *
    * @link   http://php.net/manual/en/language.oop5.overloading.php
    * @param  string $key
@@ -308,7 +308,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
   }
 
   /**
-   * ImplementaÁ„o do mÈtodo m·gico __unset().
+   * Implementa√ß√£o do m√©todo m√°gico __unset().
    *
    * @link  http://php.net/manual/en/language.oop5.overloading.php
    * @param string $key
@@ -319,7 +319,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
   }
 
   /**
-   * ImplementaÁ„o do mÈtodo m·gico __toString().
+   * Implementa√ß√£o do m√©todo m√°gico __toString().
    *
    * @link http://br2.php.net/manual/en/language.oop5.magic.php#language.oop5.magic.tostring
    * @return string
@@ -331,32 +331,32 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
 
 
   /**
-   * Carrega um objeto de uma referÍncia, usando o CoreExt_DataMapper
+   * Carrega um objeto de uma refer√™ncia, usando o CoreExt_DataMapper
    * especificado para tal.
    *
    * @param  string $key
    * @return CoreExt_Entity
-   * @todo   Se mais classes puderem ser atribuÌdas como references, implementar
-   *         algum design pattern para diminuir a complexidade ciclom·tica
-   *         desse mÈtodo e de setReferenceClass().
-   * @todo   Caso a classe n„o seja um CoreExt_DataMapper ou CoreExt_Enum,
-   *         lanÁar uma Exception.
-   * @todo   ReferÍncias CoreExt_Enum sÛ podem ter seu valor atribuÌdo na
-   *         instanciaÁ„o. Verificar se isso È desejado e ver possibilidade
+   * @todo   Se mais classes puderem ser atribu√≠das como references, implementar
+   *         algum design pattern para diminuir a complexidade ciclom√°tica
+   *         desse m√©todo e de setReferenceClass().
+   * @todo   Caso a classe n√£o seja um CoreExt_DataMapper ou CoreExt_Enum,
+   *         lan√ßar uma Exception.
+   * @todo   Refer√™ncias CoreExt_Enum s√≥ podem ter seu valor atribu√≠do na
+   *         instancia√ß√£o. Verificar se isso √© desejado e ver possibilidade
    *         de flexibilizar esse comportamente. Ver para CoreExt_DataMapper
-   *         tambÈm.
+   *         tamb√©m.
    */
   protected function _loadReference($key)
   {
     $reference = $this->_references[$key];
 
-    // Se a referÍncia tiver valor NULL
+    // Se a refer√™ncia tiver valor NULL
     $value = $reference['value'];
     if (in_array($value, array(NULL), true)) {
       return $value;
     }
 
-    // Verifica se a API da classe para saber qual tipo de instanciaÁ„o usar
+    // Verifica se a API da classe para saber qual tipo de instancia√ß√£o usar
     $class = $reference['class'];
     if ($this->_isReferenceDataMapper($key)) {
       $class  = new $class();
@@ -366,7 +366,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
       eval('?><?php $class = ' . $class . '?>');
     }
 
-    // Faz a chamada a API, recupera o valor original (objetos). Usa a inst‚ncia
+    // Faz a chamada a API, recupera o valor original (objetos). Usa a inst√¢ncia
     // da classe.
     if ($class instanceof CoreExt_DataMapper) {
       $return = $class->find($value);
@@ -382,7 +382,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
   }
 
   /**
-   * Verifica se existe uma referÍncia para uma certa chave $key.
+   * Verifica se existe uma refer√™ncia para uma certa chave $key.
    * @param string $key
    * @return bool
    */
@@ -392,20 +392,20 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
   }
 
   /**
-   * Configura ou adiciona uma nova referÍncia para possibilitar o lazy load
+   * Configura ou adiciona uma nova refer√™ncia para possibilitar o lazy load
    * entre objetos.
    *
-   * @param  string  $key   O nome do atributo que mapeia para a referÍncia
-   * @param  array   $data  O array com a especificaÁ„o da referÍncia
-   * @return CoreExt_Entity ProvÍ interface fluÌda
+   * @param  string  $key   O nome do atributo que mapeia para a refer√™ncia
+   * @param  array   $data  O array com a especifica√ß√£o da refer√™ncia
+   * @return CoreExt_Entity Prov√™ interface flu√≠da
    * @throws CoreExt_Exception_InvalidArgumentException
    */
   public function setReference($key, $data)
   {
     if (!array_key_exists($key, $this->_data)) {
       require_once 'CoreExt/Exception/InvalidArgumentException.php';
-      throw new CoreExt_Exception_InvalidArgumentException('Somente È possÌvel '
-                . 'criar referÍncias para atributos da classe.');
+      throw new CoreExt_Exception_InvalidArgumentException('Somente √© poss√≠vel '
+                . 'criar refer√™ncias para atributos da classe.');
     }
 
     $layout = array('value' => NULL, 'class' => NULL, 'file' => NULL, 'null' => NULL);
@@ -435,10 +435,10 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
   }
 
   /**
-   * Setter para o valor de referÍncia de uma reference.
+   * Setter para o valor de refer√™ncia de uma reference.
    * @param  string $key
    * @param  int    $value
-   * @return CoreExt_Entity ProvÍ interface fluÌda
+   * @return CoreExt_Entity Prov√™ interface flu√≠da
    */
   public function setReferenceValue($key, $value)
   {
@@ -451,15 +451,15 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
    * reference.
    * @param  string $key
    * @param  CoreExt_DataMapper|CoreExt_Enum|string $class
-   * @return CoreExt_Entity ProvÍ interface fluÌda
+   * @return CoreExt_Entity Prov√™ interface flu√≠da
    * @throws CoreExt_Exception_InvalidArgumentException
    */
   public function setReferenceClass($key, $class)
   {
     if (!is_string($class) && !($class instanceof CoreExt_DataMapper || $class instanceof CoreExt_Enum)) {
       require_once 'CoreExt/Exception/InvalidArgumentException.php';
-      throw new CoreExt_Exception_InvalidArgumentException('Uma classe de referÍncia '
-                . ' precisa ser especificada pelo seu nome (string), ou, uma inst‚ncia de CoreExt_DataMapper ou CoreExt_Enum.');
+      throw new CoreExt_Exception_InvalidArgumentException('Uma classe de refer√™ncia '
+                . ' precisa ser especificada pelo seu nome (string), ou, uma inst√¢ncia de CoreExt_DataMapper ou CoreExt_Enum.');
     }
     $this->_references[$key]['class'] = $class;
     return $this;
@@ -470,7 +470,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
    * informada por setReferenceClass.
    * @param  string $key
    * @param  int    $value
-   * @return CoreExt_Entity ProvÍ interface fluÌda
+   * @return CoreExt_Entity Prov√™ interface flu√≠da
    */
   public function setReferenceFile($key, $file)
   {
@@ -499,7 +499,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
   }
 
   /**
-   * Verifica se a classe da referÍncia È uma inst‚ncia de CoreExt_DataMapper.
+   * Verifica se a classe da refer√™ncia √© uma inst√¢ncia de CoreExt_DataMapper.
    * @param string $key
    * @return bool
    */
@@ -511,7 +511,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
   }
 
   /**
-   * Verifica se a classe da referÍncia È uma inst‚ncia de CoreExt_Enum.
+   * Verifica se a classe da refer√™ncia √© uma inst√¢ncia de CoreExt_Enum.
    * @param string $key
    * @return bool
    */
@@ -523,7 +523,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
   }
 
   /**
-   * Verifica se a referÍncia È subclasse de $parentClass.
+   * Verifica se a refer√™ncia √© subclasse de $parentClass.
    *
    * @param string $subClass
    * @param string $subClassFile
@@ -536,8 +536,8 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
 
     if (is_string($subClass)) {
       if (!in_array($subClassFile, $required)) {
-        // Inclui o arquivo com a definiÁ„o de subclasse para que o interpretador
-        // tenha o sÌmbolo de comparaÁ„o.
+        // Inclui o arquivo com a defini√ß√£o de subclasse para que o interpretador
+        // tenha o s√≠mbolo de compara√ß√£o.
         require_once $subClassFile;
         $required[] = $subClassFile;
       }
@@ -567,20 +567,20 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
   }
 
   /**
-   * Adiciona uma classe para o repositÛrio de classes est·tico, instanciando
-   * caso n„o seja passada uma inst‚ncia explÌcita e carregando o arquivo
-   * em que a classe est· armazenada caso seja informado.
+   * Adiciona uma classe para o reposit√≥rio de classes est√°tico, instanciando
+   * caso n√£o seja passada uma inst√¢ncia expl√≠cita e carregando o arquivo
+   * em que a classe est√° armazenada caso seja informado.
    *
-   * Quando uma inst‚ncia n„o È passada explicitamente, verifica-se se a
-   * inst‚ncia j· existe, retornado-a caso positivo e/ou instanciando uma nova
+   * Quando uma inst√¢ncia n√£o √© passada explicitamente, verifica-se se a
+   * inst√¢ncia j√° existe, retornado-a caso positivo e/ou instanciando uma nova
    * (sem passar argumentos para seu construtor) e retornando-a.
    *
-   * Permite armazenar apenas uma inst‚ncia de uma classe por vez. Por usar
-   * armazenamento est·tico, pode ter efeitos indesejados ao ser usado por
+   * Permite armazenar apenas uma inst√¢ncia de uma classe por vez. Por usar
+   * armazenamento est√°tico, pode ter efeitos indesejados ao ser usado por
    * diferentes objetos.
    *
-   * Caso seja necess·rio instanciar a classe passando argumentos ao seu
-   * construtor, instancie a classe e passe a referencia na chamada ao mÈtodo:
+   * Caso seja necess√°rio instanciar a classe passando argumentos ao seu
+   * construtor, instancie a classe e passe a referencia na chamada ao m√©todo:
    *
    * <code>
    * <?php
@@ -589,10 +589,10 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
    * </code>
    *
    * @param  string  $class     O nome da classe
-   * @param  mixed   $instance  Uma inst‚ncia da classe
+   * @param  mixed   $instance  Uma inst√¢ncia da classe
    * @param  string  $file      O nome do arquivo onde se encontra a classe
-   * @param  bool    $sticky    Se a inst‚ncia da classe de ser "grundenda",
-   *   n„o podendo ser posteriormente substituÌda por uma chamada subsequente
+   * @param  bool    $sticky    Se a inst√¢ncia da classe de ser "grundenda",
+   *   n√£o podendo ser posteriormente substitu√≠da por uma chamada subsequente
    * @return mixed
    * @throws CoreExt_Exception_InvalidArgumentException
    */
@@ -617,8 +617,8 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
   }
 
   /**
-   * Instancia uma classe de $class ou atribui uma inst‚ncia passada
-   * explicitamente para o repositÛrio de classes est·tico.
+   * Instancia uma classe de $class ou atribui uma inst√¢ncia passada
+   * explicitamente para o reposit√≥rio de classes est√°tico.
    *
    * @param string $class
    * @param mixed $instance
@@ -630,15 +630,15 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
     if (!is_null($instance)) {
       if (!($instance instanceof $class)) {
         require_once 'CoreExt/Exception/InvalidArgumentException.php';
-        throw new CoreExt_Exception_InvalidArgumentException('A inst‚ncia '
-                  . 'passada como argumento precisa ser uma inst‚ncia de "' . $class . '".');
+        throw new CoreExt_Exception_InvalidArgumentException('A inst√¢ncia '
+                  . 'passada como argumento precisa ser uma inst√¢ncia de "' . $class . '".');
       }
 
       if (FALSE == self::$_classStorage[strtolower($class)]['sticky']) {
         self::$_classStorage[strtolower($class)]['instance'] = $instance;
         self::$_classStorage[strtolower($class)]['sticky']   = $sticky;
       }
-      // Se for sticky, sÛ sobrescreve por outro
+      // Se for sticky, s√≥ sobrescreve por outro
       elseif (TRUE == self::$_classStorage[strtolower($class)]['sticky'] && TRUE == $sticky) {
         self::$_classStorage[strtolower($class)]['instance'] = $instance;
         self::$_classStorage[strtolower($class)]['sticky']   = $sticky;
@@ -666,7 +666,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
   }
 
   /**
-   * Verifica se uma classe existe no repositÛrio de classes est·tico.
+   * Verifica se uma classe existe no reposit√≥rio de classes est√°tico.
    * @param string $class
    * @return bool
    */
@@ -681,7 +681,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
   /**
    * Setter.
    * @param CoreExt_Locale $instance
-   * @return CoreExt_DataMapper ProvÍ interface fluÌda
+   * @return CoreExt_DataMapper Prov√™ interface flu√≠da
    */
   public function setLocale(CoreExt_Locale $instance)
   {
@@ -703,15 +703,15 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
   }
 
   /**
-   * Verifica se a propriedade informada por $key È v·lida, executando o
+   * Verifica se a propriedade informada por $key √© v√°lida, executando o
    * CoreExt_Validate_Interface relacionado.
    *
    * Utiliza lazy initialization para inicializar os validadores somente quando
-   * necess·rio.
+   * necess√°rio.
    *
    * @link    http://martinfowler.com/eaaCatalog/lazyLoad.html Lazy initialization
    * @param   string  $key  Propriedade a ser validade. Caso seja string vazia,
-   *   executa todos os validadores da inst‚ncia
+   *   executa todos os validadores da inst√¢ncia
    * @return  bool
    * @see     CoreExt_Validate_Validatable#isValid($key)
    */
@@ -734,7 +734,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
   }
 
   /**
-   * Verifica se uma inst‚ncia È nula, isto È, quando todos os seus atributos
+   * Verifica se uma inst√¢ncia √© nula, isto √©, quando todos os seus atributos
    * tem o valor NULL.
    *
    * @return bool
@@ -760,7 +760,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
 
   /**
    * Alias para setNew(FALSE).
-   * @return CoreExt_Entity ProvÍ interface fluÌda
+   * @return CoreExt_Entity Prov√™ interface flu√≠da
    */
   public function markOld()
   {
@@ -770,7 +770,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
   /**
    * Setter.
    * @param bool $new
-   * @return CoreExt_Entity ProvÍ interface fluÌda
+   * @return CoreExt_Entity Prov√™ interface flu√≠da
    */
   public function setNew($new)
   {
@@ -779,7 +779,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
   }
 
   /**
-   * Verifica se a inst‚ncia È "nova".
+   * Verifica se a inst√¢ncia √© "nova".
    * @return bool
    * @see CoreExt_Entity#_new
    */
@@ -789,7 +789,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
   }
 
   /**
-   * Verifica se uma propriedade da classe È v·lida de acordo com um validador
+   * Verifica se uma propriedade da classe √© v√°lida de acordo com um validador
    * CoreExt_Validate_Interface.
    *
    * Utiliza o valor sanitizado pelo validador como valor de atributo.
@@ -811,8 +811,8 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
   }
 
   /**
-   * Verifica se todas as propriedades da classe s„o v·lida de acordo com uma
-   * coleÁ„o de validadores CoreExt_Validate_Interface.
+   * Verifica se todas as propriedades da classe s√£o v√°lida de acordo com uma
+   * cole√ß√£o de validadores CoreExt_Validate_Interface.
    *
    * @return bool
    */
@@ -820,7 +820,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
   {
     $return = TRUE;
 
-    // Como eu quero todos os erros de validaÁ„o, apenas marco $return como
+    // Como eu quero todos os erros de valida√ß√£o, apenas marco $return como
     // FALSE e deixo o iterador exaurir.
     foreach ($this->getValidatorCollection() as $key => $validator) {
       if (FALSE === $this->_isValidProperty($key)) {
@@ -837,7 +837,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
   public function setValidator($key, CoreExt_Validate_Interface $validator)
   {
     if (!array_key_exists($key, $this->_data)) {
-      throw new Exception('A propriedade ' . $key . ' n„o existe em ' . __CLASS__ . '.');
+      throw new Exception('A propriedade ' . $key . ' n√£o existe em ' . __CLASS__ . '.');
     }
 
     $this->_validators[$key] = $validator;
@@ -860,7 +860,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
   }
 
   /**
-   * @param $overwrite TRUE para que as novas inst‚ncias sobrescrevam as j·
+   * @param $overwrite TRUE para que as novas inst√¢ncias sobrescrevam as j√°
    *   existentes
    * @see CoreExt_Entity_Validatable#setValidatorCollection($validators)
    */
@@ -885,8 +885,8 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
   }
 
   /**
-   * Configura os validadores padr„o da classe.
-   * @return CoreExt_Entity ProvÍ interface fluÌda
+   * Configura os validadores padr√£o da classe.
+   * @return CoreExt_Entity Prov√™ interface flu√≠da
    */
   protected function _setDefaultValidatorCollection()
   {
@@ -895,17 +895,17 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
   }
 
   /**
-   * Retorna um inst‚ncia de um validador caso um atributo da inst‚ncia tenha
-   * seu valor igual ao da condiÁ„o.
+   * Retorna um inst√¢ncia de um validador caso um atributo da inst√¢ncia tenha
+   * seu valor igual ao da condi√ß√£o.
    *
    * @param  string $key                 O atributo a ser comparado
-   * @param  mixed  $value               O valor para comparaÁ„o
-   * @param  string $validatorClassName  O nome da classe de validaÁ„o. Deve ser
+   * @param  mixed  $value               O valor para compara√ß√£o
+   * @param  string $validatorClassName  O nome da classe de valida√ß√£o. Deve ser
    *   subclasse de CoreExt_Validate_Abstract
-   * @param  array  $equalsParams        Array de opÁıes para o a classe de
-   *   validaÁ„o caso de $key ser igual a $value
-   * @param  array  $notEqualsParams     Array de opÁıes para o a classe de
-   *   validaÁ„o caso de $key ser diferente de $value
+   * @param  array  $equalsParams        Array de op√ß√µes para o a classe de
+   *   valida√ß√£o caso de $key ser igual a $value
+   * @param  array  $notEqualsParams     Array de op√ß√µes para o a classe de
+   *   valida√ß√£o caso de $key ser diferente de $value
    * @return CoreExt_Validate_Abstract
    * @throws CoreExt_Exception_InvalidArgumentException
    */
@@ -922,8 +922,8 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
     if (!is_subclass_of($validatorClassName, 'CoreExt_Validate_Abstract')) {
       require_once 'CoreExt/Exception/InvalidArgumentException.php';
       throw new CoreExt_Exception_InvalidArgumentException('A classe "'
-                . $validatorClassName . '" n„o È uma subclasse de CoreExt_Validate_Abstract'
-                . ' e por isso n„o pode ser usada como classe de validaÁ„o.');
+                . $validatorClassName . '" n√£o √© uma subclasse de CoreExt_Validate_Abstract'
+                . ' e por isso n√£o pode ser usada como classe de valida√ß√£o.');
     }
 
     return new $validatorClassName($params);
@@ -934,7 +934,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
    *
    * @param  string $key
    * @param  string|NULL $message
-   * @return CoreExt_Entity ProvÍ interface fluÌda
+   * @return CoreExt_Entity Prov√™ interface flu√≠da
    */
   protected function _setError($key, $message = NULL)
   {
@@ -943,7 +943,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
   }
 
   /**
-   * Retorna uma mensagem de erro de validaÁao para determinada propriedade.
+   * Retorna uma mensagem de erro de valida√ßao para determinada propriedade.
    *
    * @param  string $key
    * @return mixed
@@ -954,7 +954,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
   }
 
   /**
-   * Retorna um array de mensagens de erro de validaÁ„o.
+   * Retorna um array de mensagens de erro de valida√ß√£o.
    * @return array
    */
   public function getErrors()
@@ -963,7 +963,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
   }
 
   /**
-   * Verifica se uma propriedade tem um erro de validaÁ„o.
+   * Verifica se uma propriedade tem um erro de valida√ß√£o.
    *
    * @param string $key
    * @return bool
@@ -977,7 +977,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
   }
 
   /**
-   * Verifica se houve algum erro de validaÁ„o geral.
+   * Verifica se houve algum erro de valida√ß√£o geral.
    * @return bool
    */
   public function hasErrors()
@@ -991,8 +991,8 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
   }
 
   /**
-   * Configura os itens padr„o do array de erros.
-   * @return CoreExt_Entity ProvÍ interface fluÌda
+   * Configura os itens padr√£o do array de erros.
+   * @return CoreExt_Entity Prov√™ interface flu√≠da
    */
   protected function _setDefaultErrorCollectionItems()
   {
@@ -1007,8 +1007,8 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
    *
    * Atualmente suporte os tipos:
    * - boolean (informado como bool ou boolean)
-   * - numeric (converte para n˙mero, usando informaÁ„o do locale atual e
-   *  convertendo para n˙mero com {@link http://br.php.net/floatval floatval())}
+   * - numeric (converte para n√∫mero, usando informa√ß√£o do locale atual e
+   *  convertendo para n√∫mero com {@link http://br.php.net/floatval floatval())}
    *
    * <code>
    * <?php
@@ -1025,8 +1025,8 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
   protected function _getValue($key, $val)
   {
     if (!array_key_exists($key, $this->_dataTypes)) {
-      // Converte com floatval (que converte para int caso n„o tenha decimais,
-      // para permitir formataÁ„o correta com o locale da aplicaÁ„o)
+      // Converte com floatval (que converte para int caso n√£o tenha decimais,
+      // para permitir formata√ß√£o correta com o locale da aplica√ß√£o)
       if (is_numeric($val)) {
         $val = floatval($val);
       }
@@ -1062,8 +1062,8 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
   }
 
   /**
-   * Retorna um n˙mero float, verificando o locale e substituindo o separador
-   * decimal pelo separador compatÌvel com o separador padr„o do PHP ("." ponto).
+   * Retorna um n√∫mero float, verificando o locale e substituindo o separador
+   * decimal pelo separador compat√≠vel com o separador padr√£o do PHP ("." ponto).
    *
    * @param numeric $value
    * @return float
@@ -1074,7 +1074,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
     $decimalPoint = $locale->getCultureInfo('decimal_point');
 
     // Verifica se possui o ponto decimal do locale e substitui para o
-    // padr„o do locale en_US (ponto ".")
+    // padr√£o do locale en_US (ponto ".")
     if (FALSE !== strstr($value, $decimalPoint)) {
       $value = strtr($value, $decimalPoint, '.');
     }
@@ -1083,8 +1083,8 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
   }
 
   /**
-   * Retorna um array onde o Ìndice È o valor do atributo $atr1 e o valor
-   * È o prÛprio valor do atributo referenciado por $atr2. Se $atr2 n„o for
+   * Retorna um array onde o √≠ndice √© o valor do atributo $atr1 e o valor
+   * √© o pr√≥prio valor do atributo referenciado por $atr2. Se $atr2 n√£o for
    * informado, retorna o valor referenciado por $atr1.
    *
    * Exemplo:
@@ -1124,9 +1124,9 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
   }
 
   /**
-   * Retorna um array para cada inst‚ncia de CoreExt_Entity, onde cada entrada
-   * È um array onde o Ìndice È o valor do atributo $atr1 e o valor
-   * È o prÛprio valor do atributo referenciado por $atr2. Se $atr2 n„o for
+   * Retorna um array para cada inst√¢ncia de CoreExt_Entity, onde cada entrada
+   * √© um array onde o √≠ndice √© o valor do atributo $atr1 e o valor
+   * √© o pr√≥prio valor do atributo referenciado por $atr2. Se $atr2 n√£o for
    * informado, retorna o valor referenciado por $atr1.
    *
    * @param  CoreExt_Entity|array $instance
@@ -1156,8 +1156,8 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
   }
 
   /**
-   * Retorna o estado (valores dos atributos) da inst‚ncia em array. Se um
-   * atributo for uma referÍncia a um objeto, faz o lazy load do mesmo.
+   * Retorna o estado (valores dos atributos) da inst√¢ncia em array. Se um
+   * atributo for uma refer√™ncia a um objeto, faz o lazy load do mesmo.
    * @return array
    */
   public function toArray()
@@ -1170,8 +1170,8 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
   }
 
   /**
-   * Retorna o estado (valores dos atributos) da inst‚ncia. Se um atributo
-   * for uma referÍncia a um objeto, retorna o valor da referÍncia.
+   * Retorna o estado (valores dos atributos) da inst√¢ncia. Se um atributo
+   * for uma refer√™ncia a um objeto, retorna o valor da refer√™ncia.
    * @return array
    */
   public function toDataArray()

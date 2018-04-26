@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author    Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   CoreExt_Session
- * @since     Arquivo disponÌvel desde a vers„o 1.1.0
+ * @since     Arquivo dispon√≠vel desde a vers√£o 1.1.0
  * @version   $Id$
  */
 
@@ -33,29 +33,29 @@ require_once 'CoreExt/Session/Storage/Interface.php';
 /**
  * CoreExt_Session_Storage_Abstract abstract class.
  *
- * Implementa operaÁıes b·sicas para facilitar a implementaÁ„o de
+ * Implementa opera√ß√µes b√°sicas para facilitar a implementa√ß√£o de
  * CoreExt_Session_Storage_Interface.
  *
- * OpÁıes disponÌveis:
- * - session_name: o nome da session, o padr„o È o valor definido no php.ini
- * - session_auto_start: se a session deve ser iniciada na instanciaÁ„o da
- *   classe. Padr„o È TRUE
- * - session_auto_shutdown: se um mÈtodo de shutdown deve ser chamado no
- *   encerramento da execuÁ„o do script PHP. Padr„o È TRUE.
+ * Op√ß√µes dispon√≠veis:
+ * - session_name: o nome da session, o padr√£o √© o valor definido no php.ini
+ * - session_auto_start: se a session deve ser iniciada na instancia√ß√£o da
+ *   classe. Padr√£o √© TRUE
+ * - session_auto_shutdown: se um m√©todo de shutdown deve ser chamado no
+ *   encerramento da execu√ß√£o do script PHP. Padr√£o √© TRUE.
  *
- * @author    Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author    Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   CoreExt_Session
- * @since     Classe disponÌvel desde a vers„o 1.1.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.1.0
  * @version   @@package_version@@
  */
 abstract class CoreExt_Session_Storage_Abstract
   implements CoreExt_Session_Storage_Interface, Countable
 {
   /**
-   * Flag para definir se a session foi iniciada ou n„o, ˙til para impedir que
-   * funÁıes que enviem headers sejam chamadas novamente (session_start, p.ex.)
+   * Flag para definir se a session foi iniciada ou n√£o, √∫til para impedir que
+   * fun√ß√µes que enviem headers sejam chamadas novamente (session_start, p.ex.)
    * @var bool
    */
   protected static $_sessionStarted = FALSE;
@@ -67,7 +67,7 @@ abstract class CoreExt_Session_Storage_Abstract
   protected static $_sessionId = NULL;
 
   /**
-   * OpÁıes de configuraÁ„o geral da classe.
+   * Op√ß√µes de configura√ß√£o geral da classe.
    * @var array
    */
   protected $_options = array(
@@ -78,7 +78,7 @@ abstract class CoreExt_Session_Storage_Abstract
 
   /**
    * Construtor.
-   * @param array $options Array de opÁıes de configuraÁ„o.
+   * @param array $options Array de op√ß√µes de configura√ß√£o.
    */
   public function __construct(array $options = array())
   {
@@ -90,10 +90,10 @@ abstract class CoreExt_Session_Storage_Abstract
   }
 
   /**
-   * MÈtodo de inicializaÁ„o do storage. As subclasses devem sobrescrever
-   * este mÈtodo para alterar o comportamento do mecanismo de session do PHP.
+   * M√©todo de inicializa√ß√£o do storage. As subclasses devem sobrescrever
+   * este m√©todo para alterar o comportamento do mecanismo de session do PHP.
    *
-   * @return CoreExt_Session_Storage_Abstract ProvÍ interfae fluÌda
+   * @return CoreExt_Session_Storage_Abstract Prov√™ interfae flu√≠da
    */
   protected function _init(array $options = array())
   {
@@ -118,7 +118,7 @@ abstract class CoreExt_Session_Storage_Abstract
   }
 
   /**
-   * Verifica se uma opÁ„o est· setada.
+   * Verifica se uma op√ß√£o est√° setada.
    *
    * @param string $key
    * @return bool
@@ -129,7 +129,7 @@ abstract class CoreExt_Session_Storage_Abstract
   }
 
   /**
-   * Retorna um valor de opÁ„o de configuraÁ„o ou NULL caso a opÁ„o n„o esteja
+   * Retorna um valor de op√ß√£o de configura√ß√£o ou NULL caso a op√ß√£o n√£o esteja
    * setada.
    *
    * @param string $key

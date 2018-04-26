@@ -34,6 +34,10 @@
 
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 
+/**
+ * Class IesController
+ * @deprecated Essa versão da API pública será descontinuada
+ */
 class IesController extends ApiCoreController
 {
   // search options

@@ -1,31 +1,31 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     CoreExt_DataMapper
  * @subpackage  IntegrationTests
- * @since       Arquivo disponÌvel desde a vers„o 1.1.0
+ * @since       Arquivo dispon√≠vel desde a vers√£o 1.1.0
  * @version     $Id$
  */
 
@@ -35,12 +35,12 @@ require_once 'CoreExt/_stub/ChildEntityDataMapper.php';
 /**
  * CoreExt_DataMapper_LazyLoadIntegrationTest class.
  *
- * @author      Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     CoreExt_DataMapper
  * @subpackage  IntegrationTests
- * @since       Classe disponÌvel desde a vers„o 1.1.0
+ * @since       Classe dispon√≠vel desde a vers√£o 1.1.0
  * @version     @@package_version@@
  */
 class CoreExt_DataMapper_LazyLoadIntegrationTest extends IntegrationBaseTest
@@ -105,8 +105,8 @@ class CoreExt_DataMapper_LazyLoadIntegrationTest extends IntegrationBaseTest
   }
 
   /**
-   * Uma referÍncia NULL para CoreExt_Enum retorna NULL logo no inÌcio da
-   * lÛgica de CoreExt_Entity::_loadReference().
+   * Uma refer√™ncia NULL para CoreExt_Enum retorna NULL logo no in√≠cio da
+   * l√≥gica de CoreExt_Entity::_loadReference().
    * @group CoreExt_Entity
    */
   public function testLazyLoadUsandoDefinicaoDeEnumComReferenciaNula()
@@ -118,7 +118,7 @@ class CoreExt_DataMapper_LazyLoadIntegrationTest extends IntegrationBaseTest
   }
 
   /**
-   * ReferÍncia 0 È perfeitamente v·lido para um CoreExt_Enum. Se n„o existir o
+   * Refer√™ncia 0 √© perfeitamente v√°lido para um CoreExt_Enum. Se n√£o existir o
    * offset no Enum, retorna NULL
    * @group CoreExt_Entity
    */
@@ -131,7 +131,7 @@ class CoreExt_DataMapper_LazyLoadIntegrationTest extends IntegrationBaseTest
   }
 
   /**
-   * Uma referÍncia NULL È v·lida para as referÍncias que explicitam a chave
+   * Uma refer√™ncia NULL √© v√°lida para as refer√™ncias que explicitam a chave
    * null = TRUE.
    * @group CoreExt_Entity
    */
@@ -144,10 +144,10 @@ class CoreExt_DataMapper_LazyLoadIntegrationTest extends IntegrationBaseTest
   }
 
   /**
-   * ReferÍncia 0 em DataMapper forÁa o retorno de NULL. Isso È feito em
-   * raz„o do HTML n„o suportar um valor NULL e por conta dos validadores
-   * client-side legados do i-Educar n„o considerarem "" (string vazia) um
-   * valor v·lido para submit.
+   * Refer√™ncia 0 em DataMapper for√ßa o retorno de NULL. Isso √© feito em
+   * raz√£o do HTML n√£o suportar um valor NULL e por conta dos validadores
+   * client-side legados do i-Educar n√£o considerarem "" (string vazia) um
+   * valor v√°lido para submit.
    * @group CoreExt_Entity
    */
   public function testLazyLoadUsandoDefinicaoDeDataMapperComReferenciaZero()
@@ -176,7 +176,7 @@ class CoreExt_DataMapper_LazyLoadIntegrationTest extends IntegrationBaseTest
 
   /**
    * Testa se um CoreExt_Entity retornado por um CoreExt_DataMapper configura
-   * a reference e o atributo, com um valor referÍncia e a inst‚ncia,
+   * a reference e o atributo, com um valor refer√™ncia e a inst√¢ncia,
    * respectivamente.
    * @group Overload
    */

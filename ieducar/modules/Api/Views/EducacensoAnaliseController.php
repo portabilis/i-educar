@@ -36,6 +36,10 @@ require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'intranet/include/clsBanco.inc.php';
 require_once 'lib/Portabilis/Date/Utils.php';
 
+/**
+ * Class EducacensoAnaliseController
+ * @deprecated Essa versão da API pública será descontinuada
+ */
 class EducacensoAnaliseController extends ApiCoreController
 {
 

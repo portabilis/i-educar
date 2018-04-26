@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author    Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   CoreExt_Validate
- * @since     Arquivo disponÌvel desde a vers„o 1.1.0
+ * @since     Arquivo dispon√≠vel desde a vers√£o 1.1.0
  * @version   $Id$
  */
 
@@ -33,17 +33,17 @@ require_once 'CoreExt/Validate/Interface.php';
 /**
  * CoreExt_Validate_Abstract abstract class.
  *
- * @author    Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author    Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   CoreExt_Validate
- * @since     Classe disponÌvel desde a vers„o 1.1.0
+ * @since     Classe dispon√≠vel desde a vers√£o 1.1.0
  * @version   @@package_version@@
  */
 abstract class CoreExt_Validate_Abstract implements CoreExt_Validate_Interface
 {
   /**
-   * OpÁıes de configuraÁ„o geral da classe.
+   * Op√ß√µes de configura√ß√£o geral da classe.
    * @var array
    */
   protected $_options = array(
@@ -52,7 +52,7 @@ abstract class CoreExt_Validate_Abstract implements CoreExt_Validate_Interface
   );
 
   /**
-   * Valor n„o sanitizado que foi informado ao validador.
+   * Valor n√£o sanitizado que foi informado ao validador.
    * @var mixed
    */
   protected $_value = NULL;
@@ -64,21 +64,21 @@ abstract class CoreExt_Validate_Abstract implements CoreExt_Validate_Interface
   protected $_sanitized = NULL;
 
   /**
-   * Mensagem padr„o para erros de valor obrigatÛrio.
+   * Mensagem padr√£o para erros de valor obrigat√≥rio.
    * @var string
    */
-  protected $_requiredMessage = 'ObrigatÛrio.';
+  protected $_requiredMessage = 'Obrigat√≥rio.';
 
   /**
-   * Mensagem padr„o para erros de invalidez.
+   * Mensagem padr√£o para erros de invalidez.
    * @var string
    */
-  protected $_invalidMessage = 'Inv·lido.';
+  protected $_invalidMessage = 'Inv√°lido.';
 
   /**
    * Construtor.
    *
-   * Pode receber array com opÁıes de configuraÁ„o da classe.
+   * Pode receber array com op√ß√µes de configura√ß√£o da classe.
    *
    * @param array $options
    */
@@ -89,14 +89,14 @@ abstract class CoreExt_Validate_Abstract implements CoreExt_Validate_Interface
   }
 
   /**
-   * Configura as opÁıes do validador.
+   * Configura as op√ß√µes do validador.
    *
-   * MÈtodo de checagem de opÁıes inspirado na tÈcnica empregada no
+   * M√©todo de checagem de op√ß√µes inspirado na t√©cnica empregada no
    * {@link http://www.symfony-project.org symfony framework}.
    *
    * @param  array $options
-   * @throws InvalidArgumentException LanÁa exceÁ„o n„o verificada caso alguma
-   *   opÁ„o passada ao mÈtodo n„o exista na definiÁ„o da classe
+   * @throws InvalidArgumentException Lan√ßa exce√ß√£o n√£o verificada caso alguma
+   *   op√ß√£o passada ao m√©todo n√£o exista na defini√ß√£o da classe
    */
   public function setOptions(array $options = array())
   {
@@ -105,7 +105,7 @@ abstract class CoreExt_Validate_Abstract implements CoreExt_Validate_Interface
 
     if (0 < count(array_diff($passedOptions, $defaultOptions))) {
       throw new InvalidArgumentException(
-        sprintf('A classe %s n„o suporta as opÁıes: %s.', get_class($this), implode(', ', $passedOptions))
+        sprintf('A classe %s n√£o suporta as op√ß√µes: %s.', get_class($this), implode(', ', $passedOptions))
       );
     }
 
@@ -121,7 +121,7 @@ abstract class CoreExt_Validate_Abstract implements CoreExt_Validate_Interface
   }
 
   /**
-   * Verifica se uma opÁ„o est· setada.
+   * Verifica se uma op√ß√£o est√° setada.
    *
    * @param string $key
    * @return bool
@@ -134,7 +134,7 @@ abstract class CoreExt_Validate_Abstract implements CoreExt_Validate_Interface
   }
 
   /**
-   * Retorna um valor de opÁ„o de configuraÁ„o ou NULL caso a opÁ„o n„o esteja
+   * Retorna um valor de op√ß√£o de configura√ß√£o ou NULL caso a op√ß√£o n√£o esteja
    * setada.
    *
    * @param string $key
@@ -147,7 +147,7 @@ abstract class CoreExt_Validate_Abstract implements CoreExt_Validate_Interface
 
   /**
    * Permite que uma classe que estenda CoreExt_Validate_Abstract a definir
-   * valores de opÁıes prÈ-definidos adequados ao caso especÌfico.
+   * valores de op√ß√µes pr√©-definidos adequados ao caso espec√≠fico.
    *
    * @return array
    */
@@ -176,7 +176,7 @@ abstract class CoreExt_Validate_Abstract implements CoreExt_Validate_Interface
 
   /**
    * Toda classe que estende CoreExt_Validate_Abstract deve implementar esse
-   * mÈtodo com a lÛgica de validaÁ„o adequada.
+   * m√©todo com a l√≥gica de valida√ß√£o adequada.
    *
    * @param  string $value
    * @return bool
@@ -184,7 +184,7 @@ abstract class CoreExt_Validate_Abstract implements CoreExt_Validate_Interface
   protected abstract function _validate($value);
 
   /**
-   * Realiza uma sanitizaÁ„o
+   * Realiza uma sanitiza√ß√£o
    * @param mixed $value
    * @return mixed
    */
@@ -194,10 +194,10 @@ abstract class CoreExt_Validate_Abstract implements CoreExt_Validate_Interface
   }
 
   /**
-   * Verifica se um dado valor est· vazio.
+   * Verifica se um dado valor est√° vazio.
    *
    * Como vazio, entende-se string vazia (''), array sem itens (array()), o
-   * valor NULL e zero (0) numÈrico.
+   * valor NULL e zero (0) num√©rico.
    *
    * @param  mixed $value
    * @return bool
@@ -213,12 +213,12 @@ abstract class CoreExt_Validate_Abstract implements CoreExt_Validate_Interface
    * Retorna uma mensagem de erro configurada em $_options.
    *
    * A mensagem de erro pode ser uma string ou um array. Se for uma string,
-   * ocorrer· a substituiÁ„o dos placeholders. Se for um array, dever· ser
+   * ocorrer√° a substitui√ß√£o dos placeholders. Se for um array, dever√° ser
    * especificado duas mensagens de erro, uma para a forma singular e outra
-   * para o plural. O placeholder @value ser· verificado para definir se a
+   * para o plural. O placeholder @value ser√° verificado para definir se a
    * mensagem deve ser formatada no plural ou no singular.
    *
-   * Exemplo de array de mensagem de erro que usa variante de n˙mero:
+   * Exemplo de array de mensagem de erro que usa variante de n√∫mero:
    *
    * <code>
    * <?php
@@ -235,12 +235,12 @@ abstract class CoreExt_Validate_Abstract implements CoreExt_Validate_Interface
    * </code>
    *
    * @param  array|string  $key      O identificador da mensagem no array $_options
-   * @param  array         $options  Array associativo para substituiÁ„o de valores
+   * @param  array         $options  Array associativo para substitui√ß√£o de valores
    * @return string
-   * @todo   Implementar substituiÁ„o com formataÁ„o padr„o, semelhante ao
-   *   a funÁ„o Drupal {@link http://api.drupal.org/t t()}.
-   * @todo   Implementar formataÁ„o singular/plural em uma classe diferente,
-   *         como mÈtodo p˙blico, permitindo realizar o teste.
+   * @todo   Implementar substitui√ß√£o com formata√ß√£o padr√£o, semelhante ao
+   *   a fun√ß√£o Drupal {@link http://api.drupal.org/t t()}.
+   * @todo   Implementar formata√ß√£o singular/plural em uma classe diferente,
+   *         como m√©todo p√∫blico, permitindo realizar o teste.
    */
   protected function _getErrorMessage($key, array $options = array())
   {
