@@ -30,8 +30,7 @@
 
 require_once 'clsConfigItajai.inc.php';
 require_once 'include/clsCronometro.inc.php';
-require_once 'include/clsEmail.inc.php';
-
+require_once 'Portabilis/Mailer.php';
 require_once 'modules/Error/Mailers/NotificationMailer.php';
 
 /**
@@ -490,9 +489,12 @@ abstract class clsBancoSQL_
 
       $conteudo .= "</table>";
 
-      $objEmail = new clsEmail($objConfig->arrayConfig['ArrStrEmailsAdministradores'],
-        "[INTRANET - PMI] Desempenho de query", $conteudo);
-      $objEmail->envia();
+      (new Portabilis_Mailer)->sendMail(
+          $objConfig->arrayConfig['ArrStrEmailsAdministradores'],
+          '[INTRANET - PMI] Desempenho de query',
+          $conteudo,
+          ['mime' => 'text/html']
+      );
     }
 
     return $this->bConsulta_ID;
