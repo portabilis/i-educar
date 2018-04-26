@@ -20,6 +20,13 @@ class Portabilis_Mailer {
 
     public function sendMail($to, $subject, $message, $options = [])
     {
+        $defaultOpts = [
+            'mime' => 'text/plain',
+            'debug' => false
+        ];
+
+        $options += $defaultOpts;
+
         $this->transport = (new Swift_SmtpTransport($this->config->smtp->host, $this->config->smtp->port))
             ->setUsername($this->config->smtp->username)
             ->setPassword($this->config->smtp->password);
@@ -38,7 +45,7 @@ class Portabilis_Mailer {
         $message = (new Swift_Message($subject))
             ->setFrom($from)
             ->setTo($to)
-            ->setBody($message);
+            ->setBody($message, $options['mime']);
 
         $allowedDomains = !empty($this->configs->allowed_domains)
             ? $this->configs->allowed_domains
