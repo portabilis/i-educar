@@ -42,6 +42,10 @@ require_once 'lib/Portabilis/Utils/Database.php';
 require_once 'include/pmieducar/clsPmieducarEscolaUsuario.inc.php';
 require_once 'include/pmieducar/clsPermissoes.inc.php';
 
+/**
+ * Class EscolaController
+ * @deprecated Essa versão da API pública será descontinuada
+ */
 class EscolaController extends ApiCoreController
 {
   protected $_processoAp        = 561;

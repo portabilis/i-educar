@@ -31,6 +31,10 @@
 
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 
+/**
+ * Class CursoSuperiorController
+ * @deprecated Essa versão da API pública será descontinuada
+ */
 class CursoSuperiorController extends ApiCoreController
 {
   // search options

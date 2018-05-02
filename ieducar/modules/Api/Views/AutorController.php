@@ -37,6 +37,10 @@ require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
 require_once 'intranet/include/pmieducar/clsPmieducarAcervoAcervoAutor.inc.php';
 
+/**
+ * Class AutorController
+ * @deprecated Essa versão da API pública será descontinuada
+ */
 class AutorController extends ApiCoreController
 {
   // search options

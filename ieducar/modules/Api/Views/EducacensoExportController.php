@@ -42,6 +42,10 @@ require_once 'Portabilis/Business/Professor.php';
 require_once 'App/Model/IedFinder.php';
 require_once 'ComponenteCurricular/Model/CodigoEducacenso.php';
 
+/**
+ * Class EducacensoExportController
+ * @deprecated Essa versão da API pública será descontinuada
+ */
 class EducacensoExportController extends ApiCoreController
 {
 

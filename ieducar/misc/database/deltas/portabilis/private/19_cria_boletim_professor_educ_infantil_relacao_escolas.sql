@@ -1,20 +1,20 @@
  	-- //
   
  	--
- 	-- Cria os relatórios: Boletim do Professor - Educação Infantil e Relação de Escolas e ordena os menus.
+ 	-- Cria os relatÃ³rios: Boletim do Professor - EducaÃ§Ã£o Infantil e RelaÃ§Ã£o de Escolas e ordena os menus.
 	-- @author   Ricardo Bortolotto Dagostim <ricardo@portabilis.com.br>
  	-- @license  @@license@@
  	-- @version  $Id$
   
   
-  insert into portal.menu_submenu values(999206,55,2,'Boletim do Professor - Educação Infantil','portabilis_boletim_professor_educ_infantil.php',NULL,3);
+  insert into portal.menu_submenu values(999206,55,2,'Boletim do Professor - EducaÃ§Ã£o Infantil','portabilis_boletim_professor_educ_infantil.php',NULL,3);
   insert into portal.menu_funcionario values(1,0,0,999206);
-  insert into pmicontrolesis.menu values(999206,999206,999450,'Boletim do Professor - Educação Infantil',5,'portabilis_boletim_professor_educ_infantil.php','_self',1,15,192);
+  insert into pmicontrolesis.menu values(999206,999206,999450,'Boletim do Professor - EducaÃ§Ã£o Infantil',5,'portabilis_boletim_professor_educ_infantil.php','_self',1,15,192);
   insert into pmieducar.menu_tipo_usuario values(1,999206,1,0,1);
   
-  insert into portal.menu_submenu values(999605,55,2,'Relação de Escolas','portabilis_relacao_escolas.php',NULL,3);   
+  insert into portal.menu_submenu values(999605,55,2,'RelaÃ§Ã£o de Escolas','portabilis_relacao_escolas.php',NULL,3);   
   insert into portal.menu_funcionario values(1,0,0,999605);
-  insert into pmicontrolesis.menu values(999605,999605,999300,'Relação de Escolas',3,'portabilis_relacao_escolas.php','_self',1,15,192);
+  insert into pmicontrolesis.menu values(999605,999605,999300,'RelaÃ§Ã£o de Escolas',3,'portabilis_relacao_escolas.php','_self',1,15,192);
   insert into pmieducar.menu_tipo_usuario values(1,999605,1,0,1);
   
   update pmicontrolesis.menu set ord_menu = 1 where cod_menu = 999202;

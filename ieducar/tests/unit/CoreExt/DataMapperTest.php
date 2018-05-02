@@ -1,31 +1,31 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     CoreExt_DataMapper
  * @subpackage  UnitTests
- * @since       Arquivo disponÌvel desde a vers„o 1.1.0
+ * @since       Arquivo dispon√≠vel desde a vers√£o 1.1.0
  * @version     $Id: /ieducar/branches/1.1.0-dev/ieducar/tests/unit/CoreExt/EntityTest.php 587 2009-10-15T22:47:32.301900Z eriksencosta  $
  */
 
@@ -35,12 +35,12 @@ require_once 'CoreExt/_stub/EntityCompoundDataMapper.php';
 /**
  * CoreExt_DataMapperTest class.
  *
- * @author      Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     CoreExt_DataMapper
  * @subpackage  UnitTests
- * @since       Classe disponÌvel desde a vers„o 1.1.0
+ * @since       Classe dispon√≠vel desde a vers√£o 1.1.0
  * @version     @@package_version@@
  */
 class CoreExt_DataMapperTest extends UnitBaseTest
@@ -75,7 +75,7 @@ class CoreExt_DataMapperTest extends UnitBaseTest
   public function testCarregaTodosOsRegistros()
   {
     $options1 = $options2 = array('estadoCivil' => NULL);
-    $options1['nome'] = 'CÌcero Pompeu de Toledo';
+    $options1['nome'] = 'C√≠cero Pompeu de Toledo';
     $options2['nome'] = 'Cesar Filho';
 
     $expected = array(
@@ -83,11 +83,11 @@ class CoreExt_DataMapperTest extends UnitBaseTest
       new CoreExt_EntityStub($options2)
     );
 
-    // Marca como se tivesse sido carregado, para garantir a comparaÁ„o
+    // Marca como se tivesse sido carregado, para garantir a compara√ß√£o
     $expected[0]->markOld();
     $expected[1]->markOld();
 
-    // Na terceira chamada, ir· retornar false para interromper o loop while
+    // Na terceira chamada, ir√° retornar false para interromper o loop while
     $this->_db->expects($this->any())
          ->method('ProximoRegistro')
          ->will($this->onConsecutiveCalls(TRUE, TRUE, FALSE));
@@ -106,7 +106,7 @@ class CoreExt_DataMapperTest extends UnitBaseTest
   public function testCarregaTodosOsRegistrosSelecionandoColunas()
   {
     $options1 = $options2 = array();
-    $options1['nome'] = 'CÌcero Pompeu de Toledo';
+    $options1['nome'] = 'C√≠cero Pompeu de Toledo';
     $options2['nome'] = 'Cesar Filho';
 
     $expected = array(
@@ -114,11 +114,11 @@ class CoreExt_DataMapperTest extends UnitBaseTest
       new CoreExt_EntityStub($options2)
     );
 
-    // Marca como se tivesse sido carregado, para garantir a comparaÁ„o
+    // Marca como se tivesse sido carregado, para garantir a compara√ß√£o
     $expected[0]->markOld();
     $expected[1]->markOld();
 
-    // Na terceira chamada, ir· retornar false para interromper o loop while
+    // Na terceira chamada, ir√° retornar false para interromper o loop while
     $this->_db->expects($this->any())
          ->method('ProximoRegistro')
          ->will($this->onConsecutiveCalls(TRUE, TRUE, FALSE));

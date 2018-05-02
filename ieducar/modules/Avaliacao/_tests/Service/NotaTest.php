@@ -1,31 +1,31 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     Avaliacao
  * @subpackage  UnitTests
- * @since       Arquivo disponÌvel desde a vers„o 1.1.0
+ * @since       Arquivo dispon√≠vel desde a vers√£o 1.1.0
  * @version     $Id$
  */
 
@@ -35,12 +35,12 @@ require_once 'Avaliacao/Model/NotaComponente.php';
 /**
  * Avaliacao_Service_NotaTest class.
  *
- * @author      Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     Avaliacao
  * @subpackage  UnitTests
- * @since       Classe disponÌvel desde a vers„o 1.1.0
+ * @since       Classe dispon√≠vel desde a vers√£o 1.1.0
  * @version     @@package_version@@
  */
 class Avaliacao_Service_NotaTest extends Avaliacao_Service_TestCommon
@@ -54,13 +54,13 @@ class Avaliacao_Service_NotaTest extends Avaliacao_Service_TestCommon
       'nota'                 => 5
     ));
 
-    // AtribuiÁ„o simples
+    // Atribui√ß√£o simples
     $service->addNota($nota)
             ->addNota($nota);
 
     $this->assertEquals(1, count($service->getNotas()));
 
-    // Via atribuiÁ„o em lote
+    // Via atribui√ß√£o em lote
     $nota = clone $nota;
     $service->addNotas(array($nota, $nota, $nota));
 
@@ -82,7 +82,7 @@ class Avaliacao_Service_NotaTest extends Avaliacao_Service_TestCommon
     $notas = $service->getNotas();
     $serviceNota = array_shift($notas);
 
-    // Valores declarados explicitamente, verificaÁ„o explÌcita
+    // Valores declarados explicitamente, verifica√ß√£o expl√≠cita
     $this->assertEquals($notaOriginal->nota, $serviceNota->nota);
     $this->assertEquals($notaOriginal->get('componenteCurricular'), $serviceNota->get('componenteCurricular'));
 
@@ -96,7 +96,7 @@ class Avaliacao_Service_NotaTest extends Avaliacao_Service_TestCommon
     $this->assertType('CoreExt_Validate_Choice', $validators['componenteCurricular']);
     $this->assertType('CoreExt_Validate_Choice', $validators['etapa']);
 
-    // OpÁıes dos validadores
+    // Op√ß√µes dos validadores
 
     // Componentes curriculares existentes para o aluno
     $this->assertEquals(
@@ -104,7 +104,7 @@ class Avaliacao_Service_NotaTest extends Avaliacao_Service_TestCommon
       array_values($validators['componenteCurricular']->getOption('choices'))
     );
 
-    // Etapas possÌveis para o lanÁamento de nota
+    // Etapas poss√≠veis para o lan√ßamento de nota
     $this->assertEquals(
       array_merge(range(1, count($this->_getConfigOptions('anoLetivoModulo'))), array('Rc')),
       $validators['etapa']->getOption('choices')
@@ -215,7 +215,7 @@ class Avaliacao_Service_NotaTest extends Avaliacao_Service_TestCommon
 
   /**
    * Testa o service adicionando novas notas para um componente curricular,
-   * que inclusive j· tem a nota lanÁada para a segunda etapa.
+   * que inclusive j√° tem a nota lan√ßada para a segunda etapa.
    */
   public function testSalvasNotasDeUmComponenteComEtapasLancadas()
   {
@@ -303,7 +303,7 @@ class Avaliacao_Service_NotaTest extends Avaliacao_Service_TestCommon
          ->with(array($notaAluno->id, $this->_getConfigOption('matricula', 'cod_matricula')))
          ->will($this->returnValue($mediasPersistidas[0]));
 
-    // Valores de mÈdia esperados
+    // Valores de m√©dia esperados
     $media = clone $mediasPersistidas[0];
     $media->etapa = 3;
     $media->media = 6.1875;

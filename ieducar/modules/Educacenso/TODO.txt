@@ -1,21 +1,21 @@
 TODO
 ====
 
-1. Resolver problemas lógicos do gerenciamento de servidores para permitir
-   importação do Educacenso para múltiplas instituições (ver _data/install.sql)
+1. Resolver problemas lÃ³gicos do gerenciamento de servidores para permitir
+   importaÃ§Ã£o do Educacenso para mÃºltiplas instituiÃ§Ãµes (ver _data/install.sql)
 
-Enquanto modules.educacenso_cod_aluno possui uma restrição referenciando
-pmieducar.aluno, a mesma não é possível de se aplicar a
-modules.educacenso_cod_docente, já que pmieducar.servidor não possui
-cod_servidor com uma restrição do tipo única (primary key ou unique). Como a
+Enquanto modules.educacenso_cod_aluno possui uma restriÃ§Ã£o referenciando
+pmieducar.aluno, a mesma nÃ£o Ã© possÃ­vel de se aplicar a
+modules.educacenso_cod_docente, jÃ¡ que pmieducar.servidor nÃ£o possui
+cod_servidor com uma restriÃ§Ã£o do tipo Ãºnica (primary key ou unique). Como a
 tabela pmieducar.servidor foi projetada para poder cadastrar uma mesma pessoa
-física em várias instituições diferentes, esta restrição foi ignorada.
+fÃ­sica em vÃ¡rias instituiÃ§Ãµes diferentes, esta restriÃ§Ã£o foi ignorada.
 
-É importante notar que em um caso de vários importações de docentes do
-Educacenso em instituições diferentes, a pessoa física subjacente continuaria
-a mesma. Para que as diferenças cadastrais (por exemplo, um município informa
+Ã‰ importante notar que em um caso de vÃ¡rios importaÃ§Ãµes de docentes do
+Educacenso em instituiÃ§Ãµes diferentes, a pessoa fÃ­sica subjacente continuaria
+a mesma. Para que as diferenÃ§as cadastrais (por exemplo, um municÃ­pio informa
 que o docente tem mestrado enquanto o outro apenas informa que este possui
-nível superior) sejam resolvidas, seria necessário criar duas pessoas físicas
-diferentes. Enfim, toda a questão de lotação de servidores
+nÃ­vel superior) sejam resolvidas, seria necessÃ¡rio criar duas pessoas fÃ­sicas
+diferentes. Enfim, toda a questÃ£o de lotaÃ§Ã£o de servidores
 (ex: escolaridade) precisam ser movidas para o gerenciamento de pessoas
-físicas para evitar esse problema em instalações multi-institucionais.
+fÃ­sicas para evitar esse problema em instalaÃ§Ãµes multi-institucionais.

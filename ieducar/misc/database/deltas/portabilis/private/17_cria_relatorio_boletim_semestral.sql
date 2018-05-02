@@ -1,7 +1,7 @@
  	-- //
   
  	--
- 	-- Atualiza sequência de relatório e cria o modelo de relatório Boletim Escolar - Semestral.
+ 	-- Atualiza sequÃªncia de relatÃ³rio e cria o modelo de relatÃ³rio Boletim Escolar - Semestral.
 	-- @author   Ricardo Bortolotto Dagostim <ricardo@portabilis.com.br>
  	-- @license  @@license@@
  	-- @version  $Id$

@@ -40,6 +40,10 @@ require_once 'include/pessoa/clsPessoa_.inc.php';
 require_once 'include/pessoa/clsFisica.inc.php';
 require_once 'intranet/include/funcoes.inc.php';
 
+/**
+ * Class PessoaController
+ * @deprecated Essa versão da API pública será descontinuada
+ */
 class PessoaController extends ApiCoreController
 {
 

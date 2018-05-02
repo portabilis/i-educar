@@ -1,11 +1,11 @@
 -- //
 
 --
--- Cria a tabela modules.componente_curricular_turma para permitir a atribuiÁ„o
+-- Cria a tabela modules.componente_curricular_turma para permitir a atribui√ß√£o
 -- de componentes curriculares a uma turma, dando mais flexibilidade de
--- configuraÁ„o ao usu·rio.
+-- configura√ß√£o ao usu√°rio.
 --
--- @author   Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+-- @author   Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
 -- @license  @@license@@
 -- @version  $Id$
 --

@@ -49,6 +49,10 @@ require_once 'include/modules/clsModulesPessoaTransporte.inc.php';
 require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 require_once 'Transporte/Model/Responsavel.php';
 
+/**
+ * Class AlunoController
+ * @deprecated Essa versão da API pública será descontinuada
+ */
 class AlunoController extends ApiCoreController
 {
     protected $_processoAp = 578;

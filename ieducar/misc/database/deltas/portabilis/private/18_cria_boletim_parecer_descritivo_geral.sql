@@ -1,7 +1,7 @@
  	-- //
   
  	--
- 	-- Cria relatório Boletim Escolar - Parecer Desc. (Geral) e altera as ordens dos Menus.
+ 	-- Cria relatÃ³rio Boletim Escolar - Parecer Desc. (Geral) e altera as ordens dos Menus.
 	-- @author   Ricardo Bortolotto Dagostim <ricardo@portabilis.com.br>
  	-- @license  @@license@@
  	-- @version  $Id$
