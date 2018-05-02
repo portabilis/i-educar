@@ -86,42 +86,20 @@ class indice extends clsCadastro
   var $codigo_curso_superior_1;
   var $ano_inicio_curso_superior_1;
   var $ano_conclusao_curso_superior_1;
-  var $tipo_instituicao_curso_superior_1;
   var $instituicao_curso_superior_1;
   var $situacao_curso_superior_2;
   var $formacao_complementacao_pedagogica_2;
   var $codigo_curso_superior_2;
   var $ano_inicio_curso_superior_2;
   var $ano_conclusao_curso_superior_2;
-  var $tipo_instituicao_curso_superior_2;
   var $instituicao_curso_superior_2;
   var $situacao_curso_superior_3;
   var $formacao_complementacao_pedagogica_3;
   var $codigo_curso_superior_3;
   var $ano_inicio_curso_superior_3;
   var $ano_conclusao_curso_superior_3;
-  var $tipo_instituicao_curso_superior_3;
   var $instituicao_curso_superior_3;
-  var $pos_especializacao;
-  var $pos_mestrado;
-  var $pos_doutorado;
-  var $pos_nenhuma;
-  var $curso_creche;
-  var $curso_pre_escola;
-  var $curso_anos_iniciais;
-  var $curso_anos_finais;
-  var $curso_ensino_medio;
-  var $curso_eja;
-  var $curso_educacao_especial;
-  var $curso_educacao_indigena;
-  var $curso_educacao_campo;
-  var $curso_educacao_ambiental;
-  var $curso_educacao_direitos_humanos;
-  var $curso_genero_diversidade_sexual;
-  var $curso_direito_crianca_adolescente;
-  var $curso_relacoes_etnicorraciais;
-  var $curso_outros;
-  var $curso_nenhum;
+  var $curso_formacao_continuada;
   var $multi_seriado;
   var $matricula = array();
 
@@ -232,6 +210,14 @@ class indice extends clsCadastro
             $det_disciplina = $obj_disciplina->detalhe();
             $this->cursos_disciplina[$det_disciplina['ref_cod_curso']][$disciplina['ref_cod_disciplina']] = $disciplina['ref_cod_disciplina'];
           }
+        }
+
+        if (is_string($this->pos_graduacao)) {
+          $this->pos_graduacao = explode(',',str_replace(array('{', "}"), '', $this->pos_graduacao));
+        }
+
+        if (is_string($this->curso_formacao_continuada)) {
+          $this->curso_formacao_continuada = explode(',',str_replace(array('{', "}"), '', $this->curso_formacao_continuada));
         }
 
         @session_start();
@@ -468,7 +454,7 @@ class indice extends clsCadastro
     $resources = array(
       null => 'Selecione',
       1 => Portabilis_String_Utils::toLatin1('Concluído'),
-      2 => 'Cursando'
+      2 => 'Em andamento'
     );
 
     $options = array(
@@ -480,12 +466,10 @@ class indice extends clsCadastro
 
     $this->inputsHelper()->select('situacao_curso_superior_1', $options);
 
-    $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Possui formação/complementação pedagógica 1'),
-      'value' => $this->formacao_complementacao_pedagogica_1
-    );
-
-    $this->inputsHelper()->checkbox('formacao_complementacao_pedagogica_1', $options);
+    $options = array('label' => 'Possui formação/complementação pedagógica 1',
+                     'value' => $this->formacao_complementacao_pedagogica_1,
+                     'required' => false);
+    $this->inputsHelper()->booleanSelect('formacao_complementacao_pedagogica_1', $options);
 
     $options = array('label' => Portabilis_String_Utils::toLatin1('Curso superior 1'), 'required'   => false);
     $helperOptions = array(
@@ -516,20 +500,6 @@ class indice extends clsCadastro
     );
     $this->inputsHelper()->integer('ano_conclusao_curso_superior_1', $options);
 
-    $resources = array(
-      null => 'Selecione',
-      1 => Portabilis_String_Utils::toLatin1('Pública'),
-      2 => 'Privada'
-    );
-
-    $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Tipo de instituição do curso superior 1'),
-      'resources' => $resources,
-      'value' => $this->tipo_instituicao_curso_superior_1,
-      'required' => false
-    );
-    $this->inputsHelper()->select('tipo_instituicao_curso_superior_1', $options);
-
     $options = array(
       'label' => Portabilis_String_Utils::toLatin1('Instituição do curso superior 1'),
       'required'   => false
@@ -547,7 +517,7 @@ class indice extends clsCadastro
     $resources = array(
       null => 'Selecione',
       1 => Portabilis_String_Utils::toLatin1('Concluído'),
-      2 => 'Cursando'
+      2 => 'Em andamento'
     );
 
     $options = array(
@@ -558,11 +528,10 @@ class indice extends clsCadastro
     );
     $this->inputsHelper()->select('situacao_curso_superior_2', $options);
 
-    $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Possui formação/complementação pedagógica 2'),
-      'value' => $this->formacao_complementacao_pedagogica_2
-    );
-    $this->inputsHelper()->checkbox('formacao_complementacao_pedagogica_2', $options);
+    $options = array('label' => 'Possui formação/complementação pedagógica 2',
+                     'value' => $this->formacao_complementacao_pedagogica_2,
+                     'required' => false);
+    $this->inputsHelper()->booleanSelect('formacao_complementacao_pedagogica_2', $options);
 
     $options = array(
       'label' => Portabilis_String_Utils::toLatin1('Curso superior 2'),
@@ -596,20 +565,6 @@ class indice extends clsCadastro
     );
     $this->inputsHelper()->integer('ano_conclusao_curso_superior_2', $options);
 
-    $resources = array(
-      null => 'Selecione',
-      1 => Portabilis_String_Utils::toLatin1('Pública'),
-      2 => 'Privada'
-    );
-
-    $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Tipo de instituição do curso superior 2'),
-      'resources' => $resources,
-      'value' => $this->tipo_instituicao_curso_superior_2,
-      'required' => false
-    );
-    $this->inputsHelper()->select('tipo_instituicao_curso_superior_2', $options);
-
     $options = array(
       'label' => Portabilis_String_Utils::toLatin1('Instituição do curso superior 2'),
       'required' => false
@@ -627,7 +582,7 @@ class indice extends clsCadastro
     $resources = array(
       null => 'Selecione',
       1 => Portabilis_String_Utils::toLatin1('Concluído'),
-      2 => 'Cursando'
+      2 => 'Em andamento'
     );
 
     $options = array(
@@ -638,11 +593,10 @@ class indice extends clsCadastro
     );
     $this->inputsHelper()->select('situacao_curso_superior_3', $options);
 
-    $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Possui formação/complementação pedagógica 3'),
-      'value' => $this->formacao_complementacao_pedagogica_3
-    );
-    $this->inputsHelper()->checkbox('formacao_complementacao_pedagogica_3', $options);
+    $options = array('label' => 'Possui formação/complementação pedagógica 3',
+                     'value' => $this->formacao_complementacao_pedagogica_3,
+                     'required' => false);
+    $this->inputsHelper()->booleanSelect('formacao_complementacao_pedagogica_3', $options);
 
     $options = array(
       'label' => Portabilis_String_Utils::toLatin1('Curso superior 3'),
@@ -676,20 +630,6 @@ class indice extends clsCadastro
     );
     $this->inputsHelper()->integer('ano_conclusao_curso_superior_3', $options);
 
-    $resources = array(
-      null => 'Selecione',
-      1 => Portabilis_String_Utils::toLatin1('Pública'),
-      2 => 'Privada'
-    );
-
-    $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Tipo de instituição do curso superior 3'),
-      'resources' => $resources,
-      'value' => $this->tipo_instituicao_curso_superior_3,
-      'required' => false
-    );
-    $this->inputsHelper()->select('tipo_instituicao_curso_superior_3', $options);
-
     $options = array(
       'label' => Portabilis_String_Utils::toLatin1('Instituição do curso superior 3'),
       'required' => false
@@ -704,116 +644,39 @@ class indice extends clsCadastro
 
     $this->campoQuebra();
 
-    $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Pós-Graduação - Especialização'),
-      'value' => $this->pos_especializacao
-    );
-    $this->inputsHelper()->checkbox('pos_especializacao', $options);
+    $helperOptions = array('objectName'  => 'pos_graduacao');
+    $options       = array('label' => 'Possui pós-graduação',
+                            'required' => false,
+                            'options' => array('values' => $this->pos_graduacao,
+                                               'all_values' => array(
+                                                  1 => 'Especialização',
+                                                  2 => 'Mestrado',
+                                                  3 => 'Doutorado',
+                                                  4 => 'Nenhuma')));
+    $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-    $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Pós-Graduação - Mestrado'),
-      'value' => $this->pos_mestrado
-    );
-    $this->inputsHelper()->checkbox('pos_mestrado', $options);
-
-    $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Pós-Graduação - Doutorado'),
-      'value' => $this->pos_doutorado
-    );
-    $this->inputsHelper()->checkbox('pos_doutorado', $options);
-
-    $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Pós-Graduação - Nenhuma'),
-      'value' => $this->pos_nenhuma
-    );
-    $this->inputsHelper()->checkbox('pos_nenhuma', $options);
-
-    $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Curso de Formação Continuada(min. 80hrs) - Específico para Creche (0 a 3 anos)'),
-      'value' => $this->curso_creche
-    );
-    $this->inputsHelper()->checkbox('curso_creche', $options);
-
-    $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Curso de Formação Continuada(min. 80hrs) - Específico para Pré-Escola (4 e 5 anos)'),
-      'value' => $this->curso_pre_escola
-    );
-    $this->inputsHelper()->checkbox('curso_pre_escola', $options);
-
-    $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Curso de Formação Continuada(min. 80hrs) - Específico para anos iniciais do ensino fundamental'),
-      'value' => $this->curso_anos_iniciais
-    );
-    $this->inputsHelper()->checkbox('curso_anos_iniciais', $options);
-
-    $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Curso de Formação Continuada(min. 80hrs) - Específico para anos finais do ensino fundamental'),
-      'value' => $this->curso_anos_finais
-    );
-    $this->inputsHelper()->checkbox('curso_anos_finais', $options);
-
-    $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Curso de Formação Continuada(min. 80hrs) - Específico para ensino médio'),
-      'value' => $this->curso_ensino_medio
-    );
-    $this->inputsHelper()->checkbox('curso_ensino_medio', $options);
-
-    $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Curso de Formação Continuada(min. 80hrs) - Específico para educação de jovens e adultos'),
-      'value' => $this->curso_eja
-    );
-    $this->inputsHelper()->checkbox('curso_eja', $options);
-
-    $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Curso de Formação Continuada(min. 80hrs) - Específico para educação especial'),
-      'value' => $this->curso_educacao_especial
-    );
-    $this->inputsHelper()->checkbox('curso_educacao_especial', $options);
-
-    $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Curso de Formação Continuada(min. 80hrs) - Específico para educaão indígena'),
-      'value' => $this->curso_educacao_indigena
-    );
-    $this->inputsHelper()->checkbox('curso_educacao_indigena', $options);
-
-    $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Curso de Formação Continuada(min. 80hrs) - Específico para educação do campo'),
-      'value' => $this->curso_educacao_campo
-    );
-    $this->inputsHelper()->checkbox('curso_educacao_campo', $options);
-
-    $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Curso de Formação Continuada(min. 80hrs) - Específico para educação ambiental'),
-      'value' => $this->curso_educacao_ambiental
-    );
-    $this->inputsHelper()->checkbox('curso_educacao_ambiental', $options);
-
-    $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Curso de Formação Continuada(min. 80hrs) - Específico para educação em direitos humanos'),
-      'value' => $this->curso_educacao_direitos_humanos
-    );
-    $this->inputsHelper()->checkbox('curso_educacao_direitos_humanos', $options);
-
-    $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Curso de Formação Continuada(min. 80hrs) - Gênero e diversidade sexual'),
-      'value' => $this->curso_genero_diversidade_sexual
-    );
-    $this->inputsHelper()->checkbox('curso_genero_diversidade_sexual', $options);
-
-    $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Curso de Formação Continuada(min. 80hrs) - Direito das crianças e adolescentes'),
-      'value' => $this->curso_direito_crianca_adolescente
-    );
-    $this->inputsHelper()->checkbox('curso_direito_crianca_adolescente', $options);
-
-    $options = array('label' => Portabilis_String_Utils::toLatin1('Curso de Formação Continuada(min. 80hrs) - Educação para as relações etnicorraciais e História e cultura Afro-Brasileira e Africana'), 'value' => $this->curso_relacoes_etnicorraciais);
-    $this->inputsHelper()->checkbox('curso_relacoes_etnicorraciais', $options);
-
-    $options = array('label' => Portabilis_String_Utils::toLatin1('Curso de Formação Continuada(min. 80hrs) - Outros'), 'value' => $this->curso_outros);
-    $this->inputsHelper()->checkbox('curso_outros', $options);
-
-    $options = array('label' => Portabilis_String_Utils::toLatin1('Curso de Formação Continuada(min. 80hrs) - Nenhum'), 'value' => $this->curso_nenhum);
-    $this->inputsHelper()->checkbox('curso_nenhum', $options);
+    $helperOptions = array('objectName'  => 'curso_formacao_continuada');
+    $options       = array('label' => 'Possui cursos de formação continuada',
+                            'required' => false,
+                            'options' => array('values' => $this->curso_formacao_continuada,
+                                               'all_values' => array(
+                                                 1 => 'Específico para Creche (0 a 3 anos)',
+                                                 2 => 'Específico para Pré-escola (4 e 5 anos)',
+                                                 3 => 'Específico para anos iniciais do ensino fundamental',
+                                                 4 => 'Específico para anos finais do ensino fundamental',
+                                                 5 => 'Específico para ensino médio',
+                                                 6 => 'Específico para educação de jovens e adultos',
+                                                 7 => 'Específico para educação especial',
+                                                 8 => 'Específico para educação indígena',
+                                                 9 => 'Específico para educação do campo',
+                                                10 => 'Específico para educação ambiental',
+                                                11 => 'Específico para educação em direitos humanos',
+                                                12 => 'Gênero e diversidade sexual',
+                                                13 => 'Direito das crianças e adolescentes',
+                                                14 => 'Educação para as relações etnicorraciais e História e cultura Afro-Brasileira e Africana',
+                                                15 => 'Outros',
+                                                16 => 'Nenhum')));
+    $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
     $scripts = array('/modules/Cadastro/Assets/Javascripts/Servidor.js');
 
@@ -837,6 +700,9 @@ class indice extends clsCadastro
 
     $this->carga_horaria = $hour + $min;
     $this->carga_horaria = $hour + $min;
+
+    unset($this->pos_graduacao[0]);
+    $this->pos_graduacao = '{' . implode(',', $this->pos_graduacao) . '}';
 
     @session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
@@ -919,6 +785,12 @@ class indice extends clsCadastro
     $min     = abs(((int) ($timesep[1] / 60)) - ($timesep[1] / 60)) . '<br>';
     $this->carga_horaria = $hour + $min;
     $this->carga_horaria = $hour + $min;
+
+    unset($this->pos_graduacao[0]);
+    $this->pos_graduacao = '{' . implode(',', $this->pos_graduacao) . '}';
+
+    unset($this->curso_formacao_continuada[0]);
+    $this->curso_formacao_continuada = '{' . implode(',', $this->curso_formacao_continuada) . '}';
 
     @session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
@@ -1071,46 +943,25 @@ class indice extends clsCadastro
   function addCamposCenso($obj){
 
     $obj->situacao_curso_superior_1 = $this->situacao_curso_superior_1;
-    $obj->formacao_complementacao_pedagogica_1 = $this->formacao_complementacao_pedagogica_1 == 'on' ? 1 : 0;
+    $obj->formacao_complementacao_pedagogica_1 = $this->formacao_complementacao_pedagogica_1;
     $obj->codigo_curso_superior_1 = $this->codigo_curso_superior_1_id;
     $obj->ano_inicio_curso_superior_1 = $this->ano_inicio_curso_superior_1;
     $obj->ano_conclusao_curso_superior_1 = $this->ano_conclusao_curso_superior_1;
-    $obj->tipo_instituicao_curso_superior_1 = $this->tipo_instituicao_curso_superior_1;
     $obj->instituicao_curso_superior_1 = $this->instituicao_curso_superior_1_id;
     $obj->situacao_curso_superior_2 = $this->situacao_curso_superior_2;
-    $obj->formacao_complementacao_pedagogica_2 = $this->formacao_complementacao_pedagogica_2 == 'on' ? 1 : 0;
+    $obj->formacao_complementacao_pedagogica_2 = $this->formacao_complementacao_pedagogica_2;
     $obj->codigo_curso_superior_2 = $this->codigo_curso_superior_2_id;
     $obj->ano_inicio_curso_superior_2 = $this->ano_inicio_curso_superior_2;
     $obj->ano_conclusao_curso_superior_2 = $this->ano_conclusao_curso_superior_2;
-    $obj->tipo_instituicao_curso_superior_2 = $this->tipo_instituicao_curso_superior_2;
     $obj->instituicao_curso_superior_2 = $this->instituicao_curso_superior_2_id;
     $obj->situacao_curso_superior_3 = $this->situacao_curso_superior_3;
-    $obj->formacao_complementacao_pedagogica_3 = $this->formacao_complementacao_pedagogica_3 == 'on' ? 1 : 0;
+    $obj->formacao_complementacao_pedagogica_3 = $this->formacao_complementacao_pedagogica_3;
     $obj->codigo_curso_superior_3 = $this->codigo_curso_superior_3_id;
     $obj->ano_inicio_curso_superior_3 = $this->ano_inicio_curso_superior_3;
     $obj->ano_conclusao_curso_superior_3 = $this->ano_conclusao_curso_superior_3;
-    $obj->tipo_instituicao_curso_superior_3 = $this->tipo_instituicao_curso_superior_3;
     $obj->instituicao_curso_superior_3 = $this->instituicao_curso_superior_3_id;
-    $obj->pos_especializacao = $this->pos_especializacao == 'on' ? 1 : 0;
-    $obj->pos_mestrado = $this->pos_mestrado == 'on' ? 1 : 0;
-    $obj->pos_doutorado = $this->pos_doutorado == 'on' ? 1 : 0;
-    $obj->pos_nenhuma = $this->pos_nenhuma == 'on' ? 1 : 0;
-    $obj->curso_creche = $this->curso_creche == 'on' ? 1 : 0;
-    $obj->curso_pre_escola = $this->curso_pre_escola == 'on' ? 1 : 0;
-    $obj->curso_anos_iniciais = $this->curso_anos_iniciais == 'on' ? 1 : 0;
-    $obj->curso_anos_finais = $this->curso_anos_finais == 'on' ? 1 : 0;
-    $obj->curso_ensino_medio = $this->curso_ensino_medio == 'on' ? 1 : 0;
-    $obj->curso_eja = $this->curso_eja == 'on' ? 1 : 0;
-    $obj->curso_educacao_especial = $this->curso_educacao_especial == 'on' ? 1 : 0;
-    $obj->curso_educacao_indigena = $this->curso_educacao_indigena == 'on' ? 1 : 0;
-    $obj->curso_educacao_campo = $this->curso_educacao_campo == 'on' ? 1 : 0;
-    $obj->curso_educacao_ambiental = $this->curso_educacao_ambiental == 'on' ? 1 : 0;
-    $obj->curso_educacao_direitos_humanos = $this->curso_educacao_direitos_humanos == 'on' ? 1 : 0;
-    $obj->curso_genero_diversidade_sexual = $this->curso_genero_diversidade_sexual == 'on' ? 1 : 0;
-    $obj->curso_direito_crianca_adolescente = $this->curso_direito_crianca_adolescente == 'on' ? 1 : 0;
-    $obj->curso_relacoes_etnicorraciais = $this->curso_relacoes_etnicorraciais == 'on' ? 1 : 0;
-    $obj->curso_outros = $this->curso_outros == 'on' ? 1 : 0;
-    $obj->curso_nenhum = $this->curso_nenhum == 'on' ? 1 : 0;
+    $obj->pos_graduacao = $this->pos_graduacao;
+    $obj->curso_formacao_continuada = $this->curso_formacao_continuada;
     return $obj;
   }
 
