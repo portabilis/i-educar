@@ -343,11 +343,11 @@ class EducacensoExportController extends ApiCoreController
         b.zona_localizacao as r00s29,
         e.categoria_escola_privada as r00s30,
         e.conveniada_com_poder_publico r00s31,
-        CASE WHEN e.mantenedora_escola_privada::varchar LIKE \'%1%\' THEN 1 ELSE 0 END as r00s32,
-        CASE WHEN e.mantenedora_escola_privada::varchar LIKE \'%2%\' THEN 1 ELSE 0 END as r00s33,
-        CASE WHEN e.mantenedora_escola_privada::varchar LIKE \'%3%\' THEN 1 ELSE 0 END as r00s34,
-        CASE WHEN e.mantenedora_escola_privada::varchar LIKE \'%4%\' THEN 1 ELSE 0 END as r00s35,
-        CASE WHEN e.mantenedora_escola_privada::varchar LIKE \'%5%\' THEN 1 ELSE 0 END as r00s36,
+        (ARRAY[1] <@ e.mantenedora_escola_privada)::int as r00s32,
+        (ARRAY[2] <@ e.mantenedora_escola_privada)::int as r00s33,
+        (ARRAY[3] <@ e.mantenedora_escola_privada)::int as r00s34,
+        (ARRAY[4] <@ e.mantenedora_escola_privada)::int as r00s35,
+        (ARRAY[5] <@ e.mantenedora_escola_privada)::int as r00s36,
         e.cnpj_mantenedora_principal as r00s37,
         j.cnpj AS r00s38,
         e.regulamentacao as r00s39,
@@ -423,24 +423,24 @@ class EducacensoExportController extends ApiCoreController
       e.condicao as r10s12,
       e.codigo_inep_escola_compartilhada,
       e.agua_consumida as r10s20,
-      CASE WHEN e.abastecimento_agua::varchar LIKE \'%1%\' THEN 1 ELSE 0 END as r10s21,
-      CASE WHEN e.abastecimento_agua::varchar LIKE \'%2%\' THEN 1 ELSE 0 END as r10s22,
-      CASE WHEN e.abastecimento_agua::varchar LIKE \'%3%\' THEN 1 ELSE 0 END as r10s23,
-      CASE WHEN e.abastecimento_agua::varchar LIKE \'%4%\' THEN 1 ELSE 0 END as r10s24,
-      CASE WHEN e.abastecimento_agua::varchar LIKE \'%5%\' THEN 1 ELSE 0 END as r10s25,
-      CASE WHEN e.abastecimento_energia::varchar LIKE \'%1%\' THEN 1 ELSE 0 END as r10s26,
-      CASE WHEN e.abastecimento_energia::varchar LIKE \'%2%\' THEN 1 ELSE 0 END as r10s27,
-      CASE WHEN e.abastecimento_energia::varchar LIKE \'%3%\' THEN 1 ELSE 0 END as r10s28,
-      CASE WHEN e.abastecimento_energia::varchar LIKE \'%4%\' THEN 1 ELSE 0 END as r10s29,
-      CASE WHEN e.esgoto_sanitario::varchar LIKE \'%1%\' THEN 1 ELSE 0 END as r10s30,
-      CASE WHEN e.esgoto_sanitario::varchar LIKE \'%2%\' THEN 1 ELSE 0 END as r10s31,
-      CASE WHEN e.esgoto_sanitario::varchar LIKE \'%3%\' THEN 1 ELSE 0 END as r10s32,
-      CASE WHEN e.destinacao_lixo::varchar LIKE \'%1%\' THEN 1 ELSE 0 END as r10s33,
-      CASE WHEN e.destinacao_lixo::varchar LIKE \'%2%\' THEN 1 ELSE 0 END as r10s34,
-      CASE WHEN e.destinacao_lixo::varchar LIKE \'%3%\' THEN 1 ELSE 0 END as r10s35,
-      CASE WHEN e.destinacao_lixo::varchar LIKE \'%4%\' THEN 1 ELSE 0 END as r10s36,
-      CASE WHEN e.destinacao_lixo::varchar LIKE \'%5%\' THEN 1 ELSE 0 END as r10s37,
-      CASE WHEN e.destinacao_lixo::varchar LIKE \'%6%\' THEN 1 ELSE 0 END as r10s38,
+      (ARRAY[1] <@ e.abastecimento_agua)::int as r10s21,
+      (ARRAY[2] <@ e.abastecimento_agua)::int as r10s22,
+      (ARRAY[3] <@ e.abastecimento_agua)::int as r10s23,
+      (ARRAY[4] <@ e.abastecimento_agua)::int as r10s24,
+      (ARRAY[5] <@ e.abastecimento_agua)::int as r10s25,
+      (ARRAY[1] <@ e.abastecimento_energia)::int as r10s26,
+      (ARRAY[2] <@ e.abastecimento_energia)::int as r10s27,
+      (ARRAY[3] <@ e.abastecimento_energia)::int as r10s28,
+      (ARRAY[4] <@ e.abastecimento_energia)::int as r10s29,
+      (ARRAY[1] <@ e.esgoto_sanitario)::int as r10s30,
+      (ARRAY[2] <@ e.esgoto_sanitario)::int as r10s31,
+      (ARRAY[3] <@ e.esgoto_sanitario)::int as r10s32,
+      (ARRAY[1] <@ e.destinacao_lixo)::int as r10s33,
+      (ARRAY[2] <@ e.destinacao_lixo)::int as r10s34,
+      (ARRAY[3] <@ e.destinacao_lixo)::int as r10s35,
+      (ARRAY[4] <@ e.destinacao_lixo)::int as r10s36,
+      (ARRAY[5] <@ e.destinacao_lixo)::int as r10s37,
+      (ARRAY[6] <@ e.destinacao_lixo)::int as r10s38,
       e.dependencia_sala_diretoria as r10s39,
       e.dependencia_sala_professores as r10s40,
       e.dependencia_sala_secretaria as r10s41,
@@ -657,68 +657,32 @@ class EducacensoExportController extends ApiCoreController
         substring(t.hora_inicial::varchar,4,2) as r20s8,
         substring(t.hora_final::varchar,1,2) as r20s9,
         substring(t.hora_final::varchar,4,2) as r20s10,
-        (SELECT 1
-          FROM turma_dia_semana
-          WHERE ref_cod_turma = t.cod_turma
-          AND dia_semana = 1
-          LIMIT 1
-        ) as r20s11,
-        (SELECT 1
-          FROM turma_dia_semana
-          WHERE ref_cod_turma = t.cod_turma
-          AND dia_semana = 2
-          LIMIT 1
-        ) as r20s12,
-        (SELECT 1
-          FROM turma_dia_semana
-          WHERE ref_cod_turma = t.cod_turma
-          AND dia_semana = 3
-          LIMIT 1
-        ) as r20s13,
-        (SELECT 1
-          FROM turma_dia_semana
-          WHERE ref_cod_turma = t.cod_turma
-          AND dia_semana = 4
-          LIMIT 1
-        ) as r20s14,
-        (SELECT 1
-          FROM turma_dia_semana
-          WHERE ref_cod_turma = t.cod_turma
-          AND dia_semana = 5
-          LIMIT 1
-        ) as r20s15,
-        (SELECT 1
-          FROM turma_dia_semana
-          WHERE ref_cod_turma = t.cod_turma
-          AND dia_semana = 6
-          LIMIT 1
-        ) as r20s16,
-        (SELECT 1
-          FROM turma_dia_semana
-          WHERE ref_cod_turma = t.cod_turma
-          AND dia_semana = 7
-          LIMIT 1
-        ) as r20s17,
+        (ARRAY[1] <@ t.dias_semana)::int as r20s11,
+        (ARRAY[2] <@ t.dias_semana)::int as r20s12,
+        (ARRAY[3] <@ t.dias_semana)::int as r20s13,
+        (ARRAY[4] <@ t.dias_semana)::int as r20s14,
+        (ARRAY[5] <@ t.dias_semana)::int as r20s15,
+        (ARRAY[6] <@ t.dias_semana)::int as r20s16,
+        (ARRAY[7] <@ t.dias_semana)::int as r20s17,
         t.tipo_atendimento as r20s18,
         t.turma_mais_educacao as r20s19,
-
-        t.atividade_complementar_1 as r20s20,
-        t.atividade_complementar_2 as r20s21,
-        t.atividade_complementar_3 as r20s22,
-        t.atividade_complementar_4 as r20s23,
-        t.atividade_complementar_5 as r20s24,
-        t.atividade_complementar_6 as r20s25,
-        t.aee_braille as r20s26,
-        t.aee_recurso_optico as r20s27,
-        t.aee_estrategia_desenvolvimento as r20s28,
-        t.aee_tecnica_mobilidade as r20s29,
-        t.aee_libras as r20s30,
-        t.aee_caa as r20s31,
-        t.aee_curricular as r20s32,
-        t.aee_soroban as r20s33,
-        t.aee_informatica as r20s34,
-        t.aee_lingua_escrita as r20s35,
-        t.aee_autonomia as r20s36,
+        t.atividades_complementares[1] as r20s20,
+        t.atividades_complementares[2] as r20s21,
+        t.atividades_complementares[3] as r20s22,
+        t.atividades_complementares[4] as r20s23,
+        t.atividades_complementares[5] as r20s24,
+        t.atividades_complementares[6] as r20s25,
+        (ARRAY[1] <@ t.atividades_aee)::int as r20s26,
+        (ARRAY[2] <@ t.atividades_aee)::int as r20s27,
+        (ARRAY[3] <@ t.atividades_aee)::int as r20s28,
+        (ARRAY[4] <@ t.atividades_aee)::int as r20s29,
+        (ARRAY[5] <@ t.atividades_aee)::int as r20s30,
+        (ARRAY[6] <@ t.atividades_aee)::int as r20s31,
+        (ARRAY[7] <@ t.atividades_aee)::int as r20s32,
+        (ARRAY[8] <@ t.atividades_aee)::int as r20s33,
+        (ARRAY[9] <@ t.atividades_aee)::int as r20s34,
+        (ARRAY[10] <@ t.atividades_aee)::int as r20s35,
+        (ARRAY[11] <@ t.atividades_aee)::int as r20s36,
         c.modalidade_curso as r20s37,
         t.etapa_educacenso as r20s38,
         t.cod_curso_profissional as r20s39,
