@@ -489,7 +489,6 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
   }
 
   protected function postProcessamento()  {
-
     if ($this->canPostProcessamento()){
       $matriculaId = $this->getRequest()->matricula_id;
 
@@ -614,6 +613,13 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     $historicoDisciplina->cadastra();
   }
 
+  protected function shouldProcessAreaConhecimento($areaConhecimento)
+  {
+    if (!empty($this->getRequest()->area_conhecimento)){
+        return in_array($areaConhecimento, $this->getRequest()->area_conhecimento);
+    }
+    return true;
+  }
 
   protected function recreateHistoricoDisciplinas($historicoSequencial, $alunoId, $turmaId = null){
 
@@ -633,6 +639,9 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
       foreach ($this->getService()->getComponentes() as $componenteCurricular)
       {
+        if (!$this->shouldProcessAreaConhecimento($componenteCurricular->get('area_conhecimento'))){
+              continue;
+        }
         $ccId = $componenteCurricular->get('id');
         $reprovado = $mediasCc[$ccId][0]->situacao == 2;
         $disciplinaDependencia = ($aprovadoDependencia && $reprovado);
@@ -653,6 +662,8 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
             }
           }elseif($tpNota == $cnsNota::NUMERICA){
             $nota = (string)$mediasCc[$ccId][0]->mediaArredondada;
+          } elseif($tpNota == $cnsNota::NUMERICACONCEITUAL) {
+              $nota = (string)$mediasCc[$ccId][0]->mediaArredondada;
           }
         }
         else

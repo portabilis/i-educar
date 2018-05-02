@@ -53,6 +53,7 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
 
     Portabilis_View_Helper_Application::loadStylesheet($this, 'intranet/styles/localizacaoSistema.css');
 
+
     $localizacao = new LocalizacaoSistema();
 
     $localizacao->entradaCaminhos( array(
@@ -68,7 +69,7 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
 
   public function Gerar()
   {
-    Portabilis_View_Helper_Application::loadStylesheet($this, '/modules/HistoricoEscolar/Static/styles/processamento.css');
+    Portabilis_View_Helper_Application::loadStylesheet($this, array('/modules/HistoricoEscolar/Static/styles/processamento.css','/modules/Portabilis/Assets/Plugins/Chosen/chosen.css'));
 
     $this->inputsHelper()->dynamic(array('ano', 'instituicao', 'escola'));
 
@@ -189,6 +190,14 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
         </td>
         <td><input id='faltas-manual' name='faltas-manual' style='display:none;'></input></td>
       </tr>
+      
+      <tr>
+        <td><label for='area-conhecimento'>Area Conhecimento </label></td>
+        <td>
+          <select id='area-conhecimento' multiple class='chosen-choices' style='width: 90%' data-placeholder='Selecione'>
+          </select>
+        </td>
+      </tr>
 
       " . $campoPosicao . "
 
@@ -242,6 +251,8 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
     Portabilis_View_Helper_Application::loadJavascript(
       $this,
       array('/modules/Portabilis/Assets/Javascripts/Utils.js',
+            '/modules/Portabilis/Assets/Plugins/Chosen/chosen.jquery.min.js',
+            '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/MultipleSearch.js',
             '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/SimpleSearch.js',
             '/modules/HistoricoEscolar/Static/scripts/processamento.js')
     );
