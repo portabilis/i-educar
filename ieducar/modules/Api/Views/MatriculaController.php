@@ -565,6 +565,27 @@ class MatriculaController extends ApiCoreController
     return array('matriculas' => $matriculas);
   }
 
+  protected function getDispensaDisciplina() {
+    $sql = "SELECT dd.ref_cod_matricula AS matricula_id,
+                   dd.ref_cod_disciplina AS disciplina_id,
+                   td_dispensa_etapa.etapas AS etapas
+              FROM pmieducar.dispensa_disciplina AS dd,
+           LATERAL (SELECT string_agg(CAST(de.etapa AS VARCHAR), ',') AS etapas
+                      FROM pmieducar.dispensa_etapa AS de
+                     WHERE de.ref_cod_dispensa = dd.cod_dispensa
+                   ) AS td_dispensa_etapa
+             WHERE dd.ativo = 1
+               AND dd.data_exclusao IS NULL
+               AND td_dispensa_etapa.etapas <> ''";
+
+    $dispensas = $this->fetchPreparedQuery($sql);
+
+    $attrs = array('matricula_id', 'disciplina_id', 'etapas');
+    $dispensas = Portabilis_Array_Utils::filterSet($dispensas, $attrs);
+
+    return array('dispensas' => $dispensas);
+  }
+
   public function Gerar() {
     if ($this->isRequestFor('get', 'matricula'))
       $this->appendResponse($this->get());
@@ -604,6 +625,9 @@ class MatriculaController extends ApiCoreController
 
     elseif ($this->isRequestFor('get', 'matriculas-dependencia'))
       $this->appendResponse($this->getMatriculasDependencia());
+
+    elseif ($this->isRequestFor('get', 'dispensa-disciplina'))
+      $this->appendResponse($this->getDispensaDisciplina());
 
     else
       $this->notImplementedOperationError();

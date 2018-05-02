@@ -126,7 +126,8 @@ class indice extends clsCadastro
   var $codigo_inep_educacenso;
   var $tipo_mediacao_didatico_pedagogico;
   var $dias_semana;
-
+  var $tipo_boletim;
+  var $tipo_boletim_diferenciado;
   var $sequencial;
   var $ref_cod_modulo;
   var $data_inicio;
@@ -417,6 +418,7 @@ class indice extends clsCadastro
     $tiposBoletim = Portabilis_Array_Utils::insertIn(null, "Selecione um modelo", $tiposBoletim);
 
     $this->campoLista('tipo_boletim', 'Modelo relat&oacute;rio boletim', $tiposBoletim, $this->tipo_boletim);
+    $this->campoLista('tipo_boletim_diferenciado', 'Modelo relat&oacute;rio boletim diferenciado', $tiposBoletim, $this->tipo_boletim_diferenciado, '', FALSE, '', '', FALSE, FALSE);
 
     $helperOptions = array('objectName'  => 'dias_semana');
     $options       = array('label' => 'Dias da semana',

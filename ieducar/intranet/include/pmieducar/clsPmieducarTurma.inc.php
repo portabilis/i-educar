@@ -661,6 +661,12 @@ class clsPmieducarTurma
                 $gruda    = ", ";
             }
 
+            if(is_numeric($this->tipo_boletim_diferenciado)){
+                $campos  .= "{$gruda}tipo_boletim_diferenciado";
+                $valores .= "{$gruda}'{$this->tipo_boletim_diferenciado}'";
+                $gruda    = ", ";
+            }
+
             if(is_numeric($this->ano)){
                 $campos  .= "{$gruda}ano";
                 $valores .= "{$gruda}'{$this->ano}'";
@@ -1007,6 +1013,11 @@ class clsPmieducarTurma
 
             if(is_numeric($this->tipo_boletim)) {
                 $set  .= "{$gruda}tipo_boletim = '{$this->tipo_boletim}'";
+                $gruda = ", ";
+            }
+
+            if(is_numeric($this->tipo_boletim_diferenciado)) {
+                $set  .= "{$gruda}tipo_boletim_diferenciado = '{$this->tipo_boletim_diferenciado}'";
                 $gruda = ", ";
             }
 

@@ -106,12 +106,16 @@ class TurmaController extends ApiCoreController
   }
 
   protected function getTipoBoletim() {
-    $tipo = App_Model_IedFinder::getTurma($codTurma = $this->getRequest()->id);
-    $tipo = $tipo['tipo_boletim'];
+    $turma = App_Model_IedFinder::getTurma($codTurma = $this->getRequest()->id);
+    $tipo = $turma['tipo_boletim'];
+    $tipoDiferenciado = $turma['tipo_boletim_diferenciado'];
 
     $tipos = Portabilis_Model_Report_TipoBoletim::getInstance()->getReports();
     $tipos = Portabilis_Array_Utils::insertIn(null, "indefinido", $tipos);
 
+    if ($tipoDiferenciado && $tipoDiferenciado != $tipo ) {
+        $this->appendResponse('tipo-boletim-diferenciado', $tipos[$tipoDiferenciado]);
+    }
     return array('tipo-boletim' => $tipos[$tipo]);
   }
 
