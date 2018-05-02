@@ -47,10 +47,10 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchCursoSuperior extends Po
 
   protected function resourceValue($id) {
     if ($id) {
-      $sql       = "select (nome || ' / ' || (case grau_academico
+      $sql       = "select curso_id || ' - ' || nome || ' / ' || coalesce((case grau_academico
                                                when 1 then 'Tecnologo'
                                                when 2 then 'Licenciatura'
-                                               when 3 then 'Bacharelado' end)) as nome
+                                               when 3 then 'Bacharelado' end), '') as nome
                       from modules.educacenso_curso_superior where id = $1";
 
       $options   = array('params' => $id, 'return_only' => 'first-row');
@@ -64,7 +64,8 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchCursoSuperior extends Po
   public function simpleSearchCursoSuperior($attrName, $options = array()) {
     $defaultOptions = array('objectName'    => 'cursosuperior',
                             'apiController' => 'CursoSuperior',
-                            'apiResource'   => 'cursosuperior-search');
+                            'apiResource'   => 'cursosuperior-search',
+                            'showIdOnValue' => false);
 
     $options        = $this->mergeOptions($options, $defaultOptions);
 
