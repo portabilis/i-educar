@@ -328,7 +328,10 @@ class indice extends clsCadastro
         'cod_docente_inep',
         array(
             'label' => 'Código INEP',
-            'required' => false
+            'required' => false,
+            'label_hint' => 'Somente números',
+            'max_length' => 12,
+            'placeholder' => 'INEP'
         )
     );
 
