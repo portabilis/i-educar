@@ -21,7 +21,6 @@
   <link rel=stylesheet type='text/css' href='/intranet/styles/styles.css?5' />
   <link rel=stylesheet type='text/css' href='/intranet/styles/novo.css?5' />
   <link rel=stylesheet type='text/css' href='/intranet/styles/menu.css?5' />
-  
   <link rel=stylesheet type='text/css' href='/intranet/styles/font-awesome.css?5' />
   <!--link rel=stylesheet type='text/css' href='styles/reset.css?5' />
   <link rel=stylesheet type='text/css' href='styles/portabilis.css?5' /-->
@@ -41,7 +40,6 @@
   <script type="text/javascript" src="/intranet/scripts/menu.js?5"></script>
   <script type="text/javascript" src="/intranet/scripts/ied/forms.js?5"></script>
   <script type="text/javascript" src="/intranet/scripts/ied/phpjs.js?5"></script>
-  <!-- #&FRESHDESK&# -->
 
   <script type="text/javascript" src="/intranet/scripts/jquery/jquery-1.8.3.min.js?5"></script>
   <script type="text/javascript" src="/intranet/scripts/jquery/jquery.modal.min.js?5"></script>
