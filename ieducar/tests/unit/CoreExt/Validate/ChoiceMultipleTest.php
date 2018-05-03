@@ -1,31 +1,31 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     CoreExt_Validate
  * @subpackage  UnitTests
- * @since       Arquivo disponÌvel desde a vers„o 1.1.0
+ * @since       Arquivo dispon√≠vel desde a vers√£o 1.1.0
  * @version     $Id$
  */
 
@@ -34,12 +34,12 @@ require_once 'CoreExt/Validate/ChoiceMultiple.php';
 /**
  * CoreExt_Validate_ChoiceMultipleTest class.
  *
- * @author      Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     CoreExt_Validate
  * @subpackage  UnitTests
- * @since       Classe disponÌvel desde a vers„o 1.1.0
+ * @since       Classe dispon√≠vel desde a vers√£o 1.1.0
  * @version     @@package_version@@
  */
 class CoreExt_Validate_ChoiceMultipleTest extends UnitBaseTest
@@ -48,7 +48,7 @@ class CoreExt_Validate_ChoiceMultipleTest extends UnitBaseTest
 
   protected $_choices = array(
     'bit' => array(0, 1),
-    'various' => array('sim', 'n„o', 'nda')
+    'various' => array('sim', 'n√£o', 'nda')
   );
 
   protected function setUp()
@@ -70,20 +70,20 @@ class CoreExt_Validate_ChoiceMultipleTest extends UnitBaseTest
     $this->_validator->setOptions(array('choices' => $this->_choices['bit']));
     try {
       $this->_validator->isValid(array(0, 2, 3));
-      $this->fail("CoreExt_Validate_ChoiceMultiple deveria ter lanÁado exceÁ„o.");
+      $this->fail("CoreExt_Validate_ChoiceMultiple deveria ter lan√ßado exce√ß√£o.");
     }
     catch (Exception $e) {
-      $this->assertEquals('As opÁıes "2, 3" n„o existem.', $e->getMessage());
+      $this->assertEquals('As op√ß√µes "2, 3" n√£o existem.', $e->getMessage());
     }
 
-    // 'a' e '0a' normalmente seriam avaliados como '0' e '1' mas n„o queremos
+    // 'a' e '0a' normalmente seriam avaliados como '0' e '1' mas n√£o queremos
     // esse tipo de comportamento.
     try {
       $this->_validator->isValid(array(0, 'a', '1a'));
-      $this->fail("CoreExt_Validate_ChoiceMultiple deveria ter lanÁado exceÁ„o.");
+      $this->fail("CoreExt_Validate_ChoiceMultiple deveria ter lan√ßado exce√ß√£o.");
     }
     catch (Exception $e) {
-      $this->assertEquals('As opÁıes "a, 1a" n„o existem.', $e->getMessage());
+      $this->assertEquals('As op√ß√µes "a, 1a" n√£o existem.', $e->getMessage());
     }
   }
 }

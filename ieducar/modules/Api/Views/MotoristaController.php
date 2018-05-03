@@ -41,6 +41,10 @@ require_once 'Portabilis/String/Utils.php';
 require_once 'Portabilis/Array/Utils.php';
 require_once 'Portabilis/Date/Utils.php';
 
+/**
+ * Class MotoristaController
+ * @deprecated Essa versão da API pública será descontinuada
+ */
 class MotoristaController extends ApiCoreController
 {
   protected $_processoAp        = 578; //verificar

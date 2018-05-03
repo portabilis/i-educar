@@ -36,6 +36,10 @@ require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'intranet/include/clsBanco.inc.php';
 require_once 'lib/Portabilis/Date/Utils.php';
 
+/**
+ * Class EducacensoAnaliseController
+ * @deprecated Essa versão da API pública será descontinuada
+ */
 class EducacensoAnaliseController extends ApiCoreController
 {
 
@@ -101,7 +105,7 @@ class EducacensoAnaliseController extends ApiCoreController
 
     $escola       = $escola[0];
     $nomeEscola   = Portabilis_String_Utils::toUtf8(strtoupper($escola["nome_escola"]));
-    $anoAtual     = date("Y");
+    $anoAtual     = $ano;
     $anoAnterior  = $anoAtual-1;
     $anoPosterior = $anoAtual+1;
 
@@ -208,24 +212,24 @@ class EducacensoAnaliseController extends ApiCoreController
     $sql = "SELECT escola.local_funcionamento AS local_funcionamento,
                    escola.condicao AS condicao,
                    escola.agua_consumida AS agua_consumida,
-                   escola.agua_rede_publica AS agua_rede_publica,
-                   escola.agua_poco_artesiano AS agua_poco_artesiano,
-                   escola.agua_cacimba_cisterna_poco AS agua_cacimba_cisterna_poco,
-                   escola.agua_fonte_rio AS agua_fonte_rio,
-                   escola.agua_inexistente AS agua_inexistente,
-                   escola.energia_rede_publica AS energia_rede_publica,
-                   escola.energia_gerador AS energia_gerador,
-                   escola.energia_outros AS energia_outros,
-                   escola.energia_inexistente AS energia_inexistente,
-                   escola.esgoto_rede_publica AS esgoto_rede_publica,
-                   escola.esgoto_fossa AS esgoto_fossa,
-                   escola.esgoto_inexistente AS esgoto_inexistente,
-                   escola.lixo_coleta_periodica AS lixo_coleta_periodica,
-                   escola.lixo_queima AS lixo_queima,
-                   escola.lixo_joga_outra_area AS lixo_joga_outra_area,
-                   escola.lixo_recicla AS lixo_recicla,
-                   escola.lixo_enterra AS lixo_enterra,
-                   escola.lixo_outros AS lixo_outros,
+                   CASE WHEN escola.abastecimento_agua::varchar LIKE '%1%' THEN 1 ELSE 0 END AS agua_rede_publica,
+                   CASE WHEN escola.abastecimento_agua::varchar LIKE '%2%' THEN 1 ELSE 0 END AS agua_poco_artesiano,
+                   CASE WHEN escola.abastecimento_agua::varchar LIKE '%3%' THEN 1 ELSE 0 END AS agua_cacimba_cisterna_poco,
+                   CASE WHEN escola.abastecimento_agua::varchar LIKE '%4%' THEN 1 ELSE 0 END AS agua_fonte_rio,
+                   CASE WHEN escola.abastecimento_agua::varchar LIKE '%5%' THEN 1 ELSE 0 END AS agua_inexistente,
+                   CASE WHEN escola.abastecimento_energia::varchar LIKE '%1%' THEN 1 ELSE 0 END AS energia_rede_publica,
+                   CASE WHEN escola.abastecimento_energia::varchar LIKE '%2%' THEN 1 ELSE 0 END AS energia_gerador,
+                   CASE WHEN escola.abastecimento_energia::varchar LIKE '%3%' THEN 1 ELSE 0 END AS energia_outros,
+                   CASE WHEN escola.abastecimento_energia::varchar LIKE '%4%' THEN 1 ELSE 0 END AS energia_inexistente,
+                   CASE WHEN escola.esgoto_sanitario::varchar LIKE '%1%' THEN 1 ELSE 0 END AS esgoto_rede_publica,
+                   CASE WHEN escola.esgoto_sanitario::varchar LIKE '%2%' THEN 1 ELSE 0 END AS esgoto_fossa,
+                   CASE WHEN escola.esgoto_sanitario::varchar LIKE '%3%' THEN 1 ELSE 0 END AS esgoto_inexistente,
+                   CASE WHEN escola.destinacao_lixo::varchar LIKE '%1%' THEN 1 ELSE 0 END AS lixo_coleta_periodica,
+                   CASE WHEN escola.destinacao_lixo::varchar LIKE '%2%' THEN 1 ELSE 0 END AS lixo_queima,
+                   CASE WHEN escola.destinacao_lixo::varchar LIKE '%3%' THEN 1 ELSE 0 END AS lixo_joga_outra_area,
+                   CASE WHEN escola.destinacao_lixo::varchar LIKE '%4%' THEN 1 ELSE 0 END AS lixo_recicla,
+                   CASE WHEN escola.destinacao_lixo::varchar LIKE '%5%' THEN 1 ELSE 0 END AS lixo_enterra,
+                   CASE WHEN escola.destinacao_lixo::varchar LIKE '%6%' THEN 1 ELSE 0 END AS lixo_outros,
                    escola.dependencia_sala_diretoria AS dependencia_sala_diretoria,
                    escola.dependencia_sala_professores AS dependencia_sala_professores,
                    escola.dependencia_sala_secretaria AS dependncia_sala_secretaria,
@@ -276,9 +280,7 @@ class EducacensoAnaliseController extends ApiCoreController
                    escola.atendimento_aee AS atendimento_aee,
                    escola.atividade_complementar AS atividade_complementar,
                    escola.localizacao_diferenciada AS localizacao_diferenciada,
-                   escola.didatico_nao_utiliza AS didatico_nao_utiliza,
-                   escola.didatico_quilombola AS didatico_quilombola,
-                   escola.didatico_indigena AS didatico_indigena,
+                   escola.materiais_didaticos_especificos AS materiais_didaticos_especificos,
                    escola.lingua_ministrada AS lingua_ministrada,
                    escola.educacao_indigena AS educacao_indigena,
                    juridica.fantasia AS nome_escola
@@ -342,7 +344,7 @@ class EducacensoAnaliseController extends ApiCoreController
                            $escola["computadores_administrativo"] || $escola["computadores_alunos"] ||
                            $escola["impressoras_multifuncionais"]);
 
-    $existeMaterialDidatico = ($escola["didatico_nao_utiliza"] || $escola["didatico_quilombola"] || $escola["didatico_indigena"]);
+    $existeMaterialDidatico = $escola["materiais_didaticos_especificos"];
 
     $mensagem = array();
 

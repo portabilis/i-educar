@@ -36,6 +36,10 @@ require_once 'Portabilis/String/Utils.php';
 require_once 'Portabilis/Array/Utils.php';
 require_once 'Portabilis/Date/Utils.php';
 
+/**
+ * Class CursoController
+ * @deprecated Essa versão da API pública será descontinuada
+ */
 class CursoController extends ApiCoreController
 {
 

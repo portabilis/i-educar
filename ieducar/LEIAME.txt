@@ -1,37 +1,37 @@
 // $Id$
 
-CONTE⁄DO
+CONTE√öDO
 --------
 
  * Requisitos
- * InstalaÁ„o
- * DocumentaÁ„o
- * Suporte tÈcnico
- * LicenÁa
+ * Instala√ß√£o
+ * Documenta√ß√£o
+ * Suporte t√©cnico
+ * Licen√ßa
 
 
 REQUISITOS
 ----------
 
 O i-Educar requer um servidor web, PHP 5.2, PostgreSQL 8.2 e a biblioteca PDFLib
-(vers„o Lite ou Commercial). O servidor web Apache 2 È recomendado mas qualquer
+(vers√£o Lite ou Commercial). O servidor web Apache 2 √© recomendado mas qualquer
 outro com suporte a PHP pode ser utilizado.
 
-A biblioteca PDFLib Lite tem algumas restriÁıes em sua utilizaÁ„o. Consulte a
-licenÁa da biblioteca para ver se o seu uso n„o cair· na necessidade de adquirir
-uma licenÁa comercial:
+A biblioteca PDFLib Lite tem algumas restri√ß√µes em sua utiliza√ß√£o. Consulte a
+licen√ßa da biblioteca para ver se o seu uso n√£o cair√° na necessidade de adquirir
+uma licen√ßa comercial:
 http://www.pdflib.com/products/pdflib-family/pdflib-lite/pdflib-lite-licensing
 
 
-INSTALA«√O
+INSTALA√á√ÉO
 ----------
 
 1. DOWNLOAD DO SOFTWARE
 
-   FaÁa o download dos arquivos do sistema antes de prosseguir. A vers„o atual
+   Fa√ßa o download dos arquivos do sistema antes de prosseguir. A vers√£o atual
    pode ser encontrada em:
    http://www.softwarepublico.gov.br/dotlrn/clubs/ieducar/file-storage/index?folder_id=10855442.
-   Descompacte o pacote de sua preferÍncia no diretÛrio raiz do seu servidor web
+   Descompacte o pacote de sua prefer√™ncia no diret√≥rio raiz do seu servidor web
    Apache.
 
       $ cd /var/www
@@ -41,18 +41,18 @@ INSTALA«√O
 
 2. CRIE O BANCO DE DADOS
 
-   Crie o banco de dados ao qual o i-Educar usar· para armazenar todos os dados
-   digitados atravÈs da interface web. Os passos descritos nessa seÁ„o ir„o
+   Crie o banco de dados ao qual o i-Educar usar√° para armazenar todos os dados
+   digitados atrav√©s da interface web. Os passos descritos nessa se√ß√£o ir√£o
    criar:
 
-      * Um usu·rio ieducar no servidor PostgreSQL com a senha de acesso ieducar;
+      * Um usu√°rio ieducar no servidor PostgreSQL com a senha de acesso ieducar;
       * Um banco de dados ieducar.
 
-   ObservaÁ„o: vocÍ pode usar o nome de usu·rio, banco de dados e senha que
-   desejar. Esses s„o apenas nomes padrıes que a aplicaÁ„o usa para conectar-se
+   Observa√ß√£o: voc√™ pode usar o nome de usu√°rio, banco de dados e senha que
+   desejar. Esses s√£o apenas nomes padr√µes que a aplica√ß√£o usa para conectar-se
    ao banco.
 
-   FaÁa login no servidor de banco de dados PostgreSQL com o cliente psql:
+   Fa√ßa login no servidor de banco de dados PostgreSQL com o cliente psql:
 
       $ su
       # su - postgres
@@ -62,7 +62,7 @@ INSTALA«√O
 
       $ sudo -u postgres psql
 
-   Crie o usu·rio de banco de dados que ser· utilizado pelo i-Educar:
+   Crie o usu√°rio de banco de dados que ser√° utilizado pelo i-Educar:
 
       postgres=# CREATE ROLE ieducar;
       postgres=# ALTER ROLE ieducar WITH SUPERUSER INHERIT NOCREATEROLE \
@@ -74,13 +74,13 @@ INSTALA«√O
          OWNER = ieducar ENCODING = 'LATIN1';
       postgres=# \q
 
-   Execute o arquivo ieducar.sql que vem no i-Educar. O diretÛrio em que esse 
-   arquivo reside È o misc/database.
+   Execute o arquivo ieducar.sql que vem no i-Educar. O diret√≥rio em que esse 
+   arquivo reside √© o misc/database.
 
       $ psql -d ieducar -f misc/database/ieducar.sql
 
-   AtenÁ„o: em algumas plataformas, o restore do banco pode acabar em um erro
-   FATAL. Se isso acontecer, experimente fazer o restore no mesmo diretÛrio em
+   Aten√ß√£o: em algumas plataformas, o restore do banco pode acabar em um erro
+   FATAL. Se isso acontecer, experimente fazer o restore no mesmo diret√≥rio em
    que se encontra o arquivo ieducar.sql.
 
    Novamente no psql, execute o seguinte comando para configurar o search_path:
@@ -92,59 +92,59 @@ INSTALA«√O
       postgres=# \q;
 
 
-3. EDITE O ARQUIVO DE CONFIGURA«√O E CONCEDA PERMISS’ES DE ESCRITA
+3. EDITE O ARQUIVO DE CONFIGURA√á√ÉO E CONCEDA PERMISS√ïES DE ESCRITA
 
-   O i-Educar armazena algumas configuraÁıes necess·rias para a aplicaÁ„o em um
+   O i-Educar armazena algumas configura√ß√µes necess√°rias para a aplica√ß√£o em um
    arquivo chamado ieducar.ini (em configuration/), que possui uma sintaxe bem
-   simples de entender. Caso tenha criado o banco de dados, nome de usu·rio ou
+   simples de entender. Caso tenha criado o banco de dados, nome de usu√°rio ou
    senha com um valor diferente de ieducar, basta editar esse arquivo para que
    corresponda as suas escolhas:
 
       [production]
-      ; ConfiguraÁıes de banco de dados
+      ; Configura√ß√µes de banco de dados
       app.database.dbname   = ieducar
       app.database.username = ieducar
       app.database.hostname = localhost
       app.database.password = ieducar
       app.database.port     = 5432
 
-   Exemplo: caso tenha nomeado seu banco de dados com ieducar_db, o usu·rio com
+   Exemplo: caso tenha nomeado seu banco de dados com ieducar_db, o usu√°rio com
    ieducar_user e a senha com ieducar_pass, o ieducar.ini ficaria da seguinte
    forma:
 
       [production]
-      ; ConfiguraÁıes de banco de dados
+      ; Configura√ß√µes de banco de dados
       app.database.dbname   = ieducar_db
       app.database.username = ieducar_user
       app.database.hostname = localhost
       app.database.password = ieducar_pass
       app.database.port     = 5432
 
-   Depois, conceda permissıes de escrita nos diretÛrios intranet/tmp e
-   intranet/pdf. Uma forma pr·tica È dar permiss„o de escrita para o usu·rio
-   dono do diretÛrio e para usu·rios de um grupo. Nesse caso, mudaremos o grupo
-   desses diretÛrios para o grupo do usu·rio Apache.
+   Depois, conceda permiss√µes de escrita nos diret√≥rios intranet/tmp e
+   intranet/pdf. Uma forma pr√°tica √© dar permiss√£o de escrita para o usu√°rio
+   dono do diret√≥rio e para usu√°rios de um grupo. Nesse caso, mudaremos o grupo
+   desses diret√≥rios para o grupo do usu√°rio Apache.
 
       # chmod 775 intranet/tmp intranet/pdf
       # chgrp www-data intranet/tmp intranet/pdf
 
-   ObservaÁ„o: www-data È o nome do grupo Apache padr„o em sistemas Debian.
+   Observa√ß√£o: www-data √© o nome do grupo Apache padr√£o em sistemas Debian.
    Em outros sistemas, esse nome pode ser httpd, apache ou _www. Substitua de
    acordo com o usado em seu sistema operacional.
 
 
 4. CONFIGURE O APACHE OU CRIE UM VIRTUAL HOST
 
-   A partir da vers„o 1.1.X, o i-Educar inclui, por padr„o, um arquivo chamado
-   .htaccess no diretÛrio raiz da aplicaÁ„o. Esse arquivo contÈm diretivas de
-   configuraÁ„o do servidor Apache que tornam o i-Educar mais seguro.
-   AlÈm disso, esse arquivo configura o PHP corretamente para as necessidades
-   da aplicaÁ„o.
+   A partir da vers√£o 1.1.X, o i-Educar inclui, por padr√£o, um arquivo chamado
+   .htaccess no diret√≥rio raiz da aplica√ß√£o. Esse arquivo cont√©m diretivas de
+   configura√ß√£o do servidor Apache que tornam o i-Educar mais seguro.
+   Al√©m disso, esse arquivo configura o PHP corretamente para as necessidades
+   da aplica√ß√£o.
 
-   Para que esse arquivo seja executado a cada requisiÁ„o, È necess·rio
+   Para que esse arquivo seja executado a cada requisi√ß√£o, √© necess√°rio
    configurar o Apache para que este execute os arquivos .htaccess ou criar um
-   Virtual Host. A primeira opÁ„o requer a ediÁ„o do arquivo
-   /etc/apache2/site-available/default. A ˙nica diretiva a ser alterada È
+   Virtual Host. A primeira op√ß√£o requer a edi√ß√£o do arquivo
+   /etc/apache2/site-available/default. A √∫nica diretiva a ser alterada √©
    AllowOverride (linha 11) para All:
 
         9         <Directory /var/www/>
@@ -158,9 +158,9 @@ INSTALA«√O
 
       $ /etc/init.d/apache2 restart
 
-   A segunda opÁ„o requer a criaÁ„o de um novo arquivo em
+   A segunda op√ß√£o requer a cria√ß√£o de um novo arquivo em
    /etc/apache2/sites-available/. Crie um arquivo chamado ieducar.local com o
-   seguinte conte˙do:
+   seguinte conte√∫do:
 
       <VirtualHost *:80>
         ServerName ieducar.local
@@ -182,49 +182,49 @@ INSTALA«√O
 
       $ /etc/init.d/apache2 restart
 
-   Pronto. Agora, acesse o endereÁo http://ieducar.local em seu navegador.
+   Pronto. Agora, acesse o endere√ßo http://ieducar.local em seu navegador.
 
-   AtenÁ„o: configurar o seu servidor Apache (seguindo uma das opÁıes
-   apresentadas) È importante para a seguranÁa da aplicaÁ„o. Assim, evita-se que
-   arquivos importantes como o configuration/ieducar.ini e os relatÛrios gerados
-   pela aplicaÁ„o fiquem publicamente expostos para leitura atravÈs da Internet.
+   Aten√ß√£o: configurar o seu servidor Apache (seguindo uma das op√ß√µes
+   apresentadas) √© importante para a seguran√ßa da aplica√ß√£o. Assim, evita-se que
+   arquivos importantes como o configuration/ieducar.ini e os relat√≥rios gerados
+   pela aplica√ß√£o fiquem publicamente expostos para leitura atrav√©s da Internet.
 
 
-5. ACESSE A APLICA«√O
+5. ACESSE A APLICA√á√ÉO
 
-   Abra o navegador de sua preferÍncia e acesse o endereÁo
+   Abra o navegador de sua prefer√™ncia e acesse o endere√ßo
    http://localhost/ieducar ou http://ieducar.local (caso tenha configurado um
-   Virtual Host). FaÁa o login na aplicaÁ„o utilizando o usu·rio administrador.
-   O login e senha para acesso s„o admin e admin, respectivamente.
+   Virtual Host). Fa√ßa o login na aplica√ß√£o utilizando o usu√°rio administrador.
+   O login e senha para acesso s√£o admin e admin, respectivamente.
 
 
 6. CONFIGURE O PHP
 
-   Esse passo È opcional caso tenha configurado o Apache (via AllowOverride ou
+   Esse passo √© opcional caso tenha configurado o Apache (via AllowOverride ou
    VirtualHost). Edite o arquivo php.ini da seguinte forma:
 
-   * memory_limit: altere para, no mÌnimo, 32M (devido a geraÁ„o de relatÛrios
-   consumir bastante memÛria, pode ser necess·rio aumentar para uma quantidade
+   * memory_limit: altere para, no m√≠nimo, 32M (devido a gera√ß√£o de relat√≥rios
+   consumir bastante mem√≥ria, pode ser necess√°rio aumentar para uma quantidade
    maior em plataformas 64 bits);
       memory_limit = 32M
 
    * error_reporting: altere para E_ALL & ~E_NOTICE para evitar que avisos do
-   nÌvel E_NOTICE (comuns na vers„o atual), apareÁam nas telas quebrando o
-   layout do sistema. E_ERROR È o recomendado para ambientes de produÁ„o.
+   n√≠vel E_NOTICE (comuns na vers√£o atual), apare√ßam nas telas quebrando o
+   layout do sistema. E_ERROR √© o recomendado para ambientes de produ√ß√£o.
       error_reporting = E_ALL & ~E_NOTICE
 
-   * display_errors: altere para Off em produÁ„o:
+   * display_errors: altere para Off em produ√ß√£o:
       display_errors = Off
 
    * short_open_tag: altere para On.
       short_open_tag = On
 
-   ObservaÁ„o: a localizaÁ„o do arquivo php.ini È diferente entre os sistemas
-   operacionais. No Debian/Ubuntu, o padr„o È /etc/php5/apache2/php.ini. Para
-   descobrir onde o arquivo fica em seu sistema operacional, acesse o endereÁo
+   Observa√ß√£o: a localiza√ß√£o do arquivo php.ini √© diferente entre os sistemas
+   operacionais. No Debian/Ubuntu, o padr√£o √© /etc/php5/apache2/php.ini. Para
+   descobrir onde o arquivo fica em seu sistema operacional, acesse o endere√ßo
    http://localhost/ieducar/info.php e procure por Loaded Configuration File.
 
-   ApÛs qualquer alteraÁ„o no arquivo php.ini, reinicie seu servidor web:
+   Ap√≥s qualquer altera√ß√£o no arquivo php.ini, reinicie seu servidor web:
 
       # /etc/init.d/apache2 restart
 
@@ -234,28 +234,28 @@ INSTALA«√O
    * https://svn.softwarepublico.gov.br/trac/ieducar/wiki/Documentacao/1.1.X/Instalacao
 
 
-DOCUMENTA«√O
+DOCUMENTA√á√ÉO
 ------------
 
-A documentaÁ„o oficial do i-Educar est· disponÌvel em wiki:
+A documenta√ß√£o oficial do i-Educar est√° dispon√≠vel em wiki:
 http://svn.softwarepublico.gov.br/trac/ieducar/wiki
 
-Problemas comuns de instalaÁ„o podem ser encontrados no FAQ (perguntas
+Problemas comuns de instala√ß√£o podem ser encontrados no FAQ (perguntas
 frequentes):
 http://svn.softwarepublico.gov.br/trac/ieducar/wiki/Documentacao/FAQ/1.X
 
 
-SUPORTE T…CNICO
+SUPORTE T√âCNICO
 ---------------
 
-Suporte tÈcnico pode ser encontrado nos fÛruns da comunidade i-Educar no Portal
-do Software P˙blico Brasileiro (requer cadastro):
+Suporte t√©cnico pode ser encontrado nos f√≥runs da comunidade i-Educar no Portal
+do Software P√∫blico Brasileiro (requer cadastro):
 http://www.softwarepublico.gov.br/dotlrn/clubs/ieducar
 
 
-LICEN«A
+LICEN√áA
 -------
 
-O i-Educar È um Software P˙blico Brasileiro (SPB), livre e licenciado pela
-Creative Commons LicenÁa P˙blica Geral vers„o 2 traduzida (CC GNU/GPL 2). Uma
-cÛpia da licenÁa est· incluida nesta distribuiÁ„o no arquivo LICENSE-pt_BR.txt.
+O i-Educar √© um Software P√∫blico Brasileiro (SPB), livre e licenciado pela
+Creative Commons Licen√ßa P√∫blica Geral vers√£o 2 traduzida (CC GNU/GPL 2). Uma
+c√≥pia da licen√ßa est√° incluida nesta distribui√ß√£o no arquivo LICENSE-pt_BR.txt.

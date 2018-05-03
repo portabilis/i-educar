@@ -1,31 +1,31 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     ComponenteCurricular
  * @subpackage  UnitTests
- * @since       Arquivo disponÌvel desde a vers„o 1.1.0
+ * @since       Arquivo dispon√≠vel desde a vers√£o 1.1.0
  * @version     $Id$
  */
 
@@ -34,12 +34,12 @@ require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
 /**
  * ComponenteDataMapperTest class.
  *
- * @author      Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     ComponenteCurricular
  * @subpackage  UnitTests
- * @since       Classe disponÌvel desde a vers„o 1.1.0
+ * @since       Classe dispon√≠vel desde a vers√£o 1.1.0
  * @version     @@package_version@@
  */
 class ComponenteDataMapperTest extends UnitBaseTest
@@ -65,15 +65,15 @@ class ComponenteDataMapperTest extends UnitBaseTest
   public function testFindAreaConhecimento()
   {
     // Valores de retorno
-    $returnValue = array(new AreaConhecimento_Model_Area(array('id' => 1, 'nome' => 'CiÍncias exatas')));
+    $returnValue = array(new AreaConhecimento_Model_Area(array('id' => 1, 'nome' => 'Ci√™ncias exatas')));
 
-    // Mock para ·rea de conhecimento
+    // Mock para √°rea de conhecimento
     $mock = $this->getCleanMock('AreaConhecimento_Model_AreaDataMapper');
     $mock->expects($this->once())
          ->method('findAll')
          ->will($this->returnValue($returnValue));
 
-    // Substitui o data mapper padr„o pelo mock
+    // Substitui o data mapper padr√£o pelo mock
     $this->_mapper->setAreaDataMapper($mock);
     $areas = $this->_mapper->findAreaConhecimento();
 
@@ -84,7 +84,7 @@ class ComponenteDataMapperTest extends UnitBaseTest
   {
     // Valores de retorno
     $returnValue = new ComponenteCurricular_Model_Componente(
-      array('id' => 1, 'nome' => 'CiÍncias exatas', 'cargaHoraria' => 100)
+      array('id' => 1, 'nome' => 'Ci√™ncias exatas', 'cargaHoraria' => 100)
     );
 
     $returnAnoEscolar = new ComponenteCurricular_Model_AnoEscolar(array(
@@ -98,22 +98,22 @@ class ComponenteDataMapperTest extends UnitBaseTest
          ->with(array(1, 1))
          ->will($this->returnValue($returnAnoEscolar));
 
-    // Mock para Componente, exclui um mÈtodo de ser mocked
+    // Mock para Componente, exclui um m√©todo de ser mocked
     $mapper = $this->setExcludedMethods(array('findComponenteCurricularAnoEscolar'))
                    ->getCleanMock('ComponenteCurricular_Model_ComponenteDataMapper');
 
-    // O mÈtodo find do mapper ser· chamado uma vez
+    // O m√©todo find do mapper ser√° chamado uma vez
     $mapper->expects($this->once())
            ->method('find')
            ->with(1)
            ->will($this->returnValue($returnValue));
 
-    // Como um mock n„o mantÈm estado, forÁa o retorno do mapper AnoEscolarDataMapper mocked
+    // Como um mock n√£o mant√©m estado, for√ßa o retorno do mapper AnoEscolarDataMapper mocked
     $mapper->expects($this->once())
            ->method('getAnoEscolarDataMapper')
            ->will($this->returnValue($mock));
 
-    // Chama o mÈtodo
+    // Chama o m√©todo
     $componenteCurricular = $mapper->findComponenteCurricularAnoEscolar(1, 1);
 
     $this->assertEquals($returnValue, $componenteCurricular);

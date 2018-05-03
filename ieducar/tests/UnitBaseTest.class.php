@@ -1,49 +1,49 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gestÃ£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de ItajaÃ­
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa Ã© software livre; vocÃª pode redistribuÃ­-lo e/ou modificÃ¡-lo
+ * sob os termos da LicenÃ§a PÃºblica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versÃ£o 2 da LicenÃ§a, como (a seu critÃ©rio)
+ * qualquer versÃ£o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa Ã© distribuÃ­Â­do na expectativa de que seja Ãºtil, porÃ©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implÃ­Â­cita de COMERCIABILIDADE OU
+ * ADEQUAÃ‡ÃƒO A UMA FINALIDADE ESPECÃFICA. Consulte a LicenÃ§a PÃºblica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * VocÃª deve ter recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral do GNU junto
+ * com este programa; se nÃ£o, escreva para a Free Software Foundation, Inc., no
+ * endereÃ§o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @author    Eriksen Costa PaixÃ£o <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   UnitTests
- * @since     Arquivo disponível desde a versão 1.0.1
+ * @since     Arquivo disponÃ­vel desde a versÃ£o 1.0.1
  * @version   $Id$
  */
 
 /**
  * UnitBaseTest abstract class.
  *
- * Abstrai o PHPUnit, diminuindo a dependência de seu uso.
+ * Abstrai o PHPUnit, diminuindo a dependÃªncia de seu uso.
  *
- * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @author    Eriksen Costa PaixÃ£o <eriksen.paixao_bs@cobra.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   UnitTests
- * @since     Classe disponível desde a versão 1.0.1
+ * @since     Classe disponÃ­vel desde a versÃ£o 1.0.1
  * @version   @@package_version@@
  */
 abstract class UnitBaseTest extends PHPUnit_Framework_TestCase
 {
   /**
-   * Métodos a serem excluídos da lista de métodos a serem mockados por
+   * MÃ©todos a serem excluÃ­dos da lista de mÃ©todos a serem mockados por
    * getCleanMock().
    *
    * @var array
@@ -54,7 +54,7 @@ abstract class UnitBaseTest extends PHPUnit_Framework_TestCase
    * Setter para o atributo $_excludedMethods.
    *
    * @param array $methods
-   * @return PHPUnit_Framework_TestCase Provê interface fluída
+   * @return PHPUnit_Framework_TestCase ProvÃª interface fluÃ­da
    */
   public function setExcludedMethods(array $methods)
   {
@@ -74,7 +74,7 @@ abstract class UnitBaseTest extends PHPUnit_Framework_TestCase
   /**
    * Reseta o valor do atributo $_excludedMethods.
    *
-   * @return PHPUnit_Framework_TestCase Provê interface fluída
+   * @return PHPUnit_Framework_TestCase ProvÃª interface fluÃ­da
    */
   public function resetExcludedMethods()
   {
@@ -83,7 +83,7 @@ abstract class UnitBaseTest extends PHPUnit_Framework_TestCase
   }
 
   /**
-   * Remove os métodos indicados por setExcludedMethods() da lista de métodos
+   * Remove os mÃ©todos indicados por setExcludedMethods() da lista de mÃ©todos
    * a serem mockados.
    *
    * @param array $methods
@@ -101,10 +101,10 @@ abstract class UnitBaseTest extends PHPUnit_Framework_TestCase
   }
 
   /**
-   * Retorna um objeto mock do PHPUnit, alterando os valores padrões dos
-   * parâmetros $call* para FALSE.
+   * Retorna um objeto mock do PHPUnit, alterando os valores padrÃµes dos
+   * parÃ¢metros $call* para FALSE.
    *
-   * Faz uma limpeza da lista de métodos a serem mockados ao chamar
+   * Faz uma limpeza da lista de mÃ©todos a serem mockados ao chamar
    * _cleanMockMethodList().
    *
    * @param  string  $className
@@ -143,18 +143,18 @@ abstract class UnitBaseTest extends PHPUnit_Framework_TestCase
   }
 
   /**
-   * Retorna um mock da classe de conexão clsBanco.
+   * Retorna um mock da classe de conexÃ£o clsBanco.
    * @return clsBanco
    */
   public function getDbMock()
   {
-    // Cria um mock de clsBanco, preservando o código do método formatValues
+    // Cria um mock de clsBanco, preservando o cÃ³digo do mÃ©todo formatValues
     return $this->setExcludedMethods(array('formatValues'))
                 ->getCleanMock('clsBanco');
   }
 
   /**
-   * Controla o buffer de saída.
+   * Controla o buffer de saÃ­da.
    * @param  bool $enable
    * @return bool|string
    */

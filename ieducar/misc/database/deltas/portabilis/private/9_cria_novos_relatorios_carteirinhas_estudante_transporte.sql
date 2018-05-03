@@ -2,7 +2,7 @@
 
  	--
  	-- Cria menu Carteiras, organiza os menus.
-	-- Cria relatórios: Carteira de Estudante e Carteira de Transporte.
+	-- Cria relatÃ³rios: Carteira de Estudante e Carteira de Transporte.
 	-- @author   Ricardo Bortolotto Dagostim <ricardo@portabilis.com.br>
  	-- @license  @@license@@
  	-- @version  $Id$

@@ -37,7 +37,12 @@ require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
 require_once 'lib/Portabilis/Utils/Database.php';
 
-class AreaConhecimentoController extends ApiCoreController {
+/**
+ * Class AreaConhecimentoController
+ * @deprecated Essa versão da API pública será descontinuada
+ */
+class AreaConhecimentoController extends ApiCoreController
+{
 
     function canGetAreasDeConhecimento(){
         return  $this->validatesPresenceOf('instituicao_id');

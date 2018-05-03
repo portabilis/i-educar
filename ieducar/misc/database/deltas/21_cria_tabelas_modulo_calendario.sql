@@ -1,9 +1,9 @@
 -- //
 
 --
--- Cria as tabelas para o mÛdulo Calend·rio.
+-- Cria as tabelas para o m√≥dulo Calend√°rio.
 --
--- @author   Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+-- @author   Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
 -- @license  @@license@@
 -- @version  $Id$
 --

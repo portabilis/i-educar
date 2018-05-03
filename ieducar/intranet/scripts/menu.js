@@ -3,8 +3,8 @@ var array_id = new Array();
 var dentro = 0;
 var div_mostrar = "menu_suspenso";
 
-var chars = new Array( 	"√", "¬", "¡", "¿", "ƒ", 	"…", " ", "»", "À", 	"Õ", "Ã", "œ", "Œ", 	"‘", "’", "”", "“", "÷", 	"⁄", "Ÿ", "€", "‹", 	"›",  		"—", 	"«",
-						"„", "‚", "·", "‡", "‰", 	"È", "Í", "Ë", "Î", 	"Ì", "Ï", "Ô", "Ó", 	"Ù", "ı", "Û", "Ú", "ˆ", 	"˙", "˘", "˚", "¸", 	"˝",  		"Ò", 	"Á"
+var chars = new Array( 	"√É", "√Ç", "√Å", "√Ä", "√Ñ", 	"√â", "√ä", "√à", "√ã", 	"√ç", "√å", "√è", "√é", 	"√î", "√ï", "√ì", "√í", "√ñ", 	"√ö", "√ô", "√õ", "√ú", 	"√ù",  		"√ë", 	"√á",
+						"√£", "√¢", "√°", "√†", "√§", 	"√©", "√™", "√®", "√´", 	"√≠", "√¨", "√Ø", "√Æ", 	"√¥", "√µ", "√≥", "√≤", "√∂", 	"√∫", "√π", "√ª", "√º", 	"√Ω",  		"√±", 	"√ß"
 );
 var troca = new Array( 	"&Atilde;", "&Acirc;", "&Aacute;", "&Agrave;", "&Auml;", 	"&Eacute;", "&Ecirc;", "&Egrave;", "&Euml;", 	"&Iacute;", "&Igrave;", "&Iuml;", "&Icirc;", 	"&Ocirc;", "&Otilde;", "&Oacute;", "&Ograve;", "&Ouml;", 	"&Uacute;", "&Ugrave;", "&Ucirc;", "&Uuml;", 	"&Yacute;", 	"&Ntilde;", 	"&Ccedil;",
 						"&atilde;", "&acirc;", "&aacute;", "&agrave;", "&auml;", 	"&eacute;", "&ecirc;", "&egrave;", "&euml;", 	"&iacute;", "&igrave;", "&iuml;", "&icirc;", 	"&ocirc;", "&otilde;", "&oacute;", "&ograve;", "&ouml;", 	"&uacute;", "&ugrave;", "&ucirc;", "&uuml;", 	"&yacute;", 	"&ntilde;", 	"&ccedil;"
@@ -1023,7 +1023,7 @@ function enableSelect()
 	{
 		for(var i = 0; i< document.getElementsByTagName("select").length; i++)
 		{
-			//adicionado para corrigir problema de selects que s„o escondidos em outros scripts do sistema
+			//adicionado para corrigir problema de selects que s√£o escondidos em outros scripts do sistema
 			var sel = document.getElementsByTagName("select").item(i);
 			while(sel.nodeName != "TR" && sel.parentNode.nodeName != "TABLE" && sel.parentNode.nodeName != "BODY")
 				sel = sel.parentNode;
@@ -1296,7 +1296,7 @@ function MontaMenu()
 				// Percorre Menu Formatado
 				for(var j=0; j < menu_formatado.length; j++)
 				{
-					// Verifica se algum menu tem o cÔøΩdigo do pai do menu atual
+					// Verifica se algum menu tem o c√Ø¬ø¬Ωdigo do pai do menu atual
 					if(menu_formatado[j][2] == cod_menu_pai)
 					{
 						nivel_pai = menu_formatado[j][0];

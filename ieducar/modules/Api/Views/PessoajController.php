@@ -36,6 +36,10 @@ require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
 
+/**
+ * Class PessoajController
+ * @deprecated Essa versão da API pública será descontinuada
+ */
 class PessoajController extends ApiCoreController
 {
 

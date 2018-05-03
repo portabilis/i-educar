@@ -1,13 +1,13 @@
  	-- //
   
  	--
- 	-- Cria os relatÛrios Gr·ficos Alunos Matriculados por Escola e Alunos que utilizam Transporte.
+ 	-- Cria os relat√≥rios Gr√°ficos Alunos Matriculados por Escola e Alunos que utilizam Transporte.
 	-- @author   Ricardo Bortolotto Dagostim <ricardo@portabilis.com.br>
  	-- @license  @@license@@
  	-- @version  $Id$ 
 
 
-  insert into pmicontrolesis.menu values(999303,NULL,21126,'Gr·ficos',4,NULL,'_self',1,15,24);
+  insert into pmicontrolesis.menu values(999303,NULL,21126,'Gr√°ficos',4,NULL,'_self',1,15,24);
 
   insert into portal.menu_submenu values(999610,55,2,'Alunos Matriculados por Escola','portabilis_relacao_alunos_matriculados_por_escola_grafico.php',NULL,3);
   insert into portal.menu_funcionario values(1,0,0,999610);

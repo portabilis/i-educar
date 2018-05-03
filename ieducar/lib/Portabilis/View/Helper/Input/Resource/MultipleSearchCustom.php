@@ -65,9 +65,7 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchCustom extends Portabi
 
     $json = json_encode($options['options']['options']['values']);
 
-    $js .= "var elementName = '". $options['objectName'] ."';
-
-            var value = " . $json . ";";
+    $js .= 'arrayOptions.push({element : $j("#'. $options['objectName'] .'"),values : '. $json .'})';
 
     Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js, $afterReady = false);
   }

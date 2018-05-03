@@ -1,31 +1,31 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     Avaliacao
  * @subpackage  UnitTests
- * @since       Arquivo disponÌvel desde a vers„o 1.1.0
+ * @since       Arquivo dispon√≠vel desde a vers√£o 1.1.0
  * @version     $Id$
  */
 
@@ -69,70 +69,70 @@ require_once 'Avaliacao/Service/Boletim.php';
 /**
  * Avaliacao_Service_TestCommon abstract class.
  *
- * Configura o service Avaliacao_Service_Boletim com mocks de suas dependÍncias
+ * Configura o service Avaliacao_Service_Boletim com mocks de suas depend√™ncias
  * para que seja mais simples o processo de teste dos diversos comportamentos.
- * A configuraÁ„o b·sica segue o melhor cen·rio: as inst‚ncias de
- * Avaliacao_Model_NotaAluno e Avaliacao_Model_FaltaAluno existir„o. Nenhuma
- * nota, mÈdia ou falta ter· sido lanÁada.
+ * A configura√ß√£o b√°sica segue o melhor cen√°rio: as inst√¢ncias de
+ * Avaliacao_Model_NotaAluno e Avaliacao_Model_FaltaAluno existir√£o. Nenhuma
+ * nota, m√©dia ou falta ter√° sido lan√ßada.
  *
- * Alguns mÈtodos podem ser sobrescritos para que os mocks retornem o
- * comportamento desejado para a sess„o de testes (como os mÈtodos
+ * Alguns m√©todos podem ser sobrescritos para que os mocks retornem o
+ * comportamento desejado para a sess√£o de testes (como os m√©todos
  * _getMatricula(), _getSerie()) ou, pode-se usar o setter _setConfigOption()
  * para alterar apenas um dos valores default da classe.
  *
- * A configuraÁ„o padr„o do service È constituÌda de:
- * - CÛdigo do usu·rio: 1
- * - CÛdigo de matrÌcula: 1
- * - RegraAvaliacao_Model_RegraDataMapper: configuraÁ„o ampla. Ver o array
- *   $_regraOptions e o mÈtodo _setRegraOption para entender a configuraÁ„o
- *   da inst‚ncia
+ * A configura√ß√£o padr√£o do service √© constitu√≠da de:
+ * - C√≥digo do usu√°rio: 1
+ * - C√≥digo de matr√≠cula: 1
+ * - RegraAvaliacao_Model_RegraDataMapper: configura√ß√£o ampla. Ver o array
+ *   $_regraOptions e o m√©todo _setRegraOption para entender a configura√ß√£o
+ *   da inst√¢ncia
  * - ComponenteCurricular_Model_ComponenteDataMapper: mock que retorna
- *   diferentes inst‚ncias de ComponenteCurricular_Model_Componente em cada
- *   chamada. Essas inst‚ncias s„o definidas na opÁ„o 'componenteCurricular'
+ *   diferentes inst√¢ncias de ComponenteCurricular_Model_Componente em cada
+ *   chamada. Essas inst√¢ncias s√£o definidas na op√ß√£o 'componenteCurricular'
  *   do array $_config. Esses componentes correspondem com os valores
- *   retornados pelos mocks de classes legadas (configuradas nos mÈtodos
+ *   retornados pelos mocks de classes legadas (configuradas nos m√©todos
  *   _setUp*Mock()
- * - Avaliacao_Model_NotaAlunoDataMapper: mock que retorna uma inst‚ncia
- *   de Avaliacao_Model_NotaAluno com as configuraÁıes padr„o
+ * - Avaliacao_Model_NotaAlunoDataMapper: mock que retorna uma inst√¢ncia
+ *   de Avaliacao_Model_NotaAluno com as configura√ß√µes padr√£o
  * - Avaliacao_Model_NotaComponenteDataMapper: mock que retorna um array
- *   vazio. N„o existem notas lanÁadas para o aluno
+ *   vazio. N√£o existem notas lan√ßadas para o aluno
  * - Avaliacao_Model_NotaComponenteMediaDataMapper: mock que retorna um array
- *   vazio. N„o existem mÈdias lanÁadas para o aluno
- * - Avaliacao_Model_FaltaAlunoDataMapper: mock que retorna uma inst‚ncia
- *   de Avaliacao_Model_FaltaAluno com as configuraÁıes padr„o
+ *   vazio. N√£o existem m√©dias lan√ßadas para o aluno
+ * - Avaliacao_Model_FaltaAlunoDataMapper: mock que retorna uma inst√¢ncia
+ *   de Avaliacao_Model_FaltaAluno com as configura√ß√µes padr√£o
  * - Avaliacao_Model_FaltaAbstractDataMapper: mock que retorna um array
- *   vazio. N„o existem faltas lanÁadas para o aluno.
- *   OBSERVA«√O: mÈtodos que sobrescreverem este, devem estar conscientes de
- *   que È necess·rio configurar o mock para retornar objeto(s) de acordo
- *   com o 'tipoPresenca' da inst‚ncia de 'RegraAvaliacao_Model_Regra'. Ver o
- *   array $_regraOptions para mais informaÁıes.
+ *   vazio. N√£o existem faltas lan√ßadas para o aluno.
+ *   OBSERVA√á√ÉO: m√©todos que sobrescreverem este, devem estar conscientes de
+ *   que √© necess√°rio configurar o mock para retornar objeto(s) de acordo
+ *   com o 'tipoPresenca' da inst√¢ncia de 'RegraAvaliacao_Model_Regra'. Ver o
+ *   array $_regraOptions para mais informa√ß√µes.
  *
- * Outro ponto fundamental È entender que boa parte da inicializaÁ„o do service
- * constitui a chamadas de inst‚ncias das classes legadas, encapsuladas nos
- * mÈtodos de App_Model_IedFinder. Estes s„o configurados nos mÈtodos
- * _setUp*Mock(). Para alterar o comportamento desses mÈtodos, existem duas
- * opÁıes:
+ * Outro ponto fundamental √© entender que boa parte da inicializa√ß√£o do service
+ * constitui a chamadas de inst√¢ncias das classes legadas, encapsuladas nos
+ * m√©todos de App_Model_IedFinder. Estes s√£o configurados nos m√©todos
+ * _setUp*Mock(). Para alterar o comportamento desses m√©todos, existem duas
+ * op√ß√µes:
  *
- * - Chamar o mÈtodo _setConfigOptions() ou setConfigOption em uma sobrescriÁ„o
+ * - Chamar o m√©todo _setConfigOptions() ou setConfigOption em uma sobrescri√ß√£o
  * de setUp()
- * - Sobrescrever o mÈtodo
+ * - Sobrescrever o m√©todo
  *
- * Recomenda-se usar os mÈtodos _setConfigOption e _setRegraOption a
- * sobrescrever os mÈtodos j· que proporcionam mais possibilidade de
- * configuraÁ„o para cada mÈtodo de teste.
+ * Recomenda-se usar os m√©todos _setConfigOption e _setRegraOption a
+ * sobrescrever os m√©todos j√° que proporcionam mais possibilidade de
+ * configura√ß√£o para cada m√©todo de teste.
  *
- * @author      Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     Avaliacao
  * @subpackage  UnitTests
- * @since       Classe disponÌvel desde a vers„o 1.1.0
+ * @since       Classe dispon√≠vel desde a vers√£o 1.1.0
  * @version     @@package_version@@
  */
 abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
 {
   /**
-   * Array com as diretrizes de configuraÁ„o para uso nas dependÍncias de
+   * Array com as diretrizes de configura√ß√£o para uso nas depend√™ncias de
    * Avaliacao_Service_Boletim.
    * @var array
    */
@@ -144,23 +144,23 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
   protected $_regraDataMapperMock = NULL;
 
   /**
-   * OpÁıes de configuraÁ„o para RegraAvaliacao_Model_RegraDataMapper. Por
-   * padr„o, a regra ter·:
+   * Op√ß√µes de configura√ß√£o para RegraAvaliacao_Model_RegraDataMapper. Por
+   * padr√£o, a regra ter√°:
    *
    * - Identificador "1"
    * - Nome "Regra geral"
-   * - Tipo de nota numÈrica
-   * - Progress„o continuada
-   * - PresenÁa por componente
+   * - Tipo de nota num√©rica
+   * - Progress√£o continuada
+   * - Presen√ßa por componente
    * - Nenhum parecer descritivo
-   * - MÈdia para promoÁ„o de "6"
+   * - M√©dia para promo√ß√£o de "6"
    * - Tabela de arredondamento com valores de 0 a 10
-   * - FÛrmula de mÈdia aritmÈtica simples (Soma etapas / Qtde etapas)
-   * - FÛrmula de recuperaÁ„o ponderada (Soma etapas x 0.6 + RecuperaÁ„o x 0.4)
-   * - Porcentagem de presenÁa mÌnima de "75%"
+   * - F√≥rmula de m√©dia aritm√©tica simples (Soma etapas / Qtde etapas)
+   * - F√≥rmula de recupera√ß√£o ponderada (Soma etapas x 0.6 + Recupera√ß√£o x 0.4)
+   * - Porcentagem de presen√ßa m√≠nima de "75%"
    *
-   * Para alterar algum desses valores, basta usar o mÈtodo
-   * _setRegraOption($key, $value) onde $key È a chave do array e $value o valor
+   * Para alterar algum desses valores, basta usar o m√©todo
+   * _setRegraOption($key, $value) onde $key √© a chave do array e $value o valor
    * a ser usado.
    *
    * @var array
@@ -199,8 +199,8 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
 
   protected function setUp()
   {
-    // Armazena valores de configuraÁ„o para serem usados nas diferentes
-    // inst‚ncias de objetos legados e novos
+    // Armazena valores de configura√ß√£o para serem usados nas diferentes
+    // inst√¢ncias de objetos legados e novos
     $this->_setConfigOptions('usuario', array('cod_usuario' => 1))
          ->_setConfigOptions('matricula', $this->_getMatricula())
          ->_setConfigOptions('matriculaTurma', $this->_getMatriculaTurma())
@@ -225,7 +225,7 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
 
   protected function _getServiceInstance()
   {
-    // Configura mappers das dependÍncias de Avalilacao_Service_Boletim
+    // Configura mappers das depend√™ncias de Avalilacao_Service_Boletim
     $mappers = array(
       'RegraDataMapper'                     => $this->_getRegraDataMapperMock(),
       'ComponenteDataMapper'                => $this->_getComponenteDataMapperMock(),
@@ -257,7 +257,7 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
   }
 
   /**
-   * Getter. Retorna o array de opÁıes para a inicializaÁ„o do service.
+   * Getter. Retorna o array de op√ß√µes para a inicializa√ß√£o do service.
    * @return array
    */
   protected function _getServiceOptions()
@@ -291,7 +291,7 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
 
     $this->_config[$namespace] = array();
 
-    // Chama _setConfigOption() para n„o sobrescrever opÁıes j· configuradas
+    // Chama _setConfigOption() para n√£o sobrescrever op√ß√µes j√° configuradas
     foreach ($data as $key => $value) {
       $this->_setConfigOption($namespace, $key, $value);
     }
@@ -443,9 +443,9 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
   }
 
   /**
-   * Retorna um array com as possÌveis etapas a serem cursadas.
+   * Retorna um array com as poss√≠veis etapas a serem cursadas.
    * @return array
-   * @todo Condicionar o retorno de 'Rc' caso exista recuperaÁ„o na Regra
+   * @todo Condicionar o retorno de 'Rc' caso exista recupera√ß√£o na Regra
    */
   protected function _getEtapasPossiveis()
   {
@@ -489,16 +489,16 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
   {
     return array(
       1 => new ComponenteCurricular_Model_Componente(
-        array('id' => 1, 'nome' => 'Matem·tica', 'cargaHoraria' => 100)
+        array('id' => 1, 'nome' => 'Matem√°tica', 'cargaHoraria' => 100)
       ),
       2 => new ComponenteCurricular_Model_Componente(
-        array('id' => 2, 'nome' => 'PortuguÍs', 'cargaHoraria' => 100)
+        array('id' => 2, 'nome' => 'Portugu√™s', 'cargaHoraria' => 100)
       ),
       3 => new ComponenteCurricular_Model_Componente(
-        array('id' => 3, 'nome' => 'CiÍncias', 'cargaHoraria' => 60)
+        array('id' => 3, 'nome' => 'Ci√™ncias', 'cargaHoraria' => 60)
       ),
       4 => new ComponenteCurricular_Model_Componente(
-        array('id' => 4, 'nome' => 'FÌsica', 'cargaHoraria' => 60)
+        array('id' => 4, 'nome' => 'F√≠sica', 'cargaHoraria' => 60)
       )
     );
   }
@@ -721,8 +721,8 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
 
   /**
    * Configura e retorna um mock de RegraAvaliacaoDataMapper que retorna uma
-   * inst‚ncia de RegraAvaliacao_Model_Regra configurada de acordo com as
-   * opÁıes do array $_regraOptions.
+   * inst√¢ncia de RegraAvaliacao_Model_Regra configurada de acordo com as
+   * op√ß√µes do array $_regraOptions.
    *
    * @return RegraAvaliacao_Model_RegraDataMapper
    */
@@ -740,7 +740,7 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
   }
 
   /**
-   * Configura uma das opÁıes a serem passadas durante a instanciaÁ„o de
+   * Configura uma das op√ß√µes a serem passadas durante a instancia√ß√£o de
    * RegraAvaliacao_Model_Regra.
    *
    * @param string $key
@@ -780,7 +780,7 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
   {
     return new FormulaMedia_Model_Formula(array(
       'id'           => 1,
-      'nome'         => 'MÈdia aritmÈtica',
+      'nome'         => 'M√©dia aritm√©tica',
       'formulaMedia' => 'Se / Et',
       'tipoFormula'  => FormulaMedia_Model_TipoFormula::MEDIA_FINAL
     ));
@@ -793,7 +793,7 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
   {
     return new FormulaMedia_Model_Formula(array(
       'id'           => 1,
-      'nome'         => 'MÈdia ponderada',
+      'nome'         => 'M√©dia ponderada',
       'formulaMedia' => '(Se / Et * 0.6) + (Rc * 0.4)',
       'tipoFormula'  => FormulaMedia_Model_TipoFormula::MEDIA_RECUPERACAO
     ));
@@ -804,7 +804,7 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
    */
   protected function _setUpTabelaArredondamento()
   {
-    // Valores padr„o dos atributos de TabelaArredondamento_Model_TabelaValor
+    // Valores padr√£o dos atributos de TabelaArredondamento_Model_TabelaValor
     $data = array(
       'tabelaArredondamento' => 1,
       'nome'                 => NULL,
@@ -836,7 +836,7 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     $tabelaDataMapper = new TabelaArredondamento_Model_TabelaDataMapper();
     $tabelaDataMapper->setTabelaValorDataMapper($mock);
 
-    $tabela = new TabelaArredondamento_Model_Tabela(array('nome' => 'NumÈricas'));
+    $tabela = new TabelaArredondamento_Model_Tabela(array('nome' => 'Num√©ricas'));
     $tabela->setDataMapper($tabelaDataMapper);
 
     return $tabela;
