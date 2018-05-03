@@ -577,12 +577,11 @@ abstract class CoreExt_DataMapper
     // INSERT ou UPDATE. A instância precisa ser marcada explicitamente
     // como "old" para que UPDATE seja chamado.
     $hasValuePk = true;
-    if (1 < count($this->_primaryKey)) {
-      foreach ($this->_primaryKey as $key => $pk) {
-        $value = $instance->get($key);
-        if (!isset($value)) {
-          $hasValuePk = false;
-        }
+
+    foreach ($this->_primaryKey as $key => $pk) {
+      $value = $instance->get($key);
+      if (!isset($value)) {
+        $hasValuePk = false;
       }
     }
 
