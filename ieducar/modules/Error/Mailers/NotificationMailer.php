@@ -43,6 +43,7 @@ class NotificationMailer extends Portabilis_Mailer
 
       $to      = self::notificationEmail();
       $subject = "[Erro inesperado bd] i-Educar - " . self::host();
+      $trace = self::stackTrace();
       $message = "Olá!\n\n"                                                             .
                  "Ocorreu um erro inesperado no banco de dados, detalhes abaixo:\n\n"   .
                  "  ERRO APP: ' . $appError\n"                                          .
@@ -51,6 +52,7 @@ class NotificationMailer extends Portabilis_Mailer
                  "  LINHA {$lastError['line']} em {$lastError['file']}\n"               .
                  "  SQL: {$sql}\n"                                                      .
                  "  ID USUÁRIO {$userId}\n"                                             .
+                 "  TRACE: \n $trace \n"                                                .
                  "\n\n-\n\n"                                                            .
                  "Você recebeu este email pois seu email foi configurado para receber " .
                  "notificações de erros.";
@@ -67,12 +69,14 @@ class NotificationMailer extends Portabilis_Mailer
 
       $to      = self::notificationEmail();
       $subject = "[Erro inesperado] i-Educar - " . self::host();
+      $trace = self::stackTrace();
       $message = "Olá!\n\n"                                                             .
                  "Ocorreu um erro inesperado, detalhes abaixo:\n\n"                     .
                  "  ERRO APP: ' . $appError\n"                                          .
                  "  ERRO PHP: ' . {$lastError['message']}\n"                            .
                  "  LINHA {$lastError['line']} em {$lastError['file']}\n"               .
                  "  USUÁRIO {$user['matricula']} email {$user['email']}\n"              .
+                 "  TRACE: \n $trace \n"                                                .
                  "\n\n-\n\n"                                                            .
                  "Você recebeu este email pois seu email foi configurado para receber " .
                  "notificações de erros.";
@@ -113,5 +117,27 @@ class NotificationMailer extends Portabilis_Mailer
     }
 
     return $user;
+  }
+
+  protected static function stackTrace() {
+        $stack = debug_backtrace();
+        $output = '';
+
+        $stackLen = count($stack);
+        for ($i = 1; $i < $stackLen; $i++) {
+            $entry = $stack[$i];
+
+            $func = $entry['function'] . '(';
+            $argsLen = count($entry['args']);
+            for ($j = 0; $j < $argsLen; $j++) {
+                $func .= $entry['args'][$j];
+                if ($j < $argsLen - 1) $func .= ', ';
+            }
+            $func .= ')';
+
+            $output .= '#' . ($i - 1) . ' ' . $entry['file'] . ':' . $entry['line'] . ' - ' . $func . PHP_EOL;
+        }
+
+        return $output;
   }
 }
