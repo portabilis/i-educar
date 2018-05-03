@@ -149,6 +149,11 @@ function montaUrlLaudoMedico() {
     $j('#url_laudo_medico').val('[' + url + ']');
 }
 
+function codigoInepInvalido() {
+    $j('#aluno_inep_id').addClass('error');
+    messageUtils.error('O código INEP do aluno deve conter 12 dígitos');
+}
+
 function certidaoNascimentoInvalida() {
     $j('#certidao_nascimento').addClass('error');
     messageUtils.error('O campo referente a certidão de nascimento deve conter exatos 32 dígitos.');
@@ -161,6 +166,12 @@ function certidaoCasamentoInvalida() {
 }
 
 var newSubmitForm = function (event) {
+    var codigoInep = $j('#aluno_inep_id').val();
+
+    if (codigoInep && codigoInep.length != 12) {
+        return codigoInepInvalido();
+    }
+
     if ($j('#deficiencias').val().length > 1) {
         if ($j('#url_laudo_medico_obrigatorio').length > 0 && $j('#url_laudo_medico').val().length < 1) {
             return laudoMedicoObrigatorio();

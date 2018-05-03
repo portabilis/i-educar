@@ -427,7 +427,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $this->inputsHelper()->integer('id', $options);
 
         // código aluno inep
-        $options = array('label' => $this->_getLabel('aluno_inep_id'), 'required' => false, 'size' => 25, 'max_length' => 14);
+        $options = array('label' => $this->_getLabel('aluno_inep_id'), 'required' => false, 'size' => 25, 'max_length' => 12);
 
         if ($labels_botucatu) {
             $this->inputsHelper()->hidden('aluno_inep_id', array('value' => null));
