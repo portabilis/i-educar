@@ -17,10 +17,10 @@
               })(window,document,'script','dataLayer','<!-- #&GOOGLE_TAG_MANAGER_ID&# -->');</script>
   <!-- End Google Tag Manager -->
 
-  <link rel=stylesheet type='text/css' href='styles/main.css?5' />
-  <link rel=stylesheet type='text/css' href='styles/styles.css?5' />
-  <link rel=stylesheet type='text/css' href='styles/novo.css?5' />
-  <link rel=stylesheet type='text/css' href='styles/menu.css?5' />
+  <link rel=stylesheet type='text/css' href='/intranet/styles/main.css?5' />
+  <link rel=stylesheet type='text/css' href='/intranet/styles/styles.css?5' />
+  <link rel=stylesheet type='text/css' href='/intranet/styles/novo.css?5' />
+  <link rel=stylesheet type='text/css' href='/intranet/styles/menu.css?5' />
   
   <link rel=stylesheet type='text/css' href='/intranet/styles/font-awesome.css?5' />
   <!--link rel=stylesheet type='text/css' href='styles/reset.css?5' />
