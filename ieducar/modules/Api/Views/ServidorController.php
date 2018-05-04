@@ -108,7 +108,12 @@ class ServidorController extends ApiCoreController
                      pt.turma_id,
                      pt.permite_lancar_faltas_componente as permite_lancar_faltas_componente,
                      ptd.componente_curricular_id as disciplina_id,
-                     ccae.tipo_nota,
+                     CASE
+                       WHEN ccae.tipo_nota IN (1,2) THEN
+                         ccae.tipo_nota
+                       ELSE
+                         NULL
+                     END AS tipo_nota,
                      pt.updated_at as updated_at
               FROM pmieducar.servidor s
               INNER JOIN cadastro.pessoa p ON s.cod_servidor = p.idpes
