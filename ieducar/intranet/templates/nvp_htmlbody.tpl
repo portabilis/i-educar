@@ -2,7 +2,6 @@
 <tr id="topo" class="topo">
 	<td class="logo" align="left"><a style="color:#FFF; text-decoration: none;" href="/">i-Educar</a></td>
 	<td id="perfil-user-id" class="perfil-user" align="right">
-		<!-- #&ICONE_COMPASS&# -->
 		<a class="icons-top" href="#">
 			<img id="notificacao" src="/intranet/imagens/icon-nav-notifications.png">
 		</a>

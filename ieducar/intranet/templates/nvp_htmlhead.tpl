@@ -9,6 +9,13 @@
 
   <title><!-- #&TITULO&# --></title>
 
+  <script>
+    dataLayer = [{
+      'user_name': '<!-- #&USERLOGADO&# -->',
+      'user_email': '<!-- #&USEREMAIL&# -->'
+    }];
+  </script>
+
   <!-- Google Tag Manager -->
   <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
       new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -21,7 +28,7 @@
   <link rel=stylesheet type='text/css' href='/intranet/styles/styles.css?5' />
   <link rel=stylesheet type='text/css' href='/intranet/styles/novo.css?5' />
   <link rel=stylesheet type='text/css' href='/intranet/styles/menu.css?5' />
-  
+
   <link rel=stylesheet type='text/css' href='/intranet/styles/font-awesome.css?5' />
   <!--link rel=stylesheet type='text/css' href='styles/reset.css?5' />
   <link rel=stylesheet type='text/css' href='styles/portabilis.css?5' /-->
