@@ -40,6 +40,10 @@ require_once 'include/modules/clsModulesComponenteCurricularAnoEscolar.inc.php';
 require_once 'include/pmieducar/clsPmieducarEscolaSerieDisciplina.inc.php';
 require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
 
+/**
+ * Class ComponentesSerieController
+ * @deprecated Essa versão da API pública será descontinuada
+ */
 class ComponentesSerieController extends ApiCoreController
 {
 

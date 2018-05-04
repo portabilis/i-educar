@@ -391,7 +391,7 @@ class App_Model_IedFinder extends CoreExt_Entity
    */
   public static function getEscolaSerieDisciplina($serieId, $escolaId,
     ComponenteCurricular_Model_ComponenteDataMapper $mapper = NULL,
-    $disciplinaId = null, $etapa = null)
+    $disciplinaId = null, $etapa = null, $trazerDetalhes = true)
   {
     if (is_null($serieId))
       throw new App_Model_Exception('O parametro serieId não pode ser nulo');
@@ -421,8 +421,11 @@ class App_Model_IedFinder extends CoreExt_Entity
 
       $componentes[] = $componente;
     }
-
-    return self::_hydrateComponentes($componentes, $serieId, $mapper);
+    if($trazerDetalhes){
+        return self::_hydrateComponentes($componentes, $serieId, $mapper);
+    }else{
+        return $componentes;
+    }
   }
 
   /**
@@ -442,7 +445,7 @@ class App_Model_IedFinder extends CoreExt_Entity
   public static function getComponentesTurma($serieId, $escola, $turma,
     ComponenteCurricular_Model_TurmaDataMapper $mapper = NULL,
     ComponenteCurricular_Model_ComponenteDataMapper $componenteMapper = NULL,
-    $componenteCurricularId = null, $etapa = null)
+    $componenteCurricularId = null, $etapa = null, $trazerDetalhes = true)
   {
     if (is_null($mapper)) {
       require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
@@ -458,7 +461,8 @@ class App_Model_IedFinder extends CoreExt_Entity
 
     // Não existem componentes específicos para a turma
     if (0 == count($componentesTurma)) {
-      return self::getEscolaSerieDisciplina($serieId, $escola, $componenteMapper, $componenteCurricularId, $etapa);
+      return self::getEscolaSerieDisciplina($serieId, $escola, $componenteMapper,
+        $componenteCurricularId, $etapa, $trazerDetalhes);
     }
 
     $componentes = array();
@@ -482,7 +486,11 @@ class App_Model_IedFinder extends CoreExt_Entity
       }
     }
 
-    return self::_hydrateComponentes($componentes, $serieId, $componenteMapper);
+    if($trazerDetalhes){
+        return self::_hydrateComponentes($componentes, $serieId, $componenteMapper);
+    }else{
+        return $componentes;
+    }
   }
 
   /**
@@ -532,55 +540,81 @@ class App_Model_IedFinder extends CoreExt_Entity
    */
   public static function getMatricula($codMatricula)
   {
-    // Recupera clsPmieducarMatricula do storage de classe estático
-    $matricula = self::addClassToStorage('clsPmieducarMatricula', NULL,
-      'include/pmieducar/clsPmieducarMatricula.inc.php');
 
-    $turma = self::addClassToStorage('clsPmieducarMatriculaTurma', NULL,
-      'include/pmieducar/clsPmieducarMatriculaTurma.inc.php');
+    $sql = ' SELECT m.cod_matricula,
+                   m.ref_cod_reserva_vaga,
+                   m.ref_ref_cod_escola,
+                   m.ref_ref_cod_serie,
+                   m.ref_usuario_exc,
+                   m.ref_usuario_cad,
+                   m.ref_cod_aluno,
+                   m.aprovado,
+                   m.data_cadastro,
+                   m.data_exclusao,
+                   m.ativo,
+                   m.ano,
+                   m.ultima_matricula,
+                   m.modulo,
+                   formando,
+                   descricao_reclassificacao,
+                   matricula_reclassificacao,
+                   m.ref_cod_curso,
+                   m.matricula_transferencia,
+                   m.semestre,
+                   m.data_matricula,
+                   m.data_cancel,
+                   m.ref_cod_abandono_tipo,
+                   m.turno_pre_matricula,
+                   m.dependencia,
+                   data_saida_escola,
+                   turno_id,
+                   p.nome,
+                   (p.nome) AS nome_upper,
+                   e.ref_cod_instituicao,
+                   mt.ref_cod_turma,
+                   t.nm_turma,
+                   c.carga_horaria AS curso_carga_horaria,
+                   c.hora_falta AS curso_hora_falta,
+                   s.carga_horaria AS serie_carga_horaria,
+                   s.dias_letivos AS serie_dias_letivos,
+                   c.nm_curso AS curso_nome,
+                   s.nm_serie AS serie_nome,
+                   s.concluinte AS serie_concluinte,
+                   s.regra_avaliacao_diferenciada_id as serie_regra_avaliacao_diferenciada_id,
+                   s.regra_avaliacao_id as serie_regra_avaliacao_id,
+                   e.utiliza_regra_diferenciada as escola_utiliza_regra_diferenciada
 
-    $curso = self::addClassToStorage('clsPmieducarCurso', NULL,
-      'include/pmieducar/clsPmieducarCurso.inc.php');
+            FROM pmieducar.matricula m
+            JOIN pmieducar.aluno a ON a.cod_aluno = m.ref_cod_aluno
+            JOIN cadastro.pessoa p ON p.idpes = a.ref_idpes
+            JOIN pmieducar.escola e ON m.ref_ref_cod_escola = e.cod_escola
+            JOIN pmieducar.matricula_turma mt ON mt.ref_cod_matricula = m.cod_matricula
+            JOIN pmieducar.turma t ON t.cod_turma = mt.ref_cod_turma
+            JOIN pmieducar.curso c ON m.ref_cod_curso = c.cod_curso
+            JOIN pmieducar.serie s ON m.ref_ref_cod_serie = s.cod_serie
+            WHERE m.cod_matricula = $1
+              AND a.ativo = 1
+              AND (mt.ativo = 1
+                   OR (mt.transferido
+                       OR mt.remanejado
+                       OR mt.reclassificado
+                       OR mt.abandono
+                       OR mt.falecido)
+                   AND (NOT EXISTS
+                          (SELECT 1
+                           FROM pmieducar.matricula_turma
+                           WHERE matricula_turma.ativo = 1
+                             AND matricula_turma.ref_cod_matricula = mt.ref_cod_matricula
+                             AND matricula_turma.ref_cod_turma = mt.ref_cod_turma)))
+            LIMIT 1
 
-    $serie = self::addClassToStorage('clsPmieducarSerie', NULL,
-      'include/pmieducar/clsPmieducarSerie.inc.php');
+    ';
 
-    // Usa o atributo público para depois chamar o método detalhe()
-    $matricula->cod_matricula = $codMatricula;
-    $matricula = $matricula->detalhe();
+    $matricula = Portabilis_Utils_Database::selectRow($sql,array('params' => $codMatricula));;
 
-    if (FALSE === $matricula) {
-      throw new App_Model_Exception(
-        sprintf('Matrícula de código "%d" não existe.', $codMatricula)
-      );
-    }
-
-    // Atribui dados extra a matrícula
-    $turmas = $turma->lista($codMatricula, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2);
-    if (0 < count($turmas)) {
-      $turma = array_shift($turmas);
-
-      $matricula['ref_cod_turma'] = $turma['ref_cod_turma'];
-      $matricula['turma_nome']    = isset($turma['nm_turma']) ? $turma['nm_turma'] : NULL;
-    }
-    else {
+    if (!$matricula) {
       throw new App_Model_Exception('Aluno não enturmado.');
     }
-
-    $curso->cod_curso = $matricula['ref_cod_curso'];
-    $curso = $curso->detalhe();
-
-    $serie->cod_serie = $matricula['ref_ref_cod_serie'];
-    $serie = $serie->detalhe();
-
-    $matricula['curso_carga_horaria'] = $curso['carga_horaria'];
-    $matricula['curso_hora_falta']    = $curso['hora_falta'];
-    $matricula['serie_carga_horaria'] = $serie['carga_horaria'];
-    $matricula['serie_dias_letivos']  = $serie['dias_letivos'];
-
-    $matricula['curso_nome']          = isset($curso['nm_curso']) ? $curso['nm_curso'] : NULL;
-    $matricula['serie_nome']          = isset($serie['nm_serie']) ? $serie['nm_serie'] : NULL;
-    $matricula['serie_concluinte']    = isset($serie['concluinte']) ? $serie['concluinte'] : NULL;
 
     return $matricula;
   }
@@ -591,27 +625,34 @@ class App_Model_IedFinder extends CoreExt_Entity
    *
    * @param int $codMatricula
    * @param RegraAvaliacao_Model_RegraDataMapper $mapper
+   * @param array $matricula
    * @return RegraAvaliacao_Model_Regra
    * @throws App_Model_Exception
    */
   public static function getRegraAvaliacaoPorMatricula($codMatricula,
-    RegraAvaliacao_Model_RegraDataMapper $mapper = NULL)
+    RegraAvaliacao_Model_RegraDataMapper $mapper = NULL, $matricula = null)
   {
-    $matricula = self::getMatricula($codMatricula);
-    $serie     = self::getSerie($matricula['ref_ref_cod_serie']);
-    $escola     = self::getEscola($matricula['ref_ref_cod_escola']);
+    if(empty($matricula)){
+        $matricula = self::getMatricula($codMatricula);
+    }
+    $possuiDeficiencia = self::verificaSePossuiDeficiencia($matricula['ref_cod_aluno']);
 
     if (is_null($mapper)) {
       require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
       $mapper = new RegraAvaliacao_Model_RegraDataMapper();
     }
 
-    if(dbBool($escola['utiliza_regra_diferenciada']) && is_numeric($serie['regra_avaliacao_diferenciada_id']) )
-      $intRegra = $serie['regra_avaliacao_diferenciada_id'];
+    if(dbBool($matricula['escola_utiliza_regra_diferenciada']) && is_numeric($matricula['serie_regra_avaliacao_diferenciada_id']) )
+      $intRegra = $matricula['serie_regra_avaliacao_diferenciada_id'];
     else
-      $intRegra = $serie['regra_avaliacao_id'];
+      $intRegra = $matricula['serie_regra_avaliacao_id'];
 
-    return $mapper->find($intRegra);
+    $regra = $mapper->find($intRegra);
+    if($possuiDeficiencia && $regra->regraDiferenciada){
+        $regra = $regra->regraDiferenciada;
+    }
+
+    return $regra;
   }
 
   /**
@@ -659,9 +700,13 @@ class App_Model_IedFinder extends CoreExt_Entity
   public static function getComponentesPorMatricula($codMatricula,
     ComponenteCurricular_Model_ComponenteDataMapper $componenteMapper = NULL,
     ComponenteCurricular_Model_TurmaDataMapper $turmaMapper = NULL,
-    $componenteCurricularId = null, $etapa = null, $turma = null)
+    $componenteCurricularId = null, $etapa = null, $turma = null,
+    $matricula = null, $trazerDetalhes = true
+)
   {
-    $matricula = self::getMatricula($codMatricula);
+    if(empty($matricula)){
+        $matricula = self::getMatricula($codMatricula);
+    }
 
     $codEscola = $matricula['ref_ref_cod_escola'];
     $codSerie  = $matricula['ref_ref_cod_serie'];
@@ -678,7 +723,8 @@ class App_Model_IedFinder extends CoreExt_Entity
 
       // Disciplinas da escola na série em que o aluno está matriculado
       $componentes = self::getComponentesTurma(
-        $codSerie, $codEscola, $turma, $turmaMapper, $componenteMapper, $componenteCurricularId, $etapa
+        $codSerie, $codEscola, $turma, $turmaMapper, $componenteMapper,
+        $componenteCurricularId, $etapa, $trazerDetalhes
       );
 
       // Dispensas do aluno
@@ -801,14 +847,18 @@ class App_Model_IedFinder extends CoreExt_Entity
    * Retorna a quantidade de módulos do ano letivo por uma dada matrícula.
    *
    * @param  int $codMatricula
+   * @param  array $matricula
    * @return int
    */
-  public static function getQuantidadeDeModulosMatricula($codMatricula)
+  public static function getQuantidadeDeModulosMatricula($codMatricula, $matricula = null)
   {
     $modulos = array();
 
     // matricula
-    $matricula = self::getMatricula($codMatricula);
+    if(empty($matricula)){
+        $matricula = self::getMatricula($codMatricula);
+    }
+
     $codEscola = $matricula['ref_ref_cod_escola'];
     $codCurso  = $matricula['ref_cod_curso'];
     $codTurma  = $matricula['ref_cod_turma'];
@@ -1108,6 +1158,21 @@ class App_Model_IedFinder extends CoreExt_Entity
     return $resultado;
   }
 
+  public static function verificaSePossuiDeficiencia($alunoId) {
+
+    $sql = 'SELECT 1
+            FROM cadastro.fisica_deficiencia fd
+            JOIN PMIEDUCAR.ALUNO A
+            ON fd.ref_idpes = a.ref_idpes
+            JOIN cadastro.deficiencia d
+            ON d.cod_deficiencia = fd.ref_cod_deficiencia
+            WHERE a.cod_aluno = $1
+            AND d.nm_deficiencia NOT ILIKE \'nenhuma\'
+            LIMIT 1 ';
+
+    return Portabilis_Utils_Database::selectField($sql,array('params' => array($alunoId))) == 1;
+  }
+
   public static function getNotasLancadasAluno($ref_cod_matricula, $ref_cod_disciplina, $etapa) {
 
     $notas_lancadas_aluno = "SELECT na.matricula_id,
@@ -1147,11 +1212,12 @@ class App_Model_IedFinder extends CoreExt_Entity
   public static function getEscolasUser($cod_usuario) {
 
     $escolas_user = "SELECT escola_usuario.ref_cod_escola AS ref_cod_escola,
-                            juridica.fantasia AS nome,
+                            coalesce(juridica.fantasia, escola_complemento.nm_escola) AS nome,
                             escola.ref_cod_instituicao AS instituicao
                        FROM pmieducar.escola_usuario
                       INNER JOIN pmieducar.escola ON (escola.cod_escola = escola_usuario.ref_cod_escola)
-                      INNER JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
+                       LEFT JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
+                       LEFT JOIN pmieducar.escola_complemento ON (escola_complemento.ref_cod_escola = escola.cod_escola)
                       WHERE escola_usuario.ref_cod_usuario = $1";
 
     $resultado = Portabilis_Utils_Database::fetchPreparedQuery($escolas_user,array('params' => array($cod_usuario)));

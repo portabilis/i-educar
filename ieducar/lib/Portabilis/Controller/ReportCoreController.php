@@ -77,7 +77,7 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
 
 
   public function Gerar() {
-    if (count($_POST) < 1) {
+    if (count($_POST) < 1 && !isset($_GET['print_report_with_get'])) {
       $this->appendFixups();
       $this->renderForm();
     }
@@ -110,9 +110,15 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
 
 
   function headers($result) {
-    header('Content-type: application/pdf; charset=utf-8');
-    header('Content-Length: ' . strlen($result));
-    header('Content-Disposition: inline; filename=report.pdf');
+
+    header("Pragma: public");
+    header("Expires: 0");
+    header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+    header("Cache-Control: private",false);
+    header("Content-Type: application/pdf;");
+    header("Content-Disposition: inline;");
+    header("Content-Transfer-Encoding: binary");
+    header("Content-Length: " . strlen($result));
   }
 
 
@@ -130,6 +136,8 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
         throw new Exception('No report result to render!');
 
       $this->headers($result);
+      ob_clean();
+      flush();
       echo $result;
     }
     catch (Exception $e) {

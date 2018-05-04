@@ -116,13 +116,17 @@ class Portabilis_Report_ReportFactoryPHPJasper extends Portabilis_Report_ReportF
   }
 
   function showPDF($file){
-    $filename = 'relatorio.pdf';
+    header("Pragma: public");
+    header("Expires: 0");
+    header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+    header("Cache-Control: private",false);
+    header("Content-Type: application/pdf;");
+    header("Content-Disposition: inline;");
+    header("Content-Transfer-Encoding: binary");
+    header("Content-Length: ".filesize($file));
 
-    header('Content-type: application/pdf; charset=utf-8');
-    header('Content-Disposition: inline; filename="' . $filename . '"');
-    header('Content-Transfer-Encoding: binary');
-    header('Content-Length: ' . filesize($file));
-    // header('Accept-Ranges: bytes');
+    ob_clean();
+    flush();
 
     readfile($file);
   }

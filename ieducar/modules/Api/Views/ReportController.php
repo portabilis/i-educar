@@ -36,6 +36,10 @@ require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once "Reports/Reports/BoletimReport.php";
 require_once "Reports/Reports/BoletimProfessorReport.php";
 
+/**
+ * Class ReportController
+ * @deprecated Essa versão da API pública será descontinuada
+ */
 class ReportController extends ApiCoreController
 {
 
@@ -91,7 +95,7 @@ class ReportController extends ApiCoreController
       $boletimReport->addArg('curso',       (int)$dadosMatricula['curso_id']);
       $boletimReport->addArg('serie',       (int)$dadosMatricula['serie_id']);
       $boletimReport->addArg('turma',       (int)$dadosMatricula['turma_id']);
-      $boletimReport->addArg('situacao',    10);
+      $boletimReport->addArg('situacao_matricula', 10);
 
       if (CORE_EXT_CONFIGURATION_ENV == "production") {
         $boletimReport->addArg('SUBREPORT_DIR', "/sites_media_root/services/reports/jasper/");

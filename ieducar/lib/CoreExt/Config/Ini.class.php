@@ -2,56 +2,56 @@
 // error_reporting(E_ALL);
 // ini_set("display_errors", 1);
 /*
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gestÃ£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de ItajaÃ­
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa Ã© software livre; vocÃª pode redistribuÃ­-lo e/ou modificÃ¡-lo
+ * sob os termos da LicenÃ§a PÃºblica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versÃ£o 2 da LicenÃ§a, como (a seu critÃ©rio)
+ * qualquer versÃ£o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa Ã© distribuÃ­Â­do na expectativa de que seja Ãºtil, porÃ©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implÃ­Â­cita de COMERCIABILIDADE OU
+ * ADEQUAÃ‡ÃƒO A UMA FINALIDADE ESPECÃFICA. Consulte a LicenÃ§a PÃºblica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * VocÃª deve ter recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral do GNU junto
+ * com este programa; se nÃ£o, escreva para a Free Software Foundation, Inc., no
+ * endereÃ§o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  */
 
 /**
  * CoreExt_Config_Ini class.
  *
- * Essa classe torna possível o uso de um arquivo .ini como meio de configuração
- * da aplicação. O parsing do arquivo é feito através da função PHP nativa
- * parse_ini_file. Possibilita o uso de herança simples e separação de
- * namespaces no arquivo ini, tornando simples a criação de diferentes espaços
- * de configuração para o uso em ambientes diversos como produção,
+ * Essa classe torna possÃ­vel o uso de um arquivo .ini como meio de configuraÃ§Ã£o
+ * da aplicaÃ§Ã£o. O parsing do arquivo Ã© feito atravÃ©s da funÃ§Ã£o PHP nativa
+ * parse_ini_file. Possibilita o uso de heranÃ§a simples e separaÃ§Ã£o de
+ * namespaces no arquivo ini, tornando simples a criaÃ§Ã£o de diferentes espaÃ§os
+ * de configuraÃ§Ã£o para o uso em ambientes diversos como produÃ§Ã£o,
  * desenvolvimento, testes e outros.
  *
- * Para o uso dessa classe, é necessário que o arquivo ini tenha no mínimo uma
- * seção de configuração. A seção padrão a ser usada é a production mas isso
- * não impede que você a nomeie como desejar.
+ * Para o uso dessa classe, Ã© necessÃ¡rio que o arquivo ini tenha no mÃ­nimo uma
+ * seÃ§Ã£o de configuraÃ§Ã£o. A seÃ§Ã£o padrÃ£o a ser usada Ã© a production mas isso
+ * nÃ£o impede que vocÃª a nomeie como desejar.
  *
  * Essa classe foi fortemente baseada na classe Zend_Config_Ini do Zend
  * Framework.
  *
- * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa PaixÃ£o <eriksen.paixao_bs@cobra.com.br>
  * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
  * @package     CoreExt
  * @subpackage  Config
  * @see         lib/CoreExt/Config.class.php
- * @since       Classe disponível desde a versão 1.1.0
+ * @since       Classe disponÃ­vel desde a versÃ£o 1.1.0
  * @version     $Id$
  */
 class CoreExt_Config_Ini extends CoreExt_Config
 {
 
   /**
-   * Caractere de herança das seções do arquivo ini.
+   * Caractere de heranÃ§a das seÃ§Ãµes do arquivo ini.
    */
   const COREEXT_CONFIG_INI_INHERITANCE_SEP = ':';
 
@@ -61,7 +61,7 @@ class CoreExt_Config_Ini extends CoreExt_Config
   const COREEXT_CONFIG_INI_NAMESPACE_SEP   = '.';
 
   /**
-   * Array contendo as diretivas de configuração separadas por namespace.
+   * Array contendo as diretivas de configuraÃ§Ã£o separadas por namespace.
    * @var array
    */
   protected $iniArr = array();
@@ -70,7 +70,7 @@ class CoreExt_Config_Ini extends CoreExt_Config
    * Construtor.
    *
    * @param  $filename  Caminho para o arquivo ini
-   * @param  $section   Seção desejada para o carregamento das configurações
+   * @param  $section   SeÃ§Ã£o desejada para o carregamento das configuraÃ§Ãµes
    */
   public function __construct($filename, $section = 'production')
   {
@@ -81,7 +81,7 @@ class CoreExt_Config_Ini extends CoreExt_Config
   }
 
   /**
-   * Carrega as configurações para o ambiente desejado (seção do arquivo ini)
+   * Carrega as configuraÃ§Ãµes para o ambiente desejado (seÃ§Ã£o do arquivo ini)
    * @param  string  $section
    */
   public function changeEnviroment($section = 'production') {
@@ -89,7 +89,7 @@ class CoreExt_Config_Ini extends CoreExt_Config
   }
 
   /**
-   * Verifica se possui a seção desejada.
+   * Verifica se possui a seÃ§Ã£o desejada.
    * @param  string  $section
    */
   function hasEnviromentSection($section) {
@@ -97,7 +97,7 @@ class CoreExt_Config_Ini extends CoreExt_Config
   }
 
   /**
-   * Carrega as configuração da seção desejada.
+   * Carrega as configuraÃ§Ã£o da seÃ§Ã£o desejada.
    * @param  string  $section
    */
   protected function changeSection($section = 'production') {
@@ -107,11 +107,11 @@ class CoreExt_Config_Ini extends CoreExt_Config
   /**
    * Parsing do arquivo ini.
    *
-   * Realiza o parsing do arquivo ini, separando as seções, criando as relações
-   * de herança e separando cada diretiva do arquivo em um array
+   * Realiza o parsing do arquivo ini, separando as seÃ§Ãµes, criando as relaÃ§Ãµes
+   * de heranÃ§a e separando cada diretiva do arquivo em um array
    * multidimensional.
    *
-   * @link    http://php.net/parse_ini_file  Documentação da função parse_ini_file
+   * @link    http://php.net/parse_ini_file  DocumentaÃ§Ã£o da funÃ§Ã£o parse_ini_file
    * @param   string  $filename
    * @throws  Exception
    * @return  array
@@ -120,9 +120,9 @@ class CoreExt_Config_Ini extends CoreExt_Config
   {
     $iniArr = array();
 
-    // Faz o parsing separando as seções (parâmetro TRUE)
-    // Supressão simples dificulta os unit test. Altera o error handler para
-    // que use um método da classe CoreExt_Config.
+    // Faz o parsing separando as seÃ§Ãµes (parÃ¢metro TRUE)
+    // SupressÃ£o simples dificulta os unit test. Altera o error handler para
+    // que use um mÃ©todo da classe CoreExt_Config.
     set_error_handler(array($this, 'configErrorHandler'), E_ALL);
     $config = parse_ini_file($filename, TRUE);
     restore_error_handler();
@@ -130,7 +130,7 @@ class CoreExt_Config_Ini extends CoreExt_Config
     /*
      * No PHP 5.2.7 o array vem FALSE quando existe um erro de sintaxe. Antes
      * o retorno vinha como array vazio.
-     * @link  http://php.net/parse_ini_file#function.parse-ini-file.changelog  Changelog da função parse_ini_file
+     * @link  http://php.net/parse_ini_file#function.parse-ini-file.changelog  Changelog da funÃ§Ã£o parse_ini_file
      */
     if (count($this->errors) > 0) {
       throw new Exception('Arquivo ini com problemas de sintaxe. Verifique a sintaxe arquivo \''. $filename .'\'.');
@@ -141,32 +141,32 @@ class CoreExt_Config_Ini extends CoreExt_Config
 
       if (FALSE !== strpos($section, self::COREEXT_CONFIG_INI_INHERITANCE_SEP)) {
         $sections = explode(self::COREEXT_CONFIG_INI_INHERITANCE_SEP, $section);
-        // Apenas uma herança por seção é permitida
+        // Apenas uma heranÃ§a por seÃ§Ã£o Ã© permitida
         if (count($sections) > 2) {
-          throw new Exception('Não é possível herdar mais que uma seção.');
+          throw new Exception('NÃ£o Ã© possÃ­vel herdar mais que uma seÃ§Ã£o.');
         }
 
-        // Armazena seção atual e seção de herança
+        // Armazena seÃ§Ã£o atual e seÃ§Ã£o de heranÃ§a
         $section = trim($sections[0]);
         $extends = trim($sections[1]);
       }
 
-      // Processa as diretivas da seção atual para separarar os namespaces
+      // Processa as diretivas da seÃ§Ã£o atual para separarar os namespaces
       $iniArr[$section] = $this->processSection($config[$index]);
 
       /*
-       * Verifica se a seção atual herda de alguma outra seção. Se a seção de
-       * herança não existir, lança uma exceção.
+       * Verifica se a seÃ§Ã£o atual herda de alguma outra seÃ§Ã£o. Se a seÃ§Ã£o de
+       * heranÃ§a nÃ£o existir, lanÃ§a uma exceÃ§Ã£o.
        */
       if (isset($extends)) {
         if (!array_key_exists($extends, $iniArr)) {
-          $message = sprintf('Não foi possível estender %s, seção %s não existe',
+          $message = sprintf('NÃ£o foi possÃ­vel estender %s, seÃ§Ã£o %s nÃ£o existe',
             $section, $extends);
           throw new Exception($message);
         }
 
-        // Mescla recursivamente os dois arrays. Os valores definidos na seção
-        // atual não são sobrescritos
+        // Mescla recursivamente os dois arrays. Os valores definidos na seÃ§Ã£o
+        // atual nÃ£o sÃ£o sobrescritos
         $iniArr[$section] = $this->arrayMergeRecursiveDistinct($iniArr[$extends], $iniArr[$section]);
         unset($extends);
       }
@@ -176,11 +176,11 @@ class CoreExt_Config_Ini extends CoreExt_Config
   }
 
   /**
-   * Processa uma seção de um array de arquivo ini.
+   * Processa uma seÃ§Ã£o de um array de arquivo ini.
    *
-   * Processa a seção, inclusive as diretivas da seção, separando-as em
+   * Processa a seÃ§Ã£o, inclusive as diretivas da seÃ§Ã£o, separando-as em
    * um array em namespace. Dessa forma, uma diretiva que era, por exemplo,
-   * app.database.dbname = ieducardb irá se tornar:
+   * app.database.dbname = ieducardb irÃ¡ se tornar:
    * <code>
    * app => array(database => array(dbname => ieducardb))
    * </code>
@@ -196,7 +196,7 @@ class CoreExt_Config_Ini extends CoreExt_Config
    * )
    * </code>
    *
-   * @param   array  $data  Array contendo as diretivas de uma seção do arquivo ini
+   * @param   array  $data  Array contendo as diretivas de uma seÃ§Ã£o do arquivo ini
    * @return  array
    */
   private function processSection(array $data)
@@ -219,7 +219,7 @@ class CoreExt_Config_Ini extends CoreExt_Config
   }
 
   /**
-   * Cria recursivamente um array aninhado (namespaces) usando os índices
+   * Cria recursivamente um array aninhado (namespaces) usando os Ã­ndices
    * progressivamente.
    *
    * Exemplo:
@@ -236,7 +236,7 @@ class CoreExt_Config_Ini extends CoreExt_Config
    *
    * @param   mixed  $value   O valor da diretiva parseada por parse_ini_file
    * @param   array  $keys    O array contendo as chaves das diretivas (0 => app, 1 => database, 2 => dbname)
-   * @param   array  $config  O array contêiner com as chaves em suas respectivas dimensões
+   * @param   array  $config  O array contÃªiner com as chaves em suas respectivas dimensÃµes
    * @return  array
    */
   private function processDirectives($value, $keys, $config = array())

@@ -42,6 +42,10 @@ require_once 'Portabilis/String/Utils.php';
 require_once 'Portabilis/Array/Utils.php';
 require_once 'Portabilis/Date/Utils.php';
 
+/**
+ * Class EmpresaController
+ * @deprecated Essa versão da API pública será descontinuada
+ */
 class EmpresaController extends ApiCoreController
 {
   protected $_processoAp        = 578; //verificar

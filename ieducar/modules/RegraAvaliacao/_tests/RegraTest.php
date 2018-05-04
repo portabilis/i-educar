@@ -1,31 +1,31 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     RegraAvaliacao
  * @subpackage  UnitTests
- * @since       Arquivo disponÌvel desde a vers„o 1.1.0
+ * @since       Arquivo dispon√≠vel desde a vers√£o 1.1.0
  * @version     $Id$
  */
 
@@ -39,12 +39,12 @@ require_once 'include/pmieducar/clsPmieducarInstituicao.inc.php';
 /**
  * RegraTest class.
  *
- * @author      Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     RegraAvaliacao
  * @subpackage  UnitTests
- * @since       Classe disponÌvel desde a vers„o 1.1.0
+ * @since       Classe dispon√≠vel desde a vers√£o 1.1.0
  * @version     @@package_version@@
  */
 class RegraTest extends UnitBaseTest
@@ -65,21 +65,21 @@ class RegraTest extends UnitBaseTest
   {
     // Valores de retorno
     $returnFormulaValue = array(
-      new FormulaMedia_Model_Formula(array('nome' => '1∫ ao 3∫ ano')),
-      new FormulaMedia_Model_Formula(array('nome' => 'RecuperaÁ„o geral'))
+      new FormulaMedia_Model_Formula(array('nome' => '1¬∫ ao 3¬∫ ano')),
+      new FormulaMedia_Model_Formula(array('nome' => 'Recupera√ß√£o geral'))
     );
 
     $returnTabelaValue = array(
       new TabelaArredondamento_Model_Tabela(array(
         'instituicao' => 1,
-        'nome'        => 'Tabela genÈrica de notas numÈricas',
+        'nome'        => 'Tabela gen√©rica de notas num√©ricas',
         'tipoNota'    => RegraAvaliacao_Model_Nota_TipoValor::NUMERICA
       ))
     );
 
-    $returnValue = array(array('cod_instituicao' => 1, 'nm_instituicao' => 'InstituiÁ„o'));
+    $returnValue = array(array('cod_instituicao' => 1, 'nm_instituicao' => 'Institui√ß√£o'));
 
-    // Mock para fÛrmula de mÈdia
+    // Mock para f√≥rmula de m√©dia
     $mockFormula = $this->getCleanMock('FormulaMedia_Model_FormulaDataMapper');
     $mockFormula->expects($this->any())
                 ->method('findAll')
@@ -93,19 +93,19 @@ class RegraTest extends UnitBaseTest
                ->method('findAll')
                ->will($this->returnValue($returnTabelaValue));
 
-    // Mock para instituiÁ„o
+    // Mock para institui√ß√£o
     $mock = $this->getCleanMock('clsPmieducarInstituicao');
     $mock->expects($this->any())
          ->method('lista')
          ->will($this->returnValue($returnValue));
 
-    // Registra a inst‚ncia no repositÛrio de classes de CoreExt_Entity
+    // Registra a inst√¢ncia no reposit√≥rio de classes de CoreExt_Entity
     $this->_entity->addClassToStorage('clsPmieducarInstituicao', $mock);
 
-    // Substitui o data mapper de fÛrmula padr„o pelo mock
+    // Substitui o data mapper de f√≥rmula padr√£o pelo mock
     $this->_entity->getDataMapper()->setFormulaDataMapper($mockFormula);
 
-    // Substitui o data mapper de tabela padr„o pelo mock
+    // Substitui o data mapper de tabela padr√£o pelo mock
     $this->_entity->getDataMapper()->setTabelaDataMapper($mockTabela);
 
     $validators = $this->_entity->getDefaultValidatorCollection();

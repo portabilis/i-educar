@@ -1,14 +1,14 @@
 -- //
 
 --
--- Cria as tabelas para o mÛdulo Regra de AvaliaÁ„o. Esse mÛdulo È composto por
--- outros 4 mÛdulos interdependentes e por isso esse delta define a criaÁ„o
+-- Cria as tabelas para o m√≥dulo Regra de Avalia√ß√£o. Esse m√≥dulo √© composto por
+-- outros 4 m√≥dulos interdependentes e por isso esse delta define a cria√ß√£o
 -- das tabelas relacionadas.
 --
--- Esse arquivo È identico ao encontrado em 
+-- Esse arquivo √© identico ao encontrado em 
 -- modules/RegraAvaliacao/_data/install.sql
 --
--- @author   Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+-- @author   Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
 -- @license  @@license@@
 -- @version  $Id$
 --

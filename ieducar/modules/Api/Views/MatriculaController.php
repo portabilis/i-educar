@@ -37,6 +37,10 @@ require_once 'intranet/include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'Portabilis/Date/Utils.php';
 
+/**
+ * Class MatriculaController
+ * @deprecated Essa versão da API pública será descontinuada
+ */
 class MatriculaController extends ApiCoreController
 {
 
@@ -80,12 +84,12 @@ class MatriculaController extends ApiCoreController
              else
               (case when $5 = 1 then
                 (case when instituicao.permissao_filtro_abandono_transferencia then
-                  matricula.aprovado in (1, 2, 3, 7, 8, 9, 13, 14)
+                  matricula.aprovado in (1, 2, 3, 7, 8, 9, 12, 13, 14)
                  else
-                  matricula.aprovado in (1, 2, 3, 4, 6, 7, 8, 9, 13, 14)
+                  matricula.aprovado in (1, 2, 3, 4, 6, 7, 8, 9, 12, 13, 14)
                  end)
                else
-                matricula.aprovado in (1, 2, 3, 4, 6, 7, 8, 9, 13, 14)
+                matricula.aprovado in (1, 2, 3, 4, 6, 7, 8, 9, 12, 13, 14)
                end)
              end)
         and (case when aprovado = 4 then not exists (select * from pmieducar.matricula m where m.ativo = 1 and m.ano = matricula.ano and m.ref_cod_aluno = aluno.cod_aluno and m.ref_ref_cod_escola = matricula.ref_ref_cod_escola and m.aprovado <> 4 ) else true end)
@@ -112,12 +116,12 @@ class MatriculaController extends ApiCoreController
              else
               (case when $5 = 1 then
                 (case when instituicao.permissao_filtro_abandono_transferencia then
-                  matricula.aprovado in (1, 2, 3, 7, 8, 9, 13, 14)
+                  matricula.aprovado in (1, 2, 3, 7, 8, 9, 12, 13, 14)
                  else
-                  matricula.aprovado in (1, 2, 3, 4, 6, 7, 8, 9, 13, 14)
+                  matricula.aprovado in (1, 2, 3, 4, 6, 7, 8, 9, 12, 13, 14)
                  end)
                else
-                matricula.aprovado in (1, 2, 3, 4, 6, 7, 8, 9, 13, 14)
+                matricula.aprovado in (1, 2, 3, 4, 6, 7, 8, 9, 12, 13, 14)
                end)
              end)
         and (case when aprovado = 4 then not exists (select * from pmieducar.matricula m where m.ativo = 1 and m.ano = matricula.ano and m.ref_cod_aluno = aluno.cod_aluno and m.ref_ref_cod_escola = matricula.ref_ref_cod_escola and m.aprovado <> 4 ) else true end)
@@ -469,11 +473,12 @@ class MatriculaController extends ApiCoreController
       $situacaoAntiga = $matricula->aprovado;
       $situacaoNova   = $this->getRequest()->nova_situacao;
 
+      $enturmacoes = new clsPmieducarMatriculaTurma();
+      $enturmacoes = $enturmacoes->lista($matriculaId, null, null, null, null, null, null, null, 1 );
+
       if($situacaoNova == App_Model_MatriculaSituacao::TRANSFERIDO ||
          $situacaoNova == App_Model_MatriculaSituacao::ABANDONO ||
          $situacaoNova == App_Model_MatriculaSituacao::FALECIDO ){
-        $enturmacoes = new clsPmieducarMatriculaTurma();
-        $enturmacoes = $enturmacoes->lista($matriculaId, null, null, null, null, null, null, null, 1 );
 
         if($enturmacoes){
 
@@ -491,16 +496,16 @@ class MatriculaController extends ApiCoreController
           }
         }
       }elseif($situacaoNova == App_Model_MatriculaSituacao::APROVADO || $situacaoNova == App_Model_MatriculaSituacao::EM_ANDAMENTO || $situacaoNova == App_Model_MatriculaSituacao::REPROVADO){
+        if($enturmacoes) {
+          $params = array($matriculaId);
+          $sql = 'SELECT sequencial as codigo FROM pmieducar.matricula_turma where ref_cod_matricula = $1 order by ativo desc, sequencial desc limit 1';
+          $sequencial = $this->fetchPreparedQuery($sql, $params, false, 'first-field');
 
-        $params = array($matriculaId);
-        $sql = 'SELECT sequencial as codigo FROM pmieducar.matricula_turma where ref_cod_matricula = $1 order by ativo desc, sequencial desc limit 1';
-        $sequencial = $this->fetchPreparedQuery($sql, $params, false, 'first-field');
+          $sql = 'UPDATE pmieducar.matricula_turma set ativo = 1, transferido = false, remanejado = false, abandono = false, reclassificado = false where sequencial = $1 and ref_cod_matricula = $2';
 
-        $sql = 'UPDATE pmieducar.matricula_turma set ativo = 1, transferido = false, remanejado = false, abandono = false, reclassificado = false where sequencial = $1 and ref_cod_matricula = $2';
-
-        $params = array($sequencial, $matriculaId);
-        $this->fetchPreparedQuery($sql, $params);
-
+          $params = array($sequencial, $matriculaId);
+          $this->fetchPreparedQuery($sql, $params);
+        }
       }
 
       $matricula->aprovado = $this->getRequest()->nova_situacao;
@@ -560,6 +565,27 @@ class MatriculaController extends ApiCoreController
     return array('matriculas' => $matriculas);
   }
 
+  protected function getDispensaDisciplina() {
+    $sql = "SELECT dd.ref_cod_matricula AS matricula_id,
+                   dd.ref_cod_disciplina AS disciplina_id,
+                   td_dispensa_etapa.etapas AS etapas
+              FROM pmieducar.dispensa_disciplina AS dd,
+           LATERAL (SELECT string_agg(CAST(de.etapa AS VARCHAR), ',') AS etapas
+                      FROM pmieducar.dispensa_etapa AS de
+                     WHERE de.ref_cod_dispensa = dd.cod_dispensa
+                   ) AS td_dispensa_etapa
+             WHERE dd.ativo = 1
+               AND dd.data_exclusao IS NULL
+               AND td_dispensa_etapa.etapas <> ''";
+
+    $dispensas = $this->fetchPreparedQuery($sql);
+
+    $attrs = array('matricula_id', 'disciplina_id', 'etapas');
+    $dispensas = Portabilis_Array_Utils::filterSet($dispensas, $attrs);
+
+    return array('dispensas' => $dispensas);
+  }
+
   public function Gerar() {
     if ($this->isRequestFor('get', 'matricula'))
       $this->appendResponse($this->get());
@@ -599,6 +625,9 @@ class MatriculaController extends ApiCoreController
 
     elseif ($this->isRequestFor('get', 'matriculas-dependencia'))
       $this->appendResponse($this->getMatriculasDependencia());
+
+    elseif ($this->isRequestFor('get', 'dispensa-disciplina'))
+      $this->appendResponse($this->getDispensaDisciplina());
 
     else
       $this->notImplementedOperationError();

@@ -1,31 +1,31 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     CoreExt_Entity
  * @subpackage  UnitTests
- * @since       Arquivo disponÌvel desde a vers„o 1.1.0
+ * @since       Arquivo dispon√≠vel desde a vers√£o 1.1.0
  * @version     $Id$
  */
 
@@ -40,12 +40,12 @@ require_once 'CoreExt/_stub/EnumSex.php';
 /**
  * CoreExt_EntityTest class.
  *
- * @author      Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     CoreExt_Entity
  * @subpackage  UnitTests
- * @since       Classe disponÌvel desde a vers„o 1.1.0
+ * @since       Classe dispon√≠vel desde a vers√£o 1.1.0
  * @version     @@package_version@@
  */
 class CoreExt_EntityTest extends UnitBaseTest
@@ -225,12 +225,12 @@ class CoreExt_EntityTest extends UnitBaseTest
     );
     $entity = new CoreExt_EntityStub($data);
     $this->assertFalse($entity->isValid());
-    $this->assertEquals('ObrigatÛrio.', $entity->getError('nome'));
+    $this->assertEquals('Obrigat√≥rio.', $entity->getError('nome'));
     $this->assertTrue($entity->hasErrors());
   }
 
   /**
-   * Testa com inst‚ncia de CoreExt_Entity que contenha referÍncias DataMapper.
+   * Testa com inst√¢ncia de CoreExt_Entity que contenha refer√™ncias DataMapper.
    * @group Overload
    * @group CoreExt_Validate_Validatable
    * @see   testSetterDeReferenciaOverloadAtribuiValorParaAReferenciaENoAtributoQuandoUmaInstanciaDeCoreExtEntityComFieldIdentityEPassada
@@ -263,7 +263,7 @@ class CoreExt_EntityTest extends UnitBaseTest
   }
 
   /**
-   * Testa com inst‚ncia de CoreExt_Entity que contenha referÍncias Enum.
+   * Testa com inst√¢ncia de CoreExt_Entity que contenha refer√™ncias Enum.
    * @group CoreExt_Validate_Validatable
    */
   public function testValidacaoSanitizaValorDeAtributoComReferenciasEnum()
@@ -302,7 +302,7 @@ class CoreExt_EntityTest extends UnitBaseTest
 
     // Retornou o validador do If
     $entity->setValidator('estadoCivil', $validator);
-    $this->assertFalse($entity->isValid('estadoCivil'), 'Falhou na asserÁ„o de validateIfEquals() para caso If.');
+    $this->assertFalse($entity->isValid('estadoCivil'), 'Falhou na asser√ß√£o de validateIfEquals() para caso If.');
 
     // Validador condicional
     $entity->nome = 'barFoo';
@@ -312,7 +312,7 @@ class CoreExt_EntityTest extends UnitBaseTest
 
     // Retornou o validador do Else
     $entity->setValidator('estadoCivil', $validator);
-    $this->assertTrue($entity->isValid('estadoCivil'), 'Falhou na asserÁ„o de validateIfEquals() para caso Else.');
+    $this->assertTrue($entity->isValid('estadoCivil'), 'Falhou na asser√ß√£o de validateIfEquals() para caso Else.');
   }
 
   /**
@@ -350,11 +350,11 @@ class CoreExt_EntityTest extends UnitBaseTest
     );
     $entity = new CoreExt_EntityStub($data);
 
-    // Interface de inst‚ncia
+    // Interface de inst√¢ncia
     $array = $entity->filterAttr('id', 'nome');
     $this->assertEquals(array(1 => 'fooBar'), $array);
 
-    // Interface est·tica
+    // Interface est√°tica
     $array = CoreExt_Entity::entityFilterAttr($entity, 'id', 'nome');
     $this->assertEquals(array(1 => 'fooBar'), $array);
   }
@@ -492,7 +492,7 @@ class CoreExt_EntityTest extends UnitBaseTest
 
   public function testInstanciaDeClassNaoEspecificaPodeSerRepostaPorNovaInstancia()
   {
-    // SÛ para facilitar.
+    // S√≥ para facilitar.
     for ($i = 0; $i <= 1; $i++) {
       $obj = new stdClass();
       $obj->i = $i;
@@ -584,13 +584,13 @@ class CoreExt_EntityTest extends UnitBaseTest
       'filho' => $expected
     );
 
-    // O mÈtodo "find" n„o deve ser chamado pois "child" j· existe como atributo
+    // O m√©todo "find" n√£o deve ser chamado pois "child" j√° existe como atributo
     // de "parent"
     $filhoMapper = $this->getCleanMock('CoreExt_ChildEntityDataMapperStub');
     $filhoMapper->expects($this->never())
                 ->method('find');
 
-    // Configurando com mock, para ter certeza que n„o ir· tentar carregar
+    // Configurando com mock, para ter certeza que n√£o ir√° tentar carregar
     // "child"
     $parent = new CoreExt_ParentEntityStub($data);
     $parent->setReference('filho', array('value' => 1, 'class' => $filhoMapper));
@@ -599,10 +599,10 @@ class CoreExt_EntityTest extends UnitBaseTest
     $this->assertEquals(1, $parent->filho->id);
     $this->assertEquals('barFoo', $parent->filho->nome);
 
-    // toArray() causa chamadas lazy load. Garantindo que n„o ocorra.
+    // toArray() causa chamadas lazy load. Garantindo que n√£o ocorra.
     $this->assertEquals($data, $parent->toArray());
 
-    // toDataArray() retorna sempre a referÍncia numÈrica.
+    // toDataArray() retorna sempre a refer√™ncia num√©rica.
     $data['filho'] = 1;
     $this->assertEquals($data, $parent->toDataArray());
   }
@@ -616,13 +616,13 @@ class CoreExt_EntityTest extends UnitBaseTest
       'nome'  => 'fooBar'
     );
 
-    // O mÈtodo "find" n„o deve ser chamado pois "child" j· existe como atributo
+    // O m√©todo "find" n√£o deve ser chamado pois "child" j√° existe como atributo
     // de "parent"
     $filhoMapper = $this->getCleanMock('CoreExt_ChildEntityDataMapperStub');
     $filhoMapper->expects($this->never())
                 ->method('find');
 
-    // Configurando com mock, para ter certeza que n„o ir· tentar carregar
+    // Configurando com mock, para ter certeza que n√£o ir√° tentar carregar
     // "child"
     $parent = new CoreExt_ParentEntityStub($data);
 

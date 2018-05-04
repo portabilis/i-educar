@@ -1,3 +1,12 @@
+$j('#btn_enviar').removeAttr('onclick');
+$j('#btn_enviar').click(function () {
+    if ($j('input[name^="disciplinas["]:checked').length <= 0) {
+        alert('É necessário adicionar pelo menos um componente curricular.');
+    } else {
+        acao();
+    }
+})
+
 document.getElementById('ref_cod_instituicao').onchange = function () {
     getDuploEscolaCurso();
 }

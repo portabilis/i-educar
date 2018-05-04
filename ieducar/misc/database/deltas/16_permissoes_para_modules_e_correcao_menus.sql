@@ -1,37 +1,37 @@
 -- //
 
 --
--- Corrige permissıes do usu·rio administrador.
+-- Corrige permiss√µes do usu√°rio administrador.
 -- 
--- Adiciona as permissıes dos mÛdulos ¡rea de Conhecimento, AvaliaÁ„o,
--- Componente Curricular, FÛrmula MÈdia, Regra de AvaliaÁ„o e Tabela de
+-- Adiciona as permiss√µes dos m√≥dulos √Årea de Conhecimento, Avalia√ß√£o,
+-- Componente Curricular, F√≥rmula M√©dia, Regra de Avalia√ß√£o e Tabela de
 -- Arredondamento.
 --
--- Remove as permissıes dos cadastros de Disciplina, Tipo de AvaliaÁ„o e
--- Nota Turma, j· que se tornaram obsoletos com a inclus„o dos mÛdulos acima
--- como padrıes da aplicaÁ„o.
+-- Remove as permiss√µes dos cadastros de Disciplina, Tipo de Avalia√ß√£o e
+-- Nota Turma, j√° que se tornaram obsoletos com a inclus√£o dos m√≥dulos acima
+-- como padr√µes da aplica√ß√£o.
 --
 -- Inclui novas imagens do iconset FAMFAMFAM silk icons, utilizados para
--- estilizar os links de menu dos mÛdulos adicionados.
+-- estilizar os links de menu dos m√≥dulos adicionados.
 --
--- @author   Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+-- @author   Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
 -- @license  @@license@@
 -- @version  $Id$
 --
 
--- Apaga permiss„o para disciplina
+-- Apaga permiss√£o para disciplina
 DELETE FROM pmicontrolesis.menu WHERE ref_cod_menu_submenu = 557;
 DELETE FROM portal.menu_funcionario WHERE ref_cod_menu_submenu = 557;
 DELETE FROM pmieducar.menu_tipo_usuario WHERE ref_cod_menu_submenu = 557;
 DELETE FROM portal.menu_submenu WHERE cod_menu_submenu = 557;
 
--- Apaga permiss„o para tipo de avaliaÁ„o
+-- Apaga permiss√£o para tipo de avalia√ß√£o
 DELETE FROM pmicontrolesis.menu WHERE ref_cod_menu_submenu = 560;
 DELETE FROM portal.menu_funcionario WHERE ref_cod_menu_submenu = 560;
 DELETE FROM pmieducar.menu_tipo_usuario WHERE ref_cod_menu_submenu = 560;
 DELETE FROM portal.menu_submenu WHERE cod_menu_submenu = 560;
 
--- Apaga permiss„o para nota turma
+-- Apaga permiss√£o para nota turma
 DELETE FROM pmicontrolesis.menu WHERE ref_cod_menu_submenu = 650;
 DELETE FROM portal.menu_funcionario WHERE ref_cod_menu_submenu = 650;
 DELETE FROM pmieducar.menu_tipo_usuario WHERE ref_cod_menu_submenu = 650;
@@ -52,139 +52,139 @@ INSERT INTO portal.imagem VALUES (197, 1, 'cog_go.png', 'FAMFAMFAM iconset: cog_
 INSERT INTO portal.imagem VALUES (198, 1, 'calculator.png', 'FAMFAMFAM iconset: calculator.png', 'png', 16, 16, 'NOW()', 1, NULL, NULL);
 INSERT INTO portal.imagem VALUES (199, 1, 'calendar_link.png', 'FAMFAMFAM iconset: calendar_link.png', 'png', 16, 16, 'NOW()', 1, NULL, NULL);
 
--- Itens de submenu (permissıes) dos mÛdulos de avaliaÁ„o
-INSERT INTO portal.menu_submenu VALUES (945, 55, 2, '¡reas de Conhecimento', 'module/AreaConhecimento/index', '', 3);
+-- Itens de submenu (permiss√µes) dos m√≥dulos de avalia√ß√£o
+INSERT INTO portal.menu_submenu VALUES (945, 55, 2, '√Åreas de Conhecimento', 'module/AreaConhecimento/index', '', 3);
 INSERT INTO portal.menu_submenu VALUES (946, 55, 2, 'Componentes Curriculares', 'module/ComponenteCurricular/index', '', 3);
-INSERT INTO portal.menu_submenu VALUES (947, 55, 2, 'Regras de AvaliaÁ„o', 'module/RegraAvaliacao/index', '', 3);
-INSERT INTO portal.menu_submenu VALUES (948, 55, 2, 'FÛrmula de C·lculo de MÈdia', 'module/FormulaMedia/index', '', 3);
+INSERT INTO portal.menu_submenu VALUES (947, 55, 2, 'Regras de Avalia√ß√£o', 'module/RegraAvaliacao/index', '', 3);
+INSERT INTO portal.menu_submenu VALUES (948, 55, 2, 'F√≥rmula de C√°lculo de M√©dia', 'module/FormulaMedia/index', '', 3);
 INSERT INTO portal.menu_submenu VALUES (949, 55, 2, 'Tabelas de Arredondamento de Nota', 'module/TabelaArredondamento/index', '', 3);
 
 -- Apaga todos os dados do menu suspenso
 TRUNCATE TABLE pmicontrolesis.menu;
 
 -- Reinsere os dados do menu
-INSERT INTO pmicontrolesis.menu VALUES (4624, 335, NULL, 'Super Usu·rio', 4, 'otopic_su_lst.php', '_self', 1, 7, 1);
+INSERT INTO pmicontrolesis.menu VALUES (4624, 335, NULL, 'Super Usu√°rio', 4, 'otopic_su_lst.php', '_self', 1, 7, 1);
 INSERT INTO pmicontrolesis.menu VALUES (15870, 597, 15858, 'Tipo de Exemplar', 6, 'educar_exemplar_tipo_lst.php', '_self', 1, 16, 177);
 INSERT INTO pmicontrolesis.menu VALUES (15871, 596, 15858, 'Tipo de Cliente', 7, 'educar_cliente_tipo_lst.php', '_self', 1, 16, 62);
 INSERT INTO pmicontrolesis.menu VALUES (15875, 629, 15858, 'Dados Biblioteca', 12, 'educar_biblioteca_dados_lst.php', '_self', 1, 16, 143);
 INSERT INTO pmicontrolesis.menu VALUES (15860, 591, 15858, 'Biblioteca', 1, 'educar_biblioteca_lst.php', '_self', 1, 16, 1);
 INSERT INTO pmicontrolesis.menu VALUES (15858, NULL, NULL, 'Cadastro', 1, NULL, '_self', 1, 16, 1);
 INSERT INTO pmicontrolesis.menu VALUES (15861, 603, 15859, 'Cliente', 1, 'educar_cliente_lst.php', '_self', 1, 16, 1);
-INSERT INTO pmicontrolesis.menu VALUES (15863, 622, 15859, 'DÌvidas', 2, 'educar_pagamento_multa_lst.php', '_self', 1, 16, 1);
-INSERT INTO pmicontrolesis.menu VALUES (15864, 610, 15859, 'EmprÈstimo', 3, 'educar_exemplar_emprestimo_lst.php', '_self', 1, 16, 1);
-INSERT INTO pmicontrolesis.menu VALUES (15867, 628, 15859, 'DevoluÁ„o', 4, 'educar_exemplar_devolucao_lst.php', '_self', 1, 16, 1);
+INSERT INTO pmicontrolesis.menu VALUES (15863, 622, 15859, 'D√≠vidas', 2, 'educar_pagamento_multa_lst.php', '_self', 1, 16, 1);
+INSERT INTO pmicontrolesis.menu VALUES (15864, 610, 15859, 'Empr√©stimo', 3, 'educar_exemplar_emprestimo_lst.php', '_self', 1, 16, 1);
+INSERT INTO pmicontrolesis.menu VALUES (15867, 628, 15859, 'Devolu√ß√£o', 4, 'educar_exemplar_devolucao_lst.php', '_self', 1, 16, 1);
 INSERT INTO pmicontrolesis.menu VALUES (15869, 609, 15858, 'Reservas', 6, 'educar_reservas_lst.php', '_self', 1, 16, 1);
 INSERT INTO pmicontrolesis.menu VALUES (15877, 592, 15858, 'Assunto', 14, 'educar_acervo_assunto_lst.php', '_self', 1, 16, 1);
 INSERT INTO pmicontrolesis.menu VALUES (15878, 598, 15858, 'Obras', 15, 'educar_acervo_lst.php', '_self', 1, 16, 1);
 INSERT INTO pmicontrolesis.menu VALUES (15879, 606, 15858, 'Exemplares', 16, 'educar_exemplar_lst.php', '_self', 1, 16, 1);
-INSERT INTO pmicontrolesis.menu VALUES (15859, NULL, NULL, 'MovimentaÁ„o', 2, NULL, '_self', 1, 16, 1);
+INSERT INTO pmicontrolesis.menu VALUES (15859, NULL, NULL, 'Movimenta√ß√£o', 2, NULL, '_self', 1, 16, 1);
 INSERT INTO pmicontrolesis.menu VALUES (21122, NULL, NULL, 'Cadastros', 1, NULL, '_self', 1, 15, 1);
 INSERT INTO pmicontrolesis.menu VALUES (21123, NULL, NULL, 'Servidores', 2, NULL, '_self', 1, 15, 1);
-INSERT INTO pmicontrolesis.menu VALUES (21124, NULL, NULL, 'MovimentaÁ„o', 3, NULL, '_self', 1, 15, 1);
+INSERT INTO pmicontrolesis.menu VALUES (21124, NULL, NULL, 'Movimenta√ß√£o', 3, NULL, '_self', 1, 15, 1);
 INSERT INTO pmicontrolesis.menu VALUES (21125, NULL, NULL, 'Administrativo', 4, NULL, '_self', 1, 15, 1);
-INSERT INTO pmicontrolesis.menu VALUES (21126, NULL, NULL, 'RelatÛrios', 5, NULL, '_self', 1, 15, 1);
+INSERT INTO pmicontrolesis.menu VALUES (21126, NULL, NULL, 'Relat√≥rios', 5, NULL, '_self', 1, 15, 1);
 INSERT INTO pmicontrolesis.menu VALUES (21127, NULL, NULL, 'Documentos', 6, NULL, '_self', 1, 15, 1);
-INSERT INTO pmicontrolesis.menu VALUES (21128, 559, 21122, 'InstituiÁ„o', 1, 'educar_instituicao_lst.php', '_self', 1, 15, 26);
-INSERT INTO pmicontrolesis.menu VALUES (21129, 772, 21126, 'Quadro SintÈtico Alunos', 1, 'educar_relatorio_quadro_alunos_sintetico.php', '_self', 1, 15, 115);
+INSERT INTO pmicontrolesis.menu VALUES (21128, 559, 21122, 'Institui√ß√£o', 1, 'educar_instituicao_lst.php', '_self', 1, 15, 26);
+INSERT INTO pmicontrolesis.menu VALUES (21129, 772, 21126, 'Quadro Sint√©tico Alunos', 1, 'educar_relatorio_quadro_alunos_sintetico.php', '_self', 1, 15, 115);
 INSERT INTO pmicontrolesis.menu VALUES (21130, 635, 21123, 'Cadastrar', 1, 'educar_servidor_lst.php', '_self', 1, 15, 168);
-INSERT INTO pmicontrolesis.menu VALUES (21131, 554, 21125, 'Tipo de Usu·rio', 1, 'educar_tipo_usuario_lst.php', '_self', 1, 15, 111);
-INSERT INTO pmicontrolesis.menu VALUES (21132, 652, 21126, 'RelaÁ„o de Alunos ANEEs', 1, 'educar_relatorio_relacao_aluno_pnee_escola.php', '_self', 1, 15, 142);
+INSERT INTO pmicontrolesis.menu VALUES (21131, 554, 21125, 'Tipo de Usu√°rio', 1, 'educar_tipo_usuario_lst.php', '_self', 1, 15, 111);
+INSERT INTO pmicontrolesis.menu VALUES (21132, 652, 21126, 'Rela√ß√£o de Alunos ANEEs', 1, 'educar_relatorio_relacao_aluno_pnee_escola.php', '_self', 1, 15, 142);
 INSERT INTO pmicontrolesis.menu VALUES (21133, 674, 21127, 'Boletim Escolar', 1, 'educar_relatorio_boletim.php', '_self', 1, 15, 110);
 INSERT INTO pmicontrolesis.menu VALUES (21134, 639, 21124, 'Reserva de Vaga', 1, 'educar_reserva_vaga_lst.php', '_self', 1, 15, 36);
-INSERT INTO pmicontrolesis.menu VALUES (21135, 900, 21126, 'Alunos ANEEs InstituiÁ„o', 2, 'educar_relatorio_relacao_qtd_aluno_pnee_escola.php', '_self', 1, 15, 1);
-INSERT INTO pmicontrolesis.menu VALUES (21136, 664, 21127, 'Di·rio de FrequÍncia', 2, 'educar_relatorio_diario_classe.php', '_self', 1, 15, 122);
-INSERT INTO pmicontrolesis.menu VALUES (21137, 641, 21124, 'Quadro de Hor·rio', 2, 'educar_quadro_horario_lst.php', '_self', 1, 15, 105);
+INSERT INTO pmicontrolesis.menu VALUES (21135, 900, 21126, 'Alunos ANEEs Institui√ß√£o', 2, 'educar_relatorio_relacao_qtd_aluno_pnee_escola.php', '_self', 1, 15, 1);
+INSERT INTO pmicontrolesis.menu VALUES (21136, 664, 21127, 'Di√°rio de Frequ√™ncia', 2, 'educar_relatorio_diario_classe.php', '_self', 1, 15, 122);
+INSERT INTO pmicontrolesis.menu VALUES (21137, 641, 21124, 'Quadro de Hor√°rio', 2, 'educar_quadro_horario_lst.php', '_self', 1, 15, 105);
 INSERT INTO pmicontrolesis.menu VALUES (21138, 653, 21126, 'Demonstrativo Alunos Defasados', 2, 'educar_relatorio_demonstrativo_defasado.php', '_self', 1, 15, 82);
-INSERT INTO pmicontrolesis.menu VALUES (21139, 555, 21125, 'Usu·rios', 2, 'educar_usuario_lst.php', '_self', 1, 15, 141);
+INSERT INTO pmicontrolesis.menu VALUES (21139, 555, 21125, 'Usu√°rios', 2, 'educar_usuario_lst.php', '_self', 1, 15, 141);
 INSERT INTO pmicontrolesis.menu VALUES (21140, NULL, 21122, 'Curso', 2, NULL, '_self', 1, 15, 20);
 INSERT INTO pmicontrolesis.menu VALUES (21141, 786, 21126, 'Demonst. Aluno Defasado Geral', 3, 'educar_relatorio_demonstrativo_defasado_geral.php', '_self', 1, 15, 84);
 INSERT INTO pmicontrolesis.menu VALUES (21142, 654, 21126, 'Controle Desempenho de Alunos', 3, 'educar_relatorio_controle_bim_desempenho.php', '_self', 1, 15, 111);
-INSERT INTO pmicontrolesis.menu VALUES (21144, 659, 21124, 'EnturmaÁ„o', 3, 'educar_matriculas_turma_lst.php', '_self', 1, 15, 145);
-INSERT INTO pmicontrolesis.menu VALUES (21145, 670, 21127, 'Di·rio de AvaliaÁıes', 3, 'educar_relatorio_diario_classe_avaliacao.php', '_self', 1, 15, 1);
+INSERT INTO pmicontrolesis.menu VALUES (21144, 659, 21124, 'Enturma√ß√£o', 3, 'educar_matriculas_turma_lst.php', '_self', 1, 15, 145);
+INSERT INTO pmicontrolesis.menu VALUES (21145, 670, 21127, 'Di√°rio de Avalia√ß√µes', 3, 'educar_relatorio_diario_classe_avaliacao.php', '_self', 1, 15, 1);
 INSERT INTO pmicontrolesis.menu VALUES (21146, 632, 21123, 'Escolaridade', 3, 'educar_escolaridade_lst.php', '_self', 1, 15, 1);
 INSERT INTO pmicontrolesis.menu VALUES (21147, NULL, 21122, 'Componentes Curriculares', 3, NULL, '_self', 1, 15, 190);
-INSERT INTO pmicontrolesis.menu VALUES (21148, 746, 21127, 'HistÛrico Escolar', 4, 'educar_relatorio_historico_escolar.php', '_self', 1, 15, 1);
-INSERT INTO pmicontrolesis.menu VALUES (21149, 661, 21126, 'RelatÛrio Mov, Mensal Alunos', 4, 'educar_relatorio_mov_mensal_aluno.php', '_self', 1, 15, 104);
-INSERT INTO pmicontrolesis.menu VALUES (21150, NULL, 21122, 'SÈrie', 4, NULL, '_self', 1, 15, 37);
+INSERT INTO pmicontrolesis.menu VALUES (21148, 746, 21127, 'Hist√≥rico Escolar', 4, 'educar_relatorio_historico_escolar.php', '_self', 1, 15, 1);
+INSERT INTO pmicontrolesis.menu VALUES (21149, 661, 21126, 'Relat√≥rio Mov, Mensal Alunos', 4, 'educar_relatorio_mov_mensal_aluno.php', '_self', 1, 15, 104);
+INSERT INTO pmicontrolesis.menu VALUES (21150, NULL, 21122, 'S√©rie', 4, NULL, '_self', 1, 15, 37);
 INSERT INTO pmicontrolesis.menu VALUES (21151, 633, 21123, 'Motivo de Afastamento', 4, 'educar_motivo_afastamento_lst.php', '_self', 1, 15, 1);
 INSERT INTO pmicontrolesis.menu VALUES (21152, 642, 21124, 'Faltas/Notas', 4, 'educar_falta_nota_aluno_lst.php', '_self', 1, 15, 1);
-INSERT INTO pmicontrolesis.menu VALUES (21153, 634, 21123, 'FunÁ„o', 5, 'educar_funcao_lst.php', '_self', 1, 15, 1);
-INSERT INTO pmicontrolesis.menu VALUES (21155, 927, 21127, 'Di·rio de FrequÍncia Temp.', 5, 'educar_relatorio_diario_classe_temp.php', '_self', 1, 15, 1);
-INSERT INTO pmicontrolesis.menu VALUES (21156, 829, 21123, 'Categoria NÌveis', 5, 'educar_categoria_nivel_lst.php', '_self', 1, 15, 20);
-INSERT INTO pmicontrolesis.menu VALUES (21157, 587, 21122, 'SequÍncia de EnturmaÁ„o', 5, 'educar_sequencia_serie_lst.php', '_self', 1, 15, 145);
-INSERT INTO pmicontrolesis.menu VALUES (21158, NULL, 21123, 'RelatÛrios Servidores', 6, NULL, '_self', 1, 15, 176);
-INSERT INTO pmicontrolesis.menu VALUES (21159, 584, 21122, 'MÛdulos', 6, 'educar_modulo_lst.php', '_self', 1, 15, 1);
-INSERT INTO pmicontrolesis.menu VALUES (21160, 845, 21124, 'RematrÌcula Autom·tica', 6, 'educar_avancar_mod_cad.php', '_self', 1, 15, 1);
+INSERT INTO pmicontrolesis.menu VALUES (21153, 634, 21123, 'Fun√ß√£o', 5, 'educar_funcao_lst.php', '_self', 1, 15, 1);
+INSERT INTO pmicontrolesis.menu VALUES (21155, 927, 21127, 'Di√°rio de Frequ√™ncia Temp.', 5, 'educar_relatorio_diario_classe_temp.php', '_self', 1, 15, 1);
+INSERT INTO pmicontrolesis.menu VALUES (21156, 829, 21123, 'Categoria N√≠veis', 5, 'educar_categoria_nivel_lst.php', '_self', 1, 15, 20);
+INSERT INTO pmicontrolesis.menu VALUES (21157, 587, 21122, 'Sequ√™ncia de Enturma√ß√£o', 5, 'educar_sequencia_serie_lst.php', '_self', 1, 15, 145);
+INSERT INTO pmicontrolesis.menu VALUES (21158, NULL, 21123, 'Relat√≥rios Servidores', 6, NULL, '_self', 1, 15, 176);
+INSERT INTO pmicontrolesis.menu VALUES (21159, 584, 21122, 'M√≥dulos', 6, 'educar_modulo_lst.php', '_self', 1, 15, 1);
+INSERT INTO pmicontrolesis.menu VALUES (21160, 845, 21124, 'Rematr√≠cula Autom√°tica', 6, 'educar_avancar_mod_cad.php', '_self', 1, 15, 1);
 INSERT INTO pmicontrolesis.menu VALUES (21161, NULL, 21122, 'Escola', 7, NULL, '_self', 1, 15, 91);
 INSERT INTO pmicontrolesis.menu VALUES (21162, NULL, 21122, 'Infra Estrutura', 8, NULL, '_self', 1, 15, 108);
-INSERT INTO pmicontrolesis.menu VALUES (21163, 684, 21126, 'RelaÁ„o dos Alunos Enturmados', 8, 'educar_relatorio_alunos_enturmados.php', '_self', 1, 15, 1);
-INSERT INTO pmicontrolesis.menu VALUES (21164, 685, 21126, 'RelaÁ„o dos Alunos NEnturmados', 9, 'educar_relatorio_alunos_nao_enturmados.php', '_self', 1, 15, 1);
+INSERT INTO pmicontrolesis.menu VALUES (21163, 684, 21126, 'Rela√ß√£o dos Alunos Enturmados', 8, 'educar_relatorio_alunos_enturmados.php', '_self', 1, 15, 1);
+INSERT INTO pmicontrolesis.menu VALUES (21164, 685, 21126, 'Rela√ß√£o dos Alunos NEnturmados', 9, 'educar_relatorio_alunos_nao_enturmados.php', '_self', 1, 15, 1);
 INSERT INTO pmicontrolesis.menu VALUES (21165, NULL, 21122, 'Turma', 9, NULL, '_self', 1, 15, 141);
 INSERT INTO pmicontrolesis.menu VALUES (21166, 696, 21126, 'Quadro Curricular', 9, 'educar_relatorio_quadro_curricular.php', '_self', 1, 15, 105);
 INSERT INTO pmicontrolesis.menu VALUES (21167, 807, 21126, 'Espelho de Notas', 10, 'educar_relatorio_alunos_nota_semestre.php', '_self', 1, 15, 1);
 INSERT INTO pmicontrolesis.menu VALUES (21168, 811, 21126, 'Espelho de Notas Bimestral', 10, 'educar_relatorio_alunos_nota_semestre_disc.php', '_self', 1, 15, 1);
-INSERT INTO pmicontrolesis.menu VALUES (21169, NULL, 21122, 'Calend·rio Letivo', 10, NULL, '_self', 1, 15, 104);
-INSERT INTO pmicontrolesis.menu VALUES (21170, 631, 21122, 'DeficiÍncias', 11, 'educar_deficiencia_lst.php', '_self', 1, 15, 142);
+INSERT INTO pmicontrolesis.menu VALUES (21169, NULL, 21122, 'Calend√°rio Letivo', 10, NULL, '_self', 1, 15, 104);
+INSERT INTO pmicontrolesis.menu VALUES (21170, 631, 21122, 'Defici√™ncias', 11, 'educar_deficiencia_lst.php', '_self', 1, 15, 142);
 INSERT INTO pmicontrolesis.menu VALUES (21171, NULL, 21122, 'Aluno', 12, NULL, '_self', 1, 15, 62);
-INSERT INTO pmicontrolesis.menu VALUES (21172, NULL, 21122, 'Material Did·tico', 13, NULL, '_self', 1, 15, 126);
-INSERT INTO pmicontrolesis.menu VALUES (21173, 580, 21122, 'Tipos de OcorrÍncias', 13, 'educar_tipo_ocorrencia_disciplinar_lst.php', '_self', 1, 15, 194);
-INSERT INTO pmicontrolesis.menu VALUES (21174, 575, 21122, 'Tipo de TransferÍncia', 14, 'educar_transferencia_tipo_lst.php', '_self', 1, 15, 1);
-INSERT INTO pmicontrolesis.menu VALUES (21175, 707, 21126, 'Alunos Matriculados SintÈtico', 15, 'educar_relatorio_alunos_matriculados_sintetico.php', '_self', 1, 15, 62);
+INSERT INTO pmicontrolesis.menu VALUES (21172, NULL, 21122, 'Material Did√°tico', 13, NULL, '_self', 1, 15, 126);
+INSERT INTO pmicontrolesis.menu VALUES (21173, 580, 21122, 'Tipos de Ocorr√™ncias', 13, 'educar_tipo_ocorrencia_disciplinar_lst.php', '_self', 1, 15, 194);
+INSERT INTO pmicontrolesis.menu VALUES (21174, 575, 21122, 'Tipo de Transfer√™ncia', 14, 'educar_transferencia_tipo_lst.php', '_self', 1, 15, 1);
+INSERT INTO pmicontrolesis.menu VALUES (21175, 707, 21126, 'Alunos Matriculados Sint√©tico', 15, 'educar_relatorio_alunos_matriculados_sintetico.php', '_self', 1, 15, 62);
 INSERT INTO pmicontrolesis.menu VALUES (21176, NULL, 21122, 'Tipos', 15, NULL, '_self', 1, 15, 1);
-INSERT INTO pmicontrolesis.menu VALUES (21177, NULL, 21122, 'PrÈ-Requisito', 16, NULL, '_self', 1, 15, 1);
+INSERT INTO pmicontrolesis.menu VALUES (21177, NULL, 21122, 'Pr√©-Requisito', 16, NULL, '_self', 1, 15, 1);
 INSERT INTO pmicontrolesis.menu VALUES (21178, 711, 21126, 'Documentos Pendentes', 17, 'educar_relatorio_documentos_pendentes.php', '_self', 1, 15, 153);
-INSERT INTO pmicontrolesis.menu VALUES (21179, NULL, 21126, 'RelaÁ„o de Alunos ANNEs - qtd', 22, NULL, '_self', 1, 15, 1);
-INSERT INTO pmicontrolesis.menu VALUES (21180, 911, 21126, 'Ficha de RematrÌcula', 22, 'educar_relatorio_ficha_rematricula.php', '_self', 1, 15, 1);
-INSERT INTO pmicontrolesis.menu VALUES (21181, 835, 21124, 'RelatÛrio Quadros de Hor·rio', 25, 'educar_relatorio_quadro_horario.php', '_self', 1, 15, 105);
+INSERT INTO pmicontrolesis.menu VALUES (21179, NULL, 21126, 'Rela√ß√£o de Alunos ANNEs - qtd', 22, NULL, '_self', 1, 15, 1);
+INSERT INTO pmicontrolesis.menu VALUES (21180, 911, 21126, 'Ficha de Rematr√≠cula', 22, 'educar_relatorio_ficha_rematricula.php', '_self', 1, 15, 1);
+INSERT INTO pmicontrolesis.menu VALUES (21181, 835, 21124, 'Relat√≥rio Quadros de Hor√°rio', 25, 'educar_relatorio_quadro_horario.php', '_self', 1, 15, 105);
 INSERT INTO pmicontrolesis.menu VALUES (21182, 916, 21126, 'Registro de Trans. Expedidas', 25, 'educar_relatorio_registro_transferencias.php', '_self', 1, 15, 1);
-INSERT INTO pmicontrolesis.menu VALUES (21183, 774, 21126, 'RelatÛrio Alunos Idade x Sexo', 25, 'educar_relatorio_quadro_idade_sexo_serie.php', '_self', 1, 15, 1);
-INSERT INTO pmicontrolesis.menu VALUES (21184, 917, 21126, 'Alunos 5™ AvaliaÁ„o', 26, 'educar_relatorio_alunos_quinta_avaliacao.php', '_self', 1, 15, 1);
+INSERT INTO pmicontrolesis.menu VALUES (21183, 774, 21126, 'Relat√≥rio Alunos Idade x Sexo', 25, 'educar_relatorio_quadro_idade_sexo_serie.php', '_self', 1, 15, 1);
+INSERT INTO pmicontrolesis.menu VALUES (21184, 917, 21126, 'Alunos 5¬™ Avalia√ß√£o', 26, 'educar_relatorio_alunos_quinta_avaliacao.php', '_self', 1, 15, 1);
 INSERT INTO pmicontrolesis.menu VALUES (21185, 918, 21126, 'Ata Resultado Final', 28, 'educar_relatorio_ata_resultado_final.php', '_self', 1, 15, 1);
-INSERT INTO pmicontrolesis.menu VALUES (21186, 836, 21126, 'RelatÛrio de alunos por idade', 30, 'educar_relatorio_alunos_idade.php', '_self', 1, 15, 1);
+INSERT INTO pmicontrolesis.menu VALUES (21186, 836, 21126, 'Relat√≥rio de alunos por idade', 30, 'educar_relatorio_alunos_idade.php', '_self', 1, 15, 1);
 INSERT INTO pmicontrolesis.menu VALUES (21187, 823, 21126, 'Resultado Final', 30, 'educar_relatorio_resultado_final.php', '_self', 1, 15, 1);
-INSERT INTO pmicontrolesis.menu VALUES (21188, 930, 21126, 'Levantamento Alfab. e n„o Alf.', 30, 'educar_relatorio_alfabetizados.php', '_self', 1, 15, 1);
-INSERT INTO pmicontrolesis.menu VALUES (21189, 830, 21126, 'Alunos BenefÌcios', 30, 'educar_relatorio_alunos_beneficios.php', '_self', 1, 15, 1);
+INSERT INTO pmicontrolesis.menu VALUES (21188, 930, 21126, 'Levantamento Alfab. e n√£o Alf.', 30, 'educar_relatorio_alfabetizados.php', '_self', 1, 15, 1);
+INSERT INTO pmicontrolesis.menu VALUES (21189, 830, 21126, 'Alunos Benef√≠cios', 30, 'educar_relatorio_alunos_beneficios.php', '_self', 1, 15, 1);
 INSERT INTO pmicontrolesis.menu VALUES (21190, 824, 21126, 'Acompanhamento Mensal', 31, 'educar_relatorio_acompanhamento_mensal.php', '_self', 1, 15, 1);
-INSERT INTO pmicontrolesis.menu VALUES (21191, 933, 21126, 'Levantamento Turma PerÌodo', 31, 'educar_relatorio_levantamento_turma_periodo_aluno.php', '_self', 1, 15, 1);
+INSERT INTO pmicontrolesis.menu VALUES (21191, 933, 21126, 'Levantamento Turma Per√≠odo', 31, 'educar_relatorio_levantamento_turma_periodo_aluno.php', '_self', 1, 15, 1);
 INSERT INTO pmicontrolesis.menu VALUES (21192, 944, 21126, 'Demons. Alu. Defasados Nominal', 31, 'educar_alunos_defasados_nominal.php', '_self', 1, 15, 1);
 INSERT INTO pmicontrolesis.menu VALUES (21193, 825, 21126, 'Ficha de Leitura Escrita', 33, 'educar_relatorio_ficha_leitura.php', '_self', 1, 15, 1);
 INSERT INTO pmicontrolesis.menu VALUES (21194, 826, 21126, 'Acompanhamento Leitura', 35, 'educar_relatorio_acompanhamento_leitura_livros.php', '_self', 1, 15, 1);
 INSERT INTO pmicontrolesis.menu VALUES (21195, 946, 21147, 'Listar Componentes', 0, 'module/ComponenteCurricular/index', '_self', 1, 15, 192);
 INSERT INTO pmicontrolesis.menu VALUES (21197, 586, 21165, 'Cadastrar', 1, 'educar_turma_lst.php', '_self', 1, 15, 1);
 INSERT INTO pmicontrolesis.menu VALUES (21198, 561, 21161, 'Cadastrar', 1, 'educar_escola_lst.php', '_self', 1, 15, 1);
-INSERT INTO pmicontrolesis.menu VALUES (21199, 620, 21169, 'Calend·rios', 1, 'educar_calendario_ano_letivo_lst.php', '_self', 1, 15, 1);
-INSERT INTO pmicontrolesis.menu VALUES (21200, 567, 21162, 'PrÈdios', 1, 'educar_infra_predio_lst.php', '_self', 1, 15, 147);
+INSERT INTO pmicontrolesis.menu VALUES (21199, 620, 21169, 'Calend√°rios', 1, 'educar_calendario_ano_letivo_lst.php', '_self', 1, 15, 1);
+INSERT INTO pmicontrolesis.menu VALUES (21200, 567, 21162, 'Pr√©dios', 1, 'educar_infra_predio_lst.php', '_self', 1, 15, 147);
 INSERT INTO pmicontrolesis.menu VALUES (21201, 583, 21150, 'Cadastrar', 1, 'educar_serie_lst.php', '_self', 1, 15, 1);
 INSERT INTO pmicontrolesis.menu VALUES (21202, 566, 21140, 'Cadastrar', 1, 'educar_curso_lst.php', '_self', 1, 15, 1);
-INSERT INTO pmicontrolesis.menu VALUES (21203, 690, 21158, 'RelatÛrios Professores', 1, 'educar_relatorio_quadro_professores.php', '_self', 1, 15, 1);
+INSERT INTO pmicontrolesis.menu VALUES (21203, 690, 21158, 'Relat√≥rios Professores', 1, 'educar_relatorio_quadro_professores.php', '_self', 1, 15, 1);
 INSERT INTO pmicontrolesis.menu VALUES (21204, 569, 21172, 'Materiais', 1, 'educar_material_didatico_lst.php', '_self', 1, 15, 1);
 INSERT INTO pmicontrolesis.menu VALUES (21205, 578, 21171, 'Alunos', 1, 'educar_aluno_lst.php', '_self', 1, 15, 1);
-INSERT INTO pmicontrolesis.menu VALUES (21206, 945, 21147, '¡reas de Conhecimento', 1, 'module/AreaConhecimento/index', '_self', 1, 15, 189);
-INSERT INTO pmicontrolesis.menu VALUES (21207, 574, 21162, 'Comodo PrÈdio', 2, 'educar_infra_predio_comodo_lst.php', '_self', 1, 15, 1);
-INSERT INTO pmicontrolesis.menu VALUES (21208, 573, 21140, 'HabilitaÁ„o', 2, 'educar_habilitacao_lst.php', '_self', 1, 15, 1);
+INSERT INTO pmicontrolesis.menu VALUES (21206, 945, 21147, '√Åreas de Conhecimento', 1, 'module/AreaConhecimento/index', '_self', 1, 15, 189);
+INSERT INTO pmicontrolesis.menu VALUES (21207, 574, 21162, 'Comodo Pr√©dio', 2, 'educar_infra_predio_comodo_lst.php', '_self', 1, 15, 1);
+INSERT INTO pmicontrolesis.menu VALUES (21208, 573, 21140, 'Habilita√ß√£o', 2, 'educar_habilitacao_lst.php', '_self', 1, 15, 1);
 INSERT INTO pmicontrolesis.menu VALUES (21209, 576, 21169, 'Motivos', 2, 'educar_calendario_dia_motivo_lst.php', '_self', 1, 15, 1);
-INSERT INTO pmicontrolesis.menu VALUES (21210, 581, 21171, 'BenefÌcios', 2, 'educar_aluno_beneficio_lst.php', '_self', 1, 15, 1);
-INSERT INTO pmicontrolesis.menu VALUES (21211, 562, 21161, 'LocalizaÁ„o', 2, 'educar_escola_localizacao_lst.php', '_self', 1, 15, 1);
+INSERT INTO pmicontrolesis.menu VALUES (21210, 581, 21171, 'Benef√≠cios', 2, 'educar_aluno_beneficio_lst.php', '_self', 1, 15, 1);
+INSERT INTO pmicontrolesis.menu VALUES (21211, 562, 21161, 'Localiza√ß√£o', 2, 'educar_escola_localizacao_lst.php', '_self', 1, 15, 1);
 INSERT INTO pmicontrolesis.menu VALUES (21212, 563, 21172, 'Tipo Material', 2, 'educar_material_tipo_lst.php', '_self', 1, 15, 1);
 INSERT INTO pmicontrolesis.menu VALUES (21213, 577, 21147, 'Tipos de Dispensa', 2, 'educar_tipo_dispensa_lst.php', '_self', 1, 15, 193);
 INSERT INTO pmicontrolesis.menu VALUES (21214, 827, 21158, 'Professores por Disciplina', 2, 'educar_relatorio_professor_disciplina.php', '_self', 1, 15, 1);
 INSERT INTO pmicontrolesis.menu VALUES (21215, 570, 21165, 'Tipo', 2, 'educar_turma_tipo_lst.php', '_self', 1, 15, 1);
-INSERT INTO pmicontrolesis.menu VALUES (21216, 585, 21150, 'Escola-SÈrie', 3, 'educar_escola_serie_lst.php', '_self', 1, 15, 1);
-INSERT INTO pmicontrolesis.menu VALUES (21217, 831, 21158, 'Servidores por NÌvel', 3, 'educar_relatorio_servidor_nivel.php', '_self', 1, 15, 1);
+INSERT INTO pmicontrolesis.menu VALUES (21216, 585, 21150, 'Escola-S√©rie', 3, 'educar_escola_serie_lst.php', '_self', 1, 15, 1);
+INSERT INTO pmicontrolesis.menu VALUES (21217, 831, 21158, 'Servidores por N√≠vel', 3, 'educar_relatorio_servidor_nivel.php', '_self', 1, 15, 1);
 INSERT INTO pmicontrolesis.menu VALUES (21218, 647, 21161, 'Rede de Ensino', 3, 'educar_escola_rede_ensino_lst.php', '_self', 1, 15, 1);
-INSERT INTO pmicontrolesis.menu VALUES (21219, 579, 21171, 'Religi„o', 3, 'educar_religiao_lst.php', '_self', 1, 15, 1);
+INSERT INTO pmicontrolesis.menu VALUES (21219, 579, 21171, 'Religi√£o', 3, 'educar_religiao_lst.php', '_self', 1, 15, 1);
 INSERT INTO pmicontrolesis.menu VALUES (21220, 568, 21140, 'Tipo de Regime', 3, 'educar_tipo_regime_lst.php', '_self', 1, 15, 1);
-INSERT INTO pmicontrolesis.menu VALUES (21221, 572, 21162, 'FunÁ„o CÙmodo', 3, 'educar_infra_comodo_funcao_lst.php', '_self', 1, 15, 1);
+INSERT INTO pmicontrolesis.menu VALUES (21221, 572, 21162, 'Fun√ß√£o C√¥modo', 3, 'educar_infra_comodo_funcao_lst.php', '_self', 1, 15, 1);
 INSERT INTO pmicontrolesis.menu VALUES (21222, 558, 21140, 'Tipo de Ensino', 4, 'educar_tipo_ensino_lst.php', '_self', 1, 15, 124);
-INSERT INTO pmicontrolesis.menu VALUES (21223, 678, 21171, 'RaÁa', 4, 'educar_raca_lst.php', '_self', 1, 15, 1);
-INSERT INTO pmicontrolesis.menu VALUES (21224, 571, 21140, 'NÌvel Ensino', 5, 'educar_nivel_ensino_lst.php', '_self', 1, 15, 1);
-INSERT INTO pmicontrolesis.menu VALUES (21226, NULL, 21122, 'Regras de AvaliaÁ„o', 2, NULL, '_self', 1, 15, 195);
+INSERT INTO pmicontrolesis.menu VALUES (21223, 678, 21171, 'Ra√ßa', 4, 'educar_raca_lst.php', '_self', 1, 15, 1);
+INSERT INTO pmicontrolesis.menu VALUES (21224, 571, 21140, 'N√≠vel Ensino', 5, 'educar_nivel_ensino_lst.php', '_self', 1, 15, 1);
+INSERT INTO pmicontrolesis.menu VALUES (21226, NULL, 21122, 'Regras de Avalia√ß√£o', 2, NULL, '_self', 1, 15, 195);
 INSERT INTO pmicontrolesis.menu VALUES (21227, 947, 21226, 'Listar Regras', 0, 'module/RegraAvaliacao/index', '_self', 1, 15, 197);
-INSERT INTO pmicontrolesis.menu VALUES (21228, 948, 21226, 'FÛrmulas de C·lculo de MÈdia', 1, 'module/FormulaMedia/index', '_self', 1, 15, 198);
+INSERT INTO pmicontrolesis.menu VALUES (21228, 948, 21226, 'F√≥rmulas de C√°lculo de M√©dia', 1, 'module/FormulaMedia/index', '_self', 1, 15, 198);
 INSERT INTO pmicontrolesis.menu VALUES (21229, 949, 21226, 'Tabelas de Arredondamento', 2, 'module/TabelaArredondamento/index', '_self', 1, 15, 199);
-INSERT INTO pmicontrolesis.menu VALUES (21230, 693, 21126, 'Registro de MatrÌculas', 30, 'educar_relatorio_registro_matriculas.php', '_self', 1, 15, 1);
+INSERT INTO pmicontrolesis.menu VALUES (21230, 693, 21126, 'Registro de Matr√≠culas', 30, 'educar_relatorio_registro_matriculas.php', '_self', 1, 15, 1);
  
--- Corrige permissıes para o usu·rio do tipo Administrador
+-- Corrige permiss√µes para o usu√°rio do tipo Administrador
 DELETE FROM menu_tipo_usuario WHERE ref_cod_tipo_usuario = 1;
  
 INSERT INTO pmieducar.menu_tipo_usuario VALUES (1, 826, 1, 1, 1);
@@ -293,7 +293,7 @@ INSERT INTO pmieducar.menu_tipo_usuario VALUES (1, 602, 1, 1, 1);
 INSERT INTO pmieducar.menu_tipo_usuario VALUES (1, 596, 1, 1, 1);
 INSERT INTO pmieducar.menu_tipo_usuario VALUES (1, 597, 1, 1, 1);
 
--- Corrige as permissıes para o usu·rio do tipo Escola, adiciona permissıes
+-- Corrige as permiss√µes para o usu√°rio do tipo Escola, adiciona permiss√µes
 -- ausentes
 INSERT INTO pmieducar.menu_tipo_usuario VALUES (2, 946, 1, 1, 1);
 INSERT INTO pmieducar.menu_tipo_usuario VALUES (2, 948, 1, 1, 1);
@@ -301,7 +301,7 @@ INSERT INTO pmieducar.menu_tipo_usuario VALUES (2, 947, 1, 1, 1);
 INSERT INTO pmieducar.menu_tipo_usuario VALUES (2, 949, 1, 1, 1);
 INSERT INTO pmieducar.menu_tipo_usuario VALUES (2, 945, 1, 1, 1);
 
--- Apaga todas as permissıes do usu·rio administrador e as atribui novamente
+-- Apaga todas as permiss√µes do usu√°rio administrador e as atribui novamente
 DELETE FROM portal.menu_funcionario WHERE ref_ref_cod_pessoa_fj = 1;
 
 INSERT INTO portal.menu_funcionario VALUES (1, 0, 0, 0);

@@ -1,39 +1,39 @@
 TODO
 ====
 
-1. Reimplementar o histórico escolar
+1. Reimplementar o histÃ³rico escolar
 
-O histórico escolar não foi atualizado para integrar com o novo Boletim. O
-histórico era populado durante o encerramento do ano letivo ou durante a
-rematrícula automática. Neste, os nomes das "disciplinas" (agora nomeadas como
+O histÃ³rico escolar nÃ£o foi atualizado para integrar com o novo Boletim. O
+histÃ³rico era populado durante o encerramento do ano letivo ou durante a
+rematrÃ­cula automÃ¡tica. Neste, os nomes das "disciplinas" (agora nomeadas como
 "componentes curriculares") era persistidas junto com as notas e faltas do
-aluno. Um relatório (intranet/educar_relatorio_historico_escolar_proc.php)
+aluno. Um relatÃ³rio (intranet/educar_relatorio_historico_escolar_proc.php)
 exportava estes dados como um documento PDF.
 
-Todas essas funcionalidades estão quebradas.
+Todas essas funcionalidades estÃ£o quebradas.
 
 
-2. Analisar como as notas e faltas do aluno serão tratadas durante uma
-   transferência de turma e/ou escola
+2. Analisar como as notas e faltas do aluno serÃ£o tratadas durante uma
+   transferÃªncia de turma e/ou escola
 
-No momento em que a matrícula do aluno era atualizada e este estivesse com uma
-solicitação de transferência para uma outra escola, as notas e faltas
-(globalizadas ou não) eram recriadas sob um novo identificador de escola
-(vide código removido do arquivo educar_matricula_cad.php na revisão 715
+No momento em que a matrÃ­cula do aluno era atualizada e este estivesse com uma
+solicitaÃ§Ã£o de transferÃªncia para uma outra escola, as notas e faltas
+(globalizadas ou nÃ£o) eram recriadas sob um novo identificador de escola
+(vide cÃ³digo removido do arquivo educar_matricula_cad.php na revisÃ£o 715
 <http://svn.softwarepublico.gov.br/trac/ieducar/changeset/715>).
 
-No entanto, a matriz curricular de uma escola/ano escolar (série) podem
-variar, o que já tornava esta operação inconsistente. Os registros com as notas
+No entanto, a matriz curricular de uma escola/ano escolar (sÃ©rie) podem
+variar, o que jÃ¡ tornava esta operaÃ§Ã£o inconsistente. Os registros com as notas
 e faltas continuavam nas tabelas subjacentes (e de fato, continuam). Uma melhor
-forma deve ser estudada, talvez com um implementação nova do histórico escolar.
+forma deve ser estudada, talvez com um implementaÃ§Ã£o nova do histÃ³rico escolar.
 
 
-3. Analisar uma forma de "lock" para as regras de avaliação, para evitar que
-   alterações afetem os resultados apurados nos boletins
+3. Analisar uma forma de "lock" para as regras de avaliaÃ§Ã£o, para evitar que
+   alteraÃ§Ãµes afetem os resultados apurados nos boletins
 
-A regra de avaliação foi implementada para ser estática durante um ano letivo.
-Como esta pode ser compartilhada entre diversos anos escolares (séries), as
-alterações são inevitáveis. É necessário descobrir uma forma para que isto não
-ocorra depois que as notas já tenham sido lançadas em um boletim, talvez
-impedindo a alteração ou dando uma opção de reprocessamento das médias e
-presença dos boletins afetados.
+A regra de avaliaÃ§Ã£o foi implementada para ser estÃ¡tica durante um ano letivo.
+Como esta pode ser compartilhada entre diversos anos escolares (sÃ©ries), as
+alteraÃ§Ãµes sÃ£o inevitÃ¡veis. Ã‰ necessÃ¡rio descobrir uma forma para que isto nÃ£o
+ocorra depois que as notas jÃ¡ tenham sido lanÃ§adas em um boletim, talvez
+impedindo a alteraÃ§Ã£o ou dando uma opÃ§Ã£o de reprocessamento das mÃ©dias e
+presenÃ§a dos boletins afetados.

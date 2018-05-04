@@ -46,16 +46,20 @@ class PromocaoController extends Portabilis_Controller_Page_ListController
   protected $_formMap    = array();
 
   public function Gerar() {
-    $this->inputsHelper()->dynamic('ano', array('id' => 'ano_escolar'));
+    $this->inputsHelper()->dynamic('ano', array('id' => 'ano'));
     $this->inputsHelper()->dynamic('instituicao', array('id' => 'instituicao_id'));
-    $this->inputsHelper()->dynamic('escola', array('required' => false));
+    $this->inputsHelper()->dynamic('escola', array('id' => 'escola', 'required' => false));
+    $this->inputsHelper()->dynamic('curso', array('id' => 'curso', 'required' => false));
+    $this->inputsHelper()->dynamic('serie', array('id' => 'serie', 'required' => false));
+    $this->inputsHelper()->dynamic('turma', array('id' => 'turma', 'required' => false));
+    $this->inputsHelper()->dynamic('situacaoMatricula', array('id' => 'matricula', 'value' => 10, 'required' => false));
 
     $this->loadResourceAssets($this->getDispatcher());
 
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_configuracoes_index.php"                  => "Configurações",
+         "educar_configuracoes_index.php"    => "Configurações",
          ""                                  => "Atualização de matrículas"
     ));
     $this->enviaLocalizacao($localizacao->montar());

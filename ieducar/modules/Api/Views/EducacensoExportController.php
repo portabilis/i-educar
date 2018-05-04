@@ -42,6 +42,10 @@ require_once 'Portabilis/Business/Professor.php';
 require_once 'App/Model/IedFinder.php';
 require_once 'ComponenteCurricular/Model/CodigoEducacenso.php';
 
+/**
+ * Class EducacensoExportController
+ * @deprecated Essa versão da API pública será descontinuada
+ */
 class EducacensoExportController extends ApiCoreController
 {
 
@@ -126,7 +130,7 @@ class EducacensoExportController extends ApiCoreController
     $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
 
     $export = $this->exportaDadosRegistro00($escolaId, $ano);
-    $export .= $this->exportaDadosRegistro10($escolaId);
+    $export .= $this->exportaDadosRegistro10($escolaId, $ano);
     foreach ($this->getTurmas($escolaId, $ano) as $turmaId => $turmaNome) {
       $export .= $this->exportaDadosRegistro20($escolaId, $turmaId, $data_ini, $data_fim);
     }
@@ -409,7 +413,7 @@ class EducacensoExportController extends ApiCoreController
     }
   }
 
-  protected function exportaDadosRegistro10($escolaId){
+  protected function exportaDadosRegistro10($escolaId, $ano){
     $sql =
         'SELECT
       \'10\' as r10s1,
@@ -419,24 +423,24 @@ class EducacensoExportController extends ApiCoreController
       e.condicao as r10s12,
       e.codigo_inep_escola_compartilhada,
       e.agua_consumida as r10s20,
-      e.agua_rede_publica as r10s21,
-      e.agua_poco_artesiano as r10s22,
-      e.agua_cacimba_cisterna_poco as r10s23,
-      e.agua_fonte_rio as r10s24,
-      e.agua_inexistente as r10s25,
-      e.energia_rede_publica as r10s26,
-      e.energia_gerador as r10s27,
-      e.energia_outros as r10s28,
-      e.energia_inexistente as r10s29,
-      e.esgoto_rede_publica as r10s30,
-      e.esgoto_fossa as r10s31,
-      e.esgoto_inexistente as r10s32,
-      e.lixo_coleta_periodica as r10s33,
-      e.lixo_queima as r10s34,
-      e.lixo_joga_outra_area as r10s35,
-      e.lixo_recicla as r10s36,
-      e.lixo_enterra as r10s37,
-      e.lixo_outros as r10s38,
+      CASE WHEN e.abastecimento_agua::varchar LIKE \'%1%\' THEN 1 ELSE 0 END as r10s21,
+      CASE WHEN e.abastecimento_agua::varchar LIKE \'%2%\' THEN 1 ELSE 0 END as r10s22,
+      CASE WHEN e.abastecimento_agua::varchar LIKE \'%3%\' THEN 1 ELSE 0 END as r10s23,
+      CASE WHEN e.abastecimento_agua::varchar LIKE \'%4%\' THEN 1 ELSE 0 END as r10s24,
+      CASE WHEN e.abastecimento_agua::varchar LIKE \'%5%\' THEN 1 ELSE 0 END as r10s25,
+      CASE WHEN e.abastecimento_energia::varchar LIKE \'%1%\' THEN 1 ELSE 0 END as r10s26,
+      CASE WHEN e.abastecimento_energia::varchar LIKE \'%2%\' THEN 1 ELSE 0 END as r10s27,
+      CASE WHEN e.abastecimento_energia::varchar LIKE \'%3%\' THEN 1 ELSE 0 END as r10s28,
+      CASE WHEN e.abastecimento_energia::varchar LIKE \'%4%\' THEN 1 ELSE 0 END as r10s29,
+      CASE WHEN e.esgoto_sanitario::varchar LIKE \'%1%\' THEN 1 ELSE 0 END as r10s30,
+      CASE WHEN e.esgoto_sanitario::varchar LIKE \'%2%\' THEN 1 ELSE 0 END as r10s31,
+      CASE WHEN e.esgoto_sanitario::varchar LIKE \'%3%\' THEN 1 ELSE 0 END as r10s32,
+      CASE WHEN e.destinacao_lixo::varchar LIKE \'%1%\' THEN 1 ELSE 0 END as r10s33,
+      CASE WHEN e.destinacao_lixo::varchar LIKE \'%2%\' THEN 1 ELSE 0 END as r10s34,
+      CASE WHEN e.destinacao_lixo::varchar LIKE \'%3%\' THEN 1 ELSE 0 END as r10s35,
+      CASE WHEN e.destinacao_lixo::varchar LIKE \'%4%\' THEN 1 ELSE 0 END as r10s36,
+      CASE WHEN e.destinacao_lixo::varchar LIKE \'%5%\' THEN 1 ELSE 0 END as r10s37,
+      CASE WHEN e.destinacao_lixo::varchar LIKE \'%6%\' THEN 1 ELSE 0 END as r10s38,
       e.dependencia_sala_diretoria as r10s39,
       e.dependencia_sala_professores as r10s40,
       e.dependencia_sala_secretaria as r10s41,
@@ -527,11 +531,18 @@ class EducacensoExportController extends ApiCoreController
 
       fundamental_ciclo as r10s96,
       localizacao_diferenciada as r10s97,
-      didatico_nao_utiliza as r10s98,
-      didatico_quilombola as r10s99,
-      didatico_indigena as r10s100,
+      CASE WHEN materiais_didaticos_especificos = 1 THEN 1
+           ELSE 0
+       END as r10s98,
+      CASE WHEN materiais_didaticos_especificos = 2 THEN 1
+           ELSE 0
+       END as r10s99,
+      CASE WHEN materiais_didaticos_especificos = 3 THEN 1
+           ELSE 0
+       END as r10s100,
       educacao_indigena as r10s101,
-      lingua_ministrada,
+      CASE WHEN lingua_ministrada = 1 THEN 1 ELSE 0 END AS r10s102,
+      CASE WHEN lingua_ministrada = 2 THEN 1 ELSE 0 END AS r10s103,
       codigo_lingua_indigena as r10s104,
       espaco_brasil_aprendizado as r10s105,
       abre_final_semana as r10s106,
@@ -541,6 +552,7 @@ class EducacensoExportController extends ApiCoreController
          FROM pmieducar.turma
         WHERE ref_ref_cod_escola = $1
           AND etapa_educacenso IN (4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,41,56)
+          AND ano = $2
         LIMIT 1
       ) AS etapa_ensino_fundamental
 
@@ -553,7 +565,7 @@ class EducacensoExportController extends ApiCoreController
 
     $exclusivamente = 2;
 
-    extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, array('return_only' => 'first-row', 'params' => array($escolaId))));
+    extract(Portabilis_Utils_Database::fetchPreparedQuery($sql, array('return_only' => 'first-row', 'params' => array($escolaId, $ano))));
     if($r10s1){
       $d = '|';
       $return = '';
@@ -584,6 +596,18 @@ class EducacensoExportController extends ApiCoreController
         }
       }
 
+      if($r10s25 == 1){
+        $r10s21 = $r10s22 = $r10s23 = $r10s24 = 0;
+      }
+
+      if($r10s29 == 1){
+        $r10s26 = $r10s27 = $r10s28 = 0;
+      }
+
+      if($r10s32 == 1){
+        $r10s30 = $r10s31 = 0;
+      }
+
       if (!$r10s82) {
         $r10s86 = $r10s87 = NULL;
       }
@@ -602,12 +626,10 @@ class EducacensoExportController extends ApiCoreController
       $r10s98 = 1;
       $r10s99 = $r10s100 = 0;
 
-      if($lingua_ministrada && $r10s101){
-        $r10s102 = 1;
-        $r10s104 = $lingua_ministrada;
-      }elseif ($r10s124)
-        $r10s103 = 1;
-
+      if(!$r10s101){
+        $r10s102 = $r10s103 = $r10s104 = NULL;
+      }
+      
       for ($i=1; $i <= 107 ; $i++){
         if($i>=71 && $i<=85)
           $return .= (${'r10s'.$i} == 0 ? '' : ${'r10s'.$i}).$d;

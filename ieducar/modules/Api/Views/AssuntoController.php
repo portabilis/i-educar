@@ -37,6 +37,10 @@ require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
 require_once 'intranet/include/pmieducar/clsPmieducarAcervoAssunto.inc.php';
 
+/**
+ * Class AssuntoController
+ * @deprecated Essa versão da API pública será descontinuada
+ */
 class AssuntoController extends ApiCoreController
 {
   // search options
