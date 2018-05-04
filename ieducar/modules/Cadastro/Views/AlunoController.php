@@ -649,7 +649,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
             'label' => $labelCartorio,
             'value' => $documentos['cartorio_cert_civil'],
             'cols' => 45,
-            'max_length' => 150
+            'max_length' => 200,
         );
 
         $this->inputsHelper()->textArea('cartorio_emissao_certidao_civil', $options);
