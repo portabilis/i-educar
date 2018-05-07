@@ -171,6 +171,11 @@ class indice extends clsCadastro
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
+    if ($this->idpais == "45" && $this->nivelAcessoPessoaLogada() != 1) {
+        $this->mensagem = 'Não é permitido cadastro de municípios brasileiros, pois já estão previamente cadastrados.<br>';
+        return FALSE;
+    }
+
     $obj = new clsPublicMunicipio(NULL, $this->nome, $this->sigla_uf, NULL, NULL,
       NULL, $this->cod_ibge, NULL, 'M', NULL, NULL, $this->pessoa_logada, NULL, NULL, 'U',
       'I', NULL, 9);
@@ -199,6 +204,12 @@ class indice extends clsCadastro
     session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
+
+    if ($this->idpais == "45" && $this->nivelAcessoPessoaLogada() != 1) {
+        $this->mensagem = 'Não é permitido edição de municípios brasileiros, pois já estão previamente cadastrados.<br>';
+        return FALSE;
+    }
+
 
     $enderecamentoDetalhe = new clsPublicMunicipio($this->idmun);
     $enderecamentoDetalhe->cadastrou = $this->idmun;
@@ -232,6 +243,11 @@ class indice extends clsCadastro
     session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
+
+    if ($this->idpais == "45" && $this->nivelAcessoPessoaLogada() != 1) {
+        $this->mensagem = 'Não é permitido exclusão de municípios brasileiros, pois já estão previamente cadastrados.<br>';
+        return FALSE;
+    }
 
     $obj = new clsPublicMunicipio($this->idmun, NULL, NULL, NULL, NULL, NULL,
       NULL, NULL, NULL, NULL, $this->pessoa_logada);

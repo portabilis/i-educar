@@ -212,6 +212,11 @@ class indice extends clsCadastro
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
+    if ($this->idpais == "45" && $this->nivelAcessoPessoaLogada() != 1) {
+        $this->mensagem = 'Não é permitido cadastro de distritos brasileiros, pois já estão previamente cadastrados.<br>';
+        return FALSE;
+    }
+
     $obj = new clsPublicDistrito($this->idmun, NULL, NULL, $this->nome, NULL,
       NULL, 'U', $this->pessoa_logada, NULL, 'I', NULL, 9,
       $this->cod_ibge);
@@ -241,6 +246,11 @@ class indice extends clsCadastro
     session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
+
+    if ($this->idpais == "45" && $this->nivelAcessoPessoaLogada() != 1) {
+        $this->mensagem = 'Não é permitido edição de distritos brasileiros, pois já estão previamente cadastrados.<br>';
+        return FALSE;
+    }
 
     $enderecamentoDetalhe = new clsPublicDistrito(null, null, $this->iddis);
     $enderecamentoDetalhe->cadastrou = $this->iddis;
@@ -273,6 +283,11 @@ class indice extends clsCadastro
     session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
+
+    if ($this->idpais == "45" && $this->nivelAcessoPessoaLogada() != 1) {
+        $this->mensagem = 'Não é permitido exclusão de distritos brasileiros, pois já estão previamente cadastrados.<br>';
+        return FALSE;
+    }
 
     $obj = new clsPublicDistrito(NULL, NULL, $this->iddis, NULL, $this->pessoa_logada);
     $excluiu = $obj->excluir();
