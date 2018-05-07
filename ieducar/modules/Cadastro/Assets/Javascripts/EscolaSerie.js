@@ -1,11 +1,10 @@
-$j('#btn_enviar').removeAttr('onclick');
-$j('#btn_enviar').click(function () {
+function existeComponente(){
     if ($j('input[name^="disciplinas["]:checked').length <= 0) {
         alert('É necessário adicionar pelo menos um componente curricular.');
-    } else {
-        acao();
+        return false;
     }
-})
+    return true;
+}
 
 document.getElementById('ref_cod_instituicao').onchange = function () {
     getDuploEscolaCurso();
@@ -164,8 +163,9 @@ var submitButton = $j('#btn_enviar');
 submitButton.removeAttr('onclick');
 
 function existeDependencia(componentes){
-    serie = $j('#ref_cod_serie_').val();
-    escola = $j('#ref_cod_escola_').val();
+    var retorno = true;
+    var serie = $j('#ref_cod_serie_').val();
+    var escola = $j('#ref_cod_escola_').val();
     var url = getResourceUrlBuilder.buildUrl('/module/Api/ComponentesSerie',
                                              'existe-dependencia',
                                              {disciplinas : componentes,
@@ -175,19 +175,25 @@ function existeDependencia(componentes){
     var options = {
         url      : url,
         dataType : 'json',
+        async    : false,
         success  : function (dataResponse) {
             if(dataResponse.existe_dependencia){
                 messageUtils.error('Não foi possível remover o componente. Existe registros de dependência neste componente.');
-            }else {
-                acao();
+                retorno = true;
             }
         }
     };
 
     getResource(options);
+    return retorno;
 }
 
 submitButton.click(function(){
+
+    if (!existeComponente()) {
+        return false;
+    }
+    
     var componentesInput = $j('[name*=disciplinas]');
     var arrayComponentes = [];
 
@@ -199,5 +205,10 @@ submitButton.click(function(){
             arrayComponentes.push(id);
         }
     });
-    existeDependencia(arrayComponentes);
+
+    if (existeDependencia(arrayComponentes)) {
+        return false;
+    }
+
+    acao();
 });
