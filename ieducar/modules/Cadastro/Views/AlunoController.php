@@ -379,10 +379,14 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     public function Gerar()
     {
         $this->url_cancelar = '/intranet/educar_aluno_lst.php';
+
+        $configuracoes = new clsPmieducarConfiguracoesGerais();
+        $configuracoes = $configuracoes->detalhe();
+        
         $labels_botucatu = $GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu';
 
-        if ($labels_botucatu) {
-            $this->inputsHelper()->hidden('labels_botucatu');
+        if ($configuracoes["justificativa_falta_documentacao_obrigatorio"]) {
+            $this->inputsHelper()->hidden('justificativa_falta_documentacao_obrigatorio');
         }
 
         $cod_aluno = $_GET['id'];
@@ -429,7 +433,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         // código aluno inep
         $options = array('label' => $this->_getLabel('aluno_inep_id'), 'required' => false, 'size' => 25, 'max_length' => 14);
 
-        if ($labels_botucatu) {
+        if (!$configuracoes['mostrar_codigo_inep_aluno']) {
             $this->inputsHelper()->hidden('aluno_inep_id', array('value' => null));
         } else {
             $this->inputsHelper()->integer('aluno_inep_id', $options);
