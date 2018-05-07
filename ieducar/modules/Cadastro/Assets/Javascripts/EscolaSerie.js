@@ -1,11 +1,10 @@
-$j('#btn_enviar').removeAttr('onclick');
-$j('#btn_enviar').click(function () {
+function existeComponente(){
     if ($j('input[name^="disciplinas["]:checked').length <= 0) {
         alert('É necessário adicionar pelo menos um componente curricular.');
-    } else {
-        acao();
+        return false;
     }
-})
+    return true;
+}
 
 document.getElementById('ref_cod_instituicao').onchange = function () {
     getDuploEscolaCurso();
@@ -158,3 +157,59 @@ function marcarCheck(idValue) {
 }
 
 $j('.etapas_utilizadas').mask("9,9,9,9", {placeholder: "1,2,3..."});
+
+
+var submitButton = $j('#btn_enviar');
+submitButton.removeAttr('onclick');
+
+function existeDependencia(componentes){
+    var retorno = false;
+    var serie = $j('#ref_cod_serie_').val();
+    var escola = $j('#ref_cod_escola_').val();
+    var url = getResourceUrlBuilder.buildUrl('/module/Api/ComponentesSerie',
+                                             'existe-dependencia',
+                                             {disciplinas : componentes,
+                                              serie_id : serie,
+                                              escola_id : escola});
+
+    var options = {
+        url      : url,
+        dataType : 'json',
+        async    : false,
+        success  : function (dataResponse) {
+            if(dataResponse.existe_dependencia){
+                messageUtils.error('Não foi possível remover o componente. Existe registros de dependência neste componente.');
+                retorno = true;
+            }
+        }
+    };
+
+    getResource(options);
+    return retorno;
+}
+
+submitButton.click(function(){
+
+    if (!existeComponente()) {
+        return false;
+    }
+    
+    var componentesInput = $j('[name*=disciplinas]');
+    var arrayComponentes = [];
+
+    componentesInput.each(function(i, input) {
+        id = input.name.replace(/\D/g, '');
+        check = $j('[name="disciplinas[' + id + ']"]').is(':checked');
+
+        if (check) {
+            arrayComponentes.push(id);
+        }
+    });
+
+    if (existeDependencia(arrayComponentes)) {
+        return false;
+    }
+
+    acao();
+
+});
