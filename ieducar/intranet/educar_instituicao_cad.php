@@ -71,6 +71,7 @@ class indice extends clsCadastro
     var $bloqueia_matricula_serie_nao_seguinte;
     var $data_educacenso;
     var $altera_atestado_para_declaracao;
+    var $orgao_regional;
 
     function Inicializar()
     {
@@ -285,6 +286,12 @@ class indice extends clsCadastro
                 'value' => $this->data_educacenso
             )
         );
+
+        $orgaosRegionais = loadJson('educacenso_json/orgaos_regionais.json');
+        $orgaosRegionais = array_merge(array(null => 'Selecione'), $orgaosRegionais);
+
+        $options = array('label' => 'Código do órgão regional de ensino', 'resources' => $orgaosRegionais, 'value' => $this->orgao_regional, 'required' => false, 'size' => 70,);
+        $this->inputsHelper()->select('orgao_regional', $options);
     }
 
     function Novo()
@@ -318,6 +325,7 @@ class indice extends clsCadastro
         $obj->auditar_notas = !is_null($this->auditar_notas);
         $obj->data_educacenso = $this->data_educacenso;
         $obj->exigir_dados_socioeconomicos = is_null($this->exigir_dados_socioeconomicos) ? false : true;
+        $obj->orgao_regional = $this->orgao_regional;
         $cod_instituicao = $cadastrou = $obj->cadastra();
 
         if ($cadastrou) {
@@ -369,6 +377,7 @@ class indice extends clsCadastro
         $obj->data_fechamento = Portabilis_Date_Utils::brToPgSQL_ddmm($this->data_fechamento);
         $obj->data_educacenso = $this->data_educacenso;
         $obj->exigir_dados_socioeconomicos = is_null($this->exigir_dados_socioeconomicos) ? false : true;
+        $obj->orgao_regional = $this->orgao_regional;
 
         $detalheAntigo = $obj->detalhe();
 
