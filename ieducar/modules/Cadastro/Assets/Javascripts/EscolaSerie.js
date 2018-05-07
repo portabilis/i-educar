@@ -163,7 +163,7 @@ var submitButton = $j('#btn_enviar');
 submitButton.removeAttr('onclick');
 
 function existeDependencia(componentes){
-    var retorno = true;
+    var retorno = false;
     var serie = $j('#ref_cod_serie_').val();
     var escola = $j('#ref_cod_escola_').val();
     var url = getResourceUrlBuilder.buildUrl('/module/Api/ComponentesSerie',
@@ -211,4 +211,5 @@ submitButton.click(function(){
     }
 
     acao();
+
 });
