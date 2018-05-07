@@ -2696,7 +2696,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     if (!is_numeric($media)) {
       require_once 'CoreExt/Exception/InvalidArgumentException.php';
       throw new CoreExt_Exception_InvalidArgumentException(sprintf(
-        'O parâmetro $nota ("%s") não é um valor numérico.', $media
+        'O parâmetro $media ("%s") não é um valor numérico.', $media
       ));
     }
 
