@@ -814,10 +814,10 @@ class indice extends clsCadastro
 
             $resources = array(1    => 'Diretor',
                                2    => 'Outro cargo');
-            $options = array('label' => 'Cargo do Gestor escolar', 'resources' => $resources, 'value' => $this->cargo_gestor, 'required' => false, 'size' => 50);
+            $options = array('label' => 'Cargo do gestor escolar', 'resources' => $resources, 'value' => $this->cargo_gestor, 'required' => false, 'size' => 50);
             $this->inputsHelper()->select('cargo_gestor', $options);
 
-            $options = array('label' => 'E-mail do Gestor escolar', 'value' => $this->email_gestor, 'required' => false, 'size' => 50);
+            $options = array('label' => 'E-mail do gestor escolar', 'value' => $this->email_gestor, 'required' => false, 'size' => 50);
 
             $this->inputsHelper()->text('email_gestor', $options);
 
