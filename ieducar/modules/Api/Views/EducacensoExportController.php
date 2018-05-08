@@ -279,7 +279,7 @@ class EducacensoExportController extends ApiCoreController
       gestor_f.cpf as r00s3,
       gestor_p.nome as r00s4,
       e.cargo_gestor as r00s5,
-      gestor_p.email as r00s6,
+      e.email_gestor as r00s6,
 
       e.situacao_funcionamento as r00s7,
 
@@ -629,7 +629,7 @@ class EducacensoExportController extends ApiCoreController
       if(!$r10s101){
         $r10s102 = $r10s103 = $r10s104 = NULL;
       }
-      
+
       for ($i=1; $i <= 107 ; $i++){
         if($i>=71 && $i<=85)
           $return .= (${'r10s'.$i} == 0 ? '' : ${'r10s'.$i}).$d;
