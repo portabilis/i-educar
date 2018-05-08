@@ -180,6 +180,7 @@ class indice extends clsDetalhe
       NULL, NULL, NULL, NULL, NULL, 1);
 
     $existeTurma = false;
+    $existeTurmaMulti = false;
     $nomesTurmas = array();
     $datasEnturmacoes = array();
     foreach ($enturmacoes as $enturmacao) {
@@ -187,6 +188,11 @@ class indice extends clsDetalhe
       $turma         = $turma->detalhe();
       $nomesTurmas[] = $turma['nm_turma'];
       $datasEnturmacoes[] = Portabilis_Date_Utils::pgSQLToBr($enturmacao['data_enturmacao']);
+      var_dump($turma['cod_turma']);
+      var_dump($turma['etapa_educacenso']);
+      if (in_array($turma['etapa_educacenso'], array(12,13,22,23,24,72,56,64))) {
+        $existeTurmaMulti = true;
+      }
     }
     $nomesTurmas = implode('<br />', $nomesTurmas);
     $datasEnturmacoes = implode('<br />', $datasEnturmacoes);
@@ -331,8 +337,7 @@ class indice extends clsDetalhe
         }
       }
 
-
-      if ($existeTurma) {
+      if ($existeTurmaMulti) {
         $this->array_botao[]            = 'Etapa do aluno';
         $this->array_botao_url_script[] = "go(\"educar_matricula_etapa_turma_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\")";
       }

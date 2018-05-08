@@ -57,8 +57,13 @@ class indice extends clsCadastro
             $this->campoRotulo( "nm_aluno", "Aluno", $this->nm_aluno);
         }
         $enturmacoes = new clsPmieducarMatriculaTurma();
-        $enturmacoes = $enturmacoes->lista($this->cod_matricula, NULL, NULL,
-            NULL, NULL, NULL, NULL, NULL, 1);
+        $enturmacoes = $enturmacoes->lista(
+            $this->cod_matricula, NULL, NULL,
+            NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL,
+            NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, FALSE,
+            NULL, NULL, NULL, FALSE, FALSE, FALSE, NULL, NULL,
+            FALSE, NULL, FALSE, FALSE, FALSE, NULL, TRUE
+        );
 
         $etapasEducacenso = array_merge(array(0 => 'Nenhuma'), loadJson('educacenso_json/etapas_ensino.json'));
 
