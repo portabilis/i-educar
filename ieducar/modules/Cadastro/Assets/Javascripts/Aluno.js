@@ -775,49 +775,13 @@ resourceOptions.handleGet = function (dataResponse) {
     /**************
      PROVA INEP
      ***************/
-    if (dataResponse.recurso_prova_inep_aux_ledor == 1) {
-        $j('#recurso_prova_inep_aux_ledor').attr('checked', true);
-        $j('#recurso_prova_inep_aux_ledor').val('on');
-    }
 
-    if (dataResponse.recurso_prova_inep_aux_transcricao == 1) {
-        $j('#recurso_prova_inep_aux_transcricao').attr('checked', true);
-        $j('#recurso_prova_inep_aux_transcricao').val('on');
-    }
-
-    if (dataResponse.recurso_prova_inep_guia_interprete == 1) {
-        $j('#recurso_prova_inep_guia_interprete').attr('checked', true);
-        $j('#recurso_prova_inep_guia_interprete').val('on');
-    }
-
-    if (dataResponse.recurso_prova_inep_interprete_libras == 1) {
-        $j('#recurso_prova_inep_interprete_libras').attr('checked', true);
-        $j('#recurso_prova_inep_interprete_libras').val('on');
-    }
-
-    if (dataResponse.recurso_prova_inep_leitura_labial == 1) {
-        $j('#recurso_prova_inep_leitura_labial').attr('checked', true);
-        $j('#recurso_prova_inep_leitura_labial').val('on');
-    }
-
-    if (dataResponse.recurso_prova_inep_prova_ampliada_16 == 1) {
-        $j('#recurso_prova_inep_prova_ampliada_16').attr('checked', true);
-        $j('#recurso_prova_inep_prova_ampliada_16').val('on');
-    }
-
-    if (dataResponse.recurso_prova_inep_prova_ampliada_20 == 1) {
-        $j('#recurso_prova_inep_prova_ampliada_20').attr('checked', true);
-        $j('#recurso_prova_inep_prova_ampliada_20').val('on');
-    }
-
-    if (dataResponse.recurso_prova_inep_prova_ampliada_24 == 1) {
-        $j('#recurso_prova_inep_prova_ampliada_24').attr('checked', true);
-        $j('#recurso_prova_inep_prova_ampliada_24').val('on');
-    }
-
-    if (dataResponse.recurso_prova_inep_prova_braille == 1) {
-        $j('#recurso_prova_inep_prova_braille').attr('checked', true);
-        $j('#recurso_prova_inep_prova_braille').val('on');
+    if (dataResponse.recursos_prova_inep) {
+        var recursosProvaInep = dataResponse.recursos_prova_inep;
+        recursosProvaInep = recursosProvaInep.replace(/{|}/gi, '');
+        recursosProvaInep = recursosProvaInep.split(',');
+        $j('#recursos_prova_inep').val(recursosProvaInep);
+        $j('#recursos_prova_inep').trigger("chosen:updated");
     }
 
     $j('#recebe_escolarizacao_em_outro_espaco').val(dataResponse.recebe_escolarizacao_em_outro_espaco).change();
@@ -1533,7 +1497,7 @@ function canShowParentsFields() {
                 $j('#tab5').toggleClass('alunoTab alunoTab-active')
                 $j('.tablecadastro >tbody  > tr').each(function (index, row) {
                     if (row.id != 'stop') {
-                        if (index >= $j('#tr_fossa').index() && index < $j('#tr_recurso_prova_inep_prova_braille').index()) {
+                        if (index >= $j('#tr_fossa').index() && index < $j('#tr_recursos_prova_inep').index()) {
                             row.show();
                         } else if (index != 0) {
                             row.hide();
@@ -1551,7 +1515,7 @@ function canShowParentsFields() {
                 $j('#tab6').toggleClass('alunoTab alunoTab-active')
                 $j('.tablecadastro >tbody  > tr').each(function (index, row) {
                     if (row.id != 'stop') {
-                        if (index >= $j('#tr_recurso_prova_inep_prova_braille').index() && index < $j('#tr_recurso_prova_inep_prova_braille').index() + 1) {
+                        if (index >= $j('#tr_recursos_prova_inep').index() && index < $j('#tr_recursos_prova_inep').index() + 1) {
                             row.show();
                         } else if (index != 0) {
                             row.hide();
