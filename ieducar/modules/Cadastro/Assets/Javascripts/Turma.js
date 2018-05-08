@@ -18,7 +18,7 @@ linha_inicial_tipo = $j('#tr_codigo_inep_educacenso').index()-2;
 $j('.tablecadastro >tbody  > tr').each(function(index, row) {
   if (index>=linha_inicial_tipo){
     if (row.id!='stop')
-      row.hide();    
+      row.hide();
     else{
       return false;
     }
@@ -127,9 +127,9 @@ function habilitaTurmaMaisEducacao() {
   var modalidadeEja = $j('#modalidade_curso').val() == 3;
   var etapaEducacenso = ($j('#etapa_educacenso').val() >= 4 &&
                          $j('#etapa_educacenso').val() <= 38) ||
-                        ($j('#etapa_educacenso').val() == 41);  
+                        ($j('#etapa_educacenso').val() == 41);
   var validaTipoAtendimento = !atendimentoAtividadeComplementar ? !modalidadeEja && etapaEducacenso : true;
-  
+
   if (
     didaticoPedagogicoPresencial &&
     dependenciaAdministrativaEstadualMunicipal &&
@@ -183,7 +183,7 @@ $j(document).ready(function() {
   // on click das abas
 
   // DADOS GERAIS
-  $j('#tab1').click( 
+  $j('#tab1').click(
     function(){
 
       $j('.turmaTab-active').toggleClass('turmaTab-active turmaTab');
@@ -191,18 +191,18 @@ $j(document).ready(function() {
       $j('.tablecadastro >tbody  > tr').each(function(index, row) {
         if (index>=linha_inicial_tipo-1){
           if (row.id!='stop')
-            row.hide();    
+            row.hide();
           else
             return false;
         }else{
           row.show();
         }
-      });        
+      });
     }
-  );  
+  );
 
   // Adicionais
-  $j('#tab2').click( 
+  $j('#tab2').click(
     function(){
       $j('.turmaTab-active').toggleClass('turmaTab-active turmaTab');
       $j('#tab2').toggleClass('turmaTab turmaTab-active')
@@ -215,7 +215,7 @@ $j(document).ready(function() {
             }else{
               $j('#'+row.id).find('td').removeClass('formmdtd');
               $j('#'+row.id).find('td').addClass('formlttd');
-              
+
             }
 
             row.show();
@@ -236,76 +236,4 @@ $j(document).ready(function() {
       $j('#'+row.id).find('input:checked').val('on');
     }
   });
-
-  $j("#etapa_educacenso").change(function() {
-    changeEtapaTurmaField();
-  });
-
-  var changeEtapaTurmaField = function() {
-    var etapa = $j("#etapa_educacenso").val();
-
-    if (etapa == 12 || etapa == 13) {
-      $j("#etapa_educacenso2 > option").each(function() {
-        var etapasCorrespondentes = ['4','5','6','7','8','9','10','11'];
-        if ($j.inArray(this.value, etapasCorrespondentes) !== -1){
-          this.show();
-        } else {
-          this.hide();
-        }
-      });
-    } else if (etapa == 22 || etapa == 23) {
-      $j("#etapa_educacenso2 > option").each(function() {
-        var etapasCorrespondentes = ['14','15','16','17','18','19','20','21','41'];
-        if ($j.inArray(this.value, etapasCorrespondentes) !== -1){
-          this.show();
-        } else {
-          this.hide();
-        }
-      });
-    } else if (etapa == 24) {
-      $j("#etapa_educacenso2 > option").each(function() {
-        var etapasCorrespondentes = ['4','5','6','7','8','9','10','11','14','15','16','17','18','19','20','21','41'];
-        if ($j.inArray(this.value, etapasCorrespondentes) !== -1){
-          this.show();
-        } else {
-          this.hide();
-        }
-      });
-    } else if (etapa == 72) {
-      $j("#etapa_educacenso2 > option").each(function() {
-        var etapasCorrespondentes = ['69','70'];
-        if ($j.inArray(this.value, etapasCorrespondentes) !== -1){
-          this.show();
-        } else {
-          this.hide();
-        }
-      });
-    } else if (etapa == 56) {
-      $j("#etapa_educacenso2 > option").each(function() {
-        var etapasCorrespondentes = ['1','2','4','5','6','7','8','9','10','11','14','15','16','17','18','19','20','21','41'];
-        if ($j.inArray(this.value, etapasCorrespondentes) !== -1){
-          this.show();
-        } else {
-          this.hide();
-        }
-      });
-    } else if (etapa == 64) {
-      $j("#etapa_educacenso2 > option").each(function() {
-        var etapasCorrespondentes = ['39','40'];
-        if ($j.inArray(this.value, etapasCorrespondentes) !== -1){
-          this.show();
-        } else {
-          this.hide();
-        }
-      });
-    } else {
-      $j("#etapa_educacenso2").prop('disabled', 'disabled');
-      $j("#etapa_educacenso2").val(null);
-      return;
-    }
-    $j("#etapa_educacenso2").prop('disabled', false);
-  }
-
-  changeEtapaTurmaField();
-
 });

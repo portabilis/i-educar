@@ -58,6 +58,7 @@ class clsPmieducarMatriculaTurma
   var $sequencial_fechamento;
   var $removerSequencial;
   var $reabrirMatricula;
+  var $etapa_educacenso;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -126,7 +127,7 @@ class clsPmieducarMatriculaTurma
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
-    $this->_campos_lista = $this->_todos_campos = "mt.ref_cod_matricula, mt.abandono, mt.reclassificado, mt.remanejado, mt.transferido, mt.falecido, mt.ref_cod_turma, mt.ref_usuario_exc, mt.ref_usuario_cad, mt.data_cadastro, mt.data_exclusao, mt.ativo, mt.sequencial, mt.data_enturmacao, (SELECT pes.nome FROM cadastro.pessoa pes, pmieducar.aluno alu, pmieducar.matricula mat WHERE pes.idpes = alu.ref_idpes AND mat.ref_cod_aluno = alu.cod_aluno AND mat.cod_matricula = mt.ref_cod_matricula ) AS nome, (SELECT (pes.nome) FROM cadastro.pessoa pes, pmieducar.aluno alu, pmieducar.matricula mat WHERE pes.idpes = alu.ref_idpes AND mat.ref_cod_aluno = alu.cod_aluno AND mat.cod_matricula = mt.ref_cod_matricula ) AS nome_ascii";
+    $this->_campos_lista = $this->_todos_campos = "mt.ref_cod_matricula, mt.abandono, mt.reclassificado, mt.remanejado, mt.transferido, mt.falecido, mt.ref_cod_turma, mt.etapa_educacenso, mt.ref_usuario_exc, mt.ref_usuario_cad, mt.data_cadastro, mt.data_exclusao, mt.ativo, mt.sequencial, mt.data_enturmacao, (SELECT pes.nome FROM cadastro.pessoa pes, pmieducar.aluno alu, pmieducar.matricula mat WHERE pes.idpes = alu.ref_idpes AND mat.ref_cod_aluno = alu.cod_aluno AND mat.cod_matricula = mt.ref_cod_matricula ) AS nome, (SELECT (pes.nome) FROM cadastro.pessoa pes, pmieducar.aluno alu, pmieducar.matricula mat WHERE pes.idpes = alu.ref_idpes AND mat.ref_cod_aluno = alu.cod_aluno AND mat.cod_matricula = mt.ref_cod_matricula ) AS nome_ascii";
 
     if (is_numeric($ref_usuario_exc)) {
       if (class_exists("clsPmieducarUsuario")) {
@@ -288,6 +289,12 @@ class clsPmieducarMatriculaTurma
         $gruda = ", ";
       }
 
+      if(is_numeric($this->etapa_educacenso)) {
+        $campos .= "{$gruda}etapa_educacenso";
+        $valores .= "{$gruda}{$this->etapa_educacenso}";
+        $gruda = ", ";
+      }
+
       $this->sequencial = $this->buscaSequencialMax();
 
       $campos .= "{$gruda}sequencial";
@@ -361,6 +368,14 @@ class clsPmieducarMatriculaTurma
         $gruda = ", ";
       }elseif(is_null($this->data_exclusao) || empty($this->data_exclusao)){
         $set .= "{$gruda}data_exclusao = NULL";
+        $gruda = ", ";
+      }
+
+      if ($this->etapa_educacenso === 0) {
+        $set .= "{$gruda}etapa_educacenso = NULL";
+        $gruda = ", ";
+      }elseif(is_numeric($this->etapa_educacenso)){
+        $set .= "{$gruda}etapa_educacenso = {$this->etapa_educacenso}";
         $gruda = ", ";
       }
 

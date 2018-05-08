@@ -1188,7 +1188,7 @@ class EducacensoAnaliseController extends ApiCoreController
                    turma.tipo_atendimento AS tipo_atendimento,
                    aluno.recebe_escolarizacao_em_outro_espaco AS recebe_escolarizacao_em_outro_espaco,
                    turma.etapa_educacenso AS etapa_ensino,
-                   turma.etapa_educacenso2 AS etapa_turma
+                   matricula_turma.etapa_educacenso AS etapa_turma
               FROM pmieducar.aluno
              INNER JOIN pmieducar.matricula ON (matricula.ref_cod_aluno = aluno.cod_aluno)
              INNER JOIN pmieducar.matricula_turma ON (matricula_turma.ref_cod_matricula = matricula.cod_matricula)

@@ -629,7 +629,7 @@ class EducacensoExportController extends ApiCoreController
       if(!$r10s101){
         $r10s102 = $r10s103 = $r10s104 = NULL;
       }
-      
+
       for ($i=1; $i <= 107 ; $i++){
         if($i>=71 && $i<=85)
           $return .= (${'r10s'.$i} == 0 ? '' : ${'r10s'.$i}).$d;
@@ -1722,7 +1722,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
         a.cod_aluno as r80s4,
         t.cod_turma as r80s6,
         t.turma_unificada as r80s8,
-        t.etapa_educacenso2 as r80s9,
+        mt.etapa_educacenso as r80s9,
         a.recebe_escolarizacao_em_outro_espaco as r80s10,
         ta.responsavel as transporte_escolar,
         t.etapa_educacenso,

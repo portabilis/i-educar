@@ -331,6 +331,12 @@ class indice extends clsDetalhe
         }
       }
 
+
+      if ($existeTurma) {
+        $this->array_botao[]            = 'Etapa do aluno';
+        $this->array_botao_url_script[] = "go(\"educar_matricula_etapa_turma_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\")";
+      }
+
       if ($registro['aprovado'] != 4 && $registro['aprovado'] != 6) {
         if (is_array($lst_transferencia) && isset($data_transferencia)) {
           $this->array_botao[]            = 'Cancelar solicitação transferência';
