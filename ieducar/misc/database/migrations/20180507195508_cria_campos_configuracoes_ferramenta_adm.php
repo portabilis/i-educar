@@ -16,6 +16,6 @@ COMMENT ON COLUMN pmieducar.configuracoes_gerais.justificativa_falta_documentaca
 COMMENT ON COLUMN pmieducar.configuracoes_gerais.tamanho_min_rede_estadual IS \'Tamanho mínimo do campo "Código rede estadual"\';');
 
         $this->execute('ALTER TABLE pmieducar.configuracoes_gerais ADD modelo_boletim_professor INT DEFAULT 1 NULL;
-COMMENT ON COLUMN pmieducar.configuracoes_gerais.modelo_boletim_professor IS \'Modelo do boletim do professor. 1 - Padrão, 2 - Trimestral, 3 - 6 ao 9 ano\';');
+COMMENT ON COLUMN pmieducar.configuracoes_gerais.modelo_boletim_professor IS \'Modelo do boletim do professor. 1 - Padrão, 2 - Modelo recuperação por etapa, 3 - Modelo recuperação paralela\';');
     }
 }

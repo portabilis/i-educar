@@ -140,8 +140,8 @@ class indice extends clsCadastro
         'label' => 'Modelo do boletim do professor',
         'resources' => array(
             1 => 'Modelo Padrão',
-            2 => 'Modelo Trimestral',
-            3 => 'Modelo 6&ordm; ao 9&ordm; ano',
+            2 => 'Modelo recuperação por etapa',
+            3 => 'Modelo recuperação paralela',
         ),
         'value' => $this->modelo_boletim_professor
     );
