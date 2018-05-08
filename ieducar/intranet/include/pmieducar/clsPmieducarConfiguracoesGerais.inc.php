@@ -134,9 +134,7 @@ class clsPmieducarConfiguracoesGerais
        $this->justificativa_falta_documentacao_obrigatorio = $justificativa_falta_documentacao_obrigatorio;
     }
 
-    if (is_numeric($tamanho_min_rede_estadual)) {
-       $this->tamanho_min_rede_estadual = $tamanho_min_rede_estadual;
-    }
+    $this->tamanho_min_rede_estadual = $tamanho_min_rede_estadual;
 
     if (is_numeric($modelo_boletim_professor)) {
        $this->modelo_boletim_professor = $modelo_boletim_professor;
@@ -177,10 +175,11 @@ class clsPmieducarConfiguracoesGerais
         $gruda = ', ';
     }
 
-    if (is_numeric($this->tamanho_min_rede_estadual)) {
-        $set .= "{$gruda}tamanho_min_rede_estadual = '{$this->tamanho_min_rede_estadual}'";
-        $gruda = ', ';
+    if ($this->tamanho_min_rede_estadual == '') {
+        $this->tamanho_min_rede_estadual = 'NULL';
     }
+    $set .= "{$gruda}tamanho_min_rede_estadual = {$this->tamanho_min_rede_estadual}";
+    $gruda = ', ';
 
     if (is_numeric($this->modelo_boletim_professor)) {
         $set .= "{$gruda}modelo_boletim_professor = '{$this->modelo_boletim_professor}'";
