@@ -402,7 +402,7 @@ class clsBase extends clsConfig
                         } else {
                             $menu_suspenso['caminho'] = '../../intranet/' . $menu_suspenso['caminho'];
                         }
-                    } elseif ($uri[2] == 'filaunica') {
+                    } elseif ($uri[2] == 'filaunica' || $uri[2] == 'reservavaga') {
                         if (0 === strpos($menu_suspenso['caminho'], 'module')) {
                             $menu_suspenso['caminho'] = '../../' . $menu_suspenso['caminho'];
                         } else {

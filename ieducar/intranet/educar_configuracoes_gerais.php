@@ -98,11 +98,11 @@ class indice extends clsCadastro
 
     $this->inputsHelper()->checkbox('permite_relacionamento_posvendas', array('label' => 'Permite relacionamento direto no pós-venda?', 'value' => $this->permite_relacionamento_posvendas));
 
-    $this->inputsHelper()->text('url_novo_educacao', array('label' => 'URL API Novo Educação',
+    $this->inputsHelper()->text('url_novo_educacao', array('label' => 'URL de integração (API)',
                                'size' => 100,
                                'max_length' => 100,
                                'required' => false,
-                               'placeholder' => 'Ex: http://clientetest.portabilis.com.br/api/v1/',
+                               'placeholder' => 'Ex: http://cliente.provedor.com.br/api/v1/',
                                'value' => $this->url_novo_educacao));
   }
 
