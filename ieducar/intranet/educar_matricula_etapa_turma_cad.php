@@ -65,7 +65,7 @@ class indice extends clsCadastro
             FALSE, NULL, FALSE, FALSE, FALSE, NULL, TRUE
         );
 
-        $etapasEducacenso = array_merge(array(0 => 'Nenhuma'), loadJson('educacenso_json/etapas_ensino.json'));
+        $etapasEducacenso = array(0 => 'Nenhuma') + loadJson('educacenso_json/etapas_ensino.json');
 
         foreach ($enturmacoes as $enturmacao) {
             $this->campoLista("etapas_educacenso[{$enturmacao['ref_cod_turma']}-{$enturmacao['sequencial']}]", "Etapa turma: {$enturmacao['nm_turma']}", $etapasEducacenso, $enturmacao['etapa_educacenso'],'', FALSE, '', '', FALSE, FALSE);
