@@ -42,6 +42,7 @@ require_once 'Transporte/Model/AlunoDataMapper.php';
 require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
 
 require_once 'Portabilis/View/Helper/Application.php';
+require_once 'Portabilis/Utils/CustomLabel.php';
 require_once 'lib/Portabilis/Date/Utils.php';
 
 
@@ -359,7 +360,8 @@ class indice extends clsDetalhe
         }
 
         if ($registro['cod_aluno']) {
-            $this->addDetalhe(array($GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu' ? 'Código Aluno (i-Educar)' : 'Código Aluno', $registro['cod_aluno']));
+            //$this->addDetalhe(array($GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu' ? 'Código Aluno (i-Educar)' : 'Código Aluno', $registro['cod_aluno']));
+            $this->addDetalhe(array(_cl('aluno.detalhe.codigo_aluno'), $registro['cod_aluno']));
         }
 
         // código inep
