@@ -80,7 +80,7 @@ class indice extends clsCadastro
     $obj_permissoes = new clsPermissoes();
     $ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
 
-    $configuracoes = new clsPmieducarConfiguracoesGerais($ref_cod_instituicao, null, null, $this->custom_labels);
+    $configuracoes = new clsPmieducarConfiguracoesGerais($ref_cod_instituicao, null, null, null, null, null, null, $this->custom_labels);
     $detalheAntigo = $configuracoes->detalhe();
     $editou = $configuracoes->edita();
 
