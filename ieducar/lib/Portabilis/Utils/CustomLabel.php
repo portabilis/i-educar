@@ -15,7 +15,7 @@ class CustomLabel
         $raw = @file_get_contents($defaultsPath);
 
         if ($raw === false) {
-            throw Exception('Não foi possível encontrar o arquivo de chaves padrão no caminho "' . $defaultsPath . '"');
+            throw new Exception('Não foi possível encontrar o arquivo de chaves padrão no caminho "' . $defaultsPath . '"');
         }
 
         $this->defaults = json_decode($raw, true);
