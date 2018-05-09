@@ -360,7 +360,6 @@ class indice extends clsDetalhe
         }
 
         if ($registro['cod_aluno']) {
-            //$this->addDetalhe(array($GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu' ? 'Código Aluno (i-Educar)' : 'Código Aluno', $registro['cod_aluno']));
             $this->addDetalhe(array(_cl('aluno.detalhe.codigo_aluno'), $registro['cod_aluno']));
         }
 
@@ -378,7 +377,7 @@ class indice extends clsDetalhe
         }
 
         // código estado
-        $this->addDetalhe(array($GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu' ? 'Código estado (R.A.)' : 'Código estado', $registro['aluno_estado_id']));
+        $this->addDetalhe(array(_cl('aluno.detalhe.codigo_estado'), $registro['aluno_estado_id']));
 
         if ($registro['caminho_foto']) {
             $this->addDetalhe(array(

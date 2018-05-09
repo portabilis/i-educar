@@ -24,11 +24,11 @@ class CustomLabel
 
     public function customize($key)
     {
-        if (!empty($this->custom[$key])) {
+        if (!isset($this->custom[$key])) {
             return $this->custom[$key];
         }
 
-        if (!empty($this->defaults[$key])) {
+        if (!isset($this->defaults[$key])) {
             return $this->defaults[$key];
         }
 
