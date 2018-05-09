@@ -57,7 +57,7 @@ class indice extends clsCadastro
 
     $this->custom_labels = $configuracoes['custom_labels'];
 
-    $customLabel = new CustomLabel;
+    $customLabel = new CustomLabel(PROJECT_ROOT . DS . 'configuration' . DS . 'custom_labels.json');
     $defaults = $customLabel->getDefaults();
 
     foreach($defaults as $k => $v) {
