@@ -32,6 +32,7 @@ require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'Educacenso/Model/AlunoDataMapper.php';
 require_once 'include/public/clsPublicSetorBai.inc.php';
+require_once 'Portabilis/Utils/CustomLabel.php';
 
 class clsIndexBase extends clsBase
 {
@@ -112,7 +113,8 @@ class indice extends clsListagem
         foreach ($_GET AS $var => $val) // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ($val === "") ? null : $val;
 
-        $this->campoNumero("cod_aluno", $GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu' ? "C&oacute;digo Aluno (i-Educar)" : "C&oacute;digo Aluno", $this->cod_aluno, 20, 9, false);
+        $this->campoNumero("cod_aluno", _cl('aluno.detalhe.codigo_aluno'), $this->cod_aluno, 20, 9, false);
+
         if ($configuracoes['mostrar_codigo_inep_aluno']) {
             $this->campoNumero("cod_inep", "C&oacute;digo INEP", $this->cod_inep, 20, 255, false);
         }

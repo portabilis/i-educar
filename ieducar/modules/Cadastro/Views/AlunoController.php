@@ -37,6 +37,7 @@ require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
 require_once 'image_check.php';
 require_once 'App/Model/ZonaLocalizacao.php';
 require_once 'lib/Portabilis/Controller/Page/EditController.php';
+require_once 'lib/Portabilis/Utils/CustomLabel.php';
 require_once 'Usuario/Model/FuncionarioDataMapper.php';
 require_once 'include/modules/clsModulesRotaTransporteEscolar.inc.php';
 require_once 'Portabilis/String/Utils.php';
@@ -427,7 +428,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
 
         // código aluno
-        $options = array('label' => $labels_botucatu ? Portabilis_String_Utils::toLatin1("Código aluno (i-Educar)") : $this->_getLabel('id'), 'disabled' => true, 'required' => false, 'size' => 25);
+        $options = array('label' => _cl('aluno.detalhe.codigo_aluno'), 'disabled' => true, 'required' => false, 'size' => 25);
         $this->inputsHelper()->integer('id', $options);
 
         // código aluno inep
