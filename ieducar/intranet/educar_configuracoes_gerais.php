@@ -62,6 +62,7 @@ class indice extends clsCadastro
   var $justificativa_falta_documentacao_obrigatorio;
   var $tamanho_min_rede_estadual;
   var $modelo_boletim_professor;
+  var $url_cadastro_usuario;
 
   function Inicializar()
   {
@@ -103,6 +104,7 @@ class indice extends clsCadastro
     $this->justificativa_falta_documentacao_obrigatorio = $configuracoes['justificativa_falta_documentacao_obrigatorio'];
     $this->tamanho_min_rede_estadual = $configuracoes['tamanho_min_rede_estadual'];
     $this->modelo_boletim_professor = $configuracoes['modelo_boletim_professor'];
+    $this->url_cadastro_usuario = $configuracoes['url_cadastro_usuario'];
 
     $this->inputsHelper()->checkbox('permite_relacionamento_posvendas', array('label' => 'Permite relacionamento direto no pós-venda?', 'value' => $this->permite_relacionamento_posvendas));
 
@@ -146,6 +148,18 @@ class indice extends clsCadastro
         'value' => $this->modelo_boletim_professor
     );
     $this->inputsHelper()->select('modelo_boletim_professor', $options);
+
+    $this->inputsHelper()->text('url_cadastro_usuario',
+        array(
+            'label' => 'URL da ferramenta de cadastro de usuários',
+            'label_hint' => 'Deixe vazio para desabilitar a ferramenta',
+            'size' => 100,
+            'max_length' => 255,
+            'required' => false,
+            'placeholder' => 'Ex: http://login.ieducar.com.br/cliente',
+            'value' => $this->url_cadastro_usuario
+        )
+    );
   }
 
   function Editar()
@@ -160,7 +174,7 @@ class indice extends clsCadastro
     $permiteRelacionamentoPosvendas = ($this->permite_relacionamento_posvendas == 'on' ? 1 : 0);
 
 
-    $configuracoes = new clsPmieducarConfiguracoesGerais($ref_cod_instituicao, $permiteRelacionamentoPosvendas, $this->url_novo_educacao, $this->mostrar_codigo_inep_aluno, $this->justificativa_falta_documentacao_obrigatorio, $this->tamanho_min_rede_estadual, $this->modelo_boletim_professor);
+    $configuracoes = new clsPmieducarConfiguracoesGerais($ref_cod_instituicao, $permiteRelacionamentoPosvendas, $this->url_novo_educacao, $this->mostrar_codigo_inep_aluno, $this->justificativa_falta_documentacao_obrigatorio, $this->tamanho_min_rede_estadual, $this->modelo_boletim_professor, null, $this->url_cadastro_usuario);
     $detalheAntigo = $configuracoes->detalhe();
     $editou = $configuracoes->edita();
 

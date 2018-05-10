@@ -217,17 +217,17 @@ class clsControlador
     $this->destroyLoginSession();
     require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/bootstrap.php';
     $parceiro = $GLOBALS['coreExt']['Config']->app->template->layout;
-    $dbName   = $GLOBALS['coreExt']['Config']->app->database->dbname;
-    $linkCriarConta = 'https://login.ieducar.com.br/' . $dbName;
-    $msgCriarConta  = 'Não possui uma conta? <a target="_BLANK" href="'. $linkCriarConta .'">Crie sua conta agora</a>.';
     $templateName   = (trim($parceiro)=='' ? 'templates/nvp_htmlloginintranet.tpl' : 'templates/'.trim($parceiro));
     $templateFile   = fopen($templateName, "r");
     $templateText   = fread($templateFile, filesize($templateName));
     $templateText   = str_replace( "<!-- #&ERROLOGIN&# -->", $this->messenger->toHtml('p'), $templateText);
 
-    $permiteCriarConta = $this->administrativeInfoFetcher->getCanCreateUser();
-    if (!$permiteCriarConta) {
-      $msgCriarConta = '';
+    $configuracoes = new clsPmieducarConfiguracoesGerais();
+    $configuracoes = $configuracoes->detalhe();
+
+    $msgCriarConta = '';
+    if (!empty($configuracoes["url_cadastro_usuario"])) {
+        $msgCriarConta  = 'Não possui uma conta? <a target="_BLANK" href="'. $configuracoes["url_cadastro_usuario"] .'">Crie sua conta agora</a>.';
     }
 
     $requiresHumanAccessValidation = isset($_SESSION['tentativas_login_falhas']) &&

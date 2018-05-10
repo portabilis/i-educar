@@ -50,6 +50,7 @@ class clsPmieducarConfiguracoesGerais
   var $tamanho_min_rede_estadual;
   var $modelo_boletim_professor;
   var $custom_labels;
+  var $url_cadastro_usuario;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -111,7 +112,7 @@ class clsPmieducarConfiguracoesGerais
    * Construtor.
    */
 
-  function clsPmieducarConfiguracoesGerais(
+  function __construct(
       $ref_cod_instituicao = null,
       $permite_relacionamento_posvendas = null,
       $url_novo_educacao = null,
@@ -119,12 +120,13 @@ class clsPmieducarConfiguracoesGerais
       $justificativa_falta_documentacao_obrigatorio = null,
       $tamanho_min_rede_estadual = null,
       $modelo_boletim_professor = null,
-      $custom_labels = null
+      $custom_labels = null,
+      $url_cadastro_usuario = null
   ) {
     $this->_schema = 'pmieducar.';
     $this->_tabela = $this->_schema . 'configuracoes_gerais';
 
-      $this->_campos_lista = $this->_todos_campos = 'ref_cod_instituicao, permite_relacionamento_posvendas, url_novo_educacao, mostrar_codigo_inep_aluno, justificativa_falta_documentacao_obrigatorio, tamanho_min_rede_estadual, modelo_boletim_professor, custom_labels ';
+      $this->_campos_lista = $this->_todos_campos = 'ref_cod_instituicao, permite_relacionamento_posvendas, url_novo_educacao, mostrar_codigo_inep_aluno, justificativa_falta_documentacao_obrigatorio, tamanho_min_rede_estadual, modelo_boletim_professor, custom_labels, url_cadastro_usuario ';
 
     if (is_numeric($ref_cod_instituicao)) {
       $this->ref_cod_instituicao = $ref_cod_instituicao;
@@ -155,6 +157,9 @@ class clsPmieducarConfiguracoesGerais
     if (!empty($custom_labels)) {
         $this->custom_labels = $custom_labels;
     }
+
+    $this->url_cadastro_usuario = $url_cadastro_usuario;
+
   }
 
   /**
@@ -202,6 +207,8 @@ class clsPmieducarConfiguracoesGerais
     if (is_numeric($this->modelo_boletim_professor)) {
         $set[] = "modelo_boletim_professor = '{$this->modelo_boletim_professor}'";
     }
+    
+    $set[] = "url_cadastro_usuario = '{$this->url_cadastro_usuario}'";
 
     if (!empty($set)) {
       $set = join(', ', $set);
