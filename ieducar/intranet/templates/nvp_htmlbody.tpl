@@ -5,16 +5,16 @@
 		<a class="icons-top" href="#">
 			<img id="notificacao" src="/intranet/imagens/icon-nav-notifications.png">
 		</a>
-		<a href="meusdados.php" title="Meus dados">
+		<a href="/intranet/meusdados.php" title="Meus dados">
 			<div id="foto-user" class="foto-user" style="background: url('<!-- #&FOTO&# -->')"></div>
 		</a>
 		<div class="dropdown">
  	 		<div class="dropbtn"><!-- #&USERLOGADO&# --></div>
   			<div class="dropdown-content">
     			<a href="/intranet/agenda.php">Agenda</a>
-    			<a href="index.php">Calendário</a>
-    			<a href="meusdados.php">Meus dados</a>
-    			<a href="logof.php">Sair</a>
+    			<a href="/intranet/index.php">Calendário</a>
+    			<a href="/intranet/meusdados.php">Meus dados</a>
+    			<a href="/intranet/logof.php">Sair</a>
 			 </div>
 		</div><!--a href="http://www.google.com.br/" target="_blank"><img src="imagens/nvp_bot_internet.jpg" width="62" height="21" border="0" alt="Acessar Internet" title="Acessar a Web"></a--></td>
 </tr>
