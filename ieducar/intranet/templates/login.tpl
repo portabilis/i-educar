@@ -5,6 +5,7 @@
 
     <script>
       dataLayer = [{
+        'slug': '<!-- #&SLUG&# -->',
         'user_id': 0
       }];
     </script>
@@ -89,10 +90,6 @@
     </div>
 
     <div id="corpo">
-      <div class="box" id="mensagens" style="">
-        <!-- #&MENSAGENS&# -->
-      </div>
-
       <div>
         <!-- #&BRASAO&# -->
       </div>

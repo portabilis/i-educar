@@ -25,7 +25,6 @@ require_once 'include/clsBanco.inc.php';
 require_once 'Portabilis/Messenger.php';
 require_once 'Portabilis/Mailer.php';
 require_once 'Portabilis/AdministrativeInfoFetcher.php';
-require_once 'Portabilis/AdministrativeMessagesFetcher.php';
 require_once 'Portabilis/Utils/User.php';
 require_once 'Portabilis/Utils/ReCaptcha.php';
 
@@ -98,7 +97,6 @@ class clsControlador
     $this->_maximoTentativasFalhas = 7;
     $this->messenger = new Portabilis_Messenger();
     $this->administrativeInfoFetcher = new Portabilis_AdministrativeInfoFetcher();
-    $this->administrativeMessagesFetcher = new Portabilis_AdministrativeMessagesFetcher();
   }
 
 
@@ -237,15 +235,15 @@ class clsControlador
     if ($requiresHumanAccessValidation)
       $templateText = str_replace( "<!-- #&RECAPTCHA&# -->", Portabilis_Utils_ReCaptcha::getWidget(), $templateText);
 
-    $templateText = str_replace( "<!-- #&CORE_EXT_CONFIGURATION_ENV&# -->", CORE_EXT_CONFIGURATION_ENV, $templateText);
-    $templateText = str_replace( "<!-- #&MENSAGENS&# -->", $this->administrativeMessagesFetcher->getMessages(), $templateText);
-    $templateText = str_replace( "<!-- #&BRASAO&# -->", $this->administrativeInfoFetcher->getLoginLogo(), $templateText);
-    $templateText = str_replace( "<!-- #&NOME_ENTIDADE&# -->", $this->administrativeInfoFetcher->getEntityName(), $templateText);
-    $templateText = str_replace( "<!-- #&RODAPE_LOGIN&# -->", $this->administrativeInfoFetcher->getLoginFooter(), $templateText);
-    $templateText = str_replace( "<!-- #&RODAPE_EXTERNO&# -->", $this->administrativeInfoFetcher->getExternalFooter(), $templateText);
-    $templateText = str_replace( "<!-- #&LINKS_SOCIAL&# -->", $this->administrativeInfoFetcher->getSocialMediaLinks(), $templateText);
-    $templateText = str_replace( "<!-- #&CRIARCONTA&# -->", $msgCriarConta, $templateText);
+    $templateText = str_replace("<!-- #&CORE_EXT_CONFIGURATION_ENV&# -->", CORE_EXT_CONFIGURATION_ENV, $templateText);
+    $templateText = str_replace("<!-- #&BRASAO&# -->", $this->administrativeInfoFetcher->getLoginLogo(), $templateText);
+    $templateText = str_replace("<!-- #&NOME_ENTIDADE&# -->", $this->administrativeInfoFetcher->getEntityName(), $templateText);
+    $templateText = str_replace("<!-- #&RODAPE_LOGIN&# -->", $this->administrativeInfoFetcher->getLoginFooter(), $templateText);
+    $templateText = str_replace("<!-- #&RODAPE_EXTERNO&# -->", $this->administrativeInfoFetcher->getExternalFooter(), $templateText);
+    $templateText = str_replace("<!-- #&LINKS_SOCIAL&# -->", $this->administrativeInfoFetcher->getSocialMediaLinks(), $templateText);
+    $templateText = str_replace("<!-- #&CRIARCONTA&# -->", $msgCriarConta, $templateText);
     $templateText = str_replace("<!-- #&GOOGLE_TAG_MANAGER_ID&# -->", $GLOBALS['coreExt']['Config']->app->gtm->id, $templateText);
+    $templateText = str_replace("<!-- #&SLUG&# -->", $GLOBALS['coreExt']['Config']->app->database->dbname, $templateText);
 
     fclose($templateFile);
     die($templateText);
