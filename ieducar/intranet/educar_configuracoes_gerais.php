@@ -58,6 +58,10 @@ class indice extends clsCadastro
   var $ref_cod_instituicao;
   var $permite_relacionamento_posvendas;
   var $url_novo_educacao;
+  var $mostrar_codigo_inep_aluno;
+  var $justificativa_falta_documentacao_obrigatorio;
+  var $tamanho_min_rede_estadual;
+  var $modelo_boletim_professor;
 
   function Inicializar()
   {
@@ -95,6 +99,10 @@ class indice extends clsCadastro
 
     $this->permite_relacionamento_posvendas = $configuracoes['permite_relacionamento_posvendas'];
     $this->url_novo_educacao = $configuracoes['url_novo_educacao'];
+    $this->mostrar_codigo_inep_aluno = $configuracoes['mostrar_codigo_inep_aluno'];
+    $this->justificativa_falta_documentacao_obrigatorio = $configuracoes['justificativa_falta_documentacao_obrigatorio'];
+    $this->tamanho_min_rede_estadual = $configuracoes['tamanho_min_rede_estadual'];
+    $this->modelo_boletim_professor = $configuracoes['modelo_boletim_professor'];
 
     $this->inputsHelper()->checkbox('permite_relacionamento_posvendas', array('label' => 'Permite relacionamento direto no pós-venda?', 'value' => $this->permite_relacionamento_posvendas));
 
@@ -104,6 +112,40 @@ class indice extends clsCadastro
                                'required' => false,
                                'placeholder' => 'Ex: http://cliente.provedor.com.br/api/v1/',
                                'value' => $this->url_novo_educacao));
+
+    $options = array('label' => 'Mostrar código INEP nas telas de cadastro de aluno?',
+        'value' => $this->mostrar_codigo_inep_aluno,
+        'required' => true,
+    );
+    $this->inputsHelper()->booleanSelect('mostrar_codigo_inep_aluno', $options);
+
+    $options = array('label' => 'Campo "Justificativa para a falta de documentação" no cadastro de alunos deve ser obrigatório?',
+        'value' => $this->justificativa_falta_documentacao_obrigatorio,
+        'required' => true,
+    );
+    $this->inputsHelper()->booleanSelect('justificativa_falta_documentacao_obrigatorio', $options);
+
+    $this->inputsHelper()->integer('tamanho_min_rede_estadual',
+        array(
+          'label' => 'Tamanho mínimo do campo "Código rede estadual" no cadastro de alunos ',
+          'label_hint' => 'Deixe vazio no caso de não ter limite mínino',
+          'max_length' => 3,
+          'required' => false,
+          'placeholder' => '',
+          'value' => $this->tamanho_min_rede_estadual
+        )
+    );
+
+    $options = array(
+        'label' => 'Modelo do boletim do professor',
+        'resources' => array(
+            1 => 'Modelo Padrão',
+            2 => 'Modelo recuperação por etapa',
+            3 => 'Modelo recuperação paralela',
+        ),
+        'value' => $this->modelo_boletim_professor
+    );
+    $this->inputsHelper()->select('modelo_boletim_professor', $options);
   }
 
   function Editar()
@@ -118,7 +160,7 @@ class indice extends clsCadastro
     $permiteRelacionamentoPosvendas = ($this->permite_relacionamento_posvendas == 'on' ? 1 : 0);
 
 
-    $configuracoes = new clsPmieducarConfiguracoesGerais($ref_cod_instituicao, $permiteRelacionamentoPosvendas, $this->url_novo_educacao);
+    $configuracoes = new clsPmieducarConfiguracoesGerais($ref_cod_instituicao, $permiteRelacionamentoPosvendas, $this->url_novo_educacao, $this->mostrar_codigo_inep_aluno, $this->justificativa_falta_documentacao_obrigatorio, $this->tamanho_min_rede_estadual, $this->modelo_boletim_professor);
     $detalheAntigo = $configuracoes->detalhe();
     $editou = $configuracoes->edita();
 

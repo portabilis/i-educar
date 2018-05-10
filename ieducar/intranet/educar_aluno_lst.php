@@ -32,6 +32,7 @@ require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'Educacenso/Model/AlunoDataMapper.php';
 require_once 'include/public/clsPublicSetorBai.inc.php';
+require_once 'Portabilis/Utils/CustomLabel.php';
 
 class clsIndexBase extends clsBase
 {
@@ -106,11 +107,15 @@ class indice extends clsListagem
 
         $this->titulo = "Aluno - Listagem";
 
+        $configuracoes = new clsPmieducarConfiguracoesGerais();
+        $configuracoes = $configuracoes->detalhe();
+
         foreach ($_GET AS $var => $val) // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ($val === "") ? null : $val;
 
-        $this->campoNumero("cod_aluno", $GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu' ? "C&oacute;digo Aluno (i-Educar)" : "C&oacute;digo Aluno", $this->cod_aluno, 20, 9, false);
-        if (!$GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu') {
+        $this->campoNumero("cod_aluno", _cl('aluno.detalhe.codigo_aluno'), $this->cod_aluno, 20, 9, false);
+
+        if ($configuracoes['mostrar_codigo_inep_aluno']) {
             $this->campoNumero("cod_inep", "C&oacute;digo INEP", $this->cod_inep, 20, 255, false);
         }
 
@@ -166,7 +171,7 @@ class indice extends clsListagem
         $array_matriculado = array('S' => "Sim", 'N' => 'N&atilde;o');
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
-        if ($GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu') {
+        if (!$configuracoes['mostrar_codigo_inep_aluno']) {
             $cabecalhos = array("C&oacute;digo Aluno",
                 "Nome do Aluno",
                 "Nome da Mãe",
@@ -237,7 +242,7 @@ class indice extends clsListagem
             $responsavel = $aluno->getResponsavelAluno();
             $nomeResponsavel = strtoupper($responsavel["nome_responsavel"]);
 
-            if ($GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu') {
+            if (!$configuracoes['mostrar_codigo_inep_aluno']) {
                 $linhas = array(
                     "<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$registro["cod_aluno"]}</a>",
                     "<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$nomeAluno}</a>",
