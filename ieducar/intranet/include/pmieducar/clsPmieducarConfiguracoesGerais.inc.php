@@ -158,9 +158,8 @@ class clsPmieducarConfiguracoesGerais
         $this->custom_labels = $custom_labels;
     }
 
-      if (!empty($url_cadastro_usuario)) {
-          $this->url_cadastro_usuario = $url_cadastro_usuario;
-      }
+    $this->url_cadastro_usuario = $url_cadastro_usuario;
+
   }
 
   /**
@@ -208,10 +207,8 @@ class clsPmieducarConfiguracoesGerais
     if (is_numeric($this->modelo_boletim_professor)) {
         $set[] = "modelo_boletim_professor = '{$this->modelo_boletim_professor}'";
     }
-
-    if (!empty($this->url_cadastro_usuario)) {
-        $set[] = "url_cadastro_usuario = '{$this->url_cadastro_usuario}'";
-    }
+    
+    $set[] = "url_cadastro_usuario = '{$this->url_cadastro_usuario}'";
 
     if (!empty($set)) {
       $set = join(', ', $set);
