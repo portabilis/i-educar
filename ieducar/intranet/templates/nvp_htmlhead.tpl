@@ -11,6 +11,7 @@
 
   <script>
     dataLayer = [{
+      'slug': '<!-- #&SLUG&# -->',
       'user_id': <!-- #&USER_ID&# -->,
       'user_name': '<!-- #&USERLOGADO&# -->',
       'user_email': '<!-- #&USEREMAIL&# -->'

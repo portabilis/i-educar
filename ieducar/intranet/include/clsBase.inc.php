@@ -164,6 +164,7 @@ class clsBase extends clsConfig
         list($nomePessoa, $email) = $nomePessoa->queryRapida($this->currentUserId(), "nome", "email");
         $nomePessoa = ($nomePessoa) ? $nomePessoa : 'Visitante';
 
+        $saida = str_replace("<!-- #&SLUG&# -->", $GLOBALS['coreExt']['Config']->app->database->dbname, $saida);
         $saida = str_replace("<!-- #&USERLOGADO&# -->", trim($nomePessoa), $saida);
         $saida = str_replace("<!-- #&USEREMAIL&# -->", trim($email), $saida);
 

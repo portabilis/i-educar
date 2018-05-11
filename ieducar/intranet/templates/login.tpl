@@ -5,6 +5,7 @@
 
     <script>
       dataLayer = [{
+        'slug': '<!-- #&SLUG&# -->',
         'user_id': 0
       }];
     </script>
@@ -55,12 +56,6 @@
     }
 
     function loginpage_onload() {
-      var domainName = window.location.hostname;
-
-      if (domainName.indexOf('treinamento') < 0 && domainName.indexOf('demonstracao') < 0) {
-        $j('.only-for-clients').show();
-      }
-
       $j('.fade-in').fadeIn('slow');
 
       $j('#login').focus();
@@ -89,10 +84,6 @@
     </div>
 
     <div id="corpo">
-      <div class="box" id="mensagens" style="">
-        <!-- #&MENSAGENS&# -->
-      </div>
-
       <div>
         <!-- #&BRASAO&# -->
       </div>
