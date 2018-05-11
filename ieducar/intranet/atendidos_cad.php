@@ -1244,6 +1244,10 @@ class indice extends clsCadastro
     if (!$this->validaCertidao())
       return false;
 
+    if (!$this->validaNisPisPasep()) {
+      return false;
+    }
+
     $pessoaId = $this->createOrUpdatePessoa($pessoaIdOrNull);
     $this->savePhoto($pessoaId);
     $this->createOrUpdatePessoaFisica($pessoaId);
@@ -1314,6 +1318,15 @@ class indice extends clsCadastro
       return false;
     }
 
+    return true;
+  }
+
+  protected function validaNisPisPasep()
+  {
+    if (strlen($this->nis_pis_pasep) != 11) {
+      $this->mensagem = 'O NIS (PIS/PASEP) da pessoa deve conter 11 dígitos.';
+      return false;
+    }
     return true;
   }
 
