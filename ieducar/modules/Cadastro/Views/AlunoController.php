@@ -114,7 +114,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         ),
 
         'transporte' => array(
-            'label' => 'Transporte público',
+            'label' => 'Transporte escolar público',
             'help' => '',
         ),
 
@@ -818,10 +818,9 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $this->inputsHelper()->simpleSearchPessoa('nome', $options, $helperOptions);
 
         // transporte publico
-        $label = Portabilis_String_Utils::toLatin1($this->_getLabel('transporte'));
 
         $tiposTransporte = array(
-            null => $label,
+            null => 'Selecione',
             'nenhum' => 'N&atilde;o utiliza',
             'municipal' => 'Municipal',
             'estadual' => 'Estadual'
@@ -1417,7 +1416,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $options = array(
             'required' => false,
             'value' => '',
-            'max_length' => 50
+            'max_length' => 20
         );
 
         $this->inputsHelper()->text('complemento', $options);
