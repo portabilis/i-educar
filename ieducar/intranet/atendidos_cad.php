@@ -1323,7 +1323,7 @@ class indice extends clsCadastro
 
   protected function validaNisPisPasep()
   {
-    if (strlen($this->nis_pis_pasep) != 11) {
+    if ($this->nis_pis_pasep && strlen($this->nis_pis_pasep) != 11) {
       $this->mensagem = 'O NIS (PIS/PASEP) da pessoa deve conter 11 dígitos.';
       return false;
     }
