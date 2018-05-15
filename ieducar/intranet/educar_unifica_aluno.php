@@ -36,6 +36,7 @@ require_once 'include/clsBanco.inc.php';
 require_once 'include/public/geral.inc.php';
 
 require_once 'App/Date/Utils.php';
+require_once 'App/Unificacao/Aluno.php';
 
 require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
 
@@ -97,16 +98,19 @@ class indice extends clsCadastro
   function Novo()
   {
     @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
+    $this->pessoa_logada = (int) $_SESSION['id_pessoa'];
     @session_write_close();
 
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(999847, $this->pessoa_logada, 7,
       'index.php');
 
-    $cod_aluno_principal = $this->aluno_id;
+    $cod_aluno_principal = (int) $this->aluno_id;
 
     if (!$cod_aluno_principal) return;
+
+
+    $cod_alunos = array();
 
     //Monta um array com o código dos alunos selecionados na tabela
     foreach ($this->aluno_duplicado as $key => $value) {
@@ -117,35 +121,20 @@ class indice extends clsCadastro
         return false;
       }
 
-      $cod_alunos[] = $explode[0];
+      $cod_alunos[] = (int) $explode[0];
     }
 
-    $cod_alunos = implode(",", $cod_alunos);
+    if (!count($cod_alunos)) {
+       $this->mensagem = 'Informe no mínimo um aluno para unificação.<br />';
+        return false;
+    }
 
-    $db = new clsBanco();
-    $db->consulta("UPDATE pmieducar.historico_escolar
-                      SET ref_cod_aluno = {$cod_aluno_principal},
-                          sequencial = he.seq+he.max_seq
-                      FROM
-                        (SELECT ref_cod_aluno AS aluno,
-                                sequencial AS seq,
-                           COALESCE((SELECT max(sequencial)
-                            FROM pmieducar.historico_escolar
-                            WHERE ref_cod_aluno = {$cod_aluno_principal}),0) AS max_seq
-                         FROM pmieducar.historico_escolar
-                         WHERE ref_cod_aluno IN ({$cod_alunos})) AS he
-                      WHERE sequencial = he.seq
-                        AND ref_cod_aluno = he.aluno");
-    $db->consulta("UPDATE pmieducar.matricula SET ref_cod_aluno = {$cod_aluno_principal} where ref_cod_aluno in ({$cod_alunos})");
-    $db->consulta("UPDATE pmieducar.aluno SET ativo = 0, data_exclusao = now(), ref_usuario_exc = {$this->pessoa_logada} where cod_aluno in ({$cod_alunos})");
+    App_Unificacao_Aluno::unifica($cod_aluno_principal, $cod_alunos, $this->pessoa_logada, new clsBanco());
 
     $this->mensagem = "<span>Alunos unificados com sucesso.</span>";
     return true;
   }
 }
-
-
-
 
 // Instancia objeto de página
 $pagina = new clsIndexBase();
