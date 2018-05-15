@@ -184,7 +184,7 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
                 <td><input id='faltas-manual' name='faltas-manual' style='display:none;'></input></td>
             </tr>
             
-            <tr>
+            <tr id='tr-area-conhecimento'>
                 <td><label for='area-conhecimento'>Area Conhecimento </label></td>
                 <td>
                     <select id='area-conhecimento' multiple class='chosen-choices' style='width: 90%' data-placeholder='Selecione'>

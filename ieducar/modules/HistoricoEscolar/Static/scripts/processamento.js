@@ -721,6 +721,18 @@
       getResources(options);
     }
 
+
+    $j('#media-area-conhecimento').change(function() {
+        $j('#tr-area-conhecimento').show();
+        $j('#area-conhecimento').chosen();
+
+        if($j('#media-area-conhecimento').is(':checked') == true){
+            $j('#area-conhecimento').chosen('destroy');
+            $j('#tr-area-conhecimento').hide();
+            $j('#area-conhecimento option:selected').removeAttr("selected");
+        }
+    });
+
     $('#area-conhecimento').chosen();
 
 })(jQuery);

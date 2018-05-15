@@ -662,6 +662,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                         $nota = (string)$mediasCc[$ccId][0]->mediaArredondada;
                     } elseif ($tpNota == $cnsNota::NUMERICACONCEITUAL) {
                         $nota = (string)$mediasCc[$ccId][0]->mediaArredondada;
+                        $notaConceitualNumerica = (string)$mediasCc[$ccId][0]->media;
                     }
                 } else {
                     $nota = $this->getRequest()->notas;
