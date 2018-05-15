@@ -37,7 +37,7 @@ $j(document).ready(function(){
     $j("body").append(modalLoad);
     $j("body").append(modalExport);
 
-    $j("#btn_enviar").click(function(){
+    var iniciaAnalise = function() {
 
     	var escola = $j("#ref_cod_escola").val();
     	var dataIni = $j("#data_ini").val();
@@ -69,7 +69,7 @@ $j(document).ready(function(){
         });
         analisaRegistro00();
       }
-    });
+    }
 
     function isValidDate(s) {
       var bits = s.split('/');
@@ -102,9 +102,7 @@ $j(document).ready(function(){
       });
 
       if (falhaAnalise) {
-        var newPage = window.open();
-        newPage.document.write(paginaResposta);
-        $j.modal.close();
+        document.write(paginaResposta);
       } else if (fase2) {
         educacensoExportFase2();
       } else {
@@ -467,4 +465,5 @@ $j(document).ready(function(){
       montaHtmlRegistro(response);
       finishAnalysis();
     };
+  iniciaAnalise();
 });
