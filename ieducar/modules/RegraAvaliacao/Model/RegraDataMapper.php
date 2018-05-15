@@ -46,6 +46,7 @@ class RegraAvaliacao_Model_RegraDataMapper extends CoreExt_DataMapper
     'qtdMatriculasDependencia'          => 'qtd_matriculas_dependencia',
     'aprovaMediaDisciplina'             => 'aprova_media_disciplina',
     'reprovacaoAutomatica'              => 'reprovacao_automatica',
+    'regraDiferenciada'                 => 'regra_diferenciada_id',
   );
 
 

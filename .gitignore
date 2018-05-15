@@ -8,3 +8,6 @@ deploy/.ruby-version
 ieducar/configuration/ieducar.ini
 *.vscode
 ieducar/modules/Reports
+ieducar/intranet/filaunica
+ieducar/intranet/reservavaga
+ieducar/misc/database/migrations/portabilis
