@@ -29,6 +29,7 @@ require_once ("include/clsDetalhe.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once ("include/pmieducar/geral.inc.php");
 require_once ("Portabilis/View/Helper/Application.php");
+require_once 'App/Model/ZonaLocalizacao.php';
 
 class clsIndexBase extends clsBase
 {
@@ -53,7 +54,6 @@ class indice extends clsDetalhe
     var $ref_usuario_cad;
     var $ref_usuario_exc;
     var $ref_cod_instituicao;
-    var $ref_cod_escola_localizacao;
     var $ref_cod_escola_rede_ensino;
     var $ref_idpes;
     var $sigla;
@@ -207,18 +207,6 @@ class indice extends clsDetalhe
             }
         }
 
-        if( class_exists( "clsPmieducarEscolaLocalizacao" ) )
-        {
-            $obj_ref_cod_escola_localizacao = new clsPmieducarEscolaLocalizacao( $registro["ref_cod_escola_localizacao"] );
-            $det_ref_cod_escola_localizacao = $obj_ref_cod_escola_localizacao->detalhe();
-            $registro["ref_cod_escola_localizacao"] = $det_ref_cod_escola_localizacao["nm_localizacao"];
-        }
-        else
-        {
-            $registro["ref_cod_escola_localizacao"] = "Erro na geracao";
-            echo "<!--\nErro\nClasse nao existente: clsPmieducarEscolaLocalizacao\n-->";
-        }
-
         if( class_exists( "clsPmieducarEscolaRedeEnsino" ) )
         {
             $obj_ref_cod_escola_rede_ensino = new clsPmieducarEscolaRedeEnsino( $registro["ref_cod_escola_rede_ensino"] );
@@ -255,9 +243,12 @@ class indice extends clsDetalhe
         {
             $this->addDetalhe( array( "Sigla", "{$registro["sigla"]}") );
         }
-        if( $registro["ref_cod_escola_localizacao"] )
+        if( $registro["zona_localizacao"] )
         {
-            $this->addDetalhe( array( "Localiza&ccedil;&atilde;o", "{$registro["ref_cod_escola_localizacao"]}") );
+            $zona = App_Model_ZonaLocalizacao::getInstance();
+            $this->addDetalhe(array(
+                'Zona Localização', $zona->getValue($registro['zona_localizacao'])
+            ));
         }
         if( $registro["ref_cod_escola_rede_ensino"] )
         {
@@ -492,9 +483,9 @@ class indice extends clsDetalhe
         $localizacao->entradaCaminhos( array(
              $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
              "educar_index.php"                  => "Escola",
-             ""        => "Detalhe da escola"             
+             ""        => "Detalhe da escola"
         ));
-        $this->enviaLocalizacao($localizacao->montar());            
+        $this->enviaLocalizacao($localizacao->montar());
     }
 
     //***
@@ -572,7 +563,7 @@ class indice extends clsDetalhe
                                 <span class='formlttd'><b>*Somente &eacute; poss&iacute;vel finalizar um ano letivo ap&oacute;s n&atilde;o existir mais nenhuma matr&iacute;cula em andamento.</b></span>
                             </td>
                         </tr>";
-            if(!$canEdit)                       
+            if(!$canEdit)
                 $tabela .= "<tr>
                             <td>
                                 <span class='formlttd'><b>**Somente usu&aacute;rios com permiss&atilde;o de edi&ccedil;&atilde;o de escola podem alterar anos letivos.</b></span>

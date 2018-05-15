@@ -340,7 +340,7 @@ class EducacensoExportController extends ApiCoreController
 
         e.orgao_regional as r00s27,
         e.dependencia_administrativa as r00s28,
-        b.zona_localizacao as r00s29,
+        e.zona_localizacao as r00s29,
         e.categoria_escola_privada as r00s30,
         e.conveniada_com_poder_publico r00s31,
         CASE WHEN e.mantenedora_escola_privada::varchar LIKE \'%1%\' THEN 1 ELSE 0 END as r00s32,
@@ -629,7 +629,7 @@ class EducacensoExportController extends ApiCoreController
       if(!$r10s101){
         $r10s102 = $r10s103 = $r10s104 = NULL;
       }
-      
+
       for ($i=1; $i <= 107 ; $i++){
         if($i>=71 && $i<=85)
           $return .= (${'r10s'.$i} == 0 ? '' : ${'r10s'.$i}).$d;
