@@ -35,6 +35,7 @@ require_once 'include/pmieducar/geral.inc.php';
 require_once 'include/pmieducar/clsPermissoes.inc.php';
 require_once 'lib/Portabilis/Date/Utils.php';
 require_once 'Portabilis/String/Utils.php';
+require_once 'lib/App/Model/Educacenso.php';
 
 require_once 'App/Model/MatriculaSituacao.php';
 require_once 'Portabilis/View/Helper/Application.php';
@@ -190,7 +191,7 @@ class indice extends clsDetalhe
       $datasEnturmacoes[] = Portabilis_Date_Utils::pgSQLToBr($enturmacao['data_enturmacao']);
       var_dump($turma['cod_turma']);
       var_dump($turma['etapa_educacenso']);
-      if (in_array($turma['etapa_educacenso'], array(12,13,22,23,24,72,56,64))) {
+      if (in_array($turma['etapa_educacenso'], App_Model_Educacenso::etapas_multisseriadas())) {
         $existeTurmaMulti = true;
       }
     }

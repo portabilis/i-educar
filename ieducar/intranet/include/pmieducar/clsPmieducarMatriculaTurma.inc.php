@@ -32,6 +32,7 @@ require_once 'include/pmieducar/geral.inc.php';
 require_once 'Avaliacao/Fixups/CleanComponentesCurriculares.php';
 require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 require_once 'include/services/matricula/SequencialEnturmacao.php';
+require_once 'lib/App/Model/Educacenso.php';
 
 /**
  * clsPmieducarMatriculaTurma class.
@@ -597,8 +598,9 @@ class clsPmieducarMatriculaTurma
     }
 
     if ($apenasTurmasMultiSeriadas === TRUE) {
-      $filtros .= "{$whereAnd} t.etapa_educacenso IN (12,13,22,23,24,72,56,64) ";
-      $whereAnd = " AND ";
+        $etapas = implode(',', App_Model_Educacenso::etapas_multisseriadas());
+        $filtros .= "{$whereAnd} t.etapa_educacenso IN ({$etapas}) ";
+        $whereAnd = " AND ";
     }
 
     if (is_array($aprovado)) {
