@@ -33,6 +33,7 @@
  */
 
 require_once 'Portabilis/Controller/Page/ListController.php';
+require_once 'Portabilis/Utils/CustomLabel.php';
 
 class ProcessamentoController extends Portabilis_Controller_Page_ListController
 {
@@ -72,9 +73,9 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
 
     $this->inputsHelper()->dynamic(array('ano', 'instituicao', 'escola'));
 
-    $this->inputsHelper()->dynamic('curso', array('required' => false, 'label_hint' => $GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu' ? 'Ex.: Ensino Fundamental I' : ''));
+    $this->inputsHelper()->dynamic('curso', array('required' => false, 'label_hint' => _cl('historico.cadastro.curso_detalhe')));
 
-    $this->inputsHelper()->dynamic('serie', array('required' => false, 'label' => $GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu' ? 'Ano/Série' : 'Série'));
+    $this->inputsHelper()->dynamic('serie', array('required' => false, 'label' => _cl('historico.cadastro.serie')));
 
     $this->inputsHelper()->dynamic(array('turma', 'matricula'), array('required' => false));
 
@@ -233,7 +234,7 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
     </table>";
 
 
-        
+
 
 
     $this->appendOutput($resourceOptionsTable);

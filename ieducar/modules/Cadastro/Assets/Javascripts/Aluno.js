@@ -1071,7 +1071,7 @@ function enableJustificativaFields() {
     $jField = $j('#justificativa_falta_documentacao');
     $jField.removeAttr('disabled');
 
-    if (!$j('#labels_botucatu').length) {
+    if ($j('#justificativa_falta_documentacao_obrigatorio').length) {
         $jField.removeClass('geral');
         $jField.addClass('obrigatorio');
     }

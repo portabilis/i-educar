@@ -9,6 +9,15 @@
 
   <title><!-- #&TITULO&# --></title>
 
+  <script>
+    dataLayer = [{
+      'slug': '<!-- #&SLUG&# -->',
+      'user_id': <!-- #&USER_ID&# -->,
+      'user_name': '<!-- #&USERLOGADO&# -->',
+      'user_email': '<!-- #&USEREMAIL&# -->'
+    }];
+  </script>
+
   <!-- Google Tag Manager -->
   <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
       new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -21,7 +30,6 @@
   <link rel=stylesheet type='text/css' href='/intranet/styles/styles.css?5' />
   <link rel=stylesheet type='text/css' href='/intranet/styles/novo.css?5' />
   <link rel=stylesheet type='text/css' href='/intranet/styles/menu.css?5' />
-  
   <link rel=stylesheet type='text/css' href='/intranet/styles/font-awesome.css?5' />
   <!--link rel=stylesheet type='text/css' href='styles/reset.css?5' />
   <link rel=stylesheet type='text/css' href='styles/portabilis.css?5' /-->
@@ -41,7 +49,6 @@
   <script type="text/javascript" src="/intranet/scripts/menu.js?5"></script>
   <script type="text/javascript" src="/intranet/scripts/ied/forms.js?5"></script>
   <script type="text/javascript" src="/intranet/scripts/ied/phpjs.js?5"></script>
-  <!-- #&FRESHDESK&# -->
 
   <script type="text/javascript" src="/intranet/scripts/jquery/jquery-1.8.3.min.js?5"></script>
   <script type="text/javascript" src="/intranet/scripts/jquery/jquery.modal.min.js?5"></script>
