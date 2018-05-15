@@ -1,5 +1,7 @@
 $j(document).ready(function(){
 
+  let currentDateString = () => new Date().toLocaleString('pt-BR');
+
 	var modalLoad = '<div id="modal_load" class="modal" style="display:none;">' +
 				  	'<div style="float:left;width:100px;">' +
   					'	<img src="imagens/educacenso/load_modal_educacenso.gif" width="100px" height="100px" alt="">' +
@@ -23,8 +25,10 @@ $j(document).ready(function(){
             '</div>'+
             '</div>';
 
+
     var headerPaginaResposta = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>'+'Análise exportação'+'</title>'+
-            '<link rel="stylesheet" href="../modules/Educacenso/Assets/Stylesheets/educacensoPdf.css"></head><body>'+
+            '<link rel="stylesheet" href="../modules/Educacenso/Assets/Stylesheets/educacensoPdf.css?v=2"></head><body>'+
+            `<p class="date-info">Data da geração: ${currentDateString()}</p>`+
 						'<div id="content">'+
 						'  <h1 class="title">'+"Análise de exportação"+'</h1>'+
 						'</div>'+

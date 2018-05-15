@@ -4,6 +4,11 @@ body {
     padding: 10px;
 }
 
+.date-info {
+  text-align: right;
+  padding-right: 10px;
+}
+
 .title {
     font-family: 'Dejavu Sans', 'Tahoma';
     font-size: 16px;
