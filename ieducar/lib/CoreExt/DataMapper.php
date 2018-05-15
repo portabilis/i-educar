@@ -729,7 +729,7 @@ abstract class CoreExt_DataMapper
   */
   protected function _cleanNullValuesToSave(array $data){
     foreach ($data as $key => $val) {
-      if (empty($val)){
+      if (is_null($val)){
         unset($data[$key]);
       }
     }
