@@ -299,7 +299,7 @@ class indice extends clsCadastro
     // data nascimento
 
     $options = array(
-      'label'       => 'Data nascimento',
+      'label'       => 'Data de nascimento',
       'value'       => $this->data_nasc,
       'required'    => empty($parentType) && $camposObrigatorios
     );
@@ -697,7 +697,7 @@ class indice extends clsCadastro
     // tipos
     $tiposNacionalidade = array(null => 'Selecione',
                                 '1'  => 'Brasileira',
-                                '2'  => 'Brasileira nascido no Exterior ou Naturalizado',
+                                '2'  => 'Naturalizado brasileiro',
                                 '3'  => 'Estrangeira');
 
     $options            = array('label'       => 'Nacionalidade',
