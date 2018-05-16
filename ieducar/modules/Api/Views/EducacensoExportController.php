@@ -338,7 +338,7 @@ class EducacensoExportController extends ApiCoreController
 
         (SELECT COALESCE(p.email,(SELECT email FROM pmieducar.escola_complemento where ref_cod_escola = e.cod_escola))) as r00s26,
 
-        e.orgao_regional as r00s27,
+        i.orgao_regional as r00s27,
         e.dependencia_administrativa as r00s28,
         b.zona_localizacao as r00s29,
         e.categoria_escola_privada as r00s30,
@@ -354,8 +354,8 @@ class EducacensoExportController extends ApiCoreController
         0 as r00s40,
         e.situacao_funcionamento
 
-
         FROM pmieducar.escola e
+        JOIN pmieducar.instituicao i ON i.cod_instituicao = e.ref_cod_instituicao
         INNER JOIN modules.educacenso_cod_escola ece ON (e.cod_escola = ece.cod_escola)
         INNER JOIN cadastro.pessoa p ON (e.ref_idpes = p.idpes)
         INNER JOIN cadastro.juridica j ON (j.idpes = p.idpes)
@@ -629,7 +629,7 @@ class EducacensoExportController extends ApiCoreController
       if(!$r10s101){
         $r10s102 = $r10s103 = $r10s104 = NULL;
       }
-      
+
       for ($i=1; $i <= 107 ; $i++){
         if($i>=71 && $i<=85)
           $return .= (${'r10s'.$i} == 0 ? '' : ${'r10s'.$i}).$d;
