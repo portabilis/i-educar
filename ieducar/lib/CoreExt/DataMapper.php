@@ -1,32 +1,5 @@
 <?php
 
-/**
- * i-Educar - Sistema de gestão escolar
- *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
- *                     <ctima@itajai.sc.gov.br>
- *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
- *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
- * do GNU para mais detalhes.
- *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
- *
- * @author    Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   CoreExt_DataMapper
- * @since     Arquivo disponível desde a versão 1.1.0
- * @version   $Id$
- */
 require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 /**
  * CoreExt_DataMapper abstract class.
@@ -71,7 +44,7 @@ abstract class CoreExt_DataMapper
    * @see CoreExt_Entity::_createIdentityField()
    * @var array
    */
-  protected $_primaryKey = array('id');
+  protected $_primaryKey = array('id' => 'id');
 
   /**
    * Objeto de conexão com o banco de dados.
@@ -298,11 +271,11 @@ abstract class CoreExt_DataMapper
         $hasComparisonSign = ! empty($matches);
 
         // Caso $value contenha <, > ou =, ex: '> $1', não adiciona sinal de igual.
-        if($hasComparisonSign)
+        if ($hasComparisonSign)
           $where[] = sprintf("%s %s", $whereName, $value);
 
         // Caso $value contenha parametros para consulta preparada ($1, $2...), não adiciona $value entre aspas.
-        elseif(strpos($value, '$') > -1)
+        elseif (strpos($value, '$') > -1)
           $where[] = sprintf("%s = %s", $whereName, $value);
 
         else
@@ -343,19 +316,15 @@ abstract class CoreExt_DataMapper
   {
     $where = array();
 
-    if (!is_array($pkey)) {
-      $where[] = sprintf("id = '%d'", floatval($pkey));
-    }
-    elseif (is_array($pkey)) {
-      foreach ($pkey as $key => $pk) {
-        if (is_int($key)) {
-          $whereName = $this->_getTableColumn($this->_primaryKey[$key]);
-        }
-        elseif (is_string($key)) {
-          $whereName = $this->_getTableColumn($key);
-        }
-        $where[] = sprintf("%s = '%d'", $whereName, floatval($pk));
-      }
+     if (!is_array($pkey)){
+       $pkey = array(
+         array_shift(array_keys($this->_primaryKey)) => $pkey
+       );
+     }
+
+    foreach ($pkey as $key => $pk) {
+      $whereName = $this->_getTableColumn($key);
+      $where[] = sprintf("%s = '%s'", $whereName, $pk);
     }
 
     return sprintf("SELECT %s FROM %s WHERE %s", $this->_getTableColumns(),
@@ -380,8 +349,8 @@ abstract class CoreExt_DataMapper
     $sql = 'INSERT INTO %s (%s) VALUES (%s)';
     $data = $this->_getDbAdapter()->formatValues($instance->toDataArray());
 
-    // Remove o campo identidade e campos não-persistentes
-    $data = $this->_cleanData($data);
+    //Remove campos null
+    $data = $this->_cleanNullValuesToSave($data);
 
     // Pega apenas os valores do array
     $values = array_values($data);
@@ -394,14 +363,7 @@ abstract class CoreExt_DataMapper
     $valuesStmt = array();
     for ($i = 0, $count = count($values); $i < $count; $i++) {
       $value = $values[$i];
-      if (is_null($value)) {
-        $value = "NULL";
-        $replaceString = "%s";
-      }
-      else {
-        $replaceString = "'%s'";
-      }
-      $valuesStmt[] = sprintf($replaceString, $value);
+      $valuesStmt[] = sprintf("'%s'", $value);
     }
 
     $valuesStmt = join(", ", $valuesStmt);
@@ -424,30 +386,34 @@ abstract class CoreExt_DataMapper
   protected function _getUpdateStatment(CoreExt_Entity $instance)
   {
     $sql = 'UPDATE %s SET %s WHERE %s';
+    // Convert a entity em array, traz o array com dados formatados
     $data = $this->_getDbAdapter()->formatValues($instance->toDataArray());
 
     // Remove o campo identidade e campos não-persistentes
     $data = $this->_cleanData($data);
-
+    if (empty($data)) {
+      return '';
+    }
     // Trata os valores NULL diferentemente dos outros, para evitar erro
     // de execução query
     $columns = array();
     foreach ($data as $key => $value) {
       $columnName = $this->_getTableColumn($key);
+      $replaceString = "%s = '%s'";
+
       if (is_null($value)) {
         $value = "NULL";
         $replaceString = "%s = %s";
       }
-      else {
-        $replaceString = "%s = '%s'";
-      }
+
       $columns[] = sprintf($replaceString, $columnName, $value);
     }
 
     $where = array();
-    foreach ($this->_primaryKey as $pk) {
-      $whereName = $this->_getTableColumn($pk);
-      $where[] = sprintf("%s = '%d'", $whereName, $instance->get($pk));
+    $keyToUpdate = $this->buildKeyToFind($instance);
+    foreach ($keyToUpdate  as $key => $value) {
+      $whereName = $this->_getTableColumn($key);
+      $where[] = sprintf("%s = '%s'", $whereName, $value);
     }
 
     return sprintf($sql, $this->_getTableName(), implode(', ', $columns),
@@ -467,26 +433,14 @@ abstract class CoreExt_DataMapper
    * @param mixed $instance
    * @return string
    */
-  protected function _getDeleteStatment($instance)
+  protected function _getDeleteStatment($pkToDelete)
   {
     $sql = 'DELETE FROM %s WHERE %s';
 
     $where = array();
-    if ($instance instanceof CoreExt_Entity) {
-      foreach ($this->_primaryKey as $pk) {
-        $whereName = $this->_getTableColumn($pk);
-        //$where[] = sprintf("%s = '%d'", $whereName, $instance->get($pk)); estoura o decimal. valor 9801762824 retornando 1211828232
-        $where[] = sprintf("%s = '%s'", $whereName, $instance->get($pk));
-      }
-    }
-    elseif (is_numeric($instance)) {
-      $where[] = sprintf("%s = '%d'", 'id', floatval($instance));
-    }
-    elseif (is_array($instance)) {
-      foreach ($this->_primaryKey as $pk) {
-        $whereName = $this->_getTableColumn($pk);
-        $where[] = sprintf("%s = '%d'", $whereName, $instance[$pk]);
-      }
+    foreach ($pkToDelete as $key => $value) {
+      $whereName = $this->_getTableColumn($key);
+      $where[] = sprintf("%s = '%s'", $whereName, $value);
     }
 
     return sprintf($sql, $this->_getTableName(), implode(' AND ', $where));
@@ -588,6 +542,23 @@ abstract class CoreExt_DataMapper
     return $this->_createEntityObject($this->_getDbAdapter()->Tupla());
   }
 
+    /**
+     * Retorna um registro que tenha como identificador (chave única ou composta)
+     * o valor dado por $pkey.
+     *
+     * @param  array|long $pkey
+     * @return CoreExt_Entity
+     * @throws Exception
+     */
+    public function exists($pkey)
+    {
+        $this->_getDbAdapter()->Consulta($this->_getFindStatment($pkey));
+        if (FALSE === $this->_getDbAdapter()->ProximoRegistro()) {
+            return false;
+        }
+        return true;
+    }
+
   /**
    * Salva ou atualiza um registro através de uma instância de CoreExt_Entity.
    *
@@ -605,28 +576,26 @@ abstract class CoreExt_DataMapper
     // Coumpound key, todos os valores precisam estar setados, seja para
     // INSERT ou UPDATE. A instância precisa ser marcada explicitamente
     // como "old" para que UPDATE seja chamado.
-    if (1 < count($this->_primaryKey)) {
-      foreach ($this->_primaryKey as $pk) {
-        $value = $instance->get($pk);
-        if (!isset($value)) {
-          require_once 'CoreExt/DataMapper/Exception.php';
-          throw new CoreExt_DataMapper_Exception('Erro de compound key. Uma das primary keys tem o valor NULL: "' . $pk . '"');
-        }
-      }
-    }
-    // Field identity, se estiver presente, marca instância como "old".
-    elseif (1 == count($this->_primaryKey)) {
-      if (isset($instance->id)) {
-        $instance->markOld();
+    $hasValuePk = true;
+
+    foreach ($this->_primaryKey as $key => $pk) {
+      $value = $instance->get($key);
+      if (!isset($value)) {
+        $hasValuePk = false;
       }
     }
 
+    if ($hasValuePk) {
+      if ($this->exists($this->buildKeyToFind($instance))){
+        $instance->markOld();
+      }
+    }
     @session_start();
     $pessoa_logada = $_SESSION['id_pessoa'];
     @session_write_close();
 
     if ($instance->isNew()) {
-      $returning = count($this->_primaryKey) == 1 && $this->_primaryKey[0] == 'id' ? ' RETURNING id;' : ' RETURNING NULL;';
+      $returning = ' RETURNING '.implode(',', array_values($this->_primaryKey));
       $return = $this->_getDbAdapter()->Consulta($this->_getSaveStatment($instance). $returning);
       $result = pg_fetch_row($return);
       $id = $result[0];
@@ -637,19 +606,19 @@ abstract class CoreExt_DataMapper
         $auditoria->inclusao($info);
       }
     }
-    elseif ($instance->id) {
-      $tmpEntry = $this->find($instance->id);
+    elseif (!$instance->isNew()) {
+      $pkSave = $this->buildKeyToFind($instance);
+
+      $tmpEntry = $this->find($pkSave);
       $oldInfo = $tmpEntry->toDataArray();
 
       $return = $this->_getDbAdapter()->Consulta($this->_getUpdateStatment($instance));
 
-      $tmpEntry = $this->find($instance->id);
+      $tmpEntry = $this->find($pkSave);
       $newInfo = $tmpEntry->toDataArray();
 
-      $auditoria = new clsModulesAuditoriaGeral($this->_tableName, $pessoa_logada, $instance->id);
+      $auditoria = new clsModulesAuditoriaGeral($this->_tableName, $pessoa_logada, $instance->get(array_shift(array_keys($this->_primaryKey))));
       $auditoria->alteracao($oldInfo, $newInfo);
-    } else {
-      $return = $this->_getDbAdapter()->Consulta($this->_getUpdateStatment($instance));
     }
 
     return $return;
@@ -685,23 +654,43 @@ abstract class CoreExt_DataMapper
   public function delete($instance)
   {
       $info = array();
-      if((is_object($instance) && $instance->id) || (!is_object($instance) && $instance)){
-        $tmpEntry = $this->find(is_object($instance) ? $instance->id : $instance);
+      $pkToDelete = $this->buildKeyToFind($instance);
+      if ((is_object($instance) && $instance->id) || (!is_object($instance) && $instance)) {
+        $tmpEntry = $this->find($pkToDelete);
         $info = $tmpEntry->toDataArray();
       }
 
-      $return = $this->_getDbAdapter()->Consulta($this->_getDeleteStatment($instance));
+      $return = $this->_getDbAdapter()->Consulta($this->_getDeleteStatment($pkToDelete));
 
-      if(count($info)){
+      if (count($info)){
         @session_start();
         $pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
-        $auditoria = new clsModulesAuditoriaGeral($this->_tableName, $pessoa_logada, $instance->id);
+        $auditoria = new clsModulesAuditoriaGeral($this->_tableName, $pessoa_logada, array_shift(array_values($instance)));
         $auditoria->exclusao($info);
       }
 
       return $return;
+  }
+
+  /**
+   * Retorna um array com chaves do mapper.
+   *
+   * @return array
+   */
+
+  public function buildKeyToFind($instance){
+      $pkInstance = array();
+      if (is_numeric($instance)){
+        $pkInstance[array_shift(array_keys($this->_primaryKey))] = $instance;
+      } else if (is_object($instance)) {
+        foreach ($this->_primaryKey as $key => $item) {
+          $pkInstance[$key] = $instance->get($key);
+        }
+      }
+
+      return $pkInstance;
   }
 
   /**
@@ -719,14 +708,29 @@ abstract class CoreExt_DataMapper
    */
   protected function _cleanData(array $data)
   {
-    if (array_key_exists('id', $data)) {
-      unset($data['id']);
+    foreach ($this->_primaryKey as $key => $val) {
+      if (array_key_exists($key, $data)) {
+        unset($data[$key]);
+      }
     }
 
     // Remove dados não-persistíveis
     foreach ($this->_notPersistable as $field) {
       if (array_key_exists($field, $data)) {
         unset($data[$field]);
+      }
+    }
+
+    return $data;
+  }
+
+  /*
+   * Remove campos null para realizar insert
+  */
+  protected function _cleanNullValuesToSave(array $data){
+    foreach ($data as $key => $val) {
+      if (is_null($val)){
+        unset($data[$key]);
       }
     }
 

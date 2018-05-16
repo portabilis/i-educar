@@ -140,6 +140,8 @@ class clsPessoaFj
     $filtro_cnpj    = FALSE;
 
     if (is_string($nome) && $nome != '') {
+      $nome = pg_escape_string($nome);
+
       $filtros       .= "{$whereAnd} translate(upper(nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$nome}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
       $whereAnd       = ' AND ';
       $outros_filtros = TRUE;

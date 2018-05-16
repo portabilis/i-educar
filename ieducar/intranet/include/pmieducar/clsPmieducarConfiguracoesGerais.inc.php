@@ -45,6 +45,12 @@ class clsPmieducarConfiguracoesGerais
   var $ref_cod_instituicao;
   var $permite_relacionamento_posvendas;
   var $url_novo_educacao;
+  var $mostrar_codigo_inep_aluno;
+  var $justificativa_falta_documentacao_obrigatorio;
+  var $tamanho_min_rede_estadual;
+  var $modelo_boletim_professor;
+  var $custom_labels;
+  var $url_cadastro_usuario;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -105,22 +111,55 @@ class clsPmieducarConfiguracoesGerais
   /**
    * Construtor.
    */
-  function __construct($ref_cod_instituicao, $permite_relacionamento_posvendas, $url_novo_educacao)
-  {
+
+  function __construct(
+      $ref_cod_instituicao = null,
+      $permite_relacionamento_posvendas = null,
+      $url_novo_educacao = null,
+      $mostrar_codigo_inep_aluno = null,
+      $justificativa_falta_documentacao_obrigatorio = null,
+      $tamanho_min_rede_estadual = null,
+      $modelo_boletim_professor = null,
+      $custom_labels = null,
+      $url_cadastro_usuario = null
+  ) {
     $this->_schema = 'pmieducar.';
     $this->_tabela = $this->_schema . 'configuracoes_gerais';
 
-    $this->_campos_lista = $this->_todos_campos = 'ref_cod_instituicao, permite_relacionamento_posvendas, url_novo_educacao ';
+      $this->_campos_lista = $this->_todos_campos = 'ref_cod_instituicao, permite_relacionamento_posvendas, url_novo_educacao, mostrar_codigo_inep_aluno, justificativa_falta_documentacao_obrigatorio, tamanho_min_rede_estadual, modelo_boletim_professor, custom_labels, url_cadastro_usuario ';
 
     if (is_numeric($ref_cod_instituicao)) {
       $this->ref_cod_instituicao = $ref_cod_instituicao;
     }
+
     if (is_numeric($permite_relacionamento_posvendas)) {
       $this->permite_relacionamento_posvendas = $permite_relacionamento_posvendas;
     }
+
     if (!empty($url_novo_educacao)) {
       $this->url_novo_educacao = $url_novo_educacao;
     }
+
+    if (is_numeric($mostrar_codigo_inep_aluno)) {
+        $this->mostrar_codigo_inep_aluno = $mostrar_codigo_inep_aluno;
+    }
+
+    if (is_numeric($justificativa_falta_documentacao_obrigatorio)) {
+       $this->justificativa_falta_documentacao_obrigatorio = $justificativa_falta_documentacao_obrigatorio;
+    }
+
+    $this->tamanho_min_rede_estadual = $tamanho_min_rede_estadual;
+
+    if (is_numeric($modelo_boletim_professor)) {
+        $this->modelo_boletim_professor = $modelo_boletim_professor;
+    }
+
+    if (!empty($custom_labels)) {
+        $this->custom_labels = $custom_labels;
+    }
+
+    $this->url_cadastro_usuario = $url_cadastro_usuario;
+
   }
 
   /**
@@ -130,10 +169,10 @@ class clsPmieducarConfiguracoesGerais
   function edita()
   {
     $db = new clsBanco();
-    $set = '';
+    $set = array();
+
     if (is_numeric($this->permite_relacionamento_posvendas)) {
-      $set .= "{$gruda}permite_relacionamento_posvendas = '{$this->permite_relacionamento_posvendas}'";
-      $gruda = ', ';
+      $set[] = "permite_relacionamento_posvendas = '{$this->permite_relacionamento_posvendas}'";
     }
 
     if (is_numeric($this->ref_cod_instituicao)) {
@@ -143,16 +182,42 @@ class clsPmieducarConfiguracoesGerais
     }
 
     if (!empty($this->url_novo_educacao)) {
-      $set .= "{$gruda}url_novo_educacao = '{$this->url_novo_educacao}'";
-      $gruda = ', ';
+      $set[] = "url_novo_educacao = '{$this->url_novo_educacao}'";
     }
 
-    if ($set) {
+    if (is_array($this->custom_labels)) {
+        $customLabels = json_encode($this->custom_labels);
+        $set[] = "custom_labels = '{$customLabels}'";
+    }
+
+    if (is_numeric($this->mostrar_codigo_inep_aluno)) {
+        $set[] = "mostrar_codigo_inep_aluno = '{$this->mostrar_codigo_inep_aluno}'";
+    }
+
+    if (is_numeric($this->justificativa_falta_documentacao_obrigatorio)) {
+        $set[] = "justificativa_falta_documentacao_obrigatorio = '{$this->justificativa_falta_documentacao_obrigatorio}'";
+    }
+
+    if ($this->tamanho_min_rede_estadual == '') {
+        $this->tamanho_min_rede_estadual = 'NULL';
+    }
+
+    $set[] = "tamanho_min_rede_estadual = {$this->tamanho_min_rede_estadual}";
+
+    if (is_numeric($this->modelo_boletim_professor)) {
+        $set[] = "modelo_boletim_professor = '{$this->modelo_boletim_professor}'";
+    }
+    
+    $set[] = "url_cadastro_usuario = '{$this->url_cadastro_usuario}'";
+
+    if (!empty($set)) {
+      $set = join(', ', $set);
       $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE ref_cod_instituicao = '{$ref_cod_instituicao}'");
-      return TRUE;
+
+      return true;
     }
 
-    return FALSE;
+    return false;
   }
 
   /**
@@ -170,9 +235,13 @@ class clsPmieducarConfiguracoesGerais
     $db = new clsBanco();
     $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE ref_cod_instituicao = '{$ref_cod_instituicao}'");
     $db->ProximoRegistro();
-    return $db->Tupla();
+    $record = $db->Tupla();
 
-    return FALSE;
+    if (!empty($record['custom_labels'])) {
+        $record['custom_labels'] = json_decode($record['custom_labels'], true);
+    }
+
+    return $record;
   }
 
   function getUltimaInstituicaoAtiva() {

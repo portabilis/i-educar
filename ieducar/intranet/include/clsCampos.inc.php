@@ -1323,7 +1323,7 @@ class clsCampos extends Core_Controller_Page_Abstract
 
                 $click = "$nome_add.removeRow(this);";
 
-                $img = "<img src=\"imagens/banco_imagens/excluirrr.png\" border=\"0\" alt=\"excluir\" />";
+                $img = "<img src=\"/intranet/imagens/banco_imagens/excluirrr.png\" border=\"0\" alt=\"excluir\" />";
                 $md2 = FALSE;
 
                 if (!count($valores)) {
@@ -1452,7 +1452,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                 $retorno .= '</tr>';
 
                 $click = "$nome_add.addRow();";
-                $img = "<img src=\"imagens/nvp_bot_novo.png\" border=\"0\" alt=\"incluir\" style=\"float:left; margin:5px;\" />";
+                $img = "<img src=\"/intranet/imagens/nvp_bot_novo.png\" border=\"0\" alt=\"incluir\" style=\"float:left; margin:5px;\" />";
                 $retorno .= "<tr id='adicionar_linha' style=\"background-color:#f5f9fd;\">";
                 $tt = $total_campos + 1;
                 $retorno .= "<td colspan='$tt' align='left' style='padding-top: 17px !important;'><a style=\"color: #47728f; text-decoration:none;\" href='javascript:void(0)' id='btn_add_$nome_add' onclick='$click' style='outline: none;'>$img <p style=\"padding:9px; margin:0;\">ADICIONAR NOVO<p></a></td>";
@@ -1636,7 +1636,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                                     $retorno .= "<img src=\"imagens/lupa.png\" alt=\"Pesquisa\" border=\"0\" onclick=\"pesquisa_valores_popless('{$componente[7]}', '{$nome}_{$inicio}')\">";
                                 }
 
-                                $retorno .= " {$componente[8]}</td><td id=\"td_adicionador_{$nome}_{$inicio}\" style=\"padding-left:30px;\"><img name=\"adicionador_{$nome}_{$inicio}\" id=\"adicionador_{$nome}_{$inicio}\" onclick=\"remove_{$nome}('{$inicio}');\" src=\"imagens/banco_imagens/excluirrr.png\" title=\"Excluir\" border=0></td></tr>";
+                                $retorno .= " {$componente[8]}</td><td id=\"td_adicionador_{$nome}_{$inicio}\" style=\"padding-left:30px;\"><img name=\"adicionador_{$nome}_{$inicio}\" id=\"adicionador_{$nome}_{$inicio}\" onclick=\"remove_{$nome}('{$inicio}');\" src=\"/intranet/imagens/banco_imagens/excluirrr.png\" title=\"Excluir\" border=0></td></tr>";
                                 $inclusos[] = $inicio;
 
                                 $inicio++;
@@ -1724,7 +1724,7 @@ class clsCampos extends Core_Controller_Page_Abstract
     id_antecessor = id - 1;
 
     img_ant     = document.getElementById('adicionador_{$nome}_' + id_antecessor);
-    img_ant.src = 'imagens/banco_imagens/excluirrr.png';
+    img_ant.src = '/intranet/imagens/banco_imagens/excluirrr.png';
 
     document.getElementById('adicionador_{$nome}_' + id_antecessor).onclick = function() { onclick=remove_{$nome}(this.name.substr(this.name.lastIndexOf( '_' ) + 1)); };
 
@@ -1797,7 +1797,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                         }
 
                         $retorno .= "</select>";
-                        $retorno .= "<a href='#' class='imagem' onClick=\"receptor=document.formcadastro.{$nome};newwin=window.open('" . $componente[8] . "', '{$nome}_link', 'width=" . $componente[9] . ", height=" . $componente[10] . ", scollbars=false');\"> <img src='imagens/nvp_bot_novo.png' border=0 alt='" . $componente[7] . "'></a>";
+                        $retorno .= "<a href='#' class='imagem' onClick=\"receptor=document.formcadastro.{$nome};newwin=window.open('" . $componente[8] . "', '{$nome}_link', 'width=" . $componente[9] . ", height=" . $componente[10] . ", scollbars=false');\"> <img src='/intranet/imagens/nvp_bot_novo.png' border=0 alt='" . $componente[7] . "'></a>";
                         $retorno .= "
             <script type=\"text/javascript\">
             var receptor;

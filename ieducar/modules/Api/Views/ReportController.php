@@ -36,6 +36,10 @@ require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once "Reports/Reports/BoletimReport.php";
 require_once "Reports/Reports/BoletimProfessorReport.php";
 
+/**
+ * Class ReportController
+ * @deprecated Essa versão da API pública será descontinuada
+ */
 class ReportController extends ApiCoreController
 {
 
@@ -127,13 +131,10 @@ class ReportController extends ApiCoreController
       $boletimProfessorReport->addArg('orientacao', 2);
       $boletimProfessorReport->addArg('situacao', 10);
 
-      $modelo = 1;
+      $configuracoes = new clsPmieducarConfiguracoesGerais();
+      $configuracoes = $configuracoes->detalhe();
 
-      if($GLOBALS['coreExt']['Config']->report->mostrar_relatorios == 'passodetorres' || $GLOBALS['coreExt']['Config']->report->mostrar_relatorios == 'meleiro'){
-        $modelo = 2;
-      } else if($GLOBALS['coreExt']['Config']->report->mostrar_relatorios == 'saomigueldoscampos') {
-        $modelo = 3;
-      }
+      $modelo = $configuracoes["modelo_boletim_professor"];
 
       $boletimProfessorReport->addArg('modelo', $modelo);
       $boletimProfessorReport->addArg('linha', 0);

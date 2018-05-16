@@ -49,6 +49,10 @@ require_once 'include/modules/clsModulesPessoaTransporte.inc.php';
 require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 require_once 'Transporte/Model/Responsavel.php';
 
+/**
+ * Class AlunoController
+ * @deprecated Essa versão da API pública será descontinuada
+ */
 class AlunoController extends ApiCoreController
 {
     protected $_processoAp = 578;
@@ -186,9 +190,12 @@ class AlunoController extends ApiCoreController
 
             $alunoId = $this->fetchPreparedQuery($sql, $params, true, 'first-field');
 
-            if ($GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu') {
+            $configuracoes = new clsPmieducarConfiguracoesGerais();
+            $configuracoes = $configuracoes->detalhe();
+
+            if (!empty($configuracoes["tamanho_min_rede_estadual"])) {
                 $count = strlen($this->getRequest()->aluno_estado_id);
-                if ($count < 13) {
+                if ($count < $configuracoes["tamanho_min_rede_estadual"]) {
                     $this->messenger->append("O Código rede estadual informado é inválido. {$this->getRequest()->aluno_estado_id}.");
 
                     return false;
@@ -1086,7 +1093,16 @@ class AlunoController extends ApiCoreController
     {
         if ($this->canGetTodosAlunos()) {
             $sql = "
-                SELECT a.cod_aluno AS aluno_id, p.nome as nome_aluno, f.data_nasc as data_nascimento, ff.caminho as foto_aluno
+                SELECT a.cod_aluno AS aluno_id,
+                p.nome as nome_aluno,
+                f.data_nasc as data_nascimento,
+                ff.caminho as foto_aluno,
+                EXISTS(SELECT 1
+                        FROM cadastro.fisica_deficiencia fd
+                        JOIN cadastro.deficiencia d
+                        ON d.cod_deficiencia = fd.ref_cod_deficiencia
+                        WHERE fd.ref_idpes = p.idpes
+                        AND d.nm_deficiencia NOT ILIKE 'nenhuma') as utiliza_regra_diferenciada
                 FROM pmieducar.aluno a
                 INNER JOIN cadastro.pessoa p ON p.idpes = a.ref_idpes
                 INNER JOIN cadastro.fisica f ON f.idpes = p.idpes
@@ -1097,8 +1113,11 @@ class AlunoController extends ApiCoreController
 
             $alunos = $this->fetchPreparedQuery($sql);
 
-            $attrs = array('aluno_id', 'nome_aluno', 'foto_aluno', 'data_nascimento');
+            $attrs = array('aluno_id', 'nome_aluno', 'foto_aluno', 'data_nascimento', 'utiliza_regra_diferenciada');
             $alunos = Portabilis_Array_Utils::filterSet($alunos, $attrs);
+            foreach ($alunos as &$aluno) {
+                $aluno['utiliza_regra_diferenciada'] = dbBool($aluno['utiliza_regra_diferenciada']);
+            }
 
             return array('alunos' => $alunos);
         }

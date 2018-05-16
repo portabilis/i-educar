@@ -360,6 +360,11 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       unset($options['MediaGeralDataMapper']);
     }
 
+    if (isset($options['componenteCurricularId'])) {
+      $this->setComponenteCurricularId($options['componenteCurricularId']);
+      unset($options['componenteCurricularId']);
+    }
+
     $defaultOptions = array_keys($this->getOptions());
     $passedOptions  = array_keys($options);
 
@@ -450,6 +455,26 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       $this->setComponenteTurmaDataMapper(new ComponenteCurricular_Model_TurmaDataMapper());
     }
     return $this->_componenteTurmaDataMapper;
+  }
+
+  /**
+   * Setter.
+   * @param $id
+   * @return App_Service_Boletim Provê interface fluída
+   */
+  public function setComponenteCurricularId($componenteCurricularId)
+  {
+    $this->_componenteCurricularId = $componenteCurricularId;
+    return $this;
+  }
+
+  /**
+   * Getter.
+   * @return int
+   */
+  public function getComponenteCurricularId()
+  {
+    return $this->_componenteCurricularId;
   }
 
   /**
@@ -957,17 +982,16 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   {
     $codMatricula = $this->getOption('matricula');
 
-    $etapas = App_Model_IedFinder::getQuantidadeDeModulosMatricula($codMatricula);
-    $etapa_atual = $_GET['etapa'] == 'Rc' ? $etapas : $_GET['etapa'];
+    $matricula = App_Model_IedFinder::getMatricula($codMatricula);
+
+    $etapas = App_Model_IedFinder::getQuantidadeDeModulosMatricula($codMatricula, $matricula);
+    $etapaAtual = $_GET['etapa'] == 'Rc' ? $etapas : $_GET['etapa'];
 
     $this->_setRegra(App_Model_IedFinder::getRegraAvaliacaoPorMatricula(
-            $codMatricula, $this->getRegraDataMapper()
-           ))
+            $codMatricula, $this->getRegraDataMapper(), $matricula
+           ));
 
-         ->_setComponentes(App_Model_IedFinder::getComponentesPorMatricula($codMatricula, $this->getComponenteDataMapper(), $this->getComponenteTurmaDataMapper(), null, $etapa_atual));
-
-    // Valores scalar de referência
-    $matricula = App_Model_IedFinder::getMatricula($codMatricula);
+    $this->_setComponentes(App_Model_IedFinder::getComponentesPorMatricula($codMatricula, $this->getComponenteDataMapper(), $this->getComponenteTurmaDataMapper(), $this->getComponenteCurricularId(), $etapaAtual, null, $matricula));
 
     $this->setOption('matriculaData',     $matricula);
     $this->setOption('aprovado',          $matricula['aprovado']);
@@ -977,6 +1001,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $this->setOption('serieDiasLetivos',  $matricula['serie_dias_letivos']);
     $this->setOption('ref_cod_turma',     $matricula['ref_cod_turma']);
     $this->setOption('etapas',            $etapas);
+    $this->setOption('etapaAtual',            $etapaAtual);
 
     return $this;
   }
@@ -1232,8 +1257,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
   public function getQtdComponentes(){
     $codMatricula = $this->getOption('matricula');
+    $matriculaData = $this->getOption('matriculaData');
 
-    return count(App_Model_IedFinder::getComponentesPorMatricula($codMatricula, $this->getComponenteDataMapper(), $this->getComponenteTurmaDataMapper()));
+    return count(App_Model_IedFinder::getComponentesPorMatricula($codMatricula, $this->getComponenteDataMapper(), $this->getComponenteTurmaDataMapper(),null,null,null, $matriculaData, false ));
   }
 
   function getSituacaoNotaFalta($flagSituacaoNota, $flagSituacaoFalta)
@@ -1392,7 +1418,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $mediasComponentes = $this->_loadMedias()
                               ->getMediasComponentes();
     $componentes = $this->getComponentes();
-    $mediasComponentes = array_intersect_key($mediasComponentes, $componentes); 
+    $mediasComponentes = array_intersect_key($mediasComponentes, $componentes);
 
     $disciplinaDispensadaTurma = clsPmieducarTurma::getDisciplinaDispensada($this->getOption('ref_cod_turma'));
 
@@ -2670,7 +2696,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     if (!is_numeric($media)) {
       require_once 'CoreExt/Exception/InvalidArgumentException.php';
       throw new CoreExt_Exception_InvalidArgumentException(sprintf(
-        'O parâmetro $nota ("%s") não é um valor numérico.', $media
+        'O parâmetro $media ("%s") não é um valor numérico.', $media
       ));
     }
 
@@ -2941,6 +2967,20 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     return $this;
   }
 
+  protected function reloadComponentes(){
+    $this->_setComponentes(
+        App_Model_IedFinder::getComponentesPorMatricula(
+            $this->getOption('matricula'),
+            $this->getComponenteDataMapper(),
+            $this->getComponenteTurmaDataMapper(),
+            null,
+            $this->getOption('etapaAtual'),
+            null,
+            $this->getOption('matriculaData')
+        )
+    );
+  }
+
   /**
    * Promove o aluno de etapa escolar caso esteja aprovado de acordo com o
    * necessário estabelecido por tipoProgressao de
@@ -2953,6 +2993,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
   public function promover($novaSituacaoMatricula = NULL)
   {
+    // Essa função é necessária para promoção pois precisamos considerar a
+    // situação de todas as disciplinas e não só da que está sendo lançada
+    $this->reloadComponentes();
     $tipoProgressao = $this->getRegra()->get('tipoProgressao');
     $situacaoMatricula = $this->getOption('aprovado');
     $situacaoBoletim = $this->getSituacaoAluno();

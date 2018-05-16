@@ -130,25 +130,15 @@ class clsBase extends clsConfig
         if (is_array($this->estilos) && count($this->estilos)) {
             $estilos = '';
             foreach ($this->estilos as $estilo) {
-                $estilos .= "<link rel=stylesheet type='text/css' href='styles/{$estilo}.css?assets_version=" . Portabilis_Assets_Version::VERSION . "' />";
+                $estilos .= "<link rel=stylesheet type='text/css' href='/intranet/styles/{$estilo}.css?assets_version=" . Portabilis_Assets_Version::VERSION . "' />";
             }
             $saida = str_replace("<!-- #&ESTILO&# -->", $estilos, $saida);
-        }
-
-        if ($GLOBALS['coreExt']['Config']->app->widget == 1 && $this->renderMenu) {
-            $suporte_freshdesk = '<script type="text/javascript" src="https://assets.freshdesk.com/widget/freshwidget.js"></script>
-                            <script type="text/javascript" src="scripts/suporte_freshdesk.js?v=2"></script>';
-            $saida = str_replace("<!-- #&FRESHDESK&# -->", $suporte_freshdesk, $saida);
-        } elseif ($GLOBALS['coreExt']['Config']->app->widget_***REMOVED*** == 1 && $this->renderMenu) {
-            $suporte_freshdesk = '<script type="text/javascript" src="https://assets.freshdesk.com/widget/freshwidget.js"></script>
-                            <script type="text/javascript" src="scripts/suporte_freshdesk_***REMOVED***.js?v=2"></script>';
-            $saida = str_replace("<!-- #&FRESHDESK&# -->", $suporte_freshdesk, $saida);
         }
 
         if (is_array($this->scripts) && count($this->scripts)) {
             $estilos = '';
             foreach ($this->scripts as $script) {
-                $scripts .= "<script type='text/javascript' src='scripts/{$script}.js?assets_version=" . Portabilis_Assets_Version::VERSION . "' ></script>";
+                $scripts .= "<script type='text/javascript' src='/intranet/scripts/{$script}.js?assets_version=" . Portabilis_Assets_Version::VERSION . "' ></script>";
             }
             $saida = str_replace("<!-- #&SCRIPT&# -->", $scripts, $saida);
         }
@@ -164,6 +154,19 @@ class clsBase extends clsConfig
         } else {
             $saida = str_replace("<!-- #&SCRIPT_HEADER&# -->", "", $saida);
         }
+
+        $saida = str_replace("<!-- #&GOOGLE_TAG_MANAGER_ID&# -->", $GLOBALS['coreExt']['Config']->app->gtm->id, $saida);
+
+        // nome completo usuario
+        // @TODO: jeito mais eficiente de usar estes dados, já que eles são
+        //         usados em mais um método aqui...
+        $nomePessoa = new clsPessoaFisica();
+        list($nomePessoa, $email) = $nomePessoa->queryRapida($this->currentUserId(), "nome", "email");
+        $nomePessoa = ($nomePessoa) ? $nomePessoa : 'Visitante';
+
+        $saida = str_replace("<!-- #&SLUG&# -->", $GLOBALS['coreExt']['Config']->app->database->dbname, $saida);
+        $saida = str_replace("<!-- #&USERLOGADO&# -->", trim($nomePessoa), $saida);
+        $saida = str_replace("<!-- #&USEREMAIL&# -->", trim($email), $saida);
 
         return $saida;
     }
@@ -400,6 +403,12 @@ class clsBase extends clsConfig
                         } else {
                             $menu_suspenso['caminho'] = '../../intranet/' . $menu_suspenso['caminho'];
                         }
+                    } elseif ($uri[2] == 'filaunica' || $uri[2] == 'reservavaga') {
+                        if (0 === strpos($menu_suspenso['caminho'], 'module')) {
+                            $menu_suspenso['caminho'] = '../../' . $menu_suspenso['caminho'];
+                        } else {
+                            $menu_suspenso['caminho'] = '../' . $menu_suspenso['caminho'];
+                        }
                     } elseif (0 === strpos($menu_suspenso['caminho'], 'module')) {
                         $menu_suspenso['caminho'] = '../../' . $menu_suspenso['caminho'];
                     }
@@ -591,7 +600,6 @@ class clsBase extends clsConfig
         $detalheFoto = $objFoto->detalhe();
         $foto = $detalheFoto['caminho'] ? str_replace("http://", "https://", $detalheFoto['caminho']) : '/intranet/imagens/user-perfil.png';
 
-
         // data ultimo acesso
         $ultimoAcesso = $this->db()->UnicoCampo("SELECT data_hora FROM acesso WHERE cod_pessoa = {$this->currentUserId()} ORDER BY data_hora DESC LIMIT 1,1");
 
@@ -603,22 +611,12 @@ class clsBase extends clsConfig
         // substitui valores no template
         $saida = str_replace("<!-- #&ULTIMOACESSO&# -->", $ultimoAcesso, $saida);
         $saida = str_replace("<!-- #&USERLOGADO&# -->", $nomePessoa, $saida);
+        $saida = str_replace("<!-- #&USEREMAIL&# -->", $email, $saida);
         $saida = str_replace("<!-- #&CORPO&# -->", $corpo, $saida);
         $saida = str_replace("<!-- #&ANUNCIO&# -->", $menu_dinamico, $saida);
         $saida = str_replace("<!-- #&FOTO&# -->", $foto, $saida);
 
         $administrativeInfoFetcher = new Portabilis_AdministrativeInfoFetcher();
-
-        $showOnboarding = $administrativeInfoFetcher->getShowOnboarding();
-        if ($showOnboarding) {
-            $iconeCompass = "
-                <a class=\"icons-top\" href=\"#\" onclick=\"openConpassFlow()\">
-                    <img id=\"help\" src=\"imagens/icon-help.png\">
-                </a>
-            ";
-
-            $saida = str_replace("<!-- #&ICONE_COMPASS&# -->", $iconeCompass, $saida);
-        }
 
         $saida = str_replace("<!-- #&RODAPE_INTERNO&# -->", $administrativeInfoFetcher->getInternalFooter(), $saida);
 
@@ -635,27 +633,9 @@ class clsBase extends clsConfig
         $sql = "UPDATE funcionario SET ip_logado = '$ip_maquina' , data_login = NOW() WHERE ref_cod_pessoa_fj = {$this->currentUserId()}";
         $this->db()->Consulta($sql);
 
-        $saida .= "<script type=\"text/javascript\" src=\"scripts/select2/select2.full.min.js\"></script>";
-        $saida .= "<script type=\"text/javascript\" src=\"scripts/select2/pt-BR.js\"></script>";
-        $saida .= "<link type=\"text/css\" rel=\"stylesheet\" href=\"scripts/select2/select2.min.css\" />";
-
-        if ($showOnboarding) {
-            $saida .= "<script src='https://fast.conpass.io/H1gWceptS_G.js'></script>";
-
-
-            $saida .= "
-                <script type=\"text/javascript\">
-                    var titleFlow = \"Pesquisa de satisfação\";
-                    function openConpassFlow() {
-                        Conpass.startFlow(titleFlow, { show: true });
-                    }
-                    window.onload = function(e) {
-                        Conpass.startFlow(titleFlow);
-                    }
-                        Conpass.init({ name: \"{$nomePessoa}\", email: \"{$email}\" });
-                </script>
-            ";
-        }
+        $saida .= "<script type=\"text/javascript\" src=\"/intranet/scripts/select2/select2.full.min.js\"></script>";
+        $saida .= "<script type=\"text/javascript\" src=\"/intranet/scripts/select2/pt-BR.js\"></script>";
+        $saida .= "<link type=\"text/css\" rel=\"stylesheet\" href=\"/intranet/scripts/select2/select2.min.css\" />";
 
         return $saida;
     }
@@ -695,7 +675,7 @@ class clsBase extends clsConfig
             foreach ($listaBanners as $ind => $banner) {
                 if ($banner["controle_inicio"] <= $sorteio && $banner["controle_fim"] >= $sorteio) {
                     if ($pregadas == 0) {
-                        $img = "<IMG style='margin-top: 170px;' src='fotos/imgs/{$banner['caminho']}' border=0 title='{$banner['titulo']}' alt='{$banner['titulo']}' width='149' height='74'>";
+                        $img = "<IMG style='margin-top: 170px;' src='/intranet/fotos/imgs/{$banner['caminho']}' border=0 title='{$banner['titulo']}' alt='{$banner['titulo']}' width='149' height='74'>";
 
                         if (!empty($banner['link'])) {
                             $retorno .= "<a href='{$banner['link']}' target='_blank' alt='{$banner['titulo']}'>{$img}</a><BR><BR>";
@@ -703,7 +683,7 @@ class clsBase extends clsConfig
                             $retorno .= "{$img}<BR><BR>";
                         }
                     } else {
-                        $img = "<IMG src='fotos/imgs/{$banner['caminho']}' border=0 title='{$banner['titulo']}' alt='{$banner['titulo']}' width='149' height='74'>";
+                        $img = "<IMG src='/intranet/fotos/imgs/{$banner['caminho']}' border=0 title='{$banner['titulo']}' alt='{$banner['titulo']}' width='149' height='74'>";
 
                         if (!empty($banner['link'])) {
                             $retorno .= "<a href='{$banner['link']}' target='_blank' alt='{$banner['titulo']}'>{$img}</a><BR><BR>";
@@ -880,13 +860,13 @@ class clsBase extends clsConfig
     function buscaRapida()
     {
 
-        $css .= "<link rel=stylesheet type='text/css' href='styles/buscaMenu.css?assets_version=" . Portabilis_Assets_Version::VERSION . "' />";
-        $css .= "<link rel=stylesheet type='text/css' href='scripts/jquery/jquery-ui.min-1.9.2/css/custom/jquery-ui-1.9.2.custom.min.css?assets_version=" . Portabilis_Assets_Version::VERSION . "' />";
+        $css .= "<link rel=stylesheet type='text/css' href='/intranet/styles/buscaMenu.css?assets_version=" . Portabilis_Assets_Version::VERSION . "' />";
+        $css .= "<link rel=stylesheet type='text/css' href='/intranet/scripts/jquery/jquery-ui.min-1.9.2/css/custom/jquery-ui-1.9.2.custom.min.css?assets_version=" . Portabilis_Assets_Version::VERSION . "' />";
 
         $js .= "<script type='text/javascript' src='/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/SimpleSearch.js'></script>";
         $js .= "<script type='text/javascript' src='/modules/Portabilis/Assets/Javascripts/Utils.js'></script>";
-        $js .= "<script type='text/javascript' src='scripts/buscaMenu.js?assets_version= " . Portabilis_Assets_Version::VERSION . "'></script>";
-        $js .= "<script type='text/javascript' src='scripts/jquery/jquery-ui.min-1.9.2/js/jquery-ui-1.9.2.custom.min.js?assets_version= " . Portabilis_Assets_Version::VERSION . "'></script>";
+        $js .= "<script type='text/javascript' src='/intranet/scripts/buscaMenu.js?assets_version= " . Portabilis_Assets_Version::VERSION . "'></script>";
+        $js .= "<script type='text/javascript' src='/intranet/scripts/jquery/jquery-ui.min-1.9.2/js/jquery-ui-1.9.2.custom.min.js?assets_version= " . Portabilis_Assets_Version::VERSION . "'></script>";
 
         $titulo .= "<div title='Busca rápida' class='title-busca-rapida'>";
         $titulo .= "<table width='168' class='title active-section-title' style='-moz-user-select: none;'>";
