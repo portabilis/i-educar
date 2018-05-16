@@ -51,10 +51,10 @@ require_once 'modules/Error/Mailers/NotificationMailer.php';
 require_once 'Portabilis/Assets/Version.php';
 require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
 
-$administrativeInfoFetcher = new Portabilis_AdministrativeInfoFetcher();
-$suspensionInfo = $administrativeInfoFetcher->getSuspensionInfo();
-
-if (!$suspensionInfo['active']) {
+$configuracoes = new clsPmieducarConfiguracoesGerais();
+$configuracoes = $configuracoes->detalhe();
+//var_dump($configuracoes);die;
+if (!$configuracoes['active_on_ieducar']) {
     header('HTTP/1.1 503 Service Temporarily Unavailable');
     header("Location: suspenso.php");
 }
@@ -618,7 +618,10 @@ class clsBase extends clsConfig
 
         $administrativeInfoFetcher = new Portabilis_AdministrativeInfoFetcher();
 
-        $saida = str_replace("<!-- #&RODAPE_INTERNO&# -->", $administrativeInfoFetcher->getInternalFooter(), $saida);
+        $configuracoes = new clsPmieducarConfiguracoesGerais();
+        $configuracoes = $configuracoes->detalhe();
+
+        $saida = str_replace("<!-- #&RODAPE_INTERNO&# -->", $configuracoes["ieducar_internal_footer"], $saida);
 
         // Pega o endereço IP do host, primeiro com HTTP_X_FORWARDED_FOR (para pegar o IP real
         // caso o host esteja atrás de um proxy)
