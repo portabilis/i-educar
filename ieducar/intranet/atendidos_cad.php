@@ -1234,9 +1234,13 @@ class indice extends clsCadastro
   }
 
   protected function createOrUpdate($pessoaIdOrNull = null) {
+    if (!$this->possuiDocumentoObrigatorio()) {
+      $this->mensagem = 'É necessário o preenchimento de pelo menos um dos seguintes documentos: CPF, RG ou Certidão civil.';
+      return false;
+    }
+
     if (! $this->validatesCpf($this->id_federal))
       return false;
-
 
     if (!$this->validatePhoto())
       return false;
@@ -1304,6 +1308,18 @@ class indice extends clsCadastro
       return true;
     }
 
+  }
+
+  function possuiDocumentoObrigatorio() {
+    $certidaoCivil = $this->termo_certidao_civil && $this->folha_certidao_civil && $this->livro_certidao_civil;
+    $certidaoNascimentoNovoFormato = $this->certidao_nascimento;
+    $certidaoCasamentoNovoFormato = $this->certidao_casamento;
+
+    return $this->id_federal ||
+           $this->rg ||
+           $certidaoCivil ||
+           $certidaoCasamentoNovoFormato ||
+           $certidaoNascimentoNovoFormato;
   }
 
   protected function validaCertidao() {
