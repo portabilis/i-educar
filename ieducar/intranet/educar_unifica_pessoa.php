@@ -1,9 +1,5 @@
 <?php
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -100,7 +96,7 @@ class indice extends clsCadastro
     $unificador = new App_Unificacao_Pessoa($codPessoaPrincipal, $codPessoas, $this->pessoa_logada, new clsBanco(), FALSE);
     $unificador->unifica();
 
-    $this->mensagem = "<span>Pessoas unificados com sucesso.</span>";
+    $this->mensagem = "<span>Pessoas unificadas com sucesso.</span>";
     return true;
   }
 }
