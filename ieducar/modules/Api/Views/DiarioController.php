@@ -92,13 +92,10 @@ class DiarioController extends ApiCoreController
               FROM pmieducar.matricula m
               INNER JOIN pmieducar.matricula_turma mt ON m.cod_matricula = mt.ref_cod_matricula
               WHERE m.ativo = 1
-              AND (mt.ativo = 1
-                   OR (mt.transferido
-                       OR mt.remanejado)
-                  )
+              AND mt.ativo = 1
               AND  mt.ref_cod_turma = $1
               AND m.ref_cod_aluno = $2
-              AND m.aprovado IN (1,2,3,4,13,12,14) -- PERMITIDO SOMENTE LANÇAR NOTAS PARA SITUAÇÕES APROVADO/REPROVADO/ANDAMENTO
+              AND m.aprovado IN (1,2,3,13,12,14) -- PERMITIDO SOMENTE LANÇAR NOTAS PARA SITUAÇÕES APROVADO/REPROVADO/ANDAMENTO
             ORDER BY m.aprovado
               LIMIT 1';
 
