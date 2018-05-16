@@ -25,7 +25,6 @@ require_once 'include/clsBanco.inc.php';
 require_once 'Portabilis/Messenger.php';
 require_once 'Portabilis/Mailer.php';
 require_once 'Portabilis/AdministrativeInfoFetcher.php';
-require_once 'Portabilis/AdministrativeMessagesFetcher.php';
 require_once 'Portabilis/Utils/User.php';
 require_once 'Portabilis/Utils/ReCaptcha.php';
 
@@ -98,7 +97,6 @@ class clsControlador
     $this->_maximoTentativasFalhas = 7;
     $this->messenger = new Portabilis_Messenger();
     $this->administrativeInfoFetcher = new Portabilis_AdministrativeInfoFetcher();
-    $this->administrativeMessagesFetcher = new Portabilis_AdministrativeMessagesFetcher();
   }
 
 
@@ -217,17 +215,17 @@ class clsControlador
     $this->destroyLoginSession();
     require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/bootstrap.php';
     $parceiro = $GLOBALS['coreExt']['Config']->app->template->layout;
-    $dbName   = $GLOBALS['coreExt']['Config']->app->database->dbname;
-    $linkCriarConta = 'https://login.ieducar.com.br/' . $dbName;
-    $msgCriarConta  = 'Não possui uma conta? <a target="_BLANK" href="'. $linkCriarConta .'">Crie sua conta agora</a>.';
     $templateName   = (trim($parceiro)=='' ? 'templates/nvp_htmlloginintranet.tpl' : 'templates/'.trim($parceiro));
     $templateFile   = fopen($templateName, "r");
     $templateText   = fread($templateFile, filesize($templateName));
     $templateText   = str_replace( "<!-- #&ERROLOGIN&# -->", $this->messenger->toHtml('p'), $templateText);
 
-    $permiteCriarConta = $this->administrativeInfoFetcher->getCanCreateUser();
-    if (!$permiteCriarConta) {
-      $msgCriarConta = '';
+    $configuracoes = new clsPmieducarConfiguracoesGerais();
+    $configuracoes = $configuracoes->detalhe();
+
+    $msgCriarConta = '';
+    if (!empty($configuracoes["url_cadastro_usuario"])) {
+        $msgCriarConta  = 'Não possui uma conta? <a target="_BLANK" href="'. $configuracoes["url_cadastro_usuario"] .'">Crie sua conta agora</a>.';
     }
 
     $requiresHumanAccessValidation = isset($_SESSION['tentativas_login_falhas']) &&
@@ -238,7 +236,6 @@ class clsControlador
       $templateText = str_replace( "<!-- #&RECAPTCHA&# -->", Portabilis_Utils_ReCaptcha::getWidget(), $templateText);
 
     $templateText = str_replace( "<!-- #&CORE_EXT_CONFIGURATION_ENV&# -->", CORE_EXT_CONFIGURATION_ENV, $templateText);
-    $templateText = str_replace( "<!-- #&MENSAGENS&# -->", $this->administrativeMessagesFetcher->getMessages(), $templateText);
     $templateText = str_replace( "<!-- #&BRASAO&# -->", $this->administrativeInfoFetcher->getLoginLogo(), $templateText);
     $templateText = str_replace( "<!-- #&NOME_ENTIDADE&# -->", $this->administrativeInfoFetcher->getEntityName(), $templateText);
     $templateText = str_replace( "<!-- #&RODAPE_LOGIN&# -->", $this->administrativeInfoFetcher->getLoginFooter(), $templateText);
@@ -246,6 +243,7 @@ class clsControlador
     $templateText = str_replace( "<!-- #&LINKS_SOCIAL&# -->", $this->administrativeInfoFetcher->getSocialMediaLinks(), $templateText);
     $templateText = str_replace( "<!-- #&CRIARCONTA&# -->", $msgCriarConta, $templateText);
     $templateText = str_replace("<!-- #&GOOGLE_TAG_MANAGER_ID&# -->", $GLOBALS['coreExt']['Config']->app->gtm->id, $templateText);
+    $templateText = str_replace("<!-- #&SLUG&# -->", $GLOBALS['coreExt']['Config']->app->database->dbname, $templateText);
 
     fclose($templateFile);
     die($templateText);
