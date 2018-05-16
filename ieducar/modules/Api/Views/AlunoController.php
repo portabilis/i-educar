@@ -190,9 +190,12 @@ class AlunoController extends ApiCoreController
 
             $alunoId = $this->fetchPreparedQuery($sql, $params, true, 'first-field');
 
-            if ($GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu') {
+            $configuracoes = new clsPmieducarConfiguracoesGerais();
+            $configuracoes = $configuracoes->detalhe();
+
+            if (!empty($configuracoes["tamanho_min_rede_estadual"])) {
                 $count = strlen($this->getRequest()->aluno_estado_id);
-                if ($count < 13) {
+                if ($count < $configuracoes["tamanho_min_rede_estadual"]) {
                     $this->messenger->append("O Código rede estadual informado é inválido. {$this->getRequest()->aluno_estado_id}.");
 
                     return false;
