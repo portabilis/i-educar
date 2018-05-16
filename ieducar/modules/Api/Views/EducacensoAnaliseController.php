@@ -67,8 +67,10 @@ class EducacensoAnaliseController extends ApiCoreController
                    uf.cod_ibge AS inep_uf,
                    distrito.cod_ibge AS inep_distrito,
                    juridica.fantasia AS nome_escola,
-                   escola.orgao_regional AS orgao_regional
+                   instituicao.orgao_regional AS orgao_regional
               FROM pmieducar.escola
+              JOIN pmieducar.instituicao
+              ON instituicao.cod_instituicao = escola.ref_cod_instituicao
              INNER JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
              INNER JOIN pmieducar.escola_ano_letivo ON (escola_ano_letivo.ref_cod_escola = escola.cod_escola)
              INNER JOIN pmieducar.ano_letivo_modulo modulo1 ON (modulo1.ref_ref_cod_escola = escola.cod_escola
