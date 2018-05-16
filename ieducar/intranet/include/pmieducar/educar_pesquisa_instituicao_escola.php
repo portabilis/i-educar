@@ -25,7 +25,7 @@
 *                                                                        *
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 ?>
-<?      /*
+<?php      /*
             caso o campo seja de busca criar uma variavel
               ***  $obrigatorio = false;  *** antes de dar o include do arquivo
 
@@ -241,5 +241,5 @@ function EscolaInstituicao()
 }
 
 </script>
-<? }
+<?php }
 echo ""; ?>

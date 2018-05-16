@@ -401,7 +401,7 @@ elseif ( $privilegio == 1 ) {
 }
 
 ?>
-<? $scripts_js = "
+<?php $scripts_js = "
 <script>
 
 var ref_cod_escola = document.getElementById('ref_cod_escola');

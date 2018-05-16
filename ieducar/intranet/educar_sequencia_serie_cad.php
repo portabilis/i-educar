@@ -520,7 +520,7 @@ function getSerie( tipo )
     $('img_serie_origem').style.display = 'none;';
     $('img_serie_destino').style.display = 'none;';
 }*/
-<? if ($nivel_usuario_fora == 1) { ?>
+<?php if ($nivel_usuario_fora == 1) { ?>
 document.getElementById('ref_cod_instituicao').onchange = function()
 {
     var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
