@@ -97,7 +97,6 @@ require_once 'include/pmieducar/clsPmieducarCalendarioAnotacao.inc.php';
 require_once 'include/pmieducar/clsPmieducarCalendarioDiaAnotacao.inc.php';
 require_once 'include/pmieducar/clsPmieducarTurmaModulo.inc.php';
 require_once 'include/pmieducar/clsPmieducarDispensaDisciplinaEtapa.inc.php';
-require_once 'include/pmieducar/clsPmieducarTurmaDiaSemana.inc.php';
 require_once 'include/pmieducar/clsPmieducarFaltas.inc.php';
 require_once 'include/pmieducar/clsPmieducarQuadroHorarioHorariosAux.inc.php';
 require_once 'include/pmieducar/clsPmieducarServidorFuncao.inc.php';
