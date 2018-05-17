@@ -81,7 +81,7 @@ class indice extends clsCadastro
     @session_write_close();
 
     $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_cadastra(999873, $this->pessoa_logada, 7,
+    $obj_permissoes->permissao_cadastra(999873, $this->pessoa_logada, 1,
       'educar_index.php');
     $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
 
