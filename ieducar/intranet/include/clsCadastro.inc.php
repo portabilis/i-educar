@@ -563,23 +563,12 @@ class clsCadastro extends clsCampos
             //quando se referenciava um nome de elemento como um array ex: cadastro[aluno]
             //nao funcionava na referencia por nome
             //16-08-2006
-            $retorno .=  ' if (';
-
-            if ($validador[0] == '*') {
-              $validador = substr( $validador, 1 );
-              $retorno .=  "document.getElementById(\"{$nome}\").value!='' && ";
-            }
-
-            $retorno .=  "!($validador.test( document.getElementById(\"{$nome}\").value )))\n";
-            $retorno .=  "{\n";
-            $retorno .=  "  mudaClassName( 'formdestaque', 'obrigatorio' );\n";
-            $retorno .=  "  document.getElementById(\"{$nome}\").className = \"formdestaque\";\n";
-            $retorno .=  "  alert( 'Preencha o campo \'" . extendChars( $componente[1], true ) . "\' corretamente!' ); \n";
-          //if($nome == "latitude"){
-            //echo"<pre>";var_dump($retorno);die;};
+            $retornoNaFalha =  "  mudaClassName( 'formdestaque', 'obrigatorio' );\n";
+            $retornoNaFalha .=  "  document.getElementById(\"{$nome}\").className = \"formdestaque\";\n";
+            $retornoNaFalha .=  "  alert( 'Preencha o campo \'" . extendChars( $componente[1], true ) . "\' corretamente!' ); \n";
 
             if ($this->__nm_tab) {
-              $retorno .= "
+              $retornoNaFalha .= "
                   var item = document.getElementById('$nome');
                   var prox = 1;
                   do{
@@ -605,8 +594,29 @@ class clsCadastro extends clsCampos
               ";
             }
 
-            $retorno .=  "  document.getElementById(\"{$nome}\").focus(); \n";
-            $retorno .=  "  return false;\n";
+            $retornoNaFalha .=  "  document.getElementById(\"{$nome}\").focus(); \n";
+            $retornoNaFalha .=  "  return false;\n";
+            if ($validador == '/[^ ]/') {
+                $retorno .= " if (typeof \$j == 'function' &&
+                                \$j('#{$nome}').val().constructor === Array ) {\n
+                    if (!\$j('#{$nome}').val().filter((val) => val.toString().trim().length > 0).length) {\n";
+            $retorno .=  $retornoNaFalha;
+            $retorno .=  "}\n";
+            $retorno .=  '
+                                } else if (
+            ';
+            } else {
+                $retorno .=  '  if (';
+            }
+
+            if ($validador[0] == '*') {
+              $validador = substr( $validador, 1 );
+              $retorno .=  "document.getElementById(\"{$nome}\").value!='' && ";
+            }
+
+            $retorno .=  "!($validador.test( document.getElementById(\"{$nome}\").value )))\n";
+            $retorno .=  "{\n";
+            $retorno .=  $retornoNaFalha;
             $retorno .=  "}\n";
 
             if (!empty($nomeCampo)) {

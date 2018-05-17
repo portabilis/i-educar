@@ -180,14 +180,14 @@ if (!$j('#cnpj').is(':visible')){
   linha_inicial_infra = $j('#tlocal_funcionamento').index()-1;
   linha_inicial_dependencia = $j('#tmarcar_todas_dependencias').index()-1;
   linha_inicial_equipamento = $j('#ttelevisoes').index()-1;
-  linha_inicial_dados = $j('#tatendimento_aee').index()-1;  
+  linha_inicial_dados = $j('#tatendimento_aee').index()-1;
 
   // Adiciona um ID à linha que termina o formulário para parar de esconder os campos
   $j('.tableDetalheLinhaSeparador').closest('tr').attr('id','stop');
   $j('.tablecadastro >tbody  > tr').each(function(index, row) {
     if (index>=linha_inicial_infra){
       if (row.id!='stop')
-        row.hide();    
+        row.hide();
       else{
         return false;
       }
@@ -200,7 +200,7 @@ $j(document).ready(function() {
   // on click das abas
 
   // DADOS GERAIS
-  $j('#tab1').click( 
+  $j('#tab1').click(
     function(){
 
       $j('.escolaTab-active').toggleClass('escolaTab-active escolaTab');
@@ -208,18 +208,18 @@ $j(document).ready(function() {
       $j('.tablecadastro >tbody  > tr').each(function(index, row) {
         if (index>=linha_inicial_infra){
           if (row.id!='stop')
-            row.hide();    
+            row.hide();
           else
             return false;
         }else{
           row.show();
         }
-      });        
+      });
     }
-  );  
+  );
 
   // INFRA
-  $j('#tab2').click( 
+  $j('#tab2').click(
     function(){
       $j('.escolaTab-active').toggleClass('escolaTab-active escolaTab');
       $j('#tab2').toggleClass('escolaTab escolaTab-active')
@@ -236,7 +236,7 @@ $j(document).ready(function() {
     });
 
   // DEPENDENCIAS
-  $j('#tab3').click( 
+  $j('#tab3').click(
     function(){
       $j('.escolaTab-active').toggleClass('escolaTab-active escolaTab');
       $j('#tab3').toggleClass('escolaTab escolaTab-active')
@@ -253,7 +253,7 @@ $j(document).ready(function() {
     });
 
   // EQUIPAMENTOS
-  $j('#tab4').click( 
+  $j('#tab4').click(
     function(){
       $j('.escolaTab-active').toggleClass('escolaTab-active escolaTab');
       $j('#tab4').toggleClass('escolaTab escolaTab-active')
@@ -267,10 +267,10 @@ $j(document).ready(function() {
         }else
           return false;
       });
-    });  
+    });
 
   // Dados educacionais
-  $j('#tab5').click( 
+  $j('#tab5').click(
     function(){
       $j('.escolaTab-active').toggleClass('escolaTab-active escolaTab');
       $j('#tab5').toggleClass('escolaTab escolaTab-active')
