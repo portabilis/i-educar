@@ -531,7 +531,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
 
     foreach($searchOptions['sqlParams'] as $param)
       $params[] = $param;
-
+  
     return $params;
   }
 
