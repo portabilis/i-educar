@@ -1334,6 +1334,7 @@ class indice extends clsCadastro
         if (!$this->validaCamposCenso()) {
             return false;
         }
+
         if (!$this->validaDigitosInepEscola($this->codigo_inep_escola_compartilhada, 'Código da escola que compartilha o prédio')) {
             return false;
         }
@@ -2146,7 +2147,6 @@ class indice extends clsCadastro
         if ($this->dependencia_administrativa != "4" || $this->situacao_funcionamento != 1) {
             return TRUE;
         }
-
         if (empty($this->categoria_escola_privada)) {
             $this->mensagem = "O campo categoria da escola privada é obrigatório para escolas em atividade de administração privada.";
             return FALSE;
