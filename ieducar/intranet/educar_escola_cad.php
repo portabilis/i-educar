@@ -766,8 +766,8 @@ class indice extends clsCadastro
                 $this->passou = true;
                 $this->campoOculto("passou", $this->passou);
             }
-            $this->inputsHelper()->text('latitude', array('max_length' => '20', 'size' => '20', 'required' => false, 'value' => $this->latitude, 'label_hint' => 'São aceito somente os seguintes caracteres: 0123456789 .-'));
-            $this->inputsHelper()->text('longitude', array('max_length' => '20', 'size' => '20', 'required' => false, 'value' => $this->longitude, 'label_hint' => 'São aceito somente os seguintes caracteres: 0123456789 .-'));
+            $this->inputsHelper()->numeric('latitude', array('max_length' => '20', 'size' => '20', 'required' => false, 'value' => $this->latitude, 'label_hint' => 'São aceito somente os seguintes caracteres: 0123456789 .-'));
+            $this->inputsHelper()->numeric('longitude', array('max_length' => '20', 'size' => '20', 'required' => false, 'value' => $this->longitude, 'label_hint' => 'São aceito somente os seguintes caracteres: 0123456789 .-'));
             $this->campoCheck("bloquear_lancamento_diario_anos_letivos_encerrados", "Bloquear lançamento no diário para anos letivos encerrados", $this->bloquear_lancamento_diario_anos_letivos_encerrados);
             $this->campoCheck("utiliza_regra_diferenciada", "Utiliza regra diferenciada", dbBool($this->utiliza_regra_diferenciada), '', false, false, false, 'Se marcado, utilizará regra de avaliação diferenciada informada na Série');
             $this->campoNumero("orgao_regional", "Código do órgão regional de ensino", $this->orgao_regional, "5", "5", false);
@@ -1352,6 +1352,10 @@ class indice extends clsCadastro
             return false;
         }
 
+        if (!$this->validaEscolaPrivada()) {
+            return false;
+        }
+
         if (!$this->validaDigitosInepEscola($this->codigo_inep_escola_compartilhada, 'Código da escola que compartilha o prédio')) {
             return false;
         }
@@ -1710,6 +1714,10 @@ class indice extends clsCadastro
         }
 
         if (!$this->validaLatitudeLongitude()) {
+            return false;
+        }
+
+        if (!$this->validaEscolaPrivada()) {
             return false;
         }
 
@@ -2127,6 +2135,46 @@ class indice extends clsCadastro
         $this->inputsHelper()->integer("p_telefone_{$type}", $options);
     }
 
+    protected function validarCamposObrigatoriosCenso()
+    {
+        if (empty($this->ref_cod_instituicao)) {
+            return false;
+        }
+        $obj = new clsPmieducarInstituicao($this->ref_cod_instituicao);
+        $instituicao = $obj->detalhe();
+        return (bool) $instituicao['obrigar_campos_censo'];
+    }
+
+    protected function validaEscolaPrivada()
+    {
+        if ($this->dependencia_administrativa != "4" || $this->situacao_funcionamento != 1) {
+            return TRUE;
+        }
+        if (!$this->validarCamposObrigatoriosCenso()) {
+            return TRUE;
+        }
+        if (empty($this->categoria_escola_privada)) {
+            $this->mensagem = "O campo categoria da escola privada é obrigatório para escolas em atividade de administração privada.";
+            return FALSE;
+        }
+        if (empty($this->conveniada_com_poder_publico)) {
+            $this->mensagem = "O campo conveniada com poder público é obrigatório para escolas em atividade de administração privada.";
+            return FALSE;
+        }
+        if (empty($this->mantenedora_escola_privada) ||
+            (is_array($this->mantenedora_escola_privada) &&
+            count($this->mantenedora_escola_privada) == 1 &&
+            empty($this->mantenedora_escola_privada[0]))) {
+            $this->mensagem = "O campo mantenedora escola privada é obrigatório para escolas em atividade de administração privada.";
+            return FALSE;
+        }
+        if (empty($this->cnpj_mantenedora_principal)) {
+            $this->mensagem = "O campo CNPJ da mantenedora principal da escola privada é obrigatório para escolas em atividade de administração privada.";
+            return FALSE;
+        }
+        return TRUE;
+    }
+
     protected function validaLatitudeLongitude()
     {
         $caracteres = array(" ", ".", "-", null, '0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
@@ -2147,6 +2195,14 @@ class indice extends clsCadastro
                 $this->mensagem = $mensagemErro;
                 return false;
             }
+        }
+
+        if (empty($this->latitude) && !empty($this->longitude)) {
+            $this->mensagem = "O campo Latitude deve ser preenchido quando o Longitude estiver preenchido.";
+            return false;
+        } elseif (!empty($this->latitude) && empty($this->longitude)) {
+            $this->mensagem = "O campo Longitude deve ser preenchido quando o Latitude estiver preenchido.";
+            return false;
         }
 
         return true;

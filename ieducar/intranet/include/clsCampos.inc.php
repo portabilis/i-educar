@@ -679,7 +679,7 @@ class clsCampos extends Core_Controller_Page_Abstract
         $arr_componente = array(
             $duplo ? 'textoDuplo' : 'texto',
             $this->__adicionando_tabela ? $nome : $campo,
-            $obrigatorio ? "/^[0-9]+$/" : "*(/^[0-9]+$/)",
+            $obrigatorio ? "/^-?\\d*\\.{0,1}\\d+$/" : "*(/^-?\\d*\\.{0,1}\\d+$/)",
             $valor,
             $tamanhovisivel,
             $tamanhomaximo,
