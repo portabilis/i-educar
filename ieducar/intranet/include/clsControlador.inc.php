@@ -24,7 +24,6 @@
 require_once 'include/clsBanco.inc.php';
 require_once 'Portabilis/Messenger.php';
 require_once 'Portabilis/Mailer.php';
-require_once 'Portabilis/AdministrativeInfoFetcher.php';
 require_once 'Portabilis/Utils/User.php';
 require_once 'Portabilis/Utils/ReCaptcha.php';
 
@@ -96,7 +95,6 @@ class clsControlador
 
     $this->_maximoTentativasFalhas = 7;
     $this->messenger = new Portabilis_Messenger();
-    $this->administrativeInfoFetcher = new Portabilis_AdministrativeInfoFetcher();
   }
 
 
