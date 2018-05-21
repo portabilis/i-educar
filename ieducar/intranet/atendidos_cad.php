@@ -299,7 +299,7 @@ class indice extends clsCadastro
     // data nascimento
 
     $options = array(
-      'label'       => 'Data nascimento',
+      'label'       => 'Data de nascimento',
       'value'       => $this->data_nasc,
       'required'    => empty($parentType) && $camposObrigatorios
     );
@@ -696,9 +696,9 @@ class indice extends clsCadastro
 
     // tipos
     $tiposNacionalidade = array(null => 'Selecione',
-                                '1'  => 'Brasileiro',
+                                '1'  => 'Brasileira',
                                 '2'  => 'Naturalizado brasileiro',
-                                '3'  => 'Estrangeiro');
+                                '3'  => 'Estrangeira');
 
     $options            = array('label'       => 'Nacionalidade',
                                 'resources'   => $tiposNacionalidade,
@@ -925,7 +925,7 @@ class indice extends clsCadastro
                    2  => 'Rural');
 
     $options = array(
-      'label'       => 'Zona Localização',
+      'label'       => 'Zona localização',
       'value'       => $this->zona_localizacao_censo,
       'resources'   => $zonas,
       'required'    => false
@@ -1234,15 +1234,23 @@ class indice extends clsCadastro
   }
 
   protected function createOrUpdate($pessoaIdOrNull = null) {
+    if (!$this->possuiDocumentoObrigatorio()) {
+      $this->mensagem = 'É necessário o preenchimento de pelo menos um dos seguintes documentos: CPF, RG ou Certidão civil.';
+      return false;
+    }
+
     if (! $this->validatesCpf($this->id_federal))
       return false;
-
 
     if (!$this->validatePhoto())
       return false;
 
     if (!$this->validaCertidao())
       return false;
+
+    if (!$this->validaNisPisPasep()) {
+      return false;
+    }
 
     $pessoaId = $this->createOrUpdatePessoa($pessoaIdOrNull);
     $this->savePhoto($pessoaId);
@@ -1302,6 +1310,18 @@ class indice extends clsCadastro
 
   }
 
+  function possuiDocumentoObrigatorio() {
+    $certidaoCivil = $this->termo_certidao_civil && $this->folha_certidao_civil && $this->livro_certidao_civil;
+    $certidaoNascimentoNovoFormato = $this->certidao_nascimento;
+    $certidaoCasamentoNovoFormato = $this->certidao_casamento;
+
+    return $this->id_federal ||
+           $this->rg ||
+           $certidaoCivil ||
+           $certidaoCasamentoNovoFormato ||
+           $certidaoNascimentoNovoFormato;
+  }
+
   protected function validaCertidao() {
     $certidaoNascimento = ($_REQUEST['tipo_certidao_civil'] == 'certidao_nascimento_novo_formato');
     $certidaoCasamento = ($_REQUEST['tipo_certidao_civil'] == 'certidao_casamento_novo_formato');
@@ -1314,6 +1334,15 @@ class indice extends clsCadastro
       return false;
     }
 
+    return true;
+  }
+
+  protected function validaNisPisPasep()
+  {
+    if ($this->nis_pis_pasep && strlen($this->nis_pis_pasep) != 11) {
+      $this->mensagem = 'O NIS (PIS/PASEP) da pessoa deve conter 11 dígitos.';
+      return false;
+    }
     return true;
   }
 

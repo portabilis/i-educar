@@ -67,8 +67,10 @@ class EducacensoAnaliseController extends ApiCoreController
                    uf.cod_ibge AS inep_uf,
                    distrito.cod_ibge AS inep_distrito,
                    juridica.fantasia AS nome_escola,
-                   escola.orgao_regional AS orgao_regional
+                   instituicao.orgao_regional AS orgao_regional
               FROM pmieducar.escola
+              JOIN pmieducar.instituicao
+              ON instituicao.cod_instituicao = escola.ref_cod_instituicao
              INNER JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
              INNER JOIN pmieducar.escola_ano_letivo ON (escola_ano_letivo.ref_cod_escola = escola.cod_escola)
              INNER JOIN pmieducar.ano_letivo_modulo modulo1 ON (modulo1.ref_ref_cod_escola = escola.cod_escola
@@ -212,24 +214,24 @@ class EducacensoAnaliseController extends ApiCoreController
     $sql = "SELECT escola.local_funcionamento AS local_funcionamento,
                    escola.condicao AS condicao,
                    escola.agua_consumida AS agua_consumida,
-                   CASE WHEN escola.abastecimento_agua::varchar LIKE '%1%' THEN 1 ELSE 0 END AS agua_rede_publica,
-                   CASE WHEN escola.abastecimento_agua::varchar LIKE '%2%' THEN 1 ELSE 0 END AS agua_poco_artesiano,
-                   CASE WHEN escola.abastecimento_agua::varchar LIKE '%3%' THEN 1 ELSE 0 END AS agua_cacimba_cisterna_poco,
-                   CASE WHEN escola.abastecimento_agua::varchar LIKE '%4%' THEN 1 ELSE 0 END AS agua_fonte_rio,
-                   CASE WHEN escola.abastecimento_agua::varchar LIKE '%5%' THEN 1 ELSE 0 END AS agua_inexistente,
-                   CASE WHEN escola.abastecimento_energia::varchar LIKE '%1%' THEN 1 ELSE 0 END AS energia_rede_publica,
-                   CASE WHEN escola.abastecimento_energia::varchar LIKE '%2%' THEN 1 ELSE 0 END AS energia_gerador,
-                   CASE WHEN escola.abastecimento_energia::varchar LIKE '%3%' THEN 1 ELSE 0 END AS energia_outros,
-                   CASE WHEN escola.abastecimento_energia::varchar LIKE '%4%' THEN 1 ELSE 0 END AS energia_inexistente,
-                   CASE WHEN escola.esgoto_sanitario::varchar LIKE '%1%' THEN 1 ELSE 0 END AS esgoto_rede_publica,
-                   CASE WHEN escola.esgoto_sanitario::varchar LIKE '%2%' THEN 1 ELSE 0 END AS esgoto_fossa,
-                   CASE WHEN escola.esgoto_sanitario::varchar LIKE '%3%' THEN 1 ELSE 0 END AS esgoto_inexistente,
-                   CASE WHEN escola.destinacao_lixo::varchar LIKE '%1%' THEN 1 ELSE 0 END AS lixo_coleta_periodica,
-                   CASE WHEN escola.destinacao_lixo::varchar LIKE '%2%' THEN 1 ELSE 0 END AS lixo_queima,
-                   CASE WHEN escola.destinacao_lixo::varchar LIKE '%3%' THEN 1 ELSE 0 END AS lixo_joga_outra_area,
-                   CASE WHEN escola.destinacao_lixo::varchar LIKE '%4%' THEN 1 ELSE 0 END AS lixo_recicla,
-                   CASE WHEN escola.destinacao_lixo::varchar LIKE '%5%' THEN 1 ELSE 0 END AS lixo_enterra,
-                   CASE WHEN escola.destinacao_lixo::varchar LIKE '%6%' THEN 1 ELSE 0 END AS lixo_outros,
+                   (ARRAY[1] <@ escola.abastecimento_agua)::int AS agua_rede_publica,
+                   (ARRAY[2] <@ escola.abastecimento_agua)::int AS agua_poco_artesiano,
+                   (ARRAY[3] <@ escola.abastecimento_agua)::int AS agua_cacimba_cisterna_poco,
+                   (ARRAY[4] <@ escola.abastecimento_agua)::int AS agua_fonte_rio,
+                   (ARRAY[5] <@ escola.abastecimento_agua)::int AS agua_inexistente,
+                   (ARRAY[1] <@ escola.abastecimento_energia)::int AS energia_rede_publica,
+                   (ARRAY[2] <@ escola.abastecimento_energia)::int AS energia_gerador,
+                   (ARRAY[3] <@ escola.abastecimento_energia)::int AS energia_outros,
+                   (ARRAY[4] <@ escola.abastecimento_energia)::int AS energia_inexistente,
+                   (ARRAY[1] <@ escola.esgoto_sanitario)::int AS esgoto_rede_publica,
+                   (ARRAY[2] <@ escola.esgoto_sanitario)::int AS esgoto_fossa,
+                   (ARRAY[3] <@ escola.esgoto_sanitario)::int AS esgoto_inexistente,
+                   (ARRAY[1] <@ escola.destinacao_lixo)::int AS lixo_coleta_periodica,
+                   (ARRAY[2] <@ escola.destinacao_lixo)::int AS lixo_queima,
+                   (ARRAY[3] <@ escola.destinacao_lixo)::int AS lixo_joga_outra_area,
+                   (ARRAY[4] <@ escola.destinacao_lixo)::int AS lixo_recicla,
+                   (ARRAY[5] <@ escola.destinacao_lixo)::int AS lixo_enterra,
+                   (ARRAY[6] <@ escola.destinacao_lixo)::int AS lixo_outros,
                    escola.dependencia_sala_diretoria AS dependencia_sala_diretoria,
                    escola.dependencia_sala_professores AS dependencia_sala_professores,
                    escola.dependencia_sala_secretaria AS dependncia_sala_secretaria,
@@ -446,27 +448,10 @@ class EducacensoAnaliseController extends ApiCoreController
     $sql = "SELECT turma.nm_turma AS nome_turma,
                    turma.hora_inicial AS hora_inicial,
                    turma.hora_final AS hora_final,
-                   (SELECT TRUE
-                      FROM pmieducar.turma_dia_semana
-                     WHERE ref_cod_turma = turma.cod_turma LIMIT 1) AS dias_semana,
+                   turma.dias_semana[1] AS dias_semana,
                    turma.tipo_atendimento AS tipo_atendimento,
-                   turma.atividade_complementar_1 AS atividade_complementar_1,
-                   turma.atividade_complementar_2 AS atividade_complementar_2,
-                   turma.atividade_complementar_3 AS atividade_complementar_3,
-                   turma.atividade_complementar_4 AS atividade_complementar_4,
-                   turma.atividade_complementar_5 AS atividade_complementar_5,
-                   turma.atividade_complementar_6 AS atividade_complementar_6,
-                   turma.aee_braille AS aee_braille,
-                   turma.aee_recurso_optico AS aee_recurso_optico ,
-                   turma.aee_estrategia_desenvolvimento AS aee_estrategia_desenvolvimento,
-                   turma.aee_tecnica_mobilidade AS aee_tecnica_mobilidade,
-                   turma.aee_libras AS aee_libras,
-                   turma.aee_caa AS aee_caa,
-                   turma.aee_curricular AS aee_curricular,
-                   turma.aee_soroban AS aee_soroban,
-                   turma.aee_informatica AS aee_informatica,
-                   turma.aee_lingua_escrita AS aee_lingua_escrita,
-                   turma.aee_autonomia AS aee_autonomia,
+                   turma.atividades_complementares[1] AS atividades_complementares,
+                   turma.atividades_aee[1] AS atividades_aee,
                    turma.etapa_educacenso AS etapa_educacenso,
                    juridica.fantasia AS nome_escola
               FROM pmieducar.escola
@@ -493,16 +478,9 @@ class EducacensoAnaliseController extends ApiCoreController
       $nomeEscola = Portabilis_String_Utils::toUtf8(strtoupper($turma["nome_escola"]));
       $nomeTurma  = Portabilis_String_Utils::toUtf8(strtoupper($turma["nome_turma"]));
       $atividadeComplementar = ($turma["tipo_atendimento"] == 4); //Código 4 fixo no cadastro de turma
-      $existeAtividadeComplementar = ($turma["atividade_complementar_1"] || $turma["atividade_complementar_2"] ||
-                                      $turma["atividade_complementar_3"] || $turma["atividade_complementar_4"] ||
-                                      $turma["atividade_complementar_5"] || $turma["atividade_complementar_6"]);
+      $existeAtividadeComplementar = ($turma["atividades_complementares"]);
       $atendimentoAee = ($turma["tipo_atendimento"] == 5); //Código 5 fixo no cadastro de turma
-      $existeAee = ($turma["aee_braille"] || $turma["aee_recurso_optico"] ||
-                    $turma["aee_estrategia_desenvolvimento"] || $turma["aee_tecnica_mobilidade"] ||
-                    $turma["aee_libras"] || $turma["aee_caa"] ||
-                    $turma["aee_curricular"] || $turma["aee_soroban"] ||
-                    $turma["aee_informatica"] || $turma["aee_lingua_escrita"] ||
-                    $turma["aee_autonomia"]);
+      $existeAee = ($turma["atividades_aee"]);
 
       switch ($turma['tipo_atendimento']) {
         case 0:
@@ -739,26 +717,26 @@ class EducacensoAnaliseController extends ApiCoreController
                    servidor.ano_inicio_curso_superior_3 AS ano_inicio_curso_superior_3,
                    servidor.ano_conclusao_curso_superior_3 AS ano_conclusao_curso_superior_3,
                    servidor.instituicao_curso_superior_3 AS instituicao_curso_superior_3,
-                   servidor.pos_especializacao AS pos_especializacao,
-                   servidor.pos_mestrado AS pos_mestrado,
-                   servidor.pos_doutorado AS pos_doutorado,
-                   servidor.pos_nenhuma AS pos_nenhuma,
-                   servidor.curso_creche AS curso_creche,
-                   servidor.curso_pre_escola AS curso_pre_escola,
-                   servidor.curso_anos_iniciais AS curso_anos_iniciais,
-                   servidor.curso_anos_finais AS curso_anos_finais,
-                   servidor.curso_ensino_medio AS curso_ensino_medio,
-                   servidor.curso_eja AS curso_eja,
-                   servidor.curso_educacao_especial AS curso_educacao_especial,
-                   servidor.curso_educacao_indigena AS curso_educacao_indigena,
-                   servidor.curso_educacao_campo AS curso_educacao_campo,
-                   servidor.curso_educacao_ambiental AS curso_educacao_ambiental,
-                   servidor.curso_educacao_direitos_humanos AS curso_educacao_direitos_humanos,
-                   servidor.curso_genero_diversidade_sexual AS curso_genero_diversidade_sexual,
-                   servidor.curso_direito_crianca_adolescente AS curso_direito_crianca_adolescente,
-                   servidor.curso_relacoes_etnicorraciais AS curso_relacoes_etnicorraciais,
-                   servidor.curso_outros AS curso_outros,
-                   servidor.curso_nenhum AS curso_nenhum
+                   (ARRAY[1] <@ servidor.pos_graduacao)::int AS pos_especializacao,
+                   (ARRAY[2] <@ servidor.pos_graduacao)::int AS pos_mestrado,
+                   (ARRAY[3] <@ servidor.pos_graduacao)::int AS pos_doutorado,
+                   (ARRAY[4] <@ servidor.pos_graduacao)::int AS pos_nenhuma,
+                   (ARRAY[1] <@ servidor.curso_formacao_continuada)::int AS curso_creche,
+                   (ARRAY[2] <@ servidor.curso_formacao_continuada)::int AS curso_pre_escola,
+                   (ARRAY[3] <@ servidor.curso_formacao_continuada)::int AS curso_anos_iniciais,
+                   (ARRAY[4] <@ servidor.curso_formacao_continuada)::int AS curso_anos_finais,
+                   (ARRAY[5] <@ servidor.curso_formacao_continuada)::int AS curso_ensino_medio,
+                   (ARRAY[6] <@ servidor.curso_formacao_continuada)::int AS curso_eja,
+                   (ARRAY[7] <@ servidor.curso_formacao_continuada)::int AS curso_educacao_especial,
+                   (ARRAY[8] <@ servidor.curso_formacao_continuada)::int AS curso_educacao_indigena,
+                   (ARRAY[9] <@ servidor.curso_formacao_continuada)::int AS curso_educacao_campo,
+                   (ARRAY[10] <@ servidor.curso_formacao_continuada)::int AS curso_educacao_ambiental,
+                   (ARRAY[11] <@ servidor.curso_formacao_continuada)::int AS curso_educacao_direitos_humanos,
+                   (ARRAY[12] <@ servidor.curso_formacao_continuada)::int AS curso_genero_diversidade_sexual,
+                   (ARRAY[13] <@ servidor.curso_formacao_continuada)::int AS curso_direito_crianca_adolescente,
+                   (ARRAY[14] <@ servidor.curso_formacao_continuada)::int AS curso_relacoes_etnicorraciais,
+                   (ARRAY[15] <@ servidor.curso_formacao_continuada)::int AS curso_outros,
+                   (ARRAY[16] <@ servidor.curso_formacao_continuada)::int AS curso_nenhum
               FROM modules.professor_turma
              INNER JOIN pmieducar.servidor ON (servidor.cod_servidor = professor_turma.servidor_id)
              INNER JOIN pmieducar.turma ON (turma.cod_turma = professor_turma.turma_id)
@@ -792,26 +770,8 @@ class EducacensoAnaliseController extends ApiCoreController
                       servidor.ano_inicio_curso_superior_3,
                       servidor.ano_conclusao_curso_superior_3,
                       servidor.instituicao_curso_superior_3,
-                      servidor.pos_especializacao,
-                      servidor.pos_mestrado,
-                      servidor.pos_doutorado,
-                      servidor.pos_nenhuma,
-                      servidor.curso_creche,
-                      servidor.curso_pre_escola,
-                      servidor.curso_anos_iniciais,
-                      servidor.curso_anos_finais,
-                      servidor.curso_ensino_medio,
-                      servidor.curso_eja,
-                      servidor.curso_educacao_especial,
-                      servidor.curso_educacao_indigena,
-                      servidor.curso_educacao_campo,
-                      servidor.curso_educacao_ambiental,
-                      servidor.curso_educacao_direitos_humanos,
-                      servidor.curso_genero_diversidade_sexual,
-                      servidor.curso_direito_crianca_adolescente,
-                      servidor.curso_relacoes_etnicorraciais,
-                      servidor.curso_outros,
-                      servidor.curso_nenhum,
+                      servidor.pos_graduacao,
+                      servidor.curso_formacao_continuada,
                       escolaridade.escolaridade,
                       escolaridade.descricao
              ORDER BY pessoa.nome";
