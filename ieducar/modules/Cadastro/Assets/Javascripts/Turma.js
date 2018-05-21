@@ -100,7 +100,7 @@ function validaAtividadesComplementares() {
   var qtdeAtividadesComplementares = $j('#atividades_complementares').val().length - 1;
 
   if (qtdeAtividadesComplementares > 6) {
-    alert('O campo: Atividades complementares, não pode ter mais que 6 opções.');
+    alert('O campo: Tipos de atividades complementares, não pode ter mais que 6 opções.');
     return false;
   }
   return true;
