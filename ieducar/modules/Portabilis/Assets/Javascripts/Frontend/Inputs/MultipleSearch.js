@@ -34,7 +34,6 @@ var multipleSearch = {
     options.chosenOptions.url = options.get('searchPath');
 
     var typeSearch = options.get('typeSearch');
-    console.log(typeSearch);
     var attrName = options.get('attrName');
     if (attrName) { attrName = '_' + attrName; }
 
