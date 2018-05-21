@@ -110,7 +110,7 @@ class indice extends clsDetalhe
 
         $obj_permissoes = new clsPermissoes();
         if ( $obj_permissoes->permissao_cadastra( 559, $this->pessoa_logada, 3 ) ) {
-            $this->url_novo = "educar_instituicao_cad.php";
+            //$this->url_novo = "educar_instituicao_cad.php";
             $this->url_editar = "educar_instituicao_cad.php?cod_instituicao={$registro["cod_instituicao"]}";
         }
         $this->url_cancelar = "educar_instituicao_lst.php";
