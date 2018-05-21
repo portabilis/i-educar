@@ -215,6 +215,17 @@ class ComponentesSerieController extends ApiCoreController
         return array('existe_dependencia' => $obj->existeDependencia($disciplinas));
     }
 
+    function existeDispensa(){
+        $serie = $this->getRequest()->serie_id;
+        $escola = $this->getRequest()->escola_id;
+        $disciplinas = $this->getRequest()->disciplinas;
+        $disciplinas = explode(',', $disciplinas);
+
+        $obj = new clsPmieducarEscolaSerieDisciplina($serie, $escola, NULL, 1);
+
+        return array('existe_dispensa' => $obj->existeDispensa($disciplinas));
+    }
+
   public function Gerar() {
     if ($this->isRequestFor('post', 'atualiza-componentes-serie'))
       $this->appendResponse($this->atualizaComponentesDaSerie());
@@ -222,6 +233,8 @@ class ComponentesSerieController extends ApiCoreController
       $this->appendResponse($this->atualizaEscolasSerieDisciplina());
     elseif($this->isRequestFor('post', 'exclui-componentes-serie'))
         $this->appendResponse($this->excluiComponentesSerie());
+    elseif($this->isRequestFor('get', 'existe-dispensa'))
+        $this->appendResponse($this->existeDispensa());
     elseif($this->isRequestFor('get', 'existe-dependencia'))
         $this->appendResponse($this->existeDependencia());
     else

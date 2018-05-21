@@ -162,6 +162,31 @@ $j('.etapas_utilizadas').mask("9,9,9,9", {placeholder: "1,2,3..."});
 var submitButton = $j('#btn_enviar');
 submitButton.removeAttr('onclick');
 
+function existeDispensa(componentes){
+    var retorno = false;
+    var serie = $j('#ref_cod_serie_').val();
+    var escola = $j('#ref_cod_escola_').val();
+    var url = getResourceUrlBuilder.buildUrl('/module/Api/ComponentesSerie',
+        'existe-dispensa',
+        {disciplinas : componentes,
+            serie_id : serie,
+           escola_id : escola});
+
+    var options = {
+        url      : url,
+        dataType : 'json',
+        async    : false,
+        success  : function (dataResponse) {
+            if(dataResponse.existe_dispensa){
+                messageUtils.error('Não foi possível remover o componente. Existe registros de dispensa neste componente.');
+                retorno = true;
+            }
+        }
+    };
+    getResource(options);
+    return retorno;
+}
+
 function existeDependencia(componentes){
     var retorno = false;
     var serie = $j('#ref_cod_serie_').val();
@@ -206,7 +231,7 @@ submitButton.click(function(){
         }
     });
 
-    if (existeDependencia(arrayComponentes)) {
+    if (existeDependencia(arrayComponentes) || existeDispensa(arrayComponentes)) {
         return false;
     }
 
