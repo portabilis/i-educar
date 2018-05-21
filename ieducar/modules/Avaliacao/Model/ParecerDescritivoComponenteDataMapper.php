@@ -21,7 +21,6 @@ class Avaliacao_Model_ParecerDescritivoComponenteDataMapper extends Avaliacao_Mo
 
     protected $_attributeMap = array(
         'id'                    => 'id',
-        'parecerAluno'          => 'parecer_aluno_id',
         'componenteCurricular'  => 'componente_curricular_id',
         'parecer'               => 'parecer',
         'etapa'                 => 'etapa'
