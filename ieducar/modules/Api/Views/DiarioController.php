@@ -98,7 +98,7 @@ class DiarioController extends ApiCoreController
                   )
               AND  mt.ref_cod_turma = $1
               AND m.ref_cod_aluno = $2
-              AND m.aprovado IN (1,2,3,4,13,12,14) -- PERMITIDO SOMENTE LANÇAR NOTAS PARA SITUAÇÕES APROVADO/REPROVADO/ANDAMENTO
+              AND m.aprovado IN (1,2,3,4,13,12,14)
             ORDER BY m.aprovado
               LIMIT 1';
 

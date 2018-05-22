@@ -3001,10 +3001,11 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $situacaoBoletim = $this->getSituacaoAluno();
     $exceptionMsg = '';
 
-    if ($situacaoBoletim->andamento)
+    if ($situacaoMatricula == App_Model_MatriculaSituacao::TRANSFERIDO) {
+        $novaSituacaoMatricula = App_Model_MatriculaSituacao::TRANSFERIDO;
+    } elseif ($situacaoBoletim->andamento) {
         $novaSituacaoMatricula = App_Model_MatriculaSituacao::EM_ANDAMENTO;
-    else
-    {
+    } else {
 
       switch ($tipoProgressao) {
         case RegraAvaliacao_Model_TipoProgressao::CONTINUADA:
