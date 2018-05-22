@@ -279,7 +279,7 @@ class EducacensoExportController extends ApiCoreController
       gestor_f.cpf as r00s3,
       gestor_p.nome as r00s4,
       e.cargo_gestor as r00s5,
-      gestor_p.email as r00s6,
+      e.email_gestor as r00s6,
 
       e.situacao_funcionamento as r00s7,
 

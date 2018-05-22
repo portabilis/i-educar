@@ -83,6 +83,7 @@ class indice extends clsCadastro
     var $acesso;
     var $gestor_id;
     var $cargo_gestor;
+    var $email_gestor;
     var $local_funcionamento;
     var $condicao;
     var $codigo_inep_escola_compartilhada;
@@ -807,8 +808,12 @@ class indice extends clsCadastro
 
             $resources = array(1    => 'Diretor',
                                2    => 'Outro cargo');
-            $options = array('label' => 'Cargo do Gestor escolar', 'resources' => $resources, 'value' => $this->cargo_gestor, 'required' => false, 'size' => 50);
+            $options = array('label' => 'Cargo do gestor escolar', 'resources' => $resources, 'value' => $this->cargo_gestor, 'required' => false, 'size' => 50);
             $this->inputsHelper()->select('cargo_gestor', $options);
+
+            $options = array('label' => 'E-mail do gestor escolar', 'value' => $this->email_gestor, 'required' => false, 'size' => 50);
+
+            $this->inputsHelper()->text('email_gestor', $options);
 
             if ($_POST["escola_curso"]) {
                 $this->escola_curso = unserialize(urldecode($_POST["escola_curso"]));
@@ -1382,6 +1387,7 @@ class indice extends clsCadastro
                     $obj->acesso = $this->acesso;
                     $obj->ref_idpes_gestor = $this->gestor_id;
                     $obj->cargo_gestor = $this->cargo_gestor;
+                    $obj->email_gestor = $this->email_gestor;
                     $obj->local_funcionamento = $this->local_funcionamento;
                     $obj->condicao = $this->condicao;
                     $obj->codigo_inep_escola_compartilhada = $this->codigo_inep_escola_compartilhada;
@@ -1549,6 +1555,7 @@ class indice extends clsCadastro
             $obj->acesso = $this->acesso;
             $obj->ref_idpes_gestor = $this->gestor_id;
             $obj->cargo_gestor = $this->cargo_gestor;
+            $obj->email_gestor = $this->email_gestor;
             $obj->local_funcionamento = $this->local_funcionamento;
             $obj->condicao = $this->condicao;
             $obj->codigo_inep_escola_compartilhada = $this->codigo_inep_escola_compartilhada;
@@ -1742,6 +1749,7 @@ class indice extends clsCadastro
             $obj->acesso = $this->acesso;
             $obj->ref_idpes_gestor = $this->gestor_id;
             $obj->cargo_gestor = $this->cargo_gestor;
+            $obj->email_gestor = $this->email_gestor;
             $obj->local_funcionamento = $this->local_funcionamento;
             $obj->local_funcionamento = $this->local_funcionamento;
             $obj->local_funcionamento = $this->local_funcionamento;
@@ -1845,6 +1853,7 @@ class indice extends clsCadastro
             $obj->acesso = $this->acesso;
             $obj->ref_idpes_gestor = $this->gestor_id;
             $obj->cargo_gestor = $this->cargo_gestor;
+            $obj->email_gestor = $this->email_gestor;
             $obj->local_funcionamento = $this->local_funcionamento;
             $obj->condicao = $this->condicao;
             $obj->codigo_inep_escola_compartilhada = $this->codigo_inep_escola_compartilhada;
