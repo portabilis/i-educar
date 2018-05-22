@@ -347,10 +347,9 @@ abstract class CoreExt_DataMapper
   protected function _getSaveStatment(CoreExt_Entity $instance)
   {
     $sql = 'INSERT INTO %s (%s) VALUES (%s)';
-    $data = $this->_getDbAdapter()->formatValues($instance->toDataArray());
 
     //Remove campos null
-    $data = $this->_cleanNullValuesToSave($data);
+    $data = $this->_cleanNullValuesToSave($instance);
 
     // Pega apenas os valores do array
     $values = array_values($data);
@@ -728,9 +727,10 @@ abstract class CoreExt_DataMapper
   /*
    * Remove campos null para realizar insert
   */
-  protected function _cleanNullValuesToSave(array $data){
+  protected function _cleanNullValuesToSave(CoreExt_Entity $instance){
+    $data = $this->_getDbAdapter()->formatValues($instance->toDataArray());
     foreach ($data as $key => $val) {
-      if (is_null($val)){
+      if (is_null($val) || ($val == 0 && $instance->_isReferenceDataMapper($key)) ){
         unset($data[$key]);
       }
     }
