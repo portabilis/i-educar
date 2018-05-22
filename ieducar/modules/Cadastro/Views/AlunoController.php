@@ -37,6 +37,7 @@ require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
 require_once 'image_check.php';
 require_once 'App/Model/ZonaLocalizacao.php';
 require_once 'lib/Portabilis/Controller/Page/EditController.php';
+require_once 'lib/Portabilis/Utils/CustomLabel.php';
 require_once 'Usuario/Model/FuncionarioDataMapper.php';
 require_once 'include/modules/clsModulesRotaTransporteEscolar.inc.php';
 require_once 'Portabilis/String/Utils.php';
@@ -114,7 +115,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         ),
 
         'transporte' => array(
-            'label' => 'Transporte público',
+            'label' => 'Transporte escolar público',
             'help' => '',
         ),
 
@@ -307,24 +308,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         /************
          * PROVA INEP
          ************/
-
-        'recurso_prova_inep_aux_ledor' => array('label' => 'Necessida de auxílio ledor?'),
-
-        'recurso_prova_inep_aux_transcricao' => array('label' => 'Necessita de auxílio transcrição?'),
-
-        'recurso_prova_inep_guia_interprete' => array('label' => 'Necessita de guia-intérprete?'),
-
-        'recurso_prova_inep_interprete_libras' => array('label' => 'Necessita de intérprete de LIBRAS?'),
-
-        'recurso_prova_inep_leitura_labial' => array('label' => 'Necessita de leitura labial?'),
-
-        'recurso_prova_inep_prova_ampliada_16' => array('label' => 'Necessita de prova ampliada? (Fonte 16)'),
-
-        'recurso_prova_inep_prova_ampliada_20' => array('label' => 'Necessita de prova amplada? (Fonte 20)'),
-
-        'recurso_prova_inep_prova_ampliada_24' => array('label' => 'Necessita de prova ampliada? (Fonte 24)'),
-
-        'recurso_prova_inep_prova_braille' => array('label' => 'Necessita de prova em Braille?'),
+        'recursos_prova_inep' => array('label' => 'Recursos prova INEP'),
 
         'recebe_escolarizacao_em_outro_espaco' => array('label' => 'Recebe escolarização em outro espaço (diferente da escola)'),
 
@@ -379,10 +363,14 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     public function Gerar()
     {
         $this->url_cancelar = '/intranet/educar_aluno_lst.php';
+
+        $configuracoes = new clsPmieducarConfiguracoesGerais();
+        $configuracoes = $configuracoes->detalhe();
+        
         $labels_botucatu = $GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu';
 
-        if ($labels_botucatu) {
-            $this->inputsHelper()->hidden('labels_botucatu');
+        if ($configuracoes["justificativa_falta_documentacao_obrigatorio"]) {
+            $this->inputsHelper()->hidden('justificativa_falta_documentacao_obrigatorio');
         }
 
         $cod_aluno = $_GET['id'];
@@ -423,13 +411,13 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
 
         // código aluno
-        $options = array('label' => $labels_botucatu ? Portabilis_String_Utils::toLatin1("Código aluno (i-Educar)") : $this->_getLabel('id'), 'disabled' => true, 'required' => false, 'size' => 25);
+        $options = array('label' => _cl('aluno.detalhe.codigo_aluno'), 'disabled' => true, 'required' => false, 'size' => 25);
         $this->inputsHelper()->integer('id', $options);
 
         // código aluno inep
-        $options = array('label' => $this->_getLabel('aluno_inep_id'), 'required' => false, 'size' => 25, 'max_length' => 14);
+        $options = array('label' => $this->_getLabel('aluno_inep_id'), 'required' => false, 'size' => 25, 'max_length' => 12);
 
-        if ($labels_botucatu) {
+        if (!$configuracoes['mostrar_codigo_inep_aluno']) {
             $this->inputsHelper()->hidden('aluno_inep_id', array('value' => null));
         } else {
             $this->inputsHelper()->integer('aluno_inep_id', $options);
@@ -818,10 +806,9 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $this->inputsHelper()->simpleSearchPessoa('nome', $options, $helperOptions);
 
         // transporte publico
-        $label = Portabilis_String_Utils::toLatin1($this->_getLabel('transporte'));
 
         $tiposTransporte = array(
-            null => $label,
+            null => 'Selecione',
             'nenhum' => 'N&atilde;o utiliza',
             'municipal' => 'Municipal',
             'estadual' => 'Estadual'
@@ -1255,33 +1242,27 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('lixo')), 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->checkbox('lixo', $options);
-
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('recurso_prova_inep_aux_ledor')), 'required' => false, 'placeholder' => '');
-        $this->inputsHelper()->checkbox('recurso_prova_inep_aux_ledor', $options);
-
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('recurso_prova_inep_aux_transcricao')), 'required' => false, 'placeholder' => '');
-        $this->inputsHelper()->checkbox('recurso_prova_inep_aux_transcricao', $options);
-
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('recurso_prova_inep_guia_interprete')), 'required' => false, 'placeholder' => '');
-        $this->inputsHelper()->checkbox('recurso_prova_inep_guia_interprete', $options);
-
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('recurso_prova_inep_interprete_libras')), 'required' => false, 'placeholder' => '');
-        $this->inputsHelper()->checkbox('recurso_prova_inep_interprete_libras', $options);
-
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('recurso_prova_inep_leitura_labial')), 'required' => false, 'placeholder' => '');
-        $this->inputsHelper()->checkbox('recurso_prova_inep_leitura_labial', $options);
-
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('recurso_prova_inep_prova_ampliada_16')), 'required' => false, 'placeholder' => '');
-        $this->inputsHelper()->checkbox('recurso_prova_inep_prova_ampliada_16', $options);
-
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('recurso_prova_inep_prova_ampliada_20')), 'required' => false, 'placeholder' => '');
-        $this->inputsHelper()->checkbox('recurso_prova_inep_prova_ampliada_20', $options);
-
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('recurso_prova_inep_prova_ampliada_24')), 'required' => false, 'placeholder' => '');
-        $this->inputsHelper()->checkbox('recurso_prova_inep_prova_ampliada_24', $options);
-
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('recurso_prova_inep_prova_braille')), 'required' => false, 'placeholder' => '');
-        $this->inputsHelper()->checkbox('recurso_prova_inep_prova_braille', $options);
+        
+        $recursosProvaInep = array(
+            1 => 'Auxílio ledor',
+            2 => 'Auxílio transcrição',
+            3 => 'Guia-intérprete',
+            4 => 'Intérprete de LIBRAS',
+            5 => 'Leitura labial',
+            6 => 'Prova ampliada (Fonte 16)',
+            7 => 'Prova ampliada (Fonte 20)',
+            8 => 'Prova ampliada (Fonte 24)',
+            9 => 'Prova em Braille'
+        );
+        $helperOptions = array('objectName'  => 'recursos_prova_inep');
+        $options = array(
+            'label' => 'Recursos prova INEP',
+            'size' => 50,
+            'required' => false,
+            'options' => array(
+                'values' => $this->recursos_prova_inep,
+                'all_values' => $recursosProvaInep));
+        $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
         $selectOptions = array(
             3 => 'Não recebe',
@@ -1417,7 +1398,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $options = array(
             'required' => false,
             'value' => '',
-            'max_length' => 50
+            'max_length' => 20
         );
 
         $this->inputsHelper()->text('complemento', $options);

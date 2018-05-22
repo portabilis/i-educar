@@ -66,7 +66,8 @@ class ComponenteCurricular_Model_TurmaDataMapper extends CoreExt_DataMapper
   );
 
   protected $_primaryKey = array(
-    'componenteCurricular', 'turma'
+    'componenteCurricular' => 'componente_curricular_id',
+    'turma'                => 'turma_id',
   );
 
   /**

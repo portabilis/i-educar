@@ -338,7 +338,7 @@ class EducacensoExportController extends ApiCoreController
 
         (SELECT COALESCE(p.email,(SELECT email FROM pmieducar.escola_complemento where ref_cod_escola = e.cod_escola))) as r00s26,
 
-        e.orgao_regional as r00s27,
+        i.orgao_regional as r00s27,
         e.dependencia_administrativa as r00s28,
         b.zona_localizacao as r00s29,
         e.categoria_escola_privada as r00s30,
@@ -354,8 +354,8 @@ class EducacensoExportController extends ApiCoreController
         0 as r00s40,
         e.situacao_funcionamento
 
-
         FROM pmieducar.escola e
+        JOIN pmieducar.instituicao i ON i.cod_instituicao = e.ref_cod_instituicao
         INNER JOIN modules.educacenso_cod_escola ece ON (e.cod_escola = ece.cod_escola)
         INNER JOIN cadastro.pessoa p ON (e.ref_idpes = p.idpes)
         INNER JOIN cadastro.juridica j ON (j.idpes = p.idpes)
@@ -1418,15 +1418,15 @@ class EducacensoExportController extends ApiCoreController
       (SELECT cod_ibge FROM public.pais WHERE pais.idpais = fis.idpais_estrangeiro) as r60s13,
       uf.cod_ibge as r60s14,
       mun.cod_ibge as r60s15,
-      recurso_prova_inep_aux_ledor as r60s30,
-      recurso_prova_inep_aux_transcricao as r60s31,
-      recurso_prova_inep_guia_interprete as r60s32,
-      recurso_prova_inep_interprete_libras as r60s33,
-      recurso_prova_inep_leitura_labial as r60s34,
-      recurso_prova_inep_prova_ampliada_16 as r60s35,
-      recurso_prova_inep_prova_ampliada_20 as r60s36,
-      recurso_prova_inep_prova_ampliada_24 as r60s37,
-      recurso_prova_inep_prova_braille as r60s38,
+      (ARRAY[1] <@ recursos_prova_inep)::int as r60s30,
+      (ARRAY[2] <@ recursos_prova_inep)::int as r60s31,
+      (ARRAY[3] <@ recursos_prova_inep)::int as r60s32,
+      (ARRAY[4] <@ recursos_prova_inep)::int as r60s33,
+      (ARRAY[5] <@ recursos_prova_inep)::int as r60s34,
+      (ARRAY[6] <@ recursos_prova_inep)::int as r60s35,
+      (ARRAY[7] <@ recursos_prova_inep)::int as r60s36,
+      (ARRAY[8] <@ recursos_prova_inep)::int as r60s37,
+      (ARRAY[9] <@ recursos_prova_inep)::int as r60s38,
       fis.nacionalidade AS nacionalidade
 
       FROM  pmieducar.aluno a

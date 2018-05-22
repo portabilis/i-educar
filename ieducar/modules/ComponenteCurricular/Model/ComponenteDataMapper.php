@@ -1,34 +1,5 @@
 <?php
 
-/**
- * i-Educar - Sistema de gestão escolar
- *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
- *                     <ctima@itajai.sc.gov.br>
- *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
- *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
- * do GNU para mais detalhes.
- *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
- *
- * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
- * @category    i-Educar
- * @license     @@license@@
- * @package     ComponenteCurricular
- * @subpackage  Modules
- * @since       Arquivo disponível desde a versão 1.1.0
- * @version     $Id$
- */
-
 require_once 'CoreExt/DataMapper.php';
 require_once 'ComponenteCurricular/Model/Componente.php';
 
@@ -49,9 +20,21 @@ class ComponenteCurricular_Model_ComponenteDataMapper extends CoreExt_DataMapper
   protected $_tableName   = 'componente_curricular';
   protected $_tableSchema = 'modules';
 
+  protected $_primaryKey = array(
+      'id'          => 'id',
+      'instituicao' => 'instituicao_id'
+  );
+
   protected $_attributeMap = array(
-    'instituicao' => 'instituicao_id',
-    'area_conhecimento' => 'area_conhecimento_id'
+      'id'                  => 'id',
+      'instituicao'         => 'instituicao_id',
+      'area_conhecimento'   => 'area_conhecimento_id',
+      'nome'                => 'nome',
+      'abreviatura'         => 'abreviatura',
+      'tipo_base'           => 'tipo_base',
+      'codigo_educacenso'   => 'codigo_educacenso',
+      'ordenamento'         => 'ordenamento'
+
   );
 
   protected $_notPersistable = array(
@@ -131,8 +114,14 @@ class ComponenteCurricular_Model_ComponenteDataMapper extends CoreExt_DataMapper
    */
   public function findComponenteCurricularAnoEscolar($componenteCurricular, $anoEscolar)
   {
-    $anoEscolar = $this->getAnoEscolarDataMapper()->find(array($componenteCurricular, $anoEscolar));
-    $componenteCurricular = $this->find($componenteCurricular);
+    $anoEscolar = $this->getAnoEscolarDataMapper()->find(array(
+        'componenteCurricular' => $componenteCurricular,
+        'anoEscolar'           =>  $anoEscolar)
+    );
+    $componenteCurricular = $this->find(array(
+        'id'          => $componenteCurricular,
+//        'instituicao' => 1
+    ));
     $componenteCurricular->cargaHoraria = $anoEscolar->cargaHoraria;
     return $componenteCurricular;
   }

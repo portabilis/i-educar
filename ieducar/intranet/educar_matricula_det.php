@@ -34,6 +34,7 @@ require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'include/pmieducar/clsPermissoes.inc.php';
 require_once 'lib/Portabilis/Date/Utils.php';
+require_once 'lib/Portabilis/Utils/CustomLabel.php';
 require_once 'Portabilis/String/Utils.php';
 require_once 'lib/App/Model/Educacenso.php';
 
@@ -320,7 +321,7 @@ class indice extends clsDetalhe
           $this->array_botao_url_script[] = "go(\"educar_disciplina_dependencia_lst.php?ref_cod_matricula={$registro['cod_matricula']}\")";
         }
 
-        $this->array_botao[]            = ( $GLOBALS['coreExt']['Config']->app->database->dbname == 'botucatu' ? 'Troca de sala / Remanejamento' :'Enturmar' );
+        $this->array_botao[]            = _cl('matricula.detalhe.enturmar');
         $this->array_botao_url_script[] = "go(\"educar_matricula_turma_lst.php?ref_cod_matricula={$registro['cod_matricula']}&ano_letivo={$registro['ano']}\")";
 
         $this->array_botao[]            = 'Turno';
@@ -349,7 +350,7 @@ class indice extends clsDetalhe
           $this->array_botao_url_script[] = "go(\"educar_transferencia_solicitacao_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}&cancela=true\")";
         }
         elseif ($registro['ref_ref_cod_serie']) {
-            $this->array_botao[]            = ( $GLOBALS['coreExt']['Config']->app->database->dbname == 'botucatu' ? 'Deslocamento / Transferência' : 'Solicitar transferência' );
+            $this->array_botao[]            = _cl('matricula.detalhe.solicitar_transferencia');
             $this->array_botao_url_script[] = "go(\"educar_transferencia_solicitacao_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\")";
         }
 
