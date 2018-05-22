@@ -47,7 +47,7 @@ class clsPmieducarEscolaUsuario
     var $_limite_offset;
     var $_campo_order_by;
 
-    function clsPmieducarEscolaUsuario($id = 0, $ref_cod_usuario = null, $ref_cod_escola = null, $escola_atual = 0){
+    function __construct($id = 0, $ref_cod_usuario = null, $ref_cod_escola = null, $escola_atual = 0){
         $db = new clsBanco();
         $this->_schema = "pmieducar.";
         $this->_tabela = "{$this->_schema}escola_usuario";

@@ -206,7 +206,7 @@ class clsPmieducarEscola
   /**
    * Construtor.
    */
-  function clsPmieducarEscola($cod_escola = NULL,
+  function __construct($cod_escola = NULL,
                               $ref_usuario_cad = NULL,
                               $ref_usuario_exc = NULL,
                               $ref_cod_instituicao = NULL,

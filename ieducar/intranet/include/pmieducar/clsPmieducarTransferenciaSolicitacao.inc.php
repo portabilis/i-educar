@@ -114,7 +114,7 @@ class clsPmieducarTransferenciaSolicitacao
      *
      * @return object
      */
-    function clsPmieducarTransferenciaSolicitacao( $cod_transferencia_solicitacao = null, $ref_cod_transferencia_tipo = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $ref_cod_matricula_entrada = null, $ref_cod_matricula_saida = null, $observacao = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $data_transferencia = null, $escola_destino_externa = null, $ref_cod_escola_destino = null, $estado_escola_destino_externa = null, $municipio_escola_destino_externa = null)
+    function __construct( $cod_transferencia_solicitacao = null, $ref_cod_transferencia_tipo = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $ref_cod_matricula_entrada = null, $ref_cod_matricula_saida = null, $observacao = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $data_transferencia = null, $escola_destino_externa = null, $ref_cod_escola_destino = null, $estado_escola_destino_externa = null, $municipio_escola_destino_externa = null)
     {
         $db = new clsBanco();
         $this->_schema = "pmieducar.";

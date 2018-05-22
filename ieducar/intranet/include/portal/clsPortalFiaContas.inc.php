@@ -89,7 +89,7 @@ class clsPortalFiaContas
      *
      * @return object
      */
-    function clsPortalFiaContas( $cod_conta = null, $entidade = null, $num_convenio = null, $valor = null, $periodo_inicio = null, $periodo_final = null, $ano = null )
+    function __construct( $cod_conta = null, $entidade = null, $num_convenio = null, $valor = null, $periodo_inicio = null, $periodo_final = null, $ano = null )
     {
         $db = new clsBanco();
         $this->_schema = "portal.";

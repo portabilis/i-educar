@@ -101,7 +101,7 @@ class clsPmieducarCategoriaObra
      *
      * @return object
      */
-    function clsPmieducarCategoriaObra($id = "", $descricao = "", $observacoes = ""){
+    function __construct($id = "", $descricao = "", $observacoes = ""){
         $db = new clsBanco();
         $this->_schema = "pmieducar.";
         $this->_tabela = "{$this->_schema}categoria_obra";

@@ -122,7 +122,7 @@ class clsPmicontrolesisSoftwareAlteracao
      *
      * @return object
      */
-    function clsPmicontrolesisSoftwareAlteracao( $cod_software_alteracao = null, $ref_funcionario_exc = null, $ref_funcionario_cad = null, $ref_cod_software = null, $motivo = null, $tipo = null, $descricao = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $script_banco = null )
+    function __construct( $cod_software_alteracao = null, $ref_funcionario_exc = null, $ref_funcionario_cad = null, $ref_cod_software = null, $motivo = null, $tipo = null, $descricao = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $script_banco = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmicontrolesis.";

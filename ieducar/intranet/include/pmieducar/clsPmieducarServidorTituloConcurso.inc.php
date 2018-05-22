@@ -103,7 +103,7 @@ class clsPmieducarServidorTituloConcurso
      *
      * @return object
      */
-    function clsPmieducarServidorTituloConcurso( $cod_servidor_titulo = null, $ref_cod_formacao = null, $data_vigencia_homolog = null, $data_publicacao = null )
+    function __construct( $cod_servidor_titulo = null, $ref_cod_formacao = null, $data_vigencia_homolog = null, $data_publicacao = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmieducar.";

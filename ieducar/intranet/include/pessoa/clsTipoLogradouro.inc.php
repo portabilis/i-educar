@@ -40,7 +40,7 @@ class clsTipoLogradouro
      *
      * @return Object:clsTipoLogradouro
      */
-    function clsTipoLogradouro( $idtlog=false, $descricao=false)
+    function __construct( $idtlog=false, $descricao=false)
     {
         $this->idtlog    = $idtlog;
         $this->descricao = $descricao;

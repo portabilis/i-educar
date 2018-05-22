@@ -59,7 +59,7 @@ class clsSetor
      *
      * @return Object
      */
-    function clsSetor( $intCodSetor = null, $intRefCodSetor = null, $intRefCodPessoaExc = null, $intRefCodPessoaCad = null, $strNmSetor = null, $strSglSetor = null, $strDataCadastro = null, $strDataExclusao = null, $intAtivo = null, $intNivel = null, $boolNoPaco = null, $strEndereco = null, $charTipo = null, $intRefIdpesResp = null )
+    function __construct( $intCodSetor = null, $intRefCodSetor = null, $intRefCodPessoaExc = null, $intRefCodPessoaCad = null, $strNmSetor = null, $strSglSetor = null, $strDataCadastro = null, $strDataExclusao = null, $intAtivo = null, $intNivel = null, $boolNoPaco = null, $strEndereco = null, $charTipo = null, $intRefIdpesResp = null )
     {
         if(is_numeric($intCodSetor))
         {

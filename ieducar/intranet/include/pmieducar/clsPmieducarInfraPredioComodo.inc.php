@@ -111,7 +111,7 @@ class clsPmieducarInfraPredioComodo
      *
      * @return object
      */
-    function clsPmieducarInfraPredioComodo( $cod_infra_predio_comodo = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $ref_cod_infra_comodo_funcao = null, $ref_cod_infra_predio = null, $nm_comodo = null, $desc_comodo = null, $area = null, $data_cadastro = null, $data_exclusao = null, $ativo = null )
+    function __construct( $cod_infra_predio_comodo = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $ref_cod_infra_comodo_funcao = null, $ref_cod_infra_predio = null, $nm_comodo = null, $desc_comodo = null, $area = null, $data_cadastro = null, $data_exclusao = null, $ativo = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmieducar.";

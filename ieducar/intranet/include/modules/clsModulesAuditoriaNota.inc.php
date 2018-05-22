@@ -55,7 +55,7 @@ class clsModulesAuditoriaNota {
     const OPERACAO_ALTERACAO = 2;
     const OPERACAO_EXCLUSAO = 3;
 
-    function clsModulesAuditoriaNota($notaAntiga, $notaNova, $turmaId){
+    function __construct($notaAntiga, $notaNova, $turmaId){
 
         //Foi necessário enviar turma pois não á possí­vel saber a turma atual somente através da matrí­cula
         $this->turma = $turmaId;

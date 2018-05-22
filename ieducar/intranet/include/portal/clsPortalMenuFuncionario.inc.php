@@ -107,7 +107,7 @@ class clsPortalMenuFuncionario
      *
      * @return object
      */
-    function clsPortalMenuFuncionario( $ref_ref_cod_pessoa_fj = null, $cadastra = null, $exclui = null, $ref_cod_menu_submenu = null )
+    function __construct( $ref_ref_cod_pessoa_fj = null, $cadastra = null, $exclui = null, $ref_cod_menu_submenu = null )
     {
         $db = new clsBanco();
         $this->_schema = "portal.";

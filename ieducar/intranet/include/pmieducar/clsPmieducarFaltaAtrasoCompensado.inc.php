@@ -107,7 +107,7 @@ class clsPmieducarFaltaAtrasoCompensado
   /**
    * Construtor.
    */
-  function clsPmieducarFaltaAtrasoCompensado($cod_compensado = NULL,
+  function __construct($cod_compensado = NULL,
     $ref_cod_escola = NULL, $ref_ref_cod_instituicao = NULL,
     $ref_cod_servidor = NULL, $ref_usuario_exc = NULL, $ref_usuario_cad = NULL,
     $data_inicio = NULL, $data_fim = NULL, $data_cadastro = NULL,

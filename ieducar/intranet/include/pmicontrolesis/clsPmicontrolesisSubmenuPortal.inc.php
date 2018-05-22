@@ -111,7 +111,7 @@ class clsPmicontrolesisSubmenuPortal
      *
      * @return object
      */
-    function clsPmicontrolesisSubmenuPortal( $cod_submenu_portal = null, $ref_funcionario_cad = null, $ref_funcionario_exc = null, $ref_cod_menu_portal = null, $nm_submenu = null, $arquivo = null, $target = null, $title = null, $ordem = null, $data_cadastro = null, $data_exclusao = null, $ativo = null )
+    function __construct( $cod_submenu_portal = null, $ref_funcionario_cad = null, $ref_funcionario_exc = null, $ref_cod_menu_portal = null, $nm_submenu = null, $arquivo = null, $target = null, $title = null, $ordem = null, $data_cadastro = null, $data_exclusao = null, $ativo = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmicontrolesis.";

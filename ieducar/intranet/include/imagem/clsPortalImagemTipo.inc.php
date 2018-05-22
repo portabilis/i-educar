@@ -97,7 +97,7 @@ class clsPortalImagemTipo
      *
      * @return object
      */
-    function clsPortalImagemTipo( $cod_imagem_tipo = null, $nm_tipo = null )
+    function __construct( $cod_imagem_tipo = null, $nm_tipo = null )
     {
         $db = new clsBanco();
         $this->_schema = "portal.";

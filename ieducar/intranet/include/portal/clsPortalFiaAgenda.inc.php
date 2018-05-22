@@ -82,7 +82,7 @@ class clsPortalFiaAgenda
      *
      * @return object
      */
-    function clsPortalFiaAgenda( $cod_agenda = null, $nm_agenda = null, $descricao = null, $data = null )
+    function __construct( $cod_agenda = null, $nm_agenda = null, $descricao = null, $data = null )
     {
         $db = new clsBanco();
         $this->_schema = "portal.";

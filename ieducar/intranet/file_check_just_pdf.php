@@ -36,7 +36,7 @@ class FileController {
     var $maxSize;
     var $suportedExtensions;
 
-    function FileController($file, $maxSize = NULL,
+    function __construct($file, $maxSize = NULL,
                              $suportedExtensions = NULL){
 
         $this->file = $file;

@@ -111,7 +111,7 @@ class clsPmieducarQuadroHorarioHorarios
   /**
    * Construtor.
    */
-  function clsPmieducarQuadroHorarioHorarios($ref_cod_quadro_horario = NULL,
+  function __construct($ref_cod_quadro_horario = NULL,
     $ref_ref_cod_serie = NULL, $ref_ref_cod_escola = NULL,
     $ref_ref_cod_disciplina = NULL, $sequencial = NULL,
     $ref_cod_instituicao_substituto = NULL, $ref_cod_instituicao_servidor = NULL,

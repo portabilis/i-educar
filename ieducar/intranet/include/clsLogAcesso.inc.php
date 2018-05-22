@@ -42,7 +42,7 @@ class clsLogAcesso
      *
      * @return Object:clsLogAcesso
      */
-    function clsLogAcesso( $cod_acesso=false, $ip_externo=false, $ip_interno=false, $cod_pessoa=false, $obs=false, $sucesso=null )
+    function __construct( $cod_acesso=false, $ip_externo=false, $ip_interno=false, $cod_pessoa=false, $obs=false, $sucesso=null )
     {
         $this->cod_acesso = $cod_acesso;
         $this->ip_externo = $ip_externo;

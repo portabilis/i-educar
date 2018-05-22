@@ -49,7 +49,7 @@ class clsPessoa_
     var $tabela_telefone = "fone_pessoa";
 
 
-    function  clsPessoa_($int_idpes = false, $str_nome = false, $int_idpes_cad =false, $str_url = false, $int_tipo = false, $int_idpes_rev =false, $str_data_rev = false, $str_email = false )
+    function __construct($int_idpes = false, $str_nome = false, $int_idpes_cad =false, $str_url = false, $int_tipo = false, $int_idpes_rev =false, $str_data_rev = false, $str_email = false )
     {
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];

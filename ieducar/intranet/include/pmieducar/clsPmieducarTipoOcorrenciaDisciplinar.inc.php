@@ -110,7 +110,7 @@ class clsPmieducarTipoOcorrenciaDisciplinar
      *
      * @return object
      */
-    function clsPmieducarTipoOcorrenciaDisciplinar( $cod_tipo_ocorrencia_disciplinar = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_tipo = null, $descricao = null, $max_ocorrencias = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $ref_cod_instituicao = null )
+    function __construct( $cod_tipo_ocorrencia_disciplinar = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_tipo = null, $descricao = null, $max_ocorrencias = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $ref_cod_instituicao = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmieducar.";

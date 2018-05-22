@@ -59,7 +59,7 @@ class clsMenuSuspenso
   /**
    * Construtor.
    */
-  function clsMenuSuspenso($cod_menu = FALSE, $ref_cod_menu_submenu = FALSE,
+  function __construct($cod_menu = FALSE, $ref_cod_menu_submenu = FALSE,
     $ref_cod_menu_pai = FALSE, $tt_menu = FALSE, $ref_cod_ico = FALSE,
     $ord_menu = FALSE, $caminho = FALSE, $alvo = FALSE, $suprime_menu = FALSE,
     $ref_cod_tutormenu = FALSE)

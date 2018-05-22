@@ -116,7 +116,7 @@ class clsPortalProconConfiguracao
      *
      * @return object
      */
-    function clsPortalProconConfiguracao( $cod_configuracao = null, $ref_funcionario_exc = null, $ref_funcionario_cad = null, $nome_responsavel = null, $cargo = null, $data_cadastro = null, $data_exclusao = null, $ativo = null )
+    function __construct( $cod_configuracao = null, $ref_funcionario_exc = null, $ref_funcionario_cad = null, $nome_responsavel = null, $cargo = null, $data_cadastro = null, $data_exclusao = null, $ativo = null )
     {
         $db = new clsBanco();
         $this->_schema = "portal.";

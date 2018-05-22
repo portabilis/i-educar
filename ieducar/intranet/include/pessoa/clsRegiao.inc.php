@@ -43,7 +43,7 @@ class clsRegiao
      *
      * @return Object:clsBairro
      */
-    function clsRegiao( $int_cod_regiao = false, $str_nm_regiao=false)
+    function __construct( $int_cod_regiao = false, $str_nm_regiao=false)
     {
         $this->cod_regiao = $int_cod_regiao;
         $this->nm_regiao = $str_nm_regiao;

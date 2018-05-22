@@ -107,7 +107,7 @@ class clsPmicontrolesisTelefones
      *
      * @return object
      */
-    function clsPmicontrolesisTelefones( $cod_telefones = null, $ref_funcionario_cad = null, $ref_funcionario_exc = null, $nome = null, $numero = null, $data_cadastro = null, $data_exclusao = null, $ativo = null )
+    function __construct( $cod_telefones = null, $ref_funcionario_cad = null, $ref_funcionario_exc = null, $nome = null, $numero = null, $data_cadastro = null, $data_exclusao = null, $ativo = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmicontrolesis.";

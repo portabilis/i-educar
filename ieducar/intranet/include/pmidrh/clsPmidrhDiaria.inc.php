@@ -119,7 +119,7 @@ class clsPmidrhDiaria
      *
      * @return object
      */
-    function clsPmidrhDiaria( $cod_diaria = null, $ref_funcionario_cadastro = null, $ref_cod_diaria_grupo = null, $ref_funcionario = null, $conta_corrente = null, $agencia = null, $banco = null, $dotacao_orcamentaria = null, $objetivo = null, $data_partida = null, $data_chegada = null, $estadual = null, $destino = null, $data_pedido = null, $vl100 = null, $vl75 = null, $vl50 = null, $vl25 = null, $roteiro = null, $ref_cod_administracao_secretaria = null )
+    function __construct( $cod_diaria = null, $ref_funcionario_cadastro = null, $ref_cod_diaria_grupo = null, $ref_funcionario = null, $conta_corrente = null, $agencia = null, $banco = null, $dotacao_orcamentaria = null, $objetivo = null, $data_partida = null, $data_chegada = null, $estadual = null, $destino = null, $data_pedido = null, $vl100 = null, $vl75 = null, $vl50 = null, $vl25 = null, $roteiro = null, $ref_cod_administracao_secretaria = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmidrh.";

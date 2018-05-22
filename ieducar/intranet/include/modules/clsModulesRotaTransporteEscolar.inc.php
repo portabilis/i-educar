@@ -107,7 +107,7 @@ class clsModulesRotaTransporteEscolar
   /**
    * Construtor.
    */
-  function clsModulesRotaTransporteEscolar($cod_rota_transporte_escolar = NULL, $ref_idpes_destino = NULL, $descricao = NULL,  $ano = NULL, $tipo_rota = NULL, $km_pav = NULL, $km_npav = NULL, $ref_cod_empresa_transporte_escolar=NULL, $tercerizado = NULL)
+  function __construct($cod_rota_transporte_escolar = NULL, $ref_idpes_destino = NULL, $descricao = NULL,  $ano = NULL, $tipo_rota = NULL, $km_pav = NULL, $km_npav = NULL, $ref_cod_empresa_transporte_escolar=NULL, $tercerizado = NULL)
   {
 
     $db = new clsBanco();

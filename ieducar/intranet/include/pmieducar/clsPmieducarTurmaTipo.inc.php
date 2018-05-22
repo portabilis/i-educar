@@ -109,7 +109,7 @@ class clsPmieducarTurmaTipo
      *
      * @return object
      */
-    function clsPmieducarTurmaTipo( $cod_turma_tipo = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_tipo = null, $sgl_tipo = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $ref_cod_instituicao = null )
+    function __construct( $cod_turma_tipo = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_tipo = null, $sgl_tipo = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $ref_cod_instituicao = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmieducar.";

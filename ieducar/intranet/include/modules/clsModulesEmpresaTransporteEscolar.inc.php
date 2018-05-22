@@ -102,7 +102,7 @@ class clsModulesEmpresaTransporteEscolar
   /**
    * Construtor.
    */
-  function clsModulesEmpresaTransporteEscolar($cod_empresa_transporte_escolar = NULL, 
+  function __construct($cod_empresa_transporte_escolar = NULL, 
                                               $ref_idpes = NULL, $ref_resp_idpes = NULL, 
                                               $observacao = NULL)
   {

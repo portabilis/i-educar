@@ -108,7 +108,7 @@ class clsPmieducarHistoricoDisciplinas
      *
      * @return object
      */
-    function clsPmieducarHistoricoDisciplinas( $sequencial = null, $ref_ref_cod_aluno = null, $ref_sequencial = null, $nm_disciplina = null, $nota = null, $faltas = null, $ordenamento = null, $carga_horaria_disciplina = null, $dependencia = false)
+    function __construct( $sequencial = null, $ref_ref_cod_aluno = null, $ref_sequencial = null, $nm_disciplina = null, $nota = null, $faltas = null, $ordenamento = null, $carga_horaria_disciplina = null, $dependencia = false)
     {
         $db = new clsBanco();
         $this->_schema = "pmieducar.";

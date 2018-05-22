@@ -108,7 +108,7 @@ class clsPmidrhPortariaCamposTabelaValor
      *
      * @return object
      */
-    function clsPmidrhPortariaCamposTabelaValor( $sequencial = null, $ref_cod_campo_tabela = null, $ref_cod_portaria = null, $valor = null )
+    function __construct( $sequencial = null, $ref_cod_campo_tabela = null, $ref_cod_portaria = null, $valor = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmidrh.";

@@ -122,7 +122,7 @@ class clsPmidrhPortaria
      *
      * @return object
      */
-    function clsPmidrhPortaria( $cod_portaria = null, $ref_cod_status = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $ref_cod_setor = null, $num_portaria = null, $portaria_texto = null, $ref_pessoa_cad = null, $ref_pessoa_exc = null, $ref_cod_instituicao = null )
+    function __construct( $cod_portaria = null, $ref_cod_status = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $ref_cod_setor = null, $num_portaria = null, $portaria_texto = null, $ref_pessoa_cad = null, $ref_pessoa_exc = null, $ref_cod_instituicao = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmidrh.";

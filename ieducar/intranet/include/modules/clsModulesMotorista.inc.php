@@ -104,7 +104,7 @@ class clsModulesMotorista
   /**
    * Construtor.
    */
-  function clsModulesMotorista( $cod_motorista = NULL, $ref_idpes = NULL, $cnh = NULL,
+  function __construct( $cod_motorista = NULL, $ref_idpes = NULL, $cnh = NULL,
   $tipo_cnh = NULL, $dt_habilitacao = NULL, $vencimento_cnh = NULL,  $ref_cod_empresa_transporte_escolar = NULL,
    $observacao = NULL)
   {

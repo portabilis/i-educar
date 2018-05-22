@@ -47,7 +47,7 @@ class clsGrupoModerador
      *
      * @return Object
      */
-    function clsGrupoModerador( $int_ref_ref_cod_pessoa_fj = false, $int_ref_cod_grupos = false, $int_ref_pessoa_cad = false, $int_ref_pessoa_exc = false, $int_ativo = false )
+    function __construct( $int_ref_ref_cod_pessoa_fj = false, $int_ref_cod_grupos = false, $int_ref_pessoa_cad = false, $int_ref_pessoa_exc = false, $int_ativo = false )
     {
         if(is_numeric($int_ref_ref_cod_pessoa_fj))
         {

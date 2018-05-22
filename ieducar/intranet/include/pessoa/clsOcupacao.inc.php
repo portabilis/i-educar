@@ -40,7 +40,7 @@ class clsOcupacao
      *
      * @return Object:clsOcupacao
      */
-    function clsOcupacao( $idocup=false, $descricao=false)
+    function __construct( $idocup=false, $descricao=false)
     {
         $this->idocup    = $idocup;
         $this->descricao = $descricao;

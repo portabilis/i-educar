@@ -107,7 +107,7 @@ class clsPmieducarEscolaDiasLetivos
      *
      * @return object
      */
-    function clsPmieducarEscolaDiasLetivos( $ref_cod_escola = null, $ano = null, $ref_usuario_cad = null, $ref_usuario_exc = null, $num_dias = null, $data_cadastro = null, $data_exclusao = null, $ativo = null )
+    function __construct( $ref_cod_escola = null, $ano = null, $ref_usuario_cad = null, $ref_usuario_exc = null, $num_dias = null, $data_cadastro = null, $data_exclusao = null, $ativo = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmieducar.";

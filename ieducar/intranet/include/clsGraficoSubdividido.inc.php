@@ -34,7 +34,7 @@
         var $titulo;
         var $totalGeral;
         
-        function clsGraficoSubdividido( $arrayValores, $maxVal, $maxWidth, $titulo = false, $totalGeral=false )
+        function __construct( $arrayValores, $maxVal, $maxWidth, $titulo = false, $totalGeral=false )
         {
             $this->arrayValores = $arrayValores;
             $this->maxVal = $maxVal;

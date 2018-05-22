@@ -44,7 +44,7 @@ class clsNotas
      *
      * @return Object:clsnatureza
      */
-    function clsNotas( $int_ref_idpes = false, $int_ref_pessoa_cad = false, $int_ref_pessoa_exc = false, $str_nota = false,  $ativo=false, $sequencial = false )
+    function __construct( $int_ref_idpes = false, $int_ref_pessoa_cad = false, $int_ref_pessoa_exc = false, $str_nota = false,  $ativo=false, $sequencial = false )
     {
         $this->ref_idpes = is_numeric($int_ref_idpes) ? $int_ref_idpes : false;
         $this->ref_pessoa_cad = is_numeric($int_ref_pessoa_cad) ? $int_ref_pessoa_cad : false;

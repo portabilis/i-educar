@@ -42,7 +42,7 @@
         var $ultimoDiaMes = array( 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 );
         var $diasSemana = array( "Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado" );
         
-        function clsGraficoDiario( $arrayValores, $dataInicio, $dataFim=false, $titulo=false, $legenda=false, $mostraWeekend=false )
+        function __construct( $arrayValores, $dataInicio, $dataFim=false, $titulo=false, $legenda=false, $mostraWeekend=false )
         {
             $this->arrayValores = $arrayValores;
             $this->datainicio = $dataInicio;

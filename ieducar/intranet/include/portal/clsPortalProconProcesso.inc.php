@@ -126,7 +126,7 @@ class clsPortalProconProcesso
      *
      * @return object
      */
-    function clsPortalProconProcesso( $cod_processo = null, $ref_funcionario_finaliza = null, $ref_funcionario_cad = null, $ref_idpes = null, $num_processo = null, $nome_representante = null, $descricao_fatos = null, $legislacao = null, $parecer = null, $data_cadastro = null, $data_finalizacao = null )
+    function __construct( $cod_processo = null, $ref_funcionario_finaliza = null, $ref_funcionario_cad = null, $ref_idpes = null, $num_processo = null, $nome_representante = null, $descricao_fatos = null, $legislacao = null, $parecer = null, $data_cadastro = null, $data_finalizacao = null )
     {
         $db = new clsBanco();
         $this->_schema = "portal.";

@@ -112,7 +112,7 @@ class clsPmidrhPortariaCamposEspeciaisValor
      *
      * @return object
      */
-    function clsPmidrhPortariaCamposEspeciaisValor( $ref_cod_portaria = null, $ref_cod_campo = null, $ref_ref_cod_tipo_portaria = null, $ref_tipo = null, $ref_sequencial = null, $valor = null )
+    function __construct( $ref_cod_portaria = null, $ref_cod_campo = null, $ref_ref_cod_tipo_portaria = null, $ref_tipo = null, $ref_sequencial = null, $valor = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmidrh.";

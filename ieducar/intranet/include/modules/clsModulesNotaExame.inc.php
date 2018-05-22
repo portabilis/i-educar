@@ -110,7 +110,7 @@ class clsModulesNotaExame
      *
      * @return object
      */
-    function clsModulesNotaExame($ref_cod_matricula = NULL , $ref_cod_componente_curricular = NULL, $nota_exame = NULL)
+    function __construct($ref_cod_matricula = NULL , $ref_cod_componente_curricular = NULL, $nota_exame = NULL)
     {
         $db = new clsBanco();
         $this->_schema = "modules.";

@@ -106,7 +106,7 @@ class clsPessoaFj
   /**
    * Construtor.
    */
-  function  clsPessoaFj($int_idpes = FALSE)
+  function __construct($int_idpes = FALSE)
   {
     $this->idpes = $int_idpes;
   }

@@ -109,7 +109,7 @@ class clsPublicUf
      *
      * @return object
      */
-    function clsPublicUf( $sigla_uf = null, $nome = null, $geom = null, $idpais = null, $cod_ibge = null )
+    function __construct( $sigla_uf = null, $nome = null, $geom = null, $idpais = null, $cod_ibge = null )
     {
         $db = new clsBanco();
         $this->_schema = "public.";

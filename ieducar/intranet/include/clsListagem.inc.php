@@ -301,7 +301,7 @@ class clsListagem extends clsCampos
        * Adiciona o help da página.
        */
       $url = parse_url($_SERVER['REQUEST_URI']);
-      $url = ereg_replace( '^/', '', $url['path']);
+      $url = preg_replace('/^\//', '', $url['path']);
 
       if (strpos($url, '_det.php') !== FALSE) {
         $tipo = 'det';

@@ -110,7 +110,7 @@ class clsPmieducarFaltaAtraso
   /**
    * Construtor.
    */
-  function clsPmieducarFaltaAtraso($cod_falta_atraso = NULL, $ref_cod_escola = NULL,
+  function __construct($cod_falta_atraso = NULL, $ref_cod_escola = NULL,
     $ref_ref_cod_instituicao = NULL, $ref_usuario_exc = NULL, $ref_usuario_cad = NULL,
     $ref_cod_servidor = NULL, $tipo = NULL, $data_falta_atraso = NULL,
     $qtd_horas = NULL, $qtd_min = NULL, $justificada = NULL, $data_cadastro = NULL,

@@ -40,7 +40,7 @@ class clsEscolaridade
      *
      * @return Object:clsEscolaridade
      */
-    function clsEscolaridade( $idesco=false, $descricao=false)
+    function __construct( $idesco=false, $descricao=false)
     {
         $this->idesco    = $idesco;
         $this->descricao = $descricao;

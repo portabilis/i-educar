@@ -122,7 +122,7 @@ class clsPmieducarMatricula
   /**
    * Construtor.
    */
-  function clsPmieducarMatricula($cod_matricula = NULL, $ref_cod_reserva_vaga = NULL,
+  function __construct($cod_matricula = NULL, $ref_cod_reserva_vaga = NULL,
     $ref_ref_cod_escola = NULL, $ref_ref_cod_serie = NULL, $ref_usuario_exc = NULL,
     $ref_usuario_cad = NULL, $ref_cod_aluno = NULL, $aprovado = NULL,
     $data_cadastro = NULL, $data_exclusao = NULL, $ativo = NULL, $ano = NULL,

@@ -1,4 +1,4 @@
-ieducar_1204:
+ieducar_1604:
   build: .
   environment:
     - CORE_EXT_CONFIGURATION_ENV=development
@@ -8,7 +8,7 @@ ieducar_1204:
     - .:/home/portabilis/ieducar
   links:
     - postgres_95
-  container_name: ieducar_1204
+  container_name: ieducar_1604
 
 postgres_95:
   volumes:

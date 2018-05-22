@@ -71,7 +71,7 @@ class code128barcode {
     //
    
     // {{{ function code128barcode()
-    function code128barcode() {
+    function __construct() {
        
         //error_reporting(E_ALL);
        

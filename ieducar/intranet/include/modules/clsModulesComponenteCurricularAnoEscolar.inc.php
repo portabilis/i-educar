@@ -54,7 +54,7 @@ class clsModulesComponenteCurricularAnoEscolar
     var $_campo_order_by; // Define o campo padrao para ser usado como padrao de ordenacao no metodo lista
 
 
-    function clsModulesComponenteCurricularAnoEscolar($componente_curricular_id = NULL,
+    function __construct($componente_curricular_id = NULL,
                                                       $ano_escolar_id           = NULL,
                                                       $carga_horaria            = NULL,
                                                       $tipo_nota                = NULL,
