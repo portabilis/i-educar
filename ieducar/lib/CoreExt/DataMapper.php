@@ -401,7 +401,8 @@ abstract class CoreExt_DataMapper
       $columnName = $this->_getTableColumn($key);
       $replaceString = "%s = '%s'";
 
-      if (is_null($value)) {
+      if (is_null($value) || (0 == $value && $instance->_isReferenceDataMapper($key))
+      ) {
         $value = "NULL";
         $replaceString = "%s = %s";
       }
