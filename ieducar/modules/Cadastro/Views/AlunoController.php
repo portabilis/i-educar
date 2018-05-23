@@ -33,6 +33,7 @@
 
 require_once 'include/clsCadastro.inc.php';
 require_once "include/clsBanco.inc.php";
+require_once "include/pmieducar/clsPmieducarInstituicao.inc.php";
 require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
 require_once 'image_check.php';
 require_once 'App/Model/ZonaLocalizacao.php';
@@ -383,6 +384,8 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $configuracoes = new clsPmieducarConfiguracoesGerais();
         $configuracoes = $configuracoes->detalhe();
+
+        $labels_botucatu = $GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu';
 
         if ($configuracoes["justificativa_falta_documentacao_obrigatorio"]) {
             $this->inputsHelper()->hidden('justificativa_falta_documentacao_obrigatorio');
@@ -1490,6 +1493,77 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         Portabilis_View_Helper_Application::loadJavascript($this, $script);
 
         $this->loadResourceAssets($this->getDispatcher());
+
+        $clsInstituicao = new clsPmieducarInstituicao();
+        $instituicao = $clsInstituicao->primeiraAtiva();
+        $obrigarCamposCenso = FALSE;
+        if ($instituicao && isset($instituicao['obrigar_campos_censo'])) {
+            $obrigarCamposCenso = dbBool($instituicao['obrigar_campos_censo']);
+        }
+
+        $racas         = new clsCadastroRaca();
+        $racas         = $racas->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL, TRUE);
+        $selectOptions = array(null => 'Selecione');
+
+        foreach ($racas as $raca) {
+            $selectOptions[$raca['cod_raca']] = $raca['nm_raca'];
+        }
+
+        $selectOptions = Portabilis_Array_Utils::sortByValue($selectOptions);
+
+        $this->campoLista('cor_raca', 'Cor e raça', $selectOptions, $this->cod_raca, '', FALSE, '', '', '', $obrigarCamposCenso);
+
+        $zonas = array(
+            '' => 'Selecione',
+            1  => 'Urbana',
+            2  => 'Rural',
+        );
+
+        $options = array(
+          'label'       => 'Zona Localização',
+          'value'       => $this->zona_localizacao_censo,
+          'resources'   => $zonas,
+          'required'    => $obrigarCamposCenso,
+        );
+
+        $this->inputsHelper()->select('zona_localizacao_censo', $options);
+
+        $tiposNacionalidade = array(
+            NULL => 'Selecione',
+            '1'  => 'Brasileiro',
+            '2'  => 'Naturalizado brasileiro',
+            '3'  => 'Estrangeiro'
+        );
+
+        $options = array(
+            'label'       => 'Nacionalidade',
+            'resources'   => $tiposNacionalidade,
+            'required'    => $obrigarCamposCenso,
+            'inline'      => TRUE,
+            'value'       => $this->tipo_nacionalidade
+        );
+
+        $this->inputsHelper()->select('tipo_nacionalidade', $options);
+
+        // pais origem
+
+        $options = array(
+          'label'       => '',
+          'placeholder' => 'Informe o nome do pais',
+          'required'    => $obrigarCamposCenso
+        );
+
+        $hiddenInputOptions = array(
+            'options' => array(
+                'value' => $this->pais_origem_id
+            )
+        );
+
+        $helperOptions = array(
+          'objectName'         => 'pais_origem',
+          'hiddenInputOptions' => $hiddenInputOptions
+        );
+        $this->inputsHelper()->simpleSearchPais('nome', $options, $helperOptions);
     }
 
 

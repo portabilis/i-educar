@@ -1090,6 +1090,14 @@ class clsPmieducarInstituicao
         return false;
     }
 
+    public function primeiraAtiva()
+    {
+        $instituicoes = $this->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+                    NULL, NULL, NULL, NULL, NULL, NULL, TRUE);
+        return COUNT($instituicoes) ? $instituicoes[0] : NULL;
+    }
+
+
     /**
      * Retorna um array com os dados de um registro.
      * @return array
