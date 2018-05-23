@@ -516,11 +516,9 @@ class indice extends clsCadastro
 
                 $zonas = App_Model_ZonaLocalizacao::getInstance();
                 $zonas = $zonas->getEnums();
-                $zonas = Portabilis_Array_Utils::insertIn(null, 'Zona localização', $zonas);
 
                 $options = array(
                   'label'       => 'Zona localização',
-                  'placeholder' => 'Zona localização',
                   'value'       => $this->zona_localizacao,
                   'resources'   => $zonas,
                   'required'    => true,
@@ -628,11 +626,9 @@ class indice extends clsCadastro
 
                 $zonas = App_Model_ZonaLocalizacao::getInstance();
                 $zonas = $zonas->getEnums();
-                $zonas = Portabilis_Array_Utils::insertIn(null, 'Zona localização', $zonas);
 
                 $options = array(
                   'label'       => 'Zona localização',
-                  'placeholder' => 'Zona localização',
                   'value'       => $this->zona_localizacao,
                   'resources'   => $zonas,
                   'required'    => true,
