@@ -9,6 +9,23 @@
 
   <title><!-- #&TITULO&# --></title>
 
+  <script>
+    dataLayer = [{
+      'slug': '<!-- #&SLUG&# -->',
+      'user_id': <!-- #&USER_ID&# -->,
+      'user_name': '<!-- #&USERLOGADO&# -->',
+      'user_email': '<!-- #&USEREMAIL&# -->'
+    }];
+  </script>
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+              j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+              'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+              })(window,document,'script','dataLayer','<!-- #&GOOGLE_TAG_MANAGER_ID&# -->');</script>
+  <!-- End Google Tag Manager -->
+
   <link rel=stylesheet type='text/css' href='/intranet/styles/main.css?5' />
   <link rel=stylesheet type='text/css' href='/intranet/styles/styles.css?5' />
   <link rel=stylesheet type='text/css' href='/intranet/styles/novo.css?5' />
@@ -32,7 +49,6 @@
   <script type="text/javascript" src="/intranet/scripts/menu.js?5"></script>
   <script type="text/javascript" src="/intranet/scripts/ied/forms.js?5"></script>
   <script type="text/javascript" src="/intranet/scripts/ied/phpjs.js?5"></script>
-  <!-- #&FRESHDESK&# -->
 
   <script type="text/javascript" src="/intranet/scripts/jquery/jquery-1.8.3.min.js?5"></script>
   <script type="text/javascript" src="/intranet/scripts/jquery/jquery.modal.min.js?5"></script>
@@ -96,23 +112,6 @@
     }
   </script>
 
-  <script async src="https://www.googletagmanager.com/gtag/js?id=***REMOVED***"></script>
-  <script>
-    if (window.ambiente == 'production') {
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('set', {'content_group1': window.location.hostname});
-
-      user_id = '<!-- #&USER_ID&# -->';
-      if (user_id) {
-        gtag('set', {'user_id': user_id});
-      }
-
-      gtag('config', '***REMOVED***');
-    }
-  </script>
-
   <!-- #&SCRIPT&# -->
 
   <script type="text/javascript">
@@ -121,4 +120,10 @@
 
 <link rel=stylesheet type='text/css' href='/intranet/styles/custom.css?5' />
 <body <!-- #&BODYSCRIPTS&# -->>
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=<!-- #&GOOGLE_TAG_MANAGER_ID&# -->"
+                    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
   <div id="DOM_expansivel" class="DOM_expansivel"></div>

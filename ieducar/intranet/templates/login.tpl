@@ -2,6 +2,22 @@
 <html>
   <head>
     <title>Intranet</title>
+
+    <script>
+      dataLayer = [{
+        'slug': '<!-- #&SLUG&# -->',
+        'user_id': 0
+      }];
+    </script>
+
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+                j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+                'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+                })(window,document,'script','dataLayer','<!-- #&GOOGLE_TAG_MANAGER_ID&# -->');</script>
+    <!-- End Google Tag Manager -->
+
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="-1" />
@@ -40,12 +56,6 @@
     }
 
     function loginpage_onload() {
-      var domainName = window.location.hostname;
-
-      if (domainName.indexOf('treinamento') < 0 && domainName.indexOf('demonstracao') < 0) {
-        $j('.only-for-clients').show();
-      }
-
       $j('.fade-in').fadeIn('slow');
 
       $j('#login').focus();
@@ -59,20 +69,14 @@
     }
   </script>
 
-  <script async src="https://www.googletagmanager.com/gtag/js?id=***REMOVED***"></script>
-  <script>
-    if (window.ambiente == 'production') {
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('set', {'content_group1': window.location.hostname});
-
-      gtag('config', '***REMOVED***');
-    }
-  </script>
-
   </head>
   <body onload="loginpage_onload();" class="hidden fade-in">
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=<!-- #&GOOGLE_TAG_MANAGER_ID&# -->"
+                    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
      <div id="flash-container">
 
       <!-- #&PENDENCIA_ADMINISTRATIVA&# -->
@@ -80,10 +84,6 @@
     </div>
 
     <div id="corpo">
-      <div class="box" id="mensagens" style="">
-        <!-- #&MENSAGENS&# -->
-      </div>
-
       <div>
         <!-- #&BRASAO&# -->
       </div>

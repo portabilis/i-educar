@@ -307,12 +307,22 @@ class indice extends clsCadastro
       Portabilis_String_Utils::toUtf8("Permite relacionamento direto no pós-venda?") => $permiteRelacionamentoPosvendas
     );
 
-    $rdAPI = new RDStationAPI("***REMOVED***","***REMOVED***");
+    $rdStationParams = array(
+        'token' => $GLOBALS['coreExt']['Config']->app->rdstation->token,
+        'private_token' => $GLOBALS['coreExt']['Config']->app->rdstation->private_token
+    );
 
-    $rdAPI->sendNewLead($this->email, $dados);
-    $rdAPI->updateLeadStage($this->email, 2);
+    if (!empty($rdStationParams['token']) && !empty($rdStationParams['private_token'])) {
+        $rdAPI = new RDStationAPI(
+            $rdStationParams['private_token'],
+            $rdStationParams['token']
+        );
 
-    $this->mensagem .= "Ediçãoo efetuada com sucesso.<br>";
+        $rdAPI->sendNewLead($this->email, $dados);
+        $rdAPI->updateLeadStage($this->email, 2);
+    }
+
+    $this->mensagem .= "Edição efetuada com sucesso.<br>";
     header( "Location: index.php" );
     die();
   }

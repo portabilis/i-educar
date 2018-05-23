@@ -45,6 +45,22 @@ class clsPmieducarConfiguracoesGerais
   var $ref_cod_instituicao;
   var $permite_relacionamento_posvendas;
   var $url_novo_educacao;
+  var $mostrar_codigo_inep_aluno;
+  var $justificativa_falta_documentacao_obrigatorio;
+  var $tamanho_min_rede_estadual;
+  var $modelo_boletim_professor;
+  var $custom_labels;
+  var $url_cadastro_usuario;
+  var $active_on_ieducar;
+  var $ieducar_image;
+  var $ieducar_entity_name;
+  var $ieducar_login_footer;
+  var $ieducar_external_footer;
+  var $ieducar_internal_footer;
+  var $facebook_url;
+  var $twitter_url;
+  var $linkedin_url;
+  var $ieducar_suspension_message;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -105,21 +121,92 @@ class clsPmieducarConfiguracoesGerais
   /**
    * Construtor.
    */
-  function clsPmieducarConfiguracoesGerais($ref_cod_instituicao, $permite_relacionamento_posvendas, $url_novo_educacao)
-  {
+
+  function __construct($ref_cod_instituicao = null, $campos = array()) {
     $this->_schema = 'pmieducar.';
     $this->_tabela = $this->_schema . 'configuracoes_gerais';
 
-    $this->_campos_lista = $this->_todos_campos = 'ref_cod_instituicao, permite_relacionamento_posvendas, url_novo_educacao ';
+    $this->_campos_lista = $this->_todos_campos = 'ref_cod_instituicao, permite_relacionamento_posvendas,
+        url_novo_educacao, mostrar_codigo_inep_aluno, justificativa_falta_documentacao_obrigatorio,
+        tamanho_min_rede_estadual, modelo_boletim_professor, custom_labels, url_cadastro_usuario,
+        active_on_ieducar, ieducar_image, ieducar_entity_name, ieducar_login_footer,
+        ieducar_external_footer, ieducar_internal_footer, facebook_url, twitter_url, linkedin_url,
+        ieducar_suspension_message ';
 
-    if (is_numeric($ref_cod_instituicao)) {
-      $this->ref_cod_instituicao = $ref_cod_instituicao;
+    if (!empty($campos['ref_cod_instituicao']) && is_numeric($campos['ref_cod_instituicao'])) {
+      $this->ref_cod_instituicao = $campos['ref_cod_instituicao'];
     }
-    if (is_numeric($permite_relacionamento_posvendas)) {
-      $this->permite_relacionamento_posvendas = $permite_relacionamento_posvendas;
+
+    if (!empty($campos['permite_relacionamento_posvendas']) && is_numeric($campos['permite_relacionamento_posvendas'])) {
+      $this->permite_relacionamento_posvendas = $campos['permite_relacionamento_posvendas'];
     }
-    if (!empty($url_novo_educacao)) {
-      $this->url_novo_educacao = $url_novo_educacao;
+
+    if (!empty($campos['url_novo_educacao'])) {
+      $this->url_novo_educacao = $campos['url_novo_educacao'];
+    }
+
+    if (!empty($campos['mostrar_codigo_inep_aluno']) && is_numeric($campos['mostrar_codigo_inep_aluno'])) {
+        $this->mostrar_codigo_inep_aluno = $campos['mostrar_codigo_inep_aluno'];
+    }
+
+    if (!empty($campos['justificativa_falta_documentacao_obrigatorio']) && is_numeric($campos['justificativa_falta_documentacao_obrigatorio'])) {
+       $this->justificativa_falta_documentacao_obrigatorio = $campos['justificativa_falta_documentacao_obrigatorio'];
+    }
+
+    if (!empty($campos['tamanho_min_rede_estadual'])) {
+        $this->tamanho_min_rede_estadual = $campos['tamanho_min_rede_estadual'];
+    }
+
+    if (!empty($campos['modelo_boletim_professor']) && is_numeric($campos['modelo_boletim_professor'])) {
+        $this->modelo_boletim_professor = $campos['modelo_boletim_professor'];
+    }
+
+    if (!empty($campos['custom_labels'])) {
+        $this->custom_labels = $campos['custom_labels'];
+    }
+
+    if (!empty($campos['url_cadastro_usuario'])) {
+        $this->url_cadastro_usuario = $campos['url_cadastro_usuario'];
+    }
+
+    if (is_numeric($campos['active_on_ieducar'])) {
+        $this->active_on_ieducar = $campos['active_on_ieducar'];
+    }
+
+    if (!empty($campos['ieducar_image'])) {
+        $this->ieducar_image = $campos['ieducar_image'];
+    }
+
+    if (!empty($campos['ieducar_entity_name'])) {
+        $this->ieducar_entity_name = $campos['ieducar_entity_name'];
+    }
+
+    if (!empty($campos['ieducar_login_footer'])) {
+        $this->ieducar_login_footer = $campos['ieducar_login_footer'];
+    }
+
+    if (!empty($campos['ieducar_external_footer'])) {
+        $this->ieducar_external_footer = $campos['ieducar_external_footer'];
+    }
+
+    if (!empty($campos['ieducar_internal_footer'])) {
+        $this->ieducar_internal_footer = $campos['ieducar_internal_footer'];
+    }
+
+    if (!empty($campos['facebook_url'])) {
+        $this->facebook_url = $campos['facebook_url'];
+    }
+
+    if (!empty($campos['twitter_url'])) {
+        $this->twitter_url = $campos['twitter_url'];
+    }
+
+    if (!empty($campos['linkedin_url'])) {
+        $this->linkedin_url = $campos['linkedin_url'];
+    }
+
+    if (!empty($campos['ieducar_suspension_message'])) {
+        $this->ieducar_suspension_message = $campos['ieducar_suspension_message'];
     }
   }
 
@@ -130,10 +217,10 @@ class clsPmieducarConfiguracoesGerais
   function edita()
   {
     $db = new clsBanco();
-    $set = '';
+    $set = array();
+
     if (is_numeric($this->permite_relacionamento_posvendas)) {
-      $set .= "{$gruda}permite_relacionamento_posvendas = '{$this->permite_relacionamento_posvendas}'";
-      $gruda = ', ';
+      $set[] = "permite_relacionamento_posvendas = '{$this->permite_relacionamento_posvendas}'";
     }
 
     if (is_numeric($this->ref_cod_instituicao)) {
@@ -143,16 +230,84 @@ class clsPmieducarConfiguracoesGerais
     }
 
     if (!empty($this->url_novo_educacao)) {
-      $set .= "{$gruda}url_novo_educacao = '{$this->url_novo_educacao}'";
-      $gruda = ', ';
+      $set[] = "url_novo_educacao = '{$this->url_novo_educacao}'";
     }
 
-    if ($set) {
+    if (is_array($this->custom_labels)) {
+        $customLabels = json_encode($this->custom_labels);
+        $set[] = "custom_labels = '{$customLabels}'";
+    }
+
+    if (is_numeric($this->mostrar_codigo_inep_aluno)) {
+        $set[] = "mostrar_codigo_inep_aluno = '{$this->mostrar_codigo_inep_aluno}'";
+    }
+
+    if (is_numeric($this->justificativa_falta_documentacao_obrigatorio)) {
+        $set[] = "justificativa_falta_documentacao_obrigatorio = '{$this->justificativa_falta_documentacao_obrigatorio}'";
+    }
+
+    if ($this->tamanho_min_rede_estadual == '') {
+        $this->tamanho_min_rede_estadual = 'NULL';
+    }
+
+    $set[] = "tamanho_min_rede_estadual = {$this->tamanho_min_rede_estadual}";
+
+    if (is_numeric($this->modelo_boletim_professor)) {
+        $set[] = "modelo_boletim_professor = '{$this->modelo_boletim_professor}'";
+    }
+
+    if (!empty($this->url_cadastro_usuario)) {
+        $set[] = "url_cadastro_usuario = '{$this->url_cadastro_usuario}'";
+    }
+
+    if (is_numeric($this->active_on_ieducar)) {
+        $set[] = "active_on_ieducar = '{$this->active_on_ieducar}'";
+    }
+
+    if (!empty($this->ieducar_image)) {
+        $set[] = "ieducar_image = '{$this->ieducar_image}'";
+    }
+
+    if (!empty($this->ieducar_entity_name)) {
+        $set[] = "ieducar_entity_name = '{$this->ieducar_entity_name}'";
+    }
+
+    if (!empty($this->ieducar_login_footer)) {
+        $set[] = "ieducar_login_footer = '{$this->ieducar_login_footer}'";
+    }
+
+    if (!empty($this->ieducar_external_footer)) {
+        $set[] = "ieducar_external_footer = '{$this->ieducar_external_footer}'";
+    }
+
+    if (!empty($this->ieducar_internal_footer)) {
+        $set[] = "ieducar_internal_footer = '{$this->ieducar_internal_footer}'";
+    }
+
+    if (!empty($this->facebook_url)) {
+        $set[] = "facebook_url = '{$this->facebook_url}'";
+    }
+
+    if (!empty($this->twitter_url)) {
+        $set[] = "twitter_url = '{$this->twitter_url}'";
+    }
+
+    if (!empty($this->linkedin_url)) {
+        $set[] = "linkedin_url = '{$this->linkedin_url}'";
+    }
+
+    if (!empty($this->ieducar_suspension_message)) {
+        $set[] = "ieducar_suspension_message = '{$this->ieducar_suspension_message}'";
+    }
+
+    if (!empty($set)) {
+      $set = join(', ', $set);
       $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE ref_cod_instituicao = '{$ref_cod_instituicao}'");
-      return TRUE;
+
+      return true;
     }
 
-    return FALSE;
+    return false;
   }
 
   /**
@@ -170,9 +325,13 @@ class clsPmieducarConfiguracoesGerais
     $db = new clsBanco();
     $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE ref_cod_instituicao = '{$ref_cod_instituicao}'");
     $db->ProximoRegistro();
-    return $db->Tupla();
+    $record = $db->Tupla();
 
-    return FALSE;
+    if (!empty($record['custom_labels'])) {
+        $record['custom_labels'] = json_decode($record['custom_labels'], true);
+    }
+
+    return $record;
   }
 
   function getUltimaInstituicaoAtiva() {

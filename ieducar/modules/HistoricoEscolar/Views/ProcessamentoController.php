@@ -1,6 +1,7 @@
 <?php
 
 require_once 'Portabilis/Controller/Page/ListController.php';
+require_once 'Portabilis/Utils/CustomLabel.php';
 
 class ProcessamentoController extends Portabilis_Controller_Page_ListController
 {
@@ -41,15 +42,13 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
     {
         Portabilis_View_Helper_Application::loadStylesheet($this, array('/modules/HistoricoEscolar/Static/styles/processamento.css','/modules/Portabilis/Assets/Plugins/Chosen/chosen.css'));
 
-        $mostrar_aplicacao = $GLOBALS['coreExt']['Config']->app->mostrar_aplicacao;
-
         $this->inputsHelper()->dynamic(array('ano', 'instituicao', 'escola'));
 
         $this->inputsHelper()->dynamic(
             'curso',
             array(
                 'required' => false,
-                'label_hint' => $mostrar_aplicacao == 'botucatu' ? 'Ex.: Ensino Fundamental I' : ''
+                'label_hint' _cl('historico.cadastro.curso_detalhe')
             )
         );
 
@@ -57,7 +56,7 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
             'serie',
             array(
                 'required' => false,
-                'label' => $mostrar_aplicacao == 'botucatu' ? 'Ano/Série' : 'Série'
+                'label' _cl('historico.cadastro.serie')
             )
         );
 
