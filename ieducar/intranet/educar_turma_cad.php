@@ -560,7 +560,7 @@ class indice extends clsCadastro
     $this->inputsHelper()->select('turma_unificada', $options);
 
     $etapas_educacenso = loadJson('educacenso_json/etapas_ensino.json');
-    $etapas_educacenso = array_merge(array(null => 'Selecione'), $etapas_educacenso);
+    $etapas_educacenso = array_replace(array(null => 'Selecione'), $etapas_educacenso);
 
     $options = array('label' => 'Etapa de ensino', 'resources' => $etapas_educacenso, 'value' => $this->etapa_educacenso, 'required' => false, 'size' => 70,);
     $this->inputsHelper()->select('etapa_educacenso', $options);
