@@ -77,7 +77,8 @@ function validaHorarioInicialFinal() {
 function validaMinutos() {
   var campos = [{'id' : 'hora_inicial', 'label' : 'Hora inicial'},
                 {'id' : 'hora_final', 'label' : 'Hora final'},
-                {'id' : 'hora_inicio_intervalo', 'label' : 'Hora início intervalo'}];
+                {'id' : 'hora_inicio_intervalo', 'label' : 'Hora início intervalo'},
+                {'id' : 'hora_fim_intervalo', 'label' : 'Hora fim intervalo'}];
   var minutosPermitidos = ['00','05','10','15','20','25','30','35','40','45','50','55'];
   var retorno = true;
 
@@ -86,7 +87,7 @@ function validaMinutos() {
     var minutos = hora.substr(3, 2);
     var minutosValidos = $j.inArray(minutos,minutosPermitidos) != -1;
     if (minutos != '' && !minutosValidos) {
-      alert('Preencha o campo ' + campo.label + ' corretamente');
+      alert('O campo ' + campo.label + ' não permite minutos diferentes de 0 ou 5.');
       retorno = false;
       return false;
     }
@@ -99,7 +100,7 @@ function validaAtividadesComplementares() {
   var qtdeAtividadesComplementares = $j('#atividades_complementares').val().length - 1;
 
   if (qtdeAtividadesComplementares > 6) {
-    alert('O campo: Atividades complementares, não pode ter mais que 6 opções.');
+    alert('O campo: Tipos de atividades complementares, não pode ter mais que 6 opções.');
     return false;
   }
   return true;
