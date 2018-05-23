@@ -36,6 +36,8 @@ require_once 'include/clsBanco.inc.php';
 require_once 'include/public/geral.inc.php';
 require_once ("include/pmieducar/geral.inc.php");
 require_once ("include/modules/clsModulesAuditoriaGeral.inc.php");
+require_once 'App/Model/Pais.php';
+require_once 'App/Model/NivelAcesso.php';
 
 class clsIndexBase extends clsBase
 {
@@ -171,7 +173,7 @@ class indice extends clsCadastro
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
-    if ($this->idpais == "45" && $this->nivelAcessoPessoaLogada() != 1) {
+    if ($this->idpais == App_Model_Pais::BRASIL && $this->nivelAcessoPessoaLogada() != App_Model_NivelAcesso::POLI_INSTITUCIONAL) {
         $this->mensagem = 'Não é permitido cadastro de municípios brasileiros, pois já estão previamente cadastrados.<br>';
         return FALSE;
     }
@@ -205,7 +207,7 @@ class indice extends clsCadastro
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
-    if ($this->idpais == "45" && $this->nivelAcessoPessoaLogada() != 1) {
+    if ($this->idpais == App_Model_Pais::BRASIL && $this->nivelAcessoPessoaLogada() != App_Model_NivelAcesso::POLI_INSTITUCIONAL) {
         $this->mensagem = 'Não é permitido edição de municípios brasileiros, pois já estão previamente cadastrados.<br>';
         return FALSE;
     }
@@ -244,7 +246,7 @@ class indice extends clsCadastro
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
-    if ($this->idpais == "45" && $this->nivelAcessoPessoaLogada() != 1) {
+    if ($this->idpais == App_Model_Pais::BRASIL && $this->nivelAcessoPessoaLogada() != App_Model_NivelAcesso::POLI_INSTITUCIONAL) {
         $this->mensagem = 'Não é permitido exclusão de municípios brasileiros, pois já estão previamente cadastrados.<br>';
         return FALSE;
     }

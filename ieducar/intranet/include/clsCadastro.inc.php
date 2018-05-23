@@ -778,6 +778,6 @@ class clsCadastro extends clsCampos
   protected function nivelAcessoPessoaLogada()
   {
     $obj_permissoes = new clsPermissoes();
-    return $obj_permissoes->nivel_acesso($this->pessoa_logada);
+    return $obj_permissoes->nivel_acesso($this->currentUserId());
   }
 }
