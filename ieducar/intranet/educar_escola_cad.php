@@ -1,4 +1,5 @@
 <?php
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -423,12 +424,7 @@ class indice extends clsCadastro
             $this->orgao_regional = str_pad($this->orgao_regional, 5, "0", STR_PAD_LEFT);
         }
 
-        $instituicao = new clsPmieducarInstituicao();
-        $instituicoes = $instituicao->lista();
-        $obrigarCamposCenso = FALSE;
-        foreach ($instituicoes as $instituicao) {
-            $obrigarCamposCenso = (bool) $instituicao['obrigar_campos_censo'];
-        }
+        $obrigarCamposCenso = $this->validarCamposObrigatoriosCenso();
 
         if (!$this->sem_cnpj && !$this->com_cnpj) {
             $parametros = new clsParametrosPesquisas();
@@ -1186,16 +1182,14 @@ class indice extends clsCadastro
             $this->inputsHelper()->integer('computadores', $options);
 
             $disabled = $this->computadores > 0;
-            $options = array('label' => 'Possui internet banda larga',
-                'resources' => array(
-                    NULL => 'Selecione',
-                    0 => 'Não',
-                    1 => 'Sim'
-                ),
+            $options = array(
+                'label' => 'Possui internet banda larga',
                 'value' => $this->acesso_internet,
                 'required' => false,
-                'disabled' => !$disabled);
-            $this->inputsHelper()->select('acesso_internet', $options);
+                'prompt' => 'Selecione',
+                'disabled' => !$disabled
+            );
+            $this->inputsHelper()->booleanSelect('acesso_internet', $options);
 
             $options = array('label' => 'Total de funcionários da escola (inclusive profissionais escolares em sala de aula)', 'resources' => $resources, 'value' => $this->total_funcionario, 'required' => $obrigarCamposCenso, 'size' => 5, 'placeholder' => '');
             $this->inputsHelper()->integer('total_funcionario', $options);
@@ -1220,17 +1214,15 @@ class indice extends clsCadastro
                 $habilitaFundamentalCiclo = dbBool($objEscola->possuiTurmasDoEnsinoFundamentalEmCiclos());
             }
 
-            $options = array('label' => 'Ensino fundamental organizado em ciclos',
+            $options = array(
+                'label' => 'Ensino fundamental organizado em ciclos',
                 'placeholder' => 'Selecione',
-                'resources' => array(
-                    NULL => 'Selecione',
-                    0 => 'Não',
-                    1 => 'Sim'
-                ),
+                'prompt' => 'Selecione',
                 'value' => $this->fundamental_ciclo,
                 'required' => $habilitaFundamentalCiclo,
-                'disabled' => !$habilitaFundamentalCiclo);
-            $this->inputsHelper()->select('fundamental_ciclo', $options);
+                'disabled' => !$habilitaFundamentalCiclo
+            );
+            $this->inputsHelper()->booleanSelect('fundamental_ciclo', $options);
 
             $resources = array(0 => 'Selecione',
                 1 => 'Área de assentamento',
@@ -2155,12 +2147,9 @@ class indice extends clsCadastro
 
     protected function validarCamposObrigatoriosCenso()
     {
-        if (empty($this->ref_cod_instituicao)) {
-            return false;
-        }
         $obj = new clsPmieducarInstituicao($this->ref_cod_instituicao);
-        $instituicao = $obj->detalhe();
-        return (bool) $instituicao['obrigar_campos_censo'];
+        $instituicao = empty($this->ref_cod_instituicao) ? $obj->primeiraAtiva() : $obj->detalhe();
+        return dbBool($instituicao['obrigar_campos_censo']);
     }
 
     protected function validaCamposCenso()
