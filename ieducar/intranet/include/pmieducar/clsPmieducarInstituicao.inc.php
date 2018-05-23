@@ -170,7 +170,7 @@ class clsPmieducarInstituicao
                                                    permitir_carga_horaria,
                                                    exigir_dados_socioeconomicos,
                                                    altera_atestado_para_declaracao,
-                                                   obrigar_campos_censo ";
+                                                   obrigar_campos_censo";
 
         if (is_numeric($ref_usuario_cad)) {
             if (class_exists('clsPmieducarUsuario')) {
