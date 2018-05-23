@@ -421,6 +421,7 @@ class clsCadastro extends clsCampos
        * Campo tabela
        */
       if (ereg("^(tab_add_[0-9])", $nome) === 1) {
+
         $nome_campos = $componente['cabecalho'];
         $componente = array_shift($componente);
 
@@ -507,6 +508,7 @@ class clsCadastro extends clsCampos
       }
 
       if (!empty($validador)) {
+
         if ($validador == 'lat') {
           $retorno .= "if(!(/^-2[5-9]/.test( document.$this->__nome.".$nome."_graus.value ))) { \n";
           $retorno .= " alert( 'Preencha o campo \'$componente[1]\' corretamente!' ); \n";
@@ -540,6 +542,7 @@ class clsCadastro extends clsCampos
           $retorno .= " return false; } ";
         }
         else {
+
           if ($nomeCampo == 'idFederal') {
             $validador= explode('+',$validador);
             $retorno .=  " if (";
@@ -572,6 +575,8 @@ class clsCadastro extends clsCampos
             $retorno .=  "  mudaClassName( 'formdestaque', 'obrigatorio' );\n";
             $retorno .=  "  document.getElementById(\"{$nome}\").className = \"formdestaque\";\n";
             $retorno .=  "  alert( 'Preencha o campo \'" . extendChars( $componente[1], true ) . "\' corretamente!' ); \n";
+          //if($nome == "latitude"){
+            //echo"<pre>";var_dump($retorno);die;};
 
             if ($this->__nm_tab) {
               $retorno .= "
