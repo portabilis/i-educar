@@ -81,6 +81,13 @@ class indice extends clsCadastro
     @session_write_close();
 
     $obj_permissoes = new clsPermissoes();
+
+    $nivel = $obj_permissoes->nivel_acesso($this->pessoa_logada);
+
+    if ($nivel != 1) {
+      header('Location: educar_index.php');
+    }
+
     $obj_permissoes->permissao_cadastra(999873, $this->pessoa_logada, 7,
       'educar_index.php');
     $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
