@@ -42,6 +42,7 @@ class clsPmieducarInstituicao
     var $data_educacenso;
     var $exigir_dados_socioeconomicos;
     var $altera_atestado_para_declaracao;
+    var $obrigar_campos_censo;
 
     /**
      * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -119,7 +120,8 @@ class clsPmieducarInstituicao
         $percentagem_maxima_ocupacao_salas = null,
         $quantidade_alunos_metro_quadrado = null,
         $exigir_dados_socioeconomicos = null,
-        $altera_atestado_para_declaracao = null
+        $altera_atestado_para_declaracao = null,
+        $obrigar_campos_censo = NULL
     )
     {
         $db = new clsBanco();
@@ -167,7 +169,8 @@ class clsPmieducarInstituicao
                                                    bloqueia_matricula_serie_nao_seguinte,
                                                    permitir_carga_horaria,
                                                    exigir_dados_socioeconomicos,
-                                                   altera_atestado_para_declaracao";
+                                                   altera_atestado_para_declaracao,
+                                                   obrigar_campos_censo";
 
         if (is_numeric($ref_usuario_cad)) {
             if (class_exists('clsPmieducarUsuario')) {
@@ -299,6 +302,10 @@ class clsPmieducarInstituicao
 
         if (is_bool($exigir_dados_socioeconomicos)) {
             $this->exigir_dados_socioeconomicos = $exigir_dados_socioeconomicos;
+        }
+
+        if (is_bool($obrigar_campos_censo)) {
+            $this->obrigar_campos_censo = $obrigar_campos_censo;
         }
     }
 
@@ -625,6 +632,16 @@ class clsPmieducarInstituicao
                 $gruda = ", ";
             }
 
+            if (dbBool($this->obrigar_campos_censo)) {
+                $campos .= "{$gruda}obrigar_campos_censo";
+                $valores .= "{$gruda} true ";
+                $gruda = ", ";
+            } else {
+                $campos .= "{$gruda}obrigar_campos_censo";
+                $valores .= "{$gruda} false ";
+                $gruda = ", ";
+            }
+
             $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
             return $db->InsertId("{$this->_tabela}_cod_instituicao_seq");
         }
@@ -917,6 +934,14 @@ class clsPmieducarInstituicao
                 $gruda = ", ";
             } else {
                 $set .= "{$gruda}altera_atestado_para_declaracao = false ";
+                $gruda = ", ";
+            }
+
+            if (dbBool($this->obrigar_campos_censo)) {
+                $set .= "{$gruda}obrigar_campos_censo = true ";
+                $gruda = ", ";
+            } else {
+                $set .= "{$gruda}obrigar_campos_censo = false ";
                 $gruda = ", ";
             }
 
