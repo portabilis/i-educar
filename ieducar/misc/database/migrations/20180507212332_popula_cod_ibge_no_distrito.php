@@ -10323,6 +10323,9 @@ class PopulaCodIbgeNoDistrito extends AbstractMigration
         INSERT INTO public.tmp_cod_ibge_distrito VALUES ('20',TRIM(UPPER(UNACCENT(relatorio.get_texto_sem_caracter_especial('Palestina')))), TRIM(UPPER(UNACCENT(relatorio.get_texto_sem_caracter_especial('Orós')))));
         INSERT INTO public.tmp_cod_ibge_distrito VALUES ('10',TRIM(UPPER(UNACCENT(relatorio.get_texto_sem_caracter_especial('São Vicente do Seridó')))), TRIM(UPPER(UNACCENT(relatorio.get_texto_sem_caracter_especial('São Vicente do Seridó')))));
 
+            ALTER TABLE public.municipio DISABLE TRIGGER ALL;
+            ALTER TABLE public.distrito DISABLE TRIGGER ALL;
+
             ALTER TABLE public.municipio ADD COLUMN nome_simplificado VARCHAR(60);
             UPDATE public.municipio SET nome_simplificado = TRIM(UPPER(UNACCENT(relatorio.get_texto_sem_caracter_especial(municipio.nome))));
             CREATE INDEX municipio_tmp_nome_simplificado ON public.municipio(nome_simplificado);
@@ -10344,6 +10347,9 @@ class PopulaCodIbgeNoDistrito extends AbstractMigration
             DROP INDEX public.distrito_tmp_nome_simplificado;
             ALTER TABLE public.distrito DROP COLUMN nome_simplificado;
             DROP TABLE public.tmp_cod_ibge_distrito;
+
+            ALTER TABLE public.municipio ENABLE TRIGGER ALL;
+            ALTER TABLE public.distrito ENABLE TRIGGER ALL;
 
             END;
         ");
