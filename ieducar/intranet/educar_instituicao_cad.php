@@ -293,6 +293,8 @@ class indice extends clsCadastro
 
     function Novo()
     {
+        header("Location: educar_instituicao_lst.php");
+
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
@@ -398,6 +400,8 @@ class indice extends clsCadastro
 
     function Excluir()
     {
+        header("Location: educar_instituicao_lst.php");
+
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
