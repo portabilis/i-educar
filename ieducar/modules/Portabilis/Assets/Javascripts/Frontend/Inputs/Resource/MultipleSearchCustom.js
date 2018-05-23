@@ -15,9 +15,6 @@
       }
 
       setTimeout(function() {
-        console.log(element);
-        console.log(values);
-
         element.val(values);
         element.trigger('chosen:updated');
       }, 500);
