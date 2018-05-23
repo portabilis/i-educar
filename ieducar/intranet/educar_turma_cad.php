@@ -965,7 +965,7 @@ class indice extends clsCadastro
   function montaModulos()
   {
       foreach ($this->ref_cod_modulo as $key => $modulo) {
-          $turmaModulo[$key]['sequencial'] = $key;
+          $turmaModulo[$key]['sequencial'] = $key+1;
           $turmaModulo[$key]['ref_cod_modulo'] = $this->ref_cod_modulo[$key];
           $turmaModulo[$key]['data_inicio'] = $this->data_inicio[$key];
           $turmaModulo[$key]['data_fim'] = $this->data_fim[$key];
