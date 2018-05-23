@@ -470,7 +470,6 @@ class PessoaController extends ApiCoreController
     $ddd_fone_mov               = $this->getRequest()->ddd_telefone_mov;
     $fone_mov                   = $this->getRequest()->telefone_mov;
     $fisica->falecido           = $this->getRequest()->falecido == "true";
-    $fisica->falecido           = $this->getRequest()->falecido == "true";
     $fisica->idpais_estrangeiro = $this->getRequest()->pais_origem_id;
     $fisica->nacionalidade = $this->getRequest()->tipo_nacionalidade;
     $fisica->zona_localizacao_censo = $this->getRequest()->zona_localizacao_censo;

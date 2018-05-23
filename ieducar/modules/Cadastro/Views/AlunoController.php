@@ -1494,11 +1494,11 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $this->loadResourceAssets($this->getDispatcher());
 
-        $instituicao = new clsPmieducarInstituicao();
-        $instituicoes = $instituicao->lista();
+        $clsInstituicao = new clsPmieducarInstituicao();
+        $instituicao = $clsInstituicao->primeiraAtiva();
         $obrigarCamposCenso = FALSE;
-        foreach ($instituicoes as $instituicao) {
-            $obrigarCamposCenso = (bool) $instituicao['obrigar_campos_censo'];
+        if ($instituicao && isset($instituicao['obrigar_campos_censo'])) {
+            $obrigarCamposCenso = dbBool($instituicao['obrigar_campos_censo']);
         }
 
         $racas         = new clsCadastroRaca();

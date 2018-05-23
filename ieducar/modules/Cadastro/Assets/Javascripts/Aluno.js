@@ -1039,7 +1039,6 @@ var handleGetPersonDetails = function (dataResponse) {
     // # TODO show aluno photo
     //$j('#aluno_foto').val(dataResponse.url_foto);
     canShowParentsFields();
-    checkTipoNacionalidade();
 }
 
 // hide or show *certidao* fields, by #tipo_certidao_civil
@@ -1957,6 +1956,7 @@ function canShowParentsFields() {
             editar_pessoa = true;
 
             permiteEditarEndereco();
+            checkTipoNacionalidade();
         });
 
         $j("#cadastrar-pessoa-pai-link").click(function () {
@@ -2216,8 +2216,6 @@ function canShowParentsFields() {
             cor_raca: cor_raca,
             zona_localizacao_censo: zona_localizacao_censo
         };
-
-        console.log(data);
 
         var options = {
             url: postResourceUrlBuilder.buildUrl('/module/Api/pessoa', 'pessoa', {}),
