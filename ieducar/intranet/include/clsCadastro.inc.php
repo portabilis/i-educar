@@ -597,7 +597,7 @@ class clsCadastro extends clsCampos
             $retornoNaFalha .=  "  document.getElementById(\"{$nome}\").focus(); \n";
             $retornoNaFalha .=  "  return false;\n";
             if ($validador == '/[^ ]/') {
-                $retorno .= " if (typeof \$j == 'function' &&
+                $retorno .= " if (typeof \$j == 'function' && \$j('#{$nome}').val() != null &&
                                 \$j('#{$nome}').val().constructor === Array ) {\n
                     if (!\$j('#{$nome}').val().filter((val) => val.toString().trim().length > 0).length) {\n";
             $retorno .=  $retornoNaFalha;

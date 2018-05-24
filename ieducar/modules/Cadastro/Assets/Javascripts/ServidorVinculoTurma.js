@@ -1,7 +1,9 @@
 $j(document).ready(function() {
-  
+
+  let obrigarCamposCenso = $j('#obrigar_campos_censo').val() == '1';
+
   function fiupMultipleSearchSize(){
-    $j('.search-field input').css('height', '25px');  
+    $j('.search-field input').css('height', '25px');
   }
 
   fiupMultipleSearchSize();
@@ -46,7 +48,7 @@ $j(document).ready(function() {
 
   var getComponenteCurricular = function() {
     var $id = $j('#id');
-    if ($id.val()!='') {    
+    if ($id.val()!='') {
       var additionalVars = {
         id : $id.val(),
       };
@@ -64,10 +66,44 @@ $j(document).ready(function() {
 
   getComponenteCurricular();
 
+  var dependenciaAdministrativa = undefined;
+
+  function getDependenciaAdministrativaEscola(){
+    var options = {
+      dataType : 'json',
+      url : getResourceUrlBuilder.buildUrl(
+        '/module/Api/Escola',
+        'escola-dependencia-administrativa',
+        {escola_id : $j('#ref_cod_escola').val()}
+      ),
+      success : function(dataResponse) {
+        dependenciaAdministrativa = parseInt(dataResponse.dependencia_administrativa);
+        verificaObrigatoriedadeTipoVinculo();
+      }
+    }
+    getResource(options);
+  }
+
+  let verificaObrigatoriedadeTipoVinculo = () => {
+    $j('#tipo_vinculo').makeUnrequired();
+    if (obrigarCamposCenso &&
+        dependenciaAdministrativa >= 1 &&
+        dependenciaAdministrativa <= 3 &&
+        $j.inArray($j('#funcao_exercida').val(),["1", "5", "6"]) > -1){
+      $j('#tipo_vinculo').makeRequired();
+    }
+  };
+
+  $j('#ref_cod_escola').on('change', getDependenciaAdministrativaEscola);
+
   $selecionarTodosElement.on('change',function(){
     $j('#componentecurricular option').attr('selected', $j(this).prop('checked'));
     $componentecurricular.trigger("chosen:updated");
   });
+
+  $j('#funcao_exercida').on('change', verificaObrigatoriedadeTipoVinculo);
+
+
 
   $serieField.on('change', function(){
     getRegraAvaliacao();
@@ -101,5 +137,17 @@ $j(document).ready(function() {
   function handleGetRegraAvaliacao(dataResponse){
     toggleProfessorAreaEspecifica(dataResponse["tipo_presenca"]);
   }
+
+  var submitForm = function(){
+    let canSubmit = validationUtils.validatesFields();
+    if (canSubmit) {
+      acao();
+    }
+  }
+
+  var $submitButton      = $j('#btn_enviar');
+  $submitButton.removeAttr('onclick');
+  $j(document.formcadastro).removeAttr('onsubmit');
+  $submitButton.click(submitForm);
 
 });

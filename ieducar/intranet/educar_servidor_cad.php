@@ -262,6 +262,9 @@ class indice extends clsCadastro
     $get_instituicao = true;
     include 'include/pmieducar/educar_campo_lista.php';
 
+    $obrigarCamposCenso = $this->validarCamposObrigatoriosCenso();
+    $this->campoOculto('obrigar_campos_censo', (int) $obrigarCamposCenso);
+
     /**
      * Selecionar funcionário,
      * Escolher a pessoa (não o usuário)
@@ -449,7 +452,7 @@ class indice extends clsCadastro
       $script = null;
     }
 
-    $this->campoLista('ref_idesco', 'Escolaridade', $opcoes, $this->ref_idesco, '', FALSE, '', $script, FALSE, FALSE);
+    $this->campoLista('ref_idesco', 'Escolaridade', $opcoes, $this->ref_idesco, '', FALSE, '', $script, FALSE, $obrigarCamposCenso);
 
     $resources = array(
       null => 'Selecione',
@@ -657,7 +660,7 @@ class indice extends clsCadastro
 
     $helperOptions = array('objectName'  => 'curso_formacao_continuada');
     $options       = array('label' => 'Possui cursos de formação continuada',
-                            'required' => false,
+                            'required' => $obrigarCamposCenso,
                             'options' => array('values' => $this->curso_formacao_continuada,
                                                'all_values' => array(
                                                  1 => 'Específico para Creche (0 a 3 anos)',
@@ -715,7 +718,7 @@ class indice extends clsCadastro
     $obj   = new clsPmieducarServidor($this->cod_servidor, NULL, NULL, NULL, NULL, NULL, NULL, $this->ref_cod_instituicao);
 
     $servidorAntes = $obj->detalhe();
-    
+
     if ($obj->detalhe()) {
       $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
       $obj = new clsPmieducarServidor($this->cod_servidor, NULL, $this->ref_idesco, $this->carga_horaria, NULL, NULL, 1, $this->ref_cod_instituicao);
@@ -918,7 +921,7 @@ class indice extends clsCadastro
         $obj = new clsPmieducarServidor($this->cod_servidor,
           NULL, $this->ref_idesco, $this->carga_horaria,
           NULL, NULL, 0, $this->ref_cod_instituicao_original);
-        
+
         $servidor = $obj->detalhe();
 
         $excluiu = $obj->excluir();

@@ -1,11 +1,13 @@
 $j('#btn_enviar').removeAttr('onclick');
 $j('#btn_enviar').on('click', () => {
-  if (!validaServidor() || !validaPosGraduacao() || !validaCursoFormacaoContinuada()) {
+  if (!validaServidor() || !validaPosGraduacao() || !validaCursoFormacaoContinuada() || !validationUtils.validatesFields(true)) {
     return false;
   }
 
   acao();
 });
+
+let obrigarCamposCenso = $j('#obrigar_campos_censo').val() == '1';
 
 function validaServidor() {
   var inepServidor = $j('#cod_docente_inep').val();
@@ -14,7 +16,7 @@ function validaServidor() {
     messageUtils.error('O código INEP deve conter 12 dígitos');
     return false;
   }
-  
+
   return true
 }
 
@@ -47,22 +49,32 @@ function validaCursoFormacaoContinuada() {
 habilitaComplementacaoPedagogica(1);
 habilitaComplementacaoPedagogica(2);
 habilitaComplementacaoPedagogica(3);
+verificaCamposObrigatorio(1);
+verificaCamposObrigatorio(2);
+verificaCamposObrigatorio(3);
 habilitaCampoPosGraduacao();
 
+
+$j('#ref_idesco').on('change', ()=> {
+  verificaCamposObrigatorio(1);
+});
+
 $j('#situacao_curso_superior_1').on('change', () => {
-  habilitaComplementacaoPedagogica(1);
+  habilitaComplementacaoPedagogica(1);  ;
   habilitaCampoPosGraduacao();
 });
 $j('#codigo_curso_superior_1').on('change', () => habilitaComplementacaoPedagogica(1));
 
 $j('#situacao_curso_superior_2').on('change', () => {
   habilitaComplementacaoPedagogica(2);
+  verificaCamposObrigatorio(2);
   habilitaCampoPosGraduacao();
 });
 $j('#codigo_curso_superior_2').on('change', () => habilitaComplementacaoPedagogica(2));
 
 $j('#situacao_curso_superior_3').on('change', () => {
   habilitaComplementacaoPedagogica(3);
+  verificaCamposObrigatorio(3);
   habilitaCampoPosGraduacao();
 });
 $j('#codigo_curso_superior_3').on('change', () => habilitaComplementacaoPedagogica(3));
@@ -76,15 +88,34 @@ function habilitaComplementacaoPedagogica(seq) {
   $j('#formacao_complementacao_pedagogica_'+seq).attr('disabled', !habilitaCampo);
 }
 
+function verificaCamposObrigatorio(seq) {
+  $j(`#situacao_curso_superior_${seq}`).makeUnrequired();
+  $j(`#codigo_curso_superior_${seq}`).makeUnrequired();
+  $j(`#ano_inicio_curso_superior_${seq}`).makeUnrequired();
+  $j(`#instituicao_curso_superior_${seq}`).makeUnrequired();
+
+  if(obrigarCamposCenso &&
+    seq == 1 ? $j('#ref_idesco').val() == 6 : $j(`#situacao_curso_superior_${seq}`).val()
+    ){
+    $j(`#situacao_curso_superior_${seq}`).makeRequired();
+    $j(`#codigo_curso_superior_${seq}`).makeRequired();
+    $j(`#ano_inicio_curso_superior_${seq}`).makeRequired();
+    $j(`#instituicao_curso_superior_${seq}`).makeRequired();
+  }
+}
+
 function habilitaCampoPosGraduacao() {
   var possuiSuperiorConcuido = $j('#situacao_curso_superior_1').val() == 1 ||
                                $j('#situacao_curso_superior_2').val() == 1 ||
                                $j('#situacao_curso_superior_3').val() == 1;
-  
-  $j('#tr_pos_graduacao').hide();
 
+  $j('#tr_pos_graduacao').hide();
+  $j('#pos_graduacao').makeUnrequired();
   if (possuiSuperiorConcuido) {
     $j('#tr_pos_graduacao').show();
+    if (obrigarCamposCenso) {
+      $j('#pos_graduacao').makeRequired();
+    }
   }
 }
 
@@ -104,7 +135,7 @@ linha_inicial_escolaridade = $j('#tr_ref_idesco').index()-1;
 $j('.tablecadastro >tbody  > tr').each(function(index, row) {
   if (index>=linha_inicial_escolaridade - 1){
     if (row.id!='stop')
-      row.hide();    
+      row.hide();
     else{
       return false;
     }
@@ -116,7 +147,7 @@ $j(document).ready(function() {
   // on click das abas
 
   // DADOS GERAIS
-  $j('#tab1').click( 
+  $j('#tab1').click(
     function(){
 
       $j('.servidorTab-active').toggleClass('servidorTab-active servidorTab');
@@ -124,19 +155,19 @@ $j(document).ready(function() {
       $j('.tablecadastro >tbody  > tr').each(function(index, row) {
         if (index>=linha_inicial_escolaridade -1){
           if (row.id!='stop')
-            row.hide();    
+            row.hide();
           else
             return false;
         }else{
           if ($j('#cod_servidor').val() != '' || $j.inArray(row.id, ['tr_deficiencias', 'tr_cod_docente_inep']) == -1)
             row.show();
         }
-      });        
+      });
     }
-  );  
+  );
 
   // Adicionais
-  $j('#tab2').click( 
+  $j('#tab2').click(
     function(){
       $j('.servidorTab-active').toggleClass('servidorTab-active servidorTab');
       $j('#tab2').toggleClass('servidorTab servidorTab-active')
@@ -149,7 +180,7 @@ $j(document).ready(function() {
             }else{
               $j('#'+row.id).find('td').removeClass('formmdtd');
               $j('#'+row.id).find('td').addClass('formlttd');
-              
+
             }
             row.show();
           }else if (index>0){
