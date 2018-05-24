@@ -37,6 +37,7 @@ require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
 require_once 'image_check.php';
 require_once 'App/Model/ZonaLocalizacao.php';
 require_once 'lib/Portabilis/Controller/Page/EditController.php';
+require_once 'lib/Portabilis/Utils/CustomLabel.php';
 require_once 'Usuario/Model/FuncionarioDataMapper.php';
 require_once 'include/modules/clsModulesRotaTransporteEscolar.inc.php';
 require_once 'Portabilis/String/Utils.php';
@@ -379,10 +380,12 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     public function Gerar()
     {
         $this->url_cancelar = '/intranet/educar_aluno_lst.php';
-        $labels_botucatu = $GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu';
 
-        if ($labels_botucatu) {
-            $this->inputsHelper()->hidden('labels_botucatu');
+        $configuracoes = new clsPmieducarConfiguracoesGerais();
+        $configuracoes = $configuracoes->detalhe();
+
+        if ($configuracoes["justificativa_falta_documentacao_obrigatorio"]) {
+            $this->inputsHelper()->hidden('justificativa_falta_documentacao_obrigatorio');
         }
 
         $cod_aluno = $_GET['id'];
@@ -423,13 +426,13 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
 
         // código aluno
-        $options = array('label' => $labels_botucatu ? Portabilis_String_Utils::toLatin1("Código aluno (i-Educar)") : $this->_getLabel('id'), 'disabled' => true, 'required' => false, 'size' => 25);
+        $options = array('label' => _cl('aluno.detalhe.codigo_aluno'), 'disabled' => true, 'required' => false, 'size' => 25);
         $this->inputsHelper()->integer('id', $options);
 
         // código aluno inep
         $options = array('label' => $this->_getLabel('aluno_inep_id'), 'required' => false, 'size' => 25, 'max_length' => 14);
 
-        if ($labels_botucatu) {
+        if (!$configuracoes['mostrar_codigo_inep_aluno']) {
             $this->inputsHelper()->hidden('aluno_inep_id', array('value' => null));
         } else {
             $this->inputsHelper()->integer('aluno_inep_id', $options);
@@ -649,7 +652,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
             'label' => $labelCartorio,
             'value' => $documentos['cartorio_cert_civil'],
             'cols' => 45,
-            'max_length' => 150
+            'max_length' => 200,
         );
 
         $this->inputsHelper()->textArea('cartorio_emissao_certidao_civil', $options);

@@ -566,7 +566,7 @@ class indice extends clsCadastro
       'label'       => 'Cartório emissão',
       'value'       => $documentos['cartorio_cert_civil'],
       'cols'        => 45,
-      'max_length'  => 150
+      'max_length'  => 200,
     );
 
     $this->inputsHelper()->textArea('cartorio_emissao_certidao_civil', $options);

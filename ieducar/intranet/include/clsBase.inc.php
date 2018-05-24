@@ -45,16 +45,15 @@ require_once 'include/funcoes.inc.php';
 require_once 'Portabilis/Utils/Database.php';
 require_once 'Portabilis/Utils/User.php';
 require_once 'Portabilis/String/Utils.php';
-require_once 'Portabilis/AdministrativeInfoFetcher.php';
 
 require_once 'modules/Error/Mailers/NotificationMailer.php';
 require_once 'Portabilis/Assets/Version.php';
 require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
 
-$administrativeInfoFetcher = new Portabilis_AdministrativeInfoFetcher();
-$suspensionInfo = $administrativeInfoFetcher->getSuspensionInfo();
-
-if (!$suspensionInfo['active']) {
+$configuracoes = new clsPmieducarConfiguracoesGerais();
+$configuracoes = $configuracoes->detalhe();
+//var_dump($configuracoes);die;
+if (!$configuracoes['active_on_ieducar']) {
     header('HTTP/1.1 503 Service Temporarily Unavailable');
     header("Location: suspenso.php");
 }
@@ -135,16 +134,6 @@ class clsBase extends clsConfig
             $saida = str_replace("<!-- #&ESTILO&# -->", $estilos, $saida);
         }
 
-        if ($GLOBALS['coreExt']['Config']->app->widget == 1 && $this->renderMenu) {
-            $suporte_freshdesk = '<script type="text/javascript" src="https://assets.freshdesk.com/widget/freshwidget.js"></script>
-                            <script type="text/javascript" src="/intranet/scripts/suporte_freshdesk.js?v=2"></script>';
-            $saida = str_replace("<!-- #&FRESHDESK&# -->", $suporte_freshdesk, $saida);
-        } elseif ($GLOBALS['coreExt']['Config']->app->widget_***REMOVED*** == 1 && $this->renderMenu) {
-            $suporte_freshdesk = '<script type="text/javascript" src="https://assets.freshdesk.com/widget/freshwidget.js"></script>
-                            <script type="text/javascript" src="/intranet/scripts/suporte_freshdesk_***REMOVED***.js?v=2"></script>';
-            $saida = str_replace("<!-- #&FRESHDESK&# -->", $suporte_freshdesk, $saida);
-        }
-
         if (is_array($this->scripts) && count($this->scripts)) {
             $estilos = '';
             foreach ($this->scripts as $script) {
@@ -166,6 +155,17 @@ class clsBase extends clsConfig
         }
 
         $saida = str_replace("<!-- #&GOOGLE_TAG_MANAGER_ID&# -->", $GLOBALS['coreExt']['Config']->app->gtm->id, $saida);
+
+        // nome completo usuario
+        // @TODO: jeito mais eficiente de usar estes dados, já que eles são
+        //         usados em mais um método aqui...
+        $nomePessoa = new clsPessoaFisica();
+        list($nomePessoa, $email) = $nomePessoa->queryRapida($this->currentUserId(), "nome", "email");
+        $nomePessoa = ($nomePessoa) ? $nomePessoa : 'Visitante';
+
+        $saida = str_replace("<!-- #&SLUG&# -->", $GLOBALS['coreExt']['Config']->app->database->dbname, $saida);
+        $saida = str_replace("<!-- #&USERLOGADO&# -->", trim($nomePessoa), $saida);
+        $saida = str_replace("<!-- #&USEREMAIL&# -->", trim($email), $saida);
 
         return $saida;
     }
@@ -402,7 +402,7 @@ class clsBase extends clsConfig
                         } else {
                             $menu_suspenso['caminho'] = '../../intranet/' . $menu_suspenso['caminho'];
                         }
-                    } elseif ($uri[2] == 'filaunica') {
+                    } elseif ($uri[2] == 'filaunica' || $uri[2] == 'reservavaga') {
                         if (0 === strpos($menu_suspenso['caminho'], 'module')) {
                             $menu_suspenso['caminho'] = '../../' . $menu_suspenso['caminho'];
                         } else {
@@ -599,7 +599,6 @@ class clsBase extends clsConfig
         $detalheFoto = $objFoto->detalhe();
         $foto = $detalheFoto['caminho'] ? str_replace("http://", "https://", $detalheFoto['caminho']) : '/intranet/imagens/user-perfil.png';
 
-
         // data ultimo acesso
         $ultimoAcesso = $this->db()->UnicoCampo("SELECT data_hora FROM acesso WHERE cod_pessoa = {$this->currentUserId()} ORDER BY data_hora DESC LIMIT 1,1");
 
@@ -611,24 +610,15 @@ class clsBase extends clsConfig
         // substitui valores no template
         $saida = str_replace("<!-- #&ULTIMOACESSO&# -->", $ultimoAcesso, $saida);
         $saida = str_replace("<!-- #&USERLOGADO&# -->", $nomePessoa, $saida);
+        $saida = str_replace("<!-- #&USEREMAIL&# -->", $email, $saida);
         $saida = str_replace("<!-- #&CORPO&# -->", $corpo, $saida);
         $saida = str_replace("<!-- #&ANUNCIO&# -->", $menu_dinamico, $saida);
         $saida = str_replace("<!-- #&FOTO&# -->", $foto, $saida);
 
-        $administrativeInfoFetcher = new Portabilis_AdministrativeInfoFetcher();
+        $configuracoes = new clsPmieducarConfiguracoesGerais();
+        $configuracoes = $configuracoes->detalhe();
 
-        $showOnboarding = $administrativeInfoFetcher->getShowOnboarding();
-        if ($showOnboarding) {
-            $iconeCompass = "
-                <a class=\"icons-top\" href=\"#\" onclick=\"openConpassFlow()\">
-                    <img id=\"help\" src=\"imagens/icon-help.png\">
-                </a>
-            ";
-
-            $saida = str_replace("<!-- #&ICONE_COMPASS&# -->", $iconeCompass, $saida);
-        }
-
-        $saida = str_replace("<!-- #&RODAPE_INTERNO&# -->", $administrativeInfoFetcher->getInternalFooter(), $saida);
+        $saida = str_replace("<!-- #&RODAPE_INTERNO&# -->", $configuracoes["ieducar_internal_footer"], $saida);
 
         // Pega o endereço IP do host, primeiro com HTTP_X_FORWARDED_FOR (para pegar o IP real
         // caso o host esteja atrás de um proxy)
@@ -646,24 +636,6 @@ class clsBase extends clsConfig
         $saida .= "<script type=\"text/javascript\" src=\"/intranet/scripts/select2/select2.full.min.js\"></script>";
         $saida .= "<script type=\"text/javascript\" src=\"/intranet/scripts/select2/pt-BR.js\"></script>";
         $saida .= "<link type=\"text/css\" rel=\"stylesheet\" href=\"/intranet/scripts/select2/select2.min.css\" />";
-
-        if ($showOnboarding) {
-            $saida .= "<script src='https://fast.conpass.io/H1gWceptS_G.js'></script>";
-
-
-            $saida .= "
-                <script type=\"text/javascript\">
-                    var titleFlow = \"Pesquisa de satisfação\";
-                    function openConpassFlow() {
-                        Conpass.startFlow(titleFlow, { show: true });
-                    }
-                    window.onload = function(e) {
-                        Conpass.startFlow(titleFlow);
-                    }
-                        Conpass.init({ name: \"{$nomePessoa}\", email: \"{$email}\" });
-                </script>
-            ";
-        }
 
         return $saida;
     }
