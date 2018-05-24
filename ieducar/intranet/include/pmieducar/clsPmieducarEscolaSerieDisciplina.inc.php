@@ -607,4 +607,25 @@ class clsPmieducarEscolaSerieDisciplina
         }
         return FALSE;
     }
+
+    function existeDispensa(array $listaComponentesSelecionados)
+    {
+        if (is_numeric($this->ref_ref_cod_serie) && is_numeric($this->ref_ref_cod_escola)) {
+            $componentesSelecionados = join(',', $listaComponentesSelecionados);
+
+            $db = new clsBanco();
+            $sql = "SELECT EXISTS (SELECT 1
+                                     FROM {$this->_tabela}
+                                    WHERE ref_ref_cod_serie = '{$this->ref_ref_cod_serie}'
+                                      AND ref_ref_cod_escola = '{$this->ref_ref_cod_escola}'
+                                      AND ref_cod_disciplina NOT IN ({$componentesSelecionados})
+                                      AND EXISTS (SELECT 1
+                                                    FROM pmieducar.dispensa_disciplina
+                                                   WHERE dispensa_disciplina.ref_cod_disciplina NOT IN ({$componentesSelecionados})
+                                                     AND dispensa_disciplina.ref_cod_escola = {$this->_tabela}.ref_ref_cod_escola
+                                                     AND dispensa_disciplina.ref_cod_serie = {$this->_tabela}.ref_ref_cod_serie))";
+            return dbBool($db->CampoUnico($sql));
+        }
+        return FALSE;
+    }
 }
