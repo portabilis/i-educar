@@ -1322,15 +1322,10 @@ class indice extends clsCadastro
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 3, "educar_escola_lst.php");
-        unset($this->mantenedora_escola_privada[0]);
         $mantenedora_escola_privada = implode(',', $this->mantenedora_escola_privada);
-        unset($this->abastecimento_agua[0]);
         $abastecimento_agua = implode(',', $this->abastecimento_agua);
-        unset($this->abastecimento_energia[0]);
         $abastecimento_energia = implode(',', $this->abastecimento_energia);
-        unset($this->esgoto_sanitario[0]);
         $esgoto_sanitario = implode(',', $this->esgoto_sanitario);
-        unset($this->destinacao_lixo[0]);
         $destinacao_lixo = implode(',', $this->destinacao_lixo);
 
         if(!$this->validaDigitosInepEscola($this->escola_inep_id, 'Código INEP')) {
@@ -1700,15 +1695,10 @@ class indice extends clsCadastro
             return false;
         }
 
-        unset($this->mantenedora_escola_privada[0]);
         $mantenedora_escola_privada = implode(',', $this->mantenedora_escola_privada);
-        unset($this->abastecimento_agua[0]);
         $abastecimento_agua = implode(',', $this->abastecimento_agua);
-        unset($this->abastecimento_energia[0]);
         $abastecimento_energia = implode(',', $this->abastecimento_energia);
-        unset($this->esgoto_sanitario[0]);
         $esgoto_sanitario = implode(',', $this->esgoto_sanitario);
-        unset($this->destinacao_lixo[0]);
         $destinacao_lixo = implode(',', $this->destinacao_lixo);
 
         if (in_array(5, $this->abastecimento_agua) && count($this->abastecimento_agua) > 1){
