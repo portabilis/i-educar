@@ -122,7 +122,8 @@ function validaMinutos() {
 }
 
 function validaAtividadesComplementares() {
-  var qtdeAtividadesComplementares = $j('#atividades_complementares').val() ? $j('#atividades_complementares').val().length : 0;
+  var atividadesComplementares = $j('#atividades_complementares').val() || [];
+  var qtdeAtividadesComplementares = atividadesComplementares.length;
 
   if (qtdeAtividadesComplementares > 6) {
     alert('O campo: Tipos de atividades complementares, não pode ter mais que 6 opções.');
