@@ -500,7 +500,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
    * @param string $key
    * @return bool
    */
-  protected function _isReferenceDataMapper($key)
+  public function _isReferenceDataMapper($key)
   {
     $class = $this->_getReferenceClass($key);
     return $this->_isReferenceOf($class, $this->_references[$key]['file'],
