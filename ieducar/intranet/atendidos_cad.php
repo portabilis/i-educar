@@ -570,7 +570,7 @@ class indice extends clsCadastro
       'label'       => 'Cartório emissão',
       'value'       => $documentos['cartorio_cert_civil'],
       'cols'        => 45,
-      'max_length'  => 150
+      'max_length'  => 200,
     );
 
     $this->inputsHelper()->textArea('cartorio_emissao_certidao_civil', $options);
@@ -1238,15 +1238,23 @@ class indice extends clsCadastro
   }
 
   protected function createOrUpdate($pessoaIdOrNull = null) {
+    if (!$this->possuiDocumentoObrigatorio()) {
+      $this->mensagem = 'É necessário o preenchimento de pelo menos um dos seguintes documentos: CPF, RG ou Certidão civil.';
+      return false;
+    }
+
     if (! $this->validatesCpf($this->id_federal))
       return false;
-
 
     if (!$this->validatePhoto())
       return false;
 
     if (!$this->validaCertidao())
       return false;
+
+    if (!$this->validaNisPisPasep()) {
+      return false;
+    }
 
     $pessoaId = $this->createOrUpdatePessoa($pessoaIdOrNull);
     $this->savePhoto($pessoaId);
@@ -1306,6 +1314,18 @@ class indice extends clsCadastro
 
   }
 
+  function possuiDocumentoObrigatorio() {
+    $certidaoCivil = $this->termo_certidao_civil && $this->folha_certidao_civil && $this->livro_certidao_civil;
+    $certidaoNascimentoNovoFormato = $this->certidao_nascimento;
+    $certidaoCasamentoNovoFormato = $this->certidao_casamento;
+
+    return $this->id_federal ||
+           $this->rg ||
+           $certidaoCivil ||
+           $certidaoCasamentoNovoFormato ||
+           $certidaoNascimentoNovoFormato;
+  }
+
   protected function validaCertidao() {
     $certidaoNascimento = ($_REQUEST['tipo_certidao_civil'] == 'certidao_nascimento_novo_formato');
     $certidaoCasamento = ($_REQUEST['tipo_certidao_civil'] == 'certidao_casamento_novo_formato');
@@ -1318,6 +1338,15 @@ class indice extends clsCadastro
       return false;
     }
 
+    return true;
+  }
+
+  protected function validaNisPisPasep()
+  {
+    if ($this->nis_pis_pasep && strlen($this->nis_pis_pasep) != 11) {
+      $this->mensagem = 'O NIS (PIS/PASEP) da pessoa deve conter 11 dígitos.';
+      return false;
+    }
     return true;
   }
 

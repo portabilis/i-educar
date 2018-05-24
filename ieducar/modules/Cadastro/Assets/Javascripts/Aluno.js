@@ -159,6 +159,21 @@ function certidaoNascimentoInvalida() {
     messageUtils.error('O campo referente a certidão de nascimento deve conter exatos 32 dígitos.');
 }
 
+function possuiDocumentoObrigatorio() {
+    var cpf = $j('#id_federal').val();
+    var rg = $j('#rg').val();
+    var certidaoCivil = $j('#termo_certidao_civil').val() &&
+                        $j('#folha_certidao_civil').val() &&
+                        $j('#livro_certidao_civil').val();
+    var certidaoNascimentoNovoFormato = $j('#certidao_nascimento').val();
+    var certidaoCasamentoNovoFormato = $j('#certidao_casamento').val();;
+
+    return cpf ||
+           rg ||
+           certidaoCivil ||
+           certidaoCasamentoNovoFormato ||
+           certidaoNascimentoNovoFormato;
+  }
 
 function certidaoCasamentoInvalida() {
     $j('#certidao_casamento').addClass('error');
@@ -166,6 +181,11 @@ function certidaoCasamentoInvalida() {
 }
 
 var newSubmitForm = function (event) {
+    if (!possuiDocumentoObrigatorio()) {
+        messageUtils.error('É necessário o preenchimento de pelo menos um dos seguintes documentos: CPF, RG ou Certidão civil.');
+        return false;
+    }
+    
     var codigoInep = $j('#aluno_inep_id').val();
 
     if (codigoInep && codigoInep.length != 12) {
@@ -1046,7 +1066,7 @@ function enableJustificativaFields() {
     $jField = $j('#justificativa_falta_documentacao');
     $jField.removeAttr('disabled');
 
-    if (!$j('#labels_botucatu').length) {
+    if ($j('#justificativa_falta_documentacao_obrigatorio').length) {
         $jField.removeClass('geral');
         $jField.addClass('obrigatorio');
     }

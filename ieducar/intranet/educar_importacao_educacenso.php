@@ -468,6 +468,7 @@ class indice extends clsCadastro
         $diasSemana[] = $i;
       }
     }
+    $diasSemana = '{' . implode(',', $diasSemana) . '}';
 
     $disciplinas = array();
     $disciplinas[1] = $dadosRegistro[40-1];
@@ -562,6 +563,7 @@ class indice extends clsCadastro
         $turma->hora_final = $horaFinal;
         $turma->ano = $this->ano;
         $turma->tipo_boletim = 1;
+        $turma->dias_semana = $diasSemana;
 
         foreach ($camposTurma as $key => $value) {
           $turma->{$key} = $value;
@@ -571,13 +573,6 @@ class indice extends clsCadastro
 
         if(!empty($inepTurma)){
           $turma->updateInep($inepTurma);
-        }
-
-        foreach ($diasSemana as $key => $diaSemana) {
-          $obj = new clsPmieducarTurmaDiaSemana($diaSemana,
-              $codTurma, $horaInicial, $horaFinal);
-
-          $obj->cadastra();
         }
 
         foreach ($disciplinas as $disciplinaEducacenso => $usaDisciplina) {

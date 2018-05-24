@@ -1077,7 +1077,7 @@ class clsPmieducarAluno
     }
 
     if (is_string($str_nome_aluno)) {
-      $str_nome_aluno = addslashes($str_nome_aluno);
+      $str_nome_aluno = pg_escape_string($str_nome_aluno);
 
       $filtros .= "{$whereAnd} EXISTS (
                      SELECT

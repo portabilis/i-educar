@@ -11,8 +11,6 @@
     <link rel=stylesheet type='text/css' href='styles/portabilis.css?rand=3' />
     <link rel=stylesheet type='text/css' href='styles/min-portabilis.css?rand=3' />
     <link rel=stylesheet type='text/css' href='styles/login.css?rand=6' />
-    <script type="text/javascript" src="http://assets.freshdesk.com/widget/freshwidget.js"></script>
-    <script type="text/javascript" src="scripts/suporte_freshdesk.js?1"></script>
 
     <script type='text/javascript' src='scripts/jquery/jquery-1.8.3.min.js'></script>
     <script type="text/javascript" src="scripts/mensagens.js"></script>
@@ -58,7 +56,7 @@
       else
         $j('.visible-for-non-windows-so').show();
     }
-      
+
   </script>
 
 	</head>

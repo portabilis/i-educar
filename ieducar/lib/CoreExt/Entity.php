@@ -201,13 +201,10 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
       // Se for uma referência a CoreExt_DataMapper, 0 será equivalente a NULL.
       // Aqui, nem instância tem, nem lazy load acontecerá.
       if (
-        isset($this->_references[$key]['null']) &&
-        TRUE == $this->_references[$key]['null'] &&
-        (
-          is_null($val) || (FALSE == $this->_new && "NULL" == $val)
-          || ($this->_isReferenceDataMapper($key) && (is_numeric($val) && 0 == $val))
+          is_null($val) || (FALSE === $this->_new && "NULL" === $val)
+          || ($this->_isReferenceDataMapper($key) && (is_numeric($val) && 0 === $val))
         )
-      ) {
+      {
         $this->_references[$key]['value'] = NULL;
         return TRUE;
       }
@@ -503,7 +500,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
    * @param string $key
    * @return bool
    */
-  protected function _isReferenceDataMapper($key)
+  public function _isReferenceDataMapper($key)
   {
     $class = $this->_getReferenceClass($key);
     return $this->_isReferenceOf($class, $this->_references[$key]['file'],
