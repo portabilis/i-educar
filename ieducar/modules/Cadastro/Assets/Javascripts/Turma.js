@@ -124,18 +124,15 @@ function habilitaTurmaMaisEducacao() {
                                                    $j('#dependencia_administrativa').val() == 3;
   var atendimentoClasseHospitalarAee = $j('#tipo_atendimento').val() == 1 ||
                                        $j('#tipo_atendimento').val() == 5;
-  var atendimentoAtividadeComplementar = $j('#tipo_atendimento').val() == 4;
   var modalidadeEja = $j('#modalidade_curso').val() == 3;
   var etapaEducacenso = ($j('#etapa_educacenso').val() >= 4 &&
                          $j('#etapa_educacenso').val() <= 38) ||
-                        ($j('#etapa_educacenso').val() == 41);  
-  var validaTipoAtendimento = !atendimentoAtividadeComplementar ? !modalidadeEja && etapaEducacenso : true;
-  
+                        ($j('#etapa_educacenso').val() == 41);
   if (
     didaticoPedagogicoPresencial &&
     dependenciaAdministrativaEstadualMunicipal &&
     !atendimentoClasseHospitalarAee &&
-    validaTipoAtendimento
+    !(modalidadeEja || !etapaEducacenso)
   ) {
     $j("#turma_mais_educacao").attr('disabled', false);
   } else {
