@@ -701,8 +701,9 @@ class indice extends clsCadastro
     $this->carga_horaria = $hour + $min;
     $this->carga_horaria = $hour + $min;
 
-    unset($this->pos_graduacao[0]);
     $this->pos_graduacao = '{' . implode(',', $this->pos_graduacao) . '}';
+    
+    $this->curso_formacao_continuada = '{' . implode(',', $this->curso_formacao_continuada) . '}';
 
     @session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
@@ -786,10 +787,8 @@ class indice extends clsCadastro
     $this->carga_horaria = $hour + $min;
     $this->carga_horaria = $hour + $min;
 
-    unset($this->pos_graduacao[0]);
     $this->pos_graduacao = '{' . implode(',', $this->pos_graduacao) . '}';
 
-    unset($this->curso_formacao_continuada[0]);
     $this->curso_formacao_continuada = '{' . implode(',', $this->curso_formacao_continuada) . '}';
 
     @session_start();
