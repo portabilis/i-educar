@@ -43,6 +43,7 @@ class clsPmieducarInstituicao
     var $exigir_dados_socioeconomicos;
     var $altera_atestado_para_declaracao;
     var $obrigar_campos_censo;
+    var $orgao_regional;
 
     /**
      * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -170,7 +171,8 @@ class clsPmieducarInstituicao
                                                    permitir_carga_horaria,
                                                    exigir_dados_socioeconomicos,
                                                    altera_atestado_para_declaracao,
-                                                   obrigar_campos_censo";
+                                                   obrigar_campos_censo,
+                                                   orgao_regional";
 
         if (is_numeric($ref_usuario_cad)) {
             if (class_exists('clsPmieducarUsuario')) {
@@ -642,6 +644,12 @@ class clsPmieducarInstituicao
                 $gruda = ", ";
             }
 
+            if (is_string($this->orgao_regional) AND !empty($this->orgao_regional)) {
+                $campos .= "{$gruda}orgao_regional";
+                $valores .= "{$gruda}'{$this->orgao_regional}'";
+                $gruda = ", ";
+            }
+
             $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
             return $db->InsertId("{$this->_tabela}_cod_instituicao_seq");
         }
@@ -918,6 +926,14 @@ class clsPmieducarInstituicao
                 $gruda = ", ";
             } else {
                 $set .= "{$gruda}data_educacenso = null ";
+                $gruda = ", ";
+            }
+
+            if (is_string($this->orgao_regional) AND !empty($this->orgao_regional)) {
+                $set .= "{$gruda}orgao_regional = '{$this->orgao_regional}'";
+                $gruda = ", ";
+            } else {
+                $set .= "{$gruda}orgao_regional = null ";
                 $gruda = ", ";
             }
 

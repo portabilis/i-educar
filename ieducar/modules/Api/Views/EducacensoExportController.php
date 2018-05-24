@@ -338,7 +338,7 @@ class EducacensoExportController extends ApiCoreController
 
         (SELECT COALESCE(p.email,(SELECT email FROM pmieducar.escola_complemento where ref_cod_escola = e.cod_escola))) as r00s26,
 
-        e.orgao_regional as r00s27,
+        i.orgao_regional as r00s27,
         e.dependencia_administrativa as r00s28,
         b.zona_localizacao as r00s29,
         e.categoria_escola_privada as r00s30,
@@ -354,8 +354,8 @@ class EducacensoExportController extends ApiCoreController
         0 as r00s40,
         e.situacao_funcionamento
 
-
         FROM pmieducar.escola e
+        JOIN pmieducar.instituicao i ON i.cod_instituicao = e.ref_cod_instituicao
         INNER JOIN modules.educacenso_cod_escola ece ON (e.cod_escola = ece.cod_escola)
         INNER JOIN cadastro.pessoa p ON (e.ref_idpes = p.idpes)
         INNER JOIN cadastro.juridica j ON (j.idpes = p.idpes)
@@ -629,7 +629,7 @@ class EducacensoExportController extends ApiCoreController
       if(!$r10s101){
         $r10s102 = $r10s103 = $r10s104 = NULL;
       }
-      
+
       for ($i=1; $i <= 107 ; $i++){
         if($i>=71 && $i<=85)
           $return .= (${'r10s'.$i} == 0 ? '' : ${'r10s'.$i}).$d;
@@ -686,7 +686,8 @@ class EducacensoExportController extends ApiCoreController
         c.modalidade_curso as r20s37,
         t.etapa_educacenso as r20s38,
         t.cod_curso_profissional as r20s39,
-        s.cod_serie as serieId
+        s.cod_serie as serieId,
+        e.dependencia_administrativa
 
         FROM pmieducar.turma t
         INNER JOIN pmieducar.serie s ON (t.ref_ref_cod_serie = s.cod_serie)
@@ -723,9 +724,18 @@ class EducacensoExportController extends ApiCoreController
       // Se a turma não presta atendimento educacional especializado AEE esses campos precisam ser nulos
       if ($r20s18 != 5)
         $r20s26 = $r20s27 = $r20s28 = $r20s29 = $r20s30 = $r20s31 = $r20s32 = $r20s33 = $r20s34 = $r20s35 = $r20s36 = NULL;
-
-      if(!((($r20s38 >= 4 && $r20s38 <= 38) || $r20s38 == 41 || $r20s38 == 56 ) && in_array($r20s18, array(0, 2, 3))))
+      
+      if (!in_array($dependencia_administrativa, array(2,3))){
         $r20s19 = NULL;
+      }
+
+      if (in_array($r20s18, array(1,5))){
+        $r20s19 = NULL;
+      }
+
+      if (($r20s37 == 3) || !(($r20s38 >= 4 && $r20s38 <= 38) || $r20s38 == 41)) {
+        $r20s19 = NULL;
+      }
 
       $coddigoEducacensoToSeq =
                  array( 1 => '40', 2 => '41', 3 => '42', 4 => '43', 5 => '44', 6 => '45', 7 => '46',
@@ -1418,15 +1428,15 @@ class EducacensoExportController extends ApiCoreController
       (SELECT cod_ibge FROM public.pais WHERE pais.idpais = fis.idpais_estrangeiro) as r60s13,
       uf.cod_ibge as r60s14,
       mun.cod_ibge as r60s15,
-      recurso_prova_inep_aux_ledor as r60s30,
-      recurso_prova_inep_aux_transcricao as r60s31,
-      recurso_prova_inep_guia_interprete as r60s32,
-      recurso_prova_inep_interprete_libras as r60s33,
-      recurso_prova_inep_leitura_labial as r60s34,
-      recurso_prova_inep_prova_ampliada_16 as r60s35,
-      recurso_prova_inep_prova_ampliada_20 as r60s36,
-      recurso_prova_inep_prova_ampliada_24 as r60s37,
-      recurso_prova_inep_prova_braille as r60s38,
+      (ARRAY[1] <@ recursos_prova_inep)::int as r60s30,
+      (ARRAY[2] <@ recursos_prova_inep)::int as r60s31,
+      (ARRAY[3] <@ recursos_prova_inep)::int as r60s32,
+      (ARRAY[4] <@ recursos_prova_inep)::int as r60s33,
+      (ARRAY[5] <@ recursos_prova_inep)::int as r60s34,
+      (ARRAY[6] <@ recursos_prova_inep)::int as r60s35,
+      (ARRAY[7] <@ recursos_prova_inep)::int as r60s36,
+      (ARRAY[8] <@ recursos_prova_inep)::int as r60s37,
+      (ARRAY[9] <@ recursos_prova_inep)::int as r60s38,
       fis.nacionalidade AS nacionalidade
 
       FROM  pmieducar.aluno a

@@ -541,15 +541,9 @@ class AlunoController extends ApiCoreController
         $aluno->ref_usuario_exc = $this->getSession()->id_pessoa;
 
         // INFORAMÇÕES PROVA INEP
-        $aluno->recurso_prova_inep_aux_ledor = $this->getRequest()->recurso_prova_inep_aux_ledor == 'on' ? 1 : 0;
-        $aluno->recurso_prova_inep_aux_transcricao = $this->getRequest()->recurso_prova_inep_aux_transcricao == 'on' ? 1 : 0;
-        $aluno->recurso_prova_inep_guia_interprete = $this->getRequest()->recurso_prova_inep_guia_interprete == 'on' ? 1 : 0;
-        $aluno->recurso_prova_inep_interprete_libras = $this->getRequest()->recurso_prova_inep_interprete_libras == 'on' ? 1 : 0;
-        $aluno->recurso_prova_inep_leitura_labial = $this->getRequest()->recurso_prova_inep_leitura_labial == 'on' ? 1 : 0;
-        $aluno->recurso_prova_inep_prova_ampliada_16 = $this->getRequest()->recurso_prova_inep_prova_ampliada_16 == 'on' ? 1 : 0;
-        $aluno->recurso_prova_inep_prova_ampliada_20 = $this->getRequest()->recurso_prova_inep_prova_ampliada_20 == 'on' ? 1 : 0;
-        $aluno->recurso_prova_inep_prova_ampliada_24 = $this->getRequest()->recurso_prova_inep_prova_ampliada_24 == 'on' ? 1 : 0;
-        $aluno->recurso_prova_inep_prova_braille = $this->getRequest()->recurso_prova_inep_prova_braille == 'on' ? 1 : 0;
+        $recursosProvaInep = array_filter($this->getRequest()->recursos_prova_inep);
+        $recursosProvaInep = '{' . implode(',', $recursosProvaInep) . '}';
+        $aluno->recursos_prova_inep = $recursosProvaInep;
         $aluno->recebe_escolarizacao_em_outro_espaco = $this->getRequest()->recebe_escolarizacao_em_outro_espaco;
         $aluno->justificativa_falta_documentacao = $this->getRequest()->justificativa_falta_documentacao;
         $aluno->veiculo_transporte_escolar = $this->getRequest()->veiculo_transporte_escolar;
@@ -983,15 +977,7 @@ class AlunoController extends ApiCoreController
                 'analfabeto',
                 'ativo',
                 'aluno_estado_id',
-                'recurso_prova_inep_aux_ledor',
-                'recurso_prova_inep_aux_transcricao',
-                'recurso_prova_inep_guia_interprete',
-                'recurso_prova_inep_interprete_libras',
-                'recurso_prova_inep_leitura_labial',
-                'recurso_prova_inep_prova_ampliada_16',
-                'recurso_prova_inep_prova_ampliada_20',
-                'recurso_prova_inep_prova_ampliada_24',
-                'recurso_prova_inep_prova_braille',
+                'recursos_prova_inep',
                 'recebe_escolarizacao_em_outro_espaco',
                 'justificativa_falta_documentacao',
                 'veiculo_transporte_escolar',
