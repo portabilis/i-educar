@@ -6,7 +6,7 @@ class CartorioInepController extends ApiCoreController
 {
     // search options
     protected function searchOptions() {
-        $siglaUfCartorio = $this->getRequest()->sigla_uf_cartorio ? $this->getRequest()->sigla_uf_cartorio : 'SC';
+        $siglaUfCartorio = $this->getRequest()->sigla_uf_cartorio;
         return array(
             'sqlParams' => array($siglaUfCartorio),
             'selectFields' => array('id_cartorio')
