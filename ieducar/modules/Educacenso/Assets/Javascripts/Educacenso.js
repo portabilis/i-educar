@@ -28,6 +28,7 @@ $j(document).ready(function(){
 
     var headerPaginaResposta = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>'+'Análise exportação'+'</title>'+
             '<link rel="stylesheet" href="../modules/Educacenso/Assets/Stylesheets/educacensoPdf.css?v=2"></head><body>'+
+            '<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">'+
             `<p class="date-info">Data da geração: ${currentDateString()}</p>`+
 						'<div id="content">'+
 						'  <h1 class="title">'+"Análise de exportação"+'</h1>'+
@@ -125,7 +126,13 @@ $j(document).ready(function(){
         htmlAnalise += "<ul>";
         for (i = 0; i < response.mensagens.length; i++) {
           htmlAnalise += "<li>"+response.mensagens[i].text+"</li>";
-          htmlAnalise += "<p>"+response.mensagens[i].path+"</p>";
+          htmlAnalise += `<p>
+                            <a class="educacenso-link-path"
+                               href="`+response.mensagens[i].linkPath+`"
+                               target="_new">`
+                              +response.mensagens[i].path+
+                            `</a>
+                          </p>`;
 
           if (response.mensagens[i].fail) falhaAnalise = true;
         }
