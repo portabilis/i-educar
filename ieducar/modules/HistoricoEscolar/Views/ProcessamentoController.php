@@ -48,7 +48,7 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
             'curso',
             array(
                 'required' => false,
-                'label_hint' _cl('historico.cadastro.curso_detalhe')
+                'label_hint' => _cl('historico.cadastro.curso_detalhe')
             )
         );
 
@@ -56,7 +56,7 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
             'serie',
             array(
                 'required' => false,
-                'label' _cl('historico.cadastro.serie')
+                'label' => _cl('historico.cadastro.serie')
             )
         );
 
