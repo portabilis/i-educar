@@ -102,6 +102,17 @@ class indice extends clsCadastro
         // text
         $this->campoTexto( "nome", "Nome", $this->nome, 30, 60, true );
 
+        $this->inputsHelper()->integer(
+            'cod_ibge',
+            array(
+                'label' => 'Código INEP',
+                'required' => false,
+                'label_hint' => 'Somente números',
+                'max_length' => 12,
+                'placeholder' => 'INEP'
+            )
+        );
+
         $this->campoNumero( "cod_ibge", "Código INEP", $this->cod_ibge, 30, 8, true );
     }
 
