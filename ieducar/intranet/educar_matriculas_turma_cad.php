@@ -344,7 +344,7 @@ class indice extends clsCadastro
           $obj = new clsPmieducarMatriculaTurma($matricula, $this->ref_cod_turma,
             NULL, $this->pessoa_logada, NULL, NULL, 1, NULL, $campo['sequencial_']);
 
-          $existe = $obj->existe();
+          $existe = $obj->existeEnturmacaoAtiva();
 
           if (!$existe) {
             $obj->data_enturmacao = $this->data_enturmacao;
