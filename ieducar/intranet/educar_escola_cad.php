@@ -2114,13 +2114,6 @@ class indice extends clsCadastro
         $this->inputsHelper()->integer("p_telefone_{$type}", $options);
     }
 
-    protected function validarCamposObrigatoriosCenso()
-    {
-        $obj = new clsPmieducarInstituicao($this->ref_cod_instituicao);
-        $instituicao = empty($this->ref_cod_instituicao) ? $obj->primeiraAtiva() : $obj->detalhe();
-        return dbBool($instituicao['obrigar_campos_censo']);
-    }
-
     protected function validaCamposCenso()
     {
         if (!$this->validarCamposObrigatoriosCenso()) {

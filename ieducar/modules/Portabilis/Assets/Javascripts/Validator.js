@@ -23,8 +23,8 @@ var validationUtils = {
     return allValid;
   },
 
-  validatesFields : function () {
-    return validatesPresenseOfValueInRequiredFields() &&
+  validatesFields : function (validateHiddenFields) {
+    return validatesPresenseOfValueInRequiredFields(undefined, undefined, validateHiddenFields) &&
            validationUtils.validatesDateFields();
   },
 
@@ -87,7 +87,7 @@ var validationUtils = {
   }
 };
 
-function validatesPresenseOfValueInRequiredFields(additionalFields, exceptFields) {
+function validatesPresenseOfValueInRequiredFields(additionalFields, exceptFields, validateHiddenFields) {
   var $emptyFields = [];
   requiredFields = $j('.obrigatorio:not(.skip-presence-validation)');
 
@@ -102,15 +102,19 @@ function validatesPresenseOfValueInRequiredFields(additionalFields, exceptFields
 
     if ($requiredField.length > 0 &&
         /*$requiredField.css('display') != 'none' &&*/
-        $requiredField.is(':visible')           &&
+        ($requiredField.is(':visible') || validateHiddenFields) &&
         $requiredField.is(':enabled')           &&
-        $requiredField.val() == ''              &&
+        ($requiredField.val() == '' || $requiredField.val() == null)               &&
         $j.inArray($requiredField[0], exceptFields) < 0) {
 
       $emptyFields.push($requiredField);
 
       if (! $requiredField.hasClass('error'))
         $requiredField.addClass('error');
+
+      if ($requiredField.is(':hidden,select')) {
+        $requiredField.parent().find('ul.chosen-choices').addClass('error');
+      }
 
       messageUtils.removeStyle($requiredField);
     }

@@ -1,6 +1,6 @@
 <?php
-// error_reporting(E_ALL);
-// ini_set("display_errors", 1);
+ //error_reporting(E_ALL);
+ //ini_set("display_errors", 1);
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -42,6 +42,7 @@ require_once 'Portabilis/Utils/CustomLabel.php';
 require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
 require_once 'ComponenteCurricular/Model/AnoEscolarDataMapper.php';
 require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
+require_once 'lib/App/Model/Educacenso/TipoMediacaoDidaticoPedagogico.php';
 
 /**
  * clsIndexBase class.
@@ -262,8 +263,11 @@ class indice extends clsCadastro
       }
     }
 
+    $obrigarCamposCenso = $this->validarCamposObrigatoriosCenso();
+
     if (is_numeric($this->ano_letivo)) $this->ano = $this->ano_letivo;
 
+    $this->campoOculto('obrigar_campos_censo', (int) $obrigarCamposCenso);
     $this->campoOculto('cod_turma', $this->cod_turma);
     $this->campoOculto('dependencia_administrativa', $this->dependencia_administrativa);
     $this->campoOculto('modalidade_curso', $this->modalidade_curso);
@@ -400,14 +404,36 @@ class indice extends clsCadastro
     $this->campoQuebra2();
 
     // hora
-    $this->campoHora('hora_inicial', 'Hora inicial', $this->hora_inicial, FALSE);
+    if (!$this->obrigaCamposHorario()) {
+        $this->hora_inicial = "";
+        $this->hora_final = "";
+        $this->hora_inicio_intervalo = "";
+        $this->hora_fim_intervalo = "";
+        $this->dias_semana = array();
+    }
+    $this->campoHora('hora_inicial', 'Hora inicial', $this->hora_inicial, FALSE, NULL, NULL, NULL, !$this->obrigaCamposHorario());
 
-    $this->campoHora('hora_final', 'Hora final', $this->hora_final, FALSE);
+    $this->campoHora('hora_final', 'Hora final', $this->hora_final, FALSE, NULL, NULL, NULL, !$this->obrigaCamposHorario());
 
     $this->campoHora('hora_inicio_intervalo', 'Hora início intervalo',
-      $this->hora_inicio_intervalo, FALSE);
+      $this->hora_inicio_intervalo, FALSE, NULL, NULL, NULL, !$this->obrigaCamposHorario());
 
-    $this->campoHora( 'hora_fim_intervalo', 'Hora fim intervalo', $this->hora_fim_intervalo, FALSE);
+    $this->campoHora( 'hora_fim_intervalo', 'Hora fim intervalo', $this->hora_fim_intervalo, FALSE, NULL, NULL, NULL, !$this->obrigaCamposHorario());
+
+    $helperOptions = array('objectName'  => 'dias_semana');
+    $options       = array('label' => 'Dias da semana',
+                            'size' => 50,
+                            'required' => FALSE,
+                            'disabled' => !$this->obrigaCamposHorario(),
+                            'options' => array('values' => $this->dias_semana,
+                                              'all_values' => array(1 => 'Domingo',
+                                                                    2  => 'Segunda',
+                                                                    3  => 'Terça',
+                                                                    4  => 'Quarta',
+                                                                    5  => 'Quinta',
+                                                                    6  => 'Sexta',
+                                                                    7  => 'Sábado')));
+    $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
     $this->inputsHelper()->turmaTurno();
 
@@ -420,20 +446,6 @@ class indice extends clsCadastro
 
     $this->campoLista('tipo_boletim', 'Modelo relat&oacute;rio boletim', $tiposBoletim, $this->tipo_boletim);
     $this->campoLista('tipo_boletim_diferenciado', 'Modelo relat&oacute;rio boletim diferenciado', $tiposBoletim, $this->tipo_boletim_diferenciado, '', FALSE, '', '', FALSE, FALSE);
-
-    $helperOptions = array('objectName'  => 'dias_semana');
-    $options       = array('label' => 'Dias da semana',
-                            'size' => 50,
-                            'required' => false,
-                            'options' => array('values' => $this->dias_semana,
-                                              'all_values' => array(1 => 'Domingo',
-                                                                    2  => 'Segunda',
-                                                                    3  => 'Terça',
-                                                                    4  => 'Quarta',
-                                                                    5  => 'Quinta',
-                                                                    6  => 'Sexta',
-                                                                    7  => 'Sábado')));
-    $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
     $this->montaListaComponentesSerieEscola();
 
@@ -517,7 +529,7 @@ class indice extends clsCadastro
 
     if (is_null($this->tipo_atendimento)) $this->tipo_atendimento = -1;
 
-    $options = array('label' => 'Tipo de atendimento', 'resources' => $resources, 'value' => $this->tipo_atendimento, 'required' => false, 'size' => 70,);
+    $options = array('label' => 'Tipo de atendimento', 'resources' => $resources, 'value' => $this->tipo_atendimento, 'required' => $obrigarCamposCenso, 'size' => 70,);
     $this->inputsHelper()->select('tipo_atendimento', $options);
 
     $atividadesComplementares = loadJson('educacenso_json/atividades_complementares.json');
@@ -578,11 +590,8 @@ class indice extends clsCadastro
     $options = array('label' => 'Etapa da turma', 'resources' => $etapas_educacenso, 'value' => $this->etapa_educacenso2, 'required' => false, 'size' => 70,);
     $this->inputsHelper()->select('etapa_educacenso2', $options);
 
-    $resources = array(
-      1    => 'Presencial',
-      2    => 'Semipresencial',
-      3    => Portabilis_String_Utils::toLatin1('Educação a distância'),
-    );
+    $resources = App_Model_TipoMediacaoDidaticoPedagogico::getInstance()->getEnums();
+
     $options = array('label' => 'Tipo de mediação didático pedagógico', 'resources' => $resources, 'value' => $this->tipo_mediacao_didatico_pedagogico, 'required' => false, 'size' => 70,);
     $this->inputsHelper()->select('tipo_mediacao_didatico_pedagogico', $options);
 
@@ -608,6 +617,12 @@ class indice extends clsCadastro
 
     Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
   }
+
+    protected function obrigaCamposHorario()
+    {
+        return $this->tipo_mediacao_didatico_pedagogico == App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL;
+
+    }
 
   function montaListaComponentesSerieEscola(){
     $this->campoQuebra2();
@@ -775,6 +790,10 @@ class indice extends clsCadastro
       return false;
     }
 
+    if (!$this->verificaCamposCenso()) {
+      return FALSE;
+    }
+
     $this->ref_cod_instituicao_regente = $this->ref_cod_instituicao;
 
     $this->multiseriada = isset($this->multiseriada) ? 1 : 0;
@@ -822,6 +841,10 @@ class indice extends clsCadastro
 
     if (!$this->verificaModulos()) {
       return false;
+    }
+
+    if (!$this->verificaCamposCenso()) {
+      return FALSE;
     }
 
     $turmaDetalhe = new clsPmieducarTurma($this->cod_turma);
@@ -876,11 +899,89 @@ class indice extends clsCadastro
     die();
   }
 
+  protected function validaCamposHorario()
+  {
+    if (!$this->obrigaCamposHorario()) {
+        return TRUE;
+    }
+    if (empty($this->hora_inicial)) {
+        $this->mensagem = "O campo hora inicial é obrigatório";
+        return FALSE;
+    }
+    if (empty($this->hora_final)) {
+        $this->mensagem = "O campo hora final é obrigatório";
+        return FALSE;
+    }
+    if (empty($this->hora_inicio_intervalo)) {
+        $this->mensagem = "O campo hora início intervalo é obrigatório";
+        return FALSE;
+    }
+    if (empty($this->hora_fim_intervalo)) {
+        $this->mensagem = "O campo hora fim intervalo é obrigatório";
+        return FALSE;
+    }
+    if (empty($this->dias_semana)) {
+        $this->mensagem = "O campo dias da semana é obrigatório";
+        return FALSE;
+    }
+    return TRUE;
+
+  }
+
+  protected function validaCampoAtividadesComplementares()
+  {
+    if ($this->tipo_atendimento == 4 && empty($this->atividades_complementares)) {
+        $this->mensagem = "Campo atividades complementares é obrigatório";
+        return FALSE;
+    }
+    return TRUE;
+  }
+
+  protected function validaCampoAEE()
+  {
+    if ($this->tipo_atendimento == 4 && empty($this->atividades_aee)) {
+        $this->mensagem = "Campo atividades do Atendimento Educacional Especializado - AEE é obrigatório";
+        return FALSE;
+    }
+    return TRUE;
+  }
+
+  protected function validaCampoEtapaEnsino()
+  {
+    if (!empty($this->tipo_atendimento) &&
+            $this->tipo_atendimento != -1 &&
+            $this->tipo_atendimento != 4 &&
+            $this->tipo_atendimento != 5) {
+        $this->mensagem = "Campo etapa de ensino é obrigatório";
+        return FALSE;
+    }
+    return TRUE;
+  }
+
+  protected function verificaCamposCenso()
+  {
+    if (!$this->validarCamposObrigatoriosCenso()) {
+        return TRUE;
+    }
+    if (!$this->validaCamposHorario()) {
+        return FALSE;
+    }
+    if (!$this->validaCampoAtividadesComplementares()) {
+        return FALSE;
+    }
+    if (!$this->validaCampoAEE()) {
+        return FALSE;
+    }
+    if (!$this->validaCampoEtapaEnsino()) {
+        return FALSE;
+    }
+    return TRUE;
+  }
+
 
   function montaObjetoTurma($codTurma = null, $usuarioCad = null, $usuarioExc = null)
   {
       $this->dias_semana = '{' . implode(',', $this->dias_semana) . '}';
-      unset($this->atividades_complementares[0]);
       $this->atividades_complementares = '{' . implode(',', $this->atividades_complementares) . '}';
       $this->atividades_aee = '{' . implode(',', $this->atividades_aee) . '}';
       $this->cod_curso_profissional = $this->cod_curso_profissional[0];
@@ -1150,7 +1251,6 @@ class indice extends clsCadastro
 
     return true;
   }
-
 }
 
 // Instancia objeto de página

@@ -778,6 +778,13 @@ class clsCadastro extends clsCampos
     return NULL;
   }
 
+    // TODO: Abstrair lógica em Trait ao atualizar PHP
+    protected function validarCamposObrigatoriosCenso()
+    {
+        $obj = new clsPmieducarInstituicao($this->ref_cod_instituicao);
+        $instituicao = empty($this->ref_cod_instituicao) ? $obj->primeiraAtiva() : $obj->detalhe();
+        return dbBool($instituicao['obrigar_campos_censo']);
+    }
 
   protected function inputsHelper() {
     if (! isset($this->_inputsHelper))

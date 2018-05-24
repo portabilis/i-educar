@@ -18,7 +18,7 @@ linha_inicial_tipo = $j('#tr_codigo_inep_educacenso').index()-2;
 $j('.tablecadastro >tbody  > tr').each(function(index, row) {
   if (index>=linha_inicial_tipo){
     if (row.id!='stop')
-      row.hide();    
+      row.hide();
     else{
       return false;
     }
@@ -26,10 +26,24 @@ $j('.tablecadastro >tbody  > tr').each(function(index, row) {
 });
 
 var modoCadastro = $j('#retorno').val() == 'Novo';
+let obrigarCamposCenso = $j('#obrigar_campos_censo').val() == '1';
+
+let verificaEtapaEducacenso = ()=>{
+  if ($j('#tipo_atendimento').val() &&
+      $j('#tipo_atendimento').val() != "4" &&
+      $j('#tipo_atendimento') != "5") {
+
+    $j('#etapa_educacenso').makeUnrequired();
+    if (obrigarCamposCenso) {
+      $j('#etapa_educacenso').makeRequired();
+    }
+  }
+}
 
 $j('#tipo_atendimento').change(function() {
   mostraAtividadesComplementares();
   mostraAtividadesAee();
+  verificaEtapaEducacenso();
 });
 
 $j('#etapa_educacenso').change(function() {
@@ -38,8 +52,12 @@ $j('#etapa_educacenso').change(function() {
 
 function mostraAtividadesComplementares(){
   var mostraCampo = $j('#tipo_atendimento').val() == '4';
+  $j('#atividades_complementares').makeUnrequired();
   if (mostraCampo) {
     $j('#tr_atividades_complementares').show();
+    if (obrigarCamposCenso) {
+      $j('#atividades_complementares').makeRequired();
+    }
   } else {
     $j('#tr_atividades_complementares').hide();
   }
@@ -49,6 +67,10 @@ function mostraAtividadesAee() {
   var mostraCampo = $j('#tipo_atendimento').val() == '5';
   if (mostraCampo) {
     $j('#tr_atividades_aee').show();
+    $j('#atividades_aee').makeUnrequired();
+    if (obrigarCamposCenso) {
+      $j('#atividades_aee').makeRequired();
+    }
   } else {
     $j('#tr_atividades_aee').hide();
   }
@@ -59,6 +81,10 @@ function mostraCursoTecnico() {
   var mostraCampo = $j.inArray($j('#etapa_educacenso').val(),etapasEnsinoTecnico) != -1;
   if (mostraCampo) {
     $j('#tr_cod_curso_profissional').show();
+    $j('#cod_curso_profissional').makeUnrequired();
+    if (obrigarCamposCenso) {
+      $j('#cod_curso_profissional').makeRequired();
+    }
   } else {
     $j('#tr_cod_curso_profissional').hide();
   }
@@ -96,8 +122,7 @@ function validaMinutos() {
 }
 
 function validaAtividadesComplementares() {
-  // recebe - 1 pois a primeira sempre é nula
-  var qtdeAtividadesComplementares = $j('#atividades_complementares').val().length - 1;
+  var qtdeAtividadesComplementares = $j('#atividades_complementares').val() ? $j('#atividades_complementares').val().length : 0;
 
   if (qtdeAtividadesComplementares > 6) {
     alert('O campo: Tipos de atividades complementares, não pode ter mais que 6 opções.');
@@ -135,10 +160,39 @@ function habilitaTurmaMaisEducacao() {
     !(modalidadeEja || !etapaEducacenso)
   ) {
     $j("#turma_mais_educacao").attr('disabled', false);
+    $j("#turma_mais_educacao").makeUnrequired();
+    if (obrigarCamposCenso) {
+      $j("#turma_mais_educacao").makeRequired();
+    }
   } else {
     $j("#turma_mais_educacao").attr('disabled', true);
   }
 }
+
+$j('#tipo_mediacao_didatico_pedagogico').on('change', function(){
+  if (!obrigarCamposCenso) {
+    return true;
+  }
+  let didaticoPedagogicoPresencial = this.value == 1;
+  $j('#hora_inicial').makeUnrequired();
+  $j('#hora_final').makeUnrequired();
+  $j('#hora_inicio_intervalo').makeUnrequired();
+  $j('#hora_fim_intervalo').makeUnrequired();
+  $j('#dias_semana').makeUnrequired();
+  if (didaticoPedagogicoPresencial) {
+    $j('#hora_inicial').prop('disabled', false).makeRequired();
+    $j('#hora_final').prop('disabled', false).makeRequired();
+    $j('#hora_inicio_intervalo').prop('disabled', false).makeRequired();
+    $j('#hora_fim_intervalo').prop('disabled', false).makeRequired();
+    $j('#dias_semana').prop('disabled', false).makeRequired().trigger("chosen:updated");;
+  } else {
+    $j('#hora_inicial').prop('disabled', true).val("");
+    $j('#hora_final').prop('disabled', true).val("");
+    $j('#hora_inicio_intervalo').prop('disabled', true).val("");
+    $j('#hora_fim_intervalo').prop('disabled', true).val("");
+    $j('#dias_semana').prop('disabled', true).val([]).trigger("chosen:updated");
+  }
+}).trigger('change');
 
 function getDependenciaAdministrativaEscola(){
   var options = {
@@ -181,7 +235,7 @@ $j(document).ready(function() {
   // on click das abas
 
   // DADOS GERAIS
-  $j('#tab1').click( 
+  $j('#tab1').click(
     function(){
 
       $j('.turmaTab-active').toggleClass('turmaTab-active turmaTab');
@@ -189,18 +243,18 @@ $j(document).ready(function() {
       $j('.tablecadastro >tbody  > tr').each(function(index, row) {
         if (index>=linha_inicial_tipo-1){
           if (row.id!='stop')
-            row.hide();    
+            row.hide();
           else
             return false;
         }else{
           row.show();
         }
-      });        
+      });
     }
-  );  
+  );
 
   // Adicionais
-  $j('#tab2').click( 
+  $j('#tab2').click(
     function(){
       $j('.turmaTab-active').toggleClass('turmaTab-active turmaTab');
       $j('#tab2').toggleClass('turmaTab turmaTab-active')
@@ -213,7 +267,7 @@ $j(document).ready(function() {
             }else{
               $j('#'+row.id).find('td').removeClass('formmdtd');
               $j('#'+row.id).find('td').addClass('formlttd');
-              
+
             }
 
             row.show();
@@ -306,4 +360,15 @@ $j(document).ready(function() {
 
   changeEtapaTurmaField();
 
+  var submitForm = function(){
+    let canSubmit = validationUtils.validatesFields(true);
+    if (canSubmit) {
+      valida();
+    }
+  }
+
+  var $submitButton      = $j('#btn_enviar');
+  $submitButton.removeAttr('onclick');
+  $j(document.formcadastro).removeAttr('onsubmit');
+  $submitButton.click(submitForm);
 });
