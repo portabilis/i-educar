@@ -182,7 +182,7 @@ class indice extends clsCadastro
 
         $this->definirComponentePorEtapa = ($regra_avaliacao->definirComponentePorEtapa == 1);
       }
-      
+
       $this->dependencia_administrativa = $det_esc['dependencia_administrativa'];
       $this->ref_cod_escola      = $det_esc['cod_escola'];
       $this->ref_cod_instituicao = $det_esc['ref_cod_instituicao'];
@@ -770,7 +770,7 @@ class indice extends clsCadastro
     if (!$this->canCreateTurma($this->ref_cod_escola, $this->ref_cod_serie, $this->turma_turno_id)) {
       return false;
     }
-    
+
     if (!$this->verificaModulos()) {
       return false;
     }
@@ -805,7 +805,7 @@ class indice extends clsCadastro
         $this->usar_componente,
         $this->docente_vinculado
     );
-    
+
     $this->cadastraInepTurma($this->cod_turma, $this->codigo_inep_educacenso);
 
     $this->atualizaModulos();
@@ -866,7 +866,7 @@ class indice extends clsCadastro
         $this->usar_componente,
         $this->docente_vinculado
     );
-    
+
     $this->cadastraInepTurma($this->cod_turma, $this->codigo_inep_educacenso);
 
     $this->atualizaModulos();
@@ -879,11 +879,8 @@ class indice extends clsCadastro
 
   function montaObjetoTurma($codTurma = null, $usuarioCad = null, $usuarioExc = null)
   {
-      unset($this->dias_semana[0]);
       $this->dias_semana = '{' . implode(',', $this->dias_semana) . '}';
-      unset($this->atividades_complementares[0]);
       $this->atividades_complementares = '{' . implode(',', $this->atividades_complementares) . '}';
-      unset($this->atividades_aee[0]);
       $this->atividades_aee = '{' . implode(',', $this->atividades_aee) . '}';
       $this->cod_curso_profissional = $this->cod_curso_profissional[0];
 
@@ -954,7 +951,7 @@ class indice extends clsCadastro
           $this->mensagem = 'Edição não realizada.';
           return false;
       }
-      
+
       foreach ($modulos as $modulo) {
           $this->cadastraModulo($modulo);
       }
@@ -965,7 +962,7 @@ class indice extends clsCadastro
   function montaModulos()
   {
       foreach ($this->ref_cod_modulo as $key => $modulo) {
-          $turmaModulo[$key]['sequencial'] = $key;
+          $turmaModulo[$key]['sequencial'] = $key+1;
           $turmaModulo[$key]['ref_cod_modulo'] = $this->ref_cod_modulo[$key];
           $turmaModulo[$key]['data_inicio'] = $this->data_inicio[$key];
           $turmaModulo[$key]['data_fim'] = $this->data_fim[$key];
