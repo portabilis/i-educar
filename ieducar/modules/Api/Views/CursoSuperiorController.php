@@ -44,7 +44,7 @@ class CursoSuperiorController extends ApiCoreController
     $sqls[] = "SELECT id,
                       curso_id,
                       nome || ' / ' || coalesce((CASE grau_academico
-                                                      WHEN 1 THEN 'Tecnologo'
+                                                      WHEN 1 THEN 'Tecnológico'
                                                       WHEN 2 THEN 'Licenciatura'
                                                       WHEN 3 THEN 'Bacharelado' END), '') AS name
                  FROM modules.educacenso_curso_superior 
