@@ -115,7 +115,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         ),
 
         'transporte' => array(
-            'label' => 'Transporte escolar público',
+            'label' => 'Transporte público',
             'help' => '',
         ),
 
@@ -616,19 +616,17 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $this->inputsHelper()->date('data_emissao_certidao_civil', $options);
 
+        $placeholderInep = Portabilis_String_Utils::toLatin1('Código cartório INEP');
         $options = array(
+            'required' => false,
             'label' => '',
-            'required' => false
-          );
-      
-          $helperOptions = array(
-            'objectName' => 'cartorio_cert_civil_inep',
-            'hiddenInputOptions' => array(
-              'options' => array('value' => $documentos['cartorio_cert_civil_inep'])
-            )
-          );
-          
-          $this->inputsHelper()->simpleSearchCartorioInep(null, $options, $helperOptions);
+            'size' => '18',
+            'max_length' => '7',
+            'placeholder' => $placeholderInep,
+            'value' => $documentos['cartorio_cert_civil_inep']
+        );
+
+        $this->inputsHelper()->integer('cartorio_cert_civil_inep', $options);
 
         // cartório emissão certidão civil
         $labelCartorio = Portabilis_String_Utils::toLatin1('Cartório emissão');
@@ -806,9 +804,10 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $this->inputsHelper()->simpleSearchPessoa('nome', $options, $helperOptions);
 
         // transporte publico
+        $label = Portabilis_String_Utils::toLatin1($this->_getLabel('transporte'));
 
         $tiposTransporte = array(
-            null => 'Selecione',
+            null => $label,
             'nenhum' => 'N&atilde;o utiliza',
             'municipal' => 'Municipal',
             'estadual' => 'Estadual'
@@ -1398,7 +1397,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $options = array(
             'required' => false,
             'value' => '',
-            'max_length' => 20
+            'max_length' => 50
         );
 
         $this->inputsHelper()->text('complemento', $options);
