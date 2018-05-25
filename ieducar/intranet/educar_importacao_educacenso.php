@@ -1233,7 +1233,7 @@ class indice extends clsCadastro
       if(!empty($ufCartorio)){
         $documento->sigla_uf_cert_civil      = $this->getUfByCodIbge($ufCartorio);
       }
-      $documento->cartorio_cert_civil_inep = $codigoCartorio;
+      $documento->cartorio_cert_civil_inep = $this->getIdCartorioInep($codigoCartorio);
     }
 
     if(!$documento->existe()){
@@ -1345,6 +1345,11 @@ class indice extends clsCadastro
     }
 
     return true;
+  }
+
+  function getIdCartorioInep($codigo){
+    $sql = "SELECT id FROM cadastro.codigo_cartorio_inep WHERE id_cartorio = '{$codigo}' ";
+    return Portabilis_Utils_Database::selectField($sql);
   }
 
   function getIdCursoSuperiorEducacenso($codigo){
