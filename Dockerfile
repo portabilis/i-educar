@@ -25,7 +25,7 @@ RUN apt-get -y update \
         zlib1g-dev \
         openjdk-8-jre \
     && apt-get clean \
-	&& apt-get purge --auto-remove -y \
+    && apt-get purge --auto-remove -y \
     && rm -rf /var/lib/apt/lists/*
 
 RUN a2enmod rewrite
