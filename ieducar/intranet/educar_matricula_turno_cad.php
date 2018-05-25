@@ -80,7 +80,7 @@ class indice extends clsCadastro
 
         $this->url_cancelar = "educar_matricula_det.php?cod_matricula={$this->cod_matricula}";
 
-        $localizacao = new LocalizacaoSistema();    
+        $localizacao = new LocalizacaoSistema();
         $localizacao->entradaCaminhos( array(
              $_SERVER['SERVER_NAME']."/intranet" => "Início",
              "educar_index.php"                  => "Escola",
@@ -108,13 +108,7 @@ class indice extends clsCadastro
             $this->campoTexto( "nm_aluno", "Aluno", $this->nm_aluno, 30, 255, false,false,false,"","","","",true );
         }
 
-        $lst_turno = array('' => 'Selecione',
-                            1 => 'Matutino',
-                            2 => 'Vespertino',
-                            3 => 'Integral',
-                            );
-
-        $this->campoLista('turno_id', 'Turno', $lst_turno, $this->turno_id, NULL, NULL, NULL, NULL, NULL, FALSE);
+        $this->inputsHelper()->turmaTurno(array('value' => $this->turno_id, 'required' => false), array('attrName' => 'turno_id'));
     }
 
     function Editar()
@@ -146,7 +140,7 @@ class indice extends clsCadastro
      @session_start();
        $this->pessoa_logada = $_SESSION['id_pessoa'];
      @session_write_close();
- 
+
      $obj_permissoes = new clsPermissoes();
      $obj_permissoes->permissao_excluir( 578, $this->pessoa_logada, 7,  "educar_matricula_det.php?cod_matricula={$this->cod_matricula}" );
    }
