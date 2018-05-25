@@ -64,6 +64,8 @@ class AjustesTabelaOrgaoEmissorEducacenso extends AbstractMigration
              WHERE sigla = 'DExt';"
         );
 
+        $this->execute("SELECT SETVAL('cadastro.orgao_emissor_rg_idorg_rg_seq', (SELECT MAX(idorg_rg) + 1 FROM cadastro.orgao_emissor_rg));");
+
         $this->execute(
             "INSERT INTO cadastro.orgao_emissor_rg (codigo_educacenso, descricao, sigla, situacao)
              VALUES (83, 'Departamento Estadual de Trânsito', 'DETRAN', 'I');"
