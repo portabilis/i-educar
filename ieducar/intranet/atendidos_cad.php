@@ -524,7 +524,6 @@ class indice extends clsCadastro
     $options = array(
       'required' => false,
       'label'    => 'Estado emissão / Data emissão',
-      'label_hint' => 'Informe o estado para poder informar o código do cartório',
       'value'    => $documentos['sigla_uf_cert_civil'],
       'inline'   => true
     );
@@ -549,18 +548,15 @@ class indice extends clsCadastro
     $this->inputsHelper()->date('data_emissao_certidao_civil', $options);
 
     $options = array(
-      'label' => '',
-      'required' => false
+      'required'    => false,
+      'label'       => '',
+      'size'        => '18',
+      'max_length'  => '7',
+      'placeholder' => 'Código cartório INEP',
+      'value'       => $documentos['cartorio_cert_civil_inep']
     );
 
-    $helperOptions = array(
-      'objectName' => 'cartorio_cert_civil_inep',
-      'hiddenInputOptions' => array(
-        'options' => array('value' => $documentos['cartorio_cert_civil_inep'])
-      )
-    );
-    
-    $this->inputsHelper()->simpleSearchCartorioInep(null, $options, $helperOptions);
+    $this->inputsHelper()->integer('cartorio_cert_civil_inep', $options);
 
 
     // cartório emissão certidão civil
@@ -1238,23 +1234,15 @@ class indice extends clsCadastro
   }
 
   protected function createOrUpdate($pessoaIdOrNull = null) {
-    if (!$this->possuiDocumentoObrigatorio()) {
-      $this->mensagem = 'É necessário o preenchimento de pelo menos um dos seguintes documentos: CPF, RG ou Certidão civil.';
-      return false;
-    }
-
     if (! $this->validatesCpf($this->id_federal))
       return false;
+
 
     if (!$this->validatePhoto())
       return false;
 
     if (!$this->validaCertidao())
       return false;
-
-    if (!$this->validaNisPisPasep()) {
-      return false;
-    }
 
     $pessoaId = $this->createOrUpdatePessoa($pessoaIdOrNull);
     $this->savePhoto($pessoaId);
@@ -1314,18 +1302,6 @@ class indice extends clsCadastro
 
   }
 
-  function possuiDocumentoObrigatorio() {
-    $certidaoCivil = $this->termo_certidao_civil && $this->folha_certidao_civil && $this->livro_certidao_civil;
-    $certidaoNascimentoNovoFormato = $this->certidao_nascimento;
-    $certidaoCasamentoNovoFormato = $this->certidao_casamento;
-
-    return $this->id_federal ||
-           $this->rg ||
-           $certidaoCivil ||
-           $certidaoCasamentoNovoFormato ||
-           $certidaoNascimentoNovoFormato;
-  }
-
   protected function validaCertidao() {
     $certidaoNascimento = ($_REQUEST['tipo_certidao_civil'] == 'certidao_nascimento_novo_formato');
     $certidaoCasamento = ($_REQUEST['tipo_certidao_civil'] == 'certidao_casamento_novo_formato');
@@ -1338,15 +1314,6 @@ class indice extends clsCadastro
       return false;
     }
 
-    return true;
-  }
-
-  protected function validaNisPisPasep()
-  {
-    if ($this->nis_pis_pasep && strlen($this->nis_pis_pasep) != 11) {
-      $this->mensagem = 'O NIS (PIS/PASEP) da pessoa deve conter 11 dígitos.';
-      return false;
-    }
     return true;
   }
 
@@ -1475,7 +1442,7 @@ class indice extends clsCadastro
     $documentos->sigla_uf_cert_civil        = $_REQUEST['uf_emissao_certidao_civil'];
     $documentos->cartorio_cert_civil        = addslashes($_REQUEST['cartorio_emissao_certidao_civil']);
     $documentos->passaporte                 = addslashes($_REQUEST['passaporte']);
-    $documentos->cartorio_cert_civil_inep   = $_REQUEST['cartorio_cert_civil_inep_id'];
+    $documentos->cartorio_cert_civil_inep   = $_REQUEST['cartorio_cert_civil_inep'];
 
 
     // carteira de trabalho
