@@ -93,8 +93,7 @@ class DiarioController extends ApiCoreController
               INNER JOIN pmieducar.matricula_turma mt ON m.cod_matricula = mt.ref_cod_matricula
               WHERE m.ativo = 1
               AND (mt.ativo = 1
-                   OR (mt.transferido
-                       OR mt.remanejado)
+                   OR mt.transferido
                   )
               AND  mt.ref_cod_turma = $1
               AND m.ref_cod_aluno = $2
@@ -236,7 +235,9 @@ class DiarioController extends ApiCoreController
                 foreach ($notaTurma as $alunoId => $notaTurmaAluno) {
 
                     $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
-
+                    if (empty($matriculaId)){
+                        continue;
+                    }
                     foreach ($notaTurmaAluno as $componenteCurricularId => $notaTurmaAlunoDisciplina) {
                         if ($this->validateComponenteTurma($turmaId, $componenteCurricularId)) {
                             $notaOriginal = $notaTurmaAlunoDisciplina['nota'];
@@ -353,7 +354,7 @@ class DiarioController extends ApiCoreController
                     $faltas = $faltaTurmaAluno['valor'];
 
                     $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
-                    if ($matriculaId) {
+                    if (!empty($matriculaId)) {
 
                         if ($this->getRegra($matriculaId)->get('tipoPresenca') != RegraAvaliacao_Model_TipoPresenca::GERAL) {
                             throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de faltas geral."));
@@ -384,7 +385,7 @@ class DiarioController extends ApiCoreController
 
                 foreach ($parecerTurma as $alunoId => $parecerTurmaAluno) {
                     $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
-                    if ($matriculaId) {
+                    if (!empty($matriculaId)) {
 
                         if ($this->getRegra($matriculaId)->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE) {
                             throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de pareceres por etapa e componente."));
@@ -421,7 +422,7 @@ class DiarioController extends ApiCoreController
             foreach ($pareceres as $turmaId => $parecerTurma) {
                 foreach ($parecerTurma as $alunoId => $parecerTurmaAluno) {
                     $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
-                    if ($matriculaId) {
+                    if (!empty($matriculaId)) {
 
                         if ($this->getRegra($matriculaId)->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE) {
                             throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de pareceres anual por componente."));
@@ -459,7 +460,7 @@ class DiarioController extends ApiCoreController
                 foreach ($parecerTurma as $alunoId => $parecerTurmaAluno) {
 
                     $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
-                    if ($matriculaId) {
+                    if (!empty($matriculaId)) {
 
                         if ($this->getRegra($matriculaId)->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL) {
                             throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de pareceres por etapa geral."));
@@ -492,7 +493,7 @@ class DiarioController extends ApiCoreController
 
                     $parecer = $parecerTurmaAluno['valor'];
                     $matriculaId = $this->findMatriculaByTurmaAndAluno($turmaId, $alunoId);
-                    if ($matriculaId) {
+                    if (!empty($matriculaId)) {
 
                         if ($this->getRegra($matriculaId)->get('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL) {
                             throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de pareceres anual geral."));
