@@ -22,7 +22,7 @@ class CartorioInepController extends ApiCoreController
                        id_cartorio,
                        descricao AS name
                   FROM cadastro.codigo_cartorio_inep
-                 WHERE id_cartorio::varchar LIKE '%' || $1||'%'
+                 WHERE id_cartorio::varchar LIKE $1||'%'
                    AND ref_sigla_uf = $2
                  ORDER BY id_cartorio
                  LIMIT 15";
