@@ -1061,7 +1061,7 @@ class EducacensoAnaliseController extends ApiCoreController
                    documento.tipo_cert_civil AS tipo_cert_civil,
                    documento.num_termo AS num_termo,
                    documento.sigla_uf_cert_civil AS uf_cartorio,
-                   codigo_cartorio_inep.id_cartorio AS cod_cartorio,
+                   documento.cartorio_cert_civil_inep AS cod_cartorio,
                    uf.cod_ibge AS uf_inep,
                    municipio.cod_ibge AS municipio_inep,
                    uf_cartorio.cod_ibge AS uf_inep_cartorio,
@@ -1078,7 +1078,6 @@ class EducacensoAnaliseController extends ApiCoreController
              INNER JOIN cadastro.pessoa ON (pessoa.idpes = aluno.ref_idpes)
              INNER JOIN cadastro.fisica ON (fisica.idpes = pessoa.idpes)
               LEFT JOIN cadastro.documento ON (documento.idpes = pessoa.idpes)
-              LEFT JOIN cadastro.codigo_cartorio_inep ON (codigo_cartorio_inep.id = documento.cartorio_cert_civil_inep)
               LEFT JOIN cadastro.endereco_pessoa ON (endereco_pessoa.idpes = pessoa.idpes)
               LEFT JOIN public.logradouro ON (logradouro.idlog = endereco_pessoa.idlog)
               LEFT JOIN public.municipio ON (municipio.idmun = logradouro.idmun)
