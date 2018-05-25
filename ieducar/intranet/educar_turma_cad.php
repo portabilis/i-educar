@@ -880,7 +880,6 @@ class indice extends clsCadastro
   function montaObjetoTurma($codTurma = null, $usuarioCad = null, $usuarioExc = null)
   {
       $this->dias_semana = '{' . implode(',', $this->dias_semana) . '}';
-      unset($this->atividades_complementares[0]);
       $this->atividades_complementares = '{' . implode(',', $this->atividades_complementares) . '}';
       $this->atividades_aee = '{' . implode(',', $this->atividades_aee) . '}';
       $this->cod_curso_profissional = $this->cod_curso_profissional[0];
