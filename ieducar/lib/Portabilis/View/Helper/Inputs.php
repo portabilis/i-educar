@@ -241,6 +241,12 @@ class Portabilis_View_Helper_Inputs {
 
   }
 
+  public function simpleSearchCartorioInep($attrName, $inputOptions = array(), $helperOptions = array()) {
+
+    $this->simpleSearchResourceInput('simpleSearchCartorioInep', $attrName, $inputOptions, $helperOptions);
+
+  }
+
   public function simpleSearchServidor($attrName, $inputOptions = array(), $helperOptions = array()) {
 
     $this->simpleSearchResourceInput('simpleSearchServidor', $attrName, $inputOptions, $helperOptions);

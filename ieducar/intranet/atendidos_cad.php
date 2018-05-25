@@ -524,6 +524,7 @@ class indice extends clsCadastro
     $options = array(
       'required' => false,
       'label'    => 'Estado emissão / Data emissão',
+      'label_hint' => 'Informe o estado para poder informar o código do cartório',
       'value'    => $documentos['sigla_uf_cert_civil'],
       'inline'   => true
     );
@@ -548,15 +549,18 @@ class indice extends clsCadastro
     $this->inputsHelper()->date('data_emissao_certidao_civil', $options);
 
     $options = array(
-      'required'    => false,
-      'label'       => '',
-      'size'        => '18',
-      'max_length'  => '7',
-      'placeholder' => 'Código cartório INEP',
-      'value'       => $documentos['cartorio_cert_civil_inep']
+      'label' => '',
+      'required' => false
     );
 
-    $this->inputsHelper()->integer('cartorio_cert_civil_inep', $options);
+    $helperOptions = array(
+      'objectName' => 'cartorio_cert_civil_inep',
+      'hiddenInputOptions' => array(
+        'options' => array('value' => $documentos['cartorio_cert_civil_inep'])
+      )
+    );
+    
+    $this->inputsHelper()->simpleSearchCartorioInep(null, $options, $helperOptions);
 
 
     // cartório emissão certidão civil
@@ -1471,7 +1475,7 @@ class indice extends clsCadastro
     $documentos->sigla_uf_cert_civil        = $_REQUEST['uf_emissao_certidao_civil'];
     $documentos->cartorio_cert_civil        = addslashes($_REQUEST['cartorio_emissao_certidao_civil']);
     $documentos->passaporte                 = addslashes($_REQUEST['passaporte']);
-    $documentos->cartorio_cert_civil_inep   = $_REQUEST['cartorio_cert_civil_inep'];
+    $documentos->cartorio_cert_civil_inep   = $_REQUEST['cartorio_cert_civil_inep_id'];
 
 
     // carteira de trabalho
