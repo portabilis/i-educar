@@ -1611,7 +1611,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
         num_livro as r70s13,
         data_emissao_cert_civil as r70s14,
         (SELECT cod_ibge FROM public.uf WHERE uf.sigla_uf = fd.sigla_uf_cert_civil) as r70s15,
-        cartorio_cert_civil_inep as r70s17,
+        id_cartorio as r70s17,
         certidao_nascimento as r70s18,
         fis.cpf as r70s19,
         fd.passaporte as r70s20,
@@ -1630,6 +1630,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
         INNER JOIN cadastro.fisica fis ON (fis.idpes = a.ref_idpes)
          LEFT JOIN cadastro.documento fd ON (fis.idpes = fd.idpes)
          LEFT JOIN cadastro.orgao_emissor_rg oer ON (fd.idorg_exp_rg = oer.idorg_rg)
+         LEFT JOIN cadastro.codigo_cartorio_inep cci ON (cci.id = fd.cartorio_cert_civil_inep)
         INNER JOIN cadastro.pessoa p ON (fis.idpes = p.idpes)
         INNER JOIN pmieducar.matricula m ON (m.ref_cod_aluno = a.cod_aluno)
         INNER JOIN pmieducar.escola e ON (m.ref_ref_cod_escola = e.cod_escola)
