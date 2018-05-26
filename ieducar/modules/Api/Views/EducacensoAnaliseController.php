@@ -1021,7 +1021,15 @@ class EducacensoAnaliseController extends ApiCoreController
                    pessoa.nome AS nome_servidor,
                    pessoa.idpes AS idpes_servidor,
                    professor_turma.tipo_vinculo AS tipo_vinculo,
-                   professor_turma.funcao_exercida AS funcao_exercida
+                   professor_turma.funcao_exercida AS funcao_exercida,
+                   turma.nm_turma AS nm_turma,
+                   EXISTS (SELECT 1
+                             FROM modules.professor_turma_disciplina ptd
+                            WHERE professor_turma_id = professor_turma.id
+                              AND NOT EXISTS (SELECT 1
+                                                FROM relatorio.view_componente_curricular vcc
+                                               WHERE vcc.cod_turma = turma.cod_turma
+                                                 AND vcc.id = ptd.componente_curricular_id)) AS nao_existe_disciplina_turma
               FROM modules.professor_turma
              INNER JOIN pmieducar.turma ON (turma.cod_turma = professor_turma.turma_id)
              INNER JOIN pmieducar.escola ON (escola.cod_escola = turma.ref_ref_cod_escola)
@@ -1043,7 +1051,9 @@ class EducacensoAnaliseController extends ApiCoreController
                       pessoa.nome,
                       pessoa.idpes,
                       professor_turma.tipo_vinculo,
-                      professor_turma.funcao_exercida
+                      professor_turma.funcao_exercida,
+                      turma.cod_turma,
+                      turma.nm_turma
              ORDER BY pessoa.nome";
 
     $servidores = $this->fetchPreparedQuery($sql, array($ano, $escola));
@@ -1059,14 +1069,22 @@ class EducacensoAnaliseController extends ApiCoreController
     foreach ($servidores as $servidor) {
       $nomeEscola   = Portabilis_String_Utils::toUtf8(strtoupper($servidor["nome_escola"]));
       $nomeServidor = Portabilis_String_Utils::toUtf8(strtoupper($servidor["nome_servidor"]));
+      $nomeTurma = $servidor["nm_turma"];
       $idpesServidor = $servidor["idpes_servidor"];
       $instituicaoId = $servidor["instituicao_id"];
       $vinculoId = $servidor["vinculo_id"];
+      $componenteNaoExisteNaTurma = $servidor["nao_existe_disciplina_turma"] == 't';
 
       $funcaoDocente = in_array($servidor["funcao_exercida"], $docente);
 
       if ($funcaoDocente && !$servidor["tipo_vinculo"]) {
         $mensagem[] = array("text" => "Dados para formular o registro 51 da escola {$nomeEscola} não encontrados. Verificamos que o(a) servidor(a) {$nomeServidor} é docente e possui vínculo com turmas, portanto é necessário informar qual o seu tipo de vínculo.",
+                            "path" => "(Servidores > Cadastros > Servidores > Cadastrar > Vincular professor a turmas > Campo: Tipo do vínculo)",
+                            "linkPath" => "/intranet/educar_servidor_vinculo_turma_cad.php?id={$vinculoId}&ref_cod_instituicao={$instituicaoId}&ref_cod_servidor={$idpesServidor}",
+                            "fail" => true);
+      }
+      if ($componenteNaoExisteNaTurma) {
+        $mensagem[] = array("text" => "Dados para formular o registro 51 da escola {$nomeEscola} não encontrados. Verificamos que o(a) servidor(a) {$nomeServidor} possui vínculo com disciplina que não existe para a turma {$nomeTurma}",
                             "path" => "(Servidores > Cadastros > Servidores > Cadastrar > Vincular professor a turmas > Campo: Tipo do vínculo)",
                             "linkPath" => "/intranet/educar_servidor_vinculo_turma_cad.php?id={$vinculoId}&ref_cod_instituicao={$instituicaoId}&ref_cod_servidor={$idpesServidor}",
                             "fail" => true);
