@@ -426,7 +426,7 @@ class indice extends clsCadastro
                       'ref_cod_instituicao', 'ref_cod_curso', 'ref_ref_cod_serie_mult', 'ref_ref_cod_escola_mult',
                       'visivel', 'turma_turno_id', 'tipo_boletim', 'ano', 'dias_semana', 'atividades_complementares',
                       'atividades_aee', 'turma_unificada', 'tipo_atendimento', 'etapa_educacenso',
-                      'etapa_educacenso2', 'cod_curso_profissional', 'tipo_mediacao_didatico_pedagogico',
+                      'cod_curso_profissional', 'tipo_mediacao_didatico_pedagogico',
                       'nao_informar_educacenso', 'turma_mais_educacao');
 
       $turmaDestino = new clsPmieducarTurma();

@@ -122,7 +122,6 @@ class indice extends clsCadastro
   var $cod_curso_profissional;
   var $turma_unificada;
   var $etapa_educacenso;
-  var $etapa_educacenso2;
   var $ref_cod_disciplina_dispensada;
   var $codigo_inep_educacenso;
   var $tipo_mediacao_didatico_pedagogico;
@@ -575,9 +574,6 @@ class indice extends clsCadastro
                                                'all_values' => $cursos));
     $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-    $options = array('label' => 'Etapa da turma', 'resources' => $etapas_educacenso, 'value' => $this->etapa_educacenso2, 'required' => false, 'size' => 70,);
-    $this->inputsHelper()->select('etapa_educacenso2', $options);
-
     $resources = array(
       1    => 'Presencial',
       2    => 'Semipresencial',
@@ -929,7 +925,6 @@ class indice extends clsCadastro
       $objTurma->cod_curso_profissional = $this->cod_curso_profissional;
       $objTurma->turma_unificada = $this->turma_unificada == "" ? NULL : $this->turma_unificada;
       $objTurma->etapa_educacenso = $this->etapa_educacenso == "" ? NULL : $this->etapa_educacenso;
-      $objTurma->etapa_educacenso2 = $this->etapa_educacenso2 == "" ? NULL : $this->etapa_educacenso2;
       $objTurma->ref_ref_cod_serie_mult = $this->ref_cod_serie_mult == "" ? NULL : $this->ref_cod_serie_mult;
       $objTurma->ref_cod_disciplina_dispensada = $this->ref_cod_disciplina_dispensada == "" ? NULL : $this->ref_cod_disciplina_dispensada;
       $objTurma->nao_informar_educacenso = $this->nao_informar_educacenso == 'on' ? 1 : 0;
