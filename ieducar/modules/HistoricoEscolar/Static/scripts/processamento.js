@@ -45,7 +45,7 @@
 
     function resetAutoCompleteNomeDisciplinaEvent($element){
       var handleSelect = function(event, ui){
-        $j(event.target).val(ui.item.label);
+        $(event.target).val(ui.item.label);
         return false;
       };
 
@@ -53,7 +53,7 @@
         var searchPath = '/module/Api/ComponenteCurricular?oper=get&resource=componente_curricular-search';
         var params     = { query : request.term };
 
-        $j.get(searchPath, params, function(dataResponse) {
+        $.get(searchPath, params, function(dataResponse) {
           simpleSearch.handleSearch(dataResponse, response);
         });
       };
@@ -142,7 +142,7 @@
 
     var $feedbackMessages = $('<div />').attr('id', 'feedback-messages').appendTo($formFilter.parent());
 
-    var $additionalFields = $j('#resource-options select, #resource-options input[type="text"]');
+    var $additionalFields = $('#resource-options select, #resource-options input[type="text"]');
     fixupFieldsWidth($additionalFields);
 
     //url builders
@@ -244,7 +244,7 @@
     function handleDelete(dataResponse){
       try{
         var $checkbox = $('matricula-' + dataResponse.matricula_id);
-        var $targetElement = $j('#matricula-'+dataResponse.matricula_id).closest('tr').first();
+        var $targetElement = $('#matricula-'+dataResponse.matricula_id).closest('tr').first();
         handleMessages(dataResponse.msgs, $targetElement);
         updateFieldSituacao(dataResponse.link_to_historico, dataResponse.matricula_id, dataResponse.situacao_historico);
       }
@@ -288,7 +288,7 @@
 
       //field escola pode ser diferente de select caso usuario comum
       var $htmlEscolaField = $('#ref_cod_escola').children("[selected='selected']").html() ||
-                             $j('#tr_nm_escola span:last').html();
+                             $('#tr_nm_escola span:last').html();
       $('<td />').html(safeToUpperCase($htmlEscolaField)).appendTo($linha);
 
       $('<td />').html(safeToUpperCase($('#ref_cod_curso').children("[value!=''][selected='selected']").html()  || 'Todos')).appendTo($linha);
@@ -425,6 +425,7 @@
 
     //change submit button
     var onClickSearchEvent = function(event){
+
       if (validatesPresenseOfValueInRequiredFields())
       {
         matriculasSearchOptions.url = getResourceUrlBuilder.buildUrl(ApiUrlBase, 'matriculas', {matricula_id : $('#ref_cod_matricula').val()});
@@ -443,6 +444,7 @@
 
         resetAutoCompleteNomeDisciplinaEvent($disciplinasManualTable.find('input.nome'));
       }
+      updateAreaConhecimento();
     };
     $submitButton.val('Carregar');
     $submitButton.attr('onclick', '');
@@ -545,7 +547,8 @@
           disciplinas : disciplinas,
           turma_id : $('#ref_cod_turma').val(),
           dependencia : document.getElementById("alunos_dependencia").checked ? 't' : 'f',
-          posicao : $('#posicao').val()
+          posicao : $('#posicao').val(),
+          area_conhecimento : $('#area-conhecimento').val()
         },
         success : function(dataResponse){
           afterChangeResource($resourceElement, postProcessamento);
@@ -587,7 +590,7 @@
     function handlePostProcessamento(dataResponse){
       try{
         var $checkbox = $('matricula-' + dataResponse.matricula_id);
-        var $targetElement = $j('#matricula-'+dataResponse.matricula_id).closest('tr').first();
+        var $targetElement = $('#matricula-'+dataResponse.matricula_id).closest('tr').first();
         handleMessages(dataResponse.msgs, $targetElement);
         updateFieldSituacao(dataResponse.link_to_historico, dataResponse.matricula_id, dataResponse.situacao_historico);
       }
@@ -661,5 +664,75 @@
       $('.tr_posicao').show();
     }
   });
+
+    var getUrlParameter = function getUrlParameter(sParam) {
+        var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+            sURLVariables = sPageURL.split('&'),
+            sParameterName,
+            i;
+
+        for (i = 0; i < sURLVariables.length; i++) {
+            sParameterName = sURLVariables[i].split('=');
+
+            if (sParameterName[0] === sParam) {
+                return sParameterName[1] === undefined ? true : sParameterName[1];
+            }
+        }
+    };
+
+    function getAreaConhecimento(response) {
+      var areaConhecimentoField = $('#area-conhecimento');
+      var selectOptions = {};
+      var areasConhecimentoInstituicao = response['areas'];
+      var areasConhecimentoSerie = response.options;
+
+      if (areasConhecimentoInstituicao) {
+        areasConhecimentoInstituicao.forEach((area) => {
+          selectOptions[area.id] = area.nome
+        });
+      }
+
+      if (areasConhecimentoSerie) {
+        selectOptions = areasConhecimentoSerie;
+      }
+
+      updateChozen(areaConhecimentoField, selectOptions);
+    }
+
+    function updateAreaConhecimento() {
+      var instituicao_id  = getUrlParameter('instituicao_id');
+      var serie_id  = getUrlParameter('serie_id');
+      var url = getResourceUrlBuilder.buildUrl('/module/Api/AreaConhecimento', 'areas-de-conhecimento', {
+        instituicao_id : instituicao_id
+      });
+
+      if (serie_id != '') {
+        var url = getResourceUrlBuilder.buildUrl('/module/Api/AreaConhecimento', 'areaconhecimento-serie', {
+          serie_id : serie_id
+        });
+      }
+
+      var options = {
+        url : url,
+        dataType : 'json',
+        success  : getAreaConhecimento
+      };
+
+      getResources(options);
+    }
+
+
+    $j('#media-area-conhecimento').change(function() {
+        $j('#tr-area-conhecimento').show();
+        $j('#area-conhecimento').chosen();
+
+        if($j('#media-area-conhecimento').is(':checked') == true){
+            $j('#area-conhecimento').chosen('destroy');
+            $j('#tr-area-conhecimento').hide();
+            $j('#area-conhecimento option:selected').removeAttr("selected");
+        }
+    });
+
+    $('#area-conhecimento').chosen();
 
 })(jQuery);

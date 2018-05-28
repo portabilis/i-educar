@@ -115,7 +115,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         ),
 
         'transporte' => array(
-            'label' => 'Transporte escolar público',
+            'label' => 'Transporte público',
             'help' => '',
         ),
 
@@ -366,8 +366,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $configuracoes = new clsPmieducarConfiguracoesGerais();
         $configuracoes = $configuracoes->detalhe();
-        
-        $labels_botucatu = $GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu';
 
         if ($configuracoes["justificativa_falta_documentacao_obrigatorio"]) {
             $this->inputsHelper()->hidden('justificativa_falta_documentacao_obrigatorio');
@@ -806,9 +804,10 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $this->inputsHelper()->simpleSearchPessoa('nome', $options, $helperOptions);
 
         // transporte publico
+        $label = Portabilis_String_Utils::toLatin1($this->_getLabel('transporte'));
 
         $tiposTransporte = array(
-            null => 'Selecione',
+            null => $label,
             'nenhum' => 'N&atilde;o utiliza',
             'municipal' => 'Municipal',
             'estadual' => 'Estadual'
@@ -1398,7 +1397,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $options = array(
             'required' => false,
             'value' => '',
-            'max_length' => 20
+            'max_length' => 50
         );
 
         $this->inputsHelper()->text('complemento', $options);

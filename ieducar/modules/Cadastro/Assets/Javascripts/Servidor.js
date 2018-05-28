@@ -19,9 +19,9 @@ function validaServidor() {
 }
 
 function validaPosGraduacao() {
-  posGraduacao = $j('#pos_graduacao').val();
+  posGraduacao = $j('#pos_graduacao').val() || [];
   possuiOpcaoNenhuma = $j.inArray('4', posGraduacao) != -1;
-  possuiMaisDeUmaOpcao = posGraduacao.length > 2; // nos campos do tipo chosen sempre vem uma opção a mais em branco
+  possuiMaisDeUmaOpcao = posGraduacao.length > 1;
 
   if (possuiOpcaoNenhuma && possuiMaisDeUmaOpcao) {
     messageUtils.error('Não é possível informar mais de uma opção no campo: <b>Possui pós-graduação</b>, quando a opção: <b>Nenhuma</b> estiver selecionada.');
@@ -32,9 +32,9 @@ function validaPosGraduacao() {
 }
 
 function validaCursoFormacaoContinuada() {
-  cursoFormacaoContinuada = $j('#curso_formacao_continuada').val();
+  cursoFormacaoContinuada = $j('#curso_formacao_continuada').val() || [];
   possuiOpcaoNenhum = $j.inArray('16', cursoFormacaoContinuada) != -1;
-  possuiMaisDeUmaOpcao = cursoFormacaoContinuada.length > 2; // nos campos do tipo chosen sempre vem uma opção a mais em branco
+  possuiMaisDeUmaOpcao = cursoFormacaoContinuada.length > 1;
 
   if (possuiOpcaoNenhum && possuiMaisDeUmaOpcao) {
     messageUtils.error('Não é possível informar mais de uma opção no campo: <b>Possui cursos de formação continuada</b>, quando a opção: <b>Nenhum</b> estiver selecionada.');
@@ -69,7 +69,7 @@ $j('#codigo_curso_superior_3').on('change', () => habilitaComplementacaoPedagogi
 
 function habilitaComplementacaoPedagogica(seq) {
   var cursoSuperiorConcluido = $j('#situacao_curso_superior_'+seq).val() == 1;
-  var tecnologo = $j('#codigo_curso_superior_'+seq).val().search('Tecnologo') != -1;
+  var tecnologo = $j('#codigo_curso_superior_'+seq).val().search('Tecnológico') != -1;
   var bacharelado  = $j('#codigo_curso_superior_'+seq).val().search('Bacharelado') != -1;
   var habilitaCampo = cursoSuperiorConcluido && (tecnologo || bacharelado);
 

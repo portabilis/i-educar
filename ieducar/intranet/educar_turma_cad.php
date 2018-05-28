@@ -559,7 +559,7 @@ class indice extends clsCadastro
     $this->inputsHelper()->select('turma_unificada', $options);
 
     $etapas_educacenso = loadJson('educacenso_json/etapas_ensino.json');
-    $etapas_educacenso = array_merge(array(null => 'Selecione'), $etapas_educacenso);
+    $etapas_educacenso = array_replace(array(null => 'Selecione'), $etapas_educacenso);
 
     $options = array('label' => 'Etapa de ensino', 'resources' => $etapas_educacenso, 'value' => $this->etapa_educacenso, 'required' => false, 'size' => 70,);
     $this->inputsHelper()->select('etapa_educacenso', $options);
@@ -875,11 +875,8 @@ class indice extends clsCadastro
 
   function montaObjetoTurma($codTurma = null, $usuarioCad = null, $usuarioExc = null)
   {
-      unset($this->dias_semana[0]);
       $this->dias_semana = '{' . implode(',', $this->dias_semana) . '}';
-      unset($this->atividades_complementares[0]);
       $this->atividades_complementares = '{' . implode(',', $this->atividades_complementares) . '}';
-      unset($this->atividades_aee[0]);
       $this->atividades_aee = '{' . implode(',', $this->atividades_aee) . '}';
       $this->cod_curso_profissional = $this->cod_curso_profissional[0];
 
@@ -960,7 +957,7 @@ class indice extends clsCadastro
   function montaModulos()
   {
       foreach ($this->ref_cod_modulo as $key => $modulo) {
-          $turmaModulo[$key]['sequencial'] = $key;
+          $turmaModulo[$key]['sequencial'] = $key+1;
           $turmaModulo[$key]['ref_cod_modulo'] = $this->ref_cod_modulo[$key];
           $turmaModulo[$key]['data_inicio'] = $this->data_inicio[$key];
           $turmaModulo[$key]['data_fim'] = $this->data_fim[$key];

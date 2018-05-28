@@ -1210,6 +1210,23 @@ class clsPmieducarMatriculaTurma
     return FALSE;
   }
 
+    /**
+     * Retorna se existe alguma enturmação ativa para matrícula e turma informada.
+     * @return bool
+     */
+    function existeEnturmacaoAtiva()
+    {
+        if (is_numeric($this->ref_cod_matricula) && is_numeric($this->ref_cod_turma) ) {
+            $db = new clsBanco();
+            $db->Consulta( "SELECT 1 FROM {$this->_tabela} WHERE ref_cod_matricula = '{$this->ref_cod_matricula}' AND ref_cod_turma = '{$this->ref_cod_turma}' AND ativo = 1 " );
+            $db->ProximoRegistro();
+            return $db->Tupla();
+        }
+
+        return FALSE;
+    }
+
+
   /**
    * Exclui um registro.
    * @return bool
@@ -1439,7 +1456,7 @@ class clsPmieducarMatriculaTurma
 
       $dataBaseRemanejamento = $this->getDataBaseRemanejamento();
       $data = $data ? $data : date('Y-m-d');
-        if ($dataBaseRemanejamento && strtotime($dataBaseRemanejamento) < strtotime($data) ) {
+        if (is_null($dataBaseRemanejamento) || strtotime($dataBaseRemanejamento) < strtotime($data) ) {
           $db = new clsBanco();
           $db->CampoUnico("UPDATE pmieducar.matricula_turma SET transferido = false, remanejado = true, abandono = false, reclassificado = false, data_exclusao = '$data' WHERE ref_cod_matricula = {$this->ref_cod_matricula} AND sequencial = {$this->sequencial}");
         }

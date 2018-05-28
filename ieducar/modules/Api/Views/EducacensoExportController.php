@@ -686,7 +686,8 @@ class EducacensoExportController extends ApiCoreController
         c.modalidade_curso as r20s37,
         t.etapa_educacenso as r20s38,
         t.cod_curso_profissional as r20s39,
-        s.cod_serie as serieId
+        s.cod_serie as serieId,
+        e.dependencia_administrativa
 
         FROM pmieducar.turma t
         INNER JOIN pmieducar.serie s ON (t.ref_ref_cod_serie = s.cod_serie)
@@ -723,9 +724,18 @@ class EducacensoExportController extends ApiCoreController
       // Se a turma não presta atendimento educacional especializado AEE esses campos precisam ser nulos
       if ($r20s18 != 5)
         $r20s26 = $r20s27 = $r20s28 = $r20s29 = $r20s30 = $r20s31 = $r20s32 = $r20s33 = $r20s34 = $r20s35 = $r20s36 = NULL;
-
-      if(!((($r20s38 >= 4 && $r20s38 <= 38) || $r20s38 == 41 || $r20s38 == 56 ) && in_array($r20s18, array(0, 2, 3))))
+      
+      if (!in_array($dependencia_administrativa, array(2,3))){
         $r20s19 = NULL;
+      }
+
+      if (in_array($r20s18, array(1,5))){
+        $r20s19 = NULL;
+      }
+
+      if (($r20s37 == 3) || !(($r20s38 >= 4 && $r20s38 <= 38) || $r20s38 == 41)) {
+        $r20s19 = NULL;
+      }
 
       $coddigoEducacensoToSeq =
                  array( 1 => '40', 2 => '41', 3 => '42', 4 => '43', 5 => '44', 6 => '45', 7 => '46',
@@ -872,6 +882,10 @@ class EducacensoExportController extends ApiCoreController
 
       $r30s12 = $this->convertStringToAlpha($r30s12);
       $r30s13 = $this->convertStringToAlpha($r30s13);
+
+      if($r30s14 != '1') {
+        $r30s16 = $r30s17 = NULL;
+      }
 
       if($r30s14 == '1' || $r30s14 == '2')
         $r30s15 = 76;

@@ -466,11 +466,6 @@ class indice extends clsCadastro
 
     $this->inputsHelper()->select('situacao_curso_superior_1', $options);
 
-    $options = array('label' => 'Possui formação/complementação pedagógica 1',
-                     'value' => $this->formacao_complementacao_pedagogica_1,
-                     'required' => false);
-    $this->inputsHelper()->booleanSelect('formacao_complementacao_pedagogica_1', $options);
-
     $options = array('label' => Portabilis_String_Utils::toLatin1('Curso superior 1'), 'required'   => false);
     $helperOptions = array(
       'objectName' => 'codigo_curso_superior_1',
@@ -512,6 +507,11 @@ class indice extends clsCadastro
     );
     $this->inputsHelper()->simpleSearchIes(null, $options, $helperOptions);
 
+    $options = array('label' => 'Possui formação/complementação pedagógica 1',
+                     'value' => $this->formacao_complementacao_pedagogica_1,
+                     'required' => false);
+    $this->inputsHelper()->booleanSelect('formacao_complementacao_pedagogica_1', $options);
+
     $this->campoQuebra();
 
     $resources = array(
@@ -527,11 +527,6 @@ class indice extends clsCadastro
       'required' => false
     );
     $this->inputsHelper()->select('situacao_curso_superior_2', $options);
-
-    $options = array('label' => 'Possui formação/complementação pedagógica 2',
-                     'value' => $this->formacao_complementacao_pedagogica_2,
-                     'required' => false);
-    $this->inputsHelper()->booleanSelect('formacao_complementacao_pedagogica_2', $options);
 
     $options = array(
       'label' => Portabilis_String_Utils::toLatin1('Curso superior 2'),
@@ -577,6 +572,11 @@ class indice extends clsCadastro
     );
     $this->inputsHelper()->simpleSearchIes(null, $options, $helperOptions);
 
+    $options = array('label' => 'Possui formação/complementação pedagógica 2',
+                     'value' => $this->formacao_complementacao_pedagogica_2,
+                     'required' => false);
+    $this->inputsHelper()->booleanSelect('formacao_complementacao_pedagogica_2', $options);
+
     $this->campoQuebra();
 
     $resources = array(
@@ -592,11 +592,6 @@ class indice extends clsCadastro
       'required' => false
     );
     $this->inputsHelper()->select('situacao_curso_superior_3', $options);
-
-    $options = array('label' => 'Possui formação/complementação pedagógica 3',
-                     'value' => $this->formacao_complementacao_pedagogica_3,
-                     'required' => false);
-    $this->inputsHelper()->booleanSelect('formacao_complementacao_pedagogica_3', $options);
 
     $options = array(
       'label' => Portabilis_String_Utils::toLatin1('Curso superior 3'),
@@ -641,6 +636,11 @@ class indice extends clsCadastro
       )
     );
     $this->inputsHelper()->simpleSearchIes(null, $options, $helperOptions);
+
+    $options = array('label' => 'Possui formação/complementação pedagógica 3',
+                     'value' => $this->formacao_complementacao_pedagogica_3,
+                     'required' => false);
+    $this->inputsHelper()->booleanSelect('formacao_complementacao_pedagogica_3', $options);
 
     $this->campoQuebra();
 
@@ -701,8 +701,9 @@ class indice extends clsCadastro
     $this->carga_horaria = $hour + $min;
     $this->carga_horaria = $hour + $min;
 
-    unset($this->pos_graduacao[0]);
     $this->pos_graduacao = '{' . implode(',', $this->pos_graduacao) . '}';
+    
+    $this->curso_formacao_continuada = '{' . implode(',', $this->curso_formacao_continuada) . '}';
 
     @session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
@@ -786,10 +787,8 @@ class indice extends clsCadastro
     $this->carga_horaria = $hour + $min;
     $this->carga_horaria = $hour + $min;
 
-    unset($this->pos_graduacao[0]);
     $this->pos_graduacao = '{' . implode(',', $this->pos_graduacao) . '}';
 
-    unset($this->curso_formacao_continuada[0]);
     $this->curso_formacao_continuada = '{' . implode(',', $this->curso_formacao_continuada) . '}';
 
     @session_start();
