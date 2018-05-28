@@ -52,6 +52,13 @@ require_once 'include/localizacaoSistema.php';
  */
 class clsCadastro extends clsCampos
 {
+    /**
+     * Referencia pega da session para o idpes do usuario atual
+     *
+     * @var int
+     */
+    var $pessoa_logada;
+
   var $__nome = 'formcadastro';
   var $banner;
   var $bannerLateral;

@@ -91,7 +91,6 @@ class clsPmieducarTurma
   var $cod_curso_profissional;
   var $turma_unificada;
   var $etapa_educacenso;
-  var $etapa_educacenso2;
   var $ref_cod_disciplina_dispensada;
   var $parecer_1_etapa;
   var $parecer_2_etapa;
@@ -176,7 +175,7 @@ class clsPmieducarTurma
         $this->_tabela = "{$this->_schema}turma";
 
         $this->_campos_lista = $this->_todos_campos = "t.cod_turma, t.ref_usuario_exc, t.ref_usuario_cad, t.ref_ref_cod_serie, t.ref_ref_cod_escola, t.ref_cod_infra_predio_comodo, t.nm_turma, t.sgl_turma, t.max_aluno, t.multiseriada, t.data_cadastro, t.data_exclusao, t.ativo, t.ref_cod_turma_tipo, t.hora_inicial, t.hora_final, t.hora_inicio_intervalo, t.hora_fim_intervalo, t.ref_cod_regente, t.ref_cod_instituicao_regente,t.ref_cod_instituicao, t.ref_cod_curso, t.ref_ref_cod_serie_mult, t.ref_ref_cod_escola_mult, t.visivel, t.turma_turno_id, t.tipo_boletim, t.ano,
-        t.tipo_atendimento, t.turma_mais_educacao, t.atividade_complementar_1, t.atividade_complementar_2, t.atividade_complementar_3, t.atividade_complementar_4, t.atividade_complementar_5, t.atividade_complementar_6, t.aee_braille, t.aee_recurso_optico, t.aee_estrategia_desenvolvimento, t.aee_tecnica_mobilidade, t.aee_libras, t.aee_caa, t.aee_curricular, t.aee_soroban, t.aee_informatica, t.aee_lingua_escrita, t.aee_autonomia, t.cod_curso_profissional, t.turma_unificada, t.etapa_educacenso, t.etapa_educacenso2, t.ref_cod_disciplina_dispensada, t.parecer_1_etapa, t.parecer_2_etapa,
+        t.tipo_atendimento, t.turma_mais_educacao, t.atividade_complementar_1, t.atividade_complementar_2, t.atividade_complementar_3, t.atividade_complementar_4, t.atividade_complementar_5, t.atividade_complementar_6, t.aee_braille, t.aee_recurso_optico, t.aee_estrategia_desenvolvimento, t.aee_tecnica_mobilidade, t.aee_libras, t.aee_caa, t.aee_curricular, t.aee_soroban, t.aee_informatica, t.aee_lingua_escrita, t.aee_autonomia, t.cod_curso_profissional, t.turma_unificada, t.etapa_educacenso, t.ref_cod_disciplina_dispensada, t.parecer_1_etapa, t.parecer_2_etapa,
         t.parecer_3_etapa, t.parecer_4_etapa, t.nao_informar_educacenso, t.tipo_mediacao_didatico_pedagogico, t.dias_semana, t.atividades_complementares, t.atividades_aee ";
 
         if( is_numeric( $ref_cod_turma_tipo ) )
@@ -811,12 +810,6 @@ class clsPmieducarTurma
                 $gruda    = ", ";
             }
 
-            if(is_numeric($this->etapa_educacenso2)){
-                $campos  .= "{$gruda}etapa_educacenso2";
-                $valores .= "{$gruda}'{$this->etapa_educacenso2}'";
-                $gruda    = ", ";
-            }
-
             if(is_numeric($this->ref_cod_disciplina_dispensada)){
                 $campos  .= "{$gruda}ref_cod_disciplina_dispensada";
                 $valores .= "{$gruda}'{$this->ref_cod_disciplina_dispensada}'";
@@ -1173,14 +1166,6 @@ class clsPmieducarTurma
                 $gruda = ", ";
             } elseif (is_null($this->etapa_educacenso)) {
                 $set  .= "{$gruda}etapa_educacenso = NULL";
-                $gruda = ", ";
-            }
-
-            if(is_numeric($this->etapa_educacenso2)) {
-                $set  .= "{$gruda}etapa_educacenso2 = '{$this->etapa_educacenso2}'";
-                $gruda = ", ";
-            } elseif (is_null($this->etapa_educacenso2)) {
-                $set  .= "{$gruda}etapa_educacenso2 = NULL";
                 $gruda = ", ";
             }
 
