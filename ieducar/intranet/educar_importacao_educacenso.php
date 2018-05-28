@@ -256,7 +256,7 @@ class indice extends clsCadastro
 
       $codEscolaLocalizacao = $this->getOrCreateLocalizacaoEscola($localizacao);
 
-      $codEscola = $this->createEscola($codEscolaLocalizacao, $codEscolaRedeEnsino, $idpesEscola, $nomeEscola, $idpesGestor, $cargoGestor);
+      $codEscola = $this->createEscola($codEscolaLocalizacao, $codEscolaRedeEnsino, $idpesEscola, $nomeEscola, $idpesGestor, $cargoGestor, $emailGestor);
 
       $this->createEscolaAnoLetivo($codEscola, $dataInicioAnoLetivo, $dataFimAnoLetivo);
 
@@ -402,7 +402,7 @@ class indice extends clsCadastro
     );
 
     $camposEscola['abastecimento_agua'] = array();
-    for ($i=1; $i <= 5; $i++) { 
+    for ($i=1; $i <= 5; $i++) {
       if($dadosRegistro[20+$i-1]){
         $camposEscola['abastecimento_agua'][] = $i;
       }
@@ -410,7 +410,7 @@ class indice extends clsCadastro
     $camposEscola['abastecimento_agua'] = '{'.implode(',', $camposEscola['abastecimento_agua']).'}';
 
     $camposEscola['abastecimento_energia'] = array();
-    for ($i=1; $i <= 4; $i++) { 
+    for ($i=1; $i <= 4; $i++) {
       if($dadosRegistro[25+$i-1]){
         $camposEscola['abastecimento_energia'][] = $i;
       }
@@ -418,7 +418,7 @@ class indice extends clsCadastro
     $camposEscola['abastecimento_energia'] = '{'.implode(',', $camposEscola['abastecimento_energia']).'}';
 
     $camposEscola['esgoto_sanitario'] = array();
-    for ($i=1; $i <= 3; $i++) { 
+    for ($i=1; $i <= 3; $i++) {
       if($dadosRegistro[29+$i-1]){
         $camposEscola['esgoto_sanitario'][] = $i;
       }
@@ -426,13 +426,13 @@ class indice extends clsCadastro
     $camposEscola['esgoto_sanitario'] = '{'.implode(',', $camposEscola['esgoto_sanitario']).'}';
 
     $camposEscola['destinacao_lixo'] = array();
-    for ($i=1; $i <= 6; $i++) { 
+    for ($i=1; $i <= 6; $i++) {
       if($dadosRegistro[32+$i-1]){
         $camposEscola['destinacao_lixo'][] = $i;
       }
     }
     $camposEscola['destinacao_lixo'] = '{'.implode(',', $camposEscola['destinacao_lixo']).'}';
-    
+
     $codEscola = $this->existeEscola($inep);
     if($codEscola){
       $objEscola = new clsPmieducarEscola($codEscola);
@@ -1851,7 +1851,7 @@ class indice extends clsCadastro
     return $codModulo;
   }
 
-  function createEscola($codEscolaLocalizacao, $codEscolaRedeEnsino, $idpesEscola, $nomeEscola, $idpesGestor, $cargoGestor){
+  function createEscola($codEscolaLocalizacao, $codEscolaRedeEnsino, $idpesEscola, $nomeEscola, $idpesGestor, $cargoGestor, $emailGestor){
     $escola = new clsPmieducarEscola();
 
     $escola->ref_usuario_cad = $this->pessoa_logada;
@@ -1861,6 +1861,7 @@ class indice extends clsCadastro
     $escola->ref_idpes = $idpesEscola;
     $escola->ref_idpes_gestor = $idpesGestor;
     $escola->cargo_gestor = $cargoGestor;
+    $escola->email_gestor = $emailGestor;
     $escola->sigla = mb_substr($nomeEscola, 0, 5, 'UTF-8');
     $escola->ativo = 1;
 

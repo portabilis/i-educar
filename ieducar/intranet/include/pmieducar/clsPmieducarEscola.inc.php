@@ -66,6 +66,7 @@ class clsPmieducarEscola
   var $acesso;
   var $ref_idpes_gestor;
   var $cargo_gestor;
+  var $email_gestor;
   var $local_funcionamento;
   var $condicao;
   var $codigo_inep_escola_compartilhada;
@@ -232,7 +233,7 @@ class clsPmieducarEscola
           e.dependencia_nenhuma_relacionada, e.dependencia_numero_salas_existente, dependencia_numero_salas_utilizadas,
           e.total_funcionario, e.atendimento_aee, e.fundamental_ciclo, e.localizacao_diferenciada, e.materiais_didaticos_especificos, e.educacao_indigena, e.lingua_ministrada, e.espaco_brasil_aprendizado,
           e.abre_final_semana, e.codigo_lingua_indigena, e.atividade_complementar, e.proposta_pedagogica, e.local_funcionamento, e.codigo_inep_escola_compartilhada, e.televisoes, e.videocassetes, e.dvds, e.antenas_parabolicas, e.copiadoras,
-          e.retroprojetores, e.impressoras, e.aparelhos_de_som, e.projetores_digitais, e.faxs, e.maquinas_fotograficas, e.computadores, e.computadores_administrativo, e.computadores_alunos, e.impressoras_multifuncionais, e.acesso_internet, e.banda_larga, e.ato_criacao, e.ato_autorizativo, e.ref_idpes_secretario_escolar, e.utiliza_regra_diferenciada, e.categoria_escola_privada, e.conveniada_com_poder_publico, e.mantenedora_escola_privada, e.cnpj_mantenedora_principal
+          e.retroprojetores, e.impressoras, e.aparelhos_de_som, e.projetores_digitais, e.faxs, e.maquinas_fotograficas, e.computadores, e.computadores_administrativo, e.computadores_alunos, e.impressoras_multifuncionais, e.acesso_internet, e.banda_larga, e.ato_criacao, e.ato_autorizativo, e.ref_idpes_secretario_escolar, e.utiliza_regra_diferenciada, e.categoria_escola_privada, e.conveniada_com_poder_publico, e.mantenedora_escola_privada, e.cnpj_mantenedora_principal, e.email_gestor
           ';
 
     if (is_numeric($ref_usuario_cad)) {
@@ -504,6 +505,12 @@ class clsPmieducarEscola
       if (is_numeric($this->cargo_gestor)) {
         $campos .= "{$gruda}cargo_gestor";
         $valores .= "{$gruda}'{$this->cargo_gestor}'";
+        $gruda = ", ";
+      }
+
+      if (is_string($this->email_gestor)) {
+        $campos .= "{$gruda}email_gestor";
+        $valores .= "{$gruda}'{$this->email_gestor}'";
         $gruda = ", ";
       }
 
@@ -1147,6 +1154,11 @@ class clsPmieducarEscola
 
       if (is_numeric($this->cargo_gestor)) {
         $set .= "{$gruda}cargo_gestor = '{$this->cargo_gestor}'";
+        $gruda = ", ";
+      }
+
+      if (is_string($this->email_gestor)) {
+        $set .= "{$gruda}email_gestor = '{$this->email_gestor}'";
         $gruda = ", ";
       }
 
