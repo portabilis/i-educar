@@ -482,7 +482,7 @@ class clsPmieducarMatriculaTurma
       }
     }
 
-    $sql = "SELECT {$this->_campos_lista}, mt.sequencial_fechamento, c.nm_curso, t.nm_turma, i.nm_instituicao, m.ref_ref_cod_serie, m.ref_cod_curso, m.ref_ref_cod_escola, c.ref_cod_instituicao, m.ref_cod_aluno,t.hora_inicial, t.etapa_educacenso $nome FROM {$this->_tabela} mt, {$this->_schema}matricula m, {$this->_schema}curso c, {$this->_schema}turma t,{$this->_schema}aluno al, {$this->_schema}instituicao i{$tab_aluno} {$from}, cadastro.pessoa ";
+    $sql = "SELECT {$this->_campos_lista}, mt.sequencial_fechamento, c.nm_curso, t.nm_turma, i.nm_instituicao, m.ref_ref_cod_serie, m.ref_cod_curso, m.ref_ref_cod_escola, c.ref_cod_instituicao, m.ref_cod_aluno,t.hora_inicial, t.etapa_educacenso as etapa_ensino $nome FROM {$this->_tabela} mt, {$this->_schema}matricula m, {$this->_schema}curso c, {$this->_schema}turma t,{$this->_schema}aluno al, {$this->_schema}instituicao i{$tab_aluno} {$from}, cadastro.pessoa ";
 
     $whereAnd = " AND ";
     $filtros = " WHERE mt.ref_cod_matricula = m.cod_matricula AND idpes = al.ref_idpes AND al.cod_aluno = m.ref_cod_aluno AND al.ativo=1 AND m.ref_cod_curso = c.cod_curso AND t.cod_turma = mt.ref_cod_turma AND i.cod_instituicao = c.ref_cod_instituicao {$where_nm_aluno} {$where}";
