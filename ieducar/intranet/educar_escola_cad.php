@@ -439,7 +439,7 @@ class indice extends clsCadastro
             $this->array_botao = array("Continuar", "Cancelar");
             $this->array_botao_url_script = array("obj = document.getElementById('cnpj');if(obj.value != '' ) { acao(); } else { acao(); }", "go('educar_escola_lst.php');");
         } else {
-            $this->inputsHelper()->integer('escola_inep_id', array('label' => 'Código INEP', 'placeholder' => 'INEP', 'required' => false, 'max_length' => 8, 'label_hint' => 'Somente números'));
+            $this->inputsHelper()->integer('escola_inep_id', array('label' => 'Código INEP', 'placeholder' => 'INEP', 'required' => $obrigarCamposCenso, 'max_length' => 8, 'label_hint' => 'Somente números'));
 
             if ($_POST) {
                 foreach ($_POST as $campo => $val) {
@@ -814,7 +814,7 @@ class indice extends clsCadastro
             $options = array('label' => 'Cargo do gestor escolar', 'resources' => $resources, 'value' => $this->cargo_gestor, 'required' => false, 'size' => 50);
             $this->inputsHelper()->select('cargo_gestor', $options);
 
-            $options = array('label' => 'E-mail do gestor escolar', 'value' => $this->email_gestor, 'required' => false, 'size' => 50);
+            $options = array('label' => 'E-mail do gestor escolar', 'value' => $this->email_gestor, 'required' => $obrigarCamposCenso, 'size' => 50);
 
             $this->inputsHelper()->text('email_gestor', $options);
 
