@@ -1,6 +1,6 @@
 <?php
 
-require_once 'CoreExt/Exception.php';
+require_once 'lib/CoreExt/Exception.php';
 require_once 'App/Unificacao/Base.php';
 require_once 'App/Unificacao/Servidor.php';
 require_once 'App/Unificacao/Aluno.php';
@@ -602,5 +602,15 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
         $unificadorServidor = new App_Unificacao_Servidor($this->codigoUnificador, $this->codigosDuplicados, $this->codPessoaLogada, $this->db, $this->transacao);
         $unificadorServidor->unifica();
         parent::unifica();
+    }
+
+    protected function validaParametros()
+    {
+        parent::validaParametros();
+        $pessoas = implode(",", (array_merge(array($this->codigoUnificador),$this->codigosDuplicados)));
+        $numeroAlunos = $this->db->CampoUnico("SELECT count(*) numero_alunos FROM pmieducar.aluno where ref_idpes IN ({$pessoas}) AND ativo = 1 ");
+        if ($numeroAlunos > 1) {
+            throw new CoreExt_Exception('Não é permitido unificar mais de uma pessoa vinculada com alunos. Efetue primeiro a unificação de alunos e tente novamente.');
+        }
     }
 }

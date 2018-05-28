@@ -6,6 +6,7 @@ require_once 'include/clsBanco.inc.php';
 require_once 'include/public/geral.inc.php';
 
 require_once 'lib/App/Unificacao/Pessoa.php';
+require_once 'lib/CoreExt/Exception.php';
 
 class clsIndexBase extends clsBase
 {
@@ -94,7 +95,12 @@ class indice extends clsCadastro
     }
 
     $unificador = new App_Unificacao_Pessoa($codPessoaPrincipal, $codPessoas, $this->pessoa_logada, new clsBanco(), FALSE);
-    $unificador->unifica();
+    try {
+        $unificador->unifica();
+    } catch (CoreExt_Exception $exception) {
+        $this->mensagem = $exception->getMessage();
+        return FALSE;
+    }
 
     $this->mensagem = "<span>Pessoas unificadas com sucesso.</span>";
     return true;
