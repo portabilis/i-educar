@@ -60,7 +60,7 @@ $j('#ref_idesco').on('change', ()=> {
 });
 
 $j('#situacao_curso_superior_1').on('change', () => {
-  habilitaComplementacaoPedagogica(1);  ;
+  habilitaComplementacaoPedagogica(1);
   habilitaCampoPosGraduacao();
 });
 $j('#codigo_curso_superior_1').on('change', () => habilitaComplementacaoPedagogica(1));

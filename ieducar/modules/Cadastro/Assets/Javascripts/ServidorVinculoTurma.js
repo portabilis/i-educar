@@ -103,8 +103,6 @@ $j(document).ready(function() {
 
   $j('#funcao_exercida').on('change', verificaObrigatoriedadeTipoVinculo);
 
-
-
   $serieField.on('change', function(){
     getRegraAvaliacao();
   });
@@ -118,7 +116,6 @@ $j(document).ready(function() {
       $professorAreaEspecificaField.attr('checked', false);
     }
   };
-
 
   function getRegraAvaliacao(){
     $serieId = $serieField.val();
