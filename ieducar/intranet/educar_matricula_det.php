@@ -190,8 +190,6 @@ class indice extends clsDetalhe
       $turma         = $turma->detalhe();
       $nomesTurmas[] = $turma['nm_turma'];
       $datasEnturmacoes[] = Portabilis_Date_Utils::pgSQLToBr($enturmacao['data_enturmacao']);
-      var_dump($turma['cod_turma']);
-      var_dump($turma['etapa_educacenso']);
       if (in_array($turma['etapa_educacenso'], App_Model_Educacenso::etapas_multisseriadas())) {
         $existeTurmaMulti = true;
       }
