@@ -123,6 +123,8 @@ class PessoaController extends ApiCoreController
             (select nm_mae from pmieducar.aluno where cod_aluno = $1)) as nome_mae,
             (select nome from cadastro.pessoa where idpes = fisica.idpes_responsavel) as nome_responsavel,
             (select rg from cadastro.documento where documento.idpes = fisica.idpes) as rg,
+            (select sigla_uf_exp_rg from cadastro.documento where documento.idpes = fisica.idpes) as uf_emissao_rg,
+            (select idorg_exp_rg from cadastro.documento where documento.idpes = fisica.idpes) as orgao_emissao_rg,
             (select tipo_cert_civil from cadastro.documento where documento.idpes = fisica.idpes) as tipo_cert_civil,
             (select num_termo from cadastro.documento where documento.idpes = fisica.idpes) as num_termo,
             (select num_livro from cadastro.documento where documento.idpes = fisica.idpes) as num_livro,
@@ -209,7 +211,7 @@ class PessoaController extends ApiCoreController
                        'num_folha', 'certidao_nascimento', 'certidao_casamento', 'zona_localizacao', 'idbai', 'idlog', 'idmun', 'idmun_nascimento', 'complemento',
                        'apartamento', 'andar', 'bloco', 'numero' , 'letra', 'possui_documento', 'iddis', 'distrito', 'ddd_fone_fixo', 'fone_fixo', 'fone_mov', 'ddd_fone_mov',
                        'pais_origem_id', 'tipo_nacionalidade', 'zona_localizacao_censo', 'pais_origem_nome',
-                    'cor_raca');
+                    'cor_raca', 'uf_emissao_rg', 'orgao_emissao_rg');
     $details = Portabilis_Array_Utils::filter($details, $attrs);
 
     $details['aluno_id']         = $alunoId;
