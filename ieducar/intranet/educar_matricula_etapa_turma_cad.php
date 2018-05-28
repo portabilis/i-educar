@@ -65,7 +65,6 @@ class indice extends clsCadastro
             false, null, false, false, false, null, true
         );
 
-        //$etapasEducacenso = array(0 => 'Nenhuma') + loadJson('educacenso_json/etapas_ensino.json');
         $todasEtapasEducacenso = loadJson('educacenso_json/etapas_ensino.json');
 
         foreach ($enturmacoes as $enturmacao) {
@@ -75,6 +74,7 @@ class indice extends clsCadastro
                     return in_array($value, App_Model_Educacenso::etapasDaTurma($enturmacao['etapa_educacenso']));
                 }
             );
+            $etapasEducacenso = array(0 => 'Nenhuma') + $etapasEducacenso;
             $this->campoLista("etapas_educacenso[{$enturmacao['ref_cod_turma']}-{$enturmacao['sequencial']}]", "Etapa do aluno na turma: {$enturmacao['nm_turma']}", $etapasEducacenso, $enturmacao['etapa_educacenso'], '', false, '', '', false, false);
         }
     }
