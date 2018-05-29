@@ -800,8 +800,8 @@ resourceOptions.handleGet = function (dataResponse) {
         var recursosProvaInep = dataResponse.recursos_prova_inep;
         recursosProvaInep = recursosProvaInep.replace(/{|}/gi, '');
         recursosProvaInep = recursosProvaInep.split(',');
-        $j('#recursos_prova_inep').val(recursosProvaInep);
-        $j('#recursos_prova_inep').trigger("chosen:updated");
+        $j('#recursos_prova_inep__').val(recursosProvaInep);
+        $j('#recursos_prova_inep__').trigger("chosen:updated");
     }
 
     $j('#recebe_escolarizacao_em_outro_espaco').val(dataResponse.recebe_escolarizacao_em_outro_espaco).change();
@@ -1517,7 +1517,7 @@ function canShowParentsFields() {
                 $j('#tab5').toggleClass('alunoTab alunoTab-active')
                 $j('.tablecadastro >tbody  > tr').each(function (index, row) {
                     if (row.id != 'stop') {
-                        if (index >= $j('#tr_fossa').index() && index < $j('#tr_recursos_prova_inep').index()) {
+                        if (index >= $j('#tr_fossa').index() && index < $j('#tr_recursos_prova_inep__').index()) {
                             row.show();
                         } else if (index != 0) {
                             row.hide();
@@ -1535,7 +1535,7 @@ function canShowParentsFields() {
                 $j('#tab6').toggleClass('alunoTab alunoTab-active')
                 $j('.tablecadastro >tbody  > tr').each(function (index, row) {
                     if (row.id != 'stop') {
-                        if (index >= $j('#tr_recursos_prova_inep').index() && index < $j('#tr_recursos_prova_inep').index() + 1) {
+                        if (index >= $j('#tr_recursos_prova_inep__').index() && index < $j('#tr_recursos_prova_inep__').index() + 1) {
                             row.show();
                         } else if (index != 0) {
                             row.hide();
