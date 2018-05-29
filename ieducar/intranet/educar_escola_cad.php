@@ -6,6 +6,7 @@ require_once 'include/pmieducar/geral.inc.php';
 require_once 'Portabilis/View/Helper/Application.php';
 require_once 'Portabilis/Utils/Database.php';
 require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
+require_once 'App/Model/ZonaLocalizacao.php';
 
 class clsIndexBase extends clsBase
 {
@@ -30,7 +31,6 @@ class indice extends clsCadastro
     public $ref_usuario_cad;
     public $ref_usuario_exc;
     public $ref_cod_instituicao;
-    public $ref_cod_escola_localizacao;
     public $ref_cod_escola_rede_ensino;
     public $ref_idpes;
     public $cnpj;
@@ -514,32 +514,18 @@ class indice extends clsCadastro
                 }
 
                 $this->campoLista("ref_cod_escola_rede_ensino", "Rede Ensino", $opcoes, $this->ref_cod_escola_rede_ensino, "", false, "", $script);
-                $opcoes = array("" => "Selecione");
 
-                if (class_exists("clsPmieducarEscolaLocalizacao")) {
-                    // EDITAR
-                    $script = "javascript:showExpansivelIframe(520, 120, 'educar_escola_localizacao_cad_pop.php');";
+                $zonas = App_Model_ZonaLocalizacao::getInstance();
+                $zonas = $zonas->getEnums();
 
-                    if ($this->ref_cod_instituicao) {
-                        $objTemp = new clsPmieducarEscolaLocalizacao();
-                        $lista = $objTemp->lista(null, null, null, null, null, null, null, null, 1, $this->ref_cod_instituicao);
+                $options = array(
+                    'label' => 'Zona localização',
+                    'value' => $this->zona_localizacao,
+                    'resources' => $zonas,
+                    'required' => true,
+                );
 
-                        if (is_array($lista) && count($lista)) {
-                            foreach ($lista as $registro) {
-                                $opcoes["{$registro['cod_escola_localizacao']}"] = "{$registro['nm_localizacao']}";
-                            }
-                        }
-
-                        $script = "<img id='img_localizacao' style='display: \'\'' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
-                    } else {
-                        $script = "<img id='img_localizacao' style='display: none;'  src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
-                    }
-                } else {
-                    echo "<!--\nErro\nClasse clsPmieducarEscolaLocalizacao nao encontrada\n-->";
-                    $opcoes = array("" => "Erro na geracao");
-                }
-
-                $this->campoLista("ref_cod_escola_localizacao", "Escola Localização", $opcoes, $this->ref_cod_escola_localizacao, "", false, "", $script);
+                $this->inputsHelper()->select('zona_localizacao', $options);
 
                 if (is_numeric($this->cep)) {
                     $this->cep = int2CEP($this->cep);
@@ -638,30 +624,17 @@ class indice extends clsCadastro
                 $this->campoLista("ref_cod_escola_rede_ensino", "Rede Ensino", $opcoes, $this->ref_cod_escola_rede_ensino, "", false, "", $script);
                 $opcoes = array("" => "Selecione");
 
-                if (class_exists("clsPmieducarEscolaLocalizacao")) {
-                    // EDITAR
-                    $script = "javascript:showExpansivelIframe(520, 120, 'educar_escola_localizacao_cad_pop.php');";
+                $zonas = App_Model_ZonaLocalizacao::getInstance();
+                $zonas = $zonas->getEnums();
 
-                    if ($this->ref_cod_instituicao) {
-                        $objTemp = new clsPmieducarEscolaLocalizacao();
-                        $lista = $objTemp->lista(null, null, null, null, null, null, null, null, 1, $this->ref_cod_instituicao);
+                $options = array(
+                    'label' => 'Zona localização',
+                    'value' => $this->zona_localizacao,
+                    'resources' => $zonas,
+                    'required' => true,
+                );
 
-                        if (is_array($lista) && count($lista)) {
-                            foreach ($lista as $registro) {
-                                $opcoes["{$registro['cod_escola_localizacao']}"] = "{$registro['nm_localizacao']}";
-                            }
-                        }
-
-                        $script = "<img id='img_localizacao' style='display:\'\'' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
-                    } else {
-                        $script = "<img id='img_localizacao' style='display: none;' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
-                    }
-                } else {
-                    echo "<!--\nErro\nClasse clsPmieducarEscolaLocalizacao nao encontrada\n-->";
-                    $opcoes = array("" => "Erro na geracao");
-                }
-
-                $this->campoLista("ref_cod_escola_localizacao", "Escola Localização", $opcoes, $this->ref_cod_escola_localizacao, "", false, "", $script);
+                $this->inputsHelper()->select('zona_localizacao', $options);
 
                 // Detalhes do Endereco
                 $objUf = new clsUf();
@@ -1388,7 +1361,7 @@ class indice extends clsCadastro
                 $cadastrou = $obj_pes_juridica->cadastra();
 
                 if ($cadastrou) {
-                    $obj = new clsPmieducarEscola(null, $this->pessoa_logada, null, $this->ref_cod_instituicao, $this->ref_cod_escola_localizacao, $this->ref_cod_escola_rede_ensino, $this->ref_idpes, $this->sigla, null, null, 1, null, $this->bloquear_lancamento_diario_anos_letivos_encerrados);
+                    $obj = new clsPmieducarEscola(null, $this->pessoa_logada, null, $this->ref_cod_instituicao, $this->zona_localizacao, $this->ref_cod_escola_rede_ensino, $this->ref_idpes, $this->sigla, null, null, 1, null, $this->bloquear_lancamento_diario_anos_letivos_encerrados);
                     $obj->situacao_funcionamento = $this->situacao_funcionamento;
                     $obj->dependencia_administrativa = $this->dependencia_administrativa;
                     $obj->latitude = $this->latitude;
@@ -1557,7 +1530,7 @@ class indice extends clsCadastro
                 return false;
             }
         } elseif ($this->sem_cnpj) {
-            $obj = new clsPmieducarEscola(null, $this->pessoa_logada, null, $this->ref_cod_instituicao, $this->ref_cod_escola_localizacao, $this->ref_cod_escola_rede_ensino, null, $this->sigla, null, null, 1, null, $this->bloquear_lancamento_diario_anos_letivos_encerrados, $this->utiliza_regra_diferenciada);
+            $obj = new clsPmieducarEscola(null, $this->pessoa_logada, null, $this->ref_cod_instituicao, $this->zona_localizacao, $this->ref_cod_escola_rede_ensino, null, $this->sigla, null, null, 1, null, $this->bloquear_lancamento_diario_anos_letivos_encerrados, $this->utiliza_regra_diferenciada);
             $obj->dependencia_administrativa = $this->dependencia_administrativa;
             $obj->latitude = $this->latitude;
             $obj->longitude = $this->longitude;
@@ -1756,7 +1729,7 @@ class indice extends clsCadastro
         $escolaDetAntigo = $obj->detalhe();
 
         if ($this->cod_escola) {
-            $obj = new clsPmieducarEscola($this->cod_escola, null, $this->pessoa_logada, $this->ref_cod_instituicao, $this->ref_cod_escola_localizacao, $this->ref_cod_escola_rede_ensino, $this->ref_idpes, $this->sigla, null, null, 1, $this->bloquear_lancamento_diario_anos_letivos_encerrados, $this->utiliza_regra_diferenciada);
+            $obj = new clsPmieducarEscola($this->cod_escola, null, $this->pessoa_logada, $this->ref_cod_instituicao, $this->zona_localizacao, $this->ref_cod_escola_rede_ensino, $this->ref_idpes, $this->sigla, null, null, 1, $this->bloquear_lancamento_diario_anos_letivos_encerrados, $this->utiliza_regra_diferenciada);
             $obj->dependencia_administrativa = $this->dependencia_administrativa;
             $obj->latitude = $this->latitude;
             $obj->longitude = $this->longitude;
@@ -1861,7 +1834,7 @@ class indice extends clsCadastro
                 $auditoria->alteracao($escolaDetAntigo, $escolaDetAtual);
             }
         } else {
-            $obj = new clsPmieducarEscola(null, $this->pessoa_logada, null, $this->ref_cod_instituicao, $this->ref_cod_escola_localizacao, $this->ref_cod_escola_rede_ensino, $this->ref_idpes, $this->sigla, null, null, 1, $this->bloquear_lancamento_diario_anos_letivos_encerrados, $this->utiliza_regra_diferenciada);
+            $obj = new clsPmieducarEscola(null, $this->pessoa_logada, null, $this->ref_cod_instituicao, $this->zona_localizacao, $this->ref_cod_escola_rede_ensino, $this->ref_idpes, $this->sigla, null, null, 1, $this->bloquear_lancamento_diario_anos_letivos_encerrados, $this->utiliza_regra_diferenciada);
             $obj->situacao_funcionamento = $this->situacao_funcionamento;
             $obj->dependencia_administrativa = $this->dependencia_administrativa;
             $obj->latitude = $this->latitude;

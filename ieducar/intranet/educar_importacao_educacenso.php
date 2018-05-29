@@ -254,9 +254,7 @@ class indice extends clsCadastro
 
       $codEscolaRedeEnsino = $this->getOrCreateRedeDeEnsino();
 
-      $codEscolaLocalizacao = $this->getOrCreateLocalizacaoEscola($localizacao);
-
-      $codEscola = $this->createEscola($codEscolaLocalizacao, $codEscolaRedeEnsino, $idpesEscola, $nomeEscola, $idpesGestor, $cargoGestor, $emailGestor);
+      $codEscola = $this->createEscola($localizacao, $codEscolaRedeEnsino, $idpesEscola, $nomeEscola, $idpesGestor, $cargoGestor);
 
       $this->createEscolaAnoLetivo($codEscola, $dataInicioAnoLetivo, $dataFimAnoLetivo);
 
@@ -1854,12 +1852,12 @@ class indice extends clsCadastro
     return $codModulo;
   }
 
-  function createEscola($codEscolaLocalizacao, $codEscolaRedeEnsino, $idpesEscola, $nomeEscola, $idpesGestor, $cargoGestor, $emailGestor){
+  function createEscola($localizacao, $codEscolaRedeEnsino, $idpesEscola, $nomeEscola, $idpesGestor, $cargoGestor, $emailGestor){
     $escola = new clsPmieducarEscola();
 
     $escola->ref_usuario_cad = $this->pessoa_logada;
     $escola->ref_cod_instituicao = $this->ref_cod_instituicao;
-    $escola->ref_cod_escola_localizacao = $codEscolaLocalizacao;
+    $escola->zona_localizacao = $localizacao;
     $escola->ref_cod_escola_rede_ensino = $codEscolaRedeEnsino;
     $escola->ref_idpes = $idpesEscola;
     $escola->ref_idpes_gestor = $idpesGestor;
@@ -1884,31 +1882,6 @@ class indice extends clsCadastro
       $codEscolaRedeEnsino = $rede_ensino->cadastra();
     }
     return $codEscolaRedeEnsino;
-  }
-
-  function getOrCreateLocalizacaoEscola($localizacao){
-    $localizacaoString = $localizacao == "1" ? "Urbana" : "Rural";
-
-    $codEscolaLocalizacao = $this->getLocalizacaoEscola($localizacaoString);
-    if (!$codEscolaLocalizacao) {
-      $escolaLocalizacao = new clsPmieducarEscolaLocalizacao();
-      $escolaLocalizacao->ref_usuario_cad = $this->pessoa_logada;
-      $escolaLocalizacao->nm_localizacao = $localizacaoString;
-      $escolaLocalizacao->ativo = 1;
-      $escolaLocalizacao->ref_cod_instituicao = $this->ref_cod_instituicao;
-
-      $codEscolaLocalizacao = $escolaLocalizacao->cadastra();
-    }
-    return $codEscolaLocalizacao;
-  }
-
-  function getLocalizacaoEscola($nm_localizacao){
-    $sql = "SELECT cod_escola_localizacao
-              FROM pmieducar.escola_localizacao
-              WHERE nm_localizacao ILIKE '{$nm_localizacao}'
-              LIMIT 1 ";
-
-    return Portabilis_Utils_Database::selectField($sql);
   }
 
   function getRedeDeEnsino() {

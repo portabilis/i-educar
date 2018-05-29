@@ -340,7 +340,7 @@ class EducacensoExportController extends ApiCoreController
 
         e.orgao_regional as r00s27,
         e.dependencia_administrativa as r00s28,
-        b.zona_localizacao as r00s29,
+        e.zona_localizacao as r00s29,
         e.categoria_escola_privada as r00s30,
         e.conveniada_com_poder_publico r00s31,
         CASE WHEN e.mantenedora_escola_privada::varchar LIKE \'%1%\' THEN 1 ELSE 0 END as r00s32,
