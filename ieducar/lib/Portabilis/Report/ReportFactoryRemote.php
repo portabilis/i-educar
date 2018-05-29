@@ -68,6 +68,7 @@ class Portabilis_Report_ReportFactoryRemote extends Portabilis_Report_ReportFact
 
 
     // api call
+      error_log('REPORT_LOG -> app: ' . $this->settings['app_name'] . ' - template: ' . $report->templateName() . ' - username: ' . $this->settings['username'] . ' - password: ' . $this->settings['password'] . ' - args: ' . json_encode($report->args));
 
     $client = XML_RPC2_Client::create($this->settings['url']);
 
@@ -76,7 +77,6 @@ class Portabilis_Report_ReportFactoryRemote extends Portabilis_Report_ReportFact
                                            $username      = $this->settings['username'],
                                            $password      = $this->settings['password'],
                                            $args          = $report->args);
-
 
     // report encoding
 

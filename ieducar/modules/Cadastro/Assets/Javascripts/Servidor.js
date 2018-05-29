@@ -69,7 +69,7 @@ $j('#codigo_curso_superior_3').on('change', () => habilitaComplementacaoPedagogi
 
 function habilitaComplementacaoPedagogica(seq) {
   var cursoSuperiorConcluido = $j('#situacao_curso_superior_'+seq).val() == 1;
-  var tecnologo = $j('#codigo_curso_superior_'+seq).val().search('Tecnologo') != -1;
+  var tecnologo = $j('#codigo_curso_superior_'+seq).val().search('Tecnológico') != -1;
   var bacharelado  = $j('#codigo_curso_superior_'+seq).val().search('Bacharelado') != -1;
   var habilitaCampo = cursoSuperiorConcluido && (tecnologo || bacharelado);
 
