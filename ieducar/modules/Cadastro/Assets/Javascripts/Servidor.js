@@ -1,7 +1,13 @@
 $j('#btn_enviar').removeAttr('onclick');
-$j('#btn_enviar').on('click', validaServidor);
+$j('#btn_enviar').on('click', () => {
+  if (!validaServidor() || !validaPosGraduacao() || !validaCursoFormacaoContinuada()) {
+    return false;
+  }
 
-function validaServidor(){
+  acao();
+});
+
+function validaServidor() {
   var inepServidor = $j('#cod_docente_inep').val();
 
   if (inepServidor.length > 0 && inepServidor.length != 12) {
@@ -9,9 +15,78 @@ function validaServidor(){
     return false;
   }
   
-  acao();
+  return true
 }
 
+function validaPosGraduacao() {
+  posGraduacao = $j('#pos_graduacao').val() || [];
+  possuiOpcaoNenhuma = $j.inArray('4', posGraduacao) != -1;
+  possuiMaisDeUmaOpcao = posGraduacao.length > 1;
+
+  if (possuiOpcaoNenhuma && possuiMaisDeUmaOpcao) {
+    messageUtils.error('Não é possível informar mais de uma opção no campo: <b>Possui pós-graduação</b>, quando a opção: <b>Nenhuma</b> estiver selecionada.');
+    return false;
+  }
+
+  return true;
+}
+
+function validaCursoFormacaoContinuada() {
+  cursoFormacaoContinuada = $j('#curso_formacao_continuada').val() || [];
+  possuiOpcaoNenhum = $j.inArray('16', cursoFormacaoContinuada) != -1;
+  possuiMaisDeUmaOpcao = cursoFormacaoContinuada.length > 1;
+
+  if (possuiOpcaoNenhum && possuiMaisDeUmaOpcao) {
+    messageUtils.error('Não é possível informar mais de uma opção no campo: <b>Possui cursos de formação continuada</b>, quando a opção: <b>Nenhum</b> estiver selecionada.');
+    return false;
+  }
+
+  return true;
+}
+
+habilitaComplementacaoPedagogica(1);
+habilitaComplementacaoPedagogica(2);
+habilitaComplementacaoPedagogica(3);
+habilitaCampoPosGraduacao();
+
+$j('#situacao_curso_superior_1').on('change', () => {
+  habilitaComplementacaoPedagogica(1);
+  habilitaCampoPosGraduacao();
+});
+$j('#codigo_curso_superior_1').on('change', () => habilitaComplementacaoPedagogica(1));
+
+$j('#situacao_curso_superior_2').on('change', () => {
+  habilitaComplementacaoPedagogica(2);
+  habilitaCampoPosGraduacao();
+});
+$j('#codigo_curso_superior_2').on('change', () => habilitaComplementacaoPedagogica(2));
+
+$j('#situacao_curso_superior_3').on('change', () => {
+  habilitaComplementacaoPedagogica(3);
+  habilitaCampoPosGraduacao();
+});
+$j('#codigo_curso_superior_3').on('change', () => habilitaComplementacaoPedagogica(3));
+
+function habilitaComplementacaoPedagogica(seq) {
+  var cursoSuperiorConcluido = $j('#situacao_curso_superior_'+seq).val() == 1;
+  var tecnologo = $j('#codigo_curso_superior_'+seq).val().search('Tecnológico') != -1;
+  var bacharelado  = $j('#codigo_curso_superior_'+seq).val().search('Bacharelado') != -1;
+  var habilitaCampo = cursoSuperiorConcluido && (tecnologo || bacharelado);
+
+  $j('#formacao_complementacao_pedagogica_'+seq).attr('disabled', !habilitaCampo);
+}
+
+function habilitaCampoPosGraduacao() {
+  var possuiSuperiorConcuido = $j('#situacao_curso_superior_1').val() == 1 ||
+                               $j('#situacao_curso_superior_2').val() == 1 ||
+                               $j('#situacao_curso_superior_3').val() == 1;
+  
+  $j('#tr_pos_graduacao').hide();
+
+  if (possuiSuperiorConcuido) {
+    $j('#tr_pos_graduacao').show();
+  }
+}
 
 //abas
 
@@ -83,6 +158,7 @@ $j(document).ready(function() {
         }else
           return false;
       });
+      habilitaCampoPosGraduacao();
     });
 
   // fix checkboxs

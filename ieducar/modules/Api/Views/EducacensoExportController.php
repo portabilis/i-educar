@@ -1026,7 +1026,6 @@ class EducacensoExportController extends ApiCoreController
         (SELECT grau_academico FROM modules.educacenso_curso_superior ecs WHERE ecs.id = codigo_curso_superior_1) as grau_academico_curso_superior_1,
         ano_inicio_curso_superior_1 as r50s9,
         ano_conclusao_curso_superior_1 as r50s10,
-        -- tipo_instituicao_curso_superior_1 as r50s11,
         (SELECT ies_id FROM modules.educacenso_ies ei WHERE ei.id = instituicao_curso_superior_1) as r50s11,
         situacao_curso_superior_2 as r50s12,
         formacao_complementacao_pedagogica_2 as r50s13,
@@ -1034,7 +1033,6 @@ class EducacensoExportController extends ApiCoreController
     (SELECT grau_academico FROM modules.educacenso_curso_superior ecs WHERE ecs.id = codigo_curso_superior_2) as grau_academico_curso_superior_2,
         ano_inicio_curso_superior_2 as r50s15,
         ano_conclusao_curso_superior_2 as r50s16,
-        -- tipo_instituicao_curso_superior_2 as r50s18,
         (SELECT ies_id FROM modules.educacenso_ies ei WHERE ei.id = instituicao_curso_superior_2) as r50s17,
         situacao_curso_superior_3 as r50s18,
         formacao_complementacao_pedagogica_3 as r50s19,
@@ -1043,28 +1041,27 @@ class EducacensoExportController extends ApiCoreController
     WHERE ecs.id = codigo_curso_superior_3) as grau_academico_curso_superior_3,
         ano_inicio_curso_superior_3 as r50s21,
         ano_conclusao_curso_superior_3 as r50s22,
-        -- tipo_instituicao_curso_superior_3 as r50s25,
         (SELECT ies_id FROM modules.educacenso_ies ei WHERE ei.id = instituicao_curso_superior_3) as r50s23,
-        pos_especializacao as r50s24,
-        pos_mestrado as r50s25,
-        pos_doutorado as r50s26,
-        pos_nenhuma as r50s27,
-        curso_creche as r50s28,
-        curso_pre_escola as r50s29,
-        curso_anos_iniciais as r50s30,
-        curso_anos_finais as r50s31,
-        curso_ensino_medio as r50s32,
-        curso_eja as r50s33,
-        curso_educacao_especial as r50s34,
-        curso_educacao_indigena as r50s35,
-        curso_educacao_campo as r50s36,
-        curso_educacao_ambiental as r50s37,
-        curso_educacao_direitos_humanos as r50s38,
-        curso_genero_diversidade_sexual as r50s39,
-        curso_direito_crianca_adolescente as r50s40,
-        curso_relacoes_etnicorraciais as r50s41,
-        curso_outros as r50s42,
-        curso_nenhum as r50s43
+        (ARRAY[1] <@ pos_graduacao)::int as r50s24,
+        (ARRAY[2] <@ pos_graduacao)::int as r50s25,
+        (ARRAY[3] <@ pos_graduacao)::int as r50s26,
+        (ARRAY[4] <@ pos_graduacao)::int as r50s27,
+        (ARRAY[1] <@ curso_formacao_continuada)::int as r50s28,
+        (ARRAY[2] <@ curso_formacao_continuada)::int as r50s29,
+        (ARRAY[3] <@ curso_formacao_continuada)::int as r50s30,
+        (ARRAY[4] <@ curso_formacao_continuada)::int as r50s31,
+        (ARRAY[5] <@ curso_formacao_continuada)::int as r50s32,
+        (ARRAY[6] <@ curso_formacao_continuada)::int as r50s33,
+        (ARRAY[7] <@ curso_formacao_continuada)::int as r50s34,
+        (ARRAY[8] <@ curso_formacao_continuada)::int as r50s35,
+        (ARRAY[9] <@ curso_formacao_continuada)::int as r50s36,
+        (ARRAY[10] <@ curso_formacao_continuada)::int as r50s37,
+        (ARRAY[11] <@ curso_formacao_continuada)::int as r50s38,
+        (ARRAY[12] <@ curso_formacao_continuada)::int as r50s39,
+        (ARRAY[13] <@ curso_formacao_continuada)::int as r50s40,
+        (ARRAY[14] <@ curso_formacao_continuada)::int as r50s41,
+        (ARRAY[15] <@ curso_formacao_continuada)::int as r50s42,
+        (ARRAY[16] <@ curso_formacao_continuada)::int as r50s43
 
         FROM    pmieducar.servidor s
         INNER JOIN cadastro.fisica fis ON (fis.idpes = s.cod_servidor)
@@ -1134,6 +1131,10 @@ class EducacensoExportController extends ApiCoreController
 
       if (!$situacaoConcluido) {
         $r50s24 = $r50s25 = $r50s26 = $r50s27 = NULL;
+      }
+
+      if ($r50s43 == 1) {
+        $r50s28 = $r50s29 = $r50s30 = $r50s31 = $r50s32 = $r50s33 = $r50s34 = $r50s35 = $r50s36 = $r50s37 = $r50s38 = $r50s39 = $r50s40 = $r50s41 = $r50s42 = 0;
       }
 
       $cont= 0;

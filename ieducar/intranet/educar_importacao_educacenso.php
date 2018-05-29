@@ -960,27 +960,23 @@ class indice extends clsCadastro
       'formacao_complementacao_pedagogica_3' => $dadosRegistro[19-1],
       'ano_inicio_curso_superior_3' => $dadosRegistro[21-1],
       'ano_conclusao_curso_superior_3' => $dadosRegistro[22-1],
-      'pos_especializacao' => $dadosRegistro[24-1],
-      'pos_mestrado' => $dadosRegistro[25-1],
-      'pos_doutorado' => $dadosRegistro[26-1],
-      'pos_nenhuma' => $dadosRegistro[27-1],
-      'curso_creche' => $dadosRegistro[28-1],
-      'curso_pre_escola' => $dadosRegistro[29-1],
-      'curso_anos_iniciais' => $dadosRegistro[30-1],
-      'curso_anos_finais' => $dadosRegistro[31-1],
-      'curso_ensino_medio' => $dadosRegistro[32-1],
-      'curso_eja' => $dadosRegistro[33-1],
-      'curso_educacao_especial' => $dadosRegistro[34-1],
-      'curso_educacao_indigena' => $dadosRegistro[35-1],
-      'curso_educacao_campo' => $dadosRegistro[36-1],
-      'curso_educacao_ambiental' => $dadosRegistro[37-1],
-      'curso_educacao_direitos_humanos' => $dadosRegistro[38-1],
-      'curso_genero_diversidade_sexual' => $dadosRegistro[39-1],
-      'curso_direito_crianca_adolescente' => $dadosRegistro[40-1],
-      'curso_relacoes_etnicorraciais' => $dadosRegistro[41-1],
-      'curso_outros' => $dadosRegistro[42-1],
-      'curso_nenhum' => $dadosRegistro[43-1],
     );
+
+    $cursosServidor['pos_graduacao'] = array();
+    for ($i=1; $i <= 4; $i++) { 
+      if($dadosRegistro[23+$i-1]){
+        $cursosServidor['pos_graduacao'][] = $i;
+      }
+    }
+    $cursosServidor['pos_graduacao'] = '{'.implode(',', $cursosServidor['pos_graduacao']).'}';
+
+    $cursosServidor['curso_formacao_continuada'] = array();
+    for ($i=1; $i <= 16; $i++) { 
+      if($dadosRegistro[27+$i-1]){
+        $cursosServidor['curso_formacao_continuada'][] = $i;
+      }
+    }
+    $cursosServidor['curso_formacao_continuada'] = '{'.implode(',', $cursosServidor['curso_formacao_continuada']).'}';
 
     if(!is_numeric($inepServidor)){
       return false;
