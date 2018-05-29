@@ -180,14 +180,14 @@ if (!$j('#cnpj').is(':visible')){
   linha_inicial_infra = $j('#tlocal_funcionamento').index()-1;
   linha_inicial_dependencia = $j('#tmarcar_todas_dependencias').index()-1;
   linha_inicial_equipamento = $j('#ttelevisoes').index()-1;
-  linha_inicial_dados = $j('#tatendimento_aee').index()-1;  
+  linha_inicial_dados = $j('#tatendimento_aee').index()-1;
 
   // Adiciona um ID à linha que termina o formulário para parar de esconder os campos
   $j('.tableDetalheLinhaSeparador').closest('tr').attr('id','stop');
   $j('.tablecadastro >tbody  > tr').each(function(index, row) {
     if (index>=linha_inicial_infra){
       if (row.id!='stop')
-        row.hide();    
+        row.hide();
       else{
         return false;
       }
@@ -200,7 +200,7 @@ $j(document).ready(function() {
   // on click das abas
 
   // DADOS GERAIS
-  $j('#tab1').click( 
+  $j('#tab1').click(
     function(){
 
       $j('.escolaTab-active').toggleClass('escolaTab-active escolaTab');
@@ -208,18 +208,18 @@ $j(document).ready(function() {
       $j('.tablecadastro >tbody  > tr').each(function(index, row) {
         if (index>=linha_inicial_infra){
           if (row.id!='stop')
-            row.hide();    
+            row.hide();
           else
             return false;
         }else{
           row.show();
         }
-      });        
+      });
     }
-  );  
+  );
 
   // INFRA
-  $j('#tab2').click( 
+  $j('#tab2').click(
     function(){
       $j('.escolaTab-active').toggleClass('escolaTab-active escolaTab');
       $j('#tab2').toggleClass('escolaTab escolaTab-active')
@@ -236,7 +236,7 @@ $j(document).ready(function() {
     });
 
   // DEPENDENCIAS
-  $j('#tab3').click( 
+  $j('#tab3').click(
     function(){
       $j('.escolaTab-active').toggleClass('escolaTab-active escolaTab');
       $j('#tab3').toggleClass('escolaTab escolaTab-active')
@@ -253,7 +253,7 @@ $j(document).ready(function() {
     });
 
   // EQUIPAMENTOS
-  $j('#tab4').click( 
+  $j('#tab4').click(
     function(){
       $j('.escolaTab-active').toggleClass('escolaTab-active escolaTab');
       $j('#tab4').toggleClass('escolaTab escolaTab-active')
@@ -267,10 +267,10 @@ $j(document).ready(function() {
         }else
           return false;
       });
-    });  
+    });
 
   // Dados educacionais
-  $j('#tab5').click( 
+  $j('#tab5').click(
     function(){
       $j('.escolaTab-active').toggleClass('escolaTab-active escolaTab');
       $j('#tab5').toggleClass('escolaTab escolaTab-active')
@@ -324,26 +324,6 @@ function getRedeEnsino(xml_escola_rede_ensino)
         campoRedeEnsino.options[0].text = 'A instituição não possui nenhuma rede de ensino';
 }
 
-function getLocalizacao(xml_escola_localizacao)
-{
-    var campoLocalizacao = document.getElementById('ref_cod_escola_localizacao');
-    var DOM_array = xml_escola_localizacao.getElementsByTagName( "escola_localizacao" );
-
-    if(DOM_array.length)
-    {
-        campoLocalizacao.length = 1;
-        campoLocalizacao.options[0].text = 'Selecione uma localização';
-        campoLocalizacao.disabled = false;
-
-        for( var i = 0; i < DOM_array.length; i++ )
-        {
-            campoLocalizacao.options[campoLocalizacao.options.length] = new Option( DOM_array[i].firstChild.data, DOM_array[i].getAttribute("cod_escola_localizacao"),false,false);
-        }
-    }
-    else
-        campoLocalizacao.options[0].text = 'A instituição não possui nenhuma localização';
-}
-
 function getCurso(xml_curso)
 {
     var campoCurso = document.getElementById('ref_cod_curso');
@@ -376,11 +356,6 @@ if ( document.getElementById('ref_cod_instituicao') )
         campoRedeEnsino.disabled = true;
         campoRedeEnsino.options[0].text = 'Carregando rede de ensino';
 
-        var campoLocalizacao = document.getElementById('ref_cod_escola_localizacao');
-        campoLocalizacao.length = 1;
-        campoLocalizacao.disabled = true;
-        campoLocalizacao.options[0].text = 'Carregando localização';
-
         var campoCurso = document.getElementById('ref_cod_curso');
         campoCurso.length = 1;
         campoCurso.disabled = true;
@@ -389,21 +364,16 @@ if ( document.getElementById('ref_cod_instituicao') )
         var xml_escola_rede_ensino = new ajax( getRedeEnsino );
         xml_escola_rede_ensino.envia( "educar_escola_rede_ensino_xml.php?ins="+campoInstituicao );
 
-        var xml_escola_localizacao = new ajax( getLocalizacao );
-        xml_escola_localizacao.envia( "educar_escola_localizacao_xml.php?ins="+campoInstituicao );
-
         var xml_curso = new ajax( getCurso );
         xml_curso.envia( "educar_curso_xml2.php?ins="+campoInstituicao );
 
         if (this.value == '')
         {
             $('img_rede_ensino').style.display = 'none;';
-            $('img_localizacao').style.display = 'none;';
         }
         else
         {
             $('img_rede_ensino').style.display = '';
-            $('img_localizacao').style.display = '';
         }
 
     }
