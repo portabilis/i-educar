@@ -34,7 +34,7 @@ var $arrayCheckDependencias = ['dependencia_sala_diretoria',
 $escolaInepIdField.closest('tr').hide();
 
 var submitForm = function(){
-  var canSubmit = validationUtils.validatesFields();
+  var canSubmit = validationUtils.validatesFields(true);
 
   // O campo escolaInepId somente é atualizado ao cadastrar escola,  uma vez que este
   // é atualizado via ajax, e durante o (novo) cadastro a escola ainda não possui id.
@@ -118,13 +118,21 @@ $j('#marcar_todas_dependencias').click(
     }
 );
 
+let obrigarCamposCenso = $j('#obrigar_campos_censo').val() == '1';
+
 $j('#local_funcionamento').change(
   function(){
       var disabled = this.value != 3;
       $j('#condicao').prop("disabled",disabled);
       $j('#codigo_inep_escola_compartilhada').prop("disabled",disabled);
+      $j('#condicao').makeUnrequired();
+      $j('#dependencia_numero_salas_existente').makeUnrequired();
+      if (!disabled && obrigarCamposCenso) {
+        $j('#condicao').makeRequired();
+        $j('#dependencia_numero_salas_existente').makeRequired();
+      }
   }
-);
+).trigger('change');
 
 $j('#educacao_indigena').change(
   function(){
@@ -158,8 +166,12 @@ $j('#computadores').change(
   function(){
       var possuiComputadores = this.value > 0;
       $j('#acesso_internet').prop('disabled', !possuiComputadores);
+      $j('#acesso_internet').makeUnrequired();
+      if (possuiComputadores && obrigarCamposCenso) {
+        $j('#acesso_internet').makeRequired();
+      }
   }
-);
+).trigger('change');
 
 //abas
 

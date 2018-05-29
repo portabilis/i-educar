@@ -125,7 +125,12 @@ function validatesPresenseOfValueInRequiredFields(additionalFields, exceptFields
   if ($emptyFields.length == 0)
     return true;
 
-  alert('Preencha os campos obrigat\u00F3rios, antes de continuar.');
+  let label = $emptyFields[0].closest('tr').find('td:first span.form:first').text() || "";
+  if (label.length) {
+    alert(`Preencha o campo '${label}' corretamente`);
+  } else {
+    alert('Preencha os campos obrigat\u00F3rios, antes de continuar.');
+  }
   $emptyFields.first().focus();
   return false;
 }
