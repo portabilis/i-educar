@@ -1214,10 +1214,7 @@ class EducacensoAnaliseController extends ApiCoreController
                    endereco_pessoa.cep AS cep,
                    fisica.zona_localizacao_censo AS zona_localizacao
               FROM pmieducar.aluno
-             INNER JOIN pmieducar.matricula ON (matricula.ref_cod_aluno = aluno.cod_aluno)
-             INNER JOIN pmieducar.matricula_turma ON (matricula_turma.ref_cod_matricula = matricula.cod_matricula)
-             INNER JOIN pmieducar.turma ON (turma.cod_turma = matricula_turma.ref_cod_turma)
-             INNER JOIN pmieducar.escola ON (escola.cod_escola = matricula.ref_ref_cod_escola)
+              JOIN pmieducar.escola ON escola.cod_escola = $2
              INNER JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
              INNER JOIN cadastro.pessoa ON (pessoa.idpes = aluno.ref_idpes)
              INNER JOIN cadastro.fisica ON (fisica.idpes = pessoa.idpes)
@@ -1231,15 +1228,22 @@ class EducacensoAnaliseController extends ApiCoreController
               LEFT JOIN public.uf uf_rg ON (uf_rg.sigla_uf = documento.sigla_uf_exp_rg)
               LEFT JOIN public.bairro ON (bairro.idbai = endereco_pessoa.idbai)
              WHERE aluno.ativo = 1
-               AND turma.ativo = 1
-               AND turma.visivel = TRUE
-               AND COALESCE(turma.nao_informar_educacenso, 0) = 0
-               AND matricula.ativo = 1
-               AND matricula_turma.ativo = 1
-               AND matricula.ano = $1
-               AND escola.cod_escola = $2
-               AND COALESCE(matricula.data_matricula,matricula.data_cadastro) BETWEEN DATE($3) AND DATE($4)
-               AND (matricula.aprovado = 3 OR DATE(COALESCE(matricula.data_cancel,matricula.data_exclusao)) > DATE($4))
+                AND EXISTS(
+                    SELECT 1
+                    FROM pmieducar.matricula
+                    INNER JOIN pmieducar.matricula_turma ON (matricula_turma.ref_cod_matricula = matricula.cod_matricula)
+                    INNER JOIN pmieducar.turma ON (turma.cod_turma = matricula_turma.ref_cod_turma)
+                    WHERE matricula.ref_cod_aluno = aluno.cod_aluno
+                    AND turma.ativo = 1
+                    AND turma.visivel = TRUE
+                    AND COALESCE(turma.nao_informar_educacenso, 0) = 0
+                   AND matricula.ativo = 1
+                   AND matricula_turma.ativo = 1
+                   AND matricula.ano = $1
+                   AND escola.cod_escola = matricula.ref_ref_cod_escola
+                   AND COALESCE(matricula.data_matricula,matricula.data_cadastro) BETWEEN DATE($3) AND DATE($4)
+                    AND (matricula.aprovado = 3 OR DATE(COALESCE(matricula.data_cancel,matricula.data_exclusao)) > DATE($4))
+                )
              ORDER BY nome_aluno";
 
     $alunos = $this->fetchPreparedQuery($sql, array($ano,
@@ -1280,7 +1284,7 @@ class EducacensoAnaliseController extends ApiCoreController
         if ($aluno["sigla_uf_rg"] && !$aluno["uf_inep_rg"]) {
           $mensagem[] = array("text" => "Dados para formular o registro 70 da escola {$nomeEscola} não encontrados. Verificamos que o estado da identidade do(a) aluno(a) {$nomeAluno} foi informado, portanto é necessário preencher o código deste estado conforme a 'Tabela de UF'.",
                               "path" => "(Endereçamento > Cadastros > Estados > Editar > Campo: Código INEP)",
-                              "linkPath" => "/intranet/public_uf_cad.php?sigla_uf={$siglaUF}", 
+                              "linkPath" => "/intranet/public_uf_cad.php?sigla_uf={$siglaUF}",
                               "fail" => true);
         }
       }
