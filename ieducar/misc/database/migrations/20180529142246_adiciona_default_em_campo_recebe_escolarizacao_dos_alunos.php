@@ -6,7 +6,8 @@ class AdicionaDefaultEmCampoRecebeEscolarizacaoDosAlunos extends AbstractMigrati
 {
     public function up()
     {
-        $sql = "ALTER TABLE pmieducar.aluno ALTER COLUMN recebe_escolarizacao_em_outro_espaco SET DEFAULT 3;
+        $sql = "UPDATE pmieducar.aluno SET recebe_escolarizacao_em_outro_espaco = 3 WHERE recebe_escolarizacao_em_outro_espaco IS NULL;
+                ALTER TABLE pmieducar.aluno ALTER COLUMN recebe_escolarizacao_em_outro_espaco SET DEFAULT 3;
                 ALTER TABLE pmieducar.aluno ALTER COLUMN recebe_escolarizacao_em_outro_espaco SET NOT NULL; ";
         $this->execute($sql);
     }
