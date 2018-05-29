@@ -883,6 +883,10 @@ class EducacensoExportController extends ApiCoreController
       $r30s12 = $this->convertStringToAlpha($r30s12);
       $r30s13 = $this->convertStringToAlpha($r30s13);
 
+      if($r30s14 != '1') {
+        $r30s16 = $r30s17 = NULL;
+      }
+
       if($r30s14 == '1' || $r30s14 == '2')
         $r30s15 = 76;
 
