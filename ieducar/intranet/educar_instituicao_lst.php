@@ -145,10 +145,7 @@ class indice extends clsListagem
         $this->addPaginador2( "educar_instituicao_lst.php", $total, $_GET, $this->nome, $this->limite );
 
         $obj_permissoes = new clsPermissoes();
-        if( $obj_permissoes->permissao_cadastra( 559, $this->pessoa_logada, 1 ) ) {
-            $this->acao = "go(\"educar_instituicao_cad.php\")";
-            $this->nome_acao = "Novo";
-        }
+
         $this->largura = "100%";
 
         $localizacao = new LocalizacaoSistema();

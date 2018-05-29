@@ -31,8 +31,8 @@ require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'lib/Portabilis/View/Helper/Application.php';
+require_once 'lib/Portabilis/Utils/CustomLabel.php';
 require_once 'App/Model/NivelTipoUsuario.php';
-
 
 class clsIndexBase extends clsBase
 {
@@ -266,13 +266,12 @@ class indice extends clsCadastro
         }
         $this->campoLista("escola_uf", "Estado da Escola", $lista_estado, $this->escola_uf );
 
-        $this->campoTexto( "nm_curso", "Curso", $this->nm_curso, 30, 255, false, false, false, $GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu' ? 'Ex.: Ensino Fundamental I' : '' );
+        $this->campoTexto("nm_curso", "Curso", $this->nm_curso, 30, 255, false, false, false, _cl('historico.cadastro.curso_detalhe'));
 
         $opcoesGradeCurso = getOpcoesGradeCurso();
         $this->campoLista( "historico_grade_curso_id", "Grade curso", $opcoesGradeCurso, $this->historico_grade_curso_id );
 
-
-        $this->campoTexto( "nm_serie", $GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu' ? "Ano/S&eacute;rie" : "S&eacute;rie", $this->nm_serie, 30, 255, true );
+        $this->campoTexto( "nm_serie", _cl('historico.cadastro.serie'), $this->nm_serie, 30, 255, true );
         $this->campoCheck("dependencia", "Histórico de dependência", $this->dependencia);
         $this->campoNumero( "ano", "Ano", $this->ano, 4, 4, true );
         if (validaControlePosicaoHistorico()) {

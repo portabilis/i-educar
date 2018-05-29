@@ -57,9 +57,6 @@
           }else{
             loc.pathname = '/' + caminho;
           }
-
-          if (loc.search)
-            loc.search = '';
         }
       }
       if($element_nome_menu.val() != ''){

@@ -35,6 +35,7 @@ require_once 'include/pmieducar/geral.inc.php';
 
 require_once 'App/Model/IedFinder.php';
 require_once 'Portabilis/View/Helper/Application.php';
+require_once 'Portabilis/Utils/CustomLabel.php';
 
 /**
  * clsIndexBase class.
@@ -231,7 +232,7 @@ class indice extends clsDetalhe
     }
 
     if ($registro['sgl_turma']) {
-      $this->addDetalhe(array($GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu' ? 'C&oacute;digo da sala Prodesp/GDAE' : 'Sigla', $registro['sgl_turma']));
+      $this->addDetalhe(array(_cl('turma.detalhe.sigla'), $registro['sgl_turma']));
     }
 
     if ($registro['max_aluno']) {

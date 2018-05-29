@@ -50,11 +50,18 @@ class Calendario_Model_TurmaDataMapper extends CoreExt_DataMapper
   protected $_tableSchema = 'modules';
 
   protected $_attributeMap = array(
-    'calendarioAnoLetivo' => 'calendario_ano_letivo_id',
-    'turma'               => 'turma_id'
+    'calendarioAnoLetivo'   => 'calendario_ano_letivo_id',
+    'ano'                   => 'ano',
+    'mes'                   => 'mes',
+    'dia'                   => 'dia',
+    'turma'                 => 'turma_id'
   );
 
   protected $_primaryKey = array(
-    'calendarioAnoLetivo', 'mes', 'dia', 'ano', 'turma'
+    'calendarioAnoLetivo'   => 'calendario_ano_letivo_id',
+    'ano'                   => 'ano',
+    'mes'                   => 'mes',
+    'dia'                   => 'dia',
+    'turma'                 => 'turma_id'
   );
 }
