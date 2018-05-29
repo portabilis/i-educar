@@ -1021,6 +1021,7 @@ class indice extends clsCadastro
       $objTurma->visivel = $this->visivel;
       $objTurma->turma_turno_id = $this->turma_turno_id;
       $objTurma->tipo_boletim = $this->tipo_boletim;
+      $objTurma->tipo_boletim_diferenciado = $this->tipo_boletim_diferenciado;
       $objTurma->ano = $this->ano_letivo;
       $objTurma->tipo_atendimento = $this->tipo_atendimento;
       $objTurma->turma_mais_educacao = $this->turma_mais_educacao;
