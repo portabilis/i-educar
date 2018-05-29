@@ -1348,7 +1348,8 @@ class EducacensoAnaliseController extends ApiCoreController
                    turma.tipo_atendimento AS tipo_atendimento,
                    aluno.recebe_escolarizacao_em_outro_espaco AS recebe_escolarizacao_em_outro_espaco,
                    turma.etapa_educacenso AS etapa_ensino,
-                   matricula_turma.etapa_educacenso AS etapa_turma
+                   matricula_turma.etapa_educacenso AS etapa_turma,
+                   matricula.cod_matricula AS cod_matricula
               FROM pmieducar.aluno
              INNER JOIN pmieducar.matricula ON (matricula.ref_cod_aluno = aluno.cod_aluno)
              INNER JOIN pmieducar.matricula_turma ON (matricula_turma.ref_cod_matricula = matricula.cod_matricula)
@@ -1389,6 +1390,7 @@ class EducacensoAnaliseController extends ApiCoreController
       $nomeEscola = Portabilis_String_Utils::toUtf8(strtoupper($aluno["nome_escola"]));
       $nomeAluno  = Portabilis_String_Utils::toUtf8(strtoupper($aluno["nome_aluno"]));
       $codAluno = $aluno["cod_aluno"];
+      $codMatricula = $aluno["cod_matricula"];
 
       if (is_null($aluno["transporte_escolar"])) {
         $mensagem[] = array("text" => "Dados para formular o registro 80 da escola {$nomeEscola} não encontrados. Verifique se o transporte púlblico foi informado para o(a) aluno(a) {$nomeAluno}.",
@@ -1415,8 +1417,9 @@ class EducacensoAnaliseController extends ApiCoreController
       }
       if (in_array($aluno["etapa_ensino"], $etapasEnsinoCorrecao)) {
         if (!$aluno["etapa_turma"]) {
-          $mensagem[] = array("text" => "Dados para formular o registro 80 do(a) aluno(a) {$nomeAluno} não encontrados. Verificamos que a etapa da turma vinculada a este aluno(a) não foi informada.",
-                              "path" => "(Cadastros > Turma > Cadastrar > Campo: Etapa da turma)",
+          $mensagem[] = array("text" => "Dados para formular o registro 80 do(a) aluno(a) {$nomeAluno} não encontrados. Verificamos que a etapa do aluno não foi informada.",
+                              "path" => "(Escola > Cadastros > Alunos > Visualizar (matrícula do ano atual) > Etapa do aluno)",
+                              "linkPath" => "/intranet/educar_matricula_etapa_turma_cad.php?ref_cod_matricula={$codMatricula}&ref_cod_aluno={$codAluno}",
                               "fail" => true);
         }
       }
