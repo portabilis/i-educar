@@ -98,7 +98,7 @@ var getPersonByCpf = function(cpf) {
     // como no caso, onde o usuário pressiona cancelar por exemplo.
     async    : false
   };
- 
+
   getResource(options);
 }
 
@@ -300,7 +300,6 @@ function ativarPessoa(cod_pessoa){
     });
   }
 }
-
 
 // simple search options
 

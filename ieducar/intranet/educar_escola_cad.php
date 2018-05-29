@@ -1,4 +1,5 @@
 <?php
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -419,6 +420,8 @@ class indice extends clsCadastro
 
         $obj_permissoes = new clsPermissoes();
 
+        $obrigarCamposCenso = $this->validarCamposObrigatoriosCenso();
+
         if (!$this->sem_cnpj && !$this->com_cnpj) {
             $parametros = new clsParametrosPesquisas();
             $parametros->setSubmit(1);
@@ -735,8 +738,8 @@ class indice extends clsCadastro
                 $this->passou = true;
                 $this->campoOculto("passou", $this->passou);
             }
-            $this->inputsHelper()->text('latitude', array('max_length' => '20', 'size' => '20', 'required' => false, 'value' => $this->latitude, 'label_hint' => 'São aceito somente os seguintes caracteres: 0123456789 .-'));
-            $this->inputsHelper()->text('longitude', array('max_length' => '20', 'size' => '20', 'required' => false, 'value' => $this->longitude, 'label_hint' => 'São aceito somente os seguintes caracteres: 0123456789 .-'));
+            $this->inputsHelper()->numeric('latitude', array('max_length' => '20', 'size' => '20', 'required' => false, 'value' => $this->latitude, 'label_hint' => 'São aceito somente os seguintes caracteres: 0123456789 .-'));
+            $this->inputsHelper()->numeric('longitude', array('max_length' => '20', 'size' => '20', 'required' => false, 'value' => $this->longitude, 'label_hint' => 'São aceito somente os seguintes caracteres: 0123456789 .-'));
             $this->campoCheck("bloquear_lancamento_diario_anos_letivos_encerrados", "Bloquear lançamento no diário para anos letivos encerrados", $this->bloquear_lancamento_diario_anos_letivos_encerrados);
             $this->campoCheck("utiliza_regra_diferenciada", "Utiliza regra diferenciada", dbBool($this->utiliza_regra_diferenciada), '', false, false, false, 'Se marcado, utilizará regra de avaliação diferenciada informada na Série');
 
@@ -891,7 +894,7 @@ class indice extends clsCadastro
             // Os campos: Forma de ocupação do prédio e Código da escola que compartilha o prédio
             // serão desabilitados quando local de funcionamento for diferente de 3 (Prédio escolar)
             $disabled = $this->local_funcionamento != 3;
-            $options = array('label' => 'Local de funcionamento', 'resources' => $resources, 'value' => $this->local_funcionamento, 'size' => 70, 'required' => false);
+            $options = array('label' => 'Local de funcionamento', 'resources' => $resources, 'value' => $this->local_funcionamento, 'size' => 70, 'required' => $obrigarCamposCenso);
             $this->inputsHelper()->select('local_funcionamento', $options);
 
             $resources = array(0 => 'Selecione',
@@ -949,13 +952,13 @@ class indice extends clsCadastro
             $resources = array(null => 'Selecione',
                 1 => 'Não filtrada',
                 2 => 'Filtrada');
-            $options = array('label' => 'Água consumida pelos alunos', 'resources' => $resources, 'value' => $this->agua_consumida, 'required' => false, 'size' => 70);
+            $options = array('label' => 'Água consumida pelos alunos', 'resources' => $resources, 'value' => $this->agua_consumida, 'required' => $obrigarCamposCenso, 'size' => 70);
             $this->inputsHelper()->select('agua_consumida', $options);
 
             $helperOptions = array('objectName' => 'abastecimento_agua');
             $options = array('label' => 'Abastecimento de água',
                 'size' => 50,
-                'required' => false,
+                'required' => $obrigarCamposCenso,
                 'options' => array('values' => $this->abastecimento_agua,
                     'all_values' => array(1 => 'Rede pública',
                         2 => 'Poço artesiano',
@@ -967,7 +970,7 @@ class indice extends clsCadastro
             $helperOptions = array('objectName' => 'abastecimento_energia');
             $options = array('label' => 'Abastecimento de energia elétrica',
                 'size' => 50,
-                'required' => false,
+                'required' => $obrigarCamposCenso,
                 'options' => array('values' => $this->abastecimento_energia,
                     'all_values' => array(1 => 'Rede pública',
                         2 => 'Gerador',
@@ -978,7 +981,7 @@ class indice extends clsCadastro
             $helperOptions = array('objectName' => 'esgoto_sanitario');
             $options = array('label' => 'Esgoto sanitário',
                 'size' => 50,
-                'required' => false,
+                'required' => $obrigarCamposCenso,
                 'options' => array('values' => $this->esgoto_sanitario,
                     'all_values' => array(1 => 'Rede pública',
                         2 => 'Fossa',
@@ -988,7 +991,7 @@ class indice extends clsCadastro
             $helperOptions = array('objectName' => 'destinacao_lixo');
             $options = array('label' => 'Destinação do lixo',
                 'size' => 50,
-                'required' => false,
+                'required' => $obrigarCamposCenso,
                 'options' => array('values' => $this->destinacao_lixo,
                     'all_values' => array(1 => 'Coleta periódica',
                         2 => 'Queima',
@@ -1099,10 +1102,10 @@ class indice extends clsCadastro
             $options = array('label' => 'Nenhuma das relacionadas', 'value' => $this->dependencia_nenhuma_relacionada);
             $this->inputsHelper()->checkbox('dependencia_nenhuma_relacionada', $options);
 
-            $options = array('label' => 'Número de salas de aula existentes na escola', 'resources' => $resources, 'value' => $this->dependencia_numero_salas_existente, 'required' => false, 'size' => 5, 'placeholder' => '');
+            $options = array('label' => 'Número de salas de aula existentes na escola', 'resources' => $resources, 'value' => $this->dependencia_numero_salas_existente, 'required' => false, 'size' => 5, 'placeholder' => '', 'max_length' => 4);
             $this->inputsHelper()->integer('dependencia_numero_salas_existente', $options);
 
-            $options = array('label' => 'Número de salas utilizadas como sala de aula - Dentro e fora do prédio', 'resources' => $resources, 'value' => $this->dependencia_numero_salas_utilizadas, 'required' => false, 'size' => 5, 'placeholder' => '');
+            $options = array('label' => 'Número de salas utilizadas como sala de aula - Dentro e fora do prédio', 'resources' => $resources, 'value' => $this->dependencia_numero_salas_utilizadas, 'required' => $obrigarCamposCenso, 'size' => 5, 'placeholder' => '');
             $this->inputsHelper()->integer('dependencia_numero_salas_utilizadas', $options);
 
             $options = array('label' => 'Quantidade de televisores', 'resources' => $resources, 'value' => $this->televisoes, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
@@ -1151,27 +1154,30 @@ class indice extends clsCadastro
             $this->inputsHelper()->integer('computadores', $options);
 
             $disabled = $this->computadores > 0;
-            $options = array('label' => 'Possui internet banda larga',
+            $options = array(
+                'label' => 'Possui internet banda larga',
                 'value' => $this->acesso_internet,
                 'required' => false,
-                'disabled' => !$disabled);
+                'prompt' => 'Selecione',
+                'disabled' => !$disabled
+            );
             $this->inputsHelper()->booleanSelect('acesso_internet', $options);
 
-            $options = array('label' => 'Total de funcionários da escola (inclusive profissionais escolares em sala de aula)', 'resources' => $resources, 'value' => $this->total_funcionario, 'required' => false, 'size' => 5, 'placeholder' => '');
+            $options = array('label' => 'Total de funcionários da escola (inclusive profissionais escolares em sala de aula)', 'resources' => $resources, 'value' => $this->total_funcionario, 'required' => $obrigarCamposCenso, 'size' => 5, 'placeholder' => '');
             $this->inputsHelper()->integer('total_funcionario', $options);
 
             $resources = array(-1 => 'Selecione',
                 0 => 'Não oferece',
                 1 => 'Não exclusivamente',
                 2 => 'Exclusivamente');
-            $options = array('label' => 'Atendimento educacional especializado - AEE', 'resources' => $resources, 'value' => $this->atendimento_aee, 'required' => false, 'size' => 70);
+            $options = array('label' => 'Atendimento educacional especializado - AEE', 'resources' => $resources, 'value' => $this->atendimento_aee, 'required' => $obrigarCamposCenso, 'size' => 70);
             $this->inputsHelper()->select('atendimento_aee', $options);
 
             $resources = array(-1 => 'Selecione',
                 0 => 'Não oferece',
                 1 => 'Não exclusivamente',
                 2 => 'Exclusivamente');
-            $options = array('label' => 'Atividade complementar', 'resources' => $resources, 'value' => $this->atividade_complementar, 'required' => false, 'size' => 70);
+            $options = array('label' => 'Atividade complementar', 'resources' => $resources, 'value' => $this->atividade_complementar, 'required' => $obrigarCamposCenso, 'size' => 70);
             $this->inputsHelper()->select('atividade_complementar', $options);
 
             $habilitaFundamentalCiclo = false;
@@ -1180,10 +1186,14 @@ class indice extends clsCadastro
                 $habilitaFundamentalCiclo = dbBool($objEscola->possuiTurmasDoEnsinoFundamentalEmCiclos());
             }
 
-            $options = array('label' => 'Ensino fundamental organizado em ciclos',
+            $options = array(
+                'label' => 'Ensino fundamental organizado em ciclos',
+                'placeholder' => 'Selecione',
+                'prompt' => 'Selecione',
                 'value' => $this->fundamental_ciclo,
-                'required' => false,
-                'disabled' => !$habilitaFundamentalCiclo);
+                'required' => $habilitaFundamentalCiclo,
+                'disabled' => !$habilitaFundamentalCiclo
+            );
             $this->inputsHelper()->booleanSelect('fundamental_ciclo', $options);
 
             $resources = array(0 => 'Selecione',
@@ -1194,7 +1204,7 @@ class indice extends clsCadastro
                 5 => 'Unidade de uso sustentável em terra indígena',
                 6 => 'Unidade de uso sustentável em área onde se localiza comunidade remanescente de quilombos',
                 7 => 'Não se aplica');
-            $options = array('label' => 'Localização diferenciada da escola', 'resources' => $resources, 'value' => $this->localizacao_diferenciada, 'required' => false, 'size' => 70);
+            $options = array('label' => 'Localização diferenciada da escola', 'resources' => $resources, 'value' => $this->localizacao_diferenciada, 'required' => $obrigarCamposCenso, 'size' => 70);
             $this->inputsHelper()->select('localizacao_diferenciada', $options);
 
             $resources = array(1 => 'Não utiliza',
@@ -1203,7 +1213,7 @@ class indice extends clsCadastro
             $options = array('label' => 'Materiais didáticos específicos para atendimento à diversidade sócio-cultural',
                 'resources' => $resources,
                 'value' => $this->materiais_didaticos_especificos,
-                'required' => false,
+                'required' => $obrigarCamposCenso,
                 'size' => 70);
             $this->inputsHelper()->select('materiais_didaticos_especificos', $options);
 
@@ -1240,17 +1250,17 @@ class indice extends clsCadastro
 
             $options = array('label' => 'Escola cede espaço para turmas do Brasil Alfabetizado',
                 'value' => $this->espaco_brasil_aprendizado,
-                'required' => false);
+                'required' => $obrigarCamposCenso);
             $this->inputsHelper()->booleanSelect('espaco_brasil_aprendizado', $options);
 
             $options = array('label' => 'Escola abre aos finais de semana para a comunidade',
                 'value' => $this->abre_final_semana,
-                'required' => false);
+                'required' => $obrigarCamposCenso);
             $this->inputsHelper()->booleanSelect('abre_final_semana', $options);
 
             $options = array('label' => 'Escola com proposta pedagógica de formação por alternância',
                 'value' => $this->proposta_pedagogica,
-                'required' => false);
+                'required' => $obrigarCamposCenso);
             $this->inputsHelper()->booleanSelect('proposta_pedagogica', $options);
 
             $resources = array('' => 'Selecione',
@@ -1314,6 +1324,9 @@ class indice extends clsCadastro
             return false;
         }
 
+        if (!$this->validaCamposCenso()) {
+            return false;
+        }
         if (!$this->validaDigitosInepEscola($this->codigo_inep_escola_compartilhada, 'Código da escola que compartilha o prédio')) {
             return false;
         }
@@ -1667,6 +1680,10 @@ class indice extends clsCadastro
         }
 
         if (!$this->validaLatitudeLongitude()) {
+            return false;
+        }
+
+        if (!$this->validaCamposCenso()) {
             return false;
         }
 
@@ -2079,6 +2096,72 @@ class indice extends clsCadastro
         $this->inputsHelper()->integer("p_telefone_{$type}", $options);
     }
 
+    protected function validaCamposCenso()
+    {
+        if (!$this->validarCamposObrigatoriosCenso()) {
+            return TRUE;
+        }
+        return $this->validaEscolaPrivada() &&
+                $this->validaOcupacaoPredio() &&
+                $this->validaSalasExistentes() &&
+                $this->validaPossuiBandaLarga();
+    }
+
+    protected function validaOcupacaoPredio()
+    {
+        if ($this->local_funcionamento == 3 && empty($this->condicao)) {
+            $this->mensagem = 'Campo Forma de ocupação do prédio deve ser informado quando local de funcionamento for prédio escolar.';
+            return FALSE;
+        }
+        return TRUE;
+    }
+
+    protected function validaSalasExistentes()
+    {
+        if ($this->local_funcionamento == 3 && ((int) $this->dependencia_numero_salas_existente) <= 0) {
+            $this->mensagem = 'Campo Número de salas de aula existentes na escola deve ser informado quando local de funcionamento for prédio escolar.';
+            return FALSE;
+        }
+        return TRUE;
+    }
+
+    protected function validaPossuiBandaLarga()
+    {
+        if (((int)$this->computadores) > 0 && empty($this->acesso_internet)) {
+            $this->mensagem = 'Campo possui internet banda larga deve ser informado quando existir computadores na escola.';
+            return FALSE;
+        }
+        return TRUE;
+    }
+
+    protected function validaEscolaPrivada()
+    {
+        if ($this->dependencia_administrativa != "4" || $this->situacao_funcionamento != 1) {
+            return TRUE;
+        }
+
+        if (empty($this->categoria_escola_privada)) {
+            $this->mensagem = "O campo categoria da escola privada é obrigatório para escolas em atividade de administração privada.";
+            return FALSE;
+        }
+        if (empty($this->conveniada_com_poder_publico)) {
+            $this->mensagem = "O campo conveniada com poder público é obrigatório para escolas em atividade de administração privada.";
+            return FALSE;
+        }
+        if (empty($this->mantenedora_escola_privada) ||
+            (is_array($this->mantenedora_escola_privada) &&
+            count($this->mantenedora_escola_privada) == 1 &&
+            empty($this->mantenedora_escola_privada[0]))) {
+            $this->mensagem = "O campo mantenedora escola privada é obrigatório para escolas em atividade de administração privada.";
+            return FALSE;
+        }
+        if (empty($this->cnpj_mantenedora_principal)) {
+            $this->mensagem = "O campo CNPJ da mantenedora principal da escola privada é obrigatório para escolas em atividade de administração privada.";
+            return FALSE;
+        }
+        return TRUE;
+    }
+
     protected function validaLatitudeLongitude()
     {
         $caracteres = array(" ", ".", "-", null, '0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
@@ -2099,6 +2182,14 @@ class indice extends clsCadastro
                 $this->mensagem = $mensagemErro;
                 return false;
             }
+        }
+
+        if (empty($this->latitude) && !empty($this->longitude)) {
+            $this->mensagem = "O campo Latitude deve ser preenchido quando o Longitude estiver preenchido.";
+            return false;
+        } elseif (!empty($this->latitude) && empty($this->longitude)) {
+            $this->mensagem = "O campo Longitude deve ser preenchido quando o Latitude estiver preenchido.";
+            return false;
         }
 
         return true;

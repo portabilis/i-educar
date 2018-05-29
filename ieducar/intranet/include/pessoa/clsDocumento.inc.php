@@ -658,6 +658,28 @@ class clsDocumento
             $gruda = ", ";
         }
 
+        if( is_string( $this->sigla_uf_exp_rg ) and (!empty($this->sigla_uf_exp_rg)))
+        {
+            $set .= $gruda."sigla_uf_exp_rg = '{$this->sigla_uf_exp_rg}'";
+            $gruda = ", ";
+        }
+        else
+        {
+            $set .= $gruda."sigla_uf_exp_rg = NULL";
+            $gruda = ", ";
+        }
+
+        if( is_numeric( $this->idorg_exp_rg ) and (!empty($this->idorg_exp_rg)))
+        {
+            $set .= $gruda."idorg_exp_rg = '{$this->idorg_exp_rg}'";
+            $gruda = ", ";
+        }
+        else
+        {
+            $set .= $gruda."idorg_exp_rg = NULL";
+            $gruda = ", ";
+        }
+
         if($set)
         {
             $db = new clsBanco();

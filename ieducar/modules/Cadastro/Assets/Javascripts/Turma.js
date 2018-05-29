@@ -26,20 +26,46 @@ $j('.tablecadastro >tbody  > tr').each(function(index, row) {
 });
 
 var modoCadastro = $j('#retorno').val() == 'Novo';
+let obrigarCamposCenso = $j('#obrigar_campos_censo').val() == '1';
+
+let verificaEtapaEducacenso = ()=>{
+  if ($j('#tipo_atendimento').val() &&
+      $j('#tipo_atendimento').val() != "4" &&
+      $j('#tipo_atendimento') != "5") {
+
+    $j('#etapa_educacenso').makeUnrequired();
+    if (obrigarCamposCenso) {
+      $j('#etapa_educacenso').makeRequired();
+    }
+  }
+}
+
+let verificaTurmaUnificada = () => {
+  $j('#turma_unificada').makeUnrequired();
+  if (obrigarCamposCenso && $j('#etapa_educacenso').val() == '3') {
+    $j('#turma_unificada').makeRequired();
+  }
+}
 
 $j('#tipo_atendimento').change(function() {
   mostraAtividadesComplementares();
   mostraAtividadesAee();
+  verificaEtapaEducacenso();
 });
 
 $j('#etapa_educacenso').change(function() {
   mostraCursoTecnico();
+  verificaTurmaUnificada();
 });
 
 function mostraAtividadesComplementares(){
   var mostraCampo = $j('#tipo_atendimento').val() == '4';
+  $j('#atividades_complementares').makeUnrequired();
   if (mostraCampo) {
     $j('#tr_atividades_complementares').show();
+    if (obrigarCamposCenso) {
+      $j('#atividades_complementares').makeRequired();
+    }
   } else {
     $j('#tr_atividades_complementares').hide();
   }
@@ -49,6 +75,10 @@ function mostraAtividadesAee() {
   var mostraCampo = $j('#tipo_atendimento').val() == '5';
   if (mostraCampo) {
     $j('#tr_atividades_aee').show();
+    $j('#atividades_aee').makeUnrequired();
+    if (obrigarCamposCenso) {
+      $j('#atividades_aee').makeRequired();
+    }
   } else {
     $j('#tr_atividades_aee').hide();
   }
@@ -59,6 +89,10 @@ function mostraCursoTecnico() {
   var mostraCampo = $j.inArray($j('#etapa_educacenso').val(),etapasEnsinoTecnico) != -1;
   if (mostraCampo) {
     $j('#tr_cod_curso_profissional').show();
+    $j('#cod_curso_profissional').makeUnrequired();
+    if (obrigarCamposCenso) {
+      $j('#cod_curso_profissional').makeRequired();
+    }
   } else {
     $j('#tr_cod_curso_profissional').hide();
   }
@@ -135,10 +169,39 @@ function habilitaTurmaMaisEducacao() {
     !(modalidadeEja || !etapaEducacenso)
   ) {
     $j("#turma_mais_educacao").attr('disabled', false);
+    $j("#turma_mais_educacao").makeUnrequired();
+    if (obrigarCamposCenso) {
+      $j("#turma_mais_educacao").makeRequired();
+    }
   } else {
     $j("#turma_mais_educacao").attr('disabled', true);
   }
 }
+
+$j('#tipo_mediacao_didatico_pedagogico').on('change', function(){
+  if (!obrigarCamposCenso) {
+    return true;
+  }
+  let didaticoPedagogicoPresencial = this.value == 1;
+  $j('#hora_inicial').makeUnrequired();
+  $j('#hora_final').makeUnrequired();
+  $j('#hora_inicio_intervalo').makeUnrequired();
+  $j('#hora_fim_intervalo').makeUnrequired();
+  $j('#dias_semana').makeUnrequired();
+  if (didaticoPedagogicoPresencial) {
+    $j('#hora_inicial').prop('disabled', false).makeRequired();
+    $j('#hora_final').prop('disabled', false).makeRequired();
+    $j('#hora_inicio_intervalo').prop('disabled', false).makeRequired();
+    $j('#hora_fim_intervalo').prop('disabled', false).makeRequired();
+    $j('#dias_semana').prop('disabled', false).makeRequired().trigger("chosen:updated");;
+  } else {
+    $j('#hora_inicial').prop('disabled', true).val("");
+    $j('#hora_final').prop('disabled', true).val("");
+    $j('#hora_inicio_intervalo').prop('disabled', true).val("");
+    $j('#hora_fim_intervalo').prop('disabled', true).val("");
+    $j('#dias_semana').prop('disabled', true).val([]).trigger("chosen:updated");
+  }
+}).trigger('change');
 
 function getDependenciaAdministrativaEscola(){
   var options = {
@@ -234,4 +297,87 @@ $j(document).ready(function() {
       $j('#'+row.id).find('input:checked').val('on');
     }
   });
+
+  $j("#etapa_educacenso").change(function() {
+    changeEtapaTurmaField();
+  });
+
+  var changeEtapaTurmaField = function() {
+    var etapa = $j("#etapa_educacenso").val();
+
+    if (etapa == 12 || etapa == 13) {
+      $j("#etapa_educacenso2 > option").each(function() {
+        var etapasCorrespondentes = ['4','5','6','7','8','9','10','11'];
+        if ($j.inArray(this.value, etapasCorrespondentes) !== -1){
+          this.show();
+        } else {
+          this.hide();
+        }
+      });
+    } else if (etapa == 22 || etapa == 23) {
+      $j("#etapa_educacenso2 > option").each(function() {
+        var etapasCorrespondentes = ['14','15','16','17','18','19','20','21','41'];
+        if ($j.inArray(this.value, etapasCorrespondentes) !== -1){
+          this.show();
+        } else {
+          this.hide();
+        }
+      });
+    } else if (etapa == 24) {
+      $j("#etapa_educacenso2 > option").each(function() {
+        var etapasCorrespondentes = ['4','5','6','7','8','9','10','11','14','15','16','17','18','19','20','21','41'];
+        if ($j.inArray(this.value, etapasCorrespondentes) !== -1){
+          this.show();
+        } else {
+          this.hide();
+        }
+      });
+    } else if (etapa == 72) {
+      $j("#etapa_educacenso2 > option").each(function() {
+        var etapasCorrespondentes = ['69','70'];
+        if ($j.inArray(this.value, etapasCorrespondentes) !== -1){
+          this.show();
+        } else {
+          this.hide();
+        }
+      });
+    } else if (etapa == 56) {
+      $j("#etapa_educacenso2 > option").each(function() {
+        var etapasCorrespondentes = ['1','2','4','5','6','7','8','9','10','11','14','15','16','17','18','19','20','21','41'];
+        if ($j.inArray(this.value, etapasCorrespondentes) !== -1){
+          this.show();
+        } else {
+          this.hide();
+        }
+      });
+    } else if (etapa == 64) {
+      $j("#etapa_educacenso2 > option").each(function() {
+        var etapasCorrespondentes = ['39','40'];
+        if ($j.inArray(this.value, etapasCorrespondentes) !== -1){
+          this.show();
+        } else {
+          this.hide();
+        }
+      });
+    } else {
+      $j("#etapa_educacenso2").prop('disabled', 'disabled');
+      $j("#etapa_educacenso2").val(null);
+      return;
+    }
+    $j("#etapa_educacenso2").prop('disabled', false);
+  }
+
+  changeEtapaTurmaField();
+
+  var submitForm = function(){
+    let canSubmit = validationUtils.validatesFields(true);
+    if (canSubmit) {
+      valida();
+    }
+  }
+
+  var $submitButton      = $j('#btn_enviar');
+  $submitButton.removeAttr('onclick');
+  $j(document.formcadastro).removeAttr('onsubmit');
+  $submitButton.click(submitForm);
 });

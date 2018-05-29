@@ -1594,6 +1594,8 @@ class AlunoController extends ApiCoreController
         $documentos->data_exp_rg = Portabilis_Date_Utils::brToPgSQL(
             $this->getRequest()->data_emissao_rg
         );
+        $documentos->sigla_uf_exp_rg = $this->getRequest()->uf_emissao_rg;
+        $documentos->idorg_exp_rg = $this->getRequest()->orgao_emissao_rg;
 
         $documentos->data_emissao_cert_civil = Portabilis_Date_Utils::brToPgSQL(
             $this->getRequest()->data_emissao_certidao_civil

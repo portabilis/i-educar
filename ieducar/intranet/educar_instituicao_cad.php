@@ -73,6 +73,7 @@ class indice extends clsCadastro
     var $bloqueia_matricula_serie_nao_seguinte;
     var $data_educacenso;
     var $altera_atestado_para_declaracao;
+    var $obrigar_campos_censo;
     var $orgao_regional;
 
     function Inicializar()
@@ -131,6 +132,7 @@ class indice extends clsCadastro
         $this->bloqueia_matricula_serie_nao_seguinte = dbBool($this->bloqueia_matricula_serie_nao_seguinte);
         $this->exigir_dados_socioeconomicos = dbBool($this->exigir_dados_socioeconomicos);
         $this->altera_atestado_para_declaracao = dbBool($this->altera_atestado_para_declaracao);
+        $this->obrigar_campos_censo = dbBool($this->obrigar_campos_censo);
 
 
         return $retorno;
@@ -253,6 +255,8 @@ class indice extends clsCadastro
         $this->campoCheck("bloqueia_matricula_serie_nao_seguinte", "Não permitir matrículas que não respeitem a sequência de enturmação", $this->bloqueia_matricula_serie_nao_seguinte);
         $this->campoCheck("altera_atestado_para_declaracao", "Alterar nome do título do menu e relatórios de Atestado para Declaração", $this->altera_atestado_para_declaracao);
 
+        $this->campoCheck("obrigar_campos_censo", "Obrigar o preenchimento dos campos exigidos pelo Censo escolar", $this->obrigar_campos_censo);
+
         $this->inputsHelper()->text(
             'data_base',
             array(
@@ -343,6 +347,7 @@ class indice extends clsCadastro
         $obj->auditar_notas = !is_null($this->auditar_notas);
         $obj->data_educacenso = $this->data_educacenso;
         $obj->exigir_dados_socioeconomicos = is_null($this->exigir_dados_socioeconomicos) ? false : true;
+        $obj->obrigar_campos_censo = !is_null($this->obrigar_campos_censo);
         $obj->orgao_regional = $this->orgao_regional;
         $cod_instituicao = $cadastrou = $obj->cadastra();
 
@@ -395,6 +400,7 @@ class indice extends clsCadastro
         $obj->data_fechamento = Portabilis_Date_Utils::brToPgSQL_ddmm($this->data_fechamento);
         $obj->data_educacenso = $this->data_educacenso;
         $obj->exigir_dados_socioeconomicos = is_null($this->exigir_dados_socioeconomicos) ? false : true;
+        $obj->obrigar_campos_censo = !is_null($this->obrigar_campos_censo);
         $obj->orgao_regional = $this->orgao_regional;
 
         $detalheAntigo = $obj->detalhe();

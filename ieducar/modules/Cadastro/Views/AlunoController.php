@@ -33,6 +33,7 @@
 
 require_once 'include/clsCadastro.inc.php';
 require_once "include/clsBanco.inc.php";
+require_once "include/pmieducar/clsPmieducarInstituicao.inc.php";
 require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
 require_once 'image_check.php';
 require_once 'App/Model/ZonaLocalizacao.php';
@@ -367,6 +368,8 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $configuracoes = new clsPmieducarConfiguracoesGerais();
         $configuracoes = $configuracoes->detalhe();
 
+        $labels_botucatu = $GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu';
+
         if ($configuracoes["justificativa_falta_documentacao_obrigatorio"]) {
             $this->inputsHelper()->hidden('justificativa_falta_documentacao_obrigatorio');
         }
@@ -474,6 +477,40 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         );
 
         $this->inputsHelper()->date('data_emissao_rg', $options);
+
+        $selectOptions = array( null => 'Órgão emissor' );
+        $orgaos        = new clsOrgaoEmissorRg();
+        $orgaos        = $orgaos->lista();
+
+        foreach ($orgaos as $orgao)
+          $selectOptions[$orgao['idorg_rg']] = $orgao['sigla'];
+
+        $selectOptions = Portabilis_Array_Utils::sortByValue($selectOptions);
+
+        $options = array(
+          'required'  => false,
+          'label'     => '',
+          'value'     => $documentos['idorg_exp_rg'],
+          'resources' => $selectOptions,
+          'inline'    => true
+        );
+
+        $this->inputsHelper()->select('orgao_emissao_rg', $options);
+
+
+        // uf emissão rg
+
+        $options = array(
+          'required' => false,
+          'label'    => '',
+          'value'    => $documentos['sigla_uf_exp_rg']
+        );
+
+        $helperOptions = array(
+          'attrName' => 'uf_emissao_rg'
+        );
+
+        $this->inputsHelper()->uf($options, $helperOptions);
 
         // cpf
         if (is_numeric($this->cod_pessoa_fj)) {
@@ -620,14 +657,14 @@ class AlunoController extends Portabilis_Controller_Page_EditController
             'label' => '',
             'required' => false
           );
-      
+
           $helperOptions = array(
             'objectName' => 'cartorio_cert_civil_inep',
             'hiddenInputOptions' => array(
               'options' => array('value' => $documentos['cartorio_cert_civil_inep'])
             )
           );
-          
+
           $this->inputsHelper()->simpleSearchCartorioInep(null, $options, $helperOptions);
 
         // cartório emissão certidão civil
@@ -1242,7 +1279,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('lixo')), 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->checkbox('lixo', $options);
-        
+
         $recursosProvaInep = array(
             1 => 'Auxílio ledor',
             2 => 'Auxílio transcrição',
@@ -1468,6 +1505,78 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         Portabilis_View_Helper_Application::loadJavascript($this, $script);
 
         $this->loadResourceAssets($this->getDispatcher());
+
+        $clsInstituicao = new clsPmieducarInstituicao();
+        $instituicao = $clsInstituicao->primeiraAtiva();
+        $obrigarCamposCenso = FALSE;
+        if ($instituicao && isset($instituicao['obrigar_campos_censo'])) {
+            $obrigarCamposCenso = dbBool($instituicao['obrigar_campos_censo']);
+        }
+        $this->CampoOculto('obrigar_campos_censo', (int) $obrigarCamposCenso);
+
+        $racas         = new clsCadastroRaca();
+        $racas         = $racas->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL, TRUE);
+        $selectOptions = array(null => 'Selecione');
+
+        foreach ($racas as $raca) {
+            $selectOptions[$raca['cod_raca']] = $raca['nm_raca'];
+        }
+
+        $selectOptions = Portabilis_Array_Utils::sortByValue($selectOptions);
+
+        $this->campoLista('cor_raca', 'Cor e raça', $selectOptions, $this->cod_raca, '', FALSE, '', '', '', $obrigarCamposCenso);
+
+        $zonas = array(
+            '' => 'Selecione',
+            1  => 'Urbana',
+            2  => 'Rural',
+        );
+
+        $options = array(
+          'label'       => 'Zona Localização',
+          'value'       => $this->zona_localizacao_censo,
+          'resources'   => $zonas,
+          'required'    => $obrigarCamposCenso,
+        );
+
+        $this->inputsHelper()->select('zona_localizacao_censo', $options);
+
+        $tiposNacionalidade = array(
+            NULL => 'Selecione',
+            '1'  => 'Brasileiro',
+            '2'  => 'Naturalizado brasileiro',
+            '3'  => 'Estrangeiro'
+        );
+
+        $options = array(
+            'label'       => 'Nacionalidade',
+            'resources'   => $tiposNacionalidade,
+            'required'    => $obrigarCamposCenso,
+            'inline'      => TRUE,
+            'value'       => $this->tipo_nacionalidade
+        );
+
+        $this->inputsHelper()->select('tipo_nacionalidade', $options);
+
+        // pais origem
+
+        $options = array(
+          'label'       => '',
+          'placeholder' => 'Informe o nome do pais',
+          'required'    => $obrigarCamposCenso
+        );
+
+        $hiddenInputOptions = array(
+            'options' => array(
+                'value' => $this->pais_origem_id
+            )
+        );
+
+        $helperOptions = array(
+          'objectName'         => 'pais_origem',
+          'hiddenInputOptions' => $hiddenInputOptions
+        );
+        $this->inputsHelper()->simpleSearchPais('nome', $options, $helperOptions);
     }
 
 
