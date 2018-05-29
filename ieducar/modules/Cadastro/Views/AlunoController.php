@@ -1262,7 +1262,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
             'options' => array(
                 'values' => $this->recursos_prova_inep,
                 'all_values' => $recursosProvaInep));
-        $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+        $this->inputsHelper()->multipleSearchCustom('_', $options, $helperOptions);
 
         $selectOptions = array(
             3 => 'Não recebe',
