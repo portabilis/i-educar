@@ -71,10 +71,11 @@ class indice extends clsCadastro
             $etapasEducacenso = $this->array_filter_key($todasEtapasEducacenso,
                 function ($value) use ($enturmacao)
                 {
-                    return in_array($value, App_Model_Educacenso::etapasDaTurma($enturmacao['etapa_educacenso']));
+                    return in_array($value, App_Model_Educacenso::etapasDaTurma($enturmacao['etapa_ensino']));
                 }
             );
             $etapasEducacenso = array(0 => 'Nenhuma') + $etapasEducacenso;
+
             $this->campoLista("etapas_educacenso[{$enturmacao['ref_cod_turma']}-{$enturmacao['sequencial']}]", "Etapa do aluno na turma: {$enturmacao['nm_turma']}", $etapasEducacenso, $enturmacao['etapa_educacenso'], '', false, '', '', false, false);
         }
     }
