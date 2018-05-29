@@ -422,6 +422,8 @@ class indice extends clsCadastro
 
         $obrigarCamposCenso = $this->validarCamposObrigatoriosCenso();
 
+        $this->campoOculto('obrigar_campos_censo', (int) $obrigarCamposCenso);
+
         if (!$this->sem_cnpj && !$this->com_cnpj) {
             $parametros = new clsParametrosPesquisas();
             $parametros->setSubmit(1);
@@ -880,7 +882,7 @@ class indice extends clsCadastro
             $this->campoOculto("incluir_curso", "");
             $this->campoQuebra();
 
-            $resources = array(0 => 'Selecione',
+            $resources = array(NULL => 'Selecione',
                 3 => 'Prédio escolar',
                 4 => 'Templo/Igreja',
                 5 => 'Sala de empresa',
@@ -897,7 +899,7 @@ class indice extends clsCadastro
             $options = array('label' => 'Local de funcionamento', 'resources' => $resources, 'value' => $this->local_funcionamento, 'size' => 70, 'required' => $obrigarCamposCenso);
             $this->inputsHelper()->select('local_funcionamento', $options);
 
-            $resources = array(0 => 'Selecione',
+            $resources = array(NULL => 'Selecione',
                 1 => 'Próprio',
                 2 => 'Alugado',
                 3 => 'Cedido');
@@ -1001,7 +1003,8 @@ class indice extends clsCadastro
                         6 => 'Outros')));
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-            $options = array('label' => 'Marcar todos');
+            $dicaCamposCheckbox = "Os campos abaixo que não forem marcados, serão informados no Educacenso como Não";
+            $options = array('label' => 'Marcar todos', 'hint' => $dicaCamposCheckbox);
             $this->inputsHelper()->checkbox('marcar_todas_dependencias', $options);
 
             $options = array('label' => 'Sala de diretoria', 'value' => $this->dependencia_sala_diretoria);
@@ -1166,14 +1169,14 @@ class indice extends clsCadastro
             $options = array('label' => 'Total de funcionários da escola (inclusive profissionais escolares em sala de aula)', 'resources' => $resources, 'value' => $this->total_funcionario, 'required' => $obrigarCamposCenso, 'size' => 5, 'placeholder' => '');
             $this->inputsHelper()->integer('total_funcionario', $options);
 
-            $resources = array(-1 => 'Selecione',
+            $resources = array(NULL => 'Selecione',
                 0 => 'Não oferece',
                 1 => 'Não exclusivamente',
                 2 => 'Exclusivamente');
             $options = array('label' => 'Atendimento educacional especializado - AEE', 'resources' => $resources, 'value' => $this->atendimento_aee, 'required' => $obrigarCamposCenso, 'size' => 70);
             $this->inputsHelper()->select('atendimento_aee', $options);
 
-            $resources = array(-1 => 'Selecione',
+            $resources = array(NULL => 'Selecione',
                 0 => 'Não oferece',
                 1 => 'Não exclusivamente',
                 2 => 'Exclusivamente');
@@ -1207,7 +1210,8 @@ class indice extends clsCadastro
             $options = array('label' => 'Localização diferenciada da escola', 'resources' => $resources, 'value' => $this->localizacao_diferenciada, 'required' => $obrigarCamposCenso, 'size' => 70);
             $this->inputsHelper()->select('localizacao_diferenciada', $options);
 
-            $resources = array(1 => 'Não utiliza',
+            $resources = array(NULL => 'Selecione',
+                1 => 'Não utiliza',
                 2 => 'Quilombola',
                 3 => 'Indígena');
             $options = array('label' => 'Materiais didáticos específicos para atendimento à diversidade sócio-cultural',
@@ -1249,16 +1253,19 @@ class indice extends clsCadastro
             $this->inputsHelper()->select('codigo_lingua_indigena', $options);
 
             $options = array('label' => 'Escola cede espaço para turmas do Brasil Alfabetizado',
+                'prompt' => 'Selecione',
                 'value' => $this->espaco_brasil_aprendizado,
                 'required' => $obrigarCamposCenso);
             $this->inputsHelper()->booleanSelect('espaco_brasil_aprendizado', $options);
 
             $options = array('label' => 'Escola abre aos finais de semana para a comunidade',
+                'prompt' => 'Selecione',
                 'value' => $this->abre_final_semana,
                 'required' => $obrigarCamposCenso);
             $this->inputsHelper()->booleanSelect('abre_final_semana', $options);
 
             $options = array('label' => 'Escola com proposta pedagógica de formação por alternância',
+                'prompt' => 'Selecione',
                 'value' => $this->proposta_pedagogica,
                 'required' => $obrigarCamposCenso);
             $this->inputsHelper()->booleanSelect('proposta_pedagogica', $options);
@@ -2110,7 +2117,7 @@ class indice extends clsCadastro
     protected function validaOcupacaoPredio()
     {
         if ($this->local_funcionamento == 3 && empty($this->condicao)) {
-            $this->mensagem = 'Campo Forma de ocupação do prédio deve ser informado quando local de funcionamento for prédio escolar.';
+            $this->mensagem = 'O campo: Forma de ocupação do prédio, deve ser informado quando o Local de funcionamento for prédio escolar.';
             return FALSE;
         }
         return TRUE;
@@ -2119,7 +2126,7 @@ class indice extends clsCadastro
     protected function validaSalasExistentes()
     {
         if ($this->local_funcionamento == 3 && ((int) $this->dependencia_numero_salas_existente) <= 0) {
-            $this->mensagem = 'Campo Número de salas de aula existentes na escola deve ser informado quando local de funcionamento for prédio escolar.';
+            $this->mensagem = 'O campo: Número de salas de aula existentes na escola, deve ser informado quando o Local de funcionamento for prédio escolar.';
             return FALSE;
         }
         return TRUE;
@@ -2127,8 +2134,8 @@ class indice extends clsCadastro
 
     protected function validaPossuiBandaLarga()
     {
-        if (((int)$this->computadores) > 0 && empty($this->acesso_internet)) {
-            $this->mensagem = 'Campo possui internet banda larga deve ser informado quando existir computadores na escola.';
+        if (((int)$this->computadores) > 0 && !in_array($this->acesso_internet, array('0', '1'))) {
+            $this->mensagem = 'O campo: Possui internet banda larga, deve ser informado quando existir computadores na escola.';
             return FALSE;
         }
         return TRUE;

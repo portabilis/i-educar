@@ -2048,11 +2048,9 @@ class clsCampos extends Core_Controller_Page_Abstract
                             } else {
                                 // option normal
                                 $retorno .= "<option id=\"{$nome}_" . urlencode($chave) . "\" value=\"" . urlencode($chave) . "\"";
-                                if (is_array($componente[4])) {
-                                    if ($chave == $componente[4][$adicionador_indice]) {
-                                        $retorno .= " selected";
-                                    }
-                                } elseif ($chave == $componente[4]) {
+                                $defaultValue = is_array($componente[4]) ? $componente[4][$adicionador_indice] : $componente[4];
+
+                                if (!is_null($defaultValue) && $defaultValue !== '' && $chave == $defaultValue) {
                                     $retorno .= " selected";
                                 }
 
@@ -2685,12 +2683,9 @@ class clsCampos extends Core_Controller_Page_Abstract
             } else {
                 // option normal
                 $retorno .= "<option id=\"{$nome}_" . urlencode($chave) . "\" value=\"" . urlencode($chave) . "\"";
+                $defaultValue = is_array($default) ? $default[$adicionador_indice] : $default;
 
-                if (is_array($default)) {
-                    if ($chave == $default[$adicionador_indice]) {
-                        $retorno .= " selected";
-                    }
-                } elseif ($chave == $default) {
+                if (!is_null($defaultValue) && $defaultValue !== '' && $chave == $defaultValue) {
                     $retorno .= " selected";
                 }
 
