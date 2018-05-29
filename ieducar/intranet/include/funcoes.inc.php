@@ -76,6 +76,12 @@ function int2CPF($int)
   return substr($str, 0, 3) . '.' . substr($str, 3, 3). '.' . substr($str, 6, 3) . '-' . substr($str, 9, 2);
 }
 
+function loadJson($file)
+{
+  $jsonFile = file_get_contents($file);   
+  return json_decode($jsonFile, true);
+}
+
 function int2CNPJ($int)
 {
   if (strlen($int) < 14) {

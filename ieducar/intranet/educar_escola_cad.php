@@ -161,7 +161,6 @@ class indice extends clsCadastro
     public $ato_autorizativo;
     public $secretario_id;
     public $utiliza_regra_diferenciada;
-    public $orgao_regional;
     public $categoria_escola_privada;
     public $conveniada_com_poder_publico;
     public $mantenedora_escola_privada;
@@ -419,10 +418,6 @@ class indice extends clsCadastro
         Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
 
         $obj_permissoes = new clsPermissoes();
-
-        if (!empty($this->orgao_regional) && !$this->mensagem) {
-            $this->orgao_regional = str_pad($this->orgao_regional, 5, "0", STR_PAD_LEFT);
-        }
 
         if (!$this->sem_cnpj && !$this->com_cnpj) {
             $parametros = new clsParametrosPesquisas();
@@ -744,7 +739,6 @@ class indice extends clsCadastro
             $this->inputsHelper()->text('longitude', array('max_length' => '20', 'size' => '20', 'required' => false, 'value' => $this->longitude, 'label_hint' => 'São aceito somente os seguintes caracteres: 0123456789 .-'));
             $this->campoCheck("bloquear_lancamento_diario_anos_letivos_encerrados", "Bloquear lançamento no diário para anos letivos encerrados", $this->bloquear_lancamento_diario_anos_letivos_encerrados);
             $this->campoCheck("utiliza_regra_diferenciada", "Utiliza regra diferenciada", dbBool($this->utiliza_regra_diferenciada), '', false, false, false, 'Se marcado, utilizará regra de avaliação diferenciada informada na Série');
-            $this->campoNumero("orgao_regional", "Código do órgão regional de ensino", $this->orgao_regional, "5", "5", false);
 
             $resources = array(1 => 'Em atividade',
                 2 => 'Paralisada',
@@ -1306,23 +1300,13 @@ class indice extends clsCadastro
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 3, "educar_escola_lst.php");
-        unset($this->mantenedora_escola_privada[0]);
         $mantenedora_escola_privada = implode(',', $this->mantenedora_escola_privada);
-        unset($this->abastecimento_agua[0]);
         $abastecimento_agua = implode(',', $this->abastecimento_agua);
-        unset($this->abastecimento_energia[0]);
         $abastecimento_energia = implode(',', $this->abastecimento_energia);
-        unset($this->esgoto_sanitario[0]);
         $esgoto_sanitario = implode(',', $this->esgoto_sanitario);
-        unset($this->destinacao_lixo[0]);
         $destinacao_lixo = implode(',', $this->destinacao_lixo);
 
         if (!$this->validaDigitosInepEscola($this->escola_inep_id, 'Código INEP')) {
-            return false;
-        }
-
-        if (!empty($this->orgao_regional) && strlen($this->orgao_regional) != 5) {
-            $this->mensagem = 'O código do órgão regional de ensino deve conter 5 dígitos.';
             return false;
         }
 
@@ -1366,7 +1350,6 @@ class indice extends clsCadastro
                     $obj->dependencia_administrativa = $this->dependencia_administrativa;
                     $obj->latitude = $this->latitude;
                     $obj->longitude = $this->longitude;
-                    $obj->orgao_regional = $this->orgao_regional;
                     $obj->regulamentacao = $this->regulamentacao;
                     $obj->acesso = $this->acesso;
                     $obj->ref_idpes_gestor = $this->gestor_id;
@@ -1534,7 +1517,6 @@ class indice extends clsCadastro
             $obj->dependencia_administrativa = $this->dependencia_administrativa;
             $obj->latitude = $this->latitude;
             $obj->longitude = $this->longitude;
-            $obj->orgao_regional = $this->orgao_regional;
             $obj->regulamentacao = $this->regulamentacao;
             $obj->situacao_funcionamento = $this->situacao_funcionamento;
             $obj->acesso = $this->acesso;
@@ -1680,11 +1662,6 @@ class indice extends clsCadastro
             return false;
         }
 
-        if (!empty($this->orgao_regional) && strlen($this->orgao_regional) != 5) {
-            $this->mensagem = 'O código do órgão regional de ensino deve conter 5 dígitos.';
-            return false;
-        }
-
         if (!$this->validaDadosTelefones()) {
             return false;
         }
@@ -1697,15 +1674,10 @@ class indice extends clsCadastro
             return false;
         }
 
-        unset($this->mantenedora_escola_privada[0]);
         $mantenedora_escola_privada = implode(',', $this->mantenedora_escola_privada);
-        unset($this->abastecimento_agua[0]);
         $abastecimento_agua = implode(',', $this->abastecimento_agua);
-        unset($this->abastecimento_energia[0]);
         $abastecimento_energia = implode(',', $this->abastecimento_energia);
-        unset($this->esgoto_sanitario[0]);
         $esgoto_sanitario = implode(',', $this->esgoto_sanitario);
-        unset($this->destinacao_lixo[0]);
         $destinacao_lixo = implode(',', $this->destinacao_lixo);
 
         if (in_array(5, $this->abastecimento_agua) && count($this->abastecimento_agua) > 1) {
@@ -1733,7 +1705,6 @@ class indice extends clsCadastro
             $obj->dependencia_administrativa = $this->dependencia_administrativa;
             $obj->latitude = $this->latitude;
             $obj->longitude = $this->longitude;
-            $obj->orgao_regional = $this->orgao_regional;
             $obj->regulamentacao = $this->regulamentacao;
             $obj->situacao_funcionamento = $this->situacao_funcionamento;
             $obj->acesso = $this->acesso;
@@ -1839,7 +1810,6 @@ class indice extends clsCadastro
             $obj->dependencia_administrativa = $this->dependencia_administrativa;
             $obj->latitude = $this->latitude;
             $obj->longitude = $this->longitude;
-            $obj->orgao_regional = $this->orgao_regional;
             $obj->regulamentacao = $this->regulamentacao;
             $obj->acesso = $this->acesso;
             $obj->ref_idpes_gestor = $this->gestor_id;
@@ -2178,4 +2148,3 @@ $miolo = new indice();
 $pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
-?>

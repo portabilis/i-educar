@@ -3,7 +3,6 @@ var arrayOptions = [];
 var defaultChosenOptions = {
   no_results_text: "Sem resultados para ",
   width: '231px',
-  disable_search: true,
   placeholder_text_multiple: "Selecione as opções",
   placeholder_text_single: "Selecione uma opção"
 };
@@ -23,6 +22,7 @@ var defaultMultipleSearchOptions = {
   objectName    : undefined,
   attrName      : undefined,
   searchPath    : undefined,
+  typeSearch    : undefined,
 
   // options that can be overwritten
   // placeholder   : safeUtf8Decode('Selecione as opções')
@@ -33,6 +33,7 @@ var multipleSearch = {
     options = defaultMultipleSearchOptions.mergeWith(options);
     options.chosenOptions.url = options.get('searchPath');
 
+    var typeSearch = options.get('typeSearch');
     var attrName = options.get('attrName');
     if (attrName) { attrName = '_' + attrName; }
 
@@ -41,7 +42,9 @@ var multipleSearch = {
     var $input  = $j(objectId);
 
     // fixups for chosen
-    $input.attr('multiple', '');
+    if(typeSearch == 'multiple'){
+      $input.attr('multiple', '');
+    }
 
     var objectName = options.get('objectName');
 
@@ -54,11 +57,12 @@ var multipleSearch = {
 };
 
 var multipleSearchHelper = {
-  setup : function(objectName, attrName, searchPath, searchResourceOptions) {
+  setup : function(objectName, attrName, searchPath, typeSearch, searchResourceOptions) {
     var defaultOptions = {
       searchPath : searchPath,
       objectName : objectName,
-      attrName   : attrName
+      attrName   : attrName,
+      typeSearch : typeSearch
     };
 
     var options = optionsUtils.merge(defaultOptions, searchResourceOptions);

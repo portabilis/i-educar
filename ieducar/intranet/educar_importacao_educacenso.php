@@ -466,6 +466,7 @@ class indice extends clsCadastro
         $diasSemana[] = $i;
       }
     }
+    $diasSemana = '{' . implode(',', $diasSemana) . '}';
 
     $disciplinas = array();
     $disciplinas[1] = $dadosRegistro[40-1];
@@ -498,26 +499,33 @@ class indice extends clsCadastro
     $camposTurma = array(
       'tipo_atendimento' => $dadosRegistro[18-1],
       'turma_mais_educacao' => $dadosRegistro[19-1],
-      'atividade_complementar_1' => $dadosRegistro[20-1],
-      'atividade_complementar_2' => $dadosRegistro[21-1],
-      'atividade_complementar_3' => $dadosRegistro[22-1],
-      'atividade_complementar_4' => $dadosRegistro[23-1],
-      'atividade_complementar_5' => $dadosRegistro[24-1],
-      'atividade_complementar_6' => $dadosRegistro[25-1],
-      'aee_braille' => $dadosRegistro[26-1],
-      'aee_recurso_optico' => $dadosRegistro[27-1],
-      'aee_estrategia_desenvolvimento' => $dadosRegistro[28-1],
-      'aee_tecnica_mobilidade' => $dadosRegistro[29-1],
-      'aee_libras' => $dadosRegistro[30-1],
-      'aee_caa' => $dadosRegistro[31-1],
-      'aee_curricular' => $dadosRegistro[32-1],
-      'aee_soroban' => $dadosRegistro[33-1],
-      'aee_informatica' => $dadosRegistro[34-1],
-      'aee_lingua_escrita' => $dadosRegistro[35-1],
-      'aee_autonomia' => $dadosRegistro[36-1],
       'etapa_educacenso' => $dadosRegistro[38-1],
       'cod_curso_profissional' => $dadosRegistro[39-1],
     );
+
+    $camposTurma['dias_semana'] = array();
+    for ($i=1; $i <= 7; $i++) { 
+      if($dadosRegistro[10+$i-1]){
+        $camposTurma['dias_semana'][] = $i;
+      }
+    }
+    $camposTurma['dias_semana'] = '{'.implode(',', $camposTurma['dias_semana']).'}';
+
+    $camposTurma['atividades_complementares'] = array();
+    for ($i=1; $i <= 6; $i++) { 
+      if($dadosRegistro[19+$i-1]){
+        $camposTurma['atividades_complementares'][] = $dadosRegistro[19+$i-1];
+      }
+    }
+    $camposTurma['atividades_complementares'] = '{'.implode(',', $camposTurma['atividades_complementares']).'}';
+
+    $camposTurma['atividades_aee'] = array();
+    for ($i=1; $i <= 11; $i++) { 
+      if($dadosRegistro[25+$i-1]){
+        $camposTurma['atividades_aee'][] = $i;
+      }
+    }
+    $camposTurma['atividades_aee'] = '{'.implode(',', $camposTurma['atividades_aee']).'}';
 
 
     $modalidadeEnsinoCenso = $dadosRegistro[37-1];
@@ -553,6 +561,7 @@ class indice extends clsCadastro
         $turma->hora_final = $horaFinal;
         $turma->ano = $this->ano;
         $turma->tipo_boletim = 1;
+        $turma->dias_semana = $diasSemana;
 
         foreach ($camposTurma as $key => $value) {
           $turma->{$key} = $value;
@@ -562,13 +571,6 @@ class indice extends clsCadastro
 
         if(!empty($inepTurma)){
           $turma->updateInep($inepTurma);
-        }
-
-        foreach ($diasSemana as $key => $diaSemana) {
-          $obj = new clsPmieducarTurmaDiaSemana($diaSemana,
-              $codTurma, $horaInicial, $horaFinal);
-
-          $obj->cadastra();
         }
 
         foreach ($disciplinas as $disciplinaEducacenso => $usaDisciplina) {

@@ -10,6 +10,8 @@ require_once 'Portabilis/Date/Utils.php';
 require_once 'Portabilis/Currency/Utils.php';
 require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
+require_once 'Educacenso/Model/OrgaoRegionalDataMapper.php';
+
 class clsIndexBase extends clsBase
 {
     function Formular()
@@ -71,6 +73,7 @@ class indice extends clsCadastro
     var $bloqueia_matricula_serie_nao_seguinte;
     var $data_educacenso;
     var $altera_atestado_para_declaracao;
+    var $orgao_regional;
 
     function Inicializar()
     {
@@ -285,6 +288,26 @@ class indice extends clsCadastro
                 'value' => $this->data_educacenso
             )
         );
+
+        $opcoes = array();
+        if (!empty($this->ref_sigla_uf)) {
+            $opcoes = array(null => 'Selecione');
+            $orgaoRegional = new Educacenso_Model_OrgaoRegionalDataMapper();
+            $orgaosRegionais = $orgaoRegional->findAll(
+                array('sigla_uf', 'codigo'),
+                array('sigla_uf' => $this->ref_sigla_uf),
+                array('codigo' => 'asc'),
+                FALSE
+            );
+            foreach ($orgaosRegionais as $orgaoRegional) {
+              $opcoes[$orgaoRegional->codigo] = $orgaoRegional->codigo;
+            }
+        } else {
+            $opcoes = array(null => 'Informe uma UF');
+        }
+
+        $options = array('label' => 'Código do órgão regional de ensino', 'resources' => $opcoes, 'value' => $this->orgao_regional, 'required' => false, 'size' => 70,);
+        $this->inputsHelper()->select('orgao_regional', $options);
     }
 
     function Novo()
@@ -320,6 +343,7 @@ class indice extends clsCadastro
         $obj->auditar_notas = !is_null($this->auditar_notas);
         $obj->data_educacenso = $this->data_educacenso;
         $obj->exigir_dados_socioeconomicos = is_null($this->exigir_dados_socioeconomicos) ? false : true;
+        $obj->orgao_regional = $this->orgao_regional;
         $cod_instituicao = $cadastrou = $obj->cadastra();
 
         if ($cadastrou) {
@@ -371,6 +395,7 @@ class indice extends clsCadastro
         $obj->data_fechamento = Portabilis_Date_Utils::brToPgSQL_ddmm($this->data_fechamento);
         $obj->data_educacenso = $this->data_educacenso;
         $obj->exigir_dados_socioeconomicos = is_null($this->exigir_dados_socioeconomicos) ? false : true;
+        $obj->orgao_regional = $this->orgao_regional;
 
         $detalheAntigo = $obj->detalhe();
 
@@ -455,6 +480,36 @@ $pagina->MakeAll();
             $j('#quantidade_alunos_metro_quadrado').closest('tr').show();
         }
     }
+
+    let populaOrgaoRegional = data => {
+        $j('#orgao_regional').append(
+            $j('<option/>').text('Selecione').val('')
+        );
+        if (data.orgaos) {
+            $j.each(data.orgaos, function(){
+                $j('#orgao_regional').append(
+                    $j('<option/>').text(this.codigo).val(this.codigo)
+                );
+            });
+        }
+    }
+
+    $j('#ref_sigla_uf').on('change', function(){
+        let sigla_uf = this.value;
+        $j('#orgao_regional').html('');
+        if (sigla_uf) {
+            let parametros = {
+                oper: 'get',
+                resource: 'orgaos_regionais',
+                sigla_uf: sigla_uf
+            };
+            let link = '../module/Api/EducacensoOrgaoRegional';
+            $j.getJSON(link, parametros)
+            .done(populaOrgaoRegional);
+        } else {
+            $j('#orgao_regional').html('<option value="" selected>Selecione uma UF</option>');
+        }
+    });
 
     $j('#data_base').mask("99/99");
     $j('#data_fechamento').mask("99/99");
