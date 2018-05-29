@@ -1119,17 +1119,13 @@ class indice extends clsCadastro
       }
     }
 
-    $recursosProva = array(
-      'recurso_prova_inep_aux_ledor' => $dadosRegistro[30-1],
-      'recurso_prova_inep_aux_transcricao' => $dadosRegistro[31-1],
-      'recurso_prova_inep_guia_interprete' => $dadosRegistro[32-1],
-      'recurso_prova_inep_interprete_libras' => $dadosRegistro[33-1],
-      'recurso_prova_inep_leitura_labial' => $dadosRegistro[34-1],
-      'recurso_prova_inep_prova_ampliada_16' => $dadosRegistro[35-1],
-      'recurso_prova_inep_prova_ampliada_20' => $dadosRegistro[36-1],
-      'recurso_prova_inep_prova_ampliada_24' => $dadosRegistro[37-1],
-      'recurso_prova_inep_prova_braille' => $dadosRegistro[38-1],
-    );
+    $recursosProva = array();
+    for ($i=1; $i <= 9; $i++) { 
+      if($dadosRegistro[29+$i-1]){
+        $recursosProva[] = $i;
+      }
+    }
+    $recursosProva = '{'.implode(',', $recursosProva).'}';
 
     $codAluno = $this->existeAluno($inepAluno);
 
@@ -1142,9 +1138,7 @@ class indice extends clsCadastro
         $this->createOrUpdateRaca($idpesAluno, $corRacaEducacenso);
       }
       $aluno = new clsPmieducarAluno(null, null, null, null, $this->pessoa_logada, $idpesAluno, null, null, 1);
-      foreach ($recursosProva as $key => $value) {
-        $aluno->{$key} = $value;
-      }
+      $aluno->recursos_prova_inep = $recursosProva;
       $codAluno = $aluno->cadastra();
       $this->createAlunoEducacenso($codAluno, $inepAluno);
       foreach ($deficiencias as $key => $deficienciaEducacenso) {
@@ -1237,7 +1231,7 @@ class indice extends clsCadastro
       if(!empty($ufCartorio)){
         $documento->sigla_uf_cert_civil      = $this->getUfByCodIbge($ufCartorio);
       }
-      $documento->cartorio_cert_civil_inep = $codigoCartorio;
+      $documento->cartorio_cert_civil_inep = $this->getIdCartorioInep($codigoCartorio);
     }
 
     if(!$documento->existe()){
@@ -1349,6 +1343,11 @@ class indice extends clsCadastro
     }
 
     return true;
+  }
+
+  function getIdCartorioInep($codigo){
+    $sql = "SELECT id FROM cadastro.codigo_cartorio_inep WHERE id_cartorio = '{$codigo}' ";
+    return Portabilis_Utils_Database::selectField($sql);
   }
 
   function getIdCursoSuperiorEducacenso($codigo){

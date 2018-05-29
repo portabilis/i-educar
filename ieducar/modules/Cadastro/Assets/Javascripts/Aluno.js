@@ -149,11 +149,31 @@ function montaUrlLaudoMedico() {
     $j('#url_laudo_medico').val('[' + url + ']');
 }
 
+function codigoInepInvalido() {
+    $j('#aluno_inep_id').addClass('error');
+    messageUtils.error('O código INEP do aluno deve conter 12 dígitos');
+}
+
 function certidaoNascimentoInvalida() {
     $j('#certidao_nascimento').addClass('error');
     messageUtils.error('O campo referente a certidão de nascimento deve conter exatos 32 dígitos.');
 }
 
+function possuiDocumentoObrigatorio() {
+    var cpf = $j('#id_federal').val();
+    var rg = $j('#rg').val();
+    var certidaoCivil = $j('#termo_certidao_civil').val() &&
+                        $j('#folha_certidao_civil').val() &&
+                        $j('#livro_certidao_civil').val();
+    var certidaoNascimentoNovoFormato = $j('#certidao_nascimento').val();
+    var certidaoCasamentoNovoFormato = $j('#certidao_casamento').val();;
+
+    return cpf ||
+           rg ||
+           certidaoCivil ||
+           certidaoCasamentoNovoFormato ||
+           certidaoNascimentoNovoFormato;
+  }
 
 function certidaoCasamentoInvalida() {
     $j('#certidao_casamento').addClass('error');
@@ -161,6 +181,17 @@ function certidaoCasamentoInvalida() {
 }
 
 var newSubmitForm = function (event) {
+    if (!possuiDocumentoObrigatorio()) {
+        messageUtils.error('É necessário o preenchimento de pelo menos um dos seguintes documentos: CPF, RG ou Certidão civil.');
+        return false;
+    }
+    
+    var codigoInep = $j('#aluno_inep_id').val();
+
+    if (codigoInep && codigoInep.length != 12) {
+        return codigoInepInvalido();
+    }
+
     if ($j('#deficiencias').val().length > 1) {
         if ($j('#url_laudo_medico_obrigatorio').length > 0 && $j('#url_laudo_medico').val().length < 1) {
             return laudoMedicoObrigatorio();
@@ -337,7 +368,7 @@ var $linkToEditPessoaResponsavel = $linkToEditPessoaPai
 // adiciona id 'stop' na linha separadora
 $j('.tableDetalheLinhaSeparador').closest('tr').attr('id', 'stop');
 // Adiciona abas na página
-$j('td .formdktd:first').append('<div id="tabControl"><ul><li><div id="tab1" class="alunoTab"> <span class="tabText">Dados pessoais</span></div></li><li><div id="tab2" class="alunoTab"> <span class="tabText">Ficha m\u00e9dica</span></div></li><li><div id="tab4" class="alunoTab"> <span class="tabText">Moradia</span></div></li><li><div id="tab5" class="alunoTab" style="width: 125px;"> <span class="tabText" style="">Recursos prova INEP</span></div></li><li><div id="tab6" class="alunoTab"> <span class="tabText" style="">Projetos</span></div></li></ul></div>');
+$j('td .formdktd:first').append('<div id="tabControl"><ul><li><div id="tab1" class="alunoTab"> <span class="tabText">Dados pessoais</span></div></li><li><div id="tab2" class="alunoTab"> <span class="tabText">Ficha m\u00e9dica</span></div></li><li><div id="tab4" class="alunoTab"> <span class="tabText">Moradia</span></div></li><li><div id="tab5" class="alunoTab" style="width: 125px;"> <span class="tabText" style="">Dados educacenso</span></div></li><li><div id="tab6" class="alunoTab"> <span class="tabText" style="">Projetos</span></div></li></ul></div>');
 
 // Adiciona estilo de aba selecionada a primeira aba
 $j('#tab1').addClass('alunoTab-active').removeClass('alunoTab');
@@ -764,49 +795,13 @@ resourceOptions.handleGet = function (dataResponse) {
     /**************
      PROVA INEP
      ***************/
-    if (dataResponse.recurso_prova_inep_aux_ledor == 1) {
-        $j('#recurso_prova_inep_aux_ledor').attr('checked', true);
-        $j('#recurso_prova_inep_aux_ledor').val('on');
-    }
 
-    if (dataResponse.recurso_prova_inep_aux_transcricao == 1) {
-        $j('#recurso_prova_inep_aux_transcricao').attr('checked', true);
-        $j('#recurso_prova_inep_aux_transcricao').val('on');
-    }
-
-    if (dataResponse.recurso_prova_inep_guia_interprete == 1) {
-        $j('#recurso_prova_inep_guia_interprete').attr('checked', true);
-        $j('#recurso_prova_inep_guia_interprete').val('on');
-    }
-
-    if (dataResponse.recurso_prova_inep_interprete_libras == 1) {
-        $j('#recurso_prova_inep_interprete_libras').attr('checked', true);
-        $j('#recurso_prova_inep_interprete_libras').val('on');
-    }
-
-    if (dataResponse.recurso_prova_inep_leitura_labial == 1) {
-        $j('#recurso_prova_inep_leitura_labial').attr('checked', true);
-        $j('#recurso_prova_inep_leitura_labial').val('on');
-    }
-
-    if (dataResponse.recurso_prova_inep_prova_ampliada_16 == 1) {
-        $j('#recurso_prova_inep_prova_ampliada_16').attr('checked', true);
-        $j('#recurso_prova_inep_prova_ampliada_16').val('on');
-    }
-
-    if (dataResponse.recurso_prova_inep_prova_ampliada_20 == 1) {
-        $j('#recurso_prova_inep_prova_ampliada_20').attr('checked', true);
-        $j('#recurso_prova_inep_prova_ampliada_20').val('on');
-    }
-
-    if (dataResponse.recurso_prova_inep_prova_ampliada_24 == 1) {
-        $j('#recurso_prova_inep_prova_ampliada_24').attr('checked', true);
-        $j('#recurso_prova_inep_prova_ampliada_24').val('on');
-    }
-
-    if (dataResponse.recurso_prova_inep_prova_braille == 1) {
-        $j('#recurso_prova_inep_prova_braille').attr('checked', true);
-        $j('#recurso_prova_inep_prova_braille').val('on');
+    if (dataResponse.recursos_prova_inep) {
+        var recursosProvaInep = dataResponse.recursos_prova_inep;
+        recursosProvaInep = recursosProvaInep.replace(/{|}/gi, '');
+        recursosProvaInep = recursosProvaInep.split(',');
+        $j('#recursos_prova_inep__').val(recursosProvaInep);
+        $j('#recursos_prova_inep__').trigger("chosen:updated");
     }
 
     $j('#recebe_escolarizacao_em_outro_espaco').val(dataResponse.recebe_escolarizacao_em_outro_espaco).change();
@@ -1522,7 +1517,7 @@ function canShowParentsFields() {
                 $j('#tab5').toggleClass('alunoTab alunoTab-active')
                 $j('.tablecadastro >tbody  > tr').each(function (index, row) {
                     if (row.id != 'stop') {
-                        if (index >= $j('#tr_fossa').index() && index < $j('#tr_recurso_prova_inep_prova_braille').index()) {
+                        if (index >= $j('#tr_fossa').index() && index < $j('#tr_recursos_prova_inep__').index()) {
                             row.show();
                         } else if (index != 0) {
                             row.hide();
@@ -1540,7 +1535,7 @@ function canShowParentsFields() {
                 $j('#tab6').toggleClass('alunoTab alunoTab-active')
                 $j('.tablecadastro >tbody  > tr').each(function (index, row) {
                     if (row.id != 'stop') {
-                        if (index >= $j('#tr_recurso_prova_inep_prova_braille').index() && index < $j('#tr_recurso_prova_inep_prova_braille').index() + 1) {
+                        if (index >= $j('#tr_recursos_prova_inep__').index() && index < $j('#tr_recursos_prova_inep__').index() + 1) {
                             row.show();
                         } else if (index != 0) {
                             row.hide();

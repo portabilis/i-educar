@@ -1432,15 +1432,15 @@ class EducacensoExportController extends ApiCoreController
       (SELECT cod_ibge FROM public.pais WHERE pais.idpais = fis.idpais_estrangeiro) as r60s13,
       uf.cod_ibge as r60s14,
       mun.cod_ibge as r60s15,
-      recurso_prova_inep_aux_ledor as r60s30,
-      recurso_prova_inep_aux_transcricao as r60s31,
-      recurso_prova_inep_guia_interprete as r60s32,
-      recurso_prova_inep_interprete_libras as r60s33,
-      recurso_prova_inep_leitura_labial as r60s34,
-      recurso_prova_inep_prova_ampliada_16 as r60s35,
-      recurso_prova_inep_prova_ampliada_20 as r60s36,
-      recurso_prova_inep_prova_ampliada_24 as r60s37,
-      recurso_prova_inep_prova_braille as r60s38,
+      (ARRAY[1] <@ recursos_prova_inep)::int as r60s30,
+      (ARRAY[2] <@ recursos_prova_inep)::int as r60s31,
+      (ARRAY[3] <@ recursos_prova_inep)::int as r60s32,
+      (ARRAY[4] <@ recursos_prova_inep)::int as r60s33,
+      (ARRAY[5] <@ recursos_prova_inep)::int as r60s34,
+      (ARRAY[6] <@ recursos_prova_inep)::int as r60s35,
+      (ARRAY[7] <@ recursos_prova_inep)::int as r60s36,
+      (ARRAY[8] <@ recursos_prova_inep)::int as r60s37,
+      (ARRAY[9] <@ recursos_prova_inep)::int as r60s38,
       fis.nacionalidade AS nacionalidade
 
       FROM  pmieducar.aluno a
@@ -1611,7 +1611,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
         num_livro as r70s13,
         data_emissao_cert_civil as r70s14,
         (SELECT cod_ibge FROM public.uf WHERE uf.sigla_uf = fd.sigla_uf_cert_civil) as r70s15,
-        cartorio_cert_civil_inep as r70s17,
+        id_cartorio as r70s17,
         certidao_nascimento as r70s18,
         fis.cpf as r70s19,
         fd.passaporte as r70s20,
@@ -1630,6 +1630,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
         INNER JOIN cadastro.fisica fis ON (fis.idpes = a.ref_idpes)
          LEFT JOIN cadastro.documento fd ON (fis.idpes = fd.idpes)
          LEFT JOIN cadastro.orgao_emissor_rg oer ON (fd.idorg_exp_rg = oer.idorg_rg)
+         LEFT JOIN cadastro.codigo_cartorio_inep cci ON (cci.id = fd.cartorio_cert_civil_inep)
         INNER JOIN cadastro.pessoa p ON (fis.idpes = p.idpes)
         INNER JOIN pmieducar.matricula m ON (m.ref_cod_aluno = a.cod_aluno)
         INNER JOIN pmieducar.escola e ON (m.ref_ref_cod_escola = e.cod_escola)
