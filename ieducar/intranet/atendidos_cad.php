@@ -699,8 +699,7 @@ class indice extends clsCadastro
     // nacionalidade
 
     // tipos
-    $tiposNacionalidade = array(null => 'Selecione',
-                                '1'  => 'Brasileira',
+    $tiposNacionalidade = array('1'  => 'Brasileira',
                                 '2'  => 'Naturalizado brasileiro',
                                 '3'  => 'Estrangeira');
 

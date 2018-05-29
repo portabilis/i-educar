@@ -724,7 +724,7 @@ class EducacensoExportController extends ApiCoreController
       // Se a turma não presta atendimento educacional especializado AEE esses campos precisam ser nulos
       if ($r20s18 != 5)
         $r20s26 = $r20s27 = $r20s28 = $r20s29 = $r20s30 = $r20s31 = $r20s32 = $r20s33 = $r20s34 = $r20s35 = $r20s36 = NULL;
-      
+
       if (!in_array($dependencia_administrativa, array(2,3))){
         $r20s19 = NULL;
       }
@@ -1611,6 +1611,7 @@ protected function exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim,
         num_livro as r70s13,
         data_emissao_cert_civil as r70s14,
         (SELECT cod_ibge FROM public.uf WHERE uf.sigla_uf = fd.sigla_uf_cert_civil) as r70s15,
+        codigo_cartorio_inep.cod_municipio as r70s16,
         id_cartorio as r70s17,
         certidao_nascimento as r70s18,
         fis.cpf as r70s19,

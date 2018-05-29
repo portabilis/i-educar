@@ -541,7 +541,7 @@ class AlunoController extends ApiCoreController
         $aluno->ref_usuario_exc = $this->getSession()->id_pessoa;
 
         // INFORAMÇÕES PROVA INEP
-        $recursosProvaInep = array_filter($this->getRequest()->recursos_prova_inep);
+        $recursosProvaInep = $this->getRequest()->recursos_prova_inep__;
         $recursosProvaInep = '{' . implode(',', $recursosProvaInep) . '}';
         $aluno->recursos_prova_inep = $recursosProvaInep;
         $aluno->recebe_escolarizacao_em_outro_espaco = $this->getRequest()->recebe_escolarizacao_em_outro_espaco;
