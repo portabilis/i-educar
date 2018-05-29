@@ -478,6 +478,40 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $this->inputsHelper()->date('data_emissao_rg', $options);
 
+        $selectOptions = array( null => 'Órgão emissor' );
+        $orgaos        = new clsOrgaoEmissorRg();
+        $orgaos        = $orgaos->lista();
+
+        foreach ($orgaos as $orgao)
+          $selectOptions[$orgao['idorg_rg']] = $orgao['sigla'];
+
+        $selectOptions = Portabilis_Array_Utils::sortByValue($selectOptions);
+
+        $options = array(
+          'required'  => false,
+          'label'     => '',
+          'value'     => $documentos['idorg_exp_rg'],
+          'resources' => $selectOptions,
+          'inline'    => true
+        );
+
+        $this->inputsHelper()->select('orgao_emissao_rg', $options);
+
+
+        // uf emissão rg
+
+        $options = array(
+          'required' => false,
+          'label'    => '',
+          'value'    => $documentos['sigla_uf_exp_rg']
+        );
+
+        $helperOptions = array(
+          'attrName' => 'uf_emissao_rg'
+        );
+
+        $this->inputsHelper()->uf($options, $helperOptions);
+
         // cpf
         if (is_numeric($this->cod_pessoa_fj)) {
             $fisica = new clsFisica($this->cod_pessoa_fj);
@@ -623,14 +657,14 @@ class AlunoController extends Portabilis_Controller_Page_EditController
             'label' => '',
             'required' => false
           );
-      
+
           $helperOptions = array(
             'objectName' => 'cartorio_cert_civil_inep',
             'hiddenInputOptions' => array(
               'options' => array('value' => $documentos['cartorio_cert_civil_inep'])
             )
           );
-          
+
           $this->inputsHelper()->simpleSearchCartorioInep(null, $options, $helperOptions);
 
         // cartório emissão certidão civil
@@ -1245,7 +1279,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('lixo')), 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->checkbox('lixo', $options);
-        
+
         $recursosProvaInep = array(
             1 => 'Auxílio ledor',
             2 => 'Auxílio transcrição',
@@ -1478,6 +1512,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         if ($instituicao && isset($instituicao['obrigar_campos_censo'])) {
             $obrigarCamposCenso = dbBool($instituicao['obrigar_campos_censo']);
         }
+        $this->CampoOculto('obrigar_campos_censo', (int) $obrigarCamposCenso);
 
         $racas         = new clsCadastroRaca();
         $racas         = $racas->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL, TRUE);

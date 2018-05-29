@@ -40,6 +40,13 @@ let verificaEtapaEducacenso = ()=>{
   }
 }
 
+let verificaTurmaUnificada = () => {
+  $j('#turma_unificada').makeUnrequired();
+  if (obrigarCamposCenso && $j('#etapa_educacenso').val() == '3') {
+    $j('#turma_unificada').makeRequired();
+  }
+}
+
 $j('#tipo_atendimento').change(function() {
   mostraAtividadesComplementares();
   mostraAtividadesAee();
@@ -48,6 +55,7 @@ $j('#tipo_atendimento').change(function() {
 
 $j('#etapa_educacenso').change(function() {
   mostraCursoTecnico();
+  verificaTurmaUnificada();
 });
 
 function mostraAtividadesComplementares(){
