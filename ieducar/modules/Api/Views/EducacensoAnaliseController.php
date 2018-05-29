@@ -52,7 +52,7 @@ class EducacensoAnaliseController extends ApiCoreController
                    fisica_gestor.cpf AS cpf_gestor_escolar,
                    pessoa_gestor.nome AS nome_gestor_escolar,
                    escola.cargo_gestor AS cargo_gestor_escolar,
-                   pessoa_gestor.email AS email_gestor_escolar,
+                   escola.email_gestor AS email_gestor_escolar,
                    escola.dependencia_administrativa,
                    escola.situacao_funcionamento,
                    escola.categoria_escola_privada,
