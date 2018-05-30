@@ -810,11 +810,11 @@ resourceOptions.handleGet = function (dataResponse) {
     function habilitaRecursosProvaInep() {
         var deficiencias = $j('#deficiencias').val();
 
-        $j('#recursos_prova_inep__').prop('disabled', true).val([]).trigger("chosen:updated");
+        $j('#recursos_prova_inep__').prop('disabled', false).trigger("chosen:updated");
 
         // o MultipleSearch vem com uma opção vazia por padrão
-        if (deficiencias.length > 1) {
-            $j('#recursos_prova_inep__').prop('disabled', false).trigger("chosen:updated");
+        if (deficiencias.length <= 1) {
+            $j('#recursos_prova_inep__').prop('disabled', true).val([]).trigger("chosen:updated");
         }
     }
 
