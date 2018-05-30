@@ -292,6 +292,7 @@ $j(document).ready(function() {
       mostraAtividadesComplementares();
       mostraAtividadesAee();
       mostraCursoTecnico();
+      mostraTurmaUnificada();
     });
 
   // fix checkboxs
@@ -302,75 +303,18 @@ $j(document).ready(function() {
   });
 
   $j("#etapa_educacenso").change(function() {
-    changeEtapaTurmaField();
+    mostraTurmaUnificada();
   });
 
-  var changeEtapaTurmaField = function() {
-    var etapa = $j("#etapa_educacenso").val();
+  function mostraTurmaUnificada() {
+    var etapaUnificada = $j("#etapa_educacenso").val() == 3;
 
-    if (etapa == 12 || etapa == 13) {
-      $j("#etapa_educacenso2 > option").each(function() {
-        var etapasCorrespondentes = ['4','5','6','7','8','9','10','11'];
-        if ($j.inArray(this.value, etapasCorrespondentes) !== -1){
-          this.show();
-        } else {
-          this.hide();
-        }
-      });
-    } else if (etapa == 22 || etapa == 23) {
-      $j("#etapa_educacenso2 > option").each(function() {
-        var etapasCorrespondentes = ['14','15','16','17','18','19','20','21','41'];
-        if ($j.inArray(this.value, etapasCorrespondentes) !== -1){
-          this.show();
-        } else {
-          this.hide();
-        }
-      });
-    } else if (etapa == 24) {
-      $j("#etapa_educacenso2 > option").each(function() {
-        var etapasCorrespondentes = ['4','5','6','7','8','9','10','11','14','15','16','17','18','19','20','21','41'];
-        if ($j.inArray(this.value, etapasCorrespondentes) !== -1){
-          this.show();
-        } else {
-          this.hide();
-        }
-      });
-    } else if (etapa == 72) {
-      $j("#etapa_educacenso2 > option").each(function() {
-        var etapasCorrespondentes = ['69','70'];
-        if ($j.inArray(this.value, etapasCorrespondentes) !== -1){
-          this.show();
-        } else {
-          this.hide();
-        }
-      });
-    } else if (etapa == 56) {
-      $j("#etapa_educacenso2 > option").each(function() {
-        var etapasCorrespondentes = ['1','2','4','5','6','7','8','9','10','11','14','15','16','17','18','19','20','21','41'];
-        if ($j.inArray(this.value, etapasCorrespondentes) !== -1){
-          this.show();
-        } else {
-          this.hide();
-        }
-      });
-    } else if (etapa == 64) {
-      $j("#etapa_educacenso2 > option").each(function() {
-        var etapasCorrespondentes = ['39','40'];
-        if ($j.inArray(this.value, etapasCorrespondentes) !== -1){
-          this.show();
-        } else {
-          this.hide();
-        }
-      });
-    } else {
-      $j("#etapa_educacenso2").prop('disabled', 'disabled');
-      $j("#etapa_educacenso2").val(null);
-      return;
+    $j("#tr_turma_unificada").hide();
+
+    if (etapaUnificada) {
+      $j("#tr_turma_unificada").show();
     }
-    $j("#etapa_educacenso2").prop('disabled', false);
   }
-
-  changeEtapaTurmaField();
 
   var submitForm = function(){
     let canSubmit = validationUtils.validatesFields(true);
