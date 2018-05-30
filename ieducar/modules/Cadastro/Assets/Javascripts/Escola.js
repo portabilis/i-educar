@@ -326,6 +326,15 @@ $j(document).ready(function() {
     }
   }
 
+  $j('#dependencia_numero_salas_existente').on('change', () => {
+    if ($j('#dependencia_numero_salas_existente').val() && ! parseInt($j('#dependencia_numero_salas_existente').val()) > 0) {
+      messageUtils.error('O campo: Número de salas de aula existentes na escola, deve ser preenchido com um número maior que zero.');
+      $j('#dependencia_numero_salas_existente').val('').focus().addClass('error');
+    } else {
+      $j('#dependencia_numero_salas_existente').removeClass('error');
+    }
+  });
+
   $j('#dependencia_administrativa').on('change', verificaCamposDepAdm);
   $j('#situacao_funcionamento').on('change', verificaCamposDepAdm);
   verificaCamposDepAdm();

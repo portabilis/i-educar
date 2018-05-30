@@ -1199,7 +1199,7 @@ class indice extends clsCadastro
             );
             $this->inputsHelper()->booleanSelect('fundamental_ciclo', $options);
 
-            $resources = array(0 => 'Selecione',
+            $resources = array(NULL => 'Selecione',
                 1 => 'Área de assentamento',
                 2 => 'Terra indígena',
                 3 => 'Área onde se localiza comunidades remanescentes de quilombos',
