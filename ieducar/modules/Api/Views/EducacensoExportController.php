@@ -1517,9 +1517,13 @@ class EducacensoExportController extends ApiCoreController
                                  11 => '27',
                                  12 => '28',
                                  13 => '29');
+      
+      if (count($deficiencias) == 0) {
+        $r60s30 = $r60s31 = $r60s32 = $r60s33 = $r60s34 = $r60s35 = $r60s36 = $r60s37 = $r60s38 = NULL;
+      }
 
       // Se tiver alguma deficiência, a seq 16 deve ser 1
-      if (count($deficiencias)>0){
+      if (count($deficiencias)>0) {
         $r60s16 = 1;
         $r60s17 = $r60s18 = $r60s19 = $r60s20 = $r60s21 = $r60s22 = $r60s23 = $r60s24 =
                   $r60s25 = $r60s26 = $r60s27 = $r60s28 = $r60s29 = 0;

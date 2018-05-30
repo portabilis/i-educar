@@ -1110,7 +1110,15 @@ class EducacensoAnaliseController extends ApiCoreController
                    uf.cod_ibge AS uf_inep,
                    uf.sigla_uf AS sigla_uf,
                    municipio.cod_ibge AS municipio_inep,
-                   municipio.idmun AS idmun
+                   municipio.idmun AS idmun,
+                   aluno.cod_aluno AS cod_aluno,
+                   aluno.recursos_prova_inep[0] AS recursos_prova_inep,
+                   EXISTS (SELECT 1
+                             FROM cadastro.fisica_deficiencia fd,
+                                  cadastro.deficiencia d
+                            WHERE d.cod_deficiencia = fd.ref_cod_deficiencia
+                              AND fd.ref_idpes = aluno.ref_idpes
+                              AND d.deficiencia_educacenso IS NOT NULL) AS possui_deficiencia
               FROM pmieducar.aluno
              INNER JOIN pmieducar.matricula ON (matricula.ref_cod_aluno = aluno.cod_aluno)
              INNER JOIN pmieducar.matricula_turma ON (matricula_turma.ref_cod_matricula = matricula.cod_matricula)
@@ -1153,6 +1161,7 @@ class EducacensoAnaliseController extends ApiCoreController
       $nomeEscola = Portabilis_String_Utils::toUtf8(strtoupper($aluno["nome_escola"]));
       $nomeAluno  = Portabilis_String_Utils::toUtf8(strtoupper($aluno["nome_aluno"]));
       $codPessoa = $aluno["idpes"];
+      $codAluno = $aluno["cod_aluno"];
       $siglaUF = $aluno["sigla_uf"];
       $codMunicipio = $aluno["idmun"];
 
@@ -1179,6 +1188,12 @@ class EducacensoAnaliseController extends ApiCoreController
                               "path" => "(Endereçamento > Cadastros > Municípios > Editar > Campo: Código INEP)",
                               "linkPath" => "/intranet/public_municipio_cad.php?idmun={$codMunicipio}",
                               "fail" => true);
+        }
+        if ($aluno["possui_deficiencia"] && empty($aluno["recursos_prova_inep"])) {
+          $mensagem[] = array("text" => "<span class='avisos-educacenso'><b>Aviso!</b> Dados para formular o registro 60 da escola {$nomeEscola} não encontrados. Verificamos que o(a) aluno(a) {$nomeAluno} possui uma(s) deficiência(s), porém nenhum recurso para a prova INEP foi selecionado.</span>",
+                              "path" => "(Escola > Cadastros > Alunos > Cadastrar > Editar > Aba: Dados educacenso > Campo: Recursos prova INEP)",
+                              "linkPath" => "/module/Cadastro/aluno?id={$codAluno}",
+                              "fail" => false);
         }
       }
     }
@@ -1414,7 +1429,7 @@ class EducacensoAnaliseController extends ApiCoreController
           $aluno["tipo_atendimento"] != $atendimentoEducEspecializado) {
         if (!$aluno["recebe_escolarizacao_em_outro_espaco"]) {
           $mensagem[] = array("text" => "Dados para formular o registro 80 da escola {$nomeEscola} não encontrados. Verificamos que a turma vinculada a este aluno(a) {$nomeAluno} não é de Atividade complementar e nem de AEE, portanto é necessário informar se o mesmo recebe escolarização em um espaço diferente da respectiva escola.",
-                              "path" => "(Escola > Cadastros > Alunos > Cadastrar > Editar > Aba: Recursos prova INEP > Campo: Recebe escolarização em outro espaço (diferente da escola))",
+                              "path" => "(Escola > Cadastros > Alunos > Cadastrar > Editar > Aba: Dados educacenso > Campo: Recebe escolarização em outro espaço (diferente da escola))",
                               "linkPath" => "/module/Cadastro/aluno?id={$codAluno}",
                               "fail" => true);
         }
