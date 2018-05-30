@@ -18,7 +18,7 @@ var $cpfNotice    = $j('<span>').html('')
                                 .hide()
                                 .width($j('#nm_pessoa').outerWidth() - 12)
                                 .appendTo($cpfField.parent());
-
+let obrigarCamposCenso = $j('#obrigar_campos_censo');
 
 // links pessoa pai, mãe
 
@@ -105,10 +105,14 @@ var getPersonByCpf = function(cpf) {
 
 // hide or show #pais_origem_nome by #tipo_nacionalidade
 var checkTipoNacionalidade = function() {
-  if ($j.inArray($j('#tipo_nacionalidade').val(), ['2', '3']) > -1)
+  if ($j.inArray($j('#tipo_nacionalidade').val(), ['2', '3']) > -1) {
+    if (obrigarCamposCenso) {
+      $j('#pais_origem_nome').makeRequired();
+    }
     $j('#pais_origem_nome').show();
-  else
+  } else {
     $j('#pais_origem_nome').hide();
+  }
 }
 
 // hide or show *certidao* fields, by #tipo_certidao_civil

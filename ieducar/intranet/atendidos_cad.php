@@ -212,6 +212,8 @@ class indice extends clsCadastro
   function Gerar()
   {
     $camposObrigatorios = !$GLOBALS['coreExt']['Config']->app->remove_obrigatorios_cadastro_pessoa == 1;
+    $obrigarCamposCenso = $this->validarCamposObrigatoriosCenso();
+    $this->campoOculto('obrigar_campos_censo', (int) $obrigarCamposCenso);
     $this->url_cancelar = $this->retorno == 'Editar' ?
       'atendidos_det.php?cod_pessoa=' . $this->cod_pessoa_fj : 'atendidos_lst.php';
 
@@ -686,14 +688,13 @@ class indice extends clsCadastro
 
     $racas         = new clsCadastroRaca();
     $racas         = $racas->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL, TRUE);
-    $selectOptions = array(null => 'Selecione');
 
     foreach ($racas as $raca)
       $selectOptions[$raca['cod_raca']] = $raca['nm_raca'];
 
-    $selectOptions = Portabilis_Array_Utils::sortByValue($selectOptions);
+    $selectOptions = array(null => 'Selecione') + Portabilis_Array_Utils::sortByValue($selectOptions);
 
-    $this->campoLista('cor_raca', 'Raça', $selectOptions, $this->cod_raca, '', FALSE, '', '', '', FALSE);
+    $this->campoLista('cor_raca', 'Raça', $selectOptions, $this->cod_raca, '', FALSE, '', '', '', $obrigarCamposCenso);
 
 
     // nacionalidade
@@ -705,7 +706,7 @@ class indice extends clsCadastro
 
     $options            = array('label'       => 'Nacionalidade',
                                 'resources'   => $tiposNacionalidade,
-                                'required'    => false,
+                                'required'    => $obrigarCamposCenso,
                                 'inline'      => true,
                                 'value'       => $this->tipo_nacionalidade);
 

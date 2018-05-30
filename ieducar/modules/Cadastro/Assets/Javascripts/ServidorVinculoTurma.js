@@ -95,6 +95,7 @@ $j(document).ready(function() {
   };
 
   $j('#ref_cod_escola').on('change', getDependenciaAdministrativaEscola);
+  getDependenciaAdministrativaEscola();
 
   $selecionarTodosElement.on('change',function(){
     $j('#componentecurricular option').attr('selected', $j(this).prop('checked'));

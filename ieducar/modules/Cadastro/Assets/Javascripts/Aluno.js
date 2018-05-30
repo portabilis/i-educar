@@ -1716,7 +1716,7 @@ function canShowParentsFields() {
         }
         $j('#zona_localizacao_censo').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
 
-        $label = $j('<label>').html('Cor e raça').attr('for', 'cor_raca').attr('style', 'display:block;').insertBefore($j('#cor_raca'));
+        $label = $j('<label>').html('Raça').attr('for', 'cor_raca').attr('style', 'display:block;').insertBefore($j('#cor_raca'));
         if ($j('#cor_raca').hasClass('obrigatorio')) {
           $label.append($j('<span/>').addClass('campo_obrigatorio').text('*'));
         }

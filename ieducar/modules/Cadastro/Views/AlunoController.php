@@ -1516,15 +1516,14 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $racas         = new clsCadastroRaca();
         $racas         = $racas->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL, TRUE);
-        $selectOptions = array(null => 'Selecione');
 
         foreach ($racas as $raca) {
             $selectOptions[$raca['cod_raca']] = $raca['nm_raca'];
         }
 
-        $selectOptions = Portabilis_Array_Utils::sortByValue($selectOptions);
+        $selectOptions = array(null => 'Selecione') + Portabilis_Array_Utils::sortByValue($selectOptions);
 
-        $this->campoLista('cor_raca', 'Cor e raça', $selectOptions, $this->cod_raca, '', FALSE, '', '', '', $obrigarCamposCenso);
+        $this->campoLista('cor_raca', 'Raça', $selectOptions, $this->cod_raca, '', FALSE, '', '', '', $obrigarCamposCenso);
 
         $zonas = array(
             '' => 'Selecione',
@@ -1542,7 +1541,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $this->inputsHelper()->select('zona_localizacao_censo', $options);
 
         $tiposNacionalidade = array(
-            NULL => 'Selecione',
             '1'  => 'Brasileiro',
             '2'  => 'Naturalizado brasileiro',
             '3'  => 'Estrangeiro'
