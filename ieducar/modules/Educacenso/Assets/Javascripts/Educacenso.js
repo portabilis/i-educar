@@ -274,7 +274,8 @@ $j(document).ready(function(){
     var analisaRegistro30 = function(){
         var urlForGetAnaliseRegistro = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', 'registro-30', {
           escola : $j("#ref_cod_escola").val(),
-          ano    : $j("#ano").val()
+          ano    : $j("#ano").val(),
+          data_fim : $j("#data_fim").val()
         });
 
         var options = {
@@ -294,7 +295,8 @@ $j(document).ready(function(){
     var analisaRegistro40 = function(){
         var urlForGetAnaliseRegistro = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', 'registro-40', {
           escola : $j("#ref_cod_escola").val(),
-          ano    : $j("#ano").val()
+          ano    : $j("#ano").val(),
+          data_fim : $j("#data_fim").val()
         });
 
         var options = {
@@ -314,7 +316,8 @@ $j(document).ready(function(){
     var analisaRegistro50 = function(){
         var urlForGetAnaliseRegistro = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', 'registro-50', {
           escola : $j("#ref_cod_escola").val(),
-          ano    : $j("#ano").val()
+          ano    : $j("#ano").val(),
+          data_fim : $j("#data_fim").val()
         });
 
         var options = {
@@ -334,7 +337,8 @@ $j(document).ready(function(){
     var analisaRegistro51 = function(){
         var urlForGetAnaliseRegistro = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', 'registro-51', {
           escola : $j("#ref_cod_escola").val(),
-          ano    : $j("#ano").val()
+          ano    : $j("#ano").val(),
+          data_fim : $j("#data_fim").val()
         });
 
         var options = {
