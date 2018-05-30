@@ -561,7 +561,7 @@ class indice extends clsCadastro
         'options' => array('value' => $documentos['cartorio_cert_civil_inep'])
       )
     );
-    
+
     $this->inputsHelper()->simpleSearchCartorioInep(null, $options, $helperOptions);
 
 
@@ -932,7 +932,7 @@ class indice extends clsCadastro
       'label'       => 'Zona localização',
       'value'       => $this->zona_localizacao_censo,
       'resources'   => $zonas,
-      'required'    => false
+      'required'    => $obrigarCamposCenso,
     );
 
     $this->inputsHelper()->select('zona_localizacao_censo', $options);

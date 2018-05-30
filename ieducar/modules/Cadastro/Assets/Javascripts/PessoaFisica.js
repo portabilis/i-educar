@@ -122,26 +122,41 @@ var checkTipoCertidaoCivil = function() {
   var $certidaoCasamentoField  = $j('#certidao_casamento').hide();
   var tipoCertidaoCivil        = $j('#tipo_certidao_civil').val();
 
-
+  $certidaoCivilFields.makeUnrequired();
+  $certidaoNascimentoField.makeUnrequired();
+  $certidaoCasamentoField.makeUnrequired();
 
   if ($j.inArray(tipoCertidaoCivil, ['91', '92']) > -1) {
     $certidaoCivilFields.show();
+    if (obrigarCamposCenso) {
+      $certidaoCivilFields.makeRequired();
+    }
     $j('#tr_tipo_certidao_civil td:first span').html(stringUtils.toUtf8('Tipo certidão civil'));
-  }
-
-  else if (tipoCertidaoCivil == 'certidao_nascimento_novo_formato') {
+  } else if (tipoCertidaoCivil == 'certidao_nascimento_novo_formato') {
     $certidaoNascimentoField.show();
+    if (obrigarCamposCenso) {
+      $certidaoNascimentoField.makeRequired();
+    }
     $j('#tr_tipo_certidao_civil td:first span').html(stringUtils.toUtf8('Tipo certidão civil'));
-  }
-
-    else if (tipoCertidaoCivil == 'certidao_casamento_novo_formato') {
+  } else if (tipoCertidaoCivil == 'certidao_casamento_novo_formato') {
+    if (obrigarCamposCenso) {
+      $certidaoCasamentoField.makeRequired();
+    }
     $certidaoCasamentoField.show();
     $j('#tr_tipo_certidao_civil td:first span').html(stringUtils.toUtf8('Tipo certidão civil'));
   }
 
+  $j('#tipo_certidao_civil').makeUnrequired();
+  $j('#uf_emissao_certidao_civil').makeUnrequired();
+  $j('#data_emissao_certidao_civil').makeUnrequired();
+  $j('#cartorio_cert_civil_inep_id').makeUnrequired();
 
-
-
+  if (tipoCertidaoCivil.length && obrigarCamposCenso) {
+    $j('#tipo_certidao_civil').makeRequired();
+    $j('#uf_emissao_certidao_civil').makeRequired();
+    $j('#data_emissao_certidao_civil').makeRequired();
+    $j('#cartorio_cert_civil_inep_id').makeRequired();
+  }
 }
 
 var validatesCpf = function() {
@@ -232,6 +247,19 @@ $j(document).ready(function() {
   hideEnderecoFields();
   fixUpPlaceholderEndereco();
   permiteEditarEndereco();
+
+  function verificaObrigatoriedadeRg() {
+    $j('#data_emissao_rg').makeUnrequired();
+    $j('#orgao_emissao_rg').makeUnrequired();
+    $j('#uf_emissao_rg').makeUnrequired();
+    if ($j('#rg').val().length && obrigarCamposCenso) {
+      $j('#data_emissao_rg').makeRequired();
+      $j('#orgao_emissao_rg').makeRequired();
+      $j('#uf_emissao_rg').makeRequired();
+    }
+  }
+
+  $j('#rg').on('change', verificaObrigatoriedadeRg);
 
 }); // ready
 
