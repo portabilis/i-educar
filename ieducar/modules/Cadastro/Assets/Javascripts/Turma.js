@@ -289,6 +289,7 @@ $j(document).ready(function() {
       mostraAtividadesComplementares();
       mostraAtividadesAee();
       mostraCursoTecnico();
+      mostraTurmaUnificada();
     });
 
   // fix checkboxs
@@ -300,7 +301,18 @@ $j(document).ready(function() {
 
   $j("#etapa_educacenso").change(function() {
     changeEtapaTurmaField();
+    mostraTurmaUnificada();
   });
+
+  function mostraTurmaUnificada() {
+    var etapaUnificada = $j("#etapa_educacenso").val() == 3;
+
+    $j("#tr_turma_unificada").hide();
+
+    if (etapaUnificada) {
+      $j("#tr_turma_unificada").show();
+    }
+  }
 
   var changeEtapaTurmaField = function() {
     var etapa = $j("#etapa_educacenso").val();

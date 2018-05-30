@@ -562,6 +562,12 @@ class indice extends clsCadastro
     $resources = Portabilis_Array_Utils::setAsIdValue($resources, 'id', 'nome');
     $resources = Portabilis_Array_Utils::merge($resources, array('null' => 'Selecione'));
 
+    $etapas_educacenso = loadJson('educacenso_json/etapas_ensino.json');
+    $etapas_educacenso = array_replace(array(null => 'Selecione'), $etapas_educacenso);
+
+    $options = array('label' => 'Etapa de ensino', 'resources' => $etapas_educacenso, 'value' => $this->etapa_educacenso, 'required' => false, 'size' => 70,);
+    $this->inputsHelper()->select('etapa_educacenso', $options);
+
     $resources = array(
       null => 'Selecione',
       1    => 'Creche',
@@ -569,12 +575,6 @@ class indice extends clsCadastro
     );
     $options = array('label' => 'Turma unificada', 'resources' => $resources,'label_hint' => 'Selecione somente se a turma for unificada', 'value' => $this->turma_unificada, 'required' => false, 'size' => 70,);
     $this->inputsHelper()->select('turma_unificada', $options);
-
-    $etapas_educacenso = loadJson('educacenso_json/etapas_ensino.json');
-    $etapas_educacenso = array_replace(array(null => 'Selecione'), $etapas_educacenso);
-
-    $options = array('label' => 'Etapa de ensino', 'resources' => $etapas_educacenso, 'value' => $this->etapa_educacenso, 'required' => false, 'size' => 70,);
-    $this->inputsHelper()->select('etapa_educacenso', $options);
 
     $cursos = loadJson('educacenso_json/cursos_da_educacao_profissional.json');
     $helperOptions = array('objectName'  => 'cod_curso_profissional',
