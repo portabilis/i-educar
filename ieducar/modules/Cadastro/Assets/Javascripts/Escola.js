@@ -312,6 +312,53 @@ $j(document).ready(function() {
 
   // fix checkboxs
   $j('input:checked').val('on');
+
+  let verificaCamposDepAdm = () => {
+    $j('#categoria_escola_privada').makeUnrequired();
+    $j('#conveniada_com_poder_publico').makeUnrequired();
+    $j('#mantenedora_escola_privada').makeUnrequired();
+    $j('#cnpj_mantenedora_principal').makeUnrequired();
+    if (obrigarCamposCenso && $j('#situacao_funcionamento').val() == '1' && $j('#dependencia_administrativa').val() == '4'){
+      $j('#categoria_escola_privada').makeRequired();
+      $j('#conveniada_com_poder_publico').makeRequired();
+      $j('#mantenedora_escola_privada').makeRequired();
+      $j('#cnpj_mantenedora_principal').makeRequired();
+    }
+  }
+
+  $j('#dependencia_administrativa').on('change', verificaCamposDepAdm);
+  $j('#situacao_funcionamento').on('change', verificaCamposDepAdm);
+  verificaCamposDepAdm();
+
+  let verificaLatitudeLongitude = () => {
+    let regex = new RegExp('^(\\-?\\d+(\\.\\d+)?)\\.\\s*(\\-?\\d+(\\.\\d+)?)\$');
+
+    let longitude = $j('#longitude').val();
+
+    if (longitude && !regex.exec(longitude)) {
+      messageUtils.error('Longitude informada inválida.');
+      $j('#longitude').val('').focus();
+      longitude = '';
+    }
+
+    let latitude = $j('#latitude').val();
+    if (latitude && !regex.exec(latitude)) {
+      messageUtils.error('Latitude informada inválida.');
+      $j('#latitude').val('').focus();
+      latitude = '';
+    }
+    $j('#latitude').makeUnrequired();
+    $j('#longitude').makeUnrequired();
+
+    if (obrigarCamposCenso && (latitude || longitude)) {
+      $j('#latitude').makeRequired();
+      $j('#longitude').makeRequired();
+    }
+
+  }
+
+  $j('#latitude').on('change', verificaLatitudeLongitude);
+  $j('#longitude').on('change', verificaLatitudeLongitude);
 });
 
 document.getElementById('cnpj').readOnly = true;
