@@ -1414,7 +1414,7 @@ class EducacensoAnaliseController extends ApiCoreController
           $aluno["tipo_atendimento"] != $atendimentoEducEspecializado) {
         if (!$aluno["recebe_escolarizacao_em_outro_espaco"]) {
           $mensagem[] = array("text" => "Dados para formular o registro 80 da escola {$nomeEscola} não encontrados. Verificamos que a turma vinculada a este aluno(a) {$nomeAluno} não é de Atividade complementar e nem de AEE, portanto é necessário informar se o mesmo recebe escolarização em um espaço diferente da respectiva escola.",
-                              "path" => "(Escola > Cadastros > Alunos > Cadastrar > Editar > Aba: Recursos prova INEP > Campo: Recebe escolarização em outro espaço (diferente da escola))",
+                              "path" => "(Escola > Cadastros > Alunos > Cadastrar > Editar > Aba: Dados educacenso > Campo: Recebe escolarização em outro espaço (diferente da escola))",
                               "linkPath" => "/module/Cadastro/aluno?id={$codAluno}",
                               "fail" => true);
         }
