@@ -29,11 +29,10 @@ var modoCadastro = $j('#retorno').val() == 'Novo';
 let obrigarCamposCenso = $j('#obrigar_campos_censo').val() == '1';
 
 let verificaEtapaEducacenso = ()=>{
+  $j('#etapa_educacenso').makeUnrequired();
   if ($j('#tipo_atendimento').val() &&
       $j('#tipo_atendimento').val() != "4" &&
-      $j('#tipo_atendimento') != "5") {
-
-    $j('#etapa_educacenso').makeUnrequired();
+      $j('#tipo_atendimento').val() != "5") {
     if (obrigarCamposCenso) {
       $j('#etapa_educacenso').makeRequired();
     }
@@ -75,9 +74,9 @@ function mostraAtividadesComplementares(){
 
 function mostraAtividadesAee() {
   var mostraCampo = $j('#tipo_atendimento').val() == '5';
+  $j('#atividades_aee').makeUnrequired();
   if (mostraCampo) {
     $j('#tr_atividades_aee').show();
-    $j('#atividades_aee').makeUnrequired();
     if (obrigarCamposCenso) {
       $j('#atividades_aee').makeRequired();
     }
