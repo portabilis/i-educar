@@ -190,6 +190,13 @@ class EducacensoExportController extends ApiCoreController
               from pmieducar.servidor
              inner join modules.professor_turma on(servidor.cod_servidor = professor_turma.servidor_id)
              inner join pmieducar.turma on(professor_turma.turma_id = turma.cod_turma)
+             JOIN pmieducar.servidor_alocacao
+                ON servidor.cod_servidor = servidor_alocacao.ref_cod_servidor
+                AND turma.ref_ref_cod_escola = servidor_alocacao.ref_cod_escola
+                AND turma.ano = servidor_alocacao.ano
+                AND (servidor_alocacao.data_admissao IS NULL
+                OR servidor_alocacao.data_admissao <= DATE($4)
+                )
              where turma.ref_ref_cod_escola = $1
                and servidor.ativo = 1
                and professor_turma.ano = $2

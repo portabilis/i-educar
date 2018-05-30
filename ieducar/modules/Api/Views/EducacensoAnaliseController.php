@@ -599,6 +599,7 @@ class EducacensoAnaliseController extends ApiCoreController
 
     $escola = $this->getRequest()->escola;
     $ano    = $this->getRequest()->ano;
+    $data_fim    = $this->getRequest()->data_fim;
 
     $sql = "SELECT pessoa.idpes AS idpes,
                    juridica.fantasia AS nome_escola,
@@ -613,6 +614,13 @@ class EducacensoAnaliseController extends ApiCoreController
              INNER JOIN pmieducar.turma ON (turma.cod_turma = professor_turma.turma_id)
              INNER JOIN pmieducar.escola ON (escola.cod_escola = turma.ref_ref_cod_escola)
              INNER JOIN pmieducar.servidor ON (servidor.cod_servidor = professor_turma.servidor_id)
+             JOIN pmieducar.servidor_alocacao
+                ON servidor.cod_servidor = servidor_alocacao.ref_cod_servidor
+                AND escola.cod_escola = servidor_alocacao.ref_cod_escola
+                AND turma.ano = servidor_alocacao.ano
+                AND (servidor_alocacao.data_admissao IS NULL
+                OR servidor_alocacao.data_admissao <= DATE($3)
+                )
              INNER JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
               LEFT JOIN cadastro.fisica_raca ON (fisica_raca.ref_idpes = professor_turma.servidor_id)
               LEFT JOIN cadastro.raca ON (raca.cod_raca = fisica_raca.ref_cod_raca)
@@ -640,7 +648,7 @@ class EducacensoAnaliseController extends ApiCoreController
                       pessoa.idpes
               ORDER BY nome_servidor";
 
-    $servidores = $this->fetchPreparedQuery($sql, array($ano, $escola));
+    $servidores = $this->fetchPreparedQuery($sql, array($ano, $escola, Portabilis_Date_Utils::brToPgSQL($data_fim)));
 
     if(empty($servidores)){
       $this->messenger->append("Nenhum servidor encontrado.");
@@ -691,6 +699,7 @@ class EducacensoAnaliseController extends ApiCoreController
 
     $escola = $this->getRequest()->escola;
     $ano    = $this->getRequest()->ano;
+    $data_fim    = $this->getRequest()->data_fim;
 
     $sql = "SELECT pessoa.idpes AS idpes,
                    juridica.fantasia AS nome_escola,
@@ -706,6 +715,13 @@ class EducacensoAnaliseController extends ApiCoreController
             INNER JOIN pmieducar.turma ON (turma.cod_turma = professor_turma.turma_id)
             INNER JOIN pmieducar.escola ON (escola.cod_escola = turma.ref_ref_cod_escola)
             INNER JOIN pmieducar.servidor ON (servidor.cod_servidor = professor_turma.servidor_id)
+            JOIN pmieducar.servidor_alocacao
+                ON servidor.cod_servidor = servidor_alocacao.ref_cod_servidor
+                AND escola.cod_escola = servidor_alocacao.ref_cod_escola
+                AND turma.ano = servidor_alocacao.ano
+                AND (servidor_alocacao.data_admissao IS NULL
+                OR servidor_alocacao.data_admissao <= DATE($3)
+                )
             INNER JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
             INNER JOIN cadastro.pessoa ON (pessoa.idpes = professor_turma.servidor_id)
             INNER JOIN cadastro.fisica ON (fisica.idpes = professor_turma.servidor_id)
@@ -733,7 +749,7 @@ class EducacensoAnaliseController extends ApiCoreController
                      endereco_pessoa.cep
             ORDER BY pessoa.nome";
 
-    $servidores = $this->fetchPreparedQuery($sql, array($ano, $escola));
+    $servidores = $this->fetchPreparedQuery($sql, array($ano, $escola, Portabilis_Date_Utils::brToPgSQL($data_fim)));
 
     if(empty($servidores)){
       $this->messenger->append("Nenhum servidor encontrado.");
@@ -778,6 +794,7 @@ class EducacensoAnaliseController extends ApiCoreController
 
     $escola = $this->getRequest()->escola;
     $ano    = $this->getRequest()->ano;
+    $data_fim = $this->getRequest()->data_fim;
 
     $sql = "SELECT juridica.fantasia AS nome_escola,
                    pessoa.nome AS nome_servidor,
@@ -825,6 +842,13 @@ class EducacensoAnaliseController extends ApiCoreController
              INNER JOIN pmieducar.servidor ON (servidor.cod_servidor = professor_turma.servidor_id)
              INNER JOIN pmieducar.turma ON (turma.cod_turma = professor_turma.turma_id)
              INNER JOIN pmieducar.escola ON (escola.cod_escola = turma.ref_ref_cod_escola)
+             JOIN pmieducar.servidor_alocacao
+                ON servidor.cod_servidor = servidor_alocacao.ref_cod_servidor
+                AND escola.cod_escola = servidor_alocacao.ref_cod_escola
+                AND turma.ano = servidor_alocacao.ano
+                AND (servidor_alocacao.data_admissao IS NULL
+                OR servidor_alocacao.data_admissao <= DATE($3)
+                )
              INNER JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
               LEFT JOIN cadastro.escolaridade ON (escolaridade.idesco = servidor.ref_idesco)
              INNER JOIN cadastro.pessoa ON (pessoa.idpes = professor_turma.servidor_id)
@@ -862,7 +886,7 @@ class EducacensoAnaliseController extends ApiCoreController
                       escolaridade.descricao
              ORDER BY pessoa.nome";
 
-    $servidores = $this->fetchPreparedQuery($sql, array($ano, $escola));
+    $servidores = $this->fetchPreparedQuery($sql, array($ano, $escola, Portabilis_Date_Utils::brToPgSQL($data_fim)));
 
     if(empty($servidores)){
       $this->messenger->append("Nenhum servidor encontrado.");
@@ -1014,6 +1038,7 @@ class EducacensoAnaliseController extends ApiCoreController
 
     $escola = $this->getRequest()->escola;
     $ano    = $this->getRequest()->ano;
+    $data_fim = $this->getRequest()->data_fim;
 
     $sql = "SELECT professor_turma.id AS vinculo_id,
                    professor_turma.instituicao_id AS instituicao_id,
@@ -1034,6 +1059,13 @@ class EducacensoAnaliseController extends ApiCoreController
              INNER JOIN pmieducar.turma ON (turma.cod_turma = professor_turma.turma_id)
              INNER JOIN pmieducar.escola ON (escola.cod_escola = turma.ref_ref_cod_escola)
              INNER JOIN pmieducar.servidor ON (servidor.cod_servidor = professor_turma.servidor_id)
+             JOIN pmieducar.servidor_alocacao
+                ON servidor.cod_servidor = servidor_alocacao.ref_cod_servidor
+                AND escola.cod_escola = servidor_alocacao.ref_cod_escola
+                AND turma.ano = servidor_alocacao.ano
+                AND (servidor_alocacao.data_admissao IS NULL
+                OR servidor_alocacao.data_admissao <= DATE($3)
+                )
               LEFT JOIN cadastro.fisica_raca ON (fisica_raca.ref_idpes = professor_turma.servidor_id)
              INNER JOIN cadastro.pessoa ON (pessoa.idpes = professor_turma.servidor_id)
              INNER JOIN cadastro.fisica ON (fisica.idpes = professor_turma.servidor_id)
@@ -1056,7 +1088,7 @@ class EducacensoAnaliseController extends ApiCoreController
                       turma.nm_turma
              ORDER BY pessoa.nome";
 
-    $servidores = $this->fetchPreparedQuery($sql, array($ano, $escola));
+    $servidores = $this->fetchPreparedQuery($sql, array($ano, $escola, Portabilis_Date_Utils::brToPgSQL($data_fim)));
 
     if(empty($servidores)){
       $this->messenger->append("Nenhum servidor encontrado.");
