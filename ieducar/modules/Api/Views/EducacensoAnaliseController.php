@@ -614,13 +614,6 @@ class EducacensoAnaliseController extends ApiCoreController
              INNER JOIN pmieducar.turma ON (turma.cod_turma = professor_turma.turma_id)
              INNER JOIN pmieducar.escola ON (escola.cod_escola = turma.ref_ref_cod_escola)
              INNER JOIN pmieducar.servidor ON (servidor.cod_servidor = professor_turma.servidor_id)
-             JOIN pmieducar.servidor_alocacao
-                ON servidor.cod_servidor = servidor_alocacao.ref_cod_servidor
-                AND escola.cod_escola = servidor_alocacao.ref_cod_escola
-                AND turma.ano = servidor_alocacao.ano
-                AND (servidor_alocacao.data_admissao IS NULL
-                OR servidor_alocacao.data_admissao <= DATE($3)
-                )
              INNER JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
               LEFT JOIN cadastro.fisica_raca ON (fisica_raca.ref_idpes = professor_turma.servidor_id)
               LEFT JOIN cadastro.raca ON (raca.cod_raca = fisica_raca.ref_cod_raca)
@@ -630,6 +623,13 @@ class EducacensoAnaliseController extends ApiCoreController
               LEFT JOIN public.municipio ON (municipio.idmun = fisica.idmun_nascimento)
               LEFT JOIN public.uf ON (uf.sigla_uf = municipio.sigla_uf)
              WHERE professor_turma.ano = $1
+                AND NOT EXISTS (SELECT 1 FROM
+                pmieducar.servidor_alocacao
+                WHERE servidor.cod_servidor = servidor_alocacao.ref_cod_servidor
+                AND escola.cod_escola = servidor_alocacao.ref_cod_escola
+                AND turma.ano = servidor_alocacao.ano
+                AND servidor_alocacao.data_admissao > DATE($3)
+                )
                AND turma.ativo = 1
                AND turma.visivel = TRUE
                AND COALESCE(turma.nao_informar_educacenso, 0) = 0
@@ -715,13 +715,6 @@ class EducacensoAnaliseController extends ApiCoreController
             INNER JOIN pmieducar.turma ON (turma.cod_turma = professor_turma.turma_id)
             INNER JOIN pmieducar.escola ON (escola.cod_escola = turma.ref_ref_cod_escola)
             INNER JOIN pmieducar.servidor ON (servidor.cod_servidor = professor_turma.servidor_id)
-            JOIN pmieducar.servidor_alocacao
-                ON servidor.cod_servidor = servidor_alocacao.ref_cod_servidor
-                AND escola.cod_escola = servidor_alocacao.ref_cod_escola
-                AND turma.ano = servidor_alocacao.ano
-                AND (servidor_alocacao.data_admissao IS NULL
-                OR servidor_alocacao.data_admissao <= DATE($3)
-                )
             INNER JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
             INNER JOIN cadastro.pessoa ON (pessoa.idpes = professor_turma.servidor_id)
             INNER JOIN cadastro.fisica ON (fisica.idpes = professor_turma.servidor_id)
@@ -730,6 +723,13 @@ class EducacensoAnaliseController extends ApiCoreController
              LEFT JOIN public.municipio ON (municipio.idmun = logradouro.idmun)
              LEFT JOIN public.uf ON (uf.sigla_uf = municipio.sigla_uf)
             WHERE professor_turma.ano = $1
+            AND NOT EXISTS (SELECT 1 FROM
+                pmieducar.servidor_alocacao
+                WHERE servidor.cod_servidor = servidor_alocacao.ref_cod_servidor
+                AND escola.cod_escola = servidor_alocacao.ref_cod_escola
+                AND turma.ano = servidor_alocacao.ano
+                AND servidor_alocacao.data_admissao > DATE($3)
+                )
               AND turma.ativo = 1
               AND turma.visivel = TRUE
               AND COALESCE(turma.nao_informar_educacenso, 0) = 0
@@ -842,18 +842,18 @@ class EducacensoAnaliseController extends ApiCoreController
              INNER JOIN pmieducar.servidor ON (servidor.cod_servidor = professor_turma.servidor_id)
              INNER JOIN pmieducar.turma ON (turma.cod_turma = professor_turma.turma_id)
              INNER JOIN pmieducar.escola ON (escola.cod_escola = turma.ref_ref_cod_escola)
-             JOIN pmieducar.servidor_alocacao
-                ON servidor.cod_servidor = servidor_alocacao.ref_cod_servidor
-                AND escola.cod_escola = servidor_alocacao.ref_cod_escola
-                AND turma.ano = servidor_alocacao.ano
-                AND (servidor_alocacao.data_admissao IS NULL
-                OR servidor_alocacao.data_admissao <= DATE($3)
-                )
              INNER JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
               LEFT JOIN cadastro.escolaridade ON (escolaridade.idesco = servidor.ref_idesco)
              INNER JOIN cadastro.pessoa ON (pessoa.idpes = professor_turma.servidor_id)
              WHERE professor_turma.ano = $1
                AND turma.ativo = 1
+               AND NOT EXISTS (SELECT 1 FROM
+                pmieducar.servidor_alocacao
+                WHERE servidor.cod_servidor = servidor_alocacao.ref_cod_servidor
+                AND escola.cod_escola = servidor_alocacao.ref_cod_escola
+                AND turma.ano = servidor_alocacao.ano
+                AND servidor_alocacao.data_admissao > DATE($3)
+                )
                AND turma.visivel = TRUE
                AND COALESCE(turma.nao_informar_educacenso, 0) = 0
                AND turma.ano = professor_turma.ano
@@ -1059,19 +1059,19 @@ class EducacensoAnaliseController extends ApiCoreController
              INNER JOIN pmieducar.turma ON (turma.cod_turma = professor_turma.turma_id)
              INNER JOIN pmieducar.escola ON (escola.cod_escola = turma.ref_ref_cod_escola)
              INNER JOIN pmieducar.servidor ON (servidor.cod_servidor = professor_turma.servidor_id)
-             JOIN pmieducar.servidor_alocacao
-                ON servidor.cod_servidor = servidor_alocacao.ref_cod_servidor
-                AND escola.cod_escola = servidor_alocacao.ref_cod_escola
-                AND turma.ano = servidor_alocacao.ano
-                AND (servidor_alocacao.data_admissao IS NULL
-                OR servidor_alocacao.data_admissao <= DATE($3)
-                )
               LEFT JOIN cadastro.fisica_raca ON (fisica_raca.ref_idpes = professor_turma.servidor_id)
              INNER JOIN cadastro.pessoa ON (pessoa.idpes = professor_turma.servidor_id)
              INNER JOIN cadastro.fisica ON (fisica.idpes = professor_turma.servidor_id)
              INNER JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
              WHERE professor_turma.ano = $1
-               AND turma.ativo = 1
+               AND NOT EXISTS (SELECT 1 FROM
+                pmieducar.servidor_alocacao
+                WHERE servidor.cod_servidor = servidor_alocacao.ref_cod_servidor
+                AND escola.cod_escola = servidor_alocacao.ref_cod_escola
+                AND turma.ano = servidor_alocacao.ano
+                AND servidor_alocacao.data_admissao > DATE($3)
+                )
+                AND turma.ativo = 1
                AND turma.visivel = TRUE
                AND COALESCE(turma.nao_informar_educacenso, 0) = 0
                AND turma.ano = professor_turma.ano

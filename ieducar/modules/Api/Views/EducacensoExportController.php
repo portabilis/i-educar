@@ -190,17 +190,17 @@ class EducacensoExportController extends ApiCoreController
               from pmieducar.servidor
              inner join modules.professor_turma on(servidor.cod_servidor = professor_turma.servidor_id)
              inner join pmieducar.turma on(professor_turma.turma_id = turma.cod_turma)
-             JOIN pmieducar.servidor_alocacao
-                ON servidor.cod_servidor = servidor_alocacao.ref_cod_servidor
-                AND turma.ref_ref_cod_escola = servidor_alocacao.ref_cod_escola
-                AND turma.ano = servidor_alocacao.ano
-                AND (servidor_alocacao.data_admissao IS NULL
-                OR servidor_alocacao.data_admissao <= DATE($4)
-                )
              where turma.ref_ref_cod_escola = $1
                and servidor.ativo = 1
                and professor_turma.ano = $2
                and turma.ativo = 1
+               AND NOT EXISTS (SELECT 1 FROM
+                    pmieducar.servidor_alocacao
+                    WHERE servidor.cod_servidor = servidor_alocacao.ref_cod_servidor
+                    AND turma.ref_ref_cod_escola = servidor_alocacao.ref_cod_escola
+                    AND turma.ano = servidor_alocacao.ano
+                    AND servidor_alocacao.data_admissao > DATE($4)
+                )
                and (SELECT 1
                       FROM pmieducar.matricula_turma mt
                      INNER JOIN pmieducar.matricula m ON(mt.ref_cod_matricula = m.cod_matricula)
@@ -1524,7 +1524,7 @@ class EducacensoExportController extends ApiCoreController
                                  11 => '27',
                                  12 => '28',
                                  13 => '29');
-      
+
       if (count($deficiencias) == 0) {
         $r60s30 = $r60s31 = $r60s32 = $r60s33 = $r60s34 = $r60s35 = $r60s36 = $r60s37 = $r60s38 = NULL;
       }
