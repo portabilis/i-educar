@@ -518,15 +518,13 @@ class indice extends clsCadastro
                                                                    'max_length' => 14,
                                                                    'value' => $this->codigo_inep_educacenso));
 
-    $resources = array( -1 => 'Selecione',
+    $resources = array( NULL => 'Selecione',
                         0 => Portabilis_String_Utils::toLatin1('Não se aplica'),
                         1 => 'Classe hospitalar',
                         2 => Portabilis_String_Utils::toLatin1('Unidade de internação socioeducativa'),
                         3 => 'Unidade prisional',
                         4 => 'Atividade complementar',
                         5 => 'Atendimento educacional especializado (AEE)');
-
-    if (is_null($this->tipo_atendimento)) $this->tipo_atendimento = -1;
 
     $options = array('label' => 'Tipo de atendimento', 'resources' => $resources, 'value' => $this->tipo_atendimento, 'required' => $obrigarCamposCenso, 'size' => 70,);
     $this->inputsHelper()->select('tipo_atendimento', $options);
@@ -596,13 +594,15 @@ class indice extends clsCadastro
                      'label_hint' => Portabilis_String_Utils::toLatin1('Caso este campo seja selecionado, esta turma e todas as matrículas vinculadas a mesma, não serão informadas no arquivo de exportação do Censo escolar'));
     $this->inputsHelper()->checkbox('nao_informar_educacenso', $options);
 
-    $resources = array(
-      0 => 'Não',
-      1 => 'Sim'
-    );
+
     $options = array(
-      'label' => 'Turma participante do programa Mais Educação/Ensino Médio Inovador', 'resources' => $resources, 'value' => $this->turma_mais_educacao, 'required' => false);
-    $this->inputsHelper()->select('turma_mais_educacao', $options);
+        'label' => 'Turma participante do programa Mais Educação/Ensino Médio Inovador',
+        'resources' => $resources,
+        'value' => $this->turma_mais_educacao,
+        'required' => false,
+        'prompt' => 'Selecione'
+    );
+    $this->inputsHelper()->booleanSelect('turma_mais_educacao', $options);
 
     $scripts = array(
       '/modules/Cadastro/Assets/Javascripts/Turma.js'
@@ -935,7 +935,7 @@ class indice extends clsCadastro
 
   protected function validaCampoAEE()
   {
-    if ($this->tipo_atendimento == 4 && empty($this->atividades_aee)) {
+    if ($this->tipo_atendimento == 5 && empty($this->atividades_aee)) {
         $this->mensagem = "Campo atividades do Atendimento Educacional Especializado - AEE é obrigatório";
         return FALSE;
     }

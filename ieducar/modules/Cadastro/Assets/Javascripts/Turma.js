@@ -52,6 +52,7 @@ $j('#tipo_atendimento').change(function() {
   mostraAtividadesAee();
   verificaEtapaEducacenso();
 });
+verificaEtapaEducacenso();
 
 $j('#etapa_educacenso').change(function() {
   mostraCursoTecnico();
@@ -68,6 +69,7 @@ function mostraAtividadesComplementares(){
     }
   } else {
     $j('#tr_atividades_complementares').hide();
+    $j('#atividades_complementares').val([]).trigger('chosen:updated');
   }
 }
 
@@ -81,6 +83,7 @@ function mostraAtividadesAee() {
     }
   } else {
     $j('#tr_atividades_aee').hide();
+    $j('#atividades_aee').val([]).trigger('chosen:updated');
   }
 }
 
