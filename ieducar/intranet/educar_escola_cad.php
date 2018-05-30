@@ -773,8 +773,8 @@ class indice extends clsCadastro
             $hiddenInputOptions = array('options' => array('value' => $this->gestor_id));
             $helperOptions = array('objectName' => 'gestor', 'hiddenInputOptions' => $hiddenInputOptions);
             $options = array('label' => 'Gestor escolar',
-                'size' => 50,
-                'required' => false);
+                'required' => $obrigarCamposCenso,
+                'size' => 50);
             $this->inputsHelper()->simpleSearchPessoa('nome', $options, $helperOptions);
 
             $hiddenInputOptions = array('options' => array('value' => $this->secretario_id));
@@ -786,7 +786,7 @@ class indice extends clsCadastro
 
             $resources = array(1 => 'Diretor',
                 2 => 'Outro cargo');
-            $options = array('label' => 'Cargo do gestor escolar', 'resources' => $resources, 'value' => $this->cargo_gestor, 'required' => false, 'size' => 50);
+            $options = array('label' => 'Cargo do gestor escolar', 'resources' => $resources, 'value' => $this->cargo_gestor, 'required' => $obrigarCamposCenso, 'size' => 50);
             $this->inputsHelper()->select('cargo_gestor', $options);
 
             $options = array('label' => 'E-mail do gestor escolar', 'value' => $this->email_gestor, 'required' => $obrigarCamposCenso, 'size' => 50);

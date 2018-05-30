@@ -297,7 +297,7 @@ $j(document).ready(function() {
           return false;
       });
 
-      if($j('#dependencia_administrativa').val() == 4){
+      if($j('#dependencia_administrativa').val() == 4 && $j('#situacao_funcionamento').val() == '1'){
             $j('#categoria_escola_privada').closest('tr').show();
             $j('#conveniada_com_poder_publico').closest('tr').show();
             $j('#mantenedora_escola_privada').closest('tr').show();
