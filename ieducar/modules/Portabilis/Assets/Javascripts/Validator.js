@@ -125,7 +125,7 @@ function validatesPresenseOfValueInRequiredFields(additionalFields, exceptFields
   if ($emptyFields.length == 0)
     return true;
 
-  let label = $emptyFields[0].closest('tr').find('td:first span.form:first').text() || "";
+  let label = ($emptyFields[0].hasClass('simple-search-id') ? $j('#'+$emptyFields[0].attr('data-for')) : $emptyFields[0]).closest('tr').find('td:first span.form:first').text() || "";
   if (label.length) {
     alert(`Preencha o campo '${label}' corretamente`);
   } else {
