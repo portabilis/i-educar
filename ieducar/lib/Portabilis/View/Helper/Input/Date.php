@@ -60,9 +60,9 @@ class Portabilis_View_Helper_Input_Date extends Portabilis_View_Helper_Input_Cor
                                  'inline'         => false,
                                  'callback'       => false,
                                  'disabled'       => false,
-
-                                 // opcoes suportadas pelo elemento, mas não pelo helper ieducar
-                                 'size'           => 9);
+                                 'size'           => 9, // opção suportada pelo elemento, mas não pelo helper ieducar
+                                 'hint'       => 'dd/mm/aaaa',
+                             );
 
     $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
 
@@ -89,6 +89,9 @@ class Portabilis_View_Helper_Input_Date extends Portabilis_View_Helper_Input_Cor
       $sizeFixup
       $disableFixup
       \$input.change(function(){
+        if (this.value == '') {
+            return true;
+        }
 
         var validateData = /^(((0[1-9]|[12][0-9]|3[01])([-.\/])(0[13578]|10|12)([-.\/])(\d{4}))|(([0][1-9]|[12][0-9]|30)([-.\/])(0[469]|11)([-.\/])(\d{4}))|((0[1-9]|1[0-9]|2[0-8])([-.\/])(02)([-.\/])(\d{4}))|((29)(\.|-|\/)(02)([-.\/])([02468][048]00))|((29)([-.\/])(02)([-.\/])([13579][26]00))|((29)([-.\/])(02)([-.\/])([0-9][0-9][0][48]))|((29)([-.\/])(02)([-.\/])([0-9][0-9][2468][048]))|((29)([-.\/])(02)([-.\/])([0-9][0-9][13579][26])))$/;
 

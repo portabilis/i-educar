@@ -25,6 +25,7 @@ input, select, textarea, span.select2.select2-container.select2-container--defau
   border: solid 1px #cddce6 !important;
   color: #47728f;
   border-radius: 3px;
+  font-family: 'Open Sans' !important;
 }
 
 input:read-only {
@@ -53,8 +54,29 @@ span.select2-selection.select2-selection--multiple{
   border: none !important;
 }
 
-.select2-dropdown{
+.select2-dropdown {
   border-color: #cddce6 !important;
+}
+
+.chosen-container-single .chosen-single {
+  border-radius: 3px !important;
+  background: #ffffff !important;
+  border: solid 1px #cddce6 !important;
+  padding: 8px !important;
+  font-size: 14px !important;
+  color: #47728f !important;
+  max-width: 100% !important;
+  height: auto !important;
+  width: auto !important;
+  box-shadow: none !important;
+}
+
+.chosen-container-single .chosen-single div b {
+  background-position: 0 10px !important;
+}
+
+.chosen-container-active.chosen-with-drop .chosen-single div b{
+  background-position: -18 10px !important;
 }
 
 input[type="button"] {

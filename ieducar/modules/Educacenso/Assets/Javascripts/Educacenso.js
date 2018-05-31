@@ -1,5 +1,7 @@
 $j(document).ready(function(){
 
+  let currentDateString = () => new Date().toLocaleString('pt-BR');
+
 	var modalLoad = '<div id="modal_load" class="modal" style="display:none;">' +
 				  	'<div style="float:left;width:100px;">' +
   					'	<img src="imagens/educacenso/load_modal_educacenso.gif" width="100px" height="100px" alt="">' +
@@ -23,8 +25,11 @@ $j(document).ready(function(){
             '</div>'+
             '</div>';
 
+
     var headerPaginaResposta = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>'+'Análise exportação'+'</title>'+
-            '<link rel="stylesheet" href="../modules/Educacenso/Assets/Stylesheets/educacensoPdf.css"></head><body>'+
+            '<link rel="stylesheet" href="../modules/Educacenso/Assets/Stylesheets/educacensoPdf.css?v=2"></head><body>'+
+            '<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">'+
+            `<p class="date-info">Data da geração: ${currentDateString()}</p>`+
 						'<div id="content">'+
 						'  <h1 class="title">'+"Análise de exportação"+'</h1>'+
 						'</div>'+
@@ -37,7 +42,7 @@ $j(document).ready(function(){
     $j("body").append(modalLoad);
     $j("body").append(modalExport);
 
-    $j("#btn_enviar").click(function(){
+    var iniciaAnalise = function() {
 
     	var escola = $j("#ref_cod_escola").val();
     	var dataIni = $j("#data_ini").val();
@@ -69,7 +74,7 @@ $j(document).ready(function(){
         });
         analisaRegistro00();
       }
-    });
+    }
 
     function isValidDate(s) {
       var bits = s.split('/');
@@ -102,9 +107,7 @@ $j(document).ready(function(){
       });
 
       if (falhaAnalise) {
-        var newPage = window.open();
-        newPage.document.write(paginaResposta);
-        $j.modal.close();
+        document.write(paginaResposta);
       } else if (fase2) {
         educacensoExportFase2();
       } else {
@@ -123,7 +126,13 @@ $j(document).ready(function(){
         htmlAnalise += "<ul>";
         for (i = 0; i < response.mensagens.length; i++) {
           htmlAnalise += "<li>"+response.mensagens[i].text+"</li>";
-          htmlAnalise += "<p>"+response.mensagens[i].path+"</p>";
+          htmlAnalise += `<p>
+                            <a class="educacenso-link-path"
+                               href="`+response.mensagens[i].linkPath+`"
+                               target="_new">`
+                              +response.mensagens[i].path+
+                            `</a>
+                          </p>`;
 
           if (response.mensagens[i].fail) falhaAnalise = true;
         }
@@ -265,7 +274,8 @@ $j(document).ready(function(){
     var analisaRegistro30 = function(){
         var urlForGetAnaliseRegistro = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', 'registro-30', {
           escola : $j("#ref_cod_escola").val(),
-          ano    : $j("#ano").val()
+          ano    : $j("#ano").val(),
+          data_fim : $j("#data_fim").val()
         });
 
         var options = {
@@ -285,7 +295,8 @@ $j(document).ready(function(){
     var analisaRegistro40 = function(){
         var urlForGetAnaliseRegistro = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', 'registro-40', {
           escola : $j("#ref_cod_escola").val(),
-          ano    : $j("#ano").val()
+          ano    : $j("#ano").val(),
+          data_fim : $j("#data_fim").val()
         });
 
         var options = {
@@ -305,7 +316,8 @@ $j(document).ready(function(){
     var analisaRegistro50 = function(){
         var urlForGetAnaliseRegistro = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', 'registro-50', {
           escola : $j("#ref_cod_escola").val(),
-          ano    : $j("#ano").val()
+          ano    : $j("#ano").val(),
+          data_fim : $j("#data_fim").val()
         });
 
         var options = {
@@ -325,7 +337,8 @@ $j(document).ready(function(){
     var analisaRegistro51 = function(){
         var urlForGetAnaliseRegistro = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', 'registro-51', {
           escola : $j("#ref_cod_escola").val(),
-          ano    : $j("#ano").val()
+          ano    : $j("#ano").val(),
+          data_fim : $j("#data_fim").val()
         });
 
         var options = {
@@ -467,4 +480,5 @@ $j(document).ready(function(){
       montaHtmlRegistro(response);
       finishAnalysis();
     };
+  iniciaAnalise();
 });

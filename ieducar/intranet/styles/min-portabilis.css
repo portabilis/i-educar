@@ -125,6 +125,13 @@ table.strong th , tr.strong th, tr.strong td{
   background-color: #ffeeee !important;
 }
 
+ul.chosen-choices.error {
+  color: #ff4e4e !important;
+  border: 1px solid #ffe5e5 !important;
+  background-color: #ffeeee !important;
+  background: none;
+}
+
 .simple-block {
   padding: 5px;
   display: inline-block;
