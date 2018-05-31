@@ -1094,12 +1094,14 @@ var checkTipoCertidaoCivil = function () {
     $j('#uf_emissao_certidao_civil').makeUnrequired();
     $j('#data_emissao_certidao_civil').makeUnrequired();
     $j('#cartorio_cert_civil_inep_id').makeUnrequired();
+    $j('#cartorio_cert_civil_inep').makeUnrequired();
 
     if (tipoCertidaoCivil.length && obrigarCamposCenso) {
       $j('#tipo_certidao_civil').makeRequired();
       $j('#uf_emissao_certidao_civil').makeRequired();
       $j('#data_emissao_certidao_civil').makeRequired();
       $j('#cartorio_cert_civil_inep_id').makeRequired();
+      $j('#cartorio_cert_civil_inep').makeRequired();
     }
 }
 

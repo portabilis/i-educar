@@ -150,12 +150,14 @@ var checkTipoCertidaoCivil = function() {
   $j('#uf_emissao_certidao_civil').makeUnrequired();
   $j('#data_emissao_certidao_civil').makeUnrequired();
   $j('#cartorio_cert_civil_inep_id').makeUnrequired();
+  $j('#cartorio_cert_civil_inep').makeUnrequired();
 
   if (tipoCertidaoCivil.length && obrigarCamposCenso) {
     $j('#tipo_certidao_civil').makeRequired();
     $j('#uf_emissao_certidao_civil').makeRequired();
     $j('#data_emissao_certidao_civil').makeRequired();
     $j('#cartorio_cert_civil_inep_id').makeRequired();
+    $j('#cartorio_cert_civil_inep').makeRequired();
   }
 }
 
@@ -188,6 +190,14 @@ var validatesUniquenessOfCpf = function() {
     getPersonByCpf(cpf);
 }
 
+function certidaoNascimentoInvalida() {
+  $j('#certidao_nascimento').addClass('error');
+  messageUtils.error('O campo referente a certidão de nascimento deve conter exatos 32 dígitos.');
+}
+function certidaoCasamentoInvalida() {
+  $j('#certidao_casamento').addClass('error');
+  messageUtils.error('O campo referente a certidão de casamento deve conter exatos 32 dígitos.');
+}
 
 var submitForm = function(event) {
   if ($j('#cep_').val()){
@@ -195,6 +205,16 @@ var submitForm = function(event) {
       return;
     }
   }
+
+  var tipoCertidaoNascimento = ($j('#tipo_certidao_civil').val() == 'certidao_nascimento_novo_formato');
+  var tipoCertidaoCasamento = ($j('#tipo_certidao_civil').val() == 'certidao_casamento_novo_formato');
+
+  if (tipoCertidaoNascimento && $j('#certidao_nascimento').val().length < 32) {
+      return certidaoNascimentoInvalida();
+  } else if (tipoCertidaoCasamento && $j('#certidao_casamento').val().length < 32) {
+      return certidaoCasamentoInvalida();
+  }
+
   if ($cpfField.val()) {
     $j(document).data('submit_form_after_ajax_validation', true);
     validatesUniquenessOfCpf();
