@@ -2136,7 +2136,7 @@ function canShowParentsFields() {
         function checkSelect(comp, name) {
             if (comp.val() == '') {
                 comp.addClass("error");
-                messageUtils.error("Selecione um " + name + ".");
+                messageUtils.error("Selecione um(a) " + name + ".");
                 return false;
             } else {
                 return true;
@@ -2146,7 +2146,7 @@ function canShowParentsFields() {
         function checkSimpleSearch(comp, hiddenComp, name) {
             if (hiddenComp.val() == '') {
                 comp.addClass("error");
-                messageUtils.error("Selecione um " + name + ".");
+                messageUtils.error("Selecione um(a) " + name + ".");
                 return false;
             } else {
                 return true;
