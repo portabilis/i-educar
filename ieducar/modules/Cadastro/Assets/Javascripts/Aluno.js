@@ -1787,7 +1787,7 @@ function canShowParentsFields() {
                       bValid = bValid && checkSelect($j('#zona_localizacao_censo'), "zona localização");
                     }
                     if ($j('#cor_raca').hasClass('obrigatorio')) {
-                      bValid = bValid && checkSelect($j('#cor_raca'), "cor e raça");
+                      bValid = bValid && checkSelect($j('#cor_raca'), "raça");
                     }
                     if ($j('#tipo_nacionalidade').hasClass('obrigatorio')) {
                       bValid = bValid && checkSelect($j('#tipo_nacionalidade'), "nacionalidade");
