@@ -49,7 +49,40 @@ $ exit
 
 ### Inicializando o banco de dados
 
+O próximo passo é inicializar o banco de dados do i-Educar. Para isto basta
+executar os seguintes comandos:
 
+```terminal
+$ ieducar/vendor/bin/phinx seed:run -s StartingSeed -s StartingForeignKeysSeed
+$ ieducar/vendor/bin/phinx migrate
+```
+
+Este comando irá executar a criação de tabelas e inserção de dados iniciais
+para utilização do i-Educar.
+
+### Configurando permissões
+
+Para que tudo funcione adequadamente, principalmente a parte de relatórios, é
+necessário definir algumas permissões especiais em pastas e arquivos. Use os
+comandos abaixo:
+
+```terminal
+$ docker-compose exec ieducar_1604 chmod +x ieducar/vendor/portabilis/jasperphp/src/JasperStarter/bin/jasperstarter
+$ docker-compose exec ieducar_1604 chmod 777 -R ieducar/modules/Reports/ReportSources/Portabilis
+```
+
+## Primeiro acesso
+
+Após realizar a instalação de acordo com as instruções acima você está pronta a
+realizar seu primeiro acesso ao i-Educar. Basta acessar o seguinte endereço:
+
+[http://localhost:8001](http://localhost:8001)
+
+O usuário padrão é: `admin`
+A senha padrão é: `123456789`
+
+Assim que realizar seu primeiro acesso
+**não se esqueça de alterar a senha padrão**.
 
 ## Solicite demonstração do software
 
