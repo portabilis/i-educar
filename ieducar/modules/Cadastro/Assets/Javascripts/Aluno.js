@@ -1902,6 +1902,8 @@ function canShowParentsFields() {
             $j('#cep_').val('');
             clearEnderecoFields();
             hideEnderecoFields();
+            permiteEditarEndereco();
+            checkTipoNacionalidade();
 
             $j(".ui-widget-overlay").click(function () {
                 $j(".ui-dialog-titlebar-close").trigger('click');
