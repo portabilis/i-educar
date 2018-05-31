@@ -50,6 +50,7 @@ $j('#tipo_atendimento').change(function() {
   mostraAtividadesComplementares();
   mostraAtividadesAee();
   verificaEtapaEducacenso();
+  habilitaEtapaEducacenso();
 });
 verificaEtapaEducacenso();
 
@@ -180,6 +181,17 @@ function habilitaTurmaMaisEducacao() {
   }
 }
 
+function habilitaEtapaEducacenso() {
+  var atividadeComplementar = $j("#tipo_atendimento").val() == 4;
+  var atendimentoEducacionalEspecializado = $j("#tipo_atendimento").val() == 5;
+
+  $j("#etapa_educacenso").prop('disabled', false);
+
+  if (atividadeComplementar || atendimentoEducacionalEspecializado) {
+    $j("#etapa_educacenso").prop('disabled', true).val("");
+  }
+}
+
 $j('#tipo_mediacao_didatico_pedagogico').on('change', function(){
   if (!obrigarCamposCenso) {
     return true;
@@ -292,6 +304,7 @@ $j(document).ready(function() {
       mostraAtividadesAee();
       mostraCursoTecnico();
       mostraTurmaUnificada();
+      habilitaEtapaEducacenso();
     });
 
   // fix checkboxs
