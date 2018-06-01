@@ -109,7 +109,7 @@ class clsPmieducarInfraComodoFuncao
      *
      * @return object
      */
-    function clsPmieducarInfraComodoFuncao( $cod_infra_comodo_funcao = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_funcao = null, $desc_funcao = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $ref_cod_escola = null )
+    function __construct( $cod_infra_comodo_funcao = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_funcao = null, $desc_funcao = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $ref_cod_escola = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmieducar.";

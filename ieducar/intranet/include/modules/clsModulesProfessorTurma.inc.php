@@ -103,7 +103,7 @@ class clsModulesProfessorTurma
   /**
    * Construtor.
    */
-  function clsModulesProfessorTurma( $id = NULL,$ano = NULL, $instituicao_id = NULL, $servidor_id = NULL, $turma_id = NULL, $funcao_exercida = NULL, $tipo_vinculo = NULL, $permite_lancar_faltas_componente = NULL)
+  function __construct( $id = NULL,$ano = NULL, $instituicao_id = NULL, $servidor_id = NULL, $turma_id = NULL, $funcao_exercida = NULL, $tipo_vinculo = NULL, $permite_lancar_faltas_componente = NULL)
   {
     $db = new clsBanco();
     $this->_schema = "modules.";

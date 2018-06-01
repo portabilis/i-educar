@@ -107,7 +107,7 @@ class clsPmieducarEscolaAnoLetivo
      *
      * @return object
      */
-    function clsPmieducarEscolaAnoLetivo( $ref_cod_escola = null, $ano = null, $ref_usuario_cad = null, $ref_usuario_exc = null, $andamento = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $turmas_por_ano = null )
+    function __construct( $ref_cod_escola = null, $ano = null, $ref_usuario_cad = null, $ref_usuario_exc = null, $andamento = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $turmas_por_ano = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmieducar.";

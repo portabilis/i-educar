@@ -78,7 +78,7 @@ class clsCampos extends Core_Controller_Page_Abstract
     var $ref_cod_escola;
     var $ref_cod_instituicao;
 
-    function clsCampos()
+    function __construct()
     {
         parent::__construct();
     }
@@ -1169,7 +1169,7 @@ class clsCampos extends Core_Controller_Page_Abstract
             $campo_tabela = FALSE;
 
             // Cria nova tab
-            if (ereg("^(tabbed_add_[0-9]+)", $nome) === 1) {
+            if (preg_match("/^(tabbed_add_[0-9]+)/", $nome) === 1) {
                 $nomes_tab = urlencode(serialize($arr_campos['cabecalho_tab']));
                 unset($arr_campos['cabecalho_tab']);
 
@@ -1202,7 +1202,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                 continue;
             }
 
-            if (ereg("^(tab_name_[0-9]+)", $nome) === 1) {
+            if (preg_match("/^(tab_name_[0-9]+)/", $nome) === 1) {
                 if ($existe_tab_aberta) {
                     if ($this->__segue_fluxo) {
                         $colspan = 2;
@@ -1274,7 +1274,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                 continue;
             }
 
-            if (ereg("^(tab_add_[0-9]+)", $nome) === 1) {
+            if (preg_match("/^(tab_add_[0-9]+)/", $nome) === 1) {
                 $campo_tabela = TRUE;
                 $javascript = '';
 
@@ -2633,7 +2633,7 @@ class clsCampos extends Core_Controller_Page_Abstract
     }
 
     function getCampoTexto($nome, $id = '', $valor = '', $tamanhovisivel = '',
-                           $tamanhomaximo = '', $evento = '', $disabled = '', $descricao = '',
+                           $tamanhomaximo = '', $evento = '', $disabled = '', $__descricao = '',
                            $class = '', $descricao = '')
     {
         $id = $id ? $id : $nome;

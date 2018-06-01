@@ -109,7 +109,7 @@ class clsPmieducarTipoEnsino
      *
      * @return object
      */
-    function clsPmieducarTipoEnsino( $cod_tipo_ensino        = NULL,
+    function __construct( $cod_tipo_ensino        = NULL,
                                      $ref_usuario_exc        = NULL,
                                      $ref_usuario_cad        = NULL,
                                      $nm_tipo                = NULL,

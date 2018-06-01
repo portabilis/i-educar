@@ -108,7 +108,7 @@ class clsPmieducarTipoUsuario
      *
      * @return object
      */
-    function clsPmieducarTipoUsuario( $cod_tipo_usuario = null, $ref_funcionario_cad = null, $ref_funcionario_exc = null, $nm_tipo = null, $descricao = null, $nivel = null, $data_cadastro = null, $data_exclusao = null, $ativo = null )
+    function __construct( $cod_tipo_usuario = null, $ref_funcionario_cad = null, $ref_funcionario_exc = null, $nm_tipo = null, $descricao = null, $nivel = null, $data_cadastro = null, $data_exclusao = null, $ativo = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmieducar.";

@@ -81,7 +81,7 @@ class clsPmieducarServidorCursoMinistra
      *
      * @return object
      */
-    function clsPmieducarServidorCursoMinistra( $ref_cod_curso = null, $ref_ref_cod_instituicao = null, $ref_cod_servidor = null )
+    function __construct( $ref_cod_curso = null, $ref_ref_cod_instituicao = null, $ref_cod_servidor = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmieducar.";

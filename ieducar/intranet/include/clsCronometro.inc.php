@@ -31,7 +31,7 @@
         var $tempo_total;
         var $tomadas = array();
 
-        function clsCronometro()
+        function __construct()
         {
             $this->tempo_inicial = $this->get_microtime();
             $this->tempo_ultimo = $this->tempo_inicial;

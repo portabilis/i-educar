@@ -114,7 +114,7 @@ class clsPmieducarBiblioteca
      *
      * @return object
      */
-    function clsPmieducarBiblioteca($cod_biblioteca = null,
+    function __construct($cod_biblioteca = null,
                                                                     $ref_cod_instituicao = null,
                                                                     $ref_cod_escola = null,
                                                                     $nm_biblioteca = null,

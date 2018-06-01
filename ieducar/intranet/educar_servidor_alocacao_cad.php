@@ -349,7 +349,7 @@ class indice extends clsCadastro
   }
 
   function hhmmToMinutes($hhmm){
-    list($hora, $minuto) = split(':', $hhmm);
+    list($hora, $minuto) = explode(':', $hhmm);
     return (((int)$hora * 60) + $minuto);
   }
 

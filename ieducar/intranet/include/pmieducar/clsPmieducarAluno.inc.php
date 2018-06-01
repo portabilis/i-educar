@@ -125,7 +125,7 @@ class clsPmieducarAluno
   /**
    * Construtor.
    */
-  function clsPmieducarAluno(
+  function __construct(
     $cod_aluno = NULL,
     $ref_cod_aluno_beneficio = NULL,
     $ref_cod_religiao = NULL,

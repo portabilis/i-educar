@@ -80,7 +80,7 @@ class clsPmieducarDispensaDisciplinaEtapa
    *
    * @return object
    */
-  function clsPmieducarDispensaDisciplinaEtapa($ref_cod_dispensa = null,
+  function __construct($ref_cod_dispensa = null,
                                                $etapa = null)
   {
     $db = new clsBanco();

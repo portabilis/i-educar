@@ -125,7 +125,7 @@ class clsPublicBairro
    * @param int     $idsis_cad
    * @param int     $zona_localizacao
    */
-  function clsPublicBairro($idmun = NULL, $geom = NULL, $idbai = NULL,
+  function __construct($idmun = NULL, $geom = NULL, $idbai = NULL,
     $nome = NULL, $idpes_rev = NULL, $data_rev = NULL, $origem_gravacao = NULL,
     $idpes_cad = NULL, $data_cad = NULL, $operacao = NULL, $idsis_rev = NULL,
     $idsis_cad = NULL, $zona_localizacao = 1, $iddis)

@@ -115,7 +115,7 @@ class clsPmieducarServidor
   /**
    * Construtor.
    */
-  function clsPmieducarServidor(
+  function __construct(
     $cod_servidor = NULL,
     $ref_cod_deficiencia = NULL,
     $ref_idesco = NULL,

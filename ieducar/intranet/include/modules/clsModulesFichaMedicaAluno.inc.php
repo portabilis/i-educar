@@ -141,7 +141,7 @@ class clsModulesFichaMedicaAluno
   /**
    * Construtor.
    */
-  function clsModulesFichaMedicaAluno( $ref_cod_aluno = NULL , $altura = NULL , $peso = NULL , $grupo_sanguineo = NULL ,
+  function __construct( $ref_cod_aluno = NULL , $altura = NULL , $peso = NULL , $grupo_sanguineo = NULL ,
      $fator_rh = NULL , $alergia_medicamento = NULL , $desc_alergia_medicamento = NULL ,
      $alergia_alimento = NULL , $desc_alergia_alimento = NULL ,  $doenca_congenita = NULL ,
      $desc_doenca_congenita = NULL , $fumante = NULL , $doenca_caxumba = NULL , $doenca_sarampo = NULL ,

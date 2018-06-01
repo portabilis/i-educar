@@ -46,7 +46,7 @@ class clsGrupos
      *
      * @return Object:clsnatureza
      */
-    function clsGrupos( $int_cod_grupos = false, $int_ref_pessoa_cad = false, $int_ref_pessoa_exc = false, $str_nm_grupo = false,  $ativo=false, $int_atendimento = false )
+    function __construct( $int_cod_grupos = false, $int_ref_pessoa_cad = false, $int_ref_pessoa_exc = false, $str_nm_grupo = false,  $ativo=false, $int_atendimento = false )
     {
         $this->cod_grupos = is_numeric($int_cod_grupos) ? $int_cod_grupos : false;
         $this->ref_pessoa_cad = is_numeric($int_ref_pessoa_cad) ? $int_ref_pessoa_cad : false;

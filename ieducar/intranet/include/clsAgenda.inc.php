@@ -47,7 +47,7 @@ class clsAgenda
     var $time_ontem;
     var $time_real_atual;
     
-    function  clsAgenda( $int_cod_editor = 0 , $int_cod_pessoa_dono=false, $int_cod_agenda=false, $time = false )
+    function __construct( $int_cod_editor = 0 , $int_cod_pessoa_dono=false, $int_cod_agenda=false, $time = false )
     {
         $db = new clsBanco();
         $this->cod_pessoa_dono = $int_cod_pessoa_dono;
@@ -109,7 +109,7 @@ class clsAgenda
         // o nome da agenda sera o nome da pessoa
         $nome = $db->CampoUnico( "SELECT nome FROM cadastro.pessoa WHERE idpes = '{$this->cod_pessoa_dono}'" );
         // trata o nome pra remover espacos no fim
-        $nome = eregi_replace( " +\$", "", $nome );
+        $nome = rtrim($nome);
         // usa apenas o primeiro e ultimo nome da pessoa
         $nomeArr = explode( " ", $nome );
         $nome = $nomeArr[0];
@@ -230,7 +230,7 @@ class clsAgenda
             if( is_array( $edit_dataArr ) && count( $edit_dataArr ) == 3 && checkdate( $edit_dataArr[1], $edit_dataArr[0], $edit_dataArr[2] ) )
             {
                 $edit_data = "{$edit_dataArr[2]}-{$edit_dataArr[1]}-{$edit_dataArr[0]}";
-                if( ereg( "[0-9]{2}:[0-9]{2}", $hora_inicio ) ) 
+                if( preg_match( "/[0-9]{2}:[0-9]{2}/", $hora_inicio ) )
                 {
                     $timeNovo = strtotime( $edit_data );
                     if( isset( $publico ) && $publico )
@@ -255,7 +255,7 @@ class clsAgenda
                             {
                                 $campoDataFim = "";
                                 $valorDataFim = "";
-                                if( ereg( "[0-9]{2}:[0-9]{2}", $hora_fim ) ) 
+                                if( preg_match( "/[0-9]{2}:[0-9]{2}/", $hora_fim ) )
                                 {
                                     $campoDataFim .= ", data_fim" ;
                                     $valorDataFim .= ", '{$data_cad} {$hora_fim}'";
@@ -272,7 +272,7 @@ class clsAgenda
                         $data_cad = date( "Y-m-d", $timeNovo );
                         if( $hora_fim )
                         {
-                            if( ereg( "[0-9]{2}:[0-9]{2}", $hora_fim ) ) 
+                            if( preg_match( "/[0-9]{2}:[0-9]{2}/", $hora_fim ) )
                             {
                                 $campos .= ", data_fim" ;
                                 $valores .= ", '{$data_cad} {$hora_fim}'";
@@ -332,11 +332,11 @@ class clsAgenda
                 if( is_array( $edit_dataArr ) && count( $edit_dataArr ) == 3 && checkdate( $edit_dataArr[1], $edit_dataArr[0], $edit_dataArr[2] ) )
                 {
                     $edit_data = "{$edit_dataArr[2]}-{$edit_dataArr[1]}-{$edit_dataArr[0]}";
-                    if( ereg( "[0-9]{2}:[0-9]{2}", $hora_inicio ) ) 
+                    if( preg_match( "/[0-9]{2}:[0-9]{2}/", $hora_inicio ) )
                     {
                         if( $hora_fim )
                         {
-                            if( ereg( "[0-9]{2}:[0-9]{2}", $hora_fim ) ) 
+                            if( preg_match( "/[0-9]{2}:[0-9]{2}/", $hora_fim ) )
                             {
                                 $campos .= ", data_fim" ;
                                 $valores .= ", '{$edit_data} {$hora_fim}'";
@@ -384,7 +384,7 @@ class clsAgenda
         $db = new clsBanco();
         if( $this->compromissoPertenceAgenda( $cod_compromisso ) )
         {
-            if( ereg( "[0-9]{2}:[0-9]{2}", $hora_fim ) ) 
+            if( preg_match( "/[0-9]{2}:[0-9]{2}/", $hora_fim ) )
             {
                 // pega a versao da nota
                 $versaoAtual = $db->CampoUnico( "SELECT MAX( versao ) FROM agenda_compromisso WHERE cod_agenda_compromisso = '{$cod_compromisso}'" );

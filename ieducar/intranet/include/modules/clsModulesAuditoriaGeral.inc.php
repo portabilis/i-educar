@@ -56,7 +56,7 @@ class clsModulesAuditoriaGeral
 
   var $_campo_order_by;
 
-  function clsModulesAuditoriaGeral($rotina, $usuario_id, $codigo = 'null'){
+  function __construct($rotina, $usuario_id, $codigo = 'null'){
     $this->_campos_lista = 'codigo,
                             usuario_id,
                             operacao,

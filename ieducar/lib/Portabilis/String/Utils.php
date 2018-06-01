@@ -67,7 +67,8 @@ class Portabilis_String_Utils {
 
     foreach ($divisors as $divisor) {
       if (is_numeric(strpos($string, $divisor))) {
-        $result = split($divisor, $string, $options['limit']);
+        $divisor = '/' . $divisor . '/';
+        $result = preg_split($divisor, $string, $options['limit']);
         break;
       }
     }

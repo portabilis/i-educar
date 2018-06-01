@@ -41,7 +41,7 @@ class clsPessoaTelefone
     var $tabela_telefone = "fone_pessoa";
     
     
-    function  clsPessoaTelefone($int_idpes = false, $int_tipo = false, $str_fone=false, $str_ddd=false, $idpes_cad = false, $idpes_rev = false)
+    function __construct($int_idpes = false, $int_tipo = false, $str_fone=false, $str_ddd=false, $idpes_cad = false, $idpes_rev = false)
     {
         $this->idpes = $int_idpes;
         $this->ddd   = $str_ddd;

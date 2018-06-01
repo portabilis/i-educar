@@ -69,7 +69,7 @@ class clsPDF
 
   var $owner = "PMI - Prefeitura Municipal de Itajaí";
 
-  function clsPDF($nome, $titulo, $tamanhoFolha, $palavrasChaves,
+  function __construct($nome, $titulo, $tamanhoFolha, $palavrasChaves,
     $depurar = FALSE, $reder = TRUE)
   {
     $this->nome = $nome;

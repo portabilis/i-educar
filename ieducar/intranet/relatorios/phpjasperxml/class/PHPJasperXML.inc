@@ -2,7 +2,7 @@
 class PHPJasperXML {
     private $adjust=1.2;
     public $debugsql=false;
-    public function PHPJasperXML($lang="en") {
+    public function __construct($lang="en") {
         $this->lang=$lang;
     }
 

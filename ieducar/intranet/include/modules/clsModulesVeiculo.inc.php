@@ -116,7 +116,7 @@ class clsModulesVeiculo
   /**
    * Construtor.
    */
-  function clsModulesVeiculo($cod_veiculo = NULL, $descricao = NULL, $placa = NULL, $renavam = NULL,
+  function __construct($cod_veiculo = NULL, $descricao = NULL, $placa = NULL, $renavam = NULL,
                              $chassi = NULL, $marca = NULL, $ano_fabricacao = NULL, 
                              $ano_modelo = NULL, $passageiros = NULL, $malha = NULL, $ref_cod_tipo_veiculo = NULL,
                              $exclusivo_transporte_escolar = NULL, $adaptado_necessidades_especiais = NULL,

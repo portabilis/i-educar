@@ -107,7 +107,7 @@ class clsPmieducarCalendarioAtividade
      *
      * @return object
      */
-    function clsPmieducarCalendarioAtividade( $cod_calendario_atividade = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_atividade = null, $descricao = null, $data_cadastro = null, $data_exclusao = null, $ativo = null )
+    function __construct( $cod_calendario_atividade = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_atividade = null, $descricao = null, $data_cadastro = null, $data_exclusao = null, $ativo = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmieducar.";

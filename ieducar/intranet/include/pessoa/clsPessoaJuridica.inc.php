@@ -38,7 +38,7 @@ class clsPessoaJuridica extends clsPessoaFj
     var $schema_cadastro = "cadastro";
     var $codUsuario;
 
-    function  clsPessoaJuridica($int_idpes = false, $numeric_cnpj = false, $str_fantasia = false, $numeric_insc_estadual=false, $numeric_capital_social = false )
+    function __construct($int_idpes = false, $numeric_cnpj = false, $str_fantasia = false, $numeric_insc_estadual=false, $numeric_capital_social = false )
     {
         $this->idpes = $int_idpes;
         $this->cnpj = $numeric_cnpj;

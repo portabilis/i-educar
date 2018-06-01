@@ -103,7 +103,7 @@ class clsPmieducarSeriePreRequisito
      *
      * @return object
      */
-    function clsPmieducarSeriePreRequisito( $ref_cod_pre_requisito = null, $ref_cod_operador = null, $ref_cod_serie = null, $valor = null )
+    function __construct( $ref_cod_pre_requisito = null, $ref_cod_operador = null, $ref_cod_serie = null, $valor = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmieducar.";

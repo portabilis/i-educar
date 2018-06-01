@@ -110,7 +110,7 @@ class clsPmieducarReservas
      *
      * @return object
      */
-    function clsPmieducarReservas( $cod_reserva = null, $ref_usuario_libera = null, $ref_usuario_cad = null, $ref_cod_cliente = null, $data_reserva = null, $data_prevista_disponivel = null, $data_retirada = null, $ref_cod_exemplar = null, $ativo = null )
+    function __construct( $cod_reserva = null, $ref_usuario_libera = null, $ref_usuario_cad = null, $ref_cod_cliente = null, $data_reserva = null, $data_prevista_disponivel = null, $data_retirada = null, $ref_cod_exemplar = null, $ativo = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmieducar.";

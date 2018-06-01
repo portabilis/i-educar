@@ -59,7 +59,7 @@ class AdicionaNovasInstituicoesDeEnsino extends AbstractMigration
             (18799, 'Faculdade Itataia', 4, 4, 1, NOW()),
             (18896, 'Soberana Faculdade de Saúde de Petrolina', 4, 4, 1, NOW()),
             (18958, 'FACULDADES INTEGRADAS QUALIS', 4, 4, 1, NOW()),
-            (18979, 'FACULDADE CAPIXABA DE ***REMOVED***', 4, 4, 1, NOW()),
+            (18979, 'FACULDADE CAPIXABA DE VILA VELHA', 4, 4, 1, NOW()),
             (19130, 'FACULDADE SERRA GERAL', 4, 4, 1, NOW()),
             (19171, 'Faculdade de Teologia Fortaleza - FATEFOR', 4, 4, 1, NOW()),
             (19197, 'FACULDADE NIP DE CIÊNCIAS APLICADAS', 4, 4, 1, NOW()),

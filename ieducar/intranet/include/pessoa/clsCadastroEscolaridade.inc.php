@@ -97,7 +97,7 @@ class clsCadastroEscolaridade
   /**
    * Construtor (PHP 4).
    */
-  function clsCadastroEscolaridade($idesco = NULL, $descricao = NULL, $escolaridade = NULL)
+  function __construct($idesco = NULL, $descricao = NULL, $escolaridade = NULL)
   {
     $db = new clsBanco();
     $this->_schema = "cadastro.";

@@ -128,7 +128,7 @@ class clsPublicLogradouro
      *
      * @return object
      */
-    function clsPublicLogradouro( $idlog           = null, 
+    function __construct( $idlog           = null, 
                                   $idtlog          = null, 
                                   $nome            = null, 
                                   $idmun           = null, 

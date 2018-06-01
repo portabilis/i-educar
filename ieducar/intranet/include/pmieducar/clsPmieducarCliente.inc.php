@@ -112,7 +112,7 @@ class clsPmieducarCliente
      *
      * @return object
      */
-    function clsPmieducarCliente($cod_cliente = NULL, $ref_usuario_exc = NULL,
+    function __construct($cod_cliente = NULL, $ref_usuario_exc = NULL,
       $ref_usuario_cad = NULL, $ref_idpes = NULL, $login = NULL, $senha = NULL, $data_cadastro = NULL,
       $data_exclusao = NULL, $ativo = NULL, $observacoes = NULL) {
 

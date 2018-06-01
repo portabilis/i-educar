@@ -104,7 +104,7 @@ class clsPmieducarSeriePeriodoData
      *
      * @return object
      */
-    function clsPmieducarSeriePeriodoData( $ref_cod_serie = null, $sequencial = null, $ref_cod_serie_tipo_periodo_ano = null, $data_inicial = null, $data_final = null )
+    function __construct( $ref_cod_serie = null, $sequencial = null, $ref_cod_serie_tipo_periodo_ano = null, $data_inicial = null, $data_final = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmieducar.";

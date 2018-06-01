@@ -43,7 +43,7 @@ class clsTopicoReuniao
      *
      * @return Object
      */
-    function clsTopicoReuniao( $int_ref_cod_topico = false, $int_ref_cod_reuniao = false, $str_parecer= false, $str_finalizado = false, $str_data_parecer = false )
+    function __construct( $int_ref_cod_topico = false, $int_ref_cod_reuniao = false, $str_parecer= false, $str_finalizado = false, $str_data_parecer = false )
     {
         if(is_numeric($int_ref_cod_topico))
         {

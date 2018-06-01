@@ -102,7 +102,7 @@ class clsPmieducarAcervoAcervoAutor
      *
      * @return object
      */
-    function clsPmieducarAcervoAcervoAutor( $ref_cod_acervo_autor = null, $ref_cod_acervo = null, $principal = null )
+    function __construct( $ref_cod_acervo_autor = null, $ref_cod_acervo = null, $principal = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmieducar.";

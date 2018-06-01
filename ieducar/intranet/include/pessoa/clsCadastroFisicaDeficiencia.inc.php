@@ -100,7 +100,7 @@ class clsCadastroFisicaDeficiencia
      *
      * @return object
      */
-    function clsCadastroFisicaDeficiencia( $ref_idpes = null, $ref_cod_deficiencia = null )
+    function __construct( $ref_idpes = null, $ref_cod_deficiencia = null )
     {
         $db = new clsBanco();
         $this->_schema = "cadastro.";

@@ -114,7 +114,7 @@ class clsPmidrhUsuario
      *
      * @return object
      */
-    function clsPmidrhUsuario( $ref_cod_pessoa = null, $ref_cod_instituicao = null, $ref_funcionario_exc = null, $ref_funcionario_cad = null, $data_cadastro = null, $data_exclusao = null, $ativo = null )
+    function __construct( $ref_cod_pessoa = null, $ref_cod_instituicao = null, $ref_funcionario_exc = null, $ref_funcionario_cad = null, $data_cadastro = null, $data_exclusao = null, $ativo = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmidrh.";

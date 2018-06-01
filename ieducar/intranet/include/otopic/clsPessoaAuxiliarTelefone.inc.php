@@ -44,7 +44,7 @@ class clsPessoaAuxiliarTelefone
      *
      * @return Object
      */
-    function clsPessoaAuxiliarTelefone( $int_ref_cod_pessoa_auxiliar = null, $int_ddd = null, $int_fone = null)
+    function __construct( $int_ref_cod_pessoa_auxiliar = null, $int_ddd = null, $int_fone = null)
     {
         if(is_numeric($int_ref_cod_pessoa_auxiliar))
         {

@@ -104,7 +104,7 @@ class clsPmieducarArredondamento
      *
      * @return object
      */
-    function clsPmieducarArredondamento( $ref_cod_curso = null, $sequencial = null, $valor = null, $valor_min = null, $valor_max = null )
+    function __construct( $ref_cod_curso = null, $sequencial = null, $valor = null, $valor_min = null, $valor_max = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmieducar.";

@@ -107,7 +107,7 @@ class clsModulesPontoTransporteEscolar
   /**
    * Construtor.
    */
-  function clsModulesPontoTransporteEscolar($cod_ponto_transporte_escolar = NULL, $descricao = NULL)
+  function __construct($cod_ponto_transporte_escolar = NULL, $descricao = NULL)
   {
 
     $db = new clsBanco();

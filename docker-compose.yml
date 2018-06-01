@@ -1,5 +1,5 @@
-ieducar_1204:
-  build: .
+ieducar_1604:
+  build: ./docker/ieducar_1604
   environment:
     - CORE_EXT_CONFIGURATION_ENV=development
   ports:
@@ -8,13 +8,15 @@ ieducar_1204:
     - .:/home/portabilis/ieducar
   links:
     - postgres_95
-  container_name: ieducar_1204
+  container_name: ieducar_1604
 
 postgres_95:
   volumes:
     - /var/lib/postgresql/data
+    - ./docker/postgres_95/init.sql:/docker-entrypoint-initdb.d/00-init.sql
   image: postgres:9.5
   environment:
     - POSTGRES_PASSWORD=postgres
   ports:
     - "5434:5432"
+  container_name: postgres_95

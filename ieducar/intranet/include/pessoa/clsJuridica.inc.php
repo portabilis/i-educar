@@ -47,7 +47,7 @@ class clsJuridica
      *
      * @return Object:clsEstadoCivil
      */
-    function clsJuridica( $idpes = false, $cnpj = false, $fantasia = false, $insc_estadual = false, $capital_social = false, $idpes_cad =false, $idpes_rev =false )
+    function __construct( $idpes = false, $cnpj = false, $fantasia = false, $insc_estadual = false, $capital_social = false, $idpes_cad =false, $idpes_rev =false )
     {
         @session_start();
         $this->pessoa_logada = $_SESSION['id_pessoa'];

@@ -112,7 +112,7 @@ class clsModulesUniformeAluno
   /**
    * Construtor.
    */
-  function clsModulesUniformeAluno( $ref_cod_aluno = NULL, $recebeu_uniforme = NULL,
+  function __construct( $ref_cod_aluno = NULL, $recebeu_uniforme = NULL,
    $quantidade_camiseta = NULL, $tamanho_camiseta = NULL, $quantidade_blusa_jaqueta = NULL,
    $tamanho_blusa_jaqueta = NULL, $quantidade_bermuda = NULL, $tamanho_bermuda = NULL,
    $quantidade_calca = NULL, $tamanho_calca = NULL, $quantidade_saia = NULL, $tamanho_saia = NULL,

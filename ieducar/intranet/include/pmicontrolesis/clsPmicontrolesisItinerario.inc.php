@@ -111,7 +111,7 @@ class clsPmicontrolesisItinerario
      *
      * @return object
      */
-    function clsPmicontrolesisItinerario( $cod_itinerario = null, $ref_funcionario_cad = null, $ref_funcionario_exc = null, $numero = null, $itinerario = null, $retorno = null, $horarios = null, $descricao_horario = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $nome = null )
+    function __construct( $cod_itinerario = null, $ref_funcionario_cad = null, $ref_funcionario_exc = null, $numero = null, $itinerario = null, $retorno = null, $horarios = null, $descricao_horario = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $nome = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmicontrolesis.";

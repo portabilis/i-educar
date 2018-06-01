@@ -256,7 +256,7 @@ $pagina->MakeAll();
 ?>
 <script>
 
-<? 
+<?php
 
 if (!$_GET['precisa_lista'])
 {

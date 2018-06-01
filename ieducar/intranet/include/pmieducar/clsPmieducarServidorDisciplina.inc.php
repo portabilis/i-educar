@@ -101,7 +101,7 @@ class clsPmieducarServidorDisciplina
   /**
    * Construtor.
    */
-  function clsPmieducarServidorDisciplina($ref_cod_disciplina = NULL,
+  function __construct($ref_cod_disciplina = NULL,
     $ref_ref_cod_instituicao = NULL, $ref_cod_servidor = NULL, $ref_cod_curso = NULL)
   {
     $db = new clsBanco();

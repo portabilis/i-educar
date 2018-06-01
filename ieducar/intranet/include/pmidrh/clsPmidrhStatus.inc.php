@@ -116,7 +116,7 @@ class clsPmidrhStatus
      *
      * @return object
      */
-    function clsPmidrhStatus( $cod_status = null, $ref_pessoa_exc = null, $ref_pessoa_cad = null, $nm_status = null, $aprovado = null, $data_cadastro = null, $data_exclusao = null, $ativo = null )
+    function __construct( $cod_status = null, $ref_pessoa_exc = null, $ref_pessoa_cad = null, $nm_status = null, $aprovado = null, $data_cadastro = null, $data_exclusao = null, $ativo = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmidrh.";

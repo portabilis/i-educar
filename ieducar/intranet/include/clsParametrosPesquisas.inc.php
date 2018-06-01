@@ -123,7 +123,7 @@ class clsParametrosPesquisas
      *
      * @return clsParametrosPesquisas
      */
-    function clsParametrosPesquisas() {
+    function __construct() {
         $this->campo_nome   = array();
         $this->campo_tipo   = array();
         $this->campo_valor  = array();

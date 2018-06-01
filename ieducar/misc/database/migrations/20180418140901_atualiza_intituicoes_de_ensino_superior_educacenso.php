@@ -101,7 +101,7 @@ class AtualizaIntituicoesDeEnsinoSuperiorEducacenso extends AbstractMigration
             (18490,'INSTITUTO POLITÉCNICO DOCTUM DE GUARAPARI',4,2,1, NOW()),
             (18107,'FACULDADE ESTÁCIO DE SÃO MATEUS - ESTÁCIO SÃO MATEUS',4,2,1, NOW()),
             (17636,'FACULDADE DA SERRA',4,2,1, NOW()),
-            (19049,'FACULDADE INTEGRADA DE ***REMOVED***',4,2,1, NOW()),
+            (19049,'FACULDADE INTEGRADA DE VILA VELHA',4,2,1, NOW()),
             (17933,'FACULDADE REDENTOR DE PARAÍBA DO SUL',4,2,1, NOW()),
             (17657,'FACULDADE PROFESSOR DALTRO',4,2,1, NOW()),
             (17738,'FACULDADE CESGRANRIO',4,2,1, NOW()),

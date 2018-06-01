@@ -386,7 +386,7 @@ $pessoa_logada = $_SESSION['id_pessoa'];
     }
 ?>
 <script type='text/javascript'>
-<?
+<?php
 //   administrador          institucional = cpd
 if ( $nivel_usuario == 1 || $nivel_usuario == 2 || $cad_usuario )
 {
@@ -451,7 +451,7 @@ if ( $nivel_usuario == 1 || $nivel_usuario == 2 || $cad_usuario )
             after_getEscola();
         }
     }
-<?
+<?php
     if ($get_escola && $get_biblioteca)
     {
 ?>
@@ -460,7 +460,7 @@ if ( $nivel_usuario == 1 || $nivel_usuario == 2 || $cad_usuario )
             getEscola();
             getBiblioteca(1);
         }
-<?
+<?php
     }
 }
 if ( $get_curso && $sem_padrao && !$get_matricula )
@@ -506,7 +506,7 @@ if ( $get_curso && $sem_padrao && !$get_matricula )
             campoCurso.options[0].text = 'A instituição não possui nenhum curso';
         }
     }
-<?
+<?php
 }
 elseif ( $get_curso && !$get_matricula )
 {
@@ -551,7 +551,7 @@ elseif ( $get_curso && !$get_matricula )
             campoCurso.options[0].text = 'A instituição não possui nenhum curso';
         }
     }
-<?
+<?php
 }
 if ( $get_escola && $get_curso && $get_matricula)
 {
@@ -561,7 +561,7 @@ if ( $get_escola && $get_curso && $get_matricula)
         getEscola();
         getCursoMatricula();
     }
-<?
+<?php
 }
 if ( $get_escola && $get_curso && !$get_matricula)
 {
@@ -571,7 +571,7 @@ if ( $get_escola && $get_curso && !$get_matricula)
         getEscola();
         getCurso();
     }
-<?
+<?php
 }
 //if ( $get_escola_curso )
 if ( $get_curso )
@@ -597,11 +597,11 @@ if ( $get_curso )
             campoCurso.options[0].text = 'Carregando cursos';
 
             var xml = new ajax( atualizaLstEscolaCurso );
-            <? if ($get_cursos_nao_padrao) {?>
+            <?php if ($get_cursos_nao_padrao) {?>
                 xml.envia( "educar_curso_xml.php?esc="+campoEscola+"&padrao_ano_escolar=nao" );
-            <?} else {?>
+            <?php } else {?>
                 xml.envia( "educar_curso_xml.php?esc="+campoEscola );
-            <?}?>
+            <?php }?>
         }
         else
         {
@@ -629,7 +629,7 @@ if ( $get_curso )
             campoCurso.options[0].text = 'A escola não possui nenhum curso';
         }
     }
-<?
+<?php
 }
 if ( $get_escola_curso_serie && $get_matricula && $_GET["ref_cod_aluno"] )
 {
@@ -681,7 +681,7 @@ if ( $get_escola_curso_serie && $get_matricula && $_GET["ref_cod_aluno"] )
             campoSerie.options[0].text = 'A escola/curso não possui nenhuma série';
         }
     }
-<?
+<?php
 }
 if ( $get_escola_curso_serie  && !$get_matricula )
 {
@@ -734,7 +734,7 @@ if ( $get_escola_curso_serie  && !$get_matricula )
             campoSerie.options[0].text = 'A escola/curso não possui nenhuma série';
         }
     }
-<?
+<?php
 }
 if ( $get_serie && $get_escola_serie)
 {
@@ -791,7 +791,7 @@ if ( $get_serie && $get_escola_serie)
             campoSerie.options[0].text = 'O curso não possui nenhuma série ou todas as séries já estã associadas a essa escola';
         }
     }
-<?
+<?php
 }
 if ( $get_serie && !$get_escola_serie  || $exibe_get_serie)
 {
@@ -841,7 +841,7 @@ if ( $get_serie && !$get_escola_serie  || $exibe_get_serie)
             campoSerie.options[0].text = 'O curso não possui nenhuma série';
         }
     }
-<?
+<?php
 }
 if ( $get_biblioteca )
 {
@@ -885,7 +885,7 @@ if ( $get_biblioteca )
             campoBiblioteca.options[0].text = 'Nenhuma biblioteca';
         }
     }
-<?
+<?php
 }
 if ( $get_cliente_tipo )
 {
@@ -933,7 +933,7 @@ if ( $get_cliente_tipo )
             campoClienteTipo.options[0].text = 'A biblioteca não possui nenhum tipo de cliente';
         }
     }
-<?
+<?php
 }
 if ( $get_funcao )
 {
@@ -978,7 +978,7 @@ if ( $get_funcao )
             campoFuncao.options[0].text = 'A instituição não possui nenhuma função';
         }
     }
-<?
+<?php
 }
 if ( $get_turma )
 {
@@ -1029,7 +1029,7 @@ if ( $get_turma )
 
         after_getTurma();
     }
-<?
+<?php
 }
 ?>
 function limpaCampos(nivel)
@@ -1084,9 +1084,10 @@ function limpaCampos(nivel)
     }
 }
 
-<?
+<?php
 if ($get_semestre)
-{?>
+{
+    ?>
 
     function verifica_curso()
     {
@@ -1118,6 +1119,6 @@ if ($get_semestre)
         }
     }
 
-<?}?>
+<?php } ?>
 
 </script>

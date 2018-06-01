@@ -53,7 +53,7 @@ class clsControlador
   /**
    * Construtor.
    */
-  public function clsControlador()
+  public function __construct()
   {
 
     /*

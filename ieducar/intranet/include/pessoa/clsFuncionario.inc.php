@@ -101,7 +101,7 @@ class clsFuncionario extends clsPessoaFisica
      */
     var $_campo_order_by;
 
-    function clsFuncionario($int_idpes = false, $str_matricula = false, $int_cpf = false, $int_ref_cod_setor = false, $str_senha = false, $data_troca_senha = false, $tempo_expira_senha = false, $data_reativa_conta = false, $tempo_expira_conta = false, $ref_cod_funcionario_vinculo = false, $ramal = false, $matricula_permanente = false, $banido = false, $email = null)
+    function __construct($int_idpes = false, $str_matricula = false, $int_cpf = false, $int_ref_cod_setor = false, $str_senha = false, $data_troca_senha = false, $tempo_expira_senha = false, $data_reativa_conta = false, $tempo_expira_conta = false, $ref_cod_funcionario_vinculo = false, $ramal = false, $matricula_permanente = false, $banido = false, $email = null)
     {
         $this->idpes = $int_idpes;
         $this->matricula = $str_matricula;

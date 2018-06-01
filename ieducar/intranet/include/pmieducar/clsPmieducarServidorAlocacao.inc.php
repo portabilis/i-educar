@@ -123,7 +123,7 @@ class clsPmieducarServidorAlocacao
   /**
    * Construtor.
    */
-  function clsPmieducarServidorAlocacao(
+  function __construct(
     $cod_servidor_alocacao = NULL,
     $ref_ref_cod_instituicao = NULL,
     $ref_usuario_exc = NULL,

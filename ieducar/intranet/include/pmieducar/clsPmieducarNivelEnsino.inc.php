@@ -108,7 +108,7 @@ class clsPmieducarNivelEnsino
      *
      * @return object
      */
-    function clsPmieducarNivelEnsino( $cod_nivel_ensino = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_nivel = null, $descricao = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $ref_cod_instituicao = null )
+    function __construct( $cod_nivel_ensino = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_nivel = null, $descricao = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $ref_cod_instituicao = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmieducar.";

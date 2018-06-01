@@ -38,7 +38,7 @@ class relatorios
     var $exibe_titulo_relatorio = true;
     var $exibe_produzido_por = true;
 
-    function relatorios( $nome, $espacoEntreLinhas=80, $capa=false, $rodape=false, $tipoFolha="A4", $cabecalho="Prefeitura de Itajaí\nCentro Tecnologico de Informação e Modernização Administrativa.\nRua Alberto Werner, 100 - Vila Operária\nCEP. 88304-053 - Itajaí - SC", $cod_fundo_titulo = "#000000", $cor_texto_titulo = "#FFFFFF", $cor_fundo_cabecalho = "#D3D3D3", $cor_fundo_rodape = "#D3D3D3", $depurar = false)
+    function __construct( $nome, $espacoEntreLinhas=80, $capa=false, $rodape=false, $tipoFolha="A4", $cabecalho="Prefeitura de Itajaí\nCentro Tecnologico de Informação e Modernização Administrativa.\nRua Alberto Werner, 100 - Vila Operária\nCEP. 88304-053 - Itajaí - SC", $cod_fundo_titulo = "#000000", $cor_texto_titulo = "#FFFFFF", $cor_fundo_cabecalho = "#D3D3D3", $cor_fundo_rodape = "#D3D3D3", $depurar = false)
     {
         $this->fonte_titulo = "arial";
         $this->cor_fundo_titulo = $cod_fundo_titulo;

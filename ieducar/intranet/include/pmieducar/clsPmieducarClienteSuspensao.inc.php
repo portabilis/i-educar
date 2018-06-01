@@ -107,7 +107,7 @@ class clsPmieducarClienteSuspensao
      *
      * @return object
      */
-    function clsPmieducarClienteSuspensao( $sequencial = null, $ref_cod_cliente = null, $ref_cod_motivo_suspensao = null, $ref_usuario_libera = null, $ref_usuario_suspende = null, $dias = null, $data_suspensao = null, $data_liberacao = null )
+    function __construct( $sequencial = null, $ref_cod_cliente = null, $ref_cod_motivo_suspensao = null, $ref_usuario_libera = null, $ref_usuario_suspende = null, $dias = null, $data_suspensao = null, $data_liberacao = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmieducar.";

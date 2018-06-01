@@ -106,7 +106,7 @@ class clsPmieducarReligiao
      *
      * @return object
      */
-    function clsPmieducarReligiao( $cod_religiao = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_religiao = null, $data_cadastro = null, $data_exclusao = null, $ativo = null )
+    function __construct( $cod_religiao = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_religiao = null, $data_cadastro = null, $data_exclusao = null, $ativo = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmieducar.";

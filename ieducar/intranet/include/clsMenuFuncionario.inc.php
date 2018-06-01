@@ -55,7 +55,7 @@ class clsMenuFuncionario
    * @param bool $exclui
    * @param int $int_ref_cod_menu_submenu
    */
-  function clsMenuFuncionario($int_ref_ref_cod_pessoa_fj = FALSE,
+  function __construct($int_ref_ref_cod_pessoa_fj = FALSE,
     $cadastra = FALSE, $exclui = FALSE, $int_ref_cod_menu_submenu = FALSE)
   {
     $obj = new clsPessoaFj($int_ref_ref_cod_pessoa_fj);

@@ -108,7 +108,7 @@ class clsPmidrhDiariaValores
      *
      * @return object
      */
-    function clsPmidrhDiariaValores( $cod_diaria_valores = null, $ref_funcionario_cadastro = null, $ref_cod_diaria_grupo = null, $estadual = null, $p100 = null, $p75 = null, $p50 = null, $p25 = null, $data_vigencia = null )
+    function __construct( $cod_diaria_valores = null, $ref_funcionario_cadastro = null, $ref_cod_diaria_grupo = null, $estadual = null, $p100 = null, $p75 = null, $p50 = null, $p25 = null, $data_vigencia = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmidrh.";

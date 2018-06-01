@@ -110,7 +110,7 @@ class clsPmidrhPortariaFuncionario
      *
      * @return object
      */
-    function clsPmidrhPortariaFuncionario( $ref_cod_portaria = null, $sequencial = null, $ref_ref_cod_pessoa_fj = null, $nm_funcionario = null, $cpf = null )
+    function __construct( $ref_cod_portaria = null, $sequencial = null, $ref_ref_cod_pessoa_fj = null, $nm_funcionario = null, $cpf = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmidrh.";

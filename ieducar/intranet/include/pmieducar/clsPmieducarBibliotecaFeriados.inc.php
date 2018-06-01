@@ -107,7 +107,7 @@ class clsPmieducarBibliotecaFeriados
      *
      * @return object
      */
-    function clsPmieducarBibliotecaFeriados( $cod_feriado = null, $ref_cod_biblioteca = null, $nm_feriado = null, $descricao = null, $data_feriado = null, $data_cadastro = null, $data_exclusao = null, $ativo = null )
+    function __construct( $cod_feriado = null, $ref_cod_biblioteca = null, $nm_feriado = null, $descricao = null, $data_feriado = null, $data_cadastro = null, $data_exclusao = null, $ativo = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmieducar.";

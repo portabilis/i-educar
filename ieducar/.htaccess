@@ -86,7 +86,7 @@ DirectoryIndex index.php index.html index.htm
 </IfModule>
 
 # Desabilita acesso para qualquer arquivo caso o
-<IfModule !mod_php5.c>
+<IfModule !mod_php7.c>
   Order allow,deny
   Deny from all
 </IfModule>

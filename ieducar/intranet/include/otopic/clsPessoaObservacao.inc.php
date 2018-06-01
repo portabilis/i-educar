@@ -46,7 +46,7 @@ class clsPessoaObservacao
      *
      * @return Object
      */
-    function clsPessoaObservacao( $int_cod_pessoa_observacao = null, $int_ref_cod_pessoa_auxiliar = null, $int_ref_idpes = null, $str_obs = null, $str_data_edicao = null )
+    function __construct( $int_cod_pessoa_observacao = null, $int_ref_cod_pessoa_auxiliar = null, $int_ref_idpes = null, $str_obs = null, $str_data_edicao = null )
     {
         if(is_numeric($int_cod_pessoa_observacao))
         {

@@ -8,9 +8,9 @@ class PDF_Unicode extends PDF_Chinese
   var $charset;     // input charset. User must add proper fonts by add font functions like AddUniCNShwFont
   var $isUnicode;   // whether charset belongs to Unicode
 
-  function PDF_Unicode ($layout="P",$uom="mm",$papersize="A4",$charset = 'UTF-8')
+  function __construct($layout="P",$uom="mm",$papersize="A4",$charset = 'UTF-8')
   {
-    $this->FPDF ($layout, $uom, $papersize);
+    FPDF::__construct($layout, $uom, $papersize);
     //$this->FPDF ('L', 'mm', 'A4');
     $this->charset = strtoupper(str_replace ('-', '', $charset));
     $this->isUnicode = in_array ($this->charset, array ('UTF8', 'UTF16', 'UCS2'));

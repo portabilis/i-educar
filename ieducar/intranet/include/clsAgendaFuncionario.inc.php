@@ -37,7 +37,7 @@ class clsAgendaFuncionario
     var $ref_cod_funcionario_agenda;
     var $tabela;
     
-    function  clsAgendaFuncionario($int_cod_funcionario_agenda=false,$int_ref_ref_cod_pessoa_fj=false,$str_data_inicio=false, $str_data_fim=false, $str_compromisso=false,$int_versao=false,$int_ref_cod_funcionario_agenda=false)
+    function __construct($int_cod_funcionario_agenda=false,$int_ref_ref_cod_pessoa_fj=false,$str_data_inicio=false, $str_data_fim=false, $str_compromisso=false,$int_versao=false,$int_ref_cod_funcionario_agenda=false)
     {
         $this->cod_funcionario_agenda = $int_cod_funcionario_agenda;
         $this->ref_ref_cod_pessoa_fj = $int_ref_ref_cod_pessoa_fj;

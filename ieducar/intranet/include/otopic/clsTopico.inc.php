@@ -48,7 +48,7 @@ class clsTopico
      *
      * @return Object
      */
-    function clsTopico( $int_cod_topico = false, $int_ref_idpes_cad = false, $int_ref_cod_grupos_cad = false, $int_ref_idpes_exc = false, $int_ref_cod_grupos_exc = false, $str_assunto = false, $int_ativo = false )
+    function __construct( $int_cod_topico = false, $int_ref_idpes_cad = false, $int_ref_cod_grupos_cad = false, $int_ref_idpes_exc = false, $int_ref_cod_grupos_exc = false, $str_assunto = false, $int_ativo = false )
     {
         if(is_numeric($int_cod_topico))
         {
