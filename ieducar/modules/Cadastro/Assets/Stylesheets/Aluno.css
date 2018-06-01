@@ -106,7 +106,7 @@
   height: 25px;
   background-color: #f5f9fd;
   text-align: center;
-  font-weight: bold;  
+  font-weight: bold;
 }
 
 .alunoTab-active2{
@@ -130,17 +130,17 @@
   height: 25px;
   background-color: white;
   text-align: center;
-  font-weight: bold;  
+  font-weight: bold;
 }
 
 .tabText{
   position: relative;
-  top: 6px;  
+  top: 6px;
 }
 
 #tr_tit_dados_hospital, #tr_tit_dados_responsavel,
-#tit_dados_hospital, #tit_dados_responsavel, #tr_label_calca, 
-#tr_label_calcado, #tr_label_saia, #tr_label_camiseta, 
+#tit_dados_hospital, #tit_dados_responsavel, #tr_label_calca,
+#tr_label_calcado, #tr_label_saia, #tr_label_camiseta,
 #tr_label_meia, #tr_label_bermuda, #tr_label_blusa_jaqueta,
 .tit_uniforme{
   font-weight: bold;
@@ -157,7 +157,7 @@
 #dialog-form-pessoa-aluno > h1 { font-size: 1.2em; margin: .6em 0; }*/
 
 .ui-dialog .ui-state-error { padding: .3em; }
-.validateTips-pessoa-aluno { border: 1px solid transparent; padding: 0.3em; } 
+.validateTips-pessoa-aluno { border: 1px solid transparent; padding: 0.3em; }
 
 .ui-widget-overlay{
      background:black;
@@ -171,7 +171,7 @@
 }
 
 .ui-button span{
-  
+
   color: #ffffff ;
   border: 1px solid #495C67;
 
@@ -187,20 +187,20 @@ fieldset {
 
 fieldset legend{
   font-weight: bold;
-  
+
 }
 
 tr td:first-child legend{
   margin-left: -3px;
 }
 
-#feedback-messages{ 
+#feedback-messages{
   z-index: 1050;
 }
 
 .ui-button-text {
    font-size: 13px !important;
-} 
+}
 
 div p a{;
   color: blue !important;
@@ -220,9 +220,17 @@ div p a{;
 .ui-dialog-content, .ui-widget-content{
   padding: 0px !important;
 }
-.select { 
+.select {
   border: 1px solid #ffffff; background: #ffffff; color: #000000;
 }
 input{
   font-size: 11px;
+}
+
+#data_emissao_rg, #uf_emissao_rg {
+  width: 135px !important;
+}
+
+#orgao_emissao_rg {
+  width: 184px !important;
 }

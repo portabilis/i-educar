@@ -95,6 +95,8 @@ class indice extends clsCadastro
       die();
     }
 
+    $this->acao_enviar      = "acaoExportar();";
+
     return 'Nova exportação';
   }
 
@@ -117,11 +119,16 @@ class indice extends clsCadastro
     $this->inputsHelper()->date('data_fim',array('label' => 'Data fim',
                                                  'value' => $this->data_fim,
                                                  'dica' => $dicaCampoData));
+    if (!empty($this->data_ini) && !empty($this->data_fim) && !empty($this->ref_cod_escola)) {
+        Portabilis_View_Helper_Application::loadJavascript($this, '/modules/Educacenso/Assets/Javascripts/Educacenso.js');
+    }
 
-    Portabilis_View_Helper_Application::loadJavascript($this, '/modules/Educacenso/Assets/Javascripts/Educacenso.js');
+  }
 
-    $this->nome_url_sucesso = "Exportar";
-    $this->acao_enviar      = " ";
+  function Novo()
+  {
+
+    return false;
   }
 
 }
@@ -138,6 +145,13 @@ $pagina->addForm($miolo);
 $pagina->MakeAll();
 ?>
 <script type="text/javascript">
+
+function acaoExportar() {
+    document.formcadastro.target='_blank';
+    acao();
+    document.getElementById( 'btn_enviar' ).disabled = false;
+    document.getElementById( 'btn_enviar' ).value = 'Exportar';
+}
 
 function marcarCheck(idValue) {
     // testar com formcadastro

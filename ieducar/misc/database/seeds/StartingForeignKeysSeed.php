@@ -28,7 +28,7 @@ class StartingForeignKeysSeed extends AbstractSeed
         --
         
         ALTER TABLE ONLY pmieducar.menu_tipo_usuario
-            ADD CONSTRAINT menu_tipo_usuario_ref_cod_tipo_usuario_fkey FOREIGN KEY (ref_cod_tipo_usuario) REFERENCES tipo_usuario(cod_tipo_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
+            ADD CONSTRAINT menu_tipo_usuario_ref_cod_tipo_usuario_fkey FOREIGN KEY (ref_cod_tipo_usuario) REFERENCES pmieducar.tipo_usuario(cod_tipo_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
         
         
         --
@@ -36,7 +36,7 @@ class StartingForeignKeysSeed extends AbstractSeed
         --
         
         ALTER TABLE ONLY portal.menu_funcionario
-            ADD CONSTRAINT menu_funcionario_ibfk_1 FOREIGN KEY (ref_cod_menu_submenu) REFERENCES menu_submenu(cod_menu_submenu) ON UPDATE RESTRICT ON DELETE RESTRICT;
+            ADD CONSTRAINT menu_funcionario_ibfk_1 FOREIGN KEY (ref_cod_menu_submenu) REFERENCES portal.menu_submenu(cod_menu_submenu) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
         ');
     }

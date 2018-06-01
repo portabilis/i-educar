@@ -126,7 +126,7 @@ class clsOrgaoEmissorRg
      *
      * @return Array
      */
-    function lista( $str_sigla = false, $str_descricao = false, $str_situacao = false,$int_limite_ini = 0, $int_limite_qtd = 20, $str_orderBy = false )
+    function lista( $str_sigla = false, $str_descricao = false, $str_situacao = false,$int_limite_ini = 0, $int_limite_qtd = false, $str_orderBy = false )
     {
         // verificacoes de filtros a serem usados
         $whereAnd = "WHERE ";

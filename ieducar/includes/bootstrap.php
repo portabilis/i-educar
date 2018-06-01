@@ -105,8 +105,11 @@ $tenantEnv = $_SERVER['HTTP_HOST'];
 
 // tenta carregar as configurações da seção especifica do tenant,
 // ex: ao acessar http://tenant.ieducar.com.br será carregado a seção tenant.ieducar.com.br caso exista
-if ($coreExt['Config']->hasEnviromentSection($tenantEnv))
-  $coreExt['Config']->changeEnviroment($tenantEnv);
+if ($coreExt['Config']->hasEnviromentSection($tenantEnv)) {
+    $coreExt['Config']->changeEnviroment($tenantEnv);
+} else if (!$coreExt['Config']->hasEnviromentSection($tenantEnv) && CORE_EXT_CONFIGURATION_ENV !== "development"){
+    $coreExt['Config']->app->ambiente_inexistente = true;
+}
 
 /**
  * Altera o diretório da aplicação. chamadas a fopen() na aplicação não

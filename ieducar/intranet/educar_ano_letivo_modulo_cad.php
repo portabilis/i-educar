@@ -423,8 +423,11 @@ class indice extends clsCadastro
                       'ref_cod_infra_predio_comodo', 'nm_turma', 'sgl_turma', 'max_aluno', 'multiseriada',
                       'data_cadastro', 'data_exclusao', 'ativo', 'ref_cod_turma_tipo', 'hora_inicial', 'hora_final',
                       'hora_inicio_intervalo', 'hora_fim_intervalo', 'ref_cod_regente', 'ref_cod_instituicao_regente',
-                      'ref_cod_instituicao',  'ref_cod_curso', 'ref_ref_cod_serie_mult', 'ref_ref_cod_escola_mult',
-                      'visivel', 'turma_turno_id', 'tipo_boletim', 'ano');
+                      'ref_cod_instituicao', 'ref_cod_curso', 'ref_ref_cod_serie_mult', 'ref_ref_cod_escola_mult',
+                      'visivel', 'turma_turno_id', 'tipo_boletim', 'ano', 'dias_semana', 'atividades_complementares',
+                      'atividades_aee', 'turma_unificada', 'tipo_atendimento', 'etapa_educacenso',
+                      'cod_curso_profissional', 'tipo_mediacao_didatico_pedagogico',
+                      'nao_informar_educacenso', 'turma_mais_educacao');
 
       $turmaDestino = new clsPmieducarTurma();
 
@@ -436,7 +439,6 @@ class indice extends clsCadastro
 
       $this->copiarComponenteCurricularTurma($turmaOrigem['cod_turma'], $turmaDestinoId);
       $this->copiarModulosTurma($turmaOrigem['cod_turma'], $turmaDestinoId, $anoOrigem, $anoDestino);
-      $this->copiarDiasSemanaTurma($turmaOrigem['cod_turma'], $turmaDestinoId);
     }
   }
 
@@ -489,23 +491,6 @@ class indice extends clsCadastro
       }
 
       $moduloDestino->cadastra();
-    }
-  }
-
-  function copiarDiasSemanaTurma($turmaOrigemId, $turmaDestinoId) {
-    $diasSemanaTurmaOrigem = new clsPmieducarTurmaDiaSemana();
-    $diasSemanaTurmaOrigem = $diasSemanaTurmaOrigem->lista(null, $turmaOrigemId);
-
-    $fields = array('dia_semana', 'hora_inicial', 'hora_final');
-
-    foreach ($diasSemanaTurmaOrigem as $diaSemanaOrigem) {
-      $diaSemanaDestino = new clsPmieducarTurmaDiaSemana();
-
-      foreach ($fields as $fieldName)
-        $diaSemanaDestino->$fieldName = $diaSemanaOrigem[$fieldName];
-
-      $diaSemanaDestino->ref_cod_turma = $turmaDestinoId;
-      $diaSemanaDestino->cadastra();
     }
   }
 }

@@ -135,7 +135,7 @@ class indice extends clsCadastro
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_servidores_index.php"       => "Servidores",
-         ""        => "{$nomeMenu} vínculo do servidor à turma"             
+         ""        => "{$nomeMenu} vínculo do servidor à turma"
     ));
     $this->enviaLocalizacao($localizacao->montar());
 
@@ -159,13 +159,16 @@ class indice extends clsCadastro
     $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'curso', 'serie'));
     $this->inputsHelper()->dynamic(array('turma'), array('required' => !is_null($this->ref_cod_turma)));
 
+    $obrigarCamposCenso = $this->validarCamposObrigatoriosCenso();
+    $this->campoOculto('obrigar_campos_censo', (int) $obrigarCamposCenso);
+
     $resources = array( null  => 'Selecione',
                         1     => 'Docente',
                         2     => 'Auxiliar/Assistente educacional',
                         3     => 'Profissional/Monitor de atividade complementar',
                         4     => 'Tradutor Intérprete de LIBRAS',
-                        5     => 'Docente titular - coordenador de tutoria (de módulo ou disciplina) - EAD',
-                        6     => 'Docente tutor (de módulo ou disciplina)');
+                        5     => 'Docente titular - Coordenador de tutoria (de módulo ou disciplina) - EAD',
+                        6     => 'Docente tutor - Auxiliar (de módulo ou disciplina) - EAD');
 
     $options = array('label' => Portabilis_String_Utils::toLatin1('Função exercida'), 'resources' => $resources, 'value' => $this->funcao_exercida);
     $this->inputsHelper()->select('funcao_exercida', $options);
@@ -179,7 +182,7 @@ class indice extends clsCadastro
     $options = array('label' => Portabilis_String_Utils::toLatin1('Tipo do vínculo'), 'resources' => $resources, 'value' => $this->tipo_vinculo, 'required' => false);
     $this->inputsHelper()->select('tipo_vinculo', $options);
     $this->inputsHelper()->checkbox('permite_lancar_faltas_componente',
-                                    array('label' => Portabilis_String_Utils::toLatin1('Professor de área específica?'), 
+                                    array('label' => Portabilis_String_Utils::toLatin1('Professor de área específica?'),
                                           'value' => $this->permite_lancar_faltas_componente,
                                           'help'  =>  Portabilis_String_Utils::toLatin1('Marque esta opção somente se o professor leciona uma disciplina específica na turma selecionada.')));
 

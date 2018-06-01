@@ -48,7 +48,8 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchCustom extends Portabi
   public function MultipleSearchCustom($attrName, $options = array()) {
     $defaultOptions = array('objectName'    => 'custom',
                             'apiController' => 'custom',
-                            'apiResource'   => 'custom-search');
+                            'apiResource'   => 'custom-search',
+                            'type'          => 'multiple');
 
     $options                         = $this->mergeOptions($options, $defaultOptions);
     $options['options']['resources'] = $this->insertOption(NULL, '', $options['options']['options']['all_values']);
