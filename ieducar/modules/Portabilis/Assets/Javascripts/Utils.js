@@ -40,10 +40,24 @@ function makeRequired(elementId) {
   $j('#' + elementId).removeClass('geral');
 }
 
+$j.fn.makeRequired = function(){
+  return this.each(function() {
+    makeRequired(this.id);
+    return $j(this);
+  });
+}
+
 function makeUnrequired(elementId) {
   $j('#tr_' + elementId + ' td span.campo_obrigatorio').remove();
   $j('#' + elementId).addClass('geral');
   $j('#' + elementId).removeClass('obrigatorio');
+}
+
+$j.fn.makeUnrequired = function(){
+  return this.each(function() {
+    makeUnrequired(this.id);
+    return $j(this);
+  });
 }
 
 function fixupFieldsWidth(additionalFields, force){

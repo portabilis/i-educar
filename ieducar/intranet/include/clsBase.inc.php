@@ -58,6 +58,10 @@ if (!$configuracoes['active_on_ieducar']) {
     header("Location: suspenso.php");
 }
 
+if ($GLOBALS['coreExt']['Config']->app->ambiente_inexistente){
+    header("Location: /404.html");
+}
+
 
 /**
  * clsBase class.

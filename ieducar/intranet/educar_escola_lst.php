@@ -74,7 +74,6 @@ class indice extends clsListagem
     var $ref_usuario_cad;
     var $ref_usuario_exc;
     var $ref_cod_instituicao;
-    var $ref_cod_escola_localizacao;
     var $ref_cod_escola_rede_ensino;
     var $ref_idpes;
     var $sigla;

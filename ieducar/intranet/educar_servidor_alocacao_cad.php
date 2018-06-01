@@ -34,6 +34,7 @@ require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once "lib/Portabilis/String/Utils.php";
+require_once 'lib/Portabilis/Date/Utils.php';
 
 /**
  * clsIndexBase class.
@@ -84,6 +85,7 @@ class indice extends clsCadastro
   var $periodo;
   var $ref_cod_funcionario_vinculo;
   var $ano;
+  var $data_admissao;
   var $alocacao_array          = array();
   var $alocacao_excluida_array = array();
 
@@ -116,6 +118,7 @@ class indice extends clsCadastro
       $this->ref_cod_funcionario_vinculo = $servidorAlocacao['ref_cod_funcionario_vinculo'];
       $this->ativo                       = $servidorAlocacao['ativo'];
       $this->ano                         = $servidorAlocacao['ano'];
+      $this->data_admissao               = $servidorAlocacao['data_admissao'];
 
     } else if (is_numeric($ref_cod_servidor) && is_numeric($ref_ref_cod_instituicao)) {
       $this->ref_ref_cod_instituicao = $ref_ref_cod_instituicao;
@@ -202,6 +205,15 @@ class indice extends clsCadastro
     // Carga horária
     $this->campoHoraServidor('carga_horaria_alocada', 'Carga horária', $this->carga_horaria_alocada, TRUE);
 
+    $options = array(
+        'label' => 'Data de admissão',
+        'placeholder' => 'dd/mm/yyyy',
+        'hint' => 'A data deve estar em branco ou dentro do período de datas da exportação para o Educacenso, para o servidor ser exportado.',
+        'value' => $this->data_admissao,
+        'required' => FALSE,
+    );
+    $this->inputsHelper()->date('data_admissao', $options);
+
     // Funções
     $obj_funcoes = new clsPmieducarServidorFuncao();
 
@@ -232,6 +244,7 @@ class indice extends clsCadastro
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7,
         "educar_servidor_alocacao_lst.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_ref_cod_instituicao}");
+    $dataAdmissao = $this->data_admissao ? Portabilis_Date_Utils::brToPgSql($this->data_admissao) : NULL;
 
     $servidorAlocacao = new clsPmieducarServidorAlocacao($this->cod_servidor_alocacao,
                                                  $this->ref_ref_cod_instituicao,
@@ -246,7 +259,8 @@ class indice extends clsCadastro
                                                  null,
                                                  null,
                                                  null,
-                                                 $this->ano);
+                                                 $this->ano,
+                                                 $dataAdmissao);
 
     $carga_horaria_disponivel = $this->hhmmToMinutes($this->carga_horaria_disponivel);
     $carga_horaria_alocada    = $this->hhmmToMinutes($this->carga_horaria_alocada);
@@ -267,7 +281,8 @@ class indice extends clsCadastro
                                                  $this->periodo,
                                                  $this->cod_servidor_funcao,
                                                  $this->ref_cod_funcionario_vinculo,
-                                                 $this->ano);
+                                                 $this->ano,
+                                                 $dataAdmissao);
 
       if ($obj_novo->periodoAlocado()) {
         $this->mensagem = 'Período informado já foi alocado. Por favor, selecione outro.<br />';
