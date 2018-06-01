@@ -3,10 +3,10 @@
 $environments = array(
 	"development" => array(
 		"adapter" => "pgsql",
-		"host" => "localhost",
+		"host" => "postgres_95",
 		"user" => "ieducar",
 		"pass" => "ieducar",
-		"port" => "5434",
+		"port" => "5432",
 		"charset" => "utf8",
 		"name" => "ieducar",
 	),
@@ -14,7 +14,12 @@ $environments = array(
 
 $configuration = array(
 	"paths" => array(
-		"migrations" => "ieducar/misc/database/migrations",
+		"migrations" => array(
+            "ieducar/misc/database/migrations",
+        ),
+        "seeds" => array(
+            "ieducar/misc/database/seeds",
+        ),
 	),
 	"environments" => $environments,
 );
