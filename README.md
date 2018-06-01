@@ -10,7 +10,7 @@ e prática a gestão dos processos das escolas, matrículas e dados de alunos,
 apoiando os profissionais da rede de ensino e gestores a resolverem os desafios
 da educação dentro e fora da sala de aula.
 
-## TOC
+## Conteúdo
 
 1. [Cenário atual](#cenário-atual)
 2. [Sobre o i-Educar](#sobre-o-i-educar)
@@ -57,8 +57,8 @@ i-Educar.
 Antes de começar você vai precisar instalar o Docker e o Docker Compose em sua
 máquina. Para mais informações veja estes links:
 
-- [Docker](https://docs.docker.com/install/)
-- [Docker Compose](https://docs.docker.com/compose/install/)
+- [Docker](https://docs.docker.com/install/) (> 18.03.1-ce)
+- [Docker Compose](https://docs.docker.com/compose/install/) (> 1.21.2)
 
 Você também vai precisar do [Git](https://git-scm.com/downloads) caso ainda não
 o tenha instalado.
@@ -71,6 +71,9 @@ $ git clone git@github.com:portabilis/i-educar.git i-educar
 $ cd i-educar
 $ docker-compose up -d
 ```
+
+Depois disto faça uma cópia do arquivo `ieducar/configuration/ieducar.ini.sample`
+para `ieducar/configuration/ieducar.ini` realizando as alterações necessárias.
 
 ### Instalando relatórios
 
