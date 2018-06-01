@@ -12,11 +12,11 @@ da educação dentro e fora da sala de aula.
 
 ## TOC
 
-1. Cenário atual
-2. Sobre o i-Educar
-3. Instalação
-4. Solicite demonstração do software
-5. Solicite prestação de serviço
+1. [Cenário atual](#cenário-atual)
+2. [Sobre o i-Educar](#sobre-o-i-educar)
+3. [Instalação](#instalação)
+4. [Solicite demonstração do software](#solicite-demonstração-do-software)
+5. [Solicite prestação de serviço](#solicite-prestação-de-serviço)
 
 ## Cenário atual
 
