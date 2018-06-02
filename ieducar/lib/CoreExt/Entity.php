@@ -195,7 +195,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
    */
   public function __set($key, $val)
   {
-    if ($this->_hasReference($key)) {
+    if ($this->hasReference($key)) {
       // Se houver uma referência e ela pode ser NULL, atribui NULL quando
       // a referência for carregada por CoreExt_DataMapper (new = FALSE).
       // Se for uma referência a CoreExt_DataMapper, 0 será equivalente a NULL.
@@ -271,7 +271,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
         floatval($this->_data[$key]) : NULL;
     }
 
-    if ($this->_hasReference($key) && !isset($this->_data[$key])) {
+    if ($this->hasReference($key) && !isset($this->_data[$key])) {
       $this->_data[$key] = $this->_loadReference($key);
     }
 
@@ -287,7 +287,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
    */
   public function get($key)
   {
-    if ($this->_hasReference($key)) {
+    if ($this->hasReference($key)) {
       return $this->_getReferenceValue($key);
     }
     return $this->__get($key);
@@ -386,7 +386,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
    * @param string $key
    * @return bool
    */
-  protected function _hasReference($key)
+  public function hasReference($key)
   {
     return array_key_exists($key, $this->_references);
   }
@@ -1178,7 +1178,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
   {
     $data = array();
     foreach ($this->_data as $key => $value) {
-      if ($this->_hasReference($key)) {
+      if ($this->hasReference($key)) {
         $data[$key] = $this->_references[$key]['value'];
         continue;
       }
