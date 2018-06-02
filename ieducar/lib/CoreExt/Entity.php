@@ -377,6 +377,9 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
       }
       $return = $class[$value];
     }
+    else {
+      throw new Exception('A classe '. $class .' da referência ' . $key . ' é inválida.');
+    }
 
     return $return;
   }
