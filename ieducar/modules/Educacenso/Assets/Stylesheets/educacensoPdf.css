@@ -1,0 +1,48 @@
+body {
+    font-family: 'Open Sans';
+    margin: auto;
+    width: 1000px;
+    padding: 10px;
+}
+
+.date-info {
+  text-align: right;
+  padding-right: 10px;
+}
+
+.title {
+    font-family: 'Open Sans', 'Tahoma';
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.subtitle {
+    font-family: 'Open Sans', 'Tahoma';
+    font-size: 14px;
+    margin-left: 10px;
+    font-weight: bold;
+    text-align: left;
+}
+
+li {
+    font-family: 'Open Sans', 'Tahoma';
+    font-size: 14px;
+    text-align: left;
+}
+
+
+ul p {
+    font-family: 'Open Sans', 'Tahoma';
+    font-size: 14px;
+    text-align: left;
+    color: #336699;
+}
+
+.educacenso-link-path {
+    color : #188ad1;
+}
+
+.avisos-educacenso {
+    color: rgb(138, 109, 59);
+}
