@@ -205,7 +205,7 @@ $pagina->MakeAll();
 
 <script>
 
-<?
+<?php
 
 if (!$_GET['precisa_lista'])
 {
@@ -217,7 +217,7 @@ if (!$_GET['precisa_lista'])
         $('ref_cod_instituicao').value = parent.document.getElementById('ref_cod_instituicao').value;
     }
     
-<?
+<?php
 }
 ?>
 
