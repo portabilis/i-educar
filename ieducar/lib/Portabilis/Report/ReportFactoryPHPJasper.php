@@ -127,7 +127,7 @@ class Portabilis_Report_ReportFactoryPHPJasper extends Portabilis_Report_ReportF
 
     ob_clean();
     flush();
-    
+
     readfile($file);
   }
 

@@ -118,7 +118,7 @@ class indice extends clsCadastro
                                 4 => "Amarela",
                                 5 => "Indígena");
 
-        $options = array('label' => Portabilis_String_Utils::toLatin1('Raça Educacenso'), 'resources' => $resources, 'value' => $this->raca_educacenso);
+        $options = array('label' => Portabilis_String_Utils::toLatin1('Raça educacenso'), 'resources' => $resources, 'value' => $this->raca_educacenso);
         $this->inputsHelper()->select('raca_educacenso', $options);
 
     }

@@ -32,11 +32,11 @@
  */
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/bootstrap.php';
-require_once 'Portabilis/AdministrativeInfoFetcher.php';
+require_once 'include/pmieducar/clsPmieducarConfiguracoesGerais.inc.php';
 
-$administrativeInfoFetcher = new Portabilis_AdministrativeInfoFetcher();
-$suspensionInfo = $administrativeInfoFetcher->getSuspensionInfo();
-$reason = $suspensionInfo['reason'];
+$configuracoes = new clsPmieducarConfiguracoesGerais();
+$configuracoes = $configuracoes->detalhe();
+$reason = $configuracoes['ieducar_suspension_message'];
 ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="pt-br" xml:lang="pt-br">

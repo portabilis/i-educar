@@ -39,6 +39,10 @@ require_once 'Reports/Tipos/TipoBoletim.php';
 require_once "App/Model/IedFinder.php";
 require_once 'include/funcoes.inc.php';
 
+/**
+ * Class TurmaController
+ * @deprecated Essa versão da API pública será descontinuada
+ */
 class TurmaController extends ApiCoreController
 {
   // validators
@@ -79,7 +83,7 @@ class TurmaController extends ApiCoreController
     $lstMatriculaTurma  = $objMatriculaTurma->lista(null, $codTurma);
 
     foreach ($lstMatriculaTurma as $matricula) {
-      $lstNomes[] = array('nome'              => strtoupper($matricula['nome']),
+      $lstNomes[] = array('nome'              => limpa_acentos(strtoupper($matricula['nome'])),
                           'ref_cod_matricula' => $matricula['ref_cod_matricula'],
                           'sequencial'        => $matricula['sequencial']
                         );
@@ -102,12 +106,16 @@ class TurmaController extends ApiCoreController
   }
 
   protected function getTipoBoletim() {
-    $tipo = App_Model_IedFinder::getTurma($codTurma = $this->getRequest()->id);
-    $tipo = $tipo['tipo_boletim'];
+    $turma = App_Model_IedFinder::getTurma($codTurma = $this->getRequest()->id);
+    $tipo = $turma['tipo_boletim'];
+    $tipoDiferenciado = $turma['tipo_boletim_diferenciado'];
 
     $tipos = Portabilis_Model_Report_TipoBoletim::getInstance()->getReports();
     $tipos = Portabilis_Array_Utils::insertIn(null, "indefinido", $tipos);
 
+    if ($tipoDiferenciado && $tipoDiferenciado != $tipo ) {
+        $this->appendResponse('tipo-boletim-diferenciado', $tipos[$tipoDiferenciado]);
+    }
     return array('tipo-boletim' => $tipos[$tipo]);
   }
 

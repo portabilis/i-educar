@@ -36,6 +36,10 @@ require_once 'Portabilis/String/Utils.php';
 require_once 'Portabilis/Array/Utils.php';
 require_once 'Portabilis/Date/Utils.php';
 
+/**
+ * Class CursoController
+ * @deprecated Essa versão da API pública será descontinuada
+ */
 class CursoController extends ApiCoreController
 {
 
@@ -149,9 +153,23 @@ class CursoController extends ApiCoreController
     return array('options' => $cursos);
   }
 
+  protected function getModalidadeCurso(){
+    $cursoId = $this->getRequest()->curso_id;
+  
+    if(is_numeric($cursoId)){
+      $sql = "SELECT modalidade_curso
+                FROM pmieducar.curso
+               WHERE cod_curso = $1;";
+      $modalidade = $this->fetchPreparedQuery($sql, array($cursoId), false, 'first-line');
+    }
+    return $modalidade;
+  }
+
   public function Gerar() {
     if ($this->isRequestFor('get', 'cursos'))
       $this->appendResponse($this->getCursos());
+    elseif ($this->isRequestFor('get', 'modalidade-curso'))
+      $this->appendResponse($this->getModalidadeCurso());
     elseif ($this->isRequestFor('get', 'cursos-multiple-search'))
       $this->appendResponse($this->getCursosMultipleSearch());
     else

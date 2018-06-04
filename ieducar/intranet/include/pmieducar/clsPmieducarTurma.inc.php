@@ -89,10 +89,8 @@ class clsPmieducarTurma
   var $aee_lingua_escrita;
   var $aee_autonomia;
   var $cod_curso_profissional;
-  var $turma_sem_professor;
   var $turma_unificada;
   var $etapa_educacenso;
-  var $etapa_educacenso2;
   var $ref_cod_disciplina_dispensada;
   var $parecer_1_etapa;
   var $parecer_2_etapa;
@@ -100,6 +98,9 @@ class clsPmieducarTurma
   var $parecer_4_etapa;
   var $nao_informar_educacenso;
   var $tipo_mediacao_didatico_pedagogico;
+  var $dias_semana;
+  var $atividades_complementares;
+  var $atividades_aee;
 
   var $listarNaoInformarEducacenso = TRUE;
     var $codUsuario;
@@ -173,9 +174,9 @@ class clsPmieducarTurma
         $this->_schema = "pmieducar.";
         $this->_tabela = "{$this->_schema}turma";
 
-        $this->_campos_lista = $this->_todos_campos = "t.cod_turma, t.ref_usuario_exc, t.ref_usuario_cad, t.ref_ref_cod_serie, t.ref_ref_cod_escola, t.ref_cod_infra_predio_comodo, t.nm_turma, t.sgl_turma, t.max_aluno, t.multiseriada, t.data_cadastro, t.data_exclusao, t.ativo, t.ref_cod_turma_tipo, t.hora_inicial, t.hora_final, t.hora_inicio_intervalo, t.hora_fim_intervalo, t.ref_cod_regente, t.ref_cod_instituicao_regente,t.ref_cod_instituicao, t.ref_cod_curso, t.ref_ref_cod_serie_mult, t.ref_ref_cod_escola_mult, t.visivel, t.turma_turno_id, t.tipo_boletim, t.ano,
-        t.tipo_atendimento, t.turma_mais_educacao, t.atividade_complementar_1, t.atividade_complementar_2, t.atividade_complementar_3, t.atividade_complementar_4, t.atividade_complementar_5, t.atividade_complementar_6, t.aee_braille, t.aee_recurso_optico, t.aee_estrategia_desenvolvimento, t.aee_tecnica_mobilidade, t.aee_libras, t.aee_caa, t.aee_curricular, t.aee_soroban, t.aee_informatica, t.aee_lingua_escrita, t.aee_autonomia, t.cod_curso_profissional, t.turma_sem_professor, t.turma_unificada, t.etapa_educacenso, t.etapa_educacenso2, t.ref_cod_disciplina_dispensada, t.parecer_1_etapa, t.parecer_2_etapa,
-        t.parecer_3_etapa, t.parecer_4_etapa, t.nao_informar_educacenso, t.tipo_mediacao_didatico_pedagogico";
+        $this->_campos_lista = $this->_todos_campos = "t.cod_turma, t.ref_usuario_exc, t.ref_usuario_cad, t.ref_ref_cod_serie, t.ref_ref_cod_escola, t.ref_cod_infra_predio_comodo, t.nm_turma, t.sgl_turma, t.max_aluno, t.multiseriada, t.data_cadastro, t.data_exclusao, t.ativo, t.ref_cod_turma_tipo, t.hora_inicial, t.hora_final, t.hora_inicio_intervalo, t.hora_fim_intervalo, t.ref_cod_regente, t.ref_cod_instituicao_regente,t.ref_cod_instituicao, t.ref_cod_curso, t.ref_ref_cod_serie_mult, t.ref_ref_cod_escola_mult, t.visivel, t.turma_turno_id, t.tipo_boletim, t.tipo_boletim_diferenciado, t.ano,
+        t.tipo_atendimento, t.turma_mais_educacao, t.atividade_complementar_1, t.atividade_complementar_2, t.atividade_complementar_3, t.atividade_complementar_4, t.atividade_complementar_5, t.atividade_complementar_6, t.aee_braille, t.aee_recurso_optico, t.aee_estrategia_desenvolvimento, t.aee_tecnica_mobilidade, t.aee_libras, t.aee_caa, t.aee_curricular, t.aee_soroban, t.aee_informatica, t.aee_lingua_escrita, t.aee_autonomia, t.cod_curso_profissional, t.turma_unificada, t.etapa_educacenso, t.ref_cod_disciplina_dispensada, t.parecer_1_etapa, t.parecer_2_etapa,
+        t.parecer_3_etapa, t.parecer_4_etapa, t.nao_informar_educacenso, t.tipo_mediacao_didatico_pedagogico, t.dias_semana, t.atividades_complementares, t.atividades_aee ";
 
         if( is_numeric( $ref_cod_turma_tipo ) )
         {
@@ -659,6 +660,12 @@ class clsPmieducarTurma
                 $gruda    = ", ";
             }
 
+            if(is_numeric($this->tipo_boletim_diferenciado)){
+                $campos  .= "{$gruda}tipo_boletim_diferenciado";
+                $valores .= "{$gruda}'{$this->tipo_boletim_diferenciado}'";
+                $gruda    = ", ";
+            }
+
             if(is_numeric($this->ano)){
                 $campos  .= "{$gruda}ano";
                 $valores .= "{$gruda}'{$this->ano}'";
@@ -791,12 +798,6 @@ class clsPmieducarTurma
                 $gruda    = ", ";
             }
 
-            if(is_numeric($this->turma_sem_professor)){
-                $campos  .= "{$gruda}turma_sem_professor";
-                $valores .= "{$gruda}'{$this->turma_sem_professor}'";
-                $gruda    = ", ";
-            }
-
             if(is_numeric($this->turma_unificada)){
                 $campos  .= "{$gruda}turma_unificada";
                 $valores .= "{$gruda}'{$this->turma_unificada}'";
@@ -806,12 +807,6 @@ class clsPmieducarTurma
             if(is_numeric($this->etapa_educacenso)){
                 $campos  .= "{$gruda}etapa_educacenso";
                 $valores .= "{$gruda}'{$this->etapa_educacenso}'";
-                $gruda    = ", ";
-            }
-
-            if(is_numeric($this->etapa_educacenso2)){
-                $campos  .= "{$gruda}etapa_educacenso2";
-                $valores .= "{$gruda}'{$this->etapa_educacenso2}'";
                 $gruda    = ", ";
             }
 
@@ -834,6 +829,24 @@ class clsPmieducarTurma
             if(is_numeric($this->tipo_mediacao_didatico_pedagogico)){
                 $campos  .= "{$gruda}tipo_mediacao_didatico_pedagogico";
                 $valores .= "{$gruda}'{$this->tipo_mediacao_didatico_pedagogico}'";
+                $gruda    = ", ";
+            }
+
+            if(is_string($this->dias_semana)){
+                $campos  .= "{$gruda}dias_semana";
+                $valores .= "{$gruda}'{$this->dias_semana}'";
+                $gruda    = ", ";
+            }
+
+            if(is_string($this->atividades_complementares)){
+                $campos  .= "{$gruda}atividades_complementares";
+                $valores .= "{$gruda}'{$this->atividades_complementares}'";
+                $gruda    = ", ";
+            }
+
+            if(is_string($this->atividades_aee)){
+                $campos  .= "{$gruda}atividades_aee";
+                $valores .= "{$gruda}'{$this->atividades_aee}'";
                 $gruda    = ", ";
             }
 
@@ -996,6 +1009,11 @@ class clsPmieducarTurma
                 $gruda = ", ";
             }
 
+            if(is_numeric($this->tipo_boletim_diferenciado)) {
+                $set  .= "{$gruda}tipo_boletim_diferenciado = '{$this->tipo_boletim_diferenciado}'";
+                $gruda = ", ";
+            }
+
             if(is_numeric($this->ano)) {
                 $set  .= "{$gruda}ano = '{$this->ano}'";
                 $gruda = ", ";
@@ -1013,6 +1031,9 @@ class clsPmieducarTurma
 
             if(is_numeric($this->turma_mais_educacao)) {
                 $set  .= "{$gruda}turma_mais_educacao = '{$this->turma_mais_educacao}'";
+                $gruda = ", ";
+            } else {
+                $set  .= "{$gruda}turma_mais_educacao = NULL";
                 $gruda = ", ";
             }
 
@@ -1124,13 +1145,11 @@ class clsPmieducarTurma
                 $gruda = ", ";
             }
 
-            if(is_numeric($this->turma_sem_professor)) {
-                $set  .= "{$gruda}turma_sem_professor = '{$this->turma_sem_professor}'";
-                $gruda = ", ";
-            }
-
             if(is_numeric($this->cod_curso_profissional)) {
                 $set  .= "{$gruda}cod_curso_profissional = '{$this->cod_curso_profissional}'";
+                $gruda = ", ";
+            } else {
+                $set  .= "{$gruda}cod_curso_profissional = NULL";
                 $gruda = ", ";
             }
 
@@ -1147,14 +1166,6 @@ class clsPmieducarTurma
                 $gruda = ", ";
             } elseif (is_null($this->etapa_educacenso)) {
                 $set  .= "{$gruda}etapa_educacenso = NULL";
-                $gruda = ", ";
-            }
-
-            if(is_numeric($this->etapa_educacenso2)) {
-                $set  .= "{$gruda}etapa_educacenso2 = '{$this->etapa_educacenso2}'";
-                $gruda = ", ";
-            } elseif (is_null($this->etapa_educacenso2)) {
-                $set  .= "{$gruda}etapa_educacenso2 = NULL";
                 $gruda = ", ";
             }
 
@@ -1188,6 +1199,21 @@ class clsPmieducarTurma
 
             if(is_numeric($this->tipo_mediacao_didatico_pedagogico)){
                 $set  .= "{$gruda}tipo_mediacao_didatico_pedagogico = '{$this->tipo_mediacao_didatico_pedagogico}'";
+                $gruda = ", ";
+            }
+
+            if(is_string($this->dias_semana)){
+                $set  .= "{$gruda}dias_semana = '{$this->dias_semana}'";
+                $gruda = ", ";
+            }
+
+            if(is_string($this->atividades_complementares)){
+                $set  .= "{$gruda}atividades_complementares = '{$this->atividades_complementares}'";
+                $gruda = ", ";
+            }
+
+            if(is_string($this->atividades_aee)){
+                $set  .= "{$gruda}atividades_aee = '{$this->atividades_aee}'";
                 $gruda = ", ";
             }
 

@@ -35,6 +35,7 @@ require_once 'include/pmieducar/geral.inc.php';
 
 require_once 'App/Model/IedFinder.php';
 require_once 'Portabilis/View/Helper/Application.php';
+require_once 'Portabilis/Utils/CustomLabel.php';
 
 /**
  * clsIndexBase class.
@@ -107,6 +108,17 @@ class indice extends clsDetalhe
     );
 
     $this->cod_turma = $_GET['cod_turma'];
+
+    $dias_da_semana = array(
+      '' => 'Selecione',
+      1  => 'Domingo',
+      2  => 'Segunda',
+      3  => 'Terça',
+      4  => 'Quarta',
+      5  => 'Quinta',
+      6  => 'Sexta',
+      7  => 'Sábado'
+    );
 
     $tmp_obj = new clsPmieducarTurma();
     $lst_obj = $tmp_obj->lista($this->cod_turma, NULL, NULL, NULL, NULL, NULL,
@@ -231,7 +243,7 @@ class indice extends clsDetalhe
     }
 
     if ($registro['sgl_turma']) {
-      $this->addDetalhe(array($GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu' ? 'C&oacute;digo da sala Prodesp/GDAE' : 'Sigla', $registro['sgl_turma']));
+      $this->addDetalhe(array(_cl('turma.detalhe.sigla'), $registro['sgl_turma']));
     }
 
     if ($registro['max_aluno']) {
@@ -275,6 +287,13 @@ class indice extends clsDetalhe
       if ($registro['hora_fim_intervalo']) {
         $registro['hora_fim_intervalo'] = date('H:i', strtotime($registro['hora_fim_intervalo']));
         $this->addDetalhe(array('Hora Fim Intervalo', $registro['hora_fim_intervalo']));
+      }
+      if (is_string($registro['dias_semana']) && !empty($registro['dias_semana'])) {
+        $registro['dias_semana'] = explode(',',str_replace(array('{', "}"), '', $registro['dias_semana']));
+        foreach ($registro['dias_semana'] as $key => $dia) {
+          $diasSemana .= $dias_da_semana[$dia] . '<br>';
+        }
+        $this->addDetalhe(array('Dia da Semana', $diasSemana));
       }
     }
     elseif ($padrao_ano_escolar == 0) {
@@ -329,60 +348,12 @@ class indice extends clsDetalhe
         $this->addDetalhe(array('Módulo', $tabela));
       }
 
-      $dias_da_semana = array(
-        '' => 'Selecione',
-        1  => 'Domingo',
-        2  => 'Segunda',
-        3  => 'Terça',
-        4  => 'Quarta',
-        5  => 'Quinta',
-        6  => 'Sexta',
-        7  => 'Sábado'
-      );
-
-      $obj = new clsPmieducarTurmaDiaSemana();
-      $lst = $obj->lista(NULL, $this->cod_turma);
-
-      if ($lst) {
-        $tabela1 = '
-          <table>
-            <tr align="center">
-              <td bgcolor="#f5f9fd "><b>Nome</b></td>
-              <td bgcolor="#f5f9fd "><b>Hora Inicial</b></td>
-              <td bgcolor="#f5f9fd "><b>Hora Final</b></td>
-            </tr>';
-
-        $cont = 0;
-
-        foreach ($lst as $valor) {
-          if (($cont % 2) == 0) {
-            $color = ' bgcolor="#f5f9fd " ';
-          }
-          else {
-            $color = ' bgcolor="#FFFFFF" ';
-          }
-
-          $valor['hora_inicial'] = date('H:i', strtotime($valor['hora_inicial']));
-          $valor['hora_final']   = date('H:i', strtotime($valor['hora_final']));
-
-          $tabela1 .= sprintf("
-            <tr>
-              <td %s align=left>%s</td>
-              <td %s align=left>%s</td>
-              <td %s align=left>%s</td>
-            </tr>",
-            $color, $dias_da_semana[$valor['dia_semana']], $color,
-            $valor['hora_inicial'], $color, $valor['hora_final']
-          );
-
-          $cont++;
+      if (is_string($registro['dias_semana']) && !empty($registro['dias_semana'])) {
+        $registro['dias_semana'] = explode(',',str_replace(array('{', "}"), '', $registro['dias_semana']));
+        foreach ($registro['dias_semana'] as $key => $dia) {
+          $diasSemana .= $dias_da_semana[$dia] . '<br>';
         }
-
-        $tabela1 .= '</table>';
-      }
-
-      if ($tabela1) {
-        $this->addDetalhe(array('Dia da Semana', $tabela1));
+        $this->addDetalhe(array('Dia da Semana', $diasSemana));
       }
     }
 

@@ -33,10 +33,12 @@
 
 require_once 'include/clsCadastro.inc.php';
 require_once "include/clsBanco.inc.php";
+require_once "include/pmieducar/clsPmieducarInstituicao.inc.php";
 require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
 require_once 'image_check.php';
 require_once 'App/Model/ZonaLocalizacao.php';
 require_once 'lib/Portabilis/Controller/Page/EditController.php';
+require_once 'lib/Portabilis/Utils/CustomLabel.php';
 require_once 'Usuario/Model/FuncionarioDataMapper.php';
 require_once 'include/modules/clsModulesRotaTransporteEscolar.inc.php';
 require_once 'Portabilis/String/Utils.php';
@@ -114,7 +116,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         ),
 
         'transporte' => array(
-            'label' => 'Transporte público',
+            'label' => 'Transporte escolar público',
             'help' => '',
         ),
 
@@ -307,24 +309,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         /************
          * PROVA INEP
          ************/
-
-        'recurso_prova_inep_aux_ledor' => array('label' => 'Necessida de auxílio ledor?'),
-
-        'recurso_prova_inep_aux_transcricao' => array('label' => 'Necessita de auxílio transcrição?'),
-
-        'recurso_prova_inep_guia_interprete' => array('label' => 'Necessita de guia-intérprete?'),
-
-        'recurso_prova_inep_interprete_libras' => array('label' => 'Necessita de intérprete de LIBRAS?'),
-
-        'recurso_prova_inep_leitura_labial' => array('label' => 'Necessita de leitura labial?'),
-
-        'recurso_prova_inep_prova_ampliada_16' => array('label' => 'Necessita de prova ampliada? (Fonte 16)'),
-
-        'recurso_prova_inep_prova_ampliada_20' => array('label' => 'Necessita de prova amplada? (Fonte 20)'),
-
-        'recurso_prova_inep_prova_ampliada_24' => array('label' => 'Necessita de prova ampliada? (Fonte 24)'),
-
-        'recurso_prova_inep_prova_braille' => array('label' => 'Necessita de prova em Braille?'),
+        'recursos_prova_inep' => array('label' => 'Recursos prova INEP'),
 
         'recebe_escolarizacao_em_outro_espaco' => array('label' => 'Recebe escolarização em outro espaço (diferente da escola)'),
 
@@ -379,10 +364,14 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     public function Gerar()
     {
         $this->url_cancelar = '/intranet/educar_aluno_lst.php';
+
+        $configuracoes = new clsPmieducarConfiguracoesGerais();
+        $configuracoes = $configuracoes->detalhe();
+
         $labels_botucatu = $GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu';
 
-        if ($labels_botucatu) {
-            $this->inputsHelper()->hidden('labels_botucatu');
+        if ($configuracoes["justificativa_falta_documentacao_obrigatorio"]) {
+            $this->inputsHelper()->hidden('justificativa_falta_documentacao_obrigatorio');
         }
 
         $cod_aluno = $_GET['id'];
@@ -423,13 +412,13 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
 
         // código aluno
-        $options = array('label' => $labels_botucatu ? Portabilis_String_Utils::toLatin1("Código aluno (i-Educar)") : $this->_getLabel('id'), 'disabled' => true, 'required' => false, 'size' => 25);
+        $options = array('label' => _cl('aluno.detalhe.codigo_aluno'), 'disabled' => true, 'required' => false, 'size' => 25);
         $this->inputsHelper()->integer('id', $options);
 
         // código aluno inep
-        $options = array('label' => $this->_getLabel('aluno_inep_id'), 'required' => false, 'size' => 25, 'max_length' => 14);
+        $options = array('label' => $this->_getLabel('aluno_inep_id'), 'required' => false, 'size' => 25, 'max_length' => 12);
 
-        if ($labels_botucatu) {
+        if (!$configuracoes['mostrar_codigo_inep_aluno']) {
             $this->inputsHelper()->hidden('aluno_inep_id', array('value' => null));
         } else {
             $this->inputsHelper()->integer('aluno_inep_id', $options);
@@ -488,6 +477,40 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         );
 
         $this->inputsHelper()->date('data_emissao_rg', $options);
+
+        $selectOptions = array( null => 'Órgão emissor' );
+        $orgaos        = new clsOrgaoEmissorRg();
+        $orgaos        = $orgaos->lista();
+
+        foreach ($orgaos as $orgao)
+          $selectOptions[$orgao['idorg_rg']] = $orgao['sigla'];
+
+        $selectOptions = Portabilis_Array_Utils::sortByValue($selectOptions);
+
+        $options = array(
+          'required'  => false,
+          'label'     => '',
+          'value'     => $documentos['idorg_exp_rg'],
+          'resources' => $selectOptions,
+          'inline'    => true
+        );
+
+        $this->inputsHelper()->select('orgao_emissao_rg', $options);
+
+
+        // uf emissão rg
+
+        $options = array(
+          'required' => false,
+          'label'    => '',
+          'value'    => $documentos['sigla_uf_exp_rg']
+        );
+
+        $helperOptions = array(
+          'attrName' => 'uf_emissao_rg'
+        );
+
+        $this->inputsHelper()->uf($options, $helperOptions);
 
         // cpf
         if (is_numeric($this->cod_pessoa_fj)) {
@@ -630,17 +653,19 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $this->inputsHelper()->date('data_emissao_certidao_civil', $options);
 
-        $placeholderInep = Portabilis_String_Utils::toLatin1('Código cartório INEP');
         $options = array(
-            'required' => false,
             'label' => '',
-            'size' => '18',
-            'max_length' => '7',
-            'placeholder' => $placeholderInep,
-            'value' => $documentos['cartorio_cert_civil_inep']
-        );
+            'required' => false
+          );
 
-        $this->inputsHelper()->integer('cartorio_cert_civil_inep', $options);
+          $helperOptions = array(
+            'objectName' => 'cartorio_cert_civil_inep',
+            'hiddenInputOptions' => array(
+              'options' => array('value' => $documentos['cartorio_cert_civil_inep'])
+            )
+          );
+
+          $this->inputsHelper()->simpleSearchCartorioInep(null, $options, $helperOptions);
 
         // cartório emissão certidão civil
         $labelCartorio = Portabilis_String_Utils::toLatin1('Cartório emissão');
@@ -649,7 +674,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
             'label' => $labelCartorio,
             'value' => $documentos['cartorio_cert_civil'],
             'cols' => 45,
-            'max_length' => 150
+            'max_length' => 200,
         );
 
         $this->inputsHelper()->textArea('cartorio_emissao_certidao_civil', $options);
@@ -818,10 +843,9 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $this->inputsHelper()->simpleSearchPessoa('nome', $options, $helperOptions);
 
         // transporte publico
-        $label = Portabilis_String_Utils::toLatin1($this->_getLabel('transporte'));
 
         $tiposTransporte = array(
-            null => $label,
+            null => 'Selecione',
             'nenhum' => 'N&atilde;o utiliza',
             'municipal' => 'Municipal',
             'estadual' => 'Estadual'
@@ -1256,32 +1280,26 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('lixo')), 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->checkbox('lixo', $options);
 
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('recurso_prova_inep_aux_ledor')), 'required' => false, 'placeholder' => '');
-        $this->inputsHelper()->checkbox('recurso_prova_inep_aux_ledor', $options);
-
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('recurso_prova_inep_aux_transcricao')), 'required' => false, 'placeholder' => '');
-        $this->inputsHelper()->checkbox('recurso_prova_inep_aux_transcricao', $options);
-
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('recurso_prova_inep_guia_interprete')), 'required' => false, 'placeholder' => '');
-        $this->inputsHelper()->checkbox('recurso_prova_inep_guia_interprete', $options);
-
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('recurso_prova_inep_interprete_libras')), 'required' => false, 'placeholder' => '');
-        $this->inputsHelper()->checkbox('recurso_prova_inep_interprete_libras', $options);
-
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('recurso_prova_inep_leitura_labial')), 'required' => false, 'placeholder' => '');
-        $this->inputsHelper()->checkbox('recurso_prova_inep_leitura_labial', $options);
-
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('recurso_prova_inep_prova_ampliada_16')), 'required' => false, 'placeholder' => '');
-        $this->inputsHelper()->checkbox('recurso_prova_inep_prova_ampliada_16', $options);
-
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('recurso_prova_inep_prova_ampliada_20')), 'required' => false, 'placeholder' => '');
-        $this->inputsHelper()->checkbox('recurso_prova_inep_prova_ampliada_20', $options);
-
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('recurso_prova_inep_prova_ampliada_24')), 'required' => false, 'placeholder' => '');
-        $this->inputsHelper()->checkbox('recurso_prova_inep_prova_ampliada_24', $options);
-
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('recurso_prova_inep_prova_braille')), 'required' => false, 'placeholder' => '');
-        $this->inputsHelper()->checkbox('recurso_prova_inep_prova_braille', $options);
+        $recursosProvaInep = array(
+            1 => 'Auxílio ledor',
+            2 => 'Auxílio transcrição',
+            3 => 'Guia-intérprete',
+            4 => 'Intérprete de LIBRAS',
+            5 => 'Leitura labial',
+            6 => 'Prova ampliada (Fonte 16)',
+            7 => 'Prova ampliada (Fonte 20)',
+            8 => 'Prova ampliada (Fonte 24)',
+            9 => 'Prova em Braille'
+        );
+        $helperOptions = array('objectName'  => 'recursos_prova_inep');
+        $options = array(
+            'label' => 'Recursos prova INEP',
+            'size' => 50,
+            'required' => false,
+            'options' => array(
+                'values' => $this->recursos_prova_inep,
+                'all_values' => $recursosProvaInep));
+        $this->inputsHelper()->multipleSearchCustom('_', $options, $helperOptions);
 
         $selectOptions = array(
             3 => 'Não recebe',
@@ -1417,7 +1435,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $options = array(
             'required' => false,
             'value' => '',
-            'max_length' => 50
+            'max_length' => 20
         );
 
         $this->inputsHelper()->text('complemento', $options);
@@ -1487,6 +1505,76 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         Portabilis_View_Helper_Application::loadJavascript($this, $script);
 
         $this->loadResourceAssets($this->getDispatcher());
+
+        $clsInstituicao = new clsPmieducarInstituicao();
+        $instituicao = $clsInstituicao->primeiraAtiva();
+        $obrigarCamposCenso = FALSE;
+        if ($instituicao && isset($instituicao['obrigar_campos_censo'])) {
+            $obrigarCamposCenso = dbBool($instituicao['obrigar_campos_censo']);
+        }
+        $this->CampoOculto('obrigar_campos_censo', (int) $obrigarCamposCenso);
+
+        $racas         = new clsCadastroRaca();
+        $racas         = $racas->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL, TRUE);
+
+        foreach ($racas as $raca) {
+            $selectOptions[$raca['cod_raca']] = $raca['nm_raca'];
+        }
+
+        $selectOptions = array(null => 'Selecione') + Portabilis_Array_Utils::sortByValue($selectOptions);
+
+        $this->campoLista('cor_raca', 'Raça', $selectOptions, $this->cod_raca, '', FALSE, '', '', '', $obrigarCamposCenso);
+
+        $zonas = array(
+            '' => 'Selecione',
+            1  => 'Urbana',
+            2  => 'Rural',
+        );
+
+        $options = array(
+          'label'       => 'Zona Localização',
+          'value'       => $this->zona_localizacao_censo,
+          'resources'   => $zonas,
+          'required'    => $obrigarCamposCenso,
+        );
+
+        $this->inputsHelper()->select('zona_localizacao_censo', $options);
+
+        $tiposNacionalidade = array(
+            '1'  => 'Brasileiro',
+            '2'  => 'Naturalizado brasileiro',
+            '3'  => 'Estrangeiro'
+        );
+
+        $options = array(
+            'label'       => 'Nacionalidade',
+            'resources'   => $tiposNacionalidade,
+            'required'    => $obrigarCamposCenso,
+            'inline'      => TRUE,
+            'value'       => $this->tipo_nacionalidade
+        );
+
+        $this->inputsHelper()->select('tipo_nacionalidade', $options);
+
+        // pais origem
+
+        $options = array(
+          'label'       => '',
+          'placeholder' => 'Informe o nome do pais',
+          'required'    => $obrigarCamposCenso
+        );
+
+        $hiddenInputOptions = array(
+            'options' => array(
+                'value' => $this->pais_origem_id
+            )
+        );
+
+        $helperOptions = array(
+          'objectName'         => 'pais_origem',
+          'hiddenInputOptions' => $hiddenInputOptions
+        );
+        $this->inputsHelper()->simpleSearchPais('nome', $options, $helperOptions);
     }
 
 

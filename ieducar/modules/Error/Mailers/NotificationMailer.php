@@ -1,23 +1,23 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestí£o escolar
+ * i-Educar - Sistema de gestão escolar
  *
  * Copyright (C) 2006  Prefeitura Municipal de Itajaí­
  *           <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; voc� pode redistribuí-lo e/ou modific�-lo
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
  * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers�o 2 da Licença, como (a seu critério)
- * qualquer vers�o posterior.
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
  *
  * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU
  * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
  * do GNU para mais detalhes.
  *
- * Voc� deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se n�o, escreva para a Free Software Foundation, Inc., no
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
@@ -25,7 +25,7 @@
  * @license   @@license@@
  * @package   Mailer
  * @subpackage  Modules
- * @since     Arquivo disponí­vel desde a versão ?
+ * @since     Arquivo disponível desde a versão ?
  * @version   $Id$
  */
 
@@ -43,6 +43,7 @@ class NotificationMailer extends Portabilis_Mailer
             $userId = Portabilis_Utils_User::currentUserId();
             $to = $this->notificationEmail();
             $subject = "[Erro inesperado bd] i-Educar - " . $this->host();
+            $trace = $this->stackTrace();
 
             $message = "Olá!\n\n" .
                        "Ocorreu um erro inesperado no banco de dados, detalhes abaixo:\n\n" .
@@ -116,5 +117,27 @@ class NotificationMailer extends Portabilis_Mailer
         }
 
         return $user;
+    }
+
+    protected static function stackTrace() {
+        $stack = debug_backtrace();
+        $output = '';
+
+        $stackLen = count($stack);
+        for ($i = 1; $i < $stackLen; $i++) {
+            $entry = $stack[$i];
+
+            $func = $entry['function'] . '(';
+            $argsLen = count($entry['args']);
+            for ($j = 0; $j < $argsLen; $j++) {
+                $func .= $entry['args'][$j];
+                if ($j < $argsLen - 1) $func .= ', ';
+            }
+            $func .= ')';
+
+            $output .= '#' . ($i - 1) . ' ' . $entry['file'] . ':' . $entry['line'] . ' - ' . $func . PHP_EOL;
+        }
+
+        return $output;
     }
 }

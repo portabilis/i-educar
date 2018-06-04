@@ -212,6 +212,8 @@ class indice extends clsCadastro
   function Gerar()
   {
     $camposObrigatorios = !$GLOBALS['coreExt']['Config']->app->remove_obrigatorios_cadastro_pessoa == 1;
+    $obrigarCamposCenso = $this->validarCamposObrigatoriosCenso();
+    $this->campoOculto('obrigar_campos_censo', (int) $obrigarCamposCenso);
     $this->url_cancelar = $this->retorno == 'Editar' ?
       'atendidos_det.php?cod_pessoa=' . $this->cod_pessoa_fj : 'atendidos_lst.php';
 
@@ -299,7 +301,7 @@ class indice extends clsCadastro
     // data nascimento
 
     $options = array(
-      'label'       => 'Data nascimento',
+      'label'       => 'Data de nascimento',
       'value'       => $this->data_nasc,
       'required'    => empty($parentType) && $camposObrigatorios
     );
@@ -524,6 +526,7 @@ class indice extends clsCadastro
     $options = array(
       'required' => false,
       'label'    => 'Estado emissão / Data emissão',
+      'label_hint' => 'Informe o estado para poder informar o código do cartório',
       'value'    => $documentos['sigla_uf_cert_civil'],
       'inline'   => true
     );
@@ -548,15 +551,18 @@ class indice extends clsCadastro
     $this->inputsHelper()->date('data_emissao_certidao_civil', $options);
 
     $options = array(
-      'required'    => false,
-      'label'       => '',
-      'size'        => '18',
-      'max_length'  => '7',
-      'placeholder' => 'Código cartório INEP',
-      'value'       => $documentos['cartorio_cert_civil_inep']
+      'label' => '',
+      'required' => false
     );
 
-    $this->inputsHelper()->integer('cartorio_cert_civil_inep', $options);
+    $helperOptions = array(
+      'objectName' => 'cartorio_cert_civil_inep',
+      'hiddenInputOptions' => array(
+        'options' => array('value' => $documentos['cartorio_cert_civil_inep'])
+      )
+    );
+
+    $this->inputsHelper()->simpleSearchCartorioInep(null, $options, $helperOptions);
 
 
     // cartório emissão certidão civil
@@ -566,7 +572,7 @@ class indice extends clsCadastro
       'label'       => 'Cartório emissão',
       'value'       => $documentos['cartorio_cert_civil'],
       'cols'        => 45,
-      'max_length'  => 150
+      'max_length'  => 200,
     );
 
     $this->inputsHelper()->textArea('cartorio_emissao_certidao_civil', $options);
@@ -682,27 +688,25 @@ class indice extends clsCadastro
 
     $racas         = new clsCadastroRaca();
     $racas         = $racas->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL, TRUE);
-    $selectOptions = array(null => 'Selecione');
 
     foreach ($racas as $raca)
       $selectOptions[$raca['cod_raca']] = $raca['nm_raca'];
 
-    $selectOptions = Portabilis_Array_Utils::sortByValue($selectOptions);
+    $selectOptions = array(null => 'Selecione') + Portabilis_Array_Utils::sortByValue($selectOptions);
 
-    $this->campoLista('cor_raca', 'Raça', $selectOptions, $this->cod_raca, '', FALSE, '', '', '', FALSE);
+    $this->campoLista('cor_raca', 'Raça', $selectOptions, $this->cod_raca, '', FALSE, '', '', '', $obrigarCamposCenso);
 
 
     // nacionalidade
 
     // tipos
-    $tiposNacionalidade = array(null => 'Selecione',
-                                '1'  => 'Brasileiro',
+    $tiposNacionalidade = array('1'  => 'Brasileira',
                                 '2'  => 'Naturalizado brasileiro',
-                                '3'  => 'Estrangeiro');
+                                '3'  => 'Estrangeira');
 
     $options            = array('label'       => 'Nacionalidade',
                                 'resources'   => $tiposNacionalidade,
-                                'required'    => false,
+                                'required'    => $obrigarCamposCenso,
                                 'inline'      => true,
                                 'value'       => $this->tipo_nacionalidade);
 
@@ -925,10 +929,10 @@ class indice extends clsCadastro
                    2  => 'Rural');
 
     $options = array(
-      'label'       => 'Zona Localização',
+      'label'       => 'Zona localização',
       'value'       => $this->zona_localizacao_censo,
       'resources'   => $zonas,
-      'required'    => false
+      'required'    => $obrigarCamposCenso,
     );
 
     $this->inputsHelper()->select('zona_localizacao_censo', $options);
@@ -1234,15 +1238,23 @@ class indice extends clsCadastro
   }
 
   protected function createOrUpdate($pessoaIdOrNull = null) {
+    if (!$this->possuiDocumentoObrigatorio()) {
+      $this->mensagem = 'É necessário o preenchimento de pelo menos um dos seguintes documentos: CPF, RG ou Certidão civil.';
+      return false;
+    }
+
     if (! $this->validatesCpf($this->id_federal))
       return false;
-
 
     if (!$this->validatePhoto())
       return false;
 
     if (!$this->validaCertidao())
       return false;
+
+    if (!$this->validaNisPisPasep()) {
+      return false;
+    }
 
     $pessoaId = $this->createOrUpdatePessoa($pessoaIdOrNull);
     $this->savePhoto($pessoaId);
@@ -1302,6 +1314,18 @@ class indice extends clsCadastro
 
   }
 
+  function possuiDocumentoObrigatorio() {
+    $certidaoCivil = $this->termo_certidao_civil && $this->folha_certidao_civil && $this->livro_certidao_civil;
+    $certidaoNascimentoNovoFormato = $this->certidao_nascimento;
+    $certidaoCasamentoNovoFormato = $this->certidao_casamento;
+
+    return $this->id_federal ||
+           $this->rg ||
+           $certidaoCivil ||
+           $certidaoCasamentoNovoFormato ||
+           $certidaoNascimentoNovoFormato;
+  }
+
   protected function validaCertidao() {
     $certidaoNascimento = ($_REQUEST['tipo_certidao_civil'] == 'certidao_nascimento_novo_formato');
     $certidaoCasamento = ($_REQUEST['tipo_certidao_civil'] == 'certidao_casamento_novo_formato');
@@ -1314,6 +1338,15 @@ class indice extends clsCadastro
       return false;
     }
 
+    return true;
+  }
+
+  protected function validaNisPisPasep()
+  {
+    if ($this->nis_pis_pasep && strlen($this->nis_pis_pasep) != 11) {
+      $this->mensagem = 'O NIS (PIS/PASEP) da pessoa deve conter 11 dígitos.';
+      return false;
+    }
     return true;
   }
 
@@ -1442,7 +1475,7 @@ class indice extends clsCadastro
     $documentos->sigla_uf_cert_civil        = $_REQUEST['uf_emissao_certidao_civil'];
     $documentos->cartorio_cert_civil        = addslashes($_REQUEST['cartorio_emissao_certidao_civil']);
     $documentos->passaporte                 = addslashes($_REQUEST['passaporte']);
-    $documentos->cartorio_cert_civil_inep   = $_REQUEST['cartorio_cert_civil_inep'];
+    $documentos->cartorio_cert_civil_inep   = $_REQUEST['cartorio_cert_civil_inep_id'];
 
 
     // carteira de trabalho

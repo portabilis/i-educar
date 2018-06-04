@@ -117,14 +117,14 @@ class indice extends clsCadastro
                                  4 => "Deficiência auditiva",
                                  5 => "Surdocegueira",
                                  6 => "Deficiência física",
-                                 7 => "Deficiência Intelectual",
-                                 9 => "Autismo Infantil",
+                                 7 => "Deficiência intelectual",
+                                 9 => "Autismo infantil",
                                 10 => "Síndrome de Asperger",
                                 11 => "Síndrome de Rett",
                                 12 => "Transtorno desintegrativo da infância",
                                 13 => "Altas habilidades/Superdotação",);
 
-        $options = array('label' => Portabilis_String_Utils::toLatin1('Deficiência Educacenso'), 'resources' => $resources, 'value' => $this->deficiencia_educacenso);
+        $options = array('label' => Portabilis_String_Utils::toLatin1('Deficiência educacenso'), 'resources' => $resources, 'value' => $this->deficiencia_educacenso);
         $this->inputsHelper()->select('deficiencia_educacenso', $options);
 
     }

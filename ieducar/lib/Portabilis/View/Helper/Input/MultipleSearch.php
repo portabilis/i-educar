@@ -49,7 +49,8 @@ class Portabilis_View_Helper_Input_MultipleSearch extends Portabilis_View_Helper
                             'apiModule'         => 'Api',
                             'apiController'     => ucwords($objectName),
                             'apiResource'       => $objectName . '-search',
-                            'searchPath'         => '');
+                            'searchPath'         => '',
+                            'type' => 'multiple');
 
     $options = $this->mergeOptions($options, $defaultOptions);
 
@@ -100,7 +101,7 @@ class Portabilis_View_Helper_Input_MultipleSearch extends Portabilis_View_Helper
     $resourceOptions = "multipleSearch" . Portabilis_String_Utils::camelize($objectName) . "Options";
 
     $js = "$resourceOptions = typeof $resourceOptions == 'undefined' ? {} : $resourceOptions;
-           multipleSearchHelper.setup('$objectName', '$attrName', '" . $options['searchPath'] . "', $resourceOptions);";
+           multipleSearchHelper.setup('$objectName', '$attrName', '" . $options['type'] . "','" . $options['type'] . "', $resourceOptions);";
 
     // this script will be executed after the script for the current controller (if it was loaded in the view);
     Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js, $afterReady = true);

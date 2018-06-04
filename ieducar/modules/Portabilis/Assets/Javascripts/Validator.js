@@ -23,8 +23,8 @@ var validationUtils = {
     return allValid;
   },
 
-  validatesFields : function () {
-    return validatesPresenseOfValueInRequiredFields() &&
+  validatesFields : function (validateHiddenFields) {
+    return validatesPresenseOfValueInRequiredFields(undefined, undefined, validateHiddenFields) &&
            validationUtils.validatesDateFields();
   },
 
@@ -33,6 +33,23 @@ var validationUtils = {
 
     if (cpf.length != 11)
       return false;
+
+    var cpfsInvalidos = [
+      '00000000000',
+      '11111111111',
+      '22222222222',
+      '33333333333',
+      '44444444444',
+      '55555555555',
+      '66666666666',
+      '77777777777',
+      '88888888888',
+      '99999999999'
+    ];
+
+    if ($j.inArray(cpf,cpfsInvalidos) != -1) {
+      return false;
+    }
 
     var soma;
     var resto;
@@ -70,7 +87,7 @@ var validationUtils = {
   }
 };
 
-function validatesPresenseOfValueInRequiredFields(additionalFields, exceptFields) {
+function validatesPresenseOfValueInRequiredFields(additionalFields, exceptFields, validateHiddenFields) {
   var $emptyFields = [];
   requiredFields = $j('.obrigatorio:not(.skip-presence-validation)');
 
@@ -85,15 +102,19 @@ function validatesPresenseOfValueInRequiredFields(additionalFields, exceptFields
 
     if ($requiredField.length > 0 &&
         /*$requiredField.css('display') != 'none' &&*/
-        $requiredField.is(':visible')           &&
+        ($requiredField.is(':visible') || validateHiddenFields) &&
         $requiredField.is(':enabled')           &&
-        $requiredField.val() == ''              &&
+        ($requiredField.val() == '' || $requiredField.val() == null)               &&
         $j.inArray($requiredField[0], exceptFields) < 0) {
 
       $emptyFields.push($requiredField);
 
       if (! $requiredField.hasClass('error'))
         $requiredField.addClass('error');
+
+      if ($requiredField.is(':hidden,select')) {
+        $requiredField.parent().find('ul.chosen-choices').addClass('error');
+      }
 
       messageUtils.removeStyle($requiredField);
     }
@@ -104,7 +125,12 @@ function validatesPresenseOfValueInRequiredFields(additionalFields, exceptFields
   if ($emptyFields.length == 0)
     return true;
 
-  alert('Preencha os campos obrigat\u00F3rios, antes de continuar.');
+  let label = ($emptyFields[0].hasClass('simple-search-id') ? $j('#'+$emptyFields[0].attr('data-for')) : $emptyFields[0]).closest('tr').find('td:first span.form:first').text() || "";
+  if (label.length) {
+    alert(`Preencha o campo '${label}' corretamente`);
+  } else {
+    alert('Preencha os campos obrigat\u00F3rios, antes de continuar.');
+  }
   $emptyFields.first().focus();
   return false;
 }

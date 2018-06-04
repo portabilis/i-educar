@@ -471,7 +471,7 @@ class clsCampos extends Core_Controller_Page_Abstract
         );
     }
 
-    function campoHora($nome, $campo, $valor, $obrigatorio = FALSE, $descricao = '', $acao = '', $limitaHora = true)
+    function campoHora($nome, $campo, $valor, $obrigatorio = FALSE, $descricao = '', $acao = '', $limitaHora = true, $desabilitado = FALSE)
     {
         $arr_componente = array(
             'hora',
@@ -482,7 +482,8 @@ class clsCampos extends Core_Controller_Page_Abstract
             5,
             'hh:mm',
             $descricao,
-            $acao
+            $acao,
+            $desabilitado ? 'disabled="disabled"' : ''
         );
 
         if (!$this->__adicionando_tabela) {
@@ -679,7 +680,7 @@ class clsCampos extends Core_Controller_Page_Abstract
         $arr_componente = array(
             $duplo ? 'textoDuplo' : 'texto',
             $this->__adicionando_tabela ? $nome : $campo,
-            $obrigatorio ? "/^[0-9]+$/" : "*(/^[0-9]+$/)",
+            $obrigatorio ? "/^-?\\d*\\.{0,1}\\d+$/" : "*(/^-?\\d*\\.{0,1}\\d+$/)",
             $valor,
             $tamanhovisivel,
             $tamanhomaximo,
@@ -1323,7 +1324,7 @@ class clsCampos extends Core_Controller_Page_Abstract
 
                 $click = "$nome_add.removeRow(this);";
 
-                $img = "<img src=\"imagens/banco_imagens/excluirrr.png\" border=\"0\" alt=\"excluir\" />";
+                $img = "<img src=\"/intranet/imagens/banco_imagens/excluirrr.png\" border=\"0\" alt=\"excluir\" />";
                 $md2 = FALSE;
 
                 if (!count($valores)) {
@@ -1452,7 +1453,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                 $retorno .= '</tr>';
 
                 $click = "$nome_add.addRow();";
-                $img = "<img src=\"imagens/nvp_bot_novo.png\" border=\"0\" alt=\"incluir\" style=\"float:left; margin:5px;\" />";
+                $img = "<img src=\"/intranet/imagens/nvp_bot_novo.png\" border=\"0\" alt=\"incluir\" style=\"float:left; margin:5px;\" />";
                 $retorno .= "<tr id='adicionar_linha' style=\"background-color:#f5f9fd;\">";
                 $tt = $total_campos + 1;
                 $retorno .= "<td colspan='$tt' align='left' style='padding-top: 17px !important;'><a style=\"color: #47728f; text-decoration:none;\" href='javascript:void(0)' id='btn_add_$nome_add' onclick='$click' style='outline: none;'>$img <p style=\"padding:9px; margin:0;\">ADICIONAR NOVO<p></a></td>";
@@ -1636,7 +1637,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                                     $retorno .= "<img src=\"imagens/lupa.png\" alt=\"Pesquisa\" border=\"0\" onclick=\"pesquisa_valores_popless('{$componente[7]}', '{$nome}_{$inicio}')\">";
                                 }
 
-                                $retorno .= " {$componente[8]}</td><td id=\"td_adicionador_{$nome}_{$inicio}\" style=\"padding-left:30px;\"><img name=\"adicionador_{$nome}_{$inicio}\" id=\"adicionador_{$nome}_{$inicio}\" onclick=\"remove_{$nome}('{$inicio}');\" src=\"imagens/banco_imagens/excluirrr.png\" title=\"Excluir\" border=0></td></tr>";
+                                $retorno .= " {$componente[8]}</td><td id=\"td_adicionador_{$nome}_{$inicio}\" style=\"padding-left:30px;\"><img name=\"adicionador_{$nome}_{$inicio}\" id=\"adicionador_{$nome}_{$inicio}\" onclick=\"remove_{$nome}('{$inicio}');\" src=\"/intranet/imagens/banco_imagens/excluirrr.png\" title=\"Excluir\" border=0></td></tr>";
                                 $inclusos[] = $inicio;
 
                                 $inicio++;
@@ -1724,7 +1725,7 @@ class clsCampos extends Core_Controller_Page_Abstract
     id_antecessor = id - 1;
 
     img_ant     = document.getElementById('adicionador_{$nome}_' + id_antecessor);
-    img_ant.src = 'imagens/banco_imagens/excluirrr.png';
+    img_ant.src = '/intranet/imagens/banco_imagens/excluirrr.png';
 
     document.getElementById('adicionador_{$nome}_' + id_antecessor).onclick = function() { onclick=remove_{$nome}(this.name.substr(this.name.lastIndexOf( '_' ) + 1)); };
 
@@ -1765,7 +1766,7 @@ class clsCampos extends Core_Controller_Page_Abstract
 
                     case 'hora':
                         $componente[3] = strlen($componente[3]) < 6 ? $componente[3] : substr($componente[3], 0, 5);
-                        $retorno .= "<input onKeyPress=\"formataHora(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$componente[3]}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" {$componente[8]}>{$componente[7]}";
+                        $retorno .= "<input onKeyPress=\"formataHora(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$componente[3]}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" {$componente[8]} {$componente[9]}>{$componente[7]}";
                         break;
 
                     case 'cor':
@@ -1797,7 +1798,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                         }
 
                         $retorno .= "</select>";
-                        $retorno .= "<a href='#' class='imagem' onClick=\"receptor=document.formcadastro.{$nome};newwin=window.open('" . $componente[8] . "', '{$nome}_link', 'width=" . $componente[9] . ", height=" . $componente[10] . ", scollbars=false');\"> <img src='imagens/nvp_bot_novo.png' border=0 alt='" . $componente[7] . "'></a>";
+                        $retorno .= "<a href='#' class='imagem' onClick=\"receptor=document.formcadastro.{$nome};newwin=window.open('" . $componente[8] . "', '{$nome}_link', 'width=" . $componente[9] . ", height=" . $componente[10] . ", scollbars=false');\"> <img src='/intranet/imagens/nvp_bot_novo.png' border=0 alt='" . $componente[7] . "'></a>";
                         $retorno .= "
             <script type=\"text/javascript\">
             var receptor;
@@ -2047,11 +2048,9 @@ class clsCampos extends Core_Controller_Page_Abstract
                             } else {
                                 // option normal
                                 $retorno .= "<option id=\"{$nome}_" . urlencode($chave) . "\" value=\"" . urlencode($chave) . "\"";
-                                if (is_array($componente[4])) {
-                                    if ($chave == $componente[4][$adicionador_indice]) {
-                                        $retorno .= " selected";
-                                    }
-                                } elseif ($chave == $componente[4]) {
+                                $defaultValue = is_array($componente[4]) ? $componente[4][$adicionador_indice] : $componente[4];
+
+                                if (!is_null($defaultValue) && $defaultValue !== '' && $chave == $defaultValue) {
                                     $retorno .= " selected";
                                 }
 
@@ -2684,12 +2683,9 @@ class clsCampos extends Core_Controller_Page_Abstract
             } else {
                 // option normal
                 $retorno .= "<option id=\"{$nome}_" . urlencode($chave) . "\" value=\"" . urlencode($chave) . "\"";
+                $defaultValue = is_array($default) ? $default[$adicionador_indice] : $default;
 
-                if (is_array($default)) {
-                    if ($chave == $default[$adicionador_indice]) {
-                        $retorno .= " selected";
-                    }
-                } elseif ($chave == $default) {
+                if (!is_null($defaultValue) && $defaultValue !== '' && $chave == $defaultValue) {
                     $retorno .= " selected";
                 }
 

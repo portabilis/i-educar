@@ -33,6 +33,7 @@ require_once 'include/clsBase.inc.php';
 require_once 'include/clsDetalhe.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
+require_once 'lib/Portabilis/Date/Utils.php';
 
 require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
 require_once 'Educacenso/Model/DocenteDataMapper.php';
@@ -79,6 +80,7 @@ class indice extends clsDetalhe
   var $ref_cod_servidor_funcao = null;
   var $ref_cod_funcionario_vinculo = null;
   var $ano = null;
+  var $data_admissao = null;
   /**
    * Implementação do método Gerar()
    */
@@ -105,6 +107,7 @@ class indice extends clsDetalhe
     $this->ref_cod_servidor            = $registro['ref_cod_servidor'];
     $this->ref_cod_instituicao         = $registro['ref_ref_cod_instituicao'];
     $this->ref_cod_servidor_funcao     = $registro['ref_cod_servidor_funcao'];
+    $this->data_admissao = $registro['data_admissao'];
     $this->ref_cod_funcionario_vinculo = $registro['ref_cod_funcionario_vinculo'];
     $this->ano                         = $registro['ano'];
 
@@ -152,6 +155,10 @@ class indice extends clsDetalhe
       $funcionarioVinculo = $funcionarioVinculo->getNomeVinculo($registro['ref_cod_funcionario_vinculo']);
 
       $this->addDetalhe(array("Vinculo", "{$funcionarioVinculo}"));
+    }
+
+    if (!empty($this->data_admissao)) {
+      $this->addDetalhe(array("Data de admissão", Portabilis_Date_Utils::pgSQLToBr($this->data_admissao)));
     }
 
     $obj_permissoes = new clsPermissoes();

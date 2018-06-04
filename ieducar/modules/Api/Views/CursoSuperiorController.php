@@ -31,36 +31,53 @@
 
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 
+/**
+ * Class CursoSuperiorController
+ * @deprecated Essa versão da API pública será descontinuada
+ */
 class CursoSuperiorController extends ApiCoreController
 {
   // search options
 
   protected function sqlsForStringSearch() {
 
-    $sqls[] = "SELECT   id,
-                        (nome || ' / ' || (case grau_academico
-                                               when 1 then 'Tecnologo'
-                                               when 2 then 'Licenciatura'
-                                               when 3 then 'Bacharelado' end)) as name
-                from modules.educacenso_curso_superior 
-                WHERE nome ILIKE '%'||$1||'%'
+    $sqls[] = "SELECT id,
+                      curso_id,
+                      nome || ' / ' || coalesce((CASE grau_academico
+                                                      WHEN 1 THEN 'Tecnológico'
+                                                      WHEN 2 THEN 'Licenciatura'
+                                                      WHEN 3 THEN 'Bacharelado' END), '') AS name
+                 FROM modules.educacenso_curso_superior 
+                WHERE unaccent(nome) ILIKE '%'|| unaccent($1) ||'%'
+                   OR curso_id ILIKE '%'|| $1 ||'%'
                 LIMIT 15";
 
     return $sqls;
   }
 
-  protected function sqlsForNumericSearch() {
+  protected function formatResourceValue($resource) {
+    return $resource['curso_id'] . ' - ' . $this->toUtf8($resource['name'], array('transform' => true));
+  }
 
-    $sqls[] = "SELECT   id,
-                        (nome || ' / ' || (case grau_academico
-                                               when 1 then 'Tecnologo'
-                                               when 2 then 'Licenciatura'
-                                               when 3 then 'Bacharelado' end)) as name
-                from modules.educacenso_curso_superior
-                WHERE id = $1
-                LIMIT 15";
+  // sobrescrito para pesquisar apenas string, pois o codigo do curso possui letras
+  protected function loadResourcesBySearchQuery($query) {
+    $results      = array();
+    $sqls   = $this->sqlsForStringSearch();
+    $params = $this->sqlParams($query);
 
-    return $sqls;
+    if (! is_array($sqls))
+      $sqls = array($sqls);
+
+    foreach($sqls as $sql) {
+      $_results = $this->fetchPreparedQuery($sql, $params, false);
+
+      foreach($_results as $result) {
+        if (! isset($results[$result['id']]))
+          $results[$result['id']] = $this->formatResourceValue($result);
+      }
+    }
+
+    return $results;
   }
 
   protected function searchOptions() {

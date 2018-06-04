@@ -376,7 +376,7 @@ $pagina->addForm( $miolo );
 $pagina->MakeAll();
 ?>
 <script>
-<? echo "var anoAtual=".date("Y").";\n"; ?>
+<?php echo "var anoAtual=".date("Y").";\n"; ?>
 
 after_getEscola = function()
 {

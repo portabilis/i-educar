@@ -40,6 +40,10 @@ require_once 'Portabilis/Array/Utils.php';
 require_once 'Portabilis/String/Utils.php';
 require_once 'Portabilis/Date/Utils.php';
 
+/**
+ * Class PessoatransporteController
+ * @deprecated Essa versão da API pública será descontinuada
+ */
 class PessoatransporteController extends ApiCoreController
 {
   protected $_processoAp        = 21240; //verificar

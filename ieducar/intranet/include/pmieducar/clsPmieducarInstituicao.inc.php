@@ -42,6 +42,8 @@ class clsPmieducarInstituicao
     var $data_educacenso;
     var $exigir_dados_socioeconomicos;
     var $altera_atestado_para_declaracao;
+    var $obrigar_campos_censo;
+    var $orgao_regional;
 
     /**
      * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -119,7 +121,8 @@ class clsPmieducarInstituicao
         $percentagem_maxima_ocupacao_salas = null,
         $quantidade_alunos_metro_quadrado = null,
         $exigir_dados_socioeconomicos = null,
-        $altera_atestado_para_declaracao = null
+        $altera_atestado_para_declaracao = null,
+        $obrigar_campos_censo = NULL
     )
     {
         $db = new clsBanco();
@@ -167,7 +170,9 @@ class clsPmieducarInstituicao
                                                    bloqueia_matricula_serie_nao_seguinte,
                                                    permitir_carga_horaria,
                                                    exigir_dados_socioeconomicos,
-                                                   altera_atestado_para_declaracao";
+                                                   altera_atestado_para_declaracao,
+                                                   obrigar_campos_censo,
+                                                   orgao_regional";
 
         if (is_numeric($ref_usuario_cad)) {
             if (class_exists('clsPmieducarUsuario')) {
@@ -299,6 +304,10 @@ class clsPmieducarInstituicao
 
         if (is_bool($exigir_dados_socioeconomicos)) {
             $this->exigir_dados_socioeconomicos = $exigir_dados_socioeconomicos;
+        }
+
+        if (is_bool($obrigar_campos_censo)) {
+            $this->obrigar_campos_censo = $obrigar_campos_censo;
         }
     }
 
@@ -625,6 +634,22 @@ class clsPmieducarInstituicao
                 $gruda = ", ";
             }
 
+            if (dbBool($this->obrigar_campos_censo)) {
+                $campos .= "{$gruda}obrigar_campos_censo";
+                $valores .= "{$gruda} true ";
+                $gruda = ", ";
+            } else {
+                $campos .= "{$gruda}obrigar_campos_censo";
+                $valores .= "{$gruda} false ";
+                $gruda = ", ";
+            }
+
+            if (is_string($this->orgao_regional) AND !empty($this->orgao_regional)) {
+                $campos .= "{$gruda}orgao_regional";
+                $valores .= "{$gruda}'{$this->orgao_regional}'";
+                $gruda = ", ";
+            }
+
             $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
             return $db->InsertId("{$this->_tabela}_cod_instituicao_seq");
         }
@@ -904,6 +929,14 @@ class clsPmieducarInstituicao
                 $gruda = ", ";
             }
 
+            if (is_string($this->orgao_regional) AND !empty($this->orgao_regional)) {
+                $set .= "{$gruda}orgao_regional = '{$this->orgao_regional}'";
+                $gruda = ", ";
+            } else {
+                $set .= "{$gruda}orgao_regional = null ";
+                $gruda = ", ";
+            }
+
             if ($this->exigir_dados_socioeconomicos) {
                 $set .= "{$gruda}exigir_dados_socioeconomicos = true ";
                 $gruda = ", ";
@@ -917,6 +950,14 @@ class clsPmieducarInstituicao
                 $gruda = ", ";
             } else {
                 $set .= "{$gruda}altera_atestado_para_declaracao = false ";
+                $gruda = ", ";
+            }
+
+            if (dbBool($this->obrigar_campos_censo)) {
+                $set .= "{$gruda}obrigar_campos_censo = true ";
+                $gruda = ", ";
+            } else {
+                $set .= "{$gruda}obrigar_campos_censo = false ";
                 $gruda = ", ";
             }
 
@@ -1064,6 +1105,14 @@ class clsPmieducarInstituicao
 
         return false;
     }
+
+    public function primeiraAtiva()
+    {
+        $instituicoes = $this->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+                    NULL, NULL, NULL, NULL, NULL, NULL, TRUE);
+        return COUNT($instituicoes) ? $instituicoes[0] : NULL;
+    }
+
 
     /**
      * Retorna um array com os dados de um registro.

@@ -42,6 +42,10 @@ require_once 'lib/Portabilis/Utils/Database.php';
 require_once 'include/pmieducar/clsPmieducarEscolaUsuario.inc.php';
 require_once 'include/pmieducar/clsPermissoes.inc.php';
 
+/**
+ * Class EscolaController
+ * @deprecated Essa versão da API pública será descontinuada
+ */
 class EscolaController extends ApiCoreController
 {
   protected $_processoAp        = 561;
@@ -440,6 +444,18 @@ protected function getEscolaAnoLetivo(){
   return $ano[0];
 }
 
+protected function getDependenciaAdministrativaEscola(){
+  $escolaId    = $this->getRequest()->escola_id;
+
+  if(is_numeric($escolaId)){
+    $sql = "SELECT dependencia_administrativa
+              FROM pmieducar.escola
+             WHERE cod_escola = $1;";
+    $dependenciaAdministrativa = $this->fetchPreparedQuery($sql, array($escolaId), false, 'first-line');
+  }
+  return $dependenciaAdministrativa;
+}
+
   protected function getEscolasUsuarios() {
     $ref_cod_usuario = $this->getRequest()->id;
 
@@ -509,6 +525,9 @@ protected function getEscolaAnoLetivo(){
 
     elseif ($this->isRequestFor('get', 'escola-ano-letivo'))
       $this->appendResponse($this->getEscolaAnoLetivo());
+
+    elseif ($this->isRequestFor('get', 'escola-dependencia-administrativa'))
+      $this->appendResponse($this->getDependenciaAdministrativaEscola());
 
     elseif ($this->isRequestFor('get', 'escolas-usuario'))
       $this->appendResponse($this->getEscolasUsuarios());
