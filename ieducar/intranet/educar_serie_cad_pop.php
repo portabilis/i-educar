@@ -370,7 +370,7 @@ $pagina->addForm( $miolo );
 $pagina->MakeAll();
 ?>
 <script>
-<?
+<?php
 if (!$_GET['precisa_lista']) 
 {
 ?>
@@ -410,7 +410,7 @@ if (!$_GET['precisa_lista'])
         var xml_disciplina = new ajax( getDisciplina );
         xml_disciplina.envia( "educar_disciplina_xml.php?cur="+campoCurso );
     }
-<?
+<?php
 }
 else
 {

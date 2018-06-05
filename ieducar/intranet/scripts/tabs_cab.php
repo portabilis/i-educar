@@ -93,7 +93,7 @@ var bstyles = [
 
 var bmenuItems = [
 
-<?
+<?php
 $desabilitado_tab = $_GET['desabilitado_tab'];
 $desabilitado_tab = unserialize(stripslashes(urldecode($desabilitado_tab)));
 

@@ -549,7 +549,7 @@ function desabilitaCampos()
 }
 */
 
-<?
+<?php
 if ( $nivel_usuario == 1 || $nivel_usuario == 2 )
 {
 ?>
@@ -571,7 +571,7 @@ if ( $nivel_usuario == 1 || $nivel_usuario == 2 )
         else
             campoEscola.options[0].text = 'A instituição não possui nenhuma escola';
     }
-<?
+<?php
 }
 ?>
 
