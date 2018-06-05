@@ -29,6 +29,7 @@
  */
 
 require_once 'include/pmieducar/geral.inc.php';
+require_once 'lib/Utils/SafeJson.php';
 
 /**
  * clsPmieducarConfiguracoesGerais class.
@@ -234,7 +235,7 @@ class clsPmieducarConfiguracoesGerais
     }
 
     if (is_array($this->custom_labels)) {
-        $customLabels = json_encode($this->custom_labels);
+        $customLabels = SafeJson::encode($this->custom_labels);
         $set[] = "custom_labels = '{$customLabels}'";
     }
 
