@@ -1221,7 +1221,7 @@ class EducacensoAnaliseController extends ApiCoreController
                               "linkPath" => "/intranet/public_municipio_cad.php?idmun={$codMunicipio}",
                               "fail" => true);
         }
-        if ($aluno["possui_deficiencia"] && empty($aluno["recursos_prova_inep"])) {
+        if (dbBool($aluno["possui_deficiencia"]) && empty($aluno["recursos_prova_inep"])) {
           $mensagem[] = array("text" => "<span class='avisos-educacenso'><b>Aviso!</b> Dados para formular o registro 60 da escola {$nomeEscola} não encontrados. Verificamos que o(a) aluno(a) {$nomeAluno} possui uma(s) deficiência(s), porém nenhum recurso para a prova INEP foi selecionado.</span>",
                               "path" => "(Escola > Cadastros > Alunos > Cadastrar > Editar > Aba: Dados educacenso > Campo: Recursos prova INEP)",
                               "linkPath" => "/module/Cadastro/aluno?id={$codAluno}",
