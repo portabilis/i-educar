@@ -23,14 +23,11 @@ RUN add-apt-repository -y ppa:openjdk-r/ppa \
         wget \
         zlib1g-dev \
         software-properties-common \
+	&& a2enmod rewrite \
+	&& pear install XML_RPC2 Mail Net_SMTP Services_ReCaptcha \
     && apt-get clean \
     && apt-get purge --auto-remove -y \
     && rm -rf /var/lib/apt/lists/*
-
-RUN a2enmod rewrite
-
-RUN pear install XML_RPC2 Mail Net_SMTP Services_ReCaptcha
-
 COPY ieducar.conf /etc/apache2/sites-available/000-default.conf
 
 RUN echo "xdebug.remote_enable=on" >> /etc/php/7.0/apache2/conf.d/20-xdebug.ini \
