@@ -40,11 +40,7 @@ RUN add-apt-repository -y ppa:openjdk-r/ppa \
     && rm -rf /var/lib/apt/lists/*
 COPY ieducar.conf /etc/apache2/sites-available/000-default.conf
 
-
-
 EXPOSE 80
-
-
 
 COPY apache2-foreground /usr/local/bin/
 
