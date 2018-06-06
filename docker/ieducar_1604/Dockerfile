@@ -25,7 +25,7 @@ RUN apt-get -y update \
 	software-properties-common \
 	&& add-apt-repository -y ppa:openjdk-r/ppa \
 	&& apt-get update -y \
-	&& apt-get install openjdk-8-jdk \
+	&& apt-get install -y --no-install-recommends openjdk-8-jdk \
 	&& a2enmod rewrite \
 	&& pear install XML_RPC2 Mail Net_SMTP Services_ReCaptcha \
 	&& chown -R www-data:www-data /var/www \
