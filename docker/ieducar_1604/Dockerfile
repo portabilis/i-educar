@@ -25,6 +25,7 @@ RUN add-apt-repository -y ppa:openjdk-r/ppa \
         software-properties-common \
 	&& a2enmod rewrite \
 	&& pear install XML_RPC2 Mail Net_SMTP Services_ReCaptcha \
+	&& chown -R www-data:www-data /var/www
     && echo "xdebug.remote_enable=on" >> /etc/php/7.0/apache2/conf.d/20-xdebug.ini \
     && echo "xdebug.remote_autostart=off" >> /etc/php/7.0/apache2/conf.d/20-xdebug.ini \
     && echo "xdebug.remote_host=172.17.0.1" >> /etc/php/7.0/apache2/conf.d/20-xdebug.ini \
