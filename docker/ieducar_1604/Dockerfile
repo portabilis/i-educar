@@ -15,7 +15,6 @@ RUN apt-get -y update \
 	libapache2-mod-php \
 	libreadline7 \
 	make \
-	openjdk-8-jdk \
 	php-curl \
 	php-mbstring \
 	php-pear \
@@ -25,6 +24,8 @@ RUN apt-get -y update \
 	zlib1g-dev \
 	software-properties-common \
 	&& add-apt-repository -y ppa:openjdk-r/ppa \
+	&& apt-get update -y \
+	&& apt-get install openjdk-8-jdk \
 	&& a2enmod rewrite \
 	&& pear install XML_RPC2 Mail Net_SMTP Services_ReCaptcha \
 	&& chown -R www-data:www-data /var/www \
