@@ -1,17 +1,48 @@
 {
-  "name": "i-Educar",
+  "name": "portabilis/i-educar",
   "description": "Software livre de gestão escolar",
   "type": "project",
   "license": "GPL-2.0-or-later",
-  "config": {
-    "vendor-dir": "ieducar/vendor"
-  },
+  "keywords": [
+    "Portabilis",
+    "Ieducar"
+  ],
+  "homepage": "https://github.com/portabilis/i-educar",
   "require": {
+    "php": "~7.0",
     "portabilis/jasperphp": "v1.2.0",
     "robmorgan/phinx": "v0.8.1",
     "gilbitron/php-simplecache": "^1.4",
     "swiftmailer/swiftmailer": "^6.0",
     "cocur/slugify": "^3.1",
     "google/recaptcha": "~1.1"
+  },
+  "require-dev": {
+    "friendsofphp/php-cs-fixer": "^2.12",
+    "phpunit/phpunit": "~6.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "Ieducar\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Ieducar\\": "tests"
+    }
+  },
+  "scripts": {
+    "test": "phpunit",
+    "check-style": "ieducar/vendor/bin/php-cs-fixer --diff --dry-run --verbose fix",
+    "fix-style": "ieducar/vendor/bin/php-cs-fixer fix"
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.0-dev"
+    }
+  },
+  "config": {
+    "sort-packages": true,
+    "vendor-dir": "ieducar/vendor"
   }
 }
