@@ -44,7 +44,6 @@ COPY ieducar.conf /etc/apache2/sites-available/000-default.conf
 EXPOSE 80
 
 RUN mkdir -p /home/portabilis/ieducar \
-    && chmod 777 -R /home/portabilis/ieducar
 
 WORKDIR /home/portabilis/ieducar
 
