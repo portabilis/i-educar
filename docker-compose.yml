@@ -4,8 +4,6 @@ ieducar_1604:
     - CORE_EXT_CONFIGURATION_ENV=development
   ports:
     - "8001:80"
-  volumes:
-    - .:/home/portabilis/ieducar
   links:
     - postgres_95
   container_name: ieducar_1604
