@@ -4,6 +4,8 @@ LABEL maintainer="Caroline Salib <caroline@portabilis.com.br>, Everton Muniz <ev
 
 ENV DEBIAN_FRONTEND=noninteractive
 
+COPY . /var/www/html/i-educar/
+
 RUN add-apt-repository -y ppa:openjdk-r/ppa \
 	&& apt-get -y update \
     && apt-get install -y --no-install-recommends \
@@ -38,6 +40,7 @@ RUN add-apt-repository -y ppa:openjdk-r/ppa \
     && apt-get clean \
     && apt-get purge --auto-remove -y \
     && rm -rf /var/lib/apt/lists/*
+
 COPY ieducar.conf /etc/apache2/sites-available/000-default.conf
 
 EXPOSE 80
