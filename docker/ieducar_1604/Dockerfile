@@ -6,7 +6,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 COPY . /var/www/html/i-educar/
 
-	&& apt-get -y update \
+RUN apt-get -y update \
 	&& apt-get install -y --no-install-recommends \
 	apache2 \
 	curl \
