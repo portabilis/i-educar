@@ -1,3 +1,5 @@
+**Atenção:** Este projeto é mantido no [repositório comunitário](https://softwarepublico.gov.br/gitlab/i-educar/i-educar/), favor publicar suas contribuições através [deste repositório](https://softwarepublico.gov.br/gitlab/i-educar/i-educar/).
+
 # i-Educar
 
 _“Lançando o maior software livre educacional do Brasil!”._
