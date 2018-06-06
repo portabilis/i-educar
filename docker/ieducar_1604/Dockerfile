@@ -6,7 +6,6 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 COPY . /var/www/html/i-educar/
 
-RUN add-apt-repository -y ppa:openjdk-r/ppa \
 	&& apt-get -y update \
 	&& apt-get install -y --no-install-recommends \
 	apache2 \
@@ -25,6 +24,7 @@ RUN add-apt-repository -y ppa:openjdk-r/ppa \
 	wget \
 	zlib1g-dev \
 	software-properties-common \
+	&& add-apt-repository -y ppa:openjdk-r/ppa \
 	&& a2enmod rewrite \
 	&& pear install XML_RPC2 Mail Net_SMTP Services_ReCaptcha \
 	&& chown -R www-data:www-data /var/www \
