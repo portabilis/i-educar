@@ -4,7 +4,8 @@ LABEL maintainer="Caroline Salib <caroline@portabilis.com.br>, Everton Muniz <ev
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get -y update \
+RUN add-apt-repository -y ppa:openjdk-r/ppa \
+	&& apt-get -y update \
     && apt-get install -y --no-install-recommends \
         apache2 \
         php7.0 \
