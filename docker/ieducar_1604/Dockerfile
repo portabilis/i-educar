@@ -8,23 +8,23 @@ RUN add-apt-repository -y ppa:openjdk-r/ppa \
 	&& apt-get -y update \
     && apt-get install -y --no-install-recommends \
         apache2 \
-        php7.0 \
-        libapache2-mod-php7.0 \
-        php7.0-pgsql \
-        php-pear \
-        php-zip \
-        php7.0-curl \
-        rpl \
-        wget \
+        gcc \
         git \
-        php-xdebug \
-        php-mbstring \
+        libapache2-mod-php7.0 \
         libreadline6 \
         libreadline6-dev \
         make \
-        gcc \
-        zlib1g-dev \
         openjdk-8-jre \
+        php-mbstring \
+        php-pear \
+        php-xdebug \
+        php-zip \
+        php7.0 \
+        php7.0-curl \
+        php7.0-pgsql \
+        rpl \
+        wget \
+        zlib1g-dev \
     && apt-get clean \
     && apt-get purge --auto-remove -y \
     && rm -rf /var/lib/apt/lists/*
