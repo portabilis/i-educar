@@ -53,6 +53,7 @@ class NotificationMailer extends Portabilis_Mailer
                        "  LINHA {$lastError['line']} em {$lastError['file']}\n" .
                        "  SQL: {$sql}\n" .
                        "  ID USUÁRIO {$userId}\n" .
+                       "  TRACE: \n $trace \n" .
                        "\n\n-\n\n" .
                        "Você recebeu este email pois seu email foi configurado para receber " .
                        "notificações de erros.";
@@ -69,6 +70,7 @@ class NotificationMailer extends Portabilis_Mailer
             $user = $this->tryLoadUser();
             $to = $this->notificationEmail();
             $subject = "[Erro inesperado] i-Educar - " . $this->host();
+            $trace = $this->stackTrace();
 
             $message = "Olá!\n\n" .
                        "Ocorreu um erro inesperado, detalhes abaixo:\n\n" .
@@ -76,6 +78,7 @@ class NotificationMailer extends Portabilis_Mailer
                        "  ERRO PHP: ' . {$lastError['message']}\n" .
                        "  LINHA {$lastError['line']} em {$lastError['file']}\n" .
                        "  USUÁRIO {$user['matricula']} email {$user['email']}\n" .
+                       "  TRACE: \n $trace \n" .
                        "\n\n-\n\n" .
                        "Você recebeu este email pois seu email foi configurado para receber " .
                        "notificações de erros.";
