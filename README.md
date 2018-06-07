@@ -27,7 +27,7 @@ para levar o i-Educar ainda mais longe. (Leia aqui o manifesto:
 
 No sentido desta iniciativa, está a proposta de acabar com a defasagem da versão
 aberta e aumentar a aproximação com os seus usuários. No dia 31 de janeiro, a
-Portabilis anunciou o apoio da Fundaço Lemann para potencializar todos esses
+Portabilis anunciou o apoio da Fundação Lemann para potencializar todos esses
 objetivos (Saiba mais aqui:
 [Preparação do lançamento do maior software livre educacional do Brasil!](https://medium.com/portabilis/prepara%C3%A7%C3%A3o-do-lan%C3%A7amento-do-maior-software-educacional-open-source-do-brasil-305e57143372)).
 
@@ -77,7 +77,7 @@ para `ieducar/configuration/ieducar.ini` realizando as alterações necessárias
 
 ### Instalando relatórios
 
-Os relatórios respondem por uma parte muito importante o i-Educar mas o
+Os relatórios respondem por uma parte muito importante no i-Educar mas o
 desenvolvimento destes relatórios ocorre de forma paralela em outro repositório.
 Por isso, antes de prosseguir, é necessário "instalar" os relatórios em conjunto
 com o i-Educar. Execute o seguinte comando a partir da pasta onde o i-Educar foi
@@ -101,13 +101,13 @@ $ docker-compose exec ieducar_1604 composer install
 
 O próximo passo é inicializar o banco de dados do i-Educar. Nós utilizamos o
 [Phinx](https://phinx.org/) para executar migrações e preencher os dados em
-nosso banco. O Phinx já é instalado como dependência através do composer no
+nosso banco. O Phinx já é instalado como dependência através do Composer no
 passo anterior, mas é necessário configurá-lo antes de executar qualquer
 comando.
 
 Na raiz do projeto você encontra um arquivo chamado `phinx.php.sample`. Copie
 este arquivo e altere seu nome para `phinx.php`. Verifique seu conteúdo e,
-caso tenha feito alguma mudança na configuração do docker, modifique as
+caso tenha feito alguma mudança na configuração do Docker, modifique as
 credenciais do banco de acordo com suas alterações. Caso contrário o arquivo
 estará pronto para ser utilizado.
 

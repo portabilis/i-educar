@@ -32,6 +32,7 @@
 require_once 'lib/Portabilis/View/Helper/Input/MultipleSearch.php';
 require_once 'lib/Portabilis/Utils/Database.php';
 require_once 'lib/Portabilis/String/Utils.php';
+require_once 'lib/Utils/SafeJson.php';
 
 /**
  * Portabilis_View_Helper_Input_MultipleSearchCustom class.
@@ -64,7 +65,7 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchCustom extends Portabi
     $js             = "if (typeof $optionsVarName == 'undefined') { $optionsVarName = {} };
                        $optionsVarName.placeholder = safeUtf8Decode('Selecione');";
 
-    $json = json_encode($options['options']['options']['values']);
+    $json = SafeJson::encode($options['options']['options']['values']);
 
     $js .= 'arrayOptions.push({element : $j("#'. $options['objectName'] .'"),values : '. $json .'})';
 
