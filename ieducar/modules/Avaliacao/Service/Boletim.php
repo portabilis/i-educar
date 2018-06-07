@@ -1433,10 +1433,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
        $mediaGeral = $this->getMediasGerais();
 
-      if (0 == count($mediasGerais)) {
-        $situacaoGeral = App_Model_MatriculaSituacao::EM_ANDAMENTO;
-      }
-
       if ($this->getRegra()->get('tipoNota') == RegraAvaliacao_Model_Nota_TipoValor::NUMERICA) {
         $media = $mediaGeral->mediaArredondada;
       }
@@ -1466,6 +1462,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       }
 
       foreach($mediasComponentes as $id => $mediaComponente){
+        $situacao->componentesCurriculares[$id] = new stdClass();
         $situacao->componentesCurriculares[$id]->situacao = $situacaoGeral;
       }
 
@@ -1496,6 +1493,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     $qtdComponenteReprovado = 0;
     $qtdComponentes = 0;
     $somaMedias = 0;
+    $media = 0;
     $turmaId = $this->getOption('ref_cod_turma');
     foreach ($mediasComponentes as $id => $mediaComponente) {
 
