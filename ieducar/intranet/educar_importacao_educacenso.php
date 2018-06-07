@@ -530,6 +530,7 @@ class indice extends clsCadastro
 
     $modalidadeEnsinoCenso = $dadosRegistro[37-1];
     $etapaEnsinoCenso = $dadosRegistro[38-1];
+    $tipoAtendimento = $dadosRegistro[18-1];
     $codEscola = $this->existeEscola($inepEscola);
 
     if($codEscola){
@@ -541,8 +542,8 @@ class indice extends clsCadastro
       if(!$codTurma){
 
         $codTurmaTipo = $this->getOrCreateTurmaTipo();
-        $codCurso = $this->getOrCreateCurso($etapaEnsinoCenso, $codEscola, $modalidadeEnsinoCenso);
-        $codSerie = $this->getOrCreateSerie($etapaEnsinoCenso, $codEscola, $codCurso);
+        $codCurso = $this->getOrCreateCurso($etapaEnsinoCenso, $codEscola, $modalidadeEnsinoCenso, $tipoAtendimento);
+        $codSerie = $this->getOrCreateSerie($etapaEnsinoCenso, $codEscola, $codCurso, $tipoAtendimento);
 
         $turma = new clsPmieducarTurma();
         $turma->ref_cod_instituicao = $this->ref_cod_instituicao;
@@ -705,9 +706,19 @@ class indice extends clsCadastro
     return $codTurmaTipo;
   }
 
-  function getOrCreateSerie($etapaEnsinoCenso, $codEscola, $codCurso){
+  function getOrCreateSerie($etapaEnsinoCenso, $codEscola, $codCurso, $tipoAtendimento){
+    $atividadeComplementar = $tipoAtendimento == 4;
+    $atendimentoEspecializado = $tipoAtendimento == 5;
     $dadosSerie = $this->etapasCenso[$etapaEnsinoCenso];
     $codSerie = null;
+
+    if ($atividadeComplementar) {
+      $dadosCurso = $this->etapasCenso['atividade_complementar'];
+    }
+
+    if ($atendimentoEspecilizado) {
+      $dadosCurso = $this->etapasCenso['atendimento_educacional_especializado'];
+    }
 
     $series = new clsPmieducarSerie();
     $series = $series->lista(null, null, null, $codCurso, null, $dadosSerie['etapa'], null, null, null, null, null, null, 1, $this->ref_cod_instituicao);
@@ -746,9 +757,19 @@ class indice extends clsCadastro
     return $codSerie;
   }
 
-  function getOrCreateCurso($etapaEnsinoCenso, $codEscola, $modalidade){
+  function getOrCreateCurso($etapaEnsinoCenso, $codEscola, $modalidade, $tipoAtendimento){
+    $atividadeComplementar = $tipoAtendimento == 4;
+    $atendimentoEspecializado = $tipoAtendimento == 5;
     $dadosCurso = $this->etapasCenso[$etapaEnsinoCenso];
 
+    if ($atividadeComplementar) {
+      $dadosCurso = $this->etapasCenso['atividade_complementar'];
+    }
+
+    if ($atendimentoEspecilizado) {
+      $dadosCurso = $this->etapasCenso['atendimento_educacional_especializado'];
+    }
+    
     $codCurso = $this->getCurso($dadosCurso['curso']);
 
     if (!$codCurso) {
@@ -782,8 +803,7 @@ class indice extends clsCadastro
         $vinculo->cadastra();
       }
     }
-
-
+ 
     return $codCurso;
   }
 
@@ -1912,9 +1932,16 @@ class indice extends clsCadastro
   }
 
   private $etapasCenso = array(
-      0 => array(
+      'atividade_complementar' => array(
         'curso' => "Atividade complementar",
         'serie' => "Atividade complementar",
+        'etapa' => 1,
+        'etapas' => 1,
+        'nivel' => 'Outros'
+      ),
+      'atendimento_educacional_especializado' => array(
+        'curso' => "Atendimento educacional especializado (AEE)",
+        'serie' => "Atendimento educacional especializado (AEE)",
         'etapa' => 1,
         'etapas' => 1,
         'nivel' => 'Outros'
