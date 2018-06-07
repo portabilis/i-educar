@@ -951,6 +951,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE
     );
 
+    $pareceres = [];
+
     if (in_array($parecerDescritivo, $gerais)) {
       $pareceres = $this->getPareceresGerais();
     }
