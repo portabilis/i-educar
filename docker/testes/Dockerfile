@@ -13,3 +13,5 @@ RUN apt-get update -y \
 	&& php composer.phar install
 
 WORKDIR /var/www/html/i-educar/ieducar/vendor/bin
+
+CMD [ "phpunit -c phpunit.xml" ]
