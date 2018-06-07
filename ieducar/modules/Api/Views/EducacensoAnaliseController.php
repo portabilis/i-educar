@@ -1144,7 +1144,7 @@ class EducacensoAnaliseController extends ApiCoreController
                    municipio.cod_ibge AS municipio_inep,
                    municipio.idmun AS idmun,
                    aluno.cod_aluno AS cod_aluno,
-                   aluno.recursos_prova_inep[0] AS recursos_prova_inep,
+                   aluno.recursos_prova_inep[1] AS recursos_prova_inep,
                    EXISTS (SELECT 1
                              FROM cadastro.fisica_deficiencia fd,
                                   cadastro.deficiencia d
