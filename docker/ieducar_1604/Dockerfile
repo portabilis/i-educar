@@ -30,7 +30,7 @@ RUN apt-get -y update \
 
 RUN a2enmod rewrite
 
-RUN pear install XML_RPC2 Mail Net_SMTP Services_ReCaptcha
+RUN pear install XML_RPC2 Services_ReCaptcha
 
 COPY ieducar.conf /etc/apache2/sites-available/000-default.conf
 
