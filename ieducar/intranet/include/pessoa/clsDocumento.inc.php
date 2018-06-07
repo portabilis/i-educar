@@ -67,33 +67,81 @@ class clsDocumento
     var $schema = "cadastro";
 
     /**
-     * Construtor
+     * clsDocumento constructor.
      *
-     * @return Object:clsDocumento
+     * @param bool $int_idpes
+     * @param bool $int_rg
+     * @param bool $str_data_exp_rg
+     * @param bool $str_sigla_uf_exp_rg
+     * @param bool $int_tipo_cert_civil
+     * @param bool $int_num_termo
+     * @param bool $int_num_livro
+     * @param bool $int_num_folha
+     * @param bool $str_data_emissao_cert_civil
+     * @param bool $str_sigla_uf_cert_civil
+     * @param bool $str_cartorio_cert_civil
+     * @param bool $int_num_cart_trabalho
+     * @param bool $int_serie_cart_trabalho
+     * @param bool $str_data_emissao_cart_trabalho
+     * @param bool $str_sigla_uf_cart_trabalho
+     * @param bool $int_num_tit_eleitor
+     * @param bool $int_zona_tit_eleitor
+     * @param bool $int_secao_tit_eleitor
+     * @param bool $int_idorg_exp_rg
+     * @param null $str_certidao_nascimento
+     * @param null $str_certidao_casamento
+     * @param null $str_passaporte
+     * @param null $str_comprovante_residencia
+     * @param null $str_declaracao_trabalho_autonomo
      */
-    function __construct( $int_idpes = false, $int_rg = false, $str_data_exp_rg = false, $str_sigla_uf_exp_rg = false, $int_tipo_cert_civil = false, $int_num_termo = false, $int_num_livro = false, $int_num_folha = false, $str_data_emissao_cert_civil = false, $str_sigla_uf_cert_civil = false, $str_cartorio_cert_civil = false, $int_num_cart_trabalho = false, $int_serie_cart_trabalho = false, $str_data_emissao_cart_trabalho = false, $str_sigla_uf_cart_trabalho = false, $int_num_tit_eleitor = false, $int_zona_tit_eleitor = false, $int_secao_tit_eleitor = false, $int_idorg_exp_rg = false, $str_certidao_nascimento = null, $str_certidao_casamento = null, $str_passaporte, $str_comprovante_residencia = null, $str_declaracao_trabalho_autonomo = null)
-    {
+    public function __construct(
+        $int_idpes = false,
+        $int_rg = false,
+        $str_data_exp_rg = false,
+        $str_sigla_uf_exp_rg = false,
+        $int_tipo_cert_civil = false,
+        $int_num_termo = false,
+        $int_num_livro = false,
+        $int_num_folha = false,
+        $str_data_emissao_cert_civil = false,
+        $str_sigla_uf_cert_civil = false,
+        $str_cartorio_cert_civil = false,
+        $int_num_cart_trabalho = false,
+        $int_serie_cart_trabalho = false,
+        $str_data_emissao_cart_trabalho = false,
+        $str_sigla_uf_cart_trabalho = false,
+        $int_num_tit_eleitor = false,
+        $int_zona_tit_eleitor = false,
+        $int_secao_tit_eleitor = false,
+        $int_idorg_exp_rg = false,
+        $str_certidao_nascimento = null,
+        $str_certidao_casamento = null,
+        $str_passaporte = null,
+        $str_comprovante_residencia = null,
+        $str_declaracao_trabalho_autonomo = null
+    ) {
         $objPessoa = new clsFisica($int_idpes);
-        if($objPessoa->detalhe())
-        {
+
+        if ($objPessoa->detalhe()) {
             $this->idpes= $int_idpes;
         }
 
         $this->rg = $int_rg;
         $this->data_exp_rg = $str_data_exp_rg;
         $objUj = new clsUf($str_sigla_uf_exp_rg);
-        if($objUj->detalhe())
-        {
+
+        if ($objUj->detalhe()) {
             $this->sigla_uf_exp_rg = $str_sigla_uf_exp_rg;
         }
+
         $this->tipo_cert_civil = $int_tipo_cert_civil;
         $this->num_termo = $int_num_termo;
         $this->num_livro = $int_num_livro;
         $this->num_folha = $int_num_folha;
         $this->data_emissao_cert_civil = $str_data_emissao_cert_civil;
         $objUj = new clsUf($str_sigla_uf_cert_civil);
-        if($objUj->detalhe())
-        {
+
+        if($objUj->detalhe()) {
             $this->sigla_uf_cert_civil= $str_sigla_uf_cert_civil;
         }
 
@@ -103,8 +151,8 @@ class clsDocumento
         $this->data_emissao_cart_trabalho = $str_data_emissao_cart_trabalho;
 
         $objUj = new clsUf($str_sigla_uf_cart_trabalho);
-        if($objUj->detalhe())
-        {
+
+        if ($objUj->detalhe()) {
             $this->sigla_uf_cart_trabalho= $str_sigla_uf_cart_trabalho;
         }
 
@@ -113,16 +161,16 @@ class clsDocumento
         $this->secao_tit_eleitor = $int_secao_tit_eleitor;
 
         $objOrgEmisRg = new clsOrgaoEmissorRg($int_idorg_exp_rg);
-        if ($objOrgEmisRg->detalhe())
-        {
+
+        if ($objOrgEmisRg->detalhe()) {
             $this->idorg_exp_rg = $int_idorg_exp_rg;
         }
 
-    $this->certidao_nascimento = $str_certidao_nascimento;
-    $this->certidao_casamento = $str_certidao_casamento;
-    $this->passaporte = $str_passaporte;
-    $this->comprovante_residencia = $str_comprovante_residencia;
-    $this->declaracao_trabalho_autonomo = $str_declaracao_trabalho_autonomo;
+        $this->certidao_nascimento = $str_certidao_nascimento;
+        $this->certidao_casamento = $str_certidao_casamento;
+        $this->passaporte = $str_passaporte;
+        $this->comprovante_residencia = $str_comprovante_residencia;
+        $this->declaracao_trabalho_autonomo = $str_declaracao_trabalho_autonomo;
 
         $this->tabela = "documento";
     }
