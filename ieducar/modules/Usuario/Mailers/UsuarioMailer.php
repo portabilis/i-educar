@@ -37,7 +37,7 @@ class UsuarioMailer extends Portabilis_Mailer
     public function updatedPassword($user, $link)
     {
         $to = $user->email;
-        $subject = "Sua senha foi alterada - i-Educar - " . self::host();
+        $subject = "Sua senha foi alterada - i-Educar - " . $this->host();
 
         $message = "Olá!\n\n" .
                    "A senha da matrícula '{$user->matricula}' foi alterada recentemente.\n\n" .
@@ -52,7 +52,7 @@ class UsuarioMailer extends Portabilis_Mailer
     public function passwordReset($user, $link)
     {
         $to = $user->email;
-        $subject = "Redefinição de senha - i-Educar - " . self::host();
+        $subject = "Redefinição de senha - i-Educar - " . $this->host();
 
         $message = "Olá!\n\n" .
                    "Recebemos uma solicitação de redefinição de senha para a matrícula {$user->matricula}.\n\n" .
