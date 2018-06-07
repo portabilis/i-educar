@@ -286,7 +286,7 @@ class clsControlador
     if (! $this->atingiuTentativasLogin())
       $result = true;
 
-    elseif (Portabilis_Utils_ReCaptcha::getWidget()->validate()) {
+    elseif (Portabilis_Utils_ReCaptcha::check($_POST['g-recaptcha-response'])) {
       $this->unsetTentativasLogin();
       $result = true;
     }
