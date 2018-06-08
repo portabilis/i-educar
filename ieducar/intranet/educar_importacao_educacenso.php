@@ -711,11 +711,11 @@ class indice extends clsCadastro
     $codSerie = null;
 
     if ($this->isAtividadeComplementar($tipoAtendimento)) {
-      $dadosCurso = $this->etapasCenso['atividade_complementar'];
+      $dadosSerie = $this->etapasCenso['atividade_complementar'];
     }
 
     if ($this->isAtendimentoEspecializado($tipoAtendimento)) {
-      $dadosCurso = $this->etapasCenso['atendimento_educacional_especializado'];
+      $dadosSerie = $this->etapasCenso['atendimento_educacional_especializado'];
     }
 
     $series = new clsPmieducarSerie();
