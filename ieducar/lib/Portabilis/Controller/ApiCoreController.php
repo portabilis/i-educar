@@ -44,6 +44,7 @@ require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/Utils/Database.php';
 require_once 'lib/Portabilis/String/Utils.php';
 require_once 'lib/Portabilis/Utils/User.php';
+require_once 'lib/Utils/SafeJson.php';
 
 class ApiCoreController extends Core_Controller_Page_EditController
 {
@@ -255,14 +256,14 @@ class ApiCoreController extends Core_Controller_Page_EditController
       $this->appendResponse('msgs', $this->messenger->getMsgs());
       $this->appendResponse('any_error_msg', $this->messenger->hasMsgWithType('error'));
 
-      $response = json_encode($this->response);
+      $response = SafeJson::encode($this->response);
     }
     catch (Exception $e){
       error_log("Erro inesperado no metodo prepareResponse da classe ApiCoreController: {$e->getMessage()}");
       $response = array('msgs' => array('msg' => 'Erro inesperado no servidor. Por favor, tente novamente.',
                         'type' => 'error'));
 
-      $response = json_encode($response);
+      $response = SafeJson::encode($response);
     }
 
     echo $response;
