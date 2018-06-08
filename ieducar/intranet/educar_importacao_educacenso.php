@@ -707,16 +707,14 @@ class indice extends clsCadastro
   }
 
   function getOrCreateSerie($etapaEnsinoCenso, $codEscola, $codCurso, $tipoAtendimento){
-    $atividadeComplementar = $tipoAtendimento == 4;
-    $atendimentoEspecializado = $tipoAtendimento == 5;
     $dadosSerie = $this->etapasCenso[$etapaEnsinoCenso];
     $codSerie = null;
 
-    if ($atividadeComplementar) {
+    if ($this->isAtividadeComplementar($tipoAtendimento)) {
       $dadosCurso = $this->etapasCenso['atividade_complementar'];
     }
 
-    if ($atendimentoEspecilizado) {
+    if ($this->isAtendimentoEspecializado($tipoAtendimento)) {
       $dadosCurso = $this->etapasCenso['atendimento_educacional_especializado'];
     }
 
@@ -758,15 +756,13 @@ class indice extends clsCadastro
   }
 
   function getOrCreateCurso($etapaEnsinoCenso, $codEscola, $modalidade, $tipoAtendimento){
-    $atividadeComplementar = $tipoAtendimento == 4;
-    $atendimentoEspecializado = $tipoAtendimento == 5;
     $dadosCurso = $this->etapasCenso[$etapaEnsinoCenso];
 
-    if ($atividadeComplementar) {
+    if ($this->isAtividadeComplementar($tipoAtendimento)) {
       $dadosCurso = $this->etapasCenso['atividade_complementar'];
     }
 
-    if ($atendimentoEspecilizado) {
+    if ($this->isAtendimentoEspecializado($tipoAtendimento)) {
       $dadosCurso = $this->etapasCenso['atendimento_educacional_especializado'];
     }
     
@@ -1929,6 +1925,14 @@ class indice extends clsCadastro
              WHERE cod_escola_inep = {$inep}";
 
     return Portabilis_Utils_Database::selectField($sql);
+  }
+
+  function isAtividadeComplementar($tipoAtendimento) {
+    return $tipoAtendimento == 4;
+  }
+
+  function isAtendimentoEspecializado($tipoAtendimento) {
+    return $tipoAtendimento == 5;
   }
 
   private $etapasCenso = array(
