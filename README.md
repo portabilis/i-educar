@@ -67,7 +67,7 @@ Depois de ter o Docker e git instalados faça o clone deste repositório e execu
 o Docker Compose para criar os containers da aplicação:
 
 ```terminal
-$ git clone git@github.com:portabilis/i-educar.git i-educar
+$ git clone https://github.com/portabilis/i-educar.git i-educar
 $ cd i-educar
 $ docker-compose up -d
 ```
@@ -84,7 +84,7 @@ com o i-Educar. Execute o seguinte comando a partir da pasta onde o i-Educar foi
 clonado em sua máquina:
 
 ```terminal
-$ git clone git@github.com:portabilis/i-educar-reports-package.git ieducar/modules/Reports
+$ git clone https://github.com/portabilis/i-educar-reports-package.git ieducar/modules/Reports
 ```
 
 ### Instalando outras dependências
