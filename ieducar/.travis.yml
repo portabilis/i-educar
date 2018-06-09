@@ -1,0 +1,9 @@
+sudo: required
+
+services:
+  - docker
+
+before_install:
+  - docker build -t unit-tests docker/testes/.
+  - docker run -d unit-test
+  - docker ps -a
