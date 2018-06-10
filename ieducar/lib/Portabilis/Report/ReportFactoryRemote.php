@@ -28,7 +28,6 @@
  * @version   $Id$
  */
 
-// requer a biblioteca XML_RPC2, ver /scripts/install_pear_packages.sh
 require_once 'XML/RPC2/Client.php';
 
 require_once 'lib/Portabilis/Report/ReportFactory.php';

@@ -28,7 +28,6 @@
  * @version   $Id$
  */
 
-// requer a biblioteca Services_ReCaptcha, ver /scripts/install_pear_packages.sh
 require_once 'Services/ReCaptcha.php';
 
 /**
