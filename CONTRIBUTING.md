@@ -47,7 +47,7 @@ Não se aplica.
 
 ```
 
-Se possível inclua imagens ou vídeos à descrição do bug para facilitar o processo de reprodução. Use um software como [LICEcap](https://www.cockos.com/licecap/) para criar um gif animado de sua tela. Você também deve adicionar o label **bug** à issue.
+Se possível inclua imagens ou vídeos à descrição do bug para facilitar o processo de reprodução. Use um software como [LICEcap](https://www.cockos.com/licecap/) para criar um gif animado de sua tela. Informe também detalhes sobre o seu ambiente: plataforma de execução, sistema operacional, navegador e versão, etc. Você também deve adicionar o label **bug** à issue.
 
 #### Nota sobre falhas de segurança
 
@@ -93,17 +93,18 @@ Depois de ter um plano de ação relativamente claro você deve estar pronto par
 Antes de abrir seu PR (pull request) certique-se que:
 
 - O código realmente resolve um problema real (de preferência baseado em alguma issue levantada);
-- Seu código está completo ou próximo de estar completo;
-- Sua solução realmente funciona. Providencie testes se possível;
+- Seu PR resolve uma issue apenas. Se você quiser fazer mais de uma coisa, divida em vários PRs;
+- Seu código é funcional (ou algo próximo disso). Providencie testes se possível;
 - Seu código adere às convenções do [PSR-2](https://www.php-fig.org/psr/psr-2/);
-- Seus commits englobam bem as funcionalidades desenvolvidas. Evite WIPs;
+- Seus commits englobam bem as funcionalidades desenvolvidas. Evite espalhar o desenvolvimento de um recurso em múltiplos commits;
+- Se for inevitável criar vários commits intermediários, por favor execute um [squash](https://git-scm.com/book/pt-br/v1/Ferramentas-do-Git-Reescrevendo-o-Hist%C3%B3rico#Achatando-um-Commit) antes de abrir seu PR;
 - As mensagens de seus commits são claras e descrevem bem o trabalho. Para maiores dicas sobre como escrever mensagens de commit adequadas, veja [este guia](https://chris.beams.io/posts/git-commit/).
 
 Caso seu PR não atenda a uma destas demandas ele poderá ser fechado. Isto inclui PRs que tentam resolver problemas reais mas que contém código cheio de erros ou soluções incompletas. Para que a nossa lista de PRs não fique poluída, dificultando o trabalho de outros membros da comunidade que podem ajudar revisando as mudanças, pedimos que PRs sejam abertos quando sua solução estiver a mais completa possível. Por isso é imprescindível usar a discussão nas issues para a criação de soluções mais acertivas.
 
 #### Sobre mudanças cosméticas
 
-PRs que realizam apenas mudanças cosméticas como remoção de espaços em branco, ajustes de indentação, etc., não serão aceitos. Nós valorizamos um código bem escrito e queremos padronizar nossas práticas, mas PRs que não entregarem nenhuma melhoria na estabilidade, funcionalidade ou testabilidade do projeto serão fechados. Para entender melhor sobre esta decisão veja [esta discussão](https://github.com/rails/rails/pull/13771#issuecomment-32746700).
+PRs que realizam apenas mudanças cosméticas como remoção de espaços em branco, ajustes de indentação, etc., não serão aceitos. Nós valorizamos um código bem escrito e queremos padronizar nossas práticas, mas PRs que não entregarem nenhuma melhoria na estabilidade, funcionalidade, testabilidade do projeto ou compatibilidade com os padrões sendo adotados (PSR-2) serão fechados. Para entender melhor sobre esta decisão veja [esta discussão](https://github.com/rails/rails/pull/13771#issuecomment-32746700).
 
 ### Outras formas de contribuir
 

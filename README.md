@@ -39,6 +39,13 @@ melhorar a manutenibilidade e enfim permitir a evolução através de features.
 - Adoção do [PSR4](https://www.php-fig.org/psr/psr-4/)
 - Iniciar a cobertura de testes para possibilitar refatorações
 
+### Planejamento Técnico
+
+Em nossa wiki você encontra um planejamento mais técnico de como devemos
+prosseguir com as melhorias e evoluções do nosso projeto.
+[Clique aqui](https://github.com/portabilis/i-educar/wiki/Planejamento-T%C3%A9cnico)
+para ler mais a respeito.
+
 ## Como contribuir
 
 Contribuições são **super bem vindas**! Se você tem vontade de construir o
