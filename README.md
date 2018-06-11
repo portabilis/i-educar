@@ -5,52 +5,53 @@ _“Lançando o maior software livre educacional do Brasil!”._
 **Nós somos a Comunidade i-Educar e acreditamos que podemos transformar o nosso
 país por meio da educação. Junte-se a nós!**
 
-O i-Educar é um software livre e público totalmente on-line que torna mais fácil
-e prática a gestão dos processos das escolas, matrículas e dados de alunos,
-apoiando os profissionais da rede de ensino e gestores a resolverem os desafios
-da educação dentro e fora da sala de aula.
-
 ## Conteúdo
 
-1. [Cenário atual](#cenário-atual)
-2. [Sobre o i-Educar](#sobre-o-i-educar)
-3. [Instalação](#instalação)
-4. [Solicite demonstração do software](#solicite-demonstração-do-software)
-5. [Solicite prestação de serviço](#solicite-prestação-de-serviço)
+1. [Sobre o i-Educar](#sobre-o-i-educar)
+2. [Roadmap de tecnologia](#roadmap-de-tecnologia)
+3. [Como contribuir](#como-contribuir)
+4. [Instalação](#instalação)
 
-## Cenário atual
+## Sobre i-Educar
 
-No final de 2017, a Portabilis, organização que é integrante da comunidade desde
-2009 e tem o papel de mantenedora do projeto, propôs uma renovação de energias
-para levar o i-Educar ainda mais longe. (Leia aqui o manifesto:
-[i-Educar por todo o Brasil](https://softwarepublico.gov.br/social/i-educar/blog/em-2018-queremos-o-i-educar-por-todo-o-brasil)).
+O i-Educar é um software livre de gestão escolar totalmente on-line que permite
+secretários escolares, professores, coordenadores e gestores da área possam
+utilizar uma ferramenta que produz informações e estatísticas em tempo real,
+com um banco de dados centralizado e de fácil acesso, diminuindo a necessidade
+de uso de papel, a duplicidade de documentos, o tempo de atendimento ao cidadão
+e racionalizando o trabalho do servidor público.
 
-No sentido desta iniciativa, está a proposta de acabar com a defasagem da versão
-aberta e aumentar a aproximação com os seus usuários. No dia 31 de janeiro, a
-Portabilis anunciou o apoio da Fundação Lemann para potencializar todos esses
-objetivos (Saiba mais aqui:
-[Preparação do lançamento do maior software livre educacional do Brasil!](https://medium.com/portabilis/prepara%C3%A7%C3%A3o-do-lan%C3%A7amento-do-maior-software-educacional-open-source-do-brasil-305e57143372)).
+Ele foi originalmente desenvolvido pela prefeitura de Itajaí - SC e
+disponibilizado no Portal do Software Público do Governo Federal em 2008, com o
+objetivo de atender às necessidades das Secretarias de Educação e Escolas
+Públicas de **todo o Brasil**.
 
-### Etapas iniciais deste processo
+## Roadmap de tecnologia
 
-1. Liberar na versão Comunidade as principais melhorias feitas pela Portabilis
-   nos últimos anos;
-2. A Portabilis irá mudar seu fluxo de trabalho passando a desenvolver
-   diretamente no repositório da Comunidade;
-3. Planejar tecnicamente o projeto, com foco em refatoração e criação de
-   padrões, para possibilitar o crescimento e expansão do uso do i-Educar;
-4. Iniciar as refatorações propostas na fase de planejamento permitindo
-   contribuições de forma mais ativa;
-5. Evoluir constantemente o i-Educar com ênfase nos usuários e na facilidade do
-   uso em redes públicas de ensino.
+O i-Educar por ser um sistema antigo e por não ter seguido um padrão específico,
+precisa passar por um processo de melhoria para diminuir a quantidade de bugs,
+melhorar a manutenibilidade e enfim permitir a evolução através de features.
 
-## Sobre o i-Educar
+### Passos iniciais
 
-O i-Educar é um software livre e público para a gestão escolar que foi
-desenvolvido originalmente pela Prefeitura de Itajaí-SC e disponibilizado como
-Software Livre no Portal do Software Público Brasileiro
-(https://softwarepublico.gov.br), onde atualmente é mantido pela Comunidade
-i-Educar.
+- Adoção do [PSR1](https://www.php-fig.org/psr/psr-1/)
+- Adoção do [PSR2](https://www.php-fig.org/psr/psr-2/)
+- Adoção do [PSR4](https://www.php-fig.org/psr/psr-4/)
+- Iniciar a cobertura de testes para possibilitar refatorações
+
+### Planejamento Técnico
+
+Em nossa wiki você encontra um planejamento mais técnico de como devemos
+prosseguir com as melhorias e evoluções do nosso projeto.
+[Clique aqui](https://github.com/portabilis/i-educar/wiki/Planejamento-T%C3%A9cnico)
+para ler mais a respeito.
+
+## Como contribuir
+
+Contribuições são **super bem vindas**! Se você tem vontade de construir o
+i-Educar junto conosco, veja o nosso [guia de contribuição](./CONTRIBUTING.md)
+onde explicamos detalhadamente como trabalhamos e de que formas você pode nos
+ajudar a alcançar nossos objetivos.
 
 ## Instalação
 
@@ -86,6 +87,9 @@ clonado em sua máquina:
 ```terminal
 $ git clone https://github.com/portabilis/i-educar-reports-package.git ieducar/modules/Reports
 ```
+
+P.S.: Esses relatórios são legados e podem não funcionar. Em breve vamos lançar
+um pacote de mais de 40 relatórios funcionais.
 
 ### Instalando outras dependências
 
@@ -146,19 +150,9 @@ realizar seu primeiro acesso ao i-Educar. Basta acessar o seguinte endereço:
 
 O usuário padrão é: `admin` / A senha padrão é: `123456789`
 
-Assim que realizar seu primeiro acesso **não se esqueça de alterar a senha padrão**.
-
-## Solicite demonstração do software
-
-Para solicitar uma demonstração, nos envie uma mensagem ou nos ligue por meio da
-nossa [página de contato](http://goo.gl/O0JBs).
-
-## Solicite prestação de serviço
-
-Para solicitar serviço de migração de dados, instalação, atualização, correções
-ou desenvolvimento de alterações, entre em contato por meio da nossa
-[página de contato](http://goo.gl/O0JBs).
+Assim que realizar seu primeiro acesso **não se esqueça de alterar a senha
+padrão**.
 
 ---
 
-[Portabilis Tecnologia](http://www.portabilis.com.br/)
+Powered by [Portabilis Tecnologia](http://www.portabilis.com.br/)
