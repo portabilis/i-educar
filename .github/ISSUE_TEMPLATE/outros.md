@@ -11,7 +11,7 @@ o template abaixo para preencher sua issue:
 
 **CONTEXTO:**
 
-Porque esta alteração é importante? Como você usaria isto? Como esta alteração
+Por que esta alteração é importante? Como você usaria isto? Como esta alteração
 pode beneficiar outros usuários?
 
 **IMPLEMENTAÇÃO:**
