@@ -52,7 +52,7 @@ i-Educar - Escola > Cadastro > Turma > Cadastrar
 
 **DESCRIÇÃO:**
 
-No cadastro de turmas, ao selecionar a opção Multi-seriada, todas as séries
+No cadastro de turmas, ao selecionar a opção Multisseriada, todas as séries
 aparecem para seleção, quando deveria ser somente as da escola e curso
 selecionado.
 
@@ -172,7 +172,7 @@ soluções incompletas. Para que a nossa lista de PRs não fique poluída,
 dificultando o trabalho de outros membros da comunidade que podem ajudar
 revisando as mudanças, pedimos que PRs sejam abertos quando sua solução estiver
 a mais completa possível. Por isso é imprescindível usar a discussão nas issues
-para a criação de soluções mais acertivas.
+para a criação de soluções mais assertivas.
 
 #### Sobre mudanças cosméticas
 
