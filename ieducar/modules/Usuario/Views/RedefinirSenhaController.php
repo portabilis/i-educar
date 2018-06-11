@@ -178,7 +178,7 @@ class RedefinirSenhaController extends Portabilis_Controller_Page_EditController
         $this->getDataMapper()->save($user);
 
         $linkToReset = $_SERVER['HTTP_HOST'] . $this->getRequest()->getBaseurl() . '/' . 'Usuario/RedefinirSenha';
-        UsuarioMailer::updatedPassword($user = $this->getEntity(), $linkToReset);
+        (new UsuarioMailer)->updatedPassword($user = $this->getEntity(), $linkToReset);
 
         // #FIXME adicionar flash ao session, para persistr ao redirecionar ?
         $this->messenger()->append('Senha alterada com sucesso.', 'success');
@@ -303,7 +303,7 @@ class RedefinirSenhaController extends Portabilis_Controller_Page_EditController
       if ($token != false) {
         $link = $_SERVER['HTTP_REFERER'] . "?token=$token";
 
-        if(UsuarioMailer::passwordReset($user, $link)) {
+        if((new UsuarioMailer)->passwordReset($user, $link)) {
           $successMsg = 'Enviamos um e-mail para voc&ecirc;, por favor, clique no link recebido para redefinir sua senha.';
           $this->messenger()->append($successMsg, 'success');
         }

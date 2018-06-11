@@ -103,7 +103,7 @@ class AlterarSenhaController extends Portabilis_Controller_Page_EditController
     $this->getDataMapper()->save($this->getEntity());
 
     $linkToReset = $_SERVER['HTTP_HOST'] . $this->getRequest()->getBaseurl() . '/' . 'Usuario/AlterarSenha';
-    UsuarioMailer::updatedPassword($user = $this->getEntity(), $linkToReset);
+    (new UsuarioMailer)->updatedPassword($user = $this->getEntity(), $linkToReset);
   }
 }
 ?>

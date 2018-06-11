@@ -31,7 +31,6 @@
 
 require_once 'lib/Portabilis/Controller/Page/EditController.php';
 require_once 'Usuario/Model/FuncionarioDataMapper.php';
-require_once 'Usuario/Mailers/UsuarioMailer.php';
 
 class AlterarEmailController extends Portabilis_Controller_Page_EditController
 {

@@ -833,8 +833,12 @@ class clsBase extends clsConfig
 
                 $conteudo .= "</table>";
 
-                $objMail = new clsEmail($objConfig->arrayConfig['ArrStrEmailsAdministradores'], "[INTRANET - PMI] Desempenho de pagina", $conteudo);
-                $objMail->envia();
+                (new Portabilis_Mailer)->sendMail(
+                    $objConfig->arrayConfig['ArrStrEmailsAdministradores'],
+                    '[INTRANET - PMI] Desempenho de pagina',
+                    $conteudo,
+                    ['mime' => 'text/html']
+                );
             }
         } catch (Exception $e) {
             $lastError = error_get_last();
@@ -847,7 +851,7 @@ class clsBase extends clsConfig
             @session_write_close();
 
             error_log("Erro inesperado (pego em clsBase): " . $e->getMessage());
-            NotificationMailer::unexpectedError($e->getMessage());
+            (new NotificationMailer)->unexpectedError($e->getMessage());
 
             die("<script>document.location.href = '/module/Error/unexpected';</script>");
         }
