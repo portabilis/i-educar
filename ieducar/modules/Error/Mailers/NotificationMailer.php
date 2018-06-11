@@ -53,7 +53,7 @@ class NotificationMailer extends Portabilis_Mailer
                        "  LINHA {$lastError['line']} em {$lastError['file']}\n" .
                        "  SQL: {$sql}\n" .
                        "  ID USUÁRIO {$userId}\n" .
-                       "  TRACE: \n $trace \n" .
+                       "  TRACE: \n$trace\n" .
                        "\n\n-\n\n" .
                        "Você recebeu este email pois seu email foi configurado para receber " .
                        "notificações de erros.";
@@ -78,7 +78,7 @@ class NotificationMailer extends Portabilis_Mailer
                        "  ERRO PHP: ' . {$lastError['message']}\n" .
                        "  LINHA {$lastError['line']} em {$lastError['file']}\n" .
                        "  USUÁRIO {$user['matricula']} email {$user['email']}\n" .
-                       "  TRACE: \n $trace \n" .
+                       "  TRACE: \n$trace\n" .
                        "\n\n-\n\n" .
                        "Você recebeu este email pois seu email foi configurado para receber " .
                        "notificações de erros.";
@@ -109,7 +109,7 @@ class NotificationMailer extends Portabilis_Mailer
         return $email;
     }
 
-    protected static function tryLoadUser()
+    protected function tryLoadUser()
     {
         try {
             $sql = 'select matricula, email from portal.funcionario WHERE ref_cod_pessoa_fj = $1';
@@ -122,7 +122,7 @@ class NotificationMailer extends Portabilis_Mailer
         return $user;
     }
 
-    protected static function stackTrace() {
+    protected function stackTrace() {
         $stack = debug_backtrace();
         $output = '';
 

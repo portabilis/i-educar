@@ -27,40 +27,52 @@ class Portabilis_Mailer {
 
         $options += $defaultOpts;
 
-        $this->transport = (new Swift_SmtpTransport($this->config->smtp->host, $this->config->smtp->port))
-            ->setUsername($this->config->smtp->username)
-            ->setPassword($this->config->smtp->password);
+        try {
+            $this->transport = (new Swift_SmtpTransport($this->config->smtp->host, $this->config->smtp->port))
+                ->setUsername($this->config->smtp->username)
+                ->setPassword($this->config->smtp->password);
 
-        $this->mailer = new Swift_Mailer($this->transport);
+            $encryption = $this->config->smtp->encryption;
 
-        if ((bool)$this->config->debug || (bool)$options['debug']) {
-            $this->logger = new Swift_Plugins_Loggers_ArrayLogger();
-            $this->mailer->registerPlugin(new Swift_Plugins_LoggerPlugin($this->logger));
-        }
-
-        $from = !empty($options['from'])
-            ? $options['from']
-            : [$this->config->smtp->from_email => $this->config->smtp->from_name];
-
-        $message = (new Swift_Message($subject))
-            ->setFrom($from)
-            ->setTo($to)
-            ->setBody($message, $options['mime']);
-
-        $allowedDomains = !empty($this->configs->allowed_domains)
-            ? $this->configs->allowed_domains
-            : ['*'];
-
-        $result = false;
-
-        foreach ($allowedDomains as $domain) {
-            if ($domain === '*' || strpos($to, "@$domain") !== false) {
-                $result = $this->mailer->send($message);
-                break;
+            if (!empty($encryption)) {
+                $this->transport->setEncryption($encryption);
             }
+
+            $this->mailer = new Swift_Mailer($this->transport);
+
+            if ((bool)$this->config->debug || (bool)$options['debug']) {
+                $this->logger = new Swift_Plugins_Loggers_ArrayLogger();
+                $this->mailer->registerPlugin(new Swift_Plugins_LoggerPlugin($this->logger));
+            }
+
+            $from = !empty($options['from'])
+                ? $options['from']
+                : [$this->config->smtp->from_email => $this->config->smtp->from_name];
+
+            $message = (new Swift_Message($subject))
+                ->setFrom($from)
+                ->setTo($to)
+                ->setBody($message, $options['mime']);
+
+            $allowedDomains = !empty($this->configs->allowed_domains)
+                ? $this->configs->allowed_domains
+                : ['*'];
+
+            $result = false;
+
+            foreach ($allowedDomains as $domain) {
+                if ($domain === '*' || strpos($to, "@$domain") !== false) {
+                    $result = $this->mailer->send($message);
+                    break;
+                }
+            }
+
+            return $result;
+        } catch (Exception $e) {
+            error_log('Erro no envio de e-mail: ' . $e->getMessage());
         }
 
-        return $result;
+        return false;
     }
 
     public function debug()
