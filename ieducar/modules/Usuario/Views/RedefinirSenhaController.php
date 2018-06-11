@@ -121,7 +121,7 @@ class RedefinirSenhaController extends Portabilis_Controller_Page_EditController
 
   protected function GerarNovo() {
     $this->nome_url_cancelar = 'Entrar';
-    $matricula               = $_POST['matricula'];
+    $matricula = $_POST['matricula'];
 
     if (empty($matricula) && is_numeric($this->getOption('id_usuario'))) {
       $user      = Portabilis_Utils_User::load($id = $this->getOption('id_usuario'));
@@ -129,10 +129,9 @@ class RedefinirSenhaController extends Portabilis_Controller_Page_EditController
     }
 
     $this->campoTexto('matricula', $this->_getLabel('matricula'), $matricula,
-      50, 50, TRUE, FALSE, FALSE, $this->_getHelp('matricula'));
+        50, 50, TRUE, FALSE, FALSE, $this->_getHelp('matricula'));
 
-    echo Portabilis_Utils_ReCaptcha::getWidget();
-    $this->reCaptchaFixup();
+    $this->campoAvulso('recaptcha', 'Confirmação visual:', Portabilis_Utils_ReCaptcha::getWidget());
   }
 
 
@@ -149,7 +148,7 @@ class RedefinirSenhaController extends Portabilis_Controller_Page_EditController
   public function Novo()
   {
     if (! $this->messenger()->hasMsgWithType('error')) {
-      if (! Portabilis_Utils_ReCaptcha::getWidget()->validate()) {
+      if (!Portabilis_Utils_ReCaptcha::check($_POST['g-recaptcha-response'])) {
         $this->messenger()->append('Por favor, informe a confirma&ccedil;&atilde;o visual no respectivo campo.', 'error');
       }
       elseif ($this->loadUserByMatricula($_POST['matricula']))

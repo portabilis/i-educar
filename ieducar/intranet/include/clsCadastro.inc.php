@@ -407,6 +407,10 @@ class clsCadastro extends clsCampos
       $nomeCampo = $componente[0];
       $validador = $componente[2];
 
+      if ($nomeCampo === 'avulso') {
+        continue;
+      }
+
       if (empty($validador) && $nomeCampo == 'cpf' && preg_match("/^(tab_add_[0-9])/", $nome) !== 1) {
         $retorno .=
         "if( document.getElementById('$nome').value != \"\")
