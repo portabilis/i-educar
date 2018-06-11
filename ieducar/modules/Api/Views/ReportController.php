@@ -129,7 +129,7 @@ class ReportController extends ApiCoreController
       $boletimProfessorReport->addArg('professor',   Portabilis_String_Utils::toLatin1($this->getRequest()->professor));
       $boletimProfessorReport->addArg('disciplina',   (int)$this->getRequest()->componente_curricular_id);
       $boletimProfessorReport->addArg('orientacao', 2);
-      $boletimProfessorReport->addArg('situacao', 10);
+      $boletimProfessorReport->addArg('situacao', 0);
 
       $configuracoes = new clsPmieducarConfiguracoesGerais();
       $configuracoes = $configuracoes->detalhe();

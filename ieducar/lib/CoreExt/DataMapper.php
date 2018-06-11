@@ -362,7 +362,7 @@ abstract class CoreExt_DataMapper
     $valuesStmt = array();
     for ($i = 0, $count = count($values); $i < $count; $i++) {
       $value = $values[$i];
-      $valuesStmt[] = sprintf("'%s'", $value);
+      $valuesStmt[] = sprintf("'%s'", pg_escape_string($value));
     }
 
     $valuesStmt = join(", ", $valuesStmt);
@@ -406,7 +406,7 @@ abstract class CoreExt_DataMapper
         $replaceString = "%s = %s";
       }
 
-      $columns[] = sprintf($replaceString, $columnName, $value);
+      $columns[] = sprintf($replaceString, $columnName, pg_escape_string($value));
     }
 
     $where = array();
