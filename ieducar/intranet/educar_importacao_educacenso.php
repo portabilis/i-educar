@@ -501,6 +501,7 @@ class indice extends clsCadastro
       'turma_mais_educacao' => $dadosRegistro[19-1],
       'etapa_educacenso' => $dadosRegistro[38-1],
       'cod_curso_profissional' => $dadosRegistro[39-1],
+      'tipo_mediacao_didatico_pedagogico' => $dadosRegistro[6-1]
     );
 
     $camposTurma['dias_semana'] = array();
