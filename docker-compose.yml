@@ -1,12 +1,12 @@
 ieducar_1604:
-  build: ./docker/ieducar_1604
+  build: ./docker/ieducar
   environment:
     - CORE_EXT_CONFIGURATION_ENV=development
   ports:
     - "80:80"
   links:
     - postgres_95
-  container_name: ieducar_1604
+  container_name: ieducar
 
 postgres_95:
   volumes:
