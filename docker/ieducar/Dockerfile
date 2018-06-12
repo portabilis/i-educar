@@ -5,7 +5,6 @@ LABEL maintainer="Caroline Salib <caroline@portabilis.com.br>, Everton Muniz <ev
 ENV DEBIAN_FRONTEND=noninteractive
 ENV XDEBUG = /etc/php/7.0/apache2/conf.d/20-xdebug.ini
 
-COPY . /var/www/html/i-educar/
 
 RUN apt-get -y update \
 	&& apt-get install -y --no-install-recommends \
@@ -25,6 +24,10 @@ RUN apt-get -y update \
 	zlib1g-dev \
 	software-properties-common \
 	openjdk-8-jdk \
+	&& wget https://github.com/portabilis/i-educar/archive/master.tar.gz \
+	&& tar zxf master.tar.gz \
+	&& mv i-educar-master/* /var/www \
+	&& rm -rf master.tar.gz i-educar-master \
 	&& a2enmod rewrite \
 	&& pear install XML_RPC2 Mail Net_SMTP Services_ReCaptcha \
 	&& chown -R www-data:www-data /var/www \
