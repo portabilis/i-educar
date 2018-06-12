@@ -12,9 +12,9 @@ RUN apt-get -y update \
 	apache2 \
 	curl \
 	gcc \
-	git-core \
+	git \
 	libapache2-mod-php \
-	libreadline7 \
+	libreadline6 \
 	make \
 	php-curl \
 	php-mbstring \
