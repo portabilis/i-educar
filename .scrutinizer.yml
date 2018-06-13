@@ -1,6 +1,8 @@
 filter:
     excluded_paths:
         - tests/*
+        - 'ieducar/tests/*'
+        - 'ieducar/misc/**/*'
 
 checks:
     php:
