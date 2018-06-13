@@ -258,7 +258,7 @@ class indice extends clsCadastro
         $this->campoCheck("altera_atestado_para_declaracao", "Alterar nome do título do menu e relatórios de Atestado para Declaração", $this->altera_atestado_para_declaracao);
 
         $this->campoCheck("obrigar_campos_censo", "Obrigar o preenchimento dos campos exigidos pelo Censo escolar", $this->obrigar_campos_censo);
-        $this->campoCheck("obrigar_documento_pessoa", "Exigir documento (RG, CPF ou Certidão de nascimento / casamento) no cadastro de pessoa física", $this->obrigar_documento_pessoa);
+        $this->campoCheck("obrigar_documento_pessoa", "Exigir documento (RG, CPF ou Certidão de nascimento / casamento) no cadastro pessoa / aluno", $this->obrigar_documento_pessoa);
 
         $this->inputsHelper()->text(
             'data_base',
