@@ -28,6 +28,8 @@ RUN apt-get -y update \
 	&& tar zxf master.tar.gz \
 	&& mv i-educar-master/* /var/www \
 	&& rm -rf master.tar.gz i-educar-master \
+	&& find /var/www/ -type f -exec chmod 644 {} \; \
+	&& find /var/www/ -type d -exec chmod 755 {} \; \
 	&& a2enmod rewrite \
 	&& pear install XML_RPC2 Mail Net_SMTP Services_ReCaptcha \
 	&& chown -R www-data:www-data /var/www \
