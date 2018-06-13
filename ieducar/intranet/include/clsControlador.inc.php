@@ -203,6 +203,7 @@ class clsControlador
 
   public function canStartLoginSession($user) {
     if (! $this->messenger->hasMsgWithType("error")) {
+      $this->checkForSuspended($user);
       $this->checkForDisabledAccount($user);
       $this->checkForBannedAccount($user);
       $this->checkForExpiredAccount($user);
@@ -346,6 +347,17 @@ class clsControlador
     }
   }
 
+  protected function checkForSuspended($user) {
+    $configuracoes = new clsPmieducarConfiguracoesGerais();
+    $configuracoes = $configuracoes->detalhe();
+
+    $nivel = (int) $user['nivel'];
+
+    if (!$configuracoes['active_on_ieducar'] && $nivel !== 1) {
+        $this->messenger->append("Sua conta de usuário não pode acessar o sistema, " .
+            "por favor, entre em contato com o responsável pelo sistema do seu município.", "error", false, "error");
+    }
+  }
 
   protected function checkForBannedAccount($user) {
     if ($user['proibido'] != '0') {
