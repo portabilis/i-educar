@@ -74,6 +74,7 @@ class indice extends clsCadastro
     var $data_educacenso;
     var $altera_atestado_para_declaracao;
     var $obrigar_campos_censo;
+    var $obrigar_documento_pessoa;
     var $orgao_regional;
 
     function Inicializar()
@@ -133,6 +134,7 @@ class indice extends clsCadastro
         $this->exigir_dados_socioeconomicos = dbBool($this->exigir_dados_socioeconomicos);
         $this->altera_atestado_para_declaracao = dbBool($this->altera_atestado_para_declaracao);
         $this->obrigar_campos_censo = dbBool($this->obrigar_campos_censo);
+        $this->obrigar_documento_pessoa = dbBool($this->obrigar_documento_pessoa);
 
 
         return $retorno;
@@ -256,6 +258,7 @@ class indice extends clsCadastro
         $this->campoCheck("altera_atestado_para_declaracao", "Alterar nome do título do menu e relatórios de Atestado para Declaração", $this->altera_atestado_para_declaracao);
 
         $this->campoCheck("obrigar_campos_censo", "Obrigar o preenchimento dos campos exigidos pelo Censo escolar", $this->obrigar_campos_censo);
+        $this->campoCheck("obrigar_documento_pessoa", "Exigir documento (RG, CPF ou Certidão de nascimento / casamento) no cadastro de pessoa física", $this->obrigar_documento_pessoa);
 
         $this->inputsHelper()->text(
             'data_base',
@@ -348,6 +351,7 @@ class indice extends clsCadastro
         $obj->data_educacenso = $this->data_educacenso;
         $obj->exigir_dados_socioeconomicos = is_null($this->exigir_dados_socioeconomicos) ? false : true;
         $obj->obrigar_campos_censo = !is_null($this->obrigar_campos_censo);
+        $obj->obrigar_documento_pessoa = !is_null($this->obrigar_documento_pessoa);
         $obj->orgao_regional = $this->orgao_regional;
         $cod_instituicao = $cadastrou = $obj->cadastra();
 
@@ -401,6 +405,7 @@ class indice extends clsCadastro
         $obj->data_educacenso = $this->data_educacenso;
         $obj->exigir_dados_socioeconomicos = is_null($this->exigir_dados_socioeconomicos) ? false : true;
         $obj->obrigar_campos_censo = !is_null($this->obrigar_campos_censo);
+        $obj->obrigar_documento_pessoa = !is_null($this->obrigar_documento_pessoa);
         $obj->orgao_regional = $this->orgao_regional;
 
         $detalheAntigo = $obj->detalhe();
