@@ -1509,10 +1509,15 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $clsInstituicao = new clsPmieducarInstituicao();
         $instituicao = $clsInstituicao->primeiraAtiva();
         $obrigarCamposCenso = FALSE;
+        $obrigarDocumentoPessoa = FALSE;
         if ($instituicao && isset($instituicao['obrigar_campos_censo'])) {
             $obrigarCamposCenso = dbBool($instituicao['obrigar_campos_censo']);
         }
+        if ($instituicao && isset($instituicao['obrigar_documento_pessoa'])) {
+            $obrigarDocumentoPessoa = dbBool($instituicao['obrigar_documento_pessoa']);
+        }
         $this->CampoOculto('obrigar_campos_censo', (int) $obrigarCamposCenso);
+        $this->CampoOculto('obrigar_documento_pessoa', (int) $obrigarDocumentoPessoa);
 
         $racas         = new clsCadastroRaca();
         $racas         = $racas->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL, TRUE);

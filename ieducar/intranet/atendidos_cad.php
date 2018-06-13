@@ -1238,7 +1238,7 @@ class indice extends clsCadastro
   }
 
   protected function createOrUpdate($pessoaIdOrNull = null) {
-    if (!$this->possuiDocumentoObrigatorio()) {
+    if ($this->obrigarDocumentoPessoa() && !$this->possuiDocumentoObrigatorio()) {
       $this->mensagem = 'É necessário o preenchimento de pelo menos um dos seguintes documentos: CPF, RG ou Certidão civil.';
       return false;
     }
@@ -1314,7 +1314,19 @@ class indice extends clsCadastro
 
   }
 
-  function possuiDocumentoObrigatorio() {
+  protected function obrigarDocumentoPessoa() {
+    $clsInstituicao = new clsPmieducarInstituicao();
+    $instituicao = $clsInstituicao->primeiraAtiva();
+    $obrigarDocumentoPessoa = FALSE;
+
+    if ($instituicao && isset($instituicao['obrigar_documento_pessoa'])) {
+        $obrigarDocumentoPessoa = dbBool($instituicao['obrigar_documento_pessoa']);
+    }
+
+    return $obrigarDocumentoPessoa;
+  }
+
+  protected function possuiDocumentoObrigatorio() {
     $certidaoCivil = $this->termo_certidao_civil && $this->folha_certidao_civil && $this->livro_certidao_civil;
     $certidaoNascimentoNovoFormato = $this->certidao_nascimento;
     $certidaoCasamentoNovoFormato = $this->certidao_casamento;
