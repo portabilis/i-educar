@@ -15,16 +15,16 @@ RUN apt-get -y update \
 	libapache2-mod-php7.0 \
 	libreadline6 \
 	make \
+	openjdk-8-jre \
 	php-mbstring \
 	php-pear \
 	php7.0 \
 	php7.0-curl \
 	php7.0-pgsql \
 	rpl \
+	software-properties-common \
 	wget \
 	zlib1g-dev \
-	software-properties-common \
-	openjdk-8-jdk \
 	&& wget https://github.com/portabilis/i-educar/archive/master.tar.gz \
 	&& tar zxf master.tar.gz \
 	&& mv i-educar-master/* /var/www \
