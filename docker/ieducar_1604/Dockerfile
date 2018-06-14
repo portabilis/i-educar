@@ -12,13 +12,14 @@ RUN apt-get -y update \
 	curl \
 	gcc \
 	git \
-	libapache2-mod-php \
+	libapache2-mod-php7.0 \
 	libreadline6 \
 	make \
-	php-curl \
 	php-mbstring \
 	php-pear \
-	php-pgsql \
+	php7.0 \
+	php7.0-curl \
+	php7.0-pgsql \
 	rpl \
 	wget \
 	zlib1g-dev \
