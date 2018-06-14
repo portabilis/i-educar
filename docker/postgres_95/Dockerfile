@@ -1,3 +1,3 @@
-FROM ubuntu:16.04
+FROM postgres:9
 
 LABEL maintainer="Fábio Rodrigues Ribeiro <farribeiro@gmail.com>"
