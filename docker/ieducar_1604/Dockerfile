@@ -1,6 +1,6 @@
 FROM ubuntu:16.04
 
-LABEL maintainer="Caroline Salib <caroline@portabilis.com.br>, Everton Muniz <everton@portabilis.com.br>, Éber Dias <eber@portabilis.com.br>"
+LABEL maintainer="Caroline Salib <caroline@portabilis.com.br>, Everton Muniz <everton@portabilis.com.br>, Éber Dias <eber@portabilis.com.br>, Fábio Rodrigues Ribeiro<farribeiro@gmail.com>"
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV XDEBUG="/etc/php/7.0/apache2/conf.d/20-xdebug.ini"
