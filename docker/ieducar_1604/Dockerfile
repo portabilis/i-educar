@@ -32,6 +32,8 @@ RUN apt-get -y update \
 	&& tar zxf master.tar.gz \
 	&& rm -rf master.tar.gz \
 	&& mv i-educar-master/* /var/www \
+	&& rm -rf master.tar.gz \
+	&& wget https://github.com/portabilis/i-educar-reports-package/archive/master.tar.gz \
 	&& rm -rf master.tar.gz i-educar-master \
 	&& find /var/www/ -type f -exec chmod 644 {} \; \
 	&& find /var/www/ -type d -exec chmod 755 {} \; \
