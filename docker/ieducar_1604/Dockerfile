@@ -31,6 +31,8 @@ RUN apt-get -y update \
 	&& find /var/www/ -type f -exec chmod 644 {} \; \
 	&& find /var/www/ -type d -exec chmod 755 {} \; \
 	&& cp -a /var/www/docker/ieducar_1604/ieducar.conf /etc/apache2/sites-available/000-default.conf \
+	&& cp -a /var/www/docker/ieducar_1604/apache_foreground /usr/local/bin
+	&& chmod 744 /usr/local/bin/apache_foreground
 	&& a2enmod rewrite \
 	&& pear install XML_RPC2 Mail Net_SMTP Services_ReCaptcha \
 	&& chown -R www-data:www-data /var/www \
@@ -48,7 +50,5 @@ RUN apt-get -y update \
 	&& rm -rf /var/lib/apt/lists/*
 
 EXPOSE 80
-
-COPY apache2-foreground /usr/local/bin/
 
 CMD ["apache2-foreground"]
