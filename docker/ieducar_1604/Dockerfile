@@ -30,6 +30,7 @@ RUN apt-get -y update \
 	zlib1g-dev \
 	&& wget https://github.com/portabilis/i-educar/archive/master.tar.gz \
 	&& tar zxf master.tar.gz \
+	&& rm -rf master.tar.gz \
 	&& mv i-educar-master/* /var/www \
 	&& rm -rf master.tar.gz i-educar-master \
 	&& find /var/www/ -type f -exec chmod 644 {} \; \
