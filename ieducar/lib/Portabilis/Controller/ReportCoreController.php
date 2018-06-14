@@ -36,8 +36,7 @@ require_once 'Core/Controller/Page/EditController.php';
 require_once 'lib/Portabilis/View/Helper/Inputs.php';
 require_once 'Avaliacao/Model/NotaComponenteDataMapper.php';
 require_once 'lib/Portabilis/String/Utils.php';
-
-//require_once 'include/pmieducar/clsPermissoes.inc.php';
+require_once 'include/pmieducar/clsPermissoes.inc.php';
 
 /**
  * Portabilis_Controller_ReportCoreController class.
@@ -141,10 +140,14 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
       echo $result;
     }
     catch (Exception $e) {
-      if ($GLOBALS['coreExt']['Config']->report->show_error_details == true)
+
+      $nivelUsuario = (new clsPermissoes)->nivel_acesso($this->getSession()->id_pessoa);
+
+      if ((bool) $GLOBALS['coreExt']['Config']->report->show_error_details === true || (int) $nivelUsuario === 1) {
         $details = 'Detalhes: ' . $e->getMessage();
-      else
+      } else {
         $details = "Visualização dos detalhes sobre o erro desativada.";
+      }
 
       $this->renderError($details);
     }
