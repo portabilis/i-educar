@@ -14,10 +14,13 @@ RUN apt-get -y update \
 	git \
 	libapache2-mod-php7.0 \
 	libreadline6 \
+	libreadline6-dev \
 	make \
 	openjdk-8-jre \
 	php-mbstring \
 	php-pear \
+	php-xdebug \
+	php-zip \
 	php7.0 \
 	php7.0-curl \
 	php7.0-pgsql \
