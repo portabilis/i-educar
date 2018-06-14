@@ -69,6 +69,7 @@ o Docker Compose para criar os containers da aplicação:
 ```terminal
 $ git clone https://github.com/portabilis/i-educar.git i-educar
 $ cd i-educar
+$ cp .env.example .env
 $ docker-compose up -d
 ```
 
@@ -147,6 +148,13 @@ realizar seu primeiro acesso ao i-Educar. Basta acessar o seguinte endereço:
 O usuário padrão é: `admin` / A senha padrão é: `123456789`
 
 Assim que realizar seu primeiro acesso **não se esqueça de alterar a senha padrão**.
+
+### Utilização do Xdebug
+
+A ferramenta [Xdebug](https://xdebug.org/) está incluída no projeto com o 
+intuito de facilitar o processo de debug durante o desenvolvimento. Para 
+configurá-la, modifique os valores das variáveis `XDEBUG_*` no arquivo `.env` 
+conforme orientações da sua IDE de desenvolvimento.
 
 ## Solicite demonstração do software
 
