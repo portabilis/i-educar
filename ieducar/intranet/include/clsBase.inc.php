@@ -50,14 +50,6 @@ require_once 'modules/Error/Mailers/NotificationMailer.php';
 require_once 'Portabilis/Assets/Version.php';
 require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
 
-$configuracoes = new clsPmieducarConfiguracoesGerais();
-$configuracoes = $configuracoes->detalhe();
-//var_dump($configuracoes);die;
-if (!$configuracoes['active_on_ieducar']) {
-    header('HTTP/1.1 503 Service Temporarily Unavailable');
-    header("Location: suspenso.php");
-}
-
 if ($GLOBALS['coreExt']['Config']->app->ambiente_inexistente){
     header("Location: /404.html");
 }
@@ -93,6 +85,30 @@ class clsBase extends clsConfig
     var $script_header;
     var $script_footer;
     var $prog_alert;
+
+    public $configuracoes;
+
+    protected function setupConfigs()
+    {
+        $configuracoes = new clsPmieducarConfiguracoesGerais();
+        $this->configuracoes = $configuracoes->detalhe();
+    }
+
+    protected function mostraSupenso()
+    {
+        if (empty($this->configuracoes)) {
+            $this->setupConfigs();
+        }
+
+        $nivel = !empty($_SESSION['nivel']) ? (int) $_SESSION['nivel'] : null;
+
+        if (!$this->configuracoes['active_on_ieducar'] && $nivel !== 1) {
+            header('HTTP/1.1 503 Service Temporarily Unavailable');
+            header("Location: suspenso.php");
+
+            die();
+        }
+    }
 
     function OpenTpl($template)
     {
@@ -749,13 +765,15 @@ class clsBase extends clsConfig
             }
 
             $controlador = new clsControlador();
+
             if ($controlador->Logado() && $liberado || $this->convidado) {
+                $this->mostraSupenso();
+
                 $this->Formular();
                 $this->VerificaPermicao();
                 $this->CadastraAcesso();
                 $saida_geral = $this->MakeHeadHtml();
 
-                // @todo else ruim, colocar abre e fecha colchetes ao redor de foreach.
                 if ($this->renderMenu) {
                     $saida_geral .= $this->MakeBody();
                 } else {
@@ -778,23 +796,21 @@ class clsBase extends clsConfig
                     }
                 }
             } elseif ((empty($_POST['login'])) || (empty($_POST['senha'])) && $liberado) {
+                $force = !empty($_GET['force']) ? true : false;
+
+                if (!$force) {
+                    $this->mostraSupenso();
+                }
+
                 $saida_geral .= $this->MakeHeadHtml();
-                $controlador->Logar(FALSE);
+                $controlador->Logar(false);
                 $saida_geral .= $this->MakeFootHtml();
             } else {
-                $controlador->Logar(TRUE);
-                if ($controlador->Logado() && $liberado) {
-                    $this->Formular();
-                    $this->VerificaPermicao();
-                    $this->CadastraAcesso();
-                    $saida_geral = $this->MakeHeadHtml();
-                    $saida_geral .= $this->MakeBody();
-                    $saida_geral .= $this->MakeFootHtml();
-                } else {
-                    $saida_geral = $this->MakeHeadHtml();
-                    $controlador->Logar(false);
-                    $saida_geral .= $this->MakeFootHtml();
-                }
+                $controlador->Logar(true);
+                $referer = $_SERVER['HTTP_REFERER'];
+
+                header("Location: " . $referer, true, 302);
+                die();
             }
 
             echo $saida_geral;
