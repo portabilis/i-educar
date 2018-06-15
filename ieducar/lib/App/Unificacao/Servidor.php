@@ -46,10 +46,6 @@ class App_Unificacao_Servidor extends App_Unificacao_Base
             'coluna' => 'ref_cod_servidor'
         ),
         array(
-            'tabela' => 'pmieducar.servidor_disciplina',
-            'coluna' => 'ref_cod_servidor'
-        ),
-        array(
             'tabela' => 'modules.professor_turma',
             'coluna' => 'servidor_id'
         ),
@@ -57,11 +53,19 @@ class App_Unificacao_Servidor extends App_Unificacao_Base
             'tabela' => 'modules.docente_licenciatura',
             'coluna' => 'servidor_id'
         ),
+        array(
+            'tabela' => 'pmieducar.turma',
+            'coluna' => 'ref_cod_regente'
+        ),
     );
 
     protected $chavesDeletarDuplicados = array(
         array(
             'tabela' => 'pmieducar.servidor_curso_ministra',
+            'coluna' => 'ref_cod_servidor'
+        ),
+        array(
+            'tabela' => 'pmieducar.servidor_disciplina',
             'coluna' => 'ref_cod_servidor'
         ),
     );

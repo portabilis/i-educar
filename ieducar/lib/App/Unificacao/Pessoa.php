@@ -4,6 +4,7 @@ require_once 'lib/CoreExt/Exception.php';
 require_once 'App/Unificacao/Base.php';
 require_once 'App/Unificacao/Servidor.php';
 require_once 'App/Unificacao/Aluno.php';
+require_once 'App/Unificacao/Cliente.php';
 
 class App_Unificacao_Pessoa extends App_Unificacao_Base
 {
@@ -599,9 +600,36 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
 
     public function unifica()
     {
+        $this->unificaClientes();
         $unificadorServidor = new App_Unificacao_Servidor($this->codigoUnificador, $this->codigosDuplicados, $this->codPessoaLogada, $this->db, $this->transacao);
         $unificadorServidor->unifica();
         parent::unifica();
+    }
+
+    protected function unificaClientes()
+    {
+        $chavesConsultar = $this->codigosDuplicados;
+        $chavesConsultar[] = $this->codigoUnificador;
+        $chavesConsultarString = implode(',', $chavesConsultar);
+
+        $this->db->consulta("
+            SELECT cod_cliente
+                FROM pmieducar.cliente
+                WHERE ref_idpes in ({$chavesConsultarString})
+                ORDER BY ref_idpes = {$this->codigoUnificador} DESC"
+        );
+
+        $codigoClientes = [];
+
+        while ($this->db->ProximoRegistro()) {
+            $reg = $this->db->Tupla();
+            $codigoClientes[] = $reg['cod_cliente'];
+        }
+        if (COUNT($codigoClientes) < 2) {
+            return TRUE;
+        }
+        $unificadorCliente = new App_Unificacao_Cliente(array_shift($codigoClientes), $codigoClientes, $this->codPessoaLogada, $this->db, $this->transacao);
+        $unificadorCliente->unifica();
     }
 
     protected function validaParametros()
