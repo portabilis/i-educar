@@ -32,7 +32,7 @@
 </head>
 
 <body topmargin=0 leftmargin=0>
-<?
+<?php
 $id_foto = @$_GET['id_foto'];
 echo "<img src='fotos/big/{$id_foto}'>";
 ?>

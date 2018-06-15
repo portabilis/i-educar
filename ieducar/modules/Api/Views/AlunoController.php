@@ -445,9 +445,8 @@ class AlunoController extends ApiCoreController
     {
         $dataMapper = $this->getDataMapperFor('educacenso', 'aluno');
 
-        if (empty($this->getRequest()->aluno_inep_id)) {
-            $result = $this->deleteEntityOf($dataMapper, $alunoId);
-        } else {
+        $result = $this->deleteEntityOf($dataMapper, $alunoId);
+        if (!empty($this->getRequest()->aluno_inep_id)) {
             $data = array(
                 'aluno' => $alunoId,
                 'alunoInep' => $this->getRequest()->aluno_inep_id,
@@ -461,7 +460,6 @@ class AlunoController extends ApiCoreController
 
             $result = $this->saveEntity($dataMapper, $entity);
         }
-
         return $result;
     }
 
@@ -541,15 +539,9 @@ class AlunoController extends ApiCoreController
         $aluno->ref_usuario_exc = $this->getSession()->id_pessoa;
 
         // INFORAMÇÕES PROVA INEP
-        $aluno->recurso_prova_inep_aux_ledor = $this->getRequest()->recurso_prova_inep_aux_ledor == 'on' ? 1 : 0;
-        $aluno->recurso_prova_inep_aux_transcricao = $this->getRequest()->recurso_prova_inep_aux_transcricao == 'on' ? 1 : 0;
-        $aluno->recurso_prova_inep_guia_interprete = $this->getRequest()->recurso_prova_inep_guia_interprete == 'on' ? 1 : 0;
-        $aluno->recurso_prova_inep_interprete_libras = $this->getRequest()->recurso_prova_inep_interprete_libras == 'on' ? 1 : 0;
-        $aluno->recurso_prova_inep_leitura_labial = $this->getRequest()->recurso_prova_inep_leitura_labial == 'on' ? 1 : 0;
-        $aluno->recurso_prova_inep_prova_ampliada_16 = $this->getRequest()->recurso_prova_inep_prova_ampliada_16 == 'on' ? 1 : 0;
-        $aluno->recurso_prova_inep_prova_ampliada_20 = $this->getRequest()->recurso_prova_inep_prova_ampliada_20 == 'on' ? 1 : 0;
-        $aluno->recurso_prova_inep_prova_ampliada_24 = $this->getRequest()->recurso_prova_inep_prova_ampliada_24 == 'on' ? 1 : 0;
-        $aluno->recurso_prova_inep_prova_braille = $this->getRequest()->recurso_prova_inep_prova_braille == 'on' ? 1 : 0;
+        $recursosProvaInep = array_filter($this->getRequest()->recursos_prova_inep__);
+        $recursosProvaInep = '{' . implode(',', $recursosProvaInep) . '}';
+        $aluno->recursos_prova_inep = $recursosProvaInep;
         $aluno->recebe_escolarizacao_em_outro_espaco = $this->getRequest()->recebe_escolarizacao_em_outro_espaco;
         $aluno->justificativa_falta_documentacao = $this->getRequest()->justificativa_falta_documentacao;
         $aluno->veiculo_transporte_escolar = $this->getRequest()->veiculo_transporte_escolar;
@@ -983,15 +975,7 @@ class AlunoController extends ApiCoreController
                 'analfabeto',
                 'ativo',
                 'aluno_estado_id',
-                'recurso_prova_inep_aux_ledor',
-                'recurso_prova_inep_aux_transcricao',
-                'recurso_prova_inep_guia_interprete',
-                'recurso_prova_inep_interprete_libras',
-                'recurso_prova_inep_leitura_labial',
-                'recurso_prova_inep_prova_ampliada_16',
-                'recurso_prova_inep_prova_ampliada_20',
-                'recurso_prova_inep_prova_ampliada_24',
-                'recurso_prova_inep_prova_braille',
+                'recursos_prova_inep',
                 'recebe_escolarizacao_em_outro_espaco',
                 'justificativa_falta_documentacao',
                 'veiculo_transporte_escolar',
@@ -1608,6 +1592,8 @@ class AlunoController extends ApiCoreController
         $documentos->data_exp_rg = Portabilis_Date_Utils::brToPgSQL(
             $this->getRequest()->data_emissao_rg
         );
+        $documentos->sigla_uf_exp_rg = $this->getRequest()->uf_emissao_rg;
+        $documentos->idorg_exp_rg = $this->getRequest()->orgao_emissao_rg;
 
         $documentos->data_emissao_cert_civil = Portabilis_Date_Utils::brToPgSQL(
             $this->getRequest()->data_emissao_certidao_civil
@@ -1616,7 +1602,7 @@ class AlunoController extends ApiCoreController
         $documentos->sigla_uf_cert_civil = $this->getRequest()->uf_emissao_certidao_civil;
         $documentos->cartorio_cert_civil = addslashes($this->getRequest()->cartorio_emissao_certidao_civil);
         $documentos->passaporte = addslashes($this->getRequest()->passaporte);
-        $documentos->cartorio_cert_civil_inep = $this->getRequest()->cartorio_cert_civil_inep;
+        $documentos->cartorio_cert_civil_inep = $this->getRequest()->cartorio_cert_civil_inep_id;
 
         // Alteração de documentos compativel com a versão anterior do cadastro,
         // onde era possivel criar uma pessoa, não informando os documentos,

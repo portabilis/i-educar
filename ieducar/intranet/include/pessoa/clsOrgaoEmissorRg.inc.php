@@ -49,7 +49,7 @@ class clsOrgaoEmissorRg
      *
      * @return Object:clsOrgaoEmissorRg
      */
-    function clsOrgaoEmissorRg( $int_idorg_rg = false, $str_sigla = false, $str_descricao = false, $str_situacao = false )
+    function __construct( $int_idorg_rg = false, $str_sigla = false, $str_descricao = false, $str_situacao = false )
     {
         $this->idorg_rg = $int_idorg_rg;
         $this->sigla= $str_sigla;
@@ -126,7 +126,7 @@ class clsOrgaoEmissorRg
      *
      * @return Array
      */
-    function lista( $str_sigla = false, $str_descricao = false, $str_situacao = false,$int_limite_ini = 0, $int_limite_qtd = 20, $str_orderBy = false )
+    function lista( $str_sigla = false, $str_descricao = false, $str_situacao = false,$int_limite_ini = 0, $int_limite_qtd = false, $str_orderBy = false )
     {
         // verificacoes de filtros a serem usados
         $whereAnd = "WHERE ";

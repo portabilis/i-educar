@@ -158,9 +158,9 @@ class indice extends clsCadastro
             $get_escola  = true;
             include("include/pmieducar/educar_campo_lista.php");
         }
-        else 
+        else
         {
-            $this->campoOculto("ref_cod_escola", $this->ref_cod_escola);            
+            $this->campoOculto("ref_cod_escola", $this->ref_cod_escola);
         }
         // text
         $this->campoTexto( "nm_predio", "Nome Prédio", $this->nm_predio, 30, 255, true );
@@ -182,7 +182,7 @@ class indice extends clsCadastro
         $cadastrou = $obj->cadastra();
         if( $cadastrou )
         {
-            
+
             echo "<script>
                         if (parent.document.getElementById('ref_cod_infra_predio').disabled)
                             parent.document.getElementById('ref_cod_infra_predio').options[0] = new Option('Selecione um prédio', '', false, false);
@@ -256,19 +256,19 @@ $pagina->MakeAll();
 ?>
 <script>
 
-<? 
+<?php
 
 if (!$_GET['precisa_lista'])
 {
 ?>
     Event.observe(window, 'load', Init, false);
-    
+
     function Init()
     {
         $('ref_cod_escola').value = parent.document.getElementById('ref_cod_escola').value;
 //      alert($F('ref_cod_escola'));
     }
-    
-<?}?>
+
+<?php } ?>
 
 </script>

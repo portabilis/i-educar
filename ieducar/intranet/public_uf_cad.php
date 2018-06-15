@@ -30,6 +30,8 @@ require_once ("include/clsBanco.inc.php");
 require_once( "include/public/geral.inc.php" );
 require_once ("include/pmieducar/geral.inc.php");
 require_once ("include/modules/clsModulesAuditoriaGeral.inc.php");
+require_once 'App/Model/Pais.php';
+require_once 'App/Model/NivelAcesso.php';
 
 class clsIndexBase extends clsBase
 {
@@ -88,9 +90,9 @@ class indice extends clsCadastro
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_enderecamento_index.php"    => "Endereçamento",
-         ""        => "{$nomeMenu} UF"             
+         ""        => "{$nomeMenu} UF"
     ));
-    $this->enviaLocalizacao($localizacao->montar());        
+    $this->enviaLocalizacao($localizacao->montar());
         return $retorno;
     }
 
@@ -102,9 +104,9 @@ class indice extends clsCadastro
         {
             $objTemp = new clsPais();
             $lista = $objTemp->lista( false, false, false, false, false, "nome ASC" );
-            if ( is_array( $lista ) && count( $lista ) ) 
+            if ( is_array( $lista ) && count( $lista ) )
             {
-                foreach ( $lista as $registro ) 
+                foreach ( $lista as $registro )
                 {
                     $opcoes["{$registro['idpais']}"] = "{$registro['nome']}";
                 }
@@ -137,6 +139,10 @@ class indice extends clsCadastro
          $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
+        if ($this->idpais == App_Model_Pais::BRASIL && $this->nivelAcessoPessoaLogada() != App_Model_NivelAcesso::POLI_INSTITUCIONAL) {
+            $this->mensagem = 'Não é permitido cadastro de UFs brasileiras, pois já estão previamente cadastrados.<br>';
+            return false;
+        }
 
         $obj = new clsPublicUf(strtoupper($this->sigla_uf));
         $duplica= $obj->verificaDuplicidade();
@@ -145,7 +151,7 @@ class indice extends clsCadastro
             return false;
         }else{
 
-        
+
 
         $obj = new clsPublicUf( $this->sigla_uf, $this->nome, $this->geom, $this->idpais, $this->cod_ibge );
         $cadastrou = $obj->cadastra();
@@ -173,6 +179,11 @@ class indice extends clsCadastro
         @session_start();
          $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
+
+        if ($this->idpais == App_Model_Pais::BRASIL && $this->nivelAcessoPessoaLogada() != App_Model_NivelAcesso::POLI_INSTITUCIONAL) {
+            $this->mensagem = 'Não é permitido edição de UFs brasileiras, pois já estão previamente cadastrados.<br>';
+            return false;
+        }
 
         $enderecamentoDetalhe = new clsPublicUf($this->sigla_uf);
         $enderecamentoDetalhe->cadastrou = $this->sigla_uf;
@@ -209,6 +220,10 @@ class indice extends clsCadastro
          $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
+        if ($this->idpais == App_Model_Pais::BRASIL && $this->nivelAcessoPessoaLogada() != App_Model_NivelAcesso::POLI_INSTITUCIONAL) {
+            $this->mensagem = 'Não é permitido exclusão de UFs brasileiras, pois já estão previamente cadastrados.<br>';
+            return false;
+        }
         $enderecamento = $obj->detalhe();
         $enderecamentoDetalhe =  $this->sigla_uf;
 

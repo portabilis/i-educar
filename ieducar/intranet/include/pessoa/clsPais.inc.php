@@ -42,7 +42,7 @@ class clsPais
      *
      * @return Object:clsPais
      */
-    function clsPais( $int_idpais = false, $int_idpais__=false, $str_nome=false, $str_geom=false )
+    function __construct( $int_idpais = false, $int_idpais__=false, $str_nome=false, $str_geom=false )
     {
         if($int_idpais)
             $this->idpais = $int_idpais;

@@ -114,7 +114,7 @@ class clsPmidrhCargos
      *
      * @return object
      */
-    function clsPmidrhCargos( $cod_cargo = null, $ref_pessoa_exc = null, $ref_pessoa_cad = null, $nm_cargo = null, $data_cadastro = null, $data_exclusao = null, $ativo = null )
+    function __construct( $cod_cargo = null, $ref_pessoa_exc = null, $ref_pessoa_cad = null, $nm_cargo = null, $data_cadastro = null, $data_exclusao = null, $ativo = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmidrh.";

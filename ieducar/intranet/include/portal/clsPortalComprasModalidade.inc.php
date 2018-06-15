@@ -104,7 +104,7 @@ class clsPortalComprasModalidade
      *
      * @return object
      */
-    function clsPortalComprasModalidade( $cod_compras_modalidade = null, $nm_modalidade = null )
+    function __construct( $cod_compras_modalidade = null, $nm_modalidade = null )
     {
         $db = new clsBanco();
         $this->_schema = "portal.";

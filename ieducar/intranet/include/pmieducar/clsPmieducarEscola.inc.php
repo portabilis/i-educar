@@ -50,7 +50,7 @@ class clsPmieducarEscola
   var $ref_usuario_cad;
   var $ref_usuario_exc;
   var $ref_cod_instituicao;
-  var $ref_cod_escola_localizacao;
+  var $zona_localizacao;
   var $ref_cod_escola_rede_ensino;
   var $ref_idpes;
   var $sigla;
@@ -66,6 +66,7 @@ class clsPmieducarEscola
   var $acesso;
   var $ref_idpes_gestor;
   var $cargo_gestor;
+  var $email_gestor;
   var $local_funcionamento;
   var $condicao;
   var $codigo_inep_escola_compartilhada;
@@ -102,7 +103,7 @@ class clsPmieducarEscola
   var $dependencia_vias_deficiente;
   var $dependencia_refeitorio;
   var $dependencia_dispensa;
-  var $dependencia_aumoxarifadorgao_regionalo;
+  var $dependencia_aumoxarifado;
   var $dependencia_auditorio;
   var $dependencia_patio_coberto;
   var $dependencia_patio_descoberto;
@@ -146,7 +147,6 @@ class clsPmieducarEscola
   var $ato_autorizativo;
   var $ref_idpes_secretario_escolar;
   var $utiliza_regra_diferenciada;
-  var $orgao_regional;
   var $categoria_escola_privada;
   var $conveniada_com_poder_publico;
   var $mantenedora_escola_privada;
@@ -206,11 +206,11 @@ class clsPmieducarEscola
   /**
    * Construtor.
    */
-  function clsPmieducarEscola($cod_escola = NULL,
+  function __construct($cod_escola = NULL,
                               $ref_usuario_cad = NULL,
                               $ref_usuario_exc = NULL,
                               $ref_cod_instituicao = NULL,
-                              $ref_cod_escola_localizacao = NULL,
+                              $zona_localizacao = NULL,
                               $ref_cod_escola_rede_ensino = NULL,
                               $ref_idpes = NULL,
                               $sigla = NULL,
@@ -223,7 +223,7 @@ class clsPmieducarEscola
     $this->_schema = 'pmieducar.';
     $this->_tabela = $this->_schema . 'escola';
 
-    $this->_campos_lista = $this->_todos_campos = 'e.cod_escola, e.ref_usuario_cad, e.ref_usuario_exc, e.ref_cod_instituicao, e.ref_cod_escola_localizacao, e.ref_cod_escola_rede_ensino, e.ref_idpes, e.sigla, e.data_cadastro,
+    $this->_campos_lista = $this->_todos_campos = 'e.cod_escola, e.ref_usuario_cad, e.ref_usuario_exc, e.ref_cod_instituicao, e.zona_localizacao, e.ref_cod_escola_rede_ensino, e.ref_idpes, e.sigla, e.data_cadastro,
           e.data_exclusao, e.ativo, e.bloquear_lancamento_diario_anos_letivos_encerrados, e.situacao_funcionamento, e.dependencia_administrativa, e.latitude, e.longitude, e.regulamentacao, e.acesso, e.cargo_gestor, e.ref_idpes_gestor, e.area_terreno_total,
           e.condicao, e.area_construida, e.area_disponivel, e.num_pavimentos, e.decreto_criacao, e.tipo_piso, e.medidor_energia, e.agua_consumida, e.abastecimento_agua, e.abastecimento_energia, e.esgoto_sanitario, e.destinacao_lixo,
           e.dependencia_sala_diretoria, e.dependencia_sala_professores, e.dependencia_sala_secretaria, e.dependencia_laboratorio_informatica, e.dependencia_laboratorio_ciencias, e.dependencia_sala_aee,
@@ -233,7 +233,7 @@ class clsPmieducarEscola
           e.dependencia_nenhuma_relacionada, e.dependencia_numero_salas_existente, dependencia_numero_salas_utilizadas,
           e.total_funcionario, e.atendimento_aee, e.fundamental_ciclo, e.localizacao_diferenciada, e.materiais_didaticos_especificos, e.educacao_indigena, e.lingua_ministrada, e.espaco_brasil_aprendizado,
           e.abre_final_semana, e.codigo_lingua_indigena, e.atividade_complementar, e.proposta_pedagogica, e.local_funcionamento, e.codigo_inep_escola_compartilhada, e.televisoes, e.videocassetes, e.dvds, e.antenas_parabolicas, e.copiadoras,
-          e.retroprojetores, e.impressoras, e.aparelhos_de_som, e.projetores_digitais, e.faxs, e.maquinas_fotograficas, e.computadores, e.computadores_administrativo, e.computadores_alunos, e.impressoras_multifuncionais, e.acesso_internet, e.banda_larga, e.ato_criacao, e.ato_autorizativo, e.ref_idpes_secretario_escolar, e.utiliza_regra_diferenciada, e.orgao_regional, e.categoria_escola_privada, e.conveniada_com_poder_publico, e.mantenedora_escola_privada, e.cnpj_mantenedora_principal
+          e.retroprojetores, e.impressoras, e.aparelhos_de_som, e.projetores_digitais, e.faxs, e.maquinas_fotograficas, e.computadores, e.computadores_administrativo, e.computadores_alunos, e.impressoras_multifuncionais, e.acesso_internet, e.banda_larga, e.ato_criacao, e.ato_autorizativo, e.ref_idpes_secretario_escolar, e.utiliza_regra_diferenciada, e.categoria_escola_privada, e.conveniada_com_poder_publico, e.mantenedora_escola_privada, e.cnpj_mantenedora_principal, e.email_gestor
           ';
 
     if (is_numeric($ref_usuario_cad)) {
@@ -299,25 +299,8 @@ class clsPmieducarEscola
       }
     }
 
-    if (is_numeric($ref_cod_escola_localizacao)) {
-      if (class_exists("clsPmieducarEscolaLocalizacao")) {
-        $tmp_obj = new clsPmieducarEscolaLocalizacao($ref_cod_escola_localizacao);
-        if (method_exists($tmp_obj, "existe")) {
-          if ($tmp_obj->existe()) {
-            $this->ref_cod_escola_localizacao = $ref_cod_escola_localizacao;
-          }
-        }
-        elseif (method_exists($tmp_obj, "detalhe")) {
-          if ($tmp_obj->detalhe()) {
-            $this->ref_cod_escola_localizacao = $ref_cod_escola_localizacao;
-          }
-        }
-      }
-      else {
-        if ($db->CampoUnico("SELECT 1 FROM pmieducar.escola_localizacao WHERE cod_escola_localizacao = '{$ref_cod_escola_localizacao}'")) {
-          $this->ref_cod_escola_localizacao = $ref_cod_escola_localizacao;
-        }
-      }
+    if (is_numeric($zona_localizacao)) {
+        $this->zona_localizacao = $zona_localizacao;
     }
 
     if (is_numeric($ref_cod_escola_rede_ensino)) {
@@ -394,7 +377,7 @@ class clsPmieducarEscola
   function cadastra()
   {
     if (is_numeric($this->ref_usuario_cad) && is_numeric($this->ref_cod_instituicao) &&
-      is_numeric($this->ref_cod_escola_localizacao) &&
+      is_numeric($this->zona_localizacao) &&
       is_numeric($this->ref_cod_escola_rede_ensino) && is_string($this->sigla)
     ) {
       $db = new clsBanco();
@@ -421,9 +404,9 @@ class clsPmieducarEscola
         $gruda = ", ";
       }
 
-      if (is_numeric($this->ref_cod_escola_localizacao)) {
-        $campos .= "{$gruda}ref_cod_escola_localizacao";
-        $valores .= "{$gruda}'{$this->ref_cod_escola_localizacao}'";
+      if (is_numeric($this->zona_localizacao)) {
+        $campos .= "{$gruda}zona_localizacao";
+        $valores .= "{$gruda}{$this->zona_localizacao}";
         $gruda = ", ";
       }
 
@@ -505,6 +488,12 @@ class clsPmieducarEscola
       if (is_numeric($this->cargo_gestor)) {
         $campos .= "{$gruda}cargo_gestor";
         $valores .= "{$gruda}'{$this->cargo_gestor}'";
+        $gruda = ", ";
+      }
+
+      if (is_string($this->email_gestor)) {
+        $campos .= "{$gruda}email_gestor";
+        $valores .= "{$gruda}'{$this->email_gestor}'";
         $gruda = ", ";
       }
 
@@ -964,12 +953,6 @@ class clsPmieducarEscola
         $gruda = ", ";
       }
 
-      if (is_numeric($this->orgao_regional)) {
-        $campos .= "{$gruda}orgao_regional";
-        $valores .= "{$gruda}'{$this->orgao_regional}'";
-        $gruda = ", ";
-      }
-
       if (is_string($this->ato_criacao)) {
         $campos .= "{$gruda}ato_criacao";
         $valores .= "{$gruda}'{$this->ato_criacao}'";
@@ -1025,7 +1008,7 @@ class clsPmieducarEscola
       return $recordId;
     }
     else {
-      echo "<br><br>is_numeric($this->ref_usuario_cad) && is_numeric($this->ref_cod_instituicao) && is_numeric($this->ref_cod_escola_localizacao) && is_numeric($this->ref_cod_escola_rede_ensino) && is_string($this->sigla )";
+      echo "<br><br>is_numeric($this->ref_usuario_cad) && is_numeric($this->ref_cod_instituicao) && is_numeric($this->zona_localizacao) && is_numeric($this->ref_cod_escola_rede_ensino) && is_string($this->sigla )";
     }
 
     return FALSE;
@@ -1056,8 +1039,8 @@ class clsPmieducarEscola
         $gruda = ", ";
       }
 
-      if (is_numeric($this->ref_cod_escola_localizacao)) {
-        $set .= "{$gruda}ref_cod_escola_localizacao = '{$this->ref_cod_escola_localizacao}'";
+      if (is_numeric($this->zona_localizacao)) {
+        $set .= "{$gruda}zona_localizacao = '{$this->zona_localizacao}'";
         $gruda = ", ";
       }
 
@@ -1154,6 +1137,11 @@ class clsPmieducarEscola
 
       if (is_numeric($this->cargo_gestor)) {
         $set .= "{$gruda}cargo_gestor = '{$this->cargo_gestor}'";
+        $gruda = ", ";
+      }
+
+      if (is_string($this->email_gestor)) {
+        $set .= "{$gruda}email_gestor = '{$this->email_gestor}'";
         $gruda = ", ";
       }
 
@@ -1574,14 +1562,6 @@ class clsPmieducarEscola
         $gruda = ", ";
       }
 
-      if (is_numeric($this->orgao_regional)) {
-        $set .= "{$gruda}orgao_regional = '{$this->orgao_regional}'";
-        $gruda = ", ";
-      }else{
-        $set .= "{$gruda}orgao_regional = NULL ";
-        $gruda = ", ";
-      }
-
       if (is_numeric($this->categoria_escola_privada)) {
         $set .= "{$gruda}categoria_escola_privada = '{$this->categoria_escola_privada}'";
         $gruda = ", ";
@@ -1629,7 +1609,7 @@ class clsPmieducarEscola
    */
   public function lista($int_cod_escola = NULL, $int_ref_usuario_cad = NULL,
     $int_ref_usuario_exc = NULL, $int_ref_cod_instituicao = NULL,
-    $int_ref_cod_escola_localizacao = NULL, $int_ref_cod_escola_rede_ensino = NULL,
+    $zona_localizacao = NULL, $int_ref_cod_escola_rede_ensino = NULL,
     $int_ref_idpes = NULL, $str_sigla = NULL, $date_data_cadastro = NULL,
     $date_data_exclusao = NULL, $int_ativo = NULL, $str_nome = NULL,
     $escola_sem_avaliacao = NULL, $cod_usuario = NULL)
@@ -1676,8 +1656,8 @@ class clsPmieducarEscola
       $whereAnd = " AND ";
     }
 
-    if (is_numeric($int_ref_cod_escola_localizacao)) {
-      $filtros .= "{$whereAnd} ref_cod_escola_localizacao = '{$int_ref_cod_escola_localizacao}'";
+    if (is_numeric($zona_localizacao)) {
+      $filtros .= "{$whereAnd} zona_localizacao = {$zona_localizacao}";
       $whereAnd = " AND ";
     }
 

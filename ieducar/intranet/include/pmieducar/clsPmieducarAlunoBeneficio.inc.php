@@ -107,7 +107,7 @@ class clsPmieducarAlunoBeneficio
      *
      * @return object
      */
-    function clsPmieducarAlunoBeneficio( $cod_aluno_beneficio = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_beneficio = null, $desc_beneficio = null, $data_cadastro = null, $data_exclusao = null, $ativo = null )
+    function __construct( $cod_aluno_beneficio = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_beneficio = null, $desc_beneficio = null, $data_cadastro = null, $data_exclusao = null, $ativo = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmieducar.";

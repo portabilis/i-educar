@@ -49,7 +49,7 @@ class clsBairro
      *
      * @return Object:clsBairro
      */
-    function clsBairro( $int_idbai = false, $int_idmun=false, $str_geom=false, $str_nome=false , $int_idpes_cad = false, $int_idpes_rev = false, $str_origem_gravacao = false, $str_operacao=false, $int_idsis_cad=false, $int_idsis_rev=false, $zona_localizacao = null )
+    function __construct( $int_idbai = false, $int_idmun=false, $str_geom=false, $str_nome=false , $int_idpes_cad = false, $int_idpes_rev = false, $str_origem_gravacao = false, $str_operacao=false, $int_idsis_cad=false, $int_idsis_rev=false, $zona_localizacao = null )
     {
         $this->idbai = $int_idbai;
         

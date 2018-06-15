@@ -103,7 +103,7 @@ class clsModulesItinerarioTransporteEscolar
   /**
    * Construtor.
    */
-  function clsModulesItinerarioTransporteEscolar($cod_itinerario_transporte_escolar = NULL, $ref_cod_rota_transporte_escolar = NULL
+  function __construct($cod_itinerario_transporte_escolar = NULL, $ref_cod_rota_transporte_escolar = NULL
     , $seq = NULL,  $ref_cod_ponto_transporte_escolar = NULL, $ref_cod_veiculo = NULL,
      $hora = NULL, $tipo = NULL)
   {

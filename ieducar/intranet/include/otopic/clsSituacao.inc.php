@@ -45,7 +45,7 @@ class clsSituacao
      *
      * @return Object
      */
-    function clsSituacao( $int_cod_situacao = null, $int_ref_cod_pessoa_auxiliar = null, $int_ref_idpes = null, $str_situacao = null )
+    function __construct( $int_cod_situacao = null, $int_ref_cod_pessoa_auxiliar = null, $int_ref_idpes = null, $str_situacao = null )
     {
         
         if(is_numeric($int_cod_situacao))

@@ -68,7 +68,7 @@ class clsPmieducarEscolaCandidatoFilaUnica
      *
      * @return object
      */
-    function clsPmieducarEscolaCandidatoFilaUnica($ref_cod_candidato_fila_unica = null,
+    function __construct($ref_cod_candidato_fila_unica = null,
                                                   $ref_cod_escola = null,
                                                   $sequencial = null)
     {

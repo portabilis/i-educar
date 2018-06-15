@@ -111,7 +111,7 @@ class clsPmieducarEndereco
      *
      * @return object
      */
-    function clsPmieducarEndereco( $ref_cod_pessoa_educ = null, $ref_idbai = null, $ref_cep = null, $ref_idlog = null, $ref_idtlog = null, $ref_sigla_uf = null, $numero = null, $complemento = null, $letra = null, $andar = null, $bloco = null, $apartamento = null )
+    function __construct( $ref_cod_pessoa_educ = null, $ref_idbai = null, $ref_cep = null, $ref_idlog = null, $ref_idtlog = null, $ref_sigla_uf = null, $numero = null, $complemento = null, $letra = null, $andar = null, $bloco = null, $apartamento = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmieducar.";

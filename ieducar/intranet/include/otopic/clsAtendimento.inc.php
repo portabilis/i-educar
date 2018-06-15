@@ -45,7 +45,7 @@ class clsAtendimento
      *
      * @return Object
      */
-    function clsAtendimento( $int_cod_atendimento = false, $int_ref_ref_cod_pessoa_exc = false, $int_ref_ref_cod_pessoa_cad = false, $str_descricao = false, $str_data_cadastro = false, $str_data_exclusao = false, $int_ativo = false )
+    function __construct( $int_cod_atendimento = false, $int_ref_ref_cod_pessoa_exc = false, $int_ref_ref_cod_pessoa_cad = false, $str_descricao = false, $str_data_cadastro = false, $str_data_exclusao = false, $int_ativo = false )
     {
         if(is_numeric($int_cod_atendimento))
         {

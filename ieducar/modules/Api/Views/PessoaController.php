@@ -38,6 +38,7 @@ require_once 'lib/Portabilis/String/Utils.php';
 require_once 'lib/Portabilis/Date/Utils.php';
 require_once 'include/pessoa/clsPessoa_.inc.php';
 require_once 'include/pessoa/clsFisica.inc.php';
+require_once 'include/pessoa/clsCadastroFisicaRaca.inc.php';
 require_once 'intranet/include/funcoes.inc.php';
 
 /**
@@ -122,6 +123,8 @@ class PessoaController extends ApiCoreController
             (select nm_mae from pmieducar.aluno where cod_aluno = $1)) as nome_mae,
             (select nome from cadastro.pessoa where idpes = fisica.idpes_responsavel) as nome_responsavel,
             (select rg from cadastro.documento where documento.idpes = fisica.idpes) as rg,
+            (select sigla_uf_exp_rg from cadastro.documento where documento.idpes = fisica.idpes) as uf_emissao_rg,
+            (select idorg_exp_rg from cadastro.documento where documento.idpes = fisica.idpes) as orgao_emissao_rg,
             (select tipo_cert_civil from cadastro.documento where documento.idpes = fisica.idpes) as tipo_cert_civil,
             (select num_termo from cadastro.documento where documento.idpes = fisica.idpes) as num_termo,
             (select num_livro from cadastro.documento where documento.idpes = fisica.idpes) as num_livro,
@@ -170,6 +173,14 @@ class PessoaController extends ApiCoreController
 
 
              (SELECT idbai FROM cadastro.endereco_pessoa WHERE idpes = $2) as idbai,
+             fisica.idpais_estrangeiro as pais_origem_id,
+           fisica.nacionalidade as tipo_nacionalidade,
+           fisica.zona_localizacao_censo,
+           (SELECT pais.nome
+                   FROM public.pais
+                   WHERE pais.idpais = fisica.idpais_estrangeiro) AS pais_origem_nome,
+
+           (SELECT ref_cod_raca FROM cadastro.fisica_raca WHERE fisica.idpes = fisica_raca.ref_idpes) as cor_raca,
 
              (SELECT bairro.iddis FROM cadastro.endereco_pessoa
                 INNER JOIN public.bairro ON (endereco_pessoa.idbai = bairro.idbai)
@@ -198,7 +209,9 @@ class PessoaController extends ApiCoreController
     $attrs   = array('cpf', 'rg', 'data_nascimento', 'religiao_id', 'pai_id', 'mae_id', 'responsavel_id', 'nome_pai', 'nome_mae',
                        'nome_responsavel','sexo','estadocivil', 'cep', 'logradouro', 'idtlog', 'bairro','tipo_cert_civil', 'num_termo', 'num_livro',
                        'num_folha', 'certidao_nascimento', 'certidao_casamento', 'zona_localizacao', 'idbai', 'idlog', 'idmun', 'idmun_nascimento', 'complemento',
-                       'apartamento', 'andar', 'bloco', 'numero' , 'letra', 'possui_documento', 'iddis', 'distrito', 'ddd_fone_fixo', 'fone_fixo', 'fone_mov', 'ddd_fone_mov');
+                       'apartamento', 'andar', 'bloco', 'numero' , 'letra', 'possui_documento', 'iddis', 'distrito', 'ddd_fone_fixo', 'fone_fixo', 'fone_mov', 'ddd_fone_mov',
+                       'pais_origem_id', 'tipo_nacionalidade', 'zona_localizacao_censo', 'pais_origem_nome',
+                    'cor_raca', 'uf_emissao_rg', 'orgao_emissao_rg');
     $details = Portabilis_Array_Utils::filter($details, $attrs);
 
     $details['aluno_id']         = $alunoId;
@@ -221,6 +234,8 @@ class PessoaController extends ApiCoreController
     $details['ddd_fone_mov']               = $this->toUtf8($details['ddd_fone_mov']);
     $details['fone_mov']                   = $this->toUtf8($details['fone_mov']);
     $details['falecido']                   = $this->toUtf8($details['falecido']);
+
+    $details['pais_origem_nome']           = $this->toUtf8($details['pais_origem_nome']);
 
     if($details['idmun']){
 
@@ -457,6 +472,9 @@ class PessoaController extends ApiCoreController
     $ddd_fone_mov               = $this->getRequest()->ddd_telefone_mov;
     $fone_mov                   = $this->getRequest()->telefone_mov;
     $fisica->falecido           = $this->getRequest()->falecido == "true";
+    $fisica->idpais_estrangeiro = $this->getRequest()->pais_origem_id;
+    $fisica->nacionalidade = $this->getRequest()->tipo_nacionalidade;
+    $fisica->zona_localizacao_censo = $this->getRequest()->zona_localizacao_censo;
 
     $sql = "select 1 from cadastro.fisica WHERE idpes = $1 limit 1";
 
@@ -465,8 +483,12 @@ class PessoaController extends ApiCoreController
     else
       $fisica->edita();
 
-
-
+    $raca = new clsCadastroFisicaRaca($pessoaId, $this->getRequest()->cor_raca);
+    if ($raca->existe()) {
+        $this->getRequest()->cor_raca ? $raca->edita() : $raca->excluir();
+    } elseif ($this->getRequest()->cor_raca) {
+        $raca->cadastra();
+    }
 
     if ($fone_fixo || $fone_fixo == ''){
       $ddd_fixo = $ddd_fone_fixo;

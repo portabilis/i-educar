@@ -1,105 +1,89 @@
 <?php
 
-/**
- * i-Educar - Sistema de gestão escolar
- *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
- *                     <ctima@itajai.sc.gov.br>
- *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
- *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
- * do GNU para mais detalhes.
- *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
- *
- * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   Portabilis
- * @since     Arquivo disponível desde a versão 1.1.0
- * @version   $Id$
- */
-
-
-/**
- * Portabilis_Mailer class.
- *
- * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   Portabilis
- * @since     Classe disponível desde a versão 1.1.0
- * @version   @@package_version@@
- */
-
-// requer bibliotecas Mail e Net_SMTP, ver /scripts/install_pear_packages.sh
-require_once 'Mail.php';
+require_once 'vendor/autoload.php';
 
 class Portabilis_Mailer {
 
-  static $selfMailer;
+    public $config = [];
 
-  // #TODO refatorar classe para ser singleton ?
+    protected $transport;
+    protected $mailer;
+    protected $logger;
 
-  public function __construct() {
-    /* Configurações podem ser alteradas em tempo de execução, ex:
-       $mailerInstance->configs->smtp->username = 'new_username'; */
+    public function __construct()
+    {
+        /* Configurações podem ser alteradas em tempo de execução, ex:
+        $mailerInstance->configs->smtp->username = 'new_username'; */
 
-    $this->configs = $GLOBALS['coreExt']['Config']->app->mailer;
-  }
-
-
-  public function sendMail($to, $subject, $message) {
-    $from = "{$this->configs->smtp->from_name} <{$this->configs->smtp->from_email}>";
-    $headers = array ('From'    => $from,
-                      'To'      => $to,
-                      'Subject' => $subject);
-
-    $smtp = Mail::factory('smtp', array ('host'     => $this->configs->smtp->host,
-                                         'port'     => $this->configs->smtp->port,
-                                         'auth'     => $this->configs->smtp->auth == '1',
-                                         'username' => $this->configs->smtp->username,
-                                         'password' => $this->configs->smtp->password,
-                                         'debug'    => $this->configs->debug == '1',
-                                         'persist'  => false));
-
-    // if defined some allowed domain defined in config, check if $to is allowed
-
-    if (! is_null($this->configs->allowed_domains)) {
-      foreach ($this->configs->allowed_domains as $domain) {
-        if (strpos($to, "@$domain") != false) {
-          $sendResult = ! PEAR::isError($smtp->send($to, $headers, $message));
-          break;
-        }
-      }
+        $this->config = $GLOBALS['coreExt']['Config']->app->mailer;
     }
-    else
-      $sendResult = ! PEAR::isError($smtp->send($to, $headers, $message));
 
-    error_log("** Sending email from: $from, to: $to, subject: $subject, message: $message");
-    error_log("sendResult: $sendResult");
+    public function sendMail($to, $subject, $message, $options = [])
+    {
+        $defaultOpts = [
+            'mime' => 'text/plain',
+            'debug' => false
+        ];
 
-    return $sendResult;
-  }
+        $options += $defaultOpts;
 
+        try {
+            $this->transport = (new Swift_SmtpTransport($this->config->smtp->host, $this->config->smtp->port))
+                ->setUsername($this->config->smtp->username)
+                ->setPassword($this->config->smtp->password);
 
-  static function mail($to, $subject, $message) {
-    if (! isset(self::$selfMailer))
-    self::$selfMailer = new Portabilis_Mailer();
+            $encryption = $this->config->smtp->encryption;
 
-    return self::$selfMailer->sendMail($to, $subject, $message);
-  }
+            if (!empty($encryption)) {
+                $this->transport->setEncryption($encryption);
+            }
 
+            $this->mailer = new Swift_Mailer($this->transport);
 
-  static protected function host() {
-    return $_SERVER['HTTP_HOST'];
-  }
+            if ((bool)$this->config->debug || (bool)$options['debug']) {
+                $this->logger = new Swift_Plugins_Loggers_ArrayLogger();
+                $this->mailer->registerPlugin(new Swift_Plugins_LoggerPlugin($this->logger));
+            }
+
+            $from = !empty($options['from'])
+                ? $options['from']
+                : [$this->config->smtp->from_email => $this->config->smtp->from_name];
+
+            $message = (new Swift_Message($subject))
+                ->setFrom($from)
+                ->setTo($to)
+                ->setBody($message, $options['mime']);
+
+            $allowedDomains = !empty($this->configs->allowed_domains)
+                ? $this->configs->allowed_domains
+                : ['*'];
+
+            $result = false;
+
+            foreach ($allowedDomains as $domain) {
+                if ($domain === '*' || strpos($to, "@$domain") !== false) {
+                    $result = $this->mailer->send($message);
+                    break;
+                }
+            }
+
+            return $result;
+        } catch (Exception $e) {
+            error_log('Erro no envio de e-mail: ' . $e->getMessage());
+        }
+
+        return false;
+    }
+
+    public function debug()
+    {
+        if ((bool)$this->config->debug || (bool)$options['debug']) {
+            return $this->logger->dump();
+        }
+    }
+
+    protected function host()
+    {
+        return (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : false);
+    }
 }

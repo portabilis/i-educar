@@ -47,7 +47,7 @@ require_once 'lib/Portabilis/Array/Utils.php';
  */
 class clsPermissoes
 {
-  function clsPermissoes()
+  function __construct()
   {
   }
 

@@ -64,7 +64,7 @@
         var $globalAlign;
         
         
-        function clsGrafico($valor, $titulo="Gráfico", $tgrafico=600,  $legConteudo="" )
+        function __construct($valor, $titulo="Gráfico", $tgrafico=600,  $legConteudo="" )
         {
             $this->arrValores = $valor;         
             $this->intTamGrafico = $tgrafico;
@@ -117,7 +117,7 @@
     </head>
     <body>";
             
-            $retorno = ereg_replace("<!-- #&TITULO&# -->",$this->titulo,$retorno);
+            $retorno = preg_replace("/<!-- #&TITULO&# -->/",$this->titulo,$retorno);
             
             $retorno .= "<table border='0' cellpadding='0' cellspacing='1' align=\"{$this->globalAlign}\"><tr><td colspan=\"4\" align=\"center\" class=\"graf_titulo\">{$titulo}</td></tr>\n";
             //$retorno .= "<tr><td colspan=2 align=center>&nbsp;</td></tr>\n";
@@ -374,7 +374,7 @@
     </head>
     <body>";
         
-            $retorno = ereg_replace("<!-- #&TITULO&# -->",$this->titulo,$retorno);
+            $retorno = preg_replace("/<!-- #&TITULO&# -->/",$this->titulo,$retorno);
             
             $aux2 = ($cont*$cont2)+$cont2+1; // conta quantas celulas a tabela deve possuir
             $retorno .= "<table border='0' cellpadding='0' cellspacing='0' align=\"{$this->globalAlign}\"><tr><td colspan={$aux2} align=center>{$titulo}</td></tr>  \n";

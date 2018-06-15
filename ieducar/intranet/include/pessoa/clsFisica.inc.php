@@ -98,7 +98,7 @@ class clsFisica
      *
      * @return Object:clsFisica
      */
-    function clsFisica( $idpes=false,
+    function __construct( $idpes=false,
                         $data_nasc=false,
                         $sexo=false,
                         $idpes_mae=false,

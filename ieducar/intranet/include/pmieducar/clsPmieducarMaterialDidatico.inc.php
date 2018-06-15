@@ -110,7 +110,7 @@ class clsPmieducarMaterialDidatico
      *
      * @return object
      */
-    function clsPmieducarMaterialDidatico( $cod_material_didatico = null, $ref_cod_instituicao = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $ref_cod_material_tipo = null, $nm_material = null, $desc_material = null, $custo_unitario = null, $data_cadastro = null, $data_exclusao = null, $ativo = null )
+    function __construct( $cod_material_didatico = null, $ref_cod_instituicao = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $ref_cod_material_tipo = null, $nm_material = null, $desc_material = null, $custo_unitario = null, $data_cadastro = null, $data_exclusao = null, $ativo = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmieducar.";

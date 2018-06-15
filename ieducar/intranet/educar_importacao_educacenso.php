@@ -254,9 +254,7 @@ class indice extends clsCadastro
 
       $codEscolaRedeEnsino = $this->getOrCreateRedeDeEnsino();
 
-      $codEscolaLocalizacao = $this->getOrCreateLocalizacaoEscola($localizacao);
-
-      $codEscola = $this->createEscola($codEscolaLocalizacao, $codEscolaRedeEnsino, $idpesEscola, $nomeEscola, $idpesGestor, $cargoGestor);
+      $codEscola = $this->createEscola($localizacao, $codEscolaRedeEnsino, $idpesEscola, $nomeEscola, $idpesGestor, $cargoGestor);
 
       $this->createEscolaAnoLetivo($codEscola, $dataInicioAnoLetivo, $dataFimAnoLetivo);
 
@@ -402,7 +400,7 @@ class indice extends clsCadastro
     );
 
     $camposEscola['abastecimento_agua'] = array();
-    for ($i=1; $i <= 5; $i++) { 
+    for ($i=1; $i <= 5; $i++) {
       if($dadosRegistro[20+$i-1]){
         $camposEscola['abastecimento_agua'][] = $i;
       }
@@ -410,7 +408,7 @@ class indice extends clsCadastro
     $camposEscola['abastecimento_agua'] = '{'.implode(',', $camposEscola['abastecimento_agua']).'}';
 
     $camposEscola['abastecimento_energia'] = array();
-    for ($i=1; $i <= 4; $i++) { 
+    for ($i=1; $i <= 4; $i++) {
       if($dadosRegistro[25+$i-1]){
         $camposEscola['abastecimento_energia'][] = $i;
       }
@@ -418,7 +416,7 @@ class indice extends clsCadastro
     $camposEscola['abastecimento_energia'] = '{'.implode(',', $camposEscola['abastecimento_energia']).'}';
 
     $camposEscola['esgoto_sanitario'] = array();
-    for ($i=1; $i <= 3; $i++) { 
+    for ($i=1; $i <= 3; $i++) {
       if($dadosRegistro[29+$i-1]){
         $camposEscola['esgoto_sanitario'][] = $i;
       }
@@ -426,13 +424,13 @@ class indice extends clsCadastro
     $camposEscola['esgoto_sanitario'] = '{'.implode(',', $camposEscola['esgoto_sanitario']).'}';
 
     $camposEscola['destinacao_lixo'] = array();
-    for ($i=1; $i <= 6; $i++) { 
+    for ($i=1; $i <= 6; $i++) {
       if($dadosRegistro[32+$i-1]){
         $camposEscola['destinacao_lixo'][] = $i;
       }
     }
     $camposEscola['destinacao_lixo'] = '{'.implode(',', $camposEscola['destinacao_lixo']).'}';
-    
+
     $codEscola = $this->existeEscola($inep);
     if($codEscola){
       $objEscola = new clsPmieducarEscola($codEscola);
@@ -468,6 +466,7 @@ class indice extends clsCadastro
         $diasSemana[] = $i;
       }
     }
+    $diasSemana = '{' . implode(',', $diasSemana) . '}';
 
     $disciplinas = array();
     $disciplinas[1] = $dadosRegistro[40-1];
@@ -500,30 +499,39 @@ class indice extends clsCadastro
     $camposTurma = array(
       'tipo_atendimento' => $dadosRegistro[18-1],
       'turma_mais_educacao' => $dadosRegistro[19-1],
-      'atividade_complementar_1' => $dadosRegistro[20-1],
-      'atividade_complementar_2' => $dadosRegistro[21-1],
-      'atividade_complementar_3' => $dadosRegistro[22-1],
-      'atividade_complementar_4' => $dadosRegistro[23-1],
-      'atividade_complementar_5' => $dadosRegistro[24-1],
-      'atividade_complementar_6' => $dadosRegistro[25-1],
-      'aee_braille' => $dadosRegistro[26-1],
-      'aee_recurso_optico' => $dadosRegistro[27-1],
-      'aee_estrategia_desenvolvimento' => $dadosRegistro[28-1],
-      'aee_tecnica_mobilidade' => $dadosRegistro[29-1],
-      'aee_libras' => $dadosRegistro[30-1],
-      'aee_caa' => $dadosRegistro[31-1],
-      'aee_curricular' => $dadosRegistro[32-1],
-      'aee_soroban' => $dadosRegistro[33-1],
-      'aee_informatica' => $dadosRegistro[34-1],
-      'aee_lingua_escrita' => $dadosRegistro[35-1],
-      'aee_autonomia' => $dadosRegistro[36-1],
       'etapa_educacenso' => $dadosRegistro[38-1],
       'cod_curso_profissional' => $dadosRegistro[39-1],
+      'tipo_mediacao_didatico_pedagogico' => $dadosRegistro[6-1]
     );
+
+    $camposTurma['dias_semana'] = array();
+    for ($i=1; $i <= 7; $i++) { 
+      if($dadosRegistro[10+$i-1]){
+        $camposTurma['dias_semana'][] = $i;
+      }
+    }
+    $camposTurma['dias_semana'] = '{'.implode(',', $camposTurma['dias_semana']).'}';
+
+    $camposTurma['atividades_complementares'] = array();
+    for ($i=1; $i <= 6; $i++) { 
+      if($dadosRegistro[19+$i-1]){
+        $camposTurma['atividades_complementares'][] = $dadosRegistro[19+$i-1];
+      }
+    }
+    $camposTurma['atividades_complementares'] = '{'.implode(',', $camposTurma['atividades_complementares']).'}';
+
+    $camposTurma['atividades_aee'] = array();
+    for ($i=1; $i <= 11; $i++) { 
+      if($dadosRegistro[25+$i-1]){
+        $camposTurma['atividades_aee'][] = $i;
+      }
+    }
+    $camposTurma['atividades_aee'] = '{'.implode(',', $camposTurma['atividades_aee']).'}';
 
 
     $modalidadeEnsinoCenso = $dadosRegistro[37-1];
     $etapaEnsinoCenso = $dadosRegistro[38-1];
+    $tipoAtendimento = $dadosRegistro[18-1];
     $codEscola = $this->existeEscola($inepEscola);
 
     if($codEscola){
@@ -535,8 +543,8 @@ class indice extends clsCadastro
       if(!$codTurma){
 
         $codTurmaTipo = $this->getOrCreateTurmaTipo();
-        $codCurso = $this->getOrCreateCurso($etapaEnsinoCenso, $codEscola, $modalidadeEnsinoCenso);
-        $codSerie = $this->getOrCreateSerie($etapaEnsinoCenso, $codEscola, $codCurso);
+        $codCurso = $this->getOrCreateCurso($etapaEnsinoCenso, $codEscola, $modalidadeEnsinoCenso, $tipoAtendimento);
+        $codSerie = $this->getOrCreateSerie($etapaEnsinoCenso, $codEscola, $codCurso, $tipoAtendimento);
 
         $turma = new clsPmieducarTurma();
         $turma->ref_cod_instituicao = $this->ref_cod_instituicao;
@@ -555,6 +563,7 @@ class indice extends clsCadastro
         $turma->hora_final = $horaFinal;
         $turma->ano = $this->ano;
         $turma->tipo_boletim = 1;
+        $turma->dias_semana = $diasSemana;
 
         foreach ($camposTurma as $key => $value) {
           $turma->{$key} = $value;
@@ -564,13 +573,6 @@ class indice extends clsCadastro
 
         if(!empty($inepTurma)){
           $turma->updateInep($inepTurma);
-        }
-
-        foreach ($diasSemana as $key => $diaSemana) {
-          $obj = new clsPmieducarTurmaDiaSemana($diaSemana,
-              $codTurma, $horaInicial, $horaFinal);
-
-          $obj->cadastra();
         }
 
         foreach ($disciplinas as $disciplinaEducacenso => $usaDisciplina) {
@@ -705,9 +707,17 @@ class indice extends clsCadastro
     return $codTurmaTipo;
   }
 
-  function getOrCreateSerie($etapaEnsinoCenso, $codEscola, $codCurso){
+  function getOrCreateSerie($etapaEnsinoCenso, $codEscola, $codCurso, $tipoAtendimento){
     $dadosSerie = $this->etapasCenso[$etapaEnsinoCenso];
     $codSerie = null;
+
+    if ($this->isAtividadeComplementar($tipoAtendimento)) {
+      $dadosSerie = $this->etapasCenso['atividade_complementar'];
+    }
+
+    if ($this->isAtendimentoEspecializado($tipoAtendimento)) {
+      $dadosSerie = $this->etapasCenso['atendimento_educacional_especializado'];
+    }
 
     $series = new clsPmieducarSerie();
     $series = $series->lista(null, null, null, $codCurso, null, $dadosSerie['etapa'], null, null, null, null, null, null, 1, $this->ref_cod_instituicao);
@@ -746,9 +756,17 @@ class indice extends clsCadastro
     return $codSerie;
   }
 
-  function getOrCreateCurso($etapaEnsinoCenso, $codEscola, $modalidade){
+  function getOrCreateCurso($etapaEnsinoCenso, $codEscola, $modalidade, $tipoAtendimento){
     $dadosCurso = $this->etapasCenso[$etapaEnsinoCenso];
 
+    if ($this->isAtividadeComplementar($tipoAtendimento)) {
+      $dadosCurso = $this->etapasCenso['atividade_complementar'];
+    }
+
+    if ($this->isAtendimentoEspecializado($tipoAtendimento)) {
+      $dadosCurso = $this->etapasCenso['atendimento_educacional_especializado'];
+    }
+    
     $codCurso = $this->getCurso($dadosCurso['curso']);
 
     if (!$codCurso) {
@@ -782,8 +800,7 @@ class indice extends clsCadastro
         $vinculo->cadastra();
       }
     }
-
-
+ 
     return $codCurso;
   }
 
@@ -960,27 +977,23 @@ class indice extends clsCadastro
       'formacao_complementacao_pedagogica_3' => $dadosRegistro[19-1],
       'ano_inicio_curso_superior_3' => $dadosRegistro[21-1],
       'ano_conclusao_curso_superior_3' => $dadosRegistro[22-1],
-      'pos_especializacao' => $dadosRegistro[24-1],
-      'pos_mestrado' => $dadosRegistro[25-1],
-      'pos_doutorado' => $dadosRegistro[26-1],
-      'pos_nenhuma' => $dadosRegistro[27-1],
-      'curso_creche' => $dadosRegistro[28-1],
-      'curso_pre_escola' => $dadosRegistro[29-1],
-      'curso_anos_iniciais' => $dadosRegistro[30-1],
-      'curso_anos_finais' => $dadosRegistro[31-1],
-      'curso_ensino_medio' => $dadosRegistro[32-1],
-      'curso_eja' => $dadosRegistro[33-1],
-      'curso_educacao_especial' => $dadosRegistro[34-1],
-      'curso_educacao_indigena' => $dadosRegistro[35-1],
-      'curso_educacao_campo' => $dadosRegistro[36-1],
-      'curso_educacao_ambiental' => $dadosRegistro[37-1],
-      'curso_educacao_direitos_humanos' => $dadosRegistro[38-1],
-      'curso_genero_diversidade_sexual' => $dadosRegistro[39-1],
-      'curso_direito_crianca_adolescente' => $dadosRegistro[40-1],
-      'curso_relacoes_etnicorraciais' => $dadosRegistro[41-1],
-      'curso_outros' => $dadosRegistro[42-1],
-      'curso_nenhum' => $dadosRegistro[43-1],
     );
+
+    $cursosServidor['pos_graduacao'] = array();
+    for ($i=1; $i <= 4; $i++) { 
+      if($dadosRegistro[23+$i-1]){
+        $cursosServidor['pos_graduacao'][] = $i;
+      }
+    }
+    $cursosServidor['pos_graduacao'] = '{'.implode(',', $cursosServidor['pos_graduacao']).'}';
+
+    $cursosServidor['curso_formacao_continuada'] = array();
+    for ($i=1; $i <= 16; $i++) { 
+      if($dadosRegistro[27+$i-1]){
+        $cursosServidor['curso_formacao_continuada'][] = $i;
+      }
+    }
+    $cursosServidor['curso_formacao_continuada'] = '{'.implode(',', $cursosServidor['curso_formacao_continuada']).'}';
 
     if(!is_numeric($inepServidor)){
       return false;
@@ -1123,17 +1136,13 @@ class indice extends clsCadastro
       }
     }
 
-    $recursosProva = array(
-      'recurso_prova_inep_aux_ledor' => $dadosRegistro[30-1],
-      'recurso_prova_inep_aux_transcricao' => $dadosRegistro[31-1],
-      'recurso_prova_inep_guia_interprete' => $dadosRegistro[32-1],
-      'recurso_prova_inep_interprete_libras' => $dadosRegistro[33-1],
-      'recurso_prova_inep_leitura_labial' => $dadosRegistro[34-1],
-      'recurso_prova_inep_prova_ampliada_16' => $dadosRegistro[35-1],
-      'recurso_prova_inep_prova_ampliada_20' => $dadosRegistro[36-1],
-      'recurso_prova_inep_prova_ampliada_24' => $dadosRegistro[37-1],
-      'recurso_prova_inep_prova_braille' => $dadosRegistro[38-1],
-    );
+    $recursosProva = array();
+    for ($i=1; $i <= 9; $i++) { 
+      if($dadosRegistro[29+$i-1]){
+        $recursosProva[] = $i;
+      }
+    }
+    $recursosProva = '{'.implode(',', $recursosProva).'}';
 
     $codAluno = $this->existeAluno($inepAluno);
 
@@ -1146,9 +1155,7 @@ class indice extends clsCadastro
         $this->createOrUpdateRaca($idpesAluno, $corRacaEducacenso);
       }
       $aluno = new clsPmieducarAluno(null, null, null, null, $this->pessoa_logada, $idpesAluno, null, null, 1);
-      foreach ($recursosProva as $key => $value) {
-        $aluno->{$key} = $value;
-      }
+      $aluno->recursos_prova_inep = $recursosProva;
       $codAluno = $aluno->cadastra();
       $this->createAlunoEducacenso($codAluno, $inepAluno);
       foreach ($deficiencias as $key => $deficienciaEducacenso) {
@@ -1241,7 +1248,7 @@ class indice extends clsCadastro
       if(!empty($ufCartorio)){
         $documento->sigla_uf_cert_civil      = $this->getUfByCodIbge($ufCartorio);
       }
-      $documento->cartorio_cert_civil_inep = $codigoCartorio;
+      $documento->cartorio_cert_civil_inep = $this->getIdCartorioInep($codigoCartorio);
     }
 
     if(!$documento->existe()){
@@ -1353,6 +1360,11 @@ class indice extends clsCadastro
     }
 
     return true;
+  }
+
+  function getIdCartorioInep($codigo){
+    $sql = "SELECT id FROM cadastro.codigo_cartorio_inep WHERE id_cartorio = '{$codigo}' ";
+    return Portabilis_Utils_Database::selectField($sql);
   }
 
   function getIdCursoSuperiorEducacenso($codigo){
@@ -1854,16 +1866,17 @@ class indice extends clsCadastro
     return $codModulo;
   }
 
-  function createEscola($codEscolaLocalizacao, $codEscolaRedeEnsino, $idpesEscola, $nomeEscola, $idpesGestor, $cargoGestor){
+  function createEscola($localizacao, $codEscolaRedeEnsino, $idpesEscola, $nomeEscola, $idpesGestor, $cargoGestor, $emailGestor){
     $escola = new clsPmieducarEscola();
 
     $escola->ref_usuario_cad = $this->pessoa_logada;
     $escola->ref_cod_instituicao = $this->ref_cod_instituicao;
-    $escola->ref_cod_escola_localizacao = $codEscolaLocalizacao;
+    $escola->zona_localizacao = $localizacao;
     $escola->ref_cod_escola_rede_ensino = $codEscolaRedeEnsino;
     $escola->ref_idpes = $idpesEscola;
     $escola->ref_idpes_gestor = $idpesGestor;
     $escola->cargo_gestor = $cargoGestor;
+    $escola->email_gestor = $emailGestor;
     $escola->sigla = mb_substr($nomeEscola, 0, 5, 'UTF-8');
     $escola->ativo = 1;
 
@@ -1883,31 +1896,6 @@ class indice extends clsCadastro
       $codEscolaRedeEnsino = $rede_ensino->cadastra();
     }
     return $codEscolaRedeEnsino;
-  }
-
-  function getOrCreateLocalizacaoEscola($localizacao){
-    $localizacaoString = $localizacao == "1" ? "Urbana" : "Rural";
-
-    $codEscolaLocalizacao = $this->getLocalizacaoEscola($localizacaoString);
-    if (!$codEscolaLocalizacao) {
-      $escolaLocalizacao = new clsPmieducarEscolaLocalizacao();
-      $escolaLocalizacao->ref_usuario_cad = $this->pessoa_logada;
-      $escolaLocalizacao->nm_localizacao = $localizacaoString;
-      $escolaLocalizacao->ativo = 1;
-      $escolaLocalizacao->ref_cod_instituicao = $this->ref_cod_instituicao;
-
-      $codEscolaLocalizacao = $escolaLocalizacao->cadastra();
-    }
-    return $codEscolaLocalizacao;
-  }
-
-  function getLocalizacaoEscola($nm_localizacao){
-    $sql = "SELECT cod_escola_localizacao
-              FROM pmieducar.escola_localizacao
-              WHERE nm_localizacao ILIKE '{$nm_localizacao}'
-              LIMIT 1 ";
-
-    return Portabilis_Utils_Database::selectField($sql);
   }
 
   function getRedeDeEnsino() {
@@ -1940,10 +1928,25 @@ class indice extends clsCadastro
     return Portabilis_Utils_Database::selectField($sql);
   }
 
+  function isAtividadeComplementar($tipoAtendimento) {
+    return $tipoAtendimento == 4;
+  }
+
+  function isAtendimentoEspecializado($tipoAtendimento) {
+    return $tipoAtendimento == 5;
+  }
+
   private $etapasCenso = array(
-      0 => array(
+      'atividade_complementar' => array(
         'curso' => "Atividade complementar",
         'serie' => "Atividade complementar",
+        'etapa' => 1,
+        'etapas' => 1,
+        'nivel' => 'Outros'
+      ),
+      'atendimento_educacional_especializado' => array(
+        'curso' => "Atendimento educacional especializado (AEE)",
+        'serie' => "Atendimento educacional especializado (AEE)",
         'etapa' => 1,
         'etapas' => 1,
         'nivel' => 'Outros'

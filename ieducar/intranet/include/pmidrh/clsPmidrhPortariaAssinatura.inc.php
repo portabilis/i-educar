@@ -108,7 +108,7 @@ class clsPmidrhPortariaAssinatura
      *
      * @return object
      */
-    function clsPmidrhPortariaAssinatura( $cod_portaria_assinatura = null, $ref_cod_portaria = null, $nm_responsavel = null, $cargo_responsavel = null )
+    function __construct( $cod_portaria_assinatura = null, $ref_cod_portaria = null, $nm_responsavel = null, $cargo_responsavel = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmidrh.";

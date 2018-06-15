@@ -108,7 +108,7 @@ class clsPmieducarTipoDispensa
      *
      * @return object
      */
-    function clsPmieducarTipoDispensa( $cod_tipo_dispensa = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_tipo = null, $descricao = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $ref_cod_instituicao = null )
+    function __construct( $cod_tipo_dispensa = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_tipo = null, $descricao = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $ref_cod_instituicao = null )
     {
 //      echo "$cod_tipo_dispensa, $ref_usuario_exc, $ref_usuario_cad, $nm_tipo, $descricao, $data_cadastro, $data_exclusao, $ativo, $ref_cod_escola<br>";
         $db = new clsBanco();

@@ -14,6 +14,7 @@ require_once 'include/pmieducar/clsPmieducarHistoricoDisciplinas.inc.php';
 
 require_once 'lib/Portabilis/String/Utils.php';
 require_once 'Portabilis/Utils/Database.php';
+require_once 'lib/Utils/SafeJson.php';
 
 
 // TODO migrar classe novo padrao api controller
@@ -1124,7 +1125,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         }
         $this->appendResponse('msgs', $msgs);
 
-        echo json_encode($this->response);
+        echo SafeJson::encode($this->response);
     }
 
     protected function appendMsg($msg, $type = "error", $encodeToUtf8 = false)

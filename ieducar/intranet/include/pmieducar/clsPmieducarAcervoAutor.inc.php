@@ -108,7 +108,7 @@ class clsPmieducarAcervoAutor
      *
      * @return object
      */
-    function clsPmieducarAcervoAutor( $cod_acervo_autor = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_autor = null, $descricao = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $ref_cod_biblioteca = null )
+    function __construct( $cod_acervo_autor = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_autor = null, $descricao = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $ref_cod_biblioteca = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmieducar.";

@@ -64,7 +64,7 @@ class clsPmieducarAlunoCMF
      *
      * @return object
      */
-    function clsPmieducarAlunoCMF( )
+    function __construct( )
     {
 
 

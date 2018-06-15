@@ -106,7 +106,7 @@ class clsPmieducarTipoAvaliacaoValores
      *
      * @return object
      */
-    function clsPmieducarTipoAvaliacaoValores( $ref_cod_tipo_avaliacao = null, $sequencial = null, $nome = null, $valor = null, $valor_min = null, $valor_max = null, $ativo = null )
+    function __construct( $ref_cod_tipo_avaliacao = null, $sequencial = null, $nome = null, $valor = null, $valor_min = null, $valor_max = null, $ativo = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmieducar.";

@@ -103,7 +103,7 @@ class clsModulesPessoaTransporte
   /**
    * Construtor.
    */
-  function clsModulesPessoaTransporte( $cod_pessoa_transporte = NULL, $ref_cod_rota_transporte_escolar = NULL,
+  function __construct( $cod_pessoa_transporte = NULL, $ref_cod_rota_transporte_escolar = NULL,
   $ref_idpes = null ,$ref_cod_ponto_transporte_escolar = NULL, $ref_idpes_destino = NULL,
    $observacao = NULL, $turno = NULL)
   {

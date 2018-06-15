@@ -109,7 +109,7 @@ class clsPmicontrolesisTopoPortal
      *
      * @return object
      */
-    function clsPmicontrolesisTopoPortal( $cod_topo_portal = null, $ref_funcionario_cad = null, $ref_funcionario_exc = null, $ref_cod_menu_portal = null, $caminho1 = null, $caminho2 = null, $caminho3 = null, $data_cadastro = null, $data_exclusao = null, $ativo = null )
+    function __construct( $cod_topo_portal = null, $ref_funcionario_cad = null, $ref_funcionario_exc = null, $ref_cod_menu_portal = null, $caminho1 = null, $caminho2 = null, $caminho3 = null, $data_cadastro = null, $data_exclusao = null, $ativo = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmicontrolesis.";

@@ -107,7 +107,7 @@ class clsPmieducarAcervoIdioma
      *
      * @return object
      */
-    function clsPmieducarAcervoIdioma( $cod_acervo_idioma = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_idioma = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $ref_cod_biblioteca = null )
+    function __construct( $cod_acervo_idioma = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_idioma = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $ref_cod_biblioteca = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmieducar.";

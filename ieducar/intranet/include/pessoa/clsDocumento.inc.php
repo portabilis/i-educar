@@ -71,7 +71,7 @@ class clsDocumento
      *
      * @return Object:clsDocumento
      */
-    function clsDocumento( $int_idpes = false, $int_rg = false, $str_data_exp_rg = false, $str_sigla_uf_exp_rg = false, $int_tipo_cert_civil = false, $int_num_termo = false, $int_num_livro = false, $int_num_folha = false, $str_data_emissao_cert_civil = false, $str_sigla_uf_cert_civil = false, $str_cartorio_cert_civil = false, $int_num_cart_trabalho = false, $int_serie_cart_trabalho = false, $str_data_emissao_cart_trabalho = false, $str_sigla_uf_cart_trabalho = false, $int_num_tit_eleitor = false, $int_zona_tit_eleitor = false, $int_secao_tit_eleitor = false, $int_idorg_exp_rg = false, $str_certidao_nascimento = null, $str_certidao_casamento = null, $str_passaporte, $str_comprovante_residencia = null, $str_declaracao_trabalho_autonomo = null)
+    function __construct( $int_idpes = false, $int_rg = false, $str_data_exp_rg = false, $str_sigla_uf_exp_rg = false, $int_tipo_cert_civil = false, $int_num_termo = false, $int_num_livro = false, $int_num_folha = false, $str_data_emissao_cert_civil = false, $str_sigla_uf_cert_civil = false, $str_cartorio_cert_civil = false, $int_num_cart_trabalho = false, $int_serie_cart_trabalho = false, $str_data_emissao_cart_trabalho = false, $str_sigla_uf_cart_trabalho = false, $int_num_tit_eleitor = false, $int_zona_tit_eleitor = false, $int_secao_tit_eleitor = false, $int_idorg_exp_rg = false, $str_certidao_nascimento = null, $str_certidao_casamento = null, $str_passaporte, $str_comprovante_residencia = null, $str_declaracao_trabalho_autonomo = null)
     {
         $objPessoa = new clsFisica($int_idpes);
         if($objPessoa->detalhe())
@@ -655,6 +655,28 @@ class clsDocumento
         if( ! is_null( $this->passaporte ))
         {
             $set .= $gruda."passaporte = '{$this->passaporte}'";
+            $gruda = ", ";
+        }
+
+        if( is_string( $this->sigla_uf_exp_rg ) and (!empty($this->sigla_uf_exp_rg)))
+        {
+            $set .= $gruda."sigla_uf_exp_rg = '{$this->sigla_uf_exp_rg}'";
+            $gruda = ", ";
+        }
+        else
+        {
+            $set .= $gruda."sigla_uf_exp_rg = NULL";
+            $gruda = ", ";
+        }
+
+        if( is_numeric( $this->idorg_exp_rg ) and (!empty($this->idorg_exp_rg)))
+        {
+            $set .= $gruda."idorg_exp_rg = '{$this->idorg_exp_rg}'";
+            $gruda = ", ";
+        }
+        else
+        {
+            $set .= $gruda."idorg_exp_rg = NULL";
             $gruda = ", ";
         }
 

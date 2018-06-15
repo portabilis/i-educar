@@ -103,7 +103,7 @@ class clsPmieducarTelefone
      *
      * @return object
      */
-    function clsPmieducarTelefone( $ref_cod_pessoa_educ = null, $tipo = null, $ddd = null, $fone = null )
+    function __construct( $ref_cod_pessoa_educ = null, $tipo = null, $ddd = null, $fone = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmieducar.";

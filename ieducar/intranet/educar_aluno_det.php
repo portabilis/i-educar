@@ -370,7 +370,10 @@ class indice extends clsDetalhe
         try {
             $alunoInep = $alunoMapper->find(array('aluno' => $this->cod_aluno));
 
-            if (!$GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu') {
+            $configuracoes = new clsPmieducarConfiguracoesGerais();
+            $configuracoes = $configuracoes->detalhe();
+
+            if ($configuracoes['mostrar_codigo_inep_aluno']) {
                 $this->addDetalhe(array('Código inep', $alunoInep->alunoInep));
             }
         } catch (Exception $e) {

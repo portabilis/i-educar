@@ -104,7 +104,7 @@ class clsUrbanoTipoLogradouro
      *
      * @return object
      */
-    function clsUrbanoTipoLogradouro( $idtlog = null, $descricao = null )
+    function __construct( $idtlog = null, $descricao = null )
     {
         $db = new clsBanco();
         $this->_schema = "urbano.";

@@ -111,7 +111,7 @@ class clsPmieducarCalendarioDiaMotivo
      *
      * @return object
      */
-    function clsPmieducarCalendarioDiaMotivo( $cod_calendario_dia_motivo = null, $ref_cod_escola = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $sigla = null, $descricao = null, $tipo = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $nm_motivo = null )
+    function __construct( $cod_calendario_dia_motivo = null, $ref_cod_escola = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $sigla = null, $descricao = null, $tipo = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $nm_motivo = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmieducar.";

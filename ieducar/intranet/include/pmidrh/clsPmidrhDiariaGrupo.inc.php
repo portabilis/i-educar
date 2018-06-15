@@ -101,7 +101,7 @@ class clsPmidrhDiariaGrupo
      *
      * @return object
      */
-    function clsPmidrhDiariaGrupo( $cod_diaria_grupo = null, $desc_grupo = null )
+    function __construct( $cod_diaria_grupo = null, $desc_grupo = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmidrh.";

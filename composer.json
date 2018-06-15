@@ -1,0 +1,17 @@
+{
+  "name": "i-Educar",
+  "description": "Software livre de gestão escolar",
+  "type": "project",
+  "license": "GPL-2.0-or-later",
+  "config": {
+    "vendor-dir": "ieducar/vendor"
+  },
+  "require": {
+    "portabilis/jasperphp": "v1.2.0",
+    "robmorgan/phinx": "v0.8.1",
+    "gilbitron/php-simplecache": "^1.4",
+    "swiftmailer/swiftmailer": "^6.0",
+    "cocur/slugify": "^3.1",
+    "google/recaptcha": "~1.1"
+  }
+}

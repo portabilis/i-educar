@@ -49,7 +49,7 @@ class relatoriosPref
     var $alturaUltimaLinha = 13;
     var $qtd_pagina = 0;
     
-    function relatoriosPref( $nome, $espacoEntreLinhas=80, $capa=false, $rodape=false, $tipoFolha="A4", $cabecalho="")
+    function __construct( $nome, $espacoEntreLinhas=80, $capa=false, $rodape=false, $tipoFolha="A4", $cabecalho="")
     {
         $this->pdf = new clsPDF( $nome, "Cartas Folhas de Rosto", $tipoFolha, "", false, false );
         $this->titulo_relatorio = $nome;

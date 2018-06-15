@@ -116,7 +116,7 @@ class clsPortalArtigoOpiniao
      *
      * @return object
      */
-    function clsPortalArtigoOpiniao( $cod_artigo_opiniao = null, $nm_artigo = null, $arquivo = null, $data_cadastro = null, $data_exclusao = null, $ref_pessoa_cad = null, $ref_pessoa_exc = null, $ativo = null )
+    function __construct( $cod_artigo_opiniao = null, $nm_artigo = null, $arquivo = null, $data_cadastro = null, $data_exclusao = null, $ref_pessoa_cad = null, $ref_pessoa_exc = null, $ativo = null )
     {
         $db = new clsBanco();
         $this->_schema = "portal.";

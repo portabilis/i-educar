@@ -42,7 +42,7 @@ class clsFisicaCpf
      *
      * @return Object:clsFisicaCpf
      */
-    function clsFisicaCpf( $idpes=false, $cpf=false, $idpes_cad = false, $idpes_rev = false)
+    function __construct( $idpes=false, $cpf=false, $idpes_cad = false, $idpes_rev = false)
     {
         $this->idpes = $idpes;
         $this->idpes_cad = $idpes_cad? $idpes_cad : $_SESSION['id_pessoa'];

@@ -52,6 +52,13 @@ require_once 'include/localizacaoSistema.php';
  */
 class clsCadastro extends clsCampos
 {
+    /**
+     * Referencia pega da session para o idpes do usuario atual
+     *
+     * @var int
+     */
+    var $pessoa_logada;
+
   var $__nome = 'formcadastro';
   var $banner;
   var $bannerLateral;
@@ -117,7 +124,7 @@ class clsCadastro extends clsCampos
     $this->bannerClose = $boolFechaBanner;
   }
 
-  function clsCadastro()
+  function __construct()
   {
     parent::__construct();
     $this->tipoacao = @$_POST['tipoacao'];
@@ -311,7 +318,7 @@ class clsCadastro extends clsCampos
      * Adiciona os botoes de help para a pagina atual
      */
     $url = parse_url($_SERVER['REQUEST_URI']);
-    $url = ereg_replace('^/', '', $url['path']);
+    $url = preg_replace('/^\//', '', $url['path']);
     if (strpos($url, '_det.php') !== FALSE) {
       $tipo = 'det';
     }
@@ -400,7 +407,11 @@ class clsCadastro extends clsCampos
       $nomeCampo = $componente[0];
       $validador = $componente[2];
 
-      if (empty($validador) && $nomeCampo == 'cpf' && ereg("^(tab_add_[0-9])", $nome) !== 1) {
+      if ($nomeCampo === 'avulso') {
+        continue;
+      }
+
+      if (empty($validador) && $nomeCampo == 'cpf' && preg_match("/^(tab_add_[0-9])/", $nome) !== 1) {
         $retorno .=
         "if( document.getElementById('$nome').value != \"\")
         {
@@ -420,7 +431,9 @@ class clsCadastro extends clsCampos
       /**
        * Campo tabela
        */
-      if (ereg("^(tab_add_[0-9])", $nome) === 1) {
+
+      if (preg_match("/^(tab_add_[0-9])/", $nome) === 1) {
+
         $nome_campos = $componente['cabecalho'];
         $componente = array_shift($componente);
 
@@ -507,6 +520,7 @@ class clsCadastro extends clsCampos
       }
 
       if (!empty($validador)) {
+
         if ($validador == 'lat') {
           $retorno .= "if(!(/^-2[5-9]/.test( document.$this->__nome.".$nome."_graus.value ))) { \n";
           $retorno .= " alert( 'Preencha o campo \'$componente[1]\' corretamente!' ); \n";
@@ -540,6 +554,7 @@ class clsCadastro extends clsCampos
           $retorno .= " return false; } ";
         }
         else {
+
           if ($nomeCampo == 'idFederal') {
             $validador= explode('+',$validador);
             $retorno .=  " if (";
@@ -560,21 +575,12 @@ class clsCadastro extends clsCampos
             //quando se referenciava um nome de elemento como um array ex: cadastro[aluno]
             //nao funcionava na referencia por nome
             //16-08-2006
-            $retorno .=  ' if (';
-
-            if ($validador[0] == '*') {
-              $validador = substr( $validador, 1 );
-              $retorno .=  "document.getElementById(\"{$nome}\").value!='' && ";
-            }
-
-            $retorno .=  "!($validador.test( document.getElementById(\"{$nome}\").value )))\n";
-            $retorno .=  "{\n";
-            $retorno .=  "  mudaClassName( 'formdestaque', 'obrigatorio' );\n";
-            $retorno .=  "  document.getElementById(\"{$nome}\").className = \"formdestaque\";\n";
-            $retorno .=  "  alert( 'Preencha o campo \'" . extendChars( $componente[1], true ) . "\' corretamente!' ); \n";
+            $retornoNaFalha =  "  mudaClassName( 'formdestaque', 'obrigatorio' );\n";
+            $retornoNaFalha .=  "  document.getElementById(\"{$nome}\").className = \"formdestaque\";\n";
+            $retornoNaFalha .=  "  alert( 'Preencha o campo \'" . extendChars( $componente[1], true ) . "\' corretamente!' ); \n";
 
             if ($this->__nm_tab) {
-              $retorno .= "
+              $retornoNaFalha .= "
                   var item = document.getElementById('$nome');
                   var prox = 1;
                   do{
@@ -600,8 +606,29 @@ class clsCadastro extends clsCampos
               ";
             }
 
-            $retorno .=  "  document.getElementById(\"{$nome}\").focus(); \n";
-            $retorno .=  "  return false;\n";
+            $retornoNaFalha .=  "  document.getElementById(\"{$nome}\").focus(); \n";
+            $retornoNaFalha .=  "  return false;\n";
+            if ($validador == '/[^ ]/') {
+                $retorno .= " if (typeof \$j == 'function' && \$j('#{$nome}').val() != null &&
+                                \$j('#{$nome}').val().constructor === Array ) {\n
+                    if (!\$j('#{$nome}').val().filter((val) => val.toString().trim().length > 0).length) {\n";
+            $retorno .=  $retornoNaFalha;
+            $retorno .=  "}\n";
+            $retorno .=  '
+                                } else if (
+            ';
+            } else {
+                $retorno .=  '  if (';
+            }
+
+            if ($validador[0] == '*') {
+              $validador = substr( $validador, 1 );
+              $retorno .=  "document.getElementById(\"{$nome}\").value!='' && ";
+            }
+
+            $retorno .=  "!($validador.test( document.getElementById(\"{$nome}\").value )))\n";
+            $retorno .=  "{\n";
+            $retorno .=  $retornoNaFalha;
             $retorno .=  "}\n";
 
             if (!empty($nomeCampo)) {
@@ -763,6 +790,13 @@ class clsCadastro extends clsCampos
     return NULL;
   }
 
+    // TODO: Abstrair lógica em Trait ao atualizar PHP
+    protected function validarCamposObrigatoriosCenso()
+    {
+        $obj = new clsPmieducarInstituicao($this->ref_cod_instituicao);
+        $instituicao = empty($this->ref_cod_instituicao) ? $obj->primeiraAtiva() : $obj->detalhe();
+        return dbBool($instituicao['obrigar_campos_censo']);
+    }
 
   protected function inputsHelper() {
     if (! isset($this->_inputsHelper))
@@ -773,5 +807,11 @@ class clsCadastro extends clsCampos
 
   protected function currentUserId() {
     return Portabilis_Utils_User::currentUserId();
+  }
+
+  protected function nivelAcessoPessoaLogada()
+  {
+    $obj_permissoes = new clsPermissoes();
+    return $obj_permissoes->nivel_acesso($this->currentUserId());
   }
 }

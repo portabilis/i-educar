@@ -78,7 +78,7 @@ class clsCampos extends Core_Controller_Page_Abstract
     var $ref_cod_escola;
     var $ref_cod_instituicao;
 
-    function clsCampos()
+    function __construct()
     {
         parent::__construct();
     }
@@ -471,7 +471,7 @@ class clsCampos extends Core_Controller_Page_Abstract
         );
     }
 
-    function campoHora($nome, $campo, $valor, $obrigatorio = FALSE, $descricao = '', $acao = '', $limitaHora = true)
+    function campoHora($nome, $campo, $valor, $obrigatorio = FALSE, $descricao = '', $acao = '', $limitaHora = true, $desabilitado = FALSE)
     {
         $arr_componente = array(
             'hora',
@@ -482,7 +482,8 @@ class clsCampos extends Core_Controller_Page_Abstract
             5,
             'hh:mm',
             $descricao,
-            $acao
+            $acao,
+            $desabilitado ? 'disabled="disabled"' : ''
         );
 
         if (!$this->__adicionando_tabela) {
@@ -679,7 +680,7 @@ class clsCampos extends Core_Controller_Page_Abstract
         $arr_componente = array(
             $duplo ? 'textoDuplo' : 'texto',
             $this->__adicionando_tabela ? $nome : $campo,
-            $obrigatorio ? "/^[0-9]+$/" : "*(/^[0-9]+$/)",
+            $obrigatorio ? "/^-?\\d*\\.{0,1}\\d+$/" : "*(/^-?\\d*\\.{0,1}\\d+$/)",
             $valor,
             $tamanhovisivel,
             $tamanhomaximo,
@@ -894,6 +895,15 @@ class clsCampos extends Core_Controller_Page_Abstract
             $valor,
             $largura,
             $altura
+        );
+    }
+
+    function campoAvulso($nome, $campo, $conteudo)
+    {
+        $this->campos[$nome] = array(
+            'avulso',
+            $campo,
+            $conteudo
         );
     }
 
@@ -1168,7 +1178,7 @@ class clsCampos extends Core_Controller_Page_Abstract
             $campo_tabela = FALSE;
 
             // Cria nova tab
-            if (ereg("^(tabbed_add_[0-9]+)", $nome) === 1) {
+            if (preg_match("/^(tabbed_add_[0-9]+)/", $nome) === 1) {
                 $nomes_tab = urlencode(serialize($arr_campos['cabecalho_tab']));
                 unset($arr_campos['cabecalho_tab']);
 
@@ -1201,7 +1211,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                 continue;
             }
 
-            if (ereg("^(tab_name_[0-9]+)", $nome) === 1) {
+            if (preg_match("/^(tab_name_[0-9]+)/", $nome) === 1) {
                 if ($existe_tab_aberta) {
                     if ($this->__segue_fluxo) {
                         $colspan = 2;
@@ -1273,7 +1283,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                 continue;
             }
 
-            if (ereg("^(tab_add_[0-9]+)", $nome) === 1) {
+            if (preg_match("/^(tab_add_[0-9]+)/", $nome) === 1) {
                 $campo_tabela = TRUE;
                 $javascript = '';
 
@@ -1765,7 +1775,7 @@ class clsCampos extends Core_Controller_Page_Abstract
 
                     case 'hora':
                         $componente[3] = strlen($componente[3]) < 6 ? $componente[3] : substr($componente[3], 0, 5);
-                        $retorno .= "<input onKeyPress=\"formataHora(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$componente[3]}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" {$componente[8]}>{$componente[7]}";
+                        $retorno .= "<input onKeyPress=\"formataHora(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$componente[3]}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" {$componente[8]} {$componente[9]}>{$componente[7]}";
                         break;
 
                     case 'cor':
@@ -2047,11 +2057,9 @@ class clsCampos extends Core_Controller_Page_Abstract
                             } else {
                                 // option normal
                                 $retorno .= "<option id=\"{$nome}_" . urlencode($chave) . "\" value=\"" . urlencode($chave) . "\"";
-                                if (is_array($componente[4])) {
-                                    if ($chave == $componente[4][$adicionador_indice]) {
-                                        $retorno .= " selected";
-                                    }
-                                } elseif ($chave == $componente[4]) {
+                                $defaultValue = is_array($componente[4]) ? $componente[4][$adicionador_indice] : $componente[4];
+
+                                if (!is_null($defaultValue) && $defaultValue !== '' && $chave == $defaultValue) {
                                     $retorno .= " selected";
                                 }
 
@@ -2516,6 +2524,10 @@ class clsCampos extends Core_Controller_Page_Abstract
                         $theEditorWidth = $componente[4];
                         require_once 'include/clsEditor.inc.php';
                         break;
+
+                    case 'avulso':
+                        $retorno .= '<div>' . $componente[2] . '</div>';
+                        break;
                 } // endswitch
 
                 if ($this->erros[$nome]) {
@@ -2634,7 +2646,7 @@ class clsCampos extends Core_Controller_Page_Abstract
     }
 
     function getCampoTexto($nome, $id = '', $valor = '', $tamanhovisivel = '',
-                           $tamanhomaximo = '', $evento = '', $disabled = '', $descricao = '',
+                           $tamanhomaximo = '', $evento = '', $disabled = '', $__descricao = '',
                            $class = '', $descricao = '')
     {
         $id = $id ? $id : $nome;
@@ -2684,12 +2696,9 @@ class clsCampos extends Core_Controller_Page_Abstract
             } else {
                 // option normal
                 $retorno .= "<option id=\"{$nome}_" . urlencode($chave) . "\" value=\"" . urlencode($chave) . "\"";
+                $defaultValue = is_array($default) ? $default[$adicionador_indice] : $default;
 
-                if (is_array($default)) {
-                    if ($chave == $default[$adicionador_indice]) {
-                        $retorno .= " selected";
-                    }
-                } elseif ($chave == $default) {
+                if (!is_null($defaultValue) && $defaultValue !== '' && $chave == $defaultValue) {
                     $retorno .= " selected";
                 }
 

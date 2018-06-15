@@ -80,7 +80,7 @@ class clsPmieducarCandidatoFilaUnica
     var $_campo_order_by;
 
     // Construtor (PHP 4)
-    function clsPmieducarCandidatoFilaUnica($cod_candidato_fila_unica = NULL,
+    function __construct($cod_candidato_fila_unica = NULL,
                                             $ref_cod_aluno = NULL,
                                             $ref_cod_serie = NULL,
                                             $ref_cod_turno = NULL,

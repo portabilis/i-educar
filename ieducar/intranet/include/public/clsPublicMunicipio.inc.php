@@ -136,7 +136,7 @@ class clsPublicMunicipio
      *
      * @return object
      */
-    function clsPublicMunicipio( $idmun = null, $nome = null, $sigla_uf = null, $area_km2 = null, $idmreg = null, $idasmun = null, $cod_ibge = null, $geom = null, $tipo = null, $idmun_pai = null, $idpes_rev = null, $idpes_cad = null, $data_rev = null, $data_cad = null, $origem_gravacao = null, $operacao = null, $idsis_rev = null, $idsis_cad = null )
+    function __construct( $idmun = null, $nome = null, $sigla_uf = null, $area_km2 = null, $idmreg = null, $idasmun = null, $cod_ibge = null, $geom = null, $tipo = null, $idmun_pai = null, $idpes_rev = null, $idpes_cad = null, $data_rev = null, $data_cad = null, $origem_gravacao = null, $operacao = null, $idsis_rev = null, $idsis_cad = null )
     {
         $db = new clsBanco();
         $this->_schema = "public.";

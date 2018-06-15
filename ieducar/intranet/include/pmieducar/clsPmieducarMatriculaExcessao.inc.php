@@ -120,7 +120,7 @@ class clsPmieducarMatriculaExcessao
      *
      * @return object
      */
-    function clsPmieducarMatriculaExcessao( $cod_aluno_excessao = null, $ref_cod_matricula = null, $ref_cod_turma = null, $ref_sequencial = null, $ref_cod_serie = null, $ref_cod_escola = null, $ref_cod_disciplina = null, $reprovado_faltas = null, $precisa_exame = null, $permite_exame = null )
+    function __construct( $cod_aluno_excessao = null, $ref_cod_matricula = null, $ref_cod_turma = null, $ref_sequencial = null, $ref_cod_serie = null, $ref_cod_escola = null, $ref_cod_disciplina = null, $reprovado_faltas = null, $precisa_exame = null, $permite_exame = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmieducar.";

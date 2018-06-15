@@ -575,7 +575,6 @@ class MatriculaController extends ApiCoreController
                      WHERE de.ref_cod_dispensa = dd.cod_dispensa
                    ) AS td_dispensa_etapa
              WHERE dd.ativo = 1
-               AND dd.data_exclusao IS NULL
                AND td_dispensa_etapa.etapas <> ''";
 
     $dispensas = $this->fetchPreparedQuery($sql);

@@ -112,7 +112,7 @@ class clsPmieducarEnderecoExterno
      *
      * @return object
      */
-    function clsPmieducarEnderecoExterno( $ref_cod_pessoa_educ = null, $ref_sigla_uf = null, $ref_idtlog = null, $logradouro = null, $numero = null, $complemento = null, $letra = null, $bairro = null, $cep = null, $cidade = null, $andar = null, $bloco = null, $apartamento = null )
+    function __construct( $ref_cod_pessoa_educ = null, $ref_sigla_uf = null, $ref_idtlog = null, $logradouro = null, $numero = null, $complemento = null, $letra = null, $bairro = null, $cep = null, $cidade = null, $andar = null, $bloco = null, $apartamento = null )
     {
         $db = new clsBanco();
         $this->_schema = "pmieducar.";

@@ -107,10 +107,10 @@ class indice extends clsCadastro
         $this->script_cancelar = "window.parent.fechaExpansivel(\"div_dinamico_\"+(parent.DOM_divs.length-1));";
         $this->nome_url_cancelar = "Cancelar";
 
-        
+
         $this->campoOculto("ref_cod_instituicao" ,$this->ref_cod_instituicao);
         $this->campoOculto("ref_cod_curso", $this->ref_cod_curso);
-        
+
         return $retorno;
     }
 
@@ -125,13 +125,13 @@ class indice extends clsCadastro
 
         if ($_GET['precisa_lista'])
         {
-        
+
             $obrigatorio = true;
             $get_curso = true;
-            include("include/pmieducar/educar_campo_lista.php");    
+            include("include/pmieducar/educar_campo_lista.php");
         }
         // text
-    
+
         $this->campoTexto( "nm_serie", "S&eacute;rie", $this->nm_serie, 30, 255, true );
 
         $opcoes = array( "" => "Selecione" );
@@ -233,7 +233,7 @@ class indice extends clsCadastro
             $cadastrou = $obj->cadastra();
             if( $cadastrou )
             {
-            $elemento = ($_GET['ref_ref_cod_serie']) ? 'ref_ref_cod_serie' : 'ref_cod_serie';   
+            $elemento = ($_GET['ref_ref_cod_serie']) ? 'ref_ref_cod_serie' : 'ref_cod_serie';
             //-----------------------CADASTRA DISCIPLINA------------------------//
                 foreach ( $this->disciplinas AS $disciplina )
                 {
@@ -370,23 +370,23 @@ $pagina->addForm( $miolo );
 $pagina->MakeAll();
 ?>
 <script>
-<?
-if (!$_GET['precisa_lista']) 
+<?php
+if (!$_GET['precisa_lista'])
 {
 ?>
     Event.observe(window, 'load', Init, false);
-    
+
     function Init()
     {
-        
+
     //  $this->campoOculto("ref_cod_instituicao" ,$this->ref_cod_instituicao);
     //      $this->campoOculto("ref_cod_curso", $this->ref_cod_curso);
-        
+
         $('ref_cod_instituicao').value = parent.document.getElementById('ref_cod_instituicao').value;
-        $('ref_cod_curso').value =  parent.document.getElementById('ref_cod_curso').value; 
-    
+        $('ref_cod_curso').value =  parent.document.getElementById('ref_cod_curso').value;
+
         var campoCurso = document.getElementById('ref_cod_curso').value;
-    
+
         var campoEtapas = document.getElementById('etapa_curso');
         campoEtapas.length = 1;
         campoEtapas.disabled = true;
@@ -403,14 +403,14 @@ if (!$_GET['precisa_lista'])
         var xml_disciplina = ajax( getDisciplina );
         xml_disciplina.envia( "educar_disciplina_xml.php?cur="+campoCurso );
     */
-    
+
         var campoDisciplinas = document.getElementById('disciplinas');
         campoDisciplinas.innerHTML = "Carregando disciplina";
-    
+
         var xml_disciplina = new ajax( getDisciplina );
         xml_disciplina.envia( "educar_disciplina_xml.php?cur="+campoCurso );
     }
-<?
+<?php
 }
 else
 {
@@ -420,7 +420,7 @@ else
     //  EtapasCurso();
     //  getDisciplinas();
         var campoCurso = document.getElementById('ref_cod_curso').value;
-    
+
         var campoEtapas = document.getElementById('etapa_curso');
         campoEtapas.length = 1;
         campoEtapas.disabled = true;
@@ -437,14 +437,14 @@ else
         var xml_disciplina = ajax( getDisciplina );
         xml_disciplina.envia( "educar_disciplina_xml.php?cur="+campoCurso );
     */
-    
+
         var campoDisciplinas = document.getElementById('disciplinas');
         campoDisciplinas.innerHTML = "Carregando disciplina";
-    
+
         var xml_disciplina = new ajax( getDisciplina );
         xml_disciplina.envia( "educar_disciplina_xml.php?cur="+campoCurso );
     }
-<?}?>
+<?php } ?>
 
 function EtapasCurso(xml_qtd_etapas)
 {

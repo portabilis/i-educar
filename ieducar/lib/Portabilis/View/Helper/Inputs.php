@@ -134,7 +134,11 @@ class Portabilis_View_Helper_Inputs {
   }
 
   public function booleanSelect($attrName, $inputOptions = array(), $helperOptions = array()) {
-    $resources = array(0 => 'Não', 1 => 'Sim');
+    $resources = array();
+    if (isset($inputOptions['prompt'])) {
+        $resources[''] = $inputOptions['prompt'];
+    }
+    $resources +=  array(0 => 'Não', 1 => 'Sim');
     $inputOptions['resources'] = $resources;
     $this->select($attrName, $inputOptions, $helperOptions);
   }
@@ -234,6 +238,12 @@ class Portabilis_View_Helper_Inputs {
   public function simpleSearchCursoSuperior($attrName, $inputOptions = array(), $helperOptions = array()) {
 
     $this->simpleSearchResourceInput('simpleSearchCursoSuperior', $attrName, $inputOptions, $helperOptions);
+
+  }
+
+  public function simpleSearchCartorioInep($attrName, $inputOptions = array(), $helperOptions = array()) {
+
+    $this->simpleSearchResourceInput('simpleSearchCartorioInep', $attrName, $inputOptions, $helperOptions);
 
   }
 

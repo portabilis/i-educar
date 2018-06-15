@@ -159,9 +159,19 @@ class ServidorController extends ApiCoreController
     }
   }
 
+    protected function getEscolaridade() {
+        $idesco = $this->getRequest()->idesco;
+        $sql = "SELECT * FROM cadastro.escolaridade where idesco = $1 ";
+        $escolaridade = $this->fetchPreparedQuery($sql, array($idesco), TRUE, 'first-row');
+        $escolaridade['descricao'] = Portabilis_String_Utils::toUtf8($escolaridade['descricao']);
+        return array('escolaridade' => $escolaridade);
+    }
+
   public function Gerar() {
     if ($this->isRequestFor('get', 'servidor-search'))
       $this->appendResponse($this->search());
+    elseif ($this->isRequestFor('get', 'escolaridade'))
+      $this->appendResponse($this->getEscolaridade());
     elseif ($this->isRequestFor('get', 'servidores-disciplinas-turmas'))
       $this->appendResponse($this->getServidoresDisciplinasTurmas());
     else

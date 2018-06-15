@@ -101,7 +101,7 @@ class clsPmieducarDisciplinaDependencia
   /**
    * Construtor.
    */
-  function clsPmieducarDisciplinaDependencia($ref_cod_matricula = NULL,
+  function __construct($ref_cod_matricula = NULL,
     $ref_cod_serie = NULL, $ref_cod_escola = NULL, $ref_cod_disciplina = NULL,
     $observacao = NULL, $cod_disciplina_dependencia = NULL)
   {

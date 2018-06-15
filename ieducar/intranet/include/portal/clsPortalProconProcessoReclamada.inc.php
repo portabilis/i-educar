@@ -104,7 +104,7 @@ class clsPortalProconProcessoReclamada
      *
      * @return object
      */
-    function clsPortalProconProcessoReclamada( $ref_cod_processo = null, $ref_idpes = null )
+    function __construct( $ref_cod_processo = null, $ref_idpes = null )
     {
         $db = new clsBanco();
         $this->_schema = "portal.";

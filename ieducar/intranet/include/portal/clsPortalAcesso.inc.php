@@ -104,7 +104,7 @@ class clsPortalAcesso
      *
      * @return object
      */
-    function clsPortalAcesso( $cod_acesso = null, $data_hora = null, $ip_externo = null, $ip_interno = null, $cod_pessoa = null, $obs = null, $sucesso = null )
+    function __construct( $cod_acesso = null, $data_hora = null, $ip_externo = null, $ip_interno = null, $cod_pessoa = null, $obs = null, $sucesso = null )
     {
         $db = new clsBanco();
         $this->_schema = "portal.";

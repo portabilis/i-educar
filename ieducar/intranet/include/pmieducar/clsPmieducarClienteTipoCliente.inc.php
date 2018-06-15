@@ -104,7 +104,7 @@ class clsPmieducarClienteTipoCliente
      *
      * @return clsPmieducarClienteTipoCliente
      */
-    function clsPmieducarClienteTipoCliente($ref_cod_cliente_tipo = NULL, $ref_cod_cliente = NULL,
+    function __construct($ref_cod_cliente_tipo = NULL, $ref_cod_cliente = NULL,
       $data_cadastro = NULL, $data_exclusao = NULL, $ref_usuario_cad = NULL, $ref_usuario_exc = NULL,
       $ativo = 1, $ref_cod_biblioteca = NULL) {
 

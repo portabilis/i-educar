@@ -67,13 +67,19 @@ function calculoIdade($diaNasc, $mesNasc, $anoNasc)
 function idFederal2int($str)
 {
   $id_federal = str_replace(".", "", str_replace("-", "", str_replace("/", "", $str)));
-  return ereg_replace("^0+", "", $id_federal);
+  return preg_replace("/^0+/", "", $id_federal);
 }
 
 function int2CPF($int)
 {
   $str = str_repeat('0', 11 - strlen($int)) . $int;
   return substr($str, 0, 3) . '.' . substr($str, 3, 3). '.' . substr($str, 6, 3) . '-' . substr($str, 9, 2);
+}
+
+function loadJson($file)
+{
+  $jsonFile = file_get_contents($file);   
+  return json_decode($jsonFile, true);
 }
 
 function int2CNPJ($int)
