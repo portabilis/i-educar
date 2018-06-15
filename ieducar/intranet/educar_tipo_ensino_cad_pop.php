@@ -115,7 +115,7 @@ class indice extends clsCadastro
             $obrigatorio = true;
             include("include/pmieducar/educar_campo_lista.php");
         }// text
-        else 
+        else
         {
             $this->campoOculto("ref_cod_instituicao", $this->ref_cod_instituicao);
         }
@@ -212,14 +212,14 @@ $pagina->MakeAll();
 <?php
 if (!$_GET['precisa_lista'])
 {?>
-    
+
     Event.observe(window, 'load', Init);
-    
+
     function Init()
     {
         $('ref_cod_instituicao').value = parent.document.getElementById('ref_cod_instituicao').value;
     }
 
-<?}?>
+<?php } ?>
 
 </script>
