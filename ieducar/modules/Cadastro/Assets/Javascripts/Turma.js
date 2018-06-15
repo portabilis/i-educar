@@ -161,6 +161,7 @@ function habilitaTurmaMaisEducacao() {
                                                    $j('#dependencia_administrativa').val() == 3;
   var atendimentoClasseHospitalarAee = $j('#tipo_atendimento').val() == 1 ||
                                        $j('#tipo_atendimento').val() == 5;
+  var atividadeComplementar = $j('#tipo_atendimento').val() == 4; 
   var modalidadeEja = $j('#modalidade_curso').val() == 3;
   var etapaEducacenso = ($j('#etapa_educacenso').val() >= 4 &&
                          $j('#etapa_educacenso').val() <= 38) ||
@@ -169,7 +170,7 @@ function habilitaTurmaMaisEducacao() {
     didaticoPedagogicoPresencial &&
     dependenciaAdministrativaEstadualMunicipal &&
     !atendimentoClasseHospitalarAee &&
-    !(modalidadeEja || !etapaEducacenso)
+    (!atividadeComplementar ? (!modalidadeEja && etapaEducacenso) : true)
   ) {
     $j("#turma_mais_educacao").attr('disabled', false);
     $j("#turma_mais_educacao").makeUnrequired();
