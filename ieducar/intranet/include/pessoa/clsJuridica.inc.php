@@ -156,6 +156,11 @@ class clsJuridica
             {
                 $set .= "{$gruda} idpes_rev = '$this->idpes_rev' ";
             }
+
+            if (is_numeric($this->cnpj)) {
+                $set .= "{$gruda} cnpj = '$this->cnpj' ";
+            }
+
             if($set)
             {
                 $db = new clsBanco();

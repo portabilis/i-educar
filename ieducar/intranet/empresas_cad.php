@@ -172,18 +172,14 @@ class indice extends clsCadastro
             $this->campoTexto( "fantasia", "Nome Fantasia",  $this->fantasia, "50", "255", true );
             $this->campoTexto( "razao_social", "Raz&atilde;o Social",  $this->razao_social, "50", "255", true );
             $this->campoTexto( "capital_social", "Capital Social",  $this->capital_social, "50", "255" );
-            
-            if($this->cnpj)
-            {
-                $this->campoRotulo("cnpj_","CNPJ", $this->cnpj);    
-                $this->campoOculto("cnpj", $this->cnpj);
-            }else 
-            {
-                $this->campoCnpj( "cnpj", "CNPJ",  $this->cnpj, true ); 
-            }
-        
-            
 
+            $nivelUsuario = (new clsPermissoes)->nivel_acesso($this->getSession()->id_pessoa);
+            if (!$this->cod_pessoa_fj || $nivelUsuario > App_Model_NivelTipoUsuario::INSTITUCIONAL) {
+                $this->campoRotulo("cnpj_", "CNPJ", $this->cnpj);
+                $this->campoOculto("cnpj", $this->cnpj);
+            } else {
+                $this->campoCnpj("cnpj", "CNPJ", $this->cnpj, true);
+            }
 
             // Detalhes do Endereço da empresa
             $objTipoLog = new clsTipoLogradouro();
@@ -535,7 +531,7 @@ class indice extends clsCadastro
 
         return true;
     }
-
+    
 }
 
 
