@@ -38,7 +38,7 @@ RUN apt-get -y update \
 	&& find /var/www/ -type f -exec chmod 644 {} \; \
 	&& find /var/www/ -type d -exec chmod 755 {} \; \
 	&& cp -a /var/www/docker/ieducar_1604/ieducar.conf /etc/apache2/sites-available/000-default.conf \
-	&& cp -a /var/www/docker/ieducar_1604/apache-foreground /usr/local/bin \
+	&& cp -a /var/www/docker/ieducar_1604/apache2-foreground /usr/local/bin \
 	&& cp -a /var/www/ieducar/configuration/ieducar.ini.sample /var/www/ieducar/configuration/ieducar.ini.sample \
 	&& chmod 744 /usr/local/bin/apache_foreground \
 	&& a2enmod rewrite \
