@@ -11,10 +11,10 @@ ieducar_1604:
   container_name: ieducar_1604
 
 postgres_95:
+  build: ./docker/postgres_95
   volumes:
     - /var/lib/postgresql/data
     - ./docker/postgres_95/init.sql:/docker-entrypoint-initdb.d/00-init.sql
-  image: postgres:9.5
   environment:
     - POSTGRES_PASSWORD=postgres
   ports:
