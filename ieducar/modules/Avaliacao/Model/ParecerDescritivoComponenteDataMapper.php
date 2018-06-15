@@ -25,4 +25,10 @@ class Avaliacao_Model_ParecerDescritivoComponenteDataMapper extends Avaliacao_Mo
         'parecer'               => 'parecer',
         'etapa'                 => 'etapa'
     );
+
+    protected $_primaryKey = array(
+        'parecerDescritivoAluno' => 'parecer_aluno_id',
+        'componenteCurricular'  => 'componente_curricular_id',
+        'etapa' => 'etapa'
+    );
 }

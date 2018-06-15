@@ -22,6 +22,7 @@
  */
 
 require_once 'include/clsBanco.inc.php';
+require_once 'include/pmieducar/clsPermissoes.inc.php';
 require_once 'Portabilis/Messenger.php';
 require_once 'Portabilis/Mailer.php';
 require_once 'Portabilis/Utils/User.php';
@@ -116,8 +117,9 @@ class clsControlador
     if (! $this->logado)
       $validateUserCredentials = false;
 
-    elseif ($_POST['login'] && $_POST['senha'])
+    elseif ($_POST['login'] && $_POST['senha']) {
       $validateUserCredentials = true;
+    }
 
     $this->logar($validateUserCredentials);
   }
@@ -156,6 +158,10 @@ class clsControlador
       }
       else {
         $this->unsetTentativasLogin();
+
+        $permissoes = new clsPermissoes();
+        $user['nivel'] = $permissoes->nivel_acesso($user['id']);
+
         return $user;
       }
     }
@@ -169,12 +175,13 @@ class clsControlador
     $this->unsetTentativasLogin();
 
     @session_start();
-    $_SESSION                 = array();
+    $_SESSION = array();
     $_SESSION['itj_controle'] = 'logado';
-    $_SESSION['id_pessoa']    = $user['id'];
+    $_SESSION['id_pessoa'] = $user['id'];
     $_SESSION['pessoa_setor'] = $user['ref_cod_setor_new'];
-    $_SESSION['menu_opt']     = unserialize($user['opcao_menu']);
-    $_SESSION['tipo_menu']    = $user['tipo_menu'];
+    $_SESSION['menu_opt'] = unserialize($user['opcao_menu']);
+    $_SESSION['tipo_menu'] = $user['tipo_menu'];
+    $_SESSION['nivel'] = $user['nivel'];
     @session_write_close();
 
     Portabilis_Utils_User::logAccessFor($user['id'], $this->getClientIP());
@@ -184,19 +191,19 @@ class clsControlador
     $this->messenger->append("Usuário logado com sucesso.", "success");
 
     // solicita email para recuperação de senha, caso usuário ainda não tenha informado.
-    if (! filter_var($user['email'], FILTER_VALIDATE_EMAIL))
-      header("Location: /module/Usuario/AlterarEmail");
-
-    elseif($user['expired_password'])
-      header("Location: /module/Usuario/AlterarSenha");
-
-    elseif(! empty($redirectTo))
-      header("Location: $redirectTo");
+    if (!filter_var($user['email'], FILTER_VALIDATE_EMAIL)) {
+        header("Location: /module/Usuario/AlterarEmail");
+    } elseif ($user['expired_password']) {
+        header("Location: /module/Usuario/AlterarSenha");
+    } elseif (!empty($redirectTo)) {
+        header("Location: $redirectTo");
+    }
   }
 
 
   public function canStartLoginSession($user) {
     if (! $this->messenger->hasMsgWithType("error")) {
+      $this->checkForSuspended($user);
       $this->checkForDisabledAccount($user);
       $this->checkForBannedAccount($user);
       $this->checkForExpiredAccount($user);
@@ -230,20 +237,34 @@ class clsControlador
                                      is_numeric($_SESSION['tentativas_login_falhas']) &&
                                      $_SESSION['tentativas_login_falhas'] >= $this->_maximoTentativasFalhas;
 
-    if ($requiresHumanAccessValidation)
-      $templateText = str_replace( "<!-- #&RECAPTCHA&# -->", Portabilis_Utils_ReCaptcha::getWidget(), $templateText);
+    if ($requiresHumanAccessValidation) {
+        $templateText = str_replace( "<!-- #&RECAPTCHA&# -->", Portabilis_Utils_ReCaptcha::getWidget(), $templateText);
+    }
 
-    $templateText = str_replace( "<!-- #&CORE_EXT_CONFIGURATION_ENV&# -->", CORE_EXT_CONFIGURATION_ENV, $templateText);
-    $templateText = str_replace( "<!-- #&BRASAO&# -->", $this->getLoginLogo($configuracoes), $templateText);
-    $templateText = str_replace( "<!-- #&NOME_ENTIDADE&# -->", $configuracoes["ieducar_entity_name"], $templateText);
-    $templateText = str_replace( "<!-- #&RODAPE_LOGIN&# -->", $configuracoes["ieducar_login_footer"], $templateText);
-    $templateText = str_replace( "<!-- #&RODAPE_EXTERNO&# -->", $configuracoes["ieducar_external_footer"], $templateText);
-    $templateText = str_replace( "<!-- #&LINKS_SOCIAL&# -->", $this->getSocialMediaLinks($configuracoes), $templateText);
-    $templateText = str_replace( "<!-- #&CRIARCONTA&# -->", $msgCriarConta, $templateText);
+    $templateText = str_replace("<!-- #&CORE_EXT_CONFIGURATION_ENV&# -->", CORE_EXT_CONFIGURATION_ENV, $templateText);
+    $templateText = str_replace("<!-- #&BRASAO&# -->", $this->getLoginLogo($configuracoes), $templateText);
+    $templateText = str_replace("<!-- #&NOME_ENTIDADE&# -->", $configuracoes["ieducar_entity_name"], $templateText);
+    $templateText = str_replace("<!-- #&RODAPE_LOGIN&# -->", $configuracoes["ieducar_login_footer"], $templateText);
+    $templateText = str_replace("<!-- #&RODAPE_EXTERNO&# -->", $configuracoes["ieducar_external_footer"], $templateText);
+    $templateText = str_replace("<!-- #&LINKS_SOCIAL&# -->", $this->getSocialMediaLinks($configuracoes), $templateText);
+    $templateText = str_replace("<!-- #&CRIARCONTA&# -->", $msgCriarConta, $templateText);
     $templateText = str_replace("<!-- #&GOOGLE_TAG_MANAGER_ID&# -->", $GLOBALS['coreExt']['Config']->app->gtm->id, $templateText);
     $templateText = str_replace("<!-- #&SLUG&# -->", $GLOBALS['coreExt']['Config']->app->database->dbname, $templateText);
 
+    if (!$configuracoes['active_on_ieducar']) {
+        $msgSuspensao = '' .
+            '<div class="box" id="mensagens">' .
+                '<div class="message message-danger">' .
+                    '<div class="icone">' .
+                        '<img src="imagens/login/icon-danger.png">' .
+                    '</div>' .
+                    '<div class="titulo">Acesso suspenso</div>' .
+                    '<div class="mensagem"><p>O sistema está temporariamente indisponível. Contate o responsável pelo sistema em seu município. Obrigado pela compreensão.</p></div>' .
+                '</div>' .
+            '</div><br><br>';
 
+        $templateText = str_replace("<!-- #&SUSPENSO&# -->", $msgSuspensao, $templateText);
+    }
 
     fclose($templateFile);
     die($templateText);
@@ -326,6 +347,17 @@ class clsControlador
     }
   }
 
+  protected function checkForSuspended($user) {
+    $configuracoes = new clsPmieducarConfiguracoesGerais();
+    $configuracoes = $configuracoes->detalhe();
+
+    $nivel = (int) $user['nivel'];
+
+    if (!$configuracoes['active_on_ieducar'] && $nivel !== 1) {
+        $this->messenger->append("Sua conta de usuário não pode acessar o sistema, " .
+            "por favor, entre em contato com o responsável pelo sistema do seu município.", "error", false, "error");
+    }
+  }
 
   protected function checkForBannedAccount($user) {
     if ($user['proibido'] != '0') {
