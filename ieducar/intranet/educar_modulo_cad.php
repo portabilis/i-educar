@@ -34,7 +34,7 @@ class clsIndexBase extends clsBase
 {
     function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - M&oacute;dulo" );
+        $this->SetTitulo( "{$this->_instituicao} i-Educar - Etapa" );
         $this->processoAp = "584";
         $this->addEstilo("localizacaoSistema");
     }
@@ -54,6 +54,7 @@ class indice extends clsCadastro
     var $ref_usuario_cad;
     var $nm_tipo;
     var $descricao;
+    var $num_etapas;
     var $num_meses;
     var $num_semanas;
     var $data_cadastro;
@@ -97,7 +98,7 @@ class indice extends clsCadastro
         $localizacao->entradaCaminhos( array(
              $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
              "educar_index.php"                  => "Escola",
-             ""        => "{$nomeMenu} m&oacute;dulo"             
+             ""        => "{$nomeMenu} etapa"
         ));
         $this->enviaLocalizacao($localizacao->montar());
 
@@ -149,10 +150,11 @@ class indice extends clsCadastro
 //      }
 
         // text
-        $this->campoTexto( "nm_tipo", "M&oacute;dulo", $this->nm_tipo, 30, 255, true );
+        $this->campoTexto( "nm_tipo", "Etapa", $this->nm_tipo, 30, 255, true );
         $this->campoMemo( "descricao", "Descri&ccedil;&atilde;o", $this->descricao, 60, 5, false );
-        $this->campoNumero( "num_meses", "N&uacute;mero Meses", $this->num_meses, 2, 2, true );
-        $this->campoNumero( "num_semanas", "N&uacute;mero Semanas", $this->num_semanas, 2, 2, true );
+        $this->campoNumero( "num_etapas", "N&uacute;mero de etapas", $this->num_etapas, 2, 2, true );
+        $this->campoNumero( "num_meses", "N&uacute;mero de meses", $this->num_meses, 2, 2, false );
+        $this->campoNumero( "num_semanas", "N&uacute;mero de semanas", $this->num_semanas, 2, 2, false );
     }
 
     function Novo()

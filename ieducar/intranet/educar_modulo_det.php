@@ -33,7 +33,7 @@ class clsIndexBase extends clsBase
 {
     function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - M&oacute;dulo" );
+        $this->SetTitulo( "{$this->_instituicao} i-Educar - Etapa" );
         $this->processoAp = "584";
         $this->addEstilo("localizacaoSistema");
     }
@@ -53,6 +53,7 @@ class indice extends clsDetalhe
     var $ref_usuario_cad;
     var $nm_tipo;
     var $descricao;
+    var $num_etapas;
     var $num_meses;
     var $num_semanas;
     var $data_cadastro;
@@ -66,7 +67,7 @@ class indice extends clsDetalhe
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         session_write_close();
 
-        $this->titulo = "M&oacute;dulo - Detalhe";
+        $this->titulo = "Etapa - Detalhe";
         
 
         $this->cod_modulo=$_GET["cod_modulo"];
@@ -103,19 +104,23 @@ class indice extends clsDetalhe
         }
         if( $registro["nm_tipo"] )
         {
-            $this->addDetalhe( array( "M&oacute;dulo", "{$registro["nm_tipo"]}") );
+            $this->addDetalhe( array( "Etapa", "{$registro["nm_tipo"]}") );
         }
         if( $registro["descricao"] )
         {
             $this->addDetalhe( array( "Descri&ccedil;&atilde;o", "{$registro["descricao"]}") );
         }
+        /*if( $registro["num_etapas"] )
+        {*/
+            $this->addDetalhe( array( "N&uacute;mero de etapas", "{$registro["num_etapas"]}") );
+        //}
         if( $registro["num_meses"] )
         {
-            $this->addDetalhe( array( "N&uacute;mero Meses", "{$registro["num_meses"]}") );
+            $this->addDetalhe( array( "N&uacute;mero de meses", "{$registro["num_meses"]}") );
         }
         if( $registro["num_semanas"] )
         {
-            $this->addDetalhe( array( "N&uacute;mero Semanas", "{$registro["num_semanas"]}") );
+            $this->addDetalhe( array( "N&uacute;mero de semanas", "{$registro["num_semanas"]}") );
         }
 
         if( $obj_permissao->permissao_cadastra( 584, $this->pessoa_logada, 3 ) )
@@ -131,7 +136,7 @@ class indice extends clsDetalhe
         $localizacao->entradaCaminhos( array(
              $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
              "educar_index.php"                  => "Escola",
-             ""        => "Detalhe do m&oacute;dulo"             
+             ""        => "Detalhe da etapa"
         ));
         $this->enviaLocalizacao($localizacao->montar());                
     }

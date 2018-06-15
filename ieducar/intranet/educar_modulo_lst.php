@@ -33,7 +33,7 @@ class clsIndexBase extends clsBase
 {
     function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - M&oacute;dulo" );
+        $this->SetTitulo( "{$this->_instituicao} i-Educar - Etapa" );
         $this->processoAp = "584";
         $this->addEstilo("localizacaoSistema");
     }
@@ -74,6 +74,7 @@ class indice extends clsListagem
     var $ref_usuario_cad;
     var $nm_tipo;
     var $descricao;
+    var $num_etapas;
     var $num_meses;
     var $num_semanas;
     var $data_cadastro;
@@ -87,7 +88,7 @@ class indice extends clsListagem
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         session_write_close();
 
-        $this->titulo = "M&oacute;dulo - Listagem";
+        $this->titulo = "Etapa - Listagem";
 
         foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ( $val === "" ) ? null: $val;
@@ -95,8 +96,8 @@ class indice extends clsListagem
         
 
         $lista_busca = array(
-            "M&oacute;dulo",
-            "N&uacute;mero Meses"
+            "Etapa",
+            "N&uacute;mero de meses"
         );
 
         $obj_permissoes = new clsPermissoes();
@@ -141,8 +142,8 @@ class indice extends clsListagem
         }
 */
         // outros Filtros
-        $this->campoTexto( "nm_tipo", "M&oacute;dulo", $this->nm_tipo, 30, 255, false );
-        $this->campoNumero( "num_meses", "N&uacute;mero Meses", $this->num_meses, 2, 2, false );
+        $this->campoTexto( "nm_tipo", "Etapa", $this->nm_tipo, 30, 255, false );
+        $this->campoNumero( "num_meses", "N&uacute;mero de meses", $this->num_meses, 2, 2, false );
 
         // Paginador
         $this->limite = 20;
@@ -212,7 +213,7 @@ class indice extends clsListagem
         $localizacao->entradaCaminhos( array(
              $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
              "educar_index.php"                  => "Escola",
-             ""        => "Listagem de m&oacute;dulos"             
+             ""        => "Listagem de etapas"
         ));
         $this->enviaLocalizacao($localizacao->montar());        
     }
