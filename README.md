@@ -62,7 +62,7 @@ Mantemos um grupo oficial no Telegram desde dezembro de 2016 e que pode ser usad
   - falar tópicos que **não** demandem discussões profundas (para essas, usar o
   Github).
 
-Vamos fazer parte? [Acesse aqui](t.me/ieducar)!
+Vamos fazer parte? [Acesse aqui](https://t.me/ieducar)!
 
 
 Qualquer outro grupo de discussão não é reconhecido oficialmente pela
