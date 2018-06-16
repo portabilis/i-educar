@@ -10,6 +10,8 @@
     "portabilis/jasperphp": "v1.2.0",
     "robmorgan/phinx": "v0.8.1",
     "gilbitron/php-simplecache": "^1.4",
-    "cocur/slugify": "^3.1"
+    "swiftmailer/swiftmailer": "^6.0",
+    "cocur/slugify": "^3.1",
+    "google/recaptcha": "~1.1"
   }
 }
