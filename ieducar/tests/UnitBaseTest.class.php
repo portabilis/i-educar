@@ -40,7 +40,7 @@
  * @since     Classe disponível desde a versão 1.0.1
  * @version   @@package_version@@
  */
-abstract class UnitBaseTest extends PHPUnit_Framework_TestCase
+abstract class UnitBaseTest extends \PHPUnit\Framework\TestCase
 {
   /**
    * Métodos a serem excluídos da lista de métodos a serem mockados por

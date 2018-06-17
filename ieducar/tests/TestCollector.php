@@ -28,8 +28,7 @@
  * @version   $Id$
  */
 
-require_once 'PHPUnit/Framework.php';
-require_once 'PHPUnit/Runner/IncludePathTestCollector.php';
+require_once '../vendor/autoload.php';
 
 /**
  * TestCollector abstract class.
