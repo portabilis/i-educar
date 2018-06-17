@@ -28,7 +28,6 @@
  * @version   $Id$
  */
 
-require_once 'PHPUnit/Extensions/SeleniumTestCase.php';
 
 /**
  * FunctionBaseTest class.
@@ -46,7 +45,7 @@ require_once 'PHPUnit/Extensions/SeleniumTestCase.php';
  * @since     Classe disponível desde a versão 1.0.1
  * @version   @@package_version@@
  */
-abstract class FunctionalBaseTest extends PHPUnit_Extensions_SeleniumTestCase
+abstract class FunctionalBaseTest extends PHPUnit_Extensions_Selenium2TestCase
 {
   // Configurações do Selenium RC.
   static protected

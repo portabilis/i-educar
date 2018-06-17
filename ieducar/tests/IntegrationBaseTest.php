@@ -28,7 +28,6 @@
  * @version   $Id$
  */
 
-require_once 'PHPUnit/Extensions/Database/TestCase.php';
 require_once 'CoreExt/DataMapper.php';
 
 /**
@@ -44,7 +43,7 @@ require_once 'CoreExt/DataMapper.php';
  * @since     Classe disponível desde a versão 1.1.0
  * @version   @@package_version@@
  */
-abstract class IntegrationBaseTest extends PHPUnit_Extensions_Database_TestCase
+abstract class IntegrationBaseTest extends \PHPUnit\DbUnit\TestCase
 {
   /**
    * Objeto de conexão com o banco de dados que será utilizado tanto pelas
