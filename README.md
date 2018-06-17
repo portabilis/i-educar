@@ -95,7 +95,6 @@ i-Educar junto conosco, veja o nosso [guia de contribuição](./CONTRIBUTING.md)
 onde explicamos detalhadamente como trabalhamos e de que formas você pode nos
 ajudar a alcançar nossos objetivos.
 
-## Instalação
 
 Antes de começar você vai precisar instalar o Docker e o Docker Compose em sua
 máquina. Para mais informações veja estes links:
@@ -105,6 +104,8 @@ máquina. Para mais informações veja estes links:
 
 Você também vai precisar do [Git](https://git-scm.com/downloads) caso ainda não
 o tenha instalado.
+
+## Instalação
 
 Depois de ter o Docker e git instalados faça o clone deste repositório e execute
 o Docker Compose para criar os containers da aplicação:
