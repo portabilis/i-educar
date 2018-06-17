@@ -1,13 +1,28 @@
-<?xml version='1.0'?>
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+         bootstrap="tests/bootstrap.php"
+         colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         processIsolation="false"
+         stopOnFailure="false">
+  <testsuites>
+    <!--<testsuite name="Functional">-->
+      <!--<directory suffix="Test.php">./tests/functional</directory>-->
+    <!--</testsuite>-->
 
-<!--
-  - Configurações do PHPUnit.
-  -->
+    <!--<testsuite name="Itegration">-->
 
-<phpunit cleanMock='false' colors='true' bootstrap='tests/bootstrap.php'>
-<filter>
-  <blacklist>
-    <directory suffix='.php'>../tests</directory>
-  </blacklist>
-</filter>
+    <!--</testsuite>-->
+
+    <testsuite name="Unit">
+      <directory suffix="Test.php">./tests/unit</directory>
+      <exclude>./tests/unit/Utils/FileStreamTest.php</exclude>
+    </testsuite>
+  </testsuites>
+
+  <php>
+    <env name="CORE_EXT_CONFIGURATION_ENV" value="testing"/>
+  </php>
 </phpunit>

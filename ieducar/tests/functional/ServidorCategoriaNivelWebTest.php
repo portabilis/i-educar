@@ -28,7 +28,7 @@
  * @version   $Id$
  */
 
-require_once 'include/pmieducar/clsPmieducarCategoriaNivel.inc.php';
+require_once __DIR__ . '/../../intranet/include/pmieducar/clsPmieducarCategoriaNivel.inc.php';
 
 /**
  * ServidorCategoriaNivelWebTest class.
