@@ -60,6 +60,8 @@ ini_set('session.use_cookies', 0);
 chdir($root . '/intranet');
 unset($root, $paths);
 
+require_once __DIR__ . '/../vendor/autoload.php';
+
 require_once 'include/clsBanco.inc.php';
 require_once 'CustomPdo.php';
 require_once 'TestCollector.php';
