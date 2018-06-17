@@ -12,7 +12,7 @@ país por meio da educação. Junte-se a nós!**
 3. [Roadmap de tecnologia](#roadmap-de-tecnologia)
 4. [Como contribuir](#como-contribuir)
 5. [Pré requisitos](#pré-requisitos)
-5. [Instalação](#instalação)
+6. [Instalação](#instalação)
 
 ## Sobre i-Educar
 
